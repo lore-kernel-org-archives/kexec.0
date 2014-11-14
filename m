@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XpAqH-0000mK-Sh
- for kexec@lists.infradead.org; Fri, 14 Nov 2014 06:58:50 +0000
+ id 1XpAqJ-0000mK-FW
+ for kexec@lists.infradead.org; Fri, 14 Nov 2014 06:58:52 +0000
 Received: from G08CNEXCHPEKD01.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sAE6w8Tu015880
- for <kexec@lists.infradead.org>; Fri, 14 Nov 2014 14:58:08 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id sAE6w9qf015884
+ for <kexec@lists.infradead.org>; Fri, 14 Nov 2014 14:58:09 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH 1/2] makedumpfile: Add description of elf dump file
-Date: Fri, 14 Nov 2014 14:55:00 +0800
-Message-ID: <1415948101-25843-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH 2/2] makedumpfile: Add description of incomplete dump file
+Date: Fri, 14 Nov 2014 14:55:01 +0800
+Message-ID: <1415948101-25843-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1415948101-25843-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1415948101-25843-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,109 +28,99 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Add description of elf dump file in IMPLEMENTATION.
+Add description of incomplete elf and kdump-compressed dump file
+in IMPLEMENTATION.
 
+Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- IMPLEMENTATION |   88 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 88 insertions(+), 0 deletions(-)
+ IMPLEMENTATION |   76 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 76 insertions(+), 0 deletions(-)
 
 diff --git a/IMPLEMENTATION b/IMPLEMENTATION
-index 2f4cfd6..0e5ad1f 100644
+index 0e5ad1f..0c735db 100644
 --- a/IMPLEMENTATION
 +++ b/IMPLEMENTATION
-@@ -112,3 +112,91 @@
-         unsigned long long      page_flags;     /* page flags */
-     } page_desc_t;
- 
-+
-+* The ELF format
-+  There are two different ELF format(ELF32, ELF64) for K-bit architectures (K=32,64).
-+  Since they almost have the same behaviour in this situation, the following will use
-+  ELF32 as a example.
-+
-+  - The file structure
-+
-+    +---------------------------------+
-+    |  elf_header (struct elf32_hdr)  |
-+    |---------------------------------+
-+    |  PT_NOTE    (struct elf32_phdr) |
-+    |---------------------------------+
-+    |  PT_LOAD(1) (struct elf32_phdr) |
-+    |  PT_LOAD(2) (struct elf32_phdr) |
-+    |             :                   |
-+    |  PT_LOAD(Z) (struct elf32_phdr) |
-+    |---------------------------------+
-+    |  NOTE                           |
-+    |---------------------------------+
-+    |  segment(1)                     |
-+    |  segment(2)                     |
-+    |          :                      |
-+    |  segment(Z)                     |
-+    +---------------------------------+
-+
-+  - elf_header
-+    This header is almost the same as a normal elf_header. The difference is that the
-+    e_flags is used for indicating whether the dump file is complete or not.
-+    0x0 : complete,
-+    0x1 : incomplete
-+
-+	typedef struct elf32_hdr{
-+		unsigned char e_ident[EI_NIDENT];
-+		Elf32_Half    e_type;
-+		Elf32_Half    e_machine;
-+		Elf32_Word    e_version;
-+		Elf32_Addr    e_entry;
-+		Elf32_Off     e_phoff;
-+		Elf32_Off     e_shoff;
-+		Elf32_Word    e_flags;
-+		Elf32_Half    e_ehsize;
-+		Elf32_Half    e_phentsize;
-+		Elf32_Half    e_phnum;
-+		Elf32_Half    e_shentsize;
-+		Elf32_Half    e_shnum;
-+		Elf32_Half    e_shstrndx;
-+	} Elf32_Ehdr;
-+
-+  - PT_NOTE and PT_LOAD
-+    PT_NOTE corresponds to NOTE and PT_LOAD to segment.
-+    They present the corresponding NOTE and segments information.
+@@ -200,3 +200,79 @@
+     
+   - segments
+     The data dumped are all stored in segments and notes.
 +
 +
-+	typedef struct elf32_phdr{
-+		Elf32_Word    p_type;
-+		Elf32_Off     p_offset;
-+		Elf32_Addr    p_vaddr;
-+		Elf32_Addr    p_paddr;
-+		Elf32_Word    p_filesz;
-+		Elf32_Word    p_memsz;
-+		Elf32_Word    p_flags;
-+		Elf32_Word    p_align;
-+	} Elf32_Phdr;
++* The incomplete DUMPFILE
++  When generating DUMPFILE, if ENOSPACE error happens, the DUMPFILE will be
++  incomplete.
 +
-+  - note
-+    The note structure
++  - The incomplete kdump-compressed DUMPFILE
 +
-+    +------------------------------------+
-+    |  note header 1 (struct elf32_note) |
-+    |  note header 2 (struct elf32_note) |
-+    |               :                    |
-+    |  note header N (struct elf32_note) |
-+    |------------------------------------+
-+    |  note data 1                       |
-+    |  note data 2                       |
-+    |          :                         |
-+    |  note data N                       |
-+    +------------------------------------+
-+   
-+	typedef struct elf32_note {
-+		Elf32_Word    n_namesz;       /* Name size */
-+		Elf32_Word    n_descsz;       /* Content size */
-+		Elf32_Word    n_type;         /* Content type */
-+	} Elf32_Nhdr;
-+    
-+  - segments
-+    The data dumped are all stored in segments and notes.
++           the complete                  the incomplete
++    +-----------------------+    +-----------------------+
++    |      main header      |    |      main header      |  have incomplete flag
++    |-----------------------+    |-----------------------+
++    |      sub header       |    |      sub header       |
++    |-----------------------+    |-----------------------+
++    |      1st-bitmap       |    |      1st-bitmap       |
++    |-----------------------+    |-----------------------+
++    |      2nd-bitmap       |    |      2nd-bitmap       |
++    |-----------------------+    |-----------------------+
++    | page header for pfn 0 |    | page header for pfn 0 |
++    | page header for pfn 1 |    | page header for pfn 1 |
++    |                  :    |    |                  :    |
++    | page header for pfn N |    | page header for pfn N |  The page headers after
++    |                  :    |    |                       |  N don't exist. The
++    | page header for pfn Z |    |                       |  value of it is zero,
++    |-----------------------|    |-----------------------|  when try to read it.
++    |   page data (pfn 0)   |    |   page data (pfn 0)   |
++    |   page data (pfn 1)   |    |   page data (pfn 1)   |
++    |                  :    |    |                  :    |
++    |   page data (pfn N)   |    |   page data (pfn N)   |
++    |                  :    |    +-----------------------+
++    |   page data (pfn Z)   |
++    +-----------------------+
++
++    The incomplete flag is set into status of disk_dump_header by
++                          status |= DUMP_DH_COMPRESSED_INCOMPLETE
++    DUMP_DH_COMPRESSED_INCOMPLETE : 0x8
++
++    The page header and page data are written in pairs. When writing page data
++    (pfn N+1), if ENOSPACE error happens, the page headers after N won't be
++    written either.
++
++    If there is no page data dumped into the DUMPFILE, the DUMPFILE can't be
++    analysed by crash.
++
++  - The incomplete elf DUMPFILE
++
++       the complete          the incomplete
++    +-------------+         +-------------+
++    |  elf header |         |  elf header |  have incomplete flag
++    |-------------+         |-------------+
++    |  PT_NOTE    |         |  PT_NOTE    |
++    |  PT_LOAD(1) |         |  PT_LOAD(1) |
++    |         :   |         |         :   |
++    |  PT_LOAD(N) |         |  PT_LOAD(N) |  The PT_LOAD after N don't exist.
++    |         :   |         |             |  The value of it is zero, when try
++    |  PT_LOAD(Z) |         |             |  to read it.
++    |-------------+         |-------------+
++    |    NOTE     |         |     NOTE    |
++    |-------------+         |-------------+
++    |  segment(1) |         |  segment(1) |
++    |          :  |         |          :  |
++    |  segment(N) |         |  segment(N) |  The segment(N) is incomplete.
++    |          :  |         +-------------+  The segments after N don't exist.
++    |  segment(Z) |
++    +-------------+
++
++    The incomplete flag is set into e_flags of elf_header by
++                              e_flags |= DUMP_ELF_INCOMPLETE
++    DUMP_ELF_INCOMPLETE : 0x1
++
++    The PT_LOAD and segment are written in pairs. When writing segment(N)
++    , if ENOSPACE error happens, the PT_LOAD after N won't be written
++    either.
++
++    If there is no segment dumped into the DUMPFILE, the DUMPFILE can't be
++    analysed by crash.
 -- 
 1.7.1
 
