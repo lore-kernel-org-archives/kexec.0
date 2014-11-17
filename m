@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([2a01:238:4383:600:38bc:a715:4b6d:a889]
- helo=theia.8bytes.org)
+Received: from mailout2.w1.samsung.com ([210.118.77.12])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XqMWZ-0008KT-VB
- for kexec@lists.infradead.org; Mon, 17 Nov 2014 13:39:26 +0000
-Date: Mon, 17 Nov 2014 14:38:59 +0100
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 0/5] iommu/vt-d: Fix crash dump failure caused by legacy
- DMA/IO
-Message-ID: <20141117133858.GA31920@8bytes.org>
-References: <1413878659-1383-1-git-send-email-zhen-hual@hp.com>
- <20141022100525.GD9060@dhcp-16-116.nay.redhat.com>
- <545ACF66.9050509@jp.fujitsu.com> <545AD061.4000102@hp.com>
- <545AD353.8060207@jp.fujitsu.com> <545AD8D3.90709@hp.com>
- <545B2885.8070009@jp.fujitsu.com> <545B2C07.1070701@hp.com>
- <5465A0E0.4020001@hp.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5465A0E0.4020001@hp.com>
+ id 1XqO0s-0003Lq-Iz
+ for kexec@lists.infradead.org; Mon, 17 Nov 2014 15:14:47 +0000
+Received: from eucpsbgm2.samsung.com (unknown [203.254.199.245])
+ by mailout2.w1.samsung.com
+ (Oracle Communications Messaging Server 7u4-24.01(7.0.4.24.0) 64bit (built Nov
+ 17 2011)) with ESMTP id <0NF600HOFVSK8620@mailout2.w1.samsung.com> for
+ kexec@lists.infradead.org; Mon, 17 Nov 2014 15:17:08 +0000 (GMT)
+Subject: [PATCH 1/2] scripts/coccinelle: catch freeing cryptographic structures
+ via kfree
+From: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+Date: Mon, 17 Nov 2014 18:14:20 +0400
+Message-id: <20141117151420.10739.16342.stgit@buzz>
+MIME-version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,25 +26,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, ZhenHua" <zhen-hual@hp.com>
-Cc: alex.williamson@redhat.com, Takao Indoh <indou.takao@jp.fujitsu.com>, bhe@redhat.com, tom.vaden@hp.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+Cc: Michal Marek <mmarek@suse.cz>, Herbert Xu <herbert@gondor.apana.org.au>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Julia Lawall <Julia.Lawall@lip6.fr>, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
 
-On Fri, Nov 14, 2014 at 02:27:44PM +0800, Li, ZhenHua wrote:
-> I am working following  your directions:
-> 
-> 1.  If the VT-d driver finds the IOMMU enabled, it reuses its root entry
-> table, and do NOT disable-enable iommu. Other data will be copied.
-> 
-> 2. When a device driver issues the first dma_map command for a
-> device, we assign a new and empty page-table, thus removing all
-> mappings from the old kernel for the device.
-> 
-> Please let me know if I get something wrong.
+Structures allocated by crypto_alloc_* must be freed using crypto_free_*.
 
-Yes, this sounds right. Happily waiting for patches :)
+Signed-off-by: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+---
+ scripts/coccinelle/free/crypto_free.cocci |   45 +++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 scripts/coccinelle/free/crypto_free.cocci
 
-
-	Joerg
+diff --git a/scripts/coccinelle/free/crypto_free.cocci b/scripts/coccinelle/free/crypto_free.cocci
+new file mode 100644
+index 0000000..0799b70
+--- /dev/null
++++ b/scripts/coccinelle/free/crypto_free.cocci
+@@ -0,0 +1,45 @@
++///
++/// Structures allocated by crypto_alloc_* must be freed using crypto_free_*.
++/// This finds freeing them by kfree.
++///
++// Confidence: Moderate
++// Copyright: (C) 2014 Konstantin Khlebnikov,  GPLv2.
++// Comments: There are false positives in crypto/ where they are actually freed.
++// Keywords: crypto, kfree
++// Options: --no-includes --include-headers
++
++virtual org
++virtual report
++virtual context
++
++@r depends on context || org || report@
++expression x;
++identifier crypto_alloc =~ "^crypto_alloc_";
++@@
++
++(
++ x = crypto_alloc(...)
++)
++
++@pb@
++expression r.x;
++position p;
++@@
++
++(
++* kfree@p(x)
++)
++
++@script:python depends on org@
++p << pb.p;
++@@
++
++msg="WARNING: invalid free of crypto_alloc_* allocated data"
++coccilib.org.print_todo(p[0], msg)
++
++@script:python depends on report@
++p << pb.p;
++@@
++
++msg="WARNING: invalid free of crypto_alloc_* allocated data"
++coccilib.report.print_report(p[0], msg)
 
 
 _______________________________________________
