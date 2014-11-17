@@ -1,15 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from 8bytes.org ([2a01:238:4383:600:38bc:a715:4b6d:a889]
+ helo=theia.8bytes.org)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XqFV2-0006n5-Qc
- for kexec@lists.infradead.org; Mon, 17 Nov 2014 06:09:21 +0000
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 2/2] makedumpfile: Change the part of the pfn counter for
- cache page.
-Date: Mon, 17 Nov 2014 06:06:55 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D6886C@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1XqMWZ-0008KT-VB
+ for kexec@lists.infradead.org; Mon, 17 Nov 2014 13:39:26 +0000
+Date: Mon, 17 Nov 2014 14:38:59 +0100
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 0/5] iommu/vt-d: Fix crash dump failure caused by legacy
+ DMA/IO
+Message-ID: <20141117133858.GA31920@8bytes.org>
+References: <1413878659-1383-1-git-send-email-zhen-hual@hp.com>
+ <20141022100525.GD9060@dhcp-16-116.nay.redhat.com>
+ <545ACF66.9050509@jp.fujitsu.com> <545AD061.4000102@hp.com>
+ <545AD353.8060207@jp.fujitsu.com> <545AD8D3.90709@hp.com>
+ <545B2885.8070009@jp.fujitsu.com> <545B2C07.1070701@hp.com>
+ <5465A0E0.4020001@hp.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5465A0E0.4020001@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,78 +30,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "harshula@redhat.com" <harshula@redhat.com>
+To: "Li, ZhenHua" <zhen-hual@hp.com>
+Cc: alex.williamson@redhat.com, Takao Indoh <indou.takao@jp.fujitsu.com>, bhe@redhat.com, tom.vaden@hp.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-The current counter (pfn_cache and pfn_cache_private) are
-used for different dump level. A non-private cache page will
-be counted in pfn_cache when the dump level is 2 while it will
-be counted in pfn_cache_private when the level is 4.
+On Fri, Nov 14, 2014 at 02:27:44PM +0800, Li, ZhenHua wrote:
+> I am working following  your directions:
+> 
+> 1.  If the VT-d driver finds the IOMMU enabled, it reuses its root entry
+> table, and do NOT disable-enable iommu. Other data will be copied.
+> 
+> 2. When a device driver issues the first dma_map command for a
+> device, we assign a new and empty page-table, thus removing all
+> mappings from the old kernel for the device.
+> 
+> Please let me know if I get something wrong.
 
-Rather than that, it would be better to use the counters for
-different *type* of excluded pages.
+Yes, this sounds right. Happily waiting for patches :)
 
-Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
----
- makedumpfile.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 59c4952..283981f 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4999,7 +4999,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 			pfn_counter = &pfn_free;
- 		}
- 		/*
--		 * Exclude the cache page without the private page.
-+		 * Exclude the non-private cache page.
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE)
- 		    && (isLRU(flags) || isSwapCache(flags))
-@@ -5007,12 +5007,15 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 			pfn_counter = &pfn_cache;
- 		}
- 		/*
--		 * Exclude the cache page with the private page.
-+		 * Exclude the cache page whether private or non-private.
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isAnon(mapping)) {
--			pfn_counter = &pfn_cache_private;
-+			if (isPrivate(flags))
-+				pfn_counter = &pfn_cache_private;
-+			else
-+				pfn_counter = &pfn_cache;
- 		}
- 		/*
- 		 * Exclude the data page of the user process.
-@@ -8273,8 +8276,8 @@ print_report(void)
- 	REPORT_MSG("Original pages  : 0x%016llx\n", pfn_original);
- 	REPORT_MSG("  Excluded pages   : 0x%016llx\n", pfn_excluded);
- 	REPORT_MSG("    Pages filled with zero  : 0x%016llx\n", pfn_zero);
--	REPORT_MSG("    Cache pages             : 0x%016llx\n", pfn_cache);
--	REPORT_MSG("    Cache pages + private   : 0x%016llx\n",
-+	REPORT_MSG("    Non-private cache pages : 0x%016llx\n", pfn_cache);
-+	REPORT_MSG("    Private cache pages     : 0x%016llx\n",
- 	    pfn_cache_private);
- 	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
- 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
-@@ -8311,8 +8314,9 @@ print_mem_usage(void)
- 	MSG("----------------------------------------------------------------------\n");
- 
- 	MSG("ZERO		%-16llu	yes		Pages filled with zero\n", pfn_zero);
--	MSG("CACHE		%-16llu	yes		Cache pages\n", pfn_cache);
--	MSG("CACHE_PRIVATE	%-16llu	yes		Cache pages + private\n",
-+	MSG("NON_PRI_CACHE	%-16llu	yes		Cache pages without private flag\n",
-+	    pfn_cache);
-+	MSG("PRI_CACHE	%-16llu	yes		Cache pages with private flag\n",
- 	    pfn_cache_private);
- 	MSG("USER		%-16llu	yes		User process pages\n", pfn_user);
- 	MSG("FREE		%-16llu	yes		Free pages\n", pfn_free);
--- 
-1.9.0
+	Joerg
+
 
 _______________________________________________
 kexec mailing list
