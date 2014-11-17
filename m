@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1416255653.23886.34.camel@smoke>
-Subject: Re: [PATCH 08/10] arm64/kexec: Add core kexec support
-From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 17 Nov 2014 12:20:53 -0800
-In-Reply-To: <20141117163826.GD25416@leverpostej>
-References: <cover.1414099246.git.geoff@infradead.org>
- <c8e8a3378f028e54e21931bc7f3d62c48725d5c7.1414099246.git.geoff@infradead.org>
- <20141024102838.GB24265@leverpostej> <1415845188.15847.79.camel@smoke>
- <20141117163826.GD25416@leverpostej>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XqT4c-0002JT-SF
+ for kexec@lists.infradead.org; Mon, 17 Nov 2014 20:38:59 +0000
+Date: Mon, 17 Nov 2014 15:38:30 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+Message-ID: <20141117203830.GD17152@redhat.com>
+References: <20141113090657.2578f087@hananiah.suse.cz>
+ <54646C1D.1050102@jp.fujitsu.com>
+ <20141113142548.GA1978@redhat.com>
+ <20141114.103133.364422370204110382.d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20141114.103133.364422370204110382.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,143 +26,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Vivek Goyal <vgoyal@redhat.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, ptesarik@suse.cz, linux-kernel@vger.kernel.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com
 
-Hi Mark,
-
-On Thu, Nov 13, 2014 at 02:19:48AM +0000, Geoff Levand wrote:
-> > On Fri, 2014-10-24 at 11:28 +0100, Mark Rutland wrote:
-> > > > +/**
-> > > > + * machine_kexec_prepare - Prepare for a kexec reboot.
-> > > > + *
-> > > > + * Called from the core kexec code when a kernel image is loaded.
-> > > > + */
-> > > > +
-> > > > +int machine_kexec_prepare(struct kimage *image)
-> > > > +{
-> > > > +       const struct kexec_segment *dtb_seg = kexec_find_dtb_seg(image);
-> > > > +
-> > > > +       if (!dtb_seg)
-> > > > +               pr_warn("%s: No device tree segment found.\n", __func__);
-> > > > +
-> > > > +       arm64_kexec_dtb_addr = dtb_seg ? dtb_seg->mem : 0;
-> > > > +       arm64_kexec_kimage_start = image->start;
-> > > > +
-> > > > +       return 0;
-> > > > +}
-> > > 
-> > > I thought all of the DTB handling was moving to purgatory?
-> > 
-> > Non-purgatory booting is needed for kexec-lite.  We can do
-> > this simple check here which optionally sets x0 to the dtb
-> > address to support that.  The other solution is to have a
-> > trampoline in kexec-lite that sets x0 (basically an absolute
-> > minimal purgatory), but I think to do it here is nicer, and
-> > is also the same way that the arm arch code does it.
-> > 
-> > Maybe removing this pr_warn message and just relying on the
-> > kexec_image_info() output would be better.
+On Fri, Nov 14, 2014 at 10:31:33AM +0900, HATAYAMA Daisuke wrote:
+> From: Vivek Goyal <vgoyal@redhat.com>
+> Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+> Date: Thu, 13 Nov 2014 09:25:48 -0500
 > 
-> I mentioned previously that I don't think the "kexec-lite" approach is a
-> good one, especially if we're going to have userspace purgatory code
-> anyway. It embeds a policy w.r.t. the segment handling within the
-> kernel, on the assumption of a specific use-case for what is a more
-> general mechanism.
-
-I don't think this support embeds a policy.  It is completely optional.
-If one of the kexec segments is found to have a dtb header at its start
-the address of that segment is put into x0 so that it is available to
-the code that control is passed to.  That code is free to use the value
-or not.  In the case of the current kexec-tools implementation for
-example, its purgatory does not use that value in x0 since the address
-of the dtb is known to the purgatory code through its arm64_dtb_addr
-variable. 
-
-One motivation for kexec-lite was to avoid the complicated user
-space of a purgatory when it wasn't really needed.  From what I
-understand, kexec-lite is shipping to customers, so there is at least a
-desire for it on other architectures which I believe are in the same
-market as 64 bit ARM servers.  Also, just to mention it, the arm (32 bit)
-arch provides a similar facility in its kexec kernel code, by setting
-r2 to the address of the dtb, and there doesn't seem to be any concern
-over that.
-
-I can't see any negative effect of setting x0 in this way.  If a user
-space loader needs or wants to do something different it is completely
-free to ignore the value the 1st stage kernel has put into x0.
-
-If the boot protocol is changed new kernels will still need to be able to
-boot from old loaders, and old kernels from new loaders.  Depending on
-what the protocol change introduces we can decide if it makes sense to
-update this part of kexec.
-
-If you can describe a clear situation where this would cause a problem
-we should remove it, but if the choice is to remove support that users
-want to provide kernel developers some flexibility that may not be
-needed, then I think we should keep it in.
-
-> Unfortunately secureboot with kexec_file_load will require a kernelspace
-> purgatory and likely special DT handling, but it's already a far more
-> limited interface.
-
-...
-
-> > > > +/*
-> > > > + * relocate_new_kernel - Put a 2nd stage kernel image in place and boot it.
-> > > > + *
-> > > > + * The memory that the old kernel occupies may be overwritten when coping the
-> > > > + * new image to its final location.  To assure that the relocate_new_kernel
-> > > > + * routine which does that copy is not overwritten all code and data needed
-> > > > + * by relocate_new_kernel must be between the symbols relocate_new_kernel and
-> > > > + * relocate_new_kernel_end.  The machine_kexec() routine will copy
-> > > > + * relocate_new_kernel to the kexec control_code_page, a special page which
-> > > > + * has been set up to be preserved during the copy operation.
-> > > > + */
-> > > > +
-> > > > +.globl relocate_new_kernel
-> > > > +relocate_new_kernel:
+> > On Thu, Nov 13, 2014 at 05:30:21PM +0900, HATAYAMA, Daisuke wrote:
+> >> 
+> >> 
+> >> (2014/11/13 17:06), Petr Tesarik wrote:
+> >> >On Thu, 13 Nov 2014 09:17:09 +0900 (JST)
+> >> >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> >> >
+> >> >>From: Vivek Goyal <vgoyal@redhat.com>
+> >> >>Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
+> >> >>Date: Wed, 12 Nov 2014 17:12:05 -0500
+> >> >>
+> >> >>>On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
+> >> >>>>Currently, VMCOREINFO note information reports the virtual address of
+> >> >>>>phys_base that is assigned to symbol phys_base. But this doesn't make
+> >> >>>>sense because to refer to value of the phys_base, it's necessary to
+> >> >>>>get the value of phys_base itself we are now about to refer to.
+> >> >>>>
+> >> >>>
+> >> >>>Hi Hatayama,
+> >> >>>
+> >> >>>/proc/vmcore ELF headers have virtual address information and using
+> >> >>>that you should be able to read actual value of phys_base. gdb deals
+> >> >>>with virtual addresses all the time and can read value of any symbol
+> >> >>>using those headers.
+> >> >>>
+> >> >>>So I am not sure what's the need for exporting actual value of
+> >> >>>phys_base.
+> >> >>>
+> >> >>
+> >> >>Sorry, my logic in the patch description was wrong. For /proc/vmcore,
+> >> >>there's enough information for makedumpdile to get phys_base. It's
+> >> >>correct. The problem here is that other crash dump mechanisms that run
+> >> >>outside Linux kernel independently don't have information to get
+> >> >>phys_base.
+> >> >
+> >> >Yes, but these mechanisms won't be able to read VMCOREINFO either, will
+> >> >they?
+> >> >
+> >> 
+> >> I don't intend such sophisticated function only by VMCOREINFO.
+> >> Search vmcore for VMCOREINFO using strings + grep before opening it by crash.
+> >> I intend that only here.
 > > 
-> > ...
+> > I think this is very crude and not proper way to get to vmcoreinfo. Can
+> 
+> I agree it's crude, but it's useful enough for my usecase.
+> 
+> > you give more context. What are those mechanisms and what are you trying
+> > to do.
 > > 
-> > > > +
-> > > > +       /* start_new_image */
-> > > > +
-> > > > +       ldr     x4, arm64_kexec_kimage_start
-> > > > +       ldr     x0, arm64_kexec_dtb_addr
-> > > > +       mov     x1, xzr
-> > > > +       mov     x2, xzr
-> > > > +       mov     x3, xzr
-> > > > +       br      x4
-> > > 
-> > > This last part should be in userspace-provided purgatory. If you have
-> > > purgatory code which does this then we should be able to rely on that,
-> > > and we don't have to try to maintain this DTB handling in kernelspace
-> > > (which I suspect may become painful as the boot protocol evolves).
-> > 
-> > I think the putting the dtb address in x0 is already fixed.  There are
-> > users with firmware that does this and any change to the boot protocol
-> > will have to work with it.
 > 
-> Sure, but that is the _Linux_ boot protocol, and the Kconfig description
-> of kexec stats "you can start any kernel with it, not just Linux". Why
-> should we embed Linux-specific details into a supposedly generic
-> mechanism?
-> 
-> We may also extend the boot protocol, and I would rather not have to
-> manage the complexity of each possible extension within the kernel,
-> especially given that the only context we can pass in kexec is segments.
-> 
-> > As I mentioned above, we need a solution for non-purgatory re-boot and I
-> > think this is the best way.
-> 
-> Why do we need a solution for "non-purgatory re-boot"? As far as I can
-> see this is a non-problem.
+> I after all write the same thing in the patch description... I mean
+> qemu dump, xendump (and other hypervisor dumps), firmware dumps
+> implemented on each vendor system for the crash dump mechanism.
 
-I tried to address these last concerns in my comments above.
-  
--Geoff
+vmcoreinfo is exported by kdump mechanism (/proc/vmcore). These other
+dump mechanism needs to figure a way out how to export relevant
+information and it is not right to try to put more info in vmcoreinfo.
 
+Don't try to write kernel data structures in such a way so that
+somebody can scan these later. In an external dump mechanism there
+is no notion of vmcoreinfo elf header. So these mechanisms need to
+come up with their own way to query some basic information about
+kernel and export appropriately.
+
+Also this notion of relying on two mechanism is unnecessary 
+introducing extra complexity. I think you should provide user
+a choice so that they can configure one or other. If you think
+that firmware dump mechanisms are more reliable, just use these.
+In fact when crash happens then OS should call into some
+firmware hook to trigger dump. And along that hook one should
+be able to pass relevant info.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
