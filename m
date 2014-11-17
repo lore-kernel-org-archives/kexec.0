@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XqFUc-0006lM-G4
- for kexec@lists.infradead.org; Mon, 17 Nov 2014 06:08:55 +0000
+ id 1XqFV2-0006n5-Qc
+ for kexec@lists.infradead.org; Mon, 17 Nov 2014 06:09:21 +0000
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 1/2] makedumpfile: Modify the description of the dump level.
-Date: Mon, 17 Nov 2014 06:06:39 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D68867@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH 2/2] makedumpfile: Change the part of the pfn counter for
+ cache page.
+Date: Mon, 17 Nov 2014 06:06:55 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D6886C@BPXM01GP.gisp.nec.co.jp>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -24,103 +25,73 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 Cc: "harshula@redhat.com" <harshula@redhat.com>
 
-Hello,
+The current counter (pfn_cache and pfn_cache_private) are
+used for different dump level. A non-private cache page will
+be counted in pfn_cache when the dump level is 2 while it will
+be counted in pfn_cache_private when the level is 4.
 
-This is a documentation improvement for the thread below:
-
-http://lists.infradead.org/pipermail/kexec/2014-October/012776.html
-
-Any comments are helpful.
-
-
-Thanks,
-Atsushi Kumagai
-
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Wed, 12 Nov 2014 16:50:04 +0900
-Subject: [PATCH 1/2] Modify the description of the dump level.
-
-There are two kinds of dump level related to cache pages as:
-
-  - Exclude cache pages without private flag (level:2)
-  - Exclude all cache pages (level:4)
-
-The former excludes only the cache pages which don't have private
-flag while the latter excludes all cache pages.
-
-However, the man page occasionally make users misunderstood due to
-the incomplete description, so it would be better to add the
-description of each base dump level and to unify the expression.
+Rather than that, it would be better to use the counters for
+different *type* of excluded pages.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.8 | 26 +++++++++++++++++++++-----
- print_info.c   |  6 +++---
- 2 files changed, 24 insertions(+), 8 deletions(-)
+ makedumpfile.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 5e121fd..68db7e8 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -45,9 +45,9 @@ be excluded.
- .br
- .B \- Pages filled with zero
- .br
--.B \- Cache pages without private pages
-+.B \- Cache pages without private flag (non-private cache)
- .br
--.B \- All cache pages with private pages
-+.B \- Cache pages with private flag (private cache)
- .br
- .B \- User process data pages
- .br
-@@ -164,10 +164,26 @@ by dump_level 11, makedumpfile retries it by dump_level 31.
- # makedumpfile \-d 11 \-x vmlinux /proc/vmcore dumpfile
- .br
- # makedumpfile \-d 11,31 \-x vmlinux /proc/vmcore dumpfile
-+.br
-+.B Base level:
-+.br
-+dump_level consists of five bits, so there are five base levels to specify the type of unnecessary page.
-+.br
-+	\fB 1\fR :	Exclude the pages filled with zero.
-+.br
-+	\fB 2\fR :	Exclude the non-private cache pages.
-+.br
-+	\fB 4\fR :	Exclude all cache pages.
-+.br
-+	\fB 8\fR :	Exclude the user process data pages.
-+.br
-+	\fB16\fR :	Exclude the free pages.
-+
-+Here is the all combinations of the bits.
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 59c4952..283981f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -4999,7 +4999,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 			pfn_counter = &pfn_free;
+ 		}
+ 		/*
+-		 * Exclude the cache page without the private page.
++		 * Exclude the non-private cache page.
+ 		 */
+ 		else if ((info->dump_level & DL_EXCLUDE_CACHE)
+ 		    && (isLRU(flags) || isSwapCache(flags))
+@@ -5007,12 +5007,15 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 			pfn_counter = &pfn_cache;
+ 		}
+ 		/*
+-		 * Exclude the cache page with the private page.
++		 * Exclude the cache page whether private or non-private.
+ 		 */
+ 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
+ 		    && (isLRU(flags) || isSwapCache(flags))
+ 		    && !isAnon(mapping)) {
+-			pfn_counter = &pfn_cache_private;
++			if (isPrivate(flags))
++				pfn_counter = &pfn_cache_private;
++			else
++				pfn_counter = &pfn_cache;
+ 		}
+ 		/*
+ 		 * Exclude the data page of the user process.
+@@ -8273,8 +8276,8 @@ print_report(void)
+ 	REPORT_MSG("Original pages  : 0x%016llx\n", pfn_original);
+ 	REPORT_MSG("  Excluded pages   : 0x%016llx\n", pfn_excluded);
+ 	REPORT_MSG("    Pages filled with zero  : 0x%016llx\n", pfn_zero);
+-	REPORT_MSG("    Cache pages             : 0x%016llx\n", pfn_cache);
+-	REPORT_MSG("    Cache pages + private   : 0x%016llx\n",
++	REPORT_MSG("    Non-private cache pages : 0x%016llx\n", pfn_cache);
++	REPORT_MSG("    Private cache pages     : 0x%016llx\n",
+ 	    pfn_cache_private);
+ 	REPORT_MSG("    User process data pages : 0x%016llx\n", pfn_user);
+ 	REPORT_MSG("    Free pages              : 0x%016llx\n", pfn_free);
+@@ -8311,8 +8314,9 @@ print_mem_usage(void)
+ 	MSG("----------------------------------------------------------------------\n");
  
--       |      |cache  |cache  |      |
--  dump | zero |without|with   | user | free
-- level | page |private|private| data | page
-+       |      |non-   |       |      |
-+  dump | zero |private|private| user | free
-+ level | page |cache  |cache  | data | page
- .br
- \-\-\-\-\-\-\-+\-\-\-\-\-\-+\-\-\-\-\-\-\-+\-\-\-\-\-\-\-+\-\-\-\-\-\-+\-\-\-\-\-\-
-      0 |      |       |       |      |
-diff --git a/print_info.c b/print_info.c
-index efdf578..9215e0f 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -116,9 +116,9 @@ print_usage(void)
- 	MSG("      The maximum of Dump_Level is 31.\n");
- 	MSG("      Note that Dump_Level for Xen dump filtering is 0 or 1 except on x86_64\n");
- 	MSG("\n");
--	MSG("            |         cache    cache\n");
--	MSG("      Dump  |  zero   without  with     user    free\n");
--	MSG("      Level |  page   private  private  data    page\n");
-+	MSG("            |         non-\n");
-+	MSG("      Dump  |  zero   private  private  user    free\n");
-+	MSG("      Level |  page   cache    cache    data    page\n");
- 	MSG("     -------+---------------------------------------\n");
- 	MSG("         0  |\n");
- 	MSG("         1  |   X\n");
+ 	MSG("ZERO		%-16llu	yes		Pages filled with zero\n", pfn_zero);
+-	MSG("CACHE		%-16llu	yes		Cache pages\n", pfn_cache);
+-	MSG("CACHE_PRIVATE	%-16llu	yes		Cache pages + private\n",
++	MSG("NON_PRI_CACHE	%-16llu	yes		Cache pages without private flag\n",
++	    pfn_cache);
++	MSG("PRI_CACHE	%-16llu	yes		Cache pages with private flag\n",
+ 	    pfn_cache_private);
+ 	MSG("USER		%-16llu	yes		User process pages\n", pfn_user);
+ 	MSG("FREE		%-16llu	yes		Free pages\n", pfn_free);
 -- 
 1.9.0
 
