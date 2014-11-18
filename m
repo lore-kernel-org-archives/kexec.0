@@ -1,11 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <546AE4BE.1020909@huawei.com>
-Date: Tue, 18 Nov 2014 11:48:38 +0530
-From: Anurup M <anurup.m@huawei.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V6
-References: <D2393EB95A9993478029A6FE6A290A9F8129D1FE@szxeml510-mbx.china.huawei.com>
-In-Reply-To: <D2393EB95A9993478029A6FE6A290A9F8129D1FE@szxeml510-mbx.china.huawei.com>
+Received: from mailout4.w1.samsung.com ([210.118.77.14])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XqhIi-0002eX-V5
+ for kexec@lists.infradead.org; Tue, 18 Nov 2014 11:50:30 +0000
+Received: from eucpsbgm1.samsung.com (unknown [203.254.199.244])
+ by mailout4.w1.samsung.com
+ (Oracle Communications Messaging Server 7u4-24.01(7.0.4.24.0) 64bit (built Nov
+ 17 2011)) with ESMTP id <0NF800ASKH01FO70@mailout4.w1.samsung.com> for
+ kexec@lists.infradead.org; Tue, 18 Nov 2014 11:52:49 +0000 (GMT)
+Subject: [PATCH 1/2 v2] scripts/coccinelle: catch freeing cryptographic
+ structures via kfree
+From: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+Date: Tue, 18 Nov 2014 14:50:03 +0400
+Message-id: <20141118114920.13498.73584.stgit@buzz>
+In-reply-to: <20141117151420.10739.16342.stgit@buzz>
+References: <20141117151420.10739.16342.stgit@buzz>
+MIME-version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,159 +28,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: geoff@infradead.org
-Cc: sanil.kumar@hisilicon.com, kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+Cc: Michal Marek <mmarek@suse.cz>, Herbert Xu <herbert@gondor.apana.org.au>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Julia Lawall <Julia.Lawall@lip6.fr>, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
 
-Hi Geoff,
+Structures allocated by crypto_alloc_* must be freed using crypto_free_*.
 
-	I get a relocation error  when I try to load using latest kexec-tools from https://git.linaro.org/people/geoff.levand/kexec-tools.git.
+Signed-off-by: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+---
+ scripts/coccinelle/free/crypto_free.cocci |   64 +++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 scripts/coccinelle/free/crypto_free.cocci
 
-############## error log ###############
-machine_apply_elf_rel: CALL26 94000000->97ffff62
-sym: sha256_update info: 12 other: 00 shndx: 1 value: 5f58 size: 16c
-sym: sha256_update value: 81af7f58 addr: 81af81e4
-machine_apply_elf_rel: CALL26 94000000->97ffff5d
-sym:      .data info: 03 other: 00 shndx: 4 value: 0 size: 0
-sym: .data value: 81af8630 addr: 81af8550
-machine_apply_elf_rel: ABS64 0->81af8630
-Symbol: sha256_regions is in a bss section cannot set
-##############
-
-	What should be the problem? I use foundation model and the kernel image from
-https://git.linaro.org/people/geoff.levand/linux-kexec.git branch: origin/kexec-v6
-and rootfs from Linaro (http://releases.linaro.org/14.09/openembedded/aarch64)
-
-	The above error is not seen when I use kexec-tools branch: origin/kdump.
-
-	Also wish to know how to verify the kdump feature.
-
-Thanks,
-Anurup
-
-> -----Original Message-----
-> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Geoff Levand
-> Sent: Friday, November 14, 2014 6:52 AM
-> To: Catalin Marinas; Will Deacon
-> Cc: marc.zyngier@arm.com; Grant Likely; kexec@lists.infradead.org; linux-arm-kernel@lists.infradead.org; christoffer.dall@linaro.org
-> Subject: [PATCH 0/8] arm64 kexec kernel patches V6
-> 
-> Hi All,
-> 
-> This series adds the core support for kexec re-boots on arm64.  I have tested with the ARM VE fast model, the ARM Base model and the ARM Foundation model with various kernel config options for both the first and second stage kernels.
-> 
-> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to kexec-tools [2], which have not yet been merged upstream, are needed.
-> 
-> Patches 1-3 rework the arm64 hcall mechanism to give the arm64 soft_restart() routine the ability to switch exception levels from EL1 to EL2 for kernels that were entered in EL2.
-> 
-> Patch 4 moves proc-macros.S from arm64/mm to arm64/include/asm so that the dcache_line_size macro it defines can be uesd by kexec's relocate kernel routine.
-> 
-> Patches 5-8 add the actual kexec support.
-> 
-> Please consider all patches for inclusion.  Any comments or suggestions on how to improve are welcome.
-> 
-> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
-> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
-> 
-> Several things are known to have problems on kexec re-boot:
-> 
-> spin-table
-> ----------
-> 
-> PROBLEM: The spin-table enable method does not implement all the methods needed for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
-> 
-> WORK-AROUND: Upgrade to system firmware that provides PSCI enable method support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
-> on the first stage kernel command line.
-> 
-> FIX: Upgrade system firmware to provide PSCI enable method support or add missing spin-table support to the kernel.
-> 
-> KVM
-> ---
-> 
-> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those resources on shutdown, so the first stage kernel cannot be shutdown properly.
-> 
-> WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
-> 
-> FIX: Fix KVM to support soft_restart().  KVM needs to restore default exception vectors, etc.
-> 
-> UEFI
-> ----
-> 
-> PROBLEM: UEFI does not manage its runtime services virtual mappings in a way that is compatible with a kexec re-boot, so the second stage kernel hangs on boot-up.
-> 
-> WORK-AROUND: Disable UEFI in firmware, OR use EFI uboot emulation if provided by your firmware.
-> 
-> FIX: Fix kernel to manage UEFI virtual mappings properly.
-> 
-> /memreserve/
-> ----------
-> 
-> PROBLEM: The use of device tree /memreserve/ entries is not compatible with kexec re-boot.  The second stage kernel will use the reserved regions and the system will become unstable.
-> 
-> WORK-AROUND: Pass a user specified DTB using the kexec --dtb option.
-> 
-> FIX: Convert device tree source files (.dts) and/or bootloaders to use device tree reserved-memory nodes to specify reserved memory or provide an in kernel mechanism to export the /memreserve/ entries to user space.
-> 
-> ACPI
-> ----
-> 
-> PROBLEM: The kernel for ACPI based systems does not export a device tree to the standard user space location of 'proc/device-tree'.  Current applications expect to access device tree information from this standard location.
-> 
-> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage kernel command line, OR pass a user specified DTB using the kexec --dtb option.
-> 
-> FIX: Fix ACPI kernel support to export device tree information suitable for a kexec re-boot, and if this information is exported to somewhere other than 'proc/device-tree' update existing kexec user applications to use this new interface.
-> 
-> ----------------------------------------------------------------
-> The following changes since commit 302cd37c417d59549d073a8986fd028998409cb9:
-> 
->   arm64: kvm: eliminate literal pool entries (2014-11-07 15:04:54 +0000)
-> 
-> are available in the git repository at:
-> 
->   git://git.linaro.org/people/geoff.levand/linux-kexec.git kexec-v6
-> 
-> for you to fetch changes up to 3fc5a4ba22342ccd8e7e5a09620b00f4b81667a6:
-> 
->   arm64/kexec: Enable kexec in the arm64 defconfig (2014-11-13 16:52:16 -0800)
-> 
-> ----------------------------------------------------------------
-> Geoff Levand (8):
->       arm64: Convert hcalls to use ISS field
->       arm64: Add new hcall HVC_CALL_FUNC
->       arm64: Add EL2 switch to soft_restart
->       arm64: Move proc-macros.S to include/asm
->       arm64/kexec: Add core kexec support
->       arm64/kexec: Add pr_devel output
->       arm64/kexec: Add checks for KVM and EFI
->       arm64/kexec: Enable kexec in the arm64 defconfig
-> 
->  arch/arm64/Kconfig                           |   9 ++
->  arch/arm64/configs/defconfig                 |   1 +
->  arch/arm64/include/asm/kexec.h               |  47 ++++++
->  arch/arm64/include/asm/proc-fns.h            |   4 +-
->  arch/arm64/{mm => include/asm}/proc-macros.S |   0
->  arch/arm64/include/asm/virt.h                |  33 ++++
->  arch/arm64/kernel/Makefile                   |   1 +
->  arch/arm64/kernel/hyp-stub.S                 |  45 ++++--
->  arch/arm64/kernel/machine_kexec.c            | 232 +++++++++++++++++++++++++++
->  arch/arm64/kernel/process.c                  |  10 +-
->  arch/arm64/kernel/relocate_kernel.S          | 160 ++++++++++++++++++
->  arch/arm64/kvm/hyp.S                         |  18 ++-
->  arch/arm64/mm/cache.S                        |   3 +-
->  arch/arm64/mm/proc.S                         |  50 ++++--
->  include/uapi/linux/kexec.h                   |   1 +
->  15 files changed, 576 insertions(+), 38 deletions(-)  create mode 100644 arch/arm64/include/asm/kexec.h  rename arch/arm64/{mm => include/asm}/proc-macros.S (100%)  create mode 100644 arch/arm64/kernel/machine_kexec.c  create mode 100644 arch/arm64/kernel/relocate_kernel.S
-> 
-> --
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> .
-> 
+diff --git a/scripts/coccinelle/free/crypto_free.cocci b/scripts/coccinelle/free/crypto_free.cocci
+new file mode 100644
+index 0000000..a717070
+--- /dev/null
++++ b/scripts/coccinelle/free/crypto_free.cocci
+@@ -0,0 +1,64 @@
++///
++/// Structures allocated by crypto_alloc_* must be freed using crypto_free_*.
++/// This finds freeing them by kfree.
++///
++// Confidence: Moderate
++// Copyright: (C) 2014 Konstantin Khlebnikov,  GPLv2.
++// Comments: There are false positives in crypto/ where they are actually freed.
++// Keywords: crypto, kfree
++// Options: --no-includes --include-headers
++
++virtual org
++virtual report
++virtual context
++
++@r depends on context || org || report@
++expression x;
++@@
++
++(
++ x = crypto_alloc_base(...)
++|
++ x = crypto_alloc_cipher(...)
++|
++ x = crypto_alloc_ablkcipher(...)
++|
++ x = crypto_alloc_aead(...)
++|
++ x = crypto_alloc_instance(...)
++|
++ x = crypto_alloc_instance2(...)
++|
++ x = crypto_alloc_comp(...)
++|
++ x = crypto_alloc_pcomp(...)
++|
++ x = crypto_alloc_hash(...)
++|
++ x = crypto_alloc_ahash(...)
++|
++ x = crypto_alloc_shash(...)
++|
++ x = crypto_alloc_rng(...)
++)
++
++@pb@
++expression r.x;
++position p;
++@@
++
++* kfree@p(x)
++
++@script:python depends on org@
++p << pb.p;
++@@
++
++msg="WARNING: invalid free of crypto_alloc_* allocated data"
++coccilib.org.print_todo(p[0], msg)
++
++@script:python depends on report@
++p << pb.p;
++@@
++
++msg="WARNING: invalid free of crypto_alloc_* allocated data"
++coccilib.report.print_report(p[0], msg)
 
 
 _______________________________________________
