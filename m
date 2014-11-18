@@ -1,19 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XqT4c-0002JT-SF
- for kexec@lists.infradead.org; Mon, 17 Nov 2014 20:38:59 +0000
-Date: Mon, 17 Nov 2014 15:38:30 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-Message-ID: <20141117203830.GD17152@redhat.com>
-References: <20141113090657.2578f087@hananiah.suse.cz>
- <54646C1D.1050102@jp.fujitsu.com>
- <20141113142548.GA1978@redhat.com>
- <20141114.103133.364422370204110382.d.hatayama@jp.fujitsu.com>
+Message-ID: <546AE4BE.1020909@huawei.com>
+Date: Tue, 18 Nov 2014 11:48:38 +0530
+From: Anurup M <anurup.m@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20141114.103133.364422370204110382.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V6
+References: <D2393EB95A9993478029A6FE6A290A9F8129D1FE@szxeml510-mbx.china.huawei.com>
+In-Reply-To: <D2393EB95A9993478029A6FE6A290A9F8129D1FE@szxeml510-mbx.china.huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,89 +18,160 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org, ptesarik@suse.cz, linux-kernel@vger.kernel.org, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, anderson@redhat.com
+To: geoff@infradead.org
+Cc: sanil.kumar@hisilicon.com, kexec@lists.infradead.org
 
-On Fri, Nov 14, 2014 at 10:31:33AM +0900, HATAYAMA Daisuke wrote:
-> From: Vivek Goyal <vgoyal@redhat.com>
-> Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-> Date: Thu, 13 Nov 2014 09:25:48 -0500
+Hi Geoff,
+
+	I get a relocation error  when I try to load using latest kexec-tools from https://git.linaro.org/people/geoff.levand/kexec-tools.git.
+
+############## error log ###############
+machine_apply_elf_rel: CALL26 94000000->97ffff62
+sym: sha256_update info: 12 other: 00 shndx: 1 value: 5f58 size: 16c
+sym: sha256_update value: 81af7f58 addr: 81af81e4
+machine_apply_elf_rel: CALL26 94000000->97ffff5d
+sym:      .data info: 03 other: 00 shndx: 4 value: 0 size: 0
+sym: .data value: 81af8630 addr: 81af8550
+machine_apply_elf_rel: ABS64 0->81af8630
+Symbol: sha256_regions is in a bss section cannot set
+##############
+
+	What should be the problem? I use foundation model and the kernel image from
+https://git.linaro.org/people/geoff.levand/linux-kexec.git branch: origin/kexec-v6
+and rootfs from Linaro (http://releases.linaro.org/14.09/openembedded/aarch64)
+
+	The above error is not seen when I use kexec-tools branch: origin/kdump.
+
+	Also wish to know how to verify the kdump feature.
+
+Thanks,
+Anurup
+
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Geoff Levand
+> Sent: Friday, November 14, 2014 6:52 AM
+> To: Catalin Marinas; Will Deacon
+> Cc: marc.zyngier@arm.com; Grant Likely; kexec@lists.infradead.org; linux-arm-kernel@lists.infradead.org; christoffer.dall@linaro.org
+> Subject: [PATCH 0/8] arm64 kexec kernel patches V6
 > 
-> > On Thu, Nov 13, 2014 at 05:30:21PM +0900, HATAYAMA, Daisuke wrote:
-> >> 
-> >> 
-> >> (2014/11/13 17:06), Petr Tesarik wrote:
-> >> >On Thu, 13 Nov 2014 09:17:09 +0900 (JST)
-> >> >HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> >> >
-> >> >>From: Vivek Goyal <vgoyal@redhat.com>
-> >> >>Subject: Re: [PATCH] kdump, x86: report actual value of phys_base in VMCOREINFO
-> >> >>Date: Wed, 12 Nov 2014 17:12:05 -0500
-> >> >>
-> >> >>>On Wed, Nov 12, 2014 at 03:40:42PM +0900, HATAYAMA Daisuke wrote:
-> >> >>>>Currently, VMCOREINFO note information reports the virtual address of
-> >> >>>>phys_base that is assigned to symbol phys_base. But this doesn't make
-> >> >>>>sense because to refer to value of the phys_base, it's necessary to
-> >> >>>>get the value of phys_base itself we are now about to refer to.
-> >> >>>>
-> >> >>>
-> >> >>>Hi Hatayama,
-> >> >>>
-> >> >>>/proc/vmcore ELF headers have virtual address information and using
-> >> >>>that you should be able to read actual value of phys_base. gdb deals
-> >> >>>with virtual addresses all the time and can read value of any symbol
-> >> >>>using those headers.
-> >> >>>
-> >> >>>So I am not sure what's the need for exporting actual value of
-> >> >>>phys_base.
-> >> >>>
-> >> >>
-> >> >>Sorry, my logic in the patch description was wrong. For /proc/vmcore,
-> >> >>there's enough information for makedumpdile to get phys_base. It's
-> >> >>correct. The problem here is that other crash dump mechanisms that run
-> >> >>outside Linux kernel independently don't have information to get
-> >> >>phys_base.
-> >> >
-> >> >Yes, but these mechanisms won't be able to read VMCOREINFO either, will
-> >> >they?
-> >> >
-> >> 
-> >> I don't intend such sophisticated function only by VMCOREINFO.
-> >> Search vmcore for VMCOREINFO using strings + grep before opening it by crash.
-> >> I intend that only here.
-> > 
-> > I think this is very crude and not proper way to get to vmcoreinfo. Can
+> Hi All,
 > 
-> I agree it's crude, but it's useful enough for my usecase.
+> This series adds the core support for kexec re-boots on arm64.  I have tested with the ARM VE fast model, the ARM Base model and the ARM Foundation model with various kernel config options for both the first and second stage kernels.
 > 
-> > you give more context. What are those mechanisms and what are you trying
-> > to do.
-> > 
+> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to kexec-tools [2], which have not yet been merged upstream, are needed.
 > 
-> I after all write the same thing in the patch description... I mean
-> qemu dump, xendump (and other hypervisor dumps), firmware dumps
-> implemented on each vendor system for the crash dump mechanism.
+> Patches 1-3 rework the arm64 hcall mechanism to give the arm64 soft_restart() routine the ability to switch exception levels from EL1 to EL2 for kernels that were entered in EL2.
+> 
+> Patch 4 moves proc-macros.S from arm64/mm to arm64/include/asm so that the dcache_line_size macro it defines can be uesd by kexec's relocate kernel routine.
+> 
+> Patches 5-8 add the actual kexec support.
+> 
+> Please consider all patches for inclusion.  Any comments or suggestions on how to improve are welcome.
+> 
+> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+> 
+> Several things are known to have problems on kexec re-boot:
+> 
+> spin-table
+> ----------
+> 
+> PROBLEM: The spin-table enable method does not implement all the methods needed for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
+> 
+> WORK-AROUND: Upgrade to system firmware that provides PSCI enable method support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
+> on the first stage kernel command line.
+> 
+> FIX: Upgrade system firmware to provide PSCI enable method support or add missing spin-table support to the kernel.
+> 
+> KVM
+> ---
+> 
+> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those resources on shutdown, so the first stage kernel cannot be shutdown properly.
+> 
+> WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
+> 
+> FIX: Fix KVM to support soft_restart().  KVM needs to restore default exception vectors, etc.
+> 
+> UEFI
+> ----
+> 
+> PROBLEM: UEFI does not manage its runtime services virtual mappings in a way that is compatible with a kexec re-boot, so the second stage kernel hangs on boot-up.
+> 
+> WORK-AROUND: Disable UEFI in firmware, OR use EFI uboot emulation if provided by your firmware.
+> 
+> FIX: Fix kernel to manage UEFI virtual mappings properly.
+> 
+> /memreserve/
+> ----------
+> 
+> PROBLEM: The use of device tree /memreserve/ entries is not compatible with kexec re-boot.  The second stage kernel will use the reserved regions and the system will become unstable.
+> 
+> WORK-AROUND: Pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: Convert device tree source files (.dts) and/or bootloaders to use device tree reserved-memory nodes to specify reserved memory or provide an in kernel mechanism to export the /memreserve/ entries to user space.
+> 
+> ACPI
+> ----
+> 
+> PROBLEM: The kernel for ACPI based systems does not export a device tree to the standard user space location of 'proc/device-tree'.  Current applications expect to access device tree information from this standard location.
+> 
+> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage kernel command line, OR pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: Fix ACPI kernel support to export device tree information suitable for a kexec re-boot, and if this information is exported to somewhere other than 'proc/device-tree' update existing kexec user applications to use this new interface.
+> 
+> ----------------------------------------------------------------
+> The following changes since commit 302cd37c417d59549d073a8986fd028998409cb9:
+> 
+>   arm64: kvm: eliminate literal pool entries (2014-11-07 15:04:54 +0000)
+> 
+> are available in the git repository at:
+> 
+>   git://git.linaro.org/people/geoff.levand/linux-kexec.git kexec-v6
+> 
+> for you to fetch changes up to 3fc5a4ba22342ccd8e7e5a09620b00f4b81667a6:
+> 
+>   arm64/kexec: Enable kexec in the arm64 defconfig (2014-11-13 16:52:16 -0800)
+> 
+> ----------------------------------------------------------------
+> Geoff Levand (8):
+>       arm64: Convert hcalls to use ISS field
+>       arm64: Add new hcall HVC_CALL_FUNC
+>       arm64: Add EL2 switch to soft_restart
+>       arm64: Move proc-macros.S to include/asm
+>       arm64/kexec: Add core kexec support
+>       arm64/kexec: Add pr_devel output
+>       arm64/kexec: Add checks for KVM and EFI
+>       arm64/kexec: Enable kexec in the arm64 defconfig
+> 
+>  arch/arm64/Kconfig                           |   9 ++
+>  arch/arm64/configs/defconfig                 |   1 +
+>  arch/arm64/include/asm/kexec.h               |  47 ++++++
+>  arch/arm64/include/asm/proc-fns.h            |   4 +-
+>  arch/arm64/{mm => include/asm}/proc-macros.S |   0
+>  arch/arm64/include/asm/virt.h                |  33 ++++
+>  arch/arm64/kernel/Makefile                   |   1 +
+>  arch/arm64/kernel/hyp-stub.S                 |  45 ++++--
+>  arch/arm64/kernel/machine_kexec.c            | 232 +++++++++++++++++++++++++++
+>  arch/arm64/kernel/process.c                  |  10 +-
+>  arch/arm64/kernel/relocate_kernel.S          | 160 ++++++++++++++++++
+>  arch/arm64/kvm/hyp.S                         |  18 ++-
+>  arch/arm64/mm/cache.S                        |   3 +-
+>  arch/arm64/mm/proc.S                         |  50 ++++--
+>  include/uapi/linux/kexec.h                   |   1 +
+>  15 files changed, 576 insertions(+), 38 deletions(-)  create mode 100644 arch/arm64/include/asm/kexec.h  rename arch/arm64/{mm => include/asm}/proc-macros.S (100%)  create mode 100644 arch/arm64/kernel/machine_kexec.c  create mode 100644 arch/arm64/kernel/relocate_kernel.S
+> 
+> --
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> .
+> 
 
-vmcoreinfo is exported by kdump mechanism (/proc/vmcore). These other
-dump mechanism needs to figure a way out how to export relevant
-information and it is not right to try to put more info in vmcoreinfo.
-
-Don't try to write kernel data structures in such a way so that
-somebody can scan these later. In an external dump mechanism there
-is no notion of vmcoreinfo elf header. So these mechanisms need to
-come up with their own way to query some basic information about
-kernel and export appropriately.
-
-Also this notion of relying on two mechanism is unnecessary 
-introducing extra complexity. I think you should provide user
-a choice so that they can configure one or other. If you think
-that firmware dump mechanisms are more reliable, just use these.
-In fact when crash happens then OS should call into some
-firmware hook to trigger dump. And along that hook one should
-be able to pass relevant info.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
