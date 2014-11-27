@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XsoiG-00025U-Nu
- for kexec@lists.infradead.org; Mon, 24 Nov 2014 08:09:37 +0000
-Date: Mon, 24 Nov 2014 16:07:34 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH V5 4/5] Add module of calculating start_pfn and end_pfn
- in each dumpfile
-Message-ID: <20141124080734.GC3015@dhcp-16-105.nay.redhat.com>
-References: <1415263768-15821-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1415263768-15821-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20141124071856.GB3015@dhcp-16-105.nay.redhat.com>
- <5472DE1D.3090608@cn.fujitsu.com>
+Date: Thu, 27 Nov 2014 14:19:47 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V6
+Message-ID: <20141127061947.GB2860@darkstar.nay.redhat.com>
+References: <cover.1415926876.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5472DE1D.3090608@cn.fujitsu.com>
+In-Reply-To: <cover.1415926876.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,33 +15,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: drjones@redhat.com, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, christoffer.dall@linaro.org, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-T24gMTEvMjQvMTQgYXQgMDM6MjhwbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
-PiBPbiAxMS8yNC8yMDE0IDAzOjE4IFBNLCBCYW9xdWFuIEhlIHdyb3RlOgo+ID5PbiAxMS8wNi8x
-NCBhdCAwNDo0OXBtLCBaaG91IFdlbmppYW4gd3JvdGU6Cj4gPj4rCXdoaWxlICgqY3VyX3NwbGl0
-YmxvY2tfbnVtPCAgc3BsaXRibG9jay0+bnVtJiYgIHBmbl9uZWVkZWQ+ICAwKSB7Cj4gPj4rCQlw
-Zm5fbmVlZGVkIC09IHJlYWRfZnJvbV9zcGxpdGJsb2NrX3RhYmxlKHNwbGl0YmxvY2tfdmFsdWVf
-b2Zmc2V0KTsKPiA+PisJCXNwbGl0YmxvY2tfdmFsdWVfb2Zmc2V0ICs9IHNwbGl0YmxvY2stPmVu
-dHJ5X3NpemU7Cj4gPj4rCQkrKypjdXJfc3BsaXRibG9ja19udW07Cj4gPj4rCX0KPiA+Cj4gPkhp
-IFdlbmppYW4sCj4gPgo+ID5JZiBzcGxpdGJsb2NrLT5wYWdlX3Blcl9zcGxpdGJsb2NrIGlzIDFH
-LCBhbmQgdGhlIHN5c3RlbSByYW0gaXMgNEcuIE5vdwo+ID5JIHNldCA4IGR1bXBmaWxlcyB0byBz
-dG9yZSB0aGUgc3BsaXR0ZWQgdm1jb3JlLCBzYXkgZHVtcDAuLi43LiBUaGVuCj4gPmR1bXAwLzEv
-Mi8zIHdpbGwgc3RvcmUgMUcgb2YgZGF0YSwgZHVtcDQvNS82Lzcgd2lsbCBiZSBlbXB0eS4gU28g
-aXMgaXQKPiA+T0s/Cj4gPgo+ID5DYW4gd2UgZG8gYW55dGhpbmcgdG8gYXZvaWQgdGhpcyBjYXNl
-IG9yIGdpdmUgc29tZSBub3RlIHRvIGxldCBwZW9wbGUgbm90Cj4gPmJlIHBhbmlra2VkIGJ5IGVt
-cHR5IGR1bXAgZmlsZXM/Cj4gPgo+ID5UaGFua3MKPiA+QmFvcXVhbgo+ID4KPiA+Cj4gCj4gSGVs
-bG8gQmFvcXVhbiwKPiAKPiBBY3R1YWxseSwgd2UgaGF2ZSB0aG91Z2h0IGFib3V0IGl0IGFuZCB0
-YWxrZWQgYXQKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwva2V4ZWMvMjAx
-NC1Ob3ZlbWJlci8wMTI4ODAuaHRtbCAuCgpPSywgdGhhbmtzIGZvciB0ZWxsaW5nLgoKCj4gCj4g
-LS0gCj4gVGhhbmtzCj4gWmhvdSBXZW5qaWFuCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Geoff,
+
+Is there any Linaro card for the KVM soft restart issue?
+
+Ccing Andrew Jones since he might be interested in KVM issues.
+
+On 11/14/14 at 01:22am, Geoff Levand wrote:
+> Hi All,
+> 
+> This series adds the core support for kexec re-boots on arm64.  I have tested
+> with the ARM VE fast model, the ARM Base model and the ARM Foundation
+> model with various kernel config options for both the first and second stage
+> kernels.
+> 
+> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> kexec-tools [2], which have not yet been merged upstream, are needed.
+> 
+> Patches 1-3 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+> routine the ability to switch exception levels from EL1 to EL2 for kernels that
+> were entered in EL2.
+> 
+> Patch 4 moves proc-macros.S from arm64/mm to arm64/include/asm so that the
+> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> routine.
+> 
+> Patches 5-8 add the actual kexec support.
+> 
+> Please consider all patches for inclusion.  Any comments or suggestions on how 
+> to improve are welcome.
+> 
+> [1]  https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> [2]  https://git.linaro.org/people/geoff.levand/kexec-tools.git
+> 
+> Several things are known to have problems on kexec re-boot:
+> 
+> spin-table
+> ----------
+> 
+> PROBLEM: The spin-table enable method does not implement all the methods needed
+> for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
+> 
+> WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
+> support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
+> on the first stage kernel command line.
+> 
+> FIX: Upgrade system firmware to provide PSCI enable method support or add
+> missing spin-table support to the kernel.
+> 
+> KVM
+> ---
+> 
+> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
+> resources on shutdown, so the first stage kernel cannot be shutdown properly.
+> 
+> WORK-AROUND:  Build the first stage kernel with CONFIG_KVM=n.
+> 
+> FIX: Fix KVM to support soft_restart().  KVM needs to restore default exception
+> vectors, etc.
+> 
+> UEFI
+> ----
+> 
+> PROBLEM: UEFI does not manage its runtime services virtual mappings in a way
+> that is compatible with a kexec re-boot, so the second stage kernel hangs on
+> boot-up.
+> 
+> WORK-AROUND: Disable UEFI in firmware, OR use EFI uboot emulation if provided
+> by your firmware.
+> 
+> FIX: Fix kernel to manage UEFI virtual mappings properly.
+> 
+> /memreserve/
+> ----------
+> 
+> PROBLEM: The use of device tree /memreserve/ entries is not compatible with
+> kexec re-boot.  The second stage kernel will use the reserved regions and the
+> system will become unstable.
+> 
+> WORK-AROUND: Pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: Convert device tree source files (.dts) and/or bootloaders to use device
+> tree reserved-memory nodes to specify reserved memory or provide an in kernel
+> mechanism to export the /memreserve/ entries to user space.
+> 
+> ACPI
+> ----
+> 
+> PROBLEM: The kernel for ACPI based systems does not export a device tree to the
+> standard user space location of 'proc/device-tree'.  Current applications
+> expect to access device tree information from this standard location.
+> 
+> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage
+> kernel command line, OR pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: Fix ACPI kernel support to export device tree information suitable for a
+> kexec re-boot, and if this information is exported to somewhere other than
+> 'proc/device-tree' update existing kexec user applications to use this new
+> interface.
+> 
+> ----------------------------------------------------------------
+> The following changes since commit 302cd37c417d59549d073a8986fd028998409cb9:
+> 
+>   arm64: kvm: eliminate literal pool entries (2014-11-07 15:04:54 +0000)
+> 
+> are available in the git repository at:
+> 
+>   git://git.linaro.org/people/geoff.levand/linux-kexec.git kexec-v6
+> 
+> for you to fetch changes up to 3fc5a4ba22342ccd8e7e5a09620b00f4b81667a6:
+> 
+>   arm64/kexec: Enable kexec in the arm64 defconfig (2014-11-13 16:52:16 -0800)
+> 
+> ----------------------------------------------------------------
+> Geoff Levand (8):
+>       arm64: Convert hcalls to use ISS field
+>       arm64: Add new hcall HVC_CALL_FUNC
+>       arm64: Add EL2 switch to soft_restart
+>       arm64: Move proc-macros.S to include/asm
+>       arm64/kexec: Add core kexec support
+>       arm64/kexec: Add pr_devel output
+>       arm64/kexec: Add checks for KVM and EFI
+>       arm64/kexec: Enable kexec in the arm64 defconfig
+> 
+>  arch/arm64/Kconfig                           |   9 ++
+>  arch/arm64/configs/defconfig                 |   1 +
+>  arch/arm64/include/asm/kexec.h               |  47 ++++++
+>  arch/arm64/include/asm/proc-fns.h            |   4 +-
+>  arch/arm64/{mm => include/asm}/proc-macros.S |   0
+>  arch/arm64/include/asm/virt.h                |  33 ++++
+>  arch/arm64/kernel/Makefile                   |   1 +
+>  arch/arm64/kernel/hyp-stub.S                 |  45 ++++--
+>  arch/arm64/kernel/machine_kexec.c            | 232 +++++++++++++++++++++++++++
+>  arch/arm64/kernel/process.c                  |  10 +-
+>  arch/arm64/kernel/relocate_kernel.S          | 160 ++++++++++++++++++
+>  arch/arm64/kvm/hyp.S                         |  18 ++-
+>  arch/arm64/mm/cache.S                        |   3 +-
+>  arch/arm64/mm/proc.S                         |  50 ++++--
+>  include/uapi/linux/kexec.h                   |   1 +
+>  15 files changed, 576 insertions(+), 38 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/kexec.h
+>  rename arch/arm64/{mm => include/asm}/proc-macros.S (100%)
+>  create mode 100644 arch/arm64/kernel/machine_kexec.c
+>  create mode 100644 arch/arm64/kernel/relocate_kernel.S
+> 
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
