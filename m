@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
+Received: from ozlabs.org ([103.22.144.67])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XuWEV-0005HA-Ap
- for kexec@lists.infradead.org; Sat, 29 Nov 2014 00:49:58 +0000
-From: HuKeping <hukeping@huawei.com>
-Subject: [PATCH] kexec: remove some re zero-assignment
-Date: Sat, 29 Nov 2014 08:45:32 +0800
-Message-ID: <1417221932-75098-1-git-send-email-hukeping@huawei.com>
+ id 1XvBLk-0008BZ-Ey
+ for kexec@lists.infradead.org; Sun, 30 Nov 2014 20:44:09 +0000
+Date: Mon, 1 Dec 2014 07:43:19 +1100
+From: Anton Blanchard <anton@samba.org>
+Subject: Re: [PATCH 3/5]: ipr: kexec boot speed improvements
+Message-ID: <20141201074319.7ded3d8e@kryten>
+In-Reply-To: <20140827140630.1f0ee455@kryten>
+References: <53D6B2A4.4010102@linux.vnet.ibm.com>
+ <20140827140630.1f0ee455@kryten>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,35 +23,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, peifeiyue@huawei.com, sdu.liu@huawei.com
+To: Brian King <brking@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Wendy Xiong <wenxiong@linux.vnet.ibm.com>, linux-scsi <linux-scsi@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@parallels.com>
 
-since we have already cleared kexec_info with memset,
-there is no need to do that again to the struct members.
+Hi Brian,
 
-Signed-off-by: Hu Keping <hukeping@huawei.com>
----
- kexec/kexec.c | 4 ----
- 1 file changed, 4 deletions(-)
+> > Currently when performing a kexec boot with an ipr adapter,
+> > the adapter gets shutdown completely, flushing all write
+> > cache, as well as performing a full hardware reset of the card
+> > during the shutdown phase of the old kernel. This forces
+> > the new kernel to then wait for the adapter firmware to
+> > reinitialize, which slows down kexec boot. There is no
+> > need to do all of this on the newer ipr adapters, since they
+> > support the ability to cancel outstanding error buffers.
+> > 
+> > This patch adds a special case for kexec boot to simply
+> > cancel these outstanding error buffers, and as long as
+> > there is no other I/O outstanding to the adapter, which
+> > there shouldn't be, place the adapter into a state
+> > where it has no memory of any DMA addresses from the old
+> > kernel, then disable the device. This significantly
+> > speeds up kexec boot, particularly in configurations with
+> > multiple ipr adapters.
+> > 
+> > Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+> > ---
+> 
+> This reduces boot time on my box from 80 seconds to 34 seconds. ppc64
+> kernel developers (who boot boxes continually) thank you!
+> 
+> Tested-by: Anton Blanchard <anton@samba.org>
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index a5e78c6..b088916 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -662,10 +662,6 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 	int guess_only = 0;
- 
- 	memset(&info, 0, sizeof(info));
--	info.segment = NULL;
--	info.nr_segments = 0;
--	info.entry = NULL;
--	info.backup_start = 0;
- 	info.kexec_flags = kexec_flags;
- 
- 	result = 0;
--- 
-1.8.5.5
+Just checking on this series. I'm very keen to see it go in since it is
+a huge improvement in boot time.
 
+Anton
 
 _______________________________________________
 kexec mailing list
