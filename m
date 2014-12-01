@@ -1,22 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([81.169.241.247] helo=theia.8bytes.org)
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XvQAs-0006z2-H5
- for kexec@lists.infradead.org; Mon, 01 Dec 2014 12:33:55 +0000
-Date: Mon, 1 Dec 2014 13:33:27 +0100
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 0/5] iommu/vt-d: Fix crash dump failure caused by legacy
- DMA/IO
-Message-ID: <20141201123327.GJ3762@8bytes.org>
-References: <20141022100525.GD9060@dhcp-16-116.nay.redhat.com>
- <545ACF66.9050509@jp.fujitsu.com> <545AD061.4000102@hp.com>
- <545AD353.8060207@jp.fujitsu.com> <545AD8D3.90709@hp.com>
- <545B2885.8070009@jp.fujitsu.com> <545B2C07.1070701@hp.com>
- <5465A0E0.4020001@hp.com> <20141117133858.GA31920@8bytes.org>
- <547C0B4A.4060303@hp.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <547C0B4A.4060303@hp.com>
+ id 1Xvasw-0002ku-Lx
+ for kexec@lists.infradead.org; Tue, 02 Dec 2014 00:00:07 +0000
+From: Anton Blanchard <anton@samba.org>
+Subject: [PATCH] kexec/fs2dt: Use slurp_file_len to avoid partial read of files
+Date: Tue,  2 Dec 2014 10:59:40 +1100
+Message-Id: <1417478380-16890-1-git-send-email-anton@samba.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +15,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, ZhenHua" <zhen-hual@hp.com>
-Cc: alex.williamson@redhat.com, Takao Indoh <indou.takao@jp.fujitsu.com>, bhe@redhat.com, tom.vaden@hp.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org
 
-On Mon, Dec 01, 2014 at 02:31:38PM +0800, Li, ZhenHua wrote:
-> After I implement these two steps, there comes a new fault:
-> 
-> [1.594890] dmar: DRHD: handling fault status reg 2
-> [1.594894] dmar: INTR-REMAP: Request device [[41:00.0] fault index 4d
-> [1.594894] INTR-REMAP:[fault reason 34] Present field in the IRTE entry
-> is clear
-> 
-> It is caused by similar reason, so I will fix it like fixing the DMAR
-> faults: Do NOT disable and re-enable the interrupt remapping, try to
-> use data from old kernel.
+The OPAL firmware is going to embed its symbol map in the device tree.
+The size is large enough to be more than a page, and it takes
+multiple reads to get the whole file. This is because sysfs uses
+the seq_file helpers which do a page at a time.
 
-Yes, that sounds right, thanks. Looking forward to your patches.
+Unfortunately fs2dt has no handling for short reads and we die with:
 
+unrecoverable error: short read from"/proc/device-tree//ibm,opal/firmware/symbol-map"
 
-	Joerg
+This patch uses the slurp_file_len helper which does the right thing.
+It moves the explicit open of the file further down for
+add_usable_mem_property and add_dyn_reconf_usable_mem_property.
+We should convert both of these to use the buffer provided by
+slurp_file_len at some stage.
+
+Signed-off-by: Anton Blanchard <anton@samba.org>
+---
+ kexec/fs2dt.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 304f6cb..3b4432d 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -381,8 +381,8 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+ {
+ 	struct dirent *dp;
+ 	int i = 0, fd;
+-	size_t len;
+-	ssize_t slen;
++	off_t len;
++	off_t slen;
+ 	struct stat statbuf;
+ 
+ 	for (i = 0; i < numlist; i++) {
+@@ -443,23 +443,27 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+ 		*dt++ = cpu_to_be32(propnum(fn));
+ 		pad_structure_block(len);
+ 
+-		fd = open(pathname, O_RDONLY);
+-		if (fd == -1)
+-			die("unrecoverable error: could not open \"%s\": %s\n",
+-			    pathname, strerror(errno));
++		if (len) {
++			char *buf;
+ 
+-		slen = read(fd, dt, len);
+-		if (slen < 0)
+-			die("unrecoverable error: could not read \"%s\": %s\n",
+-			    pathname, strerror(errno));
+-		if ((size_t)slen != len)
+-			die("unrecoverable error: short read from\"%s\"\n",
+-			    pathname);
++			buf = slurp_file_len(pathname, len, &slen);
++			if (slen != len)
++				die("unrecoverable error: short read from\"%s\"\n",
++				    pathname);
++
++			memcpy(dt, buf, slen);
++			free(buf);
++		}
+ 
+ 		checkprop(fn, dt, len);
+ 
+ 		dt += (len + 3)/4;
+ 
++		fd = open(pathname, O_RDONLY);
++		if (fd == -1)
++			die("unrecoverable error: could not open \"%s\": %s\n",
++			    pathname, strerror(errno));
++
+ 		if (!strcmp(dp->d_name, "reg") && usablemem_rgns.size)
+ 			add_usable_mem_property(fd, len);
+ 		add_dyn_reconf_usable_mem_property(dp, fd);
+-- 
+2.1.0
 
 
 _______________________________________________
