@@ -1,14 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1417552213.7724.4.camel@infradead.org>
-Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V6
-From: Geoff Levand <geoff@infradead.org>
-Date: Tue, 02 Dec 2014 12:30:13 -0800
-In-Reply-To: <D2393EB95A9993478029A6FE6A290A9F812AD6F8@szxeml510-mbx.china.huawei.com>
-References: <D2393EB95A9993478029A6FE6A290A9F8129D1FE@szxeml510-mbx.china.huawei.com>
- <546AE4BE.1020909@huawei.com> <1416524243.23886.118.camel@smoke>
- <1416526275.23886.120.camel@smoke>
- <D2393EB95A9993478029A6FE6A290A9F812AD6F8@szxeml510-mbx.china.huawei.com>
-Mime-Version: 1.0
+Received: from e37.co.us.ibm.com ([32.97.110.158])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XvuwA-0001MT-DE
+ for kexec@lists.infradead.org; Tue, 02 Dec 2014 21:24:47 +0000
+Received: from /spool/local
+ by e37.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <wenxiong@linux.vnet.ibm.com>;
+ Tue, 2 Dec 2014 14:24:23 -0700
+Received: from b03cxnp08026.gho.boulder.ibm.com
+ (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+ by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id AD3761FF003D
+ for <kexec@lists.infradead.org>; Tue,  2 Dec 2014 14:13:04 -0700 (MST)
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+ by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ sB2LP3I343712730
+ for <kexec@lists.infradead.org>; Tue, 2 Dec 2014 14:25:03 -0700
+Received: from d03av01.boulder.ibm.com (localhost [127.0.0.1])
+ by d03av01.boulder.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ sB2LOJ3W030020
+ for <kexec@lists.infradead.org>; Tue, 2 Dec 2014 14:24:20 -0700
+Date: Tue, 02 Dec 2014 16:24:17 -0500
+Message-ID: <20141202162417.Horde.AOQbbs2peoZqPuyzTV6YTA1@ltc.linux.ibm.com>
+From: wenxiong@linux.vnet.ibm.com
+Subject: Re: [PATCH RESEND 2/5] kexec: Export kexec_in_progress
+References: <201412021847.sB2Ilfvc002145@d01av04.pok.ibm.com>
+In-Reply-To: <201412021847.sB2Ilfvc002145@d01av04.pok.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,21 +36,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="Yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Anurup m <anurup.m@huawei.com>
-Cc: Sanil kumar <sanil.kumar@hisilicon.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Brian King <brking@linux.vnet.ibm.com>
+Cc: linux-scsi@vger.kernel.org, kexec@lists.infradead.org, James.Bottomley@hansenpartnership.com, ebiederm@xmission.com, hch@lst.de, anton@samba.org
 
-On Tue, 2014-12-02 at 13:39 +0000, Anurup m wrote:
-> 	The patch solved the issue reported.
 
-OK, this seems to be a bug in the core purgatory code.  I'll verify and
-post the fix to the ML for inclusion.
+Reviewed-by: Wen Xiong<wenxiong@linux.vnet.ibm.com>
 
--Geoff
+Thanks,
+Wendy
 
+Quoting Brian King <brking@linux.vnet.ibm.com>:
+
+> A kexec boot for some ipr SAS adapters was seen to take ~20 seconds
+> just doing ipr adapter initialization. This is due to the fact that
+> a kexec invokes the driver's shutdown handler which places the adapter
+> into a state that requires a hard reset and resulting firmware initialization
+> to be usable again, which takes significant time. By exporting  
+> kexec_in_progress,
+> this process can be optimized significantly in the driver by essentially
+> placing the adapter into a state where this hardware reset and  
+> re-initialization
+> can be bypassed, eliminating this delay in kexec boot.
+>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec <kexec@lists.infradead.org>
+> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+> ---
+>
+>  kernel/kexec.c |    2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+> --- scsi-queue/kernel/kexec.c~kexec_export_in_prog	2014-12-02  
+> 12:13:22.820325731 -0600
+> +++ scsi-queue-bjking1/kernel/kexec.c	2014-12-02 12:13:22.825325687 -0600
+> @@ -2768,3 +2768,5 @@ int kernel_kexec(void)
+>  	mutex_unlock(&kexec_mutex);
+>  	return error;
+>  }
+> +
+> +EXPORT_SYMBOL_GPL(kexec_in_progress);
+> _
 
 
 
