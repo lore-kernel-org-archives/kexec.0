@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Xy63Y-0000ol-7Z
- for kexec@lists.infradead.org; Mon, 08 Dec 2014 21:41:25 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <201412021847.sB2Ilfvc002145@d01av04.pok.ibm.com>
- <547E09B7.7030507@linux.vnet.ibm.com>
- <5486148F.6020208@linux.vnet.ibm.com>
-Date: Mon, 08 Dec 2014 15:38:33 -0600
-In-Reply-To: <5486148F.6020208@linux.vnet.ibm.com> (Brian King's message of
- "Mon, 08 Dec 2014 15:13:51 -0600")
-Message-ID: <87vbllstye.fsf@x220.int.ebiederm.org>
+Received: from relay2.sgi.com ([192.48.180.65] helo=relay.sgi.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1XySto-0001L0-IK
+ for kexec@lists.infradead.org; Tue, 09 Dec 2014 22:04:53 +0000
+Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
+ by relay2.corp.sgi.com (Postfix) with ESMTP id 7C35030404E
+ for <kexec@lists.infradead.org>; Tue,  9 Dec 2014 14:04:27 -0800 (PST)
+Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
+ by estes.americas.sgi.com (Postfix) with ESMTP id CEE8C700350C
+ for <kexec@lists.infradead.org>; Tue,  9 Dec 2014 16:04:27 -0600 (CST)
+Received: from cpw by eag09.americas.sgi.com with local (Exim 4.76)
+ (envelope-from <cpw@sgi.com>) id 1XyStP-0004rK-LJ
+ for kexec@lists.infradead.org; Tue, 09 Dec 2014 16:04:27 -0600
+Date: Tue, 9 Dec 2014 16:04:27 -0600
+From: Cliff Wickman <cpw@sgi.com>
+Subject: [PATCH 0/2] time and space saving patches for large memories
+Message-ID: <20141209220427.GA18652@sgi.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH RESEND 2/5] kexec: Export kexec_in_progress
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,70 +30,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Brian King <brking@linux.vnet.ibm.com>
-Cc: wenxiong@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, anton@samba.org, hch@lst.de
+To: kexec@lists.infradead.org
 
-Brian King <brking@linux.vnet.ibm.com> writes:
+From: Cliff Wickman <cpw@sgi.com>
 
-> On 12/02/2014 12:49 PM, Brian King wrote:
->> On 12/02/2014 12:47 PM, Brian King wrote:
->>> A kexec boot for some ipr SAS adapters was seen to take ~20 seconds
->>> just doing ipr adapter initialization. This is due to the fact that
->>> a kexec invokes the driver's shutdown handler which places the adapter
->>> into a state that requires a hard reset and resulting firmware initialization
->>> to be usable again, which takes significant time. By exporting kexec_in_progress,
->>> this process can be optimized significantly in the driver by essentially
->>> placing the adapter into a state where this hardware reset and re-initialization
->>> can be bypassed, eliminating this delay in kexec boot.
->>>
->>> Cc: Eric Biederman <ebiederm@xmission.com>
->>> Cc: kexec <kexec@lists.infradead.org>
->>> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
->>> ---
->>>
->>>  kernel/kexec.c |    2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
->>> --- scsi-queue/kernel/kexec.c~kexec_export_in_prog	2014-12-02 12:13:22.820325731 -0600
->>> +++ scsi-queue-bjking1/kernel/kexec.c	2014-12-02 12:13:22.825325687 -0600
->>> @@ -2768,3 +2768,5 @@ int kernel_kexec(void)
->>>  	mutex_unlock(&kexec_mutex);
->>>  	return error;
->>>  }
->>> +
->>> +EXPORT_SYMBOL_GPL(kexec_in_progress);
->>> _
->>>
->> 
->> Eric,
->> 
->> Can I get your ack on this so this can go through the scsi tree? The last time I sent this
->> out you had some issues with the patch description.
->
-> Eric - can I get your ack here?
+Back in early 2014 I submitted several patches for your consideration, most of
+which concerned saving time and disk space when dumping very large memories.
 
-You can have my nack.
+I offer two of them again, as being the most important elements for the
+practical dumping of very large memories.
 
-We really shouldn't need to special case things for kexec here.  Why do
-you do the full shutdown that is so slow to get out of?  Does it really
-make reboots more reliable?  If you need it for a reboot why don't you
-need it for a kexec reboot?  You certainly need to stop all dma in
-both cases.
+[PATCH 1/2] use raw i/o and root device to use less memory
+[PATCH 2/2] exclude page structures of non-dumped pages
+  The second patch has a few dependencies on the first. But they are logically
+  separate.  
+  They apply to the 1.5.7 source.
 
-If it really matters to device drivers we need to refactor and make the
-callbacks make sense, be maintainable.  Right now caring that it is
-kexec vs reboot seems broken.
-
-Now maybe I am wrong here, and there are some good really good reasons
-for wanting to do a much stronger shutdown on reboot but at least
-skimming through the change longs of the associated patches I am not
-seeing the reason for making all of these changes conditional on kexec.
-
-What I am seeing is driver code getting really complicated possibly
-beyond the ability of anyone to sanely test.
-
-Eric
+As an example of the importance of these two concepts:
+ We dump a 2TB system using crashkernel=450M.
+ Without the patches we write a 3.6G dump in about 12 minutes.
+ With the patches we write a 590M dump in about 4 minutes.
+And the savings multiply as memory size grows.
 
 _______________________________________________
 kexec mailing list
