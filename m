@@ -1,22 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e34.co.us.ibm.com ([32.97.110.152])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1XycxJ-00055U-Af
- for kexec@lists.infradead.org; Wed, 10 Dec 2014 08:49:09 +0000
-Date: Wed, 10 Dec 2014 16:46:52 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 0/5] iommu/vt-d: Fix crash dump failure caused by legacy
- DMA/IO
-Message-ID: <20141210084652.GA25091@dhcp-16-105.nay.redhat.com>
-References: <1413878659-1383-1-git-send-email-zhen-hual@hp.com>
- <20141022100525.GD9060@dhcp-16-116.nay.redhat.com>
- <545ACF66.9050509@jp.fujitsu.com> <545AD061.4000102@hp.com>
- <545AD353.8060207@jp.fujitsu.com> <545AD8D3.90709@hp.com>
- <545B2885.8070009@jp.fujitsu.com> <545B2C07.1070701@hp.com>
- <5465A0E0.4020001@hp.com> <20141117133858.GA31920@8bytes.org>
+ id 1Xyq7y-0004Vr-LM
+ for kexec@lists.infradead.org; Wed, 10 Dec 2014 22:53:03 +0000
+Received: from /spool/local
+ by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <brking@linux.vnet.ibm.com>;
+ Wed, 10 Dec 2014 15:52:40 -0700
+Received: from b03cxnp07029.gho.boulder.ibm.com
+ (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+ by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id 1A0E41FF001C
+ for <kexec@lists.infradead.org>; Wed, 10 Dec 2014 15:41:22 -0700 (MST)
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+ by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ sBAMqbhP42795074
+ for <kexec@lists.infradead.org>; Wed, 10 Dec 2014 15:52:37 -0700
+Received: from d03av02.boulder.ibm.com (localhost [127.0.0.1])
+ by d03av02.boulder.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ sBAMqaZO027976
+ for <kexec@lists.infradead.org>; Wed, 10 Dec 2014 15:52:37 -0700
+Message-ID: <5488CEB4.5000005@linux.vnet.ibm.com>
+Date: Wed, 10 Dec 2014 16:52:36 -0600
+From: Brian King <brking@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20141117133858.GA31920@8bytes.org>
+Subject: Re: [PATCH RESEND 2/5] kexec: Export kexec_in_progress
+References: <201412021847.sB2Ilfvc002145@d01av04.pok.ibm.com>
+ <547E09B7.7030507@linux.vnet.ibm.com>	<5486148F.6020208@linux.vnet.ibm.com>
+ <87vbllstye.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87vbllstye.fsf@x220.int.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,35 +41,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: alex.williamson@redhat.com, Takao Indoh <indou.takao@jp.fujitsu.com>, tom.vaden@hp.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li, ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: wenxiong@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, kexec@lists.infradead.org, James.Bottomley@HansenPartnership.com, anton@samba.org, hch@lst.de
 
-Hi Joerg, ZhenHua,
+On 12/08/2014 03:38 PM, Eric W. Biederman wrote:
+> Brian King <brking@linux.vnet.ibm.com> writes:
+> 
+>> On 12/02/2014 12:49 PM, Brian King wrote:
+>>> On 12/02/2014 12:47 PM, Brian King wrote:
+>>>> A kexec boot for some ipr SAS adapters was seen to take ~20 seconds
+>>>> just doing ipr adapter initialization. This is due to the fact that
+>>>> a kexec invokes the driver's shutdown handler which places the adapter
+>>>> into a state that requires a hard reset and resulting firmware initialization
+>>>> to be usable again, which takes significant time. By exporting kexec_in_progress,
+>>>> this process can be optimized significantly in the driver by essentially
+>>>> placing the adapter into a state where this hardware reset and re-initialization
+>>>> can be bypassed, eliminating this delay in kexec boot.
+>>>>
+>>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>>> Cc: kexec <kexec@lists.infradead.org>
+>>>> Signed-off-by: Brian King <brking@linux.vnet.ibm.com>
+>>>> ---
+>>>>
+>>>>  kernel/kexec.c |    2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff -puN kernel/kexec.c~kexec_export_in_prog kernel/kexec.c
+>>>> --- scsi-queue/kernel/kexec.c~kexec_export_in_prog	2014-12-02 12:13:22.820325731 -0600
+>>>> +++ scsi-queue-bjking1/kernel/kexec.c	2014-12-02 12:13:22.825325687 -0600
+>>>> @@ -2768,3 +2768,5 @@ int kernel_kexec(void)
+>>>>  	mutex_unlock(&kexec_mutex);
+>>>>  	return error;
+>>>>  }
+>>>> +
+>>>> +EXPORT_SYMBOL_GPL(kexec_in_progress);
+>>>> _
+>>>>
+>>>
+>>> Eric,
+>>>
+>>> Can I get your ack on this so this can go through the scsi tree? The last time I sent this
+>>> out you had some issues with the patch description.
+>>
+>> Eric - can I get your ack here?
+> 
+> You can have my nack.
+> 
+> We really shouldn't need to special case things for kexec here.  Why do
+> you do the full shutdown that is so slow to get out of?  Does it really
+> make reboots more reliable?  If you need it for a reboot why don't you
+> need it for a kexec reboot?  You certainly need to stop all dma in
+> both cases.
+> 
+> If it really matters to device drivers we need to refactor and make the
+> callbacks make sense, be maintainable.  Right now caring that it is
+> kexec vs reboot seems broken.
+> 
+> Now maybe I am wrong here, and there are some good really good reasons
+> for wanting to do a much stronger shutdown on reboot but at least
+> skimming through the change longs of the associated patches I am not
+> seeing the reason for making all of these changes conditional on kexec.
+> 
+> What I am seeing is driver code getting really complicated possibly
+> beyond the ability of anyone to sanely test.
 
-This issue happens on AMD iommu too, do you have any plans or
-thoughts on that?
+The difference between an actual reboot and a kexec reboot is that for an
+actual reboot, the system / platform will end up hard resetting the adapter
+across the reboot. Due to this impending hard reset, some drivers may want
+to take additional actions before a full system reboot occurs.
 
-Thanks
-Baoquan
+In the case of ipr, prior to a full system reset the key thing I want to ensure
+happens is to tell the adapter to quiesce any outstanding I/O to the disks.
+I/O that can be occurring at this time is either data being destaged from the
+non volatile write cache, RAID rebuilds, etc. The only firmware interface available
+to initiate this quiesce currently places the adapter into a state where the only
+way back out of it to a state where the host can begin to issue I/O again is
+to hard reset the adapter, as it is expected to only occur prior to system
+shutdown or system reboot. This reset and then the firmware initialization
+that follows can take a bit of time.
 
-On 11/17/14 at 02:38pm, Joerg Roedel wrote:
-> On Fri, Nov 14, 2014 at 02:27:44PM +0800, Li, ZhenHua wrote:
-> > I am working following  your directions:
-> > 
-> > 1.  If the VT-d driver finds the IOMMU enabled, it reuses its root entry
-> > table, and do NOT disable-enable iommu. Other data will be copied.
-> > 
-> > 2. When a device driver issues the first dma_map command for a
-> > device, we assign a new and empty page-table, thus removing all
-> > mappings from the old kernel for the device.
-> > 
-> > Please let me know if I get something wrong.
-> 
-> Yes, this sounds right. Happily waiting for patches :)
-> 
-> 
-> 	Joerg
-> 
+If this pending I/O is not quiesced prior to a hard reset of the adapter the
+subsequent boot can then take even longer and, in some cases, may require
+additional actions to recover from.
+
+I can look at implementing this in a driver unique way so that we don't need
+this kexec patch, but this seemed the most straight forward.
+
+Thanks,
+
+Brian
+
+-- 
+Brian King
+Power Linux I/O
+IBM Linux Technology Center
+
+
 
 _______________________________________________
 kexec mailing list
