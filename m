@@ -1,12 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y0QrO-0006MU-Mm
- for kexec@lists.infradead.org; Mon, 15 Dec 2014 08:18:31 +0000
+ id 1Y0Rj9-0006Un-PZ
+ for kexec@lists.infradead.org; Mon, 15 Dec 2014 09:14:04 +0000
+Date: Mon, 15 Dec 2014 17:13:23 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH] kexec: remove never used member destination  in kimage
-Date: Mon, 15 Dec 2014 16:16:27 +0800
-Message-Id: <1418631387-1768-1-git-send-email-bhe@redhat.com>
+Subject: Re: [PATCH 0/5] iommu/vt-d: Fix crash dump failure caused by legacy
+ DMA/IO
+Message-ID: <20141215091323.GA12150@dhcp-16-116.nay.redhat.com>
+References: <545AD061.4000102@hp.com> <545AD353.8060207@jp.fujitsu.com>
+ <545AD8D3.90709@hp.com> <545B2885.8070009@jp.fujitsu.com>
+ <545B2C07.1070701@hp.com> <5465A0E0.4020001@hp.com>
+ <20141117133858.GA31920@8bytes.org>
+ <20141210084652.GA25091@dhcp-16-105.nay.redhat.com>
+ <548A521B.5020705@hp.com> <20141212161102.GC24292@8bytes.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20141212161102.GC24292@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,68 +25,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, ebiederm@xmission.com, vgoyal@redhat.com
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, tom.vaden@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, alex.williamson@redhat.com, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, li.zhang6@hp.com, dyoung@redhat.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-struct kimage has a member destination which is used to store the
-real destination address of each page when load segment from user
-space buffer to kernel. But we never retrieve the value stored in
-kimage->destination, so this member variable in kimage and its
-assignment operation are redundent code.
+On 12/12/14 at 05:11pm, Joerg Roedel wrote:
+> On Fri, Dec 12, 2014 at 10:25:31AM +0800, Li, ZhenHua wrote:
+> > Sorry I have no plan yet.
+> > Could you send me your logs on your AMD system?
+> 
+> > On 12/10/2014 04:46 PM, Baoquan He wrote:
+> > >This issue happens on AMD iommu too, do you have any plans or
+> > >thoughts on that?
+> 
+> I think the best approach for now is to get a prove-of-concept on the
+> VT-d driver. If it works there the way we expect, we can implement the
+> same handling in the AMD driver. But I see no reason to hold back the
+> VT-d patches until it is also fixed for AMD systems.
 
-I guess for_each_kimage_entry just does the work that kimage->destination
-is expected to do.
+Yes, I agree with you. Just raise this issue to upstream. 
 
-So in this patch just make a cleanup to remove it.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- include/linux/kexec.h | 2 --
- kernel/kexec.c        | 4 ----
- 2 files changed, 6 deletions(-)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9d957b7..10da8e2 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -122,8 +122,6 @@ struct kimage {
- 	kimage_entry_t *entry;
- 	kimage_entry_t *last_entry;
- 
--	unsigned long destination;
--
- 	unsigned long start;
- 	struct page *control_code_page;
- 	struct page *swap_page;
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 9a8a01a..7a897ac 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -856,8 +856,6 @@ static int kimage_set_destination(struct kimage *image,
- 
- 	destination &= PAGE_MASK;
- 	result = kimage_add_entry(image, destination | IND_DESTINATION);
--	if (result == 0)
--		image->destination = destination;
- 
- 	return result;
- }
-@@ -869,8 +867,6 @@ static int kimage_add_page(struct kimage *image, unsigned long page)
- 
- 	page &= PAGE_MASK;
- 	result = kimage_add_entry(image, page | IND_SOURCE);
--	if (result == 0)
--		image->destination += PAGE_SIZE;
- 
- 	return result;
- }
--- 
-1.8.5.3
+Thanks, Joerg.
 
 
 _______________________________________________
