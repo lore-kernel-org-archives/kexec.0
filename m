@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx7.zte.com.cn ([202.103.147.169] helo=zte.com.cn)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y1n4C-0007gs-Kn
- for kexec@lists.infradead.org; Fri, 19 Dec 2014 02:13:22 +0000
-In-Reply-To: <20141219020326.GB23128@dhcp-16-116.nay.redhat.com>
-References: <OFD8B0AF0F.65C2660A-ON48257DB1.002FA3F1-48257DB2.00042529@zte.com.cn>
- <20141218020312.GA9579@dhcp-16-116.nay.redhat.com>
- <OF0DFEA920.ECA2F010-ON48257DB2.000D67E5-48257DB2.000DE8EC@zte.com.cn>
- <20141219020326.GB23128@dhcp-16-116.nay.redhat.com>
-Subject: Re: Could kernel support kexec on PPC64(e6500)?
-Message-ID: <OF8968086F.3A0306CE-ON48257DB3.000B8BA0-48257DB3.000C0A01@zte.com.cn>
-From: liu.song11@zte.com.cn
-Date: Fri, 19 Dec 2014 10:12:33 +0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Y1nUJ-0001f1-1k
+ for kexec@lists.infradead.org; Fri, 19 Dec 2014 02:40:20 +0000
+Date: Fri, 19 Dec 2014 10:39:50 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] kdump, vmcoreinfo: report actual value of phys_base
+Message-ID: <20141219023950.GC23128@dhcp-16-116.nay.redhat.com>
+References: <20141113.113011.630216167285231824.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20141113.113011.630216167285231824.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,113 +19,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, anderson@redhat.com, ebiederm@xmission.com, kumagai-atsushi@mxc.nes.nec.co.jp, vgoyal@redhat.com
 
-T0ssIG1heWJlIGFsc28gbmVlZCBkdGIuIEZvciBub3csIHRoZSBrZXJuZWwgY291bGRuJ3Qgc3Vw
-cG9ydCBrZXhlYyBvZiBCT09LM0UoUFBDNjQpIHZlcnkgd2VsbCwgSSB0aGluaw0KdGhlcmUgYWxz
-byBuZWVkIHNvbWUgd29yayBhYm91dCB0aGF0LCBtYXliZSBhIGxpdHRsZSBkaWZmaWN1bHQuDQoN
-ClRoYW5rcyBhIGxvdC4NClJlZ2FyZHMNCg0KDQpGcm9tOglCYW9xdWFuIEhlIDxiaGVAcmVkaGF0
-LmNvbT4NClRvOglsaXUuc29uZzExQHp0ZS5jb20uY24sDQpDYzoJa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZw0KRGF0ZToJMjAxNC0xMi0xOSAxMDowMw0KU3ViamVjdDoJUmU6IENvdWxkIGtlcm5l
-bCBzdXBwb3J0IGtleGVjIG9uIFBQQzY0KGU2NTAwKT8NCg0KDQoNCk9uIDEyLzE4LzE0IGF0IDEw
-OjMyYW0sIGxpdS5zb25nMTFAenRlLmNvbS5jbiB3cm90ZToNCj4gSGksIEJhb3F1YW4NCj4NCj4g
-Rm9sbG93IHlvdXIgYWR2aWNlo6xJIGZvdW5kIC0tcmV1c2UtY21kbGluZSBhcHBlYXIgY291bGQg
-bm90IHdvcmsgd2VsbCB3aGljaCB3aWxsDQo+IHByaW50IHVzYWdlIG1lc3NhZ2UuDQo+DQo+IE15
-IGJvYXJkIGlzIFBQQzY0KGU2NTAwIFBQQ19CT09LM0UpLCBtYXliZSBrZXhlYyBjb3VsZG4ndCBz
-dXBwb3J0IHRoaXMgdHlwZT8NCj4NCj4NCj4gU3VwcG9ydGVkIGtlcm5lbCBmaWxlIHR5cGVzIGFu
-ZCBvcHRpb25zOg0KPiBlbGYtcHBjNjQNCj4gICAgICAtLWNvbW1hbmQtbGluZT08Q29tbWFuZCBs
-aW5lPiBjb21tYW5kIGxpbmUgdG8gYXBwZW5kLg0KPiAgICAgIC0tYXBwZW5kPTxDb21tYW5kIGxp
-bmU+IHNhbWUgYXMgLS1jb21tYW5kLWxpbmUuDQo+ICAgICAgLS1yYW1kaXNrPTxmaWxlbmFtZT4g
-SW5pdGlhbCBSQU0gZGlzay4NCj4gICAgICAtLWluaXRyZD08ZmlsZW5hbWU+IHNhbWUgYXMgLS1y
-YW1kaXNrLg0KPiAgICAgIC0tZGV2aWNldHJlZWJsb2I9PGZpbGVuYW1lPiBTcGVjaWZ5IGRldmlj
-ZSB0cmVlIGJsb2IgZmlsZS4NCj4gICAgICAtLWR0Yj08ZmlsZW5hbWU+IHNhbWUgYXMgLS1kZXZp
-Y2V0cmVlYmxvYi4NCg0KVGhlbiBqdXN0IGFkZCBhIGNtZGxpbmUtbGluZSBieSAtLWNvbW1hbmQt
-bGluZT0ieHh4eCIgd2hpY2ggY2FuIGJlDQpjb3BpZWQgZnJvbSB5b3VyIC9wcm9jL2NtZGxpbmUu
-IEkgYW0gbm90IHN1cmUgaWYgZHRiIGlzIG5lY2Vzc2FyeS4NCkhvcGUgdGhpcyBjYW4gbWFrZSBp
-dCB3b3JrLg0KDQo+DQo+IFJlZ2FyZHMNCj4NCj4NCj4NCj4gRnJvbToJCSBCYW9xdWFuIEhlIDxi
-aGVAcmVkaGF0LmNvbT4NCj4gVG86CQkgbGl1LnNvbmcxMUB6dGUuY29tLmNuLA0KPiBDYzoJCSBr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IERhdGU6CQkgMjAxNC0xMi0xOCAxMDowMw0KPiBT
-dWJqZWN0OgkJIFJlOiBDb3VsZCBrZXJuZWwgc3VwcG9ydCBrZXhlYyBvbiBQUEM2NChlNjUwMCk/
-DQo+DQo+DQo+DQo+IE9uIDEyLzE4LzE0IGF0IDA4OjQ2YW0sIGxpdS5zb25nMTFAenRlLmNvbS5j
-biB3cm90ZToNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gTXkgYm9hcmQgaXMgUFBDNjQoZTY1MDAg
-c2VyaWVzKS5XaGVuIEkgdXNlIGtleGVjLXRvb2xzLCBJIGRvIHRoZSBmb2xsb3dpbmcgb3BlcmF0
-aW9ucywNCj4gPiB0aGVuIHRoZSBrZXJuZWwgcGFuaWMuDQo+ID4NCj4gPiAxLiAuL2tleGVjIC1s
-IC4vdm1saW51eCAtLWluaXRyZD0vcmFtZGlzay5iaW4gICAgKHNlZ21lbnRzIGxvYWQgcmlnaHQp
-DQo+DQo+IFBsZWFzZSB0cnkgd2l0aCBiZWxvdyBjb21tYW5kIGFnYWluLCB5b3UgaGFkIGJldHRl
-ciBnZXQgY21kbGluZSBvcHRpb25zIGZyb20NCj4gMXN0IGtlcm5lbC4NCj4gIC4va2V4ZWMgLWwg
-Li92bWxpbnV4IC0taW5pdHJkPS9yYW1kaXNrLmJpbiAtLXJldXNlLWNtZGxpbmUNCj4NCj4gTGV0
-IG1lIGtub3cgaWYgaXQgaGVscHMgb3IgYW55IG5ldyBxdWVzdGlvbnMuDQo+DQo+DQo+ID4gMi4g
-Li9rZXhlYyAtZQ0KPiA+DQo+ID4gVGhlbiB0aGUga2VybmVsIHBhbmljIGluIGtleGVjX3NlcXVl
-bmNlLiBJIGNoZWNrIE5JUCBpcyBwb2ludCBhdCBtdG1zcmQgcjMsMQ0KPiA+IHdoaWNoIGluIGtl
-eGVjX3NlcXVlbmNlo6htaXNjXzY0LlOjqS4gSSBoYXZlIG5vIGlkZWEgb24gdGhpcyBmYXVsdCwg
-YW5kIG5lZWQNCj4gPiBzb21lIGhlbHAuDQo+ID4NCj4gPiBSZWdhcmRzDQo+ID4gLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiBTdGFydGluZyBuZXcga2VybmVsDQo+ID4gT29wczog
-RXhjZXB0aW9uIGluIGtlcm5lbCBtb2RlLCBzaWc6IDQgWyMxXQ0KPiA+IENvcmVOZXQgR2VuZXJp
-Yw0KPiA+IE1vZHVsZXMgbGlua2VkIGluOg0KPiA+IENQVTogMCBQSUQ6IDk2MyBDb21tOiBrZXhl
-YyBOb3QgdGFpbnRlZCAzLjEwLjU1LUVNQlNZUy1DR0VMLTUuMDEuMjAuUDAgIzINCj4gPiB0YXNr
-OiBjMDAwMDAwMDA2NDA4MzAwIHRpOiBjMDAwMDAwMDAwYWY4MDAwIHRhc2sudGk6IGMwMDAwMDAw
-NzUzZGMwMDANCj4gPiBOSVA6IGMwMDAwMDAwMDAwMTViZjAgTFI6IGMwMDAwMDAwMDAwMjQzZjgg
-Q1RSOiAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gUkVHUzogYzAwMDAwMDAwMGFmYmM2MCBUUkFQOiAw
-NzAwICAgTm90IHRhaW50ZWQgICgzLjEwLjU1LUVNQlNZUy1DR0VMLTUuMDEuMjAuUDApDQo+ID4g
-TVNSOiAwMDAwMDAwMDgwMDIxMDAwIDxDRSxNRT4gIENSOiAyNDAyMjQ4MCAgWEVSOiAwMDAwMDAw
-MA0KPiA+IFNPRlRFOiAwDQo+ID4NCj4gPiBHUFIwMDogMDAwMDAwMDAwMDAwMDAwMCBjMDAwMDAw
-MDAwYWZiZWUwIGMwMDAwMDAwMDBhZjhiODggODAwMjEwMDA4MDAyMTAwMA0KPiA+IEdQUjA0OiAw
-MDAwMDAwMDAxNzhmNjAwIGMwMDAwMDAwNzUzY2NjMDAgYzAwMDAwMDA3NTNjZDAwMCBjMDAwMDAw
-MDAwYTZmMjQwDQo+ID4gR1BSMDg6IGMwMDAwMDAwMDI1NmM0ZDggMDAwMDAwMDAwMDA3NTNjZCBj
-MDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwMDAwMDFiMDgNCj4gPiBHUFIxMjogMDAwMDAwMDAyMjAy
-MjQ0NCBjMDAwMDAwMDAwYjBmMDgwIDAwMDAwMDAwMDAwMDAwMDEgZmZmZmZmZmZmZmZmZmZmZg0K
-PiA+IEdQUjE2OiAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAwMDAw
-MDAwMCAwMDAwMDAwMDAwMDAwMDAwDQo+ID4gR1BSMjA6IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAw
-MDAwMDAwMDAwMiAwMDAwMDAwMDAwMDAwMDAxIDAwMDAwMDAwMDAwMDAwMDENCj4gPiBHUFIyNDog
-MDAwMDAwMDAwMDAwMDAwMSAwMDAwMDAwMDAwMDAwMDAwIGMwMDAwMDAwMDI1NmM0ZDggYzAwMDAw
-MDAwMGE2ZjI0MA0KPiA+IEdQUjI4OiBjMDAwMDAwMDc1M2NkMDAwIGMwMDAwMDAwNzUzY2NjMDAg
-MDAwMDAwMDAwMTc4ZjYwMCBjMDAwMDAwMDAwYWZiZjkwDQo+ID4gTklQIFtjMDAwMDAwMDAwMDE1
-YmYwXSAua2V4ZWNfc2VxdWVuY2UrMHg1Yy8weGFjDQo+ID4gTFIgW2MwMDAwMDAwMDAwMjQzZjhd
-IC5kZWZhdWx0X21hY2hpbmVfa2V4ZWMrMHgxMjgvMHgxOTANCj4gPiBDYWxsIFRyYWNlOg0KPiA+
-IEluc3RydWN0aW9uIGR1bXA6DQo+ID4gZmI0MWZmZDAgZmIyMWZmYzggZjgyMWZmNTEgN2M3ZjFi
-NzggN2M5ZTIzNzggN2NiZDJiNzggN2NkYzMzNzggN2NmYjNiNzgNCj4gPiA3ZDFhNDM3OCBhMzJk
-MDAzMCA3YzYwMDBhNiA1NDYzMDQ1ZSA8N2M2MTAxNjQ+IDdmYTNlYjc4IDQ4MDBlNTE5IDRiZmZm
-ZjcxDQo+ID4gLS0tWyBlbmQgdHJhY2UgNzBlNmM1MmNkNTIyZGQwNSBdLS0tDQo+ID4NCj4gPiBL
-ZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogRmF0YWwgZXhjZXB0aW9uIGluIGludGVycnVwdA0K
-PiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+ID4gWlRFIEluZm9ybWF0aW9uIFNlY3VyaXR5IE5vdGljZTogVGhlIGluZm9ybWF0aW9u
-IGNvbnRhaW5lZCBpbiB0aGlzIG1haWwgKGFuZCBhbnkgYXR0YWNobWVudCB0cmFuc21pdHRlZCBo
-ZXJld2l0aCkgaXMgcHJpdmlsZWdlZCBhbmQgY29uZmlkZW50aWFsIGFuZCBpcyBpbnRlbmRlZCBm
-b3IgdGhlIGV4Y2x1c2l2ZSB1c2Ugb2YgdGhlIGFkZHJlc3NlZShzKS4gIElmIHlvdSBhcmUgbm90
-IGFuIGludGVuZGVkIHJlY2lwaWVudCwgYW55IGRpc2Nsb3N1cmUsIHJlcHJvZHVjdGlvbiwgZGlz
-dHJpYnV0aW9uIG9yIG90aGVyIGRpc3NlbWluYXRpb24gb3IgdXNlIG9mIHRoZSBpbmZvcm1hdGlv
-biBjb250YWluZWQgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gIElmIHlvdSBoYXZlIHJlY2VpdmVk
-IHRoaXMgbWFpbCBpbiBlcnJvciwgcGxlYXNlIGRlbGV0ZSBpdCBhbmQgbm90aWZ5IHVzIGltbWVk
-aWF0ZWx5Lg0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fDQo+ID4ga2V4ZWMgbWFpbGluZyBsaXN0DQo+ID4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-Zw0KPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMN
-Cj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0NCj4gWlRFIEluZm9ybWF0aW9uIFNlY3VyaXR5IE5vdGljZTogVGhlIGluZm9ybWF0aW9uIGNv
-bnRhaW5lZCBpbiB0aGlzIG1haWwgKGFuZCBhbnkgYXR0YWNobWVudCB0cmFuc21pdHRlZCBoZXJl
-d2l0aCkgaXMgcHJpdmlsZWdlZCBhbmQgY29uZmlkZW50aWFsIGFuZCBpcyBpbnRlbmRlZCBmb3Ig
-dGhlIGV4Y2x1c2l2ZSB1c2Ugb2YgdGhlIGFkZHJlc3NlZShzKS4gIElmIHlvdSBhcmUgbm90IGFu
-IGludGVuZGVkIHJlY2lwaWVudCwgYW55IGRpc2Nsb3N1cmUsIHJlcHJvZHVjdGlvbiwgZGlzdHJp
-YnV0aW9uIG9yIG90aGVyIGRpc3NlbWluYXRpb24gb3IgdXNlIG9mIHRoZSBpbmZvcm1hdGlvbiBj
-b250YWluZWQgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRo
-aXMgbWFpbCBpbiBlcnJvciwgcGxlYXNlIGRlbGV0ZSBpdCBhbmQgbm90aWZ5IHVzIGltbWVkaWF0
-ZWx5Lg0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiBrZXhlYyBtYWlsaW5nIGxpc3QNCj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjDQotLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KWlRFIEluZm9y
-bWF0aW9uIFNlY3VyaXR5IE5vdGljZTogVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlz
-IG1haWwgKGFuZCBhbnkgYXR0YWNobWVudCB0cmFuc21pdHRlZCBoZXJld2l0aCkgaXMgcHJpdmls
-ZWdlZCBhbmQgY29uZmlkZW50aWFsIGFuZCBpcyBpbnRlbmRlZCBmb3IgdGhlIGV4Y2x1c2l2ZSB1
-c2Ugb2YgdGhlIGFkZHJlc3NlZShzKS4gIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lw
-aWVudCwgYW55IGRpc2Nsb3N1cmUsIHJlcHJvZHVjdGlvbiwgZGlzdHJpYnV0aW9uIG9yIG90aGVy
-IGRpc3NlbWluYXRpb24gb3IgdXNlIG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaXMgc3Ry
-aWN0bHkgcHJvaGliaXRlZC4gIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgbWFpbCBpbiBlcnJv
-ciwgcGxlYXNlIGRlbGV0ZSBpdCBhbmQgbm90aWZ5IHVzIGltbWVkaWF0ZWx5Lg0KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+On 11/13/14 at 11:30am, HATAYAMA Daisuke wrote:
+> Currently, VMCOREINFO note information reports the virtual address of
+> phys_base that is assigned to symbol phys_base. But this doesn't make
+> sense because to refer to phys_base, it's necessary to get the value
+> of phys_base itself we are now about to refer to.
+> 
+> Userland tools related to kdump such as makedumpfile and crash utility
+> so far have made some efforts to calculate phys_base on crash dump
+> formats generated by mechanisms running outside Linux kernel, such as
+> virtual machine hypervisor such as qemu dump, which ordinary users use
+> via virsh dump, or ones implemented on vendor specific firmware.
+> 
+> That is, find a kernel data whose virtual and physical addresses are
+> available via its note information and calculate phys_base from
+> it. However, such data structure is not the one prepared for phys_base
+> purpose. There's no guarantee that other crash dump mechanisms include
+> such information that can be used to calculate phys_base similarly.
+> 
+> To get VMCOREINFO in vmcore, it's easy to use strings and grep
+> commands like this; VMCOREINFO consists of simple string:
+> 
+> $ strings vmcore-3.10.0-121.el7.x86_64 | grep -E ".*VMCOREINFO.*" -A 100
+> VMCOREINFO
+> OSRELEASE=3.10.0-121.el7.x86_64
+> PAGESIZE=4096
+> ...
+> 
+> This is also useful to get value of phys_base in kdump 2nd kernel
+> contained in vmcore using the above-mentioned external crash dump
+> mechanism; kdump 2nd kernel is an inherently relocated kernel.
+> 
+> This commit doesn't remove VMCOREINFO_SYMBOL(phys_base) line because
+> makedumpfile refers to it and if removing it, old versions
+> makedumpfile doesn't work well.
+> 
+> ChangeLog:
+> v2:
+> - Introduce VMCOREINFO_PHYS_BASE().
+> - Correct patch description: this work is primarily for mechanisms
+>   running outside (kdump 1st) Linux kernel.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>  arch/x86/kernel/machine_kexec_64.c | 1 +
+>  include/linux/kexec.h              | 2 ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 4859810..47cc835 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -334,6 +334,7 @@ void arch_crash_save_vmcoreinfo(void)
+>  #endif
+>  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+>  			      (unsigned long)&_text - __START_KERNEL);
+> +	VMCOREINFO_PHYS_BASE(phys_base);
+>  }
+>  
+>  /* arch-dependent functionality related to kexec file-based syscall */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 9d957b7..bee3c5b 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -258,6 +258,8 @@ unsigned long paddr_vmcoreinfo_note(void);
+>  	vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
+>  #define VMCOREINFO_CONFIG(name) \
+>  	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+> +#define VMCOREINFO_PHYS_BASE(value) \
+> +	vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+
+I don't like the idea that add a new MACRO for a specific case. I prefer
+it to be a generic MACRO which can be used by later adding if they want
+to add a unsigned long value. 
+
+>  
+>  extern struct kimage *kexec_image;
+>  extern struct kimage *kexec_crash_image;
+> -- 
+> 1.9.3
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
