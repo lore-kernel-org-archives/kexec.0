@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y77Rc-0006oc-LM
- for kexec@lists.infradead.org; Fri, 02 Jan 2015 18:59:33 +0000
-Date: Fri, 2 Jan 2015 13:59:07 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kexec: Fix a typo in comment
-Message-ID: <20150102185907.GB3733@redhat.com>
-References: <1420221379-4553-1-git-send-email-kuleshovmail@gmail.com>
- <87vbkpvx0s.fsf@x220.int.ebiederm.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Y7wo7-0001QY-34
+ for kexec@lists.infradead.org; Mon, 05 Jan 2015 01:50:11 +0000
+Date: Mon, 5 Jan 2015 10:49:47 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec, remove panic_on_warn kernel parameter from kdump
+ situations
+Message-ID: <20150105014947.GC10874@verge.net.au>
+References: <1419951471-19765-1-git-send-email-prarit@redhat.com>
+ <20150102125423.GA18785@redhat.com> <54A69808.4010401@redhat.com>
+ <20150102131709.GB18785@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87vbkpvx0s.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20150102131709.GB18785@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +26,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Kuleshov <kuleshovmail@gmail.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
 
-On Fri, Jan 02, 2015 at 12:48:51PM -0600, Eric W. Biederman wrote:
-> Alexander Kuleshov <kuleshovmail@gmail.com> writes:
+On Fri, Jan 02, 2015 at 08:17:09AM -0500, Vivek Goyal wrote:
+> On Fri, Jan 02, 2015 at 08:07:20AM -0500, Prarit Bhargava wrote:
+> > 
+> > 
+> > On 01/02/2015 07:54 AM, Vivek Goyal wrote:
+> > > On Tue, Dec 30, 2014 at 09:57:51AM -0500, Prarit Bhargava wrote:
+> > >> panic_on_warn kernel parameter will cause the kernel to panic when a
+> > >> WARN() is hit in the kernel.  This is not a good situation for the kdump
+> > >> kernel because then it would be possible for the kdump kernel to panic in
+> > >> a non-fatal WARN().
+> > >>
+> > >> This patch removes panic_on_warn as a kernel parameter for the kdump
+> > >> kernel.
+> > >>
+> > > 
+> > > I think modifying kexec-tools is not best place for this. It probably is better to take care of this in distribution specific scripts.
+> > > 
+> > > In the past we have learnt that it is best that kexec-tools does least
+> > > amount of manipulation with command line.
+> > 
+> > Well .. here's the question to think about: what does adding panic_on_warn to
+> > the kdump kernel get you?  AFAICT, nothing.
 > 
-> > Signed-off-by: Alexander Kuleshov <kuleshovmail@gmail.com>
-> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-[ CC akpm ]
-
-Simple fix.
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Thanks
-Vivek
-
+> Let us consider a hypothetical situation. What if we have some buggy code
+> which will corrupt file system in certain situation and we detect that
+> situation and throw a warning. 
 > 
-> > ---
-> >  kernel/kexec.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > index 9a8a01a..75a8b7e 100644
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -444,7 +444,7 @@ arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> >  }
-> >  
-> >  /*
-> > - * Free up memory used by kernel, initrd, and comand line. This is temporary
-> > + * Free up memory used by kernel, initrd, and command line. This is temporary
-> >   * memory allocation which is not needed any more after these buffers have
-> >   * been loaded into separate segments and have been copied elsewhere.
-> >   */
+> In that case as a work around specifying panic_on_warn in kdump kernel
+> will make sense as we don't want to make further progress if we hit
+> the warning as it has potential to corrupt fs.
+> 
+> Again this is hypothetical but it can happen. So panic_on_warn might
+> still be useful in kdump kernel for some corner debugging cases.
+> 
+> That's why I think we should do it in distribution specific scripts
+> and that too only if user did not specify panic_on_warn for second
+> kernel explicitly.
+> 
+> > 
+> > If panic_on_warn is specified, the only thing that will happen is that kdump
+> > will fail (which is always bad IMO).  There is no real difference in the stack
+> > trace between the WARN() and panic situations so there is no information loss.
+> > 
+> > So I disagree -- we should never specify panic_on_warn on kdump kernel.
+> 
+> I am saying that do it in distribution specific scripts and not in 
+> kexec-tools.
+
+I have reverted this patch until some consensus is reached.
 
 _______________________________________________
 kexec mailing list
