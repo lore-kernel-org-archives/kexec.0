@@ -1,16 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3426.houston.hp.com ([15.201.208.54])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y8OEW-0006YL-3k
- for kexec@lists.infradead.org; Tue, 06 Jan 2015 07:07:16 +0000
-Message-ID: <54AB894A.3070601@hp.com>
-Date: Tue, 06 Jan 2015 15:05:46 +0800
-From: "Li, ZhenHua" <zhen-hual@hp.com>
+ id 1Y8P8q-0007lq-TZ
+ for kexec@lists.infradead.org; Tue, 06 Jan 2015 08:05:30 +0000
+Received: from int-mx10.intmail.prod.int.phx2.redhat.com
+ (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06856Zt017595
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+ for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 03:05:06 -0500
+Date: Tue, 6 Jan 2015 16:05:00 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec, remove panic_on_warn kernel parameter from kdump
+ situations
+Message-ID: <20150106080500.GD2113@darkstar.redhat.com>
+References: <1419951471-19765-1-git-send-email-prarit@redhat.com>
+ <20150102125423.GA18785@redhat.com> <54A69808.4010401@redhat.com>
+ <20150102131709.GB18785@redhat.com>
+ <20150106014405.GA2113@darkstar.redhat.com>
+ <20150106015412.GB20058@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-References: <1419239729-26529-1-git-send-email-zhen-hual@hp.com>
- <20150106063718.GA2454@dhcp-16-105.nay.redhat.com>
-In-Reply-To: <20150106063718.GA2454@dhcp-16-105.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20150106015412.GB20058@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,31 +29,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, indou.takao@jp.fujitsu.com
-Cc: alex.williamson@redhat.com, tom.vaden@hp.com, dwmw2@infradead.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>
 
-According to Takao Indoh's testing, seems adding flush after loading old 
-irte and updating old irte does not fix the dmar faults.
+On 01/05/15 at 08:54pm, Vivek Goyal wrote:
+> On Tue, Jan 06, 2015 at 09:44:05AM +0800, Dave Young wrote:
+> > On 01/02/15 at 08:17am, Vivek Goyal wrote:
+> > > On Fri, Jan 02, 2015 at 08:07:20AM -0500, Prarit Bhargava wrote:
+> > > > 
+> > > > 
+> > > > On 01/02/2015 07:54 AM, Vivek Goyal wrote:
+> > > > > On Tue, Dec 30, 2014 at 09:57:51AM -0500, Prarit Bhargava wrote:
+> > > > >> panic_on_warn kernel parameter will cause the kernel to panic when a
+> > > > >> WARN() is hit in the kernel.  This is not a good situation for the kdump
+> > > > >> kernel because then it would be possible for the kdump kernel to panic in
+> > > > >> a non-fatal WARN().
+> > > > >>
+> > > > >> This patch removes panic_on_warn as a kernel parameter for the kdump
+> > > > >> kernel.
+> > > > >>
+> > > > > 
+> > > > > I think modifying kexec-tools is not best place for this. It probably is better to take care of this in distribution specific scripts.
+> > > > > 
+> > > > > In the past we have learnt that it is best that kexec-tools does least
+> > > > > amount of manipulation with command line.
+> > > > 
+> > > > Well .. here's the question to think about: what does adding panic_on_warn to
+> > > > the kdump kernel get you?  AFAICT, nothing.
+> > > 
+> > > Let us consider a hypothetical situation. What if we have some buggy code
+> > > which will corrupt file system in certain situation and we detect that
+> > > situation and throw a warning. 
+> > > 
+> > > In that case as a work around specifying panic_on_warn in kdump kernel
+> > > will make sense as we don't want to make further progress if we hit
+> > > the warning as it has potential to corrupt fs.
+> > > 
+> > > Again this is hypothetical but it can happen. So panic_on_warn might
+> > > still be useful in kdump kernel for some corner debugging cases.
+> > > 
+> > > That's why I think we should do it in distribution specific scripts
+> > > and that too only if user did not specify panic_on_warn for second
+> > > kernel explicitly.
+> > 
+> > Thinking of user who use upstream kexec-tools instead of distribution toolset,
+> > In case kexec --reuse-cmdline, it will copy /proc/cmdline, but user will have
+> > no way to remove part of them.
+> > 
+> > I do want to insist on removing 'panic_on_warn' in upstream kexec-tools, but
+> > we should give user an option to remove it. Something like:
+> > 
+> > kexec --reuse-cmdline --remove-params="panic_on_warn" will be good.
+> 
+> If user is using --reuse-commandline at the same time does not want some
+> of the parameters from command line, then don't use --reuse-commandline.
+> 
+> This is overenginnering. First provide an option to reuse the commandline
+> and provide another option to selectively remove some parameters from that
+> commandline.
+> 
+> What's wrong with existing parameters of --command-line. This just allows
+> user to specify whatever command line is suitable.
+> 
+> So, no, we should not provide --remove-params. If existing command line
+> does not work for new kenrel, then user should not use
+> --reuse-commandline option.
 
-According to Takao Indoh's log and your log, the faults happens while 
-and after driver is loaded.  Maybe I am using incorrect code in 08/10.
-
-
-On 01/06/2015 02:37 PM, Baoquan He wrote:
-> Hi Zhenhua,
->
-> I just tested your patchset based on 3.19.0-rc2+, and found several dmar
-> fault and intr-remap fault, it seems not the same as Takao's, please
-> check the attachment.
->
-> Thanks
-> Baoquan
->
-
+Hmm, ok. So hope one who is use panic_on_warn in 1st kernel know what he is doing
+and do not simply copy the 1st kernel cmdline for 2nd kernel.
 
 _______________________________________________
 kexec mailing list
