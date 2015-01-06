@@ -1,35 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y8QwH-00062j-5B
- for kexec@lists.infradead.org; Tue, 06 Jan 2015 10:00:38 +0000
-Received: from /spool/local
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Tue, 6 Jan 2015 10:00:11 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 770361B0805F
- for <kexec@lists.infradead.org>; Tue,  6 Jan 2015 10:00:41 +0000 (GMT)
-Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
- [9.149.37.229])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t06A08VC62193690
- for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 10:00:08 GMT
-Received: from d06av05.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av05.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t06A08VS032326
- for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 03:00:08 -0700
-Message-ID: <54ABB227.7010203@linux.vnet.ibm.com>
-Date: Tue, 06 Jan 2015 11:00:07 +0100
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+ id 1Y8TYv-0002xs-GO
+ for kexec@lists.infradead.org; Tue, 06 Jan 2015 12:48:43 +0000
+Received: from int-mx13.intmail.prod.int.phx2.redhat.com
+ (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06CmKna020443
+ (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+ for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 07:48:20 -0500
+Date: Tue, 6 Jan 2015 20:46:44 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec, remove panic_on_warn kernel parameter from kdump
+ situations
+Message-ID: <20150106124644.GB5965@dhcp-16-105.nay.redhat.com>
+References: <1419951471-19765-1-git-send-email-prarit@redhat.com>
+ <20150102125423.GA18785@redhat.com> <54A69808.4010401@redhat.com>
+ <20150102131709.GB18785@redhat.com>
+ <20150106014405.GA2113@darkstar.redhat.com>
+ <20150106015412.GB20058@redhat.com>
+ <20150106080500.GD2113@darkstar.redhat.com>
 MIME-Version: 1.0
-Subject: Re: some questions about elf_ppc64_load
-References: <OF9C6CA8A8.9D7923CD-ON48257DC5.0023F61F-48257DC5.0024E800@zte.com.cn>
- <54AB9EAF.2020004@linux.vnet.ibm.com>
- <OF89302667.7C36AC27-ON48257DC5.002FF943-48257DC5.00333569@zte.com.cn>
-In-Reply-To: <OF89302667.7C36AC27-ON48257DC5.002FF943-48257DC5.00333569@zte.com.cn>
+Content-Disposition: inline
+In-Reply-To: <20150106080500.GD2113@darkstar.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,77 +30,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: liu.song11@zte.com.cn
-Cc: kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gMDYvMDEvMjAxNSAxMDoyMCwgbGl1LnNvbmcxMUB6dGUuY29tLmNuIHdyb3RlOgo+IAo+IAo+
-IExhdXJlbnQgRHVmb3VyIDxsZHVmb3VyQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JvdGUgb24gMjAx
-NS0wMS0wNiAxNjozNzowMzoKPiAKPj4gRnJvbTogTGF1cmVudCBEdWZvdXIgPGxkdWZvdXJAbGlu
-dXgudm5ldC5pYm0uY29tPgo+PiBUbzogbGl1LnNvbmcxMUB6dGUuY29tLmNuLAo+PiBDYzoga2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+PiBEYXRlOiAyMDE1LTAxLTA2IDE2OjM3Cj4+IFN1Ympl
-Y3Q6IFJlOiBzb21lIHF1ZXN0aW9ucyBhYm91dCBlbGZfcHBjNjRfbG9hZAo+Pgo+PiBPbiAwNi8w
-MS8yMDE1IDA3OjQ0LCBsaXUuc29uZzExQHp0ZS5jb20uY24gd3JvdGU6Cj4+Pgo+Pj4gaGkgYWxs
-o6wKPj4+Cj4+PiBJIHVzZSBrZXhlYy10b29scy0yLjAuOCBmb3IgcHBjNjQsIGluIGZ1Y3Rpb24g
-ZWxmX3BwYzY0X2xvYWQgcHJvbXB0ICJDYW4ndCB1c2UgcmFtZGlzayB3aXRoIGRldmljZSB0cmVl
-IGJsb2IgaW5wdXQiLgo+Pj4KPj4+IEkgZG9uJ3Qga25vdyB3aHkgaGVyZSByYW1kaXNrIGNhbid0
-IHRvZ2V0aGVyIHdpdGggZHRiLGFuZCBuZWVkIHNvbWUgaGVscC4KPj4KPj4gVGhlIGRldmljZSB0
-cmVlIGlzIGFsc28gc3BlY2lmeWluZyBpbml0cmQgKHNlZSBrZXhlYy9mczJkdC5jIHB1dG5vZGUp
-LAo+PiBzbyB0aGVyZSBpcyAyIGluaXRyZCBzcGVjaWZ5IGluIHRoYXQgY2FzZS4gVGhlIGNvZGUg
-aXMgYSBiaXQgcm91Z2ggaGVyZSwKPj4gYnV0IEkgZ3Vlc3MgdGhpcyBpcyBiZWNhdXNlIHRoZXJl
-IGlzIG5vdCB5ZXQgYSB2YWxpZCB1c2UgY2FzZS4KPiBoaSBDaGVlcnMsCj4gSW4gImVsZl9wcGM2
-NF9sb2FkIiwgaWYgd2UgaGF2ZW4ndCBhc3NpZ24gYSBzcGVjaWFsIGR0YiBieSAtLWR0Yj08Zmls
-ZW5hbWU+LCB0aGVuIGhlcmUgd2lsbCB1c2UgImNyZWF0ZV9mbGF0dGVuX3RyZWUiIHRvCj4gY3Jl
-YXRlIG9uZS4gSG93ZXZlciwgTXkgYm9hcmQgbmVlZCBhc3NpZ24gYSBkdGIsIHNvIEkgdXNlIC0t
-ZHRiPW15LmR0YiB0byBhc3NpZ24gaXQuIFRoZSBkdGIgZmlsZSBpcyB2YWxpZCB3aGljaCBJIHVz
-ZSBpdAo+IHRvIHN0YXJ0IGtlcm5lbCB1bmRlciB1Ym9vdC4gRm9yIG5vdywgSSBqdXN0IGNvbmZ1
-c2UgaXMgd2h5IHRoZSAiY3JlYXRlX2ZsYXR0ZW5fdHJlZSIgY3JlYXRlIGR0YiBjb3VsZCB3b3Jr
-LCBidXQgSSBhc3NpZ25lZAo+IGR0YiBjb3VsZG4ndCwgbXkuZHRiIGlzIDQwS0IgYW5kIHNtYWxs
-ZXIgdGhhbiBjcmVhdGUgZHRiJ3MgNzZLQi4gVGhlIHR3byB3YXlzIGJvdGggdXNlIGFkZF9idWZm
-ZXIgd2l0aCBwYXJhbSAiYnVmX2VuZCA9IC0xIiwKPiBzbyB3aWxsIGFkZCBzZWdtZW50IGZvciB0
-aGUgdG9wIG9mIHRoZSB2YWxpZCBtZW0gcmFuZ2UsIGFuZCBteS5kdGIgaXMgc21hbGxlciB3aGlj
-aCBsZXNzIGNoYW5jZSBvZiBvdmVybGFwIHNvbWUgZGF0YSBpbiBtZW1vcnkuCgpUaGUgc2Vydmlj
-ZSBjcmVhdGVfZmxhdHRlbl90cmVlIGNyZWF0ZSBhIERUQiBmcm9tIHRoZSBvbmUgaW5oZXJpdGVk
-IGF0CnRoZSBib290IHRpbWUgb2YgdGhlIGN1cnJlbnRseSBydW5uaW5nIGtlcm5lbCAoL3Byb2Mv
-ZGV2aWNlLXRyZWUpLiBJCmd1ZXNzIHRoaXMgZGV2aWNlIHRyZWUgaXMgdmFsaWQgc2luY2UgdGhl
-IGN1cnJlbnQga2VybmVsIGlzIHJ1bm5pbmcgOykKCllvdSBtYXkgdHJ5IHRvIHNlZSB3aGF0IHRo
-ZSBkZXZpY2UgdHJlZSBwYXNzZWQgdG8geW91ciBrZXhlZCBrZXJuZWwgaXMsCm1heSBiZSB0aGVy
-ZSBpcyBzb21ldGhpbmcgd3JvbmcgdGhlcmUuIEFsc28gbG9va2luZyBhdCB3aGF0IGdvaW5nIHdy
-b25nCndoZW4gdGhlIGtleGVkIGtlcm5lbCBpcyBwYW5pY2luZyBtYXkgYmUgaGVscGZ1bC4KCkNo
-ZWVycywKTGF1cmVudC4KCj4gCj4+Cj4+PiBJIGFsc28gaGF2ZSBzb21lIHF1ZXN0aW9ucywgd2hl
-biBJIGp1c3QgLi9rZXhlIC1sIHZtbGludXggdGhlbiAuL2tleGVjIC1lLCB3aWxsIGp1bXAgdG8g
-c2Vjb25kIGtlcm5lbCBzdWNlc3NmdWxseSwKPj4+Cj4+PiBidXQgd2l0aG91dCB1c2VmdWwgZHRi
-LCB0aGVuIGRldmljZSBjYW4ndCBpbml0IGNvcnJlY3QuIEJ1dCwgd2hlbiBJIGlucHV0IC4va2V4
-ZWMgLWwgdm1saW51eCAtLWR0Yj1teS5kdGIgLCB0aGVuCj4+Pgo+Pj4gLi9rZXhlYyAtZSwgdGhl
-IGtlcm5lbCBjb3VsZG4ndCB3b3JrIGFuZCBjcmFzaCBpbiBoZWFkXzY0LlMsIHRoaXMgcHJvYmxl
-bSBhbHNvIG1ha2UgbWUgY29uZnVzZWQuCj4+Cj4+IEl0J3MgaGFyZCB0byBzdGF0ZSB3aXRoIG5v
-IG1vcmUgZGV0YWlscy4gSSBndWVzcyB0aGUgZGV2aWNlIHRyZWUgYmxvYgo+PiB5b3UncmUgdXNp
-bmcgaXMgbm90IHZhbGlkLCBvciBjb250YWluIGJhZCBkYXRhLgo+Pgo+PiBDaGVlcnMsCj4+IExh
-dXJlbnQuCj4+Cj4+PiBUaGFua3MKPj4+IFJlZ2FyZHMKPj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+PiBaVEUgSW5mb3JtYXRpb24g
-U2VjdXJpdHkgTm90aWNlOiBUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgbWFpbCAo
-YW5kIGFueSBhdHRhY2htZW50IHRyYW5zbWl0dGVkIGhlcmV3aXRoKSBpcyBwcml2aWxlZ2VkIGFu
-ZCBjb25maWRlbnRpYWwgYW5kIGlzIGludGVuZGVkIGZvciB0aGUgZXhjbHVzaXZlIHVzZSBvZiB0
-aGUgYWRkcmVzc2VlKHMpLiAgSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50LCBh
-bnkgZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBkaXN0cmlidXRpb24gb3Igb3RoZXIgZGlzc2Vt
-aW5hdGlvbiBvciB1c2Ugb2YgdGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpcyBzdHJpY3RseSBw
-cm9oaWJpdGVkLiAgSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBtYWlsIGluIGVycm9yLCBwbGVh
-c2UgZGVsZXRlIGl0IGFuZCBub3RpZnkgdXMgaW1tZWRpYXRlbHkuCj4+PiBfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4ga2V4ZWMgbWFpbGluZyBsaXN0
-Cj4+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4+Pgo+Pgo+IC0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gWlRFIEluZm9ybWF0aW9uIFNl
-Y3VyaXR5IE5vdGljZTogVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIG1haWwgKGFu
-ZCBhbnkgYXR0YWNobWVudCB0cmFuc21pdHRlZCBoZXJld2l0aCkgaXMgcHJpdmlsZWdlZCBhbmQg
-Y29uZmlkZW50aWFsIGFuZCBpcyBpbnRlbmRlZCBmb3IgdGhlIGV4Y2x1c2l2ZSB1c2Ugb2YgdGhl
-IGFkZHJlc3NlZShzKS4gIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCwgYW55
-IGRpc2Nsb3N1cmUsIHJlcHJvZHVjdGlvbiwgZGlzdHJpYnV0aW9uIG9yIG90aGVyIGRpc3NlbWlu
-YXRpb24gb3IgdXNlIG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaXMgc3RyaWN0bHkgcHJv
-aGliaXRlZC4gIElmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgbWFpbCBpbiBlcnJvciwgcGxlYXNl
-IGRlbGV0ZSBpdCBhbmQgbm90aWZ5IHVzIGltbWVkaWF0ZWx5Lgo+IAoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+On 01/06/15 at 04:05pm, Dave Young wrote:
+> On 01/05/15 at 08:54pm, Vivek Goyal wrote:
+> > On Tue, Jan 06, 2015 at 09:44:05AM +0800, Dave Young wrote:
+> > > On 01/02/15 at 08:17am, Vivek Goyal wrote:
+> > > > On Fri, Jan 02, 2015 at 08:07:20AM -0500, Prarit Bhargava wrote:
+> > > > > 
+> > > > > 
+> > > > > On 01/02/2015 07:54 AM, Vivek Goyal wrote:
+> > > > > > On Tue, Dec 30, 2014 at 09:57:51AM -0500, Prarit Bhargava wrote:
+> > > > > >> panic_on_warn kernel parameter will cause the kernel to panic when a
+> > > > > >> WARN() is hit in the kernel.  This is not a good situation for the kdump
+> > > > > >> kernel because then it would be possible for the kdump kernel to panic in
+> > > > > >> a non-fatal WARN().
+> > > > > >>
+> > > > > >> This patch removes panic_on_warn as a kernel parameter for the kdump
+> > > > > >> kernel.
+> > > > > >>
+> > > > > > 
+> > > > > > I think modifying kexec-tools is not best place for this. It probably is better to take care of this in distribution specific scripts.
+> > > > > > 
+> > > > > > In the past we have learnt that it is best that kexec-tools does least
+> > > > > > amount of manipulation with command line.
+> > > > > 
+> > > > > Well .. here's the question to think about: what does adding panic_on_warn to
+> > > > > the kdump kernel get you?  AFAICT, nothing.
+> > > > 
+> > > > Let us consider a hypothetical situation. What if we have some buggy code
+> > > > which will corrupt file system in certain situation and we detect that
+> > > > situation and throw a warning. 
+> > > > 
+> > > > In that case as a work around specifying panic_on_warn in kdump kernel
+> > > > will make sense as we don't want to make further progress if we hit
+> > > > the warning as it has potential to corrupt fs.
+> > > > 
+> > > > Again this is hypothetical but it can happen. So panic_on_warn might
+> > > > still be useful in kdump kernel for some corner debugging cases.
+> > > > 
+> > > > That's why I think we should do it in distribution specific scripts
+> > > > and that too only if user did not specify panic_on_warn for second
+> > > > kernel explicitly.
+> > > 
+> > > Thinking of user who use upstream kexec-tools instead of distribution toolset,
+> > > In case kexec --reuse-cmdline, it will copy /proc/cmdline, but user will have
+> > > no way to remove part of them.
+> > > 
+> > > I do want to insist on removing 'panic_on_warn' in upstream kexec-tools, but
+> > > we should give user an option to remove it. Something like:
+> > > 
+> > > kexec --reuse-cmdline --remove-params="panic_on_warn" will be good.
+> > 
+> > If user is using --reuse-commandline at the same time does not want some
+> > of the parameters from command line, then don't use --reuse-commandline.
+> > 
+> > This is overenginnering. First provide an option to reuse the commandline
+> > and provide another option to selectively remove some parameters from that
+> > commandline.
+> > 
+> > What's wrong with existing parameters of --command-line. This just allows
+> > user to specify whatever command line is suitable.
+> > 
+> > So, no, we should not provide --remove-params. If existing command line
+> > does not work for new kenrel, then user should not use
+> > --reuse-commandline option.
+> 
+> Hmm, ok. So hope one who is use panic_on_warn in 1st kernel know what he is doing
+> and do not simply copy the 1st kernel cmdline for 2nd kernel.
+
+I am fine with which postion it should be cared in some extent.
+This is truly a problem we need consider. If one distribution used
+doesn't handle it, and user using latest upstream kernel will be
+surprised by this.
+
+
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
