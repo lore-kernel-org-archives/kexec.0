@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y8TYv-0002xs-GO
- for kexec@lists.infradead.org; Tue, 06 Jan 2015 12:48:43 +0000
+ id 1Y8Tq3-000415-6c
+ for kexec@lists.infradead.org; Tue, 06 Jan 2015 13:06:23 +0000
 Received: from int-mx13.intmail.prod.int.phx2.redhat.com
  (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06CmKna020443
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06D62bI029468
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 07:48:20 -0500
-Date: Tue, 6 Jan 2015 20:46:44 +0800
-From: Baoquan He <bhe@redhat.com>
+ for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 08:06:02 -0500
+Date: Tue, 6 Jan 2015 08:06:01 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec, remove panic_on_warn kernel parameter from kdump
  situations
-Message-ID: <20150106124644.GB5965@dhcp-16-105.nay.redhat.com>
+Message-ID: <20150106130601.GE20433@redhat.com>
 References: <1419951471-19765-1-git-send-email-prarit@redhat.com>
  <20150102125423.GA18785@redhat.com> <54A69808.4010401@redhat.com>
  <20150102131709.GB18785@redhat.com>
@@ -35,9 +35,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>
 
-On 01/06/15 at 04:05pm, Dave Young wrote:
+On Tue, Jan 06, 2015 at 04:05:00PM +0800, Dave Young wrote:
 > On 01/05/15 at 08:54pm, Vivek Goyal wrote:
 > > On Tue, Jan 06, 2015 at 09:44:05AM +0800, Dave Young wrote:
 > > > On 01/02/15 at 08:17am, Vivek Goyal wrote:
@@ -104,17 +104,13 @@ On 01/06/15 at 04:05pm, Dave Young wrote:
 > Hmm, ok. So hope one who is use panic_on_warn in 1st kernel know what he is doing
 > and do not simply copy the 1st kernel cmdline for 2nd kernel.
 
-I am fine with which postion it should be cared in some extent.
-This is truly a problem we need consider. If one distribution used
-doesn't handle it, and user using latest upstream kernel will be
-surprised by this.
+--reuse-commandline will work only for kexec case and not kdump case. And
+in case of kexec, it is fine to use panic_on_warn in kexeced kernel. So 
+there is no need to worry here.
 
+Thanks
+Vivek
 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
