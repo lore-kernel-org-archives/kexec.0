@@ -1,27 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y8Tq3-000415-6c
- for kexec@lists.infradead.org; Tue, 06 Jan 2015 13:06:23 +0000
-Received: from int-mx13.intmail.prod.int.phx2.redhat.com
- (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06D62bI029468
+ id 1Y8TrZ-0004Et-F6
+ for kexec@lists.infradead.org; Tue, 06 Jan 2015 13:07:58 +0000
+Received: from int-mx10.intmail.prod.int.phx2.redhat.com
+ (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06D7anU013394
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 08:06:02 -0500
-Date: Tue, 6 Jan 2015 08:06:01 -0500
+ for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 08:07:36 -0500
+Date: Tue, 6 Jan 2015 08:07:35 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec, remove panic_on_warn kernel parameter from kdump
  situations
-Message-ID: <20150106130601.GE20433@redhat.com>
+Message-ID: <20150106130735.GF20433@redhat.com>
 References: <1419951471-19765-1-git-send-email-prarit@redhat.com>
  <20150102125423.GA18785@redhat.com> <54A69808.4010401@redhat.com>
  <20150102131709.GB18785@redhat.com>
  <20150106014405.GA2113@darkstar.redhat.com>
  <20150106015412.GB20058@redhat.com>
  <20150106080500.GD2113@darkstar.redhat.com>
+ <20150106124644.GB5965@dhcp-16-105.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150106080500.GD2113@darkstar.redhat.com>
+In-Reply-To: <20150106124644.GB5965@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,83 +35,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
 
-On Tue, Jan 06, 2015 at 04:05:00PM +0800, Dave Young wrote:
-> On 01/05/15 at 08:54pm, Vivek Goyal wrote:
-> > On Tue, Jan 06, 2015 at 09:44:05AM +0800, Dave Young wrote:
-> > > On 01/02/15 at 08:17am, Vivek Goyal wrote:
-> > > > On Fri, Jan 02, 2015 at 08:07:20AM -0500, Prarit Bhargava wrote:
-> > > > > 
-> > > > > 
-> > > > > On 01/02/2015 07:54 AM, Vivek Goyal wrote:
-> > > > > > On Tue, Dec 30, 2014 at 09:57:51AM -0500, Prarit Bhargava wrote:
-> > > > > >> panic_on_warn kernel parameter will cause the kernel to panic when a
-> > > > > >> WARN() is hit in the kernel.  This is not a good situation for the kdump
-> > > > > >> kernel because then it would be possible for the kdump kernel to panic in
-> > > > > >> a non-fatal WARN().
-> > > > > >>
-> > > > > >> This patch removes panic_on_warn as a kernel parameter for the kdump
-> > > > > >> kernel.
-> > > > > >>
+On Tue, Jan 06, 2015 at 08:46:44PM +0800, Baoquan He wrote:
+> On 01/06/15 at 04:05pm, Dave Young wrote:
+> > On 01/05/15 at 08:54pm, Vivek Goyal wrote:
+> > > On Tue, Jan 06, 2015 at 09:44:05AM +0800, Dave Young wrote:
+> > > > On 01/02/15 at 08:17am, Vivek Goyal wrote:
+> > > > > On Fri, Jan 02, 2015 at 08:07:20AM -0500, Prarit Bhargava wrote:
 > > > > > > 
-> > > > > > I think modifying kexec-tools is not best place for this. It probably is better to take care of this in distribution specific scripts.
 > > > > > > 
-> > > > > > In the past we have learnt that it is best that kexec-tools does least
-> > > > > > amount of manipulation with command line.
+> > > > > > On 01/02/2015 07:54 AM, Vivek Goyal wrote:
+> > > > > > > On Tue, Dec 30, 2014 at 09:57:51AM -0500, Prarit Bhargava wrote:
+> > > > > > >> panic_on_warn kernel parameter will cause the kernel to panic when a
+> > > > > > >> WARN() is hit in the kernel.  This is not a good situation for the kdump
+> > > > > > >> kernel because then it would be possible for the kdump kernel to panic in
+> > > > > > >> a non-fatal WARN().
+> > > > > > >>
+> > > > > > >> This patch removes panic_on_warn as a kernel parameter for the kdump
+> > > > > > >> kernel.
+> > > > > > >>
+> > > > > > > 
+> > > > > > > I think modifying kexec-tools is not best place for this. It probably is better to take care of this in distribution specific scripts.
+> > > > > > > 
+> > > > > > > In the past we have learnt that it is best that kexec-tools does least
+> > > > > > > amount of manipulation with command line.
+> > > > > > 
+> > > > > > Well .. here's the question to think about: what does adding panic_on_warn to
+> > > > > > the kdump kernel get you?  AFAICT, nothing.
 > > > > > 
-> > > > > Well .. here's the question to think about: what does adding panic_on_warn to
-> > > > > the kdump kernel get you?  AFAICT, nothing.
+> > > > > Let us consider a hypothetical situation. What if we have some buggy code
+> > > > > which will corrupt file system in certain situation and we detect that
+> > > > > situation and throw a warning. 
+> > > > > 
+> > > > > In that case as a work around specifying panic_on_warn in kdump kernel
+> > > > > will make sense as we don't want to make further progress if we hit
+> > > > > the warning as it has potential to corrupt fs.
+> > > > > 
+> > > > > Again this is hypothetical but it can happen. So panic_on_warn might
+> > > > > still be useful in kdump kernel for some corner debugging cases.
+> > > > > 
+> > > > > That's why I think we should do it in distribution specific scripts
+> > > > > and that too only if user did not specify panic_on_warn for second
+> > > > > kernel explicitly.
 > > > > 
-> > > > Let us consider a hypothetical situation. What if we have some buggy code
-> > > > which will corrupt file system in certain situation and we detect that
-> > > > situation and throw a warning. 
+> > > > Thinking of user who use upstream kexec-tools instead of distribution toolset,
+> > > > In case kexec --reuse-cmdline, it will copy /proc/cmdline, but user will have
+> > > > no way to remove part of them.
 > > > > 
-> > > > In that case as a work around specifying panic_on_warn in kdump kernel
-> > > > will make sense as we don't want to make further progress if we hit
-> > > > the warning as it has potential to corrupt fs.
+> > > > I do want to insist on removing 'panic_on_warn' in upstream kexec-tools, but
+> > > > we should give user an option to remove it. Something like:
 > > > > 
-> > > > Again this is hypothetical but it can happen. So panic_on_warn might
-> > > > still be useful in kdump kernel for some corner debugging cases.
-> > > > 
-> > > > That's why I think we should do it in distribution specific scripts
-> > > > and that too only if user did not specify panic_on_warn for second
-> > > > kernel explicitly.
+> > > > kexec --reuse-cmdline --remove-params="panic_on_warn" will be good.
 > > > 
-> > > Thinking of user who use upstream kexec-tools instead of distribution toolset,
-> > > In case kexec --reuse-cmdline, it will copy /proc/cmdline, but user will have
-> > > no way to remove part of them.
+> > > If user is using --reuse-commandline at the same time does not want some
+> > > of the parameters from command line, then don't use --reuse-commandline.
 > > > 
-> > > I do want to insist on removing 'panic_on_warn' in upstream kexec-tools, but
-> > > we should give user an option to remove it. Something like:
+> > > This is overenginnering. First provide an option to reuse the commandline
+> > > and provide another option to selectively remove some parameters from that
+> > > commandline.
 > > > 
-> > > kexec --reuse-cmdline --remove-params="panic_on_warn" will be good.
+> > > What's wrong with existing parameters of --command-line. This just allows
+> > > user to specify whatever command line is suitable.
+> > > 
+> > > So, no, we should not provide --remove-params. If existing command line
+> > > does not work for new kenrel, then user should not use
+> > > --reuse-commandline option.
 > > 
-> > If user is using --reuse-commandline at the same time does not want some
-> > of the parameters from command line, then don't use --reuse-commandline.
-> > 
-> > This is overenginnering. First provide an option to reuse the commandline
-> > and provide another option to selectively remove some parameters from that
-> > commandline.
-> > 
-> > What's wrong with existing parameters of --command-line. This just allows
-> > user to specify whatever command line is suitable.
-> > 
-> > So, no, we should not provide --remove-params. If existing command line
-> > does not work for new kenrel, then user should not use
-> > --reuse-commandline option.
+> > Hmm, ok. So hope one who is use panic_on_warn in 1st kernel know what he is doing
+> > and do not simply copy the 1st kernel cmdline for 2nd kernel.
 > 
-> Hmm, ok. So hope one who is use panic_on_warn in 1st kernel know what he is doing
-> and do not simply copy the 1st kernel cmdline for 2nd kernel.
+> I am fine with which postion it should be cared in some extent.
+> This is truly a problem we need consider. If one distribution used
+> doesn't handle it, and user using latest upstream kernel will be
+> surprised by this.
 
---reuse-commandline will work only for kexec case and not kdump case. And
-in case of kexec, it is fine to use panic_on_warn in kexeced kernel. So 
-there is no need to worry here.
+This is true for all kernel parameters. One distribution might decide
+to use some kenrel parameter by default during installation and other
+might not. Is kexec-tools supposed to keep track of all kernel parameters?
+It is just not possible.
+
+That's why it is up to distributions to figure out what parameters work
+for them and modify their scripts accordingly.
 
 Thanks
 Vivek
-
 
 _______________________________________________
 kexec mailing list
