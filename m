@@ -1,28 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from g4t3426.houston.hp.com ([15.201.208.54])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y8TrZ-0004Et-F6
- for kexec@lists.infradead.org; Tue, 06 Jan 2015 13:07:58 +0000
-Received: from int-mx10.intmail.prod.int.phx2.redhat.com
- (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t06D7anU013394
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Tue, 6 Jan 2015 08:07:36 -0500
-Date: Tue, 6 Jan 2015 08:07:35 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kexec, remove panic_on_warn kernel parameter from kdump
- situations
-Message-ID: <20150106130735.GF20433@redhat.com>
-References: <1419951471-19765-1-git-send-email-prarit@redhat.com>
- <20150102125423.GA18785@redhat.com> <54A69808.4010401@redhat.com>
- <20150102131709.GB18785@redhat.com>
- <20150106014405.GA2113@darkstar.redhat.com>
- <20150106015412.GB20058@redhat.com>
- <20150106080500.GD2113@darkstar.redhat.com>
- <20150106124644.GB5965@dhcp-16-105.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150106124644.GB5965@dhcp-16-105.nay.redhat.com>
+ id 1Y8hsv-0007ec-9u
+ for kexec@lists.infradead.org; Wed, 07 Jan 2015 04:06:19 +0000
+From: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Subject: [PATCH v7 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+Date: Wed,  7 Jan 2015 12:04:24 +0800
+Message-Id: <1420603474-4235-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,96 +15,175 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Prarit Bhargava <prarit@redhat.com>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, WANG Chao <chaowang@redhat.com>
+To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org, vgoyal@redhat.com, dyoung@redhat.com
+Cc: jerry.hoemann@hp.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, zhen-hual@hp.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com
 
-On Tue, Jan 06, 2015 at 08:46:44PM +0800, Baoquan He wrote:
-> On 01/06/15 at 04:05pm, Dave Young wrote:
-> > On 01/05/15 at 08:54pm, Vivek Goyal wrote:
-> > > On Tue, Jan 06, 2015 at 09:44:05AM +0800, Dave Young wrote:
-> > > > On 01/02/15 at 08:17am, Vivek Goyal wrote:
-> > > > > On Fri, Jan 02, 2015 at 08:07:20AM -0500, Prarit Bhargava wrote:
-> > > > > > 
-> > > > > > 
-> > > > > > On 01/02/2015 07:54 AM, Vivek Goyal wrote:
-> > > > > > > On Tue, Dec 30, 2014 at 09:57:51AM -0500, Prarit Bhargava wrote:
-> > > > > > >> panic_on_warn kernel parameter will cause the kernel to panic when a
-> > > > > > >> WARN() is hit in the kernel.  This is not a good situation for the kdump
-> > > > > > >> kernel because then it would be possible for the kdump kernel to panic in
-> > > > > > >> a non-fatal WARN().
-> > > > > > >>
-> > > > > > >> This patch removes panic_on_warn as a kernel parameter for the kdump
-> > > > > > >> kernel.
-> > > > > > >>
-> > > > > > > 
-> > > > > > > I think modifying kexec-tools is not best place for this. It probably is better to take care of this in distribution specific scripts.
-> > > > > > > 
-> > > > > > > In the past we have learnt that it is best that kexec-tools does least
-> > > > > > > amount of manipulation with command line.
-> > > > > > 
-> > > > > > Well .. here's the question to think about: what does adding panic_on_warn to
-> > > > > > the kdump kernel get you?  AFAICT, nothing.
-> > > > > 
-> > > > > Let us consider a hypothetical situation. What if we have some buggy code
-> > > > > which will corrupt file system in certain situation and we detect that
-> > > > > situation and throw a warning. 
-> > > > > 
-> > > > > In that case as a work around specifying panic_on_warn in kdump kernel
-> > > > > will make sense as we don't want to make further progress if we hit
-> > > > > the warning as it has potential to corrupt fs.
-> > > > > 
-> > > > > Again this is hypothetical but it can happen. So panic_on_warn might
-> > > > > still be useful in kdump kernel for some corner debugging cases.
-> > > > > 
-> > > > > That's why I think we should do it in distribution specific scripts
-> > > > > and that too only if user did not specify panic_on_warn for second
-> > > > > kernel explicitly.
-> > > > 
-> > > > Thinking of user who use upstream kexec-tools instead of distribution toolset,
-> > > > In case kexec --reuse-cmdline, it will copy /proc/cmdline, but user will have
-> > > > no way to remove part of them.
-> > > > 
-> > > > I do want to insist on removing 'panic_on_warn' in upstream kexec-tools, but
-> > > > we should give user an option to remove it. Something like:
-> > > > 
-> > > > kexec --reuse-cmdline --remove-params="panic_on_warn" will be good.
-> > > 
-> > > If user is using --reuse-commandline at the same time does not want some
-> > > of the parameters from command line, then don't use --reuse-commandline.
-> > > 
-> > > This is overenginnering. First provide an option to reuse the commandline
-> > > and provide another option to selectively remove some parameters from that
-> > > commandline.
-> > > 
-> > > What's wrong with existing parameters of --command-line. This just allows
-> > > user to specify whatever command line is suitable.
-> > > 
-> > > So, no, we should not provide --remove-params. If existing command line
-> > > does not work for new kenrel, then user should not use
-> > > --reuse-commandline option.
-> > 
-> > Hmm, ok. So hope one who is use panic_on_warn in 1st kernel know what he is doing
-> > and do not simply copy the 1st kernel cmdline for 2nd kernel.
-> 
-> I am fine with which postion it should be cared in some extent.
-> This is truly a problem we need consider. If one distribution used
-> doesn't handle it, and user using latest upstream kernel will be
-> surprised by this.
+This patchset is an update of Bill Sumner's patchset, implements a fix for:
+If a kernel boots with intel_iommu=on on a system that supports intel vt-d, 
+when a panic happens, the kdump kernel will boot with these faults:
 
-This is true for all kernel parameters. One distribution might decide
-to use some kenrel parameter by default during installation and other
-might not. Is kexec-tools supposed to keep track of all kernel parameters?
-It is just not possible.
+    dmar: DRHD: handling fault status reg 102
+    dmar: DMAR:[DMA Read] Request device [01:00.0] fault addr fff80000
+    DMAR:[fault reason 01] Present bit in root entry is clear
 
-That's why it is up to distributions to figure out what parameters work
-for them and modify their scripts accordingly.
+    dmar: DRHD: handling fault status reg 2
+    dmar: INTR-REMAP: Request device [[61:00.0] fault index 42
+    INTR-REMAP:[fault reason 34] Present field in the IRTE entry is clear
 
-Thanks
-Vivek
+On some system, the interrupt remapping fault will also happen even if the 
+intel_iommu is not set to on, because the interrupt remapping will be enabled 
+when x2apic is needed by the system.
+
+The cause of the DMA fault is described in Bill's original version, and the 
+INTR-Remap fault is caused by a similar reason. In short, the initialization 
+of vt-d drivers causes the in-flight DMA and interrupt requests get wrong 
+response.
+
+To fix this problem, we modifies the behaviors of the intel vt-d in the 
+crashdump kernel:
+
+For DMA Remapping:
+1. To accept the vt-d hardware in an active state,
+2. Do not disable and re-enable the translation, keep it enabled.
+3. Use the old root entry table, do not rewrite the RTA register.
+4. Malloc and use new context entry table and page table, copy data from the 
+   old ones that used by the old kernel.
+5. to use different portions of the iova address ranges for the device drivers
+   in the crashdump kernel than the iova ranges that were in-use at the time
+   of the panic.  
+6. After device driver is loaded, when it issues the first dma_map command, 
+   free the dmar_domain structure for this device, and generate a new one, so 
+   that the device can be assigned a new and empty page table. 
+7. When a new context entry table is generated, we also save its address to 
+   the old root entry table.
+
+For Interrupt Remapping:
+1. To accept the vt-d hardware in an active state,
+2. Do not disable and re-enable the interrupt remapping, keep it enabled.
+3. Use the old interrupt remapping table, do not rewrite the IRTA register.
+4. When ioapic entry is setup, the interrupt remapping table is changed, and 
+   the updated data will be stored to the old interrupt remapping table.
+
+Advantages of this approach:
+1. All manipulation of the IO-device is done by the Linux device-driver
+   for that device.
+2. This approach behaves in a manner very similar to operation without an
+   active iommu.
+3. Any activity between the IO-device and its RMRR areas is handled by the
+   device-driver in the same manner as during a non-kdump boot.
+4. If an IO-device has no driver in the kdump kernel, it is simply left alone.
+   This supports the practice of creating a special kdump kernel without
+   drivers for any devices that are not required for taking a crashdump. 
+5. Minimal code-changes among the existing mainline intel vt-d code.
+
+Summary of changes in this patch set:
+1. Added some useful function for root entry table in code intel-iommu.c
+2. Added new members to struct root_entry and struct irte;
+3. Functions to load old root entry table to iommu->root_entry from the memory 
+   of old kernel.
+4. Functions to malloc new context entry table and page table and copy the data
+   from the old ones to the malloced new ones.
+5. Functions to enable support for DMA remapping in kdump kernel.
+6. Functions to load old irte data from the old kernel to the kdump kernel.
+7. Some code changes that support other behaviours that have been listed.
+8. In the new functions, use physical address as "unsigned long" type, not 
+   pointers.
+
+Original version by Bill Sumner:
+    https://lkml.org/lkml/2014/1/10/518
+    https://lkml.org/lkml/2014/4/15/716
+    https://lkml.org/lkml/2014/4/24/836
+
+Zhenhua's updates:
+    https://lkml.org/lkml/2014/10/21/134
+    https://lkml.org/lkml/2014/12/15/121
+    https://lkml.org/lkml/2014/12/22/53
+
+Changelog[v7]:
+    1. Use __iommu_flush_cache to flush the data to hardware.
+
+Changelog[v6]:
+    1. Use "unsigned long" as type of physical address.
+    2. Use new function unmap_device_dma to unmap the old dma.
+    3. Some small incorrect bits order for aw shift.
+
+Changelog[v5]:
+    1. Do not disable and re-enable traslation and interrupt remapping. 
+    2. Use old root entry table.
+    3. Use old interrupt remapping table.
+    4. New functions to copy data from old kernel, and save to old kernel mem.
+    5. New functions to save updated root entry table and irte table.
+    6. Use intel_unmap to unmap the old dma;
+    7. Allocate new pages while driver is being loaded.
+
+Changelog[v4]:
+    1. Cut off the patches that move some defines and functions to new files.
+    2. Reduce the numbers of patches to five, make it more easier to read.
+    3. Changed the name of functions, make them consistent with current context
+       get/set functions.
+    4. Add change to function __iommu_attach_domain.
+
+Changelog[v3]:
+    1. Commented-out "#define DEBUG 1" to eliminate debug messages.
+    2. Updated the comments about changes in each version.
+    3. Fixed: one-line added to Copy-Translations patch to initialize the iovad
+          struct as recommended by Baoquan He [bhe@redhat.com]
+          init_iova_domain(&domain->iovad, DMA_32BIT_PFN);
+
+Changelog[v2]:
+    The following series implements a fix for:
+    A kdump problem about DMA that has been discussed for a long time. That is,
+    when a kernel panics and boots into the kdump kernel, DMA started by the
+    panicked kernel is not stopped before the kdump kernel is booted and the
+    kdump kernel disables the IOMMU while this DMA continues.  This causes the
+    IOMMU to stop translating the DMA addresses as IOVAs and begin to treat
+    them as physical memory addresses -- which causes the DMA to either:
+        (1) generate DMAR errors or 
+        (2) generate PCI SERR errors or 
+        (3) transfer data to or from incorrect areas of memory. Often this 
+            causes the dump to fail.
+
+Changelog[v1]:
+    The original version.
+
+Changed in this version:
+1. Do not disable and re-enable traslation and interrupt remapping. 
+2. Use old root entry table.
+3. Use old interrupt remapping table.
+4. Use "unsigned long" as physical address.
+5. Use intel_unmap to unmap the old dma;
+
+Baoquan He <bhe@redhat.com> helps testing this patchset.
+
+  iommu/vt-d: Update iommu_attach_domain() and its callers
+  iommu/vt-d: Items required for kdump
+  iommu/vt-d: Add domain-id functions
+  iommu/vt-d: functions to copy data from old mem
+  iommu/vt-d: Add functions to load and save old re
+  iommu/vt-d: datatypes and functions used for kdump
+  iommu/vt-d: enable kdump support in iommu module
+  iommu/vt-d: assign new page table for dma_map
+  iommu/vt-d: Copy functions for irte
+  iommu/vt-d: Use old irte in kdump kernel
+
+Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
+Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+Tested-by: Baoquan He <bhe@redhat.com>
+---
+ drivers/iommu/intel-iommu.c         | 1050 +++++++++++++++++++++++++++++++++--
+ drivers/iommu/intel_irq_remapping.c |  104 +++-
+ include/linux/intel-iommu.h         |   18 +
+ 3 files changed, 1130 insertions(+), 42 deletions(-)
+
+-- 
+2.0.0-rc0
+
 
 _______________________________________________
 kexec mailing list
