@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3427.houston.hp.com ([15.201.208.55])
- by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y93X5-0000ih-It
- for kexec@lists.infradead.org; Thu, 08 Jan 2015 03:13:13 +0000
-From: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Subject: RE: [PATCH v7 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Date: Thu, 8 Jan 2015 03:11:36 +0000
-Message-ID: <1267BB84A242B24E81E0C0C8955CFFC061AD4A8E@G9W0343.americas.hpqcorp.net>
-References: <1420603474-4235-1-git-send-email-zhen-hual@hp.com>
- <54ACB1E9.9070904@hp.com>
- <20150107050247.GA16050@dhcp-16-116.nay.redhat.com>
- <54ACC35F.1070007@hp.com>
- <20150107082813.GB16050@dhcp-16-116.nay.redhat.com>
- <54ACF3CC.7090004@hp.com> <54ADD6A2.5020807@jp.fujitsu.com>
-In-Reply-To: <54ADD6A2.5020807@jp.fujitsu.com>
-Content-Language: en-US
+Received: from mx7.zte.com.cn ([202.103.147.169] helo=zte.com.cn)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Y94cr-00082o-9U
+ for kexec@lists.infradead.org; Thu, 08 Jan 2015 04:23:15 +0000
+In-Reply-To: <54ABB227.7010203@linux.vnet.ibm.com>
+References: <OF9C6CA8A8.9D7923CD-ON48257DC5.0023F61F-48257DC5.0024E800@zte.com.cn>
+ <54AB9EAF.2020004@linux.vnet.ibm.com>
+ <OF89302667.7C36AC27-ON48257DC5.002FF943-48257DC5.00333569@zte.com.cn>
+ <54ABB227.7010203@linux.vnet.ibm.com>
+Subject: Re: some questions about elf_ppc64_load
+Message-ID: <OF45591076.2B9B091A-ON48257DC7.00179FF6-48257DC7.0017DC56@zte.com.cn>
+From: liu.song11@zte.com.cn
+Date: Thu, 8 Jan 2015 12:21:44 +0800
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,291 +21,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>, "bhe@redhat.com" <bhe@redhat.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "Vaden,
- Tom (HP Server OS Architecture)" <tom.vaden@hp.com>, "Wright,
- Randy (HP Servers Linux)" <rwright@hp.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "joro@8bytes.org" <joro@8bytes.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in
- Fort Collins)" <lisa.mitchell@hp.com>, "Hoemann, Jerry" <jerry.hoemann@hp.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "ddutile@redhat.com" <ddutile@redhat.com>, "Hatch, Douglas B (HPS Linux
- PM)" <doug.hatch@hp.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "billsumnerlinux@gmail.com" <billsumnerlinux@gmail.com>, "Zhang, Li
- (Zoe@HPservers-Core-OE-PSC)" <li.zhang6@hp.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org
 
-In your log, it seems something incorrect while copying pages.
-
-Your last DMAR fault is:
-DMAR:[fault reason 01] Present bit in root entry is clear
-
-But this time, it is:
-DMAR:[fault reason 05] PTE Write access is not set
-
-
-So I think this line I added to this version , it works.
-function intel_iommu_load_translation_tables, line:
-    __iommu_flush_cache(iommu, iommu->root_entry, PAGE_SIZE);
-
-
-I checked the code, found I missed one flush in function copy_page_table.
-How do you think we add one flush after this lines:
-
-			ret = copy_page_table(&dma_pte_next, 
-					(p->val & VTD_PAGE_MASK),
-					shift-9, page_addr | (u << shift),
-					iommu, bus, devfn, dve, ppap);
-
-+			__iommu_flush_cache(iommu, phys_to_virt(dma_pte_next),
-+				VTD_PAGE_SIZE);
-
-If this does not work, I have no ideas currently, need to dig the code more.
-
-Regards
-Zhenhua
-
------Original Message-----
-From: Takao Indoh [mailto:indou.takao@jp.fujitsu.com] 
-Sent: Thursday, January 08, 2015 9:00 AM
-To: Li, Zhen-Hua; bhe@redhat.com
-Cc: dwmw2@infradead.org; joro@8bytes.org; vgoyal@redhat.com; dyoung@redhat.com; iommu@lists.linux-foundation.org; linux-kernel@vger.kernel.org; linux-pci@vger.kernel.org; kexec@lists.infradead.org; alex.williamson@redhat.com; ddutile@redhat.com; ishii.hironobu@jp.fujitsu.com; bhelgaas@google.com; Hatch, Douglas B (HPS Linux PM); Hoemann, Jerry; Vaden, Tom (HP Server OS Architecture); Zhang, Li (Zoe@HPservers-Core-OE-PSC); Mitchell, Lisa (MCLinux in Fort Collins); billsumnerlinux@gmail.com; Wright, Randy (HP Servers Linux)
-Subject: Re: [PATCH v7 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-
-On 2015/01/07 17:52, Li, ZhenHua wrote:
-> Well, that's quite good news.
-> Looking forward Takao's testing on his system.
-
-Unfortunately DMAR fault still occurs with this patch...
-I attach console log.
-
-Thanks,
-Takao Indoh
-
-> 
-> Regards
-> Zhenhua
-> On 01/07/2015 04:28 PM, Baoquan He wrote:
->> On 01/07/15 at 01:25pm, Li, ZhenHua wrote:
->>> It is same as the last one I send to you yesterday.
->>>
->>> The continuous memory that needed for data in this patchset:
->>> RE: PAGE_SIZE, 4096 Bytes;
->>> IRTE: 65536 * 16 ; 1M Bytes;
->>>
->>> It should use same memory as the old versions of this patchset. The 
->>> changes for the last version do not need more memory.
->>
->> Hi Zhenhua,
->>
->> It was my mistake because I didn't strip the debug info of modules, 
->> then initramfs is bloated very big. Just now I tested the latest 
->> version, it works well and dump is successful. No dmar fault and 
->> intr-remap fault seen any more, good job!
->>
->> Thanks
->> Baoquan
->>
->>
->>>
->>> Regards
->>> Zhenhua
->>>
->>> On 01/07/2015 01:02 PM, Baoquan He wrote:
->>>> On 01/07/15 at 12:11pm, Li, ZhenHua wrote:
->>>>> Many thanks to Takao Indoh and Baoquan He, for your testing on 
->>>>> more different systems.
->>>>>
->>>>> The calling of flush functions are added to this version.
->>>>>
->>>>> The usage of __iommu_flush_cache function :
->>>>> 1. Fixes a dump on Takao's system.
->>>>> 2. Reduces the count of faults on Baoquan's system.
->>>>
->>>> I am testing the version you sent to me yesterday afternoon. Is 
->>>> that different with this patchset? I found your patchset man 
->>>> reserve a big contiguous memory region under 896M, this will cause 
->>>> the crashkernel reservation failed when I set crashkernel=320M. The 
->>>> reason I increase the crashkerenl reservation to 320M is 256M is 
->>>> not enough and cause OOM when that patchset is tested.
->>>>
->>>> I am checking what happened.
->>>>
->>>>
->>>> Thanks
->>>> Baoquan
->>>>
->>>>>
->>>>> Regards
->>>>> Zhenhua
->>>>>
->>>>> On 01/07/2015 12:04 PM, Li, Zhen-Hua wrote:
->>>>>> This patchset is an update of Bill Sumner's patchset, implements a fix for:
->>>>>> If a kernel boots with intel_iommu=on on a system that supports 
->>>>>> intel vt-d, when a panic happens, the kdump kernel will boot with these faults:
->>>>>>
->>>>>>      dmar: DRHD: handling fault status reg 102
->>>>>>      dmar: DMAR:[DMA Read] Request device [01:00.0] fault addr fff80000
->>>>>>      DMAR:[fault reason 01] Present bit in root entry is clear
->>>>>>
->>>>>>      dmar: DRHD: handling fault status reg 2
->>>>>>      dmar: INTR-REMAP: Request device [[61:00.0] fault index 42
->>>>>>      INTR-REMAP:[fault reason 34] Present field in the IRTE entry 
->>>>>> is clear
->>>>>>
->>>>>> On some system, the interrupt remapping fault will also happen 
->>>>>> even if the intel_iommu is not set to on, because the interrupt 
->>>>>> remapping will be enabled when x2apic is needed by the system.
->>>>>>
->>>>>> The cause of the DMA fault is described in Bill's original 
->>>>>> version, and the INTR-Remap fault is caused by a similar reason. 
->>>>>> In short, the initialization of vt-d drivers causes the in-flight 
->>>>>> DMA and interrupt requests get wrong response.
->>>>>>
->>>>>> To fix this problem, we modifies the behaviors of the intel vt-d 
->>>>>> in the crashdump kernel:
->>>>>>
->>>>>> For DMA Remapping:
->>>>>> 1. To accept the vt-d hardware in an active state, 2. Do not 
->>>>>> disable and re-enable the translation, keep it enabled.
->>>>>> 3. Use the old root entry table, do not rewrite the RTA register.
->>>>>> 4. Malloc and use new context entry table and page table, copy data from the
->>>>>>     old ones that used by the old kernel.
->>>>>> 5. to use different portions of the iova address ranges for the device drivers
->>>>>>     in the crashdump kernel than the iova ranges that were in-use at the time
->>>>>>     of the panic.
->>>>>> 6. After device driver is loaded, when it issues the first dma_map command,
->>>>>>     free the dmar_domain structure for this device, and generate a new one, so
->>>>>>     that the device can be assigned a new and empty page table.
->>>>>> 7. When a new context entry table is generated, we also save its address to
->>>>>>     the old root entry table.
->>>>>>
->>>>>> For Interrupt Remapping:
->>>>>> 1. To accept the vt-d hardware in an active state, 2. Do not 
->>>>>> disable and re-enable the interrupt remapping, keep it enabled.
->>>>>> 3. Use the old interrupt remapping table, do not rewrite the IRTA register.
->>>>>> 4. When ioapic entry is setup, the interrupt remapping table is changed, and
->>>>>>     the updated data will be stored to the old interrupt remapping table.
->>>>>>
->>>>>> Advantages of this approach:
->>>>>> 1. All manipulation of the IO-device is done by the Linux device-driver
->>>>>>     for that device.
->>>>>> 2. This approach behaves in a manner very similar to operation without an
->>>>>>     active iommu.
->>>>>> 3. Any activity between the IO-device and its RMRR areas is handled by the
->>>>>>     device-driver in the same manner as during a non-kdump boot.
->>>>>> 4. If an IO-device has no driver in the kdump kernel, it is simply left alone.
->>>>>>     This supports the practice of creating a special kdump kernel without
->>>>>>     drivers for any devices that are not required for taking a crashdump.
->>>>>> 5. Minimal code-changes among the existing mainline intel vt-d code.
->>>>>>
->>>>>> Summary of changes in this patch set:
->>>>>> 1. Added some useful function for root entry table in code 
->>>>>> intel-iommu.c 2. Added new members to struct root_entry and 
->>>>>> struct irte; 3. Functions to load old root entry table to iommu->root_entry from the memory
->>>>>>     of old kernel.
->>>>>> 4. Functions to malloc new context entry table and page table and copy the data
->>>>>>     from the old ones to the malloced new ones.
->>>>>> 5. Functions to enable support for DMA remapping in kdump kernel.
->>>>>> 6. Functions to load old irte data from the old kernel to the kdump kernel.
->>>>>> 7. Some code changes that support other behaviours that have been listed.
->>>>>> 8. In the new functions, use physical address as "unsigned long" type, not
->>>>>>     pointers.
->>>>>>
->>>>>> Original version by Bill Sumner:
->>>>>>      https://lkml.org/lkml/2014/1/10/518
->>>>>>      https://lkml.org/lkml/2014/4/15/716
->>>>>>      https://lkml.org/lkml/2014/4/24/836
->>>>>>
->>>>>> Zhenhua's updates:
->>>>>>      https://lkml.org/lkml/2014/10/21/134
->>>>>>      https://lkml.org/lkml/2014/12/15/121
->>>>>>      https://lkml.org/lkml/2014/12/22/53
->>>>>>
->>>>>> Changelog[v7]:
->>>>>>      1. Use __iommu_flush_cache to flush the data to hardware.
->>>>>>
->>>>>> Changelog[v6]:
->>>>>>      1. Use "unsigned long" as type of physical address.
->>>>>>      2. Use new function unmap_device_dma to unmap the old dma.
->>>>>>      3. Some small incorrect bits order for aw shift.
->>>>>>
->>>>>> Changelog[v5]:
->>>>>>      1. Do not disable and re-enable traslation and interrupt remapping.
->>>>>>      2. Use old root entry table.
->>>>>>      3. Use old interrupt remapping table.
->>>>>>      4. New functions to copy data from old kernel, and save to old kernel mem.
->>>>>>      5. New functions to save updated root entry table and irte table.
->>>>>>      6. Use intel_unmap to unmap the old dma;
->>>>>>      7. Allocate new pages while driver is being loaded.
->>>>>>
->>>>>> Changelog[v4]:
->>>>>>      1. Cut off the patches that move some defines and functions to new files.
->>>>>>      2. Reduce the numbers of patches to five, make it more easier to read.
->>>>>>      3. Changed the name of functions, make them consistent with current context
->>>>>>         get/set functions.
->>>>>>      4. Add change to function __iommu_attach_domain.
->>>>>>
->>>>>> Changelog[v3]:
->>>>>>      1. Commented-out "#define DEBUG 1" to eliminate debug messages.
->>>>>>      2. Updated the comments about changes in each version.
->>>>>>      3. Fixed: one-line added to Copy-Translations patch to initialize the iovad
->>>>>>            struct as recommended by Baoquan He [bhe@redhat.com]
->>>>>>            init_iova_domain(&domain->iovad, DMA_32BIT_PFN);
->>>>>>
->>>>>> Changelog[v2]:
->>>>>>      The following series implements a fix for:
->>>>>>      A kdump problem about DMA that has been discussed for a long time. That is,
->>>>>>      when a kernel panics and boots into the kdump kernel, DMA started by the
->>>>>>      panicked kernel is not stopped before the kdump kernel is booted and the
->>>>>>      kdump kernel disables the IOMMU while this DMA continues.  This causes the
->>>>>>      IOMMU to stop translating the DMA addresses as IOVAs and begin to treat
->>>>>>      them as physical memory addresses -- which causes the DMA to either:
->>>>>>          (1) generate DMAR errors or
->>>>>>          (2) generate PCI SERR errors or
->>>>>>          (3) transfer data to or from incorrect areas of memory. Often this
->>>>>>              causes the dump to fail.
->>>>>>
->>>>>> Changelog[v1]:
->>>>>>      The original version.
->>>>>>
->>>>>> Changed in this version:
->>>>>> 1. Do not disable and re-enable traslation and interrupt remapping.
->>>>>> 2. Use old root entry table.
->>>>>> 3. Use old interrupt remapping table.
->>>>>> 4. Use "unsigned long" as physical address.
->>>>>> 5. Use intel_unmap to unmap the old dma;
->>>>>>
->>>>>> Baoquan He <bhe@redhat.com> helps testing this patchset.
->>>>>>
->>>>>>    iommu/vt-d: Update iommu_attach_domain() and its callers
->>>>>>    iommu/vt-d: Items required for kdump
->>>>>>    iommu/vt-d: Add domain-id functions
->>>>>>    iommu/vt-d: functions to copy data from old mem
->>>>>>    iommu/vt-d: Add functions to load and save old re
->>>>>>    iommu/vt-d: datatypes and functions used for kdump
->>>>>>    iommu/vt-d: enable kdump support in iommu module
->>>>>>    iommu/vt-d: assign new page table for dma_map
->>>>>>    iommu/vt-d: Copy functions for irte
->>>>>>    iommu/vt-d: Use old irte in kdump kernel
->>>>>>
->>>>>> Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
->>>>>> Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
->>>>>> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
->>>>>> Tested-by: Baoquan He <bhe@redhat.com>
->>>>>> ---
->>>>>>   drivers/iommu/intel-iommu.c         | 1050 +++++++++++++++++++++++++++++++++--
->>>>>>   drivers/iommu/intel_irq_remapping.c |  104 +++-
->>>>>>   include/linux/intel-iommu.h         |   18 +
->>>>>>   3 files changed, 1130 insertions(+), 42 deletions(-)
->>>>>>
->>>>>
->>>
-> 
-> 
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+DQoNCkxhdXJlbnQgRHVmb3VyIDxsZHVmb3VyQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JvdGUgb24g
+MjAxNS0wMS0wNiAxODowMDowNzoNCg0KPiBGcm9tOiBMYXVyZW50IER1Zm91ciA8bGR1Zm91ckBs
+aW51eC52bmV0LmlibS5jb20+DQo+IFRvOiBsaXUuc29uZzExQHp0ZS5jb20uY24sDQo+IENjOiBr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IERhdGU6IDIwMTUtMDEtMDYgMTg6MDANCj4gU3Vi
+amVjdDogUmU6IHNvbWUgcXVlc3Rpb25zIGFib3V0IGVsZl9wcGM2NF9sb2FkDQo+DQo+IE9uIDA2
+LzAxLzIwMTUgMTA6MjAsIGxpdS5zb25nMTFAenRlLmNvbS5jbiB3cm90ZToNCj4gPg0KPiA+DQo+
+ID4gTGF1cmVudCBEdWZvdXIgPGxkdWZvdXJAbGludXgudm5ldC5pYm0uY29tPiB3cm90ZSBvbiAy
+MDE1LTAxLTA2IDE2OjM3OjAzOg0KPiA+DQo+ID4+IEZyb206IExhdXJlbnQgRHVmb3VyIDxsZHVm
+b3VyQGxpbnV4LnZuZXQuaWJtLmNvbT4NCj4gPj4gVG86IGxpdS5zb25nMTFAenRlLmNvbS5jbiwN
+Cj4gPj4gQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPj4gRGF0ZTogMjAxNS0wMS0w
+NiAxNjozNw0KPiA+PiBTdWJqZWN0OiBSZTogc29tZSBxdWVzdGlvbnMgYWJvdXQgZWxmX3BwYzY0
+X2xvYWQNCj4gPj4NCj4gPj4gT24gMDYvMDEvMjAxNSAwNzo0NCwgbGl1LnNvbmcxMUB6dGUuY29t
+LmNuIHdyb3RlOg0KPiA+Pj4NCj4gPj4+IGhpIGFsbKOsDQo+ID4+Pg0KPiA+Pj4gSSB1c2Uga2V4
+ZWMtdG9vbHMtMi4wLjggZm9yIHBwYzY0LCBpbiBmdWN0aW9uIGVsZl9wcGM2NF9sb2FkIHByb21w
+dCAiQ2FuJ3QgdXNlIHJhbWRpc2sgd2l0aCBkZXZpY2UgdHJlZSBibG9iIGlucHV0Ii4NCj4gPj4+
+DQo+ID4+PiBJIGRvbid0IGtub3cgd2h5IGhlcmUgcmFtZGlzayBjYW4ndCB0b2dldGhlciB3aXRo
+IGR0YixhbmQgbmVlZCBzb21lIGhlbHAuDQo+ID4+DQo+ID4+IFRoZSBkZXZpY2UgdHJlZSBpcyBh
+bHNvIHNwZWNpZnlpbmcgaW5pdHJkIChzZWUga2V4ZWMvZnMyZHQuYyBwdXRub2RlKSwNCj4gPj4g
+c28gdGhlcmUgaXMgMiBpbml0cmQgc3BlY2lmeSBpbiB0aGF0IGNhc2UuIFRoZSBjb2RlIGlzIGEg
+Yml0IHJvdWdoIGhlcmUsDQo+ID4+IGJ1dCBJIGd1ZXNzIHRoaXMgaXMgYmVjYXVzZSB0aGVyZSBp
+cyBub3QgeWV0IGEgdmFsaWQgdXNlIGNhc2UuDQo+ID4gaGkgQ2hlZXJzLA0KPiA+IEluICJlbGZf
+cHBjNjRfbG9hZCIsIGlmIHdlIGhhdmVuJ3QgYXNzaWduIGEgc3BlY2lhbCBkdGIgYnkgLS1kdGI9
+PGZpbGVuYW1lPiwgdGhlbiBoZXJlIHdpbGwgdXNlICJjcmVhdGVfZmxhdHRlbl90cmVlIiB0bw0K
+PiA+IGNyZWF0ZSBvbmUuIEhvd2V2ZXIsIE15IGJvYXJkIG5lZWQgYXNzaWduIGEgZHRiLCBzbyBJ
+IHVzZSAtLWR0Yj1teS5kdGIgdG8gYXNzaWduIGl0LiBUaGUgZHRiIGZpbGUgaXMgdmFsaWQgd2hp
+Y2ggSSB1c2UgaXQNCj4gPiB0byBzdGFydCBrZXJuZWwgdW5kZXIgdWJvb3QuIEZvciBub3csIEkg
+anVzdCBjb25mdXNlIGlzIHdoeSB0aGUgImNyZWF0ZV9mbGF0dGVuX3RyZWUiIGNyZWF0ZSBkdGIg
+Y291bGQgd29yaywgYnV0IEkgYXNzaWduZWQNCj4gPiBkdGIgY291bGRuJ3QsIG15LmR0YiBpcyA0
+MEtCIGFuZCBzbWFsbGVyIHRoYW4gY3JlYXRlIGR0YidzIDc2S0IuIFRoZSB0d28gd2F5cyBib3Ro
+IHVzZSBhZGRfYnVmZmVyIHdpdGggcGFyYW0gImJ1Zl9lbmQgPSAtMSIsDQo+ID4gc28gd2lsbCBh
+ZGQgc2VnbWVudCBmb3IgdGhlIHRvcCBvZiB0aGUgdmFsaWQgbWVtIHJhbmdlLCBhbmQgbXkuZHRi
+IGlzIHNtYWxsZXIgd2hpY2ggbGVzcyBjaGFuY2Ugb2Ygb3ZlcmxhcCBzb21lIGRhdGEgaW4gbWVt
+b3J5Lg0KPg0KPiBUaGUgc2VydmljZSBjcmVhdGVfZmxhdHRlbl90cmVlIGNyZWF0ZSBhIERUQiBm
+cm9tIHRoZSBvbmUgaW5oZXJpdGVkIGF0DQo+IHRoZSBib290IHRpbWUgb2YgdGhlIGN1cnJlbnRs
+eSBydW5uaW5nIGtlcm5lbCAoL3Byb2MvZGV2aWNlLXRyZWUpLiBJDQo+IGd1ZXNzIHRoaXMgZGV2
+aWNlIHRyZWUgaXMgdmFsaWQgc2luY2UgdGhlIGN1cnJlbnQga2VybmVsIGlzIHJ1bm5pbmcgOykN
+Cj4NCj4gWW91IG1heSB0cnkgdG8gc2VlIHdoYXQgdGhlIGRldmljZSB0cmVlIHBhc3NlZCB0byB5
+b3VyIGtleGVkIGtlcm5lbCBpcywNCj4gbWF5IGJlIHRoZXJlIGlzIHNvbWV0aGluZyB3cm9uZyB0
+aGVyZS4gQWxzbyBsb29raW5nIGF0IHdoYXQgZ29pbmcgd3JvbmcNCj4gd2hlbiB0aGUga2V4ZWQg
+a2VybmVsIGlzIHBhbmljaW5nIG1heSBiZSBoZWxwZnVsLg0KPg0KPiBDaGVlcnMsDQo+IExhdXJl
+bnQuDQo+DQpUaGFua3MgTGF1cmVudCwgdGhlIGR0YiB3aGljaCBJIHVzZWQgaXMgaW52YWxpZCBm
+b3Iga2V4ZWMgYSBrZXJuZWwsIHRoaXMgZHRiIGp1c3QgdXNlZCBpbiB1LWJvb3QgYW5kIGl0IHdv
+dWxkIGJlIHByb2Nlc3NlZCBieSB1LWJvb3QsDQp0aGVuIGl0IGNvdWxkIGZpdCB0byBrZXJuZWwn
+cyByZXF1aXJlLg0KDQpUaGFua3MNClJlZ2FyZHMNCg0KPiA+DQo+ID4+DQo+ID4+PiBJIGFsc28g
+aGF2ZSBzb21lIHF1ZXN0aW9ucywgd2hlbiBJIGp1c3QgLi9rZXhlIC1sIHZtbGludXggdGhlbiAu
+L2tleGVjIC1lLCB3aWxsIGp1bXAgdG8gc2Vjb25kIGtlcm5lbCBzdWNlc3NmdWxseSwNCj4gPj4+
+DQo+ID4+PiBidXQgd2l0aG91dCB1c2VmdWwgZHRiLCB0aGVuIGRldmljZSBjYW4ndCBpbml0IGNv
+cnJlY3QuIEJ1dCwgd2hlbiBJIGlucHV0IC4va2V4ZWMgLWwgdm1saW51eCAtLWR0Yj1teS5kdGIg
+LCB0aGVuDQo+ID4+Pg0KPiA+Pj4gLi9rZXhlYyAtZSwgdGhlIGtlcm5lbCBjb3VsZG4ndCB3b3Jr
+IGFuZCBjcmFzaCBpbiBoZWFkXzY0LlMsIHRoaXMgcHJvYmxlbSBhbHNvIG1ha2UgbWUgY29uZnVz
+ZWQuDQo+ID4+DQo+ID4+IEl0J3MgaGFyZCB0byBzdGF0ZSB3aXRoIG5vIG1vcmUgZGV0YWlscy4g
+SSBndWVzcyB0aGUgZGV2aWNlIHRyZWUgYmxvYg0KPiA+PiB5b3UncmUgdXNpbmcgaXMgbm90IHZh
+bGlkLCBvciBjb250YWluIGJhZCBkYXRhLg0KPiA+Pg0KPiA+PiBDaGVlcnMsDQo+ID4+IExhdXJl
+bnQuDQo+ID4+DQo+ID4+PiBUaGFua3MNCj4gPj4+IFJlZ2FyZHMNCj4gPj4+IC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ID4+PiBaVEUg
+SW5mb3JtYXRpb24gU2VjdXJpdHkgTm90aWNlOiBUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGlu
+IHRoaXMgbWFpbCAoYW5kIGFueSBhdHRhY2htZW50IHRyYW5zbWl0dGVkIGhlcmV3aXRoKSBpcyBw
+cml2aWxlZ2VkIGFuZCBjb25maWRlbnRpYWwgYW5kIGlzIGludGVuZGVkIGZvciB0aGUgZXhjbHVz
+aXZlIHVzZSBvZiB0aGUgYWRkcmVzc2VlKHMpLiAgSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQg
+cmVjaXBpZW50LCBhbnkgZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBkaXN0cmlidXRpb24gb3Ig
+b3RoZXIgZGlzc2VtaW5hdGlvbiBvciB1c2Ugb2YgdGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBp
+cyBzdHJpY3RseSBwcm9oaWJpdGVkLiAgSWYgeW91IGhhdmUgcmVjZWl2ZWQgdGhpcyBtYWlsIGlu
+IGVycm9yLCBwbGVhc2UgZGVsZXRlIGl0IGFuZCBub3RpZnkgdXMgaW1tZWRpYXRlbHkuDQo+ID4+
+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+Pj4g
+a2V4ZWMgbWFpbGluZyBsaXN0DQo+ID4+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4+
+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjDQo+ID4+
+Pg0KPiA+Pg0KPiA+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tDQo+ID4gWlRFIEluZm9ybWF0aW9uIFNlY3VyaXR5IE5vdGljZTogVGhlIGlu
+Zm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIG1haWwgKGFuZCBhbnkgYXR0YWNobWVudCB0cmFu
+c21pdHRlZCBoZXJld2l0aCkgaXMgcHJpdmlsZWdlZCBhbmQgY29uZmlkZW50aWFsIGFuZCBpcyBp
+bnRlbmRlZCBmb3IgdGhlIGV4Y2x1c2l2ZSB1c2Ugb2YgdGhlIGFkZHJlc3NlZShzKS4gIElmIHlv
+dSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCwgYW55IGRpc2Nsb3N1cmUsIHJlcHJvZHVj
+dGlvbiwgZGlzdHJpYnV0aW9uIG9yIG90aGVyIGRpc3NlbWluYXRpb24gb3IgdXNlIG9mIHRoZSBp
+bmZvcm1hdGlvbiBjb250YWluZWQgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gIElmIHlvdSBoYXZl
+IHJlY2VpdmVkIHRoaXMgbWFpbCBpbiBlcnJvciwgcGxlYXNlIGRlbGV0ZSBpdCBhbmQgbm90aWZ5
+IHVzIGltbWVkaWF0ZWx5Lg0KPiA+DQo+DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KWlRFIEluZm9ybWF0aW9uIFNlY3VyaXR5IE5vdGlj
+ZTogVGhlIGluZm9ybWF0aW9uIGNvbnRhaW5lZCBpbiB0aGlzIG1haWwgKGFuZCBhbnkgYXR0YWNo
+bWVudCB0cmFuc21pdHRlZCBoZXJld2l0aCkgaXMgcHJpdmlsZWdlZCBhbmQgY29uZmlkZW50aWFs
+IGFuZCBpcyBpbnRlbmRlZCBmb3IgdGhlIGV4Y2x1c2l2ZSB1c2Ugb2YgdGhlIGFkZHJlc3NlZShz
+KS4gIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCwgYW55IGRpc2Nsb3N1cmUs
+IHJlcHJvZHVjdGlvbiwgZGlzdHJpYnV0aW9uIG9yIG90aGVyIGRpc3NlbWluYXRpb24gb3IgdXNl
+IG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gIElm
+IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgbWFpbCBpbiBlcnJvciwgcGxlYXNlIGRlbGV0ZSBpdCBh
+bmQgbm90aWZ5IHVzIGltbWVkaWF0ZWx5Lg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
