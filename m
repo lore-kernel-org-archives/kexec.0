@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from 8bytes.org ([2a01:238:4383:600:38bc:a715:4b6d:a889]
+ helo=theia.8bytes.org)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YAhf2-00028N-86
- for kexec@lists.infradead.org; Mon, 12 Jan 2015 16:16:13 +0000
-Date: Mon, 12 Jan 2015 11:15:38 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
+ id 1YAiAF-0004mK-2c
+ for kexec@lists.infradead.org; Mon, 12 Jan 2015 16:48:27 +0000
+Date: Mon, 12 Jan 2015 17:48:03 +0100
+From: Joerg Roedel <joro@8bytes.org>
 Subject: Re: [PATCH v8 02/10] iommu/vt-d: Items required for kdump
-Message-ID: <20150112161538.GB16162@redhat.com>
+Message-ID: <20150112164803.GG6343@8bytes.org>
 References: <1421046388-27925-1-git-send-email-zhen-hual@hp.com>
  <1421046388-27925-3-git-send-email-zhen-hual@hp.com>
  <20150112152207.GC6343@8bytes.org>
  <20150112152919.GA16162@redhat.com>
  <20150112160646.GF6343@8bytes.org>
+ <20150112161538.GB16162@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150112160646.GF6343@8bytes.org>
+In-Reply-To: <20150112161538.GB16162@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,38 +29,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
  Zhen-Hua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com
 
-On Mon, Jan 12, 2015 at 05:06:46PM +0100, Joerg Roedel wrote:
-> On Mon, Jan 12, 2015 at 10:29:19AM -0500, Vivek Goyal wrote:
-> > Kdump has the notion of backup region. Where certain parts of old kernels
-> > memory can be moved to a different location (first 640K on x86 as of now)
-> > and new kernel can make use of this memory now.
+On Mon, Jan 12, 2015 at 11:15:38AM -0500, Vivek Goyal wrote:
+> On Mon, Jan 12, 2015 at 05:06:46PM +0100, Joerg Roedel wrote:
+> > On Mon, Jan 12, 2015 at 10:29:19AM -0500, Vivek Goyal wrote:
+> > > Kdump has the notion of backup region. Where certain parts of old kernels
+> > > memory can be moved to a different location (first 640K on x86 as of now)
+> > > and new kernel can make use of this memory now.
+> > > 
+> > > So we will have to just make sure that no parts of this old page table
+> > > fall into backup region.
 > > 
-> > So we will have to just make sure that no parts of this old page table
-> > fall into backup region.
+> > Uuh, looks like the 'iommu-with-kdump-issue' isn't complicated enough
+> > yet ;)
+> > Sadly, your above statement is true for all hardware-accessible data
+> > structures in IOMMU code. I think about how we can solve this, is there
+> > an easy way to allocate memory that is not in any backup region?
 > 
-> Uuh, looks like the 'iommu-with-kdump-issue' isn't complicated enough
-> yet ;)
-> Sadly, your above statement is true for all hardware-accessible data
-> structures in IOMMU code. I think about how we can solve this, is there
-> an easy way to allocate memory that is not in any backup region?
+> Hmm..., there does not seem to be any easy way to do this. In fact, as of
+> now, kernel does not even know where is backup region. All these details are
+> managed by user space completely (except for new kexec_file_load() syscall).
+> 
+> That means we are left with ugly options now.
+> 
+> - Define per arch kexec backup regions in kernel and export it to user
+>   space and let kexec-tools make use of that deinition (instead of
+>   defining its own). That way memory allocation code in kernel can look
+>   at this backup area and skip it for certain allocations.
 
-Hmm..., there does not seem to be any easy way to do this. In fact, as of
-now, kernel does not even know where is backup region. All these details are
-managed by user space completely (except for new kexec_file_load() syscall).
+Yes, that makes sense. In fact, I think all allocations for DMA memory
+need to take this into account to avoid potentially serious data
+corruption.
+If any memory for a disk superblock gets allocated in backup memory and
+a kdump happens, the new kernel might zero out that area and the disk
+controler then writes the zeroes to disk instead of the superblock.
 
-That means we are left with ugly options now.
 
-- Define per arch kexec backup regions in kernel and export it to user
-  space and let kexec-tools make use of that deinition (instead of
-  defining its own). That way memory allocation code in kernel can look
-  at this backup area and skip it for certain allocations.
+	Joerg
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
