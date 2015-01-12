@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Y9VRg-0003WG-At
- for kexec@lists.infradead.org; Fri, 09 Jan 2015 09:01:29 +0000
-Date: Fri, 9 Jan 2015 16:59:27 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec/x86: fix crashkernel reserved mem detection
-Message-ID: <20150109085927.GA8288@dhcp-16-105.nay.redhat.com>
-References: <1419514701-9397-1-git-send-email-wolchkov.yuri@gmail.com>
- <54AF74B7.4000807@suse.de>
+ id 1YAnIU-000706-3n
+ for kexec@lists.infradead.org; Mon, 12 Jan 2015 22:17:19 +0000
+Date: Mon, 12 Jan 2015 17:16:34 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
+Message-ID: <20150112221634.GD16162@redhat.com>
+References: <545FBDDD.9060801@gmail.com> <20141111213037.GA31445@redhat.com>
+ <54ADA284.30502@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <54AF74B7.4000807@suse.de>
+In-Reply-To: <54ADA284.30502@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,64 +24,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tony Jones <tonyj@suse.de>
-Cc: wolchkov.yuri@gmail.com, horms@verge.net.au, kexec@lists.infradead.org
+To: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
 
-On 01/08/15 at 10:27pm, Tony Jones wrote:
-> On 12/25/2014 05:38 AM, Yuri Volchkov wrote:
-> > Function crashkernel_mem_callback had wrong parameters type
-> > So crash_reserved_mem got completely insane values
-> > As a result kexec was unable to allocate segments for crashkernel
-> > For instance, I got this message:
-> > 	"Could not find a free area of memory of 0x9f000 bytes..."
+On Wed, Jan 07, 2015 at 10:17:56PM +0100, Michael Kerrisk (man-pages) wrote:
+
+[..]
+> >> .BR KEXEC_ON_CRASH " (since Linux 2.6.13)"
+> >> Execute the new kernel automatically on a system crash.
+> >> .\" FIXME Explain in more detail how KEXEC_ON_CRASH is actually used
+> 
+> I wasn't expecting that you would respond to the FIXMEs that were 
+> not labeled "kexec_file_load", but I was hoping you might ;-). Thanks!
+> I have a few additional questions to your nice notes.
+> 
+> > Upon boot first kernel reserves a chunk of contiguous memory (if
+> > crashkernel=<> command line paramter is passed). This memory is
+> > is used to load the crash kernel (Kernel which will be booted into
+> > if first kernel crashes).
+> 
+
+Hi Michael,
+
+> Can I just confirm: is it in all cases only possible to use kexec_load() 
+> and kexec_file_load() if the kernel was booted with the 'crashkernel'
+> parameter set?
+
+As of now, only kexec_load() and kexec_file_load() system calls can
+make use of memory reserved by crashkernel=<> kernel parameter. And
+this is used only if we are trying to load a crash kernel (KEXEC_ON_CRASH
+flag specified).
+
+> 
+> > Location of this reserved memory is exported to user space through
+> > /proc/iomem file. 
+> 
+> Is that export via an entry labeled "Crash kernel" in the 
+> /proc/iomem file?
+
+Yes.
+
+> 
+> > User space can parse it and prepare list of segments
+> > specifying this reserved memory as destination.
+> 
+> I'm not quite clear on "specifying this reserved memory as destination".
+> Is that done by specifying the address in the kexec_segment.mem fields?
+
+You are absolutely right. User space can specify in kexec_segment.mem
+field the memory location where it expecting a particular segment to
+be loaded by kernel.
+
+> 
+> > Once kernel sees the flag KEXEC_ON_CRASH, it makes sure that all the
+> > segments are destined for reserved memory otherwise kernel load operation
+> > fails.
+> 
+> Could you point me to where this checking is done? Also, what is the
+> error (errno) that occurs when the load operation fails? (I think the
+> answers to these questions are "at the start of kimage_alloc_init()"
+> and "EADDRNOTAVAIL", but I'd like to confirm.)
+
+This checking happens in sanity_check_segment_list() which is called
+by kimage_alloc_init().
+
+And yes, error code returned is -EADDRNOTAVAIL.
+
+> 
+> > [..]
+> >> struct kexec_segment {
+> >>     void   *buf;        /* Buffer in user space */
+> >>     size_t  bufsz;      /* Buffer length in user space */
+> >>     void   *mem;        /* Physical address of kernel */
+> >>     size_t  memsz;      /* Physical address length */
+> >> };
+> >> .fi
+> >> .in
+> >> .PP
+> >> .\" FIXME Explain the details of how the kernel image defined by segments
+> >> .\" is copied from the calling process into previously reserved memory.
 > > 
-> > Signed-off-by: Yuri Volchkov <wolchkov.yuri@gmail.com>
+> > Kernel image defined by segments is copied into kernel either in regular
+> > memory 
 > 
-> See the patch attached to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=771671
-> which also fixes kexec/arch/sh/crashdump-sh.c and kexec/arch/sh/kexec-sh.c
+> Could you clarify what you mean by "regular memory"?
+
+I meant memory which is not reserved memory.
+
 > 
-> Definitely a problem.  Without the x86 fix we seem same failure on i586
+> > or in reserved memory (if KEXEC_ON_CRASH is set). Kernel first
+> > copies list of segments in kernel memory and then goes does various
+> > sanity checks on the segments. If everything looks line, kernel copies
+> > segment data to kernel memory.
+> > 
+> > In case of normal kexec, segment data is loaded in any available memory
+> > and segment data is moved to final destination at the kexec reboot time.
+> 
+> By "moved to final destination", do you mean "moved from user space to the
+> final kernel-space destination"?
 
-Hi Tony,
+No. Segment data moves from user space to kernel space once kexec_load()
+call finishes successfully. But when user does reboot (kexec -e), at that
+time kernel moves that segment data to its final location. Kernel could
+not place the segment at its final location during kexec_load() time as
+that memory is already in use by running kernel. But once we are about
+to reboot to new kernel, we can overwrite the old kernel's memory.
 
-commit 4362bfa make that change, but skip the crashkernel_mem_callback.
-It need be fixed.
+> 
+> > In case of kexec on panic (KEXEC_ON_CRASH flag set), segment data is
+> > directly loaded to reserved memory and after crash kexec simply jumps
+> 
+> By "directly", I assume you mean "at the time of the kexec_laod() call",
+> right?
 
-I am wondering how the insane values happened on i386, and it didn't
-happen on x86_64.
+Yes.
 
 Thanks
-Baoquan
+Vivek
 
-> 
-> tony
-> 
-> > ---
-> >  kexec/arch/i386/crashdump-x86.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > index 77bdad5..82bf239 100644
-> > --- a/kexec/arch/i386/crashdump-x86.c
-> > +++ b/kexec/arch/i386/crashdump-x86.c
-> > @@ -1041,8 +1041,8 @@ int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
-> >  
-> >  static int crashkernel_mem_callback(void *UNUSED(data), int nr,
-> >                                            char *UNUSED(str),
-> > -                                          unsigned long base,
-> > -                                          unsigned long length)
-> > +                                          unsigned long long base,
-> > +                                          unsigned long long length)
-> >  {
-> >  	if (nr >= CRASH_RESERVED_MEM_NR)
-> >  		return 1;
-> > 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
