@@ -1,11 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <54B5003A.1050508@huawei.com>
-Date: Tue, 13 Jan 2015 16:53:38 +0530
-From: Anurup M <anurup.m@huawei.com>
+Received: from g6t1526.atlanta.hp.com ([15.193.200.69])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YAwbz-0000PR-O9
+ for kexec@lists.infradead.org; Tue, 13 Jan 2015 08:14:04 +0000
+Message-ID: <54B4D36D.8030204@hp.com>
+Date: Tue, 13 Jan 2015 16:12:29 +0800
+From: "Li, ZhenHua" <zhen-hual@hp.com>
 MIME-Version: 1.0
-Subject: Re: Kdump on ARM64
-References: <54AE2544.2010801@huawei.com> <54AE3B7A.4070301@linaro.org>
-In-Reply-To: <54AE3B7A.4070301@linaro.org>
+Subject: Re: [PATCH v8 02/10] iommu/vt-d: Items required for kdump
+References: <1421046388-27925-1-git-send-email-zhen-hual@hp.com>
+ <1421046388-27925-3-git-send-email-zhen-hual@hp.com>
+ <20150112152207.GC6343@8bytes.org>
+In-Reply-To: <20150112152207.GC6343@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,68 +20,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org
-Cc: "sanil.kumar@hisilicon.com" <sanil.kumar@hisilicon.com>, kexec@lists.infradead.org, dingtianhong@huawei.com
+To: Joerg Roedel <joro@8bytes.org>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
+
+On 01/12/2015 11:22 PM, Joerg Roedel wrote:
+> On Mon, Jan 12, 2015 at 03:06:20PM +0800, Li, Zhen-Hua wrote:
+>> +
+>> +#ifdef CONFIG_CRASH_DUMP
+>> +
+>> +/*
+>> + * Fix Crashdump failure caused by leftover DMA through a hardware IOMMU
+>> + *
+>> + * Fixes the crashdump kernel to deal with an active iommu and legacy
+>> + * DMA from the (old) panicked kernel in a manner similar to how legacy
+>> + * DMA is handled when no hardware iommu was in use by the old kernel --
+>> + * allow the legacy DMA to continue into its current buffers.
+>> + *
+>> + * In the crashdump kernel, this code:
+>> + * 1. skips disabling the IOMMU's translating of IO Virtual Addresses (IOVA).
+>> + * 2. Do not re-enable IOMMU's translating.
+>> + * 3. In kdump kernel, use the old root entry table.
+>> + * 4. Leaves the current translations in-place so that legacy DMA will
+>> + *    continue to use its current buffers.
+>> + * 5. Allocates to the device drivers in the crashdump kernel
+>> + *    portions of the iova address ranges that are different
+>> + *    from the iova address ranges that were being used by the old kernel
+>> + *    at the time of the panic.
+>> + *
+>> + */
+>
+> It looks like you are still copying the io-page-tables from the old
+> kernel into the kdump kernel, is that right? With the approach that was
+> proposed you only need to copy over the context entries 1-1. They are
+> still pointing to the page-tables in the old kernels memory (which is
+> just fine).
+>
+> The root-entry of the old kernel is also re-used, and when the kdump
+> kernel starts to use a device, its context entry is updated to point to
+> a newly allocated page-table.
+>
+
+Current status:
+1. Use old root entry table,
+2. Copy old context entry tables.
+3. Copy old page tables.
+4. Allocate new page table when device driver is loading.
+
+I remember the progress we discussed was this. Checking the old mails,
+founding we did not clearly discuss about the old page tables, only
+agrred with allocating new page tables when device driver is loading.
+
+To me, both of these two options are fine, copying old page tables, or
+re-use the old ones. My debugging shows both of them works fine.
+
+If we use the old page tables, the patchset will use less code.
+Functions copy_page_addr, copy_page_table are no longer needed, and
+functions copy_context_entry and copy_context_entry_table will be
+reduced to several lines. The patchset will be much simpler.
+
+Zhenhua
 
 
-Hi Akashi,
-
-	Thanks for the reply.
-
-Hi  Akashi, Geoff,
-
-	In the code I could find assert(arm64_mem.memstart) in the function virt_to_phys. This address can be 0x0 when the
-  segment start address is 0x0. so can we use this assert?
-
-	The code flow is elf_arm64_load->load_crashdump_segments->add_buffer_phys_virt->add_segment_phys_virt->virt_to_phys
-  and this call is also before the call to load_elf_exec_in_crashmem which init's arm64_mem.memstart to crash_reserved_mem.start.
-  So arm64_mem.memstart is also not set before the call to virt_to_phys.
-
-	Please share your comments.
-
-Thanks,
-Anurup
-
-
-On 1/8/2015 1:40 PM, AKASHI Takahiro wrote:
-> Hi Anurup,
-> 
-> On 01/08/2015 03:35 PM, Anurup M wrote:
->> Hi Akashi, Geoff,
->>
->>     I tried to check kdump on arm64 on Foundation model. The/proc/vmcore is generated.
->> But I couldnot check if it is proper. Is there a makedumpfile binary for arm64? and also crash tool.
->> I used the master branch of https://git.linaro.org/people/geoff.levand/linux-kexec.git to verify.
->>       Please provide some information about the current status or support for kdump on arm64?
->> and the ways to verify or start development on Foundation model.
-> 
-> The story is that I used to work on kdump, but handed it off
-> to Geoff at some time. Since then, he merged it into his repo
-> but I don't think that he has tested (verified) it yet.
-> So please take it as a study work (or prototype), although I'm
-> pretty sure that it works well on model except some issues.
-> 
-> Regarding /proc/vmcore, if you can retrieve it to your host machine,
-> you can simply verify the contents as follows:
->   $ aarch64-linux-gnu-gdb vmlinux core(=vmcore)
->   (gdb) info threads
->   (gdb) bt
->    ...
-> 
-> I also have a trivial patch for crash tool to cross-build it, but
-> arm64 support (by RedHat folk) is already there.
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
->> Thanks,
->> Anurup M
->>
-> 
 
 _______________________________________________
 kexec mailing list
