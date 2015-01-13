@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from g4t3426.houston.hp.com ([15.201.208.54])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YAnIU-000706-3n
- for kexec@lists.infradead.org; Mon, 12 Jan 2015 22:17:19 +0000
-Date: Mon, 12 Jan 2015 17:16:34 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
-Message-ID: <20150112221634.GD16162@redhat.com>
-References: <545FBDDD.9060801@gmail.com> <20141111213037.GA31445@redhat.com>
- <54ADA284.30502@gmail.com>
+ id 1YAqJS-0005PZ-TK
+ for kexec@lists.infradead.org; Tue, 13 Jan 2015 01:30:32 +0000
+Message-ID: <54B474D5.8090500@hp.com>
+Date: Tue, 13 Jan 2015 09:28:53 +0800
+From: "Li, ZhenHua" <zhen-hual@hp.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <54ADA284.30502@gmail.com>
+Subject: Re: [PATCH v8 01/10] iommu/vt-d: Update iommu_attach_domain() and
+ its callers
+References: <1421046388-27925-1-git-send-email-zhen-hual@hp.com>
+ <1421046388-27925-2-git-send-email-zhen-hual@hp.com>
+ <20150112151855.GB6343@8bytes.org>
+In-Reply-To: <20150112151855.GB6343@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,127 +21,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
 
-On Wed, Jan 07, 2015 at 10:17:56PM +0100, Michael Kerrisk (man-pages) wrote:
+On 01/12/2015 11:18 PM, Joerg Roedel wrote:
+> On Mon, Jan 12, 2015 at 03:06:19PM +0800, Li, Zhen-Hua wrote:
+>> Allow specification of the domain-id for the new domain.
+>> This patch only adds the 'did' parameter to iommu_attach_domain()
+>> and modifies all of its callers to specify the default value of -1
+>> which says "no did specified, allocate a new one".
+>
+> I think its better to keep the old iommu_attach_domain() interface in
+> place and introduce a new function (like iommu_attach_domain_with_id()
+> or something) which has the additional parameter. Then you can rewrite
+> iommu_attach_domain():
+>
+> 	iommu_attach_domai(...)
+> 	{
+> 		return iommu_attach_domain_with_id(..., -1);
+> 	}
+>
+> This way you don't have to update all the callers of
+> iommu_attach_domain() and the interface is more readable.
+>
+>
+> 	Joerg
+>
 
-[..]
-> >> .BR KEXEC_ON_CRASH " (since Linux 2.6.13)"
-> >> Execute the new kernel automatically on a system crash.
-> >> .\" FIXME Explain in more detail how KEXEC_ON_CRASH is actually used
-> 
-> I wasn't expecting that you would respond to the FIXMEs that were 
-> not labeled "kexec_file_load", but I was hoping you might ;-). Thanks!
-> I have a few additional questions to your nice notes.
-> 
-> > Upon boot first kernel reserves a chunk of contiguous memory (if
-> > crashkernel=<> command line paramter is passed). This memory is
-> > is used to load the crash kernel (Kernel which will be booted into
-> > if first kernel crashes).
-> 
-
-Hi Michael,
-
-> Can I just confirm: is it in all cases only possible to use kexec_load() 
-> and kexec_file_load() if the kernel was booted with the 'crashkernel'
-> parameter set?
-
-As of now, only kexec_load() and kexec_file_load() system calls can
-make use of memory reserved by crashkernel=<> kernel parameter. And
-this is used only if we are trying to load a crash kernel (KEXEC_ON_CRASH
-flag specified).
-
-> 
-> > Location of this reserved memory is exported to user space through
-> > /proc/iomem file. 
-> 
-> Is that export via an entry labeled "Crash kernel" in the 
-> /proc/iomem file?
-
-Yes.
-
-> 
-> > User space can parse it and prepare list of segments
-> > specifying this reserved memory as destination.
-> 
-> I'm not quite clear on "specifying this reserved memory as destination".
-> Is that done by specifying the address in the kexec_segment.mem fields?
-
-You are absolutely right. User space can specify in kexec_segment.mem
-field the memory location where it expecting a particular segment to
-be loaded by kernel.
-
-> 
-> > Once kernel sees the flag KEXEC_ON_CRASH, it makes sure that all the
-> > segments are destined for reserved memory otherwise kernel load operation
-> > fails.
-> 
-> Could you point me to where this checking is done? Also, what is the
-> error (errno) that occurs when the load operation fails? (I think the
-> answers to these questions are "at the start of kimage_alloc_init()"
-> and "EADDRNOTAVAIL", but I'd like to confirm.)
-
-This checking happens in sanity_check_segment_list() which is called
-by kimage_alloc_init().
-
-And yes, error code returned is -EADDRNOTAVAIL.
-
-> 
-> > [..]
-> >> struct kexec_segment {
-> >>     void   *buf;        /* Buffer in user space */
-> >>     size_t  bufsz;      /* Buffer length in user space */
-> >>     void   *mem;        /* Physical address of kernel */
-> >>     size_t  memsz;      /* Physical address length */
-> >> };
-> >> .fi
-> >> .in
-> >> .PP
-> >> .\" FIXME Explain the details of how the kernel image defined by segments
-> >> .\" is copied from the calling process into previously reserved memory.
-> > 
-> > Kernel image defined by segments is copied into kernel either in regular
-> > memory 
-> 
-> Could you clarify what you mean by "regular memory"?
-
-I meant memory which is not reserved memory.
-
-> 
-> > or in reserved memory (if KEXEC_ON_CRASH is set). Kernel first
-> > copies list of segments in kernel memory and then goes does various
-> > sanity checks on the segments. If everything looks line, kernel copies
-> > segment data to kernel memory.
-> > 
-> > In case of normal kexec, segment data is loaded in any available memory
-> > and segment data is moved to final destination at the kexec reboot time.
-> 
-> By "moved to final destination", do you mean "moved from user space to the
-> final kernel-space destination"?
-
-No. Segment data moves from user space to kernel space once kexec_load()
-call finishes successfully. But when user does reboot (kexec -e), at that
-time kernel moves that segment data to its final location. Kernel could
-not place the segment at its final location during kexec_load() time as
-that memory is already in use by running kernel. But once we are about
-to reboot to new kernel, we can overwrite the old kernel's memory.
-
-> 
-> > In case of kexec on panic (KEXEC_ON_CRASH flag set), segment data is
-> > directly loaded to reserved memory and after crash kexec simply jumps
-> 
-> By "directly", I assume you mean "at the time of the kexec_laod() call",
-> right?
-
-Yes.
+That's a good way. I will do this in next version.
 
 Thanks
-Vivek
+Zhenhua
+
 
 
 _______________________________________________
