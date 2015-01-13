@@ -1,22 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([2a01:238:4383:600:38bc:a715:4b6d:a889]
- helo=theia.8bytes.org)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YAiAF-0004mK-2c
- for kexec@lists.infradead.org; Mon, 12 Jan 2015 16:48:27 +0000
-Date: Mon, 12 Jan 2015 17:48:03 +0100
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v8 02/10] iommu/vt-d: Items required for kdump
-Message-ID: <20150112164803.GG6343@8bytes.org>
-References: <1421046388-27925-1-git-send-email-zhen-hual@hp.com>
- <1421046388-27925-3-git-send-email-zhen-hual@hp.com>
- <20150112152207.GC6343@8bytes.org>
- <20150112152919.GA16162@redhat.com>
- <20150112160646.GF6343@8bytes.org>
- <20150112161538.GB16162@redhat.com>
+Message-ID: <54B5003A.1050508@huawei.com>
+Date: Tue, 13 Jan 2015 16:53:38 +0530
+From: Anurup M <anurup.m@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150112161538.GB16162@redhat.com>
+Subject: Re: Kdump on ARM64
+References: <54AE2544.2010801@huawei.com> <54AE3B7A.4070301@linaro.org>
+In-Reply-To: <54AE3B7A.4070301@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,47 +18,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
- Zhen-Hua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org
+Cc: "sanil.kumar@hisilicon.com" <sanil.kumar@hisilicon.com>, kexec@lists.infradead.org, dingtianhong@huawei.com
 
-On Mon, Jan 12, 2015 at 11:15:38AM -0500, Vivek Goyal wrote:
-> On Mon, Jan 12, 2015 at 05:06:46PM +0100, Joerg Roedel wrote:
-> > On Mon, Jan 12, 2015 at 10:29:19AM -0500, Vivek Goyal wrote:
-> > > Kdump has the notion of backup region. Where certain parts of old kernels
-> > > memory can be moved to a different location (first 640K on x86 as of now)
-> > > and new kernel can make use of this memory now.
-> > > 
-> > > So we will have to just make sure that no parts of this old page table
-> > > fall into backup region.
-> > 
-> > Uuh, looks like the 'iommu-with-kdump-issue' isn't complicated enough
-> > yet ;)
-> > Sadly, your above statement is true for all hardware-accessible data
-> > structures in IOMMU code. I think about how we can solve this, is there
-> > an easy way to allocate memory that is not in any backup region?
+
+Hi Akashi,
+
+	Thanks for the reply.
+
+Hi  Akashi, Geoff,
+
+	In the code I could find assert(arm64_mem.memstart) in the function virt_to_phys. This address can be 0x0 when the
+  segment start address is 0x0. so can we use this assert?
+
+	The code flow is elf_arm64_load->load_crashdump_segments->add_buffer_phys_virt->add_segment_phys_virt->virt_to_phys
+  and this call is also before the call to load_elf_exec_in_crashmem which init's arm64_mem.memstart to crash_reserved_mem.start.
+  So arm64_mem.memstart is also not set before the call to virt_to_phys.
+
+	Please share your comments.
+
+Thanks,
+Anurup
+
+
+On 1/8/2015 1:40 PM, AKASHI Takahiro wrote:
+> Hi Anurup,
 > 
-> Hmm..., there does not seem to be any easy way to do this. In fact, as of
-> now, kernel does not even know where is backup region. All these details are
-> managed by user space completely (except for new kexec_file_load() syscall).
+> On 01/08/2015 03:35 PM, Anurup M wrote:
+>> Hi Akashi, Geoff,
+>>
+>>     I tried to check kdump on arm64 on Foundation model. The/proc/vmcore is generated.
+>> But I couldnot check if it is proper. Is there a makedumpfile binary for arm64? and also crash tool.
+>> I used the master branch of https://git.linaro.org/people/geoff.levand/linux-kexec.git to verify.
+>>       Please provide some information about the current status or support for kdump on arm64?
+>> and the ways to verify or start development on Foundation model.
 > 
-> That means we are left with ugly options now.
+> The story is that I used to work on kdump, but handed it off
+> to Geoff at some time. Since then, he merged it into his repo
+> but I don't think that he has tested (verified) it yet.
+> So please take it as a study work (or prototype), although I'm
+> pretty sure that it works well on model except some issues.
 > 
-> - Define per arch kexec backup regions in kernel and export it to user
->   space and let kexec-tools make use of that deinition (instead of
->   defining its own). That way memory allocation code in kernel can look
->   at this backup area and skip it for certain allocations.
-
-Yes, that makes sense. In fact, I think all allocations for DMA memory
-need to take this into account to avoid potentially serious data
-corruption.
-If any memory for a disk superblock gets allocated in backup memory and
-a kdump happens, the new kernel might zero out that area and the disk
-controler then writes the zeroes to disk instead of the superblock.
-
-
-	Joerg
-
+> Regarding /proc/vmcore, if you can retrieve it to your host machine,
+> you can simply verify the contents as follows:
+>   $ aarch64-linux-gnu-gdb vmlinux core(=vmcore)
+>   (gdb) info threads
+>   (gdb) bt
+>    ...
+> 
+> I also have a trivial patch for crash tool to cross-build it, but
+> arm64 support (by RedHat folk) is already there.
+> 
+> Thanks,
+> -Takahiro AKASHI
+> 
+>> Thanks,
+>> Anurup M
+>>
+> 
 
 _______________________________________________
 kexec mailing list
