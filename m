@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f181.google.com ([209.85.192.181])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YBDQh-0000yO-Qq
- for kexec@lists.infradead.org; Wed, 14 Jan 2015 02:11:33 +0000
-Received: by mail-pd0-f181.google.com with SMTP id v10so6772599pde.12
- for <kexec@lists.infradead.org>; Tue, 13 Jan 2015 18:11:09 -0800 (PST)
-Message-ID: <54B5D030.20809@linaro.org>
-Date: Wed, 14 Jan 2015 11:10:56 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+ id 1YBGaf-0000Z8-5C
+ for kexec@lists.infradead.org; Wed, 14 Jan 2015 05:34:02 +0000
+Date: Wed, 14 Jan 2015 13:31:57 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec/x86: fix crashkernel reserved mem detection
+Message-ID: <20150114053157.GC24543@dhcp-16-105.nay.redhat.com>
+References: <1419514701-9397-1-git-send-email-wolchkov.yuri@gmail.com>
+ <54AF74B7.4000807@suse.de>
+ <20150109085927.GA8288@dhcp-16-105.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: Kdump on ARM64
-References: <54AE2544.2010801@huawei.com> <54AE3B7A.4070301@linaro.org>
- <54B5003A.1050508@huawei.com>
-In-Reply-To: <54B5003A.1050508@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <20150109085927.GA8288@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +21,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Anurup M <anurup.m@huawei.com>, geoff@infradead.org
-Cc: "sanil.kumar@hisilicon.com" <sanil.kumar@hisilicon.com>, kexec@lists.infradead.org, dingtianhong@huawei.com
+To: Tony Jones <tonyj@suse.de>
+Cc: kexec@lists.infradead.org, horms@verge.net.au, wolchkov.yuri@gmail.com
 
-On 01/13/2015 08:23 PM, Anurup M wrote:
->
-> Hi Akashi,
->
-> 	Thanks for the reply.
->
-> Hi  Akashi, Geoff,
->
-> 	In the code I could find assert(arm64_mem.memstart) in the function virt_to_phys. This address can be 0x0 when the
->    segment start address is 0x0. so can we use this assert?
+On 01/09/15 at 04:59pm, Baoquan He wrote:
+> On 01/08/15 at 10:27pm, Tony Jones wrote:
+> > On 12/25/2014 05:38 AM, Yuri Volchkov wrote:
+> > > Function crashkernel_mem_callback had wrong parameters type
+> > > So crash_reserved_mem got completely insane values
+> > > As a result kexec was unable to allocate segments for crashkernel
+> > > For instance, I got this message:
+> > > 	"Could not find a free area of memory of 0x9f000 bytes..."
+> > > 
+> > > Signed-off-by: Yuri Volchkov <wolchkov.yuri@gmail.com>
+> > 
+> > See the patch attached to https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=771671
+> > which also fixes kexec/arch/sh/crashdump-sh.c and kexec/arch/sh/kexec-sh.c
+> > 
+> > Definitely a problem.  Without the x86 fix we seem same failure on i586
+> 
+> Hi Tony,
+> 
+> commit 4362bfa make that change, but skip the crashkernel_mem_callback.
+> It need be fixed.
+> 
+> I am wondering how the insane values happened on i386, and it didn't
+> happen on x86_64.
 
-Probably you're right.
+Never mind, have got it.
 
-> 	The code flow is elf_arm64_load->load_crashdump_segments->add_buffer_phys_virt->add_segment_phys_virt->virt_to_phys
->    and this call is also before the call to load_elf_exec_in_crashmem which init's arm64_mem.memstart to crash_reserved_mem.start.
->    So arm64_mem.memstart is also not set before the call to virt_to_phys.
-
-I need refresh my memory about the flow, but in this particular case,
-the last argument, phys, of add_buffer_phys_virt() is 0 and virt_to_phys()
-will not be called.
-
-Do you have any other evidence that the assertion above is broken?
-
-Thanks,
--Takahiro AKASHI
-
-
-> 	Please share your comments.
->
-> Thanks,
-> Anurup
->
->
-> On 1/8/2015 1:40 PM, AKASHI Takahiro wrote:
->> Hi Anurup,
->>
->> On 01/08/2015 03:35 PM, Anurup M wrote:
->>> Hi Akashi, Geoff,
->>>
->>>      I tried to check kdump on arm64 on Foundation model. The/proc/vmcore is generated.
->>> But I couldnot check if it is proper. Is there a makedumpfile binary for arm64? and also crash tool.
->>> I used the master branch of https://git.linaro.org/people/geoff.levand/linux-kexec.git to verify.
->>>        Please provide some information about the current status or support for kdump on arm64?
->>> and the ways to verify or start development on Foundation model.
->>
->> The story is that I used to work on kdump, but handed it off
->> to Geoff at some time. Since then, he merged it into his repo
->> but I don't think that he has tested (verified) it yet.
->> So please take it as a study work (or prototype), although I'm
->> pretty sure that it works well on model except some issues.
->>
->> Regarding /proc/vmcore, if you can retrieve it to your host machine,
->> you can simply verify the contents as follows:
->>    $ aarch64-linux-gnu-gdb vmlinux core(=vmcore)
->>    (gdb) info threads
->>    (gdb) bt
->>     ...
->>
->> I also have a trivial patch for crash tool to cross-build it, but
->> arm64 support (by RedHat folk) is already there.
->>
->> Thanks,
->> -Takahiro AKASHI
->>
->>> Thanks,
->>> Anurup M
->>>
->>
 
 _______________________________________________
 kexec mailing list
