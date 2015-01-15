@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <54B65B15.7020704@huawei.com>
-Date: Wed, 14 Jan 2015 17:33:33 +0530
-From: Anurup M <anurup.m@huawei.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YBb9L-000654-7o
+ for kexec@lists.infradead.org; Thu, 15 Jan 2015 03:31:11 +0000
+Date: Thu, 15 Jan 2015 11:28:58 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v8 06/10] iommu/vt-d: datatypes and functions used for
+ kdump
+Message-ID: <20150115032858.GA2461@dhcp-16-105.nay.redhat.com>
+References: <1421046388-27925-1-git-send-email-zhen-hual@hp.com>
+ <1421046388-27925-7-git-send-email-zhen-hual@hp.com>
 MIME-Version: 1.0
-Subject: Re: Kdump on ARM64
-References: <54AE2544.2010801@huawei.com> <54AE3B7A.4070301@linaro.org>
- <54B5003A.1050508@huawei.com> <54B5D030.20809@linaro.org>
-In-Reply-To: <54B5D030.20809@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1421046388-27925-7-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,89 +25,121 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org
-Cc: "sanil.kumar@hisilicon.com" <sanil.kumar@hisilicon.com>, kexec@lists.infradead.org, dingtianhong@huawei.com
+To: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, joro@8bytes.org, kexec@lists.infradead.org, jerry.hoemann@hp.com, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
 
+On 01/12/15 at 03:06pm, Li, Zhen-Hua wrote:
+> +/*
+> + * Interface to the "copy translation tables" set of functions
+> + * from mainline code.
+> + */
+> +static int intel_iommu_load_translation_tables(struct dmar_drhd_unit *drhd,
+> +		int g_num_of_iommus)
 
+The argument g_num_of_iommus is the same as the global variable, it's better
+to rename it as num_of_iommus. And even it can be removed since you can
+just use the global variable g_num_of_iommus in this function.
 
-On 1/14/2015 7:40 AM, AKASHI Takahiro wrote:
-> On 01/13/2015 08:23 PM, Anurup M wrote:
->>
->> Hi Akashi,
->>
->>     Thanks for the reply.
->>
->> Hi  Akashi, Geoff,
->>
->>     In the code I could find assert(arm64_mem.memstart) in the function virt_to_phys. This address can be 0x0 when the
->>    segment start address is 0x0. so can we use this assert?
-> 
-> Probably you're right.
-> 
->>     The code flow is elf_arm64_load->load_crashdump_segments->add_buffer_phys_virt->add_segment_phys_virt->virt_to_phys
->>    and this call is also before the call to load_elf_exec_in_crashmem which init's arm64_mem.memstart to crash_reserved_mem.start.
->>    So arm64_mem.memstart is also not set before the call to virt_to_phys.
-> 
-> I need refresh my memory about the flow, but in this particular case,
-> the last argument, phys, of add_buffer_phys_virt() is 0 and virt_to_phys()
-> will not be called.
-> 
+Argument drhd can be intel_iommu because no other member variable in
+drhd is needed.
 
-Yes, You are right. The code flow which I gave was wrong. It is observed  when I don't input the -p option (only kexec). The error flow is
-elf_arm64_load->elf_exec_load->add_segment->add_buffer_phys_virt->add_segment_phys_virt->virt_to_phys
+> +{
+> +	struct intel_iommu *iommu;	/* Virt(iommu hardware registers) */
+> +	unsigned long long q;		/* quadword scratch */
+> +	int ret = 0;			/* Integer return code */
+> +	int i = 0;			/* Loop index */
+> +	unsigned long flags;
+> +
+> +	/* Structure so copy_page_addr() can accumulate things
+> +	 * over multiple calls and returns
+> +	 */
+> +	struct copy_page_addr_parms ppa_parms = copy_page_addr_parms_init;
+> +	struct copy_page_addr_parms *ppap = &ppa_parms;
+> +
+> +
+> +	iommu = drhd->iommu;
+> +	q = dmar_readq(iommu->reg + DMAR_RTADDR_REG);
+> +	if (!q)
+> +		return -1;
+> +
+> +	/* If (list needs initializing) do it here */
 
-Thanks,
-Anurup
+This initializing should not be here, because it's not only for this
+drhd. It should be done in init_dmars().
 
-> Do you have any other evidence that the assertion above is broken?
+> +	if (!domain_values_list) {
+> +		domain_values_list =
+> +			 kcalloc(g_num_of_iommus, sizeof(struct list_head),
+> +					GFP_KERNEL);
+> +
+> +		if (!domain_values_list) {
+> +			pr_err("Allocation failed for domain_values_list array\n");
+> +			return -ENOMEM;
+> +		}
+> +		for (i = 0; i < g_num_of_iommus; i++)
+> +			INIT_LIST_HEAD(&domain_values_list[i]);
+> +	}
+> +
+> +	spin_lock_irqsave(&iommu->lock, flags);
+> +
+> +	/* Load the root-entry table from the old kernel
+> +	 * foreach context_entry_table in root_entry
+> +	 *    foreach context_entry in context_entry_table
+> +	 *       foreach level-1 page_table_entry in context_entry
+> +	 *          foreach level-2 page_table_entry in level 1 page_table_entry
+> +	 *             Above pattern continues up to 6 levels of page tables
+> +	 *                Sanity-check the entry
+> +	 *                Process the bus, devfn, page_address, page_size
+> +	 */
+> +	if (!iommu->root_entry) {
+> +		iommu->root_entry =
+> +			(struct root_entry *)alloc_pgtable_page(iommu->node);
+> +		if (!iommu->root_entry) {
+> +			spin_unlock_irqrestore(&iommu->lock, flags);
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	iommu->root_entry_old_phys = q & VTD_PAGE_MASK;
+> +	if (!iommu->root_entry_old_phys) {
+> +		pr_err("Could not read old root entry address.");
+> +		return -1;
+> +	}
+> +
+> +	iommu->root_entry_old_virt = ioremap_cache(iommu->root_entry_old_phys,
+> +						VTD_PAGE_SIZE);
+> +	if (!iommu->root_entry_old_virt) {
+> +		pr_err("Could not map the old root entry.");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	__iommu_load_old_root_entry(iommu);
+> +	ret = copy_root_entry_table(iommu, ppap);
+> +	__iommu_flush_cache(iommu, iommu->root_entry, PAGE_SIZE);
+> +	__iommu_update_old_root_entry(iommu, -1);
+> +
+> +	spin_unlock_irqrestore(&iommu->lock, flags);
+> +
+> +	__iommu_free_mapped_mem();
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	ppa_parms.last = 1;
+> +	copy_page_addr(0, 0, 0, 0, 0, NULL, ppap);
+> +
+> +	return 0;
+> +}
+> +
+>  #endif /* CONFIG_CRASH_DUMP */
+> -- 
+> 2.0.0-rc0
 > 
-> Thanks,
-> -Takahiro AKASHI
 > 
-> 
->>     Please share your comments.
->>
->> Thanks,
->> Anurup
->>
->>
->> On 1/8/2015 1:40 PM, AKASHI Takahiro wrote:
->>> Hi Anurup,
->>>
->>> On 01/08/2015 03:35 PM, Anurup M wrote:
->>>> Hi Akashi, Geoff,
->>>>
->>>>      I tried to check kdump on arm64 on Foundation model. The/proc/vmcore is generated.
->>>> But I couldnot check if it is proper. Is there a makedumpfile binary for arm64? and also crash tool.
->>>> I used the master branch of https://git.linaro.org/people/geoff.levand/linux-kexec.git to verify.
->>>>        Please provide some information about the current status or support for kdump on arm64?
->>>> and the ways to verify or start development on Foundation model.
->>>
->>> The story is that I used to work on kdump, but handed it off
->>> to Geoff at some time. Since then, he merged it into his repo
->>> but I don't think that he has tested (verified) it yet.
->>> So please take it as a study work (or prototype), although I'm
->>> pretty sure that it works well on model except some issues.
->>>
->>> Regarding /proc/vmcore, if you can retrieve it to your host machine,
->>> you can simply verify the contents as follows:
->>>    $ aarch64-linux-gnu-gdb vmlinux core(=vmcore)
->>>    (gdb) info threads
->>>    (gdb) bt
->>>     ...
->>>
->>> I also have a trivial patch for crash tool to cross-build it, but
->>> arm64 support (by RedHat folk) is already there.
->>>
->>> Thanks,
->>> -Takahiro AKASHI
->>>
->>>> Thanks,
->>>> Anurup M
->>>>
->>>
-> .
-> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
