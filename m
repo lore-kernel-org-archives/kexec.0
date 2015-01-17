@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <bb44d4eee4fab15278e4a8829a0981878bc9acd7.1421449714.git.geoff@infradead.org>
+Message-Id: <7db998d9533d5efab816edfad3d7010fc2f7e62c.1421449714.git.geoff@infradead.org>
 In-Reply-To: <cover.1421449714.git.geoff@infradead.org>
 References: <cover.1421449714.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 4/8] arm64: Add EL2 switch to soft_restart
+Subject: [PATCH 8/8] arm64/kexec: Enable kexec in the arm64 defconfig
 Date: Sat, 17 Jan 2015 00:23:34 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,150 +21,25 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: marc.zyngier@arm.com, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-When a CPU is reset it needs to be put into the exception level it had when it
-entered the kernel.  Update cpu_reset() to accept an argument el2_switch which
-signals cpu_reset() to enter the soft reset address at EL2.  If el2_switch is
-not set the soft reset address will be entered at EL1.
-
-Update cpu_soft_restart() and soft_restart() to pass the return of
-is_hyp_mode_available() as the el2_switch value to cpu_reset().  Also update the
-comments of cpu_reset(), cpu_soft_restart() and soft_restart() to reflect this
-change.
-
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/proc-fns.h |  4 ++--
- arch/arm64/kernel/process.c       | 10 ++++++++-
- arch/arm64/mm/proc.S              | 47 +++++++++++++++++++++++++++++----------
- 3 files changed, 46 insertions(+), 15 deletions(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/proc-fns.h b/arch/arm64/include/asm/proc-fns.h
-index 9a8fd84..339394d 100644
---- a/arch/arm64/include/asm/proc-fns.h
-+++ b/arch/arm64/include/asm/proc-fns.h
-@@ -32,8 +32,8 @@ extern void cpu_cache_off(void);
- extern void cpu_do_idle(void);
- extern void cpu_do_switch_mm(unsigned long pgd_phys, struct mm_struct *mm);
- extern void cpu_reset(unsigned long addr) __attribute__((noreturn));
--void cpu_soft_restart(phys_addr_t cpu_reset,
--		unsigned long addr) __attribute__((noreturn));
-+void cpu_soft_restart(phys_addr_t cpu_reset, unsigned long el2_switch,
-+		      unsigned long addr) __attribute__((noreturn));
- extern void cpu_do_suspend(struct cpu_suspend_ctx *ptr);
- extern u64 cpu_do_resume(phys_addr_t ptr, u64 idmap_ttbr);
- 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index fde9923..371bbf1 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -50,6 +50,7 @@
- #include <asm/mmu_context.h>
- #include <asm/processor.h>
- #include <asm/stacktrace.h>
-+#include <asm/virt.h>
- 
- #ifdef CONFIG_CC_STACKPROTECTOR
- #include <linux/stackprotector.h>
-@@ -60,7 +61,14 @@ EXPORT_SYMBOL(__stack_chk_guard);
- void soft_restart(unsigned long addr)
- {
- 	setup_mm_for_reboot();
--	cpu_soft_restart(virt_to_phys(cpu_reset), addr);
-+
-+	/* TODO: Remove this conditional when KVM can support CPU restart. */
-+	if (IS_ENABLED(CONFIG_KVM))
-+		cpu_soft_restart(virt_to_phys(cpu_reset), 0, addr);
-+	else
-+		cpu_soft_restart(virt_to_phys(cpu_reset),
-+				 is_hyp_mode_available(), addr);
-+
- 	/* Should never get here */
- 	BUG();
- }
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index c507e25..b767032 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -26,6 +26,7 @@
- #include <asm/pgtable-hwdef.h>
- #include <asm/pgtable.h>
- #include <asm/proc-macros.S>
-+#include <asm/virt.h>
- 
- #ifdef CONFIG_ARM64_64K_PAGES
- #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
-@@ -58,27 +59,48 @@ ENTRY(cpu_cache_off)
- ENDPROC(cpu_cache_off)
- 
- /*
-- *	cpu_reset(loc)
-+ * cpu_reset(el2_switch, loc) - Helper for cpu_soft_restart.
-  *
-- *	Perform a soft reset of the system.  Put the CPU into the same state
-- *	as it would be if it had been reset, and branch to what would be the
-- *	reset vector. It must be executed with the flat identity mapping.
-+ * @cpu_reset: Physical address of the cpu_reset routine.
-+ * @el2_switch: Flag to indicate a swich to EL2 is needed.
-+ * @addr: Location to jump to for soft reset.
-  *
-- *	- loc   - location to jump to for soft reset
-+ * Put the CPU into the same state as it would be if it had been reset, and
-+ * branch to what would be the reset vector. It must be executed with the
-+ * flat identity mapping.
-  */
-+
- 	.align	5
-+
- ENTRY(cpu_reset)
--	mrs	x1, sctlr_el1
--	bic	x1, x1, #1
--	msr	sctlr_el1, x1			// disable the MMU
-+	mrs	x2, sctlr_el1
-+	bic	x2, x2, #1
-+	msr	sctlr_el1, x2			// disable the MMU
- 	isb
--	ret	x0
-+
-+	cbz	x0, 1f				// el2_switch?
-+	mov	x0, x1
-+	mov	x1, xzr
-+	mov	x2, xzr
-+	mov	x3, xzr
-+	hvc	#HVC_CALL_FUNC			// no return
-+
-+1:	ret	x1
- ENDPROC(cpu_reset)
- 
-+/*
-+ * cpu_soft_restart(cpu_reset, el2_switch, addr) - Perform a cpu soft reset.
-+ *
-+ * @cpu_reset: Physical address of the cpu_reset routine.
-+ * @el2_switch: Flag to indicate a swich to EL2 is needed, passed to cpu_reset.
-+ * @addr: Location to jump to for soft reset, passed to cpu_reset.
-+ *
-+ */
-+
- ENTRY(cpu_soft_restart)
--	/* Save address of cpu_reset() and reset address */
--	mov	x19, x0
--	mov	x20, x1
-+	mov	x19, x0				// cpu_reset
-+	mov	x20, x1				// el2_switch
-+	mov	x21, x2				// addr
- 
- 	/* Turn D-cache off */
- 	bl	cpu_cache_off
-@@ -87,6 +109,7 @@ ENTRY(cpu_soft_restart)
- 	bl	flush_cache_all
- 
- 	mov	x0, x20
-+	mov	x1, x21
- 	ret	x19
- ENDPROC(cpu_soft_restart)
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 5376d90..85285dc 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -42,6 +42,7 @@ CONFIG_PREEMPT=y
+ CONFIG_KSM=y
+ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_CMA=y
++CONFIG_KEXEC=y
+ CONFIG_CMDLINE="console=ttyAMA0"
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ CONFIG_COMPAT=y
 -- 
 2.1.0
-
 
 
 _______________________________________________
