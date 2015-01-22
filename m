@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([119.145.14.64])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YEFH7-0007DO-Tt
- for kexec@lists.infradead.org; Thu, 22 Jan 2015 10:46:11 +0000
-Message-ID: <54C0D3AE.9040405@huawei.com>
-Date: Thu, 22 Jan 2015 16:10:46 +0530
-From: Anurup M <anurup.m@huawei.com>
+Received: from email.exegy.com ([205.158.150.230])
+ by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YENIC-00071w-Bb
+ for kexec@lists.infradead.org; Thu, 22 Jan 2015 19:19:49 +0000
+Received: from mail.exegy.com ([192.168.77.1])
+ by email.exegy.com (8.14.3/8.14.3) with ESMTP id t0MJIm8Y007184
+ for <kexec@lists.infradead.org>; Thu, 22 Jan 2015 13:18:54 -0600
+Message-ID: <54C14D1A.1020307@exegy.com>
+Date: Thu, 22 Jan 2015 13:18:50 -0600
+From: "Mr. Berkley Shands" <bshands@exegy.com>
 MIME-Version: 1.0
-Subject: Fwd: [PATCH] arm64: Read reg property based on address-cells value.
-References: <1421913506-18587-1-git-send-email-anurup.m@huawei.com>
-In-Reply-To: <1421913506-18587-1-git-send-email-anurup.m@huawei.com>
+Subject: Failure to crashdump under Centos-6.4 x86_64 with kernel 3.12.30
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,123 +19,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: geoff@infradead.org
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, "sanil.kumar@hisilicon.com" <sanil.kumar@hisilicon.com>, kexec@lists.infradead.org, dingtianhong@huawei.com
+To: kexec@lists.infradead.org
 
-Hi Geoff,
+My kernel crashdumps don't work with vanilla 3.12.30 on a 256GB x86_64
+intel box.
+Centos-6.4. With the standard makedumpfile, makedumpfile segfaults, and
+no output is written to disk.
+with makedumpfile 1.5.7, kexec-tools-2.0.8, and crash 7.0.2 I actually
+get vmcore files,
+but then crash rejects them with:
 
-    I have faced an issue during dtb file matching for CPU reg property. The dtb file which
-I use has 32 bit value in the reg property as the #address-cells is 1. The kexec-tools code
-reads the reg as a 64bit values and reads a invalid value and hence the below comparison in
-the function fixup_cpu_nodes fails.
+crash vmcore /boot/vmlinux-3.12.30
 
-449         result = read_cpu_info(&info_2, dtb_2);
------------------------
-463
-464                         if (cp_1->hwid != cp_2->hwid)
-465                                 continue;
-466
-467                         to_process--;
------------------------
-476         if (to_process) {
-477                 fprintf(stderr, "kexec: %s:%d: Warning: Failed to process %u CPUs.\n",
-478                         __func__, __LINE__, to_process);
-479                 result = -EINVAL;
-480                 goto on_exit;
+crash 7.0.2
+...
+GNU gdb (GDB) 7.6
+...
 
-I have written a patch to read the value based on the #address-cells. Please find the patch
-below. Please share your comments.
-
-Regards,
-Anurup
-
- Signed-off-by: Anurup M <anurup.m@huawei.com>
-
----
- kexec/arch/arm64/kexec-arm64.c |   29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
-
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index c1577be..e9c92ba 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -141,7 +141,7 @@ struct cpu_properties {
-  */
-
- static int read_cpu_properties(struct cpu_properties *cp,
--	const struct dtb *dtb, int node_offset)
-+	const struct dtb *dtb, int node_offset, int address_cells)
- {
- 	int result;
- 	const void *data;
-@@ -158,7 +158,18 @@ static int read_cpu_properties(struct cpu_properties *cp,
- 		return result;
- 	}
-
--	cp->hwid = fdt64_to_cpu(*(uint64_t *)data);
-+	/* Read the value based on the #address-cells */
-+	if (1 == address_cells) {
-+		cp->hwid = fdt32_to_cpu(*(uint32_t *)data);
-+	}
-+	else if (2 == address_cells) {
-+		cp->hwid = fdt64_to_cpu(*(uint64_t *)data);
-+	}
-+	else {
-+		fprintf(stderr, "kexec: %s:%d: Invalid #address-cells value: %d\n",
-+                        __func__, __LINE__, address_cells);
-+                return -1;
-+	}
-
- 	result = fdt_get_path(dtb->buf, node_offset, cp->node_path,
- 		sizeof(cp->node_path));
-@@ -361,6 +372,8 @@ static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
- 	int offset;
- 	int result;
- 	int depth;
-+	const void *data;
-+	int address_cells = -1;
-
- 	offset = fdt_subnode_offset(dtb->buf, 0, "cpus");
-
-@@ -370,6 +383,16 @@ static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
- 		return offset;
- 	}
-
-+	/* Read the #address-cells to read the CPU address from the reg property */
-+	data = fdt_getprop(dtb->buf, offset, "#address-cells", &result);
-+
-+	if (!data) {
-+		fprintf(stderr, "kexec: %s:%d: read #address-cells failed: %s\n",
-+			__func__, __LINE__, fdt_strerror(result));
-+		return result;
-+	}
-+       address_cells = fdt32_to_cpu(*(uint32_t *)data);
-+
- 	for (i = 0, depth = 0; ; i++) {
-
- 		offset = fdt_next_node(dtb->buf, offset, &depth);
-@@ -395,7 +418,7 @@ static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
- 			goto on_error;
- 		}
-
--		result = read_cpu_properties(&info->cp[i], dtb, offset);
-+		result = read_cpu_properties(&info->cp[i], dtb, offset, address_cells);
-
- 		if (result)
- 			goto on_error;
--- 
-1.7.9.5
+crash: seek error: kernel virtual address: ffff88207fffcb60  type:
+"pglist node_id"
 
 
-.
+the grub entry for this kernel is:
+     kernel /boot/vmlinuz-3.12.30 ro root=LABEL=ROOT
+numa_balancing=disable intel_idle.max_cstate=0 processor.max_cstate=0
+mce=ignore_mce clocksource=tsc nohz=off nomodeset nodmraid rd_NO_LUKS
+rd_NO_LVM rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16
+KEYBOARDTYPE=pc KEYTABLE=us crashkernel=256M@256M  console=ttyS1,115200n8
 
 
+CONFIG_CRASH_DUMP=y
+CONFIG_KEXEC_JUMP=y
+CONFIG_PHYSICAL_START=0x2000000
+CONFIG_RELOCATABLE=y
+CONFIG_PHYSICAL_ALIGN=0x1000000
+
+A similar issue appears with a grub crashkernel=128M@32M
+
+Turning off all the makedumpfile exclusions (dump all pages) results in
+a much larger
+vmcore, but it still gets the same failures.
+
+Where do I start looking for the problems here?
+kernel 3.10.65 won't dump either, but an old 3.0.29 kernel dumps just fine.
+Is this a problem with some .config setting?
+
+Berkley
+
+--
+
+//E. F. Berkley Shands, MSc
+Senior Software Architect/Engineer
+Exegy Systems Engineering//
+
+**Exegy Inc.**
+
+349 Marshall Road, Suite 100
+
+St. Louis , MO 63119
+
+Direct: (314) 218-3600 X450
+
+Cell: (314) 303-2546
+
+Office: (314) 218-3600
+
+Fax: (314) 218-3601
+
+The Usual Disclaimer follows...
 
 
+________________________________
+
+This e-mail and any documents accompanying it may contain legally privileged and/or confidential information belonging to Exegy, Inc. Such information may be protected from disclosure by law. The information is intended for use by only the addressee. If you are not the intended recipient, you are hereby notified that any disclosure or use of the information is strictly prohibited. If you have received this e-mail in error, please immediately contact the sender by e-mail or phone regarding instructions for return or destruction and do not use or disclose the content to others.
 
 _______________________________________________
 kexec mailing list
