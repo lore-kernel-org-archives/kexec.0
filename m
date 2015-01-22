@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YDHyK-0008Ia-Tl
- for kexec@lists.infradead.org; Mon, 19 Jan 2015 19:26:50 +0000
-Date: Mon, 19 Jan 2015 20:26:16 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 0/3 v2] Fix kdump failures with crashkernel=high
-Message-ID: <20150119192616.GB4398@pd.tnic>
-References: <1420555874-11506-1-git-send-email-joro@8bytes.org>
+Received: from szxga01-in.huawei.com ([119.145.14.64])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YEFH7-0007DO-Tt
+ for kexec@lists.infradead.org; Thu, 22 Jan 2015 10:46:11 +0000
+Message-ID: <54C0D3AE.9040405@huawei.com>
+Date: Thu, 22 Jan 2015 16:10:46 +0530
+From: Anurup M <anurup.m@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1420555874-11506-1-git-send-email-joro@8bytes.org>
+Subject: Fwd: [PATCH] arm64: Read reg property based on address-cells value.
+References: <1421913506-18587-1-git-send-email-anurup.m@huawei.com>
+In-Reply-To: <1421913506-18587-1-git-send-email-anurup.m@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,86 +22,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Joerg Roedel <jroedel@suse.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: geoff@infradead.org
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, "sanil.kumar@hisilicon.com" <sanil.kumar@hisilicon.com>, kexec@lists.infradead.org, dingtianhong@huawei.com
 
-Adding some more people to CC.
+Hi Geoff,
 
-On Tue, Jan 06, 2015 at 03:51:11PM +0100, Joerg Roedel wrote:
-> v1->v2:
-> 
-> * Updated comments based on feedback from Konrad
-> * Added Acked-bys
-> * Rebased to v3.19-rc3
-> 
-> Hi,
-> 
-> here is a patch-set to fix failed kdump kernel boots when
-> the systems was booted with crashkernel=X,high. On those
-> systems the kernel allocates only 72MiB of low-memory for
-> DMA buffers, which showed to be too low on some systems.
-> 
-> The problem is that 64MiB of the low-memory is allocated by
-> swiotlb, leaving 8MB for the page-allocator. But swiotlb
-> tries to allocate DMA memory from the page-allocator first,
-> which fails pretty fast in the boot sequence, causing
-> warnings. This patch-set removes these warnings.
-> 
-> But even the 64MiB for swiotlb are eaten up on some systems,
-> so that the default of low-memory allocated for the
-> crash-kernel is increase from 72MB to 256MB (only changing
-> the defaults, can still be overwritten by crashkernel=X,low).
-> 
-> This number comes from experiments on the affected systems,
-> 128MiB low-memory was still not enough there, thus I set the
-> value to 256MiB to fix the issues.
-> 
-> Any feedback appreciated.
-> 
-> Thanks,
-> 
-> 	Joerg
-> 
-> Joerg Roedel (3):
->   swiotlb: Warn on allocation failure in swiotlb_alloc_coherent
->   x86, swiotlb: Try coherent allocations with __GFP_NOWARN
->   x86, crash: Allocate enough low-mem when crashkernel=high
-> 
->  arch/x86/kernel/pci-swiotlb.c |  8 ++++++++
->  arch/x86/kernel/setup.c       |  5 ++++-
->  lib/swiotlb.c                 | 11 +++++++++--
->  3 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-> Joerg Roedel (3):
->   swiotlb: Warn on allocation failure in swiotlb_alloc_coherent
->   x86, swiotlb: Try coherent allocations with __GFP_NOWARN
->   x86, crash: Allocate enough low-mem when crashkernel=high
-> 
->  arch/x86/kernel/pci-swiotlb.c |  8 ++++++++
->  arch/x86/kernel/setup.c       |  5 ++++-
->  lib/swiotlb.c                 | 11 +++++++++--
->  3 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
+    I have faced an issue during dtb file matching for CPU reg property. The dtb file which
+I use has 32 bit value in the reg property as the #address-cells is 1. The kexec-tools code
+reads the reg as a 64bit values and reads a invalid value and hence the below comparison in
+the function fixup_cpu_nodes fails.
 
+449         result = read_cpu_info(&info_2, dtb_2);
+-----------------------
+463
+464                         if (cp_1->hwid != cp_2->hwid)
+465                                 continue;
+466
+467                         to_process--;
+-----------------------
+476         if (to_process) {
+477                 fprintf(stderr, "kexec: %s:%d: Warning: Failed to process %u CPUs.\n",
+478                         __func__, __LINE__, to_process);
+479                 result = -EINVAL;
+480                 goto on_exit;
+
+I have written a patch to read the value based on the #address-cells. Please find the patch
+below. Please share your comments.
+
+Regards,
+Anurup
+
+ Signed-off-by: Anurup M <anurup.m@huawei.com>
+
+---
+ kexec/arch/arm64/kexec-arm64.c |   29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index c1577be..e9c92ba 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -141,7 +141,7 @@ struct cpu_properties {
+  */
+
+ static int read_cpu_properties(struct cpu_properties *cp,
+-	const struct dtb *dtb, int node_offset)
++	const struct dtb *dtb, int node_offset, int address_cells)
+ {
+ 	int result;
+ 	const void *data;
+@@ -158,7 +158,18 @@ static int read_cpu_properties(struct cpu_properties *cp,
+ 		return result;
+ 	}
+
+-	cp->hwid = fdt64_to_cpu(*(uint64_t *)data);
++	/* Read the value based on the #address-cells */
++	if (1 == address_cells) {
++		cp->hwid = fdt32_to_cpu(*(uint32_t *)data);
++	}
++	else if (2 == address_cells) {
++		cp->hwid = fdt64_to_cpu(*(uint64_t *)data);
++	}
++	else {
++		fprintf(stderr, "kexec: %s:%d: Invalid #address-cells value: %d\n",
++                        __func__, __LINE__, address_cells);
++                return -1;
++	}
+
+ 	result = fdt_get_path(dtb->buf, node_offset, cp->node_path,
+ 		sizeof(cp->node_path));
+@@ -361,6 +372,8 @@ static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
+ 	int offset;
+ 	int result;
+ 	int depth;
++	const void *data;
++	int address_cells = -1;
+
+ 	offset = fdt_subnode_offset(dtb->buf, 0, "cpus");
+
+@@ -370,6 +383,16 @@ static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
+ 		return offset;
+ 	}
+
++	/* Read the #address-cells to read the CPU address from the reg property */
++	data = fdt_getprop(dtb->buf, offset, "#address-cells", &result);
++
++	if (!data) {
++		fprintf(stderr, "kexec: %s:%d: read #address-cells failed: %s\n",
++			__func__, __LINE__, fdt_strerror(result));
++		return result;
++	}
++       address_cells = fdt32_to_cpu(*(uint32_t *)data);
++
+ 	for (i = 0, depth = 0; ; i++) {
+
+ 		offset = fdt_next_node(dtb->buf, offset, &depth);
+@@ -395,7 +418,7 @@ static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
+ 			goto on_error;
+ 		}
+
+-		result = read_cpu_properties(&info->cp[i], dtb, offset);
++		result = read_cpu_properties(&info->cp[i], dtb, offset, address_cells);
+
+ 		if (result)
+ 			goto on_error;
 -- 
-Regards/Gruss,
-    Boris.
+1.7.9.5
 
-ECO tip #101: Trim your mails when you reply.
---
+
+.
+
+
+
+
 
 _______________________________________________
 kexec mailing list
