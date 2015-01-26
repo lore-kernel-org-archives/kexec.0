@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 26 Jan 2015 19:02:23 +0000
+Date: Mon, 26 Jan 2015 19:16:20 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 4/8] arm64: Add EL2 switch to soft_restart
-Message-ID: <20150126190223.GO23313@leverpostej>
+Subject: Re: [PATCH 5/8] arm64/kexec: Add core kexec support
+Message-ID: <20150126191620.GP23313@leverpostej>
 References: <cover.1421449714.git.geoff@infradead.org>
- <bb44d4eee4fab15278e4a8829a0981878bc9acd7.1421449714.git.geoff@infradead.org>
+ <a5c232448c1d8fa1da73a9005fa9f3927c635578.1421449714.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <bb44d4eee4fab15278e4a8829a0981878bc9acd7.1421449714.git.geoff@infradead.org>
+In-Reply-To: <a5c232448c1d8fa1da73a9005fa9f3927c635578.1421449714.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +24,92 @@ To: Geoff Levand <geoff@infradead.org>
 Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
 On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
-> When a CPU is reset it needs to be put into the exception level it had when it
-> entered the kernel.  Update cpu_reset() to accept an argument el2_switch which
-> signals cpu_reset() to enter the soft reset address at EL2.  If el2_switch is
-> not set the soft reset address will be entered at EL1.
-> 
-> Update cpu_soft_restart() and soft_restart() to pass the return of
-> is_hyp_mode_available() as the el2_switch value to cpu_reset().  Also update the
-> comments of cpu_reset(), cpu_soft_restart() and soft_restart() to reflect this
-> change.
+> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
+> arm64 architecture that add support for the kexec re-boot mechanism
+> (CONFIG_KEXEC) on arm64 platforms.
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
 > ---
->  arch/arm64/include/asm/proc-fns.h |  4 ++--
->  arch/arm64/kernel/process.c       | 10 ++++++++-
->  arch/arm64/mm/proc.S              | 47 +++++++++++++++++++++++++++++----------
->  3 files changed, 46 insertions(+), 15 deletions(-)
+>  arch/arm64/Kconfig                  |   9 ++
+>  arch/arm64/include/asm/kexec.h      |  47 +++++++++++
+>  arch/arm64/kernel/Makefile          |   1 +
+>  arch/arm64/kernel/machine_kexec.c   | 155 ++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/relocate_kernel.S | 160 ++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/kexec.h          |   1 +
+>  6 files changed, 373 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/kexec.h
+>  create mode 100644 arch/arm64/kernel/machine_kexec.c
+>  create mode 100644 arch/arm64/kernel/relocate_kernel.S
 > 
-> diff --git a/arch/arm64/include/asm/proc-fns.h b/arch/arm64/include/asm/proc-fns.h
-> index 9a8fd84..339394d 100644
-> --- a/arch/arm64/include/asm/proc-fns.h
-> +++ b/arch/arm64/include/asm/proc-fns.h
-> @@ -32,8 +32,8 @@ extern void cpu_cache_off(void);
->  extern void cpu_do_idle(void);
->  extern void cpu_do_switch_mm(unsigned long pgd_phys, struct mm_struct *mm);
->  extern void cpu_reset(unsigned long addr) __attribute__((noreturn));
-> -void cpu_soft_restart(phys_addr_t cpu_reset,
-> -		unsigned long addr) __attribute__((noreturn));
-> +void cpu_soft_restart(phys_addr_t cpu_reset, unsigned long el2_switch,
-> +		      unsigned long addr) __attribute__((noreturn));
->  extern void cpu_do_suspend(struct cpu_suspend_ctx *ptr);
->  extern u64 cpu_do_resume(phys_addr_t ptr, u64 idmap_ttbr);
->  
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index fde9923..371bbf1 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -50,6 +50,7 @@
->  #include <asm/mmu_context.h>
->  #include <asm/processor.h>
->  #include <asm/stacktrace.h>
-> +#include <asm/virt.h>
->  
->  #ifdef CONFIG_CC_STACKPROTECTOR
->  #include <linux/stackprotector.h>
-> @@ -60,7 +61,14 @@ EXPORT_SYMBOL(__stack_chk_guard);
->  void soft_restart(unsigned long addr)
->  {
->  	setup_mm_for_reboot();
-> -	cpu_soft_restart(virt_to_phys(cpu_reset), addr);
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index b1f9a20..d9eb9cd 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -474,6 +474,15 @@ config SECCOMP
+>           and the task is only allowed to execute a few safe syscalls
+>           defined by each seccomp mode.
+> 
+> +config KEXEC
+> +       depends on (!SMP || PM_SLEEP_SMP)
+> +       bool "kexec system call"
+> +       ---help---
+> +         kexec is a system call that implements the ability to shutdown your
+> +         current kernel, and to start another kernel.  It is like a reboot
+> +         but it is independent of the system firmware.   And like a reboot
+> +         you can start any kernel with it, not just Linux.
 > +
-> +	/* TODO: Remove this conditional when KVM can support CPU restart. */
-> +	if (IS_ENABLED(CONFIG_KVM))
-> +		cpu_soft_restart(virt_to_phys(cpu_reset), 0, addr);
 
-If we haven't torn down KVM, doesn't that mean that KVM is active at EL2
-(with MMU and caches on) at this point?
+[...]
 
-If that's the case then we cannot possibly try to call kexec(), because
-we cannot touch the memory used by the page tables for those EL2
-mappings. Things will explode if we do.
+> +/**
+> + * kexec_is_dtb - Helper routine to check the device tree header signature.
+> + */
+> +static bool kexec_is_dtb(const void *dtb)
+> +{
+> +       __be32 magic;
+> +
+> +       return get_user(magic, (__be32 *)dtb) ? false :
+> +               (be32_to_cpu(magic) == OF_DT_HEADER);
+> +}
+> +
+> +/**
+> + * kexec_find_dtb_seg - Helper routine to find the dtb segment.
+> + */
+> +static const struct kexec_segment *kexec_find_dtb_seg(
+> +       const struct kimage *image)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < image->nr_segments; i++) {
+> +               if (kexec_is_dtb(image->segment[i].buf))
+> +                       return &image->segment[i];
+> +       }
+> +
+> +       return NULL;
+> +}
+
+As mentioned before, _please_ move the dtb handling to the
+userspace-provided purgatory. It would be far better to get userspace to
+handle setting up the dtb pointer explicitly. That avoids fragility
+w.r.t. policy here as userspace will get exactly what it asked for,
+nothing more, nothing less.
+
+The fact that this is done on 32-bit arm does not mean that we must do
+it here.
+
+[...]
+
+> +       /* Start new image. */
+> +       ldr     x4, arm64_kexec_kimage_start
+> +       ldr     x0, arm64_kexec_dtb_addr
+> +       mov     x1, xzr
+> +       mov     x2, xzr
+> +       mov     x3, xzr
+> +       br      x4
+
+Likewise, this should be part of the userspace-provided purgatory code.
+If we're staying true to "like a reboot you can start any kernel with
+it, not just Linux", we shouldn't embed the Linux boot protocol here.
 
 Mark.
 
