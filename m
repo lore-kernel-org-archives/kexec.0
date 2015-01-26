@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wg0-f42.google.com ([74.125.82.42])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YFmhr-0005vp-6e
- for kexec@lists.infradead.org; Mon, 26 Jan 2015 16:40:09 +0000
-Received: by mail-wg0-f42.google.com with SMTP id x13so10063359wgg.1
- for <kexec@lists.infradead.org>; Mon, 26 Jan 2015 08:39:43 -0800 (PST)
-Date: Mon, 26 Jan 2015 16:39:41 +0000
-From: Matt Fleming <matt@codeblueprint.co.uk>
-Subject: Re: [RFD] efi assisted kdump
-Message-ID: <20150126163941.GD3320@codeblueprint.co.uk>
-References: <20150124132637.GB2139@darkstar.redhat.com>
+Date: Mon, 26 Jan 2015 17:44:14 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V7
+Message-ID: <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
+References: <cover.1415926876.git.geoff@infradead.orgg>
+ <cover.1421449714.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150124132637.GB2139@darkstar.redhat.com>
+In-Reply-To: <cover.1421449714.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,46 +20,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Kweh Hock Leong <hock.leong.kweh@intel.com>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com, matt.fleming@intel.com
+To: Geoff Levand <geoff@infradead.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Deepak Saxena <dsaxena@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Sat, 24 Jan, at 09:26:37PM, Dave Young wrote:
+Hi Geoff,
+
+On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+> This series adds the core support for kexec re-boots on arm64.  This v7 of the
+> series is mainly just a rebase to the latest arm64 for-next/core branch
+> (v3.19-rc4), and a few very minor changes requested for v6.
+
+I haven't looked at the series in detail before, so some of my comments
+may have already been discussed.
+
+> Several things are known to have problems on kexec re-boot:
 > 
-> There's several things I need to ask for help from EFI gurus to see if it is doable:
+> spin-table
+
+I think that's not too bad, for complete kexec support (SMP->SMP) we can
+require some CPU unplug mechanism and PSCI is one of them.
+
+> FIX: Upgrade system firmware to provide PSCI enable method support or add
+> missing spin-table support to the kernel.
+
+What's the missing spin-table support?
+
+> ACPI
+> ----
 > 
-> * Make sure in case EFI warm reboot the memory of previous kernel can be retained.
- 
-The only way to reserve memory across a reboot is with EFI capsules.
+> PROBLEM: The kernel for ACPI based systems does not export a device tree to the
+> standard user space location of 'proc/device-tree'.  Current applications
+> expect to access device tree information from this standard location.
+> 
+> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage
+> kernel command line, OR pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: FIX: An interface to expose a binary device tree to user space has been
+> proposed.  User kexec utilities will need to be updated to add support for this
+> new interface.
 
-> * How to determine if kernel is boot with EFI warm reboot in stub
-
-The presence of a capsule would indicate whether we were invoked from a
-crash handler.
- 
-> * What is the right way to pass informations from 1st kernel to 2nd kernel.
->   Is it ok for saving something with efi variables? 
-
-EFI capsules would the be most natural mechanism, but you could
-conceivably do it with EFI variables (there's an upper limit on the size
-of variable data, though).
-
-> * Other possible problems what I missed
-
-Support for runtime EFI capsules was rather spotty last time I looked.
-Things may have moved on, but it's definitely something to watch out
-for.
-
-There have been patches on linux-efi in recent months for making use of
-EFI capsules,
-
-  https://lkml.kernel.org/r/1412692886-25306-1-git-send-email-matt@console-pimps.org
-  https://lkml.kernel.org/r/1414984030-13859-1-git-send-email-hock.leong.kweh@intel.com
-
-I could take a look at resubmitting the first series above if that would
-be useful for doing kexec across a reset.
+So the fix here is to boot the second stage kernel with dtb, which means
+that we mandate the existence of a DT file for any ACPI system. Are
+there plans to make the kexec'ed kernel reuse the ACPI tables?
 
 -- 
-Matt Fleming, Intel Open Source Technology Center
+Catalin
 
 _______________________________________________
 kexec mailing list
