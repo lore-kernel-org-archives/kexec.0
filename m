@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 26 Jan 2015 18:55:25 +0000
+Date: Mon, 26 Jan 2015 19:02:23 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V7
-Message-ID: <20150126185524.GN23313@leverpostej>
-References: <cover.1415926876.git.geoff@infradead.orgg>
- <cover.1421449714.git.geoff@infradead.org>
- <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
+Subject: Re: [PATCH 4/8] arm64: Add EL2 switch to soft_restart
+Message-ID: <20150126190223.GO23313@leverpostej>
+References: <cover.1421449714.git.geoff@infradead.org>
+ <bb44d4eee4fab15278e4a8829a0981878bc9acd7.1421449714.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
+In-Reply-To: <bb44d4eee4fab15278e4a8829a0981878bc9acd7.1421449714.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +20,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Will Deacon <Will.Deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Deepak Saxena <dsaxena@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Mon, Jan 26, 2015 at 05:44:14PM +0000, Catalin Marinas wrote:
-> Hi Geoff,
+On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+> When a CPU is reset it needs to be put into the exception level it had when it
+> entered the kernel.  Update cpu_reset() to accept an argument el2_switch which
+> signals cpu_reset() to enter the soft reset address at EL2.  If el2_switch is
+> not set the soft reset address will be entered at EL1.
 > 
-> On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
-> > This series adds the core support for kexec re-boots on arm64.  This v7 of the
-> > series is mainly just a rebase to the latest arm64 for-next/core branch
-> > (v3.19-rc4), and a few very minor changes requested for v6.
+> Update cpu_soft_restart() and soft_restart() to pass the return of
+> is_hyp_mode_available() as the el2_switch value to cpu_reset().  Also update the
+> comments of cpu_reset(), cpu_soft_restart() and soft_restart() to reflect this
+> change.
 > 
-> I haven't looked at the series in detail before, so some of my comments
-> may have already been discussed.
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/include/asm/proc-fns.h |  4 ++--
+>  arch/arm64/kernel/process.c       | 10 ++++++++-
+>  arch/arm64/mm/proc.S              | 47 +++++++++++++++++++++++++++++----------
+>  3 files changed, 46 insertions(+), 15 deletions(-)
 > 
-> > Several things are known to have problems on kexec re-boot:
-> > 
-> > spin-table
-> 
-> I think that's not too bad, for complete kexec support (SMP->SMP) we can
-> require some CPU unplug mechanism and PSCI is one of them.
-> 
-> > FIX: Upgrade system firmware to provide PSCI enable method support or add
-> > missing spin-table support to the kernel.
-> 
-> What's the missing spin-table support?
+> diff --git a/arch/arm64/include/asm/proc-fns.h b/arch/arm64/include/asm/proc-fns.h
+> index 9a8fd84..339394d 100644
+> --- a/arch/arm64/include/asm/proc-fns.h
+> +++ b/arch/arm64/include/asm/proc-fns.h
+> @@ -32,8 +32,8 @@ extern void cpu_cache_off(void);
+>  extern void cpu_do_idle(void);
+>  extern void cpu_do_switch_mm(unsigned long pgd_phys, struct mm_struct *mm);
+>  extern void cpu_reset(unsigned long addr) __attribute__((noreturn));
+> -void cpu_soft_restart(phys_addr_t cpu_reset,
+> -		unsigned long addr) __attribute__((noreturn));
+> +void cpu_soft_restart(phys_addr_t cpu_reset, unsigned long el2_switch,
+> +		      unsigned long addr) __attribute__((noreturn));
+>  extern void cpu_do_suspend(struct cpu_suspend_ctx *ptr);
+>  extern u64 cpu_do_resume(phys_addr_t ptr, u64 idmap_ttbr);
+>  
+> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+> index fde9923..371bbf1 100644
+> --- a/arch/arm64/kernel/process.c
+> +++ b/arch/arm64/kernel/process.c
+> @@ -50,6 +50,7 @@
+>  #include <asm/mmu_context.h>
+>  #include <asm/processor.h>
+>  #include <asm/stacktrace.h>
+> +#include <asm/virt.h>
+>  
+>  #ifdef CONFIG_CC_STACKPROTECTOR
+>  #include <linux/stackprotector.h>
+> @@ -60,7 +61,14 @@ EXPORT_SYMBOL(__stack_chk_guard);
+>  void soft_restart(unsigned long addr)
+>  {
+>  	setup_mm_for_reboot();
+> -	cpu_soft_restart(virt_to_phys(cpu_reset), addr);
+> +
+> +	/* TODO: Remove this conditional when KVM can support CPU restart. */
+> +	if (IS_ENABLED(CONFIG_KVM))
+> +		cpu_soft_restart(virt_to_phys(cpu_reset), 0, addr);
 
-As you mention above, a mechanism for returning the CPUs to FW. There is
-no spec for doing this with spin-table, which would have to be written
-and vetted.
+If we haven't torn down KVM, doesn't that mean that KVM is active at EL2
+(with MMU and caches on) at this point?
+
+If that's the case then we cannot possibly try to call kexec(), because
+we cannot touch the memory used by the page tables for those EL2
+mappings. Things will explode if we do.
 
 Mark.
 
