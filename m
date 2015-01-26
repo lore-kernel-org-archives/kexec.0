@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 26 Jan 2015 17:44:14 +0000
+Date: Mon, 26 Jan 2015 17:45:21 +0000
 From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V7
-Message-ID: <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
-References: <cover.1415926876.git.geoff@infradead.orgg>
- <cover.1421449714.git.geoff@infradead.org>
+Subject: Re: [PATCH 1/8] arm64: Move proc-macros.S to include/asm
+Message-ID: <20150126174521.GG14048@e104818-lin.cambridge.arm.com>
+References: <cover.1421449714.git.geoff@infradead.org>
+ <e81815fb841db3ea40ce8e2fd18cf021ec9c6cf7.1421449714.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1421449714.git.geoff@infradead.org>
+In-Reply-To: <e81815fb841db3ea40ce8e2fd18cf021ec9c6cf7.1421449714.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,47 +21,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Deepak Saxena <dsaxena@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
-
-Hi Geoff,
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
 On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
-> This series adds the core support for kexec re-boots on arm64.  This v7 of the
-> series is mainly just a rebase to the latest arm64 for-next/core branch
-> (v3.19-rc4), and a few very minor changes requested for v6.
-
-I haven't looked at the series in detail before, so some of my comments
-may have already been discussed.
-
-> Several things are known to have problems on kexec re-boot:
+> To allow the assembler macros defined in proc-macros.S to be used outside
+> the mm code move the proc-macros.S file from arch/arm64/mm/ to
+> arch/arm64/include/asm/ and fix up any preprocessor includes to use the new
+> file location.
 > 
-> spin-table
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/include/asm/proc-macros.S | 54 ++++++++++++++++++++++++++++++++++++
+>  arch/arm64/mm/cache.S                |  3 +-
+>  arch/arm64/mm/proc-macros.S          | 54 ------------------------------------
+>  arch/arm64/mm/proc.S                 |  3 +-
 
-I think that's not too bad, for complete kexec support (SMP->SMP) we can
-require some CPU unplug mechanism and PSCI is one of them.
-
-> FIX: Upgrade system firmware to provide PSCI enable method support or add
-> missing spin-table support to the kernel.
-
-What's the missing spin-table support?
-
-> ACPI
-> ----
-> 
-> PROBLEM: The kernel for ACPI based systems does not export a device tree to the
-> standard user space location of 'proc/device-tree'.  Current applications
-> expect to access device tree information from this standard location.
-> 
-> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage
-> kernel command line, OR pass a user specified DTB using the kexec --dtb option.
-> 
-> FIX: FIX: An interface to expose a binary device tree to user space has been
-> proposed.  User kexec utilities will need to be updated to add support for this
-> new interface.
-
-So the fix here is to boot the second stage kernel with dtb, which means
-that we mandate the existence of a DT file for any ACPI system. Are
-there plans to make the kexec'ed kernel reuse the ACPI tables?
+Actually, I would just merge proc-macros.S into assembler.h. Not wirth
+keeping the former just for a few macros.
 
 -- 
 Catalin
