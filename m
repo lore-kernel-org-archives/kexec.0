@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ie0-f171.google.com ([209.85.223.171])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YFoY3-0003wl-35
- for kexec@lists.infradead.org; Mon, 26 Jan 2015 18:38:08 +0000
-Received: by mail-ie0-f171.google.com with SMTP id tr6so10472372ieb.2
- for <kexec@lists.infradead.org>; Mon, 26 Jan 2015 10:37:45 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
+Date: Mon, 26 Jan 2015 18:55:25 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V7
+Message-ID: <20150126185524.GN23313@leverpostej>
 References: <cover.1415926876.git.geoff@infradead.orgg>
  <cover.1421449714.git.geoff@infradead.org>
  <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
-From: Grant Likely <grant.likely@linaro.org>
-Date: Mon, 26 Jan 2015 18:37:24 +0000
-Message-ID: <CACxGe6uyko0ZfMBPHphJ1H2XO_L+ROKPYfsk4sjumKndX9kbng@mail.gmail.com>
-Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V7
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,58 +22,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Deepak Saxena <dsaxena@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Will Deacon <Will.Deacon@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Deepak Saxena <dsaxena@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Mon, Jan 26, 2015 at 5:44 PM, Catalin Marinas
-<catalin.marinas@arm.com> wrote:
+On Mon, Jan 26, 2015 at 05:44:14PM +0000, Catalin Marinas wrote:
 > Hi Geoff,
->
+> 
 > On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
->> This series adds the core support for kexec re-boots on arm64.  This v7 of the
->> series is mainly just a rebase to the latest arm64 for-next/core branch
->> (v3.19-rc4), and a few very minor changes requested for v6.
->
+> > This series adds the core support for kexec re-boots on arm64.  This v7 of the
+> > series is mainly just a rebase to the latest arm64 for-next/core branch
+> > (v3.19-rc4), and a few very minor changes requested for v6.
+> 
 > I haven't looked at the series in detail before, so some of my comments
 > may have already been discussed.
->
->> Several things are known to have problems on kexec re-boot:
->>
->> spin-table
->
+> 
+> > Several things are known to have problems on kexec re-boot:
+> > 
+> > spin-table
+> 
 > I think that's not too bad, for complete kexec support (SMP->SMP) we can
 > require some CPU unplug mechanism and PSCI is one of them.
->
->> FIX: Upgrade system firmware to provide PSCI enable method support or add
->> missing spin-table support to the kernel.
->
+> 
+> > FIX: Upgrade system firmware to provide PSCI enable method support or add
+> > missing spin-table support to the kernel.
+> 
 > What's the missing spin-table support?
->
->> ACPI
->> ----
->>
->> PROBLEM: The kernel for ACPI based systems does not export a device tree to the
->> standard user space location of 'proc/device-tree'.  Current applications
->> expect to access device tree information from this standard location.
->>
->> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage
->> kernel command line, OR pass a user specified DTB using the kexec --dtb option.
->>
->> FIX: FIX: An interface to expose a binary device tree to user space has been
->> proposed.  User kexec utilities will need to be updated to add support for this
->> new interface.
 
-The new interface is merged into mainline. /sys/firmware/fdt
+As you mention above, a mechanism for returning the CPUs to FW. There is
+no spec for doing this with spin-table, which would have to be written
+and vetted.
 
-> So the fix here is to boot the second stage kernel with dtb, which means
-> that we mandate the existence of a DT file for any ACPI system. Are
-> there plans to make the kexec'ed kernel reuse the ACPI tables?
-
-Yes, the kexec'ed kernel will reuse the ACPI tables, and any other
-data passed by UEFI. The DT we're talking about here is the DT
-generated by the kernel's UEFI stub, and the kexec tools want access
-to it so they can find the UEFI system table pointer.
-
-g.
+Mark.
 
 _______________________________________________
 kexec mailing list
