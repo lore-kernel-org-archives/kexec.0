@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 26 Jan 2015 18:26:21 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 2/8] arm64: Convert hcalls to use ISS field
-Message-ID: <20150126182621.GH14048@e104818-lin.cambridge.arm.com>
-References: <cover.1421449714.git.geoff@infradead.org>
- <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
+Received: from mail-ie0-f171.google.com ([209.85.223.171])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YFoY3-0003wl-35
+ for kexec@lists.infradead.org; Mon, 26 Jan 2015 18:38:08 +0000
+Received: by mail-ie0-f171.google.com with SMTP id tr6so10472372ieb.2
+ for <kexec@lists.infradead.org>; Mon, 26 Jan 2015 10:37:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
+In-Reply-To: <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
+References: <cover.1415926876.git.geoff@infradead.orgg>
+ <cover.1421449714.git.geoff@infradead.org>
+ <20150126174414.GF14048@e104818-lin.cambridge.arm.com>
+From: Grant Likely <grant.likely@linaro.org>
+Date: Mon, 26 Jan 2015 18:37:24 +0000
+Message-ID: <CACxGe6uyko0ZfMBPHphJ1H2XO_L+ROKPYfsk4sjumKndX9kbng@mail.gmail.com>
+Subject: Re: [PATCH 0/8] arm64 kexec kernel patches V7
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,182 +26,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Deepak Saxena <dsaxena@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
-> To allow for additional hcalls to be defined and to make the arm64 hcall API
-> more consistent across exception vector routines, change the hcall implementations
-> to use the ISS field of the ESR_EL2 register to specify the hcall type.
-> 
-> The existing arm64 hcall implementations are limited in that they only allow
-> for two distinct hcalls; with the x0 register either zero, or not zero.  Also,
-> the API of the hyp-stub exception vector routines and the KVM exception vector
-> routines differ; hyp-stub uses a non-zero value in x0 to implement
-> __hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
-> 
-> Define three new preprocessor macros HVC_GET_VECTORS, HVC_SET_VECTORS and
-> HVC_CALL_HYP and to be used as hcall type specifiers and convert the
-> existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
-> to use these new macros when executing an HVC call.  Also change the
-> corresponding hyp-stub and KVM el1_sync exception vector routines to use these
-> new macros.
-> 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+On Mon, Jan 26, 2015 at 5:44 PM, Catalin Marinas
+<catalin.marinas@arm.com> wrote:
+> Hi Geoff,
+>
+> On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+>> This series adds the core support for kexec re-boots on arm64.  This v7 of the
+>> series is mainly just a rebase to the latest arm64 for-next/core branch
+>> (v3.19-rc4), and a few very minor changes requested for v6.
+>
+> I haven't looked at the series in detail before, so some of my comments
+> may have already been discussed.
+>
+>> Several things are known to have problems on kexec re-boot:
+>>
+>> spin-table
+>
+> I think that's not too bad, for complete kexec support (SMP->SMP) we can
+> require some CPU unplug mechanism and PSCI is one of them.
+>
+>> FIX: Upgrade system firmware to provide PSCI enable method support or add
+>> missing spin-table support to the kernel.
+>
+> What's the missing spin-table support?
+>
+>> ACPI
+>> ----
+>>
+>> PROBLEM: The kernel for ACPI based systems does not export a device tree to the
+>> standard user space location of 'proc/device-tree'.  Current applications
+>> expect to access device tree information from this standard location.
+>>
+>> WORK-AROUND: Disable ACPI in firmware, OR pass 'acpi=off' on the first stage
+>> kernel command line, OR pass a user specified DTB using the kexec --dtb option.
+>>
+>> FIX: FIX: An interface to expose a binary device tree to user space has been
+>> proposed.  User kexec utilities will need to be updated to add support for this
+>> new interface.
 
-Using the #imm value for HVC to separate what gets called looks fine to
-me. However, I'd like to see a review from Marc/Christoffer on this
-patch.
+The new interface is merged into mainline. /sys/firmware/fdt
 
-Some comments below:
+> So the fix here is to boot the second stage kernel with dtb, which means
+> that we mandate the existence of a DT file for any ACPI system. Are
+> there plans to make the kexec'ed kernel reuse the ACPI tables?
 
-> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> index 7a5df52..99c319c 100644
-> --- a/arch/arm64/include/asm/virt.h
-> +++ b/arch/arm64/include/asm/virt.h
-> @@ -21,6 +21,26 @@
->  #define BOOT_CPU_MODE_EL1	(0xe11)
->  #define BOOT_CPU_MODE_EL2	(0xe12)
->  
-> +/*
-> + * HVC_GET_VECTORS - Return the value of the vbar_el2 register.
-> + */
-> +
-> +#define HVC_GET_VECTORS 1
-> +
-> +/*
-> + * HVC_SET_VECTORS - Set the value of the vbar_el2 register.
-> + *
-> + * @x0: Physical address of the new vector table.
-> + */
-> +
-> +#define HVC_SET_VECTORS 2
-> +
-> +/*
-> + * HVC_CALL_HYP - Execute a hyp routine.
-> + */
-> +
-> +#define HVC_CALL_HYP 3
+Yes, the kexec'ed kernel will reuse the ACPI tables, and any other
+data passed by UEFI. The DT we're talking about here is the DT
+generated by the kernel's UEFI stub, and the kexec tools want access
+to it so they can find the UEFI system table pointer.
 
-I think you can ignore this case (make it the default), just define it
-as 0 as that's the normal use-case after initialisation and avoid
-checking it explicitly.
-
->  /*
-> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> index a272f33..e3db3fd 100644
-> --- a/arch/arm64/kernel/hyp-stub.S
-> +++ b/arch/arm64/kernel/hyp-stub.S
-> @@ -22,6 +22,7 @@
->  #include <linux/irqchip/arm-gic-v3.h>
->  
->  #include <asm/assembler.h>
-> +#include <asm/kvm_arm.h>
->  #include <asm/ptrace.h>
->  #include <asm/virt.h>
->  
-> @@ -53,14 +54,22 @@ ENDPROC(__hyp_stub_vectors)
->  	.align 11
->  
->  el1_sync:
-> -	mrs	x1, esr_el2
-> -	lsr	x1, x1, #26
-> -	cmp	x1, #0x16
-> -	b.ne	2f				// Not an HVC trap
-> -	cbz	x0, 1f
-> -	msr	vbar_el2, x0			// Set vbar_el2
-> +	mrs	x18, esr_el2
-> +	lsr	x17, x18, #ESR_ELx_EC_SHIFT
-> +	and	x18, x18, #ESR_ELx_ISS_MASK
-> +
-> +	cmp     x17, #ESR_ELx_EC_HVC64
-> +	b.ne    2f				// Not an HVC trap
-> +
-> +	cmp	x18, #HVC_GET_VECTORS
-> +	b.ne	1f
-> +	mrs	x0, vbar_el2
->  	b	2f
-> -1:	mrs	x0, vbar_el2			// Return vbar_el2
-> +
-> +1:	cmp	x18, #HVC_SET_VECTORS
-> +	b.ne	2f
-> +	msr	vbar_el2, x0
-> +
->  2:	eret
->  ENDPROC(el1_sync)
-
-You seem to be using x17 and x18 here freely. Do you have any guarantees
-that the caller saved/restored those registers? I guess you assume they
-are temporary registers and the caller first branches to a function
-(like __kvm_hyp_call) and expects them to be corrupted. But I'm not sure
-that's always the case. Take for example the __invoke_psci_fn_hvc where
-the function is in C (we should change this for other reasons).
-
-> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-> index c0d8202..1916c89 100644
-> --- a/arch/arm64/kvm/hyp.S
-> +++ b/arch/arm64/kvm/hyp.S
-> @@ -27,6 +27,7 @@
->  #include <asm/kvm_asm.h>
->  #include <asm/kvm_mmu.h>
->  #include <asm/memory.h>
-> +#include <asm/virt.h>
->  
->  #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
->  #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
-> @@ -1106,12 +1107,9 @@ __hyp_panic_str:
->   * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
->   * passed in r0 and r1.
->   *
-> - * A function pointer with a value of 0 has a special meaning, and is
-> - * used to implement __hyp_get_vectors in the same way as in
-> - * arch/arm64/kernel/hyp_stub.S.
->   */
->  ENTRY(kvm_call_hyp)
-> -	hvc	#0
-> +	hvc	#HVC_CALL_HYP
->  	ret
->  ENDPROC(kvm_call_hyp)
->  
-> @@ -1142,6 +1140,7 @@ el1_sync:					// Guest trapped into EL2
->  
->  	mrs	x1, esr_el2
->  	lsr	x2, x1, #ESR_ELx_EC_SHIFT
-> +	and	x0, x1, #ESR_ELx_ISS_MASK
->  
->  	cmp	x2, #ESR_ELx_EC_HVC64
->  	b.ne	el1_trap
-> @@ -1150,15 +1149,19 @@ el1_sync:					// Guest trapped into EL2
->  	cbnz	x3, el1_trap			// called HVC
->  
->  	/* Here, we're pretty sure the host called HVC. */
-> +	mov	x18, x0
-
-Same comment here about corrupting x18. If it is safe, maybe add some
-comments in the calling place.
-
->  	pop	x2, x3
->  	pop	x0, x1
->  
-> -	/* Check for __hyp_get_vectors */
-> -	cbnz	x0, 1f
-> +	cmp	x18, #HVC_GET_VECTORS
-> +	b.ne	1f
->  	mrs	x0, vbar_el2
->  	b	2f
->  
-> -1:	push	lr, xzr
-> +1:	cmp	x18, #HVC_CALL_HYP
-> +	b.ne	2f
-> +
-> +	push	lr, xzr
-
-At this point, we expect either HVC_GET_VECTORS or HVC_CALL_HYP. I think
-you can simply assume HVC_CALL_HYP as default and ignore the additional
-cmp.
-
--- 
-Catalin
+g.
 
 _______________________________________________
 kexec mailing list
