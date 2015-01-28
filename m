@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1422387198.21823.23.camel@infradead.org>
-Subject: [PATCH V2 1/8] arm64: Fold proc-macros.S into assembler.h
-From: Geoff Levand <geoff@infradead.org>
-Date: Tue, 27 Jan 2015 11:33:18 -0800
-In-Reply-To: <e81815fb841db3ea40ce8e2fd18cf021ec9c6cf7.1421449714.git.geoff@infradead.org>
-References: <cover.1421449714.git.geoff@infradead.org>
- <e81815fb841db3ea40ce8e2fd18cf021ec9c6cf7.1421449714.git.geoff@infradead.org>
-Mime-Version: 1.0
+Received: from mail-wi0-x22e.google.com ([2a00:1450:400c:c05::22e])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YGNcb-0005gX-Be
+ for kexec@lists.infradead.org; Wed, 28 Jan 2015 08:05:10 +0000
+Received: by mail-wi0-f174.google.com with SMTP id n3so9972737wiv.1
+ for <kexec@lists.infradead.org>; Wed, 28 Jan 2015 00:04:46 -0800 (PST)
+Message-ID: <54C89816.8030709@gmail.com>
+Date: Wed, 28 Jan 2015 09:04:38 +0100
+From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+MIME-Version: 1.0
+Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
+References: <545FBDDD.9060801@gmail.com> <20141111213037.GA31445@redhat.com>
+ <54ADA284.30502@gmail.com> <20150112221634.GD16162@redhat.com>
+ <54B91271.3000600@gmail.com> <20150127142459.GA12851@redhat.com>
+In-Reply-To: <20150127142459.GA12851@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,171 +26,131 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: marc.zyngier@arm.com, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, christoffer.dall@linaro.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, mtk.manpages@gmail.com, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-To allow the assembler macros defined in arch/arm64/mm/proc-macros.S to be used
-outside the mm code move the contents of proc-macros.S to
-arch/arm64/include/asm/assembler.h, delete proc-macros.S, and fix up all
-references to proc-macros.S.
+Hi Vivek,
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/arm64/include/asm/assembler.h | 37 +++++++++++++++++++++++++-
- arch/arm64/mm/cache.S              |  2 --
- arch/arm64/mm/proc-macros.S        | 54 --------------------------------------
- arch/arm64/mm/proc.S               |  2 --
- 4 files changed, 36 insertions(+), 59 deletions(-)
- delete mode 100644 arch/arm64/mm/proc-macros.S
+On 01/27/2015 03:24 PM, Vivek Goyal wrote:
+> On Fri, Jan 16, 2015 at 02:30:25PM +0100, Michael Kerrisk (man-pages) wrote:
+> [..]
+>>
+> 
+> Hi Michael,
+> 
+> Please find my responses below. Sorry, I got stuck in other work and
+> forgot about this thread.
+> 
+>> So, returning to the kexeec_segment structure:
+>>
+>>            struct kexec_segment {
+>>                void   *buf;        /* Buffer in user space */
+>>                size_t  bufsz;      /* Buffer length in user space */
+>>                void   *mem;        /* Physical address of kernel */
+>>                size_t  memsz;      /* Physical address length */
+>>            };
+>>
+>> Are the following statements correct:
+>> * buf + bufsz identify a memory region in the caller's virtual 
+>>   address space that is the source of the copy
+> 
+> Yes.
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 5901480..80436d3 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -1,5 +1,5 @@
- /*
-- * Based on arch/arm/include/asm/assembler.h
-+ * Based on arch/arm/include/asm/assembler.h, arch/arm/mm/proc-macros.S
-  *
-  * Copyright (C) 1996-2000 Russell King
-  * Copyright (C) 2012 ARM Ltd.
-@@ -20,6 +20,7 @@
- #error "Only include this from assembly code"
- #endif
- 
-+#include <asm/asm-offsets.h>
- #include <asm/ptrace.h>
- #include <asm/thread_info.h>
- 
-@@ -155,3 +156,37 @@ lr	.req	x30		// link register
- #endif
- 	orr	\rd, \lbits, \hbits, lsl #32
- 	.endm
-+
-+/*
-+ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-+ */
-+	.macro	vma_vm_mm, rd, rn
-+	ldr	\rd, [\rn, #VMA_VM_MM]
-+	.endm
-+
-+/*
-+ * mmid - get context id from mm pointer (mm->context.id)
-+ */
-+	.macro	mmid, rd, rn
-+	ldr	\rd, [\rn, #MM_CONTEXT_ID]
-+	.endm
-+
-+/*
-+ * dcache_line_size - get the minimum D-cache line size from the CTR register.
-+ */
-+	.macro	dcache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
-+
-+/*
-+ * icache_line_size - get the minimum I-cache line size from the CTR register.
-+ */
-+	.macro	icache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	and	\tmp, \tmp, #0xf		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
-diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-index 2560e1e..2d7a67c 100644
---- a/arch/arm64/mm/cache.S
-+++ b/arch/arm64/mm/cache.S
-@@ -24,8 +24,6 @@
- #include <asm/cpufeature.h>
- #include <asm/alternative-asm.h>
- 
--#include "proc-macros.S"
--
- /*
-  *	__flush_dcache_all()
-  *
-diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
-deleted file mode 100644
-index 005d29e..0000000
---- a/arch/arm64/mm/proc-macros.S
-+++ /dev/null
-@@ -1,54 +0,0 @@
--/*
-- * Based on arch/arm/mm/proc-macros.S
-- *
-- * Copyright (C) 2012 ARM Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
--
--#include <asm/asm-offsets.h>
--#include <asm/thread_info.h>
--
--/*
-- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-- */
--	.macro	vma_vm_mm, rd, rn
--	ldr	\rd, [\rn, #VMA_VM_MM]
--	.endm
--
--/*
-- * mmid - get context id from mm pointer (mm->context.id)
-- */
--	.macro	mmid, rd, rn
--	ldr	\rd, [\rn, #MM_CONTEXT_ID]
--	.endm
--
--/*
-- * dcache_line_size - get the minimum D-cache line size from the CTR register.
-- */
--	.macro	dcache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
--
--/*
-- * icache_line_size - get the minimum I-cache line size from the CTR register.
-- */
--	.macro	icache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	and	\tmp, \tmp, #0xf		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 28eebfb..fe69f6e 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -26,8 +26,6 @@
- #include <asm/pgtable-hwdef.h>
- #include <asm/pgtable.h>
- 
--#include "proc-macros.S"
--
- #ifdef CONFIG_ARM64_64K_PAGES
- #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
- #else
+Okay.
+
+>> * mem + memsz specify the target memory region of the copy
+> 
+> Yes.
+
+Okay.
+
+>> * mem is  physical memory address, as seen from kernel space
+> 
+> Yes.
+
+Okay.
+
+>> * the number of bytes copied from userspace is min(bufsz, memsz)
+> 
+> Yes. bufsz can not be more than memsz. There is a check to validate
+> this in kernel.
+> 
+> 	result = -EINVAL;
+> 	for (i = 0; i < nr_segments; i++) {
+> 		if (image->segment[i].bufsz > image->segment[i].memsz)
+> 			return result;
+> 	}
+
+Okay. So it's more precise to leave discussion of min(bufz, memsz) 
+out of the man page just to say: bufsz bytes are transferred; 
+if bufsz < memsz, then the excess bytes in the target region are 
+filled with zeros. Right?
+
+>> * if bufsz > memsz, then excess bytes in the user-space buffer 
+>>   are ignored.
+> 
+> You will get -EINVAL.
+
+Okay.
+
+>> * if memsz > bufsz, then excess bytes in the target kernel buffer
+>>   are filled with zeros.
+> 
+> Yes.
+
+Okay.
+
+>> Also, it seems to me that 'mem' need not be page aligned.
+>> Is that correct? Should the man page say something about that?
+>> (E.g., is it generally desirable that 'mem' should be page aligned?)
+> 
+> mem and memsz need to be page aligned. There is a check for that too.
+> 
+> 	mstart = image->segment[i].mem;
+> 	mend   = mstart + image->segment[i].memsz;
+> 	if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+> 		return result;
+> 
+>>
+>> Likewise, 'memsz' doesn't need to beta page multiple, IIUC.
+>> Should the man page say anything about this? For example, should 
+>> it note that the initialized kernel segment will be of size:
+>>
+>>      (mem % PAGE_SIZE + memsz) rounded up to the next multiple of PAGE_SIZE
+>>
+>> And should it note that if 'mem' is not a multiple of the page size, then
+>> the initial bytes (mem % PAGE_SIZE)) in the first page of the kernel segment 
+>> will be zeros?
+>>
+>> (Hopefully I have read kimage_load_normal_segment() correctly.)
+> 
+> Both mem and memsz need to be page aligned.
+
+And the error if not is EADDRNOTAVAIL, right?
+
+>> And one further question. Other than the fact that they are used with 
+>> different system calls, what is the difference between KEXEC_ON_CRASH 
+>> and KEXEC_FILE_ON_CRASH?
+> 
+> Right now I can't think of any other difference. They both tell respective
+> system call that this kernel needs to be loaded in reserved memory region
+> for crash kernel.
+
+Okay.
+
+I've made various adjustments to the page in the light of your comments 
+above. Thanks!
+
+Cheers,
+
+Michael
+
+
+
 -- 
-2.1.0
-
-
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
 
 _______________________________________________
 kexec mailing list
