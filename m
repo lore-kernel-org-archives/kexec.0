@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-la0-x233.google.com ([2a00:1450:4010:c03::233])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YGTvA-0005GX-H1
- for kexec@lists.infradead.org; Wed, 28 Jan 2015 14:48:45 +0000
-Date: Wed, 28 Jan 2015 09:48:03 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
-Message-ID: <20150128144803.GC15342@redhat.com>
+ id 1YGUsi-0000s4-Rx
+ for kexec@lists.infradead.org; Wed, 28 Jan 2015 15:50:18 +0000
+Received: by mail-la0-f51.google.com with SMTP id ge10so19813090lab.10
+ for <kexec@lists.infradead.org>; Wed, 28 Jan 2015 07:49:54 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <20150128144803.GC15342@redhat.com>
 References: <545FBDDD.9060801@gmail.com> <20141111213037.GA31445@redhat.com>
  <54ADA284.30502@gmail.com> <20150112221634.GD16162@redhat.com>
  <54B91271.3000600@gmail.com> <20150127142459.GA12851@redhat.com>
- <54C89816.8030709@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <54C89816.8030709@gmail.com>
+ <54C89816.8030709@gmail.com> <20150128144803.GC15342@redhat.com>
+From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date: Wed, 28 Jan 2015 16:49:34 +0100
+Message-ID: <CAKgNAkhhVq5fuqwH0aPdgR1bKkAPPPuS84hfAFg3grGEJNxS4w@mail.gmail.com>
+Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,61 +23,386 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: mtk.manpages@gmail.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Andi Kleen <andi@firstfloor.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>
 
-On Wed, Jan 28, 2015 at 09:04:38AM +0100, Michael Kerrisk (man-pages) wrote:
+[Dropping Andi into CC, which I should have done to start with, since
+he wrote the original page, and might also have some comments]
 
-Hi Michael,
+Hello Vivek,
 
-[..]
-> >> * the number of bytes copied from userspace is min(bufsz, memsz)
-> > 
-> > Yes. bufsz can not be more than memsz. There is a check to validate
-> > this in kernel.
-> > 
-> > 	result = -EINVAL;
-> > 	for (i = 0; i < nr_segments; i++) {
-> > 		if (image->segment[i].bufsz > image->segment[i].memsz)
-> > 			return result;
-> > 	}
-> 
-> Okay. So it's more precise to leave discussion of min(bufz, memsz) 
-> out of the man page just to say: bufsz bytes are transferred; 
-> if bufsz < memsz, then the excess bytes in the target region are 
-> filled with zeros. Right?
+>> I've made various adjustments to the page in the light of your comments
+>> above. Thanks!
+>
+> Thank you for following it up and improving kexec man page.
 
-Sounds good.
-
-[..]
-> > Both mem and memsz need to be page aligned.
-> 
-> And the error if not is EADDRNOTAVAIL, right?
-
-Yes.
-
-> 
-> >> And one further question. Other than the fact that they are used with 
-> >> different system calls, what is the difference between KEXEC_ON_CRASH 
-> >> and KEXEC_FILE_ON_CRASH?
-> > 
-> > Right now I can't think of any other difference. They both tell respective
-> > system call that this kernel needs to be loaded in reserved memory region
-> > for crash kernel.
-> 
-> Okay.
-> 
-> I've made various adjustments to the page in the light of your comments 
-> above. Thanks!
-
-Thank you for following it up and improving kexec man page.
+You're welcome. So, by now, I've made quite a lot of changes
+(including adding a number of cases under ERRORS). I think the revised
+kexec_load/kexec_file_load page is pretty much ready to go, but would
+you be willing to give the text below a check over first?
 
 Thanks
-Vivek
+
+Michael
+
+====
+
+.\" Copyright (C) 2010 Intel Corporation, Author: Andi Kleen
+.\" and Copyright 2014, Vivek Goyal <vgoyal@redhat.com>
+.\" and Copyright (c) 2015, Michael Kerrisk <mtk.manpages@gmail.com>
+.\"
+.\" %%%LICENSE_START(VERBATIM)
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\"
+.\" Since the Linux kernel and libraries are constantly changing, this
+.\" manual page may be incorrect or out-of-date.  The author(s) assume no
+.\" responsibility for errors or omissions, or for damages resulting from
+.\" the use of the information contained herein.  The author(s) may not
+.\" have taken the same level of care in the production of this manual,
+.\" which is licensed free of charge, as they might when working
+.\" professionally.
+.\"
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" %%%LICENSE_END
+.\"
+.TH KEXEC_LOAD 2 2014-08-19 "Linux" "Linux Programmer's Manual"
+.SH NAME
+kexec_load, kexec_file_load \- load a new kernel for later execution
+.SH SYNOPSIS
+.nf
+.B #include <linux/kexec.h>
+
+.BI "long kexec_load(unsigned long " entry ", unsigned long " nr_segments ","
+.BI "                struct kexec_segment *" segments \
+", unsigned long " flags ");"
+
+.BI "long kexec_file_load(int " kernel_fd ", int " initrd_fd ","
+.br
+.BI "                    unsigned long " cmdline_len  \
+", const char *" cmdline ","
+.BI "                    unsigned long " flags ");"
+
+.fi
+.IR Note :
+There are no glibc wrappers for these system calls; see NOTES.
+.SH DESCRIPTION
+The
+.BR kexec_load ()
+system call loads a new kernel that can be executed later by
+.BR reboot (2).
+.PP
+The
+.I flags
+argument is a bit mask that controls the operation of the call.
+The following values can be specified in
+.IR flags :
+.TP
+.BR KEXEC_ON_CRASH " (since Linux 2.6.13)"
+Execute the new kernel automatically on a system crash.
+This "crash kernel" is loaded into an area of reserved memory that
+is determined at boot time using the
+.I craskkernel
+kernel command-line parameter.
+The location of this reserved memory is exported to user space via the
+.I /proc/iomem
+file, in an entry labeled "Crash kernel".
+A user-space application can parse this file and prepare a list of
+segments (see below) that specify this reserved memory as destination.
+If this flag is specified, the kernel checks that the
+target segments specified in
+.I segments
+fall within the reserved region.
+.TP
+.BR KEXEC_PRESERVE_CONTEXT " (since Linux 2.6.27)"
+Preserve the system hardware and
+software states before executing the new kernel.
+This could be used for system suspend.
+This flag is available only if the kernel was configured with
+.BR CONFIG_KEXEC_JUMP ,
+and is effective only if
+.I nr_segments
+is greater than 0.
+.PP
+The high-order bits (corresponding to the mask 0xffff0000) of
+.I flags
+contain the architecture of the to-be-executed kernel.
+Specify (OR) the constant
+.B KEXEC_ARCH_DEFAULT
+to use the current architecture,
+or one of the following architecture constants
+.BR KEXEC_ARCH_386 ,
+.BR KEXEC_ARCH_68K ,
+.BR KEXEC_ARCH_X86_64 ,
+.BR KEXEC_ARCH_PPC ,
+.BR KEXEC_ARCH_PPC64 ,
+.BR KEXEC_ARCH_IA_64 ,
+.BR KEXEC_ARCH_ARM ,
+.BR KEXEC_ARCH_S390 ,
+.BR KEXEC_ARCH_SH ,
+.BR KEXEC_ARCH_MIPS ,
+and
+.BR KEXEC_ARCH_MIPS_LE .
+The architecture must be executable on the CPU of the system.
+
+The
+.I entry
+argument is the physical entry address in the kernel image.
+The
+.I nr_segments
+argument is the number of segments pointed to by the
+.I segments
+pointer;
+the kernel imposes an (arbitrary) limit of 16 on the number of segments.
+The
+.I segments
+argument is an array of
+.I kexec_segment
+structures which define the kernel layout:
+.in +4n
+.nf
+
+struct kexec_segment {
+    void   *buf;        /* Buffer in user space */
+    size_t  bufsz;      /* Buffer length in user space */
+    void   *mem;        /* Physical address of kernel */
+    size_t  memsz;      /* Physical address length */
+};
+.fi
+.in
+.PP
+The kernel image defined by
+.I segments
+is copied from the calling process into
+the kernel either in regular
+memory or in reserved memory (if
+.BR KEXEC_ON_CRASH
+is set).
+The kernel first performs various sanity checks on the
+information passed in
+.IR segments .
+If these checks pass, the kernel copies the segment data to kernel memory.
+Each segment specified in
+.I segments
+is copied as follows:
+.IP * 3
+.I buf
+and
+.I bufsz
+identify a memory region in the caller's virtual address space
+that is the source of the copy.
+The value in
+.I bufsz
+may not exceed the value in the
+.I memsz
+field.
+.IP *
+.I mem
+and
+.I memsz
+specify a physical address range that is the target of the copy.
+The values specified in both fields must be multiples of
+the system page size.
+.IP *
+.I bufsz
+bytes are copied from the source buffer to the target kernel buffer.
+If
+.I bufsz
+is less than
+.IR memsz ,
+then the excess bytes in the kernel buffer are zeroed out.
+.PP
+In case of a normal kexec (i.e., the
+.BR KEXEC_ON_CRASH
+flag is not set), the segment data is loaded in any available memory
+and is moved to the final destination at kexec reboot time (e.g., when the
+.BR kexec (8)
+command is executed with the
+.I \-e
+option).
+
+In case of kexec on panic (i.e., the
+.BR KEXEC_ON_CRASH
+flag is set), the segment data is
+loaded to reserved memory at the time of the call, and, after a crash,
+the kexec mechanism simply passes control to that kernel.
+
+The
+.BR kexec_load ()
+system call is available only if the kernel was configured with
+.BR CONFIG_KEXEC .
+.SS kexec_file_load()
+The
+.BR kexec_file_load ()
+system call is similar to
+.BR kexec_load (),
+but it takes a different set of arguments.
+It reads the kernel to be loaded from the file referred to by the descriptor
+.IR kernel_fd ,
+and the initrd (initial RAM disk)
+to be loaded from file referred to by the descriptor
+.IR initrd_fd .
+The
+.IR cmdline
+argument is a pointer to a buffer containing the command line
+for the new kernel.
+The
+.IR cmdline_len
+argument specifies size of the buffer.
+The last byte in the buffer must be a null byte (\(aq\\0\(aq).
+
+The
+.IR flags
+argument is a bit mask which modifies the behavior of the call.
+The following values can be specified in
+.IR flags :
+.TP
+.BR KEXEC_FILE_UNLOAD
+Unload the currently loaded kernel.
+.TP
+.BR KEXEC_FILE_ON_CRASH
+Load the new kernel in the memory region reserved for the crash kernel
+(as for
+.BR KEXEC_ON_CRASH).
+This kernel is booted if the currently running kernel crashes.
+.TP
+.BR KEXEC_FILE_NO_INITRAMFS
+Loading initrd/initramfs is optional.
+Specify this flag if no initramfs is being loaded.
+If this flag is set, the value passed in
+.IR initrd_fd
+is ignored.
+.PP
+The
+.BR kexec_file_load ()
+.\" See also http://lwn.net/Articles/603116/
+system call was added to provide support for systems
+where "kexec" loading should be restricted to
+only kernels that are signed.
+This system call is available only if the kernel was configured with
+.BR CONFIG_KEXEC_FILE .
+.SH RETURN VALUE
+On success, these system calls returns 0.
+On error, \-1 is returned and
+.I errno
+is set to indicate the error.
+.SH ERRORS
+.TP
+.B EADDRNOTAVAIL
+.\" See kernel/kexec.::sanity_check_segment_list in the 3.19 kernel source
+The
+.B KEXEC_ON_CRASH
+flags was specified, but the region specified by the
+.I mem
+and
+.I memsz
+fields of one of the
+.I segments
+entries lies outside the range of memory reserved for the crash kernel.
+.TP
+.B EADDRNOTAVAIL
+The value in a
+.I mem
+or
+.I memsz
+field in one of the
+.I segments
+entries is not a multiple of the system page size.
+.TP
+.B EBADF
+.I kernel_fd
+or
+.I initrd_fd
+is not a valid file descriptor.
+.TP
+.B EBUSY
+Another crash kernel is already being loaded
+or a crash kernel is already in use.
+.TP
+.B EINVAL
+.I flags
+is invalid.
+.TP
+.B EINVAL
+The value of a
+.I bufsz
+field in one of the
+.I segments
+entries exceeds the value in the corresponding
+.I memsz
+field.
+.TP
+.B EINVAL
+.IR nr_segments
+exceeds
+.BR KEXEC_SEGMENT_MAX
+(16).
+.TP
+.B EINVAL
+Two or more of the kernel target buffers overlap.
+.TP
+.B EINVAL
+The value in
+.I cmdline[cmdline_len-1]
+is not \(aq\\0\(aq.
+.TP
+.B EINVAL
+The file referred to by
+.I kernel_fd
+or
+.I initrd_fd
+is empty (length zero).
+.TP
+.B ENOMEM
+Could not allocate memory.
+.TP
+.B ENOEXEC
+.I kernel_fd
+does not refer to an open file, or the kernel can't load this file.
+.TP
+.B EPERM
+The caller does not have the
+.BR CAP_SYS_BOOT
+capability.
+.SH VERSIONS
+The
+.BR kexec_load ()
+system call first appeared in Linux 2.6.13.
+The
+.BR kexec_file_load ()
+system call first appeared in Linux 3.17.
+.SH CONFORMING TO
+These system calls are Linux-specific.
+.SH NOTES
+Currently, there is no glibc support for these system calls.
+Call them using
+.BR syscall (2).
+.SH SEE ALSO
+.BR reboot (2),
+.BR syscall (2),
+.BR kexec (8)
+
+The kernel source files
+.IR Documentation/kdump/kdump.txt
+and
+.IR Documentation/kernel-parameters.txt .
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
 
 _______________________________________________
 kexec mailing list
