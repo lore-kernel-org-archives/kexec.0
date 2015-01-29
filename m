@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-pa0-f42.google.com ([209.85.220.42])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YGlWq-0005X2-In
- for kexec@lists.infradead.org; Thu, 29 Jan 2015 09:36:49 +0000
-Received: by mail-pa0-f42.google.com with SMTP id bj1so37040180pad.1
- for <kexec@lists.infradead.org>; Thu, 29 Jan 2015 01:36:25 -0800 (PST)
-Message-ID: <54C9FF0F.9050300@linaro.org>
-Date: Thu, 29 Jan 2015 18:36:15 +0900
+ id 1YGlrf-00045r-Ak
+ for kexec@lists.infradead.org; Thu, 29 Jan 2015 09:58:19 +0000
+Received: by mail-pa0-f42.google.com with SMTP id bj1so37251900pad.1
+ for <kexec@lists.infradead.org>; Thu, 29 Jan 2015 01:57:56 -0800 (PST)
+Message-ID: <54CA041C.6020403@linaro.org>
+Date: Thu, 29 Jan 2015 18:57:48 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
