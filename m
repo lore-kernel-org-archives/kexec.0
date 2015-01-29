@@ -1,26 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qg0-x22b.google.com ([2607:f8b0:400d:c04::22b])
+Received: from mail-pa0-f42.google.com ([209.85.220.42])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YGhqJ-0005jc-Tv
- for kexec@lists.infradead.org; Thu, 29 Jan 2015 05:40:40 +0000
-Received: by mail-qg0-f43.google.com with SMTP id e89so24093801qgf.2
- for <kexec@lists.infradead.org>; Wed, 28 Jan 2015 21:40:17 -0800 (PST)
+ id 1YGlWq-0005X2-In
+ for kexec@lists.infradead.org; Thu, 29 Jan 2015 09:36:49 +0000
+Received: by mail-pa0-f42.google.com with SMTP id bj1so37040180pad.1
+ for <kexec@lists.infradead.org>; Thu, 29 Jan 2015 01:36:25 -0800 (PST)
+Message-ID: <54C9FF0F.9050300@linaro.org>
+Date: Thu, 29 Jan 2015 18:36:15 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.11.1501290010120.6022@localhost.localdomain>
-References: <20150112221634.GD16162@redhat.com> <54B91271.3000600@gmail.com>
- <20150127142459.GA12851@redhat.com> <54C89816.8030709@gmail.com>
- <20150128144803.GC15342@redhat.com>
- <CAKgNAkhhVq5fuqwH0aPdgR1bKkAPPPuS84hfAFg3grGEJNxS4w@mail.gmail.com>
- <20150128203402.GG15342@redhat.com>
- <alpine.DEB.2.11.1501282104490.9275@localhost.localdomain>
- <20150128213125.GH15342@redhat.com>
- <alpine.DEB.2.11.1501282207570.5656@localhost.localdomain>
- <20150128222526.GJ15342@redhat.com>
- <alpine.DEB.2.11.1501290010120.6022@localhost.localdomain>
-From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Date: Thu, 29 Jan 2015 06:39:56 +0100
-Message-ID: <CAKgNAkjBBRmcpu8DuaGCCRhvXP_AFotK5xrHx2HaR6g_8omULw@mail.gmail.com>
-Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
+Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
+References: <cover.1421449714.git.geoff@infradead.org>
+ <a3353cf2ac47f49c20bbbb88405301cbaa359805.1421449714.git.geoff@infradead.org>
+ <20150126191942.GQ23313@leverpostej>
+In-Reply-To: <20150126191942.GQ23313@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,77 +22,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: mtk.manpages@gmail.com
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scot Doyle <lkml14@scotdoyle.com>
-Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Andi Kleen <andi@firstfloor.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On 29 January 2015 at 02:27, Scot Doyle <lkml14@scotdoyle.com> wrote:
-> On Wed, 28 Jan 2015, Vivek Goyal wrote:
->> On Wed, Jan 28, 2015 at 10:10:59PM +0000, Scot Doyle wrote:
->> > On Wed, 28 Jan 2015, Vivek Goyal wrote:
->> > > On Wed, Jan 28, 2015 at 09:14:03PM +0000, Scot Doyle wrote:
->> > > > When I tested, kexec_file_load required CONFIG_RELOCATABLE. Is the same
->> > > > true for kexec_load? Would it make sense to note this in the man pages
->> > > > along with the need for CONFIG_KEXEC_FILE, etc? Or as an error message?
->> > >
->> > > Hmm.., I can't see an explicity dependency between RELOCATABLE and
->> > > KEXEC. Both KEXEC and KEXEC_FILE should be able to load a kernel
->> > > even if it had RELOCATABLE=n.
->> > >
->> > > Just that kernel will run from the address it has been built for.
->> > >
->> > > Thanks
->> > > Vivek
->> >
->> > Confusing, right? kexec_file_load returns -ENOEXEC and dmesg says
->> > "kexec-bzImage64: XLF_CAN_BE_LOADED_ABOVE_4G is not set." which leads to
->> > arch/x86/boot/header.S line 396:
->> >
->> > #if defined(CONFIG_RELOCATABLE) && defined(CONFIG_X86_64)
->> >    /* kernel/boot_param/ramdisk could be loaded above 4g */
->> > # define XLF1 XLF_CAN_BE_LOADED_ABOVE_4G
->> > #else
->> > # define XLF1 0
->> > #endif
+Hello,
+
+On 01/27/2015 04:19 AM, Mark Rutland wrote:
+> On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+>> Add runtime checks that fail the arm64 kexec syscall for situations that would
+>> result in system instability do to problems in the KVM kernel support.
+>> These checks should be removed when the KVM problems are resolved fixed.
 >>
->> Ah, this one. Actually generic kexec file loading implementation does not
->> impose this restriction. It is the image specific loader part which
->> decides what kind of bzImage it can load.
+>> Signed-off-by: Geoff Levand <geoff@infradead.org>
+>> ---
+>>   arch/arm64/kernel/machine_kexec.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
 >>
->> Current implementation (kexec-bzimage64.c), is only supporting loading
->> bzImages which are 64bit and can be loaded above 4G. This simplifies
->> the implementation of loader.
+>> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+>> index 3d84759..a36459d 100644
+>> --- a/arch/arm64/kernel/machine_kexec.c
+>> +++ b/arch/arm64/kernel/machine_kexec.c
+>> @@ -16,6 +16,9 @@
+>>   #include <asm/cacheflush.h>
+>>   #include <asm/system_misc.h>
 >>
->> But there is nothing which prevents one from implementing other image
->> loaders.
+>> +/* TODO: Remove this include when KVM can support a kexec reboot. */
+>> +#include <asm/virt.h>
+>> +
+>>   /* Global variables for the relocate_kernel routine. */
+>>   extern const unsigned char relocate_new_kernel[];
+>>   extern const unsigned long relocate_new_kernel_size;
+>> @@ -100,6 +103,13 @@ int machine_kexec_prepare(struct kimage *image)
 >>
->> So instead of saying that kexec_file_load() depends on CONFIG_RELOCATABLE,
->> it might be better to say in man page that currently this system call
->> supports only loading a bzImage which is 64bit and which can be loaded
->> above 4G too.
+>>   	kexec_image_info(image);
 >>
->> Thanks
->> Vivek
+>> +	/* TODO: Remove this message when KVM can support a kexec reboot. */
+>> +	if (IS_ENABLED(CONFIG_KVM) && is_hyp_mode_available()) {
+>> +		pr_err("%s: Your kernel is configured with KVM support (CONFIG_KVM=y) which currently does not allow for kexec re-boot.\n",
+>> +			__func__);
+>> +		return -ENOSYS;
+>> +	}
 >
-> Thanks, I agree, and think it would make sense to list them as part of the
-> page's ENOEXEC error.
+> If you really don't want to implement KVM teardown, surely this should
+> be at the start of the series, so we don't have a point in the middle
+> where things may explode in this case?
 
-Scott, could you then phras a couple of sentences that capture thge
-details, so I can add it to the ENOEXEC error?
+I'm going to fix this KVM issue (teardown) in cooperation with Geoff.
 
-Thanks,
+Looking into kvm init code, kvm_arch_init() in particular,
+I guess that teardown function (kvm_arch_exit()) should do
+   (reverting kvm_timer_hyp_init() per cpu)
+- stop arch timer
 
-Michael
+   (reverting cpu_init_hyp_mode() per cpu)
+- flush TLB
+- jump into identical mapping (using boot_hyp_pgd?)
+- disable MMU?
+- restore vbar_el2 to __hyp_stub_vectors (or NULL?)
 
+   (reverting kvm_mmu_init())
+- Do we need to free page tables and a bounce(trampoline) page?
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+Is this good enough for safely shutting down kvm?
+Do I miss anything essential, or can I skip anyhing?
+
+I really appreciate your comments.
+-Takahiro AKASHI
+
+> Mark.
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 
 _______________________________________________
 kexec mailing list
