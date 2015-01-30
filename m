@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1422647304.21823.31.camel@infradead.org>
-Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
+Message-ID: <1422654431.21823.33.camel@infradead.org>
+Subject: Re: [PATCH 4/8] arm64: Add EL2 switch to soft_restart
 From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 30 Jan 2015 11:48:24 -0800
-In-Reply-To: <54CB206D.7040705@linaro.org>
+Date: Fri, 30 Jan 2015 13:47:11 -0800
+In-Reply-To: <20150127175740.GK3226@e104818-lin.cambridge.arm.com>
 References: <cover.1421449714.git.geoff@infradead.org>
- <a3353cf2ac47f49c20bbbb88405301cbaa359805.1421449714.git.geoff@infradead.org>
- <20150126191942.GQ23313@leverpostej> <54CA041C.6020403@linaro.org>
- <54CA12A1.8090508@arm.com> <20150129184747.GV17721@leverpostej>
- <54CB206D.7040705@linaro.org>
+ <bb44d4eee4fab15278e4a8829a0981878bc9acd7.1421449714.git.geoff@infradead.org>
+ <20150127175740.GK3226@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,43 +20,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Hi Takahiro.
+Hi Catalin,
 
-On Fri, 2015-01-30 at 15:10 +0900, AKASHI Takahiro wrote:
-> Initially, I thought that we would define kvm_arch_exit() and call it
-> somewhere in the middle of kexec path (no idea yet).
-> But Geoff suggested me to implement a new hvc call, HVC_CPU_SHUTDOWN(??),
-> and make it called via cpu_notifier(CPU_DYING_FROZEN) initiated by
-> machine_shutdown() from kernel_kexec().
+On Tue, 2015-01-27 at 17:57 +0000, Catalin Marinas wrote:
+> On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+> >  ENTRY(cpu_reset)
+> > -	mrs	x1, sctlr_el1
+> > -	bic	x1, x1, #1
+> > -	msr	sctlr_el1, x1			// disable the MMU
+> > +	mrs	x2, sctlr_el1
+> > +	bic	x2, x2, #1
+> > +	msr	sctlr_el1, x2			// disable the MMU
+> >  	isb
+> > -	ret	x0
+> > +
+> > +	cbz	x0, 1f				// el2_switch?
+> > +	mov	x0, x1
+> > +	mov	x1, xzr
+> > +	mov	x2, xzr
+> > +	mov	x3, xzr
+> > +	hvc	#HVC_CALL_FUNC			// no return
+> 
+> If that's the only user of HVC_CALL_FUNC, why do we bother with
+> arguments, calling convention?
 
-As an initial implementation we can hook into the CPU_DYING_FROZEN
-notifier sent to hyp_init_cpu_notify().  The longer term solution
-should use kvm_arch_hardware_enable() and kvm_arch_hardware_disable().
+It was intended that HVC_CALL_FUNC be a mechanism to call a generic
+function in hyp mode.  cpu_reset() is the only user of it now.
 
-The calls to cpu_notifier(CPU_DYING_FROZEN) are part of cpu hot
-plug, and independent of kexec.  If someone were to add spin-table
-cpu un-plug, then it would be used for that also.  It seems we should
-be able to test without kexec by using cpu hot plug.
+As Mark explained in another post, the use of x18 by the hyp stub
+is to avoid the complication of setting up a stack for EL2.  We
+thought this solution was acceptable since there are relatively
+few HVC_CALL_FUNC calls and we could assure they would do the
+right thing.
 
-To tear down KVM you need to get back to hyp mode, and hence
-the need for HVC_CPU_SHUTDOWN.  The sequence I envisioned would
-be like this:
+-Geoff 
 
-cpu_notifier(CPU_DYING_FROZEN)
- -> kvm_cpu_shutdown() 
-    prepare for hvc
-    -> HVC_CPU_SHUTDOWN
-       now in hyp mode, do KVM tear down, restore default exception vectors
 
-Once the default exception vectors are restored soft_restart()
-can then execute the cpu_reset routine in EL2.
 
-Some notes are here for those with access:  https://cards.linaro.org/browse/KWG-611
-
--Geoff
 
 
 _______________________________________________
