@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1422654751.21823.35.camel@infradead.org>
-Subject: Re: [PATCH 3/8] arm64: Add new hcall HVC_CALL_FUNC
+Message-ID: <1422660681.21823.38.camel@infradead.org>
+Subject: Re: [PATCH 2/8] arm64: Convert hcalls to use ISS field
 From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 30 Jan 2015 13:52:31 -0800
-In-Reply-To: <20150127173947.GJ3226@e104818-lin.cambridge.arm.com>
+Date: Fri, 30 Jan 2015 15:31:21 -0800
+In-Reply-To: <20150126182621.GH14048@e104818-lin.cambridge.arm.com>
 References: <cover.1421449714.git.geoff@infradead.org>
- <3f1795bc1dad1d0510a9d24a168ecd5d83666507.1421449714.git.geoff@infradead.org>
- <20150127173947.GJ3226@e104818-lin.cambridge.arm.com>
+ <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
+ <20150126182621.GH14048@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,85 +20,208 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Hi Catalin,
-
-
-On Tue, 2015-01-27 at 17:39 +0000, Catalin Marinas wrote:
+On Mon, 2015-01-26 at 18:26 +0000, Catalin Marinas wrote:
 > On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+> > To allow for additional hcalls to be defined and to make the arm64 hcall API
+> > more consistent across exception vector routines, change the hcall implementations
+> > to use the ISS field of the ESR_EL2 register to specify the hcall type.
+> > 
+> > The existing arm64 hcall implementations are limited in that they only allow
+> > for two distinct hcalls; with the x0 register either zero, or not zero.  Also,
+> > the API of the hyp-stub exception vector routines and the KVM exception vector
+> > routines differ; hyp-stub uses a non-zero value in x0 to implement
+> > __hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
+> > 
+> > Define three new preprocessor macros HVC_GET_VECTORS, HVC_SET_VECTORS and
+> > HVC_CALL_HYP and to be used as hcall type specifiers and convert the
+> > existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
+> > to use these new macros when executing an HVC call.  Also change the
+> > corresponding hyp-stub and KVM el1_sync exception vector routines to use these
+> > new macros.
+> > 
+> > Signed-off-by: Geoff Levand <geoff@infradead.org>
+> 
+> Using the #imm value for HVC to separate what gets called looks fine to
+> me. However, I'd like to see a review from Marc/Christoffer on this
+> patch.
+
+Marc, Christopher, comments please?
+
+> Some comments below:
+> 
 > > diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> > index 99c319c..4f23a48 100644
+> > index 7a5df52..99c319c 100644
 > > --- a/arch/arm64/include/asm/virt.h
 > > +++ b/arch/arm64/include/asm/virt.h
-> > @@ -41,6 +41,19 @@
-> >  
-> >  #define HVC_CALL_HYP 3
+> > @@ -21,6 +21,26 @@
+> >  #define BOOT_CPU_MODE_EL1	(0xe11)
+> >  #define BOOT_CPU_MODE_EL2	(0xe12)
 > >  
 > > +/*
-> > + * HVC_CALL_FUNC - Execute a function at EL2.
-> > + *
-> > + * @x0: Physical address of the function to be executed.
-> > + * @x1: Passed as the first argument to the function.
-> > + * @x2: Passed as the second argument to the function.
-> > + * @x3: Passed as the third argument to the function.
-> > + *
-> > + * The called function must preserve the contents of register x18.
-> 
-> Can you pick a register that's normally callee saved?
-
-Mark covered this in his reply.
-
+> > + * HVC_GET_VECTORS - Return the value of the vbar_el2 register.
 > > + */
 > > +
-> > +#define HVC_CALL_FUNC 4
+> > +#define HVC_GET_VECTORS 1
 > > +
-> >  #ifndef __ASSEMBLY__
-> >  
+> > +/*
+> > + * HVC_SET_VECTORS - Set the value of the vbar_el2 register.
+> > + *
+> > + * @x0: Physical address of the new vector table.
+> > + */
+> > +
+> > +#define HVC_SET_VECTORS 2
+> > +
+> > +/*
+> > + * HVC_CALL_HYP - Execute a hyp routine.
+> > + */
+> > +
+> > +#define HVC_CALL_HYP 3
+> 
+> I think you can ignore this case (make it the default), just define it
+> as 0 as that's the normal use-case after initialisation and avoid
+> checking it explicitly.
+
+OK, I changed this so that HVC_CALL_HYP is the default at 0.
+
 > >  /*
 > > diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> > index e3db3fd..b5d36e7 100644
+> > index a272f33..e3db3fd 100644
 > > --- a/arch/arm64/kernel/hyp-stub.S
 > > +++ b/arch/arm64/kernel/hyp-stub.S
-> > @@ -66,9 +66,20 @@ el1_sync:
-> >  	mrs	x0, vbar_el2
-> >  	b	2f
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/irqchip/arm-gic-v3.h>
 > >  
-> > -1:	cmp	x18, #HVC_SET_VECTORS
-> > -	b.ne	2f
-> > -	msr	vbar_el2, x0
-> > +1:	cmp     x18, #HVC_SET_VECTORS
-> 
-> This line doesn't seem to have any change, apart from some whitespace.
-> Or did you want to drop the label?
-
-Some whitespace problems got in there from so many rebases.  I went
-through the series and cleaned them up.
-
-
-> > +	b.ne    1f
-> > +	msr     vbar_el2, x0
-> > +	b       2f
+> >  #include <asm/assembler.h>
+> > +#include <asm/kvm_arm.h>
+> >  #include <asm/ptrace.h>
+> >  #include <asm/virt.h>
+> >  
+> > @@ -53,14 +54,22 @@ ENDPROC(__hyp_stub_vectors)
+> >  	.align 11
+> >  
+> >  el1_sync:
+> > -	mrs	x1, esr_el2
+> > -	lsr	x1, x1, #26
+> > -	cmp	x1, #0x16
+> > -	b.ne	2f				// Not an HVC trap
+> > -	cbz	x0, 1f
+> > -	msr	vbar_el2, x0			// Set vbar_el2
+> > +	mrs	x18, esr_el2
+> > +	lsr	x17, x18, #ESR_ELx_EC_SHIFT
+> > +	and	x18, x18, #ESR_ELx_ISS_MASK
 > > +
-> > +1:	cmp     x18, #HVC_CALL_FUNC
-> > +	b.ne    2f
-> > +	mov     x18, lr
-> > +	mov     lr, x0
-> > +	mov     x0, x1
-> > +	mov     x1, x2
-> > +	mov     x2, x3
-> > +	blr     lr
-> > +	mov     lr, x18
-> >  
+> > +	cmp     x17, #ESR_ELx_EC_HVC64
+> > +	b.ne    2f				// Not an HVC trap
+> > +
+> > +	cmp	x18, #HVC_GET_VECTORS
+> > +	b.ne	1f
+> > +	mrs	x0, vbar_el2
+> >  	b	2f
+> > -1:	mrs	x0, vbar_el2			// Return vbar_el2
+> > +
+> > +1:	cmp	x18, #HVC_SET_VECTORS
+> > +	b.ne	2f
+> > +	msr	vbar_el2, x0
+> > +
 > >  2:	eret
 > >  ENDPROC(el1_sync)
 > 
-> What is the calling convention for this HVC? You mentioned x18 above but
-> what about other registers that the called function may corrupt (x18 is
-> a temporary register, so it's not expected to be callee saved).
+> You seem to be using x17 and x18 here freely. Do you have any guarantees
+> that the caller saved/restored those registers? I guess you assume they
+> are temporary registers and the caller first branches to a function
+> (like __kvm_hyp_call) and expects them to be corrupted. But I'm not sure
+> that's always the case. Take for example the __invoke_psci_fn_hvc where
+> the function is in C (we should change this for other reasons).
 
-Again, Mark covered this in his reply.
+Yes, I assume the compiler will not expect them to be preserved.  I
+missed __invoke_psci_fn_hvc.  Can we just add x17 and x18 to the
+clobbered list?
+
+        asm volatile(
+                        __asmeq("%0", "x0")
+                        __asmeq("%1", "x1")
+                        __asmeq("%2", "x2")
+                        __asmeq("%3", "x3")
+                        "hvc    #0\n"
+                : "+r" (function_id)
+-               : "r" (arg0), "r" (arg1), "r" (arg2));
++               : "r" (arg0), "r" (arg1), "r" (arg2)
++               : "x17", "x18");
+
+
+> > diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+> > index c0d8202..1916c89 100644
+> > --- a/arch/arm64/kvm/hyp.S
+> > +++ b/arch/arm64/kvm/hyp.S
+> > @@ -27,6 +27,7 @@
+> >  #include <asm/kvm_asm.h>
+> >  #include <asm/kvm_mmu.h>
+> >  #include <asm/memory.h>
+> > +#include <asm/virt.h>
+> >  
+> >  #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
+> >  #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
+> > @@ -1106,12 +1107,9 @@ __hyp_panic_str:
+> >   * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
+> >   * passed in r0 and r1.
+> >   *
+> > - * A function pointer with a value of 0 has a special meaning, and is
+> > - * used to implement __hyp_get_vectors in the same way as in
+> > - * arch/arm64/kernel/hyp_stub.S.
+> >   */
+> >  ENTRY(kvm_call_hyp)
+> > -	hvc	#0
+> > +	hvc	#HVC_CALL_HYP
+> >  	ret
+> >  ENDPROC(kvm_call_hyp)
+> >  
+> > @@ -1142,6 +1140,7 @@ el1_sync:					// Guest trapped into EL2
+> >  
+> >  	mrs	x1, esr_el2
+> >  	lsr	x2, x1, #ESR_ELx_EC_SHIFT
+> > +	and	x0, x1, #ESR_ELx_ISS_MASK
+> >  
+> >  	cmp	x2, #ESR_ELx_EC_HVC64
+> >  	b.ne	el1_trap
+> > @@ -1150,15 +1149,19 @@ el1_sync:					// Guest trapped into EL2
+> >  	cbnz	x3, el1_trap			// called HVC
+> >  
+> >  	/* Here, we're pretty sure the host called HVC. */
+> > +	mov	x18, x0
+> 
+> Same comment here about corrupting x18. If it is safe, maybe add some
+> comments in the calling place.
+
+I added a comment regarding this to virt.h where the HVC_XXX macros
+are defined.  I'll post that fixed up patch for review.
+
+> 
+> >  	pop	x2, x3
+> >  	pop	x0, x1
+> >  
+> > -	/* Check for __hyp_get_vectors */
+> > -	cbnz	x0, 1f
+> > +	cmp	x18, #HVC_GET_VECTORS
+> > +	b.ne	1f
+> >  	mrs	x0, vbar_el2
+> >  	b	2f
+> >  
+> > -1:	push	lr, xzr
+> > +1:	cmp	x18, #HVC_CALL_HYP
+> > +	b.ne	2f
+> > +
+> > +	push	lr, xzr
+> 
+> At this point, we expect either HVC_GET_VECTORS or HVC_CALL_HYP. I think
+> you can simply assume HVC_CALL_HYP as default and ignore the additional
+> cmp.
+
+OK, did that.
+
+-Geoff
 
 
 
