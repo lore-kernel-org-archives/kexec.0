@@ -1,28 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wg0-x22c.google.com ([2a00:1450:400c:c00::22c])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YHDRs-0003Tv-Og
- for kexec@lists.infradead.org; Fri, 30 Jan 2015 15:25:35 +0000
-Received: by mail-wg0-f44.google.com with SMTP id z12so27548788wgg.3
- for <kexec@lists.infradead.org>; Fri, 30 Jan 2015 07:25:09 -0800 (PST)
-Message-ID: <54CBA252.4050003@gmail.com>
-Date: Fri, 30 Jan 2015 16:25:06 +0100
-From: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-MIME-Version: 1.0
-Subject: Re: Edited kexec_load(2) [kexec_file_load()] man page for review
-References: <20150112221634.GD16162@redhat.com> <54B91271.3000600@gmail.com>
- <20150127142459.GA12851@redhat.com> <54C89816.8030709@gmail.com>
- <20150128144803.GC15342@redhat.com>
- <CAKgNAkhhVq5fuqwH0aPdgR1bKkAPPPuS84hfAFg3grGEJNxS4w@mail.gmail.com>
- <20150128203402.GG15342@redhat.com>
- <alpine.DEB.2.11.1501282104490.9275@localhost.localdomain>
- <20150128213125.GH15342@redhat.com>
- <alpine.DEB.2.11.1501282207570.5656@localhost.localdomain>
- <20150128222526.GJ15342@redhat.com>
- <alpine.DEB.2.11.1501290010120.6022@localhost.localdomain>
- <CAKgNAkjBBRmcpu8DuaGCCRhvXP_AFotK5xrHx2HaR6g_8omULw@mail.gmail.com>
- <alpine.DEB.2.11.1501291429001.1597@localhost.localdomain>
-In-Reply-To: <alpine.DEB.2.11.1501291429001.1597@localhost.localdomain>
+Message-ID: <1422647304.21823.31.camel@infradead.org>
+Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
+From: Geoff Levand <geoff@infradead.org>
+Date: Fri, 30 Jan 2015 11:48:24 -0800
+In-Reply-To: <54CB206D.7040705@linaro.org>
+References: <cover.1421449714.git.geoff@infradead.org>
+ <a3353cf2ac47f49c20bbbb88405301cbaa359805.1421449714.git.geoff@infradead.org>
+ <20150126191942.GQ23313@leverpostej> <54CA041C.6020403@linaro.org>
+ <54CA12A1.8090508@arm.com> <20150129184747.GV17721@leverpostej>
+ <54CB206D.7040705@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,88 +22,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scot Doyle <lkml14@scotdoyle.com>
-Cc: "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Andy Lutomirski <luto@amacapital.net>, Andi Kleen <andi@firstfloor.org>, Borislav Petkov <bp@alien8.de>, mtk.manpages@gmail.com, "H. Peter Anvin" <hpa@zytor.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On 01/29/2015 05:06 PM, Scot Doyle wrote:
-> On Thu, 29 Jan 2015, Michael Kerrisk (man-pages) wrote:
->> On 29 January 2015 at 02:27, Scot Doyle <lkml14@scotdoyle.com> wrote:
->>> On Wed, 28 Jan 2015, Vivek Goyal wrote:
->>>> On Wed, Jan 28, 2015 at 10:10:59PM +0000, Scot Doyle wrote:
->>>>> On Wed, 28 Jan 2015, Vivek Goyal wrote:
->>>>>> On Wed, Jan 28, 2015 at 09:14:03PM +0000, Scot Doyle wrote:
->>>>>>> When I tested, kexec_file_load required CONFIG_RELOCATABLE. Is the same
->>>>>>> true for kexec_load? Would it make sense to note this in the man pages
->>>>>>> along with the need for CONFIG_KEXEC_FILE, etc? Or as an error message?
->>>>>>
->>>>>> Hmm.., I can't see an explicity dependency between RELOCATABLE and
->>>>>> KEXEC. Both KEXEC and KEXEC_FILE should be able to load a kernel
->>>>>> even if it had RELOCATABLE=n.
->>>>>>
->>>>>> Just that kernel will run from the address it has been built for.
->>>>>>
->>>>>> Thanks
->>>>>> Vivek
->>>>>
->>>>> Confusing, right? kexec_file_load returns -ENOEXEC and dmesg says
->>>>> "kexec-bzImage64: XLF_CAN_BE_LOADED_ABOVE_4G is not set." which leads to
->>>>> arch/x86/boot/header.S line 396:
->>>>>
->>>>> #if defined(CONFIG_RELOCATABLE) && defined(CONFIG_X86_64)
->>>>>    /* kernel/boot_param/ramdisk could be loaded above 4g */
->>>>> # define XLF1 XLF_CAN_BE_LOADED_ABOVE_4G
->>>>> #else
->>>>> # define XLF1 0
->>>>> #endif
->>>>
->>>> Ah, this one. Actually generic kexec file loading implementation does not
->>>> impose this restriction. It is the image specific loader part which
->>>> decides what kind of bzImage it can load.
->>>>
->>>> Current implementation (kexec-bzimage64.c), is only supporting loading
->>>> bzImages which are 64bit and can be loaded above 4G. This simplifies
->>>> the implementation of loader.
->>>>
->>>> But there is nothing which prevents one from implementing other image
->>>> loaders.
->>>>
->>>> So instead of saying that kexec_file_load() depends on CONFIG_RELOCATABLE,
->>>> it might be better to say in man page that currently this system call
->>>> supports only loading a bzImage which is 64bit and which can be loaded
->>>> above 4G too.
->>>>
->>>> Thanks
->>>> Vivek
->>>
->>> Thanks, I agree, and think it would make sense to list them as part of the
->>> page's ENOEXEC error.
->>
->> Scott, could you then phras a couple of sentences that capture thge
->> details, so I can add it to the ENOEXEC error?
->>
->> Thanks,
->>
->> Michael
-> 
-> Yes, maybe something like "kernel_fd does not refer to an open file, or 
-> the file type is not supported. Currently, the file must be a bzImage
-> and contain an x86 kernel loadable above 4G in memory (see 
-> Documentation/x86/boot.txt)."?
-> 
-> boot.txt explains that loading above 4G implies 64-bit and is specified 
-> via a bit in xloadflags added in Linux 3.8.
+Hi Takahiro.
 
-Added and pushed. Thanks, Scott.
+On Fri, 2015-01-30 at 15:10 +0900, AKASHI Takahiro wrote:
+> Initially, I thought that we would define kvm_arch_exit() and call it
+> somewhere in the middle of kexec path (no idea yet).
+> But Geoff suggested me to implement a new hvc call, HVC_CPU_SHUTDOWN(??),
+> and make it called via cpu_notifier(CPU_DYING_FROZEN) initiated by
+> machine_shutdown() from kernel_kexec().
 
-Cheers,
+As an initial implementation we can hook into the CPU_DYING_FROZEN
+notifier sent to hyp_init_cpu_notify().  The longer term solution
+should use kvm_arch_hardware_enable() and kvm_arch_hardware_disable().
 
-Michael
+The calls to cpu_notifier(CPU_DYING_FROZEN) are part of cpu hot
+plug, and independent of kexec.  If someone were to add spin-table
+cpu un-plug, then it would be used for that also.  It seems we should
+be able to test without kexec by using cpu hot plug.
 
+To tear down KVM you need to get back to hyp mode, and hence
+the need for HVC_CPU_SHUTDOWN.  The sequence I envisioned would
+be like this:
 
--- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+cpu_notifier(CPU_DYING_FROZEN)
+ -> kvm_cpu_shutdown() 
+    prepare for hvc
+    -> HVC_CPU_SHUTDOWN
+       now in hyp mode, do KVM tear down, restore default exception vectors
+
+Once the default exception vectors are restored soft_restart()
+can then execute the cpu_reset routine in EL2.
+
+Some notes are here for those with access:  https://cards.linaro.org/browse/KWG-611
+
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
