@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x232.google.com ([2607:f8b0:400e:c03::232])
+Received: from mail-pa0-x231.google.com ([2607:f8b0:400e:c03::231])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YHane-00045L-Fw
- for kexec@lists.infradead.org; Sat, 31 Jan 2015 16:21:35 +0000
-Received: by mail-pa0-f50.google.com with SMTP id rd3so64344707pab.9
- for <kexec@lists.infradead.org>; Sat, 31 Jan 2015 08:21:13 -0800 (PST)
+ id 1YHanh-00045S-45
+ for kexec@lists.infradead.org; Sat, 31 Jan 2015 16:21:37 +0000
+Received: by mail-pa0-f49.google.com with SMTP id fa1so64465705pad.8
+ for <kexec@lists.infradead.org>; Sat, 31 Jan 2015 08:21:16 -0800 (PST)
 From: Yousong Zhou <yszhou4tech@gmail.com>
-Subject: [PATCH 2/3] Fix zlib/lzma decompression.
-Date: Sun,  1 Feb 2015 00:10:07 +0800
-Message-Id: <1422720608-28700-2-git-send-email-yszhou4tech@gmail.com>
+Subject: [PATCH 3/3] Fix a few compilation warnings.
+Date: Sun,  1 Feb 2015 00:10:08 +0800
+Message-Id: <1422720608-28700-3-git-send-email-yszhou4tech@gmail.com>
 In-Reply-To: <1422720608-28700-1-git-send-email-yszhou4tech@gmail.com>
 References: <1422720608-28700-1-git-send-email-yszhou4tech@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,168 +27,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Yousong Zhou <yszhou4tech@gmail.com>, horms@verge.net.au
 
-Let {zlib,lzma}_decompress_file() return NULL if anything wrong happened
-to allow the other method to have a chance to run.
 
 Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
 ---
- kexec/lzma.c |   33 ++++++++++++++++++++++-----------
- kexec/zlib.c |   57 +++++++++++++++++++++++++++++++++++----------------------
- 2 files changed, 57 insertions(+), 33 deletions(-)
+ kexec/arch/mips/crashdump-mips.c |    3 ++-
+ kexec/arch/mips/kexec-elf-mips.c |    2 +-
+ kexec/kexec-elf-rel.c            |    3 +++
+ kexec/kexec.h                    |    2 +-
+ 4 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/lzma.c b/kexec/lzma.c
-index 939aeb3..5bfccb7 100644
---- a/kexec/lzma.c
-+++ b/kexec/lzma.c
-@@ -162,13 +162,16 @@ char *lzma_decompress_file(const char *filename, off_t *r_size)
- 	off_t size, allocated;
- 	ssize_t result;
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index e7840e0..98c9f7c 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -22,6 +22,7 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
++#include <inttypes.h>
+ #include <elf.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -52,7 +53,7 @@ static int get_kernel_paddr(struct crash_elf_info *elf_info)
  
--	if (!filename) {
--		*r_size = 0;
--		return 0;
--	}
-+	dbgprintf("Try LZMA decompression.\n");
-+
-+	*r_size = 0;
-+	if (!filename)
-+		return NULL;
-+
- 	fp = lzopen(filename, "rb");
- 	if (fp == 0) {
--		die("Cannot open `%s'\n", filename);
-+		dbgprintf("Cannot open `%s'\n", filename);
-+		return NULL;
+ 	if (parse_iomem_single("Kernel code\n", &start, NULL) == 0) {
+ 		elf_info->kern_paddr_start = start;
+-		dbgprintf("kernel load physical addr start = 0x%lx\n", start);
++		dbgprintf("kernel load physical addr start = 0x%" PRIu64 "\n", start);
+ 		return 0;
  	}
- 	size = 0;
- 	allocated = 65536;
-@@ -183,17 +186,25 @@ char *lzma_decompress_file(const char *filename, off_t *r_size)
- 			if ((errno == EINTR) || (errno == EAGAIN))
- 				continue;
  
--			die ("read on %s of %ld bytes failed\n",
--				filename, (allocated - size) + 0UL);
-+			dbgprintf("%s: read on %s of %ld bytes failed\n",
-+				__func__, filename, (allocated - size) + 0UL);
-+			break;
- 		}
- 		size += result;
--	} while(result > 0);
--	result = lzclose(fp);
--	if (result != LZMA_OK) {
--		die ("Close of %s failed\n", filename);
-+	} while (result > 0);
-+
-+	if (lzclose(fp) != LZMA_OK) {
-+		dbgprintf("%s: Close of %s failed\n", __func__, filename);
-+		goto fail;
- 	}
-+	if (result < 0)
-+		goto fail;
-+
- 	*r_size =  size;
- 	return buf;
-+fail:
-+	free(buf);
-+	return NULL;
- }
- #else
- char *lzma_decompress_file(const char *UNUSED(filename), off_t *UNUSED(r_size))
-diff --git a/kexec/zlib.c b/kexec/zlib.c
-index d44df12..7170ac3 100644
---- a/kexec/zlib.c
-+++ b/kexec/zlib.c
-@@ -15,29 +15,39 @@
- #include <ctype.h>
- #include <zlib.h>
+diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
+index a27d986..8a6419a 100644
+--- a/kexec/arch/mips/kexec-elf-mips.c
++++ b/kexec/arch/mips/kexec-elf-mips.c
+@@ -158,7 +158,7 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (info->kexec_flags & KEXEC_ON_CRASH)
+ 		/* In case of crashdump segment[0] is kernel.
+ 		 * Put cmdline just after it. */
+-		cmdline_addr = info->segment[0].mem +
++		cmdline_addr = (unsigned long)info->segment[0].mem +
+ 				info->segment[0].memsz;
+ 	else
+ 		cmdline_addr = 0;
+diff --git a/kexec/kexec-elf-rel.c b/kexec/kexec-elf-rel.c
+index c625f30..5a5fcd1 100644
+--- a/kexec/kexec-elf-rel.c
++++ b/kexec/kexec-elf-rel.c
+@@ -347,6 +347,9 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 			else if (shdr->sh_type == SHT_RELA) {
+ 				rel = elf_rela(ehdr, ptr);
+ 			}
++			else {
++				die("Unexpected sh_type: %d\n", shdr->sh_type);
++			}
+ 			/* the location to change */
+ 			location = section->sh_data + rel.r_offset;
  
-+static void _gzerror(gzFile fp, int *errnum, const char **errmsg)
-+{
-+	*errmsg = gzerror(fp, errnum);
-+	if (*errnum == Z_ERRNO) {
-+		*errmsg = strerror(*errnum);
-+	}
-+}
-+
- char *zlib_decompress_file(const char *filename, off_t *r_size)
- {
- 	gzFile fp;
- 	int errnum;
- 	const char *msg;
- 	char *buf;
--	off_t size, allocated;
-+	off_t size = 0, allocated;
- 	ssize_t result;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 4be2b2f..2c85052 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -245,7 +245,7 @@ extern int file_types;
  
-+	dbgprintf("Try gzip decompression.\n");
-+
-+	*r_size = 0;
- 	if (!filename) {
--		*r_size = 0;
--		return 0;
-+		return NULL;
- 	}
- 	fp = gzopen(filename, "rb");
- 	if (fp == 0) {
--		msg = gzerror(fp, &errnum);
--		if (errnum == Z_ERRNO) {
--			msg = strerror(errno);
--		}
--		fprintf(stderr, "Cannot open `%s': %s\n", filename, msg);
-+		_gzerror(fp, &errnum, &msg);
-+		dbgprintf("Cannot open `%s': %s\n", filename, msg);
-+		return NULL;
-+	}
-+	if (gzdirect(fp)) {
-+		/* It's not in gzip format */
- 		return NULL;
- 	}
--	size = 0;
- 	allocated = 65536;
- 	buf = xmalloc(allocated);
- 	do {
-@@ -49,25 +59,28 @@ char *zlib_decompress_file(const char *filename, off_t *r_size)
- 		if (result < 0) {
- 			if ((errno == EINTR) || (errno == EAGAIN))
- 				continue;
--
--			msg = gzerror(fp, &errnum);
--			if (errnum == Z_ERRNO) {
--				msg = strerror(errno);
--			}
--			die ("read on %s of %ld bytes failed: %s\n",
--				filename, (allocated - size) + 0UL, msg);
-+			_gzerror(fp, &errnum, &msg);
-+			dbgprintf("Read on %s of %ld bytes failed: %s\n",
-+					filename, (allocated - size) + 0UL, msg);
-+			size = 0;
-+			goto fail;
- 		}
- 		size += result;
- 	} while(result > 0);
-+
-+fail:
- 	result = gzclose(fp);
- 	if (result != Z_OK) {
--		msg = gzerror(fp, &errnum);
--		if (errnum == Z_ERRNO) {
--			msg = strerror(errno);
--		}
--		die ("Close of %s failed: %s\n", filename, msg);
-+		_gzerror(fp, &errnum, &msg);
-+		dbgprintf(" Close of %s failed: %s\n", filename, msg);
-+	}
-+
-+	if (size > 0) {
-+		*r_size = size;
-+	} else {
-+		free(buf);
-+		buf = NULL;
- 	}
--	*r_size =  size;
- 	return buf;
- }
- #else
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
+-	__attribute__ ((format (printf, 1, 2)));
++	__attribute__ ((format (printf, 1, 2), noreturn));
+ extern void *xmalloc(size_t size);
+ extern void *xrealloc(void *ptr, size_t size);
+ extern char *slurp_file(const char *filename, off_t *r_size);
 -- 
 1.7.10.4
 
