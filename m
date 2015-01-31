@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1422660828.21823.40.camel@infradead.org>
-Subject: [PATCH v2 2/8] arm64: Convert hcalls to use ISS field
-From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 30 Jan 2015 15:33:48 -0800
-In-Reply-To: <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
-References: <cover.1421449714.git.geoff@infradead.org>
- <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
-Mime-Version: 1.0
+Received: from mail-pa0-x232.google.com ([2607:f8b0:400e:c03::232])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YHane-00045L-Fw
+ for kexec@lists.infradead.org; Sat, 31 Jan 2015 16:21:35 +0000
+Received: by mail-pa0-f50.google.com with SMTP id rd3so64344707pab.9
+ for <kexec@lists.infradead.org>; Sat, 31 Jan 2015 08:21:13 -0800 (PST)
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Subject: [PATCH 2/3] Fix zlib/lzma decompression.
+Date: Sun,  1 Feb 2015 00:10:07 +0800
+Message-Id: <1422720608-28700-2-git-send-email-yszhou4tech@gmail.com>
+In-Reply-To: <1422720608-28700-1-git-send-email-yszhou4tech@gmail.com>
+References: <1422720608-28700-1-git-send-email-yszhou4tech@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,209 +19,178 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, marc.zyngier@arm.com, christoffer.dall@linaro.org
-Cc: Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Yousong Zhou <yszhou4tech@gmail.com>, horms@verge.net.au
 
-To allow for additional hcalls to be defined and to make the arm64 hcall API
-more consistent across exception vector routines, change the hcall implementations
-to use the ISS field of the ESR_EL2 register to specify the hcall type.
+Let {zlib,lzma}_decompress_file() return NULL if anything wrong happened
+to allow the other method to have a chance to run.
 
-The existing arm64 hcall implementations are limited in that they only allow
-for two distinct hcalls; with the x0 register either zero, or not zero.  Also,
-the API of the hyp-stub exception vector routines and the KVM exception vector
-routines differ; hyp-stub uses a non-zero value in x0 to implement
-__hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
-
-Define three new preprocessor macros HVC_CALL_HYP, HVC_GET_VECTORS, and
-HVC_SET_VECTORS to be used as hcall type specifiers and convert the
-existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
-to use these new macros when executing an HVC call.  Also change the
-corresponding hyp-stub and KVM el1_sync exception vector routines to use these
-new macros.
-
-Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
 ---
- arch/arm64/include/asm/virt.h | 27 +++++++++++++++++++++++++++
- arch/arm64/kernel/hyp-stub.S  | 32 +++++++++++++++++++++-----------
- arch/arm64/kernel/psci.c      |  3 ++-
- arch/arm64/kvm/hyp.S          | 16 +++++++++-------
- 4 files changed, 59 insertions(+), 19 deletions(-)
+ kexec/lzma.c |   33 ++++++++++++++++++++++-----------
+ kexec/zlib.c |   57 +++++++++++++++++++++++++++++++++++----------------------
+ 2 files changed, 57 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index 7a5df52..eb10368 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -18,6 +18,33 @@
- #ifndef __ASM__VIRT_H
- #define __ASM__VIRT_H
+diff --git a/kexec/lzma.c b/kexec/lzma.c
+index 939aeb3..5bfccb7 100644
+--- a/kexec/lzma.c
++++ b/kexec/lzma.c
+@@ -162,13 +162,16 @@ char *lzma_decompress_file(const char *filename, off_t *r_size)
+ 	off_t size, allocated;
+ 	ssize_t result;
  
-+/*
-+ * The arm64 hcall implementation uses the ISS field of the ESR_EL2 register to
-+ * specify the hcall type.  The exception handlers are allowed to use registers
-+ * x17 and x18 in their implementation.  Any routine issuing an hcall must not
-+ * expect these registers to be preserved.
-+ */
+-	if (!filename) {
+-		*r_size = 0;
+-		return 0;
+-	}
++	dbgprintf("Try LZMA decompression.\n");
 +
-+/*
-+ * HVC_CALL_HYP - Execute a hyp routine.
-+ */
++	*r_size = 0;
++	if (!filename)
++		return NULL;
 +
-+#define HVC_CALL_HYP 0
-+
-+/*
-+ * HVC_GET_VECTORS - Return the value of the vbar_el2 register.
-+ */
-+
-+#define HVC_GET_VECTORS 1
-+
-+/*
-+ * HVC_SET_VECTORS - Set the value of the vbar_el2 register.
-+ *
-+ * @x0: Physical address of the new vector table.
-+ */
-+
-+#define HVC_SET_VECTORS 2
-+
- #define BOOT_CPU_MODE_EL1	(0xe11)
- #define BOOT_CPU_MODE_EL2	(0xe12)
+ 	fp = lzopen(filename, "rb");
+ 	if (fp == 0) {
+-		die("Cannot open `%s'\n", filename);
++		dbgprintf("Cannot open `%s'\n", filename);
++		return NULL;
+ 	}
+ 	size = 0;
+ 	allocated = 65536;
+@@ -183,17 +186,25 @@ char *lzma_decompress_file(const char *filename, off_t *r_size)
+ 			if ((errno == EINTR) || (errno == EAGAIN))
+ 				continue;
  
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index a272f33..017ab519 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -22,6 +22,7 @@
- #include <linux/irqchip/arm-gic-v3.h>
- 
- #include <asm/assembler.h>
-+#include <asm/kvm_arm.h>
- #include <asm/ptrace.h>
- #include <asm/virt.h>
- 
-@@ -53,14 +54,22 @@ ENDPROC(__hyp_stub_vectors)
- 	.align 11
- 
- el1_sync:
--	mrs	x1, esr_el2
--	lsr	x1, x1, #26
--	cmp	x1, #0x16
-+	mrs	x18, esr_el2
-+	lsr	x17, x18, #ESR_ELx_EC_SHIFT
-+	and	x18, x18, #ESR_ELx_ISS_MASK
+-			die ("read on %s of %ld bytes failed\n",
+-				filename, (allocated - size) + 0UL);
++			dbgprintf("%s: read on %s of %ld bytes failed\n",
++				__func__, filename, (allocated - size) + 0UL);
++			break;
+ 		}
+ 		size += result;
+-	} while(result > 0);
+-	result = lzclose(fp);
+-	if (result != LZMA_OK) {
+-		die ("Close of %s failed\n", filename);
++	} while (result > 0);
 +
-+	cmp	x17, #ESR_ELx_EC_HVC64
- 	b.ne	2f				// Not an HVC trap
--	cbz	x0, 1f
--	msr	vbar_el2, x0			// Set vbar_el2
++	if (lzclose(fp) != LZMA_OK) {
++		dbgprintf("%s: Close of %s failed\n", __func__, filename);
++		goto fail;
+ 	}
++	if (result < 0)
++		goto fail;
 +
-+	cmp	x18, #HVC_GET_VECTORS
-+	b.ne	1f
-+	mrs	x0, vbar_el2
- 	b	2f
--1:	mrs	x0, vbar_el2			// Return vbar_el2
-+
-+1:	cmp	x18, #HVC_SET_VECTORS
-+	b.ne	2f
-+	msr	vbar_el2, x0
-+
- 2:	eret
- ENDPROC(el1_sync)
- 
-@@ -100,11 +109,12 @@ ENDPROC(\label)
-  * initialisation entry point.
-  */
- 
--ENTRY(__hyp_get_vectors)
--	mov	x0, xzr
--	// fall through
- ENTRY(__hyp_set_vectors)
--	hvc	#0
-+	hvc	#HVC_SET_VECTORS
- 	ret
--ENDPROC(__hyp_get_vectors)
- ENDPROC(__hyp_set_vectors)
-+
-+ENTRY(__hyp_get_vectors)
-+	hvc	#HVC_GET_VECTORS
-+	ret
-+ENDPROC(__hyp_get_vectors)
-diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
-index 3425f31..7043fd7 100644
---- a/arch/arm64/kernel/psci.c
-+++ b/arch/arm64/kernel/psci.c
-@@ -123,7 +123,8 @@ static noinline int __invoke_psci_fn_hvc(u64 function_id, u64 arg0, u64 arg1,
- 			__asmeq("%3", "x3")
- 			"hvc	#0\n"
- 		: "+r" (function_id)
--		: "r" (arg0), "r" (arg1), "r" (arg2));
-+		: "r" (arg0), "r" (arg1), "r" (arg2)
-+		: "x17", "x18");
- 
- 	return function_id;
+ 	*r_size =  size;
+ 	return buf;
++fail:
++	free(buf);
++	return NULL;
  }
-diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-index c0d8202..42c9851 100644
---- a/arch/arm64/kvm/hyp.S
-+++ b/arch/arm64/kvm/hyp.S
-@@ -27,6 +27,7 @@
- #include <asm/kvm_asm.h>
- #include <asm/kvm_mmu.h>
- #include <asm/memory.h>
-+#include <asm/virt.h>
+ #else
+ char *lzma_decompress_file(const char *UNUSED(filename), off_t *UNUSED(r_size))
+diff --git a/kexec/zlib.c b/kexec/zlib.c
+index d44df12..7170ac3 100644
+--- a/kexec/zlib.c
++++ b/kexec/zlib.c
+@@ -15,29 +15,39 @@
+ #include <ctype.h>
+ #include <zlib.h>
  
- #define CPU_GP_REG_OFFSET(x)	(CPU_GP_REGS + x)
- #define CPU_XREG_OFFSET(x)	CPU_GP_REG_OFFSET(CPU_USER_PT_REGS + 8*x)
-@@ -1106,12 +1107,9 @@ __hyp_panic_str:
-  * in Hyp mode (see init_hyp_mode in arch/arm/kvm/arm.c).  Return values are
-  * passed in r0 and r1.
-  *
-- * A function pointer with a value of 0 has a special meaning, and is
-- * used to implement __hyp_get_vectors in the same way as in
-- * arch/arm64/kernel/hyp_stub.S.
-  */
- ENTRY(kvm_call_hyp)
--	hvc	#0
-+	hvc	#HVC_CALL_HYP
- 	ret
- ENDPROC(kvm_call_hyp)
- 
-@@ -1142,6 +1140,7 @@ el1_sync:					// Guest trapped into EL2
- 
- 	mrs	x1, esr_el2
- 	lsr	x2, x1, #ESR_ELx_EC_SHIFT
-+	and	x0, x1, #ESR_ELx_ISS_MASK
- 
- 	cmp	x2, #ESR_ELx_EC_HVC64
- 	b.ne	el1_trap
-@@ -1150,15 +1149,18 @@ el1_sync:					// Guest trapped into EL2
- 	cbnz	x3, el1_trap			// called HVC
- 
- 	/* Here, we're pretty sure the host called HVC. */
-+	mov	x18, x0
- 	pop	x2, x3
- 	pop	x0, x1
- 
--	/* Check for __hyp_get_vectors */
--	cbnz	x0, 1f
-+	cmp	x18, #HVC_GET_VECTORS
-+	b.ne	1f
- 	mrs	x0, vbar_el2
- 	b	2f
- 
--1:	push	lr, xzr
-+1:	/* Default to HVC_CALL_HYP. */
++static void _gzerror(gzFile fp, int *errnum, const char **errmsg)
++{
++	*errmsg = gzerror(fp, errnum);
++	if (*errnum == Z_ERRNO) {
++		*errmsg = strerror(*errnum);
++	}
++}
 +
-+	push	lr, xzr
+ char *zlib_decompress_file(const char *filename, off_t *r_size)
+ {
+ 	gzFile fp;
+ 	int errnum;
+ 	const char *msg;
+ 	char *buf;
+-	off_t size, allocated;
++	off_t size = 0, allocated;
+ 	ssize_t result;
  
- 	/*
- 	 * Compute the function address in EL2, and shuffle the parameters.
++	dbgprintf("Try gzip decompression.\n");
++
++	*r_size = 0;
+ 	if (!filename) {
+-		*r_size = 0;
+-		return 0;
++		return NULL;
+ 	}
+ 	fp = gzopen(filename, "rb");
+ 	if (fp == 0) {
+-		msg = gzerror(fp, &errnum);
+-		if (errnum == Z_ERRNO) {
+-			msg = strerror(errno);
+-		}
+-		fprintf(stderr, "Cannot open `%s': %s\n", filename, msg);
++		_gzerror(fp, &errnum, &msg);
++		dbgprintf("Cannot open `%s': %s\n", filename, msg);
++		return NULL;
++	}
++	if (gzdirect(fp)) {
++		/* It's not in gzip format */
+ 		return NULL;
+ 	}
+-	size = 0;
+ 	allocated = 65536;
+ 	buf = xmalloc(allocated);
+ 	do {
+@@ -49,25 +59,28 @@ char *zlib_decompress_file(const char *filename, off_t *r_size)
+ 		if (result < 0) {
+ 			if ((errno == EINTR) || (errno == EAGAIN))
+ 				continue;
+-
+-			msg = gzerror(fp, &errnum);
+-			if (errnum == Z_ERRNO) {
+-				msg = strerror(errno);
+-			}
+-			die ("read on %s of %ld bytes failed: %s\n",
+-				filename, (allocated - size) + 0UL, msg);
++			_gzerror(fp, &errnum, &msg);
++			dbgprintf("Read on %s of %ld bytes failed: %s\n",
++					filename, (allocated - size) + 0UL, msg);
++			size = 0;
++			goto fail;
+ 		}
+ 		size += result;
+ 	} while(result > 0);
++
++fail:
+ 	result = gzclose(fp);
+ 	if (result != Z_OK) {
+-		msg = gzerror(fp, &errnum);
+-		if (errnum == Z_ERRNO) {
+-			msg = strerror(errno);
+-		}
+-		die ("Close of %s failed: %s\n", filename, msg);
++		_gzerror(fp, &errnum, &msg);
++		dbgprintf(" Close of %s failed: %s\n", filename, msg);
++	}
++
++	if (size > 0) {
++		*r_size = size;
++	} else {
++		free(buf);
++		buf = NULL;
+ 	}
+-	*r_size =  size;
+ 	return buf;
+ }
+ #else
 -- 
-2.1.0
-
-
+1.7.10.4
 
 
 _______________________________________________
