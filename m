@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YI7jx-0001rg-F0
- for kexec@lists.infradead.org; Mon, 02 Feb 2015 03:31:58 +0000
-Date: Mon, 2 Feb 2015 11:31:30 +0800
+ id 1YIBX2-0003pb-0e
+ for kexec@lists.infradead.org; Mon, 02 Feb 2015 07:34:52 +0000
+Message-ID: <54CF2800.5070608@redhat.com>
+Date: Mon, 02 Feb 2015 15:32:16 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] ppc64: erase unnecessary segment info printing
-Message-ID: <20150202033130.GA5398@dhcp-16-116.nay.redhat.com>
-References: <1414570795-29258-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1414570795-29258-1-git-send-email-bhe@redhat.com>
+Subject: Re: [resend Patch v3 2/2] export the kernel image size
+ KERNEL_IMAGE_SIZE
+References: <1412060896-1902-1-git-send-email-bhe@redhat.com>
+ <1412060896-1902-2-git-send-email-bhe@redhat.com>
+In-Reply-To: <1412060896-1902-2-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +24,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: whissi@whissi.de, ak@linux.intel.com, keescook@chromium.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, ebiederm@xmission.com, hpa@zytor.com, vgoyal@redhat.com
 
-Hi Simon,
 
-ping.
+Hi Thomas,
 
-Could you please have a look at this patch and merge it if you think
-it's OK?
+Could you please also merge this patch? Since you have merged this patch
+"x86, boot: Skip relocs when load address unchanged [commit f285f4a21]",
+and this issue was raised because it broke kexec/kdump, then I posted
+these 2 patches. Without this patch makedumpfile will be broken when
+enable kaslr and do the kdump.
 
 Thanks
-Baoquan
+Baouqan
 
-On 10/29/14 at 04:19pm, Baoquan He wrote:
-> In ppc64 loading, it will print the segment information. This is not
-> wanted since other Archs don't have this. People even think there's
-> something wrong. So erase it to make it be consistent with other Archs.
-> 
-> And if people really want to check these info, they can specify "-d"
-> option. They are printed in print_segments() too.
+On 09/30/2014 03:08 PM, Baoquan He wrote:
+> Now kaslr makes kernel image size changable, not the fixed size 512M.
+> So KERNEL_IMAGE_SIZE need be exported to VMCOREINFO, otherwise makedumfile
+> will crash.
 > 
 > Signed-off-by: Baoquan He <bhe@redhat.com>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Vivek Goyal <vgoyal@redhat.com>
 > ---
->  kexec/arch/ppc64/kexec-elf-ppc64.c | 4 ----
->  1 file changed, 4 deletions(-)
+>  kernel/kexec.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> index ce10367..4a1540e 100644
-> --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-> +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> @@ -377,10 +377,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
->  	dbgprintf("opal_base is %llx\n", (unsigned long long) my_opal_base);
->  	dbgprintf("opal_entry is %llx\n", (unsigned long long) my_opal_entry);
->  
-> -	for (i = 0; i < info->nr_segments; i++)
-> -		fprintf(stderr, "segment[%d].mem:%p memsz:%zu\n", i,
-> -			info->segment[i].mem, info->segment[i].memsz);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 1.9.0
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 2bee072..bd680d3 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -2003,6 +2003,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  #endif
+>  	VMCOREINFO_NUMBER(PG_head_mask);
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+> +#ifdef CONFIG_X86
+> +       VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> +#endif
+>  #ifdef CONFIG_HUGETLBFS
+>  	VMCOREINFO_SYMBOL(free_huge_page);
+>  #endif
 > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+	
 
 _______________________________________________
 kexec mailing list
