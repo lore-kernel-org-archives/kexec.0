@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f46.google.com ([209.85.220.46])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YICDZ-0004xu-Ck
- for kexec@lists.infradead.org; Mon, 02 Feb 2015 08:18:50 +0000
-Received: by mail-pa0-f46.google.com with SMTP id lj1so79421628pab.5
- for <kexec@lists.infradead.org>; Mon, 02 Feb 2015 00:18:27 -0800 (PST)
-Message-ID: <54CF32CB.1060507@linaro.org>
-Date: Mon, 02 Feb 2015 17:18:19 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Mon, 2 Feb 2015 16:04:52 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 2/8] arm64: Convert hcalls to use ISS field
+Message-ID: <20150202160452.GF22661@e104818-lin.cambridge.arm.com>
+References: <cover.1421449714.git.geoff@infradead.org>
+ <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
+ <20150126182621.GH14048@e104818-lin.cambridge.arm.com>
+ <1422660681.21823.38.camel@infradead.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
-References: <cover.1421449714.git.geoff@infradead.org>	
- <a3353cf2ac47f49c20bbbb88405301cbaa359805.1421449714.git.geoff@infradead.org>	
- <20150126191942.GQ23313@leverpostej> <54CA041C.6020403@linaro.org>	
- <54CA12A1.8090508@arm.com> <20150129184747.GV17721@leverpostej>	
- <54CB206D.7040705@linaro.org> <1422647304.21823.31.camel@infradead.org>
-In-Reply-To: <1422647304.21823.31.camel@infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1422660681.21823.38.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,71 +18,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-Geoff,
+On Fri, Jan 30, 2015 at 11:31:21PM +0000, Geoff Levand wrote:
+> On Mon, 2015-01-26 at 18:26 +0000, Catalin Marinas wrote:
+> > On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
+> > >  /*
+> > > diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+> > > index a272f33..e3db3fd 100644
+> > > --- a/arch/arm64/kernel/hyp-stub.S
+> > > +++ b/arch/arm64/kernel/hyp-stub.S
+> > > @@ -22,6 +22,7 @@
+> > >  #include <linux/irqchip/arm-gic-v3.h>
+> > >  
+> > >  #include <asm/assembler.h>
+> > > +#include <asm/kvm_arm.h>
+> > >  #include <asm/ptrace.h>
+> > >  #include <asm/virt.h>
+> > >  
+> > > @@ -53,14 +54,22 @@ ENDPROC(__hyp_stub_vectors)
+> > >  	.align 11
+> > >  
+> > >  el1_sync:
+> > > -	mrs	x1, esr_el2
+> > > -	lsr	x1, x1, #26
+> > > -	cmp	x1, #0x16
+> > > -	b.ne	2f				// Not an HVC trap
+> > > -	cbz	x0, 1f
+> > > -	msr	vbar_el2, x0			// Set vbar_el2
+> > > +	mrs	x18, esr_el2
+> > > +	lsr	x17, x18, #ESR_ELx_EC_SHIFT
+> > > +	and	x18, x18, #ESR_ELx_ISS_MASK
+> > > +
+> > > +	cmp     x17, #ESR_ELx_EC_HVC64
+> > > +	b.ne    2f				// Not an HVC trap
+> > > +
+> > > +	cmp	x18, #HVC_GET_VECTORS
+> > > +	b.ne	1f
+> > > +	mrs	x0, vbar_el2
+> > >  	b	2f
+> > > -1:	mrs	x0, vbar_el2			// Return vbar_el2
+> > > +
+> > > +1:	cmp	x18, #HVC_SET_VECTORS
+> > > +	b.ne	2f
+> > > +	msr	vbar_el2, x0
+> > > +
+> > >  2:	eret
+> > >  ENDPROC(el1_sync)
+> > 
+> > You seem to be using x17 and x18 here freely. Do you have any guarantees
+> > that the caller saved/restored those registers? I guess you assume they
+> > are temporary registers and the caller first branches to a function
+> > (like __kvm_hyp_call) and expects them to be corrupted. But I'm not sure
+> > that's always the case. Take for example the __invoke_psci_fn_hvc where
+> > the function is in C (we should change this for other reasons).
+> 
+> Yes, I assume the compiler will not expect them to be preserved.  I
+> missed __invoke_psci_fn_hvc.  Can we just add x17 and x18 to the
+> clobbered list?
+> 
+>         asm volatile(
+>                         __asmeq("%0", "x0")
+>                         __asmeq("%1", "x1")
+>                         __asmeq("%2", "x2")
+>                         __asmeq("%3", "x3")
+>                         "hvc    #0\n"
+>                 : "+r" (function_id)
+> -               : "r" (arg0), "r" (arg1), "r" (arg2));
+> +               : "r" (arg0), "r" (arg1), "r" (arg2)
+> +               : "x17", "x18");
 
-On 01/31/2015 04:48 AM, Geoff Levand wrote:
-> Hi Takahiro.
->
-> On Fri, 2015-01-30 at 15:10 +0900, AKASHI Takahiro wrote:
->> Initially, I thought that we would define kvm_arch_exit() and call it
->> somewhere in the middle of kexec path (no idea yet).
->> But Geoff suggested me to implement a new hvc call, HVC_CPU_SHUTDOWN(??),
->> and make it called via cpu_notifier(CPU_DYING_FROZEN) initiated by
->> machine_shutdown() from kernel_kexec().
->
-> As an initial implementation we can hook into the CPU_DYING_FROZEN
-> notifier sent to hyp_init_cpu_notify().  The longer term solution
-> should use kvm_arch_hardware_enable() and kvm_arch_hardware_disable().
+I think we can ignore these because they would be called from a guest
+context and IIUC we would only clobber x18 on the host HVC side.
 
-Are these two different approaches? I mean,
-kexec will initiate cpu hotplug:
-kernel_exec() -> machine_shutdown() -> disable_nonboot_cpu()
-    -> _cpu_down() -> cpu_notify_nofail(CPU_DEAD|...)
-
-On the other hand, kvm already has a hook into kvm_arch_hardware_disable():
-   (ignoring kvm_usage_count here)
-kvm_cpu_hotplug(CPU_DYING) -> hardware_disable()
-    -> hardware_disable_nolock() -> kvm_arch_hardware_disable()
-
-So it seems that we don't have to add a new hook at hyp_init_cpu_notify()
-if kvm_arch_hardware_disable() is properly implemented.
-disable_nonboot_cpu() will not inovke cpu hotplug on *boot* cpu, and
-we should handle it in a separate way though.
-
-Do I misunderstand anything here?
-
-
--Takahiro AKASHI
-
-> The calls to cpu_notifier(CPU_DYING_FROZEN) are part of cpu hot
-> plug, and independent of kexec.  If someone were to add spin-table
-> cpu un-plug, then it would be used for that also.  It seems we should
-> be able to test without kexec by using cpu hot plug.
->
-> To tear down KVM you need to get back to hyp mode, and hence
-> the need for HVC_CPU_SHUTDOWN.  The sequence I envisioned would
-> be like this:
->
-> cpu_notifier(CPU_DYING_FROZEN)
->   -> kvm_cpu_shutdown()
->      prepare for hvc
->      -> HVC_CPU_SHUTDOWN
->         now in hyp mode, do KVM tear down, restore default exception vectors
->
-> Once the default exception vectors are restored soft_restart()
-> can then execute the cpu_reset routine in EL2.
->
-> Some notes are here for those with access:  https://cards.linaro.org/browse/KWG-611
->
-> -Geoff
->
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
