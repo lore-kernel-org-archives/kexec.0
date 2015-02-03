@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 2 Feb 2015 16:04:52 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 2/8] arm64: Convert hcalls to use ISS field
-Message-ID: <20150202160452.GF22661@e104818-lin.cambridge.arm.com>
-References: <cover.1421449714.git.geoff@infradead.org>
- <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
- <20150126182621.GH14048@e104818-lin.cambridge.arm.com>
- <1422660681.21823.38.camel@infradead.org>
+Received: from gp57.nurk.org ([208.74.128.57] helo=dscp.org)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YIU8b-0007n1-Uv
+ for kexec@lists.infradead.org; Tue, 03 Feb 2015 03:26:54 +0000
+Date: Mon, 2 Feb 2015 19:26:29 -0800 (PST)
+From: Ebben Aries <earies@dscp.org>
+Subject: Unhandled rela relocation: R_X86_64_29
+Message-ID: <alpine.LNX.2.11.1502021854480.10823@zinq.dscp.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1422660681.21823.38.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,86 +16,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-On Fri, Jan 30, 2015 at 11:31:21PM +0000, Geoff Levand wrote:
-> On Mon, 2015-01-26 at 18:26 +0000, Catalin Marinas wrote:
-> > On Sat, Jan 17, 2015 at 12:23:34AM +0000, Geoff Levand wrote:
-> > >  /*
-> > > diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-> > > index a272f33..e3db3fd 100644
-> > > --- a/arch/arm64/kernel/hyp-stub.S
-> > > +++ b/arch/arm64/kernel/hyp-stub.S
-> > > @@ -22,6 +22,7 @@
-> > >  #include <linux/irqchip/arm-gic-v3.h>
-> > >  
-> > >  #include <asm/assembler.h>
-> > > +#include <asm/kvm_arm.h>
-> > >  #include <asm/ptrace.h>
-> > >  #include <asm/virt.h>
-> > >  
-> > > @@ -53,14 +54,22 @@ ENDPROC(__hyp_stub_vectors)
-> > >  	.align 11
-> > >  
-> > >  el1_sync:
-> > > -	mrs	x1, esr_el2
-> > > -	lsr	x1, x1, #26
-> > > -	cmp	x1, #0x16
-> > > -	b.ne	2f				// Not an HVC trap
-> > > -	cbz	x0, 1f
-> > > -	msr	vbar_el2, x0			// Set vbar_el2
-> > > +	mrs	x18, esr_el2
-> > > +	lsr	x17, x18, #ESR_ELx_EC_SHIFT
-> > > +	and	x18, x18, #ESR_ELx_ISS_MASK
-> > > +
-> > > +	cmp     x17, #ESR_ELx_EC_HVC64
-> > > +	b.ne    2f				// Not an HVC trap
-> > > +
-> > > +	cmp	x18, #HVC_GET_VECTORS
-> > > +	b.ne	1f
-> > > +	mrs	x0, vbar_el2
-> > >  	b	2f
-> > > -1:	mrs	x0, vbar_el2			// Return vbar_el2
-> > > +
-> > > +1:	cmp	x18, #HVC_SET_VECTORS
-> > > +	b.ne	2f
-> > > +	msr	vbar_el2, x0
-> > > +
-> > >  2:	eret
-> > >  ENDPROC(el1_sync)
-> > 
-> > You seem to be using x17 and x18 here freely. Do you have any guarantees
-> > that the caller saved/restored those registers? I guess you assume they
-> > are temporary registers and the caller first branches to a function
-> > (like __kvm_hyp_call) and expects them to be corrupted. But I'm not sure
-> > that's always the case. Take for example the __invoke_psci_fn_hvc where
-> > the function is in C (we should change this for other reasons).
-> 
-> Yes, I assume the compiler will not expect them to be preserved.  I
-> missed __invoke_psci_fn_hvc.  Can we just add x17 and x18 to the
-> clobbered list?
-> 
->         asm volatile(
->                         __asmeq("%0", "x0")
->                         __asmeq("%1", "x1")
->                         __asmeq("%2", "x2")
->                         __asmeq("%3", "x3")
->                         "hvc    #0\n"
->                 : "+r" (function_id)
-> -               : "r" (arg0), "r" (arg1), "r" (arg2));
-> +               : "r" (arg0), "r" (arg1), "r" (arg2)
-> +               : "x17", "x18");
+According to the defined relocation types at http://refspecs.linuxbase.org/elf/x86_64-abi-0.98.pdf, I appear to be encountering an undefined type "R_X86_64_29" when attempting to load kexec
 
-I think we can ignore these because they would be called from a guest
-context and IIUC we would only clobber x18 on the host HVC side.
+Does anyone have any idea what this undefined type indicates?
 
--- 
-Catalin
+$ zcat /proc/config.gz | grep -E "^CONFIG_KEXEC|^CONFIG_RELOCAT"
+CONFIG_KEXEC=y
+CONFIG_KEXEC_FILE=y
+CONFIG_RELOCATABLE=y
+
+$ KERNEL=3.18.5-20150202
+$ sudo kexec -l /boot/vmlinuz-${KERNEL} --reuse-cmdline --initrd="/boot/initrd-${KERNEL}.gz" -d
+kernel: 0x7fb387de4010 kernel_size: 0x39c190
+MEMORY RANGES
+0000000000000100-0000000000057fff (0)
+0000000000058000-0000000000058fff (1)
+0000000000059000-000000000009bfff (0)
+000000000009c000-000000000009cfff (1)
+000000000009d000-000000000009dfff (0)
+000000000009e000-00000000000bffff (1)
+0000000000100000-00000000cfd57fff (0)
+00000000cfd58000-00000000cff59fff (1)
+00000000cff5a000-00000000da44cfff (0)
+00000000da44d000-00000000dcd3efff (1)
+00000000dcd3f000-00000000dce7efff (3)
+00000000dce7f000-00000000dcefefff (2)
+00000000dceff000-00000000dcefffff (0)
+00000000dcf00000-00000000df9fffff (1)
+00000000f80f8000-00000000f80f8fff (1)
+00000000fe101000-00000000fe112fff (1)
+00000000fed1c000-00000000fed1ffff (1)
+0000000100000000-000000031e5fffff (0)
+sym: _GLOBAL_OFFSET_TABLE_ info: 10 other: 00 shndx: 0 value: 0 size: 0
+sym: _GLOBAL_OFFSET_TABLE_ value: 4 addr: 31e5f6004
+R_X86_64_29
+Unhandled rela relocation: R_X86_64_29
+
+
+From include/elf.h
+
+/* AMD x86-64 relocations.  */
+#define R_X86_64_NONE           0       /* No reloc */
+#define R_X86_64_64             1       /* Direct 64 bit  */
+#define R_X86_64_PC32           2       /* PC relative 32 bit signed */
+#define R_X86_64_GOT32          3       /* 32 bit GOT entry */
+#define R_X86_64_PLT32          4       /* 32 bit PLT address */
+#define R_X86_64_COPY           5       /* Copy symbol at runtime */
+#define R_X86_64_GLOB_DAT       6       /* Create GOT entry */
+#define R_X86_64_JUMP_SLOT      7       /* Create PLT entry */
+#define R_X86_64_RELATIVE       8       /* Adjust by program base */
+#define R_X86_64_GOTPCREL       9       /* 32 bit signed PC relative
+                                            offset to GOT */
+#define R_X86_64_32             10      /* Direct 32 bit zero extended */
+#define R_X86_64_32S            11      /* Direct 32 bit sign extended */
+#define R_X86_64_16             12      /* Direct 16 bit zero extended */
+#define R_X86_64_PC16           13      /* 16 bit sign extended pc relative */
+#define R_X86_64_8              14      /* Direct 8 bit sign extended  */
+#define R_X86_64_PC8            15      /* 8 bit sign extended pc relative */
+#define R_X86_64_DTPMOD64       16      /* ID of module containing symbol */
+#define R_X86_64_DTPOFF64       17      /* Offset in module's TLS block */
+#define R_X86_64_TPOFF64        18      /* Offset in initial TLS block */
+#define R_X86_64_TLSGD          19      /* 32 bit signed PC relative offset
+                                            to two GOT entries for GD symbol */
+#define R_X86_64_TLSLD          20      /* 32 bit signed PC relative offset
+                                            to two GOT entries for LD symbol */
+#define R_X86_64_DTPOFF32       21      /* Offset in TLS block */
+#define R_X86_64_GOTTPOFF       22      /* 32 bit signed PC relative offset
+                                            to GOT entry for IE symbol */
+#define R_X86_64_TPOFF32        23      /* Offset in initial TLS block */
+
+#define R_X86_64_NUM            24
 
 _______________________________________________
 kexec mailing list
