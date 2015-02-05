@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gp57.nurk.org ([208.74.128.57] helo=dscp.org)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YIU8b-0007n1-Uv
- for kexec@lists.infradead.org; Tue, 03 Feb 2015 03:26:54 +0000
-Date: Mon, 2 Feb 2015 19:26:29 -0800 (PST)
-From: Ebben Aries <earies@dscp.org>
-Subject: Unhandled rela relocation: R_X86_64_29
-Message-ID: <alpine.LNX.2.11.1502021854480.10823@zinq.dscp.org>
-MIME-Version: 1.0
+Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YJIIY-0000sM-Ij
+ for kexec@lists.infradead.org; Thu, 05 Feb 2015 09:00:31 +0000
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id E877BAC063A
+ for <kexec@lists.infradead.org>; Thu,  5 Feb 2015 18:00:02 +0900 (JST)
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9640EE08002
+ for <kexec@lists.infradead.org>; Thu,  5 Feb 2015 18:00:02 +0900 (JST)
+Date: Thu, 05 Feb 2015 17:59:43 +0900 (JST)
+Message-Id: <20150205.175943.381586636.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
+ option issue in oops path
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,83 +23,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: ebiederm@xmission.com, vgoyal@redhat.com
+Cc: masami.hiramatsu.pt@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-According to the defined relocation types at http://refspecs.linuxbase.org/elf/x86_64-abi-0.98.pdf, I appear to be encountering an undefined type "R_X86_64_29" when attempting to load kexec
+The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
+"crash_kexec_post_notifiers" kernel boot option, which toggles
+wheather panic() calls crash_kexec() before or after panic_notifiers
+and dump kmsg.
 
-Does anyone have any idea what this undefined type indicates?
+The problem is that the commit overlooks panic_on_oops kernel boot
+option. If it is enabled, crash_kexec() is called directly without
+going through panic() in oops path.
 
-$ zcat /proc/config.gz | grep -E "^CONFIG_KEXEC|^CONFIG_RELOCAT"
-CONFIG_KEXEC=y
-CONFIG_KEXEC_FILE=y
-CONFIG_RELOCATABLE=y
+To fix this issue, this patch adds a check to
+"crash_kexec_post_notifiers" in the condition of kexec_should_crash().
 
-$ KERNEL=3.18.5-20150202
-$ sudo kexec -l /boot/vmlinuz-${KERNEL} --reuse-cmdline --initrd="/boot/initrd-${KERNEL}.gz" -d
-kernel: 0x7fb387de4010 kernel_size: 0x39c190
-MEMORY RANGES
-0000000000000100-0000000000057fff (0)
-0000000000058000-0000000000058fff (1)
-0000000000059000-000000000009bfff (0)
-000000000009c000-000000000009cfff (1)
-000000000009d000-000000000009dfff (0)
-000000000009e000-00000000000bffff (1)
-0000000000100000-00000000cfd57fff (0)
-00000000cfd58000-00000000cff59fff (1)
-00000000cff5a000-00000000da44cfff (0)
-00000000da44d000-00000000dcd3efff (1)
-00000000dcd3f000-00000000dce7efff (3)
-00000000dce7f000-00000000dcefefff (2)
-00000000dceff000-00000000dcefffff (0)
-00000000dcf00000-00000000df9fffff (1)
-00000000f80f8000-00000000f80f8fff (1)
-00000000fe101000-00000000fe112fff (1)
-00000000fed1c000-00000000fed1ffff (1)
-0000000100000000-000000031e5fffff (0)
-sym: _GLOBAL_OFFSET_TABLE_ info: 10 other: 00 shndx: 0 value: 0 size: 0
-sym: _GLOBAL_OFFSET_TABLE_ value: 4 addr: 31e5f6004
-R_X86_64_29
-Unhandled rela relocation: R_X86_64_29
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ include/linux/kernel.h | 3 +++
+ kernel/kexec.c         | 2 ++
+ kernel/panic.c         | 2 +-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 64ce58b..f47379f 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
+ extern int sysctl_panic_on_stackoverflow;
++
++extern bool crash_kexec_post_notifiers;
++
+ /*
+  * Only to be used by arch init code. If the user over-wrote the default
+  * CONFIG_PANIC_TIMEOUT, honor it.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 9a8a01a..0ecf252 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -84,6 +84,8 @@ struct resource crashk_low_res = {
+ 
+ int kexec_should_crash(struct task_struct *p)
+ {
++	if (crash_kexec_post_notifiers)
++		return 0;
+ 	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+ 		return 1;
+ 	return 0;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4d8d6f9..6582546 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -32,7 +32,7 @@ static unsigned long tainted_mask;
+ static int pause_on_oops;
+ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+-static bool crash_kexec_post_notifiers;
++bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
+ 
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+-- 
+1.9.3
 
 
-From include/elf.h
-
-/* AMD x86-64 relocations.  */
-#define R_X86_64_NONE           0       /* No reloc */
-#define R_X86_64_64             1       /* Direct 64 bit  */
-#define R_X86_64_PC32           2       /* PC relative 32 bit signed */
-#define R_X86_64_GOT32          3       /* 32 bit GOT entry */
-#define R_X86_64_PLT32          4       /* 32 bit PLT address */
-#define R_X86_64_COPY           5       /* Copy symbol at runtime */
-#define R_X86_64_GLOB_DAT       6       /* Create GOT entry */
-#define R_X86_64_JUMP_SLOT      7       /* Create PLT entry */
-#define R_X86_64_RELATIVE       8       /* Adjust by program base */
-#define R_X86_64_GOTPCREL       9       /* 32 bit signed PC relative
-                                            offset to GOT */
-#define R_X86_64_32             10      /* Direct 32 bit zero extended */
-#define R_X86_64_32S            11      /* Direct 32 bit sign extended */
-#define R_X86_64_16             12      /* Direct 16 bit zero extended */
-#define R_X86_64_PC16           13      /* 16 bit sign extended pc relative */
-#define R_X86_64_8              14      /* Direct 8 bit sign extended  */
-#define R_X86_64_PC8            15      /* 8 bit sign extended pc relative */
-#define R_X86_64_DTPMOD64       16      /* ID of module containing symbol */
-#define R_X86_64_DTPOFF64       17      /* Offset in module's TLS block */
-#define R_X86_64_TPOFF64        18      /* Offset in initial TLS block */
-#define R_X86_64_TLSGD          19      /* 32 bit signed PC relative offset
-                                            to two GOT entries for GD symbol */
-#define R_X86_64_TLSLD          20      /* 32 bit signed PC relative offset
-                                            to two GOT entries for LD symbol */
-#define R_X86_64_DTPOFF32       21      /* Offset in TLS block */
-#define R_X86_64_GOTTPOFF       22      /* 32 bit signed PC relative offset
-                                            to GOT entry for IE symbol */
-#define R_X86_64_TPOFF32        23      /* Offset in initial TLS block */
-
-#define R_X86_64_NUM            24
 
 _______________________________________________
 kexec mailing list
