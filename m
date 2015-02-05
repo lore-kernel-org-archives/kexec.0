@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YJIIY-0000sM-Ij
- for kexec@lists.infradead.org; Thu, 05 Feb 2015 09:00:31 +0000
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id E877BAC063A
- for <kexec@lists.infradead.org>; Thu,  5 Feb 2015 18:00:02 +0900 (JST)
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9640EE08002
- for <kexec@lists.infradead.org>; Thu,  5 Feb 2015 18:00:02 +0900 (JST)
-Date: Thu, 05 Feb 2015 17:59:43 +0900 (JST)
-Message-Id: <20150205.175943.381586636.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+ id 1YJU6U-0007kI-An
+ for kexec@lists.infradead.org; Thu, 05 Feb 2015 21:36:50 +0000
+Received: by mail-pa0-f43.google.com with SMTP id eu11so12614082pac.2
+ for <kexec@lists.infradead.org>; Thu, 05 Feb 2015 13:36:29 -0800 (PST)
+Received: from chanakya.lynx.com (farscape.lynx.com. [216.100.252.242])
+ by mx.google.com with ESMTPSA id fx1sm5988933pdb.35.2015.02.05.13.36.28
+ for <kexec@lists.infradead.org>
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Thu, 05 Feb 2015 13:36:28 -0800 (PST)
+From: Ameya Palande <2ameya@gmail.com>
+Subject: [PATCH] multiboot: fix crash on NULL kernel command line
+Date: Thu,  5 Feb 2015 13:36:24 -0800
+Message-Id: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,75 +22,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, vgoyal@redhat.com
-Cc: masami.hiramatsu.pt@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
-"crash_kexec_post_notifiers" kernel boot option, which toggles
-wheather panic() calls crash_kexec() before or after panic_notifiers
-and dump kmsg.
+If "--command-line" option is not specified, then kexec segfaults while
+dereferencing NULL command line string pointer. While we are at it, also
+fix indentation and use '{' and '}' consistently.
 
-The problem is that the commit overlooks panic_on_oops kernel boot
-option. If it is enabled, crash_kexec() is called directly without
-going through panic() in oops path.
-
-To fix this issue, this patch adds a check to
-"crash_kexec_post_notifiers" in the condition of kexec_should_crash().
-
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Signed-off-by: Ameya Palande <2ameya@gmail.com>
 ---
- include/linux/kernel.h | 3 +++
- kernel/kexec.c         | 2 ++
- kernel/panic.c         | 2 +-
- 3 files changed, 6 insertions(+), 1 deletion(-)
+ kexec/arch/i386/kexec-multiboot-x86.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 64ce58b..f47379f 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
- extern int panic_on_io_nmi;
- extern int panic_on_warn;
- extern int sysctl_panic_on_stackoverflow;
+diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
+index fce7f05..0dbac70 100644
+--- a/kexec/arch/i386/kexec-multiboot-x86.c
++++ b/kexec/arch/i386/kexec-multiboot-x86.c
+@@ -169,8 +169,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	static const char short_options[] = KEXEC_ARCH_OPT_STR "";
+ 	
+ 	/* Probe for the MB header if it's not already found */
+-	if (mbh == NULL && multiboot_x86_probe(buf, len) != 1) 
+-	{
++	if (mbh == NULL && multiboot_x86_probe(buf, len) != 1) {
+ 		fprintf(stderr, "Cannot find a loadable multiboot header.\n");
+ 		return -1;
+ 	}
+@@ -180,8 +179,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	modules = 0;
+ 	mod_command_line_space = 0;
+ 	result = 0;
+-	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1)
+-	{
++	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+ 		switch(opt) {
+ 		default:
+ 			/* Ignore core options */
+@@ -192,7 +190,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 			append = optarg;
+ 			break;
+ 		case OPT_REUSE_CMDLINE:
+-			tmp_cmdline = get_command_line();
++			command_line = get_command_line();
+ 			break;
+ 		case OPT_MOD:
+ 			modules++;
+@@ -201,11 +199,17 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		}
+ 	}
+ 	imagename = argv[optind];
+-	command_line = concat_cmdline(tmp_cmdline, append);
 +
-+extern bool crash_kexec_post_notifiers;
-+
++	/* Final command line = imagename + <OPT_REUSE_CMDLINE> + <OPT_CL> */
++	tmp_cmdline = concat_cmdline(command_line, append);
++	if (command_line) {
++		free(command_line);
++	}
++	command_line = concat_cmdline(imagename, tmp_cmdline);
+ 	if (tmp_cmdline) {
+ 		free(tmp_cmdline);
+ 	}
+-	command_line_len = strlen(command_line) + strlen(imagename) + 2;
++	command_line_len = strlen(command_line) + 1;
+ 	
+ 	/* Load the ELF executable */
+ 	elf_exec_build_load(info, &ehdr, buf, len, 0);
+@@ -232,8 +236,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	mbi_buf = xmalloc(mbi_bytes);
+ 	mbi = mbi_buf;
+ 	memset(mbi, 0, sizeof(*mbi));
+-	sprintf(((char *)mbi) + sizeof(*mbi), "%s %s",
+-		imagename, command_line);
++	sprintf(((char *)mbi) + sizeof(*mbi), "%s", command_line);
+ 	sprintf(((char *)mbi) + sizeof(*mbi) + command_line_len, "%s",
+ 		BOOTLOADER " " BOOTLOADER_VERSION);
+ 	mbi->flags = MB_INFO_CMDLINE | MB_INFO_BOOT_LOADER_NAME;
+@@ -274,9 +277,9 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 			if ((range[i].start <= 0x100000)
+ 			    && (range[i].end > mem_upper + 0x100000))
+ 				mem_upper = range[i].end - 0x100000;
++		} else {
++			mmap[i].Type = 0xbad;  /* Not RAM */
+ 		}
+-		else
+-		mmap[i].Type = 0xbad;  /* Not RAM */
+ 	}
+ 
+ 	if (mbh->flags & MULTIBOOT_MEMORY_INFO) { 
+@@ -324,8 +327,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		/* Go back and parse the module command lines */
+ 		optind = opterr = 1;
+ 		while((opt = getopt_long(argc, argv, 
+-					 short_options, options, 0)) != -1)
+-		{
++					 short_options, options, 0)) != -1) {
+ 			if (opt != OPT_MOD) continue;
+ 
+ 			/* Split module filename from command line */
+@@ -358,14 +360,13 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 			mod_clp += strlen(mod_clp) + 1;
+ 			modp++;
+ 		}
+-		
+ 	}
+ 
+ 	/* Find a place for the MBI to live */
+ 	if (sort_segments(info) < 0) {
+-                result = -1;
++		result = -1;
+ 		goto out;
+-        }
++	}
+ 	mbi_base = add_buffer(info,
+ 		mbi_buf, mbi_bytes, mbi_bytes, 4, 0, 0xFFFFFFFFUL, 1);
+ 		
+@@ -394,4 +395,3 @@ out:
  /*
-  * Only to be used by arch init code. If the user over-wrote the default
-  * CONFIG_PANIC_TIMEOUT, honor it.
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 9a8a01a..0ecf252 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -84,6 +84,8 @@ struct resource crashk_low_res = {
- 
- int kexec_should_crash(struct task_struct *p)
- {
-+	if (crash_kexec_post_notifiers)
-+		return 0;
- 	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
- 		return 1;
- 	return 0;
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 4d8d6f9..6582546 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -32,7 +32,7 @@ static unsigned long tainted_mask;
- static int pause_on_oops;
- static int pause_on_oops_flag;
- static DEFINE_SPINLOCK(pause_on_oops_lock);
--static bool crash_kexec_post_notifiers;
-+bool crash_kexec_post_notifiers;
- int panic_on_warn __read_mostly;
- 
- int panic_timeout = CONFIG_PANIC_TIMEOUT;
+  *  EOF (kexec-multiboot-x86.c)
+  */
+-
 -- 
-1.9.3
-
+1.8.3.1
 
 
 _______________________________________________
