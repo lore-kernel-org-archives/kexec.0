@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YJU6U-0007kI-An
- for kexec@lists.infradead.org; Thu, 05 Feb 2015 21:36:50 +0000
-Received: by mail-pa0-f43.google.com with SMTP id eu11so12614082pac.2
- for <kexec@lists.infradead.org>; Thu, 05 Feb 2015 13:36:29 -0800 (PST)
-Received: from chanakya.lynx.com (farscape.lynx.com. [216.100.252.242])
- by mx.google.com with ESMTPSA id fx1sm5988933pdb.35.2015.02.05.13.36.28
- for <kexec@lists.infradead.org>
- (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Thu, 05 Feb 2015 13:36:28 -0800 (PST)
-From: Ameya Palande <2ameya@gmail.com>
-Subject: [PATCH] multiboot: fix crash on NULL kernel command line
-Date: Thu,  5 Feb 2015 13:36:24 -0800
-Message-Id: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
+Message-ID: <1423181494.16019.2.camel@infradead.org>
+Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 05 Feb 2015 16:11:34 -0800
+In-Reply-To: <54CF32CB.1060507@linaro.org>
+References: <cover.1421449714.git.geoff@infradead.org>
+ <a3353cf2ac47f49c20bbbb88405301cbaa359805.1421449714.git.geoff@infradead.org>
+ <20150126191942.GQ23313@leverpostej> <54CA041C.6020403@linaro.org>
+ <54CA12A1.8090508@arm.com> <20150129184747.GV17721@leverpostej>
+ <54CB206D.7040705@linaro.org> <1422647304.21823.31.camel@infradead.org>
+ <54CF32CB.1060507@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,131 +19,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-If "--command-line" option is not specified, then kexec segfaults while
-dereferencing NULL command line string pointer. While we are at it, also
-fix indentation and use '{' and '}' consistently.
+Hi Takahiro,
 
-Signed-off-by: Ameya Palande <2ameya@gmail.com>
----
- kexec/arch/i386/kexec-multiboot-x86.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+On Mon, 2015-02-02 at 17:18 +0900, AKASHI Takahiro wrote:
+> On 01/31/2015 04:48 AM, Geoff Levand wrote:
+> > As an initial implementation we can hook into the CPU_DYING_FROZEN
+> > notifier sent to hyp_init_cpu_notify().  The longer term solution
+> > should use kvm_arch_hardware_enable() and kvm_arch_hardware_disable().
+> 
+> Are these two different approaches? 
 
-diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
-index fce7f05..0dbac70 100644
---- a/kexec/arch/i386/kexec-multiboot-x86.c
-+++ b/kexec/arch/i386/kexec-multiboot-x86.c
-@@ -169,8 +169,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 	static const char short_options[] = KEXEC_ARCH_OPT_STR "";
- 	
- 	/* Probe for the MB header if it's not already found */
--	if (mbh == NULL && multiboot_x86_probe(buf, len) != 1) 
--	{
-+	if (mbh == NULL && multiboot_x86_probe(buf, len) != 1) {
- 		fprintf(stderr, "Cannot find a loadable multiboot header.\n");
- 		return -1;
- 	}
-@@ -180,8 +179,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 	modules = 0;
- 	mod_command_line_space = 0;
- 	result = 0;
--	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1)
--	{
-+	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
- 		switch(opt) {
- 		default:
- 			/* Ignore core options */
-@@ -192,7 +190,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 			append = optarg;
- 			break;
- 		case OPT_REUSE_CMDLINE:
--			tmp_cmdline = get_command_line();
-+			command_line = get_command_line();
- 			break;
- 		case OPT_MOD:
- 			modules++;
-@@ -201,11 +199,17 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 		}
- 	}
- 	imagename = argv[optind];
--	command_line = concat_cmdline(tmp_cmdline, append);
-+
-+	/* Final command line = imagename + <OPT_REUSE_CMDLINE> + <OPT_CL> */
-+	tmp_cmdline = concat_cmdline(command_line, append);
-+	if (command_line) {
-+		free(command_line);
-+	}
-+	command_line = concat_cmdline(imagename, tmp_cmdline);
- 	if (tmp_cmdline) {
- 		free(tmp_cmdline);
- 	}
--	command_line_len = strlen(command_line) + strlen(imagename) + 2;
-+	command_line_len = strlen(command_line) + 1;
- 	
- 	/* Load the ELF executable */
- 	elf_exec_build_load(info, &ehdr, buf, len, 0);
-@@ -232,8 +236,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 	mbi_buf = xmalloc(mbi_bytes);
- 	mbi = mbi_buf;
- 	memset(mbi, 0, sizeof(*mbi));
--	sprintf(((char *)mbi) + sizeof(*mbi), "%s %s",
--		imagename, command_line);
-+	sprintf(((char *)mbi) + sizeof(*mbi), "%s", command_line);
- 	sprintf(((char *)mbi) + sizeof(*mbi) + command_line_len, "%s",
- 		BOOTLOADER " " BOOTLOADER_VERSION);
- 	mbi->flags = MB_INFO_CMDLINE | MB_INFO_BOOT_LOADER_NAME;
-@@ -274,9 +277,9 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 			if ((range[i].start <= 0x100000)
- 			    && (range[i].end > mem_upper + 0x100000))
- 				mem_upper = range[i].end - 0x100000;
-+		} else {
-+			mmap[i].Type = 0xbad;  /* Not RAM */
- 		}
--		else
--		mmap[i].Type = 0xbad;  /* Not RAM */
- 	}
- 
- 	if (mbh->flags & MULTIBOOT_MEMORY_INFO) { 
-@@ -324,8 +327,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 		/* Go back and parse the module command lines */
- 		optind = opterr = 1;
- 		while((opt = getopt_long(argc, argv, 
--					 short_options, options, 0)) != -1)
--		{
-+					 short_options, options, 0)) != -1) {
- 			if (opt != OPT_MOD) continue;
- 
- 			/* Split module filename from command line */
-@@ -358,14 +360,13 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 			mod_clp += strlen(mod_clp) + 1;
- 			modp++;
- 		}
--		
- 	}
- 
- 	/* Find a place for the MBI to live */
- 	if (sort_segments(info) < 0) {
--                result = -1;
-+		result = -1;
- 		goto out;
--        }
-+	}
- 	mbi_base = add_buffer(info,
- 		mbi_buf, mbi_bytes, mbi_bytes, 4, 0, 0xFFFFFFFFUL, 1);
- 		
-@@ -394,4 +395,3 @@ out:
- /*
-  *  EOF (kexec-multiboot-x86.c)
-  */
--
--- 
-1.8.3.1
+Yes, these are two different solutions,  One initial work-around, and a
+more involved proper solution.  Hooking into the CPU_DYING_FROZEN
+notifier would be a initial fix.  The proper solution would be to move
+the KVM setup to kvm_arch_hardware_enable(), and the shutdown to
+kvm_arch_hardware_disable().
+
+
+> kernel_exec() -> machine_shutdown() -> disable_nonboot_cpu()
+>     -> _cpu_down() -> cpu_notify_nofail(CPU_DEAD|...)
+> 
+> On the other hand, kvm already has a hook into kvm_arch_hardware_disable():
+>    (ignoring kvm_usage_count here)
+> kvm_cpu_hotplug(CPU_DYING) -> hardware_disable()
+>     -> hardware_disable_nolock() -> kvm_arch_hardware_disable()
+> 
+> So it seems that we don't have to add a new hook at hyp_init_cpu_notify()
+> if kvm_arch_hardware_disable() is properly implemented.
+
+Yes, that is correct.  But, as above, you would also need to update the
+KVM startup to use kvm_arch_hardware_enable().
+
+> disable_nonboot_cpu() will not inovke cpu hotplug on *boot* cpu, and
+> we should handle it in a separate way though.
+
+IIRC, the secondary cpus go through PSCI on shutdown, and that path
+is working OK.  Maybe I am mistaken though.
+
+The primary cpu shutdown (hyp stubs restored) is what is missing.  The
+primary cpu goes through cpu_soft_restart(), and that is what is
+currently failing.
+
+-Geoff
 
 
 _______________________________________________
