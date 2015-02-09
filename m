@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YKhIc-0002Og-J1
- for kexec@lists.infradead.org; Mon, 09 Feb 2015 05:54:23 +0000
-Received: from ayumi.isobedori.kobe.vergenet.net
- (p8130-ipbfp1005kobeminato.hyogo.ocn.ne.jp [118.10.149.130])
- by kirsty.vergenet.net (Postfix) with ESMTP id D0E5B25C01E
- for <kexec@lists.infradead.org>; Mon,  9 Feb 2015 16:53:58 +1100 (EST)
-Date: Mon, 9 Feb 2015 14:53:57 +0900
+ id 1YKhKI-0003eU-75
+ for kexec@lists.infradead.org; Mon, 09 Feb 2015 05:56:06 +0000
+Date: Mon, 9 Feb 2015 14:55:43 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.9
-Message-ID: <20150209055357.GA14349@verge.net.au>
+Subject: Re: [PATCH] ppc64: erase unnecessary segment info printing
+Message-ID: <20150209055543.GA29385@verge.net.au>
+References: <1414570795-29258-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1414570795-29258-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org
 
-Hi all,
+On Wed, Oct 29, 2014 at 04:19:55PM +0800, Baoquan He wrote:
+> In ppc64 loading, it will print the segment information. This is not
+> wanted since other Archs don't have this. People even think there's
+> something wrong. So erase it to make it be consistent with other Archs.
+> 
+> And if people really want to check these info, they can specify "-d"
+> option. They are printed in print_segments() too.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-I am happy to announce the release of kexec-tools 2.0.9.
+Thanks, applied.
 
-This is a bug-fix release coinciding with the release of the v3.19 Linux Kernel.
-
-This release can be downloaded from kernel.org:
-
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.9.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
-
-It is also tagged it in git:
-
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
+> ---
+>  kexec/arch/ppc64/kexec-elf-ppc64.c | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+> index ce10367..4a1540e 100644
+> --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
+> +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+> @@ -377,10 +377,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+>  	dbgprintf("opal_base is %llx\n", (unsigned long long) my_opal_base);
+>  	dbgprintf("opal_entry is %llx\n", (unsigned long long) my_opal_entry);
+>  
+> -	for (i = 0; i < info->nr_segments; i++)
+> -		fprintf(stderr, "segment[%d].mem:%p memsz:%zu\n", i,
+> -			info->segment[i].mem, info->segment[i].memsz);
+> -
+>  	return 0;
+>  }
+>  
+> -- 
+> 1.9.0
+> 
 
 _______________________________________________
 kexec mailing list
