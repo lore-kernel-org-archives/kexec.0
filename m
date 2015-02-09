@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1423206386.10035.1.camel@infradead.org>
-Subject: Re: [PATCH 7/8] arm64/kexec: Add checks for KVM
-From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 05 Feb 2015 23:06:26 -0800
-In-Reply-To: <54D440AD.2030608@linaro.org>
-References: <cover.1421449714.git.geoff@infradead.org>
- <a3353cf2ac47f49c20bbbb88405301cbaa359805.1421449714.git.geoff@infradead.org>
- <20150126191942.GQ23313@leverpostej> <54CA041C.6020403@linaro.org>
- <54CA12A1.8090508@arm.com> <20150129184747.GV17721@leverpostej>
- <54CB206D.7040705@linaro.org> <1422647304.21823.31.camel@infradead.org>
- <54CF32CB.1060507@linaro.org> <1423181494.16019.2.camel@infradead.org>
- <54D440AD.2030608@linaro.org>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YKeIv-0008UJ-Nq
+ for kexec@lists.infradead.org; Mon, 09 Feb 2015 02:42:30 +0000
+Date: Mon, 9 Feb 2015 10:40:30 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
+ option issue in oops path
+Message-ID: <20150209024030.GA1847@dhcp-16-105.nay.redhat.com>
+References: <20150205.175943.381586636.d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150205.175943.381586636.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,64 +24,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: masami.hiramatsu.pt@hitachi.com, kexec@lists.infradead.org, ebiederm@xmission.com, vgoyal@redhat.com, linux-kernel@vger.kernel.org
 
-On Fri, 2015-02-06 at 13:18 +0900, AKASHI Takahiro wrote:
-> On 02/06/2015 09:11 AM, Geoff Levand wrote:
-> > Hi Takahiro,
-> >
-> > On Mon, 2015-02-02 at 17:18 +0900, AKASHI Takahiro wrote:
-> >> On 01/31/2015 04:48 AM, Geoff Levand wrote:
-> >>> As an initial implementation we can hook into the CPU_DYING_FROZEN
-> >>> notifier sent to hyp_init_cpu_notify().  The longer term solution
-> >>> should use kvm_arch_hardware_enable() and kvm_arch_hardware_disable().
-> >>
-> >> Are these two different approaches?
-> >
-> > Yes, these are two different solutions,  One initial work-around, and a
-> > more involved proper solution.  Hooking into the CPU_DYING_FROZEN
-> > notifier would be a initial fix.  The proper solution would be to move
-> > the KVM setup to kvm_arch_hardware_enable(), and the shutdown to
-> > kvm_arch_hardware_disable().
-> >
-> >
-> >> kernel_exec() -> machine_shutdown() -> disable_nonboot_cpu()
-> >>      -> _cpu_down() -> cpu_notify_nofail(CPU_DEAD|...)
-> >>
-> >> On the other hand, kvm already has a hook into kvm_arch_hardware_disable():
-> >>     (ignoring kvm_usage_count here)
-> >> kvm_cpu_hotplug(CPU_DYING) -> hardware_disable()
-> >>      -> hardware_disable_nolock() -> kvm_arch_hardware_disable()
-> >>
-> >> So it seems that we don't have to add a new hook at hyp_init_cpu_notify()
-> >> if kvm_arch_hardware_disable() is properly implemented.
-> >
-> > Yes, that is correct.  But, as above, you would also need to update the
-> > KVM startup to use kvm_arch_hardware_enable().
-> >
-> >> disable_nonboot_cpu() will not inovke cpu hotplug on *boot* cpu, and
-> >> we should handle it in a separate way though.
-> >
-> > IIRC, the secondary cpus go through PSCI on shutdown, and that path
-> > is working OK.  Maybe I am mistaken though.
+On 02/05/15 at 05:59pm, HATAYAMA Daisuke wrote:
+> The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
+> "crash_kexec_post_notifiers" kernel boot option, which toggles
+> wheather panic() calls crash_kexec() before or after panic_notifiers
+> and dump kmsg.
 > 
-> If so, why should we add a hook at hyp_init_cpu_notify() as initial work-around?
-
-To tear down KVM on the primary cpu.
-
-> > The primary cpu shutdown (hyp stubs restored) is what is missing.  The
-> > primary cpu goes through cpu_soft_restart(), and that is what is
-> > currently failing.
+> The problem is that the commit overlooks panic_on_oops kernel boot
+> option. If it is enabled, crash_kexec() is called directly without
+> going through panic() in oops path.
 > 
-> Yeah, we will call teardown function manually in soft_restart();
+> To fix this issue, this patch adds a check to
+> "crash_kexec_post_notifiers" in the condition of kexec_should_crash().
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
+>  include/linux/kernel.h | 3 +++
+>  kernel/kexec.c         | 2 ++
+>  kernel/panic.c         | 2 +-
+>  3 files changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 64ce58b..f47379f 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
+>  extern int panic_on_io_nmi;
+>  extern int panic_on_warn;
+>  extern int sysctl_panic_on_stackoverflow;
+> +
+> +extern bool crash_kexec_post_notifiers;
+> +
+>  /*
+>   * Only to be used by arch init code. If the user over-wrote the default
+>   * CONFIG_PANIC_TIMEOUT, honor it.
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 9a8a01a..0ecf252 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -84,6 +84,8 @@ struct resource crashk_low_res = {
+>  
+>  int kexec_should_crash(struct task_struct *p)
+>  {
+> +	if (crash_kexec_post_notifiers)
+> +		return 0;
+>  	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+>  		return 1;
 
-I think the KVM tear down should happen independent of soft_restart().
-When soft_restart() is called, KVM should have already been torn down.
-
--Geoff
+What if these two conditions !p->pid || is_global_init(p) are satisfied?
+Seems the behavious is changed.
 
 
+>  	return 0;
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 4d8d6f9..6582546 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -32,7 +32,7 @@ static unsigned long tainted_mask;
+>  static int pause_on_oops;
+>  static int pause_on_oops_flag;
+>  static DEFINE_SPINLOCK(pause_on_oops_lock);
+> -static bool crash_kexec_post_notifiers;
+> +bool crash_kexec_post_notifiers;
+>  int panic_on_warn __read_mostly;
+>  
+>  int panic_timeout = CONFIG_PANIC_TIMEOUT;
+> -- 
+> 1.9.3
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
