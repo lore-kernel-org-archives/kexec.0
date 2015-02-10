@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YKyTj-0007Os-2T
- for kexec@lists.infradead.org; Tue, 10 Feb 2015 00:15:00 +0000
-Date: Tue, 10 Feb 2015 09:14:35 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/3] Fix a few compilation warnings.
-Message-ID: <20150210001435.GB32167@verge.net.au>
-References: <1422720608-28700-1-git-send-email-yszhou4tech@gmail.com>
- <1422720608-28700-3-git-send-email-yszhou4tech@gmail.com>
- <20150209055808.GC29385@verge.net.au>
- <CAECwjAhBPPPV-BPjcseFd3op-G_en=mUBrw6oeSGgKt4d0AM3Q@mail.gmail.com>
+ id 1YL6FO-0003Rz-Qm
+ for kexec@lists.infradead.org; Tue, 10 Feb 2015 08:32:43 +0000
+Message-ID: <54D9C211.8010000@hitachi.com>
+Date: Tue, 10 Feb 2015 17:32:17 +0900
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAECwjAhBPPPV-BPjcseFd3op-G_en=mUBrw6oeSGgKt4d0AM3Q@mail.gmail.com>
+Subject: Re: [PATCH] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
+ option issue in oops path
+References: <20150205.175943.381586636.d.hatayama@jp.fujitsu.com>
+ <20150209024030.GA1847@dhcp-16-105.nay.redhat.com>
+ <20150209.122204.284539162.d.hatayama@jp.fujitsu.com>
+ <20150209032914.GB1847@dhcp-16-105.nay.redhat.com>
+In-Reply-To: <20150209032914.GB1847@dhcp-16-105.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,118 +26,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yousong Zhou <yszhou4tech@gmail.com>
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com, vgoyal@redhat.com
 
-On Mon, Feb 09, 2015 at 08:56:25PM +0800, Yousong Zhou wrote:
-> On 9 February 2015 at 13:58, Simon Horman <horms@verge.net.au> wrote:
-> > These changes do not seem to be related to each other.
-> > Please split this into 4 separate patches each with
-> > a changelog that briefly describes what the problem is.
-> >
-> 
-> Will split them each into a separate patch.
-> 
-> > On Sun, Feb 01, 2015 at 12:10:08AM +0800, Yousong Zhou wrote:
-> >>
-> >> Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
-> >> ---
-> >>  kexec/arch/mips/crashdump-mips.c |    3 ++-
-> >>  kexec/arch/mips/kexec-elf-mips.c |    2 +-
-> >>  kexec/kexec-elf-rel.c            |    3 +++
-> >>  kexec/kexec.h                    |    2 +-
-> >>  4 files changed, 7 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
-> >> index e7840e0..98c9f7c 100644
-> >> --- a/kexec/arch/mips/crashdump-mips.c
-> >> +++ b/kexec/arch/mips/crashdump-mips.c
-> >> @@ -22,6 +22,7 @@
-> >>  #include <stdlib.h>
-> >>  #include <errno.h>
-> >>  #include <limits.h>
-> >> +#include <inttypes.h>
-> >>  #include <elf.h>
-> >>  #include <sys/types.h>
-> >>  #include <sys/stat.h>
-> >> @@ -52,7 +53,7 @@ static int get_kernel_paddr(struct crash_elf_info *elf_info)
-> >>
-> >>       if (parse_iomem_single("Kernel code\n", &start, NULL) == 0) {
-> >>               elf_info->kern_paddr_start = start;
-> >> -             dbgprintf("kernel load physical addr start = 0x%lx\n", start);
-> >> +             dbgprintf("kernel load physical addr start = 0x%" PRIu64 "\n", start);
-> >>               return 0;
-> >>       }
-> >>
-> >> diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
-> >> index a27d986..8a6419a 100644
-> >> --- a/kexec/arch/mips/kexec-elf-mips.c
-> >> +++ b/kexec/arch/mips/kexec-elf-mips.c
-> >> @@ -158,7 +158,7 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
-> >>       if (info->kexec_flags & KEXEC_ON_CRASH)
-> >>               /* In case of crashdump segment[0] is kernel.
-> >>                * Put cmdline just after it. */
-> >> -             cmdline_addr = info->segment[0].mem +
-> >> +             cmdline_addr = (unsigned long)info->segment[0].mem +
-> >>                               info->segment[0].memsz;
-> >
-> > I wonder if we can resolve this without resorting to a cast.
-> 
-> It's a "pointer to integer without cast" warning.  I think keeping
-> (unsigned long) for a pointer is fine, isnt it?
+Hello,
 
-Yes, I guess it is the least-bad solution.
+(2015/02/09 12:29), Baoquan He wrote:> On 02/09/15 at 12:22pm, HATAYAMA Daisuke wrote:
+>> From: Baoquan He <bhe@redhat.com>
+>>> On 02/05/15 at 05:59pm, HATAYAMA Daisuke wrote:
+>>>> diff --git a/kernel/kexec.c b/kernel/kexec.c
+>>>> index 9a8a01a..0ecf252 100644
+>>>> --- a/kernel/kexec.c
+>>>> +++ b/kernel/kexec.c
+>>>> @@ -84,6 +84,8 @@ struct resource crashk_low_res = {
+>>>>  
+>>>>  int kexec_should_crash(struct task_struct *p)
+>>>>  {
+>>>> +	if (crash_kexec_post_notifiers)
+>>>> +		return 0;
+>>>>  	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+>>>>  		return 1;
+>>>
+>>> What if these two conditions !p->pid || is_global_init(p) are satisfied?
+>>> Seems the behavious is changed.
+>>>
+>>
+>> Please further follow do_exit() path. For each condition, there are
+>> the corresponding panic() calls. In summary:
+>>
+>>   oops_end
+>>     1) panic() for in_interrupt()
+>>     2) panic() for panic_on_oops
+>>     do_exit
+>>       3) panic() for !p->pid (idle task)
+>>       exit_notify
+>>         forget_original_parent
+>>           find_child_reaper
+>>             4) panic() for p->pid == 1 (init task)
+> 
+> Yes, all conditions have been covered.
+> 
+> So this patch is necessary, ACK it. Thanks
+> 
+> Acked-by: Baoquan He <bhe@redhat.com>
 
-> 
-> >
-> >>       else
-> >>               cmdline_addr = 0;
-> >> diff --git a/kexec/kexec-elf-rel.c b/kexec/kexec-elf-rel.c
-> >> index c625f30..5a5fcd1 100644
-> >> --- a/kexec/kexec-elf-rel.c
-> >> +++ b/kexec/kexec-elf-rel.c
-> >> @@ -347,6 +347,9 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
-> >>                       else if (shdr->sh_type == SHT_RELA) {
-> >>                               rel = elf_rela(ehdr, ptr);
-> >>                       }
-> >> +                     else {
-> >> +                             die("Unexpected sh_type: %d\n", shdr->sh_type);
-> >> +                     }
-> >>                       /* the location to change */
-> >>                       location = section->sh_data + rel.r_offset;
-> >>
-> 
-> This one has already been fixed by explicitly initialising the local
-> variable.  So I will drop it in the next version.
-> 
-> Thank you for your time on this.
+Thanks for the patch!
+I tested it in following cases on x86_64 and it worked well;
+my panic notifier was called, then 2nd kernel booted.
 
-Likewise, thanks for spending time on this.
+- Null pointer dereference in each context of
+  - hard IRQ
+  - pid == 0
+  - pid == 1
+  - others with panic_on_oops=1
+- Zero-divide in the context of normal process
+  (panic_on_oops=1)
 
->                 yousong
-> 
-> >> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> >> index 4be2b2f..2c85052 100644
-> >> --- a/kexec/kexec.h
-> >> +++ b/kexec/kexec.h
-> >> @@ -245,7 +245,7 @@ extern int file_types;
-> >>
-> >>  extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
-> >>  extern void die(const char *fmt, ...)
-> >> -     __attribute__ ((format (printf, 1, 2)));
-> >> +     __attribute__ ((format (printf, 1, 2), noreturn));
-> >>  extern void *xmalloc(size_t size);
-> >>  extern void *xrealloc(void *ptr, size_t size);
-> >>  extern char *slurp_file(const char *filename, off_t *r_size);
-> >> --
-> >> 1.7.10.4
-> >>
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Tested-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+
+-- 
+Hidehiro Kawai
+Hitachi, Yokohama Research Laboratory
+
+
 
 _______________________________________________
 kexec mailing list
