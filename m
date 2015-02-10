@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
+Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YLAI8-0003sb-GX
- for kexec@lists.infradead.org; Tue, 10 Feb 2015 12:51:49 +0000
-Received: by mail-pa0-f47.google.com with SMTP id lj1so41103419pab.6
- for <kexec@lists.infradead.org>; Tue, 10 Feb 2015 04:51:27 -0800 (PST)
+ id 1YLAIK-0003vm-Ll
+ for kexec@lists.infradead.org; Tue, 10 Feb 2015 12:52:01 +0000
+Received: by mail-pa0-f51.google.com with SMTP id eu11so19358164pac.10
+ for <kexec@lists.infradead.org>; Tue, 10 Feb 2015 04:51:39 -0800 (PST)
 From: Yousong Zhou <yszhou4tech@gmail.com>
-Subject: [PATCH 1/4] configure.ac: apply necessary quotes to result of macro
- expansion.
-Date: Tue, 10 Feb 2015 20:46:11 +0800
-Message-Id: <1423572374-20841-1-git-send-email-yszhou4tech@gmail.com>
+Subject: [PATCH 2/4] mips: fix compiler warning on printing 64-bit integer.
+Date: Tue, 10 Feb 2015 20:46:12 +0800
+Message-Id: <1423572374-20841-2-git-send-email-yszhou4tech@gmail.com>
+In-Reply-To: <1423572374-20841-1-git-send-email-yszhou4tech@gmail.com>
+References: <1423572374-20841-1-git-send-email-yszhou4tech@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,49 +27,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Yousong Zhou <yszhou4tech@gmail.com>, horms@verge.net.au
 
-This can fix the following error when searching for lzma support and
-while at it also apply the practice to other uses of the same pattern.
-
-	checking for lzma_code in -llzma... ./configure: line 4756: ac_fn_c_try_link: command not found
 
 Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
 ---
- configure.ac |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kexec/arch/mips/crashdump-mips.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/configure.ac b/configure.ac
-index db93331..c410e90 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -152,22 +152,22 @@ AC_CHECK_PROG([DIRNAME],  dirname,  dirname,  "no", [$PATH])
- dnl See if I have a usable copy of zlib available
- if test "$with_zlib" = yes ; then
- 	AC_CHECK_HEADER(zlib.h,
--		AC_CHECK_LIB(z, inflateInit_, ,
--		AC_MSG_NOTICE([zlib support disabled])))
-+		[AC_CHECK_LIB(z, inflateInit_, ,
-+		AC_MSG_NOTICE([zlib support disabled]))])
- fi
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index e7840e0..98c9f7c 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -22,6 +22,7 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
++#include <inttypes.h>
+ #include <elf.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -52,7 +53,7 @@ static int get_kernel_paddr(struct crash_elf_info *elf_info)
  
- dnl See if I have a usable copy of lzma available
- if test "$with_lzma" = yes ; then
- 	AC_CHECK_HEADER(lzma.h,
--		AC_CHECK_LIB(lzma, lzma_code, ,
--		AC_MSG_NOTICE([lzma support disabled])))
-+		[AC_CHECK_LIB(lzma, lzma_code, ,
-+		AC_MSG_NOTICE([lzma support disabled]))])
- fi
+ 	if (parse_iomem_single("Kernel code\n", &start, NULL) == 0) {
+ 		elf_info->kern_paddr_start = start;
+-		dbgprintf("kernel load physical addr start = 0x%lx\n", start);
++		dbgprintf("kernel load physical addr start = 0x%" PRIu64 "\n", start);
+ 		return 0;
+ 	}
  
- dnl find Xen control stack libraries
- if test "$with_xen" = yes ; then
- 	AC_CHECK_HEADER(xenctrl.h,
--		AC_CHECK_LIB(xenctrl, xc_kexec_load, ,
--		AC_MSG_NOTICE([Xen support disabled])))
-+		[AC_CHECK_LIB(xenctrl, xc_kexec_load, ,
-+		AC_MSG_NOTICE([Xen support disabled]))])
- fi
- 
- dnl ---Sanity checks
 -- 
 1.7.10.4
 
