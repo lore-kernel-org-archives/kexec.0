@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YL6FO-0003Rz-Qm
- for kexec@lists.infradead.org; Tue, 10 Feb 2015 08:32:43 +0000
-Message-ID: <54D9C211.8010000@hitachi.com>
-Date: Tue, 10 Feb 2015 17:32:17 +0900
-From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-References: <20150205.175943.381586636.d.hatayama@jp.fujitsu.com>
- <20150209024030.GA1847@dhcp-16-105.nay.redhat.com>
- <20150209.122204.284539162.d.hatayama@jp.fujitsu.com>
- <20150209032914.GB1847@dhcp-16-105.nay.redhat.com>
-In-Reply-To: <20150209032914.GB1847@dhcp-16-105.nay.redhat.com>
+Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YLAI8-0003sb-GX
+ for kexec@lists.infradead.org; Tue, 10 Feb 2015 12:51:49 +0000
+Received: by mail-pa0-f47.google.com with SMTP id lj1so41103419pab.6
+ for <kexec@lists.infradead.org>; Tue, 10 Feb 2015 04:51:27 -0800 (PST)
+From: Yousong Zhou <yszhou4tech@gmail.com>
+Subject: [PATCH 1/4] configure.ac: apply necessary quotes to result of macro
+ expansion.
+Date: Tue, 10 Feb 2015 20:46:11 +0800
+Message-Id: <1423572374-20841-1-git-send-email-yszhou4tech@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,72 +18,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com, vgoyal@redhat.com
+To: kexec@lists.infradead.org
+Cc: Yousong Zhou <yszhou4tech@gmail.com>, horms@verge.net.au
 
-Hello,
+This can fix the following error when searching for lzma support and
+while at it also apply the practice to other uses of the same pattern.
 
-(2015/02/09 12:29), Baoquan He wrote:> On 02/09/15 at 12:22pm, HATAYAMA Daisuke wrote:
->> From: Baoquan He <bhe@redhat.com>
->>> On 02/05/15 at 05:59pm, HATAYAMA Daisuke wrote:
->>>> diff --git a/kernel/kexec.c b/kernel/kexec.c
->>>> index 9a8a01a..0ecf252 100644
->>>> --- a/kernel/kexec.c
->>>> +++ b/kernel/kexec.c
->>>> @@ -84,6 +84,8 @@ struct resource crashk_low_res = {
->>>>  
->>>>  int kexec_should_crash(struct task_struct *p)
->>>>  {
->>>> +	if (crash_kexec_post_notifiers)
->>>> +		return 0;
->>>>  	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
->>>>  		return 1;
->>>
->>> What if these two conditions !p->pid || is_global_init(p) are satisfied?
->>> Seems the behavious is changed.
->>>
->>
->> Please further follow do_exit() path. For each condition, there are
->> the corresponding panic() calls. In summary:
->>
->>   oops_end
->>     1) panic() for in_interrupt()
->>     2) panic() for panic_on_oops
->>     do_exit
->>       3) panic() for !p->pid (idle task)
->>       exit_notify
->>         forget_original_parent
->>           find_child_reaper
->>             4) panic() for p->pid == 1 (init task)
-> 
-> Yes, all conditions have been covered.
-> 
-> So this patch is necessary, ACK it. Thanks
-> 
-> Acked-by: Baoquan He <bhe@redhat.com>
+	checking for lzma_code in -llzma... ./configure: line 4756: ac_fn_c_try_link: command not found
 
-Thanks for the patch!
-I tested it in following cases on x86_64 and it worked well;
-my panic notifier was called, then 2nd kernel booted.
+Signed-off-by: Yousong Zhou <yszhou4tech@gmail.com>
+---
+ configure.ac |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-- Null pointer dereference in each context of
-  - hard IRQ
-  - pid == 0
-  - pid == 1
-  - others with panic_on_oops=1
-- Zero-divide in the context of normal process
-  (panic_on_oops=1)
-
-Tested-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-
+diff --git a/configure.ac b/configure.ac
+index db93331..c410e90 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -152,22 +152,22 @@ AC_CHECK_PROG([DIRNAME],  dirname,  dirname,  "no", [$PATH])
+ dnl See if I have a usable copy of zlib available
+ if test "$with_zlib" = yes ; then
+ 	AC_CHECK_HEADER(zlib.h,
+-		AC_CHECK_LIB(z, inflateInit_, ,
+-		AC_MSG_NOTICE([zlib support disabled])))
++		[AC_CHECK_LIB(z, inflateInit_, ,
++		AC_MSG_NOTICE([zlib support disabled]))])
+ fi
+ 
+ dnl See if I have a usable copy of lzma available
+ if test "$with_lzma" = yes ; then
+ 	AC_CHECK_HEADER(lzma.h,
+-		AC_CHECK_LIB(lzma, lzma_code, ,
+-		AC_MSG_NOTICE([lzma support disabled])))
++		[AC_CHECK_LIB(lzma, lzma_code, ,
++		AC_MSG_NOTICE([lzma support disabled]))])
+ fi
+ 
+ dnl find Xen control stack libraries
+ if test "$with_xen" = yes ; then
+ 	AC_CHECK_HEADER(xenctrl.h,
+-		AC_CHECK_LIB(xenctrl, xc_kexec_load, ,
+-		AC_MSG_NOTICE([Xen support disabled])))
++		[AC_CHECK_LIB(xenctrl, xc_kexec_load, ,
++		AC_MSG_NOTICE([Xen support disabled]))])
+ fi
+ 
+ dnl ---Sanity checks
 -- 
-Hidehiro Kawai
-Hitachi, Yokohama Research Laboratory
-
+1.7.10.4
 
 
 _______________________________________________
