@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-x22e.google.com ([2607:f8b0:4003:c01::22e])
+Received: from mail-oi0-x22e.google.com ([2607:f8b0:4003:c06::22e])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YLDF3-0003J9-Vt
- for kexec@lists.infradead.org; Tue, 10 Feb 2015 16:00:53 +0000
-Received: by mail-ob0-f174.google.com with SMTP id wo20so32237701obc.5
- for <kexec@lists.infradead.org>; Tue, 10 Feb 2015 08:00:28 -0800 (PST)
+ id 1YLb0B-0008Q4-Um
+ for kexec@lists.infradead.org; Wed, 11 Feb 2015 17:23:04 +0000
+Received: by mail-oi0-f46.google.com with SMTP id x69so13317432oia.5
+ for <kexec@lists.infradead.org>; Wed, 11 Feb 2015 09:22:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
+In-Reply-To: <CAFAJAEz_z0mvGih2iJ8hDuPNh9OL+18k2_tbjsF7=ydceUG9DQ@mail.gmail.com>
 References: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
-Date: Tue, 10 Feb 2015 08:00:28 -0800
-Message-ID: <CAFAJAEz_z0mvGih2iJ8hDuPNh9OL+18k2_tbjsF7=ydceUG9DQ@mail.gmail.com>
+ <CAFAJAEz_z0mvGih2iJ8hDuPNh9OL+18k2_tbjsF7=ydceUG9DQ@mail.gmail.com>
+Date: Wed, 11 Feb 2015 09:22:37 -0800
+Message-ID: <CAFAJAEwUkEnJgPr30-+KhGMQKss0C1mcEC8wm4+KYiVqXbKsGw@mail.gmail.com>
 Subject: Re: [PATCH] multiboot: fix crash on NULL kernel command line
 From: Ameya Palande <2ameya@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,14 +27,21 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-On Thu, Feb 5, 2015 at 1:36 PM, Ameya Palande <2ameya@gmail.com> wrote:
-> If "--command-line" option is not specified, then kexec segfaults while
-> dereferencing NULL command line string pointer. While we are at it, also
-> fix indentation and use '{' and '}' consistently.
+On Tue, Feb 10, 2015 at 8:00 AM, Ameya Palande <2ameya@gmail.com> wrote:
+> On Thu, Feb 5, 2015 at 1:36 PM, Ameya Palande <2ameya@gmail.com> wrote:
+>> If "--command-line" option is not specified, then kexec segfaults while
+>> dereferencing NULL command line string pointer. While we are at it, also
+>> fix indentation and use '{' and '}' consistently.
+>>
+>> Signed-off-by: Ameya Palande <2ameya@gmail.com>
 >
-> Signed-off-by: Ameya Palande <2ameya@gmail.com>
+> Any update on this one?
 
-Any update on this one?
+Is there anything wrong with this patch? Is this the correct mailing
+list for exec-tools related patch?
+
+Cheers,
+Ameya.
 
 _______________________________________________
 kexec mailing list
