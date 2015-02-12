@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-oi0-x22d.google.com ([2607:f8b0:4003:c06::22d])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YLkS4-0001Do-M5
- for kexec@lists.infradead.org; Thu, 12 Feb 2015 03:28:32 +0000
-Date: Thu, 12 Feb 2015 11:29:18 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH] multiboot: fix crash on NULL kernel command line
-Message-ID: <20150212032918.GE6861@dhcp-128-1.nay.redhat.com>
-References: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
- <CAFAJAEz_z0mvGih2iJ8hDuPNh9OL+18k2_tbjsF7=ydceUG9DQ@mail.gmail.com>
- <CAFAJAEwUkEnJgPr30-+KhGMQKss0C1mcEC8wm4+KYiVqXbKsGw@mail.gmail.com>
+ id 1YLoli-0002hO-Mc
+ for kexec@lists.infradead.org; Thu, 12 Feb 2015 08:05:03 +0000
+Received: by mail-oi0-f45.google.com with SMTP id i138so1901427oig.4
+ for <kexec@lists.infradead.org>; Thu, 12 Feb 2015 00:04:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAFAJAEwUkEnJgPr30-+KhGMQKss0C1mcEC8wm4+KYiVqXbKsGw@mail.gmail.com>
+In-Reply-To: <20150211230807.GA6735@verge.net.au>
+References: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
+ <20150211230807.GA6735@verge.net.au>
+Date: Thu, 12 Feb 2015 00:04:41 -0800
+Message-ID: <CAFAJAEweOaeMBvQsNnZcQRwFU0gsVL7=t6Vx8izY2TUzUZVbcg@mail.gmail.com>
+Subject: Re: [PATCH] multiboot: fix crash on NULL kernel command line
+From: Ameya Palande <2ameya@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +25,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ameya Palande <2ameya@gmail.com>
+To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-On 02/11/15 at 09:22am, Ameya Palande wrote:
-> On Tue, Feb 10, 2015 at 8:00 AM, Ameya Palande <2ameya@gmail.com> wrote:
-> > On Thu, Feb 5, 2015 at 1:36 PM, Ameya Palande <2ameya@gmail.com> wrote:
-> >> If "--command-line" option is not specified, then kexec segfaults while
-> >> dereferencing NULL command line string pointer. While we are at it, also
-> >> fix indentation and use '{' and '}' consistently.
-> >>
-> >> Signed-off-by: Ameya Palande <2ameya@gmail.com>
-> >
-> > Any update on this one?
-> 
-> Is there anything wrong with this patch? Is this the correct mailing
-> list for exec-tools related patch?
-> 
-> Cheers,
-> Ameya.
+On Wed, Feb 11, 2015 at 3:08 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Feb 05, 2015 at 01:36:24PM -0800, Ameya Palande wrote:
+>> If "--command-line" option is not specified, then kexec segfaults while
+>> dereferencing NULL command line string pointer. While we are at it, also
+>> fix indentation and use '{' and '}' consistently.
+>>
+>> Signed-off-by: Ameya Palande <2ameya@gmail.com>
+>
+> Somehow I missed this. Please CC me on patches for kexec-tools as
+> it makes it easier for me to see them.
 
-As Simon's comment in this thread, you should split up your patch to
-separate the fix and cleanup to be reviewed clearly.
+Sure!
 
-Thanks
-Minfei
+> Please resubmit this patch split up so that fixes and cleanups are separate.
+> One patch per issue is the rule of thumb. This makes it easier to review
+> and prioritise patches.
 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Looks like you already applied it :) Thanks!
+
+Cheers,
+Ameya.
 
 _______________________________________________
 kexec mailing list
