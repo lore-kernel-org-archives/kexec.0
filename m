@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-x22d.google.com ([2607:f8b0:4003:c06::22d])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YLoli-0002hO-Mc
- for kexec@lists.infradead.org; Thu, 12 Feb 2015 08:05:03 +0000
-Received: by mail-oi0-f45.google.com with SMTP id i138so1901427oig.4
- for <kexec@lists.infradead.org>; Thu, 12 Feb 2015 00:04:41 -0800 (PST)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YLoyq-0003MQ-2l
+ for kexec@lists.infradead.org; Thu, 12 Feb 2015 08:18:36 +0000
+Date: Thu, 12 Feb 2015 03:10:41 -0500
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/4] configure.ac: apply necessary quotes to result of
+ macro expansion.
+Message-ID: <20150212081039.GL11309@verge.net.au>
+References: <1423572374-20841-1-git-send-email-yszhou4tech@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20150211230807.GA6735@verge.net.au>
-References: <1423172184-8076-1-git-send-email-2ameya@gmail.com>
- <20150211230807.GA6735@verge.net.au>
-Date: Thu, 12 Feb 2015 00:04:41 -0800
-Message-ID: <CAFAJAEweOaeMBvQsNnZcQRwFU0gsVL7=t6Vx8izY2TUzUZVbcg@mail.gmail.com>
-Subject: Re: [PATCH] multiboot: fix crash on NULL kernel command line
-From: Ameya Palande <2ameya@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1423572374-20841-1-git-send-email-yszhou4tech@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +24,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: Yousong Zhou <yszhou4tech@gmail.com>
 Cc: kexec@lists.infradead.org
 
-On Wed, Feb 11, 2015 at 3:08 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, Feb 05, 2015 at 01:36:24PM -0800, Ameya Palande wrote:
->> If "--command-line" option is not specified, then kexec segfaults while
->> dereferencing NULL command line string pointer. While we are at it, also
->> fix indentation and use '{' and '}' consistently.
->>
->> Signed-off-by: Ameya Palande <2ameya@gmail.com>
->
-> Somehow I missed this. Please CC me on patches for kexec-tools as
-> it makes it easier for me to see them.
+On Tue, Feb 10, 2015 at 08:46:11PM +0800, Yousong Zhou wrote:
+> This can fix the following error when searching for lzma support and
+> while at it also apply the practice to other uses of the same pattern.
+> 
+> 	checking for lzma_code in -llzma... ./configure: line 4756: ac_fn_c_try_link: command not found
 
-Sure!
-
-> Please resubmit this patch split up so that fixes and cleanups are separate.
-> One patch per issue is the rule of thumb. This makes it easier to review
-> and prioritise patches.
-
-Looks like you already applied it :) Thanks!
-
-Cheers,
-Ameya.
+Thanks, I have applied this and the other three patches in the series.
 
 _______________________________________________
 kexec mailing list
