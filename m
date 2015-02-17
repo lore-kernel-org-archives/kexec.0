@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x236.google.com ([2607:f8b0:400e:c03::236])
+Received: from mail-ob0-x22f.google.com ([2607:f8b0:4003:c01::22f])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YLpKR-0006dI-Oy
- for kexec@lists.infradead.org; Thu, 12 Feb 2015 08:40:56 +0000
-Received: by mail-pa0-f54.google.com with SMTP id kx10so9924838pab.13
- for <kexec@lists.infradead.org>; Thu, 12 Feb 2015 00:40:33 -0800 (PST)
-From: Ameya Palande <2ameya@gmail.com>
-Subject: [PATCH] i386: bzImage: Fix -Wunused-but-set-variable compilation
- warning
-Date: Thu, 12 Feb 2015 00:40:18 -0800
-Message-Id: <1423730418-5173-1-git-send-email-2ameya@gmail.com>
+ id 1YNnFa-0004Hy-S2
+ for kexec@lists.infradead.org; Tue, 17 Feb 2015 18:52:03 +0000
+Received: by mail-ob0-f175.google.com with SMTP id va2so56673682obc.6
+ for <kexec@lists.infradead.org>; Tue, 17 Feb 2015 10:51:40 -0800 (PST)
 MIME-Version: 1.0
+In-Reply-To: <1423730418-5173-1-git-send-email-2ameya@gmail.com>
+References: <1423730418-5173-1-git-send-email-2ameya@gmail.com>
+Date: Tue, 17 Feb 2015 10:51:40 -0800
+Message-ID: <CAFAJAEyMNZLJspRZKFyOc5GCDqcok47Joaa-f_aiMU3dFZ48-Q@mail.gmail.com>
+Subject: Re: [PATCH] i386: bzImage: Fix -Wunused-but-set-variable compilation
+ warning
+From: Ameya Palande <2ameya@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,25 +26,13 @@ Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>, Ameya Palande <2ameya@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>
 
-a2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYzoxMTE6ODogd2FybmluZzogdmFyaWFibGUK
-4oCYa2VybmVsX3ZlcnNpb27igJkgc2V0IGJ1dCBub3QgdXNlZCBbLVd1bnVzZWQtYnV0LXNldC12
-YXJpYWJsZV0KClNpZ25lZC1vZmYtYnk6IEFtZXlhIFBhbGFuZGUgPDJhbWV5YUBnbWFpbC5jb20+
-Ci0tLQoga2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYyB8IDIgLS0KIDEgZmlsZSBjaGFu
-Z2VkLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1i
-ekltYWdlLmMgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMtYnpJbWFnZS5jCmluZGV4IGU3YmMxZDYu
-LmRmODk4NWQgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmMKKysr
-IGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLWJ6SW1hZ2UuYwpAQCAtMTA4LDcgKzEwOCw2IEBAIGlu
-dCBkb19iekltYWdlX2xvYWQoc3RydWN0IGtleGVjX2luZm8gKmluZm8sCiAJc3RydWN0IHg4Nl9s
-aW51eF9oZWFkZXIgc2V0dXBfaGVhZGVyOwogCXN0cnVjdCB4ODZfbGludXhfcGFyYW1faGVhZGVy
-ICpyZWFsX21vZGU7CiAJaW50IHNldHVwX3NlY3RzOwotCWNoYXIgKmtlcm5lbF92ZXJzaW9uOwog
-CXNpemVfdCBzaXplOwogCWludCBrZXJuMTZfc2l6ZTsKIAl1bnNpZ25lZCBsb25nIHNldHVwX2Jh
-c2UsIHNldHVwX3NpemU7CkBAIC0xMzQsNyArMTMzLDYgQEAgaW50IGRvX2J6SW1hZ2VfbG9hZChz
-dHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywKIAl9CiAKIAlrZXJuMTZfc2l6ZSA9IChzZXR1cF9zZWN0
-cyArMSkgKjUxMjsKLQlrZXJuZWxfdmVyc2lvbiA9ICgoY2hhciAqKSZzZXR1cF9oZWFkZXIpICsg
-NTEyICsgc2V0dXBfaGVhZGVyLmt2ZXJfYWRkcjsKIAlpZiAoa2VybmVsX2xlbiA8IGtlcm4xNl9z
-aXplKSB7CiAJCWZwcmludGYoc3RkZXJyLCAiQnpJbWFnZSB0cnVuY2F0ZWQ/XG4iKTsKIAkJcmV0
-dXJuIC0xOwotLSAKMS44LjMuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTI6NDAgQU0sIEFtZXlhIFBhbGFuZGUgPDJhbWV5YUBn
+bWFpbC5jb20+IHdyb3RlOgo+IGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1iekltYWdlLmM6MTExOjg6
+IHdhcm5pbmc6IHZhcmlhYmxlCj4g4oCYa2VybmVsX3ZlcnNpb27igJkgc2V0IGJ1dCBub3QgdXNl
+ZCBbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KPgo+IFNpZ25lZC1vZmYtYnk6IEFtZXlhIFBh
+bGFuZGUgPDJhbWV5YUBnbWFpbC5jb20+CgpBbnkgdXBkYXRlPwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
