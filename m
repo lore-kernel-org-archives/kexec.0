@@ -1,18 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-x235.google.com ([2607:f8b0:4003:c01::235])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YNnFy-0004Lb-PR
- for kexec@lists.infradead.org; Tue, 17 Feb 2015 18:52:27 +0000
-Received: by mail-ob0-f181.google.com with SMTP id vb8so56593682obc.12
- for <kexec@lists.infradead.org>; Tue, 17 Feb 2015 10:52:03 -0800 (PST)
+Message-Id: <5199b0097cb85d24ce1a97ac3ad06dbc75703baf.1424221020.git.geoff@infradead.org>
+In-Reply-To: <cover.1424221020.git.geoff@infradead.org>
+References: <cover.1424221020.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH 1/2] kexec: Fix compiler ambiguous else warning
 MIME-Version: 1.0
-In-Reply-To: <1423730066-4587-1-git-send-email-2ameya@gmail.com>
-References: <1423730066-4587-1-git-send-email-2ameya@gmail.com>
-Date: Tue, 17 Feb 2015 10:52:03 -0800
-Message-ID: <CAFAJAExNzO5h2=MYSEZ01z9omGyAkDG8xZvAPV=VPtfcqCrs_A@mail.gmail.com>
-Subject: Re: [PATCH] i386: elf: Fix -Wunused-but-set-variable compilation
- warning
-From: Ameya Palande <2ameya@gmail.com>
+Date: Wed, 18 Feb 2015 01:00:07 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,14 +18,30 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-T24gVGh1LCBGZWIgMTIsIDIwMTUgYXQgMTI6MzQgQU0sIEFtZXlhIFBhbGFuZGUgPDJhbWV5YUBn
-bWFpbC5jb20+IHdyb3RlOgo+IGtleGVjL2FyY2gvaTM4Ni9rZXhlYy1lbGYteDg2LmM6OTc6Njog
-d2FybmluZzogdmFyaWFibGUKPiDigJhtb2RpZmllZF9jbWRsaW5lX2xlbuKAmSBzZXQgYnV0IG5v
-dCB1c2VkIFstV3VudXNlZC1idXQtc2V0LXZhcmlhYmxlXQo+ICAgaW50IG1vZGlmaWVkX2NtZGxp
-bmVfbGVuOwo+Cj4gU2lnbmVkLW9mZi1ieTogQW1leWEgUGFsYW5kZSA8MmFtZXlhQGdtYWlsLmNv
-bT4KCkFueSB1cGRhdGU/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+QWRkIGJyYWNlcyB0byBpZiBzdGF0bWVudHMgaW4gZnMyZHQuYy4gIEZpeGVzIHdhcm5pbmdzIGxp
+a2UgdGhlc2Ugd2hlbiBjb21waWxpbmcKd2l0aCBnY2MgNC45LjE6CgogIGtleGVjL2ZzMmR0LmM6
+IHdhcm5pbmc6IHN1Z2dlc3QgZXhwbGljaXQgYnJhY2VzIHRvIGF2b2lkIGFtYmlndW91cyDigJhl
+bHNl4oCZIFstV3BhcmVudGhlc2VzXQoKU2lnbmVkLW9mZi1ieTogR2VvZmYgTGV2YW5kIDxnZW9m
+ZkBpbmZyYWRlYWQub3JnPgotLS0KIGtleGVjL2ZzMmR0LmMgfCA1ICsrKy0tCiAxIGZpbGUgY2hh
+bmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVj
+L2ZzMmR0LmMgYi9rZXhlYy9mczJkdC5jCmluZGV4IDNiNDQzMmQuLmZhN2I1NTAgMTAwNjQ0Ci0t
+LSBhL2tleGVjL2ZzMmR0LmMKKysrIGIva2V4ZWMvZnMyZHQuYwpAQCAtMTIyLDE2ICsxMjIsMTcg
+QEAgc3RhdGljIHZvaWQgY2hlY2twcm9wKGNoYXIgKm5hbWUsIHVuc2lnbmVkICpkYXRhLCBpbnQg
+bGVuKQogCWVsc2UgaWYgKCFzdHJjbXAobmFtZSwgInJ0YXMtc2l6ZSIpIHx8CiAJCQkhc3RyY21w
+KG5hbWUsICJsaW51eCx0Y2Utc2l6ZSIpKQogCQlzaXplID0gYmUzMl90b19jcHUoKmRhdGEpOwot
+CWVsc2UgaWYgKHJldXNlX2luaXRyZCAmJiAhc3RyY21wKG5hbWUsICJsaW51eCxpbml0cmQtc3Rh
+cnQiKSkKKwllbHNlIGlmIChyZXVzZV9pbml0cmQgJiYgIXN0cmNtcChuYW1lLCAibGludXgsaW5p
+dHJkLXN0YXJ0IikpIHsKIAkJaWYgKGxlbiA9PSA4KQogCQkJYmFzZSA9IGJlNjRfdG9fY3B1KCoo
+dW5zaWduZWQgbG9uZyBsb25nICopIGRhdGEpOwogCQllbHNlCiAJCQliYXNlID0gYmUzMl90b19j
+cHUoKmRhdGEpOwotCWVsc2UgaWYgKHJldXNlX2luaXRyZCAmJiAhc3RyY21wKG5hbWUsICJsaW51
+eCxpbml0cmQtZW5kIikpCisJfSBlbHNlIGlmIChyZXVzZV9pbml0cmQgJiYgIXN0cmNtcChuYW1l
+LCAibGludXgsaW5pdHJkLWVuZCIpKSB7CiAJCWlmIChsZW4gPT0gOCkKIAkJCWVuZCA9IGJlNjRf
+dG9fY3B1KCoodW5zaWduZWQgbG9uZyBsb25nICopIGRhdGEpOwogCQllbHNlCiAJCQllbmQgPSBi
+ZTMyX3RvX2NwdSgqZGF0YSk7CisJfQogCiAJaWYgKHNpemUgJiYgZW5kKQogCQlkaWUoInVucmVj
+b3ZlcmFibGUgZXJyb3I6IHNpemUgYW5kIGVuZCBzZXQgYXQgc2FtZSB0aW1lXG4iKTsKLS0gCjIu
+MS4wCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
