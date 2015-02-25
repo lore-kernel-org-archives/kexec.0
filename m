@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YQTnX-000137-TM
- for kexec@lists.infradead.org; Wed, 25 Feb 2015 04:42:12 +0000
-Date: Wed, 25 Feb 2015 13:41:49 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/1] kexec: iomem: fix callbacks params for sh and x86
- archs
-Message-ID: <20150225044149.GC23320@verge.net.au>
-References: <1424780328-31722-1-git-send-email-r.peniaev@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1424780328-31722-1-git-send-email-r.peniaev@gmail.com>
+Message-ID: <1424902170.17282.9.camel@infradead.org>
+Subject: Re: [PATCH v2 2/8] arm64: Convert hcalls to use ISS field
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 25 Feb 2015 14:09:30 -0800
+In-Reply-To: <20150219205714.GC24460@cbox>
+References: <cover.1421449714.git.geoff@infradead.org>
+ <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
+ <1422660828.21823.40.camel@infradead.org> <20150219205714.GC24460@cbox>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,20 +20,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Roman Pen <r.peniaev@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Christoffer Dall <christoffer.dall@linaro.org>
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Feb 24, 2015 at 09:18:47PM +0900, Roman Pen wrote:
-> Commit 4362bfac changes params for kexec_iomem_for_each_line from
-> 'unsigned long' to 'unsigned long long'.
-> 
-> This patch fixes forgotten changes for sh and x86 archs.
-> Bug causes incorrect parsing of memory ranges.
-> 
-> Signed-off-by: Roman Pen <r.peniaev@gmail.com>
-> Cc: kexec@lists.infradead.org
+Hi Christoffer,
 
-Thanks, applied.
+On Thu, 2015-02-19 at 21:57 +0100, Christoffer Dall wrote:
+> On Fri, Jan 30, 2015 at 03:33:48PM -0800, Geoff Levand wrote:
+> > To allow for additional hcalls to be defined and to make the arm64 hcall API
+> > more consistent across exception vector routines, change the hcall implementations
+> > to use the ISS field of the ESR_EL2 register to specify the hcall type.
+> 
+> how does this make things more consistent?  Do we have other examples of
+> things using the immediate field which I'm missing?
+
+As I detail in the next paragraph, by consistent I mean in the API exposed,
+not in the implementation.  This point is really secondary to the need for
+more hyper calls as I discuss below.
+
+> > The existing arm64 hcall implementations are limited in that they only allow
+> > for two distinct hcalls; with the x0 register either zero, or not zero.  Also,
+> > the API of the hyp-stub exception vector routines and the KVM exception vector
+> > routines differ; hyp-stub uses a non-zero value in x0 to implement
+> > __hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
+> 
+> this seems orthogonal to the use of the immediate field vs. x0 though,
+> so why it the immediate field preferred again?
+
+When a CPU is reset via cpu_soft_restart() we need to execute the caller
+supplied reset routine at the exception level the kernel was entered at.
+So, for a kernel entered at EL2, we need a way to execute that routine at
+EL2.
+
+The current hyp-stub vector implementation, which uses x0, is limited
+to two hyper calls; __hyp_get_vectors and __hyp_set_vectors.  To
+support cpu_soft_restart() we need a third hyper call, one which
+allows for code to be executed at EL2.  My proposed use of the
+immediate value of the hvc instruction will allow for 2^16 distinct
+hyper calls.
+ 
+> > Define three new preprocessor macros HVC_CALL_HYP, HVC_GET_VECTORS, and
+> > HVC_SET_VECTORS to be used as hcall type specifiers and convert the
+> > existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
+> > to use these new macros when executing an HVC call.  Also change the
+> > corresponding hyp-stub and KVM el1_sync exception vector routines to use these
+> > new macros.
+> > 
+> > Signed-off-by: Geoff Levand <geoff@infradead.org>
+> > ---
+> >  arch/arm64/include/asm/virt.h | 27 +++++++++++++++++++++++++++
+> >  arch/arm64/kernel/hyp-stub.S  | 32 +++++++++++++++++++++-----------
+> >  arch/arm64/kernel/psci.c      |  3 ++-
+> >  arch/arm64/kvm/hyp.S          | 16 +++++++++-------
+> >  4 files changed, 59 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+> > index 7a5df52..eb10368 100644
+> > --- a/arch/arm64/include/asm/virt.h
+> > +++ b/arch/arm64/include/asm/virt.h
+> > @@ -18,6 +18,33 @@
+> >  #ifndef __ASM__VIRT_H
+> >  #define __ASM__VIRT_H
+> >  
+> > +/*
+> > + * The arm64 hcall implementation uses the ISS field of the ESR_EL2 register to
+> > + * specify the hcall type.  The exception handlers are allowed to use registers
+> > + * x17 and x18 in their implementation.  Any routine issuing an hcall must not
+> > + * expect these registers to be preserved.
+> > + */
+> 
+> I thought the existing use of registers were based on the arm procedure
+> call standard so we didn't have to worry about adding more caller-save
+> registers.
+> 
+> Don't we now have to start adding code around callers to make sure
+> callers know that x17 and x18 may be clobbered?
+
+We use x17 and x18 to allow hyper calls to work without a stack, which
+is needed for cpu_soft_restart(). The procedure call standard says that
+these are temporary registers, so a C compiler should not expect these
+to be preserved.
+
+-Geoff
+
+
+
 
 _______________________________________________
 kexec mailing list
