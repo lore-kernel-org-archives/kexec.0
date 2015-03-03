@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1425338536.9265.2.camel@infradead.org>
-Subject: Re: [PATCH v2 2/8] arm64: Convert hcalls to use ISS field
-From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 02 Mar 2015 15:22:16 -0800
-In-Reply-To: <20150302221355.GA12902@lvm>
-References: <cover.1421449714.git.geoff@infradead.org>
- <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
- <1422660828.21823.40.camel@infradead.org> <20150219205714.GC24460@cbox>
- <1424902170.17282.9.camel@infradead.org> <20150302221355.GA12902@lvm>
-Mime-Version: 1.0
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YSbkQ-0001es-Lr
+ for kexec@lists.infradead.org; Tue, 03 Mar 2015 01:35:47 +0000
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: RE: [PATCH] makedumpfile: Use file offset in initialize_mmap()
+Date: Tue, 3 Mar 2015 01:31:57 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D943B8@BPXM01GP.gisp.nec.co.jp>
+References: <20150227131409.33dd14a4@hananiah.suse.cz>
+In-Reply-To: <20150227131409.33dd14a4@hananiah.suse.cz>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,60 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoffer Dall <christoffer.dall@linaro.org>
-Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Christoffer,
+Hello Petr,
 
-On Mon, 2015-03-02 at 14:13 -0800, Christoffer Dall wrote:
-> On Wed, Feb 25, 2015 at 02:09:30PM -0800, Geoff Levand wrote:
-> > The current hyp-stub vector implementation, which uses x0, is limited
-> > to two hyper calls; __hyp_get_vectors and __hyp_set_vectors.  To
-> > support cpu_soft_restart() we need a third hyper call, one which
-> > allows for code to be executed at EL2.  My proposed use of the
-> > immediate value of the hvc instruction will allow for 2^16 distinct
-> > hyper calls.  
-> 
-> right, but using x0 allows for 2^64 distinct hypercalls.  Just to be
-> clear, I'm fine with using immediate field if there are no good reasons
-> not to, I was just curious as to what direct benefit it has.  After
-> thinking about it a bit, from my point of view, the benefit would be the
-> clarity that x0 is first argument like a normal procedure call, so no
-> need to shift things around.  Is this part of the equation or am I
-> missing the overall purpose here?
+>Hi all,
+>
+>update_mmap_range() expects a file offset as its first argument, but
+>initialize_mmap() passes a physical address. Since the first segment
+>usually starts at physical addr 0 on S/390, but there is no segment
+>at file offset 0, update_mmap_range() fails, and makedumpfile falls
+>back to read().
 
-Yes, in general it will make marshaling of args, etc. easier.  Also,
-to me, if we are going to change the implementation it seems to be
-the most natural way.
- 
-> > > > + * The arm64 hcall implementation uses the ISS field of the ESR_EL2 register to
-> > > > + * specify the hcall type.  The exception handlers are allowed to use registers
-> > > > + * x17 and x18 in their implementation.  Any routine issuing an hcall must not
-> > > > + * expect these registers to be preserved.
-> > > > + */
-> > > 
-> > > I thought the existing use of registers were based on the arm procedure
-> > > call standard so we didn't have to worry about adding more caller-save
-> > > registers.
-> > > 
-> > > Don't we now have to start adding code around callers to make sure
-> > > callers know that x17 and x18 may be clobbered?
-> > 
-> > We use x17 and x18 to allow hyper calls to work without a stack, which
-> > is needed for cpu_soft_restart(). The procedure call standard says that
-> > these are temporary registers, so a C compiler should not expect these
-> > to be preserved.
-> > 
-> Then why not use r9-15 or r0-r7 as the AACPS clearly specifies as
-> caller preserve instead of the registers which may have special meaning
-> etc.?
-
-OK, I will change these to x9, x10.  I'll post a v8 patch set soon.
-
--Geoff
+I'll merge it into v1.5.8, thanks.
 
 
+Thanks
+Atsushi Kumagai
 
+>@Michael: I wonder how you actually tested the kernel mmap patches;
+>this bug has prevented mmap on all my s390 systems...
+>
+>Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+>
+>---
+> makedumpfile.c |    2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -347,7 +347,7 @@ initialize_mmap(void) {
+> 	info->mmap_buf = MAP_FAILED;
+>
+> 	get_pt_load(0, &phys_start, NULL, NULL, NULL);
+>-	if (!update_mmap_range(phys_start, 1))
+>+	if (!update_mmap_range(paddr_to_offset(phys_start), 1))
+> 		return FALSE;
+>
+> 	return TRUE;
 
 _______________________________________________
 kexec mailing list
