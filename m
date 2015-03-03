@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <54F62BF4.1070306@codeaurora.org>
-Date: Tue, 03 Mar 2015 16:47:32 -0500
-From: Christopher Covington <cov@codeaurora.org>
-MIME-Version: 1.0
+Message-ID: <1425422151.9265.13.camel@infradead.org>
 Subject: Re: [PATCH v2 2/8] arm64: Convert hcalls to use ISS field
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 03 Mar 2015 14:35:51 -0800
+In-Reply-To: <54F62BF4.1070306@codeaurora.org>
 References: <cover.1421449714.git.geoff@infradead.org>
  <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
  <1422660828.21823.40.camel@infradead.org> <20150219205714.GC24460@cbox>
  <1424902170.17282.9.camel@infradead.org> <20150302221355.GA12902@lvm>
- <1425338536.9265.2.camel@infradead.org>
-In-Reply-To: <1425338536.9265.2.camel@infradead.org>
+ <1425338536.9265.2.camel@infradead.org> <54F62BF4.1070306@codeaurora.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,53 +22,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
+To: Christopher Covington <cov@codeaurora.org>
 Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
 
-Hi Geoff,
+Hi Christopher,
 
-On 03/02/2015 06:22 PM, Geoff Levand wrote:
-> Hi Christoffer,
+On Tue, 2015-03-03 at 16:47 -0500, Christopher Covington wrote:
+> On 03/02/2015 06:22 PM, Geoff Levand wrote:
+> > Yes, in general it will make marshaling of args, etc. easier.  Also,
+> > to me, if we are going to change the implementation it seems to be
+> > the most natural way.
 > 
-> On Mon, 2015-03-02 at 14:13 -0800, Christoffer Dall wrote:
->> On Wed, Feb 25, 2015 at 02:09:30PM -0800, Geoff Levand wrote:
->>> The current hyp-stub vector implementation, which uses x0, is limited
->>> to two hyper calls; __hyp_get_vectors and __hyp_set_vectors.  To
->>> support cpu_soft_restart() we need a third hyper call, one which
->>> allows for code to be executed at EL2.  My proposed use of the
->>> immediate value of the hvc instruction will allow for 2^16 distinct
->>> hyper calls.  
->>
->> right, but using x0 allows for 2^64 distinct hypercalls.  Just to be
->> clear, I'm fine with using immediate field if there are no good reasons
->> not to, I was just curious as to what direct benefit it has.  After
->> thinking about it a bit, from my point of view, the benefit would be the
->> clarity that x0 is first argument like a normal procedure call, so no
->> need to shift things around.  Is this part of the equation or am I
->> missing the overall purpose here?
+> From reading the architecture documentation, I too expected the hypervisor
+> call instruction's immediate and the instruction specific syndrome to be used.
+> However I vaguely recall someone pointing out that reading the exception
+> syndrome register and extracting the instruction specific syndrome is bound to
+> take longer than simply using a general purpose register.
 > 
-> Yes, in general it will make marshaling of args, etc. easier.  Also,
-> to me, if we are going to change the implementation it seems to be
-> the most natural way.
+> One might also consider alignment with the SMC Calling Convention document
+> [1], which while originally written for SMC, is also used for HVC by PSCI [2].
+> 
+> 1. http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0028a/index.html
+> 2. http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0022c/index.html
 
-From reading the architecture documentation, I too expected the hypervisor
-call instruction's immediate and the instruction specific syndrome to be used.
-However I vaguely recall someone pointing out that reading the exception
-syndrome register and extracting the instruction specific syndrome is bound to
-take longer than simply using a general purpose register.
+On looking at the SMC document, I found this:
+ 
+  The SMC instruction encodes an immediate value as defined by the ARM
+  architecture [1][2]. The size of this and mechanism to access the
+  immediate value differ between the ARM instruction sets. Additionally,
+  it is time consuming for 32-bit Secure Monitor code to access this
+  immediate value. Consequently:
 
-One might also consider alignment with the SMC Calling Convention document
-[1], which while originally written for SMC, is also used for HVC by PSCI [2].
+   o An SMC immediate value of Zero must be used.
+   o All other SMC immediate values are reserved. 
 
-1. http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0028a/index.html
-2. http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0022c/index.html
+The first problem of differing access methods does not exist for our
+case, the kernel will always use the same method.
 
-Chris
+As for the second problem, the current implementation already reads
+esr_el2.  The new code just adds an AND instruction to mask the ISS
+field.  I don't think this would be more overhead than shifting
+registers.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+One alternative would be to use a high register, say x7, and limit the
+hcalls to args x0-x6, but I don't think this gains much over using the
+immediate.
+
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
