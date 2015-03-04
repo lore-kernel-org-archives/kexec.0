@@ -1,16 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YT7lc-0006jx-Kd
- for kexec@lists.infradead.org; Wed, 04 Mar 2015 11:47:09 +0000
-Message-ID: <54F6F0A0.1010704@hitachi.com>
-Date: Wed, 04 Mar 2015 20:46:40 +0900
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-MIME-Version: 1.0
-Subject: Re: [RESEND PATCH] kernel/panic/kexec: fix
- "crash_kexec_post_notifiers" option issue in oops path
-References: <20150304.175648.86711471.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20150304.175648.86711471.d.hatayama@jp.fujitsu.com>
+Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YT8fQ-0006rg-0z
+ for kexec@lists.infradead.org; Wed, 04 Mar 2015 12:44:49 +0000
+Received: from /spool/local
+ by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 4 Mar 2015 12:44:23 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9C91017D805A
+ for <kexec@lists.infradead.org>; Wed,  4 Mar 2015 12:44:40 +0000 (GMT)
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t24CiLuI64749762
+ for <kexec@lists.infradead.org>; Wed, 4 Mar 2015 12:44:21 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t24CiKbc009610
+ for <kexec@lists.infradead.org>; Wed, 4 Mar 2015 05:44:20 -0700
+Date: Wed, 4 Mar 2015 13:44:18 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH] makedumpfile: Use file offset in initialize_mmap()
+Message-ID: <20150304134418.4d1f0cbf@holzheu>
+In-Reply-To: <20150303110750.3feed6ec@hananiah.suse.cz>
+References: <20150227131409.33dd14a4@hananiah.suse.cz>
+ <20150303101543.416b5cb4@holzheu>
+ <20150303110750.3feed6ec@hananiah.suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,91 +42,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, hidehiro.kawai.ez@hitachi.com, vgoyal@redhat.com
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec mailing list <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Jan Willeke <willeke@de.ibm.com>
 
-(2015/03/04 17:56), HATAYAMA Daisuke wrote:
-> The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
-> "crash_kexec_post_notifiers" kernel boot option, which toggles
-> wheather panic() calls crash_kexec() before or after panic_notifiers
-> and dump kmsg.
+On Tue, 3 Mar 2015 11:07:50 +0100
+Petr Tesarik <ptesarik@suse.cz> wrote:
+
+> On Tue, 3 Mar 2015 10:15:43 +0100
+> Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+
+[snip]
+
+> > I did a quick test with your patch and it looks like the mmap mode
+> > on my s390 system is slower than the read mode:
 > 
-> The problem is that the commit overlooks panic_on_oops kernel boot
-> option. If it is enabled, crash_kexec() is called directly without
-> going through panic() in oops path.
-> 
-> To fix this issue, this patch adds a check to
-> "crash_kexec_post_notifiers" in the condition of kexec_should_crash().
-> 
+> That's sad. OTOH I had similar results on a file mmap some time ago.
+> The cost of copying data was less than the cost of handling a series of
+> minor page faults.
 
-Thank you for fixing this issue :)
+I think we understood the problem: As for the read path, also for mmap
+the memory is copied into a temporary buffer:
 
-Reviewed-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+ static int read_with_mmap(off_t offset, void *bufptr, ...)
+ {
 
-I think this is fundamentally needed, because crash_kexec (a.k.a.
-kdump) is mainly for shooting bugs which cause kernel panic.
-Thus, to avoid the scenario that something went wrong on kernel
-panic and failed to get kdump, we have to call panic_notifiers
-before that.
-
-> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> Tested-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-> ---
->  include/linux/kernel.h | 3 +++
->  kernel/kexec.c         | 2 ++
->  kernel/panic.c         | 2 +-
->  3 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 64ce58b..f47379f 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
->  extern int panic_on_io_nmi;
->  extern int panic_on_warn;
->  extern int sysctl_panic_on_stackoverflow;
-> +
-> +extern bool crash_kexec_post_notifiers;
-> +
->  /*
->   * Only to be used by arch init code. If the user over-wrote the default
->   * CONFIG_PANIC_TIMEOUT, honor it.
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 9a8a01a..0ecf252 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -84,6 +84,8 @@ struct resource crashk_low_res = {
->  
->  int kexec_should_crash(struct task_struct *p)
->  {
-> +	if (crash_kexec_post_notifiers)
-> +		return 0;
->  	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
->  		return 1;
->  	return 0;
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 4d8d6f9..6582546 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -32,7 +32,7 @@ static unsigned long tainted_mask;
->  static int pause_on_oops;
->  static int pause_on_oops_flag;
->  static DEFINE_SPINLOCK(pause_on_oops_lock);
-> -static bool crash_kexec_post_notifiers;
-> +bool crash_kexec_post_notifiers;
->  int panic_on_warn __read_mostly;
->  
->  int panic_timeout = CONFIG_PANIC_TIMEOUT;
-> 
+ ...
+        memcpy(bufptr, info->mmap_buf +
+               (offset - info->mmap_start_offset), read_size);
 
 
--- 
-Masami HIRAMATSU
-Software Platform Research Dept. Linux Technology Research Center
-Hitachi, Ltd., Yokohama Research Laboratory
-E-mail: masami.hiramatsu.pt@hitachi.com
+Because on s390 copy_to_user() is as fast as userspace memcpy() we
+don't have any benefit here. The only saving is due to less
+mmap()/munmap() than read() system calls because bigger chunks
+are mapped than read.
 
+If you specify -d 31 the dump memory is fragmented and we have to
+issue more mmap()/munmap() calls and therefore also the system
+call overhead increases.
+
+If we really want to speed up the mmap path on s390 we probably
+have to get rid of the temporary buffer.
+
+What do you think?
+Michael
 
 
 _______________________________________________
