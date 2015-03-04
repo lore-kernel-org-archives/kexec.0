@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1425422151.9265.13.camel@infradead.org>
-Subject: Re: [PATCH v2 2/8] arm64: Convert hcalls to use ISS field
-From: Geoff Levand <geoff@infradead.org>
-Date: Tue, 03 Mar 2015 14:35:51 -0800
-In-Reply-To: <54F62BF4.1070306@codeaurora.org>
-References: <cover.1421449714.git.geoff@infradead.org>
- <6719b2520095926ae0e8ac888663b87f2098f565.1421449714.git.geoff@infradead.org>
- <1422660828.21823.40.camel@infradead.org> <20150219205714.GC24460@cbox>
- <1424902170.17282.9.camel@infradead.org> <20150302221355.GA12902@lvm>
- <1425338536.9265.2.camel@infradead.org> <54F62BF4.1070306@codeaurora.org>
+Received: from mgwkm04.jp.fujitsu.com ([202.219.69.171])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YT57R-0000pP-7M
+ for kexec@lists.infradead.org; Wed, 04 Mar 2015 08:57:30 +0000
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by kw-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id C3248AC0A6B
+ for <kexec@lists.infradead.org>; Wed,  4 Mar 2015 17:57:01 +0900 (JST)
+Date: Wed, 04 Mar 2015 17:56:48 +0900 (JST)
+Message-Id: <20150304.175648.86711471.d.hatayama@jp.fujitsu.com>
+Subject: [RESEND PATCH] kernel/panic/kexec: fix
+ "crash_kexec_post_notifiers" option issue in oops path
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,53 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christopher Covington <cov@codeaurora.org>
-Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: ebiederm@xmission.com, vgoyal@redhat.com
+Cc: masami.hiramatsu.pt@hitachi.com, hidehiro.kawai.ez@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bhe@redhat.com
 
-Hi Christopher,
+The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
+"crash_kexec_post_notifiers" kernel boot option, which toggles
+wheather panic() calls crash_kexec() before or after panic_notifiers
+and dump kmsg.
 
-On Tue, 2015-03-03 at 16:47 -0500, Christopher Covington wrote:
-> On 03/02/2015 06:22 PM, Geoff Levand wrote:
-> > Yes, in general it will make marshaling of args, etc. easier.  Also,
-> > to me, if we are going to change the implementation it seems to be
-> > the most natural way.
-> 
-> From reading the architecture documentation, I too expected the hypervisor
-> call instruction's immediate and the instruction specific syndrome to be used.
-> However I vaguely recall someone pointing out that reading the exception
-> syndrome register and extracting the instruction specific syndrome is bound to
-> take longer than simply using a general purpose register.
-> 
-> One might also consider alignment with the SMC Calling Convention document
-> [1], which while originally written for SMC, is also used for HVC by PSCI [2].
-> 
-> 1. http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0028a/index.html
-> 2. http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0022c/index.html
+The problem is that the commit overlooks panic_on_oops kernel boot
+option. If it is enabled, crash_kexec() is called directly without
+going through panic() in oops path.
 
-On looking at the SMC document, I found this:
+To fix this issue, this patch adds a check to
+"crash_kexec_post_notifiers" in the condition of kexec_should_crash().
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Tested-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+---
+ include/linux/kernel.h | 3 +++
+ kernel/kexec.c         | 2 ++
+ kernel/panic.c         | 2 +-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 64ce58b..f47379f 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
+ extern int sysctl_panic_on_stackoverflow;
++
++extern bool crash_kexec_post_notifiers;
++
+ /*
+  * Only to be used by arch init code. If the user over-wrote the default
+  * CONFIG_PANIC_TIMEOUT, honor it.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 9a8a01a..0ecf252 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -84,6 +84,8 @@ struct resource crashk_low_res = {
  
-  The SMC instruction encodes an immediate value as defined by the ARM
-  architecture [1][2]. The size of this and mechanism to access the
-  immediate value differ between the ARM instruction sets. Additionally,
-  it is time consuming for 32-bit Secure Monitor code to access this
-  immediate value. Consequently:
+ int kexec_should_crash(struct task_struct *p)
+ {
++	if (crash_kexec_post_notifiers)
++		return 0;
+ 	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+ 		return 1;
+ 	return 0;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4d8d6f9..6582546 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -32,7 +32,7 @@ static unsigned long tainted_mask;
+ static int pause_on_oops;
+ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+-static bool crash_kexec_post_notifiers;
++bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
+ 
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+-- 
+1.9.3
 
-   o An SMC immediate value of Zero must be used.
-   o All other SMC immediate values are reserved. 
-
-The first problem of differing access methods does not exist for our
-case, the kernel will always use the same method.
-
-As for the second problem, the current implementation already reads
-esr_el2.  The new code just adds an AND instruction to mask the ISS
-field.  I don't think this would be more overhead than shifting
-registers.
-
-One alternative would be to use a high register, say x7, and limit the
-hcalls to args x0-x6, but I don't think this gains much over using the
-immediate.
-
--Geoff
 
 
 _______________________________________________
