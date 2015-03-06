@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YTsv9-0005pj-I0
- for kexec@lists.infradead.org; Fri, 06 Mar 2015 14:08:08 +0000
-Message-Id: <6f7f78c2a5a4e6fae97c8004e963fcda481077ba.1425650592.git.ptesarik@suse.cz>
+ id 1YTsv9-0005pl-IY
+ for kexec@lists.infradead.org; Fri, 06 Mar 2015 14:08:10 +0000
+Message-Id: <23a49c4e34c7364c97045de2a8f1b73714616ad8.1425650592.git.ptesarik@suse.cz>
 In-Reply-To: <cover.1425650592.git.ptesarik@suse.cz>
 References: <cover.1425650592.git.ptesarik@suse.cz>
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 6 Mar 2015 14:28:34 +0100
-Subject: [PATCH v2 8/8] cleanup: remove unused page_is_fractional
+Date: Fri, 6 Mar 2015 14:07:11 +0100
+Subject: [PATCH v2 5/8] cache: allocate buffers in one big chunk
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +25,74 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: kexec mailing list <kexec@lists.infradead.org>, Jan Willeke <willeke@de.ibm.com>
 
-This function is no longer needed, because mappage_elf() now checks
-whether the region is contiguous both in physical addresses and in
-file offsets.
+This allows callers to change the buffer pointer, because it can be
+reinitialized to the default value in cache_alloc() before returning
+the cache entry.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- elf_info.c | 16 ----------------
- elf_info.h |  2 --
- 2 files changed, 18 deletions(-)
+ cache.c | 26 +++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index 8bce942..f584393 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -583,22 +583,6 @@ offset_to_pt_load_end(off_t offset)
- 	return pt_load_end;
+diff --git a/cache.c b/cache.c
+index 344b4f6..ccd67ca 100644
+--- a/cache.c
++++ b/cache.c
+@@ -32,23 +32,23 @@ static int avail = CACHE_SIZE;
+ 
+ static struct cache used, pending;
+ 
++static void *cachebuf;
++
+ int
+ cache_init(void)
+ {
+-	void *bufptr;
+ 	int i;
+ 
+-	for (i = 0; i < CACHE_SIZE; ++i) {
+-		bufptr = malloc(info->page_size);
+-		if (bufptr == NULL) {
+-			ERRMSG("Can't allocate memory for cache. %s\n",
+-			       strerror(errno));
+-			return FALSE;
+-		}
+-		entries[i].bufptr = bufptr;
+-		pool[i] = &entries[i];
++	cachebuf = malloc(info->page_size * CACHE_SIZE);
++	if (cachebuf == NULL) {
++		ERRMSG("Can't allocate memory for cache. %s\n",
++		       strerror(errno));
++		return FALSE;
+ 	}
+ 
++	for (i = 0; i < CACHE_SIZE; ++i)
++		pool[i] = &entries[i];
++
+ 	return TRUE;
  }
  
--/*
-- * Judge whether the page is fractional or not.
-- */
--int
--page_is_fractional(off_t page_offset)
--{
--	if (page_offset % info->page_size != 0)
--		return TRUE;
--
--	if (offset_to_pt_load_end(page_offset) - page_offset
--	    < info->page_size)
--		return TRUE;
--
--	return FALSE;
--}
--
- unsigned long long
- vaddr_to_paddr_general(unsigned long long vaddr)
+@@ -98,6 +98,7 @@ struct cache_entry *
+ cache_alloc(unsigned long long paddr)
  {
-diff --git a/elf_info.h b/elf_info.h
-index e712253..7ae6bf8 100644
---- a/elf_info.h
-+++ b/elf_info.h
-@@ -40,8 +40,6 @@ unsigned long long vaddr_to_paddr_general(unsigned long long vaddr);
- off_t vaddr_to_offset_slow(int fd, char *filename, unsigned long long vaddr);
- unsigned long long get_max_paddr(void);
+ 	struct cache_entry *entry = NULL;
++	int idx;
  
--int page_is_fractional(off_t page_offset);
--
- int get_elf64_ehdr(int fd, char *filename, Elf64_Ehdr *ehdr);
- int get_elf32_ehdr(int fd, char *filename, Elf32_Ehdr *ehdr);
- int get_elf_info(int fd, char *filename);
+ 	if (avail) {
+ 		entry = pool[--avail];
+@@ -107,8 +108,11 @@ cache_alloc(unsigned long long paddr)
+ 	} else
+ 		return NULL;
+ 
+-	add_entry(&pending, entry);
++	idx = entry - entries;
+ 	entry->paddr = paddr;
++	entry->bufptr = cachebuf + idx * info->page_size;
++	add_entry(&pending, entry);
++
+ 	return entry;
+ }
+ 
 -- 
 1.8.4.5
 
