@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YTvBE-0006Si-LX
- for kexec@lists.infradead.org; Fri, 06 Mar 2015 16:32:53 +0000
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 3FD0EAC0D54
- for <kexec@lists.infradead.org>;
- Sat,  7 Mar 2015 01:32:27 +0900 (JST)
-Message-ID: <54F9D645.2050008@jp.fujitsu.com>
-Date: Sat, 07 Mar 2015 01:31:01 +0900
-From: =?ISO-2022-JP?B?IkhhdGF5YW1hLCBEYWlzdWtlLxskQkgqOzMbKEIgGyRCQmdKZRsoQg==?=
- =?ISO-2022-JP?B?Ig==?= <d.hatayama@jp.fujitsu.com>
+ id 1YTwg5-0007KF-1K
+ for kexec@lists.infradead.org; Fri, 06 Mar 2015 18:08:50 +0000
+Date: Fri, 6 Mar 2015 13:08:19 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
+ option issue in oops path
+Message-ID: <20150306180819.GB15736@redhat.com>
+References: <54F9D645.2050008@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers" option
- issue in oops path
+Content-Disposition: inline
+In-Reply-To: <54F9D645.2050008@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,93 +20,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, Vivek Goyal <vgoyal@redhat.com>
-Cc: masami.hiramatsu.pt@hitachi.com, hidehiro.kawai.ez@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bhe@redhat.com
+To: =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>
+Cc: bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com
 
-The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
-"crash_kexec_post_notifiers" kernel boot option, which toggles
-wheather panic() calls crash_kexec() before panic_notifiers and dump
-kmsg or after.
-
-The problem is that the commit overlooks panic_on_oops kernel boot
-option. If it is enabled, crash_kexec() is called directly without
-going through panic() in oops path.
-
-To fix this issue, this patch adds a check to
-"crash_kexec_post_notifiers" in the condition of kexec_should_crash().
-
-Also, put a comment in kexec_should_crash() to explain not obvious
-things on this patch.
-
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-Tested-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Reviewed-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
----
- include/linux/kernel.h |  3 +++
- kernel/kexec.c         | 11 +++++++++++
- kernel/panic.c         |  2 +-
- 3 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index d6d630d..07483c7 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
- extern int panic_on_io_nmi;
- extern int panic_on_warn;
- extern int sysctl_panic_on_stackoverflow;
-+
-+extern bool crash_kexec_post_notifiers;
-+
- /*
-  * Only to be used by arch init code. If the user over-wrote the default
-  * CONFIG_PANIC_TIMEOUT, honor it.
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 38c25b1..5bf6077 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -84,6 +84,17 @@ struct resource crashk_low_res = {
-
- int kexec_should_crash(struct task_struct *p)
- {
-+	/*
-+	 * If crash_kexec_post_notifiers is enabled, don't run
-+	 * crash_kexec() here yet, which must be run after panic
-+	 * notifiers in panic().
-+	 */
-+	if (crash_kexec_post_notifiers)
-+		return 0;
-+	/*
-+	 * There are 4 panic() calls in do_exit() path, each of which
-+	 * calls corresponds to each of these 4 conditions.
-+	 */
- 	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
- 		return 1;
- 	return 0;
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 8136ad7..79ca912 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -32,7 +32,7 @@ static unsigned long tainted_mask;
- static int pause_on_oops;
- static int pause_on_oops_flag;
- static DEFINE_SPINLOCK(pause_on_oops_lock);
--static bool crash_kexec_post_notifiers;
-+bool crash_kexec_post_notifiers;
- int panic_on_warn __read_mostly;
-
- int panic_timeout = CONFIG_PANIC_TIMEOUT;
--- 
-1.9.3
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBNYXIgMDcsIDIwMTUgYXQgMDE6MzE6MDFBTSArMDkwMCwgIkhhdGF5YW1hLCBEYWlz
+dWtlL+eVkeWxsSDlpKfovJQiIHdyb3RlOgo+IFRoZSBjb21taXQgZjA2ZTUxNTNmNGFlMmUyZjNi
+MDMwMGYwZTI2MGU0MGNiN2ZlZmQ0NSBpbnRyb2R1Y2VkCj4gImNyYXNoX2tleGVjX3Bvc3Rfbm90
+aWZpZXJzIiBrZXJuZWwgYm9vdCBvcHRpb24sIHdoaWNoIHRvZ2dsZXMKPiB3aGVhdGhlciBwYW5p
+YygpIGNhbGxzIGNyYXNoX2tleGVjKCkgYmVmb3JlIHBhbmljX25vdGlmaWVycyBhbmQgZHVtcAo+
+IGttc2cgb3IgYWZ0ZXIuCj4gCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGUgY29tbWl0IG92ZXJs
+b29rcyBwYW5pY19vbl9vb3BzIGtlcm5lbCBib290Cj4gb3B0aW9uLiBJZiBpdCBpcyBlbmFibGVk
+LCBjcmFzaF9rZXhlYygpIGlzIGNhbGxlZCBkaXJlY3RseSB3aXRob3V0Cj4gZ29pbmcgdGhyb3Vn
+aCBwYW5pYygpIGluIG9vcHMgcGF0aC4KPiAKPiBUbyBmaXggdGhpcyBpc3N1ZSwgdGhpcyBwYXRj
+aCBhZGRzIGEgY2hlY2sgdG8KPiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGluIHRoZSBj
+b25kaXRpb24gb2Yga2V4ZWNfc2hvdWxkX2NyYXNoKCkuCj4gCj4gQWxzbywgcHV0IGEgY29tbWVu
+dCBpbiBrZXhlY19zaG91bGRfY3Jhc2goKSB0byBleHBsYWluIG5vdCBvYnZpb3VzCj4gdGhpbmdz
+IG9uIHRoaXMgcGF0Y2guCj4gCj4gU2lnbmVkLW9mZi1ieTogSEFUQVlBTUEgRGFpc3VrZSA8ZC5o
+YXRheWFtYUBqcC5mdWppdHN1LmNvbT4KPiBBY2tlZC1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhh
+dC5jb20+Cj4gVGVzdGVkLWJ5OiBIaWRlaGlybyBLYXdhaSA8aGlkZWhpcm8ua2F3YWkuZXpAaGl0
+YWNoaS5jb20+Cj4gUmV2aWV3ZWQtYnk6IE1hc2FtaSBIaXJhbWF0c3UgPG1hc2FtaS5oaXJhbWF0
+c3UucHRAaGl0YWNoaS5jb20+CgpMb29rcyBnb29kIHRvIG1lLgoKQWNrZWQtYnk6IFZpdmVrIEdv
+eWFsIDx2Z295YWxAcmVkaGF0LmNvbT4KClRoYW5rcwpWaXZlawoKPiAtLS0KPiAgaW5jbHVkZS9s
+aW51eC9rZXJuZWwuaCB8ICAzICsrKwo+ICBrZXJuZWwva2V4ZWMuYyAgICAgICAgIHwgMTEgKysr
+KysrKysrKysKPiAga2VybmVsL3BhbmljLmMgICAgICAgICB8ICAyICstCj4gIDMgZmlsZXMgY2hh
+bmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9p
+bmNsdWRlL2xpbnV4L2tlcm5lbC5oIGIvaW5jbHVkZS9saW51eC9rZXJuZWwuaAo+IGluZGV4IGQ2
+ZDYzMGQuLjA3NDgzYzcgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9rZXJuZWwuaAo+ICsr
+KyBiL2luY2x1ZGUvbGludXgva2VybmVsLmgKPiBAQCAtNDI2LDYgKzQyNiw5IEBAIGV4dGVybiBp
+bnQgcGFuaWNfb25fdW5yZWNvdmVyZWRfbm1pOwo+ICBleHRlcm4gaW50IHBhbmljX29uX2lvX25t
+aTsKPiAgZXh0ZXJuIGludCBwYW5pY19vbl93YXJuOwo+ICBleHRlcm4gaW50IHN5c2N0bF9wYW5p
+Y19vbl9zdGFja292ZXJmbG93Owo+ICsKPiArZXh0ZXJuIGJvb2wgY3Jhc2hfa2V4ZWNfcG9zdF9u
+b3RpZmllcnM7Cj4gKwo+ICAvKgo+ICAgKiBPbmx5IHRvIGJlIHVzZWQgYnkgYXJjaCBpbml0IGNv
+ZGUuIElmIHRoZSB1c2VyIG92ZXItd3JvdGUgdGhlIGRlZmF1bHQKPiAgICogQ09ORklHX1BBTklD
+X1RJTUVPVVQsIGhvbm9yIGl0Lgo+IGRpZmYgLS1naXQgYS9rZXJuZWwva2V4ZWMuYyBiL2tlcm5l
+bC9rZXhlYy5jCj4gaW5kZXggMzhjMjViMS4uNWJmNjA3NyAxMDA2NDQKPiAtLS0gYS9rZXJuZWwv
+a2V4ZWMuYwo+ICsrKyBiL2tlcm5lbC9rZXhlYy5jCj4gQEAgLTg0LDYgKzg0LDE3IEBAIHN0cnVj
+dCByZXNvdXJjZSBjcmFzaGtfbG93X3JlcyA9IHsKPiAKPiAgaW50IGtleGVjX3Nob3VsZF9jcmFz
+aChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnApCj4gIHsKPiArCS8qCj4gKwkgKiBJZiBjcmFzaF9rZXhl
+Y19wb3N0X25vdGlmaWVycyBpcyBlbmFibGVkLCBkb24ndCBydW4KPiArCSAqIGNyYXNoX2tleGVj
+KCkgaGVyZSB5ZXQsIHdoaWNoIG11c3QgYmUgcnVuIGFmdGVyIHBhbmljCj4gKwkgKiBub3RpZmll
+cnMgaW4gcGFuaWMoKS4KPiArCSAqLwo+ICsJaWYgKGNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJz
+KQo+ICsJCXJldHVybiAwOwo+ICsJLyoKPiArCSAqIFRoZXJlIGFyZSA0IHBhbmljKCkgY2FsbHMg
+aW4gZG9fZXhpdCgpIHBhdGgsIGVhY2ggb2Ygd2hpY2gKPiArCSAqIGNhbGxzIGNvcnJlc3BvbmRz
+IHRvIGVhY2ggb2YgdGhlc2UgNCBjb25kaXRpb25zLgo+ICsJICovCj4gIAlpZiAoaW5faW50ZXJy
+dXB0KCkgfHwgIXAtPnBpZCB8fCBpc19nbG9iYWxfaW5pdChwKSB8fCBwYW5pY19vbl9vb3BzKQo+
+ICAJCXJldHVybiAxOwo+ICAJcmV0dXJuIDA7Cj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9wYW5pYy5j
+IGIva2VybmVsL3BhbmljLmMKPiBpbmRleCA4MTM2YWQ3Li43OWNhOTEyIDEwMDY0NAo+IC0tLSBh
+L2tlcm5lbC9wYW5pYy5jCj4gKysrIGIva2VybmVsL3BhbmljLmMKPiBAQCAtMzIsNyArMzIsNyBA
+QCBzdGF0aWMgdW5zaWduZWQgbG9uZyB0YWludGVkX21hc2s7Cj4gIHN0YXRpYyBpbnQgcGF1c2Vf
+b25fb29wczsKPiAgc3RhdGljIGludCBwYXVzZV9vbl9vb3BzX2ZsYWc7Cj4gIHN0YXRpYyBERUZJ
+TkVfU1BJTkxPQ0socGF1c2Vfb25fb29wc19sb2NrKTsKPiAtc3RhdGljIGJvb2wgY3Jhc2hfa2V4
+ZWNfcG9zdF9ub3RpZmllcnM7Cj4gK2Jvb2wgY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnM7Cj4g
+IGludCBwYW5pY19vbl93YXJuIF9fcmVhZF9tb3N0bHk7Cj4gCj4gIGludCBwYW5pY190aW1lb3V0
+ID0gQ09ORklHX1BBTklDX1RJTUVPVVQ7Cj4gLS0gCj4gMS45LjMKPiAKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
