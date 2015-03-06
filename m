@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YTsv9-0005pk-Hs
- for kexec@lists.infradead.org; Fri, 06 Mar 2015 14:08:11 +0000
-Message-Id: <200a9a32354e16bb97aced8892aaa7585bd0eaf7.1425650592.git.ptesarik@suse.cz>
-In-Reply-To: <cover.1425650592.git.ptesarik@suse.cz>
-References: <cover.1425650592.git.ptesarik@suse.cz>
-From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 6 Mar 2015 14:23:34 +0100
-Subject: [PATCH v2 7/8] cache: store mapped regions directly in the cache
+ id 1YTvBE-0006Si-LX
+ for kexec@lists.infradead.org; Fri, 06 Mar 2015 16:32:53 +0000
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 3FD0EAC0D54
+ for <kexec@lists.infradead.org>;
+ Sat,  7 Mar 2015 01:32:27 +0900 (JST)
+Message-ID: <54F9D645.2050008@jp.fujitsu.com>
+Date: Sat, 07 Mar 2015 01:31:01 +0900
+From: =?ISO-2022-JP?B?IkhhdGF5YW1hLCBEYWlzdWtlLxskQkgqOzMbKEIgGyRCQmdKZRsoQg==?=
+ =?ISO-2022-JP?B?Ig==?= <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers" option
+ issue in oops path
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,220 +22,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>, Jan Willeke <willeke@de.ibm.com>
+To: ebiederm@xmission.com, Vivek Goyal <vgoyal@redhat.com>
+Cc: masami.hiramatsu.pt@hitachi.com, hidehiro.kawai.ez@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bhe@redhat.com
 
-Avoid copying data between the mmapped region and the cache. To do that,
-readmem() tries to map the page before reading it. The mmap path and
-the read path are separated: mappage_elf() uses the mmap syscall, and
-readpage_elf() uses the read syscall.
+The commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45 introduced
+"crash_kexec_post_notifiers" kernel boot option, which toggles
+wheather panic() calls crash_kexec() before panic_notifiers and dump
+kmsg or after.
 
-If mmap is successful, readmem() stores the mmap address in the cache
-entry. Of course, the mapping must not be removed until the cache entry
-is evicted, but the cache code has no knowledge about mmap. To solve that
-in a flexible way, a discard callback is added to struct cache_entry and
-called by cache eviction code.
+The problem is that the commit overlooks panic_on_oops kernel boot
+option. If it is enabled, crash_kexec() is called directly without
+going through panic() in oops path.
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+To fix this issue, this patch adds a check to
+"crash_kexec_post_notifiers" in the condition of kexec_should_crash().
+
+Also, put a comment in kexec_should_crash() to explain not obvious
+things on this patch.
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Tested-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Reviewed-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 ---
- cache.c        |   3 ++
- cache.h        |   2 ++
- makedumpfile.c | 105 ++++++++++++++++++++++++++++++++-------------------------
- 3 files changed, 64 insertions(+), 46 deletions(-)
+ include/linux/kernel.h |  3 +++
+ kernel/kexec.c         | 11 +++++++++++
+ kernel/panic.c         |  2 +-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/cache.c b/cache.c
-index 938eda6..963eb76 100644
---- a/cache.c
-+++ b/cache.c
-@@ -108,6 +108,8 @@ cache_alloc(unsigned long long paddr)
- 	} else if (used.tail) {
- 		entry = used.tail;
- 		remove_entry(&used, entry);
-+		if (entry->discard)
-+			entry->discard(entry);
- 	} else
- 		return NULL;
- 
-@@ -115,6 +117,7 @@ cache_alloc(unsigned long long paddr)
- 	entry->paddr = paddr;
- 	entry->bufptr = cachebuf + idx * info->page_size;
- 	entry->buflen = info->page_size;
-+	entry->discard = NULL;
- 	add_entry(&pending, entry);
- 
- 	return entry;
-diff --git a/cache.h b/cache.h
-index 792ba6c..c55cec4 100644
---- a/cache.h
-+++ b/cache.h
-@@ -24,6 +24,8 @@ struct cache_entry {
- 	void *bufptr;
- 	unsigned long buflen;
- 	struct cache_entry *next, *prev;
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index d6d630d..07483c7 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -426,6 +426,9 @@ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
+ extern int sysctl_panic_on_stackoverflow;
 +
-+	void (*discard)(struct cache_entry *);
- };
- 
- int cache_init(void);
-diff --git a/makedumpfile.c b/makedumpfile.c
-index f1aad08..827c36f 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -294,6 +294,12 @@ read_page_desc(unsigned long long paddr, page_desc_t *pd)
- 	return TRUE;
- }
- 
-+static void
-+unmap_cache(struct cache_entry *entry)
-+{
-+	munmap(entry->bufptr, entry->buflen);
-+}
++extern bool crash_kexec_post_notifiers;
 +
- static int
- update_mmap_range(off_t offset, int initial) {
- 	off_t start_offset, end_offset;
-@@ -301,9 +307,6 @@ update_mmap_range(off_t offset, int initial) {
- 	off_t max_offset = get_max_file_offset();
- 	off_t pt_load_end = offset_to_pt_load_end(offset);
- 
--	munmap(info->mmap_buf,
--	       info->mmap_end_offset - info->mmap_start_offset);
--
- 	/*
- 	 * offset for mmap() must be page aligned.
- 	 */
-@@ -357,29 +360,45 @@ initialize_mmap(void) {
- 	return TRUE;
- }
- 
--static int
--read_with_mmap(off_t offset, void *bufptr, unsigned long size) {
--	size_t read_size;
-+static char *
-+mappage_elf(unsigned long long paddr)
-+{
-+	off_t offset, offset2;
- 
--next_region:
-+	if (info->flag_usemmap != MMAP_ENABLE)
-+		return NULL;
- 
--	if (!is_mapped_with_mmap(offset))
--		if (!update_mmap_range(offset, 0))
--			return FALSE;
-+	offset = paddr_to_offset(paddr);
-+	if (!offset)
-+		return NULL;
-+
-+	offset2 = paddr_to_offset(paddr + info->page_size);
-+	if (!offset2)
-+		return NULL;
- 
--	read_size = MIN(info->mmap_end_offset - offset, size);
-+	if (offset2 - offset != info->page_size)
-+		return NULL;
- 
--	memcpy(bufptr, info->mmap_buf +
--	       (offset - info->mmap_start_offset), read_size);
-+	if (!is_mapped_with_mmap(offset) &&
-+	    !update_mmap_range(offset, 0)) {
-+		ERRMSG("Can't read the dump memory(%s) with mmap().\n",
-+		       info->name_memory);
- 
--	offset += read_size;
--	bufptr += read_size;
--	size -= read_size;
-+		ERRMSG("This kernel might have some problems about mmap().\n");
-+		ERRMSG("read() will be used instead of mmap() from now.\n");
- 
--	if (size > 0)
--		goto next_region;
-+		/*
-+		 * Fall back to read().
-+		 */
-+		info->flag_usemmap = MMAP_DISABLE;
-+		return NULL;
-+	}
- 
--	return TRUE;
-+	if (offset < info->mmap_start_offset ||
-+	    offset + info->page_size > info->mmap_end_offset)
-+		return NULL;
-+
-+	return info->mmap_buf + (offset - info->mmap_start_offset);
- }
- 
- static int
-@@ -387,33 +406,16 @@ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
+ /*
+  * Only to be used by arch init code. If the user over-wrote the default
+  * CONFIG_PANIC_TIMEOUT, honor it.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 38c25b1..5bf6077 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -84,6 +84,17 @@ struct resource crashk_low_res = {
+
+ int kexec_should_crash(struct task_struct *p)
  {
- 	const off_t failed = (off_t)-1;
- 
--	if (info->flag_usemmap == MMAP_ENABLE &&
--	    page_is_fractional(offset) == FALSE) {
--		if (!read_with_mmap(offset, bufptr, size)) {
--			ERRMSG("Can't read the dump memory(%s) with mmap().\n",
--			       info->name_memory);
--
--			ERRMSG("This kernel might have some problems about mmap().\n");
--			ERRMSG("read() will be used instead of mmap() from now.\n");
--
--			/*
--			 * Fall back to read().
--			 */
--			info->flag_usemmap = MMAP_DISABLE;
--			read_from_vmcore(offset, bufptr, size);
--		}
--	} else {
--		if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
--			ERRMSG("Can't seek the dump memory(%s). (offset: %llx) %s\n",
--			       info->name_memory, (unsigned long long)offset, strerror(errno));
--			return FALSE;
--		}
-+	if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
-+		ERRMSG("Can't seek the dump memory(%s). (offset: %llx) %s\n",
-+		       info->name_memory, (unsigned long long)offset, strerror(errno));
-+		return FALSE;
-+	}
- 
--		if (read(info->fd_memory, bufptr, size) != size) {
--			ERRMSG("Can't read the dump memory(%s). %s\n",
--			       info->name_memory, strerror(errno));
--			return FALSE;
--		}
-+	if (read(info->fd_memory, bufptr, size) != size) {
-+		ERRMSG("Can't read the dump memory(%s). %s\n",
-+		       info->name_memory, strerror(errno));
-+		return FALSE;
- 	}
- 
- 	return TRUE;
-@@ -662,7 +664,18 @@ next_page:
- 			if (!readpage_sadump(pgaddr, pgbuf))
- 				goto error_cached;
- 		} else {
--			if (!readpage_elf(pgaddr, pgbuf))
-+			char *mapbuf = mappage_elf(pgaddr);
-+			size_t mapoff;
-+
-+			if (mapbuf) {
-+				pgbuf = mapbuf;
-+				mapoff = mapbuf - info->mmap_buf;
-+				cached->paddr = pgaddr - mapoff;
-+				cached->bufptr = info->mmap_buf;
-+				cached->buflen = info->mmap_end_offset -
-+					info->mmap_start_offset;
-+				cached->discard = unmap_cache;
-+			} else if (!readpage_elf(pgaddr, pgbuf))
- 				goto error_cached;
- 		}
- 		cache_add(cached);
++	/*
++	 * If crash_kexec_post_notifiers is enabled, don't run
++	 * crash_kexec() here yet, which must be run after panic
++	 * notifiers in panic().
++	 */
++	if (crash_kexec_post_notifiers)
++		return 0;
++	/*
++	 * There are 4 panic() calls in do_exit() path, each of which
++	 * calls corresponds to each of these 4 conditions.
++	 */
+ 	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+ 		return 1;
+ 	return 0;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 8136ad7..79ca912 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -32,7 +32,7 @@ static unsigned long tainted_mask;
+ static int pause_on_oops;
+ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+-static bool crash_kexec_post_notifiers;
++bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
+
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
 -- 
-1.8.4.5
+1.9.3
+
 
 
 _______________________________________________
