@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YTsul-0005hk-Pn
+ id 1YTsul-0005hj-Pi
  for kexec@lists.infradead.org; Fri, 06 Mar 2015 14:07:47 +0000
-Message-Id: <0c425d9530f9c37325cc2d9f5b8fb0a1312a3692.1425650592.git.ptesarik@suse.cz>
+Message-Id: <7a957af18427b610c80e2c32cc3b44f9f854c953.1425650592.git.ptesarik@suse.cz>
 In-Reply-To: <cover.1425650592.git.ptesarik@suse.cz>
 References: <cover.1425650592.git.ptesarik@suse.cz>
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 6 Mar 2015 09:52:07 +0100
-Subject: [PATCH v2 2/8] cache: allow to return a page to the pool
+Date: Fri, 6 Mar 2015 09:23:47 +0100
+Subject: [PATCH v2 1/8] cache: get rid of search loop in cache_add()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,101 +25,143 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: kexec mailing list <kexec@lists.infradead.org>, Jan Willeke <willeke@de.ibm.com>
 
-After a failed read, the page should no longer be pending, but rather
-available for future allocation.
+The intention was that cache code is re-entrant, so all cache entries
+should go through these states:
+
+  1. free
+  2. pending read
+  3. used
+
+The cache_add() function is used to move an entry from state 2 to 3, but
+since the caller did not know cache entry pointer, it had to search the
+pending list for a pending read for the given physical address. This is
+not needed if cache_alloc() returns this pointer.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- cache.c        | 15 ++++++++++++---
- cache.h        |  1 +
+ cache.c        | 26 ++++++--------------------
+ cache.h        | 10 ++++++++--
  makedumpfile.c |  8 +++++---
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ 3 files changed, 19 insertions(+), 25 deletions(-)
 
 diff --git a/cache.c b/cache.c
-index 700ba0c..ad9f0f1 100644
+index 0dd957c..700ba0c 100644
 --- a/cache.c
 +++ b/cache.c
-@@ -26,7 +26,8 @@ struct cache {
+@@ -20,12 +20,6 @@
+ #include "cache.h"
+ #include "print_info.h"
  
- /* 8 pages covers 4-level paging plus 4 data pages */
- #define CACHE_SIZE	8
--static struct cache_entry pool[CACHE_SIZE];
-+static struct cache_entry entries[CACHE_SIZE];
-+static struct cache_entry *pool[CACHE_SIZE];
- static int avail = CACHE_SIZE;
+-struct cache_entry {
+-	unsigned long long paddr;
+-	void *bufptr;
+-	struct cache_entry *next, *prev;
+-};
+-
+ struct cache {
+ 	struct cache_entry *head, *tail;
+ };
+@@ -98,38 +92,30 @@ cache_search(unsigned long long paddr)
+ 	return NULL;		/* cache miss */
+ }
  
- static struct cache used, pending;
-@@ -44,7 +45,8 @@ cache_init(void)
- 			       strerror(errno));
- 			return FALSE;
- 		}
--		pool[i].bufptr = bufptr;
-+		entries[i].bufptr = bufptr;
-+		pool[i] = &entries[i];
- 	}
- 
- 	return TRUE;
-@@ -98,7 +100,7 @@ cache_alloc(unsigned long long paddr)
+-void *
++struct cache_entry *
+ cache_alloc(unsigned long long paddr)
+ {
  	struct cache_entry *entry = NULL;
  
  	if (avail) {
--		entry = &pool[--avail];
-+		entry = pool[--avail];
+ 		entry = &pool[--avail];
+-		entry->paddr = paddr;
  		add_entry(&pending, entry);
  	} else if (pending.tail) {
  		entry = pending.tail;
-@@ -119,3 +121,10 @@ cache_add(struct cache_entry *entry)
- 	remove_entry(&pending, entry);
- 	add_entry(&used, entry);
+-		entry->paddr = paddr;
+ 	} else if (used.tail) {
+ 		entry = used.tail;
+ 		remove_entry(&used, entry);
+-		entry->paddr = paddr;
+ 		add_entry(&pending, entry);
+ 	} else
+ 		return NULL;
+ 
+-	return entry->bufptr;
++	entry->paddr = paddr;
++	return entry;
  }
-+
-+void
-+cache_free(struct cache_entry *entry)
-+{
+ 
+ void
+-cache_add(unsigned long long paddr)
++cache_add(struct cache_entry *entry)
+ {
+-	struct cache_entry *entry;
+-	for (entry = pending.head; entry; entry = entry->next) {
+-		if (entry->paddr == paddr) {
+-			remove_entry(&pending, entry);
+-			add_entry(&used, entry);
+-			break;
+-		}
+-	}
 +	remove_entry(&pending, entry);
-+	pool[avail++] = entry;
-+}
++	add_entry(&used, entry);
+ }
 diff --git a/cache.h b/cache.h
-index dab8eb9..0e65f97 100644
+index 4730e12..dab8eb9 100644
 --- a/cache.h
 +++ b/cache.h
-@@ -29,5 +29,6 @@ int cache_init(void);
+@@ -19,9 +19,15 @@
+ #ifndef _CACHE_H
+ #define _CACHE_H
+ 
++struct cache_entry {
++	unsigned long long paddr;
++	void *bufptr;
++	struct cache_entry *next, *prev;
++};
++
+ int cache_init(void);
  void *cache_search(unsigned long long paddr);
- struct cache_entry *cache_alloc(unsigned long long paddr);
- void cache_add(struct cache_entry *entry);
-+void cache_free(struct cache_entry *entry);
+-void *cache_alloc(unsigned long long paddr);
+-void cache_add(unsigned long long paddr);
++struct cache_entry *cache_alloc(unsigned long long paddr);
++void cache_add(struct cache_entry *entry);
  
  #endif	/* _CACHE_H */
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 828adeb..c62d035 100644
+index 74bc9db..828adeb 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -652,13 +652,13 @@ next_page:
+@@ -591,6 +591,7 @@ readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size)
+ 	unsigned long long paddr, maddr = NOT_PADDR;
+ 	unsigned long long pgaddr;
+ 	void *pgbuf;
++	struct cache_entry *cached;
+ 
+ next_page:
+ 	switch (type_addr) {
+@@ -644,9 +645,10 @@ next_page:
+ 	pgaddr = PAGEBASE(paddr);
+ 	pgbuf = cache_search(pgaddr);
+ 	if (!pgbuf) {
+-		pgbuf = cache_alloc(pgaddr);
+-		if (!pgbuf)
++		cached = cache_alloc(pgaddr);
++		if (!cached)
+ 			goto error;
++		pgbuf = cached->bufptr;
  
  		if (info->flag_refiltering) {
  			if (!readpage_kdump_compressed(pgaddr, pgbuf))
--				goto error;
-+				goto error_cached;
- 		} else if (info->flag_sadump) {
- 			if (!readpage_sadump(pgaddr, pgbuf))
--				goto error;
-+				goto error_cached;
- 		} else {
+@@ -658,7 +660,7 @@ next_page:
  			if (!readpage_elf(pgaddr, pgbuf))
--				goto error;
-+				goto error_cached;
+ 				goto error;
  		}
- 		cache_add(cached);
+-		cache_add(pgaddr);
++		cache_add(cached);
  	}
-@@ -674,6 +674,8 @@ next_page:
  
- 	return size_orig;
- 
-+error_cached:
-+	cache_free(cached);
- error:
- 	ERRMSG("type_addr: %d, addr:%llx, size:%zd\n", type_addr, addr, size_orig);
- 	return FALSE;
+ 	memcpy(bufptr, pgbuf + PAGEOFFSET(paddr), read_size);
 -- 
 1.8.4.5
 
