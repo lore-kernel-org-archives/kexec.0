@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YXQQx-0001Ws-DV
- for kexec@lists.infradead.org; Mon, 16 Mar 2015 08:31:36 +0000
-Message-Id: <1395ecaaf5d27a437c9f99cf789a1b0a3090c7e6.1426494404.git.ptesarik@suse.cz>
+ id 1YXQQx-0001Wq-DU
+ for kexec@lists.infradead.org; Mon, 16 Mar 2015 08:31:37 +0000
+Message-Id: <c7d9a240cd0d56ec407ed40fc003e49f31865b9b.1426494404.git.ptesarik@suse.cz>
 In-Reply-To: <cover.1426494404.git.ptesarik@suse.cz>
 References: <cover.1426494404.git.ptesarik@suse.cz>
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 6 Mar 2015 09:59:11 +0100
-Subject: [PATCH v3 3/7] cache: do not allocate from the pending list
+Date: Fri, 6 Mar 2015 14:10:54 +0100
+Subject: [PATCH v3 6/7] cache: allow arbitrary size of cache entries
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,40 +25,86 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: kexec mailing list <kexec@lists.infradead.org>, Jan Willeke <willeke@de.ibm.com>
 
-Since pending entries are under read, they should not be reused. This
-change allows recursive use of the cache (reading pages from within
-readpage itself). Although this feature is not used by makedumpfile
-right now, this was the original intention of the pending list.
-The cache_alloc() function may return NULL if and only if the recursion
-level is bigger than CACHE_SIZE.
+Until this commit the assumed length of all cache entries has been
+exactly one page. To make other sizes possible, the length is now
+stored in struct cache_entry. Note that cache_search may return a
+pointer in the middle of a cache buffer.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- cache.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ cache.c        | 12 ++++++++----
+ cache.h        |  3 ++-
+ makedumpfile.c |  2 +-
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/cache.c b/cache.c
-index ad9f0f1..344b4f6 100644
+index ccd67ca..938eda6 100644
 --- a/cache.c
 +++ b/cache.c
-@@ -101,16 +101,13 @@ cache_alloc(unsigned long long paddr)
- 
- 	if (avail) {
- 		entry = pool[--avail];
--		add_entry(&pending, entry);
--	} else if (pending.tail) {
--		entry = pending.tail;
- 	} else if (used.tail) {
- 		entry = used.tail;
- 		remove_entry(&used, entry);
--		add_entry(&pending, entry);
- 	} else
- 		return NULL;
- 
-+	add_entry(&pending, entry);
- 	entry->paddr = paddr;
- 	return entry;
+@@ -79,17 +79,20 @@ remove_entry(struct cache *cache, struct cache_entry *entry)
  }
+ 
+ void *
+-cache_search(unsigned long long paddr)
++cache_search(unsigned long long paddr, unsigned long length)
+ {
+ 	struct cache_entry *entry;
+-	for (entry = used.head; entry; entry = entry->next)
+-		if (entry->paddr == paddr) {
++	for (entry = used.head; entry; entry = entry->next) {
++		size_t off = paddr - entry->paddr;
++		if (off < entry->buflen &&
++		    length <= entry->buflen - off) {
+ 			if (entry != used.head) {
+ 				remove_entry(&used, entry);
+ 				add_entry(&used, entry);
+ 			}
+-			return entry->bufptr;
++			return entry->bufptr + off;
+ 		}
++	}
+ 
+ 	return NULL;		/* cache miss */
+ }
+@@ -111,6 +114,7 @@ cache_alloc(unsigned long long paddr)
+ 	idx = entry - entries;
+ 	entry->paddr = paddr;
+ 	entry->bufptr = cachebuf + idx * info->page_size;
++	entry->buflen = info->page_size;
+ 	add_entry(&pending, entry);
+ 
+ 	return entry;
+diff --git a/cache.h b/cache.h
+index 0e65f97..792ba6c 100644
+--- a/cache.h
++++ b/cache.h
+@@ -22,11 +22,12 @@
+ struct cache_entry {
+ 	unsigned long long paddr;
+ 	void *bufptr;
++	unsigned long buflen;
+ 	struct cache_entry *next, *prev;
+ };
+ 
+ int cache_init(void);
+-void *cache_search(unsigned long long paddr);
++void *cache_search(unsigned long long paddr, unsigned long length);
+ struct cache_entry *cache_alloc(unsigned long long paddr);
+ void cache_add(struct cache_entry *entry);
+ void cache_free(struct cache_entry *entry);
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d778139..f1aad08 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -647,7 +647,7 @@ next_page:
+ 	read_size = MIN(info->page_size - PAGEOFFSET(paddr), size);
+ 
+ 	pgaddr = PAGEBASE(paddr);
+-	pgbuf = cache_search(pgaddr);
++	pgbuf = cache_search(pgaddr, read_size);
+ 	if (!pgbuf) {
+ 		++cache_miss;
+ 		cached = cache_alloc(pgaddr);
 -- 
 1.8.4.5
 
