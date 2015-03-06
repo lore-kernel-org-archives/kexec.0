@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YXQQx-0001Wr-DW
+ id 1YXQQx-0001Ws-DV
  for kexec@lists.infradead.org; Mon, 16 Mar 2015 08:31:36 +0000
-Message-Id: <cover.1426494404.git.ptesarik@suse.cz>
+Message-Id: <1395ecaaf5d27a437c9f99cf789a1b0a3090c7e6.1426494404.git.ptesarik@suse.cz>
+In-Reply-To: <cover.1426494404.git.ptesarik@suse.cz>
+References: <cover.1426494404.git.ptesarik@suse.cz>
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Mon, 16 Mar 2015 09:26:44 +0100
-Subject: [PATCH v2 0/7] Handle mmaped regions in cache
+Date: Fri, 6 Mar 2015 09:59:11 +0100
+Subject: [PATCH v3 3/7] cache: do not allocate from the pending list
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,38 +25,40 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: kexec mailing list <kexec@lists.infradead.org>, Jan Willeke <willeke@de.ibm.com>
 
-Because all pages must go into the cache, data is unnecessarily
-copied from mmapped regions to cache. Avoid this copying by storing
-the mmapped regions directly in the cache.
+Since pending entries are under read, they should not be reused. This
+change allows recursive use of the cache (reading pages from within
+readpage itself). Although this feature is not used by makedumpfile
+right now, this was the original intention of the pending list.
+The cache_alloc() function may return NULL if and only if the recursion
+level is bigger than CACHE_SIZE.
 
-First, the cache code needs a clean up clarification of the concept,
-especially the meaning of the pending list (allocated cache entries
-whose content is not yet valid).
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+---
+ cache.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-Second, the cache must be able to handle differently sized objects
-so that it can store individual pages as well as mmapped regions.
-
-Last, the cache eviction code must be extended to allow either
-reusing the read buffer or unmapping the region.
-
-Changelog:
-  v3: do not mmap fractional pages
-  v2: add mmapped regions to page cache
-
-Petr Tesarik (7):
-  cache: get rid of search loop in cache_add()
-  cache: allow to return a page to the pool
-  cache: do not allocate from the pending list
-  cache: add hit/miss statistics to the final report
-  cache: allocate buffers in one big chunk
-  cache: allow arbitrary size of cache entries
-  cache: store mapped regions directly in the cache
-
- cache.c        |  81 +++++++++++++++++----------------
- cache.h        |  16 +++++--
- makedumpfile.c | 138 ++++++++++++++++++++++++++++++++++-----------------------
- 3 files changed, 138 insertions(+), 97 deletions(-)
-
+diff --git a/cache.c b/cache.c
+index ad9f0f1..344b4f6 100644
+--- a/cache.c
++++ b/cache.c
+@@ -101,16 +101,13 @@ cache_alloc(unsigned long long paddr)
+ 
+ 	if (avail) {
+ 		entry = pool[--avail];
+-		add_entry(&pending, entry);
+-	} else if (pending.tail) {
+-		entry = pending.tail;
+ 	} else if (used.tail) {
+ 		entry = used.tail;
+ 		remove_entry(&used, entry);
+-		add_entry(&pending, entry);
+ 	} else
+ 		return NULL;
+ 
++	add_entry(&pending, entry);
+ 	entry->paddr = paddr;
+ 	return entry;
+ }
 -- 
 1.8.4.5
 
