@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YTolA-0002E0-II
- for kexec@lists.infradead.org; Fri, 06 Mar 2015 09:41:35 +0000
-Message-Id: <0c425d9530f9c37325cc2d9f5b8fb0a1312a3692.1425634290.git.ptesarik@suse.cz>
+ id 1YTolA-0002Dy-If
+ for kexec@lists.infradead.org; Fri, 06 Mar 2015 09:41:33 +0000
+Message-Id: <4962021e022de9ceb07515bb9aab8bde61cd4f6b.1425634290.git.ptesarik@suse.cz>
 In-Reply-To: <cover.1425634290.git.ptesarik@suse.cz>
 References: <cover.1425634290.git.ptesarik@suse.cz>
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 6 Mar 2015 09:52:07 +0100
-Subject: [PATCH 2/4] cache: allow to return a page to the pool
+Date: Fri, 6 Mar 2015 10:26:13 +0100
+Subject: [PATCH 4/4] cache: add hit/miss statistics to the final report
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,101 +25,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: kexec mailing list <kexec@lists.infradead.org>, Jan Willeke <willeke@de.ibm.com>
 
-After a failed read, the page should no longer be pending, but rather
-available for future allocation.
+Add the most basic cache statistics (pages hit and missed). Note that
+the hit rate is not printed if cache was not used to avoid division
+by zero.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 ---
- cache.c        | 15 ++++++++++++---
- cache.h        |  1 +
- makedumpfile.c |  8 +++++---
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ makedumpfile.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/cache.c b/cache.c
-index 700ba0c..ad9f0f1 100644
---- a/cache.c
-+++ b/cache.c
-@@ -26,7 +26,8 @@ struct cache {
- 
- /* 8 pages covers 4-level paging plus 4 data pages */
- #define CACHE_SIZE	8
--static struct cache_entry pool[CACHE_SIZE];
-+static struct cache_entry entries[CACHE_SIZE];
-+static struct cache_entry *pool[CACHE_SIZE];
- static int avail = CACHE_SIZE;
- 
- static struct cache used, pending;
-@@ -44,7 +45,8 @@ cache_init(void)
- 			       strerror(errno));
- 			return FALSE;
- 		}
--		pool[i].bufptr = bufptr;
-+		entries[i].bufptr = bufptr;
-+		pool[i] = &entries[i];
- 	}
- 
- 	return TRUE;
-@@ -98,7 +100,7 @@ cache_alloc(unsigned long long paddr)
- 	struct cache_entry *entry = NULL;
- 
- 	if (avail) {
--		entry = &pool[--avail];
-+		entry = pool[--avail];
- 		add_entry(&pending, entry);
- 	} else if (pending.tail) {
- 		entry = pending.tail;
-@@ -119,3 +121,10 @@ cache_add(struct cache_entry *entry)
- 	remove_entry(&pending, entry);
- 	add_entry(&used, entry);
- }
-+
-+void
-+cache_free(struct cache_entry *entry)
-+{
-+	remove_entry(&pending, entry);
-+	pool[avail++] = entry;
-+}
-diff --git a/cache.h b/cache.h
-index dab8eb9..0e65f97 100644
---- a/cache.h
-+++ b/cache.h
-@@ -29,5 +29,6 @@ int cache_init(void);
- void *cache_search(unsigned long long paddr);
- struct cache_entry *cache_alloc(unsigned long long paddr);
- void cache_add(struct cache_entry *entry);
-+void cache_free(struct cache_entry *entry);
- 
- #endif	/* _CACHE_H */
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 828adeb..c62d035 100644
+index c62d035..d778139 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -652,13 +652,13 @@ next_page:
+@@ -39,6 +39,10 @@ struct SplitBlock		*splitblock = NULL;
  
- 		if (info->flag_refiltering) {
- 			if (!readpage_kdump_compressed(pgaddr, pgbuf))
--				goto error;
-+				goto error_cached;
- 		} else if (info->flag_sadump) {
- 			if (!readpage_sadump(pgaddr, pgbuf))
--				goto error;
-+				goto error_cached;
- 		} else {
- 			if (!readpage_elf(pgaddr, pgbuf))
--				goto error;
-+				goto error_cached;
+ char filename_stdout[] = FILENAME_STDOUT;
+ 
++/* Cache statistics */
++static unsigned long long	cache_hit;
++static unsigned long long	cache_miss;
++
+ static void first_cycle(mdf_pfn_t start, mdf_pfn_t max, struct cycle *cycle)
+ {
+ 	cycle->start_pfn = round(start, info->pfn_cyclic);
+@@ -645,6 +649,7 @@ next_page:
+ 	pgaddr = PAGEBASE(paddr);
+ 	pgbuf = cache_search(pgaddr);
+ 	if (!pgbuf) {
++		++cache_miss;
+ 		cached = cache_alloc(pgaddr);
+ 		if (!cached)
+ 			goto error;
+@@ -661,7 +666,8 @@ next_page:
+ 				goto error_cached;
  		}
  		cache_add(cached);
- 	}
-@@ -674,6 +674,8 @@ next_page:
+-	}
++	} else
++		++cache_hit;
  
- 	return size_orig;
+ 	memcpy(bufptr, pgbuf + PAGEOFFSET(paddr), read_size);
  
-+error_cached:
-+	cache_free(cached);
- error:
- 	ERRMSG("type_addr: %d, addr:%llx, size:%zd\n", type_addr, addr, size_orig);
- 	return FALSE;
+@@ -8294,6 +8300,11 @@ print_report(void)
+ 	REPORT_MSG("--------------------------------------------------\n");
+ 	REPORT_MSG("Total pages     : 0x%016llx\n", info->max_mapnr);
+ 	REPORT_MSG("\n");
++	REPORT_MSG("Cache hit: %lld, miss: %lld", cache_hit, cache_miss);
++	if (cache_hit + cache_miss)
++		REPORT_MSG(", hit rate: %.1f%%",
++		    100.0 * cache_hit / (cache_hit + cache_miss));
++	REPORT_MSG("\n\n");
+ }
+ 
+ static void
 -- 
 1.8.4.5
 
