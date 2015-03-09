@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YTwg5-0007KF-1K
- for kexec@lists.infradead.org; Fri, 06 Mar 2015 18:08:50 +0000
-Date: Fri, 6 Mar 2015 13:08:19 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-Message-ID: <20150306180819.GB15736@redhat.com>
-References: <54F9D645.2050008@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <54F9D645.2050008@jp.fujitsu.com>
+ id 1YV0F2-00034S-Bh
+ for kexec@lists.infradead.org; Mon, 09 Mar 2015 16:09:17 +0000
+Received: from /spool/local
+ by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Mon, 9 Mar 2015 16:08:51 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id B998E17D8059
+ for <kexec@lists.infradead.org>; Mon,  9 Mar 2015 16:09:09 +0000 (GMT)
+Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
+ [9.149.37.252])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t29G8mU59502978
+ for <kexec@lists.infradead.org>; Mon, 9 Mar 2015 16:08:48 GMT
+Received: from d06av11.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av11.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t29G8kSw019495
+ for <kexec@lists.infradead.org>; Mon, 9 Mar 2015 10:08:47 -0600
+Date: Mon, 9 Mar 2015 17:08:44 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 0/8] Handle mmaped regions in cache
+Message-ID: <20150309170844.69b6d139@holzheu>
+In-Reply-To: <cover.1425650592.git.ptesarik@suse.cz>
+References: <cover.1425650592.git.ptesarik@suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,63 +36,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>
-Cc: bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec mailing list <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, Jan Willeke <willeke@de.ibm.com>
 
-T24gU2F0LCBNYXIgMDcsIDIwMTUgYXQgMDE6MzE6MDFBTSArMDkwMCwgIkhhdGF5YW1hLCBEYWlz
-dWtlL+eVkeWxsSDlpKfovJQiIHdyb3RlOgo+IFRoZSBjb21taXQgZjA2ZTUxNTNmNGFlMmUyZjNi
-MDMwMGYwZTI2MGU0MGNiN2ZlZmQ0NSBpbnRyb2R1Y2VkCj4gImNyYXNoX2tleGVjX3Bvc3Rfbm90
-aWZpZXJzIiBrZXJuZWwgYm9vdCBvcHRpb24sIHdoaWNoIHRvZ2dsZXMKPiB3aGVhdGhlciBwYW5p
-YygpIGNhbGxzIGNyYXNoX2tleGVjKCkgYmVmb3JlIHBhbmljX25vdGlmaWVycyBhbmQgZHVtcAo+
-IGttc2cgb3IgYWZ0ZXIuCj4gCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGUgY29tbWl0IG92ZXJs
-b29rcyBwYW5pY19vbl9vb3BzIGtlcm5lbCBib290Cj4gb3B0aW9uLiBJZiBpdCBpcyBlbmFibGVk
-LCBjcmFzaF9rZXhlYygpIGlzIGNhbGxlZCBkaXJlY3RseSB3aXRob3V0Cj4gZ29pbmcgdGhyb3Vn
-aCBwYW5pYygpIGluIG9vcHMgcGF0aC4KPiAKPiBUbyBmaXggdGhpcyBpc3N1ZSwgdGhpcyBwYXRj
-aCBhZGRzIGEgY2hlY2sgdG8KPiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGluIHRoZSBj
-b25kaXRpb24gb2Yga2V4ZWNfc2hvdWxkX2NyYXNoKCkuCj4gCj4gQWxzbywgcHV0IGEgY29tbWVu
-dCBpbiBrZXhlY19zaG91bGRfY3Jhc2goKSB0byBleHBsYWluIG5vdCBvYnZpb3VzCj4gdGhpbmdz
-IG9uIHRoaXMgcGF0Y2guCj4gCj4gU2lnbmVkLW9mZi1ieTogSEFUQVlBTUEgRGFpc3VrZSA8ZC5o
-YXRheWFtYUBqcC5mdWppdHN1LmNvbT4KPiBBY2tlZC1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhh
-dC5jb20+Cj4gVGVzdGVkLWJ5OiBIaWRlaGlybyBLYXdhaSA8aGlkZWhpcm8ua2F3YWkuZXpAaGl0
-YWNoaS5jb20+Cj4gUmV2aWV3ZWQtYnk6IE1hc2FtaSBIaXJhbWF0c3UgPG1hc2FtaS5oaXJhbWF0
-c3UucHRAaGl0YWNoaS5jb20+CgpMb29rcyBnb29kIHRvIG1lLgoKQWNrZWQtYnk6IFZpdmVrIEdv
-eWFsIDx2Z295YWxAcmVkaGF0LmNvbT4KClRoYW5rcwpWaXZlawoKPiAtLS0KPiAgaW5jbHVkZS9s
-aW51eC9rZXJuZWwuaCB8ICAzICsrKwo+ICBrZXJuZWwva2V4ZWMuYyAgICAgICAgIHwgMTEgKysr
-KysrKysrKysKPiAga2VybmVsL3BhbmljLmMgICAgICAgICB8ICAyICstCj4gIDMgZmlsZXMgY2hh
-bmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9p
-bmNsdWRlL2xpbnV4L2tlcm5lbC5oIGIvaW5jbHVkZS9saW51eC9rZXJuZWwuaAo+IGluZGV4IGQ2
-ZDYzMGQuLjA3NDgzYzcgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9rZXJuZWwuaAo+ICsr
-KyBiL2luY2x1ZGUvbGludXgva2VybmVsLmgKPiBAQCAtNDI2LDYgKzQyNiw5IEBAIGV4dGVybiBp
-bnQgcGFuaWNfb25fdW5yZWNvdmVyZWRfbm1pOwo+ICBleHRlcm4gaW50IHBhbmljX29uX2lvX25t
-aTsKPiAgZXh0ZXJuIGludCBwYW5pY19vbl93YXJuOwo+ICBleHRlcm4gaW50IHN5c2N0bF9wYW5p
-Y19vbl9zdGFja292ZXJmbG93Owo+ICsKPiArZXh0ZXJuIGJvb2wgY3Jhc2hfa2V4ZWNfcG9zdF9u
-b3RpZmllcnM7Cj4gKwo+ICAvKgo+ICAgKiBPbmx5IHRvIGJlIHVzZWQgYnkgYXJjaCBpbml0IGNv
-ZGUuIElmIHRoZSB1c2VyIG92ZXItd3JvdGUgdGhlIGRlZmF1bHQKPiAgICogQ09ORklHX1BBTklD
-X1RJTUVPVVQsIGhvbm9yIGl0Lgo+IGRpZmYgLS1naXQgYS9rZXJuZWwva2V4ZWMuYyBiL2tlcm5l
-bC9rZXhlYy5jCj4gaW5kZXggMzhjMjViMS4uNWJmNjA3NyAxMDA2NDQKPiAtLS0gYS9rZXJuZWwv
-a2V4ZWMuYwo+ICsrKyBiL2tlcm5lbC9rZXhlYy5jCj4gQEAgLTg0LDYgKzg0LDE3IEBAIHN0cnVj
-dCByZXNvdXJjZSBjcmFzaGtfbG93X3JlcyA9IHsKPiAKPiAgaW50IGtleGVjX3Nob3VsZF9jcmFz
-aChzdHJ1Y3QgdGFza19zdHJ1Y3QgKnApCj4gIHsKPiArCS8qCj4gKwkgKiBJZiBjcmFzaF9rZXhl
-Y19wb3N0X25vdGlmaWVycyBpcyBlbmFibGVkLCBkb24ndCBydW4KPiArCSAqIGNyYXNoX2tleGVj
-KCkgaGVyZSB5ZXQsIHdoaWNoIG11c3QgYmUgcnVuIGFmdGVyIHBhbmljCj4gKwkgKiBub3RpZmll
-cnMgaW4gcGFuaWMoKS4KPiArCSAqLwo+ICsJaWYgKGNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJz
-KQo+ICsJCXJldHVybiAwOwo+ICsJLyoKPiArCSAqIFRoZXJlIGFyZSA0IHBhbmljKCkgY2FsbHMg
-aW4gZG9fZXhpdCgpIHBhdGgsIGVhY2ggb2Ygd2hpY2gKPiArCSAqIGNhbGxzIGNvcnJlc3BvbmRz
-IHRvIGVhY2ggb2YgdGhlc2UgNCBjb25kaXRpb25zLgo+ICsJICovCj4gIAlpZiAoaW5faW50ZXJy
-dXB0KCkgfHwgIXAtPnBpZCB8fCBpc19nbG9iYWxfaW5pdChwKSB8fCBwYW5pY19vbl9vb3BzKQo+
-ICAJCXJldHVybiAxOwo+ICAJcmV0dXJuIDA7Cj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9wYW5pYy5j
-IGIva2VybmVsL3BhbmljLmMKPiBpbmRleCA4MTM2YWQ3Li43OWNhOTEyIDEwMDY0NAo+IC0tLSBh
-L2tlcm5lbC9wYW5pYy5jCj4gKysrIGIva2VybmVsL3BhbmljLmMKPiBAQCAtMzIsNyArMzIsNyBA
-QCBzdGF0aWMgdW5zaWduZWQgbG9uZyB0YWludGVkX21hc2s7Cj4gIHN0YXRpYyBpbnQgcGF1c2Vf
-b25fb29wczsKPiAgc3RhdGljIGludCBwYXVzZV9vbl9vb3BzX2ZsYWc7Cj4gIHN0YXRpYyBERUZJ
-TkVfU1BJTkxPQ0socGF1c2Vfb25fb29wc19sb2NrKTsKPiAtc3RhdGljIGJvb2wgY3Jhc2hfa2V4
-ZWNfcG9zdF9ub3RpZmllcnM7Cj4gK2Jvb2wgY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnM7Cj4g
-IGludCBwYW5pY19vbl93YXJuIF9fcmVhZF9tb3N0bHk7Cj4gCj4gIGludCBwYW5pY190aW1lb3V0
-ID0gQ09ORklHX1BBTklDX1RJTUVPVVQ7Cj4gLS0gCj4gMS45LjMKPiAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+Hello Petr,
+
+With your patch we get 5-10 percent performance improvement on s390.
+
+Two examples:
+
+$ time ./makedumpfile  -d 31 /proc/vmcore  /dev/null -f
+
+                  user   sys  = total
+=====================================
+With patches      0.156  0.248  0.404
+Without patches   0.168  0.274  0.442  <- No idea why we save system time?
+
+$ time ./makedumpfile  -d 0 /proc/vmcore  /dev/null -f
+
+                  user   sys  = total
+=====================================
+With patches      0.683  0.020  0.703
+Without patches   0.714  0.019  0.733
+
+Regards
+Michael
+
+On Fri, 6 Mar 2015 15:03:12 +0100
+Petr Tesarik <ptesarik@suse.cz> wrote:
+
+> Because all pages must go into the cache, data is unnecessarily
+> copied from mmapped regions to cache. Avoid this copying by storing
+> the mmapped regions directly in the cache.
+> 
+> First, the cache code needs a clean up clarification of the concept,
+> especially the meaning of the pending list (allocated cache entries
+> whose content is not yet valid).
+> 
+> Second, the cache must be able to handle differently sized objects
+> so that it can store individual pages as well as mmapped regions.
+> 
+> Last, the cache eviction code must be extended to allow either
+> reusing the read buffer or unmapping the region.
+> 
+> Changelog:
+>   v2: cache cleanup _and_ actuall mmap implementation
+>   v1: only the cache cleanup
+> 
+> Petr Tesarik (8):
+>   cache: get rid of search loop in cache_add()
+>   cache: allow to return a page to the pool
+>   cache: do not allocate from the pending list
+>   cache: add hit/miss statistics to the final report
+>   cache: allocate buffers in one big chunk
+>   cache: allow arbitrary size of cache entries
+>   cache: store mapped regions directly in the cache
+>   cleanup: remove unused page_is_fractional
+> 
+>  cache.c        |  81 +++++++++++++++++----------------
+>  cache.h        |  16 +++++--
+>  elf_info.c     |  16 -------
+>  elf_info.h     |   2 -
+>  makedumpfile.c | 138 ++++++++++++++++++++++++++++++++++-----------------------
+>  5 files changed, 138 insertions(+), 115 deletions(-)
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
