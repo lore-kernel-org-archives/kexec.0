@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YXQ4R-0000sZ-AS
- for kexec@lists.infradead.org; Mon, 16 Mar 2015 08:08:20 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH v2 0/8] Handle mmaped regions in cache [more analysis]
-Date: Mon, 16 Mar 2015 08:06:14 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D9869B@BPXM01GP.gisp.nec.co.jp>
+ id 1YXQK1-0005SW-U5
+ for kexec@lists.infradead.org; Mon, 16 Mar 2015 08:24:27 +0000
+Date: Mon, 16 Mar 2015 09:24:03 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v2 0/8] Handle mmaped regions in cache [more analysis]
+Message-ID: <20150316092403.29ac103b@hananiah.suse.cz>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701D9869B@BPXM01GP.gisp.nec.co.jp>
 References: <cover.1425650592.git.ptesarik@suse.cz>
- <20150309170858.0e8bf357@holzheu>	<20150312163822.7df1dee6@hananiah.suse.cz>
+ <20150309170858.0e8bf357@holzheu>
+ <20150312163822.7df1dee6@hananiah.suse.cz>
  <0910DD04CBD6DE4193FCF86B9C00BE9701D978A7@BPXM01GP.gisp.nec.co.jp>
  <20150313090458.030ca8c0@hananiah.suse.cz>
  <0910DD04CBD6DE4193FCF86B9C00BE9701D984B3@BPXM01GP.gisp.nec.co.jp>
  <20150316082655.2a0ec82b@hananiah.suse.cz>
-In-Reply-To: <20150316082655.2a0ec82b@hananiah.suse.cz>
-Content-Language: ja-JP
+ <0910DD04CBD6DE4193FCF86B9C00BE9701D9869B@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,151 +29,170 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 Cc: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "willeke@de.ibm.com" <willeke@de.ibm.com>
 
->On Mon, 16 Mar 2015 05:14:25 +0000
->Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
->
->> >On Fri, 13 Mar 2015 04:10:22 +0000
->> >Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
->>[...]
->> >> I'm going to release v1.5.8 soon, so I'll adopt v2 patch if
->> >> you don't think updating it.
->> >
->> >Since v2 already brings some performance gain, I appreciate it if you
->> >can adopt it for v1.5.8.
->>
->> Ok, but unfortunately I got some error log during my test like below:
->>
->>   $ ./makedumpfile -d31 /tmp/vmcore ./dumpfile.d31
->>   Excluding free pages               : [  0.0 %] /
->>   reset_bitmap_of_free_pages: The free list is broken.
->>   reset_bitmap_of_free_pages: The free list is broken.
->>
->>   makedumpfile Failed.
->>   $
->>
->> All of errors are the same as the above at least in my test.
->> I clarified that [PATCH v2 7/8] causes this by git bisect,
->> but the root cause is under investigation.
->
->The only change I can think of is the removal of page_is_fractional.
->Originally, LOADs that do not start on a page boundary were never
->mmapped. With this patch, this check is removed.
->
->Can you try adding the following check to mappage_elf (and dropping
->patch 8/8)?
->
->	if (page_is_fractional(offset))
->		return NULL;
+On Mon, 16 Mar 2015 08:06:14 +0000
+Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
 
-It worked, thanks!
+> >On Mon, 16 Mar 2015 05:14:25 +0000
+> >Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+> >
+> >> >On Fri, 13 Mar 2015 04:10:22 +0000
+> >> >Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+> >>[...]
+> >> >> I'm going to release v1.5.8 soon, so I'll adopt v2 patch if
+> >> >> you don't think updating it.
+> >> >
+> >> >Since v2 already brings some performance gain, I appreciate it if you
+> >> >can adopt it for v1.5.8.
+> >>
+> >> Ok, but unfortunately I got some error log during my test like below:
+> >>
+> >>   $ ./makedumpfile -d31 /tmp/vmcore ./dumpfile.d31
+> >>   Excluding free pages               : [  0.0 %] /
+> >>   reset_bitmap_of_free_pages: The free list is broken.
+> >>   reset_bitmap_of_free_pages: The free list is broken.
+> >>
+> >>   makedumpfile Failed.
+> >>   $
+> >>
+> >> All of errors are the same as the above at least in my test.
+> >> I clarified that [PATCH v2 7/8] causes this by git bisect,
+> >> but the root cause is under investigation.
+> >
+> >The only change I can think of is the removal of page_is_fractional.
+> >Originally, LOADs that do not start on a page boundary were never
+> >mmapped. With this patch, this check is removed.
+> >
+> >Can you try adding the following check to mappage_elf (and dropping
+> >patch 8/8)?
+> >
+> >	if (page_is_fractional(offset))
+> >		return NULL;
+> 
+> It worked, thanks!
+> 
+> Additionally, I've remembered that we should keep page_is_fractional()
+> for old kernels.
 
-Additionally, I've remembered that we should keep page_is_fractional()
-for old kernels.
+Well, if a LOAD segment is not page-aligned, the previous code would
+have mapped only the page-aligned portion, and never beyond its
+boundaries. I'm unsure what causes the bug, but I don't have time
+to find the real root cause, so let's leave the fractional check in
+place for now.
 
-  https://lkml.org/lkml/2013/11/13/439
+I'll be sending v3 of the patch set shortly.
 
+Thank you for testing!
 
-Thanks
-Atsushi Kumagai
+Petr T
 
->Petr T
->
->P.S. This reminds me I should try to get some kernel dumps with
->fractional pages for regression testing...
->
->> >Thank you very much,
->> >Petr Tesarik
->> >
->> >> Thanks
->> >> Atsushi Kumagai
->> >>
->> >> >
->> >> >> Here the actual results I got with "perf record":
->> >> >>
->> >> >> $ time ./makedumpfile  -d 31 /proc/vmcore  /dev/null -f
->> >> >>
->> >> >>   Output of "perf report" for mmap case:
->> >> >>
->> >> >>    /* Most time spent for unmap in kernel */
->> >> >>    29.75%  makedumpfile  [kernel.kallsyms]  [k] unmap_single_vma
->> >> >>     9.84%  makedumpfile  [kernel.kallsyms]  [k] remap_pfn_range
->> >> >>     8.49%  makedumpfile  [kernel.kallsyms]  [k] vm_normal_page
->> >> >>
->> >> >>    /* Still some mmap overhead in makedumpfile readmem() */
->> >> >>    21.56%  makedumpfile  makedumpfile       [.] readmem
->> >> >
->> >> >This number is interesting. Did you compile makedumpfile with
->> >> >optimizations? If yes, then this number probably includes some
->> >> >functions which were inlined.
->> >> >
->> >> >>     8.49%  makedumpfile  makedumpfile       [.]
->> >> >> write_kdump_pages_cyclic
->> >> >>
->> >> >>   Output of "perf report" for non-mmap case:
->> >> >>
->> >> >>    /* Time spent for sys_read (that needs also two copy
->> >> >> operations on s390 :() */ 25.32%  makedumpfile
->> >> >> [kernel.kallsyms]  [k] memcpy_real 22.74%  makedumpfile
->> >> >> [kernel.kallsyms]  [k] __copy_to_user
->> >> >>
->> >> >>    /* readmem() for read path is cheaper ? */
->> >> >>    13.49%  makedumpfile  makedumpfile       [.]
->> >> >> write_kdump_pages_cyclic 4.53%  makedumpfile  makedumpfile
->> >> >> [.] readmem
->> >> >
->> >> >Yes, much lower overhead of readmem is strange. For a moment I
->> >> >suspected wrong accounting of the page fault handler, but then I
->> >> >realized that for /proc/vmcore, all page table entries are created
->> >> >with the present bit set already, so there are no page faults...
->> >> >
->> >> >I haven't had time yet to set up a system for reproduction, but
->> >> >I'll try to identify what's eating up the CPU time in readmem().
->> >> >
->> >> >>[...]
->> >> >> I hope this analysis helps more than it confuses :-)
->> >> >>
->> >> >> As a conclusion, we could think of mapping larger chunks
->> >> >> also for the fragmented case of -d 31 to reduce the amount
->> >> >> of mmap/munmap calls.
->> >> >
->> >> >I agree in general. Memory mapped through /proc/vmcore does not
->> >> >increase run-time memory requirements, because it only adds a
->> >> >mapping to the old kernel's memory. The only limiting factor is
->> >> >the virtual address space. On many architectures, this is no
->> >> >issue at all, and we could simply map the whole file at
->> >> >beginning. On some architectures, the virtual address space is
->> >> >smaller than possible physical RAM, so this approach would not
->> >> >work for them.
->> >> >
->> >> >> Another open question was why the mmap case consumes more CPU
->> >> >> time in readmem() than the read case. Our theory is that the
->> >> >> first memory access is slower because it is not in the HW
->> >> >> cache. For the mmap case userspace issues the first access (copy
->> >> >> to makdumpfile cache) and for the read case the kernel issues
->> >> >> the first access (memcpy_real/copy_to_user). Therefore the
->> >> >> cache miss is accounted to userspace for mmap and to kernel for
->> >> >> read.
->> >> >
->> >> >I have no idea how to measure this on s390. On x86_64 I would add
->> >> >some asm code to read TSC before and after the memory access
->> >> >instruction. I guess there is a similar counter on s390.
->> >> >Suggestions?
->> >> >
->> >> >> And last but not least, perhaps on s390 we could replace
->> >> >> the bounce buffer used for memcpy_real()/copy_to_user() by
->> >> >> some more inteligent solution.
->> >> >
->> >> >Which would then improve the non-mmap times even more, right?
->> >> >
->> >> >Petr T
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+>   https://lkml.org/lkml/2013/11/13/439
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+> >Petr T
+> >
+> >P.S. This reminds me I should try to get some kernel dumps with
+> >fractional pages for regression testing...
+> >
+> >> >Thank you very much,
+> >> >Petr Tesarik
+> >> >
+> >> >> Thanks
+> >> >> Atsushi Kumagai
+> >> >>
+> >> >> >
+> >> >> >> Here the actual results I got with "perf record":
+> >> >> >>
+> >> >> >> $ time ./makedumpfile  -d 31 /proc/vmcore  /dev/null -f
+> >> >> >>
+> >> >> >>   Output of "perf report" for mmap case:
+> >> >> >>
+> >> >> >>    /* Most time spent for unmap in kernel */
+> >> >> >>    29.75%  makedumpfile  [kernel.kallsyms]  [k]
+> >> >> >> unmap_single_vma 9.84%  makedumpfile  [kernel.kallsyms]  [k]
+> >> >> >> remap_pfn_range 8.49%  makedumpfile  [kernel.kallsyms]  [k]
+> >> >> >> vm_normal_page
+> >> >> >>
+> >> >> >>    /* Still some mmap overhead in makedumpfile readmem() */
+> >> >> >>    21.56%  makedumpfile  makedumpfile       [.] readmem
+> >> >> >
+> >> >> >This number is interesting. Did you compile makedumpfile with
+> >> >> >optimizations? If yes, then this number probably includes some
+> >> >> >functions which were inlined.
+> >> >> >
+> >> >> >>     8.49%  makedumpfile  makedumpfile       [.]
+> >> >> >> write_kdump_pages_cyclic
+> >> >> >>
+> >> >> >>   Output of "perf report" for non-mmap case:
+> >> >> >>
+> >> >> >>    /* Time spent for sys_read (that needs also two copy
+> >> >> >> operations on s390 :() */ 25.32%  makedumpfile
+> >> >> >> [kernel.kallsyms]  [k] memcpy_real 22.74%  makedumpfile
+> >> >> >> [kernel.kallsyms]  [k] __copy_to_user
+> >> >> >>
+> >> >> >>    /* readmem() for read path is cheaper ? */
+> >> >> >>    13.49%  makedumpfile  makedumpfile       [.]
+> >> >> >> write_kdump_pages_cyclic 4.53%  makedumpfile  makedumpfile
+> >> >> >> [.] readmem
+> >> >> >
+> >> >> >Yes, much lower overhead of readmem is strange. For a moment I
+> >> >> >suspected wrong accounting of the page fault handler, but then
+> >> >> >I realized that for /proc/vmcore, all page table entries are
+> >> >> >created with the present bit set already, so there are no page
+> >> >> >faults...
+> >> >> >
+> >> >> >I haven't had time yet to set up a system for reproduction, but
+> >> >> >I'll try to identify what's eating up the CPU time in
+> >> >> >readmem().
+> >> >> >
+> >> >> >>[...]
+> >> >> >> I hope this analysis helps more than it confuses :-)
+> >> >> >>
+> >> >> >> As a conclusion, we could think of mapping larger chunks
+> >> >> >> also for the fragmented case of -d 31 to reduce the amount
+> >> >> >> of mmap/munmap calls.
+> >> >> >
+> >> >> >I agree in general. Memory mapped through /proc/vmcore does not
+> >> >> >increase run-time memory requirements, because it only adds a
+> >> >> >mapping to the old kernel's memory. The only limiting factor is
+> >> >> >the virtual address space. On many architectures, this is no
+> >> >> >issue at all, and we could simply map the whole file at
+> >> >> >beginning. On some architectures, the virtual address space is
+> >> >> >smaller than possible physical RAM, so this approach would not
+> >> >> >work for them.
+> >> >> >
+> >> >> >> Another open question was why the mmap case consumes more CPU
+> >> >> >> time in readmem() than the read case. Our theory is that the
+> >> >> >> first memory access is slower because it is not in the HW
+> >> >> >> cache. For the mmap case userspace issues the first access
+> >> >> >> (copy to makdumpfile cache) and for the read case the kernel
+> >> >> >> issues the first access (memcpy_real/copy_to_user).
+> >> >> >> Therefore the cache miss is accounted to userspace for mmap
+> >> >> >> and to kernel for read.
+> >> >> >
+> >> >> >I have no idea how to measure this on s390. On x86_64 I would
+> >> >> >add some asm code to read TSC before and after the memory
+> >> >> >access instruction. I guess there is a similar counter on s390.
+> >> >> >Suggestions?
+> >> >> >
+> >> >> >> And last but not least, perhaps on s390 we could replace
+> >> >> >> the bounce buffer used for memcpy_real()/copy_to_user() by
+> >> >> >> some more inteligent solution.
+> >> >> >
+> >> >> >Which would then improve the non-mmap times even more, right?
+> >> >> >
+> >> >> >Petr T
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
