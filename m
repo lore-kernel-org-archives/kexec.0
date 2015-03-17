@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-x230.google.com ([2607:f8b0:4003:c01::230])
+Received: from mail-we0-x232.google.com ([2a00:1450:400c:c03::232])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YXSjw-00087m-2j
- for kexec@lists.infradead.org; Mon, 16 Mar 2015 10:59:20 +0000
-Received: by obbgg8 with SMTP id gg8so32538763obb.1
- for <kexec@lists.infradead.org>; Mon, 16 Mar 2015 03:58:58 -0700 (PDT)
+ id 1YXfKj-0005Sw-LX
+ for kexec@lists.infradead.org; Tue, 17 Mar 2015 00:26:10 +0000
+Received: by wegp1 with SMTP id p1so49600023weg.1
+ for <kexec@lists.infradead.org>; Mon, 16 Mar 2015 17:25:46 -0700 (PDT)
 MIME-Version: 1.0
-Date: Mon, 16 Mar 2015 11:58:57 +0100
-Message-ID: <CAMuHMdVb47ogpLe_4iSz-NAxdcASUZ2HzTpxh+ibjcdMtiO-tQ@mail.gmail.com>
-Subject: kexec fails if OF_UNITTEST=y (was: Re: [PATCH v2] Removes OF_UNITTEST
- dependency on OF_DYNAMIC config symbol)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+In-Reply-To: <CAMuHMdVb47ogpLe_4iSz-NAxdcASUZ2HzTpxh+ibjcdMtiO-tQ@mail.gmail.com>
+References: <CAMuHMdVb47ogpLe_4iSz-NAxdcASUZ2HzTpxh+ibjcdMtiO-tQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Date: Mon, 16 Mar 2015 19:25:26 -0500
+Message-ID: <CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA@mail.gmail.com>
+Subject: Re: kexec fails if OF_UNITTEST=y (was: Re: [PATCH v2] Removes
+ OF_UNITTEST dependency on OF_DYNAMIC config symbol)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +25,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gaurav Minocha <gaurav.minocha.os@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gaurav Minocha <gaurav.minocha.os@gmail.com>, Grant Likely <grant.likely@linaro.org>
 
-On Fri, Jan 23, 2015 at 2:03 PM, Geert Uytterhoeven
+On Mon, Mar 16, 2015 at 5:58 AM, Geert Uytterhoeven
 <geert@linux-m68k.org> wrote:
-> On Sun, Jan 11, 2015 at 8:19 AM, Gaurav Minocha
-> <gaurav.minocha.os@gmail.com> wrote:
->> This patch intends to remove the unittests dependency on
->> the functions defined in dynamic.c. So, rather than calling
->> of_attach_node defined in dynamic.c, minimal functionality
->> required to attach a new node is re-defined in unittest.c.
->> Also, now after executing the tests the test data is not
->> removed from the device tree so there is no need to call
->> of_detach_node.
+> On Fri, Jan 23, 2015 at 2:03 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Sun, Jan 11, 2015 at 8:19 AM, Gaurav Minocha
+>> <gaurav.minocha.os@gmail.com> wrote:
+>>> This patch intends to remove the unittests dependency on
+>>> the functions defined in dynamic.c. So, rather than calling
+>>> of_attach_node defined in dynamic.c, minimal functionality
+>>> required to attach a new node is re-defined in unittest.c.
+>>> Also, now after executing the tests the test data is not
+>>> removed from the device tree so there is no need to call
+>>> of_detach_node.
+>>
+>> Could there be unwanted side effects of not removing the test data?
 >
-> Could there be unwanted side effects of not removing the test data?
+> Unfortunately I found a regression introduced by commit 3ce04b4a9fdc30b6
+> ("Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol").
+>
+> If the test data is still present, kexec (kexec-tools 2.0.7 released 24
+> November 2014, 1:2.0.7-5 in Debian) fails with:
+>
+> unrecoverable error: short read
+> from"/proc/device-tree//testcase-data/large-property-PAGE_SIZEx8"
+>
+> Granted, this is a bug in kexec-tools, but I'm reporting it anyway, as it is
+> a kernel regression with existing userspace.
+>
+> I believe this bug was fixed in kexec-tools by commit d1932cd592e2a6aa
+> ("kexec/fs2dt: Use slurp_file_len to avoid partial read of files"), but I
+> haven't tested the fix yet.
 
-Unfortunately I found a regression introduced by commit 3ce04b4a9fdc30b6
-("Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol").
+Is OF_UNITTEST enabled by default in Debian or this is a custom
+kernel? Perhaps we should require a command line option to actually
+populate the test data and run the tests?
 
-If the test data is still present, kexec (kexec-tools 2.0.7 released 24
-November 2014, 1:2.0.7-5 in Debian) fails with:
+We just need more tests to slow down the boot enough people will not
+enable them by default. ;)
 
-unrecoverable error: short read
-from"/proc/device-tree//testcase-data/large-property-PAGE_SIZEx8"
+Rob
 
-Granted, this is a bug in kexec-tools, but I'm reporting it anyway, as it is
-a kernel regression with existing userspace.
-
-I believe this bug was fixed in kexec-tools by commit d1932cd592e2a6aa
-("kexec/fs2dt: Use slurp_file_len to avoid partial read of files"), but I
-haven't tested the fix yet.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 _______________________________________________
 kexec mailing list
