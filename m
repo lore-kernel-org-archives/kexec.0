@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <6859689cd7561950eda3a0fef52a2eedd22c14fb.1426719370.git.geoff@infradead.org>
+Message-Id: <69be4da0495fc4331ae63e39ddd16c3b7e5513ec.1426719370.git.geoff@infradead.org>
 In-Reply-To: <cover.1426719370.git.geoff@infradead.org>
 References: <cover.1426719370.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 4/4] purgatory: Add printf type checking
+Subject: [PATCH 3/4] purgatory: Generate map file
 Date: Wed, 18 Mar 2015 23:04:03 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,32 +21,39 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-To better catch coding problems add stricter type checking to the
-purgatory printf routines.
+To aid in debugging purgatory and its relocation generate a linker map
+file when purgatory is built.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- purgatory/include/purgatory.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ purgatory/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/purgatory/include/purgatory.h b/purgatory/include/purgatory.h
-index ed50dc4..788ce49 100644
---- a/purgatory/include/purgatory.h
-+++ b/purgatory/include/purgatory.h
-@@ -2,8 +2,9 @@
- #define PURGATORY_H
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index 6b17e71..2d6b2c0 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -12,6 +12,7 @@ PURGATORY_SRCS =
+ PURGATORY_SRCS += purgatory/purgatory.c
+ PURGATORY_SRCS += purgatory/printf.c
+ PURGATORY_SRCS += purgatory/string.c
++PURGATORY_MAP = purgatory/purgatory.map
  
- void putchar(int ch);
--void sprintf(char *buffer, const char *fmt, ...);
--void printf(const char *fmt, ...);
-+void sprintf(char *buffer, const char *fmt, ...)
-+	__attribute__ ((format (printf, 2, 3)));
-+void printf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
- void setup_arch(void);
- void post_verification_setup_arch(void);
+ dist += purgatory/Makefile $(PURGATORY_SRCS)				\
+ 	purgatory/include/purgatory.h purgatory/include/string.h
+@@ -59,7 +60,8 @@ $(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 			-I$(shell $(CC) -print-file-name=include)
+ $(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
+ 			-Wl,--no-undefined -nostartfiles -nostdlib \
+-			-nodefaultlibs -e purgatory_start -r
++			-nodefaultlibs -e purgatory_start -r \
++			-Wl,-Map=$(PURGATORY_MAP)
  
+ $(PURGATORY): $(PURGATORY_OBJS)
+ 	$(MKDIR) -p $(@D)
 -- 
 2.1.0
+
 
 
 _______________________________________________
