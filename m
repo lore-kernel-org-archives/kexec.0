@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-x230.google.com ([2607:f8b0:4003:c01::230])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YXlNB-0003kH-MF
- for kexec@lists.infradead.org; Tue, 17 Mar 2015 06:53:06 +0000
-Received: by obfv9 with SMTP id v9so548977obf.2
- for <kexec@lists.infradead.org>; Mon, 16 Mar 2015 23:52:44 -0700 (PDT)
+ id 1YY5Rc-0003Zq-W0
+ for kexec@lists.infradead.org; Wed, 18 Mar 2015 04:19:01 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH v2 0/7] Handle mmaped regions in cache
+Date: Wed, 18 Mar 2015 04:17:30 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D993AA@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1426494404.git.ptesarik@suse.cz>
+In-Reply-To: <cover.1426494404.git.ptesarik@suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA@mail.gmail.com>
-References: <CAMuHMdVb47ogpLe_4iSz-NAxdcASUZ2HzTpxh+ibjcdMtiO-tQ@mail.gmail.com>
- <CAL_Jsq+y98uP_vxKzsCVVj7hoMeGQkLB1o54iqst+dNXJkcFoA@mail.gmail.com>
-Date: Tue, 17 Mar 2015 07:52:44 +0100
-Message-ID: <CAMuHMdU+DCVNyjd0s4TLz93=3AFGoq_QWvRbg3nCej7a3mX2BA@mail.gmail.com>
-Subject: Re: kexec fails if OF_UNITTEST=y (was: Re: [PATCH v2] Removes
- OF_UNITTEST dependency on OF_DYNAMIC config symbol)
-From: Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,68 +23,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <rob.herring@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gaurav Minocha <gaurav.minocha.os@gmail.com>, Grant Likely <grant.likely@linaro.org>
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "willeke@de.ibm.com" <willeke@de.ibm.com>
 
-Hi Rob,
+Hello Petr,
 
-On Tue, Mar 17, 2015 at 1:25 AM, Rob Herring <robherring2@gmail.com> wrote:
-> On Mon, Mar 16, 2015 at 5:58 AM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Fri, Jan 23, 2015 at 2:03 PM, Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->>> On Sun, Jan 11, 2015 at 8:19 AM, Gaurav Minocha
->>> <gaurav.minocha.os@gmail.com> wrote:
->>>> This patch intends to remove the unittests dependency on
->>>> the functions defined in dynamic.c. So, rather than calling
->>>> of_attach_node defined in dynamic.c, minimal functionality
->>>> required to attach a new node is re-defined in unittest.c.
->>>> Also, now after executing the tests the test data is not
->>>> removed from the device tree so there is no need to call
->>>> of_detach_node.
->>>
->>> Could there be unwanted side effects of not removing the test data?
->>
->> Unfortunately I found a regression introduced by commit 3ce04b4a9fdc30b6
->> ("Removes OF_UNITTEST dependency on OF_DYNAMIC config symbol").
->>
->> If the test data is still present, kexec (kexec-tools 2.0.7 released 24
->> November 2014, 1:2.0.7-5 in Debian) fails with:
->>
->> unrecoverable error: short read
->> from"/proc/device-tree//testcase-data/large-property-PAGE_SIZEx8"
->>
->> Granted, this is a bug in kexec-tools, but I'm reporting it anyway, as it is
->> a kernel regression with existing userspace.
->>
->> I believe this bug was fixed in kexec-tools by commit d1932cd592e2a6aa
->> ("kexec/fs2dt: Use slurp_file_len to avoid partial read of files"), but I
->> haven't tested the fix yet.
+>Because all pages must go into the cache, data is unnecessarily
+>copied from mmapped regions to cache. Avoid this copying by storing
+>the mmapped regions directly in the cache.
 >
-> Is OF_UNITTEST enabled by default in Debian or this is a custom
-> kernel? Perhaps we should require a command line option to actually
-> populate the test data and run the tests?
+>First, the cache code needs a clean up clarification of the concept,
+>especially the meaning of the pending list (allocated cache entries
+>whose content is not yet valid).
+>
+>Second, the cache must be able to handle differently sized objects
+>so that it can store individual pages as well as mmapped regions.
+>
+>Last, the cache eviction code must be extended to allow either
+>reusing the read buffer or unmapping the region.
+>
+>Changelog:
+>  v3: do not mmap fractional pages
+>  v2: add mmapped regions to page cache
 
-It's not that bad, this is a custom kernel. I just had it still
-enabled by accident.
+Thanks for your re-posting.
+I'm testing with the v3 patch, it works fine so far.
+So v1.5.8 can be released next week.
 
-I guess making it modular is not that easy?
 
-> We just need more tests to slow down the boot enough people will not
-> enable them by default. ;)
+Thanks
+Atsushi Kumagai
 
-Apart from slowing down the boot, most tests don't have side effects.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>Petr Tesarik (7):
+>  cache: get rid of search loop in cache_add()
+>  cache: allow to return a page to the pool
+>  cache: do not allocate from the pending list
+>  cache: add hit/miss statistics to the final report
+>  cache: allocate buffers in one big chunk
+>  cache: allow arbitrary size of cache entries
+>  cache: store mapped regions directly in the cache
+>
+> cache.c        |  81 +++++++++++++++++----------------
+> cache.h        |  16 +++++--
+> makedumpfile.c | 138 ++++++++++++++++++++++++++++++++++-----------------------
+> 3 files changed, 138 insertions(+), 97 deletions(-)
+>
+>--
+>1.8.4.5
 
 _______________________________________________
 kexec mailing list
