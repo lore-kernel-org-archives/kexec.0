@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <6a3211394b177f731bca81bef9154c1d6d79773d.1426793116.git.geoff@infradead.org>
+Message-Id: <9d94104463ae6e3472526fb69e8111201c4a1fa7.1426793116.git.geoff@infradead.org>
 In-Reply-To: <cover.1426793116.git.geoff@infradead.org>
 References: <cover.1426793116.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 1/6] arm64: Fold proc-macros.S into assembler.h
-Date: Thu, 19 Mar 2015 20:35:27 +0000
+Subject: [PATCH 6/6] arm64/kexec: Add pr_devel output
+Date: Thu, 19 Mar 2015 20:35:28 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,166 +21,105 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-To allow the assembler macros defined in arch/arm64/mm/proc-macros.S to be used
-outside the mm code move the contents of proc-macros.S to asm/assembler.h.  Also,
-delete proc-macros.S, and fix up all references to proc-macros.S.
+To aid in debugging kexec problems or when adding new functionality to kexec add
+a new routine kexec_image_info() and several inline pr_devel statements.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/assembler.h | 37 +++++++++++++++++++++++++-
- arch/arm64/mm/cache.S              |  2 --
- arch/arm64/mm/proc-macros.S        | 54 --------------------------------------
- arch/arm64/mm/proc.S               |  2 --
- 4 files changed, 36 insertions(+), 59 deletions(-)
- delete mode 100644 arch/arm64/mm/proc-macros.S
+ arch/arm64/kernel/machine_kexec.c | 64 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 750bac4..47962f6be 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -1,5 +1,5 @@
- /*
-- * Based on arch/arm/include/asm/assembler.h
-+ * Based on arch/arm/include/asm/assembler.h, arch/arm/mm/proc-macros.S
-  *
-  * Copyright (C) 1996-2000 Russell King
-  * Copyright (C) 2012 ARM Ltd.
-@@ -23,6 +23,7 @@
- #ifndef __ASM_ASSEMBLER_H
- #define __ASM_ASSEMBLER_H
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index f1387d0..7aa2fa2 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -24,6 +24,48 @@ extern unsigned long arm64_kexec_dtb_addr;
+ extern unsigned long arm64_kexec_kimage_head;
+ extern unsigned long arm64_kexec_kimage_start;
  
-+#include <asm/asm-offsets.h>
- #include <asm/ptrace.h>
- #include <asm/thread_info.h>
- 
-@@ -159,4 +160,38 @@ lr	.req	x30		// link register
- 	orr	\rd, \lbits, \hbits, lsl #32
- 	.endm
- 
-+/*
-+ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
++/**
++ * kexec_is_dtb - Helper routine to check the device tree header signature.
 + */
-+	.macro	vma_vm_mm, rd, rn
-+	ldr	\rd, [\rn, #VMA_VM_MM]
-+	.endm
++static bool kexec_is_dtb(const void *dtb)
++{
++	__be32 magic;
 +
-+/*
-+ * mmid - get context id from mm pointer (mm->context.id)
++	return get_user(magic, (__be32 *)dtb) ? false :
++		(be32_to_cpu(magic) == OF_DT_HEADER);
++}
++
++/**
++ * kexec_image_info - For debugging output.
 + */
-+	.macro	mmid, rd, rn
-+	ldr	\rd, [\rn, #MM_CONTEXT_ID]
-+	.endm
++#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
++static void _kexec_image_info(const char *func, int line,
++	const struct kimage *image)
++{
++	unsigned long i;
 +
-+/*
-+ * dcache_line_size - get the minimum D-cache line size from the CTR register.
-+ */
-+	.macro	dcache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
++#if !defined(DEBUG)
++	return;
++#endif
++	pr_devel("%s:%d:\n", func, line);
++	pr_devel("  kexec image info:\n");
++	pr_devel("    type:        %d\n", image->type);
++	pr_devel("    start:       %lx\n", image->start);
++	pr_devel("    head:        %lx\n", image->head);
++	pr_devel("    nr_segments: %lu\n", image->nr_segments);
 +
-+/*
-+ * icache_line_size - get the minimum I-cache line size from the CTR register.
-+ */
-+	.macro	icache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	and	\tmp, \tmp, #0xf		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
++	for (i = 0; i < image->nr_segments; i++) {
++		pr_devel("      segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages%s\n",
++			i,
++			image->segment[i].mem,
++			image->segment[i].mem + image->segment[i].memsz,
++			image->segment[i].memsz,
++			image->segment[i].memsz /  PAGE_SIZE,
++			(kexec_is_dtb(image->segment[i].buf) ?
++				", dtb segment" : ""));
++	}
++}
 +
- #endif	/* __ASM_ASSEMBLER_H */
-diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-index 2560e1e..2d7a67c 100644
---- a/arch/arm64/mm/cache.S
-+++ b/arch/arm64/mm/cache.S
-@@ -24,8 +24,6 @@
- #include <asm/cpufeature.h>
- #include <asm/alternative-asm.h>
+ void machine_kexec_cleanup(struct kimage *image)
+ {
+ 	/* Empty routine needed to avoid build errors. */
+@@ -37,6 +79,7 @@ void machine_kexec_cleanup(struct kimage *image)
+ int machine_kexec_prepare(struct kimage *image)
+ {
+ 	arm64_kexec_kimage_start = image->start;
++	kexec_image_info(image);
+ 	return 0;
+ }
  
--#include "proc-macros.S"
--
- /*
-  *	__flush_dcache_all()
-  *
-diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
-deleted file mode 100644
-index 005d29e..0000000
---- a/arch/arm64/mm/proc-macros.S
-+++ /dev/null
-@@ -1,54 +0,0 @@
--/*
-- * Based on arch/arm/mm/proc-macros.S
-- *
-- * Copyright (C) 2012 ARM Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
--
--#include <asm/asm-offsets.h>
--#include <asm/thread_info.h>
--
--/*
-- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-- */
--	.macro	vma_vm_mm, rd, rn
--	ldr	\rd, [\rn, #VMA_VM_MM]
--	.endm
--
--/*
-- * mmid - get context id from mm pointer (mm->context.id)
-- */
--	.macro	mmid, rd, rn
--	ldr	\rd, [\rn, #MM_CONTEXT_ID]
--	.endm
--
--/*
-- * dcache_line_size - get the minimum D-cache line size from the CTR register.
-- */
--	.macro	dcache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
--
--/*
-- * icache_line_size - get the minimum I-cache line size from the CTR register.
-- */
--	.macro	icache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	and	\tmp, \tmp, #0xf		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index 28eebfb..fe69f6e 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -26,8 +26,6 @@
- #include <asm/pgtable-hwdef.h>
- #include <asm/pgtable.h>
+@@ -91,6 +134,27 @@ void machine_kexec(struct kimage *image)
+ 	reboot_code_buffer_phys = page_to_phys(image->control_code_page);
+ 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
  
--#include "proc-macros.S"
--
- #ifdef CONFIG_ARM64_64K_PAGES
- #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
- #else
++	kexec_image_info(image);
++
++	pr_devel("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
++		image->control_code_page);
++	pr_devel("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
++		&reboot_code_buffer_phys);
++	pr_devel("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
++		reboot_code_buffer);
++	pr_devel("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
++		relocate_new_kernel);
++	pr_devel("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
++		__func__, __LINE__, relocate_new_kernel_size,
++		relocate_new_kernel_size);
++
++	pr_devel("%s:%d: kexec_dtb_addr:           %lx\n", __func__, __LINE__,
++		arm64_kexec_dtb_addr);
++	pr_devel("%s:%d: kexec_kimage_head:        %lx\n", __func__, __LINE__,
++		arm64_kexec_kimage_head);
++	pr_devel("%s:%d: kexec_kimage_start:       %lx\n", __func__, __LINE__,
++		arm64_kexec_kimage_start);
++
+ 	/*
+ 	 * Copy relocate_new_kernel to the reboot_code_buffer for use
+ 	 * after the kernel is shut down.
 -- 
 2.1.0
-
 
 
 _______________________________________________
