@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from g4t3427.houston.hp.com ([15.201.208.55])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YYT9O-00012b-Fn
- for kexec@lists.infradead.org; Thu, 19 Mar 2015 05:37:47 +0000
+ id 1YYT9Y-00017j-Fu
+ for kexec@lists.infradead.org; Thu, 19 Mar 2015 05:37:57 +0000
 From: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Subject: [PATCH v9 04/10] iommu/vt-d: functions to copy data from old mem
-Date: Thu, 19 Mar 2015 13:36:22 +0800
-Message-Id: <1426743388-26908-5-git-send-email-zhen-hual@hp.com>
+Subject: [PATCH v9 06/10] iommu/vt-d: datatypes and functions used for kdump
+Date: Thu, 19 Mar 2015 13:36:24 +0800
+Message-Id: <1426743388-26908-7-git-send-email-zhen-hual@hp.com>
 In-Reply-To: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
 References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,170 +25,160 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org, vgoyal@redhat.com, dyoung@redhat.com
 Cc: jerry.hoemann@hp.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, zhen-hual@hp.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com
 
-Add some functions to copy the data from old kernel.
-These functions are used to copy context tables and page tables.
+Populate it with support functions to copy iommu translation tables from
+from the panicked kernel into the kdump kernel in the event of a crash.
 
-To avoid calling iounmap between spin_lock_irqsave and spin_unlock_irqrestore,
-use a link here, store the pointers , and then use iounmap to free them in
-another place.
+Functions:
+    Use old root entry table, and load the old data to root_entry as cache.
+    Malloc new context table and copy old context table to the new one.
 
-Li, Zhen-hua:
-    The functions and logics.
+Bill Sumner:
+    Original version, the creation of the data types and functions.
 
-Takao Indoh:
-    Check if pfn is ram:
-        if (page_is_ram(pfn))
+Li, Zhenhua:
+    Update the caller of context_get_* and context_put*, use context_*
+    and context_set_* for replacement.
+    Update the name of the function that loads root entry table.
+    Use new function to copy old context entry tables and page tables.
+    Use "unsigned long" for physical address.
+    Remove the functions to copy page table in Bill's version.
+    Remove usage of dve and ppap in Bill's version.
 
+Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
 Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
-Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
 ---
- drivers/iommu/intel-iommu.c | 102 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/intel-iommu.h |   9 ++++
- 2 files changed, 111 insertions(+)
+ drivers/iommu/intel-iommu.c | 113 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index f7dbe70..7f3484a 100644
+index 1cb9780..44f3369 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -374,6 +374,17 @@ static struct context_entry *device_to_existing_context_entry(
- 				u8 bus, u8 devfn);
+@@ -388,6 +388,18 @@ struct iommu_remapped_entry {
+ static LIST_HEAD(__iommu_remapped_mem);
+ static DEFINE_MUTEX(__iommu_mem_list_lock);
  
- 
-+/*
-+ * A structure used to store the address allocated by ioremap();
-+ * The we need to call iounmap() to free them out of spin_lock_irqsave/unlock;
++/* ========================================================================
++ * Copy iommu translation tables from old kernel into new  kernel.
++ * Entry to this set of functions is: intel_iommu_load_translation_tables()
++ * ------------------------------------------------------------------------
 + */
-+struct iommu_remapped_entry {
-+	struct list_head list;
-+	void __iomem *mem;
-+};
-+static LIST_HEAD(__iommu_remapped_mem);
-+static DEFINE_MUTEX(__iommu_mem_list_lock);
++
++static int copy_root_entry_table(struct intel_iommu *iommu);
++
++static int intel_iommu_load_translation_tables(struct dmar_drhd_unit *drhd);
++
++static void unmap_device_dma(struct dmar_domain *domain, struct device *dev);
 +
  #endif /* CONFIG_CRASH_DUMP */
  
  /*
-@@ -4822,4 +4833,95 @@ static struct context_entry *device_to_existing_context_entry(
- 	return ret;
+@@ -4976,4 +4988,105 @@ static void __iommu_update_old_root_entry(struct intel_iommu *iommu, int index)
+ 	__iommu_flush_cache(iommu, to + start, size);
  }
  
 +/*
-+ * Copy memory from a physically-addressed area into a virtually-addressed area
++ * Load root entry tables from old kernel.
 + */
-+int __iommu_load_from_oldmem(void *to, unsigned long from, unsigned long size)
++static int copy_root_entry_table(struct intel_iommu *iommu)
 +{
-+	unsigned long pfn;		/* Page Frame Number */
-+	size_t csize = (size_t)size;	/* Num(bytes to copy) */
-+	unsigned long offset;		/* Lower 12 bits of to */
-+	void __iomem *virt_mem;
-+	struct iommu_remapped_entry *mapped;
++	u32 bus;				/* Index: root-entry-table */
++	struct root_entry  *re;			/* Virt(iterator: new table) */
++	unsigned long context_old_phys;		/* Phys(context table entry) */
++	struct context_entry *context_new_virt;	/* Virt(new context_entry) */
 +
-+	pfn = from >> VTD_PAGE_SHIFT;
-+	offset = from & (~VTD_PAGE_MASK);
++	/*
++	 * A new root entry table has been allocated ,
++	 * we need copy re from old kernel to the new allocated one.
++	 */
 +
-+	if (page_is_ram(pfn)) {
-+		memcpy(to, pfn_to_kaddr(pfn) + offset, csize);
-+	} else{
++	if (!iommu->root_entry_old_phys)
++		return -ENOMEM;
 +
-+		mapped = kzalloc(sizeof(struct iommu_remapped_entry),
-+				GFP_KERNEL);
-+		if (!mapped)
++	for (bus = 0, re = iommu->root_entry; bus < 256; bus += 1, re += 1) {
++		if (!root_present(re))
++			continue;
++
++		context_old_phys = get_context_phys_from_root(re);
++
++		if (!context_old_phys)
++			continue;
++
++		context_new_virt =
++			(struct context_entry *)alloc_pgtable_page(iommu->node);
++
++		if (!context_new_virt)
 +			return -ENOMEM;
 +
-+		virt_mem = ioremap_cache((unsigned long)from, size);
-+		if (!virt_mem) {
-+			kfree(mapped);
-+			return -ENOMEM;
-+		}
-+		memcpy(to, virt_mem, size);
++		__iommu_load_from_oldmem(context_new_virt,
++					context_old_phys,
++					VTD_PAGE_SIZE);
 +
-+		mutex_lock(&__iommu_mem_list_lock);
-+		mapped->mem = virt_mem;
-+		list_add_tail(&mapped->list, &__iommu_remapped_mem);
-+		mutex_unlock(&__iommu_mem_list_lock);
++		__iommu_flush_cache(iommu, context_new_virt, VTD_PAGE_SIZE);
++
++		set_root_value(re, virt_to_phys(context_new_virt));
 +	}
-+	return size;
-+}
 +
-+/*
-+ * Copy memory from a virtually-addressed area into a physically-addressed area
-+ */
-+int __iommu_save_to_oldmem(unsigned long to, void *from, unsigned long size)
-+{
-+	unsigned long pfn;		/* Page Frame Number */
-+	size_t csize = (size_t)size;	/* Num(bytes to copy) */
-+	unsigned long offset;		/* Lower 12 bits of to */
-+	void __iomem *virt_mem;
-+	struct iommu_remapped_entry *mapped;
-+
-+	pfn = to >> VTD_PAGE_SHIFT;
-+	offset = to & (~VTD_PAGE_MASK);
-+
-+	if (page_is_ram(pfn)) {
-+		memcpy(pfn_to_kaddr(pfn) + offset, from, csize);
-+	} else{
-+		mapped = kzalloc(sizeof(struct iommu_remapped_entry),
-+				GFP_KERNEL);
-+		if (!mapped)
-+			return -ENOMEM;
-+
-+		virt_mem = ioremap_cache((unsigned long)to, size);
-+		if (!virt_mem) {
-+			kfree(mapped);
-+			return -ENOMEM;
-+		}
-+		memcpy(virt_mem, from, size);
-+		mutex_lock(&__iommu_mem_list_lock);
-+		mapped->mem = virt_mem;
-+		list_add_tail(&mapped->list, &__iommu_remapped_mem);
-+		mutex_unlock(&__iommu_mem_list_lock);
-+	}
-+	return size;
-+}
-+
-+/*
-+ * Free the mapped memory for ioremap;
-+ */
-+int __iommu_free_mapped_mem(void)
-+{
-+	struct iommu_remapped_entry *mem_entry, *tmp;
-+
-+	mutex_lock(&__iommu_mem_list_lock);
-+	list_for_each_entry_safe(mem_entry, tmp, &__iommu_remapped_mem, list) {
-+		iounmap(mem_entry->mem);
-+		list_del(&mem_entry->list);
-+		kfree(mem_entry);
-+	}
-+	mutex_unlock(&__iommu_mem_list_lock);
 +	return 0;
 +}
 +
- #endif /* CONFIG_CRASH_DUMP */
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index a65208a..8ffa523 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -26,6 +26,7 @@
- #include <linux/iova.h>
- #include <linux/io.h>
- #include <linux/dma_remapping.h>
-+#include <linux/crash_dump.h>
- #include <asm/cacheflush.h>
- #include <asm/iommu.h>
- 
-@@ -368,4 +369,12 @@ extern int dmar_ir_support(void);
- 
- extern const struct attribute_group *intel_iommu_groups[];
- 
-+#ifdef CONFIG_CRASH_DUMP
-+extern int __iommu_load_from_oldmem(void *to, unsigned long from,
-+					unsigned long size);
-+extern int __iommu_save_to_oldmem(unsigned long to, void *from,
-+					unsigned long size);
-+extern int __iommu_free_mapped_mem(void);
-+#endif /* CONFIG_CRASH_DUMP */
++/*
++ * Interface to the "load translation tables" set of functions
++ * from mainline code.
++ */
++static int intel_iommu_load_translation_tables(struct dmar_drhd_unit *drhd)
++{
++	struct intel_iommu *iommu;	/* Virt(iommu hardware registers) */
++	unsigned long long q;		/* quadword scratch */
++	int ret = 0;			/* Integer return code */
++	unsigned long flags;
 +
- #endif
++	iommu = drhd->iommu;
++	q = dmar_readq(iommu->reg + DMAR_RTADDR_REG);
++	if (!q)
++		return -1;
++
++	spin_lock_irqsave(&iommu->lock, flags);
++
++	/* Load the root-entry table from the old kernel
++	 * foreach context_entry_table in root_entry
++	 *   Copy each entry table from old kernel
++	 */
++	if (!iommu->root_entry) {
++		iommu->root_entry =
++			(struct root_entry *)alloc_pgtable_page(iommu->node);
++		if (!iommu->root_entry) {
++			spin_unlock_irqrestore(&iommu->lock, flags);
++			return -ENOMEM;
++		}
++	}
++
++	iommu->root_entry_old_phys = q & VTD_PAGE_MASK;
++	if (!iommu->root_entry_old_phys) {
++		pr_err("Could not read old root entry address.");
++		return -1;
++	}
++
++	iommu->root_entry_old_virt = ioremap_cache(iommu->root_entry_old_phys,
++						VTD_PAGE_SIZE);
++	if (!iommu->root_entry_old_virt) {
++		pr_err("Could not map the old root entry.");
++		return -ENOMEM;
++	}
++
++	__iommu_load_old_root_entry(iommu);
++	ret = copy_root_entry_table(iommu);
++	__iommu_flush_cache(iommu, iommu->root_entry, PAGE_SIZE);
++	__iommu_update_old_root_entry(iommu, -1);
++
++	spin_unlock_irqrestore(&iommu->lock, flags);
++
++	__iommu_free_mapped_mem();
++
++	return ret;
++}
++
+ #endif /* CONFIG_CRASH_DUMP */
 -- 
 2.0.0-rc0
 
