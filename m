@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YYl4m-0004es-7A
- for kexec@lists.infradead.org; Fri, 20 Mar 2015 00:46:12 +0000
-Received: from ayumi.isobedori.kobe.vergenet.net
- (p8130-ipbfp1005kobeminato.hyogo.ocn.ne.jp [118.10.149.130])
- by kirsty.vergenet.net (Postfix) with ESMTP id 2833925BF53
- for <kexec@lists.infradead.org>; Fri, 20 Mar 2015 11:45:49 +1100 (EST)
-Date: Fri, 20 Mar 2015 09:45:46 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86: Remove unnecessary res variable from efi_map_added
-Message-ID: <20150320004546.GA26666@verge.net.au>
-References: <1426731739-19328-1-git-send-email-horms@verge.net.au>
+Date: Fri, 20 Mar 2015 19:48:38 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/6] arm64 kexec kernel patches V8
+Message-ID: <20150320194838.GD24455@leverpostej>
+References: <cover.1426793116.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1426731739-19328-1-git-send-email-horms@verge.net.au>
+In-Reply-To: <cover.1426793116.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +19,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Thu, Mar 19, 2015 at 11:22:19AM +0900, Simon Horman wrote:
-> gcc 4.9.1 tells me this variable is set but unused
-> 
-> Signed-off-by: Simon Horman <horms@verge.net.au>
+On Thu, Mar 19, 2015 at 08:35:27PM +0000, Geoff Levand wrote:
+> Hi All,
 
-I have queued this up.
+Hi Geoff,
 
+As a heads-up, I'm not going to have the chanec to review this until
+after the FW summit next week.
+
+[...]
+
+> KVM
 > ---
->  kexec/arch/i386/kexec-x86-common.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index bc622e9..3624192 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -293,10 +293,10 @@ again:
->   * @return 1 if parameter is present, 0 if not or if an error occurs.
->   */
->  int efi_map_added( void ) {
-> -	char buf[512], *res;
-> +	char buf[512];
->  	FILE *fp = fopen( "/proc/cmdline", "r" );
->  	if( fp ) {
-> -		res = fgets( buf, 512, fp );
-> +		fgets( buf, 512, fp );
->  		fclose( fp );
->  		return strstr( buf, "add_efi_memmap" ) != NULL;
->  	} else {
-> -- 
-> 2.1.4
+> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
+> resources on shutdown, so the first stage kernel cannot be shutdown properly
+> when using kexec.
 > 
+> WORK-AROUND: Build the first stage kernel with CONFIG_KVM=n, or apply KVM bug
+> fix patches from [1].
+> 
+> FIX: Takahiro Akashi has preliminary patches to fix the KVM shutdown problem.  I
+> have those in my master branch at [1].  KVM + kexec works properly with that
+> branch.  Patches neeeded:
+> 
+>  arm64: kvm: add a cpu tear-down function
+>  arm64: kexec: fix kvm issue
+>  arm64/kvm: Remove !KEXEC Kconfig dependency
+>  arm64/kexec: Enable kexec in the arm64 defconfig
+
+These (or some descendents thereof) are going to be a prerequisite for
+kexec.
+
+> /memreserve/
+> ----------
+> 
+> PROBLEM: Device tree /memreserve/ entries are not available in
+> /proc/device-tree.  For systems that have /memreserve/ entries and use
+> /proc/device-tree during kexec, the second stage kernel will use the reserved
+> regions and the system will become unstable.
+> 
+> WORK-AROUND: Enable the kernel config option CONFIG_SYSFS=y to expose a binary
+> device tree to user space at /sys/firmware/fdt that includes /memreserve/
+> entries OR pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: This is expected behavior.  To maximize user support, rework device tree
+> definitions to not use /memreserve/ entries.
+
+I'd say that requiring CONFIG_SYSFS is the real fix here. That's a
+kernel change that maximises compatibility with DTBs (which we don't
+really have control over).
+
+I hope that the tools warn somehow if they cannot see the fdt.
+
+Mark.
 
 _______________________________________________
 kexec mailing list
