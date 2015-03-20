@@ -1,10 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <9d94104463ae6e3472526fb69e8111201c4a1fa7.1426793116.git.geoff@infradead.org>
-In-Reply-To: <cover.1426793116.git.geoff@infradead.org>
-References: <cover.1426793116.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 6/6] arm64/kexec: Add pr_devel output
-Date: Thu, 19 Mar 2015 20:35:28 +0000
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YYl4m-0004es-7A
+ for kexec@lists.infradead.org; Fri, 20 Mar 2015 00:46:12 +0000
+Received: from ayumi.isobedori.kobe.vergenet.net
+ (p8130-ipbfp1005kobeminato.hyogo.ocn.ne.jp [118.10.149.130])
+ by kirsty.vergenet.net (Postfix) with ESMTP id 2833925BF53
+ for <kexec@lists.infradead.org>; Fri, 20 Mar 2015 11:45:49 +1100 (EST)
+Date: Fri, 20 Mar 2015 09:45:46 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] x86: Remove unnecessary res variable from efi_map_added
+Message-ID: <20150320004546.GA26666@verge.net.au>
+References: <1426731739-19328-1-git-send-email-horms@verge.net.au>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1426731739-19328-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -13,114 +23,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
 
-To aid in debugging kexec problems or when adding new functionality to kexec add
-a new routine kexec_image_info() and several inline pr_devel statements.
+On Thu, Mar 19, 2015 at 11:22:19AM +0900, Simon Horman wrote:
+> gcc 4.9.1 tells me this variable is set but unused
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/arm64/kernel/machine_kexec.c | 64 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+I have queued this up.
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index f1387d0..7aa2fa2 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -24,6 +24,48 @@ extern unsigned long arm64_kexec_dtb_addr;
- extern unsigned long arm64_kexec_kimage_head;
- extern unsigned long arm64_kexec_kimage_start;
- 
-+/**
-+ * kexec_is_dtb - Helper routine to check the device tree header signature.
-+ */
-+static bool kexec_is_dtb(const void *dtb)
-+{
-+	__be32 magic;
-+
-+	return get_user(magic, (__be32 *)dtb) ? false :
-+		(be32_to_cpu(magic) == OF_DT_HEADER);
-+}
-+
-+/**
-+ * kexec_image_info - For debugging output.
-+ */
-+#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
-+static void _kexec_image_info(const char *func, int line,
-+	const struct kimage *image)
-+{
-+	unsigned long i;
-+
-+#if !defined(DEBUG)
-+	return;
-+#endif
-+	pr_devel("%s:%d:\n", func, line);
-+	pr_devel("  kexec image info:\n");
-+	pr_devel("    type:        %d\n", image->type);
-+	pr_devel("    start:       %lx\n", image->start);
-+	pr_devel("    head:        %lx\n", image->head);
-+	pr_devel("    nr_segments: %lu\n", image->nr_segments);
-+
-+	for (i = 0; i < image->nr_segments; i++) {
-+		pr_devel("      segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages%s\n",
-+			i,
-+			image->segment[i].mem,
-+			image->segment[i].mem + image->segment[i].memsz,
-+			image->segment[i].memsz,
-+			image->segment[i].memsz /  PAGE_SIZE,
-+			(kexec_is_dtb(image->segment[i].buf) ?
-+				", dtb segment" : ""));
-+	}
-+}
-+
- void machine_kexec_cleanup(struct kimage *image)
- {
- 	/* Empty routine needed to avoid build errors. */
-@@ -37,6 +79,7 @@ void machine_kexec_cleanup(struct kimage *image)
- int machine_kexec_prepare(struct kimage *image)
- {
- 	arm64_kexec_kimage_start = image->start;
-+	kexec_image_info(image);
- 	return 0;
- }
- 
-@@ -91,6 +134,27 @@ void machine_kexec(struct kimage *image)
- 	reboot_code_buffer_phys = page_to_phys(image->control_code_page);
- 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
- 
-+	kexec_image_info(image);
-+
-+	pr_devel("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
-+		image->control_code_page);
-+	pr_devel("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
-+		&reboot_code_buffer_phys);
-+	pr_devel("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
-+		reboot_code_buffer);
-+	pr_devel("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
-+		relocate_new_kernel);
-+	pr_devel("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
-+		__func__, __LINE__, relocate_new_kernel_size,
-+		relocate_new_kernel_size);
-+
-+	pr_devel("%s:%d: kexec_dtb_addr:           %lx\n", __func__, __LINE__,
-+		arm64_kexec_dtb_addr);
-+	pr_devel("%s:%d: kexec_kimage_head:        %lx\n", __func__, __LINE__,
-+		arm64_kexec_kimage_head);
-+	pr_devel("%s:%d: kexec_kimage_start:       %lx\n", __func__, __LINE__,
-+		arm64_kexec_kimage_start);
-+
- 	/*
- 	 * Copy relocate_new_kernel to the reboot_code_buffer for use
- 	 * after the kernel is shut down.
--- 
-2.1.0
-
+> ---
+>  kexec/arch/i386/kexec-x86-common.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+> index bc622e9..3624192 100644
+> --- a/kexec/arch/i386/kexec-x86-common.c
+> +++ b/kexec/arch/i386/kexec-x86-common.c
+> @@ -293,10 +293,10 @@ again:
+>   * @return 1 if parameter is present, 0 if not or if an error occurs.
+>   */
+>  int efi_map_added( void ) {
+> -	char buf[512], *res;
+> +	char buf[512];
+>  	FILE *fp = fopen( "/proc/cmdline", "r" );
+>  	if( fp ) {
+> -		res = fgets( buf, 512, fp );
+> +		fgets( buf, 512, fp );
+>  		fclose( fp );
+>  		return strstr( buf, "add_efi_memmap" ) != NULL;
+>  	} else {
+> -- 
+> 2.1.4
+> 
 
 _______________________________________________
 kexec mailing list
