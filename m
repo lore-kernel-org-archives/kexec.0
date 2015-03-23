@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ya4Pp-0001zZ-Gp
- for kexec@lists.infradead.org; Mon, 23 Mar 2015 15:37:22 +0000
-Date: Mon, 23 Mar 2015 11:36:59 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-Message-ID: <20150323153659.GC3172@redhat.com>
-References: <54F9D645.2050008@jp.fujitsu.com>
- <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
- <20150323071943.GA22765@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150323071943.GA22765@gmail.com>
+Message-ID: <1427126213.27739.3.camel@infradead.org>
+Subject: Re: [RFC 2/4] arm64: kexec: fix kvm issue
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 23 Mar 2015 08:56:53 -0700
+In-Reply-To: <1427111639-4575-3-git-send-email-takahiro.akashi@linaro.org>
+References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427111639-4575-3-git-send-email-takahiro.akashi@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,76 +15,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com, akpm@linux-foundation.org, bp@suse.de
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, christoffer.dall@linaro.org, freddy77@gmail.com
 
-T24gTW9uLCBNYXIgMjMsIDIwMTUgYXQgMDg6MTk6NDNBTSArMDEwMCwgSW5nbyBNb2xuYXIgd3Jv
-dGU6Cj4gCj4gKiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gCj4gPiBDQyBt
-b3JlIHBlb3BsZSAuLi4KPiA+IAo+ID4gT24gMDMvMDcvMTUgYXQgMDE6MzFhbSwgIkhhdGF5YW1h
-LCBEYWlzdWtlL+eVkeWxsSDlpKfovJQiIHdyb3RlOgo+ID4gPiBUaGUgY29tbWl0IGYwNmU1MTUz
-ZjRhZTJlMmYzYjAzMDBmMGUyNjBlNDBjYjdmZWZkNDUgaW50cm9kdWNlZAo+ID4gPiAiY3Jhc2hf
-a2V4ZWNfcG9zdF9ub3RpZmllcnMiIGtlcm5lbCBib290IG9wdGlvbiwgd2hpY2ggdG9nZ2xlcwo+
-ID4gPiB3aGVhdGhlciBwYW5pYygpIGNhbGxzIGNyYXNoX2tleGVjKCkgYmVmb3JlIHBhbmljX25v
-dGlmaWVycyBhbmQgZHVtcAo+ID4gPiBrbXNnIG9yIGFmdGVyLgo+ID4gPiAKPiA+ID4gVGhlIHBy
-b2JsZW0gaXMgdGhhdCB0aGUgY29tbWl0IG92ZXJsb29rcyBwYW5pY19vbl9vb3BzIGtlcm5lbCBi
-b290Cj4gPiA+IG9wdGlvbi4gSWYgaXQgaXMgZW5hYmxlZCwgY3Jhc2hfa2V4ZWMoKSBpcyBjYWxs
-ZWQgZGlyZWN0bHkgd2l0aG91dAo+ID4gPiBnb2luZyB0aHJvdWdoIHBhbmljKCkgaW4gb29wcyBw
-YXRoLgo+ID4gPiAKPiA+ID4gVG8gZml4IHRoaXMgaXNzdWUsIHRoaXMgcGF0Y2ggYWRkcyBhIGNo
-ZWNrIHRvCj4gPiA+ICJjcmFzaF9rZXhlY19wb3N0X25vdGlmaWVycyIgaW4gdGhlIGNvbmRpdGlv
-biBvZiBrZXhlY19zaG91bGRfY3Jhc2goKS4KPiA+ID4gCj4gPiA+IEFsc28sIHB1dCBhIGNvbW1l
-bnQgaW4ga2V4ZWNfc2hvdWxkX2NyYXNoKCkgdG8gZXhwbGFpbiBub3Qgb2J2aW91cwo+ID4gPiB0
-aGluZ3Mgb24gdGhpcyBwYXRjaC4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEhBVEFZQU1B
-IERhaXN1a2UgPGQuaGF0YXlhbWFAanAuZnVqaXRzdS5jb20+Cj4gPiA+IEFja2VkLWJ5OiBCYW9x
-dWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KPiA+ID4gVGVzdGVkLWJ5OiBIaWRlaGlybyBLYXdhaSA8
-aGlkZWhpcm8ua2F3YWkuZXpAaGl0YWNoaS5jb20+Cj4gPiA+IFJldmlld2VkLWJ5OiBNYXNhbWkg
-SGlyYW1hdHN1IDxtYXNhbWkuaGlyYW1hdHN1LnB0QGhpdGFjaGkuY29tPgo+ID4gPiAtLS0KPiA+
-ID4gIGluY2x1ZGUvbGludXgva2VybmVsLmggfCAgMyArKysKPiA+ID4gIGtlcm5lbC9rZXhlYy5j
-ICAgICAgICAgfCAxMSArKysrKysrKysrKwo+ID4gPiAga2VybmVsL3BhbmljLmMgICAgICAgICB8
-ICAyICstCj4gPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKPiAKPiBUaGlzIGlzIGhhY2sgdXBvbiBoYWNrLCBidXQgd2h5IHdhcyB0aGlzIGNyYXAg
-bWVyZ2VkIGluIHRoZSBmaXJzdCAKPiBwbGFjZT8KPiAKPiBJIHNlZSB0d28gcHJvYmxlbXMganVz
-dCBieSBjdXJzb3J5IHJldmlldzoKPiAKPiAxKQo+IAo+IEZpcnN0bHksIHRoZSByZWFsIGJ1ZyBp
-bjoKPiAKPiAgIGYwNmU1MTUzZjRhZSAoImtlcm5lbC9wYW5pYy5jOiBhZGQgImNyYXNoX2tleGVj
-X3Bvc3Rfbm90aWZpZXJzIiBvcHRpb24gZm9yIGtkdW1wIGFmdGVyIHBhbmljX25vdGlmZXJzIikK
-PiAKPiBXYXMgdGhhdCBjcmFzaF9rZXhlYygpIHdhcyBjYWxsZWQgdW5jb25kaXRpb25hbGx5IGFm
-dGVyIG5vdGlmaWVycyB3ZXJlIAo+IGNhbGxlZCwgd2hpY2ggc2hvdWxkIGJlIGZpeGVkIHZpYSB0
-aGUgc2ltcGxlIHBhdGNoIGJlbG93ICh1bnRlc3RlZCkuIAo+IExvb2tzIG11Y2ggc2ltcGxlciB0
-aGFuIHlvdXIgZml4Lgo+IAo+IDIpCj4gCj4gU2Vjb25kbHksIGFuZCBtb3JlIGltcG9ydGFudGx5
-LCB0aGUgd2hvbGUgcHJlbWlzZSBvZiBjb21taXQgCj4gZjA2ZTUxNTNmNGFlIGlzIGJyb2tlbiBJ
-TUhPOgo+IAo+ICAiVGhpcyBjYW4gaGVscCByYXJlIHNpdHVhdGlvbnMgd2hlcmUga2R1bXAgZmFp
-bHMgYmVjYXVzZSBvZiB1bnN0YWJsZQo+ICAgY3Jhc2hlZCBrZXJuZWwgb3IgaGFyZHdhcmUgZmFp
-bHVyZSAobWVtb3J5IGNvcnJ1cHRpb24gb24gY3JpdGljYWwKPiAgIGRhdGEvY29kZSkiCj4gCj4g
-d3RmPwo+IAo+IElmIHRoZSBrZXJuZWwgY3Jhc2hlZCBkdWUgdG8gYSBrZXJuZWwgY3Jhc2gsIHRo
-ZW4gdGhlIGtlcm5lbCBib290aW5nIAo+IHVwIGluIHdoYXRldmVyIGhhcmR3YXJlIHN0YXRlIHNo
-b3VsZCBiZSBhYmxlIHRvIGRvIGEgY2xlYW4gYm9vdHVwLiBUaGUgCj4gZml4IGZvciB0aG9zZSAn
-cmFyZSBzaXR1YXRpb25zJyBzaG91bGQgYmUgdG8gZml4IHRoZSByZWFsIGJ1ZyAoZm9yIAo+IGV4
-YW1wbGUgYnkgbWFraW5nIGhhcmR3YXJlIGRyaXZlciBpbml0IChvciBkZWluaXQpIHNlcXVlbmNl
-cyBtb3JlIAo+IHJvYnVzdCksIG5vdCB0byBwYXBlciBpdCBvdmVyIGJ5IG9yZGVyaW5nIGFyb3Vu
-ZCBjcmFzaC10aW1lIHNlcXVlbmNlcyAKPiAuLi4KPiAKPiBJZiBpdCBjcmFzaGVkIGR1ZSB0byBz
-b21lIGhhcmR3YXJlIGZhaWx1cmUsIHRoZXJlJ3MgbGl0ZXJhbGx5IGFuIAo+IGluZmluaXRlIGFt
-b3VudCBvZiBmYWlsdXJlIG1vZGVzIHRoYXQgbWF5IG9yIG1heSBub3QgYmUgaW1wYWN0ZWQgYnkg
-Cj4ga2V4ZWMgY3Jhc2gtdGltZSBoYW5kbGluZyBvcmRlcmluZy4gV2UgZG9uJ3Qgd2FudCB0byBw
-dXQgYSB6aWxsaW9uIAo+IHN1Y2ggZmxhZ3MgaW50byB0aGUga2VybmVsIHByb3BlciBqdXN0IHRv
-IGFsbG93IHRoZSBwZXJ0dXJiYXRpb24gb2YgCj4gdGhlIGtlcm5lbC4KPiAKPiBUaGFua3MsCj4g
-Cj4gCUluZ28KPiAKCkkgcXVpY2tseSB0ZXN0ZWQgdGhpcyBwYXRjaCB0byBtYWtlIHN1cmUgSSBj
-YW4gc3RpbGwgdHJhbnNpdGlvbiBpbnRvCnNlY29uZCBrZXJuZWwgd2hlbiBjcmFzaF9rZXhlY19w
-b3N0X25vdGlmaWVycyBpcyBzcGVjaWZpZWQgb24gY29tbWFuZApsaW5lLiBJIGhhdmUgbm90IHRy
-aWVkIHJ1bm5pbmcgYW55IG5vdGlmaWVycy4gU28uCgpUZXN0ZWQtYnk6IFZpdmVrIEdveWFsIDx2
-Z295YWxAcmVkaGF0LmNvbT4KQWNrZWQtYnk6IFZpdmVrIEdveWFsIDx2Z295YWxAcmVkaGF0LmNv
-bT4KClRoaXMgc2hvdWxkIGJlIGEgZ2VuZXJhbCBmaXggYW5kIG5vdCBhIHJlcGxhY2VtZW50IGZv
-ciB0aGUgcGF0Y2gKaW4gcXVlc3Rpb24gaW4gdGhpcyBtYWlsIHRocmVhZC4gCgpUaGFua3MKVml2
-ZWsKCj4gZGlmZiAtLWdpdCBhL2tlcm5lbC9wYW5pYy5jIGIva2VybmVsL3BhbmljLmMKPiBpbmRl
-eCA4MTM2YWQ3NmU1ZmQuLjc3NDYxNGY3MmNiZCAxMDA2NDQKPiAtLS0gYS9rZXJuZWwvcGFuaWMu
-Ywo+ICsrKyBiL2tlcm5lbC9wYW5pYy5jCj4gQEAgLTE0Miw3ICsxNDIsOCBAQCB2b2lkIHBhbmlj
-KGNvbnN0IGNoYXIgKmZtdCwgLi4uKQo+ICAJICogTm90ZTogc2luY2Ugc29tZSBwYW5pY19ub3Rp
-ZmllcnMgY2FuIG1ha2UgY3Jhc2hlZCBrZXJuZWwKPiAgCSAqIG1vcmUgdW5zdGFibGUsIGl0IGNh
-biBpbmNyZWFzZSByaXNrcyBvZiB0aGUga2R1bXAgZmFpbHVyZSB0b28uCj4gIAkgKi8KPiAtCWNy
-YXNoX2tleGVjKE5VTEwpOwo+ICsJaWYgKGNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzKQo+ICsJ
-CWNyYXNoX2tleGVjKE5VTEwpOwo+ICAKPiAgCWJ1c3Rfc3BpbmxvY2tzKDApOwo+ICAKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Mon, 2015-03-23 at 20:53 +0900, AKASHI Takahiro wrote:
+> The current kvm implementation keeps EL2 vector table installed even
+> when the system is shut down. This prevents kexec from putting the system
+> with kvm back into EL2 when starting a new kernel.
+
+This is a kvm bug fix, so I think the subject should
+be something like 'arm64/kvm: Fix shutdown issue'.
+
+-Geoff
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
