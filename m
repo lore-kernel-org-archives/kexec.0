@@ -1,22 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ya4nh-0003vf-Qq
- for kexec@lists.infradead.org; Mon, 23 Mar 2015 16:02:02 +0000
-Date: Mon, 23 Mar 2015 12:01:36 -0400
-From: Don Zickus <dzickus@redhat.com>
-Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-Message-ID: <20150323160136.GE199787@redhat.com>
-References: <54F9D645.2050008@jp.fujitsu.com>
- <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
- <20150323071943.GA22765@gmail.com>
- <20150323133710.GA3172@redhat.com>
- <20150323135046.GA25012@gmail.com>
- <20150323143158.GB3172@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150323143158.GB3172@redhat.com>
+Message-ID: <1427129214.27739.4.camel@infradead.org>
+Subject: Re: [RFC 1/4] arm64: kvm: add a cpu tear-down function
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 23 Mar 2015 09:46:54 -0700
+In-Reply-To: <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
+References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,97 +19,168 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com, akpm@linux-foundation.org, bp@suse.de, Ingo Molnar <mingo@kernel.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, christoffer.dall@linaro.org, freddy77@gmail.com
 
-On Mon, Mar 23, 2015 at 10:31:58AM -0400, Vivek Goyal wrote:
-> > > I think one of the motivations behind this patch was call to kmsg_dump().
-> > > Some vendors have been wanting to have the capability to save kernel logs
-> > > to some NVRAM before transition to second kernel happens. Their argument
-> > > is that kdump does not succeed all the time and if kdump does not succeed
-> > > then atleast they have something to work with (kernel logs retrieved
-> > > from pstore interface).
-> > 
-> > Doesn't pstore attach itself to printk itself? AFAICS it does:
-> > 
-> >  fs/pstore/platform.c:   register_console(&pstore_console);
-> > 
-> > so the printk log leading up to and including the crash should be 
-> > available, regardless of this patch. What am I missing?
-> 
-> That's a good point. I was not aware of it. I am Ccing Don Zickus as
-> he has spent some time on this in the past.
+Hi Takahiro,
 
-Hi,
+On Mon, 2015-03-23 at 20:53 +0900, AKASHI Takahiro wrote:
+> diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
+> index 3e6859b..428f41c 100644
+> --- a/arch/arm/kvm/mmu.c
+> +++ b/arch/arm/kvm/mmu.c
+...
+> +phys_addr_t kvm_get_stub_vectors(void)
+> +{
+> +       return virt_to_phys(__hyp_stub_vectors);
+> +}
 
-I will throw my two cents in here, though I expect Daisuke to provide better
-info.
+The stub vectors are not part of KVM, but part of kernel,
+so to me a routine get_hyp_stub_vectors() with a prototype
+in asm/virt.h, then a definition in maybe
+kernel/process.c, or a new file kernel/virt.c makes more
+sense.
 
-A number of years ago when I was helping work through some of the birthing
-pains of the backend for pstore, we didn't have console support.  I don't
-think it made sense for x86 either because:
+> +unsigned long kvm_reset_func_entry(void)
+> +{
+> +       /* VA of __kvm_hyp_reset in trampline code */
+> +       return TRAMPOLINE_VA + (__kvm_hyp_reset - __hyp_idmap_text_start);
+> +}
+> +
+>  int kvm_mmu_init(void)
+>  {
+>         int err;
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index 4f7310f..97ee2fc 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -116,8 +116,11 @@
+>  struct kvm;
+>  struct kvm_vcpu;
+>  
+> +extern char __hyp_stub_vectors[];
 
-- lack of space in nvram (for large logs)
-- you could mark space for deletion, but space was only recovered on reboot
-- the state machine would be slow to write (though mmap might have been
-  faster)
+I think this should at least be in asm/virt.h, or better,
+have a get_hyp_stub_vectors().
 
-Looking through the history of who introduced register_console, it looks
-like it was the ARM folks.  They might have a better implementation for a
-backend that does not have the above limitations.  I don't know.
+>  extern char __kvm_hyp_init[];
+>  extern char __kvm_hyp_init_end[];
+> +extern char __kvm_hyp_reset[];
+>  
+>  extern char __kvm_hyp_vector[];
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 8ac3c70..97f88fe 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -199,6 +199,7 @@ struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
+>  struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
+>  
+>  u64 kvm_call_hyp(void *hypfn, ...);
+> +void kvm_call_reset(unsigned long reset_func, ...);
+
+kvm_call_reset() takes a fixed number of args, so we shouldn't
+have it as a variadic here.  I think a variadic routine
+complicates things for my kvm_call_reset() suggestion below.
+
+>  void force_vm_exit(const cpumask_t *mask);
+>  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
+>  
+> @@ -223,6 +224,15 @@ static inline void __cpu_init_hyp_mode(phys_addr_t boot_pgd_ptr,
+>                      hyp_stack_ptr, vector_ptr);
+>  }
+>  
+> +static inline void __cpu_reset_hyp_mode(unsigned long reset_func,
+> +                                       phys_addr_t boot_pgd_ptr,
+> +                                       phys_addr_t phys_idmap_start,
+> +                                       unsigned long stub_vector_ptr)
+
+> +       kvm_call_reset(reset_func, boot_pgd_ptr,
+> +                      phys_idmap_start, stub_vector_ptr);
+
+Why not switch the order of the args here to:
+
+  kvm_call_reset(boot_pgd_ptr, phys_idmap_start, stub_vector_ptr, reset_func)
+
+This will eliminate the register shifting in the HVC_RESET
+hcall vector which becomes just 'br x3'.
 
 
-> 
-> Masami, would you have thougths on this? IIRC, one reason why kmsg_dump()
-> was written so that one could dump kernel messages to an NVRAM. Of one
-> could simple register pstore as console, then how kmsg_dump() will
-> continue to be useful?
-> 
-> > 
-> > > Not that I agree fully with this as problem might happen while we 
-> > > try to run panic_notifiers or kmsg_dump hooks and never transition 
-> > > into kdump kernel.
-> > 
-> > btw., this is the big problem with 'notifiers' in general: they are 
-> > opaque with barely any semantics defined, and a source of constant 
-> > confusion.
-> 
-> Agreed. That's the reason Eric never liked the idea of letting panic
-> notifiers run before crash_kexec().
-> 
-> > 
-> > > And it has been literally years since some developers have been 
-> > > pushing for allowing to run panic notifiers before crash_kexec(). 
-> > > Eric Biederman has been pushing back saying it reduces the 
-> > > reliability of kdump operation so this is not acceptable.
-> > 
-> > So what do those notifiers do?
+> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+> index fd085ec..aee75f9 100644
+> --- a/arch/arm64/kvm/hyp.S
+> +++ b/arch/arm64/kvm/hyp.S
+> @@ -1136,6 +1136,11 @@ ENTRY(kvm_call_hyp)
+>         ret
+>  ENDPROC(kvm_call_hyp)
+>  
+> +ENTRY(kvm_call_reset)
+> +       hvc     #HVC_RESET
+> +       ret
+> +ENDPROC(kvm_call_reset)
+> +
+>  .macro invalid_vector  label, target
+>         .align  2
+>  \label:
+> @@ -1179,10 +1184,10 @@ el1_sync:                                       // Guest trapped into EL2
+>         cmp     x18, #HVC_GET_VECTORS
+>         b.ne    1f
+>         mrs     x0, vbar_el2
+> -       b       2f
+> -
+> -1:     /* Default to HVC_CALL_HYP. */
 
-I think it was just philosophical differences.  kexec on panic is a
-complicated path and a bunch of stuff could go wrong.  As insurance in case kexec
-on panic did not work, some companies wanted to pre-maturely capture info,
-so they have _something_ to use for a debug analysis.
+It seems you are deleting this comment and also
+removing the logic that makes HVC_CALL_HYP the default.
 
-Vivek, Matthew Garret and myself argued to provide us with failure cases and
-we will fix kexec on panic instead.  I think the stability period for kexec
-on panic was so long that companies still do not trust it.  Just my guess.
+> +       b       3f
+>  
+> +1:     cmp     x18, #HVC_CALL_HYP
+> +       b.ne    2f
+>         push    lr, xzr
+>  
+>         /*
+> @@ -1196,7 +1201,23 @@ el1_sync:                                        // Guest trapped into EL2
+>         blr     lr
+>  
+>         pop     lr, xzr
+> -2:     eret
+> +       b       3f
+> +
+> +       /*
+> +        * shuffle the parameters and jump into trampline code.
+> +        */
+> +2:     cmp     x18, #HVC_RESET
+> +       b.ne    3f
+> +
+> +       mov     x18, x0
+> +       mov     x0, x1
+> +       mov     x1, x2
+> +       mov     x2, x3
+> +       mov     x3, x4
+> +       br      x18
+> +       /* not reach here */
+> +
+> +3:     eret
 
-Vivek provided examples of what folks were doing with the notifiers.
+We don't need to change labels for each new hcall, I
+think just this is OK:
 
-> 
-> IIRC, two main reasons had come in the past.
-> 
-> - In a cluster of nodes, people wanted to send some sort of notifications
->   to main server that a node has crashed and don't fence it off as it
->   might be saving dump.
-> 
-> - And saving kernel logs to non volatile store.
-> 
-> There might be more and I might not be aware about these. Hatayama and
-> Masami, can you shed more light on this.
+	cmp	x18, #HVC_GET_VECTORS
+	b.ne	1f
+	mrs	x0, vbar_el2
+	b	2f
 
-Cheers,
-Don
++1:	cmp	x18, #HVC_RESET
++	b.ne	1f
++	br	x3			// No return
+
+1:	/* Default to HVC_CALL_HYP. */
+	...
+
+-Geoff
+
+
+
 
 _______________________________________________
 kexec mailing list
