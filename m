@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-x232.google.com ([2a00:1450:400c:c05::232])
+Received: from mail-pa0-f44.google.com ([209.85.220.44])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YZweh-0000I4-6G
- for kexec@lists.infradead.org; Mon, 23 Mar 2015 07:20:12 +0000
-Received: by wibgn9 with SMTP id gn9so53062901wib.1
- for <kexec@lists.infradead.org>; Mon, 23 Mar 2015 00:19:48 -0700 (PDT)
-Date: Mon, 23 Mar 2015 08:19:43 +0100
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-Message-ID: <20150323071943.GA22765@gmail.com>
-References: <54F9D645.2050008@jp.fujitsu.com>
- <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
+ id 1Ya0wl-0000Jh-7z
+ for kexec@lists.infradead.org; Mon, 23 Mar 2015 11:55:08 +0000
+Received: by pacwe9 with SMTP id we9so189520664pac.1
+ for <kexec@lists.infradead.org>; Mon, 23 Mar 2015 04:54:45 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [RFC 0/4] arm64: kexec: fix kvm issue in kexec
+Date: Mon, 23 Mar 2015 20:53:55 +0900
+Message-Id: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,65 +17,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, masami.hiramatsu.pt@hitachi.com, akpm@linux-foundation.org, bp@suse.de, Vivek Goyal <vgoyal@redhat.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, christoffer.dall@linaro.org, freddy77@gmail.com
 
-CiogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+IHdyb3RlOgoKPiBDQyBtb3JlIHBlb3BsZSAu
-Li4KPiAKPiBPbiAwMy8wNy8xNSBhdCAwMTozMWFtLCAiSGF0YXlhbWEsIERhaXN1a2Uv55WR5bGx
-IOWkp+i8lCIgd3JvdGU6Cj4gPiBUaGUgY29tbWl0IGYwNmU1MTUzZjRhZTJlMmYzYjAzMDBmMGUy
-NjBlNDBjYjdmZWZkNDUgaW50cm9kdWNlZAo+ID4gImNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJz
-IiBrZXJuZWwgYm9vdCBvcHRpb24sIHdoaWNoIHRvZ2dsZXMKPiA+IHdoZWF0aGVyIHBhbmljKCkg
-Y2FsbHMgY3Jhc2hfa2V4ZWMoKSBiZWZvcmUgcGFuaWNfbm90aWZpZXJzIGFuZCBkdW1wCj4gPiBr
-bXNnIG9yIGFmdGVyLgo+ID4gCj4gPiBUaGUgcHJvYmxlbSBpcyB0aGF0IHRoZSBjb21taXQgb3Zl
-cmxvb2tzIHBhbmljX29uX29vcHMga2VybmVsIGJvb3QKPiA+IG9wdGlvbi4gSWYgaXQgaXMgZW5h
-YmxlZCwgY3Jhc2hfa2V4ZWMoKSBpcyBjYWxsZWQgZGlyZWN0bHkgd2l0aG91dAo+ID4gZ29pbmcg
-dGhyb3VnaCBwYW5pYygpIGluIG9vcHMgcGF0aC4KPiA+IAo+ID4gVG8gZml4IHRoaXMgaXNzdWUs
-IHRoaXMgcGF0Y2ggYWRkcyBhIGNoZWNrIHRvCj4gPiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmll
-cnMiIGluIHRoZSBjb25kaXRpb24gb2Yga2V4ZWNfc2hvdWxkX2NyYXNoKCkuCj4gPiAKPiA+IEFs
-c28sIHB1dCBhIGNvbW1lbnQgaW4ga2V4ZWNfc2hvdWxkX2NyYXNoKCkgdG8gZXhwbGFpbiBub3Qg
-b2J2aW91cwo+ID4gdGhpbmdzIG9uIHRoaXMgcGF0Y2guCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
-IEhBVEFZQU1BIERhaXN1a2UgPGQuaGF0YXlhbWFAanAuZnVqaXRzdS5jb20+Cj4gPiBBY2tlZC1i
-eTogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+Cj4gPiBUZXN0ZWQtYnk6IEhpZGVoaXJvIEth
-d2FpIDxoaWRlaGlyby5rYXdhaS5lekBoaXRhY2hpLmNvbT4KPiA+IFJldmlld2VkLWJ5OiBNYXNh
-bWkgSGlyYW1hdHN1IDxtYXNhbWkuaGlyYW1hdHN1LnB0QGhpdGFjaGkuY29tPgo+ID4gLS0tCj4g
-PiAgaW5jbHVkZS9saW51eC9rZXJuZWwuaCB8ICAzICsrKwo+ID4gIGtlcm5lbC9rZXhlYy5jICAg
-ICAgICAgfCAxMSArKysrKysrKysrKwo+ID4gIGtlcm5lbC9wYW5pYy5jICAgICAgICAgfCAgMiAr
-LQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoK
-VGhpcyBpcyBoYWNrIHVwb24gaGFjaywgYnV0IHdoeSB3YXMgdGhpcyBjcmFwIG1lcmdlZCBpbiB0
-aGUgZmlyc3QgCnBsYWNlPwoKSSBzZWUgdHdvIHByb2JsZW1zIGp1c3QgYnkgY3Vyc29yeSByZXZp
-ZXc6CgoxKQoKRmlyc3RseSwgdGhlIHJlYWwgYnVnIGluOgoKICBmMDZlNTE1M2Y0YWUgKCJrZXJu
-ZWwvcGFuaWMuYzogYWRkICJjcmFzaF9rZXhlY19wb3N0X25vdGlmaWVycyIgb3B0aW9uIGZvciBr
-ZHVtcCBhZnRlciBwYW5pY19ub3RpZmVycyIpCgpXYXMgdGhhdCBjcmFzaF9rZXhlYygpIHdhcyBj
-YWxsZWQgdW5jb25kaXRpb25hbGx5IGFmdGVyIG5vdGlmaWVycyB3ZXJlIApjYWxsZWQsIHdoaWNo
-IHNob3VsZCBiZSBmaXhlZCB2aWEgdGhlIHNpbXBsZSBwYXRjaCBiZWxvdyAodW50ZXN0ZWQpLiAK
-TG9va3MgbXVjaCBzaW1wbGVyIHRoYW4geW91ciBmaXguCgoyKQoKU2Vjb25kbHksIGFuZCBtb3Jl
-IGltcG9ydGFudGx5LCB0aGUgd2hvbGUgcHJlbWlzZSBvZiBjb21taXQgCmYwNmU1MTUzZjRhZSBp
-cyBicm9rZW4gSU1ITzoKCiAiVGhpcyBjYW4gaGVscCByYXJlIHNpdHVhdGlvbnMgd2hlcmUga2R1
-bXAgZmFpbHMgYmVjYXVzZSBvZiB1bnN0YWJsZQogIGNyYXNoZWQga2VybmVsIG9yIGhhcmR3YXJl
-IGZhaWx1cmUgKG1lbW9yeSBjb3JydXB0aW9uIG9uIGNyaXRpY2FsCiAgZGF0YS9jb2RlKSIKCnd0
-Zj8KCklmIHRoZSBrZXJuZWwgY3Jhc2hlZCBkdWUgdG8gYSBrZXJuZWwgY3Jhc2gsIHRoZW4gdGhl
-IGtlcm5lbCBib290aW5nIAp1cCBpbiB3aGF0ZXZlciBoYXJkd2FyZSBzdGF0ZSBzaG91bGQgYmUg
-YWJsZSB0byBkbyBhIGNsZWFuIGJvb3R1cC4gVGhlIApmaXggZm9yIHRob3NlICdyYXJlIHNpdHVh
-dGlvbnMnIHNob3VsZCBiZSB0byBmaXggdGhlIHJlYWwgYnVnIChmb3IgCmV4YW1wbGUgYnkgbWFr
-aW5nIGhhcmR3YXJlIGRyaXZlciBpbml0IChvciBkZWluaXQpIHNlcXVlbmNlcyBtb3JlIApyb2J1
-c3QpLCBub3QgdG8gcGFwZXIgaXQgb3ZlciBieSBvcmRlcmluZyBhcm91bmQgY3Jhc2gtdGltZSBz
-ZXF1ZW5jZXMgCi4uLgoKSWYgaXQgY3Jhc2hlZCBkdWUgdG8gc29tZSBoYXJkd2FyZSBmYWlsdXJl
-LCB0aGVyZSdzIGxpdGVyYWxseSBhbiAKaW5maW5pdGUgYW1vdW50IG9mIGZhaWx1cmUgbW9kZXMg
-dGhhdCBtYXkgb3IgbWF5IG5vdCBiZSBpbXBhY3RlZCBieSAKa2V4ZWMgY3Jhc2gtdGltZSBoYW5k
-bGluZyBvcmRlcmluZy4gV2UgZG9uJ3Qgd2FudCB0byBwdXQgYSB6aWxsaW9uIApzdWNoIGZsYWdz
-IGludG8gdGhlIGtlcm5lbCBwcm9wZXIganVzdCB0byBhbGxvdyB0aGUgcGVydHVyYmF0aW9uIG9m
-IAp0aGUga2VybmVsLgoKVGhhbmtzLAoKCUluZ28KCmRpZmYgLS1naXQgYS9rZXJuZWwvcGFuaWMu
-YyBiL2tlcm5lbC9wYW5pYy5jCmluZGV4IDgxMzZhZDc2ZTVmZC4uNzc0NjE0ZjcyY2JkIDEwMDY0
-NAotLS0gYS9rZXJuZWwvcGFuaWMuYworKysgYi9rZXJuZWwvcGFuaWMuYwpAQCAtMTQyLDcgKzE0
-Miw4IEBAIHZvaWQgcGFuaWMoY29uc3QgY2hhciAqZm10LCAuLi4pCiAJICogTm90ZTogc2luY2Ug
-c29tZSBwYW5pY19ub3RpZmllcnMgY2FuIG1ha2UgY3Jhc2hlZCBrZXJuZWwKIAkgKiBtb3JlIHVu
-c3RhYmxlLCBpdCBjYW4gaW5jcmVhc2Ugcmlza3Mgb2YgdGhlIGtkdW1wIGZhaWx1cmUgdG9vLgog
-CSAqLwotCWNyYXNoX2tleGVjKE5VTEwpOworCWlmIChjcmFzaF9rZXhlY19wb3N0X25vdGlmaWVy
-cykKKwkJY3Jhc2hfa2V4ZWMoTlVMTCk7CiAKIAlidXN0X3NwaW5sb2NrcygwKTsKIAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+This patch set addresses KVM issue described in Geoff's kexec patch set.
+    http://lists.infradead.org/pipermail/kexec/2015-March/013432.html
+
+The basic approach here is to define a kvm tear-down function and add
+a reboot hook to gracefully shutdown the 1st kernel. This way, kvm gets
+free from kexec-specific cleanup and yet we allows future enhancement,
+like cpu hotplug & building kvm as a module, based on tear-down function.
+In this sense, patch #1 & #2 actually fix the problem, and #3 & #4 are
+rather informative.
+
+I confirmed that 1st kernel successfully shut down and 2nd kernel started
+with the following messages:
+
+    kvm [1]: Using HYP init bounce page @8fa52f000
+    kvm [1]: interrupt-controller@2c02f000 IRQ6
+    kvm [1]: timer IRQ3
+    kvm [1]: Hyp mode initialized successfully
+
+test target: Base fast model
+version:     kernel v4.0-rc4 + Geoff's kexec v8
+
+
+I still have some concerns about the following points. Please let me know
+if you have any comments:
+
+1) Call kvm_cpu_reset() on non-boot cpus in reboot notifier
+   We don't have to do so in kexec-specific case. But the current code runs
+   the function on each cpu for safety since we use a general reboot hook.
+2) Flush D$ in kvm_cpu_reset()
+   Currently doesn't do so because all the cpus are just going to shut down,
+   and we actually flush D$ on boot cpu in Geoff's cpu_reset().
+3) Compatibility with arm implementation
+   Frediano is no longer working on this issue on arm as he left his
+   company. But my approach here is based on a generic interface and can be
+   applied to arm in a similar way.
+
+   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/322231.html
+
+
+AKASHI Takahiro (4):
+  arm64: kvm: add a cpu tear-down function
+  arm64: kexec: fix kvm issue
+  arm64: kvm: add cpu reset hook for cpu hotplug
+  arm64: kvm: add cpu reset at module exit
+
+ arch/arm/kvm/arm.c                |   54 +++++++++++++++++++++++++++++++++++++
+ arch/arm/kvm/mmu.c                |   16 +++++++++++
+ arch/arm64/include/asm/kvm_asm.h  |    3 +++
+ arch/arm64/include/asm/kvm_host.h |   11 +++++++-
+ arch/arm64/include/asm/kvm_mmu.h  |    3 +++
+ arch/arm64/include/asm/virt.h     |   11 ++++++++
+ arch/arm64/kvm/Kconfig            |    1 -
+ arch/arm64/kvm/hyp-init.S         |   41 ++++++++++++++++++++++++++++
+ arch/arm64/kvm/hyp.S              |   29 +++++++++++++++++---
+ 9 files changed, 163 insertions(+), 6 deletions(-)
+
+-- 
+1.7.9.5
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
