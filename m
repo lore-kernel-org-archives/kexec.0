@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55112467.207@arm.com>
-Date: Tue, 24 Mar 2015 08:46:31 +0000
+Message-ID: <551135AE.1080401@arm.com>
+Date: Tue, 24 Mar 2015 10:00:14 +0000
 From: Marc Zyngier <marc.zyngier@arm.com>
 MIME-Version: 1.0
-Subject: Re: [RFC 2/4] arm64: kexec: fix kvm issue
-References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>	
- <1427111639-4575-3-git-send-email-takahiro.akashi@linaro.org>
- <1427126213.27739.3.camel@infradead.org>
-In-Reply-To: <1427126213.27739.3.camel@infradead.org>
+Subject: Re: [RFC 1/4] arm64: kvm: add a cpu tear-down function
+References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
+In-Reply-To: <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,25 +19,316 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
 
-On 23/03/15 15:56, Geoff Levand wrote:
-> On Mon, 2015-03-23 at 20:53 +0900, AKASHI Takahiro wrote:
->> The current kvm implementation keeps EL2 vector table installed even
->> when the system is shut down. This prevents kexec from putting the system
->> with kvm back into EL2 when starting a new kernel.
+Hi Takahiro,
+
+On 23/03/15 11:53, AKASHI Takahiro wrote:
+> Cpu must be put back into its initial state, at least, in the
+> following cases in order to shutdown the system and/or re-initialize cpus
+> later on:
+> 1) kexec/kdump
+> 2) cpu hotplug (offline)
+> 3) removing kvm as a module
 > 
-> This is a kvm bug fix, so I think the subject should
-> be something like 'arm64/kvm: Fix shutdown issue'.
+> To address those issues in later patches, this patch adds a tear-down
+> function, kvm_cpu_reset(), that disables D-cache & MMU and restore a vector
+> table to the initial stub at EL2.
 
-Not quite. On its own, this doesn't fix anything in KVM. It simply plugs
-a deficiency in the arm64 kexec implementation. If you want to be
-completely true to the content of the patch, it should read:
+Thanks for having a look at this.
 
-"arm64: KVM: Allow EL2 context to be reset on shutdown"
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  arch/arm/kvm/arm.c                |   18 ++++++++++++++++
+>  arch/arm/kvm/mmu.c                |   16 +++++++++++++++
+>  arch/arm64/include/asm/kvm_asm.h  |    3 +++
+>  arch/arm64/include/asm/kvm_host.h |   10 +++++++++
+>  arch/arm64/include/asm/kvm_mmu.h  |    3 +++
+>  arch/arm64/include/asm/virt.h     |   11 ++++++++++
+>  arch/arm64/kvm/hyp-init.S         |   41 +++++++++++++++++++++++++++++++++++++
+>  arch/arm64/kvm/hyp.S              |   29 ++++++++++++++++++++++----
+>  8 files changed, 127 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
+> index 5560f74..35c8bc0 100644
+> --- a/arch/arm/kvm/arm.c
+> +++ b/arch/arm/kvm/arm.c
+> @@ -897,6 +897,24 @@ static void cpu_init_hyp_mode(void *dummy)
+>  	__cpu_init_hyp_mode(boot_pgd_ptr, pgd_ptr, hyp_stack_ptr, vector_ptr);
+>  }
+>  
+> +void kvm_cpu_reset(void *dummy)
 
-Can we now drop the blame game and get back to the actual code?
+Given that the notifier introduced in patch #2 lives in the same file,
+this could be made static, couldn't it?
+
+> +{
+> +	phys_addr_t boot_pgd_ptr;
+> +	phys_addr_t phys_idmap_start;
+> +	unsigned long reset_func;
+> +	unsigned long vector_ptr;
+> +
+> +	if (__hyp_get_vectors() == hyp_default_vectors)
+> +		return;
+> +
+> +	reset_func = kvm_reset_func_entry();
+> +	boot_pgd_ptr = kvm_mmu_get_boot_httbr();
+> +	phys_idmap_start = kvm_get_idmap_start();
+> +	vector_ptr = kvm_get_stub_vectors();
+
+Isn't that hyp_default_vectors already?
+
+> +	__cpu_reset_hyp_mode(reset_func,
+> +			     boot_pgd_ptr, phys_idmap_start, vector_ptr);
+> +}
+> +
+>  static int hyp_init_cpu_notify(struct notifier_block *self,
+>  			       unsigned long action, void *cpu)
+>  {
+> diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
+> index 3e6859b..428f41c 100644
+> --- a/arch/arm/kvm/mmu.c
+> +++ b/arch/arm/kvm/mmu.c
+> @@ -1490,6 +1490,22 @@ phys_addr_t kvm_get_idmap_vector(void)
+>  	return hyp_idmap_vector;
+>  }
+>  
+> +phys_addr_t kvm_get_idmap_start(void)
+> +{
+> +	return hyp_idmap_start;
+> +}
+> +
+> +phys_addr_t kvm_get_stub_vectors(void)
+> +{
+> +	return virt_to_phys(__hyp_stub_vectors);
+> +}
+
+As Geoff already mentioned, this doesn't belong in KVM. But I don't
+think you need it, as explained above.
+
+> +
+> +unsigned long kvm_reset_func_entry(void)
+> +{
+> +	/* VA of __kvm_hyp_reset in trampline code */
+> +	return TRAMPOLINE_VA + (__kvm_hyp_reset - __hyp_idmap_text_start);
+> +}
+
+If you need to compute addresses in the trampoline page, it would be
+better to have a generic macro that takes a kernel VA, and turns it into
+a trampoline VA.
+
+> +
+>  int kvm_mmu_init(void)
+>  {
+>  	int err;
+> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+> index 4f7310f..97ee2fc 100644
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> @@ -116,8 +116,11 @@
+>  struct kvm;
+>  struct kvm_vcpu;
+>  
+> +extern char __hyp_stub_vectors[];
+
+Not a KVM thing (for the same reason).
+
+> +
+>  extern char __kvm_hyp_init[];
+>  extern char __kvm_hyp_init_end[];
+> +extern char __kvm_hyp_reset[];
+>  
+>  extern char __kvm_hyp_vector[];
+>  
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 8ac3c70..97f88fe 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -199,6 +199,7 @@ struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
+>  struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
+>  
+>  u64 kvm_call_hyp(void *hypfn, ...);
+> +void kvm_call_reset(unsigned long reset_func, ...);
+
+You seem to have a single call signature for this function, and have
+defined all the parameters below. You can drop the variadic aspect.
+
+>  void force_vm_exit(const cpumask_t *mask);
+>  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
+>  
+> @@ -223,6 +224,15 @@ static inline void __cpu_init_hyp_mode(phys_addr_t boot_pgd_ptr,
+>  		     hyp_stack_ptr, vector_ptr);
+>  }
+>  
+> +static inline void __cpu_reset_hyp_mode(unsigned long reset_func,
+> +					phys_addr_t boot_pgd_ptr,
+> +					phys_addr_t phys_idmap_start,
+> +					unsigned long stub_vector_ptr)
+> +{
+> +	kvm_call_reset(reset_func, boot_pgd_ptr,
+> +		       phys_idmap_start, stub_vector_ptr);
+> +}
+> +
+>  struct vgic_sr_vectors {
+>  	void	*save_vgic;
+>  	void	*restore_vgic;
+> diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
+> index 6458b53..36be582 100644
+> --- a/arch/arm64/include/asm/kvm_mmu.h
+> +++ b/arch/arm64/include/asm/kvm_mmu.h
+> @@ -96,6 +96,9 @@ void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu);
+>  phys_addr_t kvm_mmu_get_httbr(void);
+>  phys_addr_t kvm_mmu_get_boot_httbr(void);
+>  phys_addr_t kvm_get_idmap_vector(void);
+> +phys_addr_t kvm_get_idmap_start(void);
+> +phys_addr_t kvm_get_stub_vectors(void);
+> +unsigned long kvm_reset_func_entry(void);
+>  int kvm_mmu_init(void);
+>  void kvm_clear_hyp_idmap(void);
+>  
+> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+> index 3070096..7fcd087 100644
+> --- a/arch/arm64/include/asm/virt.h
+> +++ b/arch/arm64/include/asm/virt.h
+> @@ -61,6 +61,17 @@
+>  #define BOOT_CPU_MODE_EL1	(0xe11)
+>  #define BOOT_CPU_MODE_EL2	(0xe12)
+>  
+> +/*
+> + * HVC_RESET - Reset cpu in EL2 to initial state.
+> + *
+> + * @x0: entry address in trampoline code in va
+> + * @x1: identical mapping page table in pa
+> + * @x2: start address of identical mapping in pa
+> + * @x3: initial stub vector in pa
+> + */
+> +
+> +#define HVC_RESET 5
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  /*
+> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
+> index c319116..ca7e6bf 100644
+> --- a/arch/arm64/kvm/hyp-init.S
+> +++ b/arch/arm64/kvm/hyp-init.S
+> @@ -115,6 +115,47 @@ target: /* We're now in the trampoline code, switch page tables */
+>  	eret
+>  ENDPROC(__kvm_hyp_init)
+>  
+> +	/*
+> +	 * x0: HYP boot pgd
+> +	 * x1: HYP phys_idmap_start
+> +	 * x2: HYP stub vectors
+> +	 */
+> +ENTRY(__kvm_hyp_reset)
+> +	/* We're in trampoline code in VA */
+> +	/* Invalidate the old TLBs */
+> +	tlbi	alle2
+> +	dsb	sy
+
+Invalidating the TLBs before switching TTBR0_EL2 is unlikely to have the
+effect you want.
+
+> +	/* Switch back to boot page tables */
+> +	msr	ttbr0_el2, x0
+> +	isb
+
+This is the place where you want TLBI to occur.
+
+> +	/* Branch into PA space */
+> +	adr	x0, 1f
+> +	bfi	x1, x0, #0, #PAGE_SHIFT
+> +	br	x1
+> +
+> +	/* We're now in idmap */
+> +1:	/* Invalidate the old TLBs again */
+> +	tlbi	alle2
+> +	dsb	sy
+
+See? This is the only TLBI that actually makes sense. Now, given that
+you are actually disabling the MMU, I'm not sure these TBLIs make much
+sense.
+
+> +	/* Disable MMU */
+> +	mrs	x0, sctlr_el2
+> +	and	x1, x0, #SCTLR_EL2_EE
+> +	orr	x0, x0, x1		// preserve endianness of EL2
+> +	ldr	x1, =SCTLR_EL2_FLAGS
+> +	eor	x1, x1, xzr
+> +	bic	x0, x0, x1		// Clear SCTL_M and etc
+> +	msr	sctlr_el2, x0
+> +	isb
+> +
+> +	/* Switch back to stub vectors */
+> +	msr	vbar_el2, x2
+> +
+> +	eret
+> +ENDPROC(__kvm_hyp_reset)
+> +
+>  	.ltorg
+>  
+>  	.popsection
+> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+> index fd085ec..aee75f9 100644
+> --- a/arch/arm64/kvm/hyp.S
+> +++ b/arch/arm64/kvm/hyp.S
+> @@ -1136,6 +1136,11 @@ ENTRY(kvm_call_hyp)
+>  	ret
+>  ENDPROC(kvm_call_hyp)
+>  
+> +ENTRY(kvm_call_reset)
+> +	hvc	#HVC_RESET
+> +	ret
+> +ENDPROC(kvm_call_reset)
+> +
+>  .macro invalid_vector	label, target
+>  	.align	2
+>  \label:
+> @@ -1179,10 +1184,10 @@ el1_sync:					// Guest trapped into EL2
+>  	cmp	x18, #HVC_GET_VECTORS
+>  	b.ne	1f
+>  	mrs	x0, vbar_el2
+> -	b	2f
+> -
+> -1:	/* Default to HVC_CALL_HYP. */
+> +	b	3f
+>  
+> +1:	cmp	x18, #HVC_CALL_HYP
+> +	b.ne	2f
+>  	push	lr, xzr
+>  
+>  	/*
+> @@ -1196,7 +1201,23 @@ el1_sync:					// Guest trapped into EL2
+>  	blr	lr
+>  
+>  	pop	lr, xzr
+> -2:	eret
+> +	b	3f
+> +
+> +	/*
+> +	 * shuffle the parameters and jump into trampline code.
+> +	 */
+> +2:	cmp	x18, #HVC_RESET
+> +	b.ne	3f
+> +
+> +	mov	x18, x0
+> +	mov	x0, x1
+> +	mov	x1, x2
+> +	mov	x2, x3
+> +	mov	x3, x4
+> +	br	x18
+
+I'd rather move the shuffling of the registers before the HVC call.
+
+> +	/* not reach here */
+> +
+> +3:	eret
+>  
+>  el1_trap:
+>  	/*
+> 
 
 Thanks,
 
