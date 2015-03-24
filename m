@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1427129214.27739.4.camel@infradead.org>
-Subject: Re: [RFC 1/4] arm64: kvm: add a cpu tear-down function
-From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 23 Mar 2015 09:46:54 -0700
-In-Reply-To: <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
-References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
- <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
-Mime-Version: 1.0
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YaFY9-0002mx-KK
+ for kexec@lists.infradead.org; Tue, 24 Mar 2015 03:30:43 +0000
+Message-ID: <5510DA42.6040708@hitachi.com>
+Date: Tue, 24 Mar 2015 12:30:10 +0900
+From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+MIME-Version: 1.0
+Subject: Re: Re: [PATCH v2] kernel/panic/kexec: fix
+ "crash_kexec_post_notifiers" option issue in oops path
+References: <54F9D645.2050008@jp.fujitsu.com>
+ <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
+ <20150323071943.GA22765@gmail.com>
+In-Reply-To: <20150323071943.GA22765@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,174 +21,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, linaro-kernel@lists.linaro.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, christoffer.dall@linaro.org, freddy77@gmail.com
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsQ==?= =?UTF-8?B?IOWkp+i8lCI=?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, hidehiro.kawai.ez@hitachi.com, akpm@linux-foundation.org, bp@suse.de, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Takahiro,
-
-On Mon, 2015-03-23 at 20:53 +0900, AKASHI Takahiro wrote:
-> diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
-> index 3e6859b..428f41c 100644
-> --- a/arch/arm/kvm/mmu.c
-> +++ b/arch/arm/kvm/mmu.c
-...
-> +phys_addr_t kvm_get_stub_vectors(void)
-> +{
-> +       return virt_to_phys(__hyp_stub_vectors);
-> +}
-
-The stub vectors are not part of KVM, but part of kernel,
-so to me a routine get_hyp_stub_vectors() with a prototype
-in asm/virt.h, then a definition in maybe
-kernel/process.c, or a new file kernel/virt.c makes more
-sense.
-
-> +unsigned long kvm_reset_func_entry(void)
-> +{
-> +       /* VA of __kvm_hyp_reset in trampline code */
-> +       return TRAMPOLINE_VA + (__kvm_hyp_reset - __hyp_idmap_text_start);
-> +}
-> +
->  int kvm_mmu_init(void)
->  {
->         int err;
-> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-> index 4f7310f..97ee2fc 100644
-> --- a/arch/arm64/include/asm/kvm_asm.h
-> +++ b/arch/arm64/include/asm/kvm_asm.h
-> @@ -116,8 +116,11 @@
->  struct kvm;
->  struct kvm_vcpu;
->  
-> +extern char __hyp_stub_vectors[];
-
-I think this should at least be in asm/virt.h, or better,
-have a get_hyp_stub_vectors().
-
->  extern char __kvm_hyp_init[];
->  extern char __kvm_hyp_init_end[];
-> +extern char __kvm_hyp_reset[];
->  
->  extern char __kvm_hyp_vector[];
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 8ac3c70..97f88fe 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -199,6 +199,7 @@ struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
->  struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
->  
->  u64 kvm_call_hyp(void *hypfn, ...);
-> +void kvm_call_reset(unsigned long reset_func, ...);
-
-kvm_call_reset() takes a fixed number of args, so we shouldn't
-have it as a variadic here.  I think a variadic routine
-complicates things for my kvm_call_reset() suggestion below.
-
->  void force_vm_exit(const cpumask_t *mask);
->  void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
->  
-> @@ -223,6 +224,15 @@ static inline void __cpu_init_hyp_mode(phys_addr_t boot_pgd_ptr,
->                      hyp_stack_ptr, vector_ptr);
->  }
->  
-> +static inline void __cpu_reset_hyp_mode(unsigned long reset_func,
-> +                                       phys_addr_t boot_pgd_ptr,
-> +                                       phys_addr_t phys_idmap_start,
-> +                                       unsigned long stub_vector_ptr)
-
-> +       kvm_call_reset(reset_func, boot_pgd_ptr,
-> +                      phys_idmap_start, stub_vector_ptr);
-
-Why not switch the order of the args here to:
-
-  kvm_call_reset(boot_pgd_ptr, phys_idmap_start, stub_vector_ptr, reset_func)
-
-This will eliminate the register shifting in the HVC_RESET
-hcall vector which becomes just 'br x3'.
-
-
-> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-> index fd085ec..aee75f9 100644
-> --- a/arch/arm64/kvm/hyp.S
-> +++ b/arch/arm64/kvm/hyp.S
-> @@ -1136,6 +1136,11 @@ ENTRY(kvm_call_hyp)
->         ret
->  ENDPROC(kvm_call_hyp)
->  
-> +ENTRY(kvm_call_reset)
-> +       hvc     #HVC_RESET
-> +       ret
-> +ENDPROC(kvm_call_reset)
-> +
->  .macro invalid_vector  label, target
->         .align  2
->  \label:
-> @@ -1179,10 +1184,10 @@ el1_sync:                                       // Guest trapped into EL2
->         cmp     x18, #HVC_GET_VECTORS
->         b.ne    1f
->         mrs     x0, vbar_el2
-> -       b       2f
-> -
-> -1:     /* Default to HVC_CALL_HYP. */
-
-It seems you are deleting this comment and also
-removing the logic that makes HVC_CALL_HYP the default.
-
-> +       b       3f
->  
-> +1:     cmp     x18, #HVC_CALL_HYP
-> +       b.ne    2f
->         push    lr, xzr
->  
->         /*
-> @@ -1196,7 +1201,23 @@ el1_sync:                                        // Guest trapped into EL2
->         blr     lr
->  
->         pop     lr, xzr
-> -2:     eret
-> +       b       3f
-> +
-> +       /*
-> +        * shuffle the parameters and jump into trampline code.
-> +        */
-> +2:     cmp     x18, #HVC_RESET
-> +       b.ne    3f
-> +
-> +       mov     x18, x0
-> +       mov     x0, x1
-> +       mov     x1, x2
-> +       mov     x2, x3
-> +       mov     x3, x4
-> +       br      x18
-> +       /* not reach here */
-> +
-> +3:     eret
-
-We don't need to change labels for each new hcall, I
-think just this is OK:
-
-	cmp	x18, #HVC_GET_VECTORS
-	b.ne	1f
-	mrs	x0, vbar_el2
-	b	2f
-
-+1:	cmp	x18, #HVC_RESET
-+	b.ne	1f
-+	br	x3			// No return
-
-1:	/* Default to HVC_CALL_HYP. */
-	...
-
--Geoff
-
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+KDIwMTUvMDMvMjMgMTY6MTkpLCBJbmdvIE1vbG5hciB3cm90ZToKPiAKPiAqIEJhb3F1YW4gSGUg
+PGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiAKPj4gQ0MgbW9yZSBwZW9wbGUgLi4uCj4+Cj4+IE9u
+IDAzLzA3LzE1IGF0IDAxOjMxYW0sICJIYXRheWFtYSwgRGFpc3VrZS/nlZHlsbEg5aSn6LyUIiB3
+cm90ZToKPj4+IFRoZSBjb21taXQgZjA2ZTUxNTNmNGFlMmUyZjNiMDMwMGYwZTI2MGU0MGNiN2Zl
+ZmQ0NSBpbnRyb2R1Y2VkCj4+PiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGtlcm5lbCBi
+b290IG9wdGlvbiwgd2hpY2ggdG9nZ2xlcwo+Pj4gd2hlYXRoZXIgcGFuaWMoKSBjYWxscyBjcmFz
+aF9rZXhlYygpIGJlZm9yZSBwYW5pY19ub3RpZmllcnMgYW5kIGR1bXAKPj4+IGttc2cgb3IgYWZ0
+ZXIuCj4+Pgo+Pj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGUgY29tbWl0IG92ZXJsb29rcyBwYW5p
+Y19vbl9vb3BzIGtlcm5lbCBib290Cj4+PiBvcHRpb24uIElmIGl0IGlzIGVuYWJsZWQsIGNyYXNo
+X2tleGVjKCkgaXMgY2FsbGVkIGRpcmVjdGx5IHdpdGhvdXQKPj4+IGdvaW5nIHRocm91Z2ggcGFu
+aWMoKSBpbiBvb3BzIHBhdGguCj4+Pgo+Pj4gVG8gZml4IHRoaXMgaXNzdWUsIHRoaXMgcGF0Y2gg
+YWRkcyBhIGNoZWNrIHRvCj4+PiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGluIHRoZSBj
+b25kaXRpb24gb2Yga2V4ZWNfc2hvdWxkX2NyYXNoKCkuCj4+Pgo+Pj4gQWxzbywgcHV0IGEgY29t
+bWVudCBpbiBrZXhlY19zaG91bGRfY3Jhc2goKSB0byBleHBsYWluIG5vdCBvYnZpb3VzCj4+PiB0
+aGluZ3Mgb24gdGhpcyBwYXRjaC4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBIQVRBWUFNQSBEYWlz
+dWtlIDxkLmhhdGF5YW1hQGpwLmZ1aml0c3UuY29tPgo+Pj4gQWNrZWQtYnk6IEJhb3F1YW4gSGUg
+PGJoZUByZWRoYXQuY29tPgo+Pj4gVGVzdGVkLWJ5OiBIaWRlaGlybyBLYXdhaSA8aGlkZWhpcm8u
+a2F3YWkuZXpAaGl0YWNoaS5jb20+Cj4+PiBSZXZpZXdlZC1ieTogTWFzYW1pIEhpcmFtYXRzdSA8
+bWFzYW1pLmhpcmFtYXRzdS5wdEBoaXRhY2hpLmNvbT4KPj4+IC0tLQo+Pj4gIGluY2x1ZGUvbGlu
+dXgva2VybmVsLmggfCAgMyArKysKPj4+ICBrZXJuZWwva2V4ZWMuYyAgICAgICAgIHwgMTEgKysr
+KysrKysrKysKPj4+ICBrZXJuZWwvcGFuaWMuYyAgICAgICAgIHwgIDIgKy0KPj4+ICAzIGZpbGVz
+IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBUaGlzIGlzIGhh
+Y2sgdXBvbiBoYWNrLCBidXQgd2h5IHdhcyB0aGlzIGNyYXAgbWVyZ2VkIGluIHRoZSBmaXJzdCAK
+PiBwbGFjZT8KPiAKPiBJIHNlZSB0d28gcHJvYmxlbXMganVzdCBieSBjdXJzb3J5IHJldmlldzoK
+PiAKPiAxKQo+IAo+IEZpcnN0bHksIHRoZSByZWFsIGJ1ZyBpbjoKPiAKPiAgIGYwNmU1MTUzZjRh
+ZSAoImtlcm5lbC9wYW5pYy5jOiBhZGQgImNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzIiBvcHRp
+b24gZm9yIGtkdW1wIGFmdGVyIHBhbmljX25vdGlmZXJzIikKPiAKPiBXYXMgdGhhdCBjcmFzaF9r
+ZXhlYygpIHdhcyBjYWxsZWQgdW5jb25kaXRpb25hbGx5IGFmdGVyIG5vdGlmaWVycyB3ZXJlIAo+
+IGNhbGxlZCwgd2hpY2ggc2hvdWxkIGJlIGZpeGVkIHZpYSB0aGUgc2ltcGxlIHBhdGNoIGJlbG93
+ICh1bnRlc3RlZCkuIAo+IExvb2tzIG11Y2ggc2ltcGxlciB0aGFuIHlvdXIgZml4LgoKTm8sIERh
+aXN1a2UncyBwYXRjaCBpcyBub3QgZm9yIHRoYXQgY2FzZS4gU2luY2UgdGhlIGtkdW1wIGhhcyBh
+IHNwZWNpYWwgaG9vayBpbgprZXJuZWwgb29wcywgd2hlbiBib3RoIG9mIHBhbmljX29uX29vcHMg
+YW5kIGNyYXNoX2tlcm5lbCBhcmUgc2V0LCBwYW5pYygpIGlzCm5ldmVyIGNhbGxlZC4gUGxlYXNl
+IHNlZSBvb3BzX2VuZEBhcmNoL3g4Ni9rZXJuZWwvZHVtcHN0YWNrLmMKCi0tLS0Kdm9pZCBvb3Bz
+X2VuZCh1bnNpZ25lZCBsb25nIGZsYWdzLCBzdHJ1Y3QgcHRfcmVncyAqcmVncywgaW50IHNpZ25y
+KQp7CiAgICAgICAgaWYgKHJlZ3MgJiYga2V4ZWNfc2hvdWxkX2NyYXNoKGN1cnJlbnQpKQogICAg
+ICAgICAgICAgICAgY3Jhc2hfa2V4ZWMocmVncyk7Ci0tLS0KT2YgY291cnNlIGNyYXNoX2tleGVj
+KCkgbmV2ZXIgcmV0dXJuIGV4Y2VwdCBmYWlsaW5nIGtleGVjIHVuZXhwZWN0ZWRseS4KClRodXMs
+IGtleGVjX3Nob3VsZF9jcmFzaCBzaG91bGQgcmV0dXJucyAwIGlmIGNyYXNoX2tleGVjX3Bvc3Rf
+bm90aWZpZXJzIGlzIHNldC4KKFNlbWFudGljYWxseSwgaXQgaXMgYSBiaXQgc3RyYW5nZSB0aGF0
+IHBhbmljX29uX29vcHMgZG9lc24ndCBjYWxsIHBhbmljKCksIGJ1dAp0aGF0IGlzIGFub3RoZXIg
+dG9waWMuKQoKSG93ZXZlciwgeW91ciBwYXRjaCBpcyBhbHNvIG5lZWRlZCBzaW5jZSB0aGUgZmly
+c3QgY3Jhc2hfa2V4ZWMoKSBjYW4gZmFpbCBpbiBwYW5pYygpCndoZW4gY3Jhc2hfa2V4ZWNfcG9z
+dF9ub3RpZmllcnMgaXMgbm90IHNldC4gSW4gdGhhdCBjYXNlLCBrZXJuZWwgdHJpZXMgdG8gY2Fs
+bApub3RpZmllcnMgYW5kIGNhbGwgdGhlIDJuZCBjcmFzaF9rZXhlYygpIGFnYWluLiBBY3R1YWxs
+eSB0aGUgMm5kIG9uZSBpcyB1c2VsZXNzLgoKU28sIGhlcmUgaXMgbXkgcmV2aWV3ZWQtYnkuCgpS
+ZXZpZXdlZC1ieTogTWFzYW1pIEhpcmFtYXRzdSA8bWFzYW1pLmhpcmFtYXRzdS5wdEBoaXRhY2hp
+LmNvbT4KCkknbGwgYmUgcmVwbHkgdGhlIGxhdHRlciBwYXJ0IGluIG90aGVyIG1haWwuCgpUaGFu
+ayB5b3UsCgo+IAo+IDIpCj4gCj4gU2Vjb25kbHksIGFuZCBtb3JlIGltcG9ydGFudGx5LCB0aGUg
+d2hvbGUgcHJlbWlzZSBvZiBjb21taXQgCj4gZjA2ZTUxNTNmNGFlIGlzIGJyb2tlbiBJTUhPOgo+
+IAo+ICAiVGhpcyBjYW4gaGVscCByYXJlIHNpdHVhdGlvbnMgd2hlcmUga2R1bXAgZmFpbHMgYmVj
+YXVzZSBvZiB1bnN0YWJsZQo+ICAgY3Jhc2hlZCBrZXJuZWwgb3IgaGFyZHdhcmUgZmFpbHVyZSAo
+bWVtb3J5IGNvcnJ1cHRpb24gb24gY3JpdGljYWwKPiAgIGRhdGEvY29kZSkiCj4gCj4gd3RmPwo+
+IAo+IElmIHRoZSBrZXJuZWwgY3Jhc2hlZCBkdWUgdG8gYSBrZXJuZWwgY3Jhc2gsIHRoZW4gdGhl
+IGtlcm5lbCBib290aW5nIAo+IHVwIGluIHdoYXRldmVyIGhhcmR3YXJlIHN0YXRlIHNob3VsZCBi
+ZSBhYmxlIHRvIGRvIGEgY2xlYW4gYm9vdHVwLiBUaGUgCj4gZml4IGZvciB0aG9zZSAncmFyZSBz
+aXR1YXRpb25zJyBzaG91bGQgYmUgdG8gZml4IHRoZSByZWFsIGJ1ZyAoZm9yIAo+IGV4YW1wbGUg
+YnkgbWFraW5nIGhhcmR3YXJlIGRyaXZlciBpbml0IChvciBkZWluaXQpIHNlcXVlbmNlcyBtb3Jl
+IAo+IHJvYnVzdCksIG5vdCB0byBwYXBlciBpdCBvdmVyIGJ5IG9yZGVyaW5nIGFyb3VuZCBjcmFz
+aC10aW1lIHNlcXVlbmNlcyAKPiAuLi4KPiAKPiBJZiBpdCBjcmFzaGVkIGR1ZSB0byBzb21lIGhh
+cmR3YXJlIGZhaWx1cmUsIHRoZXJlJ3MgbGl0ZXJhbGx5IGFuIAo+IGluZmluaXRlIGFtb3VudCBv
+ZiBmYWlsdXJlIG1vZGVzIHRoYXQgbWF5IG9yIG1heSBub3QgYmUgaW1wYWN0ZWQgYnkgCj4ga2V4
+ZWMgY3Jhc2gtdGltZSBoYW5kbGluZyBvcmRlcmluZy4gV2UgZG9uJ3Qgd2FudCB0byBwdXQgYSB6
+aWxsaW9uIAo+IHN1Y2ggZmxhZ3MgaW50byB0aGUga2VybmVsIHByb3BlciBqdXN0IHRvIGFsbG93
+IHRoZSBwZXJ0dXJiYXRpb24gb2YgCj4gdGhlIGtlcm5lbC4KPiAKPiBUaGFua3MsCj4gCj4gCUlu
+Z28KPiAKPiBkaWZmIC0tZ2l0IGEva2VybmVsL3BhbmljLmMgYi9rZXJuZWwvcGFuaWMuYwo+IGlu
+ZGV4IDgxMzZhZDc2ZTVmZC4uNzc0NjE0ZjcyY2JkIDEwMDY0NAo+IC0tLSBhL2tlcm5lbC9wYW5p
+Yy5jCj4gKysrIGIva2VybmVsL3BhbmljLmMKPiBAQCAtMTQyLDcgKzE0Miw4IEBAIHZvaWQgcGFu
+aWMoY29uc3QgY2hhciAqZm10LCAuLi4pCj4gIAkgKiBOb3RlOiBzaW5jZSBzb21lIHBhbmljX25v
+dGlmaWVycyBjYW4gbWFrZSBjcmFzaGVkIGtlcm5lbAo+ICAJICogbW9yZSB1bnN0YWJsZSwgaXQg
+Y2FuIGluY3JlYXNlIHJpc2tzIG9mIHRoZSBrZHVtcCBmYWlsdXJlIHRvby4KPiAgCSAqLwo+IC0J
+Y3Jhc2hfa2V4ZWMoTlVMTCk7Cj4gKwlpZiAoY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMpCj4g
+KwkJY3Jhc2hfa2V4ZWMoTlVMTCk7Cj4gIAo+ICAJYnVzdF9zcGlubG9ja3MoMCk7Cj4gIAo+IC0t
+Cj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2Ny
+aWJlIGxpbnV4LWtlcm5lbCIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21v
+QHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtl
+cm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IFBsZWFzZSByZWFkIHRoZSBGQVEgYXQgIGh0
+dHA6Ly93d3cudHV4Lm9yZy9sa21sLwo+IAoKCi0tIApNYXNhbWkgSElSQU1BVFNVClNvZnR3YXJl
+IFBsYXRmb3JtIFJlc2VhcmNoIERlcHQuIExpbnV4IFRlY2hub2xvZ3kgUmVzZWFyY2ggQ2VudGVy
+CkhpdGFjaGksIEx0ZC4sIFlva29oYW1hIFJlc2VhcmNoIExhYm9yYXRvcnkKRS1tYWlsOiBtYXNh
+bWkuaGlyYW1hdHN1LnB0QGhpdGFjaGkuY29tCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
