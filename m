@@ -1,13 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1427216218.27739.15.camel@infradead.org>
-Subject: Re: [RFC 2/4] arm64: kexec: fix kvm issue
-From: Geoff Levand <geoff@infradead.org>
-Date: Tue, 24 Mar 2015 09:56:58 -0700
-In-Reply-To: <55112467.207@arm.com>
-References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
- <1427111639-4575-3-git-send-email-takahiro.akashi@linaro.org>
- <1427126213.27739.3.camel@infradead.org> <55112467.207@arm.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YaSG1-0006pP-SR
+ for kexec@lists.infradead.org; Tue, 24 Mar 2015 17:04:51 +0000
+Date: Tue, 24 Mar 2015 13:04:17 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Re: [PATCH v2] kernel/panic/kexec: fix
+ "crash_kexec_post_notifiers" option issue in oops path
+Message-ID: <20150324170417.GA5030@redhat.com>
+References: <54F9D645.2050008@jp.fujitsu.com>
+ <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
+ <20150323071943.GA22765@gmail.com> <5510DA42.6040708@hitachi.com>
+ <20150324071129.GA28619@gmail.com>
+ <20150324144608.GB2970@redhat.com>
+ <20150324161814.GB8661@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150324161814.GB8661@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,20 +29,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, akpm@linux-foundation.org, bp@suse.de
 
-Hi Marc,
+On Tue, Mar 24, 2015 at 05:18:14PM +0100, Ingo Molnar wrote:
+> 
+> * Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> > > Yet the actual bug is in that commit, 'crash_kexec_post_notifiers' 
+> > > was clearly not a no-op in the default case, against expectations.
+> > 
+> > Hi Ingo,
+> > 
+> > I did a quick test and in default case crash_kexec() runs before 
+> > panic notifiers. So it does look like crash_kexec_post_notifiers is 
+> > a no-op in default case.
+> > 
+> > What am I missing.
+> 
+> Well, look at f06e5153f4ae:
+> 
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index d02fa9fef46a..62e16cef9cc2 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -32,6 +32,7 @@ static unsigned long tainted_mask;
+>  static int pause_on_oops;
+>  static int pause_on_oops_flag;
+>  static DEFINE_SPINLOCK(pause_on_oops_lock);
+> +static bool crash_kexec_post_notifiers;
+>  
+>  int panic_timeout = CONFIG_PANIC_TIMEOUT;
+>  EXPORT_SYMBOL_GPL(panic_timeout);
+> @@ -112,9 +113,11 @@ void panic(const char *fmt, ...)
+>  	/*
+>  	 * If we have crashed and we have a crash kernel loaded let it handle
+>  	 * everything else.
+> -	 * Do we want to call this before we try to display a message?
+> +	 * If we want to run this after calling panic_notifiers, pass
+> +	 * the "crash_kexec_post_notifiers" option to the kernel.
+>  	 */
+> -	crash_kexec(NULL);
+> +	if (!crash_kexec_post_notifiers)
+> +		crash_kexec(NULL);
+>  
+>  	/*
+>  	 * Note smp_send_stop is the usual smp shutdown function, which
+> @@ -131,6 +134,15 @@ void panic(const char *fmt, ...)
+>  
+>  	kmsg_dump(KMSG_DUMP_PANIC);
+>  
+> +	/*
+> +	 * If you doubt kdump always works fine in any situation,
+> +	 * "crash_kexec_post_notifiers" offers you a chance to run
+> +	 * panic_notifiers and dumping kmsg before kdump.
+> +	 * Note: since some panic_notifiers can make crashed kernel
+> +	 * more unstable, it can increase risks of the kdump failure too.
+> +	 */
+> +	crash_kexec(NULL);
+> +
+>  	bust_spinlocks(0);
+>  
+>  	if (!panic_blink)
+> 
+> 
+> Without knowing what crash_kexec() does, the patch looks buggy: it 
+> should preserve the old behavior by default, yet it will now execute a 
+> second crash_kexec() after the kmsg_dump() line.
+> 
+> So the invariant change would have been to do:
+> 
+> -	crash_kexec(NULL);
+> +	if (!crash_kexec_post_notifiers)
+> +		crash_kexec(NULL);
+> 
+> ...
+> 
+> +	if (crash_kexec_post_notifiers)
+> +		crash_kexec(NULL);
+> 
+> Which in the !crash_kexec_post_notifiers flag case reduces to:
+> 
+> 	crash_kexec();
+> 
+> 	...
+> 
+> 	/* NOP */
+> 
+> I.e. to exactly what the kernel was doing without the patch 
+> originally.
+> 
+> Which is what my patch does. Nothing more, nothing less.
 
-On Tue, 2015-03-24 at 08:46 +0000, Marc Zyngier wrote:
-> "arm64: KVM: Allow EL2 context to be reset on shutdown"
+Ok, I got it what you mean.
 
-Sure, this sounds good.
+crash_kexec() does not return if a kdump kernel is loaded. If kdump
+kernel is not loaded, then crash_kexec() returns without doing anything.
 
--Geoff
+I think that explains why not making second call to crash_kexec() under
+if, did not create problems. In first case it will never be called and
+in second case, it will do nothing and simply return back.
 
+But anyway, we need your patch as that's right thing to do.
 
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
