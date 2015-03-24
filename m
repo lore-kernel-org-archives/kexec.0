@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YaFY9-0002mx-KK
- for kexec@lists.infradead.org; Tue, 24 Mar 2015 03:30:43 +0000
-Message-ID: <5510DA42.6040708@hitachi.com>
-Date: Tue, 24 Mar 2015 12:30:10 +0900
+ id 1YaFz5-0006yY-F3
+ for kexec@lists.infradead.org; Tue, 24 Mar 2015 03:58:32 +0000
+Message-ID: <5510E0CA.5000507@hitachi.com>
+Date: Tue, 24 Mar 2015 12:58:02 +0900
 From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 MIME-Version: 1.0
-Subject: Re: Re: [PATCH v2] kernel/panic/kexec: fix
- "crash_kexec_post_notifiers" option issue in oops path
+Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
+ option issue in oops path
 References: <54F9D645.2050008@jp.fujitsu.com>
  <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
- <20150323071943.GA22765@gmail.com>
-In-Reply-To: <20150323071943.GA22765@gmail.com>
+ <20150323071943.GA22765@gmail.com> <20150323133710.GA3172@redhat.com>
+ <20150323135046.GA25012@gmail.com> <20150323143158.GB3172@redhat.com>
+In-Reply-To: <20150323143158.GB3172@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,94 +22,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsQ==?= =?UTF-8?B?IOWkp+i8lCI=?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, hidehiro.kawai.ez@hitachi.com, akpm@linux-foundation.org, bp@suse.de, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Don Zickus <dzickus@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, hidehiro.kawai.ez@hitachi.com, akpm@linux-foundation.org, bp@suse.de, Ingo Molnar <mingo@kernel.org>
 
-KDIwMTUvMDMvMjMgMTY6MTkpLCBJbmdvIE1vbG5hciB3cm90ZToKPiAKPiAqIEJhb3F1YW4gSGUg
-PGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiAKPj4gQ0MgbW9yZSBwZW9wbGUgLi4uCj4+Cj4+IE9u
-IDAzLzA3LzE1IGF0IDAxOjMxYW0sICJIYXRheWFtYSwgRGFpc3VrZS/nlZHlsbEg5aSn6LyUIiB3
-cm90ZToKPj4+IFRoZSBjb21taXQgZjA2ZTUxNTNmNGFlMmUyZjNiMDMwMGYwZTI2MGU0MGNiN2Zl
-ZmQ0NSBpbnRyb2R1Y2VkCj4+PiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGtlcm5lbCBi
-b290IG9wdGlvbiwgd2hpY2ggdG9nZ2xlcwo+Pj4gd2hlYXRoZXIgcGFuaWMoKSBjYWxscyBjcmFz
-aF9rZXhlYygpIGJlZm9yZSBwYW5pY19ub3RpZmllcnMgYW5kIGR1bXAKPj4+IGttc2cgb3IgYWZ0
-ZXIuCj4+Pgo+Pj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGUgY29tbWl0IG92ZXJsb29rcyBwYW5p
-Y19vbl9vb3BzIGtlcm5lbCBib290Cj4+PiBvcHRpb24uIElmIGl0IGlzIGVuYWJsZWQsIGNyYXNo
-X2tleGVjKCkgaXMgY2FsbGVkIGRpcmVjdGx5IHdpdGhvdXQKPj4+IGdvaW5nIHRocm91Z2ggcGFu
-aWMoKSBpbiBvb3BzIHBhdGguCj4+Pgo+Pj4gVG8gZml4IHRoaXMgaXNzdWUsIHRoaXMgcGF0Y2gg
-YWRkcyBhIGNoZWNrIHRvCj4+PiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGluIHRoZSBj
-b25kaXRpb24gb2Yga2V4ZWNfc2hvdWxkX2NyYXNoKCkuCj4+Pgo+Pj4gQWxzbywgcHV0IGEgY29t
-bWVudCBpbiBrZXhlY19zaG91bGRfY3Jhc2goKSB0byBleHBsYWluIG5vdCBvYnZpb3VzCj4+PiB0
-aGluZ3Mgb24gdGhpcyBwYXRjaC4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBIQVRBWUFNQSBEYWlz
-dWtlIDxkLmhhdGF5YW1hQGpwLmZ1aml0c3UuY29tPgo+Pj4gQWNrZWQtYnk6IEJhb3F1YW4gSGUg
-PGJoZUByZWRoYXQuY29tPgo+Pj4gVGVzdGVkLWJ5OiBIaWRlaGlybyBLYXdhaSA8aGlkZWhpcm8u
-a2F3YWkuZXpAaGl0YWNoaS5jb20+Cj4+PiBSZXZpZXdlZC1ieTogTWFzYW1pIEhpcmFtYXRzdSA8
-bWFzYW1pLmhpcmFtYXRzdS5wdEBoaXRhY2hpLmNvbT4KPj4+IC0tLQo+Pj4gIGluY2x1ZGUvbGlu
-dXgva2VybmVsLmggfCAgMyArKysKPj4+ICBrZXJuZWwva2V4ZWMuYyAgICAgICAgIHwgMTEgKysr
-KysrKysrKysKPj4+ICBrZXJuZWwvcGFuaWMuYyAgICAgICAgIHwgIDIgKy0KPj4+ICAzIGZpbGVz
-IGNoYW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBUaGlzIGlzIGhh
-Y2sgdXBvbiBoYWNrLCBidXQgd2h5IHdhcyB0aGlzIGNyYXAgbWVyZ2VkIGluIHRoZSBmaXJzdCAK
-PiBwbGFjZT8KPiAKPiBJIHNlZSB0d28gcHJvYmxlbXMganVzdCBieSBjdXJzb3J5IHJldmlldzoK
-PiAKPiAxKQo+IAo+IEZpcnN0bHksIHRoZSByZWFsIGJ1ZyBpbjoKPiAKPiAgIGYwNmU1MTUzZjRh
-ZSAoImtlcm5lbC9wYW5pYy5jOiBhZGQgImNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzIiBvcHRp
-b24gZm9yIGtkdW1wIGFmdGVyIHBhbmljX25vdGlmZXJzIikKPiAKPiBXYXMgdGhhdCBjcmFzaF9r
-ZXhlYygpIHdhcyBjYWxsZWQgdW5jb25kaXRpb25hbGx5IGFmdGVyIG5vdGlmaWVycyB3ZXJlIAo+
-IGNhbGxlZCwgd2hpY2ggc2hvdWxkIGJlIGZpeGVkIHZpYSB0aGUgc2ltcGxlIHBhdGNoIGJlbG93
-ICh1bnRlc3RlZCkuIAo+IExvb2tzIG11Y2ggc2ltcGxlciB0aGFuIHlvdXIgZml4LgoKTm8sIERh
-aXN1a2UncyBwYXRjaCBpcyBub3QgZm9yIHRoYXQgY2FzZS4gU2luY2UgdGhlIGtkdW1wIGhhcyBh
-IHNwZWNpYWwgaG9vayBpbgprZXJuZWwgb29wcywgd2hlbiBib3RoIG9mIHBhbmljX29uX29vcHMg
-YW5kIGNyYXNoX2tlcm5lbCBhcmUgc2V0LCBwYW5pYygpIGlzCm5ldmVyIGNhbGxlZC4gUGxlYXNl
-IHNlZSBvb3BzX2VuZEBhcmNoL3g4Ni9rZXJuZWwvZHVtcHN0YWNrLmMKCi0tLS0Kdm9pZCBvb3Bz
-X2VuZCh1bnNpZ25lZCBsb25nIGZsYWdzLCBzdHJ1Y3QgcHRfcmVncyAqcmVncywgaW50IHNpZ25y
-KQp7CiAgICAgICAgaWYgKHJlZ3MgJiYga2V4ZWNfc2hvdWxkX2NyYXNoKGN1cnJlbnQpKQogICAg
-ICAgICAgICAgICAgY3Jhc2hfa2V4ZWMocmVncyk7Ci0tLS0KT2YgY291cnNlIGNyYXNoX2tleGVj
-KCkgbmV2ZXIgcmV0dXJuIGV4Y2VwdCBmYWlsaW5nIGtleGVjIHVuZXhwZWN0ZWRseS4KClRodXMs
-IGtleGVjX3Nob3VsZF9jcmFzaCBzaG91bGQgcmV0dXJucyAwIGlmIGNyYXNoX2tleGVjX3Bvc3Rf
-bm90aWZpZXJzIGlzIHNldC4KKFNlbWFudGljYWxseSwgaXQgaXMgYSBiaXQgc3RyYW5nZSB0aGF0
-IHBhbmljX29uX29vcHMgZG9lc24ndCBjYWxsIHBhbmljKCksIGJ1dAp0aGF0IGlzIGFub3RoZXIg
-dG9waWMuKQoKSG93ZXZlciwgeW91ciBwYXRjaCBpcyBhbHNvIG5lZWRlZCBzaW5jZSB0aGUgZmly
-c3QgY3Jhc2hfa2V4ZWMoKSBjYW4gZmFpbCBpbiBwYW5pYygpCndoZW4gY3Jhc2hfa2V4ZWNfcG9z
-dF9ub3RpZmllcnMgaXMgbm90IHNldC4gSW4gdGhhdCBjYXNlLCBrZXJuZWwgdHJpZXMgdG8gY2Fs
-bApub3RpZmllcnMgYW5kIGNhbGwgdGhlIDJuZCBjcmFzaF9rZXhlYygpIGFnYWluLiBBY3R1YWxs
-eSB0aGUgMm5kIG9uZSBpcyB1c2VsZXNzLgoKU28sIGhlcmUgaXMgbXkgcmV2aWV3ZWQtYnkuCgpS
-ZXZpZXdlZC1ieTogTWFzYW1pIEhpcmFtYXRzdSA8bWFzYW1pLmhpcmFtYXRzdS5wdEBoaXRhY2hp
-LmNvbT4KCkknbGwgYmUgcmVwbHkgdGhlIGxhdHRlciBwYXJ0IGluIG90aGVyIG1haWwuCgpUaGFu
-ayB5b3UsCgo+IAo+IDIpCj4gCj4gU2Vjb25kbHksIGFuZCBtb3JlIGltcG9ydGFudGx5LCB0aGUg
-d2hvbGUgcHJlbWlzZSBvZiBjb21taXQgCj4gZjA2ZTUxNTNmNGFlIGlzIGJyb2tlbiBJTUhPOgo+
-IAo+ICAiVGhpcyBjYW4gaGVscCByYXJlIHNpdHVhdGlvbnMgd2hlcmUga2R1bXAgZmFpbHMgYmVj
-YXVzZSBvZiB1bnN0YWJsZQo+ICAgY3Jhc2hlZCBrZXJuZWwgb3IgaGFyZHdhcmUgZmFpbHVyZSAo
-bWVtb3J5IGNvcnJ1cHRpb24gb24gY3JpdGljYWwKPiAgIGRhdGEvY29kZSkiCj4gCj4gd3RmPwo+
-IAo+IElmIHRoZSBrZXJuZWwgY3Jhc2hlZCBkdWUgdG8gYSBrZXJuZWwgY3Jhc2gsIHRoZW4gdGhl
-IGtlcm5lbCBib290aW5nIAo+IHVwIGluIHdoYXRldmVyIGhhcmR3YXJlIHN0YXRlIHNob3VsZCBi
-ZSBhYmxlIHRvIGRvIGEgY2xlYW4gYm9vdHVwLiBUaGUgCj4gZml4IGZvciB0aG9zZSAncmFyZSBz
-aXR1YXRpb25zJyBzaG91bGQgYmUgdG8gZml4IHRoZSByZWFsIGJ1ZyAoZm9yIAo+IGV4YW1wbGUg
-YnkgbWFraW5nIGhhcmR3YXJlIGRyaXZlciBpbml0IChvciBkZWluaXQpIHNlcXVlbmNlcyBtb3Jl
-IAo+IHJvYnVzdCksIG5vdCB0byBwYXBlciBpdCBvdmVyIGJ5IG9yZGVyaW5nIGFyb3VuZCBjcmFz
-aC10aW1lIHNlcXVlbmNlcyAKPiAuLi4KPiAKPiBJZiBpdCBjcmFzaGVkIGR1ZSB0byBzb21lIGhh
-cmR3YXJlIGZhaWx1cmUsIHRoZXJlJ3MgbGl0ZXJhbGx5IGFuIAo+IGluZmluaXRlIGFtb3VudCBv
-ZiBmYWlsdXJlIG1vZGVzIHRoYXQgbWF5IG9yIG1heSBub3QgYmUgaW1wYWN0ZWQgYnkgCj4ga2V4
-ZWMgY3Jhc2gtdGltZSBoYW5kbGluZyBvcmRlcmluZy4gV2UgZG9uJ3Qgd2FudCB0byBwdXQgYSB6
-aWxsaW9uIAo+IHN1Y2ggZmxhZ3MgaW50byB0aGUga2VybmVsIHByb3BlciBqdXN0IHRvIGFsbG93
-IHRoZSBwZXJ0dXJiYXRpb24gb2YgCj4gdGhlIGtlcm5lbC4KPiAKPiBUaGFua3MsCj4gCj4gCUlu
-Z28KPiAKPiBkaWZmIC0tZ2l0IGEva2VybmVsL3BhbmljLmMgYi9rZXJuZWwvcGFuaWMuYwo+IGlu
-ZGV4IDgxMzZhZDc2ZTVmZC4uNzc0NjE0ZjcyY2JkIDEwMDY0NAo+IC0tLSBhL2tlcm5lbC9wYW5p
-Yy5jCj4gKysrIGIva2VybmVsL3BhbmljLmMKPiBAQCAtMTQyLDcgKzE0Miw4IEBAIHZvaWQgcGFu
-aWMoY29uc3QgY2hhciAqZm10LCAuLi4pCj4gIAkgKiBOb3RlOiBzaW5jZSBzb21lIHBhbmljX25v
-dGlmaWVycyBjYW4gbWFrZSBjcmFzaGVkIGtlcm5lbAo+ICAJICogbW9yZSB1bnN0YWJsZSwgaXQg
-Y2FuIGluY3JlYXNlIHJpc2tzIG9mIHRoZSBrZHVtcCBmYWlsdXJlIHRvby4KPiAgCSAqLwo+IC0J
-Y3Jhc2hfa2V4ZWMoTlVMTCk7Cj4gKwlpZiAoY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMpCj4g
-KwkJY3Jhc2hfa2V4ZWMoTlVMTCk7Cj4gIAo+ICAJYnVzdF9zcGlubG9ja3MoMCk7Cj4gIAo+IC0t
-Cj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2Ny
-aWJlIGxpbnV4LWtlcm5lbCIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21v
-QHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtl
-cm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IFBsZWFzZSByZWFkIHRoZSBGQVEgYXQgIGh0
-dHA6Ly93d3cudHV4Lm9yZy9sa21sLwo+IAoKCi0tIApNYXNhbWkgSElSQU1BVFNVClNvZnR3YXJl
-IFBsYXRmb3JtIFJlc2VhcmNoIERlcHQuIExpbnV4IFRlY2hub2xvZ3kgUmVzZWFyY2ggQ2VudGVy
-CkhpdGFjaGksIEx0ZC4sIFlva29oYW1hIFJlc2VhcmNoIExhYm9yYXRvcnkKRS1tYWlsOiBtYXNh
-bWkuaGlyYW1hdHN1LnB0QGhpdGFjaGkuY29tCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
-ZWMK
+(2015/03/23 23:31), Vivek Goyal wrote:
+[...]
+>>>> Secondly, and more importantly, the whole premise of commit 
+>>>> f06e5153f4ae is broken IMHO:
+>>>>
+>>>>  "This can help rare situations where kdump fails because of unstable
+>>>>   crashed kernel or hardware failure (memory corruption on critical
+>>>>   data/code)"
+>>>>
+>>>> wtf?
+>>>>
+>>>> If the kernel crashed due to a kernel crash, then the kernel booting 
+>>>> up in whatever hardware state should be able to do a clean bootup. The 
+>>>> fix for those 'rare situations' should be to fix the real bug (for 
+>>>> example by making hardware driver init (or deinit) sequences more 
+>>>> robust), not to paper it over by ordering around crash-time sequences 
+>>>> ...
+>>>>
+>>>> If it crashed due to some hardware failure, there's literally an 
+>>>> infinite amount of failure modes that may or may not be impacted by 
+>>>> kexec crash-time handling ordering. We don't want to put a zillion 
+>>>> such flags into the kernel proper just to allow the perturbation of 
+>>>> the kernel.
+>>>
+>>> I think one of the motivations behind this patch was call to kmsg_dump().
+>>> Some vendors have been wanting to have the capability to save kernel logs
+>>> to some NVRAM before transition to second kernel happens. Their argument
+>>> is that kdump does not succeed all the time and if kdump does not succeed
+>>> then atleast they have something to work with (kernel logs retrieved
+>>> from pstore interface).
+>>
+>> Doesn't pstore attach itself to printk itself? AFAICS it does:
+>>
+>>  fs/pstore/platform.c:   register_console(&pstore_console);
+>>
+>> so the printk log leading up to and including the crash should be 
+>> available, regardless of this patch. What am I missing?
+> 
+> That's a good point. I was not aware of it. I am Ccing Don Zickus as
+> he has spent some time on this in the past.
+> 
+> Masami, would you have thougths on this? IIRC, one reason why kmsg_dump()
+> was written so that one could dump kernel messages to an NVRAM. Of one
+> could simple register pstore as console, then how kmsg_dump() will
+> continue to be useful?
+
+Yes, actually, kmsg_dump and pstore can help a lot to dump the last
+message (even though kmsg_dump() is called only when setting
+crash_kexec_post_notifiers...)
+
+However, there are some machines which don't support pstore, but
+only IPMI. pstore(kmsg) stores messages to a local NVRAM, and IPMI
+stores messages to BMC(Board Management Controller)'s NVRAM (SEL:
+System Event Log).
+Some enterprise servers only have BMC, but no NVRAM. For such kind
+of servers, we still need to call panic_notifier to store messages
+via IPMI.
+And also, using IPMI has another secondary feature, we can notice
+machine failure from remote machine via IPMI over LAN by monitoring
+SEL :)
+
+You might want to integrate IPMI and pstore. But since IPMI SEL is
+very limited and very slow, those are very different.
+
+>>> Not that I agree fully with this as problem might happen while we 
+>>> try to run panic_notifiers or kmsg_dump hooks and never transition 
+>>> into kdump kernel.
+>>
+>> btw., this is the big problem with 'notifiers' in general: they are 
+>> opaque with barely any semantics defined, and a source of constant 
+>> confusion.
+> 
+> Agreed. That's the reason Eric never liked the idea of letting panic
+> notifiers run before crash_kexec().
+
+I see. thus I added a notice on documentation.
+
+                        Note that this also increases risks of kdump failure,
+                        because some panic notifiers can make the crashed
+                        kernel more unstable.
+
+I personally don't recommend to use this in usual situation. Only for
+the machines which is very well configured and tested, this feature can
+be enabled.
+
+>>> And it has been literally years since some developers have been 
+>>> pushing for allowing to run panic notifiers before crash_kexec(). 
+>>> Eric Biederman has been pushing back saying it reduces the 
+>>> reliability of kdump operation so this is not acceptable.
+>>
+>> So what do those notifiers do?
+> 
+> IIRC, two main reasons had come in the past.
+> 
+> - In a cluster of nodes, people wanted to send some sort of notifications
+>   to main server that a node has crashed and don't fence it off as it
+>   might be saving dump.
+> 
+> - And saving kernel logs to non volatile store.
+> 
+> There might be more and I might not be aware about these. Hatayama and
+> Masami, can you shed more light on this.
+
+Yes, as I described above, we'd like to use IPMI to write the log to SEL
+and that also allow us to monitor the machine remotely.
+
+> 
+> BTW, first problem we faced in our clusters too and now it has been fixed.
+> Basically we send notifications in second kernel in user space to master
+> server that this node is still saving dump so don't fence it off.
+
+Yeah, that's the usual way, I think. In some "mission-critical" use-cases,
+we can't relay only on the kdump stability.
+
+Thank you,
+
+
+
+-- 
+Masami HIRAMATSU
+Software Platform Research Dept. Linux Technology Research Center
+Hitachi, Ltd., Yokohama Research Laboratory
+E-mail: masami.hiramatsu.pt@hitachi.com
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
