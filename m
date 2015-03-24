@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wg0-x22e.google.com ([2a00:1450:400c:c00::22e])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YaQ6G-00054a-WB
- for kexec@lists.infradead.org; Tue, 24 Mar 2015 14:46:37 +0000
-Date: Tue, 24 Mar 2015 10:46:08 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+ id 1YaRXM-0007cB-Vr
+ for kexec@lists.infradead.org; Tue, 24 Mar 2015 16:18:41 +0000
+Received: by wgra20 with SMTP id a20so175209989wgr.3
+ for <kexec@lists.infradead.org>; Tue, 24 Mar 2015 09:18:18 -0700 (PDT)
+Date: Tue, 24 Mar 2015 17:18:14 +0100
+From: Ingo Molnar <mingo@kernel.org>
 Subject: Re: Re: [PATCH v2] kernel/panic/kexec: fix
  "crash_kexec_post_notifiers" option issue in oops path
-Message-ID: <20150324144608.GB2970@redhat.com>
+Message-ID: <20150324161814.GB8661@gmail.com>
 References: <54F9D645.2050008@jp.fujitsu.com>
  <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
  <20150323071943.GA22765@gmail.com> <5510DA42.6040708@hitachi.com>
  <20150324071129.GA28619@gmail.com>
+ <20150324144608.GB2970@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150324071129.GA28619@gmail.com>
+In-Reply-To: <20150324144608.GB2970@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +26,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, akpm@linux-foundation.org, bp@suse.de
 
-T24gVHVlLCBNYXIgMjQsIDIwMTUgYXQgMDg6MTE6MjlBTSArMDEwMCwgSW5nbyBNb2xuYXIgd3Jv
-dGU6Cj4gCj4gKiBNYXNhbWkgSGlyYW1hdHN1IDxtYXNhbWkuaGlyYW1hdHN1LnB0QGhpdGFjaGku
-Y29tPiB3cm90ZToKPiAKPiA+ICgyMDE1LzAzLzIzIDE2OjE5KSwgSW5nbyBNb2xuYXIgd3JvdGU6
-Cj4gPiA+IAo+ID4gPiAqIEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4g
-Cj4gPiA+PiBDQyBtb3JlIHBlb3BsZSAuLi4KPiA+ID4+Cj4gPiA+PiBPbiAwMy8wNy8xNSBhdCAw
-MTozMWFtLCAiSGF0YXlhbWEsIERhaXN1a2Uv55WR5bGxIOWkp+i8lCIgd3JvdGU6Cj4gPiA+Pj4g
-VGhlIGNvbW1pdCBmMDZlNTE1M2Y0YWUyZTJmM2IwMzAwZjBlMjYwZTQwY2I3ZmVmZDQ1IGludHJv
-ZHVjZWQKPiA+ID4+PiAiY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMiIGtlcm5lbCBib290IG9w
-dGlvbiwgd2hpY2ggdG9nZ2xlcwo+ID4gPj4+IHdoZWF0aGVyIHBhbmljKCkgY2FsbHMgY3Jhc2hf
-a2V4ZWMoKSBiZWZvcmUgcGFuaWNfbm90aWZpZXJzIGFuZCBkdW1wCj4gPiA+Pj4ga21zZyBvciBh
-ZnRlci4KPiA+ID4+Pgo+ID4gPj4+IFRoZSBwcm9ibGVtIGlzIHRoYXQgdGhlIGNvbW1pdCBvdmVy
-bG9va3MgcGFuaWNfb25fb29wcyBrZXJuZWwgYm9vdAo+ID4gPj4+IG9wdGlvbi4gSWYgaXQgaXMg
-ZW5hYmxlZCwgY3Jhc2hfa2V4ZWMoKSBpcyBjYWxsZWQgZGlyZWN0bHkgd2l0aG91dAo+ID4gPj4+
-IGdvaW5nIHRocm91Z2ggcGFuaWMoKSBpbiBvb3BzIHBhdGguCj4gPiA+Pj4KPiA+ID4+PiBUbyBm
-aXggdGhpcyBpc3N1ZSwgdGhpcyBwYXRjaCBhZGRzIGEgY2hlY2sgdG8KPiA+ID4+PiAiY3Jhc2hf
-a2V4ZWNfcG9zdF9ub3RpZmllcnMiIGluIHRoZSBjb25kaXRpb24gb2Yga2V4ZWNfc2hvdWxkX2Ny
-YXNoKCkuCj4gPiA+Pj4KPiA+ID4+PiBBbHNvLCBwdXQgYSBjb21tZW50IGluIGtleGVjX3Nob3Vs
-ZF9jcmFzaCgpIHRvIGV4cGxhaW4gbm90IG9idmlvdXMKPiA+ID4+PiB0aGluZ3Mgb24gdGhpcyBw
-YXRjaC4KPiA+ID4+Pgo+ID4gPj4+IFNpZ25lZC1vZmYtYnk6IEhBVEFZQU1BIERhaXN1a2UgPGQu
-aGF0YXlhbWFAanAuZnVqaXRzdS5jb20+Cj4gPiA+Pj4gQWNrZWQtYnk6IEJhb3F1YW4gSGUgPGJo
-ZUByZWRoYXQuY29tPgo+ID4gPj4+IFRlc3RlZC1ieTogSGlkZWhpcm8gS2F3YWkgPGhpZGVoaXJv
-Lmthd2FpLmV6QGhpdGFjaGkuY29tPgo+ID4gPj4+IFJldmlld2VkLWJ5OiBNYXNhbWkgSGlyYW1h
-dHN1IDxtYXNhbWkuaGlyYW1hdHN1LnB0QGhpdGFjaGkuY29tPgo+ID4gPj4+IC0tLQo+ID4gPj4+
-ICBpbmNsdWRlL2xpbnV4L2tlcm5lbC5oIHwgIDMgKysrCj4gPiA+Pj4gIGtlcm5lbC9rZXhlYy5j
-ICAgICAgICAgfCAxMSArKysrKysrKysrKwo+ID4gPj4+ICBrZXJuZWwvcGFuaWMuYyAgICAgICAg
-IHwgIDIgKy0KPiA+ID4+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAxIGRl
-bGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBUaGlzIGlzIGhhY2sgdXBvbiBoYWNrLCBidXQgd2h5IHdh
-cyB0aGlzIGNyYXAgbWVyZ2VkIGluIHRoZSBmaXJzdCAKPiA+ID4gcGxhY2U/Cj4gPiA+IAo+ID4g
-PiBJIHNlZSB0d28gcHJvYmxlbXMganVzdCBieSBjdXJzb3J5IHJldmlldzoKPiA+ID4gCj4gPiA+
-IDEpCj4gPiA+IAo+ID4gPiBGaXJzdGx5LCB0aGUgcmVhbCBidWcgaW46Cj4gPiA+IAo+ID4gPiAg
-IGYwNmU1MTUzZjRhZSAoImtlcm5lbC9wYW5pYy5jOiBhZGQgImNyYXNoX2tleGVjX3Bvc3Rfbm90
-aWZpZXJzIiBvcHRpb24gZm9yIGtkdW1wIGFmdGVyIHBhbmljX25vdGlmZXJzIikKPiA+ID4gCj4g
-PiA+IFdhcyB0aGF0IGNyYXNoX2tleGVjKCkgd2FzIGNhbGxlZCB1bmNvbmRpdGlvbmFsbHkgYWZ0
-ZXIgbm90aWZpZXJzIHdlcmUgCj4gPiA+IGNhbGxlZCwgd2hpY2ggc2hvdWxkIGJlIGZpeGVkIHZp
-YSB0aGUgc2ltcGxlIHBhdGNoIGJlbG93ICh1bnRlc3RlZCkuIAo+ID4gPiBMb29rcyBtdWNoIHNp
-bXBsZXIgdGhhbiB5b3VyIGZpeC4KPiA+IAo+ID4gTm8sIERhaXN1a2UncyBwYXRjaCBpcyBub3Qg
-Zm9yIHRoYXQgY2FzZS4gWy4uLl0KPiAKPiBZZXQgdGhlIGFjdHVhbCBidWcgaXMgaW4gdGhhdCBj
-b21taXQsICdjcmFzaF9rZXhlY19wb3N0X25vdGlmaWVycycgd2FzIAo+IGNsZWFybHkgbm90IGEg
-bm8tb3AgaW4gdGhlIGRlZmF1bHQgY2FzZSwgYWdhaW5zdCBleHBlY3RhdGlvbnMuCgpIaSBJbmdv
-LAoKSSBkaWQgYSBxdWljayB0ZXN0IGFuZCBpbiBkZWZhdWx0IGNhc2UgY3Jhc2hfa2V4ZWMoKSBy
-dW5zIGJlZm9yZSBwYW5pYwpub3RpZmllcnMuIFNvIGl0IGRvZXMgbG9vayBsaWtlIGNyYXNoX2tl
-eGVjX3Bvc3Rfbm90aWZpZXJzIGlzIGEgbm8tb3AKaW4gZGVmYXVsdCBjYXNlLgoKV2hhdCBhbSBJ
-IG1pc3NpbmcuCgpUaGFua3MKVml2ZWsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+* Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> > Yet the actual bug is in that commit, 'crash_kexec_post_notifiers' 
+> > was clearly not a no-op in the default case, against expectations.
+> 
+> Hi Ingo,
+> 
+> I did a quick test and in default case crash_kexec() runs before 
+> panic notifiers. So it does look like crash_kexec_post_notifiers is 
+> a no-op in default case.
+> 
+> What am I missing.
+
+Well, look at f06e5153f4ae:
+
+diff --git a/kernel/panic.c b/kernel/panic.c
+index d02fa9fef46a..62e16cef9cc2 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -32,6 +32,7 @@ static unsigned long tainted_mask;
+ static int pause_on_oops;
+ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
++static bool crash_kexec_post_notifiers;
+ 
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+ EXPORT_SYMBOL_GPL(panic_timeout);
+@@ -112,9 +113,11 @@ void panic(const char *fmt, ...)
+ 	/*
+ 	 * If we have crashed and we have a crash kernel loaded let it handle
+ 	 * everything else.
+-	 * Do we want to call this before we try to display a message?
++	 * If we want to run this after calling panic_notifiers, pass
++	 * the "crash_kexec_post_notifiers" option to the kernel.
+ 	 */
+-	crash_kexec(NULL);
++	if (!crash_kexec_post_notifiers)
++		crash_kexec(NULL);
+ 
+ 	/*
+ 	 * Note smp_send_stop is the usual smp shutdown function, which
+@@ -131,6 +134,15 @@ void panic(const char *fmt, ...)
+ 
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 
++	/*
++	 * If you doubt kdump always works fine in any situation,
++	 * "crash_kexec_post_notifiers" offers you a chance to run
++	 * panic_notifiers and dumping kmsg before kdump.
++	 * Note: since some panic_notifiers can make crashed kernel
++	 * more unstable, it can increase risks of the kdump failure too.
++	 */
++	crash_kexec(NULL);
++
+ 	bust_spinlocks(0);
+ 
+ 	if (!panic_blink)
+
+
+Without knowing what crash_kexec() does, the patch looks buggy: it 
+should preserve the old behavior by default, yet it will now execute a 
+second crash_kexec() after the kmsg_dump() line.
+
+So the invariant change would have been to do:
+
+-	crash_kexec(NULL);
++	if (!crash_kexec_post_notifiers)
++		crash_kexec(NULL);
+
+...
+
++	if (crash_kexec_post_notifiers)
++		crash_kexec(NULL);
+
+Which in the !crash_kexec_post_notifiers flag case reduces to:
+
+	crash_kexec();
+
+	...
+
+	/* NOP */
+
+I.e. to exactly what the kernel was doing without the patch 
+originally.
+
+Which is what my patch does. Nothing more, nothing less.
+
+There might be other bugs with the patch, I didn't consider that.
+
+A revert would be fine as well.
+
+Thanks,
+
+	Ingo
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
