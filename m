@@ -1,22 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YaSG1-0006pP-SR
- for kexec@lists.infradead.org; Tue, 24 Mar 2015 17:04:51 +0000
-Date: Tue, 24 Mar 2015 13:04:17 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Re: [PATCH v2] kernel/panic/kexec: fix
- "crash_kexec_post_notifiers" option issue in oops path
-Message-ID: <20150324170417.GA5030@redhat.com>
-References: <54F9D645.2050008@jp.fujitsu.com>
- <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
- <20150323071943.GA22765@gmail.com> <5510DA42.6040708@hitachi.com>
- <20150324071129.GA28619@gmail.com>
- <20150324144608.GB2970@redhat.com>
- <20150324161814.GB8661@gmail.com>
+ id 1YaYny-0003ml-UV
+ for kexec@lists.infradead.org; Wed, 25 Mar 2015 00:04:20 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id t2P03pmU023295
+ for <kexec@lists.infradead.org>; Wed, 25 Mar 2015 09:03:51 +0900 (JST)
+Received: from mailsv4.nec.co.jp (imss62.nec.co.jp [10.7.69.157]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id t2P03pX25972 for <kexec@lists.infradead.org>;
+ Wed, 25 Mar 2015 09:03:51 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id t2P03plu019933
+ for <kexec@lists.infradead.org>; Wed, 25 Mar 2015 09:03:51 +0900 (JST)
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: makedumpfile-1.5.8: Fair I/O workload assignment for --split.
+Date: Wed, 25 Mar 2015 00:02:57 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D9B216@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150324161814.GB8661@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,111 +31,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hidehiro.kawai.ez@hitachi.com, =?utf-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, akpm@linux-foundation.org, bp@suse.de
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Tue, Mar 24, 2015 at 05:18:14PM +0100, Ingo Molnar wrote:
-> 
-> * Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > > Yet the actual bug is in that commit, 'crash_kexec_post_notifiers' 
-> > > was clearly not a no-op in the default case, against expectations.
-> > 
-> > Hi Ingo,
-> > 
-> > I did a quick test and in default case crash_kexec() runs before 
-> > panic notifiers. So it does look like crash_kexec_post_notifiers is 
-> > a no-op in default case.
-> > 
-> > What am I missing.
-> 
-> Well, look at f06e5153f4ae:
-> 
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index d02fa9fef46a..62e16cef9cc2 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -32,6 +32,7 @@ static unsigned long tainted_mask;
->  static int pause_on_oops;
->  static int pause_on_oops_flag;
->  static DEFINE_SPINLOCK(pause_on_oops_lock);
-> +static bool crash_kexec_post_notifiers;
->  
->  int panic_timeout = CONFIG_PANIC_TIMEOUT;
->  EXPORT_SYMBOL_GPL(panic_timeout);
-> @@ -112,9 +113,11 @@ void panic(const char *fmt, ...)
->  	/*
->  	 * If we have crashed and we have a crash kernel loaded let it handle
->  	 * everything else.
-> -	 * Do we want to call this before we try to display a message?
-> +	 * If we want to run this after calling panic_notifiers, pass
-> +	 * the "crash_kexec_post_notifiers" option to the kernel.
->  	 */
-> -	crash_kexec(NULL);
-> +	if (!crash_kexec_post_notifiers)
-> +		crash_kexec(NULL);
->  
->  	/*
->  	 * Note smp_send_stop is the usual smp shutdown function, which
-> @@ -131,6 +134,15 @@ void panic(const char *fmt, ...)
->  
->  	kmsg_dump(KMSG_DUMP_PANIC);
->  
-> +	/*
-> +	 * If you doubt kdump always works fine in any situation,
-> +	 * "crash_kexec_post_notifiers" offers you a chance to run
-> +	 * panic_notifiers and dumping kmsg before kdump.
-> +	 * Note: since some panic_notifiers can make crashed kernel
-> +	 * more unstable, it can increase risks of the kdump failure too.
-> +	 */
-> +	crash_kexec(NULL);
-> +
->  	bust_spinlocks(0);
->  
->  	if (!panic_blink)
-> 
-> 
-> Without knowing what crash_kexec() does, the patch looks buggy: it 
-> should preserve the old behavior by default, yet it will now execute a 
-> second crash_kexec() after the kmsg_dump() line.
-> 
-> So the invariant change would have been to do:
-> 
-> -	crash_kexec(NULL);
-> +	if (!crash_kexec_post_notifiers)
-> +		crash_kexec(NULL);
-> 
-> ...
-> 
-> +	if (crash_kexec_post_notifiers)
-> +		crash_kexec(NULL);
-> 
-> Which in the !crash_kexec_post_notifiers flag case reduces to:
-> 
-> 	crash_kexec();
-> 
-> 	...
-> 
-> 	/* NOP */
-> 
-> I.e. to exactly what the kernel was doing without the patch 
-> originally.
-> 
-> Which is what my patch does. Nothing more, nothing less.
+Hello,
 
-Ok, I got it what you mean.
+makedumpfile version 1.5.8 is released.
+Your comments/patches are welcome.
 
-crash_kexec() does not return if a kdump kernel is loaded. If kdump
-kernel is not loaded, then crash_kexec() returns without doing anything.
+Main new feature:
+o Fair I/O workload assignment for --split
+ - Add the new option "--splitblock-size" to specify the permissible
+   difference of each splitted dumpfile size. Please note that the
+   difference can be larger than the specified size since this feature
+   doesn't care about zero page filtering.
 
-I think that explains why not making second call to crash_kexec() under
-if, did not create problems. In first case it will never be called and
-in second case, it will do nothing and simply return back.
+o Make incomplete dumpfile readable
+ - DUMP_DH_COMPRESSED_INCOMPLETE or DUMP_ELF_INCOMPLETE flag will be set
+   in the header of dumpfiles if ENOSPC occurs. The flags make crash utility
+   attempt analyzing the dumpfile even it is known to be incomplete.
 
-But anyway, we need your patch as that's right thing to do.
+o Support new kernels
+ - The supported kernel is updated to 3.19 in this version.
+
+Changelog:
+o New feature
+    - [PATCH v2] Get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64. (by Baoquan He) 56649f7
+    - [PATCH v4 1/4] Make get_elf64_phdr()/get_elf32_phdr() public. (by Wang Xiao) 3182be9
+    - [PATCH v4 2/4] Make the incomplete dumpfile generated by ENOSPC error analyzable.
+      (by Wang Xiao) e39216f
+    - [PATCH v4 3/4] Implementation of dealing with kdump-compressed dumpfile with
+      ENOSPC error. (by Wang Xiao) 76025d3
+    - [PATCH v4 4/4] Fix reassemble_kdump_header(). (by Zhou Wenjian) 45a1885
+    - [PATCH v3] Enable --mem-usage for s390x. (by Michael Holzheu) 2e452d7
+    - [PATCH v5 1/5] Add support for splitblock. (by Zhou Wenjian) c7825d4
+    - [PATCH v5 2/5] Add tools for reading and writing from splitblock table.
+      (by Zhou Wenjian) 11dcbfe
+    - [PATCH v5 3/5] Add module of generating table. (by Zhou Wenjian) 28e367c
+    - [PATCH v5 4/5] Add module of calculating start_pfn and end_pfn in each dumpfile.
+      (by Zhou Wenjian) 2b74c02
+    - [PATCH v5 5/5] Add support for --splitblock-size. (by Zhou Wenjian) 3352179
+    - [PATCH] sadump: Support more than 16TB physical memory space. (by HATAYAMA Daisuke) 37afcd5
+
+o Bugfix
+    - [PATCH] Use file offset in initialize_mmap(). (by Petr Tesarik) f822608
+
+o Cleanup
+    - [PATCH] Initialize symbols early for old kernels. (by Atsushi Kumagai) 99850a1
+    - [PATCH v2] Introduce stub method for machine dependent parts. (by Atsushi Kumagai) bf0bbf9
+    - [PATCH] Read vmcoreinfo as early as possible. (by Atsushi Kumagai) 21631da
+    - [PATCH] Bring get_kcore_dump_loads() backward. (by Atsushi Kumagai) c1d9e15
+    - [PATCH 1/2] Add description of elf dump file. (by Zhou Wenjian) 4074bb6
+    - [PATCH 2/2] Add description of incomplete dump file. (by Zhou Wenjian) b343067
+    - [PATCH] Cleanup: Add some comments for ELF format. (by Atsushi Kumagai) 4a59bd6
+    - [PATCH 1/2] Modify the description of the dump level. (by Atsushi Kumagai) 3599df6
+    - [PATCH 2/2] Change the part of the pfn counter for page cache. (by Atsushi Kumagai) 7b55569
+    - [PATCH v3 1/7] cache: get rid of search loop in cache_add(). (by Petr Tesarik) e068ea2
+    - [PATCH v3 2/7] cache: allow to return a page to the pool. (by Petr Tesarik) f2b30c6
+    - [PATCH v3 3/7] cache: do not allocate from the pending list. (by Petr Tesarik) ff592e6
+    - [PATCH v3 4/7] cache: add hit/miss statistics to the final report. (by Petr Tesarik) 7405a60
+    - [PATCH v3 5/7] cache: allocate buffers in one big chunk. (by Petr Tesarik) 65899d0
+    - [PATCH v3 6/7] cache: allow arbitrary size of cache entries. (by Petr Tesarik) 5881f23
+    - [PATCH v3 7/7] cache: store mapped regions directly in the cache. (by Petr Tesarik) 1acd75f
+    - [PATCH] Update email addresses of mainteners. (by Atsushi Kumagai) febff05
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 /proc/vmcore dumpfile
+
 
 Thanks
-Vivek
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
