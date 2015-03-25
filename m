@@ -1,24 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-pd0-f179.google.com ([209.85.192.179])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YaYny-0003ml-UV
- for kexec@lists.infradead.org; Wed, 25 Mar 2015 00:04:20 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id t2P03pmU023295
- for <kexec@lists.infradead.org>; Wed, 25 Mar 2015 09:03:51 +0900 (JST)
-Received: from mailsv4.nec.co.jp (imss62.nec.co.jp [10.7.69.157]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id t2P03pX25972 for <kexec@lists.infradead.org>;
- Wed, 25 Mar 2015 09:03:51 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id t2P03plu019933
- for <kexec@lists.infradead.org>; Wed, 25 Mar 2015 09:03:51 +0900 (JST)
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: makedumpfile-1.5.8: Fair I/O workload assignment for --split.
-Date: Wed, 25 Mar 2015 00:02:57 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D9B216@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1YagKk-0004IC-Q4
+ for kexec@lists.infradead.org; Wed, 25 Mar 2015 08:06:40 +0000
+Received: by pdbni2 with SMTP id ni2so20733287pdb.1
+ for <kexec@lists.infradead.org>; Wed, 25 Mar 2015 01:06:16 -0700 (PDT)
+Message-ID: <55126C6F.2080500@linaro.org>
+Date: Wed, 25 Mar 2015 17:06:07 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
+Subject: Re: [RFC 1/4] arm64: kvm: add a cpu tear-down function
+References: <1427111639-4575-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427111639-4575-2-git-send-email-takahiro.akashi@linaro.org>
+ <551135AE.1080401@arm.com>
+In-Reply-To: <551135AE.1080401@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,104 +22,357 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
 
-Hello,
+Marc,
 
-makedumpfile version 1.5.8 is released.
-Your comments/patches are welcome.
+On 03/24/2015 07:00 PM, Marc Zyngier wrote:
+> Hi Takahiro,
+>
+> On 23/03/15 11:53, AKASHI Takahiro wrote:
+>> Cpu must be put back into its initial state, at least, in the
+>> following cases in order to shutdown the system and/or re-initialize cpus
+>> later on:
+>> 1) kexec/kdump
+>> 2) cpu hotplug (offline)
+>> 3) removing kvm as a module
+>>
+>> To address those issues in later patches, this patch adds a tear-down
+>> function, kvm_cpu_reset(), that disables D-cache & MMU and restore a vector
+>> table to the initial stub at EL2.
+>
+> Thanks for having a look at this.
+>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> ---
+>>   arch/arm/kvm/arm.c                |   18 ++++++++++++++++
+>>   arch/arm/kvm/mmu.c                |   16 +++++++++++++++
+>>   arch/arm64/include/asm/kvm_asm.h  |    3 +++
+>>   arch/arm64/include/asm/kvm_host.h |   10 +++++++++
+>>   arch/arm64/include/asm/kvm_mmu.h  |    3 +++
+>>   arch/arm64/include/asm/virt.h     |   11 ++++++++++
+>>   arch/arm64/kvm/hyp-init.S         |   41 +++++++++++++++++++++++++++++++++++++
+>>   arch/arm64/kvm/hyp.S              |   29 ++++++++++++++++++++++----
+>>   8 files changed, 127 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
+>> index 5560f74..35c8bc0 100644
+>> --- a/arch/arm/kvm/arm.c
+>> +++ b/arch/arm/kvm/arm.c
+>> @@ -897,6 +897,24 @@ static void cpu_init_hyp_mode(void *dummy)
+>>   	__cpu_init_hyp_mode(boot_pgd_ptr, pgd_ptr, hyp_stack_ptr, vector_ptr);
+>>   }
+>>
+>> +void kvm_cpu_reset(void *dummy)
+>
+> Given that the notifier introduced in patch #2 lives in the same file,
+> this could be made static, couldn't it?
 
-Main new feature:
-o Fair I/O workload assignment for --split
- - Add the new option "--splitblock-size" to specify the permissible
-   difference of each splitted dumpfile size. Please note that the
-   difference can be larger than the specified size since this feature
-   doesn't care about zero page filtering.
+Yes. Will fix it.
 
-o Make incomplete dumpfile readable
- - DUMP_DH_COMPRESSED_INCOMPLETE or DUMP_ELF_INCOMPLETE flag will be set
-   in the header of dumpfiles if ENOSPC occurs. The flags make crash utility
-   attempt analyzing the dumpfile even it is known to be incomplete.
+>> +{
+>> +	phys_addr_t boot_pgd_ptr;
+>> +	phys_addr_t phys_idmap_start;
+>> +	unsigned long reset_func;
+>> +	unsigned long vector_ptr;
+>> +
+>> +	if (__hyp_get_vectors() == hyp_default_vectors)
+>> +		return;
+>> +
+>> +	reset_func = kvm_reset_func_entry();
+>> +	boot_pgd_ptr = kvm_mmu_get_boot_httbr();
+>> +	phys_idmap_start = kvm_get_idmap_start();
+>> +	vector_ptr = kvm_get_stub_vectors();
+>
+> Isn't that hyp_default_vectors already?
 
-o Support new kernels
- - The supported kernel is updated to 3.19 in this version.
+Yeah, I already use it in kvm_cpu_reset(). Will fix it.
 
-Changelog:
-o New feature
-    - [PATCH v2] Get MODULES_VADDR by KERNEL_IMAGE_SIZE for x86_64. (by Baoquan He) 56649f7
-    - [PATCH v4 1/4] Make get_elf64_phdr()/get_elf32_phdr() public. (by Wang Xiao) 3182be9
-    - [PATCH v4 2/4] Make the incomplete dumpfile generated by ENOSPC error analyzable.
-      (by Wang Xiao) e39216f
-    - [PATCH v4 3/4] Implementation of dealing with kdump-compressed dumpfile with
-      ENOSPC error. (by Wang Xiao) 76025d3
-    - [PATCH v4 4/4] Fix reassemble_kdump_header(). (by Zhou Wenjian) 45a1885
-    - [PATCH v3] Enable --mem-usage for s390x. (by Michael Holzheu) 2e452d7
-    - [PATCH v5 1/5] Add support for splitblock. (by Zhou Wenjian) c7825d4
-    - [PATCH v5 2/5] Add tools for reading and writing from splitblock table.
-      (by Zhou Wenjian) 11dcbfe
-    - [PATCH v5 3/5] Add module of generating table. (by Zhou Wenjian) 28e367c
-    - [PATCH v5 4/5] Add module of calculating start_pfn and end_pfn in each dumpfile.
-      (by Zhou Wenjian) 2b74c02
-    - [PATCH v5 5/5] Add support for --splitblock-size. (by Zhou Wenjian) 3352179
-    - [PATCH] sadump: Support more than 16TB physical memory space. (by HATAYAMA Daisuke) 37afcd5
+>> +	__cpu_reset_hyp_mode(reset_func,
+>> +			     boot_pgd_ptr, phys_idmap_start, vector_ptr);
+>> +}
+>> +
+>>   static int hyp_init_cpu_notify(struct notifier_block *self,
+>>   			       unsigned long action, void *cpu)
+>>   {
+>> diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
+>> index 3e6859b..428f41c 100644
+>> --- a/arch/arm/kvm/mmu.c
+>> +++ b/arch/arm/kvm/mmu.c
+>> @@ -1490,6 +1490,22 @@ phys_addr_t kvm_get_idmap_vector(void)
+>>   	return hyp_idmap_vector;
+>>   }
+>>
+>> +phys_addr_t kvm_get_idmap_start(void)
+>> +{
+>> +	return hyp_idmap_start;
+>> +}
+>> +
+>> +phys_addr_t kvm_get_stub_vectors(void)
+>> +{
+>> +	return virt_to_phys(__hyp_stub_vectors);
+>> +}
+>
+> As Geoff already mentioned, this doesn't belong in KVM. But I don't
+> think you need it, as explained above.
 
-o Bugfix
-    - [PATCH] Use file offset in initialize_mmap(). (by Petr Tesarik) f822608
+Will remove it.
 
-o Cleanup
-    - [PATCH] Initialize symbols early for old kernels. (by Atsushi Kumagai) 99850a1
-    - [PATCH v2] Introduce stub method for machine dependent parts. (by Atsushi Kumagai) bf0bbf9
-    - [PATCH] Read vmcoreinfo as early as possible. (by Atsushi Kumagai) 21631da
-    - [PATCH] Bring get_kcore_dump_loads() backward. (by Atsushi Kumagai) c1d9e15
-    - [PATCH 1/2] Add description of elf dump file. (by Zhou Wenjian) 4074bb6
-    - [PATCH 2/2] Add description of incomplete dump file. (by Zhou Wenjian) b343067
-    - [PATCH] Cleanup: Add some comments for ELF format. (by Atsushi Kumagai) 4a59bd6
-    - [PATCH 1/2] Modify the description of the dump level. (by Atsushi Kumagai) 3599df6
-    - [PATCH 2/2] Change the part of the pfn counter for page cache. (by Atsushi Kumagai) 7b55569
-    - [PATCH v3 1/7] cache: get rid of search loop in cache_add(). (by Petr Tesarik) e068ea2
-    - [PATCH v3 2/7] cache: allow to return a page to the pool. (by Petr Tesarik) f2b30c6
-    - [PATCH v3 3/7] cache: do not allocate from the pending list. (by Petr Tesarik) ff592e6
-    - [PATCH v3 4/7] cache: add hit/miss statistics to the final report. (by Petr Tesarik) 7405a60
-    - [PATCH v3 5/7] cache: allocate buffers in one big chunk. (by Petr Tesarik) 65899d0
-    - [PATCH v3 6/7] cache: allow arbitrary size of cache entries. (by Petr Tesarik) 5881f23
-    - [PATCH v3 7/7] cache: store mapped regions directly in the cache. (by Petr Tesarik) 1acd75f
-    - [PATCH] Update email addresses of mainteners. (by Atsushi Kumagai) febff05
+>> +
+>> +unsigned long kvm_reset_func_entry(void)
+>> +{
+>> +	/* VA of __kvm_hyp_reset in trampline code */
+>> +	return TRAMPOLINE_VA + (__kvm_hyp_reset - __hyp_idmap_text_start);
+>> +}
+>
+> If you need to compute addresses in the trampoline page, it would be
+> better to have a generic macro that takes a kernel VA, and turns it into
+> a trampoline VA.
 
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
+This is the only place to calculate the address. But will fix it.
 
-Download:
-  You can download the latest makedumpfile from the following URL.
-  Details of the change are written on the git page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
+>> +
+>>   int kvm_mmu_init(void)
+>>   {
+>>   	int err;
+>> diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
+>> index 4f7310f..97ee2fc 100644
+>> --- a/arch/arm64/include/asm/kvm_asm.h
+>> +++ b/arch/arm64/include/asm/kvm_asm.h
+>> @@ -116,8 +116,11 @@
+>>   struct kvm;
+>>   struct kvm_vcpu;
+>>
+>> +extern char __hyp_stub_vectors[];
+>
+> Not a KVM thing (for the same reason).
 
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
-  2. "cd makedumpfile-x.y.z"
-  3. "make; make install"
+Will remove it.
 
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+>> +
+>>   extern char __kvm_hyp_init[];
+>>   extern char __kvm_hyp_init_end[];
+>> +extern char __kvm_hyp_reset[];
+>>
+>>   extern char __kvm_hyp_vector[];
+>>
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index 8ac3c70..97f88fe 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -199,6 +199,7 @@ struct kvm_vcpu *kvm_arm_get_running_vcpu(void);
+>>   struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void);
+>>
+>>   u64 kvm_call_hyp(void *hypfn, ...);
+>> +void kvm_call_reset(unsigned long reset_func, ...);
+>
+> You seem to have a single call signature for this function, and have
+> defined all the parameters below. You can drop the variadic aspect.
 
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
+As Geoff suggested, the arguments of __cpu_reset_hyp_mode() and
+kvm_call_reset() will be shuffled as in this order:
+     phys_addr_t boot_pgd_ptr,
+     phys_addr_t phys_idmap_start,
+     unsigned long stub_vector_ptr
+     unsigned long reset_func.
 
-  # makedumpfile -c -d 31 /proc/vmcore dumpfile
 
+>>   void force_vm_exit(const cpumask_t *mask);
+>>   void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
+>>
+>> @@ -223,6 +224,15 @@ static inline void __cpu_init_hyp_mode(phys_addr_t boot_pgd_ptr,
+>>   		     hyp_stack_ptr, vector_ptr);
+>>   }
+>>
+>> +static inline void __cpu_reset_hyp_mode(unsigned long reset_func,
+>> +					phys_addr_t boot_pgd_ptr,
+>> +					phys_addr_t phys_idmap_start,
+>> +					unsigned long stub_vector_ptr)
+>> +{
+>> +	kvm_call_reset(reset_func, boot_pgd_ptr,
+>> +		       phys_idmap_start, stub_vector_ptr);
+>> +}
+>> +
+>>   struct vgic_sr_vectors {
+>>   	void	*save_vgic;
+>>   	void	*restore_vgic;
+>> diff --git a/arch/arm64/include/asm/kvm_mmu.h b/arch/arm64/include/asm/kvm_mmu.h
+>> index 6458b53..36be582 100644
+>> --- a/arch/arm64/include/asm/kvm_mmu.h
+>> +++ b/arch/arm64/include/asm/kvm_mmu.h
+>> @@ -96,6 +96,9 @@ void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu);
+>>   phys_addr_t kvm_mmu_get_httbr(void);
+>>   phys_addr_t kvm_mmu_get_boot_httbr(void);
+>>   phys_addr_t kvm_get_idmap_vector(void);
+>> +phys_addr_t kvm_get_idmap_start(void);
+>> +phys_addr_t kvm_get_stub_vectors(void);
+>> +unsigned long kvm_reset_func_entry(void);
+>>   int kvm_mmu_init(void);
+>>   void kvm_clear_hyp_idmap(void);
+>>
+>> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+>> index 3070096..7fcd087 100644
+>> --- a/arch/arm64/include/asm/virt.h
+>> +++ b/arch/arm64/include/asm/virt.h
+>> @@ -61,6 +61,17 @@
+>>   #define BOOT_CPU_MODE_EL1	(0xe11)
+>>   #define BOOT_CPU_MODE_EL2	(0xe12)
+>>
+>> +/*
+>> + * HVC_RESET - Reset cpu in EL2 to initial state.
+>> + *
+>> + * @x0: entry address in trampoline code in va
+>> + * @x1: identical mapping page table in pa
+>> + * @x2: start address of identical mapping in pa
+>> + * @x3: initial stub vector in pa
+>> + */
+>> +
+>> +#define HVC_RESET 5
+>> +
+>>   #ifndef __ASSEMBLY__
+>>
+>>   /*
+>> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
+>> index c319116..ca7e6bf 100644
+>> --- a/arch/arm64/kvm/hyp-init.S
+>> +++ b/arch/arm64/kvm/hyp-init.S
+>> @@ -115,6 +115,47 @@ target: /* We're now in the trampoline code, switch page tables */
+>>   	eret
+>>   ENDPROC(__kvm_hyp_init)
+>>
+>> +	/*
+>> +	 * x0: HYP boot pgd
+>> +	 * x1: HYP phys_idmap_start
+>> +	 * x2: HYP stub vectors
+>> +	 */
+>> +ENTRY(__kvm_hyp_reset)
+>> +	/* We're in trampoline code in VA */
+>> +	/* Invalidate the old TLBs */
+>> +	tlbi	alle2
+>> +	dsb	sy
+>
+> Invalidating the TLBs before switching TTBR0_EL2 is unlikely to have the
+> effect you want.
+>
+>> +	/* Switch back to boot page tables */
+>> +	msr	ttbr0_el2, x0
+>> +	isb
+>
+> This is the place where you want TLBI to occur.
 
-Thanks
-Atsushi Kumagai
+Will remove tlbi above and put it here.
+
+>> +	/* Branch into PA space */
+>> +	adr	x0, 1f
+>> +	bfi	x1, x0, #0, #PAGE_SHIFT
+>> +	br	x1
+>> +
+>> +	/* We're now in idmap */
+>> +1:	/* Invalidate the old TLBs again */
+>> +	tlbi	alle2
+>> +	dsb	sy
+>
+> See? This is the only TLBI that actually makes sense. Now, given that
+> you are actually disabling the MMU, I'm not sure these TBLIs make much
+> sense.
+
+Probably you're right, but
+otherwise, I guess, bogus TLB might remain and be used when MMU get enabled again.
+(MMU setting would be the same across disabling/enabling hyp mode though.)
+
+>> +	/* Disable MMU */
+>> +	mrs	x0, sctlr_el2
+>> +	and	x1, x0, #SCTLR_EL2_EE
+>> +	orr	x0, x0, x1		// preserve endianness of EL2
+>> +	ldr	x1, =SCTLR_EL2_FLAGS
+>> +	eor	x1, x1, xzr
+>> +	bic	x0, x0, x1		// Clear SCTL_M and etc
+>> +	msr	sctlr_el2, x0
+>> +	isb
+>> +
+>> +	/* Switch back to stub vectors */
+>> +	msr	vbar_el2, x2
+>> +
+>> +	eret
+>> +ENDPROC(__kvm_hyp_reset)
+>> +
+>>   	.ltorg
+>>
+>>   	.popsection
+>> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+>> index fd085ec..aee75f9 100644
+>> --- a/arch/arm64/kvm/hyp.S
+>> +++ b/arch/arm64/kvm/hyp.S
+>> @@ -1136,6 +1136,11 @@ ENTRY(kvm_call_hyp)
+>>   	ret
+>>   ENDPROC(kvm_call_hyp)
+>>
+>> +ENTRY(kvm_call_reset)
+>> +	hvc	#HVC_RESET
+>> +	ret
+>> +ENDPROC(kvm_call_reset)
+>> +
+>>   .macro invalid_vector	label, target
+>>   	.align	2
+>>   \label:
+>> @@ -1179,10 +1184,10 @@ el1_sync:					// Guest trapped into EL2
+>>   	cmp	x18, #HVC_GET_VECTORS
+>>   	b.ne	1f
+>>   	mrs	x0, vbar_el2
+>> -	b	2f
+>> -
+>> -1:	/* Default to HVC_CALL_HYP. */
+>> +	b	3f
+>>
+>> +1:	cmp	x18, #HVC_CALL_HYP
+>> +	b.ne	2f
+>>   	push	lr, xzr
+>>
+>>   	/*
+>> @@ -1196,7 +1201,23 @@ el1_sync:					// Guest trapped into EL2
+>>   	blr	lr
+>>
+>>   	pop	lr, xzr
+>> -2:	eret
+>> +	b	3f
+>> +
+>> +	/*
+>> +	 * shuffle the parameters and jump into trampline code.
+>> +	 */
+>> +2:	cmp	x18, #HVC_RESET
+>> +	b.ne	3f
+>> +
+>> +	mov	x18, x0
+>> +	mov	x0, x1
+>> +	mov	x1, x2
+>> +	mov	x2, x3
+>> +	mov	x3, x4
+>> +	br	x18
+>
+> I'd rather move the shuffling of the registers before the HVC call.
+
+See above.
+
+Thanks,
+-Takahiro AKASHI
+
+>> +	/* not reach here */
+>> +
+>> +3:	eret
+>>
+>>   el1_trap:
+>>   	/*
+>>
+>
+> Thanks,
+>
+> 	M.
+>
 
 _______________________________________________
 kexec mailing list
