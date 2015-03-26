@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f172.google.com ([209.85.192.172])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yb3Bf-0004pp-79
- for kexec@lists.infradead.org; Thu, 26 Mar 2015 08:30:48 +0000
-Received: by pdbcz9 with SMTP id cz9so55855950pdb.3
- for <kexec@lists.infradead.org>; Thu, 26 Mar 2015 01:30:23 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 5/5] arm64: enable kdump in the arm64 defconfig
-Date: Thu, 26 Mar 2015 17:28:53 +0900
-Message-Id: <1427358533-3754-6-git-send-email-takahiro.akashi@linaro.org>
-In-Reply-To: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
-References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
+Received: from mga01.intel.com ([192.55.52.88])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YbAWW-0007GY-A4
+ for kexec@lists.infradead.org; Thu, 26 Mar 2015 16:20:50 +0000
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+Subject: [PATCH] x86_64: Add support to build kexec-tools with x32 ABI
+Date: Thu, 26 Mar 2015 16:19:58 +0000
+Message-Id: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,36 +16,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
-Cc: linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, horms@verge.net.au, =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- arch/arm64/configs/defconfig |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 3f1c593..f5af17f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -45,6 +45,7 @@ CONFIG_KSM=y
- CONFIG_TRANSPARENT_HUGEPAGE=y
- CONFIG_CMA=y
- CONFIG_KEXEC=y
-+CONFIG_CRASH_DUMP=y
- CONFIG_CMDLINE="console=ttyAMA0"
- # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
- CONFIG_COMPAT=y
--- 
-1.7.9.5
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+U3VtbWFyeSBvZiBjaGFuZ2VzLAoKY29uZmlndXJlLmFjOiBBZGQgdGVzdCBmb3IgZGV0ZWN0IHgz
+MiBBQkkuCnB1cmdhdG9yeS9hcmNoL3g4Nl82NC9NYWtlZmlsZTogTm90IHVzZSBtY21vZGVsIGxh
+cmdlIHdoZW4KCXgzMiBBQkkgaXMgc2V0LgprZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVs
+LXg4Nl82NC5jOiBXaGVuIHgzMiBBQkkgaXMgc2V0Cgl1c2UgRUxGQ0xBU1MzMiBpbnN0ZWFkIG9m
+IEVMRkNMQVNTNjQuCmtleGVjL2tleGVjLXN5c2NhbGwuaDogQWRkIGNvcnJlY3Qgc3lzY2FsbCBu
+dW1iZXIgZm9yIHgzMiBBQkkuCgpTaWduZWQtb2ZmLWJ5OiBBbsOtYmFsIExpbcOzbiA8YW5pYmFs
+LmxpbW9uQGxpbnV4LmludGVsLmNvbT4KU2lnbmVkLW9mZi1ieTogTWFyaWFubyBMb3BleiA8bWFy
+aWFuby5sb3BlekBsaW51eC5pbnRlbC5jb20+Ci0tLQogY29uZmlndXJlLmFjICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDkgKysrKysrKysrCiBrZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1l
+bGYtcmVsLXg4Nl82NC5jIHwgNCArKysrCiBrZXhlYy9rZXhlYy1zeXNjYWxsLmggICAgICAgICAg
+ICAgICAgICAgIHwgNCArKysrCiBwdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUgICAgICAg
+ICAgIHwgNCArKystCiA0IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9jb25maWd1cmUuYWMgYi9jb25maWd1cmUuYWMKaW5kZXggYzQx
+MGU5MC4uMWVjYWRkNSAxMDA2NDQKLS0tIGEvY29uZmlndXJlLmFjCisrKyBiL2NvbmZpZ3VyZS5h
+YwpAQCAtNTIsNiArNTIsMTUgQEAgY2FzZSAkdGFyZ2V0X2NwdSBpbgogCQk7OwogCWlhNjR8eDg2
+XzY0fGFscGhhfG02OGsgKQogCQlBUkNIPSIkdGFyZ2V0X2NwdSIKKworCQlkbmwgLS0tVGVzdCBm
+b3IgeDMyIEFCSSBpbiB4ODZfNjQKKwkJaWYgdGVzdCAieCRBUkNIIiA9ICJ4eDg2XzY0IiA7IHRo
+ZW4KKwkJCUFDX0VHUkVQX0NQUCh4MzJfdGVzdCwKKwkJCVsjaWYgZGVmaW5lZChfX3g4Nl82NF9f
+KSAmJiBkZWZpbmVkIChfX0lMUDMyX18pCisJCQkJeDMyX3Rlc3QKKwkJCSNlbmRpZgorCQkJXSwg
+U1VCQVJDSD0neDMyJywgU1VCQVJDSD0nNjQnKQorCQlmaQogCQk7OwogCSogKQogCQlBQ19NU0df
+RVJST1IoW3Vuc3VwcG9ydGVkIGFyY2hpdGVjdHVyZSAkdGFyZ2V0X2NwdV0pCmRpZmYgLS1naXQg
+YS9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jIGIva2V4ZWMvYXJjaC94
+ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYwppbmRleCBjNzk1MDM3Li4wNmRiN2YwIDEwMDY0
+NAotLS0gYS9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jCisrKyBiL2tl
+eGVjL2FyY2gveDg2XzY0L2tleGVjLWVsZi1yZWwteDg2XzY0LmMKQEAgLTgsNyArOCwxMSBAQCBp
+bnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiAJaWYgKGVo
+ZHItPmVpX2RhdGEgIT0gRUxGREFUQTJMU0IpIHsKIAkJcmV0dXJuIDA7CiAJfQorI2lmZGVmIF9f
+SUxQMzJfXworCWlmIChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzMyKSB7CisjZWxzZQogCWlm
+IChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzY0KSB7CisjZW5kaWYKIAkJcmV0dXJuIDA7CiAJ
+fQogCWlmIChlaGRyLT5lX21hY2hpbmUgIT0gRU1fWDg2XzY0KSB7CmRpZmYgLS1naXQgYS9rZXhl
+Yy9rZXhlYy1zeXNjYWxsLmggYi9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKaW5kZXggY2UyZTIwYi4u
+Y2FiNTUzNSAxMDA2NDQKLS0tIGEva2V4ZWMva2V4ZWMtc3lzY2FsbC5oCisrKyBiL2tleGVjL2tl
+eGVjLXN5c2NhbGwuaApAQCAtMzEsOCArMzEsMTIgQEAKICNkZWZpbmUgX19OUl9rZXhlY19sb2Fk
+CQkyNjgKICNlbmRpZgogI2lmZGVmIF9feDg2XzY0X18KKyNpZmRlZiBfX0lMUDMyX18KKyNkZWZp
+bmUgX19OUl9rZXhlY19sb2FkCQk1MjgKKyNlbHNlCiAjZGVmaW5lIF9fTlJfa2V4ZWNfbG9hZAkJ
+MjQ2CiAjZW5kaWYKKyNlbmRpZgogI2lmZGVmIF9fczM5MHhfXwogI2RlZmluZSBfX05SX2tleGVj
+X2xvYWQJCTI3NwogI2VuZGlmCmRpZmYgLS1naXQgYS9wdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFr
+ZWZpbGUgYi9wdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUKaW5kZXggNzMwMDkzNy4uNGFm
+MTFlNCAxMDA2NDQKLS0tIGEvcHVyZ2F0b3J5L2FyY2gveDg2XzY0L01ha2VmaWxlCisrKyBiL3B1
+cmdhdG9yeS9hcmNoL3g4Nl82NC9NYWtlZmlsZQpAQCAtMjMsNCArMjMsNiBAQCB4ODZfNjRfUFVS
+R0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5L2FyY2gvaTM4Ni9jb25zb2xlLXg4Ni5jCiB4ODZfNjRf
+UFVSR0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5L2FyY2gvaTM4Ni92Z2EuYwogeDg2XzY0X1BVUkdB
+VE9SWV9TUkNTICs9IHB1cmdhdG9yeS9hcmNoL2kzODYvcGljLmMKIAoteDg2XzY0X1BVUkdBVE9S
+WV9FWFRSQV9DRkxBR1MgPSAtbWNtb2RlbD1sYXJnZQoraWZlcSAoJChTVUJBUkNIKSw2NCkKKyAg
+ICAgICAgeDg2XzY0X1BVUkdBVE9SWV9FWFRSQV9DRkxBR1MgPSAtbWNtb2RlbD1sYXJnZQorZW5k
+aWYKLS0gCjEuOC40LjUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
