@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yk0-x22b.google.com ([2607:f8b0:4002:c07::22b])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YbDHB-0007KO-5V
- for kexec@lists.infradead.org; Thu, 26 Mar 2015 19:17:10 +0000
-Received: by ykek76 with SMTP id k76so32849735yke.0
- for <kexec@lists.infradead.org>; Thu, 26 Mar 2015 12:16:46 -0700 (PDT)
-Date: Thu, 26 Mar 2015 15:16:44 -0400
-From: Tejun Heo <tj@kernel.org>
-Subject: [PATCH 2/2] kexec: remove ordering constraints from -x (--no-ifdown)
- and -y (--no-sync)
-Message-ID: <20150326191644.GF1953@htj.duckdns.org>
-References: <20150326191608.GE1953@htj.duckdns.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150326191608.GE1953@htj.duckdns.org>
+Message-ID: <1427394639.4730.18.camel@infradead.org>
+Subject: Re: [PATCH 1/5] arm64: kdump: reserve memory for crash dump kernel
+From: Geoff Levand <geoff@infradead.org>
+In-Reply-To: <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
+References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
+Date: Thu, 26 Mar 2015 11:30:39 -0700
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,101 +19,269 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Chris Mason <clm@fb.com>, kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com
 
-From 81b5889b49f0f2448c3e9543c5c936d52348910c Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Thu, 26 Mar 2015 15:11:09 -0400
+Hi Takahiro,
 
-Currently, the two options must be the last ones to be honored;
-otherwise, they can get silently ignored and both the manpage and help
-text point it out.  This is error-prone and trivial to fix.  There
-isn't much point in pointing something out in documentation when the
-peculiarity can be removed with four lines of extra code.
+On Thu, 2015-03-26 at 17:28 +0900, AKASHI Takahiro wrote:
+> On system kernel, the memory region used by crash dump kernel must be
+> specified by "crashkernel=X@Y" boot parameter. reserve_crashkernel()
+> will allocate the region in "System RAM" and reserve it for later use.
+> 
+> On crash dump kernel, memory region information in system kernel is
+> described in a specific region specified by "elfcorehdr=X@Y" boot parameter.
+> reserve_elfcorehdr() will set aside the region to avoid data destruction
+> by the kernel.
+> 
+> Crash dump kernel will access memory regions in system kernel via
+> copy_oldmem_page(), which reads a page with ioremap'ing it assuming that
 
-Update option handling so that the two arguments are honored
-regardless of their positions.
+s/page with/page by/
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- kexec/kexec.8 |  6 ++----
- kexec/kexec.c | 17 +++++++++--------
- 2 files changed, 11 insertions(+), 12 deletions(-)
+> such pages are not part of main memory of crash dump kernel.
+> This is true under non-UEFI environment because kexec-tools modifies
+> a device tree adding "usablemem" attributes to memory sections.
+> Under UEFI, however, this is not true because UEFI remove memory sections
+> in a device tree and export all the memory regions, even though they belong
+> to system kernel.
+> 
+> So we should add "mem=X[MG]" boot parameter to limit the meory size and
 
-diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index 24d1969..4d0c1d1 100644
---- a/kexec/kexec.8
-+++ b/kexec/kexec.8
-@@ -147,12 +147,10 @@ target kernel. If a capture kernel is being unloaded then specify -p with -u.
- Return the version number of the installed utility.
- .TP
- .B \-x\ (\-\-no\-ifdown)
--Shut down the running kernel, but restore the interface on reload. (If
--this option is used, it must be one of last options specified.)
-+Shut down the running kernel, but restore the interface on reload.
- .TP
- .B \-y\ (\-\-no\-sync)
--Shut down the running kernel, but skip syncing the filesystems. (If
--this option is used, it must be one of last options specified.)
-+Shut down the running kernel, but skip syncing the filesystems.
- .TP
- .BI \-\-mem\-min= addr
- Specify the lowest memory address
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 7123460..8ce6885 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -913,11 +913,7 @@ void usage(void)
- 	       " -f, --force          Force an immediate kexec,\n"
- 	       "                      don't call shutdown.\n"
- 	       " -x, --no-ifdown      Don't bring down network interfaces.\n"
--	       "                      (if used, must be one of last options\n"
--	       "                       specified)\n"
- 	       " -y, --no-sync        Don't sync filesystems before kexec.\n"
--	       "                      (if used, must be one of last options\n"
--	       "                       specified)\n"
- 	       " -l, --load           Load the new kernel into the\n"
- 	       "                      current kernel.\n"
- 	       " -p, --load-panic     Load the new kernel for use on panic.\n"
-@@ -1170,8 +1166,8 @@ int main(int argc, char *argv[])
- 	int do_exec = 0;
- 	int do_load_jump_back_helper = 0;
- 	int do_shutdown = 1;
--	int do_sync = 1;
--	int do_ifdown = 0;
-+	int do_sync = 1, skip_sync = 0;
-+	int do_ifdown = 0, skip_ifdown = 0;
- 	int do_unload = 0;
- 	int do_reuse_initrd = 0;
- 	int do_kexec_file_syscall = 0;
-@@ -1219,10 +1215,10 @@ int main(int argc, char *argv[])
- 		case OPT_DEBUG:
- 			kexec_debug = 1;
- 		case OPT_NOIFDOWN:
--			do_ifdown = 0;
-+			skip_ifdown = 1;
- 			break;
- 		case OPT_NOSYNC:
--			do_sync = 0;
-+			skip_sync = 1;
- 			break;
- 		case OPT_FORCE:
- 			do_load = 1;
-@@ -1321,6 +1317,11 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 
-+	if (skip_ifdown)
-+		do_ifdown = 0;
-+	if (skip_sync)
-+		do_sync = 0;
-+
- 	if (do_load && (kexec_flags & KEXEC_ON_CRASH) &&
- 	    !is_crashkernel_mem_reserved()) {
- 		die("Memory for crashkernel is not reserved\n"
--- 
-2.1.0
+s/meory/memory/
+
+> avoid hitting the following assertion in ioremap():
+> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+> 		return NULL;
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  arch/arm64/kernel/Makefile     |    1 +
+>  arch/arm64/kernel/crash_dump.c |   71 ++++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/setup.c      |   78 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 150 insertions(+)
+>  create mode 100644 arch/arm64/kernel/crash_dump.c
+> 
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index da9a7ee..3c24d4e 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -36,6 +36,7 @@ arm64-obj-$(CONFIG_EFI)			+= efi.o efi-stub.o efi-entry.o
+>  arm64-obj-$(CONFIG_PCI)			+= pci.o
+>  arm64-obj-$(CONFIG_ARMV8_DEPRECATED)	+= armv8_deprecated.o
+>  arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
+> +arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+>  
+>  obj-y					+= $(arm64-obj-y) vdso/
+>  obj-m					+= $(arm64-obj-m)
+> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
+> new file mode 100644
+> index 0000000..dd31b2e
+> --- /dev/null
+> +++ b/arch/arm64/kernel/crash_dump.c
+> @@ -0,0 +1,71 @@
+> +/*
+> + * arch/arm64/kernel/crash_dump.c
+
+I would recommend against adding paths in source files.  It often
+happens that files with paths are moved, but the file comments are not
+updated.
+
+> + *
+> + * Copyright (C) 2014 Linaro Limited
+> + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/crash_dump.h>
+> +#include <linux/errno.h>
+> +#include <linux/io.h>
+> +#include <linux/memblock.h>
+> +#include <linux/uaccess.h>
+> +#include <asm/memory.h>
+> +
+> +/**
+> + * copy_oldmem_page() - copy one page from old kernel memory
+> + * @pfn: page frame number to be copied
+> + * @buf: buffer where the copied page is placed
+> + * @csize: number of bytes to copy
+> + * @offset: offset in bytes into the page
+> + * @userbuf: if set, @buf is int he user address space
+
+s/is int he user/is a user/
+
+> + *
+> + * This function copies one page from old kernel memory into buffer pointed by
+> + * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
+> + * copied or negative error in case of failure.
+> + */
+> +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+> +			 size_t csize, unsigned long offset,
+> +			 int userbuf)
+
+Since userbuf is a binary flag, I think type bool would be better.
+Change the comments from 'set' and '1' to 'true'.
+
+Should offset be type size_t?
+
+> +{
+> +	void *vaddr;
+> +
+> +	if (!csize)
+> +		return 0;
+> +
+> +	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
+> +	if (!vaddr)
+> +		return -ENOMEM;
+> +
+> +	if (userbuf) {
+> +		if (copy_to_user(buf, vaddr + offset, csize)) {
+> +			iounmap(vaddr);
+> +			return -EFAULT;
+> +		}
+> +	} else {
+> +		memcpy(buf, vaddr + offset, csize);
+> +	}
+> +
+> +	iounmap(vaddr);
+> +
+> +	return csize;
+> +}
+> +
+> +/**
+> + * elfcorehdr_read - read from ELF core header
+> + * @buf: buffer where the data is placed
+> + * @csize: number of bytes to read
+> + * @ppos: address in the memory
+> + *
+> + * This function reads @count bytes from elf core header which exists
+> + * on crash dump kernel's memory.
+> + */
+> +ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+
+Should ppos be type phys_addr_t *?
+
+> +{
+> +	memcpy(buf, phys_to_virt((phys_addr_t)*ppos), count);
+> +	return count;
+> +}
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index e8420f6..daaed93 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -323,6 +323,69 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
+>  	dump_stack_set_arch_desc("%s (DT)", of_flat_dt_get_machine_name());
+>  }
+>  
+> +#ifdef CONFIG_KEXEC
+> +/*
+> + * reserve_crashkernel() - reserves memory for crash kernel
+> + *
+> + * This function reserves memory area given in "crashkernel=" kernel command
+> + * line parameter. The memory reserved is used by a dump capture kernel when
+> + * primary kernel is crashing.
+> + */
+> +static void __init reserve_crashkernel(void)
+> +{
+> +	unsigned long long crash_size, crash_base;
+> +	int ret;
+> +
+> +	/* use ULONG_MAX since we don't know system memory size here. */
+> +	ret = parse_crashkernel(boot_command_line, ULONG_MAX,
+> +				&crash_size, &crash_base);
+> +	if (ret)
+> +		return;
+> +
+> +	ret = memblock_reserve(crash_base, crash_size);
+> +	if (ret < 0) {
+> +		pr_warn("crashkernel reservation failed - memory is in use (0x%lx)\n",
+> +			(unsigned long)crash_base);
+
+Can we use 0x%llx here and below and avoid these casts?
+
+> +		return;
+> +	}
+> +
+> +	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel\n",
+> +		(unsigned long)(crash_size >> 20),
+> +		(unsigned long)(crash_base >> 20));
+> +
+> +	crashk_res.start = crash_base;
+> +	crashk_res.end = crash_base + crash_size - 1;
+> +}
+> +#endif /* CONFIG_KEXEC */
+> +
+> +#ifdef CONFIG_CRASH_DUMP
+> +/*
+> + * reserve_elfcorehdr() - reserves memory for elf core header
+> + *
+> + * This function reserves memory area given in "elfcorehdr=" kernel command
+> + * line parameter. The memory reserved is used by a dump capture kernel to
+> + * identify the memory used by primary kernel.
+> + */
+> +static void __init reserve_elfcorehdr(void)
+> +{
+> +	int ret;
+> +
+> +	if (!elfcorehdr_size)
+> +		return;
+> +
+> +	ret = memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> +	if (ret < 0) {
+> +		pr_warn("elfcorehdr reservation failed - memory is in use (0x%lx)\n",
+> +			(unsigned long)elfcorehdr_addr);
+> +		return;
+> +	}
+> +
+> +	pr_info("Reserving %ldKB of memory at %ldMB for elfcorehdr\n",
+> +		(unsigned long)(elfcorehdr_size >> 10),
+> +		(unsigned long)(elfcorehdr_addr >> 20));
+> +}
+> +#endif /* CONFIG_CRASH_DUMP */
+> +
+>  static void __init request_standard_resources(void)
+>  {
+>  	struct memblock_region *region;
+> @@ -378,10 +441,25 @@ void __init setup_arch(char **cmdline_p)
+>  	local_async_enable();
+>  
+>  	efi_init();
+
+Maybe have a blank line here?
+
+> +	/*
+> +	 * reserve_crashkernel() and reserver_elfcorehdr() must be called
+
+s/reserver_elfcorehdr/reserve_elfcorehdr/
+
+> +	 * before arm64_bootmem_init() because dma_contiguous_reserve()
+> +	 * may conflict with those regions.
+> +	 */
+> +#ifdef CONFIG_KEXEC
+> +	reserve_crashkernel();
+> +#endif
+> +#ifdef CONFIG_CRASH_DUMP
+> +	reserve_elfcorehdr();
+> +#endif
+>  	arm64_memblock_init();
+>  
+>  	paging_init();
+>  	request_standard_resources();
+> +#ifdef CONFIG_KEXEC
+> +	/* kexec-tool will detect the region with /proc/iomem */
+
+There are more kexec user programs than kexec-tools, so I think
+something like 'user space tools' would be better.
+
+> +	insert_resource(&iomem_resource, &crashk_res);
+> +#endif
+>  
+>  	early_ioremap_reset();
+>  
+
 
 
 _______________________________________________
