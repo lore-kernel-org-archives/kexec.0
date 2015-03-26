@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yamv0-0005io-3n
- for kexec@lists.infradead.org; Wed, 25 Mar 2015 15:08:31 +0000
-Message-ID: <5512CF4C.3010103@hitachi.com>
-Date: Thu, 26 Mar 2015 00:07:56 +0900
-From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
-References: <54F9D645.2050008@jp.fujitsu.com>
- <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
- <20150323071943.GA22765@gmail.com> <5510DA42.6040708@hitachi.com>
- <20150324071129.GA28619@gmail.com> <87619qzo5d.fsf@x220.int.ebiederm.org>
- <20150324143259.GA2970@redhat.com>
-In-Reply-To: <20150324143259.GA2970@redhat.com>
+Received: from mail-pd0-f170.google.com ([209.85.192.170])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Yb37q-0001RZ-NE
+ for kexec@lists.infradead.org; Thu, 26 Mar 2015 08:26:53 +0000
+Received: by pdnc3 with SMTP id c3so55996561pdn.0
+ for <kexec@lists.infradead.org>; Thu, 26 Mar 2015 01:26:27 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [RFC v2 0/5] arm64: kvm: reset hyp context for kexec
+Date: Thu, 26 Mar 2015 17:25:21 +0900
+Message-Id: <1427358326-3708-1-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,69 +17,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsSDlpKfovJQi?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, akpm@linux-foundation.org, bp@suse.de, Ingo Molnar <mingo@kernel.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, christoffer.dall@linaro.org, freddy77@gmail.com
 
-Hello all,
+This patch set addresses KVM issue described in Geoff's kexec patch set[1].
+(The subject was changed from "arm64: kexec: fix kvm issue in kexec.")
+See "Changes" below.
 
-(2015/03/24 23:32), Vivek Goyal wrote:
-> On Tue, Mar 24, 2015 at 05:27:10AM -0500, Eric W. Biederman wrote:
->> Ingo Molnar <mingo@kernel.org> writes:
->>
->>> * Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com> wrote:
->>>
->>>>>
->>>>>   f06e5153f4ae ("kernel/panic.c: add "crash_kexec_post_notifiers" option for kdump after panic_notifers")
->>>>>
->>>>> Was that crash_kexec() was called unconditionally after notifiers were 
->>>>> called, which should be fixed via the simple patch below (untested). 
->>>>> Looks much simpler than your fix.
->>>>
->>>> No, Daisuke's patch is not for that case. [...]
->>>
->>> Yet the actual bug is in that commit, 'crash_kexec_post_notifiers' was 
->>> clearly not a no-op in the default case, against expectations.
->>>
->>> So the first step should be to restore the original behavior (my 
->>> patch), then should any new tweaks be added.
->>
->> Honestly I think the proper fix is to simply revert f06e5153f4ae.
->>
->> It was clearly not properly tested by the people who wanted it because
->> they came back quite a while later with additional bleh.
->>
->> I think this pretty much counts as hitting the code doesn't work let's
->> remove it threshold.
-> 
-> IMHO, we should give users flexibility of running panic notifiers before
-> crash_kexec(). Different people have been asking for it since last 7-8
-> years and it is a pretty small code in kernel so no major maintenance
-> headache. 
-> 
-> Agreed that this might be very unreliable, but if users want to shoot
-> themseleves in the foot, it is their choice. This will not be upstream
-> default and I am hoping that distributions don't make it their default
-> either.
+The basic approach here is to define a kvm tear-down function and add
+a reboot hook to gracefully shutdown the 1st kernel. This way, kvm gets
+free from kexec-specific cleanup and yet we allows future enhancement,
+like cpu hotplug & building kvm as a module, based on tear-down function.
+In this sense, patch #1 & #2 (and #5) actually fix the problem, and #3 & #4
+are rather informative.
 
-We are going to use panic notifier to write SEL record, and actually
-it seems to be unreliable.  At least I found two problems in IPMI driver
-code while testing Hatayama-san's patch, and they will cause an infinite
-loop.  I think users wouldn't notice this bug because most of users use
-kdump and there is no difference on display between the infinite loop
-case and successful case.
+I confirmed that 1st kernel successfully shut down and 2nd kernel started
+with the following messages:
 
-Anyway, we need to harden panic notifier callee.  I will post bug fix
-patches for IPMI driver ASAP.
+    kvm [1]: Using HYP init bounce page @8fa52f000
+    kvm [1]: interrupt-controller@2c02f000 IRQ6
+    kvm [1]: timer IRQ3
+    kvm [1]: Hyp mode initialized successfully
 
-Best regards,
+test target: Base fast model
+version:     kernel v4.0-rc4 + Geoff's kexec v8
 
-Hidehiro Kawai
-Hitachi, Yokohama Research Laboratory
 
+I still have some concerns about the following points. Please let me know
+if you have any comments:
+
+1) Call kvm_cpu_reset() on non-boot cpus in reboot notifier
+   We don't have to do so in kexec-specific case. But the current code runs
+   the function on each cpu for safety since we use a general reboot hook.
+2) Flush D$ in kvm_cpu_reset()
+   Currently doesn't do so because all the cpus are just going to shut down,
+   and we actually flush D$ on boot cpu in Geoff's cpu_reset().
+3) Compatibility with arm implementation
+   Frediano[2] is no longer working on this issue on arm as he left his
+   company. But my approach here is based on a generic interface and can be
+   applied to arm in a similar way.
+
+[1] http://lists.infradead.org/pipermail/kexec/2015-March/013432.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/322231.html
+
+Changes from v1:
+* modified kvm_cpu_reset() implementation:
+    - define a macro to translate va to addr in trampoline
+    - use __hyp_default_vectors instead of kvm_get_hyp_stub_vectors()
+    - shuffle the arguments in __cpu_reset_hyp_mode()
+    - optimize TLB flush operations
+* changed a patch#2's name
+* added a patch#5 to add stub code for arm
+
+
+AKASHI Takahiro (5):
+  arm64: kvm: add a cpu tear-down function
+  arm64: kvm: allow EL2 context to be reset on shutdown
+  arm64: kvm: add cpu reset hook for cpu hotplug
+  arm64: kvm: add cpu reset at module exit
+  arm: kvm: add stub implementation for kvm_cpu_reset()
+
+ arch/arm/include/asm/kvm_asm.h    |    1 +
+ arch/arm/include/asm/kvm_host.h   |   13 +++++++++-
+ arch/arm/include/asm/kvm_mmu.h    |    5 ++++
+ arch/arm/kvm/arm.c                |   51 +++++++++++++++++++++++++++++++++++++
+ arch/arm/kvm/init.S               |    6 +++++
+ arch/arm/kvm/mmu.c                |    5 ++++
+ arch/arm64/include/asm/kvm_asm.h  |    1 +
+ arch/arm64/include/asm/kvm_host.h |   12 ++++++++-
+ arch/arm64/include/asm/kvm_mmu.h  |    5 ++++
+ arch/arm64/include/asm/virt.h     |   11 ++++++++
+ arch/arm64/kvm/Kconfig            |    1 -
+ arch/arm64/kvm/hyp-init.S         |   35 +++++++++++++++++++++++++
+ arch/arm64/kvm/hyp.S              |   16 +++++++++---
+ 13 files changed, 156 insertions(+), 6 deletions(-)
+
+-- 
+1.7.9.5
 
 
 _______________________________________________
