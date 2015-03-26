@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YbAWW-0007GY-A4
- for kexec@lists.infradead.org; Thu, 26 Mar 2015 16:20:50 +0000
-From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
-Subject: [PATCH] x86_64: Add support to build kexec-tools with x32 ABI
-Date: Thu, 26 Mar 2015 16:19:58 +0000
-Message-Id: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
+Received: from mail-qg0-x22e.google.com ([2607:f8b0:400d:c04::22e])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YbDGd-00079U-D1
+ for kexec@lists.infradead.org; Thu, 26 Mar 2015 19:16:36 +0000
+Received: by qgh3 with SMTP id 3so98064105qgh.2
+ for <kexec@lists.infradead.org>; Thu, 26 Mar 2015 12:16:13 -0700 (PDT)
+Date: Thu, 26 Mar 2015 15:16:08 -0400
+From: Tejun Heo <tj@kernel.org>
+Subject: [PATCH 1/2] kexec: implement -y (--no-sync) option
+Message-ID: <20150326191608.GE1953@htj.duckdns.org>
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,58 +19,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, horms@verge.net.au, =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Chris Mason <clm@fb.com>, kexec@lists.infradead.org
 
-U3VtbWFyeSBvZiBjaGFuZ2VzLAoKY29uZmlndXJlLmFjOiBBZGQgdGVzdCBmb3IgZGV0ZWN0IHgz
-MiBBQkkuCnB1cmdhdG9yeS9hcmNoL3g4Nl82NC9NYWtlZmlsZTogTm90IHVzZSBtY21vZGVsIGxh
-cmdlIHdoZW4KCXgzMiBBQkkgaXMgc2V0LgprZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVs
-LXg4Nl82NC5jOiBXaGVuIHgzMiBBQkkgaXMgc2V0Cgl1c2UgRUxGQ0xBU1MzMiBpbnN0ZWFkIG9m
-IEVMRkNMQVNTNjQuCmtleGVjL2tleGVjLXN5c2NhbGwuaDogQWRkIGNvcnJlY3Qgc3lzY2FsbCBu
-dW1iZXIgZm9yIHgzMiBBQkkuCgpTaWduZWQtb2ZmLWJ5OiBBbsOtYmFsIExpbcOzbiA8YW5pYmFs
-LmxpbW9uQGxpbnV4LmludGVsLmNvbT4KU2lnbmVkLW9mZi1ieTogTWFyaWFubyBMb3BleiA8bWFy
-aWFuby5sb3BlekBsaW51eC5pbnRlbC5jb20+Ci0tLQogY29uZmlndXJlLmFjICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8IDkgKysrKysrKysrCiBrZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1l
-bGYtcmVsLXg4Nl82NC5jIHwgNCArKysrCiBrZXhlYy9rZXhlYy1zeXNjYWxsLmggICAgICAgICAg
-ICAgICAgICAgIHwgNCArKysrCiBwdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUgICAgICAg
-ICAgIHwgNCArKystCiA0IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKCmRpZmYgLS1naXQgYS9jb25maWd1cmUuYWMgYi9jb25maWd1cmUuYWMKaW5kZXggYzQx
-MGU5MC4uMWVjYWRkNSAxMDA2NDQKLS0tIGEvY29uZmlndXJlLmFjCisrKyBiL2NvbmZpZ3VyZS5h
-YwpAQCAtNTIsNiArNTIsMTUgQEAgY2FzZSAkdGFyZ2V0X2NwdSBpbgogCQk7OwogCWlhNjR8eDg2
-XzY0fGFscGhhfG02OGsgKQogCQlBUkNIPSIkdGFyZ2V0X2NwdSIKKworCQlkbmwgLS0tVGVzdCBm
-b3IgeDMyIEFCSSBpbiB4ODZfNjQKKwkJaWYgdGVzdCAieCRBUkNIIiA9ICJ4eDg2XzY0IiA7IHRo
-ZW4KKwkJCUFDX0VHUkVQX0NQUCh4MzJfdGVzdCwKKwkJCVsjaWYgZGVmaW5lZChfX3g4Nl82NF9f
-KSAmJiBkZWZpbmVkIChfX0lMUDMyX18pCisJCQkJeDMyX3Rlc3QKKwkJCSNlbmRpZgorCQkJXSwg
-U1VCQVJDSD0neDMyJywgU1VCQVJDSD0nNjQnKQorCQlmaQogCQk7OwogCSogKQogCQlBQ19NU0df
-RVJST1IoW3Vuc3VwcG9ydGVkIGFyY2hpdGVjdHVyZSAkdGFyZ2V0X2NwdV0pCmRpZmYgLS1naXQg
-YS9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jIGIva2V4ZWMvYXJjaC94
-ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYwppbmRleCBjNzk1MDM3Li4wNmRiN2YwIDEwMDY0
-NAotLS0gYS9rZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jCisrKyBiL2tl
-eGVjL2FyY2gveDg2XzY0L2tleGVjLWVsZi1yZWwteDg2XzY0LmMKQEAgLTgsNyArOCwxMSBAQCBp
-bnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCiAJaWYgKGVo
-ZHItPmVpX2RhdGEgIT0gRUxGREFUQTJMU0IpIHsKIAkJcmV0dXJuIDA7CiAJfQorI2lmZGVmIF9f
-SUxQMzJfXworCWlmIChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzMyKSB7CisjZWxzZQogCWlm
-IChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzY0KSB7CisjZW5kaWYKIAkJcmV0dXJuIDA7CiAJ
-fQogCWlmIChlaGRyLT5lX21hY2hpbmUgIT0gRU1fWDg2XzY0KSB7CmRpZmYgLS1naXQgYS9rZXhl
-Yy9rZXhlYy1zeXNjYWxsLmggYi9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKaW5kZXggY2UyZTIwYi4u
-Y2FiNTUzNSAxMDA2NDQKLS0tIGEva2V4ZWMva2V4ZWMtc3lzY2FsbC5oCisrKyBiL2tleGVjL2tl
-eGVjLXN5c2NhbGwuaApAQCAtMzEsOCArMzEsMTIgQEAKICNkZWZpbmUgX19OUl9rZXhlY19sb2Fk
-CQkyNjgKICNlbmRpZgogI2lmZGVmIF9feDg2XzY0X18KKyNpZmRlZiBfX0lMUDMyX18KKyNkZWZp
-bmUgX19OUl9rZXhlY19sb2FkCQk1MjgKKyNlbHNlCiAjZGVmaW5lIF9fTlJfa2V4ZWNfbG9hZAkJ
-MjQ2CiAjZW5kaWYKKyNlbmRpZgogI2lmZGVmIF9fczM5MHhfXwogI2RlZmluZSBfX05SX2tleGVj
-X2xvYWQJCTI3NwogI2VuZGlmCmRpZmYgLS1naXQgYS9wdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFr
-ZWZpbGUgYi9wdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUKaW5kZXggNzMwMDkzNy4uNGFm
-MTFlNCAxMDA2NDQKLS0tIGEvcHVyZ2F0b3J5L2FyY2gveDg2XzY0L01ha2VmaWxlCisrKyBiL3B1
-cmdhdG9yeS9hcmNoL3g4Nl82NC9NYWtlZmlsZQpAQCAtMjMsNCArMjMsNiBAQCB4ODZfNjRfUFVS
-R0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5L2FyY2gvaTM4Ni9jb25zb2xlLXg4Ni5jCiB4ODZfNjRf
-UFVSR0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5L2FyY2gvaTM4Ni92Z2EuYwogeDg2XzY0X1BVUkdB
-VE9SWV9TUkNTICs9IHB1cmdhdG9yeS9hcmNoL2kzODYvcGljLmMKIAoteDg2XzY0X1BVUkdBVE9S
-WV9FWFRSQV9DRkxBR1MgPSAtbWNtb2RlbD1sYXJnZQoraWZlcSAoJChTVUJBUkNIKSw2NCkKKyAg
-ICAgICAgeDg2XzY0X1BVUkdBVE9SWV9FWFRSQV9DRkxBR1MgPSAtbWNtb2RlbD1sYXJnZQorZW5k
-aWYKLS0gCjEuOC40LjUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+From a32a35e46a950cd0e4b4e317a9062c41e79fbfeb Mon Sep 17 00:00:00 2001
+From: Tejun Heo <tj@kernel.org>
+Date: Thu, 26 Mar 2015 14:56:26 -0400
+
+During kernel develoment, kexec can be used to get out of sticky
+situations without going through possibly lenghty reboot; however,
+there are situations where the filesystem and/or storage stack are
+known to be misbehaving and performing sync before kexecing is
+dangerous or just never finishes.
+
+This patch implement -y (--no-sync) option which makes kexec skip
+syncing in the similar way as -x (--no-ifdown).
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Suggested-by: Chris Mason <clm@fb.com>
+---
+ kexec/kexec.8 | 8 ++++++--
+ kexec/kexec.c | 8 +++++++-
+ kexec/kexec.h | 4 +++-
+ 3 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index 2575f9e..24d1969 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -6,7 +6,7 @@
+ kexec \- directly boot into a new kernel
+ .SH SYNOPSIS
+ .B /sbin/kexec
+-.B [-v (\-\-version)] [-f (\-\-force)] [-x (\-\-no-ifdown)] [-l (\-\-load)] [-p (\-\-load-panic)] [-u (\-\-unload)] [-e (\-\-exec)] [-t (\-\-type)]
++.B [-v (\-\-version)] [-f (\-\-force)] [-x (\-\-no-ifdown)] [-y (\-\-no-sync)] [-l (\-\-load)] [-p (\-\-load-panic)] [-u (\-\-unload)] [-e (\-\-exec)] [-t (\-\-type)]
+ .BI [\-\-mem\-min= addr ]
+ .BI [\-\-mem\-max= addr ]
+ 
+@@ -148,7 +148,11 @@ Return the version number of the installed utility.
+ .TP
+ .B \-x\ (\-\-no\-ifdown)
+ Shut down the running kernel, but restore the interface on reload. (If
+-this option is used, it must be specified last.)
++this option is used, it must be one of last options specified.)
++.TP
++.B \-y\ (\-\-no\-sync)
++Shut down the running kernel, but skip syncing the filesystems. (If
++this option is used, it must be one of last options specified.)
+ .TP
+ .BI \-\-mem\-min= addr
+ Specify the lowest memory address
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index b088916..7123460 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -913,7 +913,10 @@ void usage(void)
+ 	       " -f, --force          Force an immediate kexec,\n"
+ 	       "                      don't call shutdown.\n"
+ 	       " -x, --no-ifdown      Don't bring down network interfaces.\n"
+-	       "                      (if used, must be last option\n"
++	       "                      (if used, must be one of last options\n"
++	       "                       specified)\n"
++	       " -y, --no-sync        Don't sync filesystems before kexec.\n"
++	       "                      (if used, must be one of last options\n"
+ 	       "                       specified)\n"
+ 	       " -l, --load           Load the new kernel into the\n"
+ 	       "                      current kernel.\n"
+@@ -1218,6 +1221,9 @@ int main(int argc, char *argv[])
+ 		case OPT_NOIFDOWN:
+ 			do_ifdown = 0;
+ 			break;
++		case OPT_NOSYNC:
++			do_sync = 0;
++			break;
+ 		case OPT_FORCE:
+ 			do_load = 1;
+ 			do_shutdown = 0;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 4be2b2f..b129c15 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -209,6 +209,7 @@ extern int file_types;
+ #define OPT_DEBUG		'd'
+ #define OPT_FORCE		'f'
+ #define OPT_NOIFDOWN		'x'
++#define OPT_NOSYNC		'y'
+ #define OPT_EXEC		'e'
+ #define OPT_LOAD		'l'
+ #define OPT_UNLOAD		'u'
+@@ -227,6 +228,7 @@ extern int file_types;
+ 	{ "version",		0, 0, OPT_VERSION }, \
+ 	{ "force",		0, 0, OPT_FORCE }, \
+ 	{ "no-ifdown",		0, 0, OPT_NOIFDOWN }, \
++	{ "no-sync",		0, 0, OPT_NOSYNC }, \
+ 	{ "load",		0, 0, OPT_LOAD }, \
+ 	{ "unload",		0, 0, OPT_UNLOAD }, \
+ 	{ "exec",		0, 0, OPT_EXEC }, \
+@@ -241,7 +243,7 @@ extern int file_types;
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 
+-#define KEXEC_OPT_STR "h?vdfxluet:ps"
++#define KEXEC_OPT_STR "h?vdfxyluet:ps"
+ 
+ extern void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr);
+ extern void die(const char *fmt, ...)
+-- 
+2.1.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
