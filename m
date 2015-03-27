@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1427394639.4730.18.camel@infradead.org>
+Message-ID: <1427431384.3571.0.camel@infradead.org>
 Subject: Re: [PATCH 1/5] arm64: kdump: reserve memory for crash dump kernel
 From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 26 Mar 2015 21:43:04 -0700
 In-Reply-To: <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
 References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
  <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
-Date: Thu, 26 Mar 2015 11:30:39 -0700
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -281,6 +281,7 @@ something like 'user space tools' would be better.
 >  
 >  	early_ioremap_reset();
 >  
+
 
 
 
