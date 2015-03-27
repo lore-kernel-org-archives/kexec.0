@@ -1,13 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5515984D.2020801@arm.com>
-Date: Fri, 27 Mar 2015 17:50:05 +0000
-From: Marc Zyngier <marc.zyngier@arm.com>
+Message-ID: <5515C799.8010600@redhat.com>
+Date: Sat, 28 Mar 2015 02:41:53 +0530
+From: Pratyush Anand <panand@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [RFC v2 0/5] arm64: kvm: reset hyp context for kexec
-References: <1427358326-3708-1-git-send-email-takahiro.akashi@linaro.org>
- <20150327153131.GK12400@redacted.bos.redhat.com> <55157920.3050003@arm.com>
- <20150327174044.GL12400@redacted.bos.redhat.com>
-In-Reply-To: <20150327174044.GL12400@redacted.bos.redhat.com>
+Subject: Re: arm64 kexec hang
+References: <1427477015.27739.30.camel@infradead.org>
+In-Reply-To: <1427477015.27739.30.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,50 +14,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kyle McMartin <kmcmarti@redhat.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "freddy77@gmail.com" <freddy77@gmail.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Kyle McMartin <kmcmarti@redhat.com>, Takahiro Akashi <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 27/03/15 17:40, Kyle McMartin wrote:
-> On Fri, Mar 27, 2015 at 03:37:04PM +0000, Marc Zyngier wrote:
->>> [  236.260863] Kernel panic - not syncing: HYP panic:
->>> [  236.260863] PS:600003c9 PC:000003ffffff0830 ESR:0000000096000006
->>
->> It would be interesting if you could find out what you have at offset
->> 0x830 of hyp-init.o (the stack trace is for EL1, and is not going to
->> help much).
->>
-> 
-> Given the alignment, i'm going to assume i'm looking at the right thing:
-> 
-> 0000000000000820 <__kvm_hyp_reset>:
->      820:       d51c2000        msr     ttbr0_el2, x0
->      824:       d5033fdf        isb
->      828:       d50c871f        tlbi    alle2
->      82c:       d5033f9f        dsb     sy
->      830:       10000060        adr     x0, 83c <__kvm_hyp_reset+0x1c>
->      834:       b3403c01        bfxil   x1, x0, #0, #16
->      838:       d61f0020        br      x1
->      83c:       d53c1000        mrs     x0, sctlr_el2
-> 
-> but it seems fairly implausible to be trapping on ADR x0, 1f...
+Hi Geoff,
 
-... unless you've just switched TTBR0_EL2 to something slightly
-inappropriate, and conveniently flushed the TLBs. Also, having 0 as the
-exception class is fairly indicative you've fetched some crap, which
-reinforce my idea that the page tables are pointing to nowhere-land.
+On Friday 27 March 2015 10:53 PM, Geoff Levand wrote:
+> Hi Pratyush,
+>
+> On Wed, 2015-03-25 at 15:55 +0530, Pratyush Anand wrote:
+>> So with following changes kexec load seems to complete without any
+>> error. However, kexec reboot does not work yet, Nothing after bye
+>> message :( (1st kernel booted with maxcpus=1)
+>
+> 'Bye!' doesn't mean much, other than the first kernel has
+> almost shutdown.  I recommend for debugging you either define
+> ARM64_DEBUG_PORT for the kexec-tools build, or have a suitable
+> earlyprintk= on the kernel command line.  See the read_sink()
+> routine in kexec-arm64.c.
+>
 
-I'll try to review the patches next week, maybe I'll spot something by
-inspection.
+Well, I was already using earlycon and it did not print anything after 
+*Bye*.
 
-Thanks,
+I got OCD-H and is able to track the flow atleast and to see when it dies.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+So, it all goes like machine_kexec ->..... -> arm64_kexec_kimage_start 
+-> purgatory_start -> purgatory -> printf ... -> putchar
+
+Here it dies (goes to el2_sync_invalid) as arm64_sink does not seem to 
+be correct. arm64_sink is (-1) 0xffffffffffffffff. I also tried by just 
+returning from printf without doing anything, still it goes to 
+el2_sync_invalid (may be from some other location).
+
+I will try to see tomorrow why arm64_sink is wrong and why did not it 
+work if printf was null.
+
+just for info: is_hyp_mode_available is true in my case.
+
+~Pratyush
+
+
+> Either of these will output something like this from the
+> purgatory code:
+>
+>    I'm in purgatory
+>    purgatory: kernel_entry: 0000000080080000
+>    purgatory: dtb:          0000000080760000
+>
+> Another option is to add my 'debugging: early putc' patch,
+> build the kernel with ARM64_DEBUG_PORT defined for your
+>   board.  This will output 'stext' when the second
+> stage kernel is entered
+>
+> The kexec --lite option will bypass purgatory and should just
+> show 'stext'.
+>
+> -Geoff
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
 _______________________________________________
 kexec mailing list
