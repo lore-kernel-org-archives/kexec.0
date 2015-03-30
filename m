@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f46.google.com ([209.85.220.46])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YcQH5-0001iQ-Ga
- for kexec@lists.infradead.org; Mon, 30 Mar 2015 03:22:04 +0000
-Received: by padcy3 with SMTP id cy3so153778429pad.3
- for <kexec@lists.infradead.org>; Sun, 29 Mar 2015 20:21:40 -0700 (PDT)
-Message-ID: <5518C13B.6070201@linaro.org>
-Date: Mon, 30 Mar 2015 12:21:31 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+ id 1YcR3f-0004yC-0E
+ for kexec@lists.infradead.org; Mon, 30 Mar 2015 04:12:16 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: [PATCH 0/6] WIP: avoid two pass filtering by using bitmap file.
+Date: Mon, 30 Mar 2015 04:08:29 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701D9CAB2@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/5] arm64: kdump: do not go into EL2 before starting
- a crash dump kernel
-References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>	
- <1427358533-3754-4-git-send-email-takahiro.akashi@linaro.org>
- <1427408957.6526.1.camel@infradead.org>
-In-Reply-To: <1427408957.6526.1.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,41 +17,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "cpw@sgi.com" <cpw@sgi.com>
 
-On 03/27/2015 07:29 AM, Geoff Levand wrote:
-> On Thu, 2015-03-26 at 17:28 +0900, AKASHI Takahiro wrote:
->> @@ -64,7 +65,11 @@ void soft_restart(unsigned long addr)
->>   	setup_mm_for_reboot();
->>
->>   	cpu_soft_restart(virt_to_phys(cpu_reset),
->> -		is_hyp_mode_available(), addr);
->> +#ifdef CONFIG_KEXEC
->> +		!in_crash_kexec &&
->> +#endif
->
-> Why not define in_crash_kexec without condition on CONFIG_KEXEC, say
-> here in process.c and then avoid these preprocessor conditionals.
+Hello,
 
-Well, I thought of that, but as its name suggested, the variable should
-be basically part of kdump code.
-Moreover, I suspect that some one might reject a whole idea of patch #3.
+This series is still under developing, but the basic process can work
+so I measured the performance about filtering and report it here.
+The patches include some cleanup but the main purpose is to make sure
+whether avoiding two pass filtering is worth even using bitmap file as
+I wrote the thread below:
 
--Takahiro AKASHI
+http://lists.infradead.org/pipermail/kexec/2014-December/013100.html
+> By the way, the non-cyclic is faster than the cyclic mode in your
+> environments ? Certainly the non-cyclic mode can avoid two-pass
+> filtering but it needs disk i/o to read and write the bitmap file
+> instead. I'm concerned that the disadvantage of the non-cyclic mode
+> defeats the advantage of it.
 
->> +		is_hyp_mode_available(),
->> +		addr);
->>
->>   	/* Should never get here */
->>   	BUG();
->
->
->
+-------------------------------------------------------------------------
+Environment:
+  CPU: Intel(R) Xeon(R) CPU E7- 8870  @ 2.40GHz
+  Memory: 1TiB
+  Kernel: 3.19.0
+  makedumpfile: v1.5.8 + this patch series
+
+How to measure:
+
+Sum up the total time of [Checking for memory holes  ] as "1st bitmap(s)",
+[Excluding unnecessary pages] as "2nd bitmap(s)" for each case below:
+
+   A: 1-cycle filtering by using bitmap file.
+   B: N-cycle filtering with small memory space. It needs two-pass filtering.
+   C: 1-cycle filtering with enough memory space.
+
+Command:
+
+   A: makedumpfile --message-level=31 --work-dir=/mnt/root  -d31 /proc/vmcore /dev/null -f
+   B: makedumpfile --message-level=31 --cyclic-buffer=1000  -d31 /proc/vmcore /dev/null -f
+   C: makedumpfile --message-level=31 --cyclic-buffer=40000 -d31 /proc/vmcore /dev/null -f
+
+Result:
+
+   case		1st bitmap(s)	2nd bitmap(s)    Total(s)
+------------------------------------------------------------
+    A              4.753            11.42         16.17
+    B              0.01617          20.82         20.83
+    C              0.01211          10.10         10.11
+
+and B as N-cycle case has to do two pass filtering, the breakdown
+of the result is here:
+
+    case        1st bitmap(s)   2nd bitmap(s)    Total(s)
+------------------------------------------------------------
+    B-1st          0.005563         10.43         10.43
+    B-2nd          0.01061          10.39         10.40
+    B-total        0.01617          20.82         20.83
+
+Discussion:
+- It goes without saying that C is the best. There is no meaning to
+  use bitmap file if memory space is enough.
+
+- Comparing A and B, the advantage of avoiding two pass filtering is
+  more than the disadvantage of using bitmap file.
+
+
+The benefits of avoiding two pass filtering by using bitmap file looks
+small, but at least there is no degradation. So I'll continue my work
+as code cleanup.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
