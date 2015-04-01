@@ -1,11 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <551C1537.2030009@redhat.com>
-Date: Wed, 01 Apr 2015 21:26:39 +0530
-From: Pratyush Anand <panand@redhat.com>
+Received: from mail-pd0-f169.google.com ([209.85.192.169])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YdS3Z-0004tg-LW
+ for kexec@lists.infradead.org; Wed, 01 Apr 2015 23:28:22 +0000
+Received: by pdrw1 with SMTP id w1so61704741pdr.0
+ for <kexec@lists.infradead.org>; Wed, 01 Apr 2015 16:27:58 -0700 (PDT)
+Message-ID: <551C7EF5.9030806@linaro.org>
+Date: Thu, 02 Apr 2015 08:27:49 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 0/5] arm64: add kdump support
 References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
-In-Reply-To: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
+ <551C1537.2030009@redhat.com>
+In-Reply-To: <551C1537.2030009@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,89 +25,100 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
+To: Pratyush Anand <panand@redhat.com>, catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
 Cc: linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, linux-arm-kernel@lists.infradead.org
 
-Hi Akashi,
+Hi Pratyush,
 
-On Thursday 26 March 2015 01:58 PM, AKASHI Takahiro wrote:
-> This patch set enables kdump (crash dump kernel) support on arm64 on top of
-> Geoff's kexec patchset.
+On 04/02/2015 12:56 AM, Pratyush Anand wrote:
+> Hi Akashi,
 >
-> In this version, there are some arm64-specific usage/constraints:
-> 1) "mem=" boot parameter must be specified on crash dump kernel
-> 2) Kvm will not be enabled on crash dump kernel even if configured
-> See commit messages and Documentation/kdump/kdump.txt for details.
+> On Thursday 26 March 2015 01:58 PM, AKASHI Takahiro wrote:
+>> This patch set enables kdump (crash dump kernel) support on arm64 on top of
+>> Geoff's kexec patchset.
+>>
+>> In this version, there are some arm64-specific usage/constraints:
+>> 1) "mem=" boot parameter must be specified on crash dump kernel
+>> 2) Kvm will not be enabled on crash dump kernel even if configured
+>> See commit messages and Documentation/kdump/kdump.txt for details.
+>>
+>> The only concern I have is whether or not we can use the exact same kernel
+>> as both system kernel and crash dump kernel. The current arm64 kernel is
+>> not relocatable in the exact sense but I have no problems in using the same
+>> binary for testing kdump.
+>>
+>> I tested the code with
+>>     - ATF v1.1 + EDK2(UEFI) v3.0-rc0
+>>     - kernel v4.0-rc4 + Geoff' kexec v8
+>> on Base fast model, using my yet-to-be-submitted kexec-tools [1].
+>> You may want to start a kernel with the following boot parameter:
+>>     crashkernel=64M@2240M
+>> and try
+>>     $ kexec -p --load <vmlinux> --append ...
+>>     $ echo c > /proc/sysrq-trigger
+>>
 >
-> The only concern I have is whether or not we can use the exact same kernel
-> as both system kernel and crash dump kernel. The current arm64 kernel is
-> not relocatable in the exact sense but I have no problems in using the same
-> binary for testing kdump.
->
-> I tested the code with
-> 	- ATF v1.1 + EDK2(UEFI) v3.0-rc0
-> 	- kernel v4.0-rc4 + Geoff' kexec v8
-> on Base fast model, using my yet-to-be-submitted kexec-tools [1].
-> You may want to start a kernel with the following boot parameter:
-> 	crashkernel=64M@2240M
-> and try
-> 	$ kexec -p --load <vmlinux> --append ...
-> 	$ echo c > /proc/sysrq-trigger
->
-
-I tried to use your kdump patches for kernel and kexec-tools. I am not 
-able to load the crash kernel properly.
-
-
-I passed crashkernel=64M@259G (My 8GB RAM starts at 256G) to primary kernel.
-
-Used following to load the crash kernel
-kexec -p  --load vmlinux  --append="$( cat /proc/cmdline ) maxcpus=1 
-mem=64M reset_devices"
-
-I see:
-
-kexec_load failed: Cannot assign requested address
-entry       = 0x40c40005d0 flags = 0xb70001
-
-What I noticed that arm64_load_other_segments does not calculate correct 
-load address for purgatory or if I pass initrd then for that too within 
-crash kernel allocated memory.
-
-Shouldn't we have a function similar to locate_dtb_in_crashmem for 
-putgatory as well as initrd? I can try to fix this allocation, but I was 
-just wondering if I understood correctly or I am missing something.
-
-~Pratyush
-
-
-> To examine vmcore (/proc/vmcore), you may use
-> 	- gdb v7.7 or later
-> 	- crash + a small patch (to recognize v4.0 kernel)
->
-> [1] https://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+> I tried to use your kdump patches for kernel and kexec-tools. I am not able to load the crash kernel properly.
 >
 >
-> AKASHI Takahiro (5):
->    arm64: kdump: reserve memory for crash dump kernel
->    arm64: kdump: implement machine_crash_shutdown()
->    arm64: kdump: do not go into EL2 before starting a crash dump kernel
->    arm64: add kdump support
->    arm64: enable kdump in the arm64 defconfig
+> I passed crashkernel=64M@259G (My 8GB RAM starts at 256G) to primary kernel.
 >
->   Documentation/kdump/kdump.txt     |   31 ++++++++++++++-
->   arch/arm64/Kconfig                |   12 ++++++
->   arch/arm64/configs/defconfig      |    1 +
->   arch/arm64/include/asm/kexec.h    |   34 +++++++++++++++-
->   arch/arm64/kernel/Makefile        |    1 +
->   arch/arm64/kernel/crash_dump.c    |   71 +++++++++++++++++++++++++++++++++
->   arch/arm64/kernel/machine_kexec.c |   55 +++++++++++++++++++++++++-
->   arch/arm64/kernel/process.c       |    7 +++-
->   arch/arm64/kernel/setup.c         |   78 +++++++++++++++++++++++++++++++++++++
->   arch/arm64/kernel/smp.c           |   10 ++++-
->   10 files changed, 294 insertions(+), 6 deletions(-)
->   create mode 100644 arch/arm64/kernel/crash_dump.c
+> Used following to load the crash kernel
+> kexec -p  --load vmlinux  --append="$( cat /proc/cmdline ) maxcpus=1 mem=64M reset_devices"
 >
+> I see:
+>
+> kexec_load failed: Cannot assign requested address
+> entry       = 0x40c40005d0 flags = 0xb70001
+>
+> What I noticed that arm64_load_other_segments does not calculate correct load address for purgatory or if I pass initrd
+> then for that too within crash kernel allocated memory.
+
+It seems that you hit the same problem that I mentioned in:
+   http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/334613.html
+
+Please try my latest kexec-tools in my linaro repo (branch name is kdump/v0.11)
+and let me know the result.
+
+> Shouldn't we have a function similar to locate_dtb_in_crashmem for putgatory as well as initrd? I can try to fix this
+> allocation, but I was just wondering if I understood correctly or I am missing something.
+
+I don't think a function for purgatory is necessary since we try to find a hole
+just after dtb.
+
+Thanks,
+-Takahiro AKASHI
+
+> ~Pratyush
+>
+>
+>> To examine vmcore (/proc/vmcore), you may use
+>>     - gdb v7.7 or later
+>>     - crash + a small patch (to recognize v4.0 kernel)
+>>
+>> [1] https://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+>>
+>>
+>> AKASHI Takahiro (5):
+>>    arm64: kdump: reserve memory for crash dump kernel
+>>    arm64: kdump: implement machine_crash_shutdown()
+>>    arm64: kdump: do not go into EL2 before starting a crash dump kernel
+>>    arm64: add kdump support
+>>    arm64: enable kdump in the arm64 defconfig
+>>
+>>   Documentation/kdump/kdump.txt     |   31 ++++++++++++++-
+>>   arch/arm64/Kconfig                |   12 ++++++
+>>   arch/arm64/configs/defconfig      |    1 +
+>>   arch/arm64/include/asm/kexec.h    |   34 +++++++++++++++-
+>>   arch/arm64/kernel/Makefile        |    1 +
+>>   arch/arm64/kernel/crash_dump.c    |   71 +++++++++++++++++++++++++++++++++
+>>   arch/arm64/kernel/machine_kexec.c |   55 +++++++++++++++++++++++++-
+>>   arch/arm64/kernel/process.c       |    7 +++-
+>>   arch/arm64/kernel/setup.c         |   78 +++++++++++++++++++++++++++++++++++++
+>>   arch/arm64/kernel/smp.c           |   10 ++++-
+>>   10 files changed, 294 insertions(+), 6 deletions(-)
+>>   create mode 100644 arch/arm64/kernel/crash_dump.c
+>>
 
 _______________________________________________
 kexec mailing list
