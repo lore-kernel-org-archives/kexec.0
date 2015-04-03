@@ -1,15 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ye45o-0002f8-LV
- for kexec@lists.infradead.org; Fri, 03 Apr 2015 16:05:15 +0000
-Message-ID: <551EBA32.8090208@linux.intel.com>
-Date: Fri, 03 Apr 2015 10:05:06 -0600
-From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] x86_64: Add support to build kexec-tools with x32 ABI
-References: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
-In-Reply-To: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
+Message-ID: <1428079719.1118.6.camel@infradead.org>
+Subject: Re: [PATCH 0/6] arm64 kexec kernel patches V8
+From: Geoff Levand <geoff@infradead.org>
+Date: Fri, 03 Apr 2015 09:48:39 -0700
+In-Reply-To: <cover.1426793116.git.geoff@infradead.org>
+References: <cover.1426793116.git.geoff@infradead.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,63 +14,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, horms@verge.net.au
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, marc.zyngier@arm.com, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org, Hanjun Guo <hanjun.guo@linaro.org>
 
-QW55IGNvbW1lbnQgb3IgZmVlZGJhY2s/CgogICAgIGFsaW1vbgoKT24gMjYvMDMvMTUgMTA6MTks
-IEFuw61iYWwgTGltw7NuIHdyb3RlOgo+IFN1bW1hcnkgb2YgY2hhbmdlcywKPgo+IGNvbmZpZ3Vy
-ZS5hYzogQWRkIHRlc3QgZm9yIGRldGVjdCB4MzIgQUJJLgo+IHB1cmdhdG9yeS9hcmNoL3g4Nl82
-NC9NYWtlZmlsZTogTm90IHVzZSBtY21vZGVsIGxhcmdlIHdoZW4KPiAJeDMyIEFCSSBpcyBzZXQu
-Cj4ga2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYzogV2hlbiB4MzIgQUJJ
-IGlzIHNldAo+IAl1c2UgRUxGQ0xBU1MzMiBpbnN0ZWFkIG9mIEVMRkNMQVNTNjQuCj4ga2V4ZWMv
-a2V4ZWMtc3lzY2FsbC5oOiBBZGQgY29ycmVjdCBzeXNjYWxsIG51bWJlciBmb3IgeDMyIEFCSS4K
-Pgo+IFNpZ25lZC1vZmYtYnk6IEFuw61iYWwgTGltw7NuIDxhbmliYWwubGltb25AbGludXguaW50
-ZWwuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE1hcmlhbm8gTG9wZXogPG1hcmlhbm8ubG9wZXpAbGlu
-dXguaW50ZWwuY29tPgo+IC0tLQo+ICAgY29uZmlndXJlLmFjICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8IDkgKysrKysrKysrCj4gICBrZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVs
-LXg4Nl82NC5jIHwgNCArKysrCj4gICBrZXhlYy9rZXhlYy1zeXNjYWxsLmggICAgICAgICAgICAg
-ICAgICAgIHwgNCArKysrCj4gICBwdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUgICAgICAg
-ICAgIHwgNCArKystCj4gICA0IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDEgZGVs
-ZXRpb24oLSkKPgo+IGRpZmYgLS1naXQgYS9jb25maWd1cmUuYWMgYi9jb25maWd1cmUuYWMKPiBp
-bmRleCBjNDEwZTkwLi4xZWNhZGQ1IDEwMDY0NAo+IC0tLSBhL2NvbmZpZ3VyZS5hYwo+ICsrKyBi
-L2NvbmZpZ3VyZS5hYwo+IEBAIC01Miw2ICs1MiwxNSBAQCBjYXNlICR0YXJnZXRfY3B1IGluCj4g
-ICAJCTs7Cj4gICAJaWE2NHx4ODZfNjR8YWxwaGF8bTY4ayApCj4gICAJCUFSQ0g9IiR0YXJnZXRf
-Y3B1Igo+ICsKPiArCQlkbmwgLS0tVGVzdCBmb3IgeDMyIEFCSSBpbiB4ODZfNjQKPiArCQlpZiB0
-ZXN0ICJ4JEFSQ0giID0gInh4ODZfNjQiIDsgdGhlbgo+ICsJCQlBQ19FR1JFUF9DUFAoeDMyX3Rl
-c3QsCj4gKwkJCVsjaWYgZGVmaW5lZChfX3g4Nl82NF9fKSAmJiBkZWZpbmVkIChfX0lMUDMyX18p
-Cj4gKwkJCQl4MzJfdGVzdAo+ICsJCQkjZW5kaWYKPiArCQkJXSwgU1VCQVJDSD0neDMyJywgU1VC
-QVJDSD0nNjQnKQo+ICsJCWZpCj4gICAJCTs7Cj4gICAJKiApCj4gICAJCUFDX01TR19FUlJPUihb
-dW5zdXBwb3J0ZWQgYXJjaGl0ZWN0dXJlICR0YXJnZXRfY3B1XSkKPiBkaWZmIC0tZ2l0IGEva2V4
-ZWMvYXJjaC94ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYyBiL2tleGVjL2FyY2gveDg2XzY0
-L2tleGVjLWVsZi1yZWwteDg2XzY0LmMKPiBpbmRleCBjNzk1MDM3Li4wNmRiN2YwIDEwMDY0NAo+
-IC0tLSBhL2tleGVjL2FyY2gveDg2XzY0L2tleGVjLWVsZi1yZWwteDg2XzY0LmMKPiArKysgYi9r
-ZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jCj4gQEAgLTgsNyArOCwxMSBA
-QCBpbnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCj4gICAJ
-aWYgKGVoZHItPmVpX2RhdGEgIT0gRUxGREFUQTJMU0IpIHsKPiAgIAkJcmV0dXJuIDA7Cj4gICAJ
-fQo+ICsjaWZkZWYgX19JTFAzMl9fCj4gKwlpZiAoZWhkci0+ZWlfY2xhc3MgIT0gRUxGQ0xBU1Mz
-Mikgewo+ICsjZWxzZQo+ICAgCWlmIChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzY0KSB7Cj4g
-KyNlbmRpZgo+ICAgCQlyZXR1cm4gMDsKPiAgIAl9Cj4gICAJaWYgKGVoZHItPmVfbWFjaGluZSAh
-PSBFTV9YODZfNjQpIHsKPiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMtc3lzY2FsbC5oIGIva2V4
-ZWMva2V4ZWMtc3lzY2FsbC5oCj4gaW5kZXggY2UyZTIwYi4uY2FiNTUzNSAxMDA2NDQKPiAtLS0g
-YS9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKPiArKysgYi9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKPiBA
-QCAtMzEsOCArMzEsMTIgQEAKPiAgICNkZWZpbmUgX19OUl9rZXhlY19sb2FkCQkyNjgKPiAgICNl
-bmRpZgo+ICAgI2lmZGVmIF9feDg2XzY0X18KPiArI2lmZGVmIF9fSUxQMzJfXwo+ICsjZGVmaW5l
-IF9fTlJfa2V4ZWNfbG9hZAkJNTI4Cj4gKyNlbHNlCj4gICAjZGVmaW5lIF9fTlJfa2V4ZWNfbG9h
-ZAkJMjQ2Cj4gICAjZW5kaWYKPiArI2VuZGlmCj4gICAjaWZkZWYgX19zMzkweF9fCj4gICAjZGVm
-aW5lIF9fTlJfa2V4ZWNfbG9hZAkJMjc3Cj4gICAjZW5kaWYKPiBkaWZmIC0tZ2l0IGEvcHVyZ2F0
-b3J5L2FyY2gveDg2XzY0L01ha2VmaWxlIGIvcHVyZ2F0b3J5L2FyY2gveDg2XzY0L01ha2VmaWxl
-Cj4gaW5kZXggNzMwMDkzNy4uNGFmMTFlNCAxMDA2NDQKPiAtLS0gYS9wdXJnYXRvcnkvYXJjaC94
-ODZfNjQvTWFrZWZpbGUKPiArKysgYi9wdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUKPiBA
-QCAtMjMsNCArMjMsNiBAQCB4ODZfNjRfUFVSR0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5L2FyY2gv
-aTM4Ni9jb25zb2xlLXg4Ni5jCj4gICB4ODZfNjRfUFVSR0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5
-L2FyY2gvaTM4Ni92Z2EuYwo+ICAgeDg2XzY0X1BVUkdBVE9SWV9TUkNTICs9IHB1cmdhdG9yeS9h
-cmNoL2kzODYvcGljLmMKPiAgIAo+IC14ODZfNjRfUFVSR0FUT1JZX0VYVFJBX0NGTEFHUyA9IC1t
-Y21vZGVsPWxhcmdlCj4gK2lmZXEgKCQoU1VCQVJDSCksNjQpCj4gKyAgICAgICAgeDg2XzY0X1BV
-UkdBVE9SWV9FWFRSQV9DRkxBR1MgPSAtbWNtb2RlbD1sYXJnZQo+ICtlbmRpZgoKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi,
+
+I rebased my series to the latest arm64 for-next/core (v4.0-rc4)
+and pushed it out to:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geoff/linux-kexec.git kexec-v9
+
+-Geoff
+
+On Thu, 2015-03-19 at 20:35 +0000, Geoff Levand wrote:
+> Hi All,
+> 
+> This series adds the core support for kexec re-boots on arm64.  This v8 of the
+> series is mainly just a rebase to Linux-4.0-rc3, and a few very minor changes
+> requested for v7.
+> 
+> To load a second stage kernel and execute a kexec re-boot on arm64 my patches to
+> kexec-tools [2], which have not yet been merged upstream, are needed.
+> 
+> I have tested with the ARM VE fast model, the ARM Base model and the ARM
+> Foundation model with various kernel config options for both the first and
+> second stage kernels.  Kexec on EFI systems works correctly.  With the ACPI
+> kernel patches from [3] applied, kexec on ACPI systems seeems to work correctly.
+> More ACPI + kexec testing is needed.
+> 
+> Patch 1 here moves the macros from proc-macros.S to asm/assembler.h so that the
+> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> routine.
+> 
+> Patches 2-4 rework the arm64 hcall mechanism to give the arm64 soft_restart()
+> routine the ability to switch exception levels from EL1 to EL2 for kernels that
+> were entered in EL2.
+> 
+> Patches 5-6 add the actual kexec support.
+> 
+> Please consider all patches for inclusion.
+> 
+> [1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+> [2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+> [3]  http://git.linaro.org/leg/acpi/acpi.git #acpi-topic-juno-fvp
+> 
+> Several things are known to have problems on kexec re-boot:
+> 
+> spin-table
+> ----------
+> 
+> PROBLEM: The spin-table enable method does not implement all the methods needed
+> for CPU hot-plug, so the first stage kernel cannot be shutdown properly.
+> 
+> WORK-AROUND: Upgrade to system firmware that provides PSCI enable method
+> support, OR build the first stage kernel with CONFIG_SMP=n, OR pass 'maxcpus=1'
+> on the first stage kernel command line.
+> 
+> FIX: Upgrade system firmware to provide PSCI enable method support or add
+> missing spin-table support to the kernel.
+> 
+> KVM
+> ---
+> 
+> PROBLEM: KVM acquires hypervisor resources on startup, but does not free those
+> resources on shutdown, so the first stage kernel cannot be shutdown properly
+> when using kexec.
+> 
+> WORK-AROUND: Build the first stage kernel with CONFIG_KVM=n, or apply KVM bug
+> fix patches from [1].
+> 
+> FIX: Takahiro Akashi has preliminary patches to fix the KVM shutdown problem.  I
+> have those in my master branch at [1].  KVM + kexec works properly with that
+> branch.  Patches neeeded:
+> 
+>  arm64: kvm: add a cpu tear-down function
+>  arm64: kexec: fix kvm issue
+>  arm64/kvm: Remove !KEXEC Kconfig dependency
+>  arm64/kexec: Enable kexec in the arm64 defconfig
+> 
+> /memreserve/
+> ----------
+> 
+> PROBLEM: Device tree /memreserve/ entries are not available in
+> /proc/device-tree.  For systems that have /memreserve/ entries and use
+> /proc/device-tree during kexec, the second stage kernel will use the reserved
+> regions and the system will become unstable.
+> 
+> WORK-AROUND: Enable the kernel config option CONFIG_SYSFS=y to expose a binary
+> device tree to user space at /sys/firmware/fdt that includes /memreserve/
+> entries OR pass a user specified DTB using the kexec --dtb option.
+> 
+> FIX: This is expected behavior.  To maximize user support, rework device tree
+> definitions to not use /memreserve/ entries.
+> 
+> -Geoff
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
