@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f54.google.com ([209.85.220.54])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YdZsP-0000Va-Hk
- for kexec@lists.infradead.org; Thu, 02 Apr 2015 07:49:22 +0000
-Received: by patj18 with SMTP id j18so76904546pat.2
- for <kexec@lists.infradead.org>; Thu, 02 Apr 2015 00:49:00 -0700 (PDT)
-Message-ID: <551CF463.9060702@linaro.org>
-Date: Thu, 02 Apr 2015 16:48:51 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Received: from mga11.intel.com ([192.55.52.93])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ye45o-0002f8-LV
+ for kexec@lists.infradead.org; Fri, 03 Apr 2015 16:05:15 +0000
+Message-ID: <551EBA32.8090208@linux.intel.com>
+Date: Fri, 03 Apr 2015 10:05:06 -0600
+From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/5] arm64: add kdump support
-References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
- <551C1537.2030009@redhat.com> <551C7EF5.9030806@linaro.org>
- <551CCC67.1040607@redhat.com> <551CD58E.60807@linaro.org>
- <551CDB2A.5060604@redhat.com>
-In-Reply-To: <551CDB2A.5060604@redhat.com>
+Subject: Re: [PATCH] x86_64: Add support to build kexec-tools with x32 ABI
+References: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
+In-Reply-To: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,86 +18,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
-Cc: linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, horms@verge.net.au
 
-On 04/02/2015 03:01 PM, Pratyush Anand wrote:
->
->
-> On Thursday 02 April 2015 11:07 AM, AKASHI Takahiro wrote:
->> Pratyush,
->>
->> On 04/02/2015 01:58 PM, Pratyush Anand wrote:
->>>
->>>
->>> On Thursday 02 April 2015 04:57 AM, AKASHI Takahiro wrote:
->>>> Please try my latest kexec-tools in my linaro repo (branch name is
->>>> kdump/v0.11)
->>>> and let me know the result.
->>>
->>> Thanks a lot.. Just fetched your repo and found v.0.11.
->>>
->>> With this crash kernel loaded successfully, if I do not use initrd.
->>>
->>> With following I still see Overlapping memory segments
->>>
->>> kexec -p  /home/panand/work/kernel/bsa2_kdump/vmlinux
->>> --initrd=/boot/initramfs-3.19.0.bz1198945+.img --append="$( cat
->>> /proc/cmdline ) maxcpus=1 mem=64M reset_devices"
->>
->> How big is your initrd?
->> If it is good small, please tell me segments info, or messages from
->> add_segment_phys_virt()
->> for all the segments.
->>
->
-> add_segment_phys_virt: 000000000dcd0b90 - 000000000dcd0f90 (00000400) -> 00000040c3ff0000 - 00000040c4000000 (00010000)
-> add_segment_phys_virt: 000003ff88c10010 - 000003ff8984a010 (00c3a000) -> 00000040c0080000 - 00000040c1310000 (01290000)
-> add_segment_phys_virt: 000000000dcd53c0 - 000000000dcd96b8 (000042f8) -> 00000040c0000000 - 00000040c0010000 (00010000)
-> add_segment_phys_virt: 000003ff87360010 - 000003ff88bfcc2f (0189cc1f) -> 00000040c0010000 - 00000040c18b0000 (018a0000)
-> Overlapping memory segments at 0x40c18b0000
-> sort_segments failed
->
-> Why do we try to fit dtb just after crash_reserved_mem.start. Should n't it should start after crash_reserved_mem.start
-> + arm64_mem.text_offset + arm64_mem.image_size
-
-Yeah, worth considering :)
-
--Takahiro AKASHI
-
->
-> I tried following and it works perfectly:
->
-> diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-> index 41266f294589..75f4e4d269ca 100644
-> --- a/kexec/arch/arm64/crashdump-arm64.c
-> +++ b/kexec/arch/arm64/crashdump-arm64.c
-> @@ -312,5 +312,6 @@ void set_crash_entry(struct mem_ehdr *ehdr, struct kexec_info *info)
->   off_t locate_dtb_in_crashmem(struct kexec_info *info, off_t dtb_size)
->   {
->          return locate_hole(info, dtb_size, 128UL * 1024,
-> -               crash_reserved_mem.start, crash_reserved_mem.end, 1);
-> +               crash_reserved_mem.start + arm64_mem.text_offset +
-> +               arm64_mem.image_size, crash_reserved_mem.end, 1);
->   }
->
-> With this changes new allocations are:
-> add_segment_phys_virt: 0000000010350b90 - 0000000010350f90 (00000400) -> 00000040c3ff0000 - 00000040c4000000 (00010000)
-> add_segment_phys_virt: 000003ff7ad70010 - 000003ff7b9aa010 (00c3a000) -> 00000040c0080000 - 00000040c1310000 (01290000)
-> add_segment_phys_virt: 00000000103553c0 - 00000000103596b8 (000042f8) -> 00000040c1360000 - 00000040c1370000 (00010000)
-> add_segment_phys_virt: 000003ff794c0010 - 000003ff7ad5cc2f (0189cc1f) -> 00000040c1370000 - 00000040c2c10000 (018a0000)
-> add_segment_phys_virt: 00000000103596c0 - 0000000010360190 (00006ad0) -> 00000040c2c10000 - 00000040c2c20000 (00010000)
->
->
-> Crash kernel loaded upon panic.
->
-> ~Pratyush
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+QW55IGNvbW1lbnQgb3IgZmVlZGJhY2s/CgogICAgIGFsaW1vbgoKT24gMjYvMDMvMTUgMTA6MTks
+IEFuw61iYWwgTGltw7NuIHdyb3RlOgo+IFN1bW1hcnkgb2YgY2hhbmdlcywKPgo+IGNvbmZpZ3Vy
+ZS5hYzogQWRkIHRlc3QgZm9yIGRldGVjdCB4MzIgQUJJLgo+IHB1cmdhdG9yeS9hcmNoL3g4Nl82
+NC9NYWtlZmlsZTogTm90IHVzZSBtY21vZGVsIGxhcmdlIHdoZW4KPiAJeDMyIEFCSSBpcyBzZXQu
+Cj4ga2V4ZWMvYXJjaC94ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYzogV2hlbiB4MzIgQUJJ
+IGlzIHNldAo+IAl1c2UgRUxGQ0xBU1MzMiBpbnN0ZWFkIG9mIEVMRkNMQVNTNjQuCj4ga2V4ZWMv
+a2V4ZWMtc3lzY2FsbC5oOiBBZGQgY29ycmVjdCBzeXNjYWxsIG51bWJlciBmb3IgeDMyIEFCSS4K
+Pgo+IFNpZ25lZC1vZmYtYnk6IEFuw61iYWwgTGltw7NuIDxhbmliYWwubGltb25AbGludXguaW50
+ZWwuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE1hcmlhbm8gTG9wZXogPG1hcmlhbm8ubG9wZXpAbGlu
+dXguaW50ZWwuY29tPgo+IC0tLQo+ICAgY29uZmlndXJlLmFjICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8IDkgKysrKysrKysrCj4gICBrZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVs
+LXg4Nl82NC5jIHwgNCArKysrCj4gICBrZXhlYy9rZXhlYy1zeXNjYWxsLmggICAgICAgICAgICAg
+ICAgICAgIHwgNCArKysrCj4gICBwdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUgICAgICAg
+ICAgIHwgNCArKystCj4gICA0IGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkKPgo+IGRpZmYgLS1naXQgYS9jb25maWd1cmUuYWMgYi9jb25maWd1cmUuYWMKPiBp
+bmRleCBjNDEwZTkwLi4xZWNhZGQ1IDEwMDY0NAo+IC0tLSBhL2NvbmZpZ3VyZS5hYwo+ICsrKyBi
+L2NvbmZpZ3VyZS5hYwo+IEBAIC01Miw2ICs1MiwxNSBAQCBjYXNlICR0YXJnZXRfY3B1IGluCj4g
+ICAJCTs7Cj4gICAJaWE2NHx4ODZfNjR8YWxwaGF8bTY4ayApCj4gICAJCUFSQ0g9IiR0YXJnZXRf
+Y3B1Igo+ICsKPiArCQlkbmwgLS0tVGVzdCBmb3IgeDMyIEFCSSBpbiB4ODZfNjQKPiArCQlpZiB0
+ZXN0ICJ4JEFSQ0giID0gInh4ODZfNjQiIDsgdGhlbgo+ICsJCQlBQ19FR1JFUF9DUFAoeDMyX3Rl
+c3QsCj4gKwkJCVsjaWYgZGVmaW5lZChfX3g4Nl82NF9fKSAmJiBkZWZpbmVkIChfX0lMUDMyX18p
+Cj4gKwkJCQl4MzJfdGVzdAo+ICsJCQkjZW5kaWYKPiArCQkJXSwgU1VCQVJDSD0neDMyJywgU1VC
+QVJDSD0nNjQnKQo+ICsJCWZpCj4gICAJCTs7Cj4gICAJKiApCj4gICAJCUFDX01TR19FUlJPUihb
+dW5zdXBwb3J0ZWQgYXJjaGl0ZWN0dXJlICR0YXJnZXRfY3B1XSkKPiBkaWZmIC0tZ2l0IGEva2V4
+ZWMvYXJjaC94ODZfNjQva2V4ZWMtZWxmLXJlbC14ODZfNjQuYyBiL2tleGVjL2FyY2gveDg2XzY0
+L2tleGVjLWVsZi1yZWwteDg2XzY0LmMKPiBpbmRleCBjNzk1MDM3Li4wNmRiN2YwIDEwMDY0NAo+
+IC0tLSBhL2tleGVjL2FyY2gveDg2XzY0L2tleGVjLWVsZi1yZWwteDg2XzY0LmMKPiArKysgYi9r
+ZXhlYy9hcmNoL3g4Nl82NC9rZXhlYy1lbGYtcmVsLXg4Nl82NC5jCj4gQEAgLTgsNyArOCwxMSBA
+QCBpbnQgbWFjaGluZV92ZXJpZnlfZWxmX3JlbChzdHJ1Y3QgbWVtX2VoZHIgKmVoZHIpCj4gICAJ
+aWYgKGVoZHItPmVpX2RhdGEgIT0gRUxGREFUQTJMU0IpIHsKPiAgIAkJcmV0dXJuIDA7Cj4gICAJ
+fQo+ICsjaWZkZWYgX19JTFAzMl9fCj4gKwlpZiAoZWhkci0+ZWlfY2xhc3MgIT0gRUxGQ0xBU1Mz
+Mikgewo+ICsjZWxzZQo+ICAgCWlmIChlaGRyLT5laV9jbGFzcyAhPSBFTEZDTEFTUzY0KSB7Cj4g
+KyNlbmRpZgo+ICAgCQlyZXR1cm4gMDsKPiAgIAl9Cj4gICAJaWYgKGVoZHItPmVfbWFjaGluZSAh
+PSBFTV9YODZfNjQpIHsKPiBkaWZmIC0tZ2l0IGEva2V4ZWMva2V4ZWMtc3lzY2FsbC5oIGIva2V4
+ZWMva2V4ZWMtc3lzY2FsbC5oCj4gaW5kZXggY2UyZTIwYi4uY2FiNTUzNSAxMDA2NDQKPiAtLS0g
+YS9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKPiArKysgYi9rZXhlYy9rZXhlYy1zeXNjYWxsLmgKPiBA
+QCAtMzEsOCArMzEsMTIgQEAKPiAgICNkZWZpbmUgX19OUl9rZXhlY19sb2FkCQkyNjgKPiAgICNl
+bmRpZgo+ICAgI2lmZGVmIF9feDg2XzY0X18KPiArI2lmZGVmIF9fSUxQMzJfXwo+ICsjZGVmaW5l
+IF9fTlJfa2V4ZWNfbG9hZAkJNTI4Cj4gKyNlbHNlCj4gICAjZGVmaW5lIF9fTlJfa2V4ZWNfbG9h
+ZAkJMjQ2Cj4gICAjZW5kaWYKPiArI2VuZGlmCj4gICAjaWZkZWYgX19zMzkweF9fCj4gICAjZGVm
+aW5lIF9fTlJfa2V4ZWNfbG9hZAkJMjc3Cj4gICAjZW5kaWYKPiBkaWZmIC0tZ2l0IGEvcHVyZ2F0
+b3J5L2FyY2gveDg2XzY0L01ha2VmaWxlIGIvcHVyZ2F0b3J5L2FyY2gveDg2XzY0L01ha2VmaWxl
+Cj4gaW5kZXggNzMwMDkzNy4uNGFmMTFlNCAxMDA2NDQKPiAtLS0gYS9wdXJnYXRvcnkvYXJjaC94
+ODZfNjQvTWFrZWZpbGUKPiArKysgYi9wdXJnYXRvcnkvYXJjaC94ODZfNjQvTWFrZWZpbGUKPiBA
+QCAtMjMsNCArMjMsNiBAQCB4ODZfNjRfUFVSR0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5L2FyY2gv
+aTM4Ni9jb25zb2xlLXg4Ni5jCj4gICB4ODZfNjRfUFVSR0FUT1JZX1NSQ1MgKz0gcHVyZ2F0b3J5
+L2FyY2gvaTM4Ni92Z2EuYwo+ICAgeDg2XzY0X1BVUkdBVE9SWV9TUkNTICs9IHB1cmdhdG9yeS9h
+cmNoL2kzODYvcGljLmMKPiAgIAo+IC14ODZfNjRfUFVSR0FUT1JZX0VYVFJBX0NGTEFHUyA9IC1t
+Y21vZGVsPWxhcmdlCj4gK2lmZXEgKCQoU1VCQVJDSCksNjQpCj4gKyAgICAgICAgeDg2XzY0X1BV
+UkdBVE9SWV9FWFRSQV9DRkxBR1MgPSAtbWNtb2RlbD1sYXJnZQo+ICtlbmRpZgoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
