@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YfKXF-0000AL-3B
- for kexec@lists.infradead.org; Tue, 07 Apr 2015 03:50:45 +0000
-Date: Tue, 7 Apr 2015 11:49:57 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150407034957.GC7213@localhost.localdomain>
-References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
- <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
- <551E56F6.60503@hp.com>
- <20150403092111.GG22579@dhcp-128-53.nay.redhat.com>
- <534F7596-2172-4BE1-B374-4D18D2DA5110@hp.com>
+Received: from eu-smtp-delivery-143.mimecast.com ([146.101.78.143])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YfWWM-0005Qo-K7
+ for kexec@lists.infradead.org; Tue, 07 Apr 2015 16:38:41 +0000
+Message-ID: <552407F1.1040909@arm.com>
+Date: Tue, 07 Apr 2015 17:38:09 +0100
+From: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <534F7596-2172-4BE1-B374-4D18D2DA5110@hp.com>
+Subject: Re: [PATCH 5/6] arm64/kexec: Add core kexec support
+References: <cover.1426793116.git.geoff@infradead.org>
+ <88216e29d97715cecac8630bc57342d0be860235.1426793116.git.geoff@infradead.org>
+In-Reply-To: <88216e29d97715cecac8630bc57342d0be860235.1426793116.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +19,214 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Cc: "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "indou.takao@jp.fujitsu.com" <indou.takao@jp.fujitsu.com>, "bhe@redhat.com" <bhe@redhat.com>, "Vaden,
- Tom (HP Server OS Architecture)" <tom.vaden@hp.com>, "Wright,
- Randy (HP Servers Linux)" <rwright@hp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "joro@8bytes.org" <joro@8bytes.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Mitchell,
- Lisa (MCLinux in Fort Collins)" <lisa.mitchell@hp.com>, "Hoemann,
- Jerry" <jerry.hoemann@hp.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "ddutile@redhat.com" <ddutile@redhat.com>, "Hatch,
- Douglas B (HPS Linux PM)" <doug.hatch@hp.com>, "ishii.hironobu@jp.fujitsu.com" <ishii.hironobu@jp.fujitsu.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "billsumnerlinux@gmail.com" <billsumnerlinux@gmail.com>, "Zhang,
- Li (Zoe@HPservers-Core-OE-PSC)" <li.zhang6@hp.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 04/03/15 at 02:05pm, Li, Zhen-Hua wrote:
-> The hardware will do some verification, but not completely.  If people think the OS should also do this, then it should be another patchset, I think.
+On 19/03/15 20:35, Geoff Levand wrote:
+> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
+> arm64 architecture that add support for the kexec re-boot mechanism
+> (CONFIG_KEXEC) on arm64 platforms.
+>
+> With the addition of arm64 kexec support shutdown code paths through the kernel
+> are executed that previously were not.  To avoid system instability do to
+> problems in the current arm64 KVM kernel implementation add a Kconfig dependency
+> on !KEXEC to the arm64 KVM menu item.
+>
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>   arch/arm64/Kconfig                  |   9 +++
+>   arch/arm64/include/asm/kexec.h      |  48 ++++++++++++
+>   arch/arm64/kernel/Makefile          |   1 +
+>   arch/arm64/kernel/machine_kexec.c   | 125 ++++++++++++++++++++++++++++++
+>   arch/arm64/kernel/relocate_kernel.S | 149 ++++++++++++++++++++++++++++++++++++
+>   arch/arm64/kvm/Kconfig              |   1 +
+>   include/uapi/linux/kexec.h          |   1 +
+>   7 files changed, 334 insertions(+)
+>   create mode 100644 arch/arm64/include/asm/kexec.h
+>   create mode 100644 arch/arm64/kernel/machine_kexec.c
+>   create mode 100644 arch/arm64/kernel/relocate_kernel.S
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 1b8e973..5a606d1 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -528,6 +528,15 @@ config SECCOMP
+>            and the task is only allowed to execute a few safe syscalls
+>            defined by each seccomp mode.
+>
+> +config KEXEC
+> +       depends on (!SMP || PM_SLEEP_SMP)
+> +       bool "kexec system call"
+> +       ---help---
+> +         kexec is a system call that implements the ability to shutdown your
+> +         current kernel, and to start another kernel.  It is like a reboot
+> +         but it is independent of the system firmware.   And like a reboot
+> +         you can start any kernel with it, not just Linux.
+> +
+>   config XEN_DOM0
+>          def_bool y
+>          depends on XEN
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> new file mode 100644
+> index 0000000..3530ff5
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -0,0 +1,48 @@
+> +/*
+> + * kexec for arm64
+> + *
+> + * Copyright (C) Linaro.
+> + * Copyright (C) Futurewei Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#if !defined(_ARM64_KEXEC_H)
+> +#define _ARM64_KEXEC_H
+> +
+> +/* Maximum physical address we can use pages from */
+> +
+> +#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+> +
+> +/* Maximum address we can reach in physical address mode */
+> +
+> +#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
+> +
+> +/* Maximum address we can use for the control code buffer */
+> +
+> +#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
+> +
+> +#define KEXEC_CONTROL_PAGE_SIZE        4096
+> +
+> +#define KEXEC_ARCH KEXEC_ARCH_ARM64
+> +
+> +#if !defined(__ASSEMBLY__)
+> +
+> +/**
+> + * crash_setup_regs() - save registers for the panic kernel
+> + *
+> + * @newregs: registers are saved here
+> + * @oldregs: registers to be saved (may be %NULL)
+> + */
+> +
+> +static inline void crash_setup_regs(struct pt_regs *newregs,
+> +                                   struct pt_regs *oldregs)
+> +{
+> +       /* Empty routine needed to avoid build errors. */
+> +}
+> +
+> +#endif /* !defined(__ASSEMBLY__) */
+> +
+> +#endif
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index 5ee07ee..da9a7ee 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -35,6 +35,7 @@ arm64-obj-$(CONFIG_KGDB)              += kgdb.o
+>   arm64-obj-$(CONFIG_EFI)                        += efi.o efi-stub.o efi-entry.o
+>   arm64-obj-$(CONFIG_PCI)                        += pci.o
+>   arm64-obj-$(CONFIG_ARMV8_DEPRECATED)   += armv8_deprecated.o
+> +arm64-obj-$(CONFIG_KEXEC)              += machine_kexec.o relocate_kernel.o
+>
+>   obj-y                                  += $(arm64-obj-y) vdso/
+>   obj-m                                  += $(arm64-obj-m)
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> new file mode 100644
+> index 0000000..f1387d0
+> --- /dev/null
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -0,0 +1,125 @@
+> +/*
+> + * kexec for arm64
+> + *
+> + * Copyright (C) Linaro.
+> + * Copyright (C) Futurewei Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kexec.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include <asm/cacheflush.h>
+> +#include <asm/system_misc.h>
+> +
+> +/* Global variables for the relocate_kernel routine. */
+> +extern const unsigned char relocate_new_kernel[];
+> +extern const unsigned long relocate_new_kernel_size;
+> +extern unsigned long arm64_kexec_dtb_addr;
+> +extern unsigned long arm64_kexec_kimage_head;
+> +extern unsigned long arm64_kexec_kimage_start;
+> +
+> +void machine_kexec_cleanup(struct kimage *image)
+> +{
+> +       /* Empty routine needed to avoid build errors. */
+> +}
+> +
+> +/**
+> + * machine_kexec_prepare - Prepare for a kexec reboot.
+> + *
+> + * Called from the core kexec code when a kernel image is loaded.
+> + */
+> +int machine_kexec_prepare(struct kimage *image)
+> +{
+> +       arm64_kexec_kimage_start = image->start;
+> +       return 0;
+> +}
+> +
+> +/**
+> + * kexec_list_flush - Helper to flush the kimage list to PoC.
+> + */
+> +static void kexec_list_flush(unsigned long kimage_head)
+> +{
+> +       void *dest;
 
-If there is chance to corrupt more memory I think it is not a right way.
-We should think about a better solution instead of fix it later.
+What is the use of dest ?
+> +       unsigned long *entry;
+> +
+> +       for (entry = &kimage_head, dest = NULL; ; entry++) {
+> +               unsigned int flag = *entry &
+> +                       (IND_DESTINATION | IND_INDIRECTION | IND_DONE |
+> +                       IND_SOURCE);
+You could instead do :
+
+	flag = *entry & IND_FLAGS;
+
+> +               void *addr = phys_to_virt(*entry & PAGE_MASK);
+> +
+> +               switch (flag) {
+> +               case IND_INDIRECTION:
+> +                       entry = (unsigned long *)addr - 1;
+> +                       __flush_dcache_area(addr, PAGE_SIZE);
+> +                       break;
+> +               case IND_DESTINATION:
+> +                       dest = addr;
+> +                       break;
+> +               case IND_SOURCE:
+> +                       __flush_dcache_area(addr, PAGE_SIZE);
+> +                       dest += PAGE_SIZE;
+> +                       break;
+> +               case IND_DONE:
+> +                       return;
+> +               default:
+> +                       BUG();
+> +               }
+> +       }
+> +}
 
 Thanks
-Dave
+Suzuki
+
 
 _______________________________________________
 kexec mailing list
