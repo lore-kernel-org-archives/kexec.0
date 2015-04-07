@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YfIFX-0006Nc-1H
- for kexec@lists.infradead.org; Tue, 07 Apr 2015 01:24:19 +0000
-Date: Tue, 7 Apr 2015 10:23:53 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86_64: Add support to build kexec-tools with x32 ABI
-Message-ID: <20150407012350.GA27486@verge.net.au>
-References: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
- <551EBA32.8090208@linux.intel.com>
- <20150406010447.GD23396@verge.net.au>
- <5522AC83.4090006@linux.intel.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YfKTb-0007DQ-QZ
+ for kexec@lists.infradead.org; Tue, 07 Apr 2015 03:47:00 +0000
+Date: Tue, 7 Apr 2015 11:46:22 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+Message-ID: <20150407034622.GB7213@localhost.localdomain>
+References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
+ <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
+ <551E56F6.60503@hp.com>
+ <20150403092111.GG22579@dhcp-128-53.nay.redhat.com>
+ <20150405015453.GB1562@dhcp-17-102.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5522AC83.4090006@linux.intel.com>
+In-Reply-To: <20150405015453.GB1562@dhcp-17-102.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,25 +23,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
-Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-T24gTW9uLCBBcHIgMDYsIDIwMTUgYXQgMTA6NTU6NDdBTSAtMDUwMCwgQW7DrWJhbCBMaW3Ds24g
-d3JvdGU6Cj4gCj4gT24gMDUvMDQvMTUgMjA6MDQsIFNpbW9uIEhvcm1hbiB3cm90ZToKPiA+T24g
-RnJpLCBBcHIgMDMsIDIwMTUgYXQgMTA6MDU6MDZBTSAtMDYwMCwgQW7DrWJhbCBMaW3Ds24gd3Jv
-dGU6Cj4gPj5BbnkgY29tbWVudCBvciBmZWVkYmFjaz8KPiA+SSBmZWVsIGxpa2UgSSBhbSBtaXNz
-aW5nIHNvbWV0aGluZyBvYnZpb3VzLCBidXQKPiA+Y291bGQgeW91IGV4cGxhaW4gdGhlIHVzZSBj
-YXNlIGEgbGl0dGxlIG1vcmUgY2xlYXJseT8KPiAKPiBJJ20gd29ya2luZyBpbiB0aGUgWW9jdG8g
-UHJvamVjdCBlbmFibGluZyB4MzIgQUJJIHN1cHBvcnQsIHRoZSB4MzIgQUJJCj4gZW5hYmxlcwo+
-IHByb2dyYW1zIHRvIHdvcmsgd2l0aCAzMi1iaXQgYWRkcmVzcyBzcGFjZSBhbmQgc3VwcG9ydCBv
-ZiBiZW5lZml0cyBvZiA2NC1iaXQKPiBtb2RlCj4gbGlrZSByZWdpc3RlciBjYWxsaW5nIGNvbnZl
-bnRpb24sIHRoaXMgaW1wcm92ZXMgcGVyZm9ybWFuY2UgaW4gc29tZQo+IGFwcGxpY2F0aW9ucywK
-PiBkZXRhaWxzIFsxXVsyXS4KPiAKPiBJIGRvbid0IGtub3cgaWYgdGhpcyBhbnN3ZXIgeW91ciBx
-dWVzdGlvbj8KClRoYW5rcywgdGhhdCBhbnN3ZXJzIG15IHF1ZXN0aW9uIHZlcnkgd2VsbC4KSSBo
-YXZlIGFwcGxpZWQgeW91ciBwYXRjaC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 04/05/15 at 09:54am, Baoquan He wrote:
+> On 04/03/15 at 05:21pm, Dave Young wrote:
+> > On 04/03/15 at 05:01pm, Li, ZhenHua wrote:
+> > > Hi Dave,
+> > > 
+> > > There may be some possibilities that the old iommu data is corrupted by
+> > > some other modules. Currently we do not have a better solution for the
+> > > dmar faults.
+> > > 
+> > > But I think when this happens, we need to fix the module that corrupted
+> > > the old iommu data. I once met a similar problem in normal kernel, the
+> > > queue used by the qi_* functions was written again by another module.
+> > > The fix was in that module, not in iommu module.
+> > 
+> > It is too late, there will be no chance to save vmcore then.
+> > 
+> > Also if it is possible to continue corrupt other area of oldmem because
+> > of using old iommu tables then it will cause more problems.
+> > 
+> > So I think the tables at least need some verifycation before being used.
+> > 
+> 
+> Yes, it's a good thinking anout this and verification is also an
+> interesting idea. kexec/kdump do a sha256 calculation on loaded kernel
+> and then verify this again when panic happens in purgatory. This checks
+> whether any code stomps into region reserved for kexec/kernel and corrupt
+> the loaded kernel.
+> 
+> If this is decided to do it should be an enhancement to current
+> patchset but not a approach change. Since this patchset is going very
+> close to point as maintainers expected maybe this can be merged firstly,
+> then think about enhancement. After all without this patchset vt-d often
+> raised error message, hung.
+
+It does not convince me, we should do it right at the beginning instead of
+introduce something wrong.
+
+I wonder why the old dma can not be remap to a specific page in kdump kernel
+so that it will not corrupt more memory. But I may missed something, I will
+looking for old threads and catch up.
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
