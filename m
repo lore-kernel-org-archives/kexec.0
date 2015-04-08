@@ -1,23 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YfglM-0001ok-Gy
- for kexec@lists.infradead.org; Wed, 08 Apr 2015 03:34:49 +0000
-Date: Wed, 8 Apr 2015 11:33:51 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150408033351.GI7213@localhost.localdomain>
-References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
- <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
- <551E56F6.60503@hp.com>
- <20150403092111.GG22579@dhcp-128-53.nay.redhat.com>
- <20150405015453.GB1562@dhcp-17-102.nay.redhat.com>
- <20150407034622.GB7213@localhost.localdomain>
- <20150407090837.GE7213@localhost.localdomain>
- <5523A977.1030707@hp.com>
+Received: from eu-smtp-delivery-143.mimecast.com ([146.101.78.143])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Yfnz0-000567-UG
+ for kexec@lists.infradead.org; Wed, 08 Apr 2015 11:17:24 +0000
+Message-ID: <55250E2A.80106@arm.com>
+Date: Wed, 08 Apr 2015 12:16:58 +0100
+From: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5523A977.1030707@hp.com>
+Subject: Re: [PATCH 0/6] arm64 kexec kernel patches V8
+References: <cover.1426793116.git.geoff@infradead.org>
+In-Reply-To: <cover.1426793116.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,79 +18,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, ZhenHua" <zhen-hual@hp.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, Baoquan He <bhe@redhat.com>, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: Geoff Levand <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 04/07/15 at 05:55pm, Li, ZhenHua wrote:
-> On 04/07/2015 05:08 PM, Dave Young wrote:
-> >On 04/07/15 at 11:46am, Dave Young wrote:
-> >>On 04/05/15 at 09:54am, Baoquan He wrote:
-> >>>On 04/03/15 at 05:21pm, Dave Young wrote:
-> >>>>On 04/03/15 at 05:01pm, Li, ZhenHua wrote:
-> >>>>>Hi Dave,
-> >>>>>
-> >>>>>There may be some possibilities that the old iommu data is corrupted by
-> >>>>>some other modules. Currently we do not have a better solution for the
-> >>>>>dmar faults.
-> >>>>>
-> >>>>>But I think when this happens, we need to fix the module that corrupted
-> >>>>>the old iommu data. I once met a similar problem in normal kernel, the
-> >>>>>queue used by the qi_* functions was written again by another module.
-> >>>>>The fix was in that module, not in iommu module.
-> >>>>
-> >>>>It is too late, there will be no chance to save vmcore then.
-> >>>>
-> >>>>Also if it is possible to continue corrupt other area of oldmem because
-> >>>>of using old iommu tables then it will cause more problems.
-> >>>>
-> >>>>So I think the tables at least need some verifycation before being used.
-> >>>>
-> >>>
-> >>>Yes, it's a good thinking anout this and verification is also an
-> >>>interesting idea. kexec/kdump do a sha256 calculation on loaded kernel
-> >>>and then verify this again when panic happens in purgatory. This checks
-> >>>whether any code stomps into region reserved for kexec/kernel and corrupt
-> >>>the loaded kernel.
-> >>>
-> >>>If this is decided to do it should be an enhancement to current
-> >>>patchset but not a approach change. Since this patchset is going very
-> >>>close to point as maintainers expected maybe this can be merged firstly,
-> >>>then think about enhancement. After all without this patchset vt-d often
-> >>>raised error message, hung.
-> >>
-> >>It does not convince me, we should do it right at the beginning instead of
-> >>introduce something wrong.
-> >>
-> >>I wonder why the old dma can not be remap to a specific page in kdump kernel
-> >>so that it will not corrupt more memory. But I may missed something, I will
-> >>looking for old threads and catch up.
-> >
-> >I have read the old discussion, above way was dropped because it could corrupt
-> >filesystem. Apologize about late commenting.
-> >
-> >But current solution sounds bad to me because of using old memory which is not
-> >reliable.
-> >
-> >Thanks
-> >Dave
-> >
-> Seems we do not have a better solution for the dmar faults.  But I believe
-> we can find out how to verify the iommu data which is located in old memory.
+On 19/03/15 20:35, Geoff Levand wrote:
+> Hi All,
+>
+> This series adds the core support for kexec re-boots on arm64.  This v8 o=
+f the
+> series is mainly just a rebase to Linux-4.0-rc3, and a few very minor cha=
+nges
+> requested for v7.
+>
+> To load a second stage kernel and execute a kexec re-boot on arm64 my pat=
+ches to
+> kexec-tools [2], which have not yet been merged upstream, are needed.
+>
+> I have tested with the ARM VE fast model, the ARM Base model and the ARM
+> Foundation model with various kernel config options for both the first and
+> second stage kernels.  Kexec on EFI systems works correctly.  With the AC=
+PI
+> kernel patches from [3] applied, kexec on ACPI systems seeems to work cor=
+rectly.
+> More ACPI + kexec testing is needed.
+>
+> Patch 1 here moves the macros from proc-macros.S to asm/assembler.h so th=
+at the
+> dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+> routine.
+>
+> Patches 2-4 rework the arm64 hcall mechanism to give the arm64 soft_resta=
+rt()
+> routine the ability to switch exception levels from EL1 to EL2 for kernel=
+s that
+> were entered in EL2.
+>
+> Patches 5-6 add the actual kexec support.
+>
+> Please consider all patches for inclusion.
+>
+> [1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+> [2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+Btw, I get the following build failure for kexec-tools master branch, =
 
-That will be great, thanks.
+with Linaro tool chain (crosstool-NG linaro-1.13.1-4.9-2014.09 - Linaro =
 
-So there's two things:
-1) make sure old pg tables are right, this is what we were talking about.
-2) avoid writing old memory, I suppose only dma read could corrupt filesystem,
-right? So how about for any dma writes just create a scratch page in 2nd kernel
-memory. Only using old page table for dma read.
+GCC 4.9-2014.09 )
 
-Thanks
-Dave
+  $ ./configure --host=3Daarch64-linux-gnu
+  [...]
+  $ make -j4
+kexec/arch/arm64/kexec-arm64.c: In function =91machine_verify_elf_rel=92:
+kexec/arch/arm64/kexec-arm64.c:970:29: error: =91EM_AARCH64=92 undeclared =
+
+(first use in this function)
+   return (ehdr->e_machine =3D=3D EM_AARCH64);
+                              ^
+kexec/arch/arm64/kexec-arm64.c:970:29: note: each undeclared identifier =
+
+is reported only once for each function it appears in
+kexec/arch/arm64/kexec-arm64.c:971:1: warning: control reaches end of =
+
+non-void function [-Wreturn-type]
+  }
+  ^
+make: *** [kexec/arch/arm64/kexec-arm64.o] Error 1
+make: *** Waiting for unfinished jobs....
+----
+
+You may need to add the definition of EM_AARCH64 to include/elf.h and
+include that instead of linux/elf.h, like the other archs.
+
+
+Cheers
+Suzuki
+
+
 
 _______________________________________________
 kexec mailing list
