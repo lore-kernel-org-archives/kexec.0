@@ -1,13 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 8 Apr 2015 14:05:20 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [v3 2/5] arm64: kvm: allow EL2 context to be reset on shutdown
-Message-ID: <20150408130520.GB5977@leverpostej>
-References: <1427953216-11737-1-git-send-email-takahiro.akashi@linaro.org>
- <1427953216-11737-3-git-send-email-takahiro.akashi@linaro.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1427953216-11737-3-git-send-email-takahiro.akashi@linaro.org>
+Message-ID: <1428513259.11876.5.camel@infradead.org>
+Subject: Re: [PATCH 0/6] arm64 kexec kernel patches V8
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 08 Apr 2015 10:14:19 -0700
+In-Reply-To: <55250E2A.80106@arm.com>
+References: <cover.1426793116.git.geoff@infradead.org> <55250E2A.80106@arm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,77 +14,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "geoff@infradead.org" <geoff@infradead.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
+To: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
 
-On Thu, Apr 02, 2015 at 06:40:13AM +0100, AKASHI Takahiro wrote:
-> The current kvm implementation keeps EL2 vector table installed even
-> when the system is shut down. This prevents kexec from putting the system
-> with kvm back into EL2 when starting a new kernel.
-> 
-> This patch resolves this issue by calling a cpu tear-down function via
-> reboot notifier, kvm_reboot_notify(), which is invoked by
-> kernel_restart_prepare() in kernel_kexec().
-> While kvm has a generic hook, kvm_reboot(), we can't use it here because
-> a cpu teardown function will not be invoked, under current implementation,
-> if no guest vm has been created by kvm_create_vm().
-> Please note that kvm_usage_count is zero in this case.
-> 
-> We'd better, in the future, implement cpu hotplug support and put the
-> arch-specific initialization into kvm_arch_hardware_enable/disable().
-> This way, we would be able to revert this patch.
-
-Why can't we use kvm_arch_hardware_enable/disable() currently?
-
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm/kvm/arm.c     |   21 +++++++++++++++++++++
->  arch/arm64/kvm/Kconfig |    1 -
->  2 files changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-> index 39df694..f64713e 100644
-> --- a/arch/arm/kvm/arm.c
-> +++ b/arch/arm/kvm/arm.c
-> @@ -25,6 +25,7 @@
->  #include <linux/vmalloc.h>
->  #include <linux/fs.h>
->  #include <linux/mman.h>
-> +#include <linux/reboot.h>
->  #include <linux/sched.h>
->  #include <linux/kvm.h>
->  #include <trace/events/kvm.h>
-> @@ -1100,6 +1101,23 @@ struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr)
->  	return NULL;
->  }
->  
-> +static int kvm_reboot_notify(struct notifier_block *nb,
-> +			     unsigned long val, void *v)
-> +{
-> +	/*
-> +	 * Reset each CPU in EL2 to initial state.
-> +	 */
-> +	on_each_cpu(kvm_cpu_reset, NULL, 1);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block kvm_reboot_nb = {
-> +	.notifier_call		= kvm_reboot_notify,
-> +	.next			= NULL,
-> +	.priority		= 0, /* FIXME */
-
-It would be helpful for the comment to explain why this is wrong, and
-what needs fixing.
-
-Mark.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksCgpPbiBXZWQsIDIwMTUtMDQtMDggYXQgMTI6MTYgKzAxMDAsIFN1enVraSBLLiBQb3Vsb3Nl
+IHdyb3RlOgo+IEJ0dywgSSBnZXQgdGhlIGZvbGxvd2luZyBidWlsZCBmYWlsdXJlIGZvciBrZXhl
+Yy10b29scyBtYXN0ZXIgYnJhbmNoLCAKPiB3aXRoIExpbmFybyB0b29sIGNoYWluIChjcm9zc3Rv
+b2wtTkcgbGluYXJvLTEuMTMuMS00LjktMjAxNC4wOSAtIExpbmFybyAKPiBHQ0MgNC45LTIwMTQu
+MDkgKQo+IAo+ICAgJCAuL2NvbmZpZ3VyZSAtLWhvc3Q9YWFyY2g2NC1saW51eC1nbnUKPiAgIFsu
+Li5dCj4gICAkIG1ha2UgLWo0Cj4ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1hcm02NC5jOiBJbiBm
+dW5jdGlvbiDigJhtYWNoaW5lX3ZlcmlmeV9lbGZfcmVs4oCZOgo+IGtleGVjL2FyY2gvYXJtNjQv
+a2V4ZWMtYXJtNjQuYzo5NzA6Mjk6IGVycm9yOiDigJhFTV9BQVJDSDY04oCZIHVuZGVjbGFyZWQg
+CgpJIGd1ZXNzIHRoYXQgdG9vbGNoYWluIGlzIHVzaW5nIHNvbWUgYW5jaWVudCBoZWFkZXJzLiAg
+QXMgYSB3b3JrYXJvdW5kCnlvdSBjYW4gdXNlIGNvbmZpZ3VyZSBDUFBGTEFHUz0nLURFTV9BQVJD
+SDY0PTE4MycuCgotR2VvZmYKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
