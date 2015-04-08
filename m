@@ -1,11 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1428513259.11876.5.camel@infradead.org>
-Subject: Re: [PATCH 0/6] arm64 kexec kernel patches V8
-From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 08 Apr 2015 10:14:19 -0700
-In-Reply-To: <55250E2A.80106@arm.com>
-References: <cover.1426793116.git.geoff@infradead.org> <55250E2A.80106@arm.com>
-Mime-Version: 1.0
+Received: from mga14.intel.com ([192.55.52.115])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Yfu6H-0007y9-23
+ for kexec@lists.infradead.org; Wed, 08 Apr 2015 17:49:18 +0000
+From: =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
+Subject: [PATCH] configure.ac: Fix failure caused by x32 ABI test
+Date: Wed,  8 Apr 2015 12:48:58 -0500
+Message-Id: <1428515338-4374-1-git-send-email-anibal.limon@linux.intel.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,19 +20,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, =?UTF-8?q?An=C3=ADbal=20Lim=C3=B3n?= <anibal.limon@linux.intel.com>
 
-SGksCgpPbiBXZWQsIDIwMTUtMDQtMDggYXQgMTI6MTYgKzAxMDAsIFN1enVraSBLLiBQb3Vsb3Nl
-IHdyb3RlOgo+IEJ0dywgSSBnZXQgdGhlIGZvbGxvd2luZyBidWlsZCBmYWlsdXJlIGZvciBrZXhl
-Yy10b29scyBtYXN0ZXIgYnJhbmNoLCAKPiB3aXRoIExpbmFybyB0b29sIGNoYWluIChjcm9zc3Rv
-b2wtTkcgbGluYXJvLTEuMTMuMS00LjktMjAxNC4wOSAtIExpbmFybyAKPiBHQ0MgNC45LTIwMTQu
-MDkgKQo+IAo+ICAgJCAuL2NvbmZpZ3VyZSAtLWhvc3Q9YWFyY2g2NC1saW51eC1nbnUKPiAgIFsu
-Li5dCj4gICAkIG1ha2UgLWo0Cj4ga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1hcm02NC5jOiBJbiBm
-dW5jdGlvbiDigJhtYWNoaW5lX3ZlcmlmeV9lbGZfcmVs4oCZOgo+IGtleGVjL2FyY2gvYXJtNjQv
-a2V4ZWMtYXJtNjQuYzo5NzA6Mjk6IGVycm9yOiDigJhFTV9BQVJDSDY04oCZIHVuZGVjbGFyZWQg
-CgpJIGd1ZXNzIHRoYXQgdG9vbGNoYWluIGlzIHVzaW5nIHNvbWUgYW5jaWVudCBoZWFkZXJzLiAg
-QXMgYSB3b3JrYXJvdW5kCnlvdSBjYW4gdXNlIGNvbmZpZ3VyZSBDUFBGTEFHUz0nLURFTV9BQVJD
-SDY0PTE4MycuCgotR2VvZmYKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+V2hlbiB0cnkgdG8gY29tcGlsZSB3aXRoIHpsaWIgZmFpbHMgZHVlIHRvIGNvbmZpZ3VyZS5hYwpi
+YWQgZXhwYW5zaW9uIGNhdXNlZCBieSB4MzIgQUJJIHRlc3QgdGhhdCBuZWVkcyBBQ19QUk9HX0ND
+CmZvciB1c2UgQUNfRUdSRVBfQ1BQLgoKU2lnbmVkLW9mZi1ieTogQW7DrWJhbCBMaW3Ds24gPGFu
+aWJhbC5saW1vbkBsaW51eC5pbnRlbC5jb20+Ci0tLQogY29uZmlndXJlLmFjIHwgNCArLS0tCiAx
+IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0
+IGEvY29uZmlndXJlLmFjIGIvY29uZmlndXJlLmFjCmluZGV4IDFlY2FkZDUuLmUwYjVmNzggMTAw
+NjQ0Ci0tLSBhL2NvbmZpZ3VyZS5hYworKysgYi9jb25maWd1cmUuYWMKQEAgLTgsNiArOCw3IEBA
+IEFDX0lOSVQoa2V4ZWMtdG9vbHMsIDIuMC4xMC5naXQpCiBBQ19DT05GSUdfQVVYX0RJUiguL2Nv
+bmZpZykKIEFDX0NPTkZJR19IRUFERVJTKFtpbmNsdWRlL2NvbmZpZy5oXSkKIEFDX0xBTkcoQykK
+K0FDX1BST0dfQ0MKIAogQUNfREVGSU5FX1VOUVVPVEVEKFBBQ0tBR0VfREFURSwgImBkYXRlICcr
+JWQgJUIgJVknYCIsCiAJCVtEZWZpbmUgdG8gdGhlIHJlbGVhc2UgZGF0ZSBvZiB0aGlzIHBhY2th
+Z2VdKQpAQCAtMTA2LDkgKzEwNyw2IEBAIEFDX0FSR19XSVRIKFtib29rZV0sCiAKIGRubCAtLS1Q
+cm9ncmFtcwogZG5sIFRvIHNwZWNpZnkgYSBkaWZmZXJlbnQgY29tcGlsZXIsIGp1c3QgJ2V4cG9y
+dCBDQz0vcGF0aC90by9jb21waWxlcicKLQotQUNfUFJPR19DQwotCiBpZiB0ZXN0ICIke2J1aWxk
+fSIgIT0gIiR7aG9zdH0iIDsgdGhlbgogCUFDX0NIRUNLX1BST0dTKEJVSUxEX0NDLCBbJHtidWls
+ZF9hbGlhc30tZ2NjICR7YnVpbGR9LWdjYyBnY2NdKQogZWxzZQotLSAKMS45LjEKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
