@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55267A23.2040007@redhat.com>
-Date: Thu, 09 Apr 2015 18:39:55 +0530
-From: Pratyush Anand <panand@redhat.com>
+Date: Thu, 9 Apr 2015 16:02:44 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [v3 2/5] arm64: kvm: allow EL2 context to be reset on shutdown
+Message-ID: <20150409150244.GG9648@leverpostej>
+References: <1427953216-11737-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427953216-11737-3-git-send-email-takahiro.akashi@linaro.org>
+ <20150408130520.GB5977@leverpostej> <552605CD.7000704@linaro.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/5] arm64: kdump: reserve memory for crash dump kernel
-References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
- <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
-In-Reply-To: <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <552605CD.7000704@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,53 +17,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
-Cc: linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "geoff@infradead.org" <geoff@infradead.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
 
-Hi Takahiro,
+On Thu, Apr 09, 2015 at 05:53:33AM +0100, AKASHI Takahiro wrote:
+> Mark,
+> 
+> On 04/08/2015 10:05 PM, Mark Rutland wrote:
+> > On Thu, Apr 02, 2015 at 06:40:13AM +0100, AKASHI Takahiro wrote:
+> >> The current kvm implementation keeps EL2 vector table installed even
+> >> when the system is shut down. This prevents kexec from putting the system
+> >> with kvm back into EL2 when starting a new kernel.
+> >>
+> >> This patch resolves this issue by calling a cpu tear-down function via
+> >> reboot notifier, kvm_reboot_notify(), which is invoked by
+> >> kernel_restart_prepare() in kernel_kexec().
+> >> While kvm has a generic hook, kvm_reboot(), we can't use it here because
+> >> a cpu teardown function will not be invoked, under current implementation,
+> >> if no guest vm has been created by kvm_create_vm().
+> >> Please note that kvm_usage_count is zero in this case.
+> >>
+> >> We'd better, in the future, implement cpu hotplug support and put the
+> >> arch-specific initialization into kvm_arch_hardware_enable/disable().
+> >> This way, we would be able to revert this patch.
+> >
+> > Why can't we use kvm_arch_hardware_enable/disable() currently?
+> 
+> IIUC, kvm will call kvm_arch_hardware_enable() iff a new guest is being
+> created *and* cpus have not been initialized yet. kvm_usage_count==0
+> indicates this. Similarly, kvm will call kvm_arch_hardware_disable() whenever
+> a guest is being terminated (i.e. kvm_usage_count != 0).
+> Therefore if kvm_arch_hardware_enable/disable() also handle EL2 vector table
+> initialization, we don't have to have any particular operations, as my patch
+> does, for kexec case.
+> (a long-term solution)
+> 
+> Since arm64 doesn't implement kvm_arch_hardware_enable() (I don't know why),
+> I'm trying to fix the problem by adding a minimum tear-down function, kvm_cpu_reset,
+> and invoking it via a reboot hook.
+> (an interim fix)
 
-On Thursday 26 March 2015 01:58 PM, AKASHI Takahiro wrote:
-> Crash dump kernel will access memory regions in system kernel via
-> copy_oldmem_page(), which reads a page with ioremap'ing it assuming that
-> such pages are not part of main memory of crash dump kernel.
-> This is true under non-UEFI environment because kexec-tools modifies
-> a device tree adding "usablemem" attributes to memory sections.
-> Under UEFI, however, this is not true because UEFI remove memory sections
-> in a device tree and export all the memory regions, even though they belong
-> to system kernel.
->
-> So we should add "mem=X[MG]" boot parameter to limit the meory size and
-> avoid hitting the following assertion in ioremap():
-> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
-> 		return NULL;
+What I don't understand is why we can't move the init and tear-down
+functions into kvm_arch_hardware_enable/disable(). They seem to be for
+precisely what you are implementing, with the only difference being the
+time that they are called.
 
-Well I am using your updated kexec-tool which has support of automatic 
-addition of "mem=" parameter. I found that this warning is still 
-appearing and therefore another error about "Kdump: vmcore not initialized".
+Either I'm missing something, or we can simply implement the existing
+hooks. I assume I'm missing something.
 
-Memory address for which ioremap failed was almost at the top of 
-crash_reserved_mem. So I modified kexec-tool [1] to accept user specific 
-mem= parameter with a value lesser than physical location which was 
-being remapped, however still the warning was there.
+> >> +static struct notifier_block kvm_reboot_nb = {
+> >> +	.notifier_call		= kvm_reboot_notify,
+> >> +	.next			= NULL,
+> >> +	.priority		= 0, /* FIXME */
+> >
+> > It would be helpful for the comment to explain why this is wrong, and
+> > what needs fixing.
+> 
+> Thank for reminding me of this.
+> 
+> *priority* enforces a calling order of registered hook functions.
+> If some hook returns NOTIFY_STOP_MASK, subsequent hooks won't be called.
+> (Nevertheless, reboot sequence will go ahead. See kernel_restart_prepare()/
+> notifier_call_chain().)
+> 
+> So we should make sure that kvm_reboot_notify() be called
+> 1) after any hook functions which may depend on kvm, and
 
-Further I noticed that there is no reserved memblock with nonzero 
-memblock_region->size when early_mem -> memblock_enforce_memory_limit is 
-called. Therefore this mem= param is not limiting memory location in my 
-case.
+Which hooks depend on KVM?
 
-I was just wondering, why do not we use ioremap_cache instead of ioremap 
-in copy_oldmem_page?
+> 2) before any hook functions which kvm may depend on, and
 
-~Pratyush
+Which other hooks does KVM depend on?
 
+> 3) before any hook functions that may return NOTIFY_STOP_MASK
 
+I think this would be solved by using kvm_arch_hardware_enable/disable.
+As far as I can tell, the VMs would be destroyed earlier (and hence KVM
+disabled) before we got to the final teardown.
 
-[1] 
-https://github.com/pratyushanand/kexec-tools/commit/7dc38d587cb32d4522f6baf035d09eeaf71c5105
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
