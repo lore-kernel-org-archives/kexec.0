@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yg1vR-00024t-CB
- for kexec@lists.infradead.org; Thu, 09 Apr 2015 02:10:39 +0000
-Date: Thu, 9 Apr 2015 11:10:13 +0900
+ id 1Yg1w0-00029y-9A
+ for kexec@lists.infradead.org; Thu, 09 Apr 2015 02:11:12 +0000
+Date: Thu, 9 Apr 2015 11:10:49 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] configure.ac: Fix failure caused by x32 ABI test
-Message-ID: <20150409021013.GA32707@verge.net.au>
-References: <1428515338-4374-1-git-send-email-anibal.limon@linux.intel.com>
+Subject: Re: [PATCH] x86_64: Add support to build kexec-tools with x32 ABI
+Message-ID: <20150409021049.GB32707@verge.net.au>
+References: <1427386798-6793-1-git-send-email-anibal.limon@linux.intel.com>
+ <551EBA32.8090208@linux.intel.com>
+ <20150406010447.GD23396@verge.net.au>
+ <5522AC83.4090006@linux.intel.com>
+ <20150407012350.GA27486@verge.net.au>
+ <55256B2A.4070001@linux.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1428515338-4374-1-git-send-email-anibal.limon@linux.intel.com>
+In-Reply-To: <55256B2A.4070001@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,25 +31,13 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: =?utf-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
 Cc: kexec@lists.infradead.org
 
-T24gV2VkLCBBcHIgMDgsIDIwMTUgYXQgMTI6NDg6NThQTSAtMDUwMCwgQW7DrWJhbCBMaW3Ds24g
-d3JvdGU6Cj4gV2hlbiB0cnkgdG8gY29tcGlsZSB3aXRoIHpsaWIgZmFpbHMgZHVlIHRvIGNvbmZp
-Z3VyZS5hYwo+IGJhZCBleHBhbnNpb24gY2F1c2VkIGJ5IHgzMiBBQkkgdGVzdCB0aGF0IG5lZWRz
-IEFDX1BST0dfQ0MKPiBmb3IgdXNlIEFDX0VHUkVQX0NQUC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBB
-bsOtYmFsIExpbcOzbiA8YW5pYmFsLmxpbW9uQGxpbnV4LmludGVsLmNvbT4KClRoYW5rcyBmb3Ig
-Zm9sbG93aW5nIHVwIG9uIHRoaXMsIGFwcGxpZWQuCgo+IC0tLQo+ICBjb25maWd1cmUuYWMgfCA0
-ICstLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAzIGRlbGV0aW9ucygtKQo+
-IAo+IGRpZmYgLS1naXQgYS9jb25maWd1cmUuYWMgYi9jb25maWd1cmUuYWMKPiBpbmRleCAxZWNh
-ZGQ1Li5lMGI1Zjc4IDEwMDY0NAo+IC0tLSBhL2NvbmZpZ3VyZS5hYwo+ICsrKyBiL2NvbmZpZ3Vy
-ZS5hYwo+IEBAIC04LDYgKzgsNyBAQCBBQ19JTklUKGtleGVjLXRvb2xzLCAyLjAuMTAuZ2l0KQo+
-ICBBQ19DT05GSUdfQVVYX0RJUiguL2NvbmZpZykKPiAgQUNfQ09ORklHX0hFQURFUlMoW2luY2x1
-ZGUvY29uZmlnLmhdKQo+ICBBQ19MQU5HKEMpCj4gK0FDX1BST0dfQ0MKPiAgCj4gIEFDX0RFRklO
-RV9VTlFVT1RFRChQQUNLQUdFX0RBVEUsICJgZGF0ZSAnKyVkICVCICVZJ2AiLAo+ICAJCVtEZWZp
-bmUgdG8gdGhlIHJlbGVhc2UgZGF0ZSBvZiB0aGlzIHBhY2thZ2VdKQo+IEBAIC0xMDYsOSArMTA3
-LDYgQEAgQUNfQVJHX1dJVEgoW2Jvb2tlXSwKPiAgCj4gIGRubCAtLS1Qcm9ncmFtcwo+ICBkbmwg
-VG8gc3BlY2lmeSBhIGRpZmZlcmVudCBjb21waWxlciwganVzdCAnZXhwb3J0IENDPS9wYXRoL3Rv
-L2NvbXBpbGVyJwo+IC0KPiAtQUNfUFJPR19DQwo+IC0KPiAgaWYgdGVzdCAiJHtidWlsZH0iICE9
-ICIke2hvc3R9IiA7IHRoZW4KPiAgCUFDX0NIRUNLX1BST0dTKEJVSUxEX0NDLCBbJHtidWlsZF9h
-bGlhc30tZ2NjICR7YnVpbGR9LWdjYyBnY2NdKQo+ICBlbHNlCj4gLS0gCj4gMS45LjEKPiAKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+T24gV2VkLCBBcHIgMDgsIDIwMTUgYXQgMTI6NTM6NDZQTSAtMDUwMCwgQW7DrWJhbCBMaW3Ds24g
+d3JvdGU6Cj4gSGkgU2ltb24sCj4gCj4gSSBkaWQgbW9yZSB0ZXN0aW5nIGFuZCBmb3VuZCB0aGF0
+IHRoZSBwYXRjaCBjYXVzZXMgYSBmYWlsIHdoZW4gdHJ5IHRvCj4gY29tcGlsZSB3aXRoIHpsaWIg
+YW5kIG90aGVyIGFyY2ggbm90Cj4geDg2XzY0LCBpdCdzIHJlbGF0ZWQgdG8gQUNfRUdSRVBfQ1BQ
+IG5lZWRzIHByZXZpb3VzIEFDX1BST0dfQ0MuCj4gCj4gSSBzZW50IGEgcGF0Y2ggZm9yIHRoYXQs
+Cj4gCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2tleGVjLzIwMTUtQXBy
+aWwvMDEzNTU0Lmh0bWwKPiAKPiBTb3JyeSBmb3IgdGhlIHByb2JsZW1zIHRoYXQgaSBtYXkgaGF2
+ZSBjYXVzZWQuCgpUaGFua3MsIGdvdCBpdC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
