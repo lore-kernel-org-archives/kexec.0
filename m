@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55276F4E.3010103@redhat.com>
-Date: Fri, 10 Apr 2015 12:05:58 +0530
-From: Pratyush Anand <panand@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/5] arm64: kdump: reserve memory for crash dump kernel
-References: <1427358533-3754-1-git-send-email-takahiro.akashi@linaro.org>
- <1427358533-3754-2-git-send-email-takahiro.akashi@linaro.org>
- <55267A23.2040007@redhat.com> <5527663A.70402@linaro.org>
-In-Reply-To: <5527663A.70402@linaro.org>
+Received: from g1t5425.austin.hp.com ([15.216.225.55])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YgUXO-0006EE-UO
+ for kexec@lists.infradead.org; Fri, 10 Apr 2015 08:43:44 +0000
+From: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Subject: [PATCH v10 02/10] iommu/vt-d: Items required for kdump
+Date: Fri, 10 Apr 2015 16:42:05 +0800
+Message-Id: <1428655333-19504-3-git-send-email-zhen-hual@hp.com>
+In-Reply-To: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
+References: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,125 +17,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
-Cc: linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org, vgoyal@redhat.com, dyoung@redhat.com
+Cc: jerry.hoemann@hp.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, zhen-hual@hp.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com
 
+Add context entry functions needed for kdump.
 
+Bill Sumner:
+    Original version;
 
-On Friday 10 April 2015 11:27 AM, AKASHI Takahiro wrote:
-> Hi Pratyush,
->
-> On 04/09/2015 10:09 PM, Pratyush Anand wrote:
->> Hi Takahiro,
->>
->> On Thursday 26 March 2015 01:58 PM, AKASHI Takahiro wrote:
->>> Crash dump kernel will access memory regions in system kernel via
->>> copy_oldmem_page(), which reads a page with ioremap'ing it assuming that
->>> such pages are not part of main memory of crash dump kernel.
->>> This is true under non-UEFI environment because kexec-tools modifies
->>> a device tree adding "usablemem" attributes to memory sections.
->>> Under UEFI, however, this is not true because UEFI remove memory
->>> sections
->>> in a device tree and export all the memory regions, even though they
->>> belong
->>> to system kernel.
->>>
->>> So we should add "mem=X[MG]" boot parameter to limit the meory size and
->>> avoid hitting the following assertion in ioremap():
->>>     if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
->>>         return NULL;
->>
->> Well I am using your updated kexec-tool which has support of automatic
->> addition of "mem=" parameter. I found that this
->> warning is still appearing and therefore another error about "Kdump:
->> vmcore not initialized".
->>
->> Memory address for which ioremap failed was almost at the top of
->> crash_reserved_mem. So I modified kexec-tool [1] to
->> accept user specific mem= parameter with a value lesser than physical
->> location which was being remapped, however still
->> the warning was there.
->>
->> Further I noticed that there is no reserved memblock with nonzero
->> memblock_region->size when early_mem ->
->> memblock_enforce_memory_limit is called. Therefore this mem= param is
->> not limiting memory location in my case.
->
-> On crash dump kernel? Sounds strange.
-> Can you send me the followings for both 1st kernel and crash dump kernel?
-> (add memblock_debug to cmd line for verbose messages)
->
-> - boot log (dmesg)
-> - cat /proc/iomem
->
-> sending them in a private mail is fine.
+Li, Zhenhua:
+    Changed the name of new functions, make them consistent with current
+    context get/set functions.
+    Remove the structure dve which is not used in new version.
 
-OK.
+Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
+Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+---
+ drivers/iommu/intel-iommu.c | 54 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
->
->> I was just wondering, why do not we use ioremap_cache instead of
->> ioremap in copy_oldmem_page?
->
-> Good point.
-> My next version of kdump patch uses ioremap_cache() for another reason.
-
-Thanks that you have already changed it. I am using ioremap_cache and I 
-am able to get /proc/vmcore :)
-ioremap allocates VAs with memory attribute DEVICE which might not be 
-correct for RAM area.ioremap_cache is using memory attribute NORMAL 
-which seems more logical for RAM areas.
-
-> # As I'm discussing with Mark about kvm issue, I'm holding off
-> submitting it.
->
-
-I  am using one more modification on top of your patches for finding 
-crashkernel address automatically. If that seems fine to you then may be 
-I can send you that patch and you can add that in your next rev.
-
-Author: Pratyush Anand <panand@redhat.com>
-Date:   Tue Apr 7 08:14:55 2015 +0530
-
-     arm64/kdump: Find free area for crash kernel memory
-
-     If crashkernel=X@0 is passed to the kernel then this patch will find
-     free memory area of size X for crash kernel.
-
-     Signed-off-by: Pratyush Anand <panand@redhat.com>
-
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 94694897beea..90b0b9d138f6 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -368,10 +368,18 @@ static void __init reserve_crashkernel(void)
-         if (ret)
-                 return;
-
--       ret = memblock_reserve(crash_base, crash_size);
--       if (ret < 0) {
-+       /* 0 means: find the address automatically */
-+       if (crash_base <= 0) {
-+               crash_base = memblock_alloc(crash_size, 2 << 20);
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 3a93ce0..735e28f 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -211,6 +211,12 @@ get_context_addr_from_root(struct root_entry *root)
+ 		NULL);
+ }
+ 
++static inline unsigned long
++get_context_phys_from_root(struct root_entry *root)
++{
++	return  root_present(root) ? (root->val & VTD_PAGE_MASK) : 0;
++}
 +
-+               if (!crash_base) {
-+                       pr_warn("Could not find free memory for 
-crashkernel\n");
-+                       return;
-+               }
+ /*
+  * low 64 bits:
+  * 0: present
+@@ -231,6 +237,32 @@ static inline bool context_present(struct context_entry *context)
+ {
+ 	return (context->lo & 1);
+ }
 +
-+       } else if (memblock_reserve(crash_base, crash_size) < 0) {
-                 pr_warn("crashkernel reservation failed - memory is in 
-use (0x%lx)\n",
--                       (unsigned long)crash_base);
-+                               (unsigned long)crash_base);
-                 return;
-         }
++static inline int context_fault_enable(struct context_entry *c)
++{
++	return((c->lo >> 1) & 0x1);
++}
++
++static inline int context_translation_type(struct context_entry *c)
++{
++	return((c->lo >> 2) & 0x3);
++}
++
++static inline u64 context_address_root(struct context_entry *c)
++{
++	return((c->lo >> VTD_PAGE_SHIFT));
++}
++
++static inline int context_address_width(struct context_entry *c)
++{
++	return((c->hi >> 0) & 0x7);
++}
++
++static inline int context_domain_id(struct context_entry *c)
++{
++	return((c->hi >> 8) & 0xffff);
++}
++
+ static inline void context_set_present(struct context_entry *context)
+ {
+ 	context->lo |= 1;
+@@ -316,6 +348,28 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+ 	return !((unsigned long)pte & ~VTD_PAGE_MASK);
+ }
+ 
++
++/*
++ * Fix Crashdump failure caused by leftover DMA through a hardware IOMMU
++ *
++ * Fixes the crashdump kernel to deal with an active iommu and legacy
++ * DMA from the (old) panicked kernel in a manner similar to how legacy
++ * DMA is handled when no hardware iommu was in use by the old kernel --
++ * allow the legacy DMA to continue into its current buffers.
++ *
++ * In the crashdump kernel, this code:
++ * 1. skips disabling the IOMMU's translating.
++ * 2. Do not re-enable IOMMU's translating.
++ * 3. In kdump kernel, use the old root entry table.
++ * 4. Allocate pages for new context entry, copy data from old context entries
++ *    in the old kernel to the new ones.
++ *
++ * In other kinds of kernel, for example, a kernel started by kexec,
++ * do the same thing as crashdump kernel.
++ */
++
++
++
+ /*
+  * This domain is a statically identity mapping domain.
+  *	1. This domain creats a static 1:1 mapping to all usable memory.
+-- 
+2.0.0-rc0
 
-~Pratyush
 
 _______________________________________________
 kexec mailing list
