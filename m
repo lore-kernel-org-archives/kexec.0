@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3427.houston.hp.com ([15.201.208.55])
+Received: from g2t2352.austin.hp.com ([15.217.128.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YgUXI-0006CY-Ei
- for kexec@lists.infradead.org; Fri, 10 Apr 2015 08:43:37 +0000
+ id 1YgUXa-0006Gb-7e
+ for kexec@lists.infradead.org; Fri, 10 Apr 2015 08:43:55 +0000
 From: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Subject: [PATCH v10 01/10] iommu/vt-d: New function to attach domain with id
-Date: Fri, 10 Apr 2015 16:42:04 +0800
-Message-Id: <1428655333-19504-2-git-send-email-zhen-hual@hp.com>
+Subject: [PATCH v10 03/10] iommu/vt-d: Function to get old context entry
+Date: Fri, 10 Apr 2015 16:42:06 +0800
+Message-Id: <1428655333-19504-4-git-send-email-zhen-hual@hp.com>
 In-Reply-To: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
 References: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,62 +25,53 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org, vgoyal@redhat.com, dyoung@redhat.com
 Cc: jerry.hoemann@hp.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, zhen-hual@hp.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com
 
-Allow specification of the domain-id for the new domain.
-This patch only adds a new function iommu_attach_domain_with_id, it is like
-the function iommu_attach_domain(), only adding a parameter "did".
+Interface for when a new domain in the crashdump kernel needs some
+values from the panicked kernel's context entries.
 
-Bill Sumner:
-    (In older versions) Add new 'did' parameter to iommu_attach_domain();
-    The caller of this function.
-
-Li, Zhenhua:
-    New function iommu_attach_domain_with_id(), instead of updating function
-    iommu_attach_domain();
-
-Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
 Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
 ---
- drivers/iommu/intel-iommu.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 2d1e05b..3a93ce0 100644
+index 735e28f..ff5ac04 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -1558,6 +1558,16 @@ static int iommu_attach_domain(struct dmar_domain *domain,
- 	return num;
- }
+@@ -369,6 +369,10 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+  */
  
-+static int iommu_attach_domain_with_id(struct dmar_domain *domain,
-+			       struct intel_iommu *iommu,
-+			       int domain_number)
-+{
-+	if (domain_number >= 0)
-+		return domain_number;
+ 
++static struct context_entry *device_to_existing_context_entry(
++				struct intel_iommu *iommu,
++				u8 bus, u8 devfn);
 +
-+	return iommu_attach_domain(domain, iommu);
+ 
+ /*
+  * This domain is a statically identity mapping domain.
+@@ -4793,3 +4797,23 @@ static void __init check_tylersburg_isoch(void)
+ 	printk(KERN_WARNING "DMAR: Recommended TLB entries for ISOCH unit is 16; your BIOS set %d\n",
+ 	       vtisochctrl);
+ }
++
++static struct context_entry *device_to_existing_context_entry(
++				struct intel_iommu *iommu,
++				u8 bus, u8 devfn)
++{
++	struct root_entry *root;
++	struct context_entry *context;
++	struct context_entry *ret;
++	unsigned long flags;
++
++	ret = NULL;
++	spin_lock_irqsave(&iommu->lock, flags);
++	root = &iommu->root_entry[bus];
++	context = get_context_addr_from_root(root);
++	if (context && context_present(context+devfn))
++		ret = &context[devfn];
++	spin_unlock_irqrestore(&iommu->lock, flags);
++	return ret;
 +}
 +
- static int iommu_attach_vm_domain(struct dmar_domain *domain,
- 				  struct intel_iommu *iommu)
- {
-@@ -2224,6 +2234,7 @@ static struct dmar_domain *get_domain_for_dev(struct device *dev, int gaw)
- 	u16 dma_alias;
- 	unsigned long flags;
- 	u8 bus, devfn;
-+	int did = -1;   /* Default to "no domain_id supplied" */
- 
- 	domain = find_domain(dev);
- 	if (domain)
-@@ -2257,7 +2268,7 @@ static struct dmar_domain *get_domain_for_dev(struct device *dev, int gaw)
- 	domain = alloc_domain(0);
- 	if (!domain)
- 		return NULL;
--	domain->id = iommu_attach_domain(domain, iommu);
-+	domain->id = iommu_attach_domain_with_id(domain, iommu, did);
- 	if (domain->id < 0) {
- 		free_domain_mem(domain);
- 		return NULL;
 -- 
 2.0.0-rc0
 
