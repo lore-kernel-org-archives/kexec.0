@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YiH7m-00012t-Th
- for kexec@lists.infradead.org; Wed, 15 Apr 2015 06:48:40 +0000
-Date: Wed, 15 Apr 2015 14:48:03 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v10 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150415064803.GF19051@localhost.localdomain>
-References: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
- <20150415005731.GC19051@localhost.localdomain>
- <552DFB56.1070600@hp.com>
+Date: Wed, 15 Apr 2015 13:49:14 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [v3 2/5] arm64: kvm: allow EL2 context to be reset on shutdown
+Message-ID: <20150415124913.GF2866@leverpostej>
+References: <1427953216-11737-1-git-send-email-takahiro.akashi@linaro.org>
+ <1427953216-11737-3-git-send-email-takahiro.akashi@linaro.org>
+ <20150408130520.GB5977@leverpostej> <552605CD.7000704@linaro.org>
+ <20150409150244.GG9648@leverpostej> <55276A7E.1080508@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <552DFB56.1070600@hp.com>
+In-Reply-To: <55276A7E.1080508@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +22,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, ZhenHua" <zhen-hual@hp.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "geoff@infradead.org" <geoff@infradead.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
 
-On 04/15/15 at 01:47pm, Li, ZhenHua wrote:
-> On 04/15/2015 08:57 AM, Dave Young wrote:
-> >Again, I think it is bad to use old page table, below issues need consider:
-> >1) make sure old page table are reliable across crash
-> >2) do not allow writing oldmem after crash
-> >
-> >Please correct me if I'm wrong, or if above is not doable I think I will vote for
-> >resetting pci bus.
-> >
-> >Thanks
-> >Dave
-> >
-> Hi Dave,
+> > What I don't understand is why we can't move the init and tear-down
+> > functions into kvm_arch_hardware_enable/disable(). They seem to be for
+> > precisely what you are implementing, with the only difference being the
+> > time that they are called.
 > 
-> When updating the context tables, we have to write their address to root
-> tables, this will cause writing to old mem.
+> I don't know, neither. I just followed the discussions between Marc and Geoff,
+> and their conclusion. I guessed that *refactoring* might be more complicated than
+> expected.
 > 
-> Resetting the pci bus has been discussed, please check this:
-> http://lists.infradead.org/pipermail/kexec/2014-October/012752.html
-> https://lkml.org/lkml/2014/10/21/890
+> FYI, I gave a quick try to kvm_arch_hardware_enable() approach by removing
+> cpu_init_hyp_mode() from init_hyp_mode() and putting it into kvm_arch_hardware_enable(),
+> and it seems to work, at least, in my environment:
+>     boot => start a kvm guest => kexec reboot => start a kvm guest
 
-I know one reason to use old pgtable is this looks better because it fixes the
-real problem, but it is not a good way if it introduce more problems because of
-it have to use oldmem. I will be glad if this is not a problem but I have not
-been convinced.
+That sounds pretty convincing to me, assuming you wired the teardown
+intp kvm_arch_hardware_disable() ?
 
-OTOH, there's many types of iommu, intel, amd, a lot of other types. They need
-their own fixes, so it looks not that elegant.
+> > Either I'm missing something, or we can simply implement the existing
+> > hooks. I assume I'm missing something.
+> 
+> Marc, Geoff, any comments?
+> 
+> 
+> >>>> +static struct notifier_block kvm_reboot_nb = {
+> >>>> +	.notifier_call		= kvm_reboot_notify,
+> >>>> +	.next			= NULL,
+> >>>> +	.priority		= 0, /* FIXME */
+> >>>
+> >>> It would be helpful for the comment to explain why this is wrong, and
+> >>> what needs fixing.
+> >>
+> >> Thank for reminding me of this.
+> >>
+> >> *priority* enforces a calling order of registered hook functions.
+> >> If some hook returns NOTIFY_STOP_MASK, subsequent hooks won't be called.
+> >> (Nevertheless, reboot sequence will go ahead. See kernel_restart_prepare()/
+> >> notifier_call_chain().)
+> >>
+> >> So we should make sure that kvm_reboot_notify() be called
+> >> 1) after any hook functions which may depend on kvm, and
+> >
+> > Which hooks depend on KVM?
+> 
+> I think I answered this question below:
+>  >> But how can we guarantee this and determine a priority of kvm_reboot_notify()?
+>  >> Looking into all the occurrences of register_reboot_notifier(),
+>  >> 1) => nothing
+>  >> 2) => virt/kvm/kvm_main.c (priority: 0)
+>  >> 3) => drivers/cpufreq/s32416-cpufreq.c (priority: 0)
+>  >>        drivers/cpufreq/s5pv210-cpufreq.c (priority: 0)
+>  >>
+>  >> So a priority higher than zero might be safe and better, but exactly what?
+>  >> Some hooks use "INT_MAX."
 
-For pci reset, it is not perfect, but it has another advantage, the patch is
-simpler. The problem I see from the old discusssion is, reset bus in 2nd kernel
-is acceptable but it does not fix things on sparc platform. AFAIK current reported
-problems are intel and amd iommu, at least pci reset stuff does not make it worse.
+I can't see anything listed which has a dependency on KVM.
 
-Thanks
-Dave
+The KVM notifier would be superseded by
+kvm_arch_hardware_{disable,enable}, and the cpufreq instances don't seem
+to have any relationship to KVM.
+
+Other architectures use kvm_arch_hardware_{enable,disable}(), so I
+imagine the core KVM code has no problem with the ordering of these.
+
+Mark.
 
 _______________________________________________
 kexec mailing list
