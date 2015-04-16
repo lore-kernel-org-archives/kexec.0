@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yimxx-0008AQ-GR
- for kexec@lists.infradead.org; Thu, 16 Apr 2015 16:48:38 +0000
+ id 1Yimy2-0008CD-GV
+ for kexec@lists.infradead.org; Thu, 16 Apr 2015 16:48:43 +0000
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH RFC 6/6] arm64: wait for transmit completion before next
- character transmission
-Date: Thu, 16 Apr 2015 22:17:22 +0530
-Message-Id: <6c8a63f701e98cb7cf4ddd96ab5b509115ebdc41.1429201849.git.panand@redhat.com>
-In-Reply-To: <cover.1429201849.git.panand@redhat.com>
-References: <cover.1429201849.git.panand@redhat.com>
+Subject: [PATCH RFC 0/6] Various fixes for purgatory and ARM64
+Date: Thu, 16 Apr 2015 22:17:23 +0530
+Message-Id: <cover.1429201849.git.panand@redhat.com>
 In-Reply-To: <cover.1429201849.git.panand@redhat.com>
 References: <cover.1429201849.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,178 +25,53 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.fedoraproject.org, kexec@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-Previous transmission must be completed before next character to be
-transmitted, otherwise TX buffer may saturate and we will not see all
-the characters on screen.
+These patches can be applied on top of Geoff's Kexec [1] and Takahiro's
+Kdump [2] patches and are available in my tree [3].
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
----
- kexec/arch/arm64/include/arch/options.h | 10 +++++++++-
- kexec/arch/arm64/kexec-arm64.c          | 17 +++++++++++++++++
- purgatory/arch/arm64/entry.S            | 10 ++++++++++
- purgatory/arch/arm64/purgatory-arm64.c  | 22 +++++++++++++++++++++-
- 4 files changed, 57 insertions(+), 2 deletions(-)
+First two patches are for purgatory. 1st patch is a very important fix
+for sha verification.  2nd patch is good to have.
 
-diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-index af14102220ea..a1f6f2cb00be 100644
---- a/kexec/arch/arm64/include/arch/options.h
-+++ b/kexec/arch/arm64/include/arch/options.h
-@@ -8,7 +8,9 @@
- #define OPT_PAGE_OFFSET	((OPT_MAX)+4)
- #define OPT_PORT	((OPT_MAX)+5)
- #define OPT_REUSE_CMDLINE	((OPT_MAX+6))
--#define OPT_ARCH_MAX	((OPT_MAX)+7)
-+#define OPT_PORT_LSR	((OPT_MAX)+7)
-+#define OPT_PORT_LSR_VAL	((OPT_MAX)+8)
-+#define OPT_ARCH_MAX	((OPT_MAX)+9)
- 
- #define KEXEC_ARCH_OPTIONS \
- 	KEXEC_OPTIONS \
-@@ -19,6 +21,8 @@
- 	{ "lite",         0, NULL, OPT_LITE }, \
- 	{ "page-offset",  1, NULL, OPT_PAGE_OFFSET }, \
- 	{ "port",         1, NULL, OPT_PORT }, \
-+	{ "port-lsr",     1, NULL, OPT_PORT_LSR }, \
-+	{ "port-lsr-val", 1, NULL, OPT_PORT_LSR_VAL }, \
- 	{ "ramdisk",      1, NULL, OPT_INITRD }, \
- 	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
- 
-@@ -34,6 +38,8 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
- "     --lite                Fast reboot, no memory integrity checks.\n"
- "     --page-offset         Kernel page-offset for binary image load.\n"
- "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
-+"     --port-lsr=ADDRESS    Purgatory output port line status ADDRESS.\n"
-+"     --port-lsr-val=VALUE  Purgatory output port Line status expected SET value when TX empty.\n"
- "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
- "     --reuse-cmdline       Use command line arg of primary kernel.\n";
- 
-@@ -43,6 +49,8 @@ struct arm64_opts {
- 	const char *initrd;
- 	uint64_t page_offset;
- 	uint64_t port;
-+	uint64_t port_lsr;
-+	uint32_t port_lsr_val;
- 	int lite;
- };
- 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 190037c75186..5c7445b86305 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -99,6 +99,12 @@ int arch_process_options(int argc, char **argv)
- 		case OPT_PORT:
- 			arm64_opts.port = strtoull(optarg, NULL, 0);
- 			break;
-+		case OPT_PORT_LSR:
-+			arm64_opts.port_lsr = strtoull(optarg, NULL, 0);
-+			break;
-+		case OPT_PORT_LSR_VAL:
-+			arm64_opts.port_lsr_val = strtoull(optarg, NULL, 0);
-+			break;
- 		case OPT_PAGE_OFFSET:
- 			arm64_opts.page_offset = strtoull(optarg, NULL, 0);
- 			break;
-@@ -594,6 +600,8 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	unsigned long dtb_base;
- 	char *initrd_buf = NULL;
- 	uint64_t purgatory_sink;
-+	uint64_t purgatory_sink_lsr;
-+	uint32_t purgatory_sink_lsr_val;
- 	unsigned long purgatory_base;
- 	struct dtb dtb_1 = {.name = "dtb_1"};
- 	struct dtb dtb_2 = {.name = "dtb_2"};
-@@ -615,6 +623,9 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
- 		purgatory_sink);
- 
-+	purgatory_sink_lsr = arm64_opts.port_lsr;
-+	purgatory_sink_lsr_val = arm64_opts.port_lsr_val;
-+
- 	if (arm64_opts.dtb) {
- 		dtb_2.buf = slurp_file(arm64_opts.dtb, &dtb_2.size);
- 		assert(dtb_2.buf);
-@@ -732,6 +743,12 @@ int arm64_load_other_segments(struct kexec_info *info,
- 		elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
- 			sizeof(purgatory_sink));
- 
-+		elf_rel_set_symbol(&info->rhdr, "arm64_sink_lsr",
-+			&purgatory_sink_lsr, sizeof(purgatory_sink_lsr));
-+
-+		elf_rel_set_symbol(&info->rhdr, "arm64_sink_lsr_val",
-+			&purgatory_sink_lsr_val, sizeof(purgatory_sink_lsr_val));
-+
- 		elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry",
- 			&kernel_entry, sizeof(kernel_entry));
- 
-diff --git a/purgatory/arch/arm64/entry.S b/purgatory/arch/arm64/entry.S
-index 140e91d87ab1..fdb2fca774e7 100644
---- a/purgatory/arch/arm64/entry.S
-+++ b/purgatory/arch/arm64/entry.S
-@@ -43,6 +43,11 @@ arm64_sink:
- 	.quad	0
- size arm64_sink
- 
-+.globl arm64_sink_lsr
-+arm64_sink_lsr:
-+	.quad	0
-+size arm64_sink_lsr
-+
- .globl arm64_kernel_entry
- arm64_kernel_entry:
- 	.quad	0
-@@ -52,3 +57,8 @@ size arm64_kernel_entry
- arm64_dtb_addr:
- 	.quad	0
- size arm64_dtb_addr
-+
-+.globl arm64_sink_lsr_val
-+arm64_sink_lsr_val:
-+	.word	0
-+size arm64_sink_lsr_val
-diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
-index 25960c30bd05..1b88bb799f54 100644
---- a/purgatory/arch/arm64/purgatory-arm64.c
-+++ b/purgatory/arch/arm64/purgatory-arm64.c
-@@ -8,18 +8,38 @@
- /* Symbols set by kexec. */
- 
- extern uint32_t *arm64_sink;
-+extern uint32_t *arm64_sink_lsr;
-+extern uint32_t arm64_sink_lsr_val;
- extern void (*arm64_kernel_entry)(uint64_t);
- extern uint64_t arm64_dtb_addr;
- 
-+static void wait_for_xmit_complete(void)
-+{
-+	volatile uint32_t status;
-+	volatile uint32_t *status_reg = (volatile uint32_t *)arm64_sink_lsr;
-+
-+	if (!arm64_sink_lsr)
-+		return;
-+
-+	while (1) {
-+		status = *status_reg;
-+		if ((status & arm64_sink_lsr_val) == arm64_sink_lsr_val)
-+			break;
-+	}
-+}
-+
- void putchar(int ch)
- {
- 	if (!arm64_sink)
- 		return;
- 
-+	wait_for_xmit_complete();
- 	*arm64_sink = ch;
- 
--	if (ch == '\n')
-+	if (ch == '\n') {
-+		wait_for_xmit_complete();
- 		*arm64_sink = '\r';
-+	}
- }
- 
- void setup_arch(void)
+Rest all patches are fixes and addon for ARM64.
+
+These patchset adds three extra command line options for ARM64.
+
+ --page-offset: Needed for binary image only. Default value is
+0xfffffe0000000000.
+
+ --port-lsr: It is UART's Line status register address. Normally for a
+UART based on 8250, 16450 or 16550 should have value as --port's value +
+0x14.
+
+ --port-lsr-val: It is the SET value of LSR register for TX buffer to be
+empty. Normally for above UARTs it should be 0x60 
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/geoff/kexec-tools.git
+: master
+[2] git://git.linaro.org/people/takahiro.akashi/kexec-tools.git :
+kdump/v0.10
+[3] https://github.com/pratyushanand/kexec-tools.git : master
+(6c8a63f701e9)
+
+Pratyush Anand (6):
+  purgatory: Fix memcmp for src address increment
+  purgatory: No need to sha256 update if ptr->len is zero
+  arm64: allocate memory for other segments after kernel
+  arm64: support reuse-cmdline option
+  arm64: Add support for binary image
+  arm64: wait for transmit completion before next character transmission
+
+ kexec/arch/arm64/crashdump-arm64.c      |  3 +-
+ kexec/arch/arm64/crashdump-arm64.h      |  1 +
+ kexec/arch/arm64/include/arch/options.h | 21 +++++++++++--
+ kexec/arch/arm64/kexec-arm64.c          | 28 ++++++++++++++++-
+ kexec/arch/arm64/kexec-arm64.h          |  2 ++
+ kexec/arch/arm64/kexec-image-arm64.c    | 54 ++++++++++++++++++++++++++++++---
+ purgatory/arch/arm64/entry.S            | 10 ++++++
+ purgatory/arch/arm64/purgatory-arm64.c  | 22 +++++++++++++-
+ purgatory/purgatory.c                   |  2 ++
+ purgatory/string.c                      |  2 ++
+ 10 files changed, 135 insertions(+), 10 deletions(-)
+
 -- 
 2.1.0
 
