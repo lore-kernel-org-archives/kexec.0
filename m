@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yimxs-00088I-GG
- for kexec@lists.infradead.org; Thu, 16 Apr 2015 16:48:33 +0000
+ id 1Yimxx-0008AQ-GR
+ for kexec@lists.infradead.org; Thu, 16 Apr 2015 16:48:38 +0000
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH RFC 5/6] arm64: Add support for binary image
-Date: Thu, 16 Apr 2015 22:17:21 +0530
-Message-Id: <0a15f2079e6c378996dceda1d509df77d2f43899.1429201849.git.panand@redhat.com>
+Subject: [PATCH RFC 6/6] arm64: wait for transmit completion before next
+ character transmission
+Date: Thu, 16 Apr 2015 22:17:22 +0530
+Message-Id: <6c8a63f701e98cb7cf4ddd96ab5b509115ebdc41.1429201849.git.panand@redhat.com>
 In-Reply-To: <cover.1429201849.git.panand@redhat.com>
 References: <cover.1429201849.git.panand@redhat.com>
 In-Reply-To: <cover.1429201849.git.panand@redhat.com>
@@ -27,181 +28,178 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.fedoraproject.org, kexec@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-This patch adds support to use binary image ie arch/arm64/boot/Image.
-
-Binary image does not have sufficient knowledge to extract page offset
-information, which is needed by kexec tool. Use a new command parameter
---page-offset, so that user can provide page offset information for
-liner mapping.
+Previous transmission must be completed before next character to be
+transmitted, otherwise TX buffer may saturate and we will not see all
+the characters on screen.
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- kexec/arch/arm64/crashdump-arm64.h      |  1 +
- kexec/arch/arm64/include/arch/options.h | 10 ++++--
- kexec/arch/arm64/kexec-arm64.c          |  3 ++
- kexec/arch/arm64/kexec-arm64.h          |  2 ++
- kexec/arch/arm64/kexec-image-arm64.c    | 54 ++++++++++++++++++++++++++++++---
- 5 files changed, 63 insertions(+), 7 deletions(-)
+ kexec/arch/arm64/include/arch/options.h | 10 +++++++++-
+ kexec/arch/arm64/kexec-arm64.c          | 17 +++++++++++++++++
+ purgatory/arch/arm64/entry.S            | 10 ++++++++++
+ purgatory/arch/arm64/purgatory-arm64.c  | 22 +++++++++++++++++++++-
+ 4 files changed, 57 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
-index d4fd3f2288c9..d53fa34de37a 100644
---- a/kexec/arch/arm64/crashdump-arm64.h
-+++ b/kexec/arch/arm64/crashdump-arm64.h
-@@ -17,6 +17,7 @@
- #define CRASH_MAX_MEMORY_RANGES	32
- 
- extern struct memory_ranges usablemem_rgns;
-+extern struct memory_range crash_reserved_mem;
- 
- int load_crashdump_segments(struct kexec_info *info, char **option);
- void modify_ehdr_for_crashmem(struct mem_ehdr *ehdr);
 diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-index afe3e9827ff3..af14102220ea 100644
+index af14102220ea..a1f6f2cb00be 100644
 --- a/kexec/arch/arm64/include/arch/options.h
 +++ b/kexec/arch/arm64/include/arch/options.h
-@@ -5,9 +5,10 @@
- #define OPT_DTB		((OPT_MAX)+1)
- #define OPT_INITRD	((OPT_MAX)+2)
- #define OPT_LITE	((OPT_MAX)+3)
--#define OPT_PORT	((OPT_MAX)+4)
--#define OPT_REUSE_CMDLINE	((OPT_MAX+5))
--#define OPT_ARCH_MAX	((OPT_MAX)+6)
-+#define OPT_PAGE_OFFSET	((OPT_MAX)+4)
-+#define OPT_PORT	((OPT_MAX)+5)
-+#define OPT_REUSE_CMDLINE	((OPT_MAX+6))
-+#define OPT_ARCH_MAX	((OPT_MAX)+7)
+@@ -8,7 +8,9 @@
+ #define OPT_PAGE_OFFSET	((OPT_MAX)+4)
+ #define OPT_PORT	((OPT_MAX)+5)
+ #define OPT_REUSE_CMDLINE	((OPT_MAX+6))
+-#define OPT_ARCH_MAX	((OPT_MAX)+7)
++#define OPT_PORT_LSR	((OPT_MAX)+7)
++#define OPT_PORT_LSR_VAL	((OPT_MAX)+8)
++#define OPT_ARCH_MAX	((OPT_MAX)+9)
  
  #define KEXEC_ARCH_OPTIONS \
  	KEXEC_OPTIONS \
-@@ -16,6 +17,7 @@
- 	{ "dtb",          1, NULL, OPT_DTB }, \
- 	{ "initrd",       1, NULL, OPT_INITRD }, \
+@@ -19,6 +21,8 @@
  	{ "lite",         0, NULL, OPT_LITE }, \
-+	{ "page-offset",  1, NULL, OPT_PAGE_OFFSET }, \
+ 	{ "page-offset",  1, NULL, OPT_PAGE_OFFSET }, \
  	{ "port",         1, NULL, OPT_PORT }, \
++	{ "port-lsr",     1, NULL, OPT_PORT_LSR }, \
++	{ "port-lsr-val", 1, NULL, OPT_PORT_LSR_VAL }, \
  	{ "ramdisk",      1, NULL, OPT_INITRD }, \
  	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
-@@ -30,6 +32,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
- "     --dtb=FILE            Use FILE as the device tree blob.\n"
- "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
+ 
+@@ -34,6 +38,8 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
  "     --lite                Fast reboot, no memory integrity checks.\n"
-+"     --page-offset         Kernel page-offset for binary image load.\n"
+ "     --page-offset         Kernel page-offset for binary image load.\n"
  "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
++"     --port-lsr=ADDRESS    Purgatory output port line status ADDRESS.\n"
++"     --port-lsr-val=VALUE  Purgatory output port Line status expected SET value when TX empty.\n"
  "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
  "     --reuse-cmdline       Use command line arg of primary kernel.\n";
-@@ -38,6 +41,7 @@ struct arm64_opts {
- 	const char *command_line;
- 	const char *dtb;
+ 
+@@ -43,6 +49,8 @@ struct arm64_opts {
  	const char *initrd;
-+	uint64_t page_offset;
+ 	uint64_t page_offset;
  	uint64_t port;
++	uint64_t port_lsr;
++	uint32_t port_lsr_val;
  	int lite;
  };
+ 
 diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 34e4ebf1eb23..190037c75186 100644
+index 190037c75186..5c7445b86305 100644
 --- a/kexec/arch/arm64/kexec-arm64.c
 +++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -99,6 +99,9 @@ int arch_process_options(int argc, char **argv)
+@@ -99,6 +99,12 @@ int arch_process_options(int argc, char **argv)
  		case OPT_PORT:
  			arm64_opts.port = strtoull(optarg, NULL, 0);
  			break;
-+		case OPT_PAGE_OFFSET:
-+			arm64_opts.page_offset = strtoull(optarg, NULL, 0);
++		case OPT_PORT_LSR:
++			arm64_opts.port_lsr = strtoull(optarg, NULL, 0);
 +			break;
- 		default:
- 			break; /* Ignore core and unknown options. */
- 		}
-diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-index 61e15032cbd6..7e4d0568bd01 100644
---- a/kexec/arch/arm64/kexec-arm64.h
-+++ b/kexec/arch/arm64/kexec-arm64.h
-@@ -17,6 +17,8 @@
- #define BOOT_BLOCK_LAST_COMP_VERSION 16
- #define COMMAND_LINE_SIZE 512
++		case OPT_PORT_LSR_VAL:
++			arm64_opts.port_lsr_val = strtoull(optarg, NULL, 0);
++			break;
+ 		case OPT_PAGE_OFFSET:
+ 			arm64_opts.page_offset = strtoull(optarg, NULL, 0);
+ 			break;
+@@ -594,6 +600,8 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 	unsigned long dtb_base;
+ 	char *initrd_buf = NULL;
+ 	uint64_t purgatory_sink;
++	uint64_t purgatory_sink_lsr;
++	uint32_t purgatory_sink_lsr_val;
+ 	unsigned long purgatory_base;
+ 	struct dtb dtb_1 = {.name = "dtb_1"};
+ 	struct dtb dtb_2 = {.name = "dtb_2"};
+@@ -615,6 +623,9 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
+ 		purgatory_sink);
  
-+#define ARM64_DEFAULT_PAGE_OFFSET 0xfffffe0000000000
++	purgatory_sink_lsr = arm64_opts.port_lsr;
++	purgatory_sink_lsr_val = arm64_opts.port_lsr_val;
 +
- int elf_arm64_probe(const char *kernel_buf, off_t kernel_size);
- int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	off_t kernel_size, struct kexec_info *info);
-diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-index b025dc6c0185..2ce68293a37b 100644
---- a/kexec/arch/arm64/kexec-image-arm64.c
-+++ b/kexec/arch/arm64/kexec-image-arm64.c
-@@ -8,7 +8,9 @@
- #include <errno.h>
- #include <getopt.h>
- #include <libfdt.h>
-+#include <stdlib.h>
+ 	if (arm64_opts.dtb) {
+ 		dtb_2.buf = slurp_file(arm64_opts.dtb, &dtb_2.size);
+ 		assert(dtb_2.buf);
+@@ -732,6 +743,12 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 		elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
+ 			sizeof(purgatory_sink));
  
-+#include "crashdump-arm64.h"
- #include "dt-ops.h"
- #include "image-header.h"
- #include "kexec-arm64.h"
-@@ -31,15 +33,59 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
- 	dbgprintf("%s: PE format: %s\n", __func__,
- 		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
++		elf_rel_set_symbol(&info->rhdr, "arm64_sink_lsr",
++			&purgatory_sink_lsr, sizeof(purgatory_sink_lsr));
++
++		elf_rel_set_symbol(&info->rhdr, "arm64_sink_lsr_val",
++			&purgatory_sink_lsr_val, sizeof(purgatory_sink_lsr_val));
++
+ 		elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry",
+ 			&kernel_entry, sizeof(kernel_entry));
  
--	fprintf(stderr, "kexec: arm64 binary Image files are currently NOT SUPPORTED.\n");
--
--	return -1;
-+	return 0;
- }
+diff --git a/purgatory/arch/arm64/entry.S b/purgatory/arch/arm64/entry.S
+index 140e91d87ab1..fdb2fca774e7 100644
+--- a/purgatory/arch/arm64/entry.S
++++ b/purgatory/arch/arm64/entry.S
+@@ -43,6 +43,11 @@ arm64_sink:
+ 	.quad	0
+ size arm64_sink
  
- int image_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	off_t kernel_size, struct kexec_info *info)
- {
--	return -ENOSYS;
-+	int result;
-+	uint64_t start;
-+	const struct arm64_image_header *h;
-+	char *header_option = NULL;
++.globl arm64_sink_lsr
++arm64_sink_lsr:
++	.quad	0
++size arm64_sink_lsr
 +
-+	h = (const struct arm64_image_header *)(kernel_buf);
+ .globl arm64_kernel_entry
+ arm64_kernel_entry:
+ 	.quad	0
+@@ -52,3 +57,8 @@ size arm64_kernel_entry
+ arm64_dtb_addr:
+ 	.quad	0
+ size arm64_dtb_addr
 +
-+	arm64_mem.text_offset = le64_to_cpu(h->text_offset);
-+	arm64_mem.image_size = le64_to_cpu(h->image_size);
++.globl arm64_sink_lsr_val
++arm64_sink_lsr_val:
++	.word	0
++size arm64_sink_lsr_val
+diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
+index 25960c30bd05..1b88bb799f54 100644
+--- a/purgatory/arch/arm64/purgatory-arm64.c
++++ b/purgatory/arch/arm64/purgatory-arm64.c
+@@ -8,18 +8,38 @@
+ /* Symbols set by kexec. */
+ 
+ extern uint32_t *arm64_sink;
++extern uint32_t *arm64_sink_lsr;
++extern uint32_t arm64_sink_lsr_val;
+ extern void (*arm64_kernel_entry)(uint64_t);
+ extern uint64_t arm64_dtb_addr;
+ 
++static void wait_for_xmit_complete(void)
++{
++	volatile uint32_t status;
++	volatile uint32_t *status_reg = (volatile uint32_t *)arm64_sink_lsr;
 +
-+	if(!arm64_opts.page_offset)
-+		arm64_mem.page_offset = ARM64_DEFAULT_PAGE_OFFSET;
-+	else
-+		arm64_mem.page_offset = arm64_opts.page_offset;
++	if (!arm64_sink_lsr)
++		return;
 +
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		result = load_crashdump_segments(info, &header_option);
-+
-+		if (result) {
-+			fprintf(stderr, "kexec: load crashdump segments failed.\n");
-+			return -1;
-+		}
-+		start = crash_reserved_mem.start;
-+	} else {
-+		result = parse_iomem_single("Kernel code\n", &start, NULL);
-+
-+		if (result) {
-+			fprintf(stderr, "kexec: Could not get kernel code address.\n");
-+			return -1;
-+		}
-+		start -= arm64_mem.text_offset;
++	while (1) {
++		status = *status_reg;
++		if ((status & arm64_sink_lsr_val) == arm64_sink_lsr_val)
++			break;
 +	}
++}
 +
-+	/* Add kernel */
-+	add_segment_phys_virt(info, kernel_buf, kernel_size,
-+			start + arm64_mem.text_offset,
-+			kernel_size, 0);
-+
-+	info->entry = (void *)start + arm64_mem.text_offset;
-+
-+	result = arm64_load_other_segments(info, (unsigned long)info->entry,
-+		header_option);
-+
-+	if (header_option)
-+		free(header_option);
-+
-+	return result;
+ void putchar(int ch)
+ {
+ 	if (!arm64_sink)
+ 		return;
+ 
++	wait_for_xmit_complete();
+ 	*arm64_sink = ch;
+ 
+-	if (ch == '\n')
++	if (ch == '\n') {
++		wait_for_xmit_complete();
+ 		*arm64_sink = '\r';
++	}
  }
  
- void image_arm64_usage(void)
+ void setup_arch(void)
 -- 
 2.1.0
 
