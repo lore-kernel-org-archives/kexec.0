@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yimxd-00084R-GO
- for kexec@lists.infradead.org; Thu, 16 Apr 2015 16:48:17 +0000
+ id 1Yimxi-000867-GG
+ for kexec@lists.infradead.org; Thu, 16 Apr 2015 16:48:23 +0000
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH RFC 2/6] purgatory: No need to sha256 update if ptr->len is
- zero
-Date: Thu, 16 Apr 2015 22:17:18 +0530
-Message-Id: <a66d1e193a9bd27e940edfbb56ca521556e95b39.1429201849.git.panand@redhat.com>
+Subject: [PATCH RFC 3/6] arm64: allocate memory for other segments after kernel
+Date: Thu, 16 Apr 2015 22:17:19 +0530
+Message-Id: <1d852e11a3f121d5a3cfd86c05102e940e33944c.1429201849.git.panand@redhat.com>
 In-Reply-To: <cover.1429201849.git.panand@redhat.com>
 References: <cover.1429201849.git.panand@redhat.com>
 In-Reply-To: <cover.1429201849.git.panand@redhat.com>
@@ -28,26 +27,26 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.fedoraproject.org, kexec@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-If ptr->len is zero we do not need to update sha256.
+In case of KEXEC_ON_CRASH, load other segments after the addresses where
+kernel segments finish.
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- purgatory/purgatory.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kexec/arch/arm64/crashdump-arm64.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
-index 3bbcc0935ad5..f8ed69b8fbfb 100644
---- a/purgatory/purgatory.c
-+++ b/purgatory/purgatory.c
-@@ -18,6 +18,8 @@ int verify_sha256_digest(void)
- 	sha256_starts(&ctx);
- 	end = &sha256_regions[sizeof(sha256_regions)/sizeof(sha256_regions[0])];
- 	for(ptr = sha256_regions; ptr < end; ptr++) {
-+		if (ptr->len == 0)
-+			continue;
- 		sha256_update(&ctx, (uint8_t *)((uintptr_t)ptr->start),
- 			      ptr->len);
- 	}
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 41266f294589..75f4e4d269ca 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -312,5 +312,6 @@ void set_crash_entry(struct mem_ehdr *ehdr, struct kexec_info *info)
+ off_t locate_dtb_in_crashmem(struct kexec_info *info, off_t dtb_size)
+ {
+ 	return locate_hole(info, dtb_size, 128UL * 1024,
+-		crash_reserved_mem.start, crash_reserved_mem.end, 1);
++		crash_reserved_mem.start + arm64_mem.text_offset +
++		arm64_mem.image_size, crash_reserved_mem.end, 1);
+ }
 -- 
 2.1.0
 
