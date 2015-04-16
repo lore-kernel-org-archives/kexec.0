@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
+Received: from smtp.gentoo.org ([140.211.166.183])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YieG6-0003NX-Ku
- for kexec@lists.infradead.org; Thu, 16 Apr 2015 07:30:47 +0000
-Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
- Thu, 16 Apr 2015 08:30:18 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id B94DA17D8062
- for <kexec@lists.infradead.org>; Thu, 16 Apr 2015 08:30:53 +0100 (BST)
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
- [9.149.37.250])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t3G7UHhG328132
- for <kexec@lists.infradead.org>; Thu, 16 Apr 2015 07:30:17 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t3G7UGra026845
- for <kexec@lists.infradead.org>; Thu, 16 Apr 2015 01:30:16 -0600
-Message-ID: <552F6507.1010500@linux.vnet.ibm.com>
-Date: Thu, 16 Apr 2015 09:30:15 +0200
-From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] purgatory: force PIC/PIE/SSP off
-References: <1429161304-2772-1-git-send-email-vapier@gentoo.org>
-In-Reply-To: <1429161304-2772-1-git-send-email-vapier@gentoo.org>
+ id 1YieP7-00064L-IN
+ for kexec@lists.infradead.org; Thu, 16 Apr 2015 07:40:06 +0000
+Received: from localhost.localdomain (localhost [127.0.0.1])
+ by smtp.gentoo.org (Postfix) with ESMTP id C3C0E34091A
+ for <kexec@lists.infradead.org>; Thu, 16 Apr 2015 07:39:43 +0000 (UTC)
+From: Mike Frysinger <vapier@gentoo.org>
+Subject: [PATCH v2] purgatory: force PIC/PIE/SSP off
+Date: Thu, 16 Apr 2015 03:39:26 -0400
+Message-Id: <1429169966-1340-1-git-send-email-vapier@gentoo.org>
+In-Reply-To: <552F6507.1010500@linux.vnet.ibm.com>
+References: <552F6507.1010500@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,50 +20,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Frysinger <vapier@gentoo.org>, kexec@lists.infradead.org
-Cc: Mike Frysinger <vapier@chromium.org>
+To: kexec@lists.infradead.org
 
-On 16/04/2015 07:15, Mike Frysinger wrote:
-> From: Mike Frysinger <vapier@chromium.org>
-> 
-> If the toolchain has these things turned on automatically, then the
-> purgatory code might be miscompiled leading to runtime errors like:
-> Unhandled rela relocation: R_X86_64_GOTPC64
-> 
-> It might look like the problem is with the kernel when in reality,
-> kexec is complaining about the purgatory module.  Force off harden
-> features that don't make sense in kernel space.
-> 
-> Signed-off-by: Mike Frysinger <vapier@chromium.org>
-> ---
->  purgatory/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/purgatory/Makefile b/purgatory/Makefile
-> index 2d6b2c0..2b5c061 100644
-> --- a/purgatory/Makefile
-> +++ b/purgatory/Makefile
-> @@ -49,7 +49,8 @@ $(PURGATORY): CC=$(TARGET_CC)
->  $(PURGATORY): CFLAGS+=$(PURGATORY_EXTRA_CFLAGS) \
->  		      $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
->  		      -Os -fno-builtin -ffreestanding \
-> -		      -fno-zero-initialized-in-bss
-> +		      -fno-zero-initialized-in-bss \
-> +		      -fno-PIC -fno-PIE -fno-stack-protector
+From: Mike Frysinger <vapier@chromium.org>
 
-Some architectures (ppc64 and s390) are already setting
--fno-stack-protector in purgatory/arch/x/Makefile through
-x_PURGATORY_EXTRA_CFLAGS.
+If the toolchain has these things turned on automatically, then the
+purgatory code might be miscompiled leading to runtime errors like:
+Unhandled rela relocation: R_X86_64_GOTPC64
 
-It would be cleaner to remove those per architecture settings if you set
-it globally.
+It might look like the problem is with the kernel when in reality,
+kexec is complaining about the purgatory module.  Force off harden
+features that don't make sense in kernel space.
 
-Cheers,
-Laurent.
+Signed-off-by: Mike Frysinger <vapier@chromium.org>
+---
+Note: I suspect this patch fixes a semi-recent report:
+http://lists.infradead.org/pipermail/kexec/2015-February/013305.html
+
+v2:
+	- clean up ssp flags in arch subdirs
+
+ purgatory/Makefile            | 3 ++-
+ purgatory/arch/ppc64/Makefile | 2 +-
+ purgatory/arch/s390/Makefile  | 1 -
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index 2d6b2c0..2b5c061 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -49,7 +49,8 @@ $(PURGATORY): CC=$(TARGET_CC)
+ $(PURGATORY): CFLAGS+=$(PURGATORY_EXTRA_CFLAGS) \
+ 		      $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 		      -Os -fno-builtin -ffreestanding \
+-		      -fno-zero-initialized-in-bss
++		      -fno-zero-initialized-in-bss \
++		      -fno-PIC -fno-PIE -fno-stack-protector
+ 
+ $(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 			-I$(srcdir)/purgatory/include \
+diff --git a/purgatory/arch/ppc64/Makefile b/purgatory/arch/ppc64/Makefile
+index 6c58fa2..8ca2719 100644
+--- a/purgatory/arch/ppc64/Makefile
++++ b/purgatory/arch/ppc64/Makefile
+@@ -9,7 +9,7 @@ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/console-ppc64.c
+ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/crashdump_backup.c
+ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/misc.S
+ 
+-ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float -fno-stack-protector	\
++ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float \
+ 				-fno-exceptions
+ ppc64_PURGATORY_EXTRA_ASFLAGS += -m64
+ ifeq ($(SUBARCH),BE)
+diff --git a/purgatory/arch/s390/Makefile b/purgatory/arch/s390/Makefile
+index 09749bd..c94cc3c 100644
+--- a/purgatory/arch/s390/Makefile
++++ b/purgatory/arch/s390/Makefile
+@@ -2,7 +2,6 @@
+ # Purgatory s390
+ #
+ 
+-s390_PURGATORY_EXTRA_CFLAGS += -fno-stack-protector
+ s390_PURGATORY_SRCS += purgatory/arch/s390/console-s390.c
+ s390_PURGATORY_SRCS += purgatory/arch/s390/setup-s390.S
+ s390_PURGATORY_SRCS += purgatory/arch/s390/purgatory-s390.c
+-- 
+2.3.5
 
 
 _______________________________________________
