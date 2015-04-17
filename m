@@ -1,11 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1429290437.5479.13.camel@infradead.org>
-Subject: Re: [PATCH RFC 5/6] arm64: Add support for binary image
+Message-ID: <1429291343.5479.22.camel@infradead.org>
+Subject: Re: [PATCH RFC 6/6] arm64: wait for transmit completion before next
+ character transmission
 From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 17 Apr 2015 10:07:17 -0700
-In-Reply-To: <0a15f2079e6c378996dceda1d509df77d2f43899.1429201849.git.panand@redhat.com>
+Date: Fri, 17 Apr 2015 10:22:23 -0700
+In-Reply-To: <6c8a63f701e98cb7cf4ddd96ab5b509115ebdc41.1429201849.git.panand@redhat.com>
 References: <cover.1429201849.git.panand@redhat.com>
- <0a15f2079e6c378996dceda1d509df77d2f43899.1429201849.git.panand@redhat.com>
+ <6c8a63f701e98cb7cf4ddd96ab5b509115ebdc41.1429201849.git.panand@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,29 +24,30 @@ To: Pratyush Anand <panand@redhat.com>
 Cc: kexec@lists.infradead.org, kexec@lists.fedoraproject.org
 
 On Thu, 2015-04-16 at 22:17 +0530, Pratyush Anand wrote:
-> This patch adds support to use binary image ie arch/arm64/boot/Image.
+> Previous transmission must be completed before next character to be
+> transmitted, otherwise TX buffer may saturate and we will not see all
+> the characters on screen.
 > 
-> Binary image does not have sufficient knowledge to extract page offset
-> information, which is needed by kexec tool. Use a new command parameter
-> --page-offset, so that user can provide page offset information for
-> liner mapping.
+> @@ -34,6 +38,8 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
+>  "     --lite                Fast reboot, no memory integrity checks.\n"
+>  "     --page-offset         Kernel page-offset for binary image load.\n"
+>  "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
+> +"     --port-lsr=ADDRESS    Purgatory output port line status ADDRESS.\n"
+> +"     --port-lsr-val=VALUE  Purgatory output port Line status expected SET value when TX empty.\n"
+>  "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
+>  "     --reuse-cmdline       Use command line arg of primary kernel.\n";
 
-This looks OK.  I'll add it to my arm64 series.
+We just need to put some chars to the screen, so I want to avoid a lot
+of parameters.
 
-> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-> index 61e15032cbd6..7e4d0568bd01 100644
-> --- a/kexec/arch/arm64/kexec-arm64.h
-> +++ b/kexec/arch/arm64/kexec-arm64.h
-> @@ -17,6 +17,8 @@
->  #define BOOT_BLOCK_LAST_COMP_VERSION 16
->  #define COMMAND_LINE_SIZE 512
->  
-> +#define ARM64_DEFAULT_PAGE_OFFSET 0xfffffe0000000000
-> +
+Usually the status register is at a fixed offset from the TX port.  Is
+that not the case for the ARM uarts?
 
-Since this is only used in kexec-image-arm64.c, I'll move it there.
+Can't we just poll port-lsr until empty then start writing again?  That
+will at least eliminate port-lsr-val.
 
 -Geoff
+
 
 
 _______________________________________________
