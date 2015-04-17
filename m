@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yitc5-0007wZ-Qd
- for kexec@lists.infradead.org; Thu, 16 Apr 2015 23:54:30 +0000
-Date: Fri, 17 Apr 2015 08:54:05 +0900
-From: Simon Horman <horms@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Yiv4l-0007Mx-Dl
+ for kexec@lists.infradead.org; Fri, 17 Apr 2015 01:28:12 +0000
+Date: Fri, 17 Apr 2015 09:27:43 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH RFC 0/6] Various fixes for purgatory and ARM64
-Message-ID: <20150416235405.GA6880@verge.net.au>
+Message-ID: <20150417012743.GB4062@dhcp-128-82.nay.redhat.com>
 References: <cover.1429201849.git.panand@redhat.com>
- <cover.1429201849.git.panand@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <cover.1429201849.git.panand@redhat.com>
@@ -27,9 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pratyush Anand <panand@redhat.com>
 Cc: kexec@lists.infradead.org, kexec@lists.fedoraproject.org
 
-Hi,
-
-On Thu, Apr 16, 2015 at 10:17:23PM +0530, Pratyush Anand wrote:
+On 04/16/15 at 10:17pm, Pratyush Anand wrote:
 > These patches can be applied on top of Geoff's Kexec [1] and Takahiro's
 > Kdump [2] patches and are available in my tree [3].
 > 
@@ -56,10 +53,7 @@ On Thu, Apr 16, 2015 at 10:17:23PM +0530, Pratyush Anand wrote:
 > kdump/v0.10
 > [3] https://github.com/pratyushanand/kexec-tools.git : master
 > (6c8a63f701e9)
-
-I'm more than happy to consider accepting patches into my
-kexec tree if they are in a suitable state.
-
+> 
 > Pratyush Anand (6):
 >   purgatory: Fix memcmp for src address increment
 >   purgatory: No need to sha256 update if ptr->len is zero
@@ -83,12 +77,22 @@ kexec tree if they are in a suitable state.
 > -- 
 > 2.1.0
 > 
-> 
 > _______________________________________________
 > kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> kexec@lists.fedoraproject.org
+> https://lists.fedoraproject.org/mailman/listinfo/kexec
 > 
+> 
+
+Hi, Pratyush
+
+For these kexec-tools patches, it is not necessary to cc Fedora kexec list.
+The Fedora kexec list is only for Fedora part, mostly kdump initrd related
+code. Also it is subscriber only list so it will be unconvinient for other
+people to review upstream patches.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
