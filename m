@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yk1vJ-00033i-11
- for kexec@lists.infradead.org; Mon, 20 Apr 2015 02:59:01 +0000
-Date: Mon, 20 Apr 2015 10:58:28 +0800
+ id 1Yk1xm-0004N9-QG
+ for kexec@lists.infradead.org; Mon, 20 Apr 2015 03:01:35 +0000
+Date: Mon, 20 Apr 2015 11:01:08 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH RFC 6/6] arm64: wait for transmit completion before next
- character transmission
-Message-ID: <20150420025828.GD15033@dhcp-16-116.nay.redhat.com>
+Subject: Re: [PATCH RFC 2/6] purgatory: No need to sha256 update if ptr->len
+ is zero
+Message-ID: <20150420030108.GE15033@dhcp-16-116.nay.redhat.com>
 References: <cover.1429201849.git.panand@redhat.com>
- <6c8a63f701e98cb7cf4ddd96ab5b509115ebdc41.1429201849.git.panand@redhat.com>
- <20150417053621.GA8658@dhcp-128-1.nay.redhat.com>
- <55309C29.5050702@redhat.com>
+ <a66d1e193a9bd27e940edfbb56ca521556e95b39.1429201849.git.panand@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <55309C29.5050702@redhat.com>
+In-Reply-To: <a66d1e193a9bd27e940edfbb56ca521556e95b39.1429201849.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,33 +26,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pratyush Anand <panand@redhat.com>
-Cc: Minfei Huang <mhuang@redhat.com>, kexec@lists.infradead.org, kexec@lists.fedoraproject.org
+Cc: kexec@lists.infradead.org, kexec@lists.fedoraproject.org
 
-On 04/17/15 at 11:07am, Pratyush Anand wrote:
+On 04/16/15 at 10:17pm, Pratyush Anand wrote:
+> If ptr->len is zero we do not need to update sha256.
 > 
+> Signed-off-by: Pratyush Anand <panand@redhat.com>
+> ---
+>  purgatory/purgatory.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> On Friday 17 April 2015 11:06 AM, Minfei Huang wrote:
-> >>  	.quad	0
-> >>>  size arm64_dtb_addr
-> >>>+
-> >>>+.globl arm64_sink_lsr_val
-> >>>+arm64_sink_lsr_val:
-> >>>+	.word	0
-> >Since arm64_sink_lsr_val is declared as uint32_t, it is better to keep
-> >the same format here.
+> diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
+> index 3bbcc0935ad5..f8ed69b8fbfb 100644
+> --- a/purgatory/purgatory.c
+> +++ b/purgatory/purgatory.c
+> @@ -18,6 +18,8 @@ int verify_sha256_digest(void)
+>  	sha256_starts(&ctx);
+>  	end = &sha256_regions[sizeof(sha256_regions)/sizeof(sha256_regions[0])];
+>  	for(ptr = sha256_regions; ptr < end; ptr++) {
+> +		if (ptr->len == 0)
+> +			continue;
 
-".word" only stores 16bit, doesn't it? Should it be ".int" or ".long"?
-You can check gnu as manual for reference.
+Hi Pratyush,
+
+I don't think this is necessary, but don't object to it strongly.
+Since sha256_update will check the length and return immediately if it's
+0.
+
+void sha256_update( sha256_context *ctx, const uint8_t *input, size_t
+length )
+{                             
+        size_t left, fill;
+ 
+        if( ! length ) return;
+
+...
+}
 
 Thanks
 Baoquan
 
-> >
+>  		sha256_update(&ctx, (uint8_t *)((uintptr_t)ptr->start),
+>  			      ptr->len);
+>  	}
+> -- 
+> 2.1.0
 > 
-> I thought .word will do the same. But may be I am wrong. What is the
-> good syntax for uint32_t.
-> 
-> ~Pratyush
 > 
 > _______________________________________________
 > kexec mailing list
