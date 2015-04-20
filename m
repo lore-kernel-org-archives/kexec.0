@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YjFjU-0000p6-Hm
- for kexec@lists.infradead.org; Fri, 17 Apr 2015 23:31:37 +0000
-Message-ID: <553197BE.7060705@redhat.com>
-Date: Sat, 18 Apr 2015 05:01:10 +0530
-From: Pratyush Anand <panand@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH RFC 6/6] arm64: wait for transmit completion before next
- character transmission
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YjzX9-0004BZ-Jv
+ for kexec@lists.infradead.org; Mon, 20 Apr 2015 00:25:56 +0000
+Date: Mon, 20 Apr 2015 09:25:27 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH RFC 1/6] purgatory: Fix memcmp for src address increment
+Message-ID: <20150420002527.GA17827@verge.net.au>
 References: <cover.1429201849.git.panand@redhat.com>
- <6c8a63f701e98cb7cf4ddd96ab5b509115ebdc41.1429201849.git.panand@redhat.com>
- <1429291343.5479.22.camel@infradead.org>
-In-Reply-To: <1429291343.5479.22.camel@infradead.org>
+ <6ac5de6bcd76b7a0790c3a403fa0c629c4a4eff8.1429201849.git.panand@redhat.com>
+ <1429289744.5479.6.camel@infradead.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1429289744.5479.6.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,50 +21,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org, kexec@lists.fedoraproject.org
+Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org
 
-
-
-On Friday 17 April 2015 10:52 PM, Geoff Levand wrote:
+On Fri, Apr 17, 2015 at 09:55:44AM -0700, Geoff Levand wrote:
 > On Thu, 2015-04-16 at 22:17 +0530, Pratyush Anand wrote:
->> Previous transmission must be completed before next character to be
->> transmitted, otherwise TX buffer may saturate and we will not see all
->> the characters on screen.
->>
->> @@ -34,6 +38,8 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
->>   "     --lite                Fast reboot, no memory integrity checks.\n"
->>   "     --page-offset         Kernel page-offset for binary image load.\n"
->>   "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
->> +"     --port-lsr=ADDRESS    Purgatory output port line status ADDRESS.\n"
->> +"     --port-lsr-val=VALUE  Purgatory output port Line status expected SET value when TX empty.\n"
->>   "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
->>   "     --reuse-cmdline       Use command line arg of primary kernel.\n";
->
-> We just need to put some chars to the screen, so I want to avoid a lot
-> of parameters.
->
+> > src addresses are not being incremented, so only first byte is compared
+> > instead of first len bytes.
+> 
+> So I guess this means we never really had proper error
+> checking in purgatory...  Better merge this one.
+> 
+> Acked-by: Geoff Levand <geoff@infradead.org>
 
-I was not able to get even two lines print without it :(
+Hi Pratyush,
 
-> Usually the status register is at a fixed offset from the TX port.  Is
-> that not the case for the ARM uarts?
->
-> Can't we just poll port-lsr until empty then start writing again?  That
-> will at least eliminate port-lsr-val.
->
+If you'd like me to take this plase repost it with Geoff's Ack
+and without "RFC".
 
-infact my first version was using a direct offset with port. Both are 
-fixed in most of the cases as offset 0x14 and value 0x60.
-
-OK, I will remove the param for now. if someone finds any different 
-values then later on we can add it.
-
-~Pratyush
+Thanks
 
 _______________________________________________
 kexec mailing list
