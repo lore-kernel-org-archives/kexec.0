@@ -1,18 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f178.google.com ([209.85.212.178])
+Received: from e19.ny.us.ibm.com ([129.33.205.209])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZNinW-0004Vt-50
- for kexec@lists.infradead.org; Fri, 07 Aug 2015 14:39:02 +0000
-Received: by wibxm9 with SMTP id xm9so64169015wib.0
- for <kexec@lists.infradead.org>; Fri, 07 Aug 2015 07:38:40 -0700 (PDT)
-Date: Fri, 7 Aug 2015 16:38:37 +0200
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: [V3 PATCH 0/4] Fix race issues among panic, NMI and crash_kexec
-Message-ID: <20150807143836.GI30785@dhcp22.suse.cz>
-References: <20150806054543.25766.29590.stgit@softrs>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150806054543.25766.29590.stgit@softrs>
+ id 1ZOVZN-0001H6-V3
+ for kexec@lists.infradead.org; Sun, 09 Aug 2015 18:43:42 +0000
+Received: from /spool/local
+ by e19.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <schwidefsky@de.ibm.com>;
+ Sun, 9 Aug 2015 14:43:18 -0400
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com
+ [9.57.198.25])
+ by d01dlp02.pok.ibm.com (Postfix) with ESMTP id C14426E8041
+ for <kexec@lists.infradead.org>; Sun,  9 Aug 2015 14:35:00 -0400 (EDT)
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+ by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t79IhFKn57147576
+ for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 18:43:15 GMT
+Received: from d01av02.pok.ibm.com (localhost [127.0.0.1])
+ by d01av02.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t79IhFoC009299
+ for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 14:43:15 -0400
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: [PATCH] kexec: allocate the kexec control page with
+ KEXEC_CONTROL_MEMORY_GFP
+Date: Tue, 21 Apr 2015 14:06:32 +0200
+Message-Id: <1429617992-31686-2-git-send-email-schwidefsky@de.ibm.com>
+In-Reply-To: <1429617992-31686-1-git-send-email-schwidefsky@de.ibm.com>
+References: <1429617992-31686-1-git-send-email-schwidefsky@de.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,76 +35,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arch@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-JFYI I have those patches tested on the largish box. Will come back to
-you as soon as I have some feedback.
+Introduce KEXEC_CONTROL_MEMORY_GFP to allow the architecture code
+to override the gfp flags of the allocation for the kexec control
+page. The loop in kimage_alloc_normal_control_pages allocates pages
+with GFP_KERNEL until a page is found that happens to have an
+address smaller than the KEXEC_CONTROL_MEMORY_LIMIT. On systems
+with a large memory size but a small KEXEC_CONTROL_MEMORY_LIMIT
+the loop will keep allocating memory until the oom killer steps in.
 
-I will also try to review these patches sometimes next week.
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+---
+ arch/s390/include/asm/kexec.h | 3 +++
+ include/linux/kexec.h         | 4 ++++
+ kernel/kexec.c                | 2 +-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-Thanks!
-
-On Thu 06-08-15 14:45:43, Hidehiro Kawai wrote:
-> When an HA cluster software or administrator detects non-response
-> of a host, they issue an NMI to the host to completely stop current
-> works and take a crash dump.  If the kernel has already panicked
-> or is capturing a crash dump at that time, further NMI can cause
-> a crash dump failure.
-> 
-> Also, crash_kexec() called from oops context and panic() can
-> cause race conditions.
-> 
-> To solve these issue, this patch set does following things:
-> 
-> - Don't panic on NMI if the kernel has already panicked
-> - Extend exclusion control currently done by panic_lock to crash_kexec
-> - Introduce "noextnmi" boot option which masks external NMI at the
->   boot time (supported only for x86)
-> 
-> V3:
-> - Introduce nmi_panic() macro to reduce code duplication
-> - In the case of panic on NMI, don't return from NMI handlers
->   if another cpu already panicked
-> 
-> V2:
-> - Use atomic_cmpxchg() instead of current spin_trylock() to exclude
->   concurrent accesses to panic() and crash_kexec()
-> - Don't introduce no-lock version of panic() and crash_kexec()
-> 
-> ---
-> 
-> Hidehiro Kawai (4):
->       panic/x86: Fix re-entrance problem due to panic on NMI
->       panic/x86: Allow cpus to save registers even if they are looping in NMI context
->       kexec: Fix race between panic() and crash_kexec() called directly
->       x86/apic: Introduce noextnmi boot option
-> 
-> 
->  Documentation/kernel-parameters.txt |    4 ++++
->  arch/x86/kernel/apic/apic.c         |   17 ++++++++++++++++-
->  arch/x86/kernel/nmi.c               |   15 +++++++++++----
->  arch/x86/kernel/reboot.c            |   11 +++++++++++
->  include/linux/kernel.h              |   21 +++++++++++++++++++++
->  kernel/kexec.c                      |   20 ++++++++++++++++++++
->  kernel/panic.c                      |   23 ++++++++++++++++++++---
->  kernel/watchdog.c                   |    5 +++--
->  8 files changed, 106 insertions(+), 10 deletions(-)
-> 
-> 
-> -- 
-> Hidehiro Kawai
-> Hitachi, Ltd. Research & Development Group
-> 
-> 
-
+diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+index 694bcd6..2f924bc 100644
+--- a/arch/s390/include/asm/kexec.h
++++ b/arch/s390/include/asm/kexec.h
+@@ -26,6 +26,9 @@
+ /* Not more than 2GB */
+ #define KEXEC_CONTROL_MEMORY_LIMIT (1UL<<31)
+ 
++/* Allocate control page with GFP_DMA */
++#define KEXEC_CONTROL_MEMORY_GFP GFP_DMA
++
+ /* Maximum address we can use for the crash control pages */
+ #define KEXEC_CRASH_CONTROL_MEMORY_LIMIT (-1UL)
+ 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index e60a745..e804306 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -40,6 +40,10 @@
+ #error KEXEC_CONTROL_MEMORY_LIMIT not defined
+ #endif
+ 
++#ifndef KEXEC_CONTROL_MEMORY_GFP
++#define KEXEC_CONTROL_MEMORY_GFP GFP_KERNEL
++#endif
++
+ #ifndef KEXEC_CONTROL_PAGE_SIZE
+ #error KEXEC_CONTROL_PAGE_SIZE not defined
+ #endif
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 38c25b1..7a36fdc 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -707,7 +707,7 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
+ 	do {
+ 		unsigned long pfn, epfn, addr, eaddr;
+ 
+-		pages = kimage_alloc_pages(GFP_KERNEL, order);
++		pages = kimage_alloc_pages(KEXEC_CONTROL_MEMORY_GFP, order);
+ 		if (!pages)
+ 			break;
+ 		pfn   = page_to_pfn(pages);
 -- 
-Michal Hocko
-SUSE Labs
+1.9.1
+
 
 _______________________________________________
 kexec mailing list
