@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from g2t2354.austin.hp.com ([15.217.128.53])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yk64D-00051J-Pa
- for kexec@lists.infradead.org; Mon, 20 Apr 2015 07:24:30 +0000
-Date: Mon, 20 Apr 2015 15:24:02 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH RFC 5/6] arm64: Add support for binary image
-Message-ID: <20150420072402.GG15033@dhcp-16-116.nay.redhat.com>
-References: <cover.1429201849.git.panand@redhat.com>
- <0a15f2079e6c378996dceda1d509df77d2f43899.1429201849.git.panand@redhat.com>
+ id 1YkNBH-0003Tl-Qs
+ for kexec@lists.infradead.org; Tue, 21 Apr 2015 01:40:56 +0000
+Message-ID: <5535AA57.6010404@hp.com>
+Date: Tue, 21 Apr 2015 09:39:35 +0800
+From: "Li, ZhenHua" <zhen-hual@hp.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0a15f2079e6c378996dceda1d509df77d2f43899.1429201849.git.panand@redhat.com>
+Subject: Re: [PATCH v10 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+References: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
+ <20150415005731.GC19051@localhost.localdomain> <552DFB56.1070600@hp.com>
+ <20150415064803.GF19051@localhost.localdomain>
+In-Reply-To: <20150415064803.GF19051@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,202 +20,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: kexec@lists.infradead.org, kexec@lists.fedoraproject.org
+To: Dave Young <dyoung@redhat.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-On 04/16/15 at 10:17pm, Pratyush Anand wrote:
-> This patch adds support to use binary image ie arch/arm64/boot/Image.
-> 
-> Binary image does not have sufficient knowledge to extract page offset
-> information, which is needed by kexec tool. Use a new command parameter
-> --page-offset, so that user can provide page offset information for
-> liner mapping.
-> 
-> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> ---
+Hi Dave,
+I found the old mail:
+http://lkml.iu.edu/hypermail/linux/kernel/1410.2/03584.html
 
-Seems there's a function get_kernel_page_offset used to get page_offset
-automatically in arm. arm64 should have it either.
+Please check this and you will find the discussion.
 
+Regards
+Zhenhua
 
->  kexec/arch/arm64/crashdump-arm64.h      |  1 +
->  kexec/arch/arm64/include/arch/options.h | 10 ++++--
->  kexec/arch/arm64/kexec-arm64.c          |  3 ++
->  kexec/arch/arm64/kexec-arm64.h          |  2 ++
->  kexec/arch/arm64/kexec-image-arm64.c    | 54 ++++++++++++++++++++++++++++++---
->  5 files changed, 63 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
-> index d4fd3f2288c9..d53fa34de37a 100644
-> --- a/kexec/arch/arm64/crashdump-arm64.h
-> +++ b/kexec/arch/arm64/crashdump-arm64.h
-> @@ -17,6 +17,7 @@
->  #define CRASH_MAX_MEMORY_RANGES	32
->  
->  extern struct memory_ranges usablemem_rgns;
-> +extern struct memory_range crash_reserved_mem;
->  
->  int load_crashdump_segments(struct kexec_info *info, char **option);
->  void modify_ehdr_for_crashmem(struct mem_ehdr *ehdr);
-> diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-> index afe3e9827ff3..af14102220ea 100644
-> --- a/kexec/arch/arm64/include/arch/options.h
-> +++ b/kexec/arch/arm64/include/arch/options.h
-> @@ -5,9 +5,10 @@
->  #define OPT_DTB		((OPT_MAX)+1)
->  #define OPT_INITRD	((OPT_MAX)+2)
->  #define OPT_LITE	((OPT_MAX)+3)
-> -#define OPT_PORT	((OPT_MAX)+4)
-> -#define OPT_REUSE_CMDLINE	((OPT_MAX+5))
-> -#define OPT_ARCH_MAX	((OPT_MAX)+6)
-> +#define OPT_PAGE_OFFSET	((OPT_MAX)+4)
-> +#define OPT_PORT	((OPT_MAX)+5)
-> +#define OPT_REUSE_CMDLINE	((OPT_MAX+6))
-> +#define OPT_ARCH_MAX	((OPT_MAX)+7)
->  
->  #define KEXEC_ARCH_OPTIONS \
->  	KEXEC_OPTIONS \
-> @@ -16,6 +17,7 @@
->  	{ "dtb",          1, NULL, OPT_DTB }, \
->  	{ "initrd",       1, NULL, OPT_INITRD }, \
->  	{ "lite",         0, NULL, OPT_LITE }, \
-> +	{ "page-offset",  1, NULL, OPT_PAGE_OFFSET }, \
->  	{ "port",         1, NULL, OPT_PORT }, \
->  	{ "ramdisk",      1, NULL, OPT_INITRD }, \
->  	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
-> @@ -30,6 +32,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
->  "     --dtb=FILE            Use FILE as the device tree blob.\n"
->  "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
->  "     --lite                Fast reboot, no memory integrity checks.\n"
-> +"     --page-offset         Kernel page-offset for binary image load.\n"
->  "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
->  "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
->  "     --reuse-cmdline       Use command line arg of primary kernel.\n";
-> @@ -38,6 +41,7 @@ struct arm64_opts {
->  	const char *command_line;
->  	const char *dtb;
->  	const char *initrd;
-> +	uint64_t page_offset;
->  	uint64_t port;
->  	int lite;
->  };
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 34e4ebf1eb23..190037c75186 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -99,6 +99,9 @@ int arch_process_options(int argc, char **argv)
->  		case OPT_PORT:
->  			arm64_opts.port = strtoull(optarg, NULL, 0);
->  			break;
-> +		case OPT_PAGE_OFFSET:
-> +			arm64_opts.page_offset = strtoull(optarg, NULL, 0);
-> +			break;
->  		default:
->  			break; /* Ignore core and unknown options. */
->  		}
-> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-> index 61e15032cbd6..7e4d0568bd01 100644
-> --- a/kexec/arch/arm64/kexec-arm64.h
-> +++ b/kexec/arch/arm64/kexec-arm64.h
-> @@ -17,6 +17,8 @@
->  #define BOOT_BLOCK_LAST_COMP_VERSION 16
->  #define COMMAND_LINE_SIZE 512
->  
-> +#define ARM64_DEFAULT_PAGE_OFFSET 0xfffffe0000000000
-> +
->  int elf_arm64_probe(const char *kernel_buf, off_t kernel_size);
->  int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
->  	off_t kernel_size, struct kexec_info *info);
-> diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-> index b025dc6c0185..2ce68293a37b 100644
-> --- a/kexec/arch/arm64/kexec-image-arm64.c
-> +++ b/kexec/arch/arm64/kexec-image-arm64.c
-> @@ -8,7 +8,9 @@
->  #include <errno.h>
->  #include <getopt.h>
->  #include <libfdt.h>
-> +#include <stdlib.h>
->  
-> +#include "crashdump-arm64.h"
->  #include "dt-ops.h"
->  #include "image-header.h"
->  #include "kexec-arm64.h"
-> @@ -31,15 +33,59 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
->  	dbgprintf("%s: PE format: %s\n", __func__,
->  		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
->  
-> -	fprintf(stderr, "kexec: arm64 binary Image files are currently NOT SUPPORTED.\n");
-> -
-> -	return -1;
-> +	return 0;
->  }
->  
->  int image_arm64_load(int argc, char **argv, const char *kernel_buf,
->  	off_t kernel_size, struct kexec_info *info)
->  {
-> -	return -ENOSYS;
-> +	int result;
-> +	uint64_t start;
-> +	const struct arm64_image_header *h;
-> +	char *header_option = NULL;
-> +
-> +	h = (const struct arm64_image_header *)(kernel_buf);
-> +
-> +	arm64_mem.text_offset = le64_to_cpu(h->text_offset);
-> +	arm64_mem.image_size = le64_to_cpu(h->image_size);
-> +
-> +	if(!arm64_opts.page_offset)
-> +		arm64_mem.page_offset = ARM64_DEFAULT_PAGE_OFFSET;
-> +	else
-> +		arm64_mem.page_offset = arm64_opts.page_offset;
-> +
-> +	if (info->kexec_flags & KEXEC_ON_CRASH) {
-> +		result = load_crashdump_segments(info, &header_option);
-> +
-> +		if (result) {
-> +			fprintf(stderr, "kexec: load crashdump segments failed.\n");
-> +			return -1;
-> +		}
-> +		start = crash_reserved_mem.start;
-> +	} else {
-> +		result = parse_iomem_single("Kernel code\n", &start, NULL);
-> +
-> +		if (result) {
-> +			fprintf(stderr, "kexec: Could not get kernel code address.\n");
-> +			return -1;
-> +		}
-> +		start -= arm64_mem.text_offset;
-> +	}
-> +
-> +	/* Add kernel */
-> +	add_segment_phys_virt(info, kernel_buf, kernel_size,
-> +			start + arm64_mem.text_offset,
-> +			kernel_size, 0);
-> +
-> +	info->entry = (void *)start + arm64_mem.text_offset;
-> +
-> +	result = arm64_load_other_segments(info, (unsigned long)info->entry,
-> +		header_option);
-> +
-> +	if (header_option)
-> +		free(header_option);
-> +
-> +	return result;
->  }
->  
->  void image_arm64_usage(void)
-> -- 
-> 2.1.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+On 04/15/2015 02:48 PM, Dave Young wrote:
+> On 04/15/15 at 01:47pm, Li, ZhenHua wrote:
+>> On 04/15/2015 08:57 AM, Dave Young wrote:
+>>> Again, I think it is bad to use old page table, below issues need consider:
+>>> 1) make sure old page table are reliable across crash
+>>> 2) do not allow writing oldmem after crash
+>>>
+>>> Please correct me if I'm wrong, or if above is not doable I think I will vote for
+>>> resetting pci bus.
+>>>
+>>> Thanks
+>>> Dave
+>>>
+>> Hi Dave,
+>>
+>> When updating the context tables, we have to write their address to root
+>> tables, this will cause writing to old mem.
+>>
+>> Resetting the pci bus has been discussed, please check this:
+>> http://lists.infradead.org/pipermail/kexec/2014-October/012752.html
+>> https://lkml.org/lkml/2014/10/21/890
+>
+> I know one reason to use old pgtable is this looks better because it fixes the
+> real problem, but it is not a good way if it introduce more problems because of
+> it have to use oldmem. I will be glad if this is not a problem but I have not
+> been convinced.
+>
+> OTOH, there's many types of iommu, intel, amd, a lot of other types. They need
+> their own fixes, so it looks not that elegant.
+>
+> For pci reset, it is not perfect, but it has another advantage, the patch is
+> simpler. The problem I see from the old discusssion is, reset bus in 2nd kernel
+> is acceptable but it does not fix things on sparc platform. AFAIK current reported
+> problems are intel and amd iommu, at least pci reset stuff does not make it worse.
+>
+> Thanks
+> Dave
+>
+
 
 _______________________________________________
 kexec mailing list
