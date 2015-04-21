@@ -1,32 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e19.ny.us.ibm.com ([129.33.205.209])
+Received: from e17.ny.us.ibm.com ([129.33.205.207])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOVZN-0001H6-V3
- for kexec@lists.infradead.org; Sun, 09 Aug 2015 18:43:42 +0000
+ id 1ZOVkf-0004UN-Qw
+ for kexec@lists.infradead.org; Sun, 09 Aug 2015 18:55:23 +0000
 Received: from /spool/local
- by e19.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <schwidefsky@de.ibm.com>;
- Sun, 9 Aug 2015 14:43:18 -0400
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com
- [9.57.198.25])
- by d01dlp02.pok.ibm.com (Postfix) with ESMTP id C14426E8041
- for <kexec@lists.infradead.org>; Sun,  9 Aug 2015 14:35:00 -0400 (EDT)
+ Sun, 9 Aug 2015 14:54:59 -0400
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com
+ [9.57.198.26])
+ by d01dlp01.pok.ibm.com (Postfix) with ESMTP id BFA1138C8039
+ for <kexec@lists.infradead.org>; Sun,  9 Aug 2015 14:54:56 -0400 (EDT)
 Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
- by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t79IhFKn57147576
- for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 18:43:15 GMT
+ by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t79IsuOG36569234
+ for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 18:54:56 GMT
 Received: from d01av02.pok.ibm.com (localhost [127.0.0.1])
  by d01av02.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t79IhFoC009299
- for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 14:43:15 -0400
+ t79Isuve028323
+ for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 14:54:56 -0400
 From: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH] kexec: allocate the kexec control page with
- KEXEC_CONTROL_MEMORY_GFP
-Date: Tue, 21 Apr 2015 14:06:32 +0200
-Message-Id: <1429617992-31686-2-git-send-email-schwidefsky@de.ibm.com>
-In-Reply-To: <1429617992-31686-1-git-send-email-schwidefsky@de.ibm.com>
-References: <1429617992-31686-1-git-send-email-schwidefsky@de.ibm.com>
+Subject: [PATCH] kexec: override GFP flag for the control page allocation
+Date: Tue, 21 Apr 2015 14:06:31 +0200
+Message-Id: <1429617992-31686-1-git-send-email-schwidefsky@de.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,63 +40,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-arch@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-Introduce KEXEC_CONTROL_MEMORY_GFP to allow the architecture code
-to override the gfp flags of the allocation for the kexec control
-page. The loop in kimage_alloc_normal_control_pages allocates pages
-with GFP_KERNEL until a page is found that happens to have an
-address smaller than the KEXEC_CONTROL_MEMORY_LIMIT. On systems
-with a large memory size but a small KEXEC_CONTROL_MEMORY_LIMIT
-the loop will keep allocating memory until the oom killer steps in.
+Greetings,
 
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
----
+I got a bug report that kexec does not work on s390 if the system has
+lots of memory. It is the kexec load step that dies with out-of-memory. 
+
+The reason why this happens is the value of KEXEC_CONTROL_MEMORY_LIMIT
+for s390. To start the new kernel the code in the kexec control page
+needs to switch to the ESA mode (31-bit), therefore the memory limit
+is 2GB for s390. The allocation of the control page is done with
+GFP_KERNEL in kimage_alloc_normal_control_pages. If the allocated page
+is a target page in the kexec destination range or if its address is
+larger than the memory limit, it is put on the list of extra pages
+and another page is allocated until one is found that fits the
+requirements.
+
+With a large memory size not only does this loop take a long time to
+complete (think 10 terabyte of memory), but eventually the OOM killer
+steps in and terminates the program that called kexec load.
+
+The fix for s390 is to use a different GFP flag, GFP_DMA instead of
+GFP_KERNEL. To do this a new #define for kexec is introduced that
+can be overruled by the architecture.
+
+Martin Schwidefsky (1):
+  kexec: allocate the kexec control page with KEXEC_CONTROL_MEMORY_GFP
+
  arch/s390/include/asm/kexec.h | 3 +++
  include/linux/kexec.h         | 4 ++++
  kernel/kexec.c                | 2 +-
  3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 694bcd6..2f924bc 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -26,6 +26,9 @@
- /* Not more than 2GB */
- #define KEXEC_CONTROL_MEMORY_LIMIT (1UL<<31)
- 
-+/* Allocate control page with GFP_DMA */
-+#define KEXEC_CONTROL_MEMORY_GFP GFP_DMA
-+
- /* Maximum address we can use for the crash control pages */
- #define KEXEC_CRASH_CONTROL_MEMORY_LIMIT (-1UL)
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index e60a745..e804306 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -40,6 +40,10 @@
- #error KEXEC_CONTROL_MEMORY_LIMIT not defined
- #endif
- 
-+#ifndef KEXEC_CONTROL_MEMORY_GFP
-+#define KEXEC_CONTROL_MEMORY_GFP GFP_KERNEL
-+#endif
-+
- #ifndef KEXEC_CONTROL_PAGE_SIZE
- #error KEXEC_CONTROL_PAGE_SIZE not defined
- #endif
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 38c25b1..7a36fdc 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -707,7 +707,7 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
- 	do {
- 		unsigned long pfn, epfn, addr, eaddr;
- 
--		pages = kimage_alloc_pages(GFP_KERNEL, order);
-+		pages = kimage_alloc_pages(KEXEC_CONTROL_MEMORY_GFP, order);
- 		if (!pages)
- 			break;
- 		pfn   = page_to_pfn(pages);
 -- 
 1.9.1
 
