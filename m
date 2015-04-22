@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YktkS-0006r6-5H
- for kexec@lists.infradead.org; Wed, 22 Apr 2015 12:27:24 +0000
-Received: from int-mx14.intmail.prod.int.phx2.redhat.com
- (int-mx14.intmail.prod.int.phx2.redhat.com [10.5.11.27])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t3MCR6JB008241
+ id 1Yktkc-0006re-5S
+ for kexec@lists.infradead.org; Wed, 22 Apr 2015 12:27:34 +0000
+Received: from int-mx10.intmail.prod.int.phx2.redhat.com
+ (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id t3MCRFu9010054
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
- for <kexec@lists.infradead.org>; Wed, 22 Apr 2015 08:27:06 -0400
+ for <kexec@lists.infradead.org>; Wed, 22 Apr 2015 08:27:16 -0400
 Received: from localhost (vpn-48-34.rdu2.redhat.com [10.10.48.34])
- by int-mx14.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id
- t3MCR0db025525
+ by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id
+ t3MCR8f5011419
  (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
- for <kexec@lists.infradead.org>; Wed, 22 Apr 2015 08:27:05 -0400
+ for <kexec@lists.infradead.org>; Wed, 22 Apr 2015 08:27:13 -0400
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH] arm64: kdump: Add support for binary image
-Date: Wed, 22 Apr 2015 17:56:49 +0530
-Message-Id: <ebcfa1d19964bf7342eca03cdd40830d3f7c8eb8.1429705020.git.panand@redhat.com>
+Subject: [PATCH] arm64: wait for transmit completion before next character
+ transmission
+Date: Wed, 22 Apr 2015 17:56:50 +0530
+Message-Id: <04c30b253821d34ae1dc16e723dd74b663a64f67.1429705033.git.panand@redhat.com>
 In-Reply-To: <770bae1ed7d53e74874f99343070b4c5a69cb9a2.1429704995.git.panand@redhat.com>
 References: <770bae1ed7d53e74874f99343070b4c5a69cb9a2.1429704995.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -34,65 +35,58 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This patch adds support to use binary image ie arch/arm64/boot/Image
-with kdump.
+Previous transmission must be completed before next character to be
+transmitted, otherwise TX buffer may saturate and we will not see all
+the characters on screen.
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- kexec/arch/arm64/kexec-image-arm64.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ purgatory/arch/arm64/purgatory-arm64.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-index a52ef8ea7309..1f5395bdfabf 100644
---- a/kexec/arch/arm64/kexec-image-arm64.c
-+++ b/kexec/arch/arm64/kexec-image-arm64.c
-@@ -10,6 +10,7 @@
- #include <libfdt.h>
- #include <stdlib.h>
+diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
+index 25960c30bd05..3a1c9243bfa2 100644
+--- a/purgatory/arch/arm64/purgatory-arm64.c
++++ b/purgatory/arch/arm64/purgatory-arm64.c
+@@ -11,15 +11,37 @@ extern uint32_t *arm64_sink;
+ extern void (*arm64_kernel_entry)(uint64_t);
+ extern uint64_t arm64_dtb_addr;
  
-+#include "crashdump-arm64.h"
- #include "dt-ops.h"
- #include "image-header.h"
- #include "kexec-arm64.h"
-@@ -96,13 +97,23 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
- 
- 	arm64_mem.page_offset = get_kernel_page_offset();
- 
--	result = parse_iomem_single("Kernel code\n", &start, NULL);
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		result = load_crashdump_segments(info, &header_option);
- 
--	if (result) {
--		fprintf(stderr, "kexec: Could not get kernel code address.\n");
--		return -1;
-+		if (result) {
-+			fprintf(stderr, "kexec: load crashdump segments failed.\n");
-+			return -1;
-+		}
-+		start = crash_reserved_mem.start;
-+	} else {
-+		result = parse_iomem_single("Kernel code\n", &start, NULL);
++static void wait_for_xmit_complete(void)
++{
++	volatile uint32_t status;
++	volatile uint32_t *status_reg;
 +
-+		if (result) {
-+			fprintf(stderr, "kexec: Could not get kernel code address.\n");
-+			return -1;
-+		}
-+		start -= arm64_mem.text_offset;
- 	}
--	start -= arm64_mem.text_offset;
++	/*
++	 * Since most of the UART with ARM platform has LSR register at
++	 * offset 0x14 and should have value as 0x60 for TX empty, so we
++	 * have hardcoded these values. Can modify in future if need
++	 * arises.
++	 */
++	status_reg = (volatile uint32_t *)((uint64_t)arm64_sink + 0x14);
++	while (1) {
++		status = *status_reg;
++		if ((status & 0x60) == 0x60)
++			break;
++	}
++}
++
+ void putchar(int ch)
+ {
+ 	if (!arm64_sink)
+ 		return;
  
- 	/* Add kernel */
- 	add_segment_phys_virt(info, kernel_buf, kernel_size,
-@@ -111,7 +122,8 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
++	wait_for_xmit_complete();
+ 	*arm64_sink = ch;
  
- 	info->entry = (void *)start + arm64_mem.text_offset;
+-	if (ch == '\n')
++	if (ch == '\n') {
++		wait_for_xmit_complete();
+ 		*arm64_sink = '\r';
++	}
+ }
  
--	result = arm64_load_other_segments(info, (unsigned long)info->entry);
-+	result = arm64_load_other_segments(info, (unsigned long)info->entry,
-+		header_option);
- 
- 	if (header_option)
- 		free(header_option);
+ void setup_arch(void)
 -- 
 2.1.0
 
