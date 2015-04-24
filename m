@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f177.google.com ([209.85.192.177])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YlYR1-0006QF-5L
- for kexec@lists.infradead.org; Fri, 24 Apr 2015 07:54:03 +0000
-Received: by pdbqa5 with SMTP id qa5so41970972pdb.1
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2015 00:53:40 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [v2 0/5] arm64: add kdump support
-Date: Fri, 24 Apr 2015 16:53:03 +0900
-Message-Id: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
+ id 1YlYZA-0004rj-0X
+ for kexec@lists.infradead.org; Fri, 24 Apr 2015 08:02:28 +0000
+Date: Fri, 24 Apr 2015 16:01:47 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v10 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+Message-ID: <20150424080147.GC4458@dhcp-16-116.nay.redhat.com>
+References: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
+ <20150415005731.GC19051@localhost.localdomain>
+ <552DFB56.1070600@hp.com>
+ <20150415064803.GF19051@localhost.localdomain>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150415064803.GF19051@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,91 +22,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, vgoyal@redhat.com, hbabus@us.ibm.com
-Cc: linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-This patch set enables kdump (crash dump kernel) support on arm64 on top of
-Geoff's kexec patchset.
+On 04/15/15 at 02:48pm, Dave Young wrote:
+> On 04/15/15 at 01:47pm, Li, ZhenHua wrote:
+> > On 04/15/2015 08:57 AM, Dave Young wrote:
+> > >Again, I think it is bad to use old page table, below issues need consider:
+> > >1) make sure old page table are reliable across crash
+> > >2) do not allow writing oldmem after crash
+> > >
+> > >Please correct me if I'm wrong, or if above is not doable I think I will vote for
+> > >resetting pci bus.
+> > >
+> > >Thanks
+> > >Dave
+> > >
+> > Hi Dave,
+> > 
+> > When updating the context tables, we have to write their address to root
+> > tables, this will cause writing to old mem.
+> > 
+> > Resetting the pci bus has been discussed, please check this:
+> > http://lists.infradead.org/pipermail/kexec/2014-October/012752.html
+> > https://lkml.org/lkml/2014/10/21/890
 
-In this version, there are some arm64-specific usage/constraints:
-1) "mem=" boot parameter must be specified on crash dump kernel
-   if the system starts on uefi.
-2) Kvm will not be enabled on crash dump kernel even if configured
-See commit messages and Documentation/kdump/kdump.txt for details.
+I support this patchset.
 
-The only concern I have is whether or not we can use the exact same kernel
-as both system kernel and crash dump kernel. The current arm64 kernel is
-not relocatable in the exact sense but I see no problems in using the same
-binary when testing kdump.
+We should not fear oldmem since reserved crashkernel region is similar.
+No one can guarantee that any crazy code won't step into crashkernel
+region just because 1st kernel says it's reversed for kdump kernel. Here
+the root table and context tables are also not built to allow legal code
+to danamge. Both of them has the risk to be corrupted, for trying our
+best to get a dumped vmcore the risk is worth being taken.
 
-I tested the code with
-	- ATF v1.1 + EDK2(UEFI) v3.0-rc0
-	- kernel v4.0 + Geoff' kexec v9
-on
-	- Base fast model, and
-	- MediaTek MT8173-EVB
-using my own kexec-tools [1], currently v0.12.
+And the resetting pci way has been NACKed by David Woodhouse, the
+maintainer of intel iommu. Because the place calling the resetting pci
+code is ugly before kdump kernel or in kdump kernel. And as he said a
+certain device made mistakes why we blame on all devices. We should fix
+that device who made mistakes. 
 
-You may want to start a kernel with the following boot parameter:
-	crashkernel=64M (or so, on model)
-and try
-	$ kexec -p --load <vmlinux> --append ...
-	$ echo c > /proc/sysrq-trigger
+As for me, periodically poked by customers to ask how iommu fix is
+going, I really think this patchset is good enough. Aren't we going to
+do thing just because there's a risk with tiny possibility or not perfect
+enough. I think people won't agree. Otherwise kdump could have been
+killed when author proposed it since crashkernel reserved region is
+risky and could be corrupted by 1st kernel.
 
-To examine vmcore (/proc/vmcore), you should use
-	- gdb v7.7 or later
-	- crash + a small patch (to recognize v4.0 kernel)
+Anyway, let's comprimise a little. At worst it can be reverted if it's
+not satisfactory.
 
-Changes from v1:
-* rebased to Geoff's v9
-* tested this patchset on real hardware and fixed bugs:
-- added cache flush operation in ipi_cpu_stop() when shutting down
-  the system. Otherwise, data saved in vmcore's note sections by
-  crash_save_cpu() might not be flushed to dumped memory and crash command
-  fail to fetch correct data.
-  I will address Mark's commit[2] after Geoff takes care of it on kexec.
-- modified to use ioremap_cache() instead of ioremap() when reading
-  crash memory. Otherwise, accessing /proc/vmcore on crash dump kernel
-  might cause an alignment fault.
-* allows reserve_crashkernel() to handle "crashkernel=xyz[MG]" correctly,
-  thanks to Pratyush Anand. And it now also enforces memory limit.
-* moved reserve_crashkernel() and reserve_elfcorehdr() to
-  arm64_memblock_init() to clarify that they should be called before
-  dma_contignuous_reserve().
+Personal opinion.
 
-[1] https://git.linaro.org/people/takahiro.akashi/kexec-tools.git
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-April/338171.html
+By the way, I tested it and it works well on my HP z420 workstation.
+
+Thanks
+Baoquan
 
 
-AKASHI Takahiro (5):
-  arm64: kdump: reserve memory for crash dump kernel
-  arm64: kdump: implement machine_crash_shutdown()
-  arm64: kdump: do not go into EL2 before starting a crash dump kernel
-  arm64: add kdump support
-  arm64: enable kdump in the arm64 defconfig
-
- Documentation/kdump/kdump.txt     |   31 +++++++++++++-
- arch/arm64/Kconfig                |   12 ++++++
- arch/arm64/configs/defconfig      |    1 +
- arch/arm64/include/asm/kexec.h    |   34 ++++++++++++++-
- arch/arm64/kernel/Makefile        |    1 +
- arch/arm64/kernel/crash_dump.c    |   71 +++++++++++++++++++++++++++++++
- arch/arm64/kernel/machine_kexec.c |   55 +++++++++++++++++++++++-
- arch/arm64/kernel/process.c       |    7 +++-
- arch/arm64/kernel/setup.c         |    8 +++-
- arch/arm64/kernel/smp.c           |   12 +++++-
- arch/arm64/mm/init.c              |   84 +++++++++++++++++++++++++++++++++++++
- 11 files changed, 309 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm64/kernel/crash_dump.c
-
--- 
-1.7.9.5
-
+> 
+> I know one reason to use old pgtable is this looks better because it fixes the
+> real problem, but it is not a good way if it introduce more problems because of
+> it have to use oldmem. I will be glad if this is not a problem but I have not
+> been convinced.
+> 
+> OTOH, there's many types of iommu, intel, amd, a lot of other types. They need
+> their own fixes, so it looks not that elegant.
+> 
+> For pci reset, it is not perfect, but it has another advantage, the patch is
+> simpler. The problem I see from the old discusssion is, reset bus in 2nd kernel
+> is acceptable but it does not fix things on sparc platform. AFAIK current reported
+> problems are intel and amd iommu, at least pci reset stuff does not make it worse.
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
