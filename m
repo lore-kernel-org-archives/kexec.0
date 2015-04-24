@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 24 Apr 2015 11:11:36 +0100
+Date: Fri, 24 Apr 2015 11:39:00 +0100
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [v2 1/5] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20150424101136.GE29183@leverpostej>
+Subject: Re: [v2 2/5] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20150424103900.GF29183@leverpostej>
 References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-2-git-send-email-takahiro.akashi@linaro.org>
+ <1429861989-8417-3-git-send-email-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1429861989-8417-2-git-send-email-takahiro.akashi@linaro.org>
+In-Reply-To: <1429861989-8417-3-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +21,106 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, marc.zyngier@arm.com, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On Fri, Apr 24, 2015 at 08:53:04AM +0100, AKASHI Takahiro wrote:
-> On system kernel, the memory region used by crash dump kernel must be
-> specified by "crashkernel=X@Y" boot parameter. reserve_crashkernel()
-> will allocate the region in "System RAM" and reserve it for later use.
+On Fri, Apr 24, 2015 at 08:53:05AM +0100, AKASHI Takahiro wrote:
+> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
+> save per-cpu general-purpose registers before restarting the crash dump
+> kernel. See kernel_kexec().
+> ipi_cpu_stop() is used and a bit modified to support this behavior.
 > 
-> On crash dump kernel, memory region information in system kernel is
-> described in a specific region specified by "elfcorehdr=X@Y" boot parameter.
-> reserve_elfcorehdr() will set aside the region to avoid data destruction
-> by the kernel.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  arch/arm64/include/asm/kexec.h    |   34 ++++++++++++++++++++++-
+>  arch/arm64/kernel/machine_kexec.c |   55 ++++++++++++++++++++++++++++++++++++-
+>  arch/arm64/kernel/smp.c           |   12 ++++++--
+>  3 files changed, 97 insertions(+), 4 deletions(-)
 > 
-> Crash dump kernel will access memory regions in system kernel via
-> copy_oldmem_page(), which reads a page by ioremap'ing it assuming that
-> such pages are not part of main memory of crash dump kernel.
-> This is true under non-UEFI environment because kexec-tools modifies
-> a device tree adding "usablemem" attributes to memory sections.
-
-I'm not sure what you mean by "usablemem" here.
-
-Do you just mean that the memory nodes are altered such that they only
-cover memory usable by the crash kernel?
-
-Why not _always_ require a command line argument for the crash kernel
-that restricts its memory usage to a particular range? That way it
-doesn't matter whether we're using UEFI or not.
-
-> Under UEFI, however, this is not true because UEFI remove memory sections
-> in a device tree and export all the memory regions, even though they belong
-> to system kernel.
-> 
-> So we should add "mem=X[MG]" boot parameter to limit the memory size and
-> avoid hitting the following assertion in ioremap():
->         if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
->                 return NULL;
-
-That looks suspicious. What is being ioremapped at that point?
-
-[...]
-
-> @@ -393,6 +398,7 @@ void __init setup_arch(char **cmdline_p)
->         local_async_enable();
-> 
->         efi_init();
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 3530ff5..eaf3fcb 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -30,6 +30,8 @@
+>  
+>  #if !defined(__ASSEMBLY__)
+>  
+> +extern bool in_crash_kexec;
 > +
->         arm64_memblock_init();
-> 
->         paging_init();
+>  /**
+>   * crash_setup_regs() - save registers for the panic kernel
+>   *
+> @@ -40,7 +42,37 @@
+>  static inline void crash_setup_regs(struct pt_regs *newregs,
+>  				    struct pt_regs *oldregs)
+>  {
+> -	/* Empty routine needed to avoid build errors. */
+> +	if (oldregs) {
+> +		memcpy(newregs, oldregs, sizeof(*newregs));
+> +	} else {
+> +		__asm__ __volatile__ (
+> +			"stp	 x0,   x1, [%3]\n\t"
 
-Nit: unrelated whitespace change.
+Why the tabs?
 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index ae85da6..ea70d41 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -34,6 +34,8 @@
->  #include <linux/dma-contiguous.h>
->  #include <linux/efi.h>
->  #include <linux/swiotlb.h>
-> +#include <linux/kexec.h>
-> +#include <linux/crash_dump.h>
-
-Nit: please keep these ordered.
+Please use #16 * N as the offset for consistency with entry.S, with 0
+for the first N.
 
 [...]
 
-> +               if (memblock_reserve(crash_base, crash_size)) {
-> +                       pr_warn("crashkernel reservation failed - out of memory\n");
-> +                       return;
-> +               }
+> +static void machine_kexec_mask_interrupts(void)
+> +{
+> +	unsigned int i;
+> +	struct irq_desc *desc;
+> +
+> +	for_each_irq_desc(i, desc) {
+> +		struct irq_chip *chip;
+> +
+> +		chip = irq_desc_get_chip(desc);
+> +		if (!chip)
+> +			continue;
+> +
+> +		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+> +			chip->irq_eoi(&desc->irq_data);
+> +
+> +		if (chip->irq_mask)
+> +			chip->irq_mask(&desc->irq_data);
+> +
+> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+> +			chip->irq_disable(&desc->irq_data);
+> +	}
+> +}
 
-If we can remove this memory rather than reserving it, we can limit the
-first kernel's ability to accidentally clobber the crash kernel, at the
-expense of having to explicitly map/unmap around loading it.
+I'm surprised that this isn't left to the irqchip driver init code in
+the crash kernel. For all we know this state could be corrupt anyway.
+
+Is there any reason we can't get the GIC driver to nuke all of this at
+probe time?
+
+[...]
+
+> @@ -542,7 +543,7 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
+>  /*
+>   * ipi_cpu_stop - handle IPI from smp_send_stop()
+>   */
+> -static void ipi_cpu_stop(unsigned int cpu)
+> +static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
+>  {
+>  	if (system_state == SYSTEM_BOOTING ||
+>  	    system_state == SYSTEM_RUNNING) {
+> @@ -556,6 +557,13 @@ static void ipi_cpu_stop(unsigned int cpu)
+>  
+>  	local_irq_disable();
+>  
+> +#ifdef CONFIG_KEXEC
+> +	if (in_crash_kexec) {
+> +		crash_save_cpu(regs, cpu);
+> +		flush_cache_all();
+
+Any cache maintenance will need to be by VA; flush_cache_all doesn't do
+what the name implies, though may appear to work by chance.
+
+Is kdump implemented for ARM? I don't see equivalent for in the arch/arm
+ipi_cpu_stop.
 
 Mark.
 
