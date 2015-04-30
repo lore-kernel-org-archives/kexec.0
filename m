@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yngfh-0003lD-3d
- for kexec@lists.infradead.org; Thu, 30 Apr 2015 05:06:01 +0000
-Date: Thu, 30 Apr 2015 14:05:37 +0900
+ id 1Yngi7-0004XX-NG
+ for kexec@lists.infradead.org; Thu, 30 Apr 2015 05:08:32 +0000
+Date: Thu, 30 Apr 2015 14:08:09 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] purgatory: force PIC/PIE/SSP off
-Message-ID: <20150430050537.GH15511@verge.net.au>
-References: <552F6507.1010500@linux.vnet.ibm.com>
- <1429169966-1340-1-git-send-email-vapier@gentoo.org>
+Subject: Re: [PATCH] purgatory: Disabling GCC's stack protection
+Message-ID: <20150430050809.GI15511@verge.net.au>
+References: <1430225419-23969-1-git-send-email-kexin.hao@windriver.com>
+ <20150430043950.GD15511@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1429169966-1340-1-git-send-email-vapier@gentoo.org>
+In-Reply-To: <20150430043950.GD15511@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,84 +24,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Frysinger <vapier@gentoo.org>
+To: Kevin Hao <kexin.hao@windriver.com>
 Cc: kexec@lists.infradead.org
 
-On Thu, Apr 16, 2015 at 03:39:26AM -0400, Mike Frysinger wrote:
-> From: Mike Frysinger <vapier@chromium.org>
+On Thu, Apr 30, 2015 at 01:39:50PM +0900, Simon Horman wrote:
+> Hi Kevin,
 > 
-> If the toolchain has these things turned on automatically, then the
-> purgatory code might be miscompiled leading to runtime errors like:
-> Unhandled rela relocation: R_X86_64_GOTPC64
+> On Tue, Apr 28, 2015 at 08:50:19PM +0800, Kevin Hao wrote:
+> > If the GCC's stack protection is enabled by default, the purgatory will
+> > also be built with this option. But it makes no sense to enable this
+> > for the purgatory code, and would cause error when we are trying to
+> > relocate the purgatory codes because symbol like __stack_chk_fail is
+> > unresolved. Instead of disabling this for some archs specifically,
+> > disable it for all the archs.
+> > 
+> > Signed-off-by: Kevin Hao <kexin.hao@windriver.com>
 > 
-> It might look like the problem is with the kernel when in reality,
-> kexec is complaining about the purgatory module.  Force off harden
-> features that don't make sense in kernel space.
+> This seems like a reasonable change to me, however, it does
+> not apply cleanly to the kexec tree on kernel.org which I maintain.
 > 
-> Signed-off-by: Mike Frysinger <vapier@chromium.org>
+> https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> 
+> Could you rebase and repost?
 
-thanks, applied.
+I have now realised that Mike Frysinger has posted a similar,
+slightly more comprehensive, patch which I have now applied.
 
-> ---
-> Note: I suspect this patch fixes a semi-recent report:
-> http://lists.infradead.org/pipermail/kexec/2015-February/013305.html
-> 
-> v2:
-> 	- clean up ssp flags in arch subdirs
-> 
->  purgatory/Makefile            | 3 ++-
->  purgatory/arch/ppc64/Makefile | 2 +-
->  purgatory/arch/s390/Makefile  | 1 -
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/purgatory/Makefile b/purgatory/Makefile
-> index 2d6b2c0..2b5c061 100644
-> --- a/purgatory/Makefile
-> +++ b/purgatory/Makefile
-> @@ -49,7 +49,8 @@ $(PURGATORY): CC=$(TARGET_CC)
->  $(PURGATORY): CFLAGS+=$(PURGATORY_EXTRA_CFLAGS) \
->  		      $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
->  		      -Os -fno-builtin -ffreestanding \
-> -		      -fno-zero-initialized-in-bss
-> +		      -fno-zero-initialized-in-bss \
-> +		      -fno-PIC -fno-PIE -fno-stack-protector
->  
->  $(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
->  			-I$(srcdir)/purgatory/include \
-> diff --git a/purgatory/arch/ppc64/Makefile b/purgatory/arch/ppc64/Makefile
-> index 6c58fa2..8ca2719 100644
-> --- a/purgatory/arch/ppc64/Makefile
-> +++ b/purgatory/arch/ppc64/Makefile
-> @@ -9,7 +9,7 @@ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/console-ppc64.c
->  ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/crashdump_backup.c
->  ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/misc.S
->  
-> -ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float -fno-stack-protector	\
-> +ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float \
->  				-fno-exceptions
->  ppc64_PURGATORY_EXTRA_ASFLAGS += -m64
->  ifeq ($(SUBARCH),BE)
-> diff --git a/purgatory/arch/s390/Makefile b/purgatory/arch/s390/Makefile
-> index 09749bd..c94cc3c 100644
-> --- a/purgatory/arch/s390/Makefile
-> +++ b/purgatory/arch/s390/Makefile
-> @@ -2,7 +2,6 @@
->  # Purgatory s390
->  #
->  
-> -s390_PURGATORY_EXTRA_CFLAGS += -fno-stack-protector
->  s390_PURGATORY_SRCS += purgatory/arch/s390/console-s390.c
->  s390_PURGATORY_SRCS += purgatory/arch/s390/setup-s390.S
->  s390_PURGATORY_SRCS += purgatory/arch/s390/purgatory-s390.c
-> -- 
-> 2.3.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Could you see if it addresses the problem you are seeing?
+
+It is the following commit in the above tree:
+
+4a837c9a19f9 purgatory: force PIC/PIE/SSP off
 
 _______________________________________________
 kexec mailing list
