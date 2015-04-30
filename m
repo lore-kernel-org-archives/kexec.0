@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3426.houston.hp.com ([15.201.208.54])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yn1Or-0001fd-Cl
- for kexec@lists.infradead.org; Tue, 28 Apr 2015 09:01:53 +0000
-Message-ID: <553F4C2C.30707@hp.com>
-Date: Tue, 28 Apr 2015 17:00:28 +0800
-From: "Li, ZhenHua" <zhen-hual@hp.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Yngfh-0003lD-3d
+ for kexec@lists.infradead.org; Thu, 30 Apr 2015 05:06:01 +0000
+Date: Thu, 30 Apr 2015 14:05:37 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] purgatory: force PIC/PIE/SSP off
+Message-ID: <20150430050537.GH15511@verge.net.au>
+References: <552F6507.1010500@linux.vnet.ibm.com>
+ <1429169966-1340-1-git-send-email-vapier@gentoo.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v10 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-References: <1428655333-19504-1-git-send-email-zhen-hual@hp.com>
- <20150415005731.GC19051@localhost.localdomain> <552DFB56.1070600@hp.com>
- <20150415064803.GF19051@localhost.localdomain>
- <20150424080147.GC4458@dhcp-16-116.nay.redhat.com>
- <20150424082528.GA23912@dhcp-128-91.nay.redhat.com>
- <20150424083530.GD4458@dhcp-16-116.nay.redhat.com>
- <20150424084957.GC23912@dhcp-128-91.nay.redhat.com>
- <20150428085441.GI15033@dhcp-16-116.nay.redhat.com>
-In-Reply-To: <20150428085441.GI15033@dhcp-16-116.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1429169966-1340-1-git-send-email-vapier@gentoo.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +20,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, Dave Young <dyoung@redhat.com>, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
- ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: Mike Frysinger <vapier@gentoo.org>
+Cc: kexec@lists.infradead.org
 
-Hi Baoquan,
+On Thu, Apr 16, 2015 at 03:39:26AM -0400, Mike Frysinger wrote:
+> From: Mike Frysinger <vapier@chromium.org>
+> 
+> If the toolchain has these things turned on automatically, then the
+> purgatory code might be miscompiled leading to runtime errors like:
+> Unhandled rela relocation: R_X86_64_GOTPC64
+> 
+> It might look like the problem is with the kernel when in reality,
+> kexec is complaining about the purgatory module.  Force off harden
+> features that don't make sense in kernel space.
+> 
+> Signed-off-by: Mike Frysinger <vapier@chromium.org>
 
-If old tables are corrupted, we will see the DMAR faults or INTR faults
-(which we have seen), or some other error messages. Most of these
-messages are from hardware. This means, hardware will do some check when 
-running. But I don't think hardware will completely check the
-tables.
+thanks, applied.
 
-Till now, I do not have a good idea to do the check in kdump kernel.
-
-
-Thanks
-Zhenhua
-
-
-On 04/28/2015 04:54 PM, Baoquan He wrote:
-> On 04/24/15 at 04:49pm, Dave Young wrote:
->> On 04/24/15 at 04:35pm, Baoquan He wrote:
->>> On 04/24/15 at 04:25pm, Dave Young wrote:
->>>> Hi, Baoquan
->>>>
->>>>> I support this patchset.
->>>>>
->>>>> We should not fear oldmem since reserved crashkernel region is similar.
->>>>> No one can guarantee that any crazy code won't step into crashkernel
->>>>> region just because 1st kernel says it's reversed for kdump kernel. Here
->>>>> the root table and context tables are also not built to allow legal code
->>>>> to danamge. Both of them has the risk to be corrupted, for trying our
->>>>> best to get a dumped vmcore the risk is worth being taken.
->>>>
->>>> old mem is mapped in 1st kernel so compare with the reserved crashkernel
->>>> they are more likely to be corrupted. they are totally different.
->>>
->>> Could you tell how and why they are different? Wrong code will choose
->>> root tables and context tables to danamge when they totally lose
->>> control?
->>
->> iommu will map io address to system ram, right? not to reserved ram, but
->> yes I'm assuming the page table is right, but I was worrying they are corrupted
->> while kernel panic is happening.
->
-> OK, I think we may need to think more about the old context tables
-> reuse. Currently dmar faults will cause error or warning message,
-> occasionally will cause system with iommu hang in kdump kernel. I don't
-> know what will happen if old root tables or context tables are corrupted
-> by evil code. For kdump kernel which use the similar mechanism there's a
-> verification. When load kdump kernel into reserved crashkernel region a
-> sha256 sum is calculated, then verify it when jump into kdump kernel
-> after panic. If corrupted context tables will bring worse result, then
-> we need consider giving it up and change back to the old way and try
-> to dump though there's error message.
->
-> Hi Zhenhua,
->
-> I don't know what's your plan about verification whether old root tables
-> or old context tables are corrupted. Or have you experimented that what
-> will happen if old tables are corrupted on purpose.
->
-> I am fine if you just put this in a TODO list since that's truly in a
-> rare case. But it maybe necessary to tell it in patch log.
->
-> Thanks
-> Baoquan
->
-
+> ---
+> Note: I suspect this patch fixes a semi-recent report:
+> http://lists.infradead.org/pipermail/kexec/2015-February/013305.html
+> 
+> v2:
+> 	- clean up ssp flags in arch subdirs
+> 
+>  purgatory/Makefile            | 3 ++-
+>  purgatory/arch/ppc64/Makefile | 2 +-
+>  purgatory/arch/s390/Makefile  | 1 -
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/purgatory/Makefile b/purgatory/Makefile
+> index 2d6b2c0..2b5c061 100644
+> --- a/purgatory/Makefile
+> +++ b/purgatory/Makefile
+> @@ -49,7 +49,8 @@ $(PURGATORY): CC=$(TARGET_CC)
+>  $(PURGATORY): CFLAGS+=$(PURGATORY_EXTRA_CFLAGS) \
+>  		      $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+>  		      -Os -fno-builtin -ffreestanding \
+> -		      -fno-zero-initialized-in-bss
+> +		      -fno-zero-initialized-in-bss \
+> +		      -fno-PIC -fno-PIE -fno-stack-protector
+>  
+>  $(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+>  			-I$(srcdir)/purgatory/include \
+> diff --git a/purgatory/arch/ppc64/Makefile b/purgatory/arch/ppc64/Makefile
+> index 6c58fa2..8ca2719 100644
+> --- a/purgatory/arch/ppc64/Makefile
+> +++ b/purgatory/arch/ppc64/Makefile
+> @@ -9,7 +9,7 @@ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/console-ppc64.c
+>  ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/crashdump_backup.c
+>  ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/misc.S
+>  
+> -ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float -fno-stack-protector	\
+> +ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -msoft-float \
+>  				-fno-exceptions
+>  ppc64_PURGATORY_EXTRA_ASFLAGS += -m64
+>  ifeq ($(SUBARCH),BE)
+> diff --git a/purgatory/arch/s390/Makefile b/purgatory/arch/s390/Makefile
+> index 09749bd..c94cc3c 100644
+> --- a/purgatory/arch/s390/Makefile
+> +++ b/purgatory/arch/s390/Makefile
+> @@ -2,7 +2,6 @@
+>  # Purgatory s390
+>  #
+>  
+> -s390_PURGATORY_EXTRA_CFLAGS += -fno-stack-protector
+>  s390_PURGATORY_SRCS += purgatory/arch/s390/console-s390.c
+>  s390_PURGATORY_SRCS += purgatory/arch/s390/setup-s390.S
+>  s390_PURGATORY_SRCS += purgatory/arch/s390/purgatory-s390.c
+> -- 
+> 2.3.5
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
