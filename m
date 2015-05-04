@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mga03.intel.com ([134.134.136.65])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YpIix-0005Bt-Bi
- for kexec@lists.infradead.org; Mon, 04 May 2015 15:56:05 +0000
-Message-ID: <554796B4.5020101@linux.intel.com>
-Date: Mon, 04 May 2015 10:56:36 -0500
+ id 1YpOYG-000314-0Y
+ for kexec@lists.infradead.org; Mon, 04 May 2015 22:09:25 +0000
+Message-ID: <5547EE37.2020303@linux.intel.com>
+Date: Mon, 04 May 2015 17:09:59 -0500
 From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
 MIME-Version: 1.0
 Subject: Re: commit 5edcbfd1368e break kexec on x86-64
-References: <CAE9FiQXBJygEhKpAgxZ3yVktAM5u-rxBGuy7oS1NU8wFRuub8g@mail.gmail.com>
- <20150430050944.GJ15511@verge.net.au> <20150501011556.GJ13754@verge.net.au>
- <55478B96.4060706@linux.intel.com>
-In-Reply-To: <55478B96.4060706@linux.intel.com>
-Content-Type: multipart/mixed; boundary="------------040002080803080109060500"
+References: <CAE9FiQXBJygEhKpAgxZ3yVktAM5u-rxBGuy7oS1NU8wFRuub8g@mail.gmail.com>	<20150430050944.GJ15511@verge.net.au>	<20150501011556.GJ13754@verge.net.au>	<55478B96.4060706@linux.intel.com>	<554796B4.5020101@linux.intel.com>
+ <CAE9FiQX8Sqb8rd3jE0n+7oDMLPWmnA0_d6J5bdRdoVNsxRVaVg@mail.gmail.com>
+In-Reply-To: <CAE9FiQX8Sqb8rd3jE0n+7oDMLPWmnA0_d6J5bdRdoVNsxRVaVg@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="------------030407030907040907050105"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,86 +26,43 @@ To: Yinghai Lu <yinghai@kernel.org>
 Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 This is a multi-part message in MIME format.
---------------040002080803080109060500
+--------------030407030907040907050105
 Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Transfer-Encoding: 8bit
 
-Hi Yinghai,
+Hi,
 
-I'm trying to reproduce the issue that you found but i can't, any option 
-that you use?.
+On 04/05/15 11:49, Yinghai Lu wrote:
+> On Mon, May 4, 2015 at 8:56 AM, Aníbal Limón
+> <anibal.limon@linux.intel.com> wrote:
+>> Hi Yinghai,
+>>
+>> I'm trying to reproduce the issue that you found but i can't, any option
+>> that you use?.
+> Can you compile current upstream kernel?
+Now i tested with latest 4.1-rc2 kernel and works,
 
-I made,
+commit 5ebe6afaf0057ac3eaeb98defd5456894b446d22
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun May 3 19:22:23 2015 -0700
 
-# ./configure
-# make
-# ./build/sbin/kexec -d -l /boot/vmlinuz-3.11.10-29-default
+     Linux 4.1-rc2
 
-The OS is OpenSUSE 13.1 x86_64, i attached the logs.
+See attached log.
 
-Best regards,
+Kind regards,
      alimon
 
-On 04/05/15 10:09, Aníbal Limón wrote:
-> Hi Simon,
->
-> Sorry about the problems that i caused, i was out from office.
-> I'm working in for a solution.
->
-> Best regards,
->     alimon
->
-> On 30/04/15 20:15, Simon Horman wrote:
->> On Thu, Apr 30, 2015 at 02:09:44PM +0900, Simon Horman wrote:
->>> On Wed, Apr 29, 2015 at 03:36:17PM -0700, Yinghai Lu wrote:
->>>> with
->>>>
->>>> commit 5edcbfd1368e84fce913ceeeca7b712c524dc20d
->>>> Author: Aníbal Limón <anibal.limon@linux.intel.com>
->>>> Date:   Thu Mar 26 16:19:58 2015 +0000
->>>>
->>>>      x86_64: Add support to build kexec-tools with x32 ABI
->>>>
->>>>
->>>> after built kexec on opensuse 13.1 64bit, now when using kexec load
->>>> kernel, I got
->>>>
->>>> overflow in relocation type R_X86_64_32 val 21dffc020
->>>>
->>>> revert that commit and the one after it, kexec is working again.
->>> Thanks for bringing this to my attention.
->>>
->>> My current plan is to revert the above patch from the kexec tree
->>> unless a fix is forthcoming by tomorrow.
->> I have reverted the above commit.
->>
->> Aníbal and others, I am more than happy to consider a revised
->> version of the above patch or another solution to the problem it
->> aimed to solve.
->
 
-
---------------040002080803080109060500
-Content-Type: text/plain; charset=UTF-8;
- name="os-release"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="os-release"
-
-TkFNRT1vcGVuU1VTRQpWRVJTSU9OPSIxMy4xIChCb3R0bGUpIgpWRVJTSU9OX0lEPSIxMy4x
-IgpQUkVUVFlfTkFNRT0ib3BlblNVU0UgMTMuMSAoQm90dGxlKSAoeDg2XzY0KSIKSUQ9b3Bl
-bnN1c2UKQU5TSV9DT0xPUj0iMDszMiIKQ1BFX05BTUU9ImNwZTovbzpvcGVuc3VzZTpvcGVu
-c3VzZToxMy4xIgpCVUdfUkVQT1JUX1VSTD0iaHR0cHM6Ly9idWdzLm9wZW5zdXNlLm9yZyIK
-SE9NRV9VUkw9Imh0dHBzOi8vb3BlbnN1c2Uub3JnLyIKSURfTElLRT0ic3VzZSIK
---------------040002080803080109060500
+--------------030407030907040907050105
 Content-Type: text/x-log;
- name="kexec-opensuse-13.1.log"
+ name="kexec-opensuse-13.1-linux-4.1-rc2.log"
 Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
- filename="kexec-opensuse-13.1.log"
+ filename="kexec-opensuse-13.1-linux-4.1-rc2.log"
 
 Try gzip decompression.
-kernel: 0x7fc475888010 kernel_size: 0x4c0988
+kernel: 0x7f5e3bf7d010 kernel_size: 0x85a980d
 MEMORY RANGES
 0000000000010000-000000000009ffff (0)
 0000000000100000-00000000b6673fff (0)
@@ -126,494 +82,483 @@ MEMORY RANGES
 00000000fe000000-00000000ffffffff (1)
 0000000100000000-000000203fffffff (0)
 sym: sha256_starts info: 12 other: 00 shndx: 1 value: 10e0 size: 79
-sym: sha256_starts value: 203fff70e0 addr: 203fff6004
+sym: sha256_starts value: 110e0 addr: 10004
 R_X86_64_64
 sym: sha256_update info: 12 other: 00 shndx: 1 value: 4936 size: 154
-sym: sha256_update value: 203fffa936 addr: 203fff600f
+sym: sha256_update value: 14936 addr: 1000f
 R_X86_64_64
 sym: sha256_regions info: 11 other: 00 shndx: 8 value: 20 size: 100
-sym: sha256_regions value: 203fffc020 addr: 203fff601a
+sym: sha256_regions value: 16020 addr: 1001a
 R_X86_64_64
 sym: sha256_regions info: 11 other: 00 shndx: 8 value: 20 size: 100
-sym: sha256_regions value: 203fffc120 addr: 203fff6044
+sym: sha256_regions value: 16120 addr: 10044
 R_X86_64_64
 sym: sha256_finish info: 12 other: 00 shndx: 1 value: 4a8a size: 34b
-sym: sha256_finish value: 203fffaa8a addr: 203fff605b
+sym: sha256_finish value: 14a8a addr: 1005b
 R_X86_64_64
 sym: sha256_digest info: 11 other: 00 shndx: 8 value: 0 size: 20
-sym: sha256_digest value: 203fffc000 addr: 203fff606c
+sym: sha256_digest value: 16000 addr: 1006c
 R_X86_64_64
 sym:     memcmp info: 12 other: 00 shndx: 1 value: 59f size: 21
-sym: memcmp value: 203fff659f addr: 203fff6079
+sym: memcmp value: 1059f addr: 10079
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaef0 addr: 203fff608f
+sym: .rodata.str1.1 value: 14ef0 addr: 1008f
 R_X86_64_64
 sym:     printf info: 12 other: 00 shndx: 1 value: 4bd size: a0
-sym: printf value: 203fff64bd addr: 203fff609b
+sym: printf value: 104bd addr: 1009b
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf10 addr: 203fff60a7
+sym: .rodata.str1.1 value: 14f10 addr: 100a7
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf20 addr: 203fff60be
+sym: .rodata.str1.1 value: 14f20 addr: 100be
 R_X86_64_64
 sym:     printf info: 12 other: 00 shndx: 1 value: 4bd size: a0
-sym: printf value: 203fff64bd addr: 203fff60c8
+sym: printf value: 104bd addr: 100c8
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf26 addr: 203fff60da
+sym: .rodata.str1.1 value: 14f26 addr: 100da
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf28 addr: 203fff60eb
+sym: .rodata.str1.1 value: 14f28 addr: 100eb
 R_X86_64_64
 sym: sha256_digest info: 11 other: 00 shndx: 8 value: 0 size: 20
-sym: sha256_digest value: 203fffc000 addr: 203fff60fa
+sym: sha256_digest value: 16000 addr: 100fa
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf20 addr: 203fff610e
+sym: .rodata.str1.1 value: 14f20 addr: 1010e
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf26 addr: 203fff6122
+sym: .rodata.str1.1 value: 14f26 addr: 10122
 R_X86_64_64
 sym:     printf info: 12 other: 00 shndx: 1 value: 4bd size: a0
-sym: printf value: 203fff64bd addr: 203fff612c
+sym: printf value: 104bd addr: 1012c
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf38 addr: 203fff6149
+sym: .rodata.str1.1 value: 14f38 addr: 10149
 R_X86_64_64
 sym:     printf info: 12 other: 00 shndx: 1 value: 4bd size: a0
-sym: printf value: 203fff64bd addr: 203fff6155
+sym: printf value: 104bd addr: 10155
 R_X86_64_64
 sym: setup_arch info: 12 other: 00 shndx: 1 value: 764 size: 3a
-sym: setup_arch value: 203fff6764 addr: 203fff6162
+sym: setup_arch value: 10764 addr: 10162
 R_X86_64_64
 sym: verify_sha256_digest info: 12 other: 00 shndx: 1 value: 0 size: 147
-sym: verify_sha256_digest value: 203fff6000 addr: 203fff616e
+sym: verify_sha256_digest value: 10000 addr: 1016e
 R_X86_64_64
 sym: post_verification_setup_arch info: 12 other: 00 shndx: 1 value: 7d6 size: 3c
-sym: post_verification_setup_arch value: 203fff67d6 addr: 203fff6181
+sym: post_verification_setup_arch value: 107d6 addr: 10181
 R_X86_64_64
 sym:    putchar info: 12 other: 00 shndx: 1 value: d6c size: 143
-sym: putchar value: 203fff6d6c addr: 203fff61ca
+sym: putchar value: 10d6c addr: 101ca
 R_X86_64_64
 sym:    putchar info: 12 other: 00 shndx: 1 value: d6c size: 143
-sym: putchar value: 203fff6d6c addr: 203fff620c
+sym: putchar value: 10d6c addr: 1020c
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf4a addr: 203fff62d7
+sym: .rodata.str1.1 value: 14f4a addr: 102d7
 R_X86_64_64
 sym:    putchar info: 12 other: 00 shndx: 1 value: d6c size: 143
-sym: putchar value: 203fff6d6c addr: 203fff63db
+sym: putchar value: 10d6c addr: 103db
 R_X86_64_64
 sym:   vsprintf info: 12 other: 00 shndx: 1 value: 18c size: 29b
-sym: vsprintf value: 203fff618c addr: 203fff64ab
+sym: vsprintf value: 1018c addr: 104ab
 R_X86_64_64
 sym:   vsprintf info: 12 other: 00 shndx: 1 value: 18c size: 29b
-sym: vsprintf value: 203fff618c addr: 203fff654b
+sym: vsprintf value: 1018c addr: 1054b
 R_X86_64_64
 sym:    entry32 info: 10 other: 00 shndx: 1 value: 5c0 size: 0
-sym: entry32 value: 203fff65bc addr: 203fff65cd
+sym: entry32 value: 105bc addr: 105cd
 R_X86_64_PC32
 sym:    entry32 info: 10 other: 00 shndx: 1 value: 5c0 size: 0
-sym: entry32 value: 203fff65bc addr: 203fff65e2
+sym: entry32 value: 105bc addr: 105e2
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffc13c addr: 203fff65fd
+sym: .data value: 1613c addr: 105fd
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffc11c addr: 203fff6604
+sym: .data value: 1611c addr: 10604
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae04 addr: 203fff660a
+sym: .rodata value: 14e04 addr: 1060a
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffc18c addr: 203fff6610
+sym: .data value: 1618c addr: 10610
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaddc addr: 203fff6616
+sym: .rodata value: 14ddc addr: 10616
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae71 addr: 203fff6649
+sym: .rodata value: 14e71 addr: 10649
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae80 addr: 203fff6650
+sym: .rodata value: 14e80 addr: 10650
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae8b addr: 203fff6657
+sym: .rodata value: 14e8b addr: 10657
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae96 addr: 203fff665e
+sym: .rodata value: 14e96 addr: 1065e
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaea1 addr: 203fff6665
+sym: .rodata value: 14ea1 addr: 10665
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaeac addr: 203fff666c
+sym: .rodata value: 14eac addr: 1066c
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaeb7 addr: 203fff6673
+sym: .rodata value: 14eb7 addr: 10673
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaea6 addr: 203fff667a
+sym: .rodata value: 14ea6 addr: 1067a
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffc251 addr: 203fff6681
+sym: .data value: 16251 addr: 10681
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae9c addr: 203fff6693
+sym: .rodata value: 14e9c addr: 10693
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaecc addr: 203fff66a9
+sym: .rodata value: 14ecc addr: 106a9
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae0c addr: 203fff66bc
+sym: .rodata value: 14e0c addr: 106bc
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae14 addr: 203fff66c3
+sym: .rodata value: 14e14 addr: 106c3
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae1c addr: 203fff66ca
+sym: .rodata value: 14e1c addr: 106ca
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae24 addr: 203fff66d1
+sym: .rodata value: 14e24 addr: 106d1
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae2c addr: 203fff66d8
+sym: .rodata value: 14e2c addr: 106d8
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae34 addr: 203fff66df
+sym: .rodata value: 14e34 addr: 106df
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae3c addr: 203fff66e6
+sym: .rodata value: 14e3c addr: 106e6
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae44 addr: 203fff66ed
+sym: .rodata value: 14e44 addr: 106ed
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae4c addr: 203fff66f4
+sym: .rodata value: 14e4c addr: 106f4
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae54 addr: 203fff66fb
+sym: .rodata value: 14e54 addr: 106fb
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae5c addr: 203fff6702
+sym: .rodata value: 14e5c addr: 10702
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae64 addr: 203fff6709
+sym: .rodata value: 14e64 addr: 10709
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae6c addr: 203fff6710
+sym: .rodata value: 14e6c addr: 10710
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae74 addr: 203fff6717
+sym: .rodata value: 14e74 addr: 10717
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae7c addr: 203fff671e
+sym: .rodata value: 14e7c addr: 1071e
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae84 addr: 203fff6725
+sym: .rodata value: 14e84 addr: 10725
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffae8c addr: 203fff672b
+sym: .rodata value: 14e8c addr: 1072b
 R_X86_64_PC32
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaecc addr: 203fff6733
+sym: .rodata value: 14ecc addr: 10733
 R_X86_64_PC32
 sym: jump_back_entry info: 11 other: 00 shndx: 8 value: 2008 size: 8
-sym: jump_back_entry value: 203fffe004 addr: 203fff674d
+sym: jump_back_entry value: 18004 addr: 1074d
 R_X86_64_PC32
 sym:       .bss info: 03 other: 00 shndx: a value: 0 size: 0
-sym: .bss value: 203ffffffc addr: 203fff6754
+sym: .bss value: 19ffc addr: 10754
 R_X86_64_PC32
 sym:  purgatory info: 12 other: 00 shndx: 1 value: 147 size: 44
-sym: purgatory value: 203fff6143 addr: 203fff6759
+sym: purgatory value: 10143 addr: 10759
 R_X86_64_PC32
 sym:    entry64 info: 10 other: 00 shndx: 1 value: 690 size: 0
-sym: entry64 value: 203fff668c addr: 203fff675e
+sym: entry64 value: 1068c addr: 1075e
 R_X86_64_PC32
 sym:  reset_vga info: 11 other: 00 shndx: 8 value: 2012 size: 1
-sym: reset_vga value: 203fffe012 addr: 203fff6766
+sym: reset_vga value: 18012 addr: 10766
 R_X86_64_64
 sym: x86_reset_vga info: 12 other: 00 shndx: 1 value: eb0 size: 1f9
-sym: x86_reset_vga value: 203fff6eb0 addr: 203fff6776
+sym: x86_reset_vga value: 10eb0 addr: 10776
 R_X86_64_64
 sym: legacy_pic info: 11 other: 00 shndx: 8 value: 2011 size: 1
-sym: legacy_pic value: 203fffe011 addr: 203fff6782
+sym: legacy_pic value: 18011 addr: 10782
 R_X86_64_64
 sym: x86_setup_legacy_pic info: 12 other: 00 shndx: 1 value: 10ac size: 31
-sym: x86_setup_legacy_pic value: 203fff70ac addr: 203fff6792
+sym: x86_setup_legacy_pic value: 110ac addr: 10792
 R_X86_64_64
 sym: cmdline_end info: 11 other: 00 shndx: 8 value: 2000 size: 8
-sym: cmdline_end value: 203fffe000 addr: 203fff67a0
+sym: cmdline_end value: 18000 addr: 107a0
 R_X86_64_64
 sym: jump_back_entry info: 11 other: 00 shndx: 8 value: 2008 size: 8
-sym: jump_back_entry value: 203fffe008 addr: 203fff67b2
+sym: jump_back_entry value: 18008 addr: 107b2
 R_X86_64_64
 sym: .rodata.str1.1 info: 03 other: 00 shndx: 5 value: 0 size: 0
-sym: .rodata.str1.1 value: 203fffaf5b addr: 203fff67bc
+sym: .rodata.str1.1 value: 14f5b addr: 107bc
 R_X86_64_64
 sym:    sprintf info: 12 other: 00 shndx: 1 value: 427 size: 96
-sym: sprintf value: 203fff6427 addr: 203fff67c9
+sym: sprintf value: 10427 addr: 107c9
 R_X86_64_64
 sym: panic_kernel info: 11 other: 00 shndx: 8 value: 2010 size: 1
-sym: panic_kernel value: 203fffe010 addr: 203fff67d8
+sym: panic_kernel value: 18010 addr: 107d8
 R_X86_64_64
 sym: crashdump_backup_memory info: 12 other: 00 shndx: 1 value: c84 size: 3e
-sym: crashdump_backup_memory value: 203fff6c84 addr: 203fff67e9
+sym: crashdump_backup_memory value: 10c84 addr: 107e9
 R_X86_64_64
 sym: jump_back_entry info: 11 other: 00 shndx: 8 value: 2008 size: 8
-sym: jump_back_entry value: 203fffe008 addr: 203fff67f5
+sym: jump_back_entry value: 18008 addr: 107f5
 R_X86_64_64
 sym: x86_setup_jump_back_entry info: 12 other: 00 shndx: 1 value: 79e size: 38
-sym: x86_setup_jump_back_entry value: 203fff679e addr: 203fff6806
+sym: x86_setup_jump_back_entry value: 1079e addr: 10806
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe047 addr: 203fff6837
+sym: .data value: 18047 addr: 10837
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe04f addr: 203fff683d
+sym: .data value: 1804f addr: 1083d
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe075 addr: 203fff685d
+sym: .data value: 18075 addr: 1085d
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe07f addr: 203fff6863
+sym: .data value: 1807f addr: 10863
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe089 addr: 203fff6869
+sym: .data value: 18089 addr: 10869
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe093 addr: 203fff686f
+sym: .data value: 18093 addr: 1086f
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe076 addr: 203fff6876
+sym: .data value: 18076 addr: 10876
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe08d addr: 203fff687d
+sym: .data value: 1808d addr: 1087d
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe06d addr: 203fff6947
+sym: .data value: 1806d addr: 10947
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe075 addr: 203fff694d
+sym: .data value: 18075 addr: 1094d
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe09b addr: 203fff696d
+sym: .data value: 1809b addr: 1096d
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe0a5 addr: 203fff6973
+sym: .data value: 180a5 addr: 10973
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe0af addr: 203fff6979
+sym: .data value: 180af addr: 10979
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe0b9 addr: 203fff697f
+sym: .data value: 180b9 addr: 1097f
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe0e2 addr: 203fff69c2
+sym: .data value: 180e2 addr: 109c2
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe12b addr: 203fff6a05
+sym: .data value: 1812b addr: 10a05
 R_X86_64_PC32
 sym: backup_src_start info: 11 other: 00 shndx: 8 value: 2078 size: 8
-sym: backup_src_start value: 203fffe078 addr: 203fff6c86
+sym: backup_src_start value: 18078 addr: 10c86
 R_X86_64_64
 sym: backup_src_size info: 11 other: 00 shndx: 8 value: 2070 size: 8
-sym: backup_src_size value: 203fffe070 addr: 203fff6c93
+sym: backup_src_size value: 18070 addr: 10c93
 R_X86_64_64
 sym: backup_start info: 11 other: 00 shndx: 8 value: 2080 size: 8
-sym: backup_start value: 203fffe080 addr: 203fff6ca5
+sym: backup_start value: 18080 addr: 10ca5
 R_X86_64_64
 sym:     memcpy info: 12 other: 00 shndx: 1 value: 587 size: 18
-sym: memcpy value: 203fff6587 addr: 203fff6cb7
+sym: memcpy value: 10587 addr: 10cb7
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe088 addr: 203fff6cc6
+sym: .data value: 18088 addr: 10cc6
 R_X86_64_64
 sym: serial_base info: 11 other: 00 shndx: 8 value: 2090 size: 2
-sym: serial_base value: 203fffe090 addr: 203fff6cd4
+sym: serial_base value: 18090 addr: 10cd4
 R_X86_64_64
 sym: serial_baud info: 11 other: 00 shndx: 8 value: 208c size: 4
-sym: serial_baud value: 203fffe08c addr: 203fff6d10
+sym: serial_baud value: 1808c addr: 10d10
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe088 addr: 203fff6d44
+sym: .data value: 18088 addr: 10d44
 R_X86_64_64
 sym: console_vga info: 11 other: 00 shndx: 8 value: 2093 size: 1
-sym: console_vga value: 203fffe093 addr: 203fff6d6f
+sym: console_vga value: 18093 addr: 10d6f
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe098 addr: 203fff6d85
+sym: .data value: 18098 addr: 10d85
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe098 addr: 203fff6dea
+sym: .data value: 18098 addr: 10dea
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe094 addr: 203fff6dff
+sym: .data value: 18094 addr: 10dff
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe098 addr: 203fff6e0e
+sym: .data value: 18098 addr: 10e0e
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe098 addr: 203fff6e21
+sym: .data value: 18098 addr: 10e21
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe094 addr: 203fff6e2d
+sym: .data value: 18094 addr: 10e2d
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe094 addr: 203fff6e51
+sym: .data value: 18094 addr: 10e51
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe094 addr: 203fff6e64
+sym: .data value: 18094 addr: 10e64
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe098 addr: 203fff6e76
+sym: .data value: 18098 addr: 10e76
 R_X86_64_64
 sym: console_serial info: 11 other: 00 shndx: 8 value: 2092 size: 1
-sym: console_serial value: 203fffe092 addr: 203fff6e80
+sym: console_serial value: 18092 addr: 10e80
 R_X86_64_64
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6cc4 addr: 203fff6e92
+sym: .text value: 10cc4 addr: 10e92
 R_X86_64_64
 sym:     memcpy info: 12 other: 00 shndx: 1 value: 587 size: 18
-sym: memcpy value: 203fff6587 addr: 203fffa9e8
+sym: memcpy value: 10587 addr: 149e8
 R_X86_64_64
 sym: sha256_process info: 12 other: 00 shndx: 1 value: 1159 size: 37dd
-sym: sha256_process value: 203fff7159 addr: 203fffaa06
+sym: sha256_process value: 11159 addr: 14a06
 R_X86_64_64
 sym: sha256_process info: 12 other: 00 shndx: 1 value: 1159 size: 37dd
-sym: sha256_process value: 203fff7159 addr: 203fffaa3c
+sym: sha256_process value: 11159 addr: 14a3c
 R_X86_64_64
 sym:     memcpy info: 12 other: 00 shndx: 1 value: 587 size: 18
-sym: memcpy value: 203fff6587 addr: 203fffaa7e
+sym: memcpy value: 10587 addr: 14a7e
 R_X86_64_64
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffe0a0 addr: 203fffab37
+sym: .data value: 180a0 addr: 14b37
 R_X86_64_64
 sym: sha256_update info: 12 other: 00 shndx: 1 value: 4936 size: 154
-sym: sha256_update value: 203fffa936 addr: 203fffab44
+sym: sha256_update value: 14936 addr: 14b44
 R_X86_64_64
 sym: sha256_update info: 12 other: 00 shndx: 1 value: 4936 size: 154
-sym: sha256_update value: 203fffa936 addr: 203fffab63
+sym: sha256_update value: 14936 addr: 14b63
 R_X86_64_64
 sym:    entry16 info: 10 other: 00 shndx: 1 value: 820 size: 0
-sym: entry16 value: 203fff6820 addr: 203fffae08
+sym: entry16 value: 10820 addr: 14e08
 R_X86_64_64
 sym:    entry32 info: 10 other: 00 shndx: 1 value: 5c0 size: 0
-sym: entry32 value: 203fff65c0 addr: 203fffae90
+sym: entry32 value: 105c0 addr: 14e90
 R_X86_64_64
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaea0 addr: 203fffaea2
+sym: .rodata value: 14ea0 addr: 14ea2
 R_X86_64_64
 sym:    .rodata info: 03 other: 00 shndx: 3 value: 0 size: 0
-sym: .rodata value: 203fffaed0 addr: 203fffaed2
+sym: .rodata value: 14ed0 addr: 14ed2
 R_X86_64_64
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6000 addr: 203fffaf98
+sym: .text value: 10000 addr: 14f98
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6147 addr: 203fffafcc
+sym: .text value: 10147 addr: 14fcc
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff618c addr: 203fffb000
+sym: .text value: 1018c addr: 15000
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6427 addr: 203fffb04c
+sym: .text value: 10427 addr: 1504c
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff64bd addr: 203fffb068
+sym: .text value: 104bd addr: 15068
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6560 addr: 203fffb0a0
+sym: .text value: 10560 addr: 150a0
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6573 addr: 203fffb0b4
+sym: .text value: 10573 addr: 150b4
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6587 addr: 203fffb0c8
+sym: .text value: 10587 addr: 150c8
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff659f addr: 203fffb0dc
+sym: .text value: 1059f addr: 150dc
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6764 addr: 203fffb108
+sym: .text value: 10764 addr: 15108
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff679e addr: 203fffb128
+sym: .text value: 1079e addr: 15128
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff67d6 addr: 203fffb13c
+sym: .text value: 107d6 addr: 1513c
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6c84 addr: 203fffb178
+sym: .text value: 10c84 addr: 15178
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6cc4 addr: 203fffb1a8
+sym: .text value: 10cc4 addr: 151a8
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6d6c addr: 203fffb1c4
+sym: .text value: 10d6c addr: 151c4
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff6eb0 addr: 203fffb208
+sym: .text value: 10eb0 addr: 15208
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff70ac addr: 203fffb238
+sym: .text value: 110ac addr: 15238
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff70e0 addr: 203fffb268
+sym: .text value: 110e0 addr: 15268
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fff7159 addr: 203fffb288
+sym: .text value: 11159 addr: 15288
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fffa936 addr: 203fffb2a8
+sym: .text value: 14936 addr: 152a8
 R_X86_64_PC32
 sym:      .text info: 03 other: 00 shndx: 1 value: 0 size: 0
-sym: .text value: 203fffaa8a addr: 203fffb2c8
+sym: .text value: 14a8a addr: 152c8
 R_X86_64_PC32
 sym:      .data info: 03 other: 00 shndx: 8 value: 0 size: 0
-sym: .data value: 203fffc120 addr: 203fffc122
+sym: .data value: 16120 addr: 16122
 R_X86_64_64
-Loaded purgatory at addr 0x203fff6000
-Loaded real_mode_data and command line at 0x203fff1000
-kernel init_size 0x123b000
-Loaded 64bit kernel at 0x203e000000
-E820 memmap:
-0000000000010000-000000000009ffff (1)
-0000000000100000-00000000b6673fff (1)
-00000000b6674000-00000000b6a73fff (4)
-00000000b6a74000-00000000b6b35fff (1)
-00000000b6b36000-00000000b6d36fff (2)
-00000000b6d37000-00000000b86bffff (1)
-00000000b86c0000-00000000b88c3fff (2)
-00000000b88c4000-00000000b89c3fff (4)
-00000000b89c4000-00000000b8a43fff (3)
-00000000b8a44000-00000000bca87fff (1)
-00000000bcab8000-00000000bcaeffff (1)
-00000000bd2f0000-00000000bd31bfff (2)
-00000000bd31c000-00000000bd35afff (3)
-00000000bd35b000-00000000bfffffff (2)
-00000000e0000000-00000000efffffff (2)
-00000000fe000000-00000000ffffffff (2)
-0000000100000000-000000203fffffff (1)
-/sys/firmware/edd does not exist.
-kexec_load: entry = 0x203fff6730 flags = 0x3e0000
-nr_segments = 3
-segment[0].buf   = 0x7fc47588c410
-segment[0].bufsz = 0x4bc588
-segment[0].mem   = 0x203e000000
-segment[0].memsz = 0x123b000
-segment[1].buf   = 0x10343a0
-segment[1].bufsz = 0x4441
-segment[1].mem   = 0x203fff1000
-segment[1].memsz = 0x5000
-segment[2].buf   = 0x102c280
-segment[2].bufsz = 0x80e0
-segment[2].mem   = 0x203fff6000
-segment[2].memsz = 0xa000
+kexec_load: entry = 0x10730 flags = 0x3e0000
+nr_segments = 6
+segment[0].buf   = 0x17510e0
+segment[0].bufsz = 0x80e0
+segment[0].mem   = 0x10000
+segment[0].memsz = 0xa000
+segment[1].buf   = 0x1750b40
+segment[1].bufsz = 0x44
+segment[1].mem   = 0x1a000
+segment[1].memsz = 0x1000
+segment[2].buf   = 0x7f5e3c17d010
+segment[2].bufsz = 0xace000
+segment[2].mem   = 0x1000000
+segment[2].memsz = 0xace000
+segment[3].buf   = 0x7f5e3cd7d010
+segment[3].bufsz = 0xe2000
+segment[3].mem   = 0x1c00000
+segment[3].memsz = 0xe2000
+segment[4].buf   = 0x7f5e3cf7d010
+segment[4].bufsz = 0x17718
+segment[4].mem   = 0x1ce2000
+segment[4].memsz = 0x18000
+segment[5].buf   = 0x7f5e3d077010
+segment[5].bufsz = 0x142000
+segment[5].mem   = 0x1cfa000
+segment[5].memsz = 0x2e0000
 
---------------040002080803080109060500
+--------------030407030907040907050105
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -624,5 +569,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---------------040002080803080109060500--
+--------------030407030907040907050105--
 
