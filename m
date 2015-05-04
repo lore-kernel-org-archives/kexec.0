@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YpHZd-0007wg-DW
- for kexec@lists.infradead.org; Mon, 04 May 2015 14:42:22 +0000
-Message-ID: <5547852F.8030309@redhat.com>
-Date: Mon, 04 May 2015 20:11:51 +0530
-From: Pratyush Anand <panand@redhat.com>
+Received: from mga01.intel.com ([192.55.52.88])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YpHzD-0002sw-OL
+ for kexec@lists.infradead.org; Mon, 04 May 2015 15:08:48 +0000
+Message-ID: <55478B96.4060706@linux.intel.com>
+Date: Mon, 04 May 2015 10:09:10 -0500
+From: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC 0/3] arm64: disable/enable d-cache support for
-References: <cover.1430742915.git.panand@redhat.com>
-In-Reply-To: <cover.1430742915.git.panand@redhat.com>
+Subject: Re: commit 5edcbfd1368e break kexec on x86-64
+References: <CAE9FiQXBJygEhKpAgxZ3yVktAM5u-rxBGuy7oS1NU8wFRuub8g@mail.gmail.com>
+ <20150430050944.GJ15511@verge.net.au> <20150501011556.GJ13754@verge.net.au>
+In-Reply-To: <20150501011556.GJ13754@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,50 +19,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: geoff@infradead.org
-Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, Yinghai Lu <yinghai@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-
-
-On Monday 04 May 2015 06:32 PM, Pratyush Anand wrote:
-> These patches add support for enable/disable d cache support. It reduces
-> time for sha verification from more than 2 min to 3-4 sec on my
-> platform.
-> There are some of the observation which I am unable to explain.
-> * It takes around 18 sec when I boot a kexec kernel and around 3-4 sec
-> * when I boot a crash kernel. In case of kexec kernel start of 1st
-> * segment is at 0000004000280000 and, end of last segment is at
-> * 00000040029c0000. In case of crash kernel start of 1st segment is at
-> * 00000041b9080000 and, end of last segment is at 00000041f9000000.
-
-There is one more observation which is not explainable :(
-While executing a secondary kernel using kexec -e, if sha256_process() 
-function is aligned at offset 256, it takes 18 sec else it takes double 
-ie 36 sec.
-
-# objdump -d purgatory/purgatory.ro | grep sha256_process
-0000000000001300 <sha256_process>:
-
--> takes 18 sec
-
-If because of some changes in code, this function shifts a bit
-# objdump -d purgatory/purgatory.ro | grep sha256_process
-0000000000001310 <sha256_process>:
-
--> takes 36 sec.
-
-So,  "__attribute__ ((aligned (256))) void sha256_process( 
-sha256_context *ctx, const uint8_t data[64] )" guarantees constant 
-execution time, but how can this be justified?
-
-~Pratyush
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgU2ltb24sCgpTb3JyeSBhYm91dCB0aGUgcHJvYmxlbXMgdGhhdCBpIGNhdXNlZCwgaSB3YXMg
+b3V0IGZyb20gb2ZmaWNlLgpJJ20gd29ya2luZyBpbiBmb3IgYSBzb2x1dGlvbi4KCkJlc3QgcmVn
+YXJkcywKICAgICBhbGltb24KCk9uIDMwLzA0LzE1IDIwOjE1LCBTaW1vbiBIb3JtYW4gd3JvdGU6
+Cj4gT24gVGh1LCBBcHIgMzAsIDIwMTUgYXQgMDI6MDk6NDRQTSArMDkwMCwgU2ltb24gSG9ybWFu
+IHdyb3RlOgo+PiBPbiBXZWQsIEFwciAyOSwgMjAxNSBhdCAwMzozNjoxN1BNIC0wNzAwLCBZaW5n
+aGFpIEx1IHdyb3RlOgo+Pj4gd2l0aAo+Pj4KPj4+IGNvbW1pdCA1ZWRjYmZkMTM2OGU4NGZjZTkx
+M2NlZWVjYTdiNzEyYzUyNGRjMjBkCj4+PiBBdXRob3I6IEFuw61iYWwgTGltw7NuIDxhbmliYWwu
+bGltb25AbGludXguaW50ZWwuY29tPgo+Pj4gRGF0ZTogICBUaHUgTWFyIDI2IDE2OjE5OjU4IDIw
+MTUgKzAwMDAKPj4+Cj4+PiAgICAgIHg4Nl82NDogQWRkIHN1cHBvcnQgdG8gYnVpbGQga2V4ZWMt
+dG9vbHMgd2l0aCB4MzIgQUJJCj4+Pgo+Pj4KPj4+IGFmdGVyIGJ1aWx0IGtleGVjIG9uIG9wZW5z
+dXNlIDEzLjEgNjRiaXQsIG5vdyB3aGVuIHVzaW5nIGtleGVjIGxvYWQKPj4+IGtlcm5lbCwgSSBn
+b3QKPj4+Cj4+PiBvdmVyZmxvdyBpbiByZWxvY2F0aW9uIHR5cGUgUl9YODZfNjRfMzIgdmFsIDIx
+ZGZmYzAyMAo+Pj4KPj4+IHJldmVydCB0aGF0IGNvbW1pdCBhbmQgdGhlIG9uZSBhZnRlciBpdCwg
+a2V4ZWMgaXMgd29ya2luZyBhZ2Fpbi4KPj4gVGhhbmtzIGZvciBicmluZ2luZyB0aGlzIHRvIG15
+IGF0dGVudGlvbi4KPj4KPj4gTXkgY3VycmVudCBwbGFuIGlzIHRvIHJldmVydCB0aGUgYWJvdmUg
+cGF0Y2ggZnJvbSB0aGUga2V4ZWMgdHJlZQo+PiB1bmxlc3MgYSBmaXggaXMgZm9ydGhjb21pbmcg
+YnkgdG9tb3Jyb3cuCj4gSSBoYXZlIHJldmVydGVkIHRoZSBhYm92ZSBjb21taXQuCj4KPiBBbsOt
+YmFsIGFuZCBvdGhlcnMsIEkgYW0gbW9yZSB0aGFuIGhhcHB5IHRvIGNvbnNpZGVyIGEgcmV2aXNl
+ZAo+IHZlcnNpb24gb2YgdGhlIGFib3ZlIHBhdGNoIG9yIGFub3RoZXIgc29sdXRpb24gdG8gdGhl
+IHByb2JsZW0gaXQKPiBhaW1lZCB0byBzb2x2ZS4KCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
