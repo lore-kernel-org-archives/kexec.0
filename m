@@ -1,21 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ig0-x22e.google.com ([2607:f8b0:4001:c05::22e])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YpJYr-0005sp-RO
- for kexec@lists.infradead.org; Mon, 04 May 2015 16:49:42 +0000
-Received: by igbhj9 with SMTP id hj9so88285810igb.1
- for <kexec@lists.infradead.org>; Mon, 04 May 2015 09:49:20 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <554796B4.5020101@linux.intel.com>
-References: <CAE9FiQXBJygEhKpAgxZ3yVktAM5u-rxBGuy7oS1NU8wFRuub8g@mail.gmail.com>
- <20150430050944.GJ15511@verge.net.au>
- <20150501011556.GJ13754@verge.net.au>
- <55478B96.4060706@linux.intel.com>
- <554796B4.5020101@linux.intel.com>
-Date: Mon, 4 May 2015 09:49:20 -0700
-Message-ID: <CAE9FiQX8Sqb8rd3jE0n+7oDMLPWmnA0_d6J5bdRdoVNsxRVaVg@mail.gmail.com>
-Subject: Re: commit 5edcbfd1368e break kexec on x86-64
-From: Yinghai Lu <yinghai@kernel.org>
+Message-ID: <1430931959.12082.12.camel@infradead.org>
+Subject: Re: [PATCH RFC 0/3] arm64: disable/enable d-cache support for
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 06 May 2015 10:05:59 -0700
+In-Reply-To: <cover.1430742915.git.panand@redhat.com>
+References: <cover.1430742915.git.panand@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,17 +14,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?QW7DrWJhbCBMaW3Ds24=?= <anibal.limon@linux.intel.com>
-Cc: Mariano Lopez <mariano.lopez@linux.intel.com>, Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
 
-T24gTW9uLCBNYXkgNCwgMjAxNSBhdCA4OjU2IEFNLCBBbsOtYmFsIExpbcOzbgo8YW5pYmFsLmxp
-bW9uQGxpbnV4LmludGVsLmNvbT4gd3JvdGU6Cj4gSGkgWWluZ2hhaSwKPgo+IEknbSB0cnlpbmcg
-dG8gcmVwcm9kdWNlIHRoZSBpc3N1ZSB0aGF0IHlvdSBmb3VuZCBidXQgaSBjYW4ndCwgYW55IG9w
-dGlvbgo+IHRoYXQgeW91IHVzZT8uCgpDYW4geW91IGNvbXBpbGUgY3VycmVudCB1cHN0cmVhbSBr
-ZXJuZWw/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi,
+
+I don't really like the idea of doing cache operations in purgatory.
+For fast reboot we have the --lite option to kexec, which will skip the
+digest calculations.
+
+Your 2 minutes seems like a long time.  Is this seen on other platforms?
+
+-Geoff
+
+
+On Mon, 2015-05-04 at 18:32 +0530, Pratyush Anand wrote:
+> These patches add support for enable/disable d cache support. It reduces
+> time for sha verification from more than 2 min to 3-4 sec on my
+> platform. 
+> There are some of the observation which I am unable to explain.
+> * It takes around 18 sec when I boot a kexec kernel and around 3-4 sec
+> * when I boot a crash kernel. In case of kexec kernel start of 1st
+> * segment is at 0000004000280000 and, end of last segment is at
+> * 00000040029c0000. In case of crash kernel start of 1st segment is at
+> * 00000041b9080000 and, end of last segment is at 00000041f9000000.
+> 
+> Pratyush Anand (3):
+>   arm64: Add enable/disable d-cache support for purgatory
+>   arm64: Pass RAM boundary to purgatory
+>   arm64: Enable/disable D-cache before/after sha verification
+> 
+>  kexec/arch/arm64/include/types.h       |  16 +++
+>  kexec/arch/arm64/kexec-arm64.c         |  16 ++-
+>  purgatory/arch/arm64/Makefile          |   1 +
+>  purgatory/arch/arm64/cache.S           | 222 +++++++++++++++++++++++++++++++++
+>  purgatory/arch/arm64/cache.h           |  42 +++++++
+>  purgatory/arch/arm64/entry.S           |  10 ++
+>  purgatory/arch/arm64/purgatory-arm64.c |  12 ++
+>  7 files changed, 318 insertions(+), 1 deletion(-)
+>  create mode 100644 kexec/arch/arm64/include/types.h
+>  create mode 100644 purgatory/arch/arm64/cache.S
+>  create mode 100644 purgatory/arch/arm64/cache.h
+> 
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
