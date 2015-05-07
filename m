@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YqLob-00086y-P8
- for kexec@lists.infradead.org; Thu, 07 May 2015 13:26:14 +0000
-Date: Thu, 7 May 2015 21:25:36 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150507132536.GA4559@localhost.localdomain>
-References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
- <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
- <20150504110551.GD15736@8bytes.org>
- <20150505060931.GB31063@dhcp-128-4.nay.redhat.com>
- <20150505152343.GP15736@8bytes.org>
- <20150506014649.GA14065@dhcp-128-4.nay.redhat.com>
- <20150506081617.GB20611@8bytes.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150506081617.GB20611@8bytes.org>
+Message-ID: <1431012726.12082.28.camel@infradead.org>
+Subject: Re: [PATCH RFC 0/3] arm64: disable/enable d-cache support for
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 07 May 2015 08:32:06 -0700
+In-Reply-To: <554AEFF7.5070300@redhat.com>
+References: <cover.1430742915.git.panand@redhat.com>
+ <1430931959.12082.12.camel@infradead.org> <554A5151.7020706@redhat.com>
+ <554AE924.4040208@linaro.org> <554AEFF7.5070300@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,24 +20,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
- Zhen-Hua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
 
-On 05/06/15 at 10:16am, Joerg Roedel wrote:
-> On Wed, May 06, 2015 at 09:46:49AM +0800, Dave Young wrote:
-> > For the original problem, the key issue is dmar faults cause kdump kernel
-> > hang so that vmcore can not be saved. I do not know the reason why it hangs
-> > I think it is acceptable if kdump kernel boot ok with some dma errors..
-> 
-> It hangs because some devices can't handle the DMAR faults and the kdump
-> kernel can't initialize them and will hang itself. For that it doesn't
-> matter whether the fault was caused by a read or write request.
+On Thu, 2015-05-07 at 10:24 +0530, Pratyush Anand wrote:
 
-Ok, thanks for explanation. so it explains sometimes kdump kernel boot ok
-with faults, sometimes it hangs instead.
+> @Geoff: Do you see any specific side effect for enabling D-cache in 
+> purgatory, other than the fact that it increases size of purgatory? May 
+> be we can keep an user option to select/not select d-cache enabling.
 
-Dave
+The checks in purgatory are for kdump, which won't be a regularly used
+feature.  I don't want to add the complexity to save one minute for
+someone who will likely spend several hours working on a problem that
+triggered a kdump. 
+
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
