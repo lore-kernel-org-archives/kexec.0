@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YqWzJ-0001q0-L2
- for kexec@lists.infradead.org; Fri, 08 May 2015 01:22:03 +0000
-Date: Fri, 8 May 2015 09:21:18 +0800
+Date: Fri, 8 May 2015 20:19:21 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150508012118.GA4809@dhcp-128-4.nay.redhat.com>
-References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
- <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
- <551E56F6.60503@hp.com>
- <20150403092111.GG22579@dhcp-128-53.nay.redhat.com>
- <20150405015453.GB1562@dhcp-17-102.nay.redhat.com>
- <20150407034622.GB7213@localhost.localdomain>
- <5523E5DB.2090001@redhat.com>
- <20150507140029.GC4559@localhost.localdomain>
- <554B75D6.1060204@redhat.com>
+Subject: Re: [v2 4/5] arm64: add kdump support
+Message-ID: <20150508121921.GA18400@localhost.localdomain>
+References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
+ <1429861989-8417-5-git-send-email-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <554B75D6.1060204@redhat.com>
+In-Reply-To: <1429861989-8417-5-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,103 +20,136 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Dutile <ddutile@redhat.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, Baoquan He <bhe@redhat.com>, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li, ZhenHua" <zhen-hual@hp.com>, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, panand@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On 05/07/15 at 10:25am, Don Dutile wrote:
-> On 05/07/2015 10:00 AM, Dave Young wrote:
-> >On 04/07/15 at 10:12am, Don Dutile wrote:
-> >>On 04/06/2015 11:46 PM, Dave Young wrote:
-> >>>On 04/05/15 at 09:54am, Baoquan He wrote:
-> >>>>On 04/03/15 at 05:21pm, Dave Young wrote:
-> >>>>>On 04/03/15 at 05:01pm, Li, ZhenHua wrote:
-> >>>>>>Hi Dave,
-> >>>>>>
-> >>>>>>There may be some possibilities that the old iommu data is corrupted by
-> >>>>>>some other modules. Currently we do not have a better solution for the
-> >>>>>>dmar faults.
-> >>>>>>
-> >>>>>>But I think when this happens, we need to fix the module that corrupted
-> >>>>>>the old iommu data. I once met a similar problem in normal kernel, the
-> >>>>>>queue used by the qi_* functions was written again by another module.
-> >>>>>>The fix was in that module, not in iommu module.
-> >>>>>
-> >>>>>It is too late, there will be no chance to save vmcore then.
-> >>>>>
-> >>>>>Also if it is possible to continue corrupt other area of oldmem because
-> >>>>>of using old iommu tables then it will cause more problems.
-> >>>>>
-> >>>>>So I think the tables at least need some verifycation before being used.
-> >>>>>
-> >>>>
-> >>>>Yes, it's a good thinking anout this and verification is also an
-> >>>>interesting idea. kexec/kdump do a sha256 calculation on loaded kernel
-> >>>>and then verify this again when panic happens in purgatory. This checks
-> >>>>whether any code stomps into region reserved for kexec/kernel and corrupt
-> >>>>the loaded kernel.
-> >>>>
-> >>>>If this is decided to do it should be an enhancement to current
-> >>>>patchset but not a approach change. Since this patchset is going very
-> >>>>close to point as maintainers expected maybe this can be merged firstly,
-> >>>>then think about enhancement. After all without this patchset vt-d often
-> >>>>raised error message, hung.
-> >>>
-> >>>It does not convince me, we should do it right at the beginning instead of
-> >>>introduce something wrong.
-> >>>
-> >>>I wonder why the old dma can not be remap to a specific page in kdump kernel
-> >>>so that it will not corrupt more memory. But I may missed something, I will
-> >>>looking for old threads and catch up.
-> >>>
-> >>>Thanks
-> >>>Dave
-> >>>
-> >>The (only) issue is not corruption, but once the iommu is re-configured, the old,
-> >>not-stopped-yet, dma engines will use iova's that will generate dmar faults, which
-> >>will be enabled when the iommu is re-configured (even to a single/simple paging scheme)
-> >>in the kexec kernel.
-> >>
-> >
-> >Don, so if iommu is not reconfigured then these faults will not happen?
-> >
-> Well, if iommu is not reconfigured, then if the crash isn't caused by
-> an IOMMU fault (some systems have firmware-first catch the IOMMU fault & convert
-> them into NMI_IOCK), then the DMA's will continue into the old kernel memory space.
+Hi,
 
-So NMI_IOCK is one reason to cause kernel hang, I think I'm still not clear about
-what does re-configured means though. DMAR faults will happen originally this is the old
-behavior but we are removing the faults by alowing DMA continuing into old memory
-space.
-
+On 04/24/15 at 04:53pm, AKASHI Takahiro wrote:
+> Please read the following commits for arm64-specific constraints:
+>     arm64: kdump: reserve memory for crash dump kernel
+>     arm64: kdump: do not go into EL2 before starting a crash dump kernel
 > 
-> >Baoquan and me has a confusion below today about iommu=off/intel_iommu=off:
-> >
-> >intel_iommu_init()
-> >{
-> >...
-> >
-> >        dmar_table_init();
-> >
-> >        disable active iommu translations;
-> >
-> >        if (no_iommu || dmar_disabled)
-> >                 goto out_free_dmar;
-> >
-> >...
-> >}
-> >
-> >Any reason not move no_iommu check to the begining of intel_iommu_init function?
-> >
-> What does that do/help?
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  Documentation/kdump/kdump.txt |   31 ++++++++++++++++++++++++++++++-
+>  arch/arm64/Kconfig            |   12 ++++++++++++
+>  2 files changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> index bc4bd5a..f9cf6f5 100644
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+>  a remote system.
+>  
+>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> -s390x and arm architectures.
+> +s390x, arm and arm64 architectures.
+>  
+>  When the system kernel boots, it reserves a small section of memory for
+>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> @@ -249,6 +249,29 @@ Dump-capture kernel config options (Arch Dependent, arm)
+>  
+>      AUTO_ZRELADDR=y
+>  
+> +Dump-capture kernel config options (Arch Dependent, arm64)
+> +----------------------------------------------------------
+> +
+> +1) Disable symmetric multi-processing support under "Processor type and
+> +   features":
+> +
+> +   CONFIG_SMP=n
+> +
+> +   (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
+> +   when loading the dump-capture kernel, see section "Load the Dump-capture
+> +   Kernel".)
+> +
+> +2) Under uefi, the maximum memory size on the dump-capture kernel must be
+> +   limited by specifying:
+> +
+> +   mem=X[MG]
+> +
+> +   where X should be less than or equal to the size in "crashkernel="
+> +   boot parameter. Kexec-tools will automatically add this.
 
-Just do not know why the previous handling is necessary with iommu=off, shouldn't
-we do noting and return earlier?
+I noticed you are passing mem=X in kexec-tools, Pratyush found a problem
+that vmcore is corrupted because kdump kernel is using the crash notes memory.
 
-Also there is a guess, dmar faults appears after iommu_init, so not sure if the codes
-before dmar_disabled checking have some effect about enabling the faults messages.
+How does kdump kernel know the system ram range especially the mem_start?
+Only with the size from mem=? parammeter?
 
-Thanks
-Dave
+In X86 because it use E820 so kexec-tools can pass the memory range to kdump
+kernel even for UEFI booting. But in arm64 may need find other way to
+communicate with 2nd kernel like memmap=exactmap in X86..
+
+> +
+> +3) Currently, kvm will not be initialized on the dump-capture kernel even
+> +   if it is configured.
+> +
+>  Extended crashkernel syntax
+>  ===========================
+>  
+> @@ -312,6 +335,7 @@ Boot into System Kernel
+>     any space below the alignment point may be overwritten by the dump-capture kernel,
+>     which means it is possible that the vmcore is not that precise as expected.
+>  
+> +   On arm64, use "crashkernel=Y@X".
+>  
+>  Load the Dump-capture Kernel
+>  ============================
+> @@ -334,6 +358,8 @@ For s390x:
+>  	- Use image or bzImage
+>  For arm:
+>  	- Use zImage
+> +For arm64:
+> +	- Use vmlinux
+>  
+>  If you are using a uncompressed vmlinux image then use following command
+>  to load dump-capture kernel.
+> @@ -377,6 +403,9 @@ For s390x:
+>  For arm:
+>  	"1 maxcpus=1 reset_devices"
+>  
+> +For arm64:
+> +	"1 maxcpus=1 mem=X[MG] reset_devices"
+> +
+>  Notes on loading the dump-capture kernel:
+>  
+>  * By default, the ELF headers are stored in ELF64 format to support
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 5716edf..8e2f545 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -562,6 +562,18 @@ config KEXEC
+>  	  but it is independent of the system firmware.   And like a reboot
+>  	  you can start any kernel with it, not just Linux.
+>  
+> +config CRASH_DUMP
+> +	bool "Build kdump crash kernel"
+> +	help
+> +	  Generate crash dump after being started by kexec. This should
+> +	  be normally only set in special crash dump kernels which are
+> +	  loaded in the main kernel with kexec-tools into a specially
+> +	  reserved region and then later executed after a crash by
+> +	  kdump/kexec. The crash dump kernel must be compiled to a
+> +	  memory address not used by the main kernel.
+> +
+> +	  For more details see Documentation/kdump/kdump.txt
+> +
+>  config XEN_DOM0
+>  	def_bool y
+>  	depends on XEN
+> -- 
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
 
 _______________________________________________
 kexec mailing list
