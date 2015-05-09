@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 8 May 2015 20:19:21 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [v2 4/5] arm64: add kdump support
-Message-ID: <20150508121921.GA18400@localhost.localdomain>
-References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-5-git-send-email-takahiro.akashi@linaro.org>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Yr4i1-0000Zm-QN
+ for kexec@lists.infradead.org; Sat, 09 May 2015 13:22:26 +0000
+Date: Sat, 9 May 2015 15:21:59 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: More on kexec/purgatory handover
+Message-ID: <20150509152159.6b391c2b@hananiah.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1429861989-8417-5-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,136 +20,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, panand@redhat.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Jan Beulich <JBeulich@suse.com>, xen-devel@lists.xen.org
 
-Hi,
+Hi all,
 
-On 04/24/15 at 04:53pm, AKASHI Takahiro wrote:
-> Please read the following commits for arm64-specific constraints:
->     arm64: kdump: reserve memory for crash dump kernel
->     arm64: kdump: do not go into EL2 before starting a crash dump kernel
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  Documentation/kdump/kdump.txt |   31 ++++++++++++++++++++++++++++++-
->  arch/arm64/Kconfig            |   12 ++++++++++++
->  2 files changed, 42 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index bc4bd5a..f9cf6f5 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
->  a remote system.
->  
->  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
-> -s390x and arm architectures.
-> +s390x, arm and arm64 architectures.
->  
->  When the system kernel boots, it reserves a small section of memory for
->  the dump-capture kernel. This ensures that ongoing Direct Memory Access
-> @@ -249,6 +249,29 @@ Dump-capture kernel config options (Arch Dependent, arm)
->  
->      AUTO_ZRELADDR=y
->  
-> +Dump-capture kernel config options (Arch Dependent, arm64)
-> +----------------------------------------------------------
-> +
-> +1) Disable symmetric multi-processing support under "Processor type and
-> +   features":
-> +
-> +   CONFIG_SMP=n
-> +
-> +   (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
-> +   when loading the dump-capture kernel, see section "Load the Dump-capture
-> +   Kernel".)
-> +
-> +2) Under uefi, the maximum memory size on the dump-capture kernel must be
-> +   limited by specifying:
-> +
-> +   mem=X[MG]
-> +
-> +   where X should be less than or equal to the size in "crashkernel="
-> +   boot parameter. Kexec-tools will automatically add this.
+note that I'm not subscribed to the xen-devel mailing list, but Jan
+quoted from this mail of Andrew's in SUSE Bugzilla:
 
-I noticed you are passing mem=X in kexec-tools, Pratyush found a problem
-that vmcore is corrupted because kdump kernel is using the crash notes memory.
+> This is all from a while ago.  It is quite possible that we didn't
+> actually tested the compatibility case with a 64bit dom0 kernel,
+> although I certainly did test earlier versions of the series with a
+> 32bit dom0 kernel.  The work was done long before XenServer moved to a
+> 64bit dom0, and was done by deleting everything and starting from scratch.
+> 
+> IIRC, the low 640k mappings is a purgatory bug rather than Linux, and
+> has been fixed upstream in kexec-tools since.  (I recall that it used to
+> take a backup copy of the IVT for some reason)
 
-How does kdump kernel know the system ram range especially the mem_start?
-Only with the size from mem=? parammeter?
+This is not entirely correct.
 
-In X86 because it use E820 so kexec-tools can pass the memory range to kdump
-kernel even for UEFI booting. But in arm64 may need find other way to
-communicate with 2nd kernel like memmap=exactmap in X86..
+Originally, kexec (in Linux kernel) was supposed to provide an
+environment which is equivalent to the boot loader, i.e. kexec is just
+another bootloader like LILO or GRUB. The first implementation indeed
+switched back to 16-bit real mode before passing control to the
+secondary kernel's boot code...
 
-> +
-> +3) Currently, kvm will not be initialized on the dump-capture kernel even
-> +   if it is configured.
-> +
->  Extended crashkernel syntax
->  ===========================
->  
-> @@ -312,6 +335,7 @@ Boot into System Kernel
->     any space below the alignment point may be overwritten by the dump-capture kernel,
->     which means it is possible that the vmcore is not that precise as expected.
->  
-> +   On arm64, use "crashkernel=Y@X".
->  
->  Load the Dump-capture Kernel
->  ============================
-> @@ -334,6 +358,8 @@ For s390x:
->  	- Use image or bzImage
->  For arm:
->  	- Use zImage
-> +For arm64:
-> +	- Use vmlinux
->  
->  If you are using a uncompressed vmlinux image then use following command
->  to load dump-capture kernel.
-> @@ -377,6 +403,9 @@ For s390x:
->  For arm:
->  	"1 maxcpus=1 reset_devices"
->  
-> +For arm64:
-> +	"1 maxcpus=1 mem=X[MG] reset_devices"
-> +
->  Notes on loading the dump-capture kernel:
->  
->  * By default, the ELF headers are stored in ELF64 format to support
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 5716edf..8e2f545 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -562,6 +562,18 @@ config KEXEC
->  	  but it is independent of the system firmware.   And like a reboot
->  	  you can start any kernel with it, not just Linux.
->  
-> +config CRASH_DUMP
-> +	bool "Build kdump crash kernel"
-> +	help
-> +	  Generate crash dump after being started by kexec. This should
-> +	  be normally only set in special crash dump kernels which are
-> +	  loaded in the main kernel with kexec-tools into a specially
-> +	  reserved region and then later executed after a crash by
-> +	  kdump/kexec. The crash dump kernel must be compiled to a
-> +	  memory address not used by the main kernel.
-> +
-> +	  For more details see Documentation/kdump/kdump.txt
-> +
->  config XEN_DOM0
->  	def_bool y
->  	depends on XEN
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
+It was at that time that the need arose to save the low 640K of RAM
+somewhere else, because the 16-bit bootloader had to use parts of this
+memory range, not the least because it also made BIOS calls, and BIOS
+used this range for its data.
+
+This solution was suboptimal for numerous reasons, e.g. very limited
+location of the purgatory code in physical RAM, or incompatibility with
+UEFI booting. As an improvement, a 32-bit boot protocol was introduced.
+At entry, the CPU must be in 32-bit protected mode with paging
+disabled. This explains why you never noticed any issues related to
+pagetables with 32-bit kernels. Since paging is disabled, there are
+none. ;-)
+
+The 32-bit protocol limits the location of the secondary kernel to low
+4G in physical RAM (for obvious reason). This is now solved by a 64-bit
+boot protocol. Since paging must be always enabled in Long Mode, it
+must be set up somehow. The Linux documentation says: "The range with
+setup_header.init_size from start address of loaded kernel and zero
+page and command line buffer get ident mapping".
+
+The problematic part here is that Linux kexec code is split between
+kernel and purgatory. Unfortunately, the handover between the old
+kernel and the purgatory is not so well defined, so the actual kexec
+code is probably the best documentation available.
+
+There are currently two versions of the Linux purgatory: in kexec-tools
+and in the kernel. None of them sets CR3. On the other hand, the Linux
+kernel does set CR3 (see arch/x86/kernel/relocate_kernel_64.S). This
+makes me believe that the 64-bit kexec entry point expects that paging
+is set up by the old kernel. If Xen plays the role of the old kernel,
+it must also set up paging. The question is how.
+
+Let's start a discussion on the kexec mailing list (in Cc) to clarify
+what should be done by the old kernel and what should be done by the
+purgatory code.
+
+Petr Tesarik
 
 _______________________________________________
 kexec mailing list
