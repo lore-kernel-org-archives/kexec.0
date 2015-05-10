@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yr4i1-0000Zm-QN
- for kexec@lists.infradead.org; Sat, 09 May 2015 13:22:26 +0000
-Date: Sat, 9 May 2015 15:21:59 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: More on kexec/purgatory handover
-Message-ID: <20150509152159.6b391c2b@hananiah.suse.cz>
+ id 1YrcZU-0002L2-84
+ for kexec@lists.infradead.org; Mon, 11 May 2015 01:31:53 +0000
+Message-ID: <554FCE21.7060208@redhat.com>
+Date: Sun, 10 May 2015 17:31:13 -0400
+From: Don Dutile <ddutile@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
+ <20150403084031.GF22579@dhcp-128-53.nay.redhat.com> <551E56F6.60503@hp.com>
+ <20150403092111.GG22579@dhcp-128-53.nay.redhat.com>
+ <20150405015453.GB1562@dhcp-17-102.nay.redhat.com>
+ <20150407034622.GB7213@localhost.localdomain> <5523E5DB.2090001@redhat.com>
+ <20150507140029.GC4559@localhost.localdomain>
+In-Reply-To: <20150507140029.GC4559@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,73 +23,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Jan Beulich <JBeulich@suse.com>, xen-devel@lists.xen.org
+To: Dave Young <dyoung@redhat.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, Baoquan He <bhe@redhat.com>, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li, ZhenHua" <zhen-hual@hp.com>, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-Hi all,
+On 05/07/2015 10:00 AM, Dave Young wrote:
+> On 04/07/15 at 10:12am, Don Dutile wrote:
+>> On 04/06/2015 11:46 PM, Dave Young wrote:
+>>> On 04/05/15 at 09:54am, Baoquan He wrote:
+>>>> On 04/03/15 at 05:21pm, Dave Young wrote:
+>>>>> On 04/03/15 at 05:01pm, Li, ZhenHua wrote:
+>>>>>> Hi Dave,
+>>>>>>
+>>>>>> There may be some possibilities that the old iommu data is corrupted by
+>>>>>> some other modules. Currently we do not have a better solution for the
+>>>>>> dmar faults.
+>>>>>>
+>>>>>> But I think when this happens, we need to fix the module that corrupted
+>>>>>> the old iommu data. I once met a similar problem in normal kernel, the
+>>>>>> queue used by the qi_* functions was written again by another module.
+>>>>>> The fix was in that module, not in iommu module.
+>>>>>
+>>>>> It is too late, there will be no chance to save vmcore then.
+>>>>>
+>>>>> Also if it is possible to continue corrupt other area of oldmem because
+>>>>> of using old iommu tables then it will cause more problems.
+>>>>>
+>>>>> So I think the tables at least need some verifycation before being used.
+>>>>>
+>>>>
+>>>> Yes, it's a good thinking anout this and verification is also an
+>>>> interesting idea. kexec/kdump do a sha256 calculation on loaded kernel
+>>>> and then verify this again when panic happens in purgatory. This checks
+>>>> whether any code stomps into region reserved for kexec/kernel and corrupt
+>>>> the loaded kernel.
+>>>>
+>>>> If this is decided to do it should be an enhancement to current
+>>>> patchset but not a approach change. Since this patchset is going very
+>>>> close to point as maintainers expected maybe this can be merged firstly,
+>>>> then think about enhancement. After all without this patchset vt-d often
+>>>> raised error message, hung.
+>>>
+>>> It does not convince me, we should do it right at the beginning instead of
+>>> introduce something wrong.
+>>>
+>>> I wonder why the old dma can not be remap to a specific page in kdump kernel
+>>> so that it will not corrupt more memory. But I may missed something, I will
+>>> looking for old threads and catch up.
+>>>
+>>> Thanks
+>>> Dave
+>>>
+>> The (only) issue is not corruption, but once the iommu is re-configured, the old,
+>> not-stopped-yet, dma engines will use iova's that will generate dmar faults, which
+>> will be enabled when the iommu is re-configured (even to a single/simple paging scheme)
+>> in the kexec kernel.
+>>
+>
+> Don, so if iommu is not reconfigured then these faults will not happen?
+>
+> Baoquan and me has a confusion below today about iommu=off/intel_iommu=off:
+>
+> intel_iommu_init()
+> {
+> ...
+>
+>         dmar_table_init();
+>
+>         disable active iommu translations;
+>
+>         if (no_iommu || dmar_disabled)
+>                  goto out_free_dmar;
+>
+> ...
+> }
+>
+> Any reason not move no_iommu check to the begining of intel_iommu_init function?
+>
+> Thanks
+> Dave
+Looks like you could.
 
-note that I'm not subscribed to the xen-devel mailing list, but Jan
-quoted from this mail of Andrew's in SUSE Bugzilla:
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
-> This is all from a while ago.  It is quite possible that we didn't
-> actually tested the compatibility case with a 64bit dom0 kernel,
-> although I certainly did test earlier versions of the series with a
-> 32bit dom0 kernel.  The work was done long before XenServer moved to a
-> 64bit dom0, and was done by deleting everything and starting from scratch.
-> 
-> IIRC, the low 640k mappings is a purgatory bug rather than Linux, and
-> has been fixed upstream in kexec-tools since.  (I recall that it used to
-> take a backup copy of the IVT for some reason)
-
-This is not entirely correct.
-
-Originally, kexec (in Linux kernel) was supposed to provide an
-environment which is equivalent to the boot loader, i.e. kexec is just
-another bootloader like LILO or GRUB. The first implementation indeed
-switched back to 16-bit real mode before passing control to the
-secondary kernel's boot code...
-
-It was at that time that the need arose to save the low 640K of RAM
-somewhere else, because the 16-bit bootloader had to use parts of this
-memory range, not the least because it also made BIOS calls, and BIOS
-used this range for its data.
-
-This solution was suboptimal for numerous reasons, e.g. very limited
-location of the purgatory code in physical RAM, or incompatibility with
-UEFI booting. As an improvement, a 32-bit boot protocol was introduced.
-At entry, the CPU must be in 32-bit protected mode with paging
-disabled. This explains why you never noticed any issues related to
-pagetables with 32-bit kernels. Since paging is disabled, there are
-none. ;-)
-
-The 32-bit protocol limits the location of the secondary kernel to low
-4G in physical RAM (for obvious reason). This is now solved by a 64-bit
-boot protocol. Since paging must be always enabled in Long Mode, it
-must be set up somehow. The Linux documentation says: "The range with
-setup_header.init_size from start address of loaded kernel and zero
-page and command line buffer get ident mapping".
-
-The problematic part here is that Linux kexec code is split between
-kernel and purgatory. Unfortunately, the handover between the old
-kernel and the purgatory is not so well defined, so the actual kexec
-code is probably the best documentation available.
-
-There are currently two versions of the Linux purgatory: in kexec-tools
-and in the kernel. None of them sets CR3. On the other hand, the Linux
-kernel does set CR3 (see arch/x86/kernel/relocate_kernel_64.S). This
-makes me believe that the 64-bit kexec entry point expects that paging
-is set up by the old kernel. If Xen plays the role of the old kernel,
-it must also set up paging. The question is how.
-
-Let's start a discussion on the kexec mailing list (in Cc) to clarify
-what should be done by the old kernel and what should be done by the
-purgatory code.
-
-Petr Tesarik
 
 _______________________________________________
 kexec mailing list
