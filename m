@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YrhQB-0007Di-Ba
- for kexec@lists.infradead.org; Mon, 11 May 2015 06:42:36 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.160])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gDNQ009812
- for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:13 +0900 (JST)
-Received: from mailsv.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
+ id 1YrhQL-0007HX-6x
+ for kexec@lists.infradead.org; Mon, 11 May 2015 06:42:47 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.197])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gRPO010004
+ for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:27 +0900 (JST)
+Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
  mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id t4B6gD715766 for <kexec@lists.infradead.org>;
- Mon, 11 May 2015 15:42:13 +0900 (JST)
+ id t4B6gRc14142 for <kexec@lists.infradead.org>;
+ Mon, 11 May 2015 15:42:27 +0900 (JST)
 Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
- by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gC3n015861
- for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:12 +0900 (JST)
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gQeW016012
+ for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:26 +0900 (JST)
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: [PATCH 06/13] Remove the old logic of writing kdump pages.
-Date: Mon, 11 May 2015 06:27:39 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA35A@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH 07/13] Integrate filtering process for ELF path.
+Date: Mon, 11 May 2015 06:28:24 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA35F@BPXM01GP.gisp.nec.co.jp>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -33,230 +33,186 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-write_kdump_pages() is no longer used, remove it.
+Also ELF path have duplicated codes, merge them.
+In ELF case, zero pages have to be checked before writing process,
+so move zero pages filtering into create_2nd_bitmap() like other
+pages filtering.
 
 Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 ---
- makedumpfile.c | 206 ---------------------------------------------------------
- 1 file changed, 206 deletions(-)
+ makedumpfile.c | 81 +++++++++++++++++-----------------------------------------
+ 1 file changed, 23 insertions(+), 58 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index c6b41af..ae11bf1 100644
+index ae11bf1..7993e1d 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -6620,212 +6620,6 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- }
+@@ -4788,6 +4788,9 @@ exclude_zero_pages_cyclic(struct cycle *cycle)
+ 		if (!is_in_segs(paddr))
+ 			continue;
  
- int
--write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
--{
--	mdf_pfn_t pfn, per, num_dumpable;
--	mdf_pfn_t start_pfn, end_pfn;
--	unsigned long size_out;
--	struct page_desc pd, pd_zero;
--	off_t offset_data = 0;
--	struct disk_dump_header *dh = info->dump_header;
--	unsigned char buf[info->page_size], *buf_out = NULL;
--	unsigned long len_buf_out;
--	struct dump_bitmap bitmap2;
--	struct timeval tv_start;
--	const off_t failed = (off_t)-1;
--	unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy;
--
--	int ret = FALSE;
--
--	if (info->flag_elf_dumpfile)
--		return FALSE;
--
--	initialize_2nd_bitmap(&bitmap2);
--
--	len_buf_out_zlib = len_buf_out_lzo = len_buf_out_snappy = 0;
--
--#ifdef USELZO
--	lzo_bytep wrkmem;
--
--	if ((wrkmem = malloc(LZO1X_1_MEM_COMPRESS)) == NULL) {
--		ERRMSG("Can't allocate memory for the working memory. %s\n",
--		       strerror(errno));
--		goto out;
--	}
--
--	len_buf_out_lzo = info->page_size + info->page_size / 16 + 64 + 3;
--#endif
--
--#ifdef USESNAPPY
--	len_buf_out_snappy = snappy_max_compressed_length(info->page_size);
--#endif
--
--	len_buf_out_zlib = compressBound(info->page_size);
--	
--	len_buf_out = MAX(len_buf_out_zlib,
--			  MAX(len_buf_out_lzo,
--			      len_buf_out_snappy));
--
--	if ((buf_out = malloc(len_buf_out)) == NULL) {
--		ERRMSG("Can't allocate memory for the compression buffer. %s\n",
--		    strerror(errno));
--		goto out;
--	}
--
--	num_dumpable = get_num_dumpable();
--	per = num_dumpable / 10000;
--	per = per ? per : 1;
--
--	/*
--	 * Calculate the offset of the page data.
--	 */
--	cd_header->offset
--	    = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
--		* dh->block_size;
--	cd_page->offset = cd_header->offset + sizeof(page_desc_t)*num_dumpable;
--	offset_data  = cd_page->offset;
--
--	/*
--	 * Set a fileoffset of Physical Address 0x0.
--	 */
--	if (lseek(info->fd_memory, get_offset_pt_load_memory(), SEEK_SET)
--	    == failed) {
--		ERRMSG("Can't seek the dump memory(%s). %s\n",
--		    info->name_memory, strerror(errno));
--		goto out;
--	}
--
--	/*
--	 * Write the data of zero-filled page.
--	 */
--	gettimeofday(&tv_start, NULL);
--	if (info->dump_level & DL_EXCLUDE_ZERO) {
--		pd_zero.size = info->page_size;
--		pd_zero.flags = 0;
--		pd_zero.offset = offset_data;
--		pd_zero.page_flags = 0;
--		memset(buf, 0, pd_zero.size);
--		if (!write_cache(cd_page, buf, pd_zero.size))
++		if (!sync_2nd_bitmap())
++			return FALSE;
++
+ 		if (!is_dumpable(info->bitmap2, pfn, cycle))
+ 			continue;
+ 
+@@ -5244,7 +5247,8 @@ create_2nd_bitmap(struct cycle *cycle)
+ 	 *	 should be fixed for creating an ELF header. That is slow
+ 	 *	 due to reading each page two times, but it is necessary.
+ 	 */
+-	if ((info->dump_level & DL_EXCLUDE_ZERO) && info->flag_elf_dumpfile) {
++	if ((info->dump_level & DL_EXCLUDE_ZERO) &&
++	    (info->flag_elf_dumpfile || info->flag_mem_usage)) {
+ 		/*
+ 		 * 2nd-bitmap should be flushed at this time, because
+ 		 * exclude_zero_pages() checks 2nd-bitmap.
+@@ -5252,7 +5256,7 @@ create_2nd_bitmap(struct cycle *cycle)
+ 		if (!sync_2nd_bitmap())
+ 			return FALSE;
+ 
+-		if (!exclude_zero_pages()) {
++		if (!exclude_zero_pages_cyclic(cycle)) {
+ 			ERRMSG("Can't exclude pages filled with zero for creating an ELF dumpfile.\n");
+ 			return FALSE;
+ 		}
+@@ -5599,16 +5603,9 @@ write_elf_header(struct cache_data *cd_header)
+ 	/*
+ 	 * Get the PT_LOAD number of the dumpfile.
+ 	 */
+-	if (info->flag_cyclic) {
+-		if (!(num_loads_dumpfile = get_loads_dumpfile_cyclic())) {
+-			ERRMSG("Can't get a number of PT_LOAD.\n");
 -			goto out;
--		offset_data  += pd_zero.size;
--	}
--	if (info->flag_split) {
--		start_pfn = info->split_start_pfn;
--		end_pfn   = info->split_end_pfn;
--	}
--	else {
--		start_pfn = 0;
--		end_pfn   = info->max_mapnr;
--	}
--
--	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
--
--		if ((num_dumped % per) == 0)
--			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
--
--		/*
--		 * Check the excluded page.
--		 */
--		if (!is_dumpable(&bitmap2, pfn, NULL))
--			continue;
--
--		num_dumped++;
--
--		if (!read_pfn(pfn, buf))
--			goto out;
--		filter_data_buffer(buf, pfn_to_paddr(pfn), info->page_size);
--
--		/*
--		 * Exclude the page filled with zeros.
--		 */
--		if ((info->dump_level & DL_EXCLUDE_ZERO)
--		    && is_zero_page(buf, info->page_size)) {
--			if (!write_cache(cd_header, &pd_zero, sizeof(page_desc_t)))
--				goto out;
--			pfn_zero++;
--			continue;
 -		}
--		/*
--		 * Compress the page data.
--		 */
--		size_out = len_buf_out;
--		if ((info->flag_compress & DUMP_DH_COMPRESSED_ZLIB)
--		    && ((size_out = len_buf_out),
--			compress2(buf_out, &size_out, buf, info->page_size,
--				  Z_BEST_SPEED) == Z_OK)
--		    && (size_out < info->page_size)) {
--			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
--			pd.size  = size_out;
--#ifdef USELZO
--		} else if (info->flag_lzo_support
--			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
--			   && ((size_out = info->page_size),
--			       lzo1x_1_compress(buf, info->page_size, buf_out,
--						&size_out, wrkmem) == LZO_E_OK)
--			   && (size_out < info->page_size)) {
--			pd.flags = DUMP_DH_COMPRESSED_LZO;
--			pd.size  = size_out;
--#endif
--#ifdef USESNAPPY
--		} else if ((info->flag_compress & DUMP_DH_COMPRESSED_SNAPPY)
--			   && ((size_out = len_buf_out_snappy),
--			       snappy_compress((char *)buf, info->page_size,
--					       (char *)buf_out,
--					       (size_t *)&size_out)
--			       == SNAPPY_OK)
--			   && (size_out < info->page_size)) {
--			pd.flags = DUMP_DH_COMPRESSED_SNAPPY;
--			pd.size  = size_out;
--#endif
--		} else {
--			pd.flags = 0;
--			pd.size  = info->page_size;
+-	} else {
+-		if (!(num_loads_dumpfile = get_loads_dumpfile())) {
+-			ERRMSG("Can't get a number of PT_LOAD.\n");
+-			goto out;
 -		}
--		pd.page_flags = 0;
--		pd.offset     = offset_data;
--		offset_data  += pd.size;
--
--		/*
--		 * Write the page header.
--		 */
--		if (!write_cache(cd_header, &pd, sizeof(page_desc_t)))
--			goto out;
--
--		/*
--		 * Write the page data.
--		 */
--		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
--			goto out;
--	}
--
--	/*
--	 * Write the remainder.
--	 */
--	if (!write_cache_bufsz(cd_page))
--		goto out;
--	if (!write_cache_bufsz(cd_header))
--		goto out;
--
--	/*
--	 * print [100 %]
--	 */
--	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
--	print_execution_time(PROGRESS_COPY, &tv_start);
--	PROGRESS_MSG("\n");
--
--	ret = TRUE;
--out:
--	if (buf_out != NULL)
--		free(buf_out);
--#ifdef USELZO
--	if (wrkmem != NULL)
--		free(wrkmem);
--#endif
--
--	return ret;
--}
--
--int
- write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
- 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
++	if (!(num_loads_dumpfile = get_loads_dumpfile_cyclic())) {
++		ERRMSG("Can't get a number of PT_LOAD.\n");
++		goto out;
+ 	}
+ 
+ 	if (is_elf64_memory()) { /* ELF64 */
+@@ -6328,7 +6325,6 @@ get_loads_dumpfile_cyclic(void)
  {
+ 	int i, phnum, num_new_load = 0;
+ 	long page_size = info->page_size;
+-	unsigned char buf[info->page_size];
+ 	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
+ 	unsigned long frac_head, frac_tail;
+ 	Elf64_Phdr load;
+@@ -6357,8 +6353,10 @@ get_loads_dumpfile_cyclic(void)
+ 			pfn_end++;
+ 
+ 		for_each_cycle(pfn_start, pfn_end, &cycle) {
+-			if (!create_2nd_bitmap(&cycle))
+-				return FALSE;
++			if (info->flag_cyclic) {
++				if (!create_2nd_bitmap(&cycle))
++					return FALSE;
++			}
+ 			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
+ 				if (!is_dumpable(info->bitmap2, pfn, &cycle)) {
+ 					num_excluded++;
+@@ -6366,20 +6364,6 @@ get_loads_dumpfile_cyclic(void)
+ 				}
+ 
+ 				/*
+-				 * Exclude zero pages.
+-				 */
+-				if (info->dump_level & DL_EXCLUDE_ZERO) {
+-					if (!read_pfn(pfn, buf))
+-						return FALSE;
+-					if (is_zero_page(buf, page_size)) {
+-						num_excluded++;
+-						continue;
+-					}
+-				}
+-
+-				info->num_dumpable++;
+-
+-				/*
+ 				 * If the number of the contiguous pages to be excluded
+ 				 * is 256 or more, those pages are excluded really.
+ 				 * And a new PT_LOAD segment is created.
+@@ -6400,7 +6384,6 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ {
+ 	int i, phnum;
+ 	long page_size = info->page_size;
+-	unsigned char buf[info->page_size];
+ 	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded, num_dumpable, per;
+ 	unsigned long long paddr;
+ 	unsigned long long memsz, filesz;
+@@ -6423,9 +6406,11 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	/*
+ 	 * Reset counter for debug message.
+ 	 */
+-	pfn_zero = pfn_cache = pfn_cache_private = 0;
+-	pfn_user = pfn_free = pfn_hwpoison = 0;
+-	pfn_memhole = info->max_mapnr;
++	if (info->flag_cyclic) {
++		pfn_zero = pfn_cache = pfn_cache_private = 0;
++		pfn_user = pfn_free = pfn_hwpoison = 0;
++		pfn_memhole = info->max_mapnr;
++	}
+ 
+ 	if (!(phnum = get_phnum_memory()))
+ 		return FALSE;
+@@ -6462,8 +6447,10 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 			/*
+ 			 * Update target region and partial bitmap if necessary.
+ 			 */
+-			if (!create_2nd_bitmap(&cycle))
+-				return FALSE;
++			if (info->flag_cyclic) {
++				if (!create_2nd_bitmap(&cycle))
++					return FALSE;
++			}
+ 
+ 			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
+ 				if (!is_dumpable(info->bitmap2, pfn, &cycle)) {
+@@ -6475,23 +6462,6 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 					continue;
+ 				}
+ 
+-				/*
+-				 * Exclude zero pages.
+-				 */
+-				if (info->dump_level & DL_EXCLUDE_ZERO) {
+-					if (!read_pfn(pfn, buf))
+-						return FALSE;
+-					if (is_zero_page(buf, page_size)) {
+-						pfn_zero++;
+-						num_excluded++;
+-						if ((pfn == pfn_end - 1) && frac_tail)
+-							memsz += frac_tail;
+-						else
+-							memsz += page_size;
+-						continue;
+-					}
+-				}
+-
+ 				if ((num_dumped % per) == 0)
+ 					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+ 
+@@ -8202,13 +8172,8 @@ writeout_dumpfile(void)
+ 	if (info->flag_elf_dumpfile) {
+ 		if (!write_elf_header(&cd_header))
+ 			goto out;
+-		if (info->flag_cyclic) {
+-			if (!write_elf_pages_cyclic(&cd_header, &cd_page))
++		if (!write_elf_pages_cyclic(&cd_header, &cd_page))
+ 				goto write_cache_enospc;
+-		} else {
+-			if (!write_elf_pages(&cd_header, &cd_page))
+-				goto write_cache_enospc;
+-		}
+ 		if (!write_elf_eraseinfo(&cd_header))
+ 			goto out;
+ 	} else {
 -- 
 1.9.0
 
