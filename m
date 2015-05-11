@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YrhQL-0007HX-6x
- for kexec@lists.infradead.org; Mon, 11 May 2015 06:42:47 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.197])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gRPO010004
- for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:27 +0900 (JST)
-Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
+ id 1YrhQj-0007OS-KU
+ for kexec@lists.infradead.org; Mon, 11 May 2015 06:43:11 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gl7X008775
+ for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:47 +0900 (JST)
+Received: from mailsv4.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
  mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id t4B6gRc14142 for <kexec@lists.infradead.org>;
- Mon, 11 May 2015 15:42:27 +0900 (JST)
+ id t4B6gl716556 for <kexec@lists.infradead.org>;
+ Mon, 11 May 2015 15:42:47 +0900 (JST)
 Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
- by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6gQeW016012
- for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:26 +0900 (JST)
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id t4B6glUd013553
+ for <kexec@lists.infradead.org>; Mon, 11 May 2015 15:42:47 +0900 (JST)
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: [PATCH 07/13] Integrate filtering process for ELF path.
-Date: Mon, 11 May 2015 06:28:24 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA35F@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH 08/13] Remove the old logic of writing ELF pages.
+Date: Mon, 11 May 2015 06:29:49 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA36C@BPXM01GP.gisp.nec.co.jp>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -33,186 +33,336 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Also ELF path have duplicated codes, merge them.
-In ELF case, zero pages have to be checked before writing process,
-so move zero pages filtering into create_2nd_bitmap() like other
-pages filtering.
+write_elf_pages() and related functions are no longer used,
+remove them.
 
 Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 ---
- makedumpfile.c | 81 +++++++++++++++++-----------------------------------------
- 1 file changed, 23 insertions(+), 58 deletions(-)
+ makedumpfile.c | 297 ---------------------------------------------------------
+ 1 file changed, 297 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index ae11bf1..7993e1d 100644
+index 7993e1d..c162cbc 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -4788,6 +4788,9 @@ exclude_zero_pages_cyclic(struct cycle *cycle)
- 		if (!is_in_segs(paddr))
- 			continue;
- 
-+		if (!sync_2nd_bitmap())
-+			return FALSE;
-+
- 		if (!is_dumpable(info->bitmap2, pfn, cycle))
- 			continue;
- 
-@@ -5244,7 +5247,8 @@ create_2nd_bitmap(struct cycle *cycle)
- 	 *	 should be fixed for creating an ELF header. That is slow
- 	 *	 due to reading each page two times, but it is necessary.
- 	 */
--	if ((info->dump_level & DL_EXCLUDE_ZERO) && info->flag_elf_dumpfile) {
-+	if ((info->dump_level & DL_EXCLUDE_ZERO) &&
-+	    (info->flag_elf_dumpfile || info->flag_mem_usage)) {
- 		/*
- 		 * 2nd-bitmap should be flushed at this time, because
- 		 * exclude_zero_pages() checks 2nd-bitmap.
-@@ -5252,7 +5256,7 @@ create_2nd_bitmap(struct cycle *cycle)
- 		if (!sync_2nd_bitmap())
- 			return FALSE;
- 
--		if (!exclude_zero_pages()) {
-+		if (!exclude_zero_pages_cyclic(cycle)) {
- 			ERRMSG("Can't exclude pages filled with zero for creating an ELF dumpfile.\n");
- 			return FALSE;
- 		}
-@@ -5599,16 +5603,9 @@ write_elf_header(struct cache_data *cd_header)
- 	/*
- 	 * Get the PT_LOAD number of the dumpfile.
- 	 */
--	if (info->flag_cyclic) {
--		if (!(num_loads_dumpfile = get_loads_dumpfile_cyclic())) {
--			ERRMSG("Can't get a number of PT_LOAD.\n");
--			goto out;
--		}
--	} else {
--		if (!(num_loads_dumpfile = get_loads_dumpfile())) {
--			ERRMSG("Can't get a number of PT_LOAD.\n");
--			goto out;
--		}
-+	if (!(num_loads_dumpfile = get_loads_dumpfile_cyclic())) {
-+		ERRMSG("Can't get a number of PT_LOAD.\n");
-+		goto out;
- 	}
- 
- 	if (is_elf64_memory()) { /* ELF64 */
-@@ -6328,7 +6325,6 @@ get_loads_dumpfile_cyclic(void)
- {
- 	int i, phnum, num_new_load = 0;
- 	long page_size = info->page_size;
+@@ -4724,58 +4724,6 @@ create_1st_bitmap(struct cycle *cycle)
+  * Exclude the page filled with zero in case of creating an elf dumpfile.
+  */
+ int
+-exclude_zero_pages(void)
+-{
+-	mdf_pfn_t pfn;
+-	unsigned long long paddr;
+-	struct dump_bitmap bitmap2;
+-	struct timeval tv_start;
 -	unsigned char buf[info->page_size];
- 	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
- 	unsigned long frac_head, frac_tail;
- 	Elf64_Phdr load;
-@@ -6357,8 +6353,10 @@ get_loads_dumpfile_cyclic(void)
- 			pfn_end++;
- 
- 		for_each_cycle(pfn_start, pfn_end, &cycle) {
--			if (!create_2nd_bitmap(&cycle))
+-
+-	initialize_2nd_bitmap(&bitmap2);
+-
+-	gettimeofday(&tv_start, NULL);
+-
+-	for (pfn = 0, paddr = pfn_to_paddr(pfn); pfn < info->max_mapnr;
+-	    pfn++, paddr += info->page_size) {
+-
+-		print_progress(PROGRESS_ZERO_PAGES, pfn, info->max_mapnr);
+-
+-		if (!is_in_segs(paddr))
+-			continue;
+-
+-		if (!is_dumpable(&bitmap2, pfn, NULL))
+-			continue;
+-
+-		if (is_xen_memory()) {
+-			if (!readmem(MADDR_XEN, paddr, buf, info->page_size)) {
+-				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
+-				    pfn, info->max_mapnr);
 -				return FALSE;
-+			if (info->flag_cyclic) {
-+				if (!create_2nd_bitmap(&cycle))
-+					return FALSE;
-+			}
- 			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
- 				if (!is_dumpable(info->bitmap2, pfn, &cycle)) {
- 					num_excluded++;
-@@ -6366,20 +6364,6 @@ get_loads_dumpfile_cyclic(void)
- 				}
- 
- 				/*
--				 * Exclude zero pages.
--				 */
--				if (info->dump_level & DL_EXCLUDE_ZERO) {
--					if (!read_pfn(pfn, buf))
--						return FALSE;
--					if (is_zero_page(buf, page_size)) {
--						num_excluded++;
--						continue;
--					}
--				}
--
--				info->num_dumpable++;
--
--				/*
- 				 * If the number of the contiguous pages to be excluded
- 				 * is 256 or more, those pages are excluded really.
- 				 * And a new PT_LOAD segment is created.
-@@ -6400,7 +6384,6 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- {
- 	int i, phnum;
- 	long page_size = info->page_size;
--	unsigned char buf[info->page_size];
- 	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded, num_dumpable, per;
- 	unsigned long long paddr;
- 	unsigned long long memsz, filesz;
-@@ -6423,9 +6406,11 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	/*
- 	 * Reset counter for debug message.
- 	 */
--	pfn_zero = pfn_cache = pfn_cache_private = 0;
--	pfn_user = pfn_free = pfn_hwpoison = 0;
--	pfn_memhole = info->max_mapnr;
-+	if (info->flag_cyclic) {
-+		pfn_zero = pfn_cache = pfn_cache_private = 0;
-+		pfn_user = pfn_free = pfn_hwpoison = 0;
-+		pfn_memhole = info->max_mapnr;
-+	}
- 
- 	if (!(phnum = get_phnum_memory()))
- 		return FALSE;
-@@ -6462,8 +6447,10 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 			/*
- 			 * Update target region and partial bitmap if necessary.
- 			 */
--			if (!create_2nd_bitmap(&cycle))
--				return FALSE;
-+			if (info->flag_cyclic) {
-+				if (!create_2nd_bitmap(&cycle))
-+					return FALSE;
-+			}
- 
- 			for (pfn = MAX(pfn_start, cycle.start_pfn); pfn < cycle.end_pfn; pfn++) {
- 				if (!is_dumpable(info->bitmap2, pfn, &cycle)) {
-@@ -6475,23 +6462,6 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 					continue;
- 				}
- 
--				/*
--				 * Exclude zero pages.
--				 */
--				if (info->dump_level & DL_EXCLUDE_ZERO) {
--					if (!read_pfn(pfn, buf))
--						return FALSE;
--					if (is_zero_page(buf, page_size)) {
--						pfn_zero++;
--						num_excluded++;
--						if ((pfn == pfn_end - 1) && frac_tail)
--							memsz += frac_tail;
--						else
--							memsz += page_size;
--						continue;
--					}
--				}
--
- 				if ((num_dumped % per) == 0)
- 					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
-@@ -8202,13 +8172,8 @@ writeout_dumpfile(void)
- 	if (info->flag_elf_dumpfile) {
- 		if (!write_elf_header(&cd_header))
- 			goto out;
--		if (info->flag_cyclic) {
--			if (!write_elf_pages_cyclic(&cd_header, &cd_page))
-+		if (!write_elf_pages_cyclic(&cd_header, &cd_page))
- 				goto write_cache_enospc;
+-			}
 -		} else {
--			if (!write_elf_pages(&cd_header, &cd_page))
--				goto write_cache_enospc;
+-			if (!readmem(PADDR, paddr, buf, info->page_size)) {
+-				ERRMSG("Can't get the page data(pfn:%llx, max_mapnr:%llx).\n",
+-				    pfn, info->max_mapnr);
+-				return FALSE;
+-			}
 -		}
- 		if (!write_elf_eraseinfo(&cd_header))
- 			goto out;
- 	} else {
+-		if (is_zero_page(buf, info->page_size)) {
+-			if (clear_bit_on_2nd_bitmap(pfn, NULL))
+-				pfn_zero++;
+-		}
+-	}
+-
+-	/*
+-	 * print [100 %]
+-	 */
+-	print_progress(PROGRESS_ZERO_PAGES, info->max_mapnr, info->max_mapnr);
+-	print_execution_time(PROGRESS_ZERO_PAGES, &tv_start);
+-
+-	return TRUE;
+-}
+-
+-int
+ exclude_zero_pages_cyclic(struct cycle *cycle)
+ {
+ 	mdf_pfn_t pfn;
+@@ -5428,60 +5376,6 @@ out:
+ }
+ 
+ int
+-get_loads_dumpfile(void)
+-{
+-	int i, phnum, num_new_load = 0;
+-	long page_size = info->page_size;
+-	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
+-	unsigned long frac_head, frac_tail;
+-	Elf64_Phdr load;
+-	struct dump_bitmap bitmap2;
+-
+-	initialize_2nd_bitmap(&bitmap2);
+-
+-	if (!(phnum = get_phnum_memory()))
+-		return FALSE;
+-
+-	for (i = 0; i < phnum; i++) {
+-		if (!get_phdr_memory(i, &load))
+-			return FALSE;
+-		if (load.p_type != PT_LOAD)
+-			continue;
+-
+-		pfn_start = paddr_to_pfn(load.p_paddr);
+-		pfn_end   = paddr_to_pfn(load.p_paddr + load.p_memsz);
+-		frac_head = page_size - (load.p_paddr % page_size);
+-		frac_tail = (load.p_paddr + load.p_memsz) % page_size;
+-
+-		num_new_load++;
+-		num_excluded = 0;
+-
+-		if (frac_head && (frac_head != page_size))
+-			pfn_start++;
+-		if (frac_tail)
+-			pfn_end++;
+-
+-		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
+-			if (!is_dumpable(&bitmap2, pfn, NULL)) {
+-				num_excluded++;
+-				continue;
+-			}
+-
+-			/*
+-			 * If the number of the contiguous pages to be excluded
+-			 * is 256 or more, those pages are excluded really.
+-			 * And a new PT_LOAD segment is created.
+-			 */
+-			if (num_excluded >= PFN_EXCLUDED) {
+-				num_new_load++;
+-			}
+-			num_excluded = 0;
+-		}
+-	}
+-	return num_new_load;
+-}
+-
+-int
+ prepare_cache_data(struct cache_data *cd)
+ {
+ 	cd->fd         = info->fd_dumpfile;
+@@ -6116,197 +6010,6 @@ write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
+ }
+ 
+ int
+-write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+-{
+-	int i, phnum;
+-	long page_size = info->page_size;
+-	mdf_pfn_t pfn, pfn_start, pfn_end, num_excluded;
+-	unsigned long long paddr;
+-	mdf_pfn_t num_dumpable, per;
+-	unsigned long long memsz, filesz;
+-	unsigned long frac_head, frac_tail;
+-	off_t off_seg_load, off_memory;
+-	Elf64_Phdr load;
+-	struct dump_bitmap bitmap2;
+-	struct timeval tv_start;
+-
+-	if (!info->flag_elf_dumpfile)
+-		return FALSE;
+-
+-	initialize_2nd_bitmap(&bitmap2);
+-
+-	num_dumpable = get_num_dumpable();
+-	per = num_dumpable / 10000;
+-	per = per ? per : 1;
+-
+-	off_seg_load    = info->offset_load_dumpfile;
+-	cd_page->offset = info->offset_load_dumpfile;
+-
+-	if (!(phnum = get_phnum_memory()))
+-		return FALSE;
+-
+-	gettimeofday(&tv_start, NULL);
+-
+-	for (i = 0; i < phnum; i++) {
+-		if (!get_phdr_memory(i, &load))
+-			return FALSE;
+-
+-		if (load.p_type != PT_LOAD)
+-			continue;
+-
+-		off_memory= load.p_offset;
+-		paddr     = load.p_paddr;
+-		pfn_start = paddr_to_pfn(load.p_paddr);
+-		pfn_end   = paddr_to_pfn(load.p_paddr + load.p_memsz);
+-		frac_head = page_size - (load.p_paddr % page_size);
+-		frac_tail = (load.p_paddr + load.p_memsz)%page_size;
+-
+-		num_excluded = 0;
+-		memsz  = 0;
+-		filesz = 0;
+-		if (frac_head && (frac_head != page_size)) {
+-			memsz  = frac_head;
+-			filesz = frac_head;
+-			pfn_start++;
+-		}
+-
+-		if (frac_tail)
+-			pfn_end++;
+-
+-		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
+-			if (!is_dumpable(&bitmap2, pfn, NULL)) {
+-				num_excluded++;
+-				if ((pfn == pfn_end - 1) && frac_tail)
+-					memsz += frac_tail;
+-				else
+-					memsz += page_size;
+-				continue;
+-			}
+-
+-			if ((num_dumped % per) == 0)
+-				print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+-
+-			num_dumped++;
+-
+-			/*
+-			 * The dumpable pages are continuous.
+-			 */
+-			if (!num_excluded) {
+-				if ((pfn == pfn_end - 1) && frac_tail) {
+-					memsz  += frac_tail;
+-					filesz += frac_tail;
+-				} else {
+-					memsz  += page_size;
+-					filesz += page_size;
+-				}
+-				continue;
+-			/*
+-			 * If the number of the contiguous pages to be excluded
+-			 * is 255 or less, those pages are not excluded.
+-			 */
+-			} else if (num_excluded < PFN_EXCLUDED) {
+-				if ((pfn == pfn_end - 1) && frac_tail) {
+-					memsz  += frac_tail;
+-					filesz += (page_size*num_excluded
+-					    + frac_tail);
+-				}else {
+-					memsz  += page_size;
+-					filesz += (page_size*num_excluded
+-					    + page_size);
+-				}
+-				num_excluded = 0;
+-				continue;
+-			}
+-
+-			/*
+-			 * If the number of the contiguous pages to be excluded
+-			 * is 256 or more, those pages are excluded really.
+-			 * And a new PT_LOAD segment is created.
+-			 */
+-			load.p_memsz  = memsz;
+-			load.p_filesz = filesz;
+-			if (load.p_filesz)
+-				load.p_offset = off_seg_load;
+-			else
+-				/*
+-				 * If PT_LOAD segment does not have real data
+-				 * due to the all excluded pages, the file
+-				 * offset is not effective and it should be 0.
+-				 */
+-				load.p_offset = 0;
+-
+-			/*
+-			 * Write a PT_LOAD header.
+-			 */
+-			if (!write_elf_phdr(cd_header, &load))
+-				return FALSE;
+-
+-			/*
+-			 * Write a PT_LOAD segment.
+-			 */
+-			if (load.p_filesz)
+-				if (!write_elf_load_segment(cd_page, paddr,
+-				    off_memory, load.p_filesz))
+-					return FALSE;
+-
+-			load.p_paddr += load.p_memsz;
+-#ifdef __x86__
+-			/*
+-			 * FIXME:
+-			 *  (x86) Fill PT_LOAD headers with appropriate
+-			 *        virtual addresses.
+-			 */
+-			if (load.p_paddr < MAXMEM)
+-				load.p_vaddr += load.p_memsz;
+-#else
+-			load.p_vaddr += load.p_memsz;
+-#endif /* x86 */
+-			paddr  = load.p_paddr;
+-			off_seg_load += load.p_filesz;
+-
+-			num_excluded = 0;
+-			memsz  = page_size;
+-			filesz = page_size;
+-		}
+-		/*
+-		 * Write the last PT_LOAD.
+-		 */
+-		load.p_memsz  = memsz;
+-		load.p_filesz = filesz;
+-		load.p_offset = off_seg_load;
+-
+-		/*
+-		 * Write a PT_LOAD header.
+-		 */
+-		if (!write_elf_phdr(cd_header, &load))
+-			return FALSE;
+-
+-		/*
+-		 * Write a PT_LOAD segment.
+-		 */
+-		if (load.p_filesz)
+-			if (!write_elf_load_segment(cd_page, paddr,
+-						    off_memory, load.p_filesz))
+-				return FALSE;
+-
+-		off_seg_load += load.p_filesz;
+-	}
+-	if (!write_cache_bufsz(cd_header))
+-		return FALSE;
+-	if (!write_cache_bufsz(cd_page))
+-		return FALSE;
+-
+-	/*
+-	 * print [100 %]
+-	 */
+-	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+-	print_execution_time(PROGRESS_COPY, &tv_start);
+-	PROGRESS_MSG("\n");
+-
+-	return TRUE;
+-}
+-
+-int
+ read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+ {
+ 	unsigned long long paddr;
 -- 
 1.9.0
 
