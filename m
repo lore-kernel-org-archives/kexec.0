@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f173.google.com ([209.85.192.173])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YriuY-0003lW-SC
- for kexec@lists.infradead.org; Mon, 11 May 2015 08:18:03 +0000
-Received: by pdea3 with SMTP id a3so142424338pde.3
- for <kexec@lists.infradead.org>; Mon, 11 May 2015 01:17:41 -0700 (PDT)
-Message-ID: <5550659D.90006@linaro.org>
-Date: Mon, 11 May 2015 17:17:33 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-MIME-Version: 1.0
-Subject: Re: [v2 1/5] arm64: kdump: reserve memory for crash dump kernel
+Date: Mon, 11 May 2015 16:39:30 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [v2 4/5] arm64: add kdump support
+Message-ID: <20150511083930.GB15884@dhcp-128-124.nay.redhat.com>
 References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-2-git-send-email-takahiro.akashi@linaro.org>
- <20150428091935.GJ15033@dhcp-16-116.nay.redhat.com>
- <55505C91.8070503@linaro.org>
- <20150511075447.GA4290@dhcp-128-28.nay.redhat.com>
-In-Reply-To: <20150511075447.GA4290@dhcp-128-28.nay.redhat.com>
+ <1429861989-8417-5-git-send-email-takahiro.akashi@linaro.org>
+ <20150508121921.GA18400@localhost.localdomain>
+ <20150511074728.GA15884@dhcp-128-124.nay.redhat.com>
+ <5550613A.3070506@linaro.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5550613A.3070506@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,120 +19,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: panand@redhat.com, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On 05/11/2015 04:54 PM, Baoquan He wrote:
-> On 05/11/15 at 04:38pm, AKASHI Takahiro wrote:
->> Hi Baoquan,
->>
->> On 04/28/2015 06:19 PM, Baoquan He wrote:
->>>> +#ifdef CONFIG_CRASH_DUMP
->>>> +/*
->>>> + * reserve_elfcorehdr() - reserves memory for elf core header
->>>> + *
->>>> + * This function reserves memory area given in "elfcorehdr=" kernel command
->>>> + * line parameter. The memory reserved is used by a dump capture kernel to
->>>> + * identify the memory used by primary kernel.
->>>> + */
->>>
->>> Hi AKASHI,
->>>
->>> May I know why elfcorehdr need be reserved separately but not locate a
->>> memory region in crashkernel reserved region like all other ARCHs? Is
->>> there any special reason?
->>
->> I don't get your point, but arm as well as arm64 locates elfcorehdr
->> in a crash kernel's memory region.
->> See kexec/arch/arm{,64}/crashdump-arm{,64}.c in kexec-tools.
->>
->> And this region is reserved at boot time *on crash kernel* because we don't want
->> to corrupt it accidentally.
->> (After Mark's comment, we might better remove the mmu mapping for this region, too.)
->
->
-> Sorry, I don't make myself clear.
->
-> In this patch you reserve a separate memory region in 1st kernel to
-> store elfcorehdr. I am wondering why you don't call add_buffer in
-> kexec-tools directly. Like this you can get a region from reserved
-> crashkernel region. Then you don't need reserve_elfcorehdr() to reserve
-> memory for elfcorehdr specifically. Like other ARCHs do only one memory
-> region is reserved in 1st kernel, that's crashkernel region.
+On 05/11/15 at 04:58pm, AKASHI Takahiro wrote:
+> Dave,
+> 
+> On 05/11/2015 04:47 PM, Dave Young wrote:
+> >On 05/08/15 at 08:19pm, Dave Young wrote:
+> >>Hi,
+> >>
+> >>On 04/24/15 at 04:53pm, AKASHI Takahiro wrote:
+> >>>Please read the following commits for arm64-specific constraints:
+> >>>     arm64: kdump: reserve memory for crash dump kernel
+> >>>     arm64: kdump: do not go into EL2 before starting a crash dump kernel
+> >>>
+> >>>Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>>---
+> >>>  Documentation/kdump/kdump.txt |   31 ++++++++++++++++++++++++++++++-
+> >>>  arch/arm64/Kconfig            |   12 ++++++++++++
+> >>>  2 files changed, 42 insertions(+), 1 deletion(-)
+> >>>
+> >>>diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> >>>index bc4bd5a..f9cf6f5 100644
+> >>>--- a/Documentation/kdump/kdump.txt
+> >>>+++ b/Documentation/kdump/kdump.txt
+> >>>@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+> >>>  a remote system.
+> >>>
+> >>>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> >>>-s390x and arm architectures.
+> >>>+s390x, arm and arm64 architectures.
+> >>>
+> >>>  When the system kernel boots, it reserves a small section of memory for
+> >>>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> >>>@@ -249,6 +249,29 @@ Dump-capture kernel config options (Arch Dependent, arm)
+> >>>
+> >>>      AUTO_ZRELADDR=y
+> >>>
+> >>>+Dump-capture kernel config options (Arch Dependent, arm64)
+> >>>+----------------------------------------------------------
+> >>>+
+> >>>+1) Disable symmetric multi-processing support under "Processor type and
+> >>>+   features":
+> >>>+
+> >>>+   CONFIG_SMP=n
+> >>>+
+> >>>+   (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
+> >>>+   when loading the dump-capture kernel, see section "Load the Dump-capture
+> >>>+   Kernel".)
+> >>>+
+> >>>+2) Under uefi, the maximum memory size on the dump-capture kernel must be
+> >>>+   limited by specifying:
+> >>>+
+> >>>+   mem=X[MG]
+> >>>+
+> >>>+   where X should be less than or equal to the size in "crashkernel="
+> >>>+   boot parameter. Kexec-tools will automatically add this.
+> >>
+> >>I noticed you are passing mem=X in kexec-tools, Pratyush found a problem
+> >>that vmcore is corrupted because kdump kernel is using the crash notes memory.
+> >>
+> >>How does kdump kernel know the system ram range especially the mem_start?
+> >>Only with the size from mem=? parammeter?
+> >>
+> >>In X86 because it use E820 so kexec-tools can pass the memory range to kdump
+> >>kernel even for UEFI booting. But in arm64 may need find other way to
+> >>communicate with 2nd kernel like memmap=exactmap in X86..
+> >
+> >Discussed with Pratyush in irc, he mentioned that start address is get from
+> >kernel->entry which was passed by kexec-tools.
+> >
+> >So sorry for the noise, it will works fine with the UEFI mem= limitation
+> >fix from Mark Salter
+> 
+> No, not at all.
+> As you know, in another thread (with Mark), we're discussing this.
+> If we conclude that we should go for "memmap=" approach, I will update my patch.
 
-I think that you misunderstand somewhat.
-* Kexec-tools only locates/identifies a small region for elfcore header within crash kernel's
-memory region while 1st kernel is running.
-* the data in elfcore header is filled up by kexec_load system call on 1st kernel.
-* 1st kernel doesn't reserve any region for elfcore header because the kernel
-commandline parameters don't contains "elfcorehdr=" parameter, then elfcorehdr_size=0.
-* Crash dump kernel does reserve the region, as I said, because we don't want to
-corrupt the info in elfcore header accidentally while crash kernel is running.
+Ok, good to know. I did not notice the thread, will take a look.
 
-Clear?
+There's another problem for memmap= approach though. In x86 we have problems when
+we need pass reserved memory ranges as well because of some pci mmconfig issue.
+In that case kernel command line buffer is too small and there's too many memory
+ranges for reserved ranges. Thus later we switched to pass e820 in x86 boot params
+directly.
 
--Takahiro AKASHI
+If there's same potential problems we may consider to use memmap= only for system
+ram, and for any other reserved types we can still get from same dtb in 1st kernel.
 
-> Thanks
-> Baoquan
->>
->>
->> Make sense?
->>
->> -Takahiro AKASHI
->>
->>> Thanks
->>> Baoquan
->>>
->>>> +static void __init reserve_elfcorehdr(void)
->>>> +{
->>>> +	if (!elfcorehdr_size)
->>>> +		return;
->>>> +
->>>> +	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
->>>> +		pr_warn("elfcorehdr reservation failed - memory is in use (0x%llx)\n",
->>>> +			elfcorehdr_addr);
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	if (memblock_reserve(elfcorehdr_addr, elfcorehdr_size)) {
->>>> +		pr_warn("elfcorehdr reservation failed - out of memory\n");
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	pr_info("Reserving %lldKB of memory at %lldMB for elfcorehdr\n",
->>>> +		elfcorehdr_size >> 10, elfcorehdr_addr >> 20);
->>>> +}
->>>> +#endif /* CONFIG_CRASH_DUMP */
->>>>   /*
->>>>    * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
->>>>    * currently assumes that for memory starting above 4G, 32-bit devices will
->>>> @@ -170,6 +247,13 @@ void __init arm64_memblock_init(void)
->>>>   		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
->>>>   #endif
->>>>
->>>> +#ifdef CONFIG_KEXEC
->>>> +	reserve_crashkernel(memory_limit);
->>>> +#endif
->>>> +#ifdef CONFIG_CRASH_DUMP
->>>> +	reserve_elfcorehdr();
->>>> +#endif
->>>> +
->>>>   	early_init_fdt_scan_reserved_mem();
->>>>
->>>>   	/* 4GB maximum for 32-bit only capable devices */
->>>> --
->>>> 1.7.9.5
->>>>
->>>> --
->>>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->>>> the body of a message to majordomo@vger.kernel.org
->>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>> Please read the FAQ at  http://www.tux.org/lkml/
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
