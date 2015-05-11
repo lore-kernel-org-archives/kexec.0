@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f173.google.com ([209.85.192.173])
+Received: from mail-pd0-f171.google.com ([209.85.192.171])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YrhrK-0008BE-6q
- for kexec@lists.infradead.org; Mon, 11 May 2015 07:10:39 +0000
-Received: by pdbqa5 with SMTP id qa5so137360231pdb.1
- for <kexec@lists.infradead.org>; Mon, 11 May 2015 00:10:14 -0700 (PDT)
-Message-ID: <555055CE.7090000@linaro.org>
-Date: Mon, 11 May 2015 16:10:06 +0900
+ id 1YriJD-00024z-Ax
+ for kexec@lists.infradead.org; Mon, 11 May 2015 07:39:28 +0000
+Received: by pdbqd1 with SMTP id qd1so140001467pdb.2
+ for <kexec@lists.infradead.org>; Mon, 11 May 2015 00:39:05 -0700 (PDT)
+Message-ID: <55505C91.8070503@linaro.org>
+Date: Mon, 11 May 2015 16:38:57 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
-Subject: Re: [v2 2/5] arm64: kdump: implement machine_crash_shutdown()
+Subject: Re: [v2 1/5] arm64: kdump: reserve memory for crash dump kernel
 References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-3-git-send-email-takahiro.akashi@linaro.org>
- <20150424103900.GF29183@leverpostej>
-In-Reply-To: <20150424103900.GF29183@leverpostej>
+ <1429861989-8417-2-git-send-email-takahiro.akashi@linaro.org>
+ <20150428091935.GJ15033@dhcp-16-116.nay.redhat.com>
+In-Reply-To: <20150428091935.GJ15033@dhcp-16-116.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,125 +26,88 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, marc.zyngier@arm.com, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org, hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On 04/24/2015 07:39 PM, Mark Rutland wrote:
-> On Fri, Apr 24, 2015 at 08:53:05AM +0100, AKASHI Takahiro wrote:
->> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
->> save per-cpu general-purpose registers before restarting the crash dump
->> kernel. See kernel_kexec().
->> ipi_cpu_stop() is used and a bit modified to support this behavior.
->>
->> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->> ---
->>   arch/arm64/include/asm/kexec.h    |   34 ++++++++++++++++++++++-
->>   arch/arm64/kernel/machine_kexec.c |   55 ++++++++++++++++++++++++++++++++++++-
->>   arch/arm64/kernel/smp.c           |   12 ++++++--
->>   3 files changed, 97 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
->> index 3530ff5..eaf3fcb 100644
->> --- a/arch/arm64/include/asm/kexec.h
->> +++ b/arch/arm64/include/asm/kexec.h
->> @@ -30,6 +30,8 @@
->>
->>   #if !defined(__ASSEMBLY__)
->>
->> +extern bool in_crash_kexec;
->> +
->>   /**
->>    * crash_setup_regs() - save registers for the panic kernel
->>    *
->> @@ -40,7 +42,37 @@
->>   static inline void crash_setup_regs(struct pt_regs *newregs,
->>   				    struct pt_regs *oldregs)
->>   {
->> -	/* Empty routine needed to avoid build errors. */
->> +	if (oldregs) {
->> +		memcpy(newregs, oldregs, sizeof(*newregs));
->> +	} else {
->> +		__asm__ __volatile__ (
->> +			"stp	 x0,   x1, [%3]\n\t"
+Hi Baoquan,
+
+On 04/28/2015 06:19 PM, Baoquan He wrote:
+>> +#ifdef CONFIG_CRASH_DUMP
+>> +/*
+>> + * reserve_elfcorehdr() - reserves memory for elf core header
+>> + *
+>> + * This function reserves memory area given in "elfcorehdr=" kernel command
+>> + * line parameter. The memory reserved is used by a dump capture kernel to
+>> + * identify the memory used by primary kernel.
+>> + */
 >
-> Why the tabs?
-
-Don't know. Will remove them.
-
-> Please use #16 * N as the offset for consistency with entry.S, with 0
-> for the first N.
-
-OK.
-
-> [...]
+> Hi AKASHI,
 >
->> +static void machine_kexec_mask_interrupts(void)
->> +{
->> +	unsigned int i;
->> +	struct irq_desc *desc;
->> +
->> +	for_each_irq_desc(i, desc) {
->> +		struct irq_chip *chip;
->> +
->> +		chip = irq_desc_get_chip(desc);
->> +		if (!chip)
->> +			continue;
->> +
->> +		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
->> +			chip->irq_eoi(&desc->irq_data);
->> +
->> +		if (chip->irq_mask)
->> +			chip->irq_mask(&desc->irq_data);
->> +
->> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
->> +			chip->irq_disable(&desc->irq_data);
->> +	}
->> +}
->
-> I'm surprised that this isn't left to the irqchip driver init code in
-> the crash kernel. For all we know this state could be corrupt anyway.
->
-> Is there any reason we can't get the GIC driver to nuke all of this at
-> probe time?
+> May I know why elfcorehdr need be reserved separately but not locate a
+> memory region in crashkernel reserved region like all other ARCHs? Is
+> there any special reason?
 
-I don't get the point. You mean that the code be put in probe() of GIC driver?
-To be honest, this function was copied from arm's implementation.
+I don't get your point, but arm as well as arm64 locates elfcorehdr
+in a crash kernel's memory region.
+See kexec/arch/arm{,64}/crashdump-arm{,64}.c in kexec-tools.
 
-> [...]
->
->> @@ -542,7 +543,7 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
->>   /*
->>    * ipi_cpu_stop - handle IPI from smp_send_stop()
->>    */
->> -static void ipi_cpu_stop(unsigned int cpu)
->> +static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
->>   {
->>   	if (system_state == SYSTEM_BOOTING ||
->>   	    system_state == SYSTEM_RUNNING) {
->> @@ -556,6 +557,13 @@ static void ipi_cpu_stop(unsigned int cpu)
->>
->>   	local_irq_disable();
->>
->> +#ifdef CONFIG_KEXEC
->> +	if (in_crash_kexec) {
->> +		crash_save_cpu(regs, cpu);
->> +		flush_cache_all();
->
-> Any cache maintenance will need to be by VA; flush_cache_all doesn't do
-> what the name implies, though may appear to work by chance.
->
-> Is kdump implemented for ARM? I don't see equivalent for in the arch/arm
-> ipi_cpu_stop.
+And this region is reserved at boot time *on crash kernel* because we don't want
+to corrupt it accidentally.
+(After Mark's comment, we might better remove the mmu mapping for this region, too.)
 
-Arm has a dedicated function in arch/arm/kernel/machine_kexec.c:
-    machine_crash_shutdown()
-       => machine_crash_nonpanic_core()
 
-Thanks,
+Make sense?
+
 -Takahiro AKASHI
 
-> Mark.
+> Thanks
+> Baoquan
 >
+>> +static void __init reserve_elfcorehdr(void)
+>> +{
+>> +	if (!elfcorehdr_size)
+>> +		return;
+>> +
+>> +	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+>> +		pr_warn("elfcorehdr reservation failed - memory is in use (0x%llx)\n",
+>> +			elfcorehdr_addr);
+>> +		return;
+>> +	}
+>> +
+>> +	if (memblock_reserve(elfcorehdr_addr, elfcorehdr_size)) {
+>> +		pr_warn("elfcorehdr reservation failed - out of memory\n");
+>> +		return;
+>> +	}
+>> +
+>> +	pr_info("Reserving %lldKB of memory at %lldMB for elfcorehdr\n",
+>> +		elfcorehdr_size >> 10, elfcorehdr_addr >> 20);
+>> +}
+>> +#endif /* CONFIG_CRASH_DUMP */
+>>   /*
+>>    * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
+>>    * currently assumes that for memory starting above 4G, 32-bit devices will
+>> @@ -170,6 +247,13 @@ void __init arm64_memblock_init(void)
+>>   		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
+>>   #endif
+>>
+>> +#ifdef CONFIG_KEXEC
+>> +	reserve_crashkernel(memory_limit);
+>> +#endif
+>> +#ifdef CONFIG_CRASH_DUMP
+>> +	reserve_elfcorehdr();
+>> +#endif
+>> +
+>>   	early_init_fdt_scan_reserved_mem();
+>>
+>>   	/* 4GB maximum for 32-bit only capable devices */
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
 
 _______________________________________________
 kexec mailing list
