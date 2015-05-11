@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from g2t2352.austin.hp.com ([15.217.128.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YrkPw-0004Ca-4U
- for kexec@lists.infradead.org; Mon, 11 May 2015 09:54:32 +0000
+ id 1YrkPw-0004Ai-4T
+ for kexec@lists.infradead.org; Mon, 11 May 2015 09:54:34 +0000
 From: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Subject: [PATCH v11 03/10] iommu/vt-d: Function to get existing context entry
-Date: Mon, 11 May 2015 17:52:47 +0800
-Message-Id: <1431337974-545-4-git-send-email-zhen-hual@hp.com>
+Subject: [PATCH v11 02/10] iommu/vt-d: Items required for kdump
+Date: Mon, 11 May 2015 17:52:46 +0800
+Message-Id: <1431337974-545-3-git-send-email-zhen-hual@hp.com>
 In-Reply-To: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
 References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,52 +25,119 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org, vgoyal@redhat.com, dyoung@redhat.com
 Cc: jerry.hoemann@hp.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, zhen-hual@hp.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com
 
-Interface for when a new domain in the old kernel needs some
-values from the panicked kernel's context entries.
+Add context entry functions needed for kdump.
 
+Bill Sumner:
+    Original version;
+
+Li, Zhenhua:
+    Changed the name of new functions, make them consistent with current
+    context get/set functions.
+    Remove the structure dve which is not used in new version.
+
+Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
 Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
 ---
- drivers/iommu/intel-iommu.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/iommu/intel-iommu.c | 72 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
 diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 1e7ceb5..07e6118 100644
+index cb9d6cc..1e7ceb5 100644
 --- a/drivers/iommu/intel-iommu.c
 +++ b/drivers/iommu/intel-iommu.c
-@@ -367,6 +367,10 @@ static inline int first_pte_in_page(struct dma_pte *pte)
-  * do the same thing as crashdump kernel.
-  */
+@@ -190,6 +190,31 @@ struct root_entry {
+ };
+ #define ROOT_ENTRY_NR (VTD_PAGE_SIZE/sizeof(struct root_entry))
  
-+static struct context_entry *device_to_existing_context_entry(
-+				struct intel_iommu *iommu,
-+				u8 bus, u8 devfn);
-+
- 
- /*
-  * This domain is a statically identity mapping domain.
-@@ -4810,3 +4814,22 @@ static void __init check_tylersburg_isoch(void)
- 	printk(KERN_WARNING "DMAR: Recommended TLB entries for ISOCH unit is 16; your BIOS set %d\n",
- 	       vtisochctrl);
- }
-+
-+static struct context_entry *device_to_existing_context_entry(
-+				struct intel_iommu *iommu,
-+				u8 bus, u8 devfn)
++static inline bool root_present(struct root_entry *root)
 +{
-+	struct root_entry *root;
-+	struct context_entry *context;
-+	struct context_entry *ret = NULL;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&iommu->lock, flags);
-+	root = &iommu->root_entry[bus];
-+	context = get_context_addr_from_root(root);
-+	if (context && context_present(context+devfn))
-+		ret = &context[devfn];
-+	spin_unlock_irqrestore(&iommu->lock, flags);
-+	return ret;
++	return (root->lo & 1);
 +}
 +
++static inline void set_root_value(struct root_entry *root, unsigned long value)
++{
++	root->lo &= ~VTD_PAGE_MASK;
++	root->lo |= value & VTD_PAGE_MASK;
++}
++
++static inline struct context_entry *
++get_context_addr_from_root(struct root_entry *root)
++{
++	return (struct context_entry *)
++		(root_present(root)?phys_to_virt(
++		root->lo & VTD_PAGE_MASK) :
++		NULL);
++}
++
++static inline unsigned long
++get_context_phys_from_root(struct root_entry *root)
++{
++	return  root_present(root) ? (root->lo & VTD_PAGE_MASK) : 0;
++}
+ 
+ /*
+  * low 64 bits:
+@@ -211,6 +236,32 @@ static inline bool context_present(struct context_entry *context)
+ {
+ 	return (context->lo & 1);
+ }
++
++static inline int context_fault_enable(struct context_entry *c)
++{
++	return((c->lo >> 1) & 0x1);
++}
++
++static inline int context_translation_type(struct context_entry *c)
++{
++	return((c->lo >> 2) & 0x3);
++}
++
++static inline u64 context_address_root(struct context_entry *c)
++{
++	return((c->lo >> VTD_PAGE_SHIFT));
++}
++
++static inline int context_address_width(struct context_entry *c)
++{
++	return((c->hi >> 0) & 0x7);
++}
++
++static inline int context_domain_id(struct context_entry *c)
++{
++	return((c->hi >> 8) & 0xffff);
++}
++
+ static inline void context_set_present(struct context_entry *context)
+ {
+ 	context->lo |= 1;
+@@ -296,6 +347,27 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+ 	return !((unsigned long)pte & ~VTD_PAGE_MASK);
+ }
+ 
++
++/*
++ * Fix Crashdump failure caused by leftover DMA through a hardware IOMMU
++ *
++ * Fixes the crashdump kernel to deal with an active iommu and legacy
++ * DMA from the (old) panicked kernel in a manner similar to how legacy
++ * DMA is handled when no hardware iommu was in use by the old kernel --
++ * allow the legacy DMA to continue into its current buffers.
++ *
++ * In the crashdump kernel, this code:
++ * 1. skips disabling the IOMMU's translating.
++ * 2. Do not re-enable IOMMU's translating.
++ * 3. In kdump kernel, use the old root entry table.
++ * 4. Allocate pages for new context entry, copy data from old context entries
++ *    in the old kernel to the new ones.
++ *
++ * In other kinds of kernel, for example, a kernel started by kexec,
++ * do the same thing as crashdump kernel.
++ */
++
++
+ /*
+  * This domain is a statically identity mapping domain.
+  *	1. This domain creats a static 1:1 mapping to all usable memory.
 -- 
 2.0.0-rc0
 
