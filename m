@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g2t2354.austin.hp.com ([15.217.128.53])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YrkQb-0004WH-Sz
- for kexec@lists.infradead.org; Mon, 11 May 2015 09:55:14 +0000
-From: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Subject: [PATCH v11 10/10] iommu/vt-d: Use old irte in kdump kernel
-Date: Mon, 11 May 2015 17:52:54 +0800
-Message-Id: <1431337974-545-11-git-send-email-zhen-hual@hp.com>
-In-Reply-To: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
-References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+Date: Tue, 12 May 2015 13:43:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [v2 0/5] arm64: add kdump support
+Message-ID: <20150512054304.GA29874@localhost.localdomain>
+References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
+ <20150424095312.GD29183@leverpostej> <55504956.9020007@linaro.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <55504956.9020007@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,94 +16,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dwmw2@infradead.org, indou.takao@jp.fujitsu.com, bhe@redhat.com, joro@8bytes.org, vgoyal@redhat.com, dyoung@redhat.com
-Cc: jerry.hoemann@hp.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, lisa.mitchell@hp.com, linux-kernel@vger.kernel.org, alex.williamson@redhat.com, zhen-hual@hp.com, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, ard.biesheuvel@linaro.org, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Fix the intr-remapping fault.
+On 05/11/15 at 03:16pm, AKASHI Takahiro wrote:
+> Hi
+> 
+> Sorry for late response. I was on vacation.
+> 
+> On 04/24/2015 06:53 PM, Mark Rutland wrote:
+> >Hi,
+> >
+> >On Fri, Apr 24, 2015 at 08:53:03AM +0100, AKASHI Takahiro wrote:
+> >>This patch set enables kdump (crash dump kernel) support on arm64 on top of
+> >>Geoff's kexec patchset.
+> >>
+> >>In this version, there are some arm64-specific usage/constraints:
+> >>1) "mem=" boot parameter must be specified on crash dump kernel
+> >>    if the system starts on uefi.
+> >
+> >This sounds very painful. Why is this the case, and how do x86 and/or
+> >ia64 get around that?
+> 
+> As Dave (Young) said, x86 uses "memmap=XX" kernel commandline parameters
+> to specify usable memory for crash dump kernel.
 
-[1.594890] dmar: DRHD: handling fault status reg 2
-[1.594894] dmar: INTR-REMAP: Request device [[41:00.0] fault index 4d
-[1.594894] INTR-REMAP:[fault reason 34] Present field in the IRTE entry
-is clear
+Originally x86 use memmap=exactmap memmap=XX to specify each section of
+memories for 2nd kernel. But later because a lot of reserved type ranges
+need to be passed ie. for pci mmconfig, and kernel cmdline buffer is
+limited so kexec-tools later switch to passing these in x86 boot params as
+E820 memory ranges directly.
 
-Use old irte in second kernel, do not disable and re-enable interrupt
-remapping.
+> On my arm64 implementation, "linux,usable-memory" property is added
+> to device tree blob by kexec-tools for this purpose.
+> This is because, when I first implemented kdump on arm64, ppc is the only
+> architecture that supports kdump AND utilizes device trees.
+> Since kexec-tools as well as the kernel already has this framework,
+> I believed that device-tree approach was smarter than a commandline
+> parameter.
+> 
+> However, uefi-based kernel ignores all the memory-related properties
+> in a device tree and so this "mem=" workaround was added.
 
-Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
----
- drivers/iommu/intel_irq_remapping.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+Kdump kernel reuses the memmap info getting from firmware during 1st kernel
+boot, I do not think the memmap info can be cooked for crash kernel usable
+memory. But it might be a better way to use a special fdt node for crash
+kernel memory even for UEFI..
 
-diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-index c2a4406..46d80ad 100644
---- a/drivers/iommu/intel_irq_remapping.c
-+++ b/drivers/iommu/intel_irq_remapping.c
-@@ -197,6 +197,10 @@ static int modify_irte(int irq, struct irte *irte_modified)
- 
- 	set_64bit(&irte->low, irte_modified->low);
- 	set_64bit(&irte->high, irte_modified->high);
-+
-+	if (iommu->pre_enabled_ir)
-+		__iommu_update_old_irte(iommu, index);
-+
- 	__iommu_flush_cache(iommu, irte, sizeof(*irte));
- 
- 	rc = qi_flush_iec(iommu, index, 0);
-@@ -258,6 +262,9 @@ static int clear_entries(struct irq_2_iommu *irq_iommu)
- 	bitmap_release_region(iommu->ir_table->bitmap, index,
- 			      irq_iommu->irte_mask);
- 
-+	if (iommu->pre_enabled_ir)
-+		__iommu_update_old_irte(iommu, -1);
-+
- 	return qi_flush_iec(iommu, index, irq_iommu->irte_mask);
- }
- 
-@@ -657,11 +664,13 @@ static int __init intel_enable_irq_remapping(void)
- 		 */
- 		dmar_fault(-1, iommu);
- 
-+		iommu_check_pre_ir_status(iommu);
-+
- 		/*
--		 * Disable intr remapping and queued invalidation, if already
--		 * enabled prior to OS handover.
-+		 * Here we do not disable intr remapping,
-+		 * if already enabled prior to OS handover.
- 		 */
--		iommu_disable_irq_remapping(iommu);
-+		/* iommu_disable_irq_remapping(iommu); */
- 
- 		dmar_disable_qi(iommu);
- 	}
-@@ -697,7 +706,18 @@ static int __init intel_enable_irq_remapping(void)
- 	 * Setup Interrupt-remapping for all the DRHD's now.
- 	 */
- 	for_each_iommu(iommu, drhd) {
--		iommu_set_irq_remapping(iommu, eim);
-+		if (iommu->pre_enabled_ir) {
-+			unsigned long long q;
-+
-+			q = dmar_readq(iommu->reg + DMAR_IRTA_REG);
-+			iommu->ir_table->base_old_phys = q & VTD_PAGE_MASK;
-+			iommu->ir_table->base_old_virt = ioremap_cache(
-+				iommu->ir_table->base_old_phys,
-+				INTR_REMAP_TABLE_ENTRIES*sizeof(struct irte));
-+			__iommu_load_old_irte(iommu);
-+		} else
-+			iommu_set_irq_remapping(iommu, eim);
-+
- 		setup = true;
- 	}
- 
--- 
-2.0.0-rc0
+Another way is introducing a similar memmap=, but maybe consider only
+system_ram type ranges. For other memory areas still use UEFI memmap.
 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
