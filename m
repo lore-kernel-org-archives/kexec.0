@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ys5mm-0004c8-Ix
- for kexec@lists.infradead.org; Tue, 12 May 2015 08:43:33 +0000
-Message-ID: <5551BD17.6040606@hitachi.com>
-Date: Tue, 12 May 2015 17:43:03 +0900
-From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ys5OJ-0001ch-JE
+ for kexec@lists.infradead.org; Tue, 12 May 2015 08:18:16 +0000
+Date: Tue, 12 May 2015 16:17:23 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v11 02/10] iommu/vt-d: Items required for kdump
+Message-ID: <20150512081723.GC4561@localhost.localdomain>
+References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+ <1431337974-545-3-git-send-email-zhen-hual@hp.com>
 MIME-Version: 1.0
-Subject: Re: Re: Re: [PATCH v2] kernel/panic/kexec: fix
- "crash_kexec_post_notifiers" option issue in oops path
-References: <54F9D645.2050008@jp.fujitsu.com>
- <20150323034752.GD2068@dhcp-16-105.nay.redhat.com>
- <20150323071943.GA22765@gmail.com> <5510DA42.6040708@hitachi.com>
- <20150324071129.GA28619@gmail.com> <20150324144608.GB2970@redhat.com>
- <20150324161814.GB8661@gmail.com> <20150324170417.GA5030@redhat.com>
-In-Reply-To: <20150324170417.GA5030@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1431337974-545-3-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,133 +24,132 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?B?IkhhdGF5YW1hLCBEYWlzdWtlL+eVkeWxsQ==?= =?UTF-8?B?IOWkp+i8lCI=?= <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, ebiederm@xmission.com, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, akpm@linux-foundation.org, bp@suse.de, Ingo Molnar <mingo@kernel.org>
+To: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-Hi all,
-
-What is the current status of this bug fix patch?
-I think it's OK if resending Hatayama-san's patch with Ingo's.
-
-Thanks,
-
-(2015/03/25 2:04), Vivek Goyal wrote:
-> On Tue, Mar 24, 2015 at 05:18:14PM +0100, Ingo Molnar wrote:
->>
->> * Vivek Goyal <vgoyal@redhat.com> wrote:
->>
->>>> Yet the actual bug is in that commit, 'crash_kexec_post_notifiers' 
->>>> was clearly not a no-op in the default case, against expectations.
->>>
->>> Hi Ingo,
->>>
->>> I did a quick test and in default case crash_kexec() runs before 
->>> panic notifiers. So it does look like crash_kexec_post_notifiers is 
->>> a no-op in default case.
->>>
->>> What am I missing.
->>
->> Well, look at f06e5153f4ae:
->>
->> diff --git a/kernel/panic.c b/kernel/panic.c
->> index d02fa9fef46a..62e16cef9cc2 100644
->> --- a/kernel/panic.c
->> +++ b/kernel/panic.c
->> @@ -32,6 +32,7 @@ static unsigned long tainted_mask;
->>  static int pause_on_oops;
->>  static int pause_on_oops_flag;
->>  static DEFINE_SPINLOCK(pause_on_oops_lock);
->> +static bool crash_kexec_post_notifiers;
->>  
->>  int panic_timeout = CONFIG_PANIC_TIMEOUT;
->>  EXPORT_SYMBOL_GPL(panic_timeout);
->> @@ -112,9 +113,11 @@ void panic(const char *fmt, ...)
->>  	/*
->>  	 * If we have crashed and we have a crash kernel loaded let it handle
->>  	 * everything else.
->> -	 * Do we want to call this before we try to display a message?
->> +	 * If we want to run this after calling panic_notifiers, pass
->> +	 * the "crash_kexec_post_notifiers" option to the kernel.
->>  	 */
->> -	crash_kexec(NULL);
->> +	if (!crash_kexec_post_notifiers)
->> +		crash_kexec(NULL);
->>  
->>  	/*
->>  	 * Note smp_send_stop is the usual smp shutdown function, which
->> @@ -131,6 +134,15 @@ void panic(const char *fmt, ...)
->>  
->>  	kmsg_dump(KMSG_DUMP_PANIC);
->>  
->> +	/*
->> +	 * If you doubt kdump always works fine in any situation,
->> +	 * "crash_kexec_post_notifiers" offers you a chance to run
->> +	 * panic_notifiers and dumping kmsg before kdump.
->> +	 * Note: since some panic_notifiers can make crashed kernel
->> +	 * more unstable, it can increase risks of the kdump failure too.
->> +	 */
->> +	crash_kexec(NULL);
->> +
->>  	bust_spinlocks(0);
->>  
->>  	if (!panic_blink)
->>
->>
->> Without knowing what crash_kexec() does, the patch looks buggy: it 
->> should preserve the old behavior by default, yet it will now execute a 
->> second crash_kexec() after the kmsg_dump() line.
->>
->> So the invariant change would have been to do:
->>
->> -	crash_kexec(NULL);
->> +	if (!crash_kexec_post_notifiers)
->> +		crash_kexec(NULL);
->>
->> ...
->>
->> +	if (crash_kexec_post_notifiers)
->> +		crash_kexec(NULL);
->>
->> Which in the !crash_kexec_post_notifiers flag case reduces to:
->>
->> 	crash_kexec();
->>
->> 	...
->>
->> 	/* NOP */
->>
->> I.e. to exactly what the kernel was doing without the patch 
->> originally.
->>
->> Which is what my patch does. Nothing more, nothing less.
+On 05/11/15 at 05:52pm, Li, Zhen-Hua wrote:
+> Add context entry functions needed for kdump.
 > 
-> Ok, I got it what you mean.
+> Bill Sumner:
+>     Original version;
 > 
-> crash_kexec() does not return if a kdump kernel is loaded. If kdump
-> kernel is not loaded, then crash_kexec() returns without doing anything.
+> Li, Zhenhua:
+>     Changed the name of new functions, make them consistent with current
+>     context get/set functions.
+>     Remove the structure dve which is not used in new version.
 > 
-> I think that explains why not making second call to crash_kexec() under
-> if, did not create problems. In first case it will never be called and
-> in second case, it will do nothing and simply return back.
+> Signed-off-by: Bill Sumner <billsumnerlinux@gmail.com>
+> Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 72 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
 > 
-> But anyway, we need your patch as that's right thing to do.
-> 
-> Thanks
-> Vivek
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index cb9d6cc..1e7ceb5 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -190,6 +190,31 @@ struct root_entry {
+>  };
+>  #define ROOT_ENTRY_NR (VTD_PAGE_SIZE/sizeof(struct root_entry))
+>  
+> +static inline bool root_present(struct root_entry *root)
+> +{
+> +	return (root->lo & 1);
+> +}
+> +
+> +static inline void set_root_value(struct root_entry *root, unsigned long value)
+> +{
+> +	root->lo &= ~VTD_PAGE_MASK;
+> +	root->lo |= value & VTD_PAGE_MASK;
+> +}
+> +
+> +static inline struct context_entry *
+> +get_context_addr_from_root(struct root_entry *root)
+> +{
+> +	return (struct context_entry *)
+> +		(root_present(root)?phys_to_virt(
+> +		root->lo & VTD_PAGE_MASK) :
+> +		NULL);
+> +}
+> +
+> +static inline unsigned long
+> +get_context_phys_from_root(struct root_entry *root)
+> +{
+> +	return  root_present(root) ? (root->lo & VTD_PAGE_MASK) : 0;
+> +}
+>  
+>  /*
+>   * low 64 bits:
+> @@ -211,6 +236,32 @@ static inline bool context_present(struct context_entry *context)
+>  {
+>  	return (context->lo & 1);
+>  }
+> +
+> +static inline int context_fault_enable(struct context_entry *c)
+> +{
+> +	return((c->lo >> 1) & 0x1);
+> +}
+> +
+> +static inline int context_translation_type(struct context_entry *c)
+> +{
+> +	return((c->lo >> 2) & 0x3);
+> +}
+> +
+> +static inline u64 context_address_root(struct context_entry *c)
+> +{
+> +	return((c->lo >> VTD_PAGE_SHIFT));
+> +}
+> +
+> +static inline int context_address_width(struct context_entry *c)
+> +{
+> +	return((c->hi >> 0) & 0x7);
+> +}
+> +
+> +static inline int context_domain_id(struct context_entry *c)
+> +{
+> +	return((c->hi >> 8) & 0xffff);
+> +}
+> +
+>  static inline void context_set_present(struct context_entry *context)
+>  {
+>  	context->lo |= 1;
+> @@ -296,6 +347,27 @@ static inline int first_pte_in_page(struct dma_pte *pte)
+>  	return !((unsigned long)pte & ~VTD_PAGE_MASK);
+>  }
+>  
+> +
+> +/*
+> + * Fix Crashdump failure caused by leftover DMA through a hardware IOMMU
+> + *
+> + * Fixes the crashdump kernel to deal with an active iommu and legacy
+> + * DMA from the (old) panicked kernel in a manner similar to how legacy
+> + * DMA is handled when no hardware iommu was in use by the old kernel --
+> + * allow the legacy DMA to continue into its current buffers.
+> + *
+> + * In the crashdump kernel, this code:
+> + * 1. skips disabling the IOMMU's translating.
+> + * 2. Do not re-enable IOMMU's translating.
+> + * 3. In kdump kernel, use the old root entry table.
+> + * 4. Allocate pages for new context entry, copy data from old context entries
+> + *    in the old kernel to the new ones.
+> + *
+> + * In other kinds of kernel, for example, a kernel started by kexec,
+> + * do the same thing as crashdump kernel.
+> + */
+> +
+> +
 
+Above comments should come along with the code changes instead of putting it
+in this patch.
 
--- 
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
+BTW, there's one more blank line at the end..
 
-
+>  /*
+>   * This domain is a statically identity mapping domain.
+>   *	1. This domain creats a static 1:1 mapping to all usable memory.
+> -- 
+> 2.0.0-rc0
+> 
 
 _______________________________________________
 kexec mailing list
