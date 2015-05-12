@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ys3XN-0000iM-4J
- for kexec@lists.infradead.org; Tue, 12 May 2015 06:19:29 +0000
-Date: Tue, 12 May 2015 14:18:52 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v11 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150512061852.GA10229@dhcp-16-116.nay.redhat.com>
-References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+ id 1Ys3su-0003lU-8e
+ for kexec@lists.infradead.org; Tue, 12 May 2015 06:41:45 +0000
+Date: Tue, 12 May 2015 14:41:10 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+Message-ID: <20150512064110.GE29874@localhost.localdomain>
+References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
+ <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
+ <20150504110551.GD15736@8bytes.org>
+ <20150507135600.GB4559@localhost.localdomain>
+ <20150511101124.GG20611@8bytes.org>
+ <20150512055707.GB29874@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+In-Reply-To: <20150512055707.GB29874@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +28,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
+To: Joerg Roedel <joro@8bytes.org>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ Zhen-Hua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-On 05/11/15 at 05:52pm, Li, Zhen-Hua wrote:
-> This patchset is an update of Bill Sumner's patchset, implements a fix for:
-> If a kernel boots with intel_iommu=on on a system that supports intel vt-d, 
-> when a panic happens, the kdump kernel will boot with these faults:
-
-Test passed on my local workstation. Thanks, Zhenhua.
-
+On 05/12/15 at 01:57pm, Dave Young wrote:
+> On 05/11/15 at 12:11pm, Joerg Roedel wrote:
+> > On Thu, May 07, 2015 at 09:56:00PM +0800, Dave Young wrote:
+> > > Joreg, I can not find the last reply from you, so just reply here about
+> > > my worries here.
+> > > 
+> > > I said that the patchset will cause more problems, let me explain about
+> > > it more here:
+> > > 
+> > > Suppose page table was corrupted, ie. original mapping iova1 -> page 1
+> > > it was changed to iova1 -> page 2 accidently while crash happening,
+> > > thus future dma will read/write page 2 instead page 1, right?
+> > 
+> > When the page-table is corrupted then it is a left-over from the old
+> > kernel. When the kdump kernel boots the situation can at least not get
+> > worse. For the page tables it is also hard to detect wrong mappings (if
+> > this would be possible the hardware could already do it), so any checks
+> > we could do there are of limited use anyway.
 > 
->     dmar: DRHD: handling fault status reg 102
->     dmar: DMAR:[DMA Read] Request device [01:00.0] fault addr fff80000
->     DMAR:[fault reason 01] Present bit in root entry is clear
+> Joerg, since both of you guys do not think it is a problem I will object it 
+
+s/will object/will not object
+
+> any more though I still do not like reusing the old page tables. So let's
+> leave it as a future issue.
 > 
->     dmar: DRHD: handling fault status reg 2
->     dmar: INTR-REMAP: Request device [[61:00.0] fault index 42
->     INTR-REMAP:[fault reason 34] Present field in the IRTE entry is clear
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
