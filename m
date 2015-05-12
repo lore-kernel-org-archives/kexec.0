@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pd0-f180.google.com ([209.85.192.180])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ys3su-0003lU-8e
- for kexec@lists.infradead.org; Tue, 12 May 2015 06:41:45 +0000
-Date: Tue, 12 May 2015 14:41:10 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v9 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-Message-ID: <20150512064110.GE29874@localhost.localdomain>
-References: <1426743388-26908-1-git-send-email-zhen-hual@hp.com>
- <20150403084031.GF22579@dhcp-128-53.nay.redhat.com>
- <20150504110551.GD15736@8bytes.org>
- <20150507135600.GB4559@localhost.localdomain>
- <20150511101124.GG20611@8bytes.org>
- <20150512055707.GB29874@localhost.localdomain>
+ id 1Ys4gg-0005Uk-Dr
+ for kexec@lists.infradead.org; Tue, 12 May 2015 07:33:10 +0000
+Received: by pdbnk13 with SMTP id nk13so173638918pdb.0
+ for <kexec@lists.infradead.org>; Tue, 12 May 2015 00:32:48 -0700 (PDT)
+Message-ID: <5551AC97.9040802@linaro.org>
+Date: Tue, 12 May 2015 16:32:39 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150512055707.GB29874@localhost.localdomain>
+Subject: Re: [v2 1/5] arm64: kdump: reserve memory for crash dump kernel
+References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
+ <1429861989-8417-2-git-send-email-takahiro.akashi@linaro.org>
+ <20150428091935.GJ15033@dhcp-16-116.nay.redhat.com>
+ <55505C91.8070503@linaro.org>
+ <20150511075447.GA4290@dhcp-128-28.nay.redhat.com>
+ <5550659D.90006@linaro.org>
+ <20150511094115.GB4290@dhcp-128-28.nay.redhat.com>
+In-Reply-To: <20150511094115.GB4290@dhcp-128-28.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +26,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
- Zhen-Hua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, vgoyal@redhat.com, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 05/12/15 at 01:57pm, Dave Young wrote:
-> On 05/11/15 at 12:11pm, Joerg Roedel wrote:
-> > On Thu, May 07, 2015 at 09:56:00PM +0800, Dave Young wrote:
-> > > Joreg, I can not find the last reply from you, so just reply here about
-> > > my worries here.
-> > > 
-> > > I said that the patchset will cause more problems, let me explain about
-> > > it more here:
-> > > 
-> > > Suppose page table was corrupted, ie. original mapping iova1 -> page 1
-> > > it was changed to iova1 -> page 2 accidently while crash happening,
-> > > thus future dma will read/write page 2 instead page 1, right?
-> > 
-> > When the page-table is corrupted then it is a left-over from the old
-> > kernel. When the kdump kernel boots the situation can at least not get
-> > worse. For the page tables it is also hard to detect wrong mappings (if
-> > this would be possible the hardware could already do it), so any checks
-> > we could do there are of limited use anyway.
-> 
-> Joerg, since both of you guys do not think it is a problem I will object it 
+On 05/11/2015 06:41 PM, Baoquan He wrote:
+> On 05/11/15 at 05:17pm, AKASHI Takahiro wrote:
+>> On 05/11/2015 04:54 PM, Baoquan He wrote:
+>>> In this patch you reserve a separate memory region in 1st kernel to
+>>> store elfcorehdr. I am wondering why you don't call add_buffer in
+>>> kexec-tools directly. Like this you can get a region from reserved
+>>> crashkernel region. Then you don't need reserve_elfcorehdr() to reserve
+>>> memory for elfcorehdr specifically. Like other ARCHs do only one memory
+>>> region is reserved in 1st kernel, that's crashkernel region.
+>>
+>> I think that you misunderstand somewhat.
+>> * Kexec-tools only locates/identifies a small region for elfcore header within crash kernel's
+>> memory region while 1st kernel is running.
+>> * the data in elfcore header is filled up by kexec_load system call on 1st kernel.
+>> * 1st kernel doesn't reserve any region for elfcore header because the kernel
+>> commandline parameters don't contains "elfcorehdr=" parameter, then elfcorehdr_size=0.
+>> * Crash dump kernel does reserve the region, as I said, because we don't want to
+>> corrupt the info in elfcore header accidentally while crash kernel is running.
+>>
+>> Clear?
+>
+> OK, got it now.
+>
+> Then I am wondering why "elfcorehdr=" can't be contained in kernel
+> cmdline as other ARCH does. Maybe I need go over all related threads
+> then know why it is. Thanks for explanation.
 
-s/will object/will not object
+Kexec-tools on 1st kernel appends "elfcorehdr=" to the kernel command line,
+actually chosen/bootargs in a device tree, that is passed to *crash dump kernel*.
+So when crash dump kernel boots up, it can recognizes that area (and reserves it
+for later use of managing /proc/vmcore.)
 
-> any more though I still do not like reusing the old page tables. So let's
-> leave it as a future issue.
-> 
+Thanks,
+-Takahiro AKASHI
+
 > Thanks
-> Dave
+> Baoquan
+>
 
 _______________________________________________
 kexec mailing list
