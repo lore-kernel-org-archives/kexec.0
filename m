@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f180.google.com ([209.85.192.180])
+Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Ys4gg-0005Uk-Dr
- for kexec@lists.infradead.org; Tue, 12 May 2015 07:33:10 +0000
-Received: by pdbnk13 with SMTP id nk13so173638918pdb.0
- for <kexec@lists.infradead.org>; Tue, 12 May 2015 00:32:48 -0700 (PDT)
-Message-ID: <5551AC97.9040802@linaro.org>
-Date: Tue, 12 May 2015 16:32:39 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-MIME-Version: 1.0
-Subject: Re: [v2 1/5] arm64: kdump: reserve memory for crash dump kernel
-References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-2-git-send-email-takahiro.akashi@linaro.org>
- <20150428091935.GJ15033@dhcp-16-116.nay.redhat.com>
- <55505C91.8070503@linaro.org>
- <20150511075447.GA4290@dhcp-128-28.nay.redhat.com>
- <5550659D.90006@linaro.org>
- <20150511094115.GB4290@dhcp-128-28.nay.redhat.com>
-In-Reply-To: <20150511094115.GB4290@dhcp-128-28.nay.redhat.com>
+ id 1Ys5RA-0003Oo-Tr
+ for kexec@lists.infradead.org; Tue, 12 May 2015 08:21:13 +0000
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id 7FDA7AC0331
+ for <kexec@lists.infradead.org>; Tue, 12 May 2015 17:20:45 +0900 (JST)
+Date: Tue, 12 May 2015 17:20:35 +0900 (JST)
+Message-Id: <20150512.172035.461774614.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 0/13] makedumpfile: Avoid two pass filtering by using
+ bitmap file.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA325@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA325@BPXM01GP.gisp.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +22,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: hbabus@us.ibm.com, linaro-kernel@lists.linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, vgoyal@redhat.com, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: ats-kumagai@wm.jp.nec.com
+Cc: kexec@lists.infradead.org
 
-On 05/11/2015 06:41 PM, Baoquan He wrote:
-> On 05/11/15 at 05:17pm, AKASHI Takahiro wrote:
->> On 05/11/2015 04:54 PM, Baoquan He wrote:
->>> In this patch you reserve a separate memory region in 1st kernel to
->>> store elfcorehdr. I am wondering why you don't call add_buffer in
->>> kexec-tools directly. Like this you can get a region from reserved
->>> crashkernel region. Then you don't need reserve_elfcorehdr() to reserve
->>> memory for elfcorehdr specifically. Like other ARCHs do only one memory
->>> region is reserved in 1st kernel, that's crashkernel region.
->>
->> I think that you misunderstand somewhat.
->> * Kexec-tools only locates/identifies a small region for elfcore header within crash kernel's
->> memory region while 1st kernel is running.
->> * the data in elfcore header is filled up by kexec_load system call on 1st kernel.
->> * 1st kernel doesn't reserve any region for elfcore header because the kernel
->> commandline parameters don't contains "elfcorehdr=" parameter, then elfcorehdr_size=0.
->> * Crash dump kernel does reserve the region, as I said, because we don't want to
->> corrupt the info in elfcore header accidentally while crash kernel is running.
->>
->> Clear?
->
-> OK, got it now.
->
-> Then I am wondering why "elfcorehdr=" can't be contained in kernel
-> cmdline as other ARCH does. Maybe I need go over all related threads
-> then know why it is. Thanks for explanation.
+Hello Kumagai-san,
 
-Kexec-tools on 1st kernel appends "elfcorehdr=" to the kernel command line,
-actually chosen/bootargs in a device tree, that is passed to *crash dump kernel*.
-So when crash dump kernel boots up, it can recognizes that area (and reserves it
-for later use of managing /proc/vmcore.)
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: [PATCH 0/13] makedumpfile: Avoid two pass filtering by using bitmap file.
+Date: Mon, 11 May 2015 06:13:51 +0000
 
-Thanks,
--Takahiro AKASHI
+> Hello,
+> 
+> This is the patch set to avoid two pass filtering, it is the
+> finished version of the previous patch set below:
+> 
+>   http://lists.infradead.org/pipermail/kexec/2015-March/013497.html
+> 
+> 
+> cyclic mode has to take a two-pass approach for filtering to save on the
+> memory consumption, it's a disadvantage of the cyclic mode and it's basically
+> unavoidable. However, even the cyclic mode can avoid two-pass filtering if free
+> memory space is enough to store the whole 1st and 2nd bitmaps, but the current
+> version doesn't it.
+> The main purpose of this patch set is avoiding that useless filtering,
+> but before that, I merged non-cyclic mode into cyclic mode as code clean up 
+> because the codes are almost the same. Instead, I introduce another way to
+> guarantee one-pass filtering by using disk space.
+> 
 
-> Thanks
-> Baoquan
->
+How about compromising progress information to some extent? The first
+pass is intended to count up the exact number of dumpable pages just
+to provide precise progress information. Is such prcision really
+needed?
+
+For example, how about another simple progress information:
+
+   pfn / max_mapnr
+
+where pfn is the number of a page frame that is currently
+processed. We know max_mapnr from the beginning, so this is possible
+within one pass. It's less precise but might be precise enough.
+
+--
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
