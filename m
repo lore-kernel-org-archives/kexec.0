@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YsRfz-0006ts-Dp
- for kexec@lists.infradead.org; Wed, 13 May 2015 08:06:00 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 0/13] makedumpfile: Avoid two pass filtering by using
- bitmap file.
-Date: Wed, 13 May 2015 08:04:27 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DAB6F8@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA325@BPXM01GP.gisp.nec.co.jp>
- <20150512.172035.461774614.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20150512.172035.461774614.d.hatayama@jp.fujitsu.com>
-Content-Language: ja-JP
-MIME-Version: 1.0
+Received: from mail.emea.novell.com ([130.57.118.101])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YsRmy-0003MA-0D
+ for kexec@lists.infradead.org; Wed, 13 May 2015 08:13:13 +0000
+Message-Id: <5553239F0200007800079DEE@mail.emea.novell.com>
+Date: Wed, 13 May 2015 09:12:47 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: More on kexec/purgatory handover
+References: <20150509152159.6b391c2b@hananiah.suse.cz>
+ <20150509152159.6b391c2b@hananiah.suse.cz>
+ <87y4ktjbe8.fsf@x220.int.ebiederm.org>
+ <5553116A0200007800079D2D@mail.emea.novell.com><5553116A0200007800079D2D@mail.emea.novell.com>
+ (Jan Beulich's message of "Wed, 13 May 2015 07:55:06 +0100")
+ <87vbfxhquv.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87vbfxhquv.fsf@x220.int.ebiederm.org>
+Mime-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +28,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Petr Tesarik <ptesarik@suse.cz>, xen-devel@lists.xen.org
 
->> cyclic mode has to take a two-pass approach for filtering to save on the
->> memory consumption, it's a disadvantage of the cyclic mode and it's basically
->> unavoidable. However, even the cyclic mode can avoid two-pass filtering if free
->> memory space is enough to store the whole 1st and 2nd bitmaps, but the current
->> version doesn't it.
->> The main purpose of this patch set is avoiding that useless filtering,
->> but before that, I merged non-cyclic mode into cyclic mode as code clean up
->> because the codes are almost the same. Instead, I introduce another way to
->> guarantee one-pass filtering by using disk space.
->>
->
->How about compromising progress information to some extent? The first
->pass is intended to count up the exact number of dumpable pages just
->to provide precise progress information. Is such prcision really
->needed?
+>>> On 13.05.15 at 09:35, <ebiederm@xmission.com> wrote:
+> Fundamentally if you are transfering control in long mode you have to
+> set up some page table.  I giant identity mapped page table that can use
+> 1G or 2M pages takes up very little memory, and can be very simply
+> and easily before the transfer of control takes place.
+> 
+> All you have to do when you are in a half broken state is load cr3.
+> Possible after verifying a checksum.
+> 
+> 640k in this case I don't think is particularly special, and certainly
+> not worth a special case.  The in-kernel implementation on x86_64 sets
+> up a page table for all of memory which because of the availability of
+> huge pages winds up being simple and trivial.
+> 
+> Weird things like copying off the 640k region for the kexec-on-panic
+> case can be done in the adapter/purgatory piece that lives between the
+> two kernels.
+> 
+> So at a very practical level I think we shouldn't have mappings for
+> special regions we should just have mappings for all of memory.
 
-The first pass counts up the num_dumpable *to calculate the offset of
-starting page data region in advance*, otherwise makedumpfile can't start
-to write page data except create a sparse file. 
+But in all of the above you (a) forget that setting up 1:1
+mappings for all memory isn't as simple as putting in place a
+couple of 1G pages - holes need to be accounted for and must
+at best be mapped UC (that's especially an issue with the low
+640k) and (b) imply that whatever Linux behavior there is, Xen
+should mimic it (ignoring for example the fact that with the non-
+kernel based kexec which newer Xen and tools support such 1:1
+mapping setup doesn't appear to be required, i.e. [supposed]
+requirements change).
 
-   7330 write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
-   7331 {
-   7332         struct page_desc pd_zero;
-   7333         off_t offset_data=0;
-   7334         struct disk_dump_header *dh = info->dump_header;
-   7335         unsigned char buf[info->page_size];
-   7336         struct timeval tv_start;
-   7337
-   7338         /*
-   7339          * Reset counter for debug message.
-   7340          */
-   7341         pfn_zero = pfn_cache = pfn_cache_private = 0;
-   7342         pfn_user = pfn_free = pfn_hwpoison = 0;
-   7343         pfn_memhole = info->max_mapnr;
-   7344
-   7345         cd_header->offset
-   7346                 = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
-   7347                 * dh->block_size;
-   7348         cd_page->offset = cd_header->offset + sizeof(page_desc_t)*info->num_dumpable;
-   7349         offset_data = cd_page->offset;                                  ^^^^^^^^^^^^
+Jan
 
-
->For example, how about another simple progress information:
->
->   pfn / max_mapnr
->
->where pfn is the number of a page frame that is currently
->processed. We know max_mapnr from the beginning, so this is possible
->within one pass. It's less precise but might be precise enough.
-
-I also think it's enough for progress information, but anyway the 1st
-pass is necessary as above.
-
-
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
