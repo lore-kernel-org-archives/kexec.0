@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YsSG8-0001dN-FA
- for kexec@lists.infradead.org; Wed, 13 May 2015 08:43:21 +0000
-Date: Wed, 13 May 2015 16:42:26 +0800
+ id 1YsSN4-0006hq-Tq
+ for kexec@lists.infradead.org; Wed, 13 May 2015 08:50:31 +0000
+Date: Wed, 13 May 2015 16:49:40 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v11 02/10] iommu/vt-d: Items required for kdump
-Message-ID: <20150513084226.GO4561@localhost.localdomain>
+Subject: Re: [PATCH v11 05/10] iommu/vt-d: Add functions to load and save old
+ re
+Message-ID: <20150513084940.GP4561@localhost.localdomain>
 References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
- <1431337974-545-3-git-send-email-zhen-hual@hp.com>
- <20150512081723.GC4561@localhost.localdomain>
- <5552ACB9.5050309@hp.com>
+ <1431337974-545-6-git-send-email-zhen-hual@hp.com>
+ <20150512083745.GE4561@localhost.localdomain>
+ <5552AD1B.6030208@hp.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5552ACB9.5050309@hp.com>
+In-Reply-To: <5552AD1B.6030208@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,44 +30,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Li, ZhenHua" <zhen-hual@hp.com>
 Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-On 05/13/15 at 09:45am, Li, ZhenHua wrote:
-> On 05/12/2015 04:17 PM, Dave Young wrote:
+On 05/13/15 at 09:47am, Li, ZhenHua wrote:
+> On 05/12/2015 04:37 PM, Dave Young wrote:
+> >Seems the subject was truncated? Maybe "re" means root entry? Then please fix it
+> >
 > >On 05/11/15 at 05:52pm, Li, Zhen-Hua wrote:
-> >>Add context entry functions needed for kdump.
-> >>+/*
-> >>+ * Fix Crashdump failure caused by leftover DMA through a hardware IOMMU
-> >>+ *
-> >>+ * Fixes the crashdump kernel to deal with an active iommu and legacy
-> >>+ * DMA from the (old) panicked kernel in a manner similar to how legacy
-> >>+ * DMA is handled when no hardware iommu was in use by the old kernel --
-> >>+ * allow the legacy DMA to continue into its current buffers.
-> >>+ *
-> >>+ * In the crashdump kernel, this code:
-> >>+ * 1. skips disabling the IOMMU's translating.
-> >>+ * 2. Do not re-enable IOMMU's translating.
-> >>+ * 3. In kdump kernel, use the old root entry table.
-> >>+ * 4. Allocate pages for new context entry, copy data from old context entries
-> >>+ *    in the old kernel to the new ones.
-> >>+ *
-> >>+ * In other kinds of kernel, for example, a kernel started by kexec,
-> >>+ * do the same thing as crashdump kernel.
-> >>+ */
-> >>+
-> >>+
+> >>Add functions to load root entry table from old kernel, and to save updated
+> >>root entry table.
+> >>Add two member in struct intel_iommu, to store the RTA in old kernel, and
+> >>the mapped virt address of it.
 > >
-> >Above comments should come along with the code changes instead of putting it
-> >in this patch.
+> >Please explain a bit what is "RTA" in patch log, it is unclear to most of people
+> >who do not know iommu details.
 > >
-> >BTW, there's one more blank line at the end..
-> Code change is in 00/10, the cover letter.
+> >>
+> 
+> If people want to understand this patchset, I assume they have read the vt-d
+> specs. RTA is defined clearly in this spec.
+> 
 
-I means the real code, not the changelog.
+I think explain a bit is better, it will be easier for review, RTA is defined in spec,
+right, but if you refer to it in kernel source code, describe the meaning will help
+people to understand your code.
 
-> And the blank does not matter, I checked the patch with
-> scripts/checkpatch.pl,  no warnings, no errors.
-
-Why add two line breaks if one is enough? Adding such check in checkpatch.pl
-make sense to me actually.
+I would not stick on this 'RTA', but a descriptive subject and patch log is still
+important, please check the logs, not only for this patch.
 
 Thanks
 Dave
