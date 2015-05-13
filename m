@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.emea.novell.com ([130.57.118.101])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YsRmy-0003MA-0D
- for kexec@lists.infradead.org; Wed, 13 May 2015 08:13:13 +0000
-Message-Id: <5553239F0200007800079DEE@mail.emea.novell.com>
-Date: Wed, 13 May 2015 09:12:47 +0100
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: More on kexec/purgatory handover
-References: <20150509152159.6b391c2b@hananiah.suse.cz>
- <20150509152159.6b391c2b@hananiah.suse.cz>
- <87y4ktjbe8.fsf@x220.int.ebiederm.org>
- <5553116A0200007800079D2D@mail.emea.novell.com><5553116A0200007800079D2D@mail.emea.novell.com>
- (Jan Beulich's message of "Wed, 13 May 2015 07:55:06 +0100")
- <87vbfxhquv.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87vbfxhquv.fsf@x220.int.ebiederm.org>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YsSG8-0001dN-FA
+ for kexec@lists.infradead.org; Wed, 13 May 2015 08:43:21 +0000
+Date: Wed, 13 May 2015 16:42:26 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v11 02/10] iommu/vt-d: Items required for kdump
+Message-ID: <20150513084226.GO4561@localhost.localdomain>
+References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+ <1431337974-545-3-git-send-email-zhen-hual@hp.com>
+ <20150512081723.GC4561@localhost.localdomain>
+ <5552ACB9.5050309@hp.com>
+MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <5552ACB9.5050309@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,42 +26,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, kexec@lists.infradead.org, David Vrabel <david.vrabel@citrix.com>, Petr Tesarik <ptesarik@suse.cz>, xen-devel@lists.xen.org
+To: "Li, ZhenHua" <zhen-hual@hp.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
->>> On 13.05.15 at 09:35, <ebiederm@xmission.com> wrote:
-> Fundamentally if you are transfering control in long mode you have to
-> set up some page table.  I giant identity mapped page table that can use
-> 1G or 2M pages takes up very little memory, and can be very simply
-> and easily before the transfer of control takes place.
-> 
-> All you have to do when you are in a half broken state is load cr3.
-> Possible after verifying a checksum.
-> 
-> 640k in this case I don't think is particularly special, and certainly
-> not worth a special case.  The in-kernel implementation on x86_64 sets
-> up a page table for all of memory which because of the availability of
-> huge pages winds up being simple and trivial.
-> 
-> Weird things like copying off the 640k region for the kexec-on-panic
-> case can be done in the adapter/purgatory piece that lives between the
-> two kernels.
-> 
-> So at a very practical level I think we shouldn't have mappings for
-> special regions we should just have mappings for all of memory.
+On 05/13/15 at 09:45am, Li, ZhenHua wrote:
+> On 05/12/2015 04:17 PM, Dave Young wrote:
+> >On 05/11/15 at 05:52pm, Li, Zhen-Hua wrote:
+> >>Add context entry functions needed for kdump.
+> >>+/*
+> >>+ * Fix Crashdump failure caused by leftover DMA through a hardware IOMMU
+> >>+ *
+> >>+ * Fixes the crashdump kernel to deal with an active iommu and legacy
+> >>+ * DMA from the (old) panicked kernel in a manner similar to how legacy
+> >>+ * DMA is handled when no hardware iommu was in use by the old kernel --
+> >>+ * allow the legacy DMA to continue into its current buffers.
+> >>+ *
+> >>+ * In the crashdump kernel, this code:
+> >>+ * 1. skips disabling the IOMMU's translating.
+> >>+ * 2. Do not re-enable IOMMU's translating.
+> >>+ * 3. In kdump kernel, use the old root entry table.
+> >>+ * 4. Allocate pages for new context entry, copy data from old context entries
+> >>+ *    in the old kernel to the new ones.
+> >>+ *
+> >>+ * In other kinds of kernel, for example, a kernel started by kexec,
+> >>+ * do the same thing as crashdump kernel.
+> >>+ */
+> >>+
+> >>+
+> >
+> >Above comments should come along with the code changes instead of putting it
+> >in this patch.
+> >
+> >BTW, there's one more blank line at the end..
+> Code change is in 00/10, the cover letter.
 
-But in all of the above you (a) forget that setting up 1:1
-mappings for all memory isn't as simple as putting in place a
-couple of 1G pages - holes need to be accounted for and must
-at best be mapped UC (that's especially an issue with the low
-640k) and (b) imply that whatever Linux behavior there is, Xen
-should mimic it (ignoring for example the fact that with the non-
-kernel based kexec which newer Xen and tools support such 1:1
-mapping setup doesn't appear to be required, i.e. [supposed]
-requirements change).
+I means the real code, not the changelog.
 
-Jan
+> And the blank does not matter, I checked the patch with
+> scripts/checkpatch.pl,  no warnings, no errors.
 
+Why add two line breaks if one is enough? Adding such check in checkpatch.pl
+make sense to me actually.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
