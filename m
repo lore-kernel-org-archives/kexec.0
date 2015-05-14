@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YsheJ-00087l-QJ
- for kexec@lists.infradead.org; Thu, 14 May 2015 01:09:21 +0000
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by yt-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id 6B5E8AC0552
- for <kexec@lists.infradead.org>; Thu, 14 May 2015 10:08:53 +0900 (JST)
-Date: Thu, 14 May 2015 10:08:43 +0900 (JST)
-Message-Id: <20150514.100843.320775105.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH 0/13] makedumpfile: Avoid two pass filtering by using
- bitmap file.
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DAB6F8@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DAA325@BPXM01GP.gisp.nec.co.jp>
- <20150512.172035.461774614.d.hatayama@jp.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DAB6F8@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Message-ID: <55542EC9.1060504@redhat.com>
+Date: Thu, 14 May 2015 10:42:41 +0530
+From: Pratyush Anand <panand@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] arm64: Kexec: Add support for binary image
+References: <770bae1ed7d53e74874f99343070b4c5a69cb9a2.1429704995.git.panand@redhat.com>
+ <1430933681.12082.23.camel@infradead.org>
+In-Reply-To: <1430933681.12082.23.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,90 +15,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
+To: Geoff Levand <geoff@infradead.org>
 Cc: kexec@lists.infradead.org
 
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 0/13] makedumpfile: Avoid two pass filtering by using bitmap file.
-Date: Wed, 13 May 2015 08:04:27 +0000
+Hi Geoff,
 
->>> cyclic mode has to take a two-pass approach for filtering to save on the
->>> memory consumption, it's a disadvantage of the cyclic mode and it's basically
->>> unavoidable. However, even the cyclic mode can avoid two-pass filtering if free
->>> memory space is enough to store the whole 1st and 2nd bitmaps, but the current
->>> version doesn't it.
->>> The main purpose of this patch set is avoiding that useless filtering,
->>> but before that, I merged non-cyclic mode into cyclic mode as code clean up
->>> because the codes are almost the same. Instead, I introduce another way to
->>> guarantee one-pass filtering by using disk space.
->>>
->>
->>How about compromising progress information to some extent? The first
->>pass is intended to count up the exact number of dumpable pages just
->>to provide precise progress information. Is such prcision really
->>needed?
-> 
-> The first pass counts up the num_dumpable *to calculate the offset of
-> starting page data region in advance*, otherwise makedumpfile can't start
-> to write page data except create a sparse file. 
-> 
->    7330 write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
->    7331 {
->    7332         struct page_desc pd_zero;
->    7333         off_t offset_data=0;
->    7334         struct disk_dump_header *dh = info->dump_header;
->    7335         unsigned char buf[info->page_size];
->    7336         struct timeval tv_start;
->    7337
->    7338         /*
->    7339          * Reset counter for debug message.
->    7340          */
->    7341         pfn_zero = pfn_cache = pfn_cache_private = 0;
->    7342         pfn_user = pfn_free = pfn_hwpoison = 0;
->    7343         pfn_memhole = info->max_mapnr;
->    7344
->    7345         cd_header->offset
->    7346                 = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
->    7347                 * dh->block_size;
->    7348         cd_page->offset = cd_header->offset + sizeof(page_desc_t)*info->num_dumpable;
->    7349         offset_data = cd_page->offset;                                  ^^^^^^^^^^^^
-> 
-> 
+Thanks for the review.
 
-I overlooked this, sorry.
+On Wednesday 06 May 2015 11:04 PM, Geoff Levand wrote:
+> Hi,
+>
+> On Wed, 2015-04-22 at 17:56 +0530, Pratyush Anand wrote:
+>
+>> @@ -30,6 +32,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
+>>   "     --dtb=FILE            Use FILE as the device tree blob.\n"
+>>   "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
+>>   "     --lite                Fast reboot, no memory integrity checks.\n"
+>> +"     --page-offset         Kernel page-offset for binary image load.\n"
+>
+> Sorry I didn't see this before, but page-offset is for Image load, so
+> should go in the image_arm64_usage().
+>
 
-Size of page description header is 24 bytes. This corresponds to 6 GB
-per 1 TB. Can this become a big problem? Of course, I think it odd
-that page description table could be larger than memory data part.
+OK, will modify.
 
-There's another aproach: construct the page description table at each
-cycle separately over a dump file and connect them by a linked list.
+> I think it is OK to keep page_offset in struct arm64_opts, then just
+> ignore it for the other file formats.
+>
 
-This changes dump format and needs to add crash utility support; no
-compatibility to current crash utility.
+Since arm64_opts.page_offset is used by only binary image file format, 
+so should be OK.
 
->>For example, how about another simple progress information:
->>
->>   pfn / max_mapnr
->>
->>where pfn is the number of a page frame that is currently
->>processed. We know max_mapnr from the beginning, so this is possible
->>within one pass. It's less precise but might be precise enough.
-> 
-> I also think it's enough for progress information, but anyway the 1st
-> pass is necessary as above.
-> 
-> 
-> Thanks
-> Atsushi Kumagai
---
-Thanks.
-HATAYAMA, Daisuke
+>>   "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
+>>   "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
+>>   "     --reuse-cmdline       Use command line arg of primary kernel.\n";
+>
+>> --- a/kexec/arch/arm64/kexec-image-arm64.c
+>> +++ b/kexec/arch/arm64/kexec-image-arm64.c
+>> +static unsigned long long get_kernel_page_offset(void)
+>> +{
+>> +	unsigned long long text_sym_addr = get_kernel_text_sym();
+>> +	unsigned long long text_page_offset =
+>> +		text_sym_addr & 0xFFFFFFFFFFE00000;
+>> +
+>> +	if(arm64_opts.page_offset) {
+>> +		if (text_page_offset != arm64_opts.page_offset)
+>> +			dbgprintf("User page offset did not match with text page offset\n");
+>
+> I'd like to see the values printed.
 
+OK, will modify.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
