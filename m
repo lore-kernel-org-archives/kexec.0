@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55542EC9.1060504@redhat.com>
-Date: Thu, 14 May 2015 10:42:41 +0530
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Ysm7v-0003PM-5B
+ for kexec@lists.infradead.org; Thu, 14 May 2015 05:56:13 +0000
 From: Pratyush Anand <panand@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] arm64: Kexec: Add support for binary image
-References: <770bae1ed7d53e74874f99343070b4c5a69cb9a2.1429704995.git.panand@redhat.com>
- <1430933681.12082.23.camel@infradead.org>
-In-Reply-To: <1430933681.12082.23.camel@infradead.org>
+Subject: [PATCH V2 00/11] ARM64 Binary Image Support
+Date: Thu, 14 May 2015 11:25:36 +0530
+Message-Id: <cover.1431582203.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,62 +15,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org
+To: geoff@infradead.org
+Cc: Pratyush Anand <panand@redhat.com>, takahiro.akashi@linaro.org, kexec@lists.infradead.org
 
-Hi Geoff,
+These patches are discreet and for Geoff to apply on his tree, so that
+they can further be sent to upstream with other ARM64 patches.
 
-Thanks for the review.
+Patch 1 will apply on top of [1].
+Patch (2-9): I am not sending as they are from AKASHI Takahiro's tree
+[2].
+Patch (10-11) will apply after pulling Takahiro's kdump patches[2].
 
-On Wednesday 06 May 2015 11:04 PM, Geoff Levand wrote:
-> Hi,
->
-> On Wed, 2015-04-22 at 17:56 +0530, Pratyush Anand wrote:
->
->> @@ -30,6 +32,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
->>   "     --dtb=FILE            Use FILE as the device tree blob.\n"
->>   "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
->>   "     --lite                Fast reboot, no memory integrity checks.\n"
->> +"     --page-offset         Kernel page-offset for binary image load.\n"
->
-> Sorry I didn't see this before, but page-offset is for Image load, so
-> should go in the image_arm64_usage().
->
+Changes since V1:
+ --  --page-offset  helper moved to image_arm64_usage
+ -- debug values are getting printed if user page offset did not match
+with text page offset
 
-OK, will modify.
+Pratyush Anand (3):
+  arm64: Kexec: Add support for binary image
+  arm64: kdump: Add support for binary image
+  arm64: wait for transmit completion before next character transmission
 
-> I think it is OK to keep page_offset in struct arm64_opts, then just
-> ignore it for the other file formats.
->
 
-Since arm64_opts.page_offset is used by only binary image file format, 
-so should be OK.
-
->>   "     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
->>   "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
->>   "     --reuse-cmdline       Use command line arg of primary kernel.\n";
->
->> --- a/kexec/arch/arm64/kexec-image-arm64.c
->> +++ b/kexec/arch/arm64/kexec-image-arm64.c
->> +static unsigned long long get_kernel_page_offset(void)
->> +{
->> +	unsigned long long text_sym_addr = get_kernel_text_sym();
->> +	unsigned long long text_page_offset =
->> +		text_sym_addr & 0xFFFFFFFFFFE00000;
->> +
->> +	if(arm64_opts.page_offset) {
->> +		if (text_page_offset != arm64_opts.page_offset)
->> +			dbgprintf("User page offset did not match with text page offset\n");
->
-> I'd like to see the values printed.
-
-OK, will modify.
-
-~Pratyush
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/geoff/kexec-tools.git
+: master (2f5f0e06823c)
+[2] git://git.linaro.org/people/takahiro.akashi/kexec-tools.git
+:kdump/v0.12 (fcaad9577789..913c2ec2d045)
 
 _______________________________________________
 kexec mailing list
