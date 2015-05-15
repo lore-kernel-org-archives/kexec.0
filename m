@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
+Received: from mgwym02.jp.fujitsu.com ([211.128.242.41])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YtDNV-0004iJ-NO
- for kexec@lists.infradead.org; Fri, 15 May 2015 11:02:07 +0000
+ id 1YtDNY-0004iz-7x
+ for kexec@lists.infradead.org; Fri, 15 May 2015 11:02:08 +0000
 Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
  [10.134.21.209])
- by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id E75D4AC062E
- for <kexec@lists.infradead.org>; Fri, 15 May 2015 20:01:38 +0900 (JST)
-Subject: [PATCH v3 0/2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
- option issue in oops path
+ by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id 59A9EAC02FA
+ for <kexec@lists.infradead.org>; Fri, 15 May 2015 20:01:44 +0900 (JST)
+Subject: [PATCH v3 1/2] kernel/panic: call the 2nd crash_kexec() only if
+ crash_kexec_post_notifiers is enabled
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Date: Fri, 15 May 2015 20:01:38 +0900
-Message-ID: <20150515105953.8431.65220.stgit@localhost6.localdomain6>
+Date: Fri, 15 May 2015 20:01:44 +0900
+Message-ID: <20150515110143.8431.38836.stgit@localhost6.localdomain6>
+In-Reply-To: <20150515105953.8431.65220.stgit@localhost6.localdomain6>
+References: <20150515105953.8431.65220.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,30 +30,36 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: akpm@linux-foundation.org, ebiederm@xmission.com, vgoyal@redhat.com, mingo@kernel.org
 Cc: masami.hiramatsu.pt@hitachi.com, hidehiro.kawai.ez@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bhe@redhat.com
 
-This patch set fixes a bug introduced in the commit
-f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45.
+For compatibility with the behaviour before the commit
+f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45, the 2nd crash_kexec() should
+be called only if crash_kexec_post_notifiers is enabled.
 
-For the v2 discussion, please follow the following thread:
+Note that crash_kexec() returns immediately if kdump crash kernel is
+not loaded, so in this case, this patch makes no functionality change,
+but the point is to make it explicit, from the caller panic() side,
+that the 2nd crash_kexec() does nothing.
 
-  http://thread.gmane.org/gmane.linux.kernel/1902488
-
-The v3 patch newly adds a patch suggested by Ingo Molnar.
-
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 ---
+ kernel/panic.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-HATAYAMA Daisuke (2):
-      kernel/panic: call the 2nd crash_kexec() only if crash_kexec_post_notifiers is enabled
-      kernel/panic/kexec: fix "crash_kexec_post_notifiers" option issue in oops path
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 8136ad7..774614f 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -142,7 +142,8 @@ void panic(const char *fmt, ...)
+ 	 * Note: since some panic_notifiers can make crashed kernel
+ 	 * more unstable, it can increase risks of the kdump failure too.
+ 	 */
+-	crash_kexec(NULL);
++	if (crash_kexec_post_notifiers)
++		crash_kexec(NULL);
+ 
+ 	bust_spinlocks(0);
+ 
 
-
- include/linux/kernel.h |    3 +++
- kernel/kexec.c         |   11 +++++++++++
- kernel/panic.c         |    5 +++--
- 3 files changed, 17 insertions(+), 2 deletions(-)
-
---
-Thanks.
-HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
