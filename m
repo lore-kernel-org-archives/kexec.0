@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mgwym04.jp.fujitsu.com ([211.128.242.43])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yt9ga-0001uC-Aj
- for kexec@lists.infradead.org; Fri, 15 May 2015 07:05:33 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: makedumpfile: Issue with aarch64 support
-Date: Fri, 15 May 2015 07:00:53 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DB45FE@BPXM01GP.gisp.nec.co.jp>
-References: <55555117.4080708@redhat.com>
-In-Reply-To: <55555117.4080708@redhat.com>
-Content-Language: ja-JP
+ id 1YtDNV-0004iJ-NO
+ for kexec@lists.infradead.org; Fri, 15 May 2015 11:02:07 +0000
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by yt-mxoi1.gw.nic.fujitsu.com (Postfix) with ESMTP id E75D4AC062E
+ for <kexec@lists.infradead.org>; Fri, 15 May 2015 20:01:38 +0900 (JST)
+Subject: [PATCH v3 0/2] kernel/panic/kexec: fix "crash_kexec_post_notifiers"
+ option issue in oops path
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Date: Fri, 15 May 2015 20:01:38 +0900
+Message-ID: <20150515105953.8431.65220.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,64 +25,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "panand@redhat.com" <panand@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
+To: akpm@linux-foundation.org, ebiederm@xmission.com, vgoyal@redhat.com, mingo@kernel.org
+Cc: masami.hiramatsu.pt@hitachi.com, hidehiro.kawai.ez@hitachi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bhe@redhat.com
 
-Hello Pratyush,
+This patch set fixes a bug introduced in the commit
+f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45.
 
->Hi Atsushi,
->
->* I am adding aarch64 support in makedumpfile. Preliminary patch is here
->[1]. I am having some issue with the dumpdisk created by makedumpfile.
->See, if you get any clue with following inputs.
->
->* I used cp option in kdump.conf to have a good elf vmcore in
->/var/crash/..../vmcore.
->
->* If I run crash over this elf vmcore, then everything goes fine.
->
->* Now I use makedumpfile [1] for dumpdisk creation
->
->  and compression just goes fine.
->  # makedumpfile -l --message-level 1 -d 31 /var/crash/..../vmcore vmcore
->  Copying data                       : [100.0 %] |
->
->  But, crash does not like the vmcore
->  # crash /lib/modules/.../build/vmlinux vmcore -d 31
->
-><readmem: fffffe01ffde2000, KVADDR, "memory section", 32, (FOE),
->a2c4eb0>
-><read_diskdump: addr: fffffe01ffde2000 paddr: 41fffe2000 cnt: 32>
->read_diskdump: SEEK_ERROR: paddr/pfn: 41fffe2000/41fffe max_mapnr:
->414000
+For the v2 discussion, please follow the following thread:
 
-According to this message, it seems that the max_mapnr in disk_dump_header
-was calculated wrongly by makedumpfile. pfn:41fffe must be exist since
-crash requires it, so max_mapnr must be shortened.
-What is the actual maximum pfn of the original vmcore ? If the number is
-correct, I have no ideas for now...
+  http://thread.gmane.org/gmane.linux.kernel/1902488
+
+The v3 patch newly adds a patch suggested by Ingo Molnar.
+
+---
+
+HATAYAMA Daisuke (2):
+      kernel/panic: call the 2nd crash_kexec() only if crash_kexec_post_notifiers is enabled
+      kernel/panic/kexec: fix "crash_kexec_post_notifiers" option issue in oops path
 
 
-Thanks
-Atsushi Kumagai
+ include/linux/kernel.h |    3 +++
+ kernel/kexec.c         |   11 +++++++++++
+ kernel/panic.c         |    5 +++--
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
->crash: seek error: kernel virtual address: fffffe01ffde2000  type:
->"memory section"
->
->* I tried by removing -d option in makedumpfile , still same issue.
->
->* A print for vaddr in vaddr_to_paddr_arm64 does not show address
->fffffe01ffde2000 being asked for translation by makedumpfile core.
->Infact all the vaddr printed are in the range of directly mapped kernel
->VAs, so I did not consider to add support for other memory section like
->vmalloc, vmemmap etc at this point.
->
->Thanks in advance for your help.
->
->~Pratyush
->
->[1]
->https://github.com/pratyushanand/makedumpfile/commit/073bc204c3422d6cee72eed89edb47281ead1a2e
+--
+Thanks.
+HATAYAMA, Daisuke
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
