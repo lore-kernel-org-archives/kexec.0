@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f41.google.com ([209.85.220.41])
+Received: from g2t2353.austin.hp.com ([15.217.128.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YuG6S-0004I4-4J
- for kexec@lists.infradead.org; Mon, 18 May 2015 08:08:49 +0000
-Received: by pabts4 with SMTP id ts4so141892887pab.3
- for <kexec@lists.infradead.org>; Mon, 18 May 2015 01:08:25 -0700 (PDT)
-Message-ID: <55599DF0.7010507@linaro.org>
-Date: Mon, 18 May 2015 17:08:16 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+ id 1YuHxA-0001wo-0H
+ for kexec@lists.infradead.org; Mon, 18 May 2015 10:07:21 +0000
+Message-ID: <5559B97B.5090805@hp.com>
+Date: Mon, 18 May 2015 18:05:47 +0800
+From: "Li, ZhenHua" <zhen-hual@hp.com>
 MIME-Version: 1.0
-Subject: Re: [v2 0/5] arm64: add kdump support
-References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <20150424095312.GD29183@leverpostej> <55504956.9020007@linaro.org>
- <20150512054304.GA29874@localhost.localdomain>
-In-Reply-To: <20150512054304.GA29874@localhost.localdomain>
+Subject: Re: [PATCH v11 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
+References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+ <5552AEE9.80408@hp.com>
+In-Reply-To: <5552AEE9.80408@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,90 +23,249 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, ard.biesheuvel@linaro.org, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: joro@8bytes.org
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
+ ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
 
-Mark,
+Hi Joerg,
 
-On 05/12/2015 02:43 PM, Dave Young wrote:
-> On 05/11/15 at 03:16pm, AKASHI Takahiro wrote:
->> Hi
->>
->> Sorry for late response. I was on vacation.
->>
->> On 04/24/2015 06:53 PM, Mark Rutland wrote:
->>> Hi,
->>>
->>> On Fri, Apr 24, 2015 at 08:53:03AM +0100, AKASHI Takahiro wrote:
->>>> This patch set enables kdump (crash dump kernel) support on arm64 on top of
->>>> Geoff's kexec patchset.
->>>>
->>>> In this version, there are some arm64-specific usage/constraints:
->>>> 1) "mem=" boot parameter must be specified on crash dump kernel
->>>>     if the system starts on uefi.
->>>
->>> This sounds very painful. Why is this the case, and how do x86 and/or
->>> ia64 get around that?
->>
->> As Dave (Young) said, x86 uses "memmap=XX" kernel commandline parameters
->> to specify usable memory for crash dump kernel.
+Testing from HP: passed.
+Testing from He Baoquan(Redhat): passed
+
+The problem that dmar fault came again when running v10 with latest
+kernel is fixed.
+And I think there is no need to update the code to a new version now.
+
+So please tell me if there are still any code need to be changed.
+
+Thanks
+Zhenhua
+
+On 05/13/2015 09:54 AM, Li, ZhenHua wrote:
+> One thing must be pointed out:
+> There is a known issue that hpsa driver cannot work well in kdump
+> kernel. And this patchset is not intended to fix this problem.
 >
-> Originally x86 use memmap=exactmap memmap=XX to specify each section of
-> memories for 2nd kernel. But later because a lot of reserved type ranges
-> need to be passed ie. for pci mmconfig, and kernel cmdline buffer is
-> limited so kexec-tools later switch to passing these in x86 boot params as
-> E820 memory ranges directly.
+> So this patchset cannot work with HP smart array devices which need hpsa
+> driver.
 >
->> On my arm64 implementation, "linux,usable-memory" property is added
->> to device tree blob by kexec-tools for this purpose.
->> This is because, when I first implemented kdump on arm64, ppc is the only
->> architecture that supports kdump AND utilizes device trees.
->> Since kexec-tools as well as the kernel already has this framework,
->> I believed that device-tree approach was smarter than a commandline
->> parameter.
+> On 05/11/2015 05:52 PM, Li, Zhen-Hua wrote:
+>> This patchset is an update of Bill Sumner's patchset, implements a fix
+>> for:
+>> If a kernel boots with intel_iommu=on on a system that supports intel
+>> vt-d,
+>> when a panic happens, the kdump kernel will boot with these faults:
 >>
->> However, uefi-based kernel ignores all the memory-related properties
->> in a device tree and so this "mem=" workaround
-> Kdump kernel reuses the memmap info getting from firmware during 1st kernel
-> boot, I do not think the memmap info can be cooked for crash kernel usable
-> memory. But it might be a better way to use a special fdt node for crash
-> kernel memory even for UEFI..
-
-Do you still prefer "memmap=" approach?
-
-Just FYI,
-
-       x86                     arm            arm64            powerpc{,64}
-
-(a)   cmdline(crashkernel=)   cmdline        cmdline          cmdline
-(b)   iomem                   iomem          iomem            dev tree
-(c)   cmdline(memmap=)        cmdline(mem=)  dev tree         dev tree
-                                              & cmdline(mem=)
-
-(a) how we specify/reserve crash dump kernel's memory on 1st kernel
-(b) how we inform userspace tool of crash dump kernel's memory on 1st kernel
-     - iomem: add "Crash kernel" entry in /proc/iomem
-     - dev tree: add /chosen/linux,crashkernel-base (and crashkernel-size)
-(c) how we specify usable memory on crash dump kernel
-     - dev tree: add /chosen/memory/linux,usable-memory
-
-
-As you see, arm64, and arm as well, does things in a *hybrid* way of x86 and ppc.
-I think we should go for a uniform way with device tree as ppc does.
-(Even for (a), we can use a device tree.)
-
-> Another way is introducing a similar memmap=, but maybe consider only
-> system_ram type ranges. For other memory areas still use UEFI memmap.
-
-Yeah, I don't know whether we need additional formats of memmap=, like
-memmap=XX$YY or memmap=XX#YY, for ACPI stuffs.
-
-Thanks,
--Takahiro AKASHI
-
-> Thanks
-> Dave
+>>      dmar: DRHD: handling fault status reg 102
+>>      dmar: DMAR:[DMA Read] Request device [01:00.0] fault addr fff80000
+>>      DMAR:[fault reason 01] Present bit in root entry is clear
+>>
+>>      dmar: DRHD: handling fault status reg 2
+>>      dmar: INTR-REMAP: Request device [[61:00.0] fault index 42
+>>      INTR-REMAP:[fault reason 34] Present field in the IRTE entry is
+>> clear
+>>
+>> On some system, the interrupt remapping fault will also happen even if
+>> the
+>> intel_iommu is not set to on, because the interrupt remapping will be
+>> enabled
+>> when x2apic is needed by the system.
+>>
+>> The cause of the DMA fault is described in Bill's original version,
+>> and the
+>> INTR-Remap fault is caused by a similar reason. In short, the
+>> initialization
+>> of vt-d drivers causes the in-flight DMA and interrupt requests get wrong
+>> response.
+>>
+>> To fix this problem, we modifies the behaviors of the intel vt-d in the
+>> crashdump kernel:
+>>
+>> For DMA Remapping:
+>> 1. To accept the vt-d hardware in an active state,
+>> 2. Do not disable and re-enable the translation, keep it enabled.
+>> 3. Use the old root entry table, do not rewrite the RTA register.
+>> 4. Malloc and use new context entry table, copy data from the old ones
+>> that
+>>     used by the old kernel.
+>> 5. Keep using the old page tables before driver is loaded.
+>> 6. After device driver is loaded, when it issues the first dma_map
+>> command,
+>>     free the dmar_domain structure for this device, and generate a new
+>> one, so
+>>     that the device can be assigned a new and empty page table.
+>> 7. When a new context entry table is generated, we also save its
+>> address to
+>>     the old root entry table.
+>>
+>> For Interrupt Remapping:
+>> 1. To accept the vt-d hardware in an active state,
+>> 2. Do not disable and re-enable the interrupt remapping, keep it enabled.
+>> 3. Use the old interrupt remapping table, do not rewrite the IRTA
+>> register.
+>> 4. When ioapic entry is setup, the interrupt remapping table is
+>> changed, and
+>>     the updated data will be stored to the old interrupt remapping table.
+>>
+>> Advantages of this approach:
+>> 1. All manipulation of the IO-device is done by the Linux device-driver
+>>     for that device.
+>> 2. This approach behaves in a manner very similar to operation without an
+>>     active iommu.
+>> 3. Any activity between the IO-device and its RMRR areas is handled by
+>> the
+>>     device-driver in the same manner as during a non-kdump boot.
+>> 4. If an IO-device has no driver in the kdump kernel, it is simply
+>> left alone.
+>>     This supports the practice of creating a special kdump kernel without
+>>     drivers for any devices that are not required for taking a crashdump.
+>> 5. Minimal code-changes among the existing mainline intel vt-d code.
+>>
+>> Summary of changes in this patch set:
+>> 1. Added some useful function for root entry table in code intel-iommu.c
+>> 2. Added new members to struct root_entry and struct irte;
+>> 3. Functions to load old root entry table to iommu->root_entry from
+>> the memory
+>>     of old kernel.
+>> 4. Functions to malloc new context entry table and copy the data from
+>> the old
+>>     ones to the malloced new ones.
+>> 5. Functions to enable support for DMA remapping in kdump kernel.
+>> 6. Functions to load old irte data from the old kernel to the kdump
+>> kernel.
+>> 7. Some code changes that support other behaviours that have been listed.
+>> 8. In the new functions, use physical address as "unsigned long" type,
+>> not
+>>     pointers.
+>>
+>> Original version by Bill Sumner:
+>>      https://lkml.org/lkml/2014/1/10/518
+>>      https://lkml.org/lkml/2014/4/15/716
+>>      https://lkml.org/lkml/2014/4/24/836
+>>
+>> Zhenhua's updates:
+>>      https://lkml.org/lkml/2014/10/21/134
+>>      https://lkml.org/lkml/2014/12/15/121
+>>      https://lkml.org/lkml/2014/12/22/53
+>>      https://lkml.org/lkml/2015/1/6/1166
+>>      https://lkml.org/lkml/2015/1/12/35
+>>      https://lkml.org/lkml/2015/3/19/33
+>>      https://lkml.org/lkml/2015/4/10/135
+>>
+>> Changelog[v11]:
+>>      1. Fix some conflicts with the latest upstream kernel.
+>>         Add flush in iommu_context_addr
+>>
+>> Changelog[v10]:
+>>      1. Do not use CONFIG_CRASH_DUMP and is_kdump_kernel().
+>>         Use one flag which stores the te and ir status in last kernel:
+>>             iommu->pre_enabled_trans
+>>             iommu->pre_enabled_ir
+>>
+>> Changelog[v9]:
+>>      1. Add new function iommu_attach_domain_with_id.
+>>      2. Do not copy old page tables, keep using the old ones.
+>>      3. Remove functions:
+>>             intel_iommu_did_to_domain_values_entry
+>>             intel_iommu_get_dids_from_old_kernel
+>>             device_to_domain_id
+>>             copy_page_addr
+>>             copy_page_table
+>>             copy_context_entry
+>>             copy_context_entry_table
+>>      4. Add new function device_to_existing_context_entry.
+>>
+>> Changelog[v8]:
+>>      1. Add a missing __iommu_flush_cache in function copy_page_table.
+>>
+>> Changelog[v7]:
+>>      1. Use __iommu_flush_cache to flush the data to hardware.
+>>
+>> Changelog[v6]:
+>>      1. Use "unsigned long" as type of physical address.
+>>      2. Use new function unmap_device_dma to unmap the old dma.
+>>      3. Some small incorrect bits order for aw shift.
+>>
+>> Changelog[v5]:
+>>      1. Do not disable and re-enable traslation and interrupt remapping.
+>>      2. Use old root entry table.
+>>      3. Use old interrupt remapping table.
+>>      4. New functions to copy data from old kernel, and save to old
+>> kernel mem.
+>>      5. New functions to save updated root entry table and irte table.
+>>      6. Use intel_unmap to unmap the old dma;
+>>      7. Allocate new pages while driver is being loaded.
+>>
+>> Changelog[v4]:
+>>      1. Cut off the patches that move some defines and functions to
+>> new files.
+>>      2. Reduce the numbers of patches to five, make it more easier to
+>> read.
+>>      3. Changed the name of functions, make them consistent with
+>> current context
+>>         get/set functions.
+>>      4. Add change to function __iommu_attach_domain.
+>>
+>> Changelog[v3]:
+>>      1. Commented-out "#define DEBUG 1" to eliminate debug messages.
+>>      2. Updated the comments about changes in each version.
+>>      3. Fixed: one-line added to Copy-Translations patch to initialize
+>> the iovad
+>>            struct as recommended by Baoquan He [bhe@redhat.com]
+>>            init_iova_domain(&domain->iovad, DMA_32BIT_PFN);
+>>
+>> Changelog[v2]:
+>>      The following series implements a fix for:
+>>      A kdump problem about DMA that has been discussed for a long
+>> time. That is,
+>>      when a kernel panics and boots into the kdump kernel, DMA started
+>> by the
+>>      panicked kernel is not stopped before the kdump kernel is booted
+>> and the
+>>      kdump kernel disables the IOMMU while this DMA continues.  This
+>> causes the
+>>      IOMMU to stop translating the DMA addresses as IOVAs and begin to
+>> treat
+>>      them as physical memory addresses -- which causes the DMA to either:
+>>          (1) generate DMAR errors or
+>>          (2) generate PCI SERR errors or
+>>          (3) transfer data to or from incorrect areas of memory. Often
+>> this
+>>              causes the dump to fail.
+>>
+>> Changelog[v1]:
+>>      The original version.
+>>
+>> Changed in this version:
+>> 1. Do not disable and re-enable traslation and interrupt remapping.
+>> 2. Use old root entry table.
+>> 3. Use old interrupt remapping table.
+>> 4. Use "unsigned long" as physical address.
+>> 5. Use intel_unmap to unmap the old dma;
+>>
+>> Baoquan He <bhe@redhat.com> helps testing this patchset.
+>> Takao Indoh <indou.takao@jp.fujitsu.com> gives valuable suggestions.
+>>
+>> Li, Zhen-Hua (10):
+>>    iommu/vt-d: New function to attach domain with id
+>>    iommu/vt-d: Items required for kdump
+>>    iommu/vt-d: Function to get existing context entry
+>>    iommu/vt-d: functions to copy data from old mem
+>>    iommu/vt-d: Add functions to load and save old re
+>>    iommu/vt-d: datatypes and functions used for kdump
+>>    iommu/vt-d: enable kdump support in iommu module
+>>    iommu/vt-d: assign new page table for dma_map
+>>    iommu/vt-d: Copy functions for irte
+>>    iommu/vt-d: Use old irte in kdump kernel
+>>
+>>   drivers/iommu/intel-iommu.c         | 536
+>> ++++++++++++++++++++++++++++++++++--
+>>   drivers/iommu/intel_irq_remapping.c |  96 ++++++-
+>>   include/linux/intel-iommu.h         |  16 ++
+>>   3 files changed, 623 insertions(+), 25 deletions(-)
+>>
 >
+
 
 _______________________________________________
 kexec mailing list
