@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g1t5425.austin.hp.com ([15.216.225.55])
+Received: from e06smtp15.uk.ibm.com ([195.75.94.111])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YucDA-00043I-R1
- for kexec@lists.infradead.org; Tue, 19 May 2015 07:45:13 +0000
-Message-ID: <555AE9AB.8060106@hp.com>
-Date: Tue, 19 May 2015 15:43:39 +0800
-From: "Li, ZhenHua" <zhen-hual@hp.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v11 0/10] iommu/vt-d: Fix intel vt-d faults in kdump kernel
-References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
- <5552AEE9.80408@hp.com> <5559B97B.5090805@hp.com>
- <20150519011322.GA7065@dhcp-128-76.nay.redhat.com>
-In-Reply-To: <20150519011322.GA7065@dhcp-128-76.nay.redhat.com>
+ id 1YudhH-0002ZU-KZ
+ for kexec@lists.infradead.org; Tue, 19 May 2015 09:20:24 +0000
+Received: from /spool/local
+ by e06smtp15.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <ldufour@linux.vnet.ibm.com>;
+ Tue, 19 May 2015 10:19:59 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id AE2382190061
+ for <kexec@lists.infradead.org>; Tue, 19 May 2015 10:19:38 +0100 (BST)
+Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
+ [9.149.37.217])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t4J9JvWj59769036
+ for <kexec@lists.infradead.org>; Tue, 19 May 2015 09:19:57 GMT
+Received: from d06av06.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av06.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t4J4DlE5004699
+ for <kexec@lists.infradead.org>; Tue, 19 May 2015 00:13:47 -0400
+From: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+Subject: [PATCH] ppc64: Don't look for the TOC pointer all the time
+Date: Tue, 19 May 2015 11:19:57 +0200
+Message-Id: <1432027197-19418-1-git-send-email-ldufour@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,52 +33,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, bhe@redhat.com, tom.vaden@hp.com, rwright@hp.com, linux-pci@vger.kernel.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, "Li,
- ZhenHua" <zhen-hual@hp.com>, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dwmw2@infradead.org, vgoyal@redhat.com
+To: kexec@lists.infradead.org, horms@verge.net.au
 
-Hi Dave,
+When dealing with the purgatory's relocation, the TOC pointer is computed
+by looking at the ".toc" section's address.
 
-Don't worry :).
-Of cause I have read your comments, but most of them contains no actual
-code change request, so I did not reply them one by one.
-When we are sure there is no actual code change needed, I will update
-the comments and other format problems if necessary.
+This should be done only once and the result kept back to avoid scanning
+all the ELF section each time a TOC relative relocation is processed.
 
-Regards
-Zhenhua
+Signed-off-by: Laurent Dufour <ldufour@linux.vnet.ibm.com>
+---
+ kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-On 05/19/2015 09:13 AM, Dave Young wrote:
-> Hi,
->
-> On 05/18/15 at 06:05pm, Li, ZhenHua wrote:
->> Hi Joerg,
->>
->> Testing from HP: passed.
->> Testing from He Baoquan(Redhat): passed
->>
->> The problem that dmar fault came again when running v10 with latest
->> kernel is fixed.
->> And I think there is no need to update the code to a new version now.
->>
->> So please tell me if there are still any code need to be changed.
->
-> Have you reviewed all my comments? Although it is only iommu driver fixes,
-> The patches are sent to lkml, no? If you do not want other people's comments
-> why will you send to us? I would say do not assume it is a closed circle for
-> only iommu driver.
->
-> It is not easy to review patches actually, frankly I feel kernel code review
-> is not so strict like the early days, maybe one reason is people are getting
-> tired to argue.
->
-> Thanks
-> Dave
->
+diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+index 9b191d0025a4..18d9f2f8e000 100644
+--- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+@@ -1,4 +1,4 @@
+-#include <stdio.h>
++ #include <stdio.h>
+ #include <elf.h>
+ #include <string.h>
+ #include "../../kexec.h"
+@@ -40,13 +40,17 @@ static struct mem_shdr *toc_section(const struct mem_ehdr *ehdr)
+ unsigned long my_r2(const struct mem_ehdr *ehdr)
+ {
+ 	struct mem_shdr *shdr;
++	static unsigned long r2 = 0;
+ 
+-	shdr = toc_section(ehdr);
+-	if (!shdr) {
+-		die("TOC reloc without a toc section?");
++	if (!r2) {
++		shdr = toc_section(ehdr);
++		if (!shdr) {
++			die("TOC reloc without a toc section?");
++		}
++		r2 = shdr->sh_addr + 0x8000;
+ 	}
+ 
+-	return shdr->sh_addr + 0x8000;
++	return r2;
+ }
+ 
+ static void do_relative_toc(unsigned long value, uint16_t *location,
+-- 
+1.9.1
 
 
 _______________________________________________
