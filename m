@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Yw1gj-0005V4-EM
- for kexec@lists.infradead.org; Sat, 23 May 2015 05:09:37 +0000
-Received: by padbw4 with SMTP id bw4so34529851pad.0
- for <kexec@lists.infradead.org>; Fri, 22 May 2015 22:09:11 -0700 (PDT)
-From: Shailendra Verma <shailendra.capricorn@gmail.com>
-Subject: [PATCH] kernel:kexec - Fix for typo in comment in function
- sanity_check_segment_list().
-Date: Sat, 23 May 2015 10:38:57 +0530
-Message-Id: <1432357737-4269-1-git-send-email-shailendra.capricorn@gmail.com>
+ id 1YvDnh-0001ZG-RG
+ for kexec@lists.infradead.org; Wed, 20 May 2015 23:53:26 +0000
+Date: Thu, 21 May 2015 07:52:42 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v11 08/10] iommu/vt-d: assign new page table for dma_map
+Message-ID: <20150520235242.GA2342@dhcp-17-102.nay.redhat.com>
+References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
+ <1431337974-545-9-git-send-email-zhen-hual@hp.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1431337974-545-9-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,36 +20,126 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Shailendra Verma <shailendra.capricorn@gmail.com>
+To: "Li, Zhen-Hua" <zhen-hual@hp.com>
+Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
 
+On 05/11/15 at 05:52pm, Li, Zhen-Hua wrote:
+> When a device driver issues the first dma_map command for a device, we
+> assign a new and empty page-table, thus removing all mappings from the
+> old kernel for the device.
 
-Signed-off-by: Shailendra Verma <shailendra.capricorn@gmail.com>
----
- kernel/kexec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Zhenhua,
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 7a36fdc..50dffdb 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -189,7 +189,7 @@ static int sanity_check_segment_list(struct kimage *image)
- 	}
- 
- 	/* Verify our destination addresses do not overlap.
--	 * If we alloed overlapping destination addresses
-+	 * If we allowed overlapping destination addresses
- 	 * through very weird things can happen with no
- 	 * easy explanation as one segment stops on another.
- 	 */
--- 
-1.7.9.5
+From your patch I got it will remove all mappings, assign a new
+page-table. But I didn't got why you stress an empty page-table. Did I
+miss anything?
 
+Thanks
+Baoquan
+
+> 
+> Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 58 ++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 50 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 91545bf..3cc1027 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -396,6 +396,9 @@ static int copy_root_entry_table(struct intel_iommu *iommu);
+>  
+>  static int intel_iommu_load_translation_tables(struct intel_iommu *iommu);
+>  
+> +static void unmap_device_dma(struct dmar_domain *domain,
+> +				struct device *dev,
+> +				struct intel_iommu *iommu);
+>  static void iommu_check_pre_te_status(struct intel_iommu *iommu);
+>  static u8 g_translation_pre_enabled;
+>  
+> @@ -3115,6 +3118,7 @@ static struct iova *intel_alloc_iova(struct device *dev,
+>  static struct dmar_domain *__get_valid_domain_for_dev(struct device *dev)
+>  {
+>  	struct dmar_domain *domain;
+> +	struct intel_iommu *iommu;
+>  	int ret;
+>  
+>  	domain = get_domain_for_dev(dev, DEFAULT_DOMAIN_ADDRESS_WIDTH);
+> @@ -3124,14 +3128,30 @@ static struct dmar_domain *__get_valid_domain_for_dev(struct device *dev)
+>  		return NULL;
+>  	}
+>  
+> -	/* make sure context mapping is ok */
+> -	if (unlikely(!domain_context_mapped(dev))) {
+> -		ret = domain_context_mapping(domain, dev, CONTEXT_TT_MULTI_LEVEL);
+> -		if (ret) {
+> -			printk(KERN_ERR "Domain context map for %s failed",
+> -			       dev_name(dev));
+> -			return NULL;
+> -		}
+> +	/* if in kdump kernel, we need to unmap the mapped dma pages,
+> +	 * detach this device first.
+> +	 */
+> +	if (likely(domain_context_mapped(dev))) {
+> +		iommu = domain_get_iommu(domain);
+> +		if (iommu->pre_enabled_trans) {
+> +			unmap_device_dma(domain, dev, iommu);
+> +
+> +			domain = get_domain_for_dev(dev,
+> +				DEFAULT_DOMAIN_ADDRESS_WIDTH);
+> +			if (!domain) {
+> +				pr_err("Allocating domain for %s failed",
+> +				       dev_name(dev));
+> +				return NULL;
+> +			}
+> +		} else
+> +			return domain;
+> +	}
+> +
+> +	ret = domain_context_mapping(domain, dev, CONTEXT_TT_MULTI_LEVEL);
+> +	if (ret) {
+> +		pr_err("Domain context map for %s failed",
+> +		       dev_name(dev));
+> +		return NULL;
+>  	}
+>  
+>  	return domain;
+> @@ -5168,6 +5188,28 @@ static int intel_iommu_load_translation_tables(struct intel_iommu *iommu)
+>  	return ret;
+>  }
+>  
+> +static void unmap_device_dma(struct dmar_domain *domain,
+> +				struct device *dev,
+> +				struct intel_iommu *iommu)
+> +{
+> +	struct context_entry *ce;
+> +	struct iova *iova;
+> +	phys_addr_t phys_addr;
+> +	dma_addr_t dev_addr;
+> +	struct pci_dev *pdev;
+> +
+> +	pdev = to_pci_dev(dev);
+> +	ce = iommu_context_addr(iommu, pdev->bus->number, pdev->devfn, 1);
+> +	phys_addr = context_address_root(ce) << VTD_PAGE_SHIFT;
+> +	dev_addr = phys_to_dma(dev, phys_addr);
+> +
+> +	iova = find_iova(&domain->iovad, IOVA_PFN(dev_addr));
+> +	if (iova)
+> +		intel_unmap(dev, dev_addr);
+> +
+> +	domain_remove_one_dev_info(domain, dev);
+> +}
+> +
+>  static void iommu_check_pre_te_status(struct intel_iommu *iommu)
+>  {
+>  	u32 sts;
+> -- 
+> 2.0.0-rc0
+> 
 
 _______________________________________________
 kexec mailing list
