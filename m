@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-pa0-f48.google.com ([209.85.220.48])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YvdRc-0007st-8r
- for kexec@lists.infradead.org; Fri, 22 May 2015 03:16:21 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: Makedumpfile and kernel support
-Date: Fri, 22 May 2015 03:14:38 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DB6F8A@BPXM01GP.gisp.nec.co.jp>
-References: <555DA405.1070002@canonical.com>
-In-Reply-To: <555DA405.1070002@canonical.com>
-Content-Language: ja-JP
+ id 1Yvfx6-0004RV-VU
+ for kexec@lists.infradead.org; Fri, 22 May 2015 05:57:01 +0000
+Received: by paza2 with SMTP id a2so1655688paz.3
+ for <kexec@lists.infradead.org>; Thu, 21 May 2015 22:56:39 -0700 (PDT)
+Message-ID: <555EC50E.6070109@linaro.org>
+Date: Fri, 22 May 2015 14:56:30 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 MIME-Version: 1.0
+Subject: Re: [v2 2/5] arm64: kdump: implement machine_crash_shutdown()
+References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
+ <1429861989-8417-3-git-send-email-takahiro.akashi@linaro.org>
+ <20150424103900.GF29183@leverpostej> <555055CE.7090000@linaro.org>
+In-Reply-To: <555055CE.7090000@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,45 +22,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "louis.bouchard@canonical.com" <louis.bouchard@canonical.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, marc.zyngier@arm.com, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-Hello Louis,
+Mark,
 
->- From time to time, on the distribution side, we get reports that makedumpfile
->says the kernel version is not supported with the following message :
+On 05/11/2015 04:10 PM, AKASHI Takahiro wrote:
+> On 04/24/2015 07:39 PM, Mark Rutland wrote:
+>> On Fri, Apr 24, 2015 at 08:53:05AM +0100, AKASHI Takahiro wrote:
+>>> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
+>>> save per-cpu general-purpose registers before restarting the crash dump
+>>> kernel. See kernel_kexec().
+>>> ipi_cpu_stop() is used and a bit modified to support this behavior.
+>>>
+>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>> ---
+>>>   arch/arm64/include/asm/kexec.h    |   34 ++++++++++++++++++++++-
+>>>   arch/arm64/kernel/machine_kexec.c |   55 ++++++++++++++++++++++++++++++++++++-
+>>>   arch/arm64/kernel/smp.c           |   12 ++++++--
+>>>   3 files changed, 97 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+>>> index 3530ff5..eaf3fcb 100644
+>>> --- a/arch/arm64/include/asm/kexec.h
+>>> +++ b/arch/arm64/include/asm/kexec.h
+>>> @@ -30,6 +30,8 @@
+>>>
+>>>   #if !defined(__ASSEMBLY__)
+>>>
+>>> +extern bool in_crash_kexec;
+>>> +
+>>>   /**
+>>>    * crash_setup_regs() - save registers for the panic kernel
+>>>    *
+>>> @@ -40,7 +42,37 @@
+>>>   static inline void crash_setup_regs(struct pt_regs *newregs,
+>>>                       struct pt_regs *oldregs)
+>>>   {
+>>> -    /* Empty routine needed to avoid build errors. */
+>>> +    if (oldregs) {
+>>> +        memcpy(newregs, oldregs, sizeof(*newregs));
+>>> +    } else {
+>>> +        __asm__ __volatile__ (
+>>> +            "stp     x0,   x1, [%3]\n\t"
+>>
+>> Why the tabs?
 >
->"The kernel version is not supported.
->The created dumpfile may be incomplete. "
+> Don't know. Will remove them.
 >
->Depending on the kernel and makedumpfile versions, it can be either
->disregarded or it requires fixing on the distribution. For instance, with
->Kumagai's help, I backported the required commits so makedumpfile on Jessie
->(1.5.3) would not complain about Jessie's kernels (3.16).
+>> Please use #16 * N as the offset for consistency with entry.S, with 0
+>> for the first N.
 >
->While we can review each patch to identify those who have specific kernel
->requirements, would it be possible to identify a way to highlight those
->patches so they become easily identifiable for potential backport ?
+> OK.
 >
->Maybe something like "[kernel]" in the git log or specific mention in the
->commit log.  I would like to avoid going back to upstream to confirm that the
->proper patches are being identified.
+>> [...]
+>>
+>>> +static void machine_kexec_mask_interrupts(void)
+>>> +{
+>>> +    unsigned int i;
+>>> +    struct irq_desc *desc;
+>>> +
+>>> +    for_each_irq_desc(i, desc) {
+>>> +        struct irq_chip *chip;
+>>> +
+>>> +        chip = irq_desc_get_chip(desc);
+>>> +        if (!chip)
+>>> +            continue;
+>>> +
+>>> +        if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
+>>> +            chip->irq_eoi(&desc->irq_data);
+>>> +
+>>> +        if (chip->irq_mask)
+>>> +            chip->irq_mask(&desc->irq_data);
+>>> +
+>>> +        if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+>>> +            chip->irq_disable(&desc->irq_data);
+>>> +    }
+>>> +}
+>>
+>> I'm surprised that this isn't left to the irqchip driver init code in
+>> the crash kernel. For all we know this state could be corrupt anyway.
+>>
+>> Is there any reason we can't get the GIC driver to nuke all of this at
+>> probe time?
 >
->Any comments, toughts, concerns ?
+> I don't get the point. You mean that the code be put in probe() of GIC driver?
+> To be honest, this function was copied from arm's implementation.
 
-How about inserting a label like "* Required for kernel X.YY"
-into the first line of the commit log ?
-
-It's better if contributors write it by themselves, otherwise
-I'll add it when merging.
-
+Could you please elaborate a bit more details so that I can address the issue?
 
 Thanks,
-Atsushi Kumagai
+-Takahiro AKASHI
+
+>> [...]
+>>
+>>> @@ -542,7 +543,7 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
+>>>   /*
+>>>    * ipi_cpu_stop - handle IPI from smp_send_stop()
+>>>    */
+>>> -static void ipi_cpu_stop(unsigned int cpu)
+>>> +static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
+>>>   {
+>>>       if (system_state == SYSTEM_BOOTING ||
+>>>           system_state == SYSTEM_RUNNING) {
+>>> @@ -556,6 +557,13 @@ static void ipi_cpu_stop(unsigned int cpu)
+>>>
+>>>       local_irq_disable();
+>>>
+>>> +#ifdef CONFIG_KEXEC
+>>> +    if (in_crash_kexec) {
+>>> +        crash_save_cpu(regs, cpu);
+>>> +        flush_cache_all();
+>>
+>> Any cache maintenance will need to be by VA; flush_cache_all doesn't do
+>> what the name implies, though may appear to work by chance.
+>>
+>> Is kdump implemented for ARM? I don't see equivalent for in the arch/arm
+>> ipi_cpu_stop.
+>
+> Arm has a dedicated function in arch/arm/kernel/machine_kexec.c:
+>     machine_crash_shutdown()
+>        => machine_crash_nonpanic_core()
+>
+> Thanks,
+> -Takahiro AKASHI
+>
+>> Mark.
+>>
 
 _______________________________________________
 kexec mailing list
