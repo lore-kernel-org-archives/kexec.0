@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YvDnh-0001ZG-RG
- for kexec@lists.infradead.org; Wed, 20 May 2015 23:53:26 +0000
-Date: Thu, 21 May 2015 07:52:42 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v11 08/10] iommu/vt-d: assign new page table for dma_map
-Message-ID: <20150520235242.GA2342@dhcp-17-102.nay.redhat.com>
-References: <1431337974-545-1-git-send-email-zhen-hual@hp.com>
- <1431337974-545-9-git-send-email-zhen-hual@hp.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1YwgZd-0002xE-Lw
+ for kexec@lists.infradead.org; Mon, 25 May 2015 00:49:02 +0000
+Received: from ayumi.isobedori.kobe.vergenet.net
+ (p8130-ipbfp1005kobeminato.hyogo.ocn.ne.jp [118.10.149.130])
+ by kirsty.vergenet.net (Postfix) with ESMTP id 5D3EE25BEE0
+ for <kexec@lists.infradead.org>; Mon, 25 May 2015 10:48:32 +1000 (EST)
+Date: Mon, 25 May 2015 09:48:28 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools v2.0.10 preparation
+Message-ID: <20150525004828.GA22103@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1431337974-545-9-git-send-email-zhen-hual@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,122 +25,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Li, Zhen-Hua" <zhen-hual@hp.com>
-Cc: alex.williamson@redhat.com, indou.takao@jp.fujitsu.com, tom.vaden@hp.com, rwright@hp.com, dwmw2@infradead.org, joro@8bytes.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, lisa.mitchell@hp.com, jerry.hoemann@hp.com, iommu@lists.linux-foundation.org, ddutile@redhat.com, doug.hatch@hp.com, ishii.hironobu@jp.fujitsu.com, linux-pci@vger.kernel.org, bhelgaas@google.com, billsumnerlinux@gmail.com, li.zhang6@hp.com, dyoung@redhat.com, vgoyal@redhat.com
+To: kexec@lists.infradead.org
 
-On 05/11/15 at 05:52pm, Li, Zhen-Hua wrote:
-> When a device driver issues the first dma_map command for a device, we
-> assign a new and empty page-table, thus removing all mappings from the
-> old kernel for the device.
+Hi all,
 
-Hi Zhenhua,
+I am planning to release kexec-tools v2.0.10 around the time that
+the v4.1 kernel is released.
 
-From your patch I got it will remove all mappings, assign a new
-page-table. But I didn't got why you stress an empty page-table. Did I
-miss anything?
+As I estimate that the latter occur within the next three or four weeks I
+would like to ask interested parties to send any patches they would like
+included in v2.0.10 within the next two weeks so that I can make an rc release.
 
-Thanks
-Baoquan
+For reference the patches queued up since v2.0.9 are as follows:
 
-> 
-> Signed-off-by: Li, Zhen-Hua <zhen-hual@hp.com>
-> ---
->  drivers/iommu/intel-iommu.c | 58 ++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 50 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 91545bf..3cc1027 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -396,6 +396,9 @@ static int copy_root_entry_table(struct intel_iommu *iommu);
->  
->  static int intel_iommu_load_translation_tables(struct intel_iommu *iommu);
->  
-> +static void unmap_device_dma(struct dmar_domain *domain,
-> +				struct device *dev,
-> +				struct intel_iommu *iommu);
->  static void iommu_check_pre_te_status(struct intel_iommu *iommu);
->  static u8 g_translation_pre_enabled;
->  
-> @@ -3115,6 +3118,7 @@ static struct iova *intel_alloc_iova(struct device *dev,
->  static struct dmar_domain *__get_valid_domain_for_dev(struct device *dev)
->  {
->  	struct dmar_domain *domain;
-> +	struct intel_iommu *iommu;
->  	int ret;
->  
->  	domain = get_domain_for_dev(dev, DEFAULT_DOMAIN_ADDRESS_WIDTH);
-> @@ -3124,14 +3128,30 @@ static struct dmar_domain *__get_valid_domain_for_dev(struct device *dev)
->  		return NULL;
->  	}
->  
-> -	/* make sure context mapping is ok */
-> -	if (unlikely(!domain_context_mapped(dev))) {
-> -		ret = domain_context_mapping(domain, dev, CONTEXT_TT_MULTI_LEVEL);
-> -		if (ret) {
-> -			printk(KERN_ERR "Domain context map for %s failed",
-> -			       dev_name(dev));
-> -			return NULL;
-> -		}
-> +	/* if in kdump kernel, we need to unmap the mapped dma pages,
-> +	 * detach this device first.
-> +	 */
-> +	if (likely(domain_context_mapped(dev))) {
-> +		iommu = domain_get_iommu(domain);
-> +		if (iommu->pre_enabled_trans) {
-> +			unmap_device_dma(domain, dev, iommu);
-> +
-> +			domain = get_domain_for_dev(dev,
-> +				DEFAULT_DOMAIN_ADDRESS_WIDTH);
-> +			if (!domain) {
-> +				pr_err("Allocating domain for %s failed",
-> +				       dev_name(dev));
-> +				return NULL;
-> +			}
-> +		} else
-> +			return domain;
-> +	}
-> +
-> +	ret = domain_context_mapping(domain, dev, CONTEXT_TT_MULTI_LEVEL);
-> +	if (ret) {
-> +		pr_err("Domain context map for %s failed",
-> +		       dev_name(dev));
-> +		return NULL;
->  	}
->  
->  	return domain;
-> @@ -5168,6 +5188,28 @@ static int intel_iommu_load_translation_tables(struct intel_iommu *iommu)
->  	return ret;
->  }
->  
-> +static void unmap_device_dma(struct dmar_domain *domain,
-> +				struct device *dev,
-> +				struct intel_iommu *iommu)
-> +{
-> +	struct context_entry *ce;
-> +	struct iova *iova;
-> +	phys_addr_t phys_addr;
-> +	dma_addr_t dev_addr;
-> +	struct pci_dev *pdev;
-> +
-> +	pdev = to_pci_dev(dev);
-> +	ce = iommu_context_addr(iommu, pdev->bus->number, pdev->devfn, 1);
-> +	phys_addr = context_address_root(ce) << VTD_PAGE_SHIFT;
-> +	dev_addr = phys_to_dma(dev, phys_addr);
-> +
-> +	iova = find_iova(&domain->iovad, IOVA_PFN(dev_addr));
-> +	if (iova)
-> +		intel_unmap(dev, dev_addr);
-> +
-> +	domain_remove_one_dev_info(domain, dev);
-> +}
-> +
->  static void iommu_check_pre_te_status(struct intel_iommu *iommu)
->  {
->  	u32 sts;
-> -- 
-> 2.0.0-rc0
-> 
+5041d45b1c6b Revert "x86_64: Add support to build kexec-tools with x32 ABI"
+4a837c9a19f9 purgatory: force PIC/PIE/SSP off
+458e81576530 purgatory: Fix memcmp for src address increment
+8da5dd2da475 kexec: remove ordering constraints from -x (--no-ifdown) and -y (--no-sync)
+ca718aa5070b kexec: implement -y (--no-sync) option
+6eb1c19a45bc configure.ac: Fix failure caused by x32 ABI test
+5edcbfd1368e x86_64: Add support to build kexec-tools with x32 ABI
+720d110389f2 x86: Remove unnecessary res variable from efi_map_added
+23a806695fa7 purgatory: Add printf type checking
+f9f98fd811fe purgatory: Generate map file
+835620406833 purgatory: Generate symbol file
+e42fc55e10fb purgatory: Add no-zero-initialized-in-bss flag
+236e30b2b4dc kexec: iomem: fix callbacks params for sh and x86 archs
+8e0722a93de0 i386: elf: Fix -Wunused-but-set-variable compilation warning
+9116b5e0915d i386: bzImage: Fix -Wunused-but-set-variable compilation warning
+e932fff3bfa2 kexec: Fix compiler format warning
+5a7380559732 kexec: Fix compiler ambiguous else warning
+fe781d9317e2 mips: remove unused variable.
+c2ec15074a5d mips: fix warning about implicit type conversion.
+f9dac450c212 mips: fix compiler warning on printing 64-bit integer.
+58bbd468571b configure.ac: apply necessary quotes to result of macro expansion.
+f5c40daed2ab multiboot: fix crash on NULL kernel command line
+d606837b56d4 Fix zlib/lzma decompression.
+5af63fb020d0 ppc64: erase unnecessary segment info printing
+e716a4c9fda3 kexec-tools 2.0.10.git
 
 _______________________________________________
 kexec mailing list
