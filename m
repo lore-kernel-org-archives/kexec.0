@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55643E4F.2000806@arm.com>
-Date: Tue, 26 May 2015 10:35:11 +0100
+Message-ID: <55643EA4.4080206@arm.com>
+Date: Tue, 26 May 2015 10:36:36 +0100
 From: Marc Zyngier <marc.zyngier@arm.com>
 MIME-Version: 1.0
-Subject: Re: [v4 2/4] arm64: kvm: add kvm cpu hotplug
+Subject: Re: [v4 4/4] arm: kvm: add stub implementation for kvm_cpu_reset()
 References: <1431047884-5637-1-git-send-email-takahiro.akashi@linaro.org>
- <1431047884-5637-3-git-send-email-takahiro.akashi@linaro.org>
-In-Reply-To: <1431047884-5637-3-git-send-email-takahiro.akashi@linaro.org>
+ <1431047884-5637-5-git-send-email-takahiro.akashi@linaro.org>
+In-Reply-To: <1431047884-5637-5-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,127 +23,97 @@ To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.
 Cc: linaro-kernel@lists.linaro.org, christoffer.dall@linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, david.griego@linaro.org, linux-arm-kernel@lists.infradead.org, freddy77@gmail.com
 
 On 08/05/15 02:18, AKASHI Takahiro wrote:
-> This patch allows cpu cores to be up and down by adding
-> kvm_arch_hardware_enable/isable(). This way, especially in kexec case,
-> cores are reset to initial states and kexec can gracefully shutdown the
-> system and reboot a new kernel from EL2.
+> Just to avoid compiling errors on arm.
 > 
 > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > ---
->  arch/arm/include/asm/kvm_host.h   |    1 -
->  arch/arm/kvm/arm.c                |   29 +++++++++++++++++++----------
->  arch/arm64/include/asm/kvm_host.h |    1 -
->  3 files changed, 19 insertions(+), 12 deletions(-)
+>  arch/arm/include/asm/kvm_asm.h  |    1 +
+>  arch/arm/include/asm/kvm_host.h |   12 ++++++++++++
+>  arch/arm/include/asm/kvm_mmu.h  |    5 +++++
+>  arch/arm/kvm/init.S             |    6 ++++++
+>  4 files changed, 24 insertions(+)
 > 
+> diff --git a/arch/arm/include/asm/kvm_asm.h b/arch/arm/include/asm/kvm_asm.h
+> index 25410b2..462babf 100644
+> --- a/arch/arm/include/asm/kvm_asm.h
+> +++ b/arch/arm/include/asm/kvm_asm.h
+> @@ -85,6 +85,7 @@ struct kvm_vcpu;
+>  
+>  extern char __kvm_hyp_init[];
+>  extern char __kvm_hyp_init_end[];
+> +extern char __kvm_hyp_reset[];
+>  
+>  extern char __kvm_hyp_exit[];
+>  extern char __kvm_hyp_exit_end[];
 > diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-> index 41008cd..ca97764 100644
+> index ca97764..6d38134 100644
 > --- a/arch/arm/include/asm/kvm_host.h
 > +++ b/arch/arm/include/asm/kvm_host.h
-> @@ -237,7 +237,6 @@ void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
->  
->  struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
->  
-> -static inline void kvm_arch_hardware_disable(void) {}
->  static inline void kvm_arch_hardware_unsetup(void) {}
->  static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->  static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
-> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-> index 251ab9e..e989925 100644
-> --- a/arch/arm/kvm/arm.c
-> +++ b/arch/arm/kvm/arm.c
-> @@ -87,11 +87,6 @@ struct kvm_vcpu * __percpu *kvm_get_running_vcpus(void)
->  	return &kvm_arm_running_vcpu;
+> @@ -220,6 +220,18 @@ static inline void __cpu_init_hyp_mode(phys_addr_t boot_pgd_ptr,
+>  	kvm_call_hyp((void*)hyp_stack_ptr, vector_ptr, pgd_ptr);
 >  }
 >  
-> -int kvm_arch_hardware_enable(void)
-> -{
-> -	return 0;
-> -}
-> -
->  int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
->  {
->  	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
-> @@ -885,6 +880,9 @@ static void cpu_init_hyp_mode(void *dummy)
-
-Since you removed the IPI, why do you keep the dummy argument?
-
->  	unsigned long stack_page;
->  	unsigned long vector_ptr;
->  
-> +	if (__hyp_get_vectors() != hyp_default_vectors)
-> +		return;
-> +
->  	/* Switch from the HYP stub to our own HYP init vector */
->  	__hyp_set_vectors(kvm_get_idmap_vector());
->  
-> @@ -921,6 +919,10 @@ static int hyp_init_cpu_notify(struct notifier_block *self,
->  		if (__hyp_get_vectors() == hyp_default_vectors)
->  			cpu_init_hyp_mode(NULL);
->  		break;
-> +	case CPU_DYING:
-> +	case CPU_DYING_FROZEN:
-> +		kvm_cpu_reset(NULL);
-> +		break;
->  	}
->  
->  	return NOTIFY_OK;
-> @@ -936,6 +938,7 @@ static int hyp_init_cpu_pm_notifier(struct notifier_block *self,
->  				    void *v)
->  {
->  	if (cmd == CPU_PM_EXIT &&
-> +	    kvm_arm_get_running_vcpu() &&
->  	    __hyp_get_vectors() == hyp_default_vectors) {
->  		cpu_init_hyp_mode(NULL);
->  		return NOTIFY_OK;
-> @@ -1039,11 +1042,6 @@ static int init_hyp_mode(void)
->  	}
->  
->  	/*
-> -	 * Execute the init code on each CPU.
-> -	 */
-> -	on_each_cpu(cpu_init_hyp_mode, NULL, 1);
-> -
-> -	/*
->  	 * Init HYP view of VGIC
->  	 */
->  	err = kvm_vgic_hyp_init();
-> @@ -1144,6 +1142,17 @@ out_err:
->  	return err;
->  }
->  
-> +int kvm_arch_hardware_enable(void)
+> +static inline void __cpu_reset_hyp_mode(phys_addr_t boot_pgd_ptr,
+> +					phys_addr_t phys_idmap_start,
+> +					unsigned long stub_vector_ptr,
+> +					unsigned long reset_func)
 > +{
-> +	cpu_init_hyp_mode(NULL);
-> +	return 0;
+> +	/*
+> +	 * TODO
+> +	 * kvm_call_reset(boot_pgd_ptr, phys_idmap_start, stub_vector_ptr,
+> +	 *		  reset_func);
+> +	 */
 > +}
 > +
-> +void kvm_arch_hardware_disable(void)
-> +{
-> +	kvm_cpu_reset(NULL);
-> +}
-> +
-
-Bahhh... Just rename cpu_init_hyp_mode to kvm_arch_hardware_enable, and
-kvM_cpu_reset to kvm_arch_hardware_disable. I don't see the point of
-keeping this indirection.
-
->  /* NOP: Compiling as a module not supported */
->  void kvm_arch_exit(void)
+>  static inline int kvm_arch_dev_ioctl_check_extension(long ext)
 >  {
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 6a8da9c..831e6a4 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -262,7 +262,6 @@ static inline void vgic_arch_setup(const struct vgic_params *vgic)
->  	}
->  }
+>  	return 0;
+> diff --git a/arch/arm/include/asm/kvm_mmu.h b/arch/arm/include/asm/kvm_mmu.h
+> index 37ca2a4..d85bcd1 100644
+> --- a/arch/arm/include/asm/kvm_mmu.h
+> +++ b/arch/arm/include/asm/kvm_mmu.h
+> @@ -66,6 +66,7 @@ void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu);
+>  phys_addr_t kvm_mmu_get_httbr(void);
+>  phys_addr_t kvm_mmu_get_boot_httbr(void);
+>  phys_addr_t kvm_get_idmap_vector(void);
+> +phys_addr_t kvm_get_idmap_start(void);
+>  int kvm_mmu_init(void);
+>  void kvm_clear_hyp_idmap(void);
 >  
-> -static inline void kvm_arch_hardware_disable(void) {}
->  static inline void kvm_arch_hardware_unsetup(void) {}
->  static inline void kvm_arch_sync_events(struct kvm *kvm) {}
->  static inline void kvm_arch_vcpu_uninit(struct kvm_vcpu *vcpu) {}
+> @@ -270,6 +271,10 @@ static inline void __kvm_flush_dcache_pud(pud_t pud)
+>  void kvm_set_way_flush(struct kvm_vcpu *vcpu);
+>  void kvm_toggle_cache(struct kvm_vcpu *vcpu, bool was_enabled);
+>  
+> +extern char __hyp_idmap_text_start[];
+> +#define kvm_virt_to_trampoline(x)       \
+> +			(TRAMPOLINE_VA + ((x) - __hyp_idmap_text_start))
+> +
+>  #endif	/* !__ASSEMBLY__ */
+>  
+>  #endif /* __ARM_KVM_MMU_H__ */
+> diff --git a/arch/arm/kvm/init.S b/arch/arm/kvm/init.S
+> index 3988e72..9178c9a 100644
+> --- a/arch/arm/kvm/init.S
+> +++ b/arch/arm/kvm/init.S
+> @@ -156,4 +156,10 @@ target:	@ We're now in the trampoline code, switch page tables
+>  	.globl __kvm_hyp_init_end
+>  __kvm_hyp_init_end:
+>  
+> +	.globl __kvm_hyp_reset
+> +__kvm_hyp_reset:
+> +	@ TODO
+> +
+> +	eret
+> +
+>  	.popsection
 > 
 
+So before this patch, KVM is broken on ARM. This is not acceptable.
+Please merge it with patch #1.
+
+Thanks,
+
+	M.
 
 -- 
 Jazz is not dead. It just smells funny...
