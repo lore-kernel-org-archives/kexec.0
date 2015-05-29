@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f174.google.com ([209.85.212.174])
+Received: from mail-pa0-f42.google.com ([209.85.220.42])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YxY2R-0003Q5-2w
- for kexec@lists.infradead.org; Wed, 27 May 2015 09:54:15 +0000
-Received: by wizk4 with SMTP id k4so105315938wiz.1
- for <kexec@lists.infradead.org>; Wed, 27 May 2015 02:53:51 -0700 (PDT)
-Message-ID: <5565942C.5070404@canonical.com>
-Date: Wed, 27 May 2015 11:53:48 +0200
-From: Louis Bouchard <louis.bouchard@canonical.com>
-MIME-Version: 1.0
-Subject: Re: Makedumpfile and kernel support
-References: <555DA405.1070002@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DB6F8A@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DB6F8A@BPXM01GP.gisp.nec.co.jp>
+ id 1YyD1M-0006nu-1O
+ for kexec@lists.infradead.org; Fri, 29 May 2015 05:39:53 +0000
+Received: by pacux9 with SMTP id ux9so1948393pac.3
+ for <kexec@lists.infradead.org>; Thu, 28 May 2015 22:39:30 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v5 0/2] arm64: kvm: reset hyp context for kexec
+Date: Fri, 29 May 2015 14:38:38 +0900
+Message-Id: <1432877920-12527-1-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,45 +17,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, christoffer.dall@linaro.org, freddy77@gmail.com
 
-SGVsbG8sCgpMZSAyMi8wNS8yMDE1IDA1OjE0LCBBdHN1c2hpIEt1bWFnYWkgYSDDqWNyaXQgOgo+
-IEhlbGxvIExvdWlzLAo+IAo+PiAtIEZyb20gdGltZSB0byB0aW1lLCBvbiB0aGUgZGlzdHJpYnV0
-aW9uIHNpZGUsIHdlIGdldCByZXBvcnRzIHRoYXQgbWFrZWR1bXBmaWxlCj4+IHNheXMgdGhlIGtl
-cm5lbCB2ZXJzaW9uIGlzIG5vdCBzdXBwb3J0ZWQgd2l0aCB0aGUgZm9sbG93aW5nIG1lc3NhZ2Ug
-Ogo+Pgo+PiAiVGhlIGtlcm5lbCB2ZXJzaW9uIGlzIG5vdCBzdXBwb3J0ZWQuCj4+IFRoZSBjcmVh
-dGVkIGR1bXBmaWxlIG1heSBiZSBpbmNvbXBsZXRlLiAiCj4+Cj4+IERlcGVuZGluZyBvbiB0aGUg
-a2VybmVsIGFuZCBtYWtlZHVtcGZpbGUgdmVyc2lvbnMsIGl0IGNhbiBiZSBlaXRoZXIKPj4gZGlz
-cmVnYXJkZWQgb3IgaXQgcmVxdWlyZXMgZml4aW5nIG9uIHRoZSBkaXN0cmlidXRpb24uIEZvciBp
-bnN0YW5jZSwgd2l0aAo+PiBLdW1hZ2FpJ3MgaGVscCwgSSBiYWNrcG9ydGVkIHRoZSByZXF1aXJl
-ZCBjb21taXRzIHNvIG1ha2VkdW1wZmlsZSBvbiBKZXNzaWUKPj4gKDEuNS4zKSB3b3VsZCBub3Qg
-Y29tcGxhaW4gYWJvdXQgSmVzc2llJ3Mga2VybmVscyAoMy4xNikuCj4+Cj4+IFdoaWxlIHdlIGNh
-biByZXZpZXcgZWFjaCBwYXRjaCB0byBpZGVudGlmeSB0aG9zZSB3aG8gaGF2ZSBzcGVjaWZpYyBr
-ZXJuZWwKPj4gcmVxdWlyZW1lbnRzLCB3b3VsZCBpdCBiZSBwb3NzaWJsZSB0byBpZGVudGlmeSBh
-IHdheSB0byBoaWdobGlnaHQgdGhvc2UKPj4gcGF0Y2hlcyBzbyB0aGV5IGJlY29tZSBlYXNpbHkg
-aWRlbnRpZmlhYmxlIGZvciBwb3RlbnRpYWwgYmFja3BvcnQgPwo+Pgo+PiBNYXliZSBzb21ldGhp
-bmcgbGlrZSAiW2tlcm5lbF0iIGluIHRoZSBnaXQgbG9nIG9yIHNwZWNpZmljIG1lbnRpb24gaW4g
-dGhlCj4+IGNvbW1pdCBsb2cuICBJIHdvdWxkIGxpa2UgdG8gYXZvaWQgZ29pbmcgYmFjayB0byB1
-cHN0cmVhbSB0byBjb25maXJtIHRoYXQgdGhlCj4+IHByb3BlciBwYXRjaGVzIGFyZSBiZWluZyBp
-ZGVudGlmaWVkLgo+Pgo+PiBBbnkgY29tbWVudHMsIHRvdWdodHMsIGNvbmNlcm5zID8KPiAKPiBI
-b3cgYWJvdXQgaW5zZXJ0aW5nIGEgbGFiZWwgbGlrZSAiKiBSZXF1aXJlZCBmb3Iga2VybmVsIFgu
-WVkiCj4gaW50byB0aGUgZmlyc3QgbGluZSBvZiB0aGUgY29tbWl0IGxvZyA/Cj4gCj4gSXQncyBi
-ZXR0ZXIgaWYgY29udHJpYnV0b3JzIHdyaXRlIGl0IGJ5IHRoZW1zZWx2ZXMsIG90aGVyd2lzZQo+
-IEknbGwgYWRkIGl0IHdoZW4gbWVyZ2luZy4KPiAKPiAKPiBUaGFua3MsCj4gQXRzdXNoaSBLdW1h
-Z2FpCj4gCgpGaXJzdCBvZiBhbGwsIHNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseS4KCkkgdGhpbmsg
-dGhhdCB0aGlzIHdvdWxkIGJlIGEgdmVyeSBnb29kIHNvbHV0aW9uLiBJIGp1c3QgZG9uJ3Qgd2Fu
-dCB0byBpbXBvc2UgdGhlCmJ1cmRlbiBvbiB5b3UuIFNvIGlmIHBlb3BsZSBwcm92aWRlIGtlcm5l
-bCBzcGVjaWZpYyBwYXRjaGVzLCB0aGV5IHNob3VsZAppZGVudGlmeSB0byB3aGljaCBrZXJuZWwg
-aXQgcmVsYXRlcyB0byBhcyBpdCBpcyBwcm9wb3NlZCBhYm92ZS4KClRoYW5rcyBmb3IgdGhlIHN1
-Z2dlc3Rpb24uCgpLaW5kIHJlZ2FyZHMsCgouLi5Mb3VpcwoKLS0gCkxvdWlzIEJvdWNoYXJkClNv
-ZnR3YXJlIGVuZ2luZWVyLCBDbG91ZCAmIFN1c3RhaW5pbmcgZW5nLgpDYW5vbmljYWwgTHRkClVi
-dW50dSBkZXZlbG9wZXIgICAgICAgICAgICAgICAgICAgICAgIERlYmlhbiBNYWludGFpbmVyCkdQ
-RyA6IDQyOUQgN0EzQiBERDA1IEI2RjggQUY2MyAgQjlDNCA4QjNEIDg2N0MgODIzRSA3QTYxCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+This patch was initially intended to address a KVM issue described in
+Geoff's kexec patch set[1]. But now the title of patch#1 would be more
+suitable for the entire code as it was overhauled and, since the 4th
+version, the fix is implemented as kvm cpu hotplug after Mark's comment.
+
+I confirmed that it works with kexec under the following scenarios:
+  - boot 1st kernel
+  - run a guest OS
+  - (stop a guest OS)
+  - reboot 2nd kernel by kexec
+  - run a guest OS
+
+test target: MediaTek MT8173-EVB
+version:     kernel v4.0-rc1 + Geoff's kexec v8 + Ard's patch[2]
+
+But I didn't test other complicated scenarios with cpu hotplug.
+
+On arm, Frediano[3] is no longer working on this issue as he left his
+company. So patch#1 also has a stub definition for arm.
+
+
+Changes from v4:
+* restructured the patchset as cpu_init_hyp_mode() and kvm_cpu_reset() were
+  renamed to kvm_arch_hardware_{enable,disable}() respectively
+* omitted some obvious arguments from __cpu_reset_hyp_mode().
+
+Changes from v3:
+* modified to use kvm cpu hotplug framework directly instead of reboot
+  notifier hook
+
+Changes from v2:
+* modified kvm_virt_to_trampoline() macro to fix a page-alignment issue[4]
+
+Changes from v1:
+* modified kvm_cpu_reset() implementation:
+    - define a macro to translate va to addr in trampoline
+    - use __hyp_default_vectors instead of kvm_get_hyp_stub_vectors()
+    - shuffle the arguments in __cpu_reset_hyp_mode()
+    - optimize TLB flush operations
+* changed a patch#2's name
+* added a patch#5 to add stub code for arm
+
+[1] http://lists.infradead.org/pipermail/kexec/2015-April/335533.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/334002.html
+[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-February/322231.html
+[4] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/334910.html
+
+AKASHI Takahiro (2):
+  arm64: kvm: allows kvm cpu hotplug
+  arm64: kvm: remove !KEXEC dependency
+
+ arch/arm/include/asm/kvm_host.h   |   10 ++++++-
+ arch/arm/include/asm/kvm_mmu.h    |    1 +
+ arch/arm/kvm/arm.c                |   58 ++++++++++++-------------------------
+ arch/arm/kvm/mmu.c                |    5 ++++
+ arch/arm64/include/asm/kvm_host.h |   11 ++++++-
+ arch/arm64/include/asm/kvm_mmu.h  |    1 +
+ arch/arm64/include/asm/virt.h     |    9 ++++++
+ arch/arm64/kvm/Kconfig            |    1 -
+ arch/arm64/kvm/hyp-init.S         |   33 +++++++++++++++++++++
+ arch/arm64/kvm/hyp.S              |   32 +++++++++++++++++---
+ 10 files changed, 114 insertions(+), 47 deletions(-)
+
+-- 
+1.7.9.5
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
