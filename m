@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42])
+Received: from mail.kapsi.fi ([217.30.184.167])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1YyD1a-0006qh-Kf
- for kexec@lists.infradead.org; Fri, 29 May 2015 05:40:08 +0000
-Received: by pacwv17 with SMTP id wv17so43573353pac.2
- for <kexec@lists.infradead.org>; Thu, 28 May 2015 22:39:49 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v5 2/2] arm64: kvm: remove !KEXEC dependency
-Date: Fri, 29 May 2015 14:38:40 +0900
-Message-Id: <1432877920-12527-3-git-send-email-takahiro.akashi@linaro.org>
-In-Reply-To: <1432877920-12527-1-git-send-email-takahiro.akashi@linaro.org>
-References: <1432877920-12527-1-git-send-email-takahiro.akashi@linaro.org>
+ id 1YyjZU-0008KU-4i
+ for kexec@lists.infradead.org; Sat, 30 May 2015 16:25:16 +0000
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
+Subject: [PATCH 87/98] include/uapi/linux/kexec.h: use __kernel_size_t instead
+ of size_t
+Date: Sat, 30 May 2015 17:39:19 +0200
+Message-Id: <1433000370-19509-88-git-send-email-mikko.rapeli@iki.fi>
+In-Reply-To: <1433000370-19509-1-git-send-email-mikko.rapeli@iki.fi>
+References: <1433000370-19509-1-git-send-email-mikko.rapeli@iki.fi>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,38 +19,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, geoff@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, christoffer.dall@linaro.org, freddy77@gmail.com
+To: linux-kernel@vger.kernel.org
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-api@vger.kernel.org
 
-By indroducing kvm cpu hotplug, this dependency is not needed any more.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- arch/arm64/kvm/Kconfig |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index 13ac79e..5105e29 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -19,7 +19,6 @@ if VIRTUALIZATION
- config KVM
- 	bool "Kernel-based Virtual Machine (KVM) support"
- 	depends on OF
--	depends on !KEXEC
- 	select MMU_NOTIFIER
- 	select PREEMPT_NOTIFIERS
- 	select ANON_INODES
--- 
-1.7.9.5
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Rml4ZXMgdXNlcnNwYWNlIGNvbXBpbGF0aW9uIGVycm9yOgoKZXJyb3I6IHVua25vd24gdHlwZSBu
+YW1lIOKAmHNpemVfdOKAmQogIHNpemVfdCBidWZzejsKClNpZ25lZC1vZmYtYnk6IE1pa2tvIFJh
+cGVsaSA8bWlra28ucmFwZWxpQGlraS5maT4KLS0tCiBpbmNsdWRlL3VhcGkvbGludXgva2V4ZWMu
+aCB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgva2V4ZWMuaCBiL2luY2x1ZGUvdWFw
+aS9saW51eC9rZXhlYy5oCmluZGV4IDk5MDQ4ZTUuLjI2YmUyMDEgMTAwNjQ0Ci0tLSBhL2luY2x1
+ZGUvdWFwaS9saW51eC9rZXhlYy5oCisrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9rZXhlYy5oCkBA
+IC01MCw5ICs1MCw5IEBACiAgKi8KIHN0cnVjdCBrZXhlY19zZWdtZW50IHsKIAljb25zdCB2b2lk
+ICpidWY7Ci0Jc2l6ZV90IGJ1ZnN6OworCV9fa2VybmVsX3NpemVfdCBidWZzejsKIAljb25zdCB2
+b2lkICptZW07Ci0Jc2l6ZV90IG1lbXN6OworCV9fa2VybmVsX3NpemVfdCBtZW1zejsKIH07CiAK
+ICNlbmRpZiAvKiBfX0tFUk5FTF9fICovCi0tIAoyLjEuNAoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
