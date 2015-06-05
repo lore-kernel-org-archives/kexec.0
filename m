@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z0mYF-0005sM-GF
- for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:28 +0000
+ id 1Z0mYH-0005sM-1L
+ for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:30 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wS53028998
- for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:29 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wUFl029004
+ for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:30 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH RFC 01/11] Add readpage_kdump_compressed_parallel
-Date: Fri, 5 Jun 2015 15:56:55 +0800
-Message-ID: <1433491025-7291-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH RFC 03/11] Add readpage_elf_parallel
+Date: Fri, 5 Jun 2015 15:56:57 +0800
+Message-ID: <1433491025-7291-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,178 +31,131 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-readpage_kdump_compressed_parallel is used to enable reading pages from
-vmcore in kdump-compressed format parallel. fd_memory and bitmap_memory
-should be initialized and offered to each thread individually to avoid
-conflict.
+readpage_elf_parallel is used to enable reading pages from elf format
+parallelly. fd_memory should be initialize and offered  to each threads
+individually to avoid conflict.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- makedumpfile.c |  137 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 137 insertions(+), 0 deletions(-)
+ makedumpfile.c |   98 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 98 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 32f5459..10b6738 100644
+index 0f71ce7..9f12865 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -252,6 +252,20 @@ pfn_to_pos(mdf_pfn_t pfn)
- 	return desc_pos;
- }
- 
-+unsigned long
-+pfn_to_pos_parallel(mdf_pfn_t pfn, struct dump_bitmap* bitmap_memory_parallel)
-+{
-+	unsigned long desc_pos;
-+	mdf_pfn_t i;
-+
-+	desc_pos = info->valid_pages[pfn / BITMAP_SECT_LEN];
-+	for (i = round(pfn, BITMAP_SECT_LEN); i < pfn; i++)
-+		if (is_dumpable(bitmap_memory_parallel, i))
-+			desc_pos++;
-+
-+	return desc_pos;
-+}
-+
- int
- read_page_desc(unsigned long long paddr, page_desc_t *pd)
- {
-@@ -294,6 +308,50 @@ read_page_desc(unsigned long long paddr, page_desc_t *pd)
- 	return TRUE;
- }
- 
-+int
-+read_page_desc_parallel(int fd_memory, unsigned long long paddr,
-+			page_desc_t *pd,
-+			struct dump_bitmap* bitmap_memory_parallel)
-+{
-+	struct disk_dump_header *dh;
-+	unsigned long desc_pos;
-+	mdf_pfn_t pfn;
-+	off_t offset;
-+
-+	/*
-+	 * Find page descriptor
-+	 */
-+	dh = info->dh_memory;
-+	offset
-+	    = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
-+		* dh->block_size;
-+	pfn = paddr_to_pfn(paddr);
-+	desc_pos = pfn_to_pos_parallel(pfn, bitmap_memory_parallel);
-+	offset += (off_t)desc_pos * sizeof(page_desc_t);
-+	if (lseek(fd_memory, offset, SEEK_SET) < 0) {
-+		ERRMSG("Can't seek %s. %s\n",
-+				 info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	/*
-+	 * Read page descriptor
-+	 */
-+	if (read(fd_memory, pd, sizeof(*pd)) != sizeof(*pd)) {
-+		ERRMSG("Can't read %s. %s\n",
-+				info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	/*
-+	 * Sanity check
-+	 */
-+	if (pd->size > dh->block_size)
-+		return FALSE;
-+
-+	return TRUE;
-+}
-+
- static void
- unmap_cache(struct cache_entry *entry)
- {
-@@ -590,6 +648,85 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+@@ -576,6 +576,27 @@ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
  	return TRUE;
  }
  
 +static int
-+readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
-+				   void *bufptr,
-+				   struct dump_bitmap* bitmap_memory_parallel)
++read_from_vmcore_parallel(int fd_memory, off_t offset, void *bufptr,
++			  unsigned long size)
 +{
-+	page_desc_t pd;
-+	char buf[info->page_size], *rdbuf;
-+	int ret;
-+	unsigned long retlen;
++	const off_t failed = (off_t)-1;
 +
-+	if (!is_dumpable(bitmap_memory_parallel, paddr_to_pfn(paddr))) {
-+		ERRMSG("pfn(%llx) is excluded from %s.\n",
-+				paddr_to_pfn(paddr), info->name_memory);
++	if (lseek(fd_memory, offset, SEEK_SET) == failed) {
++		ERRMSG("Can't seek the dump memory(%s). (offset: %llx) %s\n",
++		       info->name_memory, (unsigned long long)offset, strerror(errno));
 +		return FALSE;
 +	}
 +
-+	if (!read_page_desc_parallel(fd_memory, paddr, &pd,
-+						bitmap_memory_parallel)) {
-+		ERRMSG("Can't read page_desc: %llx\n", paddr);
++	if (read(fd_memory, bufptr, size) != size) {
++		ERRMSG("Can't read the dump memory(%s). %s\n",
++		       info->name_memory, strerror(errno));
 +		return FALSE;
-+	}
-+
-+	if (lseek(fd_memory, pd.offset, SEEK_SET) < 0) {
-+		ERRMSG("Can't seek %s. %s\n",
-+				info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	/*
-+	 * Read page data
-+	 */
-+	rdbuf = pd.flags & (DUMP_DH_COMPRESSED_ZLIB | DUMP_DH_COMPRESSED_LZO |
-+		DUMP_DH_COMPRESSED_SNAPPY) ? buf : bufptr;
-+	if (read(fd_memory, rdbuf, pd.size) != pd.size) {
-+		ERRMSG("Can't read %s. %s\n",
-+				info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	if (pd.flags & DUMP_DH_COMPRESSED_ZLIB) {
-+		retlen = info->page_size;
-+		ret = uncompress((unsigned char *)bufptr, &retlen,
-+					(unsigned char *)buf, pd.size);
-+		if ((ret != Z_OK) || (retlen != info->page_size)) {
-+			ERRMSG("Uncompress failed: %d\n", ret);
-+			return FALSE;
-+		}
-+#ifdef USELZO
-+	} else if (info->flag_lzo_support
-+		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
-+		retlen = info->page_size;
-+		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
-+					    (unsigned char *)bufptr, &retlen,
-+					    LZO1X_MEM_DECOMPRESS);
-+		if ((ret != LZO_E_OK) || (retlen != info->page_size)) {
-+			ERRMSG("Uncompress failed: %d\n", ret);
-+			return FALSE;
-+		}
-+#endif
-+#ifdef USESNAPPY
-+	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
-+
-+		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
-+		if (ret != SNAPPY_OK) {
-+			ERRMSG("Uncompress failed: %d\n", ret);
-+			return FALSE;
-+		}
-+
-+		ret = snappy_uncompress(buf, pd.size, bufptr, (size_t *)&retlen);
-+		if ((ret != SNAPPY_OK) || (retlen != info->page_size)) {
-+			ERRMSG("Uncompress failed: %d\n", ret);
-+			return FALSE;
-+		}
-+#endif
 +	}
 +
 +	return TRUE;
 +}
 +
- int
- readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size)
+ /*
+  * This function is specific for reading page from ELF.
+  *
+@@ -670,6 +691,83 @@ readpage_elf(unsigned long long paddr, void *bufptr)
+ }
+ 
+ static int
++readpage_elf_parallel(int fd_memory, unsigned long long paddr, void *bufptr)
++{
++	off_t offset1, offset2;
++	size_t size1, size2;
++	unsigned long long phys_start, phys_end, frac_head = 0;
++
++	offset1 = paddr_to_offset(paddr);
++	offset2 = paddr_to_offset(paddr + info->page_size);
++	phys_start = paddr;
++	phys_end = paddr + info->page_size;
++
++	/*
++	 * Check the case phys_start isn't aligned by page size like below:
++	 *
++	 *                           phys_start
++	 *                           = 0x40ffda7000
++	 *         |<-- frac_head -->|------------- PT_LOAD -------------
++	 *     ----+-----------------------+---------------------+----
++	 *         |         pfn:N         |       pfn:N+1       | ...
++	 *     ----+-----------------------+---------------------+----
++	 *         |
++	 *     pfn_to_paddr(pfn:N)               # page size = 16k
++	 *     = 0x40ffda4000
++	 */
++	if (!offset1) {
++		phys_start = page_head_to_phys_start(paddr);
++		offset1 = paddr_to_offset(phys_start);
++		frac_head = phys_start - paddr;
++		memset(bufptr, 0, frac_head);
++	}
++
++	/*
++	 * Check the case phys_end isn't aligned by page size like the
++	 * phys_start's case.
++	 */
++	if (!offset2) {
++		phys_end = page_head_to_phys_end(paddr);
++		offset2 = paddr_to_offset(phys_end);
++		memset(bufptr + (phys_end - paddr), 0, info->page_size
++							- (phys_end - paddr));
++	}
++
++	/*
++	 * Check the separated page on different PT_LOAD segments.
++	 */
++	if (offset1 + (phys_end - phys_start) == offset2) {
++		size1 = phys_end - phys_start;
++	} else {
++		for (size1 = 1; size1 < info->page_size - frac_head; size1++) {
++			offset2 = paddr_to_offset(phys_start + size1);
++			if (offset1 + size1 != offset2)
++				break;
++		}
++	}
++
++	if(!read_from_vmcore_parallel(fd_memory, offset1, bufptr + frac_head,
++								size1)) {
++		ERRMSG("Can't read the dump memory(%s).\n",
++		       info->name_memory);
++		return FALSE;
++	}
++
++	if (size1 + frac_head != info->page_size) {
++		size2 = phys_end - (phys_start + size1);
++
++		if(!read_from_vmcore_parallel(fd_memory, offset2,
++					bufptr + frac_head + size1, size2)) {
++			ERRMSG("Can't read the dump memory(%s).\n",
++			       info->name_memory);
++			return FALSE;
++		}
++	}
++
++	return TRUE;
++}
++
++static int
+ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
  {
+ 	page_desc_t pd;
 -- 
 1.7.1
 
