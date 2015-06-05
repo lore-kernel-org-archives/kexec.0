@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z0mYH-0004sJ-HB
- for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:30 +0000
+ id 1Z0mYI-0005sM-O8
+ for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:31 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wVgK029007
- for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:31 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wW80029014
+ for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:32 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH RFC 04/11] Add read_pfn_parallel
-Date: Fri, 5 Jun 2015 15:56:58 +0800
-Message-ID: <1433491025-7291-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH RFC 05/11] Add function to initial bitmap for parallel use
+Date: Fri, 5 Jun 2015 15:56:59 +0800
+Message-ID: <1433491025-7291-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,74 +31,96 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-read_pfn_parallel is used to enable reading pages from vmcore parallely.
-Current supported format is kdump-compressed and elf, mmap elf format
-is also supported.
+initialize_bitmap_memory_parallel and initialize_2nd_bitmap_parallel
+is used for parallel process to avoid conflict on bitmap.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- Makefile       |    2 ++
- makedumpfile.c |   34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+), 0 deletions(-)
+ makedumpfile.c |   20 ++++++++++++++++++++
+ makedumpfile.h |   18 ++++++++++++++++++
+ 2 files changed, 38 insertions(+), 0 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 2d2b1b7..0b10312 100644
---- a/Makefile
-+++ b/Makefile
-@@ -66,6 +66,8 @@ LIBS := -lsnappy $(LIBS)
- CFLAGS += -DUSESNAPPY
- endif
- 
-+LIBS := -lpthread $(LIBS)
-+
- all: makedumpfile
- 
- $(OBJ_PART): $(SRC_PART)
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 9f12865..8a69321 100644
+index 8a69321..05859a3 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -6667,6 +6667,40 @@ read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+@@ -3398,6 +3398,16 @@ initialize_bitmap_memory(void)
+ 	return TRUE;
  }
  
- int
-+read_pfn_parallel(int fd_memory, mdf_pfn_t pfn, unsigned char *buf,
-+		  struct dump_bitmap* bitmap_memory_parallel,
-+		  struct mmap_cache *mmap_cache)
++void
++initialize_bitmap_memory_parallel(struct dump_bitmap *bitmap, int thread_num)
 +{
-+	unsigned long long paddr;
-+	unsigned long long pgaddr;
-+
-+	paddr = pfn_to_paddr(pfn);
-+
-+	pgaddr = PAGEBASE(paddr);
-+
-+	if (info->flag_refiltering) {
-+		if (!readpage_kdump_compressed_parallel(fd_memory, pgaddr, buf,
-+						      bitmap_memory_parallel)) {
-+			ERRMSG("Can't get the page data.\n");
-+			return FALSE;
-+		}
-+	} else {
-+		char *mapbuf = mappage_elf_parallel(fd_memory, pgaddr,
-+						    mmap_cache);
-+		if (mapbuf) {
-+			memcpy(buf, mapbuf, info->page_size);
-+		} else {
-+			if (!readpage_elf_parallel(fd_memory, pgaddr, buf)) {
-+				ERRMSG("Can't get the page data.\n");
-+				return FALSE;
-+			}
-+		}
-+	}
-+
-+	return TRUE;
++	bitmap->fd = FD_BITMAP_MEMORY_PARALLEL(thread_num);
++	bitmap->file_name = info->name_memory;
++	bitmap->no_block = -1;
++	memset(bitmap->buf, 0, BUFSIZE_BITMAP);
++	bitmap->offset = info->bitmap_memory->offset;
 +}
 +
-+int
- get_loads_dumpfile_cyclic(void)
+ int
+ calibrate_machdep_info(void)
  {
- 	int i, phnum, num_new_load = 0;
+@@ -3713,6 +3723,16 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
+ 	bitmap->offset = info->len_bitmap / 2;
+ }
+ 
++void
++initialize_2nd_bitmap_parallel(struct dump_bitmap *bitmap, int thread_num)
++{
++	bitmap->fd = FD_BITMAP_PARALLEL(thread_num);
++	bitmap->file_name = info->name_bitmap;
++	bitmap->no_block = -1;
++	memset(bitmap->buf, 0, BUFSIZE_BITMAP);
++	bitmap->offset = info->len_bitmap / 2;
++}
++
+ int
+ set_bitmap(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val)
+ {
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 939850f..b1ff561 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -429,6 +429,11 @@ do { \
+ #define SPLITTING_SIZE_EI(i)	info->splitting_info[i].size_eraseinfo
+ 
+ /*
++ * Macro for getting parallel info.
++ */
++#define FD_BITMAP_MEMORY_PARALLEL(i)	info->parallel_info[i].fd_bitmap_memory
++#define FD_BITMAP_PARALLEL(i)		info->parallel_info[i].fd_bitmap
++/*
+  * kernel version
+  *
+  * NOTE: the format of kernel_version is as follows
+@@ -957,6 +962,18 @@ struct splitting_info {
+ 	unsigned long		size_eraseinfo;
+ } splitting_info_t;
+ 
++struct parallel_info {
++	int			fd_memory;
++	int 			fd_bitmap_memory;
++	int			fd_bitmap;
++	unsigned char		*buf;
++	unsigned char 		*buf_out;
++	struct mmap_cache	*mmap_cache;
++#ifdef USELZO
++	lzo_bytep		wrkmem;
++#endif
++} parallel_info_t;
++
+ struct ppc64_vmemmap {
+ 	unsigned long		phys;
+ 	unsigned long		virt;
+@@ -1093,6 +1110,7 @@ struct DumpInfo {
+ 	char			*name_dumpfile;
+ 	int			num_dumpfile;
+ 	struct splitting_info	*splitting_info;
++	struct parallel_info	*parallel_info;
+ 
+ 	/*
+ 	 * bitmap info:
 -- 
 1.7.1
 
