@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+Received: from mail.skyhub.de ([78.46.96.112])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z0mYO-0005sM-R1
- for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:38 +0000
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wdtV029036
- for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:39 +0800
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH RFC 11/11] Add usage and manual about multiple threads process
-Date: Fri, 5 Jun 2015 15:57:05 +0800
-Message-ID: <1433491025-7291-12-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ id 1Z0rha-0006V0-8I
+ for kexec@lists.infradead.org; Fri, 05 Jun 2015 13:30:27 +0000
+Date: Fri, 5 Jun 2015 15:27:36 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 0/3 v3] Fix kdump failures with crashkernel=high
+Message-ID: <20150605132736.GF3679@pd.tnic>
+References: <1433500202-25531-1-git-send-email-joro@8bytes.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1433500202-25531-1-git-send-email-joro@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,96 +23,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+To: Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
+Cc: jroedel@suse.de, Baoquan He <bhe@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+On Fri, Jun 05, 2015 at 12:29:59PM +0200, Joerg Roedel wrote:
+> v2->v3
+> 
+> * Rebased to v4.1-rc6
+> * Updated changelogs as requested and added outcome of
+>   previous discussions
+> * Added more Acked-bys
+> 
+> v1->v2:
+> 
+> * Updated comments based on feedback from Konrad
+> * Added Acked-bys
+> * Rebased to v3.19-rc3
+> 
+> Hi,
+> 
+> here is a patch-set to fix failed kdump kernel boots when
+> the systems was booted with crashkernel=X,high. On those
+> systems the kernel allocates only 72MiB of low-memory for
+> DMA buffers, which showed to be too low on some systems.
+> 
+> The problem is that 64MiB of the low-memory is allocated by
+> swiotlb, leaving 8MB for the page-allocator. But swiotlb
+> tries to allocate DMA memory from the page-allocator first,
+> which fails pretty fast in the boot sequence, causing
+> warnings. This patch-set removes these warnings.
+> 
+> But even the 64MiB for swiotlb are eaten up on some systems,
+> so that the default of low-memory allocated for the
+> crash-kernel is increase from 72MB to 256MB (only changing
+> the defaults, can still be overwritten by crashkernel=X,low).
+> 
+> This number comes from experiments on the affected systems,
+> 128MiB low-memory was still not enough there, thus I set the
+> value to 256MiB to fix the issues.
+> 
+> Any feedback appreciated.
+> 
+> Thanks,
+> 
+> 	Joerg
+> 
+> Joerg Roedel (3):
+>   swiotlb: Warn on allocation failure in swiotlb_alloc_coherent
+>   x86, swiotlb: Try coherent allocations with __GFP_NOWARN
+>   x86, crash: Allocate enough low-mem when crashkernel=high
+> 
+>  arch/x86/kernel/pci-swiotlb.c |  7 +++++++
+>  arch/x86/kernel/setup.c       |  5 ++++-
+>  lib/swiotlb.c                 | 11 +++++++++--
+>  3 files changed, 20 insertions(+), 3 deletions(-)
 
-Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
----
- makedumpfile.8 |   24 ++++++++++++++++++++++++
- print_info.c   |   16 ++++++++++++++++
- 2 files changed, 40 insertions(+), 0 deletions(-)
+Looks simple enough, all applied, thanks.
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 9752671..5a760c8 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -12,6 +12,8 @@ makedumpfile \- make a small dumpfile of kdump
- .br
- \fBmakedumpfile\fR \-\-split [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..]
- .br
-+\fBmakedumpfile\fR [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \-\-num\-threads \fITHREADNUM\fR [\-\-num\-buffers \fIBUFNUM\fR] \fIVMCORE\fR \fIDUMPFILE\fR
-+.br
- \fBmakedumpfile\fR \-\-reassemble \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..] \fIDUMPFILE\fR
- .br
- \fBmakedumpfile\fR \-g \fIVMCOREINFO\fR \-x \fIVMLINUX\fR
-@@ -371,6 +373,28 @@ the kdump\-compressed format.
- # makedumpfile \-\-split \-d 31 \-x vmlinux /proc/vmcore dumpfile1 dumpfile2
- 
- .TP
-+\fB\-\-num\-threads\fR \fITHREADNUM\fR
-+Using multiple threads to read and compress data of each page in parallel.
-+And it will reduces time for saving \fIDUMPFILE\fR.
-+This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
-+format from \fIVMCORE\fR in kdump\-compressed format or elf format.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
-+
-+.TP
-+\fB\-\-num\-buffers\fR \fIBUFNUM\fR
-+This option is used for multiple threads process, please check \-\-num\-threads
-+option. Multiple threads process will need buffers to store generated page
-+data by threads temporarily, and this option is used to specify the number
-+of pages can be stored.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-d 31 \-\-num\-threads 4 \-\-num\-buffers 30 /proc/vmcore dumpfile
-+
-+.TP
- \fB\-\-reassemble\fR
- Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
- into one \fIDUMPFILE\fR. dumpfile1 and dumpfile2 are reassembled into dumpfile
-diff --git a/print_info.c b/print_info.c
-index 9215e0f..a830ee2 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -76,6 +76,10 @@ print_usage(void)
- 	MSG("  # makedumpfile --split [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE1\n");
- 	MSG("    DUMPFILE2 [DUMPFILE3 ..]\n");
- 	MSG("\n");
-+	MSG("  Using multiple threads to create DUMPFILE in parallel:\n");
-+	MSG("  # makedumpfile [OPTION] [-x VMLINUX|-i VMCOREINFO] --num-threads THREADNUM\n");
-+	MSG("    [--num-buffers BUFNUM] VMCORE DUMPFILE1\n");
-+	MSG("\n");
- 	MSG("  Reassemble multiple DUMPFILEs:\n");
- 	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\n");
- 	MSG("\n");
-@@ -184,6 +188,18 @@ print_usage(void)
- 	MSG("      by the number of DUMPFILEs.\n");
- 	MSG("      This feature supports only the kdump-compressed format.\n");
- 	MSG("\n");
-+	MSG("  [--num-threads THREADNUM]:\n");
-+	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
-+	MSG("      And it will reduces time for saving DUMPFILE.\n");
-+	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
-+	MSG("      VMCORE in kdump-compressed format or elf format.\n");
-+	MSG("\n");
-+	MSG("  [--num-buffers BUFNUM]:\n");
-+	MSG("      This option is used for multiple threads process, please check --num-threads\n");
-+	MSG("      option. Multiple threads process will need buffers to store generated page\n");
-+	MSG("      data by threads temporarily, and this option is used to specify the number\n");
-+	MSG("      of pages can be stored.\n");
-+	MSG("\n");
- 	MSG("  [--reassemble]:\n");
- 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
- 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
+hpa, Ingo, any concerns?
+
 -- 
-1.7.1
+Regards/Gruss,
+    Boris.
 
+ECO tip #101: Trim your mails when you reply.
+--
 
 _______________________________________________
 kexec mailing list
