@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z0mYI-0005sM-O8
+ id 1Z0mYI-00060l-6l
  for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:31 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wW80029014
- for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:32 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wT8g029001
+ for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:29 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH RFC 05/11] Add function to initial bitmap for parallel use
-Date: Fri, 5 Jun 2015 15:56:59 +0800
-Message-ID: <1433491025-7291-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH RFC 02/11] Add mappage_elf_parallel
+Date: Fri, 5 Jun 2015 15:56:56 +0800
+Message-ID: <1433491025-7291-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,96 +31,178 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-initialize_bitmap_memory_parallel and initialize_2nd_bitmap_parallel
-is used for parallel process to avoid conflict on bitmap.
+mappage_elf_parallel is used to enable mmaping elf format to memory
+parallelly. later patch will will use the mmapped memory to get data
+of each page. fd_memory and mmap_cache should be initialized and offered
+to each threads individually to avoid conflict.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- makedumpfile.c |   20 ++++++++++++++++++++
- makedumpfile.h |   18 ++++++++++++++++++
- 2 files changed, 38 insertions(+), 0 deletions(-)
+ makedumpfile.c |   97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |   14 ++++++++
+ 2 files changed, 111 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 8a69321..05859a3 100644
+index 10b6738..0f71ce7 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3398,6 +3398,16 @@ initialize_bitmap_memory(void)
- 	return TRUE;
+@@ -395,6 +395,46 @@ update_mmap_range(off_t offset, int initial) {
  }
  
-+void
-+initialize_bitmap_memory_parallel(struct dump_bitmap *bitmap, int thread_num)
+ static int
++update_mmap_range_parallel(int fd_memory, off_t offset,
++			   struct mmap_cache *mmap_cache)
 +{
-+	bitmap->fd = FD_BITMAP_MEMORY_PARALLEL(thread_num);
-+	bitmap->file_name = info->name_memory;
-+	bitmap->no_block = -1;
-+	memset(bitmap->buf, 0, BUFSIZE_BITMAP);
-+	bitmap->offset = info->bitmap_memory->offset;
++	off_t start_offset, end_offset;
++	off_t map_size;
++	off_t max_offset = get_max_file_offset();
++	off_t pt_load_end = offset_to_pt_load_end(offset);
++
++	/*
++	 * mmap_buf must be cleaned
++	 */
++	if (mmap_cache->mmap_buf != MAP_FAILED)
++		munmap(mmap_cache->mmap_buf, mmap_cache->mmap_end_offset
++					     - mmap_cache->mmap_start_offset);
++
++	/*
++	 * offset for mmap() must be page aligned.
++	 */
++	start_offset = roundup(offset, info->page_size);
++	end_offset = MIN(max_offset, round(pt_load_end, info->page_size));
++
++	if (!pt_load_end || (end_offset - start_offset) <= 0)
++		return FALSE;
++
++	map_size = MIN(end_offset - start_offset, info->mmap_region_size);
++
++	mmap_cache->mmap_buf = mmap(NULL, map_size, PROT_READ, MAP_PRIVATE,
++					fd_memory, start_offset);
++
++	if (mmap_cache->mmap_buf == MAP_FAILED) {
++		return FALSE;
++	}
++
++	mmap_cache->mmap_start_offset = start_offset;
++	mmap_cache->mmap_end_offset = start_offset + map_size;
++
++	return TRUE;
++}
++
++static int
+ is_mapped_with_mmap(off_t offset) {
+ 
+ 	if (info->flag_usemmap == MMAP_ENABLE
+@@ -405,6 +445,15 @@ is_mapped_with_mmap(off_t offset) {
+ 		return FALSE;
+ }
+ 
++static int
++is_mapped_with_mmap_parallel(off_t offset, struct mmap_cache *mmap_cache) {
++	if (offset >= mmap_cache->mmap_start_offset
++	    && offset < mmap_cache->mmap_end_offset)
++		return TRUE;
++	else
++		return FALSE;
 +}
 +
  int
- calibrate_machdep_info(void)
- {
-@@ -3713,6 +3723,16 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
- 	bitmap->offset = info->len_bitmap / 2;
+ initialize_mmap(void) {
+ 	unsigned long long phys_start;
+@@ -459,6 +508,54 @@ mappage_elf(unsigned long long paddr)
+ 	return info->mmap_buf + (offset - info->mmap_start_offset);
  }
  
-+void
-+initialize_2nd_bitmap_parallel(struct dump_bitmap *bitmap, int thread_num)
++static char *
++mappage_elf_parallel(int fd_memory, unsigned long long paddr,
++		     struct mmap_cache *mmap_cache)
 +{
-+	bitmap->fd = FD_BITMAP_PARALLEL(thread_num);
-+	bitmap->file_name = info->name_bitmap;
-+	bitmap->no_block = -1;
-+	memset(bitmap->buf, 0, BUFSIZE_BITMAP);
-+	bitmap->offset = info->len_bitmap / 2;
++	off_t offset, offset2;
++	int flag_usemmap;
++
++	pthread_rwlock_rdlock(&info->usemmap_rwlock);
++	flag_usemmap = info->flag_usemmap;
++	pthread_rwlock_unlock(&info->usemmap_rwlock);
++	if (flag_usemmap != MMAP_ENABLE)
++		return NULL;
++
++	offset = paddr_to_offset(paddr);
++	if (!offset || page_is_fractional(offset))
++		return NULL;
++
++	offset2 = paddr_to_offset(paddr + info->page_size - 1);
++	if (!offset2)
++		return NULL;
++
++	if (offset2 - offset != info->page_size - 1)
++		return NULL;
++
++	if (!is_mapped_with_mmap_parallel(offset, mmap_cache) &&
++	    !update_mmap_range_parallel(fd_memory, offset, mmap_cache)) {
++		ERRMSG("Can't read the dump memory(%s) with mmap().\n",
++		       info->name_memory);
++
++		ERRMSG("This kernel might have some problems about mmap().\n");
++		ERRMSG("read() will be used instead of mmap() from now.\n");
++
++		/*
++		 * Fall back to read().
++		 */
++		pthread_rwlock_wrlock(&info->usemmap_rwlock);
++		info->flag_usemmap = MMAP_DISABLE;
++		pthread_rwlock_unlock(&info->usemmap_rwlock);
++		return NULL;
++	}
++
++	if (offset < mmap_cache->mmap_start_offset ||
++	    offset + info->page_size > mmap_cache->mmap_end_offset)
++		return NULL;
++
++	return mmap_cache->mmap_buf + (offset - mmap_cache->mmap_start_offset);
 +}
 +
- int
- set_bitmap(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val)
+ static int
+ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
  {
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 939850f..b1ff561 100644
+index d2fadbd..939850f 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -429,6 +429,11 @@ do { \
- #define SPLITTING_SIZE_EI(i)	info->splitting_info[i].size_eraseinfo
+@@ -42,6 +42,7 @@
+ #include "dwarf_info.h"
+ #include "diskdump_mod.h"
+ #include "sadump_mod.h"
++#include <pthread.h>
  
  /*
-+ * Macro for getting parallel info.
+  * Result of command
+@@ -913,6 +914,15 @@ typedef unsigned long int ulong;
+ typedef unsigned long long int ulonglong;
+ 
+ /*
++ * for parallel process
 + */
-+#define FD_BITMAP_MEMORY_PARALLEL(i)	info->parallel_info[i].fd_bitmap_memory
-+#define FD_BITMAP_PARALLEL(i)		info->parallel_info[i].fd_bitmap
-+/*
-  * kernel version
-  *
-  * NOTE: the format of kernel_version is as follows
-@@ -957,6 +962,18 @@ struct splitting_info {
- 	unsigned long		size_eraseinfo;
- } splitting_info_t;
- 
-+struct parallel_info {
-+	int			fd_memory;
-+	int 			fd_bitmap_memory;
-+	int			fd_bitmap;
-+	unsigned char		*buf;
-+	unsigned char 		*buf_out;
-+	struct mmap_cache	*mmap_cache;
-+#ifdef USELZO
-+	lzo_bytep		wrkmem;
-+#endif
-+} parallel_info_t;
++struct mmap_cache {
++	char	*mmap_buf;
++	off_t	mmap_start_offset;
++	off_t   mmap_end_offset;
++};
 +
- struct ppc64_vmemmap {
- 	unsigned long		phys;
- 	unsigned long		virt;
-@@ -1093,6 +1110,7 @@ struct DumpInfo {
- 	char			*name_dumpfile;
- 	int			num_dumpfile;
- 	struct splitting_info	*splitting_info;
-+	struct parallel_info	*parallel_info;
++/*
+  * makedumpfile header
+  *   For re-arranging the dump data on different architecture, all the
+  *   variables are defined by 64bits. The size of signature is aligned
+@@ -1177,6 +1187,10 @@ struct DumpInfo {
+ 	 * for cyclic_splitting mode, setup splitblock_size
+ 	 */
+ 	long long splitblock_size;
++	/*
++	 * for parallel process
++	 */
++	pthread_rwlock_t usemmap_rwlock;
+ };
+ extern struct DumpInfo		*info;
  
- 	/*
- 	 * bitmap info:
 -- 
 1.7.1
 
