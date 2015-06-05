@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z0mYK-00060l-H5
- for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:35 +0000
+ id 1Z0mYK-0005sM-EL
+ for kexec@lists.infradead.org; Fri, 05 Jun 2015 08:00:36 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wZgX029023
- for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:35 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t557wYpn029020
+ for <kexec@lists.infradead.org>; Fri, 5 Jun 2015 15:58:34 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH RFC 08/11] Add write_kdump_pages_parallel_cyclic to allow
- parallel process in cyclic_mode
-Date: Fri, 5 Jun 2015 15:57:02 +0800
-Message-ID: <1433491025-7291-9-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH RFC 07/11] Add write_kdump_pages_parallel to allow parallel
+ process
+Date: Fri, 5 Jun 2015 15:57:01 +0800
+Message-ID: <1433491025-7291-8-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -33,23 +33,57 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 Use several threads to read and compress pages and one thread to write
-the produced pages into dumpfile. This patch is used for cyclic mode.
+the produced pages into dumpfile. The produced pages will be stored in
+a buffer, then the consumer thread will get pages from this buffer.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- makedumpfile.c |  390 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 390 insertions(+), 0 deletions(-)
+ makedumpfile.c |  450 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |   44 ++++++
+ 2 files changed, 494 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index bce6dc3..86426d8 100644
+index 05859a3..bce6dc3 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -7672,6 +7672,396 @@ out:
- 	return ret;
+@@ -235,6 +235,31 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
+ 	return FALSE;
+ }
+ 
++static inline unsigned long
++calculate_len_buf_out(long page_size)
++{
++	unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy;
++	unsigned long len_buf_out;
++
++	len_buf_out_zlib = len_buf_out_lzo = len_buf_out_snappy = 0;
++
++#ifdef USELZO
++	len_buf_out_lzo = page_size + page_size / 16 + 64 + 3;
++#endif
++
++#ifdef USESNAPPY
++	len_buf_out_snappy = snappy_max_compressed_length(page_size);
++#endif
++
++	len_buf_out_zlib = compressBound(page_size);
++
++	len_buf_out = MAX(len_buf_out_zlib,
++			  MAX(len_buf_out_lzo,
++			      len_buf_out_snappy));
++
++	return len_buf_out;
++}
++
+ #define BITMAP_SECT_LEN 4096
+ static inline int is_dumpable(struct dump_bitmap *, mdf_pfn_t);
+ static inline int is_dumpable_cyclic(char *bitmap, mdf_pfn_t, struct cycle *cycle);
+@@ -7016,6 +7041,431 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	return TRUE;
  }
  
 +void *
-+kdump_thread_function_cyclic(void *arg) {
++kdump_thread_function(void *arg) {
 +	void *retval = PTHREAD_FAIL;
 +	struct thread_args *kdump_thread_args = (struct thread_args *)arg;
 +	struct page_data *page_data_buf = kdump_thread_args->page_data_buf;
@@ -59,7 +93,7 @@ index bce6dc3..86426d8 100644
 +	int index;
 +	int found;
 +	int fd_memory = 0;
-+	struct dump_bitmap bitmap_memory_parallel;
++	struct dump_bitmap bitmap_parallel, bitmap_memory_parallel;
 +	unsigned char *buf = NULL, *buf_out = NULL;
 +	struct mmap_cache *mmap_cache =
 +			MMAP_CACHE_PARALLEL(kdump_thread_args->thread_num);
@@ -76,6 +110,8 @@ index bce6dc3..86426d8 100644
 +	buf_out = BUF_OUT_PARALLEL(kdump_thread_args->thread_num);
 +
 +	fd_memory = FD_MEMORY_PARALLEL(kdump_thread_args->thread_num);
++
++	initialize_2nd_bitmap_parallel(&bitmap_parallel, kdump_thread_args->thread_num);
 +
 +	if (info->flag_refiltering) {
 +		initialize_bitmap_memory_parallel(&bitmap_memory_parallel,
@@ -127,8 +163,7 @@ index bce6dc3..86426d8 100644
 +			page_data_buf[index].pfn = pfn;
 +			page_data_buf[index].ready = 1;
 +
-+			if (!is_on(info->partial_bitmap2,
-+					pfn - kdump_thread_args->start_pfn)) {
++			if (!is_dumpable(&bitmap_parallel, pfn)) {
 +				page_data_buf[index].dumpable = FALSE;
 +				goto unlock;
 +			}
@@ -138,7 +173,7 @@ index bce6dc3..86426d8 100644
 +			if (!read_pfn_parallel(fd_memory, pfn, buf,
 +					       &bitmap_memory_parallel,
 +					       mmap_cache))
-+					goto fail;
++				goto fail;
 +
 +			filter_data_buffer_parallel(buf, pfn_to_paddr(pfn),
 +							info->page_size,
@@ -160,12 +195,13 @@ index bce6dc3..86426d8 100644
 +			    && ((size_out = kdump_thread_args->len_buf_out),
 +				compress2(buf_out, &size_out, buf,
 +					  info->page_size,
-+					  Z_BEST_SPEED) == Z_OK)
++					  Z_BEST_SPEED)	== Z_OK)
 +			    && (size_out < info->page_size)) {
 +				page_data_buf[index].flags =
 +							DUMP_DH_COMPRESSED_ZLIB;
 +				page_data_buf[index].size  = size_out;
-+				memcpy(page_data_buf[index].buf, buf_out, size_out);
++				memcpy(page_data_buf[index].buf, buf_out,
++								size_out);
 +#ifdef USELZO
 +			} else if (info->flag_lzo_support
 +				   && (info->flag_compress
@@ -178,7 +214,8 @@ index bce6dc3..86426d8 100644
 +				page_data_buf[index].flags =
 +							DUMP_DH_COMPRESSED_LZO;
 +				page_data_buf[index].size  = size_out;
-+				memcpy(page_data_buf[index].buf, buf_out, size_out);
++				memcpy(page_data_buf[index].buf, buf_out,
++								size_out);
 +#endif
 +#ifdef USESNAPPY
 +			} else if ((info->flag_compress
@@ -193,16 +230,17 @@ index bce6dc3..86426d8 100644
 +				page_data_buf[index].flags =
 +						DUMP_DH_COMPRESSED_SNAPPY;
 +				page_data_buf[index].size  = size_out;
-+				memcpy(page_data_buf[index].buf, buf_out, size_out);
++				memcpy(page_data_buf[index].buf, buf_out,
++								size_out);
 +#endif
 +			} else {
 +				page_data_buf[index].flags = 0;
 +				page_data_buf[index].size  = info->page_size;
-+				memcpy(page_data_buf[index].buf, buf, info->page_size);
++				memcpy(page_data_buf[index].buf, buf,
++							info->page_size);
 +			}
 +unlock:
 +			pthread_mutex_unlock(&page_data_buf[index].mutex);
-+
 +		}
 +	}
 +
@@ -216,30 +254,31 @@ index bce6dc3..86426d8 100644
 +}
 +
 +int
-+write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
-+				  struct cache_data *cd_page,
-+				  struct page_desc *pd_zero,
-+				  off_t *offset_data, struct cycle *cycle)
++write_kdump_pages_parallel(struct cache_data *cd_header,
++			   struct cache_data *cd_page)
 +{
 +	int ret = FALSE;
 +	int res;
 +	unsigned long len_buf_out;
-+	mdf_pfn_t per;
++	mdf_pfn_t per, num_dumpable;
 +	mdf_pfn_t start_pfn, end_pfn;
-+	struct page_desc pd;
++	struct disk_dump_header *dh = info->dump_header;
++	struct page_desc pd, pd_zero;
++	off_t offset_data = 0;
 +	struct timeval tv_start;
 +	struct timeval last, new;
++	unsigned char buf[info->page_size];
 +	unsigned long long consuming_pfn;
 +	pthread_t **threads = NULL;
 +	struct thread_args *kdump_thread_args = NULL;
 +	void *thread_result;
 +	int page_data_num;
 +	struct page_data *page_data_buf = NULL;
-+	int i;
 +	int index;
++	int i;
 +
 +	if (info->flag_elf_dumpfile)
-+		return FALSE;
++		return ret;
 +
 +	res = pthread_mutex_init(&info->current_pfn_mutex, NULL);
 +	if (res != 0) {
@@ -269,13 +308,36 @@ index bce6dc3..86426d8 100644
 +
 +	len_buf_out = calculate_len_buf_out(info->page_size);
 +
-+	per = info->num_dumpable / 10000;
++	num_dumpable = get_num_dumpable();
++	per = num_dumpable / 10000;
 +	per = per ? per : 1;
 +
-+	gettimeofday(&tv_start, NULL);
++	/*
++	 * Calculate the offset of the page data.
++	 */
++	cd_header->offset
++	    = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
++		* dh->block_size;
++	cd_page->offset = cd_header->offset + sizeof(page_desc_t)*num_dumpable;
++	offset_data  = cd_page->offset;
 +
-+	start_pfn = cycle->start_pfn;
-+	end_pfn   = cycle->end_pfn;
++	/*
++	 * Write the data of zero-filled page.
++	 */
++	gettimeofday(&tv_start, NULL);
++	if (info->dump_level & DL_EXCLUDE_ZERO) {
++		pd_zero.size = info->page_size;
++		pd_zero.flags = 0;
++		pd_zero.offset = offset_data;
++		pd_zero.page_flags = 0;
++		memset(buf, 0, pd_zero.size);
++		if (!write_cache(cd_page, buf, pd_zero.size))
++			goto out;
++		offset_data  += pd_zero.size;
++	}
++
++	start_pfn = 0;
++	end_pfn   = info->max_mapnr;
 +
 +	info->current_pfn = start_pfn;
 +	info->consumed_pfn = start_pfn - 1;
@@ -310,7 +372,7 @@ index bce6dc3..86426d8 100644
 +		kdump_thread_args[i].page_data_buf = page_data_buf;
 +
 +		res = pthread_create(threads[i], NULL,
-+				     kdump_thread_function_cyclic,
++				     kdump_thread_function,
 +				     (void *)&kdump_thread_args[i]);
 +		if (res != 0) {
 +			ERRMSG("Can't create thread %d. %s\n",
@@ -349,7 +411,7 @@ index bce6dc3..86426d8 100644
 +		}
 +
 +		if ((num_dumped % per) == 0)
-+			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
++			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
 +
 +		/* next pfn is found, refresh last here */
 +		last = new;
@@ -362,15 +424,15 @@ index bce6dc3..86426d8 100644
 +		num_dumped++;
 +
 +		if (page_data_buf[index].zero == TRUE) {
-+			if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
++			if (!write_cache(cd_header, &pd_zero, sizeof(page_desc_t)))
 +				goto out;
 +			pfn_zero++;
 +		} else {
 +			pd.flags      = page_data_buf[index].flags;
 +			pd.size       = page_data_buf[index].size;
 +			pd.page_flags = 0;
-+			pd.offset     = *offset_data;
-+			*offset_data  += pd.size;
++			pd.offset     = offset_data;
++			offset_data  += pd.size;
 +			/*
 +			 * Write the page header.
 +			 */
@@ -381,17 +443,24 @@ index bce6dc3..86426d8 100644
 +			 */
 +			if (!write_cache(cd_page, page_data_buf[index].buf, pd.size))
 +				goto out;
-+
 +		}
 +unlock:
 +		pthread_mutex_unlock(&page_data_buf[index].mutex);
 +	}
 +
++	/*
++	 * Write the remainder.
++	 */
++	if (!write_cache_bufsz(cd_page))
++		goto out;
++	if (!write_cache_bufsz(cd_header))
++		goto out;
++
 +	ret = TRUE;
 +	/*
 +	 * print [100 %]
 +	 */
-+	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
++	print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
 +	print_execution_time(PROGRESS_COPY, &tv_start);
 +	PROGRESS_MSG("\n");
 +
@@ -439,8 +508,86 @@ index bce6dc3..86426d8 100644
 +}
 +
  int
- write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
- 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
+ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ {
+diff --git a/makedumpfile.h b/makedumpfile.h
+index b1ff561..bca3d56 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -431,8 +431,15 @@ do { \
+ /*
+  * Macro for getting parallel info.
+  */
++#define FD_MEMORY_PARALLEL(i)		info->parallel_info[i].fd_memory
+ #define FD_BITMAP_MEMORY_PARALLEL(i)	info->parallel_info[i].fd_bitmap_memory
+ #define FD_BITMAP_PARALLEL(i)		info->parallel_info[i].fd_bitmap
++#define BUF_PARALLEL(i)			info->parallel_info[i].buf
++#define BUF_OUT_PARALLEL(i)		info->parallel_info[i].buf_out
++#define MMAP_CACHE_PARALLEL(i)		info->parallel_info[i].mmap_cache
++#ifdef USELZO
++#define WRKMEM_PARALLEL(i)		info->parallel_info[i].wrkmem
++#endif
+ /*
+  * kernel version
+  *
+@@ -921,12 +928,39 @@ typedef unsigned long long int ulonglong;
+ /*
+  * for parallel process
+  */
++
++#define WAIT_TIME	(60 * 10)
++#define PTHREAD_FAIL	((void *)-2)
++
+ struct mmap_cache {
+ 	char	*mmap_buf;
+ 	off_t	mmap_start_offset;
+ 	off_t   mmap_end_offset;
+ };
+ 
++struct page_data
++{
++	mdf_pfn_t pfn;
++	int dumpable;
++	int zero;
++	unsigned int flags;
++	long size;
++	unsigned char *buf;
++	pthread_mutex_t mutex;
++	/*
++	 * whether the page_data is ready to be consumed
++	 */
++	int ready;
++};
++
++struct thread_args {
++	int thread_num;
++	unsigned long len_buf_out;
++	mdf_pfn_t start_pfn, end_pfn;
++	int page_data_num;
++	struct page_data *page_data_buf;
++};
++
+ /*
+  * makedumpfile header
+  *   For re-arranging the dump data on different architecture, all the
+@@ -1208,7 +1242,17 @@ struct DumpInfo {
+ 	/*
+ 	 * for parallel process
+ 	 */
++	int num_threads;
++	int num_buffers;
++	pthread_t **threads;
++	struct thread_args *kdump_thread_args;
++	struct page_data *page_data_buf;
+ 	pthread_rwlock_t usemmap_rwlock;
++	mdf_pfn_t current_pfn;
++	pthread_mutex_t current_pfn_mutex;
++	mdf_pfn_t consumed_pfn;
++	pthread_mutex_t consumed_pfn_mutex;
++	pthread_mutex_t filter_mutex;
+ };
+ extern struct DumpInfo		*info;
+ 
 -- 
 1.7.1
 
