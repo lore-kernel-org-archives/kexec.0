@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([78.46.96.112])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z0rha-0006V0-8I
- for kexec@lists.infradead.org; Fri, 05 Jun 2015 13:30:27 +0000
-Date: Fri, 5 Jun 2015 15:27:36 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 0/3 v3] Fix kdump failures with crashkernel=high
-Message-ID: <20150605132736.GF3679@pd.tnic>
-References: <1433500202-25531-1-git-send-email-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1433500202-25531-1-git-send-email-joro@8bytes.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Z17KC-0000lv-Jf
+ for kexec@lists.infradead.org; Sat, 06 Jun 2015 06:11:21 +0000
+From: Minfei Huang <mhuang@redhat.com>
+Subject: [PATCH] kexec: Remove the unnecessary conditional judgement to
+ simplify the code logic
+Date: Sat,  6 Jun 2015 14:14:12 +0800
+Message-Id: <1433571252-11874-1-git-send-email-mhuang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,75 +16,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>
-Cc: jroedel@suse.de, Baoquan He <bhe@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: ebiederm@xmission.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
 
-On Fri, Jun 05, 2015 at 12:29:59PM +0200, Joerg Roedel wrote:
-> v2->v3
-> 
-> * Rebased to v4.1-rc6
-> * Updated changelogs as requested and added outcome of
->   previous discussions
-> * Added more Acked-bys
-> 
-> v1->v2:
-> 
-> * Updated comments based on feedback from Konrad
-> * Added Acked-bys
-> * Rebased to v3.19-rc3
-> 
-> Hi,
-> 
-> here is a patch-set to fix failed kdump kernel boots when
-> the systems was booted with crashkernel=X,high. On those
-> systems the kernel allocates only 72MiB of low-memory for
-> DMA buffers, which showed to be too low on some systems.
-> 
-> The problem is that 64MiB of the low-memory is allocated by
-> swiotlb, leaving 8MB for the page-allocator. But swiotlb
-> tries to allocate DMA memory from the page-allocator first,
-> which fails pretty fast in the boot sequence, causing
-> warnings. This patch-set removes these warnings.
-> 
-> But even the 64MiB for swiotlb are eaten up on some systems,
-> so that the default of low-memory allocated for the
-> crash-kernel is increase from 72MB to 256MB (only changing
-> the defaults, can still be overwritten by crashkernel=X,low).
-> 
-> This number comes from experiments on the affected systems,
-> 128MiB low-memory was still not enough there, thus I set the
-> value to 256MiB to fix the issues.
-> 
-> Any feedback appreciated.
-> 
-> Thanks,
-> 
-> 	Joerg
-> 
-> Joerg Roedel (3):
->   swiotlb: Warn on allocation failure in swiotlb_alloc_coherent
->   x86, swiotlb: Try coherent allocations with __GFP_NOWARN
->   x86, crash: Allocate enough low-mem when crashkernel=high
-> 
->  arch/x86/kernel/pci-swiotlb.c |  7 +++++++
->  arch/x86/kernel/setup.c       |  5 ++++-
->  lib/swiotlb.c                 | 11 +++++++++--
->  3 files changed, 20 insertions(+), 3 deletions(-)
+From: Minfei Huang <mnfhuang@gmail.com>
 
-Looks simple enough, all applied, thanks.
+Transforming PFN(Page Frame Number) to struct page is never failure, so
+we can simplify the code logic to do the image->control_page assignment
+directly in the loop, and remove the unnecessary conditional judgement.
 
-hpa, Ingo, any concerns?
+Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+---
+ kernel/kexec.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 7a36fdc..4589899 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -796,11 +796,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 		/* If I don't overlap any segments I have found my hole! */
+ 		if (i == image->nr_segments) {
+ 			pages = pfn_to_page(hole_start >> PAGE_SHIFT);
++			image->control_page = hole_end;
+ 			break;
+ 		}
+ 	}
+-	if (pages)
+-		image->control_page = hole_end;
+ 
+ 	return pages;
+ }
 -- 
-Regards/Gruss,
-    Boris.
+2.2.2
 
-ECO tip #101: Trim your mails when you reply.
---
 
 _______________________________________________
 kexec mailing list
