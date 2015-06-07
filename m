@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wi0-x231.google.com ([2a00:1450:400c:c05::231])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z17KC-0000lv-Jf
- for kexec@lists.infradead.org; Sat, 06 Jun 2015 06:11:21 +0000
-From: Minfei Huang <mhuang@redhat.com>
-Subject: [PATCH] kexec: Remove the unnecessary conditional judgement to
- simplify the code logic
-Date: Sat,  6 Jun 2015 14:14:12 +0800
-Message-Id: <1433571252-11874-1-git-send-email-mhuang@redhat.com>
+ id 1Z1apu-0001c7-K8
+ for kexec@lists.infradead.org; Sun, 07 Jun 2015 13:42:03 +0000
+Received: by wibut5 with SMTP id ut5so60995951wib.1
+ for <kexec@lists.infradead.org>; Sun, 07 Jun 2015 06:41:40 -0700 (PDT)
+Date: Sun, 7 Jun 2015 15:41:36 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 0/3 v3] Fix kdump failures with crashkernel=high
+Message-ID: <20150607134136.GA27512@gmail.com>
+References: <1433500202-25531-1-git-send-email-joro@8bytes.org>
+ <20150605132736.GF3679@pd.tnic>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150605132736.GF3679@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,45 +22,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: jroedel@suse.de, Baoquan He <bhe@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-From: Minfei Huang <mnfhuang@gmail.com>
 
-Transforming PFN(Page Frame Number) to struct page is never failure, so
-we can simplify the code logic to do the image->control_page assignment
-directly in the loop, and remove the unnecessary conditional judgement.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
----
- kernel/kexec.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> > Joerg Roedel (3):
+> >   swiotlb: Warn on allocation failure in swiotlb_alloc_coherent
+> >   x86, swiotlb: Try coherent allocations with __GFP_NOWARN
+> >   x86, crash: Allocate enough low-mem when crashkernel=high
+> > 
+> >  arch/x86/kernel/pci-swiotlb.c |  7 +++++++
+> >  arch/x86/kernel/setup.c       |  5 ++++-
+> >  lib/swiotlb.c                 | 11 +++++++++--
+> >  3 files changed, 20 insertions(+), 3 deletions(-)
+> 
+> Looks simple enough, all applied, thanks.
+> 
+> hpa, Ingo, any concerns?
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 7a36fdc..4589899 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -796,11 +796,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
- 		/* If I don't overlap any segments I have found my hole! */
- 		if (i == image->nr_segments) {
- 			pages = pfn_to_page(hole_start >> PAGE_SHIFT);
-+			image->control_page = hole_end;
- 			break;
- 		}
- 	}
--	if (pages)
--		image->control_page = hole_end;
- 
- 	return pages;
- }
--- 
-2.2.2
+Modulo a couple of typos it all looks sane.
 
+Thanks,
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
