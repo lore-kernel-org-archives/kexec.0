@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z2tlx-0001Uq-Dz
- for kexec@lists.infradead.org; Thu, 11 Jun 2015 04:07:21 +0000
-Received: from ayumi.isobedori.kobe.vergenet.net
- (p7166-ipbfp1503kobeminato.hyogo.ocn.ne.jp [114.153.234.166])
- by kirsty.vergenet.net (Postfix) with ESMTPSA id D265225B755
- for <kexec@lists.infradead.org>; Thu, 11 Jun 2015 14:06:57 +1000 (AEST)
-Date: Thu, 11 Jun 2015 13:06:56 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.10-rc1
-Message-ID: <20150611040656.GA19804@verge.net.au>
+Received: from mail-ie0-x242.google.com ([2607:f8b0:4001:c03::242])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Z32Rl-0008Jg-UV
+ for kexec@lists.infradead.org; Thu, 11 Jun 2015 13:23:06 +0000
+Received: by iebtr6 with SMTP id tr6so1598795ieb.1
+ for <kexec@lists.infradead.org>; Thu, 11 Jun 2015 06:22:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
+Date: Thu, 11 Jun 2015 21:22:43 +0800
+Message-ID: <CAG+qjJ-s-4HVUOrzcJehw5sAB_XvwnLVe-7O8kc9q_QgPwd89A@mail.gmail.com>
+Subject: kexec works well with "dash l" but not working with "dash p"
+From: os user <gnusercn@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,31 +23,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-Hi all,
+Hi experts,
 
-I am happy to announce the release of kexec-tools 2.0.10-rc1.
+I have a problem when using kexec-tools on freescale powerpc P1014E.
 
-This is a bug-fix pre-release.
+I have 256MB memory and reserved 78MB for crashkernel.
+The cmdline for production kernel is,
 
-So long as no serious problems arise I intend to release 2.0.10 around the
-same time as the v4.1 kernel release, which I expect to occur in the next
-week or so.  As such testing of 2.0.10-rc1 would be greatly appreciated.
+bver=0.0.10 root=/dev/ram rw console=ttyS0,115200 crashkernel=78M
 
-I do not have any outstanding changes for 2.0.10 at this time.
-And I would like to only accept bug fixes at this time and take take
-features patches once 2.0.10 has been released.
 
-The pre-release can be downloaded from kernel.org:
+I used below command to load crash kernel into memory.
+/mnt/uspace/abc/kexec -d -l /mnt/uspace/abc/vmlinux.z.img \
+--initrd=/mnt/uspace/abc/ramdisk.img.gz \
+--append="root=/dev/ram1 rw console=ttyS0,115200 1 maxcpus=1
+noirqdistrib reset_devices"
 
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.9-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
+Then I used "kexec -e" to execute the crash kernel.
+The crash kernel works *well* and I can enter busybox after the crash
+kernel is up.
 
-I have also tagged it in git:
 
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+But when I used below command to load crash kernel into memory for
+panic catching,
+/mnt/uspace/abc/kexec -d -p /mnt/uspace/abc/vmlinux.z.img \
+--initrd=/mnt/uspace/abc/ramdisk.img.gz \
+--append="root=/dev/ram1 rw console=ttyS0,115200 1 maxcpus=1
+noirqdistrib reset_devices"
 
-Thanks to everyone who has contributed to kexec.
+and tried to trigger panic by "echo c > /proc/sysrq",
+
+system hung after "Bye!" was printed to console.
+
+I attached the debug output of "kexec -d -l" and "kexec -d -p".
+
+Can someone please help here or point me a correct place to post the question?
+
+Thanks.
+
+BR
 
 _______________________________________________
 kexec mailing list
