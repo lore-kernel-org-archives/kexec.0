@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from imap.thunk.org ([2600:3c02::f03c:91ff:fe96:be03])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z4LQb-0008Bg-I0
- for kexec@lists.infradead.org; Mon, 15 Jun 2015 03:51:19 +0000
-Date: Sun, 14 Jun 2015 23:50:51 -0400
-From: Theodore Ts'o <tytso@mit.edu>
-Subject: kexec_load(2) bypasses signature verification
-Message-ID: <20150615035051.GA2634@thunk.org>
+ id 1Z4NRN-0003ua-Rm
+ for kexec@lists.infradead.org; Mon, 15 Jun 2015 06:00:14 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH RFC 00/11] makedumpfile: parallel processing
+Date: Mon, 15 Jun 2015 05:57:38 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DC517C@BPXM01GP.gisp.nec.co.jp>
+References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DBBA33@BPXM01GP.gisp.nec.co.jp>
+ <557904DB.8000307@cn.fujitsu.com> <557E318C.504@cn.fujitsu.com>
+In-Reply-To: <557E318C.504@cn.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +25,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>, dhowells@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "qiaonuohan@cn.fujitsu.com" <qiaonuohan@cn.fujitsu.com>, "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From experimentation and from looking at the sources, it appears that
-the signature checking is only done in the kexec_file_load(2) system
-all, and not in the kexec_load(2) system call.  And I understand why
--- the signature is not sent from userspace to the kernel in the older
-kexec_load(2) system call.
+Hello Qiao,
 
-The problem is that if you use an old version of kexec, it will use
-the old kexec_load(2) system call, and even though
-CONFIG_KEXEC_VERIFY_SIG is enabled, kexec_load(2) will happily load an
-unsigned kernel, and then "kexec -e" will happily boot into it.
+>> On 06/10/2015 02:06 PM, Atsushi Kumagai wrote:
+>>> Hello Zhou,
+>>>
+>
+>Hello Atsushi,
+>
+>>>> This patch set implements parallel processing by means of multiple threads.
+>>>> With this patch set, it is available to use multiple threads to read
+>>>> and compress pages. This parallel process will save time.
+>>>> This feature only supports creating dumpfile in kdump-compressed format from
+>>>> vmcore in kdump-compressed format or elf format. Currently, sadump and
+>>>> xen kdump are not supported.
+>>>
+>>> makedumpfile already has a parallel processing feature (--split),
+>>> it parallelizes not only page compression but also disk i/o, so
+>>> I think --split includes what you want to do by this patch.
+>>>
+>>> In what case do you think this patch will be effective, what is
+>>> the advantage of this patch ?
+>
+>Since commit 428a5e99eea929639ab9c761f33743f78a961b1a(kdumpctl: Pass
+>disable_cpu_apicid to kexec of capture kernel) has been merged. It is possible for
+>us to use multiple cpus in 2nd kernel.
+>
+>Using multiple threads is trying to take advantage of multiple cpus in 2nd kernel.
+>Since memory becomes bigger and bigger, dumping spends more time. Why not take
+>advantage of multiple cpus?
+>
+>OTOH, --split does a lot help to improve performance. But more processes
+>means more files, saving multiple files and managing those files is not that
+>convenient.
 
-Correct me if I am wrong, but this appears to be a hole in Secure Boot
-you could drive a Mack Truck through.
+I see, actually I guess some users may feel lazy to use --split since
+it requires concatenation for analyzing, and it seems that some improvements
+by using multiple threads can be expected at least in the zlib case.
+So I agree with the concept.
 
-(I noticed this because Debian is still using a kexec-tools from the
-stone ages, version 2.0.7, and I was wondering **why** I was able to
-kexec boot completely unsigned kernels.)
+>Multiple threads do have some merit in improving performance. And later, as zhou
+>said, we can also try to combine --split with multiple threads to save more time.
 
-It would appear to me that if CONFIG_KEXEC_VERIFY_SIG is enabled, the
-old kexec_load(2) system call should be disabled (and a warning be
-placed in the Kconfig help that the user should have at least verision
-2.X of kexec-tools if they enable this kernel option).
+At first I thought it's enough to modify --split path to generate single vmcore.
+However, if the compression process is the bottleneck, we should allot multiple
+cpus to each i/o process when doing parallel i/o. For that reason, it's good to
+introduce the new feature to create multiple threads in addition to --split.
 
-Am I missing something?
+Just one thing, when you make the complete version, please make it on the devel
+branch because cyclic/non-cyclic codes have been changed from v1.5.8.
 
-						- Ted
+
+Thanks
+Atsushi Kumagai
+
+
+>--
+>Regards
+>Qiao Nuohan
+>
+>>>
+>>>
+>>> Thanks
+>>> Atsushi Kumagai
+>>>
+>>>>
+>>>> Qiao Nuohan (11):
+>>>>   Add readpage_kdump_compressed_parallel
+>>>>   Add mappage_elf_parallel
+>>>>   Add readpage_elf_parallel
+>>>>   Add read_pfn_parallel
+>>>>   Add function to initial bitmap for parallel use
+>>>>   Add filter_data_buffer_parallel
+>>>>   Add write_kdump_pages_parallel to allow parallel process
+>>>>   Add write_kdump_pages_parallel_cyclic to allow parallel process in
+>>>>     cyclic_mode
+>>>>   Initial and free data used for parallel process
+>>>>   Make makedumpfile available to read and compress pages parallelly
+>>>>   Add usage and manual about multiple threads process
+>>>>
+>>>> Makefile       |    2 +
+>>>> erase_info.c   |   29 +-
+>>>> erase_info.h   |    2 +
+>>>> makedumpfile.8 |   24 +
+>>>> makedumpfile.c | 1505 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>>> makedumpfile.h |   79 +++
+>>>> print_info.c   |   16 +
+>>>> 7 files changed, 1652 insertions(+), 5 deletions(-)
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> kexec mailing list
+>>>> kexec@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+>>
 
 _______________________________________________
 kexec mailing list
