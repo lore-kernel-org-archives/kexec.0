@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z4Jhg-00034K-19
- for kexec@lists.infradead.org; Mon, 15 Jun 2015 02:00:50 +0000
-Message-ID: <557E318C.504@cn.fujitsu.com>
-Date: Mon, 15 Jun 2015 09:59:40 +0800
-From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
+Received: from imap.thunk.org ([2600:3c02::f03c:91ff:fe96:be03])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Z4LQb-0008Bg-I0
+ for kexec@lists.infradead.org; Mon, 15 Jun 2015 03:51:19 +0000
+Date: Sun, 14 Jun 2015 23:50:51 -0400
+From: Theodore Ts'o <tytso@mit.edu>
+Subject: kexec_load(2) bypasses signature verification
+Message-ID: <20150615035051.GA2634@thunk.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC 00/11] makedumpfile: parallel processing
-References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DBBA33@BPXM01GP.gisp.nec.co.jp>
- <557904DB.8000307@cn.fujitsu.com>
-In-Reply-To: <557904DB.8000307@cn.fujitsu.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,68 +17,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Eric Biederman <ebiederm@xmission.com>, dhowells@redhat.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-T24gMDYvMTEvMjAxNSAxMTo0NyBBTSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
-PiBoZWxsbywKPgo+IHRob3VnaCAtLXNwbGl0IGNhbiBwYXJhbGxlbCBwcm9jZXNzLCBpdCBjYW4n
-dCBqdXN0IHByb2R1Y2Ugb25lIGNvcmUuCj4gbW9yZSBwcm9jZXNzZXMsIGJldHRlciBwZXJmb3Jt
-YW5jZS4gYnV0IGl0IGFsc28gbWVhbnMgbW9yZSBzcGxpdCBjb3Jlcy4KPiBwZW9wbGUgbWF5IHdh
-bnQgdG8ganVzdCBwcm9kdWNlIG9uZSBjb3JlLCBob3dldmVyIHRoZXkgc3RpbGwgcHJlZmVyIHBh
-cmFsbGVsCj4gcHJvY2Vzc2luZyBmb3IgaXRzIGJldHRlciBwZXJmb3JtYW5jZS4KPgo+IHNvLCBw
-YXJhbGxlbCBwcm9jZXNzaW5nIGJ5IG11bHRpcGxlIHRocmVhZHMgaXMgbmVlZGVkLgo+IGluIHRo
-ZSBmdXR1cmUsIG11bHRpcGxlIHRocmVhZHMgY2FuIGFsc28gYmUgdXNlZCBpbiBlYWNoIHNwbGl0
-IHByb2Nlc3MgdG8KPiBhY2NlbGVyYXRlIHByb2Nlc3MuCj4KPgo+IE9uIDA2LzEwLzIwMTUgMDI6
-MDYgUE0sIEF0c3VzaGkgS3VtYWdhaSB3cm90ZToKPj4gSGVsbG8gWmhvdSwKPj4KCkhlbGxvIEF0
-c3VzaGksCgo+Pj4gVGhpcyBwYXRjaCBzZXQgaW1wbGVtZW50cyBwYXJhbGxlbCBwcm9jZXNzaW5n
-IGJ5IG1lYW5zIG9mIG11bHRpcGxlIHRocmVhZHMuCj4+PiBXaXRoIHRoaXMgcGF0Y2ggc2V0LCBp
-dCBpcyBhdmFpbGFibGUgdG8gdXNlIG11bHRpcGxlIHRocmVhZHMgdG8gcmVhZAo+Pj4gYW5kIGNv
-bXByZXNzIHBhZ2VzLiBUaGlzIHBhcmFsbGVsIHByb2Nlc3Mgd2lsbCBzYXZlIHRpbWUuCj4+PiBU
-aGlzIGZlYXR1cmUgb25seSBzdXBwb3J0cyBjcmVhdGluZyBkdW1wZmlsZSBpbiBrZHVtcC1jb21w
-cmVzc2VkIGZvcm1hdCBmcm9tCj4+PiB2bWNvcmUgaW4ga2R1bXAtY29tcHJlc3NlZCBmb3JtYXQg
-b3IgZWxmIGZvcm1hdC4gQ3VycmVudGx5LCBzYWR1bXAgYW5kCj4+PiB4ZW4ga2R1bXAgYXJlIG5v
-dCBzdXBwb3J0ZWQuCj4+Cj4+IG1ha2VkdW1wZmlsZSBhbHJlYWR5IGhhcyBhIHBhcmFsbGVsIHBy
-b2Nlc3NpbmcgZmVhdHVyZSAoLS1zcGxpdCksCj4+IGl0IHBhcmFsbGVsaXplcyBub3Qgb25seSBw
-YWdlIGNvbXByZXNzaW9uIGJ1dCBhbHNvIGRpc2sgaS9vLCBzbwo+PiBJIHRoaW5rIC0tc3BsaXQg
-aW5jbHVkZXMgd2hhdCB5b3Ugd2FudCB0byBkbyBieSB0aGlzIHBhdGNoLgo+Pgo+PiBJbiB3aGF0
-IGNhc2UgZG8geW91IHRoaW5rIHRoaXMgcGF0Y2ggd2lsbCBiZSBlZmZlY3RpdmUsIHdoYXQgaXMK
-Pj4gdGhlIGFkdmFudGFnZSBvZiB0aGlzIHBhdGNoID8KClNpbmNlIGNvbW1pdCA0MjhhNWU5OWVl
-YTkyOTYzOWFiOWM3NjFmMzM3NDNmNzhhOTYxYjFhKGtkdW1wY3RsOiBQYXNzCmRpc2FibGVfY3B1
-X2FwaWNpZCB0byBrZXhlYyBvZiBjYXB0dXJlIGtlcm5lbCkgaGFzIGJlZW4gbWVyZ2VkLiBJdCBp
-cyBwb3NzaWJsZSBmb3IKdXMgdG8gdXNlIG11bHRpcGxlIGNwdXMgaW4gMm5kIGtlcm5lbC4KClVz
-aW5nIG11bHRpcGxlIHRocmVhZHMgaXMgdHJ5aW5nIHRvIHRha2UgYWR2YW50YWdlIG9mIG11bHRp
-cGxlIGNwdXMgaW4gMm5kIGtlcm5lbC4KU2luY2UgbWVtb3J5IGJlY29tZXMgYmlnZ2VyIGFuZCBi
-aWdnZXIsIGR1bXBpbmcgc3BlbmRzIG1vcmUgdGltZS4gV2h5IG5vdCB0YWtlCmFkdmFudGFnZSBv
-ZiBtdWx0aXBsZSBjcHVzPwoKT1RPSCwgLS1zcGxpdCBkb2VzIGEgbG90IGhlbHAgdG8gaW1wcm92
-ZSBwZXJmb3JtYW5jZS4gQnV0IG1vcmUgcHJvY2Vzc2VzCm1lYW5zIG1vcmUgZmlsZXMsIHNhdmlu
-ZyBtdWx0aXBsZSBmaWxlcyBhbmQgbWFuYWdpbmcgdGhvc2UgZmlsZXMgaXMgbm90IHRoYXQKY29u
-dmVuaWVudC4KCk11bHRpcGxlIHRocmVhZHMgZG8gaGF2ZSBzb21lIG1lcml0IGluIGltcHJvdmlu
-ZyBwZXJmb3JtYW5jZS4gQW5kIGxhdGVyLCBhcyB6aG91CnNhaWQsIHdlIGNhbiBhbHNvIHRyeSB0
-byBjb21iaW5lIC0tc3BsaXQgd2l0aCBtdWx0aXBsZSB0aHJlYWRzIHRvIHNhdmUgbW9yZSB0aW1l
-LgoKLS0gClJlZ2FyZHMKUWlhbyBOdW9oYW4KCj4+Cj4+Cj4+IFRoYW5rcwo+PiBBdHN1c2hpIEt1
-bWFnYWkKPj4KPj4+Cj4+PiBRaWFvIE51b2hhbiAoMTEpOgo+Pj4gICBBZGQgcmVhZHBhZ2Vfa2R1
-bXBfY29tcHJlc3NlZF9wYXJhbGxlbAo+Pj4gICBBZGQgbWFwcGFnZV9lbGZfcGFyYWxsZWwKPj4+
-ICAgQWRkIHJlYWRwYWdlX2VsZl9wYXJhbGxlbAo+Pj4gICBBZGQgcmVhZF9wZm5fcGFyYWxsZWwK
-Pj4+ICAgQWRkIGZ1bmN0aW9uIHRvIGluaXRpYWwgYml0bWFwIGZvciBwYXJhbGxlbCB1c2UKPj4+
-ICAgQWRkIGZpbHRlcl9kYXRhX2J1ZmZlcl9wYXJhbGxlbAo+Pj4gICBBZGQgd3JpdGVfa2R1bXBf
-cGFnZXNfcGFyYWxsZWwgdG8gYWxsb3cgcGFyYWxsZWwgcHJvY2Vzcwo+Pj4gICBBZGQgd3JpdGVf
-a2R1bXBfcGFnZXNfcGFyYWxsZWxfY3ljbGljIHRvIGFsbG93IHBhcmFsbGVsIHByb2Nlc3MgaW4K
-Pj4+ICAgICBjeWNsaWNfbW9kZQo+Pj4gICBJbml0aWFsIGFuZCBmcmVlIGRhdGEgdXNlZCBmb3Ig
-cGFyYWxsZWwgcHJvY2Vzcwo+Pj4gICBNYWtlIG1ha2VkdW1wZmlsZSBhdmFpbGFibGUgdG8gcmVh
-ZCBhbmQgY29tcHJlc3MgcGFnZXMgcGFyYWxsZWxseQo+Pj4gICBBZGQgdXNhZ2UgYW5kIG1hbnVh
-bCBhYm91dCBtdWx0aXBsZSB0aHJlYWRzIHByb2Nlc3MKPj4+Cj4+PiBNYWtlZmlsZSAgICAgICB8
-ICAgIDIgKwo+Pj4gZXJhc2VfaW5mby5jICAgfCAgIDI5ICstCj4+PiBlcmFzZV9pbmZvLmggICB8
-ICAgIDIgKwo+Pj4gbWFrZWR1bXBmaWxlLjggfCAgIDI0ICsKPj4+IG1ha2VkdW1wZmlsZS5jIHwg
-MTUwNSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrLQo+Pj4gbWFrZWR1bXBmaWxlLmggfCAgIDc5ICsrKwo+Pj4gcHJpbnRfaW5mby5jICAgfCAg
-IDE2ICsKPj4+IDcgZmlsZXMgY2hhbmdlZCwgMTY1MiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9u
-cygtKQo+Pj4KPj4+Cj4+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwo+Pj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+From experimentation and from looking at the sources, it appears that
+the signature checking is only done in the kexec_file_load(2) system
+all, and not in the kexec_load(2) system call.  And I understand why
+-- the signature is not sent from userspace to the kernel in the older
+kexec_load(2) system call.
+
+The problem is that if you use an old version of kexec, it will use
+the old kexec_load(2) system call, and even though
+CONFIG_KEXEC_VERIFY_SIG is enabled, kexec_load(2) will happily load an
+unsigned kernel, and then "kexec -e" will happily boot into it.
+
+Correct me if I am wrong, but this appears to be a hole in Secure Boot
+you could drive a Mack Truck through.
+
+(I noticed this because Debian is still using a kexec-tools from the
+stone ages, version 2.0.7, and I was wondering **why** I was able to
+kexec boot completely unsigned kernels.)
+
+It would appear to me that if CONFIG_KEXEC_VERIFY_SIG is enabled, the
+old kexec_load(2) system call should be disabled (and a warning be
+placed in the Kconfig help that the user should have at least verision
+2.X of kexec-tools if they enable this kernel option).
+
+Am I missing something?
+
+						- Ted
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
