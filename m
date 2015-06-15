@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z4NYp-0007fX-0R
- for kexec@lists.infradead.org; Mon, 15 Jun 2015 06:07:56 +0000
-Message-ID: <557E6B77.5070407@cn.fujitsu.com>
-Date: Mon, 15 Jun 2015 14:06:47 +0800
+ id 1Z4NZ9-0007gX-Nl
+ for kexec@lists.infradead.org; Mon, 15 Jun 2015 06:08:17 +0000
+Message-ID: <557E6B98.9020404@cn.fujitsu.com>
+Date: Mon, 15 Jun 2015 14:07:20 +0800
 From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH RFC 00/11] makedumpfile: parallel processing
