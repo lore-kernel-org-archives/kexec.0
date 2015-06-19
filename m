@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z5sA6-0003wy-Cp
- for kexec@lists.infradead.org; Fri, 19 Jun 2015 09:00:36 +0000
+ id 1Z5sA8-0003x4-TE
+ for kexec@lists.infradead.org; Fri, 19 Jun 2015 09:00:38 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t5J8wY0v011922
- for <kexec@lists.infradead.org>; Fri, 19 Jun 2015 16:58:34 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t5J8wac8011935
+ for <kexec@lists.infradead.org>; Fri, 19 Jun 2015 16:58:37 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v2 08/10] Initial and free data used for parallel process
-Date: Fri, 19 Jun 2015 16:56:42 +0800
-Message-ID: <1434704204-2634-9-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2 10/10] Add usage and manual about multiple threads process
+Date: Fri, 19 Jun 2015 16:56:44 +0800
+Message-ID: <1434704204-2634-11-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1434704204-2634-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1434704204-2634-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,247 +31,88 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-This patch is used to initial/free data for parallel process and
-the memory limit is concerned in this function.
-
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- makedumpfile.c |  202 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |    1 +
- 2 files changed, 203 insertions(+), 0 deletions(-)
+ makedumpfile.8 |   24 ++++++++++++++++++++++++
+ print_info.c   |   16 ++++++++++++++++
+ 2 files changed, 40 insertions(+), 0 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index ad38bf4..04d5e92 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1432,6 +1432,23 @@ open_dump_bitmap(void)
- 			SPLITTING_FD_BITMAP(i) = fd;
- 		}
- 	}
-+
-+	if (info->num_threads) {
-+		/*
-+		 * Reserve file descriptors of bitmap for creating dumpfiles
-+		 * parallelly, because a bitmap file will be unlinked just after
-+		 * this and it is not possible to open a bitmap file later.
-+		 */
-+		for (i = 0; i < info->num_threads; i++) {
-+			if ((fd = open(info->name_bitmap, O_RDONLY)) < 0) {
-+				ERRMSG("Can't open the bitmap file(%s). %s\n",
-+				    info->name_bitmap, strerror(errno));
-+				return FALSE;
-+			}
-+			FD_BITMAP_PARALLEL(i) = fd;
-+		}
-+	}
-+
- 	unlink(info->name_bitmap);
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 2d38cd0..b400a14 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -12,6 +12,8 @@ makedumpfile \- make a small dumpfile of kdump
+ .br
+ \fBmakedumpfile\fR \-\-split [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..]
+ .br
++\fBmakedumpfile\fR [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \-\-num\-threads \fITHREADNUM\fR [\-\-num\-buffers \fIBUFNUM\fR] \fIVMCORE\fR \fIDUMPFILE\fR
++.br
+ \fBmakedumpfile\fR \-\-reassemble \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..] \fIDUMPFILE\fR
+ .br
+ \fBmakedumpfile\fR \-g \fIVMCOREINFO\fR \-x \fIVMLINUX\fR
+@@ -371,6 +373,28 @@ the kdump\-compressed format.
+ # makedumpfile \-\-split \-d 31 \-x vmlinux /proc/vmcore dumpfile1 dumpfile2
  
- 	return TRUE;
-@@ -3459,6 +3476,191 @@ calibrate_machdep_info(void)
- }
- 
- int
-+initial_for_parallel()
-+{
-+	unsigned long len_buf_out;
-+	unsigned long page_data_buf_size;
-+	unsigned long limit_size;
-+	int page_data_num;
-+	int i;
+ .TP
++\fB\-\-num\-threads\fR \fITHREADNUM\fR
++Using multiple threads to read and compress data of each page in parallel.
++And it will reduces time for saving \fIDUMPFILE\fR.
++This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
++format from \fIVMCORE\fR in kdump\-compressed format or elf format.
++.br
++.B Example:
++.br
++# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
 +
-+	len_buf_out = calculate_len_buf_out(info->page_size);
++.TP
++\fB\-\-num\-buffers\fR \fIBUFNUM\fR
++This option is used for multiple threads process, please check \-\-num\-threads
++option. Multiple threads process will need buffers to store generated page
++data by threads temporarily, and this option is used to specify the number
++of pages can be stored.
++.br
++.B Example:
++.br
++# makedumpfile \-d 31 \-\-num\-threads 4 \-\-num\-buffers 30 /proc/vmcore dumpfile
 +
-+	/*
-+	 * allocate memory for threads
-+	 */
-+	if ((info->threads = malloc(sizeof(pthread_t *) * info->num_threads))
-+	    == NULL) {
-+		MSG("Can't allocate memory for threads. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->threads, 0, sizeof(pthread_t *) * info->num_threads);
-+
-+	if ((info->kdump_thread_args =
-+			malloc(sizeof(struct thread_args) * info->num_threads))
-+	    == NULL) {
-+		MSG("Can't allocate memory for arguments of threads. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->kdump_thread_args, 0, sizeof(struct thread_args) * info->num_threads);
-+
-+	for (i = 0; i < info->num_threads; i++) {
-+		if ((info->threads[i] = malloc(sizeof(pthread_t))) == NULL) {
-+			MSG("Can't allocate memory for thread %d. %s",
-+					i, strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((BUF_PARALLEL(i) = malloc(info->page_size)) == NULL) {
-+			MSG("Can't allocate memory for the memory buffer. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((BUF_OUT_PARALLEL(i) = malloc(len_buf_out)) == NULL) {
-+			MSG("Can't allocate memory for the compression buffer. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((MMAP_CACHE_PARALLEL(i) = malloc(sizeof(struct mmap_cache))) == NULL) {
-+			MSG("Can't allocate memory for mmap_cache. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+
-+		/*
-+		 * initial for mmap_cache
-+		 */
-+		MMAP_CACHE_PARALLEL(i)->mmap_buf = MAP_FAILED;
-+		MMAP_CACHE_PARALLEL(i)->mmap_start_offset = 0;
-+		MMAP_CACHE_PARALLEL(i)->mmap_end_offset = 0;
-+
-+#ifdef USELZO
-+		if ((WRKMEM_PARALLEL(i) = malloc(LZO1X_1_MEM_COMPRESS)) == NULL) {
-+			MSG("Can't allocate memory for the working memory. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+#endif
-+	}
-+
-+	/*
-+	 * get a safe number of page_data
-+	 */
-+	page_data_buf_size = MAX(len_buf_out, info->page_size);
-+
-+	limit_size = (get_free_memory_size()
-+		      - MAP_REGION * info->num_threads) * 0.6;
-+
-+	page_data_num = limit_size / page_data_buf_size;
-+
-+	if (info->num_buffers != 0)
-+		info->num_buffers = MIN(info->num_buffers, page_data_num);
-+	else
-+		info->num_buffers = MIN(PAGE_DATA_NUM, page_data_num);
-+
-+	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
-+			info->num_buffers);
-+
-+	/*
-+	 * allocate memory for page_data
-+	 */
-+	if ((info->page_data_buf = malloc(sizeof(struct page_data) * info->num_buffers))
-+	    == NULL) {
-+		MSG("Can't allocate memory for page_data_buf. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->page_data_buf, 0, sizeof(struct page_data) * info->num_buffers);
-+
-+	for (i = 0; i < info->num_buffers; i++) {
-+		if ((info->page_data_buf[i].buf = malloc(page_data_buf_size)) == NULL) {
-+			MSG("Can't allocate memory for buf of page_data_buf. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+	}
-+
-+	/*
-+	 * initial fd_memory for threads
-+	 */
-+	for (i = 0; i < info->num_threads; i++) {
-+		if ((FD_MEMORY_PARALLEL(i) = open(info->name_memory, O_RDONLY))
-+									< 0) {
-+			ERRMSG("Can't open the dump memory(%s). %s\n",
-+					info->name_memory, strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((FD_BITMAP_MEMORY_PARALLEL(i) =
-+				open(info->name_memory, O_RDONLY)) < 0) {
-+			ERRMSG("Can't open the dump memory(%s). %s\n",
-+					info->name_memory, strerror(errno));
-+			return FALSE;
-+		}
-+	}
-+
-+	return TRUE;
-+}
-+
-+void
-+free_for_parallel()
-+{
-+	int i;
-+
-+	if (info->threads != NULL) {
-+		for (i = 0; i < info->num_threads; i++) {
-+			if (info->threads[i] != NULL)
-+				free(info->threads[i]);
-+
-+			if (BUF_PARALLEL(i) != NULL)
-+				free(BUF_PARALLEL(i));
-+
-+			if (BUF_OUT_PARALLEL(i) != NULL)
-+				free(BUF_OUT_PARALLEL(i));
-+
-+			if (MMAP_CACHE_PARALLEL(i) != NULL) {
-+				if (MMAP_CACHE_PARALLEL(i)->mmap_buf !=
-+								MAP_FAILED)
-+					munmap(MMAP_CACHE_PARALLEL(i)->mmap_buf,
-+					       MMAP_CACHE_PARALLEL(i)->mmap_end_offset
-+					       - MMAP_CACHE_PARALLEL(i)->mmap_start_offset);
-+
-+				free(MMAP_CACHE_PARALLEL(i));
-+			}
-+#ifdef USELZO
-+			if (WRKMEM_PARALLEL(i) != NULL)
-+				free(WRKMEM_PARALLEL(i));
-+#endif
-+
-+		}
-+		free(info->threads);
-+	}
-+
-+	if (info->kdump_thread_args != NULL)
-+		free(info->kdump_thread_args);
-+
-+	if (info->page_data_buf != NULL) {
-+		for (i = 0; i < info->num_buffers; i++) {
-+			if (info->page_data_buf[i].buf != NULL)
-+				free(info->page_data_buf[i].buf);
-+		}
-+		free(info->page_data_buf);
-+	}
-+
-+	for (i = 0; i < info->num_threads; i++) {
-+		if (FD_MEMORY_PARALLEL(i) > 0)
-+			close(FD_MEMORY_PARALLEL(i));
-+
-+		if (FD_BITMAP_MEMORY_PARALLEL(i) > 0)
-+			close(FD_BITMAP_MEMORY_PARALLEL(i));
-+	}
-+}
-+
-+int
- initial(void)
- {
- 	off_t offset;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 5dbea60..d0760d9 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -972,6 +972,7 @@ typedef unsigned long long int ulonglong;
-  * for parallel process
-  */
- 
-+#define PAGE_DATA_NUM	(50)
- #define WAIT_TIME	(60 * 10)
- #define PTHREAD_FAIL	((void *)-2)
- 
++.TP
+ \fB\-\-reassemble\fR
+ Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
+ into one \fIDUMPFILE\fR. dumpfile1 and dumpfile2 are reassembled into dumpfile
+diff --git a/print_info.c b/print_info.c
+index 9c36bec..e8a6b40 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -76,6 +76,10 @@ print_usage(void)
+ 	MSG("  # makedumpfile --split [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE1\n");
+ 	MSG("    DUMPFILE2 [DUMPFILE3 ..]\n");
+ 	MSG("\n");
++	MSG("  Using multiple threads to create DUMPFILE in parallel:\n");
++	MSG("  # makedumpfile [OPTION] [-x VMLINUX|-i VMCOREINFO] --num-threads THREADNUM\n");
++	MSG("    [--num-buffers BUFNUM] VMCORE DUMPFILE1\n");
++	MSG("\n");
+ 	MSG("  Reassemble multiple DUMPFILEs:\n");
+ 	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\n");
+ 	MSG("\n");
+@@ -184,6 +188,18 @@ print_usage(void)
+ 	MSG("      by the number of DUMPFILEs.\n");
+ 	MSG("      This feature supports only the kdump-compressed format.\n");
+ 	MSG("\n");
++	MSG("  [--num-threads THREADNUM]:\n");
++	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
++	MSG("      And it will reduces time for saving DUMPFILE.\n");
++	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
++	MSG("      VMCORE in kdump-compressed format or elf format.\n");
++	MSG("\n");
++	MSG("  [--num-buffers BUFNUM]:\n");
++	MSG("      This option is used for multiple threads process, please check --num-threads\n");
++	MSG("      option. Multiple threads process will need buffers to store generated page\n");
++	MSG("      data by threads temporarily, and this option is used to specify the number\n");
++	MSG("      of pages can be stored.\n");
++	MSG("\n");
+ 	MSG("  [--reassemble]:\n");
+ 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
+ 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
 -- 
 1.7.1
 
