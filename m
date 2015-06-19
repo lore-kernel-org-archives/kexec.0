@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z5sA1-0003x4-6H
- for kexec@lists.infradead.org; Fri, 19 Jun 2015 09:00:31 +0000
+ id 1Z5sA1-0003wy-6T
+ for kexec@lists.infradead.org; Fri, 19 Jun 2015 09:00:32 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t5J8wUQw011899
- for <kexec@lists.infradead.org>; Fri, 19 Jun 2015 16:58:30 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t5J8wTUP011896
+ for <kexec@lists.infradead.org>; Fri, 19 Jun 2015 16:58:29 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v2 02/10] Add mappage_elf_parallel
-Date: Fri, 19 Jun 2015 16:56:36 +0800
-Message-ID: <1434704204-2634-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2 01/10] Add readpage_kdump_compressed_parallel
+Date: Fri, 19 Jun 2015 16:56:35 +0800
+Message-ID: <1434704204-2634-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1434704204-2634-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1434704204-2634-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,178 +31,179 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-mappage_elf_parallel is used to enable mmaping elf format to memory
-parallelly. later patch will will use the mmapped memory to get data
-of each page. fd_memory and mmap_cache should be initialized and offered
-to each threads individually to avoid conflict.
+readpage_kdump_compressed_parallel is used to enable reading pages from
+vmcore in kdump-compressed format parallel. fd_memory and bitmap_memory
+should be initialized and offered to each thread individually to avoid
+conflict.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- makedumpfile.c |   97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |   14 ++++++++
- 2 files changed, 111 insertions(+), 0 deletions(-)
+ makedumpfile.c |  137 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 137 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 3657d4f..d1b4bc2 100644
+index cc71f20..3657d4f 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -394,6 +394,46 @@ update_mmap_range(off_t offset, int initial) {
+@@ -251,6 +251,20 @@ pfn_to_pos(mdf_pfn_t pfn)
+ 	return desc_pos;
  }
  
- static int
-+update_mmap_range_parallel(int fd_memory, off_t offset,
-+			   struct mmap_cache *mmap_cache)
++unsigned long
++pfn_to_pos_parallel(mdf_pfn_t pfn, struct dump_bitmap* bitmap_memory_parallel)
 +{
-+	off_t start_offset, end_offset;
-+	off_t map_size;
-+	off_t max_offset = get_max_file_offset();
-+	off_t pt_load_end = offset_to_pt_load_end(offset);
++	unsigned long desc_pos;
++	mdf_pfn_t i;
++
++	desc_pos = info->valid_pages[pfn / BITMAP_SECT_LEN];
++	for (i = round(pfn, BITMAP_SECT_LEN); i < pfn; i++)
++		if (is_dumpable(bitmap_memory_parallel, i, NULL))
++			desc_pos++;
++
++	return desc_pos;
++}
++
+ int
+ read_page_desc(unsigned long long paddr, page_desc_t *pd)
+ {
+@@ -293,6 +307,50 @@ read_page_desc(unsigned long long paddr, page_desc_t *pd)
+ 	return TRUE;
+ }
+ 
++int
++read_page_desc_parallel(int fd_memory, unsigned long long paddr,
++			page_desc_t *pd,
++			struct dump_bitmap* bitmap_memory_parallel)
++{
++	struct disk_dump_header *dh;
++	unsigned long desc_pos;
++	mdf_pfn_t pfn;
++	off_t offset;
 +
 +	/*
-+	 * mmap_buf must be cleaned
++	 * Find page descriptor
 +	 */
-+	if (mmap_cache->mmap_buf != MAP_FAILED)
-+		munmap(mmap_cache->mmap_buf, mmap_cache->mmap_end_offset
-+					     - mmap_cache->mmap_start_offset);
-+
-+	/*
-+	 * offset for mmap() must be page aligned.
-+	 */
-+	start_offset = roundup(offset, info->page_size);
-+	end_offset = MIN(max_offset, round(pt_load_end, info->page_size));
-+
-+	if (!pt_load_end || (end_offset - start_offset) <= 0)
-+		return FALSE;
-+
-+	map_size = MIN(end_offset - start_offset, info->mmap_region_size);
-+
-+	mmap_cache->mmap_buf = mmap(NULL, map_size, PROT_READ, MAP_PRIVATE,
-+					fd_memory, start_offset);
-+
-+	if (mmap_cache->mmap_buf == MAP_FAILED) {
++	dh = info->dh_memory;
++	offset
++	    = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
++		* dh->block_size;
++	pfn = paddr_to_pfn(paddr);
++	desc_pos = pfn_to_pos_parallel(pfn, bitmap_memory_parallel);
++	offset += (off_t)desc_pos * sizeof(page_desc_t);
++	if (lseek(fd_memory, offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek %s. %s\n",
++				 info->name_memory, strerror(errno));
 +		return FALSE;
 +	}
 +
-+	mmap_cache->mmap_start_offset = start_offset;
-+	mmap_cache->mmap_end_offset = start_offset + map_size;
++	/*
++	 * Read page descriptor
++	 */
++	if (read(fd_memory, pd, sizeof(*pd)) != sizeof(*pd)) {
++		ERRMSG("Can't read %s. %s\n",
++				info->name_memory, strerror(errno));
++		return FALSE;
++	}
++
++	/*
++	 * Sanity check
++	 */
++	if (pd->size > dh->block_size)
++		return FALSE;
 +
 +	return TRUE;
 +}
 +
-+static int
- is_mapped_with_mmap(off_t offset) {
- 
- 	if (info->flag_usemmap == MMAP_ENABLE
-@@ -404,6 +444,15 @@ is_mapped_with_mmap(off_t offset) {
- 		return FALSE;
+ static void
+ unmap_cache(struct cache_entry *entry)
+ {
+@@ -589,6 +647,85 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+ 	return TRUE;
  }
  
 +static int
-+is_mapped_with_mmap_parallel(off_t offset, struct mmap_cache *mmap_cache) {
-+	if (offset >= mmap_cache->mmap_start_offset
-+	    && offset < mmap_cache->mmap_end_offset)
-+		return TRUE;
-+	else
++readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
++				   void *bufptr,
++				   struct dump_bitmap* bitmap_memory_parallel)
++{
++	page_desc_t pd;
++	char buf[info->page_size], *rdbuf;
++	int ret;
++	unsigned long retlen;
++
++	if (!is_dumpable(bitmap_memory_parallel, paddr_to_pfn(paddr), NULL)) {
++		ERRMSG("pfn(%llx) is excluded from %s.\n",
++				paddr_to_pfn(paddr), info->name_memory);
 +		return FALSE;
++	}
++
++	if (!read_page_desc_parallel(fd_memory, paddr, &pd,
++						bitmap_memory_parallel)) {
++		ERRMSG("Can't read page_desc: %llx\n", paddr);
++		return FALSE;
++	}
++
++	if (lseek(fd_memory, pd.offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek %s. %s\n",
++				info->name_memory, strerror(errno));
++		return FALSE;
++	}
++
++	/*
++	 * Read page data
++	 */
++	rdbuf = pd.flags & (DUMP_DH_COMPRESSED_ZLIB | DUMP_DH_COMPRESSED_LZO |
++		DUMP_DH_COMPRESSED_SNAPPY) ? buf : bufptr;
++	if (read(fd_memory, rdbuf, pd.size) != pd.size) {
++		ERRMSG("Can't read %s. %s\n",
++				info->name_memory, strerror(errno));
++		return FALSE;
++	}
++
++	if (pd.flags & DUMP_DH_COMPRESSED_ZLIB) {
++		retlen = info->page_size;
++		ret = uncompress((unsigned char *)bufptr, &retlen,
++					(unsigned char *)buf, pd.size);
++		if ((ret != Z_OK) || (retlen != info->page_size)) {
++			ERRMSG("Uncompress failed: %d\n", ret);
++			return FALSE;
++		}
++#ifdef USELZO
++	} else if (info->flag_lzo_support
++		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
++		retlen = info->page_size;
++		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
++					    (unsigned char *)bufptr, &retlen,
++					    LZO1X_MEM_DECOMPRESS);
++		if ((ret != LZO_E_OK) || (retlen != info->page_size)) {
++			ERRMSG("Uncompress failed: %d\n", ret);
++			return FALSE;
++		}
++#endif
++#ifdef USESNAPPY
++	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
++
++		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
++		if (ret != SNAPPY_OK) {
++			ERRMSG("Uncompress failed: %d\n", ret);
++			return FALSE;
++		}
++
++		ret = snappy_uncompress(buf, pd.size, bufptr, (size_t *)&retlen);
++		if ((ret != SNAPPY_OK) || (retlen != info->page_size)) {
++			ERRMSG("Uncompress failed: %d\n", ret);
++			return FALSE;
++		}
++#endif
++	}
++
++	return TRUE;
 +}
 +
  int
- initialize_mmap(void) {
- 	unsigned long long phys_start;
-@@ -458,6 +507,54 @@ mappage_elf(unsigned long long paddr)
- 	return info->mmap_buf + (offset - info->mmap_start_offset);
- }
- 
-+static char *
-+mappage_elf_parallel(int fd_memory, unsigned long long paddr,
-+		     struct mmap_cache *mmap_cache)
-+{
-+	off_t offset, offset2;
-+	int flag_usemmap;
-+
-+	pthread_rwlock_rdlock(&info->usemmap_rwlock);
-+	flag_usemmap = info->flag_usemmap;
-+	pthread_rwlock_unlock(&info->usemmap_rwlock);
-+	if (flag_usemmap != MMAP_ENABLE)
-+		return NULL;
-+
-+	offset = paddr_to_offset(paddr);
-+	if (!offset || page_is_fractional(offset))
-+		return NULL;
-+
-+	offset2 = paddr_to_offset(paddr + info->page_size - 1);
-+	if (!offset2)
-+		return NULL;
-+
-+	if (offset2 - offset != info->page_size - 1)
-+		return NULL;
-+
-+	if (!is_mapped_with_mmap_parallel(offset, mmap_cache) &&
-+	    !update_mmap_range_parallel(fd_memory, offset, mmap_cache)) {
-+		ERRMSG("Can't read the dump memory(%s) with mmap().\n",
-+		       info->name_memory);
-+
-+		ERRMSG("This kernel might have some problems about mmap().\n");
-+		ERRMSG("read() will be used instead of mmap() from now.\n");
-+
-+		/*
-+		 * Fall back to read().
-+		 */
-+		pthread_rwlock_wrlock(&info->usemmap_rwlock);
-+		info->flag_usemmap = MMAP_DISABLE;
-+		pthread_rwlock_unlock(&info->usemmap_rwlock);
-+		return NULL;
-+	}
-+
-+	if (offset < mmap_cache->mmap_start_offset ||
-+	    offset + info->page_size > mmap_cache->mmap_end_offset)
-+		return NULL;
-+
-+	return mmap_cache->mmap_buf + (offset - mmap_cache->mmap_start_offset);
-+}
-+
- static int
- read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
+ readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size)
  {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 3d6661f..bff134e 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -42,6 +42,7 @@
- #include "dwarf_info.h"
- #include "diskdump_mod.h"
- #include "sadump_mod.h"
-+#include <pthread.h>
- 
- /*
-  * Result of command
-@@ -956,6 +957,15 @@ typedef unsigned long int ulong;
- typedef unsigned long long int ulonglong;
- 
- /*
-+ * for parallel process
-+ */
-+struct mmap_cache {
-+	char	*mmap_buf;
-+	off_t	mmap_start_offset;
-+	off_t   mmap_end_offset;
-+};
-+
-+/*
-  * makedumpfile header
-  *   For re-arranging the dump data on different architecture, all the
-  *   variables are defined by 64bits. The size of signature is aligned
-@@ -1219,6 +1229,10 @@ struct DumpInfo {
- 	 * for cyclic_splitting mode, setup splitblock_size
- 	 */
- 	long long splitblock_size;
-+	/*
-+	 * for parallel process
-+	 */
-+	pthread_rwlock_t usemmap_rwlock;
- };
- extern struct DumpInfo		*info;
- 
 -- 
 1.7.1
 
