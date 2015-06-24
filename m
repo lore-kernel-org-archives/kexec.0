@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from mail-ig0-x22c.google.com ([2607:f8b0:4001:c05::22c])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z7bTk-0000Wk-9b
- for kexec@lists.infradead.org; Wed, 24 Jun 2015 03:36:00 +0000
-Message-ID: <558A25A3.60504@codeaurora.org>
-Date: Tue, 23 Jun 2015 22:36:03 -0500
-From: Timur Tabi <timur@codeaurora.org>
+ id 1Z7enm-0005TW-EY
+ for kexec@lists.infradead.org; Wed, 24 Jun 2015 07:08:57 +0000
+Received: by igin14 with SMTP id n14so28034184igi.1
+ for <kexec@lists.infradead.org>; Wed, 24 Jun 2015 00:08:32 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-References: <d76572d93d25b0196cb2b32c88fd15dc4eb78682.1431714565.git.panand@redhat.com>
- <CAOZdJXWjZmL_K=FmvBU=U3VSDY9R4AucFU16v8CAgQCEe8HYDg@mail.gmail.com>
- <20150624033241.GA22348@localhost.localdomain>
-In-Reply-To: <20150624033241.GA22348@localhost.localdomain>
+In-Reply-To: <CAG+qjJ-s-4HVUOrzcJehw5sAB_XvwnLVe-7O8kc9q_QgPwd89A@mail.gmail.com>
+References: <CAG+qjJ-s-4HVUOrzcJehw5sAB_XvwnLVe-7O8kc9q_QgPwd89A@mail.gmail.com>
+Date: Wed, 24 Jun 2015 15:08:32 +0800
+Message-ID: <CAG+qjJ8oxD9GVQBkD8J40OPaYVyA2tqE9duhoMTgYzvCWvdEKA@mail.gmail.com>
+Subject: Re: kexec works well with "dash l" but not working with "dash p"
+From: os user <gnusercn@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,24 +20,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com, asamson@codeaurora.org, kexec@lists.infradead.org
+To: kexec@lists.infradead.org, ebiederm@xmission.com, albert_herranz@yahoo.es
+Cc: Simon Horman <horms@verge.net.au>
 
-Pratyush Anand wrote:
-> I can try to find out some time in weekend to refactor arm64 code
-> and then add 3 level, 4K support. May be I will need a Tested-by.
+Add several experts known from Google.
 
-We'd be more than happy to test any code from you promptly.  We're eager 
-to get this to work.
+-- begin resent body --
 
--- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+Hi experts,
+
+I have a problem when using kexec-tools on freescale powerpc P1014E(ppc32).
+
+I have 256MB memory and reserved 78MB for crashkernel.
+The cmdline for production kernel is,
+
+bver=0.0.10 root=/dev/ram rw console=ttyS0,115200 crashkernel=78M
+
+
+I used below command to load crash kernel into memory.
+/mnt/uspace/abc/kexec -d -l /mnt/uspace/abc/vmlinux.z.img \
+--initrd=/mnt/uspace/abc/ramdisk.img.gz \
+--append="root=/dev/ram1 rw console=ttyS0,115200 1 maxcpus=1
+noirqdistrib reset_devices"
+
+Then I used "kexec -e" to execute the crash kernel.
+The crash kernel works *well* and I can enter busybox after the crash
+kernel is up.
+
+
+But when I used below command to load crash kernel into memory for
+panic catching,
+/mnt/uspace/abc/kexec -d -p /mnt/uspace/abc/vmlinux.z.img \
+--initrd=/mnt/uspace/abc/ramdisk.img.gz \
+--append="root=/dev/ram1 rw console=ttyS0,115200 1 maxcpus=1
+noirqdistrib reset_devices"
+
+and tried to trigger panic by "echo c > /proc/sysrq",
+
+system hung after "Bye!" was printed to console.
+
+I attached the debug output of "kexec -d -l" and "kexec -d -p".
+
+Can someone please help here or point me a correct place to post the question?
+
+Thanks.
+
+BR
+
+On Thu, Jun 11, 2015 at 9:22 PM, os user <gnusercn@gmail.com> wrote:
+> Hi experts,
+>
+> I have a problem when using kexec-tools on freescale powerpc P1014E.
+>
+> I have 256MB memory and reserved 78MB for crashkernel.
+> The cmdline for production kernel is,
+>
+> bver=0.0.10 root=/dev/ram rw console=ttyS0,115200 crashkernel=78M
+>
+>
+> I used below command to load crash kernel into memory.
+> /mnt/uspace/abc/kexec -d -l /mnt/uspace/abc/vmlinux.z.img \
+> --initrd=/mnt/uspace/abc/ramdisk.img.gz \
+> --append="root=/dev/ram1 rw console=ttyS0,115200 1 maxcpus=1
+> noirqdistrib reset_devices"
+>
+> Then I used "kexec -e" to execute the crash kernel.
+> The crash kernel works *well* and I can enter busybox after the crash
+> kernel is up.
+>
+>
+> But when I used below command to load crash kernel into memory for
+> panic catching,
+> /mnt/uspace/abc/kexec -d -p /mnt/uspace/abc/vmlinux.z.img \
+> --initrd=/mnt/uspace/abc/ramdisk.img.gz \
+> --append="root=/dev/ram1 rw console=ttyS0,115200 1 maxcpus=1
+> noirqdistrib reset_devices"
+>
+> and tried to trigger panic by "echo c > /proc/sysrq",
+>
+> system hung after "Bye!" was printed to console.
+>
+> I attached the debug output of "kexec -d -l" and "kexec -d -p".
+>
+> Can someone please help here or point me a correct place to post the question?
+>
+> Thanks.
+>
+> BR
 
 _______________________________________________
 kexec mailing list
