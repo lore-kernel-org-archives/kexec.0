@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Z813q-0007Iw-KU
- for kexec@lists.infradead.org; Thu, 25 Jun 2015 06:54:59 +0000
+ id 1Z82Uk-0005Ae-AW
+ for kexec@lists.infradead.org; Thu, 25 Jun 2015 08:26:51 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t5P6qsa5011628
- for <kexec@lists.infradead.org>; Thu, 25 Jun 2015 14:52:54 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t5P8OlmP017706
+ for <kexec@lists.infradead.org>; Thu, 25 Jun 2015 16:24:47 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH 2/2] makedumpfile: Fix a bug
-Date: Thu, 25 Jun 2015 14:51:02 +0800
-Message-ID: <1435215062-31333-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1435215062-31333-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1435215062-31333-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH 1/2] makedumpfile: Add description of pages lost by ENOSPACE
+ in IMPLEMENTATION
+Date: Thu, 25 Jun 2015 16:22:55 +0800
+Message-ID: <1435220576-32595-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,54 +27,28 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-In cyclic mode, when generating vmcore in elf format, info->bitmap2
-is used but not prepared.
+Currently, there is no obvious description in IMPLEMENTATION for
+distinguishing the lost pages resulted by ENOSPACE errors or others.
+So, it is added.
 
-Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- makedumpfile.c |   15 +++++++++++++++
- 1 files changed, 15 insertions(+), 0 deletions(-)
+ IMPLEMENTATION |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 7f2949c..88e3389 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6026,6 +6026,11 @@ get_loads_dumpfile_cyclic(void)
- 	if (!(phnum = get_phnum_memory()))
- 		return FALSE;
+diff --git a/IMPLEMENTATION b/IMPLEMENTATION
+index 72df5d5..70a3f7c 100644
+--- a/IMPLEMENTATION
++++ b/IMPLEMENTATION
+@@ -240,6 +240,8 @@
+     The page header and page data are written in pairs. When writing page data
+     (pfn N+1), if ENOSPACE error happens, the page headers after N won't be
+     written either.
++    When reading page from incomplete core, only the page lost by ENOSPACE errors
++    has 0 in its corresponding page descriptor's member offset.
  
-+	if (info->flag_cyclic) {
-+		if (!prepare_bitmap2_buffer())
-+			return FALSE;
-+	}
-+
- 	for (i = 0; i < phnum; i++) {
- 		if (!get_phdr_memory(i, &load))
- 			return FALSE;
-@@ -6069,6 +6074,11 @@ get_loads_dumpfile_cyclic(void)
- 		}
- 
- 	}
-+
-+	if (info->flag_cyclic) {
-+		free_bitmap2_buffer();
-+	}
-+
- 	return num_new_load;
- }
- 
-@@ -6108,6 +6118,11 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- 	if (!(phnum = get_phnum_memory()))
- 		return FALSE;
- 
-+        if (info->flag_cyclic) {
-+                if (!prepare_bitmap2_buffer())
-+                        return FALSE;
-+        }
-+
- 	gettimeofday(&tv_start, NULL);
- 
- 	for (i = 0; i < phnum; i++) {
+     If there is no page data dumped into the DUMPFILE, the DUMPFILE can't be
+     analysed by crash.
 -- 
 1.7.1
 
