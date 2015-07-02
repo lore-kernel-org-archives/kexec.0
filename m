@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZAMyS-00046j-0A
- for kexec@lists.infradead.org; Wed, 01 Jul 2015 18:43:08 +0000
-Message-ID: <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
-In-Reply-To: <20150627082256.GE21646@localhost.localdomain>
-References: <d76572d93d25b0196cb2b32c88fd15dc4eb78682.1431714565.git.panand@redhat.com>
- <CAOZdJXWjZmL_K=FmvBU=U3VSDY9R4AucFU16v8CAgQCEe8HYDg@mail.gmail.com>
- <20150624033241.GA22348@localhost.localdomain>
- <558A25A3.60504@codeaurora.org>
- <20150627082256.GE21646@localhost.localdomain>
-Date: Wed, 1 Jul 2015 18:42:46 -0000
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-From: "Azriel Samson" <asamson@codeaurora.org>
-MIME-Version: 1.0
+ id 1ZATZs-0004VE-Ee
+ for kexec@lists.infradead.org; Thu, 02 Jul 2015 01:46:12 +0000
+Received: by pabvl15 with SMTP id vl15so31670523pab.1
+ for <kexec@lists.infradead.org>; Wed, 01 Jul 2015 18:45:51 -0700 (PDT)
+From: Minfei Huang <mnfhuang@gmail.com>
+Subject: [PATCH v3] kexec: Make a pair of map and unmap reserved pages when
+ kdump fails to start
+Date: Thu,  2 Jul 2015 09:45:52 +0800
+Message-Id: <1435801552-1230-1-git-send-email-mnfhuang@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,51 +18,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: virajm@codeaurora.org, Timur Tabi <timur@codeaurora.org>, asamson@codeaurora.org, kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
+To: ebiederm@xmission.com, vgoyal@redhat.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, linux390@de.ibm.com, holzheu@linux.vnet.ibm.com
+Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
 
-Hi Pratyush,
+For some arch, kexec shall map the reserved pages, then use them, when
+we try to start the kdump service.
 
-I am working with Timur and we are testing your version of makedumpfile.
-The tool is unable to get the kernel version and quits from check_release().
+Now kexec will never unmap the reserved pages, once it fails to continue
+starting the kdump service.
 
-I tried to debug the vmcore file with gdb but the file looks corrupt.
+Make a pair of reserved pages in kdump starting path, whatever kexec
+fails or not.
 
-Let me know if you have any ideas on what could be wrong?
+Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+---
+v2:
+- replace the "failure" label with "fail_unmap_pages"
+v1:
+- reconstruct the patch code
+---
+ kernel/kexec.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-> Hi Timur,
->
-> On 23/06/2015:10:36:03 PM, Timur Tabi wrote:
->> Pratyush Anand wrote:
->> >I can try to find out some time in weekend to refactor arm64 code
->> >and then add 3 level, 4K support. May be I will need a Tested-by.
->>
->> We'd be more than happy to test any code from you promptly.  We're eager
->> to
->> get this to work.
->
-> I have done the changes, hopefully it should work, but have not
-> tested. Let me know, if it works will send them as formal patches
-> to upstream.
->
-> https://github.com/pratyushanand/makedumpfile.git : arm64_support
-> (9b95423bcea0)
->
-> ~Pratyush
->
-
--- =
-
-Thanks,
-Azriel Samson
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,=
-=A0
-a Linux Foundation Collaborative Project
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 4589899..9cb09d9 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1291,35 +1291,37 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 			 */
+ 
+ 			kimage_free(xchg(&kexec_crash_image, NULL));
+-			result = kimage_alloc_init(&image, entry, nr_segments,
+-						   segments, flags);
+-			crash_map_reserved_pages();
+-		} else {
+-			/* Loading another kernel to reboot into. */
+-
+-			result = kimage_alloc_init(&image, entry, nr_segments,
+-						   segments, flags);
+ 		}
++
++		result = kimage_alloc_init(&image, entry, nr_segments,
++				segments, flags);
+ 		if (result)
+ 			goto out;
+ 
++		if (flags & KEXEC_ON_CRASH)
++			crash_map_reserved_pages();
++
+ 		if (flags & KEXEC_PRESERVE_CONTEXT)
+ 			image->preserve_context = 1;
+ 		result = machine_kexec_prepare(image);
+ 		if (result)
+-			goto out;
++			goto fail_unmap_pages;
+ 
+ 		for (i = 0; i < nr_segments; i++) {
+ 			result = kimage_load_segment(image, &image->segment[i]);
+ 			if (result)
+-				goto out;
++				goto fail_unmap_pages;
+ 		}
+ 		kimage_terminate(image);
++
++fail_unmap_pages:
+ 		if (flags & KEXEC_ON_CRASH)
+ 			crash_unmap_reserved_pages();
+ 	}
+-	/* Install the new kernel, and  Uninstall the old */
+-	image = xchg(dest_image, image);
++
++	if (result == 0)
++		/* Install the new kernel, and  Uninstall the old */
++		image = xchg(dest_image, image);
+ 
+ out:
+ 	mutex_unlock(&kexec_mutex);
+-- 
+2.2.2
 
 
 _______________________________________________
