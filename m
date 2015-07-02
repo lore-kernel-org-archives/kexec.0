@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZATZs-0004VE-Ee
- for kexec@lists.infradead.org; Thu, 02 Jul 2015 01:46:12 +0000
-Received: by pabvl15 with SMTP id vl15so31670523pab.1
- for <kexec@lists.infradead.org>; Wed, 01 Jul 2015 18:45:51 -0700 (PDT)
-From: Minfei Huang <mnfhuang@gmail.com>
-Subject: [PATCH v3] kexec: Make a pair of map and unmap reserved pages when
- kdump fails to start
-Date: Thu,  2 Jul 2015 09:45:52 +0800
-Message-Id: <1435801552-1230-1-git-send-email-mnfhuang@gmail.com>
+ id 1ZAU7m-0002js-OW
+ for kexec@lists.infradead.org; Thu, 02 Jul 2015 02:21:16 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH 1/2] makedumpfile: Add description of pages lost by
+ ENOSPACE in IMPLEMENTATION
+Date: Thu, 2 Jul 2015 02:19:14 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DCB481@BPXM01GP.gisp.nec.co.jp>
+References: <1435220576-32595-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DCA526@BPXM01GP.gisp.nec.co.jp>
+ <5591EA8C.4040000@cn.fujitsu.com>
+In-Reply-To: <5591EA8C.4040000@cn.fujitsu.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,91 +22,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, vgoyal@redhat.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, linux390@de.ibm.com, holzheu@linux.vnet.ibm.com
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
+To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-For some arch, kexec shall map the reserved pages, then use them, when
-we try to start the kdump service.
+>On 06/29/2015 04:33 PM, Atsushi Kumagai wrote:
+>> Hello Zhou,
+>>
+>>> Currently, there is no obvious description in IMPLEMENTATION for
+>>> distinguishing the lost pages resulted by ENOSPACE errors or others.
+>>> So, it is added.
+>>>
+>>> Signed-off-by: Zhou Wenjian<zhouwj-fnst@cn.fujitsu.com>
+>>> ---
+>>> IMPLEMENTATION |    2 ++
+>>> 1 files changed, 2 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/IMPLEMENTATION b/IMPLEMENTATION
+>>> index 72df5d5..70a3f7c 100644
+>>> --- a/IMPLEMENTATION
+>>> +++ b/IMPLEMENTATION
+>>> @@ -240,6 +240,8 @@
+>>>      The page header and page data are written in pairs. When writing page data
+>>>      (pfn N+1), if ENOSPACE error happens, the page headers after N won't be
+>>>      written either.
+>>> +    When reading page from incomplete core, only the page lost by ENOSPACE errors
+>>> +    has 0 in its corresponding page descriptor's member offset.
+>>
+>> I'm not sure this is correct.
+>> Could you point me where is the code which sets 0 to the page_desc->offset
+>> of the lost page ?
+>>
+>
+>There is no code to set it. Since the data lost is filled with zero when it is read,
+>the page_desc->offset will also be zero.
+>And zero page has its own offset not equal 0. So we can distinguish them with their
+>member offset.
 
-Now kexec will never unmap the reserved pages, once it fails to continue
-starting the kdump service.
-
-Make a pair of reserved pages in kdump starting path, whatever kexec
-fails or not.
-
-Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
----
-v2:
-- replace the "failure" label with "fail_unmap_pages"
-v1:
-- reconstruct the patch code
----
- kernel/kexec.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 4589899..9cb09d9 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1291,35 +1291,37 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 			 */
- 
- 			kimage_free(xchg(&kexec_crash_image, NULL));
--			result = kimage_alloc_init(&image, entry, nr_segments,
--						   segments, flags);
--			crash_map_reserved_pages();
--		} else {
--			/* Loading another kernel to reboot into. */
--
--			result = kimage_alloc_init(&image, entry, nr_segments,
--						   segments, flags);
- 		}
-+
-+		result = kimage_alloc_init(&image, entry, nr_segments,
-+				segments, flags);
- 		if (result)
- 			goto out;
- 
-+		if (flags & KEXEC_ON_CRASH)
-+			crash_map_reserved_pages();
-+
- 		if (flags & KEXEC_PRESERVE_CONTEXT)
- 			image->preserve_context = 1;
- 		result = machine_kexec_prepare(image);
- 		if (result)
--			goto out;
-+			goto fail_unmap_pages;
- 
- 		for (i = 0; i < nr_segments; i++) {
- 			result = kimage_load_segment(image, &image->segment[i]);
- 			if (result)
--				goto out;
-+				goto fail_unmap_pages;
- 		}
- 		kimage_terminate(image);
-+
-+fail_unmap_pages:
- 		if (flags & KEXEC_ON_CRASH)
- 			crash_unmap_reserved_pages();
- 	}
--	/* Install the new kernel, and  Uninstall the old */
--	image = xchg(dest_image, image);
-+
-+	if (result == 0)
-+		/* Install the new kernel, and  Uninstall the old */
-+		image = xchg(dest_image, image);
- 
- out:
- 	mutex_unlock(&kexec_mutex);
--- 
-2.2.2
+Ah, you mean the behavior of crash ?
+I think it would be better to describe that in more detail in order,
+otherwise this additional description sounds sudden to me.
 
 
+Thanks
+Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
