@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from sandesh.cdotd.ernet.in ([196.1.105.47])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZAd5Y-0004nB-JE
- for kexec@lists.infradead.org; Thu, 02 Jul 2015 11:55:33 +0000
-Received: from mail.del.cdot.in (webmail.cdotd.ernet.in [196.1.105.198])
- by sandesh.cdotd.ernet.in (Postfix) with ESMTP id E692C1DDE3A5
- for <kexec@lists.infradead.org>; Thu,  2 Jul 2015 17:26:27 +0530 (IST)
-Received: from cdot.in (localhost [127.0.0.1])
- by mail.del.cdot.in (8.13.8/8.13.8) with ESMTP id t62BjAwk008986
- for <kexec@lists.infradead.org>; Thu, 2 Jul 2015 17:15:10 +0530
-From: "debdutta" <debdutta@cdot.in>
-Subject: Kexec -l works but kexec -p fails
-Date: Thu, 2 Jul 2015 17:15:10 +0530
-Message-Id: <20150702114510.M49708@cdot.in>
 MIME-Version: 1.0
+In-Reply-To: <1428513259.11876.5.camel@infradead.org>
+References: <cover.1426793116.git.geoff@infradead.org> <55250E2A.80106@arm.com>
+ <1428513259.11876.5.camel@infradead.org>
+Date: Fri, 3 Jul 2015 09:09:37 +0530
+Message-ID: <CAHM4w1kUdF0RAHN7Bb3zUc_eQQDw-MAPccTp5e=_GfoZrZhEHg@mail.gmail.com>
+Subject: Re: [PATCH 0/6] arm64 kexec kernel patches V8
+From: Pratyush Anand <pratyush.anand@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,43 +15,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "Suzuki K. Poulose" <Suzuki.Poulose@arm.com>, Will Deacon <Will.Deacon@arm.com>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-SGksCgogSSBhbSB1c2luZyBsaW51eC0yLjYuMjktcnQyMyBvbiBmcmVlc2NhbGUgTVBDODMwOCBi
-YXNlZCBib2FyZC4gSXQgaXMgYSBQT1dFUlBDIDMyIGJpdApwcm9jZXNzb3IuCgogUGh5c2ljYWwg
-bWVtb3J5ID0gNTEyTUIgb2Ygd2hpY2ggMTI4TUJAMzJNQiBpcyByZXNlcnZlZCBmb3IgY2FzaGtl
-cm5lbAoKIEkgaGF2ZSBjcm9zcy1jb21waWxlZCBrZXhlYy10b29scyAyLjAuMTAgZm9yIHRoaXMg
-Ym9hcmQgd2l0aCAtLXdpdGhvdXQtemxpYiBhbmQKLS13aXRob3V0LXhlbiBvcHRpb25zLgoKIEkg
-aGF2ZSAyIGtlcm5lbHM6CgogMS4gcHJvZHVjdGlvbiBrZXJuZWwgd2l0aCBDT05GSUdfS0VYRUMs
-IENPTkZJR19TWVNGUywgQ09ORklHX0RFQlVHX0lORk8sCkNPTkZJR19QUk9DX1ZNQ09SRSBlbmFi
-bGVkCgogMi4gY2FwdHVyZSBrZXJuZWwgd2l0aCBDT05GSUdfQ1JBU0hfRFVNUCwgQ09ORklHX1BS
-T0NfVk1DT1JFLCBDT05GSUdfU1lTRlMsCkNPTkZJR19ERUJVR19JTkZPIHNldC4KCiB3aGVuIEkg
-Z2l2ZSA6Cgoga2V4ZWMgLWwgdm1saW51eAoKIGtleGVjIC1lCgogdGhpcyBzdWNjZXNzZnVsbHkg
-bG9hZHMgdGhlIGNyYXNoIGtlcm5lbAoKIGhvd2V2ZXIgd2hlbiB1c2luZyB0aGUga2V4ZWMgLXAg
-b3B0aW9uIGFuZCB0cmlnZ2VyaW5nIGEgY3Jhc2hkdW1wwqAgZG9lcyBub3QgbG9hZCB0aGUKc2Ft
-ZSBjcmFzaGtlcm5lbC4KClRoZSBvdXRwdXQgdGhhdCBjb21lcyBvbiBzY3JlZW4gaXMganVzdCB0
-aGVzZSAyIGxpbmVzOiAKU3lzUnEgOiBUcmlnZ2VyIGEgY3Jhc2hkdW1wIApCeWUhCgogSSBhbSB1
-bmFibGUgdG8gZmluZCBvdXQgd2hhdCBtYXkgYmUgdGhlIHJlYXNvbi4gUGxlYXNlIGhlbHAuCgpU
-aGFua3MsIAogRGViZHV0dGEKCiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSAKIDo6RGlzY2xhaW1l
-cjo6IAogLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gCiBUaGUgY29udGVudHMgb2YgdGhpcyBlbWFp
-bCBhbmQgYW55IGF0dGFjaG1lbnQocykgYXJlIGNvbmZpZGVudGlhbCBhbmQgaW50ZW5kZWQgCiBm
-b3IgdGhlIG5hbWVkIHJlY2lwaWVudChzKSBvbmx5LiBJdCBzaGFsbCBub3QgYXR0YWNoIGFueSBs
-aWFiaWxpdHkgb24gQy1ET1QuIAogQW55IHZpZXdzIG9yIG9waW5pb25zIHByZXNlbnRlZCBpbiB0
-aGlzIGVtYWlsIGFyZSBzb2xlbHkgdGhvc2Ugb2YgdGhlIGF1dGhvciAKIGFuZCDCoG1heSDCoG5v
-dCDCoG5lY2Vzc2FyaWx5IMKgcmVmbGVjdCDCoHRoZSDCoG9waW5pb25zIMKgb2YgwqBDLURPVC4g
-wqBBbnkgwqBmb3JtIG9mIAogcmVwcm9kdWN0aW9uLCBkaXNzZW1pbmF0aW9uLCBjb3B5aW5nLCBk
-aXNjbG9zdXJlLCBtb2RpZmljYXRpb24sIGRpc3RyaWJ1dGlvbiAKIGFuZCAvIG9yIHB1YmxpY2F0
-aW9uIG9mIHRoaXMgbWVzc2FnZSB3aXRob3V0IHRoZSBwcmlvciB3cml0dGVuIGNvbnNlbnQgb2Yg
-dGhlIAogYXV0aG9yIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlv
-dSBoYXZlIHJlY2VpdmVkIHRoaXMgZW1haWwgCiBpbiBlcnJvciBwbGVhc2UgZGVsZXRlIGl0IGFu
-ZCBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlhdGVseS4KCiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Geoff,
+
+I suppose there would be a next revision of kexec patches. When is the
+that  expected?
+Thanks a lot for working on this.
+
+~Pratyush
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
