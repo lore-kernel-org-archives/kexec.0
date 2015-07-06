@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZAsew-0005IQ-CP
- for kexec@lists.infradead.org; Fri, 03 Jul 2015 04:33:06 +0000
-Date: Fri, 3 Jul 2015 10:02:41 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-Message-ID: <20150703043241.GC21990@dhcppc13.redhat.com>
-References: <d76572d93d25b0196cb2b32c88fd15dc4eb78682.1431714565.git.panand@redhat.com>
- <CAOZdJXWjZmL_K=FmvBU=U3VSDY9R4AucFU16v8CAgQCEe8HYDg@mail.gmail.com>
- <20150624033241.GA22348@localhost.localdomain>
- <558A25A3.60504@codeaurora.org>
- <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
+Message-ID: <559A964D.30500@arm.com>
+Date: Mon, 06 Jul 2015 15:53:01 +0100
+From: Marc Zyngier <marc.zyngier@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
+Subject: Re: [PATCH v5 1/2] arm64: kvm: allows kvm cpu hotplug
+References: <1432877920-12527-1-git-send-email-takahiro.akashi@linaro.org>
+ <1432877920-12527-2-git-send-email-takahiro.akashi@linaro.org>
+ <557729A0.1030700@arm.com>
+In-Reply-To: <557729A0.1030700@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,82 +16,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Azriel Samson <asamson@codeaurora.org>
-Cc: Timur Tabi <timur@codeaurora.org>, virajm@codeaurora.org, kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Geoff Levand <geoff@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
 
-Hi Azriel,
+On 09/06/15 19:00, Marc Zyngier wrote:
+> Hi Takahiro,
+> 
+> On 29/05/15 06:38, AKASHI Takahiro wrote:
+>> The current kvm implementation on arm64 does cpu-specific initialization
+>> at system boot, and has no way to gracefully shutdown a core in terms of
+>> kvm. This prevents, especially, kexec from rebooting the system on a boot
+>> core in EL2.
+>>
+>> This patch adds a cpu tear-down function and also puts an existing cpu-init
+>> code into a separate function, kvm_arch_hardware_disable() and
+>> kvm_arch_hardware_enable() respectively.
+>> We don't need arm64-specific cpu hotplug hook any more.
+>>
+>> Since this patch modifies common part of code between arm and arm64, one
+>> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
+>> compiling errors.
+>>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> 
+> This is starting to look good. Any chance you or Geoff could repost the
+> whole series? This would help getting a better view of the whole thing,
+> and hopefully put it on track for 4.3.
 
-On 01/07/2015:06:42:46 PM, Azriel Samson wrote:
-> Hi Pratyush,
-> =
+So this has now been a whole month since I reviewed this, and I haven't
+seen any repost of this series. Any hope to see this within a reasonable
+time frame? Or is it considered dead already?
 
-> I am working with Timur and we are testing your version of makedumpfile.
+Thanks,
 
-Thanks for testing.
-
-> The tool is unable to get the kernel version and quits from check_release=
-().
-
-Couple of questions:
-
-1. Can you please let me know VA_BITS configured in your case?
-
-2. Do you expect any regions other than vmalloc, vmemmap or modules,
-which are not directly mapped and their physical address need to be
-found from swapper_pg_dir?
-
-In my vmcore, I did not had any address where
-is_vtop_from_page_table_arm64 would be true. So, vtop_arm64 function
-has been only cross checked logically. So,
-a) Please put a print in vtop_arm64 and check if control goes there?
-b) if yes, then please print vaddr and paddr at the end of vtop_arm64
-and see if that is correct. If not we need to debug vtop_arm64.
-
-~Pratyush
-
-> =
-
-> I tried to debug the vmcore file with gdb but the file looks corrupt.
-> =
-
-> Let me know if you have any ideas on what could be wrong?
-> =
-
-> > Hi Timur,
-> >
-> > On 23/06/2015:10:36:03 PM, Timur Tabi wrote:
-> >> Pratyush Anand wrote:
-> >> >I can try to find out some time in weekend to refactor arm64 code
-> >> >and then add 3 level, 4K support. May be I will need a Tested-by.
-> >>
-> >> We'd be more than happy to test any code from you promptly.  We're eag=
-er
-> >> to
-> >> get this to work.
-> >
-> > I have done the changes, hopefully it should work, but have not
-> > tested. Let me know, if it works will send them as formal patches
-> > to upstream.
-> >
-> > https://github.com/pratyushanand/makedumpfile.git : arm64_support
-> > (9b95423bcea0)
-> >
-> > ~Pratyush
-> >
-> =
-
-> -- =
-
-> Thanks,
-> Azriel Samson
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum=
-,=A0
-> a Linux Foundation Collaborative Project
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 
 _______________________________________________
 kexec mailing list
