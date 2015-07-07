@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <559B83BC.5080309@arm.com>
-Date: Tue, 07 Jul 2015 08:46:04 +0100
-From: Marc Zyngier <marc.zyngier@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZCaGc-0001dG-3G
+ for kexec@lists.infradead.org; Tue, 07 Jul 2015 21:19:02 +0000
+Date: Tue, 7 Jul 2015 17:18:40 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v3] kexec: Make a pair of map and unmap reserved pages
+ when kdump fails to start
+Message-ID: <20150707211840.GA4388@redhat.com>
+References: <1435801552-1230-1-git-send-email-mnfhuang@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 1/2] arm64: kvm: allows kvm cpu hotplug
-References: <1432877920-12527-1-git-send-email-takahiro.akashi@linaro.org>	
- <1432877920-12527-2-git-send-email-takahiro.akashi@linaro.org>	
- <557729A0.1030700@arm.com> <559A964D.30500@arm.com>
- <1436201874.22232.3.camel@infradead.org> <559B8308.4000200@linaro.org>
-In-Reply-To: <559B8308.4000200@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1435801552-1230-1-git-send-email-mnfhuang@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +24,159 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "christoffer.dall@linaro.org" <christoffer.dall@linaro.org>, "freddy77@gmail.com" <freddy77@gmail.com>
+To: Minfei Huang <mnfhuang@gmail.com>
+Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, linux390@de.ibm.com, holzheu@linux.vnet.ibm.com
 
-On 07/07/15 08:43, AKASHI Takahiro wrote:
-> On 07/07/2015 01:57 AM, Geoff Levand wrote:
->> Hi Marc,
->>
->> On Mon, 2015-07-06 at 15:53 +0100, Marc Zyngier wrote:
->>> So this has now been a whole month since I reviewed this, and I haven't
->>> seen any repost of this series. Any hope to see this within a reasonable
->>> time frame? Or is it considered dead already?
->>
->> I was hoping to do some work on updating the base kexec patches
->> last week, but all my time was taken up but other things.  I'll
->> try to start on it this week.
+On Thu, Jul 02, 2015 at 09:45:52AM +0800, Minfei Huang wrote:
+> For some arch, kexec shall map the reserved pages, then use them, when
+> we try to start the kdump service.
 > 
-> I also have some update, and so will submit my patchset
-> after Geoff. Pratyush's patch should also be synced.
+> Now kexec will never unmap the reserved pages, once it fails to continue
+> starting the kdump service.
+> 
+> Make a pair of reserved pages in kdump starting path, whatever kexec
+> fails or not.
+> 
+> Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+> ---
+> v2:
+> - replace the "failure" label with "fail_unmap_pages"
+> v1:
+> - reconstruct the patch code
+> ---
+>  kernel/kexec.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
 
-Please coordinate between all of you and post a consistent series. It
-was painful enough to review the KVM stuff independently of the rest of
-the series, so I'd really really want to see a single series that
-addresses the issue end to end.
+Hi Minfei,
 
-Thanks,
+I am thinking of moving kernel loading code in a separate function to
+make things little simpler. Right now it is confusing.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Can you please test attached patch. I have only compile tested it. This
+is primarily doing what you are doing but in a separate function. It
+seems more readable now.
+
+Thanks
+Vivek
+
+
+---
+ kernel/kexec.c |   90 +++++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 56 insertions(+), 34 deletions(-)
+
+Index: rhvgoyal-linux/kernel/kexec.c
+===================================================================
+--- rhvgoyal-linux.orig/kernel/kexec.c	2015-07-06 13:59:35.088129148 -0400
++++ rhvgoyal-linux/kernel/kexec.c	2015-07-07 17:14:23.593175644 -0400
+@@ -1247,6 +1247,57 @@ int kexec_load_disabled;
+ 
+ static DEFINE_MUTEX(kexec_mutex);
+ 
++static int __kexec_load(struct kimage **rimage, unsigned long entry,
++			unsigned long nr_segments,
++			struct kexec_segment __user * segments,
++			unsigned long flags)
++{
++	unsigned long i;
++	int result;
++	struct kimage *image;
++
++	if (flags & KEXEC_ON_CRASH) {
++		/*
++		 * Loading another kernel to switch to if this one
++		 * crashes.  Free any current crash dump kernel before
++		 * we corrupt it.
++		 */
++
++		kimage_free(xchg(&kexec_crash_image, NULL));
++	}
++
++	result = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
++	if (result)
++		return result;
++
++	if (flags & KEXEC_ON_CRASH)
++		crash_map_reserved_pages();
++
++	if (flags & KEXEC_PRESERVE_CONTEXT)
++		image->preserve_context = 1;
++
++	result = machine_kexec_prepare(image);
++	if (result)
++		goto out;
++
++	for (i = 0; i < nr_segments; i++) {
++		result = kimage_load_segment(image, &image->segment[i]);
++		if (result)
++			goto out;
++	}
++
++	kimage_terminate(image);
++	*rimage = image;
++out:
++	if (flags & KEXEC_ON_CRASH)
++		crash_unmap_reserved_pages();
++
++	/* Free image if there was an error */
++	if (result)
++		kimage_free(image);
++	return result;
++}
++
+ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 		struct kexec_segment __user *, segments, unsigned long, flags)
+ {
+@@ -1292,44 +1343,15 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
+ 	dest_image = &kexec_image;
+ 	if (flags & KEXEC_ON_CRASH)
+ 		dest_image = &kexec_crash_image;
+-	if (nr_segments > 0) {
+-		unsigned long i;
+ 
+-		if (flags & KEXEC_ON_CRASH) {
+-			/*
+-			 * Loading another kernel to switch to if this one
+-			 * crashes.  Free any current crash dump kernel before
+-			 * we corrupt it.
+-			 */
+-
+-			kimage_free(xchg(&kexec_crash_image, NULL));
+-			result = kimage_alloc_init(&image, entry, nr_segments,
+-						   segments, flags);
+-			crash_map_reserved_pages();
+-		} else {
+-			/* Loading another kernel to reboot into. */
+-
+-			result = kimage_alloc_init(&image, entry, nr_segments,
+-						   segments, flags);
+-		}
+-		if (result)
+-			goto out;
+-
+-		if (flags & KEXEC_PRESERVE_CONTEXT)
+-			image->preserve_context = 1;
+-		result = machine_kexec_prepare(image);
++	/* Load new kernel */
++	if (nr_segments > 0) {
++		result = __kexec_load(&image, entry, nr_segments, segments,
++				      flags);
+ 		if (result)
+ 			goto out;
+-
+-		for (i = 0; i < nr_segments; i++) {
+-			result = kimage_load_segment(image, &image->segment[i]);
+-			if (result)
+-				goto out;
+-		}
+-		kimage_terminate(image);
+-		if (flags & KEXEC_ON_CRASH)
+-			crash_unmap_reserved_pages();
+ 	}
++
+ 	/* Install the new kernel, and  Uninstall the old */
+ 	image = xchg(dest_image, image);
+ 
 
 _______________________________________________
 kexec mailing list
