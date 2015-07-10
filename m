@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZDO7u-0002sS-Ck
- for kexec@lists.infradead.org; Fri, 10 Jul 2015 02:33:22 +0000
+ id 1ZDO7u-0002sO-SV
+ for kexec@lists.infradead.org; Fri, 10 Jul 2015 02:33:23 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6A2V94L010652
- for <kexec@lists.infradead.org>; Fri, 10 Jul 2015 10:31:09 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6A2VBX7010661
+ for <kexec@lists.infradead.org>; Fri, 10 Jul 2015 10:31:11 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v1 2/4] Add get_pfn_offset
-Date: Fri, 10 Jul 2015 10:28:51 +0800
-Message-ID: <1436495333-22892-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v1 4/4] Use write_kdump_page instead of write_cache in
+ write_kdump_pages_cyclic
+Date: Fri, 10 Jul 2015 10:28:53 +0800
+Message-ID: <1436495333-22892-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1436495333-22892-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1436495333-22892-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -28,50 +29,38 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-get_pfn_offset is used for generating incomplete kdump core.
-When enospac occurs in writing the buf cd_page, it can be used to
-get how many pages have been written.
-
 Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- makedumpfile.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ makedumpfile.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 5a53246..e8b52f4 100644
+index 74bf83e..0f1aa94 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -6300,6 +6300,30 @@ write_cd_buf(struct cache_data *cd)
- }
+@@ -6515,17 +6515,11 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 		pd.offset     = *offset_data;
+ 		*offset_data  += pd.size;
  
- int
-+get_pfn_offset(void *buf, struct cache_data *cd_page){
-+	int size, file_end, offset;
-+	page_desc_t *pd;
-+
-+	size = 0;
-+	offset = 0;
-+	file_end = lseek(cd_page->fd, 0, SEEK_END);
-+	if (file_end < 0)
-+		ERRMSG("Can't seek end of the dump file(%s).\n", cd_page->file_name);
-+
-+	while (TRUE) {
-+		pd = (page_desc_t *)buf;
-+		size += pd->size;
-+		if (size > file_end - cd_page->offset)
-+			break;
-+
-+		offset++;
-+		buf += sizeof(page_desc_t);
-+	}
-+
-+	return offset;
-+}
-+
-+int
- write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
- 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
- {
+-                /*
+-                 * Write the page header.
+-                 */
+-                if (!write_cache(cd_header, &pd, sizeof(page_desc_t)))
+-                        goto out;
+-
+-                /*
+-                 * Write the page data.
+-                 */
+-		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+-                        goto out;
++               /*
++                * Write the page header and the page data
++                */
++               if (!write_kdump_page(cd_header, cd_page, &pd, pd.flags ? buf_out : buf))
++                       goto out;
+         }
+ 
+ 	ret = TRUE;
 -- 
 1.8.3.1
 
