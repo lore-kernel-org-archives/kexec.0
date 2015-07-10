@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x236.google.com ([2607:f8b0:400e:c03::236])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZDLO7-000319-FH
- for kexec@lists.infradead.org; Thu, 09 Jul 2015 23:37:56 +0000
-Received: by pabvl15 with SMTP id vl15so157740158pab.1
- for <kexec@lists.infradead.org>; Thu, 09 Jul 2015 16:37:32 -0700 (PDT)
-Date: Fri, 10 Jul 2015 07:37:22 +0800
-From: Minfei Huang <mnfhuang@gmail.com>
-Subject: Re: [PATCH v3] kexec: Make a pair of map and unmap reserved pages
- when kdump fails to start
-Message-ID: <20150709233722.GA2365@huangminfeis-MacBook-Pro.local>
-References: <1435801552-1230-1-git-send-email-mnfhuang@gmail.com>
- <20150707211840.GA4388@redhat.com>
- <20150709175411.7037a4fa@holzheu>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZDO7t-0002sO-Uw
+ for kexec@lists.infradead.org; Fri, 10 Jul 2015 02:33:22 +0000
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6A2V8gH010643
+ for <kexec@lists.infradead.org>; Fri, 10 Jul 2015 10:31:08 +0800
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v1 0/4] makedumpfile: optimize the way of generating
+ incomplete kdump core
+Date: Fri, 10 Jul 2015 10:28:49 +0800
+Message-ID: <1436495333-22892-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150709175411.7037a4fa@holzheu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,149 +25,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, linux390@de.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-Hi, Michael.
 
-Yes, The code is more readable after wrapping the all of function code
-in a function. Since this is a small issue, I think it is better to use
-one patch to fix it. I am glad to repost a patch to merge you and
-Vivek's patches as one patch.
+In current implementation, when generating kdump core,
+it behaves as the following logic.
 
-Thanks
-Minfei
+1. Write page header into the buffer cd_header.
+2. If buffer is full, flush the buffer.
+3. Write page data into the buffer cd_page.
+4. If buffer is full, flush the buffer.
 
-On 07/09/15 at 05:54P, Michael Holzheu wrote:
-> On Tue, 7 Jul 2015 17:18:40 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Thu, Jul 02, 2015 at 09:45:52AM +0800, Minfei Huang wrote:
-> 
-> [snip]
-> 
-> > I am thinking of moving kernel loading code in a separate function to
-> > make things little simpler. Right now it is confusing.
-> > 
-> > Can you please test attached patch. I have only compile tested it. This
-> > is primarily doing what you are doing but in a separate function. It
-> > seems more readable now.
-> 
-> The patch looks good to me. What about the following patch on top
-> to make things even more readable?
-> ---
->  kernel/kexec.c |   50 +++++++++++++++++---------------------------------
->  1 file changed, 17 insertions(+), 33 deletions(-)
-> 
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1236,14 +1236,18 @@ int kexec_load_disabled;
->  
->  static DEFINE_MUTEX(kexec_mutex);
->  
-> -static int __kexec_load(struct kimage **rimage, unsigned long entry,
-> -			unsigned long nr_segments,
-> +static int __kexec_load(unsigned long entry, unsigned long nr_segments,
->  			struct kexec_segment __user * segments,
->  			unsigned long flags)
->  {
-> +	struct kimage *image, **dest_image;
->  	unsigned long i;
->  	int result;
-> -	struct kimage *image;
-> +
-> +	dest_image = (flags & KEXEC_ON_CRASH) ? &kexec_crash_image : &kexec_image;
-> +
-> +	if (nr_segments == 0)
-> +		return 0;
->  
->  	if (flags & KEXEC_ON_CRASH) {
->  		/*
-> @@ -1251,7 +1255,6 @@ static int __kexec_load(struct kimage **
->  		 * crashes.  Free any current crash dump kernel before
->  		 * we corrupt it.
->  		 */
-> -
->  		kimage_free(xchg(&kexec_crash_image, NULL));
->  	}
->  
-> @@ -1267,30 +1270,29 @@ static int __kexec_load(struct kimage **
->  
->  	result = machine_kexec_prepare(image);
->  	if (result)
-> -		goto out;
-> +		goto fail;
->  
->  	for (i = 0; i < nr_segments; i++) {
->  		result = kimage_load_segment(image, &image->segment[i]);
->  		if (result)
-> -			goto out;
-> +			goto fail;
->  	}
-> -
->  	kimage_terminate(image);
-> -	*rimage = image;
-> -out:
-> +	/* Install the new kernel, and  uninstall the old */
-> +	kimage_free(xchg(dest_image, image));
->  	if (flags & KEXEC_ON_CRASH)
->  		crash_unmap_reserved_pages();
-> -
-> -	/* Free image if there was an error */
-> -	if (result)
-> -		kimage_free(image);
-> +	return 0;
-> +fail:
-> +	if (flags & KEXEC_ON_CRASH)
-> +		crash_unmap_reserved_pages();
-> +	kimage_free(image);
->  	return result;
->  }
->  
->  SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
->  		struct kexec_segment __user *, segments, unsigned long, flags)
->  {
-> -	struct kimage **dest_image, *image;
->  	int result;
->  
->  	/* We only trust the superuser with rebooting the system. */
-> @@ -1315,9 +1317,6 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
->  	if (nr_segments > KEXEC_SEGMENT_MAX)
->  		return -EINVAL;
->  
-> -	image = NULL;
-> -	result = 0;
-> -
->  	/* Because we write directly to the reserved memory
->  	 * region when loading crash kernels we need a mutex here to
->  	 * prevent multiple crash  kernels from attempting to load
-> @@ -1329,24 +1328,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
->  	if (!mutex_trylock(&kexec_mutex))
->  		return -EBUSY;
->  
-> -	dest_image = &kexec_image;
-> -	if (flags & KEXEC_ON_CRASH)
-> -		dest_image = &kexec_crash_image;
-> -
->  	/* Load new kernel */
-> -	if (nr_segments > 0) {
-> -		result = __kexec_load(&image, entry, nr_segments, segments,
-> -				      flags);
-> -		if (result)
-> -			goto out;
-> -	}
-> -
-> -	/* Install the new kernel, and  Uninstall the old */
-> -	image = xchg(dest_image, image);
-> -
-> -out:
-> +	result = __kexec_load(entry, nr_segments, segments, flags);
->  	mutex_unlock(&kexec_mutex);
-> -	kimage_free(image);
->  
->  	return result;
->  }
-> 
+When enospc occurs in flushing cd_page, it always still
+has much data in cd_header. The size of page data is 170
+times the size of page header. It leads to that quite a
+lot of page data been written into file can't be used.
+
+The page header may also meet that. The page data can be
+compressed, so the size of page data can also be much smaller
+than the size of page header.
+
+This patch set changes the logic of generating kdump core.
+The new logic is:
+
+1. Before writing page header and data into buffer, if the buffer
+   will be full, write the data of the buffer into file.
+2. Then, write the page header and data info buffer.
+
+When enospc occurs in writing the cd_header into file, fill the
+cd_header with zero and re-write the cd_header.
+When enospc occurs in writing the cd_page into file, fill part
+of the cd_header with zero according to how many pages in cd_page
+have been written. 
+
+Zhou Wenjian (4):
+  Add write_cd_buf
+  Add get_pfn_offset
+  Add write_kdump_page
+  Use write_kdump_page instead of write_cache in
+    write_kdump_pages_cyclic
+
+ makedumpfile.c | 107 +++++++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 96 insertions(+), 11 deletions(-)
+
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
