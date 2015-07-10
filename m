@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-x22e.google.com ([2607:f8b0:400e:c02::22e])
+Received: from mail-pd0-x22d.google.com ([2607:f8b0:400e:c02::22d])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZDPZN-0005wF-6G
- for kexec@lists.infradead.org; Fri, 10 Jul 2015 04:05:49 +0000
-Received: by pdbep18 with SMTP id ep18so176703725pdb.1
- for <kexec@lists.infradead.org>; Thu, 09 Jul 2015 21:05:28 -0700 (PDT)
-Date: Fri, 10 Jul 2015 12:05:27 +0800
+ id 1ZDQc6-00054c-9t
+ for kexec@lists.infradead.org; Fri, 10 Jul 2015 05:12:42 +0000
+Received: by pdbqm3 with SMTP id qm3so33870158pdb.0
+ for <kexec@lists.infradead.org>; Thu, 09 Jul 2015 22:12:21 -0700 (PDT)
 From: Minfei Huang <mnfhuang@gmail.com>
-Subject: Re: [PATCH v3] kexec: Make a pair of map and unmap reserved pages
- when kdump fails to start
-Message-ID: <20150710040527.GA3642@dhcp-128-21.nay.redhat.com>
-References: <1435801552-1230-1-git-send-email-mnfhuang@gmail.com>
- <20150707211840.GA4388@redhat.com>
- <20150709175411.7037a4fa@holzheu>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150709175411.7037a4fa@holzheu>
+Subject: [PATCH v4] kexec: Make a pair of map and unmap reserved pages when
+ kdump fails to start
+Date: Fri, 10 Jul 2015 13:12:17 +0800
+Message-Id: <1436505137-4364-1-git-send-email-mnfhuang@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,154 +18,181 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, linux390@de.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: ebiederm@xmission.com, vgoyal@redhat.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, linux390@de.ibm.com, holzheu@linux.vnet.ibm.com
+Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
 
-On 07/09/15 at 05:54P, Michael Holzheu wrote:
-> On Tue, 7 Jul 2015 17:18:40 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Thu, Jul 02, 2015 at 09:45:52AM +0800, Minfei Huang wrote:
-> 
-> [snip]
-> 
-> > I am thinking of moving kernel loading code in a separate function to
-> > make things little simpler. Right now it is confusing.
-> > 
-> > Can you please test attached patch. I have only compile tested it. This
-> > is primarily doing what you are doing but in a separate function. It
-> > seems more readable now.
-> 
-> The patch looks good to me. What about the following patch on top
-> to make things even more readable?
-> ---
->  kernel/kexec.c |   50 +++++++++++++++++---------------------------------
->  1 file changed, 17 insertions(+), 33 deletions(-)
-> 
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1236,14 +1236,18 @@ int kexec_load_disabled;
->  
->  static DEFINE_MUTEX(kexec_mutex);
->  
-> -static int __kexec_load(struct kimage **rimage, unsigned long entry,
-> -			unsigned long nr_segments,
-> +static int __kexec_load(unsigned long entry, unsigned long nr_segments,
->  			struct kexec_segment __user * segments,
->  			unsigned long flags)
->  {
-> +	struct kimage *image, **dest_image;
->  	unsigned long i;
->  	int result;
-> -	struct kimage *image;
-> +
-> +	dest_image = (flags & KEXEC_ON_CRASH) ? &kexec_crash_image : &kexec_image;
-> +
-> +	if (nr_segments == 0)
-> +		return 0;
+For some arch, kexec shall map the reserved pages, then use them, when
+we try to start the kdump service.
 
-It is fine, if nr_segments is 0. So we should deal with this case like
-original kexec code.
+Now kexec will never unmap the reserved pages, once it fails to continue
+starting the kdump service. So we make a pair of map/unmap reserved
+pages whatever kexec fails or not in code path.
 
->  
->  	if (flags & KEXEC_ON_CRASH) {
->  		/*
-> @@ -1251,7 +1255,6 @@ static int __kexec_load(struct kimage **
->  		 * crashes.  Free any current crash dump kernel before
->  		 * we corrupt it.
->  		 */
-> -
->  		kimage_free(xchg(&kexec_crash_image, NULL));
->  	}
->  
-> @@ -1267,30 +1270,29 @@ static int __kexec_load(struct kimage **
->  
->  	result = machine_kexec_prepare(image);
->  	if (result)
-> -		goto out;
-> +		goto fail;
->  
->  	for (i = 0; i < nr_segments; i++) {
->  		result = kimage_load_segment(image, &image->segment[i]);
->  		if (result)
-> -			goto out;
-> +			goto fail;
->  	}
-> -
->  	kimage_terminate(image);
-> -	*rimage = image;
-> -out:
-> +	/* Install the new kernel, and  uninstall the old */
-> +	kimage_free(xchg(dest_image, image));
->  	if (flags & KEXEC_ON_CRASH)
->  		crash_unmap_reserved_pages();
-> -
-> -	/* Free image if there was an error */
-> -	if (result)
-> -		kimage_free(image);
-> +	return 0;
-> +fail:
-> +	if (flags & KEXEC_ON_CRASH)
-> +		crash_unmap_reserved_pages();
-> +	kimage_free(image);
+In order to make code readable, wrap a new function __kexec_load which
+contains all of the logic to deal with the image loading.
 
-Kernel release image again, and will crash in here, since we do not
-assign the image to NULL when we release the image above.
+Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+---
+v3:
+- reconstruct the patch, wrap a new function to deal with the code logic, based on Vivek and Michael's patch
+v2:
+- replace the "failure" label with "fail_unmap_pages"
+v1:
+- reconstruct the patch code
+---
+ kernel/kexec.c | 112 ++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 63 insertions(+), 49 deletions(-)
 
-Thanks
-Minfei
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a785c10..2232c90 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1247,10 +1247,71 @@ int kexec_load_disabled;
+ 
+ static DEFINE_MUTEX(kexec_mutex);
+ 
++static int __kexec_load(unsigned long entry, unsigned long nr_segments,
++			struct kexec_segment __user *segments,
++			unsigned long flags)
++{
++	int result = 0;
++	struct kimage **dest_image, *image;
++
++	dest_image = &kexec_image;
++
++	if (flags & KEXEC_ON_CRASH)
++		dest_image = &kexec_crash_image;
++
++	if (nr_segments == 0) {
++		/* Install the new kernel, and  Uninstall the old */
++		image = xchg(dest_image, image);
++		kimage_free(image);
++	} else {
++		unsigned long i;
++
++		if (flags & KEXEC_ON_CRASH) {
++			/*
++			 * Loading another kernel to switch to if this one
++			 * crashes.  Free any current crash dump kernel before
++			 * we corrupt it.
++			 */
++			kimage_free(xchg(&kexec_crash_image, NULL));
++		}
++
++		result = kimage_alloc_init(&image, entry,
++				nr_segments, segments, flags);
++		if (result)
++			return result;
++
++		if (flags & KEXEC_ON_CRASH)
++			crash_map_reserved_pages();
++
++		if (flags & KEXEC_PRESERVE_CONTEXT)
++			image->preserve_context = 1;
++
++		result = machine_kexec_prepare(image);
++		if (result)
++			goto failure_unmap_mem;
++
++		for (i = 0; i < nr_segments; i++) {
++			result = kimage_load_segment(image, &image->segment[i]);
++			if (result)
++				goto failure_unmap_mem;
++		}
++
++		kimage_terminate(image);
++
++		/* Install the new kernel, and  Uninstall the old */
++		image = xchg(dest_image, image);
++
++failure_unmap_mem:
++		if (flags & KEXEC_ON_CRASH)
++			crash_unmap_reserved_pages();
++		kimage_free(image);
++	}
++	return result;
++}
++
+ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 		struct kexec_segment __user *, segments, unsigned long, flags)
+ {
+-	struct kimage **dest_image, *image;
+ 	int result;
+ 
+ 	/* We only trust the superuser with rebooting the system. */
+@@ -1275,9 +1336,6 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	if (nr_segments > KEXEC_SEGMENT_MAX)
+ 		return -EINVAL;
+ 
+-	image = NULL;
+-	result = 0;
+-
+ 	/* Because we write directly to the reserved memory
+ 	 * region when loading crash kernels we need a mutex here to
+ 	 * prevent multiple crash  kernels from attempting to load
+@@ -1289,53 +1347,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	if (!mutex_trylock(&kexec_mutex))
+ 		return -EBUSY;
+ 
+-	dest_image = &kexec_image;
+-	if (flags & KEXEC_ON_CRASH)
+-		dest_image = &kexec_crash_image;
+-	if (nr_segments > 0) {
+-		unsigned long i;
+-
+-		if (flags & KEXEC_ON_CRASH) {
+-			/*
+-			 * Loading another kernel to switch to if this one
+-			 * crashes.  Free any current crash dump kernel before
+-			 * we corrupt it.
+-			 */
++	result = __kexec_load(entry, nr_segments, segments, flags);
+ 
+-			kimage_free(xchg(&kexec_crash_image, NULL));
+-			result = kimage_alloc_init(&image, entry, nr_segments,
+-						   segments, flags);
+-			crash_map_reserved_pages();
+-		} else {
+-			/* Loading another kernel to reboot into. */
+-
+-			result = kimage_alloc_init(&image, entry, nr_segments,
+-						   segments, flags);
+-		}
+-		if (result)
+-			goto out;
+-
+-		if (flags & KEXEC_PRESERVE_CONTEXT)
+-			image->preserve_context = 1;
+-		result = machine_kexec_prepare(image);
+-		if (result)
+-			goto out;
+-
+-		for (i = 0; i < nr_segments; i++) {
+-			result = kimage_load_segment(image, &image->segment[i]);
+-			if (result)
+-				goto out;
+-		}
+-		kimage_terminate(image);
+-		if (flags & KEXEC_ON_CRASH)
+-			crash_unmap_reserved_pages();
+-	}
+-	/* Install the new kernel, and  Uninstall the old */
+-	image = xchg(dest_image, image);
+-
+-out:
+ 	mutex_unlock(&kexec_mutex);
+-	kimage_free(image);
+ 
+ 	return result;
+ }
+-- 
+2.2.2
 
->  	return result;
->  }
->  
->  SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
->  		struct kexec_segment __user *, segments, unsigned long, flags)
->  {
-> -	struct kimage **dest_image, *image;
->  	int result;
->  
->  	/* We only trust the superuser with rebooting the system. */
-> @@ -1315,9 +1317,6 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
->  	if (nr_segments > KEXEC_SEGMENT_MAX)
->  		return -EINVAL;
->  
-> -	image = NULL;
-> -	result = 0;
-> -
->  	/* Because we write directly to the reserved memory
->  	 * region when loading crash kernels we need a mutex here to
->  	 * prevent multiple crash  kernels from attempting to load
-> @@ -1329,24 +1328,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
->  	if (!mutex_trylock(&kexec_mutex))
->  		return -EBUSY;
->  
-> -	dest_image = &kexec_image;
-> -	if (flags & KEXEC_ON_CRASH)
-> -		dest_image = &kexec_crash_image;
-> -
->  	/* Load new kernel */
-> -	if (nr_segments > 0) {
-> -		result = __kexec_load(&image, entry, nr_segments, segments,
-> -				      flags);
-> -		if (result)
-> -			goto out;
-> -	}
-> -
-> -	/* Install the new kernel, and  Uninstall the old */
-> -	image = xchg(dest_image, image);
-> -
-> -out:
-> +	result = __kexec_load(entry, nr_segments, segments, flags);
->  	mutex_unlock(&kexec_mutex);
-> -	kimage_free(image);
->  
->  	return result;
->  }
-> 
 
 _______________________________________________
 kexec mailing list
