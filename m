@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZF0ty-00047h-B4
- for kexec@lists.infradead.org; Tue, 14 Jul 2015 14:09:42 +0000
-Date: Tue, 14 Jul 2015 10:09:20 -0400
+Date: Tue, 14 Jul 2015 10:20:04 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v4] kexec: Make a pair of map and unmap reserved pages
- when kdump fails to start
-Message-ID: <20150714140920.GA10792@redhat.com>
-References: <1436505137-4364-1-git-send-email-mnfhuang@gmail.com>
- <20150710105413.04e1db00@holzheu>
- <20150710090322.GA5138@dhcp-128-21.nay.redhat.com>
- <20150710111406.279dba14@holzheu>
+Subject: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers if kdump
+ is not available
+Message-ID: <20150714142004.GB10792@redhat.com>
+References: <20150710113331.4368.10495.stgit@softrs>
+ <20150710113331.4368.63745.stgit@softrs>
+ <87wpy82kqf.fsf@x220.int.ebiederm.org>
+ <20150713202611.GA16525@fifo99.com>
+ <87h9p7r0we.fsf@x220.int.ebiederm.org>
+ <20150714135919.GA18333@fifo99.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150710111406.279dba14@holzheu>
+In-Reply-To: <20150714135919.GA18333@fifo99.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,98 +25,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>, schwidefsky@de.ibm.com, linux390@de.ibm.com, ebiederm@xmission.com
+To: dwalker@fifo99.com
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-On Fri, Jul 10, 2015 at 11:14:06AM +0200, Michael Holzheu wrote:
+On Tue, Jul 14, 2015 at 01:59:19PM +0000, dwalker@fifo99.com wrote:
+> On Mon, Jul 13, 2015 at 08:19:45PM -0500, Eric W. Biederman wrote:
+> > dwalker@fifo99.com writes:
+> > 
+> > > On Fri, Jul 10, 2015 at 08:41:28AM -0500, Eric W. Biederman wrote:
+> > >> Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com> writes:
+> > >> 
+> > >> > You can call panic notifiers and kmsg dumpers before kdump by
+> > >> > specifying "crash_kexec_post_notifiers" as a boot parameter.
+> > >> > However, it doesn't make sense if kdump is not available.  In that
+> > >> > case, disable "crash_kexec_post_notifiers" boot parameter so that
+> > >> > you can't change the value of the parameter.
+> > >> 
+> > >> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> > >
+> > > I think it would make sense if he just replaced "kdump" with "kexec".
+> > 
+> > It would be less insane, however it still makes no sense as without
+> > kexec on panic support crash_kexec is a noop.  So the value of the
+> > seeting makes no difference.
+> 
+> Can you explain more, I don't really understand what you mean. Are you suggesting
+> the whole "crash_kexec_post_notifiers" feature has no value ?
 
-[..]
-> What about the following patch:
-> ---
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 7a36fdc..7837c4e 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1236,10 +1236,68 @@ int kexec_load_disabled;
->  
->  static DEFINE_MUTEX(kexec_mutex);
->  
-> +static int __kexec_load(unsigned long entry, unsigned long nr_segments,
+If CONFIG_KEXEC=n, then crash_kexec() is a nop. So it does not matter
+whether crash_kexec() is called before panic notifiers or after.
 
-How about renaming the function to do_kexec_load()?
-
-We also need to cleanup the description of commit. One needs to explain
-problem better and what's the solution this patch is implemeting.
-
-> +			struct kexec_segment __user *segments,
-> +			unsigned long flags)
-> +{
-> +	struct kimage **dest_image, *image;
-> +	unsigned long i;
-> +	int result;
-> +
-> +	if (flags & KEXEC_ON_CRASH)
-> +		dest_image = &kexec_crash_image;
-> +	else
-> +		dest_image = &kexec_image;
-> +
-> +	if (nr_segments == 0) {
-> +		/* Uninstall image */
-> +		kfree(xchg(dest_image, NULL));
-
-kimage_free(), as you have already noted in a follow up mail.
-
-> +		return 0;
-> +	}
-> +	if (flags & KEXEC_ON_CRASH) {
-> +		/*
-> +		 * Loading another kernel to switch to if this one
-> +		 * crashes.  Free any current crash dump kernel before
-> +		 * we corrupt it.
-> +		 */
-> +		kimage_free(xchg(&kexec_crash_image, NULL));
-> +	}
-> +
-> +	result = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
-> +	if (result)
-> +		return result;
-> +
-> +	if (flags & KEXEC_ON_CRASH)
-> +		crash_map_reserved_pages();
-> +
-> +	if (flags & KEXEC_PRESERVE_CONTEXT)
-> +		image->preserve_context = 1;
-> +
-> +	result = machine_kexec_prepare(image);
-> +	if (result)
-> +		goto failure_unmap_mem;
-> +
-> +	for (i = 0; i < nr_segments; i++) {
-> +		result = kimage_load_segment(image, &image->segment[i]);
-> +		if (result)
-> +			goto failure_unmap_mem;
-> +	}
-> +
-> +	kimage_terminate(image);
-> +
-> +	/* Install the new kernel and uninstall the old */
-> +	image = xchg(dest_image, image);
-> +
-> +failure_unmap_mem:
-
-I don't like this tag "failure_unmap_mem". We are calling this both
-in success path as well as failure path. So why not simply call it "out".
-
-> +	if (flags & KEXEC_ON_CRASH)
-> +		crash_unmap_reserved_pages();
-> +	kimage_free(image);
-
-Now kimage_free() is called with kexec_mutex held. Previously that was
-not the case. I hope that's not a problem.
-
-> +	return result;
-> +}
-> +
+IOW, what do you gain by disabling crash_kexec_post_notifiers, in 
+case of CONFIG_KEXEC=n?
 
 Thanks
 Vivek
