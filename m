@@ -1,22 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20150713202611.GA16525@fifo99.com>
- <87h9p7r0we.fsf@x220.int.ebiederm.org>
- <20150714135919.GA18333@fifo99.com>
- <20150714150208.GD10792@redhat.com>
- <20150714153430.GA18766@fifo99.com> <20150714154040.GA3912@redhat.com>
- <20150714154833.GA18883@fifo99.com>
- <20150714161612.GH10792@redhat.com>
- <87a8uyoeig.fsf@x220.int.ebiederm.org>
- <20150714172953.GA19135@fifo99.com>
- <20150714175527.GI10792@redhat.com>
-Date: Tue, 14 Jul 2015 13:01:12 -0500
-In-Reply-To: <20150714175527.GI10792@redhat.com> (Vivek Goyal's message of
- "Tue, 14 Jul 2015 13:55:27 -0400")
-Message-ID: <87si8qmxef.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers if kdump is
- not available
+Received: from e06smtp11.uk.ibm.com ([195.75.94.107])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZF4fE-0000Ml-QB
+ for kexec@lists.infradead.org; Tue, 14 Jul 2015 18:10:45 +0000
+Received: from /spool/local
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Tue, 14 Jul 2015 19:10:21 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com
+ (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id DBC972190056
+ for <kexec@lists.infradead.org>; Tue, 14 Jul 2015 19:09:55 +0100 (BST)
+Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
+ [9.149.37.247])
+ by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t6EIAICK38207552
+ for <kexec@lists.infradead.org>; Tue, 14 Jul 2015 18:10:18 GMT
+Received: from d06av12.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av12.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t6F19nim023220
+ for <kexec@lists.infradead.org>; Tue, 14 Jul 2015 19:09:50 -0600
+Date: Tue, 14 Jul 2015 20:10:16 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4] kexec: Make a pair of map and unmap reserved pages
+ when kdump fails to start
+Message-ID: <20150714201016.161e4f39@holzheu>
+In-Reply-To: <20150714140920.GA10792@redhat.com>
+References: <1436505137-4364-1-git-send-email-mnfhuang@gmail.com>
+ <20150710105413.04e1db00@holzheu>
+ <20150710090322.GA5138@dhcp-128-21.nay.redhat.com>
+ <20150710111406.279dba14@holzheu>
+ <20150714140920.GA10792@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,58 +46,60 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, dwalker@fifo99.com, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>, schwidefsky@de.ibm.com, linux390@de.ibm.com, ebiederm@xmission.com
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+On Tue, 14 Jul 2015 10:09:20 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-> On Tue, Jul 14, 2015 at 05:29:53PM +0000, dwalker@fifo99.com wrote:
->
+> On Fri, Jul 10, 2015 at 11:14:06AM +0200, Michael Holzheu wrote:
+> 
 > [..]
->> > >> > If a machine is failing, there are high chance it can't deliver you the
->> > >> > notification. Detecting that failure suing some kind of polling mechanism
->> > >> > might be more reliable. And it will make even kdump mechanism more
->> > >> > reliable so that it does not have to run panic notifiers after the crash.
->> > >> 
->> > >> I think what your suggesting is that my company should change how it's hardware works
->> > >> and that's not really an option for me. This isn't a simple thing like checking over the
->> > >> network if the machine is down or not, this is way more complex hardware design.
->> > >
->> > > That means you are ready to live with an unreliable design. There might be
->> > > cases where notifier does not get run properly and you will not do switch
->> > > despite the fact that OS has failed. I was just trying to nudge you in
->> > > a direction which could be more reliable mechanism.
->> > 
->> > Sigh I see some deep confusion going on here.
->> > 
->> > The panic notifiers are just that panic notifiers.  They have not been
->> > nor should they be tied to kexec.   If those notifiers force a switch
->> > over of between machines I fail to see why you would care if it was
->> > kexec or another panic situation that is forcing that switchover.
->> 
->> Hidehiro isn't fixing the failover situation on my side, he's fixing register
->> information collection when crash_kexec_post_notifiers is used.
->
-> Sure. Given that we have created this new parameter, let us fix it so that
-> we can capture the other cpu register state in crash dump.
->
-> I am little disappointed that it was not tested well when this parameter was
-> introuced. We should have atleast tested it to the extent to see if there
-> is proper cpu state present for all cpus in the crash dump.
->
-> At that point of time it looked like a simple modification
-> to allow panic notifiers before crash_kexec().
+> > What about the following patch:
+> > ---
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index 7a36fdc..7837c4e 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -1236,10 +1236,68 @@ int kexec_load_disabled;
+> >  
+> >  static DEFINE_MUTEX(kexec_mutex);
+> >  
+> > +static int __kexec_load(unsigned long entry, unsigned long nr_segments,
+> 
 
-Either that or we say no one cares enough, and it known broken so let's
-just revert the fool thing.
+[snip]
 
-I honestly can't see how to support panic notifiers, before kexec.
-There is no way to tell what is being done and all of the pieces
-including smp_send_stop are known to be buggy.
+> > +
+> > +failure_unmap_mem:
+> 
+> I don't like this tag "failure_unmap_mem". We are calling this both
+> in success path as well as failure path. So why not simply call it "out".
 
-It isn't like this latest set of patches was reviewed/tested much
-better, as the first patch was wrong.
+Since the code is better readable now, I'm fine with "out" :-)
 
-Eric
+> 
+> > +	if (flags & KEXEC_ON_CRASH)
+> > +		crash_unmap_reserved_pages();
+> > +	kimage_free(image);
+> 
+> Now kimage_free() is called with kexec_mutex held. Previously that was
+> not the case. I hope that's not a problem.
+
+Yes, I noticed that. But also in the original code there is already
+one spot where kimage_free() is called under lock:
+
+        /*
+         * In case of crash, new kernel gets loaded in reserved region. It is
+         * same memory where old crash kernel might be loaded. Free any
+         * current crash dump kernel before we corrupt it.
+         */
+        if (flags & KEXEC_FILE_ON_CRASH)
+                kimage_free(xchg(&kexec_crash_image, NULL));
+
+Therefore I thought it should be ok.
+
+Michael
+
 
 _______________________________________________
 kexec mailing list
