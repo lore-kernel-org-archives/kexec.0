@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 13 Jul 2015 20:26:11 +0000
-From: dwalker@fifo99.com
-Subject: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers if kdump
- is not available
-Message-ID: <20150713202611.GA16525@fifo99.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20150710113331.4368.10495.stgit@softrs>
  <20150710113331.4368.63745.stgit@softrs>
  <87wpy82kqf.fsf@x220.int.ebiederm.org>
+ <20150713202611.GA16525@fifo99.com>
+Date: Mon, 13 Jul 2015 20:19:45 -0500
+In-Reply-To: <20150713202611.GA16525@fifo99.com> (dwalker@fifo99.com's message
+ of "Mon, 13 Jul 2015 20:26:11 +0000")
+Message-ID: <87h9p7r0we.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87wpy82kqf.fsf@x220.int.ebiederm.org>
+Subject: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers if kdump is
+ not available
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,23 +23,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: dwalker@fifo99.com
 Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, linux-arm-kernel@lists.infradead.org, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Jul 10, 2015 at 08:41:28AM -0500, Eric W. Biederman wrote:
-> Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com> writes:
-> 
-> > You can call panic notifiers and kmsg dumpers before kdump by
-> > specifying "crash_kexec_post_notifiers" as a boot parameter.
-> > However, it doesn't make sense if kdump is not available.  In that
-> > case, disable "crash_kexec_post_notifiers" boot parameter so that
-> > you can't change the value of the parameter.
-> 
-> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+dwalker@fifo99.com writes:
 
-I think it would make sense if he just replaced "kdump" with "kexec".
+> On Fri, Jul 10, 2015 at 08:41:28AM -0500, Eric W. Biederman wrote:
+>> Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com> writes:
+>> 
+>> > You can call panic notifiers and kmsg dumpers before kdump by
+>> > specifying "crash_kexec_post_notifiers" as a boot parameter.
+>> > However, it doesn't make sense if kdump is not available.  In that
+>> > case, disable "crash_kexec_post_notifiers" boot parameter so that
+>> > you can't change the value of the parameter.
+>> 
+>> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>
+> I think it would make sense if he just replaced "kdump" with "kexec".
 
-Daniel
+It would be less insane, however it still makes no sense as without
+kexec on panic support crash_kexec is a noop.  So the value of the
+seeting makes no difference.
+
+Eric
 
 _______________________________________________
 kexec mailing list
