@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwkm03.jp.fujitsu.com ([202.219.69.170])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZFCsf-0005vb-B2
- for kexec@lists.infradead.org; Wed, 15 Jul 2015 02:57:09 +0000
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by kw-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 3028DAC01FD
- for <kexec@lists.infradead.org>;
- Wed, 15 Jul 2015 11:56:46 +0900 (JST)
-Date: Wed, 15 Jul 2015 11:56:39 +0900 (JST)
-Message-Id: <20150715.115639.164279461.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v1 2/4] Add get_pfn_offset
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <1436495333-22892-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1436495333-22892-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1436495333-22892-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Mime-Version: 1.0
+Message-ID: <55A5CED4.7050400@hitachi.com>
+Date: Wed, 15 Jul 2015 12:09:08 +0900
+From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+MIME-Version: 1.0
+Subject: Re: Re: [PATCH 3/3] kexec: Change the timing of callbacks related
+ to "crash_kexec_post_notifiers" boot option
+References: <20150710113331.4368.10495.stgit@softrs>
+ <20150710113331.4368.77050.stgit@softrs> <20150714144248.GC10792@redhat.com>
+In-Reply-To: <20150714144248.GC10792@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,93 +20,110 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhouwj-fnst@cn.fujitsu.com
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v1 2/4] Add get_pfn_offset
-Date: Fri, 10 Jul 2015 10:28:51 +0800
-
-> get_pfn_offset is used for generating incomplete kdump core.
-> When enospac occurs in writing the buf cd_page, it can be used to
-> get how many pages have been written.
+On 2015/07/14 23:42, Vivek Goyal wrote:
+> On Fri, Jul 10, 2015 at 08:33:31PM +0900, Hidehiro Kawai wrote:
+>> This patch fixes problems reported by Daniel Walker
+>> (https://lkml.org/lkml/2015/6/24/44), and also replaces the bug fix
+>> commits 5375b70 and f45d85f.
+>>
+>> If "crash_kexec_post_notifiers" boot option is specified,
+>> other cpus are stopped by smp_send_stop() before entering
+>> crash_kexec(), while usually machine_crash_shutdown() called by
+>> crash_kexec() does that.  This behavior change leads two problems.
+>>
+>>  Problem 1:
+>>  Some function in the crash_kexec() path depend on other cpus being
+>>  still online.  If other cpus have been offlined already, they
+>>  doesn't work properly.
+>>
+>>   Example:
+>>    panic()
+>>     crash_kexec()
+>>      machine_crash_shutdown()
+>>       octeon_generic_shutdown() // shutdown watchdog for ONLINE cpus
+>>      machine_kexec()
+>>
+>>  Problem 2:
+>>  Most of architectures stop other cpus in the machine_crash_shutdown()
+>>  path and save register information at the same time.  However, if
+>>  smp_send_stop() is called before that, we can't save the register
+>>  information.
+>>
+>> To solve these problems, this patch changes the timing of calling
+>> the callbacks instead of changing the timing of crash_kexec() if
+>> crash_kexec_post_notifiers boot option is specified.
+>>
+>>  Before:
+>>   if (!crash_kexec_post_notifiers)
+>>       crash_kexec()
+>>
+>>   smp_send_stop()
+>>   atomic_notifier_call_chain()
+>>   kmsg_dump()
+>>
+>>   if (crash_kexec_post_notifiers)
+>>       crash_kexec()
+>>
+>>  After:
+>>   crash_kexec()
+>>       machine_crash_shutdown()
+>>       if (crash_kexec_post_notifiers) {
+>>           atomic_notifier_call_chain()
+>>           kmsg_dump()
+>>       }
+>>       machine_kexec()
+>>
+>>   smp_send_stop()
+>>   if (!crash_kexec_post_notifiers) {
+>>       atomic_notifier_call_chain()
+>>       kmsg_dump()
+>>   }
+>>
 > 
-
-This patch should be merged into 3/4. This patch description is an
-expalnation of get_pfn_offset(). This should be just above
-get_pfn_offset() as a comment.
-
-> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-> ---
->  makedumpfile.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> I think this new code flow looks bad. Now we are calling kmsg_dump()
+> and atomic_notifier_call_chain() from inside the crash_kexec() as well
+> as from inside panic(). This is bad.
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 5a53246..e8b52f4 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -6300,6 +6300,30 @@ write_cd_buf(struct cache_data *cd)
->  }
->  
->  int
-> +get_pfn_offset(void *buf, struct cache_data *cd_page){
-> +	int size, file_end, offset;
-> +	page_desc_t *pd;
-> +
-> +	size = 0;
-> +	offset = 0;
-
-Put these initialization just before the while loop below.
-
-Is this really offset? This looks to me the number of pages.
-
-> +	file_end = lseek(cd_page->fd, 0, SEEK_END);
-> +	if (file_end < 0)
-> +		ERRMSG("Can't seek end of the dump file(%s).\n", cd_page->file_name);
-> +
-> +	while (TRUE) {
-> +		pd = (page_desc_t *)buf;
-> +		size += pd->size;
-> +		if (size > file_end - cd_page->offset)
-> +			break;
-> +
-> +		offset++;
-> +		buf += sizeof(page_desc_t);
-> +	}
-
-How about like this? I use nr_pages not offset.
-
-page_desc_t *pd = buf;
-
-...<skip>...
-
-size = pd->size;
-nr_pages = 0;
-while (size <= file_end - cd_page->offset) {
-    nr_pages++;
-    pd++;
-    size += pd->size;
-}
-
-Please rename get_pfn_offset(), too.
-
-> +
-> +	return offset;
-> +}
-> +
-> +int
->  write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
->  			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
->  {
-> -- 
-> 1.8.3.1
+> So basic problem seems to be that cpus need to be stopped once (with
+> or without panic notifiers. So why don't we look into desiginig a 
+> function which stops cpus, saves register states first and then does
+> rest of the processing.
 > 
+> Something like.
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> stop_cpus_save_register_state;
+> 
+> if (!crash_kexec_post_notifiers)
+> 	crash_kexec()
+> 
+> atomic_notifier_call_chain()
+> kmsg_dump()
+> 
+> Here crash_kexec() will have to be modified and it will assume that cpus
+> have already been stopped and register states have already been saved.
 
+Ah, nice! I like this idea :)
+
+> 
+> IOW, is there a reason that we can't get rid of smp_send_stop() and
+> use the mechanism crash_kexec() is using to stop cpus after panic()?
+
+I think there is no reason why we don't do so. smp_send_stop() just
+stops other cpus, but crash's one does more (collect registers and
+stop watchdogs if needed, etc.). why don't we just replace(improve) it?
+
+Thank you!
+
+
+-- 
+Masami HIRAMATSU
+Linux Technology Research Center, System Productivity Research Dept.
+Center for Technology Innovation - Systems Engineering
+Hitachi, Ltd., Research & Development Group
+E-mail: masami.hiramatsu.pt@hitachi.com
 
 _______________________________________________
 kexec mailing list
