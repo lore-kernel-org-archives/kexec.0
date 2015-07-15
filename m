@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55A5ECC3.5060803@hitachi.com>
-Date: Wed, 15 Jul 2015 14:16:51 +0900
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZFIO4-0002mS-8G
+ for kexec@lists.infradead.org; Wed, 15 Jul 2015 08:49:57 +0000
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6F8lktH028418
+ for <kexec@lists.infradead.org>; Wed, 15 Jul 2015 16:47:46 +0800
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2] makedumpfile: Fix a bug in generating incomplete kdump core
+Date: Wed, 15 Jul 2015 16:45:24 +0800
+Message-ID: <1436949924-31027-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers
- if kdump is not available
-References: <20150714135919.GA18333@fifo99.com>
- <20150714150208.GD10792@redhat.com> <20150714153430.GA18766@fifo99.com>
- <20150714154040.GA3912@redhat.com> <20150714154833.GA18883@fifo99.com>
- <20150714161612.GH10792@redhat.com> <87a8uyoeig.fsf@x220.int.ebiederm.org>
- <20150714172953.GA19135@fifo99.com> <20150714175527.GI10792@redhat.com>
- <87si8qmxef.fsf@x220.int.ebiederm.org> <20150714182336.GB3912@redhat.com>
-In-Reply-To: <20150714182336.GB3912@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,82 +24,163 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, dwalker@fifo99.com, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On 2015/07/15 3:23, Vivek Goyal wrote:
-> On Tue, Jul 14, 2015 at 01:01:12PM -0500, Eric W. Biederman wrote:
->> Vivek Goyal <vgoyal@redhat.com> writes:
->>
->>> On Tue, Jul 14, 2015 at 05:29:53PM +0000, dwalker@fifo99.com wrote:
->>>
->>> [..]
->>>>>>>> If a machine is failing, there are high chance it can't deliver you the
->>>>>>>> notification. Detecting that failure suing some kind of polling mechanism
->>>>>>>> might be more reliable. And it will make even kdump mechanism more
->>>>>>>> reliable so that it does not have to run panic notifiers after the crash.
->>>>>>>
->>>>>>> I think what your suggesting is that my company should change how it's hardware works
->>>>>>> and that's not really an option for me. This isn't a simple thing like checking over the
->>>>>>> network if the machine is down or not, this is way more complex hardware design.
->>>>>>
->>>>>> That means you are ready to live with an unreliable design. There might be
->>>>>> cases where notifier does not get run properly and you will not do switch
->>>>>> despite the fact that OS has failed. I was just trying to nudge you in
->>>>>> a direction which could be more reliable mechanism.
->>>>>
->>>>> Sigh I see some deep confusion going on here.
->>>>>
->>>>> The panic notifiers are just that panic notifiers.  They have not been
->>>>> nor should they be tied to kexec.   If those notifiers force a switch
->>>>> over of between machines I fail to see why you would care if it was
->>>>> kexec or another panic situation that is forcing that switchover.
->>>>
->>>> Hidehiro isn't fixing the failover situation on my side, he's fixing register
->>>> information collection when crash_kexec_post_notifiers is used.
->>>
->>> Sure. Given that we have created this new parameter, let us fix it so that
->>> we can capture the other cpu register state in crash dump.
->>>
->>> I am little disappointed that it was not tested well when this parameter was
->>> introuced. We should have atleast tested it to the extent to see if there
->>> is proper cpu state present for all cpus in the crash dump.
->>>
->>> At that point of time it looked like a simple modification
->>> to allow panic notifiers before crash_kexec().
->>
->> Either that or we say no one cares enough, and it known broken so let's
->> just revert the fool thing.
-> 
-> Masami, you introduced this option. Are you fine with the revert? Is it
-> really being used and tested?
+In current implementation, there is a bug in generating incomplete
+kdump core.
+The current implementation behaves as the following:
 
-Actually, it is tested but under very limited situation. I think we
-need a clear acceptance criteria, IOW, we need a testset for kdump
-so that we can make things better.
-Would you have it? maybe we can push it into kselftest.
+1. Write page header into the buffer cd_header.
+2. If cd_header is full, flush the cd_header.
+3. Write page data into the buffer cd_page.
+4. If cd_page is full, flush the cd_page.
 
->> I honestly can't see how to support panic notifiers, before kexec.
->> There is no way to tell what is being done and all of the pieces
->> including smp_send_stop are known to be buggy.
-> 
-> we should be able to replace smp_send_stop() with what crash_kexec() is
-> doing to stop the machine? If yes, then it should be fine I guess. This
-> parameter description clearly says that specify it at your own risk. So
-> we are not issuing a big support statement for successful kdump after
-> panic notifiers. If it is something fixable, otherwise user needs
-> to deal with it.
+When ENOSPC occurs in flushing cd_page, there's still data left in
+cd_header. We cannot read page data corresponding to the page
+headers in the cd_header even if the page data has been flushed into
+disk. The size of page data is 170 times larger than the size of
+page header per a single page frame. The difference becomes bigger
+if we use compression.
 
-Agreed (as I've sent in other replay).
+The patch fixs the bug by changing the logic and the new logic is:
 
-Thank you,
+1. Before writing page header and data into buffers, if either of the
+   buffers will be full, write the data of the buffer into file.
+2. When enospc occurs in writing the cd_header into file, fill the
+   cd_header with zero and re-write the cd_header.
+3. When enospc occurs in writing the cd_page into file, fill part
+   of the cd_header with zero according to how many pages in cd_page
+   have been written.
+4. Then, write the page header and data info buffers.
 
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+---
+ makedumpfile.c | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 91 insertions(+), 11 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index cc71f20..b056528 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6286,6 +6286,92 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ }
+ 
+ int
++write_cd_buf(struct cache_data *cd)
++{
++	if (cd->buf_size == 0)
++		return TRUE;
++
++	if (!write_buffer(cd->fd, cd->offset, cd->buf,
++			cd->buf_size, cd->file_name)) {
++		return FALSE;
++	}
++
++	return TRUE;
++}
++
++/*
++ * get_nr_pages is used for generating incomplete kdump core.
++ * When enospac occurs in writing the buf cd_page, it can be used to
++ * get how many pages have been written.
++ */
++int
++get_nr_pages(void *buf, struct cache_data *cd_page){
++	int size, file_end, nr_pages;
++	page_desc_t *pd = buf;
++
++	file_end = lseek(cd_page->fd, 0, SEEK_END);
++	if (file_end < 0) {
++		ERRMSG("Can't seek end of the dump file(%s).\n", cd_page->file_name);
++		return -1;
++	}
++
++	size = pd->size;
++	nr_pages = 0;
++	while (size <= file_end - cd_page->offset) {
++		nr_pages++;
++		pd++;
++		size += pd->size;
++	}
++
++	return nr_pages;
++}
++
++int
++write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
++		struct page_desc *pd, void *page_data)
++{
++	int written_headers_size;
++
++	/*
++	 * If either cd_header or cd_page is nearly full,
++	 * write the buffer cd_header into dumpfile and then write the cd_page.
++	 * With that, when enospc occurs, we can save more useful information.
++	 */
++	if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
++		|| cd_page->buf_size + pd->size > cd_page->cache_size){
++		if( !write_cd_buf(cd_header) ) {
++			memset(cd_header->buf, 0, cd_header->cache_size);
++			write_cd_buf(cd_header);
++
++			return FALSE;
++		}
++
++		if( !write_cd_buf(cd_page) ) {
++			written_headers_size = sizeof(page_desc_t) *
++					get_nr_pages(cd_header->buf, cd_page);
++			if (written_headers_size < 0)
++				return FALSE;
++
++			memset(cd_header->buf, 0, cd_header->cache_size);
++			cd_header->offset += written_headers_size;
++			cd_header->buf_size -= written_headers_size;
++			write_cd_buf(cd_header);
++
++			return FALSE;
++		}
++		cd_header->offset += cd_header->buf_size;
++		cd_page->offset += cd_page->buf_size;
++		cd_header->buf_size = 0;
++		cd_page->buf_size = 0;
++	}
++
++	write_cache(cd_header, pd, sizeof(page_desc_t));
++	write_cache(cd_page, page_data, pd->size);
++
++	return TRUE;
++}
++
++int
+ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
+ 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
+ {
+@@ -6424,17 +6510,11 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 		pd.offset     = *offset_data;
+ 		*offset_data  += pd.size;
+ 
+-                /*
+-                 * Write the page header.
+-                 */
+-                if (!write_cache(cd_header, &pd, sizeof(page_desc_t)))
+-                        goto out;
+-
+-                /*
+-                 * Write the page data.
+-                 */
+-		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
+-                        goto out;
++               /*
++                * Write the page header and the page data
++                */
++               if (!write_kdump_page(cd_header, cd_page, &pd, pd.flags ? buf_out : buf))
++                       goto out;
+         }
+ 
+ 	ret = TRUE;
 -- 
-Masami HIRAMATSU
-Linux Technology Research Center, System Productivity Research Dept.
-Center for Technology Innovation - Systems Engineering
-Hitachi, Ltd., Research & Development Group
-E-mail: masami.hiramatsu.pt@hitachi.com
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
