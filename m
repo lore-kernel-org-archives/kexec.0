@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55A5CED4.7050400@hitachi.com>
-Date: Wed, 15 Jul 2015 12:09:08 +0900
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-MIME-Version: 1.0
-Subject: Re: Re: [PATCH 3/3] kexec: Change the timing of callbacks related
- to "crash_kexec_post_notifiers" boot option
-References: <20150710113331.4368.10495.stgit@softrs>
- <20150710113331.4368.77050.stgit@softrs> <20150714144248.GC10792@redhat.com>
-In-Reply-To: <20150714144248.GC10792@redhat.com>
+Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZFD5W-0002CV-Ic
+ for kexec@lists.infradead.org; Wed, 15 Jul 2015 03:10:27 +0000
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id DD89BAC02DA
+ for <kexec@lists.infradead.org>; Wed, 15 Jul 2015 12:10:02 +0900 (JST)
+Date: Wed, 15 Jul 2015 12:09:57 +0900 (JST)
+Message-Id: <20150715.120957.106666381.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH v1 3/4] Add write_kdump_page
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <1436495333-22892-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1436495333-22892-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1436495333-22892-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,110 +27,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: zhouwj-fnst@cn.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-On 2015/07/14 23:42, Vivek Goyal wrote:
-> On Fri, Jul 10, 2015 at 08:33:31PM +0900, Hidehiro Kawai wrote:
->> This patch fixes problems reported by Daniel Walker
->> (https://lkml.org/lkml/2015/6/24/44), and also replaces the bug fix
->> commits 5375b70 and f45d85f.
->>
->> If "crash_kexec_post_notifiers" boot option is specified,
->> other cpus are stopped by smp_send_stop() before entering
->> crash_kexec(), while usually machine_crash_shutdown() called by
->> crash_kexec() does that.  This behavior change leads two problems.
->>
->>  Problem 1:
->>  Some function in the crash_kexec() path depend on other cpus being
->>  still online.  If other cpus have been offlined already, they
->>  doesn't work properly.
->>
->>   Example:
->>    panic()
->>     crash_kexec()
->>      machine_crash_shutdown()
->>       octeon_generic_shutdown() // shutdown watchdog for ONLINE cpus
->>      machine_kexec()
->>
->>  Problem 2:
->>  Most of architectures stop other cpus in the machine_crash_shutdown()
->>  path and save register information at the same time.  However, if
->>  smp_send_stop() is called before that, we can't save the register
->>  information.
->>
->> To solve these problems, this patch changes the timing of calling
->> the callbacks instead of changing the timing of crash_kexec() if
->> crash_kexec_post_notifiers boot option is specified.
->>
->>  Before:
->>   if (!crash_kexec_post_notifiers)
->>       crash_kexec()
->>
->>   smp_send_stop()
->>   atomic_notifier_call_chain()
->>   kmsg_dump()
->>
->>   if (crash_kexec_post_notifiers)
->>       crash_kexec()
->>
->>  After:
->>   crash_kexec()
->>       machine_crash_shutdown()
->>       if (crash_kexec_post_notifiers) {
->>           atomic_notifier_call_chain()
->>           kmsg_dump()
->>       }
->>       machine_kexec()
->>
->>   smp_send_stop()
->>   if (!crash_kexec_post_notifiers) {
->>       atomic_notifier_call_chain()
->>       kmsg_dump()
->>   }
->>
-> 
-> I think this new code flow looks bad. Now we are calling kmsg_dump()
-> and atomic_notifier_call_chain() from inside the crash_kexec() as well
-> as from inside panic(). This is bad.
-> 
-> So basic problem seems to be that cpus need to be stopped once (with
-> or without panic notifiers. So why don't we look into desiginig a 
-> function which stops cpus, saves register states first and then does
-> rest of the processing.
-> 
-> Something like.
-> 
-> stop_cpus_save_register_state;
-> 
-> if (!crash_kexec_post_notifiers)
-> 	crash_kexec()
-> 
-> atomic_notifier_call_chain()
-> kmsg_dump()
-> 
-> Here crash_kexec() will have to be modified and it will assume that cpus
-> have already been stopped and register states have already been saved.
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v1 3/4] Add write_kdump_page
+Date: Fri, 10 Jul 2015 10:28:52 +0800
 
-Ah, nice! I like this idea :)
-
+> write_kdump_page is used to write page when generating kdump core.
+> It mainly optimizes the way of generating incomplete core.
 > 
-> IOW, is there a reason that we can't get rid of smp_send_stop() and
-> use the mechanism crash_kexec() is using to stop cpus after panic()?
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> ---
+>  makedumpfile.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index e8b52f4..74bf83e 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -6324,6 +6324,59 @@ get_pfn_offset(void *buf, struct cache_data *cd_page){
+>  }
+>  
+>  int
+> +write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
+> +		struct page_desc *pd, void *page_data)
+> +{
+> +	int written_pfns_size;
+> +
+> +	/*
+> +	 * if either cd_header or cd_page is nearly full,
+> +	 * write the buffer cd_header into dumpfile and then write the cd_page.
+> +	 */
 
-I think there is no reason why we don't do so. smp_send_stop() just
-stops other cpus, but crash's one does more (collect registers and
-stop watchdogs if needed, etc.). why don't we just replace(improve) it?
+Please begin comments by capital letter. They should be formal.
 
-Thank you!
+Also, please explain why. What currently this comment says is obvious
+from the below.
 
+> +	if ( cd_header->buf_size + sizeof(pd) > cd_header->cache_size
 
--- 
-Masami HIRAMATSU
-Linux Technology Research Center, System Productivity Research Dept.
-Center for Technology Innovation - Systems Engineering
-Hitachi, Ltd., Research & Development Group
-E-mail: masami.hiramatsu.pt@hitachi.com
+No space needed here.
+
+Also, sizeof(pd) should have been sizeof(*pd), right?
+
+if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
+ 		|| cd_page->buf_size + pd->size > cd_page->cache_size){
+
+> +		|| cd_page->buf_size + pd->size > cd_page->cache_size ){
+> +
+> +		if(!write_cd_buf(cd_header)) {
+
+Space is needed here.
+
+      	 	if (!write_cd_buf(cd_header)) {
+
+> +			/*
+> +			 * if enospc occurs in writing cd_header,
+> +			 * fill the cd_header with zero and re-write it
+> +			 * into the dumpfile.
+> +			 */
+
+Also, this comment is meangless, no additional information...
+
+> +			memset(cd_header->buf, 0, cd_header->cache_size);
+> +			write_cd_buf(cd_header);
+> +
+> +			return FALSE;
+> +		}
+> +
+> +		if(!write_cd_buf(cd_page)) {
+> +			/*
+> +			 * if enospc occurs in writing cd_page,
+> +			 * get how many pages having been written.
+> +			 * and fill part of cd_header with zero according to it.
+> +			 */
+> +			written_pfns_size = sizeof(page_desc_t) *
+> +					get_pfn_offset(cd_header->buf, cd_page);
+
+Hmm, so get_pfn_offset() returns the number of pages? If so, this
+function name of get_pfn_offset() is very confusing.
+
+Is this variable name written_pfns_size good? That is, I associate
+page frame with pfn, but this variable should represent size of page
+headers.
+
+> +
+> +			memset(cd_header->buf, 0, cd_header->cache_size);
+> +			cd_header->offset += written_pfns_size;
+> +			cd_header->buf_size -= written_pfns_size;
+> +			write_cd_buf(cd_header);
+> +
+> +			return FALSE;
+> +		}
+> +		cd_header->offset += cd_header->buf_size;
+> +		cd_page->offset += cd_page->buf_size;
+> +		cd_header->buf_size = 0;
+> +		cd_page->buf_size = 0;
+> +	}
+> +
+> +	write_cache(cd_header, pd, sizeof(page_desc_t));
+> +	write_cache(cd_page, page_data, pd->size);
+> +
+> +	return TRUE;
+> +}
+> +
+> +int
+>  write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
+>  			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
+>  {
+> -- 
+> 1.8.3.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+--
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
