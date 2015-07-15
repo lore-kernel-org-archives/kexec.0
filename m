@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZFIO4-0002mS-8G
- for kexec@lists.infradead.org; Wed, 15 Jul 2015 08:49:57 +0000
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6F8lktH028418
- for <kexec@lists.infradead.org>; Wed, 15 Jul 2015 16:47:46 +0800
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v2] makedumpfile: Fix a bug in generating incomplete kdump core
-Date: Wed, 15 Jul 2015 16:45:24 +0800
-Message-ID: <1436949924-31027-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZFInt-0001rM-Cb
+ for kexec@lists.infradead.org; Wed, 15 Jul 2015 09:16:37 +0000
+Date: Wed, 15 Jul 2015 17:16:07 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/3] kexec: refactor CONFIG_KEXEC/CONFIG_KEXEC_FILE Kconfig
+Message-ID: <20150715091607.GB5424@dhcp-128-92.nay.redhat.com>
+References: <20150713021353.282890552@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150713021353.282890552@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,163 +23,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: jwboyer@fedoraproject.org, tytso@mit.edu, ptesarik@suse.cz, dhowells@redhat.com, ebiederm@xmission.com, vgoyal@redhat.com
 
-In current implementation, there is a bug in generating incomplete
-kdump core.
-The current implementation behaves as the following:
+On 07/13/15 at 10:13am, Dave Young wrote:
+> Previously Theodore Ts'o brought up an issue about kexec_load syscall bypassing
+> signature verification:
+> https://lkml.org/lkml/2015/6/14/280
+> 
+> Because we have two kexec load syscall, one kexec_load, another kexec_file_load,
+> the latter one was introduced by Vivek Goyal, it is mainly for supporting UEFI
+> secure boot. kexec_file_load verifies kernel signature, but even if with
+> CONFIG_KEXEC_VERIFY_SIG=y and CONFIG_KEXEC_FILE=y, kexec-tools still can use
+> old syscall and bypass signature verification.
+> 
+> KEXEC_FILE can also be used without UEFI, so kexec can always verify kernel
+> signature for security purpose. 
+> 
+> The suggestion in above thread is add a new Kconfig option for kexec common
+> code, here I use KEXEC_CORE, KEXEC and KEXEC_FILE select KEXEC_CORE so one can
+> compile only KEXEC_FILE without old kexec_load syscall.
+> 
+> There's checkpatch warnings and errors, I would like to send furthuer cleanup
+> patches after this series. Please let me know if you have other suggestions.
+> checkpatch errors are for cases such as assign a value to static variables.
+> 
+> PATCH 3/3 can be sort out from the series if people do not like. It is a
+> cleanup for a macro.
 
-1. Write page header into the buffer cd_header.
-2. If cd_header is full, flush the cd_header.
-3. Write page data into the buffer cd_page.
-4. If cd_page is full, flush the cd_page.
+Since it is not related to the Kconfig cleanup thus I will drop it in
+next update, will send out as a standalone patch later.
 
-When ENOSPC occurs in flushing cd_page, there's still data left in
-cd_header. We cannot read page data corresponding to the page
-headers in the cd_header even if the page data has been flushed into
-disk. The size of page data is 170 times larger than the size of
-page header per a single page frame. The difference becomes bigger
-if we use compression.
+Also there's a kexec-tools patch needed for testing KEXEC_FILE only, I forgot
+to mention, will take it in cover letter when I repost:
 
-The patch fixs the bug by changing the logic and the new logic is:
-
-1. Before writing page header and data into buffers, if either of the
-   buffers will be full, write the data of the buffer into file.
-2. When enospc occurs in writing the cd_header into file, fill the
-   cd_header with zero and re-write the cd_header.
-3. When enospc occurs in writing the cd_page into file, fill part
-   of the cd_header with zero according to how many pages in cd_page
-   have been written.
-4. Then, write the page header and data info buffers.
-
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- makedumpfile.c | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 91 insertions(+), 11 deletions(-)
+ kexec/crashdump-elf.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index cc71f20..b056528 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6286,6 +6286,92 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
- }
+--- kexec-tools.orig/kexec/crashdump-elf.c
++++ kexec-tools/kexec/crashdump-elf.c
+@@ -145,11 +145,12 @@ int FUNC(struct kexec_info *info,
  
- int
-+write_cd_buf(struct cache_data *cd)
-+{
-+	if (cd->buf_size == 0)
-+		return TRUE;
+ 	count_cpu = nr_cpus;
+ 	for (i = 0; count_cpu > 0; i++) {
+-		if (get_note_info(i, &notes_addr, &notes_len) < 0) {
+-			/* This cpu is not present. Skip it. */
+-			continue;
+-		}
++		int ret;
 +
-+	if (!write_buffer(cd->fd, cd->offset, cd->buf,
-+			cd->buf_size, cd->file_name)) {
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+/*
-+ * get_nr_pages is used for generating incomplete kdump core.
-+ * When enospac occurs in writing the buf cd_page, it can be used to
-+ * get how many pages have been written.
-+ */
-+int
-+get_nr_pages(void *buf, struct cache_data *cd_page){
-+	int size, file_end, nr_pages;
-+	page_desc_t *pd = buf;
-+
-+	file_end = lseek(cd_page->fd, 0, SEEK_END);
-+	if (file_end < 0) {
-+		ERRMSG("Can't seek end of the dump file(%s).\n", cd_page->file_name);
-+		return -1;
-+	}
-+
-+	size = pd->size;
-+	nr_pages = 0;
-+	while (size <= file_end - cd_page->offset) {
-+		nr_pages++;
-+		pd++;
-+		size += pd->size;
-+	}
-+
-+	return nr_pages;
-+}
-+
-+int
-+write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
-+		struct page_desc *pd, void *page_data)
-+{
-+	int written_headers_size;
-+
-+	/*
-+	 * If either cd_header or cd_page is nearly full,
-+	 * write the buffer cd_header into dumpfile and then write the cd_page.
-+	 * With that, when enospc occurs, we can save more useful information.
-+	 */
-+	if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
-+		|| cd_page->buf_size + pd->size > cd_page->cache_size){
-+		if( !write_cd_buf(cd_header) ) {
-+			memset(cd_header->buf, 0, cd_header->cache_size);
-+			write_cd_buf(cd_header);
-+
-+			return FALSE;
-+		}
-+
-+		if( !write_cd_buf(cd_page) ) {
-+			written_headers_size = sizeof(page_desc_t) *
-+					get_nr_pages(cd_header->buf, cd_page);
-+			if (written_headers_size < 0)
-+				return FALSE;
-+
-+			memset(cd_header->buf, 0, cd_header->cache_size);
-+			cd_header->offset += written_headers_size;
-+			cd_header->buf_size -= written_headers_size;
-+			write_cd_buf(cd_header);
-+
-+			return FALSE;
-+		}
-+		cd_header->offset += cd_header->buf_size;
-+		cd_page->offset += cd_page->buf_size;
-+		cd_header->buf_size = 0;
-+		cd_page->buf_size = 0;
-+	}
-+
-+	write_cache(cd_header, pd, sizeof(page_desc_t));
-+	write_cache(cd_page, page_data, pd->size);
-+
-+	return TRUE;
-+}
-+
-+int
- write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
- 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
- {
-@@ -6424,17 +6510,11 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 		pd.offset     = *offset_data;
- 		*offset_data  += pd.size;
++		ret = get_note_info(i, &notes_addr, &notes_len);
+ 		count_cpu--;
++		if (ret < 0) /* This cpu is not present. Skip it. */
++			continue;
  
--                /*
--                 * Write the page header.
--                 */
--                if (!write_cache(cd_header, &pd, sizeof(page_desc_t)))
--                        goto out;
--
--                /*
--                 * Write the page data.
--                 */
--		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
--                        goto out;
-+               /*
-+                * Write the page header and the page data
-+                */
-+               if (!write_kdump_page(cd_header, cd_page, &pd, pd.flags ? buf_out : buf))
-+                       goto out;
-         }
- 
- 	ret = TRUE;
--- 
-1.8.3.1
+ 		phdr = (PHDR *) bufp;
+ 		bufp += sizeof(PHDR);
 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
