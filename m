@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZFJ7W-0006kj-9u
- for kexec@lists.infradead.org; Wed, 15 Jul 2015 09:36:54 +0000
-Date: Wed, 15 Jul 2015 17:36:23 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 0/3] kexec: refactor CONFIG_KEXEC/CONFIG_KEXEC_FILE Kconfig
-Message-ID: <20150715093623.GC5424@dhcp-128-92.nay.redhat.com>
-References: <20150713021353.282890552@redhat.com>
- <20150715091607.GB5424@dhcp-128-92.nay.redhat.com>
+Message-ID: <55A63AC6.4040806@hitachi.com>
+Date: Wed, 15 Jul 2015 19:49:42 +0900
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150715091607.GB5424@dhcp-128-92.nay.redhat.com>
+Subject: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers if kdump
+ is not available
+References: <20150710113331.4368.10495.stgit@softrs>
+ <20150710113331.4368.63745.stgit@softrs>
+ <87wpy82kqf.fsf@x220.int.ebiederm.org> <20150713202611.GA16525@fifo99.com>
+ <87h9p7r0we.fsf@x220.int.ebiederm.org> <20150714135919.GA18333@fifo99.com>
+ <20150714150208.GD10792@redhat.com> <20150714153430.GA18766@fifo99.com>
+ <20150714154040.GA3912@redhat.com>
+In-Reply-To: <20150714154040.GA3912@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,82 +24,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: jwboyer@fedoraproject.org, tytso@mit.edu, ptesarik@suse.cz, dhowells@redhat.com, ebiederm@xmission.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, dwalker@fifo99.com, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-On 07/15/15 at 05:16pm, Dave Young wrote:
-> On 07/13/15 at 10:13am, Dave Young wrote:
-> > Previously Theodore Ts'o brought up an issue about kexec_load syscall bypassing
-> > signature verification:
-> > https://lkml.org/lkml/2015/6/14/280
-> > 
-> > Because we have two kexec load syscall, one kexec_load, another kexec_file_load,
-> > the latter one was introduced by Vivek Goyal, it is mainly for supporting UEFI
-> > secure boot. kexec_file_load verifies kernel signature, but even if with
-> > CONFIG_KEXEC_VERIFY_SIG=y and CONFIG_KEXEC_FILE=y, kexec-tools still can use
-> > old syscall and bypass signature verification.
-> > 
-> > KEXEC_FILE can also be used without UEFI, so kexec can always verify kernel
-> > signature for security purpose. 
-> > 
-> > The suggestion in above thread is add a new Kconfig option for kexec common
-> > code, here I use KEXEC_CORE, KEXEC and KEXEC_FILE select KEXEC_CORE so one can
-> > compile only KEXEC_FILE without old kexec_load syscall.
-> > 
-> > There's checkpatch warnings and errors, I would like to send furthuer cleanup
-> > patches after this series. Please let me know if you have other suggestions.
-> > checkpatch errors are for cases such as assign a value to static variables.
-> > 
-> > PATCH 3/3 can be sort out from the series if people do not like. It is a
-> > cleanup for a macro.
+(2015/07/15 0:40), Vivek Goyal wrote:
+> On Tue, Jul 14, 2015 at 03:34:30PM +0000, dwalker@fifo99.com wrote:
+>> On Tue, Jul 14, 2015 at 11:02:08AM -0400, Vivek Goyal wrote:
+>>> On Tue, Jul 14, 2015 at 01:59:19PM +0000, dwalker@fifo99.com wrote:
+>>>> On Mon, Jul 13, 2015 at 08:19:45PM -0500, Eric W. Biederman wrote:
+>>>>> dwalker@fifo99.com writes:
+>>>>>
+>>>>>> On Fri, Jul 10, 2015 at 08:41:28AM -0500, Eric W. Biederman wrote:
+>>>>>>> Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com> writes:
+>>>>>>>
+>>>>>>>> You can call panic notifiers and kmsg dumpers before kdump by
+>>>>>>>> specifying "crash_kexec_post_notifiers" as a boot parameter.
+>>>>>>>> However, it doesn't make sense if kdump is not available.  In that
+>>>>>>>> case, disable "crash_kexec_post_notifiers" boot parameter so that
+>>>>>>>> you can't change the value of the parameter.
+>>>>>>>
+>>>>>>> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>>>>>
+>>>>>> I think it would make sense if he just replaced "kdump" with "kexec".
+>>>>>
+>>>>> It would be less insane, however it still makes no sense as without
+>>>>> kexec on panic support crash_kexec is a noop.  So the value of the
+>>>>> seeting makes no difference.
+>>>>
+>>>> Can you explain more, I don't really understand what you mean. Are you suggesting
+>>>> the whole "crash_kexec_post_notifiers" feature has no value ?
+>>>
+>>> Daniel,
+>>>
+>>> BTW, why are you using crash_kexec_post_notifiers commandline? Why not
+>>> without it?
+>>
+>> It was explained in the prior thread but to rehash, the notifiers are used to do a switch
+>> over from the crashed machine to another redundant machine.
 > 
-> Since it is not related to the Kconfig cleanup thus I will drop it in
-> next update, will send out as a standalone patch later.
-> 
-> Also there's a kexec-tools patch needed for testing KEXEC_FILE only, I forgot
-> to mention, will take it in cover letter when I repost:
+> So why not detect failure using polling or issue notifications from second
+> kernel.
 
-BTW, it is the case below:
-kernel: CONFIG_KEXEC_FILE only,
-kexec-tools: do not use '-s' option, it should check kexec_load(2) earlier
-and fail out. but below code is still a fix to a code problem. 
+Polling is not sufficient because some kernel parts may be
+alive even if the responder of the polling is dead.  We want
+to notify the failure after stopping other CPUs.
 
-kexec -s -p work ok without the fix.
+Notifying from second kernel needs to wait for the kernel
+booted up and device initialization if needed, and this
+is not applicable if we want to do fast switchover.
 
-> 
-> ---
->  kexec/crashdump-elf.c |    9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> --- kexec-tools.orig/kexec/crashdump-elf.c
-> +++ kexec-tools/kexec/crashdump-elf.c
-> @@ -145,11 +145,12 @@ int FUNC(struct kexec_info *info,
->  
->  	count_cpu = nr_cpus;
->  	for (i = 0; count_cpu > 0; i++) {
-> -		if (get_note_info(i, &notes_addr, &notes_len) < 0) {
-> -			/* This cpu is not present. Skip it. */
-> -			continue;
-> -		}
-> +		int ret;
-> +
-> +		ret = get_note_info(i, &notes_addr, &notes_len);
->  		count_cpu--;
-> +		if (ret < 0) /* This cpu is not present. Skip it. */
-> +			continue;
->  
->  		phdr = (PHDR *) bufp;
->  		bufp += sizeof(PHDR);
-> 
-> Thanks
-> Dave
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
+Notifying just before second kernel, as Eric stated, is
+one of the reliable option although we can't do complicate
+things there.  For example, we can notify the failure by
+writing some specific I/O registers in purgatory codes
+provided by kexec command.  Since the purgatory codes are
+currently embedded into kexec command, so we might need to
+modify the mechanism to be pluggable because how to notify
+will differ among vendors.
+
+Anyway, this is the case of switchover use case.  If we want
+to save minimal information before kdump, notifiers or
+kmsg_dump() can be used.
+
+> IOW, expecting that a crashed machine will be able to deliver notification
+> reliably is falwed to begin with, IMHO.
+
+I think it depends on what callback is used.  Most of panic
+notifiers just do memory copy or I/O register access.
+Of course, there are relatively complicate notifiers too,
+and I'm preparing patch sets for hardening for that case.
+
+Regards,
+Hidehiro Kawai
+
+
 
 _______________________________________________
 kexec mailing list
