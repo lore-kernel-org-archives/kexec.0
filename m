@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZFD5W-0002CV-Ic
- for kexec@lists.infradead.org; Wed, 15 Jul 2015 03:10:27 +0000
-Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
- [10.134.21.209])
- by kw-mxoi2.gw.nic.fujitsu.com (Postfix) with ESMTP id DD89BAC02DA
- for <kexec@lists.infradead.org>; Wed, 15 Jul 2015 12:10:02 +0900 (JST)
-Date: Wed, 15 Jul 2015 12:09:57 +0900 (JST)
-Message-Id: <20150715.120957.106666381.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v1 3/4] Add write_kdump_page
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <1436495333-22892-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1436495333-22892-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1436495333-22892-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Mime-Version: 1.0
+Message-ID: <55A5ECC3.5060803@hitachi.com>
+Date: Wed, 15 Jul 2015 14:16:51 +0900
+From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+MIME-Version: 1.0
+Subject: Re: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers
+ if kdump is not available
+References: <20150714135919.GA18333@fifo99.com>
+ <20150714150208.GD10792@redhat.com> <20150714153430.GA18766@fifo99.com>
+ <20150714154040.GA3912@redhat.com> <20150714154833.GA18883@fifo99.com>
+ <20150714161612.GH10792@redhat.com> <87a8uyoeig.fsf@x220.int.ebiederm.org>
+ <20150714172953.GA19135@fifo99.com> <20150714175527.GI10792@redhat.com>
+ <87si8qmxef.fsf@x220.int.ebiederm.org> <20150714182336.GB3912@redhat.com>
+In-Reply-To: <20150714182336.GB3912@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,127 +24,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhouwj-fnst@cn.fujitsu.com
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, dwalker@fifo99.com, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v1 3/4] Add write_kdump_page
-Date: Fri, 10 Jul 2015 10:28:52 +0800
-
-> write_kdump_page is used to write page when generating kdump core.
-> It mainly optimizes the way of generating incomplete core.
+On 2015/07/15 3:23, Vivek Goyal wrote:
+> On Tue, Jul 14, 2015 at 01:01:12PM -0500, Eric W. Biederman wrote:
+>> Vivek Goyal <vgoyal@redhat.com> writes:
+>>
+>>> On Tue, Jul 14, 2015 at 05:29:53PM +0000, dwalker@fifo99.com wrote:
+>>>
+>>> [..]
+>>>>>>>> If a machine is failing, there are high chance it can't deliver you the
+>>>>>>>> notification. Detecting that failure suing some kind of polling mechanism
+>>>>>>>> might be more reliable. And it will make even kdump mechanism more
+>>>>>>>> reliable so that it does not have to run panic notifiers after the crash.
+>>>>>>>
+>>>>>>> I think what your suggesting is that my company should change how it's hardware works
+>>>>>>> and that's not really an option for me. This isn't a simple thing like checking over the
+>>>>>>> network if the machine is down or not, this is way more complex hardware design.
+>>>>>>
+>>>>>> That means you are ready to live with an unreliable design. There might be
+>>>>>> cases where notifier does not get run properly and you will not do switch
+>>>>>> despite the fact that OS has failed. I was just trying to nudge you in
+>>>>>> a direction which could be more reliable mechanism.
+>>>>>
+>>>>> Sigh I see some deep confusion going on here.
+>>>>>
+>>>>> The panic notifiers are just that panic notifiers.  They have not been
+>>>>> nor should they be tied to kexec.   If those notifiers force a switch
+>>>>> over of between machines I fail to see why you would care if it was
+>>>>> kexec or another panic situation that is forcing that switchover.
+>>>>
+>>>> Hidehiro isn't fixing the failover situation on my side, he's fixing register
+>>>> information collection when crash_kexec_post_notifiers is used.
+>>>
+>>> Sure. Given that we have created this new parameter, let us fix it so that
+>>> we can capture the other cpu register state in crash dump.
+>>>
+>>> I am little disappointed that it was not tested well when this parameter was
+>>> introuced. We should have atleast tested it to the extent to see if there
+>>> is proper cpu state present for all cpus in the crash dump.
+>>>
+>>> At that point of time it looked like a simple modification
+>>> to allow panic notifiers before crash_kexec().
+>>
+>> Either that or we say no one cares enough, and it known broken so let's
+>> just revert the fool thing.
 > 
-> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-> ---
->  makedumpfile.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 53 insertions(+)
+> Masami, you introduced this option. Are you fine with the revert? Is it
+> really being used and tested?
+
+Actually, it is tested but under very limited situation. I think we
+need a clear acceptance criteria, IOW, we need a testset for kdump
+so that we can make things better.
+Would you have it? maybe we can push it into kselftest.
+
+>> I honestly can't see how to support panic notifiers, before kexec.
+>> There is no way to tell what is being done and all of the pieces
+>> including smp_send_stop are known to be buggy.
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index e8b52f4..74bf83e 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -6324,6 +6324,59 @@ get_pfn_offset(void *buf, struct cache_data *cd_page){
->  }
->  
->  int
-> +write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
-> +		struct page_desc *pd, void *page_data)
-> +{
-> +	int written_pfns_size;
-> +
-> +	/*
-> +	 * if either cd_header or cd_page is nearly full,
-> +	 * write the buffer cd_header into dumpfile and then write the cd_page.
-> +	 */
+> we should be able to replace smp_send_stop() with what crash_kexec() is
+> doing to stop the machine? If yes, then it should be fine I guess. This
+> parameter description clearly says that specify it at your own risk. So
+> we are not issuing a big support statement for successful kdump after
+> panic notifiers. If it is something fixable, otherwise user needs
+> to deal with it.
 
-Please begin comments by capital letter. They should be formal.
+Agreed (as I've sent in other replay).
 
-Also, please explain why. What currently this comment says is obvious
-from the below.
+Thank you,
 
-> +	if ( cd_header->buf_size + sizeof(pd) > cd_header->cache_size
-
-No space needed here.
-
-Also, sizeof(pd) should have been sizeof(*pd), right?
-
-if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
- 		|| cd_page->buf_size + pd->size > cd_page->cache_size){
-
-> +		|| cd_page->buf_size + pd->size > cd_page->cache_size ){
-> +
-> +		if(!write_cd_buf(cd_header)) {
-
-Space is needed here.
-
-      	 	if (!write_cd_buf(cd_header)) {
-
-> +			/*
-> +			 * if enospc occurs in writing cd_header,
-> +			 * fill the cd_header with zero and re-write it
-> +			 * into the dumpfile.
-> +			 */
-
-Also, this comment is meangless, no additional information...
-
-> +			memset(cd_header->buf, 0, cd_header->cache_size);
-> +			write_cd_buf(cd_header);
-> +
-> +			return FALSE;
-> +		}
-> +
-> +		if(!write_cd_buf(cd_page)) {
-> +			/*
-> +			 * if enospc occurs in writing cd_page,
-> +			 * get how many pages having been written.
-> +			 * and fill part of cd_header with zero according to it.
-> +			 */
-> +			written_pfns_size = sizeof(page_desc_t) *
-> +					get_pfn_offset(cd_header->buf, cd_page);
-
-Hmm, so get_pfn_offset() returns the number of pages? If so, this
-function name of get_pfn_offset() is very confusing.
-
-Is this variable name written_pfns_size good? That is, I associate
-page frame with pfn, but this variable should represent size of page
-headers.
-
-> +
-> +			memset(cd_header->buf, 0, cd_header->cache_size);
-> +			cd_header->offset += written_pfns_size;
-> +			cd_header->buf_size -= written_pfns_size;
-> +			write_cd_buf(cd_header);
-> +
-> +			return FALSE;
-> +		}
-> +		cd_header->offset += cd_header->buf_size;
-> +		cd_page->offset += cd_page->buf_size;
-> +		cd_header->buf_size = 0;
-> +		cd_page->buf_size = 0;
-> +	}
-> +
-> +	write_cache(cd_header, pd, sizeof(page_desc_t));
-> +	write_cache(cd_page, page_data, pd->size);
-> +
-> +	return TRUE;
-> +}
-> +
-> +int
->  write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
->  			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
->  {
-> -- 
-> 1.8.3.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
---
-Thanks.
-HATAYAMA, Daisuke
-
+-- 
+Masami HIRAMATSU
+Linux Technology Research Center, System Productivity Research Dept.
+Center for Technology Innovation - Systems Engineering
+Hitachi, Ltd., Research & Development Group
+E-mail: masami.hiramatsu.pt@hitachi.com
 
 _______________________________________________
 kexec mailing list
