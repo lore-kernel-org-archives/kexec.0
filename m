@@ -1,22 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 14 Jul 2015 14:23:36 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 1/3] panic: Disable crash_kexec_post_notifiers if kdump
- is not available
-Message-ID: <20150714182336.GB3912@redhat.com>
-References: <20150714135919.GA18333@fifo99.com>
- <20150714150208.GD10792@redhat.com>
- <20150714153430.GA18766@fifo99.com>
- <20150714154040.GA3912@redhat.com>
- <20150714154833.GA18883@fifo99.com>
- <20150714161612.GH10792@redhat.com>
- <87a8uyoeig.fsf@x220.int.ebiederm.org>
- <20150714172953.GA19135@fifo99.com>
- <20150714175527.GI10792@redhat.com>
- <87si8qmxef.fsf@x220.int.ebiederm.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZFBWx-0001Ic-O1
+ for kexec@lists.infradead.org; Wed, 15 Jul 2015 01:30:40 +0000
+Date: Wed, 15 Jul 2015 09:30:09 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 2/3] [PATCH 2/3] kexec: split kexec_load syscall from
+ kexec core code
+Message-ID: <20150715013009.GB4337@dhcp-128-92.nay.redhat.com>
+References: <20150713021353.282890552@redhat.com>
+ <20150713022634.175021545@redhat.com>
+ <CAMuHMdUjz7gvEfQ0q=oBO5GRfXFYLwPatr3yE56e4=43V=5gWg@mail.gmail.com>
+ <20150714084651.GB4483@dhcp-129-237.nay.redhat.com>
+ <CAMuHMdUBBdUuyGES_sGULEXQx6sHpC8NFhH-+-1k+n=ZYvDb=Q@mail.gmail.com>
+ <20150714091149.GC4483@dhcp-129-237.nay.redhat.com>
+ <CAMuHMdXwYM=t82FamD2R4jQ21n66Khk533r4xKfA59PL2a6e9w@mail.gmail.com>
+ <20150714092448.GA11853@dhcp-129-237.nay.redhat.com>
+ <CAMuHMdXfxVQTDxJmsWeaSzwttQ_Hu0um481WQZYLy8K12rd8qA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87si8qmxef.fsf@x220.int.ebiederm.org>
+In-Reply-To: <CAMuHMdXfxVQTDxJmsWeaSzwttQ_Hu0um481WQZYLy8K12rd8qA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,68 +32,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-metag@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, dwalker@fifo99.com, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Josh Boyer <jwboyer@fedoraproject.org>, Theodore Ts'o <tytso@mit.edu>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, ptesarik@suse.cz, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Jul 14, 2015 at 01:01:12PM -0500, Eric W. Biederman wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
+Hi, Geert
+
+On 07/14/15 at 11:47am, Geert Uytterhoeven wrote:
+> Hi Dave,
 > 
-> > On Tue, Jul 14, 2015 at 05:29:53PM +0000, dwalker@fifo99.com wrote:
+> On Tue, Jul 14, 2015 at 11:24 AM, Dave Young <dyoung@redhat.com> wrote:
+> > On 07/14/15 at 11:16am, Geert Uytterhoeven wrote:
+> >> On Tue, Jul 14, 2015 at 11:11 AM, Dave Young <dyoung@redhat.com> wrote:
+> >> > On 07/14/15 at 10:50am, Geert Uytterhoeven wrote:
+> >> >> On Tue, Jul 14, 2015 at 10:46 AM, Dave Young <dyoung@redhat.com> wrote:
+> >> >> >> > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> >> >> >> > index 1c50210..20c48b3 100644
+> >> >> >> > --- a/arch/arm/Kconfig
+> >> >> >> > +++ b/arch/arm/Kconfig
+> >> >> >> > @@ -2001,10 +2001,14 @@ config XIP_PHYS_ADDR
+> >> >> >> >           be linked for and stored to.  This address is dependent on your
+> >> >> >> >           own flash usage.
+> >> >> >> >
+> >> >> >> > +config KEXEC_CORE
+> >> >> >> > +       bool
+> >> >> >> > +
+> >> >> >> >  config KEXEC
+> >> >> >> >         bool "Kexec system call (EXPERIMENTAL)"
+> >> >> >> >         depends on (!SMP || PM_SLEEP_SMP)
+> >> >> >> >         depends on !CPU_V7M
+> >> >> >> > +       select KEXEC_CORE
+> >> >> >> >         help
+> >> >> >> >           kexec is a system call that implements the ability to shutdown your
+> >> >> >> >           current kernel, and to start another kernel.  It is like a reboot
+> >> >> >>
+> >> >> >> As this KEXEC_CORE is appearing in all arch/*/Kconfig files, I think it's
+> >> >> >> time to add an ARCH_HAS_KEXEC symbol (to a common Kconfig file),
+> >> >> >> and let arch/*/Kconfig select that if the architecture has kexec support.
+> >> >> >>
+> >> >> >> Then KEXEC and KEXEC_CORE can live in the common Kconfig file,
+> >> >> >> without the need to duplicate it.
+> >> >> >
+> >> >> > I'm not sure I understand your idea well, do you means like
+> >> >> > in arch/Kconfig add ARCH_HAS_KEXEC which depends on KEXEC_CORE?
+> >> >>
+> >> >> No, ARCH_HAS_KEXEC and all other KEXEC config options in arch/Kconfig.
+> >> >> All other KEXEC config options should depend on ARCH_HAS_KEXEC,
+> >> >> which can be selected by architectures that support kexec.
+> >> >
+> >> > So it will be like below? problem is KEXEC_FILE is x86 only now, how
+> >> > to handle it then?
+> >> >
+> >> > arch/Kconfig:
+> >> > config ARCH_HAS_KEXEC
+> >> >         ...
+> >> > config KEXEC_CORE
+> >> >         ...
+> >> > config KEXEC
+> >>
+> >> depends on ARCH_HAS_KEXEC
+> >>
+> >> >         ...
+> >> > config KEXEC_FILE
+> >>
+> >> depends on ARCH_HAS_KEXEC
 > >
-> > [..]
-> >> > >> > If a machine is failing, there are high chance it can't deliver you the
-> >> > >> > notification. Detecting that failure suing some kind of polling mechanism
-> >> > >> > might be more reliable. And it will make even kdump mechanism more
-> >> > >> > reliable so that it does not have to run panic notifiers after the crash.
-> >> > >> 
-> >> > >> I think what your suggesting is that my company should change how it's hardware works
-> >> > >> and that's not really an option for me. This isn't a simple thing like checking over the
-> >> > >> network if the machine is down or not, this is way more complex hardware design.
-> >> > >
-> >> > > That means you are ready to live with an unreliable design. There might be
-> >> > > cases where notifier does not get run properly and you will not do switch
-> >> > > despite the fact that OS has failed. I was just trying to nudge you in
-> >> > > a direction which could be more reliable mechanism.
-> >> > 
-> >> > Sigh I see some deep confusion going on here.
-> >> > 
-> >> > The panic notifiers are just that panic notifiers.  They have not been
-> >> > nor should they be tied to kexec.   If those notifiers force a switch
-> >> > over of between machines I fail to see why you would care if it was
-> >> > kexec or another panic situation that is forcing that switchover.
-> >> 
-> >> Hidehiro isn't fixing the failover situation on my side, he's fixing register
-> >> information collection when crash_kexec_post_notifiers is used.
-> >
-> > Sure. Given that we have created this new parameter, let us fix it so that
-> > we can capture the other cpu register state in crash dump.
-> >
-> > I am little disappointed that it was not tested well when this parameter was
-> > introuced. We should have atleast tested it to the extent to see if there
-> > is proper cpu state present for all cpus in the crash dump.
-> >
-> > At that point of time it looked like a simple modification
-> > to allow panic notifiers before crash_kexec().
+> > But only x86 has KEXEC_FILE, if we make this change one will see KEXEC_FILE
+> > on arches other than x86..
 > 
-> Either that or we say no one cares enough, and it known broken so let's
-> just revert the fool thing.
+> Is there any technical reason why it's limited to x86?
 
-Masami, you introduced this option. Are you fine with the revert? Is it
-really being used and tested?
+It was implemented for UEFI secure boot, til now only done in x86. Of course it
+is also doable for other archtecture even if there's no secure boot. Basiclly
+one need port the userspace code in kexec-tools to kernel space, also need code
+to verify kernel signature.
 
-> I honestly can't see how to support panic notifiers, before kexec.
-> There is no way to tell what is being done and all of the pieces
-> including smp_send_stop are known to be buggy.
+> Else we may need ARCH_HAS_KEXEC_FILE, too :-(
 
-we should be able to replace smp_send_stop() with what crash_kexec() is
-doing to stop the machine? If yes, then it should be fine I guess. This
-parameter description clearly says that specify it at your own risk. So
-we are not issuing a big support statement for successful kdump after
-panic notifiers. If it is something fixable, otherwise user needs
-to deal with it.
+Hmm, I'm not sure it will have much benefits now to add two ARCH_HAS options.
+I would prefer current solution, but I can move the KEXEC_CORE to arch/Kconfig
 
 Thanks
-Vivek
+Dave
 
 _______________________________________________
 kexec mailing list
