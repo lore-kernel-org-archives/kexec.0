@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-bn1on0112.outbound.protection.outlook.com
+ ([157.56.110.112] helo=na01-bn1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZFz0n-0003hZ-UG
- for kexec@lists.infradead.org; Fri, 17 Jul 2015 06:20:47 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH v2] makedumpfile: Fix a bug in generating incomplete
- kdump core
-Date: Fri, 17 Jul 2015 06:18:14 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DCF7A9@BPXM01GP.gisp.nec.co.jp>
-References: <1436949924-31027-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1436949924-31027-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Content-Language: ja-JP
+ id 1ZGYF8-0004CG-Mx
+ for kexec@lists.infradead.org; Sat, 18 Jul 2015 19:57:55 +0000
+From: Scott Wood <scottwood@freescale.com>
+Subject: [PATCH 2/2] ppc64: Add a flag to tell the kernel it's booting from
+ kexec
+Date: Sat, 18 Jul 2015 14:57:19 -0500
+Message-ID: <1437249439-31496-2-git-send-email-scottwood@freescale.com>
+In-Reply-To: <1437249439-31496-1-git-send-email-scottwood@freescale.com>
+References: <1437249439-31496-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,184 +24,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-Hello Zhou,
+It needs to know this because the SMP release mechanism for Freescale
+book3e is different from when booting with normal hardware.  In theory
+we could simulate the normal spin table mechanism, but not (easily) at
+the addresses U-Boot put in the device tree -- so there'd need to be
+even more communication between the kernel and kexec to set that up.
+Since there's already a similar flag being set (for kdump only), this
+seemed like a reasonable approach.
 
->In current implementation, there is a bug in generating incomplete
->kdump core.
->The current implementation behaves as the following:
->
->1. Write page header into the buffer cd_header.
->2. If cd_header is full, flush the cd_header.
->3. Write page data into the buffer cd_page.
->4. If cd_page is full, flush the cd_page.
->
->When ENOSPC occurs in flushing cd_page, there's still data left in
->cd_header. We cannot read page data corresponding to the page
->headers in the cd_header even if the page data has been flushed into
->disk. The size of page data is 170 times larger than the size of
->page header per a single page frame. The difference becomes bigger
->if we use compression.
->
->The patch fixs the bug by changing the logic and the new logic is:
->
->1. Before writing page header and data into buffers, if either of the
->   buffers will be full, write the data of the buffer into file.
->2. When enospc occurs in writing the cd_header into file, fill the
->   cd_header with zero and re-write the cd_header.
->3. When enospc occurs in writing the cd_page into file, fill part
->   of the cd_header with zero according to how many pages in cd_page
->   have been written.
->4. Then, write the page header and data info buffers.
+Signed-off-by: Scott Wood <scottwood@freescale.com>
+---
+ kexec/arch/ppc64/kexec-elf-ppc64.c | 11 ++++++++++-
+ kexec/arch/ppc64/kexec-ppc64.h     |  2 ++
+ purgatory/arch/ppc64/v2wrap.S      | 11 +++++++++++
+ 3 files changed, 23 insertions(+), 1 deletion(-)
 
-This version looks good to me, I'll merge it into v1.5.9.
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index adcee4c..ebd91b1 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -112,7 +112,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	unsigned int my_panic_kernel;
+ 	uint64_t my_stack, my_backup_start;
+ 	uint64_t toc_addr;
+-	uint32_t my_run_at_load;
++	uint32_t my_run_at_load, my_booted_from_kexec;
+ 	unsigned int slave_code[256/sizeof (unsigned int)], master_entry;
+ 
+ 	/* See options.h -- add any more there, too. */
+@@ -314,6 +314,15 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 				sizeof(my_run_at_load));
+ 	}
+ 
++	elf_rel_get_symbol(&info->rhdr, "booted_from_kexec",
++			&my_booted_from_kexec,
++			sizeof(my_booted_from_kexec));
++	if (my_booted_from_kexec == KERNEL_BOOTED_FROM_KEXEC_MAGIC)
++		my_booted_from_kexec = 1;
++	elf_rel_set_symbol(&info->rhdr, "booted_from_kexec",
++			&my_booted_from_kexec,
++			sizeof(my_booted_from_kexec));
++
+ 	/* Set stack address */
+ 	my_stack = locate_hole(info, 16*1024, 0, 0, max_addr, 1);
+ 	my_stack += 16*1024;
+diff --git a/kexec/arch/ppc64/kexec-ppc64.h b/kexec/arch/ppc64/kexec-ppc64.h
+index 89ee942..0e9f63d 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.h
++++ b/kexec/arch/ppc64/kexec-ppc64.h
+@@ -14,6 +14,8 @@
+ #define HAVE_DYNAMIC_MEMORY
+ #define NEED_RESERVE_DTB
+ 
++#define KERNEL_BOOTED_FROM_KEXEC_MAGIC 0x6e6b7863 /* "nkxc" */
++
+ int setup_memory_ranges(unsigned long kexec_flags);
+ 
+ int elf_ppc64_probe(const char *buf, off_t len);
+diff --git a/purgatory/arch/ppc64/v2wrap.S b/purgatory/arch/ppc64/v2wrap.S
+index dc5034f..8ed9880 100644
+--- a/purgatory/arch/ppc64/v2wrap.S
++++ b/purgatory/arch/ppc64/v2wrap.S
+@@ -51,11 +51,19 @@
+ 	.align 8
+ 	.globl purgatory_start
+ purgatory_start:	b	master
++
++	.org purgatory_start + 0x58     # ABI: possible booted_from_kexec flag
++	.globl booted_from_kexec
++booted_from_kexec:
++	.long 0
++	.size booted_from_kexec, . - booted_from_kexec
++
+ 	.org purgatory_start + 0x5c     # ABI: possible run_at_load flag at 0x5c
+ 	.globl run_at_load
+ run_at_load:
+ 	.long 0
+ 	.size run_at_load, . - run_at_load
++
+ 	.org purgatory_start + 0x60     # ABI: slaves start at 60 with r3=phys
+ slave:	b $
+ 	.org purgatory_start + 0x100    # ABI: end of copied region
+@@ -111,6 +119,9 @@ master:
+ 	ld      9,0(6)          # load the OPAL entry address in r9
+ 	LOADADDR(6,kernel)
+ 	ld      4,0(6)          # load the kernel address
++	LOADADDR(6,booted_from_kexec)
++	lwz	7,0(6)		# possibly patched by kexec-elf-ppc64
++	stw	7,0x58(4)	# and patch it into the kernel
+ 	LOADADDR(6,run_at_load) # the load flag
+ 	lwz	7,0(6)		# possibly patched by kexec-elf-ppc64
+ 	stw	7,0x5c(4)	# and patch it into the kernel
+-- 
+2.1.4
 
-Thanks
-Atsushi Kumagai
-
->Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
->---
-> makedumpfile.c | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
-> 1 file changed, 91 insertions(+), 11 deletions(-)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index cc71f20..b056528 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -6286,6 +6286,92 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
-> }
->
-> int
->+write_cd_buf(struct cache_data *cd)
->+{
->+	if (cd->buf_size == 0)
->+		return TRUE;
->+
->+	if (!write_buffer(cd->fd, cd->offset, cd->buf,
->+			cd->buf_size, cd->file_name)) {
->+		return FALSE;
->+	}
->+
->+	return TRUE;
->+}
->+
->+/*
->+ * get_nr_pages is used for generating incomplete kdump core.
->+ * When enospac occurs in writing the buf cd_page, it can be used to
->+ * get how many pages have been written.
->+ */
->+int
->+get_nr_pages(void *buf, struct cache_data *cd_page){
->+	int size, file_end, nr_pages;
->+	page_desc_t *pd = buf;
-
-I prefer to
-
-+int
-+get_nr_pages(struct cache_data *cd_header, struct cache_data *cd_page){
-+	int size, file_end, nr_pages;
-+	page_desc_t *pd = cd_header->buf;
-
->+
->+	file_end = lseek(cd_page->fd, 0, SEEK_END);
->+	if (file_end < 0) {
->+		ERRMSG("Can't seek end of the dump file(%s).\n", cd_page->file_name);
->+		return -1;
->+	}
->+
->+	size = pd->size;
->+	nr_pages = 0;
->+	while (size <= file_end - cd_page->offset) {
->+		nr_pages++;
->+		pd++;
->+		size += pd->size;
->+	}
->+
->+	return nr_pages;
->+}
->+
->+int
->+write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
->+		struct page_desc *pd, void *page_data)
->+{
->+	int written_headers_size;
->+
->+	/*
->+	 * If either cd_header or cd_page is nearly full,
->+	 * write the buffer cd_header into dumpfile and then write the cd_page.
->+	 * With that, when enospc occurs, we can save more useful information.
->+	 */
->+	if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
->+		|| cd_page->buf_size + pd->size > cd_page->cache_size){
->+		if( !write_cd_buf(cd_header) ) {
->+			memset(cd_header->buf, 0, cd_header->cache_size);
->+			write_cd_buf(cd_header);
->+
->+			return FALSE;
->+		}
->+
->+		if( !write_cd_buf(cd_page) ) {
->+			written_headers_size = sizeof(page_desc_t) *
->+					get_nr_pages(cd_header->buf, cd_page);
->+			if (written_headers_size < 0)
->+				return FALSE;
->+
->+			memset(cd_header->buf, 0, cd_header->cache_size);
->+			cd_header->offset += written_headers_size;
->+			cd_header->buf_size -= written_headers_size;
->+			write_cd_buf(cd_header);
->+
->+			return FALSE;
->+		}
->+		cd_header->offset += cd_header->buf_size;
->+		cd_page->offset += cd_page->buf_size;
->+		cd_header->buf_size = 0;
->+		cd_page->buf_size = 0;
->+	}
->+
->+	write_cache(cd_header, pd, sizeof(page_desc_t));
->+	write_cache(cd_page, page_data, pd->size);
->+
->+	return TRUE;
->+}
->+
->+int
-> write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
-> 			 struct page_desc *pd_zero, off_t *offset_data, struct cycle *cycle)
-> {
->@@ -6424,17 +6510,11 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> 		pd.offset     = *offset_data;
-> 		*offset_data  += pd.size;
->
->-                /*
->-                 * Write the page header.
->-                 */
->-                if (!write_cache(cd_header, &pd, sizeof(page_desc_t)))
->-                        goto out;
->-
->-                /*
->-                 * Write the page data.
->-                 */
->-		if (!write_cache(cd_page, pd.flags ? buf_out : buf, pd.size))
->-                        goto out;
->+               /*
->+                * Write the page header and the page data
->+                */
->+               if (!write_kdump_page(cd_header, cd_page, &pd, pd.flags ? buf_out : buf))
->+                       goto out;
->         }
->
-> 	ret = TRUE;
->--
->1.8.3.1
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
