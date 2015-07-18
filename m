@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn1on0135.outbound.protection.outlook.com
- ([157.56.110.135] helo=na01-bn1-obe.outbound.protection.outlook.com)
+Received: from mail-by2on0124.outbound.protection.outlook.com
+ ([207.46.100.124] helo=na01-by2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZGYQh-0007mM-Sw
- for kexec@lists.infradead.org; Sat, 18 Jul 2015 20:09:52 +0000
+ id 1ZGYQj-0007mt-Su
+ for kexec@lists.infradead.org; Sat, 18 Jul 2015 20:09:55 +0000
 From: Scott Wood <scottwood@freescale.com>
-Subject: [RFC PATCH 15/17] powerpc/booke: Only use VIRT_PHYS_OFFSET on booke32
-Date: Sat, 18 Jul 2015 15:08:52 -0500
-Message-ID: <1437250134-307-16-git-send-email-scottwood@freescale.com>
+Subject: [RFC PATCH 02/17] powerpc/85xx: Don't use generic timebase sync on
+ 64-bit
+Date: Sat, 18 Jul 2015 15:08:39 -0500
+Message-ID: <1437250134-307-3-git-send-email-scottwood@freescale.com>
 In-Reply-To: <1437250134-307-1-git-send-email-scottwood@freescale.com>
 References: <1437250134-307-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
@@ -26,50 +27,35 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Scott Wood <scottwood@freescale.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org
 
-The way VIRT_PHYS_OFFSET is not correct on book3e-64, because
-it does not account for CONFIG_RELOCATABLE other than via the
-32-bit-only virt_phys_offset.
+85xx currently uses the generic timebase sync mechanism when
+CONFIG_KEXEC is enabled, because 32-bit 85xx kexec support does a hard
+reset of each core.  64-bit 85xx kexec does not do this, so we neither
+need nor want this (nor is the generic timebase sync code built on
+ppc64).
 
-book3e-64 can (and if the comment about a GCC miscompilation is still
-relevant, should) use the normal ppc64 __va/__pa.
-
-At this point, only booke-32 will use VIRT_PHYS_OFFSET, so given the
-issues with its calculation, restrict its definition to booke-32.
+FWIW, I don't like the fact that the hard reset is done on 32-bit
+kexec, and I especially don't like the timebase sync being triggered
+only on the presence of CONFIG_KEXEC rather than actually booting in
+that environment, but that's beyond the scope of this patch...
 
 Signed-off-by: Scott Wood <scottwood@freescale.com>
 ---
- arch/powerpc/include/asm/page.h | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/85xx/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index 71294a6..11889d8 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -107,12 +107,13 @@ extern long long virt_phys_offset;
+diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+index c2ded03..a0763be 100644
+--- a/arch/powerpc/platforms/85xx/smp.c
++++ b/arch/powerpc/platforms/85xx/smp.c
+@@ -344,7 +344,7 @@ struct smp_ops_t smp_85xx_ops = {
+ 	.cpu_disable	= generic_cpu_disable,
+ 	.cpu_die	= generic_cpu_die,
  #endif
- 
- /* See Description below for VIRT_PHYS_OFFSET */
--#ifdef CONFIG_RELOCATABLE_PPC32
-+#if defined(CONFIG_PPC32) && defined(CONFIG_BOOKE)
-+#ifdef CONFIG_RELOCATABLE
- #define VIRT_PHYS_OFFSET virt_phys_offset
- #else
- #define VIRT_PHYS_OFFSET (KERNELBASE - PHYSICAL_START)
+-#ifdef CONFIG_KEXEC
++#if defined(CONFIG_KEXEC) && !defined(CONFIG_PPC64)
+ 	.give_timebase	= smp_generic_give_timebase,
+ 	.take_timebase	= smp_generic_take_timebase,
  #endif
--
-+#endif
- 
- #ifdef CONFIG_PPC64
- #define MEMORY_START	0UL
-@@ -204,7 +205,7 @@ extern long long virt_phys_offset;
-  * On non-Book-E PPC64 PAGE_OFFSET and MEMORY_START are constants so use
-  * the other definitions for __va & __pa.
-  */
--#ifdef CONFIG_BOOKE
-+#if defined(CONFIG_PPC32) && defined(CONFIG_BOOKE)
- #define __va(x) ((void *)(unsigned long)((phys_addr_t)(x) + VIRT_PHYS_OFFSET))
- #define __pa(x) ((unsigned long)(x) - VIRT_PHYS_OFFSET)
- #else
 -- 
 2.1.4
 
