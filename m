@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2on0124.outbound.protection.outlook.com
- ([207.46.100.124] helo=na01-by2-obe.outbound.protection.outlook.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZGYQm-0007mt-By
- for kexec@lists.infradead.org; Sat, 18 Jul 2015 20:09:57 +0000
-From: Scott Wood <scottwood@freescale.com>
-Subject: [RFC PATCH 17/17] powerpc/book3e-64: Enable kexec
-Date: Sat, 18 Jul 2015 15:08:54 -0500
-Message-ID: <1437250134-307-18-git-send-email-scottwood@freescale.com>
-In-Reply-To: <1437250134-307-1-git-send-email-scottwood@freescale.com>
-References: <1437250134-307-1-git-send-email-scottwood@freescale.com>
-MIME-Version: 1.0
+ id 1ZH6jl-00054B-20
+ for kexec@lists.infradead.org; Mon, 20 Jul 2015 08:47:50 +0000
+Message-Id: <20150720083713.528114272@redhat.com>
+Date: Mon, 20 Jul 2015 16:37:13 +0800
+From: dyoung@redhat.com
+Subject: [PATCH V2 0/2] kexec: refactor CONFIG_KEXEC/CONFIG_KEXEC_FILE Kconfig
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,124 +15,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Scott Wood <scottwood@freescale.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Tiejun Chen <tiejun.chen@windriver.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: jwboyer@fedoraproject.org, tytso@mit.edu, ptesarik@suse.cz, dhowells@redhat.com, geert@linux-m68k.org, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-From: Tiejun Chen <tiejun.chen@windriver.com>
+Previously Theodore Ts'o brought up an issue about kexec_load syscall bypassing
+signature verification:
+https://lkml.org/lkml/2015/6/14/280
 
-Allow KEXEC for book3e, and bypass or convert non-book3e stuff
-in kexec code.
+Because we have two kexec load syscall, one kexec_load, another kexec_file_load,
+the latter one was introduced by Vivek Goyal, it is mainly for supporting UEFI
+secure boot. kexec_file_load verifies kernel signature, but even if with
+CONFIG_KEXEC_VERIFY_SIG=y and CONFIG_KEXEC_FILE=y, kexec-tools still can use
+old syscall and bypass signature verification.
 
-Signed-off-by: Tiejun Chen <tiejun.chen@windriver.com>
-[scottwood@freescale.com: move code to minimize diff, and cleanup]
-Signed-off-by: Scott Wood <scottwood@freescale.com>
----
- arch/powerpc/Kconfig                   |  2 +-
- arch/powerpc/kernel/machine_kexec_64.c | 19 +++++++++++++++++++
- arch/powerpc/kernel/misc_64.S          |  6 ++++++
- 3 files changed, 26 insertions(+), 1 deletion(-)
+KEXEC_FILE can also be used without UEFI, so kexec can always verify kernel
+signature for security purpose.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 5ef2711..710dcdb 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -414,7 +414,7 @@ config PPC64_SUPPORTS_MEMORY_FAILURE
+The suggestion in above thread is add a new Kconfig option for kexec common
+code, here I use KEXEC_CORE, KEXEC and KEXEC_FILE select KEXEC_CORE so one can
+compile only KEXEC_FILE without old kexec_load syscall.
+
+There's checkpatch warnings and errors, I would like to send furthuer cleanup
+patches after this series. Please let me know if you have other suggestions.
+checkpatch errors are for cases such as assign a value to static variables.
+
+Changes to V1:
+* drop patch 3/3 which is not belonging to this series
+* move KEXEC_CORE to generic arch/Kconfig, arch KEXEC selects KEXEC_CORE
+* add KEXEC_CORE in s390 arch.
+
+Tested kexec_load only, kexec_file_load only, kexec and kexec_file_load built in cases in x86. For kexec_file_load, tested signed and un-signed kernel.
+Tested kexec_load in powerpc64 arch.
+Build tested arm arch.
+
+For kexec_file_load, if you do not specify "-s" in kexec-tools, kexec load
+will hang, though "-s" is mandatory for kexec_file_load, kexec should still
+fail out instead of hanging there, here is a fix in kexec-tools:
  
- config KEXEC
- 	bool "kexec system call"
--	depends on (PPC_BOOK3S || FSL_BOOKE || (44x && !SMP))
-+	depends on (PPC_BOOK3S || FSL_BOOKE || (44x && !SMP)) || PPC_BOOK3E
- 	help
- 	  kexec is a system call that implements the ability to shutdown your
- 	  current kernel, and to start another kernel.  It is like a reboot
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 1a74446..b0d42a7 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -30,6 +30,21 @@
- #include <asm/smp.h>
- #include <asm/hw_breakpoint.h>
+--- kexec-tools.orig/kexec/crashdump-elf.c
++++ kexec-tools/kexec/crashdump-elf.c
+@@ -145,11 +145,12 @@ int FUNC(struct kexec_info *info,
  
-+#ifdef CONFIG_PPC_BOOK3E
-+int default_machine_kexec_prepare(struct kimage *image)
-+{
-+	int i;
-+	/*
-+	 * Since we use the kernel fault handlers and paging code to
-+	 * handle the virtual mode, we must make sure no destination
-+	 * overlaps kernel static data or bss.
-+	 */
-+	for (i = 0; i < image->nr_segments; i++)
-+		if (image->segment[i].mem < __pa(_end))
-+			return -ETXTBSY;
-+	return 0;
-+}
-+#else
- int default_machine_kexec_prepare(struct kimage *image)
- {
- 	int i;
-@@ -95,6 +110,7 @@ int default_machine_kexec_prepare(struct kimage *image)
- 
- 	return 0;
- }
-+#endif /* !CONFIG_PPC_BOOK3E */
- 
- static void copy_segments(unsigned long ind)
- {
-@@ -365,6 +381,7 @@ void default_machine_kexec(struct kimage *image)
- 	/* NOTREACHED */
- }
- 
-+#ifndef CONFIG_PPC_BOOK3E
- /* Values we need to export to the second kernel via the device tree. */
- static unsigned long htab_base;
- static unsigned long htab_size;
-@@ -411,3 +428,5 @@ static int __init export_htab_values(void)
- 	return 0;
- }
- late_initcall(export_htab_values);
-+#endif /* !CONFIG_PPC_BOOK3E */
+ 	count_cpu = nr_cpus;
+ 	for (i = 0; count_cpu > 0; i++) {
+-		if (get_note_info(i, &notes_addr, &notes_len) < 0) {
+-			/* This cpu is not present. Skip it. */
+-			continue;
+-		}
++		int ret;
 +
-diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-index fb955d9..8cf0b8ae 100644
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -624,9 +624,13 @@ _GLOBAL(kexec_sequence)
- 	lhz	r25,PACAHWCPUID(r13)	/* get our phys cpu from paca */
++		ret = get_note_info(i, &notes_addr, &notes_len);
+ 		count_cpu--;
++		if (ret < 0) /* This cpu is not present. Skip it. */
++			continue;
  
- 	/* disable interrupts, we are overwriting kernel data next */
-+#ifdef CONFIG_PPC_BOOK3E
-+	wrteei	0
-+#else
- 	mfmsr	r3
- 	rlwinm	r3,r3,0,17,15
- 	mtmsrd	r3,1
-+#endif
- 
- 	/* copy dest pages, flush whole dest image */
- 	mr	r3,r29
-@@ -648,6 +652,7 @@ _GLOBAL(kexec_sequence)
- 	li	r6,1
- 	stw	r6,kexec_flag-1b(5)
- 
-+#ifndef CONFIG_PPC_BOOK3E
- 	/* clear out hardware hash page table and tlb */
- #if !defined(_CALL_ELF) || _CALL_ELF != 2
- 	ld	r12,0(r27)		/* deref function descriptor */
-@@ -656,6 +661,7 @@ _GLOBAL(kexec_sequence)
- #endif
- 	mtctr	r12
- 	bctrl				/* ppc_md.hpte_clear_all(void); */
-+#endif /* !CONFIG_PPC_BOOK3E */
- 
- /*
-  *   kexec image calling is:
--- 
-2.1.4
+ 		phdr = (PHDR *) bufp;
+ 		bufp += sizeof(PHDR);
+
+Below is the diffstat of the patche series:
+--
+ arch/Kconfig                  |    3 
+ arch/arm/Kconfig              |    1 
+ arch/ia64/Kconfig             |    1 
+ arch/m68k/Kconfig             |    1 
+ arch/mips/Kconfig             |    1 
+ arch/powerpc/Kconfig          |    1 
+ arch/s390/Kconfig             |    1 
+ arch/sh/Kconfig               |    1 
+ arch/tile/Kconfig             |    1 
+ arch/x86/Kconfig              |    3 
+ arch/x86/boot/header.S        |    2 
+ arch/x86/include/asm/kdebug.h |    2 
+ arch/x86/kernel/Makefile      |    4 
+ arch/x86/kernel/kvmclock.c    |    4 
+ arch/x86/kernel/reboot.c      |    4 
+ arch/x86/kernel/setup.c       |    2 
+ arch/x86/kernel/vmlinux.lds.S |    2 
+ arch/x86/kvm/vmx.c            |    8 
+ arch/x86/platform/efi/efi.c   |    4 
+ arch/x86/platform/uv/uv_nmi.c |    6 
+ drivers/firmware/efi/Kconfig  |    2 
+ drivers/pci/pci-driver.c      |    2 
+ include/linux/kexec.h         |   12 
+ init/initramfs.c              |    4 
+ kernel/Makefile               |    2 
+ kernel/events/core.c          |    2 
+ kernel/kexec.c                | 2633 ------------------------------------------
+ kernel/kexec_core.c           | 1594 +++++++++++++++++++++++++
+ kernel/kexec_file.c           | 1044 ++++++++++++++++
+ kernel/kexec_internal.h       |   22 
+ kernel/ksysfs.c               |    6 
+ kernel/printk/printk.c        |    2 
+ kernel/reboot.c               |    2 
+ kernel/sysctl.c               |    2 
+ 34 files changed, 2725 insertions(+), 2656 deletions(-)
+
+--
+Thanks
+Dave
 
 
 _______________________________________________
