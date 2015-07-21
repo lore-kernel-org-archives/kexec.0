@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZHR7v-0001YA-TF
- for kexec@lists.infradead.org; Tue, 21 Jul 2015 06:34:09 +0000
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
- [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6L6Vq9M028638
- for <kexec@lists.infradead.org>; Tue, 21 Jul 2015 14:31:52 +0800
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v3 10/10] Add usage and manual about multiple threads process
-Date: Tue, 21 Jul 2015 14:29:13 +0800
-Message-ID: <1437460153-29211-11-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ id 1ZHRi6-0004MC-4w
+ for kexec@lists.infradead.org; Tue, 21 Jul 2015 07:11:31 +0000
+Message-ID: <55ADF066.8050800@cn.fujitsu.com>
+Date: Tue, 21 Jul 2015 15:10:30 +0800
+From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
+ <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v3 00/10] makedumpfile: parallel processing
+References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,100 +19,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+To: atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+Hello Kumagai,
 
-Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
----
- makedumpfile.8 |   24 ++++++++++++++++++++++++
- print_info.c   |   16 ++++++++++++++++
- 2 files changed, 40 insertions(+), 0 deletions(-)
+The PATCH v3 has improved the performance.
+The performance degradation in PATCH v2 mainly caused by the page_fault
+produced by the function compress2().
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 2d38cd0..b400a14 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -12,6 +12,8 @@ makedumpfile \- make a small dumpfile of kdump
- .br
- \fBmakedumpfile\fR \-\-split [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..]
- .br
-+\fBmakedumpfile\fR [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \-\-num\-threads \fITHREADNUM\fR [\-\-num\-buffers \fIBUFNUM\fR] \fIVMCORE\fR \fIDUMPFILE\fR
-+.br
- \fBmakedumpfile\fR \-\-reassemble \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..] \fIDUMPFILE\fR
- .br
- \fBmakedumpfile\fR \-g \fIVMCOREINFO\fR \-x \fIVMLINUX\fR
-@@ -371,6 +373,28 @@ the kdump\-compressed format.
- # makedumpfile \-\-split \-d 31 \-x vmlinux /proc/vmcore dumpfile1 dumpfile2
- 
- .TP
-+\fB\-\-num\-threads\fR \fITHREADNUM\fR
-+Using multiple threads to read and compress data of each page in parallel.
-+And it will reduces time for saving \fIDUMPFILE\fR.
-+This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
-+format from \fIVMCORE\fR in kdump\-compressed format or elf format.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
+I wrote some codes to test the performance of compress2. It almost costs
+the same time and produces the same amount of page_fault as executing compress2
+in thread.
+
+To reduce page_faults, I have to do the following in kdump_thread_function_cyclic().
+
++	/*
++	 * lock memory to reduce page_faults by compress2()
++	 */
++	void *temp = malloc(1);
++	memset(temp, 0, 1);
++	mlockall(MCL_CURRENT);
++	free(temp);
 +
-+.TP
-+\fB\-\-num\-buffers\fR \fIBUFNUM\fR
-+This option is used for multiple threads process, please check \-\-num\-threads
-+option. Multiple threads process will need buffers to store generated page
-+data by threads temporarily, and this option is used to specify the number
-+of pages can be stored.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-d 31 \-\-num\-threads 4 \-\-num\-buffers 30 /proc/vmcore dumpfile
-+
-+.TP
- \fB\-\-reassemble\fR
- Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
- into one \fIDUMPFILE\fR. dumpfile1 and dumpfile2 are reassembled into dumpfile
-diff --git a/print_info.c b/print_info.c
-index 9c36bec..e8a6b40 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -76,6 +76,10 @@ print_usage(void)
- 	MSG("  # makedumpfile --split [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE1\n");
- 	MSG("    DUMPFILE2 [DUMPFILE3 ..]\n");
- 	MSG("\n");
-+	MSG("  Using multiple threads to create DUMPFILE in parallel:\n");
-+	MSG("  # makedumpfile [OPTION] [-x VMLINUX|-i VMCOREINFO] --num-threads THREADNUM\n");
-+	MSG("    [--num-buffers BUFNUM] VMCORE DUMPFILE1\n");
-+	MSG("\n");
- 	MSG("  Reassemble multiple DUMPFILEs:\n");
- 	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\n");
- 	MSG("\n");
-@@ -184,6 +188,18 @@ print_usage(void)
- 	MSG("      by the number of DUMPFILEs.\n");
- 	MSG("      This feature supports only the kdump-compressed format.\n");
- 	MSG("\n");
-+	MSG("  [--num-threads THREADNUM]:\n");
-+	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
-+	MSG("      And it will reduces time for saving DUMPFILE.\n");
-+	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
-+	MSG("      VMCORE in kdump-compressed format or elf format.\n");
-+	MSG("\n");
-+	MSG("  [--num-buffers BUFNUM]:\n");
-+	MSG("      This option is used for multiple threads process, please check --num-threads\n");
-+	MSG("      option. Multiple threads process will need buffers to store generated page\n");
-+	MSG("      data by threads temporarily, and this option is used to specify the number\n");
-+	MSG("      of pages can be stored.\n");
-+	MSG("\n");
- 	MSG("  [--reassemble]:\n");
- 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
- 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
+
+With this, using a thread or not almost has the same performance.
+
+In our machine, I can get the same result as the following with PATCH v2.
+ > Test2-1:
+ >   | threads | compress time | exec time |
+ >   |    1    |     76.12     |   82.13   |
+ >
+ > Test2-2:
+ >   | threads | compress time | exec time |
+ >   |    1    |     41.97     |   51.46   |
+
+I test the new patch set in the machine, and below is the results.
+
+PATCH V2:
+###################################
+- System: PRIMEQUEST 1800E
+- CPU: Intel(R) Xeon(R) CPU E7540
+- memory: 32GB
+###################################
+************ makedumpfile -d 0 ******************
+                 core-data               0       256     512     768     1024    1280    1536    1792
+         threads-num
+-c
+         0                               158     1505    2119    2129    1707    1483    1440    1273
+         4                               207     589     672     673     636     564     536     514
+         8                               176     327     377     387     367     336     314     291
+         12                              191     272     295     306     288     259     257     240
+
+************ makedumpfile -d 7 ******************
+                 core-data               0       256     512     768     1024    1280    1536    1792
+         threads-num
+-c
+         0                               154     1508    2089    2133    1792    1660    1462    1312
+         4                               203     594     684     701     627     592     535     503
+         8                               172     326     377     393     366     334     313     286
+         12                              182     273     295     308     283     258     249     237
+
+
+
+PATCH v3:
+###################################
+- System: PRIMEQUEST 1800E
+- CPU: Intel(R) Xeon(R) CPU E7540
+- memory: 32GB
+###################################
+************ makedumpfile -d 0 ******************
+                 core-data               0       256     512     768     1024    1280    1536    1792
+         threads-num
+-c
+         0                               192     1488    1830
+         4                               62      393     477
+         8                               78      211     258
+
+************ makedumpfile -d 7 ******************
+                 core-data               0       256     512     768     1024    1280    1536    1792
+         threads-num
+-c
+         0                               197     1475    1815
+         4                               62      396     482
+         8                               78      209     252
+
+
 -- 
-1.7.1
+Thanks
+Zhou Wenjian
 
+On 07/21/2015 02:29 PM, Zhou Wenjian wrote:
+> This patch set implements parallel processing by means of multiple threads.
+> With this patch set, it is available to use multiple threads to read
+> and compress pages. This parallel process will save time.
+> This feature only supports creating dumpfile in kdump-compressed format from
+> vmcore in kdump-compressed format or elf format. Currently, sadump and
+>   xen kdump are not supported.
+>
+> Qiao Nuohan (10):
+>    Add readpage_kdump_compressed_parallel
+>    Add mappage_elf_parallel
+>    Add readpage_elf_parallel
+>    Add read_pfn_parallel
+>    Add function to initial bitmap for parallel use
+>    Add filter_data_buffer_parallel
+>    Add write_kdump_pages_parallel to allow parallel process
+>    Initial and free data used for parallel process
+>    Make makedumpfile available to read and compress pages parallelly
+>    Add usage and manual about multiple threads process
+>
+>   Makefile       |    2 +
+>   erase_info.c   |   29 ++-
+>   erase_info.h   |    2 +
+>   makedumpfile.8 |   24 ++
+>   makedumpfile.c | 1095 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>   makedumpfile.h |   80 ++++
+>   print_info.c   |   16 +
+>   7 files changed, 1245 insertions(+), 3 deletions(-)
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
 _______________________________________________
 kexec mailing list
