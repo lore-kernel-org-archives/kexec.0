@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZHR7p-0001YA-SA
- for kexec@lists.infradead.org; Tue, 21 Jul 2015 06:34:04 +0000
+ id 1ZHR7s-0001YA-Pc
+ for kexec@lists.infradead.org; Tue, 21 Jul 2015 06:34:07 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6L6Vmm2028621
- for <kexec@lists.infradead.org>; Tue, 21 Jul 2015 14:31:48 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6L6Vqf0028634
+ for <kexec@lists.infradead.org>; Tue, 21 Jul 2015 14:31:52 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v3 05/10] Add function to initial bitmap for parallel use
-Date: Tue, 21 Jul 2015 14:29:08 +0800
-Message-ID: <1437460153-29211-6-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v3 09/10] Make makedumpfile available to read and compress
+ pages parallelly
+Date: Tue, 21 Jul 2015 14:29:12 +0800
+Message-ID: <1437460153-29211-10-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,96 +32,159 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-initialize_bitmap_memory_parallel and initialize_2nd_bitmap_parallel
-is used for parallel process to avoid conflict on bitmap.
+Using this patch, it is available to use multiple threads to read
+and compress pages. This parallel process will save time.
+
+Currently, sadump and xen kdump is not supported.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- makedumpfile.c |   20 ++++++++++++++++++++
- makedumpfile.h |   18 ++++++++++++++++++
- 2 files changed, 38 insertions(+), 0 deletions(-)
+ makedumpfile.c |   68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ makedumpfile.h |    2 +
+ 2 files changed, 68 insertions(+), 2 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index e15855b..9c5da35 100644
+index 417741f..7003d10 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3411,6 +3411,16 @@ initialize_bitmap_memory(void)
+@@ -3857,6 +3857,27 @@ out:
+ 		DEBUG_MSG("Buffer size for the cyclic mode: %ld\n", info->bufsize_cyclic);
+ 	}
+ 
++	if (info->num_threads) {
++		if (is_xen_memory()) {
++			MSG("'--num-threads' option is disable,\n");
++			MSG("because %s is Xen's memory core image.\n",
++							info->name_memory);
++			return FALSE;
++		}
++
++		if (info->flag_sadump) {
++			MSG("'--num-threads' option is disable,\n");
++			MSG("because %s is sadump %s format.\n",
++			    info->name_memory, sadump_format_type_name());
++			return FALSE;
++		}
++
++		if (!initial_for_parallel()) {
++			MSG("Fail to initial for parallel process.\n");
++			return FALSE;
++		}
++	}
++
+ 	if (!is_xen_memory() && !cache_init())
+ 		return FALSE;
+ 
+@@ -7905,9 +7926,16 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 		if (!write_kdump_bitmap2(&cycle))
+ 			return FALSE;
+ 
+-		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
++		if (info->num_threads) {
++			if (!write_kdump_pages_parallel_cyclic(cd_header,
++							cd_page, &pd_zero,
++							&offset_data, &cycle))
++				return FALSE;
++		} else {
++			if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
+ 					&offset_data, &cycle))
+-			return FALSE;
++				return FALSE;
++		}
+ 	}
+ 	free_bitmap2_buffer();
+ 
+@@ -9874,6 +9902,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 	if (info->flag_sadump_diskset && !sadump_is_supported_arch())
+ 		return FALSE;
+ 
++	if (info->num_threads) {
++		if (info->flag_split) {
++			MSG("--num-threads cannot used with --split.\n");
++			return FALSE;
++		}
++
++		if (info->flag_elf_dumpfile) {
++			MSG("--num-threads cannot used with ELF format.\n");
++			return FALSE;
++		}
++	}
++
+ 	if ((argc == optind + 2) && !info->flag_flatten
+ 				 && !info->flag_split
+ 				 && !info->flag_sadump_diskset) {
+@@ -9938,6 +9978,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 	} else
+ 		return FALSE;
+ 
++	if (info->num_threads) {
++		if ((info->parallel_info =
++		     malloc(sizeof(parallel_info_t) * info->num_threads))
++		    == NULL) {
++			MSG("Can't allocate memory for parallel_info.\n");
++			return FALSE;
++		}
++
++		memset(info->parallel_info, 0, sizeof(parallel_info_t)
++							* info->num_threads);
++	}
++
  	return TRUE;
  }
  
-+void
-+initialize_bitmap_memory_parallel(struct dump_bitmap *bitmap, int thread_num)
-+{
-+	bitmap->fd = FD_BITMAP_MEMORY_PARALLEL(thread_num);
-+	bitmap->file_name = info->name_memory;
-+	bitmap->no_block = -1;
-+	memset(bitmap->buf, 0, BUFSIZE_BITMAP);
-+	bitmap->offset = info->bitmap_memory->offset;
-+}
-+
- int
- calibrate_machdep_info(void)
- {
-@@ -3725,6 +3735,16 @@ initialize_2nd_bitmap(struct dump_bitmap *bitmap)
- 	bitmap->offset = info->len_bitmap / 2;
- }
+@@ -10254,6 +10306,8 @@ static struct option longopts[] = {
+ 	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
+ 	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
+ 	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
++	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
++	{"num-buffers", required_argument, NULL, OPT_NUM_BUFFERS},
+ 	{0, 0, 0, 0}
+ };
  
-+void
-+initialize_2nd_bitmap_parallel(struct dump_bitmap *bitmap, int thread_num)
-+{
-+	bitmap->fd = FD_BITMAP_PARALLEL(thread_num);
-+	bitmap->file_name = info->name_bitmap;
-+	bitmap->no_block = -1;
-+	memset(bitmap->buf, 0, BUFSIZE_BITMAP);
-+	bitmap->offset = info->len_bitmap / 2;
-+}
+@@ -10398,6 +10452,12 @@ main(int argc, char *argv[])
+ 		case OPT_WORKING_DIR:
+ 			info->working_dir = optarg;
+ 			break;
++		case OPT_NUM_THREADS:
++			info->num_threads = atoi(optarg);
++			break;
++		case OPT_NUM_BUFFERS:
++			info->num_buffers = atoi(optarg);
++			break;
+ 		case '?':
+ 			MSG("Commandline parameter is invalid.\n");
+ 			MSG("Try `makedumpfile --help' for more information.\n");
+@@ -10541,6 +10601,8 @@ out:
+ 	else if (!info->flag_mem_usage)
+ 		MSG("makedumpfile Completed.\n");
+ 
++	free_for_parallel();
 +
- int
- set_bitmap_file(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val)
- {
+ 	if (info) {
+ 		if (info->dh_memory)
+ 			free(info->dh_memory);
+@@ -10568,6 +10630,8 @@ out:
+ 			free(info->p2m_mfn_frame_list);
+ 		if (info->page_buf != NULL)
+ 			free(info->page_buf);
++		if (info->parallel_info != NULL)
++			free(info->parallel_info);
+ 		free(info);
+ 
+ 		if (splitblock) {
 diff --git a/makedumpfile.h b/makedumpfile.h
-index bff134e..4b0709c 100644
+index d0760d9..9dfe5b6 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -429,6 +429,11 @@ do { \
- #define SPLITTING_SIZE_EI(i)	info->splitting_info[i].size_eraseinfo
+@@ -2032,6 +2032,8 @@ struct elf_prstatus {
+ #define OPT_MEM_USAGE           OPT_START+13
+ #define OPT_SPLITBLOCK_SIZE	OPT_START+14
+ #define OPT_WORKING_DIR         OPT_START+15
++#define OPT_NUM_THREADS	OPT_START+16
++#define OPT_NUM_BUFFERS	OPT_START+17
  
  /*
-+ * Macro for getting parallel info.
-+ */
-+#define FD_BITMAP_MEMORY_PARALLEL(i)	info->parallel_info[i].fd_bitmap_memory
-+#define FD_BITMAP_PARALLEL(i)		info->parallel_info[i].fd_bitmap
-+/*
-  * kernel version
-  *
-  * NOTE: the format of kernel_version is as follows
-@@ -1000,6 +1005,18 @@ struct splitting_info {
- 	unsigned long		size_eraseinfo;
- } splitting_info_t;
- 
-+struct parallel_info {
-+	int			fd_memory;
-+	int 			fd_bitmap_memory;
-+	int			fd_bitmap;
-+	unsigned char		*buf;
-+	unsigned char 		*buf_out;
-+	struct mmap_cache	*mmap_cache;
-+#ifdef USELZO
-+	lzo_bytep		wrkmem;
-+#endif
-+} parallel_info_t;
-+
- struct ppc64_vmemmap {
- 	unsigned long		phys;
- 	unsigned long		virt;
-@@ -1136,6 +1153,7 @@ struct DumpInfo {
- 	char			*name_dumpfile;
- 	int			num_dumpfile;
- 	struct splitting_info	*splitting_info;
-+	struct parallel_info	*parallel_info;
- 
- 	/*
- 	 * bitmap info:
+  * Function Prototype.
 -- 
 1.7.1
 
