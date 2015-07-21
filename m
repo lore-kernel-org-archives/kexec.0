@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZHR7p-0001YM-SJ
- for kexec@lists.infradead.org; Tue, 21 Jul 2015 06:34:02 +0000
+ id 1ZHR7q-0001X2-LT
+ for kexec@lists.infradead.org; Tue, 21 Jul 2015 06:34:04 +0000
 Received: from G08CNEXCHPEKD02.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6L6VloA028617
- for <kexec@lists.infradead.org>; Tue, 21 Jul 2015 14:31:47 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t6L6VnjR028624
+ for <kexec@lists.infradead.org>; Tue, 21 Jul 2015 14:31:49 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v3 04/10] Add read_pfn_parallel
-Date: Tue, 21 Jul 2015 14:29:07 +0800
-Message-ID: <1437460153-29211-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v3 06/10] Add filter_data_buffer_parallel
+Date: Tue, 21 Jul 2015 14:29:09 +0800
+Message-ID: <1437460153-29211-7-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,74 +31,75 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-read_pfn_parallel is used to enable reading pages from vmcore parallely.
-Current supported format is kdump-compressed and elf, mmap elf format
-is also supported.
+filter_data_buffer_parallel is used to enable filtering buffer
+parallely.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- Makefile       |    2 ++
- makedumpfile.c |   34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+), 0 deletions(-)
+ erase_info.c |   29 ++++++++++++++++++++++++++++-
+ erase_info.h |    2 ++
+ 2 files changed, 30 insertions(+), 1 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index fc21a3f..b1daf5b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -67,6 +67,8 @@ LIBS := -lsnappy $(LIBS)
- CFLAGS += -DUSESNAPPY
- endif
- 
-+LIBS := -lpthread $(LIBS)
-+
- all: makedumpfile
- 
- $(OBJ_PART): $(SRC_PART)
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 44c78b4..e15855b 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6349,6 +6349,40 @@ read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+diff --git a/erase_info.c b/erase_info.c
+index e0e0f71..0b253d7 100644
+--- a/erase_info.c
++++ b/erase_info.c
+@@ -2328,7 +2328,6 @@ extract_filter_info(unsigned long long start_paddr,
+ 	return TRUE;
  }
  
- int
-+read_pfn_parallel(int fd_memory, mdf_pfn_t pfn, unsigned char *buf,
-+		  struct dump_bitmap* bitmap_memory_parallel,
-+		  struct mmap_cache *mmap_cache)
+-
+ /*
+  * External functions.
+  */
+@@ -2413,6 +2412,34 @@ filter_data_buffer(unsigned char *buf, unsigned long long paddr,
+ 	}
+ }
+ 
++/*
++ * Filter buffer if the physical address is in filter_info.
++ */
++void
++filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
++					size_t size, pthread_mutex_t *mutex)
 +{
-+	unsigned long long paddr;
-+	unsigned long long pgaddr;
++	struct filter_info fl_info;
++	unsigned char *buf_ptr;
++	int found = FALSE;
 +
-+	paddr = pfn_to_paddr(pfn);
++	while (TRUE) {
++		pthread_mutex_lock(mutex);
++		found = extract_filter_info(paddr, paddr + size, &fl_info);
++		pthread_mutex_unlock(mutex);
 +
-+	pgaddr = PAGEBASE(paddr);
-+
-+	if (info->flag_refiltering) {
-+		if (!readpage_kdump_compressed_parallel(fd_memory, pgaddr, buf,
-+						      bitmap_memory_parallel)) {
-+			ERRMSG("Can't get the page data.\n");
-+			return FALSE;
-+		}
-+	} else {
-+		char *mapbuf = mappage_elf_parallel(fd_memory, pgaddr,
-+						    mmap_cache);
-+		if (mapbuf) {
-+			memcpy(buf, mapbuf, info->page_size);
++		if (found) {
++			buf_ptr = buf + (fl_info.paddr - paddr);
++			if (fl_info.nullify)
++				memset(buf_ptr, 0, fl_info.size);
++			else
++				memset(buf_ptr, fl_info.erase_ch, fl_info.size);
 +		} else {
-+			if (!readpage_elf_parallel(fd_memory, pgaddr, buf)) {
-+				ERRMSG("Can't get the page data.\n");
-+				return FALSE;
-+			}
++			break;
 +		}
 +	}
-+
-+	return TRUE;
 +}
 +
-+int
- get_loads_dumpfile_cyclic(void)
+ unsigned long
+ get_size_eraseinfo(void)
  {
- 	int i, phnum, num_new_load = 0;
+diff --git a/erase_info.h b/erase_info.h
+index 4d4957e..b363a40 100644
+--- a/erase_info.h
++++ b/erase_info.h
+@@ -60,6 +60,8 @@ extern unsigned long		num_erase_info;
+ int gather_filter_info(void);
+ void clear_filter_info(void);
+ void filter_data_buffer(unsigned char *buf, unsigned long long paddr, size_t size);
++void filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
++					size_t size, pthread_mutex_t *mutex);
+ unsigned long get_size_eraseinfo(void);
+ int update_filter_info_raw(unsigned long long, int, int);
+ 
 -- 
 1.7.1
 
