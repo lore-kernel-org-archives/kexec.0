@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZHobE-0006Y3-Da
- for kexec@lists.infradead.org; Wed, 22 Jul 2015 07:38:01 +0000
-Subject: [PATCH 1/3] x86/panic: Fix re-entrance problem due to panic on NMI
+ id 1ZHobE-0006Xw-EJ
+ for kexec@lists.infradead.org; Wed, 22 Jul 2015 07:37:59 +0000
+Subject: [PATCH 2/3] kexec: Fix race between panic() and crash_kexec()
+ directly called
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 Date: Wed, 22 Jul 2015 11:14:21 +0900
-Message-ID: <20150722021421.5155.9710.stgit@softrs>
+Message-ID: <20150722021421.5155.99671.stgit@softrs>
 In-Reply-To: <20150722021421.5155.74460.stgit@softrs>
 References: <20150722021421.5155.74460.stgit@softrs>
 MIME-Version: 1.0
@@ -23,166 +24,127 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
-Cc: linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 
-If panic on NMI happens just after panic() on the same CPU, panic()
-is recursively called.  As the result, it stalls on panic_lock.
+Currently, panic() and crash_kexec() can be called at the same time.
+For example (x86 case):
 
-To avoid this problem, don't call panic() in NMI context if
-we've already entered panic() (i.e. we hold panic_lock).
+CPU 0:
+  oops_end()
+    crash_kexec()
+      mutex_trylock() // acquired
+        nmi_shootdown_cpus() // stop other cpus
+
+CPU 1:
+  panic()
+    crash_kexec()
+      mutex_trylock() // failed to acquire
+    smp_send_stop() // stop other cpus
+    infinite loop
+
+If CPU 1 calls smp_send_stop() before nmi_shootdown_cpus(), kdump
+fails.
+
+In another case:
+
+CPU 0:
+  oops_end()
+    crash_kexec()
+      mutex_trylock() // acquired
+        <NMI>
+        io_check_error()
+          panic()
+            crash_kexec()
+              mutex_trylock() // failed to acquire
+            infinite loop
+
+Clearly, this is an undesirable result.
+
+To fix this problem, this patch changes crash_kexec() to exclude
+others by using panic_lock.
 
 Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/kernel/nmi.c  |   18 ++++++++++++------
- include/linux/kernel.h |    4 ++++
- kernel/panic.c         |   33 +++++++++++++++++++++++++--------
- 3 files changed, 41 insertions(+), 14 deletions(-)
+ include/linux/kexec.h |    2 ++
+ kernel/kexec.c        |   12 +++++++++++-
+ kernel/panic.c        |    4 ++--
+ 3 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index d05bd2e..c14b23f 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -230,8 +230,8 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- 	}
- #endif
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index e804306..bd6e477 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -238,6 +238,7 @@ extern int kexec_purgatory_get_set_symbol(struct kimage *image,
+ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
+ 					     const char *name);
+ extern void crash_kexec(struct pt_regs *);
++extern void __crash_kexec(struct pt_regs *);
+ int kexec_should_crash(struct task_struct *);
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+ void crash_save_vmcoreinfo(void);
+@@ -322,6 +323,7 @@ int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+ struct pt_regs;
+ struct task_struct;
+ static inline void crash_kexec(struct pt_regs *regs) { }
++static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ #endif /* CONFIG_KEXEC */
  
--	if (panic_on_unrecovered_nmi)
--		panic("NMI: Not continuing");
-+	if (panic_on_unrecovered_nmi && spin_trylock(&panic_lock))
-+		__panic("NMI: Not continuing");
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a785c10..fcdd825 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1470,7 +1470,7 @@ void __weak crash_unmap_reserved_pages(void)
  
- 	pr_emerg("Dazed and confused, but trying to continue\n");
+ #endif /* CONFIG_KEXEC_FILE */
  
-@@ -255,8 +255,12 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- 		 reason, smp_processor_id());
- 	show_regs(regs);
- 
--	if (panic_on_io_nmi)
--		panic("NMI IOCK error: Not continuing");
-+	if (panic_on_io_nmi) {
-+		if (spin_trylock(&panic_lock))
-+			__panic("NMI IOCK error: Not continuing");
-+		else
-+			return; /* We don't want to wait and re-enable NMI */
-+	}
- 
- 	/* Re-enable the IOCK line, wait for a few seconds */
- 	reason = (reason & NMI_REASON_CLEAR_MASK) | NMI_REASON_CLEAR_IOCHK;
-@@ -296,8 +300,10 @@ void unregister_nmi_handler(unsigned int type, const char *name)
- 		 reason, smp_processor_id());
- 
- 	pr_emerg("Do you have a strange power saving mode enabled?\n");
--	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
--		panic("NMI: Not continuing");
-+	if (unknown_nmi_panic || panic_on_unrecovered_nmi) {
-+		if (spin_trylock(&panic_lock))
-+			__panic("NMI: Not continuing");
-+	}
- 
- 	pr_emerg("Dazed and confused, but trying to continue\n");
- }
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 5582410..be430dc 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -250,11 +250,15 @@ static inline u32 reciprocal_scale(u32 val, u32 ep_ro)
- static inline void might_fault(void) { }
- #endif
- 
-+typedef struct spinlock spinlock_t;
-+extern spinlock_t panic_lock;
- extern struct atomic_notifier_head panic_notifier_list;
- extern long (*panic_blink)(int state);
- __printf(1, 2)
- void panic(const char *fmt, ...)
- 	__noreturn __cold;
-+void __panic(char *msg)
-+	__noreturn __cold;
- extern void oops_enter(void);
- extern void oops_exit(void);
- void print_oops_end_marker(void);
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 04e91ff..3c8338b 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -60,6 +60,8 @@ void __weak panic_smp_self_stop(void)
- 		cpu_relax();
- }
- 
-+DEFINE_SPINLOCK(panic_lock);
-+
- /**
-  *	panic - halt the system
-  *	@fmt: The text string to print
-@@ -70,11 +72,8 @@ void __weak panic_smp_self_stop(void)
-  */
- void panic(const char *fmt, ...)
+-void crash_kexec(struct pt_regs *regs)
++void __crash_kexec(struct pt_regs *regs)
  {
--	static DEFINE_SPINLOCK(panic_lock);
- 	static char buf[1024];
- 	va_list args;
--	long i, i_next = 0;
--	int state = 0;
+ 	/* Take the kexec_mutex here to prevent sys_kexec_load
+ 	 * running on one cpu from replacing the crash kernel
+@@ -1493,6 +1493,16 @@ void crash_kexec(struct pt_regs *regs)
+ 	}
+ }
  
- 	/*
- 	 * Disable local interrupts. This will prevent panic_smp_self_stop
-@@ -97,12 +96,30 @@ void panic(const char *fmt, ...)
- 	if (!spin_trylock(&panic_lock))
- 		panic_smp_self_stop();
- 
--	console_verbose();
--	bust_spinlocks(1);
- 	va_start(args, fmt);
- 	vsnprintf(buf, sizeof(buf), fmt, args);
- 	va_end(args);
--	pr_emerg("Kernel panic - not syncing: %s\n", buf);
++void crash_kexec(struct pt_regs *regs)
++{
++	unsigned long flags;
 +
-+	__panic(buf);
++	if (spin_trylock_irqsave(&panic_lock, flags)) {
++		__crash_kexec(regs);
++		spin_unlock_irqrestore(&panic_lock, flags);
++	}
 +}
 +
-+/**
-+ *	__panic - no lock version of panic
-+ *	@msg: The text string to print
-+ *
-+ *	Normally, please use panic().  This function can be used
-+ *	only if panic_lock has already been held.
-+ *
-+ *	This function never returns.
-+ */
-+void __panic(char *msg)
-+{
-+	long i, i_next = 0;
-+	int state = 0;
-+
-+	console_verbose();
-+	bust_spinlocks(1);
-+	pr_emerg("Kernel panic - not syncing: %s\n", msg);
- #ifdef CONFIG_DEBUG_BUGVERBOSE
- 	/*
- 	 * Avoid nested stack-dumping if a panic occurs during oops processing
-@@ -131,7 +148,7 @@ void panic(const char *fmt, ...)
- 	 * Run any panic handlers, including those that might need to
- 	 * add information to the kmsg dump output.
+ size_t crash_get_memory_size(void)
+ {
+ 	size_t size = 0;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 3c8338b..ce5c8ab 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -135,7 +135,7 @@ void __panic(char *msg)
+ 	 * the "crash_kexec_post_notifiers" option to the kernel.
  	 */
--	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
-+	atomic_notifier_call_chain(&panic_notifier_list, 0, msg);
+ 	if (!crash_kexec_post_notifiers)
+-		crash_kexec(NULL);
++		__crash_kexec(NULL);
  
- 	kmsg_dump(KMSG_DUMP_PANIC);
+ 	/*
+ 	 * Note smp_send_stop is the usual smp shutdown function, which
+@@ -160,7 +160,7 @@ void __panic(char *msg)
+ 	 * more unstable, it can increase risks of the kdump failure too.
+ 	 */
+ 	if (crash_kexec_post_notifiers)
+-		crash_kexec(NULL);
++		__crash_kexec(NULL);
  
-@@ -190,7 +207,7 @@ void panic(const char *fmt, ...)
- 		disabled_wait(caller);
- 	}
- #endif
--	pr_emerg("---[ end Kernel panic - not syncing: %s\n", buf);
-+	pr_emerg("---[ end Kernel panic - not syncing: %s\n", msg);
- 	local_irq_enable();
- 	for (i = 0; ; i += PANIC_TIMER_STEP) {
- 		touch_softlockup_watchdog();
+ 	bust_spinlocks(0);
+ 
 
 
 
