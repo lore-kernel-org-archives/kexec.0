@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mail-wi0-f181.google.com ([209.85.212.181])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZIDyg-0006mf-Gx
- for kexec@lists.infradead.org; Thu, 23 Jul 2015 10:43:51 +0000
-Date: Thu, 23 Jul 2015 12:43:21 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH] makedumpfile: Enable compressed dump formats for Xen
-Message-ID: <20150723124321.7d8406c0@hananiah.suse.cz>
+ id 1ZIEj3-0004LC-Mu
+ for kexec@lists.infradead.org; Thu, 23 Jul 2015 11:31:46 +0000
+Received: by wibud3 with SMTP id ud3so214314943wib.0
+ for <kexec@lists.infradead.org>; Thu, 23 Jul 2015 04:31:24 -0700 (PDT)
+Date: Thu, 23 Jul 2015 13:25:33 +0200
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 0/3] x86: Fix panic vs. NMI issues
+Message-ID: <20150723112532.GD9386@dhcp22.suse.cz>
+References: <20150722021421.5155.74460.stgit@softrs>
+ <20150723082514.GC9386@dhcp22.suse.cz>
+ <55B0BDB7.2050809@hitachi.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <55B0BDB7.2050809@hitachi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,57 +27,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec mailing list <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hello all,
+On Thu 23-07-15 19:11:03, Hidehiro Kawai wrote:
+> Hi,
+> 
+> Thanks for the feedback.
+> 
+> (2015/07/23 17:25), Michal Hocko wrote:
+> > Hi,
+> > 
+> > On Wed 22-07-15 11:14:21, Hidehiro Kawai wrote:
+> >> When an HA cluster software or administrator detects non-response
+> >> of a host, they issue an NMI to the host to completely stop current
+> >> works and take a crash dump.  If the kernel has already panicked
+> >> or is capturing a crash dump at that time, further NMI can cause
+> >> a crash dump failure.
+> >>
+> >> To solve this issue, this patch set does two things:
+> >>
+> >> - Don't panic on NMI if the kernel has already panicked
+> >> - Introduce "noextnmi" boot option which masks external NMI at the
+> >>   boot time (supported only for x86)
+> > 
+> > I am currently debugging the same issue for our customer. Curiously
+> > enough the issue happens on a Hitachi HW.
+> 
+> I found these issues by my white-box testing and source code
+> reading.  So, they haven't happened on our customers yet, but
+> possibly happen.
+> 
+> > I haven't posted my patch for an upstream review yet because I still
+> > do not have a feedback but I believe your solution is unnecessarily
+> > too complex. Unless I am missing something the following should be enough,
+> > no?
+> 
+> Your patch solves some cases, but I think it wouldn't cover
+> all cases where I want to solve.  How about the following cases?
+> 
+> 1) panic -> acquire panic_lock -> unknown NMI on this CPU ->
+>    panic -> failed to acquire panic_lock -> infinite loop
+> ==> no one processes kdump procedure. 
 
-this patch enables compressed file formats for Xen. I was suprized
-that nobody noticed earlier, given how trivial the change is. ;-)
+Ohh, I wasn't aware of panic_lock, 93e13a360ba3 ("kdump: fix
+crash_kexec()/smp_send_stop() race in panic()") has been introduced in
+3.3 and I was debugging this on 3.0 based kernel.
 
-Originally, the compressed KDUMP format was not sufficient for Xen
-Dom0 dumps, because it did not contain required Xen-specific
-information. However, all this info is stored in ELF notes, which
-have been present in the compressed file since version 4, so there
-is no longer any reason to restrict Xen dumps to ELF only.
-    
-One minor fix is necessary. In a Xen dump, PFN refers to physical
-pages _inside_ Dom0, but when compressing the whole file, the machine
-pages are used in fact (although the variable is still called pfn).
-Consequently, readmem() must interpret the address as a machine
-address rather than Dom0 physical address when saving Xen files.
-    
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> 2) crash_kexec w/o entering panic -> acquire kexec_mutex ->
+>    unknown NMI on this CPU -> panic -> crash_kexec ->
+>    failed to acquire kexec_mutex -> return to panic -> smp_send_stop
+> 
+> Even if with your patch, case 2) causes infinite loop of
+> try_crash_kexec and no one processes kdump procedure.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index de40932..2636036 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6015,9 +6015,11 @@ int
- read_pfn(mdf_pfn_t pfn, unsigned char *buf)
- {
- 	unsigned long long paddr;
-+	int type_addr;
- 
- 	paddr = pfn_to_paddr(pfn);
--	if (!readmem(PADDR, paddr, buf, info->page_size)) {
-+	type_addr = is_xen_memory() ? MADDR_XEN : PADDR;
-+	if (!readmem(type_addr, paddr, buf, info->page_size)) {
- 		ERRMSG("Can't get the page data.\n");
- 		return FALSE;
- 	}
-@@ -7654,12 +7656,6 @@ initial_xen(void)
- 	MSG("Xen is not supported on powerpc.\n");
- 	return FALSE;
- #else
--	if(!info->flag_elf_dumpfile && !info->flag_dmesg) {
--		MSG("Specify '-E' option for Xen.\n");
--		MSG("Commandline parameter is invalid.\n");
--		MSG("Try `makedumpfile --help' for more information.\n");
--		return FALSE;
--	}
- #ifndef __x86_64__
- 	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
- 		MSG("Dump_level is invalid. It should be 0 or 1.\n");
+You are right - I have missed this case.
+-- 
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
