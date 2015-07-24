@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZIRg5-0004PC-PP
- for kexec@lists.infradead.org; Fri, 24 Jul 2015 01:21:34 +0000
-Subject: [RFC V2 PATCH 0/1] kexec: crash_kexec_post_notifiers boot option
- related fixes
+ id 1ZIRg5-0004PD-Po
+ for kexec@lists.infradead.org; Fri, 24 Jul 2015 01:21:35 +0000
+Subject: [RFC V2 PATCH 1/1] panic/x86: Replace smp_send_stop() with crash_kexec
+ version
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 Date: Fri, 24 Jul 2015 10:16:15 +0900
-Message-ID: <20150724011615.6834.79628.stgit@softrs>
+Message-ID: <20150724011615.6834.97850.stgit@softrs>
+In-Reply-To: <20150724011615.6834.79628.stgit@softrs>
+References: <20150724011615.6834.79628.stgit@softrs>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,59 +26,145 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Daniel Walker <dwalker@fifo99.com>, Ingo Molnar <mingo@kernel.org>
 
-This is a bugfix patch for crash_kexec_post_notifiers boot option
-which allows users to call panic notifiers and kmsg dumpers before
-kdump.
+This patch fixes one of the problems reported by Daniel Walker
+(https://lkml.org/lkml/2015/6/24/44).
 
-This fixes one of the problems reported by Daniel Walker
-(https://lkml.org/lkml/2015/6/24/44). 
+If "crash_kexec_post_notifiers" boot option is specified,
+other cpus are stopped by smp_send_stop() before entering
+crash_kexec(), while usually machine_crash_shutdown() called by
+crash_kexec() does that.  This behavior change leads two problems.
 
  Problem 1:
- If crash_kexec_post_notifiers boot option is specified, some
- shutting down process which assume other cpus are still alive
- don't work properly.
+ Some functions in the crash_kexec() path depend on other cpus being
+ still online.  If other cpus have been offlined already, they
+ doesn't work properly.
 
- Problem 2 (addressed by this patch):
- If crash_kexec_post_notifiers boot option is specified, register
- information of other cpus are not saved to crash dumps.
+  Example (MIPS OCTEON case):
+   panic()
+    crash_kexec()
+     machine_crash_shutdown()
+      octeon_generic_shutdown() // shutdown watchdog for ONLINE cpus
+     machine_kexec()
 
-Following Vivek's opinion, this patch replaces smp_send_stop()
-in panic() with suitable version for crash_kexec which saves
-cpu states and other things like cleaning up VMX/SVM.  Since this
-needs architecture specific implementation and it's not so trivial,
-this version only support for x86.  So the problem 1, known to
-happen on MIPS/OCTEON, is not addressed now.
+ Problem 2:
+ Most of architectures stop other cpus in the machine_crash_shutdown()
+ path and save register information at that time.  However, if
+ smp_send_stop() is called before that, we can't save the register
+ information.
 
-To keep the modification impact low, this patch doesn't change
-the logic basically if crash_kexec_post_notifiers is not specified.
+This patch solves the problem 2 by replacing smp_send_stop() in
+panic() with panic_smp_stop_cpus() which is a weak function and can be
+replaced with suitable version for crash_kexec context.  In fact,
+x86 replaces it with a function based on kdump_nmi_shootdown_cpus() to
+stop other cpus and save their states.
 
 Please note that crash_kexec() can be called directly without
-entering panic().  Stopping other cpus functionality is still
-needed in crash_kexec().
+entering panic().  A stop-other-cpus procedure is still needed
+by crash_kexec().
 
 Changes in V2:
 - Replace smp_send_stop() call with crash_kexec version which
-  saves cpu states and does cleanups instead of changing execution
-  flow
-- Drop a fix for Problem 1
-- Drop other patches because they aren't needed anymore
+  saves cpu states and cleans up VMX/SVM
+- Drop a fix for Problem 1 at this moment
 
-V1: https://lkml.org/lkml/2015/7/10/316
-
+Reported-by: Daniel Walker <dwalker@fifo99.com>
+Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option
+Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
 ---
-
-Hidehiro Kawai (1):
-      panic/x86: Replace smp_send_stop() with crash_kexec version
-
-
  arch/x86/kernel/crash.c |   16 +++++++++++-----
  kernel/panic.c          |   29 +++++++++++++++++++++++------
  2 files changed, 34 insertions(+), 11 deletions(-)
 
-
--- 
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index e068d66..913c621 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -130,16 +130,22 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+ 	disable_local_APIC();
+ }
+ 
+-static void kdump_nmi_shootdown_cpus(void)
++/* Please see the comment on the weak version in kernel/panic.c */
++void panic_smp_stop_cpus(void)
+ {
++	static int cpus_stopped;
++
+ 	in_crash_kexec = 1;
+-	nmi_shootdown_cpus(kdump_nmi_callback);
+ 
+-	disable_local_APIC();
++	if (!cpus_stopped) {
++		nmi_shootdown_cpus(kdump_nmi_callback);
++		disable_local_APIC();
++		cpus_stopped = 1;
++	}
+ }
+ 
+ #else
+-static void kdump_nmi_shootdown_cpus(void)
++void panic_smp_stop_cpus(void)
+ {
+ 	/* There are no cpus to shootdown */
+ }
+@@ -158,7 +164,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+ 	/* The kernel is broken so disable interrupts */
+ 	local_irq_disable();
+ 
+-	kdump_nmi_shootdown_cpus();
++	panic_smp_stop_cpus();
+ 
+ 	/*
+ 	 * VMCLEAR VMCSs loaded on this cpu if needed.
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 04e91ff..a507637 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -60,6 +60,28 @@ void __weak panic_smp_self_stop(void)
+ 		cpu_relax();
+ }
+ 
++/*
++ * Stop other cpus in panic.  Architecture code may override this to
++ * with more suitable version.  Moreover, if the architecture supports
++ * crash dump, it should also save the states of stopped cpus.
++ *
++ * This function should be called only once.
++ */
++void __weak panic_smp_stop_cpus(void)
++{
++	static int cpus_stopped;
++
++	if (!cpus_stopped) {
++		/*
++		 * Note smp_send_stop is the usual smp shutdown function,
++		 * which unfortunately means it may not be hardened to
++		 * work in a panic situation.
++		 */
++		smp_send_stop();
++		cpus_stopped = 1;
++	}
++}
++
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -120,12 +142,7 @@ void panic(const char *fmt, ...)
+ 	if (!crash_kexec_post_notifiers)
+ 		crash_kexec(NULL);
+ 
+-	/*
+-	 * Note smp_send_stop is the usual smp shutdown function, which
+-	 * unfortunately means it may not be hardened to work in a panic
+-	 * situation.
+-	 */
+-	smp_send_stop();
++	panic_smp_stop_cpus();
+ 
+ 	/*
+ 	 * Run any panic handlers, including those that might need to
 
 
 
