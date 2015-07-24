@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f181.google.com ([209.85.212.181])
+Received: from g9t5009.houston.hp.com ([15.240.92.67])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZIEj3-0004LC-Mu
- for kexec@lists.infradead.org; Thu, 23 Jul 2015 11:31:46 +0000
-Received: by wibud3 with SMTP id ud3so214314943wib.0
- for <kexec@lists.infradead.org>; Thu, 23 Jul 2015 04:31:24 -0700 (PDT)
-Date: Thu, 23 Jul 2015 13:25:33 +0200
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 0/3] x86: Fix panic vs. NMI issues
-Message-ID: <20150723112532.GD9386@dhcp22.suse.cz>
-References: <20150722021421.5155.74460.stgit@softrs>
- <20150723082514.GC9386@dhcp22.suse.cz>
- <55B0BDB7.2050809@hitachi.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <55B0BDB7.2050809@hitachi.com>
+ id 1ZIQqU-0001I8-KG
+ for kexec@lists.infradead.org; Fri, 24 Jul 2015 00:28:15 +0000
+Message-ID: <1437697592.3214.373.camel@hp.com>
+Subject: kexec, x86: Need a new e820 type support for kexec
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Thu, 23 Jul 2015 18:26:32 -0600
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,64 +20,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: linux-nvdimm@lists.01.org
 
-On Thu 23-07-15 19:11:03, Hidehiro Kawai wrote:
-> Hi,
-> 
-> Thanks for the feedback.
-> 
-> (2015/07/23 17:25), Michal Hocko wrote:
-> > Hi,
-> > 
-> > On Wed 22-07-15 11:14:21, Hidehiro Kawai wrote:
-> >> When an HA cluster software or administrator detects non-response
-> >> of a host, they issue an NMI to the host to completely stop current
-> >> works and take a crash dump.  If the kernel has already panicked
-> >> or is capturing a crash dump at that time, further NMI can cause
-> >> a crash dump failure.
-> >>
-> >> To solve this issue, this patch set does two things:
-> >>
-> >> - Don't panic on NMI if the kernel has already panicked
-> >> - Introduce "noextnmi" boot option which masks external NMI at the
-> >>   boot time (supported only for x86)
-> > 
-> > I am currently debugging the same issue for our customer. Curiously
-> > enough the issue happens on a Hitachi HW.
-> 
-> I found these issues by my white-box testing and source code
-> reading.  So, they haven't happened on our customers yet, but
-> possibly happen.
-> 
-> > I haven't posted my patch for an upstream review yet because I still
-> > do not have a feedback but I believe your solution is unnecessarily
-> > too complex. Unless I am missing something the following should be enough,
-> > no?
-> 
-> Your patch solves some cases, but I think it wouldn't cover
-> all cases where I want to solve.  How about the following cases?
-> 
-> 1) panic -> acquire panic_lock -> unknown NMI on this CPU ->
->    panic -> failed to acquire panic_lock -> infinite loop
-> ==> no one processes kdump procedure. 
+Hello,
 
-Ohh, I wasn't aware of panic_lock, 93e13a360ba3 ("kdump: fix
-crash_kexec()/smp_send_stop() race in panic()") has been introduced in
-3.3 and I was debugging this on 3.0 based kernel.
+ACPI 6.0 defines a new type in e820, AddressRangePersistentMemory (7), for
+NVDIMM.  On a system with NVDIMM, kexec displays the following error
+message and sets it to RANGE_RESERVED as the fallback type.
 
-> 2) crash_kexec w/o entering panic -> acquire kexec_mutex ->
->    unknown NMI on this CPU -> panic -> crash_kexec ->
->    failed to acquire kexec_mutex -> return to panic -> smp_send_stop
-> 
-> Even if with your patch, case 2) causes infinite loop of
-> try_crash_kexec and no one processes kdump procedure.
+Unknown type (Persistent Memory) while parsing
+/sys/firmware/memmap/34/type. Please report this as bug. Using
+RANGE_RESERVED now.
 
-You are right - I have missed this case.
--- 
-Michal Hocko
-SUSE Labs
+This new type is defined in "arch/x86/include/uapi/asm/e820.h" in 4.2-rc1
+as follows. 
+
+  #define E820_PMEM       7
+
+kexec needs to know this new type, but I think its build env includes
+"/usr/include/asm/e820.h", which is provided by a distribution.  On Fedora
+22, kernel-headers-4.0.6-300.fc22.x86_64 is the latest kernel header
+package and it will take a while for 4.2 headers.
+
+How do we handle such kernel header dependency in the kexec build env?
+
+Thanks,
+-Toshi
+
+
+
+
+
+
+
 
 _______________________________________________
 kexec mailing list
