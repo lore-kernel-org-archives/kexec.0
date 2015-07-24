@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g9t5009.houston.hp.com ([15.240.92.67])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZIQqU-0001I8-KG
- for kexec@lists.infradead.org; Fri, 24 Jul 2015 00:28:15 +0000
-Message-ID: <1437697592.3214.373.camel@hp.com>
-Subject: kexec, x86: Need a new e820 type support for kexec
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Thu, 23 Jul 2015 18:26:32 -0600
-Mime-Version: 1.0
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZIRg5-0004PC-PP
+ for kexec@lists.infradead.org; Fri, 24 Jul 2015 01:21:34 +0000
+Subject: [RFC V2 PATCH 0/1] kexec: crash_kexec_post_notifiers boot option
+ related fixes
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Fri, 24 Jul 2015 10:16:15 +0900
+Message-ID: <20150724011615.6834.79628.stgit@softrs>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,38 +21,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linux-nvdimm@lists.01.org
+To: Andrew Morton <akpm@linux-foundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Daniel Walker <dwalker@fifo99.com>, Ingo Molnar <mingo@kernel.org>
 
-Hello,
+This is a bugfix patch for crash_kexec_post_notifiers boot option
+which allows users to call panic notifiers and kmsg dumpers before
+kdump.
 
-ACPI 6.0 defines a new type in e820, AddressRangePersistentMemory (7), for
-NVDIMM.  On a system with NVDIMM, kexec displays the following error
-message and sets it to RANGE_RESERVED as the fallback type.
+This fixes one of the problems reported by Daniel Walker
+(https://lkml.org/lkml/2015/6/24/44). 
 
-Unknown type (Persistent Memory) while parsing
-/sys/firmware/memmap/34/type. Please report this as bug. Using
-RANGE_RESERVED now.
+ Problem 1:
+ If crash_kexec_post_notifiers boot option is specified, some
+ shutting down process which assume other cpus are still alive
+ don't work properly.
 
-This new type is defined in "arch/x86/include/uapi/asm/e820.h" in 4.2-rc1
-as follows. 
+ Problem 2 (addressed by this patch):
+ If crash_kexec_post_notifiers boot option is specified, register
+ information of other cpus are not saved to crash dumps.
 
-  #define E820_PMEM       7
+Following Vivek's opinion, this patch replaces smp_send_stop()
+in panic() with suitable version for crash_kexec which saves
+cpu states and other things like cleaning up VMX/SVM.  Since this
+needs architecture specific implementation and it's not so trivial,
+this version only support for x86.  So the problem 1, known to
+happen on MIPS/OCTEON, is not addressed now.
 
-kexec needs to know this new type, but I think its build env includes
-"/usr/include/asm/e820.h", which is provided by a distribution.  On Fedora
-22, kernel-headers-4.0.6-300.fc22.x86_64 is the latest kernel header
-package and it will take a while for 4.2 headers.
+To keep the modification impact low, this patch doesn't change
+the logic basically if crash_kexec_post_notifiers is not specified.
 
-How do we handle such kernel header dependency in the kexec build env?
+Please note that crash_kexec() can be called directly without
+entering panic().  Stopping other cpus functionality is still
+needed in crash_kexec().
 
-Thanks,
--Toshi
+Changes in V2:
+- Replace smp_send_stop() call with crash_kexec version which
+  saves cpu states and does cleanups instead of changing execution
+  flow
+- Drop a fix for Problem 1
+- Drop other patches because they aren't needed anymore
+
+V1: https://lkml.org/lkml/2015/7/10/316
+
+---
+
+Hidehiro Kawai (1):
+      panic/x86: Replace smp_send_stop() with crash_kexec version
 
 
+ arch/x86/kernel/crash.c |   16 +++++++++++-----
+ kernel/panic.c          |   29 +++++++++++++++++++++++------
+ 2 files changed, 34 insertions(+), 11 deletions(-)
 
 
-
+-- 
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
 
 
 
