@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3426.houston.hp.com ([15.201.208.54])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZIe7f-0005uG-ES
- for kexec@lists.infradead.org; Fri, 24 Jul 2015 14:38:51 +0000
-Message-ID: <1437748639.3214.379.camel@hp.com>
-Subject: Re: kexec, x86: Need a new e820 type support for kexec
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Fri, 24 Jul 2015 08:37:19 -0600
-In-Reply-To: <20150724053145.GA19975@dhcp-128-28.nay.redhat.com>
-References: <1437697592.3214.373.camel@hp.com>
- <20150724053145.GA19975@dhcp-128-28.nay.redhat.com>
-Mime-Version: 1.0
+ id 1ZIvQN-0007HF-Ib
+ for kexec@lists.infradead.org; Sat, 25 Jul 2015 09:07:19 +0000
+Date: Sat, 25 Jul 2015 17:11:31 +0800
+From: Minfei Huang <mhuang@redhat.com>
+Subject: Re: [PATCH] kexec: Remove the unnecessary conditional judgement to
+ simplify the code logic
+Message-ID: <20150725091131.GA7062@dhcp-128-25.nay.redhat.com>
+References: <1433571252-11874-1-git-send-email-mhuang@redhat.com>
+ <20150615092848.GB15858@dhcp-128-59.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150615092848.GB15858@dhcp-128-59.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,39 +25,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-nvdimm@ml01.01.org, kexec@lists.infradead.org
+To: vgoyal@redhat.com, Dave Young <dyoung@redhat.com>
+Cc: Minfei Huang <mnfhuang@gmail.com>, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
 
-On Fri, 2015-07-24 at 13:31 +0800, Baoquan He wrote:
-> On 07/23/15 at 06:26pm, Toshi Kani wrote:
-> > Hello,
+Hi, Vivek.
+
+Since Dave acked this patch, Could you help to merge it?
+
+Thanks
+Minfei
+
+On 06/15/15 at 05:28pm, Dave Young wrote:
+> On 06/06/15 at 02:14pm, Minfei Huang wrote:
+> > From: Minfei Huang <mnfhuang@gmail.com>
 > > 
-> > ACPI 6.0 defines a new type in e820, AddressRangePersistentMemory (7), 
-> > for
-> > NVDIMM.  On a system with NVDIMM, kexec displays the following error
-> > message and sets it to RANGE_RESERVED as the fallback type.
+> > Transforming PFN(Page Frame Number) to struct page is never failure, so
+> > we can simplify the code logic to do the image->control_page assignment
+> > directly in the loop, and remove the unnecessary conditional judgement.
 > > 
-> > Unknown type (Persistent Memory) while parsing
-> > /sys/firmware/memmap/34/type. Please report this as bug. Using
-> > RANGE_RESERVED now.
+> > Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+> > ---
+> >  kernel/kexec.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
 > > 
-> > This new type is defined in "arch/x86/include/uapi/asm/e820.h" in 4.2
-> > -rc1
-> > as follows. 
-> > 
-> >   #define E820_PMEM       7
+> > diff --git a/kernel/kexec.c b/kernel/kexec.c
+> > index 7a36fdc..4589899 100644
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -796,11 +796,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+> >  		/* If I don't overlap any segments I have found my hole! */
+> >  		if (i == image->nr_segments) {
+> >  			pages = pfn_to_page(hole_start >> PAGE_SHIFT);
+> > +			image->control_page = hole_end;
+> >  			break;
+> >  		}
+> >  	}
+> > -	if (pages)
+> > -		image->control_page = hole_end;
+> >  
+> >  	return pages;
+> >  }
 > 
-> It need be added in struct e820entry:include/x86/x86-linux.h and
-> memory_range:kexec/kexec.h and their related handling. Could you give
-> more details about this memory type? I downloaded a ACPI 6.0 spec but
-> am not familiar with this.
-
-Oh, I see.  It has a locally defined header.  The e820 types are defined in
-Table 15-312, page 683, of ACPI 6.0.
-
-Thanks,
--Toshi
-
+> Acked-by: Dave Young <dyoung@redhat.com>
+> 
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
