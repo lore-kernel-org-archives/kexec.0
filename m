@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZIvQN-0007HF-Ib
- for kexec@lists.infradead.org; Sat, 25 Jul 2015 09:07:19 +0000
-Date: Sat, 25 Jul 2015 17:11:31 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH] kexec: Remove the unnecessary conditional judgement to
- simplify the code logic
-Message-ID: <20150725091131.GA7062@dhcp-128-25.nay.redhat.com>
-References: <1433571252-11874-1-git-send-email-mhuang@redhat.com>
- <20150615092848.GB15858@dhcp-128-59.nay.redhat.com>
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZJahK-0000Qm-Qy
+ for kexec@lists.infradead.org; Mon, 27 Jul 2015 05:11:38 +0000
+Subject: [V2 PATCH 2/3] kexec: Fix race between panic() and crash_kexec()
+ called directly
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Mon, 27 Jul 2015 10:58:50 +0900
+Message-ID: <20150727015850.4928.15194.stgit@softrs>
+In-Reply-To: <20150727015850.4928.87717.stgit@softrs>
+References: <20150727015850.4928.87717.stgit@softrs>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150615092848.GB15858@dhcp-128-59.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,51 +23,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com, Dave Young <dyoung@redhat.com>
-Cc: Minfei Huang <mnfhuang@gmail.com>, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-Hi, Vivek.
+Currently, panic() and crash_kexec() can be called at the same time.
+For example (x86 case):
 
-Since Dave acked this patch, Could you help to merge it?
+CPU 0:
+  oops_end()
+    crash_kexec()
+      mutex_trylock() // acquired
+        nmi_shootdown_cpus() // stop other cpus
 
-Thanks
-Minfei
+CPU 1:
+  panic()
+    crash_kexec()
+      mutex_trylock() // failed to acquire
+    smp_send_stop() // stop other cpus
+    infinite loop
 
-On 06/15/15 at 05:28pm, Dave Young wrote:
-> On 06/06/15 at 02:14pm, Minfei Huang wrote:
-> > From: Minfei Huang <mnfhuang@gmail.com>
-> > 
-> > Transforming PFN(Page Frame Number) to struct page is never failure, so
-> > we can simplify the code logic to do the image->control_page assignment
-> > directly in the loop, and remove the unnecessary conditional judgement.
-> > 
-> > Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
-> > ---
-> >  kernel/kexec.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/kexec.c b/kernel/kexec.c
-> > index 7a36fdc..4589899 100644
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -796,11 +796,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
-> >  		/* If I don't overlap any segments I have found my hole! */
-> >  		if (i == image->nr_segments) {
-> >  			pages = pfn_to_page(hole_start >> PAGE_SHIFT);
-> > +			image->control_page = hole_end;
-> >  			break;
-> >  		}
-> >  	}
-> > -	if (pages)
-> > -		image->control_page = hole_end;
-> >  
-> >  	return pages;
-> >  }
-> 
-> Acked-by: Dave Young <dyoung@redhat.com>
-> 
-> Thanks
-> Dave
+If CPU 1 calls smp_send_stop() before nmi_shootdown_cpus(), kdump
+fails.
+
+In another case:
+
+CPU 0:
+  oops_end()
+    crash_kexec()
+      mutex_trylock() // acquired
+        <NMI>
+        io_check_error()
+          panic()
+            crash_kexec()
+              mutex_trylock() // failed to acquire
+            infinite loop
+
+Clearly, this is an undesirable result.
+
+To fix this problem, this patch changes crash_kexec() to exclude
+others by using atomic_t panicking_cpu.
+
+V2:
+- Use atomic_cmpxchg() instead of spin_trylock() on panic_lock
+  to exclude concurrent accesses
+- Don't introduce no-lock version of crash_kexec()
+
+Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ kernel/kexec.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a785c10..ca40a19 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1472,6 +1472,18 @@ void __weak crash_unmap_reserved_pages(void)
+ 
+ void crash_kexec(struct pt_regs *regs)
+ {
++	int old_cpu, this_cpu;
++
++	/*
++	 * `old_cpu == -1' means we are the first comer and crash_kexec()
++	 * was called without entering panic().
++	 * `old_cpu == this_cpu' means crash_kexec() was called from panic().
++	 */
++	this_cpu = raw_smp_processor_id();
++	old_cpu = atomic_cmpxchg(&panicking_cpu, -1, this_cpu);
++	if (old_cpu != -1 && old_cpu != this_cpu)
++		return;
++
+ 	/* Take the kexec_mutex here to prevent sys_kexec_load
+ 	 * running on one cpu from replacing the crash kernel
+ 	 * we are using after a panic on a different cpu.
+@@ -1491,6 +1503,14 @@ void crash_kexec(struct pt_regs *regs)
+ 		}
+ 		mutex_unlock(&kexec_mutex);
+ 	}
++
++	/*
++	 * If we came here from panic(), we have to keep panicking_cpu
++	 * to prevent other cpus from entering panic().  Otherwise,
++	 * resetting it so that other cpus can enter panic()/crash_kexec().
++	 */
++	if (old_cpu == this_cpu)
++		atomic_set(&panicking_cpu, -1);
+ }
+ 
+ size_t crash_get_memory_size(void)
+
+
 
 _______________________________________________
 kexec mailing list
