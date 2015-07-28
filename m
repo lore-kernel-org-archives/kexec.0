@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZK00v-00068V-UD
- for kexec@lists.infradead.org; Tue, 28 Jul 2015 08:13:34 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Enable compressed dump formats for Xen
-Date: Tue, 28 Jul 2015 08:12:02 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DD2A68@BPXM01GP.gisp.nec.co.jp>
+ id 1ZK0Q2-0004sR-LP
+ for kexec@lists.infradead.org; Tue, 28 Jul 2015 08:39:27 +0000
+Date: Tue, 28 Jul 2015 10:39:04 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] makedumpfile: Enable compressed dump formats for Xen
+Message-ID: <20150728103904.0774f5d4@hananiah.suse.cz>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DD2A68@BPXM01GP.gisp.nec.co.jp>
 References: <20150723124321.7d8406c0@hananiah.suse.cz>
  <0910DD04CBD6DE4193FCF86B9C00BE9701DD2A05@BPXM01GP.gisp.nec.co.jp>
  <20150728095953.6c142dd5@hananiah.suse.cz>
-In-Reply-To: <20150728095953.6c142dd5@hananiah.suse.cz>
-Content-Language: ja-JP
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DD2A68@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,97 +25,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: kexec@lists.infradead.org
 
->> Hello Petr,
->>
->> >Hello all,
->> >
->> >this patch enables compressed file formats for Xen. I was suprized
->> >that nobody noticed earlier, given how trivial the change is. ;-)
->>
->> Good catch.
->> Since there is no Xen dump in the kdump-compressed format, is it also
->> necessary to fix the crash ?
->
->Yes, I have a patch set for crash, but I wanted to make sure the change
->gets accepted in makedumpfile first. The crash patch set is rather
->intrusive; if makedumpfile can actually produce such files, it makes it
->easier for me to negotiate with Dave Anderson. ;-)
+On Tue, 28 Jul 2015 08:12:02 +0000
+Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
 
-I see, I think it's a good approach.
+>[...]
+> >> BTW, I think we should fix the manuals as well. There are some wrong
+> >> statements "-E option must be specified with this option" and
+> >> some examples implicate that -E option is necessary to Xen dump.
+> >
+> >Good point. Should I send it as a separate patch, or include it in a
+> >patch set and resend?
+> 
+> I prefer a separate patch, but I don't mind either way.
 
->> BTW, I think we should fix the manuals as well. There are some wrong
->> statements "-E option must be specified with this option" and
->> some examples implicate that -E option is necessary to Xen dump.
->
->Good point. Should I send it as a separate patch, or include it in a
->patch set and resend?
+OK, here you go:
 
-I prefer a separate patch, but I don't mind either way.
+Remove notes about ELF being the only available format for Xen dumps
 
+Since Xen dumps can now be stored in compressed formats, adjust documentation
+that claims the opposite.
 
-Thanks
-Atsushi Kumagai
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
 
->Petr T
->
->> Thanks
->> Atsushi Kumagai
->>
->> >Originally, the compressed KDUMP format was not sufficient for Xen
->> >Dom0 dumps, because it did not contain required Xen-specific
->> >information. However, all this info is stored in ELF notes, which
->> >have been present in the compressed file since version 4, so there
->> >is no longer any reason to restrict Xen dumps to ELF only.
->> >
->> >One minor fix is necessary. In a Xen dump, PFN refers to physical
->> >pages _inside_ Dom0, but when compressing the whole file, the machine
->> >pages are used in fact (although the variable is still called pfn).
->> >Consequently, readmem() must interpret the address as a machine
->> >address rather than Dom0 physical address when saving Xen files.
->> >
->> >Signed-off-by: Petr Tesarik <ptesarik@suse.com>
->> >
->> >diff --git a/makedumpfile.c b/makedumpfile.c
->> >index de40932..2636036 100644
->> >--- a/makedumpfile.c
->> >+++ b/makedumpfile.c
->> >@@ -6015,9 +6015,11 @@ int
->> > read_pfn(mdf_pfn_t pfn, unsigned char *buf)
->> > {
->> > 	unsigned long long paddr;
->> >+	int type_addr;
->> >
->> > 	paddr = pfn_to_paddr(pfn);
->> >-	if (!readmem(PADDR, paddr, buf, info->page_size)) {
->> >+	type_addr = is_xen_memory() ? MADDR_XEN : PADDR;
->> >+	if (!readmem(type_addr, paddr, buf, info->page_size)) {
->> > 		ERRMSG("Can't get the page data.\n");
->> > 		return FALSE;
->> > 	}
->> >@@ -7654,12 +7656,6 @@ initial_xen(void)
->> > 	MSG("Xen is not supported on powerpc.\n");
->> > 	return FALSE;
->> > #else
->> >-	if(!info->flag_elf_dumpfile && !info->flag_dmesg) {
->> >-		MSG("Specify '-E' option for Xen.\n");
->> >-		MSG("Commandline parameter is invalid.\n");
->> >-		MSG("Try `makedumpfile --help' for more
->> >information.\n");
->> >-		return FALSE;
->> >-	}
->> > #ifndef __x86_64__
->> > 	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
->> > 		MSG("Dump_level is invalid. It should be 0 or
->> > 1.\n");
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+---
+ makedumpfile.8 |    5 +----
+ print_info.c   |    4 ++--
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 2d38cd0..3f66d73 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -16,7 +16,7 @@ makedumpfile \- make a small dumpfile of kdump
+ .br
+ \fBmakedumpfile\fR \-g \fIVMCOREINFO\fR \-x \fIVMLINUX\fR
+ .br
+-\fBmakedumpfile\fR \-E [\-\-xen-syms \fIXEN-SYMS\fR|\-\-xen-vmcoreinfo \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE\fR
++\fBmakedumpfile\fR    [\fIOPTION\fR] [\-\-xen-syms \fIXEN-SYMS\fR|\-\-xen-vmcoreinfo \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE\fR
+ .br
+ \fBmakedumpfile\fR \-\-dump-dmesg [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fILOGFILE\fR
+ .br
+@@ -441,7 +441,6 @@ This option is mainly for debugging.
+ \fB\-\-xen-syms\fR \fIXEN-SYMS\fR
+ Specify the \fIXEN-SYMS\fR with debug information to analyze the xen's memory usage.
+ This option extracts the part of xen and domain-0.
+-\-E option must be specified with this option.
+ .br
+ .B Example:
+ .br
+@@ -453,7 +452,6 @@ Specify \fIVMCOREINFO\fR instead of \fIXEN-SYMS\fR for analyzing the xen's memor
+ .br
+ \fIVMCOREINFO\fR should be made beforehand by makedumpfile with \-g option, and
+ it contains the xen's information.
+-\-E option must be specified with this option.
+ .br
+ .B Example:
+ .br
+@@ -464,7 +462,6 @@ it contains the xen's information.
+ Exclude all the user domain pages from Xen kdump's \fIVMCORE\fR, and extracts the
+ part of xen and domain-0. If \fIVMCORE\fR contains \fIVMCOREINFO\fR for Xen, it is
+ not necessary to specify \fI\-\-xen-syms\fR and \fI\-\-xen-vmcoreinfo\fR.
+-\-E option must be specified with this option.
+ .br
+ .B Example:
+ .br
+diff --git a/print_info.c b/print_info.c
+index 9c36bec..4857b39 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -87,10 +87,10 @@ print_usage(void)
+ 	MSG("\n");
+ 	MSG("\n");
+ 	MSG("  Creating DUMPFILE of Xen:\n");
+-	MSG("  # makedumpfile -E [--xen-syms XEN-SYMS|--xen-vmcoreinfo VMCOREINFO] VMCORE DUMPFILE\n");
++	MSG("  # makedumpfile [-c|-l|-p|-E] [--xen-syms XEN-SYMS|--xen-vmcoreinfo VMCOREINFO] VMCORE DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Filtering domain-0 of Xen:\n");
+-	MSG("  # makedumpfile -E -d DL -x vmlinux VMCORE DUMPFILE\n");
++	MSG("  # makedumpfile [-c|-l|-p|-E] -d DL -x vmlinux VMCORE DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Generating VMCOREINFO of Xen:\n");
+ 	MSG("  # makedumpfile -g VMCOREINFO --xen-syms XEN-SYMS\n");
 
 _______________________________________________
 kexec mailing list
