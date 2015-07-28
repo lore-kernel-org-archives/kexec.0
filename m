@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-x231.google.com ([2607:f8b0:400e:c02::231])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZJwo3-0000nK-7f
- for kexec@lists.infradead.org; Tue, 28 Jul 2015 04:47:59 +0000
-Received: by pdjr16 with SMTP id r16so64887467pdj.3
- for <kexec@lists.infradead.org>; Mon, 27 Jul 2015 21:47:38 -0700 (PDT)
-From: Minfei Huang <mnfhuang@gmail.com>
-Subject: [REPOST PATCH] kexec: Remove the unnecessary conditional judgement to
- simplify the code logic
-Date: Tue, 28 Jul 2015 12:46:42 +0800
-Message-Id: <1438058802-6462-1-git-send-email-mnfhuang@gmail.com>
+ id 1ZJzbU-0004RG-B3
+ for kexec@lists.infradead.org; Tue, 28 Jul 2015 07:47:13 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: Enable compressed dump formats for Xen
+Date: Tue, 28 Jul 2015 07:45:04 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DD2A05@BPXM01GP.gisp.nec.co.jp>
+References: <20150723124321.7d8406c0@hananiah.suse.cz>
+In-Reply-To: <20150723124321.7d8406c0@hananiah.suse.cz>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,45 +19,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org, vgoyal@redhat.com, ebiederm@xmission.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Transforming PFN(Page Frame Number) to struct page is never failure, so
-we can simplify the code logic to do the image->control_page assignment
-directly in the loop, and remove the unnecessary conditional judgement.
+Hello Petr,
 
-Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
-Acked-by: Dave Young <dyoung@redhat.com>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
----
- kernel/kexec.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+>Hello all,
+>
+>this patch enables compressed file formats for Xen. I was suprized
+>that nobody noticed earlier, given how trivial the change is. ;-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 6f1ed75..cf82474 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -807,11 +807,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
- 		/* If I don't overlap any segments I have found my hole! */
- 		if (i == image->nr_segments) {
- 			pages = pfn_to_page(hole_start >> PAGE_SHIFT);
-+			image->control_page = hole_end;
- 			break;
- 		}
- 	}
--	if (pages)
--		image->control_page = hole_end;
- 
- 	return pages;
- }
--- 
-2.4.0
+Good catch.
+Since there is no Xen dump in the kdump-compressed format, is it also
+necessary to fix the crash ?
 
+BTW, I think we should fix the manuals as well. There are some wrong
+statements "-E option must be specified with this option" and
+some examples implicate that -E option is necessary to Xen dump.
+
+
+Thanks
+Atsushi Kumagai
+
+>Originally, the compressed KDUMP format was not sufficient for Xen
+>Dom0 dumps, because it did not contain required Xen-specific
+>information. However, all this info is stored in ELF notes, which
+>have been present in the compressed file since version 4, so there
+>is no longer any reason to restrict Xen dumps to ELF only.
+>
+>One minor fix is necessary. In a Xen dump, PFN refers to physical
+>pages _inside_ Dom0, but when compressing the whole file, the machine
+>pages are used in fact (although the variable is still called pfn).
+>Consequently, readmem() must interpret the address as a machine
+>address rather than Dom0 physical address when saving Xen files.
+>
+>Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index de40932..2636036 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -6015,9 +6015,11 @@ int
+> read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+> {
+> 	unsigned long long paddr;
+>+	int type_addr;
+>
+> 	paddr = pfn_to_paddr(pfn);
+>-	if (!readmem(PADDR, paddr, buf, info->page_size)) {
+>+	type_addr = is_xen_memory() ? MADDR_XEN : PADDR;
+>+	if (!readmem(type_addr, paddr, buf, info->page_size)) {
+> 		ERRMSG("Can't get the page data.\n");
+> 		return FALSE;
+> 	}
+>@@ -7654,12 +7656,6 @@ initial_xen(void)
+> 	MSG("Xen is not supported on powerpc.\n");
+> 	return FALSE;
+> #else
+>-	if(!info->flag_elf_dumpfile && !info->flag_dmesg) {
+>-		MSG("Specify '-E' option for Xen.\n");
+>-		MSG("Commandline parameter is invalid.\n");
+>-		MSG("Try `makedumpfile --help' for more information.\n");
+>-		return FALSE;
+>-	}
+> #ifndef __x86_64__
+> 	if (DL_EXCLUDE_ZERO < info->max_dump_level) {
+> 		MSG("Dump_level is invalid. It should be 0 or 1.\n");
 
 _______________________________________________
 kexec mailing list
