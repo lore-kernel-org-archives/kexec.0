@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZKKEu-0007Cg-8S
- for kexec@lists.infradead.org; Wed, 29 Jul 2015 05:49:17 +0000
-From: =?iso-2022-jp?B?GyRCMk85ZzFROSgbKEIgLyBLQVdBSRskQiEkGyhCSElERUhJUk8=?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: Re: [V2 PATCH 1/3] x86/panic: Fix re-entrance problem due to
+Received: from mail-wi0-f172.google.com ([209.85.212.172])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZKMeZ-0007NG-28
+ for kexec@lists.infradead.org; Wed, 29 Jul 2015 08:23:55 +0000
+Received: by wibxm9 with SMTP id xm9so15006476wib.1
+ for <kexec@lists.infradead.org>; Wed, 29 Jul 2015 01:23:32 -0700 (PDT)
+Date: Wed, 29 Jul 2015 10:23:30 +0200
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: Re: [V2 PATCH 1/3] x86/panic: Fix re-entrance problem due to
  panic on NMI
-Date: Wed, 29 Jul 2015 05:48:47 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
+Message-ID: <20150729082329.GA15801@dhcp22.suse.cz>
 References: <20150727015850.4928.87717.stgit@softrs>
  <20150727015850.4928.50289.stgit@softrs>
- <20150727143405.GF11317@dhcp22.suse.cz> <55B6E2A3.8070004@hitachi.com>
-In-Reply-To: <55B6E2A3.8070004@hitachi.com>
-Content-Language: ja-JP
+ <20150727143405.GF11317@dhcp22.suse.cz>
+ <55B6E2A3.8070004@hitachi.com>
+ <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +26,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?iso-2022-jp?B?GyRCMk85ZzFROSgbKEIgLyBLQVdBSRskQiEkGyhCSElERUhJUk8=?= <hidehiro.kawai.ez@hitachi.com>, Michal Hocko <mhocko@kernel.org>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?iso-2022-jp?B?GyRCSj8+PjJtTCYbKEIgLyBISVJBTUFUVRskQiEkGyhCTUFTQU1J?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi,
-
-> From: linux-kernel-owner@vger.kernel.org [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Hidehiro Kawai
-> (2015/07/27 23:34), Michal Hocko wrote:
-> > On Mon 27-07-15 10:58:50, Hidehiro Kawai wrote:
-[...]
-> > The check could be also relaxed a bit and nmi_panic would
-> > return only if the ongoing panic is the current cpu when we really have
-> > to return and allow the preempted panic to finish.
-> 
-> It's reasonable.  I'll do that in the next version.
-
-I noticed atomic_read() is insufficient.  Please consider the following
-scenario.
-
-CPU 1: call panic() in the normal context
-CPU 0: call nmi_panic(), check the value of panic_cpu, then call panic()
-CPU 1: set 1 to panic_cpu
-CPU 0: fail to set 0 to panic_cpu, then do an infinite loop
-CPU 1: call crash_kexec(), then call kdump_nmi_shootdown_cpus()
-
-At this point, since CPU 0 loops in NMI context, it never executes
-the NMI handler registered by kdump_nmi_shootdown_cpus().  This means
-that no register states are saved and no cleanups for VMX/SVM are
-performed.  So, we should still use atomic_cmpxchg() in nmi_panic() to
-prevent other cpus from running panic routines.
-
-> > +void nmi_panic(const char *fmt, ...)
-> > +{
-> > +	/*
-> > +	 * We have to back off if the NMI has preempted an ongoing panic and
-> > +	 * allow it to finish
-> > +	 */
-> > +	if (atomic_read(&panic_cpu) == raw_smp_processor_id())
-> > +		return;
-> > +
-> > +	panic();
-> > +}
-> > +EXPORT_SYMBOL(nmi_panic);
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkIDI5LTA3LTE1IDA1OjQ4OjQ3LCDmsrPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJP
+IHdyb3RlOgo+IEhpLAo+IAo+ID4gRnJvbTogbGludXgta2VybmVsLW93bmVyQHZnZXIua2VybmVs
+Lm9yZyBbbWFpbHRvOmxpbnV4LWtlcm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFs
+ZiBPZiBIaWRlaGlybyBLYXdhaQo+ID4gKDIwMTUvMDcvMjcgMjM6MzQpLCBNaWNoYWwgSG9ja28g
+d3JvdGU6Cj4gPiA+IE9uIE1vbiAyNy0wNy0xNSAxMDo1ODo1MCwgSGlkZWhpcm8gS2F3YWkgd3Jv
+dGU6Cj4gWy4uLl0KPiA+ID4gVGhlIGNoZWNrIGNvdWxkIGJlIGFsc28gcmVsYXhlZCBhIGJpdCBh
+bmQgbm1pX3BhbmljIHdvdWxkCj4gPiA+IHJldHVybiBvbmx5IGlmIHRoZSBvbmdvaW5nIHBhbmlj
+IGlzIHRoZSBjdXJyZW50IGNwdSB3aGVuIHdlIHJlYWxseSBoYXZlCj4gPiA+IHRvIHJldHVybiBh
+bmQgYWxsb3cgdGhlIHByZWVtcHRlZCBwYW5pYyB0byBmaW5pc2guCj4gPiAKPiA+IEl0J3MgcmVh
+c29uYWJsZS4gIEknbGwgZG8gdGhhdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLgo+IAo+IEkgbm90aWNl
+ZCBhdG9taWNfcmVhZCgpIGlzIGluc3VmZmljaWVudC4gIFBsZWFzZSBjb25zaWRlciB0aGUgZm9s
+bG93aW5nCj4gc2NlbmFyaW8uCj4gCj4gQ1BVIDE6IGNhbGwgcGFuaWMoKSBpbiB0aGUgbm9ybWFs
+IGNvbnRleHQKPiBDUFUgMDogY2FsbCBubWlfcGFuaWMoKSwgY2hlY2sgdGhlIHZhbHVlIG9mIHBh
+bmljX2NwdSwgdGhlbiBjYWxsIHBhbmljKCkKPiBDUFUgMTogc2V0IDEgdG8gcGFuaWNfY3B1Cj4g
+Q1BVIDA6IGZhaWwgdG8gc2V0IDAgdG8gcGFuaWNfY3B1LCB0aGVuIGRvIGFuIGluZmluaXRlIGxv
+b3AKPiBDUFUgMTogY2FsbCBjcmFzaF9rZXhlYygpLCB0aGVuIGNhbGwga2R1bXBfbm1pX3Nob290
+ZG93bl9jcHVzKCkKPiAKPiBBdCB0aGlzIHBvaW50LCBzaW5jZSBDUFUgMCBsb29wcyBpbiBOTUkg
+Y29udGV4dCwgaXQgbmV2ZXIgZXhlY3V0ZXMKPiB0aGUgTk1JIGhhbmRsZXIgcmVnaXN0ZXJlZCBi
+eSBrZHVtcF9ubWlfc2hvb3Rkb3duX2NwdXMoKS4gIFRoaXMgbWVhbnMKPiB0aGF0IG5vIHJlZ2lz
+dGVyIHN0YXRlcyBhcmUgc2F2ZWQgYW5kIG5vIGNsZWFudXBzIGZvciBWTVgvU1ZNIGFyZQo+IHBl
+cmZvcm1lZC4KClllcyB0aGlzIGlzIHRydWUgYnV0IGl0IGlzIG5vIGRpZmZlcmVudCBmcm9tIHRo
+ZSBjdXJyZW50IHN0YXRlLCBpc24ndAppdD8gU28gaWYgeW91IHdhbnQgdG8gaGFuZGxlIHRoYXQg
+dGhlbiBpdCBkZXNlcnZlcyBhIHNlcGFyYXRlIHBhdGNoLgpJdCBpcyBjZXJ0YWlubHkgbm90IGhh
+cm1mdWwgd3J0LiBwYW5pYyBiZWhhdmlvci4KCj4gU28sIHdlIHNob3VsZCBzdGlsbCB1c2UgYXRv
+bWljX2NtcHhjaGcoKSBpbiBubWlfcGFuaWMoKSB0bwo+IHByZXZlbnQgb3RoZXIgY3B1cyBmcm9t
+IHJ1bm5pbmcgcGFuaWMgcm91dGluZXMuCgpOb3Qgc3VyZSB3aGF0IHlvdSBtZWFuIGJ5IHRoYXQu
+CgotLSAKTWljaGFsIEhvY2tvClNVU0UgTGFicwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
+Ywo=
