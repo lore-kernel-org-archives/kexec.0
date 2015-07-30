@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZKcv3-0005Ca-AY
- for kexec@lists.infradead.org; Thu, 30 Jul 2015 01:46:02 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: Re: [V2 PATCH 1/3] x86/panic: Fix re-entrance problem due to
- panic on NMI
-Date: Thu, 30 Jul 2015 01:45:35 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A8445491F23A@GSjpTKYDCembx31.service.hitachi.net>
-References: <20150727015850.4928.87717.stgit@softrs>
- <20150727015850.4928.50289.stgit@softrs>
- <20150727143405.GF11317@dhcp22.suse.cz> <55B6E2A3.8070004@hitachi.com>
- <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
- <20150729082329.GA15801@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491DB5E@GSjpTKYDCembx31.service.hitachi.net>
- <20150729092157.GC15801@dhcp22.suse.cz>
-In-Reply-To: <20150729092157.GC15801@dhcp22.suse.cz>
-Content-Language: ja-JP
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZKeCv-0003Cr-MG
+ for kexec@lists.infradead.org; Thu, 30 Jul 2015 03:08:34 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH] align crash_notes allocation to make it be inside one
+ physical page
+Date: Thu, 30 Jul 2015 11:07:59 +0800
+Message-Id: <1438225679-13052-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,87 +16,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Michal Hocko' <mhocko@kernel.org>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, tatsu@ab.jp.nec.com, lisa.mitchell@hp.com, seiji.aguchi.tr@hitachi.com, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com
 
-SGksDQoNCj4gRnJvbTogTWljaGFsIEhvY2tvIFttYWlsdG86bWhvY2tvQGtlcm5lbC5vcmddDQo+
-IA0KPiBPbiBXZWQgMjktMDctMTUgMDk6MDk6MTgsIOays+WQiOiLseWujyAvIEtBV0FJ77yMSElE
-RUhJUk8gd3JvdGU6DQo+ID4gPiBGcm9tOiBNaWNoYWwgSG9ja28gW21haWx0bzptaG9ja29Aa2Vy
-bmVsLm9yZ10NCj4gPiA+IE9uIFdlZCAyOS0wNy0xNSAwNTo0ODo0Nywg5rKz5ZCI6Iux5a6PIC8g
-S0FXQUnvvIxISURFSElSTyB3cm90ZToNCj4gPiA+ID4gSGksDQo+ID4gPiA+DQo+ID4gPiA+ID4g
-RnJvbTogbGludXgta2VybmVsLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4LWtl
-cm5lbC1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFsZiBPZiBIaWRlaGlybyBLYXdhaQ0K
-PiA+ID4gPiA+ICgyMDE1LzA3LzI3IDIzOjM0KSwgTWljaGFsIEhvY2tvIHdyb3RlOg0KPiA+ID4g
-PiA+ID4gT24gTW9uIDI3LTA3LTE1IDEwOjU4OjUwLCBIaWRlaGlybyBLYXdhaSB3cm90ZToNCj4g
-PiA+ID4gWy4uLl0NCj4gPiA+ID4gPiA+IFRoZSBjaGVjayBjb3VsZCBiZSBhbHNvIHJlbGF4ZWQg
-YSBiaXQgYW5kIG5taV9wYW5pYyB3b3VsZA0KPiA+ID4gPiA+ID4gcmV0dXJuIG9ubHkgaWYgdGhl
-IG9uZ29pbmcgcGFuaWMgaXMgdGhlIGN1cnJlbnQgY3B1IHdoZW4gd2UgcmVhbGx5IGhhdmUNCj4g
-PiA+ID4gPiA+IHRvIHJldHVybiBhbmQgYWxsb3cgdGhlIHByZWVtcHRlZCBwYW5pYyB0byBmaW5p
-c2guDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJdCdzIHJlYXNvbmFibGUuICBJJ2xsIGRvIHRoYXQg
-aW4gdGhlIG5leHQgdmVyc2lvbi4NCj4gPiA+ID4NCj4gPiA+ID4gSSBub3RpY2VkIGF0b21pY19y
-ZWFkKCkgaXMgaW5zdWZmaWNpZW50LiAgUGxlYXNlIGNvbnNpZGVyIHRoZSBmb2xsb3dpbmcNCj4g
-PiA+ID4gc2NlbmFyaW8uDQo+ID4gPiA+DQo+ID4gPiA+IENQVSAxOiBjYWxsIHBhbmljKCkgaW4g
-dGhlIG5vcm1hbCBjb250ZXh0DQo+ID4gPiA+IENQVSAwOiBjYWxsIG5taV9wYW5pYygpLCBjaGVj
-ayB0aGUgdmFsdWUgb2YgcGFuaWNfY3B1LCB0aGVuIGNhbGwgcGFuaWMoKQ0KPiA+ID4gPiBDUFUg
-MTogc2V0IDEgdG8gcGFuaWNfY3B1DQo+ID4gPiA+IENQVSAwOiBmYWlsIHRvIHNldCAwIHRvIHBh
-bmljX2NwdSwgdGhlbiBkbyBhbiBpbmZpbml0ZSBsb29wDQo+ID4gPiA+IENQVSAxOiBjYWxsIGNy
-YXNoX2tleGVjKCksIHRoZW4gY2FsbCBrZHVtcF9ubWlfc2hvb3Rkb3duX2NwdXMoKQ0KPiA+ID4g
-Pg0KPiA+ID4gPiBBdCB0aGlzIHBvaW50LCBzaW5jZSBDUFUgMCBsb29wcyBpbiBOTUkgY29udGV4
-dCwgaXQgbmV2ZXIgZXhlY3V0ZXMNCj4gPiA+ID4gdGhlIE5NSSBoYW5kbGVyIHJlZ2lzdGVyZWQg
-Ynkga2R1bXBfbm1pX3Nob290ZG93bl9jcHVzKCkuICBUaGlzIG1lYW5zDQo+ID4gPiA+IHRoYXQg
-bm8gcmVnaXN0ZXIgc3RhdGVzIGFyZSBzYXZlZCBhbmQgbm8gY2xlYW51cHMgZm9yIFZNWC9TVk0g
-YXJlDQo+ID4gPiA+IHBlcmZvcm1lZC4NCj4gPiA+DQo+ID4gPiBZZXMgdGhpcyBpcyB0cnVlIGJ1
-dCBpdCBpcyBubyBkaWZmZXJlbnQgZnJvbSB0aGUgY3VycmVudCBzdGF0ZSwgaXNuJ3QNCj4gPiA+
-IGl0PyBTbyBpZiB5b3Ugd2FudCB0byBoYW5kbGUgdGhhdCB0aGVuIGl0IGRlc2VydmVzIGEgc2Vw
-YXJhdGUgcGF0Y2guDQo+ID4gPiBJdCBpcyBjZXJ0YWlubHkgbm90IGhhcm1mdWwgd3J0LiBwYW5p
-YyBiZWhhdmlvci4NCj4gPiA+DQo+ID4gPiA+IFNvLCB3ZSBzaG91bGQgc3RpbGwgdXNlIGF0b21p
-Y19jbXB4Y2hnKCkgaW4gbm1pX3BhbmljKCkgdG8NCj4gPiA+ID4gcHJldmVudCBvdGhlciBjcHVz
-IGZyb20gcnVubmluZyBwYW5pYyByb3V0aW5lcy4NCj4gPiA+DQo+ID4gPiBOb3Qgc3VyZSB3aGF0
-IHlvdSBtZWFuIGJ5IHRoYXQuDQo+ID4NCj4gPiBJIG1lYW4gdGhhdCB3ZSBzaG91bGQgdXNlIHRo
-ZSBzYW1lIGxvZ2ljIGFzIG15IFYyIHBhdGNoIGxpa2UgdGhpczoNCj4gPg0KPiA+ICNkZWZpbmUg
-bm1pX3BhbmljKGZtdCwgLi4uKSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgXA0KPiA+ICAgICAgICBkbyB7ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgXA0KPiA+ICAgICAgICAgICAgICAgIGlmIChhdG9t
-aWNfY21weGNoZygmcGFuaWNfY3B1LCAtMSwgcmF3X3NtcF9wcm9jZXNzb3JfaWQoKSkgXA0KPiA+
-ICAgICAgICAgICAgICAgICAgICA9PSAtMSkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgXA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgcGFuaWMoZm10LCAj
-I19fVkFfQVJHU19fKTsgICAgICAgICAgICAgICAgICAgICAgXA0KPiA+ICAgICAgICB9IHdoaWxl
-ICgwKQ0KPiANCj4gVGhpcyB3b3VsZCBhbGxvdyB0byByZXR1cm4gZnJvbSBOTUkgdG9vIGVhZ2Vy
-bHkuDQoNClllcywgYnV0IHdoYXQncyB0aGUgcHJvYmxlbT8NClRoZSByb290IGNhdXNlIG9mIHlv
-dXIgY2FzZSBoYXNuJ3QgYmVlbiBjbGFyaWZpZWQgeWV0Lg0KSSBjYW4ndCBmaXggZm9yIGFuIHVu
-Y2xlYXIgaXNzdWUgYmVjYXVzZSBJIGRvbid0IGtub3cgd2hhdCdzIHRoZSByaWdodA0Kc29sdXRp
-b24uDQoNCj4gV2hlbiBJIHdhcyB0ZXN0aW5nIG15DQo+IHByZXZpb3VzIGFwcHJvYWNoIChvbiAz
-LjAgYmFzZWQga2VybmVsKSBJIGhhZCBiYXNpY2FsbHkgdGhlIHNhbWUgdGhpbmcNCj4gKG9uZSBO
-TUkgdG8gcHJvY2VzcyBwYW5pYykgYW5kIG90aGVycyB0byByZXR1cm4uIFRoaXMgbGVkIHRvIGEg
-c3RyYW5nZQ0KPiBiZWhhdmlvciB3aGVuIHRoZSBOTUkgYnV0dG9uIHRyaWdnZXJlZCBOTUkgb24g
-YWxsIChodW5kcmVkcykgQ1BVcy4NCg0KSXQncyBzdHJhbmdlLiAgVXN1YWxseSwgTk1JIGNhdXNl
-ZCBieSBOTUkgYnV0dG9uIGlzIHJvdXRlZCB0byBvbmx5IENQVSAwDQphcyBhbiBleHRlcm5hbCBO
-TUkuICBFeHRlcm5hbCBOTUkgZm9yIENQVXMgb3RoZXIgdGhhbiBDUFUgMCBhcmUgbWFza2VkDQph
-dCBib290IHRpbWUuICBEb2VzIGl0IHJlYWxseSBoYXBwZW4/ICBEb2VzIHRoZSBwcm9ibGVtIHN0
-aWxsIGhhcHBlbiBvbg0KdGhlIGxhdGVzdCBrZXJuZWw/ICBXaGF0IGtpbmQgb2YgTk1JIGlzIGRl
-bGl2ZXJkIHRvIGVhY2ggQ1BVPw0KDQpUcmFkaXRpb25hbGx5LCB3ZSBzaG91bGQgaGF2ZSBhc3N1
-bWVkIHRoYXQgTk1JIGZvciBjcmFzaCBkdW1waW5nIGlzDQpkZWxpdmVyZWQgdG8gb25seSBvbmUg
-Y3B1LiAgT3RoZXJ3aXNlLCB3ZSBzaG91bGQgb2Z0ZW4gZmFpbCB0byB0YWtlDQphIHByb3BlciBj
-cmFzaCBkdW1wLiAgSXQgc2VlbXMgdGhhdCB5b3VyIGNhc2UgaXMgYW5vdGhlciBwcm9ibGVtIHRv
-IGJlDQpzb2x2ZWQgc2VwYXJhdGVseS4NCg0KPiBUaGUNCj4gY3Jhc2gga2VybmVsIGJvb3RlZCBl
-dmVudHVhbGx5IGJ1dCB0aGUgbG9nIGNvbnRhaW5lZCBsb2NrdXBzIHdoZW4gYQ0KPiBDUFUgd2Fp
-dGVkIGZvciBhbiBJUEkgdG8gdGhlIENQVSB3aGljaCB3YXMgaGFuZGxpbmcgdGhlIE5NSSBwYW5p
-Yy4NCg0KQ291bGQgeW91IGV4cGxhaW4gbW9yZSBwcmVjaXNlbHk/DQoNCj4gQW55d2F5LCBJIGRv
-IG5vdCB0aGluZyB0aGlzIGlzIHJlYWxseSBuZWNlc3NhcnkgdG8gc29sdmUgdGhlIHBhbmljDQo+
-IHJlZW50cmFuY3kgaXNzdWUuDQo+IElmIHRoZSBtaXNzaW5nIHNhdmVkIHN0YXRlIGlzIGEgcmVh
-bCBwcm9ibGVtIHRoZW4gaXQNCj4gc2hvdWxkIGJlIGhhbmRsZWQgc2VwYXJhdGVseSAtIG1heWJl
-IGl0IGNhbiBiZSBhY2hpZXZlZCB3aXRob3V0IGFuIElQSQ0KPiBhbmQgZGlyZWN0bHkgZnJvbSB0
-aGUgcGFuaWMgY29udGV4dCBpZiB3ZSBhcmUgaW4gTk1JLg0KDQpXaGF0IEkgd291bGQgbGlrZSB0
-byBkbyB2aWEgdGhpcyBwYXRjaHNlIGlzIHRvIHNvbHZlIHJhY2UgaXNzdWVzDQphbW9uZyBOTUks
-IHBhbmljKCkgYW5kIGNyYXNoX2tleGVjKCkuICBTbywgSSBkb24ndCB0aGluayB3ZSBzaG91bGQg
-Zml4DQp0aGF0IHNlcGFyYXRlbHksIGFsdGhvdWdoIEkgd291bGQgbmVlZCB0byByZXdvcmQgc29t
-ZSBkZXNjcmlwdGlvbnMNCmFuZCB0aXRsZXMuDQoNCkFueXdheSwgSSdtIGdvaW5nIHRvIHNlbnQg
-b3V0IG15IHJldmlzZWQgdmVyc2lvbiBvbmNlIGluIG9yZGVyIHRvDQp0aWR5IHVwLiAgSSBhbHNv
-IHdvdWxkIGxpa2UgdG8gaGVhciBrZXhlYy9rZHVtcCBndXlzJyBvcGluaW9ucy4NCg0KUmVnYXJk
-cywNCkthd2FpDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+People reported that crash_notes in /proc/vmcore were corrupted and
+this cause crash kdump failure. With code debugging and log we got
+the root cause. This is because percpu variable crash_notes are
+allocated in 2 vmalloc pages. As you know percpu is based on vmalloc
+by default. Then vmalloc can't guarantee 2 continuous vmalloc pages
+are also on 2 continuous physical pages. Then 1st kernel export the
+starting addr and size, kdump kernel use the starting addr and size
+to get the content of crash_notes, then 2nd part may not be in the
+next neighbouring physical page as we think. That's why nhdr_ptr->n_namesz
+or nhdr_ptr->n_descsz could be very huge in update_note_header_size_elf64()
+and cause note header merging failure or some warnings.
+
+In this patch change to call __alloc_percpu() to passed in the align
+value which is nearest the the 2^log(sizeof(note_buf_t)). This align
+value can make sure the crash_notes is allocated inside one physical
+page since sizeof(note_buf_t) in all ARCHS is smaller PAGE_SIZE. But
+add a WARN_ON in case it grow to be bigger than PAGE_SIZE in the future.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ kernel/kexec.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index a785c10..1740c42 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1620,7 +1620,16 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+ static int __init crash_notes_memory_init(void)
+ {
+ 	/* Allocate memory for saving cpu registers. */
+-	crash_notes = alloc_percpu(note_buf_t);
++	size_t size, align;
++	int order;
++
++	size = sizeof(note_buf_t);
++	order = get_count_order(size);
++	align = 1<< order;
++
++	WARN_ON(size > PAGE_SIZE);
++
++	crash_notes = __alloc_percpu(size, align);
+ 	if (!crash_notes) {
+ 		pr_warn("Kexec: Memory allocation for saving cpu register states failed\n");
+ 		return -ENOMEM;
+-- 
+2.1.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
