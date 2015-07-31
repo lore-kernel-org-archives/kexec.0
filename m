@@ -1,28 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f182.google.com ([209.85.212.182])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZKmwW-0005Hj-9g
- for kexec@lists.infradead.org; Thu, 30 Jul 2015 12:28:12 +0000
-Received: by wibud3 with SMTP id ud3so66098608wib.0
- for <kexec@lists.infradead.org>; Thu, 30 Jul 2015 05:27:50 -0700 (PDT)
-Date: Thu, 30 Jul 2015 14:27:47 +0200
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: Re: [V2 PATCH 1/3] x86/panic: Fix re-entrance problem due to
- panic on NMI
-Message-ID: <20150730122747.GA3954@dhcp22.suse.cz>
-References: <20150727015850.4928.50289.stgit@softrs>
- <20150727143405.GF11317@dhcp22.suse.cz>
- <55B6E2A3.8070004@hitachi.com>
- <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
- <20150729082329.GA15801@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491DB5E@GSjpTKYDCembx31.service.hitachi.net>
- <20150729092157.GC15801@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491F23A@GSjpTKYDCembx31.service.hitachi.net>
- <20150730074812.GA9387@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491FC55@GSjpTKYDCembx31.service.hitachi.net>
+ id 1ZL5iC-0000Od-BG
+ for kexec@lists.infradead.org; Fri, 31 Jul 2015 08:30:41 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH v3 00/10] makedumpfile: parallel processing
+Date: Fri, 31 Jul 2015 08:27:58 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DD39B7@BPXM01GP.gisp.nec.co.jp>
+References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <55ADF066.8050800@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DD0947@BPXM01GP.gisp.nec.co.jp>
+ <55B08C1D.7010505@cn.fujitsu.com>
+In-Reply-To: <55B08C1D.7010505@cn.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <04EAB7311EE43145B2D3536183D1A8445491FC55@GSjpTKYDCembx31.service.hitachi.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,58 +22,237 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-T24gVGh1IDMwLTA3LTE1IDExOjU1OjUyLCDmsrPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJP
-IHdyb3RlOgo+ID4gRnJvbTogTWljaGFsIEhvY2tvIFttYWlsdG86bWhvY2tvQGtlcm5lbC5vcmdd
-ClsuLi5dCj4gPiBDb3VsZCB5b3UgcG9pbnQgbWUgdG8gdGhlIGNvZGUgd2hpY2ggZG9lcyB0aGF0
-LCBwbGVhc2U/IE1heWJlIHdlIGFyZQo+ID4gbWlzc2luZyB0aGF0IGluIG91ciAzLjAga2VybmVs
-LiBJIHdhcyBxdWl0ZSBzdXJwcmlzZWQgdG8gc2VlIHRoaXMKPiA+IGJlaGF2aW9yIGFzIHdlbGwu
-Cj4gCj4gUGxlYXNlIHNlZSB0aGUgc25pcHBldCBiZWxvdy4KPiAKPiB2b2lkIHNldHVwX2xvY2Fs
-X0FQSUModm9pZCkKPiB7Cj4gLi4uCj4gICAgICAgICAvKgo+ICAgICAgICAgICogb25seSB0aGUg
-QlAgc2hvdWxkIHNlZSB0aGUgTElOVDEgTk1JIHNpZ25hbCwgb2J2aW91c2x5Lgo+ICAgICAgICAg
-ICovCj4gICAgICAgICBpZiAoIWNwdSkKPiAgICAgICAgICAgICAgICAgdmFsdWUgPSBBUElDX0RN
-X05NSTsKPiAgICAgICAgIGVsc2UKPiAgICAgICAgICAgICAgICAgdmFsdWUgPSBBUElDX0RNX05N
-SSB8IEFQSUNfTFZUX01BU0tFRDsKPiAgICAgICAgIGlmICghbGFwaWNfaXNfaW50ZWdyYXRlZCgp
-KSAgICAgICAgICAgICAvKiA4MjQ4OURYICovCj4gICAgICAgICAgICAgICAgIHZhbHVlIHw9IEFQ
-SUNfTFZUX0xFVkVMX1RSSUdHRVI7Cj4gICAgICAgICBhcGljX3dyaXRlKEFQSUNfTFZUMSwgdmFs
-dWUpOwo+IAo+IAo+IExJTlQxIHBpbnMgb2YgY3B1cyBvdGhlciB0aGFuIENQVSAwIGFyZSBtYXNr
-ZWQgaGVyZS4KPiBIb3dldmVyLCBhdCBsZWFzdCBvbiBzb21lIG9mIEhpdGFjaGkgc2VydmVycywg
-Tk1JIGNhdXNlZCBieSBOTUkKPiBidXR0b24gZG9lc24ndCBzZWVtIHRvIGJlIGRlbGl2ZXJlZCB0
-aHJvdWdoIExJTlQxLiAgU28sIG15IGBleHRlcm5hbCBOTUknCj4gd29yZCBtYXkgbm90IGJlIGNv
-cnJlY3QuCgpJIGFtIG5vdCBmYW1pbGlhciB3aXRoIGRldGFpbHMgaGVyZSBidXQgSSBjYW4gdGVs
-bCB5b3UgdGhhdCB0aGlzCnBhcnRpY3VsYXIgY29kZSBzbmlwcGV0IGlzIHRoZSBzYW1lIGluIG91
-ciAzLjAgYmFzZWQga2VybmVsIHNvIGl0IHNlZW1zCnRoYXQgdGhlIEhXIGlzIGluZGVlZCBkb2lu
-ZyBzb21ldGhpbmcgZGlmZmVyZW50bHkuCgo+ID4gWW91IG1pZ2h0IHN0aWxsIGdldCBhIHBhbmlj
-IG9uIGhhcmRsb2NrdXAgd2hpY2ggd2lsbCBoYXBwZW4gb24gYWxsIENQVXMKPiA+IGZyb20gdGhl
-IE5NSSBjb250ZXh0IHNvIHdlIGhhdmUgdG8gYmUgYWJsZSB0byBoYW5kbGUgcGFuaWMgaW4gTk1J
-IG9uCj4gPiBtYW55IENQVXMuCj4gCj4gRG8geW91IHNheSBhYm91dCB0aGUgY2FzZSBvZiBhIGtl
-cm5lIHBhbmljIHdoaWxlIG90aGVyIGNwdXMgbG9ja3MgdXAKPiBpbiBOTUkgY29udGV4dD8gIElu
-IHRoYXQgY2FzZSwgdGhlcmUgaXMgbm8gd2F5IHRvIGRvIHRoaW5ncyBuZWVkZWQgYnkKPiBrZHVt
-cCBwcm9jZWR1cmUgaW5jbHVkaW5nIHNhdmluZyByZWdpc3RlcmVzLi4uCgpJIGFtIHNheWluZyB0
-aGF0IHdhdGNoZG9nX292ZXJmbG93X2NhbGxiYWNrIG1pZ2h0IHRyaWdnZXIgb24gbW9yZSBDUFVz
-CmFuZCBwYW5pYyBmcm9tIE5NSSBjb250ZXh0IGFzIHdlbGwuIFNvIHRoaXMgaXMgbm90IHJlZHVj
-ZWQgdG8gdGhlIE5NSQpidXR0b24gc2VuZHMgTk1JIHRvIG1vcmUgQ1BVcy4KCldoeSBjYW5ub3Qg
-dGhlIHBhbmljKCkgY29udGV4dCBzYXZlIGFsbCB0aGUgcmVnaXN0ZXJzIGlmIHdlIGFyZSBnb2lu
-ZyB0bwpsb29wIGluIE5NSSBjb250ZXh0PyBUaGlzIHdvdWxkIGJlIGltaG8gcHJlZmVyYWJsZSB0
-byByZXR1cm5pbmcgZnJvbQpwYW5pYyBJTU8uCgpbLi4uXQo+ID4gSSBjYW4gcHJvdmlkZSB0aGUg
-ZnVsbCBsb2cgYnV0IGl0IGlzIHF1aXRlIG1hbmdsZWQuIEkgZ3Vlc3MgdGhlCj4gPiBDUFUxMzAg
-d2FzIHRoZSBvbmx5IG9uZSBhbGxvd2VkIHRvIHByb2NlZWQgd2l0aCB0aGUgcGFuaWMgd2hpbGUg
-b3RoZXJzCj4gPiByZXR1cm5lZCBmcm9tIHRoZSB1bmtub3duIE5NSSBoYW5kbGluZy4gSXQgdG9v
-ayBhIGxvdCBvZiB0aW1lIHVudGlsCj4gPiBDUFUxMzAgbWFuYWdlZCB0byBib290IHRoZSBjcmFz
-aCBrZXJuZWwgd2l0aCBzb2Z0IGxvY2t1cHMgYW5kIFJDVSBzdGFsbHMKPiA+IHJlcG9ydHMuIENQ
-VTAgaXMgbW9zdCBwcm9iYWJseSBsb2NrZWQgdXAgd2FpdGluZyBmb3IgQ1BVMTMwIHRvCj4gPiBh
-Y2tub3dsZWRnZSB0aGUgSVBJIHdoaWNoIHdpbGwgbm90IGhhcHBlbiBhcHBhcmVudGx5Lgo+IAo+
-IFRoZXJlIGlzIGEgdGltZW91dCBvZiAxMDAwbXMgaW4gbm1pX3Nob290ZG93bl9jcHVzKCksIHNv
-IEkgZG9uJ3Qga25vdwo+IHdoeSBDUFUgMTMwIHdhaXRzIHNvIGxvbmcuICBJJ2xsIHRyeSB0byBj
-b25zaWRlciBmb3IgYSB3aGlsZS4KClllcywgSSBkbyBub3QgdW5kZXJzdGFuZCB0aGUgdGltaW5n
-IGhlcmUgZWl0aGVyIGFuZCB0aGUgZmFjdCB0aGF0IHRoZQpsb2cgaXMgYSBjb21wbGV0ZSBtZXNz
-IGluIHRoZSBpbXBvcnRhbnQgcGFydHMgZG9lc24ndCBoZWxwIGEgd2VlIGJpdC4KIApbLi4uXQoK
-LS0gCk1pY2hhbCBIb2NrbwpTVVNFIExhYnMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+>On 07/23/2015 02:20 PM, Atsushi Kumagai wrote:
+>>> Hello Kumagai,
+>>>
+>>> The PATCH v3 has improved the performance.
+>>> The performance degradation in PATCH v2 mainly caused by the page_fault
+>>> produced by the function compress2().
+>>>
+>>> I wrote some codes to test the performance of compress2. It almost costs
+>>> the same time and produces the same amount of page_fault as executing compress2
+>>> in thread.
+>>>
+>>> To reduce page_faults, I have to do the following in kdump_thread_function_cyclic().
+>>>
+>>> +	/*
+>>> +	 * lock memory to reduce page_faults by compress2()
+>>> +	 */
+>>> +	void *temp = malloc(1);
+>>> +	memset(temp, 0, 1);
+>>> +	mlockall(MCL_CURRENT);
+>>> +	free(temp);
+>>> +
+>>>
+>>> With this, using a thread or not almost has the same performance.
+>>
+>> Hmm... I can't get good results with this patch, many page faults still
+>> occur. I guess mlock will change when page faults occur, but will not
+>> change the total number of page faults.
+>> Could you explain why compress2() causes many page faults only in thread,
+>> then I may understand why this patch is meaningful.
+>>
+>
+>Actually, it will also cause so much page faults even not in thread, if
+>info->bitmap2 is not freed in makedumpfile.
+>
+>I wrote some codes to test the performance of compress2().
+>
+><cut>
+>buf = malloc(PAGE_SIZE);
+>bufout = malloc(SIZE_OUT);
+>memset(buf, 1, PAGE_SIZE / 2);
+>while (1)
+>     compress2(bufout, &size_out, buf, PAGE_SIZE, Z_BEST_SPEED);
+><cut>
+>
+>The codes almost like this.
+>It will cause much page faults.
+>
+>But if the codes turn to be the following, it will be much better.
+>
+><cut>
+>temp = malloc(TEMP_SIZE);
+>memset(temp, 0, TEMP_SIZE);
+>free(temp);
+>
+>buf = malloc(PAGE_SIZE);
+>bufout = malloc(SIZE_OUT);
+>memset(buf, 1, PAGE_SIZE / 2);
+>while (1)
+>     compress2(bufout, &size_out, buf, PAGE_SIZE, Z_BEST_SPEED);
+><cut>
+>
+>TEMP_SIZE must be large enough.
+>(larger than 135097 will work,in my machine)
+>
+>
+>If in thread, the following codes can reduce the page faults.
+>
+><cut>
+>temp = malloc(1);
+>memset(temp, 0, 1);
+>mlockall(MCL_CURRENT);
+>free(temp);
+>
+>buf = malloc(PAGE_SIZE);
+>bufout = malloc(SIZE_OUT);
+>memset(buf, 1, PAGE_SIZE / 2);
+>while (1)
+>     compress2(bufout, &size_out, buf, PAGE_SIZE, Z_BEST_SPEED);
+><cut>
+>
+>I haven't known why.
+
+I assume that we are facing the known issue of glibc:
+
+  https://sourceware.org/ml/libc-alpha/2015-03/msg00270.html
+
+According to the thread above, per-thread arena is easy to be grown and
+trimmed compared with main arena.
+Actually compress2() calls malloc() and free() for compression each time
+it is called, so every compression processing will cause page fault.
+Moreover, I confirmed that many madvise(MADV_DONTNEED) are invoked only
+when compress2() is called in thread.
+
+OTOH, in lzo case, a temp buffer for working is allocated on the caller
+side, so it can reduce the number of malloc()/free() pair.
+(but I'm not sure why snappy doesn't hit this issue. The buffer size
+for compression may be smaller than the trim threshold.)
+
+Anyway, basically it's hard for zlib to avoid this issue on the application
+side, it seems that we have to accept the performance degradation caused by it.
+Unfortunately, the main target of this multi thread feature is zlib as you
+measured, we should resolve this issue somehow.
+
+Nevertheless, even now we can get some benefit of parallel processing,
+so lets' start to discuss the implementation of the parallel processing
+feature to accept this patch. I have some comments:
+
+  - read_pfn_parallel() doesn't use the cache feature(cache.c), is it
+    intentional with you ?
+
+  - Now --num-buffers is tunable but the man description and your benchmark
+    didn't mention what is the benefit of this parameter.
+
+
+Thanks
+Atsushi Kumagai
+
+>--
+>Thanks
+>Zhou Wenjian
+>
+>>
+>> Thanks
+>> Atsushi Kumagai
+>>
+>>> In our machine, I can get the same result as the following with PATCH v2.
+>>>> Test2-1:
+>>>>    | threads | compress time | exec time |
+>>>>    |    1    |     76.12     |   82.13   |
+>>   >
+>>>> Test2-2:
+>>>>    | threads | compress time | exec time |
+>>>>    |    1    |     41.97     |   51.46   |
+>>>
+>>> I test the new patch set in the machine, and below is the results.
+>>>
+>>> PATCH V2:
+>>> ###################################
+>>> - System: PRIMEQUEST 1800E
+>>> - CPU: Intel(R) Xeon(R) CPU E7540
+>>> - memory: 32GB
+>>> ###################################
+>>> ************ makedumpfile -d 0 ******************
+>>>                  core-data               0       256     512     768     1024    1280    1536    1792
+>>>          threads-num
+>>> -c
+>>>          0                               158     1505    2119    2129    1707    1483    1440    1273
+>>>          4                               207     589     672     673     636     564     536     514
+>>>          8                               176     327     377     387     367     336     314     291
+>>>          12                              191     272     295     306     288     259     257     240
+>>>
+>>> ************ makedumpfile -d 7 ******************
+>>>                  core-data               0       256     512     768     1024    1280    1536    1792
+>>>          threads-num
+>>> -c
+>>>          0                               154     1508    2089    2133    1792    1660    1462    1312
+>>>          4                               203     594     684     701     627     592     535     503
+>>>          8                               172     326     377     393     366     334     313     286
+>>>          12                              182     273     295     308     283     258     249     237
+>>>
+>>>
+>>>
+>>> PATCH v3:
+>>> ###################################
+>>> - System: PRIMEQUEST 1800E
+>>> - CPU: Intel(R) Xeon(R) CPU E7540
+>>> - memory: 32GB
+>>> ###################################
+>>> ************ makedumpfile -d 0 ******************
+>>>                  core-data               0       256     512     768     1024    1280    1536    1792
+>>>          threads-num
+>>> -c
+>>>          0                               192     1488    1830
+>>>          4                               62      393     477
+>>>          8                               78      211     258
+>>>
+>>> ************ makedumpfile -d 7 ******************
+>>>                  core-data               0       256     512     768     1024    1280    1536    1792
+>>>          threads-num
+>>> -c
+>>>          0                               197     1475    1815
+>>>          4                               62      396     482
+>>>          8                               78      209     252
+>>>
+>>>
+>>> --
+>>> Thanks
+>>> Zhou Wenjian
+>>>
+>>> On 07/21/2015 02:29 PM, Zhou Wenjian wrote:
+>>>> This patch set implements parallel processing by means of multiple threads.
+>>>> With this patch set, it is available to use multiple threads to read
+>>>> and compress pages. This parallel process will save time.
+>>>> This feature only supports creating dumpfile in kdump-compressed format from
+>>>> vmcore in kdump-compressed format or elf format. Currently, sadump and
+>>>>    xen kdump are not supported.
+>>>>
+>>>> Qiao Nuohan (10):
+>>>>     Add readpage_kdump_compressed_parallel
+>>>>     Add mappage_elf_parallel
+>>>>     Add readpage_elf_parallel
+>>>>     Add read_pfn_parallel
+>>>>     Add function to initial bitmap for parallel use
+>>>>     Add filter_data_buffer_parallel
+>>>>     Add write_kdump_pages_parallel to allow parallel process
+>>>>     Initial and free data used for parallel process
+>>>>     Make makedumpfile available to read and compress pages parallelly
+>>>>     Add usage and manual about multiple threads process
+>>>>
+>>>>    Makefile       |    2 +
+>>>>    erase_info.c   |   29 ++-
+>>>>    erase_info.h   |    2 +
+>>>>    makedumpfile.8 |   24 ++
+>>>>    makedumpfile.c | 1095 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>>>>    makedumpfile.h |   80 ++++
+>>>>    print_info.c   |   16 +
+>>>>    7 files changed, 1245 insertions(+), 3 deletions(-)
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> kexec mailing list
+>>>> kexec@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/kexec
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
