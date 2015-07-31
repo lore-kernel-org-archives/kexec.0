@@ -1,20 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZL6k7-0001pQ-BL
- for kexec@lists.infradead.org; Fri, 31 Jul 2015 09:36:44 +0000
-Message-ID: <55BB4178.3040602@cn.fujitsu.com>
-Date: Fri, 31 Jul 2015 17:35:52 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+ id 1ZL8PO-0005Xq-QL
+ for kexec@lists.infradead.org; Fri, 31 Jul 2015 11:23:27 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: Re: [V2 PATCH 1/3] x86/panic: Fix re-entrance problem due to
+ panic on NMI
+Date: Fri, 31 Jul 2015 11:23:00 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A844549220E7@GSjpTKYDCembx31.service.hitachi.net>
+References: <20150727015850.4928.50289.stgit@softrs>
+ <20150727143405.GF11317@dhcp22.suse.cz> <55B6E2A3.8070004@hitachi.com>
+ <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
+ <20150729082329.GA15801@dhcp22.suse.cz>
+ <04EAB7311EE43145B2D3536183D1A8445491DB5E@GSjpTKYDCembx31.service.hitachi.net>
+ <20150729092157.GC15801@dhcp22.suse.cz>
+ <04EAB7311EE43145B2D3536183D1A8445491F23A@GSjpTKYDCembx31.service.hitachi.net>
+ <20150730074812.GA9387@dhcp22.suse.cz>
+ <04EAB7311EE43145B2D3536183D1A8445491FC55@GSjpTKYDCembx31.service.hitachi.net>
+ <20150730122747.GA3954@dhcp22.suse.cz>
+In-Reply-To: <20150730122747.GA3954@dhcp22.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 00/10] makedumpfile: parallel processing
-References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <55ADF066.8050800@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DD0947@BPXM01GP.gisp.nec.co.jp>
- <55B08C1D.7010505@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DD39B7@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DD39B7@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,261 +30,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: 'Michal Hocko' <mhocko@kernel.org>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 07/31/2015 04:27 PM, Atsushi Kumagai wrote:
->> On 07/23/2015 02:20 PM, Atsushi Kumagai wrote:
->>>> Hello Kumagai,
->>>>
->>>> The PATCH v3 has improved the performance.
->>>> The performance degradation in PATCH v2 mainly caused by the page_fault
->>>> produced by the function compress2().
->>>>
->>>> I wrote some codes to test the performance of compress2. It almost costs
->>>> the same time and produces the same amount of page_fault as executing compress2
->>>> in thread.
->>>>
->>>> To reduce page_faults, I have to do the following in kdump_thread_function_cyclic().
->>>>
->>>> +	/*
->>>> +	 * lock memory to reduce page_faults by compress2()
->>>> +	 */
->>>> +	void *temp = malloc(1);
->>>> +	memset(temp, 0, 1);
->>>> +	mlockall(MCL_CURRENT);
->>>> +	free(temp);
->>>> +
->>>>
->>>> With this, using a thread or not almost has the same performance.
->>>
->>> Hmm... I can't get good results with this patch, many page faults still
->>> occur. I guess mlock will change when page faults occur, but will not
->>> change the total number of page faults.
->>> Could you explain why compress2() causes many page faults only in thread,
->>> then I may understand why this patch is meaningful.
->>>
->>
->> Actually, it will also cause so much page faults even not in thread, if
->> info->bitmap2 is not freed in makedumpfile.
->>
->> I wrote some codes to test the performance of compress2().
->>
->> <cut>
->> buf = malloc(PAGE_SIZE);
->> bufout = malloc(SIZE_OUT);
->> memset(buf, 1, PAGE_SIZE / 2);
->> while (1)
->>      compress2(bufout, &size_out, buf, PAGE_SIZE, Z_BEST_SPEED);
->> <cut>
->>
->> The codes almost like this.
->> It will cause much page faults.
->>
->> But if the codes turn to be the following, it will be much better.
->>
->> <cut>
->> temp = malloc(TEMP_SIZE);
->> memset(temp, 0, TEMP_SIZE);
->> free(temp);
->>
->> buf = malloc(PAGE_SIZE);
->> bufout = malloc(SIZE_OUT);
->> memset(buf, 1, PAGE_SIZE / 2);
->> while (1)
->>      compress2(bufout, &size_out, buf, PAGE_SIZE, Z_BEST_SPEED);
->> <cut>
->>
->> TEMP_SIZE must be large enough.
->> (larger than 135097 will work,in my machine)
->>
->>
->> If in thread, the following codes can reduce the page faults.
->>
->> <cut>
->> temp = malloc(1);
->> memset(temp, 0, 1);
->> mlockall(MCL_CURRENT);
->> free(temp);
->>
->> buf = malloc(PAGE_SIZE);
->> bufout = malloc(SIZE_OUT);
->> memset(buf, 1, PAGE_SIZE / 2);
->> while (1)
->>      compress2(bufout, &size_out, buf, PAGE_SIZE, Z_BEST_SPEED);
->> <cut>
->>
->> I haven't known why.
->
-> I assume that we are facing the known issue of glibc:
->
->    https://sourceware.org/ml/libc-alpha/2015-03/msg00270.html
->
-> According to the thread above, per-thread arena is easy to be grown and
-> trimmed compared with main arena.
-> Actually compress2() calls malloc() and free() for compression each time
-> it is called, so every compression processing will cause page fault.
-> Moreover, I confirmed that many madvise(MADV_DONTNEED) are invoked only
-> when compress2() is called in thread.
->
-> OTOH, in lzo case, a temp buffer for working is allocated on the caller
-> side, so it can reduce the number of malloc()/free() pair.
-> (but I'm not sure why snappy doesn't hit this issue. The buffer size
-> for compression may be smaller than the trim threshold.)
->
-> Anyway, basically it's hard for zlib to avoid this issue on the application
-> side, it seems that we have to accept the performance degradation caused by it.
-> Unfortunately, the main target of this multi thread feature is zlib as you
-> measured, we should resolve this issue somehow.
->
-> Nevertheless, even now we can get some benefit of parallel processing,
-> so lets' start to discuss the implementation of the parallel processing
-> feature to accept this patch. I have some comments:
->
->    - read_pfn_parallel() doesn't use the cache feature(cache.c), is it
->      intentional with you ?
->
-
-Yes, since the data are read once a page here, cache feature seems not
-needed.
-
->    - Now --num-buffers is tunable but the man description and your benchmark
->      didn't mention what is the benefit of this parameter.
->
-
-The default value of num-buffers is 50. Originally the value has great influence
-on the performance. But since we changed the logic in the 2nd version of the
-patch set, more buffers have little improvement(1000 buffers may have 1% improvement).
-I'm considering if the option should be removed. what do you think about it?
-
-BTW, the code (mlockall) added in the 3rd version works well in several machines here.
-Should I keep it ?
-With the codes, madvise(MADV_DONTNEED) will be failed in compress2 and the performance
-is as expected in these machines.
-
-
--- 
-Thanks
-Zhou Wenjian
-
->
-> Thanks
-> Atsushi Kumagai
->
->> --
->> Thanks
->> Zhou Wenjian
->>
->>>
->>> Thanks
->>> Atsushi Kumagai
->>>
->>>> In our machine, I can get the same result as the following with PATCH v2.
->>>>> Test2-1:
->>>>>     | threads | compress time | exec time |
->>>>>     |    1    |     76.12     |   82.13   |
->>>    >
->>>>> Test2-2:
->>>>>     | threads | compress time | exec time |
->>>>>     |    1    |     41.97     |   51.46   |
->>>>
->>>> I test the new patch set in the machine, and below is the results.
->>>>
->>>> PATCH V2:
->>>> ###################################
->>>> - System: PRIMEQUEST 1800E
->>>> - CPU: Intel(R) Xeon(R) CPU E7540
->>>> - memory: 32GB
->>>> ###################################
->>>> ************ makedumpfile -d 0 ******************
->>>>                   core-data               0       256     512     768     1024    1280    1536    1792
->>>>           threads-num
->>>> -c
->>>>           0                               158     1505    2119    2129    1707    1483    1440    1273
->>>>           4                               207     589     672     673     636     564     536     514
->>>>           8                               176     327     377     387     367     336     314     291
->>>>           12                              191     272     295     306     288     259     257     240
->>>>
->>>> ************ makedumpfile -d 7 ******************
->>>>                   core-data               0       256     512     768     1024    1280    1536    1792
->>>>           threads-num
->>>> -c
->>>>           0                               154     1508    2089    2133    1792    1660    1462    1312
->>>>           4                               203     594     684     701     627     592     535     503
->>>>           8                               172     326     377     393     366     334     313     286
->>>>           12                              182     273     295     308     283     258     249     237
->>>>
->>>>
->>>>
->>>> PATCH v3:
->>>> ###################################
->>>> - System: PRIMEQUEST 1800E
->>>> - CPU: Intel(R) Xeon(R) CPU E7540
->>>> - memory: 32GB
->>>> ###################################
->>>> ************ makedumpfile -d 0 ******************
->>>>                   core-data               0       256     512     768     1024    1280    1536    1792
->>>>           threads-num
->>>> -c
->>>>           0                               192     1488    1830
->>>>           4                               62      393     477
->>>>           8                               78      211     258
->>>>
->>>> ************ makedumpfile -d 7 ******************
->>>>                   core-data               0       256     512     768     1024    1280    1536    1792
->>>>           threads-num
->>>> -c
->>>>           0                               197     1475    1815
->>>>           4                               62      396     482
->>>>           8                               78      209     252
->>>>
->>>>
->>>> --
->>>> Thanks
->>>> Zhou Wenjian
->>>>
->>>> On 07/21/2015 02:29 PM, Zhou Wenjian wrote:
->>>>> This patch set implements parallel processing by means of multiple threads.
->>>>> With this patch set, it is available to use multiple threads to read
->>>>> and compress pages. This parallel process will save time.
->>>>> This feature only supports creating dumpfile in kdump-compressed format from
->>>>> vmcore in kdump-compressed format or elf format. Currently, sadump and
->>>>>     xen kdump are not supported.
->>>>>
->>>>> Qiao Nuohan (10):
->>>>>      Add readpage_kdump_compressed_parallel
->>>>>      Add mappage_elf_parallel
->>>>>      Add readpage_elf_parallel
->>>>>      Add read_pfn_parallel
->>>>>      Add function to initial bitmap for parallel use
->>>>>      Add filter_data_buffer_parallel
->>>>>      Add write_kdump_pages_parallel to allow parallel process
->>>>>      Initial and free data used for parallel process
->>>>>      Make makedumpfile available to read and compress pages parallelly
->>>>>      Add usage and manual about multiple threads process
->>>>>
->>>>>     Makefile       |    2 +
->>>>>     erase_info.c   |   29 ++-
->>>>>     erase_info.h   |    2 +
->>>>>     makedumpfile.8 |   24 ++
->>>>>     makedumpfile.c | 1095 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->>>>>     makedumpfile.h |   80 ++++
->>>>>     print_info.c   |   16 +
->>>>>     7 files changed, 1245 insertions(+), 3 deletions(-)
->>>>>
->>>>>
->>>>> _______________________________________________
->>>>> kexec mailing list
->>>>> kexec@lists.infradead.org
->>>>> http://lists.infradead.org/mailman/listinfo/kexec
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiBGcm9tOiBNaWNoYWwgSG9ja28gW21haWx0bzptaG9ja29Aa2VybmVsLm9yZ10NCj4gDQo+IE9u
+IFRodSAzMC0wNy0xNSAxMTo1NTo1Miwg5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTyB3
+cm90ZToNCj4gPiA+IEZyb206IE1pY2hhbCBIb2NrbyBbbWFpbHRvOm1ob2Nrb0BrZXJuZWwub3Jn
+XQ0KPiBbLi4uXQ0KPiA+ID4gQ291bGQgeW91IHBvaW50IG1lIHRvIHRoZSBjb2RlIHdoaWNoIGRv
+ZXMgdGhhdCwgcGxlYXNlPyBNYXliZSB3ZSBhcmUNCj4gPiA+IG1pc3NpbmcgdGhhdCBpbiBvdXIg
+My4wIGtlcm5lbC4gSSB3YXMgcXVpdGUgc3VycHJpc2VkIHRvIHNlZSB0aGlzDQo+ID4gPiBiZWhh
+dmlvciBhcyB3ZWxsLg0KPiA+DQo+ID4gUGxlYXNlIHNlZSB0aGUgc25pcHBldCBiZWxvdy4NCj4g
+Pg0KPiA+IHZvaWQgc2V0dXBfbG9jYWxfQVBJQyh2b2lkKQ0KPiA+IHsNCj4gPiAuLi4NCj4gPiAg
+ICAgICAgIC8qDQo+ID4gICAgICAgICAgKiBvbmx5IHRoZSBCUCBzaG91bGQgc2VlIHRoZSBMSU5U
+MSBOTUkgc2lnbmFsLCBvYnZpb3VzbHkuDQo+ID4gICAgICAgICAgKi8NCj4gPiAgICAgICAgIGlm
+ICghY3B1KQ0KPiA+ICAgICAgICAgICAgICAgICB2YWx1ZSA9IEFQSUNfRE1fTk1JOw0KPiA+ICAg
+ICAgICAgZWxzZQ0KPiA+ICAgICAgICAgICAgICAgICB2YWx1ZSA9IEFQSUNfRE1fTk1JIHwgQVBJ
+Q19MVlRfTUFTS0VEOw0KPiA+ICAgICAgICAgaWYgKCFsYXBpY19pc19pbnRlZ3JhdGVkKCkpICAg
+ICAgICAgICAgIC8qIDgyNDg5RFggKi8NCj4gPiAgICAgICAgICAgICAgICAgdmFsdWUgfD0gQVBJ
+Q19MVlRfTEVWRUxfVFJJR0dFUjsNCj4gPiAgICAgICAgIGFwaWNfd3JpdGUoQVBJQ19MVlQxLCB2
+YWx1ZSk7DQo+ID4NCj4gPg0KPiA+IExJTlQxIHBpbnMgb2YgY3B1cyBvdGhlciB0aGFuIENQVSAw
+IGFyZSBtYXNrZWQgaGVyZS4NCj4gPiBIb3dldmVyLCBhdCBsZWFzdCBvbiBzb21lIG9mIEhpdGFj
+aGkgc2VydmVycywgTk1JIGNhdXNlZCBieSBOTUkNCj4gPiBidXR0b24gZG9lc24ndCBzZWVtIHRv
+IGJlIGRlbGl2ZXJlZCB0aHJvdWdoIExJTlQxLiAgU28sIG15IGBleHRlcm5hbCBOTUknDQo+ID4g
+d29yZCBtYXkgbm90IGJlIGNvcnJlY3QuDQo+IA0KPiBJIGFtIG5vdCBmYW1pbGlhciB3aXRoIGRl
+dGFpbHMgaGVyZSBidXQgSSBjYW4gdGVsbCB5b3UgdGhhdCB0aGlzDQo+IHBhcnRpY3VsYXIgY29k
+ZSBzbmlwcGV0IGlzIHRoZSBzYW1lIGluIG91ciAzLjAgYmFzZWQga2VybmVsIHNvIGl0IHNlZW1z
+DQo+IHRoYXQgdGhlIEhXIGlzIGluZGVlZCBkb2luZyBzb21ldGhpbmcgZGlmZmVyZW50bHkuDQoN
+ClllcywgYW5kIGl0IHR1cm5lZCBvdXQgbXkgUEFUQ0ggMy8zIGRvZXNuJ3Qgd29yayBhdCBhbGwg
+b24gc29tZQ0KaGFyZHdhcmUuLi4NCg0KPiA+ID4gWW91IG1pZ2h0IHN0aWxsIGdldCBhIHBhbmlj
+IG9uIGhhcmRsb2NrdXAgd2hpY2ggd2lsbCBoYXBwZW4gb24gYWxsIENQVXMNCj4gPiA+IGZyb20g
+dGhlIE5NSSBjb250ZXh0IHNvIHdlIGhhdmUgdG8gYmUgYWJsZSB0byBoYW5kbGUgcGFuaWMgaW4g
+Tk1JIG9uDQo+ID4gPiBtYW55IENQVXMuDQo+ID4NCj4gPiBEbyB5b3Ugc2F5IGFib3V0IHRoZSBj
+YXNlIG9mIGEga2VybmUgcGFuaWMgd2hpbGUgb3RoZXIgY3B1cyBsb2NrcyB1cA0KPiA+IGluIE5N
+SSBjb250ZXh0PyAgSW4gdGhhdCBjYXNlLCB0aGVyZSBpcyBubyB3YXkgdG8gZG8gdGhpbmdzIG5l
+ZWRlZCBieQ0KPiA+IGtkdW1wIHByb2NlZHVyZSBpbmNsdWRpbmcgc2F2aW5nIHJlZ2lzdGVyZXMu
+Li4NCj4gDQo+IEkgYW0gc2F5aW5nIHRoYXQgd2F0Y2hkb2dfb3ZlcmZsb3dfY2FsbGJhY2sgbWln
+aHQgdHJpZ2dlciBvbiBtb3JlIENQVXMNCj4gYW5kIHBhbmljIGZyb20gTk1JIGNvbnRleHQgYXMg
+d2VsbC4gU28gdGhpcyBpcyBub3QgcmVkdWNlZCB0byB0aGUgTk1JDQo+IGJ1dHRvbiBzZW5kcyBO
+TUkgdG8gbW9yZSBDUFVzLg0KDQpJIHVuZGVyc3RhbmQuICBTbywgSSBoYXZlIHRvIGFsc28gbW9k
+aWZ5IHdhdGNoZG9nX292ZXJmbG93X2NhbGxiYWNrDQp0byBjYWxsIG5taV9wYW5pYygpLg0KDQo+
+IFdoeSBjYW5ub3QgdGhlIHBhbmljKCkgY29udGV4dCBzYXZlIGFsbCB0aGUgcmVnaXN0ZXJzIGlm
+IHdlIGFyZSBnb2luZyB0bw0KPiBsb29wIGluIE5NSSBjb250ZXh0PyBUaGlzIHdvdWxkIGJlIGlt
+aG8gcHJlZmVyYWJsZSB0byByZXR1cm5pbmcgZnJvbQ0KPiBwYW5pYyBJTU8uDQoNCkknbSBub3Qg
+c2F5aW5nIHdlIGNhbm5vdCBzYXZlIHJlZ2lzdGVycyBhbmQgZG8gc29tZSBjbGVhbnVwcyBpbiBO
+TUkNCmNvbnRleHQuICBJIGZlbGwgdGhhdCBpdCB3b3VsZCBpbnRyb2R1Y2UgdW5uZWVkZWQgY29t
+cGxleGl0eS4NClNpbmNlIHdhdGNoZG9nX292ZXJmbG93X2NhbGxiYWNrIGlzIGRlZmluZWQgYXMg
+Z2VuZXJpYyBjb2RlLA0Kd2UgbmVlZCB0byBpbXBsZW1lbnQgdGhlIHByZXBhcmF0aW9uIGZvciBr
+ZHVtcCBmb3Igb3RoZXIgYXJjaGl0ZWN0dXJlcy4NCkkgaGF2ZW4ndCBjaGVja2VkIHdoaWNoIGFy
+Y2hpdGVjdHVyZXMgc3VwcG9ydCBib3RoIG5taSB3YXRjaGRvZyBhbmQNCmtkdW1wLCB0aG91Z2gu
+DQoNCkFueXdheSwgSSBjYW1lIHVwIHdpdGggYSBzaW1wbGUgc29sdXRpb24gZm9yIHg4Ni4gIFdh
+aXRpbmcgZm9yIHRoZQ0KdGltaW5nIG9mIG5taV9zaG9vdGRvd25fY3B1cygpIGluIG5taV9wYW5p
+YygpLCB0aGVuIGludm9rZSB0aGUNCmNhbGxiYWNrIHJlZ2lzdGVyZWQgYnkgbm1pX3Nob290ZG93
+bl9jcHVzKCkuDQoNCj4gPiA+IEkgY2FuIHByb3ZpZGUgdGhlIGZ1bGwgbG9nIGJ1dCBpdCBpcyBx
+dWl0ZSBtYW5nbGVkLiBJIGd1ZXNzIHRoZQ0KPiA+ID4gQ1BVMTMwIHdhcyB0aGUgb25seSBvbmUg
+YWxsb3dlZCB0byBwcm9jZWVkIHdpdGggdGhlIHBhbmljIHdoaWxlIG90aGVycw0KPiA+ID4gcmV0
+dXJuZWQgZnJvbSB0aGUgdW5rbm93biBOTUkgaGFuZGxpbmcuIEl0IHRvb2sgYSBsb3Qgb2YgdGlt
+ZSB1bnRpbA0KPiA+ID4gQ1BVMTMwIG1hbmFnZWQgdG8gYm9vdCB0aGUgY3Jhc2gga2VybmVsIHdp
+dGggc29mdCBsb2NrdXBzIGFuZCBSQ1Ugc3RhbGxzDQo+ID4gPiByZXBvcnRzLiBDUFUwIGlzIG1v
+c3QgcHJvYmFibHkgbG9ja2VkIHVwIHdhaXRpbmcgZm9yIENQVTEzMCB0bw0KPiA+ID4gYWNrbm93
+bGVkZ2UgdGhlIElQSSB3aGljaCB3aWxsIG5vdCBoYXBwZW4gYXBwYXJlbnRseS4NCj4gPg0KPiA+
+IFRoZXJlIGlzIGEgdGltZW91dCBvZiAxMDAwbXMgaW4gbm1pX3Nob290ZG93bl9jcHVzKCksIHNv
+IEkgZG9uJ3Qga25vdw0KPiA+IHdoeSBDUFUgMTMwIHdhaXRzIHNvIGxvbmcuICBJJ2xsIHRyeSB0
+byBjb25zaWRlciBmb3IgYSB3aGlsZS4NCj4gDQo+IFllcywgSSBkbyBub3QgdW5kZXJzdGFuZCB0
+aGUgdGltaW5nIGhlcmUgZWl0aGVyIGFuZCB0aGUgZmFjdCB0aGF0IHRoZQ0KPiBsb2cgaXMgYSBj
+b21wbGV0ZSBtZXNzIGluIHRoZSBpbXBvcnRhbnQgcGFydHMgZG9lc24ndCBoZWxwIGEgd2VlIGJp
+dC4NCg0KSSdtIGludGVyZXN0ZWQgaW4gd2hlcmUgImtlcm5lbCBwYW5pYyAtbm90IHN5bmNpbmc6
+ICIgaXMuDQpJdCBtYXkgZ2l2ZSB1cyBhIGNsdWUuDQoNCg0KUmVnYXJkcywNCkthd2FpDQoNCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
+bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
