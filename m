@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZMNqZ-0005aV-Rd
- for kexec@lists.infradead.org; Mon, 03 Aug 2015 22:04:40 +0000
-Date: Mon, 3 Aug 2015 15:04:17 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [Patch v2] align crash_notes allocation to make it be inside
- one physical page
-Message-Id: <20150803150417.b3536887b1ad86ae04c405b7@linux-foundation.org>
-In-Reply-To: <1438606243-13064-1-git-send-email-bhe@redhat.com>
+ id 1ZMOkN-0001yW-HW
+ for kexec@lists.infradead.org; Mon, 03 Aug 2015 23:02:20 +0000
+Date: Tue, 4 Aug 2015 07:01:52 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [Patch v2] align crash_notes allocation to make it be inside one
+ physical page
+Message-ID: <20150803230152.GA1718@dhcp-17-102.nay.redhat.com>
 References: <1438606243-13064-1-git-send-email-bhe@redhat.com>
-Mime-Version: 1.0
+ <20150803150417.b3536887b1ad86ae04c405b7@linux-foundation.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150803150417.b3536887b1ad86ae04c405b7@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,72 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: mhuang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tatsu@ab.jp.nec.com, lisa.mitchell@hp.com, seiji.aguchi.tr@hitachi.com, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com
 
-On Mon,  3 Aug 2015 20:50:43 +0800 Baoquan He <bhe@redhat.com> wrote:
+Hi Andrew,
 
-> People reported that crash_notes in /proc/vmcore were corrupted and
-> this cause crash kdump failure. With code debugging and log we got
-> the root cause. This is because percpu variable crash_notes are
-> allocated in 2 vmalloc pages. Currently percpu is based on vmalloc
-> by default. Vmalloc can't guarantee 2 continuous vmalloc pages
-> are also on 2 continuous physical pages. So when 1st kernel exports
-> the starting address and size of crash_notes through sysfs like below:
+Thanks a lot for your reviewing and suggestiong.
+
+On 08/03/15 at 03:04pm, Andrew Morton wrote:
+> On Mon,  3 Aug 2015 20:50:43 +0800 Baoquan He <bhe@redhat.com> wrote:
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -1620,7 +1620,16 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+> >  static int __init crash_notes_memory_init(void)
+> >  {
+> >  	/* Allocate memory for saving cpu registers. */
+> > -	crash_notes = alloc_percpu(note_buf_t);
+> > +	size_t size, align;
+> > +	int order;
+> > +
+> > +	size = sizeof(note_buf_t);
+> > +	order = get_count_order(size);
+> > +	align = min_t(size_t, (1<<order), PAGE_SIZE);
+> > +
+> > +	WARN_ON(size > PAGE_SIZE);
+> > +
+> > +	crash_notes = __alloc_percpu(size, align);
 > 
-> /sys/devices/system/cpu/cpux/crash_notes
-> /sys/devices/system/cpu/cpux/crash_notes_size
+> A code comment would be helpful - the reason for this code's existence
+> is otherwise utterly unobvious.
+
+Will add in new post.
+
 > 
-> kdump kernel use them to get the content of crash_notes. However the
-> 2nd part may not be in the next neighbouring physical page as we
-> expected if crash_notes are allocated accross 2 vmalloc pages. That's
-> why nhdr_ptr->n_namesz or nhdr_ptr->n_descsz could be very huge in
-> update_note_header_size_elf64() and cause note header merging failure
-> or some warnings.
+> I think it can be done this way:
 > 
-> In this patch change to call __alloc_percpu() to passed in the align
-> value by rounding crash_notes_size up to the nearest power of two.
-> This make sure the crash_notes is allocated inside one physical page
-> since sizeof(note_buf_t) in all ARCHS is smaller than PAGE_SIZE.
-> Meanwhile add a WARN_ON in case it grows to be bigger than PAGE_SIZE
-> in the future.
+> 	align = min(roundup_pow_of_two(sizeof(note_buf_t)), PAGE_SIZE);
 > 
-> ...
->
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1620,7 +1620,16 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
->  static int __init crash_notes_memory_init(void)
->  {
->  	/* Allocate memory for saving cpu registers. */
-> -	crash_notes = alloc_percpu(note_buf_t);
-> +	size_t size, align;
-> +	int order;
-> +
-> +	size = sizeof(note_buf_t);
-> +	order = get_count_order(size);
-> +	align = min_t(size_t, (1<<order), PAGE_SIZE);
-> +
-> +	WARN_ON(size > PAGE_SIZE);
-> +
-> +	crash_notes = __alloc_percpu(size, align);
+> 
+> I never noticed get_count_order() before.  afaict it does the same as
+> order_base_2(), except get_count_order() generates better code and has
+> a ridiculous name.
 
-A code comment would be helpful - the reason for this code's existence
-is otherwise utterly unobvious.
+OK, will change the code as you suggested.
 
-I think it can be done this way:
+> 
+> And I think the WARN_ON can be replaced with a
+> BUILD_BUG_ON(sizeof>PAGE_SIZE)?  That would avoid adding runtime
+> overhead.
 
-	align = min(roundup_pow_of_two(sizeof(note_buf_t)), PAGE_SIZE);
+I am not sure about this. BUILD_BUG_ON will break kernel compiling.
+Before we got the root cause several work around fix were introduced to
+skip this kind of crash_note.
 
+  c4082f3 vmcore: continue vmcore initialization if PT_NOTE is found empty
+  38dfac8 vmcore: prevent PT_NOTE p_memsz overflow during header update
 
-I never noticed get_count_order() before.  afaict it does the same as
-order_base_2(), except get_count_order() generates better code and has
-a ridiculous name.
+That means if (sizeof(note_buf_t)>PAGE_SIZE) really happened, normal
+kernel works well, kdump kernel can work but we will lose those
+crash_notes. And if on one certain ARCH sizeof(note_buf_t) is bigger
+than PAGE_SIZE, the design here must be changed to avoid using percpu
+variable or adjust their note_buf_t. That may take a not short time to
+discuss and review. Comparing with this it may be better to tolerate the
+dumping vmcore with uncomplete crash_notes for a while until new design
+is taken.
 
-And I think the WARN_ON can be replaced with a
-BUILD_BUG_ON(sizeof>PAGE_SIZE)?  That would avoid adding runtime
-overhead.
-
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
