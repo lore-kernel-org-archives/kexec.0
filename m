@@ -1,27 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZL8PO-0005Xq-QL
- for kexec@lists.infradead.org; Fri, 31 Jul 2015 11:23:27 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: Re: [V2 PATCH 1/3] x86/panic: Fix re-entrance problem due to
- panic on NMI
-Date: Fri, 31 Jul 2015 11:23:00 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A844549220E7@GSjpTKYDCembx31.service.hitachi.net>
-References: <20150727015850.4928.50289.stgit@softrs>
- <20150727143405.GF11317@dhcp22.suse.cz> <55B6E2A3.8070004@hitachi.com>
- <04EAB7311EE43145B2D3536183D1A8445491D5E8@GSjpTKYDCembx31.service.hitachi.net>
- <20150729082329.GA15801@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491DB5E@GSjpTKYDCembx31.service.hitachi.net>
- <20150729092157.GC15801@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491F23A@GSjpTKYDCembx31.service.hitachi.net>
- <20150730074812.GA9387@dhcp22.suse.cz>
- <04EAB7311EE43145B2D3536183D1A8445491FC55@GSjpTKYDCembx31.service.hitachi.net>
- <20150730122747.GA3954@dhcp22.suse.cz>
-In-Reply-To: <20150730122747.GA3954@dhcp22.suse.cz>
-Content-Language: ja-JP
+ id 1ZMDZg-0003mv-Cr
+ for kexec@lists.infradead.org; Mon, 03 Aug 2015 11:06:36 +0000
+Message-ID: <55BF4B1F.9000602@hitachi.com>
+Date: Mon, 03 Aug 2015 20:06:07 +0900
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 MIME-Version: 1.0
+Subject: Re: [RFC V2 PATCH 0/1] kexec: crash_kexec_post_notifiers boot
+ option related fixes
+References: <20150724011615.6834.79628.stgit@softrs>
+In-Reply-To: <20150724011615.6834.79628.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,76 +19,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Michal Hocko' <mhocko@kernel.org>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>
 
-PiBGcm9tOiBNaWNoYWwgSG9ja28gW21haWx0bzptaG9ja29Aa2VybmVsLm9yZ10NCj4gDQo+IE9u
-IFRodSAzMC0wNy0xNSAxMTo1NTo1Miwg5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTyB3
-cm90ZToNCj4gPiA+IEZyb206IE1pY2hhbCBIb2NrbyBbbWFpbHRvOm1ob2Nrb0BrZXJuZWwub3Jn
-XQ0KPiBbLi4uXQ0KPiA+ID4gQ291bGQgeW91IHBvaW50IG1lIHRvIHRoZSBjb2RlIHdoaWNoIGRv
-ZXMgdGhhdCwgcGxlYXNlPyBNYXliZSB3ZSBhcmUNCj4gPiA+IG1pc3NpbmcgdGhhdCBpbiBvdXIg
-My4wIGtlcm5lbC4gSSB3YXMgcXVpdGUgc3VycHJpc2VkIHRvIHNlZSB0aGlzDQo+ID4gPiBiZWhh
-dmlvciBhcyB3ZWxsLg0KPiA+DQo+ID4gUGxlYXNlIHNlZSB0aGUgc25pcHBldCBiZWxvdy4NCj4g
-Pg0KPiA+IHZvaWQgc2V0dXBfbG9jYWxfQVBJQyh2b2lkKQ0KPiA+IHsNCj4gPiAuLi4NCj4gPiAg
-ICAgICAgIC8qDQo+ID4gICAgICAgICAgKiBvbmx5IHRoZSBCUCBzaG91bGQgc2VlIHRoZSBMSU5U
-MSBOTUkgc2lnbmFsLCBvYnZpb3VzbHkuDQo+ID4gICAgICAgICAgKi8NCj4gPiAgICAgICAgIGlm
-ICghY3B1KQ0KPiA+ICAgICAgICAgICAgICAgICB2YWx1ZSA9IEFQSUNfRE1fTk1JOw0KPiA+ICAg
-ICAgICAgZWxzZQ0KPiA+ICAgICAgICAgICAgICAgICB2YWx1ZSA9IEFQSUNfRE1fTk1JIHwgQVBJ
-Q19MVlRfTUFTS0VEOw0KPiA+ICAgICAgICAgaWYgKCFsYXBpY19pc19pbnRlZ3JhdGVkKCkpICAg
-ICAgICAgICAgIC8qIDgyNDg5RFggKi8NCj4gPiAgICAgICAgICAgICAgICAgdmFsdWUgfD0gQVBJ
-Q19MVlRfTEVWRUxfVFJJR0dFUjsNCj4gPiAgICAgICAgIGFwaWNfd3JpdGUoQVBJQ19MVlQxLCB2
-YWx1ZSk7DQo+ID4NCj4gPg0KPiA+IExJTlQxIHBpbnMgb2YgY3B1cyBvdGhlciB0aGFuIENQVSAw
-IGFyZSBtYXNrZWQgaGVyZS4NCj4gPiBIb3dldmVyLCBhdCBsZWFzdCBvbiBzb21lIG9mIEhpdGFj
-aGkgc2VydmVycywgTk1JIGNhdXNlZCBieSBOTUkNCj4gPiBidXR0b24gZG9lc24ndCBzZWVtIHRv
-IGJlIGRlbGl2ZXJlZCB0aHJvdWdoIExJTlQxLiAgU28sIG15IGBleHRlcm5hbCBOTUknDQo+ID4g
-d29yZCBtYXkgbm90IGJlIGNvcnJlY3QuDQo+IA0KPiBJIGFtIG5vdCBmYW1pbGlhciB3aXRoIGRl
-dGFpbHMgaGVyZSBidXQgSSBjYW4gdGVsbCB5b3UgdGhhdCB0aGlzDQo+IHBhcnRpY3VsYXIgY29k
-ZSBzbmlwcGV0IGlzIHRoZSBzYW1lIGluIG91ciAzLjAgYmFzZWQga2VybmVsIHNvIGl0IHNlZW1z
-DQo+IHRoYXQgdGhlIEhXIGlzIGluZGVlZCBkb2luZyBzb21ldGhpbmcgZGlmZmVyZW50bHkuDQoN
-ClllcywgYW5kIGl0IHR1cm5lZCBvdXQgbXkgUEFUQ0ggMy8zIGRvZXNuJ3Qgd29yayBhdCBhbGwg
-b24gc29tZQ0KaGFyZHdhcmUuLi4NCg0KPiA+ID4gWW91IG1pZ2h0IHN0aWxsIGdldCBhIHBhbmlj
-IG9uIGhhcmRsb2NrdXAgd2hpY2ggd2lsbCBoYXBwZW4gb24gYWxsIENQVXMNCj4gPiA+IGZyb20g
-dGhlIE5NSSBjb250ZXh0IHNvIHdlIGhhdmUgdG8gYmUgYWJsZSB0byBoYW5kbGUgcGFuaWMgaW4g
-Tk1JIG9uDQo+ID4gPiBtYW55IENQVXMuDQo+ID4NCj4gPiBEbyB5b3Ugc2F5IGFib3V0IHRoZSBj
-YXNlIG9mIGEga2VybmUgcGFuaWMgd2hpbGUgb3RoZXIgY3B1cyBsb2NrcyB1cA0KPiA+IGluIE5N
-SSBjb250ZXh0PyAgSW4gdGhhdCBjYXNlLCB0aGVyZSBpcyBubyB3YXkgdG8gZG8gdGhpbmdzIG5l
-ZWRlZCBieQ0KPiA+IGtkdW1wIHByb2NlZHVyZSBpbmNsdWRpbmcgc2F2aW5nIHJlZ2lzdGVyZXMu
-Li4NCj4gDQo+IEkgYW0gc2F5aW5nIHRoYXQgd2F0Y2hkb2dfb3ZlcmZsb3dfY2FsbGJhY2sgbWln
-aHQgdHJpZ2dlciBvbiBtb3JlIENQVXMNCj4gYW5kIHBhbmljIGZyb20gTk1JIGNvbnRleHQgYXMg
-d2VsbC4gU28gdGhpcyBpcyBub3QgcmVkdWNlZCB0byB0aGUgTk1JDQo+IGJ1dHRvbiBzZW5kcyBO
-TUkgdG8gbW9yZSBDUFVzLg0KDQpJIHVuZGVyc3RhbmQuICBTbywgSSBoYXZlIHRvIGFsc28gbW9k
-aWZ5IHdhdGNoZG9nX292ZXJmbG93X2NhbGxiYWNrDQp0byBjYWxsIG5taV9wYW5pYygpLg0KDQo+
-IFdoeSBjYW5ub3QgdGhlIHBhbmljKCkgY29udGV4dCBzYXZlIGFsbCB0aGUgcmVnaXN0ZXJzIGlm
-IHdlIGFyZSBnb2luZyB0bw0KPiBsb29wIGluIE5NSSBjb250ZXh0PyBUaGlzIHdvdWxkIGJlIGlt
-aG8gcHJlZmVyYWJsZSB0byByZXR1cm5pbmcgZnJvbQ0KPiBwYW5pYyBJTU8uDQoNCkknbSBub3Qg
-c2F5aW5nIHdlIGNhbm5vdCBzYXZlIHJlZ2lzdGVycyBhbmQgZG8gc29tZSBjbGVhbnVwcyBpbiBO
-TUkNCmNvbnRleHQuICBJIGZlbGwgdGhhdCBpdCB3b3VsZCBpbnRyb2R1Y2UgdW5uZWVkZWQgY29t
-cGxleGl0eS4NClNpbmNlIHdhdGNoZG9nX292ZXJmbG93X2NhbGxiYWNrIGlzIGRlZmluZWQgYXMg
-Z2VuZXJpYyBjb2RlLA0Kd2UgbmVlZCB0byBpbXBsZW1lbnQgdGhlIHByZXBhcmF0aW9uIGZvciBr
-ZHVtcCBmb3Igb3RoZXIgYXJjaGl0ZWN0dXJlcy4NCkkgaGF2ZW4ndCBjaGVja2VkIHdoaWNoIGFy
-Y2hpdGVjdHVyZXMgc3VwcG9ydCBib3RoIG5taSB3YXRjaGRvZyBhbmQNCmtkdW1wLCB0aG91Z2gu
-DQoNCkFueXdheSwgSSBjYW1lIHVwIHdpdGggYSBzaW1wbGUgc29sdXRpb24gZm9yIHg4Ni4gIFdh
-aXRpbmcgZm9yIHRoZQ0KdGltaW5nIG9mIG5taV9zaG9vdGRvd25fY3B1cygpIGluIG5taV9wYW5p
-YygpLCB0aGVuIGludm9rZSB0aGUNCmNhbGxiYWNrIHJlZ2lzdGVyZWQgYnkgbm1pX3Nob290ZG93
-bl9jcHVzKCkuDQoNCj4gPiA+IEkgY2FuIHByb3ZpZGUgdGhlIGZ1bGwgbG9nIGJ1dCBpdCBpcyBx
-dWl0ZSBtYW5nbGVkLiBJIGd1ZXNzIHRoZQ0KPiA+ID4gQ1BVMTMwIHdhcyB0aGUgb25seSBvbmUg
-YWxsb3dlZCB0byBwcm9jZWVkIHdpdGggdGhlIHBhbmljIHdoaWxlIG90aGVycw0KPiA+ID4gcmV0
-dXJuZWQgZnJvbSB0aGUgdW5rbm93biBOTUkgaGFuZGxpbmcuIEl0IHRvb2sgYSBsb3Qgb2YgdGlt
-ZSB1bnRpbA0KPiA+ID4gQ1BVMTMwIG1hbmFnZWQgdG8gYm9vdCB0aGUgY3Jhc2gga2VybmVsIHdp
-dGggc29mdCBsb2NrdXBzIGFuZCBSQ1Ugc3RhbGxzDQo+ID4gPiByZXBvcnRzLiBDUFUwIGlzIG1v
-c3QgcHJvYmFibHkgbG9ja2VkIHVwIHdhaXRpbmcgZm9yIENQVTEzMCB0bw0KPiA+ID4gYWNrbm93
-bGVkZ2UgdGhlIElQSSB3aGljaCB3aWxsIG5vdCBoYXBwZW4gYXBwYXJlbnRseS4NCj4gPg0KPiA+
-IFRoZXJlIGlzIGEgdGltZW91dCBvZiAxMDAwbXMgaW4gbm1pX3Nob290ZG93bl9jcHVzKCksIHNv
-IEkgZG9uJ3Qga25vdw0KPiA+IHdoeSBDUFUgMTMwIHdhaXRzIHNvIGxvbmcuICBJJ2xsIHRyeSB0
-byBjb25zaWRlciBmb3IgYSB3aGlsZS4NCj4gDQo+IFllcywgSSBkbyBub3QgdW5kZXJzdGFuZCB0
-aGUgdGltaW5nIGhlcmUgZWl0aGVyIGFuZCB0aGUgZmFjdCB0aGF0IHRoZQ0KPiBsb2cgaXMgYSBj
-b21wbGV0ZSBtZXNzIGluIHRoZSBpbXBvcnRhbnQgcGFydHMgZG9lc24ndCBoZWxwIGEgd2VlIGJp
-dC4NCg0KSSdtIGludGVyZXN0ZWQgaW4gd2hlcmUgImtlcm5lbCBwYW5pYyAtbm90IHN5bmNpbmc6
-ICIgaXMuDQpJdCBtYXkgZ2l2ZSB1cyBhIGNsdWUuDQoNCg0KUmVnYXJkcywNCkthd2FpDQoNCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hello Eric and Vivek,
+
+Do you have any comments?
+
+(2015/07/24 10:16), Hidehiro Kawai wrote:
+> This is a bugfix patch for crash_kexec_post_notifiers boot option
+> which allows users to call panic notifiers and kmsg dumpers before
+> kdump.
+> 
+> This fixes one of the problems reported by Daniel Walker
+> (https://lkml.org/lkml/2015/6/24/44). 
+> 
+>  Problem 1:
+>  If crash_kexec_post_notifiers boot option is specified, some
+>  shutting down process which assume other cpus are still alive
+>  don't work properly.
+> 
+>  Problem 2 (addressed by this patch):
+>  If crash_kexec_post_notifiers boot option is specified, register
+>  information of other cpus are not saved to crash dumps.
+> 
+> Following Vivek's opinion, this patch replaces smp_send_stop()
+> in panic() with suitable version for crash_kexec which saves
+> cpu states and other things like cleaning up VMX/SVM.  Since this
+> needs architecture specific implementation and it's not so trivial,
+> this version only support for x86.  So the problem 1, known to
+> happen on MIPS/OCTEON, is not addressed now.
+> 
+> To keep the modification impact low, this patch doesn't change
+> the logic basically if crash_kexec_post_notifiers is not specified.
+> 
+> Please note that crash_kexec() can be called directly without
+> entering panic().  Stopping other cpus functionality is still
+> needed in crash_kexec().
+> 
+> Changes in V2:
+> - Replace smp_send_stop() call with crash_kexec version which
+>   saves cpu states and does cleanups instead of changing execution
+>   flow
+> - Drop a fix for Problem 1
+> - Drop other patches because they aren't needed anymore
+> 
+> V1: https://lkml.org/lkml/2015/7/10/316
+> 
+> ---
+> 
+> Hidehiro Kawai (1):
+>       panic/x86: Replace smp_send_stop() with crash_kexec version
+> 
+> 
+>  arch/x86/kernel/crash.c |   16 +++++++++++-----
+>  kernel/panic.c          |   29 +++++++++++++++++++++++------
+>  2 files changed, 34 insertions(+), 11 deletions(-)
+> 
+> 
+
+
+-- 
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
