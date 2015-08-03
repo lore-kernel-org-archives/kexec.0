@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZMFCz-00043c-FL
- for kexec@lists.infradead.org; Mon, 03 Aug 2015 12:51:14 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [Patch v2] align crash_notes allocation to make it be inside one
- physical page
-Date: Mon,  3 Aug 2015 20:50:43 +0800
-Message-Id: <1438606243-13064-1-git-send-email-bhe@redhat.com>
+ id 1ZMImb-0006Io-Vl
+ for kexec@lists.infradead.org; Mon, 03 Aug 2015 16:40:15 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20150724011615.6834.79628.stgit@softrs>
+ <55BF4B1F.9000602@hitachi.com>
+Date: Mon, 03 Aug 2015 11:33:08 -0500
+In-Reply-To: <55BF4B1F.9000602@hitachi.com> (Hidehiro Kawai's message of "Mon, 
+ 03 Aug 2015 20:06:07 +0900")
+Message-ID: <877fpcfi2j.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [RFC V2 PATCH 0/1] kexec: crash_kexec_post_notifiers boot option
+ related fixes
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,73 +21,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org, ebiederm@xmission.com, vgoyal@redhat.com, dyoung@redhat.com, mhuang@redhat.com, lisa.mitchell@hp.com, tatsu@ab.jp.nec.com, seiji.aguchi.tr@hitachi.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-People reported that crash_notes in /proc/vmcore were corrupted and
-this cause crash kdump failure. With code debugging and log we got
-the root cause. This is because percpu variable crash_notes are
-allocated in 2 vmalloc pages. Currently percpu is based on vmalloc
-by default. Vmalloc can't guarantee 2 continuous vmalloc pages
-are also on 2 continuous physical pages. So when 1st kernel exports
-the starting address and size of crash_notes through sysfs like below:
+Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com> writes:
 
-/sys/devices/system/cpu/cpux/crash_notes
-/sys/devices/system/cpu/cpux/crash_notes_size
+> Hello Eric and Vivek,
+>
+> Do you have any comments?
 
-kdump kernel use them to get the content of crash_notes. However the
-2nd part may not be in the next neighbouring physical page as we
-expected if crash_notes are allocated accross 2 vmalloc pages. That's
-why nhdr_ptr->n_namesz or nhdr_ptr->n_descsz could be very huge in
-update_note_header_size_elf64() and cause note header merging failure
-or some warnings.
+crash_kexec_post_notifiers is a debugging hack to allow people to test
+if the kmsg_dump works better than kexec.  crash_kexec_post_notifiers is
+not, nor has it ever been a solution for general operation (which is
+what I perceive this work trying to push).
 
-In this patch change to call __alloc_percpu() to passed in the align
-value by rounding crash_notes_size up to the nearest power of two.
-This make sure the crash_notes is allocated inside one physical page
-since sizeof(note_buf_t) in all ARCHS is smaller than PAGE_SIZE.
-Meanwhile add a WARN_ON in case it grows to be bigger than PAGE_SIZE
-in the future.
+I will not support any work that expands crash_kexec_post_notifiers to
+be more than it currently is, because people want ``panic hooks'' to
+run before kexec.  That appropach was extensively tested before kexec on
+panic was implemented in the kernel and every implementation failed.
+The practical symptom was that everything would work ok in testing but
+on failures in the real world there would be enough going on in the
+dying kernel that no crash dump would be taken.  kexec on panic on the
+other hand works a reasonable fraction of the time.
 
-v1->v2:
-    Minfei mentioned percpu can't take align value bigger then PAGE_SIZE.
-    So limit align to be PAGE_SIZE at most.
+I deeply and fundamentally can not support a general purpose hook being
+called before kexec.  In 15 years of practice I have never heard of a
+case where using a general purpose hook does anything but make kexec on
+panic undebuggable in practice.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- kernel/kexec.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+A specific hook for a very specific purpose when there is no other way
+we can consider.
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index a785c10..9f4b070 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1620,7 +1620,16 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
- static int __init crash_notes_memory_init(void)
- {
- 	/* Allocate memory for saving cpu registers. */
--	crash_notes = alloc_percpu(note_buf_t);
-+	size_t size, align;
-+	int order;
-+
-+	size = sizeof(note_buf_t);
-+	order = get_count_order(size);
-+	align = min_t(size_t, (1<<order), PAGE_SIZE);
-+
-+	WARN_ON(size > PAGE_SIZE);
-+
-+	crash_notes = __alloc_percpu(size, align);
- 	if (!crash_notes) {
- 		pr_warn("Kexec: Memory allocation for saving cpu register states failed\n");
- 		return -ENOMEM;
--- 
-2.1.0
+If you don't have something that generalises well into a general purpose
+operation that it makes sense for everyone to call you can always use
+the world's largest aka you can run code before the new kernel starts
+that is loaded with kexec_load.
 
+If you absolutely must run code in the dying code because you need lots
+of the kernel infrastructure to work, and it is too hard to code a small
+little bit of stand-alone assembly, I am sorry for you.  Experience shows
+that will never work when the kernel fails in interesting ways.
+
+So no.  I don't think there is any point to putting any more effort into
+the crash_kexec_post_notifiers path because experience has shown over
+the years that in practice it won't work for anyone, and if the code
+doesn't work in practice there is no point in developing or implementing
+it.
+
+Eric
 
 _______________________________________________
 kexec mailing list
