@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZMcj8-00012J-0O
- for kexec@lists.infradead.org; Tue, 04 Aug 2015 13:58:03 +0000
-Date: Tue, 4 Aug 2015 09:57:35 -0400
-From: Don Zickus <dzickus@redhat.com>
-Subject: Re: [RFC] perf: Clear MSRs on kexec
-Message-ID: <20150804135735.GP42530@redhat.com>
-References: <20150803213228.GC14481@krava.redhat.com>
- <20150803215417.GG25159@twins.programming.kicks-ass.net>
- <20150804055229.GD14481@krava.redhat.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZMojN-0005fk-Ie
+ for kexec@lists.infradead.org; Wed, 05 Aug 2015 02:47:03 +0000
+Message-ID: <55C178F2.80406@cn.fujitsu.com>
+Date: Wed, 5 Aug 2015 10:46:10 +0800
+From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
+ <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150804055229.GD14481@krava.redhat.com>
+Subject: Re: [PATCH v3 00/10] makedumpfile: parallel processing
+References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <55ADF066.8050800@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DD0947@BPXM01GP.gisp.nec.co.jp>
+ <55B08C1D.7010505@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DD39B7@BPXM01GP.gisp.nec.co.jp>
+ <55BB4178.3040602@cn.fujitsu.com>
+In-Reply-To: <55BB4178.3040602@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,57 +24,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Haren Myneni <hbabu@us.ibm.com>, dong.su@ericsson.com, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Tue, Aug 04, 2015 at 07:52:29AM +0200, Jiri Olsa wrote:
-> On Mon, Aug 03, 2015 at 11:54:17PM +0200, Peter Zijlstra wrote:
-> > On Mon, Aug 03, 2015 at 11:32:28PM +0200, Jiri Olsa wrote:
-> > > hi,
-> > > I'm getting following message on the kdump kernel start
-> > > 
-> > >   Broken BIOS detected, complain to your hardware vendor.\
-> > >   [Firmware Bug]: the BIOS has corrupted hw-PMU resources (MSR 38d is b0)
-> > > 
-> > > it seems to be caused by NMI watchdog being configured
-> > > and fixed counter values stays in MSRs, which triggers
-> > > warning in check_hw_exists and disables perf support
-> > > in kdump kernel.. which probably does not hurt ;-)
-> > > 
-> > > zeroing MSRs during kdump shutdown seems to work (attached)
-> > > but I'm not sure thats correct place for kdump perf callback
-> > 
-> > Right, but why bother? All that kernel needs to do is write a memory
-> > dump to someplace and reboot, right? The less you do, the less can go
-> > wrong.
-> 
-> well, I was hunting that 'Broken BIOS..' message which is wrong
-
-It was the limitation we understood, when we implemented the
-check_hw_exists() years ago.
-
-> 
-> I wouldn't think anyone wants to use perf under kdump kernel,
-> but you never know ;-)
-
-The amount of warning messages in the kdump kernel is significant, this
-message is just another message to add to the noise.  Heck we have to poll
-irqs because if we enable them, drivers would crash left and right due to
-left over pending irqs from the previous kernel.
-
-As Peter said, how much code are we going to put in the crash path to make
-kdump less noisy?
-
-Eric B.  usually frowns pretty heavily on this.
-
-Cheers,
-Don
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+cGluZy4uLgoKLS0gClRoYW5rcwpaaG91IFdlbmppYW4KCk9uIDA3LzMxLzIwMTUgMDU6MzUgUE0s
+ICJaaG91LCBXZW5qaWFuL+WRqOaWh+WJkSIgd3JvdGU6Cj4gT24gMDcvMzEvMjAxNSAwNDoyNyBQ
+TSwgQXRzdXNoaSBLdW1hZ2FpIHdyb3RlOgo+Pj4gT24gMDcvMjMvMjAxNSAwMjoyMCBQTSwgQXRz
+dXNoaSBLdW1hZ2FpIHdyb3RlOgo+Pj4+PiBIZWxsbyBLdW1hZ2FpLAo+Pj4+Pgo+Pj4+PiBUaGUg
+UEFUQ0ggdjMgaGFzIGltcHJvdmVkIHRoZSBwZXJmb3JtYW5jZS4KPj4+Pj4gVGhlIHBlcmZvcm1h
+bmNlIGRlZ3JhZGF0aW9uIGluIFBBVENIIHYyIG1haW5seSBjYXVzZWQgYnkgdGhlIHBhZ2VfZmF1
+bHQKPj4+Pj4gcHJvZHVjZWQgYnkgdGhlIGZ1bmN0aW9uIGNvbXByZXNzMigpLgo+Pj4+Pgo+Pj4+
+PiBJIHdyb3RlIHNvbWUgY29kZXMgdG8gdGVzdCB0aGUgcGVyZm9ybWFuY2Ugb2YgY29tcHJlc3My
+LiBJdCBhbG1vc3QgY29zdHMKPj4+Pj4gdGhlIHNhbWUgdGltZSBhbmQgcHJvZHVjZXMgdGhlIHNh
+bWUgYW1vdW50IG9mIHBhZ2VfZmF1bHQgYXMgZXhlY3V0aW5nIGNvbXByZXNzMgo+Pj4+PiBpbiB0
+aHJlYWQuCj4+Pj4+Cj4+Pj4+IFRvIHJlZHVjZSBwYWdlX2ZhdWx0cywgSSBoYXZlIHRvIGRvIHRo
+ZSBmb2xsb3dpbmcgaW4ga2R1bXBfdGhyZWFkX2Z1bmN0aW9uX2N5Y2xpYygpLgo+Pj4+Pgo+Pj4+
+PiArICAgIC8qCj4+Pj4+ICsgICAgICogbG9jayBtZW1vcnkgdG8gcmVkdWNlIHBhZ2VfZmF1bHRz
+IGJ5IGNvbXByZXNzMigpCj4+Pj4+ICsgICAgICovCj4+Pj4+ICsgICAgdm9pZCAqdGVtcCA9IG1h
+bGxvYygxKTsKPj4+Pj4gKyAgICBtZW1zZXQodGVtcCwgMCwgMSk7Cj4+Pj4+ICsgICAgbWxvY2th
+bGwoTUNMX0NVUlJFTlQpOwo+Pj4+PiArICAgIGZyZWUodGVtcCk7Cj4+Pj4+ICsKPj4+Pj4KPj4+
+Pj4gV2l0aCB0aGlzLCB1c2luZyBhIHRocmVhZCBvciBub3QgYWxtb3N0IGhhcyB0aGUgc2FtZSBw
+ZXJmb3JtYW5jZS4KPj4+Pgo+Pj4+IEhtbS4uLiBJIGNhbid0IGdldCBnb29kIHJlc3VsdHMgd2l0
+aCB0aGlzIHBhdGNoLCBtYW55IHBhZ2UgZmF1bHRzIHN0aWxsCj4+Pj4gb2NjdXIuIEkgZ3Vlc3Mg
+bWxvY2sgd2lsbCBjaGFuZ2Ugd2hlbiBwYWdlIGZhdWx0cyBvY2N1ciwgYnV0IHdpbGwgbm90Cj4+
+Pj4gY2hhbmdlIHRoZSB0b3RhbCBudW1iZXIgb2YgcGFnZSBmYXVsdHMuCj4+Pj4gQ291bGQgeW91
+IGV4cGxhaW4gd2h5IGNvbXByZXNzMigpIGNhdXNlcyBtYW55IHBhZ2UgZmF1bHRzIG9ubHkgaW4g
+dGhyZWFkLAo+Pj4+IHRoZW4gSSBtYXkgdW5kZXJzdGFuZCB3aHkgdGhpcyBwYXRjaCBpcyBtZWFu
+aW5nZnVsLgo+Pj4+Cj4+Pgo+Pj4gQWN0dWFsbHksIGl0IHdpbGwgYWxzbyBjYXVzZSBzbyBtdWNo
+IHBhZ2UgZmF1bHRzIGV2ZW4gbm90IGluIHRocmVhZCwgaWYKPj4+IGluZm8tPmJpdG1hcDIgaXMg
+bm90IGZyZWVkIGluIG1ha2VkdW1wZmlsZS4KPj4+Cj4+PiBJIHdyb3RlIHNvbWUgY29kZXMgdG8g
+dGVzdCB0aGUgcGVyZm9ybWFuY2Ugb2YgY29tcHJlc3MyKCkuCj4+Pgo+Pj4gPGN1dD4KPj4+IGJ1
+ZiA9IG1hbGxvYyhQQUdFX1NJWkUpOwo+Pj4gYnVmb3V0ID0gbWFsbG9jKFNJWkVfT1VUKTsKPj4+
+IG1lbXNldChidWYsIDEsIFBBR0VfU0laRSAvIDIpOwo+Pj4gd2hpbGUgKDEpCj4+PiAgICAgIGNv
+bXByZXNzMihidWZvdXQsICZzaXplX291dCwgYnVmLCBQQUdFX1NJWkUsIFpfQkVTVF9TUEVFRCk7
+Cj4+PiA8Y3V0Pgo+Pj4KPj4+IFRoZSBjb2RlcyBhbG1vc3QgbGlrZSB0aGlzLgo+Pj4gSXQgd2ls
+bCBjYXVzZSBtdWNoIHBhZ2UgZmF1bHRzLgo+Pj4KPj4+IEJ1dCBpZiB0aGUgY29kZXMgdHVybiB0
+byBiZSB0aGUgZm9sbG93aW5nLCBpdCB3aWxsIGJlIG11Y2ggYmV0dGVyLgo+Pj4KPj4+IDxjdXQ+
+Cj4+PiB0ZW1wID0gbWFsbG9jKFRFTVBfU0laRSk7Cj4+PiBtZW1zZXQodGVtcCwgMCwgVEVNUF9T
+SVpFKTsKPj4+IGZyZWUodGVtcCk7Cj4+Pgo+Pj4gYnVmID0gbWFsbG9jKFBBR0VfU0laRSk7Cj4+
+PiBidWZvdXQgPSBtYWxsb2MoU0laRV9PVVQpOwo+Pj4gbWVtc2V0KGJ1ZiwgMSwgUEFHRV9TSVpF
+IC8gMik7Cj4+PiB3aGlsZSAoMSkKPj4+ICAgICAgY29tcHJlc3MyKGJ1Zm91dCwgJnNpemVfb3V0
+LCBidWYsIFBBR0VfU0laRSwgWl9CRVNUX1NQRUVEKTsKPj4+IDxjdXQ+Cj4+Pgo+Pj4gVEVNUF9T
+SVpFIG11c3QgYmUgbGFyZ2UgZW5vdWdoLgo+Pj4gKGxhcmdlciB0aGFuIDEzNTA5NyB3aWxsIHdv
+cmssaW4gbXkgbWFjaGluZSkKPj4+Cj4+Pgo+Pj4gSWYgaW4gdGhyZWFkLCB0aGUgZm9sbG93aW5n
+IGNvZGVzIGNhbiByZWR1Y2UgdGhlIHBhZ2UgZmF1bHRzLgo+Pj4KPj4+IDxjdXQ+Cj4+PiB0ZW1w
+ID0gbWFsbG9jKDEpOwo+Pj4gbWVtc2V0KHRlbXAsIDAsIDEpOwo+Pj4gbWxvY2thbGwoTUNMX0NV
+UlJFTlQpOwo+Pj4gZnJlZSh0ZW1wKTsKPj4+Cj4+PiBidWYgPSBtYWxsb2MoUEFHRV9TSVpFKTsK
+Pj4+IGJ1Zm91dCA9IG1hbGxvYyhTSVpFX09VVCk7Cj4+PiBtZW1zZXQoYnVmLCAxLCBQQUdFX1NJ
+WkUgLyAyKTsKPj4+IHdoaWxlICgxKQo+Pj4gICAgICBjb21wcmVzczIoYnVmb3V0LCAmc2l6ZV9v
+dXQsIGJ1ZiwgUEFHRV9TSVpFLCBaX0JFU1RfU1BFRUQpOwo+Pj4gPGN1dD4KPj4+Cj4+PiBJIGhh
+dmVuJ3Qga25vd24gd2h5Lgo+Pgo+PiBJIGFzc3VtZSB0aGF0IHdlIGFyZSBmYWNpbmcgdGhlIGtu
+b3duIGlzc3VlIG9mIGdsaWJjOgo+Pgo+PiAgICBodHRwczovL3NvdXJjZXdhcmUub3JnL21sL2xp
+YmMtYWxwaGEvMjAxNS0wMy9tc2cwMDI3MC5odG1sCj4+Cj4+IEFjY29yZGluZyB0byB0aGUgdGhy
+ZWFkIGFib3ZlLCBwZXItdGhyZWFkIGFyZW5hIGlzIGVhc3kgdG8gYmUgZ3Jvd24gYW5kCj4+IHRy
+aW1tZWQgY29tcGFyZWQgd2l0aCBtYWluIGFyZW5hLgo+PiBBY3R1YWxseSBjb21wcmVzczIoKSBj
+YWxscyBtYWxsb2MoKSBhbmQgZnJlZSgpIGZvciBjb21wcmVzc2lvbiBlYWNoIHRpbWUKPj4gaXQg
+aXMgY2FsbGVkLCBzbyBldmVyeSBjb21wcmVzc2lvbiBwcm9jZXNzaW5nIHdpbGwgY2F1c2UgcGFn
+ZSBmYXVsdC4KPj4gTW9yZW92ZXIsIEkgY29uZmlybWVkIHRoYXQgbWFueSBtYWR2aXNlKE1BRFZf
+RE9OVE5FRUQpIGFyZSBpbnZva2VkIG9ubHkKPj4gd2hlbiBjb21wcmVzczIoKSBpcyBjYWxsZWQg
+aW4gdGhyZWFkLgo+Pgo+PiBPVE9ILCBpbiBsem8gY2FzZSwgYSB0ZW1wIGJ1ZmZlciBmb3Igd29y
+a2luZyBpcyBhbGxvY2F0ZWQgb24gdGhlIGNhbGxlcgo+PiBzaWRlLCBzbyBpdCBjYW4gcmVkdWNl
+IHRoZSBudW1iZXIgb2YgbWFsbG9jKCkvZnJlZSgpIHBhaXIuCj4+IChidXQgSSdtIG5vdCBzdXJl
+IHdoeSBzbmFwcHkgZG9lc24ndCBoaXQgdGhpcyBpc3N1ZS4gVGhlIGJ1ZmZlciBzaXplCj4+IGZv
+ciBjb21wcmVzc2lvbiBtYXkgYmUgc21hbGxlciB0aGFuIHRoZSB0cmltIHRocmVzaG9sZC4pCj4+
+Cj4+IEFueXdheSwgYmFzaWNhbGx5IGl0J3MgaGFyZCBmb3IgemxpYiB0byBhdm9pZCB0aGlzIGlz
+c3VlIG9uIHRoZSBhcHBsaWNhdGlvbgo+PiBzaWRlLCBpdCBzZWVtcyB0aGF0IHdlIGhhdmUgdG8g
+YWNjZXB0IHRoZSBwZXJmb3JtYW5jZSBkZWdyYWRhdGlvbiBjYXVzZWQgYnkgaXQuCj4+IFVuZm9y
+dHVuYXRlbHksIHRoZSBtYWluIHRhcmdldCBvZiB0aGlzIG11bHRpIHRocmVhZCBmZWF0dXJlIGlz
+IHpsaWIgYXMgeW91Cj4+IG1lYXN1cmVkLCB3ZSBzaG91bGQgcmVzb2x2ZSB0aGlzIGlzc3VlIHNv
+bWVob3cuCj4+Cj4+IE5ldmVydGhlbGVzcywgZXZlbiBub3cgd2UgY2FuIGdldCBzb21lIGJlbmVm
+aXQgb2YgcGFyYWxsZWwgcHJvY2Vzc2luZywKPj4gc28gbGV0cycgc3RhcnQgdG8gZGlzY3VzcyB0
+aGUgaW1wbGVtZW50YXRpb24gb2YgdGhlIHBhcmFsbGVsIHByb2Nlc3NpbmcKPj4gZmVhdHVyZSB0
+byBhY2NlcHQgdGhpcyBwYXRjaC4gSSBoYXZlIHNvbWUgY29tbWVudHM6Cj4+Cj4+ICAgIC0gcmVh
+ZF9wZm5fcGFyYWxsZWwoKSBkb2Vzbid0IHVzZSB0aGUgY2FjaGUgZmVhdHVyZShjYWNoZS5jKSwg
+aXMgaXQKPj4gICAgICBpbnRlbnRpb25hbCB3aXRoIHlvdSA/Cj4+Cj4KPiBZZXMsIHNpbmNlIHRo
+ZSBkYXRhIGFyZSByZWFkIG9uY2UgYSBwYWdlIGhlcmUsIGNhY2hlIGZlYXR1cmUgc2VlbXMgbm90
+Cj4gbmVlZGVkLgo+Cj4+ICAgIC0gTm93IC0tbnVtLWJ1ZmZlcnMgaXMgdHVuYWJsZSBidXQgdGhl
+IG1hbiBkZXNjcmlwdGlvbiBhbmQgeW91ciBiZW5jaG1hcmsKPj4gICAgICBkaWRuJ3QgbWVudGlv
+biB3aGF0IGlzIHRoZSBiZW5lZml0IG9mIHRoaXMgcGFyYW1ldGVyLgo+Pgo+Cj4gVGhlIGRlZmF1
+bHQgdmFsdWUgb2YgbnVtLWJ1ZmZlcnMgaXMgNTAuIE9yaWdpbmFsbHkgdGhlIHZhbHVlIGhhcyBn
+cmVhdCBpbmZsdWVuY2UKPiBvbiB0aGUgcGVyZm9ybWFuY2UuIEJ1dCBzaW5jZSB3ZSBjaGFuZ2Vk
+IHRoZSBsb2dpYyBpbiB0aGUgMm5kIHZlcnNpb24gb2YgdGhlCj4gcGF0Y2ggc2V0LCBtb3JlIGJ1
+ZmZlcnMgaGF2ZSBsaXR0bGUgaW1wcm92ZW1lbnQoMTAwMCBidWZmZXJzIG1heSBoYXZlIDElIGlt
+cHJvdmVtZW50KS4KPiBJJ20gY29uc2lkZXJpbmcgaWYgdGhlIG9wdGlvbiBzaG91bGQgYmUgcmVt
+b3ZlZC4gd2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQgaXQ/Cj4KPiBCVFcsIHRoZSBjb2RlIChtbG9j
+a2FsbCkgYWRkZWQgaW4gdGhlIDNyZCB2ZXJzaW9uIHdvcmtzIHdlbGwgaW4gc2V2ZXJhbCBtYWNo
+aW5lcyBoZXJlLgo+IFNob3VsZCBJIGtlZXAgaXQgPwo+IFdpdGggdGhlIGNvZGVzLCBtYWR2aXNl
+KE1BRFZfRE9OVE5FRUQpIHdpbGwgYmUgZmFpbGVkIGluIGNvbXByZXNzMiBhbmQgdGhlIHBlcmZv
+cm1hbmNlCj4gaXMgYXMgZXhwZWN0ZWQgaW4gdGhlc2UgbWFjaGluZXMuCj4KPgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
