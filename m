@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZNEQs-00041a-KA
- for kexec@lists.infradead.org; Thu, 06 Aug 2015 06:13:40 +0000
+ id 1ZNEQu-00041W-KS
+ for kexec@lists.infradead.org; Thu, 06 Aug 2015 06:13:43 +0000
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t766BLjm031124
- for <kexec@lists.infradead.org>; Thu, 6 Aug 2015 14:11:21 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t766BUTk031146
+ for <kexec@lists.infradead.org>; Thu, 6 Aug 2015 14:11:30 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v4 06/10] Add filter_data_buffer_parallel
-Date: Thu, 6 Aug 2015 14:08:07 +0800
-Message-ID: <1438841291-30378-7-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v4 09/10] Make makedumpfile available to read and compress
+ pages parallelly
+Date: Thu, 6 Aug 2015 14:08:10 +0800
+Message-ID: <1438841291-30378-10-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1438841291-30378-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1438841291-30378-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,75 +32,155 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-filter_data_buffer_parallel is used to enable filtering buffer
-parallely.
+Using this patch, it is available to use multiple threads to read
+and compress pages. This parallel process will save time.
+
+Currently, sadump and xen kdump is not supported.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- erase_info.c | 29 ++++++++++++++++++++++++++++-
- erase_info.h |  2 ++
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ makedumpfile.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ makedumpfile.h |  1 +
+ 2 files changed, 63 insertions(+), 2 deletions(-)
 
-diff --git a/erase_info.c b/erase_info.c
-index e0e0f71..0b253d7 100644
---- a/erase_info.c
-+++ b/erase_info.c
-@@ -2328,7 +2328,6 @@ extract_filter_info(unsigned long long start_paddr,
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 0fe9efd..5e74ad2 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3854,6 +3854,27 @@ out:
+ 		DEBUG_MSG("Buffer size for the cyclic mode: %ld\n", info->bufsize_cyclic);
+ 	}
+ 
++	if (info->num_threads) {
++		if (is_xen_memory()) {
++			MSG("'--num-threads' option is disable,\n");
++			MSG("because %s is Xen's memory core image.\n",
++							info->name_memory);
++			return FALSE;
++		}
++
++		if (info->flag_sadump) {
++			MSG("'--num-threads' option is disable,\n");
++			MSG("because %s is sadump %s format.\n",
++			    info->name_memory, sadump_format_type_name());
++			return FALSE;
++		}
++
++		if (!initial_for_parallel()) {
++			MSG("Fail to initial for parallel process.\n");
++			return FALSE;
++		}
++	}
++
+ 	if (!is_xen_memory() && !cache_init())
+ 		return FALSE;
+ 
+@@ -7893,9 +7914,16 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 		if (!write_kdump_bitmap2(&cycle))
+ 			return FALSE;
+ 
+-		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
++		if (info->num_threads) {
++			if (!write_kdump_pages_parallel_cyclic(cd_header,
++							cd_page, &pd_zero,
++							&offset_data, &cycle))
++				return FALSE;
++		} else {
++			if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
+ 					&offset_data, &cycle))
+-			return FALSE;
++				return FALSE;
++		}
+ 	}
+ 	free_bitmap2_buffer();
+ 
+@@ -9862,6 +9890,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 	if (info->flag_sadump_diskset && !sadump_is_supported_arch())
+ 		return FALSE;
+ 
++	if (info->num_threads) {
++		if (info->flag_split) {
++			MSG("--num-threads cannot used with --split.\n");
++			return FALSE;
++		}
++
++		if (info->flag_elf_dumpfile) {
++			MSG("--num-threads cannot used with ELF format.\n");
++			return FALSE;
++		}
++	}
++
+ 	if ((argc == optind + 2) && !info->flag_flatten
+ 				 && !info->flag_split
+ 				 && !info->flag_sadump_diskset) {
+@@ -9926,6 +9966,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 	} else
+ 		return FALSE;
+ 
++	if (info->num_threads) {
++		if ((info->parallel_info =
++		     malloc(sizeof(parallel_info_t) * info->num_threads))
++		    == NULL) {
++			MSG("Can't allocate memory for parallel_info.\n");
++			return FALSE;
++		}
++
++		memset(info->parallel_info, 0, sizeof(parallel_info_t)
++							* info->num_threads);
++	}
++
  	return TRUE;
  }
  
--
- /*
-  * External functions.
-  */
-@@ -2413,6 +2412,34 @@ filter_data_buffer(unsigned char *buf, unsigned long long paddr,
- 	}
- }
+@@ -10242,6 +10294,7 @@ static struct option longopts[] = {
+ 	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
+ 	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
+ 	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
++	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
+ 	{0, 0, 0, 0}
+ };
  
-+/*
-+ * Filter buffer if the physical address is in filter_info.
-+ */
-+void
-+filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
-+					size_t size, pthread_mutex_t *mutex)
-+{
-+	struct filter_info fl_info;
-+	unsigned char *buf_ptr;
-+	int found = FALSE;
-+
-+	while (TRUE) {
-+		pthread_mutex_lock(mutex);
-+		found = extract_filter_info(paddr, paddr + size, &fl_info);
-+		pthread_mutex_unlock(mutex);
-+
-+		if (found) {
-+			buf_ptr = buf + (fl_info.paddr - paddr);
-+			if (fl_info.nullify)
-+				memset(buf_ptr, 0, fl_info.size);
-+			else
-+				memset(buf_ptr, fl_info.erase_ch, fl_info.size);
-+		} else {
+@@ -10386,6 +10439,9 @@ main(int argc, char *argv[])
+ 		case OPT_WORKING_DIR:
+ 			info->working_dir = optarg;
+ 			break;
++		case OPT_NUM_THREADS:
++			info->num_threads = MAX(atoi(optarg), 0);
 +			break;
-+		}
-+	}
-+}
-+
- unsigned long
- get_size_eraseinfo(void)
- {
-diff --git a/erase_info.h b/erase_info.h
-index 4d4957e..b363a40 100644
---- a/erase_info.h
-+++ b/erase_info.h
-@@ -60,6 +60,8 @@ extern unsigned long		num_erase_info;
- int gather_filter_info(void);
- void clear_filter_info(void);
- void filter_data_buffer(unsigned char *buf, unsigned long long paddr, size_t size);
-+void filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
-+					size_t size, pthread_mutex_t *mutex);
- unsigned long get_size_eraseinfo(void);
- int update_filter_info_raw(unsigned long long, int, int);
+ 		case '?':
+ 			MSG("Commandline parameter is invalid.\n");
+ 			MSG("Try `makedumpfile --help' for more information.\n");
+@@ -10529,6 +10585,8 @@ out:
+ 	else if (!info->flag_mem_usage)
+ 		MSG("makedumpfile Completed.\n");
  
++	free_for_parallel();
++
+ 	if (info) {
+ 		if (info->dh_memory)
+ 			free(info->dh_memory);
+@@ -10556,6 +10614,8 @@ out:
+ 			free(info->p2m_mfn_frame_list);
+ 		if (info->page_buf != NULL)
+ 			free(info->page_buf);
++		if (info->parallel_info != NULL)
++			free(info->parallel_info);
+ 		free(info);
+ 
+ 		if (splitblock) {
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 1f5bd7f..3cd24c5 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -2033,6 +2033,7 @@ struct elf_prstatus {
+ #define OPT_MEM_USAGE           OPT_START+13
+ #define OPT_SPLITBLOCK_SIZE	OPT_START+14
+ #define OPT_WORKING_DIR         OPT_START+15
++#define OPT_NUM_THREADS	OPT_START+16
+ 
+ /*
+  * Function Prototype.
 -- 
 1.8.3.1
 
