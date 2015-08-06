@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZNBH2-0006Zb-Hk
- for kexec@lists.infradead.org; Thu, 06 Aug 2015 02:51:17 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH v3 00/10] makedumpfile: parallel processing
-Date: Thu, 6 Aug 2015 02:46:35 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DE02D3@BPXM01GP.gisp.nec.co.jp>
-References: <1437460153-29211-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <55ADF066.8050800@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DD0947@BPXM01GP.gisp.nec.co.jp>
- <55B08C1D.7010505@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DD39B7@BPXM01GP.gisp.nec.co.jp>
- <55BB4178.3040602@cn.fujitsu.com> <55C178F2.80406@cn.fujitsu.com>
-In-Reply-To: <55C178F2.80406@cn.fujitsu.com>
-Content-Language: ja-JP
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZNE1y-0001D9-M5
+ for kexec@lists.infradead.org; Thu, 06 Aug 2015 05:47:56 +0000
+Subject: [V3 PATCH 0/4] Fix race issues among panic, NMI and crash_kexec
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Thu, 06 Aug 2015 14:45:43 +0900
+Message-ID: <20150806054543.25766.29590.stgit@softrs>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,64 +16,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-Pk9uIDA3LzMxLzIwMTUgMDU6MzUgUE0sICJaaG91LCBXZW5qaWFuL+WRqOaWh+WJkSIgd3JvdGU6
-DQo+PiBPbiAwNy8zMS8yMDE1IDA0OjI3IFBNLCBBdHN1c2hpIEt1bWFnYWkgd3JvdGU6DQo+Pj4+
-IE9uIDA3LzIzLzIwMTUgMDI6MjAgUE0sIEF0c3VzaGkgS3VtYWdhaSB3cm90ZToNCj4+Pj4+PiBI
-ZWxsbyBLdW1hZ2FpLA0KPj4+DQo+Pj4gSSBhc3N1bWUgdGhhdCB3ZSBhcmUgZmFjaW5nIHRoZSBr
-bm93biBpc3N1ZSBvZiBnbGliYzoNCj4+Pg0KPj4+ICAgIGh0dHBzOi8vc291cmNld2FyZS5vcmcv
-bWwvbGliYy1hbHBoYS8yMDE1LTAzL21zZzAwMjcwLmh0bWwNCj4+Pg0KPj4+IEFjY29yZGluZyB0
-byB0aGUgdGhyZWFkIGFib3ZlLCBwZXItdGhyZWFkIGFyZW5hIGlzIGVhc3kgdG8gYmUgZ3Jvd24g
-YW5kDQo+Pj4gdHJpbW1lZCBjb21wYXJlZCB3aXRoIG1haW4gYXJlbmEuDQo+Pj4gQWN0dWFsbHkg
-Y29tcHJlc3MyKCkgY2FsbHMgbWFsbG9jKCkgYW5kIGZyZWUoKSBmb3IgY29tcHJlc3Npb24gZWFj
-aCB0aW1lDQo+Pj4gaXQgaXMgY2FsbGVkLCBzbyBldmVyeSBjb21wcmVzc2lvbiBwcm9jZXNzaW5n
-IHdpbGwgY2F1c2UgcGFnZSBmYXVsdC4NCj4+PiBNb3Jlb3ZlciwgSSBjb25maXJtZWQgdGhhdCBt
-YW55IG1hZHZpc2UoTUFEVl9ET05UTkVFRCkgYXJlIGludm9rZWQgb25seQ0KPj4+IHdoZW4gY29t
-cHJlc3MyKCkgaXMgY2FsbGVkIGluIHRocmVhZC4NCj4+Pg0KPj4+IE9UT0gsIGluIGx6byBjYXNl
-LCBhIHRlbXAgYnVmZmVyIGZvciB3b3JraW5nIGlzIGFsbG9jYXRlZCBvbiB0aGUgY2FsbGVyDQo+
-Pj4gc2lkZSwgc28gaXQgY2FuIHJlZHVjZSB0aGUgbnVtYmVyIG9mIG1hbGxvYygpL2ZyZWUoKSBw
-YWlyLg0KPj4+IChidXQgSSdtIG5vdCBzdXJlIHdoeSBzbmFwcHkgZG9lc24ndCBoaXQgdGhpcyBp
-c3N1ZS4gVGhlIGJ1ZmZlciBzaXplDQo+Pj4gZm9yIGNvbXByZXNzaW9uIG1heSBiZSBzbWFsbGVy
-IHRoYW4gdGhlIHRyaW0gdGhyZXNob2xkLikNCj4+Pg0KPj4+IEFueXdheSwgYmFzaWNhbGx5IGl0
-J3MgaGFyZCBmb3IgemxpYiB0byBhdm9pZCB0aGlzIGlzc3VlIG9uIHRoZSBhcHBsaWNhdGlvbg0K
-Pj4+IHNpZGUsIGl0IHNlZW1zIHRoYXQgd2UgaGF2ZSB0byBhY2NlcHQgdGhlIHBlcmZvcm1hbmNl
-IGRlZ3JhZGF0aW9uIGNhdXNlZCBieSBpdC4NCj4+PiBVbmZvcnR1bmF0ZWx5LCB0aGUgbWFpbiB0
-YXJnZXQgb2YgdGhpcyBtdWx0aSB0aHJlYWQgZmVhdHVyZSBpcyB6bGliIGFzIHlvdQ0KPj4+IG1l
-YXN1cmVkLCB3ZSBzaG91bGQgcmVzb2x2ZSB0aGlzIGlzc3VlIHNvbWVob3cuDQo+Pj4NCj4+PiBO
-ZXZlcnRoZWxlc3MsIGV2ZW4gbm93IHdlIGNhbiBnZXQgc29tZSBiZW5lZml0IG9mIHBhcmFsbGVs
-IHByb2Nlc3NpbmcsDQo+Pj4gc28gbGV0cycgc3RhcnQgdG8gZGlzY3VzcyB0aGUgaW1wbGVtZW50
-YXRpb24gb2YgdGhlIHBhcmFsbGVsIHByb2Nlc3NpbmcNCj4+PiBmZWF0dXJlIHRvIGFjY2VwdCB0
-aGlzIHBhdGNoLiBJIGhhdmUgc29tZSBjb21tZW50czoNCj4+Pg0KPj4+ICAgIC0gcmVhZF9wZm5f
-cGFyYWxsZWwoKSBkb2Vzbid0IHVzZSB0aGUgY2FjaGUgZmVhdHVyZShjYWNoZS5jKSwgaXMgaXQN
-Cj4+PiAgICAgIGludGVudGlvbmFsIHdpdGggeW91ID8NCj4+Pg0KPj4NCj4+IFllcywgc2luY2Ug
-dGhlIGRhdGEgYXJlIHJlYWQgb25jZSBhIHBhZ2UgaGVyZSwgY2FjaGUgZmVhdHVyZSBzZWVtcyBu
-b3QNCj4+IG5lZWRlZC4NCg0KT0ssIEkgc2VlLg0KDQo+Pg0KPj4+ICAgIC0gTm93IC0tbnVtLWJ1
-ZmZlcnMgaXMgdHVuYWJsZSBidXQgdGhlIG1hbiBkZXNjcmlwdGlvbiBhbmQgeW91ciBiZW5jaG1h
-cmsNCj4+PiAgICAgIGRpZG4ndCBtZW50aW9uIHdoYXQgaXMgdGhlIGJlbmVmaXQgb2YgdGhpcyBw
-YXJhbWV0ZXIuDQo+Pj4NCj4+DQo+PiBUaGUgZGVmYXVsdCB2YWx1ZSBvZiBudW0tYnVmZmVycyBp
-cyA1MC4gT3JpZ2luYWxseSB0aGUgdmFsdWUgaGFzIGdyZWF0IGluZmx1ZW5jZQ0KPj4gb24gdGhl
-IHBlcmZvcm1hbmNlLiBCdXQgc2luY2Ugd2UgY2hhbmdlZCB0aGUgbG9naWMgaW4gdGhlIDJuZCB2
-ZXJzaW9uIG9mIHRoZQ0KPj4gcGF0Y2ggc2V0LCBtb3JlIGJ1ZmZlcnMgaGF2ZSBsaXR0bGUgaW1w
-cm92ZW1lbnQoMTAwMCBidWZmZXJzIG1heSBoYXZlIDElIGltcHJvdmVtZW50KS4NCj4+IEknbSBj
-b25zaWRlcmluZyBpZiB0aGUgb3B0aW9uIHNob3VsZCBiZSByZW1vdmVkLiB3aGF0IGRvIHlvdSB0
-aGluayBhYm91dCBpdD8NCg0KSSB0aGluayB0aGlzIG9wdGlvbiBzaG91bGQgYmUgcmVtb3ZlZCwg
-bW9zdCB1c2VycyB3b3VsZG4ndCB1c2UgaXQuDQoNCj4+IEJUVywgdGhlIGNvZGUgKG1sb2NrYWxs
-KSBhZGRlZCBpbiB0aGUgM3JkIHZlcnNpb24gd29ya3Mgd2VsbCBpbiBzZXZlcmFsIG1hY2hpbmVz
-IGhlcmUuDQo+PiBTaG91bGQgSSBrZWVwIGl0ID8NCj4+IFdpdGggdGhlIGNvZGVzLCBtYWR2aXNl
-KE1BRFZfRE9OVE5FRUQpIHdpbGwgYmUgZmFpbGVkIGluIGNvbXByZXNzMiBhbmQgdGhlIHBlcmZv
-cm1hbmNlDQo+PiBpcyBhcyBleHBlY3RlZCBpbiB0aGVzZSBtYWNoaW5lcy4NCg0KVGhhdCBrbHVk
-Z2UgaXNuJ3QgcmVhc29uYWJsZSwgaXQganVzdCBjaGFuZ2UgbWVtb3J5IGFsbG9jYXRpb24gcGF0
-dGVybi4NCklmIHlvdSBjYW4ndCBleHBsYWluIHdoeSBpdCB3b3JrcyB3ZWxsIGluIHRoZW9yeSwg
-eW91IHNob3VsZCBnZXQgcmlkIG9mIGl0Lg0KDQoNClRoYW5rcw0KQXRzdXNoaSBLdW1hZ2FpDQoN
-Cj4NCj5fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPmtl
-eGVjIG1haWxpbmcgbGlzdA0KPmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5odHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjDQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+When an HA cluster software or administrator detects non-response
+of a host, they issue an NMI to the host to completely stop current
+works and take a crash dump.  If the kernel has already panicked
+or is capturing a crash dump at that time, further NMI can cause
+a crash dump failure.
+
+Also, crash_kexec() called from oops context and panic() can
+cause race conditions.
+
+To solve these issue, this patch set does following things:
+
+- Don't panic on NMI if the kernel has already panicked
+- Extend exclusion control currently done by panic_lock to crash_kexec
+- Introduce "noextnmi" boot option which masks external NMI at the
+  boot time (supported only for x86)
+
+V3:
+- Introduce nmi_panic() macro to reduce code duplication
+- In the case of panic on NMI, don't return from NMI handlers
+  if another cpu already panicked
+
+V2:
+- Use atomic_cmpxchg() instead of current spin_trylock() to exclude
+  concurrent accesses to panic() and crash_kexec()
+- Don't introduce no-lock version of panic() and crash_kexec()
+
+---
+
+Hidehiro Kawai (4):
+      panic/x86: Fix re-entrance problem due to panic on NMI
+      panic/x86: Allow cpus to save registers even if they are looping in NMI context
+      kexec: Fix race between panic() and crash_kexec() called directly
+      x86/apic: Introduce noextnmi boot option
+
+
+ Documentation/kernel-parameters.txt |    4 ++++
+ arch/x86/kernel/apic/apic.c         |   17 ++++++++++++++++-
+ arch/x86/kernel/nmi.c               |   15 +++++++++++----
+ arch/x86/kernel/reboot.c            |   11 +++++++++++
+ include/linux/kernel.h              |   21 +++++++++++++++++++++
+ kernel/kexec.c                      |   20 ++++++++++++++++++++
+ kernel/panic.c                      |   23 ++++++++++++++++++++---
+ kernel/watchdog.c                   |    5 +++--
+ 8 files changed, 106 insertions(+), 10 deletions(-)
+
+
+-- 
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
