@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
- by merlin.infradead.org with esmtp (Exim 4.85 #2 (Red Hat Linux))
- id 1ZNE23-0007Z8-5u
- for kexec@lists.infradead.org; Thu, 06 Aug 2015 05:48:00 +0000
-Subject: [V3 PATCH 3/4] kexec: Fix race between panic() and crash_kexec()
- called directly
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
+ by casper.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZNE24-0000JQ-BQ
+ for kexec@lists.infradead.org; Thu, 06 Aug 2015 05:48:02 +0000
+Subject: [V3 PATCH 4/4] x86/apic: Introduce noextnmi boot option
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 Date: Thu, 06 Aug 2015 14:45:43 +0900
-Message-ID: <20150806054543.25766.5914.stgit@softrs>
+Message-ID: <20150806054543.25766.38473.stgit@softrs>
 In-Reply-To: <20150806054543.25766.29590.stgit@softrs>
 References: <20150806054543.25766.29590.stgit@softrs>
 MIME-Version: 1.0
@@ -24,97 +23,86 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
-Cc: linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-Currently, panic() and crash_kexec() can be called at the same time.
-For example (x86 case):
+This patch introduces new boot option "noextnmi" which disables
+external NMI.  This option is useful for the dump capture kernel
+so that an HA application or administrator wouldn't mistakenly
+shoot down the kernel by NMI.
 
-CPU 0:
-  oops_end()
-    crash_kexec()
-      mutex_trylock() // acquired
-        nmi_shootdown_cpus() // stop other cpus
-
-CPU 1:
-  panic()
-    crash_kexec()
-      mutex_trylock() // failed to acquire
-    smp_send_stop() // stop other cpus
-    infinite loop
-
-If CPU 1 calls smp_send_stop() before nmi_shootdown_cpus(), kdump
-fails.
-
-In another case:
-
-CPU 0:
-  oops_end()
-    crash_kexec()
-      mutex_trylock() // acquired
-        <NMI>
-        io_check_error()
-          panic()
-            crash_kexec()
-              mutex_trylock() // failed to acquire
-            infinite loop
-
-Clearly, this is an undesirable result.
-
-To fix this problem, this patch changes crash_kexec() to exclude
-others by using atomic_t panicking_cpu.
-
-V2:
-- Use atomic_cmpxchg() instead of spin_trylock() on panic_lock
-  to exclude concurrent accesses
-- Don't introduce no-lock version of crash_kexec()
+Currently, only x86 supports this option.
 
 Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
 ---
- kernel/kexec.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ Documentation/kernel-parameters.txt |    4 ++++
+ arch/x86/kernel/apic/apic.c         |   17 ++++++++++++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index a785c10..ed75a8b 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1472,6 +1472,18 @@ void __weak crash_unmap_reserved_pages(void)
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index 1d6f045..2cbd40b 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -2364,6 +2364,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 			noexec=on: enable non-executable mappings (default)
+ 			noexec=off: disable non-executable mappings
  
- void crash_kexec(struct pt_regs *regs)
- {
-+	int old_cpu, this_cpu;
++	noextnmi	[X86]
++			Mask external NMI.  This option is useful for a
++			dump capture kernel to be shot down by NMI.
 +
-+	/*
-+	 * `old_cpu == -1' means we are the first comer and crash_kexec()
-+	 * was called without entering panic().
-+	 * `old_cpu == this_cpu' means crash_kexec() was called from panic().
-+	 */
-+	this_cpu = raw_smp_processor_id();
-+	old_cpu = atomic_cmpxchg(&panic_cpu, -1, this_cpu);
-+	if (old_cpu != -1 && old_cpu != this_cpu)
-+		return;
+ 	nosmap		[X86]
+ 			Disable SMAP (Supervisor Mode Access Prevention)
+ 			even if it is supported by processor.
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index dcb5285..a140410 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -82,6 +82,12 @@
+ static unsigned int disabled_cpu_apicid __read_mostly = BAD_APICID;
+ 
+ /*
++ * Don't enable external NMI via LINT1 on BSP.  This is useful for
++ * the dump capture kernel.
++ */
++static bool apic_noextnmi;
 +
- 	/* Take the kexec_mutex here to prevent sys_kexec_load
- 	 * running on one cpu from replacing the crash kernel
- 	 * we are using after a panic on a different cpu.
-@@ -1491,6 +1503,14 @@ void crash_kexec(struct pt_regs *regs)
- 		}
- 		mutex_unlock(&kexec_mutex);
- 	}
-+
-+	/*
-+	 * If we came here from panic(), we have to keep panic_cpu
-+	 * to prevent other cpus from entering panic().  Otherwise,
-+	 * resetting it so that other cpus can enter panic()/crash_kexec().
-+	 */
-+	if (old_cpu == -1)
-+		atomic_xchg(&panic_cpu, -1);
++/*
+  * Map cpu index to physical APIC ID
+  */
+ DEFINE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_cpu_to_apicid, BAD_APICID);
+@@ -1150,6 +1156,8 @@ void __init init_bsp_APIC(void)
+ 	value = APIC_DM_NMI;
+ 	if (!lapic_is_integrated())		/* 82489DX */
+ 		value |= APIC_LVT_LEVEL_TRIGGER;
++	if (apic_noextnmi)
++		value |= APIC_LVT_MASKED;
+ 	apic_write(APIC_LVT1, value);
  }
  
- size_t crash_get_memory_size(void)
+@@ -1369,7 +1377,7 @@ void setup_local_APIC(void)
+ 	/*
+ 	 * only the BP should see the LINT1 NMI signal, obviously.
+ 	 */
+-	if (!cpu)
++	if (!cpu && !apic_noextnmi)
+ 		value = APIC_DM_NMI;
+ 	else
+ 		value = APIC_DM_NMI | APIC_LVT_MASKED;
+@@ -2537,3 +2545,10 @@ static int __init apic_set_disabled_cpu_apicid(char *arg)
+ 	return 0;
+ }
+ early_param("disable_cpu_apicid", apic_set_disabled_cpu_apicid);
++
++static int __init apic_set_noextnmi(char *arg)
++{
++	apic_noextnmi = true;
++	return 0;
++}
++early_param("noextnmi", apic_set_noextnmi);
 
 
 
