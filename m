@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZNWcq-0002qy-Q9
- for kexec@lists.infradead.org; Fri, 07 Aug 2015 01:39:13 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [RFC V2 PATCH 0/1] kexec: crash_kexec_post_notifiers boot
- option related fixes
-Date: Fri, 7 Aug 2015 01:38:48 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A8445492BE70@GSjpTKYDCembx31.service.hitachi.net>
-References: <20150724011615.6834.79628.stgit@softrs>
- <55BF4B1F.9000602@hitachi.com> <877fpcfi2j.fsf@x220.int.ebiederm.org>
- <04EAB7311EE43145B2D3536183D1A84454926993@GSjpTKYDCembx31.service.hitachi.net>
- <87io8tvez5.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87io8tvez5.fsf@x220.int.ebiederm.org>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZNX5N-0006y4-Tf
+ for kexec@lists.infradead.org; Fri, 07 Aug 2015 02:08:43 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH v4 08/10] Initial and free data used for parallel process
+Date: Fri, 7 Aug 2015 01:42:00 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DE18C7@BPXM01GP.gisp.nec.co.jp>
+References: <1438841291-30378-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1438841291-30378-9-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1438841291-30378-9-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -28,73 +24,273 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "'Eric W. Biederman'" <ebiederm@xmission.com>
-Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-> From: Eric W. Biederman [mailto:ebiederm@xmission.com]
-> >> From: Eric W. Biederman [mailto:ebiederm@xmission.com]
-> > [...]
-> >> A specific hook for a very specific purpose when there is no other way
-> >> we can consider.
-> >
-> > So, is kmsg_dump like feature admissible?
-> >
-> >> If you don't have something that generalises well into a general purpose
-> >> operation that it makes sense for everyone to call you can always use
-> >> the world's largest aka you can run code before the new kernel starts
-> >> that is loaded with kexec_load.
-> >
-> > One of our purposes, notifying "I'm dying", would be achieved by purgatory
-> > code provided by kexec command as I stated before.  Since the way of the
-> > notification will differ from each vendor, I think we need to modify
-> > the purgatory codes pluggable.  Also, I think we need some parameter
-> > passing mechanism to the purgatory code.  For example, passing the panic
-> > message via boot parameter to save it to SEL.  Although I'm not sure
-> > we can do that (I've not investigated well yet).  Is that acceptable?
-> 
-> I think the address of panic message is available in crash notes.  If
-> not that is very reasonable to add.
+Sorry for the late pointing out, but I found a bug in this patch:
 
-I believed the boot parameter is prepared by the 1st kernel, but
-it's wrong.  The boot parameter is completely provieded kexec command.
-So, passing the panic message through boot parameter will not
-be feasible.  I'm not sure we can easily access to the crash notes
-from purgatory, but I think it's a reasonable way to pass panic message.
+>From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+>
+>This patch is used to initial/free data for parallel process and
+>the memory limit is concerned in this function.
+>
+>Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+>Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
+>---
+> makedumpfile.c | 199 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> makedumpfile.h |   3 +-
+> 2 files changed, 201 insertions(+), 1 deletion(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index a1d1148..0fe9efd 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -1432,6 +1432,23 @@ open_dump_bitmap(void)
+> 			SPLITTING_FD_BITMAP(i) = fd;
+> 		}
+> 	}
+>+
+>+	if (info->num_threads) {
+>+		/*
+>+		 * Reserve file descriptors of bitmap for creating dumpfiles
+>+		 * parallelly, because a bitmap file will be unlinked just after
+>+		 * this and it is not possible to open a bitmap file later.
+>+		 */
+>+		for (i = 0; i < info->num_threads; i++) {
+>+			if ((fd = open(info->name_bitmap, O_RDONLY)) < 0) {
+>+				ERRMSG("Can't open the bitmap file(%s). %s\n",
+>+				    info->name_bitmap, strerror(errno));
+>+				return FALSE;
+>+			}
+>+			FD_BITMAP_PARALLEL(i) = fd;
+>+		}
+>+	}
+>+
+> 	unlink(info->name_bitmap);
+>
+> 	return TRUE;
+>@@ -3459,6 +3476,188 @@ calibrate_machdep_info(void)
+> }
+>
+> int
+>+initial_for_parallel()
+>+{
+>+	unsigned long len_buf_out;
+>+	unsigned long page_data_buf_size;
+>+	unsigned long limit_size;
+>+	int page_data_num;
+>+	int i;
+>+
+>+	len_buf_out = calculate_len_buf_out(info->page_size);
+>+
+>+	/*
+>+	 * allocate memory for threads
+>+	 */
+>+	if ((info->threads = malloc(sizeof(pthread_t *) * info->num_threads))
+>+	    == NULL) {
+>+		MSG("Can't allocate memory for threads. %s\n",
+>+				strerror(errno));
+>+		return FALSE;
+>+	}
+>+	memset(info->threads, 0, sizeof(pthread_t *) * info->num_threads);
+>+
+>+	if ((info->kdump_thread_args =
+>+			malloc(sizeof(struct thread_args) * info->num_threads))
+>+	    == NULL) {
+>+		MSG("Can't allocate memory for arguments of threads. %s\n",
+>+				strerror(errno));
+>+		return FALSE;
+>+	}
+>+	memset(info->kdump_thread_args, 0, sizeof(struct thread_args) * info->num_threads);
+>+
+>+	for (i = 0; i < info->num_threads; i++) {
+>+		if ((info->threads[i] = malloc(sizeof(pthread_t))) == NULL) {
+>+			MSG("Can't allocate memory for thread %d. %s",
+>+					i, strerror(errno));
+>+			return FALSE;
+>+		}
+>+
+>+		if ((BUF_PARALLEL(i) = malloc(info->page_size)) == NULL) {
+>+			MSG("Can't allocate memory for the memory buffer. %s\n",
+>+					strerror(errno));
+>+			return FALSE;
+>+		}
+>+
+>+		if ((BUF_OUT_PARALLEL(i) = malloc(len_buf_out)) == NULL) {
+>+			MSG("Can't allocate memory for the compression buffer. %s\n",
+>+					strerror(errno));
+>+			return FALSE;
+>+		}
+>+
+>+		if ((MMAP_CACHE_PARALLEL(i) = malloc(sizeof(struct mmap_cache))) == NULL) {
+>+			MSG("Can't allocate memory for mmap_cache. %s\n",
+>+					strerror(errno));
+>+			return FALSE;
+>+		}
+>+
+>+		/*
+>+		 * initial for mmap_cache
+>+		 */
+>+		MMAP_CACHE_PARALLEL(i)->mmap_buf = MAP_FAILED;
+>+		MMAP_CACHE_PARALLEL(i)->mmap_start_offset = 0;
+>+		MMAP_CACHE_PARALLEL(i)->mmap_end_offset = 0;
+>+
+>+#ifdef USELZO
+>+		if ((WRKMEM_PARALLEL(i) = malloc(LZO1X_1_MEM_COMPRESS)) == NULL) {
+>+			MSG("Can't allocate memory for the working memory. %s\n",
+>+					strerror(errno));
+>+			return FALSE;
+>+		}
+>+#endif
+>+	}
+>+
+>+	/*
+>+	 * get a safe number of page_data
+>+	 */
+>+	page_data_buf_size = MAX(len_buf_out, info->page_size);
+>+
+>+	limit_size = (get_free_memory_size()
+>+		      - MAP_REGION * info->num_threads) * 0.6;
+>+
+>+	page_data_num = limit_size / page_data_buf_size;
+>+
+>+	info->num_buffers = MIN(NUM_BUFFERS, page_data_num);
+>+
+>+	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
+>+			info->num_buffers);
+>+
+>+	/*
+>+	 * allocate memory for page_data
+>+	 */
+>+	if ((info->page_data_buf = malloc(sizeof(struct page_data) * info->num_buffers))
+>+	    == NULL) {
+>+		MSG("Can't allocate memory for page_data_buf. %s\n",
+>+				strerror(errno));
+>+		return FALSE;
+>+	}
+>+	memset(info->page_data_buf, 0, sizeof(struct page_data) * info->num_buffers);
+>+
+>+	for (i = 0; i < info->num_buffers; i++) {
+>+		if ((info->page_data_buf[i].buf = malloc(page_data_buf_size)) == NULL) {
+>+			MSG("Can't allocate memory for buf of page_data_buf. %s\n",
+>+					strerror(errno));
+>+			return FALSE;
+>+		}
+>+	}
+>+
+>+	/*
+>+	 * initial fd_memory for threads
+>+	 */
+>+	for (i = 0; i < info->num_threads; i++) {
+>+		if ((FD_MEMORY_PARALLEL(i) = open(info->name_memory, O_RDONLY))
+>+									< 0) {
+>+			ERRMSG("Can't open the dump memory(%s). %s\n",
+>+					info->name_memory, strerror(errno));
+>+			return FALSE;
+>+		}
+>+
+>+		if ((FD_BITMAP_MEMORY_PARALLEL(i) =
+>+				open(info->name_memory, O_RDONLY)) < 0) {
+>+			ERRMSG("Can't open the dump memory(%s). %s\n",
+>+					info->name_memory, strerror(errno));
+>+			return FALSE;
+>+		}
+>+	}
+>+
+>+	return TRUE;
+>+}
+>+
+>+void
+>+free_for_parallel()
+>+{
+>+	int i;
+>+
+>+	if (info->threads != NULL) {
+>+		for (i = 0; i < info->num_threads; i++) {
+>+			if (info->threads[i] != NULL)
+>+				free(info->threads[i]);
+>+
+>+			if (BUF_PARALLEL(i) != NULL)
+>+				free(BUF_PARALLEL(i));
+>+
+>+			if (BUF_OUT_PARALLEL(i) != NULL)
+>+				free(BUF_OUT_PARALLEL(i));
+>+
+>+			if (MMAP_CACHE_PARALLEL(i) != NULL) {
+>+				if (MMAP_CACHE_PARALLEL(i)->mmap_buf !=
+>+								MAP_FAILED)
+>+					munmap(MMAP_CACHE_PARALLEL(i)->mmap_buf,
+>+					       MMAP_CACHE_PARALLEL(i)->mmap_end_offset
+>+					       - MMAP_CACHE_PARALLEL(i)->mmap_start_offset);
+>+
+>+				free(MMAP_CACHE_PARALLEL(i));
+>+			}
+>+#ifdef USELZO
+>+			if (WRKMEM_PARALLEL(i) != NULL)
+>+				free(WRKMEM_PARALLEL(i));
+>+#endif
+>+
+>+		}
+>+		free(info->threads);
+>+	}
+>+
+>+	if (info->kdump_thread_args != NULL)
+>+		free(info->kdump_thread_args);
+>+
+>+	if (info->page_data_buf != NULL) {
+>+		for (i = 0; i < info->num_buffers; i++) {
+>+			if (info->page_data_buf[i].buf != NULL)
+>+				free(info->page_data_buf[i].buf);
+>+		}
+>+		free(info->page_data_buf);
+>+	}
+>+
+>+	for (i = 0; i < info->num_threads; i++) {
+>+		if (FD_MEMORY_PARALLEL(i) > 0)
+>+			close(FD_MEMORY_PARALLEL(i));
 
-> Updating the SEL from purgatory after purgatory has validated the
-> checksums of the crash handling code is acceptable.
-> 
-> All that is desired is to run as little code as possible in a kernel
-> that is known broken.  Once the checksums have verified things in
-> purgatory you should be in good shape, and there is no possibility of
-> relying on broken infrastructure because that code simply is not present
-> in purgatory.
-> 
-> We already have a few early_printk style drivers in purgatory and I
-> don't the code to update the SEL would be much worse.
-
-For developers, early_printk style feature will be better solution.
-For end users, however, it will not be true.  Sometimes they cannot
-use a serial port for early_printk because the serial port is used
-for other purpose.  Sometimes they cannot place additional machine
-which receives messages from the serial port.  So we need some
-plugin or enable/disable mechanism for specific purgatory code.
-
-> On the flip side there are enough firmware bugs that I personally would
-> not want to rely on firmware code running properly when the machine is
-> in a known broken state, so I don't want the SEL update to be
-> unconditional.
-
-Yes, I don't also trust BMC firmware.  The most simple I/F to BMC
-is KCS (Keyboard Controller Style) I/F which is accessible via
-two I/O ports.  If BMC becomes insane, the state machine for the I/F
-can go into infinite loop.  However, we can avoid this by introducing
-proper timeout.  Of course, I think we should add some enable/disable
-mechanism.
+If there is an invalid option, memory for FD_MEMORY_PARALLEL(=info->parallel_info)
+will not be allocated even though --num-threads is specified (e.g. -E and
+ --num-threads are specified at the same time), so this code can cause SIGSEGV.
 
 
-Regards,
-Kawai
+Thanks,
+Atsushi Kumagai
+
+>+
+>+		if (FD_BITMAP_MEMORY_PARALLEL(i) > 0)
+>+			close(FD_BITMAP_MEMORY_PARALLEL(i));
+>+	}
+>+}
+>+
+>+int
+> initial(void)
+> {
+> 	off_t offset;
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 6f45bf2..1f5bd7f 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -972,9 +972,10 @@ typedef unsigned long long int ulonglong;
+>  * for parallel process
+>  */
+>
+>+#define PAGE_DATA_NUM	(50)
+> #define WAIT_TIME	(60 * 10)
+> #define PTHREAD_FAIL	((void *)-2)
+>-#define NUM_BUFFERS	50
+>+#define NUM_BUFFERS	(50)
+>
+> struct mmap_cache {
+> 	char	*mmap_buf;
+>--
+>1.8.3.1
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
