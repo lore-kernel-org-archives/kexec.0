@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g2t2353.austin.hp.com ([15.217.128.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZNWGc-0001mg-V2
- for kexec@lists.infradead.org; Fri, 07 Aug 2015 01:16:15 +0000
-Message-ID: <1438910038.3109.116.camel@hp.com>
-Subject: Re: kexec, x86: Need a new e820 type support for kexec
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Thu, 06 Aug 2015 19:13:58 -0600
-In-Reply-To: <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
-References: <1437697592.3214.373.camel@hp.com>
- <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
-Mime-Version: 1.0
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZNWcq-0002qy-Q9
+ for kexec@lists.infradead.org; Fri, 07 Aug 2015 01:39:13 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: [RFC V2 PATCH 0/1] kexec: crash_kexec_post_notifiers boot
+ option related fixes
+Date: Fri, 7 Aug 2015 01:38:48 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A8445492BE70@GSjpTKYDCembx31.service.hitachi.net>
+References: <20150724011615.6834.79628.stgit@softrs>
+ <55BF4B1F.9000602@hitachi.com> <877fpcfi2j.fsf@x220.int.ebiederm.org>
+ <04EAB7311EE43145B2D3536183D1A84454926993@GSjpTKYDCembx31.service.hitachi.net>
+ <87io8tvez5.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87io8tvez5.fsf@x220.int.ebiederm.org>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,83 +28,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, dan.j.williams@intel.com, hch@lst.de
-Cc: linux-nvdimm@ml01.01.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "'Eric W. Biederman'" <ebiederm@xmission.com>
+Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, 2015-08-06 at 16:12 +0800, Baoquan He wrote:
-> Hi Toshi,
+> From: Eric W. Biederman [mailto:ebiederm@xmission.com]
+> >> From: Eric W. Biederman [mailto:ebiederm@xmission.com]
+> > [...]
+> >> A specific hook for a very specific purpose when there is no other way
+> >> we can consider.
+> >
+> > So, is kmsg_dump like feature admissible?
+> >
+> >> If you don't have something that generalises well into a general purpose
+> >> operation that it makes sense for everyone to call you can always use
+> >> the world's largest aka you can run code before the new kernel starts
+> >> that is loaded with kexec_load.
+> >
+> > One of our purposes, notifying "I'm dying", would be achieved by purgatory
+> > code provided by kexec command as I stated before.  Since the way of the
+> > notification will differ from each vendor, I think we need to modify
+> > the purgatory codes pluggable.  Also, I think we need some parameter
+> > passing mechanism to the purgatory code.  For example, passing the panic
+> > message via boot parameter to save it to SEL.  Although I'm not sure
+> > we can do that (I've not investigated well yet).  Is that acceptable?
 > 
-> Does this patch work for you?
+> I think the address of panic message is available in crash notes.  If
+> not that is very reasonable to add.
 
-Hi Baoquan,
+I believed the boot parameter is prepared by the 1st kernel, but
+it's wrong.  The boot parameter is completely provieded kexec command.
+So, passing the panic message through boot parameter will not
+be feasible.  I'm not sure we can easily access to the crash notes
+from purgatory, but I think it's a reasonable way to pass panic message.
 
-I have tested the patch with both E820_PMEM and E820_PRAM setups, and
-confirmed it works fine for both cases. :-)  I did multiple kexec reboots
-followed by a kdump in my testing.  So, please feel free to add:
- 
-Tested-by: Toshi Kani <toshi.kani@hp.com>
+> Updating the SEL from purgatory after purgatory has validated the
+> checksums of the crash handling code is acceptable.
+> 
+> All that is desired is to run as little code as possible in a kernel
+> that is known broken.  Once the checksums have verified things in
+> purgatory you should be in good shape, and there is no possibility of
+> relying on broken infrastructure because that code simply is not present
+> in purgatory.
+> 
+> We already have a few early_printk style drivers in purgatory and I
+> don't the code to update the SEL would be much worse.
 
-> There are things I am not sure. When jump to kexec/kdump kernel is this
-> PMEM still needed by system? 
+For developers, early_printk style feature will be better solution.
+For end users, however, it will not be true.  Sometimes they cannot
+use a serial port for early_printk because the serial port is used
+for other purpose.  Sometimes they cannot place additional machine
+which receives messages from the serial port.  So we need some
+plugin or enable/disable mechanism for specific purgatory code.
 
-Yes, after a kexec reboot, the kernel needs to be able to use NVDIMM as
-before.  While the kernel actually uses NFIT table, not e820, the range
-should be marked as PMEM for consistency.  The same goes to kdump kernel
-since NVDIMM may be used as a dump device in future.
+> On the flip side there are enough firmware bugs that I personally would
+> not want to rely on firmware code running properly when the machine is
+> in a known broken state, so I don't want the SEL update to be
+> unconditional.
 
-> And what's the difference between PRAM and
-> PMEM? I saw in kernel commit ec776ef6 it introduced E820_PRAM for the
-> non-standard protected e820 type, then in kernel commit ad5fb870 it
-> introduced E820_PMEM for ACPI 6.0 persistent memory types. While it
-> doesn't add complete support for E820_PMEM like E820_PRAM if I
-> understand it correctly.
+Yes, I don't also trust BMC firmware.  The most simple I/F to BMC
+is KCS (Keyboard Controller Style) I/F which is accessible via
+two I/O ports.  If BMC becomes insane, the state machine for the I/F
+can go into infinite loop.  However, we can avoid this by introducing
+proper timeout.  Of course, I think we should add some enable/disable
+mechanism.
 
-ACPI 6.0 spec defines E820_PMEM, which is used for NVDIMM devices from now
-on.  ACPI 6.0 also defines NFIT table for NVDIMM along with this type.
 
-Before these are defined in ACPI, E820_PRAM type was "unofficially" used by
-some NVDIMM devices.  So, E820_PRAM was added for such legacy NVDIMMs. 
- Since the E820_PRAM case is very simple (it does not have any other FW
-tables), it can be easily emulated with the "memmap=nn!ss" option.  So,
-people may use the memmap option to emulate this legacy NVDIMM.    
-
->  In this patch I simply pass E820_PMEM to kdump
-> kernel as E820_PRAM when it emerges since kernel can parse E820_PRAM
-> only in parse_memmap_one(), otherwise E820_PMEM has to be discarded or
-> need be passed as E820_RESERVED. What do you think about this, need
-> E820_PMEM be differentiated with E820_PRAM strictly? If yes, I think a
-> kernel patch need be posted to fix this. If not, this patch is enough
-> for supporting both of them in kexec.
-
-E820_PMEM cannot be emulated by the "memmap=" option.  Do you have to use
-the "memmap=" options to pass the ranges for kdump kernel?  If so, I'd
-rather ignore E820_PMEM and let it be passed as E820_RESERVED.  The kdump
-kernel can still obtain the info from NFIT if necessary.
-
-As for the code change...
-
-> @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, 
-> unsigned long startk,
->  		strcat (str_mmap, "K$");
->  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
->  		strcat (str_mmap, "K#");
-> +	else if (type == RANGE_PMEM || type == RANGE_PRAM)
-> +		strcat (str_mmap, "K!");
-
-It should only check with RANGE_PRAM, but I do not think this change matters
-much unless you also modify the caller cmdline_add_memmap(), which has the
-following check to skip other types.  I do not think we will use legacy
-NVDIMM device as a dump device, so you may ignore RANGE_PRAM and let it be
-passed as RESERVED as well (which is likely the case I tested with).
-
-                /* Only adding memory regions of RAM and ACPI */
-                if (type != RANGE_RAM &&
-                    type != RANGE_ACPI &&
-                    type != RANGE_ACPI_NVS)
-                        continue;
-
-Thanks,
--Toshi
+Regards,
+Kawai
 
 _______________________________________________
 kexec mailing list
