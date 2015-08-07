@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <55C38269.8090907@arm.com>
-Date: Thu, 06 Aug 2015 16:51:05 +0100
-From: Marc Zyngier <marc.zyngier@arm.com>
-MIME-Version: 1.0
-Subject: Re: [v2 2/5] arm64: kdump: implement machine_crash_shutdown()
-References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-3-git-send-email-takahiro.akashi@linaro.org>
- <20150424103900.GF29183@leverpostej> <553A1E62.9030400@arm.com>
- <55C3083D.1000306@linaro.org>
-In-Reply-To: <55C3083D.1000306@linaro.org>
+Received: from g2t2353.austin.hp.com ([15.217.128.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZNWGc-0001mg-V2
+ for kexec@lists.infradead.org; Fri, 07 Aug 2015 01:16:15 +0000
+Message-ID: <1438910038.3109.116.camel@hp.com>
+Subject: Re: kexec, x86: Need a new e820 type support for kexec
+From: Toshi Kani <toshi.kani@hp.com>
+Date: Thu, 06 Aug 2015 19:13:58 -0600
+In-Reply-To: <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
+References: <1437697592.3214.373.camel@hp.com>
+ <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,127 +23,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Baoquan He <bhe@redhat.com>, dan.j.williams@intel.com, hch@lst.de
+Cc: linux-nvdimm@ml01.01.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi,
-
-On 06/08/15 08:09, AKASHI Takahiro wrote:
-> Marc, Mark
+On Thu, 2015-08-06 at 16:12 +0800, Baoquan He wrote:
+> Hi Toshi,
 > 
-> Sorry for not revisiting your comment below for a while.
+> Does this patch work for you?
 
-Wow. It took me a few minutes to page the context back in.
+Hi Baoquan,
 
-> On 04/24/2015 07:43 PM, Marc Zyngier wrote:
->> On 24/04/15 11:39, Mark Rutland wrote:
->>> On Fri, Apr 24, 2015 at 08:53:05AM +0100, AKASHI Takahiro wrote:
->>>> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
->>>> save per-cpu general-purpose registers before restarting the crash dump
->>>> kernel. See kernel_kexec().
->>>> ipi_cpu_stop() is used and a bit modified to support this behavior.
->>>>
->>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>>> ---
->>>>   arch/arm64/include/asm/kexec.h    |   34 ++++++++++++++++++++++-
->>>>   arch/arm64/kernel/machine_kexec.c |   55 ++++++++++++++++++++++++++++++++++++-
->>>>   arch/arm64/kernel/smp.c           |   12 ++++++--
->>>>   3 files changed, 97 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
->>>> index 3530ff5..eaf3fcb 100644
->>>> --- a/arch/arm64/include/asm/kexec.h
->>>> +++ b/arch/arm64/include/asm/kexec.h
->>>> @@ -30,6 +30,8 @@
->>>>
->>>>   #if !defined(__ASSEMBLY__)
->>>>
->>>> +extern bool in_crash_kexec;
->>>> +
->>>>   /**
->>>>    * crash_setup_regs() - save registers for the panic kernel
->>>>    *
->>>> @@ -40,7 +42,37 @@
->>>>   static inline void crash_setup_regs(struct pt_regs *newregs,
->>>>   				    struct pt_regs *oldregs)
->>>>   {
->>>> -	/* Empty routine needed to avoid build errors. */
->>>> +	if (oldregs) {
->>>> +		memcpy(newregs, oldregs, sizeof(*newregs));
->>>> +	} else {
->>>> +		__asm__ __volatile__ (
->>>> +			"stp	 x0,   x1, [%3]\n\t"
->>>
->>> Why the tabs?
->>>
->>> Please use #16 * N as the offset for consistency with entry.S, with 0
->>> for the first N.
->>>
->>> [...]
->>>
->>>> +static void machine_kexec_mask_interrupts(void)
->>>> +{
->>>> +	unsigned int i;
->>>> +	struct irq_desc *desc;
->>>> +
->>>> +	for_each_irq_desc(i, desc) {
->>>> +		struct irq_chip *chip;
->>>> +
->>>> +		chip = irq_desc_get_chip(desc);
->>>> +		if (!chip)
->>>> +			continue;
->>>> +
->>>> +		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
->>>> +			chip->irq_eoi(&desc->irq_data);
->>>> +
->>>> +		if (chip->irq_mask)
->>>> +			chip->irq_mask(&desc->irq_data);
->>>> +
->>>> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
->>>> +			chip->irq_disable(&desc->irq_data);
->>>> +	}
->>>> +}
->>>
->>> I'm surprised that this isn't left to the irqchip driver init code in
->>> the crash kernel. For all we know this state could be corrupt anyway.
->>
->> Indeed, parsing the irqdesc list is a recipe for disaster. Who knows
->> which locks have been taken or simply corrupted, pointers nuked...
->>
->>> Is there any reason we can't get the GIC driver to nuke all of this at
->>> probe time?
-> 
-> Is it just enough to remove kexec_mask_interrupts() and add gic_eoi_irq()
-> at the beginning of gic_cpu_init() in irq-gic.c and irq-gic-v3.c?
+I have tested the patch with both E820_PMEM and E820_PRAM setups, and
+confirmed it works fine for both cases. :-)  I did multiple kexec reboots
+followed by a kdump in my testing.  So, please feel free to add:
+ 
+Tested-by: Toshi Kani <toshi.kani@hp.com>
 
-No, doing an EOI is definitely the wrong thing to do. If you do it in
-the wrong order, you just screw up the GIC state machine. Plus, you have
-no idea what to write there...
+> There are things I am not sure. When jump to kexec/kdump kernel is this
+> PMEM still needed by system? 
 
-The only real solution is to zero the "active" registers.
+Yes, after a kexec reboot, the kernel needs to be able to use NVDIMM as
+before.  While the kernel actually uses NFIT table, not e820, the range
+should be marked as PMEM for consistency.  The same goes to kdump kernel
+since NVDIMM may be used as a dump device in future.
 
->> This feels like the better option. I can cook a patch or two for that.
-> 
-> If you do, that will be much better :)
+> And what's the difference between PRAM and
+> PMEM? I saw in kernel commit ec776ef6 it introduced E820_PRAM for the
+> non-standard protected e820 type, then in kernel commit ad5fb870 it
+> introduced E820_PMEM for ACPI 6.0 persistent memory types. While it
+> doesn't add complete support for E820_PMEM like E820_PRAM if I
+> understand it correctly.
 
-OK, I'll prepare something that we can merge at the same time kexec
-comes back from the dead (if it ever does - I'm not holding my breath).
+ACPI 6.0 spec defines E820_PMEM, which is used for NVDIMM devices from now
+on.  ACPI 6.0 also defines NFIT table for NVDIMM along with this type.
 
-> 
-> BTW, in arm-gic-v3.h, GICD_CTRL_ARE_NS is defined as
->      (1U << 4)
-> but should it be 5?
-> (I'm referring to the page 8-415 in IHI0069A.)
+Before these are defined in ACPI, E820_PRAM type was "unofficially" used by
+some NVDIMM devices.  So, E820_PRAM was added for such legacy NVDIMMs. 
+ Since the E820_PRAM case is very simple (it does not have any other FW
+tables), it can be easily emulated with the "memmap=nn!ss" option.  So,
+people may use the memmap option to emulate this legacy NVDIMM.    
 
-No, look at the definition ARE_NS has when the access is non-secure or
-on a system supporting a single security state. The definition you're
-referring to is for a secure access (firmware).
+>  In this patch I simply pass E820_PMEM to kdump
+> kernel as E820_PRAM when it emerges since kernel can parse E820_PRAM
+> only in parse_memmap_one(), otherwise E820_PMEM has to be discarded or
+> need be passed as E820_RESERVED. What do you think about this, need
+> E820_PMEM be differentiated with E820_PRAM strictly? If yes, I think a
+> kernel patch need be posted to fix this. If not, this patch is enough
+> for supporting both of them in kexec.
+
+E820_PMEM cannot be emulated by the "memmap=" option.  Do you have to use
+the "memmap=" options to pass the ranges for kdump kernel?  If so, I'd
+rather ignore E820_PMEM and let it be passed as E820_RESERVED.  The kdump
+kernel can still obtain the info from NFIT if necessary.
+
+As for the code change...
+
+> @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, 
+> unsigned long startk,
+>  		strcat (str_mmap, "K$");
+>  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
+>  		strcat (str_mmap, "K#");
+> +	else if (type == RANGE_PMEM || type == RANGE_PRAM)
+> +		strcat (str_mmap, "K!");
+
+It should only check with RANGE_PRAM, but I do not think this change matters
+much unless you also modify the caller cmdline_add_memmap(), which has the
+following check to skip other types.  I do not think we will use legacy
+NVDIMM device as a dump device, so you may ignore RANGE_PRAM and let it be
+passed as RESERVED as well (which is likely the case I tested with).
+
+                /* Only adding memory regions of RAM and ACPI */
+                if (type != RANGE_RAM &&
+                    type != RANGE_ACPI &&
+                    type != RANGE_ACPI_NVS)
+                        continue;
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+-Toshi
 
 _______________________________________________
 kexec mailing list
