@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pd0-f176.google.com ([209.85.192.176])
+Received: from mail-wi0-f178.google.com ([209.85.212.178])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZNZDi-0006s6-58
- for kexec@lists.infradead.org; Fri, 07 Aug 2015 04:25:27 +0000
-Received: by pdco4 with SMTP id o4so40380039pdc.3
- for <kexec@lists.infradead.org>; Thu, 06 Aug 2015 21:25:04 -0700 (PDT)
-Message-ID: <55C43319.3070906@linaro.org>
-Date: Fri, 07 Aug 2015 13:24:57 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+ id 1ZNinW-0004Vt-50
+ for kexec@lists.infradead.org; Fri, 07 Aug 2015 14:39:02 +0000
+Received: by wibxm9 with SMTP id xm9so64169015wib.0
+ for <kexec@lists.infradead.org>; Fri, 07 Aug 2015 07:38:40 -0700 (PDT)
+Date: Fri, 7 Aug 2015 16:38:37 +0200
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [V3 PATCH 0/4] Fix race issues among panic, NMI and crash_kexec
+Message-ID: <20150807143836.GI30785@dhcp22.suse.cz>
+References: <20150806054543.25766.29590.stgit@softrs>
 MIME-Version: 1.0
-Subject: Re: [v2 2/5] arm64: kdump: implement machine_crash_shutdown()
-References: <1429861989-8417-1-git-send-email-takahiro.akashi@linaro.org>
- <1429861989-8417-3-git-send-email-takahiro.akashi@linaro.org>
- <20150424103900.GF29183@leverpostej> <553A1E62.9030400@arm.com>
- <55C3083D.1000306@linaro.org> <55C38269.8090907@arm.com>
-In-Reply-To: <55C38269.8090907@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20150806054543.25766.29590.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,147 +21,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <Mark.Rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hbabus@us.ibm.com" <hbabus@us.ibm.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "geoff@infradead.org" <geoff@infradead.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "david.griego@linaro.org" <david.griego@linaro.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Marc,
+JFYI I have those patches tested on the largish box. Will come back to
+you as soon as I have some feedback.
 
-On 08/07/2015 12:51 AM, Marc Zyngier wrote:
-> Hi,
->
-> On 06/08/15 08:09, AKASHI Takahiro wrote:
->> Marc, Mark
->>
->> Sorry for not revisiting your comment below for a while.
->
-> Wow. It took me a few minutes to page the context back in.
+I will also try to review these patches sometimes next week.
 
-Please don't purge the page from your cache for a while :)
+Thanks!
 
->> On 04/24/2015 07:43 PM, Marc Zyngier wrote:
->>> On 24/04/15 11:39, Mark Rutland wrote:
->>>> On Fri, Apr 24, 2015 at 08:53:05AM +0100, AKASHI Takahiro wrote:
->>>>> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
->>>>> save per-cpu general-purpose registers before restarting the crash dump
->>>>> kernel. See kernel_kexec().
->>>>> ipi_cpu_stop() is used and a bit modified to support this behavior.
->>>>>
->>>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>>>> ---
->>>>>    arch/arm64/include/asm/kexec.h    |   34 ++++++++++++++++++++++-
->>>>>    arch/arm64/kernel/machine_kexec.c |   55 ++++++++++++++++++++++++++++++++++++-
->>>>>    arch/arm64/kernel/smp.c           |   12 ++++++--
->>>>>    3 files changed, 97 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
->>>>> index 3530ff5..eaf3fcb 100644
->>>>> --- a/arch/arm64/include/asm/kexec.h
->>>>> +++ b/arch/arm64/include/asm/kexec.h
->>>>> @@ -30,6 +30,8 @@
->>>>>
->>>>>    #if !defined(__ASSEMBLY__)
->>>>>
->>>>> +extern bool in_crash_kexec;
->>>>> +
->>>>>    /**
->>>>>     * crash_setup_regs() - save registers for the panic kernel
->>>>>     *
->>>>> @@ -40,7 +42,37 @@
->>>>>    static inline void crash_setup_regs(struct pt_regs *newregs,
->>>>>    				    struct pt_regs *oldregs)
->>>>>    {
->>>>> -	/* Empty routine needed to avoid build errors. */
->>>>> +	if (oldregs) {
->>>>> +		memcpy(newregs, oldregs, sizeof(*newregs));
->>>>> +	} else {
->>>>> +		__asm__ __volatile__ (
->>>>> +			"stp	 x0,   x1, [%3]\n\t"
->>>>
->>>> Why the tabs?
->>>>
->>>> Please use #16 * N as the offset for consistency with entry.S, with 0
->>>> for the first N.
->>>>
->>>> [...]
->>>>
->>>>> +static void machine_kexec_mask_interrupts(void)
->>>>> +{
->>>>> +	unsigned int i;
->>>>> +	struct irq_desc *desc;
->>>>> +
->>>>> +	for_each_irq_desc(i, desc) {
->>>>> +		struct irq_chip *chip;
->>>>> +
->>>>> +		chip = irq_desc_get_chip(desc);
->>>>> +		if (!chip)
->>>>> +			continue;
->>>>> +
->>>>> +		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
->>>>> +			chip->irq_eoi(&desc->irq_data);
->>>>> +
->>>>> +		if (chip->irq_mask)
->>>>> +			chip->irq_mask(&desc->irq_data);
->>>>> +
->>>>> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
->>>>> +			chip->irq_disable(&desc->irq_data);
->>>>> +	}
->>>>> +}
->>>>
->>>> I'm surprised that this isn't left to the irqchip driver init code in
->>>> the crash kernel. For all we know this state could be corrupt anyway.
->>>
->>> Indeed, parsing the irqdesc list is a recipe for disaster. Who knows
->>> which locks have been taken or simply corrupted, pointers nuked...
->>>
->>>> Is there any reason we can't get the GIC driver to nuke all of this at
->>>> probe time?
->>
->> Is it just enough to remove kexec_mask_interrupts() and add gic_eoi_irq()
->> at the beginning of gic_cpu_init() in irq-gic.c and irq-gic-v3.c?
->
-> No, doing an EOI is definitely the wrong thing to do. If you do it in
-> the wrong order, you just screw up the GIC state machine. Plus, you have
-> no idea what to write there...
->
-> The only real solution is to zero the "active" registers.
->
->>> This feels like the better option. I can cook a patch or two for that.
->>
->> If you do, that will be much better :)
->
-> OK, I'll prepare something that we can merge at the same time kexec
-> comes back from the dead (if it ever does - I'm not holding my breath).
+On Thu 06-08-15 14:45:43, Hidehiro Kawai wrote:
+> When an HA cluster software or administrator detects non-response
+> of a host, they issue an NMI to the host to completely stop current
+> works and take a crash dump.  If the kernel has already panicked
+> or is capturing a crash dump at that time, further NMI can cause
+> a crash dump failure.
+> 
+> Also, crash_kexec() called from oops context and panic() can
+> cause race conditions.
+> 
+> To solve these issue, this patch set does following things:
+> 
+> - Don't panic on NMI if the kernel has already panicked
+> - Extend exclusion control currently done by panic_lock to crash_kexec
+> - Introduce "noextnmi" boot option which masks external NMI at the
+>   boot time (supported only for x86)
+> 
+> V3:
+> - Introduce nmi_panic() macro to reduce code duplication
+> - In the case of panic on NMI, don't return from NMI handlers
+>   if another cpu already panicked
+> 
+> V2:
+> - Use atomic_cmpxchg() instead of current spin_trylock() to exclude
+>   concurrent accesses to panic() and crash_kexec()
+> - Don't introduce no-lock version of panic() and crash_kexec()
+> 
+> ---
+> 
+> Hidehiro Kawai (4):
+>       panic/x86: Fix re-entrance problem due to panic on NMI
+>       panic/x86: Allow cpus to save registers even if they are looping in NMI context
+>       kexec: Fix race between panic() and crash_kexec() called directly
+>       x86/apic: Introduce noextnmi boot option
+> 
+> 
+>  Documentation/kernel-parameters.txt |    4 ++++
+>  arch/x86/kernel/apic/apic.c         |   17 ++++++++++++++++-
+>  arch/x86/kernel/nmi.c               |   15 +++++++++++----
+>  arch/x86/kernel/reboot.c            |   11 +++++++++++
+>  include/linux/kernel.h              |   21 +++++++++++++++++++++
+>  kernel/kexec.c                      |   20 ++++++++++++++++++++
+>  kernel/panic.c                      |   23 ++++++++++++++++++++---
+>  kernel/watchdog.c                   |    5 +++--
+>  8 files changed, 106 insertions(+), 10 deletions(-)
+> 
+> 
+> -- 
+> Hidehiro Kawai
+> Hitachi, Ltd. Research & Development Group
+> 
+> 
 
-Thank you.
-Please note that the same function, machine_kexec_mask_interrupts(),
-is already there on arm(/kernel/machine_kexec.c).
-
-Well, kexec/kdump stuff is not dead.
-Hopefully I and Geoff will submit a full series of patchset in a few weeks
-although the main logic will be the same.
-
->>
->> BTW, in arm-gic-v3.h, GICD_CTRL_ARE_NS is defined as
->>       (1U << 4)
->> but should it be 5?
->> (I'm referring to the page 8-415 in IHI0069A.)
->
-> No, look at the definition ARE_NS has when the access is non-secure or
-> on a system supporting a single security state. The definition you're
-> referring to is for a secure access (firmware).
-
-Aha, I should remember that arm has "multiple personalities."
-
--Takahiro AKASHI
-
-> Thanks,
->
-> 	M.
->
+-- 
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
