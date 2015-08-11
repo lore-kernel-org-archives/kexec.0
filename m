@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOyZl-0003Ng-Oe
- for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:02 +0000
+ id 1ZOyZn-0003Ng-Fj
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:05 +0000
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cUo2001070
- for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:30 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cVMs001075
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:31 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v5 08/10] Initial and free data used for parallel process
-Date: Tue, 11 Aug 2015 09:35:20 +0800
-Message-ID: <1439256922-8781-9-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v5 09/10] Make makedumpfile available to read and compress
+ pages parallelly
+Date: Tue, 11 Aug 2015 09:35:21 +0800
+Message-ID: <1439256922-8781-10-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,248 +32,155 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-This patch is used to initial/free data for parallel process and
-the memory limit is concerned in this function.
+Using this patch, it is available to use multiple threads to read
+and compress pages. This parallel process will save time.
+
+Currently, sadump and xen kdump is not supported.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- makedumpfile.c | 202 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |   1 +
- 2 files changed, 203 insertions(+)
+ makedumpfile.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ makedumpfile.h |  1 +
+ 2 files changed, 63 insertions(+), 2 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index a1d1148..cd423e6 100644
+index cd423e6..385bb67 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -1432,6 +1432,23 @@ open_dump_bitmap(void)
- 			SPLITTING_FD_BITMAP(i) = fd;
- 		}
+@@ -3857,6 +3857,27 @@ out:
+ 		DEBUG_MSG("Buffer size for the cyclic mode: %ld\n", info->bufsize_cyclic);
  	}
-+
+ 
 +	if (info->num_threads) {
-+		/*
-+		 * Reserve file descriptors of bitmap for creating dumpfiles
-+		 * parallelly, because a bitmap file will be unlinked just after
-+		 * this and it is not possible to open a bitmap file later.
-+		 */
-+		for (i = 0; i < info->num_threads; i++) {
-+			if ((fd = open(info->name_bitmap, O_RDONLY)) < 0) {
-+				ERRMSG("Can't open the bitmap file(%s). %s\n",
-+				    info->name_bitmap, strerror(errno));
-+				return FALSE;
-+			}
-+			FD_BITMAP_PARALLEL(i) = fd;
++		if (is_xen_memory()) {
++			MSG("'--num-threads' option is disable,\n");
++			MSG("because %s is Xen's memory core image.\n",
++							info->name_memory);
++			return FALSE;
++		}
++
++		if (info->flag_sadump) {
++			MSG("'--num-threads' option is disable,\n");
++			MSG("because %s is sadump %s format.\n",
++			    info->name_memory, sadump_format_type_name());
++			return FALSE;
++		}
++
++		if (!initial_for_parallel()) {
++			MSG("Fail to initial for parallel process.\n");
++			return FALSE;
 +		}
 +	}
 +
- 	unlink(info->name_bitmap);
+ 	if (!is_xen_memory() && !cache_init())
+ 		return FALSE;
  
+@@ -7896,9 +7917,16 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 		if (!write_kdump_bitmap2(&cycle))
+ 			return FALSE;
+ 
+-		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
++		if (info->num_threads) {
++			if (!write_kdump_pages_parallel_cyclic(cd_header,
++							cd_page, &pd_zero,
++							&offset_data, &cycle))
++				return FALSE;
++		} else {
++			if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
+ 					&offset_data, &cycle))
+-			return FALSE;
++				return FALSE;
++		}
+ 	}
+ 	free_bitmap2_buffer();
+ 
+@@ -9865,6 +9893,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 	if (info->flag_sadump_diskset && !sadump_is_supported_arch())
+ 		return FALSE;
+ 
++	if (info->num_threads) {
++		if (info->flag_split) {
++			MSG("--num-threads cannot used with --split.\n");
++			return FALSE;
++		}
++
++		if (info->flag_elf_dumpfile) {
++			MSG("--num-threads cannot used with ELF format.\n");
++			return FALSE;
++		}
++	}
++
+ 	if ((argc == optind + 2) && !info->flag_flatten
+ 				 && !info->flag_split
+ 				 && !info->flag_sadump_diskset) {
+@@ -9929,6 +9969,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+ 	} else
+ 		return FALSE;
+ 
++	if (info->num_threads) {
++		if ((info->parallel_info =
++		     malloc(sizeof(parallel_info_t) * info->num_threads))
++		    == NULL) {
++			MSG("Can't allocate memory for parallel_info.\n");
++			return FALSE;
++		}
++
++		memset(info->parallel_info, 0, sizeof(parallel_info_t)
++							* info->num_threads);
++	}
++
  	return TRUE;
-@@ -3459,6 +3476,191 @@ calibrate_machdep_info(void)
  }
  
- int
-+initial_for_parallel()
-+{
-+	unsigned long len_buf_out;
-+	unsigned long page_data_buf_size;
-+	unsigned long limit_size;
-+	int page_data_num;
-+	int i;
+@@ -10245,6 +10297,7 @@ static struct option longopts[] = {
+ 	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
+ 	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
+ 	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
++	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
+ 	{0, 0, 0, 0}
+ };
+ 
+@@ -10389,6 +10442,9 @@ main(int argc, char *argv[])
+ 		case OPT_WORKING_DIR:
+ 			info->working_dir = optarg;
+ 			break;
++		case OPT_NUM_THREADS:
++			info->num_threads = MAX(atoi(optarg), 0);
++			break;
+ 		case '?':
+ 			MSG("Commandline parameter is invalid.\n");
+ 			MSG("Try `makedumpfile --help' for more information.\n");
+@@ -10532,6 +10588,8 @@ out:
+ 	else if (!info->flag_mem_usage)
+ 		MSG("makedumpfile Completed.\n");
+ 
++	free_for_parallel();
 +
-+	len_buf_out = calculate_len_buf_out(info->page_size);
-+
-+	/*
-+	 * allocate memory for threads
-+	 */
-+	if ((info->threads = malloc(sizeof(pthread_t *) * info->num_threads))
-+	    == NULL) {
-+		MSG("Can't allocate memory for threads. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->threads, 0, sizeof(pthread_t *) * info->num_threads);
-+
-+	if ((info->kdump_thread_args =
-+			malloc(sizeof(struct thread_args) * info->num_threads))
-+	    == NULL) {
-+		MSG("Can't allocate memory for arguments of threads. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->kdump_thread_args, 0, sizeof(struct thread_args) * info->num_threads);
-+
-+	for (i = 0; i < info->num_threads; i++) {
-+		if ((info->threads[i] = malloc(sizeof(pthread_t))) == NULL) {
-+			MSG("Can't allocate memory for thread %d. %s",
-+					i, strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((BUF_PARALLEL(i) = malloc(info->page_size)) == NULL) {
-+			MSG("Can't allocate memory for the memory buffer. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((BUF_OUT_PARALLEL(i) = malloc(len_buf_out)) == NULL) {
-+			MSG("Can't allocate memory for the compression buffer. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((MMAP_CACHE_PARALLEL(i) = malloc(sizeof(struct mmap_cache))) == NULL) {
-+			MSG("Can't allocate memory for mmap_cache. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+
-+		/*
-+		 * initial for mmap_cache
-+		 */
-+		MMAP_CACHE_PARALLEL(i)->mmap_buf = MAP_FAILED;
-+		MMAP_CACHE_PARALLEL(i)->mmap_start_offset = 0;
-+		MMAP_CACHE_PARALLEL(i)->mmap_end_offset = 0;
-+
-+#ifdef USELZO
-+		if ((WRKMEM_PARALLEL(i) = malloc(LZO1X_1_MEM_COMPRESS)) == NULL) {
-+			MSG("Can't allocate memory for the working memory. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+#endif
-+	}
-+
-+	/*
-+	 * get a safe number of page_data
-+	 */
-+	page_data_buf_size = MAX(len_buf_out, info->page_size);
-+
-+	limit_size = (get_free_memory_size()
-+		      - MAP_REGION * info->num_threads) * 0.6;
-+
-+	page_data_num = limit_size / page_data_buf_size;
-+
-+	info->num_buffers = MIN(NUM_BUFFERS, page_data_num);
-+
-+	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
-+			info->num_buffers);
-+
-+	/*
-+	 * allocate memory for page_data
-+	 */
-+	if ((info->page_data_buf = malloc(sizeof(struct page_data) * info->num_buffers))
-+	    == NULL) {
-+		MSG("Can't allocate memory for page_data_buf. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->page_data_buf, 0, sizeof(struct page_data) * info->num_buffers);
-+
-+	for (i = 0; i < info->num_buffers; i++) {
-+		if ((info->page_data_buf[i].buf = malloc(page_data_buf_size)) == NULL) {
-+			MSG("Can't allocate memory for buf of page_data_buf. %s\n",
-+					strerror(errno));
-+			return FALSE;
-+		}
-+	}
-+
-+	/*
-+	 * initial fd_memory for threads
-+	 */
-+	for (i = 0; i < info->num_threads; i++) {
-+		if ((FD_MEMORY_PARALLEL(i) = open(info->name_memory, O_RDONLY))
-+									< 0) {
-+			ERRMSG("Can't open the dump memory(%s). %s\n",
-+					info->name_memory, strerror(errno));
-+			return FALSE;
-+		}
-+
-+		if ((FD_BITMAP_MEMORY_PARALLEL(i) =
-+				open(info->name_memory, O_RDONLY)) < 0) {
-+			ERRMSG("Can't open the dump memory(%s). %s\n",
-+					info->name_memory, strerror(errno));
-+			return FALSE;
-+		}
-+	}
-+
-+	return TRUE;
-+}
-+
-+void
-+free_for_parallel()
-+{
-+	int i;
-+
-+	if (info->threads != NULL) {
-+		for (i = 0; i < info->num_threads; i++) {
-+			if (info->threads[i] != NULL)
-+				free(info->threads[i]);
-+
-+			if (BUF_PARALLEL(i) != NULL)
-+				free(BUF_PARALLEL(i));
-+
-+			if (BUF_OUT_PARALLEL(i) != NULL)
-+				free(BUF_OUT_PARALLEL(i));
-+
-+			if (MMAP_CACHE_PARALLEL(i) != NULL) {
-+				if (MMAP_CACHE_PARALLEL(i)->mmap_buf !=
-+								MAP_FAILED)
-+					munmap(MMAP_CACHE_PARALLEL(i)->mmap_buf,
-+					       MMAP_CACHE_PARALLEL(i)->mmap_end_offset
-+					       - MMAP_CACHE_PARALLEL(i)->mmap_start_offset);
-+
-+				free(MMAP_CACHE_PARALLEL(i));
-+			}
-+#ifdef USELZO
-+			if (WRKMEM_PARALLEL(i) != NULL)
-+				free(WRKMEM_PARALLEL(i));
-+#endif
-+
-+		}
-+		free(info->threads);
-+	}
-+
-+	if (info->kdump_thread_args != NULL)
-+		free(info->kdump_thread_args);
-+
-+	if (info->page_data_buf != NULL) {
-+		for (i = 0; i < info->num_buffers; i++) {
-+			if (info->page_data_buf[i].buf != NULL)
-+				free(info->page_data_buf[i].buf);
-+		}
-+		free(info->page_data_buf);
-+	}
-+
-+	if (info->parallel_info == NULL)
-+		return;
-+
-+	for (i = 0; i < info->num_threads; i++) {
-+		if (FD_MEMORY_PARALLEL(i) > 0)
-+			close(FD_MEMORY_PARALLEL(i));
-+
-+		if (FD_BITMAP_MEMORY_PARALLEL(i) > 0)
-+			close(FD_BITMAP_MEMORY_PARALLEL(i));
-+	}
-+}
-+
-+int
- initial(void)
- {
- 	off_t offset;
+ 	if (info) {
+ 		if (info->dh_memory)
+ 			free(info->dh_memory);
+@@ -10559,6 +10617,8 @@ out:
+ 			free(info->p2m_mfn_frame_list);
+ 		if (info->page_buf != NULL)
+ 			free(info->page_buf);
++		if (info->parallel_info != NULL)
++			free(info->parallel_info);
+ 		free(info);
+ 
+ 		if (splitblock) {
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 7f9773a..1f5bd7f 100644
+index 1f5bd7f..3cd24c5 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -972,6 +972,7 @@ typedef unsigned long long int ulonglong;
-  * for parallel process
-  */
+@@ -2033,6 +2033,7 @@ struct elf_prstatus {
+ #define OPT_MEM_USAGE           OPT_START+13
+ #define OPT_SPLITBLOCK_SIZE	OPT_START+14
+ #define OPT_WORKING_DIR         OPT_START+15
++#define OPT_NUM_THREADS	OPT_START+16
  
-+#define PAGE_DATA_NUM	(50)
- #define WAIT_TIME	(60 * 10)
- #define PTHREAD_FAIL	((void *)-2)
- #define NUM_BUFFERS	(50)
+ /*
+  * Function Prototype.
 -- 
 1.8.3.1
 
