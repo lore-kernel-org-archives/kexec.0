@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOyZp-0003Ng-Us
- for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:06 +0000
+ id 1ZOyZv-0003OT-Ri
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:12 +0000
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cWdL001078
- for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:32 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cRc3001055
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:27 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v5 10/10] Add usage and manual about multiple threads process
-Date: Tue, 11 Aug 2015 09:35:22 +0800
-Message-ID: <1439256922-8781-11-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v5 04/10] Add read_pfn_parallel
+Date: Tue, 11 Aug 2015 09:35:16 +0800
+Message-ID: <1439256922-8781-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,72 +31,74 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
-Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
----
- makedumpfile.8 | 13 +++++++++++++
- print_info.c   | 10 ++++++++++
- 2 files changed, 23 insertions(+)
+read_pfn_parallel is used to enable reading pages from vmcore parallely.
+Current supported format is kdump-compressed and elf, mmap elf format
+is also supported.
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 2d38cd0..155cc4c 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -12,6 +12,8 @@ makedumpfile \- make a small dumpfile of kdump
- .br
- \fBmakedumpfile\fR \-\-split [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..]
- .br
-+\fBmakedumpfile\fR [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \-\-num\-threads \fITHREADNUM\fR \fIVMCORE\fR \fIDUMPFILE\fR
-+.br
- \fBmakedumpfile\fR \-\-reassemble \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..] \fIDUMPFILE\fR
- .br
- \fBmakedumpfile\fR \-g \fIVMCOREINFO\fR \-x \fIVMLINUX\fR
-@@ -371,6 +373,17 @@ the kdump\-compressed format.
- # makedumpfile \-\-split \-d 31 \-x vmlinux /proc/vmcore dumpfile1 dumpfile2
+Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
+---
+ Makefile       |  2 ++
+ makedumpfile.c | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+
+diff --git a/Makefile b/Makefile
+index fc21a3f..b1daf5b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -67,6 +67,8 @@ LIBS := -lsnappy $(LIBS)
+ CFLAGS += -DUSESNAPPY
+ endif
  
- .TP
-+\fB\-\-num\-threads\fR \fITHREADNUM\fR
-+Using multiple threads to read and compress data of each page in parallel.
-+And it will reduces time for saving \fIDUMPFILE\fR.
-+This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
-+format from \fIVMCORE\fR in kdump\-compressed format or elf format.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
++LIBS := -lpthread $(LIBS)
 +
-+.TP
- \fB\-\-reassemble\fR
- Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
- into one \fIDUMPFILE\fR. dumpfile1 and dumpfile2 are reassembled into dumpfile
-diff --git a/print_info.c b/print_info.c
-index 9c36bec..ed4451c 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -76,6 +76,10 @@ print_usage(void)
- 	MSG("  # makedumpfile --split [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE1\n");
- 	MSG("    DUMPFILE2 [DUMPFILE3 ..]\n");
- 	MSG("\n");
-+	MSG("  Using multiple threads to create DUMPFILE in parallel:\n");
-+	MSG("  # makedumpfile [OPTION] [-x VMLINUX|-i VMCOREINFO] --num-threads THREADNUM\n");
-+	MSG("    VMCORE DUMPFILE1\n");
-+	MSG("\n");
- 	MSG("  Reassemble multiple DUMPFILEs:\n");
- 	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\n");
- 	MSG("\n");
-@@ -184,6 +188,12 @@ print_usage(void)
- 	MSG("      by the number of DUMPFILEs.\n");
- 	MSG("      This feature supports only the kdump-compressed format.\n");
- 	MSG("\n");
-+	MSG("  [--num-threads THREADNUM]:\n");
-+	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
-+	MSG("      And it will reduces time for saving DUMPFILE.\n");
-+	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
-+	MSG("      VMCORE in kdump-compressed format or elf format.\n");
-+	MSG("\n");
- 	MSG("  [--reassemble]:\n");
- 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
- 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
+ all: makedumpfile
+ 
+ $(OBJ_PART): $(SRC_PART)
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 44c78b4..e15855b 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6349,6 +6349,40 @@ read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+ }
+ 
+ int
++read_pfn_parallel(int fd_memory, mdf_pfn_t pfn, unsigned char *buf,
++		  struct dump_bitmap* bitmap_memory_parallel,
++		  struct mmap_cache *mmap_cache)
++{
++	unsigned long long paddr;
++	unsigned long long pgaddr;
++
++	paddr = pfn_to_paddr(pfn);
++
++	pgaddr = PAGEBASE(paddr);
++
++	if (info->flag_refiltering) {
++		if (!readpage_kdump_compressed_parallel(fd_memory, pgaddr, buf,
++						      bitmap_memory_parallel)) {
++			ERRMSG("Can't get the page data.\n");
++			return FALSE;
++		}
++	} else {
++		char *mapbuf = mappage_elf_parallel(fd_memory, pgaddr,
++						    mmap_cache);
++		if (mapbuf) {
++			memcpy(buf, mapbuf, info->page_size);
++		} else {
++			if (!readpage_elf_parallel(fd_memory, pgaddr, buf)) {
++				ERRMSG("Can't get the page data.\n");
++				return FALSE;
++			}
++		}
++	}
++
++	return TRUE;
++}
++
++int
+ get_loads_dumpfile_cyclic(void)
+ {
+ 	int i, phnum, num_new_load = 0;
 -- 
 1.8.3.1
 
