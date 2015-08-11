@@ -1,29 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e17.ny.us.ibm.com ([129.33.205.207])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOVkf-0004UN-Qw
- for kexec@lists.infradead.org; Sun, 09 Aug 2015 18:55:23 +0000
-Received: from /spool/local
- by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <schwidefsky@de.ibm.com>;
- Sun, 9 Aug 2015 14:54:59 -0400
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com
- [9.57.198.26])
- by d01dlp01.pok.ibm.com (Postfix) with ESMTP id BFA1138C8039
- for <kexec@lists.infradead.org>; Sun,  9 Aug 2015 14:54:56 -0400 (EDT)
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
- by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t79IsuOG36569234
- for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 18:54:56 GMT
-Received: from d01av02.pok.ibm.com (localhost [127.0.0.1])
- by d01av02.pok.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t79Isuve028323
- for <kexec@lists.infradead.org>; Sun, 9 Aug 2015 14:54:56 -0400
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH] kexec: override GFP flag for the control page allocation
-Date: Tue, 21 Apr 2015 14:06:31 +0200
-Message-Id: <1429617992-31686-1-git-send-email-schwidefsky@de.ibm.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZOyZa-0003Ng-C5
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:41:50 +0000
+Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
+ [127.0.0.1])
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cOrv001042
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:24 +0800
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v5 00/10] makedumpfile: parallel processing
+Date: Tue, 11 Aug 2015 09:35:12 +0800
+Message-ID: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,47 +20,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-arch@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-Greetings,
+v4->v5:
+	1.fix a bug occurring with invalid option
 
-I got a bug report that kexec does not work on s390 if the system has
-lots of memory. It is the kexec load step that dies with out-of-memory. 
+v3->v4:
+	1.remove the option --num-buffers
+	2.remove the strange code
 
-The reason why this happens is the value of KEXEC_CONTROL_MEMORY_LIMIT
-for s390. To start the new kernel the code in the kexec control page
-needs to switch to the ESA mode (31-bit), therefore the memory limit
-is 2GB for s390. The allocation of the control page is done with
-GFP_KERNEL in kimage_alloc_normal_control_pages. If the allocated page
-is a target page in the kexec destination range or if its address is
-larger than the memory limit, it is put on the list of extra pages
-and another page is allocated until one is found that fits the
-requirements.
+v2->v3:
+	1.add strange code to optimize performance
 
-With a large memory size not only does this loop take a long time to
-complete (think 10 terabyte of memory), but eventually the OOM killer
-steps in and terminates the program that called kexec load.
+v1->v2:
+	1.change the logic to optimize performance
 
-The fix for s390 is to use a different GFP flag, GFP_DMA instead of
-GFP_KERNEL. To do this a new #define for kexec is introduced that
-can be overruled by the architecture.
+This patch set implements parallel processing by means of multiple threads.
+With this patch set, it is available to use multiple threads to read
+and compress pages. This parallel process will save time.
+This feature only supports creating dumpfile in kdump-compressed format from
+vmcore in kdump-compressed format or elf format. Currently, sadump and
+ xen kdump are not supported.
 
-Martin Schwidefsky (1):
-  kexec: allocate the kexec control page with KEXEC_CONTROL_MEMORY_GFP
+Qiao Nuohan (10):
+  Add readpage_kdump_compressed_parallel
+  Add mappage_elf_parallel
+  Add readpage_elf_parallel
+  Add read_pfn_parallel
+  Add function to initial bitmap for parallel use
+  Add filter_data_buffer_parallel
+  Add write_kdump_pages_parallel to allow parallel process
+  Initial and free data used for parallel process
+  Make makedumpfile available to read and compress pages parallelly
+  Add usage and manual about multiple threads process
 
- arch/s390/include/asm/kexec.h | 3 +++
- include/linux/kexec.h         | 4 ++++
- kernel/kexec.c                | 2 +-
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ Makefile       |    2 +
+ erase_info.c   |   29 +-
+ erase_info.h   |    2 +
+ makedumpfile.8 |   13 +
+ makedumpfile.c | 1096 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ makedumpfile.h |   80 +++++
+ print_info.c   |   10 +
+ 7 files changed, 1222 insertions(+), 10 deletions(-)
 
 -- 
-1.9.1
+1.8.3.1
 
 
 _______________________________________________
