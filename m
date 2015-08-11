@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZP4ND-0005lw-6G
- for kexec@lists.infradead.org; Tue, 11 Aug 2015 07:53:28 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH v5 00/10] makedumpfile: parallel processing
-Date: Tue, 11 Aug 2015 07:51:15 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DE2379@BPXM01GP.gisp.nec.co.jp>
-References: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Content-Language: ja-JP
+ id 1ZP4QF-00087w-Pl
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 07:56:36 +0000
+Date: Tue, 11 Aug 2015 16:01:08 +0800
+From: Minfei Huang <mhuang@redhat.com>
+Subject: Re: [Patch v2] align crash_notes allocation to make it be inside one
+ physical page
+Message-ID: <20150811080108.GA2404@dhcp-128-25.nay.redhat.com>
+References: <1438606243-13064-1-git-send-email-bhe@redhat.com>
+ <20150803150417.b3536887b1ad86ae04c405b7@linux-foundation.org>
+ <20150811063333.GB9748@dhcp-17-102.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150811063333.GB9748@dhcp-17-102.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,65 +26,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tatsu@ab.jp.nec.com, lisa.mitchell@hp.com, seiji.aguchi.tr@hitachi.com, Andrew Morton <akpm@linux-foundation.org>, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com
 
-Hello Zhou,
+On 08/11/15 at 02:33pm, Baoquan He wrote:
+> Hi Andrew,
+> 
+> On 08/03/15 at 03:04pm, Andrew Morton wrote:
+> > On Mon,  3 Aug 2015 20:50:43 +0800 Baoquan He <bhe@redhat.com> wrote:
+> > And I think the WARN_ON can be replaced with a
+> > BUILD_BUG_ON(sizeof>PAGE_SIZE)?  That would avoid adding runtime
+> > overhead.
+> 
+> Rethink about this, you are right. Using BUILD_BUG_ON is better.
+> Anyone who found this compiling break should check if his/her code
+> changes increase the crash_notes size. If possible that increase need be
+> avoidable. Otherwise he should report this to upstream why it's
+> unavoidable to increase crash_notes size, then let's consider the
+> redesign the crash_notes data structure. 
+> 
+> So I will use BUILD_BUG_ON and repost.
 
-Thanks for your hard work, I'll merge this version into v1.5.9.
+Baoquan.
 
-Regards,
-Atsushi Kumagai
+If the size of notes never be exceeded to PAGE_SIZE, I think we can
+revert below patch, since the situation which describes in patch does
+not happen.
 
->v4->v5:
->	1.fix a bug occurring with invalid option
->
->v3->v4:
->	1.remove the option --num-buffers
->	2.remove the strange code
->
->v2->v3:
->	1.add strange code to optimize performance
->
->v1->v2:
->	1.change the logic to optimize performance
->
->This patch set implements parallel processing by means of multiple threads.
->With this patch set, it is available to use multiple threads to read
->and compress pages. This parallel process will save time.
->This feature only supports creating dumpfile in kdump-compressed format from
->vmcore in kdump-compressed format or elf format. Currently, sadump and
-> xen kdump are not supported.
->
->Qiao Nuohan (10):
->  Add readpage_kdump_compressed_parallel
->  Add mappage_elf_parallel
->  Add readpage_elf_parallel
->  Add read_pfn_parallel
->  Add function to initial bitmap for parallel use
->  Add filter_data_buffer_parallel
->  Add write_kdump_pages_parallel to allow parallel process
->  Initial and free data used for parallel process
->  Make makedumpfile available to read and compress pages parallelly
->  Add usage and manual about multiple threads process
->
-> Makefile       |    2 +
-> erase_info.c   |   29 +-
-> erase_info.h   |    2 +
-> makedumpfile.8 |   13 +
-> makedumpfile.c | 1096 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> makedumpfile.h |   80 +++++
-> print_info.c   |   10 +
-> 7 files changed, 1222 insertions(+), 10 deletions(-)
->
->--
->1.8.3.1
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+    commit 38dfac843cb6d7be1874888839817404a15a6b3c
+    Author: Greg Pearson <greg.pearson@hp.com>
+    Date:   Mon Feb 10 14:25:36 2014 -0800
+    
+        vmcore: prevent PT_NOTE p_memsz overflow during header update
+
+What do you think about this?
+
+Thanks
+Minfei
 
 _______________________________________________
 kexec mailing list
