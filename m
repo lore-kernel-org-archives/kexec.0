@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOyZc-0003Ng-TQ
- for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:41:54 +0000
+ id 1ZOyZg-0003Ng-2K
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:41:58 +0000
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cQbP001052
- for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:26 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cS5P001064
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:28 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v5 03/10] Add readpage_elf_parallel
-Date: Tue, 11 Aug 2015 09:35:15 +0800
-Message-ID: <1439256922-8781-4-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v5 06/10] Add filter_data_buffer_parallel
+Date: Tue, 11 Aug 2015 09:35:18 +0800
+Message-ID: <1439256922-8781-7-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,131 +31,75 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-readpage_elf_parallel is used to enable reading pages from elf format
-parallelly. fd_memory should be initialize and offered  to each threads
-individually to avoid conflict.
+filter_data_buffer_parallel is used to enable filtering buffer
+parallely.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- makedumpfile.c | 98 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ erase_info.c | 29 ++++++++++++++++++++++++++++-
+ erase_info.h |  2 ++
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index d1b4bc2..44c78b4 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -575,6 +575,27 @@ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
+diff --git a/erase_info.c b/erase_info.c
+index e0e0f71..0b253d7 100644
+--- a/erase_info.c
++++ b/erase_info.c
+@@ -2328,7 +2328,6 @@ extract_filter_info(unsigned long long start_paddr,
  	return TRUE;
  }
  
-+static int
-+read_from_vmcore_parallel(int fd_memory, off_t offset, void *bufptr,
-+			  unsigned long size)
-+{
-+	const off_t failed = (off_t)-1;
-+
-+	if (lseek(fd_memory, offset, SEEK_SET) == failed) {
-+		ERRMSG("Can't seek the dump memory(%s). (offset: %llx) %s\n",
-+		       info->name_memory, (unsigned long long)offset, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	if (read(fd_memory, bufptr, size) != size) {
-+		ERRMSG("Can't read the dump memory(%s). %s\n",
-+		       info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
+-
  /*
-  * This function is specific for reading page from ELF.
-  *
-@@ -669,6 +690,83 @@ readpage_elf(unsigned long long paddr, void *bufptr)
+  * External functions.
+  */
+@@ -2413,6 +2412,34 @@ filter_data_buffer(unsigned char *buf, unsigned long long paddr,
+ 	}
  }
  
- static int
-+readpage_elf_parallel(int fd_memory, unsigned long long paddr, void *bufptr)
++/*
++ * Filter buffer if the physical address is in filter_info.
++ */
++void
++filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
++					size_t size, pthread_mutex_t *mutex)
 +{
-+	off_t offset1, offset2;
-+	size_t size1, size2;
-+	unsigned long long phys_start, phys_end, frac_head = 0;
++	struct filter_info fl_info;
++	unsigned char *buf_ptr;
++	int found = FALSE;
 +
-+	offset1 = paddr_to_offset(paddr);
-+	offset2 = paddr_to_offset(paddr + info->page_size);
-+	phys_start = paddr;
-+	phys_end = paddr + info->page_size;
++	while (TRUE) {
++		pthread_mutex_lock(mutex);
++		found = extract_filter_info(paddr, paddr + size, &fl_info);
++		pthread_mutex_unlock(mutex);
 +
-+	/*
-+	 * Check the case phys_start isn't aligned by page size like below:
-+	 *
-+	 *                           phys_start
-+	 *                           = 0x40ffda7000
-+	 *         |<-- frac_head -->|------------- PT_LOAD -------------
-+	 *     ----+-----------------------+---------------------+----
-+	 *         |         pfn:N         |       pfn:N+1       | ...
-+	 *     ----+-----------------------+---------------------+----
-+	 *         |
-+	 *     pfn_to_paddr(pfn:N)               # page size = 16k
-+	 *     = 0x40ffda4000
-+	 */
-+	if (!offset1) {
-+		phys_start = page_head_to_phys_start(paddr);
-+		offset1 = paddr_to_offset(phys_start);
-+		frac_head = phys_start - paddr;
-+		memset(bufptr, 0, frac_head);
-+	}
-+
-+	/*
-+	 * Check the case phys_end isn't aligned by page size like the
-+	 * phys_start's case.
-+	 */
-+	if (!offset2) {
-+		phys_end = page_head_to_phys_end(paddr);
-+		offset2 = paddr_to_offset(phys_end);
-+		memset(bufptr + (phys_end - paddr), 0, info->page_size
-+							- (phys_end - paddr));
-+	}
-+
-+	/*
-+	 * Check the separated page on different PT_LOAD segments.
-+	 */
-+	if (offset1 + (phys_end - phys_start) == offset2) {
-+		size1 = phys_end - phys_start;
-+	} else {
-+		for (size1 = 1; size1 < info->page_size - frac_head; size1++) {
-+			offset2 = paddr_to_offset(phys_start + size1);
-+			if (offset1 + size1 != offset2)
-+				break;
++		if (found) {
++			buf_ptr = buf + (fl_info.paddr - paddr);
++			if (fl_info.nullify)
++				memset(buf_ptr, 0, fl_info.size);
++			else
++				memset(buf_ptr, fl_info.erase_ch, fl_info.size);
++		} else {
++			break;
 +		}
 +	}
-+
-+	if(!read_from_vmcore_parallel(fd_memory, offset1, bufptr + frac_head,
-+								size1)) {
-+		ERRMSG("Can't read the dump memory(%s).\n",
-+		       info->name_memory);
-+		return FALSE;
-+	}
-+
-+	if (size1 + frac_head != info->page_size) {
-+		size2 = phys_end - (phys_start + size1);
-+
-+		if(!read_from_vmcore_parallel(fd_memory, offset2,
-+					bufptr + frac_head + size1, size2)) {
-+			ERRMSG("Can't read the dump memory(%s).\n",
-+			       info->name_memory);
-+			return FALSE;
-+		}
-+	}
-+
-+	return TRUE;
 +}
 +
-+static int
- readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+ unsigned long
+ get_size_eraseinfo(void)
  {
- 	page_desc_t pd;
+diff --git a/erase_info.h b/erase_info.h
+index 4d4957e..b363a40 100644
+--- a/erase_info.h
++++ b/erase_info.h
+@@ -60,6 +60,8 @@ extern unsigned long		num_erase_info;
+ int gather_filter_info(void);
+ void clear_filter_info(void);
+ void filter_data_buffer(unsigned char *buf, unsigned long long paddr, size_t size);
++void filter_data_buffer_parallel(unsigned char *buf, unsigned long long paddr,
++					size_t size, pthread_mutex_t *mutex);
+ unsigned long get_size_eraseinfo(void);
+ int update_filter_info_raw(unsigned long long, int, int);
+ 
 -- 
 1.8.3.1
 
