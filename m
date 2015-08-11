@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOyZn-0003Ng-Fj
- for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:05 +0000
+ id 1ZOyZp-0003Ng-Us
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:06 +0000
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cVMs001075
- for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:31 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cWdL001078
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:32 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v5 09/10] Make makedumpfile available to read and compress
- pages parallelly
-Date: Tue, 11 Aug 2015 09:35:21 +0800
-Message-ID: <1439256922-8781-10-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v5 10/10] Add usage and manual about multiple threads process
+Date: Tue, 11 Aug 2015 09:35:22 +0800
+Message-ID: <1439256922-8781-11-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -32,155 +31,72 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-Using this patch, it is available to use multiple threads to read
-and compress pages. This parallel process will save time.
-
-Currently, sadump and xen kdump is not supported.
-
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 Signed-off-by: Zhou wenjian <zhouwj-fnst@cn.fujitsu.com>
 ---
- makedumpfile.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- makedumpfile.h |  1 +
- 2 files changed, 63 insertions(+), 2 deletions(-)
+ makedumpfile.8 | 13 +++++++++++++
+ print_info.c   | 10 ++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index cd423e6..385bb67 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3857,6 +3857,27 @@ out:
- 		DEBUG_MSG("Buffer size for the cyclic mode: %ld\n", info->bufsize_cyclic);
- 	}
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 2d38cd0..155cc4c 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -12,6 +12,8 @@ makedumpfile \- make a small dumpfile of kdump
+ .br
+ \fBmakedumpfile\fR \-\-split [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..]
+ .br
++\fBmakedumpfile\fR [\fIOPTION\fR] [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \-\-num\-threads \fITHREADNUM\fR \fIVMCORE\fR \fIDUMPFILE\fR
++.br
+ \fBmakedumpfile\fR \-\-reassemble \fIDUMPFILE1\fR \fIDUMPFILE2\fR [\fIDUMPFILE3\fR ..] \fIDUMPFILE\fR
+ .br
+ \fBmakedumpfile\fR \-g \fIVMCOREINFO\fR \-x \fIVMLINUX\fR
+@@ -371,6 +373,17 @@ the kdump\-compressed format.
+ # makedumpfile \-\-split \-d 31 \-x vmlinux /proc/vmcore dumpfile1 dumpfile2
  
-+	if (info->num_threads) {
-+		if (is_xen_memory()) {
-+			MSG("'--num-threads' option is disable,\n");
-+			MSG("because %s is Xen's memory core image.\n",
-+							info->name_memory);
-+			return FALSE;
-+		}
+ .TP
++\fB\-\-num\-threads\fR \fITHREADNUM\fR
++Using multiple threads to read and compress data of each page in parallel.
++And it will reduces time for saving \fIDUMPFILE\fR.
++This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
++format from \fIVMCORE\fR in kdump\-compressed format or elf format.
++.br
++.B Example:
++.br
++# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
 +
-+		if (info->flag_sadump) {
-+			MSG("'--num-threads' option is disable,\n");
-+			MSG("because %s is sadump %s format.\n",
-+			    info->name_memory, sadump_format_type_name());
-+			return FALSE;
-+		}
-+
-+		if (!initial_for_parallel()) {
-+			MSG("Fail to initial for parallel process.\n");
-+			return FALSE;
-+		}
-+	}
-+
- 	if (!is_xen_memory() && !cache_init())
- 		return FALSE;
- 
-@@ -7896,9 +7917,16 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
- 		if (!write_kdump_bitmap2(&cycle))
- 			return FALSE;
- 
--		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
-+		if (info->num_threads) {
-+			if (!write_kdump_pages_parallel_cyclic(cd_header,
-+							cd_page, &pd_zero,
-+							&offset_data, &cycle))
-+				return FALSE;
-+		} else {
-+			if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero,
- 					&offset_data, &cycle))
--			return FALSE;
-+				return FALSE;
-+		}
- 	}
- 	free_bitmap2_buffer();
- 
-@@ -9865,6 +9893,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
- 	if (info->flag_sadump_diskset && !sadump_is_supported_arch())
- 		return FALSE;
- 
-+	if (info->num_threads) {
-+		if (info->flag_split) {
-+			MSG("--num-threads cannot used with --split.\n");
-+			return FALSE;
-+		}
-+
-+		if (info->flag_elf_dumpfile) {
-+			MSG("--num-threads cannot used with ELF format.\n");
-+			return FALSE;
-+		}
-+	}
-+
- 	if ((argc == optind + 2) && !info->flag_flatten
- 				 && !info->flag_split
- 				 && !info->flag_sadump_diskset) {
-@@ -9929,6 +9969,18 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
- 	} else
- 		return FALSE;
- 
-+	if (info->num_threads) {
-+		if ((info->parallel_info =
-+		     malloc(sizeof(parallel_info_t) * info->num_threads))
-+		    == NULL) {
-+			MSG("Can't allocate memory for parallel_info.\n");
-+			return FALSE;
-+		}
-+
-+		memset(info->parallel_info, 0, sizeof(parallel_info_t)
-+							* info->num_threads);
-+	}
-+
- 	return TRUE;
- }
- 
-@@ -10245,6 +10297,7 @@ static struct option longopts[] = {
- 	{"mem-usage", no_argument, NULL, OPT_MEM_USAGE},
- 	{"splitblock-size", required_argument, NULL, OPT_SPLITBLOCK_SIZE},
- 	{"work-dir", required_argument, NULL, OPT_WORKING_DIR},
-+	{"num-threads", required_argument, NULL, OPT_NUM_THREADS},
- 	{0, 0, 0, 0}
- };
- 
-@@ -10389,6 +10442,9 @@ main(int argc, char *argv[])
- 		case OPT_WORKING_DIR:
- 			info->working_dir = optarg;
- 			break;
-+		case OPT_NUM_THREADS:
-+			info->num_threads = MAX(atoi(optarg), 0);
-+			break;
- 		case '?':
- 			MSG("Commandline parameter is invalid.\n");
- 			MSG("Try `makedumpfile --help' for more information.\n");
-@@ -10532,6 +10588,8 @@ out:
- 	else if (!info->flag_mem_usage)
- 		MSG("makedumpfile Completed.\n");
- 
-+	free_for_parallel();
-+
- 	if (info) {
- 		if (info->dh_memory)
- 			free(info->dh_memory);
-@@ -10559,6 +10617,8 @@ out:
- 			free(info->p2m_mfn_frame_list);
- 		if (info->page_buf != NULL)
- 			free(info->page_buf);
-+		if (info->parallel_info != NULL)
-+			free(info->parallel_info);
- 		free(info);
- 
- 		if (splitblock) {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 1f5bd7f..3cd24c5 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -2033,6 +2033,7 @@ struct elf_prstatus {
- #define OPT_MEM_USAGE           OPT_START+13
- #define OPT_SPLITBLOCK_SIZE	OPT_START+14
- #define OPT_WORKING_DIR         OPT_START+15
-+#define OPT_NUM_THREADS	OPT_START+16
- 
- /*
-  * Function Prototype.
++.TP
+ \fB\-\-reassemble\fR
+ Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
+ into one \fIDUMPFILE\fR. dumpfile1 and dumpfile2 are reassembled into dumpfile
+diff --git a/print_info.c b/print_info.c
+index 9c36bec..ed4451c 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -76,6 +76,10 @@ print_usage(void)
+ 	MSG("  # makedumpfile --split [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE1\n");
+ 	MSG("    DUMPFILE2 [DUMPFILE3 ..]\n");
+ 	MSG("\n");
++	MSG("  Using multiple threads to create DUMPFILE in parallel:\n");
++	MSG("  # makedumpfile [OPTION] [-x VMLINUX|-i VMCOREINFO] --num-threads THREADNUM\n");
++	MSG("    VMCORE DUMPFILE1\n");
++	MSG("\n");
+ 	MSG("  Reassemble multiple DUMPFILEs:\n");
+ 	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\n");
+ 	MSG("\n");
+@@ -184,6 +188,12 @@ print_usage(void)
+ 	MSG("      by the number of DUMPFILEs.\n");
+ 	MSG("      This feature supports only the kdump-compressed format.\n");
+ 	MSG("\n");
++	MSG("  [--num-threads THREADNUM]:\n");
++	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
++	MSG("      And it will reduces time for saving DUMPFILE.\n");
++	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
++	MSG("      VMCORE in kdump-compressed format or elf format.\n");
++	MSG("\n");
+ 	MSG("  [--reassemble]:\n");
+ 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
+ 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
 -- 
 1.8.3.1
 
