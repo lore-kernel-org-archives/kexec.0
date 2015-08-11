@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZOyZv-0003OT-Ri
- for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:12 +0000
+ id 1ZOyZv-0003O5-Ri
+ for kexec@lists.infradead.org; Tue, 11 Aug 2015 01:42:13 +0000
 Received: from G08CNEXCHPEKD03.g08.fujitsu.local (localhost.localdomain
  [127.0.0.1])
- by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cRc3001055
- for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:27 +0800
+ by edo.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id t7B1cPT7001049
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2015 09:38:25 +0800
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v5 04/10] Add read_pfn_parallel
-Date: Tue, 11 Aug 2015 09:35:16 +0800
-Message-ID: <1439256922-8781-5-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v5 02/10] Add mappage_elf_parallel
+Date: Tue, 11 Aug 2015 09:35:14 +0800
+Message-ID: <1439256922-8781-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 In-Reply-To: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 References: <1439256922-8781-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -31,74 +31,178 @@ Cc: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
 From: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 
-read_pfn_parallel is used to enable reading pages from vmcore parallely.
-Current supported format is kdump-compressed and elf, mmap elf format
-is also supported.
+mappage_elf_parallel is used to enable mmaping elf format to memory
+parallelly. later patch will will use the mmapped memory to get data
+of each page. fd_memory and mmap_cache should be initialized and offered
+to each threads individually to avoid conflict.
 
 Signed-off-by: Qiao Nuohan <qiaonuohan@cn.fujitsu.com>
 ---
- Makefile       |  2 ++
- makedumpfile.c | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
+ makedumpfile.c | 97 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h | 14 +++++++++
+ 2 files changed, 111 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index fc21a3f..b1daf5b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -67,6 +67,8 @@ LIBS := -lsnappy $(LIBS)
- CFLAGS += -DUSESNAPPY
- endif
- 
-+LIBS := -lpthread $(LIBS)
-+
- all: makedumpfile
- 
- $(OBJ_PART): $(SRC_PART)
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 44c78b4..e15855b 100644
+index 3657d4f..d1b4bc2 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -6349,6 +6349,40 @@ read_pfn(mdf_pfn_t pfn, unsigned char *buf)
+@@ -394,6 +394,46 @@ update_mmap_range(off_t offset, int initial) {
  }
  
- int
-+read_pfn_parallel(int fd_memory, mdf_pfn_t pfn, unsigned char *buf,
-+		  struct dump_bitmap* bitmap_memory_parallel,
-+		  struct mmap_cache *mmap_cache)
+ static int
++update_mmap_range_parallel(int fd_memory, off_t offset,
++			   struct mmap_cache *mmap_cache)
 +{
-+	unsigned long long paddr;
-+	unsigned long long pgaddr;
++	off_t start_offset, end_offset;
++	off_t map_size;
++	off_t max_offset = get_max_file_offset();
++	off_t pt_load_end = offset_to_pt_load_end(offset);
 +
-+	paddr = pfn_to_paddr(pfn);
++	/*
++	 * mmap_buf must be cleaned
++	 */
++	if (mmap_cache->mmap_buf != MAP_FAILED)
++		munmap(mmap_cache->mmap_buf, mmap_cache->mmap_end_offset
++					     - mmap_cache->mmap_start_offset);
 +
-+	pgaddr = PAGEBASE(paddr);
++	/*
++	 * offset for mmap() must be page aligned.
++	 */
++	start_offset = roundup(offset, info->page_size);
++	end_offset = MIN(max_offset, round(pt_load_end, info->page_size));
 +
-+	if (info->flag_refiltering) {
-+		if (!readpage_kdump_compressed_parallel(fd_memory, pgaddr, buf,
-+						      bitmap_memory_parallel)) {
-+			ERRMSG("Can't get the page data.\n");
-+			return FALSE;
-+		}
-+	} else {
-+		char *mapbuf = mappage_elf_parallel(fd_memory, pgaddr,
-+						    mmap_cache);
-+		if (mapbuf) {
-+			memcpy(buf, mapbuf, info->page_size);
-+		} else {
-+			if (!readpage_elf_parallel(fd_memory, pgaddr, buf)) {
-+				ERRMSG("Can't get the page data.\n");
-+				return FALSE;
-+			}
-+		}
++	if (!pt_load_end || (end_offset - start_offset) <= 0)
++		return FALSE;
++
++	map_size = MIN(end_offset - start_offset, info->mmap_region_size);
++
++	mmap_cache->mmap_buf = mmap(NULL, map_size, PROT_READ, MAP_PRIVATE,
++					fd_memory, start_offset);
++
++	if (mmap_cache->mmap_buf == MAP_FAILED) {
++		return FALSE;
 +	}
++
++	mmap_cache->mmap_start_offset = start_offset;
++	mmap_cache->mmap_end_offset = start_offset + map_size;
 +
 +	return TRUE;
 +}
 +
-+int
- get_loads_dumpfile_cyclic(void)
++static int
+ is_mapped_with_mmap(off_t offset) {
+ 
+ 	if (info->flag_usemmap == MMAP_ENABLE
+@@ -404,6 +444,15 @@ is_mapped_with_mmap(off_t offset) {
+ 		return FALSE;
+ }
+ 
++static int
++is_mapped_with_mmap_parallel(off_t offset, struct mmap_cache *mmap_cache) {
++	if (offset >= mmap_cache->mmap_start_offset
++	    && offset < mmap_cache->mmap_end_offset)
++		return TRUE;
++	else
++		return FALSE;
++}
++
+ int
+ initialize_mmap(void) {
+ 	unsigned long long phys_start;
+@@ -458,6 +507,54 @@ mappage_elf(unsigned long long paddr)
+ 	return info->mmap_buf + (offset - info->mmap_start_offset);
+ }
+ 
++static char *
++mappage_elf_parallel(int fd_memory, unsigned long long paddr,
++		     struct mmap_cache *mmap_cache)
++{
++	off_t offset, offset2;
++	int flag_usemmap;
++
++	pthread_rwlock_rdlock(&info->usemmap_rwlock);
++	flag_usemmap = info->flag_usemmap;
++	pthread_rwlock_unlock(&info->usemmap_rwlock);
++	if (flag_usemmap != MMAP_ENABLE)
++		return NULL;
++
++	offset = paddr_to_offset(paddr);
++	if (!offset || page_is_fractional(offset))
++		return NULL;
++
++	offset2 = paddr_to_offset(paddr + info->page_size - 1);
++	if (!offset2)
++		return NULL;
++
++	if (offset2 - offset != info->page_size - 1)
++		return NULL;
++
++	if (!is_mapped_with_mmap_parallel(offset, mmap_cache) &&
++	    !update_mmap_range_parallel(fd_memory, offset, mmap_cache)) {
++		ERRMSG("Can't read the dump memory(%s) with mmap().\n",
++		       info->name_memory);
++
++		ERRMSG("This kernel might have some problems about mmap().\n");
++		ERRMSG("read() will be used instead of mmap() from now.\n");
++
++		/*
++		 * Fall back to read().
++		 */
++		pthread_rwlock_wrlock(&info->usemmap_rwlock);
++		info->flag_usemmap = MMAP_DISABLE;
++		pthread_rwlock_unlock(&info->usemmap_rwlock);
++		return NULL;
++	}
++
++	if (offset < mmap_cache->mmap_start_offset ||
++	    offset + info->page_size > mmap_cache->mmap_end_offset)
++		return NULL;
++
++	return mmap_cache->mmap_buf + (offset - mmap_cache->mmap_start_offset);
++}
++
+ static int
+ read_from_vmcore(off_t offset, void *bufptr, unsigned long size)
  {
- 	int i, phnum, num_new_load = 0;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 3d6661f..bff134e 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -42,6 +42,7 @@
+ #include "dwarf_info.h"
+ #include "diskdump_mod.h"
+ #include "sadump_mod.h"
++#include <pthread.h>
+ 
+ /*
+  * Result of command
+@@ -956,6 +957,15 @@ typedef unsigned long int ulong;
+ typedef unsigned long long int ulonglong;
+ 
+ /*
++ * for parallel process
++ */
++struct mmap_cache {
++	char	*mmap_buf;
++	off_t	mmap_start_offset;
++	off_t   mmap_end_offset;
++};
++
++/*
+  * makedumpfile header
+  *   For re-arranging the dump data on different architecture, all the
+  *   variables are defined by 64bits. The size of signature is aligned
+@@ -1219,6 +1229,10 @@ struct DumpInfo {
+ 	 * for cyclic_splitting mode, setup splitblock_size
+ 	 */
+ 	long long splitblock_size;
++	/*
++	 * for parallel process
++	 */
++	pthread_rwlock_t usemmap_rwlock;
+ };
+ extern struct DumpInfo		*info;
+ 
 -- 
 1.8.3.1
 
