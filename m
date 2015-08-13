@@ -1,12 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZPoKi-0002TK-Hc
- for kexec@lists.infradead.org; Thu, 13 Aug 2015 08:57:57 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [Patch v3 RESEND] kexec: export KERNEL_IMAGE_SIZE to vmcoreinfo
-Date: Thu, 13 Aug 2015 16:57:27 +0800
-Message-Id: <1439456247-7968-1-git-send-email-bhe@redhat.com>
+ id 1ZPzLU-0006ge-US
+ for kexec@lists.infradead.org; Thu, 13 Aug 2015 20:43:29 +0000
+Date: Thu, 13 Aug 2015 13:43:06 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [REPOST PATCH] kexec: Remove the unnecessary conditional
+ judgement to simplify the code logic
+Message-Id: <20150813134306.70faabec1634fa3cd777a212@linux-foundation.org>
+In-Reply-To: <20150813005525.GB7852@verge.net.au>
+References: <1438058802-6462-1-git-send-email-mnfhuang@gmail.com>
+ <20150813005525.GB7852@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,55 +20,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, akpm@linux-foundation.org, vgoyal@redhat.com, keescook@chromium.org
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Minfei Huang <mnfhuang@gmail.com>, vgoyal@redhat.com, ebiederm@xmission.com
 
-In x86_64, since v2.6.26 the KERNEL_IMAGE_SIZE is changed to 512M, and
-accordingly the MODULES_VADDR is changed to 0xffffffffa0000000. However,
-in v3.12 Kees Cook introduced kaslr to randomise the location of kernel.
-And the kernel text mapping addr space is enlarged from 512M to 1G. That
-means now KERNEL_IMAGE_SIZE is variable, its value is 512M when kaslr
-support is not compiled in and 1G when kaslr support is compiled in.
-Accordingly the MODULES_VADDR is changed too to be:
+On Thu, 13 Aug 2015 09:55:25 +0900 Simon Horman <horms@verge.net.au> wrote:
 
-    #define MODULES_VADDR    (__START_KERNEL_map + KERNEL_IMAGE_SIZE)
+> On Tue, Jul 28, 2015 at 12:46:42PM +0800, Minfei Huang wrote:
+> > Transforming PFN(Page Frame Number) to struct page is never failure, so
+> > we can simplify the code logic to do the image->control_page assignment
+> > directly in the loop, and remove the unnecessary conditional judgement.
+> > 
+> > Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+> > Acked-by: Dave Young <dyoung@redhat.com>
+> > Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> 
+> Andrew, could you consider picking this up.
+> It seems to have been sufficiently reviewed, acked, etc...
 
-So when kaslr is compiled in and enabled, the kernel text mapping addr
-space and modules vaddr space need be adjusted. Otherwise makedumpfile
-will collapse since the addr for some symbols is not correct.
-
-Hence KERNEL_IMAGE_SIZE need be exported to vmcoreinfo and got in
-makedumpfile to help calculate MODULES_VADDR.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
----
- kernel/kexec.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index a785c10..b813c9c 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -2012,6 +2012,9 @@ static int __init crash_save_vmcoreinfo_init(void)
- #endif
- 	VMCOREINFO_NUMBER(PG_head_mask);
- 	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-+#ifdef CONFIG_X86
-+       VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
-+#endif
- #ifdef CONFIG_HUGETLBFS
- 	VMCOREINFO_SYMBOL(free_huge_page);
- #endif
--- 
-2.1.0
-
+I grabbed this one of July 28. 
+http://ozlabs.org/~akpm/mmotm/broken-out/kexec-remove-the-unnecessary-conditional-judgement-to-simplify-the-code-logic.patch
 
 _______________________________________________
 kexec mailing list
