@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from mail-by2on0109.outbound.protection.outlook.com
+ ([207.46.100.109] helo=na01-by2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZPzLU-0006ge-US
- for kexec@lists.infradead.org; Thu, 13 Aug 2015 20:43:29 +0000
-Date: Thu, 13 Aug 2015 13:43:06 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [REPOST PATCH] kexec: Remove the unnecessary conditional
- judgement to simplify the code logic
-Message-Id: <20150813134306.70faabec1634fa3cd777a212@linux-foundation.org>
-In-Reply-To: <20150813005525.GB7852@verge.net.au>
-References: <1438058802-6462-1-git-send-email-mnfhuang@gmail.com>
- <20150813005525.GB7852@verge.net.au>
-Mime-Version: 1.0
+ id 1ZRPdr-0005Xl-VH
+ for kexec@lists.infradead.org; Mon, 17 Aug 2015 19:00:20 +0000
+Message-ID: <1439837987.15601.29.camel@freescale.com>
+Subject: Re: [PATCH 2/2] ppc64: Add a flag to tell the kernel it's booting
+ from kexec
+From: Scott Wood <scottwood@freescale.com>
+Date: Mon, 17 Aug 2015 13:59:47 -0500
+In-Reply-To: <1437249439-31496-2-git-send-email-scottwood@freescale.com>
+References: <1437249439-31496-1-git-send-email-scottwood@freescale.com>
+ <1437249439-31496-2-git-send-email-scottwood@freescale.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +26,28 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Minfei Huang <mnfhuang@gmail.com>, vgoyal@redhat.com, ebiederm@xmission.com
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-On Thu, 13 Aug 2015 09:55:25 +0900 Simon Horman <horms@verge.net.au> wrote:
-
-> On Tue, Jul 28, 2015 at 12:46:42PM +0800, Minfei Huang wrote:
-> > Transforming PFN(Page Frame Number) to struct page is never failure, so
-> > we can simplify the code logic to do the image->control_page assignment
-> > directly in the loop, and remove the unnecessary conditional judgement.
-> > 
-> > Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
-> > Acked-by: Dave Young <dyoung@redhat.com>
-> > Acked-by: Vivek Goyal <vgoyal@redhat.com>
+On Sat, 2015-07-18 at 14:57 -0500, Scott Wood wrote:
+> It needs to know this because the SMP release mechanism for Freescale
+> book3e is different from when booting with normal hardware.  In theory
+> we could simulate the normal spin table mechanism, but not (easily) at
+> the addresses U-Boot put in the device tree -- so there'd need to be
+> even more communication between the kernel and kexec to set that up.
+> Since there's already a similar flag being set (for kdump only), this
+> seemed like a reasonable approach.
 > 
-> Andrew, could you consider picking this up.
-> It seems to have been sufficiently reviewed, acked, etc...
+> Signed-off-by: Scott Wood <scottwood@freescale.com>
+> ---
+>  kexec/arch/ppc64/kexec-elf-ppc64.c | 11 ++++++++++-
+>  kexec/arch/ppc64/kexec-ppc64.h     |  2 ++
+>  purgatory/arch/ppc64/v2wrap.S      | 11 +++++++++++
+>  3 files changed, 23 insertions(+), 1 deletion(-)
 
-I grabbed this one of July 28. 
-http://ozlabs.org/~akpm/mmotm/broken-out/kexec-remove-the-unnecessary-conditional-judgement-to-simplify-the-code-logic.patch
+Any comment on these two patches?
+
+-Scott
+
 
 _______________________________________________
 kexec mailing list
