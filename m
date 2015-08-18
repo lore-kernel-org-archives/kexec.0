@@ -1,30 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZRjaM-0008UT-EQ
- for kexec@lists.infradead.org; Tue, 18 Aug 2015 16:18:03 +0000
-Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Tue, 18 Aug 2015 17:17:33 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com
- (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6C81A17D805A
- for <kexec@lists.infradead.org>; Tue, 18 Aug 2015 17:19:03 +0100 (BST)
-Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
- [9.149.37.228])
- by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t7IGHRo222937842
- for <kexec@lists.infradead.org>; Tue, 18 Aug 2015 16:17:27 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t7IGHR9S022101
- for <kexec@lists.infradead.org>; Tue, 18 Aug 2015 10:17:27 -0600
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [RFC PATCH] kexec: use mmap instead of read for slurp_file()
-Date: Tue, 18 Aug 2015 18:17:23 +0200
-Message-Id: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ id 1ZRkXS-00065A-Tg
+ for kexec@lists.infradead.org; Tue, 18 Aug 2015 17:19:07 +0000
+Message-ID: <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
+In-Reply-To: <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
+References: <d76572d93d25b0196cb2b32c88fd15dc4eb78682.1431714565.git.panand@redhat.com>
+ <CAOZdJXWjZmL_K=FmvBU=U3VSDY9R4AucFU16v8CAgQCEe8HYDg@mail.gmail.com>
+ <20150624033241.GA22348@localhost.localdomain>
+ <558A25A3.60504@codeaurora.org>
+ <20150627082256.GE21646@localhost.localdomain>
+ <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
+ <20150703043241.GC21990@dhcppc13.redhat.com>
+ <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
+Date: Tue, 18 Aug 2015 17:18:44 -0000
+Subject: Re: [PATCH] makedumpfile: Support ARM64
+From: "Azriel Samson" <asamson@codeaurora.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,58 +25,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org
+To: sgoel@codeaurora.org
+Cc: Pratyush Anand <panand@redhat.com>, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
 
-The slurp_fd() function allocates memory and uses the read() system call.
-This results in double memory consumption for image and initrd:
+Adding Sameer as he has a few questions on kvbase.
 
- 1) Memory allocated in user space by the kexec tool
- 2) Memory allocated in kernel by the kexec() system call
+> Hi Pratyush,
+>
+> I was able to run makedumpfile with "-d 31" but the dumpfile was
+> approximately the same size as that of vmcore (~16GB).
+>
+> Answers inline.
+>
+>> Hi Azriel,
+>>
+>> On 01/07/2015:06:42:46 PM, Azriel Samson wrote:
+>>> Hi Pratyush,
+>>>
+>>> I am working with Timur and we are testing your version of
+>>> makedumpfile.
+>>
+>> Thanks for testing.
+>>
+>>> The tool is unable to get the kernel version and quits from
+>>> check_release().
+>>
+>> Couple of questions:
+>>
+>> 1. Can you please let me know VA_BITS configured in your case?
+> VA_BITS=3D39
+>> 2. Do you expect any regions other than vmalloc, vmemmap or modules,
+>> which are not directly mapped and their physical address need to be
+>> found from swapper_pg_dir?
+> No
+>> In my vmcore, I did not had any address where
+>> is_vtop_from_page_table_arm64 would be true. So, vtop_arm64 function
+>> has been only cross checked logically. So,
+>> a) Please put a print in vtop_arm64 and check if control goes there?
+>> b) if yes, then please print vaddr and paddr at the end of vtop_arm64
+>> and see if that is correct. If not we need to debug vtop_arm64.
+> I still need to try this. Will get back when I do.
+>> ~Pratyush
+>>
+>>>
+>>> I tried to debug the vmcore file with gdb but the file looks corrupt.
+>>>
+>>> Let me know if you have any ideas on what could be wrong?
+>>>
+>>> > Hi Timur,
+>>> >
+>>> > On 23/06/2015:10:36:03 PM, Timur Tabi wrote:
+>>> >> Pratyush Anand wrote:
+>>> >> >I can try to find out some time in weekend to refactor arm64 code
+>>> >> >and then add 3 level, 4K support. May be I will need a Tested-by.
+>>> >>
+>>> >> We'd be more than happy to test any code from you promptly.  We're
+>>> eager
+>>> >> to
+>>> >> get this to work.
+>>> >
+>>> > I have done the changes, hopefully it should work, but have not
+>>> > tested. Let me know, if it works will send them as formal patches
+>>> > to upstream.
+>>> >
+>>> > https://github.com/pratyushanand/makedumpfile.git : arm64_support
+>>> > (9b95423bcea0)
+>>> >
+>>> > ~Pratyush
+>>> >
+>>>
+>>> --
+>>> Thanks,
+>>> Azriel Samson
+>>> Qualcomm Innovation Center, Inc.
+>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>>> Forum,=A0
+>>> a Linux Foundation Collaborative Project
+>>
+>
+>
+> --
+> Thanks,
+> Azriel Samson
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+> Forum,=A0
+> a Linux Foundation Collaborative Project
+>
 
-Therefore use mmap() for non-character devices to reduce the memory
-consumption of the kexec tool.
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- kexec/kexec.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+-- =
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 8ce6885..fecf061 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -26,6 +26,7 @@
- #include <stdlib.h>
- #include <errno.h>
- #include <limits.h>
-+#include <sys/mman.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <sys/reboot.h>
-@@ -552,11 +553,12 @@ char *slurp_file(const char *filename, off_t *r_size)
- 		if (err < 0)
- 			die("Can not seek to the begin of file %s: %s\n",
- 					filename, strerror(errno));
-+		buf = slurp_fd(fd, filename, size, &nread);
- 	} else {
--		size = stats.st_size;
-+		size = nread = stats.st_size;
-+		buf = mmap(NULL, size,
-+			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
- 	}
--
--	buf = slurp_fd(fd, filename, size, &nread);
- 	if (!buf)
- 		die("Cannot read %s", filename);
- 
--- 
-2.3.0
+Thanks,
+Azriel Samson
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,=
+=A0
+a Linux Foundation Collaborative Project
 
 
 _______________________________________________
