@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g9t5009.houston.hp.com ([15.240.92.67])
+Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZRiQN-0008Pt-7y
- for kexec@lists.infradead.org; Tue, 18 Aug 2015 15:03:39 +0000
-Message-ID: <1439910078.24434.106.camel@hp.com>
-Subject: Re: kexec, x86: Need a new e820 type support for kexec
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Tue, 18 Aug 2015 09:01:18 -0600
-In-Reply-To: <20150818085330.GB15480@dhcp-128-28.nay.redhat.com>
-References: <1437697592.3214.373.camel@hp.com>
- <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
- <1438910038.3109.116.camel@hp.com>
- <20150818085330.GB15480@dhcp-128-28.nay.redhat.com>
-Mime-Version: 1.0
+ id 1ZRjaM-0008UT-EQ
+ for kexec@lists.infradead.org; Tue, 18 Aug 2015 16:18:03 +0000
+Received: from /spool/local
+ by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Tue, 18 Aug 2015 17:17:33 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6C81A17D805A
+ for <kexec@lists.infradead.org>; Tue, 18 Aug 2015 17:19:03 +0100 (BST)
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+ [9.149.37.228])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t7IGHRo222937842
+ for <kexec@lists.infradead.org>; Tue, 18 Aug 2015 16:17:27 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av02.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t7IGHR9S022101
+ for <kexec@lists.infradead.org>; Tue, 18 Aug 2015 10:17:27 -0600
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: [RFC PATCH] kexec: use mmap instead of read for slurp_file()
+Date: Tue, 18 Aug 2015 18:17:23 +0200
+Message-Id: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,62 +33,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-nvdimm@ml01.01.org, dan.j.williams@intel.com, kexec@lists.infradead.org, hch@lst.de, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org
 
-On Tue, 2015-08-18 at 16:53 +0800, Baoquan He wrote:
-> On 08/06/15 at 07:13pm, Toshi Kani wrote:
-> > On Thu, 2015-08-06 at 16:12 +0800, Baoquan He wrote:
-> > E820_PMEM cannot be emulated by the "memmap=" option.  Do you have to 
-> > use the "memmap=" options to pass the ranges for kdump kernel?  If so, 
-> > I'd rather ignore E820_PMEM and let it be passed as E820_RESERVED.  The
-> > kdump kernel can still obtain the info from NFIT if necessary.
-> > 
-> > As for the code change...
-> > 
-> > > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char 
-> > > *cmdline, 
-> > > unsigned long startk,
-> > >  		strcat (str_mmap, "K$");
-> > >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
-> > >  		strcat (str_mmap, "K#");
-> > > +	else if (type == RANGE_PMEM || type == RANGE_PRAM)
-> > > +		strcat (str_mmap, "K!");
-> > 
-> > It should only check with RANGE_PRAM, but I do not think this change 
-> > matters much unless you also modify the caller cmdline_add_memmap(), 
-> > which has the following check to skip other types.  I do not think we 
-> > will use legacy NVDIMM device as a dump device, so you may ignore 
-> > RANGE_PRAM and let it be passed as RESERVED as well (which is likely the 
-> > case I tested with).
-> 
-> Rethink it again, maybe it's better to pass PMEM as PRAM to kdump
-> kernel if user really want to use memmap way by specifying
-> --pass-memmap-cmdline. Then I need add the PMEM and PRAM checking here
-> you pointed out. Will repost with them.
+The slurp_fd() function allocates memory and uses the read() system call.
+This results in double memory consumption for image and initrd:
 
-No, you should not report PMEM as PRAM.  They are different things.  The
-kdump kernel does not need to support memmap cmdline for PMEM, as the
-regular kernel does not -- memmap cmdline cannot emulate PMEM.
+ 1) Memory allocated in user space by the kexec tool
+ 2) Memory allocated in kernel by the kexec() system call
 
-Thanks,
--Toshi
+Therefore use mmap() for non-character devices to reduce the memory
+consumption of the kexec tool.
 
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ kexec/kexec.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> 
-> 
-> > 
-> >                 /* Only adding memory regions of RAM and ACPI */
-> >                 if (type != RANGE_RAM &&
-> >                     type != RANGE_ACPI &&
-> >                     type != RANGE_ACPI_NVS)
-> >                         continue;
-> > 
-> 
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 8ce6885..fecf061 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -26,6 +26,7 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
++#include <sys/mman.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/reboot.h>
+@@ -552,11 +553,12 @@ char *slurp_file(const char *filename, off_t *r_size)
+ 		if (err < 0)
+ 			die("Can not seek to the begin of file %s: %s\n",
+ 					filename, strerror(errno));
++		buf = slurp_fd(fd, filename, size, &nread);
+ 	} else {
+-		size = stats.st_size;
++		size = nread = stats.st_size;
++		buf = mmap(NULL, size,
++			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+ 	}
+-
+-	buf = slurp_fd(fd, filename, size, &nread);
+ 	if (!buf)
+ 		die("Cannot read %s", filename);
+ 
+-- 
+2.3.0
+
 
 _______________________________________________
 kexec mailing list
