@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZRd0S-0000U3-Kf
- for kexec@lists.infradead.org; Tue, 18 Aug 2015 09:16:33 +0000
-Date: Tue, 18 Aug 2015 17:16:06 +0800
+ id 1ZRfGP-0001be-RB
+ for kexec@lists.infradead.org; Tue, 18 Aug 2015 11:41:11 +0000
+Date: Tue, 18 Aug 2015 19:40:44 +0800
 From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] Add persistent memory support
-Message-ID: <20150818091606.GA19950@dhcp-128-28.nay.redhat.com>
+Message-ID: <20150818114044.GB19950@dhcp-128-28.nay.redhat.com>
 References: <1439888406-15828-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -23,11 +23,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: toshi.kani@hp.com
+To: horms@verge.net.au, ttttoshi.kani@hp.com
 Cc: kexec@lists.infradead.org
-
-Sorry, Toshi. Resend to you since your mail address was wrong in last
-mail.
 
 On 08/18/15 at 05:00pm, Baoquan He wrote:
 > Kernel add E820_PRAM or E820_PMEM type for NVDIMM memory device.
@@ -121,6 +118,9 @@ On 08/18/15 at 05:00pm, Baoquan He wrote:
 > +		}
 > +		else if (memcmp(str, "Persistent Memory\n", 18) == 0) {
 > +			type = RANGE_ACPI_NVS;
+
+Above type assigments are not correct. Will post v2 to change this.
+
 > +		}
 >  		else {
 >  			continue;
@@ -184,11 +184,6 @@ On 08/18/15 at 05:00pm, Baoquan He wrote:
 > -- 
 > 2.1.0
 > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
