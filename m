@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2on0101.outbound.protection.outlook.com
- ([207.46.100.101] helo=na01-by2-obe.outbound.protection.outlook.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZRZ9n-0001Db-SC
- for kexec@lists.infradead.org; Tue, 18 Aug 2015 05:09:56 +0000
-Message-ID: <1439874559.15601.70.camel@freescale.com>
-Subject: Re: [RFC,14/17] powerpc/book3e-64/kexec: Enable SMP release
-From: Scott Wood <scottwood@freescale.com>
-Date: Tue, 18 Aug 2015 00:09:19 -0500
-In-Reply-To: <20150818045141.D1E8C14032F@ozlabs.org>
-References: <20150818045141.D1E8C14032F@ozlabs.org>
+ id 1ZRcMf-00013i-6P
+ for kexec@lists.infradead.org; Tue, 18 Aug 2015 08:35:25 +0000
+Date: Tue, 18 Aug 2015 16:34:56 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: kexec, x86: Need a new e820 type support for kexec
+Message-ID: <20150818083456.GA15480@dhcp-128-28.nay.redhat.com>
+References: <1437697592.3214.373.camel@hp.com>
+ <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
+ <1438910038.3109.116.camel@hp.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1438910038.3109.116.camel@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,93 +25,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Tiejun Chen <tiejun.chen@intel.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: Toshi Kani <toshi.kani@hp.com>
+Cc: linux-nvdimm@ml01.01.org, dan.j.williams@intel.com, kexec@lists.infradead.org, hch@lst.de, linux-kernel@vger.kernel.org
 
-On Tue, 2015-08-18 at 14:51 +1000, Michael Ellerman wrote:
-> On Sat, 2015-18-07 at 20:08:51 UTC, Scott Wood wrote:
-> > booted_from_exec is similar to __run_at_load, except that it is set for
->               ^
->             missing k.
+Hi Toshi,
+
+Sorry for replying late.
+
+On 08/06/15 at 07:13pm, Toshi Kani wrote:
+> On Thu, 2015-08-06 at 16:12 +0800, Baoquan He wrote:
+> > Hi Toshi,
+> > 
+> > Does this patch work for you?
 > 
-> Also do you mind using __booted_from_kexec to keep the naming similar to the
-> other variables down there, and also make it clear it's low level guts.
+> Hi Baoquan,
 > 
-> I see you asked for them to be removed on the original patch but all the 
-> other
-> vars in there are named that way.
+> I have tested the patch with both E820_PMEM and E820_PRAM setups, and
+> confirmed it works fine for both cases. :-)  I did multiple kexec reboots
+> followed by a kdump in my testing.  So, please feel free to add:
+>  
+> Tested-by: Toshi Kani <toshi.kani@hp.com>
 
-I'm not a fan of it as it isn't distinguishing from a non-underscore version, 
-isn't there for namespacing reasons, and it's not even a private 
-implementation detail -- it's part of the interface with kexec tools.  I'll 
-change it if you want, though.
+Thanks for testing, I will repost with Tested-by info.
 
-> > diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
-> > index 1b77956..ae2d6b5 100644
-> > --- a/arch/powerpc/kernel/head_64.S
-> > +++ b/arch/powerpc/kernel/head_64.S
-> > @@ -91,6 +91,21 @@ __secondary_hold_spinloop:
-> >  __secondary_hold_acknowledge:
-> >     .llong  0x0
-> >  
-> > +   /* Do not move this variable as kexec-tools knows about it. */
-> > +   . = 0x58
-> > +   .globl  booted_from_kexec
-> > +booted_from_kexec:
-> > +   /*
-> > +    * "nkxc" -- not (necessarily) from kexec by default
-> > +    *
-> > +    * This flag is set to 1 by a loader if the kernel is being
-> > +    * booted by kexec.  Older kexec-tools don't know about this
-> > +    * flag, so platforms other than fsl-book3e should treat a value
-> > +    * of "nkxc" as inconclusive.  fsl-book3e relies on this to
-> > +    * know how to release secondary cpus.
-> > +    */
-> > +   .long   0x6e6b7863
 > 
-> Couldn't we say that "nkxc" (whatever that stands for)
-
-It stands for "no kexec", which is true if that value is not overwritten.
-
->  means "unknown", and
-> have kexec-tools write "yes" to indicate yes. I realise that's not 100% 
-> bullet
-
-That is what I implemented (other than "1" versus "yes").
-
-> > diff --git a/arch/powerpc/kernel/setup_64.c 
-> > b/arch/powerpc/kernel/setup_64.c
-> > index 505ec2c..baeddcc 100644
-> > --- a/arch/powerpc/kernel/setup_64.c
-> > +++ b/arch/powerpc/kernel/setup_64.c
-> > @@ -340,11 +340,23 @@ void early_setup_secondary(void)
-> >  #endif /* CONFIG_SMP */
-> >  
-> >  #if defined(CONFIG_SMP) || defined(CONFIG_KEXEC)
-> > +static bool use_spinloop(void)
-> > +{
-> > +#ifdef CONFIG_PPC_FSL_BOOK3E
-> > +   return booted_from_kexec == 1;
-> > +#else
-> > +   return true;
-> > +#endif
+> > There are things I am not sure. When jump to kexec/kdump kernel is this
+> > PMEM still needed by system? 
 > 
-> Ugh, more ifdefs.
+> Yes, after a kexec reboot, the kernel needs to be able to use NVDIMM as
+> before.  While the kernel actually uses NFIT table, not e820, the range
+> should be marked as PMEM for consistency.  The same goes to kdump kernel
+> since NVDIMM may be used as a dump device in future.
 > 
-> What about:
+> > And what's the difference between PRAM and
+> > PMEM? I saw in kernel commit ec776ef6 it introduced E820_PRAM for the
+> > non-standard protected e820 type, then in kernel commit ad5fb870 it
+> > introduced E820_PMEM for ACPI 6.0 persistent memory types. While it
+> > doesn't add complete support for E820_PMEM like E820_PRAM if I
+> > understand it correctly.
 > 
->       return IS_ENABLED(CONFIG_PPC_FSL_BOOK3E) && (booted_from_kexec == 1);
+> ACPI 6.0 spec defines E820_PMEM, which is used for NVDIMM devices from now
+> on.  ACPI 6.0 also defines NFIT table for NVDIMM along with this type.
 > 
-> If that works, I haven't checked. It's slightly less ugly?
+> Before these are defined in ACPI, E820_PRAM type was "unofficially" used by
+> some NVDIMM devices.  So, E820_PRAM was added for such legacy NVDIMMs. 
+>  Since the E820_PRAM case is very simple (it does not have any other FW
+> tables), it can be easily emulated with the "memmap=nn!ss" option.  So,
+> people may use the memmap option to emulate this legacy NVDIMM.    
 
-That would return "false" for non-book3e which isn't correct.
+I was wrong. In fact in kexec-tools memory info can be passed to kdump
+kernel by 2 ways. One is using memmap by specifying
+--pass-memmap-cmdline. The other one is storing memory regions in
+e820_map of real mode data structure by default. And the 1st way is
+rarely used. So no need to worry about the "memmap=nn!ss" option.
 
-If it has to be done with a single expression, then it'd be:
+Since kernel parse_memmap_one doesn't support E820_PMEM well, I would
+like to ignore the PMEM adding in memmap way. So this patch is enough.
 
-        return !IS_ENABLED(CONFIG_PPC_FSL_BOOK3E) || booted_from_kexec == 1;
+> 
+> >  In this patch I simply pass E820_PMEM to kdump
+> > kernel as E820_PRAM when it emerges since kernel can parse E820_PRAM
+> > only in parse_memmap_one(), otherwise E820_PMEM has to be discarded or
+> > need be passed as E820_RESERVED. What do you think about this, need
+> > E820_PMEM be differentiated with E820_PRAM strictly? If yes, I think a
+> > kernel patch need be posted to fix this. If not, this patch is enough
+> > for supporting both of them in kexec.
+> 
+> E820_PMEM cannot be emulated by the "memmap=" option.  Do you have to use
+> the "memmap=" options to pass the ranges for kdump kernel?  If so, I'd
+> rather ignore E820_PMEM and let it be passed as E820_RESERVED.  The kdump
+> kernel can still obtain the info from NFIT if necessary.
+> 
+> As for the code change...
+> 
+> > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, 
+> > unsigned long startk,
+> >  		strcat (str_mmap, "K$");
+> >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
+> >  		strcat (str_mmap, "K#");
+> > +	else if (type == RANGE_PMEM || type == RANGE_PRAM)
+> > +		strcat (str_mmap, "K!");
+> 
+> It should only check with RANGE_PRAM, but I do not think this change matters
+> much unless you also modify the caller cmdline_add_memmap(), which has the
+> following check to skip other types.  I do not think we will use legacy
+> NVDIMM device as a dump device, so you may ignore RANGE_PRAM and let it be
+> passed as RESERVED as well (which is likely the case I tested with).
+> 
+>                 /* Only adding memory regions of RAM and ACPI */
+>                 if (type != RANGE_RAM &&
+>                     type != RANGE_ACPI &&
+>                     type != RANGE_ACPI_NVS)
+>                         continue;
 
--Scott
+Then if ignore PMEM adding into memmap, cmdline_add_memmap need not be
+cared any more.
 
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
