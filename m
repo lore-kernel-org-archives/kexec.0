@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wi0-f173.google.com ([209.85.212.173])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZS0sA-00034P-MK
- for kexec@lists.infradead.org; Wed, 19 Aug 2015 10:45:35 +0000
-Date: Wed, 19 Aug 2015 18:45:09 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [Patch v3] Add persistent memory support
-Message-ID: <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
-References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
- <20150819092815.GB6130@localhost.localdomain>
+ id 1ZS1GX-0003l1-GV
+ for kexec@lists.infradead.org; Wed, 19 Aug 2015 11:10:46 +0000
+Received: by wicne3 with SMTP id ne3so123752134wic.1
+ for <kexec@lists.infradead.org>; Wed, 19 Aug 2015 04:10:22 -0700 (PDT)
+Subject: Re: Dmesg not being dumped
+References: <55D42056.5070709@kyup.com>
+ <20150819090202.GF19950@dhcp-128-28.nay.redhat.com>
+From: Nikolay Borisov <kernel@kyup.com>
+Message-ID: <55D4641D.70902@kyup.com>
+Date: Wed, 19 Aug 2015 14:10:21 +0300
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150819092815.GB6130@localhost.localdomain>
+In-Reply-To: <20150819090202.GF19950@dhcp-128-28.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +25,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: toshi.kani@hp.com, horms@verge.net.au, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org
 
-On 08/19/15 at 05:28pm, Dave Young wrote:
-> Hi,
+Hi,
+
+On 08/19/2015 12:02 PM, Baoquan He wrote:
+> On 08/19/15 at 09:21am, Nikolay Borisov wrote:
+>> Hello,
+>>
+>> I've recently noticed that when creating crashdumps the dmesg is not
+>> being saved. The error reported is this: "Missing the struct log size
+>> export". I've tested with both kernel 4.1.1 and 3.12.28. My version of
+>> kexec tools is : kexec-tools 2.0.9 released 04 June 2015. The kernel has
+>> been compiled with debugging info so the respective symbol should be
+>> exported but apparently it is not. Any ideas how to debug that?
 > 
-> On 08/19/15 at 05:03pm, Baoquan He wrote:
-  
-> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > index 82bf239..598a78f 100644
-> > --- a/kexec/arch/i386/crashdump-x86.c
-> > +++ b/kexec/arch/i386/crashdump-x86.c
-> > @@ -301,6 +301,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> >  			type = RANGE_ACPI;
-> >  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
-> >  			type = RANGE_ACPI_NVS;
-> > +		} else if(memcmp(str,"Persistent Memory (legacy)\n",27) == 0 ) {
-> > +			type = RANGE_PRAM;
-> > +		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
-> > +			type = RANGE_PMEM;
-> >  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-> >  			type = RANGE_RESERVED;
-> >  		} else if (memcmp(str, "GART\n", 5) == 0) {
-> > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
-> >  		strcat (str_mmap, "K$");
-> >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
-> >  		strcat (str_mmap, "K#");
-> > +	else if (type == RANGE_PRAM)
-> > +		strcat (str_mmap, "K!");
-> 
-> Since we have switched to use e820 it is not necessary to supporting new things
-> in legacy memmap interface?
+> That would be more helpful if you can attach the 1st kernel and kdump
+> kernel console log.
 
-Well, I am not sure about this. Kexec-tools provides memmap method to
-pass the memory ranges, then either we continue supporting it or we
-delete it. Now is this OK we just keep legacy memmap code there and
-ignore it? If people check the man page and find --pass-memmap-cmdline
-and intend to try, then kexec/kdump fail, then how do we go with it?
+I just tested with 4.1.6 with the same result. I'm sending you a link to
+the bzImage in question
+http://georgi.unixsol.org/cruft/tmp/bzImage-4.1.6-clouder1 ( I assume
+you meant the bzImage, if you need I can provide the vmlinux as well).
+Unfortunately, I couldn't figure how to obtain the log of kdump in
+textual format (and didn't want to send pictures). Here are the 3
+relevant lines (from memory):
 
-Thanks
-Baoquan
+Saving vmcore-dmesg.txt
+Missing the struct log size export
+Error saving vmcore-dmesg.txt.
+
+Yet, when I load the crashdump inside the 'crash' utility and invoke the
+'log' command the dmesg log is there. Whereas the
+vmcore-dmesg-incomplete.txt is empty.
+
 
 > 
+>>
+>> [Please CC me as I'm not subscribed to the mailing list.]
+>>
+>> Regards,
+>> Nikolay
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
