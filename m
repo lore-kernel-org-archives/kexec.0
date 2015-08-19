@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZRzfl-0008Uv-G2
- for kexec@lists.infradead.org; Wed, 19 Aug 2015 09:28:42 +0000
-Date: Wed, 19 Aug 2015 17:28:15 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1ZS0sA-00034P-MK
+ for kexec@lists.infradead.org; Wed, 19 Aug 2015 10:45:35 +0000
+Date: Wed, 19 Aug 2015 18:45:09 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [Patch v3] Add persistent memory support
-Message-ID: <20150819092815.GB6130@localhost.localdomain>
+Message-ID: <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
 References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
+ <20150819092815.GB6130@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1439975029-25611-1-git-send-email-bhe@redhat.com>
+In-Reply-To: <20150819092815.GB6130@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,175 +24,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, toshi.kani@hp.com
+To: Dave Young <dyoung@redhat.com>
+Cc: toshi.kani@hp.com, horms@verge.net.au, kexec@lists.infradead.org
 
-Hi,
+On 08/19/15 at 05:28pm, Dave Young wrote:
+> Hi,
+> 
+> On 08/19/15 at 05:03pm, Baoquan He wrote:
+  
+> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> > index 82bf239..598a78f 100644
+> > --- a/kexec/arch/i386/crashdump-x86.c
+> > +++ b/kexec/arch/i386/crashdump-x86.c
+> > @@ -301,6 +301,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+> >  			type = RANGE_ACPI;
+> >  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
+> >  			type = RANGE_ACPI_NVS;
+> > +		} else if(memcmp(str,"Persistent Memory (legacy)\n",27) == 0 ) {
+> > +			type = RANGE_PRAM;
+> > +		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
+> > +			type = RANGE_PMEM;
+> >  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
+> >  			type = RANGE_RESERVED;
+> >  		} else if (memcmp(str, "GART\n", 5) == 0) {
+> > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
+> >  		strcat (str_mmap, "K$");
+> >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
+> >  		strcat (str_mmap, "K#");
+> > +	else if (type == RANGE_PRAM)
+> > +		strcat (str_mmap, "K!");
+> 
+> Since we have switched to use e820 it is not necessary to supporting new things
+> in legacy memmap interface?
 
-On 08/19/15 at 05:03pm, Baoquan He wrote:
-> Kernel add E820_PRAM or E820_PMEM type for NVDIMM memory device.
-> Now support them in kexec too.
-> 
-> Reported-by: Toshi Kani <toshi.kani@hp.com>
-> Tested-by: Toshi Kani <toshi.kani@hp.com>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  include/x86/x86-linux.h            |  2 ++
->  kexec/arch/i386/crashdump-x86.c    | 15 ++++++++++++---
->  kexec/arch/i386/kexec-x86-common.c | 10 ++++++++++
->  kexec/arch/i386/x86-linux-setup.c  |  6 ++++++
->  kexec/firmware_memmap.c            |  4 ++++
->  kexec/kexec.h                      |  2 ++
->  6 files changed, 36 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-> index 50c7324..7834751 100644
-> --- a/include/x86/x86-linux.h
-> +++ b/include/x86/x86-linux.h
-> @@ -21,6 +21,8 @@ struct e820entry {
->  #define E820_RESERVED	2
->  #define E820_ACPI	3 /* usable as RAM once ACPI tables have been read */
->  #define E820_NVS	4
-> +#define E820_PMEM       7
-> +#define E820_PRAM       12
->  } __attribute__((packed));
->  #endif
->  
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 82bf239..598a78f 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -301,6 +301,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
->  			type = RANGE_ACPI;
->  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
->  			type = RANGE_ACPI_NVS;
-> +		} else if(memcmp(str,"Persistent Memory (legacy)\n",27) == 0 ) {
-> +			type = RANGE_PRAM;
-> +		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
-> +			type = RANGE_PMEM;
->  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
->  			type = RANGE_RESERVED;
->  		} else if (memcmp(str, "GART\n", 5) == 0) {
-> @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
->  		strcat (str_mmap, "K$");
->  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
->  		strcat (str_mmap, "K#");
-> +	else if (type == RANGE_PRAM)
-> +		strcat (str_mmap, "K!");
+Well, I am not sure about this. Kexec-tools provides memmap method to
+pass the memory ranges, then either we continue supporting it or we
+delete it. Now is this OK we just keep legacy memmap code there and
+ignore it? If people check the man page and find --pass-memmap-cmdline
+and intend to try, then kexec/kdump fail, then how do we go with it?
 
-Since we have switched to use e820 it is not necessary to supporting new things
-in legacy memmap interface?
+Thanks
+Baoquan
 
->  
->  	ultoa(startk, str_tmp);
->  	strcat (str_mmap, str_tmp);
-> @@ -674,10 +680,11 @@ static int cmdline_add_memmap(char *cmdline, struct memory_range *memmap_p)
->  		endk = (memmap_p[i].end + 1)/1024;
->  		type = memmap_p[i].type;
->  
-> -		/* Only adding memory regions of RAM and ACPI */
-> +		/* Only adding memory regions of RAM and ACPI and Persistent Mem */
->  		if (type != RANGE_RAM &&
->  		    type != RANGE_ACPI &&
-> -		    type != RANGE_ACPI_NVS)
-> +		    type != RANGE_ACPI_NVS &&
-> +		    type != RANGE_PRAM)
->  			continue;
->  
->  		if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
-> @@ -997,7 +1004,9 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
->  		unsigned long start, end, size, type;
->  		if ( !( mem_range[i].type == RANGE_ACPI
->  			|| mem_range[i].type == RANGE_ACPI_NVS
-> -			|| mem_range[i].type == RANGE_RESERVED))
-> +			|| mem_range[i].type == RANGE_RESERVED
-> +			|| mem_range[i].type == RANGE_PMEM
-> +			|| mem_range[i].type == RANGE_PRAM))
->  			continue;
->  		start = mem_range[i].start;
->  		end = mem_range[i].end;
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index 3624192..28e5fc8 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -94,6 +94,12 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
->  		else if (memcmp(str, "ACPI Non-volatile Storage\n", 26) == 0) {
->  			type = RANGE_ACPI_NVS;
->  		}
-> +		else if (memcmp(str, "Persistent Memory (legacy)\n", 27) == 0) {
-> +			type = RANGE_PRAM;
-> +		}
-> +		else if (memcmp(str, "Persistent Memory\n", 18) == 0) {
-> +			type = RANGE_PMEM;
-> +		}
->  		else {
->  			continue;
->  		}
-> @@ -149,6 +155,10 @@ unsigned xen_e820_to_kexec_type(uint32_t type)
->  			return RANGE_ACPI;
->  		case E820_NVS:
->  			return RANGE_ACPI_NVS;
-> +		case E820_PMEM:
-> +			return RANGE_PMEM;
-> +		case E820_PRAM:
-> +			return RANGE_PRAM;
->  		case E820_RESERVED:
->  		default:
->  			return RANGE_RESERVED;
-> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> index 9271c6c..c75adaa 100644
-> --- a/kexec/arch/i386/x86-linux-setup.c
-> +++ b/kexec/arch/i386/x86-linux-setup.c
-> @@ -705,6 +705,12 @@ static void add_e820_map_from_mr(struct x86_linux_param_header *real_mode,
->  			case RANGE_ACPI_NVS:
->  				e820[i].type = E820_NVS;
->  				break;
-> +			case RANGE_PMEM:
-> +				e820[i].type = E820_PMEM;
-> +				break;
-> +			case RANGE_PRAM:
-> +				e820[i].type = E820_PRAM;
-> +				break;
->  			default:
->  			case RANGE_RESERVED:
->  				e820[i].type = E820_RESERVED;
-> diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
-> index 6be3c7c..4d84f00 100644
-> --- a/kexec/firmware_memmap.c
-> +++ b/kexec/firmware_memmap.c
-> @@ -168,6 +168,10 @@ static int parse_memmap_entry(const char *entry, struct memory_range *range)
->  		range->type = RANGE_ACPI_NVS;
->  	else if (strcmp(type, "Uncached RAM") == 0)
->  		range->type = RANGE_UNCACHED;
-> +	else if (strcmp(type, "Persistent Memory (legacy)") == 0)
-> +		range->type = RANGE_PRAM;
-> +	else if (strcmp(type, "Persistent Memory") == 0)
-> +		range->type = RANGE_PMEM;
->  	else {
->  		fprintf(stderr, "Unknown type (%s) while parsing %s. Please "
->  			"report this as bug. Using RANGE_RESERVED now.\n",
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index b129c15..0fa977f 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -136,6 +136,8 @@ struct memory_range {
->  #define RANGE_ACPI	2
->  #define RANGE_ACPI_NVS	3
->  #define RANGE_UNCACHED	4
-> +#define RANGE_PMEM		6
-> +#define RANGE_PRAM		11
->  };
->  
->  struct memory_ranges {
-> -- 
-> 2.1.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
 > 
 
 _______________________________________________
