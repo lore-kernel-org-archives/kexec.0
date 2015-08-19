@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZRkXS-00065A-Tg
- for kexec@lists.infradead.org; Tue, 18 Aug 2015 17:19:07 +0000
-Message-ID: <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
-In-Reply-To: <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
-References: <d76572d93d25b0196cb2b32c88fd15dc4eb78682.1431714565.git.panand@redhat.com>
- <CAOZdJXWjZmL_K=FmvBU=U3VSDY9R4AucFU16v8CAgQCEe8HYDg@mail.gmail.com>
- <20150624033241.GA22348@localhost.localdomain>
- <558A25A3.60504@codeaurora.org>
- <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
- <20150703043241.GC21990@dhcppc13.redhat.com>
- <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
-Date: Tue, 18 Aug 2015 17:18:44 -0000
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-From: "Azriel Samson" <asamson@codeaurora.org>
+ id 1ZRtVX-0007Ky-0T
+ for kexec@lists.infradead.org; Wed, 19 Aug 2015 02:53:43 +0000
+Date: Wed, 19 Aug 2015 10:53:16 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: kexec, x86: Need a new e820 type support for kexec
+Message-ID: <20150819025316.GD19950@dhcp-128-28.nay.redhat.com>
+References: <1437697592.3214.373.camel@hp.com>
+ <20150806081231.GA16699@dhcp-128-28.nay.redhat.com>
+ <1438910038.3109.116.camel@hp.com>
+ <20150818085330.GB15480@dhcp-128-28.nay.redhat.com>
+ <1439910078.24434.106.camel@hp.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1439910078.24434.106.camel@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,108 +23,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: sgoel@codeaurora.org
-Cc: Pratyush Anand <panand@redhat.com>, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
+Cc: linux-nvdimm@ml01.01.org, dan.j.williams@intel.com, kexec@lists.infradead.org, hch@lst.de, linux-kernel@vger.kernel.org
 
-Adding Sameer as he has a few questions on kvbase.
+On 08/18/15 at 09:01am, Toshi Kani wrote:
+> On Tue, 2015-08-18 at 16:53 +0800, Baoquan He wrote:
+> > Rethink it again, maybe it's better to pass PMEM as PRAM to kdump
+> > kernel if user really want to use memmap way by specifying
+> > --pass-memmap-cmdline. Then I need add the PMEM and PRAM checking here
+> > you pointed out. Will repost with them.
+> 
+> No, you should not report PMEM as PRAM.  They are different things.  The
+> kdump kernel does not need to support memmap cmdline for PMEM, as the
+> regular kernel does not -- memmap cmdline cannot emulate PMEM.
 
-> Hi Pratyush,
->
-> I was able to run makedumpfile with "-d 31" but the dumpfile was
-> approximately the same size as that of vmcore (~16GB).
->
-> Answers inline.
->
->> Hi Azriel,
->>
->> On 01/07/2015:06:42:46 PM, Azriel Samson wrote:
->>> Hi Pratyush,
->>>
->>> I am working with Timur and we are testing your version of
->>> makedumpfile.
->>
->> Thanks for testing.
->>
->>> The tool is unable to get the kernel version and quits from
->>> check_release().
->>
->> Couple of questions:
->>
->> 1. Can you please let me know VA_BITS configured in your case?
-> VA_BITS=3D39
->> 2. Do you expect any regions other than vmalloc, vmemmap or modules,
->> which are not directly mapped and their physical address need to be
->> found from swapper_pg_dir?
-> No
->> In my vmcore, I did not had any address where
->> is_vtop_from_page_table_arm64 would be true. So, vtop_arm64 function
->> has been only cross checked logically. So,
->> a) Please put a print in vtop_arm64 and check if control goes there?
->> b) if yes, then please print vaddr and paddr at the end of vtop_arm64
->> and see if that is correct. If not we need to debug vtop_arm64.
-> I still need to try this. Will get back when I do.
->> ~Pratyush
->>
->>>
->>> I tried to debug the vmcore file with gdb but the file looks corrupt.
->>>
->>> Let me know if you have any ideas on what could be wrong?
->>>
->>> > Hi Timur,
->>> >
->>> > On 23/06/2015:10:36:03 PM, Timur Tabi wrote:
->>> >> Pratyush Anand wrote:
->>> >> >I can try to find out some time in weekend to refactor arm64 code
->>> >> >and then add 3 level, 4K support. May be I will need a Tested-by.
->>> >>
->>> >> We'd be more than happy to test any code from you promptly.  We're
->>> eager
->>> >> to
->>> >> get this to work.
->>> >
->>> > I have done the changes, hopefully it should work, but have not
->>> > tested. Let me know, if it works will send them as formal patches
->>> > to upstream.
->>> >
->>> > https://github.com/pratyushanand/makedumpfile.git : arm64_support
->>> > (9b95423bcea0)
->>> >
->>> > ~Pratyush
->>> >
->>>
->>> --
->>> Thanks,
->>> Azriel Samson
->>> Qualcomm Innovation Center, Inc.
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>> Forum,=A0
->>> a Linux Foundation Collaborative Project
->>
->
->
-> --
-> Thanks,
-> Azriel Samson
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> Forum,=A0
-> a Linux Foundation Collaborative Project
->
+OK. Then it will be wrong if people intend to specify
+--pass-memmap-cmdline. There might be 3 ways to fix this:
 
+1) add PMEM support in kernel. memmap cmdline is not only used for
+emulating, but for kexec/kdump using.
 
--- =
+2) Delete --pass-memmap-cmdline option in kexec-tools since people
+rarely use it.
 
-Thanks,
-Azriel Samson
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,=
-=A0
-a Linux Foundation Collaborative Project
+3) Add a note in kexec-tools that option --pass-memmap-cmdline can't
+work together with PMEM, people should not use it.
 
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
