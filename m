@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from ozlabs.org ([103.22.144.67])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZSFyB-0003mj-L5
- for kexec@lists.infradead.org; Thu, 20 Aug 2015 02:52:48 +0000
-Date: Thu, 20 Aug 2015 10:52:22 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [Patch v3] Add persistent memory support
-Message-ID: <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
-References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
- <20150819092815.GB6130@localhost.localdomain>
- <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
- <20150820023812.GA20780@localhost.localdomain>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150820023812.GA20780@localhost.localdomain>
+ id 1ZSHrz-0004qk-AW
+ for kexec@lists.infradead.org; Thu, 20 Aug 2015 04:54:31 +0000
+Message-ID: <1440046447.13406.15.camel@ellerman.id.au>
+Subject: Re: [RFC PATCH 14/17] powerpc/book3e-64/kexec: Enable SMP release
+From: Michael Ellerman <mpe@ellerman.id.au>
+Date: Thu, 20 Aug 2015 14:54:07 +1000
+In-Reply-To: <1437250134-307-15-git-send-email-scottwood@freescale.com>
+References: <1437250134-307-1-git-send-email-scottwood@freescale.com>
+ <1437250134-307-15-git-send-email-scottwood@freescale.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +23,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: toshi.kani@hp.com, horms@verge.net.au, kexec@lists.infradead.org
+To: Scott Wood <scottwood@freescale.com>
+Cc: Tiejun Chen <tiejun.chen@intel.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-On 08/20/15 at 10:38am, Dave Young wrote:
-> On 08/19/15 at 06:45pm, Baoquan He wrote:
-> > On 08/19/15 at 05:28pm, Dave Young wrote:
-> > > Hi,
-> > > 
-> > > On 08/19/15 at 05:03pm, Baoquan He wrote:
-> >   
-> > > > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> > > > index 82bf239..598a78f 100644
-> > > > --- a/kexec/arch/i386/crashdump-x86.c
-> > > > +++ b/kexec/arch/i386/crashdump-x86.c
-> > > > @@ -301,6 +301,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
-> > > >  			type = RANGE_ACPI;
-> > > >  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
-> > > >  			type = RANGE_ACPI_NVS;
-> > > > +		} else if(memcmp(str,"Persistent Memory (legacy)\n",27) == 0 ) {
-> > > > +			type = RANGE_PRAM;
-> > > > +		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
-> > > > +			type = RANGE_PMEM;
-> > > >  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-> > > >  			type = RANGE_RESERVED;
-> > > >  		} else if (memcmp(str, "GART\n", 5) == 0) {
-> > > > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
-> > > >  		strcat (str_mmap, "K$");
-> > > >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
-> > > >  		strcat (str_mmap, "K#");
-> > > > +	else if (type == RANGE_PRAM)
-> > > > +		strcat (str_mmap, "K!");
-> > > 
-> > > Since we have switched to use e820 it is not necessary to supporting new things
-> > > in legacy memmap interface?
-> > 
-> > Well, I am not sure about this. Kexec-tools provides memmap method to
-> > pass the memory ranges, then either we continue supporting it or we
-> > delete it. Now is this OK we just keep legacy memmap code there and
-> > ignore it? If people check the man page and find --pass-memmap-cmdline
-> > and intend to try, then kexec/kdump fail, then how do we go with it?
+Hi Scott,
+
+Sorry for the delay. So I'm back to square one on this patch.
+
+On Sat, 2015-07-18 at 15:08 -0500, Scott Wood wrote:
+> booted_from_exec is similar to __run_at_load, except that it is set for
+> regular kexec as well as kdump.
 > 
-> It is a legacy interface, IMO we should deprecate it and remove it after a
-> period like several release cycle.
+> The flag is needed because the SMP release mechanism for FSL book3e is
+> different from when booting with normal hardware.  In theory we could
+> simulate the normal spin table mechanism, but not at the addresses
+> U-Boot put in the device tree -- so there'd need to be even more
+> communication between the kernel and kexec to set that up.  Since
+> there's already a similar flag being set (for kdump only), this seemed
+> like a reasonable approach.
 
-So if customers still want to specify memmap there isn't a way.
+Although this is a reasonable approach, I don't think it's the best approach.
+
+AFAICS there's no reason why we can't use a device tree property for this, so I
+think we should do that.
+
+It avoids using up space in the low memory area, and also any ambiguities about
+whether the value has been set or not.
+
+The reason we used a flag like this for __run_at_load is we need to access that
+very early, ie. before we've even relocated the kernel, well before we have
+(easy) access to the flattened device tree.
+
+In contrast for this, you don't need to know you're booted from kexec until
+much later, so using a device tree property is cleaner and just as easy.
+
+If you want to call it "linux,kexec-boot" or similar that's fine. Equally you
+could make it more specific, something like "fsl,avoid-spin-table".
+
+
+Also below ...
+
+> diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+> index 5152289..4abda43 100644
+> --- a/arch/powerpc/platforms/85xx/smp.c
+> +++ b/arch/powerpc/platforms/85xx/smp.c
+> @@ -305,10 +310,13 @@ static int smp_85xx_kick_cpu(int nr)
+>  		__secondary_hold_acknowledge = -1;
+>  	}
+>  #endif
+> -	flush_spin_table(spin_table);
+> -	out_be32(&spin_table->pir, hw_cpu);
+> -	out_be32(&spin_table->addr_l, __pa(__early_start));
+> -	flush_spin_table(spin_table);
+> +
+> +	if (have_spin_table) {
+> +		flush_spin_table(spin_table);
+> +		out_be32(&spin_table->pir, hw_cpu);
+> +		out_be32(&spin_table->addr_l, __pa(__early_start));
+> +		flush_spin_table(spin_table);
+> +	}
+>  
+>  	/* Wait a bit for the CPU to ack. */
+>  	if (!spin_event_timeout(__secondary_hold_acknowledge == hw_cpu,
+
+This looks like it's inside an #ifdef CONFIG_PPC32 block, which doesn't make
+sense, so I must be missing a lead-up patch or something? (I looked on the list
+but didn't find anything immediately)
+
+cheers
+
+
+
 
 
 _______________________________________________
