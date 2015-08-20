@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f180.google.com ([209.85.212.180])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZSJi7-0008BR-BT
- for kexec@lists.infradead.org; Thu, 20 Aug 2015 06:52:28 +0000
-Received: by wicne3 with SMTP id ne3so6979631wic.1
- for <kexec@lists.infradead.org>; Wed, 19 Aug 2015 23:52:05 -0700 (PDT)
-Subject: Re: Dmesg not being dumped
-References: <mailman.5.1440010802.20553.kexec@lists.infradead.org>
- <2097586247.19732970.1440016713516.JavaMail.zimbra@redhat.com>
-From: Nikolay Borisov <kernel@kyup.com>
-Message-ID: <55D57913.2070303@kyup.com>
-Date: Thu, 20 Aug 2015 09:52:03 +0300
+ id 1ZSKVC-0000DQ-PP
+ for kexec@lists.infradead.org; Thu, 20 Aug 2015 07:43:11 +0000
+Date: Thu, 20 Aug 2015 15:42:34 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [Patch v3] Add persistent memory support
+Message-ID: <20150820074234.GA23537@localhost.localdomain>
+References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
+ <20150819092815.GB6130@localhost.localdomain>
+ <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
+ <20150820023812.GA20780@localhost.localdomain>
+ <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <2097586247.19732970.1440016713516.JavaMail.zimbra@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,134 +27,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: toshi.kani@hp.com, horms@verge.net.au, kexec@lists.infradead.org
 
-
-
-On 08/19/2015 11:38 PM, Dave Anderson wrote:
+On 08/20/15 at 10:52am, Baoquan He wrote:
+> On 08/20/15 at 10:38am, Dave Young wrote:
+> > On 08/19/15 at 06:45pm, Baoquan He wrote:
+> > > On 08/19/15 at 05:28pm, Dave Young wrote:
+> > > > Hi,
+> > > > 
+> > > > On 08/19/15 at 05:03pm, Baoquan He wrote:
+> > >   
+> > > > > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> > > > > index 82bf239..598a78f 100644
+> > > > > --- a/kexec/arch/i386/crashdump-x86.c
+> > > > > +++ b/kexec/arch/i386/crashdump-x86.c
+> > > > > @@ -301,6 +301,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+> > > > >  			type = RANGE_ACPI;
+> > > > >  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
+> > > > >  			type = RANGE_ACPI_NVS;
+> > > > > +		} else if(memcmp(str,"Persistent Memory (legacy)\n",27) == 0 ) {
+> > > > > +			type = RANGE_PRAM;
+> > > > > +		} else if(memcmp(str,"Persistent Memory\n",18) == 0 ) {
+> > > > > +			type = RANGE_PMEM;
+> > > > >  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
+> > > > >  			type = RANGE_RESERVED;
+> > > > >  		} else if (memcmp(str, "GART\n", 5) == 0) {
+> > > > > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char *cmdline, unsigned long startk,
+> > > > >  		strcat (str_mmap, "K$");
+> > > > >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
+> > > > >  		strcat (str_mmap, "K#");
+> > > > > +	else if (type == RANGE_PRAM)
+> > > > > +		strcat (str_mmap, "K!");
+> > > > 
+> > > > Since we have switched to use e820 it is not necessary to supporting new things
+> > > > in legacy memmap interface?
+> > > 
+> > > Well, I am not sure about this. Kexec-tools provides memmap method to
+> > > pass the memory ranges, then either we continue supporting it or we
+> > > delete it. Now is this OK we just keep legacy memmap code there and
+> > > ignore it? If people check the man page and find --pass-memmap-cmdline
+> > > and intend to try, then kexec/kdump fail, then how do we go with it?
+> > 
+> > It is a legacy interface, IMO we should deprecate it and remove it after a
+> > period like several release cycle.
 > 
+> So if customers still want to specify memmap there isn't a way.
 > 
-> ----- Original Message -----
->>
->> Hi,
->>
->> On 08/19/2015 12:02 PM, Baoquan He wrote:
->>> On 08/19/15 at 09:21am, Nikolay Borisov wrote:
->>>> Hello,
->>>>
->>>> I've recently noticed that when creating crashdumps the dmesg is not
->>>> being saved. The error reported is this: "Missing the struct log size
->>>> export". I've tested with both kernel 4.1.1 and 3.12.28. My version of
->>>> kexec tools is : kexec-tools 2.0.9 released 04 June 2015. The kernel has
->>>> been compiled with debugging info so the respective symbol should be
->>>> exported but apparently it is not. Any ideas how to debug that?
->>>
->>> That would be more helpful if you can attach the 1st kernel and kdump
->>> kernel console log.
->>
->> I just tested with 4.1.6 with the same result. I'm sending you a link to
->> the bzImage in question
->> http://georgi.unixsol.org/cruft/tmp/bzImage-4.1.6-clouder1 ( I assume
->> you meant the bzImage, if you need I can provide the vmlinux as well).
->> Unfortunately, I couldn't figure how to obtain the log of kdump in
->> textual format (and didn't want to send pictures). Here are the 3
->> relevant lines (from memory):
->>
->> Saving vmcore-dmesg.txt
->> Missing the struct log size export   
->> Error saving vmcore-dmesg.txt.
->>
->> Yet, when I load the crashdump inside the 'crash' utility and invoke the
->> 'log' command the dmesg log is there. Whereas the vmcore-dmesg-incomplete.txt is empty.
-> 
-> FYI -- the crash utility doesn't use the vmcoreinfo data for its "log" command, 
-> but you can dump the vmcore's header contents, including the vmcoreinfo strings,
-> with the "help -n" command.  For example:
 
-Thanks for the tip, using that I can confirm that the actual symbols are
-in the resulting vmcoreinfo:
+Why do one use memmap with new kexec-tools?
 
-		      SIZE(printk_log)=16
-		      OFFSET(printk_log.ts_nsec)=0
-                      OFFSET(printk_log.len)=8
-                      OFFSET(printk_log.text_len)=10
-                      OFFSET(printk_log.dict_len)=12
+There's no reason to use the old interface, I do not think there's any benefit
+since new interface works well and be more scalable.
 
-So the required symbol is there (printk_log) but for some reason kexec
-cannot read it... I tried creating an uncompressed crash (removing the
--c option from the makedumpfile command to no avail)..
-
-
-> 
-> crash> help -n
-> ... [ cut ] ...
->                       OSRELEASE=3.18.0-0.rc2.git2.1.slub1.fc21.x86_64
->                       PAGESIZE=4096
->                       SYMBOL(init_uts_ns)=ffffffff81e1b300
->                       SYMBOL(node_online_map)=ffffffff81fe8980
->                       SYMBOL(swapper_pg_dir)=ffffffff81e14000
->                       SYMBOL(_stext)=ffffffff810001c8
->                       SYMBOL(vmap_area_list)=ffffffff81efce50
->                       SYMBOL(mem_section)=ffffffff832eb180
->                       LENGTH(mem_section)=4096
->                       SIZE(mem_section)=32
->                       OFFSET(mem_section.section_mem_map)=0
->                       SIZE(page)=64
->                       SIZE(pglist_data)=156928
->                       SIZE(zone)=1984
->                       SIZE(free_area)=88
->                       SIZE(list_head)=16
->                       SIZE(nodemask_t)=128
->                       OFFSET(page.flags)=0
->                       OFFSET(page._count)=28
->                       OFFSET(page.mapping)=8
->                       OFFSET(page.lru)=32
->                       OFFSET(page._mapcount)=24
->                       OFFSET(page.private)=48
->                       OFFSET(pglist_data.node_zones)=0
->                       OFFSET(pglist_data.nr_zones)=156480
->                       OFFSET(pglist_data.node_start_pfn)=156560
->                       OFFSET(pglist_data.node_spanned_pages)=156576
->                       OFFSET(pglist_data.node_id)=156584
->                       OFFSET(zone.free_area)=392
->                       OFFSET(zone.vm_stat)=1664
->                       OFFSET(zone.spanned_pages)=120
->                       OFFSET(free_area.free_list)=0
->                       OFFSET(list_head.next)=0
->                       OFFSET(list_head.prev)=8
->                       OFFSET(vmap_area.va_start)=0
->                       OFFSET(vmap_area.list)=48
->                       LENGTH(zone.free_area)=11
->                       SYMBOL(log_buf)=ffffffff81e5f0c0
->                       SYMBOL(log_buf_len)=ffffffff81e5f0bc
->                       SYMBOL(log_first_idx)=ffffffff831bee88
->                       SYMBOL(log_next_idx)=ffffffff831bee78
->                       SIZE(printk_log)=16
->                       OFFSET(printk_log.ts_nsec)=0
->                       OFFSET(printk_log.len)=8
->                       OFFSET(printk_log.text_len)=10
->                       OFFSET(printk_log.dict_len)=12
->                       LENGTH(free_area.free_list)=5
->                       NUMBER(NR_FREE_PAGES)=0
->                       NUMBER(PG_lru)=5
->                       NUMBER(PG_private)=11
->                       NUMBER(PG_swapcache)=16
->                       NUMBER(PG_slab)=7
->                       NUMBER(PG_hwpoison)=23
->                       NUMBER(PG_head_mask)=16384
->                       NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-128
->                       SYMBOL(free_huge_page)=ffffffff81239430
->                       SYMBOL(phys_base)=ffffffff81e1b010
->                       SYMBOL(init_level4_pgt)=ffffffff81e14000
->                       SYMBOL(node_data)=ffffffff81fe2d40
->                       LENGTH(node_data)=1024
->                       KERNELOFFSET=0
->                       CRASHTIME=141512763
-> ...
-> 
-> Dave
-> 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
