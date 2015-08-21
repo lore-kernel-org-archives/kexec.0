@@ -1,28 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZScQx-0008DJ-I9
- for kexec@lists.infradead.org; Fri, 21 Aug 2015 02:52:00 +0000
-Received: from /spool/local
- by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <sam.mj@au1.ibm.com>;
- Fri, 21 Aug 2015 12:51:33 +1000
-Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 8019C2CE8055
- for <kexec@lists.infradead.org>; Fri, 21 Aug 2015 12:51:30 +1000 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t7L2pMs246399686
- for <kexec@lists.infradead.org>; Fri, 21 Aug 2015 12:51:31 +1000
-Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t7L2ovRt000654
- for <kexec@lists.infradead.org>; Fri, 21 Aug 2015 12:50:57 +1000
-From: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
-Subject: [PATCH] purgatory/arch/ppc64: Reset primary cpu endian to big-endian
-Date: Fri, 21 Aug 2015 12:51:16 +1000
-Message-Id: <1440125476-9420-1-git-send-email-sam.mj@au1.ibm.com>
+ id 1ZSdGD-0007UU-Iy
+ for kexec@lists.infradead.org; Fri, 21 Aug 2015 03:44:57 +0000
+Date: Fri, 21 Aug 2015 09:14:33 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH] makedumpfile: Support ARM64
+Message-ID: <20150821034433.GB26132@dhcppc13.redhat.com>
+References: <20150624033241.GA22348@localhost.localdomain>
+ <558A25A3.60504@codeaurora.org>
+ <20150627082256.GE21646@localhost.localdomain>
+ <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
+ <20150703043241.GC21990@dhcppc13.redhat.com>
+ <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
+ <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
+ <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
+ <20150820112150.GA26132@dhcppc13.redhat.com>
+ <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,54 +28,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: mpe@ellerman.id.au, horms@verge.net.au, Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
+To: sgoel@codeaurora.org
+Cc: virajm@codeaurora.org, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
 
-Older big-endian ppc64 kernels don't include the FIXUP_ENDIAN check,
-meaning if we kexec from a little-endian kernel the target kernel will
-fail to boot.
-Returning to big-endian before we enter the target kernel ensures that
-the target kernel can boot whether or not it includes FIXUP_ENDIAN.
+Hi Sameer,
 
-This mirrors commit 150b14e7 in kexec-lite.
+On 20/08/2015:04:11:24 PM, sgoel@codeaurora.org wrote:
+> Hi Pratush,
+> I have made the change now.
+> 
+> The reason for changing the KVBASE was to get non zero value for mem_map
+> as seen from the crash tool. If KVBASE stays at page offset we do not get
+> into the function that looks for the free pages.
 
-Signed-off-by: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
----
- purgatory/arch/ppc64/v2wrap.S | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+OK.. I made the change for KVBASE and pushed it to my github repo.
 
-diff --git a/purgatory/arch/ppc64/v2wrap.S b/purgatory/arch/ppc64/v2wrap.S
-index dc5034f..179ade9 100644
---- a/purgatory/arch/ppc64/v2wrap.S
-+++ b/purgatory/arch/ppc64/v2wrap.S
-@@ -114,10 +114,16 @@ master:
- 	LOADADDR(6,run_at_load) # the load flag
- 	lwz	7,0(6)		# possibly patched by kexec-elf-ppc64
- 	stw	7,0x5c(4)	# and patch it into the kernel
--	li	5,0		# r5 will be 0 for kernel
--	mtctr	4		# prepare branch too
- 	mr      3,16            # restore dt address
- 
-+	mtsrr0	4		# prepare branch to
-+
-+	mfmsr	5
-+	clrrdi	5,5,1		# clear MSR_LE
-+	mtsrr1	5
-+
-+	li	5,0		# r5 will be 0 for kernel
-+
- 				# skip cache flush, do we care?
- 
--	bctr			# start kernel
-+	rfid			# update MSR and start kernel
--- 
-2.5.0
+> 
+> After looking at the page usage using the crash tool it seems that ~80% of
+> the pages are free.
+> 
+> Maybe there is something else that I am missing here. The page look up
+> fails when writing the crashdump file.
 
+Not sure if you can share the output with --message-level 31, but do you see any
+thing susceptible there?
+
+# makedumpfile -l --message-level 31 rawvmcore makedumpfilevmcore
+
+Can you compare "Virtual kernel memory layout:" print of Linux kernel boot with
+makedumpfile print for page_offset, vmalloc_start, vmemmap_start etc, and see if
+they match?
+
+They should match.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
