@@ -1,20 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZSyeq-0003ke-Lw
- for kexec@lists.infradead.org; Sat, 22 Aug 2015 02:35:49 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [V3 PATCH 3/4] kexec: Fix race between panic() and
- crash_kexec() called directly
-Date: Sat, 22 Aug 2015 02:35:24 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A8445493C868@GSjpTKYDCembx31.service.hitachi.net>
-References: <20150806054543.25766.29590.stgit@softrs>
- <20150806054543.25766.5914.stgit@softrs>
- <20150820230845.GF3161@worktop.event.rightround.com>
-In-Reply-To: <20150820230845.GF3161@worktop.event.rightround.com>
-Content-Language: ja-JP
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZSzte-0007g7-6K
+ for kexec@lists.infradead.org; Sat, 22 Aug 2015 03:55:11 +0000
+Date: Sat, 22 Aug 2015 09:24:45 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH] makedumpfile: Support ARM64
+Message-ID: <20150822035445.GC3013@dhcppc13.redhat.com>
+References: <20150627082256.GE21646@localhost.localdomain>
+ <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
+ <20150703043241.GC21990@dhcppc13.redhat.com>
+ <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
+ <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
+ <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
+ <20150820112150.GA26132@dhcppc13.redhat.com>
+ <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
+ <20150821034433.GB26132@dhcppc13.redhat.com>
+ <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,55 +32,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Peter Zijlstra' <peterz@infradead.org>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric
- W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: sgoel@codeaurora.org
+Cc: virajm@codeaurora.org, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
 
-> From: Peter Zijlstra [mailto:peterz@infradead.org]
+On 21/08/2015:08:37:57 PM, sgoel@codeaurora.org wrote:
+> > Can you compare "Virtual kernel memory layout:" print of Linux kernel boot
+> > with
+> > makedumpfile print for page_offset, vmalloc_start, vmemmap_start etc, and
+> > see if
+> > they match?
+> >
+> > They should match.
 > 
-> On Thu, Aug 06, 2015 at 02:45:43PM +0900, Hidehiro Kawai wrote:
-> >  void crash_kexec(struct pt_regs *regs)
-> >  {
-> > +	int old_cpu, this_cpu;
-> > +
-> > +	/*
-> > +	 * `old_cpu == -1' means we are the first comer and crash_kexec()
-> > +	 * was called without entering panic().
-> > +	 * `old_cpu == this_cpu' means crash_kexec() was called from panic().
-> > +	 */
-> > +	this_cpu = raw_smp_processor_id();
-> > +	old_cpu = atomic_cmpxchg(&panic_cpu, -1, this_cpu);
-> > +	if (old_cpu != -1 && old_cpu != this_cpu)
-> > +		return;
 > 
-> This allows recursive calling of crash_kexec(), the Changelog did not
-> mention that. Is this really required?
+> Yes this was a problem. The assumed Kernel struct page size in the tool is
+> 64. For our platform this evaluates to 56. After changing this value all
+> the memory mapping values match.
 
-What part are you arguing?  Recursive call of crash_kexec() doesn't
-happen.  In the first place, one of the purpose of this patch is
-to prevent a recursive call of crash_kexec() in the following case
-as I stated in the description:
+Great !!!
 
-CPU 0:
-  oops_end()
-    crash_kexec()
-      mutex_trylock() // acquired
-        <NMI>
-        io_check_error()
-          panic()
-            crash_kexec()
-              mutex_trylock() // failed to acquire
-            infinite loop
+To be on the same page:
+* You did following changes on top of
+https://github.com/pratyushanand/makedumpfile.git:arm64_support (last commit
+597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right? If yes, then is
+there out of mainline change in struct page for you? If it is mainline, then can
+you please let me know the kernel version, so that on the basic of kernel
+version I can fix it.
 
+diff --git a/arch/arm64.c b/arch/arm64.c
+index a94a4ba16dd5..4154ed6fe4a5 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -86,7 +86,7 @@ typedef struct {
+ /* kernel struct page size can be kernel version dependent, currently
+  * keep it constant.
+  */
+-#define KERN_STRUCT_PAGE_SIZE		64
++#define KERN_STRUCT_PAGE_SIZE		56
+ #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
+ #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
+ #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
 
-Also, the logic doesn't change form V1 (although the implementation
-changed), so I didn't add changelogs any more.
+> 
+> I wanted to ask if the page table translation function would be any
+> different if the page size is 4k instead of 64k?
 
-Regards,
+I believe, if we have programmed pgtable_level, va_bits and page_shift
+correctly, then vtop_arm64 should be able to calculate it for both 4K and 64K.
 
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
-
+~Pratyush
 
 _______________________________________________
 kexec mailing list
