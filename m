@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZTiFE-0004MJ-KG
- for kexec@lists.infradead.org; Mon, 24 Aug 2015 03:16:24 +0000
+ id 1ZTiFA-0004MI-9Y
+ for kexec@lists.infradead.org; Mon, 24 Aug 2015 03:16:20 +0000
 Received: from int-mx10.intmail.prod.int.phx2.redhat.com
  (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
- by mx1.redhat.com (Postfix) with ESMTPS id CCE2751
- for <kexec@lists.infradead.org>; Mon, 24 Aug 2015 03:16:06 +0000 (UTC)
+ by mx1.redhat.com (Postfix) with ESMTPS id AE1488A179
+ for <kexec@lists.infradead.org>; Mon, 24 Aug 2015 03:16:02 +0000 (UTC)
 From: Chao Fan <cfan@redhat.com>
-Subject: [PATCH] sadump_info.c: unsigned_compare: This less-than-zero
- comparison of an unsigned value is never true.
-Date: Mon, 24 Aug 2015 11:15:53 +0800
-Message-Id: <1440386153-21638-3-git-send-email-cfan@redhat.com>
+Subject: [PATCH]makedumpfile.c: check rhe return value ofset_page_size
+Date: Mon, 24 Aug 2015 11:15:52 +0800
+Message-Id: <1440386153-21638-2-git-send-email-cfan@redhat.com>
 In-Reply-To: <1440386153-21638-1-git-send-email-cfan@redhat.com>
 References: <1440386153-21638-1-git-send-email-cfan@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,30 +29,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Chao Fan <cfan@redhat.com>
 
-In sadump_info.c:432: unsigned long block_size =
-SADUMP_DEFAULT_BLOCK_SIZE.
-So block_size is unsigned long value and it is bigger than zero.
-And this comparison is useful.
+check_return: Calling function "set_page_size" without checking
+return value (as is done elsewhere 5 out of 6 times).
+
+makedumpfile.c:8793: example_checked: "set_page_size(dh.block_size)"
+has its value checked in "set_page_size(dh.block_size)". But in
+makedumpfile.c:3213, the function "set_page_size" will not check
+the return value.
 
 Signed-off-by: Chao Fan <cfan@redhat.com>
 ---
- sadump_info.c | 3 ---
- 1 file changed, 3 deletions(-)
+ makedumpfile.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sadump_info.c b/sadump_info.c
-index e2c4f03..e8154f4 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -465,9 +465,6 @@ read_sadump_header(char *filename)
- 	smh = si->smh_memory;
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 32f5459..53efc04 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3213,7 +3213,8 @@ initial(void)
+ 			MSG("because the cyclic mode doesn't support sadump format.\n");
+ 		}
  
- restart:
--	if (block_size < 0)
--		return FALSE;
--
- 	if (!read_device(sph, block_size, &offset))
- 		return ERROR;
+-		set_page_size(sadump_page_size());
++		if (!set_page_size(sadump_page_size()))
++			return FALSE;
  
+ 		if (!sadump_initialize_bitmap_memory())
+ 			return FALSE;
 -- 
 2.4.3
 
