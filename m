@@ -1,22 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f179.google.com ([209.85.212.179])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZTsZo-0005AI-Nw
- for kexec@lists.infradead.org; Mon, 24 Aug 2015 14:18:21 +0000
-Received: by wicja10 with SMTP id ja10so73519277wic.1
- for <kexec@lists.infradead.org>; Mon, 24 Aug 2015 07:17:59 -0700 (PDT)
-Subject: Re: Dmesg not being dumped
-References: <mailman.5.1440010802.20553.kexec@lists.infradead.org>
- <2097586247.19732970.1440016713516.JavaMail.zimbra@redhat.com>
- <55D57913.2070303@kyup.com>
- <1497907178.20184517.1440075877293.JavaMail.zimbra@redhat.com>
- <55D6DCD6.8050000@kyup.com>
- <435200626.24541654.1440421412725.JavaMail.zimbra@redhat.com>
-From: Nikolay Borisov <kernel@kyup.com>
-Message-ID: <55DB2795.6050108@kyup.com>
-Date: Mon, 24 Aug 2015 17:17:57 +0300
+ id 1ZTwJB-0002Ie-SS
+ for kexec@lists.infradead.org; Mon, 24 Aug 2015 18:17:26 +0000
+Message-ID: <5053347ed9f8e4e245d8438b3a8c981d.squirrel@www.codeaurora.org>
+In-Reply-To: <20150822035445.GC3013@dhcppc13.redhat.com>
+References: <20150627082256.GE21646@localhost.localdomain>
+ <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
+ <20150703043241.GC21990@dhcppc13.redhat.com>
+ <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
+ <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
+ <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
+ <20150820112150.GA26132@dhcppc13.redhat.com>
+ <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
+ <20150821034433.GB26132@dhcppc13.redhat.com>
+ <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
+ <20150822035445.GC3013@dhcppc13.redhat.com>
+Date: Mon, 24 Aug 2015 18:17:03 -0000
+Subject: Re: [PATCH] makedumpfile: Support ARM64
+From: sgoel@codeaurora.org
 MIME-Version: 1.0
-In-Reply-To: <435200626.24541654.1440421412725.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,67 +32,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, sgoel@codeaurora.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
+
+> * You did following changes on top of
+> https://github.com/pratyushanand/makedumpfile.git:arm64_support (last
+> commit
+> 597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right?
+
+Yes. Making the change to kernel struct page size fixed the memory map
+values. We are using a 4.0.0 kernel. I checked the struct page and there
+are some changes to it between the kernel versions. There is no platform
+specific change that we have made.
+
+The code still cannot find the free pages as it is exiting due to a
+virtual to physical translation.
+readmem: Can't convert a virtual address(ffffffbee0023000) to physical
+address.
+readmem: type_addr: 0, addr:ffffffbee0023000, size:28672
+__exclude_unnecessary_pages: Can't read the buffer of struct page.
+create_2nd_bitmap: Can't exclude unnecessary pages.
+
+The above is a valid virtual address and maps to a correct physical
+address when I check this using kmem -p using the crash tool. Any help
+will be appreciated.
+
+Thanks,
+Sameer
 
 
 
-On 08/24/2015 04:03 PM, Dave Anderson wrote:
-> 
-> 
-> ----- Original Message -----
+> On 21/08/2015:08:37:57 PM, sgoel@codeaurora.org wrote:
+>> > Can you compare "Virtual kernel memory layout:" print of Linux kernel
+>> boot
+>> > with
+>> > makedumpfile print for page_offset, vmalloc_start, vmemmap_start etc,
+>> and
+>> > see if
+>> > they match?
+>> >
+>> > They should match.
 >>
 >>
->> On 08/20/2015 04:04 PM, Dave Anderson wrote:
->>> The vmcoreinfo data strings were initially located in an ELF note in /proc/vmcore.
->>> When makedumpfile -c was run on /proc/vmcore, it copied those ELF notes into the
->>> compressed kdump header, and you have dumped them above.
->>>
->>> So it seems to be an issue with vmcore-dmesg.  If you change the core_collector
->>> variable to "cp" or "scp", it will copy /proc/vmcore unmodified to the target
->>> location.  Then you can run vmcore-dmesg on that file to debug it.
+>> Yes this was a problem. The assumed Kernel struct page size in the tool
+>> is
+>> 64. For our platform this evaluates to 56. After changing this value all
+>> the memory mapping values match.
+>
+> Great !!!
+>
+> To be on the same page:
+> * You did following changes on top of
+> https://github.com/pratyushanand/makedumpfile.git:arm64_support (last
+> commit
+> 597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right? If yes, then
+> is
+> there out of mainline change in struct page for you? If it is mainline,
+> then can
+> you please let me know the kernel version, so that on the basic of kernel
+> version I can fix it.
+>
+> diff --git a/arch/arm64.c b/arch/arm64.c
+> index a94a4ba16dd5..4154ed6fe4a5 100644
+> --- a/arch/arm64.c
+> +++ b/arch/arm64.c
+> @@ -86,7 +86,7 @@ typedef struct {
+>  /* kernel struct page size can be kernel version dependent, currently
+>   * keep it constant.
+>   */
+> -#define KERN_STRUCT_PAGE_SIZE		64
+> +#define KERN_STRUCT_PAGE_SIZE		56
+>  #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
+>  #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
+>  #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) *
+> KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
+>
 >>
->> This is very, very odd. Obtaining a raw vmcore with cp and then running
->> vmcore-dmesg does show the dmesg log. But at the same time, the
->> vmcore-dmesg.txt file is empty and its name is
->> vmcore-dmesg-incomplete.txt...
-> 
-> I'm not sure what you mean.  Similar to the saving of the vmcore file, the
-> script directs the output of vmcore-dmesg into vmcore-dmesg-incomplete.txt.
-> Then, only if vmcore-dmesg returns an exit status of 0, the script will 
-> rename the file to vmcore-dmesg.txt.
+>> I wanted to ask if the page table translation function would be any
+>> different if the page size is 4k instead of 64k?
+>
+> I believe, if we have programmed pgtable_level, va_bits and page_shift
+> correctly, then vtop_arm64 should be able to calculate it for both 4K and
+> 64K.
+>
+> ~Pratyush
+>
 
-vmcore-dmesg vmcore
-<dmesg log is printed"
-echo $?
-0
 
-so vmcore-dmesg succeeds but for some reason the dmesg is not being
-redirrected to the txt file. Yes the vmcore-dmesg-incomplete.txt is
-empty when the crash dump was invoked.
-
-So to sum up my findings so far:
-
-* When a crash dump is invoked the with the -c option of makedumpfile I
-get an empty vmcore-dmesg-incomplete.txt. And the error string printed
-on screen while taking the dump is: "struct log size not exported".
-Looking at the code this can happen if the "printk_log" symbol cannot be
-found. However, when I load the resulting vmcore image in crash and
-invoke help -n I see that the correct symbol is there.
-
-* When a raw coredump is taken (via cp as a collector) I still have an
-empty vmcore-dmesg-incomplete.txt file, yet when I manually run
-vmcore-dmesg on the resulting vmcore the dmesg is extracted and the
-return code of the vmcore-dmesg script is 0 (success).
-
-Having those facts in mind and what you said I do not see a logical
-reason why dmesg is not being stored in the text file.
-
-So either I'm missing something or the error message that is being
-printed is very misleading, even though the code that involves is not
-complicated it at all. Hm....
-
-> 
 
 _______________________________________________
 kexec mailing list
