@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3425.houston.hp.com ([15.201.208.53])
+Received: from mail-bn1bon0142.outbound.protection.outlook.com
+ ([157.56.111.142] helo=na01-bn1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZTxrd-0004ZM-3y
- for kexec@lists.infradead.org; Mon, 24 Aug 2015 19:57:05 +0000
-Message-ID: <1440446072.14237.8.camel@hp.com>
-Subject: Re: [Patch v3] Add persistent memory support
-From: Toshi Kani <toshi.kani@hp.com>
-Date: Mon, 24 Aug 2015 13:54:32 -0600
-In-Reply-To: <20150820074234.GA23537@localhost.localdomain>
-References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
- <20150819092815.GB6130@localhost.localdomain>
- <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
- <20150820023812.GA20780@localhost.localdomain>
- <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
- <20150820074234.GA23537@localhost.localdomain>
-Mime-Version: 1.0
+ id 1ZTyJt-0007an-Jr
+ for kexec@lists.infradead.org; Mon, 24 Aug 2015 20:26:18 +0000
+Message-ID: <1440447948.30043.36.camel@freescale.com>
+Subject: Re: [RFC PATCH 14/17] powerpc/book3e-64/kexec: Enable SMP release
+From: Scott Wood <scottwood@freescale.com>
+Date: Mon, 24 Aug 2015 15:25:48 -0500
+In-Reply-To: <1440046447.13406.15.camel@ellerman.id.au>
+References: <1437250134-307-1-git-send-email-scottwood@freescale.com>
+ <1437250134-307-15-git-send-email-scottwood@freescale.com>
+ <1440046447.13406.15.camel@ellerman.id.au>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,73 +25,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Tiejun Chen <tiejun.chen@intel.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-On Thu, 2015-08-20 at 15:42 +0800, Dave Young wrote:
-> On 08/20/15 at 10:52am, Baoquan He wrote:
-> > On 08/20/15 at 10:38am, Dave Young wrote:
-> > > On 08/19/15 at 06:45pm, Baoquan He wrote:
-> > > > On 08/19/15 at 05:28pm, Dave Young wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On 08/19/15 at 05:03pm, Baoquan He wrote:
-> > > >   
-> > > > > > diff --git a/kexec/arch/i386/crashdump-x86.c 
-> > > > > > b/kexec/arch/i386/crashdump-x86.c
-> > > > > > index 82bf239..598a78f 100644
-> > > > > > --- a/kexec/arch/i386/crashdump-x86.c
-> > > > > > +++ b/kexec/arch/i386/crashdump-x86.c
-> > > > > > @@ -301,6 +301,10 @@ static int get_crash_memory_ranges(struct 
-> > > > > > memory_range **range, int *ranges,
-> > > > > >  			type = RANGE_ACPI;
-> > > > > >  		} else if(memcmp(str,"ACPI Non-volatile 
-> > > > > > Storage\n",26) == 0 ) {
-> > > > > >  			type = RANGE_ACPI_NVS;
-> > > > > > +		} else if(memcmp(str,"Persistent Memory 
-> > > > > > (legacy)\n",27) == 0 ) {
-> > > > > > +			type = RANGE_PRAM;
-> > > > > > +		} else if(memcmp(str,"Persistent Memory\n",18) 
-> > > > > > == 0 ) {
-> > > > > > +			type = RANGE_PMEM;
-> > > > > >  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
-> > > > > >  			type = RANGE_RESERVED;
-> > > > > >  		} else if (memcmp(str, "GART\n", 5) == 0) {
-> > > > > > @@ -640,6 +644,8 @@ static void cmdline_add_memmap_internal(char 
-> > > > > > *cmdline, unsigned long startk,
-> > > > > >  		strcat (str_mmap, "K$");
-> > > > > >  	else if (type == RANGE_ACPI || type == RANGE_ACPI_NVS)
-> > > > > >  		strcat (str_mmap, "K#");
-> > > > > > +	else if (type == RANGE_PRAM)
-> > > > > > +		strcat (str_mmap, "K!");
-> > > > > 
-> > > > > Since we have switched to use e820 it is not necessary to 
-> > > > > supporting new things in legacy memmap interface?
-> > > > 
-> > > > Well, I am not sure about this. Kexec-tools provides memmap method 
-> > > > to pass the memory ranges, then either we continue supporting it or 
-> > > > we delete it. Now is this OK we just keep legacy memmap code there 
-> > > > and ignore it? If people check the man page and find --pass-memmap
-> > > > -cmdline and intend to try, then kexec/kdump fail, then how do we go 
-> > > > with it?
-> > > 
-> > > It is a legacy interface, IMO we should deprecate it and remove it 
-> > > after a period like several release cycle.
-> > 
-> > So if customers still want to specify memmap there isn't a way.
-> > 
+On Thu, 2015-08-20 at 14:54 +1000, Michael Ellerman wrote:
+> Hi Scott,
 > 
-> Why do one use memmap with new kexec-tools?
+> Sorry for the delay. So I'm back to square one on this patch.
 > 
-> There's no reason to use the old interface, I do not think there's any 
-> benefit since new interface works well and be more scalable.
+> On Sat, 2015-07-18 at 15:08 -0500, Scott Wood wrote:
+> > booted_from_exec is similar to __run_at_load, except that it is set for
+> > regular kexec as well as kdump.
+> > 
+> > The flag is needed because the SMP release mechanism for FSL book3e is
+> > different from when booting with normal hardware.  In theory we could
+> > simulate the normal spin table mechanism, but not at the addresses
+> > U-Boot put in the device tree -- so there'd need to be even more
+> > communication between the kernel and kexec to set that up.  Since
+> > there's already a similar flag being set (for kdump only), this seemed
+> > like a reasonable approach.
+> 
+> Although this is a reasonable approach, I don't think it's the best 
+> approach.
+> 
+> AFAICS there's no reason why we can't use a device tree property for this, 
+> so I
+> think we should do that.
 
-Unless --pass-memmap-cmdline has already been deprecated, I think it should
-keep up with the kernel update in the memmap cmd-line.  IOW, if we do not
-keep it up, it should be marked as deprecated.
+OK, I'll look into that.
 
-Thanks,
--Toshi
+> 
+> > diff --git a/arch/powerpc/platforms/85xx/smp.c 
+> > b/arch/powerpc/platforms/85xx/smp.c
+> > index 5152289..4abda43 100644
+> > --- a/arch/powerpc/platforms/85xx/smp.c
+> > +++ b/arch/powerpc/platforms/85xx/smp.c
+> > @@ -305,10 +310,13 @@ static int smp_85xx_kick_cpu(int nr)
+> >             __secondary_hold_acknowledge = -1;
+> >     }
+> >  #endif
+> > -   flush_spin_table(spin_table);
+> > -   out_be32(&spin_table->pir, hw_cpu);
+> > -   out_be32(&spin_table->addr_l, __pa(__early_start));
+> > -   flush_spin_table(spin_table);
+> > +
+> > +   if (have_spin_table) {
+> > +           flush_spin_table(spin_table);
+> > +           out_be32(&spin_table->pir, hw_cpu);
+> > +           out_be32(&spin_table->addr_l, __pa(__early_start));
+> > +           flush_spin_table(spin_table);
+> > +   }
+> >  
+> >     /* Wait a bit for the CPU to ack. */
+> >     if (!spin_event_timeout(__secondary_hold_acknowledge == hw_cpu,
+> 
+> This looks like it's inside an #ifdef CONFIG_PPC32 block, which doesn't make
+> sense, so I must be missing a lead-up patch or something? (I looked on the 
+> list
+> but didn't find anything immediately)
+
+Thanks for catching this.
+
+This is apparently a mismerge due to the code having been previously worked 
+on in the context of the SDK tree, which does not have that code inside 
+#ifdef CONFIG_PPC32.  When I then applied the result to mainline, everything 
+still appeared to work, because there's no real consequence to writing to the 
+spin table in this case -- it's just a no-op.  setup_64.c is the part where 
+checking booted_from_kexec (or devicetree equivalent) really matters.
+
+-Scott
+
+
 
 _______________________________________________
 kexec mailing list
