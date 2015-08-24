@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx6-phx2.redhat.com ([209.132.183.39])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZTiFA-0004MH-9W
- for kexec@lists.infradead.org; Mon, 24 Aug 2015 03:16:20 +0000
-Received: from int-mx10.intmail.prod.int.phx2.redhat.com
- (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
- by mx1.redhat.com (Postfix) with ESMTPS id 262BA461D9
- for <kexec@lists.infradead.org>; Mon, 24 Aug 2015 03:15:59 +0000 (UTC)
+ id 1ZTiPj-0006wn-Qi
+ for kexec@lists.infradead.org; Mon, 24 Aug 2015 03:27:17 +0000
+Received: from zmail25.collab.prod.int.phx2.redhat.com
+ (zmail25.collab.prod.int.phx2.redhat.com [10.5.83.31])
+ by mx6-phx2.redhat.com (8.14.4/8.14.4) with ESMTP id t7O3Qt39000945
+ for <kexec@lists.infradead.org>; Sun, 23 Aug 2015 23:26:55 -0400
+Date: Sun, 23 Aug 2015 23:26:54 -0400 (EDT)
 From: Chao Fan <cfan@redhat.com>
-Subject: [PATCH]makedumpfile.h:makedumpfile.h: check the return value
-Date: Mon, 24 Aug 2015 11:15:51 +0800
-Message-Id: <1440386153-21638-1-git-send-email-cfan@redhat.com>
+Message-ID: <1092641039.13744341.1440386814925.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1440386153-21638-2-git-send-email-cfan@redhat.com>
+References: <1440386153-21638-1-git-send-email-cfan@redhat.com>
+ <1440386153-21638-2-git-send-email-cfan@redhat.com>
+Subject: Re: [PATCH]makedumpfile.c: check rhe return value ofset_page_size
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,47 +23,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Chao Fan <cfan@redhat.com>
 
-makedumpfile.h:1748: check_return: Calling function "lseek" without
-checking return value.
+Sorry, the format is not good. I will rearrange the patches and repost.
 
-makedumpfile.c:3394: example_checked: "lseek(bitmap->fd, offset,
-SEEK_SET);" has its value checked, But in makedumpfile.h:1748, the
-function will not check the return value.
+So NACK these patches.
 
-Signed-off-by: Chao Fan <cfan@redhat.com>
----
- makedumpfile.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Maybe they should be put in one patch since they are used to remove the coverity scan error report.
 
-diff --git a/makedumpfile.h b/makedumpfile.h
-index d2fadbd..b8b44e0 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1745,7 +1745,12 @@ is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
- 	off_t offset;
- 	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
- 		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
--		lseek(bitmap->fd, offset, SEEK_SET);
-+		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
-+			ERRMSG("Can't seek the bitmap(%s). %s\n",
-+				bitmap->file_name, strerror(errno));
-+			return FALSE;
-+		}
-+
- 		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
- 		if (pfn == 0)
- 			bitmap->no_block = 0;
--- 
-2.4.3
-
+----- Original Message -----
+> From: "Chao Fan" <cfan@redhat.com>
+> To: kexec@lists.infradead.org
+> Cc: "Chao Fan" <cfan@redhat.com>
+> Sent: Monday, August 24, 2015 11:15:52 AM
+> Subject: [PATCH]makedumpfile.c: check rhe return value ofset_page_size
+> 
+> check_return: Calling function "set_page_size" without checking
+> return value (as is done elsewhere 5 out of 6 times).
+> 
+> makedumpfile.c:8793: example_checked: "set_page_size(dh.block_size)"
+> has its value checked in "set_page_size(dh.block_size)". But in
+> makedumpfile.c:3213, the function "set_page_size" will not check
+> the return value.
+> 
+> Signed-off-by: Chao Fan <cfan@redhat.com>
+> ---
+>  makedumpfile.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 32f5459..53efc04 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -3213,7 +3213,8 @@ initial(void)
+>  			MSG("because the cyclic mode doesn't support sadump format.\n");
+>  		}
+>  
+> -		set_page_size(sadump_page_size());
+> +		if (!set_page_size(sadump_page_size()))
+> +			return FALSE;
+>  
+>  		if (!sadump_initialize_bitmap_memory())
+>  			return FALSE;
+> --
+> 2.4.3
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
