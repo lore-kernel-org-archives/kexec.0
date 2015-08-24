@@ -1,25 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZSzte-0007g7-6K
- for kexec@lists.infradead.org; Sat, 22 Aug 2015 03:55:11 +0000
-Date: Sat, 22 Aug 2015 09:24:45 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-Message-ID: <20150822035445.GC3013@dhcppc13.redhat.com>
-References: <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
- <20150703043241.GC21990@dhcppc13.redhat.com>
- <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
- <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
- <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
- <20150820112150.GA26132@dhcppc13.redhat.com>
- <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
- <20150821034433.GB26132@dhcppc13.redhat.com>
- <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
+ id 1ZTiFE-0004MJ-KG
+ for kexec@lists.infradead.org; Mon, 24 Aug 2015 03:16:24 +0000
+Received: from int-mx10.intmail.prod.int.phx2.redhat.com
+ (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ by mx1.redhat.com (Postfix) with ESMTPS id CCE2751
+ for <kexec@lists.infradead.org>; Mon, 24 Aug 2015 03:16:06 +0000 (UTC)
+From: Chao Fan <cfan@redhat.com>
+Subject: [PATCH] sadump_info.c: unsigned_compare: This less-than-zero
+ comparison of an unsigned value is never true.
+Date: Mon, 24 Aug 2015 11:15:53 +0800
+Message-Id: <1440386153-21638-3-git-send-email-cfan@redhat.com>
+In-Reply-To: <1440386153-21638-1-git-send-email-cfan@redhat.com>
+References: <1440386153-21638-1-git-send-email-cfan@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,59 +22,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: sgoel@codeaurora.org
-Cc: virajm@codeaurora.org, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, ats-kumagai@wm.jp.nec.com
+To: kexec@lists.infradead.org
+Cc: Chao Fan <cfan@redhat.com>
 
-On 21/08/2015:08:37:57 PM, sgoel@codeaurora.org wrote:
-> > Can you compare "Virtual kernel memory layout:" print of Linux kernel boot
-> > with
-> > makedumpfile print for page_offset, vmalloc_start, vmemmap_start etc, and
-> > see if
-> > they match?
-> >
-> > They should match.
-> 
-> 
-> Yes this was a problem. The assumed Kernel struct page size in the tool is
-> 64. For our platform this evaluates to 56. After changing this value all
-> the memory mapping values match.
+In sadump_info.c:432: unsigned long block_size =
+SADUMP_DEFAULT_BLOCK_SIZE.
+So block_size is unsigned long value and it is bigger than zero.
+And this comparison is useful.
 
-Great !!!
+Signed-off-by: Chao Fan <cfan@redhat.com>
+---
+ sadump_info.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-To be on the same page:
-* You did following changes on top of
-https://github.com/pratyushanand/makedumpfile.git:arm64_support (last commit
-597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right? If yes, then is
-there out of mainline change in struct page for you? If it is mainline, then can
-you please let me know the kernel version, so that on the basic of kernel
-version I can fix it.
+diff --git a/sadump_info.c b/sadump_info.c
+index e2c4f03..e8154f4 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -465,9 +465,6 @@ read_sadump_header(char *filename)
+ 	smh = si->smh_memory;
+ 
+ restart:
+-	if (block_size < 0)
+-		return FALSE;
+-
+ 	if (!read_device(sph, block_size, &offset))
+ 		return ERROR;
+ 
+-- 
+2.4.3
 
-diff --git a/arch/arm64.c b/arch/arm64.c
-index a94a4ba16dd5..4154ed6fe4a5 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -86,7 +86,7 @@ typedef struct {
- /* kernel struct page size can be kernel version dependent, currently
-  * keep it constant.
-  */
--#define KERN_STRUCT_PAGE_SIZE		64
-+#define KERN_STRUCT_PAGE_SIZE		56
- #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
- #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
- #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
-
-> 
-> I wanted to ask if the page table translation function would be any
-> different if the page size is 4k instead of 64k?
-
-I believe, if we have programmed pgtable_level, va_bits and page_shift
-correctly, then vtop_arm64 should be able to calculate it for both 4K and 64K.
-
-~Pratyush
 
 _______________________________________________
 kexec mailing list
