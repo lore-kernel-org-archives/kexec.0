@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZTnOi-0006ha-HZ
- for kexec@lists.infradead.org; Mon, 24 Aug 2015 08:46:32 +0000
-From: Chao Fan <cfan@redhat.com>
-Subject: [PATCH] makedumpfile: code changes to satisfy the coverity scan
-Date: Mon, 24 Aug 2015 16:45:59 +0800
-Message-Id: <1440405959-27044-1-git-send-email-cfan@redhat.com>
+ id 1ZTnly-0000Zu-3H
+ for kexec@lists.infradead.org; Mon, 24 Aug 2015 09:10:35 +0000
+Date: Mon, 24 Aug 2015 17:10:05 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH RFC] Drop release date from kexec-tools version output
+Message-ID: <20150824091005.GA10044@dhcp-16-198.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,77 +17,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Chao Fan <cfan@redhat.com>, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-Coverity scan found some uncheked return value when calling
-function. So the return value of the function set_page_size
-and lseek should be checked to satisfy the coverity scan.
+kexec --version reports like below:
+kexec-tools 2.0.7 released 05 February 2015
 
-In the function read_sadump_header, block_size is defined as an
-unsigned long value, and it will never be less than zero, so this
-comparison should be removed.
+The date string is generated when one run bootstrap script, thus
+it is more like a build date instead of release date.
+Even for distribution like Fedora it will make more sense if it can
+report something like "kexec-tools 2.0.7-1 released 05 February 2015"
 
-Signed-off-by: Chao Fan <cfan@redhat.com>
+In case building from git tree, the date cause more confusion.
+So let's remove it from version string unless there is better idea
+to resolve the issue.
+
+Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- makedumpfile.c | 3 ++-
- makedumpfile.h | 6 +++++-
- sadump_info.c  | 3 ---
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ configure.ac  |    3 ---
+ kexec/kexec.c |    2 +-
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 32f5459..53efc04 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3213,7 +3213,8 @@ initial(void)
- 			MSG("because the cyclic mode doesn't support sadump format.\n");
- 		}
+--- kexec-tools.orig/configure.ac
++++ kexec-tools/configure.ac
+@@ -10,9 +10,6 @@ AC_CONFIG_HEADERS([include/config.h])
+ AC_LANG(C)
+ AC_PROG_CC
  
--		set_page_size(sadump_page_size());
-+		if (!set_page_size(sadump_page_size()))
-+			return FALSE;
- 
- 		if (!sadump_initialize_bitmap_memory())
- 			return FALSE;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index d2fadbd..679e075 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1745,7 +1745,11 @@ is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
- 	off_t offset;
- 	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
- 		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
--		lseek(bitmap->fd, offset, SEEK_SET);
-+		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
-+			ERRMSG("Can't seek the bitmap(%s). %s\n",
-+				bitmap->file_name, strerror(errno));
-+			return FALSE;
-+		}
- 		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
- 		if (pfn == 0)
- 			bitmap->no_block = 0;
-diff --git a/sadump_info.c b/sadump_info.c
-index e2c4f03..e8154f4 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -465,9 +465,6 @@ read_sadump_header(char *filename)
- 	smh = si->smh_memory;
- 
- restart:
--	if (block_size < 0)
--		return FALSE;
+-AC_DEFINE_UNQUOTED(PACKAGE_DATE, "`date '+%d %B %Y'`",
+-		[Define to the release date of this package])
 -
- 	if (!read_device(sph, block_size, &offset))
- 		return ERROR;
  
--- 
-2.4.3
-
+ dnl -- Compilation platform configuration
+ dnl -- the host specifices the host machine for the kexec binary, the
+--- kexec-tools.orig/kexec/kexec.c
++++ kexec-tools/kexec/kexec.c
+@@ -897,7 +897,7 @@ static int my_load_jump_back_helper(unsi
+ 
+ static void version(void)
+ {
+-	printf(PACKAGE_STRING " released " PACKAGE_DATE "\n");
++	printf(PACKAGE_STRING "\n");
+ }
+ 
+ void usage(void)
 
 _______________________________________________
 kexec mailing list
