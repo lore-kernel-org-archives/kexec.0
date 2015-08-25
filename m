@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2401:3900:2:1::2])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZU3VD-00046F-K2
- for kexec@lists.infradead.org; Tue, 25 Aug 2015 01:58:20 +0000
-Message-ID: <1440467874.16933.1.camel@ellerman.id.au>
-Subject: Re: [RFC PATCH 14/17] powerpc/book3e-64/kexec: Enable SMP release
-From: Michael Ellerman <mpe@ellerman.id.au>
-Date: Tue, 25 Aug 2015 11:57:54 +1000
-In-Reply-To: <1440447948.30043.36.camel@freescale.com>
-References: <1437250134-307-1-git-send-email-scottwood@freescale.com>
- <1437250134-307-15-git-send-email-scottwood@freescale.com>
- <1440046447.13406.15.camel@ellerman.id.au>
- <1440447948.30043.36.camel@freescale.com>
-Mime-Version: 1.0
+ id 1ZU4ES-000425-VZ
+ for kexec@lists.infradead.org; Tue, 25 Aug 2015 02:45:06 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: code changes to satisfy the coverity scan
+Date: Tue, 25 Aug 2015 02:43:41 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DE53E9@BPXM01GP.gisp.nec.co.jp>
+References: <1440405959-27044-1-git-send-email-cfan@redhat.com>
+In-Reply-To: <1440405959-27044-1-git-send-email-cfan@redhat.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,99 +23,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Tiejun Chen <tiejun.chen@intel.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: Chao Fan <cfan@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Mon, 2015-08-24 at 15:25 -0500, Scott Wood wrote:
-> On Thu, 2015-08-20 at 14:54 +1000, Michael Ellerman wrote:
-> > Hi Scott,
-> > 
-> > Sorry for the delay. So I'm back to square one on this patch.
-> > 
-> > On Sat, 2015-07-18 at 15:08 -0500, Scott Wood wrote:
-> > > booted_from_exec is similar to __run_at_load, except that it is set for
-> > > regular kexec as well as kdump.
-> > > 
-> > > The flag is needed because the SMP release mechanism for FSL book3e is
-> > > different from when booting with normal hardware.  In theory we could
-> > > simulate the normal spin table mechanism, but not at the addresses
-> > > U-Boot put in the device tree -- so there'd need to be even more
-> > > communication between the kernel and kexec to set that up.  Since
-> > > there's already a similar flag being set (for kdump only), this seemed
-> > > like a reasonable approach.
-> > 
-> > Although this is a reasonable approach, I don't think it's the best 
-> > approach.
-> > 
-> > AFAICS there's no reason why we can't use a device tree property for this, 
-> > so I think we should do that.
-> 
-> OK, I'll look into that.
+Hello Chao,
 
-Thanks.
+>Coverity scan found some uncheked return value when calling
+>function. So the return value of the function set_page_size
+>and lseek should be checked to satisfy the coverity scan.
+>
+>In the function read_sadump_header, block_size is defined as an
+>unsigned long value, and it will never be less than zero, so this
+>comparison should be removed.
+>
+>Signed-off-by: Chao Fan <cfan@redhat.com>
+>---
+> makedumpfile.c | 3 ++-
+> makedumpfile.h | 6 +++++-
+> sadump_info.c  | 3 ---
+> 3 files changed, 7 insertions(+), 5 deletions(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 32f5459..53efc04 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -3213,7 +3213,8 @@ initial(void)
+> 			MSG("because the cyclic mode doesn't support sadump format.\n");
+> 		}
+>
+>-		set_page_size(sadump_page_size());
+>+		if (!set_page_size(sadump_page_size()))
+>+			return FALSE;
+>
+> 		if (!sadump_initialize_bitmap_memory())
+> 			return FALSE;
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index d2fadbd..679e075 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1745,7 +1745,11 @@ is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
+> 	off_t offset;
+> 	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+> 		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+>-		lseek(bitmap->fd, offset, SEEK_SET);
+>+		if (lseek(bitmap->fd, old_offset, SEEK_SET) < 0 ) {
 
-> > > diff --git a/arch/powerpc/platforms/85xx/smp.c 
-> > > b/arch/powerpc/platforms/85xx/smp.c
-> > > index 5152289..4abda43 100644
-> > > --- a/arch/powerpc/platforms/85xx/smp.c
-> > > +++ b/arch/powerpc/platforms/85xx/smp.c
-> > > @@ -305,10 +310,13 @@ static int smp_85xx_kick_cpu(int nr)
-> > >             __secondary_hold_acknowledge = -1;
-> > >     }
-> > >  #endif
-> > > -   flush_spin_table(spin_table);
-> > > -   out_be32(&spin_table->pir, hw_cpu);
-> > > -   out_be32(&spin_table->addr_l, __pa(__early_start));
-> > > -   flush_spin_table(spin_table);
-> > > +
-> > > +   if (have_spin_table) {
-> > > +           flush_spin_table(spin_table);
-> > > +           out_be32(&spin_table->pir, hw_cpu);
-> > > +           out_be32(&spin_table->addr_l, __pa(__early_start));
-> > > +           flush_spin_table(spin_table);
-> > > +   }
-> > >  
-> > >     /* Wait a bit for the CPU to ack. */
-> > >     if (!spin_event_timeout(__secondary_hold_acknowledge == hw_cpu,
-> > 
-> > This looks like it's inside an #ifdef CONFIG_PPC32 block, which doesn't make
-> > sense, so I must be missing a lead-up patch or something? (I looked on the 
-> > list
-> > but didn't find anything immediately)
-> 
-> Thanks for catching this.
-> 
-> This is apparently a mismerge due to the code having been previously worked 
-> on in the context of the SDK tree, which does not have that code inside 
-> #ifdef CONFIG_PPC32.  When I then applied the result to mainline, everything 
-> still appeared to work, because there's no real consequence to writing to the 
-> spin table in this case -- it's just a no-op.  
+s/old_offset/offset/
 
-Aha, that's good, I stared at it for ages thinking I was going mad, but I wasn't!
+>+			ERRMSG("Can't seek the bitmap(%s). %s\n",
+>+				bitmap->file_name, strerror(errno));
+>+			return FALSE;
 
-> setup_64.c is the part where checking booted_from_kexec (or devicetree
-> equivalent) really matters.
-
-OK. Can we avoid that too?
-
-All smp_release_cpus() does is whack __secondary_hold_spinloop and then spin
-for a while. For the non-kexec case writing to __secondary_hold_spinloop should
-be harmless I think, so the only problem is we'll get stuck for a while in the
-udelay() loop.
-
-But you could avoid that by preemptively setting spinning_secondaries to 0 in
-platform code.
-
-That'd have to be in ppc_md.init_early(), but that's actually not very early,
-the device tree is already unflattened.
-
-I guess it's arguable whether that's more or less horrible than adding an
-#ifdef'ed booted_from_kexec check, but I think I'd prefer the
-spinning_secondaries solution.
-
-cheers
+You have to include print_info.h to use ERRMSG.
 
 
+Thanks,
+Atsushi Kumagai
+
+>+		}
+> 		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
+> 		if (pfn == 0)
+> 			bitmap->no_block = 0;
+>diff --git a/sadump_info.c b/sadump_info.c
+>index e2c4f03..e8154f4 100644
+>--- a/sadump_info.c
+>+++ b/sadump_info.c
+>@@ -465,9 +465,6 @@ read_sadump_header(char *filename)
+> 	smh = si->smh_memory;
+>
+> restart:
+>-	if (block_size < 0)
+>-		return FALSE;
+>-
+> 	if (!read_device(sph, block_size, &offset))
+> 		return ERROR;
+>
+>--
+>2.4.3
 
 _______________________________________________
 kexec mailing list
