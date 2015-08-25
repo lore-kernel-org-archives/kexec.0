@@ -1,26 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZU20E-0005lY-HX
- for kexec@lists.infradead.org; Tue, 25 Aug 2015 00:22:15 +0000
-Message-ID: <797166011523512cf7099f14770922b4.squirrel@www.codeaurora.org>
-In-Reply-To: <5053347ed9f8e4e245d8438b3a8c981d.squirrel@www.codeaurora.org>
-References: <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
- <20150703043241.GC21990@dhcppc13.redhat.com>
- <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
- <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
- <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
- <20150820112150.GA26132@dhcppc13.redhat.com>
- <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
- <20150821034433.GB26132@dhcppc13.redhat.com>
- <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
- <20150822035445.GC3013@dhcppc13.redhat.com>
- <5053347ed9f8e4e245d8438b3a8c981d.squirrel@www.codeaurora.org>
-Date: Tue, 25 Aug 2015 00:21:53 -0000
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-From: sgoel@codeaurora.org
-MIME-Version: 1.0
+ id 1ZU3VD-00046F-K2
+ for kexec@lists.infradead.org; Tue, 25 Aug 2015 01:58:20 +0000
+Message-ID: <1440467874.16933.1.camel@ellerman.id.au>
+Subject: Re: [RFC PATCH 14/17] powerpc/book3e-64/kexec: Enable SMP release
+From: Michael Ellerman <mpe@ellerman.id.au>
+Date: Tue, 25 Aug 2015 11:57:54 +1000
+In-Reply-To: <1440447948.30043.36.camel@freescale.com>
+References: <1437250134-307-1-git-send-email-scottwood@freescale.com>
+ <1437250134-307-15-git-send-email-scottwood@freescale.com>
+ <1440046447.13406.15.camel@ellerman.id.au>
+ <1440447948.30043.36.camel@freescale.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,111 +25,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, sgoel@codeaurora.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
+To: Scott Wood <scottwood@freescale.com>
+Cc: Tiejun Chen <tiejun.chen@intel.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-I also looked at the definitions for PMD_OFFSET in the code and this is
-evaluating to no PMD. This should not be the case. So, I am wondering if
-these defines should change?
+On Mon, 2015-08-24 at 15:25 -0500, Scott Wood wrote:
+> On Thu, 2015-08-20 at 14:54 +1000, Michael Ellerman wrote:
+> > Hi Scott,
+> > 
+> > Sorry for the delay. So I'm back to square one on this patch.
+> > 
+> > On Sat, 2015-07-18 at 15:08 -0500, Scott Wood wrote:
+> > > booted_from_exec is similar to __run_at_load, except that it is set for
+> > > regular kexec as well as kdump.
+> > > 
+> > > The flag is needed because the SMP release mechanism for FSL book3e is
+> > > different from when booting with normal hardware.  In theory we could
+> > > simulate the normal spin table mechanism, but not at the addresses
+> > > U-Boot put in the device tree -- so there'd need to be even more
+> > > communication between the kernel and kexec to set that up.  Since
+> > > there's already a similar flag being set (for kdump only), this seemed
+> > > like a reasonable approach.
+> > 
+> > Although this is a reasonable approach, I don't think it's the best 
+> > approach.
+> > 
+> > AFAICS there's no reason why we can't use a device tree property for this, 
+> > so I think we should do that.
+> 
+> OK, I'll look into that.
 
-I tried changing these but still the virtual address to physical address
-translation is failing.
+Thanks.
 
-Please comment.
-Thanks,
-Sameer
+> > > diff --git a/arch/powerpc/platforms/85xx/smp.c 
+> > > b/arch/powerpc/platforms/85xx/smp.c
+> > > index 5152289..4abda43 100644
+> > > --- a/arch/powerpc/platforms/85xx/smp.c
+> > > +++ b/arch/powerpc/platforms/85xx/smp.c
+> > > @@ -305,10 +310,13 @@ static int smp_85xx_kick_cpu(int nr)
+> > >             __secondary_hold_acknowledge = -1;
+> > >     }
+> > >  #endif
+> > > -   flush_spin_table(spin_table);
+> > > -   out_be32(&spin_table->pir, hw_cpu);
+> > > -   out_be32(&spin_table->addr_l, __pa(__early_start));
+> > > -   flush_spin_table(spin_table);
+> > > +
+> > > +   if (have_spin_table) {
+> > > +           flush_spin_table(spin_table);
+> > > +           out_be32(&spin_table->pir, hw_cpu);
+> > > +           out_be32(&spin_table->addr_l, __pa(__early_start));
+> > > +           flush_spin_table(spin_table);
+> > > +   }
+> > >  
+> > >     /* Wait a bit for the CPU to ack. */
+> > >     if (!spin_event_timeout(__secondary_hold_acknowledge == hw_cpu,
+> > 
+> > This looks like it's inside an #ifdef CONFIG_PPC32 block, which doesn't make
+> > sense, so I must be missing a lead-up patch or something? (I looked on the 
+> > list
+> > but didn't find anything immediately)
+> 
+> Thanks for catching this.
+> 
+> This is apparently a mismerge due to the code having been previously worked 
+> on in the context of the SDK tree, which does not have that code inside 
+> #ifdef CONFIG_PPC32.  When I then applied the result to mainline, everything 
+> still appeared to work, because there's no real consequence to writing to the 
+> spin table in this case -- it's just a no-op.  
 
+Aha, that's good, I stared at it for ages thinking I was going mad, but I wasn't!
 
+> setup_64.c is the part where checking booted_from_kexec (or devicetree
+> equivalent) really matters.
 
->> * You did following changes on top of
->> https://github.com/pratyushanand/makedumpfile.git:arm64_support (last
->> commit
->> 597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right?
->
-> Yes. Making the change to kernel struct page size fixed the memory map
-> values. We are using a 4.0.0 kernel. I checked the struct page and there
-> are some changes to it between the kernel versions. There is no platform
-> specific change that we have made.
->
-> The code still cannot find the free pages as it is exiting due to a
-> virtual to physical translation.
-> readmem: Can't convert a virtual address(ffffffbee0023000) to physical
-> address.
-> readmem: type_addr: 0, addr:ffffffbee0023000, size:28672
-> __exclude_unnecessary_pages: Can't read the buffer of struct page.
-> create_2nd_bitmap: Can't exclude unnecessary pages.
->
-> The above is a valid virtual address and maps to a correct physical
-> address when I check this using kmem -p using the crash tool. Any help
-> will be appreciated.
->
-> Thanks,
-> Sameer
->
->
->
->> On 21/08/2015:08:37:57 PM, sgoel@codeaurora.org wrote:
->>> > Can you compare "Virtual kernel memory layout:" print of Linux kernel
->>> boot
->>> > with
->>> > makedumpfile print for page_offset, vmalloc_start, vmemmap_start etc,
->>> and
->>> > see if
->>> > they match?
->>> >
->>> > They should match.
->>>
->>>
->>> Yes this was a problem. The assumed Kernel struct page size in the tool
->>> is
->>> 64. For our platform this evaluates to 56. After changing this value
->>> all
->>> the memory mapping values match.
->>
->> Great !!!
->>
->> To be on the same page:
->> * You did following changes on top of
->> https://github.com/pratyushanand/makedumpfile.git:arm64_support (last
->> commit
->> 597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right? If yes,
->> then
->> is
->> there out of mainline change in struct page for you? If it is mainline,
->> then can
->> you please let me know the kernel version, so that on the basic of
->> kernel
->> version I can fix it.
->>
->> diff --git a/arch/arm64.c b/arch/arm64.c
->> index a94a4ba16dd5..4154ed6fe4a5 100644
->> --- a/arch/arm64.c
->> +++ b/arch/arm64.c
->> @@ -86,7 +86,7 @@ typedef struct {
->>  /* kernel struct page size can be kernel version dependent, currently
->>   * keep it constant.
->>   */
->> -#define KERN_STRUCT_PAGE_SIZE		64
->> +#define KERN_STRUCT_PAGE_SIZE		56
->>  #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
->>  #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
->>  #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) *
->> KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
->>
->>>
->>> I wanted to ask if the page table translation function would be any
->>> different if the page size is 4k instead of 64k?
->>
->> I believe, if we have programmed pgtable_level, va_bits and page_shift
->> correctly, then vtop_arm64 should be able to calculate it for both 4K
->> and
->> 64K.
->>
->> ~Pratyush
->>
->
->
->
+OK. Can we avoid that too?
+
+All smp_release_cpus() does is whack __secondary_hold_spinloop and then spin
+for a while. For the non-kexec case writing to __secondary_hold_spinloop should
+be harmless I think, so the only problem is we'll get stuck for a while in the
+udelay() loop.
+
+But you could avoid that by preemptively setting spinning_secondaries to 0 in
+platform code.
+
+That'd have to be in ppc_md.init_early(), but that's actually not very early,
+the device tree is already unflattened.
+
+I guess it's arguable whether that's more or less horrible than adding an
+#ifdef'ed booted_from_kexec check, but I think I'd prefer the
+spinning_secondaries solution.
+
+cheers
 
 
 
