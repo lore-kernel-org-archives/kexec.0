@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZWwbB-0001R0-Mc
- for kexec@lists.infradead.org; Wed, 02 Sep 2015 01:12:26 +0000
-Date: Wed, 2 Sep 2015 10:12:05 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kernel:kexec - Fix for typo in comment in function
- sanity_check_segment_list().
-Message-ID: <20150902011205.GF30886@verge.net.au>
-References: <1432357737-4269-1-git-send-email-shailendra.capricorn@gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZWwn4-0006V1-QV
+ for kexec@lists.infradead.org; Wed, 02 Sep 2015 01:24:44 +0000
+Date: Wed, 2 Sep 2015 09:24:12 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] Drop release date from kexec-tools version output
+Message-ID: <20150902012412.GA8022@dhcp-128-42.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1432357737-4269-1-git-send-email-shailendra.capricorn@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +21,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Shailendra Verma <shailendra.capricorn@gmail.com>
-Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org
 
-Hi Shailendra,
+kexec --version reports like below:
+kexec-tools 2.0.7 released 05 February 2015
 
-On Sat, May 23, 2015 at 10:38:57AM +0530, Shailendra Verma wrote:
-> 
-> Signed-off-by: Shailendra Verma <shailendra.capricorn@gmail.com>
+The date string is generated when one run bootstrap script, thus
+it is more like a build date instead of release date.
+Even for distribution like Fedora it will make more sense if it can
+report something like "kexec-tools 2.0.7-1 released 05 February 2015"
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
+In case building from git tree, the date cause more confusion.
+So let's remove it from version string unless there is better idea
+to resolve the issue.
 
-I believe if you repost this with Andrew Morton <akpm@linux-foundation.org>
-cced then there is a good chance of it progressing into a kernel release.
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ configure.ac  |    3 ---
+ kexec/kexec.c |    2 +-
+ 2 files changed, 1 insertion(+), 4 deletions(-)
 
-> ---
->  kernel/kexec.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 7a36fdc..50dffdb 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -189,7 +189,7 @@ static int sanity_check_segment_list(struct kimage *image)
->  	}
->  
->  	/* Verify our destination addresses do not overlap.
-> -	 * If we alloed overlapping destination addresses
-> +	 * If we allowed overlapping destination addresses
->  	 * through very weird things can happen with no
->  	 * easy explanation as one segment stops on another.
->  	 */
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+--- kexec-tools.orig/configure.ac
++++ kexec-tools/configure.ac
+@@ -10,9 +10,6 @@ AC_CONFIG_HEADERS([include/config.h])
+ AC_LANG(C)
+ AC_PROG_CC
+ 
+-AC_DEFINE_UNQUOTED(PACKAGE_DATE, "`date '+%d %B %Y'`",
+-		[Define to the release date of this package])
+-
+ 
+ dnl -- Compilation platform configuration
+ dnl -- the host specifices the host machine for the kexec binary, the
+--- kexec-tools.orig/kexec/kexec.c
++++ kexec-tools/kexec/kexec.c
+@@ -897,7 +897,7 @@ static int my_load_jump_back_helper(unsi
+ 
+ static void version(void)
+ {
+-	printf(PACKAGE_STRING " released " PACKAGE_DATE "\n");
++	printf(PACKAGE_STRING "\n");
+ }
+ 
+ void usage(void)
 
 _______________________________________________
 kexec mailing list
