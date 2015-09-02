@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZWwTr-0006lv-O2
- for kexec@lists.infradead.org; Wed, 02 Sep 2015 01:04:52 +0000
-Date: Wed, 2 Sep 2015 10:04:10 +0900
+ id 1ZWwWx-0008BN-2H
+ for kexec@lists.infradead.org; Wed, 02 Sep 2015 01:08:03 +0000
+Date: Wed, 2 Sep 2015 10:07:21 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [Patch v3] Add persistent memory support
-Message-ID: <20150902010410.GD30886@verge.net.au>
-References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
- <20150819092815.GB6130@localhost.localdomain>
- <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
- <20150820023812.GA20780@localhost.localdomain>
- <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
- <20150820074234.GA23537@localhost.localdomain>
- <1440446072.14237.8.camel@hp.com>
- <20150825073719.GB20225@dhcp-129-120.nay.redhat.com>
+Subject: Re: [RFC PATCH] kexec: use mmap instead of read for slurp_file()
+Message-ID: <20150902010721.GE30886@verge.net.au>
+References: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150825073719.GB20225@dhcp-129-120.nay.redhat.com>
+In-Reply-To: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,24 +23,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, Toshi Kani <toshi.kani@hp.com>, Baoquan He <bhe@redhat.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org
 
-On Tue, Aug 25, 2015 at 03:37:19PM +0800, Dave Young wrote:
+Hi Michael,
 
-[snip]
+sorry for the delay in responding to your patch.
 
-> Hmm, after looking into old discussion, I found that the options is there for
-> the known issue for calgary iommu. I really doubt there's someone is using it
-> but who knows.
+On Tue, Aug 18, 2015 at 06:17:23PM +0200, Michael Holzheu wrote:
+> The slurp_fd() function allocates memory and uses the read() system call.
+> This results in double memory consumption for image and initrd:
 > 
-> calgary code uses saved_max_pfn which is only calculaed when there's memmap=exactmap
-> cmdline params. So before removing the limitation we still need carry the old
-> interface.
+>  1) Memory allocated in user space by the kexec tool
+>  2) Memory allocated in kernel by the kexec() system call
 > 
-> Hence, I will not object Bao's changes in his patch any more.
+> Therefore use mmap() for non-character devices to reduce the memory
+> consumption of the kexec tool.
 
-Thanks, on the strength of that comment I have applied this patch.
+I'm not opposed to this change but I also don't see a strong motivation for
+it.  I would imagine that the memory saving is not that large. And that the
+memory consumption disappears when the presumably short-lived kexec process
+exits.
+
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> ---
+>  kexec/kexec.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index 8ce6885..fecf061 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -26,6 +26,7 @@
+>  #include <stdlib.h>
+>  #include <errno.h>
+>  #include <limits.h>
+> +#include <sys/mman.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <sys/reboot.h>
+> @@ -552,11 +553,12 @@ char *slurp_file(const char *filename, off_t *r_size)
+>  		if (err < 0)
+>  			die("Can not seek to the begin of file %s: %s\n",
+>  					filename, strerror(errno));
+> +		buf = slurp_fd(fd, filename, size, &nread);
+>  	} else {
+> -		size = stats.st_size;
+> +		size = nread = stats.st_size;
+> +		buf = mmap(NULL, size,
+> +			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+>  	}
+> -
+> -	buf = slurp_fd(fd, filename, size, &nread);
+>  	if (!buf)
+>  		die("Cannot read %s", filename);
+>  
+> -- 
+> 2.3.0
+> 
 
 _______________________________________________
 kexec mailing list
