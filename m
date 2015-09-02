@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZWwWx-0008BN-2H
- for kexec@lists.infradead.org; Wed, 02 Sep 2015 01:08:03 +0000
-Date: Wed, 2 Sep 2015 10:07:21 +0900
+ id 1ZWwbB-0001R0-Mc
+ for kexec@lists.infradead.org; Wed, 02 Sep 2015 01:12:26 +0000
+Date: Wed, 2 Sep 2015 10:12:05 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [RFC PATCH] kexec: use mmap instead of read for slurp_file()
-Message-ID: <20150902010721.GE30886@verge.net.au>
-References: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH] kernel:kexec - Fix for typo in comment in function
+ sanity_check_segment_list().
+Message-ID: <20150902011205.GF30886@verge.net.au>
+References: <1432357737-4269-1-git-send-email-shailendra.capricorn@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
+In-Reply-To: <1432357737-4269-1-git-send-email-shailendra.capricorn@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,64 +24,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org
+To: Shailendra Verma <shailendra.capricorn@gmail.com>
+Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-Hi Michael,
+Hi Shailendra,
 
-sorry for the delay in responding to your patch.
-
-On Tue, Aug 18, 2015 at 06:17:23PM +0200, Michael Holzheu wrote:
-> The slurp_fd() function allocates memory and uses the read() system call.
-> This results in double memory consumption for image and initrd:
+On Sat, May 23, 2015 at 10:38:57AM +0530, Shailendra Verma wrote:
 > 
->  1) Memory allocated in user space by the kexec tool
->  2) Memory allocated in kernel by the kexec() system call
-> 
-> Therefore use mmap() for non-character devices to reduce the memory
-> consumption of the kexec tool.
+> Signed-off-by: Shailendra Verma <shailendra.capricorn@gmail.com>
 
-I'm not opposed to this change but I also don't see a strong motivation for
-it.  I would imagine that the memory saving is not that large. And that the
-memory consumption disappears when the presumably short-lived kexec process
-exits.
+Reviewed-by: Simon Horman <horms@verge.net.au>
 
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+I believe if you repost this with Andrew Morton <akpm@linux-foundation.org>
+cced then there is a good chance of it progressing into a kernel release.
+
 > ---
->  kexec/kexec.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  kernel/kexec.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index 8ce6885..fecf061 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -26,6 +26,7 @@
->  #include <stdlib.h>
->  #include <errno.h>
->  #include <limits.h>
-> +#include <sys/mman.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <sys/reboot.h>
-> @@ -552,11 +553,12 @@ char *slurp_file(const char *filename, off_t *r_size)
->  		if (err < 0)
->  			die("Can not seek to the begin of file %s: %s\n",
->  					filename, strerror(errno));
-> +		buf = slurp_fd(fd, filename, size, &nread);
->  	} else {
-> -		size = stats.st_size;
-> +		size = nread = stats.st_size;
-> +		buf = mmap(NULL, size,
-> +			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 7a36fdc..50dffdb 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -189,7 +189,7 @@ static int sanity_check_segment_list(struct kimage *image)
 >  	}
-> -
-> -	buf = slurp_fd(fd, filename, size, &nread);
->  	if (!buf)
->  		die("Cannot read %s", filename);
 >  
+>  	/* Verify our destination addresses do not overlap.
+> -	 * If we alloed overlapping destination addresses
+> +	 * If we allowed overlapping destination addresses
+>  	 * through very weird things can happen with no
+>  	 * easy explanation as one segment stops on another.
+>  	 */
 > -- 
-> 2.3.0
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
 _______________________________________________
