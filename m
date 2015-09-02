@@ -1,16 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZWxhu-0004s9-Ov
- for kexec@lists.infradead.org; Wed, 02 Sep 2015 02:23:27 +0000
-Date: Wed, 2 Sep 2015 11:22:41 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Drop release date from kexec-tools version output
-Message-ID: <20150902022241.GH12080@verge.net.au>
-References: <20150902012412.GA8022@dhcp-128-42.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150902012412.GA8022@dhcp-128-42.nay.redhat.com>
+Received: from e06smtp11.uk.ibm.com ([195.75.94.107])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZX3yT-00021q-0a
+ for kexec@lists.infradead.org; Wed, 02 Sep 2015 09:04:58 +0000
+Received: from /spool/local
+ by e06smtp11.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 2 Sep 2015 10:04:23 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 83D2317D837F
+ for <kexec@lists.infradead.org>; Wed,  2 Sep 2015 09:50:23 +0100 (BST)
+Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
+ [9.149.37.252])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t828mfWv43843830
+ for <kexec@lists.infradead.org>; Wed, 2 Sep 2015 08:48:41 GMT
+Received: from d06av11.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av11.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t828meDO032084
+ for <kexec@lists.infradead.org>; Wed, 2 Sep 2015 02:48:41 -0600
+Date: Wed, 2 Sep 2015 10:48:39 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [RFC PATCH] kexec: use mmap instead of read for slurp_file()
+Message-ID: <20150902104839.17674456@holzheu>
+In-Reply-To: <20150902010721.GE30886@verge.net.au>
+References: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
+ <20150902010721.GE30886@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,25 +41,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org
 
-On Wed, Sep 02, 2015 at 09:24:12AM +0800, Dave Young wrote:
-> kexec --version reports like below:
-> kexec-tools 2.0.7 released 05 February 2015
+On Wed, 2 Sep 2015 10:07:21 +0900
+Simon Horman <horms@verge.net.au> wrote:
+[snip]
+> > The slurp_fd() function allocates memory and uses the read() system call.
+> > This results in double memory consumption for image and initrd:
+> > 
+> >  1) Memory allocated in user space by the kexec tool
+> >  2) Memory allocated in kernel by the kexec() system call
+> > 
+> > Therefore use mmap() for non-character devices to reduce the memory
+> > consumption of the kexec tool.
 > 
-> The date string is generated when one run bootstrap script, thus
-> it is more like a build date instead of release date.
-> Even for distribution like Fedora it will make more sense if it can
-> report something like "kexec-tools 2.0.7-1 released 05 February 2015"
-> 
-> In case building from git tree, the date cause more confusion.
-> So let's remove it from version string unless there is better idea
-> to resolve the issue.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
+> I'm not opposed to this change but I also don't see a strong motivation for
+> it.  I would imagine that the memory saving is not that large. And that the
+> memory consumption disappears when the presumably short-lived kexec process
+> exits.
 
-Thanks, applied.
+Correct it will disappear.
+
+The reason for the the patch is that we have the following scanario:
+
+1) Boot a 4 GB Linux system
+2) Read kernel and 1,5 GB ramdisk from external source into local tmpfs (ram)
+3) kexec the kernel and ramdisk
+
+So without the mmap patch for the kexec runtime we need:
+
+1,5 GB (tmpfs) + 1,5 GB (kexec malloc) + 1,5 GB (kernel memory) = 4,5 GB
+
+If we use mmap we only need 3 GB memory.
+
+Regards,
+Michael
+
 
 _______________________________________________
 kexec mailing list
