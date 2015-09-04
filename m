@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZXnZV-0006rH-5l
- for kexec@lists.infradead.org; Fri, 04 Sep 2015 09:46:13 +0000
-Date: Fri, 4 Sep 2015 18:45:44 +0900
+ id 1ZXnbb-00087B-6j
+ for kexec@lists.infradead.org; Fri, 04 Sep 2015 09:48:23 +0000
+Date: Fri, 4 Sep 2015 18:47:35 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [RFC PATCH] kexec: use mmap instead of read for slurp_file()
-Message-ID: <20150904094541.GA30724@verge.net.au>
-References: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <20150902010721.GE30886@verge.net.au>
- <20150902104839.17674456@holzheu>
+Subject: Re: [PATCH] purgatory/arch/ppc64: Reset primary cpu endian to
+ big-endian
+Message-ID: <20150904094735.GB30724@verge.net.au>
+References: <1440125476-9420-1-git-send-email-sam.mj@au1.ibm.com>
+ <20150902010251.GC30886@verge.net.au>
+ <1441257482.29016.6.camel@ellerman.id.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150902104839.17674456@holzheu>
+In-Reply-To: <1441257482.29016.6.camel@ellerman.id.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,44 +26,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, stefan.roscher@de.ibm.com
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: kexec@lists.infradead.org, Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>, linuxppc-dev@lists.ozlabs.org
 
-On Wed, Sep 02, 2015 at 10:48:39AM +0200, Michael Holzheu wrote:
-> On Wed, 2 Sep 2015 10:07:21 +0900
-> Simon Horman <horms@verge.net.au> wrote:
-> [snip]
-> > > The slurp_fd() function allocates memory and uses the read() system call.
-> > > This results in double memory consumption for image and initrd:
-> > > 
-> > >  1) Memory allocated in user space by the kexec tool
-> > >  2) Memory allocated in kernel by the kexec() system call
-> > > 
-> > > Therefore use mmap() for non-character devices to reduce the memory
-> > > consumption of the kexec tool.
+On Thu, Sep 03, 2015 at 03:18:02PM +1000, Michael Ellerman wrote:
+> On Wed, 2015-09-02 at 10:02 +0900, Simon Horman wrote:
+> > [CC linuxppc-dev]
 > > 
-> > I'm not opposed to this change but I also don't see a strong motivation for
-> > it.  I would imagine that the memory saving is not that large. And that the
-> > memory consumption disappears when the presumably short-lived kexec process
-> > exits.
+> > On Fri, Aug 21, 2015 at 12:51:16PM +1000, Samuel Mendoza-Jonas wrote:
+> > > Older big-endian ppc64 kernels don't include the FIXUP_ENDIAN check,
+> > > meaning if we kexec from a little-endian kernel the target kernel will
+> > > fail to boot.
+> > > Returning to big-endian before we enter the target kernel ensures that
+> > > the target kernel can boot whether or not it includes FIXUP_ENDIAN.
+> > > 
+> > > This mirrors commit 150b14e7 in kexec-lite.
+> > > 
+> > > Signed-off-by: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
+> > 
+> > I would value a review from one of the PPC folks.
 > 
-> Correct it will disappear.
+> The diff looks good to me, and I've also tested it, so take your pick:
 > 
-> The reason for the the patch is that we have the following scanario:
-> 
-> 1) Boot a 4 GB Linux system
-> 2) Read kernel and 1,5 GB ramdisk from external source into local tmpfs (ram)
-> 3) kexec the kernel and ramdisk
-> 
-> So without the mmap patch for the kexec runtime we need:
-> 
-> 1,5 GB (tmpfs) + 1,5 GB (kexec malloc) + 1,5 GB (kernel memory) = 4,5 GB
-> 
-> If we use mmap we only need 3 GB memory.
+> Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Thanks, I am convinced.
-
-Could you repost the patch as a non-RFC?
+Thanks, I took the latter.
 
 _______________________________________________
 kexec mailing list
