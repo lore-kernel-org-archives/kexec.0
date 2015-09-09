@@ -1,26 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZZRRR-0005Jm-Ct
- for kexec@lists.infradead.org; Tue, 08 Sep 2015 22:32:42 +0000
-Message-ID: <bf24321255a60856d889590131daf69a.squirrel@www.codeaurora.org>
-In-Reply-To: <797166011523512cf7099f14770922b4.squirrel@www.codeaurora.org>
-References: <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
- <20150703043241.GC21990@dhcppc13.redhat.com>
- <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
- <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
- <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
- <20150820112150.GA26132@dhcppc13.redhat.com>
- <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
- <20150821034433.GB26132@dhcppc13.redhat.com>
- <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
- <20150822035445.GC3013@dhcppc13.redhat.com>
- <5053347ed9f8e4e245d8438b3a8c981d.squirrel@www.codeaurora.org>
- <797166011523512cf7099f14770922b4.squirrel@www.codeaurora.org>
-Date: Tue, 8 Sep 2015 22:32:20 -0000
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-From: sgoel@codeaurora.org
+ id 1ZZaCC-0000QE-QR
+ for kexec@lists.infradead.org; Wed, 09 Sep 2015 07:53:34 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: make --work-dir easier to use
+Date: Wed, 9 Sep 2015 07:51:50 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DE90AB@BPXM01GP.gisp.nec.co.jp>
+References: <E1ZZ1mw-0008KT-Gf@eag09.americas.sgi.com>
+In-Reply-To: <E1ZZ1mw-0008KT-Gf@eag09.americas.sgi.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -34,135 +23,268 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, sgoel@codeaurora.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
+To: cpw <cpw@sgi.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Pratush,
- I added the mappings for PMD translations to the vtop function. This
-helped in translating the address to physical. Issues seen:
-1. If PMD translates to a section. The physical translations does not get
-rid of the PMD flags. So, the physical address shows up as invalid and
-code crashes when it tries to read this address from ELF.
-2. After treating this as a PTE table address, we see a compression of
-around 50%.
+Hello Cliff,
 
-But the final file generated not does not load using the crash tool. Any
-recommendations will be helpful.
+>From: Cliff Wickman <cpw@sgi.com>
+>
+>This patch enhances the --work-dir feature to make it easier to use.
+>
+>Kumagai, I plan to require the --work-dir for the -e feature, as you suggested.  I did find --work-dir
+>hard to implement because of the differences between the way the various distros mount the root device
+>in the crashkernel. Hence this patch.
+>
+>Currently the --work-dir=<PATH> must be specified in a form that is valid in the crashkernel's environment.
+>In other words, the boot kernel's /var, for example, must be specified as:
+>  RHEL6: /mnt/var/
+>  RHEL7: /sysroot/var/
+>  SLES11: /kdump/0/var/
+>  SLES12: (with root=kdump) /kdump/mnt0/var/
+>And the administrator must remember to create that directory.
+>
+>If these conditions are not met makedumpfile fails, with little explanation as to why.
+>
+>This patch:
+>
+>- Allow the path to be one that is valid in the crashkernel's environment, or allow
+>  it to be valid in the boot kernel's environment.  In the second case, adjust the path to
+>  how the root device is mounted in the crashkernel.
+>  Limitation: The adjustment is only made if a dump file is being written, and the dump is
+>  being written to /var/crash/.  Otherwise you must (as currently) use a path that is known
+>  to be valid in the crashkernel's environment.
+>
+>- Make the directory if it does not already exist.  All components of the path are
+>  made if necessary, similar to mkdir -p.
+
+I think such adjusting should be done in kdump feature side (e.g. kexec-tools) since
+it constructs the crash kernel's environment. Each distro's kdump feature can
+take care of each own environment.
+
+Just checking by is_dir() and creating a directory are enough in makedumpfile side.
+
+
 Thanks,
-Sameer
+Atsushi Kumagai
 
-
-
-> I also looked at the definitions for PMD_OFFSET in the code and this is
-> evaluating to no PMD. This should not be the case. So, I am wondering if
-> these defines should change?
+>---
+> makedumpfile.c |  144 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> makedumpfile.h |    3 -
+> print_info.c   |   15 ++++-
+> 3 files changed, 158 insertions(+), 4 deletions(-)
 >
-> I tried changing these but still the virtual address to physical address
-> translation is failing.
+>Index: code/makedumpfile.c
+>===================================================================
+>--- code.orig/makedumpfile.c
+>+++ code/makedumpfile.c
+>@@ -25,6 +25,7 @@
+> #include <sys/time.h>
+> #include <limits.h>
+> #include <assert.h>
+>+#include <sys/stat.h>
 >
-> Please comment.
-> Thanks,
-> Sameer
+> struct symbol_table	symbol_table;
+> struct size_table	size_table;
+>@@ -10364,6 +10365,146 @@ int show_mem_usage(void)
+> 	return TRUE;
+> }
 >
+>+/*
+>+ * return 1 if path is a directory
+>+ * else return 0
+>+ */
+>+int
+>+isdir(char *path)
+>+{
+>+	struct stat buf;
+>+
+>+	if (path) {
+>+		if (stat(path, &buf) || !S_ISDIR(buf.st_mode)) {
+>+			return 0;
+>+		}
+>+		return 1;
+>+	} else {
+>+		return 0;
+>+	}
+>+}
+>+
+>+/*
+>+ * Set info->root_dir to the crashkernel's path to the bootkernel's root
+>+ * or set it to null if that path cannot be determined.
+>+ * We must assume that the dump file is in the bootkernel's /var/crash/
+>+ */
+>+void
+>+set_rootdir()
+>+{
+>+	int len;
+>+	char *cp1, *cp2;
+>+
+>+	/* allow this function to be called multiple times */
+>+	if (info->root_dir)
+>+		return;
+>+
+>+	if (!info->name_dumpfile) {
+>+		info->root_dir = NULL;
+>+		return;
+>+	}
+>+
+>+	len = (int)strlen(info->name_dumpfile);
+>+	if (len == 0) {
+>+		info->root_dir = NULL;
+>+		return;
+>+	}
+>+	info->root_dir = malloc(len);
+>+	cp1 = info->name_dumpfile;
+>+	cp2 = cp1;
+>+	while (*cp2 != '\0') {
+>+		if (!strncmp(cp2, "/var/crash/", 11)) {
+>+			len = cp2 - cp1;
+>+			strncpy(info->root_dir, cp1, len);
+>+			if (!isdir(info->root_dir)) {
+>+				fprintf(stderr, "Error: root directory %s does not exist\n",
+>+					info->root_dir);
+>+				exit(1);
+>+			}
+>+			return;
+>+		}
+>+		cp2++;
+>+	}
+>+	info->root_dir = NULL;
+>+	return;
+>+}
+>+
+>+/*
+>+ * The --work-dir directory should be validated and created if necessary.
+>+ */
+>+void
+>+adjust_working_dir()
+>+{
+>+	int ret, finished=0;
+>+	char *hold, *inter_dir = NULL, *cp1, *cp2;
+>+
+>+	/* if a crashkernel root environment was specified, no adjust is necessary */
+>+	if (isdir(info->working_dir))
+>+		return;
+>+
+>+	set_rootdir();
+>+
+>+	if (!strncmp(info->working_dir, "/", 1)) {
+>+		/* an absolute path should either exist in the crashkernel's
+>+		   root, or should be adjusted to be relative to it */
+>+		if (info->root_dir) {
+>+			hold = malloc(strlen(info->working_dir)+1);
+>+			strcpy(hold, info->working_dir);
+>+			info->working_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir));
+>+			inter_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir));
+>+			strcpy(info->working_dir, info->root_dir);
+>+			strcat(info->working_dir, hold);
+>+			free (hold);
+>+			fprintf(stderr, "--workdir set to %s\n", info->working_dir);
+>+		} else {
+>+			inter_dir = malloc(strlen(info->working_dir));
+>+		}
+>+	} else {
+>+		/* a relative path that does not already exist should be made absolute; it is taken to
+>+		   be relative to the crash kernel's root */
+>+		if (info->root_dir) {
+>+			hold = malloc(strlen(info->working_dir)+1);
+>+			strcpy(hold, info->working_dir);
+>+			info->working_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir) + 1);
+>+			inter_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir) + 1);
+>+			strcpy(info->working_dir, info->root_dir);
+>+			strcat(info->working_dir, "/");
+>+			strcat(info->working_dir, hold);
+>+			free (hold);
+>+			fprintf(stderr, "--workdir set to %s\n", info->working_dir);
+>+		} else {
+>+			inter_dir = malloc(strlen(info->working_dir));
+>+		}
+>+	}
+>+
+>+	/* path is complete, now make sure it exists */
+>+	if (!isdir(info->working_dir)) {
+>+		strcpy(inter_dir, info->working_dir);
+>+		if (info->root_dir)
+>+			cp1 = inter_dir + strlen(info->root_dir) + 1;
+>+		else
+>+			cp1 = inter_dir + 1;
+>+		while (finished == 0) {
+>+			strcpy(inter_dir, info->working_dir);
+>+			cp2 = strchr(cp1, '/');
+>+			if (cp2) {
+>+				*cp2 = '\0';
+>+				cp1 = cp2 + 1;
+>+			} else {
+>+				finished = 1;
+>+			}
+>+			if (!isdir(inter_dir)) {
+>+				ret = mkdir(inter_dir, 0755);
+>+				if (ret) {
+>+					fprintf(stderr, "Error: mkdir(%s, 0755) returned %d\n",
+>+						inter_dir, ret);
+>+					exit(1);
+>+				}
+>+			}
+>+		}
+>+	}
+>+	return;
+>+}
 >
+> static struct option longopts[] = {
+> 	{"split", no_argument, NULL, OPT_SPLIT},
+>@@ -10549,6 +10690,9 @@ main(int argc, char *argv[])
+> 		return COMPLETED;
+> 	}
 >
->>> * You did following changes on top of
->>> https://github.com/pratyushanand/makedumpfile.git:arm64_support (last
->>> commit
->>> 597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right?
->>
->> Yes. Making the change to kernel struct page size fixed the memory map
->> values. We are using a 4.0.0 kernel. I checked the struct page and there
->> are some changes to it between the kernel versions. There is no platform
->> specific change that we have made.
->>
->> The code still cannot find the free pages as it is exiting due to a
->> virtual to physical translation.
->> readmem: Can't convert a virtual address(ffffffbee0023000) to physical
->> address.
->> readmem: type_addr: 0, addr:ffffffbee0023000, size:28672
->> __exclude_unnecessary_pages: Can't read the buffer of struct page.
->> create_2nd_bitmap: Can't exclude unnecessary pages.
->>
->> The above is a valid virtual address and maps to a correct physical
->> address when I check this using kmem -p using the crash tool. Any help
->> will be appreciated.
->>
->> Thanks,
->> Sameer
->>
->>
->>
->>> On 21/08/2015:08:37:57 PM, sgoel@codeaurora.org wrote:
->>>> > Can you compare "Virtual kernel memory layout:" print of Linux
->>>> kernel
->>>> boot
->>>> > with
->>>> > makedumpfile print for page_offset, vmalloc_start, vmemmap_start
->>>> etc,
->>>> and
->>>> > see if
->>>> > they match?
->>>> >
->>>> > They should match.
->>>>
->>>>
->>>> Yes this was a problem. The assumed Kernel struct page size in the
->>>> tool
->>>> is
->>>> 64. For our platform this evaluates to 56. After changing this value
->>>> all
->>>> the memory mapping values match.
->>>
->>> Great !!!
->>>
->>> To be on the same page:
->>> * You did following changes on top of
->>> https://github.com/pratyushanand/makedumpfile.git:arm64_support (last
->>> commit
->>> 597ea74d40b7 arm64: Fix KVBASE) and it worked for you, right? If yes,
->>> then
->>> is
->>> there out of mainline change in struct page for you? If it is mainline,
->>> then can
->>> you please let me know the kernel version, so that on the basic of
->>> kernel
->>> version I can fix it.
->>>
->>> diff --git a/arch/arm64.c b/arch/arm64.c
->>> index a94a4ba16dd5..4154ed6fe4a5 100644
->>> --- a/arch/arm64.c
->>> +++ b/arch/arm64.c
->>> @@ -86,7 +86,7 @@ typedef struct {
->>>  /* kernel struct page size can be kernel version dependent, currently
->>>   * keep it constant.
->>>   */
->>> -#define KERN_STRUCT_PAGE_SIZE		64
->>> +#define KERN_STRUCT_PAGE_SIZE		56
->>>  #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
->>>  #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
->>>  #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) *
->>> KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
->>>
->>>>
->>>> I wanted to ask if the page table translation function would be any
->>>> different if the page size is 4k instead of 64k?
->>>
->>> I believe, if we have programmed pgtable_level, va_bits and page_shift
->>> correctly, then vtop_arm64 should be able to calculate it for both 4K
->>> and
->>> 64K.
->>>
->>> ~Pratyush
->>>
->>
->>
->>
->
->
->
-
-
+>+	if (info->working_dir)
+>+		adjust_working_dir();
+>+
+> 	if (elf_version(EV_CURRENT) == EV_NONE ) {
+> 		/*
+> 		 * library out of date
+>Index: code/makedumpfile.h
+>===================================================================
+>--- code.orig/makedumpfile.h
+>+++ code/makedumpfile.h
+>@@ -1258,7 +1258,8 @@ struct DumpInfo {
+> 	/*
+> 	 * for cyclic processing
+> 	 */
+>-	char	           *working_dir;	     /* working directory for bitmap */
+>+	char	           *working_dir;	/* working directory for bitmap */
+>+	char	           *root_dir;		/* crashkernel path to boot kernel's root */
+> 	mdf_pfn_t          num_dumpable;
+> 	unsigned long      bufsize_cyclic;
+> 	unsigned long      pfn_cyclic;
+>Index: code/print_info.c
+>===================================================================
+>--- code.orig/print_info.c
+>+++ code/print_info.c
+>@@ -221,11 +221,20 @@ print_usage(void)
+> 	MSG("      size is at most N kilo bytes.\n");
+> 	MSG("\n");
+> 	MSG("  [--work-dir]:\n");
+>-	MSG("      Specify the working directory for the temporary bitmap file.\n");
+>-	MSG("      If this option isn't specified, the bitmap will be saved on memory.\n");
+>+	MSG("      Specify the working directory for temporary files such as the bitmap.\n");
+>+	MSG("      If this option isn't specified, the bitmap will be saved in memory.\n");
+> 	MSG("      Filtering processing has to do 2 pass scanning to fix the memory consumption,\n");
+>-	MSG("      but it can be avoided by using working directory on file system.\n");
+>+	MSG("      but it can be avoided by using this working directory on the file system.\n");
+> 	MSG("      So if you specify this option, the filtering speed may be bit faster.\n");
+>+	MSG("      The directory path may be absolute or relative.\n");
+>+	MSG("      If relative, it is taken to be based at the root filesystem.\n");
+>+	MSG("      It may be an existing directory expressed with the path to the root filesystem as\n");
+>+	MSG("      it is mounted in the crashkernel.\n");
+>+	MSG("      Or it may expressed with '/' as the path to the root filesystem. In that case it will\n");
+>+	MSG("      be automatically adjusted to be relative to the root of the crashkernel.\n");
+>+	MSG("      The root of the crashkernel is determined from the dump name, if present. An assumption\n");
+>+	MSG("      is made that the dump file is to be written to /var/crash/.\n");
+>+	MSG("      If the directory does not exist it will be created, including multiple components.\n");
+> 	MSG("\n");
+> 	MSG("  [--non-mmap]:\n");
+> 	MSG("      Never use mmap(2) to read VMCORE even if it supports mmap(2).\n");
 
 _______________________________________________
 kexec mailing list
