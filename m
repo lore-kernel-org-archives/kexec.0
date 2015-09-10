@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([103.22.144.67])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZZdEY-00035l-Rh
- for kexec@lists.infradead.org; Wed, 09 Sep 2015 11:08:11 +0000
-Date: Wed, 9 Sep 2015 21:07:39 +1000
-From: Anton Blanchard <anton@samba.org>
-Subject: Re: [PATCH] purgatory/arch/ppc64: Reset primary cpu endian to
- big-endian
-Message-ID: <20150909210739.419a4f72@kryten>
-In-Reply-To: <20150902010251.GC30886@verge.net.au>
-References: <1440125476-9420-1-git-send-email-sam.mj@au1.ibm.com>
- <20150902010251.GC30886@verge.net.au>
+Received: from relay2.sgi.com ([192.48.180.65] helo=relay.sgi.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZZqV3-0005rJ-9B
+ for kexec@lists.infradead.org; Thu, 10 Sep 2015 01:18:07 +0000
+Date: Wed, 9 Sep 2015 20:17:40 -0500
+From: Cliff Wickman <cpw@sgi.com>
+Subject: Re: [PATCH] makedumpfile: make --work-dir easier to use
+Message-ID: <20150910011740.GA25645@sgi.com>
+References: <E1ZZ1mw-0008KT-Gf@eag09.americas.sgi.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DE90AB@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DE90AB@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +24,301 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>, linuxppc-dev@lists.ozlabs.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Horms,
+Hello Kumagai,
 
-> > Older big-endian ppc64 kernels don't include the FIXUP_ENDIAN check,
-> > meaning if we kexec from a little-endian kernel the target kernel
-> > will fail to boot.
-> > Returning to big-endian before we enter the target kernel ensures
-> > that the target kernel can boot whether or not it includes
-> > FIXUP_ENDIAN.
-> > 
-> > This mirrors commit 150b14e7 in kexec-lite.
-> > 
-> > Signed-off-by: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
+On Wed, Sep 09, 2015 at 07:51:50AM +0000, Atsushi Kumagai wrote:
+> Hello Cliff,
 > 
-> I would value a review from one of the PPC folks.
+> >From: Cliff Wickman <cpw@sgi.com>
+> >
+> >This patch enhances the --work-dir feature to make it easier to use.
+> >
+> >Kumagai, I plan to require the --work-dir for the -e feature, as you suggested.  I did find --work-dir
+> >hard to implement because of the differences between the way the various distros mount the root device
+> >in the crashkernel. Hence this patch.
+> >
+> >Currently the --work-dir=<PATH> must be specified in a form that is valid in the crashkernel's environment.
+> >In other words, the boot kernel's /var, for example, must be specified as:
+> >  RHEL6: /mnt/var/
+> >  RHEL7: /sysroot/var/
+> >  SLES11: /kdump/0/var/
+> >  SLES12: (with root=kdump) /kdump/mnt0/var/
+> >And the administrator must remember to create that directory.
+> >
+> >If these conditions are not met makedumpfile fails, with little explanation as to why.
+> >
+> >This patch:
+> >
+> >- Allow the path to be one that is valid in the crashkernel's environment, or allow
+> >  it to be valid in the boot kernel's environment.  In the second case, adjust the path to
+> >  how the root device is mounted in the crashkernel.
+> >  Limitation: The adjustment is only made if a dump file is being written, and the dump is
+> >  being written to /var/crash/.  Otherwise you must (as currently) use a path that is known
+> >  to be valid in the crashkernel's environment.
+> >
+> >- Make the directory if it does not already exist.  All components of the path are
+> >  made if necessary, similar to mkdir -p.
+> 
+> I think such adjusting should be done in kdump feature side (e.g. kexec-tools) since
+> it constructs the crash kernel's environment. Each distro's kdump feature can
+> take care of each own environment.
 
-Looks good to me. You can add:
+> Just checking by is_dir() and creating a directory are enough in makedumpfile side.
+> 
+> Thanks,
+> Atsushi Kumagai
 
-Acked-by: Anton Blanchard <anton@samba.org>
+I have been looking at how this could be done.
+As each distro may mount the root filesystem differently, it would seem to me that
+the name must be passed to makedumpfile somehow.  I don't see kexec having a role but
+the scripts that make the kdump initrd could.
+Am I missing your point in concluding that?
 
-Anton
+One could add another option to makedumpfile (maybe --root=<path>).  And then the distro's
+scripts could add that option to the makedumpfile command line. But that turns out to be
+difficult to do in SLES, as it has its own binary named 'kdumptool' that invokes
+makedumpfile and it does not have a way to pass an option to makedumpfile
+that is derived at mkdumprd time.  It only passes along options that have been stored
+in /etc/sysconfig/kdump.
 
-> > ---
-> >  purgatory/arch/ppc64/v2wrap.S | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/purgatory/arch/ppc64/v2wrap.S
-> > b/purgatory/arch/ppc64/v2wrap.S index dc5034f..179ade9 100644
-> > --- a/purgatory/arch/ppc64/v2wrap.S
-> > +++ b/purgatory/arch/ppc64/v2wrap.S
-> > @@ -114,10 +114,16 @@ master:
-> >  	LOADADDR(6,run_at_load) # the load flag
-> >  	lwz	7,0(6)		# possibly patched by
-> > kexec-elf-ppc64 stw	7,0x5c(4)	# and patch it into the
-> > kernel
-> > -	li	5,0		# r5 will be 0 for kernel
-> > -	mtctr	4		# prepare branch too
-> >  	mr      3,16            # restore dt address
-> >  
-> > +	mtsrr0	4		# prepare branch to
-> > +
-> > +	mfmsr	5
-> > +	clrrdi	5,5,1		# clear MSR_LE
-> > +	mtsrr1	5
-> > +
-> > +	li	5,0		# r5 will be 0 for kernel
-> > +
-> >  				# skip cache flush, do we care?
-> >  
-> > -	bctr			# start kernel
-> > +	rfid			# update MSR and start kernel
-> > -- 
-> > 2.5.0
-> > 
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
+Deriving the root path from the dump name is not very reliable if it depends on a
+convention that could change.
+What is configured in the kdump or kdump.conf file is the "/var/crash" or similar dump
+file directory.
+I propose to add a --dump-dir option to makedumpfile. The distro script can easily
+add --dump-dir=/var/crash to the command line, and then the path to root can be
+accurately derived.  If --dump-dir is not specified then --work-dir would have to
+be pre-adjusted, as it is currently.
+
+-Cliff
+> 
+> >---
+> > makedumpfile.c |  144 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > makedumpfile.h |    3 -
+> > print_info.c   |   15 ++++-
+> > 3 files changed, 158 insertions(+), 4 deletions(-)
+> >
+> >Index: code/makedumpfile.c
+> >===================================================================
+> >--- code.orig/makedumpfile.c
+> >+++ code/makedumpfile.c
+> >@@ -25,6 +25,7 @@
+> > #include <sys/time.h>
+> > #include <limits.h>
+> > #include <assert.h>
+> >+#include <sys/stat.h>
+> >
+> > struct symbol_table	symbol_table;
+> > struct size_table	size_table;
+> >@@ -10364,6 +10365,146 @@ int show_mem_usage(void)
+> > 	return TRUE;
+> > }
+> >
+> >+/*
+> >+ * return 1 if path is a directory
+> >+ * else return 0
+> >+ */
+> >+int
+> >+isdir(char *path)
+> >+{
+> >+	struct stat buf;
+> >+
+> >+	if (path) {
+> >+		if (stat(path, &buf) || !S_ISDIR(buf.st_mode)) {
+> >+			return 0;
+> >+		}
+> >+		return 1;
+> >+	} else {
+> >+		return 0;
+> >+	}
+> >+}
+> >+
+> >+/*
+> >+ * Set info->root_dir to the crashkernel's path to the bootkernel's root
+> >+ * or set it to null if that path cannot be determined.
+> >+ * We must assume that the dump file is in the bootkernel's /var/crash/
+> >+ */
+> >+void
+> >+set_rootdir()
+> >+{
+> >+	int len;
+> >+	char *cp1, *cp2;
+> >+
+> >+	/* allow this function to be called multiple times */
+> >+	if (info->root_dir)
+> >+		return;
+> >+
+> >+	if (!info->name_dumpfile) {
+> >+		info->root_dir = NULL;
+> >+		return;
+> >+	}
+> >+
+> >+	len = (int)strlen(info->name_dumpfile);
+> >+	if (len == 0) {
+> >+		info->root_dir = NULL;
+> >+		return;
+> >+	}
+> >+	info->root_dir = malloc(len);
+> >+	cp1 = info->name_dumpfile;
+> >+	cp2 = cp1;
+> >+	while (*cp2 != '\0') {
+> >+		if (!strncmp(cp2, "/var/crash/", 11)) {
+> >+			len = cp2 - cp1;
+> >+			strncpy(info->root_dir, cp1, len);
+> >+			if (!isdir(info->root_dir)) {
+> >+				fprintf(stderr, "Error: root directory %s does not exist\n",
+> >+					info->root_dir);
+> >+				exit(1);
+> >+			}
+> >+			return;
+> >+		}
+> >+		cp2++;
+> >+	}
+> >+	info->root_dir = NULL;
+> >+	return;
+> >+}
+> >+
+> >+/*
+> >+ * The --work-dir directory should be validated and created if necessary.
+> >+ */
+> >+void
+> >+adjust_working_dir()
+> >+{
+> >+	int ret, finished=0;
+> >+	char *hold, *inter_dir = NULL, *cp1, *cp2;
+> >+
+> >+	/* if a crashkernel root environment was specified, no adjust is necessary */
+> >+	if (isdir(info->working_dir))
+> >+		return;
+> >+
+> >+	set_rootdir();
+> >+
+> >+	if (!strncmp(info->working_dir, "/", 1)) {
+> >+		/* an absolute path should either exist in the crashkernel's
+> >+		   root, or should be adjusted to be relative to it */
+> >+		if (info->root_dir) {
+> >+			hold = malloc(strlen(info->working_dir)+1);
+> >+			strcpy(hold, info->working_dir);
+> >+			info->working_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir));
+> >+			inter_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir));
+> >+			strcpy(info->working_dir, info->root_dir);
+> >+			strcat(info->working_dir, hold);
+> >+			free (hold);
+> >+			fprintf(stderr, "--workdir set to %s\n", info->working_dir);
+> >+		} else {
+> >+			inter_dir = malloc(strlen(info->working_dir));
+> >+		}
+> >+	} else {
+> >+		/* a relative path that does not already exist should be made absolute; it is taken to
+> >+		   be relative to the crash kernel's root */
+> >+		if (info->root_dir) {
+> >+			hold = malloc(strlen(info->working_dir)+1);
+> >+			strcpy(hold, info->working_dir);
+> >+			info->working_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir) + 1);
+> >+			inter_dir = malloc(strlen(info->root_dir) + strlen(info->working_dir) + 1);
+> >+			strcpy(info->working_dir, info->root_dir);
+> >+			strcat(info->working_dir, "/");
+> >+			strcat(info->working_dir, hold);
+> >+			free (hold);
+> >+			fprintf(stderr, "--workdir set to %s\n", info->working_dir);
+> >+		} else {
+> >+			inter_dir = malloc(strlen(info->working_dir));
+> >+		}
+> >+	}
+> >+
+> >+	/* path is complete, now make sure it exists */
+> >+	if (!isdir(info->working_dir)) {
+> >+		strcpy(inter_dir, info->working_dir);
+> >+		if (info->root_dir)
+> >+			cp1 = inter_dir + strlen(info->root_dir) + 1;
+> >+		else
+> >+			cp1 = inter_dir + 1;
+> >+		while (finished == 0) {
+> >+			strcpy(inter_dir, info->working_dir);
+> >+			cp2 = strchr(cp1, '/');
+> >+			if (cp2) {
+> >+				*cp2 = '\0';
+> >+				cp1 = cp2 + 1;
+> >+			} else {
+> >+				finished = 1;
+> >+			}
+> >+			if (!isdir(inter_dir)) {
+> >+				ret = mkdir(inter_dir, 0755);
+> >+				if (ret) {
+> >+					fprintf(stderr, "Error: mkdir(%s, 0755) returned %d\n",
+> >+						inter_dir, ret);
+> >+					exit(1);
+> >+				}
+> >+			}
+> >+		}
+> >+	}
+> >+	return;
+> >+}
+> >
+> > static struct option longopts[] = {
+> > 	{"split", no_argument, NULL, OPT_SPLIT},
+> >@@ -10549,6 +10690,9 @@ main(int argc, char *argv[])
+> > 		return COMPLETED;
+> > 	}
+> >
+> >+	if (info->working_dir)
+> >+		adjust_working_dir();
+> >+
+> > 	if (elf_version(EV_CURRENT) == EV_NONE ) {
+> > 		/*
+> > 		 * library out of date
+> >Index: code/makedumpfile.h
+> >===================================================================
+> >--- code.orig/makedumpfile.h
+> >+++ code/makedumpfile.h
+> >@@ -1258,7 +1258,8 @@ struct DumpInfo {
+> > 	/*
+> > 	 * for cyclic processing
+> > 	 */
+> >-	char	           *working_dir;	     /* working directory for bitmap */
+> >+	char	           *working_dir;	/* working directory for bitmap */
+> >+	char	           *root_dir;		/* crashkernel path to boot kernel's root */
+> > 	mdf_pfn_t          num_dumpable;
+> > 	unsigned long      bufsize_cyclic;
+> > 	unsigned long      pfn_cyclic;
+> >Index: code/print_info.c
+> >===================================================================
+> >--- code.orig/print_info.c
+> >+++ code/print_info.c
+> >@@ -221,11 +221,20 @@ print_usage(void)
+> > 	MSG("      size is at most N kilo bytes.\n");
+> > 	MSG("\n");
+> > 	MSG("  [--work-dir]:\n");
+> >-	MSG("      Specify the working directory for the temporary bitmap file.\n");
+> >-	MSG("      If this option isn't specified, the bitmap will be saved on memory.\n");
+> >+	MSG("      Specify the working directory for temporary files such as the bitmap.\n");
+> >+	MSG("      If this option isn't specified, the bitmap will be saved in memory.\n");
+> > 	MSG("      Filtering processing has to do 2 pass scanning to fix the memory consumption,\n");
+> >-	MSG("      but it can be avoided by using working directory on file system.\n");
+> >+	MSG("      but it can be avoided by using this working directory on the file system.\n");
+> > 	MSG("      So if you specify this option, the filtering speed may be bit faster.\n");
+> >+	MSG("      The directory path may be absolute or relative.\n");
+> >+	MSG("      If relative, it is taken to be based at the root filesystem.\n");
+> >+	MSG("      It may be an existing directory expressed with the path to the root filesystem as\n");
+> >+	MSG("      it is mounted in the crashkernel.\n");
+> >+	MSG("      Or it may expressed with '/' as the path to the root filesystem. In that case it will\n");
+> >+	MSG("      be automatically adjusted to be relative to the root of the crashkernel.\n");
+> >+	MSG("      The root of the crashkernel is determined from the dump name, if present. An assumption\n");
+> >+	MSG("      is made that the dump file is to be written to /var/crash/.\n");
+> >+	MSG("      If the directory does not exist it will be created, including multiple components.\n");
+> > 	MSG("\n");
+> > 	MSG("  [--non-mmap]:\n");
+> > 	MSG("      Never use mmap(2) to read VMCORE even if it supports mmap(2).\n");
+
+-- 
+Cliff Wickman
+SGI
+cpw@sgi.com
+(651)683-7524 vnet 207524
+(651)482-9347 home
 
 _______________________________________________
 kexec mailing list
