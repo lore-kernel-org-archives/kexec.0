@@ -1,30 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-x242.google.com ([2607:f8b0:4003:c06::242])
+Received: from mail-pa0-x22a.google.com ([2607:f8b0:400e:c03::22a])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZaRZa-0000Eh-Qj
- for kexec@lists.infradead.org; Fri, 11 Sep 2015 16:53:15 +0000
-Received: by oixx17 with SMTP id x17so4358078oix.1
- for <kexec@lists.infradead.org>; Fri, 11 Sep 2015 09:52:53 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <bf24321255a60856d889590131daf69a.squirrel@www.codeaurora.org>
-References: <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
- <20150703043241.GC21990@dhcppc13.redhat.com>
- <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
- <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
- <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
- <20150820112150.GA26132@dhcppc13.redhat.com>
- <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
- <20150821034433.GB26132@dhcppc13.redhat.com>
- <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
- <20150822035445.GC3013@dhcppc13.redhat.com>
- <5053347ed9f8e4e245d8438b3a8c981d.squirrel@www.codeaurora.org>
- <797166011523512cf7099f14770922b4.squirrel@www.codeaurora.org>
- <bf24321255a60856d889590131daf69a.squirrel@www.codeaurora.org>
-Date: Fri, 11 Sep 2015 22:22:53 +0530
-Message-ID: <CAHM4w1=aLOKY3PebMNb7cxWM_=n3TUJYB1WSvqrmMT6rQ+hRKg@mail.gmail.com>
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-From: Pratyush Anand <pratyush.anand@gmail.com>
+ id 1Zb1Vj-0003Pq-LB
+ for kexec@lists.infradead.org; Sun, 13 Sep 2015 07:15:40 +0000
+Received: by padhk3 with SMTP id hk3so113118069pad.3
+ for <kexec@lists.infradead.org>; Sun, 13 Sep 2015 00:15:18 -0700 (PDT)
+From: Minfei Huang <mnfhuang@gmail.com>
+Subject: [PATCH] kexec: Add prefix "kexec" to output message
+Date: Sun, 13 Sep 2015 15:15:12 +0800
+Message-Id: <1442128512-32578-1-git-send-email-mnfhuang@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,36 +17,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: sgoel@codeaurora.org
-Cc: Pratyush Anand <panand@redhat.com>, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
+To: akpm@linux-foundation.org, dyoung@redhat.com, ebiederm@xmission.com
+Cc: mhuang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
 
-HI Sameer,
+kexec output message misses the prefix "kexec", when Dave Young split
+the kexec code. To keep the same format, add the prefix "kexec" to
+output message.
 
+Following is the format of output message now.
+[  140.290795] SYSC_kexec_load: hello, world
 
-On Wed, Sep 9, 2015 at 4:02 AM,  <sgoel@codeaurora.org> wrote:
-> Hi Pratush,
->  I added the mappings for PMD translations to the vtop function. This
-> helped in translating the address to physical. Issues seen:
-> 1. If PMD translates to a section. The physical translations does not get
-> rid of the PMD flags. So, the physical address shows up as invalid and
-> code crashes when it tries to read this address from ELF.
-> 2. After treating this as a PTE table address, we see a compression of
-> around 50%.
->
+Ideally, the format of output message likes below.
+[  140.291534] kexec: sanity_check_segment_list: hello, world
 
-Is it possible for you to share the modification you would have done
-on top of https://github.com/pratyushanand/makedumpfile.git:arm64_support.
-Actually, I have lost track of all the modifications you have done on
-top of my changes.
+Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+---
+ kernel/kexec.c      | 2 ++
+ kernel/kexec_file.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-I would like to review it closely this weekend and will suggest you
-whatever I find.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 4c5edc3..15351ba 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -6,6 +6,8 @@
+  * Version 2.  See the file COPYING for more details.
+  */
+ 
++#define pr_fmt(fmt)	"kexec: " fmt
++
+ #include <linux/capability.h>
+ #include <linux/mm.h>
+ #include <linux/file.h>
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 6a9a3f2..b1ad01b 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -9,6 +9,8 @@
+  * Version 2.  See the file COPYING for more details.
+  */
+ 
++#define pr_fmt(fmt)	"kexec: " fmt
++
+ #include <linux/capability.h>
+ #include <linux/mm.h>
+ #include <linux/file.h>
+-- 
+2.4.0
 
-~Pratyush
 
 _______________________________________________
 kexec mailing list
