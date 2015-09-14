@@ -1,29 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZbWDN-0000gb-Gw
- for kexec@lists.infradead.org; Mon, 14 Sep 2015 16:02:46 +0000
-Message-ID: <82a169eb513c54ef5ab49f4c78531752.squirrel@www.codeaurora.org>
-In-Reply-To: <CAHM4w1=aLOKY3PebMNb7cxWM_=n3TUJYB1WSvqrmMT6rQ+hRKg@mail.gmail.com>
-References: <20150627082256.GE21646@localhost.localdomain>
- <ddc87d025100347122b078b5104ec88c.squirrel@www.codeaurora.org>
- <20150703043241.GC21990@dhcppc13.redhat.com>
- <2c41ac3516494a1cc5d05462494b333b.squirrel@www.codeaurora.org>
- <c0ce0a0ea4482e9fca97b5c811f4693b.squirrel@www.codeaurora.org>
- <d0d13b96c02d5b54afcda30723667dab.squirrel@www.codeaurora.org>
- <20150820112150.GA26132@dhcppc13.redhat.com>
- <cd279166af08eba11be211481f319ab8.squirrel@www.codeaurora.org>
- <20150821034433.GB26132@dhcppc13.redhat.com>
- <006bee38a745c1ca9199870ca8cc600b.squirrel@www.codeaurora.org>
- <20150822035445.GC3013@dhcppc13.redhat.com>
- <5053347ed9f8e4e245d8438b3a8c981d.squirrel@www.codeaurora.org>
- <797166011523512cf7099f14770922b4.squirrel@www.codeaurora.org>
- <bf24321255a60856d889590131daf69a.squirrel@www.codeaurora.org>
- <CAHM4w1=aLOKY3PebMNb7cxWM_=n3TUJYB1WSvqrmMT6rQ+hRKg@mail.gmail.com>
-Date: Mon, 14 Sep 2015 16:02:23 -0000
-Subject: Re: [PATCH] makedumpfile: Support ARM64
-From: sgoel@codeaurora.org
-MIME-Version: 1.0
+Received: from mail-pa0-f45.google.com ([209.85.220.45])
+ by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zbcb0-0005C8-O4
+ for kexec@lists.infradead.org; Mon, 14 Sep 2015 22:51:37 +0000
+Received: by padhy16 with SMTP id hy16so155879466pad.1
+ for <kexec@lists.infradead.org>; Mon, 14 Sep 2015 15:51:11 -0700 (PDT)
+From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject: [PATCH 06/13] Move ep_take_care_of_epollwakeup() to fs/eventpoll.c
+Date: Mon, 14 Sep 2015 15:50:40 -0700
+Message-Id: <1442271047-4908-7-git-send-email-palmer@dabbelt.com>
+In-Reply-To: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
+References: <1441832902-28993-1-git-send-email-palmer@dabbelt.com>
+ <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,46 +20,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <pratyush.anand@gmail.com>
-Cc: Pratyush Anand <panand@redhat.com>, Timur Tabi <timur@codeaurora.org>, Azriel Samson <asamson@codeaurora.org>, kexec@lists.infradead.org, sgoel@codeaurora.org, virajm@codeaurora.org, ats-kumagai@wm.jp.nec.com
+To: arnd@arndb.de, dhowells@redhat.com
+Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-hi Pratyush,
- Most of the chages are translation level and architecture related. I was
-able to get this working on Friday for 3 level tables on arm64. I am
-trying to get this code back to you now.
-Thanks,
-Sameer
+This doesn't make any sense to expose to userspace, so it's been moved
+to the one user.  This was introduced by commit 95f19f658ce1 ("epoll:
+drop EPOLLWAKEUP if PM_SLEEP is disabled").
 
-> HI Sameer,
->
->
-> On Wed, Sep 9, 2015 at 4:02 AM,  <sgoel@codeaurora.org> wrote:
->> Hi Pratush,
->>  I added the mappings for PMD translations to the vtop function. This
->> helped in translating the address to physical. Issues seen:
->> 1. If PMD translates to a section. The physical translations does not
->> get
->> rid of the PMD flags. So, the physical address shows up as invalid and
->> code crashes when it tries to read this address from ELF.
->> 2. After treating this as a PTE table address, we see a compression of
->> around 50%.
->>
->
-> Is it possible for you to share the modification you would have done
-> on top of https://github.com/pratyushanand/makedumpfile.git:arm64_support.
-> Actually, I have lost track of all the modifications you have done on
-> top of my changes.
->
-> I would like to review it closely this weekend and will suggest you
-> whatever I find.
->
-> ~Pratyush
->
+Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
+Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
+---
+ fs/eventpoll.c                 | 13 +++++++++++++
+ include/uapi/linux/eventpoll.h | 12 ------------
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index 1e009cad8d5c..aadee3d1931a 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1812,6 +1812,19 @@ SYSCALL_DEFINE1(epoll_create, int, size)
+ 	return sys_epoll_create1(0);
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static inline void ep_take_care_of_epollwakeup(struct epoll_event *epev)
++{
++	if ((epev->events & EPOLLWAKEUP) && !capable(CAP_BLOCK_SUSPEND))
++		epev->events &= ~EPOLLWAKEUP;
++}
++#else
++static inline void ep_take_care_of_epollwakeup(struct epoll_event *epev)
++{
++	epev->events &= ~EPOLLWAKEUP;
++}
++#endif
++
+ /*
+  * The following function implements the controller interface for
+  * the eventpoll file that enables the insertion/removal/change of
+diff --git a/include/uapi/linux/eventpoll.h b/include/uapi/linux/eventpoll.h
+index bc81fb2e1f0e..7850373079ee 100644
+--- a/include/uapi/linux/eventpoll.h
++++ b/include/uapi/linux/eventpoll.h
+@@ -61,16 +61,4 @@ struct epoll_event {
+ 	__u64 data;
+ } EPOLL_PACKED;
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static inline void ep_take_care_of_epollwakeup(struct epoll_event *epev)
+-{
+-	if ((epev->events & EPOLLWAKEUP) && !capable(CAP_BLOCK_SUSPEND))
+-		epev->events &= ~EPOLLWAKEUP;
+-}
+-#else
+-static inline void ep_take_care_of_epollwakeup(struct epoll_event *epev)
+-{
+-	epev->events &= ~EPOLLWAKEUP;
+-}
+-#endif
+ #endif /* _UAPI_LINUX_EVENTPOLL_H */
+-- 
+2.4.6
 
 
 _______________________________________________
