@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f47.google.com ([209.85.220.47])
- by merlin.infradead.org with esmtps (Exim 4.85 #2 (Red Hat Linux))
- id 1Zbcb4-0005x2-8l
+Received: from mail-pa0-f49.google.com ([209.85.220.49])
+ by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zbcb5-0005CE-Hh
  for kexec@lists.infradead.org; Mon, 14 Sep 2015 22:51:40 +0000
-Received: by pacfv12 with SMTP id fv12so159043186pac.2
- for <kexec@lists.infradead.org>; Mon, 14 Sep 2015 15:51:10 -0700 (PDT)
+Received: by padhk3 with SMTP id hk3so155789921pad.3
+ for <kexec@lists.infradead.org>; Mon, 14 Sep 2015 15:51:19 -0700 (PDT)
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: [PATCH 05/13] Split FDPIC "struct elf_prstatus" to "struct
- elf_fdpic_prstatus"
-Date: Mon, 14 Sep 2015 15:50:39 -0700
-Message-Id: <1442271047-4908-6-git-send-email-palmer@dabbelt.com>
+Subject: [PATCH 12/13] Remove AT_VECTOR_SIZE_ARCH on x86
+Date: Mon, 14 Sep 2015 15:50:46 -0700
+Message-Id: <1442271047-4908-13-git-send-email-palmer@dabbelt.com>
 In-Reply-To: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
 References: <1441832902-28993-1-git-send-email-palmer@dabbelt.com>
  <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
@@ -29,215 +28,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: arnd@arndb.de, dhowells@redhat.com
 Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-This is a pretty big change that I haven't tested any, which worries
-me a lot.  The general idea here is that "struct elf_prstatus" can be
-visible to userspace (from <linux/ptrace.h>)
+It looks like there aren't actually users of this macro anywhere:
 
-  "
-   Generic ptrace interface that exports the architecture specific
-   regsets using the corresponding NT_* types (which are also used in
-   the core dump).  Please note that the NT_PRSTATUS note type in a
-   core dump contains a full 'struct elf_prstatus'. But the
-   user_regset for NT_PRSTATUS contains just the elf_gregset_t that is
-   the pr_reg field of 'struct elf_prstatus'. For all the other
-   user_regset flavors, the user_regset layout and the ELF core dump
-   note payload are exactly the same layout.
-  "
+ * The kernel doesn't use it on x86 because we don't suppor ELF FDPIC.
 
-so it shouldn't have an "#ifdef CONFIG_" in there.
+ * The only Google results point to LMKL patches, both the one that
+   wrote this (from 2010) and my patch to hide it behind __KERNEL__.
 
-This splits the structure into two different structures, one still
-named "struct elf_prstatus", and one for ELF FDPIC that is named
-"struct elf_fdpic_prstatus" -- the idea here is that most users are
-standard ELF, so that's the name that didn't change.
+ * I grep'd through all the source tarballs on my machine, and the
+   only packages that matched were the kernel and crui (which copied a
+   PPC kernel header).
 
-I tried to fix all the users of "struct elf_prstatus" that should now
-be using "struct elf_fdpic_prstatus".  The only testing I did here was
-to build a Blackfin defconfig with "struct elf_prstatus" not defined,
-and to build an x86 defconfig with "struct elf_fdpic_prstatus" not
-defined.
-
-Note that this fails checkpatch.pl with a complaint about wanting open
-braces on the same line as struct definitions.  The existing struct
-definitions in this file have the brace a line afterwards, so I'm
-going to leave this alone.
+Since I'm not sure how to actually provide the right answer (if I
+understand correctly, CONFIG_IA32_EMULATION is not __i386__), the only
+thing I can think of to do is to just remove the definition.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
 Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
 Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
 ---
- fs/binfmt_elf_fdpic.c        |  6 +++---
- fs/proc/kcore.c              | 16 ++++++++++++++++
- include/linux/kexec.h        |  4 ++++
- include/uapi/linux/elfcore.h | 37 +++++++++++++++++++++++++++++++++++--
- kernel/kexec_core.c          |  4 ++++
- 5 files changed, 62 insertions(+), 5 deletions(-)
+ arch/x86/include/uapi/asm/auxvec.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index d3634bfb7fe1..587bf0466d71 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1323,7 +1323,7 @@ static inline void fill_note(struct memelfnote *note, const char *name, int type
-  * fill up all the fields in prstatus from the given task struct, except
-  * registers which need to be filled up separately.
-  */
--static void fill_prstatus(struct elf_prstatus *prstatus,
-+static void fill_prstatus(struct elf_fdpic_prstatus *prstatus,
- 			  struct task_struct *p, long signr)
- {
- 	prstatus->pr_info.si_signo = prstatus->pr_cursig = signr;
-@@ -1406,7 +1406,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
- struct elf_thread_status
- {
- 	struct list_head list;
--	struct elf_prstatus prstatus;	/* NT_PRSTATUS */
-+	struct elf_fdpic_prstatus prstatus;	/* NT_PRSTATUS */
- 	elf_fpregset_t fpu;		/* NT_PRFPREG */
- 	struct task_struct *thread;
- #ifdef ELF_CORE_COPY_XFPREGS
-@@ -1539,7 +1539,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	loff_t offset = 0, dataoff;
- 	int numnote;
- 	struct memelfnote *notes = NULL;
--	struct elf_prstatus *prstatus = NULL;	/* NT_PRSTATUS */
-+	struct elf_fdpic_prstatus *prstatus = NULL;	/* NT_PRSTATUS */
- 	struct elf_prpsinfo *psinfo = NULL;	/* NT_PRPSINFO */
-  	LIST_HEAD(thread_list);
-  	struct list_head *t;
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 92e6726f6e37..b1edd77ec854 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -90,7 +90,11 @@ static size_t get_kcore_size(int *nphdr, size_t *elf_buflen)
- 			(*nphdr + 2)*sizeof(struct elf_phdr) + 
- 			3 * ((sizeof(struct elf_note)) +
- 			     roundup(sizeof(CORE_STR), 4)) +
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+			roundup(sizeof(struct elf_fdpic_prstatus), 4) +
-+#else
- 			roundup(sizeof(struct elf_prstatus), 4) +
-+#endif
- 			roundup(sizeof(struct elf_prpsinfo), 4) +
- 			roundup(arch_task_struct_size, 4);
- 	*elf_buflen = PAGE_ALIGN(*elf_buflen);
-@@ -318,7 +322,11 @@ static char *storenote(struct memelfnote *men, char *bufp)
-  */
- static void elf_kcore_store_hdr(char *bufp, int nphdr, int dataoff)
- {
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	struct elf_fdpic_prstatus prstatus;	/* NT_PRSTATUS */
-+#else
- 	struct elf_prstatus prstatus;	/* NT_PRSTATUS */
-+#endif
- 	struct elf_prpsinfo prpsinfo;	/* NT_PRPSINFO */
- 	struct elf_phdr *nhdr, *phdr;
- 	struct elfhdr *elf;
-@@ -387,10 +395,18 @@ static void elf_kcore_store_hdr(char *bufp, int nphdr, int dataoff)
- 	/* set up the process status */
- 	notes[0].name = CORE_STR;
- 	notes[0].type = NT_PRSTATUS;
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	notes[0].datasz = sizeof(struct elf_fdpic_prstatus);
-+#else
- 	notes[0].datasz = sizeof(struct elf_prstatus);
-+#endif
- 	notes[0].data = &prstatus;
- 
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	memset(&prstatus, 0, sizeof(struct elf_fdpic_prstatus));
-+#else
- 	memset(&prstatus, 0, sizeof(struct elf_prstatus));
-+#endif
- 
- 	nhdr->p_filesz	= notesize(&notes[0]);
- 	bufp = storenote(&notes[0], bufp);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d140b1e9faa7..d9196ccd3781 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -63,7 +63,11 @@
- #define KEXEC_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
- #define KEXEC_CORE_NOTE_NAME "CORE"
- #define KEXEC_CORE_NOTE_NAME_BYTES ALIGN(sizeof(KEXEC_CORE_NOTE_NAME), 4)
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+#define KEXEC_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_fdpic_prstatus), 4)
-+#else
- #define KEXEC_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
-+#endif
- /*
-  * The per-cpu notes area is a list of notes terminated by a "NULL"
-  * note header.  For kdump, the code in vmcore.c runs in the context
-diff --git a/include/uapi/linux/elfcore.h b/include/uapi/linux/elfcore.h
-index 569737cfb557..697c52db0227 100644
---- a/include/uapi/linux/elfcore.h
-+++ b/include/uapi/linux/elfcore.h
-@@ -60,7 +60,40 @@ struct elf_prstatus
- 	long	pr_instr;		/* Current instruction */
+diff --git a/arch/x86/include/uapi/asm/auxvec.h b/arch/x86/include/uapi/asm/auxvec.h
+index 77203ac352de..1316b4c35425 100644
+--- a/arch/x86/include/uapi/asm/auxvec.h
++++ b/arch/x86/include/uapi/asm/auxvec.h
+@@ -9,11 +9,4 @@
  #endif
- 	elf_gregset_t pr_reg;	/* GP registers */
--#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	int pr_fpvalid;		/* True if math co-processor being used.  */
-+};
-+
-+/* Architectures that set CONFIG_BINFMT_ELF_FDPIC use this instead of
-+ * "struct elf_prstatus".
-+ */
-+struct elf_fdpic_prstatus
-+{
-+#if 0
-+	long	pr_flags;	/* XXX Process flags */
-+	short	pr_why;		/* XXX Reason for process halt */
-+	short	pr_what;	/* XXX More detailed reason */
-+#endif
-+	struct elf_siginfo pr_info;	/* Info associated with signal */
-+	short	pr_cursig;		/* Current signal */
-+	unsigned long pr_sigpend;	/* Set of pending signals */
-+	unsigned long pr_sighold;	/* Set of held signals */
-+#if 0
-+	struct sigaltstack pr_altstack;	/* Alternate stack info */
-+	struct sigaction pr_action;	/* Signal action for current sig */
-+#endif
-+	pid_t	pr_pid;
-+	pid_t	pr_ppid;
-+	pid_t	pr_pgrp;
-+	pid_t	pr_sid;
-+	struct timeval pr_utime;	/* User time */
-+	struct timeval pr_stime;	/* System time */
-+	struct timeval pr_cutime;	/* Cumulative user time */
-+	struct timeval pr_cstime;	/* Cumulative system time */
-+#if 0
-+	long	pr_instr;		/* Current instruction */
-+#endif
-+	elf_gregset_t pr_reg;	/* GP registers */
-+
- 	/* When using FDPIC, the loadmap addresses need to be communicated
- 	 * to GDB in order for GDB to do the necessary relocations.  The
- 	 * fields (below) used to communicate this information are placed
-@@ -69,7 +102,7 @@ struct elf_prstatus
- 	 */
- 	unsigned long pr_exec_fdpic_loadmap;
- 	unsigned long pr_interp_fdpic_loadmap;
+ #define AT_SYSINFO_EHDR		33
+ 
+-/* entries in ARCH_DLINFO: */
+-#if defined(CONFIG_IA32_EMULATION) || !defined(CONFIG_X86_64)
+-# define AT_VECTOR_SIZE_ARCH 2
+-#else /* else it's non-compat x86-64 */
+-# define AT_VECTOR_SIZE_ARCH 1
 -#endif
-+
- 	int pr_fpvalid;		/* True if math co-processor being used.  */
- };
- 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 201b45327804..8d2fc707fecf 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -977,7 +977,11 @@ static void final_note(u32 *buf)
- 
- void crash_save_cpu(struct pt_regs *regs, int cpu)
- {
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	struct elf_fdpic_prstatus prstatus;
-+#else
- 	struct elf_prstatus prstatus;
-+#endif
- 	u32 *buf;
- 
- 	if ((cpu < 0) || (cpu >= nr_cpu_ids))
+-
+ #endif /* _ASM_X86_AUXVEC_H */
 -- 
 2.4.6
 
