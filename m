@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f43.google.com ([209.85.220.43])
+Received: from mail-pa0-f66.google.com ([209.85.220.66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zbcas-0002Tt-Hr
- for kexec@lists.infradead.org; Mon, 14 Sep 2015 22:51:27 +0000
-Received: by padhk3 with SMTP id hk3so155785586pad.3
- for <kexec@lists.infradead.org>; Mon, 14 Sep 2015 15:51:06 -0700 (PDT)
+ id 1Zbcar-0002Tm-Ty
+ for kexec@lists.infradead.org; Mon, 14 Sep 2015 22:51:26 +0000
+Received: by padew5 with SMTP id ew5so4711285pad.0
+ for <kexec@lists.infradead.org>; Mon, 14 Sep 2015 15:51:04 -0700 (PDT)
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: [PATCH 01/13] Remove #ifdef CONFIG_64BIT from all asm-generic/fcntl.h
-Date: Mon, 14 Sep 2015 15:50:35 -0700
-Message-Id: <1442271047-4908-2-git-send-email-palmer@dabbelt.com>
-In-Reply-To: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
+Subject: [PATCH v3] Remove #ifdef CONFIG_* from	all userspace headers
+Date: Mon, 14 Sep 2015 15:50:34 -0700
+Message-Id: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
+In-Reply-To: <1441832902-28993-1-git-send-email-palmer@dabbelt.com>
 References: <1441832902-28993-1-git-send-email-palmer@dabbelt.com>
- <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,49 +25,70 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: arnd@arndb.de, dhowells@redhat.com
-Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
+Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-When working on the RISC-V port I noticed that F_SETLK64 was being
-defined on our 64-bit platform, despite our port being so new that
-we've only ever had the 64-bit file ops.  Since there's not compat
-layer for these, this causes fcntl to bail out.
+This patch set used to be called "[PATCH] Remove #ifdef CONFIG_64BIT
+from all asm-generic/fcntl.h".
 
-It turns out that one of the ways in with F_SETLK64 was being defined
-(there's some more in glibc, but that's a whole different story... :))
-is the result of CONFIG_64BIT showing up in this user-visible header.
-<asm-generic/bitsperlong.h> confirms this isn't sane, so I replaced it
-with a __BITS_PER_LONG check.
+This is version 3 of the patch set.  I think things are kind of
+cleaning up, but there's still some questions I have:
 
-Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
-Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
----
- include/uapi/asm-generic/fcntl.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ * #4 might be dangerous, but I think this is the best way to do it
+   because otherwise arch maintainers will have to #define this to
+   something.  Since Xtensa already had exactly the same bug as the
+   asm-generic header did, I think it'd be best to avoid those if
+   possible.
 
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index e063effe0cc1..14a5c8237d84 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -1,6 +1,7 @@
- #ifndef _ASM_GENERIC_FCNTL_H
- #define _ASM_GENERIC_FCNTL_H
- 
-+#include <asm/bitsperlong.h>
- #include <linux/types.h>
- 
- /*
-@@ -115,7 +116,7 @@
- #define F_GETSIG	11	/* for sockets. */
- #endif
- 
--#ifndef CONFIG_64BIT
-+#if (__BITS_PER_LONG == 32)
- #ifndef F_GETLK64
- #define F_GETLK64	12	/*  using 'struct flock64' */
- #define F_SETLK64	13
--- 
-2.4.6
+   I'm OK changing this to define the value to 0 by default (though
+   thinking now, I think it'd be better to not define it by default),
+   since most kernels aren't going to have MAP_UNINITIALIZED do
+   anything anyway.
+
+ * #5 is big and I don't really understand what's going on, so it's
+   probably broken somewhere.
+
+Also, there's some checkpatch warnings that I purposely haven't fixed:
+
+ * In #5, there's a checkpatch.pl complaint about same-line struct
+   braces.  I've left that in to match the rest of the file, but I can
+   also fix all of them if that would be better.
+
+ * In #10, there's a checkpatch.pl complaint about a split printk
+   format string, but that was there before and I don't see a way to
+   make it a lot cleaner, so I'm leaving it alone.
+
+ * In #13, there's two checkpatch.pl complains.  One is about block
+   comments that is bogus, and one is about long lines but there's
+   more of those so I think it's OK.
+
+Thanks to everyone who looked at v2!
+
+
+
+
+Changes since v2 (<1441832902-28993-1-git-send-email-palmer@dabbelt.com>)
+
+* Patch set renamed.
+
+* #2 is rewritten to use sys_ni.c instead of an #ifdef
+
+* #3, #6, #8, #9, #10, and #11 no longer use "#ifdef __KERNEL__" but
+   have instead moved the offending lines to the correct, kernel-only
+   files.
+
+* #4 has been rewritten to always define MAP_UNINITIALIZED to
+   non-zero, rather than defining it to zero when in userspace.
+
+* #5 got a whole lot longer -- rather than just always hiding these
+   fields from userspace, there is now a second "struct
+   elf_fdpic_prstatus" structure.  This should allow userspace to
+   parse core dumps correctly.
+
+* Rebased onto 9c488de24f7264f08d341024bffdd637b4d04c96.
+
+Changes since v1 (<1441152610-22566-1-git-send-email-palmer@dabbelt.com>)
+
+* All patches but #1 were added.
 
 
 _______________________________________________
