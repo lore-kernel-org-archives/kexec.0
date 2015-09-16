@@ -1,15 +1,17 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f180.google.com ([209.85.212.180])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zc87R-000600-LV
- for kexec@lists.infradead.org; Wed, 16 Sep 2015 08:31:11 +0000
-Received: by wicfx3 with SMTP id fx3so59376476wic.0
- for <kexec@lists.infradead.org>; Wed, 16 Sep 2015 01:30:42 -0700 (PDT)
-From: Nikolay Borisov <kernel@kyup.com>
-Subject: Reducing the size of the dump file/speeding up collection
-Message-ID: <55F928B1.4080703@kyup.com>
-Date: Wed, 16 Sep 2015 11:30:41 +0300
+ id 1Zc9AT-0008LZ-5w
+ for kexec@lists.infradead.org; Wed, 16 Sep 2015 09:38:21 +0000
+Date: Wed, 16 Sep 2015 17:37:49 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] vmcore: replace Elf64_Ehdr/Elf32_Ehdr with elfhdr
+Message-ID: <20150916093749.GD6699@dhcp-128-62.nay.redhat.com>
+References: <1442372321-16334-1-git-send-email-yanjiang.jin@windriver.com>
+ <1442372321-16334-2-git-send-email-yanjiang.jin@windriver.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1442372321-16334-2-git-send-email-yanjiang.jin@windriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,27 +23,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: SiteGround Operations <operations@siteground.com>
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: yanjiang.jin@windriver.com
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, jinyanjiang@gmail.com, linux-kernel@vger.kernel.org, chaowang@redhat.com
 
-Hello,
+Cc kexec list.
 
-I've been using makedumpfile as the crash collector with the -d31
-parameter. The machine this is being run on usually have 128-256GB of
-ram and the resulting crash dumps are in the range of 14-20gb which is
-very bug for the type of analysis I'm usually performing on crashed
-machine. I was wondering whether there is a way  to further reduce the
-size and the time to take the dump (now it takes around 25 minutes to
-collect such a dump). I've seen reports where people with TBs of ram
-take that long, meaning for a machine with 256gb it should be even
-faster. I've been running this configuration on kernels 3.12.28 and 4.1
-where mmap for the vmcore file is supported.
-
-Please advise
-
-Regards,
-Nikolay
+On 09/16/15 at 10:58am, yanjiang.jin@windriver.com wrote:
+> From: Yanjiang Jin <yanjiang.jin@windriver.com>
+> 
+> Function parse_crash_elf_headers() reads e_ident[EI_CLASS] then decides to
+> call parse_crash_elf64_headers() or parse_crash_elf32_headers().
+> But this happens in run time, not compile time. So compiler will report
+> the below warning:
+> 
+> In file included from include/linux/elf.h:4:0,
+>                  from fs/proc/vmcore.c:13:
+> fs/proc/vmcore.c: In function 'parse_crash_elf32_headers':
+> arch/mips/include/asm/elf.h:258:23: warning: initializatio
+> n from incompatible pointer type
+>   struct elfhdr *__h = (hdr);     \
+>                        ^
+> fs/proc/vmcore.c:1071:4: note: in expansion of macro 'elf_
+> check_arch'
+>    !elf_check_arch(&ehdr) ||
+>     ^
+> 
+> Signed-off-by: Yanjiang Jin <yanjiang.jin@windriver.com>
+> ---
+>  fs/proc/vmcore.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 4e61388..576bb26 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -999,7 +999,7 @@ static void free_elfcorebuf(void)
+>  static int __init parse_crash_elf64_headers(void)
+>  {
+>  	int rc=0;
+> -	Elf64_Ehdr ehdr;
+> +	struct elfhdr ehdr;
+>  	u64 addr;
+>  
+>  	addr = elfcorehdr_addr;
+> @@ -1055,7 +1055,7 @@ fail:
+>  static int __init parse_crash_elf32_headers(void)
+>  {
+>  	int rc=0;
+> -	Elf32_Ehdr ehdr;
+> +	struct elfhdr ehdr;
+>  	u64 addr;
+>  
+>  	addr = elfcorehdr_addr;
+> -- 
+> 1.9.1
+> 
+> 
 
 _______________________________________________
 kexec mailing list
