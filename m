@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f54.google.com ([209.85.220.54])
+Received: from mail-pa0-f48.google.com ([209.85.220.48])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcPZ2-0000VC-BI
- for kexec@lists.infradead.org; Thu, 17 Sep 2015 03:08:49 +0000
-Received: by pacex6 with SMTP id ex6so6966594pac.0
- for <kexec@lists.infradead.org>; Wed, 16 Sep 2015 20:08:27 -0700 (PDT)
-Message-ID: <55fa2eaa.ca39440a.feaa1.36f5@mx.google.com>
-Date: Wed, 16 Sep 2015 20:08:26 -0700 (PDT)
+ id 1ZcQJ4-0001Tv-9x
+ for kexec@lists.infradead.org; Thu, 17 Sep 2015 03:56:22 +0000
+Received: by padhk3 with SMTP id hk3so7853519pad.3
+ for <kexec@lists.infradead.org>; Wed, 16 Sep 2015 20:56:01 -0700 (PDT)
+Message-ID: <55fa39d0.2c1b450a.6854.4115@mx.google.com>
+Date: Wed, 16 Sep 2015 20:56:00 -0700 (PDT)
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [PATCH 11/13] Always define MAX_RAW_MINORS as 65535 in userspace
-In-Reply-To: <55F882C7.4080304@zytor.com>
+Subject: Re: [PATCH 09/13] Move bp_type_idx to kernel/event/hw_breakpoint.c
+In-Reply-To: <20150915193910.GH16853@twins.programming.kicks-ass.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +23,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: hpa@zytor.com
-Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, dhowells@redhat.com, jcmvbkbc@gmail.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, arnd@arndb.de, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
+To: peterz@infradead.org
+Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, fweisbec@gmail.com, dhowells@redhat.com, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, dyoung@redhat.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, jikos@kernel.org, arnd@arndb.de, plagnioj@jcrosoft.com, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-On Tue, 15 Sep 2015 13:42:47 PDT (-0700), hpa@zytor.com wrote:
-> On 09/14/2015 03:50 PM, Palmer Dabbelt wrote:
->> While I don't think this was ever meant to be exposed to userspace, if
->> anyone is using it then this will at least provide a correct (if
->> unlikely) definition.
+On Tue, 15 Sep 2015 12:39:10 PDT (-0700), peterz@infradead.org wrote:
+> On Tue, Sep 15, 2015 at 11:40:11AM -0700, Palmer Dabbelt wrote:
+>> On Tue, 15 Sep 2015 01:06:07 PDT (-0700), peterz@infradead.org wrote:
+>> > On Mon, Sep 14, 2015 at 03:50:43PM -0700, Palmer Dabbelt wrote:
+>> >> This has a "#ifdef CONFIG_*" that used to be exposed to userspace.
+>> >>
+>> >> The names in here are so generic that I don't think it's a good idea
+>> >> to expose them to userspace (or even the rest of the kernel).  Since
+>> >> there's only one kernel user, it's been moved to that file.
+>> >>
+>> >> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+>> >> Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
+>> >> Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
+>> >> ---
+>> >>  include/uapi/linux/hw_breakpoint.h | 10 ----------
+>> >>  kernel/events/hw_breakpoint.c      | 10 ++++++++++
+>> >>  2 files changed, 10 insertions(+), 10 deletions(-)
+>> >>
+>> >> diff --git a/include/uapi/linux/hw_breakpoint.h b/include/uapi/linux/hw_breakpoint.h
+>> >> index b04000a2296a..7a6a5a7f9511 100644
+>> >> --- a/include/uapi/linux/hw_breakpoint.h
+>> >> +++ b/include/uapi/linux/hw_breakpoint.h
+>> >> @@ -17,14 +17,4 @@ enum {
+>> >>  	HW_BREAKPOINT_INVALID   = HW_BREAKPOINT_RW | HW_BREAKPOINT_X,
+>> >>  };
+>> >>
+>> >> -enum bp_type_idx {
+>> >> -	TYPE_INST 	= 0,
+>> >> -#ifdef CONFIG_HAVE_MIXED_BREAKPOINTS_REGS
+>> >> -	TYPE_DATA	= 0,
+>> >> -#else
+>> >> -	TYPE_DATA	= 1,
+>> >> -#endif
+>> >> -	TYPE_MAX
+>> >> -};
+>> >
+>> > This is rather unfortunate; you are correct that the naming is too
+>> > generic (and I tend to agree), but I think these values are required by
+>> > userspace to fill out:
+>> >
+>> >   perf_event_attr::bp_type
+>> >
+>> > So removing them will break things.
+>> >
+>> > Frederic?
 >>
->> MAX_RAW_MINORS used to be used in the kernel, where it's been replaced
->> with CONFIG_MAX_RAW_MINORS.
+>> perf_event_open(2) says
 >>
->> Note that there's a checkpatch.pl warning about a split config string
->> here, but I've left that alone.
+>>        bp_type (since Linux 2.6.33)
+>>               This chooses the breakpoint type.  It is one of:
+>>
+>>               HW_BREAKPOINT_EMPTY
+>>                      No breakpoint.
+>>
+>>               HW_BREAKPOINT_R
+>>                      Count when we read the memory location.
+>>
+>>               HW_BREAKPOINT_W
+>>                      Count when we write the memory location.
+>>
+>>               HW_BREAKPOINT_RW
+>>                      Count when we read or write the memory location.
+>>
+>>               HW_BREAKPOINT_X
+>>                      Count when we execute code at the memory location.
+>>
+>>               The values can be combined via a bitwise or, but the combination
+>>               of HW_BREAKPOINT_R or HW_BREAKPOINT_W  with  HW_BREAKPOINT_X  is
+>>               not allowed.
+>>
+>> so I think removing this enum from userspace is OK.  Did I miss
+>> something?
 >
-> From a UAPI perspective I would think the right value would be 2^20.
+> Nah, could've just been me not being awake. Unless Frederic says
+> otherwise I'll chalk it up to not having drank enough morning juice.
 
-Wow, I'm super surprised.  For some reason I thought major/minor
-numbers were 16 bits, but according to glibc I just have no idea what
-I'm doing :).
+Well, I'm going to leave this alone, then -- as Arnd pointed out in a
+later email that got mis-threaded, this would be super tricky to fix
+if userspace actually relied on it (which is why I was scared I was
+wrong).
 
-Thanks for catching this!
+v4 (which is hopefully the final version of the patch set) will leave
+this as it is.
 
 _______________________________________________
 kexec mailing list
