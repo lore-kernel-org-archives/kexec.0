@@ -1,17 +1,21 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.windriver.com ([147.11.1.11])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcVYw-0008N8-D2
- for kexec@lists.infradead.org; Thu, 17 Sep 2015 09:33:06 +0000
-Message-ID: <55FA88BD.3050303@windriver.com>
-Date: Thu, 17 Sep 2015 17:32:45 +0800
-From: yjin <yanjiang.jin@windriver.com>
+ id 1ZcWCf-0005ax-AR
+ for kexec@lists.infradead.org; Thu, 17 Sep 2015 10:14:11 +0000
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20150915140742.GA11938@x>
+References: <20150915140742.GA11938@x>
+ <1441832902-28993-1-git-send-email-palmer@dabbelt.com>
+ <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
+ <1442271047-4908-5-git-send-email-palmer@dabbelt.com>
+ <20150915002358.GA12618@node.dhcp.inet.fi> <20150915051919.GB4091@x>
+ <20150915094200.GA15444@node.dhcp.inet.fi>
+Subject: Re: [PATCH 04/13] Always expose MAP_UNINITIALIZED to userspace
 MIME-Version: 1.0
-Subject: Re: [PATCH] vmcore: replace Elf64_Ehdr/Elf32_Ehdr with elfhdr
-References: <1442372321-16334-1-git-send-email-yanjiang.jin@windriver.com>
- <1442372321-16334-2-git-send-email-yanjiang.jin@windriver.com>
- <20150916103917.GA32189@dhcp-128-25.nay.redhat.com>
-In-Reply-To: <20150916103917.GA32189@dhcp-128-25.nay.redhat.com>
+Content-ID: <16168.1442484811.1@warthog.procyon.org.uk>
+Date: Thu, 17 Sep 2015 11:13:31 +0100
+Message-ID: <16169.1442484811@warthog.procyon.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,49 +24,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Minfei Huang <mhuang@redhat.com>
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, jinyanjiang@gmail.com, linux-kernel@vger.kernel.org, chaowang@redhat.com
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: Josh Triplett <josh@joshtriplett.org>
+Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, dhowells@redhat.com, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, dyoung@redhat.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, jikos@kernel.org, a.p.zijlstra@chello.nl, arnd@arndb.de, plagnioj@jcrosoft.com, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, "Kirill A. Shutemov" <kirill@shutemov.name>, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-Ck9uIDIwMTXlubQwOeaciDE25pelIDE4OjM5LCBNaW5mZWkgSHVhbmcgd3JvdGU6Cj4gT24gMDkv
-MTYvMTUgYXQgMTA6NThhbSwgeWFuamlhbmcuamluQHdpbmRyaXZlci5jb20gd3JvdGU6Cj4+IEZy
-b206IFlhbmppYW5nIEppbiA8eWFuamlhbmcuamluQHdpbmRyaXZlci5jb20+Cj4+Cj4+IEZ1bmN0
-aW9uIHBhcnNlX2NyYXNoX2VsZl9oZWFkZXJzKCkgcmVhZHMgZV9pZGVudFtFSV9DTEFTU10gdGhl
-biBkZWNpZGVzIHRvCj4+IGNhbGwgcGFyc2VfY3Jhc2hfZWxmNjRfaGVhZGVycygpIG9yIHBhcnNl
-X2NyYXNoX2VsZjMyX2hlYWRlcnMoKS4KPj4gQnV0IHRoaXMgaGFwcGVucyBpbiBydW4gdGltZSwg
-bm90IGNvbXBpbGUgdGltZS4gU28gY29tcGlsZXIgd2lsbCByZXBvcnQKPj4gdGhlIGJlbG93IHdh
-cm5pbmc6Cj4+Cj4+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2xpbnV4L2VsZi5oOjQ6
-MCwKPj4gICAgICAgICAgICAgICAgICAgZnJvbSBmcy9wcm9jL3ZtY29yZS5jOjEzOgo+PiBmcy9w
-cm9jL3ZtY29yZS5jOiBJbiBmdW5jdGlvbiAncGFyc2VfY3Jhc2hfZWxmMzJfaGVhZGVycyc6Cj4+
-IGFyY2gvbWlwcy9pbmNsdWRlL2FzbS9lbGYuaDoyNTg6MjM6IHdhcm5pbmc6IGluaXRpYWxpemF0
-aW8KPj4gbiBmcm9tIGluY29tcGF0aWJsZSBwb2ludGVyIHR5cGUKPj4gICAgc3RydWN0IGVsZmhk
-ciAqX19oID0gKGhkcik7ICAgICBcCj4+ICAgICAgICAgICAgICAgICAgICAgICAgIF4KPiBIb3cg
-YWJvdXQgY29udmVydGluZyB0aGUgaGRyIHRvIHR5cGUgZWxmaGRyIGluIGFib3ZlIHNlbnRlbmNl
-LCBsaWtlCj4gZm9sbG93aW5nLgo+Cj4gc3RydWN0IGVsZmhkciAqX19oID0gKHN0cnVjdCBlbGZo
-ZHIgKikoaGRyKTsKClllcywgdGhpcyBpcyBhIHJlcGxhY2VtZW50LCBhbmQgaXQgc2VlbXMgbW9y
-ZSBzYWZlIGJlY2F1c2UgaXQganVzdCAKYWZmZWN0cyBNSVBTIGFyY2guCkJ1dCBJIGFsc28gY2Fu
-J3Qgc2VlIGFueSBvYnZpb3VzIGltcGFjdCBpZiBtb2RpZnlpbmcgY29tbW9uIHZtY29yZS5jOi0p
-CkFueXdheSwgaWYgeW91IHN0aWNrIHRvIHlvdXIgb3BpbmlvbiwgSSBjYW4gc2VuZCBhIFYyIHBh
-dGNoIHRvIHVwZGF0ZSAKbWlwcycgZWxmLmggcmF0aGVyIHRoYW4gdm1jb3JlLmMuCgpUaGFua3Mh
-CllhbmppYW5nCj4KPiBUaGFua3MKPiBNaW5mZWkKPgo+PiBmcy9wcm9jL3ZtY29yZS5jOjEwNzE6
-NDogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvICdlbGZfCj4+IGNoZWNrX2FyY2gnCj4+ICAg
-ICAhZWxmX2NoZWNrX2FyY2goJmVoZHIpIHx8Cj4+ICAgICAgXgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
-OiBZYW5qaWFuZyBKaW4gPHlhbmppYW5nLmppbkB3aW5kcml2ZXIuY29tPgo+PiAtLS0KPj4gICBm
-cy9wcm9jL3ZtY29yZS5jIHwgNCArKy0tCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
-cygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2ZzL3Byb2Mvdm1jb3JlLmMg
-Yi9mcy9wcm9jL3ZtY29yZS5jCj4+IGluZGV4IDRlNjEzODguLjU3NmJiMjYgMTAwNjQ0Cj4+IC0t
-LSBhL2ZzL3Byb2Mvdm1jb3JlLmMKPj4gKysrIGIvZnMvcHJvYy92bWNvcmUuYwo+PiBAQCAtOTk5
-LDcgKzk5OSw3IEBAIHN0YXRpYyB2b2lkIGZyZWVfZWxmY29yZWJ1Zih2b2lkKQo+PiAgIHN0YXRp
-YyBpbnQgX19pbml0IHBhcnNlX2NyYXNoX2VsZjY0X2hlYWRlcnModm9pZCkKPj4gICB7Cj4+ICAg
-CWludCByYz0wOwo+PiAtCUVsZjY0X0VoZHIgZWhkcjsKPj4gKwlzdHJ1Y3QgZWxmaGRyIGVoZHI7
-Cj4+ICAgCXU2NCBhZGRyOwo+PiAgIAo+PiAgIAlhZGRyID0gZWxmY29yZWhkcl9hZGRyOwo+PiBA
-QCAtMTA1NSw3ICsxMDU1LDcgQEAgZmFpbDoKPj4gICBzdGF0aWMgaW50IF9faW5pdCBwYXJzZV9j
-cmFzaF9lbGYzMl9oZWFkZXJzKHZvaWQpCj4+ICAgewo+PiAgIAlpbnQgcmM9MDsKPj4gLQlFbGYz
-Ml9FaGRyIGVoZHI7Cj4+ICsJc3RydWN0IGVsZmhkciBlaGRyOwo+PiAgIAl1NjQgYWRkcjsKPj4g
-ICAKPj4gICAJYWRkciA9IGVsZmNvcmVoZHJfYWRkcjsKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+Josh Triplett <josh@joshtriplett.org> wrote:
+
+> > Sure. And 0 is perfectly fine value for the flag. Like with MAP_FILE.
+> 
+> Rephrasing: the flag should always exist with the correct value.
+> Whether the kernel handles it or not, the kernel *headers* shouldn't
+> change to match the kernel, not least of which because they don't
+> necessarily match the running kernel.  Just like we define the
+> prototypes for syscalls that the running kernel may return ENOSYS for.
+
+Josh is correct.
+
+CONFIG_xxx *should* *not* be seen in UAPI headers, except inside #ifdef
+__KERNEL__ guards under special circumstances - and #ifdef __KERNEL__ guards
+*should* *not* be seen in UAPI headers except under special circumstances.
+
+In terms of such special circumstances, take a peek in
+include/uapi/linux/acct.h at struct acct with this:
+
+	/* m68k had no padding here. */
+	#if !defined(CONFIG_M68K) || !defined(__KERNEL__)
+		__u16		ac_ahz;			/* AHZ */
+	#endif
+
+in the middle of it...
+
+Or include/{,uapi/}linux/agpgart.h where it defines two different but
+same-named variants of several structs.
+
+Now, some of these - particularly things like the latter - can be fixed by
+someone who has the time.
+
+David
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
