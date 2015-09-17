@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-f182.google.com ([209.85.212.182])
+Received: from mail.windriver.com ([147.11.1.11])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcTJ2-0000PU-6j
- for kexec@lists.infradead.org; Thu, 17 Sep 2015 07:08:33 +0000
-Received: by wicge5 with SMTP id ge5so105026604wic.0
- for <kexec@lists.infradead.org>; Thu, 17 Sep 2015 00:08:09 -0700 (PDT)
-Subject: Re: Reducing the size of the dump file/speeding up collection
-References: <55F928B1.4080703@kyup.com> <55FA332B.40408@cn.fujitsu.com>
- <55FA5E8C.9020506@kyup.com>
-From: Nikolay Borisov <kernel@kyup.com>
-Message-ID: <55FA66D8.10900@kyup.com>
-Date: Thu, 17 Sep 2015 10:08:08 +0300
+ id 1ZcVYw-0008N8-D2
+ for kexec@lists.infradead.org; Thu, 17 Sep 2015 09:33:06 +0000
+Message-ID: <55FA88BD.3050303@windriver.com>
+Date: Thu, 17 Sep 2015 17:32:45 +0800
+From: yjin <yanjiang.jin@windriver.com>
 MIME-Version: 1.0
-In-Reply-To: <55FA5E8C.9020506@kyup.com>
+Subject: Re: [PATCH] vmcore: replace Elf64_Ehdr/Elf32_Ehdr with elfhdr
+References: <1442372321-16334-1-git-send-email-yanjiang.jin@windriver.com>
+ <1442372321-16334-2-git-send-email-yanjiang.jin@windriver.com>
+ <20150916103917.GA32189@dhcp-128-25.nay.redhat.com>
+In-Reply-To: <20150916103917.GA32189@dhcp-128-25.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,68 +20,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: qiaonuohan <qiaonuohan@cn.fujitsu.com>, kexec@lists.infradead.org
-Cc: SiteGround Operations <operations@siteground.com>
+To: Minfei Huang <mhuang@redhat.com>
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, jinyanjiang@gmail.com, linux-kernel@vger.kernel.org, chaowang@redhat.com
 
-Just to follow up: which version of kexec/makedumpfile are required to
-have the parallel dump feature? The thread you referenced adds
-documentation how to use that and I grepped the source of makedumpfile
-1.5.8 and couldn't find any references to the num-threads option? So
-what version of the code do I need to test that ?
-
-On 09/17/2015 09:32 AM, Nikolay Borisov wrote:
-> Hi Qiao,
-> 
-> Thanks for the reply. So far I haven't been using the the compression
-> feature of makedumpfile. But I want to ask if anything wouldn't
-> compression make the dump process slower since in addition to having to
-> write the dump to disk it also has to compress it which would put more
-> strain on the cpu. Also, which part of the dump process is the bottleneck:
-> 
-> - Reading from /proc/vmcore - that has mmap support so should be fairly
-> fast?
-> - Discarding unnecessary pages as memory is being scanned?
-> - Writing/compressing content to disk?
-> 
-> Regards,
-> Nikolay
-> 
-> On 09/17/2015 06:27 AM, qiaonuohan wrote:
->> On 09/16/2015 04:30 PM, Nikolay Borisov wrote:
->>> Hello,
->>>
->>> I've been using makedumpfile as the crash collector with the -d31
->>> parameter. The machine this is being run on usually have 128-256GB of
->>> ram and the resulting crash dumps are in the range of 14-20gb which is
->>> very bug for the type of analysis I'm usually performing on crashed
->>> machine. I was wondering whether there is a way  to further reduce the
->>> size and the time to take the dump (now it takes around 25 minutes to
->>> collect such a dump). I've seen reports where people with TBs of ram
->>> take that long, meaning for a machine with 256gb it should be even
->>> faster. I've been running this configuration on kernels 3.12.28 and 4.1
->>> where mmap for the vmcore file is supported.
->>>
->>> Please advise
->>
->> Hi nikolay,
->>
->> Yes, this issue is what we are concerning a lot.
->> About the current situation, try --split, it will save time.
->>
->>
->> And lzo/snappy instead of zlib, these two compression format are faster
->> but need more space to save. Or if you still want zlib (to save space),
->> try multiple threads, check the following site, it will help you:
->>
->> https://lists.fedoraproject.org/pipermail/kexec/2015-September/002322.html
->>
->>
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDIwMTXlubQwOeaciDE25pelIDE4OjM5LCBNaW5mZWkgSHVhbmcgd3JvdGU6Cj4gT24gMDkv
+MTYvMTUgYXQgMTA6NThhbSwgeWFuamlhbmcuamluQHdpbmRyaXZlci5jb20gd3JvdGU6Cj4+IEZy
+b206IFlhbmppYW5nIEppbiA8eWFuamlhbmcuamluQHdpbmRyaXZlci5jb20+Cj4+Cj4+IEZ1bmN0
+aW9uIHBhcnNlX2NyYXNoX2VsZl9oZWFkZXJzKCkgcmVhZHMgZV9pZGVudFtFSV9DTEFTU10gdGhl
+biBkZWNpZGVzIHRvCj4+IGNhbGwgcGFyc2VfY3Jhc2hfZWxmNjRfaGVhZGVycygpIG9yIHBhcnNl
+X2NyYXNoX2VsZjMyX2hlYWRlcnMoKS4KPj4gQnV0IHRoaXMgaGFwcGVucyBpbiBydW4gdGltZSwg
+bm90IGNvbXBpbGUgdGltZS4gU28gY29tcGlsZXIgd2lsbCByZXBvcnQKPj4gdGhlIGJlbG93IHdh
+cm5pbmc6Cj4+Cj4+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2xpbnV4L2VsZi5oOjQ6
+MCwKPj4gICAgICAgICAgICAgICAgICAgZnJvbSBmcy9wcm9jL3ZtY29yZS5jOjEzOgo+PiBmcy9w
+cm9jL3ZtY29yZS5jOiBJbiBmdW5jdGlvbiAncGFyc2VfY3Jhc2hfZWxmMzJfaGVhZGVycyc6Cj4+
+IGFyY2gvbWlwcy9pbmNsdWRlL2FzbS9lbGYuaDoyNTg6MjM6IHdhcm5pbmc6IGluaXRpYWxpemF0
+aW8KPj4gbiBmcm9tIGluY29tcGF0aWJsZSBwb2ludGVyIHR5cGUKPj4gICAgc3RydWN0IGVsZmhk
+ciAqX19oID0gKGhkcik7ICAgICBcCj4+ICAgICAgICAgICAgICAgICAgICAgICAgIF4KPiBIb3cg
+YWJvdXQgY29udmVydGluZyB0aGUgaGRyIHRvIHR5cGUgZWxmaGRyIGluIGFib3ZlIHNlbnRlbmNl
+LCBsaWtlCj4gZm9sbG93aW5nLgo+Cj4gc3RydWN0IGVsZmhkciAqX19oID0gKHN0cnVjdCBlbGZo
+ZHIgKikoaGRyKTsKClllcywgdGhpcyBpcyBhIHJlcGxhY2VtZW50LCBhbmQgaXQgc2VlbXMgbW9y
+ZSBzYWZlIGJlY2F1c2UgaXQganVzdCAKYWZmZWN0cyBNSVBTIGFyY2guCkJ1dCBJIGFsc28gY2Fu
+J3Qgc2VlIGFueSBvYnZpb3VzIGltcGFjdCBpZiBtb2RpZnlpbmcgY29tbW9uIHZtY29yZS5jOi0p
+CkFueXdheSwgaWYgeW91IHN0aWNrIHRvIHlvdXIgb3BpbmlvbiwgSSBjYW4gc2VuZCBhIFYyIHBh
+dGNoIHRvIHVwZGF0ZSAKbWlwcycgZWxmLmggcmF0aGVyIHRoYW4gdm1jb3JlLmMuCgpUaGFua3Mh
+CllhbmppYW5nCj4KPiBUaGFua3MKPiBNaW5mZWkKPgo+PiBmcy9wcm9jL3ZtY29yZS5jOjEwNzE6
+NDogbm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvICdlbGZfCj4+IGNoZWNrX2FyY2gnCj4+ICAg
+ICAhZWxmX2NoZWNrX2FyY2goJmVoZHIpIHx8Cj4+ICAgICAgXgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
+OiBZYW5qaWFuZyBKaW4gPHlhbmppYW5nLmppbkB3aW5kcml2ZXIuY29tPgo+PiAtLS0KPj4gICBm
+cy9wcm9jL3ZtY29yZS5jIHwgNCArKy0tCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
+cygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2ZzL3Byb2Mvdm1jb3JlLmMg
+Yi9mcy9wcm9jL3ZtY29yZS5jCj4+IGluZGV4IDRlNjEzODguLjU3NmJiMjYgMTAwNjQ0Cj4+IC0t
+LSBhL2ZzL3Byb2Mvdm1jb3JlLmMKPj4gKysrIGIvZnMvcHJvYy92bWNvcmUuYwo+PiBAQCAtOTk5
+LDcgKzk5OSw3IEBAIHN0YXRpYyB2b2lkIGZyZWVfZWxmY29yZWJ1Zih2b2lkKQo+PiAgIHN0YXRp
+YyBpbnQgX19pbml0IHBhcnNlX2NyYXNoX2VsZjY0X2hlYWRlcnModm9pZCkKPj4gICB7Cj4+ICAg
+CWludCByYz0wOwo+PiAtCUVsZjY0X0VoZHIgZWhkcjsKPj4gKwlzdHJ1Y3QgZWxmaGRyIGVoZHI7
+Cj4+ICAgCXU2NCBhZGRyOwo+PiAgIAo+PiAgIAlhZGRyID0gZWxmY29yZWhkcl9hZGRyOwo+PiBA
+QCAtMTA1NSw3ICsxMDU1LDcgQEAgZmFpbDoKPj4gICBzdGF0aWMgaW50IF9faW5pdCBwYXJzZV9j
+cmFzaF9lbGYzMl9oZWFkZXJzKHZvaWQpCj4+ICAgewo+PiAgIAlpbnQgcmM9MDsKPj4gLQlFbGYz
+Ml9FaGRyIGVoZHI7Cj4+ICsJc3RydWN0IGVsZmhkciBlaGRyOwo+PiAgIAl1NjQgYWRkcjsKPj4g
+ICAKPj4gICAJYWRkciA9IGVsZmNvcmVoZHJfYWRkcjsKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
