@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcrDi-0005Ry-5w
- for kexec@lists.infradead.org; Fri, 18 Sep 2015 08:40:39 +0000
-Date: Fri, 18 Sep 2015 10:40:13 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
+ id 1ZcrXK-0000xF-3V
+ for kexec@lists.infradead.org; Fri, 18 Sep 2015 09:00:54 +0000
+Date: Fri, 18 Sep 2015 17:00:28 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] Load crash kernel high on x86
-Message-ID: <20150918104013.6c3cc009@hananiah.suse.cz>
-In-Reply-To: <20150918080324.69d7b9d5@hananiah.suse.cz>
+Message-ID: <20150918090028.GJ15856@dhcp-128-28.nay.redhat.com>
 References: <20150918080324.69d7b9d5@hananiah.suse.cz>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150918080324.69d7b9d5@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,12 +23,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
-Cc: Yinghai Lu <yinghai@kernel.org>
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On Fri, 18 Sep 2015 08:03:24 +0200
-Petr Tesarik <ptesarik@suse.com> wrote:
-
+On 09/18/15 at 08:03am, Petr Tesarik wrote:
 > Hello,
 > 
 > There may be more than one crash kernel regions on x86. However, the kexec
@@ -42,23 +41,16 @@ Petr Tesarik <ptesarik@suse.com> wrote:
 > Currently, kexec-tools picks the largest region. If high reservation is
 > smaller than low, kexec(2) returns -EADDRNOTAVAIL, and kexec prints out
 > this error message:
+
+For system with more than 4G memory, usually people won't reserve
+crashkernel memory like that. But it's truly a bug and could happen in
+some cases or people intend to make it happen. Sound a reasonable fix.
+
+Ack.
+
 > 
 > kexec_load failed: Cannot assign requested address
-
-I have just re-checked with kexec_file(2), and it is also affected. At
-this point, you may think that it would be better to fix the check in
-sanity_check_segment_list() instead.
-
-I don't think so.
-
-Low memory reservation is intended for swiotlb and DMA buffers, i.e. it
-is somehow precious. The kernel can run above 4G, initrd can also be
-located above 4G, so why should I place it in the _precious_ low memory?
-
-If you agree, I'll also post a kernel patch for kexec_file(2).
-
-Petr T
-
+> 
 > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
 > ---
 >  kexec/arch/i386/crashdump-x86.c | 12 ++----------
@@ -87,7 +79,13 @@ Petr T
 >  
 >  	return 0;
 >  }
-
+> -- 
+> 2.1.4
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
