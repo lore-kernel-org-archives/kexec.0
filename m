@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp2.provo.novell.com ([137.65.250.81])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcoXV-0006bi-W6
- for kexec@lists.infradead.org; Fri, 18 Sep 2015 05:48:54 +0000
-Date: Fri, 18 Sep 2015 13:49:07 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH] vmcore: replace Elf64_Ehdr/Elf32_Ehdr with elfhdr
-Message-ID: <20150918054907.GA6349@dhcp-128-25.nay.redhat.com>
-References: <1442372321-16334-1-git-send-email-yanjiang.jin@windriver.com>
- <1442372321-16334-2-git-send-email-yanjiang.jin@windriver.com>
- <20150916103917.GA32189@dhcp-128-25.nay.redhat.com>
- <55FA88BD.3050303@windriver.com>
+ id 1Zcom9-0006UN-0E
+ for kexec@lists.infradead.org; Fri, 18 Sep 2015 06:04:02 +0000
+Date: Fri, 18 Sep 2015 08:03:24 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH] Load crash kernel high on x86
+Message-ID: <20150918080324.69d7b9d5@hananiah.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <55FA88BD.3050303@windriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,58 +16,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: yjin <yanjiang.jin@windriver.com>
-Cc: jinyanjiang@gmail.com, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, chaowang@redhat.com
+To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+Cc: Yinghai Lu <yinghai@kernel.org>
 
-T24gMDkvMTcvMTUgYXQgMDU6MzJwbSwgeWppbiB3cm90ZToKPiAKPiBPbiAyMDE15bm0MDnmnIgx
-NuaXpSAxODozOSwgTWluZmVpIEh1YW5nIHdyb3RlOgo+ID5PbiAwOS8xNi8xNSBhdCAxMDo1OGFt
-LCB5YW5qaWFuZy5qaW5Ad2luZHJpdmVyLmNvbSB3cm90ZToKPiA+PkZyb206IFlhbmppYW5nIEpp
-biA8eWFuamlhbmcuamluQHdpbmRyaXZlci5jb20+Cj4gPj4KPiA+PkZ1bmN0aW9uIHBhcnNlX2Ny
-YXNoX2VsZl9oZWFkZXJzKCkgcmVhZHMgZV9pZGVudFtFSV9DTEFTU10gdGhlbiBkZWNpZGVzIHRv
-Cj4gPj5jYWxsIHBhcnNlX2NyYXNoX2VsZjY0X2hlYWRlcnMoKSBvciBwYXJzZV9jcmFzaF9lbGYz
-Ml9oZWFkZXJzKCkuCj4gPj5CdXQgdGhpcyBoYXBwZW5zIGluIHJ1biB0aW1lLCBub3QgY29tcGls
-ZSB0aW1lLiBTbyBjb21waWxlciB3aWxsIHJlcG9ydAo+ID4+dGhlIGJlbG93IHdhcm5pbmc6Cj4g
-Pj4KPiA+PkluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2xpbnV4L2VsZi5oOjQ6MCwKPiA+
-PiAgICAgICAgICAgICAgICAgIGZyb20gZnMvcHJvYy92bWNvcmUuYzoxMzoKPiA+PmZzL3Byb2Mv
-dm1jb3JlLmM6IEluIGZ1bmN0aW9uICdwYXJzZV9jcmFzaF9lbGYzMl9oZWFkZXJzJzoKPiA+PmFy
-Y2gvbWlwcy9pbmNsdWRlL2FzbS9lbGYuaDoyNTg6MjM6IHdhcm5pbmc6IGluaXRpYWxpemF0aW8K
-PiA+Pm4gZnJvbSBpbmNvbXBhdGlibGUgcG9pbnRlciB0eXBlCj4gPj4gICBzdHJ1Y3QgZWxmaGRy
-ICpfX2ggPSAoaGRyKTsgICAgIFwKPiA+PiAgICAgICAgICAgICAgICAgICAgICAgIF4KPiA+SG93
-IGFib3V0IGNvbnZlcnRpbmcgdGhlIGhkciB0byB0eXBlIGVsZmhkciBpbiBhYm92ZSBzZW50ZW5j
-ZSwgbGlrZQo+ID5mb2xsb3dpbmcuCj4gPgo+ID5zdHJ1Y3QgZWxmaGRyICpfX2ggPSAoc3RydWN0
-IGVsZmhkciAqKShoZHIpOwo+IAo+IFllcywgdGhpcyBpcyBhIHJlcGxhY2VtZW50LCBhbmQgaXQg
-c2VlbXMgbW9yZSBzYWZlIGJlY2F1c2UgaXQganVzdAo+IGFmZmVjdHMgTUlQUyBhcmNoLgo+IEJ1
-dCBJIGFsc28gY2FuJ3Qgc2VlIGFueSBvYnZpb3VzIGltcGFjdCBpZiBtb2RpZnlpbmcgY29tbW9u
-IHZtY29yZS5jOi0pCgpXaXRob3V0IHRoZSBNYXJvIGRlZmluZSwgZWxmaGRyIGlzIG5vdCB0aGUg
-c3RydWN0IGluIHRoZSBjb2RlIHNvdXJjZS4KVGh1cyB0aGVyZSBpcyBzb21lIHVuY29udmVuaWVu
-Y2UgZm9yIHBlb3BsZSB0byByZWFkIHRoZSBjb2RlLCBpZiB0aGVyZQppcyBhbm90aGVyIHRob3Vn
-aHQgdG8gZml4IHRoaXMgaXNzdWUuIAoKUGxlYXNlIGRvIHRoZSBjb252ZXJ0aW5nIGluIHRoZSBN
-YXJvLCBhbmQgcmVwb3N0IHRoZSBuZXcgdmVyc2lvbi4KClRoYW5rcwpNaW5mZWkKCj4gQW55d2F5
-LCBpZiB5b3Ugc3RpY2sgdG8geW91ciBvcGluaW9uLCBJIGNhbiBzZW5kIGEgVjIgcGF0Y2ggdG8K
-PiB1cGRhdGUgbWlwcycgZWxmLmggcmF0aGVyIHRoYW4gdm1jb3JlLmMuCj4gCj4gVGhhbmtzIQo+
-IFlhbmppYW5nCj4gPgo+ID5UaGFua3MKPiA+TWluZmVpCj4gPgo+ID4+ZnMvcHJvYy92bWNvcmUu
-YzoxMDcxOjQ6IG5vdGU6IGluIGV4cGFuc2lvbiBvZiBtYWNybyAnZWxmXwo+ID4+Y2hlY2tfYXJj
-aCcKPiA+PiAgICAhZWxmX2NoZWNrX2FyY2goJmVoZHIpIHx8Cj4gPj4gICAgIF4KPiA+Pgo+ID4+
-U2lnbmVkLW9mZi1ieTogWWFuamlhbmcgSmluIDx5YW5qaWFuZy5qaW5Ad2luZHJpdmVyLmNvbT4K
-PiA+Pi0tLQo+ID4+ICBmcy9wcm9jL3ZtY29yZS5jIHwgNCArKy0tCj4gPj4gIDEgZmlsZSBjaGFu
-Z2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPj4KPiA+PmRpZmYgLS1naXQg
-YS9mcy9wcm9jL3ZtY29yZS5jIGIvZnMvcHJvYy92bWNvcmUuYwo+ID4+aW5kZXggNGU2MTM4OC4u
-NTc2YmIyNiAxMDA2NDQKPiA+Pi0tLSBhL2ZzL3Byb2Mvdm1jb3JlLmMKPiA+PisrKyBiL2ZzL3By
-b2Mvdm1jb3JlLmMKPiA+PkBAIC05OTksNyArOTk5LDcgQEAgc3RhdGljIHZvaWQgZnJlZV9lbGZj
-b3JlYnVmKHZvaWQpCj4gPj4gIHN0YXRpYyBpbnQgX19pbml0IHBhcnNlX2NyYXNoX2VsZjY0X2hl
-YWRlcnModm9pZCkKPiA+PiAgewo+ID4+ICAJaW50IHJjPTA7Cj4gPj4tCUVsZjY0X0VoZHIgZWhk
-cjsKPiA+PisJc3RydWN0IGVsZmhkciBlaGRyOwo+ID4+ICAJdTY0IGFkZHI7Cj4gPj4gIAlhZGRy
-ID0gZWxmY29yZWhkcl9hZGRyOwo+ID4+QEAgLTEwNTUsNyArMTA1NSw3IEBAIGZhaWw6Cj4gPj4g
-IHN0YXRpYyBpbnQgX19pbml0IHBhcnNlX2NyYXNoX2VsZjMyX2hlYWRlcnModm9pZCkKPiA+PiAg
-ewo+ID4+ICAJaW50IHJjPTA7Cj4gPj4tCUVsZjMyX0VoZHIgZWhkcjsKPiA+PisJc3RydWN0IGVs
-ZmhkciBlaGRyOwo+ID4+ICAJdTY0IGFkZHI7Cj4gPj4gIAlhZGRyID0gZWxmY29yZWhkcl9hZGRy
-Owo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+Hello,
+
+There may be more than one crash kernel regions on x86. However, the kexec
+syscall checks that target address is within crashk_res boundaries. Looking
+at the logic in arch/x86/kernel/setup.c, there are only two possible layouts:
+
+  1. crashk_res is below 4G, and there is only one region,
+  2. crashk_res is above 4G, and crashk_low_res is below 4G
+
+In either case, kexec-tools must pick the highest region.
+
+Currently, kexec-tools picks the largest region. If high reservation is
+smaller than low, kexec(2) returns -EADDRNOTAVAIL, and kexec prints out
+this error message:
+
+kexec_load failed: Cannot assign requested address
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 63959b7..2710a9e 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -1034,16 +1034,8 @@ int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
+ 	if (!crash_reserved_mem_nr)
+ 		return -1;
+ 
+-	for (i = crash_reserved_mem_nr - 1; i >= 0; i--) {
+-		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
+-		if (sz <= sz_max)
+-			continue;
+-		sz_max = sz;
+-		idx = i;
+-	}
+-
+-	*start = crash_reserved_mem[idx].start;
+-	*end = crash_reserved_mem[idx].end;
++	*start = crash_reserved_mem[crash_reserved_mem_nr - 1].start;
++	*end = crash_reserved_mem[crash_reserved_mem_nr - 1].end;
+ 
+ 	return 0;
+ }
+-- 
+2.1.4
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
