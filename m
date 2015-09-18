@@ -1,18 +1,16 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcVwv-0000Ss-Sa
- for kexec@lists.infradead.org; Thu, 17 Sep 2015 09:57:54 +0000
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1442271047-4908-4-git-send-email-palmer@dabbelt.com>
-References: <1442271047-4908-4-git-send-email-palmer@dabbelt.com>
- <1441832902-28993-1-git-send-email-palmer@dabbelt.com>
- <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
-Subject: Re: [PATCH 03/13] Move COMPAT_ATM_ADDPARTY to net/atm/svc.c
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zcld2-0000um-WA
+ for kexec@lists.infradead.org; Fri, 18 Sep 2015 02:42:25 +0000
+Message-ID: <55FB7937.9030208@cn.fujitsu.com>
+Date: Fri, 18 Sep 2015 10:38:47 +0800
+From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-ID: <15267.1442483832.1@warthog.procyon.org.uk>
-Date: Thu, 17 Sep 2015 10:57:12 +0100
-Message-ID: <15268.1442483832@warthog.procyon.org.uk>
+Subject: Re: Reducing the size of the dump file/speeding up collection
+References: <55F928B1.4080703@kyup.com> <55FA332B.40408@cn.fujitsu.com>
+ <55FA5E8C.9020506@kyup.com>
+In-Reply-To: <55FA5E8C.9020506@kyup.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,25 +19,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, dhowells@redhat.com, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, dyoung@redhat.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, jikos@kernel.org, a.p.zijlstra@chello.nl, arnd@arndb.de, plagnioj@jcrosoft.com, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Nikolay Borisov <kernel@kyup.com>, kexec@lists.infradead.org
+Cc: SiteGround Operations <operations@siteground.com>
 
-Palmer Dabbelt <palmer@dabbelt.com> wrote:
+On 09/17/2015 02:32 PM, Nikolay Borisov wrote:
+> Hi Qiao,
+>
+> Thanks for the reply. So far I haven't been using the the compression
+> feature of makedumpfile. But I want to ask if anything wouldn't
+> compression make the dump process slower since in addition to having to
+> write the dump to disk it also has to compress it which would put more
+> strain on the cpu. Also, which part of the dump process is the bottleneck:
+>
+> - Reading from /proc/vmcore - that has mmap support so should be fairly
+> fast?
+> - Discarding unnecessary pages as memory is being scanned?
+> - Writing/compressing content to disk?
 
-> +#ifdef CONFIG_COMPAT
-> +/* It actually takes struct sockaddr_atmsvc, not struct atm_iobuf */
-> +#define COMPAT_ATM_ADDPARTY _IOW('a', ATMIOC_SPECIAL+4, struct compat_atm_iobuf)
-> +#endif
+I cannot recall percentage of each part. But writing/compression takes most
+of the time
 
-I wonder if it would hurt to ditch the conditionals entirely.  It only eats
-cpp namespace, not C namespace so it won't affect the output if it is not used
-because the code that uses it is compiled out.
+1. mmap is used for reading faster
+2. --split is used to split the dump task into several processes, so compressing
+    and writing will be speeded up.
+3. multiple-thread is another option for speeding up compressing, it is a recently
+    committed patch, so you cannot find it in the master branch, checkout devel branch
+    or find it here:
 
-David
+http://sourceforge.net/p/makedumpfile/code/commit_browser
+
+Make makedumpfile available to read and compress pages parallelly.
+
+>
+> Regards,
+> Nikolay
+>
+> On 09/17/2015 06:27 AM, qiaonuohan wrote:
+>> On 09/16/2015 04:30 PM, Nikolay Borisov wrote:
+>>> Hello,
+>>>
+>>> I've been using makedumpfile as the crash collector with the -d31
+>>> parameter. The machine this is being run on usually have 128-256GB of
+>>> ram and the resulting crash dumps are in the range of 14-20gb which is
+>>> very bug for the type of analysis I'm usually performing on crashed
+>>> machine. I was wondering whether there is a way  to further reduce the
+>>> size and the time to take the dump (now it takes around 25 minutes to
+>>> collect such a dump). I've seen reports where people with TBs of ram
+>>> take that long, meaning for a machine with 256gb it should be even
+>>> faster. I've been running this configuration on kernels 3.12.28 and 4.1
+>>> where mmap for the vmcore file is supported.
+>>>
+>>> Please advise
+>>
+>> Hi nikolay,
+>>
+>> Yes, this issue is what we are concerning a lot.
+>> About the current situation, try --split, it will save time.
+>>
+>>
+>> And lzo/snappy instead of zlib, these two compression format are faster
+>> but need more space to save. Or if you still want zlib (to save space),
+>> try multiple threads, check the following site, it will help you:
+>>
+>> https://lists.fedoraproject.org/pipermail/kexec/2015-September/002322.html
+>>
+>>
+> .
+>
+
+
+-- 
+Regards
+Qiao Nuohan
 
 _______________________________________________
 kexec mailing list
