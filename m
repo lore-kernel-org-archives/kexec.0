@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcrXK-0000xF-3V
- for kexec@lists.infradead.org; Fri, 18 Sep 2015 09:00:54 +0000
-Date: Fri, 18 Sep 2015 17:00:28 +0800
-From: Baoquan He <bhe@redhat.com>
+ id 1Zcu09-0005Ae-Ca
+ for kexec@lists.infradead.org; Fri, 18 Sep 2015 11:38:49 +0000
+Date: Fri, 18 Sep 2015 19:39:02 +0800
+From: Minfei Huang <mhuang@redhat.com>
 Subject: Re: [PATCH] Load crash kernel high on x86
-Message-ID: <20150918090028.GJ15856@dhcp-128-28.nay.redhat.com>
+Message-ID: <20150918113902.GA22869@dhcp-128-25.nay.redhat.com>
 References: <20150918080324.69d7b9d5@hananiah.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -41,13 +41,6 @@ On 09/18/15 at 08:03am, Petr Tesarik wrote:
 > Currently, kexec-tools picks the largest region. If high reservation is
 > smaller than low, kexec(2) returns -EADDRNOTAVAIL, and kexec prints out
 > this error message:
-
-For system with more than 4G memory, usually people won't reserve
-crashkernel memory like that. But it's truly a bug and could happen in
-some cases or people intend to make it happen. Sound a reasonable fix.
-
-Ack.
-
 > 
 > kexec_load failed: Cannot assign requested address
 > 
@@ -78,14 +71,13 @@ Ack.
 > +	*end = crash_reserved_mem[crash_reserved_mem_nr - 1].end;
 >  
 >  	return 0;
->  }
-> -- 
-> 2.1.4
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+
+It is not a proper function name for what it does in your patch. How
+about get_reserved_mem_limit()? Also it is appreciative, if you can
+comment it more detail.
+
+Thanks
+Minfei
 
 _______________________________________________
 kexec mailing list
