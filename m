@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.provo.novell.com ([137.65.250.81])
+Received: from mail1.windriver.com ([147.11.146.13])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zcom9-0006UN-0E
- for kexec@lists.infradead.org; Fri, 18 Sep 2015 06:04:02 +0000
-Date: Fri, 18 Sep 2015 08:03:24 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-Subject: [PATCH] Load crash kernel high on x86
-Message-ID: <20150918080324.69d7b9d5@hananiah.suse.cz>
+ id 1ZcqK3-0000Qp-1c
+ for kexec@lists.infradead.org; Fri, 18 Sep 2015 07:43:07 +0000
+From: <yanjiang.jin@windriver.com>
+Subject: [PATCH] mips: vmcore: forced convert 'hdr' in elf_check_arch()
+Date: Fri, 18 Sep 2015 15:42:51 +0800
+Message-ID: <1442562171-21307-2-git-send-email-yanjiang.jin@windriver.com>
+In-Reply-To: <1442562171-21307-1-git-send-email-yanjiang.jin@windriver.com>
+References: <1442562171-21307-1-git-send-email-yanjiang.jin@windriver.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,56 +22,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
-Cc: Yinghai Lu <yinghai@kernel.org>
+To: akpm@linux-foundation.org, mhuang@redhat.com
+Cc: jinyanjiang@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, chaowang@redhat.com, yanjiang.jin@windriver.com
 
-Hello,
+From: Yanjiang Jin <yanjiang.jin@windriver.com>
 
-There may be more than one crash kernel regions on x86. However, the kexec
-syscall checks that target address is within crashk_res boundaries. Looking
-at the logic in arch/x86/kernel/setup.c, there are only two possible layouts:
+elf_check_arch() will be called both in parse_crash_elf64_headers()
+and parse_crash_elf32_headers(). But in these two functions, the type of
+the parameter ehdr is different: Elf32_Ehdr and Elf64_Ehdr.
 
-  1. crashk_res is below 4G, and there is only one region,
-  2. crashk_res is above 4G, and crashk_low_res is below 4G
+Function parse_crash_elf_headers() reads e_ident[EI_CLASS] then decides to
+call parse_crash_elf64_headers() or parse_crash_elf32_headers().
+This happens in run time, not compile time. So compiler will report
+the below warning:
 
-In either case, kexec-tools must pick the highest region.
+In file included from include/linux/elf.h:4:0,
+                 from fs/proc/vmcore.c:13:
+fs/proc/vmcore.c: In function 'parse_crash_elf32_headers':
+arch/mips/include/asm/elf.h:258:23: warning: initializatio
+n from incompatible pointer type
+  struct elfhdr *__h = (hdr);     \
+                       ^
+fs/proc/vmcore.c:1071:4: note: in expansion of macro 'elf_
+check_arch'
+   !elf_check_arch(&ehdr) ||
+    ^
 
-Currently, kexec-tools picks the largest region. If high reservation is
-smaller than low, kexec(2) returns -EADDRNOTAVAIL, and kexec prints out
-this error message:
-
-kexec_load failed: Cannot assign requested address
-
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+Signed-off-by: Yanjiang Jin <yanjiang.jin@windriver.com>
 ---
- kexec/arch/i386/crashdump-x86.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ arch/mips/include/asm/elf.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 63959b7..2710a9e 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -1034,16 +1034,8 @@ int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
- 	if (!crash_reserved_mem_nr)
- 		return -1;
- 
--	for (i = crash_reserved_mem_nr - 1; i >= 0; i--) {
--		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
--		if (sz <= sz_max)
--			continue;
--		sz_max = sz;
--		idx = i;
--	}
--
--	*start = crash_reserved_mem[idx].start;
--	*end = crash_reserved_mem[idx].end;
-+	*start = crash_reserved_mem[crash_reserved_mem_nr - 1].start;
-+	*end = crash_reserved_mem[crash_reserved_mem_nr - 1].end;
- 
- 	return 0;
- }
+diff --git a/arch/mips/include/asm/elf.h b/arch/mips/include/asm/elf.h
+index f19e890..ece490d 100644
+--- a/arch/mips/include/asm/elf.h
++++ b/arch/mips/include/asm/elf.h
+@@ -224,7 +224,7 @@ struct mips_elf_abiflags_v0 {
+ #define elf_check_arch(hdr)						\
+ ({									\
+ 	int __res = 1;							\
+-	struct elfhdr *__h = (hdr);					\
++	struct elfhdr *__h = (struct elfhdr *)(hdr);			\
+ 									\
+ 	if (__h->e_machine != EM_MIPS)					\
+ 		__res = 0;						\
+@@ -255,7 +255,7 @@ struct mips_elf_abiflags_v0 {
+ #define elf_check_arch(hdr)						\
+ ({									\
+ 	int __res = 1;							\
+-	struct elfhdr *__h = (hdr);					\
++	struct elfhdr *__h = (struct elfhdr *)(hdr);			\
+ 									\
+ 	if (__h->e_machine != EM_MIPS)					\
+ 		__res = 0;						\
 -- 
-2.1.4
+1.9.1
+
 
 _______________________________________________
 kexec mailing list
