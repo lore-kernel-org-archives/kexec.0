@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail1.windriver.com ([147.11.146.13])
+Received: from mail.windriver.com ([147.11.1.11])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcqK3-0000Qp-1c
+ id 1ZcqK2-0000Pc-Oi
  for kexec@lists.infradead.org; Fri, 18 Sep 2015 07:43:07 +0000
 From: <yanjiang.jin@windriver.com>
-Subject: [PATCH] mips: vmcore: forced convert 'hdr' in elf_check_arch()
-Date: Fri, 18 Sep 2015 15:42:51 +0800
-Message-ID: <1442562171-21307-2-git-send-email-yanjiang.jin@windriver.com>
-In-Reply-To: <1442562171-21307-1-git-send-email-yanjiang.jin@windriver.com>
-References: <1442562171-21307-1-git-send-email-yanjiang.jin@windriver.com>
+Subject: [V2 PATCH] mips: vmcore: forced convert 'hdr' in elf_check_arch()
+Date: Fri, 18 Sep 2015 15:42:50 +0800
+Message-ID: <1442562171-21307-1-git-send-email-yanjiang.jin@windriver.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,54 +25,19 @@ Cc: jinyanjiang@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.o
 
 From: Yanjiang Jin <yanjiang.jin@windriver.com>
 
-elf_check_arch() will be called both in parse_crash_elf64_headers()
-and parse_crash_elf32_headers(). But in these two functions, the type of
-the parameter ehdr is different: Elf32_Ehdr and Elf64_Ehdr.
+V1->V2: According to Minfei's suggestion, coverting in the Macro rather
+than in vmcore.c.
 
-Function parse_crash_elf_headers() reads e_ident[EI_CLASS] then decides to
-call parse_crash_elf64_headers() or parse_crash_elf32_headers().
-This happens in run time, not compile time. So compiler will report
-the below warning:
+Already verified this patch on a MIPS64 cavium octeon board: CN78XX.
 
-In file included from include/linux/elf.h:4:0,
-                 from fs/proc/vmcore.c:13:
-fs/proc/vmcore.c: In function 'parse_crash_elf32_headers':
-arch/mips/include/asm/elf.h:258:23: warning: initializatio
-n from incompatible pointer type
-  struct elfhdr *__h = (hdr);     \
-                       ^
-fs/proc/vmcore.c:1071:4: note: in expansion of macro 'elf_
-check_arch'
-   !elf_check_arch(&ehdr) ||
-    ^
+This patch is to eliminate the compile warning only, has no side effect in run-time.
 
-Signed-off-by: Yanjiang Jin <yanjiang.jin@windriver.com>
----
+Yanjiang Jin (1):
+  mips: vmcore: forced convert 'hdr' in elf_check_arch()
+
  arch/mips/include/asm/elf.h | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/elf.h b/arch/mips/include/asm/elf.h
-index f19e890..ece490d 100644
---- a/arch/mips/include/asm/elf.h
-+++ b/arch/mips/include/asm/elf.h
-@@ -224,7 +224,7 @@ struct mips_elf_abiflags_v0 {
- #define elf_check_arch(hdr)						\
- ({									\
- 	int __res = 1;							\
--	struct elfhdr *__h = (hdr);					\
-+	struct elfhdr *__h = (struct elfhdr *)(hdr);			\
- 									\
- 	if (__h->e_machine != EM_MIPS)					\
- 		__res = 0;						\
-@@ -255,7 +255,7 @@ struct mips_elf_abiflags_v0 {
- #define elf_check_arch(hdr)						\
- ({									\
- 	int __res = 1;							\
--	struct elfhdr *__h = (hdr);					\
-+	struct elfhdr *__h = (struct elfhdr *)(hdr);			\
- 									\
- 	if (__h->e_machine != EM_MIPS)					\
- 		__res = 0;						\
 -- 
 1.9.1
 
