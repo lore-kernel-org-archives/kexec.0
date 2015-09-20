@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZcwGA-0002Vp-F7
- for kexec@lists.infradead.org; Fri, 18 Sep 2015 14:03:30 +0000
-Date: Fri, 18 Sep 2015 22:03:44 +0800
-From: Minfei Huang <mhuang@redhat.com>
+ id 1ZdVkp-0006CX-QF
+ for kexec@lists.infradead.org; Sun, 20 Sep 2015 03:57:32 +0000
+Date: Sun, 20 Sep 2015 11:57:04 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] Load crash kernel high on x86
-Message-ID: <20150918140344.GA5310@dhcp-128-25.nay.redhat.com>
+Message-ID: <20150920035704.GA3773@dhcp-17-102.nay.redhat.com>
 References: <20150918080324.69d7b9d5@hananiah.suse.cz>
  <20150918104013.6c3cc009@hananiah.suse.cz>
 MIME-Version: 1.0
@@ -60,15 +60,22 @@ On 09/18/15 at 10:40am, Petr Tesarik wrote:
 > 
 > If you agree, I'll also post a kernel patch for kexec_file(2).
 
-KEXEC always use a pair of crashk_res.start and crashk_res.end as crash
-memory region in kernel. And this struct is assigned in function
-reserve_crashkernel during booting. In order to solve low memory issue,
-there is another struct crashk_low_res is used.
+It does not need a fix in kernel for kexec_file. Since it uses below code
+to get memory in kexec_add_buffer(), this is the same as it does in
+locate_hole() using mem_min and mem_max in kexec_tools.
 
-So, the code flow deals with the above case correctly.
+        /* Walk the RAM ranges and allocate a suitable range for the buffer */
+        if (image->type == KEXEC_TYPE_CRASH)
+                ret = walk_iomem_res("Crash kernel",
+                                     IORESOURCE_MEM | IORESOURCE_BUSY,
+                                     crashk_res.start, crashk_res.end, kbuf,
+                                     locate_mem_hole_callback);
+	else
+		...
+
 
 Thanks
-Minfei
+Baoquan
 
 _______________________________________________
 kexec mailing list
