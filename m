@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.windriver.com ([147.11.1.11])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZdVkp-0006CX-QF
- for kexec@lists.infradead.org; Sun, 20 Sep 2015 03:57:32 +0000
-Date: Sun, 20 Sep 2015 11:57:04 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] Load crash kernel high on x86
-Message-ID: <20150920035704.GA3773@dhcp-17-102.nay.redhat.com>
-References: <20150918080324.69d7b9d5@hananiah.suse.cz>
- <20150918104013.6c3cc009@hananiah.suse.cz>
+ id 1Zdqle-0007SX-2c
+ for kexec@lists.infradead.org; Mon, 21 Sep 2015 02:23:46 +0000
+Message-ID: <55FF6A21.7030601@windriver.com>
+Date: Mon, 21 Sep 2015 10:23:29 +0800
+From: yjin <yanjiang.jin@windriver.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150918104013.6c3cc009@hananiah.suse.cz>
+Subject: Re: [PATCH] mips: vmcore: forced convert 'hdr' in elf_check_arch()
+References: <1442562171-21307-1-git-send-email-yanjiang.jin@windriver.com>
+ <1442562171-21307-2-git-send-email-yanjiang.jin@windriver.com>
+ <55FF6876.7080908@windriver.com>
+In-Reply-To: <55FF6876.7080908@windriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,64 +20,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Yinghai Lu <yinghai@kernel.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: ralf@linux-mips.org
+Cc: linux-mips@linux-mips.org, mhuang@redhat.com, kexec@lists.infradead.org, jinyanjiang@gmail.com, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, chaowang@redhat.com
 
-On 09/18/15 at 10:40am, Petr Tesarik wrote:
-> On Fri, 18 Sep 2015 08:03:24 +0200
-> Petr Tesarik <ptesarik@suse.com> wrote:
-> 
-> > Hello,
-> > 
-> > There may be more than one crash kernel regions on x86. However, the kexec
-> > syscall checks that target address is within crashk_res boundaries. Looking
-> > at the logic in arch/x86/kernel/setup.c, there are only two possible layouts:
-> > 
-> >   1. crashk_res is below 4G, and there is only one region,
-> >   2. crashk_res is above 4G, and crashk_low_res is below 4G
-> > 
-> > In either case, kexec-tools must pick the highest region.
-> > 
-> > Currently, kexec-tools picks the largest region. If high reservation is
-> > smaller than low, kexec(2) returns -EADDRNOTAVAIL, and kexec prints out
-> > this error message:
-> > 
-> > kexec_load failed: Cannot assign requested address
-> 
-> I have just re-checked with kexec_file(2), and it is also affected. At
-> this point, you may think that it would be better to fix the check in
-> sanity_check_segment_list() instead.
-> 
-> I don't think so.
-> 
-> Low memory reservation is intended for swiotlb and DMA buffers, i.e. it
-> is somehow precious. The kernel can run above 4G, initrd can also be
-> located above 4G, so why should I place it in the _precious_ low memory?
-> 
-> If you agree, I'll also post a kernel patch for kexec_file(2).
-
-It does not need a fix in kernel for kexec_file. Since it uses below code
-to get memory in kexec_add_buffer(), this is the same as it does in
-locate_hole() using mem_min and mem_max in kexec_tools.
-
-        /* Walk the RAM ranges and allocate a suitable range for the buffer */
-        if (image->type == KEXEC_TYPE_CRASH)
-                ret = walk_iomem_res("Crash kernel",
-                                     IORESOURCE_MEM | IORESOURCE_BUSY,
-                                     crashk_res.start, crashk_res.end, kbuf,
-                                     locate_mem_hole_callback);
-	else
-		...
-
-
-Thanks
-Baoquan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SXQgc2VlbXMgdGhlIGxhc3QgbWFpbCBoYXMgYmVlbiBibG9ja2VkLCByZXNlbmQgaXQuCgpPbiAy
+MDE15bm0MDnmnIgyMeaXpSAxMDoxNiwgeWppbiB3cm90ZToKPiBUaGUgbmV3IHZlcnNpb24gcGF0
+Y2ggb25seSBtb2RpZmllcyBtaXBzL2VsZi5oLCBzbyBhZGQgUmFsZiBCYWVjaGxlIAo+IGFuZCBj
+YyBsaW51eC1taXBzQGxpbnV4LW1pcHMub3JnLgo+IFRoaXMgaXMgYSBWMiBwYXRjaCwgYXR0YWNo
+IHRoZSBWMSBwYXRjaCBmb3IgcmVmZXJlbmNlLgo+Cj4gVGhhbmtzIQo+IFlhbmppYW5nCj4KPiBP
+biAyMDE15bm0MDnmnIgxOOaXpSAxNTo0MiwgeWFuamlhbmcuamluQHdpbmRyaXZlci5jb20gd3Jv
+dGU6Cj4+IEZyb206IFlhbmppYW5nIEppbiA8eWFuamlhbmcuamluQHdpbmRyaXZlci5jb20+Cj4+
+Cj4+IGVsZl9jaGVja19hcmNoKCkgd2lsbCBiZSBjYWxsZWQgYm90aCBpbiBwYXJzZV9jcmFzaF9l
+bGY2NF9oZWFkZXJzKCkKPj4gYW5kIHBhcnNlX2NyYXNoX2VsZjMyX2hlYWRlcnMoKS4gQnV0IGlu
+IHRoZXNlIHR3byBmdW5jdGlvbnMsIHRoZSB0eXBlIG9mCj4+IHRoZSBwYXJhbWV0ZXIgZWhkciBp
+cyBkaWZmZXJlbnQ6IEVsZjMyX0VoZHIgYW5kIEVsZjY0X0VoZHIuCj4+Cj4+IEZ1bmN0aW9uIHBh
+cnNlX2NyYXNoX2VsZl9oZWFkZXJzKCkgcmVhZHMgZV9pZGVudFtFSV9DTEFTU10gdGhlbiAKPj4g
+ZGVjaWRlcyB0bwo+PiBjYWxsIHBhcnNlX2NyYXNoX2VsZjY0X2hlYWRlcnMoKSBvciBwYXJzZV9j
+cmFzaF9lbGYzMl9oZWFkZXJzKCkuCj4+IFRoaXMgaGFwcGVucyBpbiBydW4gdGltZSwgbm90IGNv
+bXBpbGUgdGltZS4gU28gY29tcGlsZXIgd2lsbCByZXBvcnQKPj4gdGhlIGJlbG93IHdhcm5pbmc6
+Cj4+Cj4+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2xpbnV4L2VsZi5oOjQ6MCwKPj4g
+ICAgICAgICAgICAgICAgICAgZnJvbSBmcy9wcm9jL3ZtY29yZS5jOjEzOgo+PiBmcy9wcm9jL3Zt
+Y29yZS5jOiBJbiBmdW5jdGlvbiAncGFyc2VfY3Jhc2hfZWxmMzJfaGVhZGVycyc6Cj4+IGFyY2gv
+bWlwcy9pbmNsdWRlL2FzbS9lbGYuaDoyNTg6MjM6IHdhcm5pbmc6IGluaXRpYWxpemF0aW8KPj4g
+biBmcm9tIGluY29tcGF0aWJsZSBwb2ludGVyIHR5cGUKPj4gICAgc3RydWN0IGVsZmhkciAqX19o
+ID0gKGhkcik7ICAgICBcCj4+ICAgICAgICAgICAgICAgICAgICAgICAgIF4KPj4gZnMvcHJvYy92
+bWNvcmUuYzoxMDcxOjQ6IG5vdGU6IGluIGV4cGFuc2lvbiBvZiBtYWNybyAnZWxmXwo+PiBjaGVj
+a19hcmNoJwo+PiAgICAgIWVsZl9jaGVja19hcmNoKCZlaGRyKSB8fAo+PiAgICAgIF4KPj4KPj4g
+U2lnbmVkLW9mZi1ieTogWWFuamlhbmcgSmluIDx5YW5qaWFuZy5qaW5Ad2luZHJpdmVyLmNvbT4K
+Pj4gLS0tCj4+ICAgYXJjaC9taXBzL2luY2x1ZGUvYXNtL2VsZi5oIHwgNCArKy0tCj4+ICAgMSBm
+aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAt
+LWdpdCBhL2FyY2gvbWlwcy9pbmNsdWRlL2FzbS9lbGYuaCBiL2FyY2gvbWlwcy9pbmNsdWRlL2Fz
+bS9lbGYuaAo+PiBpbmRleCBmMTllODkwLi5lY2U0OTBkIDEwMDY0NAo+PiAtLS0gYS9hcmNoL21p
+cHMvaW5jbHVkZS9hc20vZWxmLmgKPj4gKysrIGIvYXJjaC9taXBzL2luY2x1ZGUvYXNtL2VsZi5o
+Cj4+IEBAIC0yMjQsNyArMjI0LDcgQEAgc3RydWN0IG1pcHNfZWxmX2FiaWZsYWdzX3YwIHsKPj4g
+ICAjZGVmaW5lIGVsZl9jaGVja19hcmNoKGhkcikgICAgICAgICAgICAgICAgICAgICAgICBcCj4+
+ICAgKHsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4+ICAgICAgIGludCBf
+X3JlcyA9IDE7ICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gLSAgICBzdHJ1Y3QgZWxm
+aGRyICpfX2ggPSAoaGRyKTsgICAgICAgICAgICAgICAgICAgIFwKPj4gKyAgICBzdHJ1Y3QgZWxm
+aGRyICpfX2ggPSAoc3RydWN0IGVsZmhkciAqKShoZHIpOyAgICAgICAgICAgIFwKPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCj4+ICAgICAgIGlmIChfX2gtPmVfbWFj
+aGluZSAhPSBFTV9NSVBTKSAgICAgICAgICAgICAgICAgICAgXAo+PiAgICAgICAgICAgX19yZXMg
+PSAwOyAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gQEAgLTI1NSw3ICsyNTUsNyBAQCBzdHJ1
+Y3QgbWlwc19lbGZfYWJpZmxhZ3NfdjAgewo+PiAgICNkZWZpbmUgZWxmX2NoZWNrX2FyY2goaGRy
+KSAgICAgICAgICAgICAgICAgICAgICAgIFwKPj4gICAoeyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFwKPj4gICAgICAgaW50IF9fcmVzID0gMTsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgXAo+PiAtICAgIHN0cnVjdCBlbGZoZHIgKl9faCA9IChoZHIpOyAgICAgICAgICAg
+ICAgICAgICAgXAo+PiArICAgIHN0cnVjdCBlbGZoZHIgKl9faCA9IChzdHJ1Y3QgZWxmaGRyICop
+KGhkcik7ICAgICAgICAgICAgXAo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIFwKPj4gICAgICAgaWYgKF9faC0+ZV9tYWNoaW5lICE9IEVNX01JUFMpICAgICAgICAgICAg
+ICAgICAgICBcCj4+ICAgICAgICAgICBfX3JlcyA9IDA7ICAgICAgICAgICAgICAgICAgICAgICAg
+XAo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
