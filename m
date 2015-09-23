@@ -1,25 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZegHp-0006Lt-S9
- for kexec@lists.infradead.org; Wed, 23 Sep 2015 09:24:26 +0000
-Date: Wed, 23 Sep 2015 17:23:56 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [Patch v3] Add persistent memory support
-Message-ID: <20150923092356.GB6217@dhcp-128-28.nay.redhat.com>
-References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
- <20150819092815.GB6130@localhost.localdomain>
- <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
- <20150820023812.GA20780@localhost.localdomain>
- <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
- <20150820074234.GA23537@localhost.localdomain>
- <1440446072.14237.8.camel@hp.com>
- <20150825073719.GB20225@dhcp-129-120.nay.redhat.com>
- <20150902010410.GD30886@verge.net.au>
- <20150923103327.37c2f1ec@hananiah.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150923103327.37c2f1ec@hananiah.suse.cz>
+In-Reply-To: <f1d72f4782ef5185626a012872f9ebefe057c7e8.1426793116.git.geoff@infradead.org>
+References: <cover.1426793116.git.geoff@infradead.org>
+ <f1d72f4782ef5185626a012872f9ebefe057c7e8.1426793116.git.geoff@infradead.org>
+Date: Wed, 23 Sep 2015 14:21:16 -0500
+Message-ID: <CAOZdJXUNhGk59vEnAhXBUun2ieiuUfYH=GKmeB4-wK=azv5HBw@mail.gmail.com>
+Subject: Re: [PATCH 2/6] arm64: Convert hcalls to use HVC immediate value
+From: Timur Tabi <timur@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,33 +15,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Toshi Kani <toshi.kani@hp.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
 
-T24gMDkvMjMvMTUgYXQgMTA6MzNhbSwgUGV0ciBUZXNhcmlrIHdyb3RlOgo+IGtleGVjL2FyY2gv
-aTM4Ni9rZXhlYy14ODYtY29tbW9uLmM6MTU4Ojg6IG5vdGU6IGVhY2ggdW5kZWNsYXJlZCBpZGVu
-dGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZSBmb3IgZWFjaCBmdW5jdGlvbiBpdCBhcHBlYXJz
-IGluCj4ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYzoxNjA6ODogZXJyb3I6IOKA
-mEU4MjBfUFJBTeKAmSB1bmRlY2xhcmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikKPiAg
-ICBjYXNlIEU4MjBfUFJBTToKPiAgICAgICAgIF4KPiBNYWtlZmlsZToxMTM6IG7DoXZvZCBwcm8g
-Y8OtbCDigJ5rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5v4oCcIHNlbGhhbAo+IG1h
-a2U6ICoqKiBba2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24ub10gQ2h5YmEgMQo+IAo+
-IFRoaXMgaGFwcGVucywgYmVjYXVzZSBvdGhlciBFODIwXyogbWFjcm9zIGFyZSBkZWZpbmVkCj4g
-aW4gL3Vzci9pbmNsdWRlL3hlbmN0cmwuaCwgYnV0IG5vdCBFODIwX1BNRU0gYW5kIEU4MjBfUFJB
-TS4KPiAKPiBJJ20gdW5zdXJlIGhvdyB0byBmaXggaXQuCgpPciBpZiB4ZW4gZG9lc24ndCBzdXBw
-b3J0IHRoZXNlIDIgbWVtb3J5IHR5cGVzLCBJIGNhbiByZXZlcnQgYmVsb3cKY2hhbmdlIGZvciB4
-ZW46CgpAQCAtMTQ5LDYgKzE1NSwxMCBAQCB1bnNpZ25lZCB4ZW5fZTgyMF90b19rZXhlY190eXBl
-KHVpbnQzMl90IHR5cGUpCiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBSQU5HRV9BQ1BJ
-OwogICAgICAgICAgICAgICAgY2FzZSBFODIwX05WUzoKICAgICAgICAgICAgICAgICAgICAgICAg
-cmV0dXJuIFJBTkdFX0FDUElfTlZTOworICAgICAgICAgICAgICAgY2FzZSBFODIwX1BNRU06Cisg
-ICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBSQU5HRV9QTUVNOworICAgICAgICAgICAgICAg
-Y2FzZSBFODIwX1BSQU06CisgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBSQU5HRV9QUkFN
-OwogICAgICAgICAgICAgICAgY2FzZSBFODIwX1JFU0VSVkVEOgogICAgICAgICAgICAgICAgZGVm
-YXVsdDoKICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIFJBTkdFX1JFU0VSVkVEOwoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Mar 19, 2015 at 3:35 PM, Geoff Levand <geoff@infradead.org> wrote:
+> The existing arm64 hcall implementations are limited in that they only allow
+> for two distinct hcalls; with the x0 register either zero or not zero.  Also,
+> the API of the hyp-stub exception vector routines and the KVM exception vector
+> routines differ; hyp-stub uses a non-zero value in x0 to implement
+> __hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
+>
+> To allow for additional hcalls to be defined and to make the arm64 hcall API
+> more consistent across exception vector routines, change the hcall
+> implementations to use the 16 bit immediate value of the HVC instruction to
+> specify the hcall type.
+>
+> Define three new preprocessor macros HVC_CALL_HYP, HVC_GET_VECTORS, and
+> HVC_SET_VECTORS to be used as hcall type specifiers and convert the
+> existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
+> to use these new macros when executing an HVC call.  Also, change the
+> corresponding hyp-stub and KVM el1_sync exception vector routines to use these
+> new macros.
+>
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+
+What is the status of this patch?  I see it's not in 4.2.  I ask
+because this patch might be breaking our 4.2-based kernel, and I'm
+just wondering if it's still applicable.
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
