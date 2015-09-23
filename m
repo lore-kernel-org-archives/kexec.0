@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp2.provo.novell.com ([137.65.250.81])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zee3u-0007cV-1a
- for kexec@lists.infradead.org; Wed, 23 Sep 2015 07:01:54 +0000
-Date: Wed, 23 Sep 2015 15:01:21 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: Add prefix "kexec" to output message
-Message-ID: <20150923070121.GC4394@dhcp-129-160.nay.redhat.com>
-References: <1442128512-32578-1-git-send-email-mnfhuang@gmail.com>
- <87fv2il0rq.fsf@x220.int.ebiederm.org>
- <20150914075056.GA13324@t440s.lenovo>
- <20150914084400.GA7953@localhost.localdomain>
- <20150915030804.GA7690@t440s.lenovo>
- <20150922160704.GA10225@dhcp-128-25.nay.redhat.com>
- <20150923013723.GA4394@dhcp-129-160.nay.redhat.com>
- <20150923024933.GB3166@dhcp-17-102.nay.redhat.com>
+ id 1ZefVD-0001Rx-Uc
+ for kexec@lists.infradead.org; Wed, 23 Sep 2015 08:34:12 +0000
+Date: Wed, 23 Sep 2015 10:33:27 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [Patch v3] Add persistent memory support
+Message-ID: <20150923103327.37c2f1ec@hananiah.suse.cz>
+In-Reply-To: <20150902010410.GD30886@verge.net.au>
+References: <1439975029-25611-1-git-send-email-bhe@redhat.com>
+ <20150819092815.GB6130@localhost.localdomain>
+ <20150819104509.GG19950@dhcp-128-28.nay.redhat.com>
+ <20150820023812.GA20780@localhost.localdomain>
+ <20150820025222.GH19950@dhcp-128-28.nay.redhat.com>
+ <20150820074234.GA23537@localhost.localdomain>
+ <1440446072.14237.8.camel@hp.com>
+ <20150825073719.GB20225@dhcp-129-120.nay.redhat.com>
+ <20150902010410.GD30886@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150923024933.GB3166@dhcp-17-102.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +26,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Minfei Huang <mhuang@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>, akpm@linux-foundation.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Toshi Kani <toshi.kani@hp.com>
 
-On 09/23/15 at 10:49am, Baoquan He wrote:
-> On 09/23/15 at 09:37am, Dave Young wrote:
-> > > > Hi, Dave.
-> > > > 
-> > > > How about removing all of the prefix "crashkernel" in kexec_core. Thus
-> > > > we can be consistent with the output message prefix "kexec".
-> > > 
-> > > Ping, any comment is appreciate and helpful.
-> > 
-> > Remove "crashkernel" sounds not a proper way, it indicates crashkernel parsing
-> > messages. I have no idea what is the best way but below modification sounds better to me:
-> > 
-> > kexec_core.c:
-> > 
-> > #define pr_fmt(fmt)        "[kexec_core] " fmt
-> > Also remove below prefix "Kexec:"
-> > pr_warn("Kexec: Memory allocation for saving cpu register states failed\n"); 
-> > 
-> > kexec.c:
-> > #define pr_fmt(fmt)        "[kexec] " fmt
-> > 
-> > kexec_file.c:
-> > #define pr_fmt(fmt)        "[kexec_file] " fmt
-> 
-> This is weird, user really don't need to know each file. I saw you added
-> a new file kexec_internal.h and all three files includes it. Why not doing
-> it there to make it the same as before?
-
-I personally do not like add these prefix to a header file. One prefix for
-a c file is better to me.
-
-But rethinking about the prefix, looks like there's a lot of other components
-using ":" so KBUILD_MODNAME ": "  should be fine.
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyIFNlcCAyMDE1IDEwOjA0OjEwICswOTAwClNpbW9uIEhvcm1hbiA8aG9ybXNAdmVy
+Z2UubmV0LmF1PiB3cm90ZToKCj4gT24gVHVlLCBBdWcgMjUsIDIwMTUgYXQgMDM6Mzc6MTlQTSAr
+MDgwMCwgRGF2ZSBZb3VuZyB3cm90ZToKPiAKPiBbc25pcF0KPiAKPiA+IEhtbSwgYWZ0ZXIgbG9v
+a2luZyBpbnRvIG9sZCBkaXNjdXNzaW9uLCBJIGZvdW5kIHRoYXQgdGhlIG9wdGlvbnMgaXMgdGhl
+cmUgZm9yCj4gPiB0aGUga25vd24gaXNzdWUgZm9yIGNhbGdhcnkgaW9tbXUuIEkgcmVhbGx5IGRv
+dWJ0IHRoZXJlJ3Mgc29tZW9uZSBpcyB1c2luZyBpdAo+ID4gYnV0IHdobyBrbm93cy4KPiA+IAo+
+ID4gY2FsZ2FyeSBjb2RlIHVzZXMgc2F2ZWRfbWF4X3BmbiB3aGljaCBpcyBvbmx5IGNhbGN1bGFl
+ZCB3aGVuIHRoZXJlJ3MgbWVtbWFwPWV4YWN0bWFwCj4gPiBjbWRsaW5lIHBhcmFtcy4gU28gYmVm
+b3JlIHJlbW92aW5nIHRoZSBsaW1pdGF0aW9uIHdlIHN0aWxsIG5lZWQgY2FycnkgdGhlIG9sZAo+
+ID4gaW50ZXJmYWNlLgo+ID4gCj4gPiBIZW5jZSwgSSB3aWxsIG5vdCBvYmplY3QgQmFvJ3MgY2hh
+bmdlcyBpbiBoaXMgcGF0Y2ggYW55IG1vcmUuCj4gCj4gVGhhbmtzLCBvbiB0aGUgc3RyZW5ndGgg
+b2YgdGhhdCBjb21tZW50IEkgaGF2ZSBhcHBsaWVkIHRoaXMgcGF0Y2guCgpBcmdoLiBBZnRlciBh
+ZGRpbmcgdGhpcyBwYXRjaCwga2V4ZWMtdG9vbHMgbm8gbG9uZ2VyIGJ1aWxkcyAtLXdpdGgteGVu
+OgoKZ2NjIC1nIC1PMiAtZm5vLXN0cmljdC1hbGlhc2luZyAtV2FsbCAtV3N0cmljdC1wcm90b3R5
+cGVzIC1JLi9pbmNsdWRlIC1JLi91dGlsX2xpYi9pbmNsdWRlIC1JaW5jbHVkZS8gIC1JLi9rZXhl
+Yy9hcmNoL3g4Nl82NC9pbmNsdWRlICAtYyAtTUQgLW8ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4
+Ni1jb21tb24ubyBrZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jCmtleGVjL2FyY2gv
+aTM4Ni9rZXhlYy14ODYtY29tbW9uLmM6IEluIGZ1bmN0aW9uIOKAmHhlbl9lODIwX3RvX2tleGVj
+X3R5cGXigJk6CmtleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9uLmM6MTU4Ojg6IGVycm9y
+OiDigJhFODIwX1BNRU3igJkgdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMgZnVuY3Rpb24p
+CiAgIGNhc2UgRTgyMF9QTUVNOgogICAgICAgIF4Ka2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1j
+b21tb24uYzoxNTg6ODogbm90ZTogZWFjaCB1bmRlY2xhcmVkIGlkZW50aWZpZXIgaXMgcmVwb3J0
+ZWQgb25seSBvbmNlIGZvciBlYWNoIGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4Ka2V4ZWMvYXJjaC9p
+Mzg2L2tleGVjLXg4Ni1jb21tb24uYzoxNjA6ODogZXJyb3I6IOKAmEU4MjBfUFJBTeKAmSB1bmRl
+Y2xhcmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikKICAgY2FzZSBFODIwX1BSQU06CiAg
+ICAgICAgXgpNYWtlZmlsZToxMTM6IG7DoXZvZCBwcm8gY8OtbCDigJ5rZXhlYy9hcmNoL2kzODYv
+a2V4ZWMteDg2LWNvbW1vbi5v4oCcIHNlbGhhbAptYWtlOiAqKiogW2tleGVjL2FyY2gvaTM4Ni9r
+ZXhlYy14ODYtY29tbW9uLm9dIENoeWJhIDEKClRoaXMgaGFwcGVucywgYmVjYXVzZSBvdGhlciBF
+ODIwXyogbWFjcm9zIGFyZSBkZWZpbmVkCmluIC91c3IvaW5jbHVkZS94ZW5jdHJsLmgsIGJ1dCBu
+b3QgRTgyMF9QTUVNIGFuZCBFODIwX1BSQU0uCgpJJ20gdW5zdXJlIGhvdyB0byBmaXggaXQuCgpQ
+ZXRyIFQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
