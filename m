@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zecqm-0006pg-Md
- for kexec@lists.infradead.org; Wed, 23 Sep 2015 05:44:17 +0000
-Date: Wed, 23 Sep 2015 13:44:34 +0800
-From: Minfei Huang <mhuang@redhat.com>
+ id 1Zee3u-0007cV-1a
+ for kexec@lists.infradead.org; Wed, 23 Sep 2015 07:01:54 +0000
+Date: Wed, 23 Sep 2015 15:01:21 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] kexec: Add prefix "kexec" to output message
-Message-ID: <20150923054434.GA3147@dhcp-128-25.nay.redhat.com>
+Message-ID: <20150923070121.GC4394@dhcp-129-160.nay.redhat.com>
 References: <1442128512-32578-1-git-send-email-mnfhuang@gmail.com>
  <87fv2il0rq.fsf@x220.int.ebiederm.org>
  <20150914075056.GA13324@t440s.lenovo>
@@ -15,11 +15,9 @@ References: <1442128512-32578-1-git-send-email-mnfhuang@gmail.com>
  <20150922160704.GA10225@dhcp-128-25.nay.redhat.com>
  <20150923013723.GA4394@dhcp-129-160.nay.redhat.com>
  <20150923024933.GB3166@dhcp-17-102.nay.redhat.com>
- <20150923051419.GA21804@dhcp-128-25.nay.redhat.com>
- <20150923052622.GB7739@dhcp-17-102.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20150923052622.GB7739@dhcp-17-102.nay.redhat.com>
+In-Reply-To: <20150923024933.GB3166@dhcp-17-102.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,31 +31,44 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Minfei Huang <mnfhuang@gmail.com>
+Cc: Minfei Huang <mhuang@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>, akpm@linux-foundation.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On 09/23/15 at 01:26pm, Baoquan He wrote:
-> On 09/23/15 at 01:14pm, Minfei Huang wrote:
-> > On 09/23/15 at 10:49am, Baoquan He wrote:
-> > > This is weird, user really don't need to know each file. I saw you added
-> > > a new file kexec_internal.h and all three files includes it. Why not doing
-> > > it there to make it the same as before?
+On 09/23/15 at 10:49am, Baoquan He wrote:
+> On 09/23/15 at 09:37am, Dave Young wrote:
+> > > > Hi, Dave.
+> > > > 
+> > > > How about removing all of the prefix "crashkernel" in kexec_core. Thus
+> > > > we can be consistent with the output message prefix "kexec".
+> > > 
+> > > Ping, any comment is appreciate and helpful.
 > > 
-> > The output message format is incorrect, if other *.c (except for kexec*)
-> > include the kexec_internal.h.
+> > Remove "crashkernel" sounds not a proper way, it indicates crashkernel parsing
+> > messages. I have no idea what is the best way but below modification sounds better to me:
+> > 
+> > kexec_core.c:
+> > 
+> > #define pr_fmt(fmt)        "[kexec_core] " fmt
+> > Also remove below prefix "Kexec:"
+> > pr_warn("Kexec: Memory allocation for saving cpu register states failed\n"); 
+> > 
+> > kexec.c:
+> > #define pr_fmt(fmt)        "[kexec] " fmt
+> > 
+> > kexec_file.c:
+> > #define pr_fmt(fmt)        "[kexec_file] " fmt
 > 
-> No, I assume Dave added kexec_internal.h not to be used by other *.c.
-> It should be only used by kexec*.c
-> 
-> > 
-> > #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > 
-> > How about defining the format like above in each *.c?
+> This is weird, user really don't need to know each file. I saw you added
+> a new file kexec_internal.h and all three files includes it. Why not doing
+> it there to make it the same as before?
 
-Ok. I can split this patch as two patches One for cleanup, other to fix
-the prefix issue.
+I personally do not like add these prefix to a header file. One prefix for
+a c file is better to me.
+
+But rethinking about the prefix, looks like there's a lot of other components
+using ":" so KBUILD_MODNAME ": "  should be fine.
 
 Thanks
-Minfei
+Dave
 
 _______________________________________________
 kexec mailing list
