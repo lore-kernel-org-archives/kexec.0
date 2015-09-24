@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp2.provo.novell.com ([137.65.250.81])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zf0Ax-0001FL-7C
- for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:38:40 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 10/10] iommu/amd: Copy the old ir table
-Date: Thu, 24 Sep 2015 14:37:36 +0800
-Message-Id: <1443076656-31776-11-git-send-email-bhe@redhat.com>
-In-Reply-To: <1443076656-31776-1-git-send-email-bhe@redhat.com>
-References: <1443076656-31776-1-git-send-email-bhe@redhat.com>
+ id 1Zf0Ej-0002Ka-FI
+ for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:42:34 +0000
+Date: Thu, 24 Sep 2015 08:41:58 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH v2] Load crash kernel high on x86
+Message-ID: <20150924084158.5a11c942@hananiah.suse.cz>
+In-Reply-To: <20150924032942.GC6217@dhcp-128-28.nay.redhat.com>
+References: <20150923065655.3ecd3c1b@hananiah.suse.cz>
+ <20150924032942.GC6217@dhcp-128-28.nay.redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,58 +19,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: joro@8bytes.org, iommu@lists.linux-foundation.org
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- drivers/iommu/amd_iommu.c | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+On Thu, 24 Sep 2015 11:29:42 +0800
+Baoquan He <bhe@redhat.com> wrote:
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 1e86f4c..f4f3e63 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -3683,12 +3683,25 @@ static struct irq_remap_table *get_irq_table(u16 devid, bool ioapic)
- 
- 	memset(table->table, 0, MAX_IRQS_PER_TABLE * sizeof(u32));
- 
--	if (ioapic) {
--		int i;
--
--		for (i = 0; i < 32; ++i)
--			table->table[i] = IRTE_ALLOCATED;
--	}
-+	if (translation_pre_enabled()) {
-+		u64 dte;
-+                u64 old_intr_virt;
-+                dte     = amd_iommu_dev_table[devid].data[2];
-+                dte &= DTE_IRQ_PHYS_ADDR_MASK;
-+                old_intr_virt = ioremap_cache(dte, MAX_IRQS_PER_TABLE * sizeof(u32));
-+                memcpy_fromio(table->table, old_intr_virt, MAX_IRQS_PER_TABLE * sizeof(u32));
-+                iounmap(old_intr_virt);
-+                iommu_flush_irt(iommu, devid);
-+        }
-+        else {
-+
-+                if (ioapic) {
-+                        int i;
-+
-+                        for (i = 0; i < 32; ++i)
-+                                table->table[i] = IRTE_ALLOCATED;
-+                }
-+        }
- 
- 	irq_lookup_table[devid] = table;
- 	set_dte_irq_entry(devid, table);
--- 
-2.4.0
+> On 09/23/15 at 06:56am, Petr Tesarik wrote:
+> >  kexec/arch/i386/crashdump-x86.c    | 21 +++++++--------------
+> >  kexec/arch/i386/kexec-x86-common.c |  4 ++--
+> >  kexec/kexec.h                      |  2 +-
+> >  3 files changed, 10 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> > index 63959b7..9d866cc 100644
+> > --- a/kexec/arch/i386/crashdump-x86.c
+> > +++ b/kexec/arch/i386/crashdump-x86.c
+> > @@ -1026,24 +1026,17 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+> >  	return 0;
+> >  }
+> >  
+> > -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
+> > +/* On x86, the kernel may make a low reservation in addition to the
+> > + * normal reservation. However, the kernel refuses to load the panic
+> > + * kernel to low memory, so always choose the highest range.
+> > + */
+> > +int get_crash_kernel_range(uint64_t *start, uint64_t *end)
+> 
+> How about get_crash_kernel_load_range? In kernel crashk_res and
+> crashk_low_res are all named as "Crash kernel", but only crashk_res is
+> used to load kernel/initrd stuffs.
 
+I'm glad this patch is getting a bikeshedding kind of discussion. ;-)
+I don't mind calling the function whatever you like. So let's make it get_crash_kernel_load_range. Wait for v3. ;-)
+
+Petr Tesarik
 
 _______________________________________________
 kexec mailing list
