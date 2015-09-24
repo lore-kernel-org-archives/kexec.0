@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zf0Ad-0000tn-75
+ id 1Zf0Ad-0000lH-76
  for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:38:19 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 03/10] iommu/amd: Get the first/last device of iommu earlier
-Date: Thu, 24 Sep 2015 14:37:29 +0800
-Message-Id: <1443076656-31776-4-git-send-email-bhe@redhat.com>
+Subject: [PATCH 02/10] iommu/amd: Adjust functons which get first/last devid
+ by reading pci config
+Date: Thu, 24 Sep 2015 14:37:28 +0800
+Message-Id: <1443076656-31776-3-git-send-email-bhe@redhat.com>
 In-Reply-To: <1443076656-31776-1-git-send-email-bhe@redhat.com>
 References: <1443076656-31776-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,46 +26,77 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: joro@8bytes.org, iommu@lists.linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
 
-iommu->first_device/last_device are needed by function init_iommu_from_acpi()
-and init_iommu_devices(). So putting the assignment of them in iommu_init_pci()
-could be late. In this patch put them earlier.
+The old functon find_last_devid_on_pci not only gets the last devid, but calls
+update_last_devid(). Now adjust the function definition to make it be consistent
+with its name. Meanwhile add a new function find_first_devid_on_pci for later use.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/iommu/amd_iommu_init.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/iommu/amd_iommu_init.c | 37 +++++++++++++++++++++++++++----------
+ 1 file changed, 27 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index be20a56..5845918 100644
+index 286da26..be20a56 100644
 --- a/drivers/iommu/amd_iommu_init.c
 +++ b/drivers/iommu/amd_iommu_init.c
-@@ -1115,6 +1115,9 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
- 	iommu->pci_seg = h->pci_seg;
- 	iommu->mmio_phys = h->mmio_phys;
+@@ -412,14 +412,32 @@ static inline int ivhd_entry_length(u8 *ivhd)
+  * This function reads the last device id the IOMMU has to handle from the PCI
+  * capability header for this IOMMU
+  */
+-static int __init find_last_devid_on_pci(int bus, int dev, int fn, int cap_ptr)
++static int __init find_first_devid_on_pci(struct ivhd_header *h)
+ {
+-	u32 cap;
++	u32 range;
  
-+	iommu->first_device = find_first_devid_on_pci(h);
-+	iommu->last_device = find_last_devid_on_pci(h);
+-	cap = read_pci_config(bus, dev, fn, cap_ptr+MMIO_RANGE_OFFSET);
+-	update_last_devid(PCI_DEVID(MMIO_GET_BUS(cap), MMIO_GET_LD(cap)));
++	range = read_pci_config(PCI_BUS_NUM(h->devid),
++				PCI_SLOT(h->devid),
++				PCI_FUNC(h->devid),
++				h->cap_ptr+MMIO_RANGE_OFFSET);
+ 
+-	return 0;
++	return PCI_DEVID(MMIO_GET_BUS(range), MMIO_GET_FD(range));
++}
 +
- 	/* Check if IVHD EFR contains proper max banks/counters */
- 	if ((h->efr != 0) &&
- 	    ((h->efr & (0xF << 13)) != 0) &&
-@@ -1276,16 +1279,9 @@ static int iommu_init_pci(struct amd_iommu *iommu)
++/*
++ * This function reads the last device id the IOMMU has to handle from the PCI
++ * capability header for this IOMMU
++ */
++static int __init find_last_devid_on_pci(struct ivhd_header *h)
++{
++	u32 range;
++
++	range = read_pci_config(PCI_BUS_NUM(h->devid),
++				PCI_SLOT(h->devid),
++				PCI_FUNC(h->devid),
++				h->cap_ptr+MMIO_RANGE_OFFSET);
++
++	return PCI_DEVID(MMIO_GET_BUS(range), MMIO_GET_LD(range));
+ }
  
- 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
- 			      &iommu->cap);
--	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_RANGE_OFFSET,
--			      &range);
- 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_MISC_OFFSET,
- 			      &misc);
+ /*
+@@ -430,15 +448,14 @@ static int __init find_last_devid_from_ivhd(struct ivhd_header *h)
+ {
+ 	u8 *p = (void *)h, *end = (void *)h;
+ 	struct ivhd_entry *dev;
++	u16 devid;
++
++	devid = find_last_devid_on_pci(h);
++	update_last_devid(devid);
  
--	iommu->first_device = PCI_DEVID(MMIO_GET_BUS(range),
--					 MMIO_GET_FD(range));
--	iommu->last_device = PCI_DEVID(MMIO_GET_BUS(range),
--					MMIO_GET_LD(range));
+ 	p += sizeof(*h);
+ 	end += h->length;
+ 
+-	find_last_devid_on_pci(PCI_BUS_NUM(h->devid),
+-			PCI_SLOT(h->devid),
+-			PCI_FUNC(h->devid),
+-			h->cap_ptr);
 -
- 	if (!(iommu->cap & (1 << IOMMU_CAP_IOTLB)))
- 		amd_iommu_iotlb_sup = false;
- 
+ 	while (p < end) {
+ 		dev = (struct ivhd_entry *)p;
+ 		switch (dev->type) {
 -- 
 2.4.0
 
