@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZewIl-0005ij-7k
+ for kexec@lists.infradead.org; Thu, 24 Sep 2015 02:30:27 +0000
+Date: Thu, 24 Sep 2015 10:29:58 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2] Load crash kernel high on x86
+Message-ID: <20150924022958.GB6790@dhcp-129-149.nay.redhat.com>
+References: <20150923065655.3ecd3c1b@hananiah.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <f1d72f4782ef5185626a012872f9ebefe057c7e8.1426793116.git.geoff@infradead.org>
-References: <cover.1426793116.git.geoff@infradead.org>
- <f1d72f4782ef5185626a012872f9ebefe057c7e8.1426793116.git.geoff@infradead.org>
-Date: Wed, 23 Sep 2015 14:21:16 -0500
-Message-ID: <CAOZdJXUNhGk59vEnAhXBUun2ieiuUfYH=GKmeB4-wK=azv5HBw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] arm64: Convert hcalls to use HVC immediate value
-From: Timur Tabi <timur@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20150923065655.3ecd3c1b@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,38 +23,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On Thu, Mar 19, 2015 at 3:35 PM, Geoff Levand <geoff@infradead.org> wrote:
-> The existing arm64 hcall implementations are limited in that they only allow
-> for two distinct hcalls; with the x0 register either zero or not zero.  Also,
-> the API of the hyp-stub exception vector routines and the KVM exception vector
-> routines differ; hyp-stub uses a non-zero value in x0 to implement
-> __hyp_set_vectors, whereas KVM uses it to implement kvm_call_hyp.
->
-> To allow for additional hcalls to be defined and to make the arm64 hcall API
-> more consistent across exception vector routines, change the hcall
-> implementations to use the 16 bit immediate value of the HVC instruction to
-> specify the hcall type.
->
-> Define three new preprocessor macros HVC_CALL_HYP, HVC_GET_VECTORS, and
-> HVC_SET_VECTORS to be used as hcall type specifiers and convert the
-> existing __hyp_get_vectors(), __hyp_set_vectors() and kvm_call_hyp() routines
-> to use these new macros when executing an HVC call.  Also, change the
-> corresponding hyp-stub and KVM el1_sync exception vector routines to use these
-> new macros.
->
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+On 09/23/15 at 06:56am, Petr Tesarik wrote:
+> There may be more than one crash kernel regions on x86. Currently,
+> kexec-tools picks the largest one. If high reservation is smaller
+> than low, it will try to load panic kernel low. However, the kexec
+> syscall checks that target address is within crashk_res boundaries,
+> so attempts to load crash kernel low result in -EADDRNOTAVAIL, and
+> kexec prints out this error message:
+> 
+> kexec_load failed: Cannot assign requested address
+> 
+> Looking at the logic in arch/x86/kernel/setup.c, there are only two
+> possible layouts:
+> 
+>   1. crashk_res is below 4G, and there is only one region,
+>   2. crashk_res is above 4G, and crashk_low_res is below 4G
+> 
+> In either case, kexec-tools must pick the highest region.
 
-What is the status of this patch?  I see it's not in 4.2.  I ask
-because this patch might be breaking our 4.2-based kernel, and I'm
-just wondering if it's still applicable.
+Acked-by: Dave Young <dyoung@redhat.com>
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.c    | 21 +++++++--------------
+>  kexec/arch/i386/kexec-x86-common.c |  4 ++--
+>  kexec/kexec.h                      |  2 +-
+>  3 files changed, 10 insertions(+), 17 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index 63959b7..9d866cc 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -1026,24 +1026,17 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+>  	return 0;
+>  }
+>  
+> -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
+> +/* On x86, the kernel may make a low reservation in addition to the
+> + * normal reservation. However, the kernel refuses to load the panic
+> + * kernel to low memory, so always choose the highest range.
+> + */
+> +int get_crash_kernel_range(uint64_t *start, uint64_t *end)
+>  {
+> -	int i, idx = -1;
+> -	unsigned long sz_max = 0, sz;
+> -
+>  	if (!crash_reserved_mem_nr)
+>  		return -1;
+>  
+> -	for (i = crash_reserved_mem_nr - 1; i >= 0; i--) {
+> -		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
+> -		if (sz <= sz_max)
+> -			continue;
+> -		sz_max = sz;
+> -		idx = i;
+> -	}
+> -
+> -	*start = crash_reserved_mem[idx].start;
+> -	*end = crash_reserved_mem[idx].end;
+> +	*start = crash_reserved_mem[crash_reserved_mem_nr - 1].start;
+> +	*end = crash_reserved_mem[crash_reserved_mem_nr - 1].end;
+>  
+>  	return 0;
+>  }
+> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+> index 041c8ec..620c02d 100644
+> --- a/kexec/arch/i386/kexec-x86-common.c
+> +++ b/kexec/arch/i386/kexec-x86-common.c
+> @@ -371,9 +371,9 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+>  	    !(kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
+>  		uint64_t start, end;
+>  
+> -		ret = get_max_crash_kernel_limit(&start, &end);
+> +		ret = get_crash_kernel_range(&start, &end);
+>  		if (ret != 0) {
+> -			fprintf(stderr, "get_max_crash_kernel_limit failed.\n");
+> +			fprintf(stderr, "get_crash_kernel_range failed.\n");
+>  			return -1;
+>  		}
+>  
+> diff --git a/kexec/kexec.h b/kexec/kexec.h
+> index 0fa977f..5577d84 100644
+> --- a/kexec/kexec.h
+> +++ b/kexec/kexec.h
+> @@ -288,7 +288,7 @@ int arch_process_options(int argc, char **argv);
+>  int arch_compat_trampoline(struct kexec_info *info);
+>  void arch_update_purgatory(struct kexec_info *info);
+>  int is_crashkernel_mem_reserved(void);
+> -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end);
+> +int get_crash_kernel_range(uint64_t *start, uint64_t *end);
+>  char *get_command_line(void);
+>  
+>  int kexec_iomem_for_each_line(char *match,
+> -- 
+> 2.1.4
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
 
 _______________________________________________
 kexec mailing list
