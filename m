@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZewIl-0005ij-7k
- for kexec@lists.infradead.org; Thu, 24 Sep 2015 02:30:27 +0000
-Date: Thu, 24 Sep 2015 10:29:58 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1ZexEW-0001OQ-Ck
+ for kexec@lists.infradead.org; Thu, 24 Sep 2015 03:30:08 +0000
+Date: Thu, 24 Sep 2015 11:29:42 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v2] Load crash kernel high on x86
-Message-ID: <20150924022958.GB6790@dhcp-129-149.nay.redhat.com>
+Message-ID: <20150924032942.GC6217@dhcp-128-28.nay.redhat.com>
 References: <20150923065655.3ecd3c1b@hananiah.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -27,28 +27,6 @@ To: Petr Tesarik <ptesarik@suse.com>
 Cc: Yinghai Lu <yinghai@kernel.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
 On 09/23/15 at 06:56am, Petr Tesarik wrote:
-> There may be more than one crash kernel regions on x86. Currently,
-> kexec-tools picks the largest one. If high reservation is smaller
-> than low, it will try to load panic kernel low. However, the kexec
-> syscall checks that target address is within crashk_res boundaries,
-> so attempts to load crash kernel low result in -EADDRNOTAVAIL, and
-> kexec prints out this error message:
-> 
-> kexec_load failed: Cannot assign requested address
-> 
-> Looking at the logic in arch/x86/kernel/setup.c, there are only two
-> possible layouts:
-> 
->   1. crashk_res is below 4G, and there is only one region,
->   2. crashk_res is above 4G, and crashk_low_res is below 4G
-> 
-> In either case, kexec-tools must pick the highest region.
-
-Acked-by: Dave Young <dyoung@redhat.com>
-
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
 >  kexec/arch/i386/crashdump-x86.c    | 21 +++++++--------------
 >  kexec/arch/i386/kexec-x86-common.c |  4 ++--
 >  kexec/kexec.h                      |  2 +-
@@ -68,6 +46,11 @@ Acked-by: Dave Young <dyoung@redhat.com>
 > + * kernel to low memory, so always choose the highest range.
 > + */
 > +int get_crash_kernel_range(uint64_t *start, uint64_t *end)
+
+How about get_crash_kernel_load_range? In kernel crashk_res and
+crashk_low_res are all named as "Crash kernel", but only crashk_res is
+used to load kernel/initrd stuffs.
+
 >  {
 > -	int i, idx = -1;
 > -	unsigned long sz_max = 0, sz;
@@ -126,8 +109,6 @@ Acked-by: Dave Young <dyoung@redhat.com>
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
 
 _______________________________________________
 kexec mailing list
