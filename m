@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zf0An-00010P-7r
- for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:38:30 +0000
+ id 1Zf0As-00016m-7Q
+ for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:38:34 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 06/10] iommu/amd: Add functions
- copy_command_buffer/copy_event_buffer
-Date: Thu, 24 Sep 2015 14:37:32 +0800
-Message-Id: <1443076656-31776-7-git-send-email-bhe@redhat.com>
+Subject: [PATCH 08/10] iommu/amd: Do not update the information of domain to
+ devtables before device driver init
+Date: Thu, 24 Sep 2015 14:37:34 +0800
+Message-Id: <1443076656-31776-9-git-send-email-bhe@redhat.com>
 In-Reply-To: <1443076656-31776-1-git-send-email-bhe@redhat.com>
 References: <1443076656-31776-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,86 +26,28 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: joro@8bytes.org, iommu@lists.linux-foundation.org
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
 
-Copy command buffer and event buffer from the old to kdump kernel.
-
-Still there are 2 problems:
-  1) Not very sure if this is necessary. If do not copy the old command buffer, and
-only set the newly allocated command buffer, is there anything wrong?
-
-  2) If copy is needed, do we need to take care of the head and tail pointers? Since
-in section 3.3 of AMD IOMMU spec it says: "Any or all command buffer entries may be
-copied from the old command buffer to the new and software must set the head and tail
-pointers appropriately." However from the spec the command buffer head pointer and
-tail register store an offset from the base address, which point to the next command
-to be read/written separately.
+update_domain() is the only place where domain->pt_root will be got and
+set into dev entry. So before the device driver initialization we do
+nothing if it's in previously enabled translation status.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/iommu/amd_iommu_init.c  | 37 +++++++++++++++++++++++++++++++++++++
- drivers/iommu/amd_iommu_types.h |  1 +
- 2 files changed, 38 insertions(+)
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 913a718..a334d14 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -713,7 +713,44 @@ static void copy_dev_tables(void)
-                 }
-                 iounmap(old_devtb);
-         }
-+}
-+
-+static void copy_command_buffer(void)
-+{
-+        u64 entry;
-+        u32 lo, hi;
-+        phys_addr_t old_phys;
-+        u64 old_virt;
-+        struct amd_iommu *iommu;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 0d59f79..aee1ae4 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2350,7 +2350,7 @@ static void update_device_table(struct protection_domain *domain)
  
-+        for_each_iommu(iommu) {
-+                lo = readl(iommu->mmio_base + MMIO_CMD_BUF_OFFSET);
-+                hi = readl(iommu->mmio_base + MMIO_CMD_BUF_OFFSET + 4);
-+                entry = (((u64) hi) << 32) + lo;
-+                old_phys &= (1<<MMIO_CMD_SIZE_SHIFT) -1;
-+                old_virt = ioremap_cache(old_phys, CMD_BUFFER_SIZE);
-+                memcpy(iommu->cmd_buf, old_virt, CMD_BUFFER_SIZE);
-+                iounmap(old_virt);
-+        }
-+}
-+
-+static void copy_event_buffer(void)
-+{
-+        u64 entry;
-+        u32 lo, hi;
-+        phys_addr_t old_phys;
-+        u64 old_virt;
-+        struct amd_iommu *iommu;
-+
-+        for_each_iommu(iommu) {
-+                lo = readl(iommu->mmio_base + MMIO_EVT_BUF_OFFSET);
-+                hi = readl(iommu->mmio_base + MMIO_EVT_BUF_OFFSET + 4);
-+                entry = (((u64) hi) << 32) + lo;
-+                old_phys &= (1<<MMIO_EVT_SIZE_SHIFT) -1;
-+                old_virt = ioremap_cache(old_phys, EVT_BUFFER_SIZE);
-+                memcpy(iommu->evt_buf, old_virt, EVT_BUFFER_SIZE);
-+                iounmap(old_virt);
-+        }
- }
+ static void update_domain(struct protection_domain *domain)
+ {
+-	if (!domain->updated)
++	if (!domain->updated || translation_pre_enabled())
+ 		return;
  
- /* sets a specific bit in the device table entry. */
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index d0f0cfb..250384e 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -208,6 +208,7 @@
- /* constants for event buffer handling */
- #define EVT_BUFFER_SIZE		8192 /* 512 entries */
- #define EVT_LEN_MASK		(0x9ULL << 56)
-+#define MMIO_EVT_SIZE_SHIFT 56
- 
- /* Constants for PPR Log handling */
- #define PPR_LOG_ENTRIES		512
+ 	update_device_table(domain);
 -- 
 2.4.0
 
