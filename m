@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZezhQ-0007H4-BX
- for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:08:08 +0000
-Received: by pacgz1 with SMTP id gz1so13520631pac.3
- for <kexec@lists.infradead.org>; Wed, 23 Sep 2015 23:07:47 -0700 (PDT)
-From: Minfei Huang <mnfhuang@gmail.com>
-Subject: [PATCH V2] kexec: Use file name as the output message prefix
-Date: Thu, 24 Sep 2015 14:07:40 +0800
-Message-Id: <1443074860-18989-1-git-send-email-mnfhuang@gmail.com>
+ id 1Zf0AY-0000ht-Bd
+ for kexec@lists.infradead.org; Thu, 24 Sep 2015 06:38:14 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH 01/10] iommu/amd: Use standard bitmap operation to set bitmap
+Date: Thu, 24 Sep 2015 14:37:27 +0800
+Message-Id: <1443076656-31776-2-git-send-email-bhe@redhat.com>
+In-Reply-To: <1443076656-31776-1-git-send-email-bhe@redhat.com>
+References: <1443076656-31776-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,81 +22,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, akpm@linux-foundation.org, bhe@redhat.com, dyoung@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>
+To: joro@8bytes.org, iommu@lists.linux-foundation.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
 
-kexec output message misses the prefix "kexec", when Dave Young split
-the kexec code. Now, we use file name as the output message prefix.
-
-Currectly, the format of output message:
-[  140.290795] SYSC_kexec_load: hello, world
-[  140.291534] kexec: sanity_check_segment_list: hello, world
-
-Ideally, the format of output message:
-[   30.791503] kexec: SYSC_kexec_load, Hello, world
-[   79.182752] kexec_core: sanity_check_segment_list, Hello, world
-
-Remove the custom prefix "kexec" in output message.
-
-Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
-v2: Use KBUILD_MODNAME as prefix, instead of custom string "kexec"
----
- kernel/kexec.c      | 2 ++
- kernel/kexec_core.c | 4 ++--
- kernel/kexec_file.c | 2 ++
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/iommu/amd_iommu.c      | 2 +-
+ drivers/iommu/amd_iommu_init.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 4c5edc3..df772fc 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -18,6 +18,8 @@
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index f82060e7..0d59f79 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1900,7 +1900,7 @@ static struct dma_ops_domain *dma_ops_domain_alloc(void)
+ 	 * mark the first page as allocated so we never return 0 as
+ 	 * a valid dma-address. So we can use 0 as error value
+ 	 */
+-	dma_dom->aperture[0]->bitmap[0] = 1;
++	__set_bit(0, dma_dom->aperture[0]->bitmap);
+ 	dma_dom->next_address = 0;
  
- #include "kexec_internal.h"
  
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- static int copy_user_segment_list(struct kimage *image,
- 				  unsigned long nr_segments,
- 				  struct kexec_segment __user *segments)
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 201b453..dd21c78 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -6,7 +6,7 @@
-  * Version 2.  See the file COPYING for more details.
-  */
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 5ef347a..286da26 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -20,6 +20,7 @@
+ #include <linux/pci.h>
+ #include <linux/acpi.h>
+ #include <linux/list.h>
++#include <linux/bitmap.h>
+ #include <linux/slab.h>
+ #include <linux/syscore_ops.h>
+ #include <linux/interrupt.h>
+@@ -1938,8 +1939,7 @@ static int __init early_amd_iommu_init(void)
+ 	 * never allocate domain 0 because its used as the non-allocated and
+ 	 * error value placeholder
+ 	 */
+-	amd_iommu_pd_alloc_bitmap[0] = 1;
+-
++	 __set_bit(0, amd_iommu_pd_alloc_bitmap);
+ 	spin_lock_init(&amd_iommu_pd_lock);
  
--#define pr_fmt(fmt)	"kexec: " fmt
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/capability.h>
- #include <linux/mm.h>
-@@ -1027,7 +1027,7 @@ static int __init crash_notes_memory_init(void)
- 
- 	crash_notes = __alloc_percpu(size, align);
- 	if (!crash_notes) {
--		pr_warn("Kexec: Memory allocation for saving cpu register states failed\n");
-+		pr_warn("Memory allocation for saving cpu register states failed\n");
- 		return -ENOMEM;
- 	}
- 	return 0;
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 6a9a3f2..66a5dc8 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -22,6 +22,8 @@
- #include <linux/vmalloc.h>
- #include "kexec_internal.h"
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- /*
-  * Declare these symbols weak so that if architecture provides a purgatory,
-  * these will be overridden.
+ 	/*
 -- 
-1.9.1
+2.4.0
 
 
 _______________________________________________
