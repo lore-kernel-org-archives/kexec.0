@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1443121464.3637.3.camel@infradead.org>
-Subject: Re: [PATCH 2/6] arm64: Convert hcalls to use HVC immediate value
-From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 24 Sep 2015 12:04:24 -0700
-In-Reply-To: <CAOZdJXUNhGk59vEnAhXBUun2ieiuUfYH=GKmeB4-wK=azv5HBw@mail.gmail.com>
-References: <cover.1426793116.git.geoff@infradead.org>
- <f1d72f4782ef5185626a012872f9ebefe057c7e8.1426793116.git.geoff@infradead.org>
- <CAOZdJXUNhGk59vEnAhXBUun2ieiuUfYH=GKmeB4-wK=azv5HBw@mail.gmail.com>
-Mime-Version: 1.0
+Received: from tex.lwn.net ([70.33.254.29] helo=vena.lwn.net)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZfEK0-0003MA-00
+ for kexec@lists.infradead.org; Thu, 24 Sep 2015 21:44:56 +0000
+Date: Thu, 24 Sep 2015 15:44:33 -0600
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH] Documentation: Update the default value of crashkernel low
+Message-ID: <20150924154433.36989ba2@lwn.net>
+In-Reply-To: <1443084685-1999-1-git-send-email-bhe@redhat.com>
+References: <1443084685-1999-1-git-send-email-bhe@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,20 +22,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: akpm@linux-foundation.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, joro@8bytes.org
 
-On Wed, 2015-09-23 at 14:21 -0500, Timur Tabi wrote:
-> What is the status of this patch?  I see it's not in 4.2.  I ask
-> because this patch might be breaking our 4.2-based kernel, and I'm
-> just wondering if it's still applicable.
+On Thu, 24 Sep 2015 16:51:25 +0800
+Baoquan He <bhe@redhat.com> wrote:
 
-I have it in my linux-kexec repo, which currently based on 4.3-rc2.  I
-plan to submit it again in the next week or so after testing.
+> In commit 94fb933 ("x86/crash: Allocate enough low memory when
+> crashkernel=high") the default value of crashkernel low memory
+> is changed to 256M. In this patch update it accordingly.
 
--Geoff
+Applied to the docs tree, thanks.
 
-
+jon
 
 _______________________________________________
 kexec mailing list
