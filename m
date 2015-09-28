@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZgPfh-0000YP-6y
- for kexec@lists.infradead.org; Mon, 28 Sep 2015 04:04:13 +0000
-Date: Mon, 28 Sep 2015 12:02:16 +0800
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [V4 PATCH 3/4] kexec: Fix race between panic() and crash_kexec()
- called directly
-Message-ID: <201509281254.KxcIfuxt%fengguang.wu@intel.com>
+ id 1ZgSYF-0002iN-U3
+ for kexec@lists.infradead.org; Mon, 28 Sep 2015 07:08:44 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: Re: [V4 PATCH 3/4] kexec: Fix race between panic() and
+ crash_kexec() called directly
+Date: Mon, 28 Sep 2015 07:08:19 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454994C26@GSjpTKYDCembx31.service.hitachi.net>
+References: <20150925112809.4258.39950.stgit@softrs>
+ <201509281128.r1CboaDC%fengguang.wu@intel.com>
+In-Reply-To: <201509281128.r1CboaDC%fengguang.wu@intel.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="CE+1k2dSO48ffgeK"
-Content-Disposition: inline
-In-Reply-To: <20150925112809.4258.39950.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,179 +22,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, kbuild-all@01.org
+To: "kbuild-all@01.org" <kbuild-all@01.org>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+
+> Hi Hidehiro,
+> 
+> [auto build test results on v4.3-rc2 -- if it's inappropriate base, please ignore]
+> 
+> config: ia64-allyesconfig (attached as .config)
+> reproduce:
+>   wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>   chmod +x ~/bin/make.cross
+>   git checkout 0077681103150af584e5e592c0238fd010654c26
+>   # save the attached .config to linux build tree
+>   make.cross ARCH=ia64
+[snip]
+>    arch/ia64/include/uapi/asm/cmpxchg.h:56:2: warning: value computed is not used [-Wunused-value]
+>     ((__typeof__(*(ptr))) __xchg((unsigned long) (x), (ptr), sizeof(*(ptr))))
+>      ^
+>    arch/ia64/include/asm/atomic.h:135:30: note: in expansion of macro 'xchg'
+>     #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
+>                                  ^
+> >> kernel/kexec_core.c:899:3: note: in expansion of macro 'atomic_xchg'
+>       atomic_xchg(&panic_cpu, -1);
+>       ^
+
+I changed to use atomic_xchg() instead of atomic_set() in V3
+because atomic_set() doesn't mean memory barrier.  However,
+I thought again and there is no need of barrier; there is no
+problem if a competitor sees old value of panic_cpu or new one.
+So, atomic_set() is sufficient and using it will remove this warning.
+
+I will resend the fixed version later.
+
+> vim +/atomic_xchg +899 kernel/kexec_core.c
+> 
+>    883
+>    884		/*
+>    885		 * Only one CPU is allowed to execute the crash_kexec() code as with
+>    886		 * panic().  Otherwise parallel calls of panic() and crash_kexec()
+>    887		 * may stop each other.  To exclude them, we use panic_cpu here too.
+>    888		 */
+>    889		this_cpu = raw_smp_processor_id();
+>    890		old_cpu = atomic_cmpxchg(&panic_cpu, -1, this_cpu);
+>    891		if (old_cpu == -1) {
+>    892			/* This is the 1st CPU which comes here, so go ahead. */
+>    893			__crash_kexec(regs);
+>    894
+>    895			/*
+>    896			 * Reset panic_cpu to allow another panic()/crash_kexec()
+>    897			 * call.
+>    898			 */
+>  > 899			atomic_xchg(&panic_cpu, -1);
+>    900		}
+>    901	}
+>    902
+>    903	size_t crash_get_memory_size(void)
+>    904	{
+>    905		size_t size = 0;
+>    906
+>    907		mutex_lock(&kexec_mutex);
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
 
-Hi Hidehiro,
 
-[auto build test results on v4.3-rc2 -- if it's inappropriate base, please ignore]
-
-config: x86_64-allnoconfig (attached as .config)
-reproduce:
-  git checkout 0077681103150af584e5e592c0238fd010654c26
-  # save the attached .config to linux build tree
-  make ARCH=x86_64 
-
-All error/warnings (new ones prefixed by >>):
-
-   kernel/panic.c: In function 'panic':
->> kernel/panic.c:140:3: error: implicit declaration of function '__crash_kexec' [-Werror=implicit-function-declaration]
-      __crash_kexec(NULL);
-      ^
-   cc1: some warnings being treated as errors
-
-vim +/__crash_kexec +140 kernel/panic.c
-
-   134		 * If we have crashed and we have a crash kernel loaded let it handle
-   135		 * everything else.
-   136		 * If we want to run this after calling panic_notifiers, pass
-   137		 * the "crash_kexec_post_notifiers" option to the kernel.
-   138		 */
-   139		if (!crash_kexec_post_notifiers)
- > 140			__crash_kexec(NULL);
-   141	
-   142		/*
-   143		 * Note smp_send_stop is the usual smp shutdown function, which
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---CE+1k2dSO48ffgeK
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---CE+1k2dSO48ffgeK--
-
