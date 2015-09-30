@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZhFWy-0007sn-Rj
- for kexec@lists.infradead.org; Wed, 30 Sep 2015 11:26:41 +0000
-Date: Wed, 30 Sep 2015 19:27:07 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH v3] kexec: fix out of the ELF headers buffer issue in
- syscall kexec_file_load()
-Message-ID: <20150930112707.GA9314@dhcp-128-25.nay.redhat.com>
-References: <1443531537-29436-1-git-send-email-jlee@suse.com>
+Date: Wed, 30 Sep 2015 13:26:53 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [V4 PATCH 1/4] panic/x86: Fix re-entrance problem due to panic
+ on NMI
+Message-ID: <20150930112653.GF2881@worktop.programming.kicks-ass.net>
+References: <20150925112803.4258.94241.stgit@softrs>
+ <20150925112805.4258.97380.stgit@softrs>
+ <04EAB7311EE43145B2D3536183D1A8445499083F@GSjpTKYDCembx31.service.hitachi.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1443531537-29436-1-git-send-email-jlee@suse.com>
+In-Reply-To: <04EAB7311EE43145B2D3536183D1A8445499083F@GSjpTKYDCembx31.service.hitachi.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,108 +18,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Baoquan He <bhe@redhat.com>, Takashi Iwai <tiwai@suse.de>, Viresh Kumar <viresh.kumar@linaro.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jiang Liu <jiang.liu@linux.intel.com>, "Lee, Chun-Yi" <jlee@suse.com>, Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 09/29/15 at 08:58pm, Lee, Chun-Yi wrote:
-> This patch modified the code in fill_up_crash_elf_data by using
-> walk_system_ram_res instead of walk_system_ram_range to count the max
-> number of crash memory ranges. That's because the walk_system_ram_range
-> filters out small memory regions that are resided in the same page, but
-> walk_system_ram_res does not.
-> 
-> The oringial issue is page fault error that sometimes happened on big machines
-> when preparing ELF headers:
-> 
-> [  305.291522] BUG: unable to handle kernel paging request at ffffc90613fc9000
-> [  305.299621] IP: [<ffffffff8103d645>] prepare_elf64_ram_headers_callback+0x165/0x260
-> [  305.308300] PGD e000032067 PUD 6dcbec54067 PMD 9dc9bdeb067 PTE 0
-> [  305.315393] Oops: 0002 [#1] SMP
-> [...snip]
-> [  305.420953] task: ffff8e1c01ced600 ti: ffff8e1c03ec2000 task.ti: ffff8e1c03ec2000
-> [  305.429292] RIP: 0010:[<ffffffff8103d645>]  [<ffffffff8103d645>] prepare_elf64_ra
-> m_headers_callback+0x165/0x260
-> [...snip]
-> 
-> After tracing prepare_elf64_headers and prepare_elf64_ram_headers_callback,
-> the code uses walk_system_ram_res to fill-in crash memory regions information
-> to program header, so it counts those small memory regions that are resided in
-> a page area. But, when kernel was using walk_system_ram_range in
-> fill_up_crash_elf_data to count the number of crash memory regions, it filters
-> out small regions. I printed those small memory regions, for example:
-> 
-> kexec: Get nr_ram ranges. vaddr=0xffff880077592258 paddr=0x77592258, sz=0xdc0
-> 
-> Base on the code in walk_system_ram_range, this memory region will be filtered
-> out:
-> 
-> pfn = (0x77592258 + 0x1000 - 1) >> 12 = 0x77593
-> end_pfn = (0x77592258 + 0xfc0 -1 + 1) >> 12 = 0x77593
-> end_pfn - pfn = 0x77593 - 0x77593 = 0  <=== if (end_pfn > pfn) is FALSE
-> 
-> So, the max_nr_ranges that's counted by kernel doesn't include small memory
-> regions. That causes the page fault issue happened in later code path for
-> preparing EFL headers.
-> 
-> This issus is not easy to reproduce on small machines that don't have too
-> many CPUs because the allocated page aligned ELF buffer has more free space
-> to cover those small memory regions' PT_LOAD headers.
-> 
-> v3:
-> Changed the declaration of nr_ranges to be unsigned int*
-> 
-> v2:
-> To simplify the patch description, removed some things about CPU number to
-> avoid confusing patch reviewer.
-> 
-> Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> ---
->  arch/x86/kernel/crash.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index e068d66..74ca2fe 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -185,10 +185,9 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->  }
->  
->  #ifdef CONFIG_KEXEC_FILE
-> -static int get_nr_ram_ranges_callback(unsigned long start_pfn,
-> -				unsigned long nr_pfn, void *arg)
-> +static int get_nr_ram_ranges_callback(u64 start, u64 end, void *arg)
->  {
-> -	int *nr_ranges = arg;
-> +	unsigned int *nr_ranges = arg;
->  
->  	(*nr_ranges)++;
->  	return 0;
-> @@ -214,7 +213,7 @@ static void fill_up_crash_elf_data(struct crash_elf_data *ced,
->  
->  	ced->image = image;
->  
-> -	walk_system_ram_range(0, -1, &nr_ranges,
-> +	walk_system_ram_res(0, -1, &nr_ranges,
->  				get_nr_ram_ranges_callback);
->  
->  	ced->max_nr_ranges = nr_ranges;
-> -- 
-> 2.1.4
-> 
-
-Reviewed-by: Minfei Huang <mhuang@redhat.com>
-
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBTZXAgMjUsIDIwMTUgYXQgMTI6MTM6NTVQTSArMDAwMCwg5rKz5ZCI6Iux5a6PIC8g
+S0FXQUnvvIxISURFSElSTyB3cm90ZToKPiBQZXRlciBzYWlkcyAtdGlwIHRyZWUgZG9lc24ndCBo
+YXZlIHBhbmljX29uX3VucmVjb3ZlcmVkX25taSBpbiB0aGUKPiBwcmV2aW9pdXMgZGlzY3Vzc2lv
+biwgYnV0IGl0IHN0aWxsIGV4aXN0cy4gIFNvLCBJIGRpZG4ndCBjaGFuZ2UKPiBhbnl0aGluZyBh
+Ym91dCBwYW5pY19vbl91bnJlY292ZXJlZF9ubWkuCj4gCgo+ID4gLS0tIGEvYXJjaC94ODYva2Vy
+bmVsL25taS5jCj4gPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvbm1pLmMKPiA+IEBAIC0yMzEsNyAr
+MjMxLDcgQEAgdm9pZCB1bnJlZ2lzdGVyX25taV9oYW5kbGVyKHVuc2lnbmVkIGludCB0eXBlLCBj
+b25zdCBjaGFyICpuYW1lKQo+ID4gICNlbmRpZgo+ID4gCj4gPiAgCWlmIChwYW5pY19vbl91bnJl
+Y292ZXJlZF9ubWkpCj4gPiAtCQlwYW5pYygiTk1JOiBOb3QgY29udGludWluZyIpOwo+ID4gKwkJ
+bm1pX3BhbmljKCJOTUk6IE5vdCBjb250aW51aW5nIik7Cj4gPiAKPiA+ICAJcHJfZW1lcmcoIkRh
+emVkIGFuZCBjb25mdXNlZCwgYnV0IHRyeWluZyB0byBjb250aW51ZVxuIik7Cj4gPiAKCkkgd2Fz
+IGxvb2tpbmcgYXQgdW5yZWdpc3Rlcl9ubWlfaGFuZGxlcigpIGJlY2F1c2UgdGhhdCdzIHRoZSBm
+dW5jdGlvbgp0aGUgZGlmZiBwb2ludHMgdG8uIFRoYXQgc3RpbGwgZG9lc24ndCBoYXZlIHBhbmlj
+X29uX3VucmVjb3ZlcmVkX25taS4KCkl0IGxvb2tzIGxpa2UgeW91ciBkaWZmIHRvb2wgaXMgJ2Jy
+b2tlbicgYW5kIGdlbmVyYXRlcyBub25zZW5zZSBmdW5jdGlvbgpkYXRhLgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
