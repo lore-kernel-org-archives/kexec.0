@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zh7hb-0005Ok-HY
- for kexec@lists.infradead.org; Wed, 30 Sep 2015 03:05:08 +0000
-Date: Wed, 30 Sep 2015 11:04:29 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1ZhFWy-0007sn-Rj
+ for kexec@lists.infradead.org; Wed, 30 Sep 2015 11:26:41 +0000
+Date: Wed, 30 Sep 2015 19:27:07 +0800
+From: Minfei Huang <mhuang@redhat.com>
 Subject: Re: [PATCH v3] kexec: fix out of the ELF headers buffer issue in
  syscall kexec_file_load()
-Message-ID: <20150930030429.GA23941@dhcp-129-73.nay.redhat.com>
+Message-ID: <20150930112707.GA9314@dhcp-128-25.nay.redhat.com>
 References: <1443531537-29436-1-git-send-email-jlee@suse.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -109,11 +109,17 @@ On 09/29/15 at 08:58pm, Lee, Chun-Yi wrote:
 >  				get_nr_ram_ranges_callback);
 >  
 >  	ced->max_nr_ranges = nr_ranges;
+> -- 
+> 2.1.4
+> 
 
-Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: Minfei Huang <mhuang@redhat.com>
 
-Thanks
-Dave
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
