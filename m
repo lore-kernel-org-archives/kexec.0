@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail4.hitachi.co.jp ([133.145.228.5])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZhSGW-00047R-1i
- for kexec@lists.infradead.org; Thu, 01 Oct 2015 01:02:33 +0000
+ id 1ZhSuL-0003Gg-3u
+ for kexec@lists.infradead.org; Thu, 01 Oct 2015 01:43:42 +0000
 From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
  <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [V4 PATCH 1/4] panic/x86: Fix re-entrance problem due to panic
- on NMI
-Date: Thu, 1 Oct 2015 01:02:08 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A8445499CC33@GSjpTKYDCembx31.service.hitachi.net>
+Subject: RE: [V4 PATCH 2/4] panic/x86: Allow cpus to save registers even if
+ they are looping in NMI context
+Date: Thu, 1 Oct 2015 01:43:18 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A8445499CC87@GSjpTKYDCembx31.service.hitachi.net>
 References: <20150925112803.4258.94241.stgit@softrs>
- <20150925112805.4258.97380.stgit@softrs>
- <04EAB7311EE43145B2D3536183D1A8445499083F@GSjpTKYDCembx31.service.hitachi.net>
- <20150930112653.GF2881@worktop.programming.kicks-ass.net>
-In-Reply-To: <20150930112653.GF2881@worktop.programming.kicks-ass.net>
+ <20150925112807.4258.12180.stgit@softrs>
+ <20150930115025.GG2881@worktop.programming.kicks-ass.net>
+In-Reply-To: <20150930115025.GG2881@worktop.programming.kicks-ass.net>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -24,34 +23,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: 'Peter Zijlstra' <peterz@infradead.org>
 Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric
  W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-PiBPbiBGcmksIFNlcCAyNSwgMjAxNSBhdCAxMjoxMzo1NVBNICswMDAwLCDmsrPlkIjoi7Hlro8g
-LyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+IFBldGVyIHNhaWRzIC10aXAgdHJlZSBkb2Vz
-bid0IGhhdmUgcGFuaWNfb25fdW5yZWNvdmVyZWRfbm1pIGluIHRoZQ0KPiA+IHByZXZpb2l1cyBk
-aXNjdXNzaW9uLCBidXQgaXQgc3RpbGwgZXhpc3RzLiAgU28sIEkgZGlkbid0IGNoYW5nZQ0KPiA+
-IGFueXRoaW5nIGFib3V0IHBhbmljX29uX3VucmVjb3ZlcmVkX25taS4NCj4gPg0KPiANCj4gPiA+
-IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9ubWkuYw0KPiA+ID4gKysrIGIvYXJjaC94ODYva2VybmVs
-L25taS5jDQo+ID4gPiBAQCAtMjMxLDcgKzIzMSw3IEBAIHZvaWQgdW5yZWdpc3Rlcl9ubWlfaGFu
-ZGxlcih1bnNpZ25lZCBpbnQgdHlwZSwgY29uc3QgY2hhciAqbmFtZSkNCj4gPiA+ICAjZW5kaWYN
-Cj4gPiA+DQo+ID4gPiAgCWlmIChwYW5pY19vbl91bnJlY292ZXJlZF9ubWkpDQo+ID4gPiAtCQlw
-YW5pYygiTk1JOiBOb3QgY29udGludWluZyIpOw0KPiA+ID4gKwkJbm1pX3BhbmljKCJOTUk6IE5v
-dCBjb250aW51aW5nIik7DQo+ID4gPg0KPiA+ID4gIAlwcl9lbWVyZygiRGF6ZWQgYW5kIGNvbmZ1
-c2VkLCBidXQgdHJ5aW5nIHRvIGNvbnRpbnVlXG4iKTsNCj4gPiA+DQo+IA0KPiBJIHdhcyBsb29r
-aW5nIGF0IHVucmVnaXN0ZXJfbm1pX2hhbmRsZXIoKSBiZWNhdXNlIHRoYXQncyB0aGUgZnVuY3Rp
-b24NCj4gdGhlIGRpZmYgcG9pbnRzIHRvLiBUaGF0IHN0aWxsIGRvZXNuJ3QgaGF2ZSBwYW5pY19v
-bl91bnJlY292ZXJlZF9ubWkuDQo+IA0KPiBJdCBsb29rcyBsaWtlIHlvdXIgZGlmZiB0b29sIGlz
-ICdicm9rZW4nIGFuZCBnZW5lcmF0ZXMgbm9uc2Vuc2UgZnVuY3Rpb24NCj4gZGF0YS4NCg0KSSBo
-YWQgbm90aWNlZCB0aGUgZnVuY3Rpb24gbmFtZSBpcyB3cm9uZywgYnV0IEkgZGlkbid0IGtub3cg
-aG93DQpkbyBJIGZpeCB0aGF0LCBzb3JyeS4gIE5vdywgSSB1cGRhdGVkIGdpdCB0byB0aGUgbGF0
-ZXN0IHZlcnNpb24NCmFuZCB0aGUgaXNzdWUgZGlzYXBwZWFyZWQuDQoNClJlZ2FyZHMsDQoNCkhp
-ZGVoaXJvIEthd2FpDQpIaXRhY2hpLCBMdGQuIFJlc2VhcmNoICYgRGV2ZWxvcG1lbnQgR3JvdXAN
-Cg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+> On Fri, Sep 25, 2015 at 08:28:07PM +0900, Hidehiro Kawai wrote:
+> > --- a/arch/x86/kernel/reboot.c
+> > +++ b/arch/x86/kernel/reboot.c
+> > @@ -718,6 +718,7 @@ void machine_crash_shutdown(struct pt_regs *regs)
+> >  static nmi_shootdown_cb shootdown_callback;
+> >
+> >  static atomic_t waiting_for_crash_ipi;
+> > +static int crash_ipi_done;
+> >
+> >  static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+> >  {
+> > @@ -779,6 +780,7 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+> >  	wmb();
+> >
+> >  	smp_send_nmi_allbutself();
+> > +	crash_ipi_done = 1; /* Kick cpus looping in nmi context */
+> 
+> I would suggest using WRITE_ONCE() for that, because without the
+> volatile the compiler need not actually emit the store until after the
+> whole waiting thing _IF_ it can inline the whole thing.
+> 
+> Currently udelay() will end up being a function call and will therefore
+> force the store to be emitted, but I'd rather not rely on that.
+
+OK, I use WRITE_ONCE().
+Thanks!
+
+> >
+> >  	msecs = 1000; /* Wait at most a second for the other cpus to stop */
+> >  	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
+
+
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
