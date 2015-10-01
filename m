@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZhYG7-000491-Ev
- for kexec@lists.infradead.org; Thu, 01 Oct 2015 07:26:32 +0000
-Date: Thu, 1 Oct 2015 09:26:05 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH v3] Load crash kernel high on x86
-Message-ID: <20151001092605.04128db5@hananiah.suse.cz>
-In-Reply-To: <20150924084852.7cc1dc86@hananiah.suse.cz>
-References: <20150924084852.7cc1dc86@hananiah.suse.cz>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZhZT7-0007Z3-2N
+ for kexec@lists.infradead.org; Thu, 01 Oct 2015 08:44:02 +0000
+Date: Thu, 1 Oct 2015 10:43:35 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
+Message-ID: <20151001084335.GA3764@pd.tnic>
+References: <20150925112803.4258.94241.stgit@softrs>
+ <20150925112811.4258.54494.stgit@softrs>
+ <20150930115548.GI2881@worktop.programming.kicks-ass.net>
+ <04EAB7311EE43145B2D3536183D1A8445499CD11@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001062733.GL2881@worktop.programming.kicks-ass.net>
+ <04EAB7311EE43145B2D3536183D1A8445499D30D@GSjpTKYDCembx31.service.hitachi.net>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <04EAB7311EE43145B2D3536183D1A8445499D30D@GSjpTKYDCembx31.service.hitachi.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,122 +24,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 'Peter Zijlstra' <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hello Simon,
-
-what's up with this patch? Do you plan to apply it, or is there still
-an issue?
-
-Regards,
-Petr Tesarik
-
-On Thu, 24 Sep 2015 08:48:52 +0200
-Petr Tesarik <ptesarik@suse.com> wrote:
-
-> There may be more than one crash kernel regions on x86. Currently,
-> kexec-tools picks the largest one. If high reservation is smaller
-> than low, it will try to load panic kernel low. However, the kexec
-> syscall checks that target address is within crashk_res boundaries,
-> so attempts to load crash kernel low result in -EADDRNOTAVAIL, and
-> kexec prints out this error message:
-> 
-> kexec_load failed: Cannot assign requested address
-> 
-> Looking at the logic in arch/x86/kernel/setup.c, there are only two
-> possible layouts:
-> 
->   1. crashk_res is below 4G, and there is only one region,
->   2. crashk_res is above 4G, and crashk_low_res is below 4G
-> 
-> In either case, kexec-tools must pick the highest region.
-> 
-> Changelog:
-> 
->   * v3: rename function to get_crash_kernel_load_range
->   * v2: remove unnecessary local variables
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> 
-> ---
->  kexec/arch/i386/crashdump-x86.c    | 21 +++++++--------------
->  kexec/arch/i386/kexec-x86-common.c |  4 ++--
->  kexec/kexec.h                      |  2 +-
->  3 files changed, 10 insertions(+), 17 deletions(-)
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 63959b7..d4969c5 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -1026,24 +1026,17 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
->  	return 0;
->  }
->  
-> -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
-> +/* On x86, the kernel may make a low reservation in addition to the
-> + * normal reservation. However, the kernel refuses to load the panic
-> + * kernel to low memory, so always choose the highest range.
-> + */
-> +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
->  {
-> -	int i, idx = -1;
-> -	unsigned long sz_max = 0, sz;
-> -
->  	if (!crash_reserved_mem_nr)
->  		return -1;
->  
-> -	for (i = crash_reserved_mem_nr - 1; i >= 0; i--) {
-> -		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
-> -		if (sz <= sz_max)
-> -			continue;
-> -		sz_max = sz;
-> -		idx = i;
-> -	}
-> -
-> -	*start = crash_reserved_mem[idx].start;
-> -	*end = crash_reserved_mem[idx].end;
-> +	*start = crash_reserved_mem[crash_reserved_mem_nr - 1].start;
-> +	*end = crash_reserved_mem[crash_reserved_mem_nr - 1].end;
->  
->  	return 0;
->  }
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index 041c8ec..484d712 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -371,9 +371,9 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
->  	    !(kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
->  		uint64_t start, end;
->  
-> -		ret = get_max_crash_kernel_limit(&start, &end);
-> +		ret = get_crash_kernel_load_range(&start, &end);
->  		if (ret != 0) {
-> -			fprintf(stderr, "get_max_crash_kernel_limit failed.\n");
-> +			fprintf(stderr, "get_crash_kernel_load_range failed.\n");
->  			return -1;
->  		}
->  
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index 0fa977f..7c97b25 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -288,7 +288,7 @@ int arch_process_options(int argc, char **argv);
->  int arch_compat_trampoline(struct kexec_info *info);
->  void arch_update_purgatory(struct kexec_info *info);
->  int is_crashkernel_mem_reserved(void);
-> -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end);
-> +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end);
->  char *get_command_line(void);
->  
->  int kexec_iomem_for_each_line(char *match,
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBPY3QgMDEsIDIwMTUgYXQgMDc6MDE6NTBBTSArMDAwMCwg5rKz5ZCI6Iux5a6PIC8g
+S0FXQUnvvIxISURFSElSTyB3cm90ZToKPiBJIHN1cHBvc2UgdGhhdCBhIHNldmVyIHdoaWNoIHVz
+ZXMgdGhpcyBmZWF0dXJlIHdpbGwgZXF1aXAgYSBCTUMKPiBhbmQgQk1DIG1hbmRhdG9yaWx5IHN1
+cHBvcnRzIGhhcmQgcmVzZXQgY29tbWFuZCBmb3IgdGhlIHNlcnZlci4KPiBJZiB0aGUgSEEgY2x1
+c3RlcmluZyBzb2Z0d2FyZSBkZXRlY3RzIG5vIHJlc3BvbnNlIGZyb20gdGhlIHNlcnZlcgo+IGFm
+dGVyIHJlbGF0aXZlbHkgbG9uZyB0aW1lb3V0LCBpdCBtaWdodCB3YW50IHRvIGluc2VydCBoYXJk
+IHJlc2V0Cj4gdG8gdGhlIHNlcnZlciBieSBJUE1JIG92ZXIgTEFOLgoKU28gd2h5IGRvZXNuJ3Qg
+dGhlIGNhcHR1cmUga2VybmVsICphdXRvbWF0aWNhbGx5KiBpZ25vcmUgZXh0ZXJuYWwgTk1JcywK
+d2l0aG91dCBhIGNtZGxpbmUgb3B0aW9uPwoKQmVmb3JlIGl0IHN0YXJ0cyBjYXB0dXJpbmcsIGl0
+IHNheXM6ICJJJ20gc3RhcnRpbmcgY2FwdHVyaW5nIGFuZCBhbQppZ25vcmluZyBleHRlcm5hbCBO
+TUlzIGZyb20gbm93IG9uLiIKCi0tIApSZWdhcmRzL0dydXNzLAogICAgQm9yaXMuCgpFQ08gdGlw
+ICMxMDE6IFRyaW0geW91ciBtYWlscyB3aGVuIHlvdSByZXBseS4KCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
