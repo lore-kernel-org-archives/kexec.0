@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZhXsd-0000H9-75
- for kexec@lists.infradead.org; Thu, 01 Oct 2015 07:02:16 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
-Date: Thu, 1 Oct 2015 07:01:50 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A8445499D30D@GSjpTKYDCembx31.service.hitachi.net>
-References: <20150925112803.4258.94241.stgit@softrs>
- <20150925112811.4258.54494.stgit@softrs>
- <20150930115548.GI2881@worktop.programming.kicks-ass.net>
- <04EAB7311EE43145B2D3536183D1A8445499CD11@GSjpTKYDCembx31.service.hitachi.net>
- <20151001062733.GL2881@worktop.programming.kicks-ass.net>
-In-Reply-To: <20151001062733.GL2881@worktop.programming.kicks-ass.net>
-Content-Language: ja-JP
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZhYG7-000491-Ev
+ for kexec@lists.infradead.org; Thu, 01 Oct 2015 07:26:32 +0000
+Date: Thu, 1 Oct 2015 09:26:05 +0200
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v3] Load crash kernel high on x86
+Message-ID: <20151001092605.04128db5@hananiah.suse.cz>
+In-Reply-To: <20150924084852.7cc1dc86@hananiah.suse.cz>
+References: <20150924084852.7cc1dc86@hananiah.suse.cz>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,45 +18,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Peter Zijlstra' <peterz@infradead.org>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric
- W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-PiBPbiBUaHUsIE9jdCAwMSwgMjAxNSBhdCAwMjozMzoxOEFNICswMDAwLCDmsrPlkIjoi7Hlro8g
-LyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+ID4gT24gRnJpLCBTZXAgMjUsIDIwMTUgYXQg
-MDg6Mjg6MTFQTSArMDkwMCwgSGlkZWhpcm8gS2F3YWkgd3JvdGU6DQo+ID4gPiA+IFRoaXMgcGF0
-Y2ggaW50cm9kdWNlcyBuZXcgYm9vdCBvcHRpb24gIm5vZXh0bm1pIiB3aGljaCBkaXNhYmxlcw0K
-PiA+ID4gPiBleHRlcm5hbCBOTUkuICBUaGlzIG9wdGlvbiBpcyB1c2VmdWwgZm9yIHRoZSBkdW1w
-IGNhcHR1cmUga2VybmVsDQo+ID4gPiA+IHNvIHRoYXQgYW4gSEEgYXBwbGljYXRpb24gb3IgYWRt
-aW5pc3RyYXRvciB3b3VsZG4ndCBtaXN0YWtlbmx5DQo+ID4gPiA+IHNob290IGRvd24gdGhlIGtl
-cm5lbCBieSBOTUkuDQo+ID4gPg0KPiA+ID4gU28gdGhhdCB0aGV5IGNhbiBnZXQgcmVhbGx5IHN0
-dWNrIHdoZW4gdGhlIGNyYXNoIGtlcm5lbCBjcmFzaGVzLCByaWdodD8NCj4gPiA+IDstKQ0KPiA+
-DQo+ID4gTm8sIGl0IGlzIGRpZmZlcmVudCBmcm9tIG15IGludGVudGlvbi4NCj4gPg0KPiA+IGBt
-aXN0YWtlbmx5JyBpbiB0aGUgYWJvdmUgbWVhbnM7IHRoZXkgaXNzdWUgTk1JIGR1ZSB0byBhIG1p
-c2NvbmNlcHRpb24NCj4gPiB0aGF0IHRoZSBtb25pdG9yZWQgaG9zdCBpcyBzdHVjayBpbiB0aGUg
-MXN0IGtlcm5lbCB3aGlsZSBpdCBpcyBhY3R1YWxseQ0KPiA+IHRha2luZyBhIGNyYXNoIGR1bXAg
-aW4gdGhlIDJuZCBrZXJuZWwuICBUbyBhdm9pZCB0aGlzIGtpbmQgb2YgYWNjaWRlbnQsDQo+ID4g
-dGhlcmUgaXMgYSB0b29sIHN1Y2ggYXMgZmVuY2Vfa2R1bXAgd2hpY2ggbm90aWZpZXMgIkknbSB0
-YWtpbmcgYSBjcmFzaA0KPiA+IGR1bXAsIHNvIGRvbid0IHNlbmQgTk1JIiB0byB0aGUgSEEgY2x1
-c3RlcmluZyBzb2Z0d2FyZS4gIEhvd2V2ZXIsIHRoZXJlDQo+ID4gaXMgYSB0aW1lIHdpbmRvdyBi
-ZXR3ZWVuIGtlcm5lbCBwYW5pYyBhbmQgdGhlIG5vdGlmaWNhdGlvbi4NCj4gPg0KPiA+ICJub2V4
-dG5taSIgYWxsb3dzIHVzZXJzIHRvIGF2b2lkIHRoaXMga2luZCBvZiBhY2NpZGVudCBhbGwgdGhl
-IHRpbWUgb2YNCj4gPiAybmQga2VybmVsLg0KPiANCj4gWWVzIHllcywgSSB1bmRlcnN0YW5kLiBC
-dXQgaWYgdGhlIGNyYXNoIGtlcm5lbCBhbHNvIGdldHMgc3R1Y2sgdGhleSBoYXZlDQo+IG5vIG1l
-YW5zIG9mIHJlY292ZXJ5LCByaWdodD8gKG90aGVyIHRoYW4gcG93ZXIgY3ljbGluZyB0aGUgaGFy
-ZHdhcmUpDQoNClllcywgYnV0IEkgdGhpbmsgaXQncyBub3QgYSBiaWcgcHJvYmxlbS4NCg0KSSBz
-dXBwb3NlIHRoYXQgYSBzZXZlciB3aGljaCB1c2VzIHRoaXMgZmVhdHVyZSB3aWxsIGVxdWlwIGEg
-Qk1DDQphbmQgQk1DIG1hbmRhdG9yaWx5IHN1cHBvcnRzIGhhcmQgcmVzZXQgY29tbWFuZCBmb3Ig
-dGhlIHNlcnZlci4NCklmIHRoZSBIQSBjbHVzdGVyaW5nIHNvZnR3YXJlIGRldGVjdHMgbm8gcmVz
-cG9uc2UgZnJvbSB0aGUgc2VydmVyDQphZnRlciByZWxhdGl2ZWx5IGxvbmcgdGltZW91dCwgaXQg
-bWlnaHQgd2FudCB0byBpbnNlcnQgaGFyZCByZXNldA0KdG8gdGhlIHNlcnZlciBieSBJUE1JIG92
-ZXIgTEFOLg0KDQo+IEp1c3QgcGxheWluZyBkZXZpbHMgYWR2b2NhdGUgaGVyZSwgSSBkb24ndCBh
-Y3R1YWxseSBvYmplY3QgdG8gdGhlIHBhdGNoLg0KDQpSZWdhcmRzLA0KDQpIaWRlaGlybyBLYXdh
-aQ0KSGl0YWNoaSwgTHRkLiBSZXNlYXJjaCAmIERldmVsb3BtZW50IEdyb3VwDQoNCg0KDQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Simon,
+
+what's up with this patch? Do you plan to apply it, or is there still
+an issue?
+
+Regards,
+Petr Tesarik
+
+On Thu, 24 Sep 2015 08:48:52 +0200
+Petr Tesarik <ptesarik@suse.com> wrote:
+
+> There may be more than one crash kernel regions on x86. Currently,
+> kexec-tools picks the largest one. If high reservation is smaller
+> than low, it will try to load panic kernel low. However, the kexec
+> syscall checks that target address is within crashk_res boundaries,
+> so attempts to load crash kernel low result in -EADDRNOTAVAIL, and
+> kexec prints out this error message:
+> 
+> kexec_load failed: Cannot assign requested address
+> 
+> Looking at the logic in arch/x86/kernel/setup.c, there are only two
+> possible layouts:
+> 
+>   1. crashk_res is below 4G, and there is only one region,
+>   2. crashk_res is above 4G, and crashk_low_res is below 4G
+> 
+> In either case, kexec-tools must pick the highest region.
+> 
+> Changelog:
+> 
+>   * v3: rename function to get_crash_kernel_load_range
+>   * v2: remove unnecessary local variables
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> 
+> ---
+>  kexec/arch/i386/crashdump-x86.c    | 21 +++++++--------------
+>  kexec/arch/i386/kexec-x86-common.c |  4 ++--
+>  kexec/kexec.h                      |  2 +-
+>  3 files changed, 10 insertions(+), 17 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index 63959b7..d4969c5 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -1026,24 +1026,17 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+>  	return 0;
+>  }
+>  
+> -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end)
+> +/* On x86, the kernel may make a low reservation in addition to the
+> + * normal reservation. However, the kernel refuses to load the panic
+> + * kernel to low memory, so always choose the highest range.
+> + */
+> +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+>  {
+> -	int i, idx = -1;
+> -	unsigned long sz_max = 0, sz;
+> -
+>  	if (!crash_reserved_mem_nr)
+>  		return -1;
+>  
+> -	for (i = crash_reserved_mem_nr - 1; i >= 0; i--) {
+> -		sz = crash_reserved_mem[i].end - crash_reserved_mem[i].start +1;
+> -		if (sz <= sz_max)
+> -			continue;
+> -		sz_max = sz;
+> -		idx = i;
+> -	}
+> -
+> -	*start = crash_reserved_mem[idx].start;
+> -	*end = crash_reserved_mem[idx].end;
+> +	*start = crash_reserved_mem[crash_reserved_mem_nr - 1].start;
+> +	*end = crash_reserved_mem[crash_reserved_mem_nr - 1].end;
+>  
+>  	return 0;
+>  }
+> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+> index 041c8ec..484d712 100644
+> --- a/kexec/arch/i386/kexec-x86-common.c
+> +++ b/kexec/arch/i386/kexec-x86-common.c
+> @@ -371,9 +371,9 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+>  	    !(kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
+>  		uint64_t start, end;
+>  
+> -		ret = get_max_crash_kernel_limit(&start, &end);
+> +		ret = get_crash_kernel_load_range(&start, &end);
+>  		if (ret != 0) {
+> -			fprintf(stderr, "get_max_crash_kernel_limit failed.\n");
+> +			fprintf(stderr, "get_crash_kernel_load_range failed.\n");
+>  			return -1;
+>  		}
+>  
+> diff --git a/kexec/kexec.h b/kexec/kexec.h
+> index 0fa977f..7c97b25 100644
+> --- a/kexec/kexec.h
+> +++ b/kexec/kexec.h
+> @@ -288,7 +288,7 @@ int arch_process_options(int argc, char **argv);
+>  int arch_compat_trampoline(struct kexec_info *info);
+>  void arch_update_purgatory(struct kexec_info *info);
+>  int is_crashkernel_mem_reserved(void);
+> -int get_max_crash_kernel_limit(uint64_t *start, uint64_t *end);
+> +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end);
+>  char *get_command_line(void);
+>  
+>  int kexec_iomem_for_each_line(char *match,
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
