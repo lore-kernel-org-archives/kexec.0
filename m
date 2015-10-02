@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZhmxI-0005Ue-Qj
- for kexec@lists.infradead.org; Thu, 01 Oct 2015 23:08:05 +0000
-Date: Thu, 1 Oct 2015 16:07:41 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] kexec: fix out of the ELF headers buffer issue in
- syscall kexec_file_load()
-Message-Id: <20151001160741.07eac580c087ddb89a3e314c@linux-foundation.org>
-In-Reply-To: <1443531537-29436-1-git-send-email-jlee@suse.com>
-References: <1443531537-29436-1-git-send-email-jlee@suse.com>
-Mime-Version: 1.0
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZhogB-0003wb-I0
+ for kexec@lists.infradead.org; Fri, 02 Oct 2015 00:58:32 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
+Date: Fri, 2 Oct 2015 00:58:02 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A8445499ED83@GSjpTKYDCembx31.service.hitachi.net>
+References: <20150925112803.4258.94241.stgit@softrs>
+ <20150925112811.4258.54494.stgit@softrs>
+ <20150930115548.GI2881@worktop.programming.kicks-ass.net>
+ <04EAB7311EE43145B2D3536183D1A8445499CD11@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001062733.GL2881@worktop.programming.kicks-ass.net>
+ <04EAB7311EE43145B2D3536183D1A8445499D30D@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001084335.GA3764@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A8445499DB92@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001110110.GA3544@pd.tnic>
+In-Reply-To: <20151001110110.GA3544@pd.tnic>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,63 +28,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Baoquan He <bhe@redhat.com>, Takashi Iwai <tiwai@suse.de>, Viresh Kumar <viresh.kumar@linaro.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Lee,
- Chun-Yi" <jlee@suse.com>, Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Jiang Liu <jiang.liu@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>
+To: 'Borislav Petkov' <bp@alien8.de>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 'Peter Zijlstra' <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, 29 Sep 2015 20:58:57 +0800 "Lee, Chun-Yi" <joeyli.kernel@gmail.com> wrote:
-
-> This patch modified the code in fill_up_crash_elf_data by using
-> walk_system_ram_res instead of walk_system_ram_range to count the max
-> number of crash memory ranges. That's because the walk_system_ram_range
-> filters out small memory regions that are resided in the same page, but
-> walk_system_ram_res does not.
-> 
-> The oringial issue is page fault error that sometimes happened on big machines
-> when preparing ELF headers:
-> 
-> [  305.291522] BUG: unable to handle kernel paging request at ffffc90613fc9000
-> [  305.299621] IP: [<ffffffff8103d645>] prepare_elf64_ram_headers_callback+0x165/0x260
-> [  305.308300] PGD e000032067 PUD 6dcbec54067 PMD 9dc9bdeb067 PTE 0
-> [  305.315393] Oops: 0002 [#1] SMP
-> [...snip]
-> [  305.420953] task: ffff8e1c01ced600 ti: ffff8e1c03ec2000 task.ti: ffff8e1c03ec2000
-> [  305.429292] RIP: 0010:[<ffffffff8103d645>]  [<ffffffff8103d645>] prepare_elf64_ra
-> m_headers_callback+0x165/0x260
-> [...snip]
-> 
-> After tracing prepare_elf64_headers and prepare_elf64_ram_headers_callback,
-> the code uses walk_system_ram_res to fill-in crash memory regions information
-> to program header, so it counts those small memory regions that are resided in
-> a page area. But, when kernel was using walk_system_ram_range in
-> fill_up_crash_elf_data to count the number of crash memory regions, it filters
-> out small regions. I printed those small memory regions, for example:
-> 
-> kexec: Get nr_ram ranges. vaddr=0xffff880077592258 paddr=0x77592258, sz=0xdc0
-> 
-> Base on the code in walk_system_ram_range, this memory region will be filtered
-> out:
-> 
-> pfn = (0x77592258 + 0x1000 - 1) >> 12 = 0x77593
-> end_pfn = (0x77592258 + 0xfc0 -1 + 1) >> 12 = 0x77593
-> end_pfn - pfn = 0x77593 - 0x77593 = 0  <=== if (end_pfn > pfn) is FALSE
-> 
-> So, the max_nr_ranges that's counted by kernel doesn't include small memory
-> regions. That causes the page fault issue happened in later code path for
-> preparing EFL headers.
-> 
-> This issus is not easy to reproduce on small machines that don't have too
-> many CPUs because the allocated page aligned ELF buffer has more free space
-> to cover those small memory regions' PT_LOAD headers.
-> 
-
-fyi, I added a cc:stable to my copy of this patch.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiBPbiBUaHUsIE9jdCAwMSwgMjAxNSBhdCAxMDoyNDoxOUFNICswMDAwLCDmsrPlkIjoi7Hlro8g
+LyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+IEJ1dCBob3cgZG8gd2UgY2hlY2sgaWYgdGhl
+IHN0YXJ0aW5nIGtlcm5lbCBpcyBhIGR1bXAgY2FwdHVyZSBrZXJuZWw/DQo+IA0KPiBIb3cgZG9l
+cyB0aGF0IGZpcnN0IGtlcm5lbCBwYXNzIGluZm8gdG8gdGhlIGNhcHR1cmUga2VybmVsPw0KDQpB
+cyBJIGRlc2NyaWJlZCBpbiB0aGUgcHJldmlvdXMgbWFpbCwgWW91IGp1c3QgaGF2ZSB0byBhZGQg
+Im5vZXh0bm1pIg0KdG8gS0RVTVBfQ09NTUFORExJTkVfQVBQRU5EIGluIC9ldGMvc3lzY29uZmln
+L2tkdW1wLiAgVGhlbiwgIm5vZXh0bm1pIg0Kb3B0aW9uIGlzIHBhc3NlZCB0byB0aGUgY2FwdHVy
+ZSBrZXJuZWwgYnkgdGhlIGFjdGlvbiBvZiBrZXhlYyBjb21tYW5kLg0KDQpDbWRsaW5lIG9wdGlv
+biBnaXZlcyB1c2VycyBmbGV4aWJpbGl0eS4gIEknbSBub3Qgc3VyZSBhbGwgdXNlcnMNCndhbnQg
+dG8gZGlzYWJsZSBleHRlcm5hbCBOTUlzIGluIHRoZSAybmQga2VybmVsLg0KDQo+ID4gSSB0aGlu
+ayB1c2luZyBjbWRsaW5lIG9wdGlvbiBpcyB0aGUgc2ltcGxlc3Qgd2F5Lg0KPiANCj4gTW9yZSBv
+ZnRlbiB0aGFuIG5vdCwgc2ltcGxlc3QgIT0gY29ycmVjdC4NCj4gDQo+IFdoYXQgaGFwcGVucyBp
+ZiBJIHBhc3MgdGhpcyBvcHRpb24gdG8gdGhlIGZpcnN0IGtlcm5lbD8gQWxsIG9mIGEgc3VkZGVu
+DQo+IG15ICpmaXJzdCoga2VybmVsIGRvZXNuJ3QgZ2V0IGV4dGVybmFsIE5NSXMuDQoNClllcywg
+eW91ciBmaXJzdCBrZXJuZWwgZG9lc24ndCBnZXQgZXh0ZXJuYWwgTk1JcywgYnV0IGJhc2ljYWxs
+eQ0KeW91IGRvbid0IGhhdmUgdG8gc2V0ICJub2V4dG5taSIgb3B0aW9uIHRvIHRoZSBmaXJzdCBr
+ZXJuZWwuDQoNCg0KSGlkZWhpcm8gS2F3YWkNCkhpdGFjaGksIEx0ZC4gUmVzZWFyY2ggJiBEZXZl
+bG9wbWVudCBHcm91cA0KDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
