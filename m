@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZjO1J-0005jj-WC
- for kexec@lists.infradead.org; Tue, 06 Oct 2015 08:54:50 +0000
-Date: Tue, 6 Oct 2015 17:54:07 +0900
+ id 1ZjO1f-0005qi-71
+ for kexec@lists.infradead.org; Tue, 06 Oct 2015 08:55:11 +0000
+Date: Tue, 6 Oct 2015 17:54:41 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec-tools: fix build error with glibc 2.19 and earlier version
-Message-ID: <20151006085407.GA7174@verge.net.au>
-References: <20151003063822.GA9788@localhost.localdomain>
+Subject: Re: [PATCH v3] Load crash kernel high on x86
+Message-ID: <20151006085441.GB7174@verge.net.au>
+References: <20150924084852.7cc1dc86@hananiah.suse.cz>
+ <20151001092605.04128db5@hananiah.suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151003063822.GA9788@localhost.localdomain>
+In-Reply-To: <20151001092605.04128db5@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,50 +20,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
+To: Petr Tesarik <ptesarik@suse.cz>
 Cc: kexec@lists.infradead.org
 
-T24gU2F0LCBPY3QgMDMsIDIwMTUgYXQgMDI6Mzg6MjJQTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
-ZToKPiBrZXhlYy10b29scyBidWlsZCBmYWlscyBvbiBteSBsYXB0b3Agd2l0aCBSSEVMNy4xIGlu
-c3RhbGxlZDoKPiAgIGdjYyAtZyAtTzIgLWZuby1zdHJpY3QtYWxpYXNpbmcgLVdhbGwgLVdzdHJp
-Y3QtcHJvdG90eXBlcyAtSS4vaW5jbHVkZSAtSS4vdXRpbF9saWIvaW5jbHVkZSAtSWluY2x1ZGUv
-ICAtSS4va2V4ZWMvYXJjaC94ODZfNjQvaW5jbHVkZSAgLWMgLU1EIC1vIGtleGVjL2FyY2gvaTM4
-Ni9rZXhlYy14ODYtY29tbW9uLm8ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYwo+
-ICAgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9u
-LmM6MzY6MDoKPiAgIGtleGVjL2FyY2gvaTM4Ni8uLi8uLi9rZXhlYy5oOjE5OjI6IGVycm9yOiAj
-ZXJyb3IgQllURV9PUkRFUiBub3QgZGVmaW5lZAo+ICAgICNlcnJvciBCWVRFX09SREVSIG5vdCBk
-ZWZpbmVkCj4gICAgIF4KPiAgIGtleGVjL2FyY2gvaTM4Ni8uLi8uLi9rZXhlYy5oOjIzOjI6IGVy
-cm9yOiAjZXJyb3IgTElUVExFX0VORElBTiBub3QgZGVmaW5lZAo+ICAgICNlcnJvciBMSVRUTEVf
-RU5ESUFOIG5vdCBkZWZpbmVkCj4gICAgIF4KPiAgIGtleGVjL2FyY2gvaTM4Ni8uLi8uLi9rZXhl
-Yy5oOjI3OjI6IGVycm9yOiAjZXJyb3IgQklHX0VORElBTiBub3QgZGVmaW5lZAo+ICAgICNlcnJv
-ciBCSUdfRU5ESUFOIG5vdCBkZWZpbmVkCj4gICAgIF4KPiAgIEluIGZpbGUgaW5jbHVkZWQgZnJv
-bSBrZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jOjM3OjA6Cj4gICBrZXhlYy9hcmNo
-L2kzODYvLi4vLi4va2V4ZWMtc3lzY2FsbC5oOiBJbiBmdW5jdGlvbiDigJhrZXhlY19sb2Fk4oCZ
-Ogo+ICAga2V4ZWMvYXJjaC9pMzg2Ly4uLy4uL2tleGVjLXN5c2NhbGwuaDo3NDoyOiB3YXJuaW5n
-OiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhzeXNjYWxs4oCZIFstV2ltcGxp
-Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQo+ICAgICByZXR1cm4gKGxvbmcpIHN5c2NhbGwoX19O
-Ul9rZXhlY19sb2FkLCBlbnRyeSwgbnJfc2VnbWVudHMsIHNlZ21lbnRzLCBmbGFncyk7Cj4gICAg
-IF4KPiAgIG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24ub10gRXJy
-b3IgMQo+IAo+IFRoZSBidWlsZCBlcnJvciB3YXMgaW50cm9kdWNlZCBieSBiZWxvdyBjb21taXQ6
-Cj4gCj4gICBjb21taXQgYzljMjFjYzEwN2RjYzliNjA1M2UzOWVhZDEwNjllMDM3MTc1MTNmOQo+
-ICAgQXV0aG9yOiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KPiAgIERhdGU6ICAgVGh1IEF1
-ZyA2IDE5OjEwOjU1IDIwMTUgKzA4MDAKPiAKPiAgICAgICBrZXhlYzogdXNlIF9ERUZBVUxUX1NP
-VVJDRSBpbnN0ZWFkIHRvIHJlbW92ZSBjb21waWxpbmcgd2FybmluZwo+IAo+ICAgICAgIE5vdyBj
-b21waWxpbmcgd2lsbCBwcmludCB3YXJuaW5nIGxpa2UgYmVsb3cuIENoYW5nZSBjb2RlIGFzIGl0
-IHN1Z2dlc3RlZC4KPiAgICAgICAgIyB3YXJuaW5nICJfQlNEX1NPVVJDRSBhbmQgX1NWSURfU09V
-UkNFIGFyZSBkZXByZWNhdGVkLCB1c2UgX0RFRkFVTFRfU09VUkNFIgo+ICAgICAgICAgIF4KPiAK
-PiBTZWUgbWFucGFnZTogaHR0cDovL21hbjcub3JnL2xpbnV4L21hbi1wYWdlcy9tYW43L2ZlYXR1
-cmVfdGVzdF9tYWNyb3MuNy5odG1sCj4gCj4gX0JTRF9TT1VSQ0UgaGFzIGJlZW4gZGVwcmVjYXRl
-ZCBzaW5jZSBnbGliYyAyLjIwLCBUbyBhbGxvdyBjb2RlIHRoYXQgcmVxdWlyZXMKPiBfQlNEX1NP
-VVJDRSBpbiBnbGliYyAyLjE5IGFuZCBlYXJsaWVyIGFuZCBfREVGQVVMVF9TT1VSQ0UgaW4gZ2xp
-YmMgMi4yMCBhbmQKPiBsYXRlciB0byBjb21waWxlIHdpdGhvdXQgd2FybmluZ3MsIGRlZmluZSBi
-b3RoIF9CU0RfU09VUkNFIGFuZCBfREVGQVVMVF9TT1VSQ0UuCj4gCj4gVGh1cyBmaXggaXQgYnkg
-YWRkaW5nIGJhY2sgX0JTRF9TT1VSQ0UgYWxvbmcgd2l0aCBfREVGQVVMVF9TT1VSQ0UuCj4gCj4g
-U2lnbmVkLW9mZi1ieTogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+CgpUaGFua3MgRGF2
-ZSwKCmFwcGxpZWQuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Thu, Oct 01, 2015 at 09:26:05AM +0200, Petr Tesarik wrote:
+> Hello Simon,
+> 
+> what's up with this patch? Do you plan to apply it, or is there still
+> an issue?
+
+Thanks for the reminder, I have applied the patch now.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
