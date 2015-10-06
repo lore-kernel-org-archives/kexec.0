@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZjBBT-00061q-IG
- for kexec@lists.infradead.org; Mon, 05 Oct 2015 19:12:28 +0000
-Date: Mon, 5 Oct 2015 15:12:05 -0400
-From: Don Zickus <dzickus@redhat.com>
-Subject: Re: [PATCH] kexec: Remove obsolete flag 'in_crash_kexec'
-Message-ID: <20151005191205.GD100301@redhat.com>
-References: <1444070155-17934-1-git-send-email-mhuang@redhat.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZjO1J-0005jj-WC
+ for kexec@lists.infradead.org; Tue, 06 Oct 2015 08:54:50 +0000
+Date: Tue, 6 Oct 2015 17:54:07 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec-tools: fix build error with glibc 2.19 and earlier version
+Message-ID: <20151006085407.GA7174@verge.net.au>
+References: <20151003063822.GA9788@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1444070155-17934-1-git-send-email-mhuang@redhat.com>
+In-Reply-To: <20151003063822.GA9788@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,78 +19,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Minfei Huang <mhuang@redhat.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, cpw@sgi.com, Minfei Huang <mnfhuang@gmail.com>, akpm@linux-foundation.org, tglx@linutronix.de
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org
 
-On Tue, Oct 06, 2015 at 02:35:55AM +0800, Minfei Huang wrote:
-> From: Minfei Huang <mnfhuang@gmail.com>
-> 
-> Previously, UV NMI used 'in_crash_kexec' flag to be sure that we are in
-> kdump kernel or not in commit 5edd19af18a36a4e22c570b1b969179e0ca1fe4c
-> ("x86, UV: Make kdump avoid stack dumps"). But this flags is removed in
-> commit 9c48f1c629ecfa114850c03f875c6691003214de ("x86, nmi: Wire up NMI
-> handlers to new routines").
-
-Sounds right.
-
-Acked-by: Don Zickus <dzickus@redhat.com>
-
-
-> 
-> Since it isn't used any more, remove it.
-> 
-> Signed-off-by: Minfei Huang <mnfhuang@gmail.com>
-> ---
->  arch/x86/include/asm/kdebug.h | 6 ------
->  arch/x86/kernel/crash.c       | 3 ---
->  2 files changed, 9 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kdebug.h b/arch/x86/include/asm/kdebug.h
-> index b130d59..e5f5dc9 100644
-> --- a/arch/x86/include/asm/kdebug.h
-> +++ b/arch/x86/include/asm/kdebug.h
-> @@ -29,11 +29,5 @@ extern void show_trace(struct task_struct *t, struct pt_regs *regs,
->  extern void __show_regs(struct pt_regs *regs, int all);
->  extern unsigned long oops_begin(void);
->  extern void oops_end(unsigned long, struct pt_regs *, int signr);
-> -#ifdef CONFIG_KEXEC_CORE
-> -extern int in_crash_kexec;
-> -#else
-> -/* no crash dump is ever in progress if no crash kernel can be kexec'd */
-> -#define in_crash_kexec 0
-> -#endif
->  
->  #endif /* _ASM_X86_KDEBUG_H */
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 74ca2fe..2c1910f 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -75,8 +75,6 @@ struct crash_memmap_data {
->  	unsigned int type;
->  };
->  
-> -int in_crash_kexec;
-> -
->  /*
->   * This is used to VMCLEAR all VMCSs loaded on the
->   * processor. And when loading kvm_intel module, the
-> @@ -132,7 +130,6 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
->  
->  static void kdump_nmi_shootdown_cpus(void)
->  {
-> -	in_crash_kexec = 1;
->  	nmi_shootdown_cpus(kdump_nmi_callback);
->  
->  	disable_local_APIC();
-> -- 
-> 2.4.0
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBPY3QgMDMsIDIwMTUgYXQgMDI6Mzg6MjJQTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
+ZToKPiBrZXhlYy10b29scyBidWlsZCBmYWlscyBvbiBteSBsYXB0b3Agd2l0aCBSSEVMNy4xIGlu
+c3RhbGxlZDoKPiAgIGdjYyAtZyAtTzIgLWZuby1zdHJpY3QtYWxpYXNpbmcgLVdhbGwgLVdzdHJp
+Y3QtcHJvdG90eXBlcyAtSS4vaW5jbHVkZSAtSS4vdXRpbF9saWIvaW5jbHVkZSAtSWluY2x1ZGUv
+ICAtSS4va2V4ZWMvYXJjaC94ODZfNjQvaW5jbHVkZSAgLWMgLU1EIC1vIGtleGVjL2FyY2gvaTM4
+Ni9rZXhlYy14ODYtY29tbW9uLm8ga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYwo+
+ICAgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGtleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9u
+LmM6MzY6MDoKPiAgIGtleGVjL2FyY2gvaTM4Ni8uLi8uLi9rZXhlYy5oOjE5OjI6IGVycm9yOiAj
+ZXJyb3IgQllURV9PUkRFUiBub3QgZGVmaW5lZAo+ICAgICNlcnJvciBCWVRFX09SREVSIG5vdCBk
+ZWZpbmVkCj4gICAgIF4KPiAgIGtleGVjL2FyY2gvaTM4Ni8uLi8uLi9rZXhlYy5oOjIzOjI6IGVy
+cm9yOiAjZXJyb3IgTElUVExFX0VORElBTiBub3QgZGVmaW5lZAo+ICAgICNlcnJvciBMSVRUTEVf
+RU5ESUFOIG5vdCBkZWZpbmVkCj4gICAgIF4KPiAgIGtleGVjL2FyY2gvaTM4Ni8uLi8uLi9rZXhl
+Yy5oOjI3OjI6IGVycm9yOiAjZXJyb3IgQklHX0VORElBTiBub3QgZGVmaW5lZAo+ICAgICNlcnJv
+ciBCSUdfRU5ESUFOIG5vdCBkZWZpbmVkCj4gICAgIF4KPiAgIEluIGZpbGUgaW5jbHVkZWQgZnJv
+bSBrZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jOjM3OjA6Cj4gICBrZXhlYy9hcmNo
+L2kzODYvLi4vLi4va2V4ZWMtc3lzY2FsbC5oOiBJbiBmdW5jdGlvbiDigJhrZXhlY19sb2Fk4oCZ
+Ogo+ICAga2V4ZWMvYXJjaC9pMzg2Ly4uLy4uL2tleGVjLXN5c2NhbGwuaDo3NDoyOiB3YXJuaW5n
+OiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiBmdW5jdGlvbiDigJhzeXNjYWxs4oCZIFstV2ltcGxp
+Y2l0LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQo+ICAgICByZXR1cm4gKGxvbmcpIHN5c2NhbGwoX19O
+Ul9rZXhlY19sb2FkLCBlbnRyeSwgbnJfc2VnbWVudHMsIHNlZ21lbnRzLCBmbGFncyk7Cj4gICAg
+IF4KPiAgIG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24ub10gRXJy
+b3IgMQo+IAo+IFRoZSBidWlsZCBlcnJvciB3YXMgaW50cm9kdWNlZCBieSBiZWxvdyBjb21taXQ6
+Cj4gCj4gICBjb21taXQgYzljMjFjYzEwN2RjYzliNjA1M2UzOWVhZDEwNjllMDM3MTc1MTNmOQo+
+ICAgQXV0aG9yOiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KPiAgIERhdGU6ICAgVGh1IEF1
+ZyA2IDE5OjEwOjU1IDIwMTUgKzA4MDAKPiAKPiAgICAgICBrZXhlYzogdXNlIF9ERUZBVUxUX1NP
+VVJDRSBpbnN0ZWFkIHRvIHJlbW92ZSBjb21waWxpbmcgd2FybmluZwo+IAo+ICAgICAgIE5vdyBj
+b21waWxpbmcgd2lsbCBwcmludCB3YXJuaW5nIGxpa2UgYmVsb3cuIENoYW5nZSBjb2RlIGFzIGl0
+IHN1Z2dlc3RlZC4KPiAgICAgICAgIyB3YXJuaW5nICJfQlNEX1NPVVJDRSBhbmQgX1NWSURfU09V
+UkNFIGFyZSBkZXByZWNhdGVkLCB1c2UgX0RFRkFVTFRfU09VUkNFIgo+ICAgICAgICAgIF4KPiAK
+PiBTZWUgbWFucGFnZTogaHR0cDovL21hbjcub3JnL2xpbnV4L21hbi1wYWdlcy9tYW43L2ZlYXR1
+cmVfdGVzdF9tYWNyb3MuNy5odG1sCj4gCj4gX0JTRF9TT1VSQ0UgaGFzIGJlZW4gZGVwcmVjYXRl
+ZCBzaW5jZSBnbGliYyAyLjIwLCBUbyBhbGxvdyBjb2RlIHRoYXQgcmVxdWlyZXMKPiBfQlNEX1NP
+VVJDRSBpbiBnbGliYyAyLjE5IGFuZCBlYXJsaWVyIGFuZCBfREVGQVVMVF9TT1VSQ0UgaW4gZ2xp
+YmMgMi4yMCBhbmQKPiBsYXRlciB0byBjb21waWxlIHdpdGhvdXQgd2FybmluZ3MsIGRlZmluZSBi
+b3RoIF9CU0RfU09VUkNFIGFuZCBfREVGQVVMVF9TT1VSQ0UuCj4gCj4gVGh1cyBmaXggaXQgYnkg
+YWRkaW5nIGJhY2sgX0JTRF9TT1VSQ0UgYWxvbmcgd2l0aCBfREVGQVVMVF9TT1VSQ0UuCj4gCj4g
+U2lnbmVkLW9mZi1ieTogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+CgpUaGFua3MgRGF2
+ZSwKCmFwcGxpZWQuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
