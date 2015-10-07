@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn1on0116.outbound.protection.outlook.com
- ([157.56.110.116] helo=na01-bn1-obe.outbound.protection.outlook.com)
+Received: from mail-by2on0129.outbound.protection.outlook.com
+ ([207.46.100.129] helo=na01-by2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zjfj6-00016f-WA
- for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:49:14 +0000
-From: Scott Wood <scottwood@freescale.com>
-Subject: [PATCH v2 18/18] powerpc/book3e-64: Enable kexec
-Date: Tue, 6 Oct 2015 22:48:22 -0500
-Message-ID: <1444189702-17241-19-git-send-email-scottwood@freescale.com>
-In-Reply-To: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
-References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
+ id 1ZjpHF-0007J9-UG
+ for kexec@lists.infradead.org; Wed, 07 Oct 2015 14:01:06 +0000
+Message-ID: <56152578.6070802@freescale.com>
+Date: Wed, 7 Oct 2015 17:00:24 +0300
+From: Laurentiu Tudor <b10716@freescale.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v2 05/18] powerpc/85xx: Load all early TLB entries at once
+References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
+ <1444189702-17241-6-git-send-email-scottwood@freescale.com>
+In-Reply-To: <1444189702-17241-6-git-send-email-scottwood@freescale.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,119 +24,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Tiejun Chen <tiejun.chen@windriver.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Scott Wood <scottwood@freescale.com>, Michael Ellerman <mpe@ellerman.id.au>
+To: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org
 
-From: Tiejun Chen <tiejun.chen@windriver.com>
+On 10/07/2015 06:48 AM, Scott Wood wrote:
+> Use an AS=1 trampoline TLB entry to allow all normal TLB1 entries to
+> be loaded at once.  This avoids the need to keep the translation that
+> code is executing from in the same TLB entry in the final TLB
+> configuration as during early boot, which in turn is helpful for
+> relocatable kernels (e.g. kdump) where the kernel is not running from
+> what would be the first TLB entry.
+> 
+> On e6500, we limit map_mem_in_cams() to the primary hwthread of a
+> core (the boot cpu is always considered primary, as a kdump kernel
+> can be entered on any cpu).  Each TLB only needs to be set up once,
+> and when we do, we don't want another thread to be running when we
+> create a temporary trampoline TLB1 entry.
+> 
+> Signed-off-by: Scott Wood <scottwood@freescale.com>
+> ---
+>  arch/powerpc/kernel/setup_64.c   |  8 +++++
+>  arch/powerpc/mm/fsl_booke_mmu.c  | 15 ++++++++--
+>  arch/powerpc/mm/mmu_decl.h       |  1 +
+>  arch/powerpc/mm/tlb_nohash.c     | 19 +++++++++++-
+>  arch/powerpc/mm/tlb_nohash_low.S | 63 ++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 102 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+> index bdcbb71..505ec2c 100644
+> --- a/arch/powerpc/kernel/setup_64.c
+> +++ b/arch/powerpc/kernel/setup_64.c
+> @@ -108,6 +108,14 @@ static void setup_tlb_core_data(void)
+>  	for_each_possible_cpu(cpu) {
+>  		int first = cpu_first_thread_sibling(cpu);
+>  
+> +		/*
+> +		 * If we boot via kdump on a non-primary thread,
+> +		 * make sure we point at the thread that actually
+> +		 * set up this TLB.
+> +		 */
+> +		if (cpu_first_thread_sibling(boot_cpuid) == first)
+> +			first = boot_cpuid;
+> +
+>  		paca[cpu].tcd_ptr = &paca[first].tcd;
+>  
+>  		/*
+> diff --git a/arch/powerpc/mm/fsl_booke_mmu.c b/arch/powerpc/mm/fsl_booke_mmu.c
+> index 354ba3c..36d3c55 100644
+> --- a/arch/powerpc/mm/fsl_booke_mmu.c
+> +++ b/arch/powerpc/mm/fsl_booke_mmu.c
+> @@ -105,8 +105,9 @@ unsigned long p_mapped_by_tlbcam(phys_addr_t pa)
+>   * an unsigned long (for example, 32-bit implementations cannot support a 4GB
+>   * size).
+>   */
+> -static void settlbcam(int index, unsigned long virt, phys_addr_t phys,
+> -		unsigned long size, unsigned long flags, unsigned int pid)
+> +static void preptlbcam(int index, unsigned long virt, phys_addr_t phys,
+> +		       unsigned long size, unsigned long flags,
+> +		       unsigned int pid)
+>  {
+>  	unsigned int tsize;
+>  
+> @@ -141,7 +142,13 @@ static void settlbcam(int index, unsigned long virt, phys_addr_t phys,
+>  	tlbcam_addrs[index].start = virt;
+>  	tlbcam_addrs[index].limit = virt + size - 1;
+>  	tlbcam_addrs[index].phys = phys;
+> +}
+>  
+> +void settlbcam(int index, unsigned long virt, phys_addr_t phys,
 
-Allow KEXEC for book3e, and bypass or convert non-book3e stuff
-in kexec code.
 
-Signed-off-by: Tiejun Chen <tiejun.chen@windriver.com>
-[scottwood@freescale.com: move code to minimize diff, and cleanup]
-Signed-off-by: Scott Wood <scottwood@freescale.com>
+Nit: shouldn't this be left static? Also, now with this bulk TLB1 loading is it still used? Maybe it can be dropped.
+
 ---
- arch/powerpc/Kconfig                   |  2 +-
- arch/powerpc/kernel/machine_kexec_64.c | 18 ++++++++++++++++++
- arch/powerpc/kernel/misc_64.S          |  6 ++++++
- 3 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9a7057e..db49e0d 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -419,7 +419,7 @@ config PPC64_SUPPORTS_MEMORY_FAILURE
- 
- config KEXEC
- 	bool "kexec system call"
--	depends on (PPC_BOOK3S || FSL_BOOKE || (44x && !SMP))
-+	depends on (PPC_BOOK3S || FSL_BOOKE || (44x && !SMP)) || PPC_BOOK3E
- 	select KEXEC_CORE
- 	help
- 	  kexec is a system call that implements the ability to shutdown your
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 1a74446..0fbd75d 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -30,6 +30,21 @@
- #include <asm/smp.h>
- #include <asm/hw_breakpoint.h>
- 
-+#ifdef CONFIG_PPC_BOOK3E
-+int default_machine_kexec_prepare(struct kimage *image)
-+{
-+	int i;
-+	/*
-+	 * Since we use the kernel fault handlers and paging code to
-+	 * handle the virtual mode, we must make sure no destination
-+	 * overlaps kernel static data or bss.
-+	 */
-+	for (i = 0; i < image->nr_segments; i++)
-+		if (image->segment[i].mem < __pa(_end))
-+			return -ETXTBSY;
-+	return 0;
-+}
-+#else
- int default_machine_kexec_prepare(struct kimage *image)
- {
- 	int i;
-@@ -95,6 +110,7 @@ int default_machine_kexec_prepare(struct kimage *image)
- 
- 	return 0;
- }
-+#endif /* !CONFIG_PPC_BOOK3E */
- 
- static void copy_segments(unsigned long ind)
- {
-@@ -365,6 +381,7 @@ void default_machine_kexec(struct kimage *image)
- 	/* NOTREACHED */
- }
- 
-+#ifndef CONFIG_PPC_BOOK3E
- /* Values we need to export to the second kernel via the device tree. */
- static unsigned long htab_base;
- static unsigned long htab_size;
-@@ -411,3 +428,4 @@ static int __init export_htab_values(void)
- 	return 0;
- }
- late_initcall(export_htab_values);
-+#endif /* !CONFIG_PPC_BOOK3E */
-diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
-index ddbc535..db475d4 100644
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -631,9 +631,13 @@ _GLOBAL(kexec_sequence)
- 	lhz	r25,PACAHWCPUID(r13)	/* get our phys cpu from paca */
- 
- 	/* disable interrupts, we are overwriting kernel data next */
-+#ifdef CONFIG_PPC_BOOK3E
-+	wrteei	0
-+#else
- 	mfmsr	r3
- 	rlwinm	r3,r3,0,17,15
- 	mtmsrd	r3,1
-+#endif
- 
- 	/* copy dest pages, flush whole dest image */
- 	mr	r3,r29
-@@ -655,6 +659,7 @@ _GLOBAL(kexec_sequence)
- 	li	r6,1
- 	stw	r6,kexec_flag-1b(5)
- 
-+#ifndef CONFIG_PPC_BOOK3E
- 	/* clear out hardware hash page table and tlb */
- #if !defined(_CALL_ELF) || _CALL_ELF != 2
- 	ld	r12,0(r27)		/* deref function descriptor */
-@@ -663,6 +668,7 @@ _GLOBAL(kexec_sequence)
- #endif
- 	mtctr	r12
- 	bctrl				/* ppc_md.hpte_clear_all(void); */
-+#endif /* !CONFIG_PPC_BOOK3E */
- 
- /*
-  *   kexec image calling is:
--- 
-2.1.4
+Best Regards, Laurentiu
 
 
 _______________________________________________
