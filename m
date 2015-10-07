@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn1on0137.outbound.protection.outlook.com
- ([157.56.110.137] helo=na01-bn1-obe.outbound.protection.outlook.com)
+Received: from mail-bn1on0116.outbound.protection.outlook.com
+ ([157.56.110.116] helo=na01-bn1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zjb9n-0000C4-43
- for kexec@lists.infradead.org; Tue, 06 Oct 2015 22:56:27 +0000
+ id 1Zjfim-00016f-0A
+ for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:48:52 +0000
 From: Scott Wood <scottwood@freescale.com>
-Subject: [PATCH v2 2/3] ppc64: Avoid rfid if no need to clear MSR_LE
-Date: Tue, 6 Oct 2015 17:55:49 -0500
-Message-ID: <1444172150-29493-2-git-send-email-scottwood@freescale.com>
-In-Reply-To: <1444172150-29493-1-git-send-email-scottwood@freescale.com>
-References: <1444172150-29493-1-git-send-email-scottwood@freescale.com>
+Subject: [PATCH v2 00/18] powerpc/fsl-book3e-64: kexec/kdump support
+Date: Tue, 6 Oct 2015 22:48:04 -0500
+Message-ID: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,50 +21,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Scott Wood <scottwood@freescale.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>
 
-Commit a304e2d82a8c3 ("ppc64: purgatory: Reset primary cpu endian to
-big-endian) changed bctr to rfid.  rfid is book3s-only and will cause a
-fatal exception on book3e.
+This patchset adds support for kexec and kdump to e5500 and e6500 based
+systems running 64-bit kernels.  It depends on the kexec-tools patch
+http://patchwork.ozlabs.org/patch/527050/ ("ppc64: Add a flag to tell the
+kernel it's booting from kexec").
 
-Purgatory is an isolated environment which makes importing information
-about the subarch awkward, so instead rely on the fact that MSR_LE
-should never be set on book3e, and the rfid is only needed if MSR_LE is
-set (and thus needs to be cleared).  In theory that MSR bit is reserved
-on book3e, rather than zero, but in practice I have not seen it set.
+Scott Wood (12):
+  powerpc/fsl-booke-64: Allow booting from the secondary thread
+  powerpc/fsl-corenet: Disable coreint if kexec is enabled
+  powerpc/85xx: Don't use generic timebase sync on 64-bit
+  powerpc/fsl_pci: Don't set up inbound windows in kdump crash kernel
+  powerpc/85xx: Load all early TLB entries at once
+  powerpc/fsl-booke-64: Don't limit ppc64_rma_size to one TLB entry
+  powerpc/e6500: kexec: Handle hardware threads
+  powerpc/book3e/kdump: Enable crash_kexec_wait_realmode
+  powerpc/book3e-64: Don't limit paca to 256 MiB
+  powerpc/book3e-64/kexec: Enable SMP release
+  powerpc/booke: Only use VIRT_PHYS_OFFSET on booke32
+  powerpc/book3e-64/kexec: Set "r4 = 0" when entering spinloop
 
-Signed-off-by: Scott Wood <scottwood@freescale.com>
-Cc: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
----
-v2: new patch
+Tiejun Chen (6):
+  powerpc/85xx: Implement 64-bit kexec support
+  powerpc/book3e-64: rename interrupt_end_book3e with __end_interrupts
+  powerpc/booke64: Fix args to copy_and_flush
+  powerpc/book3e: support CONFIG_RELOCATABLE
+  powerpc/book3e-64/kexec: create an identity TLB mapping
+  powerpc/book3e-64: Enable kexec
 
- purgatory/arch/ppc64/v2wrap.S | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/chosen.txt  |  8 +++
+ arch/powerpc/Kconfig                          |  2 +-
+ arch/powerpc/include/asm/exception-64e.h      |  4 +-
+ arch/powerpc/include/asm/page.h               |  7 ++-
+ arch/powerpc/kernel/crash.c                   |  6 +-
+ arch/powerpc/kernel/exceptions-64e.S          | 17 ++++--
+ arch/powerpc/kernel/head_64.S                 | 43 ++++++++++++--
+ arch/powerpc/kernel/machine_kexec_64.c        | 18 ++++++
+ arch/powerpc/kernel/misc_64.S                 | 60 ++++++++++++++++++-
+ arch/powerpc/kernel/paca.c                    |  6 +-
+ arch/powerpc/kernel/setup_64.c                | 25 +++++++-
+ arch/powerpc/mm/fsl_booke_mmu.c               | 35 ++++++++---
+ arch/powerpc/mm/mmu_decl.h                    |  4 +-
+ arch/powerpc/mm/tlb_nohash.c                  | 41 ++++++++++---
+ arch/powerpc/mm/tlb_nohash_low.S              | 63 ++++++++++++++++++++
+ arch/powerpc/platforms/85xx/corenet_generic.c |  4 ++
+ arch/powerpc/platforms/85xx/smp.c             | 86 ++++++++++++++++++++++++---
+ arch/powerpc/sysdev/fsl_pci.c                 | 84 +++++++++++++++++++-------
+ 18 files changed, 443 insertions(+), 70 deletions(-)
 
-diff --git a/purgatory/arch/ppc64/v2wrap.S b/purgatory/arch/ppc64/v2wrap.S
-index 179ade9..3534080 100644
---- a/purgatory/arch/ppc64/v2wrap.S
-+++ b/purgatory/arch/ppc64/v2wrap.S
-@@ -116,9 +116,17 @@ master:
- 	stw	7,0x5c(4)	# and patch it into the kernel
- 	mr      3,16            # restore dt address
- 
-+	mfmsr	5
-+	andi.	10,5,1		# test MSR_LE
-+	bne	little_endian
-+
-+	li	5,0		# r5 will be 0 for kernel
-+	mtctr	4		# prepare branch to
-+	bctr			# start kernel
-+	
-+little_endian:			# book3s-only
- 	mtsrr0	4		# prepare branch to
- 
--	mfmsr	5
- 	clrrdi	5,5,1		# clear MSR_LE
- 	mtsrr1	5
- 
 -- 
 2.1.4
 
