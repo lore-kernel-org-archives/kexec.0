@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn1on0118.outbound.protection.outlook.com
- ([157.56.110.118] helo=na01-bn1-obe.outbound.protection.outlook.com)
+Received: from mail-bn1on0116.outbound.protection.outlook.com
+ ([157.56.110.116] helo=na01-bn1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zjfiw-00018p-Mc
- for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:49:04 +0000
+ id 1Zjfix-00016f-Ob
+ for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:49:05 +0000
 From: Scott Wood <scottwood@freescale.com>
-Subject: [PATCH v2 01/18] powerpc/fsl-booke-64: Allow booting from the
- secondary thread
-Date: Tue, 6 Oct 2015 22:48:05 -0500
-Message-ID: <1444189702-17241-2-git-send-email-scottwood@freescale.com>
+Subject: [PATCH v2 10/18] powerpc/booke64: Fix args to copy_and_flush
+Date: Tue, 6 Oct 2015 22:48:14 -0500
+Message-ID: <1444189702-17241-11-git-send-email-scottwood@freescale.com>
 In-Reply-To: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
@@ -25,66 +24,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
-Cc: Scott Wood <scottwood@freescale.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>
+Cc: Tiejun Chen <tiejun.chen@windriver.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Scott Wood <scottwood@freescale.com>, Michael Ellerman <mpe@ellerman.id.au>
 
-This allows SMP kernels to work as kdump crash kernels.  While crash
-kernels don't really need to be SMP, this prevents things from breaking
-if a user does it anyway (which is not something you want to only find
-out once the main kernel has crashed in the field, especially if
-whether it works or not depends on which cpu crashed).
+From: Tiejun Chen <tiejun.chen@windriver.com>
 
+Convert r4/r5, not r6, to a virtual address when calling
+copy_and_flush.  Otherwise, r3 is already virtual, and copy_to_flush
+tries to access r3+r6, PAGE_OFFSET gets added twice.
+
+This isn't normally seen because on book3e we normally enter with
+the kernel at zero and thus skip copy_to_flush -- but it will be
+needed for kexec support.
+
+Signed-off-by: Tiejun Chen <tiejun.chen@windriver.com>
+[scottwood: split patch and rewrote changelog]
 Signed-off-by: Scott Wood <scottwood@freescale.com>
 ---
- arch/powerpc/platforms/85xx/smp.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ arch/powerpc/kernel/head_64.S | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
-index b8b8216..c2ded03 100644
---- a/arch/powerpc/platforms/85xx/smp.c
-+++ b/arch/powerpc/platforms/85xx/smp.c
-@@ -173,15 +173,22 @@ static inline u32 read_spin_table_addr_l(void *spin_table)
- static void wake_hw_thread(void *info)
- {
- 	void fsl_secondary_thread_init(void);
--	unsigned long imsr1, inia1;
-+	unsigned long imsr, inia;
- 	int nr = *(const int *)info;
- 
--	imsr1 = MSR_KERNEL;
--	inia1 = *(unsigned long *)fsl_secondary_thread_init;
--
--	mttmr(TMRN_IMSR1, imsr1);
--	mttmr(TMRN_INIA1, inia1);
--	mtspr(SPRN_TENS, TEN_THREAD(1));
-+	imsr = MSR_KERNEL;
-+	inia = *(unsigned long *)fsl_secondary_thread_init;
-+
-+	if (cpu_thread_in_core(nr) == 0) {
-+		/* For when we boot on a secondary thread with kdump */
-+		mttmr(TMRN_IMSR0, imsr);
-+		mttmr(TMRN_INIA0, inia);
-+		mtspr(SPRN_TENS, TEN_THREAD(0));
-+	} else {
-+		mttmr(TMRN_IMSR1, imsr);
-+		mttmr(TMRN_INIA1, inia);
-+		mtspr(SPRN_TENS, TEN_THREAD(1));
-+	}
- 
- 	smp_generic_kick_cpu(nr);
- }
-@@ -224,6 +231,12 @@ static int smp_85xx_kick_cpu(int nr)
- 
- 		smp_call_function_single(primary, wake_hw_thread, &nr, 0);
- 		return 0;
-+	} else if (cpu_thread_in_core(boot_cpuid) != 0 &&
-+		   cpu_first_thread_sibling(boot_cpuid) == nr) {
-+		if (WARN_ON_ONCE(!cpu_has_feature(CPU_FTR_SMT)))
-+			return -ENOENT;
-+
-+		smp_call_function_single(boot_cpuid, wake_hw_thread, &nr, 0);
- 	}
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 8b2bf0d..a1e85ca 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -474,15 +474,15 @@ __after_prom_start:
+  */
+ 	li	r3,0			/* target addr */
+ #ifdef CONFIG_PPC_BOOK3E
+-	tovirt(r3,r3)			/* on booke, we already run at PAGE_OFFSET */
++	tovirt(r3,r3)		/* on booke, we already run at PAGE_OFFSET */
  #endif
+ 	mr.	r4,r26			/* In some cases the loader may  */
++#if defined(CONFIG_PPC_BOOK3E)
++	tovirt(r4,r4)
++#endif
+ 	beq	9f			/* have already put us at zero */
+ 	li	r6,0x100		/* Start offset, the first 0x100 */
+ 					/* bytes were copied earlier.	 */
+-#ifdef CONFIG_PPC_BOOK3E
+-	tovirt(r6,r6)			/* on booke, we already run at PAGE_OFFSET */
+-#endif
  
+ #ifdef CONFIG_RELOCATABLE
+ /*
+@@ -514,6 +514,9 @@ __after_prom_start:
+ p_end:	.llong	_end - _stext
+ 
+ 4:	/* Now copy the rest of the kernel up to _end */
++#if defined(CONFIG_PPC_BOOK3E)
++	tovirt(r26,r26)
++#endif
+ 	addis	r5,r26,(p_end - _stext)@ha
+ 	ld	r5,(p_end - _stext)@l(r5)	/* get _end */
+ 5:	bl	copy_and_flush		/* copy the rest */
 -- 
 2.1.4
 
