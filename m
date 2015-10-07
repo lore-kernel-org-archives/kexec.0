@@ -2,13 +2,13 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-bn1on0116.outbound.protection.outlook.com
  ([157.56.110.116] helo=na01-bn1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zjfin-00016f-1s
- for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:48:53 +0000
+ id 1Zjfio-00016f-7x
+ for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:48:54 +0000
 From: Scott Wood <scottwood@freescale.com>
-Subject: [PATCH v2 02/18] powerpc/fsl-corenet: Disable coreint if kexec is
- enabled
-Date: Tue, 6 Oct 2015 22:48:06 -0500
-Message-ID: <1444189702-17241-3-git-send-email-scottwood@freescale.com>
+Subject: [PATCH v2 03/18] powerpc/85xx: Don't use generic timebase sync on
+ 64-bit
+Date: Tue, 6 Oct 2015 22:48:07 -0500
+Message-ID: <1444189702-17241-4-git-send-email-scottwood@freescale.com>
 In-Reply-To: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
@@ -27,41 +27,35 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
 Cc: Scott Wood <scottwood@freescale.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>
 
-Problems have been observed in coreint (EPR) mode if interrupts are
-left pending (due to the lack of device quiescence with kdump) after
-having tried to deliver to a CPU but unable to deliver due to MSR[EE]
--- interrupts no longer get reliably delivered in the new kernel.  I
-tried various ways of fixing it up inside the crash kernel itself, and
-none worked (including resetting the entire mpic).  Masking all
-interrupts and issuing EOIs in the crashing kernel did help a lot of
-the time, but the behavior was not consistent.
+85xx currently uses the generic timebase sync mechanism when
+CONFIG_KEXEC is enabled, because 32-bit 85xx kexec support does a hard
+reset of each core.  64-bit 85xx kexec does not do this, so we neither
+need nor want this (nor is the generic timebase sync code built on
+ppc64).
 
-Thus, stick to standard IACK mode when kdump is a possibility.
+FWIW, I don't like the fact that the hard reset is done on 32-bit
+kexec, and I especially don't like the timebase sync being triggered
+only on the presence of CONFIG_KEXEC rather than actually booting in
+that environment, but that's beyond the scope of this patch...
 
 Signed-off-by: Scott Wood <scottwood@freescale.com>
 ---
-Previously I discussed the possibility of removing coreint entirely,
-but I think we want to keep it for virtualized guests.
----
- arch/powerpc/platforms/85xx/corenet_generic.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/platforms/85xx/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
-index b395571..04ffbcb 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -214,7 +214,11 @@ define_machine(corenet_generic) {
- 	.pcibios_fixup_bus	= fsl_pcibios_fixup_bus,
- 	.pcibios_fixup_phb      = fsl_pcibios_fixup_phb,
+diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+index c2ded03..a0763be 100644
+--- a/arch/powerpc/platforms/85xx/smp.c
++++ b/arch/powerpc/platforms/85xx/smp.c
+@@ -344,7 +344,7 @@ struct smp_ops_t smp_85xx_ops = {
+ 	.cpu_disable	= generic_cpu_disable,
+ 	.cpu_die	= generic_cpu_die,
  #endif
-+#ifdef CONFIG_KEXEC
-+	.get_irq		= mpic_get_irq,
-+#else
- 	.get_irq		= mpic_get_coreint_irq,
-+#endif
- 	.restart		= fsl_rstcr_restart,
- 	.calibrate_decr		= generic_calibrate_decr,
- 	.progress		= udbg_progress,
+-#ifdef CONFIG_KEXEC
++#if defined(CONFIG_KEXEC) && !defined(CONFIG_PPC64)
+ 	.give_timebase	= smp_generic_give_timebase,
+ 	.take_timebase	= smp_generic_take_timebase,
+ #endif
 -- 
 2.1.4
 
