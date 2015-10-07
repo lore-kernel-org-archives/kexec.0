@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn1on0116.outbound.protection.outlook.com
- ([157.56.110.116] helo=na01-bn1-obe.outbound.protection.outlook.com)
+Received: from mail-bn1on0118.outbound.protection.outlook.com
+ ([157.56.110.118] helo=na01-bn1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zjfiv-00016f-Ud
- for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:49:03 +0000
+ id 1Zjfiw-00018p-Mc
+ for kexec@lists.infradead.org; Wed, 07 Oct 2015 03:49:04 +0000
 From: Scott Wood <scottwood@freescale.com>
-Subject: [PATCH v2 09/18] powerpc/book3e-64: rename interrupt_end_book3e with
- __end_interrupts
-Date: Tue, 6 Oct 2015 22:48:13 -0500
-Message-ID: <1444189702-17241-10-git-send-email-scottwood@freescale.com>
+Subject: [PATCH v2 01/18] powerpc/fsl-booke-64: Allow booting from the
+ secondary thread
+Date: Tue, 6 Oct 2015 22:48:05 -0500
+Message-ID: <1444189702-17241-2-git-send-email-scottwood@freescale.com>
 In-Reply-To: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 References: <1444189702-17241-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
@@ -25,53 +25,66 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
-Cc: Tiejun Chen <tiejun.chen@windriver.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Scott Wood <scottwood@freescale.com>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: Scott Wood <scottwood@freescale.com>, Tiejun Chen <tiejun.chen@intel.com>, kexec@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>
 
-From: Tiejun Chen <tiejun.chen@windriver.com>
+This allows SMP kernels to work as kdump crash kernels.  While crash
+kernels don't really need to be SMP, this prevents things from breaking
+if a user does it anyway (which is not something you want to only find
+out once the main kernel has crashed in the field, especially if
+whether it works or not depends on which cpu crashed).
 
-Rename 'interrupt_end_book3e' to '__end_interrupts' so that the symbol
-can be used by both book3s and book3e.
-
-Signed-off-by: Tiejun Chen <tiejun.chen@windriver.com>
-[scottwood: edit changelog]
 Signed-off-by: Scott Wood <scottwood@freescale.com>
 ---
- arch/powerpc/kernel/exceptions-64e.S | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/85xx/smp.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-index f3bd5e7..9d4a006 100644
---- a/arch/powerpc/kernel/exceptions-64e.S
-+++ b/arch/powerpc/kernel/exceptions-64e.S
-@@ -542,8 +542,8 @@ interrupt_base_book3e:					/* fake trap */
- 	EXCEPTION_STUB(0x320, ehpriv)
- 	EXCEPTION_STUB(0x340, lrat_error)
+diff --git a/arch/powerpc/platforms/85xx/smp.c b/arch/powerpc/platforms/85xx/smp.c
+index b8b8216..c2ded03 100644
+--- a/arch/powerpc/platforms/85xx/smp.c
++++ b/arch/powerpc/platforms/85xx/smp.c
+@@ -173,15 +173,22 @@ static inline u32 read_spin_table_addr_l(void *spin_table)
+ static void wake_hw_thread(void *info)
+ {
+ 	void fsl_secondary_thread_init(void);
+-	unsigned long imsr1, inia1;
++	unsigned long imsr, inia;
+ 	int nr = *(const int *)info;
  
--	.globl interrupt_end_book3e
--interrupt_end_book3e:
-+	.globl __end_interrupts
-+__end_interrupts:
+-	imsr1 = MSR_KERNEL;
+-	inia1 = *(unsigned long *)fsl_secondary_thread_init;
+-
+-	mttmr(TMRN_IMSR1, imsr1);
+-	mttmr(TMRN_INIA1, inia1);
+-	mtspr(SPRN_TENS, TEN_THREAD(1));
++	imsr = MSR_KERNEL;
++	inia = *(unsigned long *)fsl_secondary_thread_init;
++
++	if (cpu_thread_in_core(nr) == 0) {
++		/* For when we boot on a secondary thread with kdump */
++		mttmr(TMRN_IMSR0, imsr);
++		mttmr(TMRN_INIA0, inia);
++		mtspr(SPRN_TENS, TEN_THREAD(0));
++	} else {
++		mttmr(TMRN_IMSR1, imsr);
++		mttmr(TMRN_INIA1, inia);
++		mtspr(SPRN_TENS, TEN_THREAD(1));
++	}
  
- /* Critical Input Interrupt */
- 	START_EXCEPTION(critical_input);
-@@ -736,7 +736,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
- 	beq+	1f
+ 	smp_generic_kick_cpu(nr);
+ }
+@@ -224,6 +231,12 @@ static int smp_85xx_kick_cpu(int nr)
  
- 	LOAD_REG_IMMEDIATE(r14,interrupt_base_book3e)
--	LOAD_REG_IMMEDIATE(r15,interrupt_end_book3e)
-+	LOAD_REG_IMMEDIATE(r15,__end_interrupts)
- 	cmpld	cr0,r10,r14
- 	cmpld	cr1,r10,r15
- 	blt+	cr0,1f
-@@ -800,7 +800,7 @@ kernel_dbg_exc:
- 	beq+	1f
+ 		smp_call_function_single(primary, wake_hw_thread, &nr, 0);
+ 		return 0;
++	} else if (cpu_thread_in_core(boot_cpuid) != 0 &&
++		   cpu_first_thread_sibling(boot_cpuid) == nr) {
++		if (WARN_ON_ONCE(!cpu_has_feature(CPU_FTR_SMT)))
++			return -ENOENT;
++
++		smp_call_function_single(boot_cpuid, wake_hw_thread, &nr, 0);
+ 	}
+ #endif
  
- 	LOAD_REG_IMMEDIATE(r14,interrupt_base_book3e)
--	LOAD_REG_IMMEDIATE(r15,interrupt_end_book3e)
-+	LOAD_REG_IMMEDIATE(r15,__end_interrupts)
- 	cmpld	cr0,r10,r14
- 	cmpld	cr1,r10,r15
- 	blt+	cr0,1f
 -- 
 2.1.4
 
