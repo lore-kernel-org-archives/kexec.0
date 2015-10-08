@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1444346484.29301.81.camel@infradead.org>
-Subject: [PATCH 2/2] util_lib: Silence ar informational message
+Message-ID: <1444346477.29301.80.camel@infradead.org>
+Subject: [PATCH 1/2] configure: Set SUBARCH=BE for powerpc
 From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 08 Oct 2015 16:21:24 -0700
+Date: Thu, 08 Oct 2015 16:21:17 -0700
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,27 +19,30 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-Add the -c option to ar to silence the informational
-message 'ar creating libutil.a'.  ar outputs this
-message to stderr, and some tools interpret this as
-a build warning.
+When building a 32 bit version of kexec-tools for powerpc64
+set the default powerpc64 SUBARCH as BE.
+
+Fixes build errors like these:
+
+ powerpc-linux-gnu/bin/ld: unrecognised emulation mode: elf64lppc
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- util_lib/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ configure.ac | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/util_lib/Makefile b/util_lib/Makefile
-index 54ccdc5..15b84e5 100644
---- a/util_lib/Makefile
-+++ b/util_lib/Makefile
-@@ -18,5 +18,5 @@ $(UTIL_LIB): CPPFLAGS += -I$(srcdir)/util_lib/include
- 
- $(UTIL_LIB): $(UTIL_LIB_OBJS)
- 	@$(MKDIR) -p $(@D)
--	$(AR) rs $(UTIL_LIB) $(UTIL_LIB_OBJS)
-+	$(AR) rs -c $(UTIL_LIB) $(UTIL_LIB_OBJS)
- 
+diff --git a/configure.ac b/configure.ac
+index ddb5e2b..2dc70df 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -24,6 +24,7 @@ case $target_cpu in
+ 		;;
+ 	powerpc )
+ 		ARCH="ppc"
++		SUBARCH="BE"
+ 		;;
+ 	powerpc64 )
+ 		ARCH="ppc64"
 -- 
 2.5.0
 
