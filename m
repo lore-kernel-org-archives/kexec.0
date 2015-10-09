@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wi0-x235.google.com ([2a00:1450:400c:c05::235])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZkQgm-0005jd-SB
- for kexec@lists.infradead.org; Fri, 09 Oct 2015 05:57:57 +0000
-Received: from int-mx13.intmail.prod.int.phx2.redhat.com
- (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (Postfix) with ESMTPS id 99660AB97B
- for <kexec@lists.infradead.org>; Fri,  9 Oct 2015 05:57:35 +0000 (UTC)
-Date: Fri, 9 Oct 2015 13:57:22 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
-Message-ID: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+ id 1ZkXi8-0004I8-Rz
+ for kexec@lists.infradead.org; Fri, 09 Oct 2015 13:27:49 +0000
+Received: by wiclk2 with SMTP id lk2so70634382wic.0
+ for <kexec@lists.infradead.org>; Fri, 09 Oct 2015 06:27:27 -0700 (PDT)
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: [PATCH] kexec: determine size of block device
+Date: Fri,  9 Oct 2015 15:27:18 +0200
+Message-Id: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +17,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: jstodola@redhat.com
+Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
 
-Jan Stodola <jstodola@redhat.com> reported ppc64 root= is always added in kexec
-kernel cmdline. But sometimes we need boot without root= for example we use
-kexec to boot into installation initramfs image like below:
-kexec --load vmlinuz --initrd=initrd.img --command-line=\
-"inst.repo=http://<server>/<path>/Server/ppc64le/os/"
+starting 'kexec -l /dev/mmcblk0p1' fails since the size of
+a block device can not be determined with stat
 
-While creating dtb, in case there's no root= in user provided cmdline params 
-kexec-tools will find the original root= param used in 1st kernel and pass it
-to 2nd kernel. This caused that user have no way to remove root= cmdline.
-
-Dropping that part of code so that one can get chance to kexec into 2nd kernel
-without root= param. One can still provide root= in --command-line=""
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
 ---
- kexec/fs2dt.c |   31 +------------------------------
- 1 file changed, 1 insertion(+), 30 deletions(-)
+ kexec/kexec.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- kexec-tools.orig/kexec/fs2dt.c
-+++ kexec-tools/kexec/fs2dt.c
-@@ -579,8 +579,7 @@ static void putnode(void)
- 		reserve(initrd_base, initrd_size);
- 	}
- 
--	/* Add cmdline to the second kernel.  Check to see if the new
--	 * cmdline has a root=.  If not, use the old root= cmdline.  */
-+	/* Add cmdline to the second kernel. */
- 	if (!strcmp(basename,"chosen/")) {
- 		size_t result;
- 		size_t cmd_len = 0;
-@@ -594,36 +593,8 @@ static void putnode(void)
- 			param = strstr(local_cmdline, "crashkernel=");
- 			if (param)
- 				crash_param = 1;
--			/* does the new cmdline have a root= ? ... */
--			param = strstr(local_cmdline, "root=");
- 		}
- 
--		/* ... if not, grab root= from the old command line */
--		if (!param) {
--			FILE *fp;
--			char *last_cmdline = NULL;
--			char *old_param;
--
--			strcpy(filename, pathname);
--			strcat(filename, "bootargs");
--			fp = fopen(filename, "r");
--			if (fp) {
--				if (getline(&last_cmdline, &cmd_len, fp) == -1)
--					die("unable to read %s\n", filename);
--
--				param = strstr(last_cmdline, "root=");
--				if (param) {
--					old_param = strtok(param, " ");
--					if (cmd_len != 0)
--						strcat(local_cmdline, " ");
--					strcat(local_cmdline, old_param);
--				}
--			}
--			if (last_cmdline)
--				free(last_cmdline);
--		}
--		strcat(local_cmdline, " ");
--		cmd_len = strlen(local_cmdline);
- 		cmd_len = cmd_len + 1;
- 
- 		/* add new bootargs */
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index ff024f3..8b8846e 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -26,7 +26,9 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
++#include <sys/ioctl.h>
+ #include <sys/mman.h>
++#include <sys/mount.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/reboot.h>
+@@ -554,6 +556,14 @@ char *slurp_file(const char *filename, off_t *r_size)
+ 			die("Can not seek to the begin of file %s: %s\n",
+ 					filename, strerror(errno));
+ 		buf = slurp_fd(fd, filename, size, &nread);
++    } else if (S_ISBLK(stats.st_mode)) {
++		/* taken from blockdev */
++		unsigned long long llu = -1;
++		err = ioctl(fd, BLKGETSIZE64, &llu);
++		if (err < 0)
++			die("Can't retrieve size of block device %s: %s\n",
++				filename, strerror(errno));
++		size = llu;
+ 	} else {
+ 		size = nread = stats.st_size;
+ 		buf = mmap(NULL, size,
+-- 
+2.5.1
+
 
 _______________________________________________
 kexec mailing list
