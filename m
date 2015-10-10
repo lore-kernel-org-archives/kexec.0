@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-x235.google.com ([2a00:1450:400c:c05::235])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZkXi8-0004I8-Rz
- for kexec@lists.infradead.org; Fri, 09 Oct 2015 13:27:49 +0000
-Received: by wiclk2 with SMTP id lk2so70634382wic.0
- for <kexec@lists.infradead.org>; Fri, 09 Oct 2015 06:27:27 -0700 (PDT)
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: [PATCH] kexec: determine size of block device
-Date: Fri,  9 Oct 2015 15:27:18 +0200
-Message-Id: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
+ id 1ZktCk-0006H9-VD
+ for kexec@lists.infradead.org; Sat, 10 Oct 2015 12:24:51 +0000
+Date: Sat, 10 Oct 2015 20:24:24 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 06/10] iommu/amd: Add functions
+ copy_command_buffer/copy_event_buffer
+Message-ID: <20151010122424.GA31787@dhcp-16-116.nay.redhat.com>
+References: <1443076656-31776-1-git-send-email-bhe@redhat.com>
+ <1443076656-31776-7-git-send-email-bhe@redhat.com>
+ <20150929160439.GN3036@8bytes.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20150929160439.GN3036@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,54 +22,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-starting 'kexec -l /dev/mmcblk0p1' fails since the size of
-a block device can not be determined with stat
+Hi Joerg,
 
-Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
----
- kexec/kexec.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On 09/29/15 at 06:04pm, Joerg Roedel wrote:
+> On Thu, Sep 24, 2015 at 02:37:32PM +0800, Baoquan He wrote:
+> > Copy command buffer and event buffer from the old to kdump kernel.
+> > 
+> > Still there are 2 problems:
+> >   1) Not very sure if this is necessary. If do not copy the old command buffer, and
+> > only set the newly allocated command buffer, is there anything wrong?
+> 
+> No, there is no need to copy command and event buffers. Just make sure
+> they get re-initialized and flush all iommu caches after setting the new
+> device table.
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index ff024f3..8b8846e 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -26,7 +26,9 @@
- #include <stdlib.h>
- #include <errno.h>
- #include <limits.h>
-+#include <sys/ioctl.h>
- #include <sys/mman.h>
-+#include <sys/mount.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <sys/reboot.h>
-@@ -554,6 +556,14 @@ char *slurp_file(const char *filename, off_t *r_size)
- 			die("Can not seek to the begin of file %s: %s\n",
- 					filename, strerror(errno));
- 		buf = slurp_fd(fd, filename, size, &nread);
-+    } else if (S_ISBLK(stats.st_mode)) {
-+		/* taken from blockdev */
-+		unsigned long long llu = -1;
-+		err = ioctl(fd, BLKGETSIZE64, &llu);
-+		if (err < 0)
-+			die("Can't retrieve size of block device %s: %s\n",
-+				filename, strerror(errno));
-+		size = llu;
- 	} else {
- 		size = nread = stats.st_size;
- 		buf = mmap(NULL, size,
--- 
-2.5.1
+Thanks for your reviewing.
 
+I did a lot of tests. Seems that it doesn't matter with copy or without
+a copy. And it's also OK even completely ignore the command buffer and
+event log handling here.
+
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
