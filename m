@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx5-phx2.redhat.com ([209.132.183.37])
+Received: from galois.linutronix.de ([2001:470:1f0b:db:abcd:42:0:1])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zm3pn-0007mE-Gn
- for kexec@lists.infradead.org; Tue, 13 Oct 2015 17:58:00 +0000
-Received: from zmail15.collab.prod.int.phx2.redhat.com
- (zmail15.collab.prod.int.phx2.redhat.com [10.5.83.17])
- by mx5-phx2.redhat.com (8.14.4/8.14.4) with ESMTP id t9DHvbCS053315
- for <kexec@lists.infradead.org>; Tue, 13 Oct 2015 13:57:37 -0400
-Date: Tue, 13 Oct 2015 13:57:36 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <919387907.71013933.1444759056336.JavaMail.zimbra@redhat.com>
-In-Reply-To: <mailman.7843.1444755674.1751.kexec@lists.infradead.org>
-References: <mailman.7843.1444755674.1751.kexec@lists.infradead.org>
-Subject: Re: [PATCH V5] makedumpfile: exclude page structures of non-dumped
- pages
+ id 1Zm67Q-0005Vc-8d
+ for kexec@lists.infradead.org; Tue, 13 Oct 2015 20:24:21 +0000
+Date: Tue, 13 Oct 2015 22:22:58 +0200 (CEST)
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
+In-Reply-To: <20150925112811.4258.54494.stgit@softrs>
+Message-ID: <alpine.DEB.2.11.1510132219480.25029@nanos>
+References: <20150925112803.4258.94241.stgit@softrs>
+ <20150925112811.4258.54494.stgit@softrs>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,32 +23,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
------ Original Message -----
+On Fri, 25 Sep 2015, Hidehiro Kawai wrote:
+
+> This patch introduces new boot option "noextnmi" which disables
+> external NMI.  This option is useful for the dump capture kernel
+> so that an HA application or administrator wouldn't mistakenly
+> shoot down the kernel by NMI.
 > 
-> Applies to the development branch as of 10/13/2015.
+> Currently, only x86 supports this option.
+
+You might add that is can be used for debugging purposes as
+well. External NMIs can be their own source of trouble. :)
+ 
+> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> ---
+>  Documentation/kernel-parameters.txt |    4 ++++
+>  arch/x86/kernel/apic/apic.c         |   17 ++++++++++++++++-
+>  2 files changed, 20 insertions(+), 1 deletion(-)
 > 
-> This patch adds a -e option to makedumpfile.
-> The -e option excludes kernel pages that contain nothing but kernel page
-> structures for pages that are not being included in the dump.
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index 22a4b68..8bcaccd 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2379,6 +2379,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>  			noexec=on: enable non-executable mappings (default)
+>  			noexec=off: disable non-executable mappings
+>  
+> +	noextnmi	[X86]
+> +			Mask external NMI.  This option is useful for a
+> +			dump capture kernel to be shot down by NMI.
 
-... [ cut ] ...
+That should read: "...not to be shot down", right?
 
-> 
-> The only disadvantage is that various options of the crash 'kmem' command (that
-> walk lists of page structures) will not work.
-> Version 7.0.9 of crash is already patched to issue a warning about such commands
-> when the dump is flagged DUMP_DH_EXCLUDED_VMEMMAP.
+Other than that.
 
-Just to clarify -- crash-7.0.9 added support for printing warnings if DUMP_DH_COMPRESSED_INCOMPLETE
-is set in compressed kdump dumpfile headers, (and DUMP_ELF_INCOMPLETE flags in kdump ELF headers).
-But it will not issue any warnings w/respect to missing page strucures.
-
-You're going to file an associated DUMP_DH_EXCLUDED_VMEMMAP patch to the crash-utility
-mailing list if/when this makedumpfile patch gets accepted, correct?
-
-Dave
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 
 _______________________________________________
 kexec mailing list
