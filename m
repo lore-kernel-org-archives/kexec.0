@@ -1,19 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2001:470:1f0b:db:abcd:42:0:1])
+Received: from mail-wi0-x244.google.com ([2a00:1450:400c:c05::244])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZmGSJ-0004mA-D7
- for kexec@lists.infradead.org; Wed, 14 Oct 2015 07:26:36 +0000
-Date: Wed, 14 Oct 2015 09:25:18 +0200 (CEST)
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: RE: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
-In-Reply-To: <04EAB7311EE43145B2D3536183D1A844549BAEA9@GSjpTKYDCembx31.service.hitachi.net>
-Message-ID: <alpine.DEB.2.11.1510140924370.25029@nanos>
-References: <20150925112803.4258.94241.stgit@softrs>
- <20150925112811.4258.54494.stgit@softrs>
- <alpine.DEB.2.11.1510132219480.25029@nanos>
- <04EAB7311EE43145B2D3536183D1A844549BAEA9@GSjpTKYDCembx31.service.hitachi.net>
+ id 1ZmMW5-00023b-Fp
+ for kexec@lists.infradead.org; Wed, 14 Oct 2015 13:54:54 +0000
+Received: by wicuv6 with SMTP id uv6so9579102wic.2
+ for <kexec@lists.infradead.org>; Wed, 14 Oct 2015 06:54:31 -0700 (PDT)
+Date: Wed, 14 Oct 2015 15:54:28 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
+Message-ID: <20151014135428.GC10316@gmail.com>
+References: <20151001062733.GL2881@worktop.programming.kicks-ass.net>
+ <04EAB7311EE43145B2D3536183D1A8445499D30D@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001084335.GA3764@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A8445499DB92@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001110110.GA3544@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A8445499ED83@GSjpTKYDCembx31.service.hitachi.net>
+ <20151002074721.GA16538@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A844549A4557@GSjpTKYDCembx31.service.hitachi.net>
+ <20151005082704.GA23259@nazgul.tnic>
+ <alpine.DEB.2.11.1510132210590.25029@nanos>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323329-1300212950-1444807519=:25029"
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.11.1510132210590.25029@nanos>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,65 +30,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?ISO-2022-JP?Q?=1B$B2O9g1Q9=28=1B=28J_=2F_KAWAI=1B$B!$=1B=28JHIDEHIRO?= <hidehiro.kawai.ez@hitachi.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?ISO-2022-JP?Q?=1B$BJ=3F=3E=3E2mL&=1B=28J_=2F_HIRAMATU=1B$B!$=1B=28JMASAMI?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 'Peter Zijlstra' <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1300212950-1444807519=:25029
-Content-Type: TEXT/PLAIN; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-On Wed, 14 Oct 2015, 河合英宏 / KAWAI，HIDEHIRO wrote:
-> > On Fri, 25 Sep 2015, Hidehiro Kawai wrote:
-> > 
-> > > This patch introduces new boot option "noextnmi" which disables
-> > > external NMI.  This option is useful for the dump capture kernel
-> > > so that an HA application or administrator wouldn't mistakenly
-> > > shoot down the kernel by NMI.
-> > >
-> > > Currently, only x86 supports this option.
-> > 
-> > You might add that is can be used for debugging purposes as
-> > well. External NMIs can be their own source of trouble. :)
-> 
-> Thanks for your comments!  I'll do that.
-> 
-> By the way, I have a pending patch which expands this option like
-> this:
-> 
-> 	apic_extnmi={ bsp | all | none }
-> 
-> If apic_extnmi=all is specified, external NMIs are broadcast to
-> all CPUs.  This raises the successful rate of kernel panic in the case
-> where an external NMI to CPU 0 is swallowed by other NMI handlers or
-> blocked due to hang-up in NMI context.  The patch works without any
-> problems, but I'm going to drop the feature if it will cause long
-> discussion.  I'd like to settle this patch set down once.  At least,
-> I'm going to change this option to apic_extnmi={bsp|none} style for
-> the future expansion.
-> 
-> How do you think about this?
-
-Do it right away with all three variants. They make a lot of sense to
-me.
- 
-Thanks,
-
-	tglx
---8323329-1300212950-1444807519=:25029
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---8323329-1300212950-1444807519=:25029--
-
+CiogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+IHdyb3RlOgoKPiBCb3Jpc2xh
+diwKPiAKPiBPbiBNb24sIDUgT2N0IDIwMTUsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToKPiA+IE9u
+IE1vbiwgT2N0IDA1LCAyMDE1IGF0IDAyOjAzOjU4QU0gKzAwMDAsIOays+WQiOiLseWujyAvIEtB
+V0FJ77yMSElERUhJUk8gd3JvdGU6Cj4gPiA+IFRoYXQncyBkaWZmZXJlbnQgZnJvbSBteSBwb2lu
+dCBvZiB2aWV3LiAgSSdtIG5vdCBnb2luZyB0byBwYXNzCj4gPiA+IHNvbWUgZGF0YSBmcm9tIHRo
+ZSBmaXJzdCBrZXJuZWwgdG8gdGhlIHNlY29uZCBrZXJuZWwuIEknbSBqdXN0IGdvaW5nIHRvCj4g
+PiA+IHByb3ZpZGUgYSBjb25maWd1cmFibGUgb3B0aW9uIGZvciB0aGUgc2Vjb25kIGtlcm5lbCB0
+byB1c2Vycy4KPiA+IAo+ID4gRHVkZSwgV1RGPyEgWW91J3JlIGFkZGluZyBhIGtlcm5lbCBjb21t
+YW5kIGxpbmUgd2hpY2ggaXMgc3VwcG9zZWQgdG8KPiA+IGJlIHVzZWQgKm9ubHkqIGJ5IHRoZSBr
+ZHVtcCBrZXJuZWwuIEJ1dCBub29vLCBpdCBpcyB0aGVyZSBpbiB0aGUgb3Blbgo+ID4gYW5kIHZp
+c2libGUgdG8gcGVvcGxlLiBBbmQgYW55b25lIGNhbiB0eXBlIGl0IGluIGR1cmluZyBib290LiBB
+TkQgVEhBVAo+ID4gU0hPVUxETidUIEJFIFBPU1NJQkxFIElOIFRIRSBGSVJTVCBQTEFDRSEKPiA+
+IAo+ID4gVGhpcyBpbmZvcm1hdGlvbiBpcyBzdHJpY3RseSBmb3IgdGhlIGtkdW1wIGtlcm5lbCAt
+IGl0IHNob3VsZG4ndCBiZSBhCj4gPiBnZW5lcmljIGNvbW1hbmQgbGluZSBvcHRpb24uIEhvdyBo
+YXJkIGl0IGlzIHRvIHVuZGVyc3RhbmQgdGhhdCBzaW1wbGUKPiA+IGZhY3Q/IQo+IAo+IENhbG0g
+ZG93biEKPiAKPiBEaXNhYmxpbmcgdGhhdCBOTUkgaW4gdGhlIGZpcnN0IGtlcm5lbCBpcyBub3Qg
+Z29pbmcgdG8gbWFrZSB0aGUgd29ybGQKPiBleHBsb2RlLiBXZSBoYXZlIGVub3VnaCBjb21tYW5k
+IGxpbmUgb3B0aW9ucyBhIHVzZXIgY2FuIHR5cGUgaW4sIHdoaWNoCj4gYXJlIHdheSB3b3JzZSB0
+aGFuIHRoYXQgb25lLiBJZiBzb21lICJleHBlcnQiIHR5cGVzIG5vbnNlbnNlIG9uIHRoZQo+IGZp
+cnN0IGtlcm5lbCBjb21tYW5kIGxpbmUsIHRoZW4gaXQncyBub25lIG9mIG91ciBwcm9ibGVtcywg
+cmVhbGx5Lgo+IAo+IElmIEthd2FpIHdvdWxkIGhhdmUgbWFya2VkIHRoYXQgb3B0aW9uIGFzIGEg
+ZGVidWcgZmVhdHVyZSwgdGhpcwo+IGRpc2N1c3Npb24gd291bGQgaGF2ZSBwcm9iYWJseSBuZXZl
+ciBoYXBwZW5lZC4KPiAKPiBBc2lkZSBvZiB0aGF0LCB0aGUgYmVzdCB3YXkgdG8gaGFuZCBpbiBv
+cHRpb25zIGZvciB0aGUga2R1bXAga2VybmVsIGlzCj4gdGhlIGNvbW1hbmQgbGluZS4gV2UgaGF2
+ZSBhbiBleGlzdGluZyBpbnRlcmZhY2UgZm9yIHRoYXQuCj4gCj4gTGV0J3MgbW92ZSBvbi4gTm90
+aGluZyB0byBzZWUgaGVyZS4KClNvIEJvcmlzIGtpbmQgb2YgaGFzIGEgcG9pbnQ6IHRoZXJlIGFy
+ZSBudW1lcm91cyBwcm9ibGVtcyB3aXRoIGJvb3Qgb3B0aW9ucyBhcyAKa2V4ZWMgcGFyYW1ldGVy
+IGludGVyZmFjZToKCiAtIGJvb3Qgb3B0aW9uIHN0cmluZ3MgYXJlIG5vdCBhIHdlbGwgZGVmaW5l
+ZCBwcm9ncmFtbWF0aWMgaW50ZXJmYWNlOgogICAgLSBmYWlsdXJlcyBhcmUgbm90IG9idmlvdXMg
+KHRoZXkgYXJlIG9mdGVuIGlnbm9yZWQpCiAgICAtIGluc2VydGluZy9zZXR0aW5nIHBhcmFtZXRl
+cnMgaXMgYXdrd2FyZCBhcyB3ZWxsLgoKIC0gYm9vdCBvcHRpb25zIGFyZSBub3QgYW4gQUJJLCBz
+byB3aGVuIG9wdGlvbnMgaGF2ZSBkdWFsIHVzZSB3aXRoIGtleGVjIGl0J3MgZWFzeQogICB0byBi
+cmVhayB0aGluZ3MgaW5hZHZlcnRlbnRseTogd2l0aG91dCB0aGF0IGZhaWx1cmUgYmVpbmcgYXBw
+YXJlbnQgb3RoZXIgdGhhbgogICByZWludHJvZHVjaW5nIG9ic2N1cmUga2V4ZWMgZmFpbHVyZSBt
+b2RlcyBhZ2Fpbi4KCiAtIGluIHRoZSBib290ZWQgdXAga2V4ZWMga2VybmVsIGl0J3Mgbm90IHJl
+YWxseSBvYnZpb3VzIHdoaWNoIG9wdGlvbnMgZ290IHNldCBieQogICBrZXhlYyBhbmQgd2hpY2gg
+Z290IHNldCBieSB0aGUgdXNlciAtIGFzIHRoZXJlJ3Mgbm8gc2VwYXJhdGlvbiBvZiBuYW1lc3Bh
+Y2VzLgoKIC0gbGlrZXdpc2UsIGlmIHRoZSB1c2VyIHNwZWNpZmllcyBhbiBvcHRpb24gaW4gY29u
+ZmxpY3Qgd2l0aCBhIGtleGVjIHJlcXVpcmVtZW50CiAgIGl0J3Mgbm90IHJlYWxseSBvYnZpb3Vz
+IHdoYXQncyBoYXBwZW5pbmc6IHRoZSB1c2VyIHNldHRpbmcgc2hvdWxkIHByb2JhYmx5CiAgIGRv
+bWluYXRlIC0gSSdtIG5vdCBzdXJlIHRoYXQncyB0aGUgY2FzZSB3aXRoIHRoZSBjdXJyZW50IGtl
+eGVjIGNvZGUuCgpCb290IG9wdGlvbnMgYXJlIGJhc2ljYWxseSBhIHVzZXIgaW50ZXJmYWNlLgoK
+T24gdGhlIG90aGVyIGhhbmQgdGhlIGhhY2sgb2YgKGFiLSl1c2luZyBib290IHBhcmFtZXRlcnMg
+YXMga2V4ZWMgcGFyYW1ldGVyIApwYXNzaW5nIGlzIGFuIGV4aXN0aW5nLCBtYW55IHllYXJzIG9s
+ZCBwcmFjdGljZSBhbmQgd2UgY2Fubm90IGp1c3Qgc3RvcCBpdCB3aXRob3V0IApvZmZlcmluZyBh
+biBhbHRlcm5hdGl2ZSAoYW5kIGJldHRlciEpIGludGVyZmFjZSBmaXJzdC4KCldlIGNvdWxkIGlt
+cHJvdmUgdGhpbmdzIGJ5IGVpdGhlciBhZGRpbmcgYSBzZXBhcmF0ZSBrZXhlYy1vbmx5IHBhcmFt
+ZXRlciBwYXNzaW5nIApmYWNpbGl0eSAobGlrZSBwcm9ncmFtbWF0aWMgYm9vdCBwYXJhbWV0ZXJz
+IGFyZSkgLSBvciBieSBjcmVhdGluZyBzb21lIHNvcnQgb2YgCmJvb3QgcGFyYW1ldGVyIGFsaWFz
+IHRoYXQgY2xlYXJseSBpZGVudGlmaWVzIGtleGVjIHBhcmFtZXRlcnMuCgpTbyBmb3IgZXhhbXBs
+ZSB3aGVuIGludHJvZHVjaW5nICdub2V4dG5taScgd2UnZCBhbHNvIGFkZCBhIGZhY2lsaXR5IHRv
+IGFkZCBhIAona2V4ZWNfbm9leHRubWknIGFsaWFzIC0gd2hpY2ggY2xlYXJseSBpZGVudGlmaWVz
+IHRoaXMgYm9vdCBwYXJhbWV0ZXIgYXMgYSBrZXhlYyAKcmVsYXRlZCBvbmUuCgpFdmVyeSAna2V4
+ZWMnIGluc2VydGVkIHBhcmFtZXRlciB3b3VsZCBiZSBwcmVmaXhlZCBieSBrZXhlY18gLSBhbmQg
+dGhlbiB0aGUgCnNlcGFyYXRpb24gb2YgbmFtZXNwYWNlcyAoYW5kIHRoZSBwcmlvcml0aXphdGlv
+biBvZiB1c2VyIHZzLiBrZXhlYyByZXF1aXJlbWVudHMpIApiZWNvbWVzIHdlbGwgZGVmaW5lZCBh
+cyB3ZWxsLi4KCldlIHNob3VsZCBhbHNvIHByb2JhYmx5IHByaW50IGEgd2FybmluZyBpZiBhIGtl
+eGVjXyogcGFyYW1ldGVyIGlzIHBhc3NlZCBpbiB0aGF0IApoYXMgbm8gbWF0Y2hpbmcgaGFuZGxl
+ciBpbiB0aGUga2V4ZWMoKS1lZCBrZXJuZWwuCgpJIGRvIGNvbmN1ciB0aGF0IHRoaXMgcGF0Y2gg
+aXMgcHJvYmFibHkgT0sgZ2l2ZW4gZXhpc3RpbmcgcHJhY3RpY2VzLgoKVGhhbmtzLAoKCUluZ28K
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
