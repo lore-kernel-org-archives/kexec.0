@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZmuFP-00050s-Hc
- for kexec@lists.infradead.org; Fri, 16 Oct 2015 01:55:56 +0000
-Received: from penelope.kanocho.kobe.vergenet.net
- (g1-27-253-251-5.bmobile.ne.jp [27.253.251.5])
- by kirsty.vergenet.net (Postfix) with ESMTPSA id 471D525B7BE
- for <kexec@lists.infradead.org>; Fri, 16 Oct 2015 12:55:33 +1100 (AEDT)
-Date: Fri, 16 Oct 2015 10:55:25 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools v2.0.10 preparation
-Message-ID: <20151016015525.GH20667@verge.net.au>
+ id 1ZmuIi-0005k9-H1
+ for kexec@lists.infradead.org; Fri, 16 Oct 2015 01:59:21 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
+Date: Fri, 16 Oct 2015 01:58:56 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A844549C1895@GSjpTKYDCembx31.service.hitachi.net>
+References: <20151001062733.GL2881@worktop.programming.kicks-ass.net>
+ <04EAB7311EE43145B2D3536183D1A8445499D30D@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001084335.GA3764@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A8445499DB92@GSjpTKYDCembx31.service.hitachi.net>
+ <20151001110110.GA3544@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A8445499ED83@GSjpTKYDCembx31.service.hitachi.net>
+ <20151002074721.GA16538@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A844549A4557@GSjpTKYDCembx31.service.hitachi.net>
+ <20151005082704.GA23259@nazgul.tnic>
+ <alpine.DEB.2.11.1510132210590.25029@nanos>
+ <20151014135428.GC10316@gmail.com>
+In-Reply-To: <20151014135428.GC10316@gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,36 +30,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: 'Ingo Molnar' <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 'Peter Zijlstra' <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi all,
-
-I am planning to release kexec-tools v2.0.11 around the time that
-the v4.3 kernel is released.
-
-As I estimate that the latter occur within the few weeks I
-would like to ask interested parties to send any patches they would like
-included in v2.0.10 within the next week so that I can make an rc release.
-
-For reference the patches queued up since v2.0.10 are as follows:
-
-faef3d02bb0d ppc64: Fix warnings
-626b441109b6 configure: Set SUBARCH=BE for powerpc
-0974c43a18ca kexec-tools: fix build error with glibc 2.19 and earlier version
-4fbf781eb038 Load crash kernel high on x86
-6fd80e245e38 fix kexec load hang in case crash notes addr read failure
-7ab842d8a004 kexec: use mmap instead of read for slurp_file()
-a304e2d82a8c ppc64: purgatory: Reset primary cpu endian to big-endian
-97a07e2775ef Drop release date from kexec-tools version output
-cb9a818ff2ac Add persistent memory support
-c9c21cc107dc kexec: use _DEFAULT_SOURCE instead to remove compiling warning
-973426e85377 kexec-tools 2.0.10.git
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiAqIFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPiB3cm90ZToNCj4gDQo+ID4g
+Qm9yaXNsYXYsDQo+ID4NCj4gPiBPbiBNb24sIDUgT2N0IDIwMTUsIEJvcmlzbGF2IFBldGtvdiB3
+cm90ZToNCj4gPiA+IE9uIE1vbiwgT2N0IDA1LCAyMDE1IGF0IDAyOjAzOjU4QU0gKzAwMDAsIOay
+s+WQiOiLseWujyAvIEtBV0FJ77yMSElERUhJUk8gd3JvdGU6DQo+ID4gPiA+IFRoYXQncyBkaWZm
+ZXJlbnQgZnJvbSBteSBwb2ludCBvZiB2aWV3LiAgSSdtIG5vdCBnb2luZyB0byBwYXNzDQo+ID4g
+PiA+IHNvbWUgZGF0YSBmcm9tIHRoZSBmaXJzdCBrZXJuZWwgdG8gdGhlIHNlY29uZCBrZXJuZWwu
+IEknbSBqdXN0IGdvaW5nIHRvDQo+ID4gPiA+IHByb3ZpZGUgYSBjb25maWd1cmFibGUgb3B0aW9u
+IGZvciB0aGUgc2Vjb25kIGtlcm5lbCB0byB1c2Vycy4NCj4gPiA+DQo+ID4gPiBEdWRlLCBXVEY/
+ISBZb3UncmUgYWRkaW5nIGEga2VybmVsIGNvbW1hbmQgbGluZSB3aGljaCBpcyBzdXBwb3NlZCB0
+bw0KPiA+ID4gYmUgdXNlZCAqb25seSogYnkgdGhlIGtkdW1wIGtlcm5lbC4gQnV0IG5vb28sIGl0
+IGlzIHRoZXJlIGluIHRoZSBvcGVuDQo+ID4gPiBhbmQgdmlzaWJsZSB0byBwZW9wbGUuIEFuZCBh
+bnlvbmUgY2FuIHR5cGUgaXQgaW4gZHVyaW5nIGJvb3QuIEFORCBUSEFUDQo+ID4gPiBTSE9VTERO
+J1QgQkUgUE9TU0lCTEUgSU4gVEhFIEZJUlNUIFBMQUNFIQ0KPiA+ID4NCj4gPiA+IFRoaXMgaW5m
+b3JtYXRpb24gaXMgc3RyaWN0bHkgZm9yIHRoZSBrZHVtcCBrZXJuZWwgLSBpdCBzaG91bGRuJ3Qg
+YmUgYQ0KPiA+ID4gZ2VuZXJpYyBjb21tYW5kIGxpbmUgb3B0aW9uLiBIb3cgaGFyZCBpdCBpcyB0
+byB1bmRlcnN0YW5kIHRoYXQgc2ltcGxlDQo+ID4gPiBmYWN0PyENCj4gPg0KPiA+IENhbG0gZG93
+biENCj4gPg0KPiA+IERpc2FibGluZyB0aGF0IE5NSSBpbiB0aGUgZmlyc3Qga2VybmVsIGlzIG5v
+dCBnb2luZyB0byBtYWtlIHRoZSB3b3JsZA0KPiA+IGV4cGxvZGUuIFdlIGhhdmUgZW5vdWdoIGNv
+bW1hbmQgbGluZSBvcHRpb25zIGEgdXNlciBjYW4gdHlwZSBpbiwgd2hpY2gNCj4gPiBhcmUgd2F5
+IHdvcnNlIHRoYW4gdGhhdCBvbmUuIElmIHNvbWUgImV4cGVydCIgdHlwZXMgbm9uc2Vuc2Ugb24g
+dGhlDQo+ID4gZmlyc3Qga2VybmVsIGNvbW1hbmQgbGluZSwgdGhlbiBpdCdzIG5vbmUgb2Ygb3Vy
+IHByb2JsZW1zLCByZWFsbHkuDQo+ID4NCj4gPiBJZiBLYXdhaSB3b3VsZCBoYXZlIG1hcmtlZCB0
+aGF0IG9wdGlvbiBhcyBhIGRlYnVnIGZlYXR1cmUsIHRoaXMNCj4gPiBkaXNjdXNzaW9uIHdvdWxk
+IGhhdmUgcHJvYmFibHkgbmV2ZXIgaGFwcGVuZWQuDQo+ID4NCj4gPiBBc2lkZSBvZiB0aGF0LCB0
+aGUgYmVzdCB3YXkgdG8gaGFuZCBpbiBvcHRpb25zIGZvciB0aGUga2R1bXAga2VybmVsIGlzDQo+
+ID4gdGhlIGNvbW1hbmQgbGluZS4gV2UgaGF2ZSBhbiBleGlzdGluZyBpbnRlcmZhY2UgZm9yIHRo
+YXQuDQo+ID4NCj4gPiBMZXQncyBtb3ZlIG9uLiBOb3RoaW5nIHRvIHNlZSBoZXJlLg0KPiANCj4g
+U28gQm9yaXMga2luZCBvZiBoYXMgYSBwb2ludDogdGhlcmUgYXJlIG51bWVyb3VzIHByb2JsZW1z
+IHdpdGggYm9vdCBvcHRpb25zIGFzDQo+IGtleGVjIHBhcmFtZXRlciBpbnRlcmZhY2U6DQo+IA0K
+PiAgLSBib290IG9wdGlvbiBzdHJpbmdzIGFyZSBub3QgYSB3ZWxsIGRlZmluZWQgcHJvZ3JhbW1h
+dGljIGludGVyZmFjZToNCj4gICAgIC0gZmFpbHVyZXMgYXJlIG5vdCBvYnZpb3VzICh0aGV5IGFy
+ZSBvZnRlbiBpZ25vcmVkKQ0KPiAgICAgLSBpbnNlcnRpbmcvc2V0dGluZyBwYXJhbWV0ZXJzIGlz
+IGF3a3dhcmQgYXMgd2VsbC4NCj4gDQo+ICAtIGJvb3Qgb3B0aW9ucyBhcmUgbm90IGFuIEFCSSwg
+c28gd2hlbiBvcHRpb25zIGhhdmUgZHVhbCB1c2Ugd2l0aCBrZXhlYyBpdCdzIGVhc3kNCj4gICAg
+dG8gYnJlYWsgdGhpbmdzIGluYWR2ZXJ0ZW50bHk6IHdpdGhvdXQgdGhhdCBmYWlsdXJlIGJlaW5n
+IGFwcGFyZW50IG90aGVyIHRoYW4NCj4gICAgcmVpbnRyb2R1Y2luZyBvYnNjdXJlIGtleGVjIGZh
+aWx1cmUgbW9kZXMgYWdhaW4uDQo+IA0KPiAgLSBpbiB0aGUgYm9vdGVkIHVwIGtleGVjIGtlcm5l
+bCBpdCdzIG5vdCByZWFsbHkgb2J2aW91cyB3aGljaCBvcHRpb25zIGdvdCBzZXQgYnkNCj4gICAg
+a2V4ZWMgYW5kIHdoaWNoIGdvdCBzZXQgYnkgdGhlIHVzZXIgLSBhcyB0aGVyZSdzIG5vIHNlcGFy
+YXRpb24gb2YgbmFtZXNwYWNlcy4NCj4gDQo+ICAtIGxpa2V3aXNlLCBpZiB0aGUgdXNlciBzcGVj
+aWZpZXMgYW4gb3B0aW9uIGluIGNvbmZsaWN0IHdpdGggYSBrZXhlYyByZXF1aXJlbWVudA0KPiAg
+ICBpdCdzIG5vdCByZWFsbHkgb2J2aW91cyB3aGF0J3MgaGFwcGVuaW5nOiB0aGUgdXNlciBzZXR0
+aW5nIHNob3VsZCBwcm9iYWJseQ0KPiAgICBkb21pbmF0ZSAtIEknbSBub3Qgc3VyZSB0aGF0J3Mg
+dGhlIGNhc2Ugd2l0aCB0aGUgY3VycmVudCBrZXhlYyBjb2RlLg0KDQpUaGFua3MgZm9yIHRoZSBk
+ZXRhaWxlZCBleHBsYW5hdGlvbi4gIEkgY2FuIHVuZGVyc3RhbmQgdGhlIGRpc2FkdmFudGFnZXMN
+Cm9mIHVzaW5nIGJvb3Qgb3B0aW9uLiAgU28gdGhlc2UgYXJlIGVzc2VudGlhbCBwcm9ibGVtcyB3
+aXRoIGJvb3Qgb3B0aW9ucw0KcmF0aGVyIHRoYW4gbmV3IGJvb3Qgb3B0aW9uIGFkZGVkIGZvciBr
+ZXhlYydlZCBrZXJuZWwuDQogDQo+IEJvb3Qgb3B0aW9ucyBhcmUgYmFzaWNhbGx5IGEgdXNlciBp
+bnRlcmZhY2UuDQo+IA0KPiBPbiB0aGUgb3RoZXIgaGFuZCB0aGUgaGFjayBvZiAoYWItKXVzaW5n
+IGJvb3QgcGFyYW1ldGVycyBhcyBrZXhlYyBwYXJhbWV0ZXINCj4gcGFzc2luZyBpcyBhbiBleGlz
+dGluZywgbWFueSB5ZWFycyBvbGQgcHJhY3RpY2UgYW5kIHdlIGNhbm5vdCBqdXN0IHN0b3AgaXQg
+d2l0aG91dA0KPiBvZmZlcmluZyBhbiBhbHRlcm5hdGl2ZSAoYW5kIGJldHRlciEpIGludGVyZmFj
+ZSBmaXJzdC4NCj4gDQo+IFdlIGNvdWxkIGltcHJvdmUgdGhpbmdzIGJ5IGVpdGhlciBhZGRpbmcg
+YSBzZXBhcmF0ZSBrZXhlYy1vbmx5IHBhcmFtZXRlciBwYXNzaW5nDQo+IGZhY2lsaXR5IChsaWtl
+IHByb2dyYW1tYXRpYyBib290IHBhcmFtZXRlcnMgYXJlKSAtIG9yIGJ5IGNyZWF0aW5nIHNvbWUg
+c29ydCBvZg0KPiBib290IHBhcmFtZXRlciBhbGlhcyB0aGF0IGNsZWFybHkgaWRlbnRpZmllcyBr
+ZXhlYyBwYXJhbWV0ZXJzLg0KPiANCj4gU28gZm9yIGV4YW1wbGUgd2hlbiBpbnRyb2R1Y2luZyAn
+bm9leHRubWknIHdlJ2QgYWxzbyBhZGQgYSBmYWNpbGl0eSB0byBhZGQgYQ0KPiAna2V4ZWNfbm9l
+eHRubWknIGFsaWFzIC0gd2hpY2ggY2xlYXJseSBpZGVudGlmaWVzIHRoaXMgYm9vdCBwYXJhbWV0
+ZXIgYXMgYSBrZXhlYw0KPiByZWxhdGVkIG9uZS4NCj4gDQo+IEV2ZXJ5ICdrZXhlYycgaW5zZXJ0
+ZWQgcGFyYW1ldGVyIHdvdWxkIGJlIHByZWZpeGVkIGJ5IGtleGVjXyAtIGFuZCB0aGVuIHRoZQ0K
+PiBzZXBhcmF0aW9uIG9mIG5hbWVzcGFjZXMgKGFuZCB0aGUgcHJpb3JpdGl6YXRpb24gb2YgdXNl
+ciB2cy4ga2V4ZWMgcmVxdWlyZW1lbnRzKQ0KPiBiZWNvbWVzIHdlbGwgZGVmaW5lZCBhcyB3ZWxs
+Li4NCj4gDQo+IFdlIHNob3VsZCBhbHNvIHByb2JhYmx5IHByaW50IGEgd2FybmluZyBpZiBhIGtl
+eGVjXyogcGFyYW1ldGVyIGlzIHBhc3NlZCBpbiB0aGF0DQo+IGhhcyBubyBtYXRjaGluZyBoYW5k
+bGVyIGluIHRoZSBrZXhlYygpLWVkIGtlcm5lbC4NCg0KSXQgd291bGQgYmUgcmVhc29uYWJsZS4g
+IE9yIHdlIG1pZ2h0IGltcHJvdmUga2V4ZWMgY29tbWFuZCBzbyB0aGF0DQppdCByZW1vdmVzIGNv
+bmZsaWN0IGJvb3Qgb3B0aW9ucyB3aXRoIHdhcm5pbmdzLg0KDQpBcyBJIHN0YXRlZCBpbiBhbm90
+aGVyIG1haWwsIEknbSBnb2luZyB0byBjaGFuZ2UgIm5vZXh0bm1pIiB0bw0KImFwaWNfZXh0bm1p
+PXtic3B8YWxsfG5vbmV9Iiwgd2hpY2ggY2FuIGJlIHVzZWQgYm90aCB0aGUgZmlyc3QgYW5kDQpz
+ZWNvbmQga2VybmVscy4gIFNvLCBJJ2xsIGFkZCB0aGlzIG9wdGlvbiB3aXRob3V0ICJrZXhlY18i
+IHByZWZpeA0KYXQgdGhpcyBwb2ludC4NCg0KPiBJIGRvIGNvbmN1ciB0aGF0IHRoaXMgcGF0Y2gg
+aXMgcHJvYmFibHkgT0sgZ2l2ZW4gZXhpc3RpbmcgcHJhY3RpY2VzLg0KDQpUaGFua3MhDQoNCi0t
+DQpIaWRlaGlybyBLYXdhaQ0KSGl0YWNoaSwgTHRkLiBSZXNlYXJjaCAmIERldmVsb3BtZW50IEdy
+b3VwDQoNCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
