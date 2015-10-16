@@ -1,38 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp09.uk.ibm.com ([195.75.94.105])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZmhhV-0006fF-Np
- for kexec@lists.infradead.org; Thu, 15 Oct 2015 12:32:06 +0000
-Received: from localhost
- by e06smtp09.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Thu, 15 Oct 2015 13:31:42 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 93370219005C
- for <kexec@lists.infradead.org>; Thu, 15 Oct 2015 13:31:38 +0100 (BST)
-Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
- [9.149.37.251])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t9FCVec229425690
- for <kexec@lists.infradead.org>; Thu, 15 Oct 2015 12:31:40 GMT
-Received: from d06av10.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av10.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t9FBVeDC005513
- for <kexec@lists.infradead.org>; Thu, 15 Oct 2015 05:31:40 -0600
-Date: Thu, 15 Oct 2015 14:31:38 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH] kexec: use mmap instead of read for slurp_file()
-Message-ID: <20151015143138.1287fd6f@holzheu>
-In-Reply-To: <1444867552.3929.7.camel@infradead.org>
-References: <1439914643-26484-1-git-send-email-holzheu@linux.vnet.ibm.com>
- <20150902010721.GE30886@verge.net.au>
- <20150902104839.17674456@holzheu>
- <20150904094541.GA30724@verge.net.au>
- <20150904141159.182c2f08@holzheu>
- <1444867552.3929.7.camel@infradead.org>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZmtrG-0002P8-Ly
+ for kexec@lists.infradead.org; Fri, 16 Oct 2015 01:31:00 +0000
+Date: Fri, 16 Oct 2015 10:30:26 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: determine size of block device
+Message-ID: <20151016013026.GA20667@verge.net.au>
+References: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,35 +23,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: stefan.roscher@de.ibm.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Andreas Fenkart <afenkart@gmail.com>
+Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>, kexec@lists.infradead.org
 
-On Wed, 14 Oct 2015 17:05:52 -0700
-Geoff Levand <geoff@infradead.org> wrote:
+Hi Andreas,
 
-[snip]
+On Fri, Oct 09, 2015 at 03:27:18PM +0200, Andreas Fenkart wrote:
+> starting 'kexec -l /dev/mmcblk0p1' fails since the size of
+> a block device can not be determined with stat
 
-> >  		if (err < 0)
-> >  > 	> 	> 	> die("Can not seek to the begin of file %s: %s\n",
-> >  > 	> 	> 	> 	> 	> filename, strerror(errno));
-> > +> 	> 	> buf = slurp_fd(fd, filename, size, &nread);
-> >  > 	> } else {
-> > -> 	> 	> size = stats.st_size;
-> > +> 	> 	> size = nread = stats.st_size;
-> > +> 	> 	> buf = mmap(NULL, size,
+Could you provide some motivation for kexec reading a kernel image
+from a block device as per the example above?
+
+> Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+> ---
+>  kexec/kexec.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> With this change the caller can't tell if buf was malloc'ed or mmaped.  The
-> only safe thing it can do is to not call free() on the returned buf, this will
-> lead to memory leakage for malloc'ed buffers.
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index ff024f3..8b8846e 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -26,7 +26,9 @@
+>  #include <stdlib.h>
+>  #include <errno.h>
+>  #include <limits.h>
+> +#include <sys/ioctl.h>
+>  #include <sys/mman.h>
+> +#include <sys/mount.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <sys/reboot.h>
+> @@ -554,6 +556,14 @@ char *slurp_file(const char *filename, off_t *r_size)
+>  			die("Can not seek to the begin of file %s: %s\n",
+>  					filename, strerror(errno));
+>  		buf = slurp_fd(fd, filename, size, &nread);
+> +    } else if (S_ISBLK(stats.st_mode)) {
+> +		/* taken from blockdev */
 
-I have read the code and have not found any free call. Therefore I assumed
-that the kexec approach is to not free the buffer *explicitly* and leave to
-the kernel to free it *automatically* at process exit.
+Is "blockdev" Linux kernel code?
 
-@Simon: Was this assumption wrong?
-
-Michael
-
+> +		unsigned long long llu = -1;
+> +		err = ioctl(fd, BLKGETSIZE64, &llu);
+> +		if (err < 0)
+> +			die("Can't retrieve size of block device %s: %s\n",
+> +				filename, strerror(errno));
+> +		size = llu;
+>  	} else {
+>  		size = nread = stats.st_size;
+>  		buf = mmap(NULL, size,
+> -- 
+> 2.5.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
