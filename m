@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZmtrG-0002P8-Ly
- for kexec@lists.infradead.org; Fri, 16 Oct 2015 01:31:00 +0000
-Date: Fri, 16 Oct 2015 10:30:26 +0900
+ id 1Zmtu9-0002k2-K5
+ for kexec@lists.infradead.org; Fri, 16 Oct 2015 01:33:58 +0000
+Date: Fri, 16 Oct 2015 10:33:31 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: determine size of block device
-Message-ID: <20151016013026.GA20667@verge.net.au>
-References: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
+Subject: Re: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
+Message-ID: <20151016013331.GB20667@verge.net.au>
+References: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
+In-Reply-To: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,64 +23,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andreas Fenkart <afenkart@gmail.com>
-Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: jstodola@redhat.com, kexec@lists.infradead.org
 
-Hi Andreas,
+Hi Dave,
 
-On Fri, Oct 09, 2015 at 03:27:18PM +0200, Andreas Fenkart wrote:
-> starting 'kexec -l /dev/mmcblk0p1' fails since the size of
-> a block device can not be determined with stat
-
-Could you provide some motivation for kexec reading a kernel image
-from a block device as per the example above?
-
-> Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
-> ---
->  kexec/kexec.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+On Fri, Oct 09, 2015 at 01:57:22PM +0800, Dave Young wrote:
+> Jan Stodola <jstodola@redhat.com> reported ppc64 root= is always added in kexec
+> kernel cmdline. But sometimes we need boot without root= for example we use
+> kexec to boot into installation initramfs image like below:
+> kexec --load vmlinuz --initrd=initrd.img --command-line=\
+> "inst.repo=http://<server>/<path>/Server/ppc64le/os/"
 > 
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index ff024f3..8b8846e 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -26,7 +26,9 @@
->  #include <stdlib.h>
->  #include <errno.h>
->  #include <limits.h>
-> +#include <sys/ioctl.h>
->  #include <sys/mman.h>
-> +#include <sys/mount.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <sys/reboot.h>
-> @@ -554,6 +556,14 @@ char *slurp_file(const char *filename, off_t *r_size)
->  			die("Can not seek to the begin of file %s: %s\n",
->  					filename, strerror(errno));
->  		buf = slurp_fd(fd, filename, size, &nread);
-> +    } else if (S_ISBLK(stats.st_mode)) {
-> +		/* taken from blockdev */
+> While creating dtb, in case there's no root= in user provided cmdline params 
+> kexec-tools will find the original root= param used in 1st kernel and pass it
+> to 2nd kernel. This caused that user have no way to remove root= cmdline.
+> 
+> Dropping that part of code so that one can get chance to kexec into 2nd kernel
+> without root= param. One can still provide root= in --command-line=""
 
-Is "blockdev" Linux kernel code?
+I'm a little concerned about the backwards-compatibility implications of
+this change. Though I agree the new behaviour is entirely sane perhaps
+it should be activated via a new command line option.
 
-> +		unsigned long long llu = -1;
-> +		err = ioctl(fd, BLKGETSIZE64, &llu);
-> +		if (err < 0)
-> +			die("Can't retrieve size of block device %s: %s\n",
-> +				filename, strerror(errno));
-> +		size = llu;
->  	} else {
->  		size = nread = stats.st_size;
->  		buf = mmap(NULL, size,
-> -- 
-> 2.5.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Also, won't this affect other architectures that use DT.
+I'm thinking about ARM. If so it might be good to tweak the changelog.
 
 _______________________________________________
 kexec mailing list
