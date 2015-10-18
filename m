@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Znesp-0004Th-VL
- for kexec@lists.infradead.org; Sun, 18 Oct 2015 03:43:45 +0000
+ id 1ZnetN-0004Wx-86
+ for kexec@lists.infradead.org; Sun, 18 Oct 2015 03:44:17 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.2 069/258] x86/kexec: Fix kexec crash in syscall
+Subject: [PATCH 4.1 045/202] x86/kexec: Fix kexec crash in syscall
  kexec_file_load()
-Date: Sat, 17 Oct 2015 18:56:22 -0700
-Message-Id: <20151018014733.507043726@linuxfoundation.org>
-In-Reply-To: <20151018014729.976101177@linuxfoundation.org>
-References: <20151018014729.976101177@linuxfoundation.org>
+Date: Sat, 17 Oct 2015 18:57:08 -0700
+Message-Id: <20151018014904.025555800@linuxfoundation.org>
+In-Reply-To: <20151018014901.946875729@linuxfoundation.org>
+References: <20151018014901.946875729@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,7 +27,7 @@ To: linux-kernel@vger.kernel.org
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, "Lee,
  Chun-Yi" <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>, Andy Lutomirski <luto@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Jiang Liu <jiang.liu@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>
 
-4.2-stable review patch.  If anyone has any objections, please let me know.
+4.1-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -107,7 +107,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/kernel/crash.c
 +++ b/arch/x86/kernel/crash.c
-@@ -185,10 +185,9 @@ void native_machine_crash_shutdown(struc
+@@ -184,10 +184,9 @@ void native_machine_crash_shutdown(struc
  }
  
  #ifdef CONFIG_KEXEC_FILE
@@ -120,7 +120,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  
  	(*nr_ranges)++;
  	return 0;
-@@ -214,7 +213,7 @@ static void fill_up_crash_elf_data(struc
+@@ -213,7 +212,7 @@ static void fill_up_crash_elf_data(struc
  
  	ced->image = image;
  
