@@ -1,13 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1445293795.30908.50.camel@infradead.org>
-Subject: Re: [PATCH V2 11/11] arm64: wait for transmit completion before
- next character transmission
+Message-Id: <0e27e2e50ae3c2aa867fd5e778bd2daeb3bc6eba.1445297709.git.geoff@infradead.org>
+In-Reply-To: <cover.1445297709.git.geoff@infradead.org>
+References: <cover.1445297709.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 19 Oct 2015 15:29:55 -0700
-In-Reply-To: <51d1170ea05f86a1ed7bf42f384c600e98447b7a.1431582203.git.panand@redhat.com>
-References: <cover.1431582203.git.panand@redhat.com>
- <51d1170ea05f86a1ed7bf42f384c600e98447b7a.1431582203.git.panand@redhat.com>
-Mime-Version: 1.0
+Subject: [PATCH 06/16] arm64: Add EL2 switch to cpu_reset
+Date: Mon, 19 Oct 2015 23:38:53 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,76 +13,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, marc.zyngier@arm.com, kexec@lists.infradead.org, Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi,
+When a CPU is reset it needs to be put into the exception level it had
+when it entered the kernel. Update cpu_reset() to accept an argument
+which signals if the reset address needs to be entered at EL1 or EL2.
 
-I tested this on the foundation model and it hangs.
+Also, update the comments of cpu_reset() and cpu_soft_restart() to reflect
+this change.
 
--Geoff
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ arch/arm64/kernel/cpu-reset.S | 22 +++++++++++++++++++---
+ arch/arm64/kernel/cpu-reset.h |  4 +++-
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-On Thu, 2015-05-14 at 11:25 +0530, Pratyush Anand wrote:
-> Previous transmission must be completed before next character to be
-> transmitted, otherwise TX buffer may saturate and we will not see all
-> the characters on screen.
-> 
-> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> ---
->  purgatory/arch/arm64/purgatory-arm64.c | 24 +++++++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/purgatory/arch/arm64/purgatory-arm64.c
-> b/purgatory/arch/arm64/purgatory-arm64.c
-> index 25960c30bd05..3a1c9243bfa2 100644
-> --- a/purgatory/arch/arm64/purgatory-arm64.c
-> +++ b/purgatory/arch/arm64/purgatory-arm64.c
-> @@ -11,15 +11,37 @@ extern uint32_t *arm64_sink;
->  extern void (*arm64_kernel_entry)(uint64_t);
->  extern uint64_t arm64_dtb_addr;
->  
-> +static void wait_for_xmit_complete(void)
-> +{
-> +	volatile uint32_t status;
-> +	volatile uint32_t *status_reg;
-> +
-> +	/*
-> +	 * Since most of the UART with ARM platform has LSR register
-> at
-> +	 * offset 0x14 and should have value as 0x60 for TX empty,
-> so we
-> +	 * have hardcoded these values. Can modify in future if need
-> +	 * arises.
-> +	 */
-> +	status_reg = (volatile uint32_t *)((uint64_t)arm64_sink +
-> 0x14);
-> +	while (1) {
-> +		status = *status_reg;
-> +		if ((status & 0x60) == 0x60)
-> +			break;
-> +	}
-> +}
-> +
->  void putchar(int ch)
->  {
->  	if (!arm64_sink)
->  		return;
->  
-> +	wait_for_xmit_complete();
->  	*arm64_sink = ch;
->  
-> -	if (ch == '\n')
-> +	if (ch == '\n') {
-> +		wait_for_xmit_complete();
->  		*arm64_sink = '\r';
-> +	}
->  }
->  
->  void setup_arch(void)
+diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+index 64d9d7c..ffc9e385e 100644
+--- a/arch/arm64/kernel/cpu-reset.S
++++ b/arch/arm64/kernel/cpu-reset.S
+@@ -16,6 +16,7 @@
+ #include <asm/assembler.h>
+ #include <asm/cpufeature.h>
+ #include <asm/alternative.h>
++#include <asm/virt.h>
+ 
+ .text
+ .pushsection    .idmap.text, "ax"
+@@ -23,9 +24,14 @@
+ .align 5
+ 
+ /*
+- * cpu_reset(addr) - Helper for cpu_soft_restart.
++ * cpu_reset(addr, el2_switch) - Helper for cpu_soft_restart.
+  *
+  * @addr: Location to jump to for soft reset.
++ * @el2_switch: Flag to indicate a swich to EL2 is needed.
++ *
++ * Put the CPU into the same state as it would be if it had been reset, and
++ * branch to what would be the reset vector. It must be executed with the
++ * flat identity mapping.
+  */
+ 
+ ENTRY(cpu_reset)
+@@ -33,19 +39,28 @@ ENTRY(cpu_reset)
+ 	bic	x2, x2, #1
+ 	msr	sctlr_el1, x2			// disable the MMU
+ 	isb
+-	ret	x0
++
++	cbz	x1, 1f				// el2_switch?
++	mov	x1, xzr
++	mov	x2, xzr
++	mov	x3, xzr
++	hvc	#HVC_CALL_FUNC			// no return
++
++1:	ret	x0
+ ENDPROC(cpu_reset)
+ 
+ /*
+- * cpu_soft_restart(cpu_reset, addr) - Perform a cpu soft reset.
++ * cpu_soft_restart(cpu_reset, addr, el2_switch) - Perform a cpu soft reset.
+  *
+  * @cpu_reset: Physical address of the cpu_reset routine.
+  * @addr: Location to jump to for soft reset, passed to cpu_reset.
++ * @el2_switch: Flag to indicate a swich to EL2 is needed, passed to cpu_reset.
+  */
+ 
+ ENTRY(cpu_soft_restart)
+ 	mov	x19, x0				// cpu_reset
+ 	mov	x20, x1				// addr
++	mov	x21, x2				// el2_switch
+ 
+ 	/* Turn D-cache off */
+ 	mrs	x0, sctlr_el1
+@@ -54,6 +69,7 @@ ENTRY(cpu_soft_restart)
+ 	isb
+ 
+ 	mov	x0, x20
++	mov	x1, x21
+ 	ret	x19
+ ENDPROC(cpu_soft_restart)
+ 
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+index 4e16dfe..ef3bba2 100644
+--- a/arch/arm64/kernel/cpu-reset.h
++++ b/arch/arm64/kernel/cpu-reset.h
+@@ -11,8 +11,10 @@
+ #if !defined(_ARM64_CPU_RESET_H)
+ #define _ARM64_CPU_RESET_H
+ 
++#include <asm/virt.h>
++
+ void __attribute__((noreturn)) cpu_reset(unsigned long addr);
+ void __attribute__((noreturn)) cpu_soft_restart(phys_addr_t cpu_reset,
+-	unsigned long addr);
++	unsigned long addr, unsigned long el2_switch);
+ 
+ #endif
+-- 
+2.5.0
+
+
 
 _______________________________________________
 kexec mailing list
