@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
+Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZoR1w-0003RW-T1
- for kexec@lists.infradead.org; Tue, 20 Oct 2015 07:08:21 +0000
-Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
- [10.134.21.209])
- by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id CA216AC00AA
- for <kexec@lists.infradead.org>; Tue, 20 Oct 2015 16:07:55 +0900 (JST)
-Date: Tue, 20 Oct 2015 16:07:41 +0900 (JST)
-Message-Id: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 1/2] sadump, bugfix: change bit order
+ id 1ZoR5G-0005zj-Va
+ for kexec@lists.infradead.org; Tue, 20 Oct 2015 07:11:47 +0000
+Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
+ by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id A49FEAC0145
+ for <kexec@lists.infradead.org>; Tue, 20 Oct 2015 16:11:22 +0900 (JST)
+Date: Tue, 20 Oct 2015 16:11:16 +0900 (JST)
+Message-Id: <20151020.161116.161122832.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH 2/2] sadump, bugfix: perform explicit zero page filtering
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
+References: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,149 +26,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
-Cc: kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com, indou.takao@jp.fujitsu.com
+Cc: indou.takao@jp.fujitsu.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
 
-sadump formats associate each bit in a bitmap with a physical page in
-reverse order with the kdump-compressed format.
-
-We had not detected this bug for considerably long term because
-bitmaps in sadump formats consist mostly of 0x00 and 0xff excluding a
-very limited amount of memory space for firmware.
+Currently, crash utility faces different behaviors on reading zero
+pages that are filtered out on the kdump-compressed format originating
+from kdump ELF and from sadump formats: the former succeeds in reading
+zero pages but the latter fails. This is a design bug. To fix this
+issue, perform zero pages filtering explicitly if some pages are
+filtered out.
 
 Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- sadump_info.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 73 insertions(+), 2 deletions(-)
+ sadump_info.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/sadump_info.c b/sadump_info.c
-index e2c4f03..e30b802 100644
+index e30b802..63d00c6 100644
 --- a/sadump_info.c
 +++ b/sadump_info.c
-@@ -85,6 +85,7 @@ struct sadump_info {
- 	unsigned long long backup_offset;
- 	int kdump_backed_up;
- 	mdf_pfn_t max_mapnr;
-+	struct dump_bitmap *ram_bitmap;
- };
+@@ -878,6 +878,21 @@ sadump_initialize_bitmap_memory(void)
+ 	bmp->offset = si->sub_hdr_offset + sh->block_size * sh->sub_hdr_size;
+ 	si->ram_bitmap = bmp;
  
- static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
-@@ -127,6 +128,35 @@ static int get_registers(int cpu, struct elf_prstatus *prstatus);
- static struct sadump_info sadump_info = {};
- static struct sadump_info *si = &sadump_info;
- 
-+static inline int
-+sadump_is_on(char *bitmap, mdf_pfn_t i)
-+{
-+	return bitmap[i >> 3] & (1 << (7 - (i & 7)));
-+}
-+
-+static inline int
-+sadump_is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
-+{
-+	off_t offset;
-+
-+	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
-+		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
-+		lseek(bitmap->fd, offset, SEEK_SET);
-+		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
-+		if (pfn == 0)
-+			bitmap->no_block = 0;
-+		else
-+			bitmap->no_block = pfn / PFN_BUFBITMAP;
++	/*
++	 * Perform explicitly zero filtering. Without this processing
++	 * crash utility faces different behaviors on reading zero
++	 * pages that are filtered out on the kdump-compressed format
++	 * originating from kdump ELF and from sadump formats: the
++	 * former succeeds in reading zero pages but the latter fails.
++	 */
++	for (pfn = 0; pfn < si->max_mapnr; pfn++) {
++		if (sadump_is_ram(pfn) &&
++		    !sadump_is_dumpable(info->bitmap_memory, pfn)) {
++			info->dump_level |= DL_EXCLUDE_ZERO;
++			break;
++		}
 +	}
-+	return sadump_is_on(bitmap->buf, pfn % PFN_BUFBITMAP);
-+}
-+
-+static inline int
-+sadump_is_ram(mdf_pfn_t pfn)
-+{
-+	return sadump_is_dumpable(si->ram_bitmap, pfn);
-+}
-+
- int
- check_and_get_sadump_header_info(char *filename)
- {
-@@ -161,6 +191,21 @@ check_and_get_sadump_header_info(char *filename)
- 	return TRUE;
- }
- 
-+static void
-+reverse_bit(char *buf, int len)
-+{
-+	int i;
-+	unsigned char c;
-+
-+	for (i = 0; i < len; i++) {
-+		c = buf[i];
-+		c = ((c & 0x55) << 1) | ((c & 0xaa) >> 1); /* Swap 1bit */
-+		c = ((c & 0x33) << 2) | ((c & 0xcc) >> 2); /* Swap 2bit */
-+		c = (c << 4) | (c >> 4); /* Swap 4bit */
-+		buf[i] = c;
-+	}
-+}
-+
- int
- sadump_copy_1st_bitmap_from_memory(void)
- {
-@@ -189,6 +234,14 @@ sadump_copy_1st_bitmap_from_memory(void)
- 			       info->name_memory, strerror(errno));
- 			return FALSE;
- 		}
-+		/*
-+		 * sadump formats associate each bit in a bitmap with
-+		 * a physical page in reverse order with the
-+		 * kdump-compressed format. We need to change bit
-+		 * order to reuse bitmaps in sadump formats in the
-+		 * kdump-compressed format.
-+		 */
-+		reverse_bit(buf, sizeof(buf));
- 		if (write(info->bitmap1->fd, buf, sizeof(buf)) != sizeof(buf)) {
- 			ERRMSG("Can't write the bitmap(%s). %s\n",
- 			       info->bitmap1->file_name, strerror(errno));
-@@ -812,6 +865,19 @@ sadump_initialize_bitmap_memory(void)
- 	info->bitmap_memory = bmp;
- 	si->block_table = block_table;
- 
-+	bmp = malloc(sizeof(struct dump_bitmap));
-+	if (bmp == NULL) {
-+		ERRMSG("Can't allocate memory for the memory-bitmap. %s\n",
-+		       strerror(errno));
-+		return FALSE;
-+	}
-+	bmp->fd = info->fd_memory;
-+	bmp->file_name = info->name_memory;
-+	bmp->no_block = -1;
-+	memset(bmp->buf, 0, BUFSIZE_BITMAP);
-+	bmp->offset = si->sub_hdr_offset + sh->block_size * sh->sub_hdr_size;
-+	si->ram_bitmap = bmp;
 +
  	return TRUE;
  }
  
-@@ -981,7 +1047,12 @@ readpage_sadump(unsigned long long paddr, void *bufptr)
- 	if (pfn >= si->max_mapnr)
- 		return FALSE;
+@@ -1053,9 +1068,8 @@ readpage_sadump(unsigned long long paddr, void *bufptr)
+ 	}
  
--	if (!is_dumpable(info->bitmap_memory, pfn)) {
-+	if (!sadump_is_ram(pfn)) {
-+		ERRMSG("pfn(%llx) is not ram.\n", pfn);
-+		return FALSE;
-+	}
-+
-+	if (!sadump_is_dumpable(info->bitmap_memory, pfn)) {
- 		ERRMSG("pfn(%llx) is excluded from %s.\n", pfn,
- 		       info->name_memory);
- 		return FALSE;
-@@ -1146,7 +1217,7 @@ pfn_to_block(mdf_pfn_t pfn)
- 		block = 0;
+ 	if (!sadump_is_dumpable(info->bitmap_memory, pfn)) {
+-		ERRMSG("pfn(%llx) is excluded from %s.\n", pfn,
+-		       info->name_memory);
+-		return FALSE;
++		memset(bufptr, 0, info->page_size);
++		return TRUE;
+ 	}
  
- 	for (p = section * SADUMP_PF_SECTION_NUM; p < pfn; ++p)
--		if (is_dumpable(info->bitmap_memory, p))
-+		if (sadump_is_dumpable(info->bitmap_memory, p))
- 			block++;
- 
- 	return block;
+ 	block = pfn_to_block(pfn);
 -- 
 1.9.3
 
