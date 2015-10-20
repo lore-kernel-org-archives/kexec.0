@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mgwkm02.jp.fujitsu.com ([202.219.69.169])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZoMsU-0002XJ-P4
- for kexec@lists.infradead.org; Tue, 20 Oct 2015 02:42:20 +0000
-Date: Tue, 20 Oct 2015 08:11:53 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH V2 11/11] arm64: wait for transmit completion before next
- character transmission
-Message-ID: <20151020024153.GA31893@dhcppc13.redhat.com>
-References: <cover.1431582203.git.panand@redhat.com>
- <51d1170ea05f86a1ed7bf42f384c600e98447b7a.1431582203.git.panand@redhat.com>
- <1445293795.30908.50.camel@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1445293795.30908.50.camel@infradead.org>
+ id 1ZoR1w-0003RW-T1
+ for kexec@lists.infradead.org; Tue, 20 Oct 2015 07:08:21 +0000
+Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com
+ [10.134.21.209])
+ by kw-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id CA216AC00AA
+ for <kexec@lists.infradead.org>; Tue, 20 Oct 2015 16:07:55 +0900 (JST)
+Date: Tue, 20 Oct 2015 16:07:41 +0900 (JST)
+Message-Id: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH 1/2] sadump, bugfix: change bit order
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,83 +24,154 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
+To: ats-kumagai@wm.jp.nec.com
+Cc: kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com, indou.takao@jp.fujitsu.com
 
-On 19/10/2015:03:29:55 PM, Geoff Levand wrote:
-Hi Geoff,
-> 
-> I tested this on the foundation model and it hangs.
+sadump formats associate each bit in a bitmap with a physical page in
+reverse order with the kdump-compressed format.
 
-Thanks for testing it.
+We had not detected this bug for considerably long term because
+bitmaps in sadump formats consist mostly of 0x00 and 0xff excluding a
+very limited amount of memory space for firmware.
 
-Which uart model has been used in foundation model?
-Does it have LSR register at offset 0x14? Should we expect 0x60 in LSR for TX
-buffer to be empty? May be I can do a V3 of this patch where we pass
---port="uart_base","LSR","TX_EMPTY" (like --port=0x1c020000,0x14,0x60).
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ sadump_info.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 73 insertions(+), 2 deletions(-)
 
-~Pratyush
+diff --git a/sadump_info.c b/sadump_info.c
+index e2c4f03..e30b802 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -85,6 +85,7 @@ struct sadump_info {
+ 	unsigned long long backup_offset;
+ 	int kdump_backed_up;
+ 	mdf_pfn_t max_mapnr;
++	struct dump_bitmap *ram_bitmap;
+ };
+ 
+ static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
+@@ -127,6 +128,35 @@ static int get_registers(int cpu, struct elf_prstatus *prstatus);
+ static struct sadump_info sadump_info = {};
+ static struct sadump_info *si = &sadump_info;
+ 
++static inline int
++sadump_is_on(char *bitmap, mdf_pfn_t i)
++{
++	return bitmap[i >> 3] & (1 << (7 - (i & 7)));
++}
++
++static inline int
++sadump_is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
++{
++	off_t offset;
++
++	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
++		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
++		lseek(bitmap->fd, offset, SEEK_SET);
++		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
++		if (pfn == 0)
++			bitmap->no_block = 0;
++		else
++			bitmap->no_block = pfn / PFN_BUFBITMAP;
++	}
++	return sadump_is_on(bitmap->buf, pfn % PFN_BUFBITMAP);
++}
++
++static inline int
++sadump_is_ram(mdf_pfn_t pfn)
++{
++	return sadump_is_dumpable(si->ram_bitmap, pfn);
++}
++
+ int
+ check_and_get_sadump_header_info(char *filename)
+ {
+@@ -161,6 +191,21 @@ check_and_get_sadump_header_info(char *filename)
+ 	return TRUE;
+ }
+ 
++static void
++reverse_bit(char *buf, int len)
++{
++	int i;
++	unsigned char c;
++
++	for (i = 0; i < len; i++) {
++		c = buf[i];
++		c = ((c & 0x55) << 1) | ((c & 0xaa) >> 1); /* Swap 1bit */
++		c = ((c & 0x33) << 2) | ((c & 0xcc) >> 2); /* Swap 2bit */
++		c = (c << 4) | (c >> 4); /* Swap 4bit */
++		buf[i] = c;
++	}
++}
++
+ int
+ sadump_copy_1st_bitmap_from_memory(void)
+ {
+@@ -189,6 +234,14 @@ sadump_copy_1st_bitmap_from_memory(void)
+ 			       info->name_memory, strerror(errno));
+ 			return FALSE;
+ 		}
++		/*
++		 * sadump formats associate each bit in a bitmap with
++		 * a physical page in reverse order with the
++		 * kdump-compressed format. We need to change bit
++		 * order to reuse bitmaps in sadump formats in the
++		 * kdump-compressed format.
++		 */
++		reverse_bit(buf, sizeof(buf));
+ 		if (write(info->bitmap1->fd, buf, sizeof(buf)) != sizeof(buf)) {
+ 			ERRMSG("Can't write the bitmap(%s). %s\n",
+ 			       info->bitmap1->file_name, strerror(errno));
+@@ -812,6 +865,19 @@ sadump_initialize_bitmap_memory(void)
+ 	info->bitmap_memory = bmp;
+ 	si->block_table = block_table;
+ 
++	bmp = malloc(sizeof(struct dump_bitmap));
++	if (bmp == NULL) {
++		ERRMSG("Can't allocate memory for the memory-bitmap. %s\n",
++		       strerror(errno));
++		return FALSE;
++	}
++	bmp->fd = info->fd_memory;
++	bmp->file_name = info->name_memory;
++	bmp->no_block = -1;
++	memset(bmp->buf, 0, BUFSIZE_BITMAP);
++	bmp->offset = si->sub_hdr_offset + sh->block_size * sh->sub_hdr_size;
++	si->ram_bitmap = bmp;
++
+ 	return TRUE;
+ }
+ 
+@@ -981,7 +1047,12 @@ readpage_sadump(unsigned long long paddr, void *bufptr)
+ 	if (pfn >= si->max_mapnr)
+ 		return FALSE;
+ 
+-	if (!is_dumpable(info->bitmap_memory, pfn)) {
++	if (!sadump_is_ram(pfn)) {
++		ERRMSG("pfn(%llx) is not ram.\n", pfn);
++		return FALSE;
++	}
++
++	if (!sadump_is_dumpable(info->bitmap_memory, pfn)) {
+ 		ERRMSG("pfn(%llx) is excluded from %s.\n", pfn,
+ 		       info->name_memory);
+ 		return FALSE;
+@@ -1146,7 +1217,7 @@ pfn_to_block(mdf_pfn_t pfn)
+ 		block = 0;
+ 
+ 	for (p = section * SADUMP_PF_SECTION_NUM; p < pfn; ++p)
+-		if (is_dumpable(info->bitmap_memory, p))
++		if (sadump_is_dumpable(info->bitmap_memory, p))
+ 			block++;
+ 
+ 	return block;
+-- 
+1.9.3
 
-> 
-> -Geoff
-> 
-> On Thu, 2015-05-14 at 11:25 +0530, Pratyush Anand wrote:
-> > Previous transmission must be completed before next character to be
-> > transmitted, otherwise TX buffer may saturate and we will not see all
-> > the characters on screen.
-> > 
-> > Signed-off-by: Pratyush Anand <panand@redhat.com>
-> > ---
-> >  purgatory/arch/arm64/purgatory-arm64.c | 24 +++++++++++++++++++++++-
-> >  1 file changed, 23 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/purgatory/arch/arm64/purgatory-arm64.c
-> > b/purgatory/arch/arm64/purgatory-arm64.c
-> > index 25960c30bd05..3a1c9243bfa2 100644
-> > --- a/purgatory/arch/arm64/purgatory-arm64.c
-> > +++ b/purgatory/arch/arm64/purgatory-arm64.c
-> > @@ -11,15 +11,37 @@ extern uint32_t *arm64_sink;
-> >  extern void (*arm64_kernel_entry)(uint64_t);
-> >  extern uint64_t arm64_dtb_addr;
-> >  
-> > +static void wait_for_xmit_complete(void)
-> > +{
-> > +	volatile uint32_t status;
-> > +	volatile uint32_t *status_reg;
-> > +
-> > +	/*
-> > +	 * Since most of the UART with ARM platform has LSR register
-> > at
-> > +	 * offset 0x14 and should have value as 0x60 for TX empty,
-> > so we
-> > +	 * have hardcoded these values. Can modify in future if need
-> > +	 * arises.
-> > +	 */
-> > +	status_reg = (volatile uint32_t *)((uint64_t)arm64_sink +
-> > 0x14);
-> > +	while (1) {
-> > +		status = *status_reg;
-> > +		if ((status & 0x60) == 0x60)
-> > +			break;
-> > +	}
-> > +}
-> > +
-> >  void putchar(int ch)
-> >  {
-> >  	if (!arm64_sink)
-> >  		return;
-> >  
-> > +	wait_for_xmit_complete();
-> >  	*arm64_sink = ch;
-> >  
-> > -	if (ch == '\n')
-> > +	if (ch == '\n') {
-> > +		wait_for_xmit_complete();
-> >  		*arm64_sink = '\r';
-> > +	}
-> >  }
-> >  
-> >  void setup_arch(void)
+
 
 _______________________________________________
 kexec mailing list
