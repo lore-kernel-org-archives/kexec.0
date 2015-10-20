@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56266A2C.7000005@arm.com>
-Date: Tue, 20 Oct 2015 17:22:04 +0100
-From: James Morse <james.morse@arm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] fixup! arm64: kvm: allows kvm cpu hotplug
-References: <1445327907-23274-1-git-send-email-takahiro.akashi@linaro.org>
- <1445327907-23274-3-git-send-email-takahiro.akashi@linaro.org>
-In-Reply-To: <1445327907-23274-3-git-send-email-takahiro.akashi@linaro.org>
+Message-ID: <1445360694.30908.58.camel@infradead.org>
+Subject: Re: [PATCH V2 11/11] arm64: wait for transmit completion before
+ next character transmission
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 20 Oct 2015 10:04:54 -0700
+In-Reply-To: <20151020024153.GA31893@dhcppc13.redhat.com>
+References: <cover.1431582203.git.panand@redhat.com>
+ <51d1170ea05f86a1ed7bf42f384c600e98447b7a.1431582203.git.panand@redhat.com>
+ <1445293795.30908.50.camel@infradead.org>
+ <20151020024153.GA31893@dhcppc13.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,28 +22,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, broonie@kernel.org, david.griego@linaro.org, kexec@lists.infradead.org, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
 
-On 20/10/15 08:58, AKASHI Takahiro wrote:
-> Without this patch, kvm cannot start a guest when cpuidle is enabled
-> if the hardware does not retain cpu state (EL2) in idle state.
+Hi,
+
+On Tue, 2015-10-20 at 08:11 +0530, Pratyush Anand wrote:
+> On 19/10/2015:03:29:55 PM, Geoff Levand wrote:
+> I tested this on the foundation model and it hangs.
 > 
-> This patch re-initailizes EL2 state at CPU_PM_EXIT by calling
-> kvm_arch_hardware_enable() if and only if kvm has been initialized
-> before CPU_PM_ENTER, that is, if any vcpus have been created.
+> Thanks for testing it.
 > 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Which uart model has been used in foundation model?
 
-This solves my issue with the v5 version here [0].
-Tested-By: James Morse <james.morse@arm.com>
+I only tested it, but did not look into it.  The
+documentation should be on the ARM developer's site.
 
+-Geoff
 
-Thanks!
-
-James
-
-[0] https://lists.linaro.org/pipermail/linaro-kernel/2015-May/021575.html
 
 _______________________________________________
 kexec mailing list
