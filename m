@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym01.jp.fujitsu.com ([211.128.242.40])
+Received: from mail-pa0-f50.google.com ([209.85.220.50])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZoR5G-0005zj-Va
- for kexec@lists.infradead.org; Tue, 20 Oct 2015 07:11:47 +0000
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by yt-mxq.gw.nic.fujitsu.com (Postfix) with ESMTP id A49FEAC0145
- for <kexec@lists.infradead.org>; Tue, 20 Oct 2015 16:11:22 +0900 (JST)
-Date: Tue, 20 Oct 2015 16:11:16 +0900 (JST)
-Message-Id: <20151020.161116.161122832.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 2/2] sadump, bugfix: perform explicit zero page filtering
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
-References: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+ id 1ZoRpV-0005AK-35
+ for kexec@lists.infradead.org; Tue, 20 Oct 2015 07:59:34 +0000
+Received: by pacfv9 with SMTP id fv9so14397628pac.3
+ for <kexec@lists.infradead.org>; Tue, 20 Oct 2015 00:59:11 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH 0/2] arm64: kexec/kdump fixes for v10
+Date: Tue, 20 Oct 2015 16:58:25 +0900
+Message-Id: <1445327907-23274-1-git-send-email-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,67 +17,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: indou.takao@jp.fujitsu.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, marc.zyngier@arm.com
+Cc: mark.rutland@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, broonie@kernel.org, david.griego@linaro.org, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-Currently, crash utility faces different behaviors on reading zero
-pages that are filtered out on the kdump-compressed format originating
-from kdump ELF and from sadump formats: the former succeeds in reading
-zero pages but the latter fails. This is a design bug. To fix this
-issue, perform zero pages filtering explicitly if some pages are
-filtered out.
+These patches should be applied on top of Geoff's kexec/kdump patch[1],
+v10, to fix some issues. I should have merged it before the submission
+but I missed the timing. Sorry.
 
-Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- sadump_info.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Please go ahead and review v10 since these patches don't change any
+main logic of kexec/kdump. I will merge them in the next submission.
 
-diff --git a/sadump_info.c b/sadump_info.c
-index e30b802..63d00c6 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -878,6 +878,21 @@ sadump_initialize_bitmap_memory(void)
- 	bmp->offset = si->sub_hdr_offset + sh->block_size * sh->sub_hdr_size;
- 	si->ram_bitmap = bmp;
- 
-+	/*
-+	 * Perform explicitly zero filtering. Without this processing
-+	 * crash utility faces different behaviors on reading zero
-+	 * pages that are filtered out on the kdump-compressed format
-+	 * originating from kdump ELF and from sadump formats: the
-+	 * former succeeds in reading zero pages but the latter fails.
-+	 */
-+	for (pfn = 0; pfn < si->max_mapnr; pfn++) {
-+		if (sadump_is_ram(pfn) &&
-+		    !sadump_is_dumpable(info->bitmap_memory, pfn)) {
-+			info->dump_level |= DL_EXCLUDE_ZERO;
-+			break;
-+		}
-+	}
-+
- 	return TRUE;
- }
- 
-@@ -1053,9 +1068,8 @@ readpage_sadump(unsigned long long paddr, void *bufptr)
- 	}
- 
- 	if (!sadump_is_dumpable(info->bitmap_memory, pfn)) {
--		ERRMSG("pfn(%llx) is excluded from %s.\n", pfn,
--		       info->name_memory);
--		return FALSE;
-+		memset(bufptr, 0, info->page_size);
-+		return TRUE;
- 	}
- 
- 	block = pfn_to_block(pfn);
+Patch 1 fixes a cpuidle issue reported by James[2].
+
+Patch 2 allows kdump to start a crash kernel even with a kvm guest still
+running. (I accidentally dropped this hack when rebasing my part.)
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/379268.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-October/376460.html
+
+AKASHI Takahiro (2):
+  fixup! arm64: kdump: implement machine_crash_shutdown()
+  fixup! arm64: kvm: allows kvm cpu hotplug
+
+ arch/arm/kvm/arm.c                |   25 +++++++++++++++++++++----
+ arch/arm64/kernel/machine_kexec.c |    2 +-
+ 2 files changed, 22 insertions(+), 5 deletions(-)
+
 -- 
-1.9.3
-
+1.7.9.5
 
 
 _______________________________________________
