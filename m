@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZoLiC-0007x2-QL
- for kexec@lists.infradead.org; Tue, 20 Oct 2015 01:27:37 +0000
-Date: Tue, 20 Oct 2015 10:27:14 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: determine size of block device
-Message-ID: <20151020012714.GE11217@verge.net.au>
-References: <1444397238-14330-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
- <20151016013026.GA20667@verge.net.au>
- <CALtMJEDut5=vr6pDtEyuAK0yW09CX60KSfN8Ug7ZiPk5sEx0Sg@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZoMsU-0002XJ-P4
+ for kexec@lists.infradead.org; Tue, 20 Oct 2015 02:42:20 +0000
+Date: Tue, 20 Oct 2015 08:11:53 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH V2 11/11] arm64: wait for transmit completion before next
+ character transmission
+Message-ID: <20151020024153.GA31893@dhcppc13.redhat.com>
+References: <cover.1431582203.git.panand@redhat.com>
+ <51d1170ea05f86a1ed7bf42f384c600e98447b7a.1431582203.git.panand@redhat.com>
+ <1445293795.30908.50.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CALtMJEDut5=vr6pDtEyuAK0yW09CX60KSfN8Ug7ZiPk5sEx0Sg@mail.gmail.com>
+In-Reply-To: <1445293795.30908.50.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,90 +26,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andreas Fenkart <afenkart@gmail.com>
-Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>, kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
 
-On Mon, Oct 19, 2015 at 11:32:58AM +0200, Andreas Fenkart wrote:
-> Hi Simon,
+On 19/10/2015:03:29:55 PM, Geoff Levand wrote:
+Hi Geoff,
 > 
-> 2015-10-16 3:30 GMT+02:00 Simon Horman <horms@verge.net.au>:
-> > On Fri, Oct 09, 2015 at 03:27:18PM +0200, Andreas Fenkart wrote:
-> >> starting 'kexec -l /dev/mmcblk0p1' fails since the size of
-> >> a block device can not be determined with stat
-> >
-> > Could you provide some motivation for kexec reading a kernel image
-> > from a block device as per the example above?
-> 
-> We plan to use it for our embedded system
-> 
-> We have an interim initramfs, that selects the kernel we want to boot
-> our real system. Something like a n+1 stage boot loader,
-> where n is the last stage of u-boot. The motivation is to do a safe
-> kernel upgrade on the production rootfs through package management.
-> The new kernel is dropped into a folder where the interim system will
-> selects the kernel with the highest priority. No reconfiguration of
-> u-boot/rescue system needed. In case no kernel has yet been installed,
-> we fall back to the factory default, which is installed in a raw flash
-> partition on eMMC without filesystem.
-> 
-> https://git.digitalstrom.org/bsp/dss-rescue-tools/blob/master/src/kernel-fallback-dss11-1gb-t1.config
+> I tested this on the foundation model and it hangs.
 
-Nice :)
+Thanks for testing it.
 
-> >> Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
-> >> ---
-> >>  kexec/kexec.c | 10 ++++++++++
-> >>  1 file changed, 10 insertions(+)
-> >>
-> >> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> >> index ff024f3..8b8846e 100644
-> >> --- a/kexec/kexec.c
-> >> +++ b/kexec/kexec.c
-> >> @@ -26,7 +26,9 @@
-> >>  #include <stdlib.h>
-> >>  #include <errno.h>
-> >>  #include <limits.h>
-> >> +#include <sys/ioctl.h>
-> >>  #include <sys/mman.h>
-> >> +#include <sys/mount.h>
-> >>  #include <sys/types.h>
-> >>  #include <sys/stat.h>
-> >>  #include <sys/reboot.h>
-> >> @@ -554,6 +556,14 @@ char *slurp_file(const char *filename, off_t *r_size)
-> >>                       die("Can not seek to the begin of file %s: %s\n",
-> >>                                       filename, strerror(errno));
-> >>               buf = slurp_fd(fd, filename, size, &nread);
-> >> +    } else if (S_ISBLK(stats.st_mode)) {
-> >> +             /* taken from blockdev */
-> >
-> > Is "blockdev" Linux kernel code?
+Which uart model has been used in foundation model?
+Does it have LSR register at offset 0x14? Should we expect 0x60 in LSR for TX
+buffer to be empty? May be I can do a V3 of this patch where we pass
+--port="uart_base","LSR","TX_EMPTY" (like --port=0x1c020000,0x14,0x60).
+
+~Pratyush
+
 > 
-> It is a util-linux tool, which is GPL of course. I added the comment
-> as a reference, since I couldn't find a man page for BLKGETSIZE64.
-> Since it's a straight forward ioctl call, there is probably no
-> copyright violation at all, and I could well remove it.
-
-Understood. Could you repost with the blockdev comment removed?
-
-> >> +             unsigned long long llu = -1;
-> >> +             err = ioctl(fd, BLKGETSIZE64, &llu);
-> >> +             if (err < 0)
-> >> +                     die("Can't retrieve size of block device %s: %s\n",
-> >> +                             filename, strerror(errno));
-> >> +             size = llu;
-> >>       } else {
-> >>               size = nread = stats.st_size;
-> >>               buf = mmap(NULL, size,
-> >> --
-> >> 2.5.1
-> >>
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
-> >>
+> -Geoff
 > 
+> On Thu, 2015-05-14 at 11:25 +0530, Pratyush Anand wrote:
+> > Previous transmission must be completed before next character to be
+> > transmitted, otherwise TX buffer may saturate and we will not see all
+> > the characters on screen.
+> > 
+> > Signed-off-by: Pratyush Anand <panand@redhat.com>
+> > ---
+> >  purgatory/arch/arm64/purgatory-arm64.c | 24 +++++++++++++++++++++++-
+> >  1 file changed, 23 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/purgatory/arch/arm64/purgatory-arm64.c
+> > b/purgatory/arch/arm64/purgatory-arm64.c
+> > index 25960c30bd05..3a1c9243bfa2 100644
+> > --- a/purgatory/arch/arm64/purgatory-arm64.c
+> > +++ b/purgatory/arch/arm64/purgatory-arm64.c
+> > @@ -11,15 +11,37 @@ extern uint32_t *arm64_sink;
+> >  extern void (*arm64_kernel_entry)(uint64_t);
+> >  extern uint64_t arm64_dtb_addr;
+> >  
+> > +static void wait_for_xmit_complete(void)
+> > +{
+> > +	volatile uint32_t status;
+> > +	volatile uint32_t *status_reg;
+> > +
+> > +	/*
+> > +	 * Since most of the UART with ARM platform has LSR register
+> > at
+> > +	 * offset 0x14 and should have value as 0x60 for TX empty,
+> > so we
+> > +	 * have hardcoded these values. Can modify in future if need
+> > +	 * arises.
+> > +	 */
+> > +	status_reg = (volatile uint32_t *)((uint64_t)arm64_sink +
+> > 0x14);
+> > +	while (1) {
+> > +		status = *status_reg;
+> > +		if ((status & 0x60) == 0x60)
+> > +			break;
+> > +	}
+> > +}
+> > +
+> >  void putchar(int ch)
+> >  {
+> >  	if (!arm64_sink)
+> >  		return;
+> >  
+> > +	wait_for_xmit_complete();
+> >  	*arm64_sink = ch;
+> >  
+> > -	if (ch == '\n')
+> > +	if (ch == '\n') {
+> > +		wait_for_xmit_complete();
+> >  		*arm64_sink = '\r';
+> > +	}
+> >  }
+> >  
+> >  void setup_arch(void)
 
 _______________________________________________
 kexec mailing list
