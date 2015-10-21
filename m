@@ -1,11 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1445452231.30908.90.camel@infradead.org>
-Subject: [PATCH v10.2 08/16] arm64/kexec: Add core kexec support
+Message-ID: <1445469125.30908.105.camel@infradead.org>
+Subject: [PATCH] kexec: Add --lite option
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 21 Oct 2015 11:30:31 -0700
-In-Reply-To: <a1c2a702f127d9dade1f9af8ab13decb2ef1c0da.1445297709.git.geoff@infradead.org>
-References: <cover.1445297709.git.geoff@infradead.org>
- <a1c2a702f127d9dade1f9af8ab13decb2ef1c0da.1445297709.git.geoff@infradead.org>
+Date: Wed, 21 Oct 2015 16:12:05 -0700
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,444 +16,168 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, marc.zyngier@arm.com, kexec@lists.infradead.org, Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Petitboot@lists.ozlabs.org
 
-Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to
-the
-arm64 architecture that add support for the kexec re-boot mechanism
-(CONFIG_KEXEC) on arm64 platforms.
+Add a new option --lite to kexec that allows for a fast reboot
+by avoiding the purgatory integrity checks.  This option is
+intended for use by kexec based bootloaders that load a new
+image and then immediately transfer control to it.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
-V10.2: Minor comment fixups.
+Hi Simon,
 
- arch/arm64/Kconfig                  |  10 +++
- arch/arm64/include/asm/kexec.h      |  48 +++++++++++
- arch/arm64/kernel/Makefile          |   2 +
- arch/arm64/kernel/machine_kexec.c   | 140 +++++++++++++++++++++++++++++++
- arch/arm64/kernel/relocate_kernel.S | 163 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/kexec.h          |   1 +
- 6 files changed, 364 insertions(+)
- create mode 100644 arch/arm64/include/asm/kexec.h
- create mode 100644 arch/arm64/kernel/machine_kexec.c
- create mode 100644 arch/arm64/kernel/relocate_kernel.S
+It was reported that on some systems where purgatory is running
+without caches enabled the sha256 calculations would take several
+minutes.  For bootloaders that just load a new image and
+immediately jump into it the loss of the integrity check is worth
+the increase in boot speed.  Please consider.  
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 07d1811..73e8e31 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -491,6 +491,16 @@ config SECCOMP
- 	  and the task is only allowed to execute a few safe syscalls
- 	  defined by each seccomp mode.
- 
-+config KEXEC
-+	depends on (!SMP || PM_SLEEP_SMP)
-+	select KEXEC_CORE
-+	bool "kexec system call"
-+	---help---
-+	  kexec is a system call that implements the ability to shutdown your
-+	  current kernel, and to start another kernel.  It is like a reboot
-+	  but it is independent of the system firmware.   And like a reboot
-+	  you can start any kernel with it, not just Linux.
+-Geoff
+
+ kexec/kexec.8         |  3 +++
+ kexec/kexec.c         | 19 +++++++++++++++++--
+ kexec/kexec.h         |  4 ++++
+ purgatory/purgatory.c |  3 ++-
+ 4 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index 4d0c1d1..93ed588 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -126,6 +126,9 @@ in one call.
+ Open a help file for
+ .BR kexec .
+ .TP
++.B \-i\ (\-\-lite)
++Fast reboot, no memory integrity checks.
++.TP
+ .BI \-l\ (\-\-load) \ kernel
+ Load the specified
+ .I kernel
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index ff024f3..ebb1310 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -613,6 +613,15 @@ static void update_purgatory(struct kexec_info *info)
+ 		return;
+ 	}
+ 	arch_update_purgatory(info);
 +
- config XEN_DOM0
- 	def_bool y
- 	depends on XEN
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-new file mode 100644
-index 0000000..46d63cd
---- /dev/null
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -0,0 +1,48 @@
-+/*
-+ * kexec for arm64
-+ *
-+ * Copyright (C) Linaro.
-+ * Copyright (C) Huawei Futurewei Technologies.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++	if (info->kexec_lite) {
++		unsigned int tmp = 1;
 +
-+#if !defined(_ARM64_KEXEC_H)
-+#define _ARM64_KEXEC_H
-+
-+/* Maximum physical address we can use pages from */
-+
-+#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
-+
-+/* Maximum address we can reach in physical address mode */
-+
-+#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-+
-+/* Maximum address we can use for the control code buffer */
-+
-+#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
-+
-+#define KEXEC_CONTROL_PAGE_SIZE	4096
-+
-+#define KEXEC_ARCH KEXEC_ARCH_ARM64
-+
-+#if !defined(__ASSEMBLY__)
-+
-+/**
-+ * crash_setup_regs() - save registers for the panic kernel
-+ *
-+ * @newregs: registers are saved here
-+ * @oldregs: registers to be saved (may be %NULL)
-+ */
-+
-+static inline void crash_setup_regs(struct pt_regs *newregs,
-+				    struct pt_regs *oldregs)
-+{
-+	/* Empty routine needed to avoid build errors. */
-+}
-+
-+#endif /* !defined(__ASSEMBLY__) */
-+
-+#endif
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 22dc9bc..989ccd7 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -36,6 +36,8 @@ arm64-obj-$(CONFIG_EFI)			+= efi.o efi-stub.o efi-entry.o
- arm64-obj-$(CONFIG_PCI)			+= pci.o
- arm64-obj-$(CONFIG_ARMV8_DEPRECATED)	+= armv8_deprecated.o
- arm64-obj-$(CONFIG_ACPI)		+= acpi.o
-+arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
-+					   cpu-reset.o
- 
- obj-y					+= $(arm64-obj-y) vdso/
- obj-m					+= $(arm64-obj-m)
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-new file mode 100644
-index 0000000..7e3436d
---- /dev/null
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -0,0 +1,140 @@
-+/*
-+ * kexec for arm64
-+ *
-+ * Copyright (C) Linaro.
-+ * Copyright (C) Huawei Futurewei Technologies.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kexec.h>
-+#include <linux/of_fdt.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+
-+#include <asm/cacheflush.h>
-+#include <asm/system_misc.h>
-+
-+#include "cpu-reset.h"
-+
-+/* Global variables for the arm64_relocate_new_kernel routine. */
-+extern const unsigned char arm64_relocate_new_kernel[];
-+extern const unsigned long arm64_relocate_new_kernel_size;
-+extern unsigned long arm64_kexec_kimage_head_offset;
-+extern unsigned long arm64_kexec_kimage_start_offset;
-+
-+static unsigned long kimage_head;
-+static unsigned long kimage_start;
-+
-+void machine_kexec_cleanup(struct kimage *image)
-+{
-+	/* Empty routine needed to avoid build errors. */
-+}
-+
-+/**
-+ * machine_kexec_prepare - Prepare for a kexec reboot.
-+ *
-+ * Called from the core kexec code when a kernel image is loaded.
-+ */
-+int machine_kexec_prepare(struct kimage *image)
-+{
-+	kimage_start = image->start;
-+	return 0;
-+}
-+
-+/**
-+ * kexec_list_flush - Helper to flush the kimage list to PoC.
-+ */
-+static void kexec_list_flush(unsigned long kimage_head)
-+{
-+	unsigned long *entry;
-+
-+	for (entry = &kimage_head; ; entry++) {
-+		unsigned int flag = *entry & IND_FLAGS;
-+		void *addr = phys_to_virt(*entry & PAGE_MASK);
-+
-+		switch (flag) {
-+		case IND_INDIRECTION:
-+			entry = (unsigned long *)addr - 1;
-+			__flush_dcache_area(addr, PAGE_SIZE);
-+			break;
-+		case IND_DESTINATION:
-+			break;
-+		case IND_SOURCE:
-+			__flush_dcache_area(addr, PAGE_SIZE);
-+			break;
-+		case IND_DONE:
-+			return;
-+		default:
-+			BUG();
-+		}
++		elf_rel_set_symbol(&info->rhdr, "kexec_lite", &tmp,
++			sizeof(tmp));
++		return;
 +	}
-+}
 +
-+static void soft_restart(unsigned long addr)
-+{
-+	setup_mm_for_reboot();
-+	cpu_soft_restart(virt_to_phys(cpu_reset), addr,
-+		is_hyp_mode_available());
-+
-+	BUG(); /* Should never get here. */
-+}
-+
-+/**
-+ * machine_kexec - Do the kexec reboot.
-+ *
-+ * Called from the core kexec code for a sys_reboot with LINUX_REBOOT_CMD_KEXEC.
-+ */
-+void machine_kexec(struct kimage *image)
-+{
-+	phys_addr_t reboot_code_buffer_phys;
-+	void *reboot_code_buffer;
-+
-+	BUG_ON(num_online_cpus() > 1);
-+
-+	kimage_head = image->head;
-+
-+	reboot_code_buffer_phys = page_to_phys(image->control_code_page);
-+	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
-+
-+	/*
-+	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
-+	 * after the kernel is shut down.
-+	 */
-+	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
-+		arm64_relocate_new_kernel_size);
-+
-+	/* Set the variables in reboot_code_buffer. */
-+	memcpy(reboot_code_buffer + arm64_kexec_kimage_start_offset,
-+	       &kimage_start, sizeof(kimage_start));
-+	memcpy(reboot_code_buffer + arm64_kexec_kimage_head_offset,
-+	       &kimage_head, sizeof(kimage_head));
-+
-+	/* Flush the reboot_code_buffer in preparation for its execution. */
-+	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
-+
-+	/* Flush the kimage list. */
-+	kexec_list_flush(image->head);
-+
-+	pr_info("Bye!\n");
-+
-+	/* Disable all DAIF exceptions. */
-+	asm volatile ("msr daifset, #0xf" : : : "memory");
-+
-+	/*
-+	 * soft_restart() will shutdown the MMU, disable data caches, then
-+	 * transfer control to the reboot_code_buffer which contains a copy of
-+	 * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
-+	 * uses physical addressing to relocate the new image to its final
-+	 * position and transfers control to the image entry point when the
-+	 * relocation is complete.
-+	 */
-+	soft_restart(reboot_code_buffer_phys);
-+}
-+
-+void machine_crash_shutdown(struct pt_regs *regs)
-+{
-+	/* Empty routine needed to avoid build errors. */
-+}
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-new file mode 100644
-index 0000000..2d709c6
---- /dev/null
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -0,0 +1,163 @@
-+/*
-+ * kexec for arm64
-+ *
-+ * Copyright (C) Linaro.
-+ * Copyright (C) Huawei Futurewei Technologies.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/kexec.h>
-+
-+#include <asm/assembler.h>
-+#include <asm/kexec.h>
-+#include <asm/memory.h>
-+#include <asm/page.h>
-+
-+
-+/*
-+ * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-+ *
-+ * The memory that the old kernel occupies may be overwritten when coping the
-+ * new image to its final location.  To assure that the
-+ * arm64_relocate_new_kernel routine which does that copy is not overwritten,
-+ * all code and data needed by arm64_relocate_new_kernel must be between the
-+ * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
-+ * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-+ * control_code_page, a special page which has been set up to be preserved
-+ * during the copy operation.
-+ */
-+.globl arm64_relocate_new_kernel
-+arm64_relocate_new_kernel:
-+
-+	/* Setup the list loop variables. */
-+	ldr	x18, .Lkimage_head		/* x18 = list entry */
-+	dcache_line_size x17, x0		/* x17 = dcache line size */
-+	mov	x16, xzr			/* x16 = segment start */
-+	mov	x15, xzr			/* x15 = entry ptr */
-+	mov	x14, xzr			/* x14 = copy dest */
-+
-+	/* Check if the new image needs relocation. */
-+	cbz	x18, .Ldone
-+	tbnz	x18, IND_DONE_BIT, .Ldone
-+
-+.Lloop:
-+	and	x13, x18, PAGE_MASK		/* x13 = addr */
-+
-+	/* Test the entry flags. */
-+.Ltest_source:
-+	tbz	x18, IND_SOURCE_BIT, .Ltest_indirection
-+
-+	mov x20, x14				/*  x20 = copy dest */
-+	mov x21, x13				/*  x21 = copy src */
-+
-+	/* Invalidate dest page to PoC. */
-+	mov	x0, x20
-+	add	x19, x0, #PAGE_SIZE
-+	sub	x1, x17, #1
-+	bic	x0, x0, x1
-+1:	dc	ivac, x0
-+	add	x0, x0, x17
-+	cmp	x0, x19
-+	b.lo	1b
-+	dsb	sy
-+
-+	/* Copy page. */
-+1:	ldp	x22, x23, [x21]
-+	ldp	x24, x25, [x21, #16]
-+	ldp	x26, x27, [x21, #32]
-+	ldp	x28, x29, [x21, #48]
-+	add	x21, x21, #64
-+	stnp	x22, x23, [x20]
-+	stnp	x24, x25, [x20, #16]
-+	stnp	x26, x27, [x20, #32]
-+	stnp	x28, x29, [x20, #48]
-+	add	x20, x20, #64
-+	tst	x21, #(PAGE_SIZE - 1)
-+	b.ne	1b
-+
-+	/* dest += PAGE_SIZE */
-+	add	x14, x14, PAGE_SIZE
-+	b	.Lnext
-+
-+.Ltest_indirection:
-+	tbz	x18, IND_INDIRECTION_BIT, .Ltest_destination
-+
-+	/* ptr = addr */
-+	mov	x15, x13
-+	b	.Lnext
-+
-+.Ltest_destination:
-+	tbz	x18, IND_DESTINATION_BIT, .Lnext
-+
-+	mov	x16, x13
-+
-+	/* dest = addr */
-+	mov	x14, x13
-+
-+.Lnext:
-+	/* entry = *ptr++ */
-+	ldr	x18, [x15], #8
-+
-+	/* while (!(entry & DONE)) */
-+	tbz	x18, IND_DONE_BIT, .Lloop
-+
-+.Ldone:
-+	dsb	sy
-+	isb
-+	ic	ialluis
-+	dsb	sy
-+	isb
-+
-+	/* Start new image. */
-+	ldr	x4, .Lkimage_start
-+	mov	x0, xzr
-+	mov	x1, xzr
-+	mov	x2, xzr
-+	mov	x3, xzr
-+	br	x4
-+
-+.align 3	/* To keep the 64-bit values below naturally aligned. */
-+
-+/* The machine_kexec routine sets these variables via offsets from
-+ * arm64_relocate_new_kernel.
-+ */
-+
-+/*
-+ * .Lkimage_start - Copy of image->start, the entry point of the new
-+ * image.
-+ */
-+.Lkimage_start:
-+	.quad	0x0
-+
-+/*
-+ * .Lkimage_head - Copy of image->head, the list of kimage entries.
-+ */
-+.Lkimage_head:
-+	.quad	0x0
-+
-+.Lcopy_end:
-+.org	KEXEC_CONTROL_PAGE_SIZE
-+
-+/*
-+ * arm64_relocate_new_kernel_size - Number of bytes to copy to the control_code_page.
-+ */
-+.globl arm64_relocate_new_kernel_size
-+arm64_relocate_new_kernel_size:
-+	.quad	.Lcopy_end - arm64_relocate_new_kernel
-+
-+/*
-+ * arm64_kexec_kimage_start_offset - Offset for writing .Lkimage_start.
-+ */
-+.globl arm64_kexec_kimage_start_offset
-+arm64_kexec_kimage_start_offset:
-+	.quad	.Lkimage_start - arm64_relocate_new_kernel
-+
-+/*
-+ * arm64_kexec_kimage_head_offset - Offset for writing .Lkimage_head.
-+ */
-+.globl arm64_kexec_kimage_head_offset
-+arm64_kexec_kimage_head_offset:
-+	.quad	.Lkimage_head - arm64_relocate_new_kernel
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 99048e5..ccec467 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -39,6 +39,7 @@
- #define KEXEC_ARCH_SH      (42 << 16)
- #define KEXEC_ARCH_MIPS_LE (10 << 16)
- #define KEXEC_ARCH_MIPS    ( 8 << 16)
-+#define KEXEC_ARCH_ARM64   (183 << 16)
+ 	memset(region, 0, sizeof(region));
+ 	sha256_starts(&ctx);
+ 	/* Compute a hash of the loaded kernel */
+@@ -652,7 +661,7 @@ static void update_purgatory(struct kexec_info *info)
+  *	Load the new kernel
+  */
+ static int my_load(const char *type, int fileind, int argc, char **argv,
+-		   unsigned long kexec_flags, void *entry)
++		   unsigned long kexec_flags, int kexec_lite, void *entry)
+ {
+ 	char *kernel;
+ 	char *kernel_buf;
+@@ -665,6 +674,7 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
  
- /* The artificial cap on the number of segments passed to kexec_load. */
- #define KEXEC_SEGMENT_MAX 16
+ 	memset(&info, 0, sizeof(info));
+ 	info.kexec_flags = kexec_flags;
++	info.kexec_lite = kexec_lite;
+ 
+ 	result = 0;
+ 	if (argc - fileind <= 0) {
+@@ -914,6 +924,7 @@ void usage(void)
+ 	       " -v, --version        Print the version of kexec.\n"
+ 	       " -f, --force          Force an immediate kexec,\n"
+ 	       "                      don't call shutdown.\n"
++	       " -i, --lite           Fast reboot, no memory integrity checks.\n"
+ 	       " -x, --no-ifdown      Don't bring down network interfaces.\n"
+ 	       " -y, --no-sync        Don't sync filesystems before kexec.\n"
+ 	       " -l, --load           Load the new kernel into the\n"
+@@ -1173,6 +1184,7 @@ int main(int argc, char *argv[])
+ 	int do_unload = 0;
+ 	int do_reuse_initrd = 0;
+ 	int do_kexec_file_syscall = 0;
++	int do_lite = 0;
+ 	void *entry = 0;
+ 	char *type = 0;
+ 	char *endptr;
+@@ -1314,6 +1326,9 @@ int main(int argc, char *argv[])
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			/* We already parsed it. Nothing to do. */
+ 			break;
++		case OPT_LITE:
++			do_lite = 1;
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -1374,7 +1389,7 @@ int main(int argc, char *argv[])
+ 						 kexec_file_flags);
+ 		else
+ 			result = my_load(type, fileind, argc, argv,
+-						kexec_flags, entry);
++						kexec_flags, do_lite, entry);
+ 	}
+ 	/* Don't shutdown unless there is something to reboot to! */
+ 	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 7c97b25..06e08f4 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -165,6 +165,8 @@ struct kexec_info {
+ 	int initrd_fd;
+ 	char *command_line;
+ 	int command_line_len;
++
++	int kexec_lite;
+ };
+ 
+ struct arch_map_entry {
+@@ -218,6 +220,7 @@ extern int file_types;
+ #define OPT_TYPE		't'
+ #define OPT_PANIC		'p'
+ #define OPT_KEXEC_FILE_SYSCALL	's'
++#define OPT_LITE		'i'
+ #define OPT_MEM_MIN             256
+ #define OPT_MEM_MAX             257
+ #define OPT_REUSE_INITRD	258
+@@ -243,6 +246,7 @@ extern int file_types;
+ 	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
++	{ "lite",		0, 0, OPT_LITE }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 
+ #define KEXEC_OPT_STR "h?vdfxyluet:ps"
+diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
+index 3bbcc09..7e99b92 100644
+--- a/purgatory/purgatory.c
++++ b/purgatory/purgatory.c
+@@ -8,6 +8,7 @@
+ 
+ struct sha256_region sha256_regions[SHA256_REGIONS] = {};
+ sha256_digest_t sha256_digest = { };
++int kexec_lite = 0;
+ 
+ int verify_sha256_digest(void)
+ {
+@@ -43,7 +44,7 @@ void purgatory(void)
+ {
+ 	printf("I'm in purgatory\n");
+ 	setup_arch();
+-	if (verify_sha256_digest()) {
++	if (!kexec_lite && verify_sha256_digest()) {
+ 		for(;;) {
+ 			/* loop forever */
+ 		}
 -- 
 2.5.0
 
