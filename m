@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zp6Nx-0006n2-Vj
- for kexec@lists.infradead.org; Thu, 22 Oct 2015 03:17:51 +0000
-Date: Thu, 22 Oct 2015 11:17:18 +0800
+Date: Thu, 22 Oct 2015 11:25:34 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: Add --lite option
-Message-ID: <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
-References: <1445469125.30908.105.camel@infradead.org>
+Subject: Re: [PATCH 13/16] arm64: kdump: add kdump support
+Message-ID: <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
+References: <cover.1445297709.git.geoff@infradead.org>
+ <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1445469125.30908.105.camel@infradead.org>
+In-Reply-To: <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,188 +21,34 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org, vgoyal@redhat.com
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 10/21/15 at 04:12pm, Geoff Levand wrote:
-> Add a new option --lite to kexec that allows for a fast reboot
-> by avoiding the purgatory integrity checks.  This option is
-> intended for use by kexec based bootloaders that load a new
-> image and then immediately transfer control to it.
+Hi, AKASHI,
 
-I think Vivek was rejecting this --lite since kdump need the purgatory
-integrity checks. Ccing him.
+On 10/19/15 at 11:38pm, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> 
+> On crash dump kernel, all the information about primary kernel's core
+> image is available in elf core header specified by "elfcorehdr=" boot
+> parameter. reserve_elfcorehdr() will set aside the region to avoid any
+> corruption by crash dump kernel.
+> 
+> Crash dump kernel will access the system memory of primary kernel via
+> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+> not reside in linear mapping on crash dump kernel.
+> Please note that we should add "mem=X[MG]" boot parameter to limit the
+> memory size and avoid the following assertion at ioremap():
+> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+> 		return NULL;
+> when accessing any pages beyond the usable memories of crash dump kernel.
 
-> 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
-> Hi Simon,
-> 
-> It was reported that on some systems where purgatory is running
-> without caches enabled the sha256 calculations would take several
-> minutes.  For bootloaders that just load a new image and
-> immediately jump into it the loss of the integrity check is worth
-> the increase in boot speed.  Please consider.  
+How does kexec-tools pass usable memory ranges to kernel? using dtb?
+Passing an extra mem=X sounds odd in the design. Kdump kernel should get
+usable ranges and hanle the limit better than depending on an extern kernel
+param. 
 
-Pratyush reported the arm64 issue, he sent a patch to fix it with
-enabling cache for purgatory. I think the patch can fix the problem.
-Why not fix it? The fix is simple enough and it does not introduce
-complicate logic.
-
-> 
-> -Geoff
-> 
->  kexec/kexec.8         |  3 +++
->  kexec/kexec.c         | 19 +++++++++++++++++--
->  kexec/kexec.h         |  4 ++++
->  purgatory/purgatory.c |  3 ++-
->  4 files changed, 26 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kexec/kexec.8 b/kexec/kexec.8
-> index 4d0c1d1..93ed588 100644
-> --- a/kexec/kexec.8
-> +++ b/kexec/kexec.8
-> @@ -126,6 +126,9 @@ in one call.
->  Open a help file for
->  .BR kexec .
->  .TP
-> +.B \-i\ (\-\-lite)
-> +Fast reboot, no memory integrity checks.
-> +.TP
->  .BI \-l\ (\-\-load) \ kernel
->  Load the specified
->  .I kernel
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index ff024f3..ebb1310 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -613,6 +613,15 @@ static void update_purgatory(struct kexec_info *info)
->  		return;
->  	}
->  	arch_update_purgatory(info);
-> +
-> +	if (info->kexec_lite) {
-> +		unsigned int tmp = 1;
-> +
-> +		elf_rel_set_symbol(&info->rhdr, "kexec_lite", &tmp,
-> +			sizeof(tmp));
-> +		return;
-> +	}
-> +
->  	memset(region, 0, sizeof(region));
->  	sha256_starts(&ctx);
->  	/* Compute a hash of the loaded kernel */
-> @@ -652,7 +661,7 @@ static void update_purgatory(struct kexec_info *info)
->   *	Load the new kernel
->   */
->  static int my_load(const char *type, int fileind, int argc, char **argv,
-> -		   unsigned long kexec_flags, void *entry)
-> +		   unsigned long kexec_flags, int kexec_lite, void *entry)
->  {
->  	char *kernel;
->  	char *kernel_buf;
-> @@ -665,6 +674,7 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
->  
->  	memset(&info, 0, sizeof(info));
->  	info.kexec_flags = kexec_flags;
-> +	info.kexec_lite = kexec_lite;
->  
->  	result = 0;
->  	if (argc - fileind <= 0) {
-> @@ -914,6 +924,7 @@ void usage(void)
->  	       " -v, --version        Print the version of kexec.\n"
->  	       " -f, --force          Force an immediate kexec,\n"
->  	       "                      don't call shutdown.\n"
-> +	       " -i, --lite           Fast reboot, no memory integrity checks.\n"
->  	       " -x, --no-ifdown      Don't bring down network interfaces.\n"
->  	       " -y, --no-sync        Don't sync filesystems before kexec.\n"
->  	       " -l, --load           Load the new kernel into the\n"
-> @@ -1173,6 +1184,7 @@ int main(int argc, char *argv[])
->  	int do_unload = 0;
->  	int do_reuse_initrd = 0;
->  	int do_kexec_file_syscall = 0;
-> +	int do_lite = 0;
->  	void *entry = 0;
->  	char *type = 0;
->  	char *endptr;
-> @@ -1314,6 +1326,9 @@ int main(int argc, char *argv[])
->  		case OPT_KEXEC_FILE_SYSCALL:
->  			/* We already parsed it. Nothing to do. */
->  			break;
-> +		case OPT_LITE:
-> +			do_lite = 1;
-> +			break;
->  		default:
->  			break;
->  		}
-> @@ -1374,7 +1389,7 @@ int main(int argc, char *argv[])
->  						 kexec_file_flags);
->  		else
->  			result = my_load(type, fileind, argc, argv,
-> -						kexec_flags, entry);
-> +						kexec_flags, do_lite, entry);
->  	}
->  	/* Don't shutdown unless there is something to reboot to! */
->  	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index 7c97b25..06e08f4 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -165,6 +165,8 @@ struct kexec_info {
->  	int initrd_fd;
->  	char *command_line;
->  	int command_line_len;
-> +
-> +	int kexec_lite;
->  };
->  
->  struct arch_map_entry {
-> @@ -218,6 +220,7 @@ extern int file_types;
->  #define OPT_TYPE		't'
->  #define OPT_PANIC		'p'
->  #define OPT_KEXEC_FILE_SYSCALL	's'
-> +#define OPT_LITE		'i'
->  #define OPT_MEM_MIN             256
->  #define OPT_MEM_MAX             257
->  #define OPT_REUSE_INITRD	258
-> @@ -243,6 +246,7 @@ extern int file_types;
->  	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
->  	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
->  	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
-> +	{ "lite",		0, 0, OPT_LITE }, \
->  	{ "debug",		0, 0, OPT_DEBUG }, \
->  
->  #define KEXEC_OPT_STR "h?vdfxyluet:ps"
-> diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
-> index 3bbcc09..7e99b92 100644
-> --- a/purgatory/purgatory.c
-> +++ b/purgatory/purgatory.c
-> @@ -8,6 +8,7 @@
->  
->  struct sha256_region sha256_regions[SHA256_REGIONS] = {};
->  sha256_digest_t sha256_digest = { };
-> +int kexec_lite = 0;
->  
->  int verify_sha256_digest(void)
->  {
-> @@ -43,7 +44,7 @@ void purgatory(void)
->  {
->  	printf("I'm in purgatory\n");
->  	setup_arch();
-> -	if (verify_sha256_digest()) {
-> +	if (!kexec_lite && verify_sha256_digest()) {
->  		for(;;) {
->  			/* loop forever */
->  		}
-> -- 
-> 2.5.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
