@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zp7AK-0002fu-3b
- for kexec@lists.infradead.org; Thu, 22 Oct 2015 04:07:48 +0000
-Message-ID: <562860F2.4020109@cn.fujitsu.com>
-Date: Thu, 22 Oct 2015 12:07:14 +0800
-From: qiaonuohan <qiaonuohan@cn.fujitsu.com>
+Received: from mail-pa0-x231.google.com ([2607:f8b0:400e:c03::231])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zp7Vn-0002aA-Sd
+ for kexec@lists.infradead.org; Thu, 22 Oct 2015 04:30:01 +0000
+Received: by pabrc13 with SMTP id rc13so75133108pab.0
+ for <kexec@lists.infradead.org>; Wed, 21 Oct 2015 21:29:38 -0700 (PDT)
+Subject: Re: [PATCH 13/16] arm64: kdump: add kdump support
+References: <cover.1445297709.git.geoff@infradead.org>
+ <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
+ <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <5628662B.1020605@linaro.org>
+Date: Thu, 22 Oct 2015 13:29:31 +0900
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: Improve performance for parallel compression
- with zlib.
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF3679@BPXM01GP.gisp.nec.co.jp>
- <562853CE.9000208@cn.fujitsu.com>
-In-Reply-To: <562853CE.9000208@cn.fujitsu.com>
+In-Reply-To: <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,59 +22,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paHPyI=?= <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kernel@kyup.com >> Nikolay Borisov" <kernel@kyup.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+To: Dave Young <dyoung@redhat.com>, Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-SGVsbG8gWmhvdSwKClRoZSBwZXJmb3JtYW5jZSBpbXByb3ZlbWVudCBzaG93cyBncmVhdCBhY2Nv
-cmRpbmcgdG8geW91ciBkYXRhLiBIb3dldmVyLAp0aGUgZGF0YSBpcyBub3QgdGhhdCBlbm91Z2gg
-dG8gc2hvdyB0aGUgY2hhbmdlIG9mIGNvbW1vbiB1c2UuCgpTaW5jZSB0aGUgYW1vdW50IG9mIDAv
-MSBpbiBhIHBhZ2Ugd2lsbCBjYXVzZSB0aGUgdmFyeSBvZiB0aW1lIHVzZWQgZm9yCmNvbXByZXNz
-aW9uLCBJIHdvdWxkIGxpa2UgeW91IGdldCBtb3JlIGJlbmNobWFyayBvbiBkaWZmZXJlbnQgY29y
-ZSB3aXRoCmRpZmZlcmVudCBhbW91bnQgb2YgMC8xLgoKT24gMTAvMjIvMjAxNSAxMToxMSBBTSwg
-Ilpob3UsIFdlbmppYW4v5ZGo5paHPyIgd3JvdGU6Cj4gSGVsbG8gS3VtYWdhaSwKPgo+IEkgdGVz
-dCBpdCwgYW5kIGl0IHdvcmtzIHdlbGwuIFRoZSBmb2xsb3dpbmcgaXMgdGhlIHJlc3VsdHMuCj4K
-PiBpbiB2aXJ0dWFsIG1hY2hpbmUobWVtb3J5IDJHKToKPiB3aXRoIGVtcHR5IG1lbW9yeToKPiAg
-ICAgICAgICAgIHZlcnNpb24gICAgICB8ICBudW0tdGhyZWFkcyAgfCAgdGltZShzZWMpCj4gICAg
-ICAgICAtLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tCj4gICAg
-ICAgICAgICAgIGRldmVsICAgICAgfCAgICAgICAwICAgICAgIHwgICAgMTIuNzYKPiAgICAgICAg
-ICAgICAgZGV2ZWwgICAgICB8ICAgICAgIDEgICAgICAgfCAgICAxOS4yOQo+ICAgICAgICAgICAg
-ICBkZXZlbCAgICAgIHwgICAgICAgMiAgICAgICB8ICAgIDExLjU2Cj4gICAgICAgICAgKyB0aGlz
-IHBhdGNoICAgfCAgICAgICAwICAgICAgIHwgICAgMTIuODUKPiAgICAgICAgICArIHRoaXMgcGF0
-Y2ggICB8ICAgICAgIDEgICAgICAgfCAgICAgNS42MQo+ICAgICAgICAgICsgdGhpcyBwYXRjaCAg
-IHwgICAgICAgMiAgICAgICB8ICAgICAyLjY4Cj4KPiB3aXRoIGZ1bGwgbWVtb3J5OgoKZnVsbCBt
-ZW1vcnkgbWVhbnMgbWVtb3J5IGlzIG9jY3VwaWVkIGJ5IDEsIHdpdGhvdXQgMD8KCj4gICAgICAg
-ICAgICB2ZXJzaW9uICAgICAgfCAgbnVtLXRocmVhZHMgIHwgIHRpbWUoc2VjKQo+ICAgICAgICAg
-LS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLQo+ICAgICAgICAg
-ICAgICBkZXZlbCAgICAgIHwgICAgICAgMCAgICAgICB8ICAgIDUxLjE4Cj4gICAgICAgICAgICAg
-IGRldmVsICAgICAgfCAgICAgICAxICAgICAgIHwgICAgNTcuODIKPiAgICAgICAgICAgICAgZGV2
-ZWwgICAgICB8ICAgICAgIDIgICAgICAgfCAgICA0MS41NAo+ICAgICAgICAgICsgdGhpcyBwYXRj
-aCAgIHwgICAgICAgMCAgICAgICB8ICAgIDQ5LjI1Cj4gICAgICAgICAgKyB0aGlzIHBhdGNoICAg
-fCAgICAgICAxICAgICAgIHwgICAgNDQuODAKPiAgICAgICAgICArIHRoaXMgcGF0Y2ggICB8ICAg
-ICAgIDIgICAgICAgfCAgICAzMy44Nwo+Cj4KPiBpbiByZWFsIG1hY2hpbmUobWVtb3J5IDE2Ryk6
-Cj4gd2l0aCBlbXB0eSBtZW1vcnk6Cj4gICAgICAgICAgICB2ZXJzaW9uICAgICAgfCAgbnVtLXRo
-cmVhZHMgIHwgIHRpbWUoc2VjKQo+ICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0t
-LS0tLS0rLS0tLS0tLS0tLS0tLQo+ICAgICAgICAgICAgICBkZXZlbCAgICAgIHwgICAgICAgMCAg
-ICAgICB8ICAgIDg2LjEyCj4gICAgICAgICAgICAgIGRldmVsICAgICAgfCAgICAgICAxICAgICAg
-IHwgICAyMjIuMzcKPiAgICAgICAgICAgICAgZGV2ZWwgICAgICB8ICAgICAgIDggICAgICAgfCAg
-ICA4MS41MAo+ICAgICAgICAgICAgICBkZXZlbCAgICAgIHwgICAgICAgMTYgICAgICB8ICAgIDk4
-LjQ0Cj4gICAgICAgICAgKyB0aGlzIHBhdGNoICAgfCAgICAgICAwICAgICAgIHwgICAgODYuMDcK
-PiAgICAgICAgICArIHRoaXMgcGF0Y2ggICB8ICAgICAgIDEgICAgICAgfCAgICA4NC4zMwo+ICAg
-ICAgICAgICsgdGhpcyBwYXRjaCAgIHwgICAgICAgOCAgICAgICB8ICAgIDE0Ljk1Cj4gICAgICAg
-ICAgKyB0aGlzIHBhdGNoICAgfCAgICAgICAxNiAgICAgIHwgICAgMTMuOTYKPgo+IHdpdGggZnVs
-bCBtZW1vcnk6Cj4gICAgICAgICAgICB2ZXJzaW9uICAgICAgfCAgbnVtLXRocmVhZHMgIHwgIHRp
-bWUoc2VjKQo+ICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0t
-LS0tLS0tLQo+ICAgICAgICAgICAgICBkZXZlbCAgICAgIHwgICAgICAgMCAgICAgICB8ICAgNTQw
-Ljg5Cj4gICAgICAgICAgICAgIGRldmVsICAgICAgfCAgICAgICAxICAgICAgIHwgICA3MTUuMjUK
-PiAgICAgICAgICAgICAgZGV2ZWwgICAgICB8ICAgICAgIDggICAgICAgfCAgIDEzMi41NAo+ICAg
-ICAgICAgICAgICBkZXZlbCAgICAgIHwgICAgICAgMTYgICAgICB8ICAgMTEyLjg5Cj4gICAgICAg
-ICAgKyB0aGlzIHBhdGNoICAgfCAgICAgICAwICAgICAgIHwgICA1NDIuNzkKPiAgICAgICAgICAr
-IHRoaXMgcGF0Y2ggICB8ICAgICAgIDEgICAgICAgfCAgIDUzOC4yMgo+ICAgICAgICAgICsgdGhp
-cyBwYXRjaCAgIHwgICAgICAgOCAgICAgICB8ICAgMTA4LjI4Cj4gICAgICAgICAgKyB0aGlzIHBh
-dGNoICAgfCAgICAgICAxNiAgICAgIHwgICAxMDcuODMKPgoKCi0tIApSZWdhcmRzClFpYW8gTnVv
-aGFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Dave,
+
+Thank you for your comment.
+
+On 10/22/2015 12:25 PM, Dave Young wrote:
+> Hi, AKASHI,
+>
+> On 10/19/15 at 11:38pm, Geoff Levand wrote:
+>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>
+>> On crash dump kernel, all the information about primary kernel's core
+>> image is available in elf core header specified by "elfcorehdr=" boot
+>> parameter. reserve_elfcorehdr() will set aside the region to avoid any
+>> corruption by crash dump kernel.
+>>
+>> Crash dump kernel will access the system memory of primary kernel via
+>> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+>> not reside in linear mapping on crash dump kernel.
+>> Please note that we should add "mem=X[MG]" boot parameter to limit the
+>> memory size and avoid the following assertion at ioremap():
+>> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+>> 		return NULL;
+>> when accessing any pages beyond the usable memories of crash dump kernel.
+>
+> How does kexec-tools pass usable memory ranges to kernel? using dtb?
+> Passing an extra mem=X sounds odd in the design. Kdump kernel should get
+> usable ranges and hanle the limit better than depending on an extern kernel
+> param.
+
+Well, regarding "depending on an external kernel param,"
+- this limitation ("mem=") is compatible with arm(32) implementation although
+   it is not clearly described in kernel's Documentation/kdump/kdump.txt.
+- "elfcorehdr" kernel parameter is mandatory on x86 as well as on arm/arm64.
+   The parameter is explicitly generated and added by kexec-tools.
+
+Do I miss your point?
+
+Thanks,
+-Takahiro AKASHI
+
+> Thanks
+> Dave
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
