@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZpLAh-0002D1-Gu
- for kexec@lists.infradead.org; Thu, 22 Oct 2015 19:05:08 +0000
-Date: Thu, 22 Oct 2015 15:04:45 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Message-ID: <1445540891.30908.144.camel@infradead.org>
 Subject: Re: [PATCH] kexec: Add --lite option
-Message-ID: <20151022190445.GE20847@redhat.com>
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 22 Oct 2015 12:08:11 -0700
+In-Reply-To: <20151022125012.GB20847@redhat.com>
 References: <1445469125.30908.105.camel@infradead.org>
  <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <1445540240.30908.134.camel@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1445540240.30908.134.camel@infradead.org>
+ <20151022125012.GB20847@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,13 +20,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: panand@redhat.com, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>, Petitboot@lists.ozlabs.org
+To: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
+Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org
 
-On Thu, Oct 22, 2015 at 11:57:20AM -0700, Geoff Levand wrote:
-> Hi Dave,
-> 
-> On Thu, 2015-10-22 at 11:17 +0800, Dave Young wrote:
+Hi Vivek,
+
+On Thu, 2015-10-22 at 08:50 -0400, Vivek Goyal wrote:
+> On Thu, Oct 22, 2015 at 11:17:18AM +0800, Dave Young wrote:
 > > On 10/21/15 at 04:12pm, Geoff Levand wrote:
 > > > Add a new option --lite to kexec that allows for a fast reboot
 > > > by avoiding the purgatory integrity checks.  This option is
@@ -41,35 +36,25 @@ On Thu, Oct 22, 2015 at 11:57:20AM -0700, Geoff Levand wrote:
 > > I think Vivek was rejecting this --lite since kdump need the purgatory
 > > integrity checks. Ccing him.
 > 
-> As stated, this is not intended for use by kdump.
-> 
-> This is an optional feature.  It does not remove the integrity
-> checks, but provides the user a way to bypass them if they so
-> desire.
+> Right. Why are we trying to bypass sha256 hash verification of loaded
+> segments at run time, that needs to be justified. 
 
-Why would somebody like to bypass these checks?
+Please see my reply to Dave.
 
-> 
-> > > It was reported that on some systems where purgatory is running
-> > > without caches enabled the sha256 calculations would take several
-> > > minutes.  For bootloaders that just load a new image and
-> > > immediately jump into it the loss of the integrity check is worth
-> > > the increase in boot speed.  Please consider.  
-> > 
-> > Pratyush reported the arm64 issue, he sent a patch to fix it with
-> > enabling cache for purgatory. I think the patch can fix the problem.
-> > Why not fix it? The fix is simple enough and it does not introduce
-> > complicate logic.
-> 
-> This patch also is simple, and is architecture independent.  I see this
-> feature as an improvement to kexec, not necessarily as a fix for that
-> problem.
+> Atleast on x86, this integrity verification was fast and we did not
+> notice any siginificant delays in purgatory. And in that case extra knob
+> like this is hard to justify.
 
-I am not sure why does somebody care if segments are being checked
-during transition or not?
+I notice the difference on the my arm64 system, so I guess we
+are even on that.
 
-Thanks
-Vivek
+In general, faster boot times are desirable.  This option allows
+a faster system boot for kexec based bootloaders that use
+kexec-tools.
+
+-Geoff
+
+
 
 _______________________________________________
 kexec mailing list
