@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-pa0-x235.google.com ([2607:f8b0:400e:c03::235])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZpAwC-0006d1-J0
- for kexec@lists.infradead.org; Thu, 22 Oct 2015 08:09:29 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 1/2] sadump, bugfix: change bit order
-Date: Thu, 22 Oct 2015 08:06:17 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DF6A47@BPXM01GP.gisp.nec.co.jp>
-References: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20151020.160741.273311739.d.hatayama@jp.fujitsu.com>
-Content-Language: ja-JP
+ id 1ZpCd0-00038a-Nn
+ for kexec@lists.infradead.org; Thu, 22 Oct 2015 09:57:48 +0000
+Received: by padhk11 with SMTP id hk11so83139540pad.1
+ for <kexec@lists.infradead.org>; Thu, 22 Oct 2015 02:57:26 -0700 (PDT)
+Subject: Re: [PATCH 13/16] arm64: kdump: add kdump support
+References: <cover.1445297709.git.geoff@infradead.org>
+ <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
+ <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
+ <5628662B.1020605@linaro.org>
+ <20151022051548.GD11227@dhcp-129-115.nay.redhat.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <5628B2FA.80209@linaro.org>
+Date: Thu, 22 Oct 2015 18:57:14 +0900
 MIME-Version: 1.0
+In-Reply-To: <20151022051548.GD11227@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,165 +24,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "indou.takao@jp.fujitsu.com" <indou.takao@jp.fujitsu.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hello HATAYAMA-san,
+(added Ard to Cc.)
 
-I'll merge these two patches into v1.5.9.
+On 10/22/2015 02:15 PM, Dave Young wrote:
+> On 10/22/15 at 01:29pm, AKASHI Takahiro wrote:
+>> Hi Dave,
+>>
+>> Thank you for your comment.
+>>
+>> On 10/22/2015 12:25 PM, Dave Young wrote:
+>>> Hi, AKASHI,
+>>>
+>>> On 10/19/15 at 11:38pm, Geoff Levand wrote:
+>>>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>>>
+>>>> On crash dump kernel, all the information about primary kernel's core
+>>>> image is available in elf core header specified by "elfcorehdr=" boot
+>>>> parameter. reserve_elfcorehdr() will set aside the region to avoid any
+>>>> corruption by crash dump kernel.
+>>>>
+>>>> Crash dump kernel will access the system memory of primary kernel via
+>>>> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+>>>> not reside in linear mapping on crash dump kernel.
+>>>> Please note that we should add "mem=X[MG]" boot parameter to limit the
+>>>> memory size and avoid the following assertion at ioremap():
+>>>> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+>>>> 		return NULL;
+>>>> when accessing any pages beyond the usable memories of crash dump kernel.
+>>>
+>>> How does kexec-tools pass usable memory ranges to kernel? using dtb?
+>>> Passing an extra mem=X sounds odd in the design. Kdump kernel should get
+>>> usable ranges and hanle the limit better than depending on an extern kernel
+>>> param.
+>>
+>> Well, regarding "depending on an external kernel param,"
+>> - this limitation ("mem=") is compatible with arm(32) implementation although
+>>    it is not clearly described in kernel's Documentation/kdump/kdump.txt.
+>> - "elfcorehdr" kernel parameter is mandatory on x86 as well as on arm/arm64.
+>>    The parameter is explicitly generated and added by kexec-tools.
+>>
+>> Do I miss your point?
+>
+> Arm previously use atag_mem tag for memory kernel uses, with dtb, Booting.txt
+> says: The boot loader must pass at a minimum the size and location of the
+> system memory
+>
+> In arm64 booting.txt, it does mentions about dtb but without above sentence.
+>
+> So if you are using dtb to pass memory I think the extra mem= should be not
+> necessary unless there's other limitations dtb can not been used.
+
+I would expect comments from arm64 maintainers here.
+
+In my old implementation, I added "usablemem" attributes, along with "reg," to
+"memory" nodes in dtb to specify the usable memory region on crash dump kernel.
+
+But I removed this feature partly because, on uefi system, uefi might pass
+no memory information in dtb.
+
+> One thing I'm confused is mem= only pass the memory size, where does you pass
+> the start addresses?
+
+In the current arm64 implementation, any regions below the start address will
+be ignored as system ram.
+
+> What if there's multiple sections such as some reserved
+> ranges 2nd kernel also need?
+
+My patch utilizes only a single contiguous region of memory as system ram.
+One exception that I notice is uefi's runtime data. They will be ioremap'ed separately.
+
+Please let me know if there is any other case that should be supported.
 
 Thanks,
-Atsushi Kumagai
+-Takahiro AKASHI
 
->sadump formats associate each bit in a bitmap with a physical page in
->reverse order with the kdump-compressed format.
+> Thanks
+> Dave
 >
->We had not detected this bug for considerably long term because
->bitmaps in sadump formats consist mostly of 0x00 and 0xff excluding a
->very limited amount of memory space for firmware.
->
->Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
->Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
->---
-> sadump_info.c | 75 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
-> 1 file changed, 73 insertions(+), 2 deletions(-)
->
->diff --git a/sadump_info.c b/sadump_info.c
->index e2c4f03..e30b802 100644
->--- a/sadump_info.c
->+++ b/sadump_info.c
->@@ -85,6 +85,7 @@ struct sadump_info {
-> 	unsigned long long backup_offset;
-> 	int kdump_backed_up;
-> 	mdf_pfn_t max_mapnr;
->+	struct dump_bitmap *ram_bitmap;
-> };
->
-> static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
->@@ -127,6 +128,35 @@ static int get_registers(int cpu, struct elf_prstatus *prstatus);
-> static struct sadump_info sadump_info = {};
-> static struct sadump_info *si = &sadump_info;
->
->+static inline int
->+sadump_is_on(char *bitmap, mdf_pfn_t i)
->+{
->+	return bitmap[i >> 3] & (1 << (7 - (i & 7)));
->+}
->+
->+static inline int
->+sadump_is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
->+{
->+	off_t offset;
->+
->+	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
->+		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
->+		lseek(bitmap->fd, offset, SEEK_SET);
->+		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
->+		if (pfn == 0)
->+			bitmap->no_block = 0;
->+		else
->+			bitmap->no_block = pfn / PFN_BUFBITMAP;
->+	}
->+	return sadump_is_on(bitmap->buf, pfn % PFN_BUFBITMAP);
->+}
->+
->+static inline int
->+sadump_is_ram(mdf_pfn_t pfn)
->+{
->+	return sadump_is_dumpable(si->ram_bitmap, pfn);
->+}
->+
-> int
-> check_and_get_sadump_header_info(char *filename)
-> {
->@@ -161,6 +191,21 @@ check_and_get_sadump_header_info(char *filename)
-> 	return TRUE;
-> }
->
->+static void
->+reverse_bit(char *buf, int len)
->+{
->+	int i;
->+	unsigned char c;
->+
->+	for (i = 0; i < len; i++) {
->+		c = buf[i];
->+		c = ((c & 0x55) << 1) | ((c & 0xaa) >> 1); /* Swap 1bit */
->+		c = ((c & 0x33) << 2) | ((c & 0xcc) >> 2); /* Swap 2bit */
->+		c = (c << 4) | (c >> 4); /* Swap 4bit */
->+		buf[i] = c;
->+	}
->+}
->+
-> int
-> sadump_copy_1st_bitmap_from_memory(void)
-> {
->@@ -189,6 +234,14 @@ sadump_copy_1st_bitmap_from_memory(void)
-> 			       info->name_memory, strerror(errno));
-> 			return FALSE;
-> 		}
->+		/*
->+		 * sadump formats associate each bit in a bitmap with
->+		 * a physical page in reverse order with the
->+		 * kdump-compressed format. We need to change bit
->+		 * order to reuse bitmaps in sadump formats in the
->+		 * kdump-compressed format.
->+		 */
->+		reverse_bit(buf, sizeof(buf));
-> 		if (write(info->bitmap1->fd, buf, sizeof(buf)) != sizeof(buf)) {
-> 			ERRMSG("Can't write the bitmap(%s). %s\n",
-> 			       info->bitmap1->file_name, strerror(errno));
->@@ -812,6 +865,19 @@ sadump_initialize_bitmap_memory(void)
-> 	info->bitmap_memory = bmp;
-> 	si->block_table = block_table;
->
->+	bmp = malloc(sizeof(struct dump_bitmap));
->+	if (bmp == NULL) {
->+		ERRMSG("Can't allocate memory for the memory-bitmap. %s\n",
->+		       strerror(errno));
->+		return FALSE;
->+	}
->+	bmp->fd = info->fd_memory;
->+	bmp->file_name = info->name_memory;
->+	bmp->no_block = -1;
->+	memset(bmp->buf, 0, BUFSIZE_BITMAP);
->+	bmp->offset = si->sub_hdr_offset + sh->block_size * sh->sub_hdr_size;
->+	si->ram_bitmap = bmp;
->+
-> 	return TRUE;
-> }
->
->@@ -981,7 +1047,12 @@ readpage_sadump(unsigned long long paddr, void *bufptr)
-> 	if (pfn >= si->max_mapnr)
-> 		return FALSE;
->
->-	if (!is_dumpable(info->bitmap_memory, pfn)) {
->+	if (!sadump_is_ram(pfn)) {
->+		ERRMSG("pfn(%llx) is not ram.\n", pfn);
->+		return FALSE;
->+	}
->+
->+	if (!sadump_is_dumpable(info->bitmap_memory, pfn)) {
-> 		ERRMSG("pfn(%llx) is excluded from %s.\n", pfn,
-> 		       info->name_memory);
-> 		return FALSE;
->@@ -1146,7 +1217,7 @@ pfn_to_block(mdf_pfn_t pfn)
-> 		block = 0;
->
-> 	for (p = section * SADUMP_PF_SECTION_NUM; p < pfn; ++p)
->-		if (is_dumpable(info->bitmap_memory, p))
->+		if (sadump_is_dumpable(info->bitmap_memory, p))
-> 			block++;
->
-> 	return block;
->--
->1.9.3
->
-
 
 _______________________________________________
 kexec mailing list
