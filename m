@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZpYZh-0000Jy-0p
- for kexec@lists.infradead.org; Fri, 23 Oct 2015 09:23:49 +0000
-Date: Fri, 23 Oct 2015 17:23:19 +0800
+ id 1ZpYvy-0002r6-MZ
+ for kexec@lists.infradead.org; Fri, 23 Oct 2015 09:46:51 +0000
+Date: Fri, 23 Oct 2015 17:46:20 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
-Message-ID: <20151023092319.GF11227@dhcp-129-115.nay.redhat.com>
-References: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
- <20151016013331.GB20667@verge.net.au>
- <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
- <20151023031917.GE11227@dhcp-129-115.nay.redhat.com>
+Subject: Re: [PATCH] kexec: Add --lite option
+Message-ID: <20151023094620.GG11227@dhcp-129-115.nay.redhat.com>
+References: <1445469125.30908.105.camel@infradead.org>
+ <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
+ <1445540240.30908.134.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151023031917.GE11227@dhcp-129-115.nay.redhat.com>
+In-Reply-To: <1445540240.30908.134.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,27 +25,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: jstodola@redhat.com, kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org, vgoyal@redhat.com
 
-On 10/23/15 at 11:19am, Dave Young wrote:
-> Hi, Simon
-> 
-> > 
-> > > 
-> > > Also, won't this affect other architectures that use DT.
-> > > I'm thinking about ARM. If so it might be good to tweak the changelog.
-> > 
-> > arm also uses the function, but I need verify the behavior. Will tune the changelog
-> > after I confirming it.
-> 
-> kexec on arm will have same problem when there's no external dtb being passed.
-> But kexec kernel failed to start up during my test there may be other problems.
-> 
-> I will work out a new patch for new option about skip adding root= from 1st kernel.
+Hi, Geoff
 
-Simon, for the new option, I'm thinking to create a "--dt-no-old-root". It can be
-a general option, or arch dependent one for arm and ppc64. What do you prefer?
+On 10/22/15 at 11:57am, Geoff Levand wrote:
+> Hi Dave,
+> 
+> On Thu, 2015-10-22 at 11:17 +0800, Dave Young wrote:
+> > On 10/21/15 at 04:12pm, Geoff Levand wrote:
+> > > Add a new option --lite to kexec that allows for a fast reboot
+> > > by avoiding the purgatory integrity checks.  This option is
+> > > intended for use by kexec based bootloaders that load a new
+> > > image and then immediately transfer control to it.
+> > 
+> > I think Vivek was rejecting this --lite since kdump need the purgatory
+> > integrity checks. Ccing him.
+> 
+> As stated, this is not intended for use by kdump.
+> 
+> This is an optional feature.  It does not remove the integrity
+> checks, but provides the user a way to bypass them if they so
+> desire.
+
+Problem is why they so desire to skip purgatory? what is the background?
+If the only problem is the performace issue without cache enabled then
+I think it is not a strong one. We have a design to verify the image and it
+works why can't we maintain it and fix the issue instead of introducing
+the --lite? 
 
 Thanks
 Dave
