@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZpYvy-0002r6-MZ
- for kexec@lists.infradead.org; Fri, 23 Oct 2015 09:46:51 +0000
-Date: Fri, 23 Oct 2015 17:46:20 +0800
+Date: Fri, 23 Oct 2015 17:50:59 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: Add --lite option
-Message-ID: <20151023094620.GG11227@dhcp-129-115.nay.redhat.com>
-References: <1445469125.30908.105.camel@infradead.org>
- <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <1445540240.30908.134.camel@infradead.org>
+Subject: Re: [PATCH 13/16] arm64: kdump: add kdump support
+Message-ID: <20151023095059.GH11227@dhcp-129-115.nay.redhat.com>
+References: <cover.1445297709.git.geoff@infradead.org>
+ <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
+ <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
+ <5628662B.1020605@linaro.org>
+ <20151022051548.GD11227@dhcp-129-115.nay.redhat.com>
+ <5628B2FA.80209@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1445540240.30908.134.camel@infradead.org>
+In-Reply-To: <5628B2FA.80209@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,35 +24,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi, Geoff
+On 10/22/15 at 06:57pm, AKASHI Takahiro wrote:
+> (added Ard to Cc.)
+> 
+> On 10/22/2015 02:15 PM, Dave Young wrote:
+> >On 10/22/15 at 01:29pm, AKASHI Takahiro wrote:
+> >>Hi Dave,
+> >>
+> >>Thank you for your comment.
+> >>
+> >>On 10/22/2015 12:25 PM, Dave Young wrote:
+> >>>Hi, AKASHI,
+> >>>
+> >>>On 10/19/15 at 11:38pm, Geoff Levand wrote:
+> >>>>From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>>>
+> >>>>On crash dump kernel, all the information about primary kernel's core
+> >>>>image is available in elf core header specified by "elfcorehdr=" boot
+> >>>>parameter. reserve_elfcorehdr() will set aside the region to avoid any
+> >>>>corruption by crash dump kernel.
+> >>>>
+> >>>>Crash dump kernel will access the system memory of primary kernel via
+> >>>>copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+> >>>>not reside in linear mapping on crash dump kernel.
+> >>>>Please note that we should add "mem=X[MG]" boot parameter to limit the
+> >>>>memory size and avoid the following assertion at ioremap():
+> >>>>	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+> >>>>		return NULL;
+> >>>>when accessing any pages beyond the usable memories of crash dump kernel.
+> >>>
+> >>>How does kexec-tools pass usable memory ranges to kernel? using dtb?
+> >>>Passing an extra mem=X sounds odd in the design. Kdump kernel should get
+> >>>usable ranges and hanle the limit better than depending on an extern kernel
+> >>>param.
+> >>
+> >>Well, regarding "depending on an external kernel param,"
+> >>- this limitation ("mem=") is compatible with arm(32) implementation although
+> >>   it is not clearly described in kernel's Documentation/kdump/kdump.txt.
+> >>- "elfcorehdr" kernel parameter is mandatory on x86 as well as on arm/arm64.
+> >>   The parameter is explicitly generated and added by kexec-tools.
+> >>
+> >>Do I miss your point?
+> >
+> >Arm previously use atag_mem tag for memory kernel uses, with dtb, Booting.txt
+> >says: The boot loader must pass at a minimum the size and location of the
+> >system memory
+> >
+> >In arm64 booting.txt, it does mentions about dtb but without above sentence.
+> >
+> >So if you are using dtb to pass memory I think the extra mem= should be not
+> >necessary unless there's other limitations dtb can not been used.
+> 
+> I would expect comments from arm64 maintainers here.
+> 
+> In my old implementation, I added "usablemem" attributes, along with "reg," to
+> "memory" nodes in dtb to specify the usable memory region on crash dump kernel.
+> 
+> But I removed this feature partly because, on uefi system, uefi might pass
+> no memory information in dtb.
 
-On 10/22/15 at 11:57am, Geoff Levand wrote:
-> Hi Dave,
-> 
-> On Thu, 2015-10-22 at 11:17 +0800, Dave Young wrote:
-> > On 10/21/15 at 04:12pm, Geoff Levand wrote:
-> > > Add a new option --lite to kexec that allows for a fast reboot
-> > > by avoiding the purgatory integrity checks.  This option is
-> > > intended for use by kexec based bootloaders that load a new
-> > > image and then immediately transfer control to it.
-> > 
-> > I think Vivek was rejecting this --lite since kdump need the purgatory
-> > integrity checks. Ccing him.
-> 
-> As stated, this is not intended for use by kdump.
-> 
-> This is an optional feature.  It does not remove the integrity
-> checks, but provides the user a way to bypass them if they so
-> desire.
+If this is the case there must be somewhere else one can pass memory infomation
+to kernel, the booting.txt should be updated?
 
-Problem is why they so desire to skip purgatory? what is the background?
-If the only problem is the performace issue without cache enabled then
-I think it is not a strong one. We have a design to verify the image and it
-works why can't we maintain it and fix the issue instead of introducing
-the --lite? 
+kexec as a boot loader need use same method as the 1st kernel boot loader.
+
+> 
+> >One thing I'm confused is mem= only pass the memory size, where does you pass
+> >the start addresses?
+> 
+> In the current arm64 implementation, any regions below the start address will
+> be ignored as system ram.
+> 
+> >What if there's multiple sections such as some reserved
+> >ranges 2nd kernel also need?
+> 
+> My patch utilizes only a single contiguous region of memory as system ram.
+> One exception that I notice is uefi's runtime data. They will be ioremap'ed separately.
+> 
+> Please let me know if there is any other case that should be supported.
+
+For example the elf headers range, you reserved them in kdump kernel code,
+but kexec-tools can do that early if it can provides all memory info to 2nd
+kernel. Ditto for mark all the memory ranges 1st kernel used as reserved.
 
 Thanks
 Dave
