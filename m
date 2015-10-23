@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1445540891.30908.144.camel@infradead.org>
-Subject: Re: [PATCH] kexec: Add --lite option
-From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 22 Oct 2015 12:08:11 -0700
-In-Reply-To: <20151022125012.GB20847@redhat.com>
-References: <1445469125.30908.105.camel@infradead.org>
- <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <20151022125012.GB20847@redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZpSkX-0002VA-F7
+ for kexec@lists.infradead.org; Fri, 23 Oct 2015 03:10:37 +0000
+Date: Fri, 23 Oct 2015 11:10:00 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] Revert "kexec: use mmap instead of read for slurp_file()"
+Message-ID: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,41 +21,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>
-Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-Hi Vivek,
+This reverts commit 7ab842d8a004f6cd75a9d7b3528e4a70819ce4ef.
 
-On Thu, 2015-10-22 at 08:50 -0400, Vivek Goyal wrote:
-> On Thu, Oct 22, 2015 at 11:17:18AM +0800, Dave Young wrote:
-> > On 10/21/15 at 04:12pm, Geoff Levand wrote:
-> > > Add a new option --lite to kexec that allows for a fast reboot
-> > > by avoiding the purgatory integrity checks.  This option is
-> > > intended for use by kexec based bootloaders that load a new
-> > > image and then immediately transfer control to it.
-> > 
-> > I think Vivek was rejecting this --lite since kdump need the purgatory
-> > integrity checks. Ccing him.
-> 
-> Right. Why are we trying to bypass sha256 hash verification of loaded
-> segments at run time, that needs to be justified. 
+using mmap by default in slurp_file cause segment fault while later
+reallocing dtb_buf during my arm kexec test.
 
-Please see my reply to Dave.
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ kexec/kexec.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-> Atleast on x86, this integrity verification was fast and we did not
-> notice any siginificant delays in purgatory. And in that case extra knob
-> like this is hard to justify.
-
-I notice the difference on the my arm64 system, so I guess we
-are even on that.
-
-In general, faster boot times are desirable.  This option allows
-a faster system boot for kexec based bootloaders that use
-kexec-tools.
-
--Geoff
-
-
+--- kexec-tools.orig/kexec/kexec.c
++++ kexec-tools/kexec/kexec.c
+@@ -26,7 +26,6 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
+-#include <sys/mman.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/reboot.h>
+@@ -553,12 +552,11 @@ char *slurp_file(const char *filename, o
+ 		if (err < 0)
+ 			die("Can not seek to the begin of file %s: %s\n",
+ 					filename, strerror(errno));
+-		buf = slurp_fd(fd, filename, size, &nread);
+ 	} else {
+-		size = nread = stats.st_size;
+-		buf = mmap(NULL, size,
+-			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
++		size = stats.st_size;
+ 	}
++
++	buf = slurp_fd(fd, filename, size, &nread);
+ 	if (!buf)
+ 		die("Cannot read %s", filename);
+ 
 
 _______________________________________________
 kexec mailing list
