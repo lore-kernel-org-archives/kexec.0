@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1445626183.30908.198.camel@infradead.org>
-Subject: Re: [PATCH] kexec: Add --lite option
-From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 23 Oct 2015 11:49:43 -0700
-In-Reply-To: <20151023094620.GG11227@dhcp-129-115.nay.redhat.com>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zphkq-0000tl-L7
+ for kexec@lists.infradead.org; Fri, 23 Oct 2015 19:11:57 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1445469125.30908.105.camel@infradead.org>
  <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
  <1445540240.30908.134.camel@infradead.org>
- <20151023094620.GG11227@dhcp-129-115.nay.redhat.com>
-Mime-Version: 1.0
+Date: Fri, 23 Oct 2015 14:02:34 -0500
+In-Reply-To: <1445540240.30908.134.camel@infradead.org> (Geoff Levand's
+ message of "Thu, 22 Oct 2015 11:57:20 -0700")
+Message-ID: <87d1w52yt1.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH] kexec: Add --lite option
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,45 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org, vgoyal@redhat.com
+To: Geoff Levand <geoff@infradead.org>
+Cc: panand@redhat.com, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Petitboot@lists.ozlabs.org, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Hi Dave,
+Geoff Levand <geoff@infradead.org> writes:
 
-On Fri, 2015-10-23 at 17:46 +0800, Dave Young wrote:
-> On 10/22/15 at 11:57am, Geoff Levand wrote:
-> > As stated, this is not intended for use by kdump.
-> > 
-> > This is an optional feature.  It does not remove the integrity
-> > checks, but provides the user a way to bypass them if they so
-> > desire.
-> 
-> Problem is why they so desire to skip purgatory? what is the background?
+>> > It was reported that on some systems where purgatory is running
+>> > without caches enabled the sha256 calculations would take several
+>> > minutes.  For bootloaders that just load a new image and
+>> > immediately jump into it the loss of the integrity check is worth
+>> > the increase in boot speed.  Please consider.  
+>> 
+>> Pratyush reported the arm64 issue, he sent a patch to fix it with
+>> enabling cache for purgatory. I think the patch can fix the problem.
+>> Why not fix it? The fix is simple enough and it does not introduce
+>> complicate logic.
+>
+> This patch also is simple, and is architecture independent.  I see this
+> feature as an improvement to kexec, not necessarily as a fix for that
+> problem.
 
-This doesn't remove or skip purgatory.  Purgatory is still used.
-
-What it does do is skip the digest calculations that are done
-when an image is loaded (kexec --load), and it skips the digest
-calculations and comparison when the new image is run
-(kexec --exec).
-
-The digest check is great for kdump, where the crash kernel is
-loaded, and some time later a possibly unstable system tries to
-do a kexec and we want to assure the integrity of the new image.
-Kexec based bootloaders are very different.  They are running
-in a stable state.  They load a new image and immediately
-transfer control to that new image.  Because the system is in a
-stable state, and very little is done between the time the image
-is loaded and the time it is entered, there is little reason to
-do an integrity check, and by avoiding it we can speed up the
-boot process.
+Disabling image verification is not an improvement, all it does is
+allow for a nasty form of heisenbug.
 
 
-Faster boot (and re-boot) time is important to users, vendors,
-highly available systems, they all want it.
-
--Geoff
-
+Eric
 
 _______________________________________________
 kexec mailing list
