@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-bl2on0112.outbound.protection.outlook.com ([65.55.169.112]
+ helo=na01-bl2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZpStQ-0004J0-Tu
- for kexec@lists.infradead.org; Fri, 23 Oct 2015 03:19:49 +0000
-Date: Fri, 23 Oct 2015 11:19:17 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
-Message-ID: <20151023031917.GE11227@dhcp-129-115.nay.redhat.com>
-References: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
- <20151016013331.GB20667@verge.net.au>
- <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
+ id 1ZpTRb-0002Dl-CO
+ for kexec@lists.infradead.org; Fri, 23 Oct 2015 03:55:08 +0000
+From: Scott Wood <scottwood@freescale.com>
+Subject: [PATCH v3 05/18] powerpc/85xx: Load all early TLB entries at once
+Date: Thu, 22 Oct 2015 22:54:36 -0500
+Message-ID: <1445572476-17192-1-git-send-email-scottwood@freescale.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +21,209 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: jstodola@redhat.com, kexec@lists.infradead.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Laurentiu Tudor <b10716@freescale.com>, Scott Wood <scottwood@freescale.com>, kexec@lists.infradead.org
 
-Hi, Simon
+Use an AS=1 trampoline TLB entry to allow all normal TLB1 entries to
+be loaded at once.  This avoids the need to keep the translation that
+code is executing from in the same TLB entry in the final TLB
+configuration as during early boot, which in turn is helpful for
+relocatable kernels (e.g. kdump) where the kernel is not running from
+what would be the first TLB entry.
 
-> 
-> > 
-> > Also, won't this affect other architectures that use DT.
-> > I'm thinking about ARM. If so it might be good to tweak the changelog.
-> 
-> arm also uses the function, but I need verify the behavior. Will tune the changelog
-> after I confirming it.
+On e6500, we limit map_mem_in_cams() to the primary hwthread of a
+core (the boot cpu is always considered primary, as a kdump kernel
+can be entered on any cpu).  Each TLB only needs to be set up once,
+and when we do, we don't want another thread to be running when we
+create a temporary trampoline TLB1 entry.
 
-kexec on arm will have same problem when there's no external dtb being passed.
-But kexec kernel failed to start up during my test there may be other problems.
+Signed-off-by: Scott Wood <scottwood@freescale.com>
+---
+v3: Drop rename of settlbcam to preptlbcam, as the settlbcam wrapper
+was unused.
 
-I will work out a new patch for new option about skip adding root= from 1st kernel.
+ arch/powerpc/kernel/setup_64.c   |  8 +++++
+ arch/powerpc/mm/fsl_booke_mmu.c  |  4 +--
+ arch/powerpc/mm/mmu_decl.h       |  1 +
+ arch/powerpc/mm/tlb_nohash.c     | 19 +++++++++++-
+ arch/powerpc/mm/tlb_nohash_low.S | 63 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 92 insertions(+), 3 deletions(-)
 
-BTW, there's also a problem with external dtb --dtb option, I sent a patch to
-revert the mmap patch from Michael, please review.
+diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+index bdcbb71..505ec2c 100644
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -108,6 +108,14 @@ static void setup_tlb_core_data(void)
+ 	for_each_possible_cpu(cpu) {
+ 		int first = cpu_first_thread_sibling(cpu);
+ 
++		/*
++		 * If we boot via kdump on a non-primary thread,
++		 * make sure we point at the thread that actually
++		 * set up this TLB.
++		 */
++		if (cpu_first_thread_sibling(boot_cpuid) == first)
++			first = boot_cpuid;
++
+ 		paca[cpu].tcd_ptr = &paca[first].tcd;
+ 
+ 		/*
+diff --git a/arch/powerpc/mm/fsl_booke_mmu.c b/arch/powerpc/mm/fsl_booke_mmu.c
+index 354ba3c..bb1f88c 100644
+--- a/arch/powerpc/mm/fsl_booke_mmu.c
++++ b/arch/powerpc/mm/fsl_booke_mmu.c
+@@ -141,8 +141,6 @@ static void settlbcam(int index, unsigned long virt, phys_addr_t phys,
+ 	tlbcam_addrs[index].start = virt;
+ 	tlbcam_addrs[index].limit = virt + size - 1;
+ 	tlbcam_addrs[index].phys = phys;
+-
+-	loadcam_entry(index);
+ }
+ 
+ unsigned long calc_cam_sz(unsigned long ram, unsigned long virt,
+@@ -188,6 +186,8 @@ static unsigned long map_mem_in_cams_addr(phys_addr_t phys, unsigned long virt,
+ 		virt += cam_sz;
+ 		phys += cam_sz;
+ 	}
++
++	loadcam_multi(0, i, max_cam_idx);
+ 	tlbcam_index = i;
+ 
+ #ifdef CONFIG_PPC64
+diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
+index 085b66b..27c3a2d 100644
+--- a/arch/powerpc/mm/mmu_decl.h
++++ b/arch/powerpc/mm/mmu_decl.h
+@@ -152,6 +152,7 @@ extern int switch_to_as1(void);
+ extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
+ #endif
+ extern void loadcam_entry(unsigned int index);
++extern void loadcam_multi(int first_idx, int num, int tmp_idx);
+ 
+ struct tlbcam {
+ 	u32	MAS0;
+diff --git a/arch/powerpc/mm/tlb_nohash.c b/arch/powerpc/mm/tlb_nohash.c
+index 723a099..a7381fb 100644
+--- a/arch/powerpc/mm/tlb_nohash.c
++++ b/arch/powerpc/mm/tlb_nohash.c
+@@ -42,6 +42,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
+ #include <asm/code-patching.h>
++#include <asm/cputhreads.h>
+ #include <asm/hugetlb.h>
+ #include <asm/paca.h>
+ 
+@@ -628,10 +629,26 @@ static void early_init_this_mmu(void)
+ #ifdef CONFIG_PPC_FSL_BOOK3E
+ 	if (mmu_has_feature(MMU_FTR_TYPE_FSL_E)) {
+ 		unsigned int num_cams;
++		int __maybe_unused cpu = smp_processor_id();
++		bool map = true;
+ 
+ 		/* use a quarter of the TLBCAM for bolted linear map */
+ 		num_cams = (mfspr(SPRN_TLB1CFG) & TLBnCFG_N_ENTRY) / 4;
+-		linear_map_top = map_mem_in_cams(linear_map_top, num_cams);
++
++		/*
++		 * Only do the mapping once per core, or else the
++		 * transient mapping would cause problems.
++		 */
++#ifdef CONFIG_SMP
++		if (cpu != boot_cpuid &&
++		    (cpu != cpu_first_thread_sibling(cpu) ||
++		     cpu == cpu_first_thread_sibling(boot_cpuid)))
++			map = false;
++#endif
++
++		if (map)
++			linear_map_top = map_mem_in_cams(linear_map_top,
++							 num_cams);
+ 	}
+ #endif
+ 
+diff --git a/arch/powerpc/mm/tlb_nohash_low.S b/arch/powerpc/mm/tlb_nohash_low.S
+index 43ff3c7..68c4775 100644
+--- a/arch/powerpc/mm/tlb_nohash_low.S
++++ b/arch/powerpc/mm/tlb_nohash_low.S
+@@ -400,6 +400,7 @@ _GLOBAL(set_context)
+  * extern void loadcam_entry(unsigned int index)
+  *
+  * Load TLBCAM[index] entry in to the L2 CAM MMU
++ * Must preserve r7, r8, r9, and r10
+  */
+ _GLOBAL(loadcam_entry)
+ 	mflr	r5
+@@ -423,4 +424,66 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_BIG_PHYS)
+ 	tlbwe
+ 	isync
+ 	blr
++
++/*
++ * Load multiple TLB entries at once, using an alternate-space
++ * trampoline so that we don't have to care about whether the same
++ * TLB entry maps us before and after.
++ *
++ * r3 = first entry to write
++ * r4 = number of entries to write
++ * r5 = temporary tlb entry
++ */
++_GLOBAL(loadcam_multi)
++	mflr	r8
++
++	/*
++	 * Set up temporary TLB entry that is the same as what we're
++	 * running from, but in AS=1.
++	 */
++	bl	1f
++1:	mflr	r6
++	tlbsx	0,r8
++	mfspr	r6,SPRN_MAS1
++	ori	r6,r6,MAS1_TS
++	mtspr	SPRN_MAS1,r6
++	mfspr	r6,SPRN_MAS0
++	rlwimi	r6,r5,MAS0_ESEL_SHIFT,MAS0_ESEL_MASK
++	mr	r7,r5
++	mtspr	SPRN_MAS0,r6
++	isync
++	tlbwe
++	isync
++
++	/* Switch to AS=1 */
++	mfmsr	r6
++	ori	r6,r6,MSR_IS|MSR_DS
++	mtmsr	r6
++	isync
++
++	mr	r9,r3
++	add	r10,r3,r4
++2:	bl	loadcam_entry
++	addi	r9,r9,1
++	cmpw	r9,r10
++	mr	r3,r9
++	blt	2b
++
++	/* Return to AS=0 and clear the temporary entry */
++	mfmsr	r6
++	rlwinm.	r6,r6,0,~(MSR_IS|MSR_DS)
++	mtmsr	r6
++	isync
++
++	li	r6,0
++	mtspr	SPRN_MAS1,r6
++	rlwinm	r6,r7,MAS0_ESEL_SHIFT,MAS0_ESEL_MASK
++	oris	r6,r6,MAS0_TLBSEL(1)@h
++	mtspr	SPRN_MAS0,r6
++	isync
++	tlbwe
++	isync
++
++	mtlr	r8
++	blr
+ #endif
+-- 
+2.1.4
 
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
