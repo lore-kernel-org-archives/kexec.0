@@ -1,32 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp08.uk.ibm.com ([195.75.94.104])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zpdz8-0002Eg-6l
- for kexec@lists.infradead.org; Fri, 23 Oct 2015 15:10:27 +0000
-Received: from localhost
- by e06smtp08.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 23 Oct 2015 16:10:02 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id E02FF17D8056
- for <kexec@lists.infradead.org>; Fri, 23 Oct 2015 16:10:10 +0100 (BST)
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
- [9.149.37.250])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t9NFA0uX62455864
- for <kexec@lists.infradead.org>; Fri, 23 Oct 2015 15:10:00 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t9NFA0dn005119
- for <kexec@lists.infradead.org>; Fri, 23 Oct 2015 09:10:00 -0600
-Date: Fri, 23 Oct 2015 17:09:59 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH] Revert "kexec: use mmap instead of read for slurp_file()"
-Message-ID: <20151023170959.0ab74f20@holzheu>
-In-Reply-To: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
-References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+Message-ID: <1445626183.30908.198.camel@infradead.org>
+Subject: Re: [PATCH] kexec: Add --lite option
+From: Geoff Levand <geoff@infradead.org>
+Date: Fri, 23 Oct 2015 11:49:43 -0700
+In-Reply-To: <20151023094620.GG11227@dhcp-129-115.nay.redhat.com>
+References: <1445469125.30908.105.camel@infradead.org>
+ <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
+ <1445540240.30908.134.camel@infradead.org>
+ <20151023094620.GG11227@dhcp-129-115.nay.redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -41,25 +22,43 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+Cc: panand@redhat.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Petitboot@lists.ozlabs.org, vgoyal@redhat.com
 
-On Fri, 23 Oct 2015 11:10:00 +0800
-Dave Young <dyoung@redhat.com> wrote:
+Hi Dave,
 
-> This reverts commit 7ab842d8a004f6cd75a9d7b3528e4a70819ce4ef.
+On Fri, 2015-10-23 at 17:46 +0800, Dave Young wrote:
+> On 10/22/15 at 11:57am, Geoff Levand wrote:
+> > As stated, this is not intended for use by kdump.
+> > 
+> > This is an optional feature.  It does not remove the integrity
+> > checks, but provides the user a way to bypass them if they so
+> > desire.
 > 
-> using mmap by default in slurp_file cause segment fault while later
-> reallocing dtb_buf during my arm kexec test.
+> Problem is why they so desire to skip purgatory? what is the background?
 
-Sorry, I obviously missed that part.
+This doesn't remove or skip purgatory.  Purgatory is still used.
 
-How can we fix that:
+What it does do is skip the digest calculations that are done
+when an image is loaded (kexec --load), and it skips the digest
+calculations and comparison when the new image is run
+(kexec --exec).
 
-- Create a separate function slurp_file_mmap() that is called by s390x?
-- Rework xmalloc/xrealloc to always use mmap() and mremap()?
-- ...
+The digest check is great for kdump, where the crash kernel is
+loaded, and some time later a possibly unstable system tries to
+do a kexec and we want to assure the integrity of the new image.
+Kexec based bootloaders are very different.  They are running
+in a stable state.  They load a new image and immediately
+transfer control to that new image.  Because the system is in a
+stable state, and very little is done between the time the image
+is loaded and the time it is entered, there is little reason to
+do an integrity check, and by avoiding it we can speed up the
+boot process.
 
-Michael
+
+Faster boot (and re-boot) time is important to users, vendors,
+highly available systems, they all want it.
+
+-Geoff
 
 
 _______________________________________________
