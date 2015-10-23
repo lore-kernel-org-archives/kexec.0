@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZpSkX-0002VA-F7
- for kexec@lists.infradead.org; Fri, 23 Oct 2015 03:10:37 +0000
-Date: Fri, 23 Oct 2015 11:10:00 +0800
+ id 1ZpStQ-0004J0-Tu
+ for kexec@lists.infradead.org; Fri, 23 Oct 2015 03:19:49 +0000
+Date: Fri, 23 Oct 2015 11:19:17 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] Revert "kexec: use mmap instead of read for slurp_file()"
-Message-ID: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+Subject: Re: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
+Message-ID: <20151023031917.GE11227@dhcp-129-115.nay.redhat.com>
+References: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
+ <20151016013331.GB20667@verge.net.au>
+ <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +26,28 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
+Cc: jstodola@redhat.com, kexec@lists.infradead.org
 
-This reverts commit 7ab842d8a004f6cd75a9d7b3528e4a70819ce4ef.
+Hi, Simon
 
-using mmap by default in slurp_file cause segment fault while later
-reallocing dtb_buf during my arm kexec test.
+> 
+> > 
+> > Also, won't this affect other architectures that use DT.
+> > I'm thinking about ARM. If so it might be good to tweak the changelog.
+> 
+> arm also uses the function, but I need verify the behavior. Will tune the changelog
+> after I confirming it.
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/kexec.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+kexec on arm will have same problem when there's no external dtb being passed.
+But kexec kernel failed to start up during my test there may be other problems.
 
---- kexec-tools.orig/kexec/kexec.c
-+++ kexec-tools/kexec/kexec.c
-@@ -26,7 +26,6 @@
- #include <stdlib.h>
- #include <errno.h>
- #include <limits.h>
--#include <sys/mman.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <sys/reboot.h>
-@@ -553,12 +552,11 @@ char *slurp_file(const char *filename, o
- 		if (err < 0)
- 			die("Can not seek to the begin of file %s: %s\n",
- 					filename, strerror(errno));
--		buf = slurp_fd(fd, filename, size, &nread);
- 	} else {
--		size = nread = stats.st_size;
--		buf = mmap(NULL, size,
--			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-+		size = stats.st_size;
- 	}
-+
-+	buf = slurp_fd(fd, filename, size, &nread);
- 	if (!buf)
- 		die("Cannot read %s", filename);
- 
+I will work out a new patch for new option about skip adding root= from 1st kernel.
+
+BTW, there's also a problem with external dtb --dtb option, I sent a patch to
+revert the mmap patch from Michael, please review.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
