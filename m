@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZqZRd-0007Sf-GV
- for kexec@lists.infradead.org; Mon, 26 Oct 2015 04:31:42 +0000
-Date: Mon, 26 Oct 2015 13:31:19 +0900
+ id 1ZqZSp-0007rd-Et
+ for kexec@lists.infradead.org; Mon, 26 Oct 2015 04:32:56 +0000
+Date: Mon, 26 Oct 2015 13:32:33 +0900
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
-Message-ID: <20151026043119.GB2411@verge.net.au>
+Message-ID: <20151026043233.GC2411@verge.net.au>
 References: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
  <20151016013331.GB20667@verge.net.au>
  <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
+ <20151023031917.GE11227@dhcp-129-115.nay.redhat.com>
+ <20151023092319.GF11227@dhcp-129-115.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
+In-Reply-To: <20151023092319.GF11227@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,52 +30,28 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
 Cc: jstodola@redhat.com, kexec@lists.infradead.org
 
-On Mon, Oct 19, 2015 at 04:22:46PM +0800, Dave Young wrote:
-> Hi, Simon
-> 
-> On 10/16/15 at 10:33am, Simon Horman wrote:
-> > Hi Dave,
+On Fri, Oct 23, 2015 at 05:23:19PM +0800, Dave Young wrote:
+> On 10/23/15 at 11:19am, Dave Young wrote:
+> > Hi, Simon
 > > 
-> > On Fri, Oct 09, 2015 at 01:57:22PM +0800, Dave Young wrote:
-> > > Jan Stodola <jstodola@redhat.com> reported ppc64 root= is always added in kexec
-> > > kernel cmdline. But sometimes we need boot without root= for example we use
-> > > kexec to boot into installation initramfs image like below:
-> > > kexec --load vmlinuz --initrd=initrd.img --command-line=\
-> > > "inst.repo=http://<server>/<path>/Server/ppc64le/os/"
 > > > 
-> > > While creating dtb, in case there's no root= in user provided cmdline params 
-> > > kexec-tools will find the original root= param used in 1st kernel and pass it
-> > > to 2nd kernel. This caused that user have no way to remove root= cmdline.
+> > > > 
+> > > > Also, won't this affect other architectures that use DT.
+> > > > I'm thinking about ARM. If so it might be good to tweak the changelog.
 > > > 
-> > > Dropping that part of code so that one can get chance to kexec into 2nd kernel
-> > > without root= param. One can still provide root= in --command-line=""
+> > > arm also uses the function, but I need verify the behavior. Will tune the changelog
+> > > after I confirming it.
 > > 
-> > I'm a little concerned about the backwards-compatibility implications of
-> > this change. Though I agree the new behaviour is entirely sane perhaps
-> > it should be activated via a new command line option.
+> > kexec on arm will have same problem when there's no external dtb being passed.
+> > But kexec kernel failed to start up during my test there may be other problems.
+> > 
+> > I will work out a new patch for new option about skip adding root= from 1st kernel.
 > 
-> I did not notice this problem until Jan reported it so I thouhgt that it
-> is just a hidden assumption, people might not notice it and use it that
-> way.
-> 
-> For Fedora/RHEL kdump we will copy 1st kernel cmdline by default so one
-> do not need to use it. For kexec and other distributions I'm not sure..
-> 
-> Since it is more of a fix to original logic, personally I tend to not
-> introducing a new option. But if you think we need to add a new option I
-> can do it.
+> Simon, for the new option, I'm thinking to create a "--dt-no-old-root". It can be
+> a general option, or arch dependent one for arm and ppc64. What do you prefer?
 
-> > Also, won't this affect other architectures that use DT.
-> > I'm thinking about ARM. If so it might be good to tweak the changelog.
-> 
-> arm also uses the function, but I need verify the behavior. Will tune the
-> changelog after I confirming it.
-
-Thanks
-
-I'm still concerned that people may be relying on this behaviour.
-But I agree it seems painful to add an option to get what
-should have been the default.
+Lets just make it arch dependent if it only changes the behaviour
+on some architectures. The name sounds good to me.
 
 _______________________________________________
 kexec mailing list
