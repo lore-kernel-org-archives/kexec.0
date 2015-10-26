@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZplC6-00014k-A7
- for kexec@lists.infradead.org; Fri, 23 Oct 2015 22:52:18 +0000
-Received: from zmail15.collab.prod.int.phx2.redhat.com
- (zmail15.collab.prod.int.phx2.redhat.com [10.5.83.17])
- by mx3-phx2.redhat.com (8.13.8/8.13.8) with ESMTP id t9NMptLe012050
- for <kexec@lists.infradead.org>; Fri, 23 Oct 2015 18:51:55 -0400
-Date: Fri, 23 Oct 2015 18:51:55 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1614308760.81805248.1445640715281.JavaMail.zimbra@redhat.com>
-In-Reply-To: <mailman.119.1445632877.1639.kexec@lists.infradead.org>
-References: <mailman.119.1445632877.1639.kexec@lists.infradead.org>
-Subject: Re: [PATCH V6] makedumpfile: exclude page structures of non-dumped
- pages
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZqZQY-00072x-9m
+ for kexec@lists.infradead.org; Mon, 26 Oct 2015 04:30:34 +0000
+Date: Mon, 26 Oct 2015 13:30:11 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Revert "kexec: use mmap instead of read for slurp_file()"
+Message-ID: <20151026043010.GA2411@verge.net.au>
+References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-
-
------ Original Message -----
-                                 done)
+On Fri, Oct 23, 2015 at 11:10:00AM +0800, Dave Young wrote:
+> This reverts commit 7ab842d8a004f6cd75a9d7b3528e4a70819ce4ef.
 > 
-> The only disadvantage is that various options of the crash 'kmem' command that
-> walk lists of page structures) will not work.
-> Version 7.0.9 of crash is already patched to issue a warning about such commands
-> when the dump is flagged DUMP_DH_EXCLUDED_VMEMMAP.
+> using mmap by default in slurp_file cause segment fault while later
+> reallocing dtb_buf during my arm kexec test.
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 
-No it does not.  
+Thanks, applied.
 
-There is a warning if the dumpfile is marked DUMP_DH_COMPRESSED_INCOMPLETE,
-but it will not recognize missing page structures.  Please remember to post
-a patch to the crash utility mailing list to support DUMP_DH_EXCLUDED_VMEMMAP.
-
-Thanks,
-  Dave
+> ---
+>  kexec/kexec.c |    8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> --- kexec-tools.orig/kexec/kexec.c
+> +++ kexec-tools/kexec/kexec.c
+> @@ -26,7 +26,6 @@
+>  #include <stdlib.h>
+>  #include <errno.h>
+>  #include <limits.h>
+> -#include <sys/mman.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+>  #include <sys/reboot.h>
+> @@ -553,12 +552,11 @@ char *slurp_file(const char *filename, o
+>  		if (err < 0)
+>  			die("Can not seek to the begin of file %s: %s\n",
+>  					filename, strerror(errno));
+> -		buf = slurp_fd(fd, filename, size, &nread);
+>  	} else {
+> -		size = nread = stats.st_size;
+> -		buf = mmap(NULL, size,
+> -			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+> +		size = stats.st_size;
+>  	}
+> +
+> +	buf = slurp_fd(fd, filename, size, &nread);
+>  	if (!buf)
+>  		die("Cannot read %s", filename);
+>  
+> 
 
 _______________________________________________
 kexec mailing list
