@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZqZQY-00072x-9m
- for kexec@lists.infradead.org; Mon, 26 Oct 2015 04:30:34 +0000
-Date: Mon, 26 Oct 2015 13:30:11 +0900
+ id 1ZqZRd-0007Sf-GV
+ for kexec@lists.infradead.org; Mon, 26 Oct 2015 04:31:42 +0000
+Date: Mon, 26 Oct 2015 13:31:19 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Revert "kexec: use mmap instead of read for slurp_file()"
-Message-ID: <20151026043010.GA2411@verge.net.au>
-References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+Subject: Re: [PATCH] kexec-tools: do not copy 1st kernel root= param in fs2dt.c
+Message-ID: <20151026043119.GB2411@verge.net.au>
+References: <20151009055722.GA6248@dhcp-129-237.nay.redhat.com>
+ <20151016013331.GB20667@verge.net.au>
+ <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+In-Reply-To: <20151019082246.GC31886@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +26,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
+Cc: jstodola@redhat.com, kexec@lists.infradead.org
 
-On Fri, Oct 23, 2015 at 11:10:00AM +0800, Dave Young wrote:
-> This reverts commit 7ab842d8a004f6cd75a9d7b3528e4a70819ce4ef.
+On Mon, Oct 19, 2015 at 04:22:46PM +0800, Dave Young wrote:
+> Hi, Simon
 > 
-> using mmap by default in slurp_file cause segment fault while later
-> reallocing dtb_buf during my arm kexec test.
+> On 10/16/15 at 10:33am, Simon Horman wrote:
+> > Hi Dave,
+> > 
+> > On Fri, Oct 09, 2015 at 01:57:22PM +0800, Dave Young wrote:
+> > > Jan Stodola <jstodola@redhat.com> reported ppc64 root= is always added in kexec
+> > > kernel cmdline. But sometimes we need boot without root= for example we use
+> > > kexec to boot into installation initramfs image like below:
+> > > kexec --load vmlinuz --initrd=initrd.img --command-line=\
+> > > "inst.repo=http://<server>/<path>/Server/ppc64le/os/"
+> > > 
+> > > While creating dtb, in case there's no root= in user provided cmdline params 
+> > > kexec-tools will find the original root= param used in 1st kernel and pass it
+> > > to 2nd kernel. This caused that user have no way to remove root= cmdline.
+> > > 
+> > > Dropping that part of code so that one can get chance to kexec into 2nd kernel
+> > > without root= param. One can still provide root= in --command-line=""
+> > 
+> > I'm a little concerned about the backwards-compatibility implications of
+> > this change. Though I agree the new behaviour is entirely sane perhaps
+> > it should be activated via a new command line option.
 > 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
+> I did not notice this problem until Jan reported it so I thouhgt that it
+> is just a hidden assumption, people might not notice it and use it that
+> way.
+> 
+> For Fedora/RHEL kdump we will copy 1st kernel cmdline by default so one
+> do not need to use it. For kexec and other distributions I'm not sure..
+> 
+> Since it is more of a fix to original logic, personally I tend to not
+> introducing a new option. But if you think we need to add a new option I
+> can do it.
 
-Thanks, applied.
+> > Also, won't this affect other architectures that use DT.
+> > I'm thinking about ARM. If so it might be good to tweak the changelog.
+> 
+> arm also uses the function, but I need verify the behavior. Will tune the
+> changelog after I confirming it.
 
-> ---
->  kexec/kexec.c |    8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> --- kexec-tools.orig/kexec/kexec.c
-> +++ kexec-tools/kexec/kexec.c
-> @@ -26,7 +26,6 @@
->  #include <stdlib.h>
->  #include <errno.h>
->  #include <limits.h>
-> -#include <sys/mman.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <sys/reboot.h>
-> @@ -553,12 +552,11 @@ char *slurp_file(const char *filename, o
->  		if (err < 0)
->  			die("Can not seek to the begin of file %s: %s\n",
->  					filename, strerror(errno));
-> -		buf = slurp_fd(fd, filename, size, &nread);
->  	} else {
-> -		size = nread = stats.st_size;
-> -		buf = mmap(NULL, size,
-> -			   PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
-> +		size = stats.st_size;
->  	}
-> +
-> +	buf = slurp_fd(fd, filename, size, &nread);
->  	if (!buf)
->  		die("Cannot read %s", filename);
->  
-> 
+Thanks
+
+I'm still concerned that people may be relying on this behaviour.
+But I agree it seems painful to add an option to get what
+should have been the default.
 
 _______________________________________________
 kexec mailing list
