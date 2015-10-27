@@ -1,19 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e06smtp05.uk.ibm.com ([195.75.94.101])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zr0DV-0003mz-2t
- for kexec@lists.infradead.org; Tue, 27 Oct 2015 09:06:53 +0000
-Date: Tue, 27 Oct 2015 17:06:27 +0800
-From: "'Baoquan He'" <bhe@redhat.com>
-Subject: Re: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
-Message-ID: <20151027090627.GA29587@dhcp-128-28.nay.redhat.com>
-References: <20150925112803.4258.94241.stgit@softrs>
- <20150925112811.4258.54494.stgit@softrs>
- <20151027084622.GA5141@dhcp-128-28.nay.redhat.com>
- <04EAB7311EE43145B2D3536183D1A844549DC280@GSjpTKYDCembx31.service.hitachi.net>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <04EAB7311EE43145B2D3536183D1A844549DC280@GSjpTKYDCembx31.service.hitachi.net>
+ id 1Zr3eU-0000Fl-9C
+ for kexec@lists.infradead.org; Tue, 27 Oct 2015 12:46:59 +0000
+Received: from localhost
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Tue, 27 Oct 2015 12:46:34 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com
+ (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+ by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7126B17D8059
+ for <kexec@lists.infradead.org>; Tue, 27 Oct 2015 12:35:34 +0000 (GMT)
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
+ by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t9RCZMZw53542970
+ for <kexec@lists.infradead.org>; Tue, 27 Oct 2015 12:35:22 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t9RCZM8s028515
+ for <kexec@lists.infradead.org>; Tue, 27 Oct 2015 06:35:22 -0600
+Date: Tue, 27 Oct 2015 13:35:20 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: [PATCH v2] kexec/s390x: use mmap instead of read for slurp_file()
+Message-ID: <20151027133520.30653ba3@holzheu>
+In-Reply-To: <20151026073139.GB2916@dhcp-128-73.nay.redhat.com>
+References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+ <20151023170959.0ab74f20@holzheu>
+ <20151026073139.GB2916@dhcp-128-73.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,34 +38,175 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>
+Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org
 
-T24gMTAvMjcvMTUgYXQgMDk6MDFhbSwg5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTyB3
-cm90ZToKPiBIaSwKPiAKPiA+IEkganVzdCBoYXZlIGEgbG9vayBhdCB0aGlzIHRocmVhZC4gSSBh
-bSB3b25kZXJpbmcgd2h5IHdlIGRvbid0IHVzZQo+ID4gZXhpc3RpbmcgaXNfa2R1bXBfa2VybmVs
-KCkgZGlyZWN0bHkgdG8gZGlzYWJsZSBleHRlcm5hbCBOTUkgaWYgaXQncwo+ID4gaW4ga2R1bXAg
-a2VybmVsLiBUaGVuIG5vIG5lZWQgdG8gaW50cm9kdWNlIGFub3RoZXIgYm9vdCBvcHRpb24gIm5v
-ZXh0bm1pIgo+ID4gd2hpY2ggaXMgdXNlZCBvbmx5IGZvciBrZHVtcCBrZXJuZWwuCj4gCj4gQXMg
-SSBzdGF0ZWQgaW4gYW5vdGhlciBtYWlsLCB0aGVyZSBpcyBhIGNhc2Ugd2hlcmUgd2UgZG9uJ3Qg
-d2FudCB0bwo+IG1hc2sgZXh0ZXJuYWwgTk1JcyBpbiB0aGUgc2Vjb25kIGtlcm5lbC4gIFNvLCB3
-ZSBuZWVkIHNvbWUKPiBjb25maWd1cmFibGUgd2F5LiAgUGxlYXNlIHNlZSB0aGUgZm9sbG93aW5n
-IHF1b3RhdGlvbi4KCkdvdCBpdC4gVGhhbmtzIGZvciB0ZWxsaW5nLgoKPiAKPiA+IFdlIHNvdWxk
-bid0IGVuYWJsZSB0aGlzIGZlYXR1cmUgc2lsZW50bHkuICBTb21lIHVzZXJzIHdvdWxkbid0IGxp
-a2UKPiA+IHRvIGVuYWJsZSB0aGlzIGZlYXR1cmUuICBGb3IgZXhhbXBsZSwgYSB1c2VyIGVuYWJs
-ZXMgYSB3YXRjaGRvZyB0aW1lcgo+ID4gd2hpY2ggcmFpc2VzIGFuIGV4dGVybmFsIE5NSSB3aGVu
-IHRoZSBjb3VudGVyIGlzIG5vdCByZXNldCBmb3IgYQo+ID4gc3BlY2lmaWMgZHVyYXRpb24uICBU
-aGVuLCB0aGUgc2Vjb25kIGtlcm5lbCBoYW5ncyB1cCB3aGlsZSBzYXZpbmcKPiA+IGNyYXNoIGR1
-bXAsIGFuZCBOTUkgaXMgZGVsaXZlcmVkIHRvIHRoZSBDUFUuICBUaGUga2VybmVsIGdldHMgcGFu
-aWMKPiA+IGR1ZSB0byB0aGUgTk1JLCBwcmludHMgc29tZSBpbmZvcm1hdGlvbiB0byB0aGUgZGlz
-cGxheSBhbmQgc2VyaWFsCj4gPiBjb25zb2xlLCBhbmQgdGhlbiBhdXRvbWF0aWNhbGx5IHJlYm9v
-dC4gIEluIHRoaXMgY2FzZSwgdXNlcnMgZG9uJ3QKPiA+IHdhbnQgdG8gYmxvY2sgZXh0ZXJuYWwg
-Tk1Jcy4KPiAKPiBSZWdhcmRzLAo+IAo+IEhpZGVoaXJvIEthd2FpCj4gSGl0YWNoaSwgTHRkLiBS
-ZXNlYXJjaCAmIERldmVsb3BtZW50IEdyb3VwCj4gCj4gCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+On Mon, 26 Oct 2015 15:31:39 +0800
+Dave Young <dyoung@redhat.com> wrote:
+
+[snip]
+
+> IMHO adding a slurp_file_mmap for s390x use is a better way since the
+> huge initramfs is not a general case.
+
+Ok, what about the following patch:
+---
+[PATCH] kexec/s390x: use mmap instead of read for slurp_file()
+
+The slurp_fd() function allocates memory and uses the read() system call.
+This results in double memory consumption for image and initrd:
+
+ 1) Memory allocated in user space by the kexec tool
+ 2) Memory allocated in kernel by the kexec() system call
+
+Therefore use mmap() to reduce the runtime memory consumption of the kexec tool.
+
+The following use case illustrates the usefulness of this patch a bit more:
+
+ 1) Boot a 4 GB Linux system
+ 2) Read kernel and 1,5 GB ramdisk from external source into local
+    tmpfs (ram)
+ 3) kexec the kernel and ramdisk
+
+ Without this patch for the kexec runtime we need:
+
+ 1,5 GB (tmpfs) + 1,5 GB (kexec malloc) + 1,5 GB (kernel memory) = 4,5 GB
+
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ kexec/arch/s390/kexec-image.c |    2 +-
+ kexec/kexec.c                 |   40 ++++++++++++++++++++++++++++++++++------
+ kexec/kexec.h                 |    1 +
+ 3 files changed, 36 insertions(+), 7 deletions(-)
+
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -101,7 +101,7 @@ image_s390_load(int argc, char **argv, c
+ 	 * we load the ramdisk directly behind the image with 1 MiB alignment.
+ 	 */
+ 	if (ramdisk) {
+-		rd_buffer = slurp_file(ramdisk, &ramdisk_len);
++		rd_buffer = slurp_file_mmap(ramdisk, &ramdisk_len);
+ 		if (rd_buffer == NULL) {
+ 			fprintf(stderr, "Could not read ramdisk.\n");
+ 			return -1;
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -29,6 +29,7 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/reboot.h>
++#include <sys/mman.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ #ifndef _O_BINARY
+@@ -481,13 +482,19 @@ static int add_backup_segments(struct ke
+ 	return 0;
+ }
+ 
+-static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
++static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread,
++		      int use_mmap)
+ {
+ 	char *buf;
+ 	off_t progress;
+ 	ssize_t result;
+ 
+-	buf = xmalloc(size);
++	if (use_mmap) {
++		buf = mmap(NULL, size, PROT_READ|PROT_WRITE,
++			   MAP_ANON|MAP_PRIVATE, -1, 0);
++	} else {
++		buf = xmalloc(size);
++	}
+ 	progress = 0;
+ 	while (progress < size) {
+ 		result = read(fd, buf + progress, size - progress);
+@@ -496,7 +503,10 @@ static char *slurp_fd(int fd, const char
+ 				continue;
+ 			fprintf(stderr, "Read on %s failed: %s\n", filename,
+ 				strerror(errno));
+-			free(buf);
++			if (use_mmap)
++				munmap(buf, size);
++			else
++				free(buf);
+ 			close(fd);
+ 			return NULL;
+ 		}
+@@ -514,7 +524,8 @@ static char *slurp_fd(int fd, const char
+ 	return buf;
+ }
+ 
+-char *slurp_file(const char *filename, off_t *r_size)
++static char *slurp_file_generic(const char *filename, off_t *r_size,
++				int use_mmap)
+ {
+ 	int fd;
+ 	char *buf;
+@@ -552,11 +563,18 @@ char *slurp_file(const char *filename, o
+ 		if (err < 0)
+ 			die("Can not seek to the begin of file %s: %s\n",
+ 					filename, strerror(errno));
++		buf = slurp_fd(fd, filename, size, &nread, use_mmap);
+ 	} else {
+ 		size = stats.st_size;
++		if (use_mmap) {
++			buf = mmap(NULL, size, PROT_READ | PROT_WRITE,
++				   MAP_PRIVATE, fd, 0);
++			nread = stats.st_size;
++		} else {
++			buf = slurp_fd(fd, filename, size, &nread, 0);
++		}
+ 	}
+ 
+-	buf = slurp_fd(fd, filename, size, &nread);
+ 	if (!buf)
+ 		die("Cannot read %s", filename);
+ 
+@@ -567,6 +585,16 @@ char *slurp_file(const char *filename, o
+ 	return buf;
+ }
+ 
++char *slurp_file(const char *filename, off_t *r_size)
++{
++	return slurp_file_generic(filename, r_size, 0);
++}
++
++char *slurp_file_mmap(const char *filename, off_t *r_size)
++{
++	return slurp_file_generic(filename, r_size, 1);
++}
++
+ /* This functions reads either specified number of bytes from the file or
+    lesser if EOF is met. */
+ 
+@@ -583,7 +611,7 @@ char *slurp_file_len(const char *filenam
+ 		return 0;
+ 	}
+ 
+-	return slurp_fd(fd, filename, size, nread);
++	return slurp_fd(fd, filename, size, nread, 0);
+ }
+ 
+ char *slurp_decompress_file(const char *filename, off_t *r_size)
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -253,6 +253,7 @@ extern void die(const char *fmt, ...)
+ extern void *xmalloc(size_t size);
+ extern void *xrealloc(void *ptr, size_t size);
+ extern char *slurp_file(const char *filename, off_t *r_size);
++extern char *slurp_file_mmap(const char *filename, off_t *r_size);
+ extern char *slurp_file_len(const char *filename, off_t size, off_t *nread);
+ extern char *slurp_decompress_file(const char *filename, off_t *r_size);
+ extern unsigned long virt_to_phys(unsigned long addr);
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
