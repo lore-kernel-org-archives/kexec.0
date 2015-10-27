@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zqzu5-0000fH-6p
- for kexec@lists.infradead.org; Tue, 27 Oct 2015 08:46:51 +0000
-Date: Tue, 27 Oct 2015 16:46:22 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
-Message-ID: <20151027084622.GA5141@dhcp-128-28.nay.redhat.com>
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zr08S-0000Rj-JD
+ for kexec@lists.infradead.org; Tue, 27 Oct 2015 09:01:41 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: Re: [V4 PATCH 4/4] x86/apic: Introduce noextnmi boot option
+Date: Tue, 27 Oct 2015 09:01:15 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A844549DC280@GSjpTKYDCembx31.service.hitachi.net>
 References: <20150925112803.4258.94241.stgit@softrs>
  <20150925112811.4258.54494.stgit@softrs>
+ <20151027084622.GA5141@dhcp-128-28.nay.redhat.com>
+In-Reply-To: <20151027084622.GA5141@dhcp-128-28.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20150925112811.4258.54494.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,105 +26,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: x86@kernel.org, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: 'Baoquan He' <bhe@redhat.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
 Hi,
 
-I just have a look at this thread. I am wondering why we don't use
-existing is_kdump_kernel() directly to disable external NMI if it's
-in kdump kernel. Then no need to introduce another boot option "noextnmi"
-which is used only for kdump kernel.
+> I just have a look at this thread. I am wondering why we don't use
+> existing is_kdump_kernel() directly to disable external NMI if it's
+> in kdump kernel. Then no need to introduce another boot option "noextnmi"
+> which is used only for kdump kernel.
 
-Thanks
-Baoquan
+As I stated in another mail, there is a case where we don't want to
+mask external NMIs in the second kernel.  So, we need some
+configurable way.  Please see the following quotation.
 
-On 09/25/15 at 08:28pm, Hidehiro Kawai wrote:
-> This patch introduces new boot option "noextnmi" which disables
-> external NMI.  This option is useful for the dump capture kernel
-> so that an HA application or administrator wouldn't mistakenly
-> shoot down the kernel by NMI.
-> 
-> Currently, only x86 supports this option.
-> 
-> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> ---
->  Documentation/kernel-parameters.txt |    4 ++++
->  arch/x86/kernel/apic/apic.c         |   17 ++++++++++++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-> index 22a4b68..8bcaccd 100644
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -2379,6 +2379,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
->  			noexec=on: enable non-executable mappings (default)
->  			noexec=off: disable non-executable mappings
->  
-> +	noextnmi	[X86]
-> +			Mask external NMI.  This option is useful for a
-> +			dump capture kernel to be shot down by NMI.
-> +
->  	nosmap		[X86]
->  			Disable SMAP (Supervisor Mode Access Prevention)
->  			even if it is supported by processor.
-> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> index 24e94ce..fd47128 100644
-> --- a/arch/x86/kernel/apic/apic.c
-> +++ b/arch/x86/kernel/apic/apic.c
-> @@ -82,6 +82,12 @@
->  static unsigned int disabled_cpu_apicid __read_mostly = BAD_APICID;
->  
->  /*
-> + * Don't enable external NMI via LINT1 on BSP.  This is useful for
-> + * the dump capture kernel.
-> + */
-> +static bool apic_noextnmi;
-> +
-> +/*
->   * Map cpu index to physical APIC ID
->   */
->  DEFINE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_cpu_to_apicid, BAD_APICID);
-> @@ -1161,6 +1167,8 @@ void __init init_bsp_APIC(void)
->  	value = APIC_DM_NMI;
->  	if (!lapic_is_integrated())		/* 82489DX */
->  		value |= APIC_LVT_LEVEL_TRIGGER;
-> +	if (apic_noextnmi)
-> +		value |= APIC_LVT_MASKED;
->  	apic_write(APIC_LVT1, value);
->  }
->  
-> @@ -1380,7 +1388,7 @@ void setup_local_APIC(void)
->  	/*
->  	 * only the BP should see the LINT1 NMI signal, obviously.
->  	 */
-> -	if (!cpu)
-> +	if (!cpu && !apic_noextnmi)
->  		value = APIC_DM_NMI;
->  	else
->  		value = APIC_DM_NMI | APIC_LVT_MASKED;
-> @@ -2548,3 +2556,10 @@ static int __init apic_set_disabled_cpu_apicid(char *arg)
->  	return 0;
->  }
->  early_param("disable_cpu_apicid", apic_set_disabled_cpu_apicid);
-> +
-> +static int __init apic_set_noextnmi(char *arg)
-> +{
-> +	apic_noextnmi = true;
-> +	return 0;
-> +}
-> +early_param("noextnmi", apic_set_noextnmi);
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> We souldn't enable this feature silently.  Some users wouldn't like
+> to enable this feature.  For example, a user enables a watchdog timer
+> which raises an external NMI when the counter is not reset for a
+> specific duration.  Then, the second kernel hangs up while saving
+> crash dump, and NMI is delivered to the CPU.  The kernel gets panic
+> due to the NMI, prints some information to the display and serial
+> console, and then automatically reboot.  In this case, users don't
+> want to block external NMIs.
+
+Regards,
+
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
+
 
 _______________________________________________
 kexec mailing list
