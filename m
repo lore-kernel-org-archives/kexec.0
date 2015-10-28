@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-x22f.google.com ([2a00:1450:400c:c05::22f])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrM1q-0000Bu-02
- for kexec@lists.infradead.org; Wed, 28 Oct 2015 08:24:18 +0000
-Received: by wijp11 with SMTP id p11so245522175wij.0
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 01:23:55 -0700 (PDT)
-Subject: Re: makedumpfile-1.5.9: Introduce parallel compression processing.
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
-From: Louis Bouchard <louis.bouchard@canonical.com>
-Message-ID: <56308618.3080908@canonical.com>
-Date: Wed, 28 Oct 2015 09:23:52 +0100
-MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
+ id 1ZrMq1-0007Qp-4w
+ for kexec@lists.infradead.org; Wed, 28 Oct 2015 09:16:14 +0000
+Received: from int-mx13.intmail.prod.int.phx2.redhat.com
+ (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
+ by mx1.redhat.com (Postfix) with ESMTPS id 3A7B16A
+ for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 09:15:48 +0000 (UTC)
+From: Dangyi Liu <dliu@redhat.com>
+Subject: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of logged_chars
+Date: Wed, 28 Oct 2015 17:15:24 +0800
+Message-Id: <1446023724-12445-1-git-send-email-dliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,40 +19,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Dave Young <dyoung@redhat.com>, Dangyi Liu <dliu@redhat.com>
 
-SGVsbG8gS3VtYWdhaS1zYW4sCgpMZSAyOC8xMC8yMDE1IDA3OjMxLCBBdHN1c2hpIEt1bWFnYWkg
-YSDDqWNyaXQgOgo+IEhlbGxvLAo+IAo+IG1ha2VkdW1wZmlsZSB2ZXJzaW9uIDEuNS45IGlzIHJl
-bGVhc2VkLgo+IFlvdXIgY29tbWVudHMvcGF0Y2hlcyBhcmUgd2VsY29tZS4KPiAKPiBNYWluIG5l
-dyBmZWF0dXJlOgo+IG8gUGFyYWxsZWwgY29tcHJlc3Npb24KPiAgLSBBZGQgdGhlIG5ldyBvcHRp
-b24gIi0tbnVtLXRocmVhZHMiIHRvIGVuYWJsZSBwYXJhbGxlbCBjb21wcmVzc2lvbgo+ICAgIGZv
-ciBmYXN0ZXIgcHJvY2Vzc2luZy4gVGhpcyBvcHRpb24gaW50ZW5kcyBwYXJhbGxlbCBjb21wcmVz
-c2lvbgo+ICAgIHdoaWxlIC0tc3BsaXQgaW50ZW5kcyBwYXJhbGxlbCBpL28sIHRoZXkgdHJ5IHRv
-IHNvbHZlIGRpZmZlcmVudAo+ICAgIGJvdHRsZW5lY2tzLgo+IAo+IG8gQ2hhbmdlIHRoZSB3YXkg
-dG8gY2hvb3NlIHRoZSBub24tY3ljbGljIG1vZGUKPiAgLSBBZGQgdGhlIG5ldyBvcHRpb24gIi0t
-d29yay1kaXIiIHRvIHNwZWNpZnkgdGhlIGRpcmVjdG9yeSB1c2VkIHRvCj4gICAgc3RvcmUgdGhl
-IGJpdG1hcC4gVGhpcyBpcyB0aGUgYWx0ZXJuYXRpdmUgdG8gdGhlIGNvbWJpbmF0aW9uIG9mCj4g
-ICAgLS1ub24tY3ljbGljIGFuZCBUTVBESVIuCj4gCj4gbyBTdXBwb3J0IG5ldyBrZXJuZWxzCj4g
-IC0gVGhlIHN1cHBvcnRlZCBrZXJuZWwgaXMgdXBkYXRlZCB0byA0LjEgaW4gdGhpcyB2ZXJzaW9u
-Lgo+ICAgIEF0IGZpcnN0IEknbSBnb2luZyB0byBleHRlbmQgdGhlIHN1cHBvcnRlZCB2ZXJzaW9u
-IHRvIDQuMiwgYnV0Cj4gICAgSSBmb3VuZCBhbiBpc3N1ZSB0aGF0IG1ha2VkdW1wZmlsZSBzZWVt
-cyB0byBleGNsdWRlIG5lY2Vzc2FyeSBwYWdlcwo+ICAgIGJ5IG1pc3Rha2Ugb24gbGludXggNC4y
-LiBXaGVuIGNyYXNoLTcuMS4zIHJlYWRzIHRoYXQgZmlsdGVyZWQgZHVtcCBmaWxlLAo+ICAgIHRo
-ZSBmb2xsb3dpbmcgbWVzc2FnZSBpcyBzaG93bi4KPiAKPiAgICAgICBjcmFzaDogcGFnZSBleGNs
-dWRlZDoga2VybmVsIHZpcnR1YWwgYWRkcmVzczogZjNmZTAwMDAgIHR5cGU6ICJmaWxsX3Rhc2tf
-c3RydWN0Igo+IAo+ICAgIFRoaXMgd2lsbCBiZSBmaXhlZCBpbiB0aGUgbmV4dCB2ZXJzaW9uLgoK
-SGF2ZSB5b3UgZml4ZWQgdGhlIDQuMiBrZXJuZWwgaXNzdWUgYWxyZWFkeSBvciB5b3UgaW50ZW5k
-IHRvIHdvcmsgb24gaXQgaW4gdGhlCmZ1dHVyZSA/CgpCb3RoIERlYmlhbiBhbmQgVWJ1bnR1IHJ1
-biA0LjIga2VybmVsIHNvIGlmIHdhaXRpbmcgZm9yIGEgZml4IGlzIGFjY2VwdGFibGUgSQp3b3Vs
-ZCByYXRoZXIgYnJpbmcgaW4gYSAxLjUuOSArIHBhdGNoIHZlcnNpb24uCgpLaW5kIHJlZ2FyZHMs
-CgoKLi4uTG91aXMKCgotLSAKTG91aXMgQm91Y2hhcmQKU29mdHdhcmUgZW5naW5lZXIsIENsb3Vk
-ICYgU3VzdGFpbmluZyBlbmcuCkNhbm9uaWNhbCBMdGQKVWJ1bnR1IGRldmVsb3BlciAgICAgICAg
-ICAgICAgICAgICAgICAgRGViaWFuIE1haW50YWluZXIKR1BHIDogNDI5RCA3QTNCIEREMDUgQjZG
-OCBBRjYzICBCOUM0IDhCM0QgODY3QyA4MjNFIDdBNjEKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-a2V4ZWMK
+logged_chars would be set to 0 by `dmesg -c`, but full dmesg is useful
+for debugging. So instead of using logged_chars directly, we calculate
+it by ourselves.
+
+Now logged_chars is set to the minimum of log_end and log_buf_len, as
+the same logic as crash utility is using.
+
+Signed-off-by: Dangyi Liu <dliu@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+---
+Changes:
+  v1->v2: Update comment and commit message.
+  v2->v3: Adjust maximum line length
+
+ vmcore-dmesg/vmcore-dmesg.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+index f47ee11..0364636 100644
+--- a/vmcore-dmesg/vmcore-dmesg.c
++++ b/vmcore-dmesg/vmcore-dmesg.c
+@@ -540,6 +540,12 @@ static void dump_dmesg_legacy(int fd)
+ 		exit(53);
+ 	}
+ 
++	/*
++	 * To collect full dmesg including the part before `dmesg -c` is useful
++	 * for later debugging. Use same logic as what crash utility is using.
++	 */
++	logged_chars = log_end < log_buf_len ? log_end : log_buf_len;
++
+ 	write_to_stdout(buf + (log_buf_len -  logged_chars), logged_chars);
+ }
+ 
+-- 
+2.4.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
