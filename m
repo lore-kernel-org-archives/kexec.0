@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrLS3-00017w-IZ
- for kexec@lists.infradead.org; Wed, 28 Oct 2015 07:47:20 +0000
+ id 1ZrLVo-0003ID-S1
+ for kexec@lists.infradead.org; Wed, 28 Oct 2015 07:51:13 +0000
 Received: from int-mx13.intmail.prod.int.phx2.redhat.com
  (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (Postfix) with ESMTPS id 954918E240
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 07:46:58 +0000 (UTC)
+ by mx1.redhat.com (Postfix) with ESMTPS id 485A896F5
+ for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 07:50:52 +0000 (UTC)
 From: Dangyi Liu <dliu@redhat.com>
-Subject: [PATCH] vmcore-dmesg: Collect full dmesg regardless of logged_chars
-Date: Wed, 28 Oct 2015 15:46:49 +0800
-Message-Id: <1446018409-11183-1-git-send-email-dliu@redhat.com>
+Subject: [PATCH v2] vmcore-dmesg: Collect full dmesg regardless of logged_chars
+Date: Wed, 28 Oct 2015 15:50:41 +0800
+Message-Id: <1446018641-11404-1-git-send-email-dliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,6 +36,9 @@ the same logic as crash utility is using.
 
 Signed-off-by: Dangyi Liu <dliu@redhat.com>
 ---
+Changes:
+  v1->v2: Update comment and commit message
+
  vmcore-dmesg/vmcore-dmesg.c | 6 ++++++
  1 file changed, 6 insertions(+)
 
