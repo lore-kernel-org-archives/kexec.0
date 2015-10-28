@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrJRp-0001Rh-SW
- for kexec@lists.infradead.org; Wed, 28 Oct 2015 05:38:58 +0000
-Received: from int-mx11.intmail.prod.int.phx2.redhat.com
- (int-mx11.intmail.prod.int.phx2.redhat.com [10.5.11.24])
- by mx1.redhat.com (Postfix) with ESMTPS id 2F5EC8E673
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 05:38:36 +0000 (UTC)
-From: Dangyi Liu <dliu@redhat.com>
-Subject: [PATCH] vmcore-dmesg: do not use logged_chars as dmesg length
-Date: Wed, 28 Oct 2015 13:38:27 +0800
-Message-Id: <1446010707-7527-1-git-send-email-dliu@redhat.com>
+ id 1ZrJYC-0004c0-7R
+ for kexec@lists.infradead.org; Wed, 28 Oct 2015 05:45:33 +0000
+Message-Id: <20151028054359.909471239@redhat.com>
+Date: Wed, 28 Oct 2015 13:41:35 +0800
+From: dyoung@redhat.com
+Subject: [kexec-tools PATCH 1/3] fs2dt.c: move copy old root param as a new
+ function
+References: <20151028054134.200833741@redhat.com>
+Content-Disposition: inline; filename=fs2dt-fix.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,36 +24,125 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Dangyi Liu <dliu@redhat.com>
+Cc: jstodola@redhat.com, horms@verge.net.au
 
-logged_chars would be set to 0 by `dmesg -c`, but we want to get the
-full dmesg after crash. So instead of using logged_chars directly, we
-calculate it by ourselves.
+Split the copy old root param code to a new function dt_copy_old_root_param
+Also add a global variable dt_no_old_root, do not copy root param when
+dt_no_old_root == 1. It will be used in later patches.
 
-Now logged_chars is set to the minimum of log_end and log_buf_len, which
-is coherent to how crash utility deals with dmesg length.
-
-Signed-off-by: Dangyi Liu <dliu@redhat.com>
+Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- vmcore-dmesg/vmcore-dmesg.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kexec/fs2dt.c |   66 +++++++++++++++++++++++++++++++++++-----------------------
+ kexec/fs2dt.h |    1 
+ 2 files changed, 41 insertions(+), 26 deletions(-)
 
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index f47ee11..ec2570f 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -540,6 +540,9 @@ static void dump_dmesg_legacy(int fd)
- 		exit(53);
- 	}
+--- kexec-tools.orig/kexec/fs2dt.c
++++ kexec-tools/kexec/fs2dt.c
+@@ -53,6 +53,7 @@ extern unsigned char reuse_initrd;
+ /* Used for enabling printing message from purgatory code
+  * Only has implemented for PPC64 */
+ int my_debug;
++int dt_no_old_root;
  
-+	// `dmesg -c` would set logged_chars to 0, then we cannot get a full dmesg.
-+	logged_chars = log_end < log_buf_len ? log_end : log_buf_len;
-+
- 	write_to_stdout(buf + (log_buf_len -  logged_chars), logged_chars);
+ /* This provides the behaviour of hte existing ppc64 implementation */
+ static void pad_structure_block(size_t len) {
+@@ -511,6 +512,37 @@ static int comparefunc(const struct dire
+ 	return strcmp(str1, str2);
  }
  
--- 
-2.4.3
++/* grab root= from the old command line */
++static void dt_copy_old_root_param(void)
++{
++	FILE *fp;
++	char filename[MAXPATH];
++	char *last_cmdline = NULL;
++	char *p, *old_param;
++	size_t len = 0;
++
++	strcpy(filename, pathname);
++	strcat(filename, "bootargs");
++	fp = fopen(filename, "r");
++	if (fp) {
++		if (getline(&last_cmdline, &len, fp) == -1)
++			die("unable to read %s\n", filename);
++
++		p = strstr(last_cmdline, "root=");
++		if (p) {
++			old_param = strtok(p, " ");
++			len = strlen(local_cmdline);
++			if (len != 0)
++				strcat(local_cmdline, " ");
++			strcat(local_cmdline, old_param);
++		}
++	}
++	if (last_cmdline)
++		free(last_cmdline);
++
++	fclose(fp);
++}
++
+ /*
+  * put a node (directory) in the property structure.  first properties
+  * then children.
+@@ -579,8 +611,11 @@ static void putnode(void)
+ 		reserve(initrd_base, initrd_size);
+ 	}
+ 
+-	/* Add cmdline to the second kernel.  Check to see if the new
+-	 * cmdline has a root=.  If not, use the old root= cmdline.  */
++	/*
++	 * Add cmdline to the second kernel. Use the old root= cmdline if there
++	 * is no root= in the new command line and there's no --dt-no-old-root
++	 * option being used.
++	 */
+ 	if (!strcmp(basename,"chosen/")) {
+ 		size_t result;
+ 		size_t cmd_len = 0;
+@@ -598,30 +633,9 @@ static void putnode(void)
+ 			param = strstr(local_cmdline, "root=");
+ 		}
+ 
+-		/* ... if not, grab root= from the old command line */
+-		if (!param) {
+-			FILE *fp;
+-			char *last_cmdline = NULL;
+-			char *old_param;
+-
+-			strcpy(filename, pathname);
+-			strcat(filename, "bootargs");
+-			fp = fopen(filename, "r");
+-			if (fp) {
+-				if (getline(&last_cmdline, &cmd_len, fp) == -1)
+-					die("unable to read %s\n", filename);
+-
+-				param = strstr(last_cmdline, "root=");
+-				if (param) {
+-					old_param = strtok(param, " ");
+-					if (cmd_len != 0)
+-						strcat(local_cmdline, " ");
+-					strcat(local_cmdline, old_param);
+-				}
+-			}
+-			if (last_cmdline)
+-				free(last_cmdline);
+-		}
++		if (!param && !dt_no_old_root)
++			dt_copy_old_root_param();
++
+ 		strcat(local_cmdline, " ");
+ 		cmd_len = strlen(local_cmdline);
+ 		cmd_len = cmd_len + 1;
+--- kexec-tools.orig/kexec/fs2dt.h
++++ kexec-tools/kexec/fs2dt.h
+@@ -31,6 +31,7 @@ extern struct bootblock bb[1];
+ /* Used for enabling printing message from purgatory code
+  * Only has implemented for PPC64 */
+ int my_debug;
++extern int dt_no_old_root;
+ 
+ void reserve(unsigned long long where, unsigned long long length);
+ void create_flatten_tree(char **, off_t *, const char *);
+
 
 
 _______________________________________________
