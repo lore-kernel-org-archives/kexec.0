@@ -1,19 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wi0-x231.google.com ([2a00:1450:400c:c05::231])
+Received: from e06smtp08.uk.ibm.com ([195.75.94.104])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrNMq-0001kM-DA
- for kexec@lists.infradead.org; Wed, 28 Oct 2015 09:50:05 +0000
-Received: by wicll6 with SMTP id ll6so5626610wic.1
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 02:49:42 -0700 (PDT)
-From: Louis Bouchard <louis.bouchard@canonical.com>
-Subject: Re: makedumpfile-1.5.9: Introduce parallel compression processing.
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
- <56308618.3080908@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
-Message-ID: <56309A33.4000201@canonical.com>
-Date: Wed, 28 Oct 2015 10:49:39 +0100
-MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
+ id 1ZrNUI-0006WF-Nq
+ for kexec@lists.infradead.org; Wed, 28 Oct 2015 09:57:47 +0000
+Received: from localhost
+ by e06smtp08.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
+ Wed, 28 Oct 2015 09:57:24 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com
+ (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+ by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id ACC271B08067
+ for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 09:57:33 +0000 (GMT)
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+ [9.149.37.212])
+ by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ t9S9vMQV9240946
+ for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 09:57:22 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
+ by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ t9S9vMBX021434
+ for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 03:57:22 -0600
+Date: Wed, 28 Oct 2015 10:57:21 +0100
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] kexec/s390x: use mmap instead of read for slurp_file()
+Message-ID: <20151028105721.4ada142d@holzheu>
+In-Reply-To: <20151028064623.GB30645@dhcp-128-73.nay.redhat.com>
+References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+ <20151023170959.0ab74f20@holzheu>
+ <20151026073139.GB2916@dhcp-128-73.nay.redhat.com>
+ <20151027133520.30653ba3@holzheu>
+ <20151028064623.GB30645@dhcp-128-73.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,35 +40,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: stefan.roscher@de.ibm.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-SGksCgpMZSAyOC8xMC8yMDE1IDEwOjA3LCBBdHN1c2hpIEt1bWFnYWkgYSDDqWNyaXQgOgo+IEhl
-bGxvIExvdWlzLAo+IAo+Pj4gbyBTdXBwb3J0IG5ldyBrZXJuZWxzCj4+PiAgLSBUaGUgc3VwcG9y
-dGVkIGtlcm5lbCBpcyB1cGRhdGVkIHRvIDQuMSBpbiB0aGlzIHZlcnNpb24uCj4+PiAgICBBdCBm
-aXJzdCBJJ20gZ29pbmcgdG8gZXh0ZW5kIHRoZSBzdXBwb3J0ZWQgdmVyc2lvbiB0byA0LjIsIGJ1
-dAo+Pj4gICAgSSBmb3VuZCBhbiBpc3N1ZSB0aGF0IG1ha2VkdW1wZmlsZSBzZWVtcyB0byBleGNs
-dWRlIG5lY2Vzc2FyeSBwYWdlcwo+Pj4gICAgYnkgbWlzdGFrZSBvbiBsaW51eCA0LjIuIFdoZW4g
-Y3Jhc2gtNy4xLjMgcmVhZHMgdGhhdCBmaWx0ZXJlZCBkdW1wIGZpbGUsCj4+PiAgICB0aGUgZm9s
-bG93aW5nIG1lc3NhZ2UgaXMgc2hvd24uCj4+Pgo+Pj4gICAgICAgY3Jhc2g6IHBhZ2UgZXhjbHVk
-ZWQ6IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3M6IGYzZmUwMDAwICB0eXBlOiAiZmlsbF90YXNrX3N0
-cnVjdCIKPj4+Cj4+PiAgICBUaGlzIHdpbGwgYmUgZml4ZWQgaW4gdGhlIG5leHQgdmVyc2lvbi4K
-Pj4KPj4gSGF2ZSB5b3UgZml4ZWQgdGhlIDQuMiBrZXJuZWwgaXNzdWUgYWxyZWFkeSBvciB5b3Ug
-aW50ZW5kIHRvIHdvcmsgb24gaXQgaW4gdGhlCj4+IGZ1dHVyZSA/Cj4gCj4gSSBoYXZlbid0IGRv
-bmUgYW55dGhpbmcgeWV0LCBJIHdhcyBnb2luZyB0byB3b3JrIGZyb20gbm93Lgo+IAo+PiBCb3Ro
-IERlYmlhbiBhbmQgVWJ1bnR1IHJ1biA0LjIga2VybmVsIHNvIGlmIHdhaXRpbmcgZm9yIGEgZml4
-IGlzIGFjY2VwdGFibGUgSQo+PiB3b3VsZCByYXRoZXIgYnJpbmcgaW4gYSAxLjUuOSArIHBhdGNo
-IHZlcnNpb24uCj4gCj4gU28gaXQgd2lsbCBiZSBoZWxwZnVsIGlmIHlvdSBjYW4gZG8gaXQuCj4g
-Cj4gCj4gVGhhbmtzLAo+IEF0c3VzaGkgS3VtYWdhaQo+IAoKVGhhdCBpcyBwZXJmZWN0LiAgSnVz
-dCBsZXQgbWUga25vdyBvbmNlIHlvdSBoYXZlIGlkZW50aWZpZWQgYSBmaXggYW5kIEkgd2lsbApp
-bmNsdWRlIGl0IGluIHRoZSBuZXcgcGFja2FnZS4KCktpbmQgcmVnYXJkcywKCi4uLkxvdWlzCi0t
-IApMb3VpcyBCb3VjaGFyZApTb2Z0d2FyZSBlbmdpbmVlciwgQ2xvdWQgJiBTdXN0YWluaW5nIGVu
-Zy4KQ2Fub25pY2FsIEx0ZApVYnVudHUgZGV2ZWxvcGVyICAgICAgICAgICAgICAgICAgICAgICBE
-ZWJpYW4gTWFpbnRhaW5lcgpHUEcgOiA0MjlEIDdBM0IgREQwNSBCNkY4IEFGNjMgIEI5QzQgOEIz
-RCA4NjdDIDgyM0UgN0E2MQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Wed, 28 Oct 2015 14:46:23 +0800
+Dave Young <dyoung@redhat.com> wrote:
+
+> Hi, Michael
+> 
+> > @@ -552,11 +563,18 @@ char *slurp_file(const char *filename, o
+> >  		if (err < 0)
+> >  			die("Can not seek to the begin of file %s: %s\n",
+> >  					filename, strerror(errno));
+> > +		buf = slurp_fd(fd, filename, size, &nread, use_mmap);
+> >  	} else {
+> >  		size = stats.st_size;
+> > +		if (use_mmap) {
+> > +			buf = mmap(NULL, size, PROT_READ | PROT_WRITE,
+> > +				   MAP_PRIVATE, fd, 0);
+> > +			nread = stats.st_size;
+> > +		} else {
+> > +			buf = slurp_fd(fd, filename, size, &nread, 0);
+> > +		}
+> >  	}
+> 
+> Drop above changes and replace below lines with an extra use_mmap argument
+> should be enough?
+> 
+> -	buf = slurp_fd(fd, filename, size, &nread);
+> [snip]
+
+Hmm, I don't think so.
+
+In case of non-character devices I either mmap the file directly (use_mmap=true)
+or use "slurp_fd()" (use_mmap=false). So I can't unconditionaly use slurp_fd().
+
+The change in slurp_fd() to use anonymous mmap in case of use_mmap=true is
+not really necessary. I did it nevertheless for consistency. This ensures
+that the slrup_file_mmap() functions *always* returns mmaped memory.
+
+Michael
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
