@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrMq1-0007Qp-4w
- for kexec@lists.infradead.org; Wed, 28 Oct 2015 09:16:14 +0000
-Received: from int-mx13.intmail.prod.int.phx2.redhat.com
- (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (Postfix) with ESMTPS id 3A7B16A
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 09:15:48 +0000 (UTC)
-From: Dangyi Liu <dliu@redhat.com>
-Subject: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of logged_chars
-Date: Wed, 28 Oct 2015 17:15:24 +0800
-Message-Id: <1446023724-12445-1-git-send-email-dliu@redhat.com>
+ id 1ZrN6P-0007hB-M5
+ for kexec@lists.infradead.org; Wed, 28 Oct 2015 09:33:06 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: makedumpfile-1.5.9: Introduce parallel compression processing.
+Date: Wed, 28 Oct 2015 09:07:32 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
+ <56308618.3080908@canonical.com>
+In-Reply-To: <56308618.3080908@canonical.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,52 +20,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Dave Young <dyoung@redhat.com>, Dangyi Liu <dliu@redhat.com>
+To: Louis Bouchard <louis.bouchard@canonical.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-logged_chars would be set to 0 by `dmesg -c`, but full dmesg is useful
-for debugging. So instead of using logged_chars directly, we calculate
-it by ourselves.
+Hello Louis,
 
-Now logged_chars is set to the minimum of log_end and log_buf_len, as
-the same logic as crash utility is using.
+>> o Support new kernels
+>>  - The supported kernel is updated to 4.1 in this version.
+>>    At first I'm going to extend the supported version to 4.2, but
+>>    I found an issue that makedumpfile seems to exclude necessary pages
+>>    by mistake on linux 4.2. When crash-7.1.3 reads that filtered dump file,
+>>    the following message is shown.
+>>
+>>       crash: page excluded: kernel virtual address: f3fe0000  type: "fill_task_struct"
+>>
+>>    This will be fixed in the next version.
+>
+>Have you fixed the 4.2 kernel issue already or you intend to work on it in the
+>future ?
 
-Signed-off-by: Dangyi Liu <dliu@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>
----
-Changes:
-  v1->v2: Update comment and commit message.
-  v2->v3: Adjust maximum line length
+I haven't done anything yet, I was going to work from now.
 
- vmcore-dmesg/vmcore-dmesg.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+>Both Debian and Ubuntu run 4.2 kernel so if waiting for a fix is acceptable I
+>would rather bring in a 1.5.9 + patch version.
 
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index f47ee11..0364636 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -540,6 +540,12 @@ static void dump_dmesg_legacy(int fd)
- 		exit(53);
- 	}
- 
-+	/*
-+	 * To collect full dmesg including the part before `dmesg -c` is useful
-+	 * for later debugging. Use same logic as what crash utility is using.
-+	 */
-+	logged_chars = log_end < log_buf_len ? log_end : log_buf_len;
-+
- 	write_to_stdout(buf + (log_buf_len -  logged_chars), logged_chars);
- }
- 
--- 
-2.4.3
+So it will be helpful if you can do it.
 
 
+Thanks,
+Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
