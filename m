@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 29 Oct 2015 15:01:08 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 13/16] arm64: kdump: add kdump support
-Message-ID: <20151029070108.GK30645@dhcp-128-73.nay.redhat.com>
-References: <cover.1445297709.git.geoff@infradead.org>
- <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
- <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
- <5628662B.1020605@linaro.org>
- <20151022051548.GD11227@dhcp-129-115.nay.redhat.com>
- <5628B2FA.80209@linaro.org>
- <20151023095059.GH11227@dhcp-129-115.nay.redhat.com>
- <5631B4BA.6030903@linaro.org>
- <20151029064011.GF21927@dhcp-129-115.nay.redhat.com>
- <5631C270.3020504@linaro.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZrkYK-0000K0-J4
+ for kexec@lists.infradead.org; Thu, 29 Oct 2015 10:35:29 +0000
+Date: Thu, 29 Oct 2015 16:05:04 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH V2 11/11] arm64: wait for transmit completion before next
+ character transmission
+Message-ID: <20151029103504.GB5387@dhcppc13.redhat.com>
+References: <cover.1431582203.git.panand@redhat.com>
+ <51d1170ea05f86a1ed7bf42f384c600e98447b7a.1431582203.git.panand@redhat.com>
+ <1445293795.30908.50.camel@infradead.org>
+ <20151020024153.GA31893@dhcppc13.redhat.com>
+ <1445360694.30908.58.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5631C270.3020504@linaro.org>
+In-Reply-To: <1445360694.30908.58.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,124 +28,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: takahiro.akashi@linaro.org, kexec@lists.infradead.org
 
-On 10/29/15 at 03:53pm, AKASHI Takahiro wrote:
-> On 10/29/2015 03:40 PM, Dave Young wrote:
-> >Hi, AKASHI
-> >
-> >On 10/29/15 at 02:55pm, AKASHI Takahiro wrote:
-> >>Dave,
-> >>
-> >>On 10/23/2015 06:50 PM, Dave Young wrote:
-> >>>On 10/22/15 at 06:57pm, AKASHI Takahiro wrote:
-> >>>>(added Ard to Cc.)
-> >>>>
-> >>>>On 10/22/2015 02:15 PM, Dave Young wrote:
-> >>>>>On 10/22/15 at 01:29pm, AKASHI Takahiro wrote:
-> >>>>>>Hi Dave,
-> >>>>>>
-> >>>>>>Thank you for your comment.
-> >>>>>>
-> >>>>>>On 10/22/2015 12:25 PM, Dave Young wrote:
-> >>>>>>>Hi, AKASHI,
-> >>>>>>>
-> >>>>>>>On 10/19/15 at 11:38pm, Geoff Levand wrote:
-> >>>>>>>>From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >>>>>>>>
-> >>>>>>>>On crash dump kernel, all the information about primary kernel's core
-> >>>>>>>>image is available in elf core header specified by "elfcorehdr=" boot
-> >>>>>>>>parameter. reserve_elfcorehdr() will set aside the region to avoid any
-> >>>>>>>>corruption by crash dump kernel.
-> >>>>>>>>
-> >>>>>>>>Crash dump kernel will access the system memory of primary kernel via
-> >>>>>>>>copy_oldmem_page(), which reads one page by ioremap'ing it since it does
-> >>>>>>>>not reside in linear mapping on crash dump kernel.
-> >>>>>>>>Please note that we should add "mem=X[MG]" boot parameter to limit the
-> >>>>>>>>memory size and avoid the following assertion at ioremap():
-> >>>>>>>>	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
-> >>>>>>>>		return NULL;
-> >>>>>>>>when accessing any pages beyond the usable memories of crash dump kernel.
-> >>>>>>>
-> >>>>>>>How does kexec-tools pass usable memory ranges to kernel? using dtb?
-> >>>>>>>Passing an extra mem=X sounds odd in the design. Kdump kernel should get
-> >>>>>>>usable ranges and hanle the limit better than depending on an extern kernel
-> >>>>>>>param.
-> >>>>>>
-> >>>>>>Well, regarding "depending on an external kernel param,"
-> >>>>>>- this limitation ("mem=") is compatible with arm(32) implementation although
-> >>>>>>   it is not clearly described in kernel's Documentation/kdump/kdump.txt.
-> >>>>>>- "elfcorehdr" kernel parameter is mandatory on x86 as well as on arm/arm64.
-> >>>>>>   The parameter is explicitly generated and added by kexec-tools.
-> >>>>>>
-> >>>>>>Do I miss your point?
-> >>>>>
-> >>>>>Arm previously use atag_mem tag for memory kernel uses, with dtb, Booting.txt
-> >>>>>says: The boot loader must pass at a minimum the size and location of the
-> >>>>>system memory
-> >>>>>
-> >>>>>In arm64 booting.txt, it does mentions about dtb but without above sentence.
-> >>>>>
-> >>>>>So if you are using dtb to pass memory I think the extra mem= should be not
-> >>>>>necessary unless there's other limitations dtb can not been used.
-> >>>>
-> >>>>I would expect comments from arm64 maintainers here.
-> >>>>
-> >>>>In my old implementation, I added "usablemem" attributes, along with "reg," to
-> >>>>"memory" nodes in dtb to specify the usable memory region on crash dump kernel.
-> >>>>
-> >>>>But I removed this feature partly because, on uefi system, uefi might pass
-> >>>>no memory information in dtb.
-> >>>
-> >>>If this is the case there must be somewhere else one can pass memory infomation
-> >>>to kernel, the booting.txt should be updated?
-> >>>
-> >>>kexec as a boot loader need use same method as the 1st kernel boot loader.
-> >>>
-> >>>>
-> >>>>>One thing I'm confused is mem= only pass the memory size, where does you pass
-> >>>>>the start addresses?
-> >>>>
-> >>>>In the current arm64 implementation, any regions below the start address will
-> >>>>be ignored as system ram.
-> >>>>
-> >>>>>What if there's multiple sections such as some reserved
-> >>>>>ranges 2nd kernel also need?
-> >>>>
-> >>>>My patch utilizes only a single contiguous region of memory as system ram.
-> >>>>One exception that I notice is uefi's runtime data. They will be ioremap'ed separately.
-> >>>>
-> >>>>Please let me know if there is any other case that should be supported.
-> >>>
-> >>>For example the elf headers range, you reserved them in kdump kernel code,
-> >>>but kexec-tools can do that early if it can provides all memory info to 2nd
-> >>>kernel. Ditto for mark all the memory ranges 1st kernel used as reserved.
-> >>
-> >>It seems to me that the issue you mentioned here is totally independent
-> >>from "mem=" issue, isn't it?
-> >>(and "elfcorehdr=" is a common way for crash dump kernel to know the region.)
-> >
-> >Hmm, I did not talked about the eflcorehdr=, I means the code to reserve the
-> >memory ranges elfcorehdr is using.
-> 
-> So how does it relate to "mem=" issue?
+Hi Geoff,
 
-It is just an example that kexec can pass it along with the usable mem range to
-kernel via some interface like dtb blob or some other interfaces. 
+On 20/10/2015:10:04:54 AM, Geoff Levand wrote:
+> Hi,
+> 
+> On Tue, 2015-10-20 at 08:11 +0530, Pratyush Anand wrote:
+> > On 19/10/2015:03:29:55 PM, Geoff Levand wrote:
+> > I tested this on the foundation model and it hangs.
+> > 
+> > Thanks for testing it.
+> > 
+> > Which uart model has been used in foundation model?
+> 
+> I only tested it, but did not look into it.  The
+> documentation should be on the ARM developer's site.
 
-> 
-> -Takahiro AKASHI
-> 
-> >Thanks
-> >Dave
-> >
-> >>
-> >>-Takahiro AKASHI
-> >>
-> >>>Thanks
-> >>>Dave
-> >>>
+Line status register offset for pl011(which is in foundation model) and 8250
+based uart are not same. I think, in that case we should keep separate argument
+for lsr. Can you please try patch[1] and let me know your feedback.
+
+If you are using UART0 of foundation model, then you would be passing
+--port=0x1C090000. With patch[1], you may pass one more argument
+--port-lsr=0x1C090018,0x80. Even if --port-lsr is not passed to kexec() system
+call, it will not hang. However, one may not see all the printed character
+without --port-lsr.
+
+~Pratyush
+
+[1] https://github.com/pratyushanand/kexec-tools/commit/57344a8516447cefabc2372daf9a6b0b04bd9851
 
 _______________________________________________
 kexec mailing list
