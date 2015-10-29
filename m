@@ -1,37 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp08.uk.ibm.com ([195.75.94.104])
+Received: from mail-pa0-x232.google.com ([2607:f8b0:400e:c03::232])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrNUI-0006WF-Nq
- for kexec@lists.infradead.org; Wed, 28 Oct 2015 09:57:47 +0000
-Received: from localhost
- by e06smtp08.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 28 Oct 2015 09:57:24 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com
- (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id ACC271B08067
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 09:57:33 +0000 (GMT)
-Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
- [9.149.37.212])
- by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- t9S9vMQV9240946
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 09:57:22 GMT
-Received: from d06av01.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av01.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- t9S9vMBX021434
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 03:57:22 -0600
-Date: Wed, 28 Oct 2015 10:57:21 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2] kexec/s390x: use mmap instead of read for slurp_file()
-Message-ID: <20151028105721.4ada142d@holzheu>
-In-Reply-To: <20151028064623.GB30645@dhcp-128-73.nay.redhat.com>
-References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
- <20151023170959.0ab74f20@holzheu>
- <20151026073139.GB2916@dhcp-128-73.nay.redhat.com>
- <20151027133520.30653ba3@holzheu>
- <20151028064623.GB30645@dhcp-128-73.nay.redhat.com>
-Mime-Version: 1.0
+ id 1ZrgBS-0002P0-I1
+ for kexec@lists.infradead.org; Thu, 29 Oct 2015 05:55:35 +0000
+Received: by pacfv9 with SMTP id fv9so31284783pac.3
+ for <kexec@lists.infradead.org>; Wed, 28 Oct 2015 22:55:13 -0700 (PDT)
+Subject: Re: [PATCH 13/16] arm64: kdump: add kdump support
+References: <cover.1445297709.git.geoff@infradead.org>
+ <ef50b13d545f37a9fa95c5e6856e35f324798d00.1445297709.git.geoff@infradead.org>
+ <20151022032534.GC11227@dhcp-129-115.nay.redhat.com>
+ <5628662B.1020605@linaro.org>
+ <20151022051548.GD11227@dhcp-129-115.nay.redhat.com>
+ <5628B2FA.80209@linaro.org>
+ <20151023095059.GH11227@dhcp-129-115.nay.redhat.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <5631B4BA.6030903@linaro.org>
+Date: Thu, 29 Oct 2015 14:55:06 +0900
+MIME-Version: 1.0
+In-Reply-To: <20151023095059.GH11227@dhcp-129-115.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,51 +26,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Dave Young <dyoung@redhat.com>
-Cc: stefan.roscher@de.ibm.com, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On Wed, 28 Oct 2015 14:46:23 +0800
-Dave Young <dyoung@redhat.com> wrote:
+Dave,
 
-> Hi, Michael
-> 
-> > @@ -552,11 +563,18 @@ char *slurp_file(const char *filename, o
-> >  		if (err < 0)
-> >  			die("Can not seek to the begin of file %s: %s\n",
-> >  					filename, strerror(errno));
-> > +		buf = slurp_fd(fd, filename, size, &nread, use_mmap);
-> >  	} else {
-> >  		size = stats.st_size;
-> > +		if (use_mmap) {
-> > +			buf = mmap(NULL, size, PROT_READ | PROT_WRITE,
-> > +				   MAP_PRIVATE, fd, 0);
-> > +			nread = stats.st_size;
-> > +		} else {
-> > +			buf = slurp_fd(fd, filename, size, &nread, 0);
-> > +		}
-> >  	}
-> 
-> Drop above changes and replace below lines with an extra use_mmap argument
-> should be enough?
-> 
-> -	buf = slurp_fd(fd, filename, size, &nread);
-> [snip]
+On 10/23/2015 06:50 PM, Dave Young wrote:
+> On 10/22/15 at 06:57pm, AKASHI Takahiro wrote:
+>> (added Ard to Cc.)
+>>
+>> On 10/22/2015 02:15 PM, Dave Young wrote:
+>>> On 10/22/15 at 01:29pm, AKASHI Takahiro wrote:
+>>>> Hi Dave,
+>>>>
+>>>> Thank you for your comment.
+>>>>
+>>>> On 10/22/2015 12:25 PM, Dave Young wrote:
+>>>>> Hi, AKASHI,
+>>>>>
+>>>>> On 10/19/15 at 11:38pm, Geoff Levand wrote:
+>>>>>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>>>>>
+>>>>>> On crash dump kernel, all the information about primary kernel's core
+>>>>>> image is available in elf core header specified by "elfcorehdr=" boot
+>>>>>> parameter. reserve_elfcorehdr() will set aside the region to avoid any
+>>>>>> corruption by crash dump kernel.
+>>>>>>
+>>>>>> Crash dump kernel will access the system memory of primary kernel via
+>>>>>> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+>>>>>> not reside in linear mapping on crash dump kernel.
+>>>>>> Please note that we should add "mem=X[MG]" boot parameter to limit the
+>>>>>> memory size and avoid the following assertion at ioremap():
+>>>>>> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+>>>>>> 		return NULL;
+>>>>>> when accessing any pages beyond the usable memories of crash dump kernel.
+>>>>>
+>>>>> How does kexec-tools pass usable memory ranges to kernel? using dtb?
+>>>>> Passing an extra mem=X sounds odd in the design. Kdump kernel should get
+>>>>> usable ranges and hanle the limit better than depending on an extern kernel
+>>>>> param.
+>>>>
+>>>> Well, regarding "depending on an external kernel param,"
+>>>> - this limitation ("mem=") is compatible with arm(32) implementation although
+>>>>    it is not clearly described in kernel's Documentation/kdump/kdump.txt.
+>>>> - "elfcorehdr" kernel parameter is mandatory on x86 as well as on arm/arm64.
+>>>>    The parameter is explicitly generated and added by kexec-tools.
+>>>>
+>>>> Do I miss your point?
+>>>
+>>> Arm previously use atag_mem tag for memory kernel uses, with dtb, Booting.txt
+>>> says: The boot loader must pass at a minimum the size and location of the
+>>> system memory
+>>>
+>>> In arm64 booting.txt, it does mentions about dtb but without above sentence.
+>>>
+>>> So if you are using dtb to pass memory I think the extra mem= should be not
+>>> necessary unless there's other limitations dtb can not been used.
+>>
+>> I would expect comments from arm64 maintainers here.
+>>
+>> In my old implementation, I added "usablemem" attributes, along with "reg," to
+>> "memory" nodes in dtb to specify the usable memory region on crash dump kernel.
+>>
+>> But I removed this feature partly because, on uefi system, uefi might pass
+>> no memory information in dtb.
+>
+> If this is the case there must be somewhere else one can pass memory infomation
+> to kernel, the booting.txt should be updated?
+>
+> kexec as a boot loader need use same method as the 1st kernel boot loader.
+>
+>>
+>>> One thing I'm confused is mem= only pass the memory size, where does you pass
+>>> the start addresses?
+>>
+>> In the current arm64 implementation, any regions below the start address will
+>> be ignored as system ram.
+>>
+>>> What if there's multiple sections such as some reserved
+>>> ranges 2nd kernel also need?
+>>
+>> My patch utilizes only a single contiguous region of memory as system ram.
+>> One exception that I notice is uefi's runtime data. They will be ioremap'ed separately.
+>>
+>> Please let me know if there is any other case that should be supported.
+>
+> For example the elf headers range, you reserved them in kdump kernel code,
+> but kexec-tools can do that early if it can provides all memory info to 2nd
+> kernel. Ditto for mark all the memory ranges 1st kernel used as reserved.
 
-Hmm, I don't think so.
+It seems to me that the issue you mentioned here is totally independent
+from "mem=" issue, isn't it?
+(and "elfcorehdr=" is a common way for crash dump kernel to know the region.)
 
-In case of non-character devices I either mmap the file directly (use_mmap=true)
-or use "slurp_fd()" (use_mmap=false). So I can't unconditionaly use slurp_fd().
+-Takahiro AKASHI
 
-The change in slurp_fd() to use anonymous mmap in case of use_mmap=true is
-not really necessary. I did it nevertheless for consistency. This ensures
-that the slrup_file_mmap() functions *always* returns mmaped memory.
-
-Michael
-
+> Thanks
+> Dave
+>
 
 _______________________________________________
 kexec mailing list
