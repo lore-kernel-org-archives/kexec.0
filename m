@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 30 Oct 2015 16:54:13 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/16] arm64/kexec: Add core kexec support
-Message-ID: <20151030165413.GH31073@leverpostej>
-References: <cover.1445297709.git.geoff@infradead.org>
- <a1c2a702f127d9dade1f9af8ab13decb2ef1c0da.1445297709.git.geoff@infradead.org>
- <56339ACD.7010506@arm.com>
+Received: from mail-bn1bon0142.outbound.protection.outlook.com
+ ([157.56.111.142] helo=na01-bn1-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZsFcE-0002kX-FU
+ for kexec@lists.infradead.org; Fri, 30 Oct 2015 19:45:35 +0000
+Message-ID: <1446234303.22185.38.camel@freescale.com>
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.11-rc1
+From: Scott Wood <scottwood@freescale.com>
+Date: Fri, 30 Oct 2015 14:45:03 -0500
+In-Reply-To: <20151030081236.GH31252@verge.net.au>
+References: <20151029234849.GA28689@verge.net.au>
+ <1446164604.22185.19.camel@freescale.com>
+ <20151030081236.GH31252@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56339ACD.7010506@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,114 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: AKASHI@infradead.org, Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
 
-Hi,
-
-> If I've followed all this through properly:
+On Fri, 2015-10-30 at 17:12 +0900, Simon Horman wrote:
+> On Thu, Oct 29, 2015 at 07:23:24PM -0500, Scott Wood wrote:
+> > On Fri, 2015-10-30 at 08:48 +0900, Simon Horman wrote:
+> > > Hi all,
+> > > 
+> > > I am happy to announce the release of kexec-tools 2.0.11-rc1.
+> > > 
+> > > This is an incremental feature pre-release.
+> > > 
+> > > So long as no serious problems arise I intend to release kexec-tools 
+> > > 2.0.11
+> > > shortly after the release of the v4.3 kernel, which I expect to occur in
+> > > the next week or so.  As such testing of 2.0.11-rc1 would be greatly
+> > > appreciated.
+> > > 
+> > > I do not have any outstanding changes for 2.0.11 at this time.
+> > > And I would like to only accept bug fixes at this time and take take
+> > > features patches once 2.0.11 has been released.
+> > 
+> > As I previously reported, "ppc64: purgatory: Reset primary cpu endian to 
+> > big-
+> > endian" breaks book3e, so can  http://patchwork.ozlabs.org/patch/527048/be 
+> > considered for this release?
 > 
-> With KVM - mmu+caches are configured, but then disabled by 'kvm: allows kvm
-> cpu hotplug'. This 'arm64_relocate_new_kernel' function then runs at EL2
-> with M=0, C=0, I=0.
+> Yes of course, sorry for not taking more note of that.
 > 
-> Without KVM - when there is no user of EL2, the mmu+caches are left in
-> whatever state the bootloader (or efi stub) left them in. From
-> Documentation/arm64/booting.txt:
-> > Instruction cache may be on or off.
-> and
-> > System caches which respect the architected cache maintenance by VA
-> > operations must be configured and may be enabled.
-> 
-> So 'arm64_relocate_new_kernel' function could run at EL2 with M=0, C=?, I=?.
-> 
-> I think this means you can't guarantee anything you are copying below
-> actually makes it through the caches - booting secondary processors may get
-> stale values.
-> 
-> The EFI stub disables the M and C bits when booted at EL2 with uefi - but
-> it leaves the instruction cache enabled. You only clean the
-> reboot_code_buffer from the data cache, so there may be stale values in the
-> instruction cache.
-> 
-> I think you need to disable the i-cache at EL1. If you jump to EL2, I think
-> you need to disable the I/C bits there too - as you can't rely on the code
-> in 'kvm: allows kvm cpu hotplug' to do this in a non-kvm case.
+> Would it be possible to get a review, e.g. from Michael?
 
-The SCTLR_ELx.I only affects the attributes that the I-cache uses to
-fetch with, not whether it is enabled (it cannot be disabled
-architecturally).
+I pinged Michael again on the original patch, and CCed him and Samuel and the 
+PPC list here.  If they still don't respond, and you still don't want to put 
+the fix in without their input, then could you revert the broken patch?
 
-It's not necessary to clear the I bit so long as the appropriate
-maintenance has occurred, though I believe that when the I bit is set
-instruction fetches may allocte in unified levels of cache, so
-additional consideration is required for that case.
+-Scott
 
-> > +	/* Copy page. */
-> > +1:	ldp	x22, x23, [x21]
-> > +	ldp	x24, x25, [x21, #16]
-> > +	ldp	x26, x27, [x21, #32]
-> > +	ldp	x28, x29, [x21, #48]
-> > +	add	x21, x21, #64
-> > +	stnp	x22, x23, [x20]
-> > +	stnp	x24, x25, [x20, #16]
-> > +	stnp	x26, x27, [x20, #32]
-> > +	stnp	x28, x29, [x20, #48]
-> > +	add	x20, x20, #64
-> > +	tst	x21, #(PAGE_SIZE - 1)
-> > +	b.ne	1b
-> > +
-> > +	/* dest += PAGE_SIZE */
-> > +	add	x14, x14, PAGE_SIZE
-> > +	b	.Lnext
-> > +
-> > +.Ltest_indirection:
-> > +	tbz	x18, IND_INDIRECTION_BIT, .Ltest_destination
-> > +
-> > +	/* ptr = addr */
-> > +	mov	x15, x13
-> > +	b	.Lnext
-> > +
-> > +.Ltest_destination:
-> > +	tbz	x18, IND_DESTINATION_BIT, .Lnext
-> > +
-> > +	mov	x16, x13
-> > +
-> > +	/* dest = addr */
-> > +	mov	x14, x13
-> > +
-> > +.Lnext:
-> > +	/* entry = *ptr++ */
-> > +	ldr	x18, [x15], #8
-> > +
-> > +	/* while (!(entry & DONE)) */
-> > +	tbz	x18, IND_DONE_BIT, .Lloop
-> > +
-> > +.Ldone:
-> > +	dsb	sy
-> > +	isb
-> > +	ic	ialluis
-> > +	dsb	sy
-> 
-> Why the second dsb?
-> 
-> 
-> > +	isb
-
-The first DSB ensures that the copied data is observable by the
-I-caches.
-
-The first ISB is unnecessary.
-
-The second DSB ensures that the I-cache maintenance is completed.
-
-The second ISB ensures that the I-cache maintenance is complete w.r.t.
-the current instruction stream. There could be instructions in the
-pipline fetched from the I-cache prior to invalidation which need to be
-cleared.
-
-Thanks,
-Mark.
 
 _______________________________________________
 kexec mailing list
