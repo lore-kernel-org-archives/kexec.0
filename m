@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZrwxA-0003Ho-K8
- for kexec@lists.infradead.org; Thu, 29 Oct 2015 23:49:57 +0000
-Date: Fri, 30 Oct 2015 08:49:34 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [kexec-tools PATCH 0/3] New option to avoid copying old root
- param from 1st kernel cmdline
-Message-ID: <20151029234934.GA26105@verge.net.au>
-References: <20151028054134.200833741@redhat.com>
+Received: from mail-bn1bbn0105.outbound.protection.outlook.com
+ ([157.56.111.105] helo=na01-bn1-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZrxNf-0005Qn-92
+ for kexec@lists.infradead.org; Fri, 30 Oct 2015 00:17:20 +0000
+Message-ID: <1446164196.22185.15.camel@freescale.com>
+Subject: Re: [PATCH v2 2/3] ppc64: Avoid rfid if no need to clear MSR_LE
+From: Scott Wood <scottwood@freescale.com>
+Date: Thu, 29 Oct 2015 19:16:36 -0500
+In-Reply-To: <20151016014803.GF20667@verge.net.au>
+References: <1444172150-29493-1-git-send-email-scottwood@freescale.com>
+ <1444172150-29493-2-git-send-email-scottwood@freescale.com>
+ <20151016014803.GF20667@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20151028054134.200833741@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +25,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: jstodola@redhat.com, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
 
-On Wed, Oct 28, 2015 at 01:41:34PM +0800, dyoung@redhat.com wrote:
-> Hi,
+On Fri, 2015-10-16 at 10:48 +0900, Simon Horman wrote:
+> On Tue, Oct 06, 2015 at 05:55:49PM -0500, Scott Wood wrote:
+> > Commit a304e2d82a8c3 ("ppc64: purgatory: Reset primary cpu endian to
+> > big-endian) changed bctr to rfid.  rfid is book3s-only and will cause a
+> > fatal exception on book3e.
+> > 
+> > Purgatory is an isolated environment which makes importing information
+> > about the subarch awkward, so instead rely on the fact that MSR_LE
+> > should never be set on book3e, and the rfid is only needed if MSR_LE is
+> > set (and thus needs to be cleared).  In theory that MSR bit is reserved
+> > on book3e, rather than zero, but in practice I have not seen it set.
+> > 
+> > Signed-off-by: Scott Wood <scottwood@freescale.com>
+> > Cc: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
+> > ---
+> > v2: new patch
 > 
-> Here is the update patches for adding a new option --dt-no-old-root.
-> Per previously discussion with Simon, we should consider the compatibility 
-> issue for changing the old behavior. Thus a new option is necessary
-> 
-> The 1st patch move the copying code to another function. The other two patches
-> are for adding arch dependent option for arm and ppc64.
-> 
-> Tested kexec load on both arm and ppc64 machines.
-> 
-> For the latter two patches, some usage lines are over 80 characters, but I just
-> keep same with original formats. I prefer to fix it in other patches. If you
-> think it really need being fixed in this patchset please let me know, I can
-> update them again.
+> Could I get a review of this from at lest one ppc person?
 
-Thanks, I have applied these and included them in kexec-tools 2.0.11-rc1.
+Michael, can you comment on this as well as patch 3/3?
+
+-Scott
+
+> 
+> >  purgatory/arch/ppc64/v2wrap.S | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/purgatory/arch/ppc64/v2wrap.S b/purgatory/arch/ppc64/v2wrap.S
+> > index 179ade9..3534080 100644
+> > --- a/purgatory/arch/ppc64/v2wrap.S
+> > +++ b/purgatory/arch/ppc64/v2wrap.S
+> > @@ -116,9 +116,17 @@ master:
+> >     stw     7,0x5c(4)       # and patch it into the kernel
+> >     mr      3,16            # restore dt address
+> >  
+> > +   mfmsr   5
+> > +   andi.   10,5,1          # test MSR_LE
+> > +   bne     little_endian
+> > +
+> > +   li      5,0             # r5 will be 0 for kernel
+> > +   mtctr   4               # prepare branch to
+> > +   bctr                    # start kernel
+> > +   
+> > +little_endian:                     # book3s-only
+> >     mtsrr0  4               # prepare branch to
+> >  
+> > -   mfmsr   5
+> >     clrrdi  5,5,1           # clear MSR_LE
+> >     mtsrr1  5
+> >  
 
 _______________________________________________
 kexec mailing list
