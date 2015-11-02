@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zt4Wv-0003FC-Od
- for kexec@lists.infradead.org; Mon, 02 Nov 2015 02:07:30 +0000
-Date: Mon, 2 Nov 2015 11:06:55 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/3] ppc64: Avoid rfid if no need to clear MSR_LE
-Message-ID: <20151102020655.GD11188@verge.net.au>
-References: <1444172150-29493-1-git-send-email-scottwood@freescale.com>
- <1444172150-29493-2-git-send-email-scottwood@freescale.com>
- <20151101225553.GA1995@localhost.localdomain>
- <20151102002143.GA7053@localhost.localdomain>
+Received: from mail-lf0-x233.google.com ([2a00:1450:4010:c07::233])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1Zt8BP-0005Gn-So
+ for kexec@lists.infradead.org; Mon, 02 Nov 2015 06:01:32 +0000
+Received: by lfbn126 with SMTP id n126so56748881lfb.2
+ for <kexec@lists.infradead.org>; Sun, 01 Nov 2015 22:01:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20151102002143.GA7053@localhost.localdomain>
+Date: Mon, 2 Nov 2015 11:31:09 +0530
+Message-ID: <CAF4mCy1_k96TsBVBowZXT7dqaM76KZyBSxrAzw7BDd28u_0SwQ@mail.gmail.com>
+Subject: PCI device dump in kdump
+From: shalini singhal <embshalini01@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,37 +22,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sam Mendoza-Jonas <sam.mj@au1.ibm.com>
-Cc: Scott Wood <scottwood@freescale.com>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: kexec@lists.infradead.org
 
-On Mon, Nov 02, 2015 at 11:21:43AM +1100, Sam Mendoza-Jonas wrote:
-> On Mon, Nov 02, 2015 at 09:55:53AM +1100, Sam Mendoza-Jonas wrote:
-> > On Tue, Oct 06, 2015 at 05:55:49PM -0500, Scott Wood wrote:
-> > > Commit a304e2d82a8c3 ("ppc64: purgatory: Reset primary cpu endian to
-> > > big-endian) changed bctr to rfid.  rfid is book3s-only and will cause a
-> > > fatal exception on book3e.
-> > > 
-> > > Purgatory is an isolated environment which makes importing information
-> > > about the subarch awkward, so instead rely on the fact that MSR_LE
-> > > should never be set on book3e, and the rfid is only needed if MSR_LE is
-> > > set (and thus needs to be cleared).  In theory that MSR bit is reserved
-> > > on book3e, rather than zero, but in practice I have not seen it set.
-> > > 
-> > > Signed-off-by: Scott Wood <scottwood@freescale.com>
-> > > Cc: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
-> > > ---
-> > > v2: new patch
-> > 
-> > Looks good to me, thanks for catching this!
-> > I'll ping Michael too if you'd like his reviewed-by.
-> > 
-> > Reviewed-by: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
-> 
-> Following up, also add my
-> 
-> Tested-by: Samuel Mendoza-Jonas <sam.mj@au1.ibm.com>
+Hi,
 
-Thanks, I have queued this up for v2.0.11.
+Does the dump provided by kdump has information about PCI devices?
+The information can be name of PCI device, physical memory, registers
+mapped etc. Can I check the state of  PCI register set also with
+machine specific register set while debugging dump generated with
+kdump.
+
+
+Thanks &Regards,
+Shalini
 
 _______________________________________________
 kexec mailing list
