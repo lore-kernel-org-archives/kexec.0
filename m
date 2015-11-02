@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-x233.google.com ([2a00:1450:4010:c07::233])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zt8BP-0005Gn-So
- for kexec@lists.infradead.org; Mon, 02 Nov 2015 06:01:32 +0000
-Received: by lfbn126 with SMTP id n126so56748881lfb.2
- for <kexec@lists.infradead.org>; Sun, 01 Nov 2015 22:01:10 -0800 (PST)
+Date: Mon, 2 Nov 2015 14:56:40 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH 08/16] arm64/kexec: Add core kexec support
+Message-ID: <20151102092640.GA25166@dhcppc13.redhat.com>
+References: <cover.1445297709.git.geoff@infradead.org>
+ <a1c2a702f127d9dade1f9af8ab13decb2ef1c0da.1445297709.git.geoff@infradead.org>
+ <56339ACD.7010506@arm.com>
 MIME-Version: 1.0
-Date: Mon, 2 Nov 2015 11:31:09 +0530
-Message-ID: <CAF4mCy1_k96TsBVBowZXT7dqaM76KZyBSxrAzw7BDd28u_0SwQ@mail.gmail.com>
-Subject: PCI device dump in kdump
-From: shalini singhal <embshalini01@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <56339ACD.7010506@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,19 +21,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi,
+Hi James,
 
-Does the dump provided by kdump has information about PCI devices?
-The information can be name of PCI device, physical memory, registers
-mapped etc. Can I check the state of  PCI register set also with
-machine specific register set while debugging dump generated with
-kdump.
+On 30/10/2015:04:29:01 PM, James Morse wrote:
+> 
+> >From 'kexec -e' to the first messages from the new kernel takes ~1 minute
+> on Juno, Did you see a similar delay? Or should I go looking for what I've
+> configured wrong!?
 
+I did had similar issues with mustang, where it was taking more than 2 min.
 
-Thanks &Regards,
-Shalini
+Can you please try with my kexec-tools repo [1] where I have patches to enable
+D-cache for sha verification. Your feedback might help to upstream these patches.
+
+Thanks
+~Pratyush
+
+[1] https://github.com/pratyushanand/kexec-tools.git : master
 
 _______________________________________________
 kexec mailing list
