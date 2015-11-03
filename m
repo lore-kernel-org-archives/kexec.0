@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x236.google.com ([2607:f8b0:400e:c03::236])
+Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZthY3-0001lE-5t
- for kexec@lists.infradead.org; Tue, 03 Nov 2015 19:47:15 +0000
-Received: by pabfh17 with SMTP id fh17so27166024pab.0
- for <kexec@lists.infradead.org>; Tue, 03 Nov 2015 11:46:56 -0800 (PST)
+ id 1ZthY5-0001ll-Vb
+ for kexec@lists.infradead.org; Tue, 03 Nov 2015 19:47:18 +0000
+Received: by padhx2 with SMTP id hx2so19312895pad.1
+ for <kexec@lists.infradead.org>; Tue, 03 Nov 2015 11:47:00 -0800 (PST)
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: [PATCH 08/13] Move MAX_SHARED_LIBS to fs/binfmt_flat.c
-Date: Tue,  3 Nov 2015 11:46:29 -0800
-Message-Id: <1446579994-9937-9-git-send-email-palmer@dabbelt.com>
+Subject: [PATCH 12/13] Remove AT_VECTOR_SIZE_ARCH on x86
+Date: Tue,  3 Nov 2015 11:46:33 -0800
+Message-Id: <1446579994-9937-13-git-send-email-palmer@dabbelt.com>
 In-Reply-To: <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
 References: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
  <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
@@ -28,53 +28,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: arnd@arndb.de, dhowells@redhat.com
 Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-I'm not sure what this is, but it doesn't feel like something that
-should be exposed to userspace here.  I'm assuming this file was
-exposed for the structure in it, which doesn't depend on
-MAX_SHARED_LIBS.
+It looks like there aren't actually users of this macro anywhere:
+
+ * The kernel doesn't use it on x86 because we don't suppor ELF FDPIC.
+
+ * The only Google results point to LMKL patches, both the one that
+   wrote this (from 2010) and my patch to hide it behind __KERNEL__.
+
+ * I grep'd through all the source tarballs on my machine, and the
+   only packages that matched were the kernel and crui (which copied a
+   PPC kernel header).
+
+Since I'm not sure how to actually provide the right answer (if I
+understand correctly, CONFIG_IA32_EMULATION is not __i386__), the only
+thing I can think of to do is to just remove the definition.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
 Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
 Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
 ---
- fs/binfmt_flat.c          | 6 ++++++
- include/uapi/linux/flat.h | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/include/uapi/asm/auxvec.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
-index f723cd3..e89fb43 100644
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -72,6 +72,12 @@
- #define RELOC_FAILED 0xff00ff01		/* Relocation incorrect somewhere */
- #define UNLOADED_LIB 0x7ff000ff		/* Placeholder for unused library */
+diff --git a/arch/x86/include/uapi/asm/auxvec.h b/arch/x86/include/uapi/asm/auxvec.h
+index 77203ac..1316b4c 100644
+--- a/arch/x86/include/uapi/asm/auxvec.h
++++ b/arch/x86/include/uapi/asm/auxvec.h
+@@ -9,11 +9,4 @@
+ #endif
+ #define AT_SYSINFO_EHDR		33
  
-+#ifdef CONFIG_BINFMT_SHARED_FLAT
-+#define	MAX_SHARED_LIBS			(4)
-+#else
-+#define	MAX_SHARED_LIBS			(1)
-+#endif
-+
- struct lib_info {
- 	struct {
- 		unsigned long start_code;		/* Start of text segment */
-diff --git a/include/uapi/linux/flat.h b/include/uapi/linux/flat.h
-index 88cd6ba..1b177c7 100644
---- a/include/uapi/linux/flat.h
-+++ b/include/uapi/linux/flat.h
-@@ -13,12 +13,6 @@
- 
- #define	FLAT_VERSION			0x00000004L
- 
--#ifdef CONFIG_BINFMT_SHARED_FLAT
--#define	MAX_SHARED_LIBS			(4)
--#else
--#define	MAX_SHARED_LIBS			(1)
+-/* entries in ARCH_DLINFO: */
+-#if defined(CONFIG_IA32_EMULATION) || !defined(CONFIG_X86_64)
+-# define AT_VECTOR_SIZE_ARCH 2
+-#else /* else it's non-compat x86-64 */
+-# define AT_VECTOR_SIZE_ARCH 1
 -#endif
 -
- /*
-  * To make everything easier to port and manage cross platform
-  * development,  all fields are in network byte order.
+ #endif /* _ASM_X86_AUXVEC_H */
 -- 
 2.4.10
 
