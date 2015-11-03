@@ -1,14 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 2 Nov 2015 14:56:40 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH 08/16] arm64/kexec: Add core kexec support
-Message-ID: <20151102092640.GA25166@dhcppc13.redhat.com>
-References: <cover.1445297709.git.geoff@infradead.org>
- <a1c2a702f127d9dade1f9af8ab13decb2ef1c0da.1445297709.git.geoff@infradead.org>
- <56339ACD.7010506@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56339ACD.7010506@arm.com>
+Message-ID: <1446509499.23374.2.camel@infradead.org>
+Subject: Re: [PATCH] Revert "kexec: use mmap instead of read for slurp_file()"
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 02 Nov 2015 16:11:39 -0800
+In-Reply-To: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+References: <20151023031000.GA15557@dhcp-129-115.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,26 +18,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI@infradead.org, Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Dave Young <dyoung@redhat.com>, Simon Horman <horms@verge.net.au>
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-Hi James,
+Hi,
 
-On 30/10/2015:04:29:01 PM, James Morse wrote:
+On Fri, 2015-10-23 at 11:10 +0800, Dave Young wrote:
+> This reverts commit 7ab842d8a004f6cd75a9d7b3528e4a70819ce4ef.
 > 
-> >From 'kexec -e' to the first messages from the new kernel takes ~1 minute
-> on Juno, Did you see a similar delay? Or should I go looking for what I've
-> configured wrong!?
+> using mmap by default in slurp_file cause segment fault while later
+> reallocing dtb_buf during my arm kexec test.
 
-I did had similar issues with mustang, where it was taking more than 2 min.
+Could you say more about the cause of the segfault?  Where is the dtb
+reallocated?
 
-Can you please try with my kexec-tools repo [1] where I have patches to enable
-D-cache for sha verification. Your feedback might help to upstream these patches.
-
-Thanks
-~Pratyush
-
-[1] https://github.com/pratyushanand/kexec-tools.git : master
+-Geoff
 
 _______________________________________________
 kexec mailing list
