@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x234.google.com ([2607:f8b0:400e:c03::234])
+Received: from mail-pa0-x236.google.com ([2607:f8b0:400e:c03::236])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZthY1-0001kA-4B
- for kexec@lists.infradead.org; Tue, 03 Nov 2015 19:47:14 +0000
-Received: by pacdm15 with SMTP id dm15so2820276pac.3
- for <kexec@lists.infradead.org>; Tue, 03 Nov 2015 11:46:52 -0800 (PST)
+ id 1ZthY3-0001lE-5t
+ for kexec@lists.infradead.org; Tue, 03 Nov 2015 19:47:15 +0000
+Received: by pabfh17 with SMTP id fh17so27166024pab.0
+ for <kexec@lists.infradead.org>; Tue, 03 Nov 2015 11:46:56 -0800 (PST)
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: [PATCH 05/13] Split FDPIC "struct elf_prstatus" to "struct
- elf_fdpic_prstatus"
-Date: Tue,  3 Nov 2015 11:46:26 -0800
-Message-Id: <1446579994-9937-6-git-send-email-palmer@dabbelt.com>
+Subject: [PATCH 08/13] Move MAX_SHARED_LIBS to fs/binfmt_flat.c
+Date: Tue,  3 Nov 2015 11:46:29 -0800
+Message-Id: <1446579994-9937-9-git-send-email-palmer@dabbelt.com>
 In-Reply-To: <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
 References: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
  <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
@@ -29,215 +28,53 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: arnd@arndb.de, dhowells@redhat.com
 Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-This is a pretty big change that I haven't tested any, which worries
-me a lot.  The general idea here is that "struct elf_prstatus" can be
-visible to userspace (from <linux/ptrace.h>)
-
-  "
-   Generic ptrace interface that exports the architecture specific
-   regsets using the corresponding NT_* types (which are also used in
-   the core dump).  Please note that the NT_PRSTATUS note type in a
-   core dump contains a full 'struct elf_prstatus'. But the
-   user_regset for NT_PRSTATUS contains just the elf_gregset_t that is
-   the pr_reg field of 'struct elf_prstatus'. For all the other
-   user_regset flavors, the user_regset layout and the ELF core dump
-   note payload are exactly the same layout.
-  "
-
-so it shouldn't have an "#ifdef CONFIG_" in there.
-
-This splits the structure into two different structures, one still
-named "struct elf_prstatus", and one for ELF FDPIC that is named
-"struct elf_fdpic_prstatus" -- the idea here is that most users are
-standard ELF, so that's the name that didn't change.
-
-I tried to fix all the users of "struct elf_prstatus" that should now
-be using "struct elf_fdpic_prstatus".  The only testing I did here was
-to build a Blackfin defconfig with "struct elf_prstatus" not defined,
-and to build an x86 defconfig with "struct elf_fdpic_prstatus" not
-defined.
-
-Note that this fails checkpatch.pl with a complaint about wanting open
-braces on the same line as struct definitions.  The existing struct
-definitions in this file have the brace a line afterwards, so I'm
-going to leave this alone.
+I'm not sure what this is, but it doesn't feel like something that
+should be exposed to userspace here.  I'm assuming this file was
+exposed for the structure in it, which doesn't depend on
+MAX_SHARED_LIBS.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
 Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
 Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
 ---
- fs/binfmt_elf_fdpic.c        |  6 +++---
- fs/proc/kcore.c              | 16 ++++++++++++++++
- include/linux/kexec.h        |  4 ++++
- include/uapi/linux/elfcore.h | 37 +++++++++++++++++++++++++++++++++++--
- kernel/kexec_core.c          |  4 ++++
- 5 files changed, 62 insertions(+), 5 deletions(-)
+ fs/binfmt_flat.c          | 6 ++++++
+ include/uapi/linux/flat.h | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index d3634bf..587bf04 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1323,7 +1323,7 @@ static inline void fill_note(struct memelfnote *note, const char *name, int type
-  * fill up all the fields in prstatus from the given task struct, except
-  * registers which need to be filled up separately.
-  */
--static void fill_prstatus(struct elf_prstatus *prstatus,
-+static void fill_prstatus(struct elf_fdpic_prstatus *prstatus,
- 			  struct task_struct *p, long signr)
- {
- 	prstatus->pr_info.si_signo = prstatus->pr_cursig = signr;
-@@ -1406,7 +1406,7 @@ static int fill_psinfo(struct elf_prpsinfo *psinfo, struct task_struct *p,
- struct elf_thread_status
- {
- 	struct list_head list;
--	struct elf_prstatus prstatus;	/* NT_PRSTATUS */
-+	struct elf_fdpic_prstatus prstatus;	/* NT_PRSTATUS */
- 	elf_fpregset_t fpu;		/* NT_PRFPREG */
- 	struct task_struct *thread;
- #ifdef ELF_CORE_COPY_XFPREGS
-@@ -1539,7 +1539,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	loff_t offset = 0, dataoff;
- 	int numnote;
- 	struct memelfnote *notes = NULL;
--	struct elf_prstatus *prstatus = NULL;	/* NT_PRSTATUS */
-+	struct elf_fdpic_prstatus *prstatus = NULL;	/* NT_PRSTATUS */
- 	struct elf_prpsinfo *psinfo = NULL;	/* NT_PRPSINFO */
-  	LIST_HEAD(thread_list);
-  	struct list_head *t;
-diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-index 92e6726..b1edd77e 100644
---- a/fs/proc/kcore.c
-+++ b/fs/proc/kcore.c
-@@ -90,7 +90,11 @@ static size_t get_kcore_size(int *nphdr, size_t *elf_buflen)
- 			(*nphdr + 2)*sizeof(struct elf_phdr) + 
- 			3 * ((sizeof(struct elf_note)) +
- 			     roundup(sizeof(CORE_STR), 4)) +
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+			roundup(sizeof(struct elf_fdpic_prstatus), 4) +
-+#else
- 			roundup(sizeof(struct elf_prstatus), 4) +
-+#endif
- 			roundup(sizeof(struct elf_prpsinfo), 4) +
- 			roundup(arch_task_struct_size, 4);
- 	*elf_buflen = PAGE_ALIGN(*elf_buflen);
-@@ -318,7 +322,11 @@ static char *storenote(struct memelfnote *men, char *bufp)
-  */
- static void elf_kcore_store_hdr(char *bufp, int nphdr, int dataoff)
- {
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	struct elf_fdpic_prstatus prstatus;	/* NT_PRSTATUS */
-+#else
- 	struct elf_prstatus prstatus;	/* NT_PRSTATUS */
-+#endif
- 	struct elf_prpsinfo prpsinfo;	/* NT_PRPSINFO */
- 	struct elf_phdr *nhdr, *phdr;
- 	struct elfhdr *elf;
-@@ -387,10 +395,18 @@ static void elf_kcore_store_hdr(char *bufp, int nphdr, int dataoff)
- 	/* set up the process status */
- 	notes[0].name = CORE_STR;
- 	notes[0].type = NT_PRSTATUS;
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	notes[0].datasz = sizeof(struct elf_fdpic_prstatus);
-+#else
- 	notes[0].datasz = sizeof(struct elf_prstatus);
-+#endif
- 	notes[0].data = &prstatus;
+diff --git a/fs/binfmt_flat.c b/fs/binfmt_flat.c
+index f723cd3..e89fb43 100644
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -72,6 +72,12 @@
+ #define RELOC_FAILED 0xff00ff01		/* Relocation incorrect somewhere */
+ #define UNLOADED_LIB 0x7ff000ff		/* Placeholder for unused library */
  
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	memset(&prstatus, 0, sizeof(struct elf_fdpic_prstatus));
++#ifdef CONFIG_BINFMT_SHARED_FLAT
++#define	MAX_SHARED_LIBS			(4)
 +#else
- 	memset(&prstatus, 0, sizeof(struct elf_prstatus));
++#define	MAX_SHARED_LIBS			(1)
 +#endif
++
+ struct lib_info {
+ 	struct {
+ 		unsigned long start_code;		/* Start of text segment */
+diff --git a/include/uapi/linux/flat.h b/include/uapi/linux/flat.h
+index 88cd6ba..1b177c7 100644
+--- a/include/uapi/linux/flat.h
++++ b/include/uapi/linux/flat.h
+@@ -13,12 +13,6 @@
  
- 	nhdr->p_filesz	= notesize(&notes[0]);
- 	bufp = storenote(&notes[0], bufp);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d140b1e..d9196cc 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -63,7 +63,11 @@
- #define KEXEC_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
- #define KEXEC_CORE_NOTE_NAME "CORE"
- #define KEXEC_CORE_NOTE_NAME_BYTES ALIGN(sizeof(KEXEC_CORE_NOTE_NAME), 4)
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+#define KEXEC_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_fdpic_prstatus), 4)
-+#else
- #define KEXEC_CORE_NOTE_DESC_BYTES ALIGN(sizeof(struct elf_prstatus), 4)
-+#endif
- /*
-  * The per-cpu notes area is a list of notes terminated by a "NULL"
-  * note header.  For kdump, the code in vmcore.c runs in the context
-diff --git a/include/uapi/linux/elfcore.h b/include/uapi/linux/elfcore.h
-index 569737c..697c52d 100644
---- a/include/uapi/linux/elfcore.h
-+++ b/include/uapi/linux/elfcore.h
-@@ -60,7 +60,40 @@ struct elf_prstatus
- 	long	pr_instr;		/* Current instruction */
- #endif
- 	elf_gregset_t pr_reg;	/* GP registers */
--#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	int pr_fpvalid;		/* True if math co-processor being used.  */
-+};
-+
-+/* Architectures that set CONFIG_BINFMT_ELF_FDPIC use this instead of
-+ * "struct elf_prstatus".
-+ */
-+struct elf_fdpic_prstatus
-+{
-+#if 0
-+	long	pr_flags;	/* XXX Process flags */
-+	short	pr_why;		/* XXX Reason for process halt */
-+	short	pr_what;	/* XXX More detailed reason */
-+#endif
-+	struct elf_siginfo pr_info;	/* Info associated with signal */
-+	short	pr_cursig;		/* Current signal */
-+	unsigned long pr_sigpend;	/* Set of pending signals */
-+	unsigned long pr_sighold;	/* Set of held signals */
-+#if 0
-+	struct sigaltstack pr_altstack;	/* Alternate stack info */
-+	struct sigaction pr_action;	/* Signal action for current sig */
-+#endif
-+	pid_t	pr_pid;
-+	pid_t	pr_ppid;
-+	pid_t	pr_pgrp;
-+	pid_t	pr_sid;
-+	struct timeval pr_utime;	/* User time */
-+	struct timeval pr_stime;	/* System time */
-+	struct timeval pr_cutime;	/* Cumulative user time */
-+	struct timeval pr_cstime;	/* Cumulative system time */
-+#if 0
-+	long	pr_instr;		/* Current instruction */
-+#endif
-+	elf_gregset_t pr_reg;	/* GP registers */
-+
- 	/* When using FDPIC, the loadmap addresses need to be communicated
- 	 * to GDB in order for GDB to do the necessary relocations.  The
- 	 * fields (below) used to communicate this information are placed
-@@ -69,7 +102,7 @@ struct elf_prstatus
- 	 */
- 	unsigned long pr_exec_fdpic_loadmap;
- 	unsigned long pr_interp_fdpic_loadmap;
+ #define	FLAT_VERSION			0x00000004L
+ 
+-#ifdef CONFIG_BINFMT_SHARED_FLAT
+-#define	MAX_SHARED_LIBS			(4)
+-#else
+-#define	MAX_SHARED_LIBS			(1)
 -#endif
-+
- 	int pr_fpvalid;		/* True if math co-processor being used.  */
- };
- 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 201b453..8d2fc70 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -977,7 +977,11 @@ static void final_note(u32 *buf)
- 
- void crash_save_cpu(struct pt_regs *regs, int cpu)
- {
-+#ifdef CONFIG_BINFMT_ELF_FDPIC
-+	struct elf_fdpic_prstatus prstatus;
-+#else
- 	struct elf_prstatus prstatus;
-+#endif
- 	u32 *buf;
- 
- 	if ((cpu < 0) || (cpu >= nr_cpu_ids))
+-
+ /*
+  * To make everything easier to port and manage cross platform
+  * development,  all fields are in network byte order.
 -- 
 2.4.10
 
