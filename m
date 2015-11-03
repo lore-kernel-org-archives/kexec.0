@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22e.google.com ([2607:f8b0:400e:c03::22e])
+Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZthY7-0001lR-59
- for kexec@lists.infradead.org; Tue, 03 Nov 2015 19:47:20 +0000
-Received: by pabfh17 with SMTP id fh17so27166902pab.0
- for <kexec@lists.infradead.org>; Tue, 03 Nov 2015 11:46:58 -0800 (PST)
+ id 1ZthY8-0001ld-BP
+ for kexec@lists.infradead.org; Tue, 03 Nov 2015 19:47:21 +0000
+Received: by pasz6 with SMTP id z6so27440105pas.2
+ for <kexec@lists.infradead.org>; Tue, 03 Nov 2015 11:46:59 -0800 (PST)
 From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: [PATCH 10/13] Move USE_WCACHING to drivers/block/pktcdvd.c
-Date: Tue,  3 Nov 2015 11:46:31 -0800
-Message-Id: <1446579994-9937-11-git-send-email-palmer@dabbelt.com>
+Subject: [PATCH 11/13] Always define MAX_RAW_MINORS as 2**20 in userspace
+Date: Tue,  3 Nov 2015 11:46:32 -0800
+Message-Id: <1446579994-9937-12-git-send-email-palmer@dabbelt.com>
 In-Reply-To: <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
 References: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
  <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
@@ -28,63 +28,61 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: arnd@arndb.de, dhowells@redhat.com
 Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, plagnioj@jcrosoft.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, a.p.zijlstra@chello.nl, jikos@kernel.org, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-I don't think this was ever intended to be exposed to userspace, but
-it did require an "#ifdef CONFIG_*".  Since the name is kind of
-generic and was only used in one place, I've moved the definition to
-the one user.
+While I don't think this was ever meant to be exposed to userspace, if
+anyone is using it then this will at least provide a correct (if
+unlikely) definition.
+
+MAX_RAW_MINORS used to be used in the kernel, where it's been replaced
+with CONFIG_MAX_RAW_MINORS.
+
+Note that there's a checkpatch.pl warning about a split config string
+here, but I've left that alone.
 
 Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
 Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
 Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
 ---
- drivers/block/pktcdvd.c      | 11 +++++++++++
- include/uapi/linux/pktcdvd.h | 11 -----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/char/raw.c       | 7 ++++---
+ include/uapi/linux/raw.h | 2 +-
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index 7be2375..18d2d05 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -90,6 +90,17 @@ do {									\
+diff --git a/drivers/char/raw.c b/drivers/char/raw.c
+index 60316fb..362d7a6 100644
+--- a/drivers/char/raw.c
++++ b/drivers/char/raw.c
+@@ -36,7 +36,7 @@ static struct raw_device_data *raw_devices;
+ static DEFINE_MUTEX(raw_mutex);
+ static const struct file_operations raw_ctl_fops; /* forward declaration */
  
- #define MAX_SPEED 0xffff
+-static int max_raw_minors = MAX_RAW_MINORS;
++static int max_raw_minors = CONFIG_MAX_RAW_MINORS;
  
-+/*
-+ * use drive write caching -- we need deferred error handling to be
-+ * able to successfully recover with this option (drive will return good
-+ * status as soon as the cdb is validated).
-+ */
-+#if defined(CONFIG_CDROM_PKTCDVD_WCACHE)
-+#define USE_WCACHING		1
-+#else
-+#define USE_WCACHING		0
-+#endif
-+
- static DEFINE_MUTEX(pktcdvd_mutex);
- static struct pktcdvd_device *pkt_devs[MAX_WRITERS];
- static struct proc_dir_entry *pkt_proc;
-diff --git a/include/uapi/linux/pktcdvd.h b/include/uapi/linux/pktcdvd.h
-index 2640b9d..05c2bee 100644
---- a/include/uapi/linux/pktcdvd.h
-+++ b/include/uapi/linux/pktcdvd.h
-@@ -29,17 +29,6 @@
- #define PACKET_WAIT_TIME	(HZ * 5 / 1000)
+ module_param(max_raw_minors, int, 0);
+ MODULE_PARM_DESC(max_raw_minors, "Maximum number of raw devices (1-65536)");
+@@ -317,8 +317,9 @@ static int __init raw_init(void)
  
- /*
-- * use drive write caching -- we need deferred error handling to be
-- * able to successfully recover with this option (drive will return good
-- * status as soon as the cdb is validated).
-- */
--#if defined(CONFIG_CDROM_PKTCDVD_WCACHE)
--#define USE_WCACHING		1
--#else
--#define USE_WCACHING		0
--#endif
--
--/*
-  * No user-servicable parts beyond this point ->
-  */
+ 	if (max_raw_minors < 1 || max_raw_minors > 65536) {
+ 		printk(KERN_WARNING "raw: invalid max_raw_minors (must be"
+-			" between 1 and 65536), using %d\n", MAX_RAW_MINORS);
+-		max_raw_minors = MAX_RAW_MINORS;
++			" between 1 and 65536), using %d\n",
++		       CONFIG_MAX_RAW_MINORS);
++		max_raw_minors = CONFIG_MAX_RAW_MINORS;
+ 	}
  
+ 	raw_devices = vzalloc(sizeof(struct raw_device_data) * max_raw_minors);
+diff --git a/include/uapi/linux/raw.h b/include/uapi/linux/raw.h
+index 62d543e..f3d009b 100644
+--- a/include/uapi/linux/raw.h
++++ b/include/uapi/linux/raw.h
+@@ -13,6 +13,6 @@ struct raw_config_request
+ 	__u64	block_minor;
+ };
+ 
+-#define MAX_RAW_MINORS CONFIG_MAX_RAW_DEVS
++#define MAX_RAW_MINORS (1 << 20)
+ 
+ #endif /* __LINUX_RAW_H */
 -- 
 2.4.10
 
