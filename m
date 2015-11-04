@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x235.google.com ([2a00:1450:400c:c09::235])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zviyu-0004xn-6e
- for kexec@lists.infradead.org; Mon, 09 Nov 2015 09:43:21 +0000
-Received: by wmec201 with SMTP id c201so70360661wme.0
- for <kexec@lists.infradead.org>; Mon, 09 Nov 2015 01:42:58 -0800 (PST)
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: [PATCH v3] kexec: determine size of block device
-Date: Mon,  9 Nov 2015 10:42:56 +0100
-Message-Id: <1447062176-13234-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
+Date: Wed, 4 Nov 2015 12:41:06 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 09/13] Move bp_type_idx to kernel/event/hw_breakpoint.c
+Message-ID: <20151104114106.GJ17308@twins.programming.kicks-ass.net>
+References: <1442271047-4908-1-git-send-email-palmer@dabbelt.com>
+ <1446579994-9937-1-git-send-email-palmer@dabbelt.com>
+ <1446579994-9937-10-git-send-email-palmer@dabbelt.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1446579994-9937-10-git-send-email-palmer@dabbelt.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,51 +17,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: dave@sr71.net, linux-xtensa@linux-xtensa.org, dhowells@redhat.com, jcmvbkbc@gmail.com, hpa@zytor.com, mingo@kernel.org, ast@plumgrid.com, aarcange@redhat.com, bhe@redhat.com, x86@kernel.org, tomi.valkeinen@ti.com, 3chas3@gmail.com, paulmck@linux.vnet.ibm.com, dyoung@redhat.com, vgoyal@redhat.com, aishchuk@linux.vnet.ibm.com, linux-arch@vger.kernel.org, jikos@kernel.org, arnd@arndb.de, plagnioj@jcrosoft.com, josh@joshtriplett.org, acme@kernel.org, mathieu.desnoyers@efficios.com, viro@zeniv.linux.org.uk, luto@kernel.org, tglx@linutronix.de, drysdale@google.com, chris@zankel.net, iulia.manda21@gmail.com, geoff@infradead.org, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, davem@davemloft.net
 
-starting 'kexec -l /dev/mmcblk0p1' fails since the size of
-a block device can not be determined with stat
+On Tue, Nov 03, 2015 at 11:46:30AM -0800, Palmer Dabbelt wrote:
+> This has a "#ifdef CONFIG_*" that used to be exposed to userspace.
+> 
+> The names in here are so generic that I don't think it's a good idea
+> to expose them to userspace (or even the rest of the kernel).  Since
+> there's only one kernel user, it's been moved to that file.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> Reviewed-by: Andrew Waterman <waterman@eecs.berkeley.edu>
+> Reviewed-by: Albert Ou <aou@eecs.berkeley.edu>
 
-Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
----
- kexec/kexec.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Assuming you want to keep all these patches together in a tree or so.
+Let me know if you want me to take this patch.
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index ca1e81d..cf6e03d 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -26,6 +26,8 @@
- #include <stdlib.h>
- #include <errno.h>
- #include <limits.h>
-+#include <sys/ioctl.h>
-+#include <sys/mount.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <sys/reboot.h>
-@@ -555,6 +557,12 @@ static char *slurp_file_generic(const char *filename, off_t *r_size,
- 			die("Can not seek to the begin of file %s: %s\n",
- 					filename, strerror(errno));
- 		buf = slurp_fd(fd, filename, size, &nread);
-+	} else if (S_ISBLK(stats.st_mode)) {
-+		err = ioctl(fd, BLKGETSIZE64, &size);
-+		if (err < 0)
-+			die("Can't retrieve size of block device %s: %s\n",
-+				filename, strerror(errno));
-+		buf = slurp_fd(fd, filename, size, &nread);
- 	} else {
- 		size = stats.st_size;
- 		if (use_mmap) {
--- 
-2.6.1
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
 _______________________________________________
 kexec mailing list
