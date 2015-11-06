@@ -1,9 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <32e01ddb7a1d98e7619b3ecd87e7f747206ae68e.1446836443.git.geoff@infradead.org>
+Message-Id: <2b09b58c7586a4ca929400327d394fec3135fdd0.1446836443.git.geoff@infradead.org>
 In-Reply-To: <cover.1446836442.git.geoff@infradead.org>
 References: <cover.1446836442.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 10/15] arm64: kdump: reserve memory for crash dump kernel
+Subject: [PATCH 15/15] arm64: kdump: relax BUG_ON() if more than one cpus are
+ still active
 Date: Fri, 06 Nov 2015 19:14:37 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,126 +24,33 @@ Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infra
 
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On primary kernel, the memory region used by crash dump kernel must be
-specified by "crashkernel=" boot parameter. reserve_crashkernel()
-will allocate and reserve the region for later use.
-
-User space tools will be able to find the region marked as "Crash kernel"
-in /proc/iomem.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+We should try best in case of kdump.
+So even if not all secondary cpus have shut down, we do kdump anyway.
 ---
- arch/arm64/kernel/setup.c |  7 +++++-
- arch/arm64/mm/init.c      | 54 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/machine_kexec.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 2322479..9d085ac 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -32,7 +32,6 @@
- #include <linux/screen_info.h>
- #include <linux/init.h>
- #include <linux/kexec.h>
--#include <linux/crash_dump.h>
- #include <linux/root_dev.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
-@@ -337,6 +336,12 @@ static void __init request_standard_resources(void)
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
- 	}
-+
-+#ifdef CONFIG_KEXEC
-+	/* User space tools will find "Crash kernel" region in /proc/iomem. */
-+	if (crashk_res.end)
-+		insert_resource(&iomem_resource, &crashk_res);
-+#endif
- }
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index d2d7e90..482aae7 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -148,7 +148,13 @@ void machine_kexec(struct kimage *kimage)
+ 	phys_addr_t reboot_code_buffer_phys;
+ 	void *reboot_code_buffer;
  
- #ifdef CONFIG_BLK_DEV_INITRD
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f5c0680..f33f201 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -34,6 +34,7 @@
- #include <linux/dma-contiguous.h>
- #include <linux/efi.h>
- #include <linux/swiotlb.h>
-+#include <linux/kexec.h>
- 
- #include <asm/fixmap.h>
- #include <asm/memory.h>
-@@ -66,6 +67,55 @@ static int __init early_initrd(char *p)
- early_param("initrd", early_initrd);
- #endif
- 
-+#ifdef CONFIG_KEXEC
-+/*
-+ * reserve_crashkernel() - reserves memory for crash kernel
-+ *
-+ * This function reserves memory area given in "crashkernel=" kernel command
-+ * line parameter. The memory reserved is used by dump capture kernel when
-+ * primary kernel is crashing.
-+ */
-+static void __init reserve_crashkernel(void)
-+{
-+	unsigned long long crash_size = 0, crash_base = 0;
-+	int ret;
-+
-+	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+				&crash_size, &crash_base);
-+	if (ret)
-+		return;
-+
-+	if (crash_base == 0) {
-+		crash_base = memblock_alloc(crash_size, 1 << 21);
-+		if (crash_base == 0) {
-+			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-+				crash_size);
-+			return;
-+		}
-+	} else {
-+		/* User specifies base address explicitly. */
-+		if (!memblock_is_region_memory(crash_base, crash_size) ||
-+			memblock_is_region_reserved(crash_base, crash_size)) {
-+			pr_warn("crashkernel has wrong address or size\n");
-+			return;
-+		}
-+
-+		if (crash_base & ((1 << 21) - 1)) {
-+			pr_warn("crashkernel base address is not 2MB aligned\n");
-+			return;
-+		}
-+
-+		memblock_reserve(crash_base, crash_size);
+-	BUG_ON(num_online_cpus() > 1);
++	if (num_online_cpus() > 1) {
++		if (in_crash_kexec)
++			pr_warn("kdump might fail because %d cpus are still online\n",
++					num_online_cpus());
++		else
++			BUG();
 +	}
-+
-+	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-+		crash_size >> 20, crash_base >> 20);
-+
-+	crashk_res.start = crash_base;
-+	crashk_res.end = crash_base + crash_size - 1;
-+}
-+#endif /* CONFIG_KEXEC */
-+
- /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -170,6 +220,10 @@ void __init arm64_memblock_init(void)
- 		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
- #endif
  
-+#ifdef CONFIG_KEXEC
-+	reserve_crashkernel();
-+#endif
-+
- 	early_init_fdt_scan_reserved_mem();
- 
- 	/* 4GB maximum for 32-bit only capable devices */
+ 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+ 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
 -- 
 2.5.0
-
 
 
 _______________________________________________
