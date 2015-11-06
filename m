@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-by2on0133.outbound.protection.outlook.com
- ([207.46.100.133] helo=na01-by2-obe.outbound.protection.outlook.com)
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZuDun-0004wu-HH
- for kexec@lists.infradead.org; Thu, 05 Nov 2015 06:20:54 +0000
-Message-ID: <1446704423.12676.91.camel@freescale.com>
-Subject: Re: [PATCH] kexec: Add --lite option
-From: Scott Wood <scottwood@freescale.com>
-Date: Thu, 5 Nov 2015 00:20:23 -0600
-In-Reply-To: <1445474248.30908.115.camel@infradead.org>
-References: <1445469125.30908.105.camel@infradead.org>
- <5628279C.7030104@ozlabs.org> <1445474248.30908.115.camel@infradead.org>
+ id 1ZuVLj-0005n0-3x
+ for kexec@lists.infradead.org; Fri, 06 Nov 2015 00:57:52 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH V7] makedumpfile: exclude page structures of non-dumped
+ pages
+Date: Fri, 6 Nov 2015 00:55:48 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701DF9DE0@BPXM01GP.gisp.nec.co.jp>
+References: <mailman.1817.1446622935.1639.kexec@lists.infradead.org>
+ <2105561780.4751780.1446645262529.JavaMail.zimbra@redhat.com>
+In-Reply-To: <2105561780.4751780.1446645262529.JavaMail.zimbra@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,36 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>, Petitboot@lists.ozlabs.org, Anton Blanchard <anton@samba.org>
+To: Dave Anderson <anderson@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wed, 2015-10-21 at 17:37 -0700, Geoff Levand wrote:
-> Hi Jeremy,
-> 
-> On Thu, 2015-10-22 at 08:02 +0800, Jeremy Kerr wrote:
-> > Add a new option --lite to kexec that allows for a fast reboot
-> > > by avoiding the purgatory integrity checks.  This option is
-> > > intended for use by kexec based bootloaders that load a new
-> > > image and then immediately transfer control to it.
-> > 
-> > Can we call this something other than 'lite'? I'd want to prevent any
-> > confusion when referring to 'kexec-lite', which is a separate
-> > project.
-> 
-> Well, that is why I chose the name 'lite', because it mimics what kexec
-> -lite does...
-> 
-> What do others think?
+>> >> Thanks for your great work.
+>> >> I don't want to delay v1.5.9 release anymore, I'll merge this patch
+>> >> into v1.6.0.
+>> >
+>> >Great!
+>> >Thanks for your long and patient help in defining the extent of this patch
+>> >and sanding off its rough edges.
+>>
+>> BTW, I think you might be doing this, you should post a crash's patch to
+>> support DUMP_DH_EXCLUDED_VMEMMAP as Dave said, until this feature is
+>> released formally in v1.6.0.
+>>
+>>   http://lists.infradead.org/pipermail/kexec/2015-October/014600.html
+>>
+>> Thanks,
+>> Atsushi Kumagai
+>
+>Hi Atsushi,
+>
+>Since I didn't get a response to either of my posts re: the above, when
+>I saw the patch go into your devel branch, I went ahead and added a patch
+>for crash-7.1.4:
+>
+>  https://github.com/crash-utility/crash/commit/7ce8469f8bf7e32017f8270ecd22469040817ba2
+>
+>Thanks,
+>  Dave
 
-I don't think it's a good name.  Even if the user has any idea what the kexec-
-lite project is and that this is a reference to it, you're mimicking a 
-specific aspect of kexec-lite behavior, not kexec-lite in general.
+Hello Dave,
 
-If it's an option to skip sha256 verification, then call it something like "--
-skip-sha256".
+Oh I overlooked it, thanks for your help !
 
--Scott
-
+Regards,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
