@@ -1,11 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <2b09b58c7586a4ca929400327d394fec3135fdd0.1446836443.git.geoff@infradead.org>
-In-Reply-To: <cover.1446836442.git.geoff@infradead.org>
-References: <cover.1446836442.git.geoff@infradead.org>
+Message-Id: <cover.1446836442.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 15/15] arm64: kdump: relax BUG_ON() if more than one cpus are
- still active
-Date: Fri, 06 Nov 2015 19:14:37 +0000
+Subject: [PATCH 00/15] arm64 kexec kernel patches v11
+Date: Fri, 06 Nov 2015 19:14:36 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,33 +19,121 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Hi All,
 
-We should try best in case of kdump.
-So even if not all secondary cpus have shut down, we do kdump anyway.
----
- arch/arm64/kernel/machine_kexec.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+This series adds the core support for kexec re-boot and kdump on ARM64.  This
+version of the series combines Takahiro's kdump patches with my kexec patches.
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index d2d7e90..482aae7 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -148,7 +148,13 @@ void machine_kexec(struct kimage *kimage)
- 	phys_addr_t reboot_code_buffer_phys;
- 	void *reboot_code_buffer;
- 
--	BUG_ON(num_online_cpus() > 1);
-+	if (num_online_cpus() > 1) {
-+		if (in_crash_kexec)
-+			pr_warn("kdump might fail because %d cpus are still online\n",
-+					num_online_cpus());
-+		else
-+			BUG();
-+	}
- 
- 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
- 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+To load a second stage kernel and execute a kexec re-boot or to work with kdump
+on ARM64 systems a series of patches to kexec-tools [2], which have not yet been
+merged upstream, are needed.
+
+I have tested kexec with the ARM Foundation model, and Takahiro has reported
+that kdump is working on the 96boards HiKey developer board.  Kexec on EFI
+systems works correctly.  More ACPI + kexec testing is needed.
+
+Patch 1 here moves the macros from proc-macros.S to asm/assembler.h so that the
+dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+routine.
+
+Patches 2 & 3 rework the ARM64 hcall mechanism to give the CPU reset routines
+the ability to switch exception levels from EL1 to EL2 for kernels that were
+entered in EL2.
+
+Patch 4 allows KVM to handle a CPU reset.
+
+Patches 5 & 6 add back the ARM64 CPU reset support that was recently removed
+from the kernel.
+
+Patches 7 - 9 add kexec support.
+
+Patches 10-15 add kdump support.
+
+Please consider all patches for inclusion.
+
+Changes since v10:
+
+o Move the flush of the new image from arm64_relocate_new_kernel to machine_kexec.
+o Pass values to arm64_relocate_new_kernel in registers, not in global variables.
+o Fixups to setting the sctlr_el1 and sctlr_el2 flags.
+
+[1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+[2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+
+-Geoff
+
+The following changes since commit 6a13feb9c82803e2b815eca72fa7a9f5561d7861:
+
+  Linux 4.3 (2015-11-01 16:05:25 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geoff/linux-kexec.git kexec-v11
+
+for you to fetch changes up to 2b09b58c7586a4ca929400327d394fec3135fdd0:
+
+  arm64: kdump: relax BUG_ON() if more than one cpus are still active (2015-11-06 10:38:13 -0800)
+
+----------------------------------------------------------------
+AKASHI Takahiro (7):
+      arm64: kvm: allows kvm cpu hotplug
+      arm64: kdump: reserve memory for crash dump kernel
+      arm64: kdump: implement machine_crash_shutdown()
+      arm64: kdump: add kdump support
+      arm64: kdump: update a kernel doc
+      arm64: kdump: enable kdump in the arm64 defconfig
+      arm64: kdump: relax BUG_ON() if more than one cpus are still active
+
+Geoff Levand (8):
+      arm64: Fold proc-macros.S into assembler.h
+      arm64: Convert hcalls to use HVC immediate value
+      arm64: Add new hcall HVC_CALL_FUNC
+      arm64: Add back cpu_reset routines
+      Revert "arm64: remove dead code"
+      arm64/kexec: Add core kexec support
+      arm64/kexec: Add pr_devel output
+      arm64/kexec: Enable kexec in the arm64 defconfig
+
+ Documentation/kdump/kdump.txt       |  32 ++++-
+ arch/arm/include/asm/kvm_host.h     |  10 +-
+ arch/arm/include/asm/kvm_mmu.h      |   1 +
+ arch/arm/kvm/arm.c                  |  79 ++++++------
+ arch/arm/kvm/mmu.c                  |   5 +
+ arch/arm64/Kconfig                  |  22 ++++
+ arch/arm64/configs/defconfig        |   2 +
+ arch/arm64/include/asm/assembler.h  |  48 ++++++-
+ arch/arm64/include/asm/kexec.h      |  80 ++++++++++++
+ arch/arm64/include/asm/kvm_host.h   |  16 ++-
+ arch/arm64/include/asm/kvm_mmu.h    |   1 +
+ arch/arm64/include/asm/mmu.h        |   1 +
+ arch/arm64/include/asm/virt.h       |  49 +++++++
+ arch/arm64/kernel/Makefile          |   3 +
+ arch/arm64/kernel/cpu-reset.S       |  84 ++++++++++++
+ arch/arm64/kernel/cpu-reset.h       |  22 ++++
+ arch/arm64/kernel/crash_dump.c      |  71 +++++++++++
+ arch/arm64/kernel/head.S            |   1 -
+ arch/arm64/kernel/hyp-stub.S        |  43 +++++--
+ arch/arm64/kernel/machine_kexec.c   | 248 ++++++++++++++++++++++++++++++++++++
+ arch/arm64/kernel/relocate_kernel.S | 131 +++++++++++++++++++
+ arch/arm64/kernel/setup.c           |   7 +-
+ arch/arm64/kernel/smp.c             |  16 ++-
+ arch/arm64/kvm/hyp-init.S           |  34 ++++-
+ arch/arm64/kvm/hyp.S                |  44 +++++--
+ arch/arm64/mm/cache.S               |   2 -
+ arch/arm64/mm/init.c                |  83 ++++++++++++
+ arch/arm64/mm/mmu.c                 |  11 ++
+ arch/arm64/mm/proc-macros.S         |  64 ----------
+ arch/arm64/mm/proc.S                |   3 -
+ include/uapi/linux/kexec.h          |   1 +
+ 31 files changed, 1074 insertions(+), 140 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kexec.h
+ create mode 100644 arch/arm64/kernel/cpu-reset.S
+ create mode 100644 arch/arm64/kernel/cpu-reset.h
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+ create mode 100644 arch/arm64/kernel/machine_kexec.c
+ create mode 100644 arch/arm64/kernel/relocate_kernel.S
+ delete mode 100644 arch/arm64/mm/proc-macros.S
+
 -- 
 2.5.0
 
