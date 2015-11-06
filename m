@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <82b846e4b9855a02c404b5d1f70c79142f87c005.1446836443.git.geoff@infradead.org>
+Message-Id: <afbeea6ab2e1aa3ea8c4683521ac155667f86ca1.1446836442.git.geoff@infradead.org>
 In-Reply-To: <cover.1446836442.git.geoff@infradead.org>
 References: <cover.1446836442.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 05/15] arm64: Add back cpu_reset routines
+Subject: [PATCH 01/15] arm64: Fold proc-macros.S into assembler.h
 Date: Fri, 06 Nov 2015 19:14:36 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,142 +21,213 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-Commit 68234df4ea7939f98431aa81113fbdce10c4a84b (arm64: kill flush_cache_all())
-removed the global arm64 routines cpu_reset() and cpu_soft_restart() needed by
-the arm64 kexec and kdump support.  Add simplified versions of those two
-routines back with some changes needed for kexec in the new files cpu_reset.S,
-and cpu_reset.h.
-
-When a CPU is reset it needs to be put into the exception level it had
-when it entered the kernel. Update cpu_reset() to accept an argument
-which signals if the reset address needs to be entered at EL1 or EL2.
+To allow the assembler macros defined in arch/arm64/mm/proc-macros.S to be used
+outside the mm code move the contents of proc-macros.S to asm/assembler.h.  Also,
+delete proc-macros.S, and fix up all references to proc-macros.S.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/kernel/cpu-reset.S | 84 +++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/kernel/cpu-reset.h | 22 ++++++++++++
- 2 files changed, 106 insertions(+)
- create mode 100644 arch/arm64/kernel/cpu-reset.S
- create mode 100644 arch/arm64/kernel/cpu-reset.h
+ arch/arm64/include/asm/assembler.h | 48 +++++++++++++++++++++++++++-
+ arch/arm64/kernel/head.S           |  1 -
+ arch/arm64/kvm/hyp-init.S          |  1 -
+ arch/arm64/mm/cache.S              |  2 --
+ arch/arm64/mm/proc-macros.S        | 64 --------------------------------------
+ arch/arm64/mm/proc.S               |  3 --
+ 6 files changed, 47 insertions(+), 72 deletions(-)
+ delete mode 100644 arch/arm64/mm/proc-macros.S
 
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-new file mode 100644
-index 0000000..0423f27
---- /dev/null
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -0,0 +1,84 @@
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index b51f2cc..3b46501 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -1,5 +1,5 @@
+ /*
+- * Based on arch/arm/include/asm/assembler.h
++ * Based on arch/arm/include/asm/assembler.h, arch/arm/mm/proc-macros.S
+  *
+  * Copyright (C) 1996-2000 Russell King
+  * Copyright (C) 2012 ARM Ltd.
+@@ -23,6 +23,8 @@
+ #ifndef __ASM_ASSEMBLER_H
+ #define __ASM_ASSEMBLER_H
+ 
++#include <asm/asm-offsets.h>
++#include <asm/pgtable-hwdef.h>
+ #include <asm/ptrace.h>
+ #include <asm/thread_info.h>
+ 
+@@ -193,4 +195,48 @@ lr	.req	x30		// link register
+ 	str	\src, [\tmp, :lo12:\sym]
+ 	.endm
+ 
 +/*
-+ * cpu reset routines
-+ *
-+ * Copyright (C) 2001 Deep Blue Solutions Ltd.
-+ * Copyright (C) 2012 ARM Ltd.
-+ * Copyright (C) 2015 Huawei Futurewei Technologies.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
 + */
-+
-+#include <linux/linkage.h>
-+#include <asm/assembler.h>
-+#include <asm/virt.h>
-+
-+#define SCTLR_ELx_I	(1 << 12)
-+#define SCTLR_ELx_SA	(1 << 3)
-+#define SCTLR_ELx_C	(1 << 2)
-+#define SCTLR_ELx_A	(1 << 1)
-+#define SCTLR_ELx_M	1
-+#define SCTLR_ELx_FLAGS	(SCTLR_ELx_M | SCTLR_ELx_A | SCTLR_ELx_C |	\
-+			 SCTLR_ELx_SA | SCTLR_ELx_I)
-+
-+.text
-+.pushsection    .idmap.text, "ax"
-+
-+.align 5
++	.macro	vma_vm_mm, rd, rn
++	ldr	\rd, [\rn, #VMA_VM_MM]
++	.endm
 +
 +/*
-+ * cpu_soft_restart(cpu_reset, el2_switch, entry, arg0, arg1) - Perform a cpu
-+ * soft reset.
-+ *
-+ * @cpu_reset: Physical address of the cpu_reset routine.
-+ * @el2_switch: Flag to indicate a swich to EL2 is needed, passed to cpu_reset.
-+ * @entry: Location to jump to for soft reset, passed to cpu_reset.
-+ * arg0: First argument passed to @entry.
-+ * arg1: Second argument passed to @entry.
++ * mmid - get context id from mm pointer (mm->context.id)
 + */
-+
-+ENTRY(cpu_soft_restart)
-+	mov	x18, x0				// cpu_reset
-+	mov	x0, x1				// el2_switch
-+	mov	x1, x2				// entry
-+	mov	x2, x3				// arg0
-+	mov	x3, x4				// arg1
-+	ret	x18
-+ENDPROC(cpu_soft_restart)
++	.macro	mmid, rd, rn
++	ldr	\rd, [\rn, #MM_CONTEXT_ID]
++	.endm
 +
 +/*
-+ * cpu_reset(el2_switch, entry, arg0, arg1) - Helper for cpu_soft_restart.
-+ *
-+ * @el2_switch: Flag to indicate a swich to EL2 is needed.
-+ * @entry: Location to jump to for soft reset.
-+ * arg0: First argument passed to @entry.
-+ * arg1: Second argument passed to @entry.
-+ *
-+ * Put the CPU into the same state as it would be if it had been reset, and
-+ * branch to what would be the reset vector. It must be executed with the
-+ * flat identity mapping.
++ * dcache_line_size - get the minimum D-cache line size from the CTR register.
 + */
++	.macro	dcache_line_size, reg, tmp
++	mrs	\tmp, ctr_el0			// read CTR
++	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
++	mov	\reg, #4			// bytes per word
++	lsl	\reg, \reg, \tmp		// actual cache line size
++	.endm
 +
-+ENTRY(cpu_reset)
-+	/* Clear sctlr_el1 flags. */
-+	mrs	x12, sctlr_el1
-+	ldr	x13, =SCTLR_ELx_FLAGS
-+	bic	x12, x12, x13
-+	msr	sctlr_el1, x12
-+	isb
-+
-+	cbz	x0, 1f				// el2_switch?
-+
-+	mov	x0, x1				// entry
-+	mov	x1, x2				// arg0
-+	mov	x2, x3				// arg1
-+	hvc	#HVC_CALL_FUNC			// no return
-+
-+1:	mov	x18, x1				// entry
-+	mov	x0, x2				// arg0
-+	mov	x1, x3				// arg1
-+	ret	x18
-+ENDPROC(cpu_reset)
-+
-+.popsection
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-new file mode 100644
-index 0000000..79816b6
---- /dev/null
-+++ b/arch/arm64/kernel/cpu-reset.h
-@@ -0,0 +1,22 @@
 +/*
-+ * cpu reset routines
-+ *
-+ * Copyright (C) 2015 Huawei Futurewei Technologies.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * icache_line_size - get the minimum I-cache line size from the CTR register.
 + */
++	.macro	icache_line_size, reg, tmp
++	mrs	\tmp, ctr_el0			// read CTR
++	and	\tmp, \tmp, #0xf		// cache line size encoding
++	mov	\reg, #4			// bytes per word
++	lsl	\reg, \reg, \tmp		// actual cache line size
++	.endm
 +
-+#if !defined(_ARM64_CPU_RESET_H)
-+#define _ARM64_CPU_RESET_H
-+
-+#include <asm/virt.h>
-+
-+void __attribute__((noreturn)) cpu_reset(unsigned long el2_switch,
-+	unsigned long entry, unsigned long arg0, unsigned long arg1);
-+void __attribute__((noreturn)) cpu_soft_restart(phys_addr_t cpu_reset,
-+	unsigned long el2_switch, unsigned long entry, unsigned long arg0,
-+	unsigned long arg1);
-+
++/*
++ * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
++ */
++	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
++#ifndef CONFIG_ARM64_VA_BITS_48
++	ldr_l	\tmpreg, idmap_t0sz
++	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
 +#endif
++	.endm
++
+ #endif	/* __ASM_ASSEMBLER_H */
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 90d09ed..9ad8b1f 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -31,7 +31,6 @@
+ #include <asm/cputype.h>
+ #include <asm/memory.h>
+ #include <asm/thread_info.h>
+-#include <asm/pgtable-hwdef.h>
+ #include <asm/pgtable.h>
+ #include <asm/page.h>
+ #include <asm/virt.h>
+diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
+index 178ba22..2e67a48 100644
+--- a/arch/arm64/kvm/hyp-init.S
++++ b/arch/arm64/kvm/hyp-init.S
+@@ -20,7 +20,6 @@
+ #include <asm/assembler.h>
+ #include <asm/kvm_arm.h>
+ #include <asm/kvm_mmu.h>
+-#include <asm/pgtable-hwdef.h>
+ 
+ 	.text
+ 	.pushsection	.hyp.idmap.text, "ax"
+diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
+index eb48d5d..9e13cb5 100644
+--- a/arch/arm64/mm/cache.S
++++ b/arch/arm64/mm/cache.S
+@@ -24,8 +24,6 @@
+ #include <asm/cpufeature.h>
+ #include <asm/alternative.h>
+ 
+-#include "proc-macros.S"
+-
+ /*
+  *	flush_icache_range(start,end)
+  *
+diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
+deleted file mode 100644
+index 4c4d93c..0000000
+--- a/arch/arm64/mm/proc-macros.S
++++ /dev/null
+@@ -1,64 +0,0 @@
+-/*
+- * Based on arch/arm/mm/proc-macros.S
+- *
+- * Copyright (C) 2012 ARM Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-#include <asm/asm-offsets.h>
+-#include <asm/thread_info.h>
+-
+-/*
+- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
+- */
+-	.macro	vma_vm_mm, rd, rn
+-	ldr	\rd, [\rn, #VMA_VM_MM]
+-	.endm
+-
+-/*
+- * mmid - get context id from mm pointer (mm->context.id)
+- */
+-	.macro	mmid, rd, rn
+-	ldr	\rd, [\rn, #MM_CONTEXT_ID]
+-	.endm
+-
+-/*
+- * dcache_line_size - get the minimum D-cache line size from the CTR register.
+- */
+-	.macro	dcache_line_size, reg, tmp
+-	mrs	\tmp, ctr_el0			// read CTR
+-	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
+-	mov	\reg, #4			// bytes per word
+-	lsl	\reg, \reg, \tmp		// actual cache line size
+-	.endm
+-
+-/*
+- * icache_line_size - get the minimum I-cache line size from the CTR register.
+- */
+-	.macro	icache_line_size, reg, tmp
+-	mrs	\tmp, ctr_el0			// read CTR
+-	and	\tmp, \tmp, #0xf		// cache line size encoding
+-	mov	\reg, #4			// bytes per word
+-	lsl	\reg, \reg, \tmp		// actual cache line size
+-	.endm
+-
+-/*
+- * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
+- */
+-	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
+-#ifndef CONFIG_ARM64_VA_BITS_48
+-	ldr_l	\tmpreg, idmap_t0sz
+-	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
+-#endif
+-	.endm
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index e4ee7bd..456c1c5 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -23,11 +23,8 @@
+ #include <asm/assembler.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/hwcap.h>
+-#include <asm/pgtable-hwdef.h>
+ #include <asm/pgtable.h>
+ 
+-#include "proc-macros.S"
+-
+ #ifdef CONFIG_ARM64_64K_PAGES
+ #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
+ #else
 -- 
 2.5.0
 
