@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zvbk9-0008CJ-Td
- for kexec@lists.infradead.org; Mon, 09 Nov 2015 01:59:38 +0000
-Date: Mon, 9 Nov 2015 10:59:15 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3] kexec/s390x: use mmap instead of read for slurp_file()
-Message-ID: <20151109015915.GA7407@verge.net.au>
-References: <20151026073139.GB2916@dhcp-128-73.nay.redhat.com>
- <20151027133520.30653ba3@holzheu>
- <20151028064623.GB30645@dhcp-128-73.nay.redhat.com>
- <20151028105721.4ada142d@holzheu>
- <20151029063710.GE21927@dhcp-129-115.nay.redhat.com>
- <20151029162612.14e68bdc@holzheu>
- <20151030020322.GA18800@dhcp-128-73.nay.redhat.com>
- <20151030111353.7fdf3762@holzheu>
- <20151030133904.GA18134@localhost.localdomain>
- <20151030160204.6cf76607@holzheu>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ZvcAO-0006X7-0z
+ for kexec@lists.infradead.org; Mon, 09 Nov 2015 02:26:44 +0000
+Received: from int-mx14.intmail.prod.int.phx2.redhat.com
+ (int-mx14.intmail.prod.int.phx2.redhat.com [10.5.11.27])
+ by mx1.redhat.com (Postfix) with ESMTPS id 996AF42E5A6
+ for <kexec@lists.infradead.org>; Mon,  9 Nov 2015 02:26:22 +0000 (UTC)
+Date: Mon, 9 Nov 2015 10:26:12 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of
+ logged_chars
+Message-ID: <20151109022612.GA20386@dhcp-128-32.nay.redhat.com>
+References: <1446023724-12445-1-git-send-email-dliu@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151030160204.6cf76607@holzheu>
+In-Reply-To: <1446023724-12445-1-git-send-email-dliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,36 +28,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
+To: Dangyi Liu <dliu@redhat.com>
+Cc: kexec@lists.infradead.org
 
-On Fri, Oct 30, 2015 at 04:02:04PM +0100, Michael Holzheu wrote:
-> The slurp_fd() function allocates memory and uses the read() system call.
-> This results in double memory consumption for image and initrd:
+On 10/28/15 at 05:15pm, Dangyi Liu wrote:
+> logged_chars would be set to 0 by `dmesg -c`, but full dmesg is useful
+> for debugging. So instead of using logged_chars directly, we calculate
+> it by ourselves.
 > 
->  1) Memory allocated in user space by the kexec tool
->  2) Memory allocated in kernel by the kexec() system call
+> Now logged_chars is set to the minimum of log_end and log_buf_len, as
+> the same logic as crash utility is using.
 > 
-> The following illustrates the use case that we have on s390x:
+> Signed-off-by: Dangyi Liu <dliu@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> ---
+> Changes:
+>   v1->v2: Update comment and commit message.
+>   v2->v3: Adjust maximum line length
 > 
->  1) Boot a 4 GB Linux system
->  2) Copy kernel and 1,5 GB ramdisk from external source into tmpfs (ram)
->  3) Use kexec to boot kernel with ramdisk
+>  vmcore-dmesg/vmcore-dmesg.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
->  Therefore for kexec runtime we need:
+> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+> index f47ee11..0364636 100644
+> --- a/vmcore-dmesg/vmcore-dmesg.c
+> +++ b/vmcore-dmesg/vmcore-dmesg.c
+> @@ -540,6 +540,12 @@ static void dump_dmesg_legacy(int fd)
+>  		exit(53);
+>  	}
+>  
+> +	/*
+> +	 * To collect full dmesg including the part before `dmesg -c` is useful
+> +	 * for later debugging. Use same logic as what crash utility is using.
+> +	 */
+> +	logged_chars = log_end < log_buf_len ? log_end : log_buf_len;
+> +
+>  	write_to_stdout(buf + (log_buf_len -  logged_chars), logged_chars);
+>  }
+>  
+> -- 
+> 2.4.3
 > 
->  1,5 GB (tmpfs) + 1,5 GB (kexec malloc) + 1,5 GB (kernel memory) = 4,5 GB
 > 
-> This patch introduces slurp_file_mmap() which for "normal" files uses
-> mmap() instead of malloc()/read(). This reduces the runtime memory
-> consumption of the kexec tool as follows:
-> 
->  1,5 GB (tmpfs) + 1,5 GB (kernel memory) = 3 GB
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> Reviewed-by: Dave Young <dyoung@redhat.com>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-Thanks, applied.
+Acked-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
