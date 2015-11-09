@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm0-x235.google.com ([2a00:1450:400c:c09::235])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zvccw-0000jY-R1
- for kexec@lists.infradead.org; Mon, 09 Nov 2015 02:56:15 +0000
-Date: Mon, 9 Nov 2015 10:55:45 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [ANNOUNCE] kexec-tools 2.0.11
-Message-ID: <20151109025544.GB20386@dhcp-128-32.nay.redhat.com>
-References: <20151109015547.GA20400@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20151109015547.GA20400@verge.net.au>
+ id 1Zviyu-0004xn-6e
+ for kexec@lists.infradead.org; Mon, 09 Nov 2015 09:43:21 +0000
+Received: by wmec201 with SMTP id c201so70360661wme.0
+ for <kexec@lists.infradead.org>; Mon, 09 Nov 2015 01:42:58 -0800 (PST)
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: [PATCH v3] kexec: determine size of block device
+Date: Mon,  9 Nov 2015 10:42:56 +0100
+Message-Id: <1447062176-13234-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,27 +17,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
 
-Hi, Simon
+starting 'kexec -l /dev/mmcblk0p1' fails since the size of
+a block device can not be determined with stat
 
-On 11/09/15 at 10:55am, Simon Horman wrote:
-> Hi all,
-> 
-> I am happy to announce the release of kexec-tools 2.0.11.
-> 
-> This is a feature release coinciding with the release of the v4.3 Linux Kernel.
-> 
+Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+---
+ kexec/kexec.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Cool, I'm rebasing to it in Fedora kexec-tools..
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index ca1e81d..cf6e03d 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -26,6 +26,8 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
++#include <sys/ioctl.h>
++#include <sys/mount.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/reboot.h>
+@@ -555,6 +557,12 @@ static char *slurp_file_generic(const char *filename, off_t *r_size,
+ 			die("Can not seek to the begin of file %s: %s\n",
+ 					filename, strerror(errno));
+ 		buf = slurp_fd(fd, filename, size, &nread);
++	} else if (S_ISBLK(stats.st_mode)) {
++		err = ioctl(fd, BLKGETSIZE64, &size);
++		if (err < 0)
++			die("Can't retrieve size of block device %s: %s\n",
++				filename, strerror(errno));
++		buf = slurp_fd(fd, filename, size, &nread);
+ 	} else {
+ 		size = stats.st_size;
+ 		if (use_mmap) {
+-- 
+2.6.1
 
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
