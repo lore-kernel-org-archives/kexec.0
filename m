@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from youngberry.canonical.com ([91.189.89.112])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zwyfm-0006BM-9l
- for kexec@lists.infradead.org; Thu, 12 Nov 2015 20:40:47 +0000
+ id 1Zx19a-0007y6-PT
+ for kexec@lists.infradead.org; Thu, 12 Nov 2015 23:19:44 +0000
 From: Kamal Mostafa <kamal@canonical.com>
-Subject: [3.19.y-ckt stable] Patch "x86/kexec: Fix kexec crash in syscall
- kexec_file_load()" has been added to staging queue
-Date: Thu, 12 Nov 2015 12:39:55 -0800
-Message-Id: <1447360795-17257-1-git-send-email-kamal@canonical.com>
+Subject: [PATCH 3.19.y-ckt 028/155] x86/kexec: Fix kexec crash in syscall
+ kexec_file_load()
+Date: Thu, 12 Nov 2015 15:16:22 -0800
+Message-Id: <1447370309-357-29-git-send-email-kamal@canonical.com>
+In-Reply-To: <1447370309-357-1-git-send-email-kamal@canonical.com>
+References: <1447370309-357-1-git-send-email-kamal@canonical.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +23,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lee Chun-Yi <joeyli.kernel@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Kamal Mostafa <kamal@canonical.com>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Lee Chun-Yi <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>, kernel-team@lists.ubuntu.com, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Jiang Liu <jiang.liu@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@lists.ubuntu.com
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, Kamal Mostafa <kamal@canonical.com>, Mike Galbraith <efault@gmx.de>, kexec@lists.infradead.org, Ingo Molnar <mingo@kernel.org>, "Lee,
+ Chun-Yi" <jlee@suse.com>, Takashi Iwai <tiwai@suse.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, Jiang Liu <jiang.liu@linux.intel.com>, Vivek Goyal <vgoyal@redhat.com>
 
-This is a note to let you know that I have just added a patch titled
+3.19.8-ckt10 -stable review patch.  If anyone has any objections, please let me know.
 
-    x86/kexec: Fix kexec crash in syscall kexec_file_load()
+------------------
 
-to the linux-3.19.y-queue branch of the 3.19.y-ckt extended stable tree 
-which can be found at:
-
-    http://kernel.ubuntu.com/git/ubuntu/linux.git/log/?h=linux-3.19.y-queue
-
-This patch is scheduled to be released in version 3.19.8-ckt10.
-
-If you, or anyone else, feels it should not be added to this tree, please 
-reply to this email.
-
-For more information about the 3.19.y-ckt tree, see
-https://wiki.ubuntu.com/Kernel/Dev/ExtendedStable
-
-Thanks.
--Kamal
-
-------
-
-From aee991fa333789d6fbb19000bf3bd0fdd318e199 Mon Sep 17 00:00:00 2001
 From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Date: Tue, 29 Sep 2015 20:58:57 +0800
-Subject: x86/kexec: Fix kexec crash in syscall kexec_file_load()
 
 commit e3c41e37b0f4b18cbd4dac76cbeece5a7558b909 upstream.
 
@@ -128,7 +110,7 @@ index aceb2f9..58a47b5 100644
 +++ b/arch/x86/kernel/crash.c
 @@ -184,10 +184,9 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
  }
-
+ 
  #ifdef CONFIG_KEXEC_FILE
 -static int get_nr_ram_ranges_callback(unsigned long start_pfn,
 -				unsigned long nr_pfn, void *arg)
@@ -136,19 +118,19 @@ index aceb2f9..58a47b5 100644
  {
 -	int *nr_ranges = arg;
 +	unsigned int *nr_ranges = arg;
-
+ 
  	(*nr_ranges)++;
  	return 0;
 @@ -213,7 +212,7 @@ static void fill_up_crash_elf_data(struct crash_elf_data *ced,
-
+ 
  	ced->image = image;
-
+ 
 -	walk_system_ram_range(0, -1, &nr_ranges,
 +	walk_system_ram_res(0, -1, &nr_ranges,
  				get_nr_ram_ranges_callback);
-
+ 
  	ced->max_nr_ranges = nr_ranges;
---
+-- 
 1.9.1
 
 
