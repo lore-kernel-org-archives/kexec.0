@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm0-x233.google.com ([2a00:1450:400c:c09::233])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZyCSE-00045A-Va
- for kexec@lists.infradead.org; Mon, 16 Nov 2015 05:35:52 +0000
-Date: Mon, 16 Nov 2015 11:05:25 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: Problem: crashkernel boots at 512MB address in RAM with kexec
- -l/-e but not with kexec -p
-Message-ID: <20151116053525.GA17574@dhcppc13.redhat.com>
-References: <BAEDA261213CF64EAEFAC725AB01AEC386CE1201@FR712WXCHMBA09.zeu.alcatel-lucent.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <BAEDA261213CF64EAEFAC725AB01AEC386CE1201@FR712WXCHMBA09.zeu.alcatel-lucent.com>
+ id 1ZyJLZ-00074A-HY
+ for kexec@lists.infradead.org; Mon, 16 Nov 2015 12:57:26 +0000
+Received: by wmdw130 with SMTP id w130so109732701wmd.0
+ for <kexec@lists.infradead.org>; Mon, 16 Nov 2015 04:57:03 -0800 (PST)
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: [PATCH 1/2] kexex: arm: create ATAGS_MEM tag from devicetree memory
+ node
+Date: Mon, 16 Nov 2015 13:56:54 +0100
+Message-Id: <1447678615-16987-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,177 +18,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "HECKEL, Hans (Hans)" <hans.heckel@alcatel-lucent.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>, Andreas Fenkart <afenkart@gmail.com>
 
-On 12/11/2015:01:33:18 PM, HECKEL, Hans (Hans) wrote:
-> Dear kexec team,
-> I hope it is okay to ask you as my public problem description has not
-> yielded any replies so far. My problem is posted here:
-> http://unix.stackexchange.com/questions/237580/boot-rescue-kernel-at-high-me
-> mory-address-using-kexec-on-arm
-> and also copied below (without the formatting). Update: Same result when
-> using kernel 4.3 and kexec-tools 2.0.11.
-> Any help is highly appreciated, and thanks for the work you are putting into
-> kexec!
-> Best regards,
-> Hans Heckel (Alcatel-Lucent, IP Routing and Transport)
-> 
-> 
-> Summary: Crashkernel boots at 512MB address in RAM with kexec -l/-e but not
-> with kexec -p - why?
-> 
-> Embedded platform with Marvell Armada XP (MV78460) (ARMv7 with 4 cores) and
-> 1GB of RAM.
-> production kernel: customized Linux 3.4.91
-> rescue kernel: clean kernel.org-Linux (4.2.3) (I am aware that it uses
-> device trees but that works fine by appending DTB to zImage)
-> in user-space, I am using the latest kexec-tools (2.0.10)
-> 
-> History: Using kexec -l (with ramdisk and command line params from
-> 3.4.91-kernel, and --atags) and kexec -e, the rescue kernel boots just fine
-> and seems to place itself in the beginning of RAM (according to /proc/iomem)
-> regardless of what is being set via --mem-min and --mem-max. When reserving
-> space in RAM using the boot-option crashkernel, I have to use a high memory
-> address because otherwise it tells me the requested area is already in use.
-> So we set crashkernel=128M@512M. The kernel does not boot with kexec -p.
-> 
-> Current status: I understand that relocatable kernels
-> (CONFIG_AUTO_ZRELADDR=y) must reside within the top 128MB which is not
-> possible for us. So I have worked around the standard kernel configuration
-> and forced CONFIG_ARM_PATCH_PHYS_VIRT to no and CONFIG_PHYS_OFFSET to
-> 0x20000000. I had to add a Makefile.boot for the machine where I set
-> zreladdr-y := 0x20008000, params_phys-y := 0x20000100, initrd_phys-y :=
-> 0x20800000. Now the kernel still boots fine using kexec -l and kexec -e and
-> according to --mem-min. I can see it is placed at 512MB. However,
-> configuring it with -p and causing a panic, the console says "Loading
-> crashdump kernel... Bye!" and remains silent forever.
-> 
-> All files and everything is only located in RAM.
-> 
-> What could I be doing wrong? Should I worry about the decompression errors
-> (even in the good case)?
-> 
-> >From dmesg:
-> Reserving 128MB of memory at 512MB for crashkernel (System RAM: 760MB)
-> 
-> root@host:~# cat /proc/iomem
-> 00000000-3bff9fff : System RAM
->   00008000-00724f43 : Kernel code
->   0076e000-0087553f : Kernel data
->   20000000-27ffffff : Crash kernel
-> (some RAM at the end is reserved for persistent storage, that's why it
-> doesn't add up to 1GB)
-> 
-> Successful case:
-> 
-> root@host:~# kexec -l -t zImage --command-line="console=ttyS0,38400
-> earlyprintk=ttyS0 root=/dev/ram rdinit=/sbin/init rw irqpoll maxcpus=1
-> reset_devices" --atags --initrd=./initramfs.cpio.gz -d --mem-min=0x20000000
-> --mem-max=0x28000000 ./zImage_fixed_addr
-> Try gzip decompression.
-> Try LZMA decompression.
-> lzma_decompress_file: read on ./zImage_fixed_addr of 65536 bytes failed
-> kernel: 0xb6c06008 kernel_size: 0x3db659
-> kexec_load: entry = 0x20008000 flags = 0x280000
-> nr_segments = 3
-> segment[0].buf   = 0x40e98
-> segment[0].bufsz = 0x3f0
-> segment[0].mem   = 0x20001000
-> segment[0].memsz = 0x1000
-> segment[1].buf   = 0xb6c06008
-> segment[1].bufsz = 0x3db659
-> segment[1].mem   = 0x20008000
-> segment[1].memsz = 0x3dc000
-> segment[2].buf   = 0xb5ade008
-> segment[2].bufsz = 0x1127516
-> segment[2].mem   = 0x20f6e000
-> segment[2].memsz = 0x1128000
-> root@host:~# kexec -e
-> Starting new kernel
-> Booting Linux on physical CPU 0x0
-> ...
-> 
-> After boot:
-> 
-> root@vanilla:~# cat /proc/iomem
-> 20000000-3fffffff : System RAM
->   20008000-206dd237 : Kernel code
->   20720000-2078f54f : Kernel data
-> 
-> Unsuccessful case:
-> 
-> root@host:~# kexec -p -t zImage --command-line="console=ttyS0,38400
-> earlyprintk=ttyS0 root=/dev/ram rdinit=/sbin/init rw irqpoll maxcpus=1
-> reset_devices" --atags --initrd=./initramfs.cpio.gz -d ./zImage_fixed_addr
-> Try gzip decompression
-> Try LZMA decompression.
-> lzma_decompress_file: read on ./zImage_fixed_addr of 65536 bytes failed
-> kernel: 0xb6b69008 kernel_size: 0x3db659
-> phys_offset: 0
-> kernel symbol _stext vaddr =         c0008240
-> page_offset is set to c0000000
-> get_crash_notes_per_cpu: crash_notes addr = 10f525c, size = 1024
-> Elf header: p_type = 4, p_offset = 0x10f525c p_paddr = 0x10f525c p_vaddr =
-> 0x0 p_filesz = 0x400 p_memsz = 0x400
-> get_crash_notes_per_cpu: crash_notes addr = 10ff25c, size = 1024
-> Elf header: p_type = 4, p_offset = 0x10ff25c p_paddr = 0x10ff25c p_vaddr =
-> 0x0 p_filesz = 0x400 p_memsz = 0x400
-> get_crash_notes_per_cpu: crash_notes addr = 110925c, size = 1024
-> Elf header: p_type = 4, p_offset = 0x110925c p_paddr = 0x110925c p_vaddr =
-> 0x0 p_filesz = 0x400 p_memsz = 0x400
-> get_crash_notes_per_cpu: crash_notes addr = 111325c, size = 1024
-> Elf header: p_type = 4, p_offset = 0x111325c p_paddr = 0x111325c p_vaddr =
-> 0x0 p_filesz = 0x400 p_memsz = 0x400
-> vmcoreinfo header: p_type = 4, p_offset = 0x7f1330 p_paddr = 0x7f1330
-> p_vaddr = 0x0 p_filesz = 0x1000 p_memsz = 0x1000
-> Elf header: p_type = 1, p_offset = 0x0 p_paddr = 0x0 p_vaddr = 0xc0000000
-> p_filesz = 0x20000000 p_memsz = 0x20000000
-> Elf header: p_type = 1, p_offset = 0x28000000 p_paddr = 0x28000000 p_vaddr =
-> 0xe8000000 p_filesz = 0x13ffa000 p_memsz = 0x13ffa000
-> elfcorehdr: 0x27f00000
-> crashkernel: [0x20000000 - 0x27ffffff] (128M)
-> memory range: [0 - 0x1fffffff] (512M)
-> memory range: [0x28000000 - 0x3bff9fff] (319M)
-> kernel command line: "console=ttyS0,38400 earlyprintk=ttyS0 root=/dev/ram
-> rdinit=/sbin/init rw irqpoll maxcpus=1 reset_devices elfcorehdr=0x27f00000
-> mem=130048K"
-> kexec_load: entry = 0x20008000 flags = 0x280001
-> nr_segments = 4
-> segment[0].buf   = 0x416e0
-> segment[0].bufsz = 0x410
-> segment[0].mem   = 0x20001000
-> segment[0].memsz = 0x1000
-> segment[1].buf   = 0xb6b69008
-> segment[1].bufsz = 0x3db659
-> segment[1].mem   = 0x20008000
-> segment[1].memsz = 0x3dc000
-> segment[2].buf   = 0xb5a41008
-> segment[2].bufsz = 0x1127516
-> segment[2].mem   = 0x20f6e000
-> segment[2].memsz = 0x1128000
-> segment[3].buf   = 0x412a0
-> segment[3].bufsz = 0x400
-> segment[3].mem   = 0x27f00000
-> segment[3].memsz = 0x1000
-> 
-> <cause crash via SysRq>
-> 
-> Loading crashdump kernel...
-> Bye!
+From: Andreas Fenkart <afenkart@gmail.com>
 
-Although not sure, it might happen that your first kernel is corrupting crash
-kernel and so you do not see any print even with earlyprintk enabled. [it seems
-you are not using purgatory for sha256 verification].
+booting a non-devicetree kernel from a devicetree kernel failed,
+since the memory layout wasn't passed.
 
-Can you please try to limit memory visible to first kernel(pass mem=512M to 1st
-kenrel command line) and see if it improves?
+Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+---
+ kexec/arch/arm/kexec-zImage-arm.c | 43 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-~Pratyush
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index ff4e38d..f460ba7 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -4,6 +4,7 @@
+  */
+ #define _GNU_SOURCE
+ #define _XOPEN_SOURCE
++#include <assert.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
+@@ -139,6 +140,42 @@ struct tag * atag_read_tags(void)
+ 	return (struct tag *) buf;
+ }
+ 
++static
++int create_mem32_tag(struct tag_mem32 *tag_mem32)
++{
++	const char fn[]= "/proc/device-tree/memory/reg";
++	FILE *fp;
++	uint32_t tmp[2];
++	int ret = 0;
++
++	assert(tag_mem32);
++	fp = fopen(fn, "r");
++	if (!fp) {
++		ret = errno;
++		fprintf(stderr, "Cannot open %s: %m\n", fn);
++		return ret;
++	}
++
++	if (!fread(tmp, sizeof(tmp[0]), 2, fp)) {
++		ret = ENOENT;
++		fprintf(stderr, "Short read %s\n", fn);
++		goto out;
++	}
++
++	if (ferror(fp)) {
++		ret = errno;
++		fprintf(stderr, "Cannot read %s: %m\n", fn);
++		goto out;
++	}
++
++	/* atags_mem32 has base/size fields reversed! */
++	tag_mem32->size = be32_to_cpu(tmp[1]);
++	tag_mem32->start = be32_to_cpu(tmp[0]);
++
++out:
++	fclose(fp);
++	return ret;
++}
+ 
+ static
+ int atag_arm_load(struct kexec_info *info, unsigned long base,
+@@ -182,6 +219,12 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
+ 		params->hdr.size = 2;
+ 		params->hdr.tag = ATAG_CORE;
+ 		params = tag_next(params);
++
++		if (!create_mem32_tag(&params->u.mem)) {
++			params->hdr.size = 4;
++			params->hdr.tag = ATAG_MEM;
++			params = tag_next(params);
++		}
+ 	}
+ 
+ 	if (initrd) {
+-- 
+2.6.1
+
 
 _______________________________________________
 kexec mailing list
