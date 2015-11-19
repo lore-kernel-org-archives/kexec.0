@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x231.google.com ([2a00:1450:400c:c09::231])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZzI3w-00014i-No
- for kexec@lists.infradead.org; Thu, 19 Nov 2015 05:47:17 +0000
-Received: by wmvv187 with SMTP id v187so8454767wmv.1
- for <kexec@lists.infradead.org>; Wed, 18 Nov 2015 21:46:54 -0800 (PST)
+ id 1ZzJiY-0007bg-Bx
+ for kexec@lists.infradead.org; Thu, 19 Nov 2015 07:33:19 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: makedumpfile-1.5.9: Introduce parallel compression processing.
+Date: Thu, 19 Nov 2015 07:30:21 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E059DD@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
+ <56308618.3080908@canonical.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
+ <56309A33.4000201@canonical.com>
+In-Reply-To: <56309A33.4000201@canonical.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20151119025323.GA6022@dhcp-128-65.nay.redhat.com>
-References: <CA+MhoaMjeVODU_zt=8OoU4zAzBt6hA219=44kee+FR3Ew_v3Vw@mail.gmail.com>
- <20151119025323.GA6022@dhcp-128-65.nay.redhat.com>
-Date: Thu, 19 Nov 2015 13:46:54 +0800
-Message-ID: <CA+MhoaNy+Orq97Sb1V6NOHJ4SOgpM38MiXyqdSnLFKT-85rLXg@mail.gmail.com>
-Subject: Re: How to understand "high" or "low" in crashkernel configuration?
-From: Nan Xiao <xiaonan830818@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,44 +26,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Louis Bouchard <louis.bouchard@canonical.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Dave,
+Hello Louis,
 
-Got it, thanks very much!
-Best Regards
-Nan Xiao
-
-
-On Thu, Nov 19, 2015 at 10:53 AM, Dave Young <dyoung@redhat.com> wrote:
-> On 11/18/15 at 10:45pm, Nan Xiao wrote:
->> Hi all,
+>>>> o Support new kernels
+>>>>  - The supported kernel is updated to 4.1 in this version.
+>>>>    At first I'm going to extend the supported version to 4.2, but
+>>>>    I found an issue that makedumpfile seems to exclude necessary pages
+>>>>    by mistake on linux 4.2. When crash-7.1.3 reads that filtered dump file,
+>>>>    the following message is shown.
+>>>>
+>>>>       crash: page excluded: kernel virtual address: f3fe0000  type: "fill_task_struct"
+>>>>
+>>>>    This will be fixed in the next version.
+>>>
+>>> Have you fixed the 4.2 kernel issue already or you intend to work on it in the
+>>> future ?
 >>
->> When I use SuSE default Kdump configuration, I find there is "high" or "low" in
->> crashkernel's value, and it likes this:
+>> I haven't done anything yet, I was going to work from now.
 >>
->>     crashkernel=xxM,high Or crashkernel=xxM,low
+>>> Both Debian and Ubuntu run 4.2 kernel so if waiting for a fix is acceptable I
+>>> would rather bring in a 1.5.9 + patch version.
 >>
->> But from this document(https://www.kernel.org/doc/Documentation/kdump/kdump.txt),
->> I can't find explanation of "high" or "low". How to understand it?
+>> So it will be helpful if you can do it.
+>>
+>>
+>> Thanks,
+>> Atsushi Kumagai
+>>
 >
-> You can find it in Documentation/kernel-parameters.txt
->
->
->>
->> Thanks very much in advance!
->>
->> Best Regards
->> Nan Xiao
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
->>
+>That is perfect.  Just let me know once you have identified a fix and I will
+>include it in the new package.
 
+I confirmed that there is no problem in makedumpfile, so you don't need to
+update your makedumpfile packages.
+
+That was a crash side issue and the problem is still under discussion.
+The warning I reported first is going to be solved in the next crash version,
+but "struct" and "task" commands with task_struct (or some corresponding fields)
+can fail if a dumpfile of linux 4.2 is filtered.
+
+You should see this thread for more details:
+
+  https://www.redhat.com/archives/crash-utility/2015-November/msg00021.html
+
+
+Thanks,
+Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
