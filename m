@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZzFME-0004S1-Ep
- for kexec@lists.infradead.org; Thu, 19 Nov 2015 02:53:59 +0000
-Date: Thu, 19 Nov 2015 10:53:23 +0800
+ id 1ZzFOt-0006j0-R5
+ for kexec@lists.infradead.org; Thu, 19 Nov 2015 02:56:45 +0000
+Received: from int-mx09.intmail.prod.int.phx2.redhat.com
+ (int-mx09.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ by mx1.redhat.com (Postfix) with ESMTPS id C7D89A4CCD
+ for <kexec@lists.infradead.org>; Thu, 19 Nov 2015 02:56:22 +0000 (UTC)
+Date: Thu, 19 Nov 2015 10:56:11 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: How to understand "high" or "low" in crashkernel configuration?
-Message-ID: <20151119025323.GA6022@dhcp-128-65.nay.redhat.com>
-References: <CA+MhoaMjeVODU_zt=8OoU4zAzBt6hA219=44kee+FR3Ew_v3Vw@mail.gmail.com>
+Subject: Re: [Crash-utility] Support for dynamic allocations of 'struct fpu'
+Message-ID: <20151119025611.GB6022@dhcp-128-65.nay.redhat.com>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701E04B64@BPXM01GP.gisp.nec.co.jp>
+ <1732076475.17412085.1447771197152.JavaMail.zimbra@redhat.com>
+ <1875416740.17574817.1447785143211.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CA+MhoaMjeVODU_zt=8OoU4zAzBt6hA219=44kee+FR3Ew_v3Vw@mail.gmail.com>
+In-Reply-To: <1875416740.17574817.1447785143211.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,35 +29,151 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nan Xiao <xiaonan830818@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Dave Anderson <anderson@redhat.com>
+Cc: kexec@lists.infradead.org, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-On 11/18/15 at 10:45pm, Nan Xiao wrote:
-> Hi all,
+On 11/17/15 at 01:32pm, Dave Anderson wrote:
 > 
-> When I use SuSE default Kdump configuration, I find there is "high" or "low" in
-> crashkernel's value, and it likes this:
 > 
->     crashkernel=xxM,high Or crashkernel=xxM,low
+> ----- Original Message -----
+> > 
+> > 
+> > ----- Original Message -----
+> > > Hello,
+> > > 
+> > > This is a follow-up report of the issue I found in the release test
+> > > for makedumpfile-1.5.9. The original report was posted in kexec-ML:
+> > > 
+> > >   http://lists.infradead.org/pipermail/kexec/2015-October/014620.html
+> > > 
+> > > > o Support new kernels
+> > > >  - The supported kernel is updated to 4.1 in this version.
+> > > >    At first I'm going to extend the supported version to 4.2, but
+> > > >    I found an issue that makedumpfile seems to exclude necessary pages
+> > > >    by mistake on linux 4.2. When crash-7.1.3 reads that filtered dump
+> > > >    file,
+> > > >    the following message is shown.
+> > > > 
+> > > >       crash: page excluded: kernel virtual address: f3fe0000  type:
+> > > >       "fill_task_struct"
+> > > > 
+> > > >    This will be fixed in the next version.
+> > > 
+> > > I looked for the cause of this issue and found that it doesn't seem to be
+> > > an
+> > > issue of makedumpfile, it seems to be a crash side issue.
+> > > 
+> > > The size of task_struct is decided dynamically by FPU registers since linux
+> > > 4.2
+> > > due to:
+> > > 
+> > >   commit 5aaeb5c01c5b6c0be7b7aadbf3ace9f3a4458c3d
+> > >   Author: Ingo Molnar <mingo@kernel.org>
+> > >   Date:   Fri Jul 17 12:28:12 2015 +0200
+> > > 
+> > >       x86/fpu, sched: Introduce CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT and
+> > >       use
+> > >       it on x86
+> > > 
+> > > and
+> > > 
+> > >   commit 0c8c0f03e3a292e031596484275c14cf39c0ab7a
+> > >   Author: Dave Hansen <dave@sr71.net>
+> > >   Date:   Fri Jul 17 12:28:11 2015 +0200
+> > > 
+> > >       86/fpu, sched: Dynamically allocate 'struct fpu'
+> > > 
+> > > This change will cause a difference between dwarf info and the actual size
+> > > like below:
+> > > (This is an example in linux 4.2 on x86_64)
+> > > 
+> > > - dwarf info
+> > > 
+> > >     $ dwarfdump vmlinux | grep -A 2 task_struct
+> > >     DW_AT_name                  "task_struct"
+> > >     DW_AT_byte_size             0x00001940                         // 6464
+> > >     byte
+> > >     DW_AT_decl_file             0x0000001a include/linux/sched.h
+> > > 
+> > > - actual size
+> > > 
+> > >     crash> p arch_task_struct_size
+> > >     arch_task_struct_size = $1 = 2880
+> > >     crash>
+> > > 
+> > > I don't think crash handle this change, so crash can read an irrelevant
+> > > page when trying to read a task_struct. If the dump is filtered by
+> > > makedumpfile
+> > > and the page just behind the task_struct is excluded, the message I
+> > > reported
+> > > will be shown.
+> > > 
+> > > To fix the size_table for the crash's initialization is easy, we should
+> > > just update it by arch_task_struct_size like:
+> > > 
+> > > 
+> > > diff --git a/task.c b/task.c
+> > > index 8956fb5..ee94d4e 100755
+> > > --- a/task.c
+> > > +++ b/task.c
+> > > @@ -284,6 +284,17 @@ task_init(void)
+> > >         MEMBER_OFFSET_INIT(pid_pid_chain, "pid", "pid_chain");
+> > > 
+> > >         STRUCT_SIZE_INIT(task_struct, "task_struct");
+> > > +       int task_struct_size;
+> > > +       if (kernel_symbol_exists("arch_task_struct_size") &&
+> > > +           readmem(symbol_value("arch_task_struct_size"), KVADDR,
+> > > +                   &task_struct_size, sizeof(int),
+> > > +                   "arch_task_struct_size", RETURN_ON_ERROR)) {
+> > > +               ASSIGN_SIZE(task_struct) = task_struct_size;
+> > > +               if (CRASHDEBUG(1))
+> > > +                       fprintf(fp, "\downsize_task_struct: %ld to %ld\n",
+> > > +                               STRUCT_SIZE("task_struct"),
+> > > +                               SIZE(task_struct));
+> > > +       }
+> > > 
+> > > 
+> > > However, struct command always refer to dwarf info since it's probably
+> > > designed for general purpose, I can't come up with good way to fix it.
+> > > 
+> > > Do you have any comments ?
+> > > 
+> > > Thanks,
+> > > Atsushi Kumagai
+> > 
+> > Hi Atsushi,
+> > 
+> > Thanks for reporting this -- I missed seeing that patch go into the
+> > upstream kernel.
+> > 
+> > At a minimum your patch above will certainly be necessary.  But I don't
+> > know any way to work around the fact that gdb/crash will be bound to the
+> > debuginfo data as far as displaying the contents, for example, when
+> > a user manually creates a gdb print command.  In the case of kdump,
+> > dumpfiles, --zero_excluded would either have to be set on the command line
+> > or "set" during the crash session.  And I suppose I can flag attempts to
+> > access bogus appended data with the "struct" or "task" commands, and
+> > perhaps just fill the remainder with zeroes.
+> > 
+> > It's going to be ugly.  What a pain in the ass...
+> > 
+> > Thanks,
+> >   Dave
 > 
-> But from this document(https://www.kernel.org/doc/Documentation/kdump/kdump.txt),
-> I can't find explanation of "high" or "low". How to understand it?
+> The patch above has been queued for crash-7.1.4:
+> 
+>   https://github.com/crash-utility/crash/commit/80b49a879e0ba8ce7c365a2fd88693128a79310f
+> 
+> More to come...
+> 
 
-You can find it in Documentation/kernel-parameters.txt
+Good news, thanks Atsushi and Dave
 
+I will rebase makedumpfile 1.5.9 in Fedora rawhide.
 
-> 
-> Thanks very much in advance!
-> 
-> Best Regards
-> Nan Xiao
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
