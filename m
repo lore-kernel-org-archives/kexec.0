@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZzpXp-0004jk-Rd
+ id 1ZzpXp-0004il-Uf
  for kexec@lists.infradead.org; Fri, 20 Nov 2015 17:32:22 +0000
 Received: from int-mx09.intmail.prod.int.phx2.redhat.com
  (int-mx09.intmail.prod.int.phx2.redhat.com [10.5.11.22])
- by mx1.redhat.com (Postfix) with ESMTPS id CCE8514CAA5
- for <kexec@lists.infradead.org>; Fri, 20 Nov 2015 17:32:02 +0000 (UTC)
+ by mx1.redhat.com (Postfix) with ESMTPS id D08288E6E3
+ for <kexec@lists.infradead.org>; Fri, 20 Nov 2015 17:32:00 +0000 (UTC)
 From: Andrew Jones <drjones@redhat.com>
-Subject: [PATCH 1/4] uImage: cleanup some warnings
-Date: Fri, 20 Nov 2015 12:31:51 -0500
-Message-Id: <1448040714-19841-2-git-send-email-drjones@redhat.com>
-In-Reply-To: <1448040714-19841-1-git-send-email-drjones@redhat.com>
-References: <1448040714-19841-1-git-send-email-drjones@redhat.com>
+Subject: [PATCH 0/4] [RFT] cleanup /chosen/linux,stdout-path warning
+Date: Fri, 20 Nov 2015 12:31:50 -0500
+Message-Id: <1448040714-19841-1-git-send-email-drjones@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,64 +26,42 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Signed-off-by: Andrew Jones <drjones@redhat.com>
----
- kexec/arch/arm/kexec-uImage-arm.c | 3 ++-
- kexec/arch/ppc/kexec-uImage-ppc.c | 5 +++--
- kexec/arch/sh/kexec-uImage-sh.c   | 3 ++-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+On arm we get
 
-diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
-index 03c2f4ddca7b0..285883eb9779d 100644
---- a/kexec/arch/arm/kexec-uImage-arm.c
-+++ b/kexec/arch/arm/kexec-uImage-arm.c
-@@ -11,7 +11,8 @@
- 
- int uImage_arm_probe(const char *buf, off_t len)
- {
--	return uImage_probe_kernel(buf, len, IH_ARCH_ARM);
-+	return uImage_probe_kernel((const unsigned char *)buf,
-+				   len, IH_ARCH_ARM);
- }
- 
- int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index c89a1a77926d2..30be9d9cb5817 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -78,7 +78,8 @@ char *slurp_ramdisk_ppc(const char *filename, off_t *r_size)
- 	
- int uImage_ppc_probe(const char *buf, off_t len)
- {
--	return uImage_probe_kernel(buf, len, IH_ARCH_PPC);
-+	return uImage_probe_kernel((const unsigned char *)buf,
-+				   len, IH_ARCH_PPC);
- }
- 
- static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
-@@ -316,7 +317,7 @@ int uImage_ppc_load(int argc, char **argv, const char *buf, off_t len,
- 	struct Image_info img;
- 	int ret;
- 
--	ret = uImage_load(buf, len, &img);
-+	ret = uImage_load((const unsigned char *)buf, len, &img);
- 	if (ret)
- 		return ret;
- 
-diff --git a/kexec/arch/sh/kexec-uImage-sh.c b/kexec/arch/sh/kexec-uImage-sh.c
-index 130f12ca94317..28c8f2fde3a35 100644
---- a/kexec/arch/sh/kexec-uImage-sh.c
-+++ b/kexec/arch/sh/kexec-uImage-sh.c
-@@ -13,7 +13,8 @@
- 
- int uImage_sh_probe(const char *buf, off_t len)
- {
--	return uImage_probe_kernel(buf, len, IH_ARCH_SH);
-+	return uImage_probe_kernel((const unsigned char *)buf,
-+				   len, IH_ARCH_SH);
- }
- 
- int uImage_sh_load(int argc, char **argv, const char *buf, off_t len,
+"Unable to find /proc/device-tree//chosen/linux,stdout-path, printing
+from purgatory is diabled"
+
+when loading a kexec kernel. There are three problems with this warning.
+
+ 1) two slashes after device-tree
+ 2) we should be also checking (and firstly) for /chosen/stdout-path,
+    as linux,stdout-path is the deprecated node name. We may actually
+    have the former on arm, allowing us to avoid this warning all together.
+ 3) "disabled" has a typo in it
+
+This series addresses these three problems with the last three patches,
+and the first patch removes a compiler warning.
+
+I've added the RFT as these patches touch code shared with other
+architectures, namely powerpc, but I only tested on arm.
+
+Please keep me on CC, as I'm not subscribed to the kexec mailing list.
+
+Thanks,
+drew
+
+Andrew Jones (4):
+  uImage: cleanup some warnings
+  kexec/fs2dt: s/diabled/disabled/
+  kexec/fs2dt: cleanup pathname
+  kexec/fs2dt: check for /chosen/stdout-path first
+
+ kexec/arch/arm/kexec-uImage-arm.c |  3 ++-
+ kexec/arch/ppc/kexec-uImage-ppc.c |  5 +++--
+ kexec/arch/sh/kexec-uImage-sh.c   |  3 ++-
+ kexec/fs2dt.c                     | 26 ++++++++++++++------------
+ 4 files changed, 21 insertions(+), 16 deletions(-)
+
 -- 
 2.4.3
 
