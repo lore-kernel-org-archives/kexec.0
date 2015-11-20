@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x229.google.com ([2a00:1450:400c:c09::229])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1Zziqe-0001xh-79
- for kexec@lists.infradead.org; Fri, 20 Nov 2015 10:23:21 +0000
-Received: by wmvv187 with SMTP id v187so65162584wmv.1
- for <kexec@lists.infradead.org>; Fri, 20 Nov 2015 02:22:57 -0800 (PST)
-Subject: Re: makedumpfile-1.5.9: Introduce parallel compression processing.
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
- <56308618.3080908@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
- <56309A33.4000201@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E059DD@BPXM01GP.gisp.nec.co.jp>
-From: Louis Bouchard <louis.bouchard@canonical.com>
-Message-ID: <564EF47D.7090202@canonical.com>
-Date: Fri, 20 Nov 2015 11:22:53 +0100
-MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E059DD@BPXM01GP.gisp.nec.co.jp>
+ id 1ZzpXp-0004jk-Rd
+ for kexec@lists.infradead.org; Fri, 20 Nov 2015 17:32:22 +0000
+Received: from int-mx09.intmail.prod.int.phx2.redhat.com
+ (int-mx09.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ by mx1.redhat.com (Postfix) with ESMTPS id CCE8514CAA5
+ for <kexec@lists.infradead.org>; Fri, 20 Nov 2015 17:32:02 +0000 (UTC)
+From: Andrew Jones <drjones@redhat.com>
+Subject: [PATCH 1/4] uImage: cleanup some warnings
+Date: Fri, 20 Nov 2015 12:31:51 -0500
+Message-Id: <1448040714-19841-2-git-send-email-drjones@redhat.com>
+In-Reply-To: <1448040714-19841-1-git-send-email-drjones@redhat.com>
+References: <1448040714-19841-1-git-send-email-drjones@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +21,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQpIYXNoOiBTSEEyNTYKCkhlbGxvIEt1
-bWFnYWktc2FuLAoKTGUgMTkvMTEvMjAxNSAwODozMCwgQXRzdXNoaSBLdW1hZ2FpIGEgw6ljcml0
-IDoKPiBIZWxsbyBMb3VpcywKPiAKPj4+Pj4gbyBTdXBwb3J0IG5ldyBrZXJuZWxzIC0gVGhlIHN1
-cHBvcnRlZCBrZXJuZWwgaXMgdXBkYXRlZCB0byA0LjEgaW4KPj4+Pj4gdGhpcyB2ZXJzaW9uLiBB
-dCBmaXJzdCBJJ20gZ29pbmcgdG8gZXh0ZW5kIHRoZSBzdXBwb3J0ZWQgdmVyc2lvbiB0bwo+Pj4+
-PiA0LjIsIGJ1dCBJIGZvdW5kIGFuIGlzc3VlIHRoYXQgbWFrZWR1bXBmaWxlIHNlZW1zIHRvIGV4
-Y2x1ZGUKPj4+Pj4gbmVjZXNzYXJ5IHBhZ2VzIGJ5IG1pc3Rha2Ugb24gbGludXggNC4yLiBXaGVu
-IGNyYXNoLTcuMS4zIHJlYWRzCj4+Pj4+IHRoYXQgZmlsdGVyZWQgZHVtcCBmaWxlLCB0aGUgZm9s
-bG93aW5nIG1lc3NhZ2UgaXMgc2hvd24uCj4+Pj4+IAo+Pj4+PiBjcmFzaDogcGFnZSBleGNsdWRl
-ZDoga2VybmVsIHZpcnR1YWwgYWRkcmVzczogZjNmZTAwMDAgIHR5cGU6Cj4+Pj4+ICJmaWxsX3Rh
-c2tfc3RydWN0Igo+Pj4+PiAKPj4+Pj4gVGhpcyB3aWxsIGJlIGZpeGVkIGluIHRoZSBuZXh0IHZl
-cnNpb24uCj4+Pj4gCj4+Pj4gSGF2ZSB5b3UgZml4ZWQgdGhlIDQuMiBrZXJuZWwgaXNzdWUgYWxy
-ZWFkeSBvciB5b3UgaW50ZW5kIHRvIHdvcmsgb24KPj4+PiBpdCBpbiB0aGUgZnV0dXJlID8KPj4+
-IAo+Pj4gSSBoYXZlbid0IGRvbmUgYW55dGhpbmcgeWV0LCBJIHdhcyBnb2luZyB0byB3b3JrIGZy
-b20gbm93Lgo+Pj4gCj4+Pj4gQm90aCBEZWJpYW4gYW5kIFVidW50dSBydW4gNC4yIGtlcm5lbCBz
-byBpZiB3YWl0aW5nIGZvciBhIGZpeCBpcwo+Pj4+IGFjY2VwdGFibGUgSSB3b3VsZCByYXRoZXIg
-YnJpbmcgaW4gYSAxLjUuOSArIHBhdGNoIHZlcnNpb24uCj4+PiAKPj4+IFNvIGl0IHdpbGwgYmUg
-aGVscGZ1bCBpZiB5b3UgY2FuIGRvIGl0Lgo+Pj4gCj4+PiAKPj4+IFRoYW5rcywgQXRzdXNoaSBL
-dW1hZ2FpCj4+PiAKPj4gCj4+IFRoYXQgaXMgcGVyZmVjdC4gIEp1c3QgbGV0IG1lIGtub3cgb25j
-ZSB5b3UgaGF2ZSBpZGVudGlmaWVkIGEgZml4IGFuZCBJCj4+IHdpbGwgaW5jbHVkZSBpdCBpbiB0
-aGUgbmV3IHBhY2thZ2UuCj4gCj4gSSBjb25maXJtZWQgdGhhdCB0aGVyZSBpcyBubyBwcm9ibGVt
-IGluIG1ha2VkdW1wZmlsZSwgc28geW91IGRvbid0IG5lZWQgdG8gCj4gdXBkYXRlIHlvdXIgbWFr
-ZWR1bXBmaWxlIHBhY2thZ2VzLgo+IAo+IFRoYXQgd2FzIGEgY3Jhc2ggc2lkZSBpc3N1ZSBhbmQg
-dGhlIHByb2JsZW0gaXMgc3RpbGwgdW5kZXIgZGlzY3Vzc2lvbi4gVGhlCj4gd2FybmluZyBJIHJl
-cG9ydGVkIGZpcnN0IGlzIGdvaW5nIHRvIGJlIHNvbHZlZCBpbiB0aGUgbmV4dCBjcmFzaCB2ZXJz
-aW9uLCAKPiBidXQgInN0cnVjdCIgYW5kICJ0YXNrIiBjb21tYW5kcyB3aXRoIHRhc2tfc3RydWN0
-IChvciBzb21lIGNvcnJlc3BvbmRpbmcKPiBmaWVsZHMpIGNhbiBmYWlsIGlmIGEgZHVtcGZpbGUg
-b2YgbGludXggNC4yIGlzIGZpbHRlcmVkLgo+IAo+IFlvdSBzaG91bGQgc2VlIHRoaXMgdGhyZWFk
-IGZvciBtb3JlIGRldGFpbHM6Cj4gCj4gaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9hcmNoaXZlcy9j
-cmFzaC11dGlsaXR5LzIwMTUtTm92ZW1iZXIvbXNnMDAwMjEuaHRtbAo+IAo+IAo+IFRoYW5rcywg
-QXRzdXNoaSBLdW1hZ2FpCj4gCgpBcyBJIHVuZGVyc3RhbmQgaXQsIDEuNS45IHdpbGwgd29yayBm
-aW5lIG9uIDQuMiBrZXJuZWxzLiAgQnV0IGFzIHRoZSByZWxlYXNlZApzb3VyY2Ugc3RhbmQsIDEu
-NS45IG9ubHkgc3VwcG9ydHMgdXAgdG8gNC4xLiAgU2hvdWxkIEkgc2ltcGx5IGdvIGFoZWFkIGFu
-ZAoibWFudWFsbHkiIGFkZCBzdXBwb3J0IHN0YXRlbWVudCBmb3IgNC4yIChpbiBSRUFETUUgJiBt
-YWtlZHVtcGZpbGUuaCkgb3IgeW91CnByZWZlciB0byBjaGFuZ2UgaXQgaW4geW91ciBnaXQgdHJl
-ZSA/CgpLaW5kIHJlZ2FyZHMsCgouLi5Mb3VpcwoKLSAtLSAKTG91aXMgQm91Y2hhcmQKU29mdHdh
-cmUgZW5naW5lZXIsIENsb3VkICYgU3VzdGFpbmluZyBlbmcuCkNhbm9uaWNhbCBMdGQKVWJ1bnR1
-IGRldmVsb3BlciAgICAgICAgICAgICAgICAgICAgICAgRGViaWFuIE1haW50YWluZXIKR1BHIDog
-NDI5RCA3QTNCIEREMDUgQjZGOCBBRjYzICBCOUM0IDhCM0QgODY3QyA4MjNFIDdBNjEKLS0tLS1C
-RUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KVmVyc2lvbjogR251UEcgdjIKCmlRSWNCQUVCQ0FBR0JR
-SldUdlI5QUFvSkVGWlN0TDJxZndPdGhMRVAvQTA0Mk9SZllENnZmS1RNN1dXalc1WWgKdXBFa1pR
-S21zN0kySHpHR1doQzF4MVR0SkFtdldPSzhHN1ZvdStVTHBLTWpIOGJ5Uk1pdlA3aW9UU3F0dzI0
-SgphVGl3TGlDKzJLMlFsZWFzamVZdFk1cFkzT095aElzZDdYT0l4ZmN2dVBhNDZzc21zR2V2bnE2
-WkZCMDZzNW54Ckhya2ZZUVJ1VDZ1TFFScXBlbTYxTjhneWtuZ0FCSjI1YjdSRUdZaGpzU2wwT1pO
-d3oxWUJscEh0UXFnRVh0bTIKQ3IxN3EyeVR5Vjh0MDVMZ1EzNUpNRW9JUmJndzRiS29iTWhWMnlQ
-MEhuWmpIeVhWb2VFWTRWaEJ3VTlBb3I0QQpsYXljT2s1dTBiU2hxRUlvZXdlQlNkVysycU1sZDJr
-TS95M3VHQUJPcEJ5WmdRU21OVnRtQnpYYU1QUEhFTFJkClh0Z2hOeE9QdlJMYTV1a3c2ZWJCSStm
-Uk11eHhkNksvT3BtRWsycDJmVmxmQnhCd0ZIUVNReStscDlXQktGL3IKWkRQaUlYcTF4WWxOUzVl
-R1FjQVhzVCs0OGphUjY1NnJ4a3VFdjVSUW9OTk12L0tWUzJsMEt0RTEwdW1mVGpKWQo3MkEyZzI0
-MGdSelNJUXpCd1VhaGVLQy9GREJSakwyTkVUVE52blUzaUdXTWRjdEFzS2Qza2NrNUNLSW9vUFg1
-CkNVVmVNbmRxRWVuZldNck9qTEdzZldKcHdXK3ZITUkwUTB3R1VuL1JNazczM3IzNHJaWUhOM204
-NlBoMmNSQWgKUkxRWU9OeURRR3AxaWc0S0ttVHdrT2dLSW9SN3ZiZVdxYk9lZzNqTWFPOFZOREpY
-VW1SUVlFR2Z6ZjNiYW1jSwpnMHR4dGdFeGR2WHN2Z29lQUhyaQo9RHY0ZAotLS0tLUVORCBQR1Ag
-U0lHTkFUVVJFLS0tLS0KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+---
+ kexec/arch/arm/kexec-uImage-arm.c | 3 ++-
+ kexec/arch/ppc/kexec-uImage-ppc.c | 5 +++--
+ kexec/arch/sh/kexec-uImage-sh.c   | 3 ++-
+ 3 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
+index 03c2f4ddca7b0..285883eb9779d 100644
+--- a/kexec/arch/arm/kexec-uImage-arm.c
++++ b/kexec/arch/arm/kexec-uImage-arm.c
+@@ -11,7 +11,8 @@
+ 
+ int uImage_arm_probe(const char *buf, off_t len)
+ {
+-	return uImage_probe_kernel(buf, len, IH_ARCH_ARM);
++	return uImage_probe_kernel((const unsigned char *)buf,
++				   len, IH_ARCH_ARM);
+ }
+ 
+ int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+index c89a1a77926d2..30be9d9cb5817 100644
+--- a/kexec/arch/ppc/kexec-uImage-ppc.c
++++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+@@ -78,7 +78,8 @@ char *slurp_ramdisk_ppc(const char *filename, off_t *r_size)
+ 	
+ int uImage_ppc_probe(const char *buf, off_t len)
+ {
+-	return uImage_probe_kernel(buf, len, IH_ARCH_PPC);
++	return uImage_probe_kernel((const unsigned char *)buf,
++				   len, IH_ARCH_PPC);
+ }
+ 
+ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+@@ -316,7 +317,7 @@ int uImage_ppc_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct Image_info img;
+ 	int ret;
+ 
+-	ret = uImage_load(buf, len, &img);
++	ret = uImage_load((const unsigned char *)buf, len, &img);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/kexec/arch/sh/kexec-uImage-sh.c b/kexec/arch/sh/kexec-uImage-sh.c
+index 130f12ca94317..28c8f2fde3a35 100644
+--- a/kexec/arch/sh/kexec-uImage-sh.c
++++ b/kexec/arch/sh/kexec-uImage-sh.c
+@@ -13,7 +13,8 @@
+ 
+ int uImage_sh_probe(const char *buf, off_t len)
+ {
+-	return uImage_probe_kernel(buf, len, IH_ARCH_SH);
++	return uImage_probe_kernel((const unsigned char *)buf,
++				   len, IH_ARCH_SH);
+ }
+ 
+ int uImage_sh_load(int argc, char **argv, const char *buf, off_t len,
+-- 
+2.4.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
