@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22f.google.com ([2a00:1450:400c:c09::22f])
+Received: from mail-wm0-x229.google.com ([2a00:1450:400c:c09::229])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ZziIg-00017L-Gd
- for kexec@lists.infradead.org; Fri, 20 Nov 2015 09:48:15 +0000
-Received: by wmvv187 with SMTP id v187so63838229wmv.1
- for <kexec@lists.infradead.org>; Fri, 20 Nov 2015 01:47:52 -0800 (PST)
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: [PATCH v2] kexex: arm: create ATAGS_MEM tag from devicetree memory
- node
-Date: Fri, 20 Nov 2015 10:47:47 +0100
-Message-Id: <1448012867-10421-1-git-send-email-andreas.fenkart@dev.digitalstrom.org>
+ id 1Zziqe-0001xh-79
+ for kexec@lists.infradead.org; Fri, 20 Nov 2015 10:23:21 +0000
+Received: by wmvv187 with SMTP id v187so65162584wmv.1
+ for <kexec@lists.infradead.org>; Fri, 20 Nov 2015 02:22:57 -0800 (PST)
+Subject: Re: makedumpfile-1.5.9: Introduce parallel compression processing.
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
+ <56308618.3080908@canonical.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
+ <56309A33.4000201@canonical.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E059DD@BPXM01GP.gisp.nec.co.jp>
+From: Louis Bouchard <louis.bouchard@canonical.com>
+Message-ID: <564EF47D.7090202@canonical.com>
+Date: Fri, 20 Nov 2015 11:22:53 +0100
+MIME-Version: 1.0
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E059DD@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,83 +24,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-booting a non-devicetree kernel from a devicetree kernel failed,
-since the memory layout wasn't passed.
-
-Signed-off-by: Andreas Fenkart <andreas.fenkart@dev.digitalstrom.org>
----
- kexec/arch/arm/kexec-zImage-arm.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index ff4e38d..d5b8ab4 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -139,6 +139,38 @@ struct tag * atag_read_tags(void)
- 	return (struct tag *) buf;
- }
- 
-+static
-+int create_mem32_tag(struct tag_mem32 *tag_mem32)
-+{
-+	const char fn[]= "/proc/device-tree/memory/reg";
-+	uint32_t tmp[2];
-+	FILE *fp;
-+
-+	fp = fopen(fn, "r");
-+	if (!fp) {
-+		fprintf(stderr, "Cannot open %s: %m\n", fn);
-+		return -1;
-+	}
-+
-+	if (fread(tmp, sizeof(tmp[0]), 2, fp) != 2) {
-+		fprintf(stderr, "Short read %s\n", fn);
-+		fclose(fp);
-+		return -1;
-+	}
-+
-+	if (ferror(fp)) {
-+		fprintf(stderr, "Cannot read %s: %m\n", fn);
-+		fclose(fp);
-+		return -1;
-+	}
-+
-+	/* atags_mem32 has base/size fields reversed! */
-+	tag_mem32->size = be32_to_cpu(tmp[1]);
-+	tag_mem32->start = be32_to_cpu(tmp[0]);
-+
-+	fclose(fp);
-+	return 0;
-+}
- 
- static
- int atag_arm_load(struct kexec_info *info, unsigned long base,
-@@ -182,6 +214,12 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
- 		params->hdr.size = 2;
- 		params->hdr.tag = ATAG_CORE;
- 		params = tag_next(params);
-+
-+		if (!create_mem32_tag(&params->u.mem)) {
-+			params->hdr.size = 4;
-+			params->hdr.tag = ATAG_MEM;
-+			params = tag_next(params);
-+		}
- 	}
- 
- 	if (initrd) {
--- 
-2.6.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQpIYXNoOiBTSEEyNTYKCkhlbGxvIEt1
+bWFnYWktc2FuLAoKTGUgMTkvMTEvMjAxNSAwODozMCwgQXRzdXNoaSBLdW1hZ2FpIGEgw6ljcml0
+IDoKPiBIZWxsbyBMb3VpcywKPiAKPj4+Pj4gbyBTdXBwb3J0IG5ldyBrZXJuZWxzIC0gVGhlIHN1
+cHBvcnRlZCBrZXJuZWwgaXMgdXBkYXRlZCB0byA0LjEgaW4KPj4+Pj4gdGhpcyB2ZXJzaW9uLiBB
+dCBmaXJzdCBJJ20gZ29pbmcgdG8gZXh0ZW5kIHRoZSBzdXBwb3J0ZWQgdmVyc2lvbiB0bwo+Pj4+
+PiA0LjIsIGJ1dCBJIGZvdW5kIGFuIGlzc3VlIHRoYXQgbWFrZWR1bXBmaWxlIHNlZW1zIHRvIGV4
+Y2x1ZGUKPj4+Pj4gbmVjZXNzYXJ5IHBhZ2VzIGJ5IG1pc3Rha2Ugb24gbGludXggNC4yLiBXaGVu
+IGNyYXNoLTcuMS4zIHJlYWRzCj4+Pj4+IHRoYXQgZmlsdGVyZWQgZHVtcCBmaWxlLCB0aGUgZm9s
+bG93aW5nIG1lc3NhZ2UgaXMgc2hvd24uCj4+Pj4+IAo+Pj4+PiBjcmFzaDogcGFnZSBleGNsdWRl
+ZDoga2VybmVsIHZpcnR1YWwgYWRkcmVzczogZjNmZTAwMDAgIHR5cGU6Cj4+Pj4+ICJmaWxsX3Rh
+c2tfc3RydWN0Igo+Pj4+PiAKPj4+Pj4gVGhpcyB3aWxsIGJlIGZpeGVkIGluIHRoZSBuZXh0IHZl
+cnNpb24uCj4+Pj4gCj4+Pj4gSGF2ZSB5b3UgZml4ZWQgdGhlIDQuMiBrZXJuZWwgaXNzdWUgYWxy
+ZWFkeSBvciB5b3UgaW50ZW5kIHRvIHdvcmsgb24KPj4+PiBpdCBpbiB0aGUgZnV0dXJlID8KPj4+
+IAo+Pj4gSSBoYXZlbid0IGRvbmUgYW55dGhpbmcgeWV0LCBJIHdhcyBnb2luZyB0byB3b3JrIGZy
+b20gbm93Lgo+Pj4gCj4+Pj4gQm90aCBEZWJpYW4gYW5kIFVidW50dSBydW4gNC4yIGtlcm5lbCBz
+byBpZiB3YWl0aW5nIGZvciBhIGZpeCBpcwo+Pj4+IGFjY2VwdGFibGUgSSB3b3VsZCByYXRoZXIg
+YnJpbmcgaW4gYSAxLjUuOSArIHBhdGNoIHZlcnNpb24uCj4+PiAKPj4+IFNvIGl0IHdpbGwgYmUg
+aGVscGZ1bCBpZiB5b3UgY2FuIGRvIGl0Lgo+Pj4gCj4+PiAKPj4+IFRoYW5rcywgQXRzdXNoaSBL
+dW1hZ2FpCj4+PiAKPj4gCj4+IFRoYXQgaXMgcGVyZmVjdC4gIEp1c3QgbGV0IG1lIGtub3cgb25j
+ZSB5b3UgaGF2ZSBpZGVudGlmaWVkIGEgZml4IGFuZCBJCj4+IHdpbGwgaW5jbHVkZSBpdCBpbiB0
+aGUgbmV3IHBhY2thZ2UuCj4gCj4gSSBjb25maXJtZWQgdGhhdCB0aGVyZSBpcyBubyBwcm9ibGVt
+IGluIG1ha2VkdW1wZmlsZSwgc28geW91IGRvbid0IG5lZWQgdG8gCj4gdXBkYXRlIHlvdXIgbWFr
+ZWR1bXBmaWxlIHBhY2thZ2VzLgo+IAo+IFRoYXQgd2FzIGEgY3Jhc2ggc2lkZSBpc3N1ZSBhbmQg
+dGhlIHByb2JsZW0gaXMgc3RpbGwgdW5kZXIgZGlzY3Vzc2lvbi4gVGhlCj4gd2FybmluZyBJIHJl
+cG9ydGVkIGZpcnN0IGlzIGdvaW5nIHRvIGJlIHNvbHZlZCBpbiB0aGUgbmV4dCBjcmFzaCB2ZXJz
+aW9uLCAKPiBidXQgInN0cnVjdCIgYW5kICJ0YXNrIiBjb21tYW5kcyB3aXRoIHRhc2tfc3RydWN0
+IChvciBzb21lIGNvcnJlc3BvbmRpbmcKPiBmaWVsZHMpIGNhbiBmYWlsIGlmIGEgZHVtcGZpbGUg
+b2YgbGludXggNC4yIGlzIGZpbHRlcmVkLgo+IAo+IFlvdSBzaG91bGQgc2VlIHRoaXMgdGhyZWFk
+IGZvciBtb3JlIGRldGFpbHM6Cj4gCj4gaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9hcmNoaXZlcy9j
+cmFzaC11dGlsaXR5LzIwMTUtTm92ZW1iZXIvbXNnMDAwMjEuaHRtbAo+IAo+IAo+IFRoYW5rcywg
+QXRzdXNoaSBLdW1hZ2FpCj4gCgpBcyBJIHVuZGVyc3RhbmQgaXQsIDEuNS45IHdpbGwgd29yayBm
+aW5lIG9uIDQuMiBrZXJuZWxzLiAgQnV0IGFzIHRoZSByZWxlYXNlZApzb3VyY2Ugc3RhbmQsIDEu
+NS45IG9ubHkgc3VwcG9ydHMgdXAgdG8gNC4xLiAgU2hvdWxkIEkgc2ltcGx5IGdvIGFoZWFkIGFu
+ZAoibWFudWFsbHkiIGFkZCBzdXBwb3J0IHN0YXRlbWVudCBmb3IgNC4yIChpbiBSRUFETUUgJiBt
+YWtlZHVtcGZpbGUuaCkgb3IgeW91CnByZWZlciB0byBjaGFuZ2UgaXQgaW4geW91ciBnaXQgdHJl
+ZSA/CgpLaW5kIHJlZ2FyZHMsCgouLi5Mb3VpcwoKLSAtLSAKTG91aXMgQm91Y2hhcmQKU29mdHdh
+cmUgZW5naW5lZXIsIENsb3VkICYgU3VzdGFpbmluZyBlbmcuCkNhbm9uaWNhbCBMdGQKVWJ1bnR1
+IGRldmVsb3BlciAgICAgICAgICAgICAgICAgICAgICAgRGViaWFuIE1haW50YWluZXIKR1BHIDog
+NDI5RCA3QTNCIEREMDUgQjZGOCBBRjYzICBCOUM0IDhCM0QgODY3QyA4MjNFIDdBNjEKLS0tLS1C
+RUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KVmVyc2lvbjogR251UEcgdjIKCmlRSWNCQUVCQ0FBR0JR
+SldUdlI5QUFvSkVGWlN0TDJxZndPdGhMRVAvQTA0Mk9SZllENnZmS1RNN1dXalc1WWgKdXBFa1pR
+S21zN0kySHpHR1doQzF4MVR0SkFtdldPSzhHN1ZvdStVTHBLTWpIOGJ5Uk1pdlA3aW9UU3F0dzI0
+SgphVGl3TGlDKzJLMlFsZWFzamVZdFk1cFkzT095aElzZDdYT0l4ZmN2dVBhNDZzc21zR2V2bnE2
+WkZCMDZzNW54Ckhya2ZZUVJ1VDZ1TFFScXBlbTYxTjhneWtuZ0FCSjI1YjdSRUdZaGpzU2wwT1pO
+d3oxWUJscEh0UXFnRVh0bTIKQ3IxN3EyeVR5Vjh0MDVMZ1EzNUpNRW9JUmJndzRiS29iTWhWMnlQ
+MEhuWmpIeVhWb2VFWTRWaEJ3VTlBb3I0QQpsYXljT2s1dTBiU2hxRUlvZXdlQlNkVysycU1sZDJr
+TS95M3VHQUJPcEJ5WmdRU21OVnRtQnpYYU1QUEhFTFJkClh0Z2hOeE9QdlJMYTV1a3c2ZWJCSStm
+Uk11eHhkNksvT3BtRWsycDJmVmxmQnhCd0ZIUVNReStscDlXQktGL3IKWkRQaUlYcTF4WWxOUzVl
+R1FjQVhzVCs0OGphUjY1NnJ4a3VFdjVSUW9OTk12L0tWUzJsMEt0RTEwdW1mVGpKWQo3MkEyZzI0
+MGdSelNJUXpCd1VhaGVLQy9GREJSakwyTkVUVE52blUzaUdXTWRjdEFzS2Qza2NrNUNLSW9vUFg1
+CkNVVmVNbmRxRWVuZldNck9qTEdzZldKcHdXK3ZITUkwUTB3R1VuL1JNazczM3IzNHJaWUhOM204
+NlBoMmNSQWgKUkxRWU9OeURRR3AxaWc0S0ttVHdrT2dLSW9SN3ZiZVdxYk9lZzNqTWFPOFZOREpY
+VW1SUVlFR2Z6ZjNiYW1jSwpnMHR4dGdFeGR2WHN2Z29lQUhyaQo9RHY0ZAotLS0tLUVORCBQR1Ag
+U0lHTkFUVVJFLS0tLS0KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
