@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a0lBG-0007gM-TD
- for kexec@lists.infradead.org; Mon, 23 Nov 2015 07:04:55 +0000
-Received: from int-mx09.intmail.prod.int.phx2.redhat.com
- (int-mx09.intmail.prod.int.phx2.redhat.com [10.5.11.22])
- by mx1.redhat.com (Postfix) with ESMTPS id 1B79BA063B
- for <kexec@lists.infradead.org>; Mon, 23 Nov 2015 07:04:33 +0000 (UTC)
-Date: Mon, 23 Nov 2015 15:04:23 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] arm: use /sys/firmware/fdt in case without --atags and --dtb
-Message-ID: <20151123070423.GA3972@dhcp-128-65.nay.redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a0wBg-00088W-FT
+ for kexec@lists.infradead.org; Mon, 23 Nov 2015 18:50:25 +0000
+Date: Mon, 23 Nov 2015 19:49:30 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [V5 PATCH 1/4] panic/x86: Fix re-entrance problem due to panic
+ on NMI
+Message-ID: <20151123184930.GH5134@pd.tnic>
+References: <20151120093641.4285.97253.stgit@softrs>
+ <20151120093644.4285.9349.stgit@softrs>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20151120093644.4285.9349.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +25,176 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Latest linux kernel will create /sys/firmware/fdt file. It will be convenient
-to use it in case one does not specify --atags and --dtb options.
+On Fri, Nov 20, 2015 at 06:36:44PM +0900, Hidehiro Kawai wrote:
+> If panic on NMI happens just after panic() on the same CPU, panic()
+> is recursively called.  As the result, it stalls after failing to
+> acquire panic_lock.
+> 
+> To avoid this problem, don't call panic() in NMI context if
+> we've already entered panic().
+> 
+> V4:
+> - Improve comments in io_check_error() and panic()
+> 
+> V3:
+> - Introduce nmi_panic() macro to reduce code duplication
+> - In the case of panic on NMI, don't return from NMI handlers
+>   if another cpu already panicked
+> 
+> V2:
+> - Use atomic_cmpxchg() instead of current spin_trylock() to
+>   exclude concurrent accesses to the panic routines
+> - Don't introduce no-lock version of panic()
+> 
+> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> ---
+>  arch/x86/kernel/nmi.c  |   16 ++++++++++++----
+>  include/linux/kernel.h |   13 +++++++++++++
+>  kernel/panic.c         |   15 ++++++++++++---
+>  kernel/watchdog.c      |    2 +-
+>  4 files changed, 38 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 697f90d..5131714 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -231,7 +231,7 @@ pci_serr_error(unsigned char reason, struct pt_regs *regs)
+>  #endif
+>  
+>  	if (panic_on_unrecovered_nmi)
+> -		panic("NMI: Not continuing");
+> +		nmi_panic("NMI: Not continuing");
+>  
+>  	pr_emerg("Dazed and confused, but trying to continue\n");
+>  
+> @@ -255,8 +255,16 @@ io_check_error(unsigned char reason, struct pt_regs *regs)
+>  		 reason, smp_processor_id());
+>  	show_regs(regs);
+>  
+> -	if (panic_on_io_nmi)
+> -		panic("NMI IOCK error: Not continuing");
+> +	if (panic_on_io_nmi) {
+> +		nmi_panic("NMI IOCK error: Not continuing");
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/arm/kexec-arm.c        |    7 +++++++
- kexec/arch/arm/kexec-arm.h        |    2 ++
- kexec/arch/arm/kexec-zImage-arm.c |    8 ++++++++
- 3 files changed, 17 insertions(+)
+Btw, that panic_on_io_nmi seems undocumented in
+Documentation/sysctl/kernel.txt. Care to document it, please, as a
+separate patch?
 
---- kexec-tools.orig/kexec/arch/arm/kexec-arm.c
-+++ kexec-tools/kexec/arch/arm/kexec-arm.c
-@@ -12,6 +12,7 @@
- #include <stdint.h>
- #include <string.h>
- #include <getopt.h>
-+#include <unistd.h>
- #include "../../kexec.h"
- #include "../../kexec-syscall.h"
- #include "kexec-arm.h"
-@@ -137,3 +138,9 @@ int arch_compat_trampoline(struct kexec_
- void arch_update_purgatory(struct kexec_info *UNUSED(info))
- {
- }
-+
-+/* return 1 if /sys/firmware/fdt exists, otherwise return 0 */
-+int have_sysfs_fdt(void)
-+{
-+	return !access(SYSFS_FDT, F_OK);
-+}
---- kexec-tools.orig/kexec/arch/arm/kexec-arm.h
-+++ kexec-tools/kexec/arch/arm/kexec-arm.h
-@@ -3,6 +3,7 @@
- 
- #include <sys/types.h>
- 
-+#define SYSFS_FDT "/sys/firmware/fdt"
- #define BOOT_BLOCK_VERSION 17
- #define BOOT_BLOCK_LAST_COMP_VERSION 16
- 
-@@ -16,5 +17,6 @@ void zImage_arm_usage(void);
- int uImage_arm_probe(const char *buf, off_t len);
- int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		        struct kexec_info *info);
-+extern int have_sysfs_fdt(void);
- 
- #endif /* KEXEC_ARM_H */
---- kexec-tools.orig/kexec/arch/arm/kexec-zImage-arm.c
-+++ kexec-tools/kexec/arch/arm/kexec-zImage-arm.c
-@@ -358,6 +358,14 @@ int zImage_arm_load(int argc, char **arg
- 		return -1;
- 	}
- 
-+	if (!use_atags && !dtb_file) {
-+		int f;
-+
-+		f = have_sysfs_fdt();
-+		if (f)
-+			dtb_file = SYSFS_FDT;
-+	}
-+
- 	if (command_line) {
- 		command_line_len = strlen(command_line) + 1;
- 		if (command_line_len > COMMAND_LINE_SIZE)
+> +
+> +		/*
+> +		 * If we return from nmi_panic(), it means we have received
+> +		 * NMI while processing panic().  So, simply return without
+> +		 * a delay and re-enabling NMI.
+> +		 */
+> +		return;
+> +	}
+>  
+>  	/* Re-enable the IOCK line, wait for a few seconds */
+>  	reason = (reason & NMI_REASON_CLEAR_MASK) | NMI_REASON_CLEAR_IOCHK;
+> @@ -297,7 +305,7 @@ unknown_nmi_error(unsigned char reason, struct pt_regs *regs)
+>  
+>  	pr_emerg("Do you have a strange power saving mode enabled?\n");
+>  	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
+> -		panic("NMI: Not continuing");
+> +		nmi_panic("NMI: Not continuing");
+>  
+>  	pr_emerg("Dazed and confused, but trying to continue\n");
+>  }
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 350dfb0..480a4fd 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -445,6 +445,19 @@ extern int sysctl_panic_on_stackoverflow;
+>  
+>  extern bool crash_kexec_post_notifiers;
+>  
+> +extern atomic_t panic_cpu;
+
+This needs a comment explaining what this variable is and what it
+denotes.
+
+> +
+> +/*
+> + * A variant of panic() called from NMI context.
+> + * If we've already panicked on this cpu, return from here.
+> + */
+> +#define nmi_panic(fmt, ...)						\
+> +	do {								\
+> +		int this_cpu = raw_smp_processor_id();			\
+> +		if (atomic_cmpxchg(&panic_cpu, -1, this_cpu) != this_cpu) \
+> +			panic(fmt, ##__VA_ARGS__);			\
+> +	} while (0)
+> +
+>  /*
+>   * Only to be used by arch init code. If the user over-wrote the default
+>   * CONFIG_PANIC_TIMEOUT, honor it.
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 4579dbb..24ee2ea 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -61,6 +61,8 @@ void __weak panic_smp_self_stop(void)
+>  		cpu_relax();
+>  }
+>  
+> +atomic_t panic_cpu = ATOMIC_INIT(-1);
+> +
+>  /**
+>   *	panic - halt the system
+>   *	@fmt: The text string to print
+> @@ -71,17 +73,17 @@ void __weak panic_smp_self_stop(void)
+>   */
+>  void panic(const char *fmt, ...)
+>  {
+> -	static DEFINE_SPINLOCK(panic_lock);
+>  	static char buf[1024];
+>  	va_list args;
+>  	long i, i_next = 0;
+>  	int state = 0;
+> +	int old_cpu, this_cpu;
+>  
+>  	/*
+>  	 * Disable local interrupts. This will prevent panic_smp_self_stop
+>  	 * from deadlocking the first cpu that invokes the panic, since
+>  	 * there is nothing to prevent an interrupt handler (that runs
+> -	 * after the panic_lock is acquired) from invoking panic again.
+> +	 * after setting panic_cpu) from invoking panic again.
+>  	 */
+>  	local_irq_disable();
+>  
+> @@ -94,8 +96,15 @@ void panic(const char *fmt, ...)
+>  	 * multiple parallel invocations of panic, all other CPUs either
+>  	 * stop themself or will wait until they are stopped by the 1st CPU
+>  	 * with smp_send_stop().
+> +	 *
+> +	 * `old_cpu == -1' means this is the 1st CPU which comes here, so
+> +	 * go ahead.
+> +	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
+> +	 * panic_cpu to this cpu.  In this case, this is also the 1st CPU.
+
+I'd prefer that -1 to be
+
+#define INVALID_CPU_NUM		-1
+
+or
+
+#define UNDEFINED_CPU_NUM	-1
+
+or so instead of a naked number.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
 
 _______________________________________________
 kexec mailing list
