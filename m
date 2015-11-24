@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <a9d2131ff127fb8841a136e66ca5962304bb57e7.1448403503.git.geoff@infradead.org>
+Message-Id: <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
 In-Reply-To: <cover.1448403503.git.geoff@infradead.org>
 References: <cover.1448403503.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v12 01/16] arm64: Fold proc-macros.S into assembler.h
-Date: Tue, 24 Nov 2015 22:25:33 +0000
+Subject: [PATCH v12 12/16] arm64: kdump: implement machine_crash_shutdown()
+Date: Tue, 24 Nov 2015 22:25:34 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,202 +21,190 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-To allow the assembler macros defined in arch/arm64/mm/proc-macros.S to be used
-outside the mm code move the contents of proc-macros.S to asm/assembler.h.  Also,
-delete proc-macros.S, and fix up all references to proc-macros.S.
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
+kdump calls machine_crash_shutdown() to shut down non-boot cpus and
+save registers' status in per-cpu ELF notes before starting the crash
+dump kernel. See kernel_kexec().
+
+ipi_cpu_stop() is a bit modified and used to support this behavior.
+
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- arch/arm64/include/asm/assembler.h | 48 +++++++++++++++++++++++++++-
- arch/arm64/kvm/hyp-init.S          |  1 -
- arch/arm64/mm/cache.S              |  2 --
- arch/arm64/mm/proc-macros.S        | 64 --------------------------------------
- arch/arm64/mm/proc.S               |  3 --
- 5 files changed, 47 insertions(+), 71 deletions(-)
- delete mode 100644 arch/arm64/mm/proc-macros.S
+ arch/arm64/include/asm/kexec.h    | 34 +++++++++++++++++++++++++++++++++-
+ arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++--
+ arch/arm64/kernel/smp.c           | 16 ++++++++++++++--
+ 3 files changed, 76 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 12eff92..21979a4 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -1,5 +1,5 @@
- /*
-- * Based on arch/arm/include/asm/assembler.h
-+ * Based on arch/arm/include/asm/assembler.h, arch/arm/mm/proc-macros.S
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 46d63cd..555a955 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -30,6 +30,8 @@
+ 
+ #if !defined(__ASSEMBLY__)
+ 
++extern bool in_crash_kexec;
++
+ /**
+  * crash_setup_regs() - save registers for the panic kernel
   *
-  * Copyright (C) 1996-2000 Russell King
-  * Copyright (C) 2012 ARM Ltd.
-@@ -23,6 +23,8 @@
- #ifndef __ASM_ASSEMBLER_H
- #define __ASM_ASSEMBLER_H
+@@ -40,7 +42,37 @@
+ static inline void crash_setup_regs(struct pt_regs *newregs,
+ 				    struct pt_regs *oldregs)
+ {
+-	/* Empty routine needed to avoid build errors. */
++	if (oldregs) {
++		memcpy(newregs, oldregs, sizeof(*newregs));
++	} else {
++		__asm__ __volatile__ (
++			"stp	 x0,   x1, [%3, #16 *  0]\n"
++			"stp	 x2,   x3, [%3, #16 *  1]\n"
++			"stp	 x4,   x5, [%3, #16 *  2]\n"
++			"stp	 x6,   x7, [%3, #16 *  3]\n"
++			"stp	 x8,   x9, [%3, #16 *  4]\n"
++			"stp	x10,  x11, [%3, #16 *  5]\n"
++			"stp	x12,  x13, [%3, #16 *  6]\n"
++			"stp	x14,  x15, [%3, #16 *  7]\n"
++			"stp	x16,  x17, [%3, #16 *  8]\n"
++			"stp	x18,  x19, [%3, #16 *  9]\n"
++			"stp	x20,  x21, [%3, #16 * 10]\n"
++			"stp	x22,  x23, [%3, #16 * 11]\n"
++			"stp	x24,  x25, [%3, #16 * 12]\n"
++			"stp	x26,  x27, [%3, #16 * 13]\n"
++			"stp	x28,  x29, [%3, #16 * 14]\n"
++			"str	x30,	   [%3, #16 * 15]\n"
++			"mov	%0, sp\n"
++			"adr	%1, 1f\n"
++			"mrs	%2, spsr_el1\n"
++		"1:"
++			: "=r" (newregs->sp),
++			  "=r" (newregs->pc),
++			  "=r" (newregs->pstate)
++			: "r"  (&newregs->regs)
++			: "memory"
++		);
++	}
+ }
  
-+#include <asm/asm-offsets.h>
-+#include <asm/pgtable-hwdef.h>
- #include <asm/ptrace.h>
- #include <asm/thread_info.h>
- 
-@@ -194,6 +196,50 @@ lr	.req	x30		// link register
- 	.endm
- 
- /*
-+ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-+ */
-+	.macro	vma_vm_mm, rd, rn
-+	ldr	\rd, [\rn, #VMA_VM_MM]
-+	.endm
-+
-+/*
-+ * mmid - get context id from mm pointer (mm->context.id)
-+ */
-+	.macro	mmid, rd, rn
-+	ldr	\rd, [\rn, #MM_CONTEXT_ID]
-+	.endm
-+
-+/*
-+ * dcache_line_size - get the minimum D-cache line size from the CTR register.
-+ */
-+	.macro	dcache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
-+
-+/*
-+ * icache_line_size - get the minimum I-cache line size from the CTR register.
-+ */
-+	.macro	icache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	and	\tmp, \tmp, #0xf		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
-+
-+/*
-+ * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
-+ */
-+	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
-+#ifndef CONFIG_ARM64_VA_BITS_48
-+	ldr_l	\tmpreg, idmap_t0sz
-+	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
-+#endif
-+	.endm
-+
-+/*
-  * Annotate a function as position independent, i.e., safe to be called before
-  * the kernel virtual mapping is activated.
+ #endif /* !defined(__ASSEMBLY__) */
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index da28a26..d2d7e90 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -9,6 +9,7 @@
+  * published by the Free Software Foundation.
   */
-diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
-index 178ba22..2e67a48 100644
---- a/arch/arm64/kvm/hyp-init.S
-+++ b/arch/arm64/kvm/hyp-init.S
-@@ -20,7 +20,6 @@
- #include <asm/assembler.h>
- #include <asm/kvm_arm.h>
- #include <asm/kvm_mmu.h>
--#include <asm/pgtable-hwdef.h>
  
- 	.text
- 	.pushsection	.hyp.idmap.text, "ax"
-diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-index cfa44a6..f49041d 100644
---- a/arch/arm64/mm/cache.S
-+++ b/arch/arm64/mm/cache.S
-@@ -24,8 +24,6 @@
- #include <asm/cpufeature.h>
++#include <linux/kernel.h>
+ #include <linux/kexec.h>
+ #include <linux/of_fdt.h>
+ #include <linux/slab.h>
+@@ -23,6 +24,7 @@
+ extern const unsigned char arm64_relocate_new_kernel[];
+ extern const unsigned long arm64_relocate_new_kernel_size;
+ 
++bool in_crash_kexec;
+ static unsigned long kimage_start;
+ 
+ /**
+@@ -203,13 +205,38 @@ void machine_kexec(struct kimage *kimage)
+ 	 */
+ 
+ 	cpu_soft_restart(virt_to_phys(cpu_reset),
+-		is_hyp_mode_available(),
++		in_crash_kexec ? 0 : is_hyp_mode_available(),
+ 		reboot_code_buffer_phys, kimage->head, kimage_start);
+ 
+ 	BUG(); /* Should never get here. */
+ }
+ 
++/**
++ * machine_crash_shutdown - shutdown non-boot cpus and save registers
++ */
+ void machine_crash_shutdown(struct pt_regs *regs)
+ {
+-	/* Empty routine needed to avoid build errors. */
++	struct pt_regs dummy_regs;
++	int cpu;
++
++	local_irq_disable();
++
++	in_crash_kexec = true;
++
++	/*
++	 * clear and initialize the per-cpu info. This is necessary
++	 * because, otherwise, slots for offline cpus would never be
++	 * filled up. See smp_send_stop().
++	 */
++	memset(&dummy_regs, 0, sizeof(dummy_regs));
++	for_each_possible_cpu(cpu)
++		crash_save_cpu(&dummy_regs, cpu);
++
++	/* shutdown non-boot cpus */
++	smp_send_stop();
++
++	/* for boot cpu */
++	crash_save_cpu(regs, smp_processor_id());
++
++	pr_info("Starting crashdump kernel...\n");
+ }
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index b1adc51..15aabef 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -37,6 +37,7 @@
+ #include <linux/completion.h>
+ #include <linux/of.h>
+ #include <linux/irq_work.h>
++#include <linux/kexec.h>
+ 
  #include <asm/alternative.h>
+ #include <asm/atomic.h>
+@@ -54,6 +55,8 @@
+ #include <asm/ptrace.h>
+ #include <asm/virt.h>
  
--#include "proc-macros.S"
--
++#include "cpu-reset.h"
++
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/ipi.h>
+ 
+@@ -683,8 +686,12 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
  /*
-  *	flush_icache_range(start,end)
-  *
-diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
-deleted file mode 100644
-index 4c4d93c..0000000
---- a/arch/arm64/mm/proc-macros.S
-+++ /dev/null
-@@ -1,64 +0,0 @@
--/*
-- * Based on arch/arm/mm/proc-macros.S
-- *
-- * Copyright (C) 2012 ARM Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
--
--#include <asm/asm-offsets.h>
--#include <asm/thread_info.h>
--
--/*
-- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-- */
--	.macro	vma_vm_mm, rd, rn
--	ldr	\rd, [\rn, #VMA_VM_MM]
--	.endm
--
--/*
-- * mmid - get context id from mm pointer (mm->context.id)
-- */
--	.macro	mmid, rd, rn
--	ldr	\rd, [\rn, #MM_CONTEXT_ID]
--	.endm
--
--/*
-- * dcache_line_size - get the minimum D-cache line size from the CTR register.
-- */
--	.macro	dcache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
--
--/*
-- * icache_line_size - get the minimum I-cache line size from the CTR register.
-- */
--	.macro	icache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	and	\tmp, \tmp, #0xf		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
--
--/*
-- * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
-- */
--	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
--#ifndef CONFIG_ARM64_VA_BITS_48
--	ldr_l	\tmpreg, idmap_t0sz
--	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
--#endif
--	.endm
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index cacecc4..7ab3a90 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -23,11 +23,8 @@
- #include <asm/assembler.h>
- #include <asm/asm-offsets.h>
- #include <asm/hwcap.h>
--#include <asm/pgtable-hwdef.h>
- #include <asm/pgtable.h>
+  * ipi_cpu_stop - handle IPI from smp_send_stop()
+  */
+-static void ipi_cpu_stop(unsigned int cpu)
++static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
+ {
++#ifdef CONFIG_KEXEC
++	/* printing messages may slow down the shutdown. */
++	if (!in_crash_kexec)
++#endif
+ 	if (system_state == SYSTEM_BOOTING ||
+ 	    system_state == SYSTEM_RUNNING) {
+ 		raw_spin_lock(&stop_lock);
+@@ -697,6 +704,11 @@ static void ipi_cpu_stop(unsigned int cpu)
  
--#include "proc-macros.S"
--
- #ifdef CONFIG_ARM64_64K_PAGES
- #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
- #elif defined(CONFIG_ARM64_16K_PAGES)
+ 	local_irq_disable();
+ 
++#ifdef CONFIG_KEXEC
++	if (in_crash_kexec)
++		crash_save_cpu(regs, cpu);
++#endif /* CONFIG_KEXEC */
++
+ 	while (1)
+ 		cpu_relax();
+ }
+@@ -727,7 +739,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 
+ 	case IPI_CPU_STOP:
+ 		irq_enter();
+-		ipi_cpu_stop(cpu);
++		ipi_cpu_stop(cpu, regs);
+ 		irq_exit();
+ 		break;
+ 
 -- 
 2.5.0
 
