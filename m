@@ -1,20 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtprelay0211.hostedemail.com ([216.40.44.211]
- helo=smtprelay.hostedemail.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a1KTK-0008NZ-Rt
- for kexec@lists.infradead.org; Tue, 24 Nov 2015 20:45:55 +0000
-Date: Tue, 24 Nov 2015 15:45:28 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [V5 PATCH 1/4] panic/x86: Fix re-entrance problem due to panic
- on NMI
-Message-ID: <20151124154528.45203352@gandalf.local.home>
-In-Reply-To: <20151124202712.GA23063@dhcp22.suse.cz>
-References: <20151120093641.4285.97253.stgit@softrs>
- <20151120093644.4285.9349.stgit@softrs>
- <20151124150510.GA6100@home.goodmis.org>
- <20151124202712.GA23063@dhcp22.suse.cz>
-MIME-Version: 1.0
+Message-Id: <cover.1448403503.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH v12 00/16] arm64 kexec kernel patches v12
+Date: Tue, 24 Nov 2015 22:25:33 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +11,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Hocko <mhocko@kernel.org>
-Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter
- Anvin" <hpa@zytor.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, 24 Nov 2015 21:27:13 +0100
-Michal Hocko <mhocko@kernel.org> wrote:
+Hi All,
 
+This series adds the core support for kexec re-boot and kdump on ARM64.  This
+version of the series combines Takahiro's kdump patches with my kexec patches.
 
-> > What happens if:
-> > 
-> > 	CPU 0:				CPU 1:
-> > 	------				------
-> > 	nmi_panic();
-> > 
-> > 					nmi_panic();
-> > 					<external nmi>
-> > 					nmi_panic();  
-> 
-> I thought that nmi_panic is called only from the nmi context. If so how
-> can we get a nested NMI like that?
+Changes since v11:
 
-Nevermind. I was thinking the external NMI could nest, but I'm guessing
-it cant. Anyway, the patches later on modify this code which checks for
-something other than != this_cpu, which makes this issue mute even if
-it could nest.
+o No changes, rebase to v4.4-rc2.
 
--- Steve
+Changes since v10:
+
+o Move the flush of the new image from arm64_relocate_new_kernel to machine_kexec.
+o Pass values to arm64_relocate_new_kernel in registers, not in global variables.
+o Fixups to setting the sctlr_el1 and sctlr_el2 flags.
+
+To load a second stage kernel and execute a kexec re-boot or to work with kdump
+on ARM64 systems a series of patches to kexec-tools [2], which have not yet been
+merged upstream, are needed.
+
+I have tested kexec with the ARM Foundation model, and Takahiro has reported
+that kdump is working on the 96boards HiKey developer board.  Kexec on EFI
+systems works correctly.  More ACPI + kexec testing is needed.
+
+Patch 1 here moves the macros from proc-macros.S to asm/assembler.h so that the
+dcache_line_size macro it defines can be uesd by kexec's relocate kernel
+routine.
+
+Patches 2 & 3 rework the ARM64 hcall mechanism to give the CPU reset routines
+the ability to switch exception levels from EL1 to EL2 for kernels that were
+entered in EL2.
+
+Patch 4 allows KVM to handle a CPU reset.
+
+Patches 5 - 7 add back the ARM64 CPU reset support that was recently removed
+from the kernel.
+
+Patches 8 - 10 add kexec support.
+
+Patches 11-16 add kdump support.
+
+Please consider all patches for inclusion.
+
+[1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+[2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+
+-Geoff
+
+The following changes since commit 1ec218373b8ebda821aec00bb156a9c94fad9cd4:
+
+  Linux 4.4-rc2 (2015-11-22 16:45:59 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geoff/linux-kexec.git kexec-v12
+
+for you to fetch changes up to 83db66df70fc1f7cd4da8b580d264b9320991cf0:
+
+  arm64: kdump: relax BUG_ON() if more than one cpus are still active (2015-11-24 13:59:27 -0800)
+
+----------------------------------------------------------------
+AKASHI Takahiro (7):
+      arm64: kvm: allows kvm cpu hotplug
+      arm64: kdump: reserve memory for crash dump kernel
+      arm64: kdump: implement machine_crash_shutdown()
+      arm64: kdump: add kdump support
+      arm64: kdump: update a kernel doc
+      arm64: kdump: enable kdump in the arm64 defconfig
+      arm64: kdump: relax BUG_ON() if more than one cpus are still active
+
+Geoff Levand (9):
+      arm64: Fold proc-macros.S into assembler.h
+      arm64: Convert hcalls to use HVC immediate value
+      arm64: Add new hcall HVC_CALL_FUNC
+      arm64: Add back cpu_reset routines
+      Revert "arm64: mm: remove unused cpu_set_idmap_tcr_t0sz function"
+      Revert "arm64: remove dead code"
+      arm64/kexec: Add core kexec support
+      arm64/kexec: Add pr_devel output
+      arm64/kexec: Enable kexec in the arm64 defconfig
+
+ Documentation/kdump/kdump.txt        |  32 ++++-
+ arch/arm/include/asm/kvm_host.h      |  10 +-
+ arch/arm/include/asm/kvm_mmu.h       |   1 +
+ arch/arm/kvm/arm.c                   |  79 ++++++-----
+ arch/arm/kvm/mmu.c                   |   5 +
+ arch/arm64/Kconfig                   |  22 ++++
+ arch/arm64/configs/defconfig         |   2 +
+ arch/arm64/include/asm/assembler.h   |  48 ++++++-
+ arch/arm64/include/asm/kexec.h       |  80 +++++++++++
+ arch/arm64/include/asm/kvm_host.h    |  16 ++-
+ arch/arm64/include/asm/kvm_mmu.h     |   1 +
+ arch/arm64/include/asm/mmu.h         |   1 +
+ arch/arm64/include/asm/mmu_context.h |  35 +++--
+ arch/arm64/include/asm/virt.h        |  49 +++++++
+ arch/arm64/kernel/Makefile           |   3 +
+ arch/arm64/kernel/cpu-reset.S        |  84 ++++++++++++
+ arch/arm64/kernel/cpu-reset.h        |  22 ++++
+ arch/arm64/kernel/crash_dump.c       |  71 ++++++++++
+ arch/arm64/kernel/hyp-stub.S         |  43 ++++--
+ arch/arm64/kernel/machine_kexec.c    | 248 +++++++++++++++++++++++++++++++++++
+ arch/arm64/kernel/relocate_kernel.S  | 131 ++++++++++++++++++
+ arch/arm64/kernel/setup.c            |   7 +-
+ arch/arm64/kernel/smp.c              |  16 ++-
+ arch/arm64/kvm/hyp-init.S            |  34 ++++-
+ arch/arm64/kvm/hyp.S                 |  44 +++++--
+ arch/arm64/mm/cache.S                |   2 -
+ arch/arm64/mm/init.c                 |  83 ++++++++++++
+ arch/arm64/mm/mmu.c                  |  11 ++
+ arch/arm64/mm/proc-macros.S          |  64 ---------
+ arch/arm64/mm/proc.S                 |   3 -
+ include/uapi/linux/kexec.h           |   1 +
+ 31 files changed, 1097 insertions(+), 151 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kexec.h
+ create mode 100644 arch/arm64/kernel/cpu-reset.S
+ create mode 100644 arch/arm64/kernel/cpu-reset.h
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+ create mode 100644 arch/arm64/kernel/machine_kexec.c
+ create mode 100644 arch/arm64/kernel/relocate_kernel.S
+ delete mode 100644 arch/arm64/mm/proc-macros.S
+
+-- 
+2.5.0
+
 
 _______________________________________________
 kexec mailing list
