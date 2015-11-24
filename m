@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a13fi-0007nE-H6
- for kexec@lists.infradead.org; Tue, 24 Nov 2015 02:49:35 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: makedumpfile-1.5.9: Introduce parallel compression processing.
-Date: Tue, 24 Nov 2015 02:48:13 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E0674F@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701DF7CC4@BPXM01GP.gisp.nec.co.jp>
- <56308618.3080908@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701DF7F43@BPXM01GP.gisp.nec.co.jp>
- <56309A33.4000201@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E059DD@BPXM01GP.gisp.nec.co.jp>
- <564EF47D.7090202@canonical.com>
-In-Reply-To: <564EF47D.7090202@canonical.com>
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a14sB-0001fR-Ib
+ for kexec@lists.infradead.org; Tue, 24 Nov 2015 04:06:34 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: [V5 PATCH 1/4] panic/x86: Fix re-entrance problem due to panic
+ on NMI
+Date: Tue, 24 Nov 2015 04:06:03 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454A24B0F@GSjpTKYDCembx31.service.hitachi.net>
+References: <20151120093641.4285.97253.stgit@softrs>
+ <20151120093644.4285.9349.stgit@softrs> <20151123184930.GH5134@pd.tnic>
+In-Reply-To: <20151123184930.GH5134@pd.tnic>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -28,77 +26,190 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Louis Bouchard <louis.bouchard@canonical.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: 'Borislav Petkov' <bp@alien8.de>
+Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
->>>>>> o Support new kernels - The supported kernel is updated to 4.1 in
->>>>>> this version. At first I'm going to extend the supported version to
->>>>>> 4.2, but I found an issue that makedumpfile seems to exclude
->>>>>> necessary pages by mistake on linux 4.2. When crash-7.1.3 reads
->>>>>> that filtered dump file, the following message is shown.
->>>>>>
->>>>>> crash: page excluded: kernel virtual address: f3fe0000  type:
->>>>>> "fill_task_struct"
->>>>>>
->>>>>> This will be fixed in the next version.
->>>>>
->>>>> Have you fixed the 4.2 kernel issue already or you intend to work on
->>>>> it in the future ?
->>>>
->>>> I haven't done anything yet, I was going to work from now.
->>>>
->>>>> Both Debian and Ubuntu run 4.2 kernel so if waiting for a fix is
->>>>> acceptable I would rather bring in a 1.5.9 + patch version.
->>>>
->>>> So it will be helpful if you can do it.
->>>>
->>>>
->>>> Thanks, Atsushi Kumagai
->>>>
->>>
->>> That is perfect.  Just let me know once you have identified a fix and I
->>> will include it in the new package.
->>
->> I confirmed that there is no problem in makedumpfile, so you don't need to
->> update your makedumpfile packages.
->>
->> That was a crash side issue and the problem is still under discussion. The
->> warning I reported first is going to be solved in the next crash version,
->> but "struct" and "task" commands with task_struct (or some corresponding
->> fields) can fail if a dumpfile of linux 4.2 is filtered.
->>
->> You should see this thread for more details:
->>
->> https://www.redhat.com/archives/crash-utility/2015-November/msg00021.html
->>
->>
->> Thanks, Atsushi Kumagai
->>
->
->As I understand it, 1.5.9 will work fine on 4.2 kernels.  But as the released
->source stand, 1.5.9 only supports up to 4.1.  Should I simply go ahead and
->"manually" add support statement for 4.2 (in README & makedumpfile.h) or you
->prefer to change it in your git tree ?
+Hi,
 
-I've updated the git tree, you can pick up the commit:
+> On Fri, Nov 20, 2015 at 06:36:44PM +0900, Hidehiro Kawai wrote:
+> > If panic on NMI happens just after panic() on the same CPU, panic()
+> > is recursively called.  As the result, it stalls after failing to
+> > acquire panic_lock.
+> >
+> > To avoid this problem, don't call panic() in NMI context if
+> > we've already entered panic().
+> >
+> > V4:
+> > - Improve comments in io_check_error() and panic()
+> >
+> > V3:
+> > - Introduce nmi_panic() macro to reduce code duplication
+> > - In the case of panic on NMI, don't return from NMI handlers
+> >   if another cpu already panicked
+> >
+> > V2:
+> > - Use atomic_cmpxchg() instead of current spin_trylock() to
+> >   exclude concurrent accesses to the panic routines
+> > - Don't introduce no-lock version of panic()
+> >
+> > Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > ---
+> >  arch/x86/kernel/nmi.c  |   16 ++++++++++++----
+> >  include/linux/kernel.h |   13 +++++++++++++
+> >  kernel/panic.c         |   15 ++++++++++++---
+> >  kernel/watchdog.c      |    2 +-
+> >  4 files changed, 38 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> > index 697f90d..5131714 100644
+> > --- a/arch/x86/kernel/nmi.c
+> > +++ b/arch/x86/kernel/nmi.c
+> > @@ -231,7 +231,7 @@ pci_serr_error(unsigned char reason, struct pt_regs *regs)
+> >  #endif
+> >
+> >  	if (panic_on_unrecovered_nmi)
+> > -		panic("NMI: Not continuing");
+> > +		nmi_panic("NMI: Not continuing");
+> >
+> >  	pr_emerg("Dazed and confused, but trying to continue\n");
+> >
+> > @@ -255,8 +255,16 @@ io_check_error(unsigned char reason, struct pt_regs *regs)
+> >  		 reason, smp_processor_id());
+> >  	show_regs(regs);
+> >
+> > -	if (panic_on_io_nmi)
+> > -		panic("NMI IOCK error: Not continuing");
+> > +	if (panic_on_io_nmi) {
+> > +		nmi_panic("NMI IOCK error: Not continuing");
+> 
+> Btw, that panic_on_io_nmi seems undocumented in
+> Documentation/sysctl/kernel.txt. Care to document it, please, as a
+> separate patch?
 
-commit 1c01d4bfb383c10a97e256f4a6cbf1d92ed133f6
-Author: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Date:   Tue Nov 24 10:50:07 2015 +0900
+Sure. I'll post a documentation patch for it in a separate patch.
+Because panic_on_io_nmi has been available since relatively old days,
+I didn't check it. 
 
-    [PATCH] Support newer kernels.
+> > +
+> > +		/*
+> > +		 * If we return from nmi_panic(), it means we have received
+> > +		 * NMI while processing panic().  So, simply return without
+> > +		 * a delay and re-enabling NMI.
+> > +		 */
+> > +		return;
+> > +	}
+> >
+> >  	/* Re-enable the IOCK line, wait for a few seconds */
+> >  	reason = (reason & NMI_REASON_CLEAR_MASK) | NMI_REASON_CLEAR_IOCHK;
+> > @@ -297,7 +305,7 @@ unknown_nmi_error(unsigned char reason, struct pt_regs *regs)
+> >
+> >  	pr_emerg("Do you have a strange power saving mode enabled?\n");
+> >  	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
+> > -		panic("NMI: Not continuing");
+> > +		nmi_panic("NMI: Not continuing");
+> >
+> >  	pr_emerg("Dazed and confused, but trying to continue\n");
+> >  }
+> > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> > index 350dfb0..480a4fd 100644
+> > --- a/include/linux/kernel.h
+> > +++ b/include/linux/kernel.h
+> > @@ -445,6 +445,19 @@ extern int sysctl_panic_on_stackoverflow;
+> >
+> >  extern bool crash_kexec_post_notifiers;
+> >
+> > +extern atomic_t panic_cpu;
+> 
+> This needs a comment explaining what this variable is and what it
+> denotes.
 
-    A new makedumpfile supports newer kernels:
+OK, I'll do that in the next version.
 
-          - 4.2    (x86 FLATMEM)
-          - 4.2    (x86 SPARSEMEM)
-          - 4.2    (x86_64 SPARSEMEM)
+> 
+> > +
+> > +/*
+> > + * A variant of panic() called from NMI context.
+> > + * If we've already panicked on this cpu, return from here.
+> > + */
+> > +#define nmi_panic(fmt, ...)						\
+> > +	do {								\
+> > +		int this_cpu = raw_smp_processor_id();			\
+> > +		if (atomic_cmpxchg(&panic_cpu, -1, this_cpu) != this_cpu) \
+> > +			panic(fmt, ##__VA_ARGS__);			\
+> > +	} while (0)
+> > +
+> >  /*
+> >   * Only to be used by arch init code. If the user over-wrote the default
+> >   * CONFIG_PANIC_TIMEOUT, honor it.
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index 4579dbb..24ee2ea 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -61,6 +61,8 @@ void __weak panic_smp_self_stop(void)
+> >  		cpu_relax();
+> >  }
+> >
+> > +atomic_t panic_cpu = ATOMIC_INIT(-1);
+> > +
+> >  /**
+> >   *	panic - halt the system
+> >   *	@fmt: The text string to print
+> > @@ -71,17 +73,17 @@ void __weak panic_smp_self_stop(void)
+> >   */
+> >  void panic(const char *fmt, ...)
+> >  {
+> > -	static DEFINE_SPINLOCK(panic_lock);
+> >  	static char buf[1024];
+> >  	va_list args;
+> >  	long i, i_next = 0;
+> >  	int state = 0;
+> > +	int old_cpu, this_cpu;
+> >
+> >  	/*
+> >  	 * Disable local interrupts. This will prevent panic_smp_self_stop
+> >  	 * from deadlocking the first cpu that invokes the panic, since
+> >  	 * there is nothing to prevent an interrupt handler (that runs
+> > -	 * after the panic_lock is acquired) from invoking panic again.
+> > +	 * after setting panic_cpu) from invoking panic again.
+> >  	 */
+> >  	local_irq_disable();
+> >
+> > @@ -94,8 +96,15 @@ void panic(const char *fmt, ...)
+> >  	 * multiple parallel invocations of panic, all other CPUs either
+> >  	 * stop themself or will wait until they are stopped by the 1st CPU
+> >  	 * with smp_send_stop().
+> > +	 *
+> > +	 * `old_cpu == -1' means this is the 1st CPU which comes here, so
+> > +	 * go ahead.
+> > +	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
+> > +	 * panic_cpu to this cpu.  In this case, this is also the 1st CPU.
+> 
+> I'd prefer that -1 to be
+> 
+> #define INVALID_CPU_NUM		-1
+> 
+> or
+> 
+> #define UNDEFINED_CPU_NUM	-1
+> 
+> or so instead of a naked number.
 
-    Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+OK, I'll use a macro.
+
+Regards,
+
+--
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
 
 
-Thanks,
-Atsushi Kumagai
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
