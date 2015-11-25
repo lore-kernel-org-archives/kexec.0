@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a1TZF-0000by-KJ
- for kexec@lists.infradead.org; Wed, 25 Nov 2015 06:28:39 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [V5 PATCH 3/4] kexec: Fix race between panic() and
- crash_kexec() called directly
-Date: Wed, 25 Nov 2015 06:28:14 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A84454A2A48B@GSjpTKYDCembx31.service.hitachi.net>
+ id 1a1Vsg-0002WV-0L
+ for kexec@lists.infradead.org; Wed, 25 Nov 2015 08:56:51 +0000
+Date: Wed, 25 Nov 2015 09:56:21 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [V5 PATCH 2/4] panic/x86: Allow cpus to save registers even if
+ they are looping in NMI context
+Message-ID: <20151125085620.GA29499@pd.tnic>
 References: <20151120093641.4285.97253.stgit@softrs>
- <20151120093648.4285.17715.stgit@softrs>
- <20151124203555.GC6100@home.goodmis.org>
-In-Reply-To: <20151124203555.GC6100@home.goodmis.org>
-Content-Language: ja-JP
+ <20151120093646.4285.62259.stgit@softrs>
+ <20151124104853.GC3785@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A84454A2A425@GSjpTKYDCembx31.service.hitachi.net>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <04EAB7311EE43145B2D3536183D1A84454A2A425@GSjpTKYDCembx31.service.hitachi.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,188 +23,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Steven Rostedt' <rostedt@goodmis.org>
-Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Borislav Petkov <bp@alien8.de>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-> On Fri, Nov 20, 2015 at 06:36:48PM +0900, Hidehiro Kawai wrote:
-> > Currently, panic() and crash_kexec() can be called at the same time.
-> > For example (x86 case):
-> >
-> > CPU 0:
-> >   oops_end()
-> >     crash_kexec()
-> >       mutex_trylock() // acquired
-> >         nmi_shootdown_cpus() // stop other cpus
-> >
-> > CPU 1:
-> >   panic()
-> >     crash_kexec()
-> >       mutex_trylock() // failed to acquire
-> >     smp_send_stop() // stop other cpus
-> >     infinite loop
-> >
-> > If CPU 1 calls smp_send_stop() before nmi_shootdown_cpus(), kdump
-> > fails.
-> 
-> So the smp_send_stop() stops CPU 0 from calling nmi_shootdown_cpus(), right?
-
-Yes, but the important thing is that CPU 1 stops CPU 0 which is
-only CPU processing crash_ kexec routines.
-
-> >
-> > In another case:
-> >
-> > CPU 0:
-> >   oops_end()
-> >     crash_kexec()
-> >       mutex_trylock() // acquired
-> >         <NMI>
-> >         io_check_error()
-> >           panic()
-> >             crash_kexec()
-> >               mutex_trylock() // failed to acquire
-> >             infinite loop
-> >
-> > Clearly, this is an undesirable result.
-> 
-> I'm trying to see how this patch fixes this case.
-> 
-> >
-> > To fix this problem, this patch changes crash_kexec() to exclude
-> > others by using atomic_t panic_cpu.
-> >
-> > V5:
-> > - Add missing dummy __crash_kexec() for !CONFIG_KEXEC_CORE case
-> > - Replace atomic_xchg() with atomic_set() in crash_kexec() because
-> >   it is used as a release operation and there is no need of memory
-> >   barrier effect.  This change also removes an unused value warning
-> >
-> > V4:
-> > - Use new __crash_kexec(), no exclusion check version of crash_kexec(),
-> >   instead of checking if panic_cpu is the current cpu or not
-> >
-> > V2:
-> > - Use atomic_cmpxchg() instead of spin_trylock() on panic_lock
-> >   to exclude concurrent accesses
-> > - Don't introduce no-lock version of crash_kexec()
-> >
-> > Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Michal Hocko <mhocko@kernel.org>
-> > ---
-> >  include/linux/kexec.h |    2 ++
-> >  kernel/kexec_core.c   |   26 +++++++++++++++++++++++++-
-> >  kernel/panic.c        |    4 ++--
-> >  3 files changed, 29 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index d140b1e..7b68d27 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -237,6 +237,7 @@ extern int kexec_purgatory_get_set_symbol(struct kimage *image,
-> >  					  unsigned int size, bool get_value);
-> >  extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
-> >  					     const char *name);
-> > +extern void __crash_kexec(struct pt_regs *);
-> >  extern void crash_kexec(struct pt_regs *);
-> >  int kexec_should_crash(struct task_struct *);
-> >  void crash_save_cpu(struct pt_regs *regs, int cpu);
-> > @@ -332,6 +333,7 @@ int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
-> >  #else /* !CONFIG_KEXEC_CORE */
-> >  struct pt_regs;
-> >  struct task_struct;
-> > +static inline void __crash_kexec(struct pt_regs *regs) { }
-> >  static inline void crash_kexec(struct pt_regs *regs) { }
-> >  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
-> >  #define kexec_in_progress false
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index 11b64a6..9d097f5 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -853,7 +853,8 @@ struct kimage *kexec_image;
-> >  struct kimage *kexec_crash_image;
-> >  int kexec_load_disabled;
-> >
-> > -void crash_kexec(struct pt_regs *regs)
-> > +/* No panic_cpu check version of crash_kexec */
-> > +void __crash_kexec(struct pt_regs *regs)
-> >  {
-> >  	/* Take the kexec_mutex here to prevent sys_kexec_load
-> >  	 * running on one cpu from replacing the crash kernel
-> > @@ -876,6 +877,29 @@ void crash_kexec(struct pt_regs *regs)
-> >  	}
-> >  }
-> >
-> > +void crash_kexec(struct pt_regs *regs)
-> > +{
-> > +	int old_cpu, this_cpu;
-> > +
-> > +	/*
-> > +	 * Only one CPU is allowed to execute the crash_kexec() code as with
-> > +	 * panic().  Otherwise parallel calls of panic() and crash_kexec()
-> > +	 * may stop each other.  To exclude them, we use panic_cpu here too.
-> > +	 */
-> > +	this_cpu = raw_smp_processor_id();
-> > +	old_cpu = atomic_cmpxchg(&panic_cpu, -1, this_cpu);
-> > +	if (old_cpu == -1) {
-> > +		/* This is the 1st CPU which comes here, so go ahead. */
-> > +		__crash_kexec(regs);
-> > +
-> > +		/*
-> > +		 * Reset panic_cpu to allow another panic()/crash_kexec()
-> > +		 * call.
-> > +		 */
-> > +		atomic_set(&panic_cpu, -1);
-> > +	}
-> > +}
-> > +
-> >  size_t crash_get_memory_size(void)
-> >  {
-> >  	size_t size = 0;
-> > diff --git a/kernel/panic.c b/kernel/panic.c
-> > index 4fce2be..5d0b807 100644
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -138,7 +138,7 @@ void panic(const char *fmt, ...)
-> >  	 * the "crash_kexec_post_notifiers" option to the kernel.
-> >  	 */
-> >  	if (!crash_kexec_post_notifiers)
-> > -		crash_kexec(NULL);
-> > +		__crash_kexec(NULL);
-> 
-> Why call the __crash_kexec() version and not just crash_kexec() here.
-> This needs to be documented.
-
-In this patch, an exclusive execution control with panic_cpu
-is added to crash_kexec(). When crash_kexec() is called from
-panic(), we don't need to check panic_cpu because we have already
-held the exclusive control. So, __crash_kexec() is used here
-to bypass it.
-
-Of course, we can call crash_kexec() here, and crash_kexec()
-checks if panic_cpu is equal to the current CPU number, and
-if so, continues to process crash_kexec() routines.
-This was done in older version of this patch series, but
-Peter received a wrong impression about checking if panic_cpu
-is equal to the current CPU number; it implies that it permits
-recursive call of crash_kexec() (actually recursive call of
-crash_kexec() can't happen).
-
-Anyway, I'll add some comments.
- 
-Regards,
-
---
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBOb3YgMjUsIDIwMTUgYXQgMDU6NTE6NTlBTSArMDAwMCwg5rKz5ZCI6Iux5a6PIC8g
+S0FXQUnvvIxISURFSElSTyB3cm90ZToKPiA+ID4gYEluZmluaXRlIGxvb3AgaW4gTk1JIGNvbnRl
+eHQnIGNhbiBoYXBwZW46Cj4gPiA+Cj4gPiA+ICAgYS4gd2hlbiBhIGNwdSBwYW5pY3Mgb24gTk1J
+IHdoaWxlIGFub3RoZXIgY3B1IGlzIHByb2Nlc3NpbmcgcGFuaWMKPiA+ID4gICBiLiB3aGVuIGEg
+Y3B1IHJlY2VpdmVkIGFuIGV4dGVybmFsIG9yIHVua25vd24gTk1JIHdoaWxlIGFub3RoZXIKPiA+
+ID4gICAgICBjcHUgaXMgcHJvY2Vzc2luZyBwYW5pYyBvbiBOTUkKPiA+ID4KPiA+ID4gSW4gdGhl
+IGNhc2Ugb2YgYSwgaXQgbG9vcHMgaW4gcGFuaWNfc21wX3NlbGZfc3RvcCgpLiAgSW4gdGhlIGNh
+c2UKPiA+ID4gb2YgYiwgaXQgbG9vcHMgaW4gcmF3X3NwaW5fbG9jaygpIG9mIG5taV9yZWFzb25f
+bG9jay4KPiA+IAo+ID4gUGxlYXNlIGRlc2NyaWJlIHRob3NlIHR3byBjYXNlcyBtb3JlIHZlcmJv
+c2VseSAtIGl0IHRha2VzIHNsb3cgcGVvcGxlCj4gPiBsaWtlIG1lIGEgd2hpbGUgdG8gZmlndXJl
+IG91dCB3aGF0IGV4YWN0bHkgY2FuIGhhcHBlbi4KPiAKPiAgIGEuIHdoZW4gYSBjcHUgcGFuaWNz
+IG9uIE5NSSB3aGlsZSBhbm90aGVyIGNwdSBpcyBwcm9jZXNzaW5nIHBhbmljCj4gICAgICBFeC4K
+PiAgICAgIENQVSAwICAgICAgICAgICAgICAgICAgICAgQ1BVIDEKPiAgICAgID09PT09PT09PT09
+PT09PT09ICAgICAgICAgPT09PT09PT09PT09PT09PT0KPiAgICAgIHBhbmljKCkKPiAgICAgICAg
+cGFuaWNfY3B1IDwtLSAwCj4gICAgICAgIGNoZWNrIHBhbmljX2NwdQo+ICAgICAgICBjcmFzaF9r
+ZXhlYygpCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY2VpdmUgYW4gdW5rbm93
+biBOTUkKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5rbm93bl9ubWlfZXJyb3Io
+KQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5taV9wYW5pYygpCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwYW5pYygpCj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGNoZWNrIHBhbmljX2NwdQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBwYW5pY19zbXBfc2VsZl9zdG9wKCkKPiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBpbmZpbml0ZSBsb29wIGluIE5NSSBjb250ZXh0Cj4gCj4g
+ICBiLiB3aGVuIGEgY3B1IHJlY2VpdmVkIGFuIGV4dGVybmFsIG9yIHVua25vd24gTk1JIHdoaWxl
+IGFub3RoZXIKPiAgICAgIGNwdSBpcyBwcm9jZXNzaW5nIHBhbmljIG9uIE5NSQo+ICAgICAgRXgu
+Cj4gICAgICBDUFUgMCAgICAgICAgICAgICAgICAgICAgIENQVSAxCj4gICAgICA9PT09PT09PT09
+PT09PT09PT09PT09ICAgID09PT09PT09PT09PT09PT09PQo+ICAgICAgcmVjZWl2ZSBhbiB1bmtu
+b3duIE5NSQo+ICAgICAgdW5rbm93bl9ubWlfZXJyb3IoKQo+ICAgICAgICBubWlfcGFuaWMoKSAg
+ICAgICAgICAgICByZWNlaXZlIGFuIHVua25vd24gTk1JCj4gICAgICAgICAgcGFuaWNfY3B1IDwt
+LSAwICAgICAgIHVua25vd25fbm1pX2Vycm9yKCkKPiAgICAgICAgICBwYW5pYygpICAgICAgICAg
+ICAgICAgICBubWlfcGFuaWMoKQo+ICAgICAgICAgICAgY2hlY2sgcGFuaWNfY3B1ICAgICAgICAg
+cGFuaWMKPiAgICAgICAgICAgIGNyYXNoX2tleGVjKCkgICAgICAgICAgICAgY2hlY2sgcGFuaWNf
+Y3B1Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBhbmljX3NtcF9zZWxm
+X3N0b3AoKQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGluZmluaXRl
+IGxvb3AgaW4gTk1JIGNvbnRleHQKCk9rLCB0aGF0J3Mgd2hhdCBJIHNhdyB0b28sIHRoYW5rcyBm
+b3IgY29uZmlybWluZy4KCkJ1dCBwbGVhc2Ugd3JpdGUgdGhvc2UgZXhhbXBsZXMgd2l0aCB0aGUg
+Km9sZCogY29kZSBpbiB0aGUgY29tbWl0Cm1lc3NhZ2UsIGkuZS4gd2l0aG91dCBwYW5pY19jcHUg
+YW5kIG5taV9wYW5pYygpIHdoaWNoIHlvdSdyZSBhZGRpbmcuCgpCYXNpY2FsbHksIHlvdSB3YW50
+IHRvIHN0cnVjdHVyZSB5b3VyIGNvbW1pdCBtZXNzYWdlIHRoaXMgd2F5OgoKVGhpcyBpcyB0aGUg
+cHJvYmxlbSB0aGUgY3VycmVudCBjb2RlIGhhczogLi4uCgpCdXQgd2UgbmVlZCB0byBkbyB0aGlz
+OiAuLi4KCldlIGZpeCBpdCBieSBkb2luZyB0aGF0OiAuLi4KClRoaXMgd2lsbCBiZSBvZiBncmVh
+dCBoZWxwIG5vdyB3aGVuIHJlYWRpbmcgdGhlIGNvbW1pdCBtZXNzYWdlIGFuZCBvZgppbnZhbHVh
+YmxlIGhlbHAgbGF0ZXIsIHdoZW4gd2UgYWxsIGhhdmUgZm9yZ290dGVuIGFib3V0IHRoZSBpc3N1
+ZSBhbmQKYXJlIHNjcmF0Y2hpbmcgaGVhZHMgb3ZlciB3aHkgc3R1ZmYgd2FzIGFkZGVkLgoKPiA+
+ID4gVG8gc2F2ZSByZWdpc3RlcnMgaW4gdGhlc2UgY2FzZSB0b28sIHRoaXMgcGF0Y2ggZG9lcyBm
+b2xsb3dpbmcgdGhpbmdzOgo+ID4gPgo+ID4gPiAxLiBNb3ZlIHRoZSB0aW1pbmcgb2YgYGluZmlu
+aXRlIGxvb3AgaW4gTk1JIGNvbnRleHQnIChhY3R1YWxseQo+ID4gPiAgICBkb25lIGJ5IHBhbmlj
+X3NtcF9zZWxmX3N0b3AoKSkgb3V0c2lkZSBvZiBwYW5pYygpIHRvIGVuYWJsZSB1cyB0bwo+ID4g
+PiAgICByZWZlciBwdF9yZWdzCj4gPiAKPiA+IEkgY2FuJ3QgcGFyc2UgdGhhdCBzZW50ZW5jZS4g
+QW5kIEkgcmVhbGx5IHRyaWVkIDotXAo+ID4gcGFuaWNfc21wX3NlbGZfc3RvcCgpIGlzIHN0aWxs
+IGluIHBhbmljKCkuCj4gCj4gcGFuaWNfc21wX3NlbGZfc3RvcCgpIGlzIHN0aWxsIHVzZWQgd2hl
+biBhIENQVSBpbiBub3JtYWwgY29udGV4dAo+IHNob3VsZCBnbyBpbnRvIGluZmluaXRlIGxvb3Au
+ICBPbmx5IHdoZW4gYSBDUFUgaXMgaW4gTk1JIGNvbnRleHQsCj4gbm1pX3BhbmljX3NlbGZfc3Rv
+cCgpIGlzIGNhbGxlZCBhbmQgdGhlIENQVSBsb29wcyBpbmZpbml0ZWx5Cj4gd2l0aG91dCBlbnRl
+cmluZyBwYW5pYygpLgo+IAo+IEknbGwgdHJ5IHRvIHJldmlzZSB0aGlzIHNlbnRlbnNlLgoKRldJ
+VywgaXQgc291bmRzIGJldHRlciBhbHJlYWR5ISA6KQoKPiA+ID4gKwkgKi8KPiA+ID4gKwl3aGls
+ZSAoIXJhd19zcGluX3RyeWxvY2soJm5taV9yZWFzb25fbG9jaykpCj4gPiA+ICsJCXBvbGxfY3Jh
+c2hfaXBpX2FuZF9jYWxsYmFjayhyZWdzKTsKPiA+IAo+ID4gV2FhYWl0IGEgbWludXRlOiBzbyBp
+ZiB3ZSdyZSBnZXR0aW5nIE5NSXMgYnJvYWRjYXN0ZWQgb24gZXZlcnkgY29yZSBidXQKPiA+IHdl
+J3JlICpub3QqIGNyYXNoIGR1bXBpbmcsIHdlIHdpbGwgcnVuIGludG8gaGVyZSB0b28uIFRoaXMg
+Y2FuJ3QgYmUKPiA+IHJpZ2h0LiA6LVwKPiAKPiBBcyBTdGV2ZW4gY29tbWVudGVkLCBwb2xsX2Ny
+YXNoX2lwaV9hbmRfY2FsbGJhY2soKSBkb2VzIG5vdGhpbmcKPiBpZiB3ZSdyZSBub3QgY3Jhc2gg
+ZHVtcGluZy4gIEJ1dCB5ZXMsIHRoaXMgaXMgY29uZnVzaW5nLiAgSSdsbCBhZGQKPiBtb3JlIGRl
+dGFpbGVkIGNvbW1lbnQsIG9yIGNoYW5nZSB0aGUgbG9naWMgYSBiaXQgaWYgSSBjb21lIHVwIHdp
+dGgKPiBiZXR0ZXIgb25lLgoKVGhhbmtzLCBtdWNoIGFwcHJlY2lhdGVkIQoKPiA+ID4gKy8qCj4g
+PiA+ICsgKiBXYWl0IGZvciB0aGUgdGltaW5nIG9mIElQSSBmb3IgY3Jhc2ggZHVtcGluZywgYW5k
+IHRoZW4gY2FsbCBpdHMgY2FsbGJhY2sKPiA+IAo+ID4gIldhaXQgZm9yIHRoZSBjcmFzaCBkdW1w
+aW5nIElQSSB0byBjb21wbGV0ZS4uLiAiCj4gCj4gU28sIEkgdGhpbmsgIldhaXQgZm9yIHRoZSBj
+cmFzaCBkdW1waW5nIElQSSB0byBiZSBpc3N1ZWQuLi4iIGlzIGJldHRlci4KPiAiY29tcGxldGUi
+IHdvdWxkIGJlIGFtYmlndW91cyBpbiB0aGlzIGNvbnRleHQuCgpPay4KCj4gCj4gPiA+ICsgKiBk
+aXJlY3RseS4gIFRoaXMgZnVuY3Rpb24gaXMgdXNlZCB3aGVuIHdlIGhhdmUgYWxyZWFkeSBiZWVu
+IGluIE5NSSBoYW5kbGVyLgo+ID4gPiArICovCj4gPiA+ICt2b2lkIHBvbGxfY3Jhc2hfaXBpX2Fu
+ZF9jYWxsYmFjayhzdHJ1Y3QgcHRfcmVncyAqcmVncykKPiA+IAo+ID4gV2h5ICJwb2xsIj8gV2Ug
+d29uJ3QgcmV0dXJuIGZyb20gY3Jhc2hfbm1pX2NhbGxiYWNrKCkgaWYgd2UncmUgbm90IHRoZQo+
+ID4gY3Jhc2hpbmcgQ1BVLgo+IAo+IFRoaXMgZnVuY3Rpb24gcG9sbHMgdGhhdCBjcmFzaCBJUEkg
+aGFzIGJlZW4gaXNzdWVkIGJ5IGNoZWNraW5nCj4gY3Jhc2hfaXBpX2RvbmUsIHRoZW4gaW52b2tl
+cyB0aGUgY2FsbGJhY2suICBUaGlzIGlzIGRpZmZlcmVudAo+IGZyb20gc28tY2FsbGVkICJwb2xs
+IiBmdW5jdGlvbnMuICBEbyB5b3UgaGF2ZSBzb21lIGdvb2QgbmFtZT8KCk1heWJlIHNvbWV0aGlu
+ZyBhcyBzaW1wbGUgYXMgInJ1bl9jcmFzaF9jYWxsYmFjayI/CgpPciBzaW5jZSB3ZSdyZSBjYWxs
+aW5nIGl0IGZyb20gb3RoZXIgcGxhY2VzLCBtYXliZSBhZGQgdGhlICJjcmFzaCIKcHJlZml4OgoK
+CXdoaWxlICghcmF3X3NwaW5fdHJ5bG9jaygmbm1pX3JlYXNvbl9sb2NrKSkKCQljcmFzaF9ydW5f
+Y2FsbGJhY2socmVncyk7CgpMb29rcyBldmVuIGJldHRlciB0byBtZSBpbiBjb2RlIGNvbnRleHQu
+IDopCgpUaGFua3MhCgotLSAKUmVnYXJkcy9HcnVzcywKICAgIEJvcmlzLgoKRUNPIHRpcCAjMTAx
+OiBUcmltIHlvdXIgbWFpbHMgd2hlbiB5b3UgcmVwbHkuCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
