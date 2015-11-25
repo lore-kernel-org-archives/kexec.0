@@ -1,31 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a1ZUX-000060-QC
- for kexec@lists.infradead.org; Wed, 25 Nov 2015 12:48:14 +0000
-Received: from localhost
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 25 Nov 2015 12:47:45 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp01.portsmouth.uk.ibm.com (Postfix) with ESMTP id B09C217D8062
- for <kexec@lists.infradead.org>; Wed, 25 Nov 2015 12:48:08 +0000 (GMT)
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
- [9.149.37.250])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- tAPClhHI51052566
- for <kexec@lists.infradead.org>; Wed, 25 Nov 2015 12:47:43 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- tAPClgQg009638
- for <kexec@lists.infradead.org>; Wed, 25 Nov 2015 05:47:43 -0700
-Date: Wed, 25 Nov 2015 13:47:41 +0100
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [PATCH] kexec: fix mmap return code handling
-Message-ID: <20151125134741.55c7e21c@holzheu>
-Mime-Version: 1.0
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a1bjF-0004Ap-9R
+ for kexec@lists.infradead.org; Wed, 25 Nov 2015 15:11:30 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: [V5 PATCH 2/4] panic/x86: Allow cpus to save registers even if
+ they are looping in NMI context
+Date: Wed, 25 Nov 2015 15:11:05 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454A2C71E@GSjpTKYDCembx31.service.hitachi.net>
+References: <20151120093641.4285.97253.stgit@softrs>
+ <20151120093646.4285.62259.stgit@softrs> <20151124104853.GC3785@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A84454A2A425@GSjpTKYDCembx31.service.hitachi.net>
+ <20151125085620.GA29499@pd.tnic>
+ <04EAB7311EE43145B2D3536183D1A84454A2B929@GSjpTKYDCembx31.service.hitachi.net>
+ <20151125095758.GC29499@pd.tnic>
+In-Reply-To: <20151125095758.GC29499@pd.tnic>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,44 +26,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: stefan.roscher@de.ibm.com, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
+To: 'Borislav Petkov' <bp@alien8.de>
+Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Simon,
-
-I made a mistake in my mmap patch, sorry for that!
-
-When mmap fails, MAP_FAILED (that is, (void *) -1) is returned. Currently
-we assume that NULL is returned. Fix this and add the MAP_FAILED check.
-
-Fixes: 95741713e790 ("kexec/s390x: use mmap instead of read for slurp_file")
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- kexec/kexec.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index cf6e03d..02285fb 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -568,6 +568,8 @@ static char *slurp_file_generic(const char *filename, off_t *r_size,
- 		if (use_mmap) {
- 			buf = mmap(NULL, size, PROT_READ|PROT_WRITE,
- 				   MAP_PRIVATE, fd, 0);
-+			if (buf == MAP_FAILED)
-+				buf = NULL;
- 			nread = size;
- 		} else {
- 			buf = slurp_fd(fd, filename, size, &nread);
--- 
-2.3.9
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiBPbiBXZWQsIE5vdiAyNSwgMjAxNSBhdCAwOTo0NjozN0FNICswMDAwLCDmsrPlkIjoi7Hlro8g
+LyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KLi4uDQo+ID4gSSBwcmVmZXIgdGhpcywgYnV0IHdl
+IG1pZ2h0IHdhbnQgdG8gYWRkIHNvbWUgbW9yZSBwcmVmaXggb3Igc3VmZml4Lg0KPiA+IEZvciBl
+eGFtcGxlLCAiY29uZGl0aW9uYWxseV9ydW5fY3Jhc2hfbm1pX2NhbGxiYWNrIi4NCj4gDQo+IFRo
+YXQncyB1bm5lY2Vzc2FyeSBJTU8uIElmIHlvdSBuZWVkIHRvIGV4cHJlc3MgdGhhdCwgeW91IGNv
+dWxkIHdyaXRlDQo+IHRoYXQgaW4gYSBjb21tZW50IGFib3ZlIHRoZSBmdW5jdGlvbiBkZWZpbml0
+aW9uLiBBbnlvbmUgd2hvIGxvb2tzIGF0DQo+IHRoZSBjb2RlIHRoZW4gd2lsbCBrbm93IHRoYXQg
+aXQgaXMgY29uZGl0aW9uYWwsIGxpa2Ugc28gbWFueSBvdGhlcg0KPiBrZXJuZWwgZnVuY3Rpb25z
+LiA6KQ0KDQpPSywgSSdsbCB1c2UgYSBzaW1wbGUgb25lIHdpdGggYSBjb21tZW50Lg0KDQpSZWdh
+cmRzLA0KDQotLQ0KSGlkZWhpcm8gS2F3YWkNCkhpdGFjaGksIEx0ZC4gUmVzZWFyY2ggJiBEZXZl
+bG9wbWVudCBHcm91cA0KDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
