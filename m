@@ -1,10 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <8b02b030a4a081816f35e49b210b41d9f6e2d961.1448403503.git.geoff@infradead.org>
-In-Reply-To: <cover.1448403503.git.geoff@infradead.org>
-References: <cover.1448403503.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v12 13/16] arm64: kdump: add kdump support
-Date: Tue, 24 Nov 2015 22:25:34 +0000
+Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a1Pe9-0003fP-Se
+ for kexec@lists.infradead.org; Wed, 25 Nov 2015 02:17:27 +0000
+Received: by pacdm15 with SMTP id dm15so40740231pac.3
+ for <kexec@lists.infradead.org>; Tue, 24 Nov 2015 18:17:06 -0800 (PST)
+Received: from monster-15.cumulusnetworks.com. ([216.129.126.126])
+ by smtp.googlemail.com with ESMTPSA id xr8sm17475815pab.26.2015.11.24.18.17.04
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 24 Nov 2015 18:17:05 -0800 (PST)
+From: Curt Brune <curt@cumulusnetworks.com>
+Subject: [PATCH 1/1] Improve device tree directory sorting
+Date: Tue, 24 Nov 2015 18:17:10 -0800
+Message-Id: <1448417830-48786-2-git-send-email-curt@cumulusnetworks.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,207 +27,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
 
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Previously when sorting the device tree directory entries, if both
+device tree entries contained the '@' character then comparison was
+made based on the length of the strings.
 
-On crash dump kernel, all the information about primary kernel's core
-image is available in elf core header specified by "elfcorehdr=" boot
-parameter. reserve_elfcorehdr() will set aside the region to avoid any
-corruption by crash dump kernel.
+This did not work in all cases and could result in odd orderings.
 
-Crash dump kernel will access the system memory of primary kernel via
-copy_oldmem_page(), which reads one page by ioremap'ing it since it does
-not reside in linear mapping on crash dump kernel.
-Please note that we should add "mem=X[MG]" boot parameter to limit the
-memory size and avoid the following assertion at ioremap():
-	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
-		return NULL;
-when accessing any pages beyond the usable memories of crash dump kernel.
+This patch modifies the comparison function for the case when both
+strings contain the '@' character.
 
-We also need our own elfcorehdr_read() here since the weak definition of
-elfcorehdr_read() utilizes copy_oldmem_page() and will hit the assertion
-above on arm64.
+First a lexical comparison is made between the prefix portions of the
+strings *before* the '@' character.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Next, if the prefixes are equal, the lengths of the suffixes *after*
+the '@' character are compared.  This preserves the intent of the
+original code.
+
+Next, if the suffix lengths are equal, a lexical comparison of the
+suffixes is made.
+
+This is still not strictly correct, as ideally the portion after the
+'@' should be compared numerically.  However, determining what base to
+use for all case is difficult.
+
+Signed-off-by: Curt Brune <curt@cumulusnetworks.com>
 ---
- arch/arm64/Kconfig             | 12 +++++++
- arch/arm64/kernel/Makefile     |  1 +
- arch/arm64/kernel/crash_dump.c | 71 ++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/mm/init.c           | 29 +++++++++++++++++
- 4 files changed, 113 insertions(+)
- create mode 100644 arch/arm64/kernel/crash_dump.c
+ kexec/arch/ppc/fs2dt.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index c23fd77..4bac7dc 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -545,6 +545,18 @@ config KEXEC
- 	  but it is independent of the system firmware.   And like a reboot
- 	  you can start any kernel with it, not just Linux.
+diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+index 4121c7d..6e77379 100644
+--- a/kexec/arch/ppc/fs2dt.c
++++ b/kexec/arch/ppc/fs2dt.c
+@@ -30,6 +30,7 @@
+ #include <stdio.h>
+ #include "../../kexec.h"
+ #include "kexec-ppc.h"
++#include "types.h"
  
-+config CRASH_DUMP
-+	bool "Build kdump crash kernel"
-+	help
-+	  Generate crash dump after being started by kexec. This should
-+	  be normally only set in special crash dump kernels which are
-+	  loaded in the main kernel with kexec-tools into a specially
-+	  reserved region and then later executed after a crash by
-+	  kdump/kexec. The crash dump kernel must be compiled to a
-+	  memory address not used by the main kernel.
-+
-+	  For more details see Documentation/kdump/kdump.txt
-+
- config XEN_DOM0
- 	def_bool y
- 	depends on XEN
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index f68420d..a08b054 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -43,6 +43,7 @@ arm64-obj-$(CONFIG_ARMV8_DEPRECATED)	+= armv8_deprecated.o
- arm64-obj-$(CONFIG_ACPI)		+= acpi.o
- arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
-+arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+ #define MAXPATH			1024	/* max path name length */
+ #define NAMESPACE		16384	/* max bytes for property names */
+@@ -296,6 +297,8 @@ static int comparefunc(const void *dentry1, const void *dentry2)
+ {
+ 	char *str1 = (*(struct dirent **)dentry1)->d_name;
+ 	char *str2 = (*(struct dirent **)dentry2)->d_name;
++	char *p1, *p2;
++	int res = 0, max_len;
  
- obj-y					+= $(arm64-obj-y) vdso/
- obj-m					+= $(arm64-obj-m)
-diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-new file mode 100644
-index 0000000..3d86c0a
---- /dev/null
-+++ b/arch/arm64/kernel/crash_dump.c
-@@ -0,0 +1,71 @@
-+/*
-+ * Routines for doing kexec-based kdump
-+ *
-+ * Copyright (C) 2014 Linaro Limited
-+ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/crash_dump.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+#include <linux/uaccess.h>
-+#include <asm/memory.h>
-+
-+/**
-+ * copy_oldmem_page() - copy one page from old kernel memory
-+ * @pfn: page frame number to be copied
-+ * @buf: buffer where the copied page is placed
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page
-+ * @userbuf: if set, @buf is in a user address space
-+ *
-+ * This function copies one page from old kernel memory into buffer pointed by
-+ * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
-+ * copied or negative error in case of failure.
-+ */
-+ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-+			 size_t csize, unsigned long offset,
-+			 int userbuf)
-+{
-+	void *vaddr;
-+
-+	if (!csize)
-+		return 0;
-+
-+	vaddr = ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
-+	if (!vaddr)
-+		return -ENOMEM;
-+
-+	if (userbuf) {
-+		if (copy_to_user(buf, vaddr + offset, csize)) {
-+			iounmap(vaddr);
-+			return -EFAULT;
+ 	/*
+ 	 * strcmp scans from left to right and fails to idetify for some
+@@ -303,11 +306,21 @@ static int comparefunc(const void *dentry1, const void *dentry2)
+ 	 * Therefore, we get the wrong sorted order like memory@10000000 and
+ 	 * memory@f000000.
+ 	 */
+-	if (strchr(str1, '@') && strchr(str2, '@') &&
+-		(strlen(str1) > strlen(str2)))
+-		return 1;
++	if ((p1 = strchr(str1, '@')) && (p2 = strchr(str2, '@'))) {
++		max_len = max(p1 - str1, p2 - str2);
++		if ((res = strncmp(str1, str2, max_len)) == 0) {
++			/* prefix is equal - compare part after '@' by length */
++			p1++; p2++;
++			res = strlen(p1) - strlen(p2);
++			if (res == 0)
++				/* equal length, compare by strcmp() */
++				res = strcmp(p1,p2);
 +		}
-+	} else {
-+		memcpy(buf, vaddr + offset, csize);
-+	}
-+
-+	iounmap(vaddr);
-+
-+	return csize;
-+}
-+
-+/**
-+ * elfcorehdr_read - read from ELF core header
-+ * @buf: buffer where the data is placed
-+ * @csize: number of bytes to read
-+ * @ppos: address in the memory
-+ *
-+ * This function reads @count bytes from elf core header which exists
-+ * on crash dump kernel's memory.
-+ */
-+ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-+{
-+	memcpy(buf, phys_to_virt((phys_addr_t)*ppos), count);
-+	return count;
-+}
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 24f0a1c..52a1469 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -35,6 +35,7 @@
- #include <linux/efi.h>
- #include <linux/swiotlb.h>
- #include <linux/kexec.h>
-+#include <linux/crash_dump.h>
++        } else {
++		res = strcmp(str1, str2);
++        }
  
- #include <asm/fixmap.h>
- #include <asm/memory.h>
-@@ -116,6 +117,31 @@ static void __init reserve_crashkernel(void)
+-	return strcmp(str1, str2);
++	return res;
  }
- #endif /* CONFIG_KEXEC */
  
-+#ifdef CONFIG_CRASH_DUMP
-+/*
-+ * reserve_elfcorehdr() - reserves memory for elf core header
-+ *
-+ * This function reserves elf core header given in "elfcorehdr=" kernel
-+ * command line parameter. This region contains all the information about
-+ * primary kernel's core image and is used by a dump capture kernel to
-+ * access the system memory on primary kernel.
-+ */
-+static void __init reserve_elfcorehdr(void)
-+{
-+	if (!elfcorehdr_size)
-+		return;
-+
-+	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-+		pr_warn("elfcorehdr is overlapped\n");
-+		return;
-+	}
-+
-+	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-+
-+	pr_info("Reserving %lldKB of memory at %lldMB for elfcorehdr\n",
-+		elfcorehdr_size >> 10, elfcorehdr_addr >> 20);
-+}
-+#endif /* CONFIG_CRASH_DUMP */
  /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -224,6 +250,9 @@ void __init arm64_memblock_init(void)
- #ifdef CONFIG_KEXEC
- 	reserve_crashkernel();
- #endif
-+#ifdef CONFIG_CRASH_DUMP
-+	reserve_elfcorehdr();
-+#endif
- 
- 	early_init_fdt_scan_reserved_mem();
- 
 -- 
-2.5.0
-
+1.9.1
 
 
 _______________________________________________
