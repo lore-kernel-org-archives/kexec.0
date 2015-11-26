@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a1dw1-0006lN-Tj
- for kexec@lists.infradead.org; Wed, 25 Nov 2015 17:32:50 +0000
-Date: Wed, 25 Nov 2015 12:32:24 -0500
-From: Andrew Jones <drjones@redhat.com>
-Subject: Re: [PATCH 1/4] uImage: cleanup some warnings
-Message-ID: <20151125173224.GA3581@hawk.localdomain>
-References: <1448040714-19841-1-git-send-email-drjones@redhat.com>
- <1448040714-19841-2-git-send-email-drjones@redhat.com>
- <20151124070026.GC2632@verge.net.au>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a1m6v-0005EJ-Cx
+ for kexec@lists.infradead.org; Thu, 26 Nov 2015 02:16:38 +0000
+Date: Thu, 26 Nov 2015 11:16:14 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/1] Improve device tree directory sorting
+Message-ID: <20151126021614.GA30297@verge.net.au>
+References: <1448417830-48786-2-git-send-email-curt@cumulusnetworks.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151124070026.GC2632@verge.net.au>
+In-Reply-To: <1448417830-48786-2-git-send-email-curt@cumulusnetworks.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +23,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: Curt Brune <curt@cumulusnetworks.com>
 Cc: kexec@lists.infradead.org
 
-On Tue, Nov 24, 2015 at 04:00:26PM +0900, Simon Horman wrote:
-> I don't see any value in masking warnings with casts.
+On Tue, Nov 24, 2015 at 06:17:10PM -0800, Curt Brune wrote:
+> Previously when sorting the device tree directory entries, if both
+> device tree entries contained the '@' character then comparison was
+> made based on the length of the strings.
+> 
+> This did not work in all cases and could result in odd orderings.
+> 
+> This patch modifies the comparison function for the case when both
+> strings contain the '@' character.
+> 
+> First a lexical comparison is made between the prefix portions of the
+> strings *before* the '@' character.
+> 
+> Next, if the prefixes are equal, the lengths of the suffixes *after*
+> the '@' character are compared.  This preserves the intent of the
+> original code.
+> 
+> Next, if the suffix lengths are equal, a lexical comparison of the
+> suffixes is made.
+> 
+> This is still not strictly correct, as ideally the portion after the
+> '@' should be compared numerically.  However, determining what base to
+> use for all case is difficult.
+> 
+> Signed-off-by: Curt Brune <curt@cumulusnetworks.com>
 
-I assume you mean that you would prefer to either change the callers' type
-or uImage's API in order to avoid the need for casts. Choosing to keep
-warnings wouldn't make sense; they add noise making it difficult to spot
-warnings that point out real problems, and you can't ever turn on -Werror.
-
-In this case I think casts are the right solution. We shouldn't change the
-uImage API, as unsigned char is the type generally used for an arbitrary
-data stream. The callers could possibly be changed, but they're also free
-to use whatever type they want, signed char may well be what they want.
-Indeed, the fact that each caller (architecture) has its own wrapper
-around the uImage API calls allows for this very thing. Furthermore, an
-explicit cast acknowledges that the two types were both chosen by design.
-If this patch is wrong, then the warning has done its job and we need to
-change the callers.
-
-Thanks,
-drew
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
