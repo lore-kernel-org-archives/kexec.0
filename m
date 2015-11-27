@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a2Czz-0001uS-Ok
- for kexec@lists.infradead.org; Fri, 27 Nov 2015 06:59:16 +0000
-Date: Fri, 27 Nov 2015 14:58:47 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] x86: Make sure E820_PM[AE]M are defined if needed
-Message-ID: <20151127065847.GF13853@dhcp-128-28.nay.redhat.com>
-References: <1448584578-5706-1-git-send-email-horms@verge.net.au>
+Date: Fri, 27 Nov 2015 18:43:06 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+Message-ID: <20151127131306.GE23908@dhcppc13.redhat.com>
+References: <cover.1448403503.git.geoff@infradead.org>
+ <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1448584578-5706-1-git-send-email-horms@verge.net.au>
+In-Reply-To: <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,52 +20,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On 11/27/15 at 09:36am, Simon Horman wrote:
-> It appears that (older?) revisions of xenctl.h define
-> all of the E820_* values used in kexec-x86-common.c except
-> E820_PMAM and E820_PMEM. This results in a build failure when
-> building against libxenctl.
-> 
-> Avoid this problem by providing local definitions of those values.
-> 
-> It seems reasonable to do so in the kexec-x86-common.c as
-> currently that is the only source file that uses the values in question.
-> 
-> Fixes: 56a12abc1df1 ("kexec: fix mmap return code handling")
-> Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> Cc: Petr Tesarik <ptesarik@suse.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Simon Horman <horms@verge.net.au>
-> ---
->  kexec/arch/i386/kexec-x86-common.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> index b308e4719503..3e97239c0c78 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -44,6 +44,12 @@
->  #include <xenctrl.h>
->  #endif /* HAVE_LIBXENCTRL */
->  
-> +/* Used below but not present in (older?) xenctrl.h */
-> +#ifndef E820_PMEM
-> +#define E820_PMEM         7
-> +#define E820_PRAM         12
-> +#endif
+Hi Geoff,
+
+On 24/11/2015:10:25:34 PM, Geoff Levand wrote:
+> +	/* Test the entry flags. */
+> +.Ltest_source:
+> +	tbz	x18, IND_SOURCE_BIT, .Ltest_indirection
 > +
+> +	mov x20, x13				/*  x20 = copy dest */
+> +	mov x21, x12				/*  x21 = copy src */
 
-It looks very ugly but seems no better way to do it.
+Till v10 we had here invalidation for relocated destination page to PoC. I could
+not understand, why it was removed. Removing that piece of code breaks kexec
+booting with mustang. I need [1] to kexec boot into second kernel with mustang
+platform.
 
->  static struct memory_range memory_range[MAX_MEMORY_RANGES];
->  
->  /**
-> -- 
-> 2.1.4
-> 
+[1]
+https://github.com/pratyushanand/linux/commit/431e3247391981a1e8b2864a83a5743e8a274cb9
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
