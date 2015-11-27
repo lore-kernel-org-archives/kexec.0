@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56586679.8060403@arm.com>
-Date: Fri, 27 Nov 2015 14:19:37 +0000
+Message-ID: <56586B27.9080508@arm.com>
+Date: Fri, 27 Nov 2015 14:39:35 +0000
 From: Marc Zyngier <marc.zyngier@arm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
+Subject: Re: [PATCH v12 12/16] arm64: kdump: implement machine_crash_shutdown()
 References: <cover.1448403503.git.geoff@infradead.org>
- <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
-In-Reply-To: <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
+ <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
+In-Reply-To: <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,169 +23,219 @@ To: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com
 Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
 On 24/11/15 22:25, Geoff Levand wrote:
-> Commit 68234df4ea7939f98431aa81113fbdce10c4a84b (arm64: kill flush_cache_all())
-> removed the global arm64 routines cpu_reset() and cpu_soft_restart() needed by
-> the arm64 kexec and kdump support.  Add simplified versions of those two
-> routines back with some changes needed for kexec in the new files cpu_reset.S,
-> and cpu_reset.h.
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> When a CPU is reset it needs to be put into the exception level it had
-> when it entered the kernel. Update cpu_reset() to accept an argument
-> which signals if the reset address needs to be entered at EL1 or EL2.
+> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
+> save registers' status in per-cpu ELF notes before starting the crash
+> dump kernel. See kernel_kexec().
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ipi_cpu_stop() is a bit modified and used to support this behavior.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > ---
->  arch/arm64/kernel/cpu-reset.S | 84 +++++++++++++++++++++++++++++++++++++++++++
->  arch/arm64/kernel/cpu-reset.h | 22 ++++++++++++
->  2 files changed, 106 insertions(+)
->  create mode 100644 arch/arm64/kernel/cpu-reset.S
->  create mode 100644 arch/arm64/kernel/cpu-reset.h
+>  arch/arm64/include/asm/kexec.h    | 34 +++++++++++++++++++++++++++++++++-
+>  arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++--
+>  arch/arm64/kernel/smp.c           | 16 ++++++++++++++--
+>  3 files changed, 76 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-> new file mode 100644
-> index 0000000..0423f27
-> --- /dev/null
-> +++ b/arch/arm64/kernel/cpu-reset.S
-> @@ -0,0 +1,84 @@
-> +/*
-> + * cpu reset routines
-> + *
-> + * Copyright (C) 2001 Deep Blue Solutions Ltd.
-> + * Copyright (C) 2012 ARM Ltd.
-> + * Copyright (C) 2015 Huawei Futurewei Technologies.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 46d63cd..555a955 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -30,6 +30,8 @@
+>  
+>  #if !defined(__ASSEMBLY__)
+>  
+> +extern bool in_crash_kexec;
+> +
+>  /**
+>   * crash_setup_regs() - save registers for the panic kernel
+>   *
+> @@ -40,7 +42,37 @@
+>  static inline void crash_setup_regs(struct pt_regs *newregs,
+>  				    struct pt_regs *oldregs)
+>  {
+> -	/* Empty routine needed to avoid build errors. */
+> +	if (oldregs) {
+> +		memcpy(newregs, oldregs, sizeof(*newregs));
+> +	} else {
+> +		__asm__ __volatile__ (
+> +			"stp	 x0,   x1, [%3, #16 *  0]\n"
+> +			"stp	 x2,   x3, [%3, #16 *  1]\n"
+> +			"stp	 x4,   x5, [%3, #16 *  2]\n"
+> +			"stp	 x6,   x7, [%3, #16 *  3]\n"
+> +			"stp	 x8,   x9, [%3, #16 *  4]\n"
+> +			"stp	x10,  x11, [%3, #16 *  5]\n"
+> +			"stp	x12,  x13, [%3, #16 *  6]\n"
+> +			"stp	x14,  x15, [%3, #16 *  7]\n"
+> +			"stp	x16,  x17, [%3, #16 *  8]\n"
+> +			"stp	x18,  x19, [%3, #16 *  9]\n"
+> +			"stp	x20,  x21, [%3, #16 * 10]\n"
+> +			"stp	x22,  x23, [%3, #16 * 11]\n"
+> +			"stp	x24,  x25, [%3, #16 * 12]\n"
+> +			"stp	x26,  x27, [%3, #16 * 13]\n"
+> +			"stp	x28,  x29, [%3, #16 * 14]\n"
+> +			"str	x30,	   [%3, #16 * 15]\n"
+> +			"mov	%0, sp\n"
+> +			"adr	%1, 1f\n"
+> +			"mrs	%2, spsr_el1\n"
+> +		"1:"
+> +			: "=r" (newregs->sp),
+> +			  "=r" (newregs->pc),
+> +			  "=r" (newregs->pstate)
+> +			: "r"  (&newregs->regs)
+> +			: "memory"
+> +		);
+
+I wonder how useful this thing is, given that it starts by corrupting
+whatever register is holding newregs->regs. Maybe this is not supposed
+to be accurate anyway...
+
+
+> +	}
+>  }
+>  
+>  #endif /* !defined(__ASSEMBLY__) */
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index da28a26..d2d7e90 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -9,6 +9,7 @@
+>   * published by the Free Software Foundation.
+>   */
+>  
+> +#include <linux/kernel.h>
+>  #include <linux/kexec.h>
+>  #include <linux/of_fdt.h>
+>  #include <linux/slab.h>
+> @@ -23,6 +24,7 @@
+>  extern const unsigned char arm64_relocate_new_kernel[];
+>  extern const unsigned long arm64_relocate_new_kernel_size;
+>  
+> +bool in_crash_kexec;
+>  static unsigned long kimage_start;
+>  
+>  /**
+> @@ -203,13 +205,38 @@ void machine_kexec(struct kimage *kimage)
+>  	 */
+>  
+>  	cpu_soft_restart(virt_to_phys(cpu_reset),
+> -		is_hyp_mode_available(),
+> +		in_crash_kexec ? 0 : is_hyp_mode_available(),
+>  		reboot_code_buffer_phys, kimage->head, kimage_start);
+>  
+>  	BUG(); /* Should never get here. */
+>  }
+>  
+> +/**
+> + * machine_crash_shutdown - shutdown non-boot cpus and save registers
 > + */
+>  void machine_crash_shutdown(struct pt_regs *regs)
+>  {
+> -	/* Empty routine needed to avoid build errors. */
+> +	struct pt_regs dummy_regs;
+> +	int cpu;
 > +
-> +#include <linux/linkage.h>
-> +#include <asm/assembler.h>
-> +#include <asm/virt.h>
+> +	local_irq_disable();
 > +
-> +#define SCTLR_ELx_I	(1 << 12)
-> +#define SCTLR_ELx_SA	(1 << 3)
-> +#define SCTLR_ELx_C	(1 << 2)
-> +#define SCTLR_ELx_A	(1 << 1)
-> +#define SCTLR_ELx_M	1
-
-kvm_arm.h already has some of these defined, and sysreg.h has another
-bunch. Can you please consolidate this into a single place (probably
-sysreg.h)?
-
-> +#define SCTLR_ELx_FLAGS	(SCTLR_ELx_M | SCTLR_ELx_A | SCTLR_ELx_C |	\
-> +			 SCTLR_ELx_SA | SCTLR_ELx_I)
+> +	in_crash_kexec = true;
 > +
-> +.text
-> +.pushsection    .idmap.text, "ax"
+> +	/*
+> +	 * clear and initialize the per-cpu info. This is necessary
+> +	 * because, otherwise, slots for offline cpus would never be
+> +	 * filled up. See smp_send_stop().
+> +	 */
+> +	memset(&dummy_regs, 0, sizeof(dummy_regs));
+> +	for_each_possible_cpu(cpu)
+> +		crash_save_cpu(&dummy_regs, cpu);
 > +
-> +.align 5
-
-Why is this .align directive required?
-
+> +	/* shutdown non-boot cpus */
+> +	smp_send_stop();
 > +
-> +/*
-> + * cpu_soft_restart(cpu_reset, el2_switch, entry, arg0, arg1) - Perform a cpu
-> + * soft reset.
-> + *
-> + * @cpu_reset: Physical address of the cpu_reset routine.
-> + * @el2_switch: Flag to indicate a swich to EL2 is needed, passed to cpu_reset.
-> + * @entry: Location to jump to for soft reset, passed to cpu_reset.
-> + * arg0: First argument passed to @entry.
-> + * arg1: Second argument passed to @entry.
-> + */
+> +	/* for boot cpu */
+> +	crash_save_cpu(regs, smp_processor_id());
 > +
-> +ENTRY(cpu_soft_restart)
-> +	mov	x18, x0				// cpu_reset
-> +	mov	x0, x1				// el2_switch
-> +	mov	x1, x2				// entry
-> +	mov	x2, x3				// arg0
-> +	mov	x3, x4				// arg1
-> +	ret	x18
-> +ENDPROC(cpu_soft_restart)
-
-Grepping through the tree, I can only find a single use of
-cpu_soft_restart, with cpu_reset as its first parameter.
-
-Why do we need this indirection? Having
-
-void cpu_soft_restart(el2_switch, entry, arg0, arg1);
-
-should be enough...
-
+> +	pr_info("Starting crashdump kernel...\n");
+>  }
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index b1adc51..15aabef 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -37,6 +37,7 @@
+>  #include <linux/completion.h>
+>  #include <linux/of.h>
+>  #include <linux/irq_work.h>
+> +#include <linux/kexec.h>
+>  
+>  #include <asm/alternative.h>
+>  #include <asm/atomic.h>
+> @@ -54,6 +55,8 @@
+>  #include <asm/ptrace.h>
+>  #include <asm/virt.h>
+>  
+> +#include "cpu-reset.h"
 > +
-> +/*
-> + * cpu_reset(el2_switch, entry, arg0, arg1) - Helper for cpu_soft_restart.
-> + *
-> + * @el2_switch: Flag to indicate a swich to EL2 is needed.
-> + * @entry: Location to jump to for soft reset.
-> + * arg0: First argument passed to @entry.
-> + * arg1: Second argument passed to @entry.
-> + *
-> + * Put the CPU into the same state as it would be if it had been reset, and
-> + * branch to what would be the reset vector. It must be executed with the
-> + * flat identity mapping.
-> + */
-> +
-> +ENTRY(cpu_reset)
-> +	/* Clear sctlr_el1 flags. */
-> +	mrs	x12, sctlr_el1
-> +	ldr	x13, =SCTLR_ELx_FLAGS
-> +	bic	x12, x12, x13
-> +	msr	sctlr_el1, x12
-> +	isb
-> +
-> +	cbz	x0, 1f				// el2_switch?
-> +
-> +	mov	x0, x1				// entry
-> +	mov	x1, x2				// arg0
-> +	mov	x2, x3				// arg1
-> +	hvc	#HVC_CALL_FUNC			// no return
-> +
-> +1:	mov	x18, x1				// entry
-> +	mov	x0, x2				// arg0
-> +	mov	x1, x3				// arg1
-> +	ret	x18
-> +ENDPROC(cpu_reset)
-
-And this can be an actual part of cpu_soft_reset.
-
-> +
-> +.popsection
-> diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-> new file mode 100644
-> index 0000000..79816b6
-> --- /dev/null
-> +++ b/arch/arm64/kernel/cpu-reset.h
-> @@ -0,0 +1,22 @@
-> +/*
-> + * cpu reset routines
-> + *
-> + * Copyright (C) 2015 Huawei Futurewei Technologies.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#if !defined(_ARM64_CPU_RESET_H)
-
-The usual idiom is "#ifndef __BLAH_H".
-
-> +#define _ARM64_CPU_RESET_H
-> +
-> +#include <asm/virt.h>
-> +
-> +void __attribute__((noreturn)) cpu_reset(unsigned long el2_switch,
-> +	unsigned long entry, unsigned long arg0, unsigned long arg1);
-> +void __attribute__((noreturn)) cpu_soft_restart(phys_addr_t cpu_reset,
-> +	unsigned long el2_switch, unsigned long entry, unsigned long arg0,
-> +	unsigned long arg1);
-> +
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/ipi.h>
+>  
+> @@ -683,8 +686,12 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
+>  /*
+>   * ipi_cpu_stop - handle IPI from smp_send_stop()
+>   */
+> -static void ipi_cpu_stop(unsigned int cpu)
+> +static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
+>  {
+> +#ifdef CONFIG_KEXEC
+> +	/* printing messages may slow down the shutdown. */
+> +	if (!in_crash_kexec)
 > +#endif
-> 
+>  	if (system_state == SYSTEM_BOOTING ||
+>  	    system_state == SYSTEM_RUNNING) {
+>  		raw_spin_lock(&stop_lock);
 
-There is a __noreturn attribute already defined.
+Irrespective of how useful this change is, how about having a predicate
+instead? Something like:
+
+static inline bool is_in_crash_kexec(void)
+{
+#ifdef CONFIG_KEXEC
+	return in_crash_kexec;
+#else
+	return false;
+#endif
+}
+
+located in machine_kexec.c (making the in_crash_kernel static), and then
+
+	if (!is_in_crash_kexec() && (systen_state == ... || ...) {
+
+It would certainly look better.
+
+> @@ -697,6 +704,11 @@ static void ipi_cpu_stop(unsigned int cpu)
+>  
+>  	local_irq_disable();
+>  
+> +#ifdef CONFIG_KEXEC
+> +	if (in_crash_kexec)
+> +		crash_save_cpu(regs, cpu);
+> +#endif /* CONFIG_KEXEC */
+> +
+
+Same here.
+
+>  	while (1)
+>  		cpu_relax();
+>  }
+> @@ -727,7 +739,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>  
+>  	case IPI_CPU_STOP:
+>  		irq_enter();
+> -		ipi_cpu_stop(cpu);
+> +		ipi_cpu_stop(cpu, regs);
+>  		irq_exit();
+>  		break;
+>  
+> 
 
 Thanks,
 
