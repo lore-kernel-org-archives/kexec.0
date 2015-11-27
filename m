@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a272L-00052l-Po
- for kexec@lists.infradead.org; Fri, 27 Nov 2015 00:37:18 +0000
-Date: Fri, 27 Nov 2015 09:36:49 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] kexec: fix mmap return code handling
-Message-ID: <20151127003649.GF2394@verge.net.au>
-References: <20151125134741.55c7e21c@holzheu> <20151126183231.33da064b@holzheu>
- <20151126190228.47e4213a@hananiah.suse.cz>
- <20151126200235.5450c397@holzheu>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a2Czz-0001uS-Ok
+ for kexec@lists.infradead.org; Fri, 27 Nov 2015 06:59:16 +0000
+Date: Fri, 27 Nov 2015 14:58:47 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86: Make sure E820_PM[AE]M are defined if needed
+Message-ID: <20151127065847.GF13853@dhcp-128-28.nay.redhat.com>
+References: <1448584578-5706-1-git-send-email-horms@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151126200235.5450c397@holzheu>
+In-Reply-To: <1448584578-5706-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,36 +23,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>
+To: Simon Horman <horms@verge.net.au>
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.com>
 
-On Thu, Nov 26, 2015 at 08:02:35PM +0100, Michael Holzheu wrote:
-> On Thu, 26 Nov 2015 19:02:28 +0100
-> Petr Tesarik <ptesarik@suse.cz> wrote:
+On 11/27/15 at 09:36am, Simon Horman wrote:
+> It appears that (older?) revisions of xenctl.h define
+> all of the E820_* values used in kexec-x86-common.c except
+> E820_PMAM and E820_PMEM. This results in a build failure when
+> building against libxenctl.
 > 
-> > On Thu, 26 Nov 2015 18:32:31 +0100
-> > Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> > 
-> > > Hi Simon again,
-> > > 
-> > > After a bit more thinking: In theory mmap() could also return NULL.
-> > > Therefore the following fix is probably the better one ...
-> > 
-> > No, if you let the kernel choose the address (i.e. call mmap with NULL
-> > addr), it will return at least PAGE_SIZE (and a higher limit is usually
-> > enforced by sys.vm.mmap_min_addr sysctl). Admittedly the limit is set
-> > in arch-specific code, so theoretically there can be an architecture
-> > which sets the limit to 0, but I doubt it, because it would break too
-> > many assumptions in user space (for example gcc assumes that
-> > dereferencing a NULL pointer terminates a process).
-> >
-> > In short, this other fix is just as good as the previous one.
+> Avoid this problem by providing local definitions of those values.
 > 
-> Hi Petr,
+> It seems reasonable to do so in the kexec-x86-common.c as
+> currently that is the only source file that uses the values in question.
 > 
-> Thanks for clarification! I still would vote for the second one ;-)
+> Fixes: 56a12abc1df1 ("kexec: fix mmap return code handling")
+> Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> Cc: Petr Tesarik <ptesarik@suse.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> ---
+>  kexec/arch/i386/kexec-x86-common.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
+> index b308e4719503..3e97239c0c78 100644
+> --- a/kexec/arch/i386/kexec-x86-common.c
+> +++ b/kexec/arch/i386/kexec-x86-common.c
+> @@ -44,6 +44,12 @@
+>  #include <xenctrl.h>
+>  #endif /* HAVE_LIBXENCTRL */
+>  
+> +/* Used below but not present in (older?) xenctrl.h */
+> +#ifndef E820_PMEM
+> +#define E820_PMEM         7
+> +#define E820_PRAM         12
+> +#endif
+> +
 
-Thanks, I have applied that version.
+It looks very ugly but seems no better way to do it.
+
+>  static struct memory_range memory_range[MAX_MEMORY_RANGES];
+>  
+>  /**
+> -- 
+> 2.1.4
+> 
 
 _______________________________________________
 kexec mailing list
