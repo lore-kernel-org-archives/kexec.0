@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56586B27.9080508@arm.com>
-Date: Fri, 27 Nov 2015 14:39:35 +0000
-From: Marc Zyngier <marc.zyngier@arm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v12 12/16] arm64: kdump: implement machine_crash_shutdown()
-References: <cover.1448403503.git.geoff@infradead.org>
- <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
-In-Reply-To: <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a2lta-0002Zi-9a
+ for kexec@lists.infradead.org; Sat, 28 Nov 2015 20:14:59 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [RFC PATCH] crashdump/x86: Add option to get crash kernel region size
+Date: Sat, 28 Nov 2015 21:14:04 +0100
+Message-Id: <1448741644-905-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,233 +15,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
+To: xen-devel@lists.xenproject.org, kexec@lists.infradead.org
+Cc: andrew.cooper3@citrix.com, keir@xen.org, david.vrabel@citrix.com, jbeulich@suse.com, konrad.wilk@oracle.com
 
-On 24/11/15 22:25, Geoff Levand wrote:
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> 
-> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
-> save registers' status in per-cpu ELF notes before starting the crash
-> dump kernel. See kernel_kexec().
-> 
-> ipi_cpu_stop() is a bit modified and used to support this behavior.
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm64/include/asm/kexec.h    | 34 +++++++++++++++++++++++++++++++++-
->  arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++--
->  arch/arm64/kernel/smp.c           | 16 ++++++++++++++--
->  3 files changed, 76 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 46d63cd..555a955 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -30,6 +30,8 @@
->  
->  #if !defined(__ASSEMBLY__)
->  
-> +extern bool in_crash_kexec;
-> +
->  /**
->   * crash_setup_regs() - save registers for the panic kernel
->   *
-> @@ -40,7 +42,37 @@
->  static inline void crash_setup_regs(struct pt_regs *newregs,
->  				    struct pt_regs *oldregs)
->  {
-> -	/* Empty routine needed to avoid build errors. */
-> +	if (oldregs) {
-> +		memcpy(newregs, oldregs, sizeof(*newregs));
-> +	} else {
-> +		__asm__ __volatile__ (
-> +			"stp	 x0,   x1, [%3, #16 *  0]\n"
-> +			"stp	 x2,   x3, [%3, #16 *  1]\n"
-> +			"stp	 x4,   x5, [%3, #16 *  2]\n"
-> +			"stp	 x6,   x7, [%3, #16 *  3]\n"
-> +			"stp	 x8,   x9, [%3, #16 *  4]\n"
-> +			"stp	x10,  x11, [%3, #16 *  5]\n"
-> +			"stp	x12,  x13, [%3, #16 *  6]\n"
-> +			"stp	x14,  x15, [%3, #16 *  7]\n"
-> +			"stp	x16,  x17, [%3, #16 *  8]\n"
-> +			"stp	x18,  x19, [%3, #16 *  9]\n"
-> +			"stp	x20,  x21, [%3, #16 * 10]\n"
-> +			"stp	x22,  x23, [%3, #16 * 11]\n"
-> +			"stp	x24,  x25, [%3, #16 * 12]\n"
-> +			"stp	x26,  x27, [%3, #16 * 13]\n"
-> +			"stp	x28,  x29, [%3, #16 * 14]\n"
-> +			"str	x30,	   [%3, #16 * 15]\n"
-> +			"mov	%0, sp\n"
-> +			"adr	%1, 1f\n"
-> +			"mrs	%2, spsr_el1\n"
-> +		"1:"
-> +			: "=r" (newregs->sp),
-> +			  "=r" (newregs->pc),
-> +			  "=r" (newregs->pstate)
-> +			: "r"  (&newregs->regs)
-> +			: "memory"
-> +		);
+Crash kernel region size is available via sysfs on Linux running on
+bare metal. However, this does not work when Linux runs as Xen dom0.
+In this case Xen crash kernel region size should be established using
+__HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+accessible using shell scripts or something like that. Potentially we
+can check "xl dmesg" output for crashkernel option but this is not nice.
+So, let's add this functionality, for Linux running on bare metal and
+as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+kernel region size in one way regardless of platform. All burden of
+platform detection lies on kexec-tools.
 
-I wonder how useful this thing is, given that it starts by corrupting
-whatever register is holding newregs->regs. Maybe this is not supposed
-to be accurate anyway...
+Figure (and unit) displayed by this new kexec-tools functionality is
+the same as one taken from /sys/kernel/kexec_crash_size.
 
+This functionality is available on x86 platform only. If idea is acceptable
+then I can prepare patches for other platforms (if it is possible and make
+sense) and repost them as fully flagged patch series.
 
-> +	}
->  }
->  
->  #endif /* !defined(__ASSEMBLY__) */
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index da28a26..d2d7e90 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -9,6 +9,7 @@
->   * published by the Free Software Foundation.
->   */
->  
-> +#include <linux/kernel.h>
->  #include <linux/kexec.h>
->  #include <linux/of_fdt.h>
->  #include <linux/slab.h>
-> @@ -23,6 +24,7 @@
->  extern const unsigned char arm64_relocate_new_kernel[];
->  extern const unsigned long arm64_relocate_new_kernel_size;
->  
-> +bool in_crash_kexec;
->  static unsigned long kimage_start;
->  
->  /**
-> @@ -203,13 +205,38 @@ void machine_kexec(struct kimage *kimage)
->  	 */
->  
->  	cpu_soft_restart(virt_to_phys(cpu_reset),
-> -		is_hyp_mode_available(),
-> +		in_crash_kexec ? 0 : is_hyp_mode_available(),
->  		reboot_code_buffer_phys, kimage->head, kimage_start);
->  
->  	BUG(); /* Should never get here. */
->  }
->  
-> +/**
-> + * machine_crash_shutdown - shutdown non-boot cpus and save registers
-> + */
->  void machine_crash_shutdown(struct pt_regs *regs)
->  {
-> -	/* Empty routine needed to avoid build errors. */
-> +	struct pt_regs dummy_regs;
-> +	int cpu;
-> +
-> +	local_irq_disable();
-> +
-> +	in_crash_kexec = true;
-> +
-> +	/*
-> +	 * clear and initialize the per-cpu info. This is necessary
-> +	 * because, otherwise, slots for offline cpus would never be
-> +	 * filled up. See smp_send_stop().
-> +	 */
-> +	memset(&dummy_regs, 0, sizeof(dummy_regs));
-> +	for_each_possible_cpu(cpu)
-> +		crash_save_cpu(&dummy_regs, cpu);
-> +
-> +	/* shutdown non-boot cpus */
-> +	smp_send_stop();
-> +
-> +	/* for boot cpu */
-> +	crash_save_cpu(regs, smp_processor_id());
-> +
-> +	pr_info("Starting crashdump kernel...\n");
->  }
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index b1adc51..15aabef 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -37,6 +37,7 @@
->  #include <linux/completion.h>
->  #include <linux/of.h>
->  #include <linux/irq_work.h>
-> +#include <linux/kexec.h>
->  
->  #include <asm/alternative.h>
->  #include <asm/atomic.h>
-> @@ -54,6 +55,8 @@
->  #include <asm/ptrace.h>
->  #include <asm/virt.h>
->  
-> +#include "cpu-reset.h"
-> +
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/ipi.h>
->  
-> @@ -683,8 +686,12 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
->  /*
->   * ipi_cpu_stop - handle IPI from smp_send_stop()
->   */
-> -static void ipi_cpu_stop(unsigned int cpu)
-> +static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
->  {
-> +#ifdef CONFIG_KEXEC
-> +	/* printing messages may slow down the shutdown. */
-> +	if (!in_crash_kexec)
-> +#endif
->  	if (system_state == SYSTEM_BOOTING ||
->  	    system_state == SYSTEM_RUNNING) {
->  		raw_spin_lock(&stop_lock);
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ kexec/arch/i386/crashdump-x86.c |   18 +++++++++++++++++-
+ kexec/crashdump.h               |    1 -
+ kexec/kexec.8                   |    3 +++
+ kexec/kexec.c                   |    4 ++++
+ kexec/kexec.h                   |    5 ++++-
+ 5 files changed, 28 insertions(+), 3 deletions(-)
 
-Irrespective of how useful this change is, how about having a predicate
-instead? Something like:
-
-static inline bool is_in_crash_kexec(void)
-{
-#ifdef CONFIG_KEXEC
-	return in_crash_kexec;
-#else
-	return false;
-#endif
-}
-
-located in machine_kexec.c (making the in_crash_kernel static), and then
-
-	if (!is_in_crash_kexec() && (systen_state == ... || ...) {
-
-It would certainly look better.
-
-> @@ -697,6 +704,11 @@ static void ipi_cpu_stop(unsigned int cpu)
->  
->  	local_irq_disable();
->  
-> +#ifdef CONFIG_KEXEC
-> +	if (in_crash_kexec)
-> +		crash_save_cpu(regs, cpu);
-> +#endif /* CONFIG_KEXEC */
-> +
-
-Same here.
-
->  	while (1)
->  		cpu_relax();
->  }
-> @@ -727,7 +739,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
->  
->  	case IPI_CPU_STOP:
->  		irq_enter();
-> -		ipi_cpu_stop(cpu);
-> +		ipi_cpu_stop(cpu, regs);
->  		irq_exit();
->  		break;
->  
-> 
-
-Thanks,
-
-	M.
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index bbc0f35..4b31112 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -1056,7 +1056,7 @@ static int crashkernel_mem_callback(void *UNUSED(data), int nr,
+ 	return 0;
+ }
+ 
+-int is_crashkernel_mem_reserved(void)
++static int get_crashkernel_region(void)
+ {
+ 	int ret;
+ 
+@@ -1079,3 +1079,19 @@ int is_crashkernel_mem_reserved(void)
+ 
+ 	return !!crash_reserved_mem_nr;
+ }
++
++int is_crashkernel_mem_reserved(void)
++{
++	return get_crashkernel_region();
++}
++
++void print_crashkernel_region_size(void)
++{
++	uint64_t end, start;
++
++	if (get_crashkernel_region()) {
++		get_crash_kernel_load_range(&start, &end);
++		printf("%lu\n", end - start + 1);
++	} else
++		printf("0\n");
++}
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 95f1f0c..320767b 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -1,7 +1,6 @@
+ #ifndef CRASHDUMP_H
+ #define CRASHDUMP_H
+ 
+-int get_crashkernel_region(uint64_t *start, uint64_t *end);
+ extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
+ extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
+ extern int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len);
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index 4d0c1d1..ba7d096 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -173,6 +173,9 @@ Load a helper image to jump back to original kernel.
+ .TP
+ .BI \-\-reuseinitrd
+ Reuse initrd from first boot.
++.TP
++.BI \-\-print-ckr-size
++Print crash kernel region size.
+ 
+ 
+ .SH SUPPORTED KERNEL FILE TYPES AND OPTIONS
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index cf6e03d..43c7e8c 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -960,6 +960,7 @@ void usage(void)
+ 	       "     --mem-max=<addr> Specify the highest memory address to\n"
+ 	       "                      load code into.\n"
+ 	       "     --reuseinitrd    Reuse initrd from first boot.\n"
++	       "     --print-ckr-size Print crash kernel region size.\n"
+ 	       "     --load-preserve-context Load the new kernel and preserve\n"
+ 	       "                      context of current kernel during kexec.\n"
+ 	       "     --load-jump-back-helper Load a helper image to jump back\n"
+@@ -1345,6 +1346,9 @@ int main(int argc, char *argv[])
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			/* We already parsed it. Nothing to do. */
+ 			break;
++		case OPT_PRINT_CKR_SIZE:
++			print_crashkernel_region_size();
++			return 0;
+ 		default:
+ 			break;
+ 		}
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index c02ac8f..42a602d 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -224,7 +224,8 @@ extern int file_types;
+ #define OPT_LOAD_PRESERVE_CONTEXT 259
+ #define OPT_LOAD_JUMP_BACK_HELPER 260
+ #define OPT_ENTRY		261
+-#define OPT_MAX			262
++#define OPT_PRINT_CKR_SIZE	262
++#define OPT_MAX			263
+ #define KEXEC_OPTIONS \
+ 	{ "help",		0, 0, OPT_HELP }, \
+ 	{ "version",		0, 0, OPT_VERSION }, \
+@@ -244,6 +245,7 @@ extern int file_types;
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
++	{ "print-ckr-size",	0, 0, OPT_PRINT_CKR_SIZE }, \
+ 
+ #define KEXEC_OPT_STR "h?vdfxyluet:ps"
+ 
+@@ -290,6 +292,7 @@ int arch_compat_trampoline(struct kexec_info *info);
+ void arch_update_purgatory(struct kexec_info *info);
+ int is_crashkernel_mem_reserved(void);
+ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end);
++void print_crashkernel_region_size(void);
+ char *get_command_line(void);
+ 
+ int kexec_iomem_for_each_line(char *match,
 -- 
-Jazz is not dead. It just smells funny...
+1.7.10.4
+
 
 _______________________________________________
 kexec mailing list
