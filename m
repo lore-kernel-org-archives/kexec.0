@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a3Bms-0001VX-9d
- for kexec@lists.infradead.org; Sun, 29 Nov 2015 23:53:47 +0000
-Date: Mon, 30 Nov 2015 08:53:22 +0900
+ id 1a3Bou-0002pF-AZ
+ for kexec@lists.infradead.org; Sun, 29 Nov 2015 23:55:52 +0000
+Date: Mon, 30 Nov 2015 08:55:32 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86: Make sure E820_PM[AE]M are defined if needed
-Message-ID: <20151129235322.GA13342@verge.net.au>
-References: <1448584578-5706-1-git-send-email-horms@verge.net.au>
- <20151127065847.GF13853@dhcp-128-28.nay.redhat.com>
+Subject: Re: [RFC PATCH] crashdump/x86: Add option to get crash kernel region
+ size
+Message-ID: <20151129235532.GB13342@verge.net.au>
+References: <1448741644-905-1-git-send-email-daniel.kiper@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20151127065847.GF13853@dhcp-128-28.nay.redhat.com>
+In-Reply-To: <1448741644-905-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,48 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.com>
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: keir@xen.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, david.vrabel@citrix.com, jbeulich@suse.com, xen-devel@lists.xenproject.org
 
-On Fri, Nov 27, 2015 at 02:58:47PM +0800, Baoquan He wrote:
-> On 11/27/15 at 09:36am, Simon Horman wrote:
-> > It appears that (older?) revisions of xenctl.h define
-> > all of the E820_* values used in kexec-x86-common.c except
-> > E820_PMAM and E820_PMEM. This results in a build failure when
-> > building against libxenctl.
-> > 
-> > Avoid this problem by providing local definitions of those values.
-> > 
-> > It seems reasonable to do so in the kexec-x86-common.c as
-> > currently that is the only source file that uses the values in question.
-> > 
-> > Fixes: 56a12abc1df1 ("kexec: fix mmap return code handling")
-> > Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> > Cc: Petr Tesarik <ptesarik@suse.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Signed-off-by: Simon Horman <horms@verge.net.au>
-> > ---
-> >  kexec/arch/i386/kexec-x86-common.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-> > index b308e4719503..3e97239c0c78 100644
-> > --- a/kexec/arch/i386/kexec-x86-common.c
-> > +++ b/kexec/arch/i386/kexec-x86-common.c
-> > @@ -44,6 +44,12 @@
-> >  #include <xenctrl.h>
-> >  #endif /* HAVE_LIBXENCTRL */
-> >  
-> > +/* Used below but not present in (older?) xenctrl.h */
-> > +#ifndef E820_PMEM
-> > +#define E820_PMEM         7
-> > +#define E820_PRAM         12
-> > +#endif
-> > +
+On Sat, Nov 28, 2015 at 09:14:04PM +0100, Daniel Kiper wrote:
+> Crash kernel region size is available via sysfs on Linux running on
+> bare metal. However, this does not work when Linux runs as Xen dom0.
+> In this case Xen crash kernel region size should be established using
+> __HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+> not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+> accessible using shell scripts or something like that. Potentially we
+> can check "xl dmesg" output for crashkernel option but this is not nice.
+> So, let's add this functionality, for Linux running on bare metal and
+> as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+> kernel region size in one way regardless of platform. All burden of
+> platform detection lies on kexec-tools.
 > 
-> It looks very ugly but seems no better way to do it.
+> Figure (and unit) displayed by this new kexec-tools functionality is
+> the same as one taken from /sys/kernel/kexec_crash_size.
+> 
+> This functionality is available on x86 platform only. If idea is acceptable
+> then I can prepare patches for other platforms (if it is possible and make
+> sense) and repost them as fully flagged patch series.
+> 
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-Agreed. I've applied this change.
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
