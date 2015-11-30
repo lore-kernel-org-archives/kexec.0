@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a3Bpa-0003Ey-VD
- for kexec@lists.infradead.org; Sun, 29 Nov 2015 23:56:35 +0000
-Date: Mon, 30 Nov 2015 08:56:14 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86/xen: Build memory type conversion code conditionally
-Message-ID: <20151129235614.GC13342@verge.net.au>
-References: <1448741838-958-1-git-send-email-daniel.kiper@oracle.com>
+Date: Mon, 30 Nov 2015 10:58:43 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
+Message-ID: <20151130052843.GG23908@dhcppc13.redhat.com>
+References: <cover.1448403503.git.geoff@infradead.org>
+ <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
+ <56586679.8060403@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1448741838-958-1-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <56586679.8060403@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: keir@xen.org, bhe@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, toshi.kani@hp.com, david.vrabel@citrix.com, jbeulich@suse.com, xen-devel@lists.xenproject.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Sat, Nov 28, 2015 at 09:17:18PM +0100, Daniel Kiper wrote:
-> Xen is not aware of E820_PMEM and E820_PRAM memory types, so, build
-> simply fails. Hence, build code referencing them conditionally.
+On 27/11/2015:02:19:37 PM, Marc Zyngier wrote:
+> On 24/11/15 22:25, Geoff Levand wrote:
+> > +ENTRY(cpu_soft_restart)
+> > +	mov	x18, x0				// cpu_reset
+> > +	mov	x0, x1				// el2_switch
+> > +	mov	x1, x2				// entry
+> > +	mov	x2, x3				// arg0
+> > +	mov	x3, x4				// arg1
+> > +	ret	x18
+> > +ENDPROC(cpu_soft_restart)
 > 
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> Grepping through the tree, I can only find a single use of
+> cpu_soft_restart, with cpu_reset as its first parameter.
+> 
+> Why do we need this indirection? Having
 
-I believe this is fixed by
-"x86: Make sure E820_PM[AE]M are defined if needed"
-which I applied a few moments ago.
+It is needed because we need to execute cpu_reset() in physical address space.
+
+> 
+> void cpu_soft_restart(el2_switch, entry, arg0, arg1);
+> 
+> should be enough...
+
+We can do with only cpu_soft_restart(), but then a function pointer to __pa() of
+it need to be called. May  be current approach is more cleaner.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
