@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1448909475.31214.27.camel@infradead.org>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+Message-ID: <1448913810.31214.61.camel@infradead.org>
+Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
 From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 30 Nov 2015 10:51:15 -0800
-In-Reply-To: <20151127131306.GE23908@dhcppc13.redhat.com>
+Date: Mon, 30 Nov 2015 12:03:30 -0800
+In-Reply-To: <56586679.8060403@arm.com>
 References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151127131306.GE23908@dhcppc13.redhat.com>
+ <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
+ <56586679.8060403@arm.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,36 +20,151 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi,
+Hi Marc,
 
-On Fri, 2015-11-27 at 18:43 +0530, Pratyush Anand wrote:
-
-> On 24/11/2015:10:25:34 PM, Geoff Levand wrote:
-> > +> > 	> > /* Test the entry flags. */
-> > +.Ltest_source:
-> > +> > 	> > tbz> > 	> > x18, IND_SOURCE_BIT, .Ltest_indirection
-> > +
-> > +> > 	> > mov x20, x13> > 	> > 	> > 	> > 	> > /*  x20 = copy dest */
-> > +> > 	> > mov x21, x12> > 	> > 	> > 	> > 	> > /*  x21 = copy src */
+On Fri, 2015-11-27 at 14:19 +0000, Marc Zyngier wrote:
+> On 24/11/15 22:25, Geoff Levand wrote:
+> > +#define SCTLR_ELx_I> > 	> > (1 << 12)
+> > +#define SCTLR_ELx_SA> > 	> > (1 << 3)
+> > +#define SCTLR_ELx_C> > 	> > (1 << 2)
+> > +#define SCTLR_ELx_A> > 	> > (1 << 1)
+> > +#define SCTLR_ELx_M> > 	> > 1
 > 
-> Till v10 we had here invalidation for relocated destination page to PoC. I could
-> not understand, why it was removed. Removing that piece of code breaks kexec
-> booting with mustang. I need [1] to kexec boot into second kernel with mustang
-> platform.
+> kvm_arm.h already has some of these defined, and sysreg.h has another
+> bunch. Can you please consolidate this into a single place (probably
+> sysreg.h)?
 
-We need to flush the new kernel to PoC.  The code that was here that
-was doing that would only be executed when the new kernel needed
-relocation (the standard kexec case).  We also need to flush kernels
-that do not need relocation (the standard kdump case).
+OK, I'll look into it.
 
-I moved the new kernel flush to kexec_segment_flush(), called
-unconditionally in machine_kexec() so we can handle both cases
-with one piece of code.
+> > +#define SCTLR_ELx_FLAGS> > 	> > (SCTLR_ELx_M | SCTLR_ELx_A | SCTLR_ELx_C |> > 	> > \
+> > +> > 	> > 	> > 	> >  SCTLR_ELx_SA | SCTLR_ELx_I)
+> > +
+> > +.text
+> > +.pushsection    .idmap.text, "ax"
+> > +
+> > +.align 5
+> 
+> Why is this .align directive required?
 
-Have you experienced a problem on mustang with the current version?
+In the original proc.S file, this was to align the cpu_reset
+routine.  It has been there since the initial commit of the
+proc.S.  I don't think this alignment is needed, but maybe
+there is some reason it is there that I am not aware of?
+
+> > +
+> > +/*
+> > + * cpu_soft_restart(cpu_reset, el2_switch, entry, arg0, arg1) - Perform a cpu
+> > + * soft reset.
+> > + *
+> > + * @cpu_reset: Physical address of the cpu_reset routine.
+> > + * @el2_switch: Flag to indicate a swich to EL2 is needed, passed to cpu_reset.
+> > + * @entry: Location to jump to for soft reset, passed to cpu_reset.
+> > + * arg0: First argument passed to @entry.
+> > + * arg1: Second argument passed to @entry.
+> > + */
+> > +
+> > +ENTRY(cpu_soft_restart)
+> > +> > 	> > mov> > 	> > x18, x0> > 	> > 	> > 	> > 	> > // cpu_reset
+> > +> > 	> > mov> > 	> > x0, x1> > 	> > 	> > 	> > 	> > // el2_switch
+> > +> > 	> > mov> > 	> > x1, x2> > 	> > 	> > 	> > 	> > // entry
+> > +> > 	> > mov> > 	> > x2, x3> > 	> > 	> > 	> > 	> > // arg0
+> > +> > 	> > mov> > 	> > x3, x4> > 	> > 	> > 	> > 	> > // arg1
+> > +> > 	> > ret> > 	> > x18
+> > +ENDPROC(cpu_soft_restart)
+> 
+> Grepping through the tree, I can only find a single use of
+> cpu_soft_restart, with cpu_reset as its first parameter.
+> 
+> Why do we need this indirection? Having
+> 
+> void cpu_soft_restart(el2_switch, entry, arg0, arg1);
+> 
+> should be enough...
+
+> > +/*
+> > + * cpu_reset(el2_switch, entry, arg0, arg1) - Helper for cpu_soft_restart.
+> > + *
+> > + * @el2_switch: Flag to indicate a swich to EL2 is needed.
+> > + * @entry: Location to jump to for soft reset.
+> > + * arg0: First argument passed to @entry.
+> > + * arg1: Second argument passed to @entry.
+> > + *
+> > + * Put the CPU into the same state as it would be if it had been reset, and
+> > + * branch to what would be the reset vector. It must be executed with the
+> > + * flat identity mapping.
+> > + */
+> > +
+> > +ENTRY(cpu_reset)
+> > +> > 	> > /* Clear sctlr_el1 flags. */
+> > +> > 	> > mrs> > 	> > x12, sctlr_el1
+> > +> > 	> > ldr> > 	> > x13, =SCTLR_ELx_FLAGS
+> > +> > 	> > bic> > 	> > x12, x12, x13
+> > +> > 	> > msr> > 	> > sctlr_el1, x12
+> > +> > 	> > isb
+> > +
+> > +> > 	> > cbz> > 	> > x0, 1f> > 	> > 	> > 	> > 	> > // el2_switch?
+> > +
+> > +> > 	> > mov> > 	> > x0, x1> > 	> > 	> > 	> > 	> > // entry
+> > +> > 	> > mov> > 	> > x1, x2> > 	> > 	> > 	> > 	> > // arg0
+> > +> > 	> > mov> > 	> > x2, x3> > 	> > 	> > 	> > 	> > // arg1
+> > +> > 	> > hvc> > 	> > #HVC_CALL_FUNC> > 	> > 	> > 	> > // no return
+> > +
+> > +1:> > 	> > mov> > 	> > x18, x1> > 	> > 	> > 	> > 	> > // entry
+> > +> > 	> > mov> > 	> > x0, x2> > 	> > 	> > 	> > 	> > // arg0
+> > +> > 	> > mov> > 	> > x1, x3> > 	> > 	> > 	> > 	> > // arg1
+> > +> > 	> > ret> > 	> > x18
+> > +ENDPROC(cpu_reset)
+> 
+> And this can be an actual part of cpu_soft_reset.
+
+Sure, I'll look at your proposal from your reply to Pratyush.
+
+> > +
+> > +.popsection
+> > diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+> > new file mode 100644
+> > index 0000000..79816b6
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/cpu-reset.h
+> > @@ -0,0 +1,22 @@
+> > +/*
+> > + * cpu reset routines
+> > + *
+> > + * Copyright (C) 2015 Huawei Futurewei Technologies.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#if !defined(_ARM64_CPU_RESET_H)
+> 
+> The usual idiom is "#ifndef __BLAH_H".
+
+Sure, I can change that.  Grepping the arm64 sources shows one other
+use of this style, in a kvm header...
+
+> > +#define _ARM64_CPU_RESET_H
+> > +
+> > +#include 
+> > +
+> > +void __attribute__((noreturn)) cpu_reset(unsigned long el2_switch,
+> > +> > 	> > unsigned long entry, unsigned long arg0, unsigned long arg1);
+> > +void __attribute__((noreturn)) cpu_soft_restart(phys_addr_t cpu_reset,
+> > +> > 	> > unsigned long el2_switch, unsigned long entry, unsigned long arg0,
+> > +> > 	> > unsigned long arg1);
+> > +
+> > +#endif
+> > 
+> 
+> There is a __noreturn attribute already defined.
+
+I'll switch these over.
+
+Thanks for the review.
 
 -Geoff
 
