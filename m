@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 30 Nov 2015 10:58:43 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
-Message-ID: <20151130052843.GG23908@dhcppc13.redhat.com>
-References: <cover.1448403503.git.geoff@infradead.org>
- <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
- <56586679.8060403@arm.com>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a3J4F-0000sf-0y
+ for kexec@lists.infradead.org; Mon, 30 Nov 2015 07:40:11 +0000
+Date: Mon, 30 Nov 2015 08:39:31 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [RFC PATCH] crashdump/x86: Add option to get crash kernel region
+ size
+Message-ID: <20151130073931.GZ4768@olila.local.net-space.pl>
+References: <1448741644-905-1-git-send-email-daniel.kiper@oracle.com>
+ <20151129235532.GB13342@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <56586679.8060403@arm.com>
+In-Reply-To: <20151129235532.GB13342@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,36 +25,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: keir@xen.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, david.vrabel@citrix.com, jbeulich@suse.com, xen-devel@lists.xenproject.org
 
-On 27/11/2015:02:19:37 PM, Marc Zyngier wrote:
-> On 24/11/15 22:25, Geoff Levand wrote:
-> > +ENTRY(cpu_soft_restart)
-> > +	mov	x18, x0				// cpu_reset
-> > +	mov	x0, x1				// el2_switch
-> > +	mov	x1, x2				// entry
-> > +	mov	x2, x3				// arg0
-> > +	mov	x3, x4				// arg1
-> > +	ret	x18
-> > +ENDPROC(cpu_soft_restart)
-> 
-> Grepping through the tree, I can only find a single use of
-> cpu_soft_restart, with cpu_reset as its first parameter.
-> 
-> Why do we need this indirection? Having
+On Mon, Nov 30, 2015 at 08:55:32AM +0900, Simon Horman wrote:
+> On Sat, Nov 28, 2015 at 09:14:04PM +0100, Daniel Kiper wrote:
+> > Crash kernel region size is available via sysfs on Linux running on
+> > bare metal. However, this does not work when Linux runs as Xen dom0.
+> > In this case Xen crash kernel region size should be established using
+> > __HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+> > not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+> > accessible using shell scripts or something like that. Potentially we
+> > can check "xl dmesg" output for crashkernel option but this is not nice.
+> > So, let's add this functionality, for Linux running on bare metal and
+> > as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+> > kernel region size in one way regardless of platform. All burden of
+> > platform detection lies on kexec-tools.
+> >
+> > Figure (and unit) displayed by this new kexec-tools functionality is
+> > the same as one taken from /sys/kernel/kexec_crash_size.
+> >
+> > This functionality is available on x86 platform only. If idea is acceptable
+> > then I can prepare patches for other platforms (if it is possible and make
+> > sense) and repost them as fully flagged patch series.
+> >
+> > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+>
+> Thanks, applied.
 
-It is needed because we need to execute cpu_reset() in physical address space.
+Thanks a lot. However, this patch itself breaks build on other platforms.
+That is why I posted it as a RFC. To fix this I can post similar patches
+for other platforms (this will happen probably tomorrow or on Wednesday
+but no later than by the end of this week). Or you can revert this patch
+and than I repost it as a part of fully functional patch series.
 
-> 
-> void cpu_soft_restart(el2_switch, entry, arg0, arg1);
-> 
-> should be enough...
-
-We can do with only cpu_soft_restart(), but then a function pointer to __pa() of
-it need to be called. May  be current approach is more cleaner.
-
-~Pratyush
+Daniel
 
 _______________________________________________
 kexec mailing list
