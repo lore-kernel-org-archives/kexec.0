@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 1 Dec 2015 07:46:15 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
-Message-ID: <20151201021615.GA5704@dhcppc13.redhat.com>
-References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151127131306.GE23908@dhcppc13.redhat.com>
- <1448909475.31214.27.camel@infradead.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a3eJ8-0005CL-B2
+ for kexec@lists.infradead.org; Tue, 01 Dec 2015 06:20:59 +0000
+Date: Tue, 1 Dec 2015 15:20:32 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC PATCH] crashdump/x86: Add option to get crash kernel region
+ size
+Message-ID: <20151201062032.GC16260@verge.net.au>
+References: <1448741644-905-1-git-send-email-daniel.kiper@oracle.com>
+ <20151129235532.GB13342@verge.net.au>
+ <20151130073931.GZ4768@olila.local.net-space.pl>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1448909475.31214.27.camel@infradead.org>
+In-Reply-To: <20151130073931.GZ4768@olila.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,50 +26,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: keir@xen.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, david.vrabel@citrix.com, jbeulich@suse.com, xen-devel@lists.xenproject.org
 
-Hi Geoff,
-
-On 30/11/2015:10:51:15 AM, Geoff Levand wrote:
-> Hi,
+On Mon, Nov 30, 2015 at 08:39:31AM +0100, Daniel Kiper wrote:
+> On Mon, Nov 30, 2015 at 08:55:32AM +0900, Simon Horman wrote:
+> > On Sat, Nov 28, 2015 at 09:14:04PM +0100, Daniel Kiper wrote:
+> > > Crash kernel region size is available via sysfs on Linux running on
+> > > bare metal. However, this does not work when Linux runs as Xen dom0.
+> > > In this case Xen crash kernel region size should be established using
+> > > __HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+> > > not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+> > > accessible using shell scripts or something like that. Potentially we
+> > > can check "xl dmesg" output for crashkernel option but this is not nice.
+> > > So, let's add this functionality, for Linux running on bare metal and
+> > > as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+> > > kernel region size in one way regardless of platform. All burden of
+> > > platform detection lies on kexec-tools.
+> > >
+> > > Figure (and unit) displayed by this new kexec-tools functionality is
+> > > the same as one taken from /sys/kernel/kexec_crash_size.
+> > >
+> > > This functionality is available on x86 platform only. If idea is acceptable
+> > > then I can prepare patches for other platforms (if it is possible and make
+> > > sense) and repost them as fully flagged patch series.
+> > >
+> > > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> >
+> > Thanks, applied.
 > 
-> On Fri, 2015-11-27 at 18:43 +0530, Pratyush Anand wrote:
-> 
-> > On 24/11/2015:10:25:34 PM, Geoff Levand wrote:
-> > > +> > 	> > /* Test the entry flags. */
-> > > +.Ltest_source:
-> > > +> > 	> > tbz> > 	> > x18, IND_SOURCE_BIT, .Ltest_indirection
-> > > +
-> > > +> > 	> > mov x20, x13> > 	> > 	> > 	> > 	> > /*  x20 = copy dest */
-> > > +> > 	> > mov x21, x12> > 	> > 	> > 	> > 	> > /*  x21 = copy src */
-> > 
-> > Till v10 we had here invalidation for relocated destination page to PoC. I could
-> > not understand, why it was removed. Removing that piece of code breaks kexec
-> > booting with mustang. I need [1] to kexec boot into second kernel with mustang
-> > platform.
-> 
-> We need to flush the new kernel to PoC.  The code that was here that
-> was doing that would only be executed when the new kernel needed
-> relocation (the standard kexec case).  We also need to flush kernels
-> that do not need relocation (the standard kdump case).
-> 
-> I moved the new kernel flush to kexec_segment_flush(), called
-> unconditionally in machine_kexec() so we can handle both cases
-> with one piece of code.
+> Thanks a lot. However, this patch itself breaks build on other platforms.
+> That is why I posted it as a RFC. To fix this I can post similar patches
+> for other platforms (this will happen probably tomorrow or on Wednesday
+> but no later than by the end of this week). Or you can revert this patch
+> and than I repost it as a part of fully functional patch series.
 
-Yes, I had noticed that. Actually flushing before cache is disabled can always
-cause heisenbug.
+Sorry for being a bit too hasty.
 
-> 
-> Have you experienced a problem on mustang with the current version?
-
-Yes, v10 works fine, but I need invalidation fix for both v11 and v12 to work on
-mustang.
-I have not tested vanilla v12 on seattle, but v12 ported on rhelsa needs
-invalidation fix to work on seattle as well.
-
-~Pratyush
+I will revert.
 
 _______________________________________________
 kexec mailing list
