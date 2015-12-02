@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a49WT-000763-Pz
- for kexec@lists.infradead.org; Wed, 02 Dec 2015 15:40:50 +0000
-Date: Wed, 2 Dec 2015 16:40:23 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [V5 PATCH 3/4] kexec: Fix race between panic() and crash_kexec()
- called directly
-Message-ID: <20151202154023.GH3783@pd.tnic>
-References: <20151120093641.4285.97253.stgit@softrs>
- <20151120093648.4285.17715.stgit@softrs>
- <20151125095457.GB29499@pd.tnic>
- <04EAB7311EE43145B2D3536183D1A84454A3B032@GSjpTKYDCembx31.service.hitachi.net>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <04EAB7311EE43145B2D3536183D1A84454A3B032@GSjpTKYDCembx31.service.hitachi.net>
+Received: from smtp.codeaurora.org ([198.145.29.96])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a4EDI-0001Cy-At
+ for kexec@lists.infradead.org; Wed, 02 Dec 2015 20:41:21 +0000
+From: Sameer Goel <sgoel@codeaurora.org>
+Subject: [PATCH] arm64: Fix for ARM64 3 level translation tables
+Date: Wed,  2 Dec 2015 13:40:54 -0700
+Message-Id: <1449088854-13968-1-git-send-email-sgoel@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,22 +15,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: panand@redhat.com, kexec@lists.infradead.org
+Cc: Sameer Goel <sgoel@codeaurora.org>, timur@codeaurora.org, asamson@codeaurora.org, rruigrok@codeaurora.org
 
-T24gV2VkLCBEZWMgMDIsIDIwMTUgYXQgMTE6NTc6MzhBTSArMDAwMCwg5rKz5ZCI6Iux5a6PIC8g
-S0FXQUnvvIxISURFSElSTyB3cm90ZToKPiBXZSBjYW4gZG8gc28sIGJ1dCBJIHRoaW5rIHJlc2V0
-dGluZyBwYW5pY19jcHUgYWx3YXlzIHdvdWxkIGJlCj4gc2ltcGxlciBhbmQgc2FmZXIuCgpXZWxs
-LCBJIHRoaW5rIGV4ZWN1dGluZyBjb2RlIG5lZWRsZXNzbHkgKmVzcGVjaWFsbHkqIGF0IHBhbmlj
-IHRpbWUgaXMKbm90IGFsbCB0aGF0IHJvc3kgZWl0aGVyLgoKQmVzaWRlcyBzb21ldGhpbmcgbGlr
-ZSB0aGlzOgoKCXN0YXRpYyBib29sIGtleGVjX2ZhaWxlZDsKCgkuLi4KCiAgICAgICAgaWYgKGNy
-YXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzICYmICFrZXhlY19mYWlsZWQpCgkJa2V4ZWNfZmFpbGVk
-ID0gX19jcmFzaF9rZXhlYyhOVUxMKTsKCmlzIGFzIHNpbXBsZSBhcyBpdCBnZXRzLgoKLS0gClJl
-Z2FyZHMvR3J1c3MsCiAgICBCb3Jpcy4KCkVDTyB0aXAgIzEwMTogVHJpbSB5b3VyIG1haWxzIHdo
-ZW4geW91IHJlcGx5LgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Add the implementation for PMD translation in case of 3 level page tables.
+Assign the kernel page size based on the page structure read from the kernel
+ELF file.
+
+Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
+---
+This change targets the arm64_support branch of Pratush Anand's repository at:
+https://github.com/pratyushanand/makedumpfile.git
+
+ arch/arm64.c   | 36 ++++++++++++++++++++++++++++++------
+ makedumpfile.c |  2 +-
+ 2 files changed, 31 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm64.c b/arch/arm64.c
+index a94a4ba..ab20389 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -36,7 +36,7 @@ typedef struct {
+ } pmd_t;
+ 
+ #define pud_offset(pgd, vaddr) 	((pud_t *)pgd)
+-#define pmd_offset(pud, vaddr) 	((pmd_t *)pud)
++
+ #define pgd_val(x)		((x).pgd)
+ #define pud_val(x)		(pgd_val((x).pgd))
+ #define pmd_val(x)		(pud_val((x).pud))
+@@ -68,6 +68,11 @@ typedef struct {
+ */
+ #define PHYS_MASK_SHIFT		48
+ #define PHYS_MASK		((1UL << PHYS_MASK_SHIFT) - 1)
++/*
++ * Remove the highest order bits that are not a part of the
++ * physical address in a section
++ */
++#define PMD_SECTION_MASK        ((1UL << 40) - 1)
+ 
+ #define PMD_TYPE_MASK		3
+ #define PMD_TYPE_SECT		1
+@@ -83,10 +88,18 @@ typedef struct {
+ #define pmd_page_vaddr(pmd)		(__va(pmd_val(pmd) & PHYS_MASK & (int32_t)PAGE_MASK))
+ #define pte_offset(dir, vaddr) 		((pte_t*)pmd_page_vaddr((*dir)) + pte_index(vaddr))
+ 
++
++#define pmd_offset_pgtbl_lvl_2(pud, vaddr) ((pmd_t *)pud)
++
++#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
++#define pud_page_vaddr(pud)		(__va(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK))
++#define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_vaddr((*pud)) + pmd_index(vaddr))
++
+ /* kernel struct page size can be kernel version dependent, currently
+  * keep it constant.
+  */
+-#define KERN_STRUCT_PAGE_SIZE		64
++#define KERN_STRUCT_PAGE_SIZE		get_structure_size("page", DWARF_INFO_GET_STRUCT_SIZE)
++
+ #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
+ #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
+ #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
+@@ -97,6 +110,15 @@ static int pgtable_level;
+ static int va_bits;
+ static int page_shift;
+ 
++pmd_t *
++pmd_offset(pud_t *pud, unsigned long vaddr)
++{
++	if (pgtable_level == 2) {
++		return pmd_offset_pgtbl_lvl_2(pud, vaddr);
++	} else {
++		return pmd_offset_pgtbl_lvl_3(pud, vaddr);
++	}
++}
+ int
+ get_pgtable_level_arm64(void)
+ {
+@@ -256,7 +278,7 @@ vtop_arm64(unsigned long vaddr)
+ {
+ 	unsigned long long paddr = NOT_PADDR;
+ 	pgd_t	*pgda, pgdv;
+-	pud_t	*puda;
++	pud_t	*puda, pudv;
+ 	pmd_t	*pmda, pmdv;
+ 	pte_t 	*ptea, ptev;
+ 
+@@ -271,8 +293,9 @@ vtop_arm64(unsigned long vaddr)
+ 		return NOT_PADDR;
+ 	}
+ 
+-	puda = pud_offset(pgda, vaddr);
+-	pmda = pmd_offset(puda, vaddr);
++	pudv.pgd = pgdv;
++
++	pmda = pmd_offset(&pudv, vaddr);
+ 	if (!readmem(VADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+ 		ERRMSG("Can't read pmd\n");
+ 		return NOT_PADDR;
+@@ -298,7 +321,8 @@ vtop_arm64(unsigned long vaddr)
+ 		break;
+ 	case PMD_TYPE_SECT:
+ 		/* 1GB section */
+-		paddr = (pmd_val(pmdv) & PMD_MASK) + (vaddr & (PMD_SIZE - 1));
++		paddr = (pmd_val(pmdv) & (PMD_MASK & PMD_SECTION_MASK))
++					+ (vaddr & (PMD_SIZE - 1));
+ 		break;
+ 	}
+ 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index cc71f20..df11f73 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -5955,7 +5955,7 @@ create_dump_bitmap(void)
+ 	ret = TRUE;
+ out:
+ 	/* Should keep the buffer in the 1-cycle case. */
+-	if (info->flag_cyclic)
++	if (info->flag_cyclic && (!info->flag_elf_dumpfile))
+ 		free_bitmap_buffer();
+ 
+ 	return ret;
+-- 
+1.8.2.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
