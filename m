@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-x229.google.com ([2a00:1450:4010:c07::229])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4G5T-0000MM-8j
- for kexec@lists.infradead.org; Wed, 02 Dec 2015 22:41:24 +0000
-Received: by lfdl133 with SMTP id l133so69746391lfd.2
- for <kexec@lists.infradead.org>; Wed, 02 Dec 2015 14:41:00 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <23ca498d5e28017549c6076812d60b18e86fa20e.1448403503.git.geoff@infradead.org>
+Message-ID: <1449096562.6139.74.camel@infradead.org>
+Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 02 Dec 2015 14:49:22 -0800
+In-Reply-To: <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
 References: <cover.1448403503.git.geoff@infradead.org>
- <23ca498d5e28017549c6076812d60b18e86fa20e.1448403503.git.geoff@infradead.org>
-From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
-Date: Wed, 2 Dec 2015 17:40:41 -0500
-Message-ID: <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
-Subject: Re: [PATCH v12 04/16] arm64: kvm: allows kvm cpu hotplug
+ <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
+ <20151127131306.GE23908@dhcppc13.redhat.com>
+ <1448909475.31214.27.camel@infradead.org>
+ <20151201021615.GA5704@dhcppc13.redhat.com>
+ <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,73 +23,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, vikrams@codeaurora.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, shankerd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: Azriel Samson <asamson@codeaurora.org>, 'Pratyush Anand' <panand@redhat.com>
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello,
+Azriel and Pratyush,
 
-On 24 November 2015 at 17:25, Geoff Levand <geoff@infradead.org> wrote:
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
->
-> The current kvm implementation on arm64 does cpu-specific initialization
-> at system boot, and has no way to gracefully shutdown a core in terms of
-> kvm. This prevents, especially, kexec from rebooting the system on a boot
-> core in EL2.
->
-> This patch adds a cpu tear-down function and also puts an existing cpu-init
-> code into a separate function, kvm_arch_hardware_disable() and
-> kvm_arch_hardware_enable() respectively.
-> We don't need arm64-specific cpu hotplug hook any more.
->
-> Since this patch modifies common part of code between arm and arm64, one
-> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
-> compiling errors.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm/include/asm/kvm_host.h   | 10 ++++-
->  arch/arm/include/asm/kvm_mmu.h    |  1 +
->  arch/arm/kvm/arm.c                | 79 ++++++++++++++++++---------------------
->  arch/arm/kvm/mmu.c                |  5 +++
->  arch/arm64/include/asm/kvm_host.h | 16 +++++++-
->  arch/arm64/include/asm/kvm_mmu.h  |  1 +
->  arch/arm64/include/asm/virt.h     |  9 +++++
->  arch/arm64/kvm/hyp-init.S         | 33 ++++++++++++++++
->  arch/arm64/kvm/hyp.S              | 32 ++++++++++++++--
->  9 files changed, 138 insertions(+), 48 deletions(-)
+On Tue, 2015-12-01 at 11:32 -0700, Azriel Samson wrote:
+> I tested with v11 on our platform and I too needed the invalidation
+> fix.
 
-[..]
+I pushed out a kexec-v12.1 branch to my linux-kexec repo [1] with
+fixes.  Could you test it with both kexec reboot and kdump?  For
+kdump, use something like:
 
->
->
->  static struct notifier_block hyp_init_cpu_pm_nb = {
-> @@ -1108,11 +1119,6 @@ static int init_hyp_mode(void)
->         }
->
->         /*
-> -        * Execute the init code on each CPU.
-> -        */
-> -       on_each_cpu(cpu_init_hyp_mode, NULL, 1);
-> -
-> -       /*
->          * Init HYP view of VGIC
->          */
->         err = kvm_vgic_hyp_init();
+  CMDLINE += 'crashkernel=64M@2240M'
 
-With this flow, the cpu_init_hyp_mode() is called only at VM guest
-creation, but vgic_hyp_init() is called at bootup. On a system with
-GICv3, it looks like we end up with bogus values from the ICH_VTR_EL2
-(to get the number of LRs), because we're not reading it from EL2
-anymore.
+then
 
-Whats the best way to fix this?
-- Call kvm_arch_hardware_enable() before vgic_hyp_init() and disable later?
-- Fold the VGIC init stuff back into hardware_enable()?
-- Read the VGIC number of LRs from the hyp stub?
-- ..
+  # kexec -d --load-panic /boot/vmlinux.strip --append="1 mem=64M maxcpus=1 reset_devices console=... root=..."
+  # echo c > /proc/sysrq-trigger
 
-Regards,
-Ashwin.
+We need to test both reboot and kdump since the the way the kexec is
+done is different for the two.
+
+[1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
