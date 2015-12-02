@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1449096562.6139.74.camel@infradead.org>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+Message-ID: <1449097050.6139.80.camel@infradead.org>
+Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 02 Dec 2015 14:49:22 -0800
-In-Reply-To: <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
+Date: Wed, 02 Dec 2015 14:57:30 -0800
+In-Reply-To: <20151130104027.7eeaa273@why.wild-wind.fr.eu.org>
 References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151127131306.GE23908@dhcppc13.redhat.com>
- <1448909475.31214.27.camel@infradead.org>
- <20151201021615.GA5704@dhcppc13.redhat.com>
- <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
+ <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
+ <56586679.8060403@arm.com> <20151130052843.GG23908@dhcppc13.redhat.com>
+ <20151130104027.7eeaa273@why.wild-wind.fr.eu.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,30 +21,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Azriel Samson <asamson@codeaurora.org>, 'Pratyush Anand' <panand@redhat.com>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Pratyush Anand <panand@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Azriel and Pratyush,
+On Mon, 2015-11-30 at 10:40 +0000, Marc Zyngier wrote:
 
-On Tue, 2015-12-01 at 11:32 -0700, Azriel Samson wrote:
-> I tested with v11 on our platform and I too needed the invalidation
-> fix.
+> All that can be solved in C, and mostly at compile time. Using an
+> assembler trampoline is complicating things for no good reason:
 
-I pushed out a kexec-v12.1 branch to my linux-kexec repo [1] with
-fixes.  Could you test it with both kexec reboot and kdump?  For
-kdump, use something like:
+I added this into my kexec-v12.1 branch.  After some more testing I'll
+post a v13 to the list.
 
-  CMDLINE += 'crashkernel=64M@2240M'
-
-then
-
-  # kexec -d --load-panic /boot/vmlinux.strip --append="1 mem=64M maxcpus=1 reset_devices console=... root=..."
-  # echo c > /proc/sysrq-trigger
-
-We need to test both reboot and kdump since the the way the kexec is
-done is different for the two.
-
-[1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
 -Geoff
 
 
