@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 1 Dec 2015 19:03:37 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
-Message-ID: <20151201190337.GG29045@leverpostej>
-References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151127131306.GE23908@dhcppc13.redhat.com>
- <1448909475.31214.27.camel@infradead.org>
- <20151201021615.GA5704@dhcppc13.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20151201021615.GA5704@dhcppc13.redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a3zwb-0004r0-5L
+ for kexec@lists.infradead.org; Wed, 02 Dec 2015 05:27:09 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH 1/2] kexec: Set KEXEC_TYPE_CRASH before
+ sanity_check_segment_list()
+Date: Wed,  2 Dec 2015 13:26:35 +0800
+Message-Id: <1449033995-15700-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +16,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Xunlei Pang <xlpang@redhat.com>, Dave Young <dyoung@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-On Tue, Dec 01, 2015 at 07:46:15AM +0530, Pratyush Anand wrote:
-> Hi Geoff,
-> 
-> On 30/11/2015:10:51:15 AM, Geoff Levand wrote:
-> > Hi,
-> > 
-> > On Fri, 2015-11-27 at 18:43 +0530, Pratyush Anand wrote:
-> > 
-> > > On 24/11/2015:10:25:34 PM, Geoff Levand wrote:
-> > > > +> > 	> > /* Test the entry flags. */
-> > > > +.Ltest_source:
-> > > > +> > 	> > tbz> > 	> > x18, IND_SOURCE_BIT, .Ltest_indirection
-> > > > +
-> > > > +> > 	> > mov x20, x13> > 	> > 	> > 	> > 	> > /*  x20 = copy dest */
-> > > > +> > 	> > mov x21, x12> > 	> > 	> > 	> > 	> > /*  x21 = copy src */
-> > > 
-> > > Till v10 we had here invalidation for relocated destination page to PoC. I could
-> > > not understand, why it was removed. Removing that piece of code breaks kexec
-> > > booting with mustang. I need [1] to kexec boot into second kernel with mustang
-> > > platform.
-> > 
-> > We need to flush the new kernel to PoC.  The code that was here that
-> > was doing that would only be executed when the new kernel needed
-> > relocation (the standard kexec case).  We also need to flush kernels
-> > that do not need relocation (the standard kdump case).
-> > 
-> > I moved the new kernel flush to kexec_segment_flush(), called
-> > unconditionally in machine_kexec() so we can handle both cases
-> > with one piece of code.
-> 
-> Yes, I had noticed that. Actually flushing before cache is disabled can always
-> cause heisenbug.
+sanity_check_segment_list() checks KEXEC_TYPE_CRASH flag to ensure
+all the segments of the loaded crash kernel are winthin the kernel
+crash resource limits, so set the flag beforehand.
 
-Please use "clean", "invalidate", or "clean+invalidate" rather than
-"flush". The latter is ambiguous and misleading.
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+ kernel/kexec.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-You can validly perform maintenance while the cache may allocate for a
-region of memory, it's just that afterwards the cache may hold a clean
-entries for that region.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index d873b64..9624391 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -63,16 +63,19 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+ 	if (ret)
+ 		goto out_free_image;
+ 
+-	ret = sanity_check_segment_list(image);
+-	if (ret)
+-		goto out_free_image;
+-
+-	 /* Enable the special crash kernel control page allocation policy. */
++	/*
++	 * Enable the special crash kernel control page allocation policy,
++	 * and set the crash type flag.
++	 */
+ 	if (kexec_on_panic) {
+ 		image->control_page = crashk_res.start;
+ 		image->type = KEXEC_TYPE_CRASH;
+ 	}
+ 
++	ret = sanity_check_segment_list(image);
++	if (ret)
++		goto out_free_image;
++
+ 	/*
+ 	 * Find a location for the control code buffer, and add it
+ 	 * the vector of segments so that it's pages will also be
+-- 
+2.5.0
 
-You can clean/clean+invalidate to push data to the PoC, or you can
-invalidate/clean+invalidate to ensure that no asynchronous writebacks
-occur later (so long as you do not make a cacheable write to said
-cacheline).
-
-The only thing that you cannot guarantee is that there is not some clean
-cacheline allocated for a region of memory to which cacheable accesses
-may be performed.
-
-Note that the kernel only requires its Image to be clean to the PoC. So
-long as this is true, we know that there will not be asynchrnoous
-writebacks, and can invalidate as necessary as part of the boot process.
-
-Thanks,
-Mark.
 
 _______________________________________________
 kexec mailing list
