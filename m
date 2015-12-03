@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4JYs-0007Yo-V4
- for kexec@lists.infradead.org; Thu, 03 Dec 2015 02:23:59 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [V5 PATCH 2/4] panic/x86: Allow cpus to save registers even if
- they are looping in NMI context
-Date: Thu, 3 Dec 2015 02:23:32 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A84454A3CDD3@GSjpTKYDCembx31.service.hitachi.net>
-References: <20151120093641.4285.97253.stgit@softrs>
- <20151120093646.4285.62259.stgit@softrs>
-In-Reply-To: <20151120093646.4285.62259.stgit@softrs>
-Content-Language: ja-JP
+ id 1a4K08-0000aV-6L
+ for kexec@lists.infradead.org; Thu, 03 Dec 2015 02:52:09 +0000
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
+ by cn.fujitsu.com (Postfix) with ESMTP id 11A8E409255B
+ for <kexec@lists.infradead.org>; Thu,  3 Dec 2015 10:51:27 +0800 (CST)
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH] Add more description for --num-threads
+Date: Thu, 3 Dec 2015 10:50:11 +0800
+Message-ID: <1449111011-21749-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,43 +23,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>, Jonathan Corbet <corbet@lwn.net>, Peter
- Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W.
- Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 'Steven Rostedt' <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>
+To: kexec@lists.infradead.org
 
-> @@ -357,7 +358,15 @@ static void default_do_nmi(struct pt_regs *regs)
->  	}
-> 
->  	/* Non-CPU-specific NMI: NMI sources can be processed on any CPU */
-> -	raw_spin_lock(&nmi_reason_lock);
-> +
-> +	/*
-> +	 * Another CPU may be processing panic routines with holding
-> +	 * nmi_reason_lock.  Check IPI issuance from the panicking CPU
-> +	 * and call the callback directly.
-> +	 */
-> +	while (!raw_spin_trylock(&nmi_reason_lock))
-> +		poll_crash_ipi_and_callback(regs);
-> +
->  	reason = x86_platform.get_nmi_reason();
+From the test result, we can see when "-d 31" is specified, using
+"--num-threads" always spends more time than not. And it occurs at
+most of the time in theory. So it should be mentioned in the
+description of "--num-threads".
 
-I noticed this logic is unneeded until applying PATCH 4/4.
-Currently, unknown NMI can be broadcast to all CPUs, but in that case,
-panic()/nmi_panic() are called after releasing nmi_reason_lock.
-So CPUs can't loop infinitely here.
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+---
+ makedumpfile.8 | 6 ++++--
+ print_info.c   | 4 ++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-PATCH 4/4 allows us to broadcast external NMIs to all CPUs, and it
-causes infinite loop in raw_spin_lock(&nmi_reason_lock).  So the above
-changes are needed.
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 6eff4f1..ec179a5 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -378,11 +378,13 @@ Using multiple threads to read and compress data of each page in parallel.
+ And it will reduces time for saving \fIDUMPFILE\fR.
+ This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
+ format from \fIVMCORE\fR in kdump\-compressed format or elf format.
++Note that if too many pages are filtered, \'\-\-num\-threads\' may not improve
++the performance, or even has bad effects. It means if \'\-d 31\' is specified,
++you should think about whether to use \'\-\-num\-threads\'.
+ .br
+ .B Example:
+ .br
+-# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
+-
++# makedumpfile \-\-num\-threads 4 /proc/vmcore dumpfile
+ .TP
+ \fB\-\-reassemble\fR
+ Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
+diff --git a/print_info.c b/print_info.c
+index d662c0c..d0302a8 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -194,6 +194,10 @@ print_usage(void)
+ 	MSG("      And it will reduces time for saving DUMPFILE.\n");
+ 	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
+ 	MSG("      VMCORE in kdump-compressed format or elf format.\n");
++	MSG("      Note that if too many pages are filtered, '--num-threads' may not improve\n");
++	MSG("      the performance, or even has bad effects.\n");
++	MSG("      It means if '-d 31' is specified, you should think about whether to use\n");
++	MSG("      '--num-threads'.\n");
+ 	MSG("\n");
+ 	MSG("  [--reassemble]:\n");
+ 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
+-- 
+1.8.3.1
 
-I'll move these chagnes to a later patch in the next version.
-
-Thanks,
-
---
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
 
 
 
