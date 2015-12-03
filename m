@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 3 Dec 2015 11:39:01 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
-Message-ID: <20151203060901.GH14143@dhcppc13.redhat.com>
+Date: Thu, 3 Dec 2015 09:32:13 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
+Message-ID: <20151203093212.GC7023@arm.com>
 References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151127131306.GE23908@dhcppc13.redhat.com>
- <1448909475.31214.27.camel@infradead.org>
- <20151201021615.GA5704@dhcppc13.redhat.com>
- <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
- <1449096562.6139.74.camel@infradead.org>
+ <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
+ <56586679.8060403@arm.com>
+ <20151130052843.GG23908@dhcppc13.redhat.com>
+ <20151130104027.7eeaa273@why.wild-wind.fr.eu.org>
+ <1449097050.6139.80.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1449096562.6139.74.camel@infradead.org>
+In-Reply-To: <1449097050.6139.80.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,27 +25,21 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, Azriel Samson <asamson@codeaurora.org>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-Hi Geoff,
-
-On 02/12/2015:02:49:22 PM, Geoff Levand wrote:
-> Azriel and Pratyush,
+On Wed, Dec 02, 2015 at 02:57:30PM -0800, Geoff Levand wrote:
+> On Mon, 2015-11-30 at 10:40 +0000, Marc Zyngier wrote:
 > 
-> On Tue, 2015-12-01 at 11:32 -0700, Azriel Samson wrote:
-> > I tested with v11 on our platform and I too needed the invalidation
-> > fix.
+> > All that can be solved in C, and mostly at compile time. Using an
+> > assembler trampoline is complicating things for no good reason:
 > 
-> I pushed out a kexec-v12.1 branch to my linux-kexec repo [1] with
-> fixes.  Could you test it with both kexec reboot and kdump?  For
-> kdump, use something like:
+> I added this into my kexec-v12.1 branch.  After some more testing I'll
+> post a v13 to the list.
 
-I tested kexec-v12.1 with mustang and it works for both kexec and kdump.
+You may well need some notrace annotations if you want to run C code
+here. Can you give it a spin with things like ftrace and kprobes?
 
-There had been few updates with Akashi, which are not there in kexec-v12.1.
-Please take his updates and merge them in v13.
-
-~Pratyush
+Will
 
 _______________________________________________
 kexec mailing list
