@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 3 Dec 2015 09:45:25 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v12 12/16] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20151203041525.GG14143@dhcppc13.redhat.com>
+From: "Azriel Samson" <asamson@codeaurora.org>
 References: <cover.1448403503.git.geoff@infradead.org>
- <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
+ <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
+ <20151127131306.GE23908@dhcppc13.redhat.com>
+ <1448909475.31214.27.camel@infradead.org>
+ <20151201021615.GA5704@dhcppc13.redhat.com>
+ <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
+ <1449096562.6139.74.camel@infradead.org>
+In-Reply-To: <1449096562.6139.74.camel@infradead.org>
+Subject: RE: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+Date: Wed, 2 Dec 2015 21:37:03 -0700
+Message-ID: <000b01d12d84$4313a930$c93afb90$@codeaurora.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
+Content-Language: en-us
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,58 +21,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, msalter@redhat.com, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: 'Geoff Levand' <geoff@infradead.org>
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Pratyush Anand' <panand@redhat.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi Akashi,
+Hi Geoff,
 
-Some of the points which came while discussing with Mark Salter are worth
-including in v13.
+> I pushed out a kexec-v12.1 branch to my linux-kexec repo [1] with fixes.
+Could you test it with both kexec reboot and kdump?  For kdump, use
+something like:
+ > CMDLINE +=3D 'crashkernel=3D64M@2240M'
 
-On 24/11/2015:10:25:34 PM, Geoff Levand wrote:
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+For kdump, I also require a version of the patch "arm64/kexec: Add support
+for kexec-lite". Without this, the dump capture kernel cannot find the
+device tree even on v11 that I tested.
 
-[...]
+Thanks,
+Azriel Samson
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,=
+=A0
+a Linux Foundation Collaborative Project
 
-> +/**
-> + * machine_crash_shutdown - shutdown non-boot cpus and save registers
-
-"non-panic" would be correct in stead of "non-boot". 
-
-> +	/* shutdown non-boot cpus */
-
-Ditto
-
-> +	smp_send_stop();
-> +
-> +	/* for boot cpu */
-
-"for panic cpu"
-
-
-[...]
-
-> @@ -697,6 +704,11 @@ static void ipi_cpu_stop(unsigned int cpu)
->  
->  	local_irq_disable();
-
-We have "set_cpu_online(cpu, false);" just before it.
-Panic core is waiting for non-panic to go offline, i.e. for the above event.
-
->  
-> +#ifdef CONFIG_KEXEC
-> +	if (in_crash_kexec)
-> +		crash_save_cpu(regs, cpu);
-> +#endif /* CONFIG_KEXEC */
-
-However, we are still saving crash info for non-panic core. So, it would be good
-to move crash_save_cpu() before set_cpu_online() to avoid any race condition.
-
-~Pratyush
 
 _______________________________________________
 kexec mailing list
