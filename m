@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-x233.google.com ([2a00:1450:4010:c07::233])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4UMo-0005pk-O0
- for kexec@lists.infradead.org; Thu, 03 Dec 2015 13:56:16 +0000
-Received: by lfdl133 with SMTP id l133so90381924lfd.2
- for <kexec@lists.infradead.org>; Thu, 03 Dec 2015 05:55:52 -0800 (PST)
+Message-ID: <56604A6E.60102@arm.com>
+Date: Thu, 03 Dec 2015 13:58:06 +0000
+From: Marc Zyngier <marc.zyngier@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
+Subject: Re: [PATCH v12 04/16] arm64: kvm: allows kvm cpu hotplug
 References: <cover.1448403503.git.geoff@infradead.org>
  <23ca498d5e28017549c6076812d60b18e86fa20e.1448403503.git.geoff@infradead.org>
  <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
-From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
-Date: Thu, 3 Dec 2015 08:55:32 -0500
-Message-ID: <CAJ5Y-eaxSAHQon2A1yP6mChsxcqPsU9Y1L1=-Lh8cF337H2pBQ@mail.gmail.com>
-Subject: Re: [PATCH v12 04/16] arm64: kvm: allows kvm cpu hotplug
+In-Reply-To: <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,12 +20,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, vikrams@codeaurora.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, shankerd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: Ashwin Chaugule <ashwin.chaugule@linaro.org>, Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, vikrams@codeaurora.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, shankerd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
 
-On 2 December 2015 at 17:40, Ashwin Chaugule <ashwin.chaugule@linaro.org> wrote:
+On 02/12/15 22:40, Ashwin Chaugule wrote:
 > Hello,
->
+> 
 > On 24 November 2015 at 17:25, Geoff Levand <geoff@infradead.org> wrote:
 >> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 >>
@@ -61,9 +55,9 @@ On 2 December 2015 at 17:40, Ashwin Chaugule <ashwin.chaugule@linaro.org> wrote:
 >>  arch/arm64/kvm/hyp-init.S         | 33 ++++++++++++++++
 >>  arch/arm64/kvm/hyp.S              | 32 ++++++++++++++--
 >>  9 files changed, 138 insertions(+), 48 deletions(-)
->
+> 
 > [..]
->
+> 
 >>
 >>
 >>  static struct notifier_block hyp_init_cpu_pm_nb = {
@@ -79,27 +73,41 @@ On 2 December 2015 at 17:40, Ashwin Chaugule <ashwin.chaugule@linaro.org> wrote:
 >>          * Init HYP view of VGIC
 >>          */
 >>         err = kvm_vgic_hyp_init();
->
+> 
 > With this flow, the cpu_init_hyp_mode() is called only at VM guest
 > creation, but vgic_hyp_init() is called at bootup. On a system with
 > GICv3, it looks like we end up with bogus values from the ICH_VTR_EL2
 > (to get the number of LRs), because we're not reading it from EL2
 > anymore.
 
-..or more likely, that the function to read the ICH_VTR_EL2 is not
-mapped in EL2, because we deferred the cpu_init_hyp_mode() calls. In
-any case, this ends up breaking KVM and manifests as a guest console
-which is stuck.
+Indeed, this is completely broken (I just reproduced the issue on a
+model). I wish this kind of details had been checked earlier, but thanks
+for pointing it out.
 
->
 > Whats the best way to fix this?
 > - Call kvm_arch_hardware_enable() before vgic_hyp_init() and disable later?
 > - Fold the VGIC init stuff back into hardware_enable()?
+
+None of that works - kvm_arch_hardware_enable() is called once per CPU,
+while vgic_hyp_init() can only be called once. Also,
+kvm_arch_hardware_enable() is called from interrupt context, and I
+wouldn't feel comfortable starting probing DT and allocating stuff from
+there.
+
 > - Read the VGIC number of LRs from the hyp stub?
+
+That's may UNDEF if called in the wrong context. Also, this defeats the
+point of stubs, which is just to install the vectors for the hypervisor.
+
 > - ..
->
-> Regards,
-> Ashwin.
+
+Yeah, quite.
+
+Geoff, Takahiro?
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 
 _______________________________________________
 kexec mailing list
