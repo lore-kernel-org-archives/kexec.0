@@ -1,24 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4SuN-0000rY-RG
- for kexec@lists.infradead.org; Thu, 03 Dec 2015 12:22:49 +0000
-Date: Thu, 3 Dec 2015 13:22:20 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [V5 PATCH 3/4] kexec: Fix race between panic() and crash_kexec()
- called directly
-Message-ID: <20151203122220.GA3213@pd.tnic>
-References: <20151120093641.4285.97253.stgit@softrs>
- <20151120093648.4285.17715.stgit@softrs>
- <20151125095457.GB29499@pd.tnic>
- <04EAB7311EE43145B2D3536183D1A84454A3B032@GSjpTKYDCembx31.service.hitachi.net>
- <20151202154023.GH3783@pd.tnic>
- <04EAB7311EE43145B2D3536183D1A84454A3CD95@GSjpTKYDCembx31.service.hitachi.net>
- <20151203093544.GC22271@pd.tnic>
- <04EAB7311EE43145B2D3536183D1A84454A3DF12@GSjpTKYDCembx31.service.hitachi.net>
+Received: from mail-lf0-x233.google.com ([2a00:1450:4010:c07::233])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a4UMo-0005pk-O0
+ for kexec@lists.infradead.org; Thu, 03 Dec 2015 13:56:16 +0000
+Received: by lfdl133 with SMTP id l133so90381924lfd.2
+ for <kexec@lists.infradead.org>; Thu, 03 Dec 2015 05:55:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <04EAB7311EE43145B2D3536183D1A84454A3DF12@GSjpTKYDCembx31.service.hitachi.net>
+In-Reply-To: <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
+References: <cover.1448403503.git.geoff@infradead.org>
+ <23ca498d5e28017549c6076812d60b18e86fa20e.1448403503.git.geoff@infradead.org>
+ <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
+From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
+Date: Thu, 3 Dec 2015 08:55:32 -0500
+Message-ID: <CAJ5Y-eaxSAHQon2A1yP6mChsxcqPsU9Y1L1=-Lh8cF337H2pBQ@mail.gmail.com>
+Subject: Re: [PATCH v12 04/16] arm64: kvm: allows kvm cpu hotplug
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,40 +22,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, =?utf-8?B?5bmz5p2+6ZuF5bezIC8gSElSQU1BVFXvvIxNQVNBTUk=?= <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, vikrams@codeaurora.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, shankerd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
 
-T24gVGh1LCBEZWMgMDMsIDIwMTUgYXQgMTE6Mjk6MjFBTSArMDAwMCwg5rKz5ZCI6Iux5a6PIC8g
-S0FXQUnvvIxISURFSElSTyB3cm90ZToKPiBJIHdhcyBhcmd1aW5nIGFib3V0IHRoZSBjYXNlIG9m
-IG9vcHNfZW5kIC0tPiBjcmFzaF9rZXhlYwo+IC0tPiByZXR1cm4gZnJvbSBjcmFzaF9rZXhlYyBi
-ZWNhdXNlIG9mICFrZXhlY19jcmFzaF9pbWFnZSAtLT4KPiBwYW5pYy4KCkFoYS4KCj4gSW4gdGhl
-IGNhc2Ugb2YgcGFuaWMgLS0+IF9fY3Jhc2hfa2V4ZWMsIF9fY3Jhc2hfa2V4ZWMgaXMgY2FsbGVk
-Cj4gb25seSBvbmNlLCBzbyB3ZSBkb24ndCBuZWVkIHRvIGNoZWNrIHRoZSByZXR1cm4gdmFsdWUg
-b2YgX19jcmFzaF9rZXhlYwo+IGFzIHlvdSBzdWdnZXN0ZWQuICBTbyBJIHRob3VnaHQgeW91IHN0
-YXRlZCBhYm91dCBjcmFzaF9rZXhlYyAtLT4gcGFuaWMKPiBjYXNlLgoKTm8sIEkgbWVhbnQgdGhl
-IG90aGVyIHdheSBhcm91bmQuCgo+IEkgYWxzbyBtZW50aW9uZWQgIWtleGVjX2NyYXNoX2ltYWdl
-IGNhc2UuLi4KCkkgbXVzdCd2ZSBtaXNzZWQgaXQuCgo+IE5vLiAgVGhlIGZpcnN0IENQVSBjYWxs
-cyBwYW5pYywgYW5kIHRoZW4gaXQgY2FsbHMgX19jcmFzaF9rZXhlYy4KPiBCZWNhdXNlIG9mICFr
-ZXhlY19jcmFzaF9pbWFnZSwgaXQgcmV0dXJucyBmcm9tIF9fY3Jhc2hfa2V4ZWMgYW5kCj4gY29u
-dGludWVzIHRvIHRoZSBwYW5pYyBwcm9jZWR1cmUuICBBdCB0aGUgc2FtZSB0aW1lLCBhbm90aGVy
-IENQVQo+IHRyaWVzIHRvIGNhbGwgcGFuaWMoKSwgYnV0IGl0IGRvZXNuJ3QgcnVuIHRoZSBwYW5p
-YyBwcm9jZWR1cmU7Cj4gcGFuaWNfY3B1IHByZXZlbnRzIHRoZSBzZWNvbmQgQ1BVIGZyb20gcnVu
-bmluZyBpdC4KPgo+IFRoaXMgbWVhbnMgX19jcmFzaF9rZXhlYyBpcyBjYWxsZWQgb25seSBvbmNl
-IGV2ZW4gaWYgd2UgZG9uJ3QKPiBjaGVjayB0aGUgcmV0dXJuIHZhbHVlIG9mIF9fY3Jhc2hfa2V4
-ZWMuCgpJIHRoaW5rIHdlJ3JlIG9uIHRoZSBzYW1lIHBhZ2UsIGV2ZW4gaWYgd2UgZXhwcmVzcyBp
-dCBkaWZmZXJlbnRseSAtIHRoZQpvdGhlciBDUFVzIGVudGVyaW5nIHBhbmljKCkgd2lsbCBsb29w
-IGluIHBhbmljX3NtcF9zZWxmX3N0b3AoKSBzbyB0aGV5Cndvbid0IHJlYWNoIF9fY3Jhc2hfa2V4
-ZWMoKS4KCj4gKFBsZWFzZSBub3RlIHRoYXQgY3Jhc2hfa2V4ZWMgY2FuIGJlIGNhbGxlZCBtdWx0
-aXBsZSB0aW1lcyBpbiB0aGUKPiBjYXNlIG9mIG9vcHNfZW5kKCkgLS0+IGNyYXNoX2tleGVjKCku
-KQoKUmlnaHQsIGFuZCB0aGF0IHdhcyB0aGUgY2FzZSB0aGF0IHdhcyBidWdnaW5nIG1lIC0gY2Fs
-bGluZyBpbnRvCmNyYXNoX2tleGVjKCkgb24gbXVsdGlwbGUgQ1BVcyBidXQgaXQgaXMgYSB0cnls
-b2NrIGFuZCBhIHBvaW50ZXIgdGVzdCAtCkkgZ3Vlc3MgdGhhdCdzIGRpbWluaXNoaW5nbHkgc21h
-bGwgb3ZlcmhlYWQgdG8gY2FyZS4KClRoYW5rcy4KCi0tIApSZWdhcmRzL0dydXNzLAogICAgQm9y
-aXMuCgpFQ08gdGlwICMxMDE6IFRyaW0geW91ciBtYWlscyB3aGVuIHlvdSByZXBseS4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 2 December 2015 at 17:40, Ashwin Chaugule <ashwin.chaugule@linaro.org> wrote:
+> Hello,
+>
+> On 24 November 2015 at 17:25, Geoff Levand <geoff@infradead.org> wrote:
+>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>
+>> The current kvm implementation on arm64 does cpu-specific initialization
+>> at system boot, and has no way to gracefully shutdown a core in terms of
+>> kvm. This prevents, especially, kexec from rebooting the system on a boot
+>> core in EL2.
+>>
+>> This patch adds a cpu tear-down function and also puts an existing cpu-init
+>> code into a separate function, kvm_arch_hardware_disable() and
+>> kvm_arch_hardware_enable() respectively.
+>> We don't need arm64-specific cpu hotplug hook any more.
+>>
+>> Since this patch modifies common part of code between arm and arm64, one
+>> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
+>> compiling errors.
+>>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> ---
+>>  arch/arm/include/asm/kvm_host.h   | 10 ++++-
+>>  arch/arm/include/asm/kvm_mmu.h    |  1 +
+>>  arch/arm/kvm/arm.c                | 79 ++++++++++++++++++---------------------
+>>  arch/arm/kvm/mmu.c                |  5 +++
+>>  arch/arm64/include/asm/kvm_host.h | 16 +++++++-
+>>  arch/arm64/include/asm/kvm_mmu.h  |  1 +
+>>  arch/arm64/include/asm/virt.h     |  9 +++++
+>>  arch/arm64/kvm/hyp-init.S         | 33 ++++++++++++++++
+>>  arch/arm64/kvm/hyp.S              | 32 ++++++++++++++--
+>>  9 files changed, 138 insertions(+), 48 deletions(-)
+>
+> [..]
+>
+>>
+>>
+>>  static struct notifier_block hyp_init_cpu_pm_nb = {
+>> @@ -1108,11 +1119,6 @@ static int init_hyp_mode(void)
+>>         }
+>>
+>>         /*
+>> -        * Execute the init code on each CPU.
+>> -        */
+>> -       on_each_cpu(cpu_init_hyp_mode, NULL, 1);
+>> -
+>> -       /*
+>>          * Init HYP view of VGIC
+>>          */
+>>         err = kvm_vgic_hyp_init();
+>
+> With this flow, the cpu_init_hyp_mode() is called only at VM guest
+> creation, but vgic_hyp_init() is called at bootup. On a system with
+> GICv3, it looks like we end up with bogus values from the ICH_VTR_EL2
+> (to get the number of LRs), because we're not reading it from EL2
+> anymore.
+
+..or more likely, that the function to read the ICH_VTR_EL2 is not
+mapped in EL2, because we deferred the cpu_init_hyp_mode() calls. In
+any case, this ends up breaking KVM and manifests as a guest console
+which is stuck.
+
+>
+> Whats the best way to fix this?
+> - Call kvm_arch_hardware_enable() before vgic_hyp_init() and disable later?
+> - Fold the VGIC init stuff back into hardware_enable()?
+> - Read the VGIC number of LRs from the hyp stub?
+> - ..
+>
+> Regards,
+> Ashwin.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
