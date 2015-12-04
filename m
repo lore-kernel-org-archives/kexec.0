@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx5-phx2.redhat.com ([209.132.183.37])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4mJa-0004mg-4i
- for kexec@lists.infradead.org; Fri, 04 Dec 2015 09:06:06 +0000
-Date: Fri, 4 Dec 2015 04:05:39 -0500 (EST)
-From: Chao Fan <cfan@redhat.com>
-Message-ID: <885095395.27300639.1449219939731.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1449111011-21749-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1449111011-21749-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-Subject: Re: [PATCH] Add more description for --num-threads
+ id 1a4q0d-0003Jt-3M
+ for kexec@lists.infradead.org; Fri, 04 Dec 2015 13:02:48 +0000
+Date: Fri, 4 Dec 2015 18:32:22 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH] arm64: Fix for ARM64 3 level translation tables
+Message-ID: <20151204130222.GA6116@dhcppc13.redhat.com>
+References: <1449088854-13968-1-git-send-email-sgoel@codeaurora.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1449088854-13968-1-git-send-email-sgoel@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,87 +23,136 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Cc: kexec@lists.infradead.org
+To: Sameer Goel <sgoel@codeaurora.org>
+Cc: timur@codeaurora.org, asamson@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org
 
-Ack.
+Hi Sameer,
 
-Since in the condition of "-d 31", it will cost more time with
-"--num-threads" than without "--num-threads". So I suggest not
-using "--num-threads" when "-d 31" will be better.
+Thanks for the patch.
 
-Acked-by: Chao Fan <cfan@redhat.com>
-
------ Original Message -----
-> From: "Zhou Wenjian" <zhouwj-fnst@cn.fujitsu.com>
-> To: kexec@lists.infradead.org
-> Sent: Thursday, December 3, 2015 10:50:11 AM
-> Subject: [PATCH] Add more description for --num-threads
+On 02/12/2015:01:40:54 PM, Sameer Goel wrote:
+> Add the implementation for PMD translation in case of 3 level page tables.
+> Assign the kernel page size based on the page structure read from the kernel
+> ELF file.
 > 
-> From the test result, we can see when "-d 31" is specified, using
-> "--num-threads" always spends more time than not. And it occurs at
-> most of the time in theory. So it should be mentioned in the
-> description of "--num-threads".
-> 
-> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
 > ---
->  makedumpfile.8 | 6 ++++--
->  print_info.c   | 4 ++++
->  2 files changed, 8 insertions(+), 2 deletions(-)
+> This change targets the arm64_support branch of Pratush Anand's repository at:
+> https://github.com/pratyushanand/makedumpfile.git
 > 
-> diff --git a/makedumpfile.8 b/makedumpfile.8
-> index 6eff4f1..ec179a5 100644
-> --- a/makedumpfile.8
-> +++ b/makedumpfile.8
-> @@ -378,11 +378,13 @@ Using multiple threads to read and compress data of
-> each page in parallel.
->  And it will reduces time for saving \fIDUMPFILE\fR.
->  This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
->  format from \fIVMCORE\fR in kdump\-compressed format or elf format.
-> +Note that if too many pages are filtered, \'\-\-num\-threads\' may not
-> improve
-> +the performance, or even has bad effects. It means if \'\-d 31\' is
-> specified,
-> +you should think about whether to use \'\-\-num\-threads\'.
->  .br
->  .B Example:
->  .br
-> -# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
-> -
-> +# makedumpfile \-\-num\-threads 4 /proc/vmcore dumpfile
->  .TP
->  \fB\-\-reassemble\fR
->  Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
-> diff --git a/print_info.c b/print_info.c
-> index d662c0c..d0302a8 100644
-> --- a/print_info.c
-> +++ b/print_info.c
-> @@ -194,6 +194,10 @@ print_usage(void)
->  	MSG("      And it will reduces time for saving DUMPFILE.\n");
->  	MSG("      This feature only supports creating DUMPFILE in kdump-comressed
->  	format from\n");
->  	MSG("      VMCORE in kdump-compressed format or elf format.\n");
-> +	MSG("      Note that if too many pages are filtered, '--num-threads' may
-> not improve\n");
-> +	MSG("      the performance, or even has bad effects.\n");
-> +	MSG("      It means if '-d 31' is specified, you should think about whether
-> to use\n");
-> +	MSG("      '--num-threads'.\n");
->  	MSG("\n");
->  	MSG("  [--reassemble]:\n");
->  	MSG("      Reassemble multiple DUMPFILEs, which are created by --split
->  	option,\n");
-> --
-> 1.8.3.1
+>  arch/arm64.c   | 36 ++++++++++++++++++++++++++++++------
+>  makedumpfile.c |  2 +-
+>  2 files changed, 31 insertions(+), 7 deletions(-)
 > 
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> diff --git a/arch/arm64.c b/arch/arm64.c
+> index a94a4ba..ab20389 100644
+> --- a/arch/arm64.c
+> +++ b/arch/arm64.c
+> @@ -36,7 +36,7 @@ typedef struct {
+>  } pmd_t;
+>  
+>  #define pud_offset(pgd, vaddr) 	((pud_t *)pgd)
+> -#define pmd_offset(pud, vaddr) 	((pmd_t *)pud)
+> +
+>  #define pgd_val(x)		((x).pgd)
+>  #define pud_val(x)		(pgd_val((x).pgd))
+>  #define pmd_val(x)		(pud_val((x).pud))
+> @@ -68,6 +68,11 @@ typedef struct {
+>  */
+>  #define PHYS_MASK_SHIFT		48
+>  #define PHYS_MASK		((1UL << PHYS_MASK_SHIFT) - 1)
+> +/*
+> + * Remove the highest order bits that are not a part of the
+> + * physical address in a section
+> + */
+> +#define PMD_SECTION_MASK        ((1UL << 40) - 1)
+>  
+>  #define PMD_TYPE_MASK		3
+>  #define PMD_TYPE_SECT		1
+> @@ -83,10 +88,18 @@ typedef struct {
+>  #define pmd_page_vaddr(pmd)		(__va(pmd_val(pmd) & PHYS_MASK & (int32_t)PAGE_MASK))
+>  #define pte_offset(dir, vaddr) 		((pte_t*)pmd_page_vaddr((*dir)) + pte_index(vaddr))
+>  
+> +
+> +#define pmd_offset_pgtbl_lvl_2(pud, vaddr) ((pmd_t *)pud)
+> +
+> +#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+> +#define pud_page_vaddr(pud)		(__va(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK))
+> +#define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_vaddr((*pud)) + pmd_index(vaddr))
+> +
+>  /* kernel struct page size can be kernel version dependent, currently
+>   * keep it constant.
+>   */
+> -#define KERN_STRUCT_PAGE_SIZE		64
+> +#define KERN_STRUCT_PAGE_SIZE		get_structure_size("page", DWARF_INFO_GET_STRUCT_SIZE)
+> +
+>  #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
+>  #define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
+>  #define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGE_SHIFT)) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
+> @@ -97,6 +110,15 @@ static int pgtable_level;
+>  static int va_bits;
+>  static int page_shift;
+>  
+> +pmd_t *
+> +pmd_offset(pud_t *pud, unsigned long vaddr)
+> +{
+> +	if (pgtable_level == 2) {
+> +		return pmd_offset_pgtbl_lvl_2(pud, vaddr);
+> +	} else {
+> +		return pmd_offset_pgtbl_lvl_3(pud, vaddr);
+> +	}
+> +}
+>  int
+>  get_pgtable_level_arm64(void)
+>  {
+> @@ -256,7 +278,7 @@ vtop_arm64(unsigned long vaddr)
+>  {
+>  	unsigned long long paddr = NOT_PADDR;
+>  	pgd_t	*pgda, pgdv;
+> -	pud_t	*puda;
+> +	pud_t	*puda, pudv;
+>  	pmd_t	*pmda, pmdv;
+>  	pte_t 	*ptea, ptev;
+>  
+> @@ -271,8 +293,9 @@ vtop_arm64(unsigned long vaddr)
+>  		return NOT_PADDR;
+>  	}
+>  
+> -	puda = pud_offset(pgda, vaddr);
+> -	pmda = pmd_offset(puda, vaddr);
+> +	pudv.pgd = pgdv;
+> +
+> +	pmda = pmd_offset(&pudv, vaddr);
+>  	if (!readmem(VADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+>  		ERRMSG("Can't read pmd\n");
+>  		return NOT_PADDR;
+> @@ -298,7 +321,8 @@ vtop_arm64(unsigned long vaddr)
+>  		break;
+>  	case PMD_TYPE_SECT:
+>  		/* 1GB section */
+> -		paddr = (pmd_val(pmdv) & PMD_MASK) + (vaddr & (PMD_SIZE - 1));
+> +		paddr = (pmd_val(pmdv) & (PMD_MASK & PMD_SECTION_MASK))
+> +					+ (vaddr & (PMD_SIZE - 1));
+>  		break;
+>  	}
+>  
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index cc71f20..df11f73 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5955,7 +5955,7 @@ create_dump_bitmap(void)
+>  	ret = TRUE;
+>  out:
+>  	/* Should keep the buffer in the 1-cycle case. */
+> -	if (info->flag_cyclic)
+> +	if (info->flag_cyclic && (!info->flag_elf_dumpfile))
+
+I think, this is a change which is not ARM64 specific, so should go to a
+separate patch.
+Moreover, probably you need:
+if (info->flag_cyclic && !info->flag_elf_dumpfile && ret)
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
