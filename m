@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
-References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151127131306.GE23908@dhcppc13.redhat.com>
- <1448909475.31214.27.camel@infradead.org>
- <20151201021615.GA5704@dhcppc13.redhat.com>
- <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
- <1449096562.6139.74.camel@infradead.org>
- <000b01d12d84$4313a930$c93afb90$@codeaurora.org>
- <1449172587.24127.12.camel@infradead.org>
-From: Azriel Samson <asamson@codeaurora.org>
-Message-ID: <5660E0B0.8010507@codeaurora.org>
-Date: Thu, 3 Dec 2015 17:39:12 -0700
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a4gFU-0004Zd-Nr
+ for kexec@lists.infradead.org; Fri, 04 Dec 2015 02:37:30 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH RFC 00/11] makedumpfile: parallel processing
+Date: Fri, 4 Dec 2015 02:30:52 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E09F28@BPXM01GP.gisp.nec.co.jp>
+References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <5575123D.8090506@cn.fujitsu.com>
+ <1831406384.24254782.1448959169018.JavaMail.zimbra@redhat.com>
+ <565E81A7.4080604@cn.fujitsu.com>
+ <20151202072443.GD2899@dhcp-128-65.nay.redhat.com>
+ <565E9FFE.20501@cn.fujitsu.com>
+In-Reply-To: <565E9FFE.20501@cn.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <1449172587.24127.12.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,48 +24,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, 'Pratyush Anand' <panand@redhat.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: "zhouwj-fnst@cn.fujitsu.com" <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi,
-
-On 12/3/2015 12:56 PM, Geoff Levand wrote:
-> Hi,
->
-> On Wed, 2015-12-02 at 21:37 -0700, Azriel Samson wrote:
->> For kdump, I also require a version of the patch "arm64/kexec: Add support
->> for kexec-lite". Without this, the dump capture kernel cannot find the
->> device tree even on v11 that I tested.
-
-This was a setup issue on my side. kdump with your v11 patches worked 
-fine without the above patch when I used your version of kexec-tools.
-
-In kexec-tools, I had to skip check_cpu_nodes() since we are using ACPI 
-and the device tree does not contain cpu_info.
-
->
-> Without that patch, does the 2nd stage kernel get the correct
-> dtb address in register x0?
->
-> Is the problem that the dtb data is corrupt when in the 2nd
-> stage kernel?
->
-> Is the dtb data OK when in the 1st stage kernel?
->
-> -Geoff
->
-
-Thanks,
-Azriel Samson
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8sIFpob3UNCg0KPk9uIDEyLzAyLzIwMTUgMDM6MjQgUE0sIERhdmUgWW91bmcgd3JvdGU6
+DQo+PiBIaSwNCj4+DQo+PiBPbiAxMi8wMi8xNSBhdCAwMToyOXBtLCAiWmhvdSwgV2Vuamlhbi/l
+kajmlofliZEiIHdyb3RlOg0KPj4+IEkgdGhpbmsgdGhlcmUgaXMgbm8gcHJvYmxlbSBpZiBvdGhl
+ciB0ZXN0IHJlc3VsdHMgYXJlIGFzIGV4cGVjdGVkLg0KPj4+DQo+Pj4gLS1udW0tdGhyZWFkcyBt
+YWlubHkgcmVkdWNlcyB0aGUgdGltZSBvZiBjb21wcmVzc2luZy4NCj4+PiBTbyBmb3IgbHpvLCBp
+dCBjYW4ndCBkbyBtdWNoIGhlbHAgYXQgbW9zdCBvZiB0aW1lLg0KPj4NCj4+IFNlZW1zIHRoZSBo
+ZWxwIG9mIC0tbnVtLXRocmVhZHMgZG9lcyBub3Qgc2F5IGl0IGV4YWN0bHk6DQo+Pg0KPj4gICAg
+Wy0tbnVtLXRocmVhZHMgVEhSRUFETlVNXToNCj4+ICAgICAgICBVc2luZyBtdWx0aXBsZSB0aHJl
+YWRzIHRvIHJlYWQgYW5kIGNvbXByZXNzIGRhdGEgb2YgZWFjaCBwYWdlIGluIHBhcmFsbGVsLg0K
+Pj4gICAgICAgIEFuZCBpdCB3aWxsIHJlZHVjZXMgdGltZSBmb3Igc2F2aW5nIERVTVBGSUxFLg0K
+Pj4gICAgICAgIFRoaXMgZmVhdHVyZSBvbmx5IHN1cHBvcnRzIGNyZWF0aW5nIERVTVBGSUxFIGlu
+IGtkdW1wLWNvbXJlc3NlZCBmb3JtYXQgZnJvbQ0KPj4gICAgICAgIFZNQ09SRSBpbiBrZHVtcC1j
+b21wcmVzc2VkIGZvcm1hdCBvciBlbGYgZm9ybWF0Lg0KPj4NCj4+IEx6byBpcyBhbHNvIGEgY29t
+cHJlc3MgbWV0aG9kLCBpdCBzaG91bGQgYmUgbWVudGlvbmVkIHRoYXQgLS1udW0tdGhyZWFkcyBv
+bmx5DQo+PiBzdXBwb3J0cyB6bGliIGNvbXByZXNzZWQgdm1jb3JlLg0KPj4NCj4NCj5Tb3JyeSwg
+aXQgc2VlbXMgdGhhdCBzb21ldGhpbmcgSSBzYWlkIGlzIG5vdCBzbyBjbGVhci4NCj5sem8gaXMg
+YWxzbyBzdXBwb3J0ZWQuIFNpbmNlIGx6byBjb21wcmVzc2VzIGRhdGEgYXQgYSBoaWdoIHNwZWVk
+LCB0aGUNCj5pbXByb3Zpbmcgb2YgdGhlIHBlcmZvcm1hbmNlIGlzIG5vdCBzbyBvYnZpb3VzIGF0
+IG1vc3Qgb2YgdGltZS4NCj4NCj4+IEFsc28gd29ydGggdG8gbWVudGlvbiBhYm91dCB0aGUgcmVj
+b21tZW5kZWQgLWQgdmFsdWUgZm9yIHRoaXMgZmVhdHVyZS4NCj4+DQo+DQo+WWVzLCBJIHRoaW5r
+IGl0J3Mgd29ydGguIEkgZm9yZ290IGl0Lg0KDQpJIHNhdyB5b3VyIHBhdGNoLCBidXQgSSB0aGlu
+ayBJIHNob3VsZCBjb25maXJtIHdoYXQgaXMgdGhlIHByb2JsZW0gZmlyc3QuDQoNCj5Ib3dldmVy
+LCB3aGVuICItZCAzMSIgaXMgc3BlY2lmaWVkLCBpdCB3aWxsIGJlIHdvcnNlLg0KPkxlc3MgdGhh
+biA1MCBidWZmZXJzIGFyZSB1c2VkIHRvIGNhY2hlIHRoZSBjb21wcmVzc2VkIHBhZ2UuDQo+QW5k
+IGV2ZW4gdGhlIHBhZ2UgaGFzIGJlZW4gZmlsdGVyZWQsIGl0IHdpbGwgYWxzbyB0YWtlIGEgYnVm
+ZmVyLg0KPlNvIGlmICItZCAzMSIgaXMgc3BlY2lmaWVkLCB0aGUgZmlsdGVyZWQgcGFnZSB3aWxs
+IHVzZSBhIGxvdA0KPm9mIGJ1ZmZlcnMuIFRoZW4gdGhlIHBhZ2Ugd2hpY2ggbmVlZHMgdG8gYmUg
+Y29tcHJlc3NlZCBjYW4ndA0KPmJlIGNvbXByZXNzZWQgcGFyYWxsZWwuDQoNCkNvdWxkIHlvdSBl
+eHBsYWluIHdoeSBjb21wcmVzc2lvbiB3aWxsIG5vdCBiZSBwYXJhbGxlbCBpbiBtb3JlIGRldGFp
+bCA/DQpBY3R1YWxseSB0aGUgYnVmZmVycyBhcmUgdXNlZCBhbHNvIGZvciBmaWx0ZXJlZCBwYWdl
+cywgaXQgc291bmRzIGluZWZmaWNpZW50Lg0KSG93ZXZlciwgSSBkb24ndCB1bmRlcnN0YW5kIHdo
+eSBpdCBwcmV2ZW50cyBwYXJhbGxlbCBjb21wcmVzc2lvbi4NCg0KRnVydGhlciwgYWNjb3JkaW5n
+IHRvIENoYW8ncyBiZW5jaG1hcmssIHRoZXJlIGlzIGEgYmlnIHBlcmZvcm1hbmNlDQpkZWdyYWRh
+dGlvbiBldmVuIGlmIHRoZSBudW1iZXIgb2YgdGhyZWFkIGlzIDEuICg1OHMgdnMgMjQwcykNClRo
+ZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIHNlZW1zIHRvIGhhdmUgc29tZSBwcm9ibGVtcywgd2Ug
+c2hvdWxkDQpzb2x2ZSB0aGVtLg0KDQoNClRoYW5rcywNCkF0c3VzaGkgS3VtYWdhaQ0KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
