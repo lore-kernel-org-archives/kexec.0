@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
+Received: from mx5-phx2.redhat.com ([209.132.183.37])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4mAs-0001cz-F4
- for kexec@lists.infradead.org; Fri, 04 Dec 2015 08:57:07 +0000
-Date: Fri, 4 Dec 2015 03:56:41 -0500 (EST)
+ id 1a4mJa-0004mg-4i
+ for kexec@lists.infradead.org; Fri, 04 Dec 2015 09:06:06 +0000
+Date: Fri, 4 Dec 2015 04:05:39 -0500 (EST)
 From: Chao Fan <cfan@redhat.com>
-Message-ID: <321901967.27296756.1449219401394.JavaMail.zimbra@redhat.com>
-In-Reply-To: <56610990.2090607@cn.fujitsu.com>
-References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <5575123D.8090506@cn.fujitsu.com>
- <1831406384.24254782.1448959169018.JavaMail.zimbra@redhat.com>
- <565E81A7.4080604@cn.fujitsu.com>
- <20151202072443.GD2899@dhcp-128-65.nay.redhat.com>
- <565E9FFE.20501@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E09F28@BPXM01GP.gisp.nec.co.jp>
- <56610990.2090607@cn.fujitsu.com>
-Subject: Re: [PATCH RFC 00/11] makedumpfile: parallel processing
+Message-ID: <885095395.27300639.1449219939731.JavaMail.zimbra@redhat.com>
+In-Reply-To: <1449111011-21749-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1449111011-21749-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: Re: [PATCH] Add more description for --num-threads
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,101 +18,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Wenjian =?utf-8?B?WmhvdS/lkajmlofliZE=?= <zhouwj-fnst@cn.fujitsu.com>
-Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, kexec@lists.infradead.org
+To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Cc: kexec@lists.infradead.org
 
-SGkgWmhvdSBXZW5qaWFuIGFuZCBLdW1hZ2FpLAoKSSBoYXZlIGZvbGxvdyBaaG91IFdlbmppYW4n
-cyB3b3JkcyB0byBkbyBzb21lIHRlc3RzLCBpbiB0aGUgY29uZGl0aW9uIG9mCiItYyIsIG1ha2R1
-bXBmaWxlIDEuNS45IGRvZXMgcGVyZm9ybSBiZXR0ZXIgdGhhbiAiLWwiLgoKSSBoYXZlIGRvbmUg
-bW9yZSB0ZXN0cyBpbiBhIG1hY2hpbmUgd2l0aCAxMjhHIG1lbW9yeSwgaW4gdGhlIGNvbmRpdGlv
-bgpvZiAiLWQgMCIgYW5kICItZCAzIiwgdGhlIG1ha2VkdW1wZmlsZSAxLjUuOSBwZXJmb3JtcyB3
-ZWxsLiBCdXQgaWYgd2l0aAoiLS1udW0tdGhyZWFkcyAxIiwgaXQgZG9lcyBuZWVkIG1vcmUgdGlt
-ZSB0aGFuIHdpdGhvdXQgIi0tbnVtLXRocmVhZHMiLgoKSGVyZSBpcyBteSByZXN1bHRzKG1ha2Vk
-dW1wZmlsZSAtYyk6CgoiLWQgMCIgKHRoZSBzaXplIG9mIHZtY29yZSBpcyAyLjZHKToKLS1udW0t
-dGhyZWFkcyAgICAgICAgdGltZShzZWNvbmRzKQogICAgMCAgICAgICAgICAgICAgICAgNTU2CiAg
-ICAxICAgICAgICAgICAgICAgIDExODYKICAgIDQgICAgICAgICAgICAgICAgIDMwNwogICAgOCAg
-ICAgICAgICAgICAgICAgMTg2CiAgIDEyICAgICAgICAgICAgICAgICAxMzEKICAgMTYgICAgICAg
-ICAgICAgICAgIDEyMwoKICAKIi1kIDMiICh0aGUgc2l6ZSBvZiB2bWNvcmUgaXMgMS4zRyk6Ci0t
-bnVtLXRocmVhZHMgICAgICAgIHRpbWUoc2Vjb25kcykKICAgIDAgICAgICAgICAgICAgICAgIDE0
-MQogICAgMSAgICAgICAgICAgICAgICAgMjYyCiAgICAyICAgICAgICAgICAgICAgICAxMzcKICAg
-IDQgICAgICAgICAgICAgICAgICA5MQogICAgOCAgICAgICAgICAgICAgICAgMTIxCiAgIDE2ICAg
-ICAgICAgICAgICAgICAxMzcKClNvLCBJIHRoaW5rIG1ha2VkdW1wZmlsZSAxLjUuOSBjYW4gc2F2
-ZSB0aW1lIGluIHRoZSBjb25kaXRpb24gb2YgIi1jIgphbmQgbm90ICItZCAzMSIgYW5kIG5vdCAi
-LS1udW0tdGhyZWFkcyAxIi4KCi0tLS0tIE9yaWdpbmFsIE1lc3NhZ2UgLS0tLS0KPiBGcm9tOiAi
-V2VuamlhbiBaaG91L+WRqOaWh+WJkSIgPHpob3V3ai1mbnN0QGNuLmZ1aml0c3UuY29tPgo+IFRv
-OiAiQXRzdXNoaSBLdW1hZ2FpIiA8YXRzLWt1bWFnYWlAd20uanAubmVjLmNvbT4KPiBDYzoga2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IFNlbnQ6IEZyaWRheSwgRGVjZW1iZXIgNCwgMjAxNSAx
-MTozMzozNiBBTQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkZDIDAwLzExXSBtYWtlZHVtcGZpbGU6
-IHBhcmFsbGVsIHByb2Nlc3NpbmcKPiAKPiBIZWxsbyBLdW1hZ2FpLAo+IAo+IE9uIDEyLzA0LzIw
-MTUgMTA6MzAgQU0sIEF0c3VzaGkgS3VtYWdhaSB3cm90ZToKPiA+IEhlbGxvLCBaaG91Cj4gPgo+
-ID4+IE9uIDEyLzAyLzIwMTUgMDM6MjQgUE0sIERhdmUgWW91bmcgd3JvdGU6Cj4gPj4+IEhpLAo+
-ID4+Pgo+ID4+PiBPbiAxMi8wMi8xNSBhdCAwMToyOXBtLCAiWmhvdSwgV2Vuamlhbi/lkajmlofl
-iZEiIHdyb3RlOgo+ID4+Pj4gSSB0aGluayB0aGVyZSBpcyBubyBwcm9ibGVtIGlmIG90aGVyIHRl
-c3QgcmVzdWx0cyBhcmUgYXMgZXhwZWN0ZWQuCj4gPj4+Pgo+ID4+Pj4gLS1udW0tdGhyZWFkcyBt
-YWlubHkgcmVkdWNlcyB0aGUgdGltZSBvZiBjb21wcmVzc2luZy4KPiA+Pj4+IFNvIGZvciBsem8s
-IGl0IGNhbid0IGRvIG11Y2ggaGVscCBhdCBtb3N0IG9mIHRpbWUuCj4gPj4+Cj4gPj4+IFNlZW1z
-IHRoZSBoZWxwIG9mIC0tbnVtLXRocmVhZHMgZG9lcyBub3Qgc2F5IGl0IGV4YWN0bHk6Cj4gPj4+
-Cj4gPj4+ICAgICBbLS1udW0tdGhyZWFkcyBUSFJFQUROVU1dOgo+ID4+PiAgICAgICAgIFVzaW5n
-IG11bHRpcGxlIHRocmVhZHMgdG8gcmVhZCBhbmQgY29tcHJlc3MgZGF0YSBvZiBlYWNoIHBhZ2Ug
-aW4KPiA+Pj4gICAgICAgICBwYXJhbGxlbC4KPiA+Pj4gICAgICAgICBBbmQgaXQgd2lsbCByZWR1
-Y2VzIHRpbWUgZm9yIHNhdmluZyBEVU1QRklMRS4KPiA+Pj4gICAgICAgICBUaGlzIGZlYXR1cmUg
-b25seSBzdXBwb3J0cyBjcmVhdGluZyBEVU1QRklMRSBpbiBrZHVtcC1jb21yZXNzZWQKPiA+Pj4g
-ICAgICAgICBmb3JtYXQgZnJvbQo+ID4+PiAgICAgICAgIFZNQ09SRSBpbiBrZHVtcC1jb21wcmVz
-c2VkIGZvcm1hdCBvciBlbGYgZm9ybWF0Lgo+ID4+Pgo+ID4+PiBMem8gaXMgYWxzbyBhIGNvbXBy
-ZXNzIG1ldGhvZCwgaXQgc2hvdWxkIGJlIG1lbnRpb25lZCB0aGF0IC0tbnVtLXRocmVhZHMKPiA+
-Pj4gb25seQo+ID4+PiBzdXBwb3J0cyB6bGliIGNvbXByZXNzZWQgdm1jb3JlLgo+ID4+Pgo+ID4+
-Cj4gPj4gU29ycnksIGl0IHNlZW1zIHRoYXQgc29tZXRoaW5nIEkgc2FpZCBpcyBub3Qgc28gY2xl
-YXIuCj4gPj4gbHpvIGlzIGFsc28gc3VwcG9ydGVkLiBTaW5jZSBsem8gY29tcHJlc3NlcyBkYXRh
-IGF0IGEgaGlnaCBzcGVlZCwgdGhlCj4gPj4gaW1wcm92aW5nIG9mIHRoZSBwZXJmb3JtYW5jZSBp
-cyBub3Qgc28gb2J2aW91cyBhdCBtb3N0IG9mIHRpbWUuCj4gPj4KPiA+Pj4gQWxzbyB3b3J0aCB0
-byBtZW50aW9uIGFib3V0IHRoZSByZWNvbW1lbmRlZCAtZCB2YWx1ZSBmb3IgdGhpcyBmZWF0dXJl
-Lgo+ID4+Pgo+ID4+Cj4gPj4gWWVzLCBJIHRoaW5rIGl0J3Mgd29ydGguIEkgZm9yZ290IGl0Lgo+
-ID4KPiA+IEkgc2F3IHlvdXIgcGF0Y2gsIGJ1dCBJIHRoaW5rIEkgc2hvdWxkIGNvbmZpcm0gd2hh
-dCBpcyB0aGUgcHJvYmxlbSBmaXJzdC4KPiA+Cj4gPj4gSG93ZXZlciwgd2hlbiAiLWQgMzEiIGlz
-IHNwZWNpZmllZCwgaXQgd2lsbCBiZSB3b3JzZS4KPiA+PiBMZXNzIHRoYW4gNTAgYnVmZmVycyBh
-cmUgdXNlZCB0byBjYWNoZSB0aGUgY29tcHJlc3NlZCBwYWdlLgo+ID4+IEFuZCBldmVuIHRoZSBw
-YWdlIGhhcyBiZWVuIGZpbHRlcmVkLCBpdCB3aWxsIGFsc28gdGFrZSBhIGJ1ZmZlci4KPiA+PiBT
-byBpZiAiLWQgMzEiIGlzIHNwZWNpZmllZCwgdGhlIGZpbHRlcmVkIHBhZ2Ugd2lsbCB1c2UgYSBs
-b3QKPiA+PiBvZiBidWZmZXJzLiBUaGVuIHRoZSBwYWdlIHdoaWNoIG5lZWRzIHRvIGJlIGNvbXBy
-ZXNzZWQgY2FuJ3QKPiA+PiBiZSBjb21wcmVzc2VkIHBhcmFsbGVsLgo+ID4KPiA+IENvdWxkIHlv
-dSBleHBsYWluIHdoeSBjb21wcmVzc2lvbiB3aWxsIG5vdCBiZSBwYXJhbGxlbCBpbiBtb3JlIGRl
-dGFpbCA/Cj4gPiBBY3R1YWxseSB0aGUgYnVmZmVycyBhcmUgdXNlZCBhbHNvIGZvciBmaWx0ZXJl
-ZCBwYWdlcywgaXQgc291bmRzCj4gPiBpbmVmZmljaWVudC4KPiA+IEhvd2V2ZXIsIEkgZG9uJ3Qg
-dW5kZXJzdGFuZCB3aHkgaXQgcHJldmVudHMgcGFyYWxsZWwgY29tcHJlc3Npb24uCj4gPgo+IAo+
-IFRoaW5rIGFib3V0IHRoaXMsIGluIGEgaHVnZSBtZW1vcnksIG1vc3Qgb2YgdGhlIHBhZ2Ugd2ls
-bCBiZSBmaWx0ZXJlZCwgYW5kCj4gd2UgaGF2ZSA1IGJ1ZmZlcnMuCj4gCj4gcGFnZTEgICAgICAg
-cGFnZTIgICAgICBwYWdlMyAgICAgcGFnZTQgICAgIHBhZ2U1ICAgICAgcGFnZTYgICAgICAgcGFn
-ZTcgLi4uLi4KPiBbYnVmZmVyMV0gICBbMl0gICAgICAgIFszXSAgICAgICBbNF0gICAgICAgWzVd
-Cj4gdW5maWx0ZXJlZCAgZmlsdGVyZWQgICBmaWx0ZXJlZCAgZmlsdGVyZWQgIGZpbHRlcmVkICAg
-dW5maWx0ZXJlZCAgZmlsdGVyZWQKPiAKPiBTaW5jZSBmaWx0ZXJlZCBwYWdlIHdpbGwgdGFrZSBh
-IGJ1ZmZlciwgd2hlbiBjb21wcmVzc2luZyBwYWdlMSwKPiBwYWdlNiBjYW4ndCBiZSBjb21wcmVz
-c2VkIGF0IHRoZSBzYW1lIHRpbWUuCj4gVGhhdCB3aHkgaXQgd2lsbCBwcmV2ZW50IHBhcmFsbGVs
-IGNvbXByZXNzaW9uLgo+IAo+ID4gRnVydGhlciwgYWNjb3JkaW5nIHRvIENoYW8ncyBiZW5jaG1h
-cmssIHRoZXJlIGlzIGEgYmlnIHBlcmZvcm1hbmNlCj4gPiBkZWdyYWRhdGlvbiBldmVuIGlmIHRo
-ZSBudW1iZXIgb2YgdGhyZWFkIGlzIDEuICg1OHMgdnMgMjQwcykKPiA+IFRoZSBjdXJyZW50IGlt
-cGxlbWVudGF0aW9uIHNlZW1zIHRvIGhhdmUgc29tZSBwcm9ibGVtcywgd2Ugc2hvdWxkCj4gPiBz
-b2x2ZSB0aGVtLgo+ID4KPiAKPiBJZiAiLWQgMzEiIGlzIHNwZWNpZmllZCwgb24gdGhlIG9uZSBo
-YW5kIHdlIGNhbid0IHNhdmUgdGltZSBieSBjb21wcmVzc2luZwo+IHBhcmFsbGVsLCBvbiB0aGUg
-b3RoZXIgaGFuZCB3ZSB3aWxsIGludHJvZHVjZSBzb21lIGV4dHJhIHdvcmsgYnkgYWRkaW5nCj4g
-Ii0tbnVtLXRocmVhZHMiLiBTbyBpdCBpcyBvYnZpb3VzIHRoYXQgaXQgd2lsbCBoYXZlIGEgcGVy
-Zm9ybWFuY2UKPiBkZWdyYWRhdGlvbi4KPiAKPiBJJ20gbm90IHNvIHN1cmUgaWYgaXQgaXMgYSBw
-cm9ibGVtIHRoYXQgdGhlIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9uIGlzIHNvCj4gYmlnLgo+IEJ1
-dCBJIHRoaW5rIGlmIGluIG90aGVyIGNhc2VzLCBpdCB3b3JrcyBhcyBleHBlY3RlZCwgdGhpcyB3
-b24ndCBiZSBhIHByb2JsZW0oCj4gb3IgYSBwcm9ibGVtIG5lZWRzIHRvIGJlIGZpeGVkKSwgZm9y
-IHRoZSBwZXJmb3JtYW5jZSBkZWdyYWRhdGlvbiBleGlzdGluZwo+IGluIHRoZW9yeS4KPiAKPiBP
-ciB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBzaG91bGQgYmUgcmVwbGFjZWQgYnkgYSBuZXcg
-YXJpdGhtZXRpYy4KPiBGb3IgZXhhbXBsZToKPiBXZSBjYW4gYWRkIGFuIGFycmF5IHRvIHJlY29y
-ZCB3aGV0aGVyIHRoZSBwYWdlIGlzIGZpbHRlcmVkIG9yIG5vdC4KPiBBbmQgb25seSB0aGUgdW5m
-aWx0ZXJlZCBwYWdlIHdpbGwgdGFrZSB0aGUgYnVmZmVyLgo+IAo+IEJ1dCBJJ20gbm90IHN1cmUg
-aWYgaXQgaXMgd29ydGguCj4gRm9yICItbCAtZCAzMSIgaXMgZmFzdCBlbm91Z2gsIHRoZSBuZXcg
-YXJpdGhtZXRpYyBhbHNvIGNhbid0IGRvIG11Y2ggaGVscC4KPiAKPiAtLQo+IFRoYW5rcwo+IFpo
-b3UKPiAKPiAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Ack.
+
+Since in the condition of "-d 31", it will cost more time with
+"--num-threads" than without "--num-threads". So I suggest not
+using "--num-threads" when "-d 31" will be better.
+
+Acked-by: Chao Fan <cfan@redhat.com>
+
+----- Original Message -----
+> From: "Zhou Wenjian" <zhouwj-fnst@cn.fujitsu.com>
+> To: kexec@lists.infradead.org
+> Sent: Thursday, December 3, 2015 10:50:11 AM
+> Subject: [PATCH] Add more description for --num-threads
+> 
+> From the test result, we can see when "-d 31" is specified, using
+> "--num-threads" always spends more time than not. And it occurs at
+> most of the time in theory. So it should be mentioned in the
+> description of "--num-threads".
+> 
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> ---
+>  makedumpfile.8 | 6 ++++--
+>  print_info.c   | 4 ++++
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/makedumpfile.8 b/makedumpfile.8
+> index 6eff4f1..ec179a5 100644
+> --- a/makedumpfile.8
+> +++ b/makedumpfile.8
+> @@ -378,11 +378,13 @@ Using multiple threads to read and compress data of
+> each page in parallel.
+>  And it will reduces time for saving \fIDUMPFILE\fR.
+>  This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
+>  format from \fIVMCORE\fR in kdump\-compressed format or elf format.
+> +Note that if too many pages are filtered, \'\-\-num\-threads\' may not
+> improve
+> +the performance, or even has bad effects. It means if \'\-d 31\' is
+> specified,
+> +you should think about whether to use \'\-\-num\-threads\'.
+>  .br
+>  .B Example:
+>  .br
+> -# makedumpfile \-d 31 \-\-num\-threads 4 /proc/vmcore dumpfile
+> -
+> +# makedumpfile \-\-num\-threads 4 /proc/vmcore dumpfile
+>  .TP
+>  \fB\-\-reassemble\fR
+>  Reassemble multiple \fIDUMPFILE\fRs, which are created by \-\-split option,
+> diff --git a/print_info.c b/print_info.c
+> index d662c0c..d0302a8 100644
+> --- a/print_info.c
+> +++ b/print_info.c
+> @@ -194,6 +194,10 @@ print_usage(void)
+>  	MSG("      And it will reduces time for saving DUMPFILE.\n");
+>  	MSG("      This feature only supports creating DUMPFILE in kdump-comressed
+>  	format from\n");
+>  	MSG("      VMCORE in kdump-compressed format or elf format.\n");
+> +	MSG("      Note that if too many pages are filtered, '--num-threads' may
+> not improve\n");
+> +	MSG("      the performance, or even has bad effects.\n");
+> +	MSG("      It means if '-d 31' is specified, you should think about whether
+> to use\n");
+> +	MSG("      '--num-threads'.\n");
+>  	MSG("\n");
+>  	MSG("  [--reassemble]:\n");
+>  	MSG("      Reassemble multiple DUMPFILEs, which are created by --split
+>  	option,\n");
+> --
+> 1.8.3.1
+> 
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
