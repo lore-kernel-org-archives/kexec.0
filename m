@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a4h9s-0000i7-J8
- for kexec@lists.infradead.org; Fri, 04 Dec 2015 03:35:47 +0000
-Message-ID: <56610990.2090607@cn.fujitsu.com>
-Date: Fri, 4 Dec 2015 11:33:36 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+Date: Fri, 4 Dec 2015 09:24:05 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+Message-ID: <20151204035405.GB737@dhcppc13.redhat.com>
+References: <cover.1448403503.git.geoff@infradead.org>
+ <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
+ <20151127131306.GE23908@dhcppc13.redhat.com>
+ <1448909475.31214.27.camel@infradead.org>
+ <20151201021615.GA5704@dhcppc13.redhat.com>
+ <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
+ <1449096562.6139.74.camel@infradead.org>
+ <000b01d12d84$4313a930$c93afb90$@codeaurora.org>
+ <1449172587.24127.12.camel@infradead.org>
+ <5660E0B0.8010507@codeaurora.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC 00/11] makedumpfile: parallel processing
-References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <5575123D.8090506@cn.fujitsu.com>
- <1831406384.24254782.1448959169018.JavaMail.zimbra@redhat.com>
- <565E81A7.4080604@cn.fujitsu.com>
- <20151202072443.GD2899@dhcp-128-65.nay.redhat.com>
- <565E9FFE.20501@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E09F28@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E09F28@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <5660E0B0.8010507@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +24,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Azriel Samson <asamson@codeaurora.org>, Geoff Levand <geoff@infradead.org>
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-SGVsbG8gS3VtYWdhaSwKCk9uIDEyLzA0LzIwMTUgMTA6MzAgQU0sIEF0c3VzaGkgS3VtYWdhaSB3
-cm90ZToKPiBIZWxsbywgWmhvdQo+Cj4+IE9uIDEyLzAyLzIwMTUgMDM6MjQgUE0sIERhdmUgWW91
-bmcgd3JvdGU6Cj4+PiBIaSwKPj4+Cj4+PiBPbiAxMi8wMi8xNSBhdCAwMToyOXBtLCAiWmhvdSwg
-V2Vuamlhbi/lkajmlofliZEiIHdyb3RlOgo+Pj4+IEkgdGhpbmsgdGhlcmUgaXMgbm8gcHJvYmxl
-bSBpZiBvdGhlciB0ZXN0IHJlc3VsdHMgYXJlIGFzIGV4cGVjdGVkLgo+Pj4+Cj4+Pj4gLS1udW0t
-dGhyZWFkcyBtYWlubHkgcmVkdWNlcyB0aGUgdGltZSBvZiBjb21wcmVzc2luZy4KPj4+PiBTbyBm
-b3IgbHpvLCBpdCBjYW4ndCBkbyBtdWNoIGhlbHAgYXQgbW9zdCBvZiB0aW1lLgo+Pj4KPj4+IFNl
-ZW1zIHRoZSBoZWxwIG9mIC0tbnVtLXRocmVhZHMgZG9lcyBub3Qgc2F5IGl0IGV4YWN0bHk6Cj4+
-Pgo+Pj4gICAgIFstLW51bS10aHJlYWRzIFRIUkVBRE5VTV06Cj4+PiAgICAgICAgIFVzaW5nIG11
-bHRpcGxlIHRocmVhZHMgdG8gcmVhZCBhbmQgY29tcHJlc3MgZGF0YSBvZiBlYWNoIHBhZ2UgaW4g
-cGFyYWxsZWwuCj4+PiAgICAgICAgIEFuZCBpdCB3aWxsIHJlZHVjZXMgdGltZSBmb3Igc2F2aW5n
-IERVTVBGSUxFLgo+Pj4gICAgICAgICBUaGlzIGZlYXR1cmUgb25seSBzdXBwb3J0cyBjcmVhdGlu
-ZyBEVU1QRklMRSBpbiBrZHVtcC1jb21yZXNzZWQgZm9ybWF0IGZyb20KPj4+ICAgICAgICAgVk1D
-T1JFIGluIGtkdW1wLWNvbXByZXNzZWQgZm9ybWF0IG9yIGVsZiBmb3JtYXQuCj4+Pgo+Pj4gTHpv
-IGlzIGFsc28gYSBjb21wcmVzcyBtZXRob2QsIGl0IHNob3VsZCBiZSBtZW50aW9uZWQgdGhhdCAt
-LW51bS10aHJlYWRzIG9ubHkKPj4+IHN1cHBvcnRzIHpsaWIgY29tcHJlc3NlZCB2bWNvcmUuCj4+
-Pgo+Pgo+PiBTb3JyeSwgaXQgc2VlbXMgdGhhdCBzb21ldGhpbmcgSSBzYWlkIGlzIG5vdCBzbyBj
-bGVhci4KPj4gbHpvIGlzIGFsc28gc3VwcG9ydGVkLiBTaW5jZSBsem8gY29tcHJlc3NlcyBkYXRh
-IGF0IGEgaGlnaCBzcGVlZCwgdGhlCj4+IGltcHJvdmluZyBvZiB0aGUgcGVyZm9ybWFuY2UgaXMg
-bm90IHNvIG9idmlvdXMgYXQgbW9zdCBvZiB0aW1lLgo+Pgo+Pj4gQWxzbyB3b3J0aCB0byBtZW50
-aW9uIGFib3V0IHRoZSByZWNvbW1lbmRlZCAtZCB2YWx1ZSBmb3IgdGhpcyBmZWF0dXJlLgo+Pj4K
-Pj4KPj4gWWVzLCBJIHRoaW5rIGl0J3Mgd29ydGguIEkgZm9yZ290IGl0Lgo+Cj4gSSBzYXcgeW91
-ciBwYXRjaCwgYnV0IEkgdGhpbmsgSSBzaG91bGQgY29uZmlybSB3aGF0IGlzIHRoZSBwcm9ibGVt
-IGZpcnN0Lgo+Cj4+IEhvd2V2ZXIsIHdoZW4gIi1kIDMxIiBpcyBzcGVjaWZpZWQsIGl0IHdpbGwg
-YmUgd29yc2UuCj4+IExlc3MgdGhhbiA1MCBidWZmZXJzIGFyZSB1c2VkIHRvIGNhY2hlIHRoZSBj
-b21wcmVzc2VkIHBhZ2UuCj4+IEFuZCBldmVuIHRoZSBwYWdlIGhhcyBiZWVuIGZpbHRlcmVkLCBp
-dCB3aWxsIGFsc28gdGFrZSBhIGJ1ZmZlci4KPj4gU28gaWYgIi1kIDMxIiBpcyBzcGVjaWZpZWQs
-IHRoZSBmaWx0ZXJlZCBwYWdlIHdpbGwgdXNlIGEgbG90Cj4+IG9mIGJ1ZmZlcnMuIFRoZW4gdGhl
-IHBhZ2Ugd2hpY2ggbmVlZHMgdG8gYmUgY29tcHJlc3NlZCBjYW4ndAo+PiBiZSBjb21wcmVzc2Vk
-IHBhcmFsbGVsLgo+Cj4gQ291bGQgeW91IGV4cGxhaW4gd2h5IGNvbXByZXNzaW9uIHdpbGwgbm90
-IGJlIHBhcmFsbGVsIGluIG1vcmUgZGV0YWlsID8KPiBBY3R1YWxseSB0aGUgYnVmZmVycyBhcmUg
-dXNlZCBhbHNvIGZvciBmaWx0ZXJlZCBwYWdlcywgaXQgc291bmRzIGluZWZmaWNpZW50Lgo+IEhv
-d2V2ZXIsIEkgZG9uJ3QgdW5kZXJzdGFuZCB3aHkgaXQgcHJldmVudHMgcGFyYWxsZWwgY29tcHJl
-c3Npb24uCj4KClRoaW5rIGFib3V0IHRoaXMsIGluIGEgaHVnZSBtZW1vcnksIG1vc3Qgb2YgdGhl
-IHBhZ2Ugd2lsbCBiZSBmaWx0ZXJlZCwgYW5kCndlIGhhdmUgNSBidWZmZXJzLgoKcGFnZTEgICAg
-ICAgcGFnZTIgICAgICBwYWdlMyAgICAgcGFnZTQgICAgIHBhZ2U1ICAgICAgcGFnZTYgICAgICAg
-cGFnZTcgLi4uLi4KW2J1ZmZlcjFdICAgWzJdICAgICAgICBbM10gICAgICAgWzRdICAgICAgIFs1
-XQp1bmZpbHRlcmVkICBmaWx0ZXJlZCAgIGZpbHRlcmVkICBmaWx0ZXJlZCAgZmlsdGVyZWQgICB1
-bmZpbHRlcmVkICBmaWx0ZXJlZAoKU2luY2UgZmlsdGVyZWQgcGFnZSB3aWxsIHRha2UgYSBidWZm
-ZXIsIHdoZW4gY29tcHJlc3NpbmcgcGFnZTEsCnBhZ2U2IGNhbid0IGJlIGNvbXByZXNzZWQgYXQg
-dGhlIHNhbWUgdGltZS4KVGhhdCB3aHkgaXQgd2lsbCBwcmV2ZW50IHBhcmFsbGVsIGNvbXByZXNz
-aW9uLgoKPiBGdXJ0aGVyLCBhY2NvcmRpbmcgdG8gQ2hhbydzIGJlbmNobWFyaywgdGhlcmUgaXMg
-YSBiaWcgcGVyZm9ybWFuY2UKPiBkZWdyYWRhdGlvbiBldmVuIGlmIHRoZSBudW1iZXIgb2YgdGhy
-ZWFkIGlzIDEuICg1OHMgdnMgMjQwcykKPiBUaGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiBzZWVt
-cyB0byBoYXZlIHNvbWUgcHJvYmxlbXMsIHdlIHNob3VsZAo+IHNvbHZlIHRoZW0uCj4KCklmICIt
-ZCAzMSIgaXMgc3BlY2lmaWVkLCBvbiB0aGUgb25lIGhhbmQgd2UgY2FuJ3Qgc2F2ZSB0aW1lIGJ5
-IGNvbXByZXNzaW5nCnBhcmFsbGVsLCBvbiB0aGUgb3RoZXIgaGFuZCB3ZSB3aWxsIGludHJvZHVj
-ZSBzb21lIGV4dHJhIHdvcmsgYnkgYWRkaW5nCiItLW51bS10aHJlYWRzIi4gU28gaXQgaXMgb2J2
-aW91cyB0aGF0IGl0IHdpbGwgaGF2ZSBhIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9uLgoKSSdtIG5v
-dCBzbyBzdXJlIGlmIGl0IGlzIGEgcHJvYmxlbSB0aGF0IHRoZSBwZXJmb3JtYW5jZSBkZWdyYWRh
-dGlvbiBpcyBzbyBiaWcuCkJ1dCBJIHRoaW5rIGlmIGluIG90aGVyIGNhc2VzLCBpdCB3b3JrcyBh
-cyBleHBlY3RlZCwgdGhpcyB3b24ndCBiZSBhIHByb2JsZW0oCm9yIGEgcHJvYmxlbSBuZWVkcyB0
-byBiZSBmaXhlZCksIGZvciB0aGUgcGVyZm9ybWFuY2UgZGVncmFkYXRpb24gZXhpc3RpbmcKaW4g
-dGhlb3J5LgoKT3IgdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gc2hvdWxkIGJlIHJlcGxhY2Vk
-IGJ5IGEgbmV3IGFyaXRobWV0aWMuCkZvciBleGFtcGxlOgpXZSBjYW4gYWRkIGFuIGFycmF5IHRv
-IHJlY29yZCB3aGV0aGVyIHRoZSBwYWdlIGlzIGZpbHRlcmVkIG9yIG5vdC4KQW5kIG9ubHkgdGhl
-IHVuZmlsdGVyZWQgcGFnZSB3aWxsIHRha2UgdGhlIGJ1ZmZlci4KCkJ1dCBJJ20gbm90IHN1cmUg
-aWYgaXQgaXMgd29ydGguCkZvciAiLWwgLWQgMzEiIGlzIGZhc3QgZW5vdWdoLCB0aGUgbmV3IGFy
-aXRobWV0aWMgYWxzbyBjYW4ndCBkbyBtdWNoIGhlbHAuCgotLSAKVGhhbmtzClpob3UKCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Geoff,
+
+On 03/12/2015:05:39:12 PM, Azriel Samson wrote:
+> This was a setup issue on my side. kdump with your v11 patches worked fine
+> without the above patch when I used your version of kexec-tools.
+> 
+> In kexec-tools, I had to skip check_cpu_nodes() since we are using ACPI and
+> the device tree does not contain cpu_info.
+
+I think, something like following should be squashed into patch "arm64: Add arm64
+kexec support".
+https://github.com/pratyushanand/kexec-tools/commit/85f403cabb9ae0d7a37d1656a00fb609a9525086
+
+~Pratyush
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
