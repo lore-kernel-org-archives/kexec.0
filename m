@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 7 Dec 2015 19:37:55 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] kexec: Add --lite option
-Message-ID: <20151207140755.GG16406@dhcppc13.redhat.com>
-References: <1445469125.30908.105.camel@infradead.org>
- <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <20151022125012.GB20847@redhat.com>
- <1445540891.30908.144.camel@infradead.org>
- <1446703011.12676.83.camel@freescale.com>
- <20151207114547.GE16406@dhcppc13.redhat.com>
- <20151207114839.GF16406@dhcppc13.redhat.com>
- <56658696.6070103@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56658696.6070103@arm.com>
+Message-ID: <1449514034.24127.18.camel@infradead.org>
+Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 07 Dec 2015 10:47:14 -0800
+In-Reply-To: <20151204035405.GB737@dhcppc13.redhat.com>
+References: <cover.1448403503.git.geoff@infradead.org>
+ <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
+ <20151127131306.GE23908@dhcppc13.redhat.com>
+ <1448909475.31214.27.camel@infradead.org>
+ <20151201021615.GA5704@dhcppc13.redhat.com>
+ <002101d12c66$ae985440$0bc8fcc0$@codeaurora.org>
+ <1449096562.6139.74.camel@infradead.org>
+ <000b01d12d84$4313a930$c93afb90$@codeaurora.org>
+ <1449172587.24127.12.camel@infradead.org> <5660E0B0.8010507@codeaurora.org>
+ <20151204035405.GB737@dhcppc13.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,45 +27,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>, Petitboot@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>, Azriel Samson <asamson@codeaurora.org>
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, marc.zyngier@arm.com, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Dave Young' <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi James,
-
-Thanks for the reply.
-
-On 07/12/2015:01:16:06 PM, James Morse wrote:
-> Hi Pratyush,
+On Fri, 2015-12-04 at 09:24 +0530, Pratyush Anand wrote:
+> Hi Geoff,
 > 
-> On 07/12/15 11:48, Pratyush Anand wrote:
-> >> 1) When we execute kexec() system call in first kernel, at that time it
-> >> calculates sha256 on all the binaries [1]. It take almost un-noticeable time
-> >> (less than a sec) there.
-> >>
-> >> 2) When purgatory is executed then it re-calculates sha256 using same routines
-> >> [2] on same binary data as that of case (1). But, now it takes 10-20 sec
-> >> (depending of size of binaries)?
-> >>
-> >> Why did not it take same time with O2 + D-cache enabled? I think, we should be
-> >> able to achieve same time in second case as well. What is missing?
+> On 03/12/2015:05:39:12 PM, Azriel Samson wrote:
+> > This was a setup issue on my side. kdump with your v11 patches worked fine
+> > without the above patch when I used your version of kexec-tools.
+> > 
+> > In kexec-tools, I had to skip check_cpu_nodes() since we are using ACPI and
+> > the device tree does not contain cpu_info.
 > 
-> I haven't benchmarked this, but:
-> 
-> util_lib/sha256.c contains calls out to memcpy().
-> In your case 1, this will use the glibc version. In case 2, it will use
-> the version implemented in purgatory/string.c, which is a byte-by-byte copy.
-> 
+> I think, something like following should be squashed into patch "arm64: Add arm64
+> kexec support".
+> https://github.com/pratyushanand/kexec-tools/commit/85f403cabb9ae0d7a37d1656a00fb609a9525086
 
-Yes, I agree that byte copy is too slow. But, memcpy() in sha256_update() will
-copy only few bytes (I think max 126 bytes). Most of the data will be processed
-using loop while( length >= 64 ){}, where we do not have any memcpy.So, I do not
-think that this would be causing such a difference.
+I think it better to test for ACPI and then run
+any meaningful checks than to just ignore the
+check_cpu_nodes failure.
 
-Could it be the case that I am not using perfect memory attributes while setting
-up identity mapping and enabling D-cache. My implementation is here:
-https://github.com/pratyushanand/kexec-tools/commit/8efdbc56b52f99a8a074edd0ddc519d7b68be82f
-
-~Pratyush
+-Geoff
 
 _______________________________________________
 kexec mailing list
