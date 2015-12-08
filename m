@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1449536600.15946.102.camel@freescale.com>
-Subject: Re: [PATCH] kexec: Add --lite option
-From: Scott Wood <scottwood@freescale.com>
-Date: Mon, 7 Dec 2015 19:03:20 -0600
-In-Reply-To: <20151207140755.GG16406@dhcppc13.redhat.com>
-References: <1445469125.30908.105.camel@infradead.org>
- <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <20151022125012.GB20847@redhat.com>
- <1445540891.30908.144.camel@infradead.org>
- <1446703011.12676.83.camel@freescale.com>
- <20151207114547.GE16406@dhcppc13.redhat.com>
- <20151207114839.GF16406@dhcppc13.redhat.com> <56658696.6070103@arm.com>
- <20151207140755.GG16406@dhcppc13.redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a694o-0000En-DX
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 03:36:31 +0000
+Date: Tue, 8 Dec 2015 11:36:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of
+ logged_chars
+Message-ID: <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
+References: <1446023724-12445-1-git-send-email-dliu@redhat.com>
+ <1447824280.2500.1.camel@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1447824280.2500.1.camel@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,67 +21,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, James Morse <james.morse@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>, Petitboot@lists.ozlabs.org, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, dliu@redhat.com
 
-On Mon, 2015-12-07 at 19:37 +0530, Pratyush Anand wrote:
-> Hi James,
-> 
-> Thanks for the reply.
-> 
-> On 07/12/2015:01:16:06 PM, James Morse wrote:
-> > Hi Pratyush,
-> > 
-> > On 07/12/15 11:48, Pratyush Anand wrote:
-> > > > 1) When we execute kexec() system call in first kernel, at that time
-> > > > it
-> > > > calculates sha256 on all the binaries [1]. It take almost un
-> > > > -noticeable time
-> > > > (less than a sec) there.
-> > > > 
-> > > > 2) When purgatory is executed then it re-calculates sha256 using same
-> > > > routines
-> > > > [2] on same binary data as that of case (1). But, now it takes 10-20
-> > > > sec
-> > > > (depending of size of binaries)?
-> > > > 
-> > > > Why did not it take same time with O2 + D-cache enabled? I think, we
-> > > > should be
-> > > > able to achieve same time in second case as well. What is missing?
-> > 
-> > I haven't benchmarked this, but:
-> > 
-> > util_lib/sha256.c contains calls out to memcpy().
-> > In your case 1, this will use the glibc version. In case 2, it will use
-> > the version implemented in purgatory/string.c, which is a byte-by-byte
-> > copy.
-> > 
-> 
-> Yes, I agree that byte copy is too slow. But, memcpy() in sha256_update()
-> will
-> copy only few bytes (I think max 126 bytes). Most of the data will be
-> processed
-> using loop while( length >= 64 ){}, where we do not have any memcpy.So, I do
-> not
-> think that this would be causing such a difference.
-> 
-> Could it be the case that I am not using perfect memory attributes while
-> setting
-> up identity mapping and enabling D-cache. My implementation is here:
-> https://github.com/pratyushanand/kexec-tools/commit/8efdbc56b52f99a8a074edd0
-> ddc519d7b68be82f
+On 11/18/15 at 01:24pm, Dangyi Liu wrote:
+> Simon,
+> =
 
-FWIW, purgatory is fast for me on PPC (sub-second), so between that (assuming
-it's not due to some PPC-specific optimization) and the fact that you don't
-see any improvement with cache, I'd guess there's something wrong with how
-you're enabling caches.
+> Could you help to review this patch?
+> =
 
--Scott
+> Thanks,
+> Dangyi Liu
+> =
 
+> On Wed, 2015-10-28 at 17:15 +0800, Dangyi Liu wrote:
+> > logged_chars would be set to 0 by `dmesg -c`, but full dmesg is
+> > useful
+> > for debugging. So instead of using logged_chars directly, we
+> > calculate
+> > it by ourselves.
+> > =
+
+> > Now logged_chars is set to the minimum of log_end and log_buf_len, as
+> > the same logic as crash utility is using.
+> > =
+
+> > Signed-off-by: Dangyi Liu <dliu@redhat.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > ---
+> > Changes:
+> > =A0 v1->v2: Update comment and commit message.
+> > =A0 v2->v3: Adjust maximum line length
+> > =
+
+> > =A0vmcore-dmesg/vmcore-dmesg.c | 6 ++++++
+> > =A01 file changed, 6 insertions(+)
+> > =
+
+> > diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-
+> > dmesg.c
+> > index f47ee11..0364636 100644
+> > --- a/vmcore-dmesg/vmcore-dmesg.c
+> > +++ b/vmcore-dmesg/vmcore-dmesg.c
+> > @@ -540,6 +540,12 @@ static void dump_dmesg_legacy(int fd)
+> > =A0		exit(53);
+> > =A0	}
+> > =A0
+> > +	/*
+> > +	=A0* To collect full dmesg including the part before `dmesg
+> > -c` is useful
+> > +	=A0* for later debugging. Use same logic as what crash utility
+> > is using.
+> > +	=A0*/
+> > +	logged_chars =3D log_end < log_buf_len ? log_end :
+> > log_buf_len;
+> > +
+> > =A0	write_to_stdout(buf + (log_buf_len -=A0=A0logged_chars),
+> > logged_chars);
+> > =A0}
+> > =A0
+> =
+
+
+Simon,
+
+What's your opinion about this patch? It is a rh internal report.
+Current code make sense, adding the patch will be slight better though
+for kdump case. But if you do not like it we can ignore it and close
+the bug.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
