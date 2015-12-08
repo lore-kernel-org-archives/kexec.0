@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6QHe-0001Zj-Tn
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:58:56 +0000
+ id 1a6QHg-0001bL-Ht
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:58:57 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 02/14] kexec: Remove redundant space from help message
-Date: Tue,  8 Dec 2015 22:57:35 +0100
-Message-Id: <1449611867-15672-3-git-send-email-daniel.kiper@oracle.com>
+Subject: [PATCH 05/14] crashdump/arm: Add print_crashkernel_region_size()
+ function
+Date: Tue,  8 Dec 2015 22:57:38 +0100
+Message-Id: <1449611867-15672-6-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,24 +26,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
 Cc: andrew.cooper3@citrix.com, horms@verge.net.au, keir@xen.org, david.vrabel@citrix.com, konrad.wilk@oracle.com
 
+Follow similar x86 patch.
+
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- kexec/kexec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kexec/arch/arm/crashdump-arm.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index f0bd527..20dd93d 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -969,7 +969,7 @@ void usage(void)
- 	       "                      preserve context)\n"
- 	       "                      to original kernel.\n"
- 	       " -s, --kexec-file-syscall Use file based syscall for kexec operation\n"
--	       " -d, --debug           Enable debugging to help spot a failure.\n"
-+	       " -d, --debug          Enable debugging to help spot a failure.\n"
- 	       "\n"
- 	       "Supported kernel file types and options: \n");
- 	for (i = 0; i < file_types; i++) {
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index b523e5f..b3e93ad 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -414,3 +414,13 @@ int is_crashkernel_mem_reserved(void)
+ 
+ 	return 0;
+ }
++
++void print_crashkernel_region_size(void)
++{
++	uint64_t start, end;
++
++	if (!parse_iomem_single("Crash kernel\n", &start, &end) && start != end)
++		printf("%lu\n", end - start + 1);
++	else
++		printf("0\n");
++}
 -- 
 1.7.10.4
 
