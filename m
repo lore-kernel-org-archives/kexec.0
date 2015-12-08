@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6BLg-0006zt-4g
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 06:02:05 +0000
-Date: Tue, 8 Dec 2015 15:01:39 +0900
+ id 1a6BOb-0007Vu-Ru
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 06:05:06 +0000
+Date: Tue, 8 Dec 2015 15:04:44 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 3/3] ppc64: Add a flag to tell the kernel it's booting
- from kexec
-Message-ID: <20151208060139.GA20730@verge.net.au>
-References: <1444172150-29493-1-git-send-email-scottwood@freescale.com>
- <1444172150-29493-3-git-send-email-scottwood@freescale.com>
- <1449520948.15946.89.camel@freescale.com>
- <1449546377.12218.9.camel@ellerman.id.au>
+Subject: Re: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of
+ logged_chars
+Message-ID: <20151208060444.GB20730@verge.net.au>
+References: <1446023724-12445-1-git-send-email-dliu@redhat.com>
+ <1447824280.2500.1.camel@redhat.com>
+ <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1449546377.12218.9.camel@ellerman.id.au>
+In-Reply-To: <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,41 +22,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, dliu@redhat.com
 
-On Tue, Dec 08, 2015 at 02:46:17PM +1100, Michael Ellerman wrote:
-> On Mon, 2015-12-07 at 14:42 -0600, Scott Wood wrote:
-> > On Tue, 2015-10-06 at 17:55 -0500, Scott Wood wrote:
-> > > It needs to know this because the SMP release mechanism for Freescale
-> > > book3e is different from when booting with normal hardware.  In theory
-> > > we could simulate the normal spin table mechanism, but not (easily) at
-> > > the addresses U-Boot put in the device tree -- so there'd need to be
-> > > even more communication between the kernel and kexec to set that up.
-> > > 
-> > > Signed-off-by: Scott Wood <scottwood@freescale.com>
-> > > ---
-> > > v2: Use a device tree property rather than setting a flag in the kernel
-> > > image, as requested by Michael Ellerman.
-> > 
-> > ping?
-> > 
-> > Michael, can you review this?  Simon is waiting for another PPC person to
-> > review it.
-> 
-> Oh sorry I thought it'd been merged already, but I see now only 1 & 2 went in.
-> 
-> Horms this looks fine to me:
-> 
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-Thanks, applied.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBEZWMgMDgsIDIwMTUgYXQgMTE6MzY6MDRBTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
+ZToKPiBPbiAxMS8xOC8xNSBhdCAwMToyNHBtLCBEYW5neWkgTGl1IHdyb3RlOgo+ID4gU2ltb24s
+Cj4gPiAKPiA+IENvdWxkIHlvdSBoZWxwIHRvIHJldmlldyB0aGlzIHBhdGNoPwo+ID4gCj4gPiBU
+aGFua3MsCj4gPiBEYW5neWkgTGl1Cj4gPiAKPiA+IE9uIFdlZCwgMjAxNS0xMC0yOCBhdCAxNzox
+NSArMDgwMCwgRGFuZ3lpIExpdSB3cm90ZToKPiA+ID4gbG9nZ2VkX2NoYXJzIHdvdWxkIGJlIHNl
+dCB0byAwIGJ5IGBkbWVzZyAtY2AsIGJ1dCBmdWxsIGRtZXNnIGlzCj4gPiA+IHVzZWZ1bAo+ID4g
+PiBmb3IgZGVidWdnaW5nLiBTbyBpbnN0ZWFkIG9mIHVzaW5nIGxvZ2dlZF9jaGFycyBkaXJlY3Rs
+eSwgd2UKPiA+ID4gY2FsY3VsYXRlCj4gPiA+IGl0IGJ5IG91cnNlbHZlcy4KPiA+ID4gCj4gPiA+
+IE5vdyBsb2dnZWRfY2hhcnMgaXMgc2V0IHRvIHRoZSBtaW5pbXVtIG9mIGxvZ19lbmQgYW5kIGxv
+Z19idWZfbGVuLCBhcwo+ID4gPiB0aGUgc2FtZSBsb2dpYyBhcyBjcmFzaCB1dGlsaXR5IGlzIHVz
+aW5nLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogRGFuZ3lpIExpdSA8ZGxpdUByZWRoYXQu
+Y29tPgo+ID4gPiBDYzogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+Cj4gPiA+IC0tLQo+
+ID4gPiBDaGFuZ2VzOgo+ID4gPiDCoCB2MS0+djI6IFVwZGF0ZSBjb21tZW50IGFuZCBjb21taXQg
+bWVzc2FnZS4KPiA+ID4gwqAgdjItPnYzOiBBZGp1c3QgbWF4aW11bSBsaW5lIGxlbmd0aAo+ID4g
+PiAKPiA+ID4gwqB2bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMgfCA2ICsrKysrKwo+ID4gPiDC
+oDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykKPiA+ID4gCj4gPiA+IGRpZmYgLS1naXQg
+YS92bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMgYi92bWNvcmUtZG1lc2cvdm1jb3JlLQo+ID4g
+PiBkbWVzZy5jCj4gPiA+IGluZGV4IGY0N2VlMTEuLjAzNjQ2MzYgMTAwNjQ0Cj4gPiA+IC0tLSBh
+L3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+ID4gPiArKysgYi92bWNvcmUtZG1lc2cvdm1j
+b3JlLWRtZXNnLmMKPiA+ID4gQEAgLTU0MCw2ICs1NDAsMTIgQEAgc3RhdGljIHZvaWQgZHVtcF9k
+bWVzZ19sZWdhY3koaW50IGZkKQo+ID4gPiDCoAkJZXhpdCg1Myk7Cj4gPiA+IMKgCX0KPiA+ID4g
+wqAKPiA+ID4gKwkvKgo+ID4gPiArCcKgKiBUbyBjb2xsZWN0IGZ1bGwgZG1lc2cgaW5jbHVkaW5n
+IHRoZSBwYXJ0IGJlZm9yZSBgZG1lc2cKPiA+ID4gLWNgIGlzIHVzZWZ1bAo+ID4gPiArCcKgKiBm
+b3IgbGF0ZXIgZGVidWdnaW5nLiBVc2Ugc2FtZSBsb2dpYyBhcyB3aGF0IGNyYXNoIHV0aWxpdHkK
+PiA+ID4gaXMgdXNpbmcuCj4gPiA+ICsJwqAqLwo+ID4gPiArCWxvZ2dlZF9jaGFycyA9IGxvZ19l
+bmQgPCBsb2dfYnVmX2xlbiA/IGxvZ19lbmQgOgo+ID4gPiBsb2dfYnVmX2xlbjsKPiA+ID4gKwo+
+ID4gPiDCoAl3cml0ZV90b19zdGRvdXQoYnVmICsgKGxvZ19idWZfbGVuIC3CoMKgbG9nZ2VkX2No
+YXJzKSwKPiA+ID4gbG9nZ2VkX2NoYXJzKTsKPiA+ID4gwqB9Cj4gPiA+IMKgCj4gPiAKPiAKPiBT
+aW1vbiwKPiAKPiBXaGF0J3MgeW91ciBvcGluaW9uIGFib3V0IHRoaXMgcGF0Y2g/IEl0IGlzIGEg
+cmggaW50ZXJuYWwgcmVwb3J0Lgo+IEN1cnJlbnQgY29kZSBtYWtlIHNlbnNlLCBhZGRpbmcgdGhl
+IHBhdGNoIHdpbGwgYmUgc2xpZ2h0IGJldHRlciB0aG91Z2gKPiBmb3Iga2R1bXAgY2FzZS4gQnV0
+IGlmIHlvdSBkbyBub3QgbGlrZSBpdCB3ZSBjYW4gaWdub3JlIGl0IGFuZCBjbG9zZQo+IHRoZSBi
+dWcuCgpUaGlzIHNlZW1zIHJlYXNvbmFibGUgdG8gbWUsIGJ1dCBwZXJoYXBzIHRoZSBsb2dpYyBz
+aG91bGQgb25seSBraWNrCmluIGlmIGxvZ2dlZF9jaGFycyBpcyAwPwoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
