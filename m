@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6QHl-0001bq-IA
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:02 +0000
+ id 1a6QHq-0001d0-I0
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:07 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 07/14] crashdump/ia64: Add print_crashkernel_region_size()
+Subject: [PATCH 09/14] crashdump/mips: Add print_crashkernel_region_size()
  function
-Date: Tue,  8 Dec 2015 22:57:40 +0100
-Message-Id: <1449611867-15672-8-git-send-email-daniel.kiper@oracle.com>
+Date: Tue,  8 Dec 2015 22:57:42 +0100
+Message-Id: <1449611867-15672-10-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,18 +30,17 @@ Follow similar x86 patch.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- kexec/arch/ia64/crashdump-ia64.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kexec/arch/mips/crashdump-mips.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/kexec/arch/ia64/crashdump-ia64.c b/kexec/arch/ia64/crashdump-ia64.c
-index 726c9f4..07de42a 100644
---- a/kexec/arch/ia64/crashdump-ia64.c
-+++ b/kexec/arch/ia64/crashdump-ia64.c
-@@ -286,3 +286,13 @@ int is_crashkernel_mem_reserved(void)
- 	return parse_iomem_single("Crash kernel\n", &start,
- 				  &end) == 0 ?  (start != end) : 0;
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index dc68cb4..450fa13 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -377,3 +377,12 @@ int is_crashkernel_mem_reserved(void)
+ 		(start != end) : 0;
  }
-+
+ 
 +void print_crashkernel_region_size(void)
 +{
 +	uint64_t start, end;
