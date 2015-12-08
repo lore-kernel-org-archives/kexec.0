@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6BOb-0007Vu-Ru
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 06:05:06 +0000
-Date: Tue, 8 Dec 2015 15:04:44 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of
- logged_chars
-Message-ID: <20151208060444.GB20730@verge.net.au>
-References: <1446023724-12445-1-git-send-email-dliu@redhat.com>
- <1447824280.2500.1.camel@redhat.com>
- <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
+Message-ID: <5666FE91.5010302@arm.com>
+Date: Tue, 08 Dec 2015 16:00:17 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH] kexec: Add --lite option
+References: <1445469125.30908.105.camel@infradead.org>
+ <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
+ <20151022125012.GB20847@redhat.com>
+ <1445540891.30908.144.camel@infradead.org>
+ <1446703011.12676.83.camel@freescale.com>
+ <20151207114547.GE16406@dhcppc13.redhat.com>
+ <20151207114839.GF16406@dhcppc13.redhat.com> <56658696.6070103@arm.com>
+ <20151207140755.GG16406@dhcppc13.redhat.com>
+In-Reply-To: <20151207140755.GG16406@dhcppc13.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +21,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, dliu@redhat.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>, Petitboot@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-T24gVHVlLCBEZWMgMDgsIDIwMTUgYXQgMTE6MzY6MDRBTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
-ZToKPiBPbiAxMS8xOC8xNSBhdCAwMToyNHBtLCBEYW5neWkgTGl1IHdyb3RlOgo+ID4gU2ltb24s
-Cj4gPiAKPiA+IENvdWxkIHlvdSBoZWxwIHRvIHJldmlldyB0aGlzIHBhdGNoPwo+ID4gCj4gPiBU
-aGFua3MsCj4gPiBEYW5neWkgTGl1Cj4gPiAKPiA+IE9uIFdlZCwgMjAxNS0xMC0yOCBhdCAxNzox
-NSArMDgwMCwgRGFuZ3lpIExpdSB3cm90ZToKPiA+ID4gbG9nZ2VkX2NoYXJzIHdvdWxkIGJlIHNl
-dCB0byAwIGJ5IGBkbWVzZyAtY2AsIGJ1dCBmdWxsIGRtZXNnIGlzCj4gPiA+IHVzZWZ1bAo+ID4g
-PiBmb3IgZGVidWdnaW5nLiBTbyBpbnN0ZWFkIG9mIHVzaW5nIGxvZ2dlZF9jaGFycyBkaXJlY3Rs
-eSwgd2UKPiA+ID4gY2FsY3VsYXRlCj4gPiA+IGl0IGJ5IG91cnNlbHZlcy4KPiA+ID4gCj4gPiA+
-IE5vdyBsb2dnZWRfY2hhcnMgaXMgc2V0IHRvIHRoZSBtaW5pbXVtIG9mIGxvZ19lbmQgYW5kIGxv
-Z19idWZfbGVuLCBhcwo+ID4gPiB0aGUgc2FtZSBsb2dpYyBhcyBjcmFzaCB1dGlsaXR5IGlzIHVz
-aW5nLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogRGFuZ3lpIExpdSA8ZGxpdUByZWRoYXQu
-Y29tPgo+ID4gPiBDYzogRGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+Cj4gPiA+IC0tLQo+
-ID4gPiBDaGFuZ2VzOgo+ID4gPiDCoCB2MS0+djI6IFVwZGF0ZSBjb21tZW50IGFuZCBjb21taXQg
-bWVzc2FnZS4KPiA+ID4gwqAgdjItPnYzOiBBZGp1c3QgbWF4aW11bSBsaW5lIGxlbmd0aAo+ID4g
-PiAKPiA+ID4gwqB2bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMgfCA2ICsrKysrKwo+ID4gPiDC
-oDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykKPiA+ID4gCj4gPiA+IGRpZmYgLS1naXQg
-YS92bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMgYi92bWNvcmUtZG1lc2cvdm1jb3JlLQo+ID4g
-PiBkbWVzZy5jCj4gPiA+IGluZGV4IGY0N2VlMTEuLjAzNjQ2MzYgMTAwNjQ0Cj4gPiA+IC0tLSBh
-L3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+ID4gPiArKysgYi92bWNvcmUtZG1lc2cvdm1j
-b3JlLWRtZXNnLmMKPiA+ID4gQEAgLTU0MCw2ICs1NDAsMTIgQEAgc3RhdGljIHZvaWQgZHVtcF9k
-bWVzZ19sZWdhY3koaW50IGZkKQo+ID4gPiDCoAkJZXhpdCg1Myk7Cj4gPiA+IMKgCX0KPiA+ID4g
-wqAKPiA+ID4gKwkvKgo+ID4gPiArCcKgKiBUbyBjb2xsZWN0IGZ1bGwgZG1lc2cgaW5jbHVkaW5n
-IHRoZSBwYXJ0IGJlZm9yZSBgZG1lc2cKPiA+ID4gLWNgIGlzIHVzZWZ1bAo+ID4gPiArCcKgKiBm
-b3IgbGF0ZXIgZGVidWdnaW5nLiBVc2Ugc2FtZSBsb2dpYyBhcyB3aGF0IGNyYXNoIHV0aWxpdHkK
-PiA+ID4gaXMgdXNpbmcuCj4gPiA+ICsJwqAqLwo+ID4gPiArCWxvZ2dlZF9jaGFycyA9IGxvZ19l
-bmQgPCBsb2dfYnVmX2xlbiA/IGxvZ19lbmQgOgo+ID4gPiBsb2dfYnVmX2xlbjsKPiA+ID4gKwo+
-ID4gPiDCoAl3cml0ZV90b19zdGRvdXQoYnVmICsgKGxvZ19idWZfbGVuIC3CoMKgbG9nZ2VkX2No
-YXJzKSwKPiA+ID4gbG9nZ2VkX2NoYXJzKTsKPiA+ID4gwqB9Cj4gPiA+IMKgCj4gPiAKPiAKPiBT
-aW1vbiwKPiAKPiBXaGF0J3MgeW91ciBvcGluaW9uIGFib3V0IHRoaXMgcGF0Y2g/IEl0IGlzIGEg
-cmggaW50ZXJuYWwgcmVwb3J0Lgo+IEN1cnJlbnQgY29kZSBtYWtlIHNlbnNlLCBhZGRpbmcgdGhl
-IHBhdGNoIHdpbGwgYmUgc2xpZ2h0IGJldHRlciB0aG91Z2gKPiBmb3Iga2R1bXAgY2FzZS4gQnV0
-IGlmIHlvdSBkbyBub3QgbGlrZSBpdCB3ZSBjYW4gaWdub3JlIGl0IGFuZCBjbG9zZQo+IHRoZSBi
-dWcuCgpUaGlzIHNlZW1zIHJlYXNvbmFibGUgdG8gbWUsIGJ1dCBwZXJoYXBzIHRoZSBsb2dpYyBz
-aG91bGQgb25seSBraWNrCmluIGlmIGxvZ2dlZF9jaGFycyBpcyAwPwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+Hi Pratyush,
+
+On 07/12/15 14:07, Pratyush Anand wrote:
+> On 07/12/2015:01:16:06 PM, James Morse wrote:
+>> I haven't benchmarked this, but:
+>>
+>> util_lib/sha256.c contains calls out to memcpy().
+>> In your case 1, this will use the glibc version. In case 2, it will use
+>> the version implemented in purgatory/string.c, which is a byte-by-byte copy.
+>>
+> 
+> Yes, I agree that byte copy is too slow. But, memcpy() in sha256_update() will
+> copy only few bytes (I think max 126 bytes). Most of the data will be processed
+> using loop while( length >= 64 ){}, where we do not have any memcpy.So, I do not
+> think that this would be causing such a difference.
+
+You're right, I benchmarked the two sha256.o files checksumming a 10MB
+buffer - one takes 0.6s, the other 1.7s, we can probably expect a couple
+of seconds to do this.
+
+Is the sha256 really useful? Purgatory can't print out an error message,
+if it fails...
+
+
+> Could it be the case that I am not using perfect memory attributes while setting
+> up identity mapping and enabling D-cache. My implementation is here:
+> https://github.com/pratyushanand/kexec-tools/commit/8efdbc56b52f99a8a074edd0ddc519d7b68be82f
+
+I'm no expert, but that looks like you're setting it up as 'normal'
+memory. You're missing some isb-s and tlbi-s: depending on how long the
+changes to system state take, you may be using old memory-attributes or
+page-tables. If you depend on a change to system state, (like turning
+the mmu on), you need explicit synchronisation, see section 12.3.2 of
+the 'Architecture Programmers Guide' (arm den0024a), and D7.1.2 of the
+ARM ARM.
+
+I haven't managed to get your kexec-tools branch to work with v10 of
+Geoff's series. It looks like you save registers to the stack, which
+give stale values once you turn the mmu off. You also do the opposite,
+saving registers with the mmu off, then cleaning cache lines over the
+top, corrupting the saved registers.
+
+The page size of 64K is hard coded. Kexec-ing from a 4K kernel, to a 4K
+kernel will work, but only if the hardware also supports 64K, this will
+be surprising to debug.
+
+
+
+Thanks,
+
+
+James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
