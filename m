@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from ozlabs.org ([103.22.144.67])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a694o-0000En-DX
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 03:36:31 +0000
-Date: Tue, 8 Dec 2015 11:36:04 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of
- logged_chars
-Message-ID: <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
-References: <1446023724-12445-1-git-send-email-dliu@redhat.com>
- <1447824280.2500.1.camel@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1447824280.2500.1.camel@redhat.com>
+ id 1a69Ei-0004Xb-6z
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 03:46:45 +0000
+Message-ID: <1449546377.12218.9.camel@ellerman.id.au>
+Subject: Re: [PATCH v2 3/3] ppc64: Add a flag to tell the kernel it's
+ booting from kexec
+From: Michael Ellerman <mpe@ellerman.id.au>
+Date: Tue, 08 Dec 2015 14:46:17 +1100
+In-Reply-To: <1449520948.15946.89.camel@freescale.com>
+References: <1444172150-29493-1-git-send-email-scottwood@freescale.com>
+ <1444172150-29493-3-git-send-email-scottwood@freescale.com>
+ <1449520948.15946.89.camel@freescale.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,82 +21,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, dliu@redhat.com
+To: Scott Wood <scottwood@freescale.com>, Simon Horman <horms@verge.net.au>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-On 11/18/15 at 01:24pm, Dangyi Liu wrote:
-> Simon,
-> =
-
-> Could you help to review this patch?
-> =
-
-> Thanks,
-> Dangyi Liu
-> =
-
-> On Wed, 2015-10-28 at 17:15 +0800, Dangyi Liu wrote:
-> > logged_chars would be set to 0 by `dmesg -c`, but full dmesg is
-> > useful
-> > for debugging. So instead of using logged_chars directly, we
-> > calculate
-> > it by ourselves.
-> > =
-
-> > Now logged_chars is set to the minimum of log_end and log_buf_len, as
-> > the same logic as crash utility is using.
-> > =
-
-> > Signed-off-by: Dangyi Liu <dliu@redhat.com>
-> > Cc: Dave Young <dyoung@redhat.com>
+On Mon, 2015-12-07 at 14:42 -0600, Scott Wood wrote:
+> On Tue, 2015-10-06 at 17:55 -0500, Scott Wood wrote:
+> > It needs to know this because the SMP release mechanism for Freescale
+> > book3e is different from when booting with normal hardware.  In theory
+> > we could simulate the normal spin table mechanism, but not (easily) at
+> > the addresses U-Boot put in the device tree -- so there'd need to be
+> > even more communication between the kernel and kexec to set that up.
+> > 
+> > Signed-off-by: Scott Wood <scottwood@freescale.com>
 > > ---
-> > Changes:
-> > =A0 v1->v2: Update comment and commit message.
-> > =A0 v2->v3: Adjust maximum line length
-> > =
+> > v2: Use a device tree property rather than setting a flag in the kernel
+> > image, as requested by Michael Ellerman.
+> 
+> ping?
+> 
+> Michael, can you review this?  Simon is waiting for another PPC person to
+> review it.
 
-> > =A0vmcore-dmesg/vmcore-dmesg.c | 6 ++++++
-> > =A01 file changed, 6 insertions(+)
-> > =
+Oh sorry I thought it'd been merged already, but I see now only 1 & 2 went in.
 
-> > diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-
-> > dmesg.c
-> > index f47ee11..0364636 100644
-> > --- a/vmcore-dmesg/vmcore-dmesg.c
-> > +++ b/vmcore-dmesg/vmcore-dmesg.c
-> > @@ -540,6 +540,12 @@ static void dump_dmesg_legacy(int fd)
-> > =A0		exit(53);
-> > =A0	}
-> > =A0
-> > +	/*
-> > +	=A0* To collect full dmesg including the part before `dmesg
-> > -c` is useful
-> > +	=A0* for later debugging. Use same logic as what crash utility
-> > is using.
-> > +	=A0*/
-> > +	logged_chars =3D log_end < log_buf_len ? log_end :
-> > log_buf_len;
-> > +
-> > =A0	write_to_stdout(buf + (log_buf_len -=A0=A0logged_chars),
-> > logged_chars);
-> > =A0}
-> > =A0
-> =
+Horms this looks fine to me:
 
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Simon,
+cheers
 
-What's your opinion about this patch? It is a rh internal report.
-Current code make sense, adding the patch will be slight better though
-for kdump case. But if you do not like it we can ignore it and close
-the bug.
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
