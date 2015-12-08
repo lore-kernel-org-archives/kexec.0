@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6QI0-0001gN-I6
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:17 +0000
+ id 1a6QI0-0001iW-QF
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:18 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 12/14] crashdump/s390: Add print_crashkernel_region_size()
+Subject: [PATCH 13/14] crashdump/sh: Add print_crashkernel_region_size()
  function
-Date: Tue,  8 Dec 2015 22:57:45 +0100
-Message-Id: <1449611867-15672-13-git-send-email-daniel.kiper@oracle.com>
+Date: Tue,  8 Dec 2015 22:57:46 +0100
+Message-Id: <1449611867-15672-14-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,16 +30,16 @@ Follow similar x86 patch.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- kexec/arch/s390/kexec-s390.c |   10 ++++++++++
+ kexec/arch/sh/crashdump-sh.c |   10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
-index 074575e..212a64f 100644
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -262,3 +262,13 @@ int is_crashkernel_mem_reserved(void)
+diff --git a/kexec/arch/sh/crashdump-sh.c b/kexec/arch/sh/crashdump-sh.c
+index 9e6af6b..6556eb1 100644
+--- a/kexec/arch/sh/crashdump-sh.c
++++ b/kexec/arch/sh/crashdump-sh.c
+@@ -178,3 +178,13 @@ int is_crashkernel_mem_reserved(void)
  	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
- 		(start != end) : 0;
+ 	  (start != end) : 0;
  }
 +
 +void print_crashkernel_region_size(void)
