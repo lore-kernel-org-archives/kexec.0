@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6QHq-0001d0-I0
+ id 1a6QHq-0001dk-QI
  for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:07 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 09/14] crashdump/mips: Add print_crashkernel_region_size()
+Subject: [PATCH 10/14] crashdump/ppc: Add print_crashkernel_region_size()
  function
-Date: Tue,  8 Dec 2015 22:57:42 +0100
-Message-Id: <1449611867-15672-10-git-send-email-daniel.kiper@oracle.com>
+Date: Tue,  8 Dec 2015 22:57:43 +0100
+Message-Id: <1449611867-15672-11-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,29 +26,26 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
 Cc: andrew.cooper3@citrix.com, horms@verge.net.au, keir@xen.org, david.vrabel@citrix.com, konrad.wilk@oracle.com
 
-Follow similar x86 patch.
+Provide just print_crashkernel_region_size() stub. This way
+we can properly build kexec utility on ppc arch even
+if the functionality is not available on it.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- kexec/arch/mips/crashdump-mips.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ kexec/arch/ppc/crashdump-powerpc.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
-index dc68cb4..450fa13 100644
---- a/kexec/arch/mips/crashdump-mips.c
-+++ b/kexec/arch/mips/crashdump-mips.c
-@@ -377,3 +377,12 @@ int is_crashkernel_mem_reserved(void)
- 		(start != end) : 0;
+diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
+index 3dc35eb..19c4a61 100644
+--- a/kexec/arch/ppc/crashdump-powerpc.c
++++ b/kexec/arch/ppc/crashdump-powerpc.c
+@@ -408,3 +408,7 @@ int is_crashkernel_mem_reserved(void)
+ 	return 1;
  }
  
 +void print_crashkernel_region_size(void)
 +{
-+	uint64_t start, end;
-+
-+	if (!parse_iomem_single("Crash kernel\n", &start, &end) && start != end)
-+		printf("%lu\n", end - start + 1);
-+	else
-+		printf("0\n");
++	printf("-1\n");
 +}
 -- 
 1.7.10.4
