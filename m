@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5666FE91.5010302@arm.com>
-Date: Tue, 08 Dec 2015 16:00:17 +0000
-From: James Morse <james.morse@arm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: Add --lite option
-References: <1445469125.30908.105.camel@infradead.org>
- <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <20151022125012.GB20847@redhat.com>
- <1445540891.30908.144.camel@infradead.org>
- <1446703011.12676.83.camel@freescale.com>
- <20151207114547.GE16406@dhcppc13.redhat.com>
- <20151207114839.GF16406@dhcppc13.redhat.com> <56658696.6070103@arm.com>
- <20151207140755.GG16406@dhcppc13.redhat.com>
-In-Reply-To: <20151207140755.GG16406@dhcppc13.redhat.com>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a6QHc-0001Zk-Le
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:58:53 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH 01/14] purgatory: Add purgatory.map and purgatory.ro.sym to
+ clean recipe
+Date: Tue,  8 Dec 2015 22:57:34 +0100
+Message-Id: <1449611867-15672-2-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
+References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,65 +18,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>, Petitboot@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc: andrew.cooper3@citrix.com, horms@verge.net.au, keir@xen.org, david.vrabel@citrix.com, konrad.wilk@oracle.com
 
-Hi Pratyush,
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ purgatory/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 07/12/15 14:07, Pratyush Anand wrote:
-> On 07/12/2015:01:16:06 PM, James Morse wrote:
->> I haven't benchmarked this, but:
->>
->> util_lib/sha256.c contains calls out to memcpy().
->> In your case 1, this will use the glibc version. In case 2, it will use
->> the version implemented in purgatory/string.c, which is a byte-by-byte copy.
->>
-> 
-> Yes, I agree that byte copy is too slow. But, memcpy() in sha256_update() will
-> copy only few bytes (I think max 126 bytes). Most of the data will be processed
-> using loop while( length >= 64 ){}, where we do not have any memcpy.So, I do not
-> think that this would be causing such a difference.
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index 2b5c061..caea7ea 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -33,7 +33,7 @@ PURGATORY_SRCS+=$($(ARCH)_PURGATORY_SRCS)
+ PURGATORY_OBJS = $(call objify, $(PURGATORY_SRCS)) purgatory/sha256.o
+ PURGATORY_DEPS = $(call depify, $(PURGATORY_OBJS))
+ 
+-clean += $(PURGATORY_OBJS) $(PURGATORY_DEPS) $(PURGATORY)
++clean += $(PURGATORY_OBJS) $(PURGATORY_DEPS) $(PURGATORY) $(PURGATORY_MAP) $(PURGATORY).sym
+ 
+ -include $(PURGATORY_DEPS)
+ 
+-- 
+1.7.10.4
 
-You're right, I benchmarked the two sha256.o files checksumming a 10MB
-buffer - one takes 0.6s, the other 1.7s, we can probably expect a couple
-of seconds to do this.
-
-Is the sha256 really useful? Purgatory can't print out an error message,
-if it fails...
-
-
-> Could it be the case that I am not using perfect memory attributes while setting
-> up identity mapping and enabling D-cache. My implementation is here:
-> https://github.com/pratyushanand/kexec-tools/commit/8efdbc56b52f99a8a074edd0ddc519d7b68be82f
-
-I'm no expert, but that looks like you're setting it up as 'normal'
-memory. You're missing some isb-s and tlbi-s: depending on how long the
-changes to system state take, you may be using old memory-attributes or
-page-tables. If you depend on a change to system state, (like turning
-the mmu on), you need explicit synchronisation, see section 12.3.2 of
-the 'Architecture Programmers Guide' (arm den0024a), and D7.1.2 of the
-ARM ARM.
-
-I haven't managed to get your kexec-tools branch to work with v10 of
-Geoff's series. It looks like you save registers to the stack, which
-give stale values once you turn the mmu off. You also do the opposite,
-saving registers with the mmu off, then cleaning cache lines over the
-top, corrupting the saved registers.
-
-The page size of 64K is hard coded. Kexec-ing from a 4K kernel, to a 4K
-kernel will work, but only if the hardware also supports 64K, this will
-be surprising to debug.
-
-
-
-Thanks,
-
-
-James
 
 _______________________________________________
 kexec mailing list
