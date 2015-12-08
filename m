@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6QHq-0001dk-QI
- for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:07 +0000
+ id 1a6QHv-0001dt-QE
+ for kexec@lists.infradead.org; Tue, 08 Dec 2015 21:59:12 +0000
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH 10/14] crashdump/ppc: Add print_crashkernel_region_size()
+Subject: [PATCH 11/14] crashdump/ppc64: Add print_crashkernel_region_size()
  function
-Date: Tue,  8 Dec 2015 22:57:43 +0100
-Message-Id: <1449611867-15672-11-git-send-email-daniel.kiper@oracle.com>
+Date: Tue,  8 Dec 2015 22:57:44 +0100
+Message-Id: <1449611867-15672-12-git-send-email-daniel.kiper@oracle.com>
 In-Reply-To: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,19 +27,19 @@ To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, xen-devel@lists.xen
 Cc: andrew.cooper3@citrix.com, horms@verge.net.au, keir@xen.org, david.vrabel@citrix.com, konrad.wilk@oracle.com
 
 Provide just print_crashkernel_region_size() stub. This way
-we can properly build kexec utility on ppc arch even
+we can properly build kexec utility on ppc64 arch even
 if the functionality is not available on it.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
- kexec/arch/ppc/crashdump-powerpc.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ kexec/arch/ppc64/crashdump-ppc64.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index 3dc35eb..19c4a61 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -408,3 +408,7 @@ int is_crashkernel_mem_reserved(void)
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index b3c8928..49af7a6 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -527,6 +527,11 @@ int is_crashkernel_mem_reserved(void)
  	return 1;
  }
  
@@ -47,6 +47,10 @@ index 3dc35eb..19c4a61 100644
 +{
 +	printf("-1\n");
 +}
++
+ #if 0
+ static int sort_regions(mem_rgns_t *rgn)
+ {
 -- 
 1.7.10.4
 
