@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6UrS-0002EY-0G
- for kexec@lists.infradead.org; Wed, 09 Dec 2015 02:52:10 +0000
-Date: Wed, 9 Dec 2015 10:51:34 +0800
+ id 1a6UsA-0002LI-O8
+ for kexec@lists.infradead.org; Wed, 09 Dec 2015 02:52:55 +0000
+Date: Wed, 9 Dec 2015 10:52:19 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 10/14] crashdump/ppc: Add print_crashkernel_region_size()
- function
-Message-ID: <20151209025134.GB14426@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH 11/14] crashdump/ppc64: Add
+ print_crashkernel_region_size() function
+Message-ID: <20151209025219.GC14426@dhcp-128-65.nay.redhat.com>
 References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
- <1449611867-15672-11-git-send-email-daniel.kiper@oracle.com>
+ <1449611867-15672-12-git-send-email-daniel.kiper@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1449611867-15672-11-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <1449611867-15672-12-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,22 +30,22 @@ Cc: keir@xen.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists
 
 On 12/08/15 at 10:57pm, Daniel Kiper wrote:
 > Provide just print_crashkernel_region_size() stub. This way
-> we can properly build kexec utility on ppc arch even
+> we can properly build kexec utility on ppc64 arch even
 > if the functionality is not available on it.
 
-The functionality is available by reading device tree nodes in procfs..
+Ditto as ppc, you can read procfs file to get the values..
 
 > 
 > Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 > ---
->  kexec/arch/ppc/crashdump-powerpc.c |    4 ++++
->  1 file changed, 4 insertions(+)
+>  kexec/arch/ppc64/crashdump-ppc64.c |    5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-> index 3dc35eb..19c4a61 100644
-> --- a/kexec/arch/ppc/crashdump-powerpc.c
-> +++ b/kexec/arch/ppc/crashdump-powerpc.c
-> @@ -408,3 +408,7 @@ int is_crashkernel_mem_reserved(void)
+> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+> index b3c8928..49af7a6 100644
+> --- a/kexec/arch/ppc64/crashdump-ppc64.c
+> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
+> @@ -527,6 +527,11 @@ int is_crashkernel_mem_reserved(void)
 >  	return 1;
 >  }
 >  
@@ -53,6 +53,10 @@ The functionality is available by reading device tree nodes in procfs..
 > +{
 > +	printf("-1\n");
 > +}
+> +
+>  #if 0
+>  static int sort_regions(mem_rgns_t *rgn)
+>  {
 > -- 
 > 1.7.10.4
 > 
