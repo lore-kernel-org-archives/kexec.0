@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6UvP-0004I9-Sv
- for kexec@lists.infradead.org; Wed, 09 Dec 2015 02:56:16 +0000
-Date: Wed, 9 Dec 2015 10:55:39 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 06/14] crashdump/cris: Add
- print_crashkernel_region_size() function
-Message-ID: <20151209025539.GD14426@dhcp-128-65.nay.redhat.com>
-References: <1449611867-15672-1-git-send-email-daniel.kiper@oracle.com>
- <1449611867-15672-7-git-send-email-daniel.kiper@oracle.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a6VxJ-0002es-2Z
+ for kexec@lists.infradead.org; Wed, 09 Dec 2015 04:02:18 +0000
+Date: Wed, 9 Dec 2015 13:01:52 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] vmcore-dmesg: Collect full dmesg regardless of
+ logged_chars
+Message-ID: <20151209040150.GA3888@verge.net.au>
+References: <1446023724-12445-1-git-send-email-dliu@redhat.com>
+ <1447824280.2500.1.camel@redhat.com>
+ <20151208033604.GA3052@dhcp-128-65.nay.redhat.com>
+ <20151208060444.GB20730@verge.net.au>
+ <20151209022803.GA14426@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1449611867-15672-7-git-send-email-daniel.kiper@oracle.com>
+In-Reply-To: <20151209022803.GA14426@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +24,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: keir@xen.org, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, david.vrabel@citrix.com, xen-devel@lists.xenproject.org
+To: Dave Young <dyoung@redhat.com>
+Cc: dliu@redhat.com, kexec@lists.infradead.org
 
-On 12/08/15 at 10:57pm, Daniel Kiper wrote:
-> Provide just print_crashkernel_region_size() stub. This way
-> we can properly build kexec utility on cris arch even
-> if the functionality is not available on it.
-> 
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> ---
->  kexec/arch/cris/kexec-cris.c |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
-> index 4ac2f89..8c62191 100644
-> --- a/kexec/arch/cris/kexec-cris.c
-> +++ b/kexec/arch/cris/kexec-cris.c
-> @@ -77,6 +77,11 @@ int is_crashkernel_mem_reserved(void)
->  	return 0;
->  }
->  
-> +void print_crashkernel_region_size(void)
-> +{
-> +	printf("-1\n");
-
-"-1" is meaningless to end user, how about instead telling that there's no
-such functionality for the arch.
-
-
-> +}
-> +
->  unsigned long virt_to_phys(unsigned long addr)
->  {
->  	return (addr) & 0x7fffffff;
-> -- 
-> 1.7.10.4
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBEZWMgMDksIDIwMTUgYXQgMTA6Mjg6MDNBTSArMDgwMCwgRGF2ZSBZb3VuZyB3cm90
+ZToKPiBPbiAxMi8wOC8xNSBhdCAwMzowNHBtLCBTaW1vbiBIb3JtYW4gd3JvdGU6Cj4gPiBPbiBU
+dWUsIERlYyAwOCwgMjAxNSBhdCAxMTozNjowNEFNICswODAwLCBEYXZlIFlvdW5nIHdyb3RlOgo+
+ID4gPiBPbiAxMS8xOC8xNSBhdCAwMToyNHBtLCBEYW5neWkgTGl1IHdyb3RlOgo+ID4gPiA+IFNp
+bW9uLAo+ID4gPiA+IAo+ID4gPiA+IENvdWxkIHlvdSBoZWxwIHRvIHJldmlldyB0aGlzIHBhdGNo
+Pwo+ID4gPiA+IAo+ID4gPiA+IFRoYW5rcywKPiA+ID4gPiBEYW5neWkgTGl1Cj4gPiA+ID4gCj4g
+PiA+ID4gT24gV2VkLCAyMDE1LTEwLTI4IGF0IDE3OjE1ICswODAwLCBEYW5neWkgTGl1IHdyb3Rl
+Ogo+ID4gPiA+ID4gbG9nZ2VkX2NoYXJzIHdvdWxkIGJlIHNldCB0byAwIGJ5IGBkbWVzZyAtY2As
+IGJ1dCBmdWxsIGRtZXNnIGlzCj4gPiA+ID4gPiB1c2VmdWwKPiA+ID4gPiA+IGZvciBkZWJ1Z2dp
+bmcuIFNvIGluc3RlYWQgb2YgdXNpbmcgbG9nZ2VkX2NoYXJzIGRpcmVjdGx5LCB3ZQo+ID4gPiA+
+ID4gY2FsY3VsYXRlCj4gPiA+ID4gPiBpdCBieSBvdXJzZWx2ZXMuCj4gPiA+ID4gPiAKPiA+ID4g
+PiA+IE5vdyBsb2dnZWRfY2hhcnMgaXMgc2V0IHRvIHRoZSBtaW5pbXVtIG9mIGxvZ19lbmQgYW5k
+IGxvZ19idWZfbGVuLCBhcwo+ID4gPiA+ID4gdGhlIHNhbWUgbG9naWMgYXMgY3Jhc2ggdXRpbGl0
+eSBpcyB1c2luZy4KPiA+ID4gPiA+IAo+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogRGFuZ3lpIExp
+dSA8ZGxpdUByZWRoYXQuY29tPgo+ID4gPiA+ID4gQ2M6IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRo
+YXQuY29tPgo+ID4gPiA+ID4gLS0tCj4gPiA+ID4gPiBDaGFuZ2VzOgo+ID4gPiA+ID4gwqAgdjEt
+PnYyOiBVcGRhdGUgY29tbWVudCBhbmQgY29tbWl0IG1lc3NhZ2UuCj4gPiA+ID4gPiDCoCB2Mi0+
+djM6IEFkanVzdCBtYXhpbXVtIGxpbmUgbGVuZ3RoCj4gPiA+ID4gPiAKPiA+ID4gPiA+IMKgdm1j
+b3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jIHwgNiArKysrKysKPiA+ID4gPiA+IMKgMSBmaWxlIGNo
+YW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+ID4gPiA+ID4gCj4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEv
+dm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jIGIvdm1jb3JlLWRtZXNnL3ZtY29yZS0KPiA+ID4g
+PiA+IGRtZXNnLmMKPiA+ID4gPiA+IGluZGV4IGY0N2VlMTEuLjAzNjQ2MzYgMTAwNjQ0Cj4gPiA+
+ID4gPiAtLS0gYS92bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMKPiA+ID4gPiA+ICsrKyBiL3Zt
+Y29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+ID4gPiA+ID4gQEAgLTU0MCw2ICs1NDAsMTIgQEAg
+c3RhdGljIHZvaWQgZHVtcF9kbWVzZ19sZWdhY3koaW50IGZkKQo+ID4gPiA+ID4gwqAJCWV4aXQo
+NTMpOwo+ID4gPiA+ID4gwqAJfQo+ID4gPiA+ID4gwqAKPiA+ID4gPiA+ICsJLyoKPiA+ID4gPiA+
+ICsJwqAqIFRvIGNvbGxlY3QgZnVsbCBkbWVzZyBpbmNsdWRpbmcgdGhlIHBhcnQgYmVmb3JlIGBk
+bWVzZwo+ID4gPiA+ID4gLWNgIGlzIHVzZWZ1bAo+ID4gPiA+ID4gKwnCoCogZm9yIGxhdGVyIGRl
+YnVnZ2luZy4gVXNlIHNhbWUgbG9naWMgYXMgd2hhdCBjcmFzaCB1dGlsaXR5Cj4gPiA+ID4gPiBp
+cyB1c2luZy4KPiA+ID4gPiA+ICsJwqAqLwo+ID4gPiA+ID4gKwlsb2dnZWRfY2hhcnMgPSBsb2df
+ZW5kIDwgbG9nX2J1Zl9sZW4gPyBsb2dfZW5kIDoKPiA+ID4gPiA+IGxvZ19idWZfbGVuOwo+ID4g
+PiA+ID4gKwo+ID4gPiA+ID4gwqAJd3JpdGVfdG9fc3Rkb3V0KGJ1ZiArIChsb2dfYnVmX2xlbiAt
+wqDCoGxvZ2dlZF9jaGFycyksCj4gPiA+ID4gPiBsb2dnZWRfY2hhcnMpOwo+ID4gPiA+ID4gwqB9
+Cj4gPiA+ID4gPiDCoAo+ID4gPiA+IAo+ID4gPiAKPiA+ID4gU2ltb24sCj4gPiA+IAo+ID4gPiBX
+aGF0J3MgeW91ciBvcGluaW9uIGFib3V0IHRoaXMgcGF0Y2g/IEl0IGlzIGEgcmggaW50ZXJuYWwg
+cmVwb3J0Lgo+ID4gPiBDdXJyZW50IGNvZGUgbWFrZSBzZW5zZSwgYWRkaW5nIHRoZSBwYXRjaCB3
+aWxsIGJlIHNsaWdodCBiZXR0ZXIgdGhvdWdoCj4gPiA+IGZvciBrZHVtcCBjYXNlLiBCdXQgaWYg
+eW91IGRvIG5vdCBsaWtlIGl0IHdlIGNhbiBpZ25vcmUgaXQgYW5kIGNsb3NlCj4gPiA+IHRoZSBi
+dWcuCj4gPiAKPiA+IFRoaXMgc2VlbXMgcmVhc29uYWJsZSB0byBtZSwgYnV0IHBlcmhhcHMgdGhl
+IGxvZ2ljIHNob3VsZCBvbmx5IGtpY2sKPiA+IGluIGlmIGxvZ2dlZF9jaGFycyBpcyAwPwo+ID4g
+Cj4gCj4gSXQgd2lsbCBjb250YWluIGF0IGxlYXN0IHBhbmljIG1lc3NhZ2VzIHRvIGl0IGlzIHVu
+bGlrZWx5IGxvZ2dlZF9jaGFycyA9IDA/CgpVbmRlcnN0b29kLiBJIGhhdmUgYXBwbGllZCB0aGUg
+cGF0Y2guCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
