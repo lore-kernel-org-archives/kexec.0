@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 9 Dec 2015 14:58:39 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] kexec: Add --lite option
-Message-ID: <20151209092839.GN16406@dhcppc13.redhat.com>
-References: <1445469125.30908.105.camel@infradead.org>
- <20151022031718.GB11227@dhcp-129-115.nay.redhat.com>
- <20151022125012.GB20847@redhat.com>
- <1445540891.30908.144.camel@infradead.org>
- <1446703011.12676.83.camel@freescale.com>
- <20151207114547.GE16406@dhcppc13.redhat.com>
- <20151207114839.GF16406@dhcppc13.redhat.com>
- <56658696.6070103@arm.com>
- <20151207140755.GG16406@dhcppc13.redhat.com>
- <5666FE91.5010302@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5666FE91.5010302@arm.com>
+Message-ID: <1449708562.24127.39.camel@infradead.org>
+Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 09 Dec 2015 16:49:22 -0800
+In-Reply-To: <20151203093212.GC7023@arm.com>
+References: <cover.1448403503.git.geoff@infradead.org>
+ <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
+ <56586679.8060403@arm.com> <20151130052843.GG23908@dhcppc13.redhat.com>
+ <20151130104027.7eeaa273@why.wild-wind.fr.eu.org>
+ <1449097050.6139.80.camel@infradead.org> <20151203093212.GC7023@arm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,96 +22,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>, Petitboot@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
-Hi James,
+Hi Will,
 
-On 08/12/2015:04:00:17 PM, James Morse wrote:
-> Hi Pratyush,
-> 
-> On 07/12/15 14:07, Pratyush Anand wrote:
-> > On 07/12/2015:01:16:06 PM, James Morse wrote:
-> >> I haven't benchmarked this, but:
-> >>
-> >> util_lib/sha256.c contains calls out to memcpy().
-> >> In your case 1, this will use the glibc version. In case 2, it will use
-> >> the version implemented in purgatory/string.c, which is a byte-by-byte copy.
-> >>
+On Thu, 2015-12-03 at 09:32 +0000, Will Deacon wrote:
+> On Wed, Dec 02, 2015 at 02:57:30PM -0800, Geoff Levand wrote:
+> > On Mon, 2015-11-30 at 10:40 +0000, Marc Zyngier wrote:
 > > 
-> > Yes, I agree that byte copy is too slow. But, memcpy() in sha256_update() will
-> > copy only few bytes (I think max 126 bytes). Most of the data will be processed
-> > using loop while( length >= 64 ){}, where we do not have any memcpy.So, I do not
-> > think that this would be causing such a difference.
+> > > All that can be solved in C, and mostly at compile time. Using an
+> > > assembler trampoline is complicating things for no good reason:
+> > 
+> > I added this into my kexec-v12.1 branch.  After some more testing I'll
+> > post a v13 to the list.
 > 
-> You're right, I benchmarked the two sha256.o files checksumming a 10MB
-> buffer - one takes 0.6s, the other 1.7s, we can probably expect a couple
-> of seconds to do this.
-> 
-> Is the sha256 really useful? Purgatory can't print out an error message,
-> if it fails...
+> You may well need some notrace annotations if you want to run C code
+> here. Can you give it a spin with things like ftrace and kprobes?
 
-kdump needs the sha256 integrity checks. Please see previous reply from Dave,
-Vivek and Eric in this thread.
+I tested ftrace with and without the notrace annotation on
+cpu_soft_restart() and could do kexec re-boots either way.
 
-Purgatory prints error message, in case sha256 fails. It prints expected and
-calculated sha256 values. You must pass --port with proper value to see print
-messages. Geoff has been able to see purgatory debug messages on foundation
-model only with --port, however I need below patch and pass --port-lsr as well
-in order to print all the characters properly.
-https://github.com/pratyushanand/kexec-tools/commit/ab30f4015189b177dd2e78980f5b7e47c2d22fe4
+When cpu_soft_restart() is called we've only done setup_mm_for_reboot(),
+so I would think C code should still be OK.
 
-So, on a system having pl011 base address 0xe1010000, I pass --port=0xe1010000
---port-lsr=0xe1010018,0x80 to the kexec command.
+-Geoff
 
-> 
-> 
-> > Could it be the case that I am not using perfect memory attributes while setting
-> > up identity mapping and enabling D-cache. My implementation is here:
-> > https://github.com/pratyushanand/kexec-tools/commit/8efdbc56b52f99a8a074edd0ddc519d7b68be82f
-> 
-
-First of all, thanks a lot for taking out your time to review it :-)
-
-> I'm no expert, but that looks like you're setting it up as 'normal'
-
-Me too not an expert.
-
-Shouldn't it be normal type memory? I think, I will need to define only UART
-area as device type (currently it is not defined, and so I am not able to use
-print message while mmu is enabled).
-
-> memory. You're missing some isb-s and tlbi-s: depending on how long the
-> changes to system state take, you may be using old memory-attributes or
-> page-tables. If you depend on a change to system state, (like turning
-> the mmu on), you need explicit synchronisation, see section 12.3.2 of
-> the 'Architecture Programmers Guide' (arm den0024a), and D7.1.2 of the
-> ARM ARM.
-
-I will go through these docs and kernel arch/arm64/kernel/head.S and will
-rewrite the cache implementation.
-
-> 
-> I haven't managed to get your kexec-tools branch to work with v10 of
-
-May be you can try master branch. It is almost same as that of Geoff's.
-Additionally, it has support to "wait for transmit completion before next
-character transmission".
-
-> Geoff's series. It looks like you save registers to the stack, which
-> give stale values once you turn the mmu off. You also do the opposite,
-> saving registers with the mmu off, then cleaning cache lines over the
-> top, corrupting the saved registers.
-> 
-> The page size of 64K is hard coded. Kexec-ing from a 4K kernel, to a 4K
-> kernel will work, but only if the hardware also supports 64K, this will
-> be surprising to debug.
-
-OK, I will take care in the re-implementation.
-
-Thanks
-
-~Pratyush
 
 _______________________________________________
 kexec mailing list
