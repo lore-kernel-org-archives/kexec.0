@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5669818A.5000405@arm.com>
-Date: Thu, 10 Dec 2015 13:43:38 +0000
-From: Marc Zyngier <marc.zyngier@arm.com>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a73M2-0004Lm-MS
+ for kexec@lists.infradead.org; Thu, 10 Dec 2015 15:42:06 +0000
+Date: Thu, 10 Dec 2015 16:41:36 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [V6 PATCH 1/6] panic/x86: Fix re-entrance problem due to panic
+ on NMI
+Message-ID: <20151210154136.GA4762@pd.tnic>
+References: <20151210014624.25437.50028.stgit@softrs>
+ <20151210014626.25437.13302.stgit@softrs>
 MIME-Version: 1.0
-Subject: Re: [PATCH v12 12/16] arm64: kdump: implement machine_crash_shutdown()
-References: <cover.1448403503.git.geoff@infradead.org>
- <9ae67f7515c66bfd747486c8dc1c1772913a8d46.1448403503.git.geoff@infradead.org>
- <56586B27.9080508@arm.com> <56696347.4060402@linaro.org>
- <56696593.2070703@arm.com> <56697638.2010501@linaro.org>
-In-Reply-To: <56697638.2010501@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20151210014626.25437.13302.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,254 +25,256 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 10/12/15 12:55, AKASHI Takahiro wrote:
-> On 12/10/2015 08:44 PM, Marc Zyngier wrote:
->> On 10/12/15 11:34, AKASHI Takahiro wrote:
->>> Marc,
->>>
->>> I was back from my vacation.
->>>
->>> On 11/27/2015 11:39 PM, Marc Zyngier wrote:
->>>> On 24/11/15 22:25, Geoff Levand wrote:
->>>>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>>>>
->>>>> kdump calls machine_crash_shutdown() to shut down non-boot cpus and
->>>>> save registers' status in per-cpu ELF notes before starting the crash
->>>>> dump kernel. See kernel_kexec().
->>>>>
->>>>> ipi_cpu_stop() is a bit modified and used to support this behavior.
->>>>>
->>>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>>>> ---
->>>>>    arch/arm64/include/asm/kexec.h    | 34 +++++++++++++++++++++++++++++++++-
->>>>>    arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++--
->>>>>    arch/arm64/kernel/smp.c           | 16 ++++++++++++++--
->>>>>    3 files changed, 76 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
->>>>> index 46d63cd..555a955 100644
->>>>> --- a/arch/arm64/include/asm/kexec.h
->>>>> +++ b/arch/arm64/include/asm/kexec.h
->>>>> @@ -30,6 +30,8 @@
->>>>>
->>>>>    #if !defined(__ASSEMBLY__)
->>>>>
->>>>> +extern bool in_crash_kexec;
->>>>> +
->>>>>    /**
->>>>>     * crash_setup_regs() - save registers for the panic kernel
->>>>>     *
->>>>> @@ -40,7 +42,37 @@
->>>>>    static inline void crash_setup_regs(struct pt_regs *newregs,
->>>>>    				    struct pt_regs *oldregs)
->>>>>    {
->>>>> -	/* Empty routine needed to avoid build errors. */
->>>>> +	if (oldregs) {
->>>>> +		memcpy(newregs, oldregs, sizeof(*newregs));
->>>>> +	} else {
->>>>> +		__asm__ __volatile__ (
->>>>> +			"stp	 x0,   x1, [%3, #16 *  0]\n"
->>>>> +			"stp	 x2,   x3, [%3, #16 *  1]\n"
->>>>> +			"stp	 x4,   x5, [%3, #16 *  2]\n"
->>>>> +			"stp	 x6,   x7, [%3, #16 *  3]\n"
->>>>> +			"stp	 x8,   x9, [%3, #16 *  4]\n"
->>>>> +			"stp	x10,  x11, [%3, #16 *  5]\n"
->>>>> +			"stp	x12,  x13, [%3, #16 *  6]\n"
->>>>> +			"stp	x14,  x15, [%3, #16 *  7]\n"
->>>>> +			"stp	x16,  x17, [%3, #16 *  8]\n"
->>>>> +			"stp	x18,  x19, [%3, #16 *  9]\n"
->>>>> +			"stp	x20,  x21, [%3, #16 * 10]\n"
->>>>> +			"stp	x22,  x23, [%3, #16 * 11]\n"
->>>>> +			"stp	x24,  x25, [%3, #16 * 12]\n"
->>>>> +			"stp	x26,  x27, [%3, #16 * 13]\n"
->>>>> +			"stp	x28,  x29, [%3, #16 * 14]\n"
->>>>> +			"str	x30,	   [%3, #16 * 15]\n"
->>>>> +			"mov	%0, sp\n"
->>>>> +			"adr	%1, 1f\n"
->>>>> +			"mrs	%2, spsr_el1\n"
->>>>> +		"1:"
->>>>> +			: "=r" (newregs->sp),
->>>>> +			  "=r" (newregs->pc),
->>>>> +			  "=r" (newregs->pstate)
->>>>> +			: "r"  (&newregs->regs)
->>>>> +			: "memory"
->>>>> +		);
->>>>
->>>> I wonder how useful this thing is, given that it starts by corrupting
->>>> whatever register is holding newregs->regs. Maybe this is not supposed
->>>> to be accurate anyway...
->>>
->>> I'm not quite sure about what part of my code you're mentioning here, but
->>> crash_setup_regs() is solely called by crash_kexec(), and panic() is
->>> the only caller of crash_kexec() with NULL argument which, in turn, is
->>> used as 'oldregs' in crash_setup_regs().
->>
->> You have this assembly sequence:
->>
->> stp	 x0,   x1, [%3, #16 *  0]
->> [...]
->>
->> where %3 itself is one of the x[0..30] registers.
+On Thu, Dec 10, 2015 at 10:46:26AM +0900, Hidehiro Kawai wrote:
+> If panic on NMI happens just after panic() on the same CPU, panic()
+> is recursively called.  As the result, it stalls after failing to
+> acquire panic_lock.
 > 
-> Not only %3, but also
+> To avoid this problem, don't call panic() in NMI context if
+> we've already entered panic().
 > 
->> So you are saving
->> things that have already been corrupted by the saving procedure. Not
->> sure how useful that is, but as I said, maybe it is not supposed to be
->> completely accurate.
+> V6:
+> - Add a comment about panic_cpu
+> - Replace the magic number -1 for panic_cpu with a macro
 > 
-> x0, x1 ... are the current values in panic(), and not the exact cpu contexts
-> at the place we are really interested in.
-> We have no way here in panic() to know them, but sp and pc would still be useful
-> for back-tracing in later investigation of dump file.
+> V4:
+> - Improve comments in io_check_error() and panic()
 > 
-> Please note that the same problem exists on arm (and x86) implementation.
-
-As I said: if people don't expect to have a precise dump of the register
-file, then fine.
-
->>> Given this fact, I think that the values saved in newregs as indicated above
->>> will be the best estimate of current cpu contexts.
->>>
->>> The other caller of crash_kexec() is die() in traps.c, but here we call
->>> it with explicit cpu contexts at exception.
->>>
->>>>
->>>>> +	}
->>>>>    }
->>>>>
->>>>>    #endif /* !defined(__ASSEMBLY__) */
->>>>> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
->>>>> index da28a26..d2d7e90 100644
->>>>> --- a/arch/arm64/kernel/machine_kexec.c
->>>>> +++ b/arch/arm64/kernel/machine_kexec.c
->>>>> @@ -9,6 +9,7 @@
->>>>>     * published by the Free Software Foundation.
->>>>>     */
->>>>>
->>>>> +#include <linux/kernel.h>
->>>>>    #include <linux/kexec.h>
->>>>>    #include <linux/of_fdt.h>
->>>>>    #include <linux/slab.h>
->>>>> @@ -23,6 +24,7 @@
->>>>>    extern const unsigned char arm64_relocate_new_kernel[];
->>>>>    extern const unsigned long arm64_relocate_new_kernel_size;
->>>>>
->>>>> +bool in_crash_kexec;
->>>>>    static unsigned long kimage_start;
->>>>>
->>>>>    /**
->>>>> @@ -203,13 +205,38 @@ void machine_kexec(struct kimage *kimage)
->>>>>    	 */
->>>>>
->>>>>    	cpu_soft_restart(virt_to_phys(cpu_reset),
->>>>> -		is_hyp_mode_available(),
->>>>> +		in_crash_kexec ? 0 : is_hyp_mode_available(),
->>>>>    		reboot_code_buffer_phys, kimage->head, kimage_start);
->>>>>
->>>>>    	BUG(); /* Should never get here. */
->>>>>    }
->>>>>
->>>>> +/**
->>>>> + * machine_crash_shutdown - shutdown non-boot cpus and save registers
->>>>> + */
->>>>>    void machine_crash_shutdown(struct pt_regs *regs)
->>>>>    {
->>>>> -	/* Empty routine needed to avoid build errors. */
->>>>> +	struct pt_regs dummy_regs;
->>>>> +	int cpu;
->>>>> +
->>>>> +	local_irq_disable();
->>>>> +
->>>>> +	in_crash_kexec = true;
->>>>> +
->>>>> +	/*
->>>>> +	 * clear and initialize the per-cpu info. This is necessary
->>>>> +	 * because, otherwise, slots for offline cpus would never be
->>>>> +	 * filled up. See smp_send_stop().
->>>>> +	 */
->>>>> +	memset(&dummy_regs, 0, sizeof(dummy_regs));
->>>>> +	for_each_possible_cpu(cpu)
->>>>> +		crash_save_cpu(&dummy_regs, cpu);
->>>>> +
->>>>> +	/* shutdown non-boot cpus */
->>>>> +	smp_send_stop();
->>>>> +
->>>>> +	/* for boot cpu */
->>>>> +	crash_save_cpu(regs, smp_processor_id());
->>>>> +
->>>>> +	pr_info("Starting crashdump kernel...\n");
->>>>>    }
->>>>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
->>>>> index b1adc51..15aabef 100644
->>>>> --- a/arch/arm64/kernel/smp.c
->>>>> +++ b/arch/arm64/kernel/smp.c
->>>>> @@ -37,6 +37,7 @@
->>>>>    #include <linux/completion.h>
->>>>>    #include <linux/of.h>
->>>>>    #include <linux/irq_work.h>
->>>>> +#include <linux/kexec.h>
->>>>>
->>>>>    #include <asm/alternative.h>
->>>>>    #include <asm/atomic.h>
->>>>> @@ -54,6 +55,8 @@
->>>>>    #include <asm/ptrace.h>
->>>>>    #include <asm/virt.h>
->>>>>
->>>>> +#include "cpu-reset.h"
->>>>> +
->>>>>    #define CREATE_TRACE_POINTS
->>>>>    #include <trace/events/ipi.h>
->>>>>
->>>>> @@ -683,8 +686,12 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
->>>>>    /*
->>>>>     * ipi_cpu_stop - handle IPI from smp_send_stop()
->>>>>     */
->>>>> -static void ipi_cpu_stop(unsigned int cpu)
->>>>> +static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
->>>>>    {
->>>>> +#ifdef CONFIG_KEXEC
->>>>> +	/* printing messages may slow down the shutdown. */
->>>>> +	if (!in_crash_kexec)
->>>>> +#endif
->>>>>    	if (system_state == SYSTEM_BOOTING ||
->>>>>    	    system_state == SYSTEM_RUNNING) {
->>>>>    		raw_spin_lock(&stop_lock);
->>>>
->>>> Irrespective of how useful this change is, how about having a predicate
->>>> instead? Something like:
->>>>
->>>> static inline bool is_in_crash_kexec(void)
->>>> {
->>>> #ifdef CONFIG_KEXEC
->>>> 	return in_crash_kexec;
->>>> #else
->>>> 	return false;
->>>> #endif
->>>> }
->>>
->>> OK, I will take your idea.
->>>
->>>> located in machine_kexec.c (making the in_crash_kernel static), and then
->>>
->>> but cannot make in_crash_kernel static because it is also used in both smp.c
->>> and machine_kexec.c.
->>
->> smp.c only reads from in_crash_kernel (at least from what I can see in
->> this patch), so it should be able to use the accessor.
+> V3:
+> - Introduce nmi_panic() macro to reduce code duplication
+> - In the case of panic on NMI, don't return from NMI handlers
+>   if another CPU already panicked
 > 
-> Only if we define the accessor as a real function, not an inline function in a header :)
+> V2:
+> - Use atomic_cmpxchg() instead of current spin_trylock() to
+>   exclude concurrent accesses to the panic routines
+> - Don't introduce no-lock version of panic()
+> 
+> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> ---
+>  arch/x86/kernel/nmi.c  |   16 ++++++++++++----
+>  include/linux/kernel.h |   21 +++++++++++++++++++++
+>  kernel/panic.c         |   15 ++++++++++++---
+>  kernel/watchdog.c      |    2 +-
+>  4 files changed, 46 insertions(+), 8 deletions(-)
 
-I'll leave the implementation details in your capable hands. :-)
+Looks better.
 
-Thanks,
+Did some comments cleanup and nmi_panic() macro reformatting so that it
+is more readable and ended up applying this:
 
-	M.
+---
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Thu, 10 Dec 2015 10:46:26 +0900
+Subject: [PATCH] panic, x86: Fix re-entrance problem due to panic on NMI
+
+If panic on NMI happens just after panic() on the same CPU, panic() is
+recursively called. Kernel stalls, as a result, after failing to acquire
+panic_lock.
+
+To avoid this problem, don't call panic() in NMI context if we've
+already entered panic().
+
+For that, introduce nmi_panic() macro to reduce code duplication. In
+the case of panic on NMI, don't return from NMI handlers if another CPU
+already panicked.
+
+Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Aaron Tomlin <atomlin@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Chris Metcalf <cmetcalf@ezchip.com>
+Cc: David Hildenbrand <dahi@linux.vnet.ibm.com>
+Cc: Don Zickus <dzickus@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Gobinda Charan Maji <gobinda.cemk07@gmail.com>
+Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Javi Merino <javi.merino@arm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: kexec@lists.infradead.org
+Cc: linux-doc@vger.kernel.org
+Cc: lkml <linux-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Michal Nazarewicz <mina86@mina86.com>
+Cc: Nicolas Iooss <nicolas.iooss_linux@m4x.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Rusty Russell <rusty@rustcorp.com.au>
+Cc: Seth Jennings <sjenning@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ulrich Obergfell <uobergfe@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Link: http://lkml.kernel.org/r/20151210014626.25437.13302.stgit@softrs
+[ Cleanup comments, fixup formatting. ]
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/x86/kernel/nmi.c  | 16 ++++++++++++----
+ include/linux/kernel.h | 20 ++++++++++++++++++++
+ kernel/panic.c         | 16 +++++++++++++---
+ kernel/watchdog.c      |  2 +-
+ 4 files changed, 46 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 697f90db0e37..292a24bd0553 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -231,7 +231,7 @@ pci_serr_error(unsigned char reason, struct pt_regs *regs)
+ #endif
+ 
+ 	if (panic_on_unrecovered_nmi)
+-		panic("NMI: Not continuing");
++		nmi_panic("NMI: Not continuing");
+ 
+ 	pr_emerg("Dazed and confused, but trying to continue\n");
+ 
+@@ -255,8 +255,16 @@ io_check_error(unsigned char reason, struct pt_regs *regs)
+ 		 reason, smp_processor_id());
+ 	show_regs(regs);
+ 
+-	if (panic_on_io_nmi)
+-		panic("NMI IOCK error: Not continuing");
++	if (panic_on_io_nmi) {
++		nmi_panic("NMI IOCK error: Not continuing");
++
++		/*
++		 * If end up here, it means we have received an NMI while
++		 * processing panic(). Simply return without delaying and
++		 * re-enabling NMI.
++		 */
++		return;
++	}
+ 
+ 	/* Re-enable the IOCK line, wait for a few seconds */
+ 	reason = (reason & NMI_REASON_CLEAR_MASK) | NMI_REASON_CLEAR_IOCHK;
+@@ -297,7 +305,7 @@ unknown_nmi_error(unsigned char reason, struct pt_regs *regs)
+ 
+ 	pr_emerg("Do you have a strange power saving mode enabled?\n");
+ 	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
+-		panic("NMI: Not continuing");
++		nmi_panic("NMI: Not continuing");
+ 
+ 	pr_emerg("Dazed and confused, but trying to continue\n");
+ }
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 350dfb08aee3..750cc5c7c999 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -446,6 +446,26 @@ extern int sysctl_panic_on_stackoverflow;
+ extern bool crash_kexec_post_notifiers;
+ 
+ /*
++ * panic_cpu is used for synchronizing panic() and crash_kexec() execution. It
++ * holds a CPU number which is executing panic() currently. A value of
++ * PANIC_CPU_INVALID means no CPU has entered panic() or crash_kexec().
++ */
++extern atomic_t panic_cpu;
++#define PANIC_CPU_INVALID	-1
++
++/*
++ * A variant of panic() called from NMI context. We return if we've already
++ * panicked on this CPU.
++ */
++#define nmi_panic(fmt, ...)						\
++do {									\
++	int cpu = raw_smp_processor_id();				\
++									\
++	if (atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, cpu) != cpu)	\
++		panic(fmt, ##__VA_ARGS__);				\
++} while (0)
++
++/*
+  * Only to be used by arch init code. If the user over-wrote the default
+  * CONFIG_PANIC_TIMEOUT, honor it.
+  */
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4b150bc0c6c1..3344524cf6ff 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -61,6 +61,8 @@ void __weak panic_smp_self_stop(void)
+ 		cpu_relax();
+ }
+ 
++atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
++
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -71,17 +73,17 @@ void __weak panic_smp_self_stop(void)
+  */
+ void panic(const char *fmt, ...)
+ {
+-	static DEFINE_SPINLOCK(panic_lock);
+ 	static char buf[1024];
+ 	va_list args;
+ 	long i, i_next = 0;
+ 	int state = 0;
++	int old_cpu, this_cpu;
+ 
+ 	/*
+ 	 * Disable local interrupts. This will prevent panic_smp_self_stop
+ 	 * from deadlocking the first cpu that invokes the panic, since
+ 	 * there is nothing to prevent an interrupt handler (that runs
+-	 * after the panic_lock is acquired) from invoking panic again.
++	 * after setting panic_cpu) from invoking panic() again.
+ 	 */
+ 	local_irq_disable();
+ 
+@@ -94,8 +96,16 @@ void panic(const char *fmt, ...)
+ 	 * multiple parallel invocations of panic, all other CPUs either
+ 	 * stop themself or will wait until they are stopped by the 1st CPU
+ 	 * with smp_send_stop().
++	 *
++	 * `old_cpu == PANIC_CPU_INVALID' means this is the 1st CPU which
++	 * comes here, so go ahead.
++	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
++	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
+ 	 */
+-	if (!spin_trylock(&panic_lock))
++	this_cpu = raw_smp_processor_id();
++	old_cpu  = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
++
++	if (old_cpu != PANIC_CPU_INVALID && old_cpu != this_cpu)
+ 		panic_smp_self_stop();
+ 
+ 	console_verbose();
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 18f34cf75f74..b9be18fae154 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -351,7 +351,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
+ 			trigger_allbutself_cpu_backtrace();
+ 
+ 		if (hardlockup_panic)
+-			panic("Hard LOCKUP");
++			nmi_panic("Hard LOCKUP");
+ 
+ 		__this_cpu_write(hard_watchdog_warn, true);
+ 		return;
 -- 
-Jazz is not dead. It just smells funny...
+2.3.5
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
 
 _______________________________________________
 kexec mailing list
