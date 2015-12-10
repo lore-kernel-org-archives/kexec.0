@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6qMX-0007iw-2F
+ id 1a6qMW-0007ii-DI
  for kexec@lists.infradead.org; Thu, 10 Dec 2015 01:49:44 +0000
-Subject: [V6 PATCH 6/6] Documentation: Add documentation for
- kernel.panic_on_io_nmi sysctl
+Subject: [V6 PATCH 5/6] x86/nmi: Fix to save registers for crash dump on
+ external NMI broadcast
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Thu, 10 Dec 2015 10:46:37 +0900
-Message-ID: <20151210014637.25437.71903.stgit@softrs>
+Date: Thu, 10 Dec 2015 10:46:35 +0900
+Message-ID: <20151210014634.25437.217.stgit@softrs>
 In-Reply-To: <20151210014624.25437.50028.stgit@softrs>
 References: <20151210014624.25437.50028.stgit@softrs>
 MIME-Version: 1.0
@@ -24,48 +24,130 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Cc: Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-kernel.panic_on_io_nmi sysctl was introduced by commit 5211a242d0cb
-("x86: Add sysctl to allow panic on IOCK NMI error"), but its
-documentation is missing. So, add it.
+Now, multiple CPUs can receive external NMI simultaneously by
+specifying "apic_extnmi=all" as an boot option.  When we take a
+crash dump by using external NMI with this option, we fail to save
+register values into the crash dump.  This happens as follows:
+
+  CPU 0                              CPU 1
+  ================================   =============================
+  receive an external NMI
+  default_do_nmi()                   receive an external NMI
+    spin_lock(&nmi_reason_lock)      default_do_nmi()
+    io_check_error()                   spin_lock(&nmi_reason_lock)
+      panic()                            busy loop
+      ...
+        kdump_nmi_shootdown_cpus()
+          issue NMI IPI -----------> blocked until IRET
+                                         busy loop...
+
+  Here, since CPU 1 is in NMI context, additional NMI from CPU 0
+  is blocked until CPU 1 executes IRET.  However, CPU 1 never
+  executes IRET, so the NMI is not handled and the callback function
+  to save registers is never called.
+
+To solve this issue, we check if the IPI for crash dumping was
+issued while waiting for nmi_reason_lock to be released, and if so,
+call its callback function directly.  If the IPI is not issued (e.g.
+kdump is disabled), the actual behavior doesn't change.
 
 V6:
-- Newly added
+- Separated from the former patch `panic/x86: Allow cpus to save
+  registers even if they are looping in NMI context'
+- Fix comments
+- Remove unneeded UP version of poll_crash_ipi_and_calback
+- Rename poll_crash_ipi_and_callback to run_crash_ipi_callback
 
 Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
 ---
- Documentation/sysctl/kernel.txt |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/x86/include/asm/reboot.h |    1 +
+ arch/x86/kernel/nmi.c         |   11 ++++++++++-
+ arch/x86/kernel/reboot.c      |   18 +++++++++++++-----
+ 3 files changed, 24 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index af70d15..235f804 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -551,6 +551,21 @@ the recommended setting is 60.
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index a82c4f1..2cb1cc2 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -25,5 +25,6 @@ void __noreturn machine_real_restart(unsigned int type);
  
- ==============================================================
+ typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback);
++void run_crash_ipi_callback(struct pt_regs *regs);
  
-+panic_on_io_nmi:
-+
-+Controls the kernel's behavior when a CPU receives an NMI caused by
-+an IO error.
-+
-+0: try to continue operation (default)
-+
-+1: panic immediately. The IO error triggered NMI indicates a serious
-+   system condition, which could result in IO data corruption. Rather
-+   than continuing, panicking might be a better choice. Some servers
-+   issue this sort of NMI when the dump button is pushed, and you
-+   can use this option to take a crash dump
-+
-+==============================================================
-+
- panic_on_oops:
+ #endif /* _ASM_X86_REBOOT_H */
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 5e00de7..cbfa0b5 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -29,6 +29,7 @@
+ #include <asm/mach_traps.h>
+ #include <asm/nmi.h>
+ #include <asm/x86_init.h>
++#include <asm/reboot.h>
  
- Controls the kernel's behaviour when an oops or BUG is encountered.
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/nmi.h>
+@@ -357,7 +358,15 @@ static void default_do_nmi(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Non-CPU-specific NMI: NMI sources can be processed on any CPU */
+-	raw_spin_lock(&nmi_reason_lock);
++	/*
++	 * Another CPU may be processing panic routines while holding
++	 * nmi_reason_lock.  Check if the CPU issued the IPI for crash
++	 * dumping, and if so, call its callback directly.  If there is
++	 * no CPU preparing crash dump, we simply loop here without doing
++	 * special things.
++	 */
++	while (!raw_spin_trylock(&nmi_reason_lock))
++		run_crash_ipi_callback(regs);
+ 	reason = x86_platform.get_nmi_reason();
+ 
+ 	if (reason & NMI_REASON_MASK) {
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 1da1302..60a216b 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -793,17 +793,25 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ 	/* Leave the nmi callback set */
+ }
+ 
++/*
++ * Wait for the crash dumping IPI to be issued, and then call its callback
++ * directly.  This function is used when we have already been in NMI handler.
++ */
++void run_crash_ipi_callback(struct pt_regs *regs)
++{
++	if (crash_ipi_issued)
++		crash_nmi_callback(0, regs); /* Don't return */
++}
++
+ /* Override the weak function in kernel/panic.c */
+ void nmi_panic_self_stop(struct pt_regs *regs)
+ {
+ 	while (1) {
+ 		/*
+-		 * Wait for the crash dumping IPI to be issued, and then
+-		 * call its callback directly.
++		 * If there is no CPU preparing crash dump, we simply loop
++		 * here without doing special things.
+ 		 */
+-		if (READ_ONCE(crash_ipi_issued))
+-			crash_nmi_callback(0, regs); /* Don't return */
+-
++		run_crash_ipi_callback(regs);
+ 		cpu_relax();
+ 	}
+ }
 
 
 
