@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1449708562.24127.39.camel@infradead.org>
-Subject: Re: [PATCH v12 05/16] arm64: Add back cpu_reset routines
-From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 09 Dec 2015 16:49:22 -0800
-In-Reply-To: <20151203093212.GC7023@arm.com>
-References: <cover.1448403503.git.geoff@infradead.org>
- <3279584774ba40f088b79f4df864d69a5b57b516.1448403503.git.geoff@infradead.org>
- <56586679.8060403@arm.com> <20151130052843.GG23908@dhcppc13.redhat.com>
- <20151130104027.7eeaa273@why.wild-wind.fr.eu.org>
- <1449097050.6139.80.camel@infradead.org> <20151203093212.GC7023@arm.com>
-Mime-Version: 1.0
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a6qMW-0007i1-BK
+ for kexec@lists.infradead.org; Thu, 10 Dec 2015 01:49:41 +0000
+Subject: [V6 PATCH 0/6] Fix race issues among panic, NMI and crash_kexec
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Thu, 10 Dec 2015 10:46:24 +0900
+Message-ID: <20151210014624.25437.50028.stgit@softrs>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,31 +20,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-Hi Will,
+When an HA clustering software or administrator detects unresponsiveness
+of a host, they issue an NMI to the host to completely stop current
+works and take a crash dump.  If the kernel has already panicked
+or is capturing a crash dump at that time, further NMI can cause
+a crash dump failure.
 
-On Thu, 2015-12-03 at 09:32 +0000, Will Deacon wrote:
-> On Wed, Dec 02, 2015 at 02:57:30PM -0800, Geoff Levand wrote:
-> > On Mon, 2015-11-30 at 10:40 +0000, Marc Zyngier wrote:
-> > 
-> > > All that can be solved in C, and mostly at compile time. Using an
-> > > assembler trampoline is complicating things for no good reason:
-> > 
-> > I added this into my kexec-v12.1 branch.  After some more testing I'll
-> > post a v13 to the list.
-> 
-> You may well need some notrace annotations if you want to run C code
-> here. Can you give it a spin with things like ftrace and kprobes?
+Also, crash_kexec() called from oops context and panic() can
+cause race conditions.
 
-I tested ftrace with and without the notrace annotation on
-cpu_soft_restart() and could do kexec re-boots either way.
+To solve these issues, this patch set does following things:
 
-When cpu_soft_restart() is called we've only done setup_mm_for_reboot(),
-so I would think C code should still be OK.
+- Don't call panic() on NMI if the kernel has already panicked
+- Extend exclusion control currently done by panic_lock to crash_kexec
+- Introduce "apic_extnmi=none" boot option which masks external NMI
+  NMI at the boot time
 
--Geoff
+Additionally, "apic_extnmi=all" is provieded.  This option unmasks
+external NMI for all CPUs.  This would help cause kernel panic even if
+CPU 0 can't handle an external NMI due to hang-up in NMI context
+or being handled by other NMI handlers.
+
+This patch set can be applied to current -tip tree.
+
+V6:
+- Update comments and patch descriptions all over the patch series
+- Add documentation for kernel.panic_on_io_nmi sysctl (PATCH 6/6)
+- Separate PATCH 5/6 from PATCH 2/6 because the portion is actually
+  needed for "apic_extnmi=all" case introduced by PATCH 4/6
+- ...and various fixes (please see the change logs in each patch
+  description for details)
+
+V5: https://lkml.org/lkml/2015/11/20/228
+- Use WRITE_ONCE() for crash_ipi_done to keep the instruction order
+  (PATCH 2/4)
+- Address concurrent unknown/external NMI case, too (PATCH 2/4)
+- Fix build errors (PATCH 3/4)
+- Rename "noextnmi" boot option to "apic_extnmi" and expand its
+  feature (PATCH 4/4)
+
+V4: https://lkml.org/lkml/2015/9/25/193
+- Improve comments and descriptions (PATCH 1/4 to 3/4)
+- Use new __crash_kexec(), no exclusion check version of crash_kexec(),
+  instead of checking if panic_cpu is the current cpu or not
+  (PATCH 3/4)
+
+V3: https://lkml.org/lkml/2015/8/6/39
+- Introduce nmi_panic() macro to reduce code duplication
+- In the case of panic on NMI, don't return from NMI handlers
+  if another cpu already panicked
+
+V2: https://lkml.org/lkml/2015/7/27/31
+- Use atomic_cmpxchg() instead of current spin_trylock() to exclude
+  concurrent accesses to panic() and crash_kexec()
+- Don't introduce no-lock version of panic() and crash_kexec()
+
+V1: https://lkml.org/lkml/2015/7/22/81
+
+---
+
+Hidehiro Kawai (6):
+      panic/x86: Fix re-entrance problem due to panic on NMI
+      panic/x86: Allow CPUs to save registers even if they are looping in NMI context
+      kexec: Fix race between panic() and crash_kexec() called directly
+      x86/apic: Introduce apic_extnmi boot option
+      x86/nmi: Fix to save registers for crash dump on external NMI broadcast
+      Documentation: Add documentation for kernel.panic_on_io_nmi sysctl
+
+
+ Documentation/kernel-parameters.txt |    9 +++++++++
+ Documentation/sysctl/kernel.txt     |   15 +++++++++++++++
+ arch/x86/include/asm/apic.h         |    5 +++++
+ arch/x86/include/asm/reboot.h       |    1 +
+ arch/x86/kernel/apic/apic.c         |   35 +++++++++++++++++++++++++++++++++--
+ arch/x86/kernel/nmi.c               |   27 ++++++++++++++++++++++-----
+ arch/x86/kernel/reboot.c            |   28 ++++++++++++++++++++++++++++
+ include/linux/kernel.h              |   29 +++++++++++++++++++++++++++++
+ include/linux/kexec.h               |    2 ++
+ kernel/kexec_core.c                 |   30 +++++++++++++++++++++++++++++-
+ kernel/panic.c                      |   29 ++++++++++++++++++++++++-----
+ kernel/watchdog.c                   |    2 +-
+ 12 files changed, 198 insertions(+), 14 deletions(-)
+
+
+-- 
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
+
 
 
 _______________________________________________
