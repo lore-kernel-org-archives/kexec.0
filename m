@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail9.hitachi.co.jp ([133.145.228.44])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6qMX-0007id-3j
+ id 1a6qMX-0007iW-2T
  for kexec@lists.infradead.org; Thu, 10 Dec 2015 01:49:45 +0000
-Subject: [V6 PATCH 4/6] x86/apic: Introduce apic_extnmi boot option
+Subject: [V6 PATCH 1/6] panic/x86: Fix re-entrance problem due to panic on NMI
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Thu, 10 Dec 2015 10:46:32 +0900
-Message-ID: <20151210014632.25437.43778.stgit@softrs>
+Date: Thu, 10 Dec 2015 10:46:26 +0900
+Message-ID: <20151210014626.25437.13302.stgit@softrs>
 In-Reply-To: <20151210014624.25437.50028.stgit@softrs>
 References: <20151210014624.25437.50028.stgit@softrs>
 MIME-Version: 1.0
@@ -25,141 +25,180 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-This patch introduces new boot option, apic_extnmi:
+If panic on NMI happens just after panic() on the same CPU, panic()
+is recursively called.  As the result, it stalls after failing to
+acquire panic_lock.
 
- apic_extnmi={ bsp | all | none}
-
-The default value is "bsp" and this is the current behavior; only
-BSP receives external NMI.  "all" allows external NMIs to be
-broadcast to all CPUs.  This would raise the success rate of panic
-on NMI when BSP hangs up in NMI context or the external NMI is
-swallowed by other NMI handlers on BSP.  If you specified "none",
-any CPUs don't receive external NMIs.  This is useful for dump
-capture kernel so that it wouldn't be shot down while saving a
-crash dump.
+To avoid this problem, don't call panic() in NMI context if
+we've already entered panic().
 
 V6:
-- Fix comments
-- Change to use strncmp to parse the value of "apic_extnmi="
-- Make apic_set_extnmi() return -EINVAL if the given value is invalid
+- Add a comment about panic_cpu
+- Replace the magic number -1 for panic_cpu with a macro
 
-V5:
-- Rename the option from "noextnmi" to "apic_extnmi"
-- Add apic_extnmi=all feature
-- Fix the wrong documentation about "noextnmi" (apic_extnmi=none)
+V4:
+- Improve comments in io_check_error() and panic()
+
+V3:
+- Introduce nmi_panic() macro to reduce code duplication
+- In the case of panic on NMI, don't return from NMI handlers
+  if another CPU already panicked
+
+V2:
+- Use atomic_cmpxchg() instead of current spin_trylock() to
+  exclude concurrent accesses to the panic routines
+- Don't introduce no-lock version of panic()
 
 Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
 ---
- Documentation/kernel-parameters.txt |    9 +++++++++
- arch/x86/include/asm/apic.h         |    5 +++++
- arch/x86/kernel/apic/apic.c         |   35 +++++++++++++++++++++++++++++++++--
- 3 files changed, 47 insertions(+), 2 deletions(-)
+ arch/x86/kernel/nmi.c  |   16 ++++++++++++----
+ include/linux/kernel.h |   21 +++++++++++++++++++++
+ kernel/panic.c         |   15 ++++++++++++---
+ kernel/watchdog.c      |    2 +-
+ 4 files changed, 46 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index 742f69d..74acea5 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -472,6 +472,15 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			Change the amount of debugging information output
- 			when initialising the APIC and IO-APIC components.
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 697f90d..5131714 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -231,7 +231,7 @@ pci_serr_error(unsigned char reason, struct pt_regs *regs)
+ #endif
  
-+	apic_extnmi=	[APIC,X86] External NMI delivery setting
-+			Format: { bsp (default) | all | none }
-+			bsp:  External NMI is delivered only to CPU 0
-+			all:  External NMIs are broadcast to all CPUs as a
-+			      backup of CPU 0
-+			none: External NMI is masked for all CPUs. This is
-+			      useful so that a dump capture kernel won't be
-+			      shot down by NMI
+ 	if (panic_on_unrecovered_nmi)
+-		panic("NMI: Not continuing");
++		nmi_panic("NMI: Not continuing");
+ 
+ 	pr_emerg("Dazed and confused, but trying to continue\n");
+ 
+@@ -255,8 +255,16 @@ io_check_error(unsigned char reason, struct pt_regs *regs)
+ 		 reason, smp_processor_id());
+ 	show_regs(regs);
+ 
+-	if (panic_on_io_nmi)
+-		panic("NMI IOCK error: Not continuing");
++	if (panic_on_io_nmi) {
++		nmi_panic("NMI IOCK error: Not continuing");
 +
- 	autoconf=	[IPV6]
- 			See Documentation/networking/ipv6.txt.
++		/*
++		 * If we return from nmi_panic(), it means we have received
++		 * NMI while processing panic().  So, simply return without
++		 * a delay and re-enabling NMI.
++		 */
++		return;
++	}
  
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 7f62ad4..c80f6b6 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -23,6 +23,11 @@
- #define APIC_VERBOSE 1
- #define APIC_DEBUG   2
+ 	/* Re-enable the IOCK line, wait for a few seconds */
+ 	reason = (reason & NMI_REASON_CLEAR_MASK) | NMI_REASON_CLEAR_IOCHK;
+@@ -297,7 +305,7 @@ unknown_nmi_error(unsigned char reason, struct pt_regs *regs)
  
-+/* Macros for apic_extnmi which controls external NMI masking */
-+#define APIC_EXTNMI_BSP		0 /* Default */
-+#define APIC_EXTNMI_ALL		1
-+#define APIC_EXTNMI_NONE	2
-+
+ 	pr_emerg("Do you have a strange power saving mode enabled?\n");
+ 	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
+-		panic("NMI: Not continuing");
++		nmi_panic("NMI: Not continuing");
+ 
+ 	pr_emerg("Dazed and confused, but trying to continue\n");
+ }
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 350dfb0..db66867 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -446,6 +446,27 @@ extern int sysctl_panic_on_stackoverflow;
+ extern bool crash_kexec_post_notifiers;
+ 
  /*
-  * Define the default level of output to be very little
-  * This can be turned up by using apic=verbose for more
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 8d7df74..162d2bd 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -82,6 +82,12 @@ physid_mask_t phys_cpu_present_map;
- static unsigned int disabled_cpu_apicid __read_mostly = BAD_APICID;
- 
- /*
-+ * This variable controls which CPUs receive external NMIs.  By default,
-+ * external NMIs are delivered only to the BSP.
++ * panic_cpu holds a panicking CPU number and is used for exclusive
++ * execution of panic and crash_kexec routines. If the value is
++ * PANIC_CPU_INVALID, it means that none of CPU has entered panic or
++ * crash_kexec.
 + */
-+static int apic_extnmi = APIC_EXTNMI_BSP;
++extern atomic_t panic_cpu;
++#define PANIC_CPU_INVALID	-1
 +
 +/*
-  * Map cpu index to physical APIC ID
++ * A variant of panic() called from NMI context.
++ * If we've already panicked on this CPU, return from here.
++ */
++#define nmi_panic(fmt, ...)						\
++	do {								\
++		int this_cpu = raw_smp_processor_id();			\
++		if (atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu) \
++		    != this_cpu)					\
++			panic(fmt, ##__VA_ARGS__);			\
++	} while (0)
++
++/*
+  * Only to be used by arch init code. If the user over-wrote the default
+  * CONFIG_PANIC_TIMEOUT, honor it.
   */
- DEFINE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_cpu_to_apicid, BAD_APICID);
-@@ -1161,6 +1167,8 @@ void __init init_bsp_APIC(void)
- 	value = APIC_DM_NMI;
- 	if (!lapic_is_integrated())		/* 82489DX */
- 		value |= APIC_LVT_LEVEL_TRIGGER;
-+	if (apic_extnmi == APIC_EXTNMI_NONE)
-+		value |= APIC_LVT_MASKED;
- 	apic_write(APIC_LVT1, value);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 4b150bc..3261e2d 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -61,6 +61,8 @@ void __weak panic_smp_self_stop(void)
+ 		cpu_relax();
  }
  
-@@ -1378,9 +1386,11 @@ void setup_local_APIC(void)
- 	apic_write(APIC_LVT0, value);
++atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
++
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -71,17 +73,17 @@ void __weak panic_smp_self_stop(void)
+  */
+ void panic(const char *fmt, ...)
+ {
+-	static DEFINE_SPINLOCK(panic_lock);
+ 	static char buf[1024];
+ 	va_list args;
+ 	long i, i_next = 0;
+ 	int state = 0;
++	int old_cpu, this_cpu;
  
  	/*
--	 * only the BP should see the LINT1 NMI signal, obviously.
-+	 * Only the BP sees the LINT1 NMI signal by default.  This can be
-+	 * modified by apic_extnmi= boot option.
+ 	 * Disable local interrupts. This will prevent panic_smp_self_stop
+ 	 * from deadlocking the first cpu that invokes the panic, since
+ 	 * there is nothing to prevent an interrupt handler (that runs
+-	 * after the panic_lock is acquired) from invoking panic again.
++	 * after setting panic_cpu) from invoking panic again.
  	 */
--	if (!cpu)
-+	if ((!cpu && apic_extnmi != APIC_EXTNMI_NONE) ||
-+	    apic_extnmi == APIC_EXTNMI_ALL)
- 		value = APIC_DM_NMI;
- 	else
- 		value = APIC_DM_NMI | APIC_LVT_MASKED;
-@@ -2557,3 +2567,24 @@ static int __init apic_set_disabled_cpu_apicid(char *arg)
- 	return 0;
- }
- early_param("disable_cpu_apicid", apic_set_disabled_cpu_apicid);
-+
-+static int __init apic_set_extnmi(char *arg)
-+{
-+	if (!arg)
-+		return -EINVAL;
-+
-+	if (!strncmp("all", arg, 3))
-+		apic_extnmi = APIC_EXTNMI_ALL;
-+	else if (!strncmp("none", arg, 4))
-+		apic_extnmi = APIC_EXTNMI_NONE;
-+	else if (!strncmp("bsp", arg, 3))
-+		apic_extnmi = APIC_EXTNMI_BSP;
-+	else {
-+		pr_warn("Unknown external NMI delivery mode `%s' ignored\n",
-+			arg);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+early_param("apic_extnmi", apic_set_extnmi);
+ 	local_irq_disable();
+ 
+@@ -94,8 +96,15 @@ void panic(const char *fmt, ...)
+ 	 * multiple parallel invocations of panic, all other CPUs either
+ 	 * stop themself or will wait until they are stopped by the 1st CPU
+ 	 * with smp_send_stop().
++	 *
++	 * `old_cpu == PANIC_CPU_INVALID' means this is the 1st CPU which
++	 * comes here, so go ahead.
++	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
++	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
+ 	 */
+-	if (!spin_trylock(&panic_lock))
++	this_cpu = raw_smp_processor_id();
++	old_cpu = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
++	if (old_cpu != PANIC_CPU_INVALID && old_cpu != this_cpu)
+ 		panic_smp_self_stop();
+ 
+ 	console_verbose();
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 18f34cf..b9be18f 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -351,7 +351,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
+ 			trigger_allbutself_cpu_backtrace();
+ 
+ 		if (hardlockup_panic)
+-			panic("Hard LOCKUP");
++			nmi_panic("Hard LOCKUP");
+ 
+ 		__this_cpu_write(hard_watchdog_warn, true);
+ 		return;
 
 
 
