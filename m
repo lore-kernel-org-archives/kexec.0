@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a6wR0-0004KA-QO
- for kexec@lists.infradead.org; Thu, 10 Dec 2015 08:19:19 +0000
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by casper.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a6aq6-000103-Ci
+ for kexec@lists.infradead.org; Wed, 09 Dec 2015 09:15:12 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 0/4] ARM64: 3 Level page support
-Date: Thu, 10 Dec 2015 08:14:52 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E0C31E@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1449332470.git.panand@redhat.com>
-In-Reply-To: <cover.1449332470.git.panand@redhat.com>
+Subject: RE: [PATCH RFC 00/11] makedumpfile: parallel processing
+Date: Thu, 10 Dec 2015 08:14:41 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E0C319@BPXM01GP.gisp.nec.co.jp>
+References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <5575123D.8090506@cn.fujitsu.com>
+ <1831406384.24254782.1448959169018.JavaMail.zimbra@redhat.com>
+ <565E81A7.4080604@cn.fujitsu.com>
+ <20151202072443.GD2899@dhcp-128-65.nay.redhat.com>
+ <565E9FFE.20501@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E09F28@BPXM01GP.gisp.nec.co.jp>
+ <56610990.2090607@cn.fujitsu.com>
+In-Reply-To: <56610990.2090607@cn.fujitsu.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -19,49 +26,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "timur@codeaurora.org" <timur@codeaurora.org>, "asamson@codeaurora.org" <asamson@codeaurora.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "rruigrok@codeaurora.org" <rruigrok@codeaurora.org>, "sgoel@codeaurora.org" <sgoel@codeaurora.org>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello Pratyush,
-
->Hi Atsushi,
->
->ARM64 was supporting only two level page support. These patches add support
->for 3 level page table as well.
->
->~Pratyush
-
-Thanks for your work, I'll merge these patches into v1.6.0.
-
-Regards,
-Atsushi Kumagai
-
->Pratyush Anand (3):
->  ARM64: Refactor code to support multiple page level
->  arm64: Decide VA Bits on the basis of _stext symbol value
->  arm64: Fix KVBASE
->
->Sameer Goel (1):
->  arm64: Fix for ARM64 3 level translation tables
->
-> arch/arm64.c   | 103 +++++++++++++++++++++++++++++++++++++++++++++++++++------
-> makedumpfile.h |  29 +++-------------
-> 2 files changed, 98 insertions(+), 34 deletions(-)
->
->--
->2.5.0
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PkhlbGxvIEt1bWFnYWksDQo+DQo+T24gMTIvMDQvMjAxNSAxMDozMCBBTSwgQXRzdXNoaSBLdW1h
+Z2FpIHdyb3RlOg0KPj4gSGVsbG8sIFpob3UNCj4+DQo+Pj4gT24gMTIvMDIvMjAxNSAwMzoyNCBQ
+TSwgRGF2ZSBZb3VuZyB3cm90ZToNCj4+Pj4gSGksDQo+Pj4+DQo+Pj4+IE9uIDEyLzAyLzE1IGF0
+IDAxOjI5cG0sICJaaG91LCBXZW5qaWFuL+WRqOaWh+WJkSIgd3JvdGU6DQo+Pj4+PiBJIHRoaW5r
+IHRoZXJlIGlzIG5vIHByb2JsZW0gaWYgb3RoZXIgdGVzdCByZXN1bHRzIGFyZSBhcyBleHBlY3Rl
+ZC4NCj4+Pj4+DQo+Pj4+PiAtLW51bS10aHJlYWRzIG1haW5seSByZWR1Y2VzIHRoZSB0aW1lIG9m
+IGNvbXByZXNzaW5nLg0KPj4+Pj4gU28gZm9yIGx6bywgaXQgY2FuJ3QgZG8gbXVjaCBoZWxwIGF0
+IG1vc3Qgb2YgdGltZS4NCj4+Pj4NCj4+Pj4gU2VlbXMgdGhlIGhlbHAgb2YgLS1udW0tdGhyZWFk
+cyBkb2VzIG5vdCBzYXkgaXQgZXhhY3RseToNCj4+Pj4NCj4+Pj4gICAgIFstLW51bS10aHJlYWRz
+IFRIUkVBRE5VTV06DQo+Pj4+ICAgICAgICAgVXNpbmcgbXVsdGlwbGUgdGhyZWFkcyB0byByZWFk
+IGFuZCBjb21wcmVzcyBkYXRhIG9mIGVhY2ggcGFnZSBpbiBwYXJhbGxlbC4NCj4+Pj4gICAgICAg
+ICBBbmQgaXQgd2lsbCByZWR1Y2VzIHRpbWUgZm9yIHNhdmluZyBEVU1QRklMRS4NCj4+Pj4gICAg
+ICAgICBUaGlzIGZlYXR1cmUgb25seSBzdXBwb3J0cyBjcmVhdGluZyBEVU1QRklMRSBpbiBrZHVt
+cC1jb21yZXNzZWQgZm9ybWF0IGZyb20NCj4+Pj4gICAgICAgICBWTUNPUkUgaW4ga2R1bXAtY29t
+cHJlc3NlZCBmb3JtYXQgb3IgZWxmIGZvcm1hdC4NCj4+Pj4NCj4+Pj4gTHpvIGlzIGFsc28gYSBj
+b21wcmVzcyBtZXRob2QsIGl0IHNob3VsZCBiZSBtZW50aW9uZWQgdGhhdCAtLW51bS10aHJlYWRz
+IG9ubHkNCj4+Pj4gc3VwcG9ydHMgemxpYiBjb21wcmVzc2VkIHZtY29yZS4NCj4+Pj4NCj4+Pg0K
+Pj4+IFNvcnJ5LCBpdCBzZWVtcyB0aGF0IHNvbWV0aGluZyBJIHNhaWQgaXMgbm90IHNvIGNsZWFy
+Lg0KPj4+IGx6byBpcyBhbHNvIHN1cHBvcnRlZC4gU2luY2UgbHpvIGNvbXByZXNzZXMgZGF0YSBh
+dCBhIGhpZ2ggc3BlZWQsIHRoZQ0KPj4+IGltcHJvdmluZyBvZiB0aGUgcGVyZm9ybWFuY2UgaXMg
+bm90IHNvIG9idmlvdXMgYXQgbW9zdCBvZiB0aW1lLg0KPj4+DQo+Pj4+IEFsc28gd29ydGggdG8g
+bWVudGlvbiBhYm91dCB0aGUgcmVjb21tZW5kZWQgLWQgdmFsdWUgZm9yIHRoaXMgZmVhdHVyZS4N
+Cj4+Pj4NCj4+Pg0KPj4+IFllcywgSSB0aGluayBpdCdzIHdvcnRoLiBJIGZvcmdvdCBpdC4NCj4+
+DQo+PiBJIHNhdyB5b3VyIHBhdGNoLCBidXQgSSB0aGluayBJIHNob3VsZCBjb25maXJtIHdoYXQg
+aXMgdGhlIHByb2JsZW0gZmlyc3QuDQo+Pg0KPj4+IEhvd2V2ZXIsIHdoZW4gIi1kIDMxIiBpcyBz
+cGVjaWZpZWQsIGl0IHdpbGwgYmUgd29yc2UuDQo+Pj4gTGVzcyB0aGFuIDUwIGJ1ZmZlcnMgYXJl
+IHVzZWQgdG8gY2FjaGUgdGhlIGNvbXByZXNzZWQgcGFnZS4NCj4+PiBBbmQgZXZlbiB0aGUgcGFn
+ZSBoYXMgYmVlbiBmaWx0ZXJlZCwgaXQgd2lsbCBhbHNvIHRha2UgYSBidWZmZXIuDQo+Pj4gU28g
+aWYgIi1kIDMxIiBpcyBzcGVjaWZpZWQsIHRoZSBmaWx0ZXJlZCBwYWdlIHdpbGwgdXNlIGEgbG90
+DQo+Pj4gb2YgYnVmZmVycy4gVGhlbiB0aGUgcGFnZSB3aGljaCBuZWVkcyB0byBiZSBjb21wcmVz
+c2VkIGNhbid0DQo+Pj4gYmUgY29tcHJlc3NlZCBwYXJhbGxlbC4NCj4+DQo+PiBDb3VsZCB5b3Ug
+ZXhwbGFpbiB3aHkgY29tcHJlc3Npb24gd2lsbCBub3QgYmUgcGFyYWxsZWwgaW4gbW9yZSBkZXRh
+aWwgPw0KPj4gQWN0dWFsbHkgdGhlIGJ1ZmZlcnMgYXJlIHVzZWQgYWxzbyBmb3IgZmlsdGVyZWQg
+cGFnZXMsIGl0IHNvdW5kcyBpbmVmZmljaWVudC4NCj4+IEhvd2V2ZXIsIEkgZG9uJ3QgdW5kZXJz
+dGFuZCB3aHkgaXQgcHJldmVudHMgcGFyYWxsZWwgY29tcHJlc3Npb24uDQo+Pg0KPg0KPlRoaW5r
+IGFib3V0IHRoaXMsIGluIGEgaHVnZSBtZW1vcnksIG1vc3Qgb2YgdGhlIHBhZ2Ugd2lsbCBiZSBm
+aWx0ZXJlZCwgYW5kDQo+d2UgaGF2ZSA1IGJ1ZmZlcnMuDQo+DQo+cGFnZTEgICAgICAgcGFnZTIg
+ICAgICBwYWdlMyAgICAgcGFnZTQgICAgIHBhZ2U1ICAgICAgcGFnZTYgICAgICAgcGFnZTcgLi4u
+Li4NCj5bYnVmZmVyMV0gICBbMl0gICAgICAgIFszXSAgICAgICBbNF0gICAgICAgWzVdDQo+dW5m
+aWx0ZXJlZCAgZmlsdGVyZWQgICBmaWx0ZXJlZCAgZmlsdGVyZWQgIGZpbHRlcmVkICAgdW5maWx0
+ZXJlZCAgZmlsdGVyZWQNCj4NCj5TaW5jZSBmaWx0ZXJlZCBwYWdlIHdpbGwgdGFrZSBhIGJ1ZmZl
+ciwgd2hlbiBjb21wcmVzc2luZyBwYWdlMSwNCj5wYWdlNiBjYW4ndCBiZSBjb21wcmVzc2VkIGF0
+IHRoZSBzYW1lIHRpbWUuDQo+VGhhdCB3aHkgaXQgd2lsbCBwcmV2ZW50IHBhcmFsbGVsIGNvbXBy
+ZXNzaW9uLg0KDQpUaGFua3MgZm9yIHlvdXIgZXhwbGFuYXRpb24sIEkgdW5kZXJzdGFuZC4NClRo
+aXMgaXMganVzdCBhbiBpc3N1ZSBvZiB0aGUgY3VycmVudCBpbXBsZW1lbnRhdGlvbiwgdGhlcmUg
+aXMgbm8NCnJlYXNvbiB0byBzdGFuZCB0aGlzIHJlc3RyaWN0aW9uLg0KDQo+PiBGdXJ0aGVyLCBh
+Y2NvcmRpbmcgdG8gQ2hhbydzIGJlbmNobWFyaywgdGhlcmUgaXMgYSBiaWcgcGVyZm9ybWFuY2UN
+Cj4+IGRlZ3JhZGF0aW9uIGV2ZW4gaWYgdGhlIG51bWJlciBvZiB0aHJlYWQgaXMgMS4gKDU4cyB2
+cyAyNDBzKQ0KPj4gVGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gc2VlbXMgdG8gaGF2ZSBzb21l
+IHByb2JsZW1zLCB3ZSBzaG91bGQNCj4+IHNvbHZlIHRoZW0uDQo+Pg0KPg0KPklmICItZCAzMSIg
+aXMgc3BlY2lmaWVkLCBvbiB0aGUgb25lIGhhbmQgd2UgY2FuJ3Qgc2F2ZSB0aW1lIGJ5IGNvbXBy
+ZXNzaW5nDQo+cGFyYWxsZWwsIG9uIHRoZSBvdGhlciBoYW5kIHdlIHdpbGwgaW50cm9kdWNlIHNv
+bWUgZXh0cmEgd29yayBieSBhZGRpbmcNCj4iLS1udW0tdGhyZWFkcyIuIFNvIGl0IGlzIG9idmlv
+dXMgdGhhdCBpdCB3aWxsIGhhdmUgYSBwZXJmb3JtYW5jZSBkZWdyYWRhdGlvbi4NCg0KU3VyZSwg
+dGhlcmUgbXVzdCBiZSBzb21lIG92ZXJoZWFkIGR1ZSB0byAic29tZSBleHRyYSB3b3JrIihlLmcu
+IGV4Y2x1c2l2ZSBsb2NrKSwgDQpidXQgIi0tbnVtLXRocmVhZHM9MSBpcyA0IHRpbWVzIHNsb3dl
+ciB0aGFuIC0tbnVtLXRocmVhZHM9MCIgc3RpbGwgc291bmRzDQp0b28gc2xvdywgdGhlIGRlZ3Jh
+ZGF0aW9uIGlzIHRvbyBiaWcgdG8gYmUgY2FsbGVkICJzb21lIGV4dHJhIHdvcmsiLg0KDQpCb3Ro
+IC0tbnVtLXRocmVhZHM9MCBhbmQgLS1udW0tdGhyZWFkcz0xIGFyZSBzZXJpYWwgcHJvY2Vzc2lu
+ZywgDQp0aGUgYWJvdmUgImJ1ZmZlciBmYWlybmVzcyBpc3N1ZSIgd2lsbCBub3QgYmUgcmVsYXRl
+ZCB0byB0aGlzIGRlZ3JhZGF0aW9uLg0KV2hhdCBkbyB5b3UgdGhpbmsgd2hhdCBtYWtlIHRoaXMg
+ZGVncmFkYXRpb24gPw0KDQo+SSdtIG5vdCBzbyBzdXJlIGlmIGl0IGlzIGEgcHJvYmxlbSB0aGF0
+IHRoZSBwZXJmb3JtYW5jZSBkZWdyYWRhdGlvbiBpcyBzbyBiaWcuDQo+QnV0IEkgdGhpbmsgaWYg
+aW4gb3RoZXIgY2FzZXMsIGl0IHdvcmtzIGFzIGV4cGVjdGVkLCB0aGlzIHdvbid0IGJlIGEgcHJv
+YmxlbSgNCj5vciBhIHByb2JsZW0gbmVlZHMgdG8gYmUgZml4ZWQpLCBmb3IgdGhlIHBlcmZvcm1h
+bmNlIGRlZ3JhZGF0aW9uIGV4aXN0aW5nDQo+aW4gdGhlb3J5LgkNCj4NCj5PciB0aGUgY3VycmVu
+dCBpbXBsZW1lbnRhdGlvbiBzaG91bGQgYmUgcmVwbGFjZWQgYnkgYSBuZXcgYXJpdGhtZXRpYy4N
+Cj5Gb3IgZXhhbXBsZToNCj5XZSBjYW4gYWRkIGFuIGFycmF5IHRvIHJlY29yZCB3aGV0aGVyIHRo
+ZSBwYWdlIGlzIGZpbHRlcmVkIG9yIG5vdC4NCj5BbmQgb25seSB0aGUgdW5maWx0ZXJlZCBwYWdl
+IHdpbGwgdGFrZSB0aGUgYnVmZmVyLg0KDQpXZSBzaG91bGQgZGlzY3VzcyBob3cgdG8gaW1wbGVt
+ZW50IG5ldyBtZWNoYW5pc20sIEknbGwgbWVudGlvbiB0aGlzIGxhdGVyLg0KDQo+QnV0IEknbSBu
+b3Qgc3VyZSBpZiBpdCBpcyB3b3J0aC4NCj5Gb3IgIi1sIC1kIDMxIiBpcyBmYXN0IGVub3VnaCwg
+dGhlIG5ldyBhcml0aG1ldGljIGFsc28gY2FuJ3QgZG8gbXVjaCBoZWxwLg0KDQpCYXNpY2FsbHkg
+dGhlIGZhc3RlciwgdGhlIGJldHRlci4gVGhlcmUgaXMgbm8gb2J2aW91cyB0YXJnZXQgdGltZS4N
+CklmIHRoZXJlIGlzIHJvb20gZm9yIGltcHJvdmVtZW50LCB3ZSBzaG91bGQgZG8gaXQuDQoNCg0K
+VGhhbmtzLA0KQXRzdXNoaSBLdW1hZ2FpDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
