@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lb0-x232.google.com ([2a00:1450:4010:c04::232])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a7U4j-00014E-5C
- for kexec@lists.infradead.org; Fri, 11 Dec 2015 20:13:58 +0000
-Received: by lbblt2 with SMTP id lt2so77150593lbb.3
- for <kexec@lists.infradead.org>; Fri, 11 Dec 2015 12:13:33 -0800 (PST)
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a7iBl-0001t5-6U
+ for kexec@lists.infradead.org; Sat, 12 Dec 2015 11:18:10 +0000
+Date: Sat, 12 Dec 2015 12:17:43 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [V6 PATCH 0/6] Fix race issues among panic, NMI and crash_kexec
+Message-ID: <20151212111743.GA3723@pd.tnic>
+References: <20151210014624.25437.50028.stgit@softrs>
 MIME-Version: 1.0
-In-Reply-To: <566AF9BE.7090806@arm.com>
-References: <cover.1448403503.git.geoff@infradead.org>
- <23ca498d5e28017549c6076812d60b18e86fa20e.1448403503.git.geoff@infradead.org>
- <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
- <56604A6E.60102@arm.com> <566A8404.4020507@linaro.org>
- <566AF9BE.7090806@arm.com>
-From: Ashwin Chaugule <ashwin.chaugule@linaro.org>
-Date: Fri, 11 Dec 2015 15:13:13 -0500
-Message-ID: <CAJ5Y-ebgXWsKZWi0L9kjFYQRp1ik2NRfhmm1FEvGXWu2NwP1Hw@mail.gmail.com>
-Subject: Re: [PATCH v12 04/16] arm64: kvm: allows kvm cpu hotplug
+Content-Disposition: inline
+In-Reply-To: <20151210014624.25437.50028.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,72 +23,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, vikrams@codeaurora.org, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, shankerd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoffer Dall <christoffer.dall@linaro.org>
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: x86@kernel.org, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Peter Zijlstra <peterz@infradead.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Michal Hocko <mhocko@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 11 December 2015 at 11:28, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On 11/12/15 08:06, AKASHI Takahiro wrote:
->> On 12/03/2015 10:58 PM, Marc Zyngier wrote:
->>> On 02/12/15 22:40, Ashwin Chaugule wrote:
->>>> On 24 November 2015 at 17:25, Geoff Levand <geoff@infradead.org> wrote:
->>>>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+On Thu, Dec 10, 2015 at 10:46:24AM +0900, Hidehiro Kawai wrote:
+> Hidehiro Kawai (6):
+>       panic/x86: Fix re-entrance problem due to panic on NMI
+>       panic/x86: Allow CPUs to save registers even if they are looping in NMI context
+>       kexec: Fix race between panic() and crash_kexec() called directly
+>       x86/apic: Introduce apic_extnmi boot option
+>       x86/nmi: Fix to save registers for crash dump on external NMI broadcast
+>       Documentation: Add documentation for kernel.panic_on_io_nmi sysctl
+> 
+> 
+>  Documentation/kernel-parameters.txt |    9 +++++++++
+>  Documentation/sysctl/kernel.txt     |   15 +++++++++++++++
+>  arch/x86/include/asm/apic.h         |    5 +++++
+>  arch/x86/include/asm/reboot.h       |    1 +
+>  arch/x86/kernel/apic/apic.c         |   35 +++++++++++++++++++++++++++++++++--
+>  arch/x86/kernel/nmi.c               |   27 ++++++++++++++++++++++-----
+>  arch/x86/kernel/reboot.c            |   28 ++++++++++++++++++++++++++++
+>  include/linux/kernel.h              |   29 +++++++++++++++++++++++++++++
+>  include/linux/kexec.h               |    2 ++
+>  kernel/kexec_core.c                 |   30 +++++++++++++++++++++++++++++-
+>  kernel/panic.c                      |   29 ++++++++++++++++++++++++-----
+>  kernel/watchdog.c                   |    2 +-
+>  12 files changed, 198 insertions(+), 14 deletions(-)
 
-[..]
+All applied,
+thanks.
 
->> How about the fixup! patch attached below?
->> The point is that, like Ashwin's first idea, we initialize cpus temporarily
->> before kvm_vgic_hyp_init() and then soon reset cpus again. Thus,
->> kvm cpu hotplug will still continue to work as before.
->> Now that cpu_init_hyp_mode() is revived as exactly the same as Marc's
->> original code, the change will not be a big jump.
->
-> This seems quite complicated:
-> - init EL2 on  all CPUs
-> - do some initialization
-> - tear all CPUs EL2 down
-> - let KVM drive the vectors being set or not
->
-> My questions are: why do we need to do this on *all* cpus? Can't that
-> work on a single one?
->
-> Also, the simple fact that we were able to get some junk value is a sign
-> that something is amiss. I'd expect a splat of some sort, because we now
-> have a possibility of doing things in the wrong context.
+-- 
+Regards/Gruss,
+    Boris.
 
-Yea. I had the same expectation too. Probably some leftover state from
-the hyp stub at bootup kept us lucky.
-
->
->>
->> If kvm_hyp_call() in vgic_v3_probe()/kvm_vgic_hyp_init() is a *problem*,
->> I hope this should work. Actually I confirmed that, with this fixup! patch,
->> we could run a kvm guest and also successfully executed kexec on model w/gic-v3.
->>
->> My only concern is the following kernel message I saw when kexec shut down
->> the kernel:
->> (Please note that I was running one kvm quest (pid=961) here.)
->>
->> ===
->> sh-4.3# ./kexec -d -e
->> kexec version: 15.11.16.11.06-g41e52e2
->> arch_process_options:112: command_line: (null)
->> arch_process_options:114: initrd: (null)
->> arch_process_options:115: dtb: (null)
->> arch_process_options:117: port: 0x0
->> kvm: exiting hardware virtualization
->> kvm [961]: Unsupported exception type: 6248304    <== this message
->
-> That makes me feel very uncomfortable. It looks like we've exited a
-> guest with some horrible value in X0. How is that even possible?
->
-> This deserves to be investigated.
-
-Did this exception trigger as a result of the fixup? For giggles, what
-happens if you dont tear down the EL2 setup after reading the number
-of LRs? Are we missing another site where we need to setup and
-teardown?
-
-Ashwin
+ECO tip #101: Trim your mails when you reply.
 
 _______________________________________________
 kexec mailing list
