@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1450226812.24127.136.camel@infradead.org>
-Subject: [PATCH v12.4] arm64/kexec: Add pr_debug output
-From: Geoff Levand <geoff@infradead.org>
-Date: Tue, 15 Dec 2015 16:46:52 -0800
-In-Reply-To: <0e4d27286ec607b0c1f6e17b3034279c96d6b6a6.1448403503.git.geoff@infradead.org>
-References: <cover.1448403503.git.geoff@infradead.org>
- <0e4d27286ec607b0c1f6e17b3034279c96d6b6a6.1448403503.git.geoff@infradead.org>
-Mime-Version: 1.0
+Received: from mail-am1on0120.outbound.protection.outlook.com
+ ([157.56.112.120] helo=emea01-am1-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a8T1y-0003Yp-S5
+ for kexec@lists.infradead.org; Mon, 14 Dec 2015 13:19:13 +0000
+From: Michele Dionisio <michele.dionisio@powersoft.it>
+Subject: uboot ramdisk image support for arm
+Message-ID: <566EC1B0.3020604@powersoft.it>
+Date: Mon, 14 Dec 2015 14:18:40 +0100
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="------------080000050309030607050609"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,138 +18,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
 
-To aid in debugging kexec problems or when adding new functionality to kexec add
-a new routine kexec_image_info() and several inline pr_debug statements.
+--------------080000050309030607050609
+Content-Type: text/plain; charset="iso-8859-15"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/arm64/kernel/machine_kexec.c | 70 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 68 insertions(+), 2 deletions(-)
+Hi, I have add support for uboot ramdisk support in the patch attached.
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index fd05308..02c6eac 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/kexec.h>
-+#include <linux/libfdt_env.h>
- #include <linux/of_fdt.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-@@ -25,6 +26,50 @@ extern const unsigned long arm64_relocate_new_kernel_size;
- 
- static unsigned long kimage_start;
- 
-+/**
-+ * kexec_is_dtb - Helper routine to check the device tree header signature.
-+ */
-+static bool kexec_is_dtb(const void *dtb)
-+{
-+	__be32 magic;
-+
-+	if (!get_user(magic, (__be32 *)dtb))
-+		return false;
-+
-+	return fdt32_to_cpu(magic) == OF_DT_HEADER;
-+}
-+
-+/**
-+ * kexec_image_info - For debugging output.
-+ */
-+#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
-+static void _kexec_image_info(const char *func, int line,
-+	const struct kimage *kimage)
-+{
-+	unsigned long i;
-+
-+#if !defined(DEBUG)
-+	return;
-+#endif
-+	pr_debug("%s:%d:\n", func, line);
-+	pr_debug("  kexec kimage info:\n");
-+	pr_debug("    type:        %d\n", kimage->type);
-+	pr_debug("    start:       %lx\n", kimage->start);
-+	pr_debug("    head:        %lx\n", kimage->head);
-+	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
-+
-+	for (i = 0; i < kimage->nr_segments; i++) {
-+		pr_debug("      segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages%s\n",
-+			i,
-+			kimage->segment[i].mem,
-+			kimage->segment[i].mem + kimage->segment[i].memsz,
-+			kimage->segment[i].memsz,
-+			kimage->segment[i].memsz /  PAGE_SIZE,
-+			(kexec_is_dtb(kimage->segment[i].buf) ?
-+				", dtb segment" : ""));
-+	}
-+}
-+
- void machine_kexec_cleanup(struct kimage *kimage)
+the new features is implemented in:
+kexec/arch/arm/kexec-uImage-arm.c
+kexec/arch/arm/kexec-zImage-arm.c
+
+but there is also a fix in
+kexec/kexec-uImage.c where there is a endianes bug.
+
+If someone can review the patch I think that it can be usefull to be 
+added in the next version.
+
+Regards.
+
+--------------080000050309030607050609
+Content-Type: text/x-patch; name="0000-fix-ramdisk-uimage.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="0000-fix-ramdisk-uimage.patch"
+
+diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
+index 03c2f4d..20d71a2 100644
+--- a/kexec/arch/arm/kexec-uImage-arm.c
++++ b/kexec/arch/arm/kexec-uImage-arm.c
+@@ -17,6 +17,12 @@ int uImage_arm_probe(const char *buf, off_t len)
+ int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
  {
- 	/* Empty routine needed to avoid build errors. */
-@@ -38,6 +83,8 @@ void machine_kexec_cleanup(struct kimage *kimage)
- int machine_kexec_prepare(struct kimage *kimage)
- {
- 	kimage_start = kimage->start;
-+	kexec_image_info(kimage);
+-	return zImage_arm_load(argc, argv, buf + sizeof(struct image_header),
+-	                       len - sizeof(struct image_header), info);
++    struct Image_info img;
++	int ret;
 +
++	ret = uImage_load(buf, len, &img);
++	if (ret)
++		return ret;
++    
++	return zImage_arm_load(argc, argv, img.buf, img.len, info);
+ }
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index d85ab9b..fda30f8 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -14,6 +14,8 @@
+ #include <getopt.h>
+ #include <unistd.h>
+ #include <libfdt.h>
++#include <image.h>
++#include <kexec-uImage.h>
+ #include <arch/options.h>
+ #include "../../kexec.h"
+ #include "../../kexec-syscall.h"
+@@ -318,6 +320,36 @@ static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
  	return 0;
  }
  
-@@ -77,10 +124,10 @@ static void kexec_segment_flush(const struct kimage *kimage)
++/*
++ * Load the ramdisk into buffer.
++ *  If the supplied image is in uImage format use
++ *  uImage_load() to read the payload from the image.
++ */
++char *slurp_ramdisk_arm(const char *filename, off_t *r_size)
++{
++	struct Image_info img;
++	off_t size;
++	const unsigned char *buf = slurp_file(filename, &size);
++	int rc;
++
++	/* Check if this is a uImage RAMDisk */
++	if (!buf)
++		return buf;
++	rc = uImage_probe_ramdisk(buf, size, IH_ARCH_ARM); 
++	if (rc < 0)
++		die("uImage: Corrupted ramdisk file %s\n", filename);
++	else if (rc == 0) {
++		if (uImage_load(buf, size, &img) != 0)
++			die("uImage: Reading %ld bytes from %s failed\n",
++				size, filename);
++		buf = img.buf;
++		size = img.len;
++	}
++
++	*r_size = size;
++	return buf;
++}
++
+ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
  {
- 	unsigned long i;
+@@ -410,7 +442,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 			command_line_len = COMMAND_LINE_SIZE;
+ 	}
+ 	if (ramdisk)
+-		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
++		ramdisk_buf = slurp_ramdisk_arm(ramdisk, &initrd_size);
  
--	pr_devel("%s:\n", __func__);
-+	pr_debug("%s:\n", __func__);
+ 	if (dtb_file)
+ 		dtb_buf = slurp_file(dtb_file, &dtb_length);
+diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
+index 9df601b..5b85e86 100644
+--- a/kexec/kexec-uImage.c
++++ b/kexec/kexec-uImage.c
+@@ -235,7 +235,7 @@ int uImage_load(const unsigned char *buf, off_t len, struct Image_info *image)
+ {
+ 	const struct image_header *header = (const struct image_header *)buf;
+ 	const unsigned char *img_buf = buf + sizeof(struct image_header);
+-	off_t img_len = header->ih_size;
++	off_t img_len =  cpu_to_be32(header->ih_size);
  
- 	for (i = 0; i < kimage->nr_segments; i++) {
--		pr_devel("  segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages\n",
-+		pr_debug("  segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages\n",
- 			i,
- 			kimage->segment[i].mem,
- 			kimage->segment[i].mem + kimage->segment[i].memsz,
-@@ -107,6 +154,25 @@ void machine_kexec(struct kimage *kimage)
- 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
- 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
- 
-+	kexec_image_info(kimage);
-+
-+	pr_debug("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
-+		kimage->control_code_page);
-+	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
-+		&reboot_code_buffer_phys);
-+	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
-+		reboot_code_buffer);
-+	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
-+		arm64_relocate_new_kernel);
-+	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
-+		__func__, __LINE__, arm64_relocate_new_kernel_size,
-+		arm64_relocate_new_kernel_size);
-+
-+	pr_debug("%s:%d: kimage_head:              %lx\n", __func__, __LINE__,
-+		kimage->head);
-+	pr_debug("%s:%d: kimage_start:             %lx\n", __func__, __LINE__,
-+		kimage_start);
-+
  	/*
- 	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
- 	 * after the kernel is shut down.
--- 
-2.5.0
+ 	 * Prevent loading a modified image.
 
-
+--------------080000050309030607050609
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------080000050309030607050609--
+
