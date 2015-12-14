@@ -1,21 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x235.google.com ([2607:f8b0:400e:c00::235])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a8Ndu-00047O-Kf
- for kexec@lists.infradead.org; Mon, 14 Dec 2015 07:34:05 +0000
-Received: by pfbo64 with SMTP id o64so22647755pfb.1
- for <kexec@lists.infradead.org>; Sun, 13 Dec 2015 23:33:36 -0800 (PST)
-Subject: Re: [PATCH v12 04/16] arm64: kvm: allows kvm cpu hotplug
-References: <cover.1448403503.git.geoff@infradead.org>
- <23ca498d5e28017549c6076812d60b18e86fa20e.1448403503.git.geoff@infradead.org>
- <CAJ5Y-eYHqQCf=ZQzXb=D_P7VscM=vNc3YpYLJs+UtZLFswiaeQ@mail.gmail.com>
- <56604A6E.60102@arm.com> <566A8404.4020507@linaro.org>
- <566AF9BE.7090806@arm.com>
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Message-ID: <566E70C7.4070700@linaro.org>
-Date: Mon, 14 Dec 2015 16:33:27 +0900
+ id 1a8OTm-0000LK-8A
+ for kexec@lists.infradead.org; Mon, 14 Dec 2015 08:27:41 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH RFC 00/11] makedumpfile: parallel processing
+Date: Mon, 14 Dec 2015 08:26:00 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E0D0DA@BPXM01GP.gisp.nec.co.jp>
+References: <1433491025-7291-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <5575123D.8090506@cn.fujitsu.com>
+ <1831406384.24254782.1448959169018.JavaMail.zimbra@redhat.com>
+ <565E81A7.4080604@cn.fujitsu.com>
+ <20151202072443.GD2899@dhcp-128-65.nay.redhat.com>
+ <565E9FFE.20501@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E09F28@BPXM01GP.gisp.nec.co.jp>
+ <56610990.2090607@cn.fujitsu.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E0C319@BPXM01GP.gisp.nec.co.jp>
+ <566947AF.5010800@cn.fujitsu.com>
+In-Reply-To: <566947AF.5010800@cn.fujitsu.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <566AF9BE.7090806@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,284 +28,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, vikrams@codeaurora.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, shankerd@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kexec@lists.infradead.org, Christoffer Dall <christoffer.dall@linaro.org>
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Marc,
-
-On 12/12/2015 01:28 AM, Marc Zyngier wrote:
-> On 11/12/15 08:06, AKASHI Takahiro wrote:
->> Ashwin, Marc,
->>
->> On 12/03/2015 10:58 PM, Marc Zyngier wrote:
->>> On 02/12/15 22:40, Ashwin Chaugule wrote:
->>>> Hello,
->>>>
->>>> On 24 November 2015 at 17:25, Geoff Levand <geoff@infradead.org> wrote:
->>>>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>>>>
->>>>> The current kvm implementation on arm64 does cpu-specific initialization
->>>>> at system boot, and has no way to gracefully shutdown a core in terms of
->>>>> kvm. This prevents, especially, kexec from rebooting the system on a boot
->>>>> core in EL2.
->>>>>
->>>>> This patch adds a cpu tear-down function and also puts an existing cpu-init
->>>>> code into a separate function, kvm_arch_hardware_disable() and
->>>>> kvm_arch_hardware_enable() respectively.
->>>>> We don't need arm64-specific cpu hotplug hook any more.
->>>>>
->>>>> Since this patch modifies common part of code between arm and arm64, one
->>>>> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
->>>>> compiling errors.
->>>>>
->>>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>>>> ---
->>>>>    arch/arm/include/asm/kvm_host.h   | 10 ++++-
->>>>>    arch/arm/include/asm/kvm_mmu.h    |  1 +
->>>>>    arch/arm/kvm/arm.c                | 79 ++++++++++++++++++---------------------
->>>>>    arch/arm/kvm/mmu.c                |  5 +++
->>>>>    arch/arm64/include/asm/kvm_host.h | 16 +++++++-
->>>>>    arch/arm64/include/asm/kvm_mmu.h  |  1 +
->>>>>    arch/arm64/include/asm/virt.h     |  9 +++++
->>>>>    arch/arm64/kvm/hyp-init.S         | 33 ++++++++++++++++
->>>>>    arch/arm64/kvm/hyp.S              | 32 ++++++++++++++--
->>>>>    9 files changed, 138 insertions(+), 48 deletions(-)
->>>>
->>>> [..]
->>>>
->>>>>
->>>>>
->>>>>    static struct notifier_block hyp_init_cpu_pm_nb = {
->>>>> @@ -1108,11 +1119,6 @@ static int init_hyp_mode(void)
->>>>>           }
->>>>>
->>>>>           /*
->>>>> -        * Execute the init code on each CPU.
->>>>> -        */
->>>>> -       on_each_cpu(cpu_init_hyp_mode, NULL, 1);
->>>>> -
->>>>> -       /*
->>>>>            * Init HYP view of VGIC
->>>>>            */
->>>>>           err = kvm_vgic_hyp_init();
->>>>
->>>> With this flow, the cpu_init_hyp_mode() is called only at VM guest
->>>> creation, but vgic_hyp_init() is called at bootup. On a system with
->>>> GICv3, it looks like we end up with bogus values from the ICH_VTR_EL2
->>>> (to get the number of LRs), because we're not reading it from EL2
->>>> anymore.
->>
->> Thank you for pointing this out.
->> Recently I tested my kdump code on hikey, and as hikey(hi6220) has gic-400,
->> I didn't notice this problem.
->
-> Because GIC-400 is a GICv2 implementation, which is entirely MMIO based.
-> GICv3 uses some system registers that are only available at EL2, and KVM
-> needs some information contained in these registers before being able to
-> get initialized.
-
-I see.
-
->>> Indeed, this is completely broken (I just reproduced the issue on a
->>> model). I wish this kind of details had been checked earlier, but thanks
->>> for pointing it out.
+>>> Think about this, in a huge memory, most of the page will be filtered, and
+>>> we have 5 buffers.
 >>>
->>>> Whats the best way to fix this?
->>>> - Call kvm_arch_hardware_enable() before vgic_hyp_init() and disable later?
->>>> - Fold the VGIC init stuff back into hardware_enable()?
+>>> page1       page2      page3     page4     page5      page6       page7 .....
+>>> [buffer1]   [2]        [3]       [4]       [5]
+>>> unfiltered  filtered   filtered  filtered  filtered   unfiltered  filtered
 >>>
->>> None of that works - kvm_arch_hardware_enable() is called once per CPU,
->>> while vgic_hyp_init() can only be called once. Also,
->>> kvm_arch_hardware_enable() is called from interrupt context, and I
->>> wouldn't feel comfortable starting probing DT and allocating stuff from
->>> there.
+>>> Since filtered page will take a buffer, when compressing page1,
+>>> page6 can't be compressed at the same time.
+>>> That why it will prevent parallel compression.
 >>
->> Do you think so?
->> How about the fixup! patch attached below?
->> The point is that, like Ashwin's first idea, we initialize cpus temporarily
->> before kvm_vgic_hyp_init() and then soon reset cpus again. Thus,
->> kvm cpu hotplug will still continue to work as before.
->> Now that cpu_init_hyp_mode() is revived as exactly the same as Marc's
->> original code, the change will not be a big jump.
->
-> This seems quite complicated:
-> - init EL2 on  all CPUs
-> - do some initialization
-> - tear all CPUs EL2 down
-> - let KVM drive the vectors being set or not
->
-> My questions are: why do we need to do this on *all* cpus? Can't that
-> work on a single one?
-
-I did initialize all the cpus partly because using preempt_enable/disable
-looked a bit ugly and partly because we may, in the future, do additional
-per-cpu initialization in kvm_vgic_hyp_init() and/or kvm_timer_hyp_init().
-But if you're comfortable with preempt_*() stuff, I don' care.
-
-
-> Also, the simple fact that we were able to get some junk value is a sign
-> that something is amiss. I'd expect a splat of some sort, because we now
-> have a possibility of doing things in the wrong context.
->
+>> Thanks for your explanation, I understand.
+>> This is just an issue of the current implementation, there is no
+>> reason to stand this restriction.
 >>
->> If kvm_hyp_call() in vgic_v3_probe()/kvm_vgic_hyp_init() is a *problem*,
->> I hope this should work. Actually I confirmed that, with this fixup! patch,
->> we could run a kvm guest and also successfully executed kexec on model w/gic-v3.
+>>>> Further, according to Chao's benchmark, there is a big performance
+>>>> degradation even if the number of thread is 1. (58s vs 240s)
+>>>> The current implementation seems to have some problems, we should
+>>>> solve them.
+>>>>
+>>>
+>>> If "-d 31" is specified, on the one hand we can't save time by compressing
+>>> parallel, on the other hand we will introduce some extra work by adding
+>>> "--num-threads". So it is obvious that it will have a performance degradation.
 >>
->> My only concern is the following kernel message I saw when kexec shut down
->> the kernel:
->> (Please note that I was running one kvm quest (pid=961) here.)
+>> Sure, there must be some overhead due to "some extra work"(e.g. exclusive lock),
+>> but "--num-threads=1 is 4 times slower than --num-threads=0" still sounds
+>> too slow, the degradation is too big to be called "some extra work".
 >>
->> ===
->> sh-4.3# ./kexec -d -e
->> kexec version: 15.11.16.11.06-g41e52e2
->> arch_process_options:112: command_line: (null)
->> arch_process_options:114: initrd: (null)
->> arch_process_options:115: dtb: (null)
->> arch_process_options:117: port: 0x0
->> kvm: exiting hardware virtualization
->> kvm [961]: Unsupported exception type: 6248304    <== this message
+>> Both --num-threads=0 and --num-threads=1 are serial processing,
+>> the above "buffer fairness issue" will not be related to this degradation.
+>> What do you think what make this degradation ?
+>>
 >
-> That makes me feel very uncomfortable. It looks like we've exited a
-> guest with some horrible value in X0. How is that even possible?
+>I can't get such result at this moment, so I can't do some further investigation
+>right now. I guess it may be caused by the underlying implementation of pthread.
+>I reviewed the test result of the patch v2 and found in different machines,
+>the results are quite different.
+
+Unluckily, I also can't reproduce such big degradation.
+According to the Chao's verification, this issue seems different form
+the "too many page fault issue" that we solved.
+I have no ideas, but at least I want to confirm whether this issue
+is avoidable or not.
+
+>It seems that I can get almost the same result of Chao from "PRIMEQUEST 1800E".
 >
-> This deserves to be investigated.
+>###################################
+>- System: PRIMERGY RX300 S6
+>- CPU: Intel(R) Xeon(R) CPU x5660
+>- memory: 16GB
+>###################################
+>************ makedumpfile -d 7 ******************
+>                 core-data       0       256
+>         threads-num
+>-l
+>         0                       10      144
+>         4                       5       110
+>         8                       5       111
+>         12                      6       111
+>
+>************ makedumpfile -d 31 ******************
+>                 core-data       0       256
+>         threads-num
+>-l
+>         0                       0       0
+>         4                       2       2
+>         8                       2       3
+>         12                      2       3
+>
+>###################################
+>- System: PRIMEQUEST 1800E
+>- CPU: Intel(R) Xeon(R) CPU E7540
+>- memory: 32GB
+>###################################
+>************ makedumpfile -d 7 ******************
+>                 core-data        0       256
+>         threads-num
+>-l
+>         0                        34      270
+>         4                        63      154
+>         8                        64      131
+>         12                       65      159
+>
+>************ makedumpfile -d 31 ******************
+>                 core-data        0       256
+>         threads-num
+>-l
+>         0                        2       1
+>         4                        48      48
+>         8                        48      49
+>         12                       49      50
+>
+>>> I'm not so sure if it is a problem that the performance degradation is so big.
+>>> But I think if in other cases, it works as expected, this won't be a problem(
+>>> or a problem needs to be fixed), for the performance degradation existing
+>>> in theory.
+>>>
+>>> Or the current implementation should be replaced by a new arithmetic.
+>>> For example:
+>>> We can add an array to record whether the page is filtered or not.
+>>> And only the unfiltered page will take the buffer.
+>>
+>> We should discuss how to implement new mechanism, I'll mention this later.
+>>
+>>> But I'm not sure if it is worth.
+>>> For "-l -d 31" is fast enough, the new arithmetic also can't do much help.
+>>
+>> Basically the faster, the better. There is no obvious target time.
+>> If there is room for improvement, we should do it.
+>>
+>
+>Maybe we can improve the performance of "-c -d 31" in some case.
 
-I guess the problem is that cpu tear-down function is called even if a kvm guest
-is still running in kvm_arch_vcpu_ioctl_run().
-So adding a check whether cpu has been initialized or not in every iteration of
-kvm_arch_vcpu_ioctl_run() will, if necessary, terminate a guest safely without entering
-a guest mode. Since this check is done while interrupt is disabled, it won't
-interfere with kvm_arch_hardware_disable() called via IPI.
-See the attached fixup patch.
+Yes, the buffer is used for -c, -l and -p, not only for -l.
+It would be useful to improve that.
 
-Again, I verified the code on model.
+>BTW, we can easily get the theoretical performance by using the "--split".
+
+Are you sure ? You persuaded me in the thread below:
+
+  http://lists.infradead.org/pipermail/kexec/2015-June/013881.html
+
+--num-threads is orthogonal to --split, it's better to use the both
+option since they try to solve different bottlenecks.
+That's why I decided to merge your multi thread feature.
+
+However, what you said sounds --split is a superset of --num-threads.
+You don't need the multi thread feature ?
+
 
 Thanks,
--Takahiro AKASHI
-
-> Thanks,
->
-> 	M.
->
-
-----8<----
- From 77f273ba5e0c3dfcf75a5a8d1da8035cc390250c Mon Sep 17 00:00:00 2001
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Date: Fri, 11 Dec 2015 13:43:35 +0900
-Subject: [PATCH] fixup! arm64: kvm: allows kvm cpu hotplug
-
----
-  arch/arm/kvm/arm.c |   45 ++++++++++++++++++++++++++++++++++-----------
-  1 file changed, 34 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-index 518c3c7..d7e86fb 100644
---- a/arch/arm/kvm/arm.c
-+++ b/arch/arm/kvm/arm.c
-@@ -573,7 +573,11 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-  		/*
-  		 * Re-check atomic conditions
-  		 */
--		if (signal_pending(current)) {
-+		if (__hyp_get_vectors() == hyp_default_vectors) {
-+			/* cpu has been torn down */
-+			ret = -ENOEXEC;
-+			run->exit_reason = KVM_EXIT_SHUTDOWN;
-+		} else if (signal_pending(current)) {
-  			ret = -EINTR;
-  			run->exit_reason = KVM_EXIT_INTR;
-  		}
-@@ -950,7 +954,7 @@ long kvm_arch_vm_ioctl(struct file *filp,
-  	}
-  }
-
--int kvm_arch_hardware_enable(void)
-+static void cpu_init_hyp_mode(void)
-  {
-  	phys_addr_t boot_pgd_ptr;
-  	phys_addr_t pgd_ptr;
-@@ -958,9 +962,6 @@ int kvm_arch_hardware_enable(void)
-  	unsigned long stack_page;
-  	unsigned long vector_ptr;
-
--	if (__hyp_get_vectors() != hyp_default_vectors)
--		return 0;
--
-  	/* Switch from the HYP stub to our own HYP init vector */
-  	__hyp_set_vectors(kvm_get_idmap_vector());
-
-@@ -973,24 +974,35 @@ int kvm_arch_hardware_enable(void)
-  	__cpu_init_hyp_mode(boot_pgd_ptr, pgd_ptr, hyp_stack_ptr, vector_ptr);
-
-  	kvm_arm_init_debug();
--
--	return 0;
-  }
-
--void kvm_arch_hardware_disable(void)
-+static void cpu_reset_hyp_mode(void)
-  {
-  	phys_addr_t boot_pgd_ptr;
-  	phys_addr_t phys_idmap_start;
-
--	if (__hyp_get_vectors() == hyp_default_vectors)
--		return;
--
-  	boot_pgd_ptr = kvm_mmu_get_boot_httbr();
-  	phys_idmap_start = kvm_get_idmap_start();
-
-  	__cpu_reset_hyp_mode(boot_pgd_ptr, phys_idmap_start);
-  }
-
-+int kvm_arch_hardware_enable(void)
-+{
-+	if (__hyp_get_vectors() == hyp_default_vectors)
-+		cpu_init_hyp_mode();
-+
-+	return 0;
-+}
-+
-+void kvm_arch_hardware_disable(void)
-+{
-+	if (__hyp_get_vectors() == hyp_default_vectors)
-+		return;
-+
-+	cpu_reset_hyp_mode();
-+}
-+
-  #ifdef CONFIG_CPU_PM
-  static int hyp_init_cpu_pm_notifier(struct notifier_block *self,
-  				    unsigned long cmd,
-@@ -1114,9 +1126,20 @@ static int init_hyp_mode(void)
-  	}
-
-  	/*
-+	 * Init this CPU temporarily to execute kvm_hyp_call()
-+	 * during kvm_vgic_hyp_init().
-+	 */
-+	preempt_disable();
-+	cpu_init_hyp_mode();
-+
-+	/*
-  	 * Init HYP view of VGIC
-  	 */
-  	err = kvm_vgic_hyp_init();
-+
-+	cpu_reset_hyp_mode();
-+	preempt_enable();
-+
-  	if (err)
-  		goto out_free_context;
-
--- 
-1.7.9.5
-
-
+Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
