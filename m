@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 15 Dec 2015 17:15:18 +0000
+Date: Tue, 15 Dec 2015 17:17:27 +0000
 From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v12 09/16] arm64/kexec: Add pr_devel output
-Message-ID: <20151215171517.GB353@arm.com>
+Subject: Re: [PATCH v12 14/16] arm64: kdump: update a kernel doc
+Message-ID: <20151215171727.GC353@arm.com>
 References: <cover.1448403503.git.geoff@infradead.org>
- <0e4d27286ec607b0c1f6e17b3034279c96d6b6a6.1448403503.git.geoff@infradead.org>
+ <3c9bfb1df9bba481b753d8d630e4e3d45f986f04.1448403503.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0e4d27286ec607b0c1f6e17b3034279c96d6b6a6.1448403503.git.geoff@infradead.org>
+In-Reply-To: <3c9bfb1df9bba481b753d8d630e4e3d45f986f04.1448403503.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +24,78 @@ To: Geoff Levand <geoff@infradead.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
 On Tue, Nov 24, 2015 at 10:25:34PM +0000, Geoff Levand wrote:
-> To aid in debugging kexec problems or when adding new functionality to kexec add
-> a new routine kexec_image_info() and several inline pr_devel statements.
-
-We don't currently have any pr_devel invocations under arm64. Can you
-either remove these or change them to pr_debug?
-
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
->  arch/arm64/kernel/machine_kexec.c | 63 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index 8b990b8..da28a26 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -25,6 +25,48 @@ extern const unsigned long arm64_relocate_new_kernel_size;
+> This patch adds arch specific descriptions about kdump usage on arm64
+> to kdump.txt.
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  Documentation/kdump/kdump.txt | 32 +++++++++++++++++++++++++++++++-
+>  1 file changed, 31 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> index bc4bd5a..7d3fad0 100644
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+>  a remote system.
 >  
->  static unsigned long kimage_start;
+>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> -s390x and arm architectures.
+> +s390x, arm and arm64 architectures.
 >  
-> +/**
-> + * kexec_is_dtb - Helper routine to check the device tree header signature.
-> + */
-> +static bool kexec_is_dtb(const void *dtb)
-> +{
-> +	__be32 magic;
+>  When the system kernel boots, it reserves a small section of memory for
+>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> @@ -249,6 +249,29 @@ Dump-capture kernel config options (Arch Dependent, arm)
+>  
+>      AUTO_ZRELADDR=y
+>  
+> +Dump-capture kernel config options (Arch Dependent, arm64)
+> +----------------------------------------------------------
 > +
-> +	return get_user(magic, (__be32 *)dtb) ? false :
-> +		(be32_to_cpu(magic) == OF_DT_HEADER);
+> +1) Disable symmetric multi-processing support under "Processor type and
+> +   features":
+> +
+> +   CONFIG_SMP=n
+> +
+> +   (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
+> +   when loading the dump-capture kernel, see section "Load the Dump-capture
+> +   Kernel".)
 
-Isn't there an fdt32_to_cpu helper for this already? I also can't help
-but thing this would be more readable if you didn't bother with the
-ternary if form.
+SMP is now forced on, so please update this text.
+
+> +2) The maximum memory size on the dump-capture kernel must be limited by
+> +   specifying:
+> +
+> +   mem=X[MG]
+> +
+> +   where X should be less than or equal to the size in "crashkernel="
+> +   boot parameter. Kexec-tools will automatically add this.
+> +
+> +3) Currently, kvm will not be enabled on the dump-capture kernel even
+> +   if it is configured.
+> +
+>  Extended crashkernel syntax
+>  ===========================
+>  
+> @@ -312,6 +335,8 @@ Boot into System Kernel
+>     any space below the alignment point may be overwritten by the dump-capture kernel,
+>     which means it is possible that the vmcore is not that precise as expected.
+>  
+> +   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+> +   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+>  
+>  Load the Dump-capture Kernel
+>  ============================
+> @@ -334,6 +359,8 @@ For s390x:
+>  	- Use image or bzImage
+>  For arm:
+>  	- Use zImage
+> +For arm64:
+> +	- Use vmlinux
+
+What? Why doesn't Image work?
 
 Will
 
