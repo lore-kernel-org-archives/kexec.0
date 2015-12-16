@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-am1on0120.outbound.protection.outlook.com
- ([157.56.112.120] helo=emea01-am1-obe.outbound.protection.outlook.com)
+Received: from mail-pf0-x22f.google.com ([2607:f8b0:400e:c00::22f])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a8T1y-0003Yp-S5
- for kexec@lists.infradead.org; Mon, 14 Dec 2015 13:19:13 +0000
-From: Michele Dionisio <michele.dionisio@powersoft.it>
-Subject: uboot ramdisk image support for arm
-Message-ID: <566EC1B0.3020604@powersoft.it>
-Date: Mon, 14 Dec 2015 14:18:40 +0100
+ id 1a94VF-0004NL-NT
+ for kexec@lists.infradead.org; Wed, 16 Dec 2015 05:19:55 +0000
+Received: by mail-pf0-x22f.google.com with SMTP id v86so6087904pfa.2
+ for <kexec@lists.infradead.org>; Tue, 15 Dec 2015 21:19:33 -0800 (PST)
+Subject: Re: [PATCH v12 11/16] arm64: kdump: reserve memory for crash dump
+ kernel
+References: <cover.1448403503.git.geoff@infradead.org>
+ <bc962621bd537244b54fc35627a456ab40bc6d26.1448403503.git.geoff@infradead.org>
+ <20151215172953.GD353@arm.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <5670F45E.7060100@linaro.org>
+Date: Wed, 16 Dec 2015 14:19:26 +0900
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------080000050309030607050609"
+In-Reply-To: <20151215172953.GD353@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,135 +23,167 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>, Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org, linux-arm-kernel@lists.infradead.org
 
---------------080000050309030607050609
-Content-Type: text/plain; charset="iso-8859-15"; format=flowed
-Content-Transfer-Encoding: 7bit
+On 12/16/2015 02:29 AM, Will Deacon wrote:
+> On Tue, Nov 24, 2015 at 10:25:34PM +0000, Geoff Levand wrote:
+>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>
+>> On primary kernel, the memory region used by crash dump kernel must be
+>> specified by "crashkernel=" boot parameter. reserve_crashkernel()
+>> will allocate and reserve the region for later use.
+>>
+>> User space tools will be able to find the region marked as "Crash kernel"
+>> in /proc/iomem.
+>>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> ---
+>>   arch/arm64/kernel/setup.c |  7 +++++-
+>>   arch/arm64/mm/init.c      | 54 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 60 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+>> index 8119479..f9fffc9 100644
+>> --- a/arch/arm64/kernel/setup.c
+>> +++ b/arch/arm64/kernel/setup.c
+>> @@ -31,7 +31,6 @@
+>>   #include <linux/screen_info.h>
+>>   #include <linux/init.h>
+>>   #include <linux/kexec.h>
+>> -#include <linux/crash_dump.h>
+>>   #include <linux/root_dev.h>
+>>   #include <linux/cpu.h>
+>>   #include <linux/interrupt.h>
+>> @@ -221,6 +220,12 @@ static void __init request_standard_resources(void)
+>>   		    kernel_data.end <= res->end)
+>>   			request_resource(res, &kernel_data);
+>>   	}
+>> +
+>> +#ifdef CONFIG_KEXEC
+>> +	/* User space tools will find "Crash kernel" region in /proc/iomem. */
+>> +	if (crashk_res.end)
+>> +		insert_resource(&iomem_resource, &crashk_res);
+>> +#endif
+>
+> Why can't this bit be moved into reserved_crashkernel, at the end?
 
-Hi, I have add support for uboot ramdisk support in the patch attached.
+Because
+- I want to call reserve_crashkernel() as early as possbile, (so before
+   request_standard_resources()), and
+- if inserting "Crash kernel" region is done before request_standard_resources(),
+   request_resource() for "System RAM" region which contains "Crash kernel" will
+   fail and the entry will be lost from /proc/iomem.
 
-the new features is implemented in:
-kexec/arch/arm/kexec-uImage-arm.c
-kexec/arch/arm/kexec-zImage-arm.c
 
-but there is also a fix in
-kexec/kexec-uImage.c where there is a endianes bug.
+>>   }
+>>
+>>   #ifdef CONFIG_BLK_DEV_INITRD
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 17bf39a..24f0a1c 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -34,6 +34,7 @@
+>>   #include <linux/dma-contiguous.h>
+>>   #include <linux/efi.h>
+>>   #include <linux/swiotlb.h>
+>> +#include <linux/kexec.h>
+>>
+>>   #include <asm/fixmap.h>
+>>   #include <asm/memory.h>
+>> @@ -66,6 +67,55 @@ static int __init early_initrd(char *p)
+>>   early_param("initrd", early_initrd);
+>>   #endif
+>>
+>> +#ifdef CONFIG_KEXEC
+>> +/*
+>> + * reserve_crashkernel() - reserves memory for crash kernel
+>> + *
+>> + * This function reserves memory area given in "crashkernel=" kernel command
+>> + * line parameter. The memory reserved is used by dump capture kernel when
+>> + * primary kernel is crashing.
+>> + */
+>> +static void __init reserve_crashkernel(void)
+>> +{
+>> +	unsigned long long crash_size = 0, crash_base = 0;
+>> +	int ret;
+>> +
+>> +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+>> +				&crash_size, &crash_base);
+>> +	if (ret)
+>> +		return;
+>
+> What's the point in ret?
 
-If someone can review the patch I think that it can be usefull to be 
-added in the next version.
+parse_crashkernel() will returns -EINVAL if
+- the boot command line doesn't contain "crashkernel=" parameter, or
+- "crashkernel=" parameter has an invalid synstax of value
+Otherwise returns 0.
 
-Regards.
+So just returning should be OK, but just in case that the syntax is OK, but
+that a resulting crash_size gets 0, I will add a check like:
+     if (!crash_size)
+         return;
 
---------------080000050309030607050609
-Content-Type: text/x-patch; name="0000-fix-ramdisk-uimage.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="0000-fix-ramdisk-uimage.patch"
+>> +
+>> +	if (crash_base == 0) {
+>> +		crash_base = memblock_alloc(crash_size, 1 << 21);
+>
+> What is this magic number? How about SZ_2M and a comment mentioning the
+> arm64 boot protocol?
 
-diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
-index 03c2f4d..20d71a2 100644
---- a/kexec/arch/arm/kexec-uImage-arm.c
-+++ b/kexec/arch/arm/kexec-uImage-arm.c
-@@ -17,6 +17,12 @@ int uImage_arm_probe(const char *buf, off_t len)
- int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
--	return zImage_arm_load(argc, argv, buf + sizeof(struct image_header),
--	                       len - sizeof(struct image_header), info);
-+    struct Image_info img;
-+	int ret;
-+
-+	ret = uImage_load(buf, len, &img);
-+	if (ret)
-+		return ret;
-+    
-+	return zImage_arm_load(argc, argv, img.buf, img.len, info);
- }
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index d85ab9b..fda30f8 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -14,6 +14,8 @@
- #include <getopt.h>
- #include <unistd.h>
- #include <libfdt.h>
-+#include <image.h>
-+#include <kexec-uImage.h>
- #include <arch/options.h>
- #include "../../kexec.h"
- #include "../../kexec-syscall.h"
-@@ -318,6 +320,36 @@ static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
- 	return 0;
- }
- 
-+/*
-+ * Load the ramdisk into buffer.
-+ *  If the supplied image is in uImage format use
-+ *  uImage_load() to read the payload from the image.
-+ */
-+char *slurp_ramdisk_arm(const char *filename, off_t *r_size)
-+{
-+	struct Image_info img;
-+	off_t size;
-+	const unsigned char *buf = slurp_file(filename, &size);
-+	int rc;
-+
-+	/* Check if this is a uImage RAMDisk */
-+	if (!buf)
-+		return buf;
-+	rc = uImage_probe_ramdisk(buf, size, IH_ARCH_ARM); 
-+	if (rc < 0)
-+		die("uImage: Corrupted ramdisk file %s\n", filename);
-+	else if (rc == 0) {
-+		if (uImage_load(buf, size, &img) != 0)
-+			die("uImage: Reading %ld bytes from %s failed\n",
-+				size, filename);
-+		buf = img.buf;
-+		size = img.len;
-+	}
-+
-+	*r_size = size;
-+	return buf;
-+}
-+
- int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
-@@ -410,7 +442,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			command_line_len = COMMAND_LINE_SIZE;
- 	}
- 	if (ramdisk)
--		ramdisk_buf = slurp_file(ramdisk, &initrd_size);
-+		ramdisk_buf = slurp_ramdisk_arm(ramdisk, &initrd_size);
- 
- 	if (dtb_file)
- 		dtb_buf = slurp_file(dtb_file, &dtb_length);
-diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
-index 9df601b..5b85e86 100644
---- a/kexec/kexec-uImage.c
-+++ b/kexec/kexec-uImage.c
-@@ -235,7 +235,7 @@ int uImage_load(const unsigned char *buf, off_t len, struct Image_info *image)
- {
- 	const struct image_header *header = (const struct image_header *)buf;
- 	const unsigned char *img_buf = buf + sizeof(struct image_header);
--	off_t img_len = header->ih_size;
-+	off_t img_len =  cpu_to_be32(header->ih_size);
- 
- 	/*
- 	 * Prevent loading a modified image.
+Right. I will do so.
 
---------------080000050309030607050609
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+>> +		if (crash_base == 0) {
+>> +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
+>> +				crash_size);
+>> +			return;
+>> +		}
+>> +	} else {
+>> +		/* User specifies base address explicitly. */
+>> +		if (!memblock_is_region_memory(crash_base, crash_size) ||
+>> +			memblock_is_region_reserved(crash_base, crash_size)) {
+>> +			pr_warn("crashkernel has wrong address or size\n");
+>> +			return;
+>> +		}
+>> +
+>> +		if (crash_base & ((1 << 21) - 1)) {
+>
+> IS_ALIGNED
+
+OK.
+
+>> +			pr_warn("crashkernel base address is not 2MB aligned\n");
+>> +			return;
+>> +		}
+>> +
+>> +		memblock_reserve(crash_base, crash_size);
+>> +	}
+>> +
+>> +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
+>> +		crash_size >> 20, crash_base >> 20);
+>> +
+>> +	crashk_res.start = crash_base;
+>> +	crashk_res.end = crash_base + crash_size - 1;
+>> +}
+>
+> #else
+>
+> static void __init reserve_crashkernel(void) {};
+
+OK.
+
+Thanks,
+-Takahiro AKASHI
+
+> Will
+>
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------080000050309030607050609--
-
