@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 16 Dec 2015 16:02:59 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v12 08/16] arm64/kexec: Add core kexec support
-Message-ID: <20151216103259.GA316@dhcppc13.redhat.com>
-References: <cover.1448403503.git.geoff@infradead.org>
- <6ac232ad37d6b02cf2d5848b15236f26f5ac61ac.1448403503.git.geoff@infradead.org>
- <20151215182932.GF353@arm.com>
- <1450224870.24127.130.camel@infradead.org>
- <20151216071804.GI4674@dhcppc13.redhat.com>
- <56712F3A.7040805@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56712F3A.7040805@arm.com>
+Received: from cp.broadbandcity.com.au ([203.19.11.18])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1a9Ix7-00057f-99
+ for kexec@lists.infradead.org; Wed, 16 Dec 2015 20:45:38 +0000
+Received: from sydrb1-perm-140.idx.com.au ([210.56.78.140]:36068
+ helo=[192.168.7.10])
+ by cp.broadbandcity.com.au with esmtpsa (TLSv1:DHE-RSA-AES256-SHA:256)
+ (Exim 4.86) (envelope-from <jnysen+infradead@gmail.com>)
+ id 1a9Iwh-0008Ak-Gr
+ for kexec@lists.infradead.org; Thu, 17 Dec 2015 07:45:11 +1100
+From: Jeremy Nysen <jnysen+infradead@gmail.com>
+Subject: Building kexec-tools with arm64 cross compilation 
+Message-Id: <5BD8163F-BEB3-468E-83D9-7833A750B939@gmail.com>
+Date: Thu, 17 Dec 2015 07:45:10 +1100
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,30 +22,20 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, marc.zyngier@arm.com, christoffer.dall@linaro.org
+To: kexec@lists.infradead.org
 
-On 16/12/2015:09:30:34 AM, James Morse wrote:
-> On 16/12/15 07:18, Pratyush Anand wrote:
-> > We execute arm64_relocate_new_kernel() code with I-cache disabled. So, do we
-> > really need to invalidate I-cache?
-> 
-> I got bitten by this, see Mark's earlier reply[0]:
-> 
-> Mark Rutland wrote:
-> > The SCTLR_ELx.I only affects the attributes that the I-cache uses to
-> > fetch with, not whether it is enabled (it cannot be disabled
-> > architecturally).
-
-Thanks James for pointing to it. I had missed that.
-
-~Pratyush
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhlIGtlcm5lbC9naXQvZ2VvZmYva2V4ZWMtdG9vbHMgcmVwb3NpdG9yeSBkb2VzbuKAmXQgc2Vl
+bSB0byBjcm9zcyBjb21waWxlIGZvciB0aGUgdGFyZ2V0IHBsYXRmb3JtLiBJ4oCZdmUgdHJpZWQg
+dGhlIGFwcHJvcHJpYXRlIHRhcmdldCBvcHRpb25zIGFuZCBUQVJHRVRfeHggdmFycywgZXRjLCBi
+dXQgaXQgc3RpbGwgZXJyb3JzIG91dCB3aXRoIG1pc3NpbmcgaW5jbHVkZXMgYW5kIGF0dGVtcHRz
+IHRvIHVzZSBob3N0IGluY2x1ZGVzIHdpdGggdGFyZ2V0IGNvbXBpbGF0aW9uIHdoZW4gYnVpbGRp
+bmcgZm9yIGEgbW9iaWxlIEFuZHJvaWQgdGFyZ2V0IHBsYXRmb3JtLgoKSeKAmWQgZ3JlYXRseSBh
+cHByZWNpYXRlIGFueSBpbmZvIHlvdSBoYXZlIG9uIHRoZSB0b29sIHNldCBhbmQgY29uZmlndXJl
+IG9wdGlvbnMgeW91J3JlIHVzaW5nIHRvIGJ1aWxkIGl0LgoKQ2hlZXJzLApKZXJlbXkKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
+IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
