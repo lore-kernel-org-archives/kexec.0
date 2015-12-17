@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-db3on0140.outbound.protection.outlook.com
- ([157.55.234.140] helo=emea01-db3-obe.outbound.protection.outlook.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a9TRK-0002Ug-SE
- for kexec@lists.infradead.org; Thu, 17 Dec 2015 07:57:32 +0000
+ id 1a9VDr-0006B8-Kg
+ for kexec@lists.infradead.org; Thu, 17 Dec 2015 09:51:44 +0000
+Date: Thu, 17 Dec 2015 15:21:17 +0530
+From: Pratyush Anand <panand@redhat.com>
 Subject: Re: [PATCH] arm: ramdisk uimage support for arm
+Message-ID: <20151217095117.GB8965@dhcp-0-82.del.redhat.com>
 References: <56711B8C.9090407@powersoft.it>
  <20151217042353.GC1525@dhcppc13.redhat.com>
-From: Michele Dionisio <michele.dionisio@powersoft.it>
-Message-ID: <56726ADA.1050403@powersoft.it>
-Date: Thu, 17 Dec 2015 08:57:14 +0100
+ <56726ADA.1050403@powersoft.it>
 MIME-Version: 1.0
-In-Reply-To: <20151217042353.GC1525@dhcppc13.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <56726ADA.1050403@powersoft.it>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,37 +21,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
+To: Michele Dionisio <michele.dionisio@powersoft.it>
 Cc: kexec@lists.infradead.org
 
-yes it is true.
+On 17/12/2015:08:57:14 AM, Michele Dionisio wrote:
+> yes it is true.
+> 
+> I'm not in the position to test ppc. So my only way to be sure to avoid to
+> introduce regration is to avoid to refactor the code.
+> 
+> But it is true. If you are able to test ppc I can try to post the
+> refactoring.
 
-I'm not in the position to test ppc. So my only way to be sure to avoid 
-to introduce regration is to avoid to refactor the code.
+I also do not be able to test it on ppc, but I believe refactoring would be
+trivial and would not have any functionality difference. So, better to go with
+that rather than duplicating the code. You may keep ppc developer in CC and ask
+for ACK from  them.
 
-But it is true. If you are able to test ppc I can try to post the 
-refactoring.
-
-Il 17/12/2015 05:23, Pratyush Anand ha scritto:
-> Hi Michele,
->
-> On 16/12/2015:09:06:36 AM, Michele Dionisio wrote:
->> +/*
->> + * Load the ramdisk into buffer.
->> + *  If the supplied image is in uImage format use
->> + *  uImage_load() to read the payload from the image.
->> + */
->> +char *slurp_ramdisk_arm(const char *filename, off_t *r_size)
-> This function is exactly as slurp_ramdisk_ppc(). So, why not we have a common
-> slurp_ramdisk() function usable for both arm and ppc.
->
-> ~Pratyush
-> .
->
+~Pratyush
 
 
 _______________________________________________
