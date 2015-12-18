@@ -1,18 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1a9VDr-0006B8-Kg
- for kexec@lists.infradead.org; Thu, 17 Dec 2015 09:51:44 +0000
-Date: Thu, 17 Dec 2015 15:21:17 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] arm: ramdisk uimage support for arm
-Message-ID: <20151217095117.GB8965@dhcp-0-82.del.redhat.com>
-References: <56711B8C.9090407@powersoft.it>
- <20151217042353.GC1525@dhcppc13.redhat.com>
- <56726ADA.1050403@powersoft.it>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56726ADA.1050403@powersoft.it>
+Message-ID: <1450401056.9233.8.camel@infradead.org>
+Subject: Re: Building kexec-tools with arm64 cross compilation
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 17 Dec 2015 17:10:56 -0800
+In-Reply-To: <5BD8163F-BEB3-468E-83D9-7833A750B939@gmail.com>
+References: <5BD8163F-BEB3-468E-83D9-7833A750B939@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,31 +14,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michele Dionisio <michele.dionisio@powersoft.it>
-Cc: kexec@lists.infradead.org
+To: Jeremy Nysen <jnysen+infradead@gmail.com>, kexec@lists.infradead.org
 
-On 17/12/2015:08:57:14 AM, Michele Dionisio wrote:
-> yes it is true.
-> 
-> I'm not in the position to test ppc. So my only way to be sure to avoid to
-> introduce regration is to avoid to refactor the code.
-> 
-> But it is true. If you are able to test ppc I can try to post the
-> refactoring.
-
-I also do not be able to test it on ppc, but I believe refactoring would be
-trivial and would not have any functionality difference. So, better to go with
-that rather than duplicating the code. You may keep ppc developer in CC and ask
-for ACK from  them.
-
-~Pratyush
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksCgpPbiBUaHUsIDIwMTUtMTItMTcgYXQgMDc6NDUgKzExMDAsIEplcmVteSBOeXNlbiB3cm90
+ZToKPiBUaGUga2VybmVsL2dpdC9nZW9mZi9rZXhlYy10b29scyByZXBvc2l0b3J5IGRvZXNu4oCZ
+dCBzZWVtIHRvIGNyb3NzIGNvbXBpbGUgZm9yIHRoZSB0YXJnZXQgcGxhdGZvcm0uIEnigJl2ZSB0
+cmllZCB0aGUgYXBwcm9wcmlhdGUgdGFyZ2V0IG9wdGlvbnMgYW5kIFRBUkdFVF94eCB2YXJzLCBl
+dGMsIGJ1dCBpdCBzdGlsbCBlcnJvcnMgb3V0IHdpdGggbWlzc2luZyBpbmNsdWRlcyBhbmQgYXR0
+ZW1wdHMgdG8gdXNlIGhvc3QgaW5jbHVkZXMgd2l0aCB0YXJnZXQgY29tcGlsYXRpb24gd2hlbiBi
+dWlsZGluZyBmb3IgYSBtb2JpbGUgQW5kcm9pZCB0YXJnZXQgcGxhdGZvcm0uCj4gCj4gSeKAmWQg
+Z3JlYXRseSBhcHByZWNpYXRlIGFueSBpbmZvIHlvdSBoYXZlIG9uIHRoZSB0b29sIHNldCBhbmQg
+Y29uZmlndXJlIG9wdGlvbnMgeW91J3JlIHVzaW5nIHRvIGJ1aWxkIGl0LgoKSSB1c2UgdGhlIGdj
+Yy1hYXJjaDY0LWxpbnV4LWdudSB0b29sY2hhaW4gcGFja2FnZSBvbiBVYnVudHUuCgpJIGJ1aWxk
+IHdpdGggdGhpczoKCiAgJCBjZCAke3dvcmt9CiAgJCAke3BhdGhfdG99L2tleGVjLXRvb2xzL2Nv
+bmZpZ3VyZSAtLWJ1aWxkPXg4Nl82NC1saW51eCAtLWhvc3Q9YWFyY2g2NC1saW51eC1nbnUgLS10
+YXJnZXQ9YWFyY2g2NC1saW51eC1nbnUgLS13aXRob3V0LXhlbgogICQgbWFrZSBBUkNIPWFybTY0
+IGNsZWFuIGFsbAoKQ2hlY2sgaXQgd2l0aCB0aGlzOgoKICAkIGZpbGUgYnVpbGQvc2Jpbi9rZXhl
+YyAgCiAgYnVpbGQvc2Jpbi9rZXhlYzogRUxGIDY0LWJpdCBMU0IgZXhlY3V0YWJsZSwgQVJNIGFh
+cmNoNjQsIHZlcnNpb24gMSAoU1lTViksIGR5bmFtaWNhbGx5IGxpbmtlZCwKCi1HZW9mZgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
