@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aCqcP-0002iU-Ek
- for kexec@lists.infradead.org; Sat, 26 Dec 2015 15:18:54 +0000
-Date: Sat, 26 Dec 2015 23:21:00 +0800
+ id 1aCrJM-0004ld-Hm
+ for kexec@lists.infradead.org; Sat, 26 Dec 2015 16:03:16 +0000
+Date: Sun, 27 Dec 2015 00:05:22 +0800
 From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH 2/2] kexec: Provide
- arch_kexec_protect(unprotect)_crashkres()
-Message-ID: <20151226152100.GA26946@dhcp-128-25.nay.redhat.com>
-References: <1450869146-6186-1-git-send-email-xlpang@redhat.com>
- <1450869146-6186-2-git-send-email-xlpang@redhat.com>
+Subject: Re: [PATCH v2 14/16] x86, nvdimm, kexec: Use walk_iomem_res_desc() for
+ iomem search
+Message-ID: <20151226160522.GA28533@dhcp-128-25.nay.redhat.com>
+References: <1451081365-15190-1-git-send-email-toshi.kani@hpe.com>
+ <1451081365-15190-14-git-send-email-toshi.kani@hpe.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1450869146-6186-2-git-send-email-xlpang@redhat.com>
+In-Reply-To: <1451081365-15190-14-git-send-email-toshi.kani@hpe.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,55 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Toshi Kani <toshi.kani@hpe.com>
+Cc: linux-arch@vger.kernel.org, linux-nvdimm@ml01.01.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, bp@alien8.de, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Dan Williams <dan.j.williams@intel.com>
 
-On 12/23/15 at 07:12pm, Xunlei Pang wrote:
-> Implement the protection method for the crash kernel memory
-> reservation for the 64-bit x86 kdump.
-> 
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-> ---
-> Only provided x86_64 implementation, as I've only tested on x86_64 so far.
-> 
->  arch/x86/kernel/machine_kexec_64.c | 43 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index 819ab3f..a3d289c 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -536,3 +536,46 @@ overflow:
->  	return -ENOEXEC;
->  }
->  #endif /* CONFIG_KEXEC_FILE */
-> +
-> +#ifdef CONFIG_KEXEC_CORE
-> +static int
-> +kexec_mark_range(unsigned long start, unsigned long end, bool protect)
-> +{
-> +	struct page *page;
-> +	unsigned int nr_pages;
-> +
-> +	if (!start || !end || start >= end)
-> +		return 0;
-> +
-> +	page = pfn_to_page(start >> PAGE_SHIFT);
-> +	nr_pages = (end + 1 - start) >> PAGE_SHIFT;
+Ccing kexec maillist.
 
-The start and end may across two pages, although the range is small than
-PAGE_SIZE. You can use following to calculate count of page.
+On 12/25/15 at 03:09pm, Toshi Kani wrote:
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index c245085..e2bd737 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -522,10 +522,10 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+>  
+>  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+>  	if (image->type == KEXEC_TYPE_CRASH)
+> -		ret = walk_iomem_res("Crash kernel",
+> -				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> -				     crashk_res.start, crashk_res.end, kbuf,
+> -				     locate_mem_hole_callback);
+> +		ret = walk_iomem_res_desc(IORES_DESC_CRASH_KERNEL,
 
-nr_pages = (end >> PAGE_SHIFT) - (start >> PAGE_SHIFT) + 1;
+Since crashk_res's desc has been assigned to IORES_DESC_CRASH_KERNEL, it
+is better to use crashk_res.desc, instead of using
+IORES_DESC_CRASH_KERNEL directly.
 
 Thanks
 Minfei
 
-> +	if (protect)
-> +		return set_pages_ro(page, nr_pages);
-> +	else
-> +		return set_pages_rw(page, nr_pages);
-> +}
+> +				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> +				crashk_res.start, crashk_res.end, kbuf,
+> +				locate_mem_hole_callback);
+>  	else
+>  		ret = walk_system_ram_res(0, -1, kbuf,
+>  					  locate_mem_hole_callback);
 
 _______________________________________________
 kexec mailing list
