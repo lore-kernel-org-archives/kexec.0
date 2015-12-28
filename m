@@ -1,29 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp03.au.ibm.com ([202.81.31.145])
+Received: from e23smtp01.au.ibm.com ([202.81.31.143])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aDXHC-000525-J6
- for kexec@lists.infradead.org; Mon, 28 Dec 2015 12:51:51 +0000
+ id 1aDXHs-0005Qm-49
+ for kexec@lists.infradead.org; Mon, 28 Dec 2015 12:52:32 +0000
 Received: from localhost
- by e23smtp03.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Mon, 28 Dec 2015 22:51:27 +1000
-Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id 4524E2BB0052
- for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 23:51:24 +1100 (EST)
+ Mon, 28 Dec 2015 22:52:09 +1000
+Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 9FCB32CE8050
+ for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 23:52:07 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- tBSCpE5j62849084
- for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 23:51:24 +1100
+ by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ tBSCq1wE33816634
+ for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 23:52:09 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- tBSCooJu029175
- for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 23:50:50 +1100
-Message-ID: <1451307031.3289.223.camel@linux.vnet.ibm.com>
+ tBSCpZJ7029857
+ for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 23:51:35 +1100
+Message-ID: <1451307075.3289.224.camel@linux.vnet.ibm.com>
 Subject: Re: [Linux-ima-devel] [PATCH v2 4/7] ima: measure and appraise
  kexec image and initramfs
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Mon, 28 Dec 2015 07:50:31 -0500
+Date: Mon, 28 Dec 2015 07:51:15 -0500
 In-Reply-To: <20151228020829.GB2980@dhcp-128-65.nay.redhat.com>
 References: <1450914903-5793-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1450914903-5793-5-git-send-email-zohar@linux.vnet.ibm.com>
