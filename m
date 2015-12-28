@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aDNF8-0003Bp-JV
- for kexec@lists.infradead.org; Mon, 28 Dec 2015 02:09:03 +0000
-Date: Mon, 28 Dec 2015 10:08:29 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [Linux-ima-devel] [PATCH v2 4/7] ima: measure and appraise kexec
- image and initramfs
-Message-ID: <20151228020829.GB2980@dhcp-128-65.nay.redhat.com>
-References: <1450914903-5793-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1450914903-5793-5-git-send-email-zohar@linux.vnet.ibm.com>
- <20151225053356.GA3398@dhcp-128-65.nay.redhat.com>
- <1451054749.3289.131.camel@linux.vnet.ibm.com>
+ id 1aDRMa-0004ZG-7n
+ for kexec@lists.infradead.org; Mon, 28 Dec 2015 06:33:01 +0000
+Subject: Re: [PATCH 2/2] kexec: Provide
+ arch_kexec_protect(unprotect)_crashkres()
+References: <1450869146-6186-1-git-send-email-xlpang@redhat.com>
+ <1450869146-6186-2-git-send-email-xlpang@redhat.com>
+ <20151224055425.GC3480@dhcp-128-65.nay.redhat.com>
+ <567B8B44.9070807@redhat.com>
+ <20151224061616.GD3480@dhcp-128-65.nay.redhat.com>
+ <567B9444.1050608@redhat.com>
+From: Xunlei Pang <xlpang@redhat.com>
+Message-ID: <5680D780.4070709@redhat.com>
+Date: Mon, 28 Dec 2015 14:32:32 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1451054749.3289.131.camel@linux.vnet.ibm.com>
+In-Reply-To: <567B9444.1050608@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,77 +28,135 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, David Woodhouse <dwmw2@infradead.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, Eric Biederman <ebiederm@xmission.com>
 
-Hi, Mimi
+On 12/24/2015 at 02:44 PM, Xunlei Pang wrote:
+> On 12/24/2015 at 02:16 PM, Dave Young wrote:
+>> Hi, Xunlei
+>>
+>> On 12/24/15 at 02:05pm, Xunlei Pang wrote:
+>>> On 12/24/2015 at 01:54 PM, Dave Young wrote:
+>>>> Ccing Vivek
+>>>>
+>>>> On 12/23/15 at 07:12pm, Xunlei Pang wrote:
+>>>>> Implement the protection method for the crash kernel memory
+>>>>> reservation for the 64-bit x86 kdump.
+>>>>>
+>>>>> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+>>>>> ---
+>>>>> Only provided x86_64 implementation, as I've only tested on x86_64 so far.
+>>>>>
+>>>>>  arch/x86/kernel/machine_kexec_64.c | 43 ++++++++++++++++++++++++++++++++++++++
+>>>>>  1 file changed, 43 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+>>>>> index 819ab3f..a3d289c 100644
+>>>>> --- a/arch/x86/kernel/machine_kexec_64.c
+>>>>> +++ b/arch/x86/kernel/machine_kexec_64.c
+>>>>> @@ -536,3 +536,46 @@ overflow:
+>>>>>  	return -ENOEXEC;
+>>>>>  }
+>>>>>  #endif /* CONFIG_KEXEC_FILE */
+>>>>> +
+>>>>> +#ifdef CONFIG_KEXEC_CORE
+>>>> The file is only compiled when CONFIG_KEXEC_CORE=y so #ifdef is not necessary
+>>> Yes, indeed. I'll remove this macro and send v2 later.
+>>>
+>>>>> +static int
+>>>>> +kexec_mark_range(unsigned long start, unsigned long end, bool protect)
+>>>>> +{
+>>>>> +	struct page *page;
+>>>>> +	unsigned int nr_pages;
+>>>>> +
+>>>>> +	if (!start || !end || start >= end)
+>>>>> +		return 0;
+>>>>> +
+>>>>> +	page = pfn_to_page(start >> PAGE_SHIFT);
+>>>>> +	nr_pages = (end + 1 - start) >> PAGE_SHIFT;
+>>>>> +	if (protect)
+>>>>> +		return set_pages_ro(page, nr_pages);
+>>>>> +	else
+>>>>> +		return set_pages_rw(page, nr_pages);
+>>>> May use set_memory_ro/rw to avoid converting to *page?
+>>> on x86 it just a wrapper of set_memory_ro/rw, I think both are ok.
+>> Ok, I have no strong opinion on that..
+>>
+>>>>> +}
+>>>>> +
+>>>>> +static void kexec_mark_crashkres(bool protect)
+>>>>> +{
+>>>>> +	unsigned long control;
+>>>>> +
+>>>>> +	kexec_mark_range(crashk_low_res.start, crashk_low_res.end, protect);
+>>>>> +
+>>>>> +	/* Don't touch the control code page used in crash_kexec().*/
+>>>>> +	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
+>>>>> +	/* Control code page is located in the 2nd page. */
+>>>>> +	control = control + PAGE_SIZE;
+>> Though it works because the control code is less than 1 page, but use the macro
+>> of KEXEC_CONTROL_PAGE_SIZE looks better..
 
-On 12/25/15 at 09:45am, Mimi Zohar wrote:
-> On Fri, 2015-12-25 at 13:33 +0800, Dave Young wrote:
-> > Hi, Mimi
-> > 
-> > CCing kexec list, not all kexec people subscribed to IMA list.
-> > I just subscribed to it since Vivek CCed me last time about the V1 of this
-> > series.
-> 
-> Thanks!
-> 
-> > On 12/23/15 at 06:55pm, Mimi Zohar wrote:
-> > > This patch defines a new IMA hook ima_hash_and_process_file() for
-> > > measuring and appraising files read by the kernel.  The caller loads
-> > > the file into memory before calling this function, which calculates
-> > > the hash followed by the normal IMA policy based processing.
-> > > 
-> > > Two new IMA policy functions named KEXEC_CHECK and INITRAMFS_CHECK
-> > > are defined for measuring, appraising or auditing the kexec image
-> > > and initramfs.
-> > 
-> > Could you help us understand why do we need it first.
-> 
-> IMA can be viewed as extending secure and trusted boot to the running
-> system in a uniform and consistent manner.   As files are accessed,
-> based on policy, IMA measures them, appends the file measurements to the
-> running measurement list (<securityfs>/ima/ascii_runtime_measurements)
-> and appraises the file's integrity, based on either the file's hash or
-> signature, which are stored as extended attributes in "security.ima".
-> 
-> There are still a couple of file measurement and appraisal gaps that
-> need to be closed.
-> 
-> > I think I do not really understand the purpose of the IMA handling
-> > about kexec kernel and initramfs.
-> 
-> One of those measurement and appraisal gaps are files that are read by
-> the kernel, like the kexec image and initramfs.
-> 
-> [There is a lot of code duplication in the kernel for reading a file and
-> verifying its signature.   Each place does it just a bit differently
-> than the other.  I'm working with Luis Rodriguez on defining a single,
-> common function  - https://lkml.org/lkml/2015/12/21/478.]
-> 
-> > * Does the files in disk space have already contains some hash values 
-> > and when kernel load it IMA functions will do some checking? But seems I do not
-> > see such handling..
-> 
-> IMA sits on a number of the LSM hooks, where they exist, and in other
-> places defines its own hook.   This patch set defines a new IMA hook for
-> measuring and appraising files being read by the kernel.
-> 
-> > * Does it try to calculate the hash of the file buffer after copying,
-> 
-> IMA calculates the file hash, in this case, based on the buffer
-> contents.   The hash is calculated once and used for both measurement
-> and appraisal.  If the file integrity appraisal fails (eg. hash
-> comparison or signature failure), IMA prevents the kexec files from
-> being used.
-> 
+The 1st page is pagetable, control code page locates at the 2nd page.
+The following kexec_mark_range() wants to mark ro from crashk_res.start
+to the 1st page(included), so here we must use PAGE_SIZE.
 
-Ok, thanks for the explanatioin. But I have another question, why do we
-need a special hook for KEXEC? Shouldn't all files use same way to do the
-measurement and appraisal?
+>>
+>>>>> +	kexec_mark_range(crashk_res.start, control - 1, protect);
+>>>>> +	kexec_mark_range(control + PAGE_SIZE, crashk_res.end, protect);
+>>>> X86 kexec will copy the page while kexecing, could you check if we can move
+>>>> that copying to earliyer while kexec loading, maybe machine_kexec_prepare so
+>>>> that we can make a arch-independent implementation.
+>>> For some arch, may use huge tlb directly to do the kernel mapping,
+>>> in such cases, we can't implement this function. So I think it should
+>>> be arch-dependent.
+>> Ok, that's fine.
+> At least moving the x86 control-copying code into arch-related
+> machine_kexec_prepare() should work, and this can omit the
+> special treatment of the control code page.
 
-Thanks
-Dave
+The "relocate_kernel" routine in "relocate_kernel_64.S" will use it as
+a temp storage "for jumping back"(as its comment), so we can't mark
+it readonly.
+
+>
+> Regards,
+> Xunlei
+>
+>>> Regards,
+>>> Xunlei
+>>>
+>>>>> +}
+>>>>> +
+>>>>> +void arch_kexec_protect_crashkres(void)
+>>>>> +{
+>>>>> +	kexec_mark_crashkres(true);
+>>>>> +}
+>>>>> +
+>>>>> +void arch_kexec_unprotect_crashkres(void)
+>>>>> +{
+>>>>> +	kexec_mark_crashkres(false);
+>>>>> +}
+>>>>> +#endif
+>>>>> -- 
+>>>>> 2.5.0
+>>>>>
+>>>>>
+>>>>> _______________________________________________
+>>>>> kexec mailing list
+>>>>> kexec@lists.infradead.org
+>>>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>> Thanks
+>> Dave
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 
 
 _______________________________________________
