@@ -1,26 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aDN4a-0007vP-C7
- for kexec@lists.infradead.org; Mon, 28 Dec 2015 01:58:09 +0000
-Received: from int-mx13.intmail.prod.int.phx2.redhat.com
- (int-mx13.intmail.prod.int.phx2.redhat.com [10.5.11.26])
- by mx1.redhat.com (Postfix) with ESMTPS id 4479E57
- for <kexec@lists.infradead.org>; Mon, 28 Dec 2015 01:57:47 +0000 (UTC)
-Received: from dhcp-128-28.nay.redhat.com ([10.66.129.152])
- by int-mx13.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id
- tBS1vjfo005854
- for <kexec@lists.infradead.org>; Sun, 27 Dec 2015 20:57:46 -0500
-Subject: Re: [PATCH 2/2] kexec: Provide
- arch_kexec_protect(unprotect)_crashkres()
-References: <1450869146-6186-1-git-send-email-xlpang@redhat.com>
- <1450869146-6186-2-git-send-email-xlpang@redhat.com>
- <20151226152100.GA26946@dhcp-128-25.nay.redhat.com>
-From: Xunlei Pang <xlpang@redhat.com>
-Message-ID: <56809718.1050700@redhat.com>
-Date: Mon, 28 Dec 2015 09:57:44 +0800
+ id 1aDNF8-0003Bp-JV
+ for kexec@lists.infradead.org; Mon, 28 Dec 2015 02:09:03 +0000
+Date: Mon, 28 Dec 2015 10:08:29 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [Linux-ima-devel] [PATCH v2 4/7] ima: measure and appraise kexec
+ image and initramfs
+Message-ID: <20151228020829.GB2980@dhcp-128-65.nay.redhat.com>
+References: <1450914903-5793-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1450914903-5793-5-git-send-email-zohar@linux.vnet.ibm.com>
+ <20151225053356.GA3398@dhcp-128-65.nay.redhat.com>
+ <1451054749.3289.131.camel@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20151226152100.GA26946@dhcp-128-25.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1451054749.3289.131.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,64 +27,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, David Woodhouse <dwmw2@infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 12/26/2015 at 11:21 PM, Minfei Huang wrote:
-> On 12/23/15 at 07:12pm, Xunlei Pang wrote:
->> Implement the protection method for the crash kernel memory
->> reservation for the 64-bit x86 kdump.
->>
->> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
->> ---
->> Only provided x86_64 implementation, as I've only tested on x86_64 so far.
->>
->>  arch/x86/kernel/machine_kexec_64.c | 43 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 43 insertions(+)
->>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> index 819ab3f..a3d289c 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -536,3 +536,46 @@ overflow:
->>  	return -ENOEXEC;
->>  }
->>  #endif /* CONFIG_KEXEC_FILE */
->> +
->> +#ifdef CONFIG_KEXEC_CORE
->> +static int
->> +kexec_mark_range(unsigned long start, unsigned long end, bool protect)
->> +{
->> +	struct page *page;
->> +	unsigned int nr_pages;
->> +
->> +	if (!start || !end || start >= end)
->> +		return 0;
->> +
->> +	page = pfn_to_page(start >> PAGE_SHIFT);
->> +	nr_pages = (end + 1 - start) >> PAGE_SHIFT;
-> The start and end may across two pages, although the range is small than
-> PAGE_SIZE. You can use following to calculate count of page.
->
-> nr_pages = (end >> PAGE_SHIFT) - (start >> PAGE_SHIFT) + 1;
+Hi, Mimi
 
-For subpage ranges, you're right. I'll adjust this, thanks!
+On 12/25/15 at 09:45am, Mimi Zohar wrote:
+> On Fri, 2015-12-25 at 13:33 +0800, Dave Young wrote:
+> > Hi, Mimi
+> > 
+> > CCing kexec list, not all kexec people subscribed to IMA list.
+> > I just subscribed to it since Vivek CCed me last time about the V1 of this
+> > series.
+> 
+> Thanks!
+> 
+> > On 12/23/15 at 06:55pm, Mimi Zohar wrote:
+> > > This patch defines a new IMA hook ima_hash_and_process_file() for
+> > > measuring and appraising files read by the kernel.  The caller loads
+> > > the file into memory before calling this function, which calculates
+> > > the hash followed by the normal IMA policy based processing.
+> > > 
+> > > Two new IMA policy functions named KEXEC_CHECK and INITRAMFS_CHECK
+> > > are defined for measuring, appraising or auditing the kexec image
+> > > and initramfs.
+> > 
+> > Could you help us understand why do we need it first.
+> 
+> IMA can be viewed as extending secure and trusted boot to the running
+> system in a uniform and consistent manner.   As files are accessed,
+> based on policy, IMA measures them, appends the file measurements to the
+> running measurement list (<securityfs>/ima/ascii_runtime_measurements)
+> and appraises the file's integrity, based on either the file's hash or
+> signature, which are stored as extended attributes in "security.ima".
+> 
+> There are still a couple of file measurement and appraisal gaps that
+> need to be closed.
+> 
+> > I think I do not really understand the purpose of the IMA handling
+> > about kexec kernel and initramfs.
+> 
+> One of those measurement and appraisal gaps are files that are read by
+> the kernel, like the kexec image and initramfs.
+> 
+> [There is a lot of code duplication in the kernel for reading a file and
+> verifying its signature.   Each place does it just a bit differently
+> than the other.  I'm working with Luis Rodriguez on defining a single,
+> common function  - https://lkml.org/lkml/2015/12/21/478.]
+> 
+> > * Does the files in disk space have already contains some hash values 
+> > and when kernel load it IMA functions will do some checking? But seems I do not
+> > see such handling..
+> 
+> IMA sits on a number of the LSM hooks, where they exist, and in other
+> places defines its own hook.   This patch set defines a new IMA hook for
+> measuring and appraising files being read by the kernel.
+> 
+> > * Does it try to calculate the hash of the file buffer after copying,
+> 
+> IMA calculates the file hash, in this case, based on the buffer
+> contents.   The hash is calculated once and used for both measurement
+> and appraisal.  If the file integrity appraisal fails (eg. hash
+> comparison or signature failure), IMA prevents the kexec files from
+> being used.
+> 
 
-Regards,
-Xunlei
+Ok, thanks for the explanatioin. But I have another question, why do we
+need a special hook for KEXEC? Shouldn't all files use same way to do the
+measurement and appraisal?
 
->
-> Thanks
-> Minfei
->
->> +	if (protect)
->> +		return set_pages_ro(page, nr_pages);
->> +	else
->> +		return set_pages_rw(page, nr_pages);
->> +}
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Thanks
+Dave
 
 
 _______________________________________________
