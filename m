@@ -1,22 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aDs2v-0002Ba-AJ
- for kexec@lists.infradead.org; Tue, 29 Dec 2015 11:02:30 +0000
-Subject: Re: [PATCH 2/2] kexec: Provide
- arch_kexec_protect(unprotect)_crashkres()
-References: <1450869146-6186-1-git-send-email-xlpang@redhat.com>
- <1450869146-6186-2-git-send-email-xlpang@redhat.com>
- <20151224055425.GC3480@dhcp-128-65.nay.redhat.com>
- <567B8B44.9070807@redhat.com>
- <20151224061616.GD3480@dhcp-128-65.nay.redhat.com>
- <567B9444.1050608@redhat.com> <5680D780.4070709@redhat.com>
- <20151228121438.GA31802@dhcp-128-25.nay.redhat.com>
-From: Xunlei Pang <xlpang@redhat.com>
-Message-ID: <5682682C.1070206@redhat.com>
-Date: Tue, 29 Dec 2015 19:02:04 +0800
-MIME-Version: 1.0
-In-Reply-To: <20151228121438.GA31802@dhcp-128-25.nay.redhat.com>
+ id 1aDt3v-0001CA-5o
+ for kexec@lists.infradead.org; Tue, 29 Dec 2015 12:07:36 +0000
+Received: from localhost
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Tue, 29 Dec 2015 22:07:11 +1000
+Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 094133578047
+ for <kexec@lists.infradead.org>; Tue, 29 Dec 2015 23:07:08 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ tBTC6kfu34144436
+ for <kexec@lists.infradead.org>; Tue, 29 Dec 2015 23:06:59 +1100
+Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ tBTC6V2p014585
+ for <kexec@lists.infradead.org>; Tue, 29 Dec 2015 23:06:31 +1100
+Message-ID: <1451390772.3078.39.camel@linux.vnet.ibm.com>
+Subject: Re: [Linux-ima-devel] [PATCH v2 4/7] ima: measure and appraise
+ kexec image and initramfs
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Tue, 29 Dec 2015 07:06:12 -0500
+In-Reply-To: <20151229082122.GA11810@dhcp-128-65.nay.redhat.com>
+References: <1450914903-5793-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1450914903-5793-5-git-send-email-zohar@linux.vnet.ibm.com>
+ <20151225053356.GA3398@dhcp-128-65.nay.redhat.com>
+ <1451054749.3289.131.camel@linux.vnet.ibm.com>
+ <20151228020829.GB2980@dhcp-128-65.nay.redhat.com>
+ <1451307075.3289.224.camel@linux.vnet.ibm.com>
+ <20151229082122.GA11810@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,68 +45,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Minfei Huang <mhuang@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, David Woodhouse <dwmw2@infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On 12/28/2015 at 08:14 PM, Minfei Huang wrote:
-> On 12/28/15 at 02:32pm, Xunlei Pang wrote:
->> On 12/24/2015 at 02:44 PM, Xunlei Pang wrote:
->>>>>>> +static void kexec_mark_crashkres(bool protect)
->>>>>>> +{
->>>>>>> +	unsigned long control;
->>>>>>> +
->>>>>>> +	kexec_mark_range(crashk_low_res.start, crashk_low_res.end, protect);
->>>>>>> +
->>>>>>> +	/* Don't touch the control code page used in crash_kexec().*/
->>>>>>> +	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
->>>>>>> +	/* Control code page is located in the 2nd page. */
->>>>>>> +	control = control + PAGE_SIZE;
->>>> Though it works because the control code is less than 1 page, but use the macro
->>>> of KEXEC_CONTROL_PAGE_SIZE looks better..
->> The 1st page is pagetable, control code page locates at the 2nd page.
->> The following kexec_mark_range() wants to mark ro from crashk_res.start
->> to the 1st page(included), so here we must use PAGE_SIZE.
->>
->>>>>>> +	kexec_mark_range(crashk_res.start, control - 1, protect);
->>>>>>> +	kexec_mark_range(control + PAGE_SIZE, crashk_res.end, protect);
->>>>>> X86 kexec will copy the page while kexecing, could you check if we can move
->>>>>> that copying to earliyer while kexec loading, maybe machine_kexec_prepare so
->>>>>> that we can make a arch-independent implementation.
->>>>> For some arch, may use huge tlb directly to do the kernel mapping,
->>>>> in such cases, we can't implement this function. So I think it should
->>>>> be arch-dependent.
->>>> Ok, that's fine.
->>> At least moving the x86 control-copying code into arch-related
->>> machine_kexec_prepare() should work, and this can omit the
->>> special treatment of the control code page.
->> The "relocate_kernel" routine in "relocate_kernel_64.S" will use it as
->> a temp storage "for jumping back"(as its comment), so we can't mark
->> it readonly.
-> kexec will copy the relocate_kernel binary to control_code_page in
-> function machine_kexec. This is a major reason to set the region
-> control_code_page to control_code_page + PAGE_SIZE with mode read/write.
+On Tue, 2015-12-29 at 16:21 +0800, Dave Young wrote:
+> Hi, Mimi
+> 
+> On 12/28/15 at 07:51am, Mimi Zohar wrote:
+> > On Mon, 2015-12-28 at 10:08 +0800, Dave Young wrote:
+> > > On 12/25/15 at 09:45am, Mimi Zohar wrote:
+> > > > IMA calculates the file hash, in this case, based on the buffer
+> > > > contents.   The hash is calculated once and used for both measurement
+> > > > and appraisal.  If the file integrity appraisal fails (eg. hash
+> > > > comparison or signature failure), IMA prevents the kexec files from
+> > > > being used.
+> > > > 
+> > > 
+> > > Ok, thanks for the explanatioin. But I have another question, why do we
+> > > need a special hook for KEXEC? Shouldn't all files use same way to do the
+> > > measurement and appraisal?
+> > 
+> > "By all files" are you referring to all files read by the kernel or all
+> > files opened, executed or mmapped by the system?
+> 
+> Hmm, I means any kind of files read by the kernel.
+> 
+> > 
+> > Currently IMA allocates a page sized buffer, reads a file a page chunk
+> > at a time calculating the file hash as it does so, and then frees the
+> > buffer before returning to the caller.  This method of calculating the
+> > file hash is used for measuring and appraising files opened
+> > (FILE_CHECK), executed (BPRM_CHECK) or mmapped (MMAP_CHECK) by the
+> > system.
+> > 
+> > This patch set addresses files being read by kernel.  A single new
+> > generic hook named ima_hash_and_process_file() is defined to not only
+> > measure and appraise the kexec image and initramfs, but firmware and the
+> > IMA policy.   As we identify other places that the kernel is reading
+> > files, this hook would be called in those places as well.
+> 
+> What I can not understand is why IMA need know the caller information and
+> why cann't introduce a generic interface. kexec and firmware and other
+> caller all read files, so a common file based interface should be better?
 
-Yes, I mean after avoiding this copy by  moving the x86 control-copying
-code into arch-related machine_kexec_prepare(), we still can't mark it
-readonly because of its temp storage role.
+The next patch set will define a common function for reading files by
+the kernel.  Luis set up a wiki
+http://kernelnewbies.org/KernelProjects/common-kernel-loader with some
+details.
 
-Of course we can still do that by setting its kernel pte to rwx and do a
-local tlb invalidation when crash_kexec(), but I think we can simply leave
-that alone, since its content is meaningless before crash happens where
-the code is copied into it. Unless you want to capture the wrong kernel
-operations that only write to this reserved page.
+This patch set defines a generic interface for measuring and appraising
+files being read by the kernel, with the ability to define a policy
+based on the caller information.   For the details on expressing a
+policy, refer to Documentation/ABI/testing/ima-policy.   For example,
+the new rules could be expressed like:
 
-Regards,
-Xunlei
+measure func=KEXEC_CHECK
+appraise func=KEXEC_CHECK appraise_type=imasig
+#
+measure func=INITRAMFS_CHECK
+appraise func=INITRAMFS_CHECK appraise_type=imasig
+#
+measure func=FIRMWARE_CHECK
+appraise func=FIRMWARE_CHECK appraise_type=imasig
+#
+measure func=POLICY_CHECK
+appraise func=POLICY_CHECK appraise_type=imasig
 
->
-> Thanks
-> Minfei
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+This policy flexibility is needed at least until all files come from
+software providers with file signatures.  (RPM has been modified to
+include file signatures.)  Even then, in terms of kexec, some distros
+generate the initramfs on the target host and,  therefore, can not sign
+the initramfs.  The local user could, however, sign the initramfs on
+their own system.
+
+Mimi
 
 
 _______________________________________________
