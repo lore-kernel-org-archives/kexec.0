@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aFwVv-0005Mw-S0
- for kexec@lists.infradead.org; Mon, 04 Jan 2016 04:13:00 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.195])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u044CYq7015219
- for <kexec@lists.infradead.org>; Mon, 4 Jan 2016 13:12:34 +0900 (JST)
-Received: from mailsv4.nec.co.jp (imss63.nec.co.jp [10.7.69.158]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id u044CXU15421 for <kexec@lists.infradead.org>;
- Mon, 4 Jan 2016 13:12:33 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id u044CX0Z026182
- for <kexec@lists.infradead.org>; Mon, 4 Jan 2016 13:12:33 +0900 (JST)
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: [PATCH] makedumpfile: Remove useless definitions of return value. 
-Date: Mon, 4 Jan 2016 04:11:51 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E11A46@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1aG1PG-0001zu-JR
+ for kexec@lists.infradead.org; Mon, 04 Jan 2016 09:26:27 +0000
+Date: Mon, 4 Jan 2016 17:25:45 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 14/16] x86, nvdimm, kexec: Use walk_iomem_res_desc() for
+ iomem search
+Message-ID: <20160104092545.GA7033@dhcp-128-65.nay.redhat.com>
+References: <1451081365-15190-1-git-send-email-toshi.kani@hpe.com>
+ <1451081365-15190-14-git-send-email-toshi.kani@hpe.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1451081365-15190-14-git-send-email-toshi.kani@hpe.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,86 +21,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Toshi Kani <toshi.kani@hpe.com>
+Cc: linux-arch@vger.kernel.org, linux-nvdimm@ml01.01.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, bp@alien8.de, akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>
 
-Hello,
+Hi, Toshi,
 
-I'll reduce the type of return value in the next version,
-please let me know if this change is inconvenient for you.
+On 12/25/15 at 03:09pm, Toshi Kani wrote:
+> Change to call walk_iomem_res_desc() for searching resource entries
+> with the following names:
+>  "ACPI Tables"
+>  "ACPI Non-volatile Storage"
+>  "Persistent Memory (legacy)"
+>  "Crash kernel"
+> =
+
+> Note, the caller of walk_iomem_res() with "GART" is left unchanged
+> because this entry may be initialized by out-of-tree drivers, which
+> do not have 'desc' set to IORES_DESC_GART.
+
+Found below commit which initialize the GART entry:
+commit 56dd669a138c40ea6cdae487f233430d12372767
+Author: Aaron Durbin <adurbin@google.com>
+Date:   Tue Sep 26 10:52:40 2006 +0200
+
+    [PATCH] Insert GART region into resource map
+    =
+
+    Patch inserts the GART region into the iomem resource map. The GART wil=
+l then
+    be visible within /proc/iomem. It will also allow for other users
+    utilizing the GART to subreserve the region (agp or IOMMU).
+    =
+
+    Signed-off-by: Aaron Durbin <adurbin@google.com>
+
+But later it was reverted:
+commit 707d4eefbdb31f8e588277157056b0ce637d6c68
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue Mar 18 14:26:12 2014 -0600
+
+    Revert "[PATCH] Insert GART region into resource map"
+    =
+
+    This reverts commit 56dd669a138c, which makes the GART visible in
+    /proc/iomem.  This fixes a regression: e501b3d87f00 ("agp: Support 64-b=
+it
+    APBASE") exposed an existing problem with a conflict between the GART
+    region and a PCI BAR region.
+    =
+
+    The GART addresses are bus addresses, not CPU addresses, and therefore
+    should not be inserted in iomem_resource.
+    =
+
+    On many machines, the GART region is addressable by the CPU as well as =
+by
+    an AGP master, but CPU addressability is not required by the spec.  On =
+some
+    of these machines, the GART is mapped by a PCI BAR, and in that case, t=
+he
+    PCI core automatically inserts it into iomem_resource, just as it does =
+for
+    all BARs.
+    =
+
+    Inserting it here means we'll have a conflict if the PCI core later tri=
+es
+    to claim the GART region, so let's drop the insertion here.
+    =
+
+    The conflict indirectly causes X failures, as reported by Jouni in the
+    bugzilla below.  We detected the conflict even before e501b3d87f00, but
+    after it the AGP code (fix_northbridge()) uses the PCI resource (which =
+is
+    zeroed because of the conflict) instead of reading the BAR again.
+    =
+
+    Conflicts:
+        arch/x86_64/kernel/aperture.c
+    =
+
+    Fixes: e501b3d87f00 agp: Support 64-bit APBASE
+    Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D72201
+    Reported-and-tested-by: Jouni Mett=E4l=E4 <jtmettala@gmail.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 
 
-Thanks,
-Atsushi Kumagai
+For amd64 agp, currently the region name is "aperture" instead:
+drivers/char/agp/amd64-agp.c: agp_aperture_valid()
 
---
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Date: Mon, 28 Dec 2015 16:22:09 +0900
-Subject: [PATCH] Remove useless definitions of return value.
+This may not be the only case, but I doubt that anyone is testing this since
+long time ago kexec-tools excluding the 'GART' region. Kexec-tools and kexe=
+c_file
+may need update to use "aperture" if someone can test it.
 
-The five return values are defined in makedumpfile,
-but the latter two are useless.
+I think adding an enum value for compatibility is reasonable, we do not care
+about third party drivers in mainline.
 
-  #define COMPLETED       (0)
-  #define FAILED          (1)
-  #define WRONG_RELEASE   (2)     /* utsname.release does not match. */
-  #define ANALYSIS_FAILED (3)     /* detected illegal page descriptor. */
-  #define OUTPUT_FAILED   (4)     /* detected an output error. */
-
-ANALYSIS_FAILED will be returned only when free_list is broken,
-but I can't find any reason to give this case special treatment.
-As for OUTPUT_FAILED, it isn't used at all.
-
-Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
----
- makedumpfile.8 | 2 --
- makedumpfile.c | 1 -
- makedumpfile.h | 2 --
- 3 files changed, 5 deletions(-)
-
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 6eff4f1..5fda3ed 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -635,8 +635,6 @@ makedumpfile exits with the following value.
- \fB1\fR : makedumpfile failed without the following reasons.
- .TP
- \fB2\fR : makedumpfile failed due to the different version between  \fIVMLINUX\fR and \fIVMCORE\fR.
--.TP
--\fB3\fR : makedumpfile failed due to the analysis error of the memory.
- 
- .SH AUTHORS
- .PP
-diff --git a/makedumpfile.c b/makedumpfile.c
-index a8c9e8b..b802446 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -4706,7 +4706,6 @@ reset_bitmap_of_free_pages(unsigned long node_zones, struct cycle *cycle)
- 				}
- 				if (previous != curr_prev) {
- 					ERRMSG("The free list is broken.\n");
--					retcd = ANALYSIS_FAILED;
- 					return FALSE;
- 				}
- 				for (i = 0; i < (1<<order); i++) {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index c42fc81..e626be8 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -54,8 +54,6 @@
- #define COMPLETED	(0)
- #define FAILED		(1)
- #define WRONG_RELEASE	(2)	/* utsname.release does not match. */
--#define ANALYSIS_FAILED	(3)	/* detected illegal page descriptor. */
--#define OUTPUT_FAILED	(4)	/* detected an output error. */
- 
- /*
-  * Type of memory management
--- 
-1.9.0
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
