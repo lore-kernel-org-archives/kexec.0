@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t3426.houston.hp.com ([15.201.208.54])
+Received: from g4t3428.houston.hp.com ([15.201.208.56])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aGWlv-0001uV-77
- for kexec@lists.infradead.org; Tue, 05 Jan 2016 18:55:56 +0000
+ id 1aGWm8-000260-Ug
+ for kexec@lists.infradead.org; Tue, 05 Jan 2016 18:56:10 +0000
 From: Toshi Kani <toshi.kani@hpe.com>
-Subject: [PATCH v3 07/17] kexec: Set IORESOURCE_SYSTEM_RAM to System RAM
-Date: Tue,  5 Jan 2016 11:54:31 -0700
-Message-Id: <1452020081-26534-7-git-send-email-toshi.kani@hpe.com>
+Subject: [PATCH v3 14/17] x86, nvdimm,
+ kexec: Use walk_iomem_res_desc() for iomem search
+Date: Tue,  5 Jan 2016 11:54:38 -0700
+Message-Id: <1452020081-26534-14-git-send-email-toshi.kani@hpe.com>
 In-Reply-To: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
 References: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
 List-Id: <kexec.lists.infradead.org>
@@ -23,71 +24,103 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: akpm@linux-foundation.org, bp@alien8.de
-Cc: linux-arch@vger.kernel.org, Toshi Kani <toshi.kani@hpe.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Dave Young <dyoung@redhat.com>
+Cc: linux-arch@vger.kernel.org, Toshi Kani <toshi.kani@hpe.com>, linux-nvdimm@lists.01.org, Minfei Huang <mhuang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>, Dave Young <dyoung@redhat.com>
 
-Set IORESOURCE_SYSTEM_RAM to 'flags' and IORES_DESC_CRASH_KERNEL
-to 'desc' of "Crash kernel" resource ranges, which are child
-nodes of System RAM.
+Change the callers of walk_iomem_res() with the following names
+to use walk_iomem_res(), instead.
 
-Change crash_shrink_memory() to set IORESOURCE_SYSTEM_RAM for
-a System RAM range.
+ "ACPI Tables"
+ "ACPI Non-volatile Storage"
+ "Persistent Memory (legacy)"
+ "Crash kernel"
 
-Change kexec_add_buffer() to call walk_iomem_res() with
-IORESOURCE_SYSTEM_RAM type for "Crash kernel".
+Note, the caller of walk_iomem_res() with "GART" will be removed
+in a later patch.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: Dave Young <dyoung@redhat.com>
+Cc: Minfei Huang <mhuang@redhat.com>
+Cc: x86@kernel.org
+Cc: linux-nvdimm@lists.01.org
 Cc: kexec@lists.infradead.org
 Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
 ---
- kernel/kexec_core.c |    8 +++++---
- kernel/kexec_file.c |    2 +-
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ arch/x86/kernel/crash.c |    4 ++--
+ arch/x86/kernel/pmem.c  |    4 ++--
+ drivers/nvdimm/e820.c   |    2 +-
+ kernel/kexec_file.c     |    8 ++++----
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 11b64a6..80bff05 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -66,13 +66,15 @@ struct resource crashk_res = {
- 	.name  = "Crash kernel",
- 	.start = 0,
- 	.end   = 0,
--	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_CRASH_KERNEL
- };
- struct resource crashk_low_res = {
- 	.name  = "Crash kernel",
- 	.start = 0,
- 	.end   = 0,
--	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_CRASH_KERNEL
- };
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 2c1910f..082373b 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -588,12 +588,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	/* Add ACPI tables */
+ 	cmd.type = E820_ACPI;
+ 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+-	walk_iomem_res("ACPI Tables", flags, 0, -1, &cmd,
++	walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1, &cmd,
+ 		       memmap_entry_callback);
  
- int kexec_should_crash(struct task_struct *p)
-@@ -934,7 +936,7 @@ int crash_shrink_memory(unsigned long new_size)
+ 	/* Add ACPI Non-volatile Storage */
+ 	cmd.type = E820_NVS;
+-	walk_iomem_res("ACPI Non-volatile Storage", flags, 0, -1, &cmd,
++	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
+ 			memmap_entry_callback);
  
- 	ram_res->start = end;
- 	ram_res->end = crashk_res.end;
--	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
-+	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM;
- 	ram_res->name = "System RAM";
+ 	/* Add crashk_low_res region */
+diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
+index 14415af..92f7014 100644
+--- a/arch/x86/kernel/pmem.c
++++ b/arch/x86/kernel/pmem.c
+@@ -13,11 +13,11 @@ static int found(u64 start, u64 end, void *data)
  
- 	crashk_res.end = end - 1;
+ static __init int register_e820_pmem(void)
+ {
+-	char *pmem = "Persistent Memory (legacy)";
+ 	struct platform_device *pdev;
+ 	int rc;
+ 
+-	rc = walk_iomem_res(pmem, IORESOURCE_MEM, 0, -1, NULL, found);
++	rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
++				 IORESOURCE_MEM, 0, -1, NULL, found);
+ 	if (rc <= 0)
+ 		return 0;
+ 
+diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
+index b0045a5..95825b3 100644
+--- a/drivers/nvdimm/e820.c
++++ b/drivers/nvdimm/e820.c
+@@ -55,7 +55,7 @@ static int e820_pmem_probe(struct platform_device *pdev)
+ 	for (p = iomem_resource.child; p ; p = p->sibling) {
+ 		struct nd_region_desc ndr_desc;
+ 
+-		if (strncmp(p->name, "Persistent Memory (legacy)", 26) != 0)
++		if (p->desc != IORES_DESC_PERSISTENT_MEMORY_LEGACY)
+ 			continue;
+ 
+ 		memset(&ndr_desc, 0, sizeof(ndr_desc));
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b70ada0..c245085 100644
+index c245085..6e31cea 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -523,7 +523,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+@@ -522,10 +522,10 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 
  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
  	if (image->type == KEXEC_TYPE_CRASH)
- 		ret = walk_iomem_res("Crash kernel",
--				     IORESOURCE_MEM | IORESOURCE_BUSY,
-+				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
- 				     crashk_res.start, crashk_res.end, kbuf,
- 				     locate_mem_hole_callback);
+-		ret = walk_iomem_res("Crash kernel",
+-				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+-				     crashk_res.start, crashk_res.end, kbuf,
+-				     locate_mem_hole_callback);
++		ret = walk_iomem_res_desc(crashk_res.desc,
++				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
++				crashk_res.start, crashk_res.end, kbuf,
++				locate_mem_hole_callback);
  	else
+ 		ret = walk_system_ram_res(0, -1, kbuf,
+ 					  locate_mem_hole_callback);
 
 _______________________________________________
 kexec mailing list
