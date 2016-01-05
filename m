@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g9t5009.houston.hp.com ([15.240.92.67])
+Received: from g4t3426.houston.hp.com ([15.201.208.54])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aGWlW-0001VB-8F
- for kexec@lists.infradead.org; Tue, 05 Jan 2016 18:55:31 +0000
+ id 1aGWlv-0001uV-77
+ for kexec@lists.infradead.org; Tue, 05 Jan 2016 18:55:56 +0000
 From: Toshi Kani <toshi.kani@hpe.com>
-Subject: [PATCH v3 00/17] Enhance iomem search interfaces and support EINJ to
- NVDIMM
-Date: Tue,  5 Jan 2016 11:54:28 -0700
-Message-Id: <1452020068-26492-1-git-send-email-toshi.kani@hpe.com>
+Subject: [PATCH v3 07/17] kexec: Set IORESOURCE_SYSTEM_RAM to System RAM
+Date: Tue,  5 Jan 2016 11:54:31 -0700
+Message-Id: <1452020081-26534-7-git-send-email-toshi.kani@hpe.com>
+In-Reply-To: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
+References: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,112 +23,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: akpm@linux-foundation.org, bp@alien8.de
-Cc: linux-arch@vger.kernel.org, x86@kernel.org, linux-ia64@vger.kernel.org, linux-acpi@vger.kernel.org, linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org, torvalds@linux-foundation.org, rafael.j.wysocki@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-samsung-soc@vger.kernel.org, xen-devel@lists.xenproject.org, dan.j.williams@intel.com, dyoung@redhat.com, linux-nvdimm@lists.01.org
+Cc: linux-arch@vger.kernel.org, Toshi Kani <toshi.kani@hpe.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Dave Young <dyoung@redhat.com>
 
-This patch-set enhances the iomem table and its search interfacs, and
-then changes EINJ to support NVDIMM.
+Set IORESOURCE_SYSTEM_RAM to 'flags' and IORES_DESC_CRASH_KERNEL
+to 'desc' of "Crash kernel" resource ranges, which are child
+nodes of System RAM.
 
- - Patches 1-2 add a new System RAM type, IORESOURCE_SYSTEM_RAM, and
-   make the iomem search interfaces work with resource flags with
-   modifier bits set.  IORESOURCE_SYSTEM_RAM has IORESOURCE_MEM bit set
-   for backward compatibility.
+Change crash_shrink_memory() to set IORESOURCE_SYSTEM_RAM for
+a System RAM range.
 
- - Patch 3 adds a new field, I/O resource descriptor, into struct resource.
-   Drivers can assign their unique descritor to a range when they support
-   the iomem search interfaces.
+Change kexec_add_buffer() to call walk_iomem_res() with
+IORESOURCE_SYSTEM_RAM type for "Crash kernel".
 
- - Patches 4-9 changes initializations of resource entries.  They set
-   the System RAM type to System RAM ranges, set I/O resource descriptors
-   to the regions targeted by the iomem search interfaces, and change
-   to call kzalloc() where kmalloc() is used to allocate struct resource
-   ranges.
-
- - Patches 10-14 extend the iomem interfaces to check System RAM ranges
-   with the System RAM type and the I/O resource descriptor.
-
- - Patch 15-16 remove deprecated walk_iomem_res().
-
- - Patch 17 changes the EINJ driver to allow injecting a memory error
-   to NVDIMM.
-
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org
+Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
 ---
-v3:
- - Remove the walk_iomem_res() call with "GART" in crash.c since it is
-   no longer needed. Then kill walk_iomem_res(). (Borislav Petkov,
-   Dave Young)
- - Change to use crashk_res.desc at the walk_iomem_res_desc() call in
-   kexec_add_buffer(). (Minfei Huang)
+ kernel/kexec_core.c |    8 +++++---
+ kernel/kexec_file.c |    2 +-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-v2:
- - Add 'desc' to struct resource, and add a new iomem interface to
-   search with the desc. (Borislav Petkov)
- - Add a check to checkpatch.pl to warn on new use of walk_iomem_res().
-   (Borislav Petkov)
-
-v1:
- - Searching for System RAM in the resource table should not require
-   strcmp(). (Borislav Petkov)
- - Add a new System RAM type as a modifier to IORESOURCE_MEM.
-   (Linus Torvalds)
- - NVDIMM check needs to be able to distinguish legacy and NFIT pmem
-   ranges. (Dan Williams)
-
----
-Toshi Kani (17):
- 01/17 resource: Add System RAM resource type
- 02/17 resource: make resource flags handled properly
- 03/17 resource: Add I/O resource descriptor
- 04/17 x86/e820: Set System RAM type and descriptor
- 05/17 ia64: Set System RAM type and descriptor
- 06/17 arch: Set IORESOURCE_SYSTEM_RAM to System RAM
- 07/17 kexec: Set IORESOURCE_SYSTEM_RAM to System RAM
- 08/17 xen, mm: Set IORESOURCE_SYSTEM_RAM to System RAM
- 09/17 drivers: Initialize resource entry to zero
- 10/17 resource: Change walk_system_ram to use System RAM type
- 11/17 arm/samsung: Change s3c_pm_run_res() to use System RAM type
- 12/17 memremap: Change region_intersects() to take @flags and @desc
- 13/17 resource: Add walk_iomem_res_desc()
- 14/17 x86,nvdimm,kexec: Use walk_iomem_res_desc() for iomem search
- 15/17 x86/kexec: Remove walk_iomem_res() call with GART
- 16/17 resource: Kill walk_iomem_res()
- 17/17 ACPI/EINJ: Allow memory error injection to NVDIMM
-
----
- arch/arm/kernel/setup.c            |  6 +--
- arch/arm/plat-samsung/pm-check.c   |  4 +-
- arch/arm64/kernel/setup.c          |  6 +--
- arch/avr32/kernel/setup.c          |  6 +--
- arch/ia64/kernel/efi.c             | 13 ++++--
- arch/ia64/kernel/setup.c           |  6 +--
- arch/m32r/kernel/setup.c           |  4 +-
- arch/mips/kernel/setup.c           | 10 +++--
- arch/parisc/mm/init.c              |  6 +--
- arch/powerpc/mm/mem.c              |  2 +-
- arch/s390/kernel/setup.c           |  8 ++--
- arch/score/kernel/setup.c          |  2 +-
- arch/sh/kernel/setup.c             |  8 ++--
- arch/sparc/mm/init_64.c            |  8 ++--
- arch/tile/kernel/setup.c           | 11 +++--
- arch/unicore32/kernel/setup.c      |  6 +--
- arch/x86/kernel/crash.c            | 41 ++-----------------
- arch/x86/kernel/e820.c             | 38 ++++++++++++++++-
- arch/x86/kernel/pmem.c             |  4 +-
- arch/x86/kernel/setup.c            |  6 +--
- drivers/acpi/acpi_platform.c       |  2 +-
- drivers/acpi/apei/einj.c           | 15 +++++--
- drivers/nvdimm/e820.c              |  2 +-
- drivers/parisc/eisa_enumerator.c   |  4 +-
- drivers/rapidio/rio.c              |  8 ++--
- drivers/sh/superhyway/superhyway.c |  2 +-
- drivers/xen/balloon.c              |  2 +-
- include/linux/ioport.h             | 33 ++++++++++++++-
- include/linux/mm.h                 |  3 +-
- kernel/kexec_core.c                |  8 ++--
- kernel/kexec_file.c                |  8 ++--
- kernel/memremap.c                  | 13 +++---
- kernel/resource.c                  | 83 ++++++++++++++++++++++----------------
- mm/memory_hotplug.c                |  2 +-
- 34 files changed, 225 insertions(+), 155 deletions(-)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 11b64a6..80bff05 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -66,13 +66,15 @@ struct resource crashk_res = {
+ 	.name  = "Crash kernel",
+ 	.start = 0,
+ 	.end   = 0,
+-	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_CRASH_KERNEL
+ };
+ struct resource crashk_low_res = {
+ 	.name  = "Crash kernel",
+ 	.start = 0,
+ 	.end   = 0,
+-	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_CRASH_KERNEL
+ };
+ 
+ int kexec_should_crash(struct task_struct *p)
+@@ -934,7 +936,7 @@ int crash_shrink_memory(unsigned long new_size)
+ 
+ 	ram_res->start = end;
+ 	ram_res->end = crashk_res.end;
+-	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
++	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM;
+ 	ram_res->name = "System RAM";
+ 
+ 	crashk_res.end = end - 1;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b70ada0..c245085 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -523,7 +523,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	if (image->type == KEXEC_TYPE_CRASH)
+ 		ret = walk_iomem_res("Crash kernel",
+-				     IORESOURCE_MEM | IORESOURCE_BUSY,
++				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 				     crashk_res.start, crashk_res.end, kbuf,
+ 				     locate_mem_hole_callback);
+ 	else
 
 _______________________________________________
 kexec mailing list
