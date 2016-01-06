@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aGi1v-00086Z-Ga
- for kexec@lists.infradead.org; Wed, 06 Jan 2016 06:57:12 +0000
-Date: Wed, 6 Jan 2016 12:26:47 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] arm64: Add support for 4level 4K page translations table
-Message-ID: <20160106065647.GA29776@dhcppc13.redhat.com>
-References: <1452039159-5559-1-git-send-email-asamson@codeaurora.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1452039159-5559-1-git-send-email-asamson@codeaurora.org>
+ id 1aGkkY-00029s-0s
+ for kexec@lists.infradead.org; Wed, 06 Jan 2016 09:51:26 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH v2 1/2] kexec: Introduce a protection mechanism for the
+ crashkernel reserved memory
+Date: Wed,  6 Jan 2016 17:50:44 +0800
+Message-Id: <1452073845-1474-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,132 +16,128 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Azriel Samson <asamson@codeaurora.org>
-Cc: timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org, Mansi Patel <mansip@codeaurora.org>, sgoel@codeaurora.org, virajm@codeaurora.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Minfei Huang <mhuang@redhat.com>, Xunlei Pang <xlpang@redhat.com>, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Azriel,
+For the cases that some kernel (module) path stamps the crash
+reserved memory(already mapped by the kernel) where has been
+loaded the second kernel data, the kdump kernel will probably
+fail to boot when panic happens (or even not happens) leaving
+the culprit at large, this is unacceptable.
 
-Thanks for working on 4 level 4K page support.
+The patch introduces a mechanism for detecting such cases:
+1) After each crash kexec loading, it simply marks the reserved
+memory regions readonly since we no longer access it after that.
+When someone stamps the region, the first kernel will panic and
+trigger the kdump. The weak arch_kexec_protect_crashkres() is
+introduced to do the actual protection.
 
-On 05/01/2016:05:12:39 PM, Azriel Samson wrote:
-> Add PUD translation for 4 level page tables.
-> 
-> Signed-off-by: Mansi Patel <mansip@codeaurora.org>
-> Signed-off-by: Azriel Samson <asamson@codeaurora.org>
-> ---
-> This change targets the arm64_support branch of Pratush Anand's repository at:
-> https://github.com/pratyushanand/makedumpfile.git
-> 
->  arch/arm64.c | 25 ++++++++++++++++++-------
->  1 file changed, 18 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64.c b/arch/arm64.c
-> index 59825fa..62c76e3 100644
-> --- a/arch/arm64.c
-> +++ b/arch/arm64.c
-> @@ -35,15 +35,10 @@ typedef struct {
->  	pud_t pud;
->  } pmd_t;
->  
-> -#define pud_offset(pgd, vaddr) 	((pud_t *)pgd)
-> -
->  #define pgd_val(x)		((x).pgd)
->  #define pud_val(x)		(pgd_val((x).pgd))
->  #define pmd_val(x)		(pud_val((x).pud))
->  
-> -#define PUD_SHIFT		PGDIR_SHIFT
-> -#define PUD_SIZE		(1UL << PUD_SHIFT)
-> -
->  typedef struct {
->  	unsigned long pte;
->  } pte_t;
-> @@ -59,6 +54,10 @@ typedef struct {
->  #define PMD_SIZE		(1UL << PMD_SHIFT)
->  #define PMD_MASK		(~(PMD_SIZE - 1))
->  #define PTRS_PER_PMD		PTRS_PER_PTE
-> +#define PUD_SHIFT		((PAGE_SHIFT - 3) * 3 + 3)
+2) To allow multiple loading, once 1) was done we also need to
+remark the reserved memory to readwrite each time a system call
+related to kdump is made. The weak arch_kexec_unprotect_crashkres()
+is introduced to undo the actual protection.
 
-It will break system with pgtable_level <= 3. I think it would be better to keep
-it like as follows:
+The architecture can make its specific implementation by overriding
+arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres().
 
-static int
-get_pud_shift_arm64(void)
-{
-        if (pgtable_level == 4)
-                return ((PAGE_SHIFT - 3) * 3 + 3);
-        else
-                return PGDIR_SHIFT;
-}
-#define PUD_SHIFT               get_pud_shift_arm64()
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+ include/linux/kexec.h | 2 ++
+ kernel/kexec.c        | 9 ++++++++-
+ kernel/kexec_core.c   | 6 ++++++
+ kernel/kexec_file.c   | 8 +++++++-
+ 4 files changed, 23 insertions(+), 2 deletions(-)
 
-> +#define PUD_SIZE		(1UL << PUD_SHIFT)
-> +#define PUD_MASK		(~(PUD_SIZE - 1))
-> +#define PTRS_PER_PUD		PTRS_PER_PTE
->  
->  #define PAGE_PRESENT		(1 << 0)
->  #define SECTIONS_SIZE_BITS	30
-> @@ -95,6 +94,10 @@ typedef struct {
->  #define pud_page_vaddr(pud)		(__va(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK))
->  #define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_vaddr((*pud)) + pmd_index(vaddr))
->  
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 7b68d27..ebd6950 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -329,6 +329,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+ 					Elf_Shdr *sechdrs, unsigned int relsec);
+ int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 					unsigned int relsec);
++void arch_kexec_protect_crashkres(void);
++void arch_kexec_unprotect_crashkres(void);
+ 
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index d873b64..3680f9c 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -167,8 +167,12 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 		return -EBUSY;
+ 
+ 	dest_image = &kexec_image;
+-	if (flags & KEXEC_ON_CRASH)
++	if (flags & KEXEC_ON_CRASH) {
+ 		dest_image = &kexec_crash_image;
++		if (kexec_crash_image)
++			arch_kexec_unprotect_crashkres();
++	}
++
+ 	if (nr_segments > 0) {
+ 		unsigned long i;
+ 
+@@ -211,6 +215,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	image = xchg(dest_image, image);
+ 
+ out:
++	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
++		arch_kexec_protect_crashkres();
++
+ 	mutex_unlock(&kexec_mutex);
+ 	kimage_free(image);
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c823f30..de4dd80 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1560,3 +1560,9 @@ void __weak crash_map_reserved_pages(void)
+ 
+ void __weak crash_unmap_reserved_pages(void)
+ {}
++
++void __weak arch_kexec_protect_crashkres(void)
++{}
++
++void __weak arch_kexec_unprotect_crashkres(void)
++{}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b70ada0..5892d6a 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -327,8 +327,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 		return -EBUSY;
+ 
+ 	dest_image = &kexec_image;
+-	if (flags & KEXEC_FILE_ON_CRASH)
++	if (flags & KEXEC_FILE_ON_CRASH) {
+ 		dest_image = &kexec_crash_image;
++		if (kexec_crash_image)
++			arch_kexec_unprotect_crashkres();
++	}
+ 
+ 	if (flags & KEXEC_FILE_UNLOAD)
+ 		goto exchange;
+@@ -377,6 +380,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ exchange:
+ 	image = xchg(dest_image, image);
+ out:
++	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
++		arch_kexec_protect_crashkres();
++
+ 	mutex_unlock(&kexec_mutex);
+ 	kimage_free(image);
+ 	return ret;
+-- 
+2.5.0
 
-Since above definition for PTRS_PER_PUD is true only for 4 level page table so
-better to keep that define here.
-
-> +#define pud_index(vaddr)		(((vaddr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-> +#define pgd_page_vaddr(pgd)		   (__va(pgd_val(pgd) & PHYS_MASK & (int32_t)PAGE_MASK))
-> +#define pud_offset(pgd, vaddr) ((pud_t *)pgd_page_vaddr((*pgd)) + pud_index(vaddr))
-> +
-
-May be following would be better:
-
-static pud_t * 
-pud_offset(pgd_t *pgd, unsigned long vaddr)
-{
-        if (pgtable_level == 4)
-                return ((pud_t *)pgd_page_vaddr((*pgd)) + pud_index(vaddr));
-        else
-                return (pud_t *)pgd;
-}
-
-
->  /* kernel struct page size can be kernel version dependent, currently
->   * keep it constant.
->   */
-> @@ -244,7 +247,7 @@ vtop_arm64(unsigned long vaddr)
->  {
->  	unsigned long long paddr = NOT_PADDR;
->  	pgd_t	*pgda, pgdv;
-> -	pud_t	pudv;
-> +	pud_t	*puda, pudv;
->  	pmd_t	*pmda, pmdv;
->  	pte_t 	*ptea, ptev;
->  
-> @@ -259,7 +262,15 @@ vtop_arm64(unsigned long vaddr)
->  		return NOT_PADDR;
->  	}
->  
-> -	pudv.pgd = pgdv;
-> +	if (pgtable_level <= 3) {
-> +		pudv.pgd = pgdv;
-> +	} else {
-
-With suggested pud_offset() definition, we can get rid of above "if" condition and
-then pud calculation code would be in sync with other calculations like that of
-pgd and pmd.
-
-> +		puda = pud_offset(&pgdv, vaddr);
-> +		if (!readmem(VADDR, (unsigned long long)puda, &pudv, sizeof(pudv))) {
-> +			ERRMSG("Can't read pud\n");
-> +			return NOT_PADDR;
-> +		}
-> +	}
-
-~Pratyush
 
 _______________________________________________
 kexec mailing list
