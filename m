@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g9t5009.houston.hp.com ([15.240.92.67])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aGWm9-00026R-Sn
- for kexec@lists.infradead.org; Tue, 05 Jan 2016 18:56:11 +0000
-From: Toshi Kani <toshi.kani@hpe.com>
-Subject: [PATCH v3 15/17] x86/kexec: Remove walk_iomem_res() call with GART
-Date: Tue,  5 Jan 2016 11:54:39 -0700
-Message-Id: <1452020081-26534-15-git-send-email-toshi.kani@hpe.com>
-In-Reply-To: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
-References: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
+ id 1aGbjJ-00037k-5J
+ for kexec@lists.infradead.org; Wed, 06 Jan 2016 00:13:33 +0000
+From: Azriel Samson <asamson@codeaurora.org>
+Subject: [PATCH] arm64: Add support for 4level 4K page translations table
+Date: Tue,  5 Jan 2016 17:12:39 -0700
+Message-Id: <1452039159-5559-1-git-send-email-asamson@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,98 +20,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org, bp@alien8.de
-Cc: linux-arch@vger.kernel.org, Toshi Kani <toshi.kani@hpe.com>, Minfei Huang <mhuang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Dave Young <dyoung@redhat.com>
+To: panand@redhat.com, kexec@lists.infradead.org
+Cc: timur@codeaurora.org, Azriel Samson <asamson@codeaurora.org>, rruigrok@codeaurora.org, Mansi Patel <mansip@codeaurora.org>, sgoel@codeaurora.org, virajm@codeaurora.org
 
-There is no longer any driver inserting a "GART" region in the kernel
-since 'commit 707d4eefbdb3 ("Revert "[PATCH] Insert GART region into
-resource map"")' was made.
+Add PUD translation for 4 level page tables.
 
-Remove the call to walk_iomem_res() with "GART", its callback function,
-and GART-specific variables set by the callback.
-
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Minfei Huang <mhuang@redhat.com>
-Cc: x86@kernel.org
-Cc: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/<20160104110427.GA2965@dhcp-128-65.nay.redhat.com>
-Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
+Signed-off-by: Mansi Patel <mansip@codeaurora.org>
+Signed-off-by: Azriel Samson <asamson@codeaurora.org>
 ---
- arch/x86/kernel/crash.c |   37 +------------------------------------
- 1 file changed, 1 insertion(+), 36 deletions(-)
+This change targets the arm64_support branch of Pratush Anand's repository at:
+https://github.com/pratyushanand/makedumpfile.git
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 082373b..f5069e7 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -56,10 +56,9 @@ struct crash_elf_data {
- 	struct kimage *image;
- 	/*
- 	 * Total number of ram ranges we have after various adjustments for
--	 * GART, crash reserved region etc.
-+	 * crash reserved region, etc.
- 	 */
- 	unsigned int max_nr_ranges;
--	unsigned long gart_start, gart_end;
+ arch/arm64.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm64.c b/arch/arm64.c
+index 59825fa..62c76e3 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -35,15 +35,10 @@ typedef struct {
+ 	pud_t pud;
+ } pmd_t;
  
- 	/* Pointer to elf header */
- 	void *ehdr;
-@@ -190,17 +189,6 @@ static int get_nr_ram_ranges_callback(u64 start, u64 end, void *arg)
- 	return 0;
- }
- 
--static int get_gart_ranges_callback(u64 start, u64 end, void *arg)
--{
--	struct crash_elf_data *ced = arg;
+-#define pud_offset(pgd, vaddr) 	((pud_t *)pgd)
 -
--	ced->gart_start = start;
--	ced->gart_end = end;
--
--	/* Not expecting more than 1 gart aperture */
--	return 1;
--}
--
+ #define pgd_val(x)		((x).pgd)
+ #define pud_val(x)		(pgd_val((x).pgd))
+ #define pmd_val(x)		(pud_val((x).pud))
  
- /* Gather all the required information to prepare elf headers for ram regions */
- static void fill_up_crash_elf_data(struct crash_elf_data *ced,
-@@ -215,22 +203,6 @@ static void fill_up_crash_elf_data(struct crash_elf_data *ced,
- 
- 	ced->max_nr_ranges = nr_ranges;
- 
--	/*
--	 * We don't create ELF headers for GART aperture as an attempt
--	 * to dump this memory in second kernel leads to hang/crash.
--	 * If gart aperture is present, one needs to exclude that region
--	 * and that could lead to need of extra phdr.
--	 */
--	walk_iomem_res("GART", IORESOURCE_MEM, 0, -1,
--				ced, get_gart_ranges_callback);
+-#define PUD_SHIFT		PGDIR_SHIFT
+-#define PUD_SIZE		(1UL << PUD_SHIFT)
 -
--	/*
--	 * If we have gart region, excluding that could potentially split
--	 * a memory range, resulting in extra header. Account for  that.
--	 */
--	if (ced->gart_end)
--		ced->max_nr_ranges++;
--
- 	/* Exclusion of crash region could split memory ranges */
- 	ced->max_nr_ranges++;
+ typedef struct {
+ 	unsigned long pte;
+ } pte_t;
+@@ -59,6 +54,10 @@ typedef struct {
+ #define PMD_SIZE		(1UL << PMD_SHIFT)
+ #define PMD_MASK		(~(PMD_SIZE - 1))
+ #define PTRS_PER_PMD		PTRS_PER_PTE
++#define PUD_SHIFT		((PAGE_SHIFT - 3) * 3 + 3)
++#define PUD_SIZE		(1UL << PUD_SHIFT)
++#define PUD_MASK		(~(PUD_SIZE - 1))
++#define PTRS_PER_PUD		PTRS_PER_PTE
  
-@@ -339,13 +311,6 @@ static int elf_header_exclude_ranges(struct crash_elf_data *ced,
- 			return ret;
+ #define PAGE_PRESENT		(1 << 0)
+ #define SECTIONS_SIZE_BITS	30
+@@ -95,6 +94,10 @@ typedef struct {
+ #define pud_page_vaddr(pud)		(__va(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK))
+ #define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_vaddr((*pud)) + pmd_index(vaddr))
+ 
++#define pud_index(vaddr)		(((vaddr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
++#define pgd_page_vaddr(pgd)		   (__va(pgd_val(pgd) & PHYS_MASK & (int32_t)PAGE_MASK))
++#define pud_offset(pgd, vaddr) ((pud_t *)pgd_page_vaddr((*pgd)) + pud_index(vaddr))
++
+ /* kernel struct page size can be kernel version dependent, currently
+  * keep it constant.
+  */
+@@ -244,7 +247,7 @@ vtop_arm64(unsigned long vaddr)
+ {
+ 	unsigned long long paddr = NOT_PADDR;
+ 	pgd_t	*pgda, pgdv;
+-	pud_t	pudv;
++	pud_t	*puda, pudv;
+ 	pmd_t	*pmda, pmdv;
+ 	pte_t 	*ptea, ptev;
+ 
+@@ -259,7 +262,15 @@ vtop_arm64(unsigned long vaddr)
+ 		return NOT_PADDR;
  	}
  
--	/* Exclude GART region */
--	if (ced->gart_end) {
--		ret = exclude_mem_range(cmem, ced->gart_start, ced->gart_end);
--		if (ret)
--			return ret;
--	}
--
- 	return ret;
- }
+-	pudv.pgd = pgdv;
++	if (pgtable_level <= 3) {
++		pudv.pgd = pgdv;
++	} else {
++		puda = pud_offset(&pgdv, vaddr);
++		if (!readmem(VADDR, (unsigned long long)puda, &pudv, sizeof(pudv))) {
++			ERRMSG("Can't read pud\n");
++			return NOT_PADDR;
++		}
++	}
  
+ 	pmda = pmd_offset(&pudv, vaddr);
+ 	if (!readmem(VADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
+
 
 _______________________________________________
 kexec mailing list
