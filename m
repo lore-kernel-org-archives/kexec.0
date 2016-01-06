@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aGrXK-00023C-Aw
- for kexec@lists.infradead.org; Wed, 06 Jan 2016 17:06:14 +0000
-Date: Thu, 7 Jan 2016 01:08:32 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH v2 2/2] kexec: Provide
- arch_kexec_protect(unprotect)_crashkres()
-Message-ID: <20160106170832.GB25832@dhcp-128-25.nay.redhat.com>
-References: <1452073845-1474-1-git-send-email-xlpang@redhat.com>
- <1452073845-1474-2-git-send-email-xlpang@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1452073845-1474-2-git-send-email-xlpang@redhat.com>
+ id 1aGxZW-0001DV-2c
+ for kexec@lists.infradead.org; Wed, 06 Jan 2016 23:32:54 +0000
+From: Azriel Samson <asamson@codeaurora.org>
+Subject: [PATCH v2] arm64: Add support for 4level 4K page translations table
+Date: Wed,  6 Jan 2016 16:32:28 -0700
+Message-Id: <1452123148-17792-1-git-send-email-asamson@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,78 +15,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: panand@redhat.com, kexec@lists.infradead.org
+Cc: timur@codeaurora.org, Azriel Samson <asamson@codeaurora.org>, rruigrok@codeaurora.org, Mansi Patel <mansip@codeaurora.org>, sgoel@codeaurora.org, virajm@codeaurora.org
 
-On 01/06/16 at 05:50pm, Xunlei Pang wrote:
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index 819ab3f..cda867d 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -536,3 +536,44 @@ overflow:
->  	return -ENOEXEC;
->  }
->  #endif /* CONFIG_KEXEC_FILE */
-> +
-> +static int
-> +kexec_mark_range(unsigned long start, unsigned long end, bool protect)
-> +{
-> +	struct page *page;
-> +	unsigned int nr_pages;
-> +
-> +	/* For physical range: [start, end] */
-> +	if (!start || !end || start > end)
-> +		return 0;
+Add PUD translation for 4 level page tables.
 
-Hi, Xunlei.
+Signed-off-by: Mansi Patel <mansip@codeaurora.org>
+Signed-off-by: Azriel Samson <asamson@codeaurora.org>
+Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
+---
+This change targets the arm64_support branch of Pratush Anand's repository at:
+https://github.com/pratyushanand/makedumpfile.git
 
-        if (start > end)
-                return 0;
+ arch/arm64.c | 46 +++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
 
-See the below comment.
-> +
-> +	page = pfn_to_page(start >> PAGE_SHIFT);
-> +	nr_pages = (end + PAGE_SIZE - start) >> PAGE_SHIFT;
+diff --git a/arch/arm64.c b/arch/arm64.c
+index 59825fa..1eb050b 100644
+--- a/arch/arm64.c
++++ b/arch/arm64.c
+@@ -35,15 +35,10 @@ typedef struct {
+ 	pud_t pud;
+ } pmd_t;
+ 
+-#define pud_offset(pgd, vaddr) 	((pud_t *)pgd)
+-
+ #define pgd_val(x)		((x).pgd)
+ #define pud_val(x)		(pgd_val((x).pgd))
+ #define pmd_val(x)		(pud_val((x).pud))
+ 
+-#define PUD_SHIFT		PGDIR_SHIFT
+-#define PUD_SIZE		(1UL << PUD_SHIFT)
+-
+ typedef struct {
+ 	unsigned long pte;
+ } pte_t;
+@@ -59,6 +54,9 @@ typedef struct {
+ #define PMD_SIZE		(1UL << PMD_SHIFT)
+ #define PMD_MASK		(~(PMD_SIZE - 1))
+ #define PTRS_PER_PMD		PTRS_PER_PTE
++#define PUD_SHIFT		get_pud_shift_arm64()
++#define PUD_SIZE		(1UL << PUD_SHIFT)
++#define PUD_MASK		(~(PUD_SIZE - 1))
+ 
+ #define PAGE_PRESENT		(1 << 0)
+ #define SECTIONS_SIZE_BITS	30
+@@ -95,6 +93,10 @@ typedef struct {
+ #define pud_page_vaddr(pud)		(__va(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK))
+ #define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_vaddr((*pud)) + pmd_index(vaddr))
+ 
++#define PTRS_PER_PUD			PTRS_PER_PTE
++#define pud_index(vaddr)		(((vaddr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
++#define pgd_page_vaddr(pgd)		(__va(pgd_val(pgd) & PHYS_MASK & (int32_t)PAGE_MASK))
++
+ /* kernel struct page size can be kernel version dependent, currently
+  * keep it constant.
+  */
+@@ -128,16 +130,34 @@ get_page_shift_arm64(void)
+ 	return page_shift;
+ }
+ 
++static int
++get_pud_shift_arm64(void)
++{
++        if (pgtable_level == 4)
++                return ((PAGE_SHIFT - 3) * 3 + 3);
++        else
++                return PGDIR_SHIFT;
++}
++
+ pmd_t *
+-pmd_offset(pud_t *pud, unsigned long vaddr)
++pmd_offset(pud_t *puda, pud_t *pudv, unsigned long vaddr)
+ {
+ 	if (pgtable_level == 2) {
+-		return pmd_offset_pgtbl_lvl_2(pud, vaddr);
++		return pmd_offset_pgtbl_lvl_2(puda, vaddr);
+ 	} else {
+-		return pmd_offset_pgtbl_lvl_3(pud, vaddr);
++		return pmd_offset_pgtbl_lvl_3(pudv, vaddr);
+ 	}
+ }
+ 
++static pud_t *
++pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
++{
++        if (pgtable_level == 4)
++                return ((pud_t *)pgd_page_vaddr((*pgdv)) + pud_index(vaddr));
++        else
++                return (pud_t *)(pgda);
++}
++
+ static int
+ is_vtop_from_page_table_arm64(unsigned long vaddr)
+ {
+@@ -244,7 +264,7 @@ vtop_arm64(unsigned long vaddr)
+ {
+ 	unsigned long long paddr = NOT_PADDR;
+ 	pgd_t	*pgda, pgdv;
+-	pud_t	pudv;
++	pud_t	*puda, pudv;
+ 	pmd_t	*pmda, pmdv;
+ 	pte_t 	*ptea, ptev;
+ 
+@@ -259,9 +279,13 @@ vtop_arm64(unsigned long vaddr)
+ 		return NOT_PADDR;
+ 	}
+ 
+-	pudv.pgd = pgdv;
++	puda = pud_offset(pgda, &pgdv, vaddr);
++	if (!readmem(VADDR, (unsigned long long)puda, &pudv, sizeof(pudv))) {
++		ERRMSG("Can't read pud\n");
++		return NOT_PADDR;
++	}
+ 
+-	pmda = pmd_offset(&pudv, vaddr);
++	pmda = pmd_offset(puda, &pudv, vaddr);
+ 	if (!readmem(VADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+ 		ERRMSG("Can't read pmd\n");
+ 		return NOT_PADDR;
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
-As I commented in last version, it is better to cover the case if the
-range from start to end acrosses two pages.
-
-> +	if (protect)
-> +		return set_pages_ro(page, nr_pages);
-> +	else
-> +		return set_pages_rw(page, nr_pages);
-> +}
-> +
-> +static void kexec_mark_crashkres(bool protect)
-> +{
-> +	unsigned long control;
-> +
-> +	kexec_mark_range(crashk_low_res.start, crashk_low_res.end, protect);
-
-Adding the following if test to test crashk_low_res is better. Then we
-do not need to test if start or end is equal to 0 in kexec_mark_range.
-
-        if (crashk_low_res.start != crashk_low_res.end) {
-                kexec_mark_range(crashk_low_res.start,
-                                crashk_low_res.end, protect);
-        }
-
-> +
-> +	/* Don't touch the control code page used in crash_kexec().*/
-> +	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
-> +	/* Control code page is located in the 2nd page. */
-> +	kexec_mark_range(crashk_res.start, control + PAGE_SIZE - 1, protect);
-> +	kexec_mark_range(control + 2 * PAGE_SIZE, crashk_res.end, protect);
-
-I think it is more readable, if we use MACRO KEXEC_CONTROL_PAGE_SIZE,
-instead of using 2*PAGE_SIZE directly.
-
-Thanks
-Minfei
 
 _______________________________________________
 kexec mailing list
