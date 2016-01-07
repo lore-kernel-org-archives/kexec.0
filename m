@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aH5BS-00074b-73
- for kexec@lists.infradead.org; Thu, 07 Jan 2016 07:40:35 +0000
-Date: Thu, 7 Jan 2016 13:10:10 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v2] arm64: Add support for 4level 4K page translations
- table
-Message-ID: <20160107074010.GA6040@dhcppc13.redhat.com>
-References: <1452123148-17792-1-git-send-email-asamson@codeaurora.org>
+ id 1aH6km-0001jd-0c
+ for kexec@lists.infradead.org; Thu, 07 Jan 2016 09:21:09 +0000
+Date: Thu, 7 Jan 2016 10:20:41 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH v2 2/2] kexec: Provide
+ arch_kexec_protect(unprotect)_crashkres()
+Message-ID: <20160107102041.1d99f70f@hananiah.suse.cz>
+In-Reply-To: <568DF2C5.9080701@redhat.com>
+References: <1452073845-1474-1-git-send-email-xlpang@redhat.com>
+ <1452073845-1474-2-git-send-email-xlpang@redhat.com>
+ <20160106170832.GB25832@dhcp-128-25.nay.redhat.com>
+ <568DC9F0.8090609@redhat.com>
+ <20160107023637.GA12526@dhcp-128-25.nay.redhat.com>
+ <568DF2C5.9080701@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1452123148-17792-1-git-send-email-asamson@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +28,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Azriel Samson <asamson@codeaurora.org>
-Cc: timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org, Mansi Patel <mansip@codeaurora.org>, sgoel@codeaurora.org, virajm@codeaurora.org
+To: Xunlei Pang <xlpang@redhat.com>
+Cc: Minfei Huang <mhuang@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Azriel,
+On Thu, 7 Jan 2016 13:08:21 +0800
+Xunlei Pang <xlpang@redhat.com> wrote:
 
-Thanks for the quick v2.
-
-On 06/01/2016:04:32:28 PM, Azriel Samson wrote:
-> Add PUD translation for 4 level page tables.
+> On 01/07/2016 at 10:36 AM, Minfei Huang wrote:
+> > On 01/07/16 at 10:14am, Xunlei Pang wrote:
+> >>>> +static int
+> >>>> +kexec_mark_range(unsigned long start, unsigned long end, bool protect)
+> >>>> +{
+> >>>> +	struct page *page;
+> >>>> +	unsigned int nr_pages;
+> >>>> +
+> >>>> +	/* For physical range: [start, end] */
+> >>>> +	if (!start || !end || start > end)
+> >>>> +		return 0;
+> >>> Hi, Xunlei.
+> >>>
+> >>>         if (start > end)
+> >>>                 return 0;
+> >> If both start and end are zero, we want to return directly, so the two
+> >> more check doesn't hurt.
+> > How about if the start is equal to 0, and end is larger than 0? It is
+> > better to make code more robust, although it never happen in currect
+> > kexec code.
 > 
-> Signed-off-by: Mansi Patel <mansip@codeaurora.org>
-> Signed-off-by: Azriel Samson <asamson@codeaurora.org>
-> Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
-> ---
-> This change targets the arm64_support branch of Pratush Anand's repository at:
-> https://github.com/pratyushanand/makedumpfile.git
+> Hmm, this will be better:
+> 
+> 	if (!end || start > end)
+> 		return 0;
+> 
+> it handles the common case not using crash_low_res(start and end are 0).
 
-I have applied this patch to arm64_support branch. Since this patch depends on
-few corresponding changes in kernel which is not part of Geoff's kexec-v12
-series. So I will first get ACKed corresponding kernel patch [1] and then will
-resend this patch along with other dependent patch to kexec mailing list.
+Hm, if both start and end are 0, then what about using this condition:
 
-~Pratyush
+ 	if (start >= end)
+ 		return 0;
 
-[1]
-https://github.com/pratyushanand/linux/commit/3d9a2e96bd49c69637b88f61cbefa9736e029370
+I think it's good enough, because if start is equal to end, then
+there's nothing to protect anyway.
+
+Regards,
+Petr Tesarik
 
 _______________________________________________
 kexec mailing list
