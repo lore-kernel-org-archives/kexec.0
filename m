@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aH34v-00051u-92
- for kexec@lists.infradead.org; Thu, 07 Jan 2016 05:25:41 +0000
-Date: Thu, 7 Jan 2016 13:25:07 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Kexec_file_load failed with "Missing required AuthAttr"
-Message-ID: <20160107052507.GA12900@dhcp-128-65.nay.redhat.com>
+ id 1aH5BS-00074b-73
+ for kexec@lists.infradead.org; Thu, 07 Jan 2016 07:40:35 +0000
+Date: Thu, 7 Jan 2016 13:10:10 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v2] arm64: Add support for 4level 4K page translations
+ table
+Message-ID: <20160107074010.GA6040@dhcppc13.redhat.com>
+References: <1452123148-17792-1-git-send-email-asamson@codeaurora.org>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1452123148-17792-1-git-send-email-asamson@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,34 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Howells <dhowells@redhat.com>
-Cc: xlpang@redhat.com, kexec@lists.infradead.org, linux-crypto@vger.kernel.org, vgoyal@redhat.com, linux-kernel@vger.kernel.org
+To: Azriel Samson <asamson@codeaurora.org>
+Cc: timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org, Mansi Patel <mansip@codeaurora.org>, sgoel@codeaurora.org, virajm@codeaurora.org
 
-Hi,
+Hi Azriel,
 
-I saw the warning "Missing required AuthAttr" when testing kexec, known issue?
-Idea about how to fix it?
+Thanks for the quick v2.
 
-The kernel is latest linus tree plus sevral patches from Toshi to cleanup io resource structure.
+On 06/01/2016:04:32:28 PM, Azriel Samson wrote:
+> Add PUD translation for 4 level page tables.
+> 
+> Signed-off-by: Mansi Patel <mansip@codeaurora.org>
+> Signed-off-by: Azriel Samson <asamson@codeaurora.org>
+> Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
+> ---
+> This change targets the arm64_support branch of Pratush Anand's repository at:
+> https://github.com/pratyushanand/makedumpfile.git
 
-in function pkcs7_sig_note_set_of_authattrs():
-        if (!test_bit(sinfo_has_content_type, &sinfo->aa_set) ||
-            !test_bit(sinfo_has_message_digest, &sinfo->aa_set) ||
-            (ctx->msg->data_type == OID_msIndirectData &&
-             !test_bit(sinfo_has_ms_opus_info, &sinfo->aa_set))) {
-                pr_warn("Missing required AuthAttr\n");
-                return -EBADMSG;
-        }
+I have applied this patch to arm64_support branch. Since this patch depends on
+few corresponding changes in kernel which is not part of Geoff's kexec-v12
+series. So I will first get ACKed corresponding kernel patch [1] and then will
+resend this patch along with other dependent patch to kexec mailing list.
 
-The third condition below is true:
-(ctx->msg->data_type == OID_msIndirectData &&
-             !test_bit(sinfo_has_ms_opus_info, &sinfo->aa_set))
+~Pratyush
 
-I signed the kernel with redhat test key like below:
-pesign -c 'Red Hat Test Certificate' -i arch/x86/boot/bzImage -o /boot/vmlinuz-4.4.0-rc8+ -s --force
-
-Thanks
-Dave
+[1]
+https://github.com/pratyushanand/linux/commit/3d9a2e96bd49c69637b88f61cbefa9736e029370
 
 _______________________________________________
 kexec mailing list
