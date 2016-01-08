@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aH9rM-0002PK-4P
- for kexec@lists.infradead.org; Thu, 07 Jan 2016 12:40:09 +0000
-Date: Thu, 7 Jan 2016 20:39:30 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 14/17] x86, nvdimm, kexec: Use walk_iomem_res_desc() for
- iomem search
-Message-ID: <20160107123930.GC2870@dhcp-128-65.nay.redhat.com>
-References: <1452020081-26534-1-git-send-email-toshi.kani@hpe.com>
- <1452020081-26534-14-git-send-email-toshi.kani@hpe.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1452020081-26534-14-git-send-email-toshi.kani@hpe.com>
+ id 1aHMt5-0007FK-Ln
+ for kexec@lists.infradead.org; Fri, 08 Jan 2016 02:34:49 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH v3 1/2] kexec: Introduce a protection mechanism for the
+ crashkernel reserved memory
+Date: Fri,  8 Jan 2016 10:33:42 +0800
+Message-Id: <1452220423-4733-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,114 +16,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Toshi Kani <toshi.kani@hpe.com>
-Cc: linux-arch@vger.kernel.org, Minfei Huang <mhuang@redhat.com>, linux-nvdimm@ml01.01.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, bp@alien8.de, akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Minfei Huang <mhuang@redhat.com>, Xunlei Pang <xlpang@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 01/05/16 at 11:54am, Toshi Kani wrote:
-> Change the callers of walk_iomem_res() with the following names
-> to use walk_iomem_res(), instead.
-> 
->  "ACPI Tables"
->  "ACPI Non-volatile Storage"
->  "Persistent Memory (legacy)"
->  "Crash kernel"
-> 
-> Note, the caller of walk_iomem_res() with "GART" will be removed
-> in a later patch.
-> 
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Minfei Huang <mhuang@redhat.com>
-> Cc: x86@kernel.org
-> Cc: linux-nvdimm@lists.01.org
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
-> ---
->  arch/x86/kernel/crash.c |    4 ++--
->  arch/x86/kernel/pmem.c  |    4 ++--
->  drivers/nvdimm/e820.c   |    2 +-
->  kernel/kexec_file.c     |    8 ++++----
->  4 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 2c1910f..082373b 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -588,12 +588,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->  	/* Add ACPI tables */
->  	cmd.type = E820_ACPI;
->  	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> -	walk_iomem_res("ACPI Tables", flags, 0, -1, &cmd,
-> +	walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1, &cmd,
->  		       memmap_entry_callback);
->  
->  	/* Add ACPI Non-volatile Storage */
->  	cmd.type = E820_NVS;
-> -	walk_iomem_res("ACPI Non-volatile Storage", flags, 0, -1, &cmd,
-> +	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
->  			memmap_entry_callback);
->  
->  	/* Add crashk_low_res region */
-> diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
-> index 14415af..92f7014 100644
-> --- a/arch/x86/kernel/pmem.c
-> +++ b/arch/x86/kernel/pmem.c
-> @@ -13,11 +13,11 @@ static int found(u64 start, u64 end, void *data)
->  
->  static __init int register_e820_pmem(void)
->  {
-> -	char *pmem = "Persistent Memory (legacy)";
->  	struct platform_device *pdev;
->  	int rc;
->  
-> -	rc = walk_iomem_res(pmem, IORESOURCE_MEM, 0, -1, NULL, found);
-> +	rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
-> +				 IORESOURCE_MEM, 0, -1, NULL, found);
->  	if (rc <= 0)
->  		return 0;
->  
-> diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-> index b0045a5..95825b3 100644
-> --- a/drivers/nvdimm/e820.c
-> +++ b/drivers/nvdimm/e820.c
-> @@ -55,7 +55,7 @@ static int e820_pmem_probe(struct platform_device *pdev)
->  	for (p = iomem_resource.child; p ; p = p->sibling) {
->  		struct nd_region_desc ndr_desc;
->  
-> -		if (strncmp(p->name, "Persistent Memory (legacy)", 26) != 0)
-> +		if (p->desc != IORES_DESC_PERSISTENT_MEMORY_LEGACY)
->  			continue;
->  
->  		memset(&ndr_desc, 0, sizeof(ndr_desc));
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index c245085..6e31cea 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -522,10 +522,10 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
->  
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
->  	if (image->type == KEXEC_TYPE_CRASH)
-> -		ret = walk_iomem_res("Crash kernel",
-> -				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-> -				     crashk_res.start, crashk_res.end, kbuf,
-> -				     locate_mem_hole_callback);
-> +		ret = walk_iomem_res_desc(crashk_res.desc,
-> +				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-> +				crashk_res.start, crashk_res.end, kbuf,
-> +				locate_mem_hole_callback);
->  	else
->  		ret = walk_system_ram_res(0, -1, kbuf,
->  					  locate_mem_hole_callback);
+For the cases that some kernel (module) path stamps the crash
+reserved memory(already mapped by the kernel) where has been
+loaded the second kernel data, the kdump kernel will probably
+fail to boot when panic happens (or even not happens) leaving
+the culprit at large, this is unacceptable.
 
-Reviewed-by: Dave Young <dyoung@redhat.com>
+The patch introduces a mechanism for detecting such cases:
+1) After each crash kexec loading, it simply marks the reserved
+memory regions readonly since we no longer access it after that.
+When someone stamps the region, the first kernel will panic and
+trigger the kdump. The weak arch_kexec_protect_crashkres() is
+introduced to do the actual protection.
 
-Thanks
-Dave
+2) To allow multiple loading, once 1) was done we also need to
+remark the reserved memory to readwrite each time a system call
+related to kdump is made. The weak arch_kexec_unprotect_crashkres()
+is introduced to undo the actual protection.
+
+The architecture can make its specific implementation by overriding
+arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres().
+
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+v2->v3:
+No changes.
+
+ include/linux/kexec.h | 2 ++
+ kernel/kexec.c        | 9 ++++++++-
+ kernel/kexec_core.c   | 6 ++++++
+ kernel/kexec_file.c   | 8 +++++++-
+ 4 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 7b68d27..ebd6950 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -329,6 +329,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+ 					Elf_Shdr *sechdrs, unsigned int relsec);
+ int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 					unsigned int relsec);
++void arch_kexec_protect_crashkres(void);
++void arch_kexec_unprotect_crashkres(void);
+ 
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index d873b64..3680f9c 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -167,8 +167,12 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 		return -EBUSY;
+ 
+ 	dest_image = &kexec_image;
+-	if (flags & KEXEC_ON_CRASH)
++	if (flags & KEXEC_ON_CRASH) {
+ 		dest_image = &kexec_crash_image;
++		if (kexec_crash_image)
++			arch_kexec_unprotect_crashkres();
++	}
++
+ 	if (nr_segments > 0) {
+ 		unsigned long i;
+ 
+@@ -211,6 +215,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	image = xchg(dest_image, image);
+ 
+ out:
++	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
++		arch_kexec_protect_crashkres();
++
+ 	mutex_unlock(&kexec_mutex);
+ 	kimage_free(image);
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c823f30..de4dd80 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1560,3 +1560,9 @@ void __weak crash_map_reserved_pages(void)
+ 
+ void __weak crash_unmap_reserved_pages(void)
+ {}
++
++void __weak arch_kexec_protect_crashkres(void)
++{}
++
++void __weak arch_kexec_unprotect_crashkres(void)
++{}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b70ada0..5892d6a 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -327,8 +327,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 		return -EBUSY;
+ 
+ 	dest_image = &kexec_image;
+-	if (flags & KEXEC_FILE_ON_CRASH)
++	if (flags & KEXEC_FILE_ON_CRASH) {
+ 		dest_image = &kexec_crash_image;
++		if (kexec_crash_image)
++			arch_kexec_unprotect_crashkres();
++	}
+ 
+ 	if (flags & KEXEC_FILE_UNLOAD)
+ 		goto exchange;
+@@ -377,6 +380,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ exchange:
+ 	image = xchg(dest_image, image);
+ out:
++	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
++		arch_kexec_protect_crashkres();
++
+ 	mutex_unlock(&kexec_mutex);
+ 	kimage_free(image);
+ 	return ret;
+-- 
+2.5.0
+
 
 _______________________________________________
 kexec mailing list
