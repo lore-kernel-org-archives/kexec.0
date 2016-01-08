@@ -1,28 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aHcdV-0005kI-Rm
- for kexec@lists.infradead.org; Fri, 08 Jan 2016 19:23:46 +0000
+ id 1aHcdY-0005kU-5d
+ for kexec@lists.infradead.org; Fri, 08 Jan 2016 19:23:49 +0000
 Received: from localhost
- by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Sat, 9 Jan 2016 05:23:21 +1000
-Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 2456B3578052
- for <kexec@lists.infradead.org>; Sat,  9 Jan 2016 06:23:19 +1100 (EST)
+ Sat, 9 Jan 2016 05:23:25 +1000
+Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 4B4CA2CE8055
+ for <kexec@lists.infradead.org>; Sat,  9 Jan 2016 06:23:22 +1100 (EST)
 Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
- by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u08JNA3546923884
- for <kexec@lists.infradead.org>; Sat, 9 Jan 2016 06:23:19 +1100
+ by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u08JNGom23789678
+ for <kexec@lists.infradead.org>; Sat, 9 Jan 2016 06:23:24 +1100
 Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
  by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u08JMj2E018589
- for <kexec@lists.infradead.org>; Sat, 9 Jan 2016 06:22:46 +1100
+ u08JMnk4018682
+ for <kexec@lists.infradead.org>; Sat, 9 Jan 2016 06:22:49 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [RFC PATCH 0/5] vfs: support for a common kernel file loader (step 1)
-Date: Fri,  8 Jan 2016 14:21:59 -0500
-Message-Id: <1452280924-28774-1-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [RFC PATCH 1/5] vfs: define a generic function to read a file from
+ the kernel
+Date: Fri,  8 Jan 2016 14:22:00 -0500
+Message-Id: <1452280924-28774-2-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1452280924-28774-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1452280924-28774-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,56 +42,210 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-For a while it was looked down upon to directly read files from Linux.
-These days there exists a few mechanisms in the kernel that do just this
-though to load a file into a local buffer. There are minor but important
-checks differences on each, we should take all the best practices from
-each of them, generalize them and make all places in the kernel that
-read a file use it.[1]
+In order to measure and appraise files being read by the kernel,
+new module and kexec syscalls were defined which include a file
+descriptor.  Other places in the kernel (eg. firmware, IMA,
+sound) also read files.
 
-One difference is the method for opening the file.  In some cases we
-have a file, while in other cases we have a pathname or a file descriptor.
+This patch introduces a common function for reading files from
+the kernel with the corresponding security post-read hook and
+function.
 
-Another difference is the security hook calls, or lack of them.  In
-some versions there is a post file read hook, while in others there
-is a pre file read hook.
+Changelog:
+- Add missing <linux/vmalloc.h>
 
-This patch set is the first attempt at resolving these differences.  It
-does not attempt to merge the different methods of opening a file, but
-defines a single common kernel file read function with two wrappers.
-Although this patch set defines two new security hooks for pre and post
-file read, it does not attempt to merge the existing security hooks.
-That is left as future work.
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+---
+ fs/exec.c                 | 56 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fs.h        |  1 +
+ include/linux/lsm_hooks.h | 11 ++++++++++
+ include/linux/security.h  |  9 ++++++++
+ security/security.c       | 16 ++++++++++++++
+ 5 files changed, 93 insertions(+)
 
-These patches are based on top of the "ima: measuring/appraising files
-read by the kernel".  The latest version of these patches can be found
-in the next-kernel-read branch of:
-git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
-
-Mimi Zohar (5):
-  vfs: define a generic function to read a file from the kernel
-  firmware: replace call to fw_read_file_contents() with kernel version
-  kexec: replace call to copy_file_from_fd() with kernel version
-  ima: replace call to integrity_read_file() with kernel version
-  module: replace copy_module_from_fd with kernel version
-
- drivers/base/firmware_class.c         | 51 +++++--------------
- fs/exec.c                             | 96 +++++++++++++++++++++++++++++++++++
- include/linux/fs.h                    |  3 ++
- include/linux/ima.h                   |  7 +--
- include/linux/lsm_hooks.h             | 19 +++++++
- include/linux/security.h              | 14 +++--
- kernel/kexec_file.c                   | 76 +++------------------------
- kernel/module.c                       | 67 +++---------------------
- security/integrity/ima/ima.h          |  1 -
- security/integrity/ima/ima_appraise.c |  7 ---
- security/integrity/ima/ima_fs.c       | 15 +++---
- security/integrity/ima/ima_main.c     | 21 ++++----
- security/integrity/ima/ima_policy.c   | 16 +++---
- security/integrity/integrity.h        | 12 ++---
- security/security.c                   | 46 ++++++++++++-----
- 15 files changed, 217 insertions(+), 234 deletions(-)
-
+diff --git a/fs/exec.c b/fs/exec.c
+index b06623a..3c48a19 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -56,6 +56,7 @@
+ #include <linux/pipe_fs_i.h>
+ #include <linux/oom.h>
+ #include <linux/compat.h>
++#include <linux/vmalloc.h>
+ 
+ #include <asm/uaccess.h>
+ #include <asm/mmu_context.h>
+@@ -831,6 +832,61 @@ int kernel_read(struct file *file, loff_t offset,
+ 
+ EXPORT_SYMBOL(kernel_read);
+ 
++int kernel_read_file(struct file *file, void **buf, loff_t *size,
++		     loff_t max_size, int policy_id)
++{
++	loff_t i_size, pos;
++	ssize_t bytes = 0;
++	int ret;
++
++	if (!S_ISREG(file_inode(file)->i_mode))
++		return -EINVAL;
++
++	i_size = i_size_read(file_inode(file));
++	if (max_size > 0 && i_size > max_size)
++		return -EFBIG;
++	if (i_size == 0)
++		return -EINVAL;
++
++	*buf = vmalloc(i_size);
++	if (!*buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	pos = 0;
++	while (pos < i_size) {
++		bytes = kernel_read(file, pos, (char *)(*buf) + pos,
++				    i_size - pos);
++		if (bytes < 0) {
++			ret = bytes;
++			goto out_free;
++		}
++
++		if (bytes == 0)
++			break;
++		pos += bytes;
++	}
++
++	if (pos != i_size) {
++		ret = -EBADF;  /* firmware uses -EIO */
++		goto out_free;
++	}
++
++	ret = security_kernel_post_read_file(file, *buf, i_size, policy_id);
++	if (!ret)
++		*size = pos;
++
++out_free:
++	if (ret < 0) {
++		vfree(*buf);
++		*buf = NULL;
++	}
++out:
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kernel_read_file);
++
+ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+ {
+ 	ssize_t res = vfs_read(file, (void __user *)addr, len, &pos);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3aa5142..9b1468c 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2527,6 +2527,7 @@ static inline void i_readcount_inc(struct inode *inode)
+ extern int do_pipe_flags(int *, int);
+ 
+ extern int kernel_read(struct file *, loff_t, char *, unsigned long);
++extern int kernel_read_file(struct file *, void **, loff_t *, loff_t, int);
+ extern ssize_t kernel_write(struct file *, const char *, size_t, loff_t);
+ extern ssize_t __kernel_write(struct file *, const char *, size_t, loff_t *);
+ extern struct file * open_exec(const char *);
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 71969de..10baa8f 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -561,6 +561,14 @@
+  *	the kernel module to load. If the module is being loaded from a blob,
+  *	this argument will be NULL.
+  *	Return 0 if permission is granted.
++ * @kernel_post_read_file:
++ *	Read a file specified by userspace.
++ *	@file contains the file structure pointing to the file being read
++ *	by the kernel.
++ *	@buf pointer to buffer containing the file contents.
++ *	@size length of the file contents.
++ *	@policy_id contains the calling function identifier.
++ *	Return 0 if permission is granted.
+  * @task_fix_setuid:
+  *	Update the module's state after setting one or more of the user
+  *	identity attributes of the current process.  The @flags parameter
+@@ -1457,6 +1465,8 @@ union security_list_options {
+ 	int (*kernel_fw_from_file)(struct file *file, char *buf, size_t size);
+ 	int (*kernel_module_request)(char *kmod_name);
+ 	int (*kernel_module_from_file)(struct file *file);
++	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size,
++				     int policy_id);
+ 	int (*task_fix_setuid)(struct cred *new, const struct cred *old,
+ 				int flags);
+ 	int (*task_setpgid)(struct task_struct *p, pid_t pgid);
+@@ -1716,6 +1726,7 @@ struct security_hook_heads {
+ 	struct list_head kernel_act_as;
+ 	struct list_head kernel_create_files_as;
+ 	struct list_head kernel_fw_from_file;
++	struct list_head kernel_post_read_file;
+ 	struct list_head kernel_module_request;
+ 	struct list_head kernel_module_from_file;
+ 	struct list_head task_fix_setuid;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 4824a4c..44d8832 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -301,6 +301,8 @@ int security_kernel_create_files_as(struct cred *new, struct inode *inode);
+ int security_kernel_fw_from_file(struct file *file, char *buf, size_t size);
+ int security_kernel_module_request(char *kmod_name);
+ int security_kernel_module_from_file(struct file *file);
++int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
++				   int policy_id);
+ int security_task_fix_setuid(struct cred *new, const struct cred *old,
+ 			     int flags);
+ int security_task_setpgid(struct task_struct *p, pid_t pgid);
+@@ -866,6 +868,13 @@ static inline int security_kernel_module_from_file(struct file *file)
+ 	return 0;
+ }
+ 
++static inline int security_kernel_post_read_file(struct file *file,
++						 char *buf, loff_t size,
++						 int policy_id)
++{
++	return 0;
++}
++
+ static inline int security_task_fix_setuid(struct cred *new,
+ 					   const struct cred *old,
+ 					   int flags)
+diff --git a/security/security.c b/security/security.c
+index e8ffd92..e979c2d 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -910,6 +910,20 @@ int security_kernel_module_from_file(struct file *file)
+ 	return ima_module_check(file);
+ }
+ 
++int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
++				   int policy_id)
++{
++	int ret;
++
++	ret = call_int_hook(kernel_post_read_file, 0, file, buf, size,
++			    policy_id);
++	if (ret)
++		return ret;
++
++	return ima_hash_and_process_file(file, buf, size, policy_id);
++}
++EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
++
+ int security_task_fix_setuid(struct cred *new, const struct cred *old,
+ 			     int flags)
+ {
+@@ -1697,6 +1711,8 @@ struct security_hook_heads security_hook_heads = {
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_module_request),
+ 	.kernel_module_from_file =
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_module_from_file),
++	.kernel_post_read_file =
++		LIST_HEAD_INIT(security_hook_heads.kernel_post_read_file),
+ 	.task_fix_setuid =
+ 		LIST_HEAD_INIT(security_hook_heads.task_fix_setuid),
+ 	.task_setpgid =	LIST_HEAD_INIT(security_hook_heads.task_setpgid),
 -- 
 2.1.0
 
