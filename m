@@ -1,18 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from e23smtp02.au.ibm.com ([202.81.31.144])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aHX5l-0008Jk-Oy
- for kexec@lists.infradead.org; Fri, 08 Jan 2016 13:28:34 +0000
-Subject: Re: [PATCH v3 2/2] kexec: Provide
- arch_kexec_protect(unprotect)_crashkres()
-References: <1452220423-4733-1-git-send-email-xlpang@redhat.com>
- <1452220423-4733-2-git-send-email-xlpang@redhat.com>
- <20160108084741.GB6295@dhcp-128-25.nay.redhat.com>
-From: Xunlei Pang <xlpang@redhat.com>
-Message-ID: <568FB964.7030705@redhat.com>
-Date: Fri, 8 Jan 2016 21:28:04 +0800
-MIME-Version: 1.0
-In-Reply-To: <20160108084741.GB6295@dhcp-128-25.nay.redhat.com>
+ id 1aHcdV-0005kI-Rm
+ for kexec@lists.infradead.org; Fri, 08 Jan 2016 19:23:46 +0000
+Received: from localhost
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Sat, 9 Jan 2016 05:23:21 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 2456B3578052
+ for <kexec@lists.infradead.org>; Sat,  9 Jan 2016 06:23:19 +1100 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u08JNA3546923884
+ for <kexec@lists.infradead.org>; Sat, 9 Jan 2016 06:23:19 +1100
+Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u08JMj2E018589
+ for <kexec@lists.infradead.org>; Sat, 9 Jan 2016 06:22:46 +1100
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [RFC PATCH 0/5] vfs: support for a common kernel file loader (step 1)
+Date: Fri,  8 Jan 2016 14:21:59 -0500
+Message-Id: <1452280924-28774-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,44 +31,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Minfei Huang <mhuang@redhat.com>
-Cc: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-security-module@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-On 01/08/2016 at 04:47 PM, Minfei Huang wrote:
-> On 01/08/16 at 10:33am, Xunlei Pang wrote:
->> +
->> +static int
->> +kexec_mark_range(unsigned long start, unsigned long end, bool protect)
->> +{
->> +	struct page *page;
->> +	unsigned int nr_pages;
->> +
->> +	/* For physical range: [start, end] */
->> +	if (!end || start > end)
->> +		return 0;
-> This test !end is hard to be understood without the annotation. It is
-> better to add the comment about it.
+For a while it was looked down upon to directly read files from Linux.
+These days there exists a few mechanisms in the kernel that do just this
+though to load a file into a local buffer. There are minor but important
+checks differences on each, we should take all the best practices from
+each of them, generalize them and make all places in the kernel that
+read a file use it.[1]
 
-!end is just for uninitialized crashk resource with a zero end member,
-maybe not so hard to understand :-)
+One difference is the method for opening the file.  In some cases we
+have a file, while in other cases we have a pathname or a file descriptor.
 
-Regards,
-Xunlei
+Another difference is the security hook calls, or lack of them.  In
+some versions there is a post file read hook, while in others there
+is a pre file read hook.
 
->
-> Otherwise it looks good for me.
->
-> Thanks
-> Minfei
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+This patch set is the first attempt at resolving these differences.  It
+does not attempt to merge the different methods of opening a file, but
+defines a single common kernel file read function with two wrappers.
+Although this patch set defines two new security hooks for pre and post
+file read, it does not attempt to merge the existing security hooks.
+That is left as future work.
+
+These patches are based on top of the "ima: measuring/appraising files
+read by the kernel".  The latest version of these patches can be found
+in the next-kernel-read branch of:
+git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+
+Mimi Zohar (5):
+  vfs: define a generic function to read a file from the kernel
+  firmware: replace call to fw_read_file_contents() with kernel version
+  kexec: replace call to copy_file_from_fd() with kernel version
+  ima: replace call to integrity_read_file() with kernel version
+  module: replace copy_module_from_fd with kernel version
+
+ drivers/base/firmware_class.c         | 51 +++++--------------
+ fs/exec.c                             | 96 +++++++++++++++++++++++++++++++++++
+ include/linux/fs.h                    |  3 ++
+ include/linux/ima.h                   |  7 +--
+ include/linux/lsm_hooks.h             | 19 +++++++
+ include/linux/security.h              | 14 +++--
+ kernel/kexec_file.c                   | 76 +++------------------------
+ kernel/module.c                       | 67 +++---------------------
+ security/integrity/ima/ima.h          |  1 -
+ security/integrity/ima/ima_appraise.c |  7 ---
+ security/integrity/ima/ima_fs.c       | 15 +++---
+ security/integrity/ima/ima_main.c     | 21 ++++----
+ security/integrity/ima/ima_policy.c   | 16 +++---
+ security/integrity/integrity.h        | 12 ++---
+ security/security.c                   | 46 ++++++++++++-----
+ 15 files changed, 217 insertions(+), 234 deletions(-)
+
+-- 
+2.1.0
 
 
 _______________________________________________
