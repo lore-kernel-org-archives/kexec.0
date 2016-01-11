@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aI4hc-0001J3-Hh
- for kexec@lists.infradead.org; Sun, 10 Jan 2016 01:21:53 +0000
-Received: by mail-pa0-x22b.google.com with SMTP id uo6so285064041pac.1
- for <kexec@lists.infradead.org>; Sat, 09 Jan 2016 17:21:31 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] vmcore-dmesg: Define _GNU_SOURCE
-Date: Sat,  9 Jan 2016 17:21:22 -0800
-Message-Id: <1452388882-11712-1-git-send-email-raj.khem@gmail.com>
+ id 1aISeL-0003jx-Bk
+ for kexec@lists.infradead.org; Mon, 11 Jan 2016 02:56:06 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH v4 1/2] kexec: Introduce a protection mechanism for the
+ crashkernel reserved memory
+Date: Mon, 11 Jan 2016 10:55:28 +0800
+Message-Id: <1452480929-3606-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,32 +21,125 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, Khem Raj <raj.khem@gmail.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Minfei Huang <mhuang@redhat.com>, Xunlei Pang <xlpang@redhat.com>, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-loff_t is guarded with _GNU_SOURCE on some C library implementations
-e.g. musl since this type is not defined by POSIX. Define _GNU_SOURCE to
-include this define, it should help compiling on musl while nothing
-changes for glibc based systems since there _GNU_SOURCE is already
-defined
+For the cases that some kernel (module) path stamps the crash
+reserved memory(already mapped by the kernel) where has been
+loaded the second kernel data, the kdump kernel will probably
+fail to boot when panic happens (or even not happens) leaving
+the culprit at large, this is unacceptable.
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+The patch introduces a mechanism for detecting such cases:
+1) After each crash kexec loading, it simply marks the reserved
+memory regions readonly since we no longer access it after that.
+When someone stamps the region, the first kernel will panic and
+trigger the kdump. The weak arch_kexec_protect_crashkres() is
+introduced to do the actual protection.
+
+2) To allow multiple loading, once 1) was done we also need to
+remark the reserved memory to readwrite each time a system call
+related to kdump is made. The weak arch_kexec_unprotect_crashkres()
+is introduced to undo the actual protection.
+
+The architecture can make its specific implementation by overriding
+arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres().
+
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
 ---
- vmcore-dmesg/vmcore-dmesg.c | 1 +
- 1 file changed, 1 insertion(+)
+v3->v4:
+No changes.
 
-diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
-index 0364636..a8f56df 100644
---- a/vmcore-dmesg/vmcore-dmesg.c
-+++ b/vmcore-dmesg/vmcore-dmesg.c
-@@ -1,4 +1,5 @@
- #define _XOPEN_SOURCE 600
-+#define _GNU_SOURCE
- #define _LARGEFILE_SOURCE 1
- #define _FILE_OFFSET_BITS 64
- #include <endian.h>
+ include/linux/kexec.h | 2 ++
+ kernel/kexec.c        | 9 ++++++++-
+ kernel/kexec_core.c   | 6 ++++++
+ kernel/kexec_file.c   | 8 +++++++-
+ 4 files changed, 23 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 7b68d27..ebd6950 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -329,6 +329,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+ 					Elf_Shdr *sechdrs, unsigned int relsec);
+ int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 					unsigned int relsec);
++void arch_kexec_protect_crashkres(void);
++void arch_kexec_unprotect_crashkres(void);
+ 
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index d873b64..3680f9c 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -167,8 +167,12 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 		return -EBUSY;
+ 
+ 	dest_image = &kexec_image;
+-	if (flags & KEXEC_ON_CRASH)
++	if (flags & KEXEC_ON_CRASH) {
+ 		dest_image = &kexec_crash_image;
++		if (kexec_crash_image)
++			arch_kexec_unprotect_crashkres();
++	}
++
+ 	if (nr_segments > 0) {
+ 		unsigned long i;
+ 
+@@ -211,6 +215,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	image = xchg(dest_image, image);
+ 
+ out:
++	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
++		arch_kexec_protect_crashkres();
++
+ 	mutex_unlock(&kexec_mutex);
+ 	kimage_free(image);
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c823f30..de4dd80 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1560,3 +1560,9 @@ void __weak crash_map_reserved_pages(void)
+ 
+ void __weak crash_unmap_reserved_pages(void)
+ {}
++
++void __weak arch_kexec_protect_crashkres(void)
++{}
++
++void __weak arch_kexec_unprotect_crashkres(void)
++{}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b70ada0..5892d6a 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -327,8 +327,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 		return -EBUSY;
+ 
+ 	dest_image = &kexec_image;
+-	if (flags & KEXEC_FILE_ON_CRASH)
++	if (flags & KEXEC_FILE_ON_CRASH) {
+ 		dest_image = &kexec_crash_image;
++		if (kexec_crash_image)
++			arch_kexec_unprotect_crashkres();
++	}
+ 
+ 	if (flags & KEXEC_FILE_UNLOAD)
+ 		goto exchange;
+@@ -377,6 +380,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ exchange:
+ 	image = xchg(dest_image, image);
+ out:
++	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
++		arch_kexec_protect_crashkres();
++
+ 	mutex_unlock(&kexec_mutex);
+ 	kimage_free(image);
+ 	return ret;
 -- 
-2.7.0
+2.5.0
 
 
 _______________________________________________
