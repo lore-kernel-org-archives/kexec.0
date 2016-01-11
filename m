@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aISeL-0003jx-Bk
- for kexec@lists.infradead.org; Mon, 11 Jan 2016 02:56:06 +0000
+ id 1aIShm-0004nZ-OV
+ for kexec@lists.infradead.org; Mon, 11 Jan 2016 02:59:39 +0000
 From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH v4 1/2] kexec: Introduce a protection mechanism for the
- crashkernel reserved memory
-Date: Mon, 11 Jan 2016 10:55:28 +0800
-Message-Id: <1452480929-3606-1-git-send-email-xlpang@redhat.com>
+Subject: [PATCH v4 2/2] kexec: Provide
+ arch_kexec_protect(unprotect)_crashkres()
+Date: Mon, 11 Jan 2016 10:55:29 +0800
+Message-Id: <1452480929-3606-2-git-send-email-xlpang@redhat.com>
+In-Reply-To: <1452480929-3606-1-git-send-email-xlpang@redhat.com>
+References: <1452480929-3606-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,120 +26,70 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: Minfei Huang <mhuang@redhat.com>, Xunlei Pang <xlpang@redhat.com>, ebiederm@xmission.com, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-For the cases that some kernel (module) path stamps the crash
-reserved memory(already mapped by the kernel) where has been
-loaded the second kernel data, the kdump kernel will probably
-fail to boot when panic happens (or even not happens) leaving
-the culprit at large, this is unacceptable.
-
-The patch introduces a mechanism for detecting such cases:
-1) After each crash kexec loading, it simply marks the reserved
-memory regions readonly since we no longer access it after that.
-When someone stamps the region, the first kernel will panic and
-trigger the kdump. The weak arch_kexec_protect_crashkres() is
-introduced to do the actual protection.
-
-2) To allow multiple loading, once 1) was done we also need to
-remark the reserved memory to readwrite each time a system call
-related to kdump is made. The weak arch_kexec_unprotect_crashkres()
-is introduced to undo the actual protection.
-
-The architecture can make its specific implementation by overriding
-arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres().
+Implement the protection method for the crash kernel memory
+reservation for the 64-bit x86 kdump.
 
 Signed-off-by: Xunlei Pang <xlpang@redhat.com>
 ---
 v3->v4:
-No changes.
+Add some comments according to Minfei's suggestion.
 
- include/linux/kexec.h | 2 ++
- kernel/kexec.c        | 9 ++++++++-
- kernel/kexec_core.c   | 6 ++++++
- kernel/kexec_file.c   | 8 +++++++-
- 4 files changed, 23 insertions(+), 2 deletions(-)
+ arch/x86/kernel/machine_kexec_64.c | 45 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 7b68d27..ebd6950 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -329,6 +329,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
- 					Elf_Shdr *sechdrs, unsigned int relsec);
- int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 					unsigned int relsec);
-+void arch_kexec_protect_crashkres(void);
-+void arch_kexec_unprotect_crashkres(void);
- 
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index d873b64..3680f9c 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -167,8 +167,12 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 		return -EBUSY;
- 
- 	dest_image = &kexec_image;
--	if (flags & KEXEC_ON_CRASH)
-+	if (flags & KEXEC_ON_CRASH) {
- 		dest_image = &kexec_crash_image;
-+		if (kexec_crash_image)
-+			arch_kexec_unprotect_crashkres();
-+	}
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 819ab3f..6497982 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -536,3 +536,48 @@ overflow:
+ 	return -ENOEXEC;
+ }
+ #endif /* CONFIG_KEXEC_FILE */
 +
- 	if (nr_segments > 0) {
- 		unsigned long i;
- 
-@@ -211,6 +215,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 	image = xchg(dest_image, image);
- 
- out:
-+	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
-+		arch_kexec_protect_crashkres();
++static int
++kexec_mark_range(unsigned long start, unsigned long end, bool protect)
++{
++	struct page *page;
++	unsigned int nr_pages;
 +
- 	mutex_unlock(&kexec_mutex);
- 	kimage_free(image);
- 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c823f30..de4dd80 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1560,3 +1560,9 @@ void __weak crash_map_reserved_pages(void)
- 
- void __weak crash_unmap_reserved_pages(void)
- {}
++	/*
++	 * For physical range: [start, end]. We must skip the unassigned
++	 * crashk resource with zero-valued "end" member.
++	 */
++	if (!end || start > end)
++		return 0;
 +
-+void __weak arch_kexec_protect_crashkres(void)
-+{}
++	page = pfn_to_page(start >> PAGE_SHIFT);
++	nr_pages = (end >> PAGE_SHIFT) - (start >> PAGE_SHIFT) + 1;
++	if (protect)
++		return set_pages_ro(page, nr_pages);
++	else
++		return set_pages_rw(page, nr_pages);
++}
 +
-+void __weak arch_kexec_unprotect_crashkres(void)
-+{}
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b70ada0..5892d6a 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -327,8 +327,11 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 		return -EBUSY;
- 
- 	dest_image = &kexec_image;
--	if (flags & KEXEC_FILE_ON_CRASH)
-+	if (flags & KEXEC_FILE_ON_CRASH) {
- 		dest_image = &kexec_crash_image;
-+		if (kexec_crash_image)
-+			arch_kexec_unprotect_crashkres();
-+	}
- 
- 	if (flags & KEXEC_FILE_UNLOAD)
- 		goto exchange;
-@@ -377,6 +380,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- exchange:
- 	image = xchg(dest_image, image);
- out:
-+	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
-+		arch_kexec_protect_crashkres();
++static void kexec_mark_crashkres(bool protect)
++{
++	unsigned long control;
 +
- 	mutex_unlock(&kexec_mutex);
- 	kimage_free(image);
- 	return ret;
++	kexec_mark_range(crashk_low_res.start, crashk_low_res.end, protect);
++
++	/* Don't touch the control code page used in crash_kexec().*/
++	control = PFN_PHYS(page_to_pfn(kexec_crash_image->control_code_page));
++	/* Control code page is located in the 2nd page. */
++	kexec_mark_range(crashk_res.start, control + PAGE_SIZE - 1, protect);
++	control += KEXEC_CONTROL_PAGE_SIZE;
++	kexec_mark_range(control, crashk_res.end, protect);
++}
++
++void arch_kexec_protect_crashkres(void)
++{
++	kexec_mark_crashkres(true);
++}
++
++void arch_kexec_unprotect_crashkres(void)
++{
++	kexec_mark_crashkres(false);
++}
 -- 
 2.5.0
 
