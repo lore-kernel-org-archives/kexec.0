@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 12 Jan 2016 10:06:38 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: Add --lite option
-Message-ID: <20160112010638.GC3860@verge.net.au>
-References: <20151022125012.GB20847@redhat.com>
- <1445540891.30908.144.camel@infradead.org>
- <1446703011.12676.83.camel@freescale.com>
- <20151207114547.GE16406@dhcppc13.redhat.com>
- <20151207114839.GF16406@dhcppc13.redhat.com>
- <56658696.6070103@arm.com>
- <20151207140755.GG16406@dhcppc13.redhat.com>
- <5666FE91.5010302@arm.com>
- <20151209092839.GN16406@dhcppc13.redhat.com>
- <20160111124638.GD21206@dhcppc13.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160111124638.GD21206@dhcppc13.redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aIrGh-0004uV-U1
+ for kexec@lists.infradead.org; Tue, 12 Jan 2016 05:13:21 +0000
+From: Pratyush Anand <panand@redhat.com>
+Subject: [PATCH RFC V2 0/2] kexec: arm64: purgatory: cache support
+Date: Tue, 12 Jan 2016 10:42:49 +0530
+Message-Id: <cover.1452572612.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,33 +15,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Vivek Goyal <vgoyal@redhat.com>, Petitboot@lists.ozlabs.org, Scott Wood <scottwood@freescale.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org, Wei Fu <wefu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: geoff@infradead.org, takahiro.akashi@linaro.org, horms@verge.net.au, james.morse@arm.com, jk@ozlabs.org, scottwood@freescale.com, dyoung@redhat.com, vgoyal@redhat.com, ebiederm@xmission.com
 
-On Mon, Jan 11, 2016 at 06:16:38PM +0530, Pratyush Anand wrote:
-> +Fu
-> 
-> Hi James,
-> 
-> > On 08/12/2015:04:00:17 PM, James Morse wrote:
-> > > Hi Pratyush,
-> 
-> > > I haven't managed to get your kexec-tools branch to work with v10 of
-> 
-> Thanks for all your feedback. It helped to stabilize the code better. I took
-> all your suggestions and also did few other modifications [1]. Now, purgatory
-> does SHA verifications on mustang and seattle within a second. I think this
-> would be helpful in handling few of the kdump issues with watchdog. May be you
-> can give a try to the code in branch purgatory-enable-dcache of my tree. Any
-> feedback would be welcome.
+This patch series adds support to enable cache during sha-256 verification
+in purgatory. Until --enable-dcache is passed to kexec(), these patches
+does not affect existing purgatory functionality. 
 
-Please post the patches here for review.
+Patches have been tested with Seattle and Mustang for normal kexec and
+kdump. It took hardly a second to verify SHA256 when kernel and initramfs
+segment sizes were 0x01030000 and  0x01130000 respectively.
 
-Thanks
+Patches are still being sent as RFC, because these are dependent on Geoff's
+kexec-tools patches. These patches along with other dependent patches are
+also available here:
+https://github.com/pratyushanand/kexec-tools.git (HEAD commit 062475cf4f3f)
+
+RFC V1 was here:
+http://lists.infradead.org/pipermail/kexec/2015-May/013678.html
+
+Changes since RFC V1:
+There had been many changes, I would say rather that code has been
+reimplemented. I am listing some of the significant changes here:
+-- By default D-cache would be disabled now.
+-- Most part of implementation has been moved from asm to c code.
+-- Proper synchronization barrier and tlb invalidation
+-- Now we can have print during MMU enabled as well, since UART area is
+also identity mapped.
+-- Supports 64K and 4K page table. If a HW supports 64K then it uses 64K
+page implementation, else it checks if 4K is supported and then uses 4K
+page table. 16K is not yet supported.
+
+
+Pratyush Anand (2):
+  arm64: Add enable/disable d-cache support for purgatory
+  arm64: Pass RAM boundary and enable-dcache flag to purgatory
+
+ kexec/arch/arm64/include/arch/options.h |   6 +-
+ kexec/arch/arm64/include/types.h        |  16 ++
+ kexec/arch/arm64/kexec-arm64.c          |  24 ++-
+ purgatory/arch/arm64/Makefile           |   2 +
+ purgatory/arch/arm64/cache-asm.S        | 228 ++++++++++++++++++++++
+ purgatory/arch/arm64/cache.c            | 333 ++++++++++++++++++++++++++++++++
+ purgatory/arch/arm64/cache.h            |  83 ++++++++
+ purgatory/arch/arm64/entry.S            |  15 ++
+ purgatory/arch/arm64/purgatory-arm64.c  |  10 +-
+ 9 files changed, 714 insertions(+), 3 deletions(-)
+ create mode 100644 kexec/arch/arm64/include/types.h
+ create mode 100644 purgatory/arch/arm64/cache-asm.S
+ create mode 100644 purgatory/arch/arm64/cache.c
+ create mode 100644 purgatory/arch/arm64/cache.h
+
+-- 
+2.5.0
+
 
 _______________________________________________
 kexec mailing list
