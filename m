@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <c39ce3cf694a3582d66e38d6925f235e3663588d.1452884156.git.geoff@infradead.org>
+Message-Id: <8b5d0a08bff585caa278afc2dc16352e5b8f210b.1452884156.git.geoff@infradead.org>
 In-Reply-To: <cover.1452884156.git.geoff@infradead.org>
 References: <cover.1452884156.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH 15/19] arm64: kdump: implement machine_crash_shutdown()
-Date: Fri, 15 Jan 2016 19:18:38 +0000
+Subject: [PATCH 01/19] arm64: Fold proc-macros.S into assembler.h
+Date: Fri, 15 Jan 2016 19:18:37 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,239 +21,190 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, christoffer.dall@linaro.org
 
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+To allow the assembler macros defined in arch/arm64/mm/proc-macros.S to be used
+outside the mm code move the contents of proc-macros.S to asm/assembler.h.  Also,
+delete proc-macros.S, and fix up all references to proc-macros.S.
 
-kdump calls machine_crash_shutdown() to shut down non-boot cpus and
-save registers' status in per-cpu ELF notes before starting the crash
-dump kernel. See kernel_kexec().
-
-ipi_cpu_stop() is a bit modified and used to support this behavior.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- arch/arm64/include/asm/kexec.h    | 47 +++++++++++++++++++++++++++-
- arch/arm64/kernel/machine_kexec.c | 65 +++++++++++++++++++++++++++++++++++++--
- arch/arm64/kernel/smp.c           | 18 ++++++++---
- 3 files changed, 123 insertions(+), 7 deletions(-)
+ arch/arm64/include/asm/assembler.h | 48 +++++++++++++++++++++++++++-
+ arch/arm64/mm/cache.S              |  2 --
+ arch/arm64/mm/proc-macros.S        | 64 --------------------------------------
+ arch/arm64/mm/proc.S               |  3 --
+ 4 files changed, 47 insertions(+), 70 deletions(-)
+ delete mode 100644 arch/arm64/mm/proc-macros.S
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 04744dc..3dffb1d 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -30,6 +30,21 @@
- 
- #ifndef __ASSEMBLY__
- 
-+extern bool in_crash_kexec;
-+
-+static inline bool is_in_crash_kexec(void)
-+{
-+#ifdef CONFIG_KEXEC_CORE
-+	return in_crash_kexec;
-+#else
-+	return false;
-+#endif
-+}
-+
-+#ifndef CONFIG_KEXEC_CORE
-+#define crash_save_cpu(regs, cpu)
-+#endif
-+
- /**
-  * crash_setup_regs() - save registers for the panic kernel
-  *
-@@ -40,7 +55,37 @@
- static inline void crash_setup_regs(struct pt_regs *newregs,
- 				    struct pt_regs *oldregs)
- {
--	/* Empty routine needed to avoid build errors. */
-+	if (oldregs) {
-+		memcpy(newregs, oldregs, sizeof(*newregs));
-+	} else {
-+		__asm__ __volatile__ (
-+			"stp	 x0,   x1, [%3, #16 *  0]\n"
-+			"stp	 x2,   x3, [%3, #16 *  1]\n"
-+			"stp	 x4,   x5, [%3, #16 *  2]\n"
-+			"stp	 x6,   x7, [%3, #16 *  3]\n"
-+			"stp	 x8,   x9, [%3, #16 *  4]\n"
-+			"stp	x10,  x11, [%3, #16 *  5]\n"
-+			"stp	x12,  x13, [%3, #16 *  6]\n"
-+			"stp	x14,  x15, [%3, #16 *  7]\n"
-+			"stp	x16,  x17, [%3, #16 *  8]\n"
-+			"stp	x18,  x19, [%3, #16 *  9]\n"
-+			"stp	x20,  x21, [%3, #16 * 10]\n"
-+			"stp	x22,  x23, [%3, #16 * 11]\n"
-+			"stp	x24,  x25, [%3, #16 * 12]\n"
-+			"stp	x26,  x27, [%3, #16 * 13]\n"
-+			"stp	x28,  x29, [%3, #16 * 14]\n"
-+			"str	x30,	   [%3, #16 * 15]\n"
-+			"mov	%0, sp\n"
-+			"adr	%1, 1f\n"
-+			"mrs	%2, spsr_el1\n"
-+		"1:"
-+			: "=r" (newregs->sp),
-+			  "=r" (newregs->pc),
-+			  "=r" (newregs->pstate)
-+			: "r"  (&newregs->regs)
-+			: "memory"
-+		);
-+	}
- }
- 
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index a375268..0ba2ae4 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -10,6 +10,9 @@
-  */
- 
- #include <linux/highmem.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/libfdt_env.h>
- #include <linux/of_fdt.h>
-@@ -25,6 +28,7 @@
- extern const unsigned char arm64_relocate_new_kernel[];
- extern const unsigned long arm64_relocate_new_kernel_size;
- 
-+bool in_crash_kexec;
- static unsigned long kimage_start;
- 
- /**
-@@ -212,13 +216,70 @@ void machine_kexec(struct kimage *kimage)
- 	 * relocation is complete.
- 	 */
- 
--	cpu_soft_restart(is_hyp_mode_available(),
-+	cpu_soft_restart(in_crash_kexec ? 0 : is_hyp_mode_available(),
- 		reboot_code_buffer_phys, kimage->head, kimage_start, 0);
- 
- 	BUG(); /* Should never get here. */
- }
- 
-+static void machine_kexec_mask_interrupts(void)
-+{
-+	unsigned int i;
-+	struct irq_desc *desc;
-+
-+	for_each_irq_desc(i, desc) {
-+		struct irq_chip *chip;
-+		int ret;
-+
-+		chip = irq_desc_get_chip(desc);
-+		if (!chip)
-+			continue;
-+
-+		/*
-+		 * First try to remove the active state. If this
-+		 * fails, try to EOI the interrupt.
-+		 */
-+		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
-+
-+		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
-+		    chip->irq_eoi)
-+			chip->irq_eoi(&desc->irq_data);
-+
-+		if (chip->irq_mask)
-+			chip->irq_mask(&desc->irq_data);
-+
-+		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
-+			chip->irq_disable(&desc->irq_data);
-+	}
-+}
-+
-+/**
-+ * machine_crash_shutdown - shutdown non-crashing cpus and save registers
-+ */
- void machine_crash_shutdown(struct pt_regs *regs)
- {
--	/* Empty routine needed to avoid build errors. */
-+	struct pt_regs dummy_regs;
-+	int cpu;
-+
-+	local_irq_disable();
-+
-+	in_crash_kexec = true;
-+
-+	/*
-+	 * clear and initialize the per-cpu info. This is necessary
-+	 * because, otherwise, slots for offline cpus would never be
-+	 * filled up. See smp_send_stop().
-+	 */
-+	memset(&dummy_regs, 0, sizeof(dummy_regs));
-+	for_each_possible_cpu(cpu)
-+		crash_save_cpu(&dummy_regs, cpu);
-+
-+	/* shutdown non-crashing cpus */
-+	smp_send_stop();
-+
-+	/* for crashing cpu */
-+	crash_save_cpu(regs, smp_processor_id());
-+	machine_kexec_mask_interrupts();
-+
-+	pr_info("Starting crashdump kernel...\n");
- }
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index b1adc51..aa45c21 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -37,6 +37,7 @@
- #include <linux/completion.h>
- #include <linux/of.h>
- #include <linux/irq_work.h>
-+#include <linux/kexec.h>
- 
- #include <asm/alternative.h>
- #include <asm/atomic.h>
-@@ -44,6 +45,7 @@
- #include <asm/cpu.h>
- #include <asm/cputype.h>
- #include <asm/cpu_ops.h>
-+#include <asm/kexec.h>
- #include <asm/mmu_context.h>
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
-@@ -54,6 +56,8 @@
- #include <asm/ptrace.h>
- #include <asm/virt.h>
- 
-+#include "cpu-reset.h"
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/ipi.h>
- 
-@@ -683,10 +687,16 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index 12eff92..21979a4 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -1,5 +1,5 @@
  /*
-  * ipi_cpu_stop - handle IPI from smp_send_stop()
+- * Based on arch/arm/include/asm/assembler.h
++ * Based on arch/arm/include/asm/assembler.h, arch/arm/mm/proc-macros.S
+  *
+  * Copyright (C) 1996-2000 Russell King
+  * Copyright (C) 2012 ARM Ltd.
+@@ -23,6 +23,8 @@
+ #ifndef __ASM_ASSEMBLER_H
+ #define __ASM_ASSEMBLER_H
+ 
++#include <asm/asm-offsets.h>
++#include <asm/pgtable-hwdef.h>
+ #include <asm/ptrace.h>
+ #include <asm/thread_info.h>
+ 
+@@ -194,6 +196,50 @@ lr	.req	x30		// link register
+ 	.endm
+ 
+ /*
++ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
++ */
++	.macro	vma_vm_mm, rd, rn
++	ldr	\rd, [\rn, #VMA_VM_MM]
++	.endm
++
++/*
++ * mmid - get context id from mm pointer (mm->context.id)
++ */
++	.macro	mmid, rd, rn
++	ldr	\rd, [\rn, #MM_CONTEXT_ID]
++	.endm
++
++/*
++ * dcache_line_size - get the minimum D-cache line size from the CTR register.
++ */
++	.macro	dcache_line_size, reg, tmp
++	mrs	\tmp, ctr_el0			// read CTR
++	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
++	mov	\reg, #4			// bytes per word
++	lsl	\reg, \reg, \tmp		// actual cache line size
++	.endm
++
++/*
++ * icache_line_size - get the minimum I-cache line size from the CTR register.
++ */
++	.macro	icache_line_size, reg, tmp
++	mrs	\tmp, ctr_el0			// read CTR
++	and	\tmp, \tmp, #0xf		// cache line size encoding
++	mov	\reg, #4			// bytes per word
++	lsl	\reg, \reg, \tmp		// actual cache line size
++	.endm
++
++/*
++ * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
++ */
++	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
++#ifndef CONFIG_ARM64_VA_BITS_48
++	ldr_l	\tmpreg, idmap_t0sz
++	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
++#endif
++	.endm
++
++/*
+  * Annotate a function as position independent, i.e., safe to be called before
+  * the kernel virtual mapping is activated.
   */
--static void ipi_cpu_stop(unsigned int cpu)
-+static void ipi_cpu_stop(unsigned int cpu, struct pt_regs *regs)
- {
--	if (system_state == SYSTEM_BOOTING ||
--	    system_state == SYSTEM_RUNNING) {
-+	if (is_in_crash_kexec()) {
-+		crash_save_cpu(regs, cpu);
-+		/*
-+		 * printing messages at panic may slow down the shutdown.
-+		 * So don't fall through dump_stack().
-+		 */
-+	} else if (system_state == SYSTEM_BOOTING ||
-+			system_state == SYSTEM_RUNNING) {
- 		raw_spin_lock(&stop_lock);
- 		pr_crit("CPU%u: stopping\n", cpu);
- 		dump_stack();
-@@ -727,7 +737,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
+index cfa44a6..f49041d 100644
+--- a/arch/arm64/mm/cache.S
++++ b/arch/arm64/mm/cache.S
+@@ -24,8 +24,6 @@
+ #include <asm/cpufeature.h>
+ #include <asm/alternative.h>
  
- 	case IPI_CPU_STOP:
- 		irq_enter();
--		ipi_cpu_stop(cpu);
-+		ipi_cpu_stop(cpu, regs);
- 		irq_exit();
- 		break;
+-#include "proc-macros.S"
+-
+ /*
+  *	flush_icache_range(start,end)
+  *
+diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
+deleted file mode 100644
+index 4c4d93c..0000000
+--- a/arch/arm64/mm/proc-macros.S
++++ /dev/null
+@@ -1,64 +0,0 @@
+-/*
+- * Based on arch/arm/mm/proc-macros.S
+- *
+- * Copyright (C) 2012 ARM Ltd.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-#include <asm/asm-offsets.h>
+-#include <asm/thread_info.h>
+-
+-/*
+- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
+- */
+-	.macro	vma_vm_mm, rd, rn
+-	ldr	\rd, [\rn, #VMA_VM_MM]
+-	.endm
+-
+-/*
+- * mmid - get context id from mm pointer (mm->context.id)
+- */
+-	.macro	mmid, rd, rn
+-	ldr	\rd, [\rn, #MM_CONTEXT_ID]
+-	.endm
+-
+-/*
+- * dcache_line_size - get the minimum D-cache line size from the CTR register.
+- */
+-	.macro	dcache_line_size, reg, tmp
+-	mrs	\tmp, ctr_el0			// read CTR
+-	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
+-	mov	\reg, #4			// bytes per word
+-	lsl	\reg, \reg, \tmp		// actual cache line size
+-	.endm
+-
+-/*
+- * icache_line_size - get the minimum I-cache line size from the CTR register.
+- */
+-	.macro	icache_line_size, reg, tmp
+-	mrs	\tmp, ctr_el0			// read CTR
+-	and	\tmp, \tmp, #0xf		// cache line size encoding
+-	mov	\reg, #4			// bytes per word
+-	lsl	\reg, \reg, \tmp		// actual cache line size
+-	.endm
+-
+-/*
+- * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
+- */
+-	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
+-#ifndef CONFIG_ARM64_VA_BITS_48
+-	ldr_l	\tmpreg, idmap_t0sz
+-	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
+-#endif
+-	.endm
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index cacecc4..7ab3a90 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -23,11 +23,8 @@
+ #include <asm/assembler.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/hwcap.h>
+-#include <asm/pgtable-hwdef.h>
+ #include <asm/pgtable.h>
  
+-#include "proc-macros.S"
+-
+ #ifdef CONFIG_ARM64_64K_PAGES
+ #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
+ #elif defined(CONFIG_ARM64_16K_PAGES)
 -- 
 2.5.0
 
