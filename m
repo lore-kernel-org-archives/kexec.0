@@ -1,10 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Sun, 17 Jan 2016 11:56:46 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] arm/kdump: fix kernel panic for masking disabled irq
-Message-ID: <20160117035646.GA15086@dhcp-128-65.nay.redhat.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aKz95-0005QI-53
+ for kexec@lists.infradead.org; Mon, 18 Jan 2016 02:02:17 +0000
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
+ by cn.fujitsu.com (Postfix) with ESMTP id 2A91941896E8
+ for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 10:01:27 +0800 (CST)
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH RFC] Improve the performance of --num-threads -d 31
+Date: Mon, 18 Jan 2016 10:00:05 +0800
+Message-ID: <1453082405-28847-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,108 +23,540 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-omap@vger.kernel.org
-Cc: kexec@lists.infradead.org, grygorii.strashko@ti.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
 
-kdump testing on Beaglebone black triggered below kernel panic which is caused by
-accessing some disabled gpio module.
+The origin implementation of --num-threads wastes a lot of time
+dealing with the filtered pages. So it has a great performance degradation
+when -d 31 is specified.
+The new implementation is just like the following:
+	* The basic idea is producer producing page and consumer writing page.
+	* Each producer have a page_flag_buf list which is used for storing page's description.
+	* The size of page_flag_buf is little so it won't take too much memory.
+	* And all producers will share a page_data_buf array which is used for storing page's compressed data.
+	* The main thread is the consumer. It will find the next pfn and write it into file.
+	* The next pfn is smallest pfn in all page_flag_buf.
+It won't waste time and memory for filtered page. So it has a good behaviour in -d 31.
 
-In booting phase omap_gpio_probe -> ... -> __irq_do_set_handler -> mask_ack_irq
-will mask/disable the irq desc since handle == handle_bad_irq.
+Some tests results:
 
-Thus fix it by only masking the unmasked irq desc to avoid kernel panic.  
+      -l                                   -c
+-d 31: 2.6                                 11.3 (without num-threads)
+       num-threads    origin    new        origin    new
+       1              13.2      2.9        22.4      13.2
+       2              11.6      2.46       15.3      7.3
+       4              10.4      3.2        12.3      5.7
+-d 0:  32.7                                151.2(without num-threads)
+       1              43.3      45.3       158.9     159.4
+       2              21.2      23.0       81.8      83.2
+       4              18.2      21.4       46.1      47.5
 
-[   66.344456] Unhandled fault: external abort on non-linefetch (0x1028) at 0xfa1ac140
-[   66.352142] pgd = dd9f0000
-[   66.354856] [fa1ac140] *pgd=48011452(bad)
-[   66.358896] Internal error: : 1028 [#2] SMP THUMB2
-[   66.363703] Modules linked in: ti_cpsw cpsw_ale cpsw_common omap_hwspinlock hwspinlock_core ir_lirc_codec lirc_dev ir_xmp_decoder is
-[   66.391072] CPU: 0 PID: 402 Comm: bash Not tainted 4.4.0-rc6+ #80
-[   66.397190] Hardware name: Generic AM33XX (Flattened Device Tree)
-[   66.403307] task: df51d240 ti: ddc38000 task.ti: ddc38000
-[   66.408731] PC is at omap_set_gpio_triggering+0x86/0x23c
-[   66.414065] LR is at omap_set_gpio_triggering+0x87/0x23c
-[   66.419398] pc : [<c01f2276>]    lr : [<c01f2277>]    psr: a00e01b3
-[   66.419398] sp : ddc39c30  ip : 0000001f  fp : c021e550
-[   66.430923] r10: 00000002  r9 : c021e554  r8 : 00000001
-[   66.436168] r7 : fa1ac000  r6 : 00000000  r5 : df0d4a10  r4 : fa1ac140
-[   66.442721] r3 : 00000001  r2 : 00000007  r1 : 00000000  r0 : 00000020
-[   66.449276] Flags: NzCv  IRQs off  FIQs on  Mode SVC_32  ISA Thumb  Segment none
-[   66.456701] Control: 50c5387d  Table: 9d9f0019  DAC: 00000051
-[   66.462469] Process bash (pid: 402, stack limit = 0xddc38218)
-[   66.468237] Stack: (0xddc39c30 to 0xddc3a000)
-[   66.472612] 9c20:                                     df0d4a10 df0d4a64 00000000 a00e0193
-[   66.480827] 9c40: 0000000b c021e554 00000002 c01f2551 c01f2529 df0d7700 0000005a df0d7890
-[   66.489041] 9c60: c06f3530 c0012f35 ddc39c78 c0768f04 ddc39c80 ddc39e58 200e0113 c00803fd
-[   66.497256] 9c80: 00000063 df93647c 1f26a000 00000000 00000001 00000063 00000007 c0702e3c
-[   66.505471] 9ca0: 00000000 ddc38000 00000000 7f70d614 00000030 ddc39ea8 c021e54b c021e54c
-[   66.513686] 9cc0: 600e0033 ffffffff c0730644 c06d86f4 ddc39e58 c0010f51 ddc38218 0000000b
-[   66.521901] 9ce0: 600e0113 200e0113 00000020 ddc38000 bf000000 00000004 38000000 20653466
-[   66.530116] 9d00: 61663566 37396620 33322064 28203030 63313037 64622029 00203031 df78b5c4
-[   66.538331] 9d20: 00000031 c005f8df c05f3de0 ddc39d4c 0000000a 00000000 ddc39e58 00000805
-[   66.546546] 9d40: df78b580 df78b580 c076c724 df78b5c4 00000031 c001bc23 00000000 c0412e11
-[   66.554761] 9d60: c06cd6dc 00000000 00000000 c006021b c005f36e 00010000 00000800 00000000
-[   66.562976] 9d80: c0755f44 c041250d 00000000 c06d8a0c 00000805 00000000 ddc39e8c ddc39e58
-[   66.571191] 9da0: c06d8a5c 00000000 7f70d614 c00091ff 00000000 00000001 00000e65 00000406
-[   66.579405] 9dc0: 00000000 00000406 600e0013 c0412165 00000406 c005f1c3 0000000f 0a2f88ba
-[   66.587620] 9de0: 0000000f c0753f28 c07335f8 c0753308 600e0013 c06f3408 00000000 00000001
-[   66.595834] 9e00: df936478 00000001 1f26a000 1f26a000 200e0013 c005f00b 00000001 0000000f
-[   66.604049] 9e20: 00000001 c005f665 dfd4c668 c041215b 9b34a83f c00b49b9 00000000 c021e54c
-[   66.612265] 9e40: 600e0033 ffffffff ddc39e8c 00000000 ddc38000 c041247b 00000063 df93647c
-[   66.620480] 9e60: 1f26a000 00000000 00000001 00000063 00000007 c0702e3c 00000000 ddc38000
-[   66.628696] 9e80: 00000000 7f70d614 00000030 ddc39ea8 c021e54b c021e54c 600e0033 ffffffff
-[   66.636910] 9ea0: 00000051 c021e54b c06f349c c021e8b5 00000055 00000002 00000051 00000001
-[   66.645125] 9ec0: 00000000 df26d7c0 ddc38000 c021ec79 ddc39f88 c021ec35 00000000 c010695f
-[   66.653340] 9ee0: df241200 c010691d c0423f80 ddc39f88 00000002 c00ca6a3 c06d8a7c 00000000
-[   66.661556] 9f00: be9ac93c c00091ff 00000400 c0019001 b6f7a000 00001000 df78b580 00000002
-[   66.669770] 9f20: dec84c38 df241200 00000000 c00cab05 00000073 c00b82f7 000b6f7a be9ac380
-[   66.677985] 9f40: df241200 00000002 b6f7a000 ddc39f88 00000002 00000000 7f70d614 c00cacd7
-[   66.686200] 9f60: 00000000 00000000 be9ac93c df241200 df241200 00000000 00000000 00000002
-[   66.694415] 9f80: ddc38000 c00cb313 00000000 00000000 00000002 b6f7a000 b6ee2d60 00000004
-[   66.702630] 9fa0: c000df84 c000ddc1 00000002 b6f7a000 00000001 b6f7a000 00000002 00000000
-[   66.710845] 9fc0: 00000002 b6f7a000 b6ee2d60 00000004 00000002 00000000 7f72cd94 7f70d614
-[   66.719060] 9fe0: 00000000 be9ac8fc b6dfcae4 b6e60690 600e0010 00000001 00000000 00000000
-[   66.727278] [<c01f2276>] (omap_set_gpio_triggering) from [<c01f2551>] (omap_gpio_mask_irq+0x29/0x34)
-[   66.736457] [<c01f2551>] (omap_gpio_mask_irq) from [<c0012f35>] (machine_crash_shutdown+0xb9/0x104)
-[   66.745551] [<c0012f35>] (machine_crash_shutdown) from [<c00803fd>] (crash_kexec+0x35/0x68)
-[   66.753942] [<c00803fd>] (crash_kexec) from [<c0010f51>] (die+0x1b9/0x390)
-[   66.760859] [<c0010f51>] (die) from [<c001bc23>] (__do_kernel_fault.part.0+0x4f/0x1cc)
-[   66.768824] [<c001bc23>] (__do_kernel_fault.part.0) from [<c0412e11>] (do_page_fault+0x155/0x29c)
-[   66.777740] [<c0412e11>] (do_page_fault) from [<c00091ff>] (do_DataAbort+0x2f/0x88)
-[   66.785432] [<c00091ff>] (do_DataAbort) from [<c041247b>] (__dabt_svc+0x3b/0x80)
-[   66.792858] Exception stack(0xddc39e58 to 0xddc39ea0)
-[   66.797929] 9e40:                                                       00000063 df93647c
-[   66.806144] 9e60: 1f26a000 00000000 00000001 00000063 00000007 c0702e3c 00000000 ddc38000
-[   66.814359] 9e80: 00000000 7f70d614 00000030 ddc39ea8 c021e54b c021e54c 600e0033 ffffffff
-[   66.822575] [<c041247b>] (__dabt_svc) from [<c021e54c>] (sysrq_handle_crash+0x18/0x1c)
-[   66.830530] [<c021e54c>] (sysrq_handle_crash) from [<c021e8b5>] (__handle_sysrq+0x79/0x10c)
-[   66.838919] [<c021e8b5>] (__handle_sysrq) from [<c021ec79>] (write_sysrq_trigger+0x45/0x50)
-[   66.847310] [<c021ec79>] (write_sysrq_trigger) from [<c010695f>] (proc_reg_write+0x43/0x68)
-[   66.855700] [<c010695f>] (proc_reg_write) from [<c00ca6a3>] (__vfs_write+0xf/0x8c)
-[   66.863304] [<c00ca6a3>] (__vfs_write) from [<c00cacd7>] (vfs_write+0x5f/0x128)
-[   66.870646] [<c00cacd7>] (vfs_write) from [<c00cb313>] (SyS_write+0x2b/0x68)
-[   66.877729] [<c00cb313>] (SyS_write) from [<c000ddc1>] (ret_fast_syscall+0x1/0x4c)
-[   66.885332] Code: 443c 4643 f6a9 f9a1 (6823) 0732
-[   66.890145] ---[ end trace 5a39094ece4dc200 ]---
-[   66.894782] Kernel panic - not syncing: Fatal exception
-[   66.900033] ---[ end Kernel panic - not syncing: Fatal exception
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
+These tests are executed in the second kernel with /proc/vmcore.
 ---
- arch/arm/kernel/machine_kexec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ makedumpfile.c | 266 +++++++++++++++++++++++++++++++++++++++------------------
+ makedumpfile.h |  26 +++---
+ 2 files changed, 196 insertions(+), 96 deletions(-)
 
---- linux.orig/arch/arm/kernel/machine_kexec.c
-+++ linux/arch/arm/kernel/machine_kexec.c
-@@ -106,7 +106,7 @@ static void machine_kexec_mask_interrupt
- 		if (chip->irq_eoi && irqd_irq_inprogress(&desc->irq_data))
- 			chip->irq_eoi(&desc->irq_data);
+diff --git a/makedumpfile.c b/makedumpfile.c
+index fa0b779..8cf274b 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3483,7 +3483,8 @@ initial_for_parallel()
+ 	unsigned long page_data_buf_size;
+ 	unsigned long limit_size;
+ 	int page_data_num;
+-	int i;
++	struct page_flag *current;
++	int i, j;
  
--		if (chip->irq_mask)
-+		if ((chip->irq_mask) && !irqd_irq_masked(&desc->irq_data))
- 			chip->irq_mask(&desc->irq_data);
+ 	len_buf_out = calculate_len_buf_out(info->page_size);
  
- 		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+@@ -3562,8 +3563,10 @@ initial_for_parallel()
+ 		      - MAP_REGION * info->num_threads) * 0.6;
+ 
+ 	page_data_num = limit_size / page_data_buf_size;
++	info->num_buffers = 3 * info->num_threads;
+ 
+-	info->num_buffers = MIN(NUM_BUFFERS, page_data_num);
++	info->num_buffers = MAX(info->num_buffers, NUM_BUFFERS);
++	info->num_buffers = MIN(info->num_buffers, page_data_num);
+ 
+ 	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
+ 			info->num_buffers);
+@@ -3588,6 +3591,36 @@ initial_for_parallel()
+ 	}
+ 
+ 	/*
++	 * initial page_flag for each thread
++	 */
++	if ((info->page_flag_buf = malloc(sizeof(void *) * info->num_threads))
++	    == NULL) {
++		MSG("Can't allocate memory for page_flag_buf. %s\n",
++				strerror(errno));
++		return FALSE;
++	}
++	memset(info->page_flag_buf, 0, sizeof(void *) * info->num_threads);
++
++	for (i = 0; i < info->num_threads; i++) {
++		if ((info->page_flag_buf[i] = malloc(sizeof(struct page_flag))) == NULL) {
++			MSG("Can't allocate memory for page_flag_buf. %s\n",
++				strerror(errno));
++			return FALSE;
++		}
++		current = info->page_flag_buf[i];
++
++		for (j = 1; j < NUM_BUFFERS; j++) {
++			if ((current->next = calloc(0, sizeof(struct page_flag))) == NULL) {
++				MSG("Can't allocate memory for data of page_data_buf. %s\n",
++					strerror(errno));
++				return FALSE;
++			}
++			current = current->next;
++		}
++		current->next = info->page_flag_buf[i];
++	}
++
++	/*
+ 	 * initial fd_memory for threads
+ 	 */
+ 	for (i = 0; i < info->num_threads; i++) {
+@@ -3612,7 +3645,8 @@ initial_for_parallel()
+ void
+ free_for_parallel()
+ {
+-	int i;
++	int i, j;
++	struct page_flag *current;
+ 
+ 	if (info->threads != NULL) {
+ 		for (i = 0; i < info->num_threads; i++) {
+@@ -3655,6 +3689,19 @@ free_for_parallel()
+ 		free(info->page_data_buf);
+ 	}
+ 
++	if (info->page_flag_buf != NULL) {
++		for (i = 0; i < info->num_threads; i++) {
++			for (j = 0; j < NUM_BUFFERS; j++) {
++				if (info->page_flag_buf[i] != NULL) {
++					current = info->page_flag_buf[i];
++					info->page_flag_buf[i] = current->next;
++					free(current);
++				}
++			}
++		}
++		free(info->page_flag_buf);
++	}
++
+ 	if (info->parallel_info == NULL)
+ 		return;
+ 
+@@ -7076,10 +7123,10 @@ kdump_thread_function_cyclic(void *arg) {
+ 	void *retval = PTHREAD_FAIL;
+ 	struct thread_args *kdump_thread_args = (struct thread_args *)arg;
+ 	struct page_data *page_data_buf = kdump_thread_args->page_data_buf;
++	struct page_flag *page_flag_buf = kdump_thread_args->page_flag_buf;
+ 	struct cycle *cycle = kdump_thread_args->cycle;
+-	int page_data_num = kdump_thread_args->page_data_num;
+ 	mdf_pfn_t pfn;
+-	int index;
++	int index = kdump_thread_args->thread_num;
+ 	int buf_ready;
+ 	int dumpable;
+ 	int fd_memory = 0;
+@@ -7125,47 +7172,48 @@ kdump_thread_function_cyclic(void *arg) {
+ 						kdump_thread_args->thread_num);
+ 	}
+ 
+-	while (1) {
+-		/* get next pfn */
+-		pthread_mutex_lock(&info->current_pfn_mutex);
+-		pfn = info->current_pfn;
+-		info->current_pfn++;
+-		pthread_mutex_unlock(&info->current_pfn_mutex);
++	/* filtered page won't take anything
++	 * unfiltered zero page will only take a page_flag_buf
++	 * unfiltered non-zero page will take a page_flag_buf and a page_data_buf
++	 */
++	while (page_flag_buf->pfn < kdump_thread_args->end_pfn) {
++		buf_ready = FALSE;
+ 
+-		if (pfn >= kdump_thread_args->end_pfn)
+-			break;
++		while (page_data_buf[index].used != 0 ||
++				pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
++			index = (index + 1) % info->num_buffers;
+ 
+-		index = -1;
+-		buf_ready = FALSE;
++		page_data_buf[index].used = 1;
+ 
+ 		while (buf_ready == FALSE) {
+ 			pthread_testcancel();
+-
+-			index = pfn % page_data_num;
+-
+-			if (pfn - info->consumed_pfn > info->num_buffers)
+-				continue;
+-
+-			if (page_data_buf[index].ready != 0)
++			/* 1 means page_flag_buf is ready to be used */
++			if (page_flag_buf->ready == 1)
+ 				continue;
+ 
+-			pthread_mutex_lock(&page_data_buf[index].mutex);
++			/* get next pfn */
++			pthread_mutex_lock(&info->current_pfn_mutex);
++			pfn = info->current_pfn;
++			info->current_pfn++;
++			/* 2 means page_flag_buf is being filled */
++			page_flag_buf->ready = 2;
++			pthread_mutex_unlock(&info->current_pfn_mutex);
+ 
+-			if (page_data_buf[index].ready != 0)
+-				goto unlock;
++			page_flag_buf->pfn = pfn;
+ 
+-			buf_ready = TRUE;
+-
+-			page_data_buf[index].pfn = pfn;
+-			page_data_buf[index].ready = 1;
++			if (pfn >= kdump_thread_args->end_pfn) {
++				page_data_buf[index].used = 0;
++				page_flag_buf->ready = 1;
++				info->current_pfn--;
++				break;
++			}
+ 
+ 			dumpable = is_dumpable(
+ 				info->fd_bitmap ? &bitmap_parallel : info->bitmap2,
+ 				pfn,
+ 				cycle);
+-			page_data_buf[index].dumpable = dumpable;
+ 			if (!dumpable)
+-				goto unlock;
++				continue;
+ 
+ 			if (!read_pfn_parallel(fd_memory, pfn, buf,
+ 					       &bitmap_memory_parallel,
+@@ -7178,11 +7226,11 @@ kdump_thread_function_cyclic(void *arg) {
+ 
+ 			if ((info->dump_level & DL_EXCLUDE_ZERO)
+ 			    && is_zero_page(buf, info->page_size)) {
+-				page_data_buf[index].zero = TRUE;
+-				goto unlock;
++				page_flag_buf->zero = TRUE;
++				goto next;
+ 			}
+ 
+-			page_data_buf[index].zero = FALSE;
++			page_flag_buf->zero = FALSE;
+ 
+ 			/*
+ 			 * Compress the page data.
+@@ -7232,12 +7280,16 @@ kdump_thread_function_cyclic(void *arg) {
+ 				page_data_buf[index].size  = info->page_size;
+ 				memcpy(page_data_buf[index].buf, buf, info->page_size);
+ 			}
+-unlock:
+-			pthread_mutex_unlock(&page_data_buf[index].mutex);
++			page_flag_buf->index = index;
++			buf_ready = TRUE;
++next:
++			page_flag_buf->ready = 1;
++			page_flag_buf = page_flag_buf->next;
+ 
+ 		}
+-	}
+ 
++		pthread_mutex_unlock(&page_data_buf[index].mutex);
++	}
+ 	retval = NULL;
+ 
+ fail:
+@@ -7265,14 +7317,15 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 	struct page_desc pd;
+ 	struct timeval tv_start;
+ 	struct timeval last, new;
+-	unsigned long long consuming_pfn;
+ 	pthread_t **threads = NULL;
+ 	struct thread_args *kdump_thread_args = NULL;
+ 	void *thread_result;
+-	int page_data_num;
++	int page_buf_num;
+ 	struct page_data *page_data_buf = NULL;
+ 	int i;
+ 	int index;
++	int end_count, consuming, check_count;
++	mdf_pfn_t current_pfn, temp_pfn;
+ 
+ 	if (info->flag_elf_dumpfile)
+ 		return FALSE;
+@@ -7319,16 +7372,11 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 	threads = info->threads;
+ 	kdump_thread_args = info->kdump_thread_args;
+ 
+-	page_data_num = info->num_buffers;
++	page_buf_num = info->num_buffers;
+ 	page_data_buf = info->page_data_buf;
+ 
+-	for (i = 0; i < page_data_num; i++) {
+-		/*
+-		 * producer will use pfn in page_data_buf to decide the
+-		 * consumed pfn
+-		 */
+-		page_data_buf[i].pfn = start_pfn - 1;
+-		page_data_buf[i].ready = 0;
++	for (i = 0; i < page_buf_num; i++) {
++		page_data_buf[i].used = 0;
+ 		res = pthread_mutex_init(&page_data_buf[i].mutex, NULL);
+ 		if (res != 0) {
+ 			ERRMSG("Can't initialize mutex of page_data_buf. %s\n",
+@@ -7342,8 +7390,9 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 		kdump_thread_args[i].len_buf_out = len_buf_out;
+ 		kdump_thread_args[i].start_pfn = start_pfn;
+ 		kdump_thread_args[i].end_pfn = end_pfn;
+-		kdump_thread_args[i].page_data_num = page_data_num;
++		kdump_thread_args[i].page_buf_num = page_buf_num;
+ 		kdump_thread_args[i].page_data_buf = page_data_buf;
++		kdump_thread_args[i].page_flag_buf = info->page_flag_buf[i];
+ 		kdump_thread_args[i].cycle = cycle;
+ 
+ 		res = pthread_create(threads[i], NULL,
+@@ -7356,55 +7405,101 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 		}
+ 	}
+ 
+-	consuming_pfn = start_pfn;
+-	index = -1;
++	while (1) {
++		consuming = 0;
++		check_count = 0;
+ 
+-	gettimeofday(&last, NULL);
++		/*
++		 * The basic idea is producer producing page and consumer writing page.
++		 * Each producer have a page_flag_buf list which is used for storing page's description.
++		 * The size of page_flag_buf is little so it won't take too much memory.
++		 * And all producers will share a page_data_buf array which is used for storing page's compressed data.
++		 * The main thread is the consumer. It will find the next pfn and write it into file.
++		 * The next pfn is smallest pfn in all page_flag_buf.
++		 */
++		/*
++		 * 
++		 */ 
++		while (1) {
++			current_pfn = end_pfn;
++			end_count = 0;
+ 
+-	while (consuming_pfn < end_pfn) {
+-		index = consuming_pfn % page_data_num;
++			/*
++			 * page_flag_buf is in circular linked list.
++			 * The array info->page_flag_buf[] records the current page_flag_buf in each thread's
++			 * page_flag_buf list.
++			 * consuming is used for recording in which thread the pfn is the smallest.
++			 * current_pfn is used for recording the value of pfn when checking the pfn.
++			 */
++			for (i = 0; i < info->num_threads; i++) {
+ 
+-		gettimeofday(&new, NULL);
+-		if (new.tv_sec - last.tv_sec > WAIT_TIME) {
+-			ERRMSG("Can't get data of pfn %llx.\n", consuming_pfn);
+-			goto out;
+-		}
++				/*
++				 * ready == 0 means the page_flag_buf haven't been used.
++				 * So we will skip it.
++				 */
++				if (info->page_flag_buf[i]->ready == 0)
++					continue;
++				temp_pfn = info->page_flag_buf[i]->pfn;
+ 
+-		/*
+-		 * check pfn first without mutex locked to reduce the time
+-		 * trying to lock the mutex
+-		 */
+-		if (page_data_buf[index].pfn != consuming_pfn)
+-			continue;
++				/*
++				 * count how many threads have reached the end.
++				 */ 
++				if (temp_pfn >= end_pfn) {
++					end_count++;
++					continue;
++				}
+ 
+-		if (pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
+-			continue;
++				if (current_pfn < temp_pfn)
++					continue;
+ 
+-		/* check whether the found one is ready to be consumed */
+-		if (page_data_buf[index].pfn != consuming_pfn ||
+-		    page_data_buf[index].ready != 1) {
+-			goto unlock;
++				check_count++;
++				consuming = i;
++				current_pfn = temp_pfn;
++			}
++
++			/*
++			 * If all the threads have reached the end, we will finish writing.
++			 */
++			if (end_count >= info->num_threads)
++				goto finish;
++
++			/*
++			 * Since it has the probabilty that there is no page_flag_buf being ready,
++			 * we should recheck if it happens.
++			 */
++			if (check_count == 0)
++				continue;
++
++			/*
++			 * When we check the pfn in page_flag_buf, it may be being produced.
++			 * So we should wait until it is ready to use. And if the pfn is
++			 * different from the value when we check, we should rechoose the buf.
++			 */
++			gettimeofday(&last, NULL);
++			while (info->page_flag_buf[consuming]->ready != 1) {
++				gettimeofday(&new, NULL);
++				if (new.tv_sec - last.tv_sec > WAIT_TIME) {
++					ERRMSG("Can't get data of pfn.\n");
++					goto out;
++				}
++			}
++
++			if (current_pfn == info->page_flag_buf[consuming]->pfn)
++				break;
+ 		}
+ 
+ 		if ((num_dumped % per) == 0)
+ 			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+ 
+-		/* next pfn is found, refresh last here */
+-		last = new;
+-		consuming_pfn++;
+-		info->consumed_pfn++;
+-		page_data_buf[index].ready = 0;
+-
+-		if (page_data_buf[index].dumpable == FALSE)
+-			goto unlock;
+-
+ 		num_dumped++;
+ 
+-		if (page_data_buf[index].zero == TRUE) {
++
++		if (info->page_flag_buf[consuming]->zero == TRUE) {
+ 			if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
+ 				goto out;
+ 			pfn_zero++;
+ 		} else {
++			index = info->page_flag_buf[consuming]->index;
+ 			pd.flags      = page_data_buf[index].flags;
+ 			pd.size       = page_data_buf[index].size;
+ 			pd.page_flags = 0;
+@@ -7420,12 +7515,12 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+ 			 */
+ 			if (!write_cache(cd_page, page_data_buf[index].buf, pd.size))
+ 				goto out;
+-
++			page_data_buf[index].used = 0;
+ 		}
+-unlock:
+-		pthread_mutex_unlock(&page_data_buf[index].mutex);
++		info->page_flag_buf[consuming]->ready = 0;
++		info->page_flag_buf[consuming] = info->page_flag_buf[consuming]->next;
+ 	}
+-
++finish:
+ 	ret = TRUE;
+ 	/*
+ 	 * print [100 %]
+@@ -7464,7 +7559,7 @@ out:
+ 	}
+ 
+ 	if (page_data_buf != NULL) {
+-		for (i = 0; i < page_data_num; i++) {
++		for (i = 0; i < page_buf_num; i++) {
+ 			pthread_mutex_destroy(&page_data_buf[i].mutex);
+ 		}
+ 	}
+@@ -7564,6 +7659,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 		num_dumped++;
+ 		if (!read_pfn(pfn, buf))
+ 			goto out;
++
+ 		filter_data_buffer(buf, pfn_to_paddr(pfn), info->page_size);
+ 
+ 		/*
+diff --git a/makedumpfile.h b/makedumpfile.h
+index e0b5bbf..7452e24 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -977,7 +977,7 @@ typedef unsigned long long int ulonglong;
+ #define PAGE_DATA_NUM	(50)
+ #define WAIT_TIME	(60 * 10)
+ #define PTHREAD_FAIL	((void *)-2)
+-#define NUM_BUFFERS	(50)
++#define NUM_BUFFERS	(20)
+ 
+ struct mmap_cache {
+ 	char	*mmap_buf;
+@@ -985,28 +985,31 @@ struct mmap_cache {
+ 	off_t   mmap_end_offset;
+ };
+ 
++struct page_flag {
++	mdf_pfn_t pfn;
++	char zero;
++	char ready;
++	short index;
++	struct page_flag *next;
++};
++
+ struct page_data
+ {
+-	mdf_pfn_t pfn;
+-	int dumpable;
+-	int zero;
+-	unsigned int flags;
++	pthread_mutex_t mutex;
+ 	long size;
+ 	unsigned char *buf;
+-	pthread_mutex_t mutex;
+-	/*
+-	 * whether the page_data is ready to be consumed
+-	 */
+-	int ready;
++	int flags;
++	int used;
+ };
+ 
+ struct thread_args {
+ 	int thread_num;
+ 	unsigned long len_buf_out;
+ 	mdf_pfn_t start_pfn, end_pfn;
+-	int page_data_num;
++	int page_buf_num;
+ 	struct cycle *cycle;
+ 	struct page_data *page_data_buf;
++	struct page_flag *page_flag_buf;
+ };
+ 
+ /*
+@@ -1295,6 +1298,7 @@ struct DumpInfo {
+ 	pthread_t **threads;
+ 	struct thread_args *kdump_thread_args;
+ 	struct page_data *page_data_buf;
++	struct page_flag **page_flag_buf;
+ 	pthread_rwlock_t usemmap_rwlock;
+ 	mdf_pfn_t current_pfn;
+ 	pthread_mutex_t current_pfn_mutex;
+-- 
+1.8.3.1
+
+
+
 
 _______________________________________________
 kexec mailing list
