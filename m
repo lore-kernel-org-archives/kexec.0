@@ -1,14 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 18 Jan 2016 11:29:33 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
-Message-ID: <20160118112933.GH21067@leverpostej>
-References: <cover.1452884156.git.geoff@infradead.org>
- <fb4506943bbaed8b0657ed367ebd57e4064d57ed.1452884156.git.geoff@infradead.org>
- <20160115201601.GR3262@leverpostej> <569CBDBC.5050500@linaro.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <569CBDBC.5050500@linaro.org>
+Received: from e28smtp02.in.ibm.com ([125.16.236.2])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aLBd1-0002au-Su
+ for kexec@lists.infradead.org; Mon, 18 Jan 2016 15:22:00 +0000
+Received: from localhost
+ by e28smtp02.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Mon, 18 Jan 2016 20:43:32 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+ by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u0IFC50n52297952
+ for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 20:42:05 +0530
+Received: from d28av01.in.ibm.com (localhost [127.0.0.1])
+ by d28av01.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u0IFC4kY030676
+ for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 20:42:05 +0530
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [RFC PATCH v2 04/11] ima: calculate the hash of a buffer using
+ aynchronous hash(ahash)
+Date: Mon, 18 Jan 2016 10:11:19 -0500
+Message-Id: <1453129886-20192-5-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,101 +31,125 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, ard.biesheuvel@linaro.org
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: linux-security-module@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-On Mon, Jan 18, 2016 at 07:26:04PM +0900, AKASHI Takahiro wrote:
-> On 01/16/2016 05:16 AM, Mark Rutland wrote:
-> >On Fri, Jan 15, 2016 at 07:18:38PM +0000, Geoff Levand wrote:
-> >>From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >>
-> >>This patch adds arch specific descriptions about kdump usage on arm64
-> >>to kdump.txt.
-> >>
-> >>Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >>---
-> >>  Documentation/kdump/kdump.txt | 23 ++++++++++++++++++++++-
-> >>  1 file changed, 22 insertions(+), 1 deletion(-)
-> >>
-> >>diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> >>index bc4bd5a..36cf978 100644
-> >>--- a/Documentation/kdump/kdump.txt
-> >>+++ b/Documentation/kdump/kdump.txt
-> >>@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
-> >>  a remote system.
-> >>
-> >>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
-> >>-s390x and arm architectures.
-> >>+s390x, arm and arm64 architectures.
-> >>
-> >>  When the system kernel boots, it reserves a small section of memory for
-> >>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
-> >>@@ -249,6 +249,20 @@ Dump-capture kernel config options (Arch Dependent, arm)
-> >>
-> >>      AUTO_ZRELADDR=y
-> >>
-> >>+Dump-capture kernel config options (Arch Dependent, arm64)
-> >>+----------------------------------------------------------
-> >>+
-> >>+1) The maximum memory size on the dump-capture kernel must be limited by
-> >>+   specifying:
-> >>+
-> >>+   mem=X[MG]
-> >>+
-> >>+   where X should be less than or equal to the size in "crashkernel="
-> >>+   boot parameter. Kexec-tools will automatically add this.
-> >
-> >
-> >This is extremely fragile, and will trivially fail when the kernel can
-> >be loaded anywhere (see [1]).
-> 
-> As I said before, this restriction also exists on arm, but I understand
-> that recent Ard's patches break it.
-> 
-> >We must explicitly describe the set of regions the crash kernel may use
-> >(i.e. we need base and size). NAK in the absence of that.
-> 
-> There seem to exist several approaches:
-> (a) use a device-tree property, "linux,usable-memory", in addition to "reg"
+Setting up ahash has some overhead.  Only use ahash to calculate the
+hash of a buffer, if the buffer is larger than ima_ahash_minsize.
 
-I'm not opposed to the idea of a DT property, though I think that should
-live under /chosen.
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+---
+ security/integrity/ima/ima_crypto.c | 75 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 2 deletions(-)
 
-I see that "linux,usable-memory" exists already, though I'm confused as
-to exactly what it is for as there is no documentation (neither in the
-kernel nor in ePAPR). It's also painful to alter multiple memory nodes
-to use that, and I can see that going wrong.
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index 8d86281..82c4d3c 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -519,6 +519,63 @@ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 	return rc;
+ }
+ 
++static int calc_buffer_ahash_atfm(const void *buf, loff_t len,
++				  struct ima_digest_data *hash,
++				  struct crypto_ahash *tfm)
++{
++	struct ahash_request *req;
++	struct scatterlist sg;
++	struct ahash_completion res;
++	int rc, ahash_rc = 0;
++
++	hash->length = crypto_ahash_digestsize(tfm);
++
++	req = ahash_request_alloc(tfm, GFP_KERNEL);
++	if (!req)
++		return -ENOMEM;
++
++	init_completion(&res.completion);
++	ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG |
++				   CRYPTO_TFM_REQ_MAY_SLEEP,
++				   ahash_complete, &res);
++
++	rc = ahash_wait(crypto_ahash_init(req), &res);
++	if (rc)
++		goto out;
++
++	sg_init_one(&sg, buf, len);
++	ahash_request_set_crypt(req, &sg, NULL, len);
++
++	ahash_rc = crypto_ahash_update(req);
++
++	/* wait for the update request to complete */
++	rc = ahash_wait(ahash_rc, &res);
++	if (!rc) {
++		ahash_request_set_crypt(req, NULL, hash->digest, 0);
++		rc = ahash_wait(crypto_ahash_final(req), &res);
++	}
++out:
++	ahash_request_free(req);
++	return rc;
++}
++
++static int calc_buffer_ahash(const void *buf, loff_t len,
++			     struct ima_digest_data *hash)
++{
++	struct crypto_ahash *tfm;
++	int rc;
++
++	tfm = ima_alloc_atfm(hash->algo);
++	if (IS_ERR(tfm))
++		return PTR_ERR(tfm);
++
++	rc = calc_buffer_ahash_atfm(buf, len, hash, tfm);
++
++	ima_free_atfm(tfm);
++
++	return rc;
++}
++
+ static int calc_buffer_shash_tfm(const void *buf, loff_t size,
+ 				struct ima_digest_data *hash,
+ 				struct crypto_shash *tfm)
+@@ -550,8 +607,8 @@ static int calc_buffer_shash_tfm(const void *buf, loff_t size,
+ 	return rc;
+ }
+ 
+-int ima_calc_buffer_hash(const void *buf, loff_t len,
+-			 struct ima_digest_data *hash)
++static int calc_buffer_shash(const void *buf, loff_t len,
++			     struct ima_digest_data *hash)
+ {
+ 	struct crypto_shash *tfm;
+ 	int rc;
+@@ -566,6 +623,20 @@ int ima_calc_buffer_hash(const void *buf, loff_t len,
+ 	return rc;
+ }
+ 
++int ima_calc_buffer_hash(const void *buf, loff_t len,
++			 struct ima_digest_data *hash)
++{
++	int rc;
++
++	if (ima_ahash_minsize && len >= ima_ahash_minsize) {
++		rc = calc_buffer_ahash(buf, len, hash);
++		if (!rc)
++			return 0;
++	}
++
++	return calc_buffer_shash(buf, len, hash);
++}
++
+ static void __init ima_pcrread(int idx, u8 *pcr)
+ {
+ 	if (!ima_used_chip)
+-- 
+2.1.0
 
->     under "memory" node
-> (b) use a kernel's early parameter, "memmap=nn[@#$]ss"
-
-I'm not too keen on this, as I think it's fragile, and logically
-somewhat distinct from what mem= is for (a best effort testing tool).
-
-> Power PC takes (a), while this does not work on efi-started kernel
-> because dtb has no "memory" nodes under efi.
-
-A property under /chosen would work for EFI too.
-
-> X86 takes (b). If we take this, we will need to overwrite a weak
-> early_init_dt_add_memory().
-> (I thought that this approach was not smart as we have three different
-> ways to specify memory regions, dtb, efi and this kernel parameter.)
-
-I'm not sure that's a big problem. We may be able to make this generic,
-also.
-
-We don't necessarily need a weak add memory function if we can guarantee
-nothing gets memblock_alloc'd before we carve it out.
-
-Something like the nomap stuff Ard put together might be useful here.
-
-Thanks,
-Mark.
 
 _______________________________________________
 kexec mailing list
