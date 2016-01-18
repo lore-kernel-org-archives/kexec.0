@@ -1,26 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp01.in.ibm.com ([125.16.236.1])
+Received: from e28smtp06.in.ibm.com ([125.16.236.6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aLBg0-000336-Op
- for kexec@lists.infradead.org; Mon, 18 Jan 2016 15:25:06 +0000
+ id 1aLBg5-00034j-8B
+ for kexec@lists.infradead.org; Mon, 18 Jan 2016 15:25:10 +0000
 Received: from localhost
- by e28smtp01.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Mon, 18 Jan 2016 20:45:07 +0530
+ Mon, 18 Jan 2016 20:45:33 +0530
 Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
- by d28relay02.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u0IFCLKa9568694
- for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 20:42:21 +0530
+ by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u0IFCC4J3998188
+ for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 20:42:12 +0530
 Received: from d28av01.in.ibm.com (localhost [127.0.0.1])
  by d28av01.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u0IFCFQj030781
- for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 20:42:17 +0530
+ u0IFCBXV030747
+ for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 20:42:12 +0530
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [RFC PATCH v2 07/11] firmware: replace call to
- fw_read_file_contents() with kernel version
-Date: Mon, 18 Jan 2016 10:11:22 -0500
-Message-Id: <1453129886-20192-8-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd() with
+ kernel version
+Date: Mon, 18 Jan 2016 10:11:21 -0500
+Message-Id: <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -39,449 +39,334 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-Replace fw_read_file_contents() for reading a file with the common VFS
-kernel_read_file() function.  A benefit of calling kernel_read_file()
-to read the firmware is the firmware is read only once, instead of once
-for measuring/appraising the firmware and again for reading the file
-contents into memory.
+This patch defines kernel_read_file_from_fd(), a wrapper for the VFS
+common kernel_read_file(), and replaces the kexec copy_file_from_fd()
+calls with the kernel_read_file_from_fd() wrapper.
 
-This patch retains the kernel_fw_from_file() hook, which is called from
-security_kernel_post_read_file(), but removes the
-sercurity_kernel_fw_from_file() function.
+Two new IMA policy identifiers named KEXEC_CHECK and INITRAMFS_CHECK
+are defined for measuring, appraising or auditing the kexec image
+and initramfs.
 
-Changelog:
-- reordered and squashed firmware patches
-- fix MAX firmware size (Kees Cook)
+Changelog v1:
+- re-order and squash the kexec patches
+
+v3: ima: measure and appraise kexec image and initramfs (squashed)
+- rename ima_read_hooks enumeration to ima_policy_id
+- use kstat file size type loff_t, not size_t
+- add union name "hooks" to fix sparse warning
+
+v2:
+- Calculate the file hash from the in memory buffer
+(suggested by Dave Young)
+- Rename ima_read_and_process_file() to ima_hash_and_process_file()
+- replace individual case statements with range:
+        KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1
+v1:
+- Instead of ima_read_and_process_file() allocating memory, the caller
+allocates and frees the memory.
+- Moved the kexec measurement/appraisal call to copy_file_from_fd(). The
+same call now measures and appraises both the kexec image and initramfs.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- drivers/base/firmware_class.c         | 48 ++++++++++-------------------------
- include/linux/ima.h                   |  7 +----
- include/linux/security.h              |  8 +-----
- security/integrity/ima/ima.h          |  1 -
- security/integrity/ima/ima_appraise.c |  8 ------
- security/integrity/ima/ima_main.c     | 18 +++++--------
- security/integrity/ima/ima_policy.c   | 26 +++++++++----------
- security/integrity/integrity.h        | 11 +++-----
- security/security.c                   | 28 ++++++++++----------
- 9 files changed, 54 insertions(+), 101 deletions(-)
+ Documentation/ABI/testing/ima_policy  |  2 +-
+ fs/exec.c                             | 15 ++++++++
+ include/linux/fs.h                    |  1 +
+ include/linux/ima.h                   |  2 +
+ kernel/kexec_file.c                   | 72 ++++-------------------------------
+ security/integrity/ima/ima.h          |  9 ++++-
+ security/integrity/ima/ima_appraise.c |  7 ++++
+ security/integrity/ima/ima_policy.c   | 27 ++++++++++---
+ 8 files changed, 64 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/base/firmware_class.c b/drivers/base/firmware_class.c
-index 8524450..cc175f1 100644
---- a/drivers/base/firmware_class.c
-+++ b/drivers/base/firmware_class.c
-@@ -29,6 +29,7 @@
- #include <linux/syscore_ops.h>
- #include <linux/reboot.h>
- #include <linux/security.h>
-+#include <linux/ima.h>
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index 0a378a8..e80f767 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -26,7 +26,7 @@ Description:
+ 			option:	[[appraise_type=]] [permit_directio]
  
- #include <generated/utsrelease.h>
+ 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][FILE_CHECK][MODULE_CHECK]
+-				[FIRMWARE_CHECK]
++				[FIRMWARE_CHECK] [KEXEC_CHECK] [INITRAMFS_CHECK]
+ 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+ 			       [[^]MAY_EXEC]
+ 			fsmagic:= hex value
+diff --git a/fs/exec.c b/fs/exec.c
+index 211b81c..a5ae51e 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -884,6 +884,21 @@ out:
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file);
  
-@@ -291,40 +292,10 @@ static const char * const fw_path[] = {
- module_param_string(path, fw_path_para, sizeof(fw_path_para), 0644);
- MODULE_PARM_DESC(path, "customized firmware image search path with a higher priority than default path");
- 
--static int fw_read_file_contents(struct file *file, struct firmware_buf *fw_buf)
--{
--	int size;
--	char *buf;
--	int rc;
--
--	if (!S_ISREG(file_inode(file)->i_mode))
--		return -EINVAL;
--	size = i_size_read(file_inode(file));
--	if (size <= 0)
--		return -EINVAL;
--	buf = vmalloc(size);
--	if (!buf)
--		return -ENOMEM;
--	rc = kernel_read(file, 0, buf, size);
--	if (rc != size) {
--		if (rc > 0)
--			rc = -EIO;
--		goto fail;
--	}
--	rc = security_kernel_fw_from_file(file, buf, size);
--	if (rc)
--		goto fail;
--	fw_buf->data = buf;
--	fw_buf->size = size;
--	return 0;
--fail:
--	vfree(buf);
--	return rc;
--}
--
- static int fw_get_filesystem_firmware(struct device *device,
- 				       struct firmware_buf *buf)
- {
-+	loff_t size;
- 	int i, len;
- 	int rc = -ENOENT;
- 	char *path;
-@@ -350,13 +321,18 @@ static int fw_get_filesystem_firmware(struct device *device,
- 		file = filp_open(path, O_RDONLY, 0);
- 		if (IS_ERR(file))
- 			continue;
--		rc = fw_read_file_contents(file, buf);
++int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
++			     int policy_id)
++{
++	struct fd f = fdget(fd);
++	int ret = -ENOEXEC;
 +
-+		buf->size = 0;
-+		rc = kernel_read_file(file, &buf->data, &size, INT_MAX,
-+				      FIRMWARE_CHECK);
- 		fput(file);
- 		if (rc)
- 			dev_warn(device, "firmware, attempted to load %s, but failed with error %d\n",
- 				path, rc);
--		else
-+		else {
-+			buf->size = (size_t) size;
- 			break;
-+		}
- 	}
- 	__putname(path);
++	if (!f.file)
++		goto out;
++
++	ret = kernel_read_file(f.file, buf, size, max_size, policy_id);
++out:
++	fdput(f);
++	return ret;
++}
++
+ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+ {
+ 	ssize_t res = vfs_read(file, (void __user *)addr, len, &pos);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 9b1468c..9642623 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2528,6 +2528,7 @@ extern int do_pipe_flags(int *, int);
  
-@@ -685,8 +661,10 @@ static ssize_t firmware_loading_store(struct device *dev,
- 				dev_err(dev, "%s: map pages failed\n",
- 					__func__);
- 			else
--				rc = security_kernel_fw_from_file(NULL,
--						fw_buf->data, fw_buf->size);
-+				rc = security_kernel_post_read_file(NULL,
-+							       fw_buf->data,
-+							       fw_buf->size,
-+							       FIRMWARE_CHECK);
- 
- 			/*
- 			 * Same logic as fw_load_abort, only the DONE bit
+ extern int kernel_read(struct file *, loff_t, char *, unsigned long);
+ extern int kernel_read_file(struct file *, void **, loff_t *, loff_t, int);
++extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t, int);
+ extern ssize_t kernel_write(struct file *, const char *, size_t, loff_t);
+ extern ssize_t __kernel_write(struct file *, const char *, size_t, loff_t *);
+ extern struct file * open_exec(const char *);
 diff --git a/include/linux/ima.h b/include/linux/ima.h
-index ae91938..0a7f039 100644
+index ca76f60..ae91938 100644
 --- a/include/linux/ima.h
 +++ b/include/linux/ima.h
-@@ -16,6 +16,7 @@ struct linux_binprm;
+@@ -14,6 +14,8 @@
+ struct linux_binprm;
+ 
  enum ima_policy_id {
- 	KEXEC_CHECK = 1,
- 	INITRAMFS_CHECK,
-+	FIRMWARE_CHECK,
++	KEXEC_CHECK = 1,
++	INITRAMFS_CHECK,
  	IMA_MAX_READ_CHECK
  };
  
-@@ -25,7 +26,6 @@ extern int ima_file_check(struct file *file, int mask, int opened);
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long prot);
- extern int ima_module_check(struct file *file);
--extern int ima_fw_from_file(struct file *file, char *buf, size_t size);
- extern int ima_hash_and_process_file(struct file *file,
- 				     void *buf, loff_t size,
- 				     enum ima_policy_id policy_id);
-@@ -56,11 +56,6 @@ static inline int ima_module_check(struct file *file)
- 	return 0;
- }
- 
--static inline int ima_fw_from_file(struct file *file, char *buf, size_t size)
--{
--	return 0;
--}
--
- static inline int ima_hash_and_process_file(struct file *file,
- 					    void *buf, loff_t size,
- 					    enum ima_policy_id policy_id)
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 44d8832..51f3bc6 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -28,6 +28,7 @@
- #include <linux/err.h>
- #include <linux/string.h>
- #include <linux/mm.h>
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b70ada0..f7c3ce4 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -18,6 +18,7 @@
+ #include <linux/kexec.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
 +#include <linux/ima.h>
+ #include <crypto/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/syscalls.h>
+@@ -33,65 +34,6 @@ size_t __weak kexec_purgatory_size = 0;
  
- struct linux_binprm;
- struct cred;
-@@ -298,7 +299,6 @@ int security_prepare_creds(struct cred *new, const struct cred *old, gfp_t gfp);
- void security_transfer_creds(struct cred *new, const struct cred *old);
- int security_kernel_act_as(struct cred *new, u32 secid);
- int security_kernel_create_files_as(struct cred *new, struct inode *inode);
--int security_kernel_fw_from_file(struct file *file, char *buf, size_t size);
- int security_kernel_module_request(char *kmod_name);
- int security_kernel_module_from_file(struct file *file);
- int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
-@@ -852,12 +852,6 @@ static inline int security_kernel_create_files_as(struct cred *cred,
- 	return 0;
- }
+ static int kexec_calculate_store_digests(struct kimage *image);
  
--static inline int security_kernel_fw_from_file(struct file *file,
--					       char *buf, size_t size)
+-static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
 -{
--	return 0;
+-	struct fd f = fdget(fd);
+-	int ret;
+-	struct kstat stat;
+-	loff_t pos;
+-	ssize_t bytes = 0;
+-
+-	if (!f.file)
+-		return -EBADF;
+-
+-	ret = vfs_getattr(&f.file->f_path, &stat);
+-	if (ret)
+-		goto out;
+-
+-	if (stat.size > INT_MAX) {
+-		ret = -EFBIG;
+-		goto out;
+-	}
+-
+-	/* Don't hand 0 to vmalloc, it whines. */
+-	if (stat.size == 0) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	*buf = vmalloc(stat.size);
+-	if (!*buf) {
+-		ret = -ENOMEM;
+-		goto out;
+-	}
+-
+-	pos = 0;
+-	while (pos < stat.size) {
+-		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
+-				    stat.size - pos);
+-		if (bytes < 0) {
+-			vfree(*buf);
+-			ret = bytes;
+-			goto out;
+-		}
+-
+-		if (bytes == 0)
+-			break;
+-		pos += bytes;
+-	}
+-
+-	if (pos != stat.size) {
+-		ret = -EBADF;
+-		vfree(*buf);
+-		goto out;
+-	}
+-
+-	*buf_len = pos;
+-out:
+-	fdput(f);
+-	return ret;
 -}
 -
- static inline int security_kernel_module_request(char *kmod_name)
+ /* Architectures can provide this probe function */
+ int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+ 					 unsigned long buf_len)
+@@ -180,16 +122,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
  {
- 	return 0;
+ 	int ret = 0;
+ 	void *ldata;
++	loff_t size;
+ 
+-	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
+-				&image->kernel_buf_len);
++	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
++				       &size, INT_MAX, KEXEC_CHECK);
+ 	if (ret)
+ 		return ret;
++	image->kernel_buf_len = size;
+ 
+ 	/* Call arch image probe handlers */
+ 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+ 					    image->kernel_buf_len);
+-
+ 	if (ret)
+ 		goto out;
+ 
+@@ -204,10 +147,11 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ #endif
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+-		ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
+-					&image->initrd_buf_len);
++		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
++					       &size, INT_MAX, INITRAMFS_CHECK);
+ 		if (ret)
+ 			goto out;
++		image->initrd_buf_len = size;
+ 	}
+ 
+ 	if (cmdline_len) {
 diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index b98dbd5..520c7b4 100644
+index 06bcc24..b98dbd5 100644
 --- a/security/integrity/ima/ima.h
 +++ b/security/integrity/ima/ima.h
-@@ -165,7 +165,6 @@ enum ima_hooks {
- 	MMAP_CHECK,
- 	BPRM_CHECK,
- 	MODULE_CHECK,
--	FIRMWARE_CHECK,
- 	POST_SETATTR
- };
+@@ -160,7 +160,14 @@ void ima_free_template_entry(struct ima_template_entry *entry);
+ const char *ima_d_path(struct path *path, char **pathbuf);
  
+ /* IMA policy related functions */
+-enum ima_hooks { FILE_CHECK = 1, MMAP_CHECK, BPRM_CHECK, MODULE_CHECK, FIRMWARE_CHECK, POST_SETATTR };
++enum ima_hooks {
++	FILE_CHECK = IMA_MAX_READ_CHECK,
++	MMAP_CHECK,
++	BPRM_CHECK,
++	MODULE_CHECK,
++	FIRMWARE_CHECK,
++	POST_SETATTR
++};
+ 
+ int ima_match_policy(struct inode *inode, int func, int mask, int flags);
+ void ima_init_policy(void);
 diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 3adf937..57b1ad1 100644
+index 4edf47f..3adf937 100644
 --- a/security/integrity/ima/ima_appraise.c
 +++ b/security/integrity/ima/ima_appraise.c
-@@ -76,8 +76,6 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
- 		return iint->ima_bprm_status;
- 	case MODULE_CHECK:
+@@ -78,6 +78,8 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
  		return iint->ima_module_status;
--	case FIRMWARE_CHECK:
--		return iint->ima_firmware_status;
- 	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
- 		return iint->ima_read_status;
+ 	case FIRMWARE_CHECK:
+ 		return iint->ima_firmware_status;
++	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
++		return iint->ima_read_status;
  	case FILE_CHECK:
-@@ -99,9 +97,6 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
- 	case MODULE_CHECK:
- 		iint->ima_module_status = status;
+ 	default:
+ 		return iint->ima_file_status;
+@@ -100,6 +102,9 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
+ 	case FIRMWARE_CHECK:
+ 		iint->ima_firmware_status = status;
  		break;
--	case FIRMWARE_CHECK:
--		iint->ima_firmware_status = status;
--		break;
- 	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
- 		iint->ima_read_status = status;
- 		break;
-@@ -124,9 +119,6 @@ static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
- 	case MODULE_CHECK:
- 		iint->flags |= (IMA_MODULE_APPRAISED | IMA_APPRAISED);
- 		break;
--	case FIRMWARE_CHECK:
--		iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
--		break;
- 	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
- 		break;
++	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
++		iint->ima_read_status = status;
++		break;
  	case FILE_CHECK:
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 668cbc6..1251882 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -337,17 +337,6 @@ int ima_module_check(struct file *file)
- 	return process_measurement(file, NULL, 0, MAY_EXEC, MODULE_CHECK, 0);
- }
- 
--int ima_fw_from_file(struct file *file, char *buf, size_t size)
--{
--	if (!file) {
--		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
--		    (ima_appraise & IMA_APPRAISE_ENFORCE))
--			return -EACCES;	/* INTEGRITY_UNKNOWN */
--		return 0;
--	}
--	return process_measurement(file, NULL, 0, MAY_EXEC, FIRMWARE_CHECK, 0);
--}
--
- /**
-  * ima_hash_and_process_file - in memory collect/appraise/audit measurement
-  * @file: pointer to the file to be measured/appraised/audit
-@@ -361,6 +350,13 @@ int ima_fw_from_file(struct file *file, char *buf, size_t size)
- int ima_hash_and_process_file(struct file *file, void *buf, loff_t size,
- 			      enum ima_policy_id policy_id)
- {
-+	if (!file && policy_id == FIRMWARE_CHECK) {
-+		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-+		    (ima_appraise & IMA_APPRAISE_ENFORCE))
-+			return -EACCES;	/* INTEGRITY_UNKNOWN */
-+		return 0;
-+	}
-+
- 	if (!file || !buf || size == 0) { /* should never happen */
- 		if (ima_appraise & IMA_APPRAISE_ENFORCE)
- 			return -EACCES;
+ 	default:
+ 		iint->ima_file_status = status;
+@@ -122,6 +127,8 @@ static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
+ 	case FIRMWARE_CHECK:
+ 		iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
+ 		break;
++	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
++		break;
+ 	case FILE_CHECK:
+ 	default:
+ 		iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 4711083..dbd7aa1 100644
+index 595e038..4711083 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -102,7 +102,8 @@ static struct ima_rule_entry original_measurement_rules[] = {
- 	{.action = MEASURE, .hooks.func = FILE_CHECK, .mask = MAY_READ,
- 	 .uid = GLOBAL_ROOT_UID, .flags = IMA_FUNC | IMA_MASK | IMA_UID},
- 	{.action = MEASURE, .hooks.func = MODULE_CHECK, .flags = IMA_FUNC},
--	{.action = MEASURE, .hooks.func = FIRMWARE_CHECK, .flags = IMA_FUNC},
-+	{.action = MEASURE, .hooks.policy_id = FIRMWARE_CHECK,
-+	 .flags = IMA_FUNC},
- };
- 
- static struct ima_rule_entry default_measurement_rules[] = {
-@@ -115,7 +116,8 @@ static struct ima_rule_entry default_measurement_rules[] = {
- 	{.action = MEASURE, .hooks.func = FILE_CHECK, .mask = MAY_READ,
- 	 .uid = GLOBAL_ROOT_UID, .flags = IMA_FUNC | IMA_INMASK | IMA_UID},
- 	{.action = MEASURE, .hooks.func = MODULE_CHECK, .flags = IMA_FUNC},
--	{.action = MEASURE, .hooks.func = FIRMWARE_CHECK, .flags = IMA_FUNC},
-+	{.action = MEASURE, .hooks.policy_id = FIRMWARE_CHECK,
-+	 .flags = IMA_FUNC},
- };
- 
- static struct ima_rule_entry default_appraise_rules[] = {
-@@ -304,8 +306,6 @@ static int get_subaction(struct ima_rule_entry *rule, int func)
- 		return IMA_BPRM_APPRAISE;
- 	case MODULE_CHECK:
+@@ -306,6 +306,8 @@ static int get_subaction(struct ima_rule_entry *rule, int func)
  		return IMA_MODULE_APPRAISE;
--	case FIRMWARE_CHECK:
--		return IMA_FIRMWARE_APPRAISE;
- 	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
- 		return IMA_READ_APPRAISE;
+ 	case FIRMWARE_CHECK:
+ 		return IMA_FIRMWARE_APPRAISE;
++	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
++		return IMA_READ_APPRAISE;
  	case FILE_CHECK:
-@@ -609,8 +609,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->hooks.func = FILE_CHECK;
- 			else if (strcmp(args[0].from, "MODULE_CHECK") == 0)
- 				entry->hooks.func = MODULE_CHECK;
--			else if (strcmp(args[0].from, "FIRMWARE_CHECK") == 0)
--				entry->hooks.func = FIRMWARE_CHECK;
- 			else if ((strcmp(args[0].from, "FILE_MMAP") == 0)
- 				|| (strcmp(args[0].from, "MMAP_CHECK") == 0))
+ 	default:
+ 		return IMA_FILE_APPRAISE;
+@@ -614,6 +616,10 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
  				entry->hooks.func = MMAP_CHECK;
-@@ -620,6 +618,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->hooks.policy_id = KEXEC_CHECK;
- 			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
- 				entry->hooks.policy_id = INITRAMFS_CHECK;
-+			else if (strcmp(args[0].from, "FIRMWARE_CHECK") == 0)
-+				entry->hooks.policy_id = FIRMWARE_CHECK;
+ 			else if (strcmp(args[0].from, "BPRM_CHECK") == 0)
+ 				entry->hooks.func = BPRM_CHECK;
++			else if (strcmp(args[0].from, "KEXEC_CHECK") == 0)
++				entry->hooks.policy_id = KEXEC_CHECK;
++			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
++				entry->hooks.policy_id = INITRAMFS_CHECK;
  			else
  				result = -EINVAL;
  			if (!result)
-@@ -776,7 +776,7 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 		result = -EINVAL;
- 	else if (entry->hooks.func == MODULE_CHECK)
- 		temp_ima_appraise |= IMA_APPRAISE_MODULES;
--	else if (entry->hooks.func == FIRMWARE_CHECK)
-+	else if (entry->hooks.policy_id == FIRMWARE_CHECK)
- 		temp_ima_appraise |= IMA_APPRAISE_FIRMWARE;
- 	audit_log_format(ab, "res=%d", !result);
- 	audit_log_end(ab);
-@@ -863,8 +863,8 @@ static char *mask_tokens[] = {
- 
- enum {
- 	func_file = 0, func_mmap, func_bprm,
--	func_module, func_firmware, func_post,
--	func_kexec, func_initramfs
-+	func_module, func_post,
-+	func_kexec, func_initramfs, func_firmware
- };
- 
- static char *func_tokens[] = {
-@@ -872,10 +872,10 @@ static char *func_tokens[] = {
- 	"MMAP_CHECK",
+@@ -867,7 +873,9 @@ static char *func_tokens[] = {
  	"BPRM_CHECK",
  	"MODULE_CHECK",
--	"FIRMWARE_CHECK",
- 	"POST_SETATTR",
- 	"KEXEC_CHECK",
- 	"INITRAMFS_CHECK",
-+	"FIRMWARE_CHECK"
+ 	"FIRMWARE_CHECK",
+-	"POST_SETATTR"
++	"POST_SETATTR",
++	"KEXEC_CHECK",
++	"INITRAMFS_CHECK",
  };
  
  void *ima_policy_start(struct seq_file *m, loff_t *pos)
-@@ -949,9 +949,6 @@ int ima_policy_show(struct seq_file *m, void *v)
- 		case MODULE_CHECK:
- 			seq_printf(m, pt(Opt_func), ft(func_module));
- 			break;
--		case FIRMWARE_CHECK:
--			seq_printf(m, pt(Opt_func), ft(func_firmware));
--			break;
- 		case POST_SETATTR:
+@@ -948,10 +956,19 @@ int ima_policy_show(struct seq_file *m, void *v)
  			seq_printf(m, pt(Opt_func), ft(func_post));
  			break;
-@@ -963,6 +960,9 @@ int ima_policy_show(struct seq_file *m, void *v)
- 			case INITRAMFS_CHECK:
- 				seq_printf(m, pt(Opt_func), ft(func_initramfs));
- 				break;
-+			case FIRMWARE_CHECK:
-+				seq_printf(m, pt(Opt_func), ft(func_firmware));
+ 		default:
+-			snprintf(tbuf, sizeof(tbuf), "%d",
+-				 entry->hooks.func);
+-			seq_printf(m, pt(Opt_func), tbuf);
+-			break;
++			switch (entry->hooks.policy_id) {
++			case KEXEC_CHECK:
++				seq_printf(m, pt(Opt_func), ft(func_kexec));
 +				break;
- 			default:
- 				snprintf(tbuf, sizeof(tbuf), "%d",
- 					 entry->hooks.func);
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 9a0ea4c..75334cd 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -47,16 +47,14 @@
- #define IMA_BPRM_APPRAISED	0x00002000
- #define IMA_MODULE_APPRAISE	0x00004000
- #define IMA_MODULE_APPRAISED	0x00008000
--#define IMA_FIRMWARE_APPRAISE	0x00010000
--#define IMA_FIRMWARE_APPRAISED	0x00020000
--#define IMA_READ_APPRAISE	0x00040000
--#define IMA_READ_APPRAISED	0x00080000
-+#define IMA_READ_APPRAISE	0x00010000
-+#define IMA_READ_APPRAISED	0x00020000
- #define IMA_APPRAISE_SUBMASK	(IMA_FILE_APPRAISE | IMA_MMAP_APPRAISE | \
- 				 IMA_BPRM_APPRAISE | IMA_MODULE_APPRAISE | \
--				 IMA_FIRMWARE_APPRAISE | IMA_READ_APPRAISE)
-+				 IMA_READ_APPRAISE)
- #define IMA_APPRAISED_SUBMASK	(IMA_FILE_APPRAISED | IMA_MMAP_APPRAISED | \
- 				 IMA_BPRM_APPRAISED | IMA_MODULE_APPRAISED | \
--				 IMA_FIRMWARE_APPRAISED | IMA_READ_APPRAISED)
-+				 IMA_READ_APPRAISED)
- 
- enum evm_ima_xattr_type {
- 	IMA_XATTR_DIGEST = 0x01,
-@@ -112,7 +110,6 @@ struct integrity_iint_cache {
- 	enum integrity_status ima_mmap_status:4;
- 	enum integrity_status ima_bprm_status:4;
- 	enum integrity_status ima_module_status:4;
--	enum integrity_status ima_firmware_status:4;
- 	enum integrity_status ima_read_status:4;
- 	enum integrity_status evm_status:4;
- 	struct ima_digest_data *ima_hash;
-diff --git a/security/security.c b/security/security.c
-index 49cacae..a391ce4 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -884,17 +884,6 @@ int security_kernel_create_files_as(struct cred *new, struct inode *inode)
- 	return call_int_hook(kernel_create_files_as, 0, new, inode);
- }
- 
--int security_kernel_fw_from_file(struct file *file, char *buf, size_t size)
--{
--	int ret;
--
--	ret = call_int_hook(kernel_fw_from_file, 0, file, buf, size);
--	if (ret)
--		return ret;
--	return ima_fw_from_file(file, buf, size);
--}
--EXPORT_SYMBOL_GPL(security_kernel_fw_from_file);
--
- int security_kernel_module_request(char *kmod_name)
- {
- 	return call_int_hook(kernel_module_request, 0, kmod_name);
-@@ -913,8 +902,21 @@ int security_kernel_module_from_file(struct file *file)
- int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
- 				   int policy_id)
- {
--	return = call_int_hook(kernel_post_read_file, 0, file, buf, size,
--			       policy_id);
-+	int ret = 0;
-+
-+	switch (policy_id) {
-+	case FIRMWARE_CHECK:
-+		ret = call_int_hook(kernel_fw_from_file, 0, file, buf, size);
-+		break;
-+	default:
-+		ret = call_int_hook(kernel_post_read_file, 0, file, buf, size,
-+				    policy_id);
-+		break;
-+	}
-+	if (ret)
-+		return ret;
-+
-+	return ima_hash_and_process_file(file, buf, size, policy_id);
- }
- EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
- 
++			case INITRAMFS_CHECK:
++				seq_printf(m, pt(Opt_func), ft(func_initramfs));
++				break;
++			default:
++				snprintf(tbuf, sizeof(tbuf), "%d",
++					 entry->hooks.func);
++				seq_printf(m, pt(Opt_func), tbuf);
++				break;
++			}
+ 		}
+ 		seq_puts(m, " ");
+ 	}
 -- 
 2.1.0
 
