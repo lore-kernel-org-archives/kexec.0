@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aL715-0005sx-8k
- for kexec@lists.infradead.org; Mon, 18 Jan 2016 10:26:32 +0000
-Received: by mail-pf0-x231.google.com with SMTP id e65so156305842pfe.0
- for <kexec@lists.infradead.org>; Mon, 18 Jan 2016 02:26:10 -0800 (PST)
+Date: Mon, 18 Jan 2016 11:29:33 +0000
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
+Message-ID: <20160118112933.GH21067@leverpostej>
 References: <cover.1452884156.git.geoff@infradead.org>
  <fb4506943bbaed8b0657ed367ebd57e4064d57ed.1452884156.git.geoff@infradead.org>
- <20160115201601.GR3262@leverpostej>
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Message-ID: <569CBDBC.5050500@linaro.org>
-Date: Mon, 18 Jan 2016 19:26:04 +0900
+ <20160115201601.GR3262@leverpostej> <569CBDBC.5050500@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20160115201601.GR3262@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <569CBDBC.5050500@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,126 +17,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>
-Cc: ard.biesheuvel@linaro.org, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, ard.biesheuvel@linaro.org
+Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On 01/16/2016 05:16 AM, Mark Rutland wrote:
-> On Fri, Jan 15, 2016 at 07:18:38PM +0000, Geoff Levand wrote:
->> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>
->> This patch adds arch specific descriptions about kdump usage on arm64
->> to kdump.txt.
->>
->> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->> ---
->>   Documentation/kdump/kdump.txt | 23 ++++++++++++++++++++++-
->>   1 file changed, 22 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
->> index bc4bd5a..36cf978 100644
->> --- a/Documentation/kdump/kdump.txt
->> +++ b/Documentation/kdump/kdump.txt
->> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
->>   a remote system.
->>
->>   Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
->> -s390x and arm architectures.
->> +s390x, arm and arm64 architectures.
->>
->>   When the system kernel boots, it reserves a small section of memory for
->>   the dump-capture kernel. This ensures that ongoing Direct Memory Access
->> @@ -249,6 +249,20 @@ Dump-capture kernel config options (Arch Dependent, arm)
->>
->>       AUTO_ZRELADDR=y
->>
->> +Dump-capture kernel config options (Arch Dependent, arm64)
->> +----------------------------------------------------------
->> +
->> +1) The maximum memory size on the dump-capture kernel must be limited by
->> +   specifying:
->> +
->> +   mem=X[MG]
->> +
->> +   where X should be less than or equal to the size in "crashkernel="
->> +   boot parameter. Kexec-tools will automatically add this.
->
->
-> This is extremely fragile, and will trivially fail when the kernel can
-> be loaded anywhere (see [1]).
+On Mon, Jan 18, 2016 at 07:26:04PM +0900, AKASHI Takahiro wrote:
+> On 01/16/2016 05:16 AM, Mark Rutland wrote:
+> >On Fri, Jan 15, 2016 at 07:18:38PM +0000, Geoff Levand wrote:
+> >>From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>
+> >>This patch adds arch specific descriptions about kdump usage on arm64
+> >>to kdump.txt.
+> >>
+> >>Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>---
+> >>  Documentation/kdump/kdump.txt | 23 ++++++++++++++++++++++-
+> >>  1 file changed, 22 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> >>index bc4bd5a..36cf978 100644
+> >>--- a/Documentation/kdump/kdump.txt
+> >>+++ b/Documentation/kdump/kdump.txt
+> >>@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+> >>  a remote system.
+> >>
+> >>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> >>-s390x and arm architectures.
+> >>+s390x, arm and arm64 architectures.
+> >>
+> >>  When the system kernel boots, it reserves a small section of memory for
+> >>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> >>@@ -249,6 +249,20 @@ Dump-capture kernel config options (Arch Dependent, arm)
+> >>
+> >>      AUTO_ZRELADDR=y
+> >>
+> >>+Dump-capture kernel config options (Arch Dependent, arm64)
+> >>+----------------------------------------------------------
+> >>+
+> >>+1) The maximum memory size on the dump-capture kernel must be limited by
+> >>+   specifying:
+> >>+
+> >>+   mem=X[MG]
+> >>+
+> >>+   where X should be less than or equal to the size in "crashkernel="
+> >>+   boot parameter. Kexec-tools will automatically add this.
+> >
+> >
+> >This is extremely fragile, and will trivially fail when the kernel can
+> >be loaded anywhere (see [1]).
+> 
+> As I said before, this restriction also exists on arm, but I understand
+> that recent Ard's patches break it.
+> 
+> >We must explicitly describe the set of regions the crash kernel may use
+> >(i.e. we need base and size). NAK in the absence of that.
+> 
+> There seem to exist several approaches:
+> (a) use a device-tree property, "linux,usable-memory", in addition to "reg"
 
-As I said before, this restriction also exists on arm, but I understand
-that recent Ard's patches break it.
+I'm not opposed to the idea of a DT property, though I think that should
+live under /chosen.
 
-> We must explicitly describe the set of regions the crash kernel may use
-> (i.e. we need base and size). NAK in the absence of that.
+I see that "linux,usable-memory" exists already, though I'm confused as
+to exactly what it is for as there is no documentation (neither in the
+kernel nor in ePAPR). It's also painful to alter multiple memory nodes
+to use that, and I can see that going wrong.
 
-There seem to exist several approaches:
-(a) use a device-tree property, "linux,usable-memory", in addition to "reg"
-     under "memory" node
-(b) use a kernel's early parameter, "memmap=nn[@#$]ss"
+>     under "memory" node
+> (b) use a kernel's early parameter, "memmap=nn[@#$]ss"
 
-Power PC takes (a), while this does not work on efi-started kernel
-because dtb has no "memory" nodes under efi.
-X86 takes (b). If we take this, we will need to overwrite a weak
-early_init_dt_add_memory().
-(I thought that this approach was not smart as we have three different
-ways to specify memory regions, dtb, efi and this kernel parameter.)
+I'm not too keen on this, as I think it's fragile, and logically
+somewhat distinct from what mem= is for (a best effort testing tool).
 
-Do you have any other ideas?
+> Power PC takes (a), while this does not work on efi-started kernel
+> because dtb has no "memory" nodes under efi.
+
+A property under /chosen would work for EFI too.
+
+> X86 takes (b). If we take this, we will need to overwrite a weak
+> early_init_dt_add_memory().
+> (I thought that this approach was not smart as we have three different
+> ways to specify memory regions, dtb, efi and this kernel parameter.)
+
+I'm not sure that's a big problem. We may be able to make this generic,
+also.
+
+We don't necessarily need a weak add memory function if we can guarantee
+nothing gets memblock_alloc'd before we carve it out.
+
+Something like the nomap stuff Ard put together might be useful here.
 
 Thanks,
--Takahiro AKASHI
-
-
-> Thanks,
-> Mark.
->
->> +
->> +2) Currently, kvm will not be enabled on the dump-capture kernel even
->> +   if it is configured.
->> +
->>   Extended crashkernel syntax
->>   ===========================
->>
->> @@ -312,6 +326,8 @@ Boot into System Kernel
->>      any space below the alignment point may be overwritten by the dump-capture kernel,
->>      which means it is possible that the vmcore is not that precise as expected.
->>
->> +   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
->> +   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
->>
->>   Load the Dump-capture Kernel
->>   ============================
->> @@ -334,6 +350,8 @@ For s390x:
->>   	- Use image or bzImage
->>   For arm:
->>   	- Use zImage
->> +For arm64:
->> +	- Use vmlinux or Image
->>
->>   If you are using a uncompressed vmlinux image then use following command
->>   to load dump-capture kernel.
->> @@ -377,6 +395,9 @@ For s390x:
->>   For arm:
->>   	"1 maxcpus=1 reset_devices"
->>
->> +For arm64:
->> +	"1 mem=X[MG] maxcpus=1 reset_devices"
->> +
->>   Notes on loading the dump-capture kernel:
->>
->>   * By default, the ELF headers are stored in ELF64 format to support
->> --
->> 2.5.0
->>
->>
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398527.html
->
+Mark.
 
 _______________________________________________
 kexec mailing list
