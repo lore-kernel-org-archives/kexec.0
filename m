@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vms173025pub.verizon.net ([206.46.173.25])
+Received: from mail-lb0-x242.google.com ([2a00:1450:4010:c04::242])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aLZc2-0004OH-Qu
- for kexec@lists.infradead.org; Tue, 19 Jan 2016 16:58:36 +0000
-Received: from serve.minyard.net ([173.57.176.17]) by vms173025.mailsrvcs.net
- (Oracle Communications Messaging Server 7.0.5.32.0 64bit (built Jul
- 16 2014))
- with ESMTPA id <0O1700M7FLSCR410@vms173025.mailsrvcs.net> for
- kexec@lists.infradead.org; Tue, 19 Jan 2016 10:57:53 -0600 (CST)
-From: minyard@acm.org
-Subject: [PATCH] kdump: Fix gdb macros work work with newer and 64-bit kernels
-Date: Tue, 19 Jan 2016 10:57:44 -0600
-Message-id: <1453222664-20379-1-git-send-email-minyard@acm.org>
+ id 1aLbv8-00027q-Vt
+ for kexec@lists.infradead.org; Tue, 19 Jan 2016 19:26:27 +0000
+Received: by mail-lb0-x242.google.com with SMTP id bc4so26485901lbc.0
+ for <kexec@lists.infradead.org>; Tue, 19 Jan 2016 11:26:06 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <1453129886-20192-4-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1453129886-20192-4-git-send-email-zohar@linux.vnet.ibm.com>
+Date: Tue, 19 Jan 2016 21:26:04 +0200
+Message-ID: <CACE9dm8nd+zf-GKzdo1xYfedGhKSEtUrS2UrmARf2t+PKYNTgA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 03/11] ima: provide buffer hash calculation function
+From: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,212 +21,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org
-Cc: Corey Minyard <cminyard@mvista.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Kasatkin <d.kasatkin@samsung.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+On Mon, Jan 18, 2016 at 5:11 PM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+> From: Dmitry Kasatkin <d.kasatkin@samsung.com>
+>
+> This patch provides convenient buffer hash calculation function.
+>
+> Changelog:
+> - rewrite to support loff_t sized buffers - Mimi
+>   (based on Fenguang Wu's testing)
+>
+> Signed-off-by: Dmitry Kasatkin <d.kasatkin@samsung.com>
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> ---
+>  security/integrity/ima/ima.h        |  2 ++
+>  security/integrity/ima/ima_crypto.c | 47 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 49 insertions(+)
+>
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index fb8da36..de53631 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -107,6 +107,8 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
+>                            const char *op, struct inode *inode,
+>                            const unsigned char *filename);
+>  int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash);
+> +int ima_calc_buffer_hash(const void *buf, loff_t len,
+> +                        struct ima_digest_data *hash);
+>  int ima_calc_field_array_hash(struct ima_field_data *field_data,
+>                               struct ima_template_desc *desc, int num_fields,
+>                               struct ima_digest_data *hash);
+> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+> index fb30ce4..8d86281 100644
+> --- a/security/integrity/ima/ima_crypto.c
+> +++ b/security/integrity/ima/ima_crypto.c
+> @@ -519,6 +519,53 @@ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+>         return rc;
+>  }
+>
+> +static int calc_buffer_shash_tfm(const void *buf, loff_t size,
+> +                               struct ima_digest_data *hash,
+> +                               struct crypto_shash *tfm)
+> +{
+> +       SHASH_DESC_ON_STACK(shash, tfm);
+> +       unsigned int len;
+> +       loff_t offset = 0;
+> +       int rc;
+> +
+> +       shash->tfm = tfm;
+> +       shash->flags = 0;
+> +
+> +       hash->length = crypto_shash_digestsize(tfm);
+> +
+> +       rc = crypto_shash_init(shash);
+> +       if (rc != 0)
+> +               return rc;
+> +
+> +       len = size < PAGE_SIZE ? size : PAGE_SIZE;
+> +       while (offset < size) {
+> +               rc = crypto_shash_update(shash, buf + offset, len);
+> +               if (rc)
+> +                       break;
+> +               offset += len;
+> +       }
+> +
 
-Lots of little changes needed to be made to clean these up, remove the
-four byte pointer assumption and traverse the pid queue properly.
-Also consolidate the traceback code into a single function instead
-of having three copies of it.
+Hello Mimi,
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
----
- Documentation/kdump/gdbmacros.txt | 90 +++++++++++++++++----------------------
- 1 file changed, 40 insertions(+), 50 deletions(-)
+May be this was my earlier patch, but it seems to have a problem of
+accessing beyond end of buffer using the same len.
+When buffer always padded by zeros it is not a problem, but it is a bug.
 
-diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/kdump/gdbmacros.txt
-index 9b9b454..e5bbd8d 100644
---- a/Documentation/kdump/gdbmacros.txt
-+++ b/Documentation/kdump/gdbmacros.txt
-@@ -15,14 +15,14 @@
- 
- define bttnobp
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
- 	while ($next_t != $init_t)
- 		set $next_t=(struct task_struct *)$next_t
- 		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
- 		printf "===================\n"
--		set var $stackp = $next_t.thread.esp
-+		set var $stackp = $next_t.thread.sp
- 		set var $stack_top = ($stackp & ~4095) + 4096
- 
- 		while ($stackp < $stack_top)
-@@ -31,12 +31,12 @@ define bttnobp
- 			end
- 			set $stackp += 4
- 		end
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
- 			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
- 			printf "===================\n"
--			set var $stackp = $next_t.thread.esp
-+			set var $stackp = $next_t.thread.sp
- 			set var $stack_top = ($stackp & ~4095) + 4096
- 
- 			while ($stackp < $stack_top)
-@@ -45,7 +45,7 @@ define bttnobp
- 				end
- 				set $stackp += 4
- 			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
-@@ -54,42 +54,43 @@ document bttnobp
- 	dump all thread stack traces on a kernel compiled with !CONFIG_FRAME_POINTER
- end
- 
-+define btthreadstruct
-+	set var $pid_task = $arg0
-+
-+	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
-+	printf "task struct: "
-+	print $pid_task
-+	printf "===================\n"
-+	set var $stackp = $pid_task.thread.sp
-+	set var $stack_top = ($stackp & ~4095) + 4096
-+	set var $stack_bot = ($stackp & ~4095)
-+
-+	set $stackp = *((unsigned long *) $stackp)
-+	while (($stackp < $stack_top) && ($stackp > $stack_bot))
-+		set var $addr = *(((unsigned long *) $stackp) + 1)
-+		info symbol $addr
-+		set $stackp = *((unsigned long *) $stackp)
-+	end
-+end
-+document btthreadstruct
-+	 dump a thread stack using the given task structure pointer
-+end
-+
-+
- define btt
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
- 	while ($next_t != $init_t)
- 		set $next_t=(struct task_struct *)$next_t
--		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
--		printf "===================\n"
--		set var $stackp = $next_t.thread.esp
--		set var $stack_top = ($stackp & ~4095) + 4096
--		set var $stack_bot = ($stackp & ~4095)
-+		btthreadstruct $next_t
- 
--		set $stackp = *($stackp)
--		while (($stackp < $stack_top) && ($stackp > $stack_bot))
--			set var $addr = *($stackp + 4)
--			info symbol $addr
--			set $stackp = *($stackp)
--		end
--
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
--			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
--			printf "===================\n"
--			set var $stackp = $next_t.thread.esp
--			set var $stack_top = ($stackp & ~4095) + 4096
--			set var $stack_bot = ($stackp & ~4095)
--
--			set $stackp = *($stackp)
--			while (($stackp < $stack_top) && ($stackp > $stack_bot))
--				set var $addr = *($stackp + 4)
--				info symbol $addr
--				set $stackp = *($stackp)
--			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			btthreadstruct $next_th
-+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
-@@ -101,7 +102,7 @@ end
- define btpid
- 	set var $pid = $arg0
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
- 	set var $pid_task = 0
-@@ -113,29 +114,18 @@ define btpid
- 			set $pid_task = $next_t
- 		end
- 
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
- 			if ($next_th.pid == $pid)
- 				set $pid_task = $next_th
- 			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
- 
--	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
--	printf "===================\n"
--	set var $stackp = $pid_task.thread.esp
--	set var $stack_top = ($stackp & ~4095) + 4096
--	set var $stack_bot = ($stackp & ~4095)
--
--	set $stackp = *($stackp)
--	while (($stackp < $stack_top) && ($stackp > $stack_bot))
--		set var $addr = *($stackp + 4)
--		info symbol $addr
--		set $stackp = *($stackp)
--	end
-+	btthreadstruct $pid_task
- end
- document btpid
- 	backtrace of pid
-@@ -145,7 +135,7 @@ end
- define trapinfo
- 	set var $pid = $arg0
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
- 	set var $pid_task = 0
-@@ -157,13 +147,13 @@ define trapinfo
- 			set $pid_task = $next_t
- 		end
- 
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
- 			if ($next_th.pid == $pid)
- 				set $pid_task = $next_th
- 			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
+This seems to be better version.
+
+   while (size) {
+               len = size < PAGE_SIZE ? size : PAGE_SIZE;
+               rc = crypto_shash_update(shash, buf, len);
+               if (rc)
+                       break;
+               buf += len;
+               size -= len;
+    }
+
+Please change my sign-of to: dmitry.kasatkin@huawei.com
+
+Thanks.
+Dmitry
+> +       if (!rc)
+> +               rc = crypto_shash_final(shash, hash->digest);
+> +       return rc;
+> +}
+> +
+> +int ima_calc_buffer_hash(const void *buf, loff_t len,
+> +                        struct ima_digest_data *hash)
+> +{
+> +       struct crypto_shash *tfm;
+> +       int rc;
+> +
+> +       tfm = ima_alloc_tfm(hash->algo);
+> +       if (IS_ERR(tfm))
+> +               return PTR_ERR(tfm);
+> +
+> +       rc = calc_buffer_shash_tfm(buf, len, hash, tfm);
+> +
+> +       ima_free_tfm(tfm);
+> +       return rc;
+> +}
+> +
+>  static void __init ima_pcrread(int idx, u8 *pcr)
+>  {
+>         if (!ima_used_chip)
+> --
+> 2.1.0
+>
+
+
+
 -- 
-2.5.0
-
+Thanks,
+Dmitry
 
 _______________________________________________
 kexec mailing list
