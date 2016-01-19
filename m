@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aLKnP-0003ZW-9b
- for kexec@lists.infradead.org; Tue, 19 Jan 2016 01:09:20 +0000
-Date: Tue, 19 Jan 2016 09:08:44 +0800
+Date: Tue, 19 Jan 2016 09:43:32 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] Don't require SpcSpOpusInfo in Authenticode pkcs7
- signatures
-Message-ID: <20160119010844.GA2919@dhcp-128-65.nay.redhat.com>
-References: <20160115081249.GA19487@dhcp-128-65.nay.redhat.com>
- <1453132198-19644-1-git-send-email-pjones@redhat.com>
+Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
+Message-ID: <20160119014332.GB2919@dhcp-128-65.nay.redhat.com>
+References: <cover.1452884156.git.geoff@infradead.org>
+ <fb4506943bbaed8b0657ed367ebd57e4064d57ed.1452884156.git.geoff@infradead.org>
+ <20160115201601.GR3262@leverpostej> <569CBDBC.5050500@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1453132198-19644-1-git-send-email-pjones@redhat.com>
+In-Reply-To: <569CBDBC.5050500@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,130 +21,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Peter Jones <pjones@redhat.com>
-Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-crypto@vger.kernel.org, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 01/18/16 at 10:49am, Peter Jones wrote:
-> Dave Young reported:
-> > Hi,
+On 01/18/16 at 07:26pm, AKASHI Takahiro wrote:
+> On 01/16/2016 05:16 AM, Mark Rutland wrote:
+> >On Fri, Jan 15, 2016 at 07:18:38PM +0000, Geoff Levand wrote:
+> >>From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>
+> >>This patch adds arch specific descriptions about kdump usage on arm64
+> >>to kdump.txt.
+> >>
+> >>Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >>---
+> >>  Documentation/kdump/kdump.txt | 23 ++++++++++++++++++++++-
+> >>  1 file changed, 22 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> >>index bc4bd5a..36cf978 100644
+> >>--- a/Documentation/kdump/kdump.txt
+> >>+++ b/Documentation/kdump/kdump.txt
+> >>@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+> >>  a remote system.
+> >>
+> >>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> >>-s390x and arm architectures.
+> >>+s390x, arm and arm64 architectures.
+> >>
+> >>  When the system kernel boots, it reserves a small section of memory for
+> >>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> >>@@ -249,6 +249,20 @@ Dump-capture kernel config options (Arch Dependent, arm)
+> >>
+> >>      AUTO_ZRELADDR=y
+> >>
+> >>+Dump-capture kernel config options (Arch Dependent, arm64)
+> >>+----------------------------------------------------------
+> >>+
+> >>+1) The maximum memory size on the dump-capture kernel must be limited by
+> >>+   specifying:
+> >>+
+> >>+   mem=X[MG]
+> >>+
+> >>+   where X should be less than or equal to the size in "crashkernel="
+> >>+   boot parameter. Kexec-tools will automatically add this.
 > >
-> > I saw the warning "Missing required AuthAttr" when testing kexec,
-> > known issue?  Idea about how to fix it?
 > >
-> > The kernel is latest linus tree plus sevral patches from Toshi to
-> > cleanup io resource structure.
-> >
-> > in function pkcs7_sig_note_set_of_authattrs():
-> >         if (!test_bit(sinfo_has_content_type, &sinfo->aa_set) ||
-> >             !test_bit(sinfo_has_message_digest, &sinfo->aa_set) ||
-> >             (ctx->msg->data_type == OID_msIndirectData &&
-> >              !test_bit(sinfo_has_ms_opus_info, &sinfo->aa_set))) {
-> >                 pr_warn("Missing required AuthAttr\n");
-> >                 return -EBADMSG;
-> >         }
-> >
-> > The third condition below is true:
-> > (ctx->msg->data_type == OID_msIndirectData &&
-> >              !test_bit(sinfo_has_ms_opus_info, &sinfo->aa_set))
-> >
-> > I signed the kernel with redhat test key like below:
-> > pesign -c 'Red Hat Test Certificate' -i arch/x86/boot/bzImage -o /boot/vmlinuz-4.4.0-rc8+ -s --force
+> >This is extremely fragile, and will trivially fail when the kernel can
+> >be loaded anywhere (see [1]).
 > 
-> And right he is!  The Authenticode specification is a paragon amongst
-> technical documents, and has this pearl of wisdom to offer:
+> As I said before, this restriction also exists on arm, but I understand
+> that recent Ard's patches break it.
 > 
-> ---------------------------------
-> Authenticode-Specific SignerInfo UnauthenticatedAttributes Structures
+> >We must explicitly describe the set of regions the crash kernel may use
+> >(i.e. we need base and size). NAK in the absence of that.
 > 
->   The following Authenticode-specific data structures are present in
->   SignerInfo authenticated attributes.
+> There seem to exist several approaches:
+> (a) use a device-tree property, "linux,usable-memory", in addition to "reg"
+>     under "memory" node
+> (b) use a kernel's early parameter, "memmap=nn[@#$]ss"
 > 
->   SpcSpOpusInfo
->   SpcSpOpusInfo is identified by SPC_SP_OPUS_INFO_OBJID
->   (1.3.6.1.4.1.311.2.1.12) and is defined as follows:
->   SpcSpOpusInfo ::= SEQUENCE {
->     programName  [0] EXPLICIT SpcString OPTIONAL,
->     moreInfo     [1] EXPLICIT SpcLink OPTIONAL,
->   } --#public--
-> 
->   SpcSpOpusInfo has two fields:
->     programName
->       This field contains the program description:
->       If publisher chooses not to specify a description, the SpcString
->       structure contains a zero-length program name.
->       If the publisher chooses to specify a
->       description, the SpcString structure contains a Unicode string.
->     moreInfo
->       This field is set to an SPCLink structure that contains a URL for
->       a Web site with more information about the signer. The URL is an
->       ASCII string.
-> ---------------------------------
-> 
-> Which is to say that this is an optional *unauthenticated* field which
-> may be present in the Authenticated Attribute list.  This is not how
-> pkcs7 is supposed to work, so when David implemented this, he didn't
-> appreciate the subtlety the original spec author was working with, and
-> missed the part of the sublime prose that says this Authenticated
-> Attribute is an Unauthenticated Attribute.  As a result, the code in
-> question simply takes as given that the Authenticated Attributes should
-> be authenticated.
-> 
-> But this one should not, individually.  Because it says it's not
-> authenticated.
-> 
-> It still has to hash right so the TBS digest is correct.  So it is both
-> authenticated and unauthenticated, all at once.  Truly, a wonder of
-> technical accomplishment.
-> 
-> Additionally, pesign's implementation has always attempted to be
-> compatible with the signatures emitted from contemporary versions of
-> Microsoft's signtool.exe.  During the initial implementation, Microsoft
-> signatures always produced the same values for SpcSpOpusInfo -
-> {U"Microsoft Windows", "http://www.microsoft.com"} - without regard to
-> who the signer was.
-> 
-> Sometime between Windows 8 and Windows 8.1 they stopped including the
-> field in their signatures altogether, and as such pesign stopped
-> producing them in commits c0c4da6 and d79cb0c, sometime around June of
-> 2012.  The theory here is that anything that breaks with
-> pesign signatures would also be breaking with signtool.exe sigs as well,
-> and that'll be a more noticed problem for firmwares parsing it, so it'll
-> get fixed.  The fact that we've done exactly this bug in Linux code is
-> first class, grade A irony.
-> 
-> So anyway, we should not be checking this field for presence or any
-> particular value: if the field exists, it should be at the right place,
-> but aside from that, as long as the hash matches the field is good.
-> 
-> Signed-off-by: Peter Jones <pjones@redhat.com>
-> ---
->  crypto/asymmetric_keys/pkcs7_parser.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/crypto/asymmetric_keys/pkcs7_parser.c b/crypto/asymmetric_keys/pkcs7_parser.c
-> index 758acab..8f3056c 100644
-> --- a/crypto/asymmetric_keys/pkcs7_parser.c
-> +++ b/crypto/asymmetric_keys/pkcs7_parser.c
-> @@ -547,9 +547,7 @@ int pkcs7_sig_note_set_of_authattrs(void *context, size_t hdrlen,
->  	struct pkcs7_signed_info *sinfo = ctx->sinfo;
->  
->  	if (!test_bit(sinfo_has_content_type, &sinfo->aa_set) ||
-> -	    !test_bit(sinfo_has_message_digest, &sinfo->aa_set) ||
-> -	    (ctx->msg->data_type == OID_msIndirectData &&
-> -	     !test_bit(sinfo_has_ms_opus_info, &sinfo->aa_set))) {
-> +	    !test_bit(sinfo_has_message_digest, &sinfo->aa_set)) {
->  		pr_warn("Missing required AuthAttr\n");
->  		return -EBADMSG;
->  	}
-> -- 
-> 2.5.0
-> 
+> Power PC takes (a), while this does not work on efi-started kernel
+> because dtb has no "memory" nodes under efi.
+> X86 takes (b). If we take this, we will need to overwrite a weak
+> early_init_dt_add_memory().
 
-Tested-by: Dave Young <dyoung@redhat.com>
+X86 takes another way in latest kexec-tools and kexec_file_load, that is
+recreating E820 table and pass it to kexec/kdump kernel, if the entries
+are over E820 limitation then turn to use setup_data list for remain
+entries.
 
-Peter, thanks for the expanation. I was using such fix for several days but 
-not sure if it is right or not though it works for me.
+I think it is X86 specific. Personally I think device tree property is
+better.
 
+Thanks
 Dave
 
 _______________________________________________
