@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail9.hitachi.co.jp ([133.145.228.44])
- by merlin.infradead.org with esmtp (Exim 4.85 #2 (Red Hat Linux))
- id 1aLqIl-0005wG-Tl
+ by casper.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aLqIl-0000Fp-JL
  for kexec@lists.infradead.org; Wed, 20 Jan 2016 10:47:49 +0000
-Subject: [RFC PATCH 4/4] purgatory/ipmi: Add timeout logic to IPMI command
- processing
+Subject: [RFC PATCH 3/4] purgatory/x86: Support CMOS RTC
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Wed, 20 Jan 2016 19:37:42 +0900
-Message-ID: <20160120103742.4234.12599.stgit@softrs>
+Date: Wed, 20 Jan 2016 19:37:40 +0900
+Message-ID: <20160120103740.4234.84157.stgit@softrs>
 In-Reply-To: <20160120103734.4234.64015.stgit@softrs>
 References: <20160120103734.4234.64015.stgit@softrs>
 MIME-Version: 1.0
@@ -26,212 +25,150 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
 
-If you enable the IPMI command issuing features and your BMC is
-malfunctioning, you may loops indefinitely while processing IPMI
-commands.  To guarantee that the second kernel starts to boot in
-fixed seconds, this patch introduces a timeout for the total
-processing time of IPMI commands.  The timeout is 5 seconds by
-default.
+Support CMOS RTC based on MC148618A RTC by overriding get_unix_time()
+function.  This is needed for the timeout API previously added.
 
 Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 ---
- purgatory/ipmi.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 63 insertions(+), 2 deletions(-)
+ purgatory/arch/i386/Makefile   |    1 
+ purgatory/arch/i386/rtc_cmos.c |  104 ++++++++++++++++++++++++++++++++++++++++
+ purgatory/arch/x86_64/Makefile |    1 
+ 3 files changed, 106 insertions(+)
+ create mode 100644 purgatory/arch/i386/rtc_cmos.c
 
-diff --git a/purgatory/ipmi.c b/purgatory/ipmi.c
-index 0acb853..f4a093a 100644
---- a/purgatory/ipmi.c
-+++ b/purgatory/ipmi.c
-@@ -1,6 +1,7 @@
- #include <sys/io.h>
- #include <purgatory.h>
- #include "../kexec/ipmi.h"
+diff --git a/purgatory/arch/i386/Makefile b/purgatory/arch/i386/Makefile
+index 1532219..cb77328 100644
+--- a/purgatory/arch/i386/Makefile
++++ b/purgatory/arch/i386/Makefile
+@@ -13,6 +13,7 @@ i386_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
+ i386_PURGATORY_SRCS += purgatory/arch/i386/vga.c
+ i386_PURGATORY_SRCS += purgatory/arch/i386/pic.c
+ i386_PURGATORY_SRCS += purgatory/arch/i386/crashdump_backup.c
++i386_PURGATORY_SRCS += purgatory/arch/i386/rtc_cmos.c
+ 
+ dist += purgatory/arch/i386/Makefile $(i386_PURGATORY_SRCS)	\
+ 	purgatory/arch/i386/purgatory-x86.h			\
+diff --git a/purgatory/arch/i386/rtc_cmos.c b/purgatory/arch/i386/rtc_cmos.c
+new file mode 100644
+index 0000000..3dbbd01
+--- /dev/null
++++ b/purgatory/arch/i386/rtc_cmos.c
+@@ -0,0 +1,104 @@
++#include <sys/io.h>
 +#include "time.h"
- 
- #define KCS_PORT_DEFAULT	0xca2
- #define KCS_PORT_DATA		(kcs_port + 0)
-@@ -41,6 +42,8 @@ const unsigned char cmd_stop_wdt[] = {
- 	0xff,
- };
- 
-+static struct timeout_info ipmi_to; /* Total timeout for IPMI operations */
 +
- static inline unsigned char read_status(void)
- {
- 	return inb(KCS_PORT_STATUS);
-@@ -49,29 +52,50 @@ static inline unsigned char read_status(void)
- unsigned char wait_out(void)
- {
- 	unsigned char status;
-+	static int count = 0;
- 
- 	do {
-+		count++;
-+		if (count % 1024 == 0)
-+			EXIT_ON_TIMEOUT(&ipmi_to, 1);
++#define CMOS_PORT0		0x70
++#define  CMOS_NMI_DISABLE	0x80
++#define CMOS_PORT1		0x71
 +
- 		status = read_status();
- 	} while ((status & KCS_STATUS_OBF) == 0);
- 
- 	return status;
++#define RTC_SECONDS		0x00
++#define RTC_MINUTES		0x02
++#define RTC_HOURS		0x04
++#define RTC_DAY			0x07
++#define RTC_MONTH		0x08
++#define RTC_YEAR		0x09
 +
-+timed_out:
-+	return 0xff;
- }
- 
- unsigned char wait_in(void)
- {
- 	unsigned char status;
-+	static int count = 0;
- 
- 	do {
-+		count++;
-+		if (count % 1024 == 0)
-+			EXIT_ON_TIMEOUT(&ipmi_to, 1);
++#define RTC_REGA		0x0a
++#define  RTC_UIP		0x80
++#define RTC_REGB		0x0b
++#define  RTC_HOURFORM		0x02
++#define  RTC_DM			0x04
 +
- 		status = read_status();
- 	} while (status & KCS_STATUS_IBF);
- 
- 	return status;
++static int is_bcd;	/* 1 if the Data Mode is BCD */
++static int is_12hr;	/* 1 if the Hour Format is 12-hr mode */
 +
-+timed_out:
-+	return 0xff;
- }
- 
- unsigned char read_data(void)
- {
- 	wait_out();
-+	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++unsigned char read_cmos(int idx)
++{
++	static unsigned char nmi_disable_bit = 0xff;
 +
- 	return inb(KCS_PORT_DATA);
++	/* Preserve NMI Disable bit at the first time */
++	if (nmi_disable_bit == 0xff)
++		nmi_disable_bit = inb(CMOS_PORT0) & CMOS_NMI_DISABLE;
 +
-+timed_out:
-+	return 0xff;
- }
- 
- void clear_obf(void)
-@@ -105,12 +129,17 @@ int write_ipmi_cmd(const unsigned char *cmd, int size)
- 	int i;
- 
- 	wait_in();
-+	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++	outb(nmi_disable_bit | (idx & 0x7f), CMOS_PORT0);
 +
- 	status = write_cmd(KCS_CMD_WRITE_START);
-+	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++	return inb(CMOS_PORT1);
++}
 +
- 	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
- 		return -1;
- 
- 	for (i = 0; i < size - 1; i++) {
- 		status = write_data(cmd[i]);
-+		EXIT_ON_TIMEOUT(&ipmi_to, 0);
- 
- 		if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
- 			return -1;
-@@ -118,12 +147,18 @@ int write_ipmi_cmd(const unsigned char *cmd, int size)
- 
- 	/* last write */
- 	status = write_cmd(KCS_CMD_WRITE_END);
-+	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++/**
++ * Return UNIX-epoch time.
++ *
++ * If the RTC is about to be updated (UIP bit is set), this function wait
++ * for that.  It takes at most 2228us with MC146818A RTC according to
++ * the specification.  Modern MC146818A-compatible RTCs in chipset will work
++ * faster, but not so much.  So you shouldn't call this function too often.
++ */
++time64_t get_unix_time(void)
++{
++	static int is_first_time = 1;
++	unsigned char byte;
++	int ss, mm, hh;
++	int day, mon, year;
++	int is_pm;
 +
- 	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
- 		return -1;
- 
- 	write_data(cmd[i]);
-+	EXIT_ON_TIMEOUT(&ipmi_to, 0);
- 
- 	return 0;
++	/* Check the modes at the first time. */
++	if (is_first_time) {
++		byte = read_cmos(RTC_REGB);
++		if (!(byte & RTC_DM))
++			is_bcd = 1;
 +
-+timed_out:
-+	return -1;
- }
- 
- /*
-@@ -140,11 +175,17 @@ unsigned char read_result(void)
- 
- 	while (1) {
- 		state = GET_STATUS_STATE(wait_in());
-+		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++		if (!(byte & RTC_HOURFORM))
++			is_12hr = 1;
 +
- 		if (state == KCS_READ_STATE) {
- 			data[count] = read_data();
-+			EXIT_ON_TIMEOUT(&ipmi_to, 0);
++		is_first_time = 0;
++	}
 +
- 			outb(KCS_CMD_READ, KCS_PORT_DATA);
- 		} else if (state == KCS_IDLE_STATE) {
- 			data[count] = read_data();
-+			EXIT_ON_TIMEOUT(&ipmi_to, 0);
++ 	/* Wait for the clock update to be done if it is in progress */
++	do {
++		byte = read_cmos(RTC_REGA);
++	} while (byte & RTC_UIP);
 +
- 			break;
- 		} else {
- 			/*
-@@ -164,6 +205,9 @@ unsigned char read_result(void)
- 	}
- 
- 	return data[2]; /* Return completion code */
 +
-+timed_out:
-+	return 0xff;
- }
- 
- /*
-@@ -190,15 +234,22 @@ int issue_ipmi_cmd(const unsigned char *cmd, int size)
- 	 */
- 	for (i = 0; i < 3; i++) {
- 		ret = write_ipmi_cmd(cmd, size);
-+		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++	/*
++	 * Now, we have 244us at least until the clock update will start.
++	 */
++	ss = read_cmos(RTC_SECONDS);
++	mm = read_cmos(RTC_MINUTES);
++	hh = read_cmos(RTC_HOURS);
++	day = read_cmos(RTC_DAY);
++	mon = read_cmos(RTC_MONTH);
++	year = read_cmos(RTC_YEAR);
 +
- 		if (ret < 0)
- 			continue;
- 
- 		comp_code = read_result();
-+		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++	/* If the RTC is in 12-hr mode, bit-7 of HOUR byte indicates PM. */
++	is_pm = (hh & 0x80);
++	hh &= 0x7f; /* drop AM/PM bit */
 +
- 		if (comp_code == 0)
- 			break; /* succeeded */
- 	}
- 
- 	return (i < 3) ? 0 : -1;
++	if (is_bcd) {
++		ss = (ss >> 4) * 10 + (ss & 0xf);
++		mm = (mm >> 4) * 10 + (mm & 0xf);
++		hh = (hh >> 4) * 10 + (hh & 0xf);
++		day = (day >> 4) * 10 + (day & 0xf);
++		mon = (mon >> 4) * 10 + (mon & 0xf);
++		year = (year >> 4) * 10 + (year & 0xf) +
++			2000; /* FIXME? */
++	}
 +
-+timed_out:
-+	return -1;
- }
- 
- int do_start_wdt(void)
-@@ -207,7 +258,11 @@ int do_start_wdt(void)
- 
- 	printf("IPMI: starting watchdog timer...");
- 	ret = issue_ipmi_cmd(cmd_start_wdt, sizeof(cmd_start_wdt));
--	printf("done\n");
++	if (is_12hr) {
++		if (is_pm && hh != 12)
++			hh += 12;
 +
-+	if (ret == 0)
-+		printf("done\n");
-+	else
-+		printf("failed\n");
- 
- 	return ret;
- }
-@@ -218,13 +273,19 @@ int do_stop_wdt(void)
- 
- 	printf("IPMI: stopping watchdog timer...");
- 	ret = issue_ipmi_cmd(cmd_stop_wdt, sizeof(cmd_stop_wdt));
--	printf("done\n");
++		if (!is_pm && hh == 12)
++			hh = 0;
++	}
 +
-+	if (ret == 0)
-+		printf("done\n");
-+	else
-+		printf("failed\n");
++	return date2unix(year, mon, day, hh, mm, ss);
++}
+diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
+index 7300937..bca1f71 100644
+--- a/purgatory/arch/x86_64/Makefile
++++ b/purgatory/arch/x86_64/Makefile
+@@ -22,5 +22,6 @@ x86_64_PURGATORY_SRCS += purgatory/arch/i386/crashdump_backup.c
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/vga.c
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/pic.c
++x86_64_PURGATORY_SRCS += purgatory/arch/i386/rtc_cmos.c
  
- 	return ret;
- }
- 
- void ipmi_wdt_start_stop(void)
- {
-+	init_timeout(&ipmi_to, 5);
-+
- 	if (ipmi_wdt & IPMI_WDT_START)
- 		do_start_wdt();
- 	else if (ipmi_wdt & IPMI_WDT_STOP)
+ x86_64_PURGATORY_EXTRA_CFLAGS = -mcmodel=large
 
 
 
