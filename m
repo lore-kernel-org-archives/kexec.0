@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aM1vz-0001zy-Rw
- for kexec@lists.infradead.org; Wed, 20 Jan 2016 23:13:04 +0000
-Date: Thu, 21 Jan 2016 00:12:40 +0100
+ id 1aM2Ll-0005Mn-Ft
+ for kexec@lists.infradead.org; Wed, 20 Jan 2016 23:39:42 +0000
+Date: Thu, 21 Jan 2016 00:39:19 +0100
 From: "Luis R. Rodriguez" <mcgrof@suse.com>
-Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
- with kernel version
-Message-ID: <20160120231240.GL11277@wotan.suse.de>
+Subject: Re: [RFC PATCH v2 07/11] firmware: replace call to
+ fw_read_file_contents() with kernel version
+Message-ID: <20160120233919.GM11277@wotan.suse.de>
 References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
+ <1453129886-20192-8-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1453129886-20192-8-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,126 +26,124 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, Julia Lawall <julia.lawall@lip6.fr>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On Mon, Jan 18, 2016 at 10:11:21AM -0500, Mimi Zohar wrote:
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 211b81c..a5ae51e 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -884,6 +884,21 @@ out:
->  }
->  EXPORT_SYMBOL_GPL(kernel_read_file);
+On Mon, Jan 18, 2016 at 10:11:22AM -0500, Mimi Zohar wrote:
+> Replace fw_read_file_contents() for reading a file with the common VFS
+> kernel_read_file() function.  A benefit of calling kernel_read_file()
+> to read the firmware is the firmware is read only once, instead of once
+> for measuring/appraising the firmware and again for reading the file
+> contents into memory.
+> 
+> This patch retains the kernel_fw_from_file() hook, which is called from
+> security_kernel_post_read_file(), but removes the
+> sercurity_kernel_fw_from_file() function.
+> 
+> Changelog:
+> - reordered and squashed firmware patches
+> - fix MAX firmware size (Kees Cook)
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> ---
+>  drivers/base/firmware_class.c         | 48 ++++++++++-------------------------
+>  include/linux/ima.h                   |  7 +----
+>  include/linux/security.h              |  8 +-----
+>  security/integrity/ima/ima.h          |  1 -
+>  security/integrity/ima/ima_appraise.c |  8 ------
+>  security/integrity/ima/ima_main.c     | 18 +++++--------
+>  security/integrity/ima/ima_policy.c   | 26 +++++++++----------
+>  security/integrity/integrity.h        | 11 +++-----
+>  security/security.c                   | 28 ++++++++++----------
+>  9 files changed, 54 insertions(+), 101 deletions(-)
+> 
+> diff --git a/drivers/base/firmware_class.c b/drivers/base/firmware_class.c
+> index 8524450..cc175f1 100644
+> --- a/drivers/base/firmware_class.c
+> +++ b/drivers/base/firmware_class.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/syscore_ops.h>
+>  #include <linux/reboot.h>
+>  #include <linux/security.h>
+> +#include <linux/ima.h>
 >  
-> +int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
-> +			     int policy_id)
-> +{
-> +	struct fd f = fdget(fd);
-> +	int ret = -ENOEXEC;
+>  #include <generated/utsrelease.h>
+>  
+> @@ -291,40 +292,10 @@ static const char * const fw_path[] = {
+>  module_param_string(path, fw_path_para, sizeof(fw_path_para), 0644);
+>  MODULE_PARM_DESC(path, "customized firmware image search path with a higher priority than default path");
+>  
+> -static int fw_read_file_contents(struct file *file, struct firmware_buf *fw_buf)
+> -{
+> -	int size;
+> -	char *buf;
+> -	int rc;
+> -
+> -	if (!S_ISREG(file_inode(file)->i_mode))
+> -		return -EINVAL;
+> -	size = i_size_read(file_inode(file));
+> -	if (size <= 0)
+> -		return -EINVAL;
+> -	buf = vmalloc(size);
+> -	if (!buf)
+> -		return -ENOMEM;
+> -	rc = kernel_read(file, 0, buf, size);
+> -	if (rc != size) {
+> -		if (rc > 0)
+> -			rc = -EIO;
+> -		goto fail;
+> -	}
+> -	rc = security_kernel_fw_from_file(file, buf, size);
+> -	if (rc)
+> -		goto fail;
+> -	fw_buf->data = buf;
+> -	fw_buf->size = size;
+> -	return 0;
+> -fail:
+> -	vfree(buf);
+> -	return rc;
+> -}
+> -
+>  static int fw_get_filesystem_firmware(struct device *device,
+>  				       struct firmware_buf *buf)
+>  {
+> +	loff_t size;
+>  	int i, len;
+>  	int rc = -ENOENT;
+>  	char *path;
+> @@ -350,13 +321,18 @@ static int fw_get_filesystem_firmware(struct device *device,
+>  		file = filp_open(path, O_RDONLY, 0);
+>  		if (IS_ERR(file))
+>  			continue;
+> -		rc = fw_read_file_contents(file, buf);
 > +
-> +	if (!f.file)
-> +		goto out;
-> +
-> +	ret = kernel_read_file(f.file, buf, size, max_size, policy_id);
-> +out:
-> +	fdput(f);
-> +	return ret;
-> +}
-> +
+> +		buf->size = 0;
+> +		rc = kernel_read_file(file, &buf->data, &size, INT_MAX,
+> +				      FIRMWARE_CHECK);
 
-Don't you need to EXPORT_SYMBOL_GPL() here as well?
+The way kernel firmware signing was implemented was that we'd first read the
+foo.sig (or whatever extension we use). The same kernel_read_file() would be
+used if this gets applied so this would still works well with that. Of course
+folks using IMA and their own security policy would just disable the kernel
+fw signing facility.
 
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index 4edf47f..3adf937 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -78,6 +78,8 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
->  		return iint->ima_module_status;
->  	case FIRMWARE_CHECK:
->  		return iint->ima_firmware_status;
-> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
-> +		return iint->ima_read_status;
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index ae91938..0a7f039 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -16,6 +16,7 @@ struct linux_binprm;
+>  enum ima_policy_id {
+>  	KEXEC_CHECK = 1,
+>  	INITRAMFS_CHECK,
+> +	FIRMWARE_CHECK,
+>  	IMA_MAX_READ_CHECK
+>  };
 
-I didn't get the memo that we're OK to use compiler specific extensions
-like this. I'm sure if you are using it its not the first case, just
-want to be sure we are aware of possible issues if some compiler doesn't
-support this.
-
-If we don't have a precedence can we just avoid its use?
-
-Cc'd Julia in case this might be of interest for Coccinelle to grok.
-
->  	case FILE_CHECK:
->  	default:
->  		return iint->ima_file_status;
-> @@ -100,6 +102,9 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
->  	case FIRMWARE_CHECK:
->  		iint->ima_firmware_status = status;
->  		break;
-> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
-> +		iint->ima_read_status = status;
-> +		break;
->  	case FILE_CHECK:
->  	default:
->  		iint->ima_file_status = status;
-
-Likewise.
-
-> @@ -122,6 +127,8 @@ static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
->  	case FIRMWARE_CHECK:
->  		iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
->  		break;
-> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
-> +		break;
->  	case FILE_CHECK:
->  	default:
->  		iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
-
-Likewise.
-
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 595e038..4711083 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -306,6 +306,8 @@ static int get_subaction(struct ima_rule_entry *rule, int func)
->  		return IMA_MODULE_APPRAISE;
->  	case FIRMWARE_CHECK:
->  		return IMA_FIRMWARE_APPRAISE;
-> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
-> +		return IMA_READ_APPRAISE;
->  	case FILE_CHECK:
->  	default:
->  		return IMA_FILE_APPRAISE;
-
-Likewise.
-
-> @@ -948,10 +956,19 @@ int ima_policy_show(struct seq_file *m, void *v)
->  			seq_printf(m, pt(Opt_func), ft(func_post));
->  			break;
->  		default:
-> -			snprintf(tbuf, sizeof(tbuf), "%d",
-> -				 entry->hooks.func);
-> -			seq_printf(m, pt(Opt_func), tbuf);
-> -			break;
-> +			switch (entry->hooks.policy_id) {
-> +			case KEXEC_CHECK:
-> +				seq_printf(m, pt(Opt_func), ft(func_kexec));
-> +				break;
-> +			case INITRAMFS_CHECK:
-> +				seq_printf(m, pt(Opt_func), ft(func_initramfs));
-> +				break;
-> +			default:
-> +				snprintf(tbuf, sizeof(tbuf), "%d",
-> +					 entry->hooks.func);
-> +				seq_printf(m, pt(Opt_func), tbuf);
-> +				break;
-> +			}
->  		}
->  		seq_puts(m, " ");
->  	}
-
-Two switches wrapped tend to lead to messy and hard to read code,
-is using a function here better?
+The only thing that is worth questioning here in light of kernel fw signing is
+what int policy_id do we use? Would we be OK to add FIRMWARE_SIG_CHECK later 
+While at it, perhaps kernel_read_file() last argument should be enum
+ima_policy_id then. If the policy_id is going to be used elsewhere outside of
+IMA then perhaps ima.h is not the best place for it ? Would fs.h for type of
+file be OK ? Then we'd have a list of known file types the kernel reads.
 
   Luis
 
