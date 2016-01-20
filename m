@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aLqIh-0005CN-0v
- for kexec@lists.infradead.org; Wed, 20 Jan 2016 10:48:01 +0000
-Subject: [RFC PATCH 1/4] purgatory/ipmi: Support BMC watchdog timer
- start/stop in purgatory
-From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Wed, 20 Jan 2016 19:37:36 +0900
-Message-ID: <20160120103736.4234.69214.stgit@softrs>
-In-Reply-To: <20160120103734.4234.64015.stgit@softrs>
-References: <20160120103734.4234.64015.stgit@softrs>
+Date: Wed, 20 Jan 2016 11:28:21 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
+Message-ID: <20160120112819.GA25829@leverpostej>
+References: <fb4506943bbaed8b0657ed367ebd57e4064d57ed.1452884156.git.geoff@infradead.org>
+ <20160115201601.GR3262@leverpostej> <569CBDBC.5050500@linaro.org>
+ <20160119014332.GB2919@dhcp-128-65.nay.redhat.com>
+ <569DCB30.9010501@linaro.org>
+ <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
+ <20160119125114.GH25024@leverpostej>
+ <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
+ <20160119140139.GC26545@leverpostej>
+ <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,419 +27,185 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-This patch adds an interface to BMC via KCS I/F and a functionality
-to start/stop BMC watchdog timer in purgatory.  Starting the watchdog
-timer is useful to automatically reboot the server when we fail to
-boot the second kernel.  Stopping the watchdog timer is useful to
-prevent the second kernel from being stopped by the watchdog timer
-enabled while the first kernel is running.
+On Wed, Jan 20, 2016 at 10:49:46AM +0800, Dave Young wrote:
+> On 01/19/16 at 02:01pm, Mark Rutland wrote:
+> > On Tue, Jan 19, 2016 at 09:45:53PM +0800, Dave Young wrote:
+> > > On 01/19/16 at 12:51pm, Mark Rutland wrote:
+> > > > On Tue, Jan 19, 2016 at 08:28:48PM +0800, Dave Young wrote:
+> > > > > On 01/19/16 at 02:35pm, AKASHI Takahiro wrote:
+> > > > > > On 01/19/2016 10:43 AM, Dave Young wrote:
+> > > > > > >X86 takes another way in latest kexec-tools and kexec_file_load, that is
+> > > > > > >recreating E820 table and pass it to kexec/kdump kernel, if the entries
+> > > > > > >are over E820 limitation then turn to use setup_data list for remain
+> > > > > > >entries.
+> > > > > > 
+> > > > > > Thanks. I will visit x86 code again.
+> > > > > > 
+> > > > > > >I think it is X86 specific. Personally I think device tree property is
+> > > > > > >better.
+> > > > > > 
+> > > > > > Do you think so?
+> > > > > 
+> > > > > I'm not sure it is the best way. For X86 we run into problem with
+> > > > > memmap= design, one example is pci domain X (X>1) need the pci memory
+> > > > > ranges being passed to kdump kernel. When we passed reserved ranges in /proc/iomem
+> > > > > to 2nd kernel we find that cmdline[] array is not big enough.
+> > > > 
+> > > > I'm not sure how PCI ranges relate to the memory map used for normal
+> > > > memory (i.e. RAM), though I'm probably missing some caveat with the way
+> > > > ACPI and UEFI describe PCI. Why does memmap= affect PCI memory?
+> > > 
+> > > Here is the old patch which was rejected in kexec-tools:
+> > > http://lists.infradead.org/pipermail/kexec/2013-February/007924.html
+> > > 
+> > > > 
+> > > > If the kernel got the rest of its system topology from DT, the PCI
+> > > > regions would be described there.
+> > > 
+> > > Yes, if kdump kernel use same DT as 1st kernel.
+> > 
+> > Other than for testing purposes, I don't see why you'd pass the kdump
+> > kernel a DTB inconsistent with that the 1st kernel was passsed (other
+> > than some proerties under /chosen).
+> > 
+> > We added /sys/firmware/fdt specifically to allow the kexec tools to get
+> > the exact DTB the first kernel used. There's no reason for tools to have
+> > to make something up.
+> 
+> Agreed, but kexec-tools has an option to pass in any dtb files. Who knows
+> how one will use it unless dropping the option and use /sys/firmware/fdt
+> unconditionally. 
 
-If you specify --ipmi-wdt-start or --ipmi-wdt-stop option to kexec
-command, BMC's watchdog timer will start or stop respectively while
-executing purgatory.  You can't specify the both options at the same
-time.  The start operation doesn't change the parameters of the
-watchdog timer such as initial counter and action, you need to set
-those parameters in the first OS.  On the other hand, the stop
-operation changes the parameters.  You need to reset them when you
-want to reuse the watchdog timer.
+I think this is a tangential discussion. I think it's fine to say that
+for kdump we do not expect this -- a user would be shooting themselves
+in the foot if they did. Regardless, I was under the impression that
+kdump was usually set up by distribution-provided init code.
 
-Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
----
- kexec/ipmi.h                  |    9 ++
- kexec/kexec.c                 |   18 +++
- kexec/kexec.h                 |    6 +
- purgatory/Makefile            |    1 
- purgatory/include/purgatory.h |    3 +
- purgatory/ipmi.c              |  232 +++++++++++++++++++++++++++++++++++++++++
- purgatory/purgatory.c         |    4 +
- 7 files changed, 272 insertions(+), 1 deletion(-)
- create mode 100644 kexec/ipmi.h
- create mode 100644 purgatory/ipmi.c
+or kdump, which typically is set up automatically by the OS, 
 
-diff --git a/kexec/ipmi.h b/kexec/ipmi.h
-new file mode 100644
-index 0000000..395a2c7
---- /dev/null
-+++ b/kexec/ipmi.h
-@@ -0,0 +1,9 @@
-+#ifndef IPMI_H
-+#define IPMI_H
-+
-+/* Options for IPMI code excuted in purgatory */
-+#define IPMI_WDT_DO_NOTHING	0
-+#define IPMI_WDT_START		(1 << 0)
-+#define IPMI_WDT_STOP		(1 << 1)
-+
-+#endif /* IPMI_H */
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index f0bd527..8a8f268 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -49,6 +49,7 @@
- #include "kexec-sha256.h"
- #include "kexec-zlib.h"
- #include "kexec-lzma.h"
-+#include "ipmi.h"
- #include <arch/options.h>
- 
- unsigned long long mem_min = 0;
-@@ -57,6 +58,7 @@ static unsigned long kexec_flags = 0;
- /* Flags for kexec file (fd) based syscall */
- static unsigned long kexec_file_flags = 0;
- int kexec_debug = 0;
-+int opt_ipmi_wdt = IPMI_WDT_DO_NOTHING;
- 
- void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
- {
-@@ -643,6 +645,10 @@ static void update_purgatory(struct kexec_info *info)
- 	if (!info->rhdr.e_shdr) {
- 		return;
- 	}
-+
-+	elf_rel_set_symbol(&info->rhdr, "ipmi_wdt", &opt_ipmi_wdt,
-+			   sizeof(opt_ipmi_wdt));
-+
- 	arch_update_purgatory(info);
- 	memset(region, 0, sizeof(region));
- 	sha256_starts(&ctx);
-@@ -1345,6 +1351,12 @@ int main(int argc, char *argv[])
- 		case OPT_KEXEC_FILE_SYSCALL:
- 			/* We already parsed it. Nothing to do. */
- 			break;
-+		case OPT_IPMI_WDT_START:
-+			opt_ipmi_wdt |= IPMI_WDT_START;
-+			break;
-+		case OPT_IPMI_WDT_STOP:
-+			opt_ipmi_wdt |= IPMI_WDT_STOP;
-+			break;
- 		default:
- 			break;
- 		}
-@@ -1370,6 +1382,12 @@ int main(int argc, char *argv[])
- 		    "\"--mem-max\" parameter\n");
- 	}
- 
-+	if ((opt_ipmi_wdt & IPMI_WDT_START) &&
-+	    (opt_ipmi_wdt & IPMI_WDT_STOP)) {
-+		die("You can't specify both --ipmi-wdt-start and "
-+		    "--ipmi-wdt-stop\n");
-+	}
-+
- 	fileind = optind;
- 	/* Reset getopt for the next pass; called in other source modules */
- 	opterr = 1;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index c02ac8f..4638866 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -224,7 +224,9 @@ extern int file_types;
- #define OPT_LOAD_PRESERVE_CONTEXT 259
- #define OPT_LOAD_JUMP_BACK_HELPER 260
- #define OPT_ENTRY		261
--#define OPT_MAX			262
-+#define OPT_IPMI_WDT_START	262
-+#define OPT_IPMI_WDT_STOP	263
-+#define OPT_MAX			264
- #define KEXEC_OPTIONS \
- 	{ "help",		0, 0, OPT_HELP }, \
- 	{ "version",		0, 0, OPT_VERSION }, \
-@@ -244,6 +246,8 @@ extern int file_types;
- 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
- 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
-+	{ "ipmi-wdt-start",	0, 0, OPT_IPMI_WDT_START }, \
-+	{ "ipmi-wdt-stop",	0, 0, OPT_IPMI_WDT_STOP }, \
- 
- #define KEXEC_OPT_STR "h?vdfxyluet:ps"
- 
-diff --git a/purgatory/Makefile b/purgatory/Makefile
-index 2b5c061..ae1d2bd 100644
---- a/purgatory/Makefile
-+++ b/purgatory/Makefile
-@@ -9,6 +9,7 @@
- 
- PURGATORY = purgatory/purgatory.ro
- PURGATORY_SRCS =
-+PURGATORY_SRCS += purgatory/ipmi.c
- PURGATORY_SRCS += purgatory/purgatory.c
- PURGATORY_SRCS += purgatory/printf.c
- PURGATORY_SRCS += purgatory/string.c
-diff --git a/purgatory/include/purgatory.h b/purgatory/include/purgatory.h
-index 788ce49..9b9ffbe 100644
---- a/purgatory/include/purgatory.h
-+++ b/purgatory/include/purgatory.h
-@@ -1,11 +1,14 @@
- #ifndef PURGATORY_H
- #define PURGATORY_H
- 
-+extern int ipmi_wdt;
-+
- void putchar(int ch);
- void sprintf(char *buffer, const char *fmt, ...)
- 	__attribute__ ((format (printf, 2, 3)));
- void printf(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
- void setup_arch(void);
- void post_verification_setup_arch(void);
-+void ipmi_wdt_start_stop(void);
- 
- #endif /* PURGATORY_H */
-diff --git a/purgatory/ipmi.c b/purgatory/ipmi.c
-new file mode 100644
-index 0000000..0acb853
---- /dev/null
-+++ b/purgatory/ipmi.c
-@@ -0,0 +1,232 @@
-+#include <sys/io.h>
-+#include <purgatory.h>
-+#include "../kexec/ipmi.h"
-+
-+#define KCS_PORT_DEFAULT	0xca2
-+#define KCS_PORT_DATA		(kcs_port + 0)
-+#define KCS_PORT_STATUS		(kcs_port + 1)
-+#define KCS_PORT_CMD		(kcs_port + 1)
-+
-+#define KCS_STATUS_OBF		0x1
-+#define KCS_STATUS_IBF		0x2
-+
-+#define KCS_CMD_WRITE_START	0x61
-+#define KCS_CMD_WRITE_END	0x62
-+#define KCS_CMD_READ		0x68
-+
-+#define GET_STATUS_STATE(status) (((status) >> 6) & 0x03)
-+#define KCS_IDLE_STATE	0x0
-+#define KCS_READ_STATE	0x1
-+#define KCS_WRITE_STATE	0x2
-+#define KCS_ERROR_STATE	0x3
-+
-+int kcs_port = KCS_PORT_DEFAULT;
-+int ipmi_wdt = IPMI_WDT_DO_NOTHING;
-+
-+/* IPMI command to start BMC watchdog timer */
-+const unsigned char cmd_start_wdt[] = {
-+	0x06 << 2,	/* App */
-+	0x22,		/* Reset Watchdog Timer */
-+};
-+
-+/* IPMI command to stop BMC watchdog timer */
-+const unsigned char cmd_stop_wdt[] = {
-+	0x06 << 2,	/* App */
-+	0x24,		/* Set Watchdog Timer Command */
-+	0x84,		/* Timer Use: don't log, and SMS/OS use */
-+	0x00,		/* Timer Actions: no action */
-+	0x00,		/* Pre-timeout interval: 0 */
-+	0x10,		/* Timer Use Expiration flag clear: SMS/OS */
-+	0xff,		/* Initial countdown value: 0xffff */
-+	0xff,
-+};
-+
-+static inline unsigned char read_status(void)
-+{
-+	return inb(KCS_PORT_STATUS);
-+}
-+
-+unsigned char wait_out(void)
-+{
-+	unsigned char status;
-+
-+	do {
-+		status = read_status();
-+	} while ((status & KCS_STATUS_OBF) == 0);
-+
-+	return status;
-+}
-+
-+unsigned char wait_in(void)
-+{
-+	unsigned char status;
-+
-+	do {
-+		status = read_status();
-+	} while (status & KCS_STATUS_IBF);
-+
-+	return status;
-+}
-+
-+unsigned char read_data(void)
-+{
-+	wait_out();
-+	return inb(KCS_PORT_DATA);
-+}
-+
-+void clear_obf(void)
-+{
-+	if (inb(KCS_PORT_STATUS) & KCS_STATUS_OBF)
-+		read_data();
-+}
-+
-+unsigned char write_data(unsigned char byte)
-+{
-+	clear_obf();
-+	outb(byte, KCS_PORT_DATA);
-+	return wait_in();
-+}
-+
-+unsigned char write_cmd(unsigned char byte)
-+{
-+	clear_obf();
-+	outb(byte, KCS_PORT_CMD);
-+	return wait_in();
-+}
-+
-+/*
-+ * Issue a given IPMI command via KCS I/F.
-+ *
-+ * Return 0 on success, otherwise -1.
-+ */
-+int write_ipmi_cmd(const unsigned char *cmd, int size)
-+{
-+	unsigned char status;
-+	int i;
-+
-+	wait_in();
-+	status = write_cmd(KCS_CMD_WRITE_START);
-+	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
-+		return -1;
-+
-+	for (i = 0; i < size - 1; i++) {
-+		status = write_data(cmd[i]);
-+
-+		if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
-+			return -1;
-+	}
-+
-+	/* last write */
-+	status = write_cmd(KCS_CMD_WRITE_END);
-+	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
-+		return -1;
-+
-+	write_data(cmd[i]);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Read result bytes for the previously issued IPMI command.
-+ *
-+ * Return the completion code, which is 0 on success.  Otherwise, return
-+ * non-zero value.
-+ */
-+unsigned char read_result(void)
-+{
-+	unsigned char state;
-+	unsigned char data[4] = { 0 };
-+	int count = 0;
-+
-+	while (1) {
-+		state = GET_STATUS_STATE(wait_in());
-+		if (state == KCS_READ_STATE) {
-+			data[count] = read_data();
-+			outb(KCS_CMD_READ, KCS_PORT_DATA);
-+		} else if (state == KCS_IDLE_STATE) {
-+			data[count] = read_data();
-+			break;
-+		} else {
-+			/*
-+			 * Error! Set 0xff (unspecified error) as the
-+			 * completion code.
-+			 */
-+			data[2] = 0xff;
-+			break;
-+		}
-+
-+		/*
-+		 * We are interested only in the completion code in the
-+		 * 3rd byte. Skip the following bytes.
-+		 */
-+		if (count < 3)
-+			count++;
-+	}
-+
-+	return data[2]; /* Return completion code */
-+}
-+
-+/*
-+ * Issue one IPMI command and check the result.
-+ *
-+ * Return 0 on success, otherwise -1.
-+ */
-+int issue_ipmi_cmd(const unsigned char *cmd, int size)
-+{
-+	int i, ret;
-+	unsigned char comp_code;
-+
-+	/*
-+	 * Retry 3 times at most on error.
-+	 *
-+	 * write_ipmi_cmd() issues WRITE_START KCS command at the beginning,
-+	 * which aborts the ongoing IPMI command and starts new one.  So
-+	 * basically, write_ipmi_cmd() will succeed anytime.
-+	 *
-+	 * This command abort can fail on some BMC depending on its KCS I/F
-+	 * state, and  we get ERROR_STATE from the status register in that
-+	 * case.  However, there is no problem.  We can recover it by
-+	 * simply retrying from writing WRITE_START KCS command.
-+	 */
-+	for (i = 0; i < 3; i++) {
-+		ret = write_ipmi_cmd(cmd, size);
-+		if (ret < 0)
-+			continue;
-+
-+		comp_code = read_result();
-+		if (comp_code == 0)
-+			break; /* succeeded */
-+	}
-+
-+	return (i < 3) ? 0 : -1;
-+}
-+
-+int do_start_wdt(void)
-+{
-+	int ret;
-+
-+	printf("IPMI: starting watchdog timer...");
-+	ret = issue_ipmi_cmd(cmd_start_wdt, sizeof(cmd_start_wdt));
-+	printf("done\n");
-+
-+	return ret;
-+}
-+
-+int do_stop_wdt(void)
-+{
-+	int ret;
-+
-+	printf("IPMI: stopping watchdog timer...");
-+	ret = issue_ipmi_cmd(cmd_stop_wdt, sizeof(cmd_stop_wdt));
-+	printf("done\n");
-+
-+	return ret;
-+}
-+
-+void ipmi_wdt_start_stop(void)
-+{
-+	if (ipmi_wdt & IPMI_WDT_START)
-+		do_start_wdt();
-+	else if (ipmi_wdt & IPMI_WDT_STOP)
-+		do_stop_wdt();
-+}
-diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
-index 3bbcc09..f60879d 100644
---- a/purgatory/purgatory.c
-+++ b/purgatory/purgatory.c
-@@ -48,5 +48,9 @@ void purgatory(void)
- 			/* loop forever */
- 		}
- 	}
-+
-+	if (ipmi_wdt)
-+		ipmi_wdt_start_stop();
-+
- 	post_verification_setup_arch();
- }
+> If we choose to implement kexec_file_load only in kernel, the interfaces
+> provided are kernel, initrd and cmdline. We can always use same dtb.
 
+There are use-cases where being in complete control of the purgatory
+code is necessary. For example, the next OS might not be Linux (and
+might not accept a DTB, or have different requirements on the initial
+register state).
 
+Regardless of the need for something like kexec_file_load for kdump in
+Secure Boot environments, there is also a need for kexec_load with the
+user having complete control.
+
+> > > > > Do you think for arm64 only usable memory is necessary to let kdump kernel
+> > > > > know? I'm curious about how arm64 kernel get all memory layout from boot loader,
+> > > > > via UEFI memmap?
+> > > > 
+> > > > When booted via EFI, we use the EFI memory map. The EFI stub handles
+> > > > acquring the relevant information and passing that to the first kernel
+> > > > in the DTB (see Documentation/arm/uefi.txt).
+> > > 
+> > > Ok, thanks for the pointer. So in dt we are just have uefi memmap infomation
+> > > instead of memory nodes details.. 
+> > 
+> > When booted via EFI, yes.
+> > 
+> > For NUMA topology in !ACPI kernels, we might need to also retain and
+> > parse memory nodes, but only for toplogy information. The kernel would
+> > still only use memory as described by the EFI memory map.
+> > 
+> > There's a horrible edge case I've spotted if performing a chain of
+> > cross-endian kexecs: LE -> BE -> LE, as the BE kernel would have to
+> > respect the EFI memory map so as to avoid corrupting it for the
+> > subsequent LE kernel. Other than this I believe everything should just
+> > work.
+> 
+> Firmware do not know kernel endianniess, kernel should respect firmware
+> maps and adapt to it, it sounds like a generic issue not specfic to kexec.
+
+I agree that this isn't kexec's fault as such, but in the absence of
+kexec, the above issue does not exist, so one can't consider it in
+isolation.
+
+> > > > A kexec'd kernel should simply inherit that. So long as the DTB and/or
+> > > > UEFI tables in memory are the same, it would be the same as a cold boot.
+> > > 
+> > > For kexec all memory ranges are same, for kdump we need use original reserved
+> > > range with crashkernel= as usable memory and all other orignal usable ranges
+> > > are not usable anymore. 
+> > 
+> > Sure. This is what I believe we should expose with an additional
+> > property under /chosen, while keeping everything else pristine.
+> > 
+> > The crash kernel can then limit itself to that region, while it would
+> > have the information of the full memory map (which it could log and/or
+> > use to drive other dumping).
+> 
+> In this way kernel should be aware it is a kdump booting, it is doable though
+> I feel it is better for kdump kernel in a black box with infomations it
+> can use just like the 1st kernel. Things here is where we choose to cook
+> the memory infomation in boot loader or in kernel itself.
+
+Sorry, I can't follow what you are trying to say here. Could you
+elaborate?
+
+> > > Is it possible to modify uefi memmap for kdump case?
+> > 
+> > Technically it would be possible, however I don't think it's necessary,
+> > and I think it would be disadvantageous to do so.
+> > 
+> > Describing the range(s) the crash kernel can use in separate properties
+> > under /chosen has a number of advantages.
+> 
+> Ok, I got the points. We have a is_kdump_kernel() by checking if there is
+> elfcorehdr_addr kernel cmdline. This is mainly for some drivers which
+> do not work well in kdump kernel some uncertain reasons. But ideally I
+> think kernel should handle things just like in 1st kernel and avoid to use
+> it. 
+
+I agree that we should not have kexec/kdump knowledge spread throughout
+the kernel, and that the boot protocol should be uniform with a cold
+boot as far as possible.
+
+However, requiring userspace or the first kernel to modify
+firmware-provided information has a number of risks and reduces the
+amount of information available to the kdump kernel. To that end I am
+opposed to modifying the memory nodes in the DTB, or to modifying the
+EFI memory map.
+
+Having a property in the DTB describing the range(s) of memory reserved
+for use by the kdump kernel is vastly simpler, and avoids those risks:
+
+* It requires a tiny amount of self-contained code in the kdump kernel
+  to parse the property and apply the constraints imposed (i.e. carve up
+  memblock).
+
+  This is easy to contain in a single function (or at least within a
+  single file), and need not affect drivers or other code.
+
+* It is uniform regardless of whether the EFI memory map, DT memory
+  nodes, or some other mechanism is used to discover memory in the
+  systems.
+
+  This makes it easy to impose the restrictions consistently, and is
+  somewhat future-proof.
+
+* Userspace or the first kernel to not need to parse and modify an
+  arbitrary amount of data (which might be in an extended format it
+  doesn't fully understand). There is less risk for this to go wrong.
+
+  It is far easier to add a property than it is to correctly modify the
+  EFI memory map, memory nodes, or some other data structure. There is
+  less risk, and it is somewhat future-proof.
+  
+* The original memory map information is preserved, even though unused.
+  This may be useful for debugging, and it may turn out that the kdump
+  kernel needs to know about certain portions of the original memory
+  map, even if we are not currently aware of why we would need this.
+
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
