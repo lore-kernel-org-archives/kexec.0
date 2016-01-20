@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 20 Jan 2016 12:36:21 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
-Message-ID: <20160120123620.GE25829@leverpostej>
-References: <20160115201601.GR3262@leverpostej> <569CBDBC.5050500@linaro.org>
- <20160119014332.GB2919@dhcp-128-65.nay.redhat.com>
- <569DCB30.9010501@linaro.org>
- <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
- <20160119125114.GH25024@leverpostej>
- <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
- <20160119140139.GC26545@leverpostej> <569F1A33.4000208@linaro.org>
- <20160120120257.GD25829@leverpostej>
+Message-ID: <569F9348.2000100@arm.com>
+Date: Wed, 20 Jan 2016 14:01:44 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160120120257.GD25829@leverpostej>
+Subject: Re: [PATCH 03/19] arm64: Add new asm macro copy_page
+References: <cover.1452884156.git.geoff@infradead.org>
+ <f7dcd4d1b5a9b77eaef50f22f4040a26c6b40487.1452884156.git.geoff@infradead.org>
+In-Reply-To: <f7dcd4d1b5a9b77eaef50f22f4040a26c6b40487.1452884156.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,56 +19,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-Cc: Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Ard, Ganapatrao, the below is something we need to consider for the
-combination of the NUMA & kexec approaches. It only becomes a problem
-if/when we preserve DT memory nodes in the presence of EFI, though it
-would be nice to not box ourselves into a corner.
+Hi Geoff,
 
-On Wed, Jan 20, 2016 at 12:02:58PM +0000, Mark Rutland wrote:
-> On Wed, Jan 20, 2016 at 02:25:07PM +0900, AKASHI Takahiro wrote:
-> > On 01/19/2016 11:01 PM, Mark Rutland wrote:
-> > >For NUMA topology in !ACPI kernels, we might need to also retain and
-> > >parse memory nodes, but only for toplogy information. The kernel would
-> > >still only use memory as described by the EFI memory map.
-> > >
-> > >There's a horrible edge case I've spotted if performing a chain of
-> > >cross-endian kexecs: LE -> BE -> LE, as the BE kernel would have to
-> > >respect the EFI memory map so as to avoid corrupting it for the
-> > >subsequent LE kernel. Other than this I believe everything should just
-> > >work.
-> > 
-> > BE kernel doesn't support UEFI yet and cannot access UEFI memmap table. So,
-> > for LE -> BE, we don't use a dtb generated from /sys/firmware/fdt (or /proc/device-tree)
-> > (as in the case of LE -> LE) and require users to provide a dtb file explicitly.
-> 
-> As I mentioned above, the problem exists when memory nodes also exist
-> (for describing NUMA topology). In that case the BE kernel would try to
-> use the information from the memory nodes.
-> 
-> > For BE -> LE, BE kernel doesn't know wther UEFI memmap table is available or not
-> > and so use the same (explicitly-provided) dtb (as LE -> LE in !UEFI)
-> 
-> See above. The problem I imagine is:
-> 
-> LE kernel - uses EFI mmap, takes NUMA information from DT memory nodes
-> 
->     v       kexec
-> 
-> BE kernel - uses DT memory nodes
->           - clobbers EFI runtime regions as it sees them as available
-> 
->     v       kexec
-> 
-> LE kernel - uses EFI mmap, takes NUMA information from DT memory nodes
->           - tries to call EFI runtime services, and explodes.
+On 15/01/16 19:18, Geoff Levand wrote:
 
-I'm not really sure what the best approach is here, but I thought that
-it would be good to raise awareness of the edge-case.
+Can I donate a commit message:
 
-Mark.
+Kexec and hibernate need to copy pages of memory, but may not have all
+of the kernel mapped, and are unable to call copy_page().
+
+Convert copy_page() to a macro, so that it can be inlined in these
+situations.
+
+
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/include/asm/assembler.h | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+> index 21979a4..c47a623 100644
+> --- a/arch/arm64/include/asm/assembler.h
+> +++ b/arch/arm64/include/asm/assembler.h
+> @@ -24,6 +24,7 @@
+>  #define __ASM_ASSEMBLER_H
+>  
+>  #include <asm/asm-offsets.h>
+> +#include <asm/page.h>
+>  #include <asm/pgtable-hwdef.h>
+>  #include <asm/ptrace.h>
+>  #include <asm/thread_info.h>
+> @@ -240,6 +241,24 @@ lr	.req	x30		// link register
+>  	.endm
+>  
+>  /*
+> + * copy_page - copy src to dest using temp registers t1-t8
+> + */
+> +	.macro copy_page dest:req src:req t1:req t2:req t3:req t4:req t5:req t6:req t7:req t8:req
+> +1:	ldp	\t1, \t2, [\src]
+
+Using '1' as a label here means callers can't jump back over it using
+the same label. The convention with USER() and alternatives is to use
+unlikely values like '9999'.
+
+
+> +	ldp	\t3, \t4, [\src, #16]
+> +	ldp	\t5, \t6, [\src, #32]
+> +	ldp	\t7, \t8, [\src, #48]
+> +	add	\src, \src, #64
+> +	stnp	\t1, \t2, [\dest]
+> +	stnp	\t3, \t4, [\dest, #16]
+> +	stnp	\t5, \t6, [\dest, #32]
+> +	stnp	\t7, \t8, [\dest, #48]
+> +	add	\dest, \dest, #64
+> +	tst	\src, #(PAGE_SIZE - 1)
+> +	b.ne	1b
+> +	.endm
+
+It may be worth updating lib/copy_page.S to use this macro.
+
+
+I will fix the code in hibernate to use this!
+
+Thanks,
+
+
+James
+
+
+
+
 
 _______________________________________________
 kexec mailing list
