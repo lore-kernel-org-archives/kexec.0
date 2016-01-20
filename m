@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 20 Jan 2016 16:26:17 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
-Message-ID: <20160120082617.GJ2999@dhcp-128-65.nay.redhat.com>
-References: <569DCB30.9010501@linaro.org>
- <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
- <20160119125114.GH25024@leverpostej>
- <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
- <20160119140139.GC26545@leverpostej>
- <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
- <569F2439.9000604@linaro.org>
- <20160120063856.GA3725@dhcp-128-65.nay.redhat.com>
- <20160120070044.GF2999@dhcp-128-65.nay.redhat.com>
- <569F3EC2.4020807@linaro.org>
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aLqIh-0005CL-2m
+ for kexec@lists.infradead.org; Wed, 20 Jan 2016 10:47:50 +0000
+Subject: [RFC PATCH 0/4] purgatory: Add basic support for IPMI command
+ execution
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Wed, 20 Jan 2016 19:37:34 +0900
+Message-ID: <20160120103734.4234.64015.stgit@softrs>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <569F3EC2.4020807@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,68 +21,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
 
-On 01/20/16 at 05:01pm, AKASHI Takahiro wrote:
-> On 01/20/2016 04:00 PM, Dave Young wrote:
-> >>>So I'm not still sure about what are advantages of a property under /chosen
-> >>>over "memmap=" kernel parameter.
-> >>>Both are simple and can have the same effect with minimizing changes to dtb.
-> >>>(But if, in the latter case, we have to provide *all* the memory-related information
-> >>>through "memmap=" parameters, it would be much complicated.)
-> >>
-> >>Maybe I did not say it clearly, I prefer kexec syscall/tool to modifiy dtb
-> >>or uefi-memmap so that we do not need any extra kernel cmdline.
-> 
-> Yes, I understand.
-> But on arm64, kexec-tools can generate a "memmap=" parameter for crash kernel's
-> memory region without any user's interaction.
-> (please note that this parameter eventually goes into dtb's cmdline property in
-> /chosen.)
-> 
-> In this sense, it is no different from an extra property under /chosen
-> as kexec-tools can also add it to dtb passed to the crash dump kernel.
-> 
-> (See what I mean?)
+If the second kernel for crash dumping hangs up while booting, no
+information related to the first kernel will be saved.  This makes
+crash cause analysis difficult.  So, some enterprise users want to
+save minimal information befor booting the second kernel.
 
-I think I understand your points, what I would prefer is not an extra property
-but modifying uefi memmap or recreating memory nodes for !EFI to be used in kdump kernel.
+One of the approaches is to use panic notifier call or pstore
+feature.  For example, a panic notifier callback registered by IPMI
+driver saves the panic message to BMC's SEL before booting the second
+kernel.  Similarly, pstore saves kernel logs to a non-volatile memory
+on the server.  However, since these functionalities run with crashed
+kernel, they may fail to complete their work and boot the second
+kernel.
 
-> 
-> >>For x86 we would like to drop the memmap= usage in kexec-tools
-> 
-> I didn't know that :)
-> 
-> >>but we can not
-> >>do that for a compatibility problem about calgary iommu. So that currently
-> >>kexec-tools supports both recreating E820 maps and passing memmap=.
-> >>
-> >>We should think it carefully because it will be hard to remove once we support it.
-> 
-> Absolutely.
-> 
-> >>IMO handling it in code is better than using an external interface.
-> >
-> >Also seems semantic of memmap=exactmap is different than current use in the implementation
-> >exactmap means we need pass each range seperately including reserved, acpi and other types
-> >We can not reuse ranges in uefi memmap for other than usable memory.
-> 
-> 
-> If necessary, we may use a different name, say, "usablememmap=" for arm64
-> or just extend "mem=" semantics (allowing XX@YY format) to avoid any confusion.
+So, another approach; saving minimal information to BMC's SEL in the
+purgatory.  Since the purgatory code doesn't rely on the crashed
+kernel, we can run it safely after verifying the hash of the code.
 
-For either of above what is the 1st kernel behavior with these params?
+This patch set is the first step to the final goal; it provides
+a basic support for IPMI command execution in purgatory.  IPMI
+specification defines multiple interfaces to BMC, and this patch set
+uses one of them, KCS I/F, which talks with BMC via I/O port like
+keyboard controllers.  As a use case for that, options to start/stop
+BMC's watchdog timer before booting the second kernel are also
+provided.  These options are useful for the cases where:
 
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
-> >It will also have the cmdline array size issue.k
-> >
-> >Thanks
-> >Dave
-> >
+ - you want to automatically reboot the server when the second kernel
+   hangs up while booting
+ - you want to prevent the second kernel from being stopped by the
+   watchdog timer enabled while the first kernel is running
+
+If the BMC doesn't work well, the IPMI command execution can take
+indefinite time and fail to boot the second kernel.  To avoid this,
+timeout logic based on RTC polling is also implemented.
+
+NOTE: This is an RFC version, so some parts are incomplete; these
+codes are unconditionally built into the kexec binary, and I/O ports
+for KCS I/F and timeout (5 seconds) are hard-coded, and etc.
+
+Future plan:
+Add an option to save the panic message and instruction pointers to
+BMC's SEL in purgatory.  To realize this, we first need to pass the
+panic message to the purgatory.  Instruction pointers are already
+passed to the second kernel through ELF notes, so just read them.
+
+---
+
+Hidehiro Kawai (4):
+      purgatory/ipmi: Support BMC watchdog timer start/stop in purgatory
+      purgatory: Introduce timeout API
+      purgatory/x86: Support CMOS RTC
+      purgatory/ipmi: Add timeout logic to IPMI command processing
+
+
+ kexec/ipmi.h                   |    9 +
+ kexec/kexec.c                  |   18 ++
+ kexec/kexec.h                  |    6 +
+ purgatory/Makefile             |    5 +
+ purgatory/arch/i386/Makefile   |    1 
+ purgatory/arch/i386/rtc_cmos.c |  104 ++++++++++++++
+ purgatory/arch/x86_64/Makefile |    1 
+ purgatory/include/purgatory.h  |    3 
+ purgatory/include/time.h       |   33 +++++
+ purgatory/ipmi.c               |  293 ++++++++++++++++++++++++++++++++++++++++
+ purgatory/purgatory.c          |    4 +
+ purgatory/time.c               |   58 ++++++++
+ 12 files changed, 533 insertions(+), 2 deletions(-)
+ create mode 100644 kexec/ipmi.h
+ create mode 100644 purgatory/arch/i386/rtc_cmos.c
+ create mode 100644 purgatory/include/time.h
+ create mode 100644 purgatory/ipmi.c
+ create mode 100644 purgatory/time.c
+
+
+-- 
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
+
+
 
 _______________________________________________
 kexec mailing list
