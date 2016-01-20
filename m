@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 20 Jan 2016 10:49:46 +0800
+Date: Wed, 20 Jan 2016 10:54:07 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
-Message-ID: <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
+Message-ID: <20160120025407.GB2999@dhcp-128-65.nay.redhat.com>
 References: <cover.1452884156.git.geoff@infradead.org>
  <fb4506943bbaed8b0657ed367ebd57e4064d57ed.1452884156.git.geoff@infradead.org>
  <20160115201601.GR3262@leverpostej> <569CBDBC.5050500@linaro.org>
  <20160119014332.GB2919@dhcp-128-65.nay.redhat.com>
- <569DCB30.9010501@linaro.org>
- <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
- <20160119125114.GH25024@leverpostej>
- <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
- <20160119140139.GC26545@leverpostej>
+ <20160119121721.GG25024@leverpostej>
+ <20160119135233.GB2986@dhcp-128-65.nay.redhat.com>
+ <20160119140526.GD26545@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160119140139.GC26545@leverpostej>
+In-Reply-To: <20160119140526.GD26545@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,134 +26,112 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On 01/19/16 at 02:01pm, Mark Rutland wrote:
-> On Tue, Jan 19, 2016 at 09:45:53PM +0800, Dave Young wrote:
-> > On 01/19/16 at 12:51pm, Mark Rutland wrote:
-> > > On Tue, Jan 19, 2016 at 08:28:48PM +0800, Dave Young wrote:
-> > > > On 01/19/16 at 02:35pm, AKASHI Takahiro wrote:
-> > > > > On 01/19/2016 10:43 AM, Dave Young wrote:
-> > > > > >X86 takes another way in latest kexec-tools and kexec_file_load, that is
-> > > > > >recreating E820 table and pass it to kexec/kdump kernel, if the entries
-> > > > > >are over E820 limitation then turn to use setup_data list for remain
-> > > > > >entries.
+On 01/19/16 at 02:05pm, Mark Rutland wrote:
+> On Tue, Jan 19, 2016 at 09:52:33PM +0800, Dave Young wrote:
+> > On 01/19/16 at 12:17pm, Mark Rutland wrote:
+> > > On Tue, Jan 19, 2016 at 09:43:32AM +0800, Dave Young wrote:
+> > > > On 01/18/16 at 07:26pm, AKASHI Takahiro wrote:
+> > > > > On 01/16/2016 05:16 AM, Mark Rutland wrote:
+> > > > > >On Fri, Jan 15, 2016 at 07:18:38PM +0000, Geoff Levand wrote:
+> > > > > >>From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > > > >>
+> > > > > >>This patch adds arch specific descriptions about kdump usage on arm64
+> > > > > >>to kdump.txt.
+> > > > > >>
+> > > > > >>Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > > > >>---
+> > > > > >>  Documentation/kdump/kdump.txt | 23 ++++++++++++++++++++++-
+> > > > > >>  1 file changed, 22 insertions(+), 1 deletion(-)
+> > > > > >>
+> > > > > >>diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> > > > > >>index bc4bd5a..36cf978 100644
+> > > > > >>--- a/Documentation/kdump/kdump.txt
+> > > > > >>+++ b/Documentation/kdump/kdump.txt
+> > > > > >>@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+> > > > > >>  a remote system.
+> > > > > >>
+> > > > > >>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> > > > > >>-s390x and arm architectures.
+> > > > > >>+s390x, arm and arm64 architectures.
+> > > > > >>
+> > > > > >>  When the system kernel boots, it reserves a small section of memory for
+> > > > > >>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> > > > > >>@@ -249,6 +249,20 @@ Dump-capture kernel config options (Arch Dependent, arm)
+> > > > > >>
+> > > > > >>      AUTO_ZRELADDR=y
+> > > > > >>
+> > > > > >>+Dump-capture kernel config options (Arch Dependent, arm64)
+> > > > > >>+----------------------------------------------------------
+> > > > > >>+
+> > > > > >>+1) The maximum memory size on the dump-capture kernel must be limited by
+> > > > > >>+   specifying:
+> > > > > >>+
+> > > > > >>+   mem=X[MG]
+> > > > > >>+
+> > > > > >>+   where X should be less than or equal to the size in "crashkernel="
+> > > > > >>+   boot parameter. Kexec-tools will automatically add this.
+> > > > > >
+> > > > > >
+> > > > > >This is extremely fragile, and will trivially fail when the kernel can
+> > > > > >be loaded anywhere (see [1]).
 > > > > > 
-> > > > > Thanks. I will visit x86 code again.
+> > > > > As I said before, this restriction also exists on arm, but I understand
+> > > > > that recent Ard's patches break it.
 > > > > > 
-> > > > > >I think it is X86 specific. Personally I think device tree property is
-> > > > > >better.
+> > > > > >We must explicitly describe the set of regions the crash kernel may use
+> > > > > >(i.e. we need base and size). NAK in the absence of that.
 > > > > > 
-> > > > > Do you think so?
+> > > > > There seem to exist several approaches:
+> > > > > (a) use a device-tree property, "linux,usable-memory", in addition to "reg"
+> > > > >     under "memory" node
+> > > > > (b) use a kernel's early parameter, "memmap=nn[@#$]ss"
+> > > > > 
+> > > > > Power PC takes (a), while this does not work on efi-started kernel
+> > > > > because dtb has no "memory" nodes under efi.
+> > > > > X86 takes (b). If we take this, we will need to overwrite a weak
+> > > > > early_init_dt_add_memory().
 > > > > 
-> > > > I'm not sure it is the best way. For X86 we run into problem with
-> > > > memmap= design, one example is pci domain X (X>1) need the pci memory
-> > > > ranges being passed to kdump kernel. When we passed reserved ranges in /proc/iomem
-> > > > to 2nd kernel we find that cmdline[] array is not big enough.
+> > > > X86 takes another way in latest kexec-tools and kexec_file_load, that is
+> > > > recreating E820 table and pass it to kexec/kdump kernel, if the entries
+> > > > are over E820 limitation then turn to use setup_data list for remain
+> > > > entries.
 > > > 
-> > > I'm not sure how PCI ranges relate to the memory map used for normal
-> > > memory (i.e. RAM), though I'm probably missing some caveat with the way
-> > > ACPI and UEFI describe PCI. Why does memmap= affect PCI memory?
-> > 
-> > Here is the old patch which was rejected in kexec-tools:
-> > http://lists.infradead.org/pipermail/kexec/2013-February/007924.html
-> > 
+> > > This would imply modifying the EFI memory map or the memory nodes, which
+> > > I'm not keen on.
 > > > 
-> > > If the kernel got the rest of its system topology from DT, the PCI
-> > > regions would be described there.
-> > 
-> > Yes, if kdump kernel use same DT as 1st kernel.
-> 
-> Other than for testing purposes, I don't see why you'd pass the kdump
-> kernel a DTB inconsistent with that the 1st kernel was passsed (other
-> than some proerties under /chosen).
-> 
-> We added /sys/firmware/fdt specifically to allow the kexec tools to get
-> the exact DTB the first kernel used. There's no reason for tools to have
-> to make something up.
-
-Agreed, but kexec-tools has an option to pass in any dtb files. Who knows
-how one will use it unless dropping the option and use /sys/firmware/fdt
-unconditionally. 
-
-If we choose to implement kexec_file_load only in kernel, the interfaces
-provided are kernel, initrd and cmdline. We can always use same dtb.
- 
-> 
-> > > > Do you think for arm64 only usable memory is necessary to let kdump kernel
-> > > > know? I'm curious about how arm64 kernel get all memory layout from boot loader,
-> > > > via UEFI memmap?
+> > > I would prefer that they are left _pristine_, and we describe the
+> > > restriction on the kdump kernel with additional properties under
+> > > /chosen.
 > > > 
-> > > When booted via EFI, we use the EFI memory map. The EFI stub handles
-> > > acquring the relevant information and passing that to the first kernel
-> > > in the DTB (see Documentation/arm/uefi.txt).
+> > > That leaves us with more useful information about the environment of the
+> > > first kernel, is simpler for userspace (it's resilient to updates to the
+> > > UEFI memory map spec, for example), and is simple for the crash kernel.
 > > 
-> > Ok, thanks for the pointer. So in dt we are just have uefi memmap infomation
-> > instead of memory nodes details.. 
+> > In theory kexec as boot loader should prepare correct efi memmap and pass
+> > to kernel, but as you said yes it will increase complexity. We need banlance
+> > them.
 > 
-> When booted via EFI, yes.
-> 
-> For NUMA topology in !ACPI kernels, we might need to also retain and
-> parse memory nodes, but only for toplogy information. The kernel would
-> still only use memory as described by the EFI memory map.
-> 
-> There's a horrible edge case I've spotted if performing a chain of
-> cross-endian kexecs: LE -> BE -> LE, as the BE kernel would have to
-> respect the EFI memory map so as to avoid corrupting it for the
-> subsequent LE kernel. Other than this I believe everything should just
-> work.
+> I'd argue that the "correct efi memmap" is what we were given by the
+> firmware initially -- none of that information is any less true.
 
-Firmware do not know kernel endianniess, kernel should respect firmware
-maps and adapt to it, it sounds like a generic issue not specfic to kexec.
+In X86 boot loader will cook a E820 map for kernel use, there's no such needs
+in arm so maybe it is acceptable to use same memmap to avoid modifying it only
+for kdump.
+
+I think I will not insist though I like more about doing something in
+bootloader instead of in kernel.
 
 > 
-> > > A kexec'd kernel should simply inherit that. So long as the DTB and/or
-> > > UEFI tables in memory are the same, it would be the same as a cold boot.
-> > 
-> > For kexec all memory ranges are same, for kdump we need use original reserved
-> > range with crashkernel= as usable memory and all other orignal usable ranges
-> > are not usable anymore. 
-> 
-> Sure. This is what I believe we should expose with an additional
-> property under /chosen, while keeping everything else pristine.
-> 
-> The crash kernel can then limit itself to that region, while it would
-> have the information of the full memory map (which it could log and/or
-> use to drive other dumping).
+> For kdump all we need to ensure is that the kdump kernel only uses the
+> memory that was specially reserved for it by the first kernel. The
+> simplest way of doing that is to tell the kdump kernel which specific
+> region(s) of memory were reserved for it, leaving the EFI memory map
+> alone.
 
-In this way kernel should be aware it is a kdump booting, it is doable though
-I feel it is better for kdump kernel in a black box with infomations it
-can use just like the 1st kernel. Things here is where we choose to cook
-the memory infomation in boot loader or in kernel itself.
+Yes, agreed that it is simpler.
 
-> 
-> > Is it possible to modify uefi memmap for kdump case?
-> 
-> Technically it would be possible, however I don't think it's necessary,
-> and I think it would be disadvantageous to do so.
-> 
-> Describing the range(s) the crash kernel can use in separate properties
-> under /chosen has a number of advantages.
-
-Ok, I got the points. We have a is_kdump_kernel() by checking if there is
-elfcorehdr_addr kernel cmdline. This is mainly for some drivers which
-do not work well in kdump kernel some uncertain reasons. But ideally I
-think kernel should handle things just like in 1st kernel and avoid to use
-it. 
-
-> 
-> > > In the !EFI case, we use the memory nodes in the DTB. Only in this case
-> > > could usable-memory properties in memory nodes make sense. I'd prefer a
-> > > uniform property under /chosen for both cases.
-> > 
-> > We stil use same DTB, need to modify the DT and update the usable and unusable
-> > nodes for kdump?
-> 
-> We'd have a (slightly) modified DTB that contained additional properties
-> describing the range(s) reserved for use by the crash kernel.
-> 
-> Other than those properties under /chosen (e.g. the command line, initrd
-> pointers if any), it would be the original DTB.
 > 
 > Thanks,
 > Mark.
