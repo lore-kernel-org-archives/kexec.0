@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1453324549.21755.10.camel@infradead.org>
-Subject: Re: [PATCH 00/19] arm64 kexec kernel patches v13
+Message-ID: <1453324703.21755.13.camel@infradead.org>
+Subject: Re: [PATCH 09/19] Revert "arm64: remove dead code"
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 20 Jan 2016 13:15:49 -0800
-In-Reply-To: <20160120025621.GC2999@dhcp-128-65.nay.redhat.com>
+Date: Wed, 20 Jan 2016 13:18:23 -0800
+In-Reply-To: <20160115195517.GP3262@leverpostej>
 References: <cover.1452884156.git.geoff@infradead.org>
- <20160119123230.GB2904@dhcp-128-65.nay.redhat.com>
- <1453248900.21755.8.camel@infradead.org>
- <20160120025621.GC2999@dhcp-128-65.nay.redhat.com>
+ <81d9f2f035e6ae0e1a121f3eddeaef915d761e2d.1452884156.git.geoff@infradead.org>
+ <20160115195517.GP3262@leverpostej>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,26 +20,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On Wed, 2016-01-20 at 10:56 +0800, Dave Young wrote:
-> On 01/19/16 at 04:15pm, Geoff Levand wrote:
-> > On Tue, 2016-01-19 at 20:32 +0800, Dave Young wrote:
-> > > Geoff, another question about kexec-tools part is, can the kexec
-> > > -tools code
-> > > been written in kernel? We have the infrastructure for
-> > > kexec_file_load.
+On Fri, 2016-01-15 at 19:55 +0000, Mark Rutland wrote:
+> On Fri, Jan 15, 2016 at 07:18:37PM +0000, Geoff Levand wrote:
+> > This reverts commit b08d4640a3dca68670fc5af2fe9205b395a02388.
 > > 
-> > I see no technical reason why the arm64 kernel cannot support
-> > kexec_file_load.
+> > Add back the setup_mm_for_reboot() needed for kexec.
 > 
-> Cool, care to port it to kernel so that we have kexec_file_load only
-> in arm64
-> we do not need to support both kexec_load and kexec_file_load?
-> 
+> My pagetable rework series [1,2] adds cpu_install_idmap() [3], which
+> supersedes setup_mm_for_reboot, and differs only in name.
 
-I have no plans to do so.  Feel free to submit a patch.
+OK, I'll switch to cpu_install_idmap.
 
 -Geoff
 
