@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aLqIh-0005CL-2m
- for kexec@lists.infradead.org; Wed, 20 Jan 2016 10:47:50 +0000
-Subject: [RFC PATCH 0/4] purgatory: Add basic support for IPMI command
- execution
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
+ by merlin.infradead.org with esmtp (Exim 4.85 #2 (Red Hat Linux))
+ id 1aLqIl-0005wG-Tl
+ for kexec@lists.infradead.org; Wed, 20 Jan 2016 10:47:49 +0000
+Subject: [RFC PATCH 4/4] purgatory/ipmi: Add timeout logic to IPMI command
+ processing
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Wed, 20 Jan 2016 19:37:34 +0900
-Message-ID: <20160120103734.4234.64015.stgit@softrs>
+Date: Wed, 20 Jan 2016 19:37:42 +0900
+Message-ID: <20160120103742.4234.12599.stgit@softrs>
+In-Reply-To: <20160120103734.4234.64015.stgit@softrs>
+References: <20160120103734.4234.64015.stgit@softrs>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,82 +26,212 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
 
-If the second kernel for crash dumping hangs up while booting, no
-information related to the first kernel will be saved.  This makes
-crash cause analysis difficult.  So, some enterprise users want to
-save minimal information befor booting the second kernel.
+If you enable the IPMI command issuing features and your BMC is
+malfunctioning, you may loops indefinitely while processing IPMI
+commands.  To guarantee that the second kernel starts to boot in
+fixed seconds, this patch introduces a timeout for the total
+processing time of IPMI commands.  The timeout is 5 seconds by
+default.
 
-One of the approaches is to use panic notifier call or pstore
-feature.  For example, a panic notifier callback registered by IPMI
-driver saves the panic message to BMC's SEL before booting the second
-kernel.  Similarly, pstore saves kernel logs to a non-volatile memory
-on the server.  However, since these functionalities run with crashed
-kernel, they may fail to complete their work and boot the second
-kernel.
-
-So, another approach; saving minimal information to BMC's SEL in the
-purgatory.  Since the purgatory code doesn't rely on the crashed
-kernel, we can run it safely after verifying the hash of the code.
-
-This patch set is the first step to the final goal; it provides
-a basic support for IPMI command execution in purgatory.  IPMI
-specification defines multiple interfaces to BMC, and this patch set
-uses one of them, KCS I/F, which talks with BMC via I/O port like
-keyboard controllers.  As a use case for that, options to start/stop
-BMC's watchdog timer before booting the second kernel are also
-provided.  These options are useful for the cases where:
-
- - you want to automatically reboot the server when the second kernel
-   hangs up while booting
- - you want to prevent the second kernel from being stopped by the
-   watchdog timer enabled while the first kernel is running
-
-If the BMC doesn't work well, the IPMI command execution can take
-indefinite time and fail to boot the second kernel.  To avoid this,
-timeout logic based on RTC polling is also implemented.
-
-NOTE: This is an RFC version, so some parts are incomplete; these
-codes are unconditionally built into the kexec binary, and I/O ports
-for KCS I/F and timeout (5 seconds) are hard-coded, and etc.
-
-Future plan:
-Add an option to save the panic message and instruction pointers to
-BMC's SEL in purgatory.  To realize this, we first need to pass the
-panic message to the purgatory.  Instruction pointers are already
-passed to the second kernel through ELF notes, so just read them.
-
+Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 ---
+ purgatory/ipmi.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 63 insertions(+), 2 deletions(-)
 
-Hidehiro Kawai (4):
-      purgatory/ipmi: Support BMC watchdog timer start/stop in purgatory
-      purgatory: Introduce timeout API
-      purgatory/x86: Support CMOS RTC
-      purgatory/ipmi: Add timeout logic to IPMI command processing
-
-
- kexec/ipmi.h                   |    9 +
- kexec/kexec.c                  |   18 ++
- kexec/kexec.h                  |    6 +
- purgatory/Makefile             |    5 +
- purgatory/arch/i386/Makefile   |    1 
- purgatory/arch/i386/rtc_cmos.c |  104 ++++++++++++++
- purgatory/arch/x86_64/Makefile |    1 
- purgatory/include/purgatory.h  |    3 
- purgatory/include/time.h       |   33 +++++
- purgatory/ipmi.c               |  293 ++++++++++++++++++++++++++++++++++++++++
- purgatory/purgatory.c          |    4 +
- purgatory/time.c               |   58 ++++++++
- 12 files changed, 533 insertions(+), 2 deletions(-)
- create mode 100644 kexec/ipmi.h
- create mode 100644 purgatory/arch/i386/rtc_cmos.c
- create mode 100644 purgatory/include/time.h
- create mode 100644 purgatory/ipmi.c
- create mode 100644 purgatory/time.c
-
-
--- 
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
+diff --git a/purgatory/ipmi.c b/purgatory/ipmi.c
+index 0acb853..f4a093a 100644
+--- a/purgatory/ipmi.c
++++ b/purgatory/ipmi.c
+@@ -1,6 +1,7 @@
+ #include <sys/io.h>
+ #include <purgatory.h>
+ #include "../kexec/ipmi.h"
++#include "time.h"
+ 
+ #define KCS_PORT_DEFAULT	0xca2
+ #define KCS_PORT_DATA		(kcs_port + 0)
+@@ -41,6 +42,8 @@ const unsigned char cmd_stop_wdt[] = {
+ 	0xff,
+ };
+ 
++static struct timeout_info ipmi_to; /* Total timeout for IPMI operations */
++
+ static inline unsigned char read_status(void)
+ {
+ 	return inb(KCS_PORT_STATUS);
+@@ -49,29 +52,50 @@ static inline unsigned char read_status(void)
+ unsigned char wait_out(void)
+ {
+ 	unsigned char status;
++	static int count = 0;
+ 
+ 	do {
++		count++;
++		if (count % 1024 == 0)
++			EXIT_ON_TIMEOUT(&ipmi_to, 1);
++
+ 		status = read_status();
+ 	} while ((status & KCS_STATUS_OBF) == 0);
+ 
+ 	return status;
++
++timed_out:
++	return 0xff;
+ }
+ 
+ unsigned char wait_in(void)
+ {
+ 	unsigned char status;
++	static int count = 0;
+ 
+ 	do {
++		count++;
++		if (count % 1024 == 0)
++			EXIT_ON_TIMEOUT(&ipmi_to, 1);
++
+ 		status = read_status();
+ 	} while (status & KCS_STATUS_IBF);
+ 
+ 	return status;
++
++timed_out:
++	return 0xff;
+ }
+ 
+ unsigned char read_data(void)
+ {
+ 	wait_out();
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 	return inb(KCS_PORT_DATA);
++
++timed_out:
++	return 0xff;
+ }
+ 
+ void clear_obf(void)
+@@ -105,12 +129,17 @@ int write_ipmi_cmd(const unsigned char *cmd, int size)
+ 	int i;
+ 
+ 	wait_in();
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 	status = write_cmd(KCS_CMD_WRITE_START);
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
+ 		return -1;
+ 
+ 	for (i = 0; i < size - 1; i++) {
+ 		status = write_data(cmd[i]);
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
+ 
+ 		if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
+ 			return -1;
+@@ -118,12 +147,18 @@ int write_ipmi_cmd(const unsigned char *cmd, int size)
+ 
+ 	/* last write */
+ 	status = write_cmd(KCS_CMD_WRITE_END);
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
+ 		return -1;
+ 
+ 	write_data(cmd[i]);
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
+ 
+ 	return 0;
++
++timed_out:
++	return -1;
+ }
+ 
+ /*
+@@ -140,11 +175,17 @@ unsigned char read_result(void)
+ 
+ 	while (1) {
+ 		state = GET_STATUS_STATE(wait_in());
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 		if (state == KCS_READ_STATE) {
+ 			data[count] = read_data();
++			EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 			outb(KCS_CMD_READ, KCS_PORT_DATA);
+ 		} else if (state == KCS_IDLE_STATE) {
+ 			data[count] = read_data();
++			EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 			break;
+ 		} else {
+ 			/*
+@@ -164,6 +205,9 @@ unsigned char read_result(void)
+ 	}
+ 
+ 	return data[2]; /* Return completion code */
++
++timed_out:
++	return 0xff;
+ }
+ 
+ /*
+@@ -190,15 +234,22 @@ int issue_ipmi_cmd(const unsigned char *cmd, int size)
+ 	 */
+ 	for (i = 0; i < 3; i++) {
+ 		ret = write_ipmi_cmd(cmd, size);
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 		if (ret < 0)
+ 			continue;
+ 
+ 		comp_code = read_result();
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
+ 		if (comp_code == 0)
+ 			break; /* succeeded */
+ 	}
+ 
+ 	return (i < 3) ? 0 : -1;
++
++timed_out:
++	return -1;
+ }
+ 
+ int do_start_wdt(void)
+@@ -207,7 +258,11 @@ int do_start_wdt(void)
+ 
+ 	printf("IPMI: starting watchdog timer...");
+ 	ret = issue_ipmi_cmd(cmd_start_wdt, sizeof(cmd_start_wdt));
+-	printf("done\n");
++
++	if (ret == 0)
++		printf("done\n");
++	else
++		printf("failed\n");
+ 
+ 	return ret;
+ }
+@@ -218,13 +273,19 @@ int do_stop_wdt(void)
+ 
+ 	printf("IPMI: stopping watchdog timer...");
+ 	ret = issue_ipmi_cmd(cmd_stop_wdt, sizeof(cmd_stop_wdt));
+-	printf("done\n");
++
++	if (ret == 0)
++		printf("done\n");
++	else
++		printf("failed\n");
+ 
+ 	return ret;
+ }
+ 
+ void ipmi_wdt_start_stop(void)
+ {
++	init_timeout(&ipmi_to, 5);
++
+ 	if (ipmi_wdt & IPMI_WDT_START)
+ 		do_start_wdt();
+ 	else if (ipmi_wdt & IPMI_WDT_STOP)
 
 
 
