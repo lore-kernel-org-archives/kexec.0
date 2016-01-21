@@ -1,30 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp05.in.ibm.com ([125.16.236.5])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aMFEy-0006Ft-9E
- for kexec@lists.infradead.org; Thu, 21 Jan 2016 13:25:34 +0000
-Received: from localhost
- by e28smtp05.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 21 Jan 2016 18:49:13 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
- by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u0LDG6oh15401240
- for <kexec@lists.infradead.org>; Thu, 21 Jan 2016 18:46:06 +0530
-Received: from d28av05.in.ibm.com (localhost [127.0.0.1])
- by d28av05.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u0LDG2Fm011936
- for <kexec@lists.infradead.org>; Thu, 21 Jan 2016 18:46:04 +0530
-Message-ID: <1453382137.9549.134.camel@linux.vnet.ibm.com>
-Subject: Re: [RFC PATCH v2 09/11] ima: load policy using path
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 21 Jan 2016 08:15:37 -0500
-In-Reply-To: <20160121000536.GO11277@wotan.suse.de>
-References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-10-git-send-email-zohar@linux.vnet.ibm.com>
- <20160121000536.GO11277@wotan.suse.de>
-Mime-Version: 1.0
+Message-ID: <56A0E869.1020906@arm.com>
+Date: Thu, 21 Jan 2016 14:17:13 +0000
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 16/19] arm64: kdump: add kdump support
+References: <cover.1452884156.git.geoff@infradead.org>
+ <c1faadcc74ca0670413396b36e2bdcc02b15bcd9.1452884156.git.geoff@infradead.org>
+In-Reply-To: <c1faadcc74ca0670413396b36e2bdcc02b15bcd9.1452884156.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,44 +19,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Luis R. Rodriguez" <mcgrof@suse.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Dmitry Kasatkin <d.kasatkin@samsung.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Geoff Levand <geoff@infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-On Thu, 2016-01-21 at 01:05 +0100, Luis R. Rodriguez wrote:
-> On Mon, Jan 18, 2016 at 10:11:24AM -0500, Mimi Zohar wrote:
-> > --- a/fs/exec.c
-> > +++ b/fs/exec.c
-> > @@ -903,6 +903,27 @@ out:
-> >  	return ret;
-> >  }
-> >  
-> > +int kernel_read_file_from_path(char *path, void **buf, loff_t *size,
-> > +			       loff_t max_size, int policy_id)
-> > +{
-> > +	struct file *file;
-> > +	int ret;
-> > +
-> > +	if (!path || !*path)
-> > +		return -EINVAL;
-> > +
-> > +	file = filp_open(path, O_RDONLY, 0);
-> > +	if (IS_ERR(file)) {
-> > +		ret = PTR_ERR(file);
-> > +		pr_err("Unable to open file: %s (%d)", path, ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = kernel_read_file(file, buf, size, max_size, policy_id);
-> > +	fput(file);
-> > +	return ret;
-> > +}
-> > +
+Hi!
+
+On 15/01/16 19:18, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> EXPORT_SYMBOL_GPL() needed.
+> On crash dump kernel, all the information about primary kernel's core
+> image is available in elf core header specified by "elfcorehdr=" boot
+> parameter. reserve_elfcorehdr() will set aside the region to avoid any
+> corruption by crash dump kernel.
+> 
+> Crash dump kernel will access the system memory of primary kernel via
+> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+> not reside in linear mapping on crash dump kernel.
+> Please note that we should add "mem=X[MG]" boot parameter to limit the
+> memory size and avoid the following assertion at ioremap():
+> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+> 		return NULL;
+> when accessing any pages beyond the usable memories of crash dump kernel.
+> 
+> We also need our own elfcorehdr_read() here since the weak definition of
+> elfcorehdr_read() utilizes copy_oldmem_page() and will hit the assertion
+> above on arm64.
 
-Yes.  Thank you for reviewing all the patches!
+How does this work for a different-endian crash kernel?
 
-Mimi
+It looks like fs/proc/vmcore.c:parse_crash_elf64_headers() does some
+validation on the elf-headers that doesn't look like it will work if
+elfcorehdr:endian != kernel:endian.
+
+Is it worth preventing this corner case by getting kexec-tools to
+prevent linux with a different endianness being loaded as a kdump kernel?
+
+
+Thanks,
+
+James
+
 
 
 _______________________________________________
