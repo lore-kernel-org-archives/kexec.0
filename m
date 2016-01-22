@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aMTVi-0002e8-1K
- for kexec@lists.infradead.org; Fri, 22 Jan 2016 04:39:48 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [RFC PATCH 0/4] purgatory: Add basic support for IPMI command
- execution
-Date: Fri, 22 Jan 2016 04:39:18 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A84454AA932B@GSjpTKYDCembx31.service.hitachi.net>
-References: <20160120103734.4234.64015.stgit@softrs> <56A0FB5E.5080606@acm.org>
-In-Reply-To: <56A0FB5E.5080606@acm.org>
-Content-Language: ja-JP
+Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aMTgc-000821-Ue
+ for kexec@lists.infradead.org; Fri, 22 Jan 2016 04:51:03 +0000
+Received: by mail-pa0-x233.google.com with SMTP id yy13so34860941pab.3
+ for <kexec@lists.infradead.org>; Thu, 21 Jan 2016 20:50:42 -0800 (PST)
+Subject: Re: [PATCH 16/19] arm64: kdump: add kdump support
+References: <cover.1452884156.git.geoff@infradead.org>
+ <c1faadcc74ca0670413396b36e2bdcc02b15bcd9.1452884156.git.geoff@infradead.org>
+ <56A0E869.1020906@arm.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <56A1B51A.3000001@linaro.org>
+Date: Fri, 22 Jan 2016 13:50:34 +0900
 MIME-Version: 1.0
+In-Reply-To: <56A0E869.1020906@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,104 +22,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "'minyard@acm.org'" <minyard@acm.org>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: James Morse <james.morse@arm.com>, Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hello,
+James,
 
-Thanks for your comments.
+On 01/21/2016 11:17 PM, James Morse wrote:
+> Hi!
+>
+> On 15/01/16 19:18, Geoff Levand wrote:
+>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>
+>> On crash dump kernel, all the information about primary kernel's core
+>> image is available in elf core header specified by "elfcorehdr=" boot
+>> parameter. reserve_elfcorehdr() will set aside the region to avoid any
+>> corruption by crash dump kernel.
+>>
+>> Crash dump kernel will access the system memory of primary kernel via
+>> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+>> not reside in linear mapping on crash dump kernel.
+>> Please note that we should add "mem=X[MG]" boot parameter to limit the
+>> memory size and avoid the following assertion at ioremap():
+>> 	if (WARN_ON(pfn_valid(__phys_to_pfn(phys_addr))))
+>> 		return NULL;
+>> when accessing any pages beyond the usable memories of crash dump kernel.
+>>
+>> We also need our own elfcorehdr_read() here since the weak definition of
+>> elfcorehdr_read() utilizes copy_oldmem_page() and will hit the assertion
+>> above on arm64.
+>
+> How does this work for a different-endian crash kernel?
+>
+> It looks like fs/proc/vmcore.c:parse_crash_elf64_headers() does some
+> validation on the elf-headers that doesn't look like it will work if
+> elfcorehdr:endian != kernel:endian.
 
-> I understand what you are trying to accomplish here, but I'm not sure of
-> the wisdom of this approach.  I'll give some more information and the
-> kexec maintainers can decide, I suppose.
-> 
-> The KCS interface given here probably covers ~70% of the systems out there
-> right now.
+Good point!
 
-I decided to use KCS I/F because I believe it covers relatively high
-rate of servers and it is the only system interface which one of our
-targets supports for.
+> Is it worth preventing this corner case by getting kexec-tools to
+> prevent linux with a different endianness being loaded as a kdump kernel?
 
->  Other systems have:
->    * KCS interfaces at a different port or in a different place like
-> memory, PCI,
->      and with different register sizes and spacing.
+It may be, but I think that people should always check whether or not kdump
+will work in their environment before puting the system in practical use.
 
-At least, I'm going to add an option to change the base I/O port.
-I'm not sure about other cases because I don't know how supporting
-them raises the cover rate and I don't have hardware to test.
+(I know the check costs almost nothing though.)
 
->    * Other standard interfaces.  SMIC (probably not relevant), BT
-> (faster, it does
->      block transfers) and SSIF (which is IPMI over I2C).
->    * Those other standard interfaces can be in different places, just
-> like KCS.
->      Hundreds of I2C interfaces exist.
->    * Non-standard interfaces.  Power systems have their own IPMI interfaces,
->      for instance.  Some systems have IPMI over serial ports, though
-> hopefully
->      that has pretty much gone away.
-> 
-> I'd guess that over half of the IPMI SI driver is discovering and
-> handling all the
-> various interface types, locations from all the sources it can come from.
-> 
-> As time goes on that 70% number is decreasing in favour of other faster
-> and more convenient interfaces.  I expect that SSIF will become much more
-> popular over time because it has block transfer capability and all the
-> hardware
-> is already there on systems.
+Thanks,
+-Takahiro AKASHI
 
-Thanks for this information.  I'll check out the BMC implementation
-of other servers, then I'll decide whether I should support SSIF, too.
-
-> This is no different, of course, than any other common hardware
-> interface out
-> there.  USB, ATA, etc.  But it makes it hard to cover all the
-> possibilities in something
-> like purgatory.
-
-Such kind of device sometimes become a cause of dump failure
-due to wrong DMA or interrupts.  So we shouldn't use them.
-Also, I think it is not suitable for purgatory to implement
-their drivers.
-
-Other possible options are to use serial device and NVRAM (like
-the pstore driver).  However, serial port is not always available
-for this purpose (actually this is our case), and NVRAM is not
-always equipped.  Furthermore, we'd like to start/stop
-the BMC's watchdog timer before starting the 2nd kernel.  This
-can be done only by IPMI.
-
-> I know how valuable this information can be.  It has saved my butt on
-> occasions,
-> which is why I go through the inconvenience of handling it in the IPMI
-> driver.
-> But it seems to me that the failure rate of doing this in the crashing
-> kernel should
-> be pretty low.  Not zero of course.  But I have no idea what it is.
-
-At first, I tried to use crash_kexec_post_notifiers to call
-the callback of IPMI driver before jumping to the 2nd kernel.
-But the feature has a couple of bugs and I tried to fix them:
-
-https://lkml.org/lkml/2015/7/10/316
-https://lkml.org/lkml/2015/7/23/864
-
-However, no one supports this bugfix and the discussion didn't
-make a progress because calling notifiers before kdump is not
-reliable.  So, I suggested to use the purgatory.
-
-Regards,
-
---
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
-
+>
+> Thanks,
+>
+> James
+>
+>
 
 _______________________________________________
 kexec mailing list
