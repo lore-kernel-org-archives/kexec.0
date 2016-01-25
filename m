@@ -1,12 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56A63A99.2000506@arm.com>
-Date: Mon, 25 Jan 2016 15:09:13 +0000
-From: James Morse <james.morse@arm.com>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aNmfG-0002Gu-H8
+ for kexec@lists.infradead.org; Mon, 25 Jan 2016 19:19:05 +0000
+Date: Mon, 25 Jan 2016 20:18:04 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3 00/17] Enhance iomem search interfaces and support
+ EINJ to NVDIMM
+Message-ID: <20160125191804.GE14030@pd.tnic>
+References: <1452020068-26492-1-git-send-email-toshi.kani@hpe.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 04/19] arm64: Cleanup SCTLR flags
-References: <cover.1452884156.git.geoff@infradead.org>
- <701b44f00cdb8dbc7881c12508f55e993b9ce6dd.1452884156.git.geoff@infradead.org>
-In-Reply-To: <701b44f00cdb8dbc7881c12508f55e993b9ce6dd.1452884156.git.geoff@infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1452020068-26492-1-git-send-email-toshi.kani@hpe.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,47 +24,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Toshi Kani <toshi.kani@hpe.com>
+Cc: linux-arch@vger.kernel.org, x86@kernel.org, linux-ia64@vger.kernel.org, linux-acpi@vger.kernel.org, linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org, torvalds@linux-foundation.org, rafael.j.wysocki@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-samsung-soc@vger.kernel.org, xen-devel@lists.xenproject.org, akpm@linux-foundation.org, dyoung@redhat.com, dan.j.williams@intel.com, linux-nvdimm@lists.01.org
 
-Hi Geoff,
-
-On 15/01/16 19:18, Geoff Levand wrote:
-> We currently have macros defining flags for the arm64 sctlr registers in both
-> kvm_arm.h and sysreg.h.  To clean things up and simplify move the definitions
-> of the SCTLR_EL2 flags from kvm_arm.h to sysreg.h, rename any SCTLR_EL1 or
-> SCTLR_EL2 flags that are common to both registers to be SCTLR_ELx, with 'x'
-> indicating a common flag, and fixup all files to include the proper header or
-> to use the new macro names.
+On Tue, Jan 05, 2016 at 11:54:28AM -0700, Toshi Kani wrote:
+> This patch-set enhances the iomem table and its search interfacs, and
+> then changes EINJ to support NVDIMM.
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
-> ---
+>  - Patches 1-2 add a new System RAM type, IORESOURCE_SYSTEM_RAM, and
+>    make the iomem search interfaces work with resource flags with
+>    modifier bits set.  IORESOURCE_SYSTEM_RAM has IORESOURCE_MEM bit set
+>    for backward compatibility.
+> 
+>  - Patch 3 adds a new field, I/O resource descriptor, into struct resource.
+>    Drivers can assign their unique descritor to a range when they support
+>    the iomem search interfaces.
+> 
+>  - Patches 4-9 changes initializations of resource entries.  They set
+>    the System RAM type to System RAM ranges, set I/O resource descriptors
+>    to the regions targeted by the iomem search interfaces, and change
+>    to call kzalloc() where kmalloc() is used to allocate struct resource
+>    ranges.
+> 
+>  - Patches 10-14 extend the iomem interfaces to check System RAM ranges
+>    with the System RAM type and the I/O resource descriptor.
+> 
+>  - Patch 15-16 remove deprecated walk_iomem_res().
+> 
+>  - Patch 17 changes the EINJ driver to allow injecting a memory error
+>    to NVDIMM.
 
-> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
-> index 178ba22..1d7e502 100644
-> --- a/arch/arm64/kvm/hyp-init.S
-> +++ b/arch/arm64/kvm/hyp-init.S
-> @@ -20,7 +20,7 @@
->  #include <asm/assembler.h>
->  #include <asm/kvm_arm.h>
->  #include <asm/kvm_mmu.h>
-> -#include <asm/pgtable-hwdef.h>
+Ok, all applied ontop of 4.5-rc1.
 
-I think this one crept in... this header file is needed for the
-definition of TCR_T0SZ_OFFSET and TCR_TxSZ_WIDTH.
+You could take a look if everything's still fine and I haven't botched
+anything:
 
+http://git.kernel.org/cgit/linux/kernel/git/bp/bp.git/log/?h=tip-mm
 
-> +#include <asm/sysreg.h>
->  
->  	.text
->  	.pushsection	.hyp.idmap.text, "ax"
+I'll let the build bot chew on it and then test it here and send it out
+again to everyone on CC so that people don't act surprised.
 
+Thanks for this cleanup, code looks much better now!
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
-James
-
-
+ECO tip #101: Trim your mails when you reply.
 
 _______________________________________________
 kexec mailing list
