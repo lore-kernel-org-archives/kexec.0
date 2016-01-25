@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 25 Jan 2016 12:23:30 +0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aNamf-0006i3-QJ
+ for kexec@lists.infradead.org; Mon, 25 Jan 2016 06:37:55 +0000
+Date: Mon, 25 Jan 2016 14:37:12 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
-Message-ID: <20160125042330.GB5616@dhcp-128-65.nay.redhat.com>
-References: <20160119125114.GH25024@leverpostej>
- <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
- <20160119140139.GC26545@leverpostej>
- <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
- <569F2439.9000604@linaro.org> <20160120114929.GB25829@leverpostej>
- <56A08076.8060302@linaro.org> <20160121120210.GD2581@leverpostej>
- <56A1CAD2.70403@linaro.org>
- <20160125031917.GA5616@dhcp-128-65.nay.redhat.com>
+Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
+ with kernel version
+Message-ID: <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
+References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160125031917.GA5616@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,30 +25,370 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On 01/25/16 at 11:19am, Dave Young wrote:
-> Hi, AKASHI
+Hi, Mimi
+
+Besides of code issues, I have several thing to be understand:
+
+What is the effect to kexec behavior with this patchset?
+  - without IMA enabled (kconfig or kernel cmdline) it will be same as before?
+  - with IMA enabled for kernel bzImage, kexec_file_load will check both ima
+    signature and original pe file signature, those two mechanisms are
+    somehow duplicated. I'm not sure if we need both for bzImage.
+
+Do you have a simple usage documentation about how to test it?
+
+On 01/18/16 at 10:11am, Mimi Zohar wrote:
+> This patch defines kernel_read_file_from_fd(), a wrapper for the VFS
+> common kernel_read_file(), and replaces the kexec copy_file_from_fd()
+> calls with the kernel_read_file_from_fd() wrapper.
 > 
-> > >To place "elfcorehdr=" or "memmap="/"usable-memory=" into the command
-> > >line, one needs to know where it is valid to place it. Appending doesn't
-> > >always work, as per the example above with 51e158c12aca3c9a.
-> > 
-> > So, are you now suggesting that we put both "elfcorehdr=" and
-> > "usable-memory=" under /chosen in dtb? That's fair enough.
-> > (as far as nobody cares about incompatibility with other archs.)
+> Two new IMA policy identifiers named KEXEC_CHECK and INITRAMFS_CHECK
+> are defined for measuring, appraising or auditing the kexec image
+> and initramfs.
 > 
-> You may need move is_kdump_kernel as a weak function so that in arm64 you
-> can still use it in kdump kernel.
+> Changelog v1:
+> - re-order and squash the kexec patches
+> 
+> v3: ima: measure and appraise kexec image and initramfs (squashed)
+> - rename ima_read_hooks enumeration to ima_policy_id
+> - use kstat file size type loff_t, not size_t
+> - add union name "hooks" to fix sparse warning
+> 
+> v2:
+> - Calculate the file hash from the in memory buffer
+> (suggested by Dave Young)
+> - Rename ima_read_and_process_file() to ima_hash_and_process_file()
+> - replace individual case statements with range:
+>         KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1
+> v1:
+> - Instead of ima_read_and_process_file() allocating memory, the caller
+> allocates and frees the memory.
+> - Moved the kexec measurement/appraisal call to copy_file_from_fd(). The
+> same call now measures and appraises both the kexec image and initramfs.
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> ---
+>  Documentation/ABI/testing/ima_policy  |  2 +-
+>  fs/exec.c                             | 15 ++++++++
+>  include/linux/fs.h                    |  1 +
+>  include/linux/ima.h                   |  2 +
+>  kernel/kexec_file.c                   | 72 ++++-------------------------------
+>  security/integrity/ima/ima.h          |  9 ++++-
+>  security/integrity/ima/ima_appraise.c |  7 ++++
+>  security/integrity/ima/ima_policy.c   | 27 ++++++++++---
+>  8 files changed, 64 insertions(+), 71 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+> index 0a378a8..e80f767 100644
+> --- a/Documentation/ABI/testing/ima_policy
+> +++ b/Documentation/ABI/testing/ima_policy
+> @@ -26,7 +26,7 @@ Description:
+>  			option:	[[appraise_type=]] [permit_directio]
+>  
+>  		base: 	func:= [BPRM_CHECK][MMAP_CHECK][FILE_CHECK][MODULE_CHECK]
+> -				[FIRMWARE_CHECK]
+> +				[FIRMWARE_CHECK] [KEXEC_CHECK] [INITRAMFS_CHECK]
+>  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+>  			       [[^]MAY_EXEC]
+>  			fsmagic:= hex value
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 211b81c..a5ae51e 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -884,6 +884,21 @@ out:
+>  }
+>  EXPORT_SYMBOL_GPL(kernel_read_file);
+>  
+> +int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+> +			     int policy_id)
 
-Ignore the comment please, you just use a different way to set the variable
-is_kdump_kernel will still work..
+Though this is only used in kexec now, it looks more a general function, move it
+to general code should be fine along with kernel_read_file 
 
-It is pretty fine to use dtb along with usable memories then.
+> +{
+> +	struct fd f = fdget(fd);
+> +	int ret = -ENOEXEC;
 
-Thanks
-Dave
+-EBADF looks better?
+
+> +
+> +	if (!f.file)
+> +		goto out;
+> +
+> +	ret = kernel_read_file(f.file, buf, size, max_size, policy_id);
+> +out:
+> +	fdput(f);
+> +	return ret;
+> +}
+> +
+>  ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+>  {
+>  	ssize_t res = vfs_read(file, (void __user *)addr, len, &pos);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 9b1468c..9642623 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2528,6 +2528,7 @@ extern int do_pipe_flags(int *, int);
+>  
+>  extern int kernel_read(struct file *, loff_t, char *, unsigned long);
+>  extern int kernel_read_file(struct file *, void **, loff_t *, loff_t, int);
+> +extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t, int);
+>  extern ssize_t kernel_write(struct file *, const char *, size_t, loff_t);
+>  extern ssize_t __kernel_write(struct file *, const char *, size_t, loff_t *);
+>  extern struct file * open_exec(const char *);
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index ca76f60..ae91938 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -14,6 +14,8 @@
+>  struct linux_binprm;
+>  
+>  enum ima_policy_id {
+> +	KEXEC_CHECK = 1,
+> +	INITRAMFS_CHECK,
+
+Change to below should be better:
+KEXEC_KERNEL_CHECK
+KEXEC_INITRAMFS_CHECK
+
+>  	IMA_MAX_READ_CHECK
+>  };
+>  
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b70ada0..f7c3ce4 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/kexec.h>
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+> +#include <linux/ima.h>
+>  #include <crypto/hash.h>
+>  #include <crypto/sha.h>
+>  #include <linux/syscalls.h>
+> @@ -33,65 +34,6 @@ size_t __weak kexec_purgatory_size = 0;
+>  
+>  static int kexec_calculate_store_digests(struct kimage *image);
+>  
+> -static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
+> -{
+> -	struct fd f = fdget(fd);
+> -	int ret;
+> -	struct kstat stat;
+> -	loff_t pos;
+> -	ssize_t bytes = 0;
+> -
+> -	if (!f.file)
+> -		return -EBADF;
+> -
+> -	ret = vfs_getattr(&f.file->f_path, &stat);
+> -	if (ret)
+> -		goto out;
+> -
+> -	if (stat.size > INT_MAX) {
+> -		ret = -EFBIG;
+> -		goto out;
+> -	}
+> -
+> -	/* Don't hand 0 to vmalloc, it whines. */
+> -	if (stat.size == 0) {
+> -		ret = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	*buf = vmalloc(stat.size);
+> -	if (!*buf) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> -
+> -	pos = 0;
+> -	while (pos < stat.size) {
+> -		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
+> -				    stat.size - pos);
+> -		if (bytes < 0) {
+> -			vfree(*buf);
+> -			ret = bytes;
+> -			goto out;
+> -		}
+> -
+> -		if (bytes == 0)
+> -			break;
+> -		pos += bytes;
+> -	}
+> -
+> -	if (pos != stat.size) {
+> -		ret = -EBADF;
+> -		vfree(*buf);
+> -		goto out;
+> -	}
+> -
+> -	*buf_len = pos;
+> -out:
+> -	fdput(f);
+> -	return ret;
+> -}
+> -
+>  /* Architectures can provide this probe function */
+>  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+>  					 unsigned long buf_len)
+> @@ -180,16 +122,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  {
+>  	int ret = 0;
+>  	void *ldata;
+> +	loff_t size;
+>  
+> -	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
+> -				&image->kernel_buf_len);
+> +	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+> +				       &size, INT_MAX, KEXEC_CHECK);
+>  	if (ret)
+>  		return ret;
+> +	image->kernel_buf_len = size;
+>  
+>  	/* Call arch image probe handlers */
+>  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+>  					    image->kernel_buf_len);
+> -
+>  	if (ret)
+>  		goto out;
+>  
+> @@ -204,10 +147,11 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  #endif
+>  	/* It is possible that there no initramfs is being loaded */
+>  	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+> -		ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
+> -					&image->initrd_buf_len);
+> +		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+> +					       &size, INT_MAX, INITRAMFS_CHECK);
+>  		if (ret)
+>  			goto out;
+> +		image->initrd_buf_len = size;
+>  	}
+>  
+>  	if (cmdline_len) {
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 06bcc24..b98dbd5 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -160,7 +160,14 @@ void ima_free_template_entry(struct ima_template_entry *entry);
+>  const char *ima_d_path(struct path *path, char **pathbuf);
+>  
+>  /* IMA policy related functions */
+> -enum ima_hooks { FILE_CHECK = 1, MMAP_CHECK, BPRM_CHECK, MODULE_CHECK, FIRMWARE_CHECK, POST_SETATTR };
+> +enum ima_hooks {
+> +	FILE_CHECK = IMA_MAX_READ_CHECK,
+> +	MMAP_CHECK,
+> +	BPRM_CHECK,
+> +	MODULE_CHECK,
+> +	FIRMWARE_CHECK,
+> +	POST_SETATTR
+> +};
+>  
+>  int ima_match_policy(struct inode *inode, int func, int mask, int flags);
+>  void ima_init_policy(void);
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> index 4edf47f..3adf937 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -78,6 +78,8 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
+>  		return iint->ima_module_status;
+>  	case FIRMWARE_CHECK:
+>  		return iint->ima_firmware_status;
+> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
+> +		return iint->ima_read_status;
+>  	case FILE_CHECK:
+>  	default:
+>  		return iint->ima_file_status;
+> @@ -100,6 +102,9 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
+>  	case FIRMWARE_CHECK:
+>  		iint->ima_firmware_status = status;
+>  		break;
+> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
+> +		iint->ima_read_status = status;
+> +		break;
+>  	case FILE_CHECK:
+>  	default:
+>  		iint->ima_file_status = status;
+> @@ -122,6 +127,8 @@ static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
+>  	case FIRMWARE_CHECK:
+>  		iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
+>  		break;
+> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
+> +		break;
+>  	case FILE_CHECK:
+>  	default:
+>  		iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 595e038..4711083 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -306,6 +306,8 @@ static int get_subaction(struct ima_rule_entry *rule, int func)
+>  		return IMA_MODULE_APPRAISE;
+>  	case FIRMWARE_CHECK:
+>  		return IMA_FIRMWARE_APPRAISE;
+> +	case KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1:
+> +		return IMA_READ_APPRAISE;
+>  	case FILE_CHECK:
+>  	default:
+>  		return IMA_FILE_APPRAISE;
+> @@ -614,6 +616,10 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  				entry->hooks.func = MMAP_CHECK;
+>  			else if (strcmp(args[0].from, "BPRM_CHECK") == 0)
+>  				entry->hooks.func = BPRM_CHECK;
+> +			else if (strcmp(args[0].from, "KEXEC_CHECK") == 0)
+> +				entry->hooks.policy_id = KEXEC_CHECK;
+> +			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
+> +				entry->hooks.policy_id = INITRAMFS_CHECK;
+>  			else
+>  				result = -EINVAL;
+>  			if (!result)
+> @@ -867,7 +873,9 @@ static char *func_tokens[] = {
+>  	"BPRM_CHECK",
+>  	"MODULE_CHECK",
+>  	"FIRMWARE_CHECK",
+> -	"POST_SETATTR"
+> +	"POST_SETATTR",
+> +	"KEXEC_CHECK",
+> +	"INITRAMFS_CHECK",
+>  };
+>  
+>  void *ima_policy_start(struct seq_file *m, loff_t *pos)
+> @@ -948,10 +956,19 @@ int ima_policy_show(struct seq_file *m, void *v)
+>  			seq_printf(m, pt(Opt_func), ft(func_post));
+>  			break;
+>  		default:
+> -			snprintf(tbuf, sizeof(tbuf), "%d",
+> -				 entry->hooks.func);
+> -			seq_printf(m, pt(Opt_func), tbuf);
+> -			break;
+> +			switch (entry->hooks.policy_id) {
+> +			case KEXEC_CHECK:
+> +				seq_printf(m, pt(Opt_func), ft(func_kexec));
+> +				break;
+> +			case INITRAMFS_CHECK:
+> +				seq_printf(m, pt(Opt_func), ft(func_initramfs));
+> +				break;
+> +			default:
+> +				snprintf(tbuf, sizeof(tbuf), "%d",
+> +					 entry->hooks.func);
+> +				seq_printf(m, pt(Opt_func), tbuf);
+> +				break;
+> +			}
+>  		}
+>  		seq_puts(m, " ");
+>  	}
+> -- 
+> 2.1.0
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
