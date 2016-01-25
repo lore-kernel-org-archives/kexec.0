@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aMoQa-0004Hx-Jp
- for kexec@lists.infradead.org; Sat, 23 Jan 2016 02:59:53 +0000
-Date: Sat, 23 Jan 2016 03:59:28 +0100
-From: "Luis R. Rodriguez" <mcgrof@suse.com>
-Subject: Re: [RFC PATCH v2 09/11] ima: load policy using path
-Message-ID: <20160123025928.GD20964@wotan.suse.de>
-References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-10-git-send-email-zohar@linux.vnet.ibm.com>
+Date: Mon, 25 Jan 2016 11:19:17 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
+Message-ID: <20160125031917.GA5616@dhcp-128-65.nay.redhat.com>
+References: <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
+ <20160119125114.GH25024@leverpostej>
+ <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
+ <20160119140139.GC26545@leverpostej>
+ <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
+ <569F2439.9000604@linaro.org> <20160120114929.GB25829@leverpostej>
+ <56A08076.8060302@linaro.org> <20160121120210.GD2581@leverpostej>
+ <56A1CAD2.70403@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1453129886-20192-10-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <56A1CAD2.70403@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,64 +26,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Dmitry Kasatkin <d.kasatkin@samsung.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Mon, Jan 18, 2016 at 10:11:24AM -0500, Mimi Zohar wrote:
-> From: Dmitry Kasatkin <d.kasatkin@samsung.com>
+Hi, AKASHI
+
+> >To place "elfcorehdr=" or "memmap="/"usable-memory=" into the command
+> >line, one needs to know where it is valid to place it. Appending doesn't
+> >always work, as per the example above with 51e158c12aca3c9a.
 > 
-> echo /etc/ima/ima_policy > /sys/kernel/security/ima/policy
+> So, are you now suggesting that we put both "elfcorehdr=" and
+> "usable-memory=" under /chosen in dtb? That's fair enough.
+> (as far as nobody cares about incompatibility with other archs.)
 
->  fs/exec.c                       | 21 ++++++++++++++++++++
+You may need move is_kdump_kernel as a weak function so that in arm64 you
+can still use it in kdump kernel.
 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 3524e5f..5731b40 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -903,6 +903,27 @@ out:
->  	return ret;
->  }
->  
-> +int kernel_read_file_from_path(char *path, void **buf, loff_t *size,
-> +			       loff_t max_size, int policy_id)
-> +{
-> +	struct file *file;
-> +	int ret;
-> +
-> +	if (!path || !*path)
-> +		return -EINVAL;
-> +
-> +	file = filp_open(path, O_RDONLY, 0);
-> +	if (IS_ERR(file)) {
-> +		ret = PTR_ERR(file);
-> +		pr_err("Unable to open file: %s (%d)", path, ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = kernel_read_file(file, buf, size, max_size, policy_id);
-> +	fput(file);
-> +	return ret;
-> +}
-> +
-
-I like this strategy, and can see it being further generalized in
-areas of the kernel where we may want self policy / file loading
-appraisal. Those policies are now defined through LSMs, in IMA
-here you do your own vetting but -- it seems we might better
-want instead to enable easily *any* LSM to do its vetting. In this
-case I suppose that's still possible given kernel_read_file() is
-used and that in turn would have a pre LSM hook and post-LSM hook.
-
-Is that right? If so then it should just be a matter of all other
-areas of the kernel to use kernel_read_file_from_path() or
-kernel_read_file() to take advantage of similar strategies. Or
-is there more work? The other obvious alternative for the heavy
-handed users would be to just use the future sysdata helpers, that
-in turn would use kernel_read_file_from_path() and still if a
-distribution wants can also in the future get kernel signature
-verification.
-
-  Luis
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
