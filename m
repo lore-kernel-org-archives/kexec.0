@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from helcar.hengli.com.au ([209.40.204.226])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aNbBL-0006sO-N6
- for kexec@lists.infradead.org; Mon, 25 Jan 2016 07:03:24 +0000
-Date: Mon, 25 Jan 2016 15:02:46 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
- with kernel version
-Message-ID: <20160125070246.GD5616@dhcp-128-65.nay.redhat.com>
-References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
- <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
+ id 1aNhhy-0004ri-2z
+ for kexec@lists.infradead.org; Mon, 25 Jan 2016 14:01:32 +0000
+Date: Mon, 25 Jan 2016 22:00:58 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] Don't require SpcSpOpusInfo in Authenticode pkcs7
+ signatures
+Message-ID: <20160125140058.GA8379@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20160119010844.GA2919@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,24 +23,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, dhowells@redhat.com, pjones@redhat.com, linux-crypto@vger.kernel.org, vgoyal@redhat.com
 
-> > diff --git a/fs/exec.c b/fs/exec.c
-> > index 211b81c..a5ae51e 100644
-> > --- a/fs/exec.c
-> > +++ b/fs/exec.c
-> > @@ -884,6 +884,21 @@ out:
-> >  }
-> >  EXPORT_SYMBOL_GPL(kernel_read_file);
-> >  
-> > +int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
-> > +			     int policy_id)
-> 
-> Though this is only used in kexec now, it looks more a general function, move it
-> to general code should be fine along with kernel_read_file 
+Dave Young <dyoung@redhat.com> wrote:
+>
+>> So anyway, we should not be checking this field for presence or any
+>> particular value: if the field exists, it should be at the right place,
+>> but aside from that, as long as the hash matches the field is good.
+>> 
+>> Signed-off-by: Peter Jones <pjones@redhat.com>
+>
+> Tested-by: Dave Young <dyoung@redhat.com>
 
-Oops, seems I misread exec.c as kexec.c
+Patch applied.  Thanks!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
 _______________________________________________
 kexec mailing list
