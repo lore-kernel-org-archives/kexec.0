@@ -1,33 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([125.16.236.2])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aO6gE-0005bu-6l
- for kexec@lists.infradead.org; Tue, 26 Jan 2016 16:41:24 +0000
-Received: from localhost
- by e28smtp02.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Tue, 26 Jan 2016 22:10:51 +0530
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay05.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u0QGelpO22348254
- for <kexec@lists.infradead.org>; Tue, 26 Jan 2016 22:10:48 +0530
-Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u0QGekJD017163
- for <kexec@lists.infradead.org>; Tue, 26 Jan 2016 22:10:47 +0530
-Message-ID: <1453826441.2689.8.camel@linux.vnet.ibm.com>
-Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
- with kernel version
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Tue, 26 Jan 2016 11:40:41 -0500
-In-Reply-To: <20160126012031.GA3228@dhcp-128-65.nay.redhat.com>
-References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
- <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
- <1453734258.2713.4.camel@linux.vnet.ibm.com>
- <20160126012031.GA3228@dhcp-128-65.nay.redhat.com>
-Mime-Version: 1.0
+Message-ID: <56A7B018.7050900@arm.com>
+Date: Tue, 26 Jan 2016 17:42:48 +0000
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 10/19] arm64: kvm: allows kvm cpu hotplug
+References: <cover.1452884156.git.geoff@infradead.org>
+ <ab2ffead6b80df7e0676bc7383c1183c1e50453f.1452884156.git.geoff@infradead.org>
+In-Reply-To: <ab2ffead6b80df7e0676bc7383c1183c1e50453f.1452884156.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,125 +19,200 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-Hi Dave,
+Hi!
 
-On Tue, 2016-01-26 at 09:20 +0800, Dave Young wrote:
-> Hi, Mimi
+On 15/01/16 19:18, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> On 01/25/16 at 10:04am, Mimi Zohar wrote:
-> > On Mon, 2016-01-25 at 14:37 +0800, Dave Young wrote:
-> > > Hi, Mimi
-> > > 
-> > > Besides of code issues, I have several thing to be understand:
-> > > 
-> > > What is the effect to kexec behavior with this patchset?
-> > >   - without IMA enabled (kconfig or kernel cmdline) it will be same as before?
-> > 
-> > Yes, without IMA configured or an IMA policy, it is the same as before.
-> > 
-> > >   - with IMA enabled for kernel bzImage, kexec_file_load will check both ima
-> > >     signature and original pe file signature, those two mechanisms are
-> > >     somehow duplicated. I'm not sure if we need both for bzImage.
-> > 
-> > IMA provides a uniform method of measuring and appraising all files on
-> > the system, based on policy.  The IMA policy could prevent the original
-> > kexec syscall.  On systems without MODULE_SIG_FORCE, the IMA policy
-> > would require an IMA signature as well.  (The current patch would
-> > require both, even when MODULE_SIG_FORCE is enabled.)
+> The current kvm implementation on arm64 does cpu-specific initialization
+> at system boot, and has no way to gracefully shutdown a core in terms of
+> kvm. This prevents, especially, kexec from rebooting the system on a boot
+> core in EL2.
 > 
-> Hmm, enabling policy is in userspace (initramfs?) so it may not be good
-> enough for secure boot case. IMA can be used as a uniform method for kexec
-> kernel signature verification for !UEFI or !secure-boot case. 
-
-Normally, the kernel is booted with a builtin policy.   The policy, if
-it is being replaced, is normally replaced in the initramfs.  This patch
-set introduces the concept of a signed policy.   Refer to the last 3
-patches. 
-
-> > 
-> > The pe format is supported on x86.  Why require the pe file signature
-> > format on all platforms?
+> This patch adds a cpu tear-down function and also puts an existing cpu-init
+> code into a separate function, kvm_arch_hardware_disable() and
+> kvm_arch_hardware_enable() respectively.
+> We don't need arm64-specific cpu hotplug hook any more.
 > 
-> For secure boot purpose, an uefi bootable kernel (as an uefi applicatioin)
-> require it to be a pe file.
+> Since this patch modifies common part of code between arm and arm64, one
+> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
+> compiling errors.
 > 
-> But for !secure-boot it is not mandatory.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-It would be more appropriate to say that "UEFI secure boot" requires a
-pe file, as opposed to "secure boot" in general.
+> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
+> index e06fd29..e91f80e 100644
+> --- a/arch/arm/kvm/arm.c
+> +++ b/arch/arm/kvm/arm.c
 
-> > > Do you have a simple usage documentation about how to test it?
-> > 
-> > The wiki[1] and ima-evm-ctl package[2] have directions for enabling
-> > IMA/IMA-appraisal.
-> > 
-> > To include just the kexec image and initramfs file hashes in the IMA
-> > measurement list, create a file containing the following IMA policy
-> > rules.  "cat" the policy and redirect the output
-> > to /sys/kernel/security/ima/policy.   After loading the kexec image and
-> > initramfs, the IMA measurements will be included in the measurement list
-> > (/sys/kernel/security/ima/ascii_runtime_measurements)
-> > 
-> > IMA policy: 
-> > measure func=KEXEC_CHECK
-> > measure func=INITRAMFS_CHECK
-> > 
-> > Appraising the kexec image and initramfs is a bit more complicated as it
-> > requires creating a key, which is signed by a key on the system keyring,
-> > and loading the key onto the trusted IMA keyring.  To simplify testing,
-> > without CONFIG_IMA_TRUSTED_KEYRING enabled, the key being loaded onto
-> > the IMA keyring does not need to be signed.  The evmctl man page[2]
-> > contains directions for creating and loading the key onto the IMA
-> > keyring. 
-> > 
-> > To appraise just the kexec image and initramfs files, add the following
-> > two rules to the IMA policy and load the policy as before.  (The policy
-> > can only be loaded once per boot, unless IMA_WRITE_POLICY is configured.
-> > With the default appraisal policy, the policy would need to signed.)
-> > Sign the kexec image and initramfs with evmctl before loading them.
-> > 
-> > # evmctl ima_sign -k <private key> -a sha256 <VM image>
-> > # evmctl ima_sign -k <private key> -a sha256 <initramfs>
-> > 
-> > IMA appraise policy:
-> > appraise func=KEXEC_CHECK appraise_type=imasig
-> > appraise func=INITRAMFS_CHECK appraise_type=imasig
-> > 
-> > [1] http://sourceforge.net/p/linux-ima/wiki/Home
-> > [2] http://linux-ima.sourceforge.net/evmctl.1.html
-> 
-> Thank you, will try
-> 
-> > 
-> > > > +{
-> > > > +	struct fd f = fdget(fd);
-> > > > +	int ret = -ENOEXEC;
-> > > 
-> > > -EBADF looks better?
-> > 
-> > Sure.
-> > 
-> Seems you missed another comment about the policy id name?
-> can the name be like below?
-> KEXEC_KERNEL_CHECK
-> KEXEC_INITRAMFS_CHECK
+>  #ifdef CONFIG_CPU_PM
+>  static int hyp_init_cpu_pm_notifier(struct notifier_block *self,
+>  				    unsigned long cmd,
+>  				    void *v)
+>  {
+> -	if (cmd == CPU_PM_EXIT &&
+> -	    __hyp_get_vectors() == hyp_default_vectors) {
+> -		cpu_init_hyp_mode(NULL);
+> +	switch (cmd) {
+> +	case CPU_PM_ENTER:
+> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
+> +			cpu_reset_hyp_mode();
+> +
+>  		return NOTIFY_OK;
+> -	}
+> +	case CPU_PM_EXIT:
+> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
+> +			cpu_init_hyp_mode();
 
-Luis suggested making the enumeration more generic, not IMA specific.  I
-suggested the following:
+I read this as:
+		if (enabled)
+			enable();
 
-enum kernel_read_file_id {
-        READING_KEXEC_IMAGE = 1,
-        READING_KEXEC_INITRAMFS,
-        READING_FIRMWARE,
-        READING_MODULE,
-        READING_POLICY,
-        READING_MAX_ID
-};
+What am I missing? Is there a missing '!'?
 
-Mimi
+[/me thinks some more]
+
+I suspect this is trying to be clever: leaving the flag set over a
+deep-sleep, to indicate that the hardware should be re-enabled when we
+resume... if so, a comment to that effect would be good.
+
+
+>  
+> -	return NOTIFY_DONE;
+> +		return NOTIFY_OK;
+> +
+> +	default:
+> +		return NOTIFY_DONE;
+> +	}
+>  }
+>  
+>  static struct notifier_block hyp_init_cpu_pm_nb = {
+
+> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+> index 3070096..bca79f9 100644
+> --- a/arch/arm64/include/asm/virt.h
+> +++ b/arch/arm64/include/asm/virt.h
+> @@ -58,9 +58,18 @@
+>  
+>  #define HVC_CALL_FUNC 3
+>  
+> +/*
+> + * HVC_RESET_CPU - Reset cpu in EL2 to initial state.
+> + *
+> + * @x0: entry address in trampoline code in va
+> + * @x1: identical mapping page table in pa
+> + */
+> +
+>  #define BOOT_CPU_MODE_EL1	(0xe11)
+>  #define BOOT_CPU_MODE_EL2	(0xe12)
+>  
+> +#define HVC_RESET_CPU 4
+> +
+
+Patch 5 added a fancy new way to call arbitrary functions at el2, why
+not use that? (it would save beating up el1_sync again).
+
+I agree the trampoline stuff is complicated - I will try and cook-up a
+version of this patch for hibernate that does this. (... and comment
+what I think is happening above while I'm at it)
+
+
+>  #ifndef __ASSEMBLY__
+>  
+>  /*
+> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
+> index 1d7e502..d909ce2 100644
+> --- a/arch/arm64/kvm/hyp-init.S
+> +++ b/arch/arm64/kvm/hyp-init.S
+> @@ -140,6 +140,39 @@ merged:
+>  	eret
+>  ENDPROC(__kvm_hyp_init)
+>  
+> +	/*
+> +	 * x0: HYP boot pgd
+> +	 * x1: HYP phys_idmap_start
+> +	 */
+> +ENTRY(__kvm_hyp_reset)
+> +	/* We're in trampoline code in VA, switch back to boot page tables */
+> +	msr	ttbr0_el2, x0
+> +	isb
+> +
+> +	/* Invalidate the old TLBs */
+> +	tlbi	alle2
+> +	dsb	sy
+> +
+> +	/* Branch into PA space */
+> +	adr	x0, 1f
+> +	bfi	x1, x0, #0, #PAGE_SHIFT
+> +	br	x1
+> +
+> +	/* We're now in idmap, disable MMU */
+> +1:	mrs	x0, sctlr_el2
+> +	ldr	x1, =SCTLR_ELx_FLAGS
+> +	bic	x0, x0, x1		// Clear SCTL_M and etc
+> +	msr	sctlr_el2, x0
+> +	isb
+> +
+> +	/* Install stub vectors */
+> +	adrp	x0, __hyp_stub_vectors
+> +	add	x0, x0, #:lo12:__hyp_stub_vectors
+
+adr_l ?
+
+> +	msr	vbar_el2, x0
+> +
+> +	eret
+> +ENDPROC(__kvm_hyp_reset)
+> +
+>  	.ltorg
+>  
+>  	.popsection
+> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+> index 15b1ef9..ed82dc2 100644
+> --- a/arch/arm64/kvm/hyp.S
+> +++ b/arch/arm64/kvm/hyp.S
+> @@ -986,10 +991,27 @@ el1_sync:					// Guest trapped into EL2
+>  	cmp	x18, #HVC_GET_VECTORS
+>  	b.ne	1f
+>  	mrs	x0, vbar_el2
+> -	b	2f
+> -
+> -1:	/* Default to HVC_CALL_HYP. */
+> +	b	do_eret
+>  
+> +	/* jump into trampoline code */
+> +1:	cmp	x18, #HVC_RESET_CPU
+> +	b.ne	2f
+> +	/*
+> +	 * Entry point is:
+> +	 *	TRAMPOLINE_VA
+> +	 *	+ (__kvm_hyp_reset - (__hyp_idmap_text_start & PAGE_MASK))
+> +	 */
+> +	adrp	x2, __kvm_hyp_reset
+> +	add	x2, x2, #:lo12:__kvm_hyp_reset
+> +	adrp	x3, __hyp_idmap_text_start
+> +	add	x3, x3, #:lo12:__hyp_idmap_text_start
+
+adr_l ?
+
+> +	and	x3, x3, PAGE_MASK
+> +	sub	x2, x2, x3
+> +	ldr	x3, =TRAMPOLINE_VA
+> +	add	x2, x2, x3
+> +	br	x2				// no return
+> +
+> +2:	/* Default to HVC_CALL_HYP. */
+>  	push	lr, xzr
+>  
+>  	/*
+
+
+Thanks,
+
+James
 
 
 _______________________________________________
