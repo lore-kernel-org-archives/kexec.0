@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOAXa-0004K1-7h
- for kexec@lists.infradead.org; Tue, 26 Jan 2016 20:48:45 +0000
-Date: Tue, 26 Jan 2016 21:48:18 +0100
-From: "Luis R. Rodriguez" <mcgrof@suse.com>
-Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
- with kernel version
-Message-ID: <20160126204818.GJ20964@wotan.suse.de>
-References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
- <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
- <1453734258.2713.4.camel@linux.vnet.ibm.com>
- <20160125203414.GE20964@wotan.suse.de>
- <1453765692.2803.15.camel@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1453765692.2803.15.camel@linux.vnet.ibm.com>
+Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aOAgf-0000WD-9I
+ for kexec@lists.infradead.org; Tue, 26 Jan 2016 20:58:07 +0000
+From: Borislav Petkov <bp@alien8.de>
+Subject: [PATCH 07/17] kexec: Set IORESOURCE_SYSTEM_RAM for System RAM
+Date: Tue, 26 Jan 2016 21:57:23 +0100
+Message-Id: <1453841853-11383-8-git-send-email-bp@alien8.de>
+In-Reply-To: <1453841853-11383-1-git-send-email-bp@alien8.de>
+References: <1453841853-11383-1-git-send-email-bp@alien8.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,93 +17,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-arch@vger.kernel.org, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Minfei Huang <mnfhuang@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Jan 25, 2016 at 06:48:12PM -0500, Mimi Zohar wrote:
-> On Mon, 2016-01-25 at 21:34 +0100, Luis R. Rodriguez wrote:
-> > On Mon, Jan 25, 2016 at 10:04:18AM -0500, Mimi Zohar wrote:
-> > > On Mon, 2016-01-25 at 14:37 +0800, Dave Young wrote:
-> > > > Hi, Mimi
-> > > > 
-> > > > Besides of code issues, I have several thing to be understand:
-> > > > 
-> > > > What is the effect to kexec behavior with this patchset?
-> > > >   - without IMA enabled (kconfig or kernel cmdline) it will be same as before?
-> > > 
-> > > Yes, without IMA configured or an IMA policy, it is the same as before.
-> > 
-> > That's a bit unfair to your work here, this actually paves the way
-> > for not only IMA but also other LSMs to vet for the kexec/initramfs
-> > given LSM hooks are used now on a common kernel read set of functions.
-> 
-> Right, I responded to his questions about IMA and not the bigger picture.
+From: Toshi Kani <toshi.kani@hpe.com>
 
-Indeed, its just the bigger picture helps validate your work further.
+Set proper ioresource flags and types for crash kernel reservation
+areas.
 
-> > > >   - with IMA enabled for kernel bzImage, kexec_file_load will check both ima
-> > > >     signature and original pe file signature, those two mechanisms are
-> > > >     somehow duplicated. I'm not sure if we need both for bzImage.
-> > > 
-> > > IMA provides a uniform method of measuring and appraising all files on
-> > > the system, based on policy.  The IMA policy could prevent the original
-> > > kexec syscall. 
-> 
-> Sorry for jumping back and forth between security hooks.  Similarly, for
-> the kernel module hook, it prevents the original kernel module syscall
-> as well.
+Reviewed-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-mm <linux-mm@kvack.org>
+Cc: Minfei Huang <mnfhuang@gmail.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Link: http://lkml.kernel.org/r/1452020081-26534-7-git-send-email-toshi.kani@hpe.com
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ kernel/kexec_core.c | 8 +++++---
+ kernel/kexec_file.c | 2 +-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-This is indeed an important feature. I know people who don't use IMA won't
-care, but people who do should, likewise its also important for the prospects
-in design of LSMs if they wanted to consider the prospects of this evaluation
-for any of the file types we are now clearly defining.
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 8dc659144869..8d34308ea449 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -66,13 +66,15 @@ struct resource crashk_res = {
+ 	.name  = "Crash kernel",
+ 	.start = 0,
+ 	.end   = 0,
+-	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_CRASH_KERNEL
+ };
+ struct resource crashk_low_res = {
+ 	.name  = "Crash kernel",
+ 	.start = 0,
+ 	.end   = 0,
+-	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
++	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
++	.desc  = IORES_DESC_CRASH_KERNEL
+ };
+ 
+ int kexec_should_crash(struct task_struct *p)
+@@ -959,7 +961,7 @@ int crash_shrink_memory(unsigned long new_size)
+ 
+ 	ram_res->start = end;
+ 	ram_res->end = crashk_res.end;
+-	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
++	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM;
+ 	ram_res->name = "System RAM";
+ 
+ 	crashk_res.end = end - 1;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 007b791f676d..2bfcdc064116 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -525,7 +525,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	if (image->type == KEXEC_TYPE_CRASH)
+ 		ret = walk_iomem_res("Crash kernel",
+-				     IORESOURCE_MEM | IORESOURCE_BUSY,
++				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+ 				     crashk_res.start, crashk_res.end, kbuf,
+ 				     locate_mem_hole_callback);
+ 	else
+-- 
+2.3.5
 
-> > On systems without MODULE_SIG_FORCE, the IMA policy
-> > > would require an IMA signature as well.  (The current patch would
-> > > require both, even when MODULE_SIG_FORCE is enabled.)
-> > 
-> > 
-> > Right, so what this approach has revealed really is that architecturally
-> > MODULE_SIG_FORCE should have been an LSM but its not, its also hard to make it
-> > an LSM.  Now with LSM stacking this might make more sense but that requires
-> > work and who knows when and if that will happen. 
-> 
-> I kind of lost you here.  A new mini LSM would require file signatures
-> of an existing type or would it be a new method for verifying file
-> signatures?
-
-No the way I see it is this is a feature for signature verification with all
-security mechanisms built-in to the kernel. Clearly there is a difference for
-how signatures are defined between file types: modules have signatures built-in
-to the file, meanwhile for other files this might be detached (that will be the
-case for firmware, sysdata). This has yet to be considered for kexec /
-initramfs but it shouldn't' be too hard now to consider that. Its also why
-firmware signatures is using a separate kconfig option.
-
-> > In the meantime we'll live
-> > with the fact that enabling MODULE_SIG_FORCE means you want to stack on
-> > top of the LSMs you have enabled, the MODULE_SIG_FORCE functionality being
-> > all kernel related and perhaps easier to manage / set.
-> 
-> As I see it, with MODULE_SIG_FORCE, IMA-appraisal could relax its own
-> policy knowing that only signed kernel modules are loaded.  Without
-> MODULE_SIG_FORCE enabled, then IMA-appraisal needs to do the enforcing,
-> of course based on policy.
-
-Sure, up to the LSMs, which begs the question of how an LSM would codify
-such stacking assumptions. IIRC stacking will just let the code stack, but
-I am not sure if we have a clean way to know: hey the kernel vetted this
-file's signature itself, just fyi. Other than #idef'ery or relying on the
-.config.  What I just described is the case for say IMA and kernel module
-firmware signing (note both have separate kconfigs), the same question still
-applies to ways LSM stacking can provide a set of security requirements each
-could have addressed. All in a clean way.
-
-  Luis
 
 _______________________________________________
 kexec mailing list
