@@ -1,12 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56A7B018.7050900@arm.com>
-Date: Tue, 26 Jan 2016 17:42:48 +0000
-From: James Morse <james.morse@arm.com>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aOAXa-0004K1-7h
+ for kexec@lists.infradead.org; Tue, 26 Jan 2016 20:48:45 +0000
+Date: Tue, 26 Jan 2016 21:48:18 +0100
+From: "Luis R. Rodriguez" <mcgrof@suse.com>
+Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
+ with kernel version
+Message-ID: <20160126204818.GJ20964@wotan.suse.de>
+References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
+ <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
+ <1453734258.2713.4.camel@linux.vnet.ibm.com>
+ <20160125203414.GE20964@wotan.suse.de>
+ <1453765692.2803.15.camel@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 10/19] arm64: kvm: allows kvm cpu hotplug
-References: <cover.1452884156.git.geoff@infradead.org>
- <ab2ffead6b80df7e0676bc7383c1183c1e50453f.1452884156.git.geoff@infradead.org>
-In-Reply-To: <ab2ffead6b80df7e0676bc7383c1183c1e50453f.1452884156.git.geoff@infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1453765692.2803.15.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,201 +29,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-Hi!
-
-On 15/01/16 19:18, Geoff Levand wrote:
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+On Mon, Jan 25, 2016 at 06:48:12PM -0500, Mimi Zohar wrote:
+> On Mon, 2016-01-25 at 21:34 +0100, Luis R. Rodriguez wrote:
+> > On Mon, Jan 25, 2016 at 10:04:18AM -0500, Mimi Zohar wrote:
+> > > On Mon, 2016-01-25 at 14:37 +0800, Dave Young wrote:
+> > > > Hi, Mimi
+> > > > 
+> > > > Besides of code issues, I have several thing to be understand:
+> > > > 
+> > > > What is the effect to kexec behavior with this patchset?
+> > > >   - without IMA enabled (kconfig or kernel cmdline) it will be same as before?
+> > > 
+> > > Yes, without IMA configured or an IMA policy, it is the same as before.
+> > 
+> > That's a bit unfair to your work here, this actually paves the way
+> > for not only IMA but also other LSMs to vet for the kexec/initramfs
+> > given LSM hooks are used now on a common kernel read set of functions.
 > 
-> The current kvm implementation on arm64 does cpu-specific initialization
-> at system boot, and has no way to gracefully shutdown a core in terms of
-> kvm. This prevents, especially, kexec from rebooting the system on a boot
-> core in EL2.
+> Right, I responded to his questions about IMA and not the bigger picture.
+
+Indeed, its just the bigger picture helps validate your work further.
+
+> > > >   - with IMA enabled for kernel bzImage, kexec_file_load will check both ima
+> > > >     signature and original pe file signature, those two mechanisms are
+> > > >     somehow duplicated. I'm not sure if we need both for bzImage.
+> > > 
+> > > IMA provides a uniform method of measuring and appraising all files on
+> > > the system, based on policy.  The IMA policy could prevent the original
+> > > kexec syscall. 
 > 
-> This patch adds a cpu tear-down function and also puts an existing cpu-init
-> code into a separate function, kvm_arch_hardware_disable() and
-> kvm_arch_hardware_enable() respectively.
-> We don't need arm64-specific cpu hotplug hook any more.
+> Sorry for jumping back and forth between security hooks.  Similarly, for
+> the kernel module hook, it prevents the original kernel module syscall
+> as well.
+
+This is indeed an important feature. I know people who don't use IMA won't
+care, but people who do should, likewise its also important for the prospects
+in design of LSMs if they wanted to consider the prospects of this evaluation
+for any of the file types we are now clearly defining.
+
+> > On systems without MODULE_SIG_FORCE, the IMA policy
+> > > would require an IMA signature as well.  (The current patch would
+> > > require both, even when MODULE_SIG_FORCE is enabled.)
+> > 
+> > 
+> > Right, so what this approach has revealed really is that architecturally
+> > MODULE_SIG_FORCE should have been an LSM but its not, its also hard to make it
+> > an LSM.  Now with LSM stacking this might make more sense but that requires
+> > work and who knows when and if that will happen. 
 > 
-> Since this patch modifies common part of code between arm and arm64, one
-> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
-> compiling errors.
+> I kind of lost you here.  A new mini LSM would require file signatures
+> of an existing type or would it be a new method for verifying file
+> signatures?
+
+No the way I see it is this is a feature for signature verification with all
+security mechanisms built-in to the kernel. Clearly there is a difference for
+how signatures are defined between file types: modules have signatures built-in
+to the file, meanwhile for other files this might be detached (that will be the
+case for firmware, sysdata). This has yet to be considered for kexec /
+initramfs but it shouldn't' be too hard now to consider that. Its also why
+firmware signatures is using a separate kconfig option.
+
+> > In the meantime we'll live
+> > with the fact that enabling MODULE_SIG_FORCE means you want to stack on
+> > top of the LSMs you have enabled, the MODULE_SIG_FORCE functionality being
+> > all kernel related and perhaps easier to manage / set.
 > 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> As I see it, with MODULE_SIG_FORCE, IMA-appraisal could relax its own
+> policy knowing that only signed kernel modules are loaded.  Without
+> MODULE_SIG_FORCE enabled, then IMA-appraisal needs to do the enforcing,
+> of course based on policy.
 
-> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-> index e06fd29..e91f80e 100644
-> --- a/arch/arm/kvm/arm.c
-> +++ b/arch/arm/kvm/arm.c
+Sure, up to the LSMs, which begs the question of how an LSM would codify
+such stacking assumptions. IIRC stacking will just let the code stack, but
+I am not sure if we have a clean way to know: hey the kernel vetted this
+file's signature itself, just fyi. Other than #idef'ery or relying on the
+.config.  What I just described is the case for say IMA and kernel module
+firmware signing (note both have separate kconfigs), the same question still
+applies to ways LSM stacking can provide a set of security requirements each
+could have addressed. All in a clean way.
 
->  #ifdef CONFIG_CPU_PM
->  static int hyp_init_cpu_pm_notifier(struct notifier_block *self,
->  				    unsigned long cmd,
->  				    void *v)
->  {
-> -	if (cmd == CPU_PM_EXIT &&
-> -	    __hyp_get_vectors() == hyp_default_vectors) {
-> -		cpu_init_hyp_mode(NULL);
-> +	switch (cmd) {
-> +	case CPU_PM_ENTER:
-> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
-> +			cpu_reset_hyp_mode();
-> +
->  		return NOTIFY_OK;
-> -	}
-> +	case CPU_PM_EXIT:
-> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
-> +			cpu_init_hyp_mode();
-
-I read this as:
-		if (enabled)
-			enable();
-
-What am I missing? Is there a missing '!'?
-
-[/me thinks some more]
-
-I suspect this is trying to be clever: leaving the flag set over a
-deep-sleep, to indicate that the hardware should be re-enabled when we
-resume... if so, a comment to that effect would be good.
-
-
->  
-> -	return NOTIFY_DONE;
-> +		return NOTIFY_OK;
-> +
-> +	default:
-> +		return NOTIFY_DONE;
-> +	}
->  }
->  
->  static struct notifier_block hyp_init_cpu_pm_nb = {
-
-> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-> index 3070096..bca79f9 100644
-> --- a/arch/arm64/include/asm/virt.h
-> +++ b/arch/arm64/include/asm/virt.h
-> @@ -58,9 +58,18 @@
->  
->  #define HVC_CALL_FUNC 3
->  
-> +/*
-> + * HVC_RESET_CPU - Reset cpu in EL2 to initial state.
-> + *
-> + * @x0: entry address in trampoline code in va
-> + * @x1: identical mapping page table in pa
-> + */
-> +
->  #define BOOT_CPU_MODE_EL1	(0xe11)
->  #define BOOT_CPU_MODE_EL2	(0xe12)
->  
-> +#define HVC_RESET_CPU 4
-> +
-
-Patch 5 added a fancy new way to call arbitrary functions at el2, why
-not use that? (it would save beating up el1_sync again).
-
-I agree the trampoline stuff is complicated - I will try and cook-up a
-version of this patch for hibernate that does this. (... and comment
-what I think is happening above while I'm at it)
-
-
->  #ifndef __ASSEMBLY__
->  
->  /*
-> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
-> index 1d7e502..d909ce2 100644
-> --- a/arch/arm64/kvm/hyp-init.S
-> +++ b/arch/arm64/kvm/hyp-init.S
-> @@ -140,6 +140,39 @@ merged:
->  	eret
->  ENDPROC(__kvm_hyp_init)
->  
-> +	/*
-> +	 * x0: HYP boot pgd
-> +	 * x1: HYP phys_idmap_start
-> +	 */
-> +ENTRY(__kvm_hyp_reset)
-> +	/* We're in trampoline code in VA, switch back to boot page tables */
-> +	msr	ttbr0_el2, x0
-> +	isb
-> +
-> +	/* Invalidate the old TLBs */
-> +	tlbi	alle2
-> +	dsb	sy
-> +
-> +	/* Branch into PA space */
-> +	adr	x0, 1f
-> +	bfi	x1, x0, #0, #PAGE_SHIFT
-> +	br	x1
-> +
-> +	/* We're now in idmap, disable MMU */
-> +1:	mrs	x0, sctlr_el2
-> +	ldr	x1, =SCTLR_ELx_FLAGS
-> +	bic	x0, x0, x1		// Clear SCTL_M and etc
-> +	msr	sctlr_el2, x0
-> +	isb
-> +
-> +	/* Install stub vectors */
-> +	adrp	x0, __hyp_stub_vectors
-> +	add	x0, x0, #:lo12:__hyp_stub_vectors
-
-adr_l ?
-
-> +	msr	vbar_el2, x0
-> +
-> +	eret
-> +ENDPROC(__kvm_hyp_reset)
-> +
->  	.ltorg
->  
->  	.popsection
-> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
-> index 15b1ef9..ed82dc2 100644
-> --- a/arch/arm64/kvm/hyp.S
-> +++ b/arch/arm64/kvm/hyp.S
-> @@ -986,10 +991,27 @@ el1_sync:					// Guest trapped into EL2
->  	cmp	x18, #HVC_GET_VECTORS
->  	b.ne	1f
->  	mrs	x0, vbar_el2
-> -	b	2f
-> -
-> -1:	/* Default to HVC_CALL_HYP. */
-> +	b	do_eret
->  
-> +	/* jump into trampoline code */
-> +1:	cmp	x18, #HVC_RESET_CPU
-> +	b.ne	2f
-> +	/*
-> +	 * Entry point is:
-> +	 *	TRAMPOLINE_VA
-> +	 *	+ (__kvm_hyp_reset - (__hyp_idmap_text_start & PAGE_MASK))
-> +	 */
-> +	adrp	x2, __kvm_hyp_reset
-> +	add	x2, x2, #:lo12:__kvm_hyp_reset
-> +	adrp	x3, __hyp_idmap_text_start
-> +	add	x3, x3, #:lo12:__hyp_idmap_text_start
-
-adr_l ?
-
-> +	and	x3, x3, PAGE_MASK
-> +	sub	x2, x2, x3
-> +	ldr	x3, =TRAMPOLINE_VA
-> +	add	x2, x2, x3
-> +	br	x2				// no return
-> +
-> +2:	/* Default to HVC_CALL_HYP. */
->  	push	lr, xzr
->  
->  	/*
-
-
-Thanks,
-
-James
-
+  Luis
 
 _______________________________________________
 kexec mailing list
