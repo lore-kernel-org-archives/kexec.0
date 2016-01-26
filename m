@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOAgf-0000Wn-9X
- for kexec@lists.infradead.org; Tue, 26 Jan 2016 20:58:10 +0000
+ id 1aOAgf-0000Wb-3c
+ for kexec@lists.infradead.org; Tue, 26 Jan 2016 20:58:07 +0000
 From: Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 15/17] x86/kexec: Remove walk_iomem_res() call with GART type
-Date: Tue, 26 Jan 2016 21:57:31 +0100
-Message-Id: <1453841853-11383-16-git-send-email-bp@alien8.de>
+Subject: [PATCH 14/17] x86, kexec,
+ nvdimm: Use walk_iomem_res_desc() for iomem search
+Date: Tue, 26 Jan 2016 21:57:30 +0100
+Message-Id: <1453841853-11383-15-git-send-email-bp@alien8.de>
 In-Reply-To: <1453841853-11383-1-git-send-email-bp@alien8.de>
 References: <1453841853-11383-1-git-send-email-bp@alien8.de>
 List-Id: <kexec.lists.infradead.org>
@@ -23,114 +24,120 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-arch@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, Takao Indoh <indou.takao@jp.fujitsu.com>, "Lee,
- Chun-Yi" <joeyli.kernel@gmail.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Viresh Kumar <viresh.kumar@linaro.org>, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>, Minfei Huang <mnfhuang@gmail.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Don Zickus <dzickus@redhat.com>, linux-arch@vger.kernel.org, Takao Indoh <indou.takao@jp.fujitsu.com>, "Lee,
+ Chun-Yi" <joeyli.kernel@gmail.com>, linux-nvdimm@lists.01.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Minfei Huang <mnfhuang@gmail.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, Ross Zwisler <ross.zwisler@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>
 
 From: Toshi Kani <toshi.kani@hpe.com>
 
-There is no longer any driver inserting a "GART" region in the kernel
-since
+Change the callers of walk_iomem_res() scanning for the following
+resources by name to use walk_iomem_res_desc() instead.
 
-  707d4eefbdb3 ("Revert "[PATCH] Insert GART region into resource map"").
+ "ACPI Tables"
+ "ACPI Non-volatile Storage"
+ "Persistent Memory (legacy)"
+ "Crash kernel"
 
-Remove the call to walk_iomem_res() with "GART" type, its callback
-function, and GART-specific variables set by the callback.
+Note, the caller of walk_iomem_res() with "GART" will be removed in a
+later patch.
 
 Reviewed-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Don Zickus <dzickus@redhat.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: kexec@lists.infradead.org
 Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
 Cc: linux-arch@vger.kernel.org
 Cc: linux-mm <linux-mm@kvack.org>
+Cc: linux-nvdimm@lists.01.org
 Cc: Minfei Huang <mnfhuang@gmail.com>
 Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Ross Zwisler <ross.zwisler@linux.intel.com>
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 Cc: Takao Indoh <indou.takao@jp.fujitsu.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
 Cc: x86-ml <x86@kernel.org>
-Link: http://lkml.kernel.org/r/20160104110427.GA2965@dhcp-128-65.nay.redhat.com
-Link: http://lkml.kernel.org/r/1452020081-26534-15-git-send-email-toshi.kani@hpe.com
+Link: http://lkml.kernel.org/r/1452020081-26534-14-git-send-email-toshi.kani@hpe.com
 Signed-off-by: Borislav Petkov <bp@suse.de>
 ---
- arch/x86/kernel/crash.c | 37 +------------------------------------
- 1 file changed, 1 insertion(+), 36 deletions(-)
+ arch/x86/kernel/crash.c | 4 ++--
+ arch/x86/kernel/pmem.c  | 4 ++--
+ drivers/nvdimm/e820.c   | 2 +-
+ kernel/kexec_file.c     | 8 ++++----
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 35e152eeb6e0..9ef978d69c22 100644
+index 58f34319b29a..35e152eeb6e0 100644
 --- a/arch/x86/kernel/crash.c
 +++ b/arch/x86/kernel/crash.c
-@@ -57,10 +57,9 @@ struct crash_elf_data {
- 	struct kimage *image;
- 	/*
- 	 * Total number of ram ranges we have after various adjustments for
--	 * GART, crash reserved region etc.
-+	 * crash reserved region, etc.
- 	 */
- 	unsigned int max_nr_ranges;
--	unsigned long gart_start, gart_end;
+@@ -599,12 +599,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	/* Add ACPI tables */
+ 	cmd.type = E820_ACPI;
+ 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+-	walk_iomem_res("ACPI Tables", flags, 0, -1, &cmd,
++	walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1, &cmd,
+ 		       memmap_entry_callback);
  
- 	/* Pointer to elf header */
- 	void *ehdr;
-@@ -201,17 +200,6 @@ static int get_nr_ram_ranges_callback(u64 start, u64 end, void *arg)
- 	return 0;
- }
+ 	/* Add ACPI Non-volatile Storage */
+ 	cmd.type = E820_NVS;
+-	walk_iomem_res("ACPI Non-volatile Storage", flags, 0, -1, &cmd,
++	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
+ 			memmap_entry_callback);
  
--static int get_gart_ranges_callback(u64 start, u64 end, void *arg)
--{
--	struct crash_elf_data *ced = arg;
--
--	ced->gart_start = start;
--	ced->gart_end = end;
--
--	/* Not expecting more than 1 gart aperture */
--	return 1;
--}
--
+ 	/* Add crashk_low_res region */
+diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
+index 14415aff1813..92f70147a9a6 100644
+--- a/arch/x86/kernel/pmem.c
++++ b/arch/x86/kernel/pmem.c
+@@ -13,11 +13,11 @@ static int found(u64 start, u64 end, void *data)
  
- /* Gather all the required information to prepare elf headers for ram regions */
- static void fill_up_crash_elf_data(struct crash_elf_data *ced,
-@@ -226,22 +214,6 @@ static void fill_up_crash_elf_data(struct crash_elf_data *ced,
+ static __init int register_e820_pmem(void)
+ {
+-	char *pmem = "Persistent Memory (legacy)";
+ 	struct platform_device *pdev;
+ 	int rc;
  
- 	ced->max_nr_ranges = nr_ranges;
+-	rc = walk_iomem_res(pmem, IORESOURCE_MEM, 0, -1, NULL, found);
++	rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
++				 IORESOURCE_MEM, 0, -1, NULL, found);
+ 	if (rc <= 0)
+ 		return 0;
  
--	/*
--	 * We don't create ELF headers for GART aperture as an attempt
--	 * to dump this memory in second kernel leads to hang/crash.
--	 * If gart aperture is present, one needs to exclude that region
--	 * and that could lead to need of extra phdr.
--	 */
--	walk_iomem_res("GART", IORESOURCE_MEM, 0, -1,
--				ced, get_gart_ranges_callback);
--
--	/*
--	 * If we have gart region, excluding that could potentially split
--	 * a memory range, resulting in extra header. Account for  that.
--	 */
--	if (ced->gart_end)
--		ced->max_nr_ranges++;
--
- 	/* Exclusion of crash region could split memory ranges */
- 	ced->max_nr_ranges++;
+diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
+index b0045a505dc8..95825b38559a 100644
+--- a/drivers/nvdimm/e820.c
++++ b/drivers/nvdimm/e820.c
+@@ -55,7 +55,7 @@ static int e820_pmem_probe(struct platform_device *pdev)
+ 	for (p = iomem_resource.child; p ; p = p->sibling) {
+ 		struct nd_region_desc ndr_desc;
  
-@@ -350,13 +322,6 @@ static int elf_header_exclude_ranges(struct crash_elf_data *ced,
- 			return ret;
- 	}
+-		if (strncmp(p->name, "Persistent Memory (legacy)", 26) != 0)
++		if (p->desc != IORES_DESC_PERSISTENT_MEMORY_LEGACY)
+ 			continue;
  
--	/* Exclude GART region */
--	if (ced->gart_end) {
--		ret = exclude_mem_range(cmem, ced->gart_start, ced->gart_end);
--		if (ret)
--			return ret;
--	}
--
- 	return ret;
- }
+ 		memset(&ndr_desc, 0, sizeof(ndr_desc));
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 2bfcdc064116..56b18eb1f001 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -524,10 +524,10 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
  
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	if (image->type == KEXEC_TYPE_CRASH)
+-		ret = walk_iomem_res("Crash kernel",
+-				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+-				     crashk_res.start, crashk_res.end, kbuf,
+-				     locate_mem_hole_callback);
++		ret = walk_iomem_res_desc(crashk_res.desc,
++				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
++				crashk_res.start, crashk_res.end, kbuf,
++				locate_mem_hole_callback);
+ 	else
+ 		ret = walk_system_ram_res(0, -1, kbuf,
+ 					  locate_mem_hole_callback);
 -- 
 2.3.5
 
