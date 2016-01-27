@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOAgf-0000Wb-3c
- for kexec@lists.infradead.org; Tue, 26 Jan 2016 20:58:07 +0000
-From: Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 14/17] x86, kexec,
- nvdimm: Use walk_iomem_res_desc() for iomem search
-Date: Tue, 26 Jan 2016 21:57:30 +0100
-Message-Id: <1453841853-11383-15-git-send-email-bp@alien8.de>
-In-Reply-To: <1453841853-11383-1-git-send-email-bp@alien8.de>
-References: <1453841853-11383-1-git-send-email-bp@alien8.de>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aOFGh-0007Pk-5Y
+ for kexec@lists.infradead.org; Wed, 27 Jan 2016 01:51:36 +0000
+Date: Wed, 27 Jan 2016 09:50:54 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
+ with kernel version
+Message-ID: <20160127015054.GB2997@dhcp-128-65.nay.redhat.com>
+References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
+ <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
+ <1453734258.2713.4.camel@linux.vnet.ibm.com>
+ <20160126012031.GA3228@dhcp-128-65.nay.redhat.com>
+ <1453826441.2689.8.camel@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1453826441.2689.8.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,129 +25,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Don Zickus <dzickus@redhat.com>, linux-arch@vger.kernel.org, Takao Indoh <indou.takao@jp.fujitsu.com>, "Lee,
- Chun-Yi" <joeyli.kernel@gmail.com>, linux-nvdimm@lists.01.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Minfei Huang <mnfhuang@gmail.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, Ross Zwisler <ross.zwisler@linux.intel.com>, Dan Williams <dan.j.williams@intel.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-From: Toshi Kani <toshi.kani@hpe.com>
+On 01/26/16 at 11:40am, Mimi Zohar wrote:
+> Hi Dave,
+> 
+> On Tue, 2016-01-26 at 09:20 +0800, Dave Young wrote:
+> > Hi, Mimi
+> > 
+> > On 01/25/16 at 10:04am, Mimi Zohar wrote:
+> > > On Mon, 2016-01-25 at 14:37 +0800, Dave Young wrote:
+> > > > Hi, Mimi
+> > > > 
+> > > > Besides of code issues, I have several thing to be understand:
+> > > > 
+> > > > What is the effect to kexec behavior with this patchset?
+> > > >   - without IMA enabled (kconfig or kernel cmdline) it will be same as before?
+> > > 
+> > > Yes, without IMA configured or an IMA policy, it is the same as before.
+> > > 
+> > > >   - with IMA enabled for kernel bzImage, kexec_file_load will check both ima
+> > > >     signature and original pe file signature, those two mechanisms are
+> > > >     somehow duplicated. I'm not sure if we need both for bzImage.
+> > > 
+> > > IMA provides a uniform method of measuring and appraising all files on
+> > > the system, based on policy.  The IMA policy could prevent the original
+> > > kexec syscall.  On systems without MODULE_SIG_FORCE, the IMA policy
+> > > would require an IMA signature as well.  (The current patch would
+> > > require both, even when MODULE_SIG_FORCE is enabled.)
+> > 
+> > Hmm, enabling policy is in userspace (initramfs?) so it may not be good
+> > enough for secure boot case. IMA can be used as a uniform method for kexec
+> > kernel signature verification for !UEFI or !secure-boot case. 
+> 
+> Normally, the kernel is booted with a builtin policy.   The policy, if
+> it is being replaced, is normally replaced in the initramfs.  This patch
+> set introduces the concept of a signed policy.   Refer to the last 3
+> patches. 
 
-Change the callers of walk_iomem_res() scanning for the following
-resources by name to use walk_iomem_res_desc() instead.
+But one can still disable ima via kernel cmdline. I'm not objecting this
+patch I just think that it can not replace the kexec signature verification
+that we are using for UEFI secure boot.
 
- "ACPI Tables"
- "ACPI Non-volatile Storage"
- "Persistent Memory (legacy)"
- "Crash kernel"
+I think they can coexist consider their different design.
 
-Note, the caller of walk_iomem_res() with "GART" will be removed in a
-later patch.
+> 
+> > > 
+> > > The pe format is supported on x86.  Why require the pe file signature
+> > > format on all platforms?
+> > 
+> > For secure boot purpose, an uefi bootable kernel (as an uefi applicatioin)
+> > require it to be a pe file.
+> > 
+> > But for !secure-boot it is not mandatory.
+> 
+> It would be more appropriate to say that "UEFI secure boot" requires a
+> pe file, as opposed to "secure boot" in general.
 
-Reviewed-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Toshi Kani <toshi.kani@hpe.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Don Zickus <dzickus@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-mm <linux-mm@kvack.org>
-Cc: linux-nvdimm@lists.01.org
-Cc: Minfei Huang <mnfhuang@gmail.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc: Ross Zwisler <ross.zwisler@linux.intel.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: http://lkml.kernel.org/r/1452020081-26534-14-git-send-email-toshi.kani@hpe.com
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/x86/kernel/crash.c | 4 ++--
- arch/x86/kernel/pmem.c  | 4 ++--
- drivers/nvdimm/e820.c   | 2 +-
- kernel/kexec_file.c     | 8 ++++----
- 4 files changed, 9 insertions(+), 9 deletions(-)
+Fair enough and agreed.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 58f34319b29a..35e152eeb6e0 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -599,12 +599,12 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	/* Add ACPI tables */
- 	cmd.type = E820_ACPI;
- 	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
--	walk_iomem_res("ACPI Tables", flags, 0, -1, &cmd,
-+	walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1, &cmd,
- 		       memmap_entry_callback);
- 
- 	/* Add ACPI Non-volatile Storage */
- 	cmd.type = E820_NVS;
--	walk_iomem_res("ACPI Non-volatile Storage", flags, 0, -1, &cmd,
-+	walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1, &cmd,
- 			memmap_entry_callback);
- 
- 	/* Add crashk_low_res region */
-diff --git a/arch/x86/kernel/pmem.c b/arch/x86/kernel/pmem.c
-index 14415aff1813..92f70147a9a6 100644
---- a/arch/x86/kernel/pmem.c
-+++ b/arch/x86/kernel/pmem.c
-@@ -13,11 +13,11 @@ static int found(u64 start, u64 end, void *data)
- 
- static __init int register_e820_pmem(void)
- {
--	char *pmem = "Persistent Memory (legacy)";
- 	struct platform_device *pdev;
- 	int rc;
- 
--	rc = walk_iomem_res(pmem, IORESOURCE_MEM, 0, -1, NULL, found);
-+	rc = walk_iomem_res_desc(IORES_DESC_PERSISTENT_MEMORY_LEGACY,
-+				 IORESOURCE_MEM, 0, -1, NULL, found);
- 	if (rc <= 0)
- 		return 0;
- 
-diff --git a/drivers/nvdimm/e820.c b/drivers/nvdimm/e820.c
-index b0045a505dc8..95825b38559a 100644
---- a/drivers/nvdimm/e820.c
-+++ b/drivers/nvdimm/e820.c
-@@ -55,7 +55,7 @@ static int e820_pmem_probe(struct platform_device *pdev)
- 	for (p = iomem_resource.child; p ; p = p->sibling) {
- 		struct nd_region_desc ndr_desc;
- 
--		if (strncmp(p->name, "Persistent Memory (legacy)", 26) != 0)
-+		if (p->desc != IORES_DESC_PERSISTENT_MEMORY_LEGACY)
- 			continue;
- 
- 		memset(&ndr_desc, 0, sizeof(ndr_desc));
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 2bfcdc064116..56b18eb1f001 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -524,10 +524,10 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 
- 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
- 	if (image->type == KEXEC_TYPE_CRASH)
--		ret = walk_iomem_res("Crash kernel",
--				     IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
--				     crashk_res.start, crashk_res.end, kbuf,
--				     locate_mem_hole_callback);
-+		ret = walk_iomem_res_desc(crashk_res.desc,
-+				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-+				crashk_res.start, crashk_res.end, kbuf,
-+				locate_mem_hole_callback);
- 	else
- 		ret = walk_system_ram_res(0, -1, kbuf,
- 					  locate_mem_hole_callback);
--- 
-2.3.5
+> 
+> > > > Do you have a simple usage documentation about how to test it?
+> > > 
+> > > The wiki[1] and ima-evm-ctl package[2] have directions for enabling
+> > > IMA/IMA-appraisal.
+> > > 
+> > > To include just the kexec image and initramfs file hashes in the IMA
+> > > measurement list, create a file containing the following IMA policy
+> > > rules.  "cat" the policy and redirect the output
+> > > to /sys/kernel/security/ima/policy.   After loading the kexec image and
+> > > initramfs, the IMA measurements will be included in the measurement list
+> > > (/sys/kernel/security/ima/ascii_runtime_measurements)
+> > > 
+> > > IMA policy: 
+> > > measure func=KEXEC_CHECK
+> > > measure func=INITRAMFS_CHECK
+> > > 
+> > > Appraising the kexec image and initramfs is a bit more complicated as it
+> > > requires creating a key, which is signed by a key on the system keyring,
+> > > and loading the key onto the trusted IMA keyring.  To simplify testing,
+> > > without CONFIG_IMA_TRUSTED_KEYRING enabled, the key being loaded onto
+> > > the IMA keyring does not need to be signed.  The evmctl man page[2]
+> > > contains directions for creating and loading the key onto the IMA
+> > > keyring. 
+> > > 
+> > > To appraise just the kexec image and initramfs files, add the following
+> > > two rules to the IMA policy and load the policy as before.  (The policy
+> > > can only be loaded once per boot, unless IMA_WRITE_POLICY is configured.
+> > > With the default appraisal policy, the policy would need to signed.)
+> > > Sign the kexec image and initramfs with evmctl before loading them.
+> > > 
+> > > # evmctl ima_sign -k <private key> -a sha256 <VM image>
+> > > # evmctl ima_sign -k <private key> -a sha256 <initramfs>
+> > > 
+> > > IMA appraise policy:
+> > > appraise func=KEXEC_CHECK appraise_type=imasig
+> > > appraise func=INITRAMFS_CHECK appraise_type=imasig
+> > > 
+> > > [1] http://sourceforge.net/p/linux-ima/wiki/Home
+> > > [2] http://linux-ima.sourceforge.net/evmctl.1.html
+> > 
+> > Thank you, will try
+> > 
+> > > 
+> > > > > +{
+> > > > > +	struct fd f = fdget(fd);
+> > > > > +	int ret = -ENOEXEC;
+> > > > 
+> > > > -EBADF looks better?
+> > > 
+> > > Sure.
+> > > 
+> > Seems you missed another comment about the policy id name?
+> > can the name be like below?
+> > KEXEC_KERNEL_CHECK
+> > KEXEC_INITRAMFS_CHECK
+> 
+> Luis suggested making the enumeration more generic, not IMA specific.  I
+> suggested the following:
+> 
+> enum kernel_read_file_id {
+>         READING_KEXEC_IMAGE = 1,
+>         READING_KEXEC_INITRAMFS,
+>         READING_FIRMWARE,
+>         READING_MODULE,
+>         READING_POLICY,
+>         READING_MAX_ID
+> };
 
+It is even better.
+
+> 
+> Mimi
+> 
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
