@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOFGh-0007Pk-5Y
- for kexec@lists.infradead.org; Wed, 27 Jan 2016 01:51:36 +0000
-Date: Wed, 27 Jan 2016 09:50:54 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC PATCH v2 06/11] kexec: replace call to copy_file_from_fd()
- with kernel version
-Message-ID: <20160127015054.GB2997@dhcp-128-65.nay.redhat.com>
-References: <1453129886-20192-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1453129886-20192-7-git-send-email-zohar@linux.vnet.ibm.com>
- <20160125063712.GC5616@dhcp-128-65.nay.redhat.com>
- <1453734258.2713.4.camel@linux.vnet.ibm.com>
- <20160126012031.GA3228@dhcp-128-65.nay.redhat.com>
- <1453826441.2689.8.camel@linux.vnet.ibm.com>
+ id 1aOFlT-00029K-FU
+ for kexec@lists.infradead.org; Wed, 27 Jan 2016 02:23:25 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: readpage_elf: handle 0-pages not stored
+ in the ELF file
+Date: Wed, 27 Jan 2016 02:21:57 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
+References: <20160122233514.GA25777@ycc.fr>
+In-Reply-To: <20160122233514.GA25777@ycc.fr>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1453826441.2689.8.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,143 +24,150 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Ivan Delalande <colona@arista.com>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
 
-On 01/26/16 at 11:40am, Mimi Zohar wrote:
-> Hi Dave,
-> 
-> On Tue, 2016-01-26 at 09:20 +0800, Dave Young wrote:
-> > Hi, Mimi
-> > 
-> > On 01/25/16 at 10:04am, Mimi Zohar wrote:
-> > > On Mon, 2016-01-25 at 14:37 +0800, Dave Young wrote:
-> > > > Hi, Mimi
-> > > > 
-> > > > Besides of code issues, I have several thing to be understand:
-> > > > 
-> > > > What is the effect to kexec behavior with this patchset?
-> > > >   - without IMA enabled (kconfig or kernel cmdline) it will be same as before?
-> > > 
-> > > Yes, without IMA configured or an IMA policy, it is the same as before.
-> > > 
-> > > >   - with IMA enabled for kernel bzImage, kexec_file_load will check both ima
-> > > >     signature and original pe file signature, those two mechanisms are
-> > > >     somehow duplicated. I'm not sure if we need both for bzImage.
-> > > 
-> > > IMA provides a uniform method of measuring and appraising all files on
-> > > the system, based on policy.  The IMA policy could prevent the original
-> > > kexec syscall.  On systems without MODULE_SIG_FORCE, the IMA policy
-> > > would require an IMA signature as well.  (The current patch would
-> > > require both, even when MODULE_SIG_FORCE is enabled.)
-> > 
-> > Hmm, enabling policy is in userspace (initramfs?) so it may not be good
-> > enough for secure boot case. IMA can be used as a uniform method for kexec
-> > kernel signature verification for !UEFI or !secure-boot case. 
-> 
-> Normally, the kernel is booted with a builtin policy.   The policy, if
-> it is being replaced, is normally replaced in the initramfs.  This patch
-> set introduces the concept of a signed policy.   Refer to the last 3
-> patches. 
+Hello Ivan,
 
-But one can still disable ima via kernel cmdline. I'm not objecting this
-patch I just think that it can not replace the kexec signature verification
-that we are using for UEFI secure boot.
+>Handle pages filled with zeros that are not stored in the ELF file
+>directly, but have addresses between p_filesz and p_memsz of a segment.
 
-I think they can coexist consider their different design.
+This fix looks reasonable, thanks for your work.
 
-> 
-> > > 
-> > > The pe format is supported on x86.  Why require the pe file signature
-> > > format on all platforms?
-> > 
-> > For secure boot purpose, an uefi bootable kernel (as an uefi applicatioin)
-> > require it to be a pe file.
-> > 
-> > But for !secure-boot it is not mandatory.
-> 
-> It would be more appropriate to say that "UEFI secure boot" requires a
-> pe file, as opposed to "secure boot" in general.
+>This allows makedumpfile to dump-dmesg from a previously makedumpfile-ed
+>vmcore where all 0-pages were excluded (dump_level & 1) for example.
 
-Fair enough and agreed.
+I have some comments below:
 
-> 
-> > > > Do you have a simple usage documentation about how to test it?
-> > > 
-> > > The wiki[1] and ima-evm-ctl package[2] have directions for enabling
-> > > IMA/IMA-appraisal.
-> > > 
-> > > To include just the kexec image and initramfs file hashes in the IMA
-> > > measurement list, create a file containing the following IMA policy
-> > > rules.  "cat" the policy and redirect the output
-> > > to /sys/kernel/security/ima/policy.   After loading the kexec image and
-> > > initramfs, the IMA measurements will be included in the measurement list
-> > > (/sys/kernel/security/ima/ascii_runtime_measurements)
-> > > 
-> > > IMA policy: 
-> > > measure func=KEXEC_CHECK
-> > > measure func=INITRAMFS_CHECK
-> > > 
-> > > Appraising the kexec image and initramfs is a bit more complicated as it
-> > > requires creating a key, which is signed by a key on the system keyring,
-> > > and loading the key onto the trusted IMA keyring.  To simplify testing,
-> > > without CONFIG_IMA_TRUSTED_KEYRING enabled, the key being loaded onto
-> > > the IMA keyring does not need to be signed.  The evmctl man page[2]
-> > > contains directions for creating and loading the key onto the IMA
-> > > keyring. 
-> > > 
-> > > To appraise just the kexec image and initramfs files, add the following
-> > > two rules to the IMA policy and load the policy as before.  (The policy
-> > > can only be loaded once per boot, unless IMA_WRITE_POLICY is configured.
-> > > With the default appraisal policy, the policy would need to signed.)
-> > > Sign the kexec image and initramfs with evmctl before loading them.
-> > > 
-> > > # evmctl ima_sign -k <private key> -a sha256 <VM image>
-> > > # evmctl ima_sign -k <private key> -a sha256 <initramfs>
-> > > 
-> > > IMA appraise policy:
-> > > appraise func=KEXEC_CHECK appraise_type=imasig
-> > > appraise func=INITRAMFS_CHECK appraise_type=imasig
-> > > 
-> > > [1] http://sourceforge.net/p/linux-ima/wiki/Home
-> > > [2] http://linux-ima.sourceforge.net/evmctl.1.html
-> > 
-> > Thank you, will try
-> > 
-> > > 
-> > > > > +{
-> > > > > +	struct fd f = fdget(fd);
-> > > > > +	int ret = -ENOEXEC;
-> > > > 
-> > > > -EBADF looks better?
-> > > 
-> > > Sure.
-> > > 
-> > Seems you missed another comment about the policy id name?
-> > can the name be like below?
-> > KEXEC_KERNEL_CHECK
-> > KEXEC_INITRAMFS_CHECK
-> 
-> Luis suggested making the enumeration more generic, not IMA specific.  I
-> suggested the following:
-> 
-> enum kernel_read_file_id {
->         READING_KEXEC_IMAGE = 1,
->         READING_KEXEC_INITRAMFS,
->         READING_FIRMWARE,
->         READING_MODULE,
->         READING_POLICY,
->         READING_MAX_ID
+>Signed-off-by: Ivan Delalande <colona@arista.com>
+>---
+> elf_info.c     | 22 ++++++++++++++++++++++
+> elf_info.h     |  1 +
+> makedumpfile.c | 16 ++++++++++++++++
+> 3 files changed, 39 insertions(+)
+>
+>diff --git a/elf_info.c b/elf_info.c
+>index 8bce942..340e885 100644
+>--- a/elf_info.c
+>+++ b/elf_info.c
+>@@ -42,6 +42,7 @@ struct pt_load_segment {
+> 	unsigned long long	phys_end;
+> 	unsigned long long	virt_start;
+> 	unsigned long long	virt_end;
+>+	size_t			mem_size;
 > };
+>
+> static int			nr_cpus;             /* number of cpu */
+>@@ -166,6 +167,7 @@ dump_Elf_load(Elf64_Phdr *prog, int num_load)
+> 	pls->virt_start  = prog->p_vaddr;
+> 	pls->virt_end    = pls->virt_start + prog->p_filesz;
+> 	pls->file_offset = prog->p_offset;
+>+	pls->mem_size    = prog->p_memsz;
+>
+> 	DEBUG_MSG("LOAD (%d)\n", num_load);
+> 	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
+>@@ -584,6 +586,26 @@ offset_to_pt_load_end(off_t offset)
+> }
+>
+> /*
+>+ * Return true if a page is in the zone between p_filesz and p_memsz of a
+>+ * segment, which is a page filled with zero and not stored in the ELF file.
+>+ */
 
-It is even better.
+This function checks just "if a page fits within a PT_LOAD", but this comment
+and the function name don't match with it.
 
-> 
-> Mimi
-> 
+>+int
+>+paddr_is_null(unsigned long long paddr)
+>+{
+>+	int i;
+>+	struct pt_load_segment *pls;
+>+
+>+	for (i = 0; i < num_pt_loads; i++) {
+>+		pls = &pt_loads[i];
+>+		if ((paddr >= pls->phys_start)
+>+		    && (paddr + info->page_size
+>+			<= pls->phys_start + pls->mem_size))
+>+			return TRUE;
+>+	}
+>+	return FALSE;
+>+}
 
-Thanks
-Dave
+If you keep the function name, the conditional expression should be:
+
+	if ((paddr >= pls->phys_end)
+	    && (paddr + info->page_size
+		<= pls->phys_start + pls->mem_size))
+		return TRUE;
+
+or,
+
+>+
+>+/*
+>  * Judge whether the page is fractional or not.
+>  */
+> int
+>diff --git a/elf_info.h b/elf_info.h
+>index e712253..4823311 100644
+>--- a/elf_info.h
+>+++ b/elf_info.h
+>@@ -36,6 +36,7 @@ unsigned long long page_head_to_phys_start(unsigned long long head_paddr);
+> unsigned long long page_head_to_phys_end(unsigned long long head_paddr);
+> off_t offset_to_pt_load_start(off_t offset);
+> off_t offset_to_pt_load_end(off_t offset);
+>+int paddr_is_null(unsigned long long paddr);
+> unsigned long long vaddr_to_paddr_general(unsigned long long vaddr);
+> off_t vaddr_to_offset_slow(int fd, char *filename, unsigned long long vaddr);
+> unsigned long long get_max_paddr(void);
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index fa0b779..120bfdc 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -654,6 +654,14 @@ readpage_elf(unsigned long long paddr, void *bufptr)
+> 	phys_end = paddr + info->page_size;
+>
+> 	/*
+>+	 * Check the 0-filled pages that are not in the ELF file.
+>+	 */
+>+	if (!offset1 && !offset2 && paddr_is_null(paddr)) {
+>+		memset(bufptr, 0, info->page_size);
+>+		return TRUE;
+>+	}
+
+Since this combination of three conditions is exactly *paddr_is_null()*,
+the current paddr_is_null() should be renamed so that the name reflects
+its contents.
+
+
+Thanks,
+Atsushi Kumagai
+
+>+
+>+	/*
+> 	 * Check the case phys_start isn't aligned by page size like below:
+> 	 *
+> 	 *                           phys_start
+>@@ -728,6 +736,14 @@ readpage_elf_parallel(int fd_memory, unsigned long long paddr, void *bufptr)
+> 	phys_end = paddr + info->page_size;
+>
+> 	/*
+>+	 * Check the 0-filled pages that are not in the ELF file.
+>+	 */
+>+	if (!offset1 && !offset2 && paddr_is_null(paddr)) {
+>+		memset(bufptr, 0, info->page_size);
+>+		return TRUE;
+>+	}
+>+
+>+	/*
+> 	 * Check the case phys_start isn't aligned by page size like below:
+> 	 *
+> 	 *                           phys_start
+>--
+>2.7.0
+>
+>--
+>Ivan "Colona" Delalande
+>Arista Networks
 
 _______________________________________________
 kexec mailing list
