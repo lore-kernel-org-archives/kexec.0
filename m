@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOKg0-0005ed-SP
- for kexec@lists.infradead.org; Wed, 27 Jan 2016 07:38:06 +0000
-Received: by mail-pa0-x233.google.com with SMTP id uo6so431251pac.1
- for <kexec@lists.infradead.org>; Tue, 26 Jan 2016 23:37:43 -0800 (PST)
-Subject: Re: [PATCH 10/19] arm64: kvm: allows kvm cpu hotplug
-References: <cover.1452884156.git.geoff@infradead.org>
- <ab2ffead6b80df7e0676bc7383c1183c1e50453f.1452884156.git.geoff@infradead.org>
- <56A7B018.7050900@arm.com>
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Message-ID: <56A873C0.6090406@linaro.org>
-Date: Wed, 27 Jan 2016 16:37:36 +0900
+ id 1aOKmk-0000Z4-FL
+ for kexec@lists.infradead.org; Wed, 27 Jan 2016 07:45:03 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u0R7ieMp002898
+ for <kexec@lists.infradead.org>; Wed, 27 Jan 2016 16:44:40 +0900 (JST)
+Received: from mailsv3.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id u0R7ido01795 for <kexec@lists.infradead.org>;
+ Wed, 27 Jan 2016 16:44:39 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id u0R7i5xd001262
+ for <kexec@lists.infradead.org>; Wed, 27 Jan 2016 16:44:39 +0900 (JST)
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: [PATCH] makedumpfile: Looking up page.compound_order/compound_dtor
+ to exclude hugepages.
+Date: Wed, 27 Jan 2016 07:39:08 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E19E40@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <56A7B018.7050900@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,215 +28,236 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 01/27/2016 02:42 AM, James Morse wrote:
-> Hi!
->
-> On 15/01/16 19:18, Geoff Levand wrote:
->> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
->>
->> The current kvm implementation on arm64 does cpu-specific initialization
->> at system boot, and has no way to gracefully shutdown a core in terms of
->> kvm. This prevents, especially, kexec from rebooting the system on a boot
->> core in EL2.
->>
->> This patch adds a cpu tear-down function and also puts an existing cpu-init
->> code into a separate function, kvm_arch_hardware_disable() and
->> kvm_arch_hardware_enable() respectively.
->> We don't need arm64-specific cpu hotplug hook any more.
->>
->> Since this patch modifies common part of code between arm and arm64, one
->> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
->> compiling errors.
->>
->> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->
->> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
->> index e06fd29..e91f80e 100644
->> --- a/arch/arm/kvm/arm.c
->> +++ b/arch/arm/kvm/arm.c
->
->>   #ifdef CONFIG_CPU_PM
->>   static int hyp_init_cpu_pm_notifier(struct notifier_block *self,
->>   				    unsigned long cmd,
->>   				    void *v)
->>   {
->> -	if (cmd == CPU_PM_EXIT &&
->> -	    __hyp_get_vectors() == hyp_default_vectors) {
->> -		cpu_init_hyp_mode(NULL);
->> +	switch (cmd) {
->> +	case CPU_PM_ENTER:
->> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
->> +			cpu_reset_hyp_mode();
->> +
->>   		return NOTIFY_OK;
->> -	}
->> +	case CPU_PM_EXIT:
->> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
->> +			cpu_init_hyp_mode();
->
-> I read this as:
-> 		if (enabled)
-> 			enable();
->
-> What am I missing? Is there a missing '!'?
->
-> [/me thinks some more]
->
-> I suspect this is trying to be clever: leaving the flag set over a
-> deep-sleep, to indicate that the hardware should be re-enabled when we
-> resume... if so, a comment to that effect would be good.
+Hello,
 
-Yep, I meant so. Will add some comment.
+This is for hugepage filtering on linux 4.4 and later.
+Without this patch, hugepages wouldn't be removed correctly. Not only that,
+irrelevant pages can be excluded.
+This patch requires the kernel side fix which I've posted:
 
->
->>
->> -	return NOTIFY_DONE;
->> +		return NOTIFY_OK;
->> +
->> +	default:
->> +		return NOTIFY_DONE;
->> +	}
->>   }
->>
->>   static struct notifier_block hyp_init_cpu_pm_nb = {
->
->> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
->> index 3070096..bca79f9 100644
->> --- a/arch/arm64/include/asm/virt.h
->> +++ b/arch/arm64/include/asm/virt.h
->> @@ -58,9 +58,18 @@
->>
->>   #define HVC_CALL_FUNC 3
->>
->> +/*
->> + * HVC_RESET_CPU - Reset cpu in EL2 to initial state.
->> + *
->> + * @x0: entry address in trampoline code in va
->> + * @x1: identical mapping page table in pa
->> + */
->> +
->>   #define BOOT_CPU_MODE_EL1	(0xe11)
->>   #define BOOT_CPU_MODE_EL2	(0xe12)
->>
->> +#define HVC_RESET_CPU 4
->> +
->
-> Patch 5 added a fancy new way to call arbitrary functions at el2, why
-> not use that? (it would save beating up el1_sync again).
+  https://lkml.org/lkml/2016/1/27/92
 
-Let me think. I need to detangle some header files.
-
-> I agree the trampoline stuff is complicated - I will try and cook-up a
-> version of this patch for hibernate that does this. (... and comment
-> what I think is happening above while I'm at it)
->
->
->>   #ifndef __ASSEMBLY__
->>
->>   /*
->> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
->> index 1d7e502..d909ce2 100644
->> --- a/arch/arm64/kvm/hyp-init.S
->> +++ b/arch/arm64/kvm/hyp-init.S
->> @@ -140,6 +140,39 @@ merged:
->>   	eret
->>   ENDPROC(__kvm_hyp_init)
->>
->> +	/*
->> +	 * x0: HYP boot pgd
->> +	 * x1: HYP phys_idmap_start
->> +	 */
->> +ENTRY(__kvm_hyp_reset)
->> +	/* We're in trampoline code in VA, switch back to boot page tables */
->> +	msr	ttbr0_el2, x0
->> +	isb
->> +
->> +	/* Invalidate the old TLBs */
->> +	tlbi	alle2
->> +	dsb	sy
->> +
->> +	/* Branch into PA space */
->> +	adr	x0, 1f
->> +	bfi	x1, x0, #0, #PAGE_SHIFT
->> +	br	x1
->> +
->> +	/* We're now in idmap, disable MMU */
->> +1:	mrs	x0, sctlr_el2
->> +	ldr	x1, =SCTLR_ELx_FLAGS
->> +	bic	x0, x0, x1		// Clear SCTL_M and etc
->> +	msr	sctlr_el2, x0
->> +	isb
->> +
->> +	/* Install stub vectors */
->> +	adrp	x0, __hyp_stub_vectors
->> +	add	x0, x0, #:lo12:__hyp_stub_vectors
->
-> adr_l ?
-
-OK.
+Any comments are helpful.
 
 Thanks,
--Takahiro AKASHI
+Atsushi Kumagai
 
->> +	msr	vbar_el2, x0
->> +
->> +	eret
->> +ENDPROC(__kvm_hyp_reset)
->> +
->>   	.ltorg
->>
->>   	.popsection
->> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
->> index 15b1ef9..ed82dc2 100644
->> --- a/arch/arm64/kvm/hyp.S
->> +++ b/arch/arm64/kvm/hyp.S
->> @@ -986,10 +991,27 @@ el1_sync:					// Guest trapped into EL2
->>   	cmp	x18, #HVC_GET_VECTORS
->>   	b.ne	1f
->>   	mrs	x0, vbar_el2
->> -	b	2f
->> -
->> -1:	/* Default to HVC_CALL_HYP. */
->> +	b	do_eret
->>
->> +	/* jump into trampoline code */
->> +1:	cmp	x18, #HVC_RESET_CPU
->> +	b.ne	2f
->> +	/*
->> +	 * Entry point is:
->> +	 *	TRAMPOLINE_VA
->> +	 *	+ (__kvm_hyp_reset - (__hyp_idmap_text_start & PAGE_MASK))
->> +	 */
->> +	adrp	x2, __kvm_hyp_reset
->> +	add	x2, x2, #:lo12:__kvm_hyp_reset
->> +	adrp	x3, __hyp_idmap_text_start
->> +	add	x3, x3, #:lo12:__hyp_idmap_text_start
->
-> adr_l ?
->
->> +	and	x3, x3, PAGE_MASK
->> +	sub	x2, x2, x3
->> +	ldr	x3, =TRAMPOLINE_VA
->> +	add	x2, x2, x3
->> +	br	x2				// no return
->> +
->> +2:	/* Default to HVC_CALL_HYP. */
->>   	push	lr, xzr
->>
->>   	/*
->
->
-> Thanks,
->
-> James
->
+-----------------------------------------------------------------------------
+Required for kernel 4.4
+
+Due to some changes in struct page, hugepages wouldn't be removed on
+linux 4.4. makedumpfile reads page.lru.prev to get "order" (number of hugepages)
+and page.lru.next to get "dtor" (destructor for hugepages) to detect hugepages,
+but the offsets of the two symbol was changed in linux 4.4.
+
+     kernel    |            order            |            dtor
+    version    |      member    |   offset   |    member     |   offset
+ --------------+----------------+------------+---------------+-----------
+       - v3.19 |   lru.prev     |    as is   |   lru.next    |   as is
+  v4.0 - v4.3  | compound_order | ==lru.prev | compound_dtor | ==lru.next
+  v4.4 -       | compound_order | !=lru.prev | compound_dtor | !=lru.next
+
+As above, OFFSET(page.compound_order) and OFFSET(page.compound_dtor) are
+definitely necessary in VMCOREINFO on linux 4.4 and later. At least linux 4.4
+doesn't export OFFSET(page.compound_order) and OFFSET(page.compound_dtor),
+we have to give up hugepage filtering unless vmlinux is prepared.
+
+Further, the content of page.compound_dtor was changed from direct address
+of dtor to the ID of it in linux 4.4.
+
+Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+---
+ makedumpfile.c | 76 +++++++++++++++++++++++++++++++++++++++++++++++-----------
+ makedumpfile.h |  5 ++--
+ 2 files changed, 65 insertions(+), 16 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b802446..cd6c4de 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -240,6 +240,15 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
+ 	return FALSE;
+ }
+ 
++static inline int
++isHugetlb(dtor)
++{
++        return ((NUMBER(HUGETLB_PAGE_DTOR) != NOT_FOUND_NUMBER)
++		&& (NUMBER(HUGETLB_PAGE_DTOR) == dtor))
++                || ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL)
++                    && (SYMBOL(free_huge_page) == dtor));
++}
++
+ static inline unsigned long
+ calculate_len_buf_out(long page_size)
+ {
+@@ -1614,6 +1623,8 @@ get_structure_info(void)
+ 	OFFSET_INIT(page.mapping, "page", "mapping");
+ 	OFFSET_INIT(page._mapcount, "page", "_mapcount");
+ 	OFFSET_INIT(page.private, "page", "private");
++	OFFSET_INIT(page.compound_dtor, "page", "compound_dtor");
++	OFFSET_INIT(page.compound_order, "page", "compound_order");
+ 
+ 	/*
+ 	 * Some vmlinux(s) don't have debugging information about
+@@ -1720,6 +1731,8 @@ get_structure_info(void)
+ 			NUMBER(PG_head_mask) = 1UL << NUMBER(PG_head);
+ 	}
+ 
++	ENUM_NUMBER_INIT(HUGETLB_PAGE_DTOR, "HUGETLB_PAGE_DTOR");
++
+ 	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
+ 
+ 	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
+@@ -2164,6 +2177,8 @@ write_vmcoreinfo_data(void)
+ 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
+ 	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
+ 	WRITE_MEMBER_OFFSET("page.private", page.private);
++	WRITE_MEMBER_OFFSET("page.compound_dtor", page.compound_dtor);
++	WRITE_MEMBER_OFFSET("page.compound_order", page.compound_order);
+ 	WRITE_MEMBER_OFFSET("mem_section.section_mem_map",
+ 	    mem_section.section_mem_map);
+ 	WRITE_MEMBER_OFFSET("pglist_data.node_zones", pglist_data.node_zones);
+@@ -2233,6 +2248,8 @@ write_vmcoreinfo_data(void)
+ 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+ 	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ 
++	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
++
+ 	/*
+ 	 * write the source file of 1st kernel
+ 	 */
+@@ -2499,6 +2516,8 @@ read_vmcoreinfo(void)
+ 	READ_MEMBER_OFFSET("page.lru", page.lru);
+ 	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
+ 	READ_MEMBER_OFFSET("page.private", page.private);
++	READ_MEMBER_OFFSET("page.compound_dtor", page.compound_dtor);
++	READ_MEMBER_OFFSET("page.compound_order", page.compound_order);
+ 	READ_MEMBER_OFFSET("mem_section.section_mem_map",
+ 	    mem_section.section_mem_map);
+ 	READ_MEMBER_OFFSET("pglist_data.node_zones", pglist_data.node_zones);
+@@ -2568,6 +2587,8 @@ read_vmcoreinfo(void)
+ 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+ 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ 
++	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
++
+ 	return TRUE;
+ }
+ 
+@@ -5487,6 +5508,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
+ 	unsigned char *pcache;
+ 	unsigned int _count, _mapcount = 0, compound_order = 0;
++	unsigned int order_offset, dtor_offset;
+ 	unsigned long flags, mapping, private = 0;
+ 	unsigned long compound_dtor;
+ 
+@@ -5555,26 +5577,52 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		_count  = UINT(pcache + OFFSET(page._count));
+ 		mapping = ULONG(pcache + OFFSET(page.mapping));
+ 
+-		if ((index_pg < PGMM_CACHED - 1) &&
+-		    isCompoundHead(flags)) {
+-			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
+-					       + OFFSET(list_head.prev));
+-			compound_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
+-					     + OFFSET(list_head.next));
++		if (OFFSET(page.compound_order) != NOT_FOUND_SYMBOL) {
++			order_offset = OFFSET(page.compound_order);
++		} else {
++			if (info->kernel_version < KERNEL_VERSION(4, 4, 0))
++				order_offset = OFFSET(page.lru) + OFFSET(list_head.prev);
++			else
++				order_offset = 0;
++		}
++
++		if (OFFSET(page.compound_dtor) != NOT_FOUND_SYMBOL) {
++			dtor_offset = OFFSET(page.compound_dtor);
++		} else {
++			if (info->kernel_version < KERNEL_VERSION(4, 4, 0))
++				dtor_offset = OFFSET(page.lru) + OFFSET(list_head.next);
++			else
++				dtor_offset = 0;
++		}
++
++		compound_order = 0;
++		compound_dtor = 0;
++		/*
++		 * The last pfn of the mem_map cache must not be compound page
++		 * since all compound pages are aligned to its page order and
++		 * PGMM_CACHED is a power of 2.
++		 */
++		if ((index_pg < PGMM_CACHED - 1) && isCompoundHead(flags)) {
++			if (order_offset)
++				compound_order = USHORT(pcache + SIZE(page) + order_offset);
++
++			if (dtor_offset) {
++				/*
++				 * compound_dtor has been changed from the address of descriptor
++				 * to the ID of it since linux-4.4.
++				 */
++				if (info->kernel_version >= KERNEL_VERSION(4, 4, 0)) {
++					compound_dtor = USHORT(pcache + SIZE(page) + dtor_offset);
++				} else {
++					compound_dtor = ULONG(pcache + SIZE(page) + dtor_offset);
++				}
++			}
+ 
+ 			if ((compound_order >= sizeof(unsigned long) * 8)
+ 			    || ((pfn & ((1UL << compound_order) - 1)) != 0)) {
+ 				/* Invalid order */
+ 				compound_order = 0;
+ 			}
+-		} else {
+-			/*
+-			 * The last pfn of the mem_map cache must not be compound page
+-			 * since all compound pages are aligned to its page order and
+-			 * PGMM_CACHED is a power of 2.
+-			 */
+-			compound_order = 0;
+-			compound_dtor = 0;
+ 		}
+ 
+ 		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
+diff --git a/makedumpfile.h b/makedumpfile.h
+index e626be8..2912ee6 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -153,8 +153,6 @@ test_bit(int nr, unsigned long addr)
+ #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
+ #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
+ #define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
+-#define isHugetlb(dtor)         ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL) \
+-				 && (SYMBOL(free_huge_page) == dtor))
+ #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
+ #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
+ 				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
+@@ -1481,6 +1479,8 @@ struct offset_table {
+ 		long	lru;
+ 		long	_mapcount;
+ 		long	private;
++		long	compound_dtor;
++		long	compound_order;
+ 	} page;
+ 	struct mem_section {
+ 		long	section_mem_map;
+@@ -1676,6 +1676,7 @@ struct number_table {
+ 	long	KERNEL_IMAGE_SIZE;
+ 	long	SECTION_SIZE_BITS;
+ 	long	MAX_PHYSMEM_BITS;
++	long    HUGETLB_PAGE_DTOR;
+ };
+ 
+ struct srcfile_table {
+-- 
+1.9.0
 
 _______________________________________________
 kexec mailing list
