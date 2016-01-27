@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOKmk-0000Z4-FL
- for kexec@lists.infradead.org; Wed, 27 Jan 2016 07:45:03 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.160])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u0R7ieMp002898
- for <kexec@lists.infradead.org>; Wed, 27 Jan 2016 16:44:40 +0900 (JST)
-Received: from mailsv3.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id u0R7ido01795 for <kexec@lists.infradead.org>;
- Wed, 27 Jan 2016 16:44:39 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id u0R7i5xd001262
- for <kexec@lists.infradead.org>; Wed, 27 Jan 2016 16:44:39 +0900 (JST)
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: [PATCH] makedumpfile: Looking up page.compound_order/compound_dtor
- to exclude hugepages.
-Date: Wed, 27 Jan 2016 07:39:08 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E19E40@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1aOMY8-0004IQ-3m
+ for kexec@lists.infradead.org; Wed, 27 Jan 2016 09:38:05 +0000
+Received: from relay2.suse.de (charybdis-ext.suse.de [195.135.220.254])
+ by mx2.suse.de (Postfix) with ESMTP id 07BF3AAC4
+ for <kexec@lists.infradead.org>; Wed, 27 Jan 2016 09:37:41 +0000 (UTC)
+Date: Wed, 27 Jan 2016 10:37:41 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] makedumpfile: readpage_elf: handle 0-pages not stored
+ in the ELF file
+Message-ID: <20160127103741.0e4fec81@hananiah.suse.cz>
+In-Reply-To: <20160127085821.3be424e1@hananiah.suse.cz>
+References: <20160122233514.GA25777@ycc.fr>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
+ <20160127085821.3be424e1@hananiah.suse.cz>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,232 +28,227 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-Hello,
+Resent to the list.
 
-This is for hugepage filtering on linux 4.4 and later.
-Without this patch, hugepages wouldn't be removed correctly. Not only that,
-irrelevant pages can be excluded.
-This patch requires the kernel side fix which I've posted:
+The list does not like attachments, it seems.
 
-  https://lkml.org/lkml/2016/1/27/92
+Petr T
 
-Any comments are helpful.
+On Wed, 27 Jan 2016 08:58:21 +0100
+Petr Tesarik <ptesarik@suse.cz> wrote:
 
-Thanks,
-Atsushi Kumagai
+> Hello Atsushi-san,
+> 
+> On Wed, 27 Jan 2016 02:21:57 +0000
+> Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+> 
+> > Hello Ivan,
+> > 
+> > >Handle pages filled with zeros that are not stored in the ELF file
+> > >directly, but have addresses between p_filesz and p_memsz of a segment.
+> > 
+> > This fix looks reasonable, thanks for your work.
+> > 
+> > >This allows makedumpfile to dump-dmesg from a previously makedumpfile-ed
+> > >vmcore where all 0-pages were excluded (dump_level & 1) for example.
+> > 
+> > I have some comments below:
+> 
+> Actually, I have already hit another issue with filtered ELF files.
+> When refiltering an ELF file that had already been filtered, the memory
+> size vs. file size can cause wrong max_mapnr calculation for a
+> compressed file. In turn, if some pages were removed at the end of
+> physical memory, those pages are not marked as filtered in the output
+> file, but instead the total RAM appears to be smaller by that amount.
+> 
+> I don't think my patch addresses the same issue that Ivan found, but it
+> definitely touches the same area. Please have a look.
+> 
+> Petr Tesarik
 
------------------------------------------------------------------------------
-Required for kernel 4.4
+From: Petr Tesarik <ptesarik@suse.cz>
+Date: Thu Aug 20 10:43:22 2015 +0200
+Subject: Keep segment memory size when re-filtering ELF dumps
 
-Due to some changes in struct page, hugepages wouldn't be removed on
-linux 4.4. makedumpfile reads page.lru.prev to get "order" (number of hugepages)
-and page.lru.next to get "dtor" (destructor for hugepages) to detect hugepages,
-but the offsets of the two symbol was changed in linux 4.4.
+Originally, makedumpfile was designed to read from /proc/vmcore, where
+each segment's p_memsz is equal to its p_filesz. However, makedumpfile
+can also be used to re-filter an already filtered ELF dump file, where
+memory size may be larger than file size. In that case the memory size
+should be used as the size of the segment. This affects:
 
-     kernel    |            order            |            dtor
-    version    |      member    |   offset   |    member     |   offset
- --------------+----------------+------------+---------------+-----------
-       - v3.19 |   lru.prev     |    as is   |   lru.next    |   as is
-  v4.0 - v4.3  | compound_order | ==lru.prev | compound_dtor | ==lru.next
-  v4.4 -       | compound_order | !=lru.prev | compound_dtor | !=lru.next
+1. max_mapnr
+   This value is computed as the highest phys_end. If the last segment
+   was filtered, max_mapnr may be too small, and the crash utility will
+   refuse to read that memory (even with --zero_excluded).
 
-As above, OFFSET(page.compound_order) and OFFSET(page.compound_dtor) are
-definitely necessary in VMCOREINFO on linux 4.4 and later. At least linux 4.4
-doesn't export OFFSET(page.compound_order) and OFFSET(page.compound_dtor),
-we have to give up hugepage filtering unless vmlinux is prepared.
+2. p_memsz field in ELF dumps
+   The resulting ELF segment p_memsz will be capped to original file's
+   p_filesz, ignoring the original p_memsz.
 
-Further, the content of page.compound_dtor was changed from direct address
-of dtor to the ID of it in linux 4.4.
+3. memory holes in KDUMP dumps
+   Pages excluded in the original ELF dump will be appear as memory
+   holes in the resulting KDUMP file's first bitmap.
 
-Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+4. vtop translation
+   Virtual addresses that were filtered out in the original ELF file
+   cannot be translated to physical addresses using the generic vtop
+   translation.
+
+My fix uses p_memsz to set physical and virtual extents of ELF segments,
+because this is the actual size. However, file size is important when
+accessing page data, so it must be stored separately and checked where
+appropriate. Last but not least, pages that were filtered in the original
+dump file must also be filtered in the destination file, i.e. pages
+between p_filesz and p_memsz must have their corresponding bit cleared in
+the 2nd bitmap.
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+
 ---
- makedumpfile.c | 76 +++++++++++++++++++++++++++++++++++++++++++++++-----------
- makedumpfile.h |  5 ++--
- 2 files changed, 65 insertions(+), 16 deletions(-)
+ elf_info.c     |   37 ++++++++++++++++++++++++++++++-------
+ elf_info.h     |    4 ++++
+ makedumpfile.c |   26 ++++++++++++++++++++++++++
+ 3 files changed, 60 insertions(+), 7 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b802446..cd6c4de 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -38,6 +38,7 @@
+ 
+ struct pt_load_segment {
+ 	off_t			file_offset;
++	off_t			file_size;
+ 	unsigned long long	phys_start;
+ 	unsigned long long	phys_end;
+ 	unsigned long long	virt_start;
+@@ -162,10 +163,11 @@ dump_Elf_load(Elf64_Phdr *prog, int num_
+ 
+ 	pls = &pt_loads[num_load];
+ 	pls->phys_start  = prog->p_paddr;
+-	pls->phys_end    = pls->phys_start + prog->p_filesz;
++	pls->phys_end    = pls->phys_start + prog->p_memsz;
+ 	pls->virt_start  = prog->p_vaddr;
+-	pls->virt_end    = pls->virt_start + prog->p_filesz;
++	pls->virt_end    = pls->virt_start + prog->p_memsz;
+ 	pls->file_offset = prog->p_offset;
++	pls->file_size   = prog->p_filesz;
+ 
+ 	DEBUG_MSG("LOAD (%d)\n", num_load);
+ 	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
+@@ -462,7 +464,7 @@ paddr_to_offset(unsigned long long paddr
+ 	for (i = offset = 0; i < num_pt_loads; i++) {
+ 		pls = &pt_loads[i];
+ 		if ((paddr >= pls->phys_start)
+-		    && (paddr < pls->phys_end)) {
++		    && (paddr < pls->phys_start + pls->file_size)) {
+ 			offset = (off_t)(paddr - pls->phys_start) +
+ 				pls->file_offset;
+ 			break;
+@@ -480,16 +482,14 @@ paddr_to_offset2(unsigned long long padd
+ {
+ 	int i;
+ 	off_t offset;
+-	unsigned long long len;
+ 	struct pt_load_segment *pls;
+ 
+ 	for (i = offset = 0; i < num_pt_loads; i++) {
+ 		pls = &pt_loads[i];
+-		len = pls->phys_end - pls->phys_start;
+ 		if ((paddr >= pls->phys_start)
+-		    && (paddr < pls->phys_end)
++		    && (paddr < pls->phys_start + pls->file_size)
+ 		    && (hint >= pls->file_offset)
+-		    && (hint < pls->file_offset + len)) {
++		    && (hint < pls->file_offset + pls->file_size)) {
+ 			offset = (off_t)(paddr - pls->phys_start) +
+ 				pls->file_offset;
+ 			break;
+@@ -1095,6 +1095,29 @@ get_pt_load(int idx,
+ 
+ 	return TRUE;
+ }
++
++int
++get_pt_extents(int idx,
++	unsigned long long *phys_start,
++	unsigned long long *phys_end,
++	off_t *file_size)
++{
++	struct pt_load_segment *pls;
++
++	if (num_pt_loads <= idx)
++		return FALSE;
++
++	pls = &pt_loads[idx];
++
++	if (phys_start)
++		*phys_start = pls->phys_start;
++	if (phys_end)
++		*phys_end   = pls->phys_end;
++	if (file_size)
++		*file_size = pls->file_size;
++
++	return TRUE;
++}
+ 
+ unsigned int
+ get_num_pt_loads(void)
+--- a/elf_info.h
++++ b/elf_info.h
+@@ -61,6 +61,10 @@ int get_pt_load(int idx,
+ 	unsigned long long *phys_end,
+ 	unsigned long long *virt_start,
+ 	unsigned long long *virt_end);
++int get_pt_extents(int idx,
++	unsigned long long *phys_start,
++	unsigned long long *phys_end,
++	off_t *file_size);
+ unsigned int get_num_pt_loads(void);
+ 
+ void set_nr_cpus(int num);
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -240,6 +240,15 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
- 	return FALSE;
- }
- 
-+static inline int
-+isHugetlb(dtor)
-+{
-+        return ((NUMBER(HUGETLB_PAGE_DTOR) != NOT_FOUND_NUMBER)
-+		&& (NUMBER(HUGETLB_PAGE_DTOR) == dtor))
-+                || ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL)
-+                    && (SYMBOL(free_huge_page) == dtor));
-+}
-+
- static inline unsigned long
- calculate_len_buf_out(long page_size)
- {
-@@ -1614,6 +1623,8 @@ get_structure_info(void)
- 	OFFSET_INIT(page.mapping, "page", "mapping");
- 	OFFSET_INIT(page._mapcount, "page", "_mapcount");
- 	OFFSET_INIT(page.private, "page", "private");
-+	OFFSET_INIT(page.compound_dtor, "page", "compound_dtor");
-+	OFFSET_INIT(page.compound_order, "page", "compound_order");
- 
- 	/*
- 	 * Some vmlinux(s) don't have debugging information about
-@@ -1720,6 +1731,8 @@ get_structure_info(void)
- 			NUMBER(PG_head_mask) = 1UL << NUMBER(PG_head);
- 	}
- 
-+	ENUM_NUMBER_INIT(HUGETLB_PAGE_DTOR, "HUGETLB_PAGE_DTOR");
-+
- 	ENUM_TYPE_SIZE_INIT(pageflags, "pageflags");
- 
- 	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
-@@ -2164,6 +2177,8 @@ write_vmcoreinfo_data(void)
- 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
- 	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
- 	WRITE_MEMBER_OFFSET("page.private", page.private);
-+	WRITE_MEMBER_OFFSET("page.compound_dtor", page.compound_dtor);
-+	WRITE_MEMBER_OFFSET("page.compound_order", page.compound_order);
- 	WRITE_MEMBER_OFFSET("mem_section.section_mem_map",
- 	    mem_section.section_mem_map);
- 	WRITE_MEMBER_OFFSET("pglist_data.node_zones", pglist_data.node_zones);
-@@ -2233,6 +2248,8 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
- 	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
- 
-+	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-+
- 	/*
- 	 * write the source file of 1st kernel
- 	 */
-@@ -2499,6 +2516,8 @@ read_vmcoreinfo(void)
- 	READ_MEMBER_OFFSET("page.lru", page.lru);
- 	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
- 	READ_MEMBER_OFFSET("page.private", page.private);
-+	READ_MEMBER_OFFSET("page.compound_dtor", page.compound_dtor);
-+	READ_MEMBER_OFFSET("page.compound_order", page.compound_order);
- 	READ_MEMBER_OFFSET("mem_section.section_mem_map",
- 	    mem_section.section_mem_map);
- 	READ_MEMBER_OFFSET("pglist_data.node_zones", pglist_data.node_zones);
-@@ -2568,6 +2587,8 @@ read_vmcoreinfo(void)
- 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
- 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
- 
-+	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-+
+@@ -4395,6 +4395,26 @@ read_start_flat_header(void)
  	return TRUE;
  }
  
-@@ -5487,6 +5508,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 	unsigned char page_cache[SIZE(page) * PGMM_CACHED];
- 	unsigned char *pcache;
- 	unsigned int _count, _mapcount = 0, compound_order = 0;
-+	unsigned int order_offset, dtor_offset;
- 	unsigned long flags, mapping, private = 0;
- 	unsigned long compound_dtor;
- 
-@@ -5555,26 +5577,52 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		_count  = UINT(pcache + OFFSET(page._count));
- 		mapping = ULONG(pcache + OFFSET(page.mapping));
- 
--		if ((index_pg < PGMM_CACHED - 1) &&
--		    isCompoundHead(flags)) {
--			compound_order = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
--					       + OFFSET(list_head.prev));
--			compound_dtor = ULONG(pcache + SIZE(page) + OFFSET(page.lru)
--					     + OFFSET(list_head.next));
-+		if (OFFSET(page.compound_order) != NOT_FOUND_SYMBOL) {
-+			order_offset = OFFSET(page.compound_order);
-+		} else {
-+			if (info->kernel_version < KERNEL_VERSION(4, 4, 0))
-+				order_offset = OFFSET(page.lru) + OFFSET(list_head.prev);
-+			else
-+				order_offset = 0;
-+		}
++static void
++exclude_nodata_pages(void)
++{
++	int i;
++	unsigned long long phys_start, phys_end;
++	off_t file_size;
 +
-+		if (OFFSET(page.compound_dtor) != NOT_FOUND_SYMBOL) {
-+			dtor_offset = OFFSET(page.compound_dtor);
-+		} else {
-+			if (info->kernel_version < KERNEL_VERSION(4, 4, 0))
-+				dtor_offset = OFFSET(page.lru) + OFFSET(list_head.next);
-+			else
-+				dtor_offset = 0;
-+		}
++	i = 0;
++	while (get_pt_extents(i, &phys_start, &phys_end, &file_size)) {
++		unsigned long long pfn, pfn_end;
 +
-+		compound_order = 0;
-+		compound_dtor = 0;
-+		/*
-+		 * The last pfn of the mem_map cache must not be compound page
-+		 * since all compound pages are aligned to its page order and
-+		 * PGMM_CACHED is a power of 2.
-+		 */
-+		if ((index_pg < PGMM_CACHED - 1) && isCompoundHead(flags)) {
-+			if (order_offset)
-+				compound_order = USHORT(pcache + SIZE(page) + order_offset);
++		pfn = paddr_to_pfn(phys_start + file_size);
++		pfn_end = paddr_to_pfn(phys_end);
++		while (pfn <= pfn_end)
++			clear_bit_on_2nd_bitmap(pfn);
++			++pfn;
++		++i;
++	}
++}
 +
-+			if (dtor_offset) {
-+				/*
-+				 * compound_dtor has been changed from the address of descriptor
-+				 * to the ID of it since linux-4.4.
-+				 */
-+				if (info->kernel_version >= KERNEL_VERSION(4, 4, 0)) {
-+					compound_dtor = USHORT(pcache + SIZE(page) + dtor_offset);
-+				} else {
-+					compound_dtor = ULONG(pcache + SIZE(page) + dtor_offset);
-+				}
-+			}
+ int
+ read_flat_data_header(struct makedumpfile_data_header *fdh)
+ {
+@@ -6087,6 +6107,12 @@ create_2nd_bitmap(struct cycle *cycle)
+ 	}
  
- 			if ((compound_order >= sizeof(unsigned long) * 8)
- 			    || ((pfn & ((1UL << compound_order) - 1)) != 0)) {
- 				/* Invalid order */
- 				compound_order = 0;
- 			}
--		} else {
--			/*
--			 * The last pfn of the mem_map cache must not be compound page
--			 * since all compound pages are aligned to its page order and
--			 * PGMM_CACHED is a power of 2.
--			 */
--			compound_order = 0;
--			compound_dtor = 0;
- 		}
- 
- 		if (OFFSET(page._mapcount) != NOT_FOUND_STRUCTURE)
-diff --git a/makedumpfile.h b/makedumpfile.h
-index e626be8..2912ee6 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -153,8 +153,6 @@ test_bit(int nr, unsigned long addr)
- #define isLRU(flags)		test_bit(NUMBER(PG_lru), flags)
- #define isPrivate(flags)	test_bit(NUMBER(PG_private), flags)
- #define isCompoundHead(flags)   (!!((flags) & NUMBER(PG_head_mask)))
--#define isHugetlb(dtor)         ((SYMBOL(free_huge_page) != NOT_FOUND_SYMBOL) \
--				 && (SYMBOL(free_huge_page) == dtor))
- #define isSwapCache(flags)	test_bit(NUMBER(PG_swapcache), flags)
- #define isHWPOISON(flags)	(test_bit(NUMBER(PG_hwpoison), flags) \
- 				&& (NUMBER(PG_hwpoison) != NOT_FOUND_NUMBER))
-@@ -1481,6 +1479,8 @@ struct offset_table {
- 		long	lru;
- 		long	_mapcount;
- 		long	private;
-+		long	compound_dtor;
-+		long	compound_order;
- 	} page;
- 	struct mem_section {
- 		long	section_mem_map;
-@@ -1676,6 +1676,7 @@ struct number_table {
- 	long	KERNEL_IMAGE_SIZE;
- 	long	SECTION_SIZE_BITS;
- 	long	MAX_PHYSMEM_BITS;
-+	long    HUGETLB_PAGE_DTOR;
- };
- 
- struct srcfile_table {
--- 
-1.9.0
+ 	/*
++	 * If re-filtering ELF dump, exclude pages that were already
++	 * excluded in the original file.
++	 */
++	exclude_nodata_pages();
++
++	/*
+ 	 * Exclude cache pages, cache private pages, user data pages,
+ 	 * and hwpoison pages.
+ 	 */
 
 _______________________________________________
 kexec mailing list
