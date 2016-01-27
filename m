@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOKSU-0003kL-FP
- for kexec@lists.infradead.org; Wed, 27 Jan 2016 07:24:19 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: [PATCH] kexec: Add compound_order/compound_dtor to VMCOREINFO
-Date: Wed, 27 Jan 2016 07:19:01 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E19DFC@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+ id 1aOKg0-0005ed-SP
+ for kexec@lists.infradead.org; Wed, 27 Jan 2016 07:38:06 +0000
+Received: by mail-pa0-x233.google.com with SMTP id uo6so431251pac.1
+ for <kexec@lists.infradead.org>; Tue, 26 Jan 2016 23:37:43 -0800 (PST)
+Subject: Re: [PATCH 10/19] arm64: kvm: allows kvm cpu hotplug
+References: <cover.1452884156.git.geoff@infradead.org>
+ <ab2ffead6b80df7e0676bc7383c1183c1e50453f.1452884156.git.geoff@infradead.org>
+ <56A7B018.7050900@arm.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <56A873C0.6090406@linaro.org>
+Date: Wed, 27 Jan 2016 16:37:36 +0900
 MIME-Version: 1.0
+In-Reply-To: <56A7B018.7050900@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,58 +22,215 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, christoffer.dall@linaro.org
 
-makedumpfile refers to page.lru.next to get the order of compound pages
-for page filtering. However, now the order is stored in page.compound_order,
-hence VMCOREINFO should be updated to export the offset of page.compound_order.
+On 01/27/2016 02:42 AM, James Morse wrote:
+> Hi!
+>
+> On 15/01/16 19:18, Geoff Levand wrote:
+>> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>
+>> The current kvm implementation on arm64 does cpu-specific initialization
+>> at system boot, and has no way to gracefully shutdown a core in terms of
+>> kvm. This prevents, especially, kexec from rebooting the system on a boot
+>> core in EL2.
+>>
+>> This patch adds a cpu tear-down function and also puts an existing cpu-init
+>> code into a separate function, kvm_arch_hardware_disable() and
+>> kvm_arch_hardware_enable() respectively.
+>> We don't need arm64-specific cpu hotplug hook any more.
+>>
+>> Since this patch modifies common part of code between arm and arm64, one
+>> stub definition, __cpu_reset_hyp_mode(), is added on arm side to avoid
+>> compiling errors.
+>>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>
+>> diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
+>> index e06fd29..e91f80e 100644
+>> --- a/arch/arm/kvm/arm.c
+>> +++ b/arch/arm/kvm/arm.c
+>
+>>   #ifdef CONFIG_CPU_PM
+>>   static int hyp_init_cpu_pm_notifier(struct notifier_block *self,
+>>   				    unsigned long cmd,
+>>   				    void *v)
+>>   {
+>> -	if (cmd == CPU_PM_EXIT &&
+>> -	    __hyp_get_vectors() == hyp_default_vectors) {
+>> -		cpu_init_hyp_mode(NULL);
+>> +	switch (cmd) {
+>> +	case CPU_PM_ENTER:
+>> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
+>> +			cpu_reset_hyp_mode();
+>> +
+>>   		return NOTIFY_OK;
+>> -	}
+>> +	case CPU_PM_EXIT:
+>> +		if (__this_cpu_read(kvm_arm_hardware_enabled))
+>> +			cpu_init_hyp_mode();
+>
+> I read this as:
+> 		if (enabled)
+> 			enable();
+>
+> What am I missing? Is there a missing '!'?
+>
+> [/me thinks some more]
+>
+> I suspect this is trying to be clever: leaving the flag set over a
+> deep-sleep, to indicate that the hardware should be re-enabled when we
+> resume... if so, a comment to that effect would be good.
 
-The fact is, page.compound_order was introduced already in kernel 4.0,
-but the offset of it was the same as page.lru.next until kernel 4.3,
-so this was not actual problem.
+Yep, I meant so. Will add some comment.
 
-The above can be said also for page.lru.prev, it contained the address of
-destructor for compound pages but it was moved to page.compound_dtor.
-It's necessary to detect hugetlbfs pages. Further, the content of
-page.compound_dtor was changed from direct address of destructor to the
-ID of it.
+>
+>>
+>> -	return NOTIFY_DONE;
+>> +		return NOTIFY_OK;
+>> +
+>> +	default:
+>> +		return NOTIFY_DONE;
+>> +	}
+>>   }
+>>
+>>   static struct notifier_block hyp_init_cpu_pm_nb = {
+>
+>> diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+>> index 3070096..bca79f9 100644
+>> --- a/arch/arm64/include/asm/virt.h
+>> +++ b/arch/arm64/include/asm/virt.h
+>> @@ -58,9 +58,18 @@
+>>
+>>   #define HVC_CALL_FUNC 3
+>>
+>> +/*
+>> + * HVC_RESET_CPU - Reset cpu in EL2 to initial state.
+>> + *
+>> + * @x0: entry address in trampoline code in va
+>> + * @x1: identical mapping page table in pa
+>> + */
+>> +
+>>   #define BOOT_CPU_MODE_EL1	(0xe11)
+>>   #define BOOT_CPU_MODE_EL2	(0xe12)
+>>
+>> +#define HVC_RESET_CPU 4
+>> +
+>
+> Patch 5 added a fancy new way to call arbitrary functions at el2, why
+> not use that? (it would save beating up el1_sync again).
 
-Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
----
- kernel/kexec_core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Let me think. I need to detangle some header files.
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 11b64a6..8c7a6e8 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1388,6 +1388,8 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_OFFSET(page, lru);
- 	VMCOREINFO_OFFSET(page, _mapcount);
- 	VMCOREINFO_OFFSET(page, private);
-+	VMCOREINFO_OFFSET(page, compound_dtor);
-+	VMCOREINFO_OFFSET(page, compound_order);
- 	VMCOREINFO_OFFSET(pglist_data, node_zones);
- 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
- #ifdef CONFIG_FLAT_NODE_MEM_MAP
-@@ -1420,8 +1422,8 @@ static int __init crash_save_vmcoreinfo_init(void)
- #ifdef CONFIG_X86
- 	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
- #endif
--#ifdef CONFIG_HUGETLBFS
--	VMCOREINFO_SYMBOL(free_huge_page);
-+#ifdef CONFIG_HUGETLB_PAGE
-+	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
- #endif
- 
- 	arch_crash_save_vmcoreinfo();
--- 
-1.9.0
+> I agree the trampoline stuff is complicated - I will try and cook-up a
+> version of this patch for hibernate that does this. (... and comment
+> what I think is happening above while I'm at it)
+>
+>
+>>   #ifndef __ASSEMBLY__
+>>
+>>   /*
+>> diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
+>> index 1d7e502..d909ce2 100644
+>> --- a/arch/arm64/kvm/hyp-init.S
+>> +++ b/arch/arm64/kvm/hyp-init.S
+>> @@ -140,6 +140,39 @@ merged:
+>>   	eret
+>>   ENDPROC(__kvm_hyp_init)
+>>
+>> +	/*
+>> +	 * x0: HYP boot pgd
+>> +	 * x1: HYP phys_idmap_start
+>> +	 */
+>> +ENTRY(__kvm_hyp_reset)
+>> +	/* We're in trampoline code in VA, switch back to boot page tables */
+>> +	msr	ttbr0_el2, x0
+>> +	isb
+>> +
+>> +	/* Invalidate the old TLBs */
+>> +	tlbi	alle2
+>> +	dsb	sy
+>> +
+>> +	/* Branch into PA space */
+>> +	adr	x0, 1f
+>> +	bfi	x1, x0, #0, #PAGE_SHIFT
+>> +	br	x1
+>> +
+>> +	/* We're now in idmap, disable MMU */
+>> +1:	mrs	x0, sctlr_el2
+>> +	ldr	x1, =SCTLR_ELx_FLAGS
+>> +	bic	x0, x0, x1		// Clear SCTL_M and etc
+>> +	msr	sctlr_el2, x0
+>> +	isb
+>> +
+>> +	/* Install stub vectors */
+>> +	adrp	x0, __hyp_stub_vectors
+>> +	add	x0, x0, #:lo12:__hyp_stub_vectors
+>
+> adr_l ?
+
+OK.
+
+Thanks,
+-Takahiro AKASHI
+
+>> +	msr	vbar_el2, x0
+>> +
+>> +	eret
+>> +ENDPROC(__kvm_hyp_reset)
+>> +
+>>   	.ltorg
+>>
+>>   	.popsection
+>> diff --git a/arch/arm64/kvm/hyp.S b/arch/arm64/kvm/hyp.S
+>> index 15b1ef9..ed82dc2 100644
+>> --- a/arch/arm64/kvm/hyp.S
+>> +++ b/arch/arm64/kvm/hyp.S
+>> @@ -986,10 +991,27 @@ el1_sync:					// Guest trapped into EL2
+>>   	cmp	x18, #HVC_GET_VECTORS
+>>   	b.ne	1f
+>>   	mrs	x0, vbar_el2
+>> -	b	2f
+>> -
+>> -1:	/* Default to HVC_CALL_HYP. */
+>> +	b	do_eret
+>>
+>> +	/* jump into trampoline code */
+>> +1:	cmp	x18, #HVC_RESET_CPU
+>> +	b.ne	2f
+>> +	/*
+>> +	 * Entry point is:
+>> +	 *	TRAMPOLINE_VA
+>> +	 *	+ (__kvm_hyp_reset - (__hyp_idmap_text_start & PAGE_MASK))
+>> +	 */
+>> +	adrp	x2, __kvm_hyp_reset
+>> +	add	x2, x2, #:lo12:__kvm_hyp_reset
+>> +	adrp	x3, __hyp_idmap_text_start
+>> +	add	x3, x3, #:lo12:__hyp_idmap_text_start
+>
+> adr_l ?
+>
+>> +	and	x3, x3, PAGE_MASK
+>> +	sub	x2, x2, x3
+>> +	ldr	x3, =TRAMPOLINE_VA
+>> +	add	x2, x2, x3
+>> +	br	x2				// no return
+>> +
+>> +2:	/* Default to HVC_CALL_HYP. */
+>>   	push	lr, xzr
+>>
+>>   	/*
+>
+>
+> Thanks,
+>
+> James
+>
 
 _______________________________________________
 kexec mailing list
