@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x230.google.com ([2a00:1450:400c:c09::230])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aOYP3-0004zq-Fu
- for kexec@lists.infradead.org; Wed, 27 Jan 2016 22:17:30 +0000
-Received: by mail-wm0-x230.google.com with SMTP id p63so47401235wmp.1
- for <kexec@lists.infradead.org>; Wed, 27 Jan 2016 14:17:07 -0800 (PST)
-Date: Wed, 27 Jan 2016 23:17:00 +0100
-From: Ivan Delalande <colona@arista.com>
-Subject: [PATCH v2] makedumpfile: readpage_elf: handle 0-pages not stored in
- the ELF file
-Message-ID: <20160127221700.GA31203@ycc.fr>
+ id 1aOdOe-0000wd-PA
+ for kexec@lists.infradead.org; Thu, 28 Jan 2016 03:37:25 +0000
+Subject: Re: [PATCH] kexec: unmap reserved pages for each error-return way
+References: <1453895311-11087-1-git-send-email-dsafonov@virtuozzo.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <56A98CD6.1000900@redhat.com>
+Date: Thu, 28 Jan 2016 11:36:54 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <1453895311-11087-1-git-send-email-dsafonov@virtuozzo.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,132 +18,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
+To: Dmitry Safonov <dsafonov@virtuozzo.com>, linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, ebiederm@xmission.com, akpm@linux-foundation.org
+Cc: linux-s390@vger.kernel.org, dyoung@redhat.com, holzheu@linux.vnet.ibm.com, 0x7f454c46@gmail.com, kexec@lists.infradead.org
 
-Handle pages filled with zero that are not stored in the ELF file
-directly, but have addresses between p_filesz and p_memsz of a segment.
+On 2016/01/27 at 19:48, Dmitry Safonov wrote:
+> For allocation of kimage failure or kexec_prepare or load segments
+> errors there is no need to keep crashkernel memory mapped.
+> It will affect only s390 as map/unmap hook defined only for it.
+> As on unmap s390 also changes os_info structure let's check return code
+> and add info only on success.
+>
+> Signed-off-by: Dmitry Safonov <dsafonov@virtuozzo.com>
+> ---
+>  arch/s390/kernel/machine_kexec.c | 39 +++++++++++++++++----------------------
+>  include/linux/kexec.h            |  2 +-
+>  kernel/kexec.c                   |  4 ++--
+>  kernel/kexec_core.c              |  4 ++--
+>  4 files changed, 22 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/s390/kernel/machine_kexec.c b/arch/s390/kernel/machine_kexec.c
+> index 2f1b721..60bf374 100644
+> --- a/arch/s390/kernel/machine_kexec.c
+> +++ b/arch/s390/kernel/machine_kexec.c
+> @@ -49,7 +49,7 @@ static int machine_kdump_pm_cb(struct notifier_block *nb, unsigned long action,
+>  	case PM_POST_SUSPEND:
+>  	case PM_POST_HIBERNATION:
+>  		if (crashk_res.start)
+> -			crash_unmap_reserved_pages();
+> +			crash_unmap_reserved_pages(0);
+>  		break;
+>  	default:
+>  		return NOTIFY_DONE;
+> @@ -147,39 +147,34 @@ static int kdump_csum_valid(struct kimage *image)
+>  }
+>  
+>  /*
+> - * Map or unmap crashkernel memory
+> + * Map crashkernel memory
+>   */
+> -static void crash_map_pages(int enable)
+> +void crash_map_reserved_pages(void)
+>  {
+>  	unsigned long size = resource_size(&crashk_res);
+>  
+>  	BUG_ON(crashk_res.start % KEXEC_CRASH_MEM_ALIGN ||
+>  	       size % KEXEC_CRASH_MEM_ALIGN);
+> -	if (enable)
+> -		vmem_add_mapping(crashk_res.start, size);
+> -	else {
+> -		vmem_remove_mapping(crashk_res.start, size);
+> -		if (size)
+> -			os_info_crashkernel_add(crashk_res.start, size);
+> -		else
+> -			os_info_crashkernel_add(0, 0);
+> -	}
+> -}
+> -
+> -/*
+> - * Map crashkernel memory
+> - */
+> -void crash_map_reserved_pages(void)
+> -{
+> -	crash_map_pages(1);
+> +	vmem_add_mapping(crashk_res.start, size);
+>  }
+>  
+>  /*
+>   * Unmap crashkernel memory
+>   */
+> -void crash_unmap_reserved_pages(void)
+> +void crash_unmap_reserved_pages(int error)
+>  {
+> -	crash_map_pages(0);
+> +	unsigned long size = resource_size(&crashk_res);
+> +
+> +	BUG_ON(crashk_res.start % KEXEC_CRASH_MEM_ALIGN ||
+> +	       size % KEXEC_CRASH_MEM_ALIGN);
+> +	vmem_remove_mapping(crashk_res.start, size);
+> +
+> +	if (error)
+> +		return;
+> +	if (size)
+> +		os_info_crashkernel_add(crashk_res.start, size);
+> +	else
+> +		os_info_crashkernel_add(0, 0);
+>  }
 
-This allows makedumpfile to dump-dmesg from a previously makedumpfile-ed
-vmcore where all 0-page were excluded (dump_level & 1) for example.
+I think it doesn't hurt doing os_info_crashkernel_add() multiple times which will make
+the code cleaner.
 
-Signed-off-by: Ivan Delalande <colona@arista.com>
----
- elf_info.c     | 22 ++++++++++++++++++++++
- elf_info.h     |  1 +
- makedumpfile.c | 17 +++++++++++++++++
- 3 files changed, 40 insertions(+)
+>  
+>  /*
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 2cc643c..ef3bd1e 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -231,7 +231,7 @@ int kexec_should_crash(struct task_struct *);
+>  void crash_save_cpu(struct pt_regs *regs, int cpu);
+>  void crash_save_vmcoreinfo(void);
+>  void crash_map_reserved_pages(void);
+> -void crash_unmap_reserved_pages(void);
+> +void crash_unmap_reserved_pages(int error);
+>  void arch_crash_save_vmcoreinfo(void);
+>  __printf(1, 2)
+>  void vmcoreinfo_append_str(const char *fmt, ...);
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index ee70aef..dfc6c18 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -204,13 +204,13 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+>  				goto out;
+>  		}
+>  		kimage_terminate(image);
+> -		if (flags & KEXEC_ON_CRASH)
+> -			crash_unmap_reserved_pages();
+>  	}
+>  	/* Install the new kernel, and  Uninstall the old */
+>  	image = xchg(dest_image, image);
+>  
+>  out:
+> +	if ((flags & KEXEC_ON_CRASH) && (nr_segments > 0))
+> +		crash_unmap_reserved_pages(result);
+>  	mutex_unlock(&kexec_mutex);
+>  	kimage_free(image);
 
-diff --git a/elf_info.c b/elf_info.c
-index 8bce942..d9d1f42 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -42,6 +42,7 @@ struct pt_load_segment {
- 	unsigned long long	phys_end;
- 	unsigned long long	virt_start;
- 	unsigned long long	virt_end;
-+	size_t			mem_size;
- };
- 
- static int			nr_cpus;             /* number of cpu */
-@@ -166,6 +167,7 @@ dump_Elf_load(Elf64_Phdr *prog, int num_load)
- 	pls->virt_start  = prog->p_vaddr;
- 	pls->virt_end    = pls->virt_start + prog->p_filesz;
- 	pls->file_offset = prog->p_offset;
-+	pls->mem_size    = prog->p_memsz;
- 
- 	DEBUG_MSG("LOAD (%d)\n", num_load);
- 	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
-@@ -584,6 +586,26 @@ offset_to_pt_load_end(off_t offset)
- }
- 
- /*
-+ * Return true if a page is in the zone between p_filesz and p_memsz of a
-+ * segment, which is a page filled with zero and not stored in the ELF file.
-+ */
-+int
-+paddr_is_null(unsigned long long paddr)
-+{
-+	int i;
-+	struct pt_load_segment *pls;
-+
-+	for (i = 0; i < num_pt_loads; i++) {
-+		pls = &pt_loads[i];
-+		if ((paddr >= pls->phys_end)
-+		    && (paddr + info->page_size
-+			<= pls->phys_start + pls->mem_size))
-+			return TRUE;
-+	}
-+	return FALSE;
-+}
-+
-+/*
-  * Judge whether the page is fractional or not.
-  */
- int
-diff --git a/elf_info.h b/elf_info.h
-index e712253..4823311 100644
---- a/elf_info.h
-+++ b/elf_info.h
-@@ -36,6 +36,7 @@ unsigned long long page_head_to_phys_start(unsigned long long head_paddr);
- unsigned long long page_head_to_phys_end(unsigned long long head_paddr);
- off_t offset_to_pt_load_start(off_t offset);
- off_t offset_to_pt_load_end(off_t offset);
-+int paddr_is_null(unsigned long long paddr);
- unsigned long long vaddr_to_paddr_general(unsigned long long vaddr);
- off_t vaddr_to_offset_slow(int fd, char *filename, unsigned long long vaddr);
- unsigned long long get_max_paddr(void);
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b802446..491f278 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -652,11 +652,20 @@ readpage_elf(unsigned long long paddr, void *bufptr)
- 	size_t size1, size2;
- 	unsigned long long phys_start, phys_end, frac_head = 0;
- 
-+	/*
-+	 * Check the 0-filled pages that are not in the ELF file.
-+	 */
-+	if (paddr_is_null(paddr)) {
-+		memset(bufptr, 0, info->page_size);
-+		return TRUE;
-+	}
-+
- 	offset1 = paddr_to_offset(paddr);
- 	offset2 = paddr_to_offset(paddr + info->page_size);
- 	phys_start = paddr;
- 	phys_end = paddr + info->page_size;
- 
-+
- 	/*
- 	 * Check the case phys_start isn't aligned by page size like below:
- 	 *
-@@ -726,6 +735,14 @@ readpage_elf_parallel(int fd_memory, unsigned long long paddr, void *bufptr)
- 	size_t size1, size2;
- 	unsigned long long phys_start, phys_end, frac_head = 0;
- 
-+	/*
-+	 * Check the 0-filled pages that are not in the ELF file.
-+	 */
-+	if (paddr_is_null(paddr)) {
-+		memset(bufptr, 0, info->page_size);
-+		return TRUE;
-+	}
-+
- 	offset1 = paddr_to_offset(paddr);
- 	offset2 = paddr_to_offset(paddr + info->page_size);
- 	phys_start = paddr;
--- 
-2.7.0
+Shouldn't we do the similar thing for kexec_file_load()?
 
+>  
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 8dc6591..cae5d11 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -965,7 +965,7 @@ int crash_shrink_memory(unsigned long new_size)
+>  	crashk_res.end = end - 1;
+>  
+>  	insert_resource(&iomem_resource, ram_res);
+> -	crash_unmap_reserved_pages();
+> +	crash_unmap_reserved_pages(0);
 
--- 
-Ivan "Colona" Delalande
-Arista Networks
+If using arch_kexec_unprotect/protect_crashkres(), we don't need this since there's a judge at the entry :-)
+    if (kexec_crash_image) {
+        ret = -ENOENT;
+        goto unlock;
+    }
+
+Regards,
+Xunlei
+
+>  
+>  unlock:
+>  	mutex_unlock(&kexec_mutex);
+> @@ -1555,5 +1555,5 @@ int kernel_kexec(void)
+>  void __weak crash_map_reserved_pages(void)
+>  {}
+>  
+> -void __weak crash_unmap_reserved_pages(void)
+> +void __weak crash_unmap_reserved_pages(int error)
+>  {}
+
 
 _______________________________________________
 kexec mailing list
