@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aQ7uY-0007Xs-7X
- for kexec@lists.infradead.org; Mon, 01 Feb 2016 06:24:32 +0000
-Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
- by cn.fujitsu.com (Postfix) with ESMTP id D0CAA41896F1
- for <kexec@lists.infradead.org>; Mon,  1 Feb 2016 14:23:00 +0800 (CST)
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v1] Improve the performance of --num-threads -d 31
-Date: Mon, 1 Feb 2016 14:22:20 +0800
-Message-ID: <1454307740-2761-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aQ8L1-000838-Hb
+ for kexec@lists.infradead.org; Mon, 01 Feb 2016 06:51:52 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: readpage_elf: handle 0-pages not stored
+ in the ELF file
+Date: Mon, 1 Feb 2016 06:48:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E1B252@BPXM01GP.gisp.nec.co.jp>
+References: <20160122233514.GA25777@ycc.fr>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
+ <20160127085821.3be424e1@hananiah.suse.cz>
+ <20160127103741.0e4fec81@hananiah.suse.cz>
+In-Reply-To: <20160127103741.0e4fec81@hananiah.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,536 +27,274 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Ivan Delalande <colona@arista.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-v1:
-        1. change page_flag.ready's value to enum
-        2. change the patch description
-        3. cleanup some codes
-	4. fix a bug in cyclic mode
+Hello Petr,
 
-multi-threads implementation will introduce extra cost when handling
-each page. The origin implementation will also do the extra work for
-filtered pages. So there is a big performance degradation in
---num-threads -d 31.
-The new implementation won't do the extra work for filtered pages any
-more. So the performance of -d 31 is close to that of serial processing.
+> handle 0-pages not stored in the ELF file
+>
+>Resent to the list.
+>
+>The list does not like attachments, it seems.
+>
+>Petr T
+>
+>On Wed, 27 Jan 2016 08:58:21 +0100
+>Petr Tesarik <ptesarik@suse.cz> wrote:
+>
+>> Hello Atsushi-san,
+>>
+>> On Wed, 27 Jan 2016 02:21:57 +0000
+>> Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+>>
+>> > Hello Ivan,
+>> >
+>> > >Handle pages filled with zeros that are not stored in the ELF file
+>> > >directly, but have addresses between p_filesz and p_memsz of a segment.
+>> >
+>> > This fix looks reasonable, thanks for your work.
+>> >
+>> > >This allows makedumpfile to dump-dmesg from a previously makedumpfile-ed
+>> > >vmcore where all 0-pages were excluded (dump_level & 1) for example.
+>> >
+>> > I have some comments below:
+>>
+>> Actually, I have already hit another issue with filtered ELF files.
+>> When refiltering an ELF file that had already been filtered, the memory
+>> size vs. file size can cause wrong max_mapnr calculation for a
+>> compressed file. In turn, if some pages were removed at the end of
+>> physical memory, those pages are not marked as filtered in the output
+>> file, but instead the total RAM appears to be smaller by that amount.
+>>
+>> I don't think my patch addresses the same issue that Ivan found, but it
+>> definitely touches the same area. Please have a look.
 
-The new implementation is just like the following:
-        * The basic idea is producer producing page and consumer writing page.
-        * Each producer have a page_flag_buf list which is used for storing
-          page's description.
-        * The size of page_flag_buf is little so it won't take too much memory.
-        * And all producers will share a page_data_buf array which is
-          used for storing page's compressed data.
-        * The main thread is the consumer. It will find the next pfn and write
-          it into file.
-        * The next pfn is smallest pfn in all page_flag_buf.
+Good catch, thanks for your report.
 
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
----
- makedumpfile.c | 258 ++++++++++++++++++++++++++++++++++++++-------------------
- makedumpfile.h |  31 ++++---
- 2 files changed, 193 insertions(+), 96 deletions(-)
+>> Petr Tesarik
+>
+>From: Petr Tesarik <ptesarik@suse.cz>
+>Date: Thu Aug 20 10:43:22 2015 +0200
+>Subject: Keep segment memory size when re-filtering ELF dumps
+>
+>Originally, makedumpfile was designed to read from /proc/vmcore, where
+>each segment's p_memsz is equal to its p_filesz. However, makedumpfile
+>can also be used to re-filter an already filtered ELF dump file, where
+>memory size may be larger than file size. In that case the memory size
+>should be used as the size of the segment. This affects:
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index fa0b779..0ecd065 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3483,7 +3483,8 @@ initial_for_parallel()
- 	unsigned long page_data_buf_size;
- 	unsigned long limit_size;
- 	int page_data_num;
--	int i;
-+	struct page_flag *current;
-+	int i, j;
- 
- 	len_buf_out = calculate_len_buf_out(info->page_size);
- 
-@@ -3562,8 +3563,10 @@ initial_for_parallel()
- 		      - MAP_REGION * info->num_threads) * 0.6;
- 
- 	page_data_num = limit_size / page_data_buf_size;
-+	info->num_buffers = 3 * info->num_threads;
- 
--	info->num_buffers = MIN(NUM_BUFFERS, page_data_num);
-+	info->num_buffers = MAX(info->num_buffers, NUM_BUFFERS);
-+	info->num_buffers = MIN(info->num_buffers, page_data_num);
- 
- 	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
- 			info->num_buffers);
-@@ -3588,6 +3591,36 @@ initial_for_parallel()
- 	}
- 
- 	/*
-+	 * initial page_flag for each thread
-+	 */
-+	if ((info->page_flag_buf = malloc(sizeof(void *) * info->num_threads))
-+	    == NULL) {
-+		MSG("Can't allocate memory for page_flag_buf. %s\n",
-+				strerror(errno));
-+		return FALSE;
-+	}
-+	memset(info->page_flag_buf, 0, sizeof(void *) * info->num_threads);
-+
-+	for (i = 0; i < info->num_threads; i++) {
-+		if ((info->page_flag_buf[i] = malloc(sizeof(struct page_flag))) == NULL) {
-+			MSG("Can't allocate memory for page_flag_buf. %s\n",
-+				strerror(errno));
-+			return FALSE;
-+		}
-+		current = info->page_flag_buf[i];
-+
-+		for (j = 1; j < NUM_BUFFERS; j++) {
-+			if ((current->next = calloc(0, sizeof(struct page_flag))) == NULL) {
-+				MSG("Can't allocate memory for data of page_data_buf. %s\n",
-+					strerror(errno));
-+				return FALSE;
-+			}
-+			current = current->next;
-+		}
-+		current->next = info->page_flag_buf[i];
-+	}
-+
-+	/*
- 	 * initial fd_memory for threads
- 	 */
- 	for (i = 0; i < info->num_threads; i++) {
-@@ -3612,7 +3645,8 @@ initial_for_parallel()
- void
- free_for_parallel()
- {
--	int i;
-+	int i, j;
-+	struct page_flag *current;
- 
- 	if (info->threads != NULL) {
- 		for (i = 0; i < info->num_threads; i++) {
-@@ -3655,6 +3689,19 @@ free_for_parallel()
- 		free(info->page_data_buf);
- 	}
- 
-+	if (info->page_flag_buf != NULL) {
-+		for (i = 0; i < info->num_threads; i++) {
-+			for (j = 0; j < NUM_BUFFERS; j++) {
-+				if (info->page_flag_buf[i] != NULL) {
-+					current = info->page_flag_buf[i];
-+					info->page_flag_buf[i] = current->next;
-+					free(current);
-+				}
-+			}
-+		}
-+		free(info->page_flag_buf);
-+	}
-+
- 	if (info->parallel_info == NULL)
- 		return;
- 
-@@ -7076,10 +7123,10 @@ kdump_thread_function_cyclic(void *arg) {
- 	void *retval = PTHREAD_FAIL;
- 	struct thread_args *kdump_thread_args = (struct thread_args *)arg;
- 	struct page_data *page_data_buf = kdump_thread_args->page_data_buf;
-+	struct page_flag *page_flag_buf = kdump_thread_args->page_flag_buf;
- 	struct cycle *cycle = kdump_thread_args->cycle;
--	int page_data_num = kdump_thread_args->page_data_num;
- 	mdf_pfn_t pfn;
--	int index;
-+	int index = kdump_thread_args->thread_num;
- 	int buf_ready;
- 	int dumpable;
- 	int fd_memory = 0;
-@@ -7125,47 +7172,47 @@ kdump_thread_function_cyclic(void *arg) {
- 						kdump_thread_args->thread_num);
- 	}
- 
--	while (1) {
--		/* get next pfn */
--		pthread_mutex_lock(&info->current_pfn_mutex);
--		pfn = info->current_pfn;
--		info->current_pfn++;
--		pthread_mutex_unlock(&info->current_pfn_mutex);
-+	/*
-+	 * filtered page won't take anything
-+	 * unfiltered zero page will only take a page_flag_buf
-+	 * unfiltered non-zero page will take a page_flag_buf and a page_data_buf
-+	 */
-+	while (page_flag_buf->pfn < kdump_thread_args->end_pfn) {
-+		buf_ready = FALSE;
- 
--		if (pfn >= kdump_thread_args->end_pfn)
--			break;
-+		while (page_data_buf[index].used != 0 ||
-+				pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
-+			index = (index + 1) % info->num_buffers;
- 
--		index = -1;
--		buf_ready = FALSE;
-+		page_data_buf[index].used = 1;
- 
- 		while (buf_ready == FALSE) {
- 			pthread_testcancel();
--
--			index = pfn % page_data_num;
--
--			if (pfn - info->consumed_pfn > info->num_buffers)
-+			if (page_flag_buf->ready == FLAG_READY)
- 				continue;
- 
--			if (page_data_buf[index].ready != 0)
--				continue;
--
--			pthread_mutex_lock(&page_data_buf[index].mutex);
-+			/* get next pfn */
-+			pthread_mutex_lock(&info->current_pfn_mutex);
-+			pfn = info->current_pfn;
-+			info->current_pfn++;
-+			page_flag_buf->ready = FLAG_FILLING;
-+			pthread_mutex_unlock(&info->current_pfn_mutex);
- 
--			if (page_data_buf[index].ready != 0)
--				goto unlock;
-+			page_flag_buf->pfn = pfn;
- 
--			buf_ready = TRUE;
--
--			page_data_buf[index].pfn = pfn;
--			page_data_buf[index].ready = 1;
-+			if (pfn >= kdump_thread_args->end_pfn) {
-+				page_data_buf[index].used = 0;
-+				page_flag_buf->ready = FLAG_READY;
-+				info->current_pfn--;
-+				break;
-+			}
- 
- 			dumpable = is_dumpable(
- 				info->fd_bitmap ? &bitmap_parallel : info->bitmap2,
- 				pfn,
- 				cycle);
--			page_data_buf[index].dumpable = dumpable;
- 			if (!dumpable)
--				goto unlock;
-+				continue;
- 
- 			if (!read_pfn_parallel(fd_memory, pfn, buf,
- 					       &bitmap_memory_parallel,
-@@ -7178,11 +7225,11 @@ kdump_thread_function_cyclic(void *arg) {
- 
- 			if ((info->dump_level & DL_EXCLUDE_ZERO)
- 			    && is_zero_page(buf, info->page_size)) {
--				page_data_buf[index].zero = TRUE;
--				goto unlock;
-+				page_flag_buf->zero = TRUE;
-+				goto next;
- 			}
- 
--			page_data_buf[index].zero = FALSE;
-+			page_flag_buf->zero = FALSE;
- 
- 			/*
- 			 * Compress the page data.
-@@ -7232,12 +7279,16 @@ kdump_thread_function_cyclic(void *arg) {
- 				page_data_buf[index].size  = info->page_size;
- 				memcpy(page_data_buf[index].buf, buf, info->page_size);
- 			}
--unlock:
--			pthread_mutex_unlock(&page_data_buf[index].mutex);
-+			page_flag_buf->index = index;
-+			buf_ready = TRUE;
-+next:
-+			page_flag_buf->ready = FLAG_READY;
-+			page_flag_buf = page_flag_buf->next;
- 
- 		}
--	}
- 
-+		pthread_mutex_unlock(&page_data_buf[index].mutex);
-+	}
- 	retval = NULL;
- 
- fail:
-@@ -7265,14 +7316,15 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
- 	struct page_desc pd;
- 	struct timeval tv_start;
- 	struct timeval last, new;
--	unsigned long long consuming_pfn;
- 	pthread_t **threads = NULL;
- 	struct thread_args *kdump_thread_args = NULL;
- 	void *thread_result;
--	int page_data_num;
-+	int page_buf_num;
- 	struct page_data *page_data_buf = NULL;
- 	int i;
- 	int index;
-+	int end_count, consuming, check_count;
-+	mdf_pfn_t current_pfn, temp_pfn;
- 
- 	if (info->flag_elf_dumpfile)
- 		return FALSE;
-@@ -7319,16 +7371,11 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
- 	threads = info->threads;
- 	kdump_thread_args = info->kdump_thread_args;
- 
--	page_data_num = info->num_buffers;
-+	page_buf_num = info->num_buffers;
- 	page_data_buf = info->page_data_buf;
- 
--	for (i = 0; i < page_data_num; i++) {
--		/*
--		 * producer will use pfn in page_data_buf to decide the
--		 * consumed pfn
--		 */
--		page_data_buf[i].pfn = start_pfn - 1;
--		page_data_buf[i].ready = 0;
-+	for (i = 0; i < page_buf_num; i++) {
-+		page_data_buf[i].used = 0;
- 		res = pthread_mutex_init(&page_data_buf[i].mutex, NULL);
- 		if (res != 0) {
- 			ERRMSG("Can't initialize mutex of page_data_buf. %s\n",
-@@ -7342,8 +7389,9 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
- 		kdump_thread_args[i].len_buf_out = len_buf_out;
- 		kdump_thread_args[i].start_pfn = start_pfn;
- 		kdump_thread_args[i].end_pfn = end_pfn;
--		kdump_thread_args[i].page_data_num = page_data_num;
-+		kdump_thread_args[i].page_buf_num = page_buf_num;
- 		kdump_thread_args[i].page_data_buf = page_data_buf;
-+		kdump_thread_args[i].page_flag_buf = info->page_flag_buf[i];
- 		kdump_thread_args[i].cycle = cycle;
- 
- 		res = pthread_create(threads[i], NULL,
-@@ -7356,55 +7404,94 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
- 		}
- 	}
- 
--	consuming_pfn = start_pfn;
--	index = -1;
-+	while (1) {
-+		consuming = 0;
-+		check_count = 0;
-+		end_count = 0;
- 
--	gettimeofday(&last, NULL);
-+		/*
-+		 * The basic idea is producer producing page and consumer writing page.
-+		 * Each producer have a page_flag_buf list which is used for storing page's description.
-+		 * The size of page_flag_buf is little so it won't take too much memory.
-+		 * And all producers will share a page_data_buf array which is used for storing page's compressed data.
-+		 * The main thread is the consumer. It will find the next pfn and write it into file.
-+		 * The next pfn is smallest pfn in all page_flag_buf.
-+		 */
-+		while (1) {
-+			current_pfn = end_pfn;
- 
--	while (consuming_pfn < end_pfn) {
--		index = consuming_pfn % page_data_num;
-+			/*
-+			 * page_flag_buf is in circular linked list.
-+			 * The array info->page_flag_buf[] records the current page_flag_buf in each thread's
-+			 * page_flag_buf list.
-+			 * consuming is used for recording in which thread the pfn is the smallest.
-+			 * current_pfn is used for recording the value of pfn when checking the pfn.
-+			 */
-+			for (i = 0; i < info->num_threads; i++) {
-+				if (info->page_flag_buf[i]->ready == FLAG_UNUSED)
-+					continue;
-+				temp_pfn = info->page_flag_buf[i]->pfn;
- 
--		gettimeofday(&new, NULL);
--		if (new.tv_sec - last.tv_sec > WAIT_TIME) {
--			ERRMSG("Can't get data of pfn %llx.\n", consuming_pfn);
--			goto out;
--		}
-+				/*
-+				 * count how many threads have reached the end.
-+				 */
-+				if (temp_pfn >= end_pfn) {
-+					end_count++;
-+					info->page_flag_buf[i]->ready = FLAG_UNUSED;
-+					continue;
-+				}
- 
--		/*
--		 * check pfn first without mutex locked to reduce the time
--		 * trying to lock the mutex
--		 */
--		if (page_data_buf[index].pfn != consuming_pfn)
--			continue;
-+				if (current_pfn < temp_pfn)
-+					continue;
- 
--		if (pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
--			continue;
-+				check_count++;
-+				consuming = i;
-+				current_pfn = temp_pfn;
-+			}
-+
-+			/*
-+			 * If all the threads have reached the end, we will finish writing.
-+			 */
-+			if (end_count >= info->num_threads)
-+				goto finish;
-+
-+			/*
-+			 * Since it has the probabilty that there is no page_flag_buf being ready,
-+			 * we should recheck if it happens.
-+			 */
-+			if (check_count == 0)
-+				continue;
-+
-+			/*
-+			 * When we check the pfn in page_flag_buf, it may be being produced.
-+			 * So we should wait until it is ready to use. And if the pfn is
-+			 * different from the value when we check, we should rechoose the buf.
-+			 */
-+			gettimeofday(&last, NULL);
-+			while (info->page_flag_buf[consuming]->ready != FLAG_READY) {
-+				gettimeofday(&new, NULL);
-+				if (new.tv_sec - last.tv_sec > WAIT_TIME) {
-+					ERRMSG("Can't get data of pfn.\n");
-+					goto out;
-+				}
-+			}
- 
--		/* check whether the found one is ready to be consumed */
--		if (page_data_buf[index].pfn != consuming_pfn ||
--		    page_data_buf[index].ready != 1) {
--			goto unlock;
-+			if (current_pfn == info->page_flag_buf[consuming]->pfn)
-+				break;
- 		}
- 
- 		if ((num_dumped % per) == 0)
- 			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
- 
--		/* next pfn is found, refresh last here */
--		last = new;
--		consuming_pfn++;
--		info->consumed_pfn++;
--		page_data_buf[index].ready = 0;
--
--		if (page_data_buf[index].dumpable == FALSE)
--			goto unlock;
--
- 		num_dumped++;
- 
--		if (page_data_buf[index].zero == TRUE) {
-+
-+		if (info->page_flag_buf[consuming]->zero == TRUE) {
- 			if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
- 				goto out;
- 			pfn_zero++;
- 		} else {
-+			index = info->page_flag_buf[consuming]->index;
- 			pd.flags      = page_data_buf[index].flags;
- 			pd.size       = page_data_buf[index].size;
- 			pd.page_flags = 0;
-@@ -7420,12 +7507,12 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
- 			 */
- 			if (!write_cache(cd_page, page_data_buf[index].buf, pd.size))
- 				goto out;
--
-+			page_data_buf[index].used = 0;
- 		}
--unlock:
--		pthread_mutex_unlock(&page_data_buf[index].mutex);
-+		info->page_flag_buf[consuming]->ready = FLAG_UNUSED;
-+		info->page_flag_buf[consuming] = info->page_flag_buf[consuming]->next;
- 	}
--
-+finish:
- 	ret = TRUE;
- 	/*
- 	 * print [100 %]
-@@ -7464,7 +7551,7 @@ out:
- 	}
- 
- 	if (page_data_buf != NULL) {
--		for (i = 0; i < page_data_num; i++) {
-+		for (i = 0; i < page_buf_num; i++) {
- 			pthread_mutex_destroy(&page_data_buf[i].mutex);
- 		}
- 	}
-@@ -7564,6 +7651,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 		num_dumped++;
- 		if (!read_pfn(pfn, buf))
- 			goto out;
-+
- 		filter_data_buffer(buf, pfn_to_paddr(pfn), info->page_size);
- 
- 		/*
-diff --git a/makedumpfile.h b/makedumpfile.h
-index e0b5bbf..8a9a5b2 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -977,7 +977,7 @@ typedef unsigned long long int ulonglong;
- #define PAGE_DATA_NUM	(50)
- #define WAIT_TIME	(60 * 10)
- #define PTHREAD_FAIL	((void *)-2)
--#define NUM_BUFFERS	(50)
-+#define NUM_BUFFERS	(20)
- 
- struct mmap_cache {
- 	char	*mmap_buf;
-@@ -985,28 +985,36 @@ struct mmap_cache {
- 	off_t   mmap_end_offset;
- };
- 
-+enum {
-+	FLAG_UNUSED,
-+	FLAG_READY,
-+	FLAG_FILLING
-+};
-+struct page_flag {
-+	mdf_pfn_t pfn;
-+	char zero;
-+	char ready;
-+	short index;
-+	struct page_flag *next;
-+};
-+
- struct page_data
- {
--	mdf_pfn_t pfn;
--	int dumpable;
--	int zero;
--	unsigned int flags;
-+	pthread_mutex_t mutex;
- 	long size;
- 	unsigned char *buf;
--	pthread_mutex_t mutex;
--	/*
--	 * whether the page_data is ready to be consumed
--	 */
--	int ready;
-+	int flags;
-+	int used;
- };
- 
- struct thread_args {
- 	int thread_num;
- 	unsigned long len_buf_out;
- 	mdf_pfn_t start_pfn, end_pfn;
--	int page_data_num;
-+	int page_buf_num;
- 	struct cycle *cycle;
- 	struct page_data *page_data_buf;
-+	struct page_flag *page_flag_buf;
- };
- 
- /*
-@@ -1295,6 +1303,7 @@ struct DumpInfo {
- 	pthread_t **threads;
- 	struct thread_args *kdump_thread_args;
- 	struct page_data *page_data_buf;
-+	struct page_flag **page_flag_buf;
- 	pthread_rwlock_t usemmap_rwlock;
- 	mdf_pfn_t current_pfn;
- 	pthread_mutex_t current_pfn_mutex;
--- 
-1.8.3.1
+Does this problem occur only if makedumpfile has done filtering ?
+According to the man 5 elf, even the original ELF file can have
+"unstored zero pages".
+
+   PT_LOAD     The array element specifies a loadable segment, described  by  p_filesz  and  p_memsz.
+               The  bytes  from  the  file are mapped to the beginning of the memory segment.  If the
+               segment's memory size p_memsz is larger than the file size p_filesz, the "extra" bytes
+               are  defined  to  hold  the value 0 and to follow the segment's initialized area.
+
+If unstored pages will be made only by makedumpfile, what I said
+Below has no meaning.
+
+>1. max_mapnr
+>   This value is computed as the highest phys_end. If the last segment
+>   was filtered, max_mapnr may be too small, and the crash utility will
+>   refuse to read that memory (even with --zero_excluded).
+
+Yes, should be computed based on p_memsz.
+
+>2. p_memsz field in ELF dumps
+>   The resulting ELF segment p_memsz will be capped to original file's
+>   p_filesz, ignoring the original p_memsz.
+
+Yes, should be fixed.
+
+>3. memory holes in KDUMP dumps
+>   Pages excluded in the original ELF dump will be appear as memory
+>   holes in the resulting KDUMP file's first bitmap.
+
+ a. If an unstored page is a just zero page, it is neither on a memory hole
+    nor a filtered page. 
+ b. If an unstored page is the result of makedumpfile filtering, it should be
+    handled as a filtered page. 
+
+However, I think it's impossible to distinguish whether former or latter
+after filtering.
+
+>4. vtop translation
+>   Virtual addresses that were filtered out in the original ELF file
+>   cannot be translated to physical addresses using the generic vtop
+>   translation.
+
+Exactly, should refer to p_memsz for it as you did.
+
+>My fix uses p_memsz to set physical and virtual extents of ELF segments,
+>because this is the actual size. However, file size is important when
+>accessing page data, so it must be stored separately and checked where
+>appropriate. Last but not least, pages that were filtered in the original
+>dump file must also be filtered in the destination file, i.e. pages
+>between p_filesz and p_memsz must have their corresponding bit cleared in
+>the 2nd bitmap.
+
+As I said above, I suspect not all of unstored pages are filtered pages,
+I'm not sure exclude_nodata_pages() does right things.
+As Ivan's patch does, I guess reading them as zero pages fits ELF's format
+specification.
 
 
+Thanks,
+Atsushi Kumagai
 
+>Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>
+>---
+> elf_info.c     |   37 ++++++++++++++++++++++++++++++-------
+> elf_info.h     |    4 ++++
+> makedumpfile.c |   26 ++++++++++++++++++++++++++
+> 3 files changed, 60 insertions(+), 7 deletions(-)
+>
+>--- a/elf_info.c
+>+++ b/elf_info.c
+>@@ -38,6 +38,7 @@
+>
+> struct pt_load_segment {
+> 	off_t			file_offset;
+>+	off_t			file_size;
+> 	unsigned long long	phys_start;
+> 	unsigned long long	phys_end;
+> 	unsigned long long	virt_start;
+>@@ -162,10 +163,11 @@ dump_Elf_load(Elf64_Phdr *prog, int num_
+>
+> 	pls = &pt_loads[num_load];
+> 	pls->phys_start  = prog->p_paddr;
+>-	pls->phys_end    = pls->phys_start + prog->p_filesz;
+>+	pls->phys_end    = pls->phys_start + prog->p_memsz;
+> 	pls->virt_start  = prog->p_vaddr;
+>-	pls->virt_end    = pls->virt_start + prog->p_filesz;
+>+	pls->virt_end    = pls->virt_start + prog->p_memsz;
+> 	pls->file_offset = prog->p_offset;
+>+	pls->file_size   = prog->p_filesz;
+>
+> 	DEBUG_MSG("LOAD (%d)\n", num_load);
+> 	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
+>@@ -462,7 +464,7 @@ paddr_to_offset(unsigned long long paddr
+> 	for (i = offset = 0; i < num_pt_loads; i++) {
+> 		pls = &pt_loads[i];
+> 		if ((paddr >= pls->phys_start)
+>-		    && (paddr < pls->phys_end)) {
+>+		    && (paddr < pls->phys_start + pls->file_size)) {
+> 			offset = (off_t)(paddr - pls->phys_start) +
+> 				pls->file_offset;
+> 			break;
+>@@ -480,16 +482,14 @@ paddr_to_offset2(unsigned long long padd
+> {
+> 	int i;
+> 	off_t offset;
+>-	unsigned long long len;
+> 	struct pt_load_segment *pls;
+>
+> 	for (i = offset = 0; i < num_pt_loads; i++) {
+> 		pls = &pt_loads[i];
+>-		len = pls->phys_end - pls->phys_start;
+> 		if ((paddr >= pls->phys_start)
+>-		    && (paddr < pls->phys_end)
+>+		    && (paddr < pls->phys_start + pls->file_size)
+> 		    && (hint >= pls->file_offset)
+>-		    && (hint < pls->file_offset + len)) {
+>+		    && (hint < pls->file_offset + pls->file_size)) {
+> 			offset = (off_t)(paddr - pls->phys_start) +
+> 				pls->file_offset;
+> 			break;
+>@@ -1095,6 +1095,29 @@ get_pt_load(int idx,
+>
+> 	return TRUE;
+> }
+>+
+>+int
+>+get_pt_extents(int idx,
+>+	unsigned long long *phys_start,
+>+	unsigned long long *phys_end,
+>+	off_t *file_size)
+>+{
+>+	struct pt_load_segment *pls;
+>+
+>+	if (num_pt_loads <= idx)
+>+		return FALSE;
+>+
+>+	pls = &pt_loads[idx];
+>+
+>+	if (phys_start)
+>+		*phys_start = pls->phys_start;
+>+	if (phys_end)
+>+		*phys_end   = pls->phys_end;
+>+	if (file_size)
+>+		*file_size = pls->file_size;
+>+
+>+	return TRUE;
+>+}
+>
+> unsigned int
+> get_num_pt_loads(void)
+>--- a/elf_info.h
+>+++ b/elf_info.h
+>@@ -61,6 +61,10 @@ int get_pt_load(int idx,
+> 	unsigned long long *phys_end,
+> 	unsigned long long *virt_start,
+> 	unsigned long long *virt_end);
+>+int get_pt_extents(int idx,
+>+	unsigned long long *phys_start,
+>+	unsigned long long *phys_end,
+>+	off_t *file_size);
+> unsigned int get_num_pt_loads(void);
+>
+> void set_nr_cpus(int num);
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -4395,6 +4395,26 @@ read_start_flat_header(void)
+> 	return TRUE;
+> }
+>
+>+static void
+>+exclude_nodata_pages(void)
+>+{
+>+	int i;
+>+	unsigned long long phys_start, phys_end;
+>+	off_t file_size;
+>+
+>+	i = 0;
+>+	while (get_pt_extents(i, &phys_start, &phys_end, &file_size)) {
+>+		unsigned long long pfn, pfn_end;
+>+
+>+		pfn = paddr_to_pfn(phys_start + file_size);
+>+		pfn_end = paddr_to_pfn(phys_end);
+>+		while (pfn <= pfn_end)
+>+			clear_bit_on_2nd_bitmap(pfn);
+>+			++pfn;
+>+		++i;
+>+	}
+>+}
+>+
+> int
+> read_flat_data_header(struct makedumpfile_data_header *fdh)
+> {
+>@@ -6087,6 +6107,12 @@ create_2nd_bitmap(struct cycle *cycle)
+> 	}
+>
+> 	/*
+>+	 * If re-filtering ELF dump, exclude pages that were already
+>+	 * excluded in the original file.
+>+	 */
+>+	exclude_nodata_pages();
+>+
+>+	/*
+> 	 * Exclude cache pages, cache private pages, user data pages,
+> 	 * and hwpoison pages.
+> 	 */
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
