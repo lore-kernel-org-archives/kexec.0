@@ -1,20 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aQDAJ-0002mh-Bv
- for kexec@lists.infradead.org; Mon, 01 Feb 2016 12:01:09 +0000
-Date: Mon, 1 Feb 2016 13:00:42 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: readpage_elf: handle 0-pages not stored
- in the ELF file
-Message-ID: <20160201130042.5c83f7ae@hananiah.suse.cz>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E1B252@BPXM01GP.gisp.nec.co.jp>
-References: <20160122233514.GA25777@ycc.fr>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
- <20160127085821.3be424e1@hananiah.suse.cz>
- <20160127103741.0e4fec81@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E1B252@BPXM01GP.gisp.nec.co.jp>
+ id 1aQTMT-0007KB-Pd
+ for kexec@lists.infradead.org; Tue, 02 Feb 2016 05:18:46 +0000
+Received: by mail-pf0-x232.google.com with SMTP id o185so91725711pfb.1
+ for <kexec@lists.infradead.org>; Mon, 01 Feb 2016 21:18:25 -0800 (PST)
+Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
+References: <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
+ <20160119125114.GH25024@leverpostej>
+ <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
+ <20160119140139.GC26545@leverpostej>
+ <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
+ <569F2439.9000604@linaro.org> <20160120114929.GB25829@leverpostej>
+ <56A08076.8060302@linaro.org> <20160121120210.GD2581@leverpostej>
+ <56A1CAD2.70403@linaro.org> <20160122111331.GA23620@leverpostej>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Message-ID: <56B03C17.5090606@linaro.org>
+Date: Tue, 2 Feb 2016 14:18:15 +0900
 MIME-Version: 1.0
+In-Reply-To: <20160122111331.GA23620@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,118 +27,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Ivan Delalande <colona@arista.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello Atsushi,
+Mark,
 
-On Mon, 1 Feb 2016 06:48:13 +0000
-Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+On 01/22/2016 08:13 PM, Mark Rutland wrote:
+> On Fri, Jan 22, 2016 at 03:23:14PM +0900, AKASHI Takahiro wrote:
+>> On 01/21/2016 09:02 PM, Mark Rutland wrote:
+>>> On Thu, Jan 21, 2016 at 03:53:42PM +0900, AKASHI Takahiro wrote:
+>>>> On 01/20/2016 08:49 PM, Mark Rutland wrote:
+>>>>> On Wed, Jan 20, 2016 at 03:07:53PM +0900, AKASHI Takahiro wrote:
+>>>>>> On 01/20/2016 11:49 AM, Dave Young wrote:
+>>>>>>> Firmware do not know kernel endianniess, kernel should respect firmware
+>>>>>>> maps and adapt to it, it sounds like a generic issue not specfic to kexec.
+>>>>>>
+>>>>>> On arm64, a kernel image header has a bit field to specify the image's endianness.
+>>>>>> Anyway, our current implementation replies on a user-supplied dtb to start BE kernel.
+>>>>>
+>>>>> The firmware should _never_ care about the kernel's endianness. The
+>>>>> bootlaoder or first kernel shouldn't care about the next kernel's
+>>>>> endianness apart from in exceptional circumstances. The DTB for a LE
+>>>>> kernel should look identical to that passed to a BE kernel.
+>>>>
+>>>> Please note that I didn't say anything different from your last two statements.
+>>>> The current arm64 kexec implementation doesn't do anything specific to BE,
+>>>> but as far as BE kernel doesn't support UEFI, users are responsible for
+>>>> providing a proper dtb.
+>>>
+>>> I'm just confused as to what you mean by a "proper dtb" in that case.
+>>>
+>>> If you just mean one with memory nodes hacked in, then that would
+>>> currently be a way to make that work, yes.
+>>
+>> One of useful cases that I have in my mind is kdump.
+>> We may want to use a small sub-set of dtb, especially devices, to
+>> make the reboot more reliable. Device drivers are likely to be vulnerable
+>> at crash.
+>
+> I don't think that we can reliably have userspace carve out devices from
+> the DTB or from ACPI tables in order to achieve that. That's going to
+> end up complex and/or incomplete. We also can't do this in the
+> kexec_load_file / Secure Boot case.
+>
+> That's not to say we cannot try, as it's possible when using kexec_load.
+> However, it's only going to be possible on a subset of systems, and it
+> would probably make sense to reserve this approach to those cases we
+> cannot work around by other means (e.g. whitelisting "safe" devices in
+> the kdump kernel, forcing explicit resets, etc).
+>
+>>> It seems like the better option is to fix the BE kernel to support a
+>>> UEFI memory map, as that solves other issues.
+>>
+>> Why did Ard throw away his patch?
+>
+> In the absence of kexec it wasn't necessary, it only supported a subset
+> of the runtime services (and no other features like DMI IIRC), and it
+> looked like it would be painful to debug (if something went wrong while
+> a CPU was in LE mode, we couldn't even panic()).
+>
+> Given BE kernels on UEFI were never supported until that point, there
+> wasn't a compelling reason to support that case.
+>
+> Even if we support the UEFI memory map, I don't think it's worth the
+> effort to support runtime services, ACPI, and related code that's only
+> ever been tested on LE. So realistically this would only work on systems
+> using UEFI && DT rather than UEFI && ACPI.
+>
+>> So, are you now suggesting that we put both "elfcorehdr=" and
+>> "usable-memory=" under /chosen in dtb?
+>
+> Yes.
+>
+>> That's fair enough.  (as far as nobody cares about incompatibility
+>> with other archs.)
+>
+> Glad to hear! :)
 
->[...]
-> >Originally, makedumpfile was designed to read from /proc/vmcore, where
-> >each segment's p_memsz is equal to its p_filesz. However, makedumpfile
-> >can also be used to re-filter an already filtered ELF dump file, where
-> >memory size may be larger than file size. In that case the memory size
-> >should be used as the size of the segment. This affects:
-> 
-> Does this problem occur only if makedumpfile has done filtering ?
+I'm preparing for a new version based on our discussions.
+Do you think that UEFI memory map support on BE kernel is a prerequisite
+for accepting my kdump?
 
-Indeed, I have only seen it in a previously filtered dump file, but see
-below.
+-Takahiro AKASHI
 
-> According to the man 5 elf, even the original ELF file can have
-> "unstored zero pages".
-> 
-> [...]
-
-I'm aware of that.
-
-> If unstored pages will be made only by makedumpfile, what I said
-> Below has no meaning.
-
-So, I had a look at the kernel code for /proc/vmcore, and it turns out
-that the p_memsz and p_filesz fields for PT_LOAD segments are not
-changed at all. This means they are prepared by:
-
-  a. kexec(8) or
-  b. kexec_file_load(2) in the old kernel, or
-  c. elfcorehdr_alloc() in the new kernel (s390).
-
-For option a, kexec/crashdump-elf.c says:
-
-		phdr->p_filesz  = phdr->p_memsz = elf_info->kern_size;
-
-and:
-		phdr->p_filesz  = phdr->p_memsz = mend - mstart + 1;
-
-For option b, arch/x86/kernel/crash.c says:
-
-		phdr->p_filesz = phdr->p_memsz = mend - mstart + 1;
-
-and:
-		phdr->p_filesz = phdr->p_memsz = _end - _text;
-
-For option c, arch/s390/kernel/crash_dump.c says:
-
-		phdr->p_filesz = end - start;
-		phdr->p_memsz = end - start;
-
-To sum it up, both fields (p_filesz and p_memsz) may originate outside
-the dump kernel (except s390), hence they cannot be fully trusted.
-Theoretically, you can write a custom tool which creates ELF segments
-with p_memsz greater than p_filesz and pass it to the secondary kernel.
-However, I'm not sure how it should be interpreted in a kernel dump
-file: The "file" is in fact physical RAM, so such a segment would in
-effect forcibly replace existing RAM content with zeros.
-
-OTOH another tool may post-process /proc/vmcore, translating
-zero-filled pages to more segments with a smaller p_filesz (just like
-makedumpfile does). If makedumpfile is supposed to interpret the output
-of such a (hypothetical) tool correctly, then yes, you must follow the
-ELF specification and treat the pages as zero.
-
->[...]
-> >3. memory holes in KDUMP dumps
-> >   Pages excluded in the original ELF dump will be appear as memory
-> >   holes in the resulting KDUMP file's first bitmap.
-> 
->  a. If an unstored page is a just zero page, it is neither on a memory hole
->     nor a filtered page. 
->  b. If an unstored page is the result of makedumpfile filtering, it should be
->     handled as a filtered page. 
-> 
-> However, I think it's impossible to distinguish whether former or latter
-> after filtering.
-
-Correct.
-
-A clean solution would be to store this information in the filtered ELF
-file, e.g. with a ELF note or with an OS-specific program header flag.
-
->[...]
-> As I said above, I suspect not all of unstored pages are filtered pages,
-> I'm not sure exclude_nodata_pages() does right things.
-> As Ivan's patch does, I guess reading them as zero pages fits ELF's format
-> specification.
-
-That's right. It follows the ELF specification.
-
-It may replace filtered out pages with zero-filled pages when
-converting an already-filtered ELF file to the compressed format; but
-they may be filtered again if bit 0 is set in the dump level, so Ivan's
-approach is cleaner, in fact. If you ever find a way to mark filtered
-out pages in an ELF file, then this behaviour can be improved later.
-
-Anyway, are you going to take the patch by Ivan, or my patch (after I
-remove exclude_nodata_pages)?
-
-Regards,
-Petr Tesarik
+> Thanks,
+> Mark.
+>
 
 _______________________________________________
 kexec mailing list
