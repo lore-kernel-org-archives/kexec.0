@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aQTMT-0007KB-Pd
- for kexec@lists.infradead.org; Tue, 02 Feb 2016 05:18:46 +0000
-Received: by mail-pf0-x232.google.com with SMTP id o185so91725711pfb.1
- for <kexec@lists.infradead.org>; Mon, 01 Feb 2016 21:18:25 -0800 (PST)
-Subject: Re: [PATCH 18/19] arm64: kdump: update a kernel doc
-References: <20160119122848.GA2904@dhcp-128-65.nay.redhat.com>
- <20160119125114.GH25024@leverpostej>
- <20160119134553.GA2986@dhcp-128-65.nay.redhat.com>
- <20160119140139.GC26545@leverpostej>
- <20160120024946.GA2999@dhcp-128-65.nay.redhat.com>
- <569F2439.9000604@linaro.org> <20160120114929.GB25829@leverpostej>
- <56A08076.8060302@linaro.org> <20160121120210.GD2581@leverpostej>
- <56A1CAD2.70403@linaro.org> <20160122111331.GA23620@leverpostej>
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Message-ID: <56B03C17.5090606@linaro.org>
-Date: Tue, 2 Feb 2016 14:18:15 +0900
-MIME-Version: 1.0
-In-Reply-To: <20160122111331.GA23620@leverpostej>
+ id 1aQTkA-00008V-16
+ for kexec@lists.infradead.org; Tue, 02 Feb 2016 05:43:14 +0000
+Date: Mon, 1 Feb 2016 21:45:40 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] kexec: unmap reserved pages for each error-return way
+Message-Id: <20160201214540.c0b4b8c2.akpm@linux-foundation.org>
+In-Reply-To: <56A9D7F2.5000504@virtuozzo.com>
+References: <1453895311-11087-1-git-send-email-dsafonov@virtuozzo.com>
+ <20160128062906.GA4170@dhcp-128-25.nay.redhat.com>
+ <56A9D7F2.5000504@virtuozzo.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,96 +20,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: ard.biesheuvel@linaro.org, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, christoffer.dall@linaro.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Dmitry Safonov <dsafonov@virtuozzo.com>
+Cc: linux-s390@vger.kernel.org, Minfei Huang <mhuang@redhat.com>, 0x7f454c46@gmail.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, holzheu@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org
 
-Mark,
+On Thu, 28 Jan 2016 11:57:22 +0300 Dmitry Safonov <dsafonov@virtuozzo.com> wrote:
 
-On 01/22/2016 08:13 PM, Mark Rutland wrote:
-> On Fri, Jan 22, 2016 at 03:23:14PM +0900, AKASHI Takahiro wrote:
->> On 01/21/2016 09:02 PM, Mark Rutland wrote:
->>> On Thu, Jan 21, 2016 at 03:53:42PM +0900, AKASHI Takahiro wrote:
->>>> On 01/20/2016 08:49 PM, Mark Rutland wrote:
->>>>> On Wed, Jan 20, 2016 at 03:07:53PM +0900, AKASHI Takahiro wrote:
->>>>>> On 01/20/2016 11:49 AM, Dave Young wrote:
->>>>>>> Firmware do not know kernel endianniess, kernel should respect firmware
->>>>>>> maps and adapt to it, it sounds like a generic issue not specfic to kexec.
->>>>>>
->>>>>> On arm64, a kernel image header has a bit field to specify the image's endianness.
->>>>>> Anyway, our current implementation replies on a user-supplied dtb to start BE kernel.
->>>>>
->>>>> The firmware should _never_ care about the kernel's endianness. The
->>>>> bootlaoder or first kernel shouldn't care about the next kernel's
->>>>> endianness apart from in exceptional circumstances. The DTB for a LE
->>>>> kernel should look identical to that passed to a BE kernel.
->>>>
->>>> Please note that I didn't say anything different from your last two statements.
->>>> The current arm64 kexec implementation doesn't do anything specific to BE,
->>>> but as far as BE kernel doesn't support UEFI, users are responsible for
->>>> providing a proper dtb.
->>>
->>> I'm just confused as to what you mean by a "proper dtb" in that case.
->>>
->>> If you just mean one with memory nodes hacked in, then that would
->>> currently be a way to make that work, yes.
->>
->> One of useful cases that I have in my mind is kdump.
->> We may want to use a small sub-set of dtb, especially devices, to
->> make the reboot more reliable. Device drivers are likely to be vulnerable
->> at crash.
->
-> I don't think that we can reliably have userspace carve out devices from
-> the DTB or from ACPI tables in order to achieve that. That's going to
-> end up complex and/or incomplete. We also can't do this in the
-> kexec_load_file / Secure Boot case.
->
-> That's not to say we cannot try, as it's possible when using kexec_load.
-> However, it's only going to be possible on a subset of systems, and it
-> would probably make sense to reserve this approach to those cases we
-> cannot work around by other means (e.g. whitelisting "safe" devices in
-> the kdump kernel, forcing explicit resets, etc).
->
->>> It seems like the better option is to fix the BE kernel to support a
->>> UEFI memory map, as that solves other issues.
->>
->> Why did Ard throw away his patch?
->
-> In the absence of kexec it wasn't necessary, it only supported a subset
-> of the runtime services (and no other features like DMI IIRC), and it
-> looked like it would be painful to debug (if something went wrong while
-> a CPU was in LE mode, we couldn't even panic()).
->
-> Given BE kernels on UEFI were never supported until that point, there
-> wasn't a compelling reason to support that case.
->
-> Even if we support the UEFI memory map, I don't think it's worth the
-> effort to support runtime services, ACPI, and related code that's only
-> ever been tested on LE. So realistically this would only work on systems
-> using UEFI && DT rather than UEFI && ACPI.
->
->> So, are you now suggesting that we put both "elfcorehdr=" and
->> "usable-memory=" under /chosen in dtb?
->
-> Yes.
->
->> That's fair enough.  (as far as nobody cares about incompatibility
->> with other archs.)
->
-> Glad to hear! :)
+> On 01/28/2016 09:29 AM, Minfei Huang wrote:
+> > On 01/27/16 at 02:48pm, Dmitry Safonov wrote:
+> >> For allocation of kimage failure or kexec_prepare or load segments
+> >> errors there is no need to keep crashkernel memory mapped.
+> >> It will affect only s390 as map/unmap hook defined only for it.
+> >> As on unmap s390 also changes os_info structure let's check return code
+> >> and add info only on success.
+> > Hi, Dmitry.
+> >
+> > Previously, I sent a patch to fix this issue. You can refer it in
+> > following link.
+> >
+> > http://lists.infradead.org/pipermail/kexec/2015-July/013960.html
+> Oh, scratch my patch - I'm fine with yours, wanted to do the similar thing
+> because it has dazzled me while I was debugging around.
 
-I'm preparing for a new version based on our discussions.
-Do you think that UEFI memory map support on BE kernel is a prerequisite
-for accepting my kdump?
+There were a bunch of patches tossed around in that thread but I'm not
+sure that anything actually got applied?  Perhaps some resending is
+needed.
 
--Takahiro AKASHI
-
-> Thanks,
-> Mark.
->
 
 _______________________________________________
 kexec mailing list
