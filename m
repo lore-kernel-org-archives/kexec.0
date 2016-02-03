@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp04.au.ibm.com ([202.81.31.146])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aR2nq-0003p5-Az
- for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:09:25 +0000
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+ by casper.infradead.org with esmtps (Exim 4.85 #2 (Red Hat Linux))
+ id 1aR2nL-0002dN-2F
+ for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:52 +0000
 Received: from localhost
- by e23smtp04.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Feb 2016 05:08:59 +1000
-Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id A05B32BB004D
- for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:57 +1100 (EST)
+ Thu, 4 Feb 2016 05:08:27 +1000
+Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id 9DBDB2BB0055
+ for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:24 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u13J8p3q49807580
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:59 +1100
+ by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u13J85nu28704852
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:13 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u13J8OYx010935
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:25 +1100
+ u13J7pRL010052
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:52 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 21/22] ima: measure and appraise the IMA policy itself
-Date: Wed,  3 Feb 2016 14:06:29 -0500
-Message-Id: <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 13/22] firmware: replace call to fw_read_file_contents()
+ with kernel version
+Date: Wed,  3 Feb 2016 14:06:21 -0500
+Message-Id: <1454526390-19792-14-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -41,119 +42,298 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-modules@vger.kernel.org, fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Rusty Russell <rusty@rustcorp.com.au>
 Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-Add support for measuring and appraising the IMA policy itself.
+Replace the fw_read_file_contents with kernel_file_read_from_path().
+
+Although none of the upstreamed LSMs define a kernel_fw_from_file hook,
+IMA is called by the security function to prevent unsigned firmware from
+being loaded and to measure/appraise signed firmware, based on policy.
+
+Instead of reading the firmware twice, once for measuring/appraising the
+firmware and again for reading the firmware contents into memory, the
+kernel_post_read_file() security hook calculates the file hash based on
+the in memory file buffer.  The firmware is read once.
+
+This patch removes the LSM kernel_fw_from_file() hook and security call.
+
+Changelog v3:
+- remove kernel_fw_from_file hook
+- use kernel_file_read_from_path() - requested by Luis
+v2:
+- reordered and squashed firmware patches
+- fix MAX firmware size (Kees Cook)
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- security/integrity/ima/ima.h        |  2 ++
- security/integrity/ima/ima_fs.c     |  9 ++++++++-
- security/integrity/ima/ima_main.c   |  3 +++
- security/integrity/ima/ima_policy.c | 10 +++++++++-
- 4 files changed, 22 insertions(+), 2 deletions(-)
+ drivers/base/firmware_class.c     | 48 +++++++--------------------------------
+ include/linux/fs.h                |  1 +
+ include/linux/ima.h               |  6 -----
+ include/linux/lsm_hooks.h         | 11 ---------
+ include/linux/security.h          |  7 ------
+ security/integrity/ima/ima_main.c | 21 ++++++++---------
+ security/security.c               | 13 -----------
+ 7 files changed, 19 insertions(+), 88 deletions(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 832e62a..6685968 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -149,6 +149,7 @@ enum ima_hooks {
- 	FIRMWARE_CHECK,
- 	KEXEC_CHECK,
- 	INITRAMFS_CHECK,
-+	POLICY_CHECK,
- 	MAX_CHECK
+diff --git a/drivers/base/firmware_class.c b/drivers/base/firmware_class.c
+index c658cec..e06a3d8 100644
+--- a/drivers/base/firmware_class.c
++++ b/drivers/base/firmware_class.c
+@@ -291,37 +291,6 @@ static const char * const fw_path[] = {
+ module_param_string(path, fw_path_para, sizeof(fw_path_para), 0644);
+ MODULE_PARM_DESC(path, "customized firmware image search path with a higher priority than default path");
+ 
+-static int fw_read_file_contents(struct file *file, struct firmware_buf *fw_buf)
+-{
+-	int size;
+-	char *buf;
+-	int rc;
+-
+-	if (!S_ISREG(file_inode(file)->i_mode))
+-		return -EINVAL;
+-	size = i_size_read(file_inode(file));
+-	if (size <= 0)
+-		return -EINVAL;
+-	buf = vmalloc(size);
+-	if (!buf)
+-		return -ENOMEM;
+-	rc = kernel_read(file, 0, buf, size);
+-	if (rc != size) {
+-		if (rc > 0)
+-			rc = -EIO;
+-		goto fail;
+-	}
+-	rc = security_kernel_fw_from_file(file, buf, size);
+-	if (rc)
+-		goto fail;
+-	fw_buf->data = buf;
+-	fw_buf->size = size;
+-	return 0;
+-fail:
+-	vfree(buf);
+-	return rc;
+-}
+-
+ static void fw_finish_direct_load(struct device *device,
+ 				  struct firmware_buf *buf)
+ {
+@@ -334,6 +303,7 @@ static void fw_finish_direct_load(struct device *device,
+ static int fw_get_filesystem_firmware(struct device *device,
+ 				       struct firmware_buf *buf)
+ {
++	loff_t size;
+ 	int i, len;
+ 	int rc = -ENOENT;
+ 	char *path;
+@@ -343,8 +313,6 @@ static int fw_get_filesystem_firmware(struct device *device,
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(fw_path); i++) {
+-		struct file *file;
+-
+ 		/* skip the unset customized path */
+ 		if (!fw_path[i][0])
+ 			continue;
+@@ -356,12 +324,11 @@ static int fw_get_filesystem_firmware(struct device *device,
+ 			break;
+ 		}
+ 
+-		file = filp_open(path, O_RDONLY, 0);
+-		if (IS_ERR(file))
+-			continue;
+-		rc = fw_read_file_contents(file, buf);
+-		fput(file);
++		buf->size = 0;
++		rc = kernel_read_file_from_path(path, &buf->data, &size,
++						INT_MAX, READING_FIRMWARE);
+ 		if (rc == 0) {
++			buf->size = (size_t) size;
+ 			dev_dbg(device, "direct-loading %s\n",
+ 				buf->fw_id);
+ 			fw_finish_direct_load(device, buf);
+@@ -689,8 +656,9 @@ static ssize_t firmware_loading_store(struct device *dev,
+ 				dev_err(dev, "%s: map pages failed\n",
+ 					__func__);
+ 			else
+-				rc = security_kernel_fw_from_file(NULL,
+-						fw_buf->data, fw_buf->size);
++				rc = security_kernel_post_read_file(NULL,
++						fw_buf->data, fw_buf->size,
++						READING_FIRMWARE);
+ 
+ 			/*
+ 			 * Same logic as fw_load_abort, only the DONE bit
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 962c491..2a9670a 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2527,6 +2527,7 @@ static inline void i_readcount_inc(struct inode *inode)
+ extern int do_pipe_flags(int *, int);
+ 
+ enum kernel_read_file_id {
++	READING_FIRMWARE = 1,
+ 	READING_MAX_ID
  };
  
-@@ -191,6 +192,7 @@ int ima_policy_show(struct seq_file *m, void *v);
- #define IMA_APPRAISE_LOG	0x04
- #define IMA_APPRAISE_MODULES	0x08
- #define IMA_APPRAISE_FIRMWARE	0x10
-+#define IMA_APPRAISE_POLICY	0x20
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index d29a6a2..7aea486 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -19,7 +19,6 @@ extern int ima_file_check(struct file *file, int mask, int opened);
+ extern void ima_file_free(struct file *file);
+ extern int ima_file_mmap(struct file *file, unsigned long prot);
+ extern int ima_module_check(struct file *file);
+-extern int ima_fw_from_file(struct file *file, char *buf, size_t size);
+ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 			      enum kernel_read_file_id id);
  
- #ifdef CONFIG_IMA_APPRAISE
- int ima_appraise_measurement(enum ima_hooks func,
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 00ccd67..7b15e80 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -325,7 +325,14 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+@@ -49,11 +48,6 @@ static inline int ima_module_check(struct file *file)
+ 	return 0;
+ }
  
- 	if (data[0] == '/')
- 		result = ima_read_policy(data);
--	else
-+	else if (ima_appraise & IMA_APPRAISE_POLICY) {
-+		pr_err("IMA: signed policy required\n");
-+		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-+				    "policy_update", "signed policy required",
-+				    1, 0);
-+		if (ima_appraise & IMA_APPRAISE_ENFORCE)
-+			result = -EACCES;
-+	} else
- 		result = ima_parse_add_rule(data);
- 	mutex_unlock(&ima_write_mutex);
- out_free:
+-static inline int ima_fw_from_file(struct file *file, char *buf, size_t size)
+-{
+-	return 0;
+-}
+-
+ static inline int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 				     enum kernel_read_file_id id)
+ {
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 2337f33..7d04a12 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -541,15 +541,6 @@
+  *	@inode points to the inode to use as a reference.
+  *	The current task must be the one that nominated @inode.
+  *	Return 0 if successful.
+- * @kernel_fw_from_file:
+- *	Load firmware from userspace (not called for built-in firmware).
+- *	@file contains the file structure pointing to the file containing
+- *	the firmware to load. This argument will be NULL if the firmware
+- *	was loaded via the uevent-triggered blob-based interface exposed
+- *	by CONFIG_FW_LOADER_USER_HELPER.
+- *	@buf pointer to buffer containing firmware contents.
+- *	@size length of the firmware contents.
+- *	Return 0 if permission is granted.
+  * @kernel_module_request:
+  *	Ability to trigger the kernel to automatically upcall to userspace for
+  *	userspace to load a kernel module with the given name.
+@@ -1462,7 +1453,6 @@ union security_list_options {
+ 	void (*cred_transfer)(struct cred *new, const struct cred *old);
+ 	int (*kernel_act_as)(struct cred *new, u32 secid);
+ 	int (*kernel_create_files_as)(struct cred *new, struct inode *inode);
+-	int (*kernel_fw_from_file)(struct file *file, char *buf, size_t size);
+ 	int (*kernel_module_request)(char *kmod_name);
+ 	int (*kernel_module_from_file)(struct file *file);
+ 	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size,
+@@ -1725,7 +1715,6 @@ struct security_hook_heads {
+ 	struct list_head cred_transfer;
+ 	struct list_head kernel_act_as;
+ 	struct list_head kernel_create_files_as;
+-	struct list_head kernel_fw_from_file;
+ 	struct list_head kernel_post_read_file;
+ 	struct list_head kernel_module_request;
+ 	struct list_head kernel_module_from_file;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index d920718..cee1349 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -300,7 +300,6 @@ int security_prepare_creds(struct cred *new, const struct cred *old, gfp_t gfp);
+ void security_transfer_creds(struct cred *new, const struct cred *old);
+ int security_kernel_act_as(struct cred *new, u32 secid);
+ int security_kernel_create_files_as(struct cred *new, struct inode *inode);
+-int security_kernel_fw_from_file(struct file *file, char *buf, size_t size);
+ int security_kernel_module_request(char *kmod_name);
+ int security_kernel_module_from_file(struct file *file);
+ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+@@ -854,12 +853,6 @@ static inline int security_kernel_create_files_as(struct cred *cred,
+ 	return 0;
+ }
+ 
+-static inline int security_kernel_fw_from_file(struct file *file,
+-					       char *buf, size_t size)
+-{
+-	return 0;
+-}
+-
+ static inline int security_kernel_module_request(char *kmod_name)
+ {
+ 	return 0;
 diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index ccf9526..497a6f2 100644
+index bead94b..4a5db31 100644
 --- a/security/integrity/ima/ima_main.c
 +++ b/security/integrity/ima/ima_main.c
-@@ -386,6 +386,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 	case READING_KEXEC_INITRAMFS:
- 		func = INITRAMFS_CHECK;
- 		break;
-+	case READING_POLICY:
-+		func = POLICY_CHECK;
-+		break;
- 	default:
- 		func = FILE_CHECK;
- 		break;
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index d02560e..39a811a 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -114,6 +114,7 @@ static struct ima_rule_entry default_measurement_rules[] = {
- 	 .uid = GLOBAL_ROOT_UID, .flags = IMA_FUNC | IMA_INMASK | IMA_UID},
- 	{.action = MEASURE, .func = MODULE_CHECK, .flags = IMA_FUNC},
- 	{.action = MEASURE, .func = FIRMWARE_CHECK, .flags = IMA_FUNC},
-+	{.action = MEASURE, .func = POLICY_CHECK, .flags = IMA_FUNC},
- };
+@@ -337,17 +337,6 @@ int ima_module_check(struct file *file)
+ 	return process_measurement(file, NULL, 0, MAY_EXEC, MODULE_CHECK, 0);
+ }
  
- static struct ima_rule_entry default_appraise_rules[] = {
-@@ -616,6 +617,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->func = KEXEC_CHECK;
- 			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
- 				entry->func = INITRAMFS_CHECK;
-+			else if (strcmp(args[0].from, "POLICY_CHECK") == 0)
-+				entry->func = POLICY_CHECK;
- 			else
- 				result = -EINVAL;
- 			if (!result)
-@@ -774,6 +777,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 		temp_ima_appraise |= IMA_APPRAISE_MODULES;
- 	else if (entry->func == FIRMWARE_CHECK)
- 		temp_ima_appraise |= IMA_APPRAISE_FIRMWARE;
-+	else if (entry->func == POLICY_CHECK)
-+		temp_ima_appraise |= IMA_APPRAISE_POLICY;
- 	audit_log_format(ab, "res=%d", !result);
- 	audit_log_end(ab);
- 	return result;
-@@ -860,7 +865,7 @@ static char *mask_tokens[] = {
- enum {
- 	func_file = 0, func_mmap, func_bprm,
- 	func_module, func_firmware, func_post,
--	func_kexec, func_initramfs
-+	func_kexec, func_initramfs, func_policy
- };
+-int ima_fw_from_file(struct file *file, char *buf, size_t size)
+-{
+-	if (!file) {
+-		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+-		    (ima_appraise & IMA_APPRAISE_ENFORCE))
+-			return -EACCES;	/* INTEGRITY_UNKNOWN */
+-		return 0;
+-	}
+-	return process_measurement(file, NULL, 0, MAY_EXEC, FIRMWARE_CHECK, 0);
+-}
+-
+ /**
+  * ima_post_read_file - in memory collect/appraise/audit measurement
+  * @file: pointer to the file to be measured/appraised/audit
+@@ -366,12 +355,22 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ {
+ 	enum ima_hooks func = FILE_CHECK;
  
- static char *func_tokens[] = {
-@@ -940,6 +945,9 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
- 	case INITRAMFS_CHECK:
- 		seq_printf(m, pt(Opt_func), ft(func_initramfs));
- 		break;
-+	case POLICY_CHECK:
-+		seq_printf(m, pt(Opt_func), ft(func_policy));
-+		break;
- 	default:
- 		snprintf(tbuf, sizeof(tbuf), "%d", func);
- 		seq_printf(m, pt(Opt_func), tbuf);
++	if (!file && read_id == READING_FIRMWARE) {
++		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
++		    (ima_appraise & IMA_APPRAISE_ENFORCE))
++			return -EACCES;	/* INTEGRITY_UNKNOWN */
++		return 0;
++	}
++
+ 	if (!file && (!buf || size == 0)) { /* should never happen */
+ 		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+ 			return -EACCES;
+ 		return 0;
+ 	}
+ 
++	if (read_id == READING_FIRMWARE)
++		func = FIRMWARE_CHECK;
++
+ 	return process_measurement(file, buf, size, MAY_READ, func, 0);
+ }
+ 
+diff --git a/security/security.c b/security/security.c
+index ad87e8d..81a4c3a 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -884,17 +884,6 @@ int security_kernel_create_files_as(struct cred *new, struct inode *inode)
+ 	return call_int_hook(kernel_create_files_as, 0, new, inode);
+ }
+ 
+-int security_kernel_fw_from_file(struct file *file, char *buf, size_t size)
+-{
+-	int ret;
+-
+-	ret = call_int_hook(kernel_fw_from_file, 0, file, buf, size);
+-	if (ret)
+-		return ret;
+-	return ima_fw_from_file(file, buf, size);
+-}
+-EXPORT_SYMBOL_GPL(security_kernel_fw_from_file);
+-
+ int security_kernel_module_request(char *kmod_name)
+ {
+ 	return call_int_hook(kernel_module_request, 0, kmod_name);
+@@ -1702,8 +1691,6 @@ struct security_hook_heads security_hook_heads = {
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_act_as),
+ 	.kernel_create_files_as =
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_create_files_as),
+-	.kernel_fw_from_file =
+-		LIST_HEAD_INIT(security_hook_heads.kernel_fw_from_file),
+ 	.kernel_module_request =
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_module_request),
+ 	.kernel_module_from_file =
 -- 
 2.1.0
 
