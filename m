@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.31.143])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aR2mv-0002z5-Ac
- for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:30 +0000
+ id 1aR2n2-00035T-T4
+ for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:38 +0000
 Received: from localhost
- by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Feb 2016 05:08:03 +1000
+ Thu, 4 Feb 2016 05:08:09 +1000
 Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id C83B92BB0055
- for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:01 +1100 (EST)
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 5F0BD3578056
+ for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:06 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
  by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u13J7r0I14024930
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:01 +1100
+ u13J7wgR65142926
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:06 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u13J7SGK009318
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:29 +1100
+ u13J7X8a009571
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:34 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 08/22] vfs: define kernel_read_file_id enumeration
-Date: Wed,  3 Feb 2016 14:06:16 -0500
-Message-Id: <1454526390-19792-9-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 09/22] ima: provide buffer hash calculation function
+Date: Wed,  3 Feb 2016 14:06:17 -0500
+Message-Id: <1454526390-19792-10-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -39,139 +39,96 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-modules@vger.kernel.org, fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Rusty Russell <rusty@rustcorp.com.au>
-Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Dmitry Kasatkin <d.kasatkin@samsung.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
 
-To differentiate between the kernel_read_file() callers, this patch
-defines a new enumeration named kernel_read_file_id and includes the
-caller identifier as an argument.
+From: Dmitry Kasatkin <d.kasatkin@samsung.com>
 
-Subsequent patches define READING_KEXEC_IMAGE, READING_KEXEC_INITRAMFS,
-READING_FIRMWARE, READING_MODULE, and READING_POLICY.
+This patch provides convenient buffer hash calculation function.
 
 Changelog v3:
-- Replace the IMA specific enumeration with a generic one.
+- fix while hash calculation - Dmitry
+v1:
+- rewrite to support loff_t sized buffers - Mimi
+  (based on Fenguang Wu's testing)
 
+Signed-off-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- fs/exec.c                 | 4 ++--
- include/linux/fs.h        | 7 ++++++-
- include/linux/lsm_hooks.h | 4 +++-
- include/linux/security.h  | 7 +++++--
- security/security.c       | 5 +++--
- 5 files changed, 19 insertions(+), 8 deletions(-)
+ security/integrity/ima/ima.h        |  2 ++
+ security/integrity/ima/ima_crypto.c | 47 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index 742de7a..cd2b5b2 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -833,7 +833,7 @@ int kernel_read(struct file *file, loff_t offset,
- EXPORT_SYMBOL(kernel_read);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index b7e7935..2c5262f 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -107,6 +107,8 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
+ 			   const char *op, struct inode *inode,
+ 			   const unsigned char *filename);
+ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash);
++int ima_calc_buffer_hash(const void *buf, loff_t len,
++			 struct ima_digest_data *hash);
+ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 			      struct ima_template_desc *desc, int num_fields,
+ 			      struct ima_digest_data *hash);
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index fb30ce4..fccb6ce 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -519,6 +519,53 @@ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 	return rc;
+ }
  
- int kernel_read_file(struct file *file, void **buf, loff_t *size,
--		     loff_t max_size)
-+		     loff_t max_size, enum kernel_read_file_id id)
- {
- 	loff_t i_size, pos;
- 	ssize_t bytes = 0;
-@@ -871,7 +871,7 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
- 		goto out;
- 	}
- 
--	ret = security_kernel_post_read_file(file, *buf, i_size);
-+	ret = security_kernel_post_read_file(file, *buf, i_size, id);
- 	if (!ret)
- 		*size = pos;
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 93ca379..1458ca5 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2526,8 +2526,13 @@ static inline void i_readcount_inc(struct inode *inode)
- #endif
- extern int do_pipe_flags(int *, int);
- 
-+enum kernel_read_file_id {
-+	READING_MAX_ID
-+};
++static int calc_buffer_shash_tfm(const void *buf, loff_t size,
++				struct ima_digest_data *hash,
++				struct crypto_shash *tfm)
++{
++	SHASH_DESC_ON_STACK(shash, tfm);
++	unsigned int len;
++	int rc;
 +
- extern int kernel_read(struct file *, loff_t, char *, unsigned long);
--extern int kernel_read_file(struct file *, void **, loff_t *, loff_t);
-+extern int kernel_read_file(struct file *, void **, loff_t *, loff_t,
-+			    enum kernel_read_file_id);
- extern ssize_t kernel_write(struct file *, const char *, size_t, loff_t);
- extern ssize_t __kernel_write(struct file *, const char *, size_t, loff_t *);
- extern struct file * open_exec(const char *);
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index f82631c..2337f33 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -567,6 +567,7 @@
-  *	by the kernel.
-  *	@buf pointer to buffer containing the file contents.
-  *	@size length of the file contents.
-+ *	@id kernel read file identifier
-  *	Return 0 if permission is granted.
-  * @task_fix_setuid:
-  *	Update the module's state after setting one or more of the user
-@@ -1464,7 +1465,8 @@ union security_list_options {
- 	int (*kernel_fw_from_file)(struct file *file, char *buf, size_t size);
- 	int (*kernel_module_request)(char *kmod_name);
- 	int (*kernel_module_from_file)(struct file *file);
--	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size);
-+	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size,
-+				     enum kernel_read_file_id id);
- 	int (*task_fix_setuid)(struct cred *new, const struct cred *old,
- 				int flags);
- 	int (*task_setpgid)(struct task_struct *p, pid_t pgid);
-diff --git a/include/linux/security.h b/include/linux/security.h
-index f30f564..b68ce94 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -28,6 +28,7 @@
- #include <linux/err.h>
- #include <linux/string.h>
- #include <linux/mm.h>
-+#include <linux/fs.h>
- 
- struct linux_binprm;
- struct cred;
-@@ -301,7 +302,8 @@ int security_kernel_create_files_as(struct cred *new, struct inode *inode);
- int security_kernel_fw_from_file(struct file *file, char *buf, size_t size);
- int security_kernel_module_request(char *kmod_name);
- int security_kernel_module_from_file(struct file *file);
--int security_kernel_post_read_file(struct file *file, char *buf, loff_t size);
-+int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
-+				   enum kernel_read_file_id id);
- int security_task_fix_setuid(struct cred *new, const struct cred *old,
- 			     int flags);
- int security_task_setpgid(struct task_struct *p, pid_t pgid);
-@@ -868,7 +870,8 @@ static inline int security_kernel_module_from_file(struct file *file)
- }
- 
- static inline int security_kernel_post_read_file(struct file *file,
--						 char *buf, loff_t size)
-+						 char *buf, loff_t size,
-+						 enum kernel_read_file_id id)
++	shash->tfm = tfm;
++	shash->flags = 0;
++
++	hash->length = crypto_shash_digestsize(tfm);
++
++	rc = crypto_shash_init(shash);
++	if (rc != 0)
++		return rc;
++
++	while (size) {
++		len = size < PAGE_SIZE ? size : PAGE_SIZE;
++		rc = crypto_shash_update(shash, buf, len);
++		if (rc)
++			break;
++		buf += len;
++		size -= len;
++	}
++
++	if (!rc)
++		rc = crypto_shash_final(shash, hash->digest);
++	return rc;
++}
++
++int ima_calc_buffer_hash(const void *buf, loff_t len,
++			 struct ima_digest_data *hash)
++{
++	struct crypto_shash *tfm;
++	int rc;
++
++	tfm = ima_alloc_tfm(hash->algo);
++	if (IS_ERR(tfm))
++		return PTR_ERR(tfm);
++
++	rc = calc_buffer_shash_tfm(buf, len, hash, tfm);
++
++	ima_free_tfm(tfm);
++	return rc;
++}
++
+ static void __init ima_pcrread(int idx, u8 *pcr)
  {
- 	return 0;
- }
-diff --git a/security/security.c b/security/security.c
-index ae50730..796a261 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -910,9 +910,10 @@ int security_kernel_module_from_file(struct file *file)
- 	return ima_module_check(file);
- }
- 
--int security_kernel_post_read_file(struct file *file, char *buf, loff_t size)
-+int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
-+				   enum kernel_read_file_id id)
- {
--	return call_int_hook(kernel_post_read_file, 0, file, buf, size);
-+	return call_int_hook(kernel_post_read_file, 0, file, buf, size, id);
- }
- 
- int security_task_fix_setuid(struct cred *new, const struct cred *old,
+ 	if (!ima_used_chip)
 -- 
 2.1.0
 
