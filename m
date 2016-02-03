@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+Received: from e23smtp08.au.ibm.com ([202.81.31.141])
  by casper.infradead.org with esmtps (Exim 4.85 #2 (Red Hat Linux))
- id 1aR2md-0002XW-KM
- for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:09 +0000
+ id 1aR2mW-0002Wo-H3
+ for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:01 +0000
 Received: from localhost
- by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp08.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Feb 2016 05:07:42 +1000
-Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id F045E3578052
- for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:07:39 +1100 (EST)
+ Thu, 4 Feb 2016 05:07:38 +1000
+Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id 3DBD12BB0055
+ for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:07:35 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u13J77vV8847542
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:15 +1100
+ by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u13J7Rkb983388
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:35 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u13J76Ti008724
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:07 +1100
+ u13J72kA008601
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:03 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 03/22] ima: use "ima_hooks" enum as function argument
-Date: Wed,  3 Feb 2016 14:06:11 -0500
-Message-Id: <1454526390-19792-4-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 02/22] ima: refactor ima_policy_show() to display
+ "ima_hooks" rules
+Date: Wed,  3 Feb 2016 14:06:10 -0500
+Message-Id: <1454526390-19792-3-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -41,248 +42,94 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-modules@vger.kernel.org, fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Rusty Russell <rusty@rustcorp.com.au>
 Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-Cleanup the function arguments by using "ima_hooks" enumerator as needed.
+Define and call a function to display the "ima_hooks" rules.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- security/integrity/ima/ima.h          | 25 +++++++++++++++++--------
- security/integrity/ima/ima_api.c      |  6 +++---
- security/integrity/ima/ima_appraise.c | 13 +++++++------
- security/integrity/ima/ima_main.c     | 14 +++++++-------
- security/integrity/ima/ima_policy.c   |  6 +++---
- 5 files changed, 37 insertions(+), 27 deletions(-)
+ security/integrity/ima/ima_policy.c | 63 +++++++++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 27 deletions(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index fb8da36..b7e7935 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -137,9 +137,18 @@ static inline unsigned long ima_hash_key(u8 *digest)
- 	return hash_long(*digest, IMA_HASH_BITS);
- }
- 
-+enum ima_hooks {
-+	FILE_CHECK = 1,
-+	MMAP_CHECK,
-+	BPRM_CHECK,
-+	MODULE_CHECK,
-+	FIRMWARE_CHECK,
-+	POST_SETATTR
-+};
-+
- /* LIM API function definitions */
--int ima_get_action(struct inode *inode, int mask, int function);
--int ima_must_measure(struct inode *inode, int mask, int function);
-+int ima_get_action(struct inode *inode, int mask, enum ima_hooks func);
-+int ima_must_measure(struct inode *inode, int mask, enum ima_hooks func);
- int ima_collect_measurement(struct integrity_iint_cache *iint,
- 			    struct file *file, enum hash_algo algo);
- void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
-@@ -156,8 +165,6 @@ void ima_free_template_entry(struct ima_template_entry *entry);
- const char *ima_d_path(struct path *path, char **pathbuf);
- 
- /* IMA policy related functions */
--enum ima_hooks { FILE_CHECK = 1, MMAP_CHECK, BPRM_CHECK, MODULE_CHECK, FIRMWARE_CHECK, POST_SETATTR };
--
- int ima_match_policy(struct inode *inode, enum ima_hooks func, int mask,
- 		     int flags);
- void ima_init_policy(void);
-@@ -179,21 +186,22 @@ int ima_policy_show(struct seq_file *m, void *v);
- #define IMA_APPRAISE_FIRMWARE	0x10
- 
- #ifdef CONFIG_IMA_APPRAISE
--int ima_appraise_measurement(int func, struct integrity_iint_cache *iint,
-+int ima_appraise_measurement(enum ima_hooks func,
-+			     struct integrity_iint_cache *iint,
- 			     struct file *file, const unsigned char *filename,
- 			     struct evm_ima_xattr_data *xattr_value,
- 			     int xattr_len, int opened);
- int ima_must_appraise(struct inode *inode, int mask, enum ima_hooks func);
- void ima_update_xattr(struct integrity_iint_cache *iint, struct file *file);
- enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
--					   int func);
-+					   enum ima_hooks func);
- enum hash_algo ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value,
- 				 int xattr_len);
- int ima_read_xattr(struct dentry *dentry,
- 		   struct evm_ima_xattr_data **xattr_value);
- 
- #else
--static inline int ima_appraise_measurement(int func,
-+static inline int ima_appraise_measurement(enum ima_hooks func,
- 					   struct integrity_iint_cache *iint,
- 					   struct file *file,
- 					   const unsigned char *filename,
-@@ -215,7 +223,8 @@ static inline void ima_update_xattr(struct integrity_iint_cache *iint,
- }
- 
- static inline enum integrity_status ima_get_cache_status(struct integrity_iint_cache
--							 *iint, int func)
-+							 *iint,
-+							 enum ima_hooks func)
- {
- 	return INTEGRITY_UNKNOWN;
- }
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index e7c7a5d..8750254 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -156,7 +156,7 @@ err_out:
-  * ima_get_action - appraise & measure decision based on policy.
-  * @inode: pointer to inode to measure
-  * @mask: contains the permission mask (MAY_READ, MAY_WRITE, MAY_EXECUTE)
-- * @function: calling function (FILE_CHECK, BPRM_CHECK, MMAP_CHECK, MODULE_CHECK)
-+ * @func: caller identifier
-  *
-  * The policy is defined in terms of keypairs:
-  *		subj=, obj=, type=, func=, mask=, fsmagic=
-@@ -168,13 +168,13 @@ err_out:
-  * Returns IMA_MEASURE, IMA_APPRAISE mask.
-  *
-  */
--int ima_get_action(struct inode *inode, int mask, int function)
-+int ima_get_action(struct inode *inode, int mask, enum ima_hooks func)
- {
- 	int flags = IMA_MEASURE | IMA_AUDIT | IMA_APPRAISE;
- 
- 	flags &= ima_policy_flag;
- 
--	return ima_match_policy(inode, function, mask, flags);
-+	return ima_match_policy(inode, func, mask, flags);
- }
- 
- /*
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 9c2b46b..2888449 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -67,7 +67,7 @@ static int ima_fix_xattr(struct dentry *dentry,
- 
- /* Return specific func appraised cached result */
- enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
--					   int func)
-+					   enum ima_hooks func)
- {
- 	switch (func) {
- 	case MMAP_CHECK:
-@@ -85,7 +85,8 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
- }
- 
- static void ima_set_cache_status(struct integrity_iint_cache *iint,
--				 int func, enum integrity_status status)
-+				 enum ima_hooks func,
-+				 enum integrity_status status)
- {
- 	switch (func) {
- 	case MMAP_CHECK:
-@@ -103,11 +104,11 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
- 	case FILE_CHECK:
- 	default:
- 		iint->ima_file_status = status;
--		break;
- 	}
- }
- 
--static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
-+static void ima_cache_flags(struct integrity_iint_cache *iint,
-+			     enum ima_hooks func)
- {
- 	switch (func) {
- 	case MMAP_CHECK:
-@@ -125,7 +126,6 @@ static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
- 	case FILE_CHECK:
- 	default:
- 		iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
--		break;
- 	}
- }
- 
-@@ -185,7 +185,8 @@ int ima_read_xattr(struct dentry *dentry,
-  *
-  * Return 0 on success, error code otherwise
-  */
--int ima_appraise_measurement(int func, struct integrity_iint_cache *iint,
-+int ima_appraise_measurement(enum ima_hooks func,
-+			     struct integrity_iint_cache *iint,
- 			     struct file *file, const unsigned char *filename,
- 			     struct evm_ima_xattr_data *xattr_value,
- 			     int xattr_len, int opened)
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index d9fc463..78a80c8 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -153,8 +153,8 @@ void ima_file_free(struct file *file)
- 	ima_check_last_writer(iint, inode, file);
- }
- 
--static int process_measurement(struct file *file, int mask, int function,
--			       int opened)
-+static int process_measurement(struct file *file, int mask,
-+			       enum ima_hooks func, int opened)
- {
- 	struct inode *inode = file_inode(file);
- 	struct integrity_iint_cache *iint = NULL;
-@@ -174,8 +174,8 @@ static int process_measurement(struct file *file, int mask, int function,
- 	 * bitmask based on the appraise/audit/measurement policy.
- 	 * Included is the appraise submask.
- 	 */
--	action = ima_get_action(inode, mask, function);
--	violation_check = ((function == FILE_CHECK || function == MMAP_CHECK) &&
-+	action = ima_get_action(inode, mask, func);
-+	violation_check = ((func == FILE_CHECK || func == MMAP_CHECK) &&
- 			   (ima_policy_flag & IMA_MEASURE));
- 	if (!action && !violation_check)
- 		return 0;
-@@ -184,7 +184,7 @@ static int process_measurement(struct file *file, int mask, int function,
- 
- 	/*  Is the appraise rule hook specific?  */
- 	if (action & IMA_FILE_APPRAISE)
--		function = FILE_CHECK;
-+		func = FILE_CHECK;
- 
- 	mutex_lock(&inode->i_mutex);
- 
-@@ -214,7 +214,7 @@ static int process_measurement(struct file *file, int mask, int function,
- 	/* Nothing to do, just return existing appraised status */
- 	if (!action) {
- 		if (must_appraise)
--			rc = ima_get_cache_status(iint, function);
-+			rc = ima_get_cache_status(iint, func);
- 		goto out_digsig;
- 	}
- 
-@@ -240,7 +240,7 @@ static int process_measurement(struct file *file, int mask, int function,
- 		ima_store_measurement(iint, file, pathname,
- 				      xattr_value, xattr_len);
- 	if (action & IMA_APPRAISE_SUBMASK)
--		rc = ima_appraise_measurement(function, iint, file, pathname,
-+		rc = ima_appraise_measurement(func, iint, file, pathname,
- 					      xattr_value, xattr_len, opened);
- 	if (action & IMA_AUDIT)
- 		ima_audit_measurement(iint, pathname);
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 43b6425..b089ebe 100644
+index e0e18cc..43b6425 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -207,8 +207,8 @@ static void ima_lsm_update_rules(void)
-  *
-  * Returns true on rule match, false on failure.
-  */
--static bool ima_match_rules(struct ima_rule_entry *rule,
--			    struct inode *inode, enum ima_hooks func, int mask)
-+static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
-+			    enum ima_hooks func, int mask)
+@@ -903,6 +903,40 @@ void ima_policy_stop(struct seq_file *m, void *v)
+ #define mt(token)	mask_tokens[token]
+ #define ft(token)	func_tokens[token]
+ 
++/*
++ * policy_func_show - display the ima_hooks policy rule
++ */
++static void policy_func_show(struct seq_file *m, enum ima_hooks func)
++{
++	char tbuf[64] = {0,};
++
++	switch (func) {
++	case FILE_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_file));
++		break;
++	case MMAP_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_mmap));
++		break;
++	case BPRM_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_bprm));
++		break;
++	case MODULE_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_module));
++		break;
++	case FIRMWARE_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_firmware));
++		break;
++	case POST_SETATTR:
++		seq_printf(m, pt(Opt_func), ft(func_post));
++		break;
++	default:
++		snprintf(tbuf, sizeof(tbuf), "%d", func);
++		seq_printf(m, pt(Opt_func), tbuf);
++		break;
++	}
++	seq_puts(m, " ");
++}
++
+ int ima_policy_show(struct seq_file *m, void *v)
  {
- 	struct task_struct *tsk = current;
- 	const struct cred *cred = current_cred();
-@@ -289,7 +289,7 @@ retry:
-  * In addition to knowing that we need to appraise the file in general,
-  * we need to differentiate between calling hooks, for hook specific rules.
-  */
--static int get_subaction(struct ima_rule_entry *rule, int func)
-+static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
- {
- 	if (!(rule->flags & IMA_FUNC))
- 		return IMA_FILE_APPRAISE;
+ 	struct ima_rule_entry *entry = v;
+@@ -924,33 +958,8 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 
+ 	seq_puts(m, " ");
+ 
+-	if (entry->flags & IMA_FUNC) {
+-		switch (entry->func) {
+-		case FILE_CHECK:
+-			seq_printf(m, pt(Opt_func), ft(func_file));
+-			break;
+-		case MMAP_CHECK:
+-			seq_printf(m, pt(Opt_func), ft(func_mmap));
+-			break;
+-		case BPRM_CHECK:
+-			seq_printf(m, pt(Opt_func), ft(func_bprm));
+-			break;
+-		case MODULE_CHECK:
+-			seq_printf(m, pt(Opt_func), ft(func_module));
+-			break;
+-		case FIRMWARE_CHECK:
+-			seq_printf(m, pt(Opt_func), ft(func_firmware));
+-			break;
+-		case POST_SETATTR:
+-			seq_printf(m, pt(Opt_func), ft(func_post));
+-			break;
+-		default:
+-			snprintf(tbuf, sizeof(tbuf), "%d", entry->func);
+-			seq_printf(m, pt(Opt_func), tbuf);
+-			break;
+-		}
+-		seq_puts(m, " ");
+-	}
++	if (entry->flags & IMA_FUNC)
++		policy_func_show(m, entry->func);
+ 
+ 	if (entry->flags & IMA_MASK) {
+ 		if (entry->mask & MAY_EXEC)
 -- 
 2.1.0
 
