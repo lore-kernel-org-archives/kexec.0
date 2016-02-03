@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+Received: from e23smtp02.au.ibm.com ([202.81.31.144])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aR2nc-0003gw-IW
- for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:09:14 +0000
+ id 1aR2nm-0003mA-1P
+ for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:09:23 +0000
 Received: from localhost
- by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Feb 2016 05:08:49 +1000
-Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id CFB342BB004D
- for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:47 +1100 (EST)
+ Thu, 4 Feb 2016 05:08:55 +1000
+Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id D69752CE8055
+ for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:52 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u13J8dHS64291064
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:47 +1100
+ by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u13J8iE966781296
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:52 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u13J8EAV010672
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:15 +1100
+ u13J8Jij010800
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:20 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 19/22] ima: support for kexec image and initramfs
-Date: Wed,  3 Feb 2016 14:06:27 -0500
-Message-Id: <1454526390-19792-20-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 20/22] ima: load policy using path
+Date: Wed,  3 Feb 2016 14:06:28 -0500
+Message-Id: <1454526390-19792-21-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -39,160 +39,118 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-modules@vger.kernel.org, fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Rusty Russell <rusty@rustcorp.com.au>
-Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Dmitry Kasatkin <d.kasatkin@samsung.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
 
-Add IMA policy support for measuring/appraising the kexec image and
-initramfs.
+From: Dmitry Kasatkin <d.kasatkin@samsung.com>
 
-Moving the enumeration to the vfs layer simplified the patches, allowing
-the IMA changes, for the most part, to be separated from the other
-changes.  Unfortunately, passing either a kernel_read_file_id or a
-ima_hooks enumeration within IMA is messy.
+We currently cannot do appraisal or signature vetting of IMA policies
+since we currently can only load IMA policies by writing the contents
+of the policy directly in, as follows:
 
-Option 1: duplicate kernel_read_file enumeration in ima_hooks
+cat policy-file > <securityfs>/ima/policy
 
-enum kernel_read_file_id {
-	...
-        READING_KEXEC_IMAGE,
-        READING_KEXEC_INITRAMFS,
-        READING_MAX_ID
+If we provide the kernel the path to the IMA policy so it can load
+the policy itself it'd be able to later appraise or vet the file
+signature if it has one.  This patch adds support to load the IMA
+policy with a given path as follows:
 
-enum ima_hooks {
-	...
-	KEXEC_CHECK
-	INITRAMFS_CHECK
+echo /etc/ima/ima_policy > /sys/kernel/security/ima/policy
 
-Option 2: define ima_hooks as extension of kernel_read_file
-eg: enum ima_hooks {
-        FILE_CHECK = READING_MAX_ID,
-        MMAP_CHECK,
+Changelog v3:
+- moved kernel_read_file_from_path() to a separate patch
+v2:
+- after re-ordering the patches, replace calling integrity_kernel_read()
+  to read the file with kernel_read_file_from_path() (Mimi)
+- Patch description re-written by Luis R. Rodriguez
 
-In order to pass both kernel_read_file_id and ima_hooks values, we
-would need to specify a struct containing a union.
-
-struct caller_id {
-        union {
-                enum ima_hooks func_id;
-                enum kernel_read_file_id read_id;
-        };
-};
-
-Option 3: incorportate the ima_hooks enumeration into kernel_read_file_id,
-perhaps changing the enumeration name.
-
-For now, duplicate the new READING_KEXEC_IMAGE/INITRAMFS in ima_hooks.
-
+Signed-off-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- Documentation/ABI/testing/ima_policy |  2 +-
- security/integrity/ima/ima.h         |  2 ++
- security/integrity/ima/ima_main.c    | 19 ++++++++++++++++---
- security/integrity/ima/ima_policy.c  | 13 ++++++++++++-
- 4 files changed, 31 insertions(+), 5 deletions(-)
+ include/linux/fs.h              |  1 +
+ security/integrity/ima/ima_fs.c | 43 +++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 42 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-index 0a378a8..e80f767 100644
---- a/Documentation/ABI/testing/ima_policy
-+++ b/Documentation/ABI/testing/ima_policy
-@@ -26,7 +26,7 @@ Description:
- 			option:	[[appraise_type=]] [permit_directio]
- 
- 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][FILE_CHECK][MODULE_CHECK]
--				[FIRMWARE_CHECK]
-+				[FIRMWARE_CHECK] [KEXEC_CHECK] [INITRAMFS_CHECK]
- 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
- 			       [[^]MAY_EXEC]
- 			fsmagic:= hex value
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index a5d2592..832e62a 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -147,6 +147,8 @@ enum ima_hooks {
- 	POST_SETATTR,
- 	MODULE_CHECK,
- 	FIRMWARE_CHECK,
-+	KEXEC_CHECK,
-+	INITRAMFS_CHECK,
- 	MAX_CHECK
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index d4d556e..b648e6d 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2531,6 +2531,7 @@ enum kernel_read_file_id {
+ 	READING_MODULE,
+ 	READING_KEXEC_IMAGE,
+ 	READING_KEXEC_INITRAMFS,
++	READING_POLICY,
+ 	READING_MAX_ID
  };
  
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 1e91d94..ccf9526 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -355,7 +355,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 		       enum kernel_read_file_id read_id)
- {
--	enum ima_hooks func = FILE_CHECK;
-+	enum ima_hooks func;
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index f355231..00ccd67 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -22,6 +22,7 @@
+ #include <linux/rculist.h>
+ #include <linux/rcupdate.h>
+ #include <linux/parser.h>
++#include <linux/vmalloc.h>
  
- 	if (!file && read_id == READING_FIRMWARE) {
- 		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-@@ -373,10 +373,23 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 		return 0;
- 	}
+ #include "ima.h"
  
--	if (read_id == READING_FIRMWARE)
-+	switch (read_id) {
-+	case READING_FIRMWARE:
- 		func = FIRMWARE_CHECK;
--	else if (read_id == READING_MODULE)
-+		break;
-+	case READING_MODULE:
- 		func = MODULE_CHECK;
-+		break;
-+	case READING_KEXEC_IMAGE:
-+		func = KEXEC_CHECK;
-+		break;
-+	case READING_KEXEC_INITRAMFS:
-+		func = INITRAMFS_CHECK;
-+		break;
-+	default:
-+		func = FILE_CHECK;
-+		break;
+@@ -258,6 +259,41 @@ static const struct file_operations ima_ascii_measurements_ops = {
+ 	.release = seq_release,
+ };
+ 
++static ssize_t ima_read_policy(char *path)
++{
++	void *data;
++	char *datap;
++	loff_t size;
++	int rc, pathlen = strlen(path);
++
++	char *p;
++
++	/* remove \n */
++	datap = path;
++	strsep(&datap, "\n");
++
++	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
++	if (rc < 0)
++		return rc;
++
++	datap = data;
++	while (size > 0 && (p = strsep(&datap, "\n"))) {
++		pr_debug("rule: %s\n", p);
++		rc = ima_parse_add_rule(p);
++		if (rc < 0)
++			break;
++		size -= rc;
 +	}
++
++	vfree(data);
++	if (rc < 0)
++		return rc;
++	else if (size)
++		return -EINVAL;
++	else
++		return pathlen;
++}
++
+ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+ 				size_t datalen, loff_t *ppos)
+ {
+@@ -286,9 +322,12 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+ 	result = mutex_lock_interruptible(&ima_write_mutex);
+ 	if (result < 0)
+ 		goto out_free;
+-	result = ima_parse_add_rule(data);
+-	mutex_unlock(&ima_write_mutex);
  
- 	return process_measurement(file, buf, size, MAY_READ, func, 0);
- }
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 7571ce8..d02560e 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -612,6 +612,10 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				entry->func = MMAP_CHECK;
- 			else if (strcmp(args[0].from, "BPRM_CHECK") == 0)
- 				entry->func = BPRM_CHECK;
-+			else if (strcmp(args[0].from, "KEXEC_CHECK") == 0)
-+				entry->func = KEXEC_CHECK;
-+			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
-+				entry->func = INITRAMFS_CHECK;
- 			else
- 				result = -EINVAL;
- 			if (!result)
-@@ -855,7 +859,8 @@ static char *mask_tokens[] = {
- 
- enum {
- 	func_file = 0, func_mmap, func_bprm,
--	func_module, func_firmware, func_post
-+	func_module, func_firmware, func_post,
-+	func_kexec, func_initramfs
- };
- 
- static char *func_tokens[] = {
-@@ -929,6 +934,12 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
- 	case POST_SETATTR:
- 		seq_printf(m, pt(Opt_func), ft(func_post));
- 		break;
-+	case KEXEC_CHECK:
-+		seq_printf(m, pt(Opt_func), ft(func_kexec));
-+		break;
-+	case INITRAMFS_CHECK:
-+		seq_printf(m, pt(Opt_func), ft(func_initramfs));
-+		break;
- 	default:
- 		snprintf(tbuf, sizeof(tbuf), "%d", func);
- 		seq_printf(m, pt(Opt_func), tbuf);
++	if (data[0] == '/')
++		result = ima_read_policy(data);
++	else
++		result = ima_parse_add_rule(data);
++	mutex_unlock(&ima_write_mutex);
+ out_free:
+ 	kfree(data);
+ out:
 -- 
 2.1.0
 
