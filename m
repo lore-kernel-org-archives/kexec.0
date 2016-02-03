@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp08.au.ibm.com ([202.81.31.141])
+Received: from e23smtp01.au.ibm.com ([202.81.31.143])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aR2mU-0002YH-GC
- for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:12 +0000
+ id 1aR2ml-0002pZ-Mi
+ for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:08:20 +0000
 Received: from localhost
- by e23smtp08.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Feb 2016 05:07:33 +1000
-Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id 6D5182BB0057
- for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:07:31 +1100 (EST)
+ Thu, 4 Feb 2016 05:07:53 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 0AF682CE8054
+ for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:07:50 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u13J7N1d20709572
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:31 +1100
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u13J7fhV59769082
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:49 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u13J6whQ008495
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:06:59 +1100
+ u13J7GKo009017
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:07:17 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 01/22] ima: separate 'security.ima' reading functionality
- from collect
-Date: Wed,  3 Feb 2016 14:06:09 -0500
-Message-Id: <1454526390-19792-2-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 05/22] firmware: move completing fw into a helper
+Date: Wed,  3 Feb 2016 14:06:13 -0500
+Message-Id: <1454526390-19792-6-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -40,284 +39,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-modules@vger.kernel.org, fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Rusty Russell <rusty@rustcorp.com.au>
-Cc: Dmitry Kasatkin <d.kasatkin@samsung.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
+Cc: "Luis R. Rodriguez" <mcgrof@kernel.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-From: Dmitry Kasatkin <d.kasatkin@samsung.com>
+From: "Luis R. Rodriguez" <mcgrof@kernel.org>
 
-Instead of passing pointers to pointers to ima_collect_measurent() to
-read and return the 'security.ima' xattr value, this patch moves the
-functionality to the calling process_measurement() to directly read
-the xattr and pass only the hash algo to the ima_collect_measurement().
+This will be re-used later through a new extensible interface.
 
-Signed-off-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
+Reviewed-by: Josh Boyer <jwboyer@fedoraproject.org>
+Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- security/integrity/ima/ima.h              | 15 +++++++--------
- security/integrity/ima/ima_api.c          | 15 +++------------
- security/integrity/ima/ima_appraise.c     | 25 ++++++++++++++-----------
- security/integrity/ima/ima_crypto.c       |  2 +-
- security/integrity/ima/ima_init.c         |  2 +-
- security/integrity/ima/ima_main.c         | 11 +++++++----
- security/integrity/ima/ima_template.c     |  2 --
- security/integrity/ima/ima_template_lib.c |  1 -
- 8 files changed, 33 insertions(+), 40 deletions(-)
+ drivers/base/firmware_class.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 585af61..fb8da36 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -23,6 +23,7 @@
- #include <linux/hash.h>
- #include <linux/tpm.h>
- #include <linux/audit.h>
-+#include <crypto/hash_info.h>
- 
- #include "../integrity.h"
- 
-@@ -140,9 +141,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
- int ima_get_action(struct inode *inode, int mask, int function);
- int ima_must_measure(struct inode *inode, int mask, int function);
- int ima_collect_measurement(struct integrity_iint_cache *iint,
--			    struct file *file,
--			    struct evm_ima_xattr_data **xattr_value,
--			    int *xattr_len);
-+			    struct file *file, enum hash_algo algo);
- void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   const unsigned char *filename,
- 			   struct evm_ima_xattr_data *xattr_value,
-@@ -188,8 +187,8 @@ int ima_must_appraise(struct inode *inode, int mask, enum ima_hooks func);
- void ima_update_xattr(struct integrity_iint_cache *iint, struct file *file);
- enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
- 					   int func);
--void ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value, int xattr_len,
--		       struct ima_digest_data *hash);
-+enum hash_algo ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value,
-+				 int xattr_len);
- int ima_read_xattr(struct dentry *dentry,
- 		   struct evm_ima_xattr_data **xattr_value);
- 
-@@ -221,10 +220,10 @@ static inline enum integrity_status ima_get_cache_status(struct integrity_iint_c
- 	return INTEGRITY_UNKNOWN;
+diff --git a/drivers/base/firmware_class.c b/drivers/base/firmware_class.c
+index 3358f5d..fb64814 100644
+--- a/drivers/base/firmware_class.c
++++ b/drivers/base/firmware_class.c
+@@ -322,6 +322,15 @@ fail:
+ 	return rc;
  }
  
--static inline void ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value,
--				     int xattr_len,
--				     struct ima_digest_data *hash)
-+static inline enum hash_algo
-+ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value, int xattr_len)
- {
-+	return ima_hash_algo;
- }
- 
- static inline int ima_read_xattr(struct dentry *dentry,
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index 1d950fb..e7c7a5d 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -18,7 +18,7 @@
- #include <linux/fs.h>
- #include <linux/xattr.h>
- #include <linux/evm.h>
--#include <crypto/hash_info.h>
++static void fw_finish_direct_load(struct device *device,
++				  struct firmware_buf *buf)
++{
++	mutex_lock(&fw_lock);
++	set_bit(FW_STATUS_DONE, &buf->status);
++	complete_all(&buf->completion);
++	mutex_unlock(&fw_lock);
++}
 +
- #include "ima.h"
- 
- /*
-@@ -188,9 +188,7 @@ int ima_get_action(struct inode *inode, int mask, int function)
-  * Return 0 on success, error code otherwise
-  */
- int ima_collect_measurement(struct integrity_iint_cache *iint,
--			    struct file *file,
--			    struct evm_ima_xattr_data **xattr_value,
--			    int *xattr_len)
-+			    struct file *file, enum hash_algo algo)
+ static int fw_get_filesystem_firmware(struct device *device,
+ 				       struct firmware_buf *buf)
  {
- 	const char *audit_cause = "failed";
- 	struct inode *inode = file_inode(file);
-@@ -201,9 +199,6 @@ int ima_collect_measurement(struct integrity_iint_cache *iint,
- 		char digest[IMA_MAX_DIGEST_SIZE];
- 	} hash;
- 
--	if (xattr_value)
--		*xattr_len = ima_read_xattr(file->f_path.dentry, xattr_value);
--
- 	if (!(iint->flags & IMA_COLLECTED)) {
- 		u64 i_version = file_inode(file)->i_version;
- 
-@@ -213,11 +208,7 @@ int ima_collect_measurement(struct integrity_iint_cache *iint,
- 			goto out;
- 		}
- 
--		/* use default hash algorithm */
--		hash.hdr.algo = ima_hash_algo;
--
--		if (xattr_value)
--			ima_get_hash_algo(*xattr_value, *xattr_len, &hash.hdr);
-+		hash.hdr.algo = algo;
- 
- 		result = ima_calc_file_hash(file, &hash.hdr);
- 		if (!result) {
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 1873b55..9c2b46b 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -15,7 +15,6 @@
- #include <linux/magic.h>
- #include <linux/ima.h>
- #include <linux/evm.h>
--#include <crypto/hash_info.h>
- 
- #include "ima.h"
- 
-@@ -130,36 +129,40 @@ static void ima_cache_flags(struct integrity_iint_cache *iint, int func)
+@@ -363,10 +372,7 @@ static int fw_get_filesystem_firmware(struct device *device,
+ 	if (!rc) {
+ 		dev_dbg(device, "direct-loading %s\n",
+ 			buf->fw_id);
+-		mutex_lock(&fw_lock);
+-		set_bit(FW_STATUS_DONE, &buf->status);
+-		complete_all(&buf->completion);
+-		mutex_unlock(&fw_lock);
++		fw_finish_direct_load(device, buf);
  	}
- }
  
--void ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value, int xattr_len,
--		       struct ima_digest_data *hash)
-+enum hash_algo ima_get_hash_algo(struct evm_ima_xattr_data *xattr_value,
-+				 int xattr_len)
- {
- 	struct signature_v2_hdr *sig;
- 
- 	if (!xattr_value || xattr_len < 2)
--		return;
-+		/* return default hash algo */
-+		return ima_hash_algo;
- 
- 	switch (xattr_value->type) {
- 	case EVM_IMA_XATTR_DIGSIG:
- 		sig = (typeof(sig))xattr_value;
- 		if (sig->version != 2 || xattr_len <= sizeof(*sig))
--			return;
--		hash->algo = sig->hash_algo;
-+			return ima_hash_algo;
-+		return sig->hash_algo;
- 		break;
- 	case IMA_XATTR_DIGEST_NG:
--		hash->algo = xattr_value->digest[0];
-+		return xattr_value->digest[0];
- 		break;
- 	case IMA_XATTR_DIGEST:
- 		/* this is for backward compatibility */
- 		if (xattr_len == 21) {
- 			unsigned int zero = 0;
- 			if (!memcmp(&xattr_value->digest[16], &zero, 4))
--				hash->algo = HASH_ALGO_MD5;
-+				return HASH_ALGO_MD5;
- 			else
--				hash->algo = HASH_ALGO_SHA1;
-+				return HASH_ALGO_SHA1;
- 		} else if (xattr_len == 17)
--			hash->algo = HASH_ALGO_MD5;
-+			return HASH_ALGO_MD5;
- 		break;
- 	}
-+
-+	/* return default hash algo */
-+	return ima_hash_algo;
- }
- 
- int ima_read_xattr(struct dentry *dentry,
-@@ -296,7 +299,7 @@ void ima_update_xattr(struct integrity_iint_cache *iint, struct file *file)
- 	if (iint->flags & IMA_DIGSIG)
- 		return;
- 
--	rc = ima_collect_measurement(iint, file, NULL, NULL);
-+	rc = ima_collect_measurement(iint, file, ima_hash_algo);
- 	if (rc < 0)
- 		return;
- 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 6eb6293..fb30ce4 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -24,7 +24,7 @@
- #include <linux/err.h>
- #include <linux/slab.h>
- #include <crypto/hash.h>
--#include <crypto/hash_info.h>
-+
- #include "ima.h"
- 
- struct ahash_completion {
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index bd79f25..5d679a6 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -21,7 +21,7 @@
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
- #include <linux/err.h>
--#include <crypto/hash_info.h>
-+
- #include "ima.h"
- 
- /* name for boot aggregate entry */
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index c21f09b..d9fc463 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -24,7 +24,6 @@
- #include <linux/slab.h>
- #include <linux/xattr.h>
- #include <linux/ima.h>
--#include <crypto/hash_info.h>
- 
- #include "ima.h"
- 
-@@ -163,9 +162,10 @@ static int process_measurement(struct file *file, int mask, int function,
- 	char *pathbuf = NULL;
- 	const char *pathname = NULL;
- 	int rc = -ENOMEM, action, must_appraise;
--	struct evm_ima_xattr_data *xattr_value = NULL, **xattr_ptr = NULL;
-+	struct evm_ima_xattr_data *xattr_value = NULL;
- 	int xattr_len = 0;
- 	bool violation_check;
-+	enum hash_algo hash_algo;
- 
- 	if (!ima_policy_flag || !S_ISREG(inode->i_mode))
- 		return 0;
-@@ -221,9 +221,12 @@ static int process_measurement(struct file *file, int mask, int function,
- 	template_desc = ima_template_desc_current();
- 	if ((action & IMA_APPRAISE_SUBMASK) ||
- 		    strcmp(template_desc->name, IMA_TEMPLATE_IMA_NAME) != 0)
--		xattr_ptr = &xattr_value;
-+		/* read 'security.ima' */
-+		xattr_len = ima_read_xattr(file->f_path.dentry, &xattr_value);
- 
--	rc = ima_collect_measurement(iint, file, xattr_ptr, &xattr_len);
-+	hash_algo = ima_get_hash_algo(xattr_value, xattr_len);
-+
-+	rc = ima_collect_measurement(iint, file, hash_algo);
- 	if (rc != 0) {
- 		if (file->f_flags & O_DIRECT)
- 			rc = (iint->flags & IMA_PERMIT_DIRECTIO) ? 0 : -EACCES;
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index 0b7404e..febd12e 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -15,8 +15,6 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
--#include <crypto/hash_info.h>
--
- #include "ima.h"
- #include "ima_template_lib.h"
- 
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 2934e3d..f9bae04 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -12,7 +12,6 @@
-  * File: ima_template_lib.c
-  *      Library of supported template fields.
-  */
--#include <crypto/hash_info.h>
- 
- #include "ima_template_lib.h"
- 
+ 	return rc;
 -- 
 2.1.0
 
