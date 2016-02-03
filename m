@@ -1,29 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp03.au.ibm.com ([202.81.31.145])
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aR2nV-0003Xe-Kj
- for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:09:10 +0000
+ id 1aR2nc-0003dw-IX
+ for kexec@lists.infradead.org; Wed, 03 Feb 2016 19:09:14 +0000
 Received: from localhost
- by e23smtp03.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Feb 2016 05:08:38 +1000
-Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 3F2A72CE8058
- for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:36 +1100 (EST)
+ Thu, 4 Feb 2016 05:08:46 +1000
+Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 4E2EE3578053
+ for <kexec@lists.infradead.org>; Thu,  4 Feb 2016 06:08:44 +1100 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u13J8Hoe50987134
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:25 +1100
+ by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u13J8ckH26869864
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:46 +1100
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u13J839c010323
- for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:03 +1100
+ u13J8Bv4010570
+ for <kexec@lists.infradead.org>; Thu, 4 Feb 2016 06:08:11 +1100
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 16/22] module: replace copy_module_from_fd with kernel
- version
-Date: Wed,  3 Feb 2016 14:06:24 -0500
-Message-Id: <1454526390-19792-17-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 18/22] kexec: replace call to copy_file_from_fd() with
+ kernel version
+Date: Wed,  3 Feb 2016 14:06:26 -0500
+Message-Id: <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -42,312 +42,166 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-modules@vger.kernel.org, fsdevel@vger.kernel.org, David Howells <dhowells@redhat.com>, David Woodhouse <dwmw2@infradead.org>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Rusty Russell <rusty@rustcorp.com.au>
 Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-Replace copy_module_from_fd() with kernel_read_file_from_fd().
+Replace copy_file_from_fd() with kernel_read_file_from_fd().
 
-Although none of the upstreamed LSMs define a kernel_module_from_file
-hook, IMA is called, based on policy, to prevent unsigned kernel modules
-from being loaded by the original kernel module syscall and to
-measure/appraise signed kernel modules.
+Two new identifiers named READING_KEXEC_IMAGE and READING_KEXEC_INITRAMFS
+are defined for measuring, appraising or auditing the kexec image and
+initramfs.
 
-The security function security_kernel_module_from_file() was called prior
-to reading a kernel module.  Preventing unsigned kernel modules from being
-loaded by the original kernel module syscall remains on the pre-read
-kernel_read_file() security hook.  Instead of reading the kernel module
-twice, once for measuring/appraising and again for loading the kernel
-module, the signature validation is moved to the kernel_post_read_file()
-security hook.
-
-This patch removes the security_kernel_module_from_file() hook and security
-call.
+Changelog v3:
+- return -EBADF, not -ENOEXEC
+- identifier change
+- moved copy_file_from_fd() to a separate patch
+- defer support for IMA
+v1:
+- re-order and squash the kexec patches
+v0: ima: measure and appraise kexec image and initramfs (squashed)
+- rename ima_read_hooks enumeration to ima_policy_id
+- use kstat file size type loff_t, not size_t
+- add union name "hooks" to fix sparse warning
+- Calculate the file hash from the in memory buffer
+(suggested by Dave Young)
+- Rename ima_read_and_process_file() to ima_hash_and_process_file()
+- replace individual case statements with range:
+        KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1
+- Instead of ima_read_and_process_file() allocating memory, the caller
+allocates and frees the memory.
+- Moved the kexec measurement/appraisal call to copy_file_from_fd(). The
+same call now measures and appraises both the kexec image and initramfs.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- include/linux/fs.h                |  1 +
- include/linux/ima.h               |  6 ----
- include/linux/lsm_hooks.h         |  7 ----
- include/linux/security.h          |  5 ---
- kernel/module.c                   | 68 +++++----------------------------------
- security/integrity/ima/ima_main.c | 35 ++++++++------------
- security/security.c               | 12 -------
- 7 files changed, 22 insertions(+), 112 deletions(-)
+ include/linux/fs.h  |  2 ++
+ kernel/kexec_file.c | 73 +++++++----------------------------------------------
+ 2 files changed, 11 insertions(+), 64 deletions(-)
 
 diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 5ba806b..9e1f1e3 100644
+index 9e1f1e3..d4d556e 100644
 --- a/include/linux/fs.h
 +++ b/include/linux/fs.h
-@@ -2528,6 +2528,7 @@ extern int do_pipe_flags(int *, int);
- 
+@@ -2529,6 +2529,8 @@ extern int do_pipe_flags(int *, int);
  enum kernel_read_file_id {
  	READING_FIRMWARE = 1,
-+	READING_MODULE,
+ 	READING_MODULE,
++	READING_KEXEC_IMAGE,
++	READING_KEXEC_INITRAMFS,
  	READING_MAX_ID
  };
  
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6adcaea..e6516cb 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -18,7 +18,6 @@ extern int ima_bprm_check(struct linux_binprm *bprm);
- extern int ima_file_check(struct file *file, int mask, int opened);
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long prot);
--extern int ima_module_check(struct file *file);
- extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
- extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
-@@ -44,11 +43,6 @@ static inline int ima_file_mmap(struct file *file, unsigned long prot)
- 	return 0;
- }
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b70ada0..1443f93 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -18,6 +18,7 @@
+ #include <linux/kexec.h>
+ #include <linux/mutex.h>
+ #include <linux/list.h>
++#include <linux/fs.h>
+ #include <crypto/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/syscalls.h>
+@@ -33,65 +34,6 @@ size_t __weak kexec_purgatory_size = 0;
  
--static inline int ima_module_check(struct file *file)
--{
--	return 0;
--}
--
- static inline int ima_read_file(struct file *file, enum kernel_read_file_id id)
- {
- 	return 0;
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index d32b7bd..cdee11c 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -546,12 +546,6 @@
-  *	userspace to load a kernel module with the given name.
-  *	@kmod_name name of the module requested by the kernel
-  *	Return 0 if successful.
-- * @kernel_module_from_file:
-- *	Load a kernel module from userspace.
-- *	@file contains the file structure pointing to the file containing
-- *	the kernel module to load. If the module is being loaded from a blob,
-- *	this argument will be NULL.
-- *	Return 0 if permission is granted.
-  * @kernel_read_file:
-  *	Read a file specified by userspace.
-  *	@file contains the file structure pointing to the file being read
-@@ -1725,7 +1719,6 @@ struct security_hook_heads {
- 	struct list_head kernel_read_file;
- 	struct list_head kernel_post_read_file;
- 	struct list_head kernel_module_request;
--	struct list_head kernel_module_from_file;
- 	struct list_head task_fix_setuid;
- 	struct list_head task_setpgid;
- 	struct list_head task_getpgid;
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 071fb74..157f0cb 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -859,11 +859,6 @@ static inline int security_kernel_module_request(char *kmod_name)
- 	return 0;
- }
+ static int kexec_calculate_store_digests(struct kimage *image);
  
--static inline int security_kernel_module_from_file(struct file *file)
--{
--	return 0;
--}
--
- static inline int security_kernel_read_file(struct file *file,
- 					    enum kernel_read_file_id id)
- {
-diff --git a/kernel/module.c b/kernel/module.c
-index 8f051a1..d77c4f1 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2665,7 +2665,7 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
- 	if (info->len < sizeof(*(info->hdr)))
- 		return -ENOEXEC;
- 
--	err = security_kernel_module_from_file(NULL);
-+	err = security_kernel_read_file(NULL, READING_MODULE);
- 	if (err)
- 		return err;
- 
-@@ -2683,63 +2683,6 @@ static int copy_module_from_user(const void __user *umod, unsigned long len,
- 	return 0;
- }
- 
--/* Sets info->hdr and info->len. */
--static int copy_module_from_fd(int fd, struct load_info *info)
+-static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
 -{
 -	struct fd f = fdget(fd);
--	int err;
+-	int ret;
 -	struct kstat stat;
 -	loff_t pos;
 -	ssize_t bytes = 0;
 -
 -	if (!f.file)
--		return -ENOEXEC;
+-		return -EBADF;
 -
--	err = security_kernel_module_from_file(f.file);
--	if (err)
--		goto out;
--
--	err = vfs_getattr(&f.file->f_path, &stat);
--	if (err)
+-	ret = vfs_getattr(&f.file->f_path, &stat);
+-	if (ret)
 -		goto out;
 -
 -	if (stat.size > INT_MAX) {
--		err = -EFBIG;
+-		ret = -EFBIG;
 -		goto out;
 -	}
 -
 -	/* Don't hand 0 to vmalloc, it whines. */
 -	if (stat.size == 0) {
--		err = -EINVAL;
+-		ret = -EINVAL;
 -		goto out;
 -	}
 -
--	info->hdr = vmalloc(stat.size);
--	if (!info->hdr) {
--		err = -ENOMEM;
+-	*buf = vmalloc(stat.size);
+-	if (!*buf) {
+-		ret = -ENOMEM;
 -		goto out;
 -	}
 -
 -	pos = 0;
 -	while (pos < stat.size) {
--		bytes = kernel_read(f.file, pos, (char *)(info->hdr) + pos,
+-		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
 -				    stat.size - pos);
 -		if (bytes < 0) {
--			vfree(info->hdr);
--			err = bytes;
+-			vfree(*buf);
+-			ret = bytes;
 -			goto out;
 -		}
+-
 -		if (bytes == 0)
 -			break;
 -		pos += bytes;
 -	}
--	info->len = pos;
 -
+-	if (pos != stat.size) {
+-		ret = -EBADF;
+-		vfree(*buf);
+-		goto out;
+-	}
+-
+-	*buf_len = pos;
 -out:
 -	fdput(f);
--	return err;
+-	return ret;
 -}
 -
- static void free_copy(struct load_info *info)
+ /* Architectures can provide this probe function */
+ int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+ 					 unsigned long buf_len)
+@@ -180,16 +122,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
  {
- 	vfree(info->hdr);
-@@ -3602,8 +3545,10 @@ SYSCALL_DEFINE3(init_module, void __user *, umod,
- 
- SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
- {
--	int err;
- 	struct load_info info = { };
+ 	int ret = 0;
+ 	void *ldata;
 +	loff_t size;
-+	void *hdr;
-+	int err;
  
- 	err = may_init_module();
- 	if (err)
-@@ -3615,9 +3560,12 @@ SYSCALL_DEFINE3(finit_module, int, fd, const char __user *, uargs, int, flags)
- 		      |MODULE_INIT_IGNORE_VERMAGIC))
- 		return -EINVAL;
+-	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
+-				&image->kernel_buf_len);
++	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
++				       &size, INT_MAX, READING_KEXEC_IMAGE);
+ 	if (ret)
+ 		return ret;
++	image->kernel_buf_len = size;
  
--	err = copy_module_from_fd(fd, &info);
-+	err = kernel_read_file_from_fd(fd, &hdr, &size, INT_MAX,
-+				       READING_MODULE);
- 	if (err)
- 		return err;
-+	info.hdr = hdr;
-+	info.len = size;
- 
- 	return load_module(&info, uargs, flags);
- }
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 6f79bdf..1e91d94 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -316,28 +316,6 @@ int ima_file_check(struct file *file, int mask, int opened)
- EXPORT_SYMBOL_GPL(ima_file_check);
- 
- /**
-- * ima_module_check - based on policy, collect/store/appraise measurement.
-- * @file: pointer to the file to be measured/appraised
-- *
-- * Measure/appraise kernel modules based on policy.
-- *
-- * On success return 0.  On integrity appraisal error, assuming the file
-- * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
-- */
--int ima_module_check(struct file *file)
--{
--	if (!file) {
--#ifndef CONFIG_MODULE_SIG_FORCE
--		if ((ima_appraise & IMA_APPRAISE_MODULES) &&
--		    (ima_appraise & IMA_APPRAISE_ENFORCE))
--			return -EACCES;	/* INTEGRITY_UNKNOWN */
--#endif
--		return 0;	/* We rely on module signature checking */
--	}
--	return process_measurement(file, NULL, 0, MAY_EXEC, MODULE_CHECK, 0);
--}
+ 	/* Call arch image probe handlers */
+ 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+ 					    image->kernel_buf_len);
 -
--/**
-  * ima_read_file - pre-measure/appraise hook decision based on policy
-  * @file: pointer to the file to be measured/appraised/audit
-  * @read_id: caller identifier
-@@ -350,6 +328,14 @@ int ima_module_check(struct file *file)
-  */
- int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
- {
-+	if (!file && read_id == READING_MODULE) {
-+#ifndef CONFIG_MODULE_SIG_FORCE
-+		if ((ima_appraise & IMA_APPRAISE_MODULES) &&
-+		    (ima_appraise & IMA_APPRAISE_ENFORCE))
-+			return -EACCES;	/* INTEGRITY_UNKNOWN */
-+#endif
-+		return 0;	/* We rely on module signature checking */
-+	}
- 	return 0;
- }
+ 	if (ret)
+ 		goto out;
  
-@@ -378,6 +364,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 		return 0;
+@@ -204,10 +147,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ #endif
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+-		ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
+-					&image->initrd_buf_len);
++		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
++					       &size, INT_MAX,
++					       READING_KEXEC_INITRAMFS);
+ 		if (ret)
+ 			goto out;
++		image->initrd_buf_len = size;
  	}
  
-+	if (!file && read_id == READING_MODULE) /* MODULE_SIG_FORCE enabled */
-+		return 0;
-+
- 	if (!file && (!buf || size == 0)) { /* should never happen */
- 		if (ima_appraise & IMA_APPRAISE_ENFORCE)
- 			return -EACCES;
-@@ -386,6 +375,8 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 
- 	if (read_id == READING_FIRMWARE)
- 		func = FIRMWARE_CHECK;
-+	else if (read_id == READING_MODULE)
-+		func = MODULE_CHECK;
- 
- 	return process_measurement(file, buf, size, MAY_READ, func, 0);
- }
-diff --git a/security/security.c b/security/security.c
-index 1728fe2..3573c82 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -889,16 +889,6 @@ int security_kernel_module_request(char *kmod_name)
- 	return call_int_hook(kernel_module_request, 0, kmod_name);
- }
- 
--int security_kernel_module_from_file(struct file *file)
--{
--	int ret;
--
--	ret = call_int_hook(kernel_module_from_file, 0, file);
--	if (ret)
--		return ret;
--	return ima_module_check(file);
--}
--
- int security_kernel_read_file(struct file *file, enum kernel_read_file_id id)
- {
- 	int ret;
-@@ -1703,8 +1693,6 @@ struct security_hook_heads security_hook_heads = {
- 		LIST_HEAD_INIT(security_hook_heads.kernel_create_files_as),
- 	.kernel_module_request =
- 		LIST_HEAD_INIT(security_hook_heads.kernel_module_request),
--	.kernel_module_from_file =
--		LIST_HEAD_INIT(security_hook_heads.kernel_module_from_file),
- 	.kernel_read_file =
- 		LIST_HEAD_INIT(security_hook_heads.kernel_read_file),
- 	.kernel_post_read_file =
+ 	if (cmdline_len) {
 -- 
 2.1.0
 
