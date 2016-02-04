@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aRQ2J-0000UL-3d
- for kexec@lists.infradead.org; Thu, 04 Feb 2016 19:57:51 +0000
-Date: Thu, 4 Feb 2016 20:57:29 +0100
+ id 1aRQUH-00084o-7c
+ for kexec@lists.infradead.org; Thu, 04 Feb 2016 20:26:46 +0000
+Date: Thu, 4 Feb 2016 21:26:22 +0100
 From: "Luis R. Rodriguez" <mcgrof@suse.com>
-Subject: Re: [PATCH v3 18/22] kexec: replace call to copy_file_from_fd() with
- kernel version
-Message-ID: <20160204195729.GG12481@wotan.suse.de>
+Subject: Re: [PATCH v3 06/22] firmware: fold successful fw read early
+Message-ID: <20160204202622.GH12481@wotan.suse.de>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-7-git-send-email-zohar@linux.vnet.ibm.com>
+ <CAGXu5j+=4gWSuQHX-iBVGZTsL3UFsLFp74+QeVNcSJHyK+4v8w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <CAGXu5j+=4gWSuQHX-iBVGZTsL3UFsLFp74+QeVNcSJHyK+4v8w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,40 +25,109 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Kees Cook <keescook@chromium.org>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, "linux-fsdevel@vger.kernel.org" <fsdevel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-On Wed, Feb 03, 2016 at 02:06:26PM -0500, Mimi Zohar wrote:
-> Replace copy_file_from_fd() with kernel_read_file_from_fd().
+On Thu, Feb 04, 2016 at 09:36:50AM -0800, Kees Cook wrote:
+> On Wed, Feb 3, 2016 at 11:06 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+> > From: David Howells <dhowells@redhat.com>
+> >
+> > We'll be folding in some more checks on fw_read_file_contents(),
+> > this will make the success case easier to follow.
+> >
+> > Reviewed-by: Josh Boyer <jwboyer@fedoraproject.org>
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
+> > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> > ---
+> >  drivers/base/firmware_class.c | 16 +++++++---------
+> >  1 file changed, 7 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/base/firmware_class.c b/drivers/base/firmware_class.c
+> > index fb64814..c658cec 100644
+> > --- a/drivers/base/firmware_class.c
+> > +++ b/drivers/base/firmware_class.c
+> > @@ -361,20 +361,18 @@ static int fw_get_filesystem_firmware(struct device *device,
+> >                         continue;
+> >                 rc = fw_read_file_contents(file, buf);
+> >                 fput(file);
+> > -               if (rc)
+> > +               if (rc == 0) {
+> > +                       dev_dbg(device, "direct-loading %s\n",
+> > +                               buf->fw_id);
+> > +                       fw_finish_direct_load(device, buf);
+> > +                       goto out;
+> > +               } else
+> >                         dev_warn(device, "loading %s failed with error %d\n",
+> >                                  path, rc);
+> > -               else
+> > -                       break;
+> >         }
+> > +out:
+> >         __putname(path);
+> >
+> > -       if (!rc) {
+> > -               dev_dbg(device, "direct-loading %s\n",
+> > -                       buf->fw_id);
+> > -               fw_finish_direct_load(device, buf);
+> > -       }
+> > -
+> >         return rc;
+> >  }
 > 
-> Two new identifiers named READING_KEXEC_IMAGE and READING_KEXEC_INITRAMFS
-> are defined for measuring, appraising or auditing the kexec image and
-> initramfs.
+> Looking at this code, why does this use "break":
 > 
-> Changelog v3:
-> - return -EBADF, not -ENOEXEC
-> - identifier change
-> - moved copy_file_from_fd() to a separate patch
-> - defer support for IMA
-> v1:
-> - re-order and squash the kexec patches
-> v0: ima: measure and appraise kexec image and initramfs (squashed)
-> - rename ima_read_hooks enumeration to ima_policy_id
-> - use kstat file size type loff_t, not size_t
-> - add union name "hooks" to fix sparse warning
-> - Calculate the file hash from the in memory buffer
-> (suggested by Dave Young)
-> - Rename ima_read_and_process_file() to ima_hash_and_process_file()
-> - replace individual case statements with range:
->         KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1
-> - Instead of ima_read_and_process_file() allocating memory, the caller
-> allocates and frees the memory.
-> - Moved the kexec measurement/appraisal call to copy_file_from_fd(). The
-> same call now measures and appraises both the kexec image and initramfs.
+>                 len = snprintf(path, PATH_MAX, "%s/%s",
+>                                fw_path[i], buf->fw_id);
+>                 if (len >= PATH_MAX) {
+>                         rc = -ENAMETOOLONG;
+>                         break;
+>                 }
 > 
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> Shouldn't that emit a warning, set rc, and continue?
 
-Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
+Yes but this is a separate piece of code, and that's a functional change but I
+welcome the change for sure.  This could be done separately.
+
+> Regardless, I think this is more readable. Adding an "out" target at
+> the end of a for loop seems weird, given "break" existing. :)
+
+Good call, goto mixed with while loops can be get iffy.  I'm fine with this
+change as a replacement. To be fair we should also note both patches (the one
+submitted and yours below) also make a small functional change so that the loop
+continues over all other possible directories in the fw_path in case of failure
+with the first directory used as a base. If we wanted to be pedantic and careful
+we could split the functional change to not enable to continue in case of failure
+onto the next directory, and instead require that as a separate patch. I'll leave
+it to Mimi to decide.
+
+> 
+>                 rc = fw_read_file_contents(file, buf);
+>                 fput(file);
+> -               if (rc)
+> +               if (rc) {
+>                         dev_warn(device, "loading %s failed with error %d\n",
+>                                  path, rc);
+> +                       continue;
+> +               }
+> +               dev_dbg(device, "direct-loading %s\n", buf->fw_id);
+> +               fw_finish_direct_load(device, buf);
+> -               else
+> -                       break;
+> +               break;
+>         }
+>         __putname(path);
+> -
+> -       if (!rc) {
+> -               dev_dbg(device, "direct-loading %s\n",
+> -                       buf->fw_id);
+> -               fw_finish_direct_load(device, buf);
+> -       }
+> -
+>         return rc;
+>  }
+
+Can you provided a Signed-offy-by? If so consider my Acked-by.
 
   Luis
 
