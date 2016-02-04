@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22b.google.com ([2a00:1450:400c:c09::22b])
+Received: from mail-io0-x236.google.com ([2607:f8b0:4001:c06::236])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aRIXI-0007L6-IR
- for kexec@lists.infradead.org; Thu, 04 Feb 2016 11:57:21 +0000
-Received: by mail-wm0-x22b.google.com with SMTP id 128so23431670wmz.1
- for <kexec@lists.infradead.org>; Thu, 04 Feb 2016 03:56:59 -0800 (PST)
-Date: Thu, 4 Feb 2016 11:56:56 +0000
-From: Matt Fleming <matt@codeblueprint.co.uk>
-Subject: Re: [PATCH] x86/efi: skip bgrt init for kexec reboot
-Message-ID: <20160204115656.GB2586@codeblueprint.co.uk>
-References: <20160127112044.GA2961@dhcp-128-65.nay.redhat.com>
- <20160203214200.GA15110@dhcp-128-65.nay.redhat.com>
- <20160203225333.GA31246@codeblueprint.co.uk>
- <20160204100329.GA2586@codeblueprint.co.uk>
- <20160204110903.GA2977@dhcp-128-65.nay.redhat.com>
+ id 1aRNhM-0006C8-7b
+ for kexec@lists.infradead.org; Thu, 04 Feb 2016 17:28:04 +0000
+Received: by mail-io0-x236.google.com with SMTP id g73so100660490ioe.3
+ for <kexec@lists.infradead.org>; Thu, 04 Feb 2016 09:27:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160204110903.GA2977@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <1454526390-19792-6-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-6-git-send-email-zohar@linux.vnet.ibm.com>
+Date: Thu, 4 Feb 2016 09:27:43 -0800
+Message-ID: <CAGXu5jJwZzYm5ZEMRmypg7auJaPsRS4GM2ES9uGQj81LFqQrQQ@mail.gmail.com>
+Subject: Re: [PATCH v3 05/22] firmware: move completing fw into a helper
+From: Kees Cook <keescook@chromium.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,40 +25,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>, linux-acpi@vger.kernel.org, Borislav Petkov <bp@alien8.de>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On Thu, 04 Feb, at 07:09:03PM, Dave Young wrote:
-> 
-> Consider the original code path, maybe change it to efi_kexec_setup will
-> be better to remind people? Or something else like a wraper function with
-> similar name..
- 
-Possibly. I had considered adding a new efi_enabled() bit for
-KEXEC_BOOT, but I'm worried that'll just encourage more uses.
+On Wed, Feb 3, 2016 at 11:06 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+> From: "Luis R. Rodriguez" <mcgrof@kernel.org>
+>
+> This will be re-used later through a new extensible interface.
+>
+> Reviewed-by: Josh Boyer <jwboyer@fedoraproject.org>
+> Signed-off-by: Luis R. Rodriguez <mcgrof@kernel.org>
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-The best approach is going to be to see whether we can reduce the uses
-of efi_setup and the associated special code. Once we've completed
-that exercise, we can think about the best name for this variable.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-> For building ACPI tables we need do it in kernel instead of kexec-tools
-> because of kexec_file_load for secure boot case so we still need a conditional
-> code path for kexec..
+-Kees
 
-Note that it may not be necessary to build any ACPI tables at all,
-provided that things like acpi_get_table() fail gracefully for kexec.
-I'm assuming that's the problem that you discovered when writing this
-patch.
+> ---
+>  drivers/base/firmware_class.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/base/firmware_class.c b/drivers/base/firmware_class.c
+> index 3358f5d..fb64814 100644
+> --- a/drivers/base/firmware_class.c
+> +++ b/drivers/base/firmware_class.c
+> @@ -322,6 +322,15 @@ fail:
+>         return rc;
+>  }
+>
+> +static void fw_finish_direct_load(struct device *device,
+> +                                 struct firmware_buf *buf)
+> +{
+> +       mutex_lock(&fw_lock);
+> +       set_bit(FW_STATUS_DONE, &buf->status);
+> +       complete_all(&buf->completion);
+> +       mutex_unlock(&fw_lock);
+> +}
+> +
+>  static int fw_get_filesystem_firmware(struct device *device,
+>                                        struct firmware_buf *buf)
+>  {
+> @@ -363,10 +372,7 @@ static int fw_get_filesystem_firmware(struct device *device,
+>         if (!rc) {
+>                 dev_dbg(device, "direct-loading %s\n",
+>                         buf->fw_id);
+> -               mutex_lock(&fw_lock);
+> -               set_bit(FW_STATUS_DONE, &buf->status);
+> -               complete_all(&buf->completion);
+> -               mutex_unlock(&fw_lock);
+> +               fw_finish_direct_load(device, buf);
+>         }
+>
+>         return rc;
+> --
+> 2.1.0
+>
 
-And yes, I don't expect you can build the ACPI table from userspace,
-but it should at least be possible to do it in setup_boot_parameters()
-or so when you setup the EFI table pointers (efi.config_tables), etc.
-I think that would be a natural home for this feature.
 
-> Also I'm not sure how to rebuild ACPI tables, it is easy or hard. Let me
-> checking the detail and think more about it.
 
-Thanks.
+-- 
+Kees Cook
+Chrome OS & Brillo Security
 
 _______________________________________________
 kexec mailing list
