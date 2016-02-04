@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x22d.google.com ([2607:f8b0:4001:c06::22d])
+Received: from mail-ig0-x22f.google.com ([2607:f8b0:4001:c05::22f])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aROID-000491-MB
- for kexec@lists.infradead.org; Thu, 04 Feb 2016 18:06:11 +0000
-Received: by mail-io0-x22d.google.com with SMTP id g73so101909685ioe.3
- for <kexec@lists.infradead.org>; Thu, 04 Feb 2016 10:05:49 -0800 (PST)
+ id 1aRORg-0001gO-3F
+ for kexec@lists.infradead.org; Thu, 04 Feb 2016 18:15:57 +0000
+Received: by mail-ig0-x22f.google.com with SMTP id hb3so40927259igb.0
+ for <kexec@lists.infradead.org>; Thu, 04 Feb 2016 10:15:35 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
-Date: Thu, 4 Feb 2016 10:05:48 -0800
-Message-ID: <CAGXu5jK45ejTH=XkCR=fyEqrShzQEp0GAho0H+iCHL1DXvMhpg@mail.gmail.com>
-Subject: Re: [PATCH v3 18/22] kexec: replace call to copy_file_from_fd() with
- kernel version
+Date: Thu, 4 Feb 2016 10:15:34 -0800
+Message-ID: <CAGXu5jKve+Lcm+m69L_hGDWtL67H8ndJLq+MpRNVsF9N0-buAw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/22] vfs: support for a common kernel file loader
 From: Kees Cook <keescook@chromium.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,171 +28,109 @@ To: Mimi Zohar <zohar@linux.vnet.ibm.com>
 Cc: Rusty Russell <rusty@rustcorp.com.au>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
 On Wed, Feb 3, 2016 at 11:06 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> Replace copy_file_from_fd() with kernel_read_file_from_fd().
+> For a while it was looked down upon to directly read files from Linux.
+> These days there exists a few mechanisms in the kernel that do just this
+> though to load a file into a local buffer. There are minor but important
+> checks differences on each, we should take all the best practices from
+> each of them, generalize them and make all places in the kernel that
+> read a file use it.[1]
 >
-> Two new identifiers named READING_KEXEC_IMAGE and READING_KEXEC_INITRAMFS
-> are defined for measuring, appraising or auditing the kexec image and
-> initramfs.
+> One difference is the method for opening the file.  In some cases we
+> have a file, while in other cases we have a pathname or a file descriptor.
 >
-> Changelog v3:
-> - return -EBADF, not -ENOEXEC
-> - identifier change
-> - moved copy_file_from_fd() to a separate patch
-> - defer support for IMA
-> v1:
-> - re-order and squash the kexec patches
-> v0: ima: measure and appraise kexec image and initramfs (squashed)
-> - rename ima_read_hooks enumeration to ima_policy_id
-> - use kstat file size type loff_t, not size_t
-> - add union name "hooks" to fix sparse warning
-> - Calculate the file hash from the in memory buffer
-> (suggested by Dave Young)
-> - Rename ima_read_and_process_file() to ima_hash_and_process_file()
-> - replace individual case statements with range:
->         KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1
-> - Instead of ima_read_and_process_file() allocating memory, the caller
-> allocates and frees the memory.
-> - Moved the kexec measurement/appraisal call to copy_file_from_fd(). The
-> same call now measures and appraises both the kexec image and initramfs.
+> Another difference is the security hook calls, or lack of them.  In
+> some versions there is a post file read hook, while in others there
+> is a pre file read hook.
 >
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> This patch set attempts to resolve these differences.  It does not attempt
+> to merge the different methods of opening a file, but defines a single
+> common kernel file read function with two wrappers. In addition, as none
+> of the upstreamed LSMs define either a kernel_module_from_file or a
+> kernel_fw_from_file hook, this patch set removes these hooks and the
+> associated functions.  The ima_module_check() and ima_fw_from_file()
+> functions are renamed and called from the pre and post kernel_read_file
+> security functions respectively.
 
-Acked-by: Kees Cook <keescook@chromium.org>
+I'm very happy about the pre and post hooks; this solves the primary
+problem I'd had when comparing the firmware and module hooks. Thanks!
+
+Once this series is in -next, I'll resend my rebased "loadpin" LSM.
 
 -Kees
 
-> ---
->  include/linux/fs.h  |  2 ++
->  kernel/kexec_file.c | 73 +++++++----------------------------------------------
->  2 files changed, 11 insertions(+), 64 deletions(-)
 >
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 9e1f1e3..d4d556e 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2529,6 +2529,8 @@ extern int do_pipe_flags(int *, int);
->  enum kernel_read_file_id {
->         READING_FIRMWARE = 1,
->         READING_MODULE,
-> +       READING_KEXEC_IMAGE,
-> +       READING_KEXEC_INITRAMFS,
->         READING_MAX_ID
->  };
+> Changelog:
+> - Rebased on top of some of the "firmware_class: extensible firmware API"
+> patches posted by Luis.
+> - Removed the kernel_module_from_file and kernel_fw_from_file security
+> hooks and functions.
+> - Defined "kernel_read_file_id" enumeration, independently of "ima_hooks".
+> - Split patches for ease of review.
 >
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index b70ada0..1443f93 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -18,6 +18,7 @@
->  #include <linux/kexec.h>
->  #include <linux/mutex.h>
->  #include <linux/list.h>
-> +#include <linux/fs.h>
->  #include <crypto/hash.h>
->  #include <crypto/sha.h>
->  #include <linux/syscalls.h>
-> @@ -33,65 +34,6 @@ size_t __weak kexec_purgatory_size = 0;
+> The latest version of these patches can be found in the next-kernel-read-v3
+> branch of:
+> git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
 >
->  static int kexec_calculate_store_digests(struct kimage *image);
+> [1] Taken from Luis Rodriguez's wiki -
+> http://kernelnewbies.org/KernelProjects/common-kernel-loader
 >
-> -static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
-> -{
-> -       struct fd f = fdget(fd);
-> -       int ret;
-> -       struct kstat stat;
-> -       loff_t pos;
-> -       ssize_t bytes = 0;
-> -
-> -       if (!f.file)
-> -               return -EBADF;
-> -
-> -       ret = vfs_getattr(&f.file->f_path, &stat);
-> -       if (ret)
-> -               goto out;
-> -
-> -       if (stat.size > INT_MAX) {
-> -               ret = -EFBIG;
-> -               goto out;
-> -       }
-> -
-> -       /* Don't hand 0 to vmalloc, it whines. */
-> -       if (stat.size == 0) {
-> -               ret = -EINVAL;
-> -               goto out;
-> -       }
-> -
-> -       *buf = vmalloc(stat.size);
-> -       if (!*buf) {
-> -               ret = -ENOMEM;
-> -               goto out;
-> -       }
-> -
-> -       pos = 0;
-> -       while (pos < stat.size) {
-> -               bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
-> -                                   stat.size - pos);
-> -               if (bytes < 0) {
-> -                       vfree(*buf);
-> -                       ret = bytes;
-> -                       goto out;
-> -               }
-> -
-> -               if (bytes == 0)
-> -                       break;
-> -               pos += bytes;
-> -       }
-> -
-> -       if (pos != stat.size) {
-> -               ret = -EBADF;
-> -               vfree(*buf);
-> -               goto out;
-> -       }
-> -
-> -       *buf_len = pos;
-> -out:
-> -       fdput(f);
-> -       return ret;
-> -}
-> -
->  /* Architectures can provide this probe function */
->  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
->                                          unsigned long buf_len)
-> @@ -180,16 +122,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  {
->         int ret = 0;
->         void *ldata;
-> +       loff_t size;
+> Mimi
 >
-> -       ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
-> -                               &image->kernel_buf_len);
-> +       ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
-> +                                      &size, INT_MAX, READING_KEXEC_IMAGE);
->         if (ret)
->                 return ret;
-> +       image->kernel_buf_len = size;
+> David Howells (1):
+>   firmware: fold successful fw read early
 >
->         /* Call arch image probe handlers */
->         ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
->                                             image->kernel_buf_len);
-> -
->         if (ret)
->                 goto out;
+> Dmitry Kasatkin (3):
+>   ima: separate 'security.ima' reading functionality from collect
+>   ima: provide buffer hash calculation function
+>   ima: load policy using path
 >
-> @@ -204,10 +147,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  #endif
->         /* It is possible that there no initramfs is being loaded */
->         if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
-> -               ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
-> -                                       &image->initrd_buf_len);
-> +               ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
-> +                                              &size, INT_MAX,
-> +                                              READING_KEXEC_INITRAMFS);
->                 if (ret)
->                         goto out;
-> +               image->initrd_buf_len = size;
->         }
+> Luis R. Rodriguez (2):
+>   firmware: simplify dev_*() print messages for generic helpers
+>   firmware: move completing fw into a helper
 >
->         if (cmdline_len) {
+> Mimi Zohar (16):
+>   ima: refactor ima_policy_show() to display "ima_hooks" rules
+>   ima: use "ima_hooks" enum as function argument
+>   vfs: define a generic function to read a file from the kernel
+>   vfs: define kernel_read_file_id enumeration
+>   ima: calculate the hash of a buffer using aynchronous hash(ahash)
+>   ima: define a new hook to measure and appraise a file already in
+>     memory
+>   vfs: define kernel_read_file_from_path
+>   firmware: replace call to fw_read_file_contents() with kernel version
+>   security: define kernel_read_file hook
+>   vfs: define kernel_copy_file_from_fd()
+>   module: replace copy_module_from_fd with kernel version
+>   ima: remove firmware and module specific cached status info
+>   kexec: replace call to copy_file_from_fd() with kernel version
+>   ima: support for kexec image and initramfs
+>   ima: measure and appraise the IMA policy itself
+>   ima: require signed IMA policy
+>
+>  Documentation/ABI/testing/ima_policy      |   2 +-
+>  drivers/base/firmware_class.c             |  76 ++++++-------------
+>  fs/exec.c                                 |  95 +++++++++++++++++++++++
+>  include/linux/fs.h                        |  15 ++++
+>  include/linux/ima.h                       |  10 ++-
+>  include/linux/lsm_hooks.h                 |  35 ++++-----
+>  include/linux/security.h                  |  16 ++--
+>  kernel/kexec_file.c                       |  73 +++---------------
+>  kernel/module.c                           |  68 ++---------------
+>  security/integrity/iint.c                 |   4 +-
+>  security/integrity/ima/ima.h              |  49 ++++++++----
+>  security/integrity/ima/ima_api.c          |  25 +++----
+>  security/integrity/ima/ima_appraise.c     |  69 ++++++++---------
+>  security/integrity/ima/ima_crypto.c       | 120 +++++++++++++++++++++++++++++-
+>  security/integrity/ima/ima_fs.c           |  50 ++++++++++++-
+>  security/integrity/ima/ima_init.c         |   2 +-
+>  security/integrity/ima/ima_main.c         | 104 +++++++++++++++++++-------
+>  security/integrity/ima/ima_policy.c       | 107 +++++++++++++++++---------
+>  security/integrity/ima/ima_template.c     |   2 -
+>  security/integrity/ima/ima_template_lib.c |   1 -
+>  security/integrity/integrity.h            |  15 ++--
+>  security/security.c                       |  32 ++++----
+>  22 files changed, 605 insertions(+), 365 deletions(-)
+>
 > --
 > 2.1.0
 >
