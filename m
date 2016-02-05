@@ -1,34 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aRU8j-0007mR-Oy
- for kexec@lists.infradead.org; Fri, 05 Feb 2016 00:20:46 +0000
-Received: from localhost
- by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 5 Feb 2016 10:20:22 +1000
-Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 380722CE8058
- for <kexec@lists.infradead.org>; Fri,  5 Feb 2016 11:20:20 +1100 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u150KB0x45744236
- for <kexec@lists.infradead.org>; Fri, 5 Feb 2016 11:20:20 +1100
-Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u150JkXR023573
- for <kexec@lists.infradead.org>; Fri, 5 Feb 2016 11:19:47 +1100
-Message-ID: <1454631566.2648.23.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 16/22] module: replace copy_module_from_fd with
- kernel version
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 04 Feb 2016 19:19:26 -0500
-In-Reply-To: <20160204195601.GF12481@wotan.suse.de>
-References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-17-git-send-email-zohar@linux.vnet.ibm.com>
- <20160204195601.GF12481@wotan.suse.de>
-Mime-Version: 1.0
+ id 1aRUTI-0001pD-Qn
+ for kexec@lists.infradead.org; Fri, 05 Feb 2016 00:42:01 +0000
+Date: Fri, 5 Feb 2016 08:41:15 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] x86/efi: skip bgrt init for kexec reboot
+Message-ID: <20160205004115.GA3651@dhcp-128-65.nay.redhat.com>
+References: <20160127112044.GA2961@dhcp-128-65.nay.redhat.com>
+ <20160203214200.GA15110@dhcp-128-65.nay.redhat.com>
+ <20160203225333.GA31246@codeblueprint.co.uk>
+ <20160204100329.GA2586@codeblueprint.co.uk>
+ <20160204110903.GA2977@dhcp-128-65.nay.redhat.com>
+ <20160204115656.GB2586@codeblueprint.co.uk>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160204115656.GB2586@codeblueprint.co.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,37 +28,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Luis R. Rodriguez" <mcgrof@kernel.org>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>, linux-acpi@vger.kernel.org, Borislav Petkov <bp@alien8.de>
 
-On Thu, 2016-02-04 at 20:56 +0100, Luis R. Rodriguez wrote:
-> On Wed, Feb 03, 2016 at 02:06:24PM -0500, Mimi Zohar wrote:
-> > Replace copy_module_from_fd() with kernel_read_file_from_fd().
+On 02/04/16 at 11:56am, Matt Fleming wrote:
+> On Thu, 04 Feb, at 07:09:03PM, Dave Young wrote:
 > > 
-> > Although none of the upstreamed LSMs define a kernel_module_from_file
-> > hook, IMA is called, based on policy, to prevent unsigned kernel modules
-> > from being loaded by the original kernel module syscall and to
-> > measure/appraise signed kernel modules.
-> > 
-> > The security function security_kernel_module_from_file() was called prior
-> > to reading a kernel module.  Preventing unsigned kernel modules from being
-> > loaded by the original kernel module syscall remains on the pre-read
-> > kernel_read_file() security hook.  Instead of reading the kernel module
-> > twice, once for measuring/appraising and again for loading the kernel
-> > module, the signature validation is moved to the kernel_post_read_file()
-> > security hook.
-> > 
-> > This patch removes the security_kernel_module_from_file() hook and security
-> > call.
-> > 
-> > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> > Consider the original code path, maybe change it to efi_kexec_setup will
+> > be better to remind people? Or something else like a wraper function with
+> > similar name..
+>  
+> Possibly. I had considered adding a new efi_enabled() bit for
+> KEXEC_BOOT, but I'm worried that'll just encourage more uses.
 > 
-> Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
+> The best approach is going to be to see whether we can reduce the uses
+> of efi_setup and the associated special code. Once we've completed
+> that exercise, we can think about the best name for this variable.
 
-Thank you for reviewing the patches!
+Ok, thanks.
 
-Mimi
+> 
+> > For building ACPI tables we need do it in kernel instead of kexec-tools
+> > because of kexec_file_load for secure boot case so we still need a conditional
+> > code path for kexec..
+> 
+> Note that it may not be necessary to build any ACPI tables at all,
+> provided that things like acpi_get_table() fail gracefully for kexec.
+> I'm assuming that's the problem that you discovered when writing this
+> patch.
+> 
+> And yes, I don't expect you can build the ACPI table from userspace,
+> but it should at least be possible to do it in setup_boot_parameters()
+> or so when you setup the EFI table pointers (efi.config_tables), etc.
+> I think that would be a natural home for this feature.
 
+Thing is we support both kexec_load and kexec_file_load, if we do something
+in kernel loader we will need do same in userspace kexec-tools as well.
+
+Another way is we probably can retain the boot service areas for kexec
+boot, but yes it is another special handling for kexec :(. Is this way
+better to you?
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
