@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aSVRl-0002gg-Ie
- for kexec@lists.infradead.org; Sun, 07 Feb 2016 19:56:38 +0000
-Date: Sun, 7 Feb 2016 21:56:53 +0200
+ id 1aSVUY-0002wZ-E5
+ for kexec@lists.infradead.org; Sun, 07 Feb 2016 19:59:31 +0000
+Date: Sun, 7 Feb 2016 21:59:45 +0200
 From: Petko Manolov <petkan@mip-labs.com>
-Subject: Re: [PATCH v3 17/22] ima: remove firmware and module specific cached
- status info
-Message-ID: <20160207195653.GF17321@localhost>
+Subject: Re: [PATCH v3 20/22] ima: load policy using path
+Message-ID: <20160207195945.GG17321@localhost>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-21-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1454526390-19792-21-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,193 +25,122 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Dmitry Kasatkin <dmitry.kasatkin@huawei.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Dmitry Kasatkin <d.kasatkin@samsung.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On 16-02-03 14:06:25, Mimi Zohar wrote:
-> Each time a file is read by the kernel, the file should be re-measured and
-> the file signature re-appraised, based on policy.  As there is no need to
-> preserve the status information, this patch replaces the firmware and
-> module specific cache status with a generic one named read_file.
+On 16-02-03 14:06:28, Mimi Zohar wrote:
+> From: Dmitry Kasatkin <d.kasatkin@samsung.com>
 > 
-> This change simplifies adding support for other files read by the kernel.
+> We currently cannot do appraisal or signature vetting of IMA policies
+> since we currently can only load IMA policies by writing the contents
+> of the policy directly in, as follows:
 > 
+> cat policy-file > <securityfs>/ima/policy
+> 
+> If we provide the kernel the path to the IMA policy so it can load
+> the policy itself it'd be able to later appraise or vet the file
+> signature if it has one.  This patch adds support to load the IMA
+> policy with a given path as follows:
+> 
+> echo /etc/ima/ima_policy > /sys/kernel/security/ima/policy
+> 
+> Changelog v3:
+> - moved kernel_read_file_from_path() to a separate patch
+> v2:
+> - after re-ordering the patches, replace calling integrity_kernel_read()
+>   to read the file with kernel_read_file_from_path() (Mimi)
+> - Patch description re-written by Luis R. Rodriguez
+> 
+> Signed-off-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-
-Acked-by: Petko Manolov <petkan@mip-labs.com>
-
 > ---
->  security/integrity/iint.c             |  4 ++--
->  security/integrity/ima/ima.h          |  3 ++-
->  security/integrity/ima/ima_appraise.c | 35 ++++++++++++++++-------------------
->  security/integrity/ima/ima_policy.c   |  9 ++++-----
->  security/integrity/integrity.h        | 16 ++++------------
->  5 files changed, 28 insertions(+), 39 deletions(-)
+>  include/linux/fs.h              |  1 +
+>  security/integrity/ima/ima_fs.c | 43 +++++++++++++++++++++++++++++++++++++++--
+>  2 files changed, 42 insertions(+), 2 deletions(-)
 > 
-> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> index 8f1ab37..345b759 100644
-> --- a/security/integrity/iint.c
-> +++ b/security/integrity/iint.c
-> @@ -77,7 +77,7 @@ static void iint_free(struct integrity_iint_cache *iint)
->  	iint->ima_file_status = INTEGRITY_UNKNOWN;
->  	iint->ima_mmap_status = INTEGRITY_UNKNOWN;
->  	iint->ima_bprm_status = INTEGRITY_UNKNOWN;
-> -	iint->ima_module_status = INTEGRITY_UNKNOWN;
-> +	iint->ima_read_status = INTEGRITY_UNKNOWN;
->  	iint->evm_status = INTEGRITY_UNKNOWN;
->  	kmem_cache_free(iint_cache, iint);
->  }
-> @@ -157,7 +157,7 @@ static void init_once(void *foo)
->  	iint->ima_file_status = INTEGRITY_UNKNOWN;
->  	iint->ima_mmap_status = INTEGRITY_UNKNOWN;
->  	iint->ima_bprm_status = INTEGRITY_UNKNOWN;
-> -	iint->ima_module_status = INTEGRITY_UNKNOWN;
-> +	iint->ima_read_status = INTEGRITY_UNKNOWN;
->  	iint->evm_status = INTEGRITY_UNKNOWN;
->  }
->  
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 0b7134c..a5d2592 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -144,9 +144,10 @@ enum ima_hooks {
->  	FILE_CHECK = 1,
->  	MMAP_CHECK,
->  	BPRM_CHECK,
-> +	POST_SETATTR,
->  	MODULE_CHECK,
->  	FIRMWARE_CHECK,
-> -	POST_SETATTR
-> +	MAX_CHECK
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index d4d556e..b648e6d 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2531,6 +2531,7 @@ enum kernel_read_file_id {
+>  	READING_MODULE,
+>  	READING_KEXEC_IMAGE,
+>  	READING_KEXEC_INITRAMFS,
+> +	READING_POLICY,
+>  	READING_MAX_ID
 >  };
 >  
->  /* LIM API function definitions */
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index cb0d0ff..6b4694a 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -74,13 +74,12 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
->  		return iint->ima_mmap_status;
->  	case BPRM_CHECK:
->  		return iint->ima_bprm_status;
-> -	case MODULE_CHECK:
-> -		return iint->ima_module_status;
-> -	case FIRMWARE_CHECK:
-> -		return iint->ima_firmware_status;
->  	case FILE_CHECK:
-> -	default:
-> +	case POST_SETATTR:
->  		return iint->ima_file_status;
-> +	case MODULE_CHECK ... MAX_CHECK - 1:
-> +	default:
-> +		return iint->ima_read_status;
->  	}
->  }
+> diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+> index f355231..00ccd67 100644
+> --- a/security/integrity/ima/ima_fs.c
+> +++ b/security/integrity/ima/ima_fs.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/rculist.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/parser.h>
+> +#include <linux/vmalloc.h>
+>  
+>  #include "ima.h"
+>  
+> @@ -258,6 +259,41 @@ static const struct file_operations ima_ascii_measurements_ops = {
+>  	.release = seq_release,
+>  };
+>  
+> +static ssize_t ima_read_policy(char *path)
+> +{
+> +	void *data;
+> +	char *datap;
+> +	loff_t size;
+> +	int rc, pathlen = strlen(path);
+> +
+> +	char *p;
+> +
+> +	/* remove \n */
+> +	datap = path;
+> +	strsep(&datap, "\n");
+> +
+> +	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	datap = data;
+> +	while (size > 0 && (p = strsep(&datap, "\n"))) {
+> +		pr_debug("rule: %s\n", p);
+> +		rc = ima_parse_add_rule(p);
+> +		if (rc < 0)
+> +			break;
+> +		size -= rc;
+> +	}
+> +
+> +	vfree(data);
+> +	if (rc < 0)
+> +		return rc;
+> +	else if (size)
+> +		return -EINVAL;
+> +	else
+> +		return pathlen;
+> +}
+> +
+>  static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+>  				size_t datalen, loff_t *ppos)
+>  {
+> @@ -286,9 +322,12 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+>  	result = mutex_lock_interruptible(&ima_write_mutex);
+>  	if (result < 0)
+>  		goto out_free;
+> -	result = ima_parse_add_rule(data);
+> -	mutex_unlock(&ima_write_mutex);
+>  
+> +	if (data[0] == '/')
 
-I assume you used "case MODULE_CHECK ... MAX_CHECK - 1:" for readability?
+It seems that if we feed relative path to ima_policy the update will fail...
 
-
-> @@ -95,15 +94,14 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
->  	case BPRM_CHECK:
->  		iint->ima_bprm_status = status;
->  		break;
-> -	case MODULE_CHECK:
-> -		iint->ima_module_status = status;
-> -		break;
-> -	case FIRMWARE_CHECK:
-> -		iint->ima_firmware_status = status;
-> -		break;
->  	case FILE_CHECK:
-> -	default:
-> +	case POST_SETATTR:
->  		iint->ima_file_status = status;
-> +		break;
-> +	case MODULE_CHECK ... MAX_CHECK - 1:
-> +	default:
-> +		iint->ima_read_status = status;
-> +		break;
->  	}
->  }
->  
-> @@ -117,15 +115,14 @@ static void ima_cache_flags(struct integrity_iint_cache *iint,
->  	case BPRM_CHECK:
->  		iint->flags |= (IMA_BPRM_APPRAISED | IMA_APPRAISED);
->  		break;
-> -	case MODULE_CHECK:
-> -		iint->flags |= (IMA_MODULE_APPRAISED | IMA_APPRAISED);
-> -		break;
-> -	case FIRMWARE_CHECK:
-> -		iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
-> -		break;
->  	case FILE_CHECK:
-> -	default:
-> +	case POST_SETATTR:
->  		iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
-> +		break;
-> +	case MODULE_CHECK ... MAX_CHECK - 1:
-> +	default:
-> +		iint->flags |= (IMA_READ_APPRAISED | IMA_APPRAISED);
-> +		break;
->  	}
->  }
->  
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index cfbe86f..7571ce8 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -300,13 +300,12 @@ static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
->  		return IMA_MMAP_APPRAISE;
->  	case BPRM_CHECK:
->  		return IMA_BPRM_APPRAISE;
-> -	case MODULE_CHECK:
-> -		return IMA_MODULE_APPRAISE;
-> -	case FIRMWARE_CHECK:
-> -		return IMA_FIRMWARE_APPRAISE;
->  	case FILE_CHECK:
-> -	default:
-> +	case POST_SETATTR:
->  		return IMA_FILE_APPRAISE;
-> +	case MODULE_CHECK ... MAX_CHECK - 1:
-> +	default:
-> +		return IMA_READ_APPRAISE;
->  	}
->  }
->  
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-> index 9a0ea4c..c7a111c 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -45,18 +45,12 @@
->  #define IMA_MMAP_APPRAISED	0x00000800
->  #define IMA_BPRM_APPRAISE	0x00001000
->  #define IMA_BPRM_APPRAISED	0x00002000
-> -#define IMA_MODULE_APPRAISE	0x00004000
-> -#define IMA_MODULE_APPRAISED	0x00008000
-> -#define IMA_FIRMWARE_APPRAISE	0x00010000
-> -#define IMA_FIRMWARE_APPRAISED	0x00020000
-> -#define IMA_READ_APPRAISE	0x00040000
-> -#define IMA_READ_APPRAISED	0x00080000
-> +#define IMA_READ_APPRAISE	0x00004000
-> +#define IMA_READ_APPRAISED	0x00008000
->  #define IMA_APPRAISE_SUBMASK	(IMA_FILE_APPRAISE | IMA_MMAP_APPRAISE | \
-> -				 IMA_BPRM_APPRAISE | IMA_MODULE_APPRAISE | \
-> -				 IMA_FIRMWARE_APPRAISE | IMA_READ_APPRAISE)
-> +				 IMA_BPRM_APPRAISE | IMA_READ_APPRAISE)
->  #define IMA_APPRAISED_SUBMASK	(IMA_FILE_APPRAISED | IMA_MMAP_APPRAISED | \
-> -				 IMA_BPRM_APPRAISED | IMA_MODULE_APPRAISED | \
-> -				 IMA_FIRMWARE_APPRAISED | IMA_READ_APPRAISED)
-> +				 IMA_BPRM_APPRAISED | IMA_READ_APPRAISED)
->  
->  enum evm_ima_xattr_type {
->  	IMA_XATTR_DIGEST = 0x01,
-> @@ -111,8 +105,6 @@ struct integrity_iint_cache {
->  	enum integrity_status ima_file_status:4;
->  	enum integrity_status ima_mmap_status:4;
->  	enum integrity_status ima_bprm_status:4;
-> -	enum integrity_status ima_module_status:4;
-> -	enum integrity_status ima_firmware_status:4;
->  	enum integrity_status ima_read_status:4;
->  	enum integrity_status evm_status:4;
->  	struct ima_digest_data *ima_hash;
+> +		result = ima_read_policy(data);
+> +	else
+> +		result = ima_parse_add_rule(data);
+> +	mutex_unlock(&ima_write_mutex);
+>  out_free:
+>  	kfree(data);
+>  out:
 > -- 
 > 2.1.0
 > 
