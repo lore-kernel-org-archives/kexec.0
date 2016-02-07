@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aSVUY-0002wZ-E5
- for kexec@lists.infradead.org; Sun, 07 Feb 2016 19:59:31 +0000
-Date: Sun, 7 Feb 2016 21:59:45 +0200
+ id 1aSVWU-0004JV-TN
+ for kexec@lists.infradead.org; Sun, 07 Feb 2016 20:01:31 +0000
+Date: Sun, 7 Feb 2016 22:01:48 +0200
 From: Petko Manolov <petkan@mip-labs.com>
-Subject: Re: [PATCH v3 20/22] ima: load policy using path
-Message-ID: <20160207195945.GG17321@localhost>
+Subject: Re: [PATCH v3 21/22] ima: measure and appraise the IMA policy itself
+Message-ID: <20160207200148.GH17321@localhost>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-21-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1454526390-19792-21-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,122 +25,125 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, Dmitry Kasatkin <dmitry.kasatkin@huawei.com>, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Dmitry Kasatkin <d.kasatkin@samsung.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On 16-02-03 14:06:28, Mimi Zohar wrote:
-> From: Dmitry Kasatkin <d.kasatkin@samsung.com>
+On 16-02-03 14:06:29, Mimi Zohar wrote:
+> Add support for measuring and appraising the IMA policy itself.
 > 
-> We currently cannot do appraisal or signature vetting of IMA policies
-> since we currently can only load IMA policies by writing the contents
-> of the policy directly in, as follows:
-> 
-> cat policy-file > <securityfs>/ima/policy
-> 
-> If we provide the kernel the path to the IMA policy so it can load
-> the policy itself it'd be able to later appraise or vet the file
-> signature if it has one.  This patch adds support to load the IMA
-> policy with a given path as follows:
-> 
-> echo /etc/ima/ima_policy > /sys/kernel/security/ima/policy
-> 
-> Changelog v3:
-> - moved kernel_read_file_from_path() to a separate patch
-> v2:
-> - after re-ordering the patches, replace calling integrity_kernel_read()
->   to read the file with kernel_read_file_from_path() (Mimi)
-> - Patch description re-written by Luis R. Rodriguez
-> 
-> Signed-off-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+
+Acked-by: Petko Manolov <petkan@mip-labs.com>
+
 > ---
->  include/linux/fs.h              |  1 +
->  security/integrity/ima/ima_fs.c | 43 +++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 42 insertions(+), 2 deletions(-)
+>  security/integrity/ima/ima.h        |  2 ++
+>  security/integrity/ima/ima_fs.c     |  9 ++++++++-
+>  security/integrity/ima/ima_main.c   |  3 +++
+>  security/integrity/ima/ima_policy.c | 10 +++++++++-
+>  4 files changed, 22 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index d4d556e..b648e6d 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2531,6 +2531,7 @@ enum kernel_read_file_id {
->  	READING_MODULE,
->  	READING_KEXEC_IMAGE,
->  	READING_KEXEC_INITRAMFS,
-> +	READING_POLICY,
->  	READING_MAX_ID
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 832e62a..6685968 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -149,6 +149,7 @@ enum ima_hooks {
+>  	FIRMWARE_CHECK,
+>  	KEXEC_CHECK,
+>  	INITRAMFS_CHECK,
+> +	POLICY_CHECK,
+>  	MAX_CHECK
 >  };
 >  
+> @@ -191,6 +192,7 @@ int ima_policy_show(struct seq_file *m, void *v);
+>  #define IMA_APPRAISE_LOG	0x04
+>  #define IMA_APPRAISE_MODULES	0x08
+>  #define IMA_APPRAISE_FIRMWARE	0x10
+> +#define IMA_APPRAISE_POLICY	0x20
+>  
+>  #ifdef CONFIG_IMA_APPRAISE
+>  int ima_appraise_measurement(enum ima_hooks func,
 > diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-> index f355231..00ccd67 100644
+> index 00ccd67..7b15e80 100644
 > --- a/security/integrity/ima/ima_fs.c
 > +++ b/security/integrity/ima/ima_fs.c
-> @@ -22,6 +22,7 @@
->  #include <linux/rculist.h>
->  #include <linux/rcupdate.h>
->  #include <linux/parser.h>
-> +#include <linux/vmalloc.h>
+> @@ -325,7 +325,14 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
 >  
->  #include "ima.h"
->  
-> @@ -258,6 +259,41 @@ static const struct file_operations ima_ascii_measurements_ops = {
->  	.release = seq_release,
+>  	if (data[0] == '/')
+>  		result = ima_read_policy(data);
+> -	else
+> +	else if (ima_appraise & IMA_APPRAISE_POLICY) {
+> +		pr_err("IMA: signed policy required\n");
+> +		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+> +				    "policy_update", "signed policy required",
+> +				    1, 0);
+> +		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+> +			result = -EACCES;
+> +	} else
+>  		result = ima_parse_add_rule(data);
+>  	mutex_unlock(&ima_write_mutex);
+>  out_free:
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index ccf9526..497a6f2 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -386,6 +386,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  	case READING_KEXEC_INITRAMFS:
+>  		func = INITRAMFS_CHECK;
+>  		break;
+> +	case READING_POLICY:
+> +		func = POLICY_CHECK;
+> +		break;
+>  	default:
+>  		func = FILE_CHECK;
+>  		break;
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index d02560e..39a811a 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -114,6 +114,7 @@ static struct ima_rule_entry default_measurement_rules[] = {
+>  	 .uid = GLOBAL_ROOT_UID, .flags = IMA_FUNC | IMA_INMASK | IMA_UID},
+>  	{.action = MEASURE, .func = MODULE_CHECK, .flags = IMA_FUNC},
+>  	{.action = MEASURE, .func = FIRMWARE_CHECK, .flags = IMA_FUNC},
+> +	{.action = MEASURE, .func = POLICY_CHECK, .flags = IMA_FUNC},
 >  };
 >  
-> +static ssize_t ima_read_policy(char *path)
-> +{
-> +	void *data;
-> +	char *datap;
-> +	loff_t size;
-> +	int rc, pathlen = strlen(path);
-> +
-> +	char *p;
-> +
-> +	/* remove \n */
-> +	datap = path;
-> +	strsep(&datap, "\n");
-> +
-> +	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	datap = data;
-> +	while (size > 0 && (p = strsep(&datap, "\n"))) {
-> +		pr_debug("rule: %s\n", p);
-> +		rc = ima_parse_add_rule(p);
-> +		if (rc < 0)
-> +			break;
-> +		size -= rc;
-> +	}
-> +
-> +	vfree(data);
-> +	if (rc < 0)
-> +		return rc;
-> +	else if (size)
-> +		return -EINVAL;
-> +	else
-> +		return pathlen;
-> +}
-> +
->  static ssize_t ima_write_policy(struct file *file, const char __user *buf,
->  				size_t datalen, loff_t *ppos)
->  {
-> @@ -286,9 +322,12 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
->  	result = mutex_lock_interruptible(&ima_write_mutex);
->  	if (result < 0)
->  		goto out_free;
-> -	result = ima_parse_add_rule(data);
-> -	mutex_unlock(&ima_write_mutex);
+>  static struct ima_rule_entry default_appraise_rules[] = {
+> @@ -616,6 +617,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  				entry->func = KEXEC_CHECK;
+>  			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
+>  				entry->func = INITRAMFS_CHECK;
+> +			else if (strcmp(args[0].from, "POLICY_CHECK") == 0)
+> +				entry->func = POLICY_CHECK;
+>  			else
+>  				result = -EINVAL;
+>  			if (!result)
+> @@ -774,6 +777,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>  		temp_ima_appraise |= IMA_APPRAISE_MODULES;
+>  	else if (entry->func == FIRMWARE_CHECK)
+>  		temp_ima_appraise |= IMA_APPRAISE_FIRMWARE;
+> +	else if (entry->func == POLICY_CHECK)
+> +		temp_ima_appraise |= IMA_APPRAISE_POLICY;
+>  	audit_log_format(ab, "res=%d", !result);
+>  	audit_log_end(ab);
+>  	return result;
+> @@ -860,7 +865,7 @@ static char *mask_tokens[] = {
+>  enum {
+>  	func_file = 0, func_mmap, func_bprm,
+>  	func_module, func_firmware, func_post,
+> -	func_kexec, func_initramfs
+> +	func_kexec, func_initramfs, func_policy
+>  };
 >  
-> +	if (data[0] == '/')
-
-It seems that if we feed relative path to ima_policy the update will fail...
-
-> +		result = ima_read_policy(data);
-> +	else
-> +		result = ima_parse_add_rule(data);
-> +	mutex_unlock(&ima_write_mutex);
->  out_free:
->  	kfree(data);
->  out:
+>  static char *func_tokens[] = {
+> @@ -940,6 +945,9 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
+>  	case INITRAMFS_CHECK:
+>  		seq_printf(m, pt(Opt_func), ft(func_initramfs));
+>  		break;
+> +	case POLICY_CHECK:
+> +		seq_printf(m, pt(Opt_func), ft(func_policy));
+> +		break;
+>  	default:
+>  		snprintf(tbuf, sizeof(tbuf), "%d", func);
+>  		seq_printf(m, pt(Opt_func), tbuf);
 > -- 
 > 2.1.0
 > 
