@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x230.google.com ([2607:f8b0:4001:c06::230])
+Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aRNgU-0005lJ-Ga
- for kexec@lists.infradead.org; Thu, 04 Feb 2016 17:27:11 +0000
-Received: by mail-io0-x230.google.com with SMTP id f81so100270948iof.0
- for <kexec@lists.infradead.org>; Thu, 04 Feb 2016 09:26:49 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <1454526390-19792-5-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1aSVHB-0006NJ-0u
+ for kexec@lists.infradead.org; Sun, 07 Feb 2016 19:45:42 +0000
+Date: Sun, 7 Feb 2016 21:45:46 +0200
+From: Petko Manolov <petkan@mip-labs.com>
+Subject: Re: [PATCH v3 02/22] ima: refactor ima_policy_show() to display
+ "ima_hooks" rules
+Message-ID: <20160207194546.GD17321@localhost>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-5-git-send-email-zohar@linux.vnet.ibm.com>
-Date: Thu, 4 Feb 2016 09:26:48 -0800
-Message-ID: <CAGXu5j+S3PZm+A+=rYNhvoRQboEhHQQbkWC3Rxdn2h=r7W9_Nw@mail.gmail.com>
-Subject: Re: [PATCH v3 04/22] firmware: simplify dev_*() print messages for
- generic helpers
-From: Kees Cook <keescook@chromium.org>
+ <1454526390-19792-3-git-send-email-zohar@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1454526390-19792-3-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,71 +21,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, Kyle McMartin <kyle@kernel.org>, Rusty Russell <rusty@rustcorp.com.au>, "linux-fsdevel@vger.kernel.org" <fsdevel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, "Luis R. Rodriguez" <mcgrof@kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, =?UTF-8?B?Vm9qdMSbY2ggUGF2bMOtaw==?= <vojtech@suse.cz>, Eric Biederman <ebiederm@xmission.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Casey Schaufler <casey@schaufler-ca.com>, Andrew Morton <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>, Ming Lei <ming.lei@canonical.com>, linux-modules@vger.kernel.org
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-T24gV2VkLCBGZWIgMywgMjAxNiBhdCAxMTowNiBBTSwgTWltaSBab2hhciA8em9oYXJAbGludXgu
-dm5ldC5pYm0uY29tPiB3cm90ZToKPiBGcm9tOiAiTHVpcyBSLiBSb2RyaWd1ZXoiIDxtY2dyb2ZA
-a2VybmVsLm9yZz4KPgo+IFNpbXBsaWZ5IGEgZmV3IG9mIHRoZSAqZ2VuZXJpYyogc2hhcmVkIGRl
-dl93YXJuKCkgYW5kIGRldl9kYmcoKQo+IHByaW50IG1lc3NhZ2VzIGZvciB0aHJlZSByZWFzb25z
-Ogo+Cj4gMCkgSGlzdG9yaWNhbGx5IGZpcm13YXJlX2NsYXNzIGNvZGUgd2FzIGFkZGVkIHRvIGhl
-bHAKPiAgICBnZXQgZGV2aWNlIGRyaXZlciBmaXJtd2FyZSBiaW5hcmllcyBidXQgdGhlc2UgZGF5
-cwo+ICAgIHJlcXVlc3RfZmlybXdhcmUqKCkgaGVscGVycyBhcmUgYmVpbmcgcmVwdXJwb3NlZCBm
-b3IKPiAgICBnZW5lcmFsICpzeXN0ZW0gZGF0YSogbmVlZGVkIGJ5IHRoZSBrZXJuZWwuCj4KPiAx
-KSBUaGlzIHdpbGwgYWxzbyBoZWxwIGdlbmVyYWxpemUgc2hhcmVkIGNvZGUgYXMgbXVjaCBhcyBw
-b3NzaWJsZQo+ICAgIGxhdGVyIGluIHRoZSBmdXR1cmUgaW4gY29uc2lkZXJhdGlvbiBmb3IgYSBu
-ZXcgZXh0ZW5zaWJsZSBmaXJtd2FyZQo+ICAgIEFQSSB3aGljaCB3aWxsIGVuYWJsZSB0byBzZXBh
-cmF0ZSB1c2VybW9kZSBoZWxwZXIgY29kZSBvdXQgYXMgbXVjaAo+ICAgIGFzIHBvc3NpYmxlLgo+
-Cj4gMikgS2VlcyBDb29rIHBvaW50ZWQgb3V0IHRoZSB0aGUgcHJpbnRzIGFscmVhZHkgaGF2ZSB0
-aGUgZGV2aWNlCj4gICAgYXNzb2NpYXRlZCBhcyBkZXZfKigpIGhlbHBlcnMgYXJlIHVzZWQsIHRo
-YXQgc2hvdWxkIGhlbHAgaWRlbnRpZnkKPiAgICB0aGUgdXNlciBhbmQgY2FzZSBpbiB3aGljaCB0
-aGUgaGVscGVycyBhcmUgdXNlZC4gVGhhdCBzaG91bGQgcHJvdmlkZQo+ICAgIGVub3VnaCBjb250
-ZXh0IGFuZCBzaW1wbGlmaWVzIHRoZSBtZXNzYWdlcyBmdXJ0aGVyLgo+Cj4gdjQ6IGdlbmVyYWxp
-emUgZGVidWcvd2FybiBtZXNzYWdlcyBldmVuIGZ1cnRoZXIgYXMgc3VnZ2VzdGVkIGJ5Cj4gICAg
-IEtlZXMgQ29vay4KPgo+IENjOiBSdXN0eSBSdXNzZWxsIDxydXN0eUBydXN0Y29ycC5jb20uYXU+
-Cj4gQ2M6IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+Cj4gQ2M6IEdy
-ZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+Cj4gQ2M6IERhdmlk
-IEhvd2VsbHMgPGRob3dlbGxzQHJlZGhhdC5jb20+Cj4gQ2M6IEtlZXMgQ29vayA8a2Vlc2Nvb2tA
-Y2hyb21pdW0ub3JnPgo+IENjOiBDYXNleSBTY2hhdWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5j
-b20+Cj4gQ2M6IE1pbmcgTGVpIDxtaW5nLmxlaUBjYW5vbmljYWwuY29tPgo+IENjOiBUYWthc2hp
-IEl3YWkgPHRpd2FpQHN1c2UuZGU+Cj4gQ2M6IFZvanTEm2NoIFBhdmzDrWsgPHZvanRlY2hAc3Vz
-ZS5jej4KPiBDYzogS3lsZSBNY01hcnRpbiA8a3lsZUBrZXJuZWwub3JnPgo+IENjOiBNYXR0aGV3
-IEdhcnJldHQgPG1qZzU5QHNyY2YudWNhbS5vcmc+Cj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBMdWlzIFIuIFJvZHJpZ3VleiA8bWNncm9mQGtlcm5l
-bC5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogTWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5pYm0u
-Y29tPgoKQWNrZWQtYnk6IEtlZXMgQ29vayA8a2Vlc2Nvb2tAY2hyb21pdW0ub3JnPgoKLUtlZXMK
-Cj4gLS0tCj4gIGRyaXZlcnMvYmFzZS9maXJtd2FyZV9jbGFzcy5jIHwgOCArKysrLS0tLQo+ICAx
-IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvYmFzZS9maXJtd2FyZV9jbGFzcy5jIGIvZHJpdmVycy9iYXNlL2Zpcm13
-YXJlX2NsYXNzLmMKPiBpbmRleCA4NTI0NDUwLi4zMzU4ZjVkIDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvYmFzZS9maXJtd2FyZV9jbGFzcy5jCj4gKysrIGIvZHJpdmVycy9iYXNlL2Zpcm13YXJlX2Ns
-YXNzLmMKPiBAQCAtMzUzLDE1ICszNTMsMTUgQEAgc3RhdGljIGludCBmd19nZXRfZmlsZXN5c3Rl
-bV9maXJtd2FyZShzdHJ1Y3QgZGV2aWNlICpkZXZpY2UsCj4gICAgICAgICAgICAgICAgIHJjID0g
-ZndfcmVhZF9maWxlX2NvbnRlbnRzKGZpbGUsIGJ1Zik7Cj4gICAgICAgICAgICAgICAgIGZwdXQo
-ZmlsZSk7Cj4gICAgICAgICAgICAgICAgIGlmIChyYykKPiAtICAgICAgICAgICAgICAgICAgICAg
-ICBkZXZfd2FybihkZXZpY2UsICJmaXJtd2FyZSwgYXR0ZW1wdGVkIHRvIGxvYWQgJXMsIGJ1dCBm
-YWlsZWQgd2l0aCBlcnJvciAlZFxuIiwKPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHBhdGgsIHJjKTsKPiArICAgICAgICAgICAgICAgICAgICAgICBkZXZfd2FybihkZXZpY2UsICJs
-b2FkaW5nICVzIGZhaWxlZCB3aXRoIGVycm9yICVkXG4iLAo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHBhdGgsIHJjKTsKPiAgICAgICAgICAgICAgICAgZWxzZQo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIGJyZWFrOwo+ICAgICAgICAgfQo+ICAgICAgICAgX19wdXRuYW1lKHBh
-dGgpOwo+Cj4gICAgICAgICBpZiAoIXJjKSB7Cj4gLSAgICAgICAgICAgICAgIGRldl9kYmcoZGV2
-aWNlLCAiZmlybXdhcmU6IGRpcmVjdC1sb2FkaW5nIGZpcm13YXJlICVzXG4iLAo+ICsgICAgICAg
-ICAgICAgICBkZXZfZGJnKGRldmljZSwgImRpcmVjdC1sb2FkaW5nICVzXG4iLAo+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIGJ1Zi0+ZndfaWQpOwo+ICAgICAgICAgICAgICAgICBtdXRleF9sb2Nr
-KCZmd19sb2NrKTsKPiAgICAgICAgICAgICAgICAgc2V0X2JpdChGV19TVEFUVVNfRE9ORSwgJmJ1
-Zi0+c3RhdHVzKTsKPiBAQCAtMTA1MSw3ICsxMDUxLDcgQEAgX3JlcXVlc3RfZmlybXdhcmVfcHJl
-cGFyZShzdHJ1Y3QgZmlybXdhcmUgKipmaXJtd2FyZV9wLCBjb25zdCBjaGFyICpuYW1lLAo+ICAg
-ICAgICAgfQo+Cj4gICAgICAgICBpZiAoZndfZ2V0X2J1aWx0aW5fZmlybXdhcmUoZmlybXdhcmUs
-IG5hbWUpKSB7Cj4gLSAgICAgICAgICAgICAgIGRldl9kYmcoZGV2aWNlLCAiZmlybXdhcmU6IHVz
-aW5nIGJ1aWx0LWluIGZpcm13YXJlICVzXG4iLCBuYW1lKTsKPiArICAgICAgICAgICAgICAgZGV2
-X2RiZyhkZXZpY2UsICJ1c2luZyBidWlsdC1pbiAlc1xuIiwgbmFtZSk7Cj4gICAgICAgICAgICAg
-ICAgIHJldHVybiAwOyAvKiBhc3NpZ25lZCAqLwo+ICAgICAgICAgfQo+Cj4gLS0KPiAyLjEuMAo+
-CgoKCi0tIApLZWVzIENvb2sKQ2hyb21lIE9TICYgQnJpbGxvIFNlY3VyaXR5CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+On 16-02-03 14:06:10, Mimi Zohar wrote:
+> Define and call a function to display the "ima_hooks" rules.
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+
+Acked-by: Petko Manolov <petkan@mip-labs.com>
+
+> ---
+>  security/integrity/ima/ima_policy.c | 63 +++++++++++++++++++++----------------
+>  1 file changed, 36 insertions(+), 27 deletions(-)
+> 
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index e0e18cc..43b6425 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -903,6 +903,40 @@ void ima_policy_stop(struct seq_file *m, void *v)
+>  #define mt(token)	mask_tokens[token]
+>  #define ft(token)	func_tokens[token]
+>  
+> +/*
+> + * policy_func_show - display the ima_hooks policy rule
+> + */
+> +static void policy_func_show(struct seq_file *m, enum ima_hooks func)
+> +{
+> +	char tbuf[64] = {0,};
+> +
+> +	switch (func) {
+> +	case FILE_CHECK:
+> +		seq_printf(m, pt(Opt_func), ft(func_file));
+> +		break;
+> +	case MMAP_CHECK:
+> +		seq_printf(m, pt(Opt_func), ft(func_mmap));
+> +		break;
+> +	case BPRM_CHECK:
+> +		seq_printf(m, pt(Opt_func), ft(func_bprm));
+> +		break;
+> +	case MODULE_CHECK:
+> +		seq_printf(m, pt(Opt_func), ft(func_module));
+> +		break;
+> +	case FIRMWARE_CHECK:
+> +		seq_printf(m, pt(Opt_func), ft(func_firmware));
+> +		break;
+> +	case POST_SETATTR:
+> +		seq_printf(m, pt(Opt_func), ft(func_post));
+> +		break;
+> +	default:
+> +		snprintf(tbuf, sizeof(tbuf), "%d", func);
+> +		seq_printf(m, pt(Opt_func), tbuf);
+> +		break;
+> +	}
+> +	seq_puts(m, " ");
+> +}
+> +
+>  int ima_policy_show(struct seq_file *m, void *v)
+>  {
+>  	struct ima_rule_entry *entry = v;
+> @@ -924,33 +958,8 @@ int ima_policy_show(struct seq_file *m, void *v)
+>  
+>  	seq_puts(m, " ");
+>  
+> -	if (entry->flags & IMA_FUNC) {
+> -		switch (entry->func) {
+> -		case FILE_CHECK:
+> -			seq_printf(m, pt(Opt_func), ft(func_file));
+> -			break;
+> -		case MMAP_CHECK:
+> -			seq_printf(m, pt(Opt_func), ft(func_mmap));
+> -			break;
+> -		case BPRM_CHECK:
+> -			seq_printf(m, pt(Opt_func), ft(func_bprm));
+> -			break;
+> -		case MODULE_CHECK:
+> -			seq_printf(m, pt(Opt_func), ft(func_module));
+> -			break;
+> -		case FIRMWARE_CHECK:
+> -			seq_printf(m, pt(Opt_func), ft(func_firmware));
+> -			break;
+> -		case POST_SETATTR:
+> -			seq_printf(m, pt(Opt_func), ft(func_post));
+> -			break;
+> -		default:
+> -			snprintf(tbuf, sizeof(tbuf), "%d", entry->func);
+> -			seq_printf(m, pt(Opt_func), tbuf);
+> -			break;
+> -		}
+> -		seq_puts(m, " ");
+> -	}
+> +	if (entry->flags & IMA_FUNC)
+> +		policy_func_show(m, entry->func);
+>  
+>  	if (entry->flags & IMA_MASK) {
+>  		if (entry->mask & MAY_EXEC)
+> -- 
+> 2.1.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-security-module" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
