@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aSVWU-0004JV-TN
- for kexec@lists.infradead.org; Sun, 07 Feb 2016 20:01:31 +0000
-Date: Sun, 7 Feb 2016 22:01:48 +0200
+ id 1aSVXS-0004RR-15
+ for kexec@lists.infradead.org; Sun, 07 Feb 2016 20:02:30 +0000
+Date: Sun, 7 Feb 2016 22:02:47 +0200
 From: Petko Manolov <petkan@mip-labs.com>
-Subject: Re: [PATCH v3 21/22] ima: measure and appraise the IMA policy itself
-Message-ID: <20160207200148.GH17321@localhost>
+Subject: Re: [PATCH v3 22/22] ima: require signed IMA policy
+Message-ID: <20160207200246.GI17321@localhost>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-23-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1454526390-19792-23-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,123 +27,49 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.vnet.ibm.com>
 Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On 16-02-03 14:06:29, Mimi Zohar wrote:
-> Add support for measuring and appraising the IMA policy itself.
+On 16-02-03 14:06:30, Mimi Zohar wrote:
+> Require the IMA policy to be signed when additional rules can be added.
+> 
+> v1:
+> - initialize the policy flag
+> - include IMA_APPRAISE_POLICY in the policy flag
 > 
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
 Acked-by: Petko Manolov <petkan@mip-labs.com>
 
 > ---
->  security/integrity/ima/ima.h        |  2 ++
->  security/integrity/ima/ima_fs.c     |  9 ++++++++-
->  security/integrity/ima/ima_main.c   |  3 +++
->  security/integrity/ima/ima_policy.c | 10 +++++++++-
->  4 files changed, 22 insertions(+), 2 deletions(-)
+>  security/integrity/ima/ima_policy.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 832e62a..6685968 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -149,6 +149,7 @@ enum ima_hooks {
->  	FIRMWARE_CHECK,
->  	KEXEC_CHECK,
->  	INITRAMFS_CHECK,
-> +	POLICY_CHECK,
->  	MAX_CHECK
->  };
->  
-> @@ -191,6 +192,7 @@ int ima_policy_show(struct seq_file *m, void *v);
->  #define IMA_APPRAISE_LOG	0x04
->  #define IMA_APPRAISE_MODULES	0x08
->  #define IMA_APPRAISE_FIRMWARE	0x10
-> +#define IMA_APPRAISE_POLICY	0x20
->  
->  #ifdef CONFIG_IMA_APPRAISE
->  int ima_appraise_measurement(enum ima_hooks func,
-> diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-> index 00ccd67..7b15e80 100644
-> --- a/security/integrity/ima/ima_fs.c
-> +++ b/security/integrity/ima/ima_fs.c
-> @@ -325,7 +325,14 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
->  
->  	if (data[0] == '/')
->  		result = ima_read_policy(data);
-> -	else
-> +	else if (ima_appraise & IMA_APPRAISE_POLICY) {
-> +		pr_err("IMA: signed policy required\n");
-> +		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-> +				    "policy_update", "signed policy required",
-> +				    1, 0);
-> +		if (ima_appraise & IMA_APPRAISE_ENFORCE)
-> +			result = -EACCES;
-> +	} else
->  		result = ima_parse_add_rule(data);
->  	mutex_unlock(&ima_write_mutex);
->  out_free:
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index ccf9526..497a6f2 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -386,6 +386,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  	case READING_KEXEC_INITRAMFS:
->  		func = INITRAMFS_CHECK;
->  		break;
-> +	case READING_POLICY:
-> +		func = POLICY_CHECK;
-> +		break;
->  	default:
->  		func = FILE_CHECK;
->  		break;
 > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index d02560e..39a811a 100644
+> index 39a811a..ba0f6dc 100644
 > --- a/security/integrity/ima/ima_policy.c
 > +++ b/security/integrity/ima/ima_policy.c
-> @@ -114,6 +114,7 @@ static struct ima_rule_entry default_measurement_rules[] = {
->  	 .uid = GLOBAL_ROOT_UID, .flags = IMA_FUNC | IMA_INMASK | IMA_UID},
->  	{.action = MEASURE, .func = MODULE_CHECK, .flags = IMA_FUNC},
->  	{.action = MEASURE, .func = FIRMWARE_CHECK, .flags = IMA_FUNC},
-> +	{.action = MEASURE, .func = POLICY_CHECK, .flags = IMA_FUNC},
->  };
+> @@ -129,6 +129,10 @@ static struct ima_rule_entry default_appraise_rules[] = {
+>  	{.action = DONT_APPRAISE, .fsmagic = SELINUX_MAGIC, .flags = IMA_FSMAGIC},
+>  	{.action = DONT_APPRAISE, .fsmagic = NSFS_MAGIC, .flags = IMA_FSMAGIC},
+>  	{.action = DONT_APPRAISE, .fsmagic = CGROUP_SUPER_MAGIC, .flags = IMA_FSMAGIC},
+> +#ifdef CONFIG_IMA_WRITE_POLICY
+> +	{.action = APPRAISE, .func = POLICY_CHECK,
+> +	.flags = IMA_FUNC | IMA_DIGSIG_REQUIRED},
+> +#endif
+>  #ifndef CONFIG_IMA_APPRAISE_SIGNED_INIT
+>  	{.action = APPRAISE, .fowner = GLOBAL_ROOT_UID, .flags = IMA_FOWNER},
+>  #else
+> @@ -412,9 +416,12 @@ void __init ima_init_policy(void)
+>  	for (i = 0; i < appraise_entries; i++) {
+>  		list_add_tail(&default_appraise_rules[i].list,
+>  			      &ima_default_rules);
+> +		if (default_appraise_rules[i].func == POLICY_CHECK)
+> +			temp_ima_appraise |= IMA_APPRAISE_POLICY;
+>  	}
 >  
->  static struct ima_rule_entry default_appraise_rules[] = {
-> @@ -616,6 +617,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  				entry->func = KEXEC_CHECK;
->  			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
->  				entry->func = INITRAMFS_CHECK;
-> +			else if (strcmp(args[0].from, "POLICY_CHECK") == 0)
-> +				entry->func = POLICY_CHECK;
->  			else
->  				result = -EINVAL;
->  			if (!result)
-> @@ -774,6 +777,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  		temp_ima_appraise |= IMA_APPRAISE_MODULES;
->  	else if (entry->func == FIRMWARE_CHECK)
->  		temp_ima_appraise |= IMA_APPRAISE_FIRMWARE;
-> +	else if (entry->func == POLICY_CHECK)
-> +		temp_ima_appraise |= IMA_APPRAISE_POLICY;
->  	audit_log_format(ab, "res=%d", !result);
->  	audit_log_end(ab);
->  	return result;
-> @@ -860,7 +865,7 @@ static char *mask_tokens[] = {
->  enum {
->  	func_file = 0, func_mmap, func_bprm,
->  	func_module, func_firmware, func_post,
-> -	func_kexec, func_initramfs
-> +	func_kexec, func_initramfs, func_policy
->  };
+>  	ima_rules = &ima_default_rules;
+> +	ima_update_policy_flag();
+>  }
 >  
->  static char *func_tokens[] = {
-> @@ -940,6 +945,9 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
->  	case INITRAMFS_CHECK:
->  		seq_printf(m, pt(Opt_func), ft(func_initramfs));
->  		break;
-> +	case POLICY_CHECK:
-> +		seq_printf(m, pt(Opt_func), ft(func_policy));
-> +		break;
->  	default:
->  		snprintf(tbuf, sizeof(tbuf), "%d", func);
->  		seq_printf(m, pt(Opt_func), tbuf);
+>  /* Make sure we have a valid policy, at least containing some rules. */
 > -- 
 > 2.1.0
 > 
