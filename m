@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aSVeS-0006hT-B0
- for kexec@lists.infradead.org; Sun, 07 Feb 2016 20:09:45 +0000
-Date: Sun, 7 Feb 2016 22:10:00 +0200
-From: Petko Manolov <petkan@mip-labs.com>
-Subject: Re: [PATCH v3 19/22] ima: support for kexec image and initramfs
-Message-ID: <20160207201000.GJ17321@localhost>
-References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-20-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1aSeFJ-00040h-51
+ for kexec@lists.infradead.org; Mon, 08 Feb 2016 05:20:26 +0000
+From: Minoru Usui <min-usui@ti.jp.nec.com>
+Subject: Re: [PATCH v1] Improve the performance of --num-threads -d 31
+Date: Mon, 8 Feb 2016 05:00:00 +0000
+Message-ID: <BE691E4CBA06214BB0FA8EEFC7C61A4D017F8C30@BPXM02GP.gisp.nec.co.jp>
+References: <1454307740-2761-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <BE691E4CBA06214BB0FA8EEFC7C61A4D017F494B@BPXM02GP.gisp.nec.co.jp>
+In-Reply-To: <BE691E4CBA06214BB0FA8EEFC7C61A4D017F494B@BPXM02GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1454526390-19792-20-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,174 +24,638 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 16-02-03 14:06:27, Mimi Zohar wrote:
-> Add IMA policy support for measuring/appraising the kexec image and
-> initramfs.
-> 
-> Moving the enumeration to the vfs layer simplified the patches, allowing
-> the IMA changes, for the most part, to be separated from the other
-> changes.  Unfortunately, passing either a kernel_read_file_id or a
-> ima_hooks enumeration within IMA is messy.
-> 
-> Option 1: duplicate kernel_read_file enumeration in ima_hooks
-> 
-> enum kernel_read_file_id {
-> 	...
->         READING_KEXEC_IMAGE,
->         READING_KEXEC_INITRAMFS,
->         READING_MAX_ID
-> 
-> enum ima_hooks {
-> 	...
-> 	KEXEC_CHECK
-> 	INITRAMFS_CHECK
-> 
-> Option 2: define ima_hooks as extension of kernel_read_file
-> eg: enum ima_hooks {
->         FILE_CHECK = READING_MAX_ID,
->         MMAP_CHECK,
-> 
-> In order to pass both kernel_read_file_id and ima_hooks values, we
-> would need to specify a struct containing a union.
-> 
-> struct caller_id {
->         union {
->                 enum ima_hooks func_id;
->                 enum kernel_read_file_id read_id;
->         };
-> };
-> 
-> Option 3: incorportate the ima_hooks enumeration into kernel_read_file_id,
-> perhaps changing the enumeration name.
-> 
-> For now, duplicate the new READING_KEXEC_IMAGE/INITRAMFS in ima_hooks.
-> 
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Hello,
 
-Option 3 seems the right way to go, but for now:
-
-Acked-by: Petko Manolov <petkan@mip-labs.com>
-
-> ---
->  Documentation/ABI/testing/ima_policy |  2 +-
->  security/integrity/ima/ima.h         |  2 ++
->  security/integrity/ima/ima_main.c    | 19 ++++++++++++++++---
->  security/integrity/ima/ima_policy.c  | 13 ++++++++++++-
->  4 files changed, 31 insertions(+), 5 deletions(-)
+> -----Original Message-----
+> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Minoru Usui
+> Sent: Thursday, February 04, 2016 8:52 AM
+> To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>; kexec@lists.infradead.org
+> Subject: Re: [PATCH v1] Improve the performance of --num-threads -d 31
 > 
-> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-> index 0a378a8..e80f767 100644
-> --- a/Documentation/ABI/testing/ima_policy
-> +++ b/Documentation/ABI/testing/ima_policy
-> @@ -26,7 +26,7 @@ Description:
->  			option:	[[appraise_type=]] [permit_directio]
->  
->  		base: 	func:= [BPRM_CHECK][MMAP_CHECK][FILE_CHECK][MODULE_CHECK]
-> -				[FIRMWARE_CHECK]
-> +				[FIRMWARE_CHECK] [KEXEC_CHECK] [INITRAMFS_CHECK]
->  			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
->  			       [[^]MAY_EXEC]
->  			fsmagic:= hex value
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index a5d2592..832e62a 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -147,6 +147,8 @@ enum ima_hooks {
->  	POST_SETATTR,
->  	MODULE_CHECK,
->  	FIRMWARE_CHECK,
-> +	KEXEC_CHECK,
-> +	INITRAMFS_CHECK,
->  	MAX_CHECK
->  };
->  
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 1e91d94..ccf9526 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -355,7 +355,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
->  int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  		       enum kernel_read_file_id read_id)
->  {
-> -	enum ima_hooks func = FILE_CHECK;
-> +	enum ima_hooks func;
->  
->  	if (!file && read_id == READING_FIRMWARE) {
->  		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-> @@ -373,10 +373,23 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  		return 0;
->  	}
->  
-> -	if (read_id == READING_FIRMWARE)
-> +	switch (read_id) {
-> +	case READING_FIRMWARE:
->  		func = FIRMWARE_CHECK;
-> -	else if (read_id == READING_MODULE)
-> +		break;
-> +	case READING_MODULE:
->  		func = MODULE_CHECK;
-> +		break;
-> +	case READING_KEXEC_IMAGE:
-> +		func = KEXEC_CHECK;
-> +		break;
-> +	case READING_KEXEC_INITRAMFS:
-> +		func = INITRAMFS_CHECK;
-> +		break;
-> +	default:
-> +		func = FILE_CHECK;
-> +		break;
-> +	}
->  
->  	return process_measurement(file, buf, size, MAY_READ, func, 0);
->  }
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 7571ce8..d02560e 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -612,6 +612,10 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->  				entry->func = MMAP_CHECK;
->  			else if (strcmp(args[0].from, "BPRM_CHECK") == 0)
->  				entry->func = BPRM_CHECK;
-> +			else if (strcmp(args[0].from, "KEXEC_CHECK") == 0)
-> +				entry->func = KEXEC_CHECK;
-> +			else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
-> +				entry->func = INITRAMFS_CHECK;
->  			else
->  				result = -EINVAL;
->  			if (!result)
-> @@ -855,7 +859,8 @@ static char *mask_tokens[] = {
->  
->  enum {
->  	func_file = 0, func_mmap, func_bprm,
-> -	func_module, func_firmware, func_post
-> +	func_module, func_firmware, func_post,
-> +	func_kexec, func_initramfs
->  };
->  
->  static char *func_tokens[] = {
-> @@ -929,6 +934,12 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
->  	case POST_SETATTR:
->  		seq_printf(m, pt(Opt_func), ft(func_post));
->  		break;
-> +	case KEXEC_CHECK:
-> +		seq_printf(m, pt(Opt_func), ft(func_kexec));
-> +		break;
-> +	case INITRAMFS_CHECK:
-> +		seq_printf(m, pt(Opt_func), ft(func_initramfs));
-> +		break;
->  	default:
->  		snprintf(tbuf, sizeof(tbuf), "%d", func);
->  		seq_printf(m, pt(Opt_func), tbuf);
-> -- 
-> 2.1.0
+> Hi, Zhou
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-security-module" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I have some comments.
+> I'm sorry if I have misunderstood your code.
+> 
+> > -----Original Message-----
+> > From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Zhou Wenjian
+> > Sent: Monday, February 01, 2016 3:22 PM
+> > To: kexec@lists.infradead.org
+> > Subject: [PATCH v1] Improve the performance of --num-threads -d 31
+> >
+> > v1:
+> >         1. change page_flag.ready's value to enum
+> >         2. change the patch description
+> >         3. cleanup some codes
+> > 	4. fix a bug in cyclic mode
+> >
+> > multi-threads implementation will introduce extra cost when handling
+> > each page. The origin implementation will also do the extra work for
+> > filtered pages. So there is a big performance degradation in
+> > --num-threads -d 31.
+> > The new implementation won't do the extra work for filtered pages any
+> > more. So the performance of -d 31 is close to that of serial processing.
+> >
+> > The new implementation is just like the following:
+> >         * The basic idea is producer producing page and consumer writing page.
+> >         * Each producer have a page_flag_buf list which is used for storing
+> >           page's description.
+> >         * The size of page_flag_buf is little so it won't take too much memory.
+> >         * And all producers will share a page_data_buf array which is
+> >           used for storing page's compressed data.
+> >         * The main thread is the consumer. It will find the next pfn and write
+> >           it into file.
+> >         * The next pfn is smallest pfn in all page_flag_buf.
+> >
+> > Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> > ---
+> >  makedumpfile.c | 258 ++++++++++++++++++++++++++++++++++++++-------------------
+> >  makedumpfile.h |  31 ++++---
+> >  2 files changed, 193 insertions(+), 96 deletions(-)
+> >
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index fa0b779..0ecd065 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -3483,7 +3483,8 @@ initial_for_parallel()
+> >  	unsigned long page_data_buf_size;
+> >  	unsigned long limit_size;
+> >  	int page_data_num;
+> > -	int i;
+> > +	struct page_flag *current;
+> > +	int i, j;
+> >
+> >  	len_buf_out = calculate_len_buf_out(info->page_size);
+> >
+> > @@ -3562,8 +3563,10 @@ initial_for_parallel()
+> >  		      - MAP_REGION * info->num_threads) * 0.6;
+> >
+> >  	page_data_num = limit_size / page_data_buf_size;
+> > +	info->num_buffers = 3 * info->num_threads;
+> >
+> > -	info->num_buffers = MIN(NUM_BUFFERS, page_data_num);
+> > +	info->num_buffers = MAX(info->num_buffers, NUM_BUFFERS);
+> > +	info->num_buffers = MIN(info->num_buffers, page_data_num);
+> >
+> >  	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
+> >  			info->num_buffers);
+> > @@ -3588,6 +3591,36 @@ initial_for_parallel()
+> >  	}
+> >
+> >  	/*
+> > +	 * initial page_flag for each thread
+> > +	 */
+> > +	if ((info->page_flag_buf = malloc(sizeof(void *) * info->num_threads))
+> > +	    == NULL) {
+> > +		MSG("Can't allocate memory for page_flag_buf. %s\n",
+> > +				strerror(errno));
+> > +		return FALSE;
+> > +	}
+> > +	memset(info->page_flag_buf, 0, sizeof(void *) * info->num_threads);
+> > +
+> > +	for (i = 0; i < info->num_threads; i++) {
+> > +		if ((info->page_flag_buf[i] = malloc(sizeof(struct page_flag))) == NULL) {
+> 
+> Fist element of struct page_flag in circular list is allocated by malloc(),
+> but other elements are allocated by calloc().(see below)
+> I think both elements should be allocated by calloc().
+> 
+> > +			MSG("Can't allocate memory for page_flag_buf. %s\n",
+> > +				strerror(errno));
+> > +			return FALSE;
+> > +		}
+> > +		current = info->page_flag_buf[i];
+> > +
+> > +		for (j = 1; j < NUM_BUFFERS; j++) {
+> > +			if ((current->next = calloc(0, sizeof(struct page_flag))) == NULL) {
+> > +				MSG("Can't allocate memory for data of page_data_buf. %s\n",
+> > +					strerror(errno));
+> > +				return FALSE;
+> > +			}
+> 
+> 
+> First argument of calloc() should be 1, not 0.
+> And there is typo in error message.
+> Allocated element is not page_data_buf.
+> 
+> > +			current = current->next;
+> > +		}
+> > +		current->next = info->page_flag_buf[i];
+> > +	}
+> > +
+> > +	/*
+> >  	 * initial fd_memory for threads
+> >  	 */
+> >  	for (i = 0; i < info->num_threads; i++) {
+> > @@ -3612,7 +3645,8 @@ initial_for_parallel()
+> >  void
+> >  free_for_parallel()
+> >  {
+> > -	int i;
+> > +	int i, j;
+> > +	struct page_flag *current;
+> >
+> >  	if (info->threads != NULL) {
+> >  		for (i = 0; i < info->num_threads; i++) {
+> > @@ -3655,6 +3689,19 @@ free_for_parallel()
+> >  		free(info->page_data_buf);
+> >  	}
+> >
+> > +	if (info->page_flag_buf != NULL) {
+> > +		for (i = 0; i < info->num_threads; i++) {
+> > +			for (j = 0; j < NUM_BUFFERS; j++) {
+> > +				if (info->page_flag_buf[i] != NULL) {
+> > +					current = info->page_flag_buf[i];
+> > +					info->page_flag_buf[i] = current->next;
+> > +					free(current);
+> > +				}
+> > +			}
+> > +		}
+> > +		free(info->page_flag_buf);
+> > +	}
+> > +
+> >  	if (info->parallel_info == NULL)
+> >  		return;
+> >
+> > @@ -7076,10 +7123,10 @@ kdump_thread_function_cyclic(void *arg) {
+> >  	void *retval = PTHREAD_FAIL;
+> >  	struct thread_args *kdump_thread_args = (struct thread_args *)arg;
+> >  	struct page_data *page_data_buf = kdump_thread_args->page_data_buf;
+> > +	struct page_flag *page_flag_buf = kdump_thread_args->page_flag_buf;
+> >  	struct cycle *cycle = kdump_thread_args->cycle;
+> > -	int page_data_num = kdump_thread_args->page_data_num;
+> >  	mdf_pfn_t pfn;
+> > -	int index;
+> > +	int index = kdump_thread_args->thread_num;
+> >  	int buf_ready;
+> >  	int dumpable;
+> >  	int fd_memory = 0;
+> > @@ -7125,47 +7172,47 @@ kdump_thread_function_cyclic(void *arg) {
+> >  						kdump_thread_args->thread_num);
+> >  	}
+> >
+> > -	while (1) {
+> > -		/* get next pfn */
+> > -		pthread_mutex_lock(&info->current_pfn_mutex);
+> > -		pfn = info->current_pfn;
+> > -		info->current_pfn++;
+> > -		pthread_mutex_unlock(&info->current_pfn_mutex);
+> > +	/*
+> > +	 * filtered page won't take anything
+> > +	 * unfiltered zero page will only take a page_flag_buf
+> > +	 * unfiltered non-zero page will take a page_flag_buf and a page_data_buf
+> > +	 */
+> > +	while (page_flag_buf->pfn < kdump_thread_args->end_pfn) {
+> 
+> At first, page_flag_buf->pfn is not initialized.
+> I think this block should be replaced with the following code.
+> 
+> ===
+>   do {
+>     :
+>   } while(page_flag_buf->pfn < kdump_thread_args->end_pfn)
+> ===
+
+I'm sorry, above suggestion is meaningless in terms of page_flag_buf->pfn is uninitialized.
+It should be replaced like following.
+
+===
+  while (1) {
+    :
+    while (buf_ready == FALSE) {
+       :
+      if (pfn >= kdump_thread_args->end_pfn) {
+         :
+        goto finish;
+      }
+      :
+    }
+    :
+  }
+finish:
+===
+
+Thanks,
+Minoru Usui
+
+ 
+> > +		buf_ready = FALSE;
+> >
+> > -		if (pfn >= kdump_thread_args->end_pfn)
+> > -			break;
+> > +		while (page_data_buf[index].used != 0 ||
+> > +				pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
+> > +			index = (index + 1) % info->num_buffers;
+> >
+> > -		index = -1;
+> > -		buf_ready = FALSE;
+> > +		page_data_buf[index].used = 1;
+> 
+> "1" is a magic number.
+> It should be changed TRUE or FALSE.
+> 
+> >  		while (buf_ready == FALSE) {
+> >  			pthread_testcancel();
+> > -
+> > -			index = pfn % page_data_num;
+> > -
+> > -			if (pfn - info->consumed_pfn > info->num_buffers)
+> > +			if (page_flag_buf->ready == FLAG_READY)
+> >  				continue;
+> 
+> At first, page_flag_buf->ready is uninitialized, too.
+> Should it be initialized in head part of this function, even if FLAG_UNUSED is defined 0?
+> 
+> 
+> >
+> > -			if (page_data_buf[index].ready != 0)
+> > -				continue;
+> > -
+> > -			pthread_mutex_lock(&page_data_buf[index].mutex);
+> > +			/* get next pfn */
+> > +			pthread_mutex_lock(&info->current_pfn_mutex);
+> > +			pfn = info->current_pfn;
+> > +			info->current_pfn++;
+> > +			page_flag_buf->ready = FLAG_FILLING;
+> > +			pthread_mutex_unlock(&info->current_pfn_mutex);
+> >
+> > -			if (page_data_buf[index].ready != 0)
+> > -				goto unlock;
+> > +			page_flag_buf->pfn = pfn;
+> 
+> It set FLAG_FILLING to page_flag_buf->ready before setting pfn to page_flag_buf->pfn.
+> But consumer gets page_flag_buf->pfn after checking page_flag_buf->ready != FLAG_UNUSED
+> in getting minimum pfn of each thread block.
+> Should it set page_flag_buf->pfn first?
+> 
+> >
+> > -			buf_ready = TRUE;
+> > -
+> > -			page_data_buf[index].pfn = pfn;
+> > -			page_data_buf[index].ready = 1;
+> > +			if (pfn >= kdump_thread_args->end_pfn) {
+> > +				page_data_buf[index].used = 0;
+> > +				page_flag_buf->ready = FLAG_READY;
+> > +				info->current_pfn--;
+> > +				break;
+> > +			}
+> 
+> This block decrements info->current_pfn without info->current_pfn_mutex.
+> I think this block should be moved into previous pthread_mutex_lock(info->current_pfn_mutex) block, so it can remove.
+> 
+> >
+> >  			dumpable = is_dumpable(
+> >  				info->fd_bitmap ? &bitmap_parallel : info->bitmap2,
+> >  				pfn,
+> >  				cycle);
+> > -			page_data_buf[index].dumpable = dumpable;
+> >  			if (!dumpable)
+> > -				goto unlock;
+> > +				continue;
+> >
+> >  			if (!read_pfn_parallel(fd_memory, pfn, buf,
+> >  					       &bitmap_memory_parallel,
+> > @@ -7178,11 +7225,11 @@ kdump_thread_function_cyclic(void *arg) {
+> >
+> >  			if ((info->dump_level & DL_EXCLUDE_ZERO)
+> >  			    && is_zero_page(buf, info->page_size)) {
+> > -				page_data_buf[index].zero = TRUE;
+> > -				goto unlock;
+> > +				page_flag_buf->zero = TRUE;
+> > +				goto next;
+> >  			}
+> 
+> First, this code gets page_data_buf, then it gets page_flag_buf.
+> However, if processed pfn is zero page,
+> it processes next pfn while keeping page_data_buf.
+> 
+> I think it should get page_flag_buf, then get page_data_buf
+> in order to shorten the holding period of the page_data_buf[index].mutex.
+> 
+> Thanks,
+> Minoru Usui
+> 
+> >
+> > -			page_data_buf[index].zero = FALSE;
+> > +			page_flag_buf->zero = FALSE;
+> >
+> >  			/*
+> >  			 * Compress the page data.
+> > @@ -7232,12 +7279,16 @@ kdump_thread_function_cyclic(void *arg) {
+> >  				page_data_buf[index].size  = info->page_size;
+> >  				memcpy(page_data_buf[index].buf, buf, info->page_size);
+> >  			}
+> > -unlock:
+> > -			pthread_mutex_unlock(&page_data_buf[index].mutex);
+> > +			page_flag_buf->index = index;
+> > +			buf_ready = TRUE;
+> > +next:
+> > +			page_flag_buf->ready = FLAG_READY;
+> > +			page_flag_buf = page_flag_buf->next;
+> >
+> >  		}
+> > -	}
+> >
+> > +		pthread_mutex_unlock(&page_data_buf[index].mutex);
+> > +	}
+> >  	retval = NULL;
+> >
+> >  fail:
+> > @@ -7265,14 +7316,15 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+> >  	struct page_desc pd;
+> >  	struct timeval tv_start;
+> >  	struct timeval last, new;
+> > -	unsigned long long consuming_pfn;
+> >  	pthread_t **threads = NULL;
+> >  	struct thread_args *kdump_thread_args = NULL;
+> >  	void *thread_result;
+> > -	int page_data_num;
+> > +	int page_buf_num;
+> >  	struct page_data *page_data_buf = NULL;
+> >  	int i;
+> >  	int index;
+> > +	int end_count, consuming, check_count;
+> > +	mdf_pfn_t current_pfn, temp_pfn;
+> >
+> >  	if (info->flag_elf_dumpfile)
+> >  		return FALSE;
+> > @@ -7319,16 +7371,11 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+> >  	threads = info->threads;
+> >  	kdump_thread_args = info->kdump_thread_args;
+> >
+> > -	page_data_num = info->num_buffers;
+> > +	page_buf_num = info->num_buffers;
+> >  	page_data_buf = info->page_data_buf;
+> >
+> > -	for (i = 0; i < page_data_num; i++) {
+> > -		/*
+> > -		 * producer will use pfn in page_data_buf to decide the
+> > -		 * consumed pfn
+> > -		 */
+> > -		page_data_buf[i].pfn = start_pfn - 1;
+> > -		page_data_buf[i].ready = 0;
+> > +	for (i = 0; i < page_buf_num; i++) {
+> > +		page_data_buf[i].used = 0;
+> >  		res = pthread_mutex_init(&page_data_buf[i].mutex, NULL);
+> >  		if (res != 0) {
+> >  			ERRMSG("Can't initialize mutex of page_data_buf. %s\n",
+> > @@ -7342,8 +7389,9 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+> >  		kdump_thread_args[i].len_buf_out = len_buf_out;
+> >  		kdump_thread_args[i].start_pfn = start_pfn;
+> >  		kdump_thread_args[i].end_pfn = end_pfn;
+> > -		kdump_thread_args[i].page_data_num = page_data_num;
+> > +		kdump_thread_args[i].page_buf_num = page_buf_num;
+> >  		kdump_thread_args[i].page_data_buf = page_data_buf;
+> > +		kdump_thread_args[i].page_flag_buf = info->page_flag_buf[i];
+> >  		kdump_thread_args[i].cycle = cycle;
+> >
+> >  		res = pthread_create(threads[i], NULL,
+> > @@ -7356,55 +7404,94 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+> >  		}
+> >  	}
+> >
+> > -	consuming_pfn = start_pfn;
+> > -	index = -1;
+> > +	while (1) {
+> > +		consuming = 0;
+> > +		check_count = 0;
+> > +		end_count = 0;
+> >
+> > -	gettimeofday(&last, NULL);
+> > +		/*
+> > +		 * The basic idea is producer producing page and consumer writing page.
+> > +		 * Each producer have a page_flag_buf list which is used for storing page's description.
+> > +		 * The size of page_flag_buf is little so it won't take too much memory.
+> > +		 * And all producers will share a page_data_buf array which is used for storing page's compressed data.
+> > +		 * The main thread is the consumer. It will find the next pfn and write it into file.
+> > +		 * The next pfn is smallest pfn in all page_flag_buf.
+> > +		 */
+> > +		while (1) {
+> > +			current_pfn = end_pfn;
+> >
+> > -	while (consuming_pfn < end_pfn) {
+> > -		index = consuming_pfn % page_data_num;
+> > +			/*
+> > +			 * page_flag_buf is in circular linked list.
+> > +			 * The array info->page_flag_buf[] records the current page_flag_buf in each thread's
+> > +			 * page_flag_buf list.
+> > +			 * consuming is used for recording in which thread the pfn is the smallest.
+> > +			 * current_pfn is used for recording the value of pfn when checking the pfn.
+> > +			 */
+> > +			for (i = 0; i < info->num_threads; i++) {
+> > +				if (info->page_flag_buf[i]->ready == FLAG_UNUSED)
+> > +					continue;
+> > +				temp_pfn = info->page_flag_buf[i]->pfn;
+> >
+> > -		gettimeofday(&new, NULL);
+> > -		if (new.tv_sec - last.tv_sec > WAIT_TIME) {
+> > -			ERRMSG("Can't get data of pfn %llx.\n", consuming_pfn);
+> > -			goto out;
+> > -		}
+> > +				/*
+> > +				 * count how many threads have reached the end.
+> > +				 */
+> > +				if (temp_pfn >= end_pfn) {
+> > +					end_count++;
+> > +					info->page_flag_buf[i]->ready = FLAG_UNUSED;
+> > +					continue;
+> > +				}
+> >
+> > -		/*
+> > -		 * check pfn first without mutex locked to reduce the time
+> > -		 * trying to lock the mutex
+> > -		 */
+> > -		if (page_data_buf[index].pfn != consuming_pfn)
+> > -			continue;
+> > +				if (current_pfn < temp_pfn)
+> > +					continue;
+> >
+> > -		if (pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
+> > -			continue;
+> > +				check_count++;
+> > +				consuming = i;
+> > +				current_pfn = temp_pfn;
+> > +			}
+> > +
+> > +			/*
+> > +			 * If all the threads have reached the end, we will finish writing.
+> > +			 */
+> > +			if (end_count >= info->num_threads)
+> > +				goto finish;
+> > +
+> > +			/*
+> > +			 * Since it has the probabilty that there is no page_flag_buf being ready,
+> > +			 * we should recheck if it happens.
+> > +			 */
+> > +			if (check_count == 0)
+> > +				continue;
+> > +
+> > +			/*
+> > +			 * When we check the pfn in page_flag_buf, it may be being produced.
+> > +			 * So we should wait until it is ready to use. And if the pfn is
+> > +			 * different from the value when we check, we should rechoose the buf.
+> > +			 */
+> > +			gettimeofday(&last, NULL);
+> > +			while (info->page_flag_buf[consuming]->ready != FLAG_READY) {
+> > +				gettimeofday(&new, NULL);
+> > +				if (new.tv_sec - last.tv_sec > WAIT_TIME) {
+> > +					ERRMSG("Can't get data of pfn.\n");
+> > +					goto out;
+> > +				}
+> > +			}
+> >
+> > -		/* check whether the found one is ready to be consumed */
+> > -		if (page_data_buf[index].pfn != consuming_pfn ||
+> > -		    page_data_buf[index].ready != 1) {
+> > -			goto unlock;
+> > +			if (current_pfn == info->page_flag_buf[consuming]->pfn)
+> > +				break;
+> >  		}
+> >
+> >  		if ((num_dumped % per) == 0)
+> >  			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
+> >
+> > -		/* next pfn is found, refresh last here */
+> > -		last = new;
+> > -		consuming_pfn++;
+> > -		info->consumed_pfn++;
+> > -		page_data_buf[index].ready = 0;
+> > -
+> > -		if (page_data_buf[index].dumpable == FALSE)
+> > -			goto unlock;
+> > -
+> >  		num_dumped++;
+> >
+> > -		if (page_data_buf[index].zero == TRUE) {
+> > +
+> > +		if (info->page_flag_buf[consuming]->zero == TRUE) {
+> >  			if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
+> >  				goto out;
+> >  			pfn_zero++;
+> >  		} else {
+> > +			index = info->page_flag_buf[consuming]->index;
+> >  			pd.flags      = page_data_buf[index].flags;
+> >  			pd.size       = page_data_buf[index].size;
+> >  			pd.page_flags = 0;
+> > @@ -7420,12 +7507,12 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
+> >  			 */
+> >  			if (!write_cache(cd_page, page_data_buf[index].buf, pd.size))
+> >  				goto out;
+> > -
+> > +			page_data_buf[index].used = 0;
+> >  		}
+> > -unlock:
+> > -		pthread_mutex_unlock(&page_data_buf[index].mutex);
+> > +		info->page_flag_buf[consuming]->ready = FLAG_UNUSED;
+> > +		info->page_flag_buf[consuming] = info->page_flag_buf[consuming]->next;
+> >  	}
+> > -
+> > +finish:
+> >  	ret = TRUE;
+> >  	/*
+> >  	 * print [100 %]
+> > @@ -7464,7 +7551,7 @@ out:
+> >  	}
+> >
+> >  	if (page_data_buf != NULL) {
+> > -		for (i = 0; i < page_data_num; i++) {
+> > +		for (i = 0; i < page_buf_num; i++) {
+> >  			pthread_mutex_destroy(&page_data_buf[i].mutex);
+> >  		}
+> >  	}
+> > @@ -7564,6 +7651,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+> >  		num_dumped++;
+> >  		if (!read_pfn(pfn, buf))
+> >  			goto out;
+> > +
+> >  		filter_data_buffer(buf, pfn_to_paddr(pfn), info->page_size);
+> >
+> >  		/*
+> > diff --git a/makedumpfile.h b/makedumpfile.h
+> > index e0b5bbf..8a9a5b2 100644
+> > --- a/makedumpfile.h
+> > +++ b/makedumpfile.h
+> > @@ -977,7 +977,7 @@ typedef unsigned long long int ulonglong;
+> >  #define PAGE_DATA_NUM	(50)
+> >  #define WAIT_TIME	(60 * 10)
+> >  #define PTHREAD_FAIL	((void *)-2)
+> > -#define NUM_BUFFERS	(50)
+> > +#define NUM_BUFFERS	(20)
+> >
+> >  struct mmap_cache {
+> >  	char	*mmap_buf;
+> > @@ -985,28 +985,36 @@ struct mmap_cache {
+> >  	off_t   mmap_end_offset;
+> >  };
+> >
+> > +enum {
+> > +	FLAG_UNUSED,
+> > +	FLAG_READY,
+> > +	FLAG_FILLING
+> > +};
+> > +struct page_flag {
+> > +	mdf_pfn_t pfn;
+> > +	char zero;
+> > +	char ready;
+> > +	short index;
+> > +	struct page_flag *next;
+> > +};
+> > +
+> >  struct page_data
+> >  {
+> > -	mdf_pfn_t pfn;
+> > -	int dumpable;
+> > -	int zero;
+> > -	unsigned int flags;
+> > +	pthread_mutex_t mutex;
+> >  	long size;
+> >  	unsigned char *buf;
+> > -	pthread_mutex_t mutex;
+> > -	/*
+> > -	 * whether the page_data is ready to be consumed
+> > -	 */
+> > -	int ready;
+> > +	int flags;
+> > +	int used;
+> >  };
+> >
+> >  struct thread_args {
+> >  	int thread_num;
+> >  	unsigned long len_buf_out;
+> >  	mdf_pfn_t start_pfn, end_pfn;
+> > -	int page_data_num;
+> > +	int page_buf_num;
+> >  	struct cycle *cycle;
+> >  	struct page_data *page_data_buf;
+> > +	struct page_flag *page_flag_buf;
+> >  };
+> >
+> >  /*
+> > @@ -1295,6 +1303,7 @@ struct DumpInfo {
+> >  	pthread_t **threads;
+> >  	struct thread_args *kdump_thread_args;
+> >  	struct page_data *page_data_buf;
+> > +	struct page_flag **page_flag_buf;
+> >  	pthread_rwlock_t usemmap_rwlock;
+> >  	mdf_pfn_t current_pfn;
+> >  	pthread_mutex_t current_pfn_mutex;
+> > --
+> > 1.8.3.1
+> >
+> >
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
