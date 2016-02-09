@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vms173013pub.verizon.net ([206.46.173.13])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aTAMp-0002ij-DJ
- for kexec@lists.infradead.org; Tue, 09 Feb 2016 15:38:15 +0000
-Received: from serve.minyard.net ([173.57.176.17]) by vms173013.mailsrvcs.net
- (Oracle Communications Messaging Server 7.0.5.32.0 64bit (built Jul
- 16 2014))
- with ESMTPA id <0O2A00MDSE2MVY60@vms173013.mailsrvcs.net> for
- kexec@lists.infradead.org; Tue, 09 Feb 2016 09:37:34 -0600 (CST)
-Received: from [IPv6:2001:470:b8f6:1b:e553:a7f5:748e:1b1d]
- (unknown [IPv6:2001:470:b8f6:1b:e553:a7f5:748e:1b1d])
- by serve.minyard.net (Postfix) with ESMTPSA id 3C00FC2C	for
- <kexec@lists.infradead.org>; Tue,  9 Feb 2016 09:37:34 -0600 (CST)
-From: Corey Minyard <minyard@acm.org>
-Subject: Handling an elf kernel dump with a randomized base
-Message-id: <56BA07BD.3090009@acm.org>
-Date: Tue, 09 Feb 2016 09:37:33 -0600
-MIME-version: 1.0
+ id 1aTCE3-0006ES-2b
+ for kexec@lists.infradead.org; Tue, 09 Feb 2016 17:37:23 +0000
+Date: Tue, 9 Feb 2016 18:36:56 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Regression in makedumpfile-1.5.9
+Message-ID: <20160209183656.355f7c8d@hananiah.suse.cz>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,50 +16,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: minyard@acm.org
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-I have been working on getting kernels on different architectures with 
-randomized
-base operational.  One problem I've run into is that kernel dumps taken 
-this way are
-not debuggable with gdb, the symbols are, of course, all in the wrong 
-places.
+Hello Kumagai,
 
-The way gdb handles relocation is to add an AT_ENTRY value in an auxv 
-note.  It holds
-the relocated start address and gdb uses that to figure out the 
-offsets.  This is
-easy enough to add if you have the information, I'm wondering the best 
-way to do
-this looking at getting it into the mainstream kernel and the crash dump 
-tools.
+while testing my changes for ELF file reading, I found a regression in
+makedumpfile. It now segfaults on me when creating an ELF file. I
+bisected the regression to this commit:
 
-There is some handling of this on x86_64 with KERNELOFFSET, but it 
-doesn't work for
-gdb.
+commit d18796d090623d18f46c8dc608dcad9960fbbe9b
+Author: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Date:   Mon May 11 14:25:47 2015 +0900
 
-I can think of two ways to add this:
+    [PATCH 04/13] Integrate the main logic of writing kdump file.
 
-* Add a vmcoreinfo value with the entry point and have the extraction 
-tool create
-the elf note.
+I run my command as:
 
-* Put the entry point in sysfs and have kexec add the note like it does for
-vmcoreinfo.
+    makedumpfile -E -d31 vmcore-reloc.elf vmcore-reloc.d31.elf
 
-I'd like to avoid any solution that requires putting vmlinux or any 
-other large file
-on the target system, as this is not always possible for small embedded 
-systems.
+This is the backtrace:
 
-Thanks,
+#0  memset () at ../sysdeps/x86_64/memset.S:80
+#1  0x00000000004328b4 in initialize_bitmap (bitmap=0x7fffffffda30) at makedumpfile.c:3389
+#2  0x00000000004328f4 in initialize_2nd_bitmap (bitmap=0x7fffffffda30) at makedumpfile.c:3403
+#3  0x000000000043765c in exclude_zero_pages () at makedumpfile.c:4778
+#4  0x0000000000000000 in ?? ()
 
--corey
+And this is the output from valgrind:
+
+==5092== Conditional jump or move depends on uninitialised value(s)
+==5092==    at 0x4C2F8EC: memset (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==5092==    by 0x4328B3: initialize_bitmap (makedumpfile.c:3389)
+==5092==    by 0x4328F3: initialize_2nd_bitmap (makedumpfile.c:3403)
+==5092==    by 0x43765B: exclude_zero_pages (makedumpfile.c:4778)
+==5092==    by 0x438F63: create_2nd_bitmap (makedumpfile.c:5277)
+==5092==    by 0x43B2EE: get_num_dumpable_cyclic (makedumpfile.c:6087)
+==5092==    by 0x439666: create_dump_bitmap (makedumpfile.c:5417)
+==5092==    by 0x4440BF: create_dumpfile (makedumpfile.c:8700)
+==5092==    by 0x4499FD: main (makedumpfile.c:10103)
+==5092== 
+==5092== Use of uninitialised value of size 8
+==5092==    at 0x4C2F957: memset (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==5092==    by 0x4328B3: initialize_bitmap (makedumpfile.c:3389)
+==5092==    by 0x4328F3: initialize_2nd_bitmap (makedumpfile.c:3403)
+==5092==    by 0x43765B: exclude_zero_pages (makedumpfile.c:4778)
+==5092==    by 0x438F63: create_2nd_bitmap (makedumpfile.c:5277)
+==5092==    by 0x43B2EE: get_num_dumpable_cyclic (makedumpfile.c:6087)
+==5092==    by 0x439666: create_dump_bitmap (makedumpfile.c:5417)
+==5092==    by 0x4440BF: create_dumpfile (makedumpfile.c:8700)
+==5092==    by 0x4499FD: main (makedumpfile.c:10103)
+==5092== 
+==5092== Conditional jump or move depends on uninitialised value(s)
+==5092==    at 0x4C2F95D: memset (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==5092==    by 0x4328B3: initialize_bitmap (makedumpfile.c:3389)
+==5092==    by 0x4328F3: initialize_2nd_bitmap (makedumpfile.c:3403)
+==5092==    by 0x43765B: exclude_zero_pages (makedumpfile.c:4778)
+==5092==    by 0x438F63: create_2nd_bitmap (makedumpfile.c:5277)
+==5092==    by 0xFFEFFFA5F: ???
+==5092==    by 0xFFEFFFA5F: ???
+==5092==    by 0xFFEFFFA9F: ???
+==5092==    by 0x43B2EE: get_num_dumpable_cyclic (makedumpfile.c:6087)
+==5092== 
+==5092== Invalid write of size 8
+==5092==    at 0x4C2F957: memset (in /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so)
+==5092==    by 0x4328B3: initialize_bitmap (makedumpfile.c:3389)
+==5092==    by 0x4328F3: initialize_2nd_bitmap (makedumpfile.c:3403)
+==5092==    by 0x43765B: exclude_zero_pages (makedumpfile.c:4778)
+==5092==  Address 0xfff001000 is not stack'd, malloc'd or (recently) free'd
+
+I think the bitmap is not initialized properly, but I have no time now
+to research further. Is the above information sufficient, or do you
+need more info from me?
+
+Regards,
+Petr Tesarik
 
 _______________________________________________
 kexec mailing list
