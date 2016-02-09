@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from vms173013pub.verizon.net ([206.46.173.13])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aT3iZ-00035b-0e
- for kexec@lists.infradead.org; Tue, 09 Feb 2016 08:32:15 +0000
-Date: Tue, 9 Feb 2016 09:31:50 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: readpage_elf: handle 0-pages not stored
- in the ELF file
-Message-ID: <20160209093150.35da61c2@hananiah.suse.cz>
-In-Reply-To: <20160202070044.GN6903@ycc.fr>
-References: <20160122233514.GA25777@ycc.fr>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
- <20160127085821.3be424e1@hananiah.suse.cz>
- <20160127103741.0e4fec81@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E1B252@BPXM01GP.gisp.nec.co.jp>
- <20160201130042.5c83f7ae@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E1B6CE@BPXM01GP.gisp.nec.co.jp>
- <20160202070044.GN6903@ycc.fr>
-MIME-Version: 1.0
+ id 1aTAMp-0002ij-DJ
+ for kexec@lists.infradead.org; Tue, 09 Feb 2016 15:38:15 +0000
+Received: from serve.minyard.net ([173.57.176.17]) by vms173013.mailsrvcs.net
+ (Oracle Communications Messaging Server 7.0.5.32.0 64bit (built Jul
+ 16 2014))
+ with ESMTPA id <0O2A00MDSE2MVY60@vms173013.mailsrvcs.net> for
+ kexec@lists.infradead.org; Tue, 09 Feb 2016 09:37:34 -0600 (CST)
+Received: from [IPv6:2001:470:b8f6:1b:e553:a7f5:748e:1b1d]
+ (unknown [IPv6:2001:470:b8f6:1b:e553:a7f5:748e:1b1d])
+ by serve.minyard.net (Postfix) with ESMTPSA id 3C00FC2C	for
+ <kexec@lists.infradead.org>; Tue,  9 Feb 2016 09:37:34 -0600 (CST)
+From: Corey Minyard <minyard@acm.org>
+Subject: Handling an elf kernel dump with a randomized base
+Message-id: <56BA07BD.3090009@acm.org>
+Date: Tue, 09 Feb 2016 09:37:33 -0600
+MIME-version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,43 +25,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Reply-To: minyard@acm.org
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ivan Delalande <colona@arista.com>
-Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Kexec Mailing List <kexec@lists.infradead.org>
 
-On Tue, 2 Feb 2016 08:00:44 +0100
-Ivan Delalande <colona@arista.com> wrote:
+I have been working on getting kernels on different architectures with 
+randomized
+base operational.  One problem I've run into is that kernel dumps taken 
+this way are
+not debuggable with gdb, the symbols are, of course, all in the wrong 
+places.
 
-> On Tue, Feb 02, 2016 at 06:48:17AM +0000, Atsushi Kumagai wrote:
-> > >Anyway, are you going to take the patch by Ivan, or my patch (after I
-> > >remove exclude_nodata_pages)?
-> > 
-> > Ivan's patch is necessary to follow the ELF specification, but also
-> > your patch (with exclude_nodata_pages) should be merged.
-> > The two patches have different approach to expand struct pt_load_segment,
-> > hence could you manage both work ?
-> > 
-> > Ivan, your v2 patch has no problems, but could I leave this work to Petr
-> > since the two patches touch the same area ?
-> 
-> Sure, this sounds reasonable.
+The way gdb handles relocation is to add an AT_ENTRY value in an auxv 
+note.  It holds
+the relocated start address and gdb uses that to figure out the 
+offsets.  This is
+easy enough to add if you have the information, I'm wondering the best 
+way to do
+this looking at getting it into the mainstream kernel and the crash dump 
+tools.
 
-Hello,
+There is some handling of this on x86_64 with KERNELOFFSET, but it 
+doesn't work for
+gdb.
 
-just a short status update. I haven't forgotten this patch, but I've
-had some troubles reproducing the issue. To make sure I'm not on the
-wrong track, what happened when you tried to dump dmesg on the affected
-dump file without the patch?
+I can think of two ways to add this:
 
-For me, I crafted a dump file which causes a segfault. Did makedumpfile
-also terminate on SIGSEGV? Did it report an error? Or did it just
-produce wrong output?
+* Add a vmcoreinfo value with the entry point and have the extraction 
+tool create
+the elf note.
+
+* Put the entry point in sysfs and have kexec add the note like it does for
+vmcoreinfo.
+
+I'd like to avoid any solution that requires putting vmlinux or any 
+other large file
+on the target system, as this is not always possible for small embedded 
+systems.
 
 Thanks,
-Petr T
+
+-corey
 
 _______________________________________________
 kexec mailing list
