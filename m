@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aT32T-00059q-Cv
- for kexec@lists.infradead.org; Tue, 09 Feb 2016 07:48:46 +0000
-Date: Tue, 9 Feb 2016 09:47:42 +0200
-From: Petko Manolov <petkan@mip-labs.com>
-Subject: Re: [PATCH v3 20/22] ima: load policy using path
-Message-ID: <20160209074742.GB2912@bender.nucleusys.com>
-References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-21-git-send-email-zohar@linux.vnet.ibm.com>
- <20160207195945.GG17321@localhost>
- <C2D7A727C393B644B70DF4B4DCFB60B9C8A843@lhreml507-mbx.china.huawei.com>
- <20160208103505.GA7931@bender.nucleusys.com>
- <C2D7A727C393B644B70DF4B4DCFB60B9C8A882@lhreml507-mbx.china.huawei.com>
- <1454965936.3037.34.camel@linux.vnet.ibm.com>
+ id 1aT3iZ-00035b-0e
+ for kexec@lists.infradead.org; Tue, 09 Feb 2016 08:32:15 +0000
+Date: Tue, 9 Feb 2016 09:31:50 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] makedumpfile: readpage_elf: handle 0-pages not stored
+ in the ELF file
+Message-ID: <20160209093150.35da61c2@hananiah.suse.cz>
+In-Reply-To: <20160202070044.GN6903@ycc.fr>
+References: <20160122233514.GA25777@ycc.fr>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E19AFB@BPXM01GP.gisp.nec.co.jp>
+ <20160127085821.3be424e1@hananiah.suse.cz>
+ <20160127103741.0e4fec81@hananiah.suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E1B252@BPXM01GP.gisp.nec.co.jp>
+ <20160201130042.5c83f7ae@hananiah.suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E1B6CE@BPXM01GP.gisp.nec.co.jp>
+ <20160202070044.GN6903@ycc.fr>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1454965936.3037.34.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,55 +30,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, "fsdevel@vger.kernel.org" <fsdevel@vger.kernel.org>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dmitry Kasatkin <dmitry.kasatkin@huawei.com>, David Howells <dhowells@redhat.com>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dmitry Kasatkin <d.kasatkin@samsung.com>, David Woodhouse <dwmw2@infradead.org>, "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>
+To: Ivan Delalande <colona@arista.com>
+Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 16-02-08 16:12:16, Mimi Zohar wrote:
-> On Mon, 2016-02-08 at 10:45 +0000, Dmitry Kasatkin wrote:
-> 
-> > > > @@ -286,9 +322,12 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
-> > > >       result = mutex_lock_interruptible(&ima_write_mutex);
-> > > >       if (result < 0)
-> > > >               goto out_free;
-> > > > -     result = ima_parse_add_rule(data);
-> > > > -     mutex_unlock(&ima_write_mutex);
-> > > >
-> > > > +     if (data[0] == '/')
-> > >
-> > > >It seems that if we feed relative path to ima_policy the update will fail...
-> > >
-> > > Yes, i think it is always a good idea to pass absolute path.
+On Tue, 2 Feb 2016 08:00:44 +0100
+Ivan Delalande <colona@arista.com> wrote:
+
+> On Tue, Feb 02, 2016 at 06:48:17AM +0000, Atsushi Kumagai wrote:
+> > >Anyway, are you going to take the patch by Ivan, or my patch (after I
+> > >remove exclude_nodata_pages)?
 > > 
-> > What if we at least emit a warning so people know what's wrong?
-> 
-> The next patch "ima: measure and appraise the IMA policy itself" adds
-> the following.  Is a failure message enough?
-
-That would be the wrong message.  The above code does not handle relative paths 
-so any attempt to load the policy by "./ima_policy_file" or 
-"../../ima_policy_file" will fail.
-
-Isn't there a kernel function that checks if given string is a path-name?
-
-> +       else if (ima_appraise & IMA_APPRAISE_POLICY) {
-> +               pr_err("IMA: signed policy required\n");
-> +               integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-> +                                   "policy_update", "signed policy
-> required",
-> +                                   1, 0);
-> +               if (ima_appraise & IMA_APPRAISE_ENFORCE)
-> +                       result = -EACCES;
-> +       } else
->                 result = ima_parse_add_rule(data);
-> 
+> > Ivan's patch is necessary to follow the ELF specification, but also
+> > your patch (with exclude_nodata_pages) should be merged.
+> > The two patches have different approach to expand struct pt_load_segment,
+> > hence could you manage both work ?
 > > 
-> >                 Petko
-> > 
-> > DK: May be a good idea to print that loading policy by path or not.
+> > Ivan, your v2 patch has no problems, but could I leave this work to Petr
+> > since the two patches touch the same area ?
 > 
-> Are we including the pathname?  Are you suggesting a log or audit message?
+> Sure, this sounds reasonable.
 
-I guess log is more appropriate.
+Hello,
+
+just a short status update. I haven't forgotten this patch, but I've
+had some troubles reproducing the issue. To make sure I'm not on the
+wrong track, what happened when you tried to dump dmesg on the affected
+dump file without the patch?
+
+For me, I crafted a dump file which causes a segfault. Did makedumpfile
+also terminate on SIGSEGV? Did it report an error? Or did it just
+produce wrong output?
+
+Thanks,
+Petr T
 
 _______________________________________________
 kexec mailing list
