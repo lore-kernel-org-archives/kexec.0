@@ -1,19 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22a.google.com ([2a00:1450:400c:c09::22a])
+Received: from e23smtp08.au.ibm.com ([202.81.31.141])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aTd60-00085H-AG
- for kexec@lists.infradead.org; Wed, 10 Feb 2016 22:18:49 +0000
-Received: by mail-wm0-x22a.google.com with SMTP id g62so46094337wme.0
- for <kexec@lists.infradead.org>; Wed, 10 Feb 2016 14:18:27 -0800 (PST)
-Date: Wed, 10 Feb 2016 23:18:17 +0100
-From: Ivan Delalande <colona@arista.com>
-Subject: Re: [PATCH 3/3] makedumpfile: Rewrite readpage_elf
-Message-ID: <20160210221817.GJ382@ycc.fr>
-References: <20160210084737.3060fb5a@hananiah.suse.cz>
- <20160210085009.4df4d14d@hananiah.suse.cz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160210085009.4df4d14d@hananiah.suse.cz>
+ id 1aTdyw-0002FN-Vb
+ for kexec@lists.infradead.org; Wed, 10 Feb 2016 23:15:35 +0000
+Received: from localhost
+ by e23smtp08.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 11 Feb 2016 09:15:09 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 2737C3578057
+ for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 10:15:04 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u1ANEtxm40829020
+ for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 10:15:03 +1100
+Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u1ANEV2O022119
+ for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 10:14:31 +1100
+Message-ID: <1455146051.2538.230.camel@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 17/22] ima: remove firmware and module specific
+ cached status info
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Wed, 10 Feb 2016 18:14:11 -0500
+In-Reply-To: <CACE9dm9dmwfPN_C+kL-ys4TQKDHvyvYuqQKVLbS1=ERju8Z5Lw@mail.gmail.com>
+References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
+ <CACE9dm9dmwfPN_C+kL-ys4TQKDHvyvYuqQKVLbS1=ERju8Z5Lw@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,48 +41,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, kexec mailing list <kexec@lists.infradead.org>
+To: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, "Luis R.
+ Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On Wed, Feb 10, 2016 at 08:50:09AM +0100, Petr Tesarik wrote:
-> The current code in readpage_elf (and readpage_elf_parallel) is extremely
-> hard to follow. Additionally, it still does not cover all possible cases.
-> For example, attempts to read outside of any ELF segment will end up with
-> phys_start being 0, frac_head a negative number, interpreted as a large
-> positive number by memset() and write past buffer end.
-> 
-> Instead of trying to handle even more "corner cases", I rewrote the
-> algorithm from scratch. The basic idea is simple: set a goal to fill the
-> page buffer with data, then work towards that goal by:
-> 
->   - filling holes with zeroes (see Note below),
->   - p_filesz portions with file data and
->   - remaining p_memsz portions again with zeroes.
-> 
-> Repeat this method for each LOAD until the goal is achieved, or an error
-> occurs. In most cases, the loop runs only once.
-> 
-> Note: A "hole" is data at a physical address that is not covered by any
-> ELF LOAD program header. In other words, the ELF file does not specify
-> any data for such a hole (not even zeroes). So, why does makedumpfile
-> fill them with zeroes? It's because makedumpfile works with page
-> granularity (the compressed format does not even have a way to store
-> a partial page), so if only part of a page is stored, a complete page
-> must be provided to make this partial data accessible.
-> 
-> Credits to Ivan Delalande <colona@arista.com> who first found the
-> problem and wrote the original fix.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+On Wed, 2016-02-10 at 22:18 +0200, Dmitry Kasatkin wrote:
 
-Tested-by: Ivan Delalande <colona@arista.com>
+> > diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> > index cb0d0ff..6b4694a 100644
+> > --- a/security/integrity/ima/ima_appraise.c
+> > +++ b/security/integrity/ima/ima_appraise.c
+> > @@ -74,13 +74,12 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
+> >                 return iint->ima_mmap_status;
+> >         case BPRM_CHECK:
+> >                 return iint->ima_bprm_status;
+> > -       case MODULE_CHECK:
+> > -               return iint->ima_module_status;
+> > -       case FIRMWARE_CHECK:
+> > -               return iint->ima_firmware_status;
+> >         case FILE_CHECK:
+> > -       default:
+> > +       case POST_SETATTR:
+> >                 return iint->ima_file_status;
+> > +       case MODULE_CHECK ... MAX_CHECK - 1:
+> 
+> Will LLVM clang handles this range?
+> 
+> Otherwise it can be just like:
+> 
+> case MODULE_CHECK ... MAX_CHECK :
 
-Dump-dmesg works well and gives the expected results with our various
-setups (x86_64 only). Thanks for your work Petr!
+Yes, my test program compiled fine with clang.  Similar usage exists in
+the kernel (eg. fs/afs/callback.c).
 
--- 
-Ivan "Colona" Delalande
-Arista Networks
+Mimi
+
 
 _______________________________________________
 kexec mailing list
