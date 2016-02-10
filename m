@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-x241.google.com ([2a00:1450:4010:c07::241])
+Received: from mail-lb0-x242.google.com ([2a00:1450:4010:c04::242])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aTbE7-0007wM-Kl
- for kexec@lists.infradead.org; Wed, 10 Feb 2016 20:19:05 +0000
-Received: by mail-lf0-x241.google.com with SMTP id 78so1547607lfy.1
- for <kexec@lists.infradead.org>; Wed, 10 Feb 2016 12:18:43 -0800 (PST)
+ id 1aTbIC-0001hk-Br
+ for kexec@lists.infradead.org; Wed, 10 Feb 2016 20:23:17 +0000
+Received: by mail-lb0-x242.google.com with SMTP id e10so1346836lbb.1
+ for <kexec@lists.infradead.org>; Wed, 10 Feb 2016 12:22:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
-Date: Wed, 10 Feb 2016 22:18:41 +0200
-Message-ID: <CACE9dm9dmwfPN_C+kL-ys4TQKDHvyvYuqQKVLbS1=ERju8Z5Lw@mail.gmail.com>
-Subject: Re: [PATCH v3 17/22] ima: remove firmware and module specific cached
- status info
+ <1454526390-19792-22-git-send-email-zohar@linux.vnet.ibm.com>
+Date: Wed, 10 Feb 2016 22:22:54 +0200
+Message-ID: <CACE9dm9=MRT50JgZeHrLTBVK0W+J6gYgUrzSrfzOGii_r2Ct7A@mail.gmail.com>
+Subject: Re: [PATCH v3 21/22] ima: measure and appraise the IMA policy itself
 From: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,192 +29,144 @@ To: Mimi Zohar <zohar@linux.vnet.ibm.com>
 Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
 On Wed, Feb 3, 2016 at 9:06 PM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> Each time a file is read by the kernel, the file should be re-measured and
-> the file signature re-appraised, based on policy.  As there is no need to
-> preserve the status information, this patch replaces the firmware and
-> module specific cache status with a generic one named read_file.
->
-> This change simplifies adding support for other files read by the kernel.
+> Add support for measuring and appraising the IMA policy itself.
 >
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+
+Acked-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
+
+But from Documentation/CodingStyle
+
+if (condition)
+    do_this();
+else
+    do_that();
+
+This does not apply if only one branch of a conditional statement is a single
+statement; in the latter case use braces in both branches:
+
+if (condition) {
+     do_this();
+     do_that();
+} else {
+     otherwise();
+}
+
+
+You have similar issue in other patches as well...
+
+Dmitry
+
 > ---
->  security/integrity/iint.c             |  4 ++--
->  security/integrity/ima/ima.h          |  3 ++-
->  security/integrity/ima/ima_appraise.c | 35 ++++++++++++++++-------------------
->  security/integrity/ima/ima_policy.c   |  9 ++++-----
->  security/integrity/integrity.h        | 16 ++++------------
->  5 files changed, 28 insertions(+), 39 deletions(-)
->
-> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> index 8f1ab37..345b759 100644
-> --- a/security/integrity/iint.c
-> +++ b/security/integrity/iint.c
-> @@ -77,7 +77,7 @@ static void iint_free(struct integrity_iint_cache *iint)
->         iint->ima_file_status = INTEGRITY_UNKNOWN;
->         iint->ima_mmap_status = INTEGRITY_UNKNOWN;
->         iint->ima_bprm_status = INTEGRITY_UNKNOWN;
-> -       iint->ima_module_status = INTEGRITY_UNKNOWN;
-> +       iint->ima_read_status = INTEGRITY_UNKNOWN;
->         iint->evm_status = INTEGRITY_UNKNOWN;
->         kmem_cache_free(iint_cache, iint);
->  }
-> @@ -157,7 +157,7 @@ static void init_once(void *foo)
->         iint->ima_file_status = INTEGRITY_UNKNOWN;
->         iint->ima_mmap_status = INTEGRITY_UNKNOWN;
->         iint->ima_bprm_status = INTEGRITY_UNKNOWN;
-> -       iint->ima_module_status = INTEGRITY_UNKNOWN;
-> +       iint->ima_read_status = INTEGRITY_UNKNOWN;
->         iint->evm_status = INTEGRITY_UNKNOWN;
->  }
+>  security/integrity/ima/ima.h        |  2 ++
+>  security/integrity/ima/ima_fs.c     |  9 ++++++++-
+>  security/integrity/ima/ima_main.c   |  3 +++
+>  security/integrity/ima/ima_policy.c | 10 +++++++++-
+>  4 files changed, 22 insertions(+), 2 deletions(-)
 >
 > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 0b7134c..a5d2592 100644
+> index 832e62a..6685968 100644
 > --- a/security/integrity/ima/ima.h
 > +++ b/security/integrity/ima/ima.h
-> @@ -144,9 +144,10 @@ enum ima_hooks {
->         FILE_CHECK = 1,
->         MMAP_CHECK,
->         BPRM_CHECK,
-> +       POST_SETATTR,
->         MODULE_CHECK,
+> @@ -149,6 +149,7 @@ enum ima_hooks {
 >         FIRMWARE_CHECK,
-> -       POST_SETATTR
-> +       MAX_CHECK
+>         KEXEC_CHECK,
+>         INITRAMFS_CHECK,
+> +       POLICY_CHECK,
+>         MAX_CHECK
 >  };
 >
->  /* LIM API function definitions */
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index cb0d0ff..6b4694a 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -74,13 +74,12 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
->                 return iint->ima_mmap_status;
->         case BPRM_CHECK:
->                 return iint->ima_bprm_status;
-> -       case MODULE_CHECK:
-> -               return iint->ima_module_status;
-> -       case FIRMWARE_CHECK:
-> -               return iint->ima_firmware_status;
->         case FILE_CHECK:
-> -       default:
-> +       case POST_SETATTR:
->                 return iint->ima_file_status;
-> +       case MODULE_CHECK ... MAX_CHECK - 1:
-
-Will LLVM clang handles this range?
-
-Otherwise it can be just like:
-
-case MODULE_CHECK ... MAX_CHECK :
-
-
-> +       default:
-> +               return iint->ima_read_status;
->         }
->  }
+> @@ -191,6 +192,7 @@ int ima_policy_show(struct seq_file *m, void *v);
+>  #define IMA_APPRAISE_LOG       0x04
+>  #define IMA_APPRAISE_MODULES   0x08
+>  #define IMA_APPRAISE_FIRMWARE  0x10
+> +#define IMA_APPRAISE_POLICY    0x20
 >
-> @@ -95,15 +94,14 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
->         case BPRM_CHECK:
->                 iint->ima_bprm_status = status;
+>  #ifdef CONFIG_IMA_APPRAISE
+>  int ima_appraise_measurement(enum ima_hooks func,
+> diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+> index 00ccd67..7b15e80 100644
+> --- a/security/integrity/ima/ima_fs.c
+> +++ b/security/integrity/ima/ima_fs.c
+> @@ -325,7 +325,14 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+>
+>         if (data[0] == '/')
+>                 result = ima_read_policy(data);
+> -       else
+> +       else if (ima_appraise & IMA_APPRAISE_POLICY) {
+> +               pr_err("IMA: signed policy required\n");
+> +               integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+> +                                   "policy_update", "signed policy required",
+> +                                   1, 0);
+> +               if (ima_appraise & IMA_APPRAISE_ENFORCE)
+> +                       result = -EACCES;
+> +       } else
+>                 result = ima_parse_add_rule(data);
+>         mutex_unlock(&ima_write_mutex);
+>  out_free:
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index ccf9526..497a6f2 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -386,6 +386,9 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>         case READING_KEXEC_INITRAMFS:
+>                 func = INITRAMFS_CHECK;
 >                 break;
-> -       case MODULE_CHECK:
-> -               iint->ima_module_status = status;
-> -               break;
-> -       case FIRMWARE_CHECK:
-> -               iint->ima_firmware_status = status;
-> -               break;
->         case FILE_CHECK:
-> -       default:
-> +       case POST_SETATTR:
->                 iint->ima_file_status = status;
+> +       case READING_POLICY:
+> +               func = POLICY_CHECK;
 > +               break;
-> +       case MODULE_CHECK ... MAX_CHECK - 1:
-> +       default:
-> +               iint->ima_read_status = status;
-> +               break;
->         }
->  }
->
-> @@ -117,15 +115,14 @@ static void ima_cache_flags(struct integrity_iint_cache *iint,
->         case BPRM_CHECK:
->                 iint->flags |= (IMA_BPRM_APPRAISED | IMA_APPRAISED);
+>         default:
+>                 func = FILE_CHECK;
 >                 break;
-> -       case MODULE_CHECK:
-> -               iint->flags |= (IMA_MODULE_APPRAISED | IMA_APPRAISED);
-> -               break;
-> -       case FIRMWARE_CHECK:
-> -               iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
-> -               break;
->         case FILE_CHECK:
-> -       default:
-> +       case POST_SETATTR:
->                 iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
-> +               break;
-> +       case MODULE_CHECK ... MAX_CHECK - 1:
-> +       default:
-> +               iint->flags |= (IMA_READ_APPRAISED | IMA_APPRAISED);
-> +               break;
->         }
->  }
->
 > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index cfbe86f..7571ce8 100644
+> index d02560e..39a811a 100644
 > --- a/security/integrity/ima/ima_policy.c
 > +++ b/security/integrity/ima/ima_policy.c
-> @@ -300,13 +300,12 @@ static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
->                 return IMA_MMAP_APPRAISE;
->         case BPRM_CHECK:
->                 return IMA_BPRM_APPRAISE;
-> -       case MODULE_CHECK:
-> -               return IMA_MODULE_APPRAISE;
-> -       case FIRMWARE_CHECK:
-> -               return IMA_FIRMWARE_APPRAISE;
->         case FILE_CHECK:
-> -       default:
-> +       case POST_SETATTR:
->                 return IMA_FILE_APPRAISE;
-> +       case MODULE_CHECK ... MAX_CHECK - 1:
-> +       default:
-> +               return IMA_READ_APPRAISE;
->         }
->  }
+> @@ -114,6 +114,7 @@ static struct ima_rule_entry default_measurement_rules[] = {
+>          .uid = GLOBAL_ROOT_UID, .flags = IMA_FUNC | IMA_INMASK | IMA_UID},
+>         {.action = MEASURE, .func = MODULE_CHECK, .flags = IMA_FUNC},
+>         {.action = MEASURE, .func = FIRMWARE_CHECK, .flags = IMA_FUNC},
+> +       {.action = MEASURE, .func = POLICY_CHECK, .flags = IMA_FUNC},
+>  };
 >
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-> index 9a0ea4c..c7a111c 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -45,18 +45,12 @@
->  #define IMA_MMAP_APPRAISED     0x00000800
->  #define IMA_BPRM_APPRAISE      0x00001000
->  #define IMA_BPRM_APPRAISED     0x00002000
-> -#define IMA_MODULE_APPRAISE    0x00004000
-> -#define IMA_MODULE_APPRAISED   0x00008000
-> -#define IMA_FIRMWARE_APPRAISE  0x00010000
-> -#define IMA_FIRMWARE_APPRAISED 0x00020000
-> -#define IMA_READ_APPRAISE      0x00040000
-> -#define IMA_READ_APPRAISED     0x00080000
-> +#define IMA_READ_APPRAISE      0x00004000
-> +#define IMA_READ_APPRAISED     0x00008000
->  #define IMA_APPRAISE_SUBMASK   (IMA_FILE_APPRAISE | IMA_MMAP_APPRAISE | \
-> -                                IMA_BPRM_APPRAISE | IMA_MODULE_APPRAISE | \
-> -                                IMA_FIRMWARE_APPRAISE | IMA_READ_APPRAISE)
-> +                                IMA_BPRM_APPRAISE | IMA_READ_APPRAISE)
->  #define IMA_APPRAISED_SUBMASK  (IMA_FILE_APPRAISED | IMA_MMAP_APPRAISED | \
-> -                                IMA_BPRM_APPRAISED | IMA_MODULE_APPRAISED | \
-> -                                IMA_FIRMWARE_APPRAISED | IMA_READ_APPRAISED)
-> +                                IMA_BPRM_APPRAISED | IMA_READ_APPRAISED)
+>  static struct ima_rule_entry default_appraise_rules[] = {
+> @@ -616,6 +617,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>                                 entry->func = KEXEC_CHECK;
+>                         else if (strcmp(args[0].from, "INITRAMFS_CHECK") == 0)
+>                                 entry->func = INITRAMFS_CHECK;
+> +                       else if (strcmp(args[0].from, "POLICY_CHECK") == 0)
+> +                               entry->func = POLICY_CHECK;
+>                         else
+>                                 result = -EINVAL;
+>                         if (!result)
+> @@ -774,6 +777,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>                 temp_ima_appraise |= IMA_APPRAISE_MODULES;
+>         else if (entry->func == FIRMWARE_CHECK)
+>                 temp_ima_appraise |= IMA_APPRAISE_FIRMWARE;
+> +       else if (entry->func == POLICY_CHECK)
+> +               temp_ima_appraise |= IMA_APPRAISE_POLICY;
+>         audit_log_format(ab, "res=%d", !result);
+>         audit_log_end(ab);
+>         return result;
+> @@ -860,7 +865,7 @@ static char *mask_tokens[] = {
+>  enum {
+>         func_file = 0, func_mmap, func_bprm,
+>         func_module, func_firmware, func_post,
+> -       func_kexec, func_initramfs
+> +       func_kexec, func_initramfs, func_policy
+>  };
 >
->  enum evm_ima_xattr_type {
->         IMA_XATTR_DIGEST = 0x01,
-> @@ -111,8 +105,6 @@ struct integrity_iint_cache {
->         enum integrity_status ima_file_status:4;
->         enum integrity_status ima_mmap_status:4;
->         enum integrity_status ima_bprm_status:4;
-> -       enum integrity_status ima_module_status:4;
-> -       enum integrity_status ima_firmware_status:4;
->         enum integrity_status ima_read_status:4;
->         enum integrity_status evm_status:4;
->         struct ima_digest_data *ima_hash;
+>  static char *func_tokens[] = {
+> @@ -940,6 +945,9 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
+>         case INITRAMFS_CHECK:
+>                 seq_printf(m, pt(Opt_func), ft(func_initramfs));
+>                 break;
+> +       case POLICY_CHECK:
+> +               seq_printf(m, pt(Opt_func), ft(func_policy));
+> +               break;
+>         default:
+>                 snprintf(tbuf, sizeof(tbuf), "%d", func);
+>                 seq_printf(m, pt(Opt_func), tbuf);
 > --
 > 2.1.0
 >
