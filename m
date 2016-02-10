@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lb0-x241.google.com ([2a00:1450:4010:c04::241])
+Received: from mail-lf0-x241.google.com ([2a00:1450:4010:c07::241])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aTauX-0006YR-2Q
- for kexec@lists.infradead.org; Wed, 10 Feb 2016 19:58:49 +0000
-Received: by mail-lb0-x241.google.com with SMTP id e10so1319020lbb.1
- for <kexec@lists.infradead.org>; Wed, 10 Feb 2016 11:58:28 -0800 (PST)
+ id 1aTbE7-0007wM-Kl
+ for kexec@lists.infradead.org; Wed, 10 Feb 2016 20:19:05 +0000
+Received: by mail-lf0-x241.google.com with SMTP id 78so1547607lfy.1
+ for <kexec@lists.infradead.org>; Wed, 10 Feb 2016 12:18:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1454526390-19792-11-git-send-email-zohar@linux.vnet.ibm.com>
+In-Reply-To: <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-11-git-send-email-zohar@linux.vnet.ibm.com>
-Date: Wed, 10 Feb 2016 21:58:27 +0200
-Message-ID: <CACE9dm9uTYHP1+9K2mo-F=8Z9KQzTBAZGm3-mwG2_YeyfV4xVA@mail.gmail.com>
-Subject: Re: [PATCH v3 10/22] ima: calculate the hash of a buffer using
- aynchronous hash(ahash)
+ <1454526390-19792-18-git-send-email-zohar@linux.vnet.ibm.com>
+Date: Wed, 10 Feb 2016 22:18:41 +0200
+Message-ID: <CACE9dm9dmwfPN_C+kL-ys4TQKDHvyvYuqQKVLbS1=ERju8Z5Lw@mail.gmail.com>
+Subject: Re: [PATCH v3 17/22] ima: remove firmware and module specific cached
+ status info
 From: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,117 +30,192 @@ To: Mimi Zohar <zohar@linux.vnet.ibm.com>
 Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
 On Wed, Feb 3, 2016 at 9:06 PM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
-> Setting up ahash has some overhead.  Only use ahash to calculate the
-> hash of a buffer, if the buffer is larger than ima_ahash_minsize.
+> Each time a file is read by the kernel, the file should be re-measured and
+> the file signature re-appraised, based on policy.  As there is no need to
+> preserve the status information, this patch replaces the firmware and
+> module specific cache status with a generic one named read_file.
+>
+> This change simplifies adding support for other files read by the kernel.
 >
 > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-
-Acked-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
-
 > ---
->  security/integrity/ima/ima_crypto.c | 75 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 73 insertions(+), 2 deletions(-)
+>  security/integrity/iint.c             |  4 ++--
+>  security/integrity/ima/ima.h          |  3 ++-
+>  security/integrity/ima/ima_appraise.c | 35 ++++++++++++++++-------------------
+>  security/integrity/ima/ima_policy.c   |  9 ++++-----
+>  security/integrity/integrity.h        | 16 ++++------------
+>  5 files changed, 28 insertions(+), 39 deletions(-)
 >
-> diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-> index fccb6ce..38f2ed8 100644
-> --- a/security/integrity/ima/ima_crypto.c
-> +++ b/security/integrity/ima/ima_crypto.c
-> @@ -519,6 +519,63 @@ int ima_calc_field_array_hash(struct ima_field_data *field_data,
->         return rc;
+> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+> index 8f1ab37..345b759 100644
+> --- a/security/integrity/iint.c
+> +++ b/security/integrity/iint.c
+> @@ -77,7 +77,7 @@ static void iint_free(struct integrity_iint_cache *iint)
+>         iint->ima_file_status = INTEGRITY_UNKNOWN;
+>         iint->ima_mmap_status = INTEGRITY_UNKNOWN;
+>         iint->ima_bprm_status = INTEGRITY_UNKNOWN;
+> -       iint->ima_module_status = INTEGRITY_UNKNOWN;
+> +       iint->ima_read_status = INTEGRITY_UNKNOWN;
+>         iint->evm_status = INTEGRITY_UNKNOWN;
+>         kmem_cache_free(iint_cache, iint);
+>  }
+> @@ -157,7 +157,7 @@ static void init_once(void *foo)
+>         iint->ima_file_status = INTEGRITY_UNKNOWN;
+>         iint->ima_mmap_status = INTEGRITY_UNKNOWN;
+>         iint->ima_bprm_status = INTEGRITY_UNKNOWN;
+> -       iint->ima_module_status = INTEGRITY_UNKNOWN;
+> +       iint->ima_read_status = INTEGRITY_UNKNOWN;
+>         iint->evm_status = INTEGRITY_UNKNOWN;
 >  }
 >
-> +static int calc_buffer_ahash_atfm(const void *buf, loff_t len,
-> +                                 struct ima_digest_data *hash,
-> +                                 struct crypto_ahash *tfm)
-> +{
-> +       struct ahash_request *req;
-> +       struct scatterlist sg;
-> +       struct ahash_completion res;
-> +       int rc, ahash_rc = 0;
-> +
-> +       hash->length = crypto_ahash_digestsize(tfm);
-> +
-> +       req = ahash_request_alloc(tfm, GFP_KERNEL);
-> +       if (!req)
-> +               return -ENOMEM;
-> +
-> +       init_completion(&res.completion);
-> +       ahash_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG |
-> +                                  CRYPTO_TFM_REQ_MAY_SLEEP,
-> +                                  ahash_complete, &res);
-> +
-> +       rc = ahash_wait(crypto_ahash_init(req), &res);
-> +       if (rc)
-> +               goto out;
-> +
-> +       sg_init_one(&sg, buf, len);
-> +       ahash_request_set_crypt(req, &sg, NULL, len);
-> +
-> +       ahash_rc = crypto_ahash_update(req);
-> +
-> +       /* wait for the update request to complete */
-> +       rc = ahash_wait(ahash_rc, &res);
-> +       if (!rc) {
-> +               ahash_request_set_crypt(req, NULL, hash->digest, 0);
-> +               rc = ahash_wait(crypto_ahash_final(req), &res);
-> +       }
-> +out:
-> +       ahash_request_free(req);
-> +       return rc;
-> +}
-> +
-> +static int calc_buffer_ahash(const void *buf, loff_t len,
-> +                            struct ima_digest_data *hash)
-> +{
-> +       struct crypto_ahash *tfm;
-> +       int rc;
-> +
-> +       tfm = ima_alloc_atfm(hash->algo);
-> +       if (IS_ERR(tfm))
-> +               return PTR_ERR(tfm);
-> +
-> +       rc = calc_buffer_ahash_atfm(buf, len, hash, tfm);
-> +
-> +       ima_free_atfm(tfm);
-> +
-> +       return rc;
-> +}
-> +
->  static int calc_buffer_shash_tfm(const void *buf, loff_t size,
->                                 struct ima_digest_data *hash,
->                                 struct crypto_shash *tfm)
-> @@ -550,8 +607,8 @@ static int calc_buffer_shash_tfm(const void *buf, loff_t size,
->         return rc;
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 0b7134c..a5d2592 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -144,9 +144,10 @@ enum ima_hooks {
+>         FILE_CHECK = 1,
+>         MMAP_CHECK,
+>         BPRM_CHECK,
+> +       POST_SETATTR,
+>         MODULE_CHECK,
+>         FIRMWARE_CHECK,
+> -       POST_SETATTR
+> +       MAX_CHECK
+>  };
+>
+>  /* LIM API function definitions */
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> index cb0d0ff..6b4694a 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -74,13 +74,12 @@ enum integrity_status ima_get_cache_status(struct integrity_iint_cache *iint,
+>                 return iint->ima_mmap_status;
+>         case BPRM_CHECK:
+>                 return iint->ima_bprm_status;
+> -       case MODULE_CHECK:
+> -               return iint->ima_module_status;
+> -       case FIRMWARE_CHECK:
+> -               return iint->ima_firmware_status;
+>         case FILE_CHECK:
+> -       default:
+> +       case POST_SETATTR:
+>                 return iint->ima_file_status;
+> +       case MODULE_CHECK ... MAX_CHECK - 1:
+
+Will LLVM clang handles this range?
+
+Otherwise it can be just like:
+
+case MODULE_CHECK ... MAX_CHECK :
+
+
+> +       default:
+> +               return iint->ima_read_status;
+>         }
 >  }
 >
-> -int ima_calc_buffer_hash(const void *buf, loff_t len,
-> -                        struct ima_digest_data *hash)
-> +static int calc_buffer_shash(const void *buf, loff_t len,
-> +                            struct ima_digest_data *hash)
->  {
->         struct crypto_shash *tfm;
->         int rc;
-> @@ -566,6 +623,20 @@ int ima_calc_buffer_hash(const void *buf, loff_t len,
->         return rc;
+> @@ -95,15 +94,14 @@ static void ima_set_cache_status(struct integrity_iint_cache *iint,
+>         case BPRM_CHECK:
+>                 iint->ima_bprm_status = status;
+>                 break;
+> -       case MODULE_CHECK:
+> -               iint->ima_module_status = status;
+> -               break;
+> -       case FIRMWARE_CHECK:
+> -               iint->ima_firmware_status = status;
+> -               break;
+>         case FILE_CHECK:
+> -       default:
+> +       case POST_SETATTR:
+>                 iint->ima_file_status = status;
+> +               break;
+> +       case MODULE_CHECK ... MAX_CHECK - 1:
+> +       default:
+> +               iint->ima_read_status = status;
+> +               break;
+>         }
 >  }
 >
-> +int ima_calc_buffer_hash(const void *buf, loff_t len,
-> +                        struct ima_digest_data *hash)
-> +{
-> +       int rc;
-> +
-> +       if (ima_ahash_minsize && len >= ima_ahash_minsize) {
-> +               rc = calc_buffer_ahash(buf, len, hash);
-> +               if (!rc)
-> +                       return 0;
-> +       }
-> +
-> +       return calc_buffer_shash(buf, len, hash);
-> +}
-> +
->  static void __init ima_pcrread(int idx, u8 *pcr)
->  {
->         if (!ima_used_chip)
+> @@ -117,15 +115,14 @@ static void ima_cache_flags(struct integrity_iint_cache *iint,
+>         case BPRM_CHECK:
+>                 iint->flags |= (IMA_BPRM_APPRAISED | IMA_APPRAISED);
+>                 break;
+> -       case MODULE_CHECK:
+> -               iint->flags |= (IMA_MODULE_APPRAISED | IMA_APPRAISED);
+> -               break;
+> -       case FIRMWARE_CHECK:
+> -               iint->flags |= (IMA_FIRMWARE_APPRAISED | IMA_APPRAISED);
+> -               break;
+>         case FILE_CHECK:
+> -       default:
+> +       case POST_SETATTR:
+>                 iint->flags |= (IMA_FILE_APPRAISED | IMA_APPRAISED);
+> +               break;
+> +       case MODULE_CHECK ... MAX_CHECK - 1:
+> +       default:
+> +               iint->flags |= (IMA_READ_APPRAISED | IMA_APPRAISED);
+> +               break;
+>         }
+>  }
+>
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index cfbe86f..7571ce8 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -300,13 +300,12 @@ static int get_subaction(struct ima_rule_entry *rule, enum ima_hooks func)
+>                 return IMA_MMAP_APPRAISE;
+>         case BPRM_CHECK:
+>                 return IMA_BPRM_APPRAISE;
+> -       case MODULE_CHECK:
+> -               return IMA_MODULE_APPRAISE;
+> -       case FIRMWARE_CHECK:
+> -               return IMA_FIRMWARE_APPRAISE;
+>         case FILE_CHECK:
+> -       default:
+> +       case POST_SETATTR:
+>                 return IMA_FILE_APPRAISE;
+> +       case MODULE_CHECK ... MAX_CHECK - 1:
+> +       default:
+> +               return IMA_READ_APPRAISE;
+>         }
+>  }
+>
+> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+> index 9a0ea4c..c7a111c 100644
+> --- a/security/integrity/integrity.h
+> +++ b/security/integrity/integrity.h
+> @@ -45,18 +45,12 @@
+>  #define IMA_MMAP_APPRAISED     0x00000800
+>  #define IMA_BPRM_APPRAISE      0x00001000
+>  #define IMA_BPRM_APPRAISED     0x00002000
+> -#define IMA_MODULE_APPRAISE    0x00004000
+> -#define IMA_MODULE_APPRAISED   0x00008000
+> -#define IMA_FIRMWARE_APPRAISE  0x00010000
+> -#define IMA_FIRMWARE_APPRAISED 0x00020000
+> -#define IMA_READ_APPRAISE      0x00040000
+> -#define IMA_READ_APPRAISED     0x00080000
+> +#define IMA_READ_APPRAISE      0x00004000
+> +#define IMA_READ_APPRAISED     0x00008000
+>  #define IMA_APPRAISE_SUBMASK   (IMA_FILE_APPRAISE | IMA_MMAP_APPRAISE | \
+> -                                IMA_BPRM_APPRAISE | IMA_MODULE_APPRAISE | \
+> -                                IMA_FIRMWARE_APPRAISE | IMA_READ_APPRAISE)
+> +                                IMA_BPRM_APPRAISE | IMA_READ_APPRAISE)
+>  #define IMA_APPRAISED_SUBMASK  (IMA_FILE_APPRAISED | IMA_MMAP_APPRAISED | \
+> -                                IMA_BPRM_APPRAISED | IMA_MODULE_APPRAISED | \
+> -                                IMA_FIRMWARE_APPRAISED | IMA_READ_APPRAISED)
+> +                                IMA_BPRM_APPRAISED | IMA_READ_APPRAISED)
+>
+>  enum evm_ima_xattr_type {
+>         IMA_XATTR_DIGEST = 0x01,
+> @@ -111,8 +105,6 @@ struct integrity_iint_cache {
+>         enum integrity_status ima_file_status:4;
+>         enum integrity_status ima_mmap_status:4;
+>         enum integrity_status ima_bprm_status:4;
+> -       enum integrity_status ima_module_status:4;
+> -       enum integrity_status ima_firmware_status:4;
+>         enum integrity_status ima_read_status:4;
+>         enum integrity_status evm_status:4;
+>         struct ima_digest_data *ima_hash;
 > --
 > 2.1.0
 >
