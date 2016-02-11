@@ -1,37 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+Received: from mail-wm0-x22b.google.com ([2a00:1450:400c:c09::22b])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aTqfb-0000Vq-Tq
- for kexec@lists.infradead.org; Thu, 11 Feb 2016 12:48:28 +0000
-Received: from localhost
- by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 11 Feb 2016 22:17:47 +1000
-Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id 2556C2BB0055
- for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 23:17:45 +1100 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u1BCHb5B29425732
- for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 23:17:45 +1100
-Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u1BCHClv023168
- for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 23:17:12 +1100
-Message-ID: <1455193012.2538.318.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 19/22] ima: support for kexec image and initramfs
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 11 Feb 2016 07:16:52 -0500
-In-Reply-To: <CACE9dm-VTDNaEJPGamhMY239LQAPCRYp9rvnwbmZijyo7Vh43g@mail.gmail.com>
-References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-20-git-send-email-zohar@linux.vnet.ibm.com>
- <CACE9dm9cqE5cu=0+LujHOGP9XyhGNxYfy52Ds6z+pz+fPwF+pw@mail.gmail.com>
- <1455146516.2538.237.camel@linux.vnet.ibm.com>
- <CACE9dm8OJ1cgbKszUG-pCiEMVarUFLLWi_jewVV-JEMGAJsA-g@mail.gmail.com>
- <1455156500.2538.268.camel@linux.vnet.ibm.com>
- <CACE9dm-VTDNaEJPGamhMY239LQAPCRYp9rvnwbmZijyo7Vh43g@mail.gmail.com>
-Mime-Version: 1.0
+ id 1aTtoZ-0007So-WF
+ for kexec@lists.infradead.org; Thu, 11 Feb 2016 16:10:03 +0000
+Received: by mail-wm0-x22b.google.com with SMTP id c200so80382301wme.0
+ for <kexec@lists.infradead.org>; Thu, 11 Feb 2016 08:09:34 -0800 (PST)
+Date: Thu, 11 Feb 2016 16:09:31 +0000
+From: Matt Fleming <matt@codeblueprint.co.uk>
+Subject: Re: [PATCH] x86/efi: skip bgrt init for kexec reboot
+Message-ID: <20160211160931.GL4134@codeblueprint.co.uk>
+References: <20160127112044.GA2961@dhcp-128-65.nay.redhat.com>
+ <20160203214200.GA15110@dhcp-128-65.nay.redhat.com>
+ <20160203225333.GA31246@codeblueprint.co.uk>
+ <20160204100329.GA2586@codeblueprint.co.uk>
+ <20160204110903.GA2977@dhcp-128-65.nay.redhat.com>
+ <20160204115656.GB2586@codeblueprint.co.uk>
+ <20160205004115.GA3651@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160205004115.GA3651@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,28 +31,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, "Luis R. Rodriguez" <mcgrof@suse.com>, Rusty Russell <rusty@rustcorp.com.au>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module <linux-security-module@vger.kernel.org>, "Eric W.
- Biederman" <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: Dave Young <dyoung@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>, linux-acpi@vger.kernel.org, Borislav Petkov <bp@alien8.de>
 
-On Thu, 2016-02-11 at 10:47 +0200, Dmitry Kasatkin wrote:
-> On Thu, Feb 11, 2016 at 4:08 AM, Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+On Fri, 05 Feb, at 08:41:15AM, Dave Young wrote:
+> On 02/04/16 at 11:56am, Matt Fleming wrote:
+> > On Thu, 04 Feb, at 07:09:03PM, Dave Young wrote:
+> > > 
+> > > Consider the original code path, maybe change it to efi_kexec_setup will
+> > > be better to remind people? Or something else like a wraper function with
+> > > similar name..
+> >  
+> > Possibly. I had considered adding a new efi_enabled() bit for
+> > KEXEC_BOOT, but I'm worried that'll just encourage more uses.
+> > 
+> > The best approach is going to be to see whether we can reduce the uses
+> > of efi_setup and the associated special code. Once we've completed
+> > that exercise, we can think about the best name for this variable.
+> 
+> Ok, thanks.
+> 
+> > 
+> > > For building ACPI tables we need do it in kernel instead of kexec-tools
+> > > because of kexec_file_load for secure boot case so we still need a conditional
+> > > code path for kexec..
+> > 
+> > Note that it may not be necessary to build any ACPI tables at all,
+> > provided that things like acpi_get_table() fail gracefully for kexec.
+> > I'm assuming that's the problem that you discovered when writing this
+> > patch.
+> > 
+> > And yes, I don't expect you can build the ACPI table from userspace,
+> > but it should at least be possible to do it in setup_boot_parameters()
+> > or so when you setup the EFI table pointers (efi.config_tables), etc.
+> > I think that would be a natural home for this feature.
+> 
+> Thing is we support both kexec_load and kexec_file_load, if we do something
+> in kernel loader we will need do same in userspace kexec-tools as well.
+ 
+Actually, on thinking about it a little bit more, any changes we make
+would have to be on the second kernel side, because otherwise you end
+up with incompatibilities between kernel versions.
 
-> static int idmap[] = {
->          [READING_FIRMWARE] = FIRMWARE_CHECK,
->          [READING_MODULE] = MODULE_CHECK,
->          ...
-> };
+For example, changing the data we pass in the SETUP_EFI chain is a bad
+idea becuase you then have to care about exactly which kernel version
+you kexec loaded.
 
-That works nicely, even with non-sequential ordering or missing entries.
-The switch case be replaced with a single line:
+> Another way is we probably can retain the boot service areas for kexec
+> boot, but yes it is another special handling for kexec :(. Is this way
+> better to you?
 
-func = read_idmap[read_id] == 0 ? FILE_CHECK : read_idmap[read_id]; 
-
-Thank you!
-
-Mimi
-
+Unfortunately retaining Boot Services areas is infeasible because they
+can be *really* large, i.e. multiple gigabytes in size.
 
 _______________________________________________
 kexec mailing list
