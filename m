@@ -1,26 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp07.in.ibm.com ([125.16.236.7])
+Received: from e28smtp08.in.ibm.com ([125.16.236.8])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aUIW2-0007d4-Lj
- for kexec@lists.infradead.org; Fri, 12 Feb 2016 18:32:28 +0000
+ id 1aUIW2-0007d5-Pp
+ for kexec@lists.infradead.org; Fri, 12 Feb 2016 18:32:29 +0000
 Received: from localhost
- by e28smtp07.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp08.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
  Sat, 13 Feb 2016 00:02:04 +0530
 Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
- by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u1CIVwS518219412
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:02:00 +0530
+ by d28relay03.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u1CIW1I7000400
+ for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:02:01 +0530
 Received: from d28av05.in.ibm.com (localhost [127.0.0.1])
  by d28av05.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u1CIVh2G000803
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:01:54 +0530
+ u1CIVxXd001249
+ for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:02:00 +0530
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v4 15/19] kexec: replace call to copy_file_from_fd() with
- kernel version
-Date: Fri, 12 Feb 2016 13:29:27 -0500
-Message-Id: <1455301771-7703-16-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v4 16/19] ima: support for kexec image and initramfs
+Date: Fri, 12 Feb 2016 13:29:28 -0500
+Message-Id: <1455301771-7703-17-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1455301771-7703-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1455301771-7703-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -37,160 +36,178 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: Kees Cook <keescook@chromium.org>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-Replace copy_file_from_fd() with kernel_read_file_from_fd().
+Add IMA policy support for measuring/appraising the kexec image and
+initramfs. Two new IMA policy identifiers KEXEC_KERNEL_CHECK and
+KEXEC_INITRAMFS_CHECK are defined.
 
-Two new identifiers named READING_KEXEC_IMAGE and READING_KEXEC_INITRAMFS
-are defined for measuring, appraising or auditing the kexec image and
-initramfs.
+Example policy rules:
+measure func=KEXEC_KERNEL_CHECK
+appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig
+measure func=KEXEC_INITRAMFS_CHECK
+appraise func=KEXEC_INITRAMFS_CHECK appraise_type=imasig
 
-Changelog v3:
-- return -EBADF, not -ENOEXEC
-- identifier change
-- split patch, moving copy_file_from_fd() to a separate patch
-- split patch, moving IMA changes to a separate patch
-v0:
-- use kstat file size type loff_t, not size_t
-- Calculate the file hash from the in memory buffer - Dave Young
+Moving the enumeration to the vfs layer simplified the patches, allowing
+the IMA changes, for the most part, to be separated from the other
+changes.  Unfortunately, passing either a kernel_read_file_id or a
+ima_hooks enumeration within IMA is messy.
+
+Option 1: duplicate kernel_read_file enumeration in ima_hooks
+
+enum kernel_read_file_id {
+	...
+        READING_KEXEC_IMAGE,
+        READING_KEXEC_INITRAMFS,
+        READING_MAX_ID
+
+enum ima_hooks {
+	...
+	KEXEC_KERNEL_CHECK
+	KEXEC_INITRAMFS_CHECK
+
+Option 2: define ima_hooks as extension of kernel_read_file
+eg: enum ima_hooks {
+        FILE_CHECK = READING_MAX_ID,
+        MMAP_CHECK,
+
+In order to pass both kernel_read_file_id and ima_hooks values, we
+would need to specify a struct containing a union.
+
+struct caller_id {
+        union {
+                enum ima_hooks func_id;
+                enum kernel_read_file_id read_id;
+        };
+};
+
+Option 3: incorportate the ima_hooks enumeration into kernel_read_file_id,
+perhaps changing the enumeration name.
+
+For now, duplicate the new READING_KEXEC_IMAGE/INITRAMFS in the ima_hooks.
+
+Changelog v4:
+- replaced switch statement with a kernel_read_file_id to an ima_hooks
+id mapping array - Dmitry
+- renamed ima_hook tokens KEXEC_CHECK and INITRAMFS_CHECK to
+KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK respectively - Dave Young
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Acked-by: Dave Young <dyoung@redhat.com>
+Acked-by: Petko Manolov <petkan@mip-labs.com>
+Acked-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
+Cc: Dave Young <dyoung@redhat.com>
 ---
- include/linux/fs.h  |  2 ++
- kernel/kexec_file.c | 73 +++++++----------------------------------------------
- 2 files changed, 11 insertions(+), 64 deletions(-)
+ Documentation/ABI/testing/ima_policy |  1 +
+ security/integrity/ima/ima.h         |  2 ++
+ security/integrity/ima/ima_main.c    | 15 +++++++++------
+ security/integrity/ima/ima_policy.c  | 15 ++++++++++++++-
+ 4 files changed, 26 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index fb08b66..5256725 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2579,6 +2579,8 @@ extern int do_pipe_flags(int *, int);
- enum kernel_read_file_id {
- 	READING_FIRMWARE = 1,
- 	READING_MODULE,
-+	READING_KEXEC_IMAGE,
-+	READING_KEXEC_INITRAMFS,
- 	READING_MAX_ID
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index 0a378a8..bb0f9a1 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -27,6 +27,7 @@ Description:
+ 
+ 		base: 	func:= [BPRM_CHECK][MMAP_CHECK][FILE_CHECK][MODULE_CHECK]
+ 				[FIRMWARE_CHECK]
++				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+ 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+ 			       [[^]MAY_EXEC]
+ 			fsmagic:= hex value
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index a5d2592..bd97e0d 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -147,6 +147,8 @@ enum ima_hooks {
+ 	POST_SETATTR,
+ 	MODULE_CHECK,
+ 	FIRMWARE_CHECK,
++	KEXEC_KERNEL_CHECK,
++	KEXEC_INITRAMFS_CHECK,
+ 	MAX_CHECK
  };
  
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 007b791..b696c3f 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -18,6 +18,7 @@
- #include <linux/kexec.h>
- #include <linux/mutex.h>
- #include <linux/list.h>
-+#include <linux/fs.h>
- #include <crypto/hash.h>
- #include <crypto/sha.h>
- #include <linux/syscalls.h>
-@@ -33,65 +34,6 @@ size_t __weak kexec_purgatory_size = 0;
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index f6039f5..4d0bdf1 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -339,6 +339,13 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ 	return 0;
+ }
  
- static int kexec_calculate_store_digests(struct kimage *image);
- 
--static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
--{
--	struct fd f = fdget(fd);
--	int ret;
--	struct kstat stat;
--	loff_t pos;
--	ssize_t bytes = 0;
--
--	if (!f.file)
--		return -EBADF;
--
--	ret = vfs_getattr(&f.file->f_path, &stat);
--	if (ret)
--		goto out;
--
--	if (stat.size > INT_MAX) {
--		ret = -EFBIG;
--		goto out;
--	}
--
--	/* Don't hand 0 to vmalloc, it whines. */
--	if (stat.size == 0) {
--		ret = -EINVAL;
--		goto out;
--	}
--
--	*buf = vmalloc(stat.size);
--	if (!*buf) {
--		ret = -ENOMEM;
--		goto out;
--	}
--
--	pos = 0;
--	while (pos < stat.size) {
--		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
--				    stat.size - pos);
--		if (bytes < 0) {
--			vfree(*buf);
--			ret = bytes;
--			goto out;
--		}
--
--		if (bytes == 0)
--			break;
--		pos += bytes;
--	}
--
--	if (pos != stat.size) {
--		ret = -EBADF;
--		vfree(*buf);
--		goto out;
--	}
--
--	*buf_len = pos;
--out:
--	fdput(f);
--	return ret;
--}
--
- /* Architectures can provide this probe function */
- int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 					 unsigned long buf_len)
-@@ -182,16 +124,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
++static int read_idmap[READING_MAX_ID] = {
++	[READING_FIRMWARE] = FIRMWARE_CHECK,
++	[READING_MODULE] = MODULE_CHECK,
++	[READING_KEXEC_IMAGE] = KEXEC_KERNEL_CHECK,
++	[READING_KEXEC_INITRAMFS] = KEXEC_INITRAMFS_CHECK,
++};
++
+ /**
+  * ima_post_read_file - in memory collect/appraise/audit measurement
+  * @file: pointer to the file to be measured/appraised/audit
+@@ -355,7 +362,7 @@ int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
+ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 		       enum kernel_read_file_id read_id)
  {
- 	int ret = 0;
- 	void *ldata;
-+	loff_t size;
+-	enum ima_hooks func = FILE_CHECK;
++	enum ima_hooks func;
  
--	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
--				&image->kernel_buf_len);
-+	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
-+				       &size, INT_MAX, READING_KEXEC_IMAGE);
- 	if (ret)
- 		return ret;
-+	image->kernel_buf_len = size;
- 
- 	/* Call arch image probe handlers */
- 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
- 					    image->kernel_buf_len);
--
- 	if (ret)
- 		goto out;
- 
-@@ -206,10 +149,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- #endif
- 	/* It is possible that there no initramfs is being loaded */
- 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
--		ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
--					&image->initrd_buf_len);
-+		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
-+					       &size, INT_MAX,
-+					       READING_KEXEC_INITRAMFS);
- 		if (ret)
- 			goto out;
-+		image->initrd_buf_len = size;
+ 	if (!file && read_id == READING_FIRMWARE) {
+ 		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
+@@ -373,11 +380,7 @@ int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 		return 0;
  	}
  
- 	if (cmdline_len) {
+-	if (read_id == READING_FIRMWARE)
+-		func = FIRMWARE_CHECK;
+-	else if (read_id == READING_MODULE)
+-		func = MODULE_CHECK;
+-
++	func = read_idmap[read_id] ?: FILE_CHECK;
+ 	return process_measurement(file, buf, size, MAY_READ, func, 0);
+ }
+ 
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 7571ce8..5ccd3f5 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -612,6 +612,12 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 				entry->func = MMAP_CHECK;
+ 			else if (strcmp(args[0].from, "BPRM_CHECK") == 0)
+ 				entry->func = BPRM_CHECK;
++			else if (strcmp(args[0].from, "KEXEC_KERNEL_CHECK") ==
++				 0)
++				entry->func = KEXEC_KERNEL_CHECK;
++			else if (strcmp(args[0].from, "KEXEC_INITRAMFS_CHECK")
++				 == 0)
++				entry->func = KEXEC_INITRAMFS_CHECK;
+ 			else
+ 				result = -EINVAL;
+ 			if (!result)
+@@ -855,7 +861,8 @@ static char *mask_tokens[] = {
+ 
+ enum {
+ 	func_file = 0, func_mmap, func_bprm,
+-	func_module, func_firmware, func_post
++	func_module, func_firmware, func_post,
++	func_kexec_kernel, func_kexec_initramfs
+ };
+ 
+ static char *func_tokens[] = {
+@@ -929,6 +936,12 @@ static void policy_func_show(struct seq_file *m, enum ima_hooks func)
+ 	case POST_SETATTR:
+ 		seq_printf(m, pt(Opt_func), ft(func_post));
+ 		break;
++	case KEXEC_KERNEL_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_kexec_kernel));
++		break;
++	case KEXEC_INITRAMFS_CHECK:
++		seq_printf(m, pt(Opt_func), ft(func_kexec_initramfs));
++		break;
+ 	default:
+ 		snprintf(tbuf, sizeof(tbuf), "%d", func);
+ 		seq_printf(m, pt(Opt_func), tbuf);
 -- 
 2.1.0
 
