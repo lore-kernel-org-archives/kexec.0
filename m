@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aUD70-0001Pu-Ll
- for kexec@lists.infradead.org; Fri, 12 Feb 2016 12:46:15 +0000
-Date: Fri, 12 Feb 2016 20:45:42 +0800
+ id 1aUDBL-00030X-K3
+ for kexec@lists.infradead.org; Fri, 12 Feb 2016 12:50:44 +0000
+Date: Fri, 12 Feb 2016 20:50:10 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/efi: skip bgrt init for kexec reboot
-Message-ID: <20160212124542.GA7051@dhcp-128-65.nay.redhat.com>
-References: <20160127112044.GA2961@dhcp-128-65.nay.redhat.com>
- <20160203214200.GA15110@dhcp-128-65.nay.redhat.com>
- <20160203225333.GA31246@codeblueprint.co.uk>
- <20160204100329.GA2586@codeblueprint.co.uk>
- <20160204110903.GA2977@dhcp-128-65.nay.redhat.com>
- <20160204115656.GB2586@codeblueprint.co.uk>
- <20160205004115.GA3651@dhcp-128-65.nay.redhat.com>
- <20160211160931.GL4134@codeblueprint.co.uk>
+Subject: Re: [PATCH v3 18/22] kexec: replace call to copy_file_from_fd() with
+ kernel version
+Message-ID: <20160212125010.GB7051@dhcp-128-65.nay.redhat.com>
+References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160211160931.GL4134@codeblueprint.co.uk>
+In-Reply-To: <1454526390-19792-19-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,91 +25,175 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>, linux-acpi@vger.kernel.org, Borislav Petkov <bp@alien8.de>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
 
-On 02/11/16 at 04:09pm, Matt Fleming wrote:
-> On Fri, 05 Feb, at 08:41:15AM, Dave Young wrote:
-> > On 02/04/16 at 11:56am, Matt Fleming wrote:
-> > > On Thu, 04 Feb, at 07:09:03PM, Dave Young wrote:
-> > > > 
-> > > > Consider the original code path, maybe change it to efi_kexec_setup will
-> > > > be better to remind people? Or something else like a wraper function with
-> > > > similar name..
-> > >  
-> > > Possibly. I had considered adding a new efi_enabled() bit for
-> > > KEXEC_BOOT, but I'm worried that'll just encourage more uses.
-> > > 
-> > > The best approach is going to be to see whether we can reduce the uses
-> > > of efi_setup and the associated special code. Once we've completed
-> > > that exercise, we can think about the best name for this variable.
-> > 
-> > Ok, thanks.
-> > 
-> > > 
-> > > > For building ACPI tables we need do it in kernel instead of kexec-tools
-> > > > because of kexec_file_load for secure boot case so we still need a conditional
-> > > > code path for kexec..
-> > > 
-> > > Note that it may not be necessary to build any ACPI tables at all,
-> > > provided that things like acpi_get_table() fail gracefully for kexec.
-> > > I'm assuming that's the problem that you discovered when writing this
-> > > patch.
-> > > 
-> > > And yes, I don't expect you can build the ACPI table from userspace,
-> > > but it should at least be possible to do it in setup_boot_parameters()
-> > > or so when you setup the EFI table pointers (efi.config_tables), etc.
-> > > I think that would be a natural home for this feature.
-> > 
-> > Thing is we support both kexec_load and kexec_file_load, if we do something
-> > in kernel loader we will need do same in userspace kexec-tools as well.
+On 02/03/16 at 02:06pm, Mimi Zohar wrote:
+> Replace copy_file_from_fd() with kernel_read_file_from_fd().
+> 
+> Two new identifiers named READING_KEXEC_IMAGE and READING_KEXEC_INITRAMFS
+> are defined for measuring, appraising or auditing the kexec image and
+> initramfs.
+> 
+> Changelog v3:
+> - return -EBADF, not -ENOEXEC
+> - identifier change
+> - moved copy_file_from_fd() to a separate patch
+> - defer support for IMA
+> v1:
+> - re-order and squash the kexec patches
+> v0: ima: measure and appraise kexec image and initramfs (squashed)
+> - rename ima_read_hooks enumeration to ima_policy_id
+> - use kstat file size type loff_t, not size_t
+> - add union name "hooks" to fix sparse warning
+> - Calculate the file hash from the in memory buffer
+> (suggested by Dave Young)
+> - Rename ima_read_and_process_file() to ima_hash_and_process_file()
+> - replace individual case statements with range:
+>         KEXEC_CHECK ... IMA_MAX_READ_CHECK - 1
+> - Instead of ima_read_and_process_file() allocating memory, the caller
+> allocates and frees the memory.
+> - Moved the kexec measurement/appraisal call to copy_file_from_fd(). The
+> same call now measures and appraises both the kexec image and initramfs.
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> ---
+>  include/linux/fs.h  |  2 ++
+>  kernel/kexec_file.c | 73 +++++++----------------------------------------------
+>  2 files changed, 11 insertions(+), 64 deletions(-)
+> 
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 9e1f1e3..d4d556e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2529,6 +2529,8 @@ extern int do_pipe_flags(int *, int);
+>  enum kernel_read_file_id {
+>  	READING_FIRMWARE = 1,
+>  	READING_MODULE,
+> +	READING_KEXEC_IMAGE,
+> +	READING_KEXEC_INITRAMFS,
+>  	READING_MAX_ID
+>  };
 >  
-> Actually, on thinking about it a little bit more, any changes we make
-> would have to be on the second kernel side, because otherwise you end
-> up with incompatibilities between kernel versions.
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b70ada0..1443f93 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/kexec.h>
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+> +#include <linux/fs.h>
+>  #include <crypto/hash.h>
+>  #include <crypto/sha.h>
+>  #include <linux/syscalls.h>
+> @@ -33,65 +34,6 @@ size_t __weak kexec_purgatory_size = 0;
+>  
+>  static int kexec_calculate_store_digests(struct kimage *image);
+>  
+> -static int copy_file_from_fd(int fd, void **buf, unsigned long *buf_len)
+> -{
+> -	struct fd f = fdget(fd);
+> -	int ret;
+> -	struct kstat stat;
+> -	loff_t pos;
+> -	ssize_t bytes = 0;
+> -
+> -	if (!f.file)
+> -		return -EBADF;
+> -
+> -	ret = vfs_getattr(&f.file->f_path, &stat);
+> -	if (ret)
+> -		goto out;
+> -
+> -	if (stat.size > INT_MAX) {
+> -		ret = -EFBIG;
+> -		goto out;
+> -	}
+> -
+> -	/* Don't hand 0 to vmalloc, it whines. */
+> -	if (stat.size == 0) {
+> -		ret = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	*buf = vmalloc(stat.size);
+> -	if (!*buf) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> -
+> -	pos = 0;
+> -	while (pos < stat.size) {
+> -		bytes = kernel_read(f.file, pos, (char *)(*buf) + pos,
+> -				    stat.size - pos);
+> -		if (bytes < 0) {
+> -			vfree(*buf);
+> -			ret = bytes;
+> -			goto out;
+> -		}
+> -
+> -		if (bytes == 0)
+> -			break;
+> -		pos += bytes;
+> -	}
+> -
+> -	if (pos != stat.size) {
+> -		ret = -EBADF;
+> -		vfree(*buf);
+> -		goto out;
+> -	}
+> -
+> -	*buf_len = pos;
+> -out:
+> -	fdput(f);
+> -	return ret;
+> -}
+> -
+>  /* Architectures can provide this probe function */
+>  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+>  					 unsigned long buf_len)
+> @@ -180,16 +122,17 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  {
+>  	int ret = 0;
+>  	void *ldata;
+> +	loff_t size;
+>  
+> -	ret = copy_file_from_fd(kernel_fd, &image->kernel_buf,
+> -				&image->kernel_buf_len);
+> +	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+> +				       &size, INT_MAX, READING_KEXEC_IMAGE);
+>  	if (ret)
+>  		return ret;
+> +	image->kernel_buf_len = size;
+>  
+>  	/* Call arch image probe handlers */
+>  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
+>  					    image->kernel_buf_len);
+> -
+>  	if (ret)
+>  		goto out;
+>  
+> @@ -204,10 +147,12 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  #endif
+>  	/* It is possible that there no initramfs is being loaded */
+>  	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+> -		ret = copy_file_from_fd(initrd_fd, &image->initrd_buf,
+> -					&image->initrd_buf_len);
+> +		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+> +					       &size, INT_MAX,
+> +					       READING_KEXEC_INITRAMFS);
+>  		if (ret)
+>  			goto out;
+> +		image->initrd_buf_len = size;
+>  	}
+>  
+>  	if (cmdline_len) {
 
-Hmm, agreed.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-> 
-> For example, changing the data we pass in the SETUP_EFI chain is a bad
-> idea becuase you then have to care about exactly which kernel version
-> you kexec loaded.
-> 
-> > Another way is we probably can retain the boot service areas for kexec
-> > boot, but yes it is another special handling for kexec :(. Is this way
-> > better to you?
-> 
-> Unfortunately retaining Boot Services areas is infeasible because they
-> can be *really* large, i.e. multiple gigabytes in size.
-
-Yes, rethink about this issue, how about something like below:
----
-
-For kexec reboot the bgrt image address could contains random data because
-we have freed boot service areas in 1st kernel boot phase. One possible
-result is kmalloc fail in efi_bgrt_init due to large random image size.
-
-bgrt table finished it's task after copying bgrt image thus let's
-change the table status to be invalid at the end of efi_bgrt_init. 
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- arch/x86/platform/efi/efi-bgrt.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- linux-x86.orig/arch/x86/platform/efi/efi-bgrt.c
-+++ linux-x86/arch/x86/platform/efi/efi-bgrt.c
-@@ -107,4 +107,10 @@ void __init efi_bgrt_init(void)
- 	memcpy_fromio(bgrt_image, image, bgrt_image_size);
- 	if (ioremapped)
- 		early_iounmap(image, bmp_header.size);
-+
-+	/*
-+	 * Invalidate bgrt table because kexec reboot will access the bgrt image
-+	 * which stays in freed boot service area.
-+	 */
-+	bgrt_tab->status &= 0xfe;
- }
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
