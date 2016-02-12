@@ -1,26 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from e28smtp07.in.ibm.com ([125.16.236.7])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aUIVI-0007GY-Ti
- for kexec@lists.infradead.org; Fri, 12 Feb 2016 18:31:43 +0000
+ id 1aUIVX-0007Pu-La
+ for kexec@lists.infradead.org; Fri, 12 Feb 2016 18:31:57 +0000
 Received: from localhost
  by e28smtp07.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Sat, 13 Feb 2016 00:01:15 +0530
+ Sat, 13 Feb 2016 00:01:36 +0530
 Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
  by d28relay03.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u1CIVBio1245570
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:01:11 +0530
+ u1CIVXAe000370
+ for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:01:33 +0530
 Received: from d28av05.in.ibm.com (localhost [127.0.0.1])
  by d28av05.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u1CIV7fY032344
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:01:10 +0530
+ u1CIVQX0000516
+ for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:01:28 +0530
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v4 08/19] ima: define a new hook to measure and appraise a
- file already in memory
-Date: Fri, 12 Feb 2016 13:29:20 -0500
-Message-Id: <1455301771-7703-9-git-send-email-zohar@linux.vnet.ibm.com>
+Subject: [PATCH v4 11/19] security: define kernel_read_file hook
+Date: Fri, 12 Feb 2016 13:29:23 -0500
+Message-Id: <1455301771-7703-12-git-send-email-zohar@linux.vnet.ibm.com>
 In-Reply-To: <1455301771-7703-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1455301771-7703-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -39,285 +38,176 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
 Cc: Kees Cook <keescook@chromium.org>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-This patch defines a new IMA hook ima_post_read_file() for measuring
-and appraising files read by the kernel. The caller loads the file into
-memory before calling this function, which calculates the hash followed by
-the normal IMA policy based processing.
-
-Changelog v3:
-- rename ima_hash_and_process_file() to ima_post_read_file()
-
-v1:
-- split patch
+The kernel_read_file security hook is called prior to reading the file
+into memory.
 
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Acked-by: Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Luis R. Rodriguez <mcgrof@kernel.org>
+Acked-by: Casey Schaufler <casey@schaufler-ca.com>
 ---
- include/linux/ima.h                   |  8 +++++++
- include/linux/security.h              |  1 +
- security/integrity/ima/ima.h          |  4 +++-
- security/integrity/ima/ima_api.c      |  6 +++--
- security/integrity/ima/ima_appraise.c |  2 +-
- security/integrity/ima/ima_main.c     | 45 ++++++++++++++++++++++++++++-------
- security/integrity/ima/ima_policy.c   |  1 +
- security/integrity/integrity.h        |  7 ++++--
- security/security.c                   |  7 +++++-
- 9 files changed, 66 insertions(+), 15 deletions(-)
+ fs/exec.c                         |  4 ++++
+ include/linux/ima.h               |  6 ++++++
+ include/linux/lsm_hooks.h         |  8 ++++++++
+ include/linux/security.h          |  7 +++++++
+ security/integrity/ima/ima_main.c | 16 ++++++++++++++++
+ security/security.c               | 12 ++++++++++++
+ 6 files changed, 53 insertions(+)
 
+diff --git a/fs/exec.c b/fs/exec.c
+index 67816a0..78dfdf3 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -842,6 +842,10 @@ int kernel_read_file(struct file *file, void **buf, loff_t *size,
+ 	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
+ 		return -EINVAL;
+ 
++	ret = security_kernel_read_file(file, id);
++	if (ret)
++		return ret;
++
+ 	i_size = i_size_read(file_inode(file));
+ 	if (max_size > 0 && i_size > max_size)
+ 		return -EFBIG;
 diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 120ccc5..d29a6a2 100644
+index 7aea486..6adcaea 100644
 --- a/include/linux/ima.h
 +++ b/include/linux/ima.h
-@@ -20,6 +20,8 @@ extern void ima_file_free(struct file *file);
+@@ -19,6 +19,7 @@ extern int ima_file_check(struct file *file, int mask, int opened);
+ extern void ima_file_free(struct file *file);
  extern int ima_file_mmap(struct file *file, unsigned long prot);
  extern int ima_module_check(struct file *file);
- extern int ima_fw_from_file(struct file *file, char *buf, size_t size);
-+extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
-+			      enum kernel_read_file_id id);
++extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
+ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 			      enum kernel_read_file_id id);
  
- #else
- static inline int ima_bprm_check(struct linux_binprm *bprm)
-@@ -52,6 +54,12 @@ static inline int ima_fw_from_file(struct file *file, char *buf, size_t size)
+@@ -48,6 +49,11 @@ static inline int ima_module_check(struct file *file)
  	return 0;
  }
  
-+static inline int ima_post_read_file(struct file *file, void *buf, loff_t size,
-+				     enum kernel_read_file_id id)
++static inline int ima_read_file(struct file *file, enum kernel_read_file_id id)
 +{
 +	return 0;
 +}
 +
- #endif /* CONFIG_IMA */
- 
- #ifdef CONFIG_IMA_APPRAISE
+ static inline int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 				     enum kernel_read_file_id id)
+ {
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 7d04a12..d32b7bd 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -552,6 +552,12 @@
+  *	the kernel module to load. If the module is being loaded from a blob,
+  *	this argument will be NULL.
+  *	Return 0 if permission is granted.
++ * @kernel_read_file:
++ *	Read a file specified by userspace.
++ *	@file contains the file structure pointing to the file being read
++ *	by the kernel.
++ *	@id kernel read file identifier
++ *	Return 0 if permission is granted.
+  * @kernel_post_read_file:
+  *	Read a file specified by userspace.
+  *	@file contains the file structure pointing to the file being read
+@@ -1455,6 +1461,7 @@ union security_list_options {
+ 	int (*kernel_create_files_as)(struct cred *new, struct inode *inode);
+ 	int (*kernel_module_request)(char *kmod_name);
+ 	int (*kernel_module_from_file)(struct file *file);
++	int (*kernel_read_file)(struct file *file, enum kernel_read_file_id id);
+ 	int (*kernel_post_read_file)(struct file *file, char *buf, loff_t size,
+ 				     enum kernel_read_file_id id);
+ 	int (*task_fix_setuid)(struct cred *new, const struct cred *old,
+@@ -1715,6 +1722,7 @@ struct security_hook_heads {
+ 	struct list_head cred_transfer;
+ 	struct list_head kernel_act_as;
+ 	struct list_head kernel_create_files_as;
++	struct list_head kernel_read_file;
+ 	struct list_head kernel_post_read_file;
+ 	struct list_head kernel_module_request;
+ 	struct list_head kernel_module_from_file;
 diff --git a/include/linux/security.h b/include/linux/security.h
-index b68ce94..d920718 100644
+index cee1349..071fb74 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -24,6 +24,7 @@
- 
- #include <linux/key.h>
- #include <linux/capability.h>
-+#include <linux/fs.h>
- #include <linux/slab.h>
- #include <linux/err.h>
- #include <linux/string.h>
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 2c5262f..0b7134c 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -19,6 +19,7 @@
- 
- #include <linux/types.h>
- #include <linux/crypto.h>
-+#include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/hash.h>
- #include <linux/tpm.h>
-@@ -152,7 +153,8 @@ enum ima_hooks {
- int ima_get_action(struct inode *inode, int mask, enum ima_hooks func);
- int ima_must_measure(struct inode *inode, int mask, enum ima_hooks func);
- int ima_collect_measurement(struct integrity_iint_cache *iint,
--			    struct file *file, enum hash_algo algo);
-+			    struct file *file, void *buf, loff_t size,
-+			    enum hash_algo algo);
- void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   const unsigned char *filename,
- 			   struct evm_ima_xattr_data *xattr_value,
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index 8750254..370e42d 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -188,7 +188,8 @@ int ima_get_action(struct inode *inode, int mask, enum ima_hooks func)
-  * Return 0 on success, error code otherwise
-  */
- int ima_collect_measurement(struct integrity_iint_cache *iint,
--			    struct file *file, enum hash_algo algo)
-+			    struct file *file, void *buf, loff_t size,
-+			    enum hash_algo algo)
- {
- 	const char *audit_cause = "failed";
- 	struct inode *inode = file_inode(file);
-@@ -210,7 +211,8 @@ int ima_collect_measurement(struct integrity_iint_cache *iint,
- 
- 		hash.hdr.algo = algo;
- 
--		result = ima_calc_file_hash(file, &hash.hdr);
-+		result = (!buf) ?  ima_calc_file_hash(file, &hash.hdr) :
-+			ima_calc_buffer_hash(buf, size, &hash.hdr);
- 		if (!result) {
- 			int length = sizeof(hash.hdr) + hash.hdr.length;
- 			void *tmpbuf = krealloc(iint->ima_hash, length,
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 2888449..cb0d0ff 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -300,7 +300,7 @@ void ima_update_xattr(struct integrity_iint_cache *iint, struct file *file)
- 	if (iint->flags & IMA_DIGSIG)
- 		return;
- 
--	rc = ima_collect_measurement(iint, file, ima_hash_algo);
-+	rc = ima_collect_measurement(iint, file, NULL, 0, ima_hash_algo);
- 	if (rc < 0)
- 		return;
- 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 1be99a2..cfb508b 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -153,8 +153,8 @@ void ima_file_free(struct file *file)
- 	ima_check_last_writer(iint, inode, file);
- }
- 
--static int process_measurement(struct file *file, int mask,
--			       enum ima_hooks func, int opened)
-+static int process_measurement(struct file *file, char *buf, loff_t size,
-+			       int mask, enum ima_hooks func, int opened)
- {
- 	struct inode *inode = file_inode(file);
- 	struct integrity_iint_cache *iint = NULL;
-@@ -226,7 +226,7 @@ static int process_measurement(struct file *file, int mask,
- 
- 	hash_algo = ima_get_hash_algo(xattr_value, xattr_len);
- 
--	rc = ima_collect_measurement(iint, file, hash_algo);
-+	rc = ima_collect_measurement(iint, file, buf, size, hash_algo);
- 	if (rc != 0) {
- 		if (file->f_flags & O_DIRECT)
- 			rc = (iint->flags & IMA_PERMIT_DIRECTIO) ? 0 : -EACCES;
-@@ -273,7 +273,8 @@ out:
- int ima_file_mmap(struct file *file, unsigned long prot)
- {
- 	if (file && (prot & PROT_EXEC))
--		return process_measurement(file, MAY_EXEC, MMAP_CHECK, 0);
-+		return process_measurement(file, NULL, 0, MAY_EXEC,
-+					   MMAP_CHECK, 0);
+@@ -302,6 +302,7 @@ int security_kernel_act_as(struct cred *new, u32 secid);
+ int security_kernel_create_files_as(struct cred *new, struct inode *inode);
+ int security_kernel_module_request(char *kmod_name);
+ int security_kernel_module_from_file(struct file *file);
++int security_kernel_read_file(struct file *file, enum kernel_read_file_id id);
+ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
+ 				   enum kernel_read_file_id id);
+ int security_task_fix_setuid(struct cred *new, const struct cred *old,
+@@ -863,6 +864,12 @@ static inline int security_kernel_module_from_file(struct file *file)
  	return 0;
  }
  
-@@ -292,7 +293,8 @@ int ima_file_mmap(struct file *file, unsigned long prot)
-  */
- int ima_bprm_check(struct linux_binprm *bprm)
- {
--	return process_measurement(bprm->file, MAY_EXEC, BPRM_CHECK, 0);
-+	return process_measurement(bprm->file, NULL, 0, MAY_EXEC,
-+				   BPRM_CHECK, 0);
++static inline int security_kernel_read_file(struct file *file,
++					    enum kernel_read_file_id id)
++{
++	return 0;
++}
++
+ static inline int security_kernel_post_read_file(struct file *file,
+ 						 char *buf, loff_t size,
+ 						 enum kernel_read_file_id id)
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index bf53a70..80c24aa 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -338,6 +338,22 @@ int ima_module_check(struct file *file)
  }
  
  /**
-@@ -307,7 +309,7 @@ int ima_bprm_check(struct linux_binprm *bprm)
-  */
- int ima_file_check(struct file *file, int mask, int opened)
- {
--	return process_measurement(file,
-+	return process_measurement(file, NULL, 0,
- 				   mask & (MAY_READ | MAY_WRITE | MAY_EXEC),
- 				   FILE_CHECK, opened);
- }
-@@ -332,7 +334,7 @@ int ima_module_check(struct file *file)
- #endif
- 		return 0;	/* We rely on module signature checking */
- 	}
--	return process_measurement(file, MAY_EXEC, MODULE_CHECK, 0);
-+	return process_measurement(file, NULL, 0, MAY_EXEC, MODULE_CHECK, 0);
- }
- 
- int ima_fw_from_file(struct file *file, char *buf, size_t size)
-@@ -343,7 +345,34 @@ int ima_fw_from_file(struct file *file, char *buf, size_t size)
- 			return -EACCES;	/* INTEGRITY_UNKNOWN */
- 		return 0;
- 	}
--	return process_measurement(file, MAY_EXEC, FIRMWARE_CHECK, 0);
-+	return process_measurement(file, NULL, 0, MAY_EXEC, FIRMWARE_CHECK, 0);
++ * ima_read_file - pre-measure/appraise hook decision based on policy
++ * @file: pointer to the file to be measured/appraised/audit
++ * @read_id: caller identifier
++ *
++ * Permit reading a file based on policy. The policy rules are written
++ * in terms of the policy identifier.  Appraising the integrity of
++ * a file requires a file descriptor.
++ *
++ * For permission return 0, otherwise return -EACCES.
++ */
++int ima_read_file(struct file *file, enum kernel_read_file_id read_id)
++{
++	return 0;
 +}
 +
 +/**
-+ * ima_post_read_file - in memory collect/appraise/audit measurement
-+ * @file: pointer to the file to be measured/appraised/audit
-+ * @buf: pointer to in memory file contents
-+ * @size: size of in memory file contents
-+ * @read_id: caller identifier
-+ *
-+ * Measure/appraise/audit in memory file based on policy.  Policy rules
-+ * are written in terms of a policy identifier.
-+ *
-+ * On success return 0.  On integrity appraisal error, assuming the file
-+ * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
-+ */
-+int ima_post_read_file(struct file *file, void *buf, loff_t size,
-+		       enum kernel_read_file_id read_id)
-+{
-+	enum ima_hooks func = FILE_CHECK;
-+
-+	if (!file && (!buf || size == 0)) { /* should never happen */
-+		if (ima_appraise & IMA_APPRAISE_ENFORCE)
-+			return -EACCES;
-+		return 0;
-+	}
-+
-+	return process_measurement(file, buf, size, MAY_READ, func, 0);
- }
- 
- static int __init init_ima(void)
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index b089ebe..cfbe86f 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -12,6 +12,7 @@
-  */
- #include <linux/module.h>
- #include <linux/list.h>
-+#include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/magic.h>
- #include <linux/parser.h>
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 5efe2ec..9a0ea4c 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -49,12 +49,14 @@
- #define IMA_MODULE_APPRAISED	0x00008000
- #define IMA_FIRMWARE_APPRAISE	0x00010000
- #define IMA_FIRMWARE_APPRAISED	0x00020000
-+#define IMA_READ_APPRAISE	0x00040000
-+#define IMA_READ_APPRAISED	0x00080000
- #define IMA_APPRAISE_SUBMASK	(IMA_FILE_APPRAISE | IMA_MMAP_APPRAISE | \
- 				 IMA_BPRM_APPRAISE | IMA_MODULE_APPRAISE | \
--				 IMA_FIRMWARE_APPRAISE)
-+				 IMA_FIRMWARE_APPRAISE | IMA_READ_APPRAISE)
- #define IMA_APPRAISED_SUBMASK	(IMA_FILE_APPRAISED | IMA_MMAP_APPRAISED | \
- 				 IMA_BPRM_APPRAISED | IMA_MODULE_APPRAISED | \
--				 IMA_FIRMWARE_APPRAISED)
-+				 IMA_FIRMWARE_APPRAISED | IMA_READ_APPRAISED)
- 
- enum evm_ima_xattr_type {
- 	IMA_XATTR_DIGEST = 0x01,
-@@ -111,6 +113,7 @@ struct integrity_iint_cache {
- 	enum integrity_status ima_bprm_status:4;
- 	enum integrity_status ima_module_status:4;
- 	enum integrity_status ima_firmware_status:4;
-+	enum integrity_status ima_read_status:4;
- 	enum integrity_status evm_status:4;
- 	struct ima_digest_data *ima_hash;
- };
+  * ima_post_read_file - in memory collect/appraise/audit measurement
+  * @file: pointer to the file to be measured/appraised/audit
+  * @buf: pointer to in memory file contents
 diff --git a/security/security.c b/security/security.c
-index 796a261..ad87e8d 100644
+index 81a4c3a..1728fe2 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -913,7 +913,12 @@ int security_kernel_module_from_file(struct file *file)
+@@ -899,6 +899,16 @@ int security_kernel_module_from_file(struct file *file)
+ 	return ima_module_check(file);
+ }
+ 
++int security_kernel_read_file(struct file *file, enum kernel_read_file_id id)
++{
++	int ret;
++
++	ret = call_int_hook(kernel_read_file, 0, file, id);
++	if (ret)
++		return ret;
++	return ima_read_file(file, id);
++}
++
  int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
  				   enum kernel_read_file_id id)
  {
--	return call_int_hook(kernel_post_read_file, 0, file, buf, size, id);
-+	int ret;
-+
-+	ret = call_int_hook(kernel_post_read_file, 0, file, buf, size, id);
-+	if (ret)
-+		return ret;
-+	return ima_post_read_file(file, buf, size, id);
- }
- 
- int security_task_fix_setuid(struct cred *new, const struct cred *old,
+@@ -1695,6 +1705,8 @@ struct security_hook_heads security_hook_heads = {
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_module_request),
+ 	.kernel_module_from_file =
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_module_from_file),
++	.kernel_read_file =
++		LIST_HEAD_INIT(security_hook_heads.kernel_read_file),
+ 	.kernel_post_read_file =
+ 		LIST_HEAD_INIT(security_hook_heads.kernel_post_read_file),
+ 	.task_fix_setuid =
 -- 
 2.1.0
 
