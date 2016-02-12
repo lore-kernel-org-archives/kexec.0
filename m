@@ -1,33 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+Received: from e28smtp08.in.ibm.com ([125.16.236.8])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aUDeH-0002b1-57
- for kexec@lists.infradead.org; Fri, 12 Feb 2016 13:20:37 +0000
+ id 1aUIU3-0005m8-T1
+ for kexec@lists.infradead.org; Fri, 12 Feb 2016 18:30:25 +0000
 Received: from localhost
- by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp08.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 12 Feb 2016 23:10:06 +1000
-Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id 031362BB0057
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:10:02 +1100 (EST)
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u1CD9luf49938618
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:09:55 +1100
-Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
- by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u1CD9TlA026320
- for <kexec@lists.infradead.org>; Sat, 13 Feb 2016 00:09:29 +1100
-Message-ID: <1455282548.2544.22.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 19/22] ima: support for kexec image and initramfs
+ Fri, 12 Feb 2016 23:59:58 +0530
+Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
+ by d28relay02.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u1CITg1s5833084
+ for <kexec@lists.infradead.org>; Fri, 12 Feb 2016 23:59:44 +0530
+Received: from d28av05.in.ibm.com (localhost [127.0.0.1])
+ by d28av05.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u1CITli8029619
+ for <kexec@lists.infradead.org>; Fri, 12 Feb 2016 23:59:50 +0530
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Fri, 12 Feb 2016 08:09:08 -0500
-In-Reply-To: <20160212125333.GC7051@dhcp-128-65.nay.redhat.com>
-References: <1454526390-19792-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1454526390-19792-20-git-send-email-zohar@linux.vnet.ibm.com>
- <20160212125333.GC7051@dhcp-128-65.nay.redhat.com>
-Mime-Version: 1.0
+Subject: [PATCH v4 00/19] vfs: support for a common kernel file loader
+Date: Fri, 12 Feb 2016 13:29:12 -0500
+Message-Id: <1455301771-7703-1-git-send-email-zohar@linux.vnet.ibm.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,52 +33,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Rusty Russell <rusty@rustcorp.com.au>, Kees Cook <keescook@chromium.org>, fsdevel@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, kexec@lists.infradead.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, David Woodhouse <dwmw2@infradead.org>, linux-modules@vger.kernel.org
+To: linux-security-module <linux-security-module@vger.kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, "Luis R. Rodriguez" <mcgrof@suse.com>, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, linux-modules@vger.kernel.org
 
-On Fri, 2016-02-12 at 20:53 +0800, Dave Young wrote:
-> Hi, Mimi
-> 
-> > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> > index a5d2592..832e62a 100644
-> > --- a/security/integrity/ima/ima.h
-> > +++ b/security/integrity/ima/ima.h
-> > @@ -147,6 +147,8 @@ enum ima_hooks {
-> >  	POST_SETATTR,
-> >  	MODULE_CHECK,
-> >  	FIRMWARE_CHECK,
-> > +	KEXEC_CHECK,
-> > +	INITRAMFS_CHECK,
-> 
-> KEXEC_CHECK is actually kexec kernel image check, INITRAMFS_CHECK is for
-> kexec initramfs check, they are both for checking kexec loaded files.
-> 
-> Do you mind a longer id like KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK?
+For a while it was looked down upon to directly read files from Linux.
+These days there exists a few mechanisms in the kernel that do just this
+though to load a file into a local buffer. There are minor but important
+checks differences on each, we should take all the best practices from
+each of them, generalize them and make all places in the kernel that
+read a file use it.[1]
 
-These are the IMA policy tokens.  Currently the IMA policy would include
-these KEXEC rules, where "appraise_type=imasig" indicates requiring a
-signature as opposed to a hash.
+One difference is the method for opening the file.  In some cases we
+have a file, while in other cases we have a pathname or a file descriptor.
 
-measure func=KEXEC_CHECK
-appraise func=KEXEC_CHECK appraise_type=imasig
-#
-measure func=INITRAMFS_CHECK
-appraise func=INITRAMFS_CHECK appraise_type=imasig
+Another difference is the security hook calls, or lack of them.  In
+some versions there is a post file read hook, while in others there
+is a pre file read hook. 
 
-I'll change these IMA policy identifiers to the longer names you
-suggested.
+This patch set attempts to resolve these differences.  It does not attempt
+to merge the different methods of opening a file, but defines a single
+common kernel file read function with two wrappers. In addition, as none
+of the upstreamed LSMs define either a kernel_module_from_file or a
+kernel_fw_from_file hook, this patch set removes these hooks and the
+associated functions.  The ima_module_check() and ima_fw_from_file()
+functions are renamed and called from the pre and post kernel_read_file
+security functions respectively.
 
-thanks,
+Changelog:
+- First four IMA patches removed from this patch set.
+- Cleaned up the kernel_read_file_id to ima_hooks enumeration mapping.
+- Renamed the kexec IMA policy identifiers.
+- Added missing include file for other architectures.
+- Rebased on top of some of the "firmware_class: extensible firmware API"
+patches posted by Luis.
+- Removed the kernel_module_from_file and kernel_fw_from_file security
+hooks and functions.
+- Defined "kernel_read_file_id" enumeration, independently of "ima_hooks".
+- Split patches for ease of review.
+
+The latest version of these patches can be found in the next-kernel-read
+branch of:
+git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+
+[1] Taken from Luis Rodriguez's wiki -
+http://kernelnewbies.org/KernelProjects/common-kernel-loader
 
 Mimi
 
-> >  	MAX_CHECK
-> >  };
-> >  
-> 
-> Thanks
-> Dave
+Dmitry Kasatkin (2):
+  ima: provide buffer hash calculation function
+  ima: load policy using path
 
+Kees Cook (1):
+  firmware: clean up filesystem load exit path
+
+Luis R. Rodriguez (2):
+  firmware: simplify dev_*() print messages for generic helpers
+  firmware: move completing fw into a helper
+
+Mimi Zohar (14):
+  vfs: define a generic function to read a file from the kernel
+  vfs: define kernel_read_file_id enumeration
+  ima: calculate the hash of a buffer using aynchronous hash(ahash)
+  ima: define a new hook to measure and appraise a file already in
+    memory
+  vfs: define kernel_read_file_from_path
+  firmware: replace call to fw_read_file_contents() with kernel version
+  security: define kernel_read_file hook
+  vfs: define kernel_copy_file_from_fd()
+  module: replace copy_module_from_fd with kernel version
+  ima: remove firmware and module specific cached status info
+  kexec: replace call to copy_file_from_fd() with kernel version
+  ima: support for kexec image and initramfs
+  ima: measure and appraise the IMA policy itself
+  ima: require signed IMA policy
+
+ Documentation/ABI/testing/ima_policy  |   1 +
+ drivers/base/firmware_class.c         |  74 +++++++--------------
+ fs/exec.c                             |  95 +++++++++++++++++++++++++++
+ include/linux/fs.h                    |  15 +++++
+ include/linux/ima.h                   |  10 +--
+ include/linux/lsm_hooks.h             |  35 +++++-----
+ include/linux/security.h              |  16 +++--
+ kernel/kexec_file.c                   |  73 +++------------------
+ kernel/module.c                       |  68 +++-----------------
+ security/integrity/iint.c             |   4 +-
+ security/integrity/ima/ima.h          |  13 +++-
+ security/integrity/ima/ima_api.c      |   6 +-
+ security/integrity/ima/ima_appraise.c |  37 +++++------
+ security/integrity/ima/ima_crypto.c   | 118 ++++++++++++++++++++++++++++++++++
+ security/integrity/ima/ima_fs.c       |  51 ++++++++++++++-
+ security/integrity/ima/ima_main.c     |  73 ++++++++++++++++-----
+ security/integrity/ima/ima_policy.c   |  41 ++++++++++--
+ security/integrity/integrity.h        |  15 ++---
+ security/security.c                   |  32 ++++-----
+ 19 files changed, 499 insertions(+), 278 deletions(-)
+
+-- 
+2.1.0
 
 
 _______________________________________________
