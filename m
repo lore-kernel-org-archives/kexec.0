@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-wm0-x235.google.com ([2a00:1450:400c:c09::235])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aVx5q-0007hQ-E7
- for kexec@lists.infradead.org; Wed, 17 Feb 2016 08:04:15 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 3/3] makedumpfile: Rewrite readpage_elf
-Date: Wed, 17 Feb 2016 07:58:10 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E1F5F6@BPXM01GP.gisp.nec.co.jp>
-References: <20160210084737.3060fb5a@hananiah.suse.cz>
- <20160210085009.4df4d14d@hananiah.suse.cz> <20160210221817.GJ382@ycc.fr>
-In-Reply-To: <20160210221817.GJ382@ycc.fr>
-Content-Language: ja-JP
-MIME-Version: 1.0
+ id 1aW4IJ-0006HL-PI
+ for kexec@lists.infradead.org; Wed, 17 Feb 2016 15:45:37 +0000
+Received: by mail-wm0-x235.google.com with SMTP id a4so34077114wme.1
+ for <kexec@lists.infradead.org>; Wed, 17 Feb 2016 07:45:13 -0800 (PST)
+From: Matt Fleming <matt@codeblueprint.co.uk>
+Subject: [PATCH 0/2] ACPI, x86/efi: Remove ACPI BGRT tables for kexec 
+Date: Wed, 17 Feb 2016 15:45:08 +0000
+Message-Id: <1455723910-16710-1-git-send-email-matt@codeblueprint.co.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,55 +17,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ivan Delalande <colona@arista.com>, Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>, linux-acpi@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Vivek Goyal <vgoyal@redhat.com>
 
->On Wed, Feb 10, 2016 at 08:50:09AM +0100, Petr Tesarik wrote:
->> The current code in readpage_elf (and readpage_elf_parallel) is extremely
->> hard to follow. Additionally, it still does not cover all possible cases.
->> For example, attempts to read outside of any ELF segment will end up with
->> phys_start being 0, frac_head a negative number, interpreted as a large
->> positive number by memset() and write past buffer end.
->>
->> Instead of trying to handle even more "corner cases", I rewrote the
->> algorithm from scratch. The basic idea is simple: set a goal to fill the
->> page buffer with data, then work towards that goal by:
->>
->>   - filling holes with zeroes (see Note below),
->>   - p_filesz portions with file data and
->>   - remaining p_memsz portions again with zeroes.
->>
->> Repeat this method for each LOAD until the goal is achieved, or an error
->> occurs. In most cases, the loop runs only once.
->>
->> Note: A "hole" is data at a physical address that is not covered by any
->> ELF LOAD program header. In other words, the ELF file does not specify
->> any data for such a hole (not even zeroes). So, why does makedumpfile
->> fill them with zeroes? It's because makedumpfile works with page
->> granularity (the compressed format does not even have a way to store
->> a partial page), so if only part of a page is stored, a complete page
->> must be provided to make this partial data accessible.
->>
->> Credits to Ivan Delalande <colona@arista.com> who first found the
->> problem and wrote the original fix.
->>
->> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
->
->Tested-by: Ivan Delalande <colona@arista.com>
->
->Dump-dmesg works well and gives the expected results with our various
->setups (x86_64 only). Thanks for your work Petr!
+Based on Dave's report that the BGRT image regions are being accessed
+on kexec reboot (which by that time contain garbage),
 
-Thanks for your great work, Petr and Ivan.
-I'll merge this patch set into v1.6.0.
+  https://lkml.kernel.org/r/20160127112044.GA2961@dhcp-128-65.nay.redhat.com
 
+the following patches simply delete the table when doing a kexec boot.
 
-Thanks,
-Atsushi Kumagai
+This is part of a wider compaign to stop kexec-specific code from
+leaking into all parts of arch/x86. Instead of sprinkling "if
+(efi_setup)", kexec should be shaping the platform information to more
+accurately describe which features are still available, so that
+existing drivers work transparently without kexec quirks.
+
+Matt Fleming (2):
+  ACPICA: Tables: Add function to remove ACPI tables
+  x86/efi: Delete ACPI BGRT when booting via kexec
+
+ arch/x86/include/asm/efi.h    |  1 +
+ arch/x86/kernel/setup.c       |  4 +++-
+ arch/x86/platform/efi/efi.c   | 38 ++++++++++++++++++++++++++++++
+ drivers/acpi/acpica/tbxface.c | 54 +++++++++++++++++++++++++++++++++++++++++++
+ include/acpi/acpixf.h         |  3 +++
+ 5 files changed, 99 insertions(+), 1 deletion(-)
+
+-- 
+2.6.2
+
 
 _______________________________________________
 kexec mailing list
