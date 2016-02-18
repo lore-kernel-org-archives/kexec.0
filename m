@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aWESn-0007yt-Rp
- for kexec@lists.infradead.org; Thu, 18 Feb 2016 02:37:07 +0000
-From: "Zheng, Lv" <lv.zheng@intel.com>
-Subject: RE: [PATCH 1/2] ACPICA: Tables: Add function to remove ACPI tables
-Date: Thu, 18 Feb 2016 02:34:46 +0000
-Message-ID: <1AE640813FDE7649BE1B193DEA596E883BB4D2A6@SHSMSX101.ccr.corp.intel.com>
-References: <1455723910-16710-1-git-send-email-matt@codeblueprint.co.uk>
- <1455723910-16710-2-git-send-email-matt@codeblueprint.co.uk>
-In-Reply-To: <1455723910-16710-2-git-send-email-matt@codeblueprint.co.uk>
-Content-Language: en-US
+Received: from mx4-phx2.redhat.com ([209.132.183.25])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aWS1F-0006rL-ES
+ for kexec@lists.infradead.org; Thu, 18 Feb 2016 17:05:35 +0000
+Date: Thu, 18 Feb 2016 12:05:11 -0500 (EST)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <649995246.30033929.1455815111557.JavaMail.zimbra@redhat.com>
+In-Reply-To: <349750156.30030224.1455814657685.JavaMail.zimbra@redhat.com>
+Subject: makedumpfile: 4.5 kernel commit breaks page filtering
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,168 +17,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matt Fleming <matt@codeblueprint.co.uk>, Dave Young <dyoung@redhat.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "Wysocki,
- Rafael J" <rafael.j.wysocki@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Josh Triplett <josh@joshtriplett.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, Vivek Goyal <vgoyal@redhat.com>
+To: ats-kumagai@wm.jp.nec.com
+Cc: Joe Lawrence <joe.lawrence@stratus.com>, Laurence Oberman <loberman@redhat.com>, kexec@lists.infradead.org, "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-Hi, 
-
-> From: linux-acpi-owner@vger.kernel.org [mailto:linux-acpi-
-> owner@vger.kernel.org] On Behalf Of Matt Fleming
-[Lv Zheng] 
-First, is it possible for you to submit an ACPICA patch instead of a Linux patch.
-The reasoning for doing this can be found at:
-https://acpica.org/Licensing
-
-> Subject: [PATCH 1/2] ACPICA: Tables: Add function to remove ACPI tables
-> 
-> There are existing internal functions that allow the removal of ACPI
-> tables, but they're not exposed to the OS in any useful way.
-> 
-> Introduce acpi_remove_table() which allows tables to be invalidated in
-> the global table list, resulting in failure of subsequent calls to
-> acpi_get_table() for those tables.
-> 
-> The rationale for this change is the ability to remove the BGRT table
-> during kexec boot. The BGRT table refers to memory regions that are no
-> longer reserved by the firmware once the kexec kernel boots, having
-> been released for general allocation by the previous kernel.
-> 
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: <kexec@lists.infradead.org>
-> Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-> ---
->  drivers/acpi/acpica/tbxface.c | 54
-> +++++++++++++++++++++++++++++++++++++++++++
->  include/acpi/acpixf.h         |  3 +++
->  2 files changed, 57 insertions(+)
-> 
-> diff --git a/drivers/acpi/acpica/tbxface.c b/drivers/acpi/acpica/tbxface.c
-> index 326df65decef..999eecd89601 100644
-> --- a/drivers/acpi/acpica/tbxface.c
-> +++ b/drivers/acpi/acpica/tbxface.c
-> @@ -480,3 +480,57 @@ cleanup:
->  }
-> 
->  ACPI_EXPORT_SYMBOL(acpi_remove_table_handler)
-> +
-> +/**************************************************************
-> *****************
-> + *
-> + * FUNCTION:    acpi_remove_table
-[Lv Zheng] 
-I'd prefer acpi_uninstall_table() in order to keep the consistencies of the function naming.
-There is in fact a state machine defined by the table manager design:
-UNINSTALLED - install -> INSTALLED/INVALIDATED - validate -> VALIDATED/UNLOADED - load -> LOADED
-LOADED -> unload -> UNLOADED/VALIDATED -> invalidate - INVALIDATED/INSTALLED -> uninstall -> UNINSTALLED
-
-> + *
-> + * PARAMETERS:  signature           - ACPI signature of needed table
-> + *              instance            - Which instance (for SSDTs)
-> + *
-> + * RETURN:      Status
-> + *
-> + * DESCRIPTION: Finds and removes an ACPI table.
-> + *
-> +
-> ****************************************************************
-> **************/
-> +acpi_status
-[Lv Zheng] 
-You need to put __init here.
-Otherwise another API (for example, acpi_unload_table()) should be provided instead of this.
-
-> acpi_remove_table(char *signature, u32 instance)
-[Lv Zheng] 
-I'm not sure if using instance is a good idea here.
-We have extensions not upstreamed that have something to do with the table indexing.
-But well, it doesn't look bad for now.
-
-> +{
-> +	struct acpi_table_desc *table_desc;
-> +	acpi_status status;
-> +	u32 i;
-> +	u32 j;
-> +
-> +	/* Parameter validation */
-> +	if (!signature) {
-> +		return (AE_BAD_PARAMETER);
-> +	}
-> +
-> +	/* Walk the root table list */
-> +
-> +	for (i = 0, j = 0; i < acpi_gbl_root_table_list.current_table_count;
-> +	     i++) {
-> +		if (!ACPI_COMPARE_NAME
-> +		    (&(acpi_gbl_root_table_list.tables[i].signature),
-> +		     signature)) {
-> +			continue;
-> +		}
-[Lv Zheng] 
-After removing a table, the instance no remains 2 for the next table of the same signature.
-Is it intentional?
-
-> +
-> +		if (++j < instance) {
-> +			continue;
-> +		}
-> +
-> +		table_desc = &acpi_gbl_root_table_list.tables[i];
-> +
-> +		status = acpi_tb_validate_table(table_desc);
-> +		if (ACPI_FAILURE(status)) {
-> +			return (status);
-> +		}
-[Lv Zheng] 
-You needn't invoke acpi_tb_validate_table() here.
-
-> +
-> +		acpi_tb_uninstall_table(table_desc);
-> +		return (AE_OK);
-> +	}
-> +
-> +	return (AE_NOT_FOUND);
-> +}
-> +
-> +ACPI_EXPORT_SYMBOL(acpi_remove_table);
-> diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
-> index c96621e87c19..47e51612293e 100644
-> --- a/include/acpi/acpixf.h
-> +++ b/include/acpi/acpixf.h
-> @@ -505,6 +505,9 @@ ACPI_EXTERNAL_RETURN_STATUS(acpi_status
->  ACPI_EXTERNAL_RETURN_STATUS(acpi_status
->  			     acpi_remove_table_handler(acpi_table_handler
->  						       handler))
-> +ACPI_EXTERNAL_RETURN_STATUS(acpi_status
-> +			     acpi_remove_table(acpi_string signature,
-> +					       u32 instance))
-> 
-[Lv Zheng] 
-It is better to move this declaration close to acpi_install_table().
-
-Thanks and best regards
--Lv
-
->  /*
->   * Namespace and name interfaces
-> --
-> 2.6.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpIZWxsbyBBdHN1c2hpLAoKSSd2ZSByZWNlbnRseSBoYWQgYSBjb3VwbGUgNC41LWVyYSB2bWNv
+cmVzIGlzc3VlcyByZXBvcnRlZCB0byBtZSBhcyBjcmFzaCBidWdzCmJlY2F1c2UgdGhleSBnZW5l
+cmF0ZSBudW1lcm91cyBpbml0aWFsaXphdGlvbi10aW1lIGVycm9ycyBvZiB0aGUgdHlwZToKCiAg
+Y3Jhc2g6IHBhZ2UgZXhjbHVkZWQ6IGtlcm5lbCB2aXJ0dWFsIGFkZHJlc3M6IGZmZmY4ODAwNzU0
+NTkwMDAgIHR5cGU6ICJmaWxsX3Rhc2tfc3RydWN0IgoKSW5pdGlhbGx5IEkgdGhvdWdodCBpdCB3
+YXMgcmVsYXRlZCB0byB0aGlzIGNyYXNoLTcuMS40IGZpeCB0aGF0IHlvdSBwb3N0ZWQ6CgogICAg
+Rml4IGZvciB0aGUgaGFuZGxpbmcgb2YgZHluYW1pY2FsbHktc2l6ZWQgdGFza19zdHJ1Y3Qgc3Ry
+dWN0dXJlcyBpbgogICAgTGludXggNC4yIGFuZCBsYXRlciBrZXJuZWxzLCB3aGljaCBjb250YWlu
+IHRoZXNlIGNvbW1pdHM6CiAgICAKICAgICAgY29tbWl0IDVhYWViNWMwMWM1YjZjMGJlN2I3YWFk
+YmYzYWNlOWYzYTQ0NThjM2QKICAgICAgeDg2L2ZwdSwgc2NoZWQ6IEludHJvZHVjZSBDT05GSUdf
+QVJDSF9XQU5UU19EWU5BTUlDX1RBU0tfU1RSVUNUIGFuZAogICAgICAgICAgICAgICAgICAgICAg
+dXNlIGl0IG9uIHg4NgogICAgICBjb21taXQgMGM4YzBmMDNlM2EyOTJlMDMxNTk2NDg0Mjc1YzE0
+Y2YzOWMwYWI3YQogICAgICB4ODYvZnB1LCBzY2hlZDogRHluYW1pY2FsbHkgYWxsb2NhdGUgJ3N0
+cnVjdCBmcHUnCiAgICAKICAgIFdpdGhvdXQgdGhlIHBhdGNoLCB3aGVuIHJ1bm5pbmcgb24gYSBm
+aWx0ZXJlZCBrZHVtcCBkdW1wZmlsZSwgaXQgaXMKICAgIHBvc3NpYmxlIHRoYXQgZXJyb3IgbWVz
+c2FnZXMgbGlrZSB0aGlzIHdpbGwgYmUgc2VlbiB3aGVuIGdhdGhlcmluZwogICAgdGhlIHRhc2tz
+IHJ1bm5pbmcgb24gYSBzeXN0ZW06ICJjcmFzaDogcGFnZSBleGNsdWRlZDoga2VybmVsIHZpcnR1
+YWwKICAgIGFkZHJlc3M6IDx0YXNrX3N0cnVjdCBhZGRyZXNzPiAgdHlwZTogImZpbGxfdGFza19z
+dHJ1Y3QiLgogICAgKGF0cy1rdW1hZ2FpQHdtLmpwLm5lYy5jb20pCgpCdXQgdXBvbiBmdXJ0aGVy
+IGludmVzdGlnYXRpb24gb2YgYSBzdXNwZWN0IHZtY29yZSwgdGhlcmUgYXJlIG1hbnkgb3RoZXIK
+InBhZ2UgZXhjbHVkZWQiIGVycm9ycyBmb3Igc2V2ZXJhbCBvdGhlciBkYXRhIHN0cnVjdHVyZSB0
+eXBlcy4gIEpvZSBMYXdyZW5jZQpvZiBTdHJhdHVzIGRpZCBzb21lIGtlcm5lbC1iaXNlY3Rpbmcs
+IGFuZCBuYXJyb3dlZCBpdCBkb3duIHRvIHRoaXMgcmVjZW50CjQuNSBjb21taXQ6CgogIGNvbW1p
+dCAxYzI5MGY2NDIxMDFlNjRmMzc5ZTM4ZWEwMzYxZDA5N2MwOGU4MjRkCiAgQXV0aG9yOiBLaXJp
+bGwgQS4gU2h1dGVtb3YgPGtpcmlsbC5zaHV0ZW1vdkBsaW51eC5pbnRlbC5jb20+CiAgRGF0ZTog
+ICBGcmkgSmFuIDE1IDE2OjUyOjA3IDIwMTYgLTA4MDAKCiAgICBtbTogc2FuaXRpemUgcGFnZS0+
+bWFwcGluZyBmb3IgdGFpbCBwYWdlcwogICAgCiAgICBXZSBkb24ndCBkZWZpbmUgbWVhbmluZyBv
+ZiBwYWdlLT5tYXBwaW5nIGZvciB0YWlsIHBhZ2VzLiAgQ3VycmVudGx5IGl0J3MKICAgIGFsd2F5
+cyBOVUxMLCB3aGljaCBjYW4gYmUgaW5jb25zaXN0ZW50IHdpdGggaGVhZCBwYWdlIGFuZCBwb3Rl
+bnRpYWxseQogICAgbGVhZCB0byBwcm9ibGVtcy4KICAgIAogICAgTGV0J3MgcG9pc29uIHRoZSBw
+b2ludGVyIHRvIGNhdGNoIGFsbCBpbGxpZ2FsIHVzZXMuCiAgICAKICAgIHBhZ2Vfcm1hcHBpbmco
+KSwgcGFnZV9tYXBwaW5nKCkgYW5kIHBhZ2VfYW5vbl92bWEoKSBhcmUgY2hhbmdlZCB0byBsb29r
+CiAgICBvbiBoZWFkIHBhZ2UuCiAgICAKICAgIFRoZSBvbmx5IGlsbGVnYWwgdXNlIEkndmUgY2F1
+Z2h0IHNvIGZhciBpcyBfX0dQRl9DT01QIHBhZ2VzIGZyb20gc291bmQKICAgIHN1YnN5c3RlbSwg
+bWFwcGVkIHdpdGggUFRFcy4gIGRvX3NoYXJlZF9mYXVsdCgpIGlzIGNoYW5nZWQgdG8gdXNlCiAg
+ICBwYWdlX3JtYXBwaW5nKCkgaW5zdGVhZCBvZiBkaXJlY3QgYWNjZXNzIHRvIGZhdWx0X3BhZ2Ut
+Pm1hcHBpbmcuCiAgICAKICAgIFNpZ25lZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2ly
+aWxsLnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4KICAgIFJldmlld2VkLWJ5OiBKw4PCqXLDg8K0
+bWUgR2xpc3NlIDxqZ2xpc3NlQHJlZGhhdC5jb20+CiAgICBDYzogQW5kcmVhIEFyY2FuZ2VsaSA8
+YWFyY2FuZ2VAcmVkaGF0LmNvbT4KICAgIENjOiBIdWdoIERpY2tpbnMgPGh1Z2hkQGdvb2dsZS5j
+b20+CiAgICBDYzogRGF2ZSBIYW5zZW4gPGRhdmUuaGFuc2VuQGludGVsLmNvbT4KICAgIENjOiBN
+ZWwgR29ybWFuIDxtZ29ybWFuQHN1c2UuZGU+CiAgICBDYzogUmlrIHZhbiBSaWVsIDxyaWVsQHJl
+ZGhhdC5jb20+CiAgICBDYzogVmxhc3RpbWlsIEJhYmthIDx2YmFia2FAc3VzZS5jej4KICAgIENj
+OiBDaHJpc3RvcGggTGFtZXRlciA8Y2xAbGludXguY29tPgogICAgQ2M6IE5hb3lhIEhvcmlndWNo
+aSA8bi1ob3JpZ3VjaGlAYWguanAubmVjLmNvbT4KICAgIENjOiBTdGV2ZSBDYXBwZXIgPHN0ZXZl
+LmNhcHBlckBsaW5hcm8ub3JnPgogICAgQ2M6ICJBbmVlc2ggS3VtYXIgSy5WIiA8YW5lZXNoLmt1
+bWFyQGxpbnV4LnZuZXQuaWJtLmNvbT4KICAgIENjOiBKb2hhbm5lcyBXZWluZXIgPGhhbm5lc0Bj
+bXB4Y2hnLm9yZz4KICAgIENjOiBNaWNoYWwgSG9ja28gPG1ob2Nrb0BzdXNlLmN6PgogICAgQ2M6
+IEplcm9tZSBNYXJjaGFuZCA8am1hcmNoYW5AcmVkaGF0LmNvbT4KICAgIFNpZ25lZC1vZmYtYnk6
+IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+CiAgICBTaWduZWQtb2Zm
+LWJ5OiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+CgpBbmQg
+cmVsYXRlZCB0byB0aGUgYWJvdmUsIGFuZCB0aGUgb25lIHRoYXQgYWZmZWN0cyBtYWtlZHVtcGZp
+bGUsIGlzIHRoaXMgb25lOgoKICBjb21taXQgODIyY2RkMTE1MjI2NWQ4N2ZjZmM5NzRlMDZjM2I2
+OGY3NjI5ODdmZAogIEF1dGhvcjogS2lyaWxsIEEuIFNodXRlbW92IDxraXJpbGwuc2h1dGVtb3ZA
+bGludXguaW50ZWwuY29tPgogIERhdGU6ICAgRnJpIEphbiAxNSAxNjo1MjowMyAyMDE2IC0wODAw
+CgogICAgcGFnZS1mbGFnczogbG9vayBhdCBoZWFkIHBhZ2UgaWYgdGhlIGZsYWcgaXMgZW5jb2Rl
+ZCBpbiBwYWdlLT5tYXBwaW5nCiAgICAKICAgIFBhZ2VBbm9uKCkgYW5kIFBhZ2VLc20oKSBsb29r
+IGF0IGxvd2VyIGJpdHMgb2YgcGFnZS0+bWFwcGluZyB0byBjaGVjayBpZgogICAgdGhlIHBhZ2Ug
+aXMgQW5vbiBvciBLU00uICBwYWdlLT5tYXBwaW5nIGNhbiBiZSBvdmVybG9hZGVkIGluIHRhaWwg
+cGFnZXMuCiAgICAKICAgIExldCdzIGFsd2F5cyBsb29rIGF0IGhlYWQgcGFnZSB0byBhdm9pZCBm
+YWxzZS1wb3NpdGl2ZXMuCiAgICAKICAgIFNpZ25lZC1vZmYtYnk6IEtpcmlsbCBBLiBTaHV0ZW1v
+diA8a2lyaWxsLnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4KICAgIENjOiBBbmRyZWEgQXJjYW5n
+ZWxpIDxhYXJjYW5nZUByZWRoYXQuY29tPgogICAgQ2M6IEh1Z2ggRGlja2lucyA8aHVnaGRAZ29v
+Z2xlLmNvbT4KICAgIENjOiBEYXZlIEhhbnNlbiA8ZGF2ZS5oYW5zZW5AaW50ZWwuY29tPgogICAg
+Q2M6IE1lbCBHb3JtYW4gPG1nb3JtYW5Ac3VzZS5kZT4KICAgIENjOiBSaWsgdmFuIFJpZWwgPHJp
+ZWxAcmVkaGF0LmNvbT4KICAgIENjOiBWbGFzdGltaWwgQmFia2EgPHZiYWJrYUBzdXNlLmN6Pgog
+ICAgQ2M6IENocmlzdG9waCBMYW1ldGVyIDxjbEBsaW51eC5jb20+CiAgICBDYzogTmFveWEgSG9y
+aWd1Y2hpIDxuLWhvcmlndWNoaUBhaC5qcC5uZWMuY29tPgogICAgQ2M6IFN0ZXZlIENhcHBlciA8
+c3RldmUuY2FwcGVyQGxpbmFyby5vcmc+CiAgICBDYzogIkFuZWVzaCBLdW1hciBLLlYiIDxhbmVl
+c2gua3VtYXJAbGludXgudm5ldC5pYm0uY29tPgogICAgQ2M6IEpvaGFubmVzIFdlaW5lciA8aGFu
+bmVzQGNtcHhjaGcub3JnPgogICAgQ2M6IE1pY2hhbCBIb2NrbyA8bWhvY2tvQHN1c2UuY3o+CiAg
+ICBDYzogSmVyb21lIE1hcmNoYW5kIDxqbWFyY2hhbkByZWRoYXQuY29tPgogICAgQ2M6IErDg8Kp
+csODwrRtZSBHbGlzc2UgPGpnbGlzc2VAcmVkaGF0LmNvbT4KICAgIFNpZ25lZC1vZmYtYnk6IEFu
+ZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+CiAgICBTaWduZWQtb2ZmLWJ5
+OiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+CgpkaWZmIC0t
+Z2l0IGEvaW5jbHVkZS9saW51eC9wYWdlLWZsYWdzLmggYi9pbmNsdWRlL2xpbnV4L3BhZ2UtZmxh
+Z3MuaAppbmRleCA4MThmYTM5Li4xOTBmMTkxIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L3Bh
+Z2UtZmxhZ3MuaAorKysgYi9pbmNsdWRlL2xpbnV4L3BhZ2UtZmxhZ3MuaApAQCAtMTc2LDcgKzE3
+Niw3IEBAIHN0YXRpYyBpbmxpbmUgaW50IFBhZ2VDb21wb3VuZChzdHJ1Y3QgcGFnZSAqcGFnZSkK
+ICNkZWZpbmUgUEZfTk9fVEFJTChwYWdlLCBlbmZvcmNlKSAoeyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgXAogICAgICAgICAgICAgICAgVk1fQlVHX09OX1BHRkxBR1MoZW5mb3Jj
+ZSAmJiBQYWdlVGFpbChwYWdlKSwgcGFnZSk7ICAgICBcCiAgICAgICAgICAgICAgICBjb21wb3Vu
+ZF9oZWFkKHBhZ2UpO30pCi0jZGVmaW5lIFBGX05PX0NPTVBPVU5EKHBhZ2UsIGVuZm9yY2UpICh7
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAorI2RlZmluZSBQRl9OT19D
+T01QT1VORChwYWdlLCBlbmZvcmNlKSAoeyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBc
+CiAgICAgICAgICAgICAgICBWTV9CVUdfT05fUEdGTEFHUyhlbmZvcmNlICYmIFBhZ2VDb21wb3Vu
+ZChwYWdlKSwgcGFnZSk7IFwKICAgICAgICAgICAgICAgIHBhZ2U7fSkKIApAQCAtMzgxLDYgKzM4
+MSw3IEBAIFBBR0VGTEFHKElkbGUsIGlkbGUsIFBGX0FOWSkKIAogc3RhdGljIGlubGluZSBpbnQg
+UGFnZUFub24oc3RydWN0IHBhZ2UgKnBhZ2UpCiB7CisgICAgICAgcGFnZSA9IGNvbXBvdW5kX2hl
+YWQocGFnZSk7CiAgICAgICAgcmV0dXJuICgodW5zaWduZWQgbG9uZylwYWdlLT5tYXBwaW5nICYg
+UEFHRV9NQVBQSU5HX0FOT04pICE9IDA7CiB9CiAKQEAgLTM5Myw2ICszOTQsNyBAQCBzdGF0aWMg
+aW5saW5lIGludCBQYWdlQW5vbihzdHJ1Y3QgcGFnZSAqcGFnZSkKICAqLwogc3RhdGljIGlubGlu
+ZSBpbnQgUGFnZUtzbShzdHJ1Y3QgcGFnZSAqcGFnZSkKIHsKKyAgICAgICBwYWdlID0gY29tcG91
+bmRfaGVhZChwYWdlKTsKICAgICAgICByZXR1cm4gKCh1bnNpZ25lZCBsb25nKXBhZ2UtPm1hcHBp
+bmcgJiBQQUdFX01BUFBJTkdfRkxBR1MpID09CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgKFBBR0VfTUFQUElOR19BTk9OIHwgUEFHRV9NQVBQSU5HX0tTTSk7CiB9CgpOb3RlIHRoYXQg
+UEFHRV9NQVBQSU5HX0FOT04gaXMgbm93IG9ubHkgc2V0IGluIHRoZSBjb21wb3VuZF9oZWFkIHBh
+Z2UsCnNvIHdoZW4gbWFrZWR1bXBmaWxlIHdhbGtzIHRob3VnaCB0aGUgcGFnZXMsIGl0IHdpbGwg
+aGF2ZSB0byBsb29rCmF0IGVhY2ggcGFnZSdzIGhlYWQgcGFnZSBmb3IgdGhlIGJpdCBzZXR0aW5n
+LgoKQXMgaXQgaXMgbm93LCBtYWtlZHVtcGZpbGUgcnVucyBhbW9rIGZpbHRlcmluZyBwYWdlcyB0
+aGF0IHN0aWxsIGhhdmUKc3R1ZmYgbGVmdCBpbiBwYWdlLT5tYXBwaW5nLiAgRm9yIGV4YW1wbGUs
+IGFsbCBvZiB0aGUgYWRkcmVzc2VzIGluCm15ICJmaWx0ZXJlZC5saXN0IiBpbnB1dCBmaWxlIGFy
+ZSB0aG9zZSBvZiBsZWdpdGltYXRlIGtlcm5lbCBkYXRhIApzdHJ1Y3R1cmVzIHRoYXQgaGF2ZSBi
+ZWVuIGluY29ycmVjdGx5IGZpbHRlcmVkIGJlY2F1c2UgUEFHRV9NQVBQSU5HX0FOT04gCihiaXQg
+MSkgaGFzIGJlZW4gbGVmdCBzZXQ6CgpjcmFzaD4ga21lbSAtcCA8IGZpbHRlcmVkLmxpc3QKICAg
+ICAgUEFHRSAgICAgICAgUEhZU0lDQUwgICAgICBNQVBQSU5HICAgICAgIElOREVYIENOVCBGTEFH
+UwpmZmZmZWEwMDExYjI5MDQwIDQ2Y2E0MTAwMCBkZWFkMDAwMGZmZmZmZmZmICAgICAgICAwICAw
+IDNmZmZmODAwMDAwMDAwCiAgICAgIFBBR0UgICAgICAgIFBIWVNJQ0FMICAgICAgTUFQUElORyAg
+ICAgICBJTkRFWCBDTlQgRkxBR1MKZmZmZmVhMDAxMWIyOTA0MCA0NmNhNDEwMDAgZGVhZDAwMDBm
+ZmZmZmZmZiAgICAgICAgMCAgMCAzZmZmZjgwMDAwMDAwMAogICAgICBQQUdFICAgICAgICBQSFlT
+SUNBTCAgICAgIE1BUFBJTkcgICAgICAgSU5ERVggQ05UIEZMQUdTCmZmZmZlYTAwMTFiMjk2NDAg
+NDZjYTU5MDAwIGRlYWQwMDAwZmZmZmZmZmYgICAgICAgIDAgIDAgM2ZmZmY4MDAwMDAwMDAKICAg
+ICAgUEFHRSAgICAgICAgUEhZU0lDQUwgICAgICBNQVBQSU5HICAgICAgIElOREVYIENOVCBGTEFH
+UwpmZmZmZWEwMDExYjI5NjQwIDQ2Y2E1OTAwMCBkZWFkMDAwMGZmZmZmZmZmICAgICAgICAwICAw
+IDNmZmZmODAwMDAwMDAwCiAgICAgIFBBR0UgICAgICAgIFBIWVNJQ0FMICAgICAgTUFQUElORyAg
+ICAgICBJTkRFWCBDTlQgRkxBR1MKZmZmZmVhMDAwMWQ1MTY0MCAgNzU0NTkwMDAgZGVhZDAwMDBm
+ZmZmZmZmZiAgICAgICAgMCAgMCAxZmZmZjgwMDAwMDAwMAouLi4KCkluIGVhcmxpZXIga2VybmVs
+cywgdGhlIHBhZ2UtPm1hcHBpbmcgZmllbGRzIGFib3ZlIHdvdWxkIG5vdCBoYXZlCnRoZWlyIFBB
+R0VfTUFQUElOR19BTk9OIHNldC4KCkRhdmUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
