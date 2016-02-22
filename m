@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail9.hitachi.co.jp ([133.145.228.44])
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aXpAn-0001pj-EH
- for kexec@lists.infradead.org; Mon, 22 Feb 2016 12:01:12 +0000
-Subject: [RFC v2 PATCH 6/7] purgatory/x86: Add an option to output IP
- registers to console in panic case
+ id 1aXpAn-0001pe-Gi
+ for kexec@lists.infradead.org; Mon, 22 Feb 2016 12:01:14 +0000
+Subject: [RFC v2 PATCH 3/7] purgatory/ipmi: Support IPMI KCS interface
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Mon, 22 Feb 2016 20:56:29 +0900
-Message-ID: <20160222115629.4231.73890.stgit@softrs>
+Date: Mon, 22 Feb 2016 20:56:23 +0900
+Message-ID: <20160222115623.4231.23153.stgit@softrs>
 In-Reply-To: <20160222115617.4231.50041.stgit@softrs>
 References: <20160222115617.4231.50041.stgit@softrs>
 MIME-Version: 1.0
@@ -26,367 +25,385 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
 
-This patch adds --output-cpu-ip option which outpus the values of IP
-registers to VGA/serial console.  To take effect, you need to specify
-both or one of --console-vga and --console-serial options, too.
+This patch adds an interface to BMC for purgatory.  While IPMI defines
+various interfaces to BMC, this patch supports only KCS (Keyboard
+Style Controller) interface which is implemented in the most of recent
+enterprise class servers with BMC.
 
-The values of IP registers are taken from the ELF core header
-prepared by the first kernel.  To do this, the address of the header
-is passed to the purgatory through elfcorehdr variable.
+Normally, I/O port 0xca2 and 0xca3 are used for KCS interface, but it
+varies depending on servers.  In this case, you can specify the I/O
+ports by --ipmi-kcs-ports option.
+
+To guarantee that the second kernel starts to boot in fixed seconds,
+polling-based timeout check is performed.  Timeout counting starts
+when calling ipmi_init_timeout(), and it expires after 5 seconds by
+default.
 
 Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
 ---
- kexec/arch/i386/crashdump-x86.c              |   10 ++--
- kexec/arch/i386/include/arch/options.h       |    4 +-
- kexec/arch/i386/kexec-x86.h                  |    1 
- kexec/arch/x86_64/kexec-x86_64.c             |   15 ++++++
- kexec/kexec.h                                |    1 
- purgatory/Makefile                           |    1 
- purgatory/arch/i386/purgatory-x86.h          |    1 
- purgatory/arch/x86_64/Makefile               |    1 
- purgatory/arch/x86_64/purgatory-elf-x86_64.c |   49 ++++++++++++++++++++
- purgatory/arch/x86_64/purgatory-x86_64.c     |    5 ++
- purgatory/include/purgatory-elf.h            |   13 +++++
- purgatory/purgatory-elf-core.c               |   64 ++++++++++++++++++++++++++
- 12 files changed, 159 insertions(+), 6 deletions(-)
- create mode 100644 purgatory/arch/x86_64/purgatory-elf-x86_64.c
- create mode 100644 purgatory/include/purgatory-elf.h
- create mode 100644 purgatory/purgatory-elf-core.c
+ kexec/kexec.c      |   22 ++++
+ kexec/kexec.h      |    4 +
+ purgatory/Makefile |    1 
+ purgatory/ipmi.c   |  256 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 282 insertions(+), 1 deletion(-)
+ create mode 100644 purgatory/ipmi.c
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index bbc0f35..d843b0c 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -867,7 +867,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 				unsigned long max_addr, unsigned long min_base)
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index f0bd527..f051ca0 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -57,6 +57,7 @@ static unsigned long kexec_flags = 0;
+ /* Flags for kexec file (fd) based syscall */
+ static unsigned long kexec_file_flags = 0;
+ int kexec_debug = 0;
++int opt_ipmi_ports[2];
+ 
+ void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
  {
- 	void *tmp;
--	unsigned long sz, bufsz, memsz, elfcorehdr;
-+	unsigned long sz, bufsz, memsz;
- 	int nr_ranges = 0, nr_memmap = 0, align = 1024, i;
- 	struct memory_range *mem_range, *memmap_p;
- 	struct crash_elf_info elf_info;
-@@ -990,15 +990,15 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	} else {
- 		memsz = bufsz;
+@@ -643,6 +644,14 @@ static void update_purgatory(struct kexec_info *info)
+ 	if (!info->rhdr.e_shdr) {
+ 		return;
  	}
--	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
-+	info->elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
- 							max_addr, -1);
--	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
--	if (delete_memmap(memmap_p, &nr_memmap, elfcorehdr, memsz) < 0)
-+	dbgprintf("Created elf header segment at 0x%lx\n", info->elfcorehdr);
-+	if (delete_memmap(memmap_p, &nr_memmap, info->elfcorehdr, memsz) < 0)
- 		return -1;
- 	if (!bzImage_support_efi_boot || arch_options.noefi ||
- 	    !sysfs_efi_runtime_map_exist())
- 		cmdline_add_efi(mod_cmdline);
--	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
-+	cmdline_add_elfcorehdr(mod_cmdline, info->elfcorehdr);
++
++	if (opt_ipmi_ports[0] != 0 && opt_ipmi_ports[1] != 0) {
++		elf_rel_set_symbol(&info->rhdr, "kcs_port_data",
++			&opt_ipmi_ports[0], sizeof(opt_ipmi_ports[0]));
++		elf_rel_set_symbol(&info->rhdr, "kcs_port_cmd",
++			&opt_ipmi_ports[1], sizeof(opt_ipmi_ports[1]));
++	}
++
+ 	arch_update_purgatory(info);
+ 	memset(region, 0, sizeof(region));
+ 	sha256_starts(&ctx);
+@@ -969,6 +978,8 @@ void usage(void)
+ 	       "                      preserve context)\n"
+ 	       "                      to original kernel.\n"
+ 	       " -s, --kexec-file-syscall Use file based syscall for kexec operation\n"
++	       "     --ipmi-kcs-ports=<port1>,<port2> Specify Data_In/Out port to port1 and\n"
++	       "                      Status/Command port to port2. Default is 0xca2,0xca3.\n"
+ 	       " -d, --debug           Enable debugging to help spot a failure.\n"
+ 	       "\n"
+ 	       "Supported kernel file types and options: \n");
+@@ -1215,6 +1226,7 @@ int main(int argc, char *argv[])
+ 		{ 0, 0, 0, 0},
+ 	};
+ 	static const char short_options[] = KEXEC_ALL_OPT_STR;
++	int ret;
  
- 	/* Inform second kernel about the presence of ACPI tables. */
- 	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
-diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
-index c113a83..46339e6 100644
---- a/kexec/arch/i386/include/arch/options.h
-+++ b/kexec/arch/i386/include/arch/options.h
-@@ -17,7 +17,8 @@
- #define OPT_CONSOLE_SERIAL (OPT_MAX+4)
- #define OPT_ELF32_CORE     (OPT_MAX+5)
- #define OPT_ELF64_CORE     (OPT_MAX+6)
--#define OPT_ARCH_MAX       (OPT_MAX+7)
-+#define OPT_OUTPUT_CPU_IP  (OPT_MAX+7)
-+#define OPT_ARCH_MAX       (OPT_MAX+8)
- 
- #define OPT_APPEND		(OPT_ARCH_MAX+0)
- #define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
-@@ -45,6 +46,7 @@
- 	{ "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
- 	{ "pass-memmap-cmdline", 0, 0, OPT_PASS_MEMMAP_CMDLINE }, \
- 	{ "noefi", 0, 0, OPT_NOEFI}, \
-+	{ "output-cpu-ip", 0, 0, OPT_OUTPUT_CPU_IP }, \
- 
- #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
- 
-diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
-index 33df352..7d9facf 100644
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -52,6 +52,7 @@ struct arch_options_t {
- 	enum coretype	core_header_type;
- 	uint8_t  	pass_memmap_cmdline;
- 	uint8_t		noefi;
-+	uint8_t		output_cpu_ip;
- };
- 
- int multiboot_x86_probe(const char *buf, off_t len);
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index 041b007..0ba2e45 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -55,6 +55,8 @@ void arch_usage(void)
- 		"     --console-serial          Enable the serial console\n"
- 		"     --pass-memmap-cmdline     Pass memory map via command line in kexec on panic case\n"
- 		"     --noefi                   Disable efi support\n"
-+		"     --output-cpu-ip           Output RIP for each CPU in kexec on panic\n"
-+		"                               case. You should use with --console-* options\n"
- 		);
- }
- 
-@@ -67,6 +69,7 @@ struct arch_options_t arch_options = {
- 	.core_header_type = CORE_TYPE_ELF64,
- 	.pass_memmap_cmdline = 0,
- 	.noefi = 0,
-+	.output_cpu_ip = 0,
- };
- 
- int arch_process_options(int argc, char **argv)
-@@ -136,8 +139,15 @@ int arch_process_options(int argc, char **argv)
- 		case OPT_NOEFI:
- 			arch_options.noefi = 1;
+ 	/*
+ 	 * First check if --use-kexec-file-syscall is set. That changes lot of
+@@ -1345,6 +1357,16 @@ int main(int argc, char *argv[])
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			/* We already parsed it. Nothing to do. */
  			break;
-+		case OPT_OUTPUT_CPU_IP:
-+			arch_options.output_cpu_ip = 1;
++		case OPT_IPMI_KCS_PORTS:
++			ret = sscanf(optarg, "%i,%i",
++				     &opt_ipmi_ports[0], &opt_ipmi_ports[1]);
++			if (ret != 2) {
++				fprintf(stderr, "Bad option value in "
++					"--ipmi-kcs-ports=%s\n", optarg);
++				usage();
++				return 1;
++			}
 +			break;
+ 		default:
+ 			break;
  		}
- 	}
-+
-+	if ((arch_options.console_vga | arch_options.console_serial) == 0)
-+		arch_options.output_cpu_ip = 0;
-+
- 	/* Reset getopt for the next pass; called in other source modules */
- 	opterr = 1;
- 	optind = 1;
-@@ -177,6 +187,11 @@ void arch_update_purgatory(struct kexec_info *info)
- 		panic_kernel = 1;
- 		elf_rel_set_symbol(&info->rhdr, "backup_start",
- 					&info->backup_start, sizeof(info->backup_start));
-+		elf_rel_set_symbol(&info->rhdr, "elfcorehdr",
-+				   &info->elfcorehdr, sizeof(info->elfcorehdr));
-+		elf_rel_set_symbol(&info->rhdr, "output_cpu_ip",
-+				   &arch_options.output_cpu_ip,
-+				   sizeof(arch_options.output_cpu_ip));
- 	}
- 	elf_rel_set_symbol(&info->rhdr, "panic_kernel",
- 				&panic_kernel, sizeof(panic_kernel));
 diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 2faab91..9105c63 100644
+index c02ac8f..5eab478 100644
 --- a/kexec/kexec.h
 +++ b/kexec/kexec.h
-@@ -158,6 +158,7 @@ struct kexec_info {
- 	unsigned long kexec_flags;
- 	unsigned long backup_src_start;
- 	unsigned long backup_src_size;
-+	unsigned long elfcorehdr;
- 	/* Set to 1 if we are using kexec file syscall */
- 	unsigned long file_mode :1;
+@@ -224,7 +224,8 @@ extern int file_types;
+ #define OPT_LOAD_PRESERVE_CONTEXT 259
+ #define OPT_LOAD_JUMP_BACK_HELPER 260
+ #define OPT_ENTRY		261
+-#define OPT_MAX			262
++#define OPT_IPMI_KCS_PORTS	262
++#define OPT_MAX			263
+ #define KEXEC_OPTIONS \
+ 	{ "help",		0, 0, OPT_HELP }, \
+ 	{ "version",		0, 0, OPT_VERSION }, \
+@@ -244,6 +245,7 @@ extern int file_types;
+ 	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
++	{ "ipmi-kcs-ports",	1, 0, OPT_IPMI_KCS_PORTS }, \
+ 
+ #define KEXEC_OPT_STR "h?vdfxyluet:ps"
  
 diff --git a/purgatory/Makefile b/purgatory/Makefile
-index 80caeab..cc9b383 100644
+index 4a30b94..80caeab 100644
 --- a/purgatory/Makefile
 +++ b/purgatory/Makefile
-@@ -14,6 +14,7 @@ PURGATORY_SRCS += purgatory/purgatory.c
+@@ -9,6 +9,7 @@
+ 
+ PURGATORY = purgatory/purgatory.ro
+ PURGATORY_SRCS =
++PURGATORY_SRCS += purgatory/ipmi.c
+ PURGATORY_SRCS += purgatory/purgatory.c
  PURGATORY_SRCS += purgatory/printf.c
  PURGATORY_SRCS += purgatory/string.c
- PURGATORY_SRCS += purgatory/time.c
-+PURGATORY_SRCS += purgatory/purgatory-elf-core.c
- PURGATORY_MAP = purgatory/purgatory.map
- 
- dist += purgatory/Makefile $(PURGATORY_SRCS)				\
-diff --git a/purgatory/arch/i386/purgatory-x86.h b/purgatory/arch/i386/purgatory-x86.h
-index 02039c9..16dfafd 100644
---- a/purgatory/arch/i386/purgatory-x86.h
-+++ b/purgatory/arch/i386/purgatory-x86.h
-@@ -5,5 +5,6 @@ void x86_reset_vga(void);
- void x86_setup_legacy_pic(void);
- void x86_setup_legacy_timer(void);
- void crashdump_backup_memory(void);
-+void print_ip(void);
- 
- #endif /* PURGATORY_X86_H */
-diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
-index bca1f71..e34f6a5 100644
---- a/purgatory/arch/x86_64/Makefile
-+++ b/purgatory/arch/x86_64/Makefile
-@@ -7,6 +7,7 @@ x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/entry64.S
- x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/setup-x86_64.S
- x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/stack.S
- x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/purgatory-x86_64.c
-+x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/purgatory-elf-x86_64.c
- 
- x86_64_PURGATORY_SRCS += $(x86_64_PURGATORY_SRCS_native)
- 
-diff --git a/purgatory/arch/x86_64/purgatory-elf-x86_64.c b/purgatory/arch/x86_64/purgatory-elf-x86_64.c
+diff --git a/purgatory/ipmi.c b/purgatory/ipmi.c
 new file mode 100644
-index 0000000..513974b
+index 0000000..5a73b93
 --- /dev/null
-+++ b/purgatory/arch/x86_64/purgatory-elf-x86_64.c
-@@ -0,0 +1,49 @@
-+#include <string.h>
-+#include <sys/procfs.h>
-+#include <elf.h>
++++ b/purgatory/ipmi.c
+@@ -0,0 +1,256 @@
++#include <stdint.h>
++#include <sys/io.h>
 +#include <purgatory.h>
-+#include <purgatory-elf.h>
++#include "time.h"
 +
-+static int is_valid_crash_note(Elf64_Phdr *phdr)
++#define KCS_PORT_DATA_DEFAULT	0xca2
++#define KCS_PORT_CMD_DEFAULT	0xca3
++#define KCS_PORT_DATA		(kcs_port_data)
++#define KCS_PORT_STATUS		(kcs_port_cmd)
++#define KCS_PORT_CMD		(kcs_port_cmd)
++
++#define KCS_STATUS_OBF		0x1
++#define KCS_STATUS_IBF		0x2
++
++#define KCS_CMD_WRITE_START	0x61
++#define KCS_CMD_WRITE_END	0x62
++#define KCS_CMD_READ		0x68
++
++#define GET_STATUS_STATE(status) (((status) >> 6) & 0x03)
++#define KCS_IDLE_STATE	0x0
++#define KCS_READ_STATE	0x1
++#define KCS_WRITE_STATE	0x2
++#define KCS_ERROR_STATE	0x3
++
++int kcs_port_cmd = KCS_PORT_CMD_DEFAULT;
++int kcs_port_data = KCS_PORT_DATA_DEFAULT;
++
++/* Total timeout for IPMI operations */
++static struct timeout_info ipmi_to = {
++	.end = INT64_MAX, /* never time out */
++};
++
++static inline unsigned char read_status(void)
 +{
-+	Elf64_Nhdr *nhdr = (Elf64_Nhdr *)phdr->p_paddr;
-+	char *buf;
-+
-+	if (phdr->p_filesz < sizeof(struct elf_prstatus))
-+		return 0;
-+
-+	if (nhdr->n_namesz != 5 ||
-+	    nhdr->n_descsz != sizeof(struct elf_prstatus) ||
-+	    nhdr->n_type != NT_PRSTATUS)
-+		return 0;
-+
-+	buf = (char *)nhdr;
-+	buf += _ALIGN(sizeof(*nhdr), 4);
-+
-+	/* Check the name of this note including null terminator */
-+	if (memcmp(buf, "CORE", 5) != 0)
-+		return 0;
-+
-+	return 1;
++	return inb(KCS_PORT_STATUS);
 +}
 +
-+static unsigned long get_ip_from_crash_note(Elf64_Phdr *phdr)
++unsigned char wait_out(void)
 +{
-+	struct elf_prstatus *prstatus;
++	unsigned char status;
++	static int count = 0;
 +
-+	prstatus = (struct elf_prstatus *)get_note_contents(phdr);
++	do {
++		count++;
++		if (count % 1024 == 0)
++			EXIT_ON_TIMEOUT(&ipmi_to, 1);
 +
-+	/* RIP is in pr_reg[16] for x86_64 */
-+	return prstatus->pr_reg[16];
++		status = read_status();
++	} while ((status & KCS_STATUS_OBF) == 0);
++
++	return status;
++
++timed_out:
++	return 0xff;
 +}
 +
-+static void fn_print_ip(Elf64_Phdr *phdr)
++unsigned char wait_in(void)
 +{
-+	if (is_valid_crash_note(phdr))
-+		printf("RIP: %lx\n", get_ip_from_crash_note(phdr));
++	unsigned char status;
++	static int count = 0;
++
++	do {
++		count++;
++		if (count % 1024 == 0)
++			EXIT_ON_TIMEOUT(&ipmi_to, 1);
++
++		status = read_status();
++	} while (status & KCS_STATUS_IBF);
++
++	return status;
++
++timed_out:
++	return 0xff;
 +}
 +
-+void print_ip(void)
++unsigned char read_data(void)
 +{
-+	process_elf_notes(fn_print_ip);
++	wait_out();
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++	return inb(KCS_PORT_DATA);
++
++timed_out:
++	return 0xff;
 +}
-diff --git a/purgatory/arch/x86_64/purgatory-x86_64.c b/purgatory/arch/x86_64/purgatory-x86_64.c
-index fb238a3..cfc9d97 100644
---- a/purgatory/arch/x86_64/purgatory-x86_64.c
-+++ b/purgatory/arch/x86_64/purgatory-x86_64.c
-@@ -1,11 +1,13 @@
- #include <stdint.h>
- #include <stddef.h>
- #include <purgatory.h>
-+#include <purgatory-elf.h>
- #include "purgatory-x86_64.h"
- 
- uint8_t reset_vga = 0;
- uint8_t legacy_pic = 0;
- uint8_t panic_kernel = 0;
-+uint8_t output_cpu_ip = 0;
- unsigned long jump_back_entry = 0;
- char *cmdline_end = NULL;
- 
-@@ -41,6 +43,9 @@ void post_verification_setup_arch(void)
- 
- 		if (ipmi_wdt)
- 			ipmi_wdt_start_stop();
 +
-+		if (output_cpu_ip && have_valid_elf_header())
-+			print_ip();
- 	}
- 
- 	if (jump_back_entry) x86_setup_jump_back_entry();
-diff --git a/purgatory/include/purgatory-elf.h b/purgatory/include/purgatory-elf.h
-new file mode 100644
-index 0000000..5d35c14
---- /dev/null
-+++ b/purgatory/include/purgatory-elf.h
-@@ -0,0 +1,13 @@
-+#ifndef PURGATORY_ELF_H
-+#define PURGATORY_ELF_H
++void clear_obf(void)
++{
++	if (inb(KCS_PORT_STATUS) & KCS_STATUS_OBF)
++		read_data();
++}
 +
-+#include <elf.h>
++unsigned char write_data(unsigned char byte)
++{
++	clear_obf();
++	outb(byte, KCS_PORT_DATA);
++	return wait_in();
++}
 +
-+#define _ALIGN_MASK(addr, mask)	(((addr) + (mask)) & ~(mask))
-+#define _ALIGN(addr, size)	_ALIGN_MASK((addr), (typeof(addr))(size) - 1)
-+
-+extern int have_valid_elf_header(void);
-+extern char *get_note_contents(Elf64_Phdr *phdr);
-+extern void process_elf_notes(void (*fn)(Elf64_Phdr *));
-+
-+#endif /* PURGATORY_ELF_H */
-diff --git a/purgatory/purgatory-elf-core.c b/purgatory/purgatory-elf-core.c
-new file mode 100644
-index 0000000..8a2dc06
---- /dev/null
-+++ b/purgatory/purgatory-elf-core.c
-@@ -0,0 +1,64 @@
-+#include <string.h>
-+#include <sys/procfs.h>
-+#include <elf.h>
-+#include <purgatory.h>
-+#include <purgatory-elf.h>
-+
-+unsigned long elfcorehdr = 0;
-+
-+/* TODO for non-RFC version: Make this independent of architectures */
++unsigned char write_cmd(unsigned char byte)
++{
++	clear_obf();
++	outb(byte, KCS_PORT_CMD);
++	return wait_in();
++}
 +
 +/*
-+ * Check the ELF header and return the address of the first program header.
-+ * Return NULL if the given ELF header doesn't have expected values.
++ * Issue a given IPMI command via KCS I/F.
++ *
++ * Return 0 on success, otherwise -1.
 + */
-+int have_valid_elf_header(void)
++int write_ipmi_cmd(const unsigned char *cmd, int size)
 +{
-+	Elf64_Ehdr *ehdr = (Elf64_Ehdr *)elfcorehdr;
-+
-+	if (ehdr == NULL)
-+		return 0;
-+
-+	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0)
-+		return 0;
-+
-+	if (ehdr->e_ident[EI_CLASS] != ELFCLASS64 ||
-+	    ehdr->e_ident[EI_DATA] != ELFDATA2LSB ||
-+	    ehdr->e_ident[EI_VERSION] != EV_CURRENT)
-+		return 0;
-+
-+	if (ehdr->e_type != ET_CORE ||
-+	    ehdr->e_machine != EM_X86_64 ||
-+	    ehdr->e_version != EV_CURRENT)
-+		return 0;
-+
-+	return 1;
-+}
-+
-+char *get_note_contents(Elf64_Phdr *phdr)
-+{
-+	Elf64_Nhdr *nhdr = (Elf64_Nhdr *)phdr->p_paddr;
-+	char *buf;
-+
-+	buf = (char *)nhdr;
-+	buf += _ALIGN(sizeof(*nhdr), 4);
-+	buf += _ALIGN(nhdr->n_namesz, 4);
-+
-+	return buf;
-+}
-+
-+void process_elf_notes(void (*fn)(Elf64_Phdr *))
-+{
-+	Elf64_Ehdr *ehdr = (Elf64_Ehdr *)elfcorehdr;
-+	Elf64_Phdr *phdr;
++	unsigned char status;
 +	int i;
 +
-+	phdr = (void *)((unsigned long)ehdr + ehdr->e_phoff);
++	wait_in();
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
 +
-+	for (i = 0; i < ehdr->e_phnum; phdr++, i++) {
-+		if (phdr->p_type != PT_NOTE)
++	status = write_cmd(KCS_CMD_WRITE_START);
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
++		return -1;
++
++	for (i = 0; i < size - 1; i++) {
++		status = write_data(cmd[i]);
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++		if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
++			return -1;
++	}
++
++	/* last write */
++	status = write_cmd(KCS_CMD_WRITE_END);
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++	if (GET_STATUS_STATE(status) != KCS_WRITE_STATE)
++		return -1;
++
++	write_data(cmd[i]);
++	EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++	return 0;
++
++timed_out:
++	return -1;
++}
++
++/*
++ * Read result bytes for the previously issued IPMI command.
++ *
++ * Return the completion code, which is 0 on success.  Otherwise, return
++ * non-zero value.
++ */
++unsigned char read_result(void)
++{
++	unsigned char state;
++	unsigned char data[4] = { 0 };
++	int count = 0;
++
++	while (1) {
++		state = GET_STATUS_STATE(wait_in());
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++		if (state == KCS_READ_STATE) {
++			data[count] = read_data();
++			EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++			outb(KCS_CMD_READ, KCS_PORT_DATA);
++		} else if (state == KCS_IDLE_STATE) {
++			data[count] = read_data();
++			EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++			break;
++		} else {
++			/*
++			 * Error! Set 0xff (unspecified error) as the
++			 * completion code.
++			 */
++			data[2] = 0xff;
++			break;
++		}
++
++		/*
++		 * We are interested only in the completion code in the
++		 * 3rd byte. Skip the following bytes.
++		 */
++		if (count < 3)
++			count++;
++	}
++
++	return data[2]; /* Return completion code */
++
++timed_out:
++	return 0xff;
++}
++
++/*
++ * Issue one IPMI command and check the result.
++ *
++ * Return 0 on success, otherwise -1.
++ */
++int issue_ipmi_cmd(const unsigned char *cmd, int size)
++{
++	int i, ret;
++	unsigned char comp_code;
++
++	/*
++	 * Try 3 times at most on error.
++	 *
++	 * WRITE_START KCS command issued by write_ipmi_cmd() at the beginning
++	 * aborts the ongoing IPMI command and starts new one.  So, it's no
++	 * problem even if the first kernel was processing IPMI command via
++	 * KCS I/F.
++	 *
++	 * However, WRITE_START can fail on some buggy BMC depending on its
++	 * KCS I/F state and get ERROR_STATE form the status register.  In
++	 * this situation, we can recover it from the error state by issuing
++	 * WRITE_START command.  So, just retrying is sufficient.
++	 */
++	for (i = 0; i < 3; i++) {
++		ret = write_ipmi_cmd(cmd, size);
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++		if (ret < 0)
++			/*
++			 * We detected ERROR_STATE or unexpected state.  In
++			 * this case, IPMI specification instructs us to issue
++			 * GET_STATUS command to request the reason of the
++			 * error or simply retry the command.
++			 *
++			 * Since we are not interested in the reason, simply
++			 * retry here.  Just for the record, the process to
++			 * obtain the reason of errors doesn't work properly
++			 * on some major BMCs.
++			 */
 +			continue;
 +
-+		fn(phdr);
++		comp_code = read_result();
++		EXIT_ON_TIMEOUT(&ipmi_to, 0);
++
++		if (comp_code == 0)
++			break; /* succeeded */
 +	}
++
++	return (i < 3) ? 0 : -1;
++
++timed_out:
++	return -1;
++}
++
++void ipmi_init_timeout(void)
++{
++	init_timeout(&ipmi_to, 5);
 +}
 
 
