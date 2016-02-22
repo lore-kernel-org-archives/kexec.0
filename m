@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aXpAn-0001pg-H0
+ id 1aXpAn-0001pR-EB
  for kexec@lists.infradead.org; Mon, 22 Feb 2016 12:01:10 +0000
-Subject: [RFC v2 PATCH 5/7] purgatory/ipmi: Add an option for purgatory to
- handle panic event with IPMI
+Subject: [RFC v2 PATCH 0/7] purgatory: Say last words in kexec on panic case
 From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Mon, 22 Feb 2016 20:56:27 +0900
-Message-ID: <20160222115627.4231.44196.stgit@softrs>
-In-Reply-To: <20160222115617.4231.50041.stgit@softrs>
-References: <20160222115617.4231.50041.stgit@softrs>
+Date: Mon, 22 Feb 2016 20:56:17 +0900
+Message-ID: <20160222115617.4231.50041.stgit@softrs>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,179 +23,141 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
 
-This patch adds --ipmi-handle-panic option which enables panic event
-handling in purgatory.  At this point, if you specify the option, an
-"OS Stop" event is generated in the panic case.  As the result, BMC
-may log the event to SEL.  Furthermore, you can make the BMC issue an
-SNMP trap by configuring PEF alerting of the BMC in advance.
+This is the version 2 of RFC patch series previously named
+"purgatory: Add basic support for IPMI command execution."
 
-In the future, other actions to inform or record the panic event will
-be added.
+Changes since RFC v1:
+- Add --ipmi-kcs-ports option to specify I/O ports for KCS I/F
+- Add --ipmi-handle-panic option to generate an event on BMC to
+  inform and record about the panic
+- Add --output-cpu-ip option to output IP registers to console
+  and BMC's SEL
+...and various cleanups and improvements
 
-Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+I performed some Web searches, and I found that major BMCs still
+support KCS I/F.  Although this patch series supports only KCS I/F, it
+should cover many recent servers with BMC.  However, I/O ports used
+for KCS I/F are varies among servers, so I added an option to specify
+port numbers for KCS.
+
+About error handling for KCS protocol, I re-checked IPMI
+specification, and I found that simply retrying on error is
+sufficient.  So I didn't change the logic for the simplicity.  Please
+see PATCH 3/7 for details.
+
+
+Background and purpose
+======================
+
+If the second kernel for crash dumping hangs up while booting, no
+information related to the first kernel will be saved.  This makes
+crash cause analysis difficult.  Some enterprise users don't permit
+the same faults happen multiple times, so we want to save minimal
+information before booting the second kernel.
+
+
+Approaches
+==========
+
+One of the approaches is (1) to use panic notifier call or kmsg dump
+feature.  For example, a panic notifier callback registered by IPMI
+driver can save the panic message to BMC's SEL before booting the
+second kernel.  Similarly, kmsg dump saves kernel logs to a non-
+volatile memory on the server.  This approach covers multiple
+hardware/firmware implementation.  However, doing many things in
+crashed kernel will reduce the reliability.  Additionally, a part of
+the code is also used for normal operation and still evolving.  This
+would makes it difficult to keep stable.
+
+Another approach is (2) to save minimal information to BMC's SEL in
+purgatory.  It is difficult to do complicate things in purgatory, but
+fortunately IPMI specification defines a simple interface, KCS
+(Keyboard Controller Style) I/F.  KCS is controlled by two I/O ports
+and supported by most of major BMCs.
+
+Here, we want more reliable one for the purpose, we adopt (2).
+
+
+What are provided?
+==================
+
+This patch series provides multiple RAS features other than the main
+purpose described above.
+
+- Timeout mechanism relying on polling RTC
+- API to access BMC via KCS I/F 
+- Command line option to start/stop BMC's watchdog timer in purgatory
+- Command line option to write the value of RIP registers to SEL and/or
+  serial console (useful for kernel hang-up cases)
+- Command line option to generate a plantform event on BMC (useful for
+  server monitoring or HA clustering; you can make the BMC issue an
+  SNMP trap)
+- Command line option to change the default I/O ports of KCS I/F
+
+
+Limitations of RFC version
+==========================
+
+This patch serires is incomplete, and there are some limitations.
+
+- Related codes are unconditionally built into the kexec binary
+- Implemented only for x86_64 (it may break the build for other
+  architectures)
+- Timeout value for IPMI operations is hard-coded
+
+
+Future plan
+===========
+
+- Add an option to save the panic message to BMC's SEL (this requires
+  some kernel modifications)
+
 ---
- kexec/kexec.c                            |    8 ++++++++
- kexec/kexec.h                            |    4 +++-
- purgatory/arch/x86_64/purgatory-x86_64.c |   13 +++++++++++--
- purgatory/include/purgatory.h            |    4 ++++
- purgatory/ipmi.c                         |   23 +++++++++++++++++++++++
- 5 files changed, 49 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index d9d21e8..62e228d 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -59,6 +59,7 @@ static unsigned long kexec_flags = 0;
- static unsigned long kexec_file_flags = 0;
- int kexec_debug = 0;
- int opt_ipmi_wdt = IPMI_WDT_DO_NOTHING;
-+uint8_t opt_ipmi_handle_panic = 0;
- int opt_ipmi_ports[2];
- 
- void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
-@@ -649,6 +650,9 @@ static void update_purgatory(struct kexec_info *info)
- 
- 	elf_rel_set_symbol(&info->rhdr, "ipmi_wdt", &opt_ipmi_wdt,
- 			   sizeof(opt_ipmi_wdt));
-+	elf_rel_set_symbol(&info->rhdr, "ipmi_handle_panic",
-+			   &opt_ipmi_handle_panic,
-+			   sizeof(opt_ipmi_handle_panic));
- 
- 	if (opt_ipmi_ports[0] != 0 && opt_ipmi_ports[1] != 0) {
- 		elf_rel_set_symbol(&info->rhdr, "kcs_port_data",
-@@ -989,6 +993,7 @@ void usage(void)
- 	       "                      starting the second kernel\n"
- 	       "     --ipmi-wdt-stop  Stop BMC's watchdog timer in panic case before starting\n"
- 	       "                      the second kernel\n"
-+	       "     --ipmi-handle-panic Inform/record the panic event via IPMI\n"
- 	       " -d, --debug           Enable debugging to help spot a failure.\n"
- 	       "\n"
- 	       "Supported kernel file types and options: \n");
-@@ -1382,6 +1387,9 @@ int main(int argc, char *argv[])
- 				return 1;
- 			}
- 			break;
-+		case OPT_IPMI_HANDLE_PANIC:
-+			opt_ipmi_handle_panic = 1;
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 6fb8fba..2faab91 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -227,7 +227,8 @@ extern int file_types;
- #define OPT_IPMI_KCS_PORTS	262
- #define OPT_IPMI_WDT_START	263
- #define OPT_IPMI_WDT_STOP	264
--#define OPT_MAX			265
-+#define OPT_IPMI_HANDLE_PANIC	265
-+#define OPT_MAX			266
- #define KEXEC_OPTIONS \
- 	{ "help",		0, 0, OPT_HELP }, \
- 	{ "version",		0, 0, OPT_VERSION }, \
-@@ -250,6 +251,7 @@ extern int file_types;
- 	{ "ipmi-kcs-ports",	1, 0, OPT_IPMI_KCS_PORTS }, \
- 	{ "ipmi-wdt-start",	0, 0, OPT_IPMI_WDT_START }, \
- 	{ "ipmi-wdt-stop",	0, 0, OPT_IPMI_WDT_STOP }, \
-+	{ "ipmi-handle-panic",	0, 0, OPT_IPMI_HANDLE_PANIC }, \
- 
- #define KEXEC_OPT_STR "h?vdfxyluet:ps"
- 
-diff --git a/purgatory/arch/x86_64/purgatory-x86_64.c b/purgatory/arch/x86_64/purgatory-x86_64.c
-index 87433a2..fb238a3 100644
---- a/purgatory/arch/x86_64/purgatory-x86_64.c
-+++ b/purgatory/arch/x86_64/purgatory-x86_64.c
-@@ -28,10 +28,19 @@ void post_verification_setup_arch(void)
- 	if (panic_kernel) {
- 		crashdump_backup_memory();
- 
--		if (ipmi_wdt) {
-+		if (ipmi_handle_panic || ipmi_wdt)
- 			ipmi_init_timeout();
-+
-+		/*
-+		 * You can make the BMC send an SNMP trap here by configuring
-+		 * PEF alerting beforehand.  Do this first to inform the
-+		 * panic event ASAP.
-+		 */
-+		if (ipmi_handle_panic)
-+			ipmi_send_panic_event();
-+
-+		if (ipmi_wdt)
- 			ipmi_wdt_start_stop();
--		}
- 	}
- 
- 	if (jump_back_entry) x86_setup_jump_back_entry();
-diff --git a/purgatory/include/purgatory.h b/purgatory/include/purgatory.h
-index 5cfbea1..7afa890 100644
---- a/purgatory/include/purgatory.h
-+++ b/purgatory/include/purgatory.h
-@@ -1,7 +1,10 @@
- #ifndef PURGATORY_H
- #define PURGATORY_H
- 
-+#include <stdint.h>
-+
- extern int ipmi_wdt;
-+extern uint8_t ipmi_handle_panic;
- 
- void putchar(int ch);
- void sprintf(char *buffer, const char *fmt, ...)
-@@ -11,5 +14,6 @@ void setup_arch(void);
- void post_verification_setup_arch(void);
- void ipmi_init_timeout(void);
- void ipmi_wdt_start_stop(void);
-+void ipmi_send_panic_event(void);
- 
- #endif /* PURGATORY_H */
-diff --git a/purgatory/ipmi.c b/purgatory/ipmi.c
-index 780fc67..59c0366 100644
---- a/purgatory/ipmi.c
-+++ b/purgatory/ipmi.c
-@@ -26,6 +26,7 @@
- int kcs_port_cmd = KCS_PORT_CMD_DEFAULT;
- int kcs_port_data = KCS_PORT_DATA_DEFAULT;
- int ipmi_wdt = IPMI_WDT_DO_NOTHING;
-+uint8_t ipmi_handle_panic = 0;
- 
- /* IPMI command to start BMC watchdog timer */
- const unsigned char cmd_start_wdt[] = {
-@@ -45,6 +46,23 @@ const unsigned char cmd_stop_wdt[] = {
- 	0xff,
- };
- 
-+/*
-+ * IPMI command to generate an event to inform a kernel panic happend.
-+ * All fixed parameters are same as that of IPMI driver for Linux.
-+ */
-+const unsigned char cmd_panic_event[] = {
-+	0x04 << 2,	/* Sensor/Event */
-+	0x02,		/* Platform Event Command */
-+	0x41,		/* Generator ID: System Management Software */
-+	0x03,		/* Event Message Rev.: comply with IPMI 1.0 */
-+	0x20,		/* Sensor Type: OS Stop */
-+	0x00,		/* Sensor # */
-+	0x6f,		/* Event Type: Sensor specific */
-+	0xa1,		/* Data 1: Run-time Stop. Data 2 & 3 are OEM defined */
-+	0x00,		/* Data 2 */
-+	0x00,		/* Data 3 */
-+};
-+
- /* Total timeout for IPMI operations */
- static struct timeout_info ipmi_to = {
- 	.end = INT64_MAX, /* never time out */
-@@ -312,3 +330,8 @@ void ipmi_wdt_start_stop(void)
- 	else if (ipmi_wdt & IPMI_WDT_STOP)
- 		do_stop_wdt();
- }
-+
-+void ipmi_send_panic_event(void)
-+{
-+	issue_ipmi_cmd(cmd_panic_event, sizeof(cmd_panic_event));
-+}
+Hidehiro Kawai (7):
+      purgatory: Introduce timeout API
+      purgatory/x86: Support CMOS RTC
+      purgatory/ipmi: Support IPMI KCS interface
+      purgatory/ipmi: Support BMC watchdog timer start/stop in purgatory
+      purgatory/ipmi: Add an option for purgatory to handle panic event with IPMI
+      purgatory/x86: Add an option to output IP registers to console in panic case
+      purgatory/ipmi/x86: Support logging of IP registers into SEL
+
+
+ kexec/arch/i386/crashdump-x86.c              |   10 -
+ kexec/arch/i386/include/arch/options.h       |    4 
+ kexec/arch/i386/kexec-x86.h                  |    1 
+ kexec/arch/x86_64/kexec-x86_64.c             |   15 +
+ kexec/ipmi.h                                 |    9 +
+ kexec/kexec.c                                |   51 ++++
+ kexec/kexec.h                                |   11 +
+ purgatory/Makefile                           |    6 
+ purgatory/arch/i386/Makefile                 |    1 
+ purgatory/arch/i386/purgatory-x86.h          |    2 
+ purgatory/arch/i386/rtc_cmos.c               |  107 ++++++++
+ purgatory/arch/x86_64/Makefile               |    2 
+ purgatory/arch/x86_64/purgatory-elf-x86_64.c |   82 ++++++
+ purgatory/arch/x86_64/purgatory-x86_64.c     |   35 ++-
+ purgatory/include/purgatory-elf.h            |   13 +
+ purgatory/include/purgatory.h                |    9 +
+ purgatory/include/time.h                     |   33 ++
+ purgatory/ipmi.c                             |  361 ++++++++++++++++++++++++++
+ purgatory/purgatory-elf-core.c               |   64 +++++
+ purgatory/time.c                             |   59 ++++
+ 20 files changed, 866 insertions(+), 9 deletions(-)
+ create mode 100644 kexec/ipmi.h
+ create mode 100644 purgatory/arch/i386/rtc_cmos.c
+ create mode 100644 purgatory/arch/x86_64/purgatory-elf-x86_64.c
+ create mode 100644 purgatory/include/purgatory-elf.h
+ create mode 100644 purgatory/include/time.h
+ create mode 100644 purgatory/ipmi.c
+ create mode 100644 purgatory/purgatory-elf-core.c
+ create mode 100644 purgatory/time.c
+
+
+-- 
+Hidehiro Kawai
+Hitachi, Ltd. Research & Development Group
 
 
 
