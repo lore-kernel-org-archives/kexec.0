@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mail9.hitachi.co.jp ([133.145.228.44])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aXhzO-0003FQ-BK
- for kexec@lists.infradead.org; Mon, 22 Feb 2016 04:20:52 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: makedumpfile: 4.5 kernel commit breaks page filtering
-Date: Mon, 22 Feb 2016 04:18:08 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E21775@BPXM01GP.gisp.nec.co.jp>
-References: <349750156.30030224.1455814657685.JavaMail.zimbra@redhat.com>
- <649995246.30033929.1455815111557.JavaMail.zimbra@redhat.com>
-In-Reply-To: <649995246.30033929.1455815111557.JavaMail.zimbra@redhat.com>
-Content-Language: ja-JP
+ id 1aXpAn-0001pU-EI
+ for kexec@lists.infradead.org; Mon, 22 Feb 2016 12:01:07 +0000
+Subject: [RFC v2 PATCH 1/7] purgatory: Introduce timeout API
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Mon, 22 Feb 2016 20:56:19 +0900
+Message-ID: <20160222115619.4231.6469.stgit@softrs>
+In-Reply-To: <20160222115617.4231.50041.stgit@softrs>
+References: <20160222115617.4231.50041.stgit@softrs>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,141 +18,163 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: Joe Lawrence <joe.lawrence@stratus.com>, Laurence Oberman <loberman@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
+To: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, Corey Minyard <minyard@acm.org>
 
-SGVsbG8gRGF2ZSwNCg0KPkhlbGxvIEF0c3VzaGksDQo+DQo+SSd2ZSByZWNlbnRseSBoYWQgYSBj
-b3VwbGUgNC41LWVyYSB2bWNvcmVzIGlzc3VlcyByZXBvcnRlZCB0byBtZSBhcyBjcmFzaCBidWdz
-DQo+YmVjYXVzZSB0aGV5IGdlbmVyYXRlIG51bWVyb3VzIGluaXRpYWxpemF0aW9uLXRpbWUgZXJy
-b3JzIG9mIHRoZSB0eXBlOg0KPg0KPiAgY3Jhc2g6IHBhZ2UgZXhjbHVkZWQ6IGtlcm5lbCB2aXJ0
-dWFsIGFkZHJlc3M6IGZmZmY4ODAwNzU0NTkwMDAgIHR5cGU6ICJmaWxsX3Rhc2tfc3RydWN0Ig0K
-Pg0KPkluaXRpYWxseSBJIHRob3VnaHQgaXQgd2FzIHJlbGF0ZWQgdG8gdGhpcyBjcmFzaC03LjEu
-NCBmaXggdGhhdCB5b3UgcG9zdGVkOg0KPg0KPiAgICBGaXggZm9yIHRoZSBoYW5kbGluZyBvZiBk
-eW5hbWljYWxseS1zaXplZCB0YXNrX3N0cnVjdCBzdHJ1Y3R1cmVzIGluDQo+ICAgIExpbnV4IDQu
-MiBhbmQgbGF0ZXIga2VybmVscywgd2hpY2ggY29udGFpbiB0aGVzZSBjb21taXRzOg0KPg0KPiAg
-ICAgIGNvbW1pdCA1YWFlYjVjMDFjNWI2YzBiZTdiN2FhZGJmM2FjZTlmM2E0NDU4YzNkDQo+ICAg
-ICAgeDg2L2ZwdSwgc2NoZWQ6IEludHJvZHVjZSBDT05GSUdfQVJDSF9XQU5UU19EWU5BTUlDX1RB
-U0tfU1RSVUNUIGFuZA0KPiAgICAgICAgICAgICAgICAgICAgICB1c2UgaXQgb24geDg2DQo+ICAg
-ICAgY29tbWl0IDBjOGMwZjAzZTNhMjkyZTAzMTU5NjQ4NDI3NWMxNGNmMzljMGFiN2ENCj4gICAg
-ICB4ODYvZnB1LCBzY2hlZDogRHluYW1pY2FsbHkgYWxsb2NhdGUgJ3N0cnVjdCBmcHUnDQo+DQo+
-ICAgIFdpdGhvdXQgdGhlIHBhdGNoLCB3aGVuIHJ1bm5pbmcgb24gYSBmaWx0ZXJlZCBrZHVtcCBk
-dW1wZmlsZSwgaXQgaXMNCj4gICAgcG9zc2libGUgdGhhdCBlcnJvciBtZXNzYWdlcyBsaWtlIHRo
-aXMgd2lsbCBiZSBzZWVuIHdoZW4gZ2F0aGVyaW5nDQo+ICAgIHRoZSB0YXNrcyBydW5uaW5nIG9u
-IGEgc3lzdGVtOiAiY3Jhc2g6IHBhZ2UgZXhjbHVkZWQ6IGtlcm5lbCB2aXJ0dWFsDQo+ICAgIGFk
-ZHJlc3M6IDx0YXNrX3N0cnVjdCBhZGRyZXNzPiAgdHlwZTogImZpbGxfdGFza19zdHJ1Y3QiLg0K
-PiAgICAoYXRzLWt1bWFnYWlAd20uanAubmVjLmNvbSkNCj4NCj5CdXQgdXBvbiBmdXJ0aGVyIGlu
-dmVzdGlnYXRpb24gb2YgYSBzdXNwZWN0IHZtY29yZSwgdGhlcmUgYXJlIG1hbnkgb3RoZXINCj4i
-cGFnZSBleGNsdWRlZCIgZXJyb3JzIGZvciBzZXZlcmFsIG90aGVyIGRhdGEgc3RydWN0dXJlIHR5
-cGVzLiAgSm9lIExhd3JlbmNlDQo+b2YgU3RyYXR1cyBkaWQgc29tZSBrZXJuZWwtYmlzZWN0aW5n
-LCBhbmQgbmFycm93ZWQgaXQgZG93biB0byB0aGlzIHJlY2VudA0KPjQuNSBjb21taXQ6DQo+DQo+
-ICBjb21taXQgMWMyOTBmNjQyMTAxZTY0ZjM3OWUzOGVhMDM2MWQwOTdjMDhlODI0ZA0KPiAgQXV0
-aG9yOiBLaXJpbGwgQS4gU2h1dGVtb3YgPGtpcmlsbC5zaHV0ZW1vdkBsaW51eC5pbnRlbC5jb20+
-DQo+ICBEYXRlOiAgIEZyaSBKYW4gMTUgMTY6NTI6MDcgMjAxNiAtMDgwMA0KPg0KPiAgICBtbTog
-c2FuaXRpemUgcGFnZS0+bWFwcGluZyBmb3IgdGFpbCBwYWdlcw0KPg0KPiAgICBXZSBkb24ndCBk
-ZWZpbmUgbWVhbmluZyBvZiBwYWdlLT5tYXBwaW5nIGZvciB0YWlsIHBhZ2VzLiAgQ3VycmVudGx5
-IGl0J3MNCj4gICAgYWx3YXlzIE5VTEwsIHdoaWNoIGNhbiBiZSBpbmNvbnNpc3RlbnQgd2l0aCBo
-ZWFkIHBhZ2UgYW5kIHBvdGVudGlhbGx5DQo+ICAgIGxlYWQgdG8gcHJvYmxlbXMuDQo+DQo+ICAg
-IExldCdzIHBvaXNvbiB0aGUgcG9pbnRlciB0byBjYXRjaCBhbGwgaWxsaWdhbCB1c2VzLg0KPg0K
-PiAgICBwYWdlX3JtYXBwaW5nKCksIHBhZ2VfbWFwcGluZygpIGFuZCBwYWdlX2Fub25fdm1hKCkg
-YXJlIGNoYW5nZWQgdG8gbG9vaw0KPiAgICBvbiBoZWFkIHBhZ2UuDQo+DQo+ICAgIFRoZSBvbmx5
-IGlsbGVnYWwgdXNlIEkndmUgY2F1Z2h0IHNvIGZhciBpcyBfX0dQRl9DT01QIHBhZ2VzIGZyb20g
-c291bmQNCj4gICAgc3Vic3lzdGVtLCBtYXBwZWQgd2l0aCBQVEVzLiAgZG9fc2hhcmVkX2ZhdWx0
-KCkgaXMgY2hhbmdlZCB0byB1c2UNCj4gICAgcGFnZV9ybWFwcGluZygpIGluc3RlYWQgb2YgZGly
-ZWN0IGFjY2VzcyB0byBmYXVsdF9wYWdlLT5tYXBwaW5nLg0KPg0KPiAgICBTaWduZWQtb2ZmLWJ5
-OiBLaXJpbGwgQS4gU2h1dGVtb3YgPGtpcmlsbC5zaHV0ZW1vdkBsaW51eC5pbnRlbC5jb20+DQo+
-ICAgIFJldmlld2VkLWJ5OiBKw4PCqXLDg8K0bWUgR2xpc3NlIDxqZ2xpc3NlQHJlZGhhdC5jb20+
-DQo+ICAgIENjOiBBbmRyZWEgQXJjYW5nZWxpIDxhYXJjYW5nZUByZWRoYXQuY29tPg0KPiAgICBD
-YzogSHVnaCBEaWNraW5zIDxodWdoZEBnb29nbGUuY29tPg0KPiAgICBDYzogRGF2ZSBIYW5zZW4g
-PGRhdmUuaGFuc2VuQGludGVsLmNvbT4NCj4gICAgQ2M6IE1lbCBHb3JtYW4gPG1nb3JtYW5Ac3Vz
-ZS5kZT4NCj4gICAgQ2M6IFJpayB2YW4gUmllbCA8cmllbEByZWRoYXQuY29tPg0KPiAgICBDYzog
-Vmxhc3RpbWlsIEJhYmthIDx2YmFia2FAc3VzZS5jej4NCj4gICAgQ2M6IENocmlzdG9waCBMYW1l
-dGVyIDxjbEBsaW51eC5jb20+DQo+ICAgIENjOiBOYW95YSBIb3JpZ3VjaGkgPG4taG9yaWd1Y2hp
-QGFoLmpwLm5lYy5jb20+DQo+ICAgIENjOiBTdGV2ZSBDYXBwZXIgPHN0ZXZlLmNhcHBlckBsaW5h
-cm8ub3JnPg0KPiAgICBDYzogIkFuZWVzaCBLdW1hciBLLlYiIDxhbmVlc2gua3VtYXJAbGludXgu
-dm5ldC5pYm0uY29tPg0KPiAgICBDYzogSm9oYW5uZXMgV2VpbmVyIDxoYW5uZXNAY21weGNoZy5v
-cmc+DQo+ICAgIENjOiBNaWNoYWwgSG9ja28gPG1ob2Nrb0BzdXNlLmN6Pg0KPiAgICBDYzogSmVy
-b21lIE1hcmNoYW5kIDxqbWFyY2hhbkByZWRoYXQuY29tPg0KPiAgICBTaWduZWQtb2ZmLWJ5OiBB
-bmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPg0KPiAgICBTaWduZWQtb2Zm
-LWJ5OiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlvbi5vcmc+DQo+DQo+
-QW5kIHJlbGF0ZWQgdG8gdGhlIGFib3ZlLCBhbmQgdGhlIG9uZSB0aGF0IGFmZmVjdHMgbWFrZWR1
-bXBmaWxlLCBpcyB0aGlzIG9uZToNCj4NCj4gIGNvbW1pdCA4MjJjZGQxMTUyMjY1ZDg3ZmNmYzk3
-NGUwNmMzYjY4Zjc2Mjk4N2ZkDQo+ICBBdXRob3I6IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2lyaWxs
-LnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4NCj4gIERhdGU6ICAgRnJpIEphbiAxNSAxNjo1Mjow
-MyAyMDE2IC0wODAwDQo+DQo+ICAgIHBhZ2UtZmxhZ3M6IGxvb2sgYXQgaGVhZCBwYWdlIGlmIHRo
-ZSBmbGFnIGlzIGVuY29kZWQgaW4gcGFnZS0+bWFwcGluZw0KPg0KPiAgICBQYWdlQW5vbigpIGFu
-ZCBQYWdlS3NtKCkgbG9vayBhdCBsb3dlciBiaXRzIG9mIHBhZ2UtPm1hcHBpbmcgdG8gY2hlY2sg
-aWYNCj4gICAgdGhlIHBhZ2UgaXMgQW5vbiBvciBLU00uICBwYWdlLT5tYXBwaW5nIGNhbiBiZSBv
-dmVybG9hZGVkIGluIHRhaWwgcGFnZXMuDQo+DQo+ICAgIExldCdzIGFsd2F5cyBsb29rIGF0IGhl
-YWQgcGFnZSB0byBhdm9pZCBmYWxzZS1wb3NpdGl2ZXMuDQo+DQo+ICAgIFNpZ25lZC1vZmYtYnk6
-IEtpcmlsbCBBLiBTaHV0ZW1vdiA8a2lyaWxsLnNodXRlbW92QGxpbnV4LmludGVsLmNvbT4NCj4g
-ICAgQ2M6IEFuZHJlYSBBcmNhbmdlbGkgPGFhcmNhbmdlQHJlZGhhdC5jb20+DQo+ICAgIENjOiBI
-dWdoIERpY2tpbnMgPGh1Z2hkQGdvb2dsZS5jb20+DQo+ICAgIENjOiBEYXZlIEhhbnNlbiA8ZGF2
-ZS5oYW5zZW5AaW50ZWwuY29tPg0KPiAgICBDYzogTWVsIEdvcm1hbiA8bWdvcm1hbkBzdXNlLmRl
-Pg0KPiAgICBDYzogUmlrIHZhbiBSaWVsIDxyaWVsQHJlZGhhdC5jb20+DQo+ICAgIENjOiBWbGFz
-dGltaWwgQmFia2EgPHZiYWJrYUBzdXNlLmN6Pg0KPiAgICBDYzogQ2hyaXN0b3BoIExhbWV0ZXIg
-PGNsQGxpbnV4LmNvbT4NCj4gICAgQ2M6IE5hb3lhIEhvcmlndWNoaSA8bi1ob3JpZ3VjaGlAYWgu
-anAubmVjLmNvbT4NCj4gICAgQ2M6IFN0ZXZlIENhcHBlciA8c3RldmUuY2FwcGVyQGxpbmFyby5v
-cmc+DQo+ICAgIENjOiAiQW5lZXNoIEt1bWFyIEsuViIgPGFuZWVzaC5rdW1hckBsaW51eC52bmV0
-LmlibS5jb20+DQo+ICAgIENjOiBKb2hhbm5lcyBXZWluZXIgPGhhbm5lc0BjbXB4Y2hnLm9yZz4N
-Cj4gICAgQ2M6IE1pY2hhbCBIb2NrbyA8bWhvY2tvQHN1c2UuY3o+DQo+ICAgIENjOiBKZXJvbWUg
-TWFyY2hhbmQgPGptYXJjaGFuQHJlZGhhdC5jb20+DQo+ICAgIENjOiBKw4PCqXLDg8K0bWUgR2xp
-c3NlIDxqZ2xpc3NlQHJlZGhhdC5jb20+DQo+ICAgIFNpZ25lZC1vZmYtYnk6IEFuZHJldyBNb3J0
-b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+DQo+ICAgIFNpZ25lZC1vZmYtYnk6IExpbnVz
-IFRvcnZhbGRzIDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9uLm9yZz4NCj4NCj5kaWZmIC0tZ2l0
-IGEvaW5jbHVkZS9saW51eC9wYWdlLWZsYWdzLmggYi9pbmNsdWRlL2xpbnV4L3BhZ2UtZmxhZ3Mu
-aA0KPmluZGV4IDgxOGZhMzkuLjE5MGYxOTEgMTAwNjQ0DQo+LS0tIGEvaW5jbHVkZS9saW51eC9w
-YWdlLWZsYWdzLmgNCj4rKysgYi9pbmNsdWRlL2xpbnV4L3BhZ2UtZmxhZ3MuaA0KPkBAIC0xNzYs
-NyArMTc2LDcgQEAgc3RhdGljIGlubGluZSBpbnQgUGFnZUNvbXBvdW5kKHN0cnVjdCBwYWdlICpw
-YWdlKQ0KPiAjZGVmaW5lIFBGX05PX1RBSUwocGFnZSwgZW5mb3JjZSkgKHsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIFwNCj4gICAgICAgICAgICAgICAgVk1fQlVHX09OX1BHRkxB
-R1MoZW5mb3JjZSAmJiBQYWdlVGFpbChwYWdlKSwgcGFnZSk7ICAgICBcDQo+ICAgICAgICAgICAg
-ICAgIGNvbXBvdW5kX2hlYWQocGFnZSk7fSkNCj4tI2RlZmluZSBQRl9OT19DT01QT1VORChwYWdl
-LCBlbmZvcmNlKSAoeyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4r
-I2RlZmluZSBQRl9OT19DT01QT1VORChwYWdlLCBlbmZvcmNlKSAoeyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBcDQo+ICAgICAgICAgICAgICAgIFZNX0JVR19PTl9QR0ZMQUdTKGVuZm9y
-Y2UgJiYgUGFnZUNvbXBvdW5kKHBhZ2UpLCBwYWdlKTsgXA0KPiAgICAgICAgICAgICAgICBwYWdl
-O30pDQo+DQo+QEAgLTM4MSw2ICszODEsNyBAQCBQQUdFRkxBRyhJZGxlLCBpZGxlLCBQRl9BTlkp
-DQo+DQo+IHN0YXRpYyBpbmxpbmUgaW50IFBhZ2VBbm9uKHN0cnVjdCBwYWdlICpwYWdlKQ0KPiB7
-DQo+KyAgICAgICBwYWdlID0gY29tcG91bmRfaGVhZChwYWdlKTsNCj4gICAgICAgIHJldHVybiAo
-KHVuc2lnbmVkIGxvbmcpcGFnZS0+bWFwcGluZyAmIFBBR0VfTUFQUElOR19BTk9OKSAhPSAwOw0K
-PiB9DQo+DQo+QEAgLTM5Myw2ICszOTQsNyBAQCBzdGF0aWMgaW5saW5lIGludCBQYWdlQW5vbihz
-dHJ1Y3QgcGFnZSAqcGFnZSkNCj4gICovDQo+IHN0YXRpYyBpbmxpbmUgaW50IFBhZ2VLc20oc3Ry
-dWN0IHBhZ2UgKnBhZ2UpDQo+IHsNCj4rICAgICAgIHBhZ2UgPSBjb21wb3VuZF9oZWFkKHBhZ2Up
-Ow0KPiAgICAgICAgcmV0dXJuICgodW5zaWduZWQgbG9uZylwYWdlLT5tYXBwaW5nICYgUEFHRV9N
-QVBQSU5HX0ZMQUdTKSA9PQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKFBBR0Vf
-TUFQUElOR19BTk9OIHwgUEFHRV9NQVBQSU5HX0tTTSk7DQo+IH0NCj4NCj5Ob3RlIHRoYXQgUEFH
-RV9NQVBQSU5HX0FOT04gaXMgbm93IG9ubHkgc2V0IGluIHRoZSBjb21wb3VuZF9oZWFkIHBhZ2Us
-DQo+c28gd2hlbiBtYWtlZHVtcGZpbGUgd2Fsa3MgdGhvdWdoIHRoZSBwYWdlcywgaXQgd2lsbCBo
-YXZlIHRvIGxvb2sNCj5hdCBlYWNoIHBhZ2UncyBoZWFkIHBhZ2UgZm9yIHRoZSBiaXQgc2V0dGlu
-Zy4NCg0KVGhhbmtzIGZvciB5b3VyIHJlcG9ydC4NCkFzIHlvdSBzYWlkLCBpdCBzZWVtcyBjaGVj
-a2luZyB0aGUgaGVhZCBwYWdlIGxpa2Uga2VybmVsIGRvZXMgaXMgbmVjZXNzYXJ5Lg0KSSdsbCB0
-cnkgdG8gd29yayBpdCBvdXQsIHBsZWFzZSBnaXZlIG1lIHNvbWUgdGltZS4NCg0KDQpUaGFua3Ms
-DQpBdHN1c2hpIEt1bWFnYWkNCg0KPkFzIGl0IGlzIG5vdywgbWFrZWR1bXBmaWxlIHJ1bnMgYW1v
-ayBmaWx0ZXJpbmcgcGFnZXMgdGhhdCBzdGlsbCBoYXZlDQo+c3R1ZmYgbGVmdCBpbiBwYWdlLT5t
-YXBwaW5nLiAgRm9yIGV4YW1wbGUsIGFsbCBvZiB0aGUgYWRkcmVzc2VzIGluDQo+bXkgImZpbHRl
-cmVkLmxpc3QiIGlucHV0IGZpbGUgYXJlIHRob3NlIG9mIGxlZ2l0aW1hdGUga2VybmVsIGRhdGEN
-Cj5zdHJ1Y3R1cmVzIHRoYXQgaGF2ZSBiZWVuIGluY29ycmVjdGx5IGZpbHRlcmVkIGJlY2F1c2Ug
-UEFHRV9NQVBQSU5HX0FOT04NCj4oYml0IDEpIGhhcyBiZWVuIGxlZnQgc2V0Og0KPg0KPmNyYXNo
-PiBrbWVtIC1wIDwgZmlsdGVyZWQubGlzdA0KPiAgICAgIFBBR0UgICAgICAgIFBIWVNJQ0FMICAg
-ICAgTUFQUElORyAgICAgICBJTkRFWCBDTlQgRkxBR1MNCj5mZmZmZWEwMDExYjI5MDQwIDQ2Y2E0
-MTAwMCBkZWFkMDAwMGZmZmZmZmZmICAgICAgICAwICAwIDNmZmZmODAwMDAwMDAwDQo+ICAgICAg
-UEFHRSAgICAgICAgUEhZU0lDQUwgICAgICBNQVBQSU5HICAgICAgIElOREVYIENOVCBGTEFHUw0K
-PmZmZmZlYTAwMTFiMjkwNDAgNDZjYTQxMDAwIGRlYWQwMDAwZmZmZmZmZmYgICAgICAgIDAgIDAg
-M2ZmZmY4MDAwMDAwMDANCj4gICAgICBQQUdFICAgICAgICBQSFlTSUNBTCAgICAgIE1BUFBJTkcg
-ICAgICAgSU5ERVggQ05UIEZMQUdTDQo+ZmZmZmVhMDAxMWIyOTY0MCA0NmNhNTkwMDAgZGVhZDAw
-MDBmZmZmZmZmZiAgICAgICAgMCAgMCAzZmZmZjgwMDAwMDAwMA0KPiAgICAgIFBBR0UgICAgICAg
-IFBIWVNJQ0FMICAgICAgTUFQUElORyAgICAgICBJTkRFWCBDTlQgRkxBR1MNCj5mZmZmZWEwMDEx
-YjI5NjQwIDQ2Y2E1OTAwMCBkZWFkMDAwMGZmZmZmZmZmICAgICAgICAwICAwIDNmZmZmODAwMDAw
-MDAwDQo+ICAgICAgUEFHRSAgICAgICAgUEhZU0lDQUwgICAgICBNQVBQSU5HICAgICAgIElOREVY
-IENOVCBGTEFHUw0KPmZmZmZlYTAwMDFkNTE2NDAgIDc1NDU5MDAwIGRlYWQwMDAwZmZmZmZmZmYg
-ICAgICAgIDAgIDAgMWZmZmY4MDAwMDAwMDANCj4uLi4NCj4NCj5JbiBlYXJsaWVyIGtlcm5lbHMs
-IHRoZSBwYWdlLT5tYXBwaW5nIGZpZWxkcyBhYm92ZSB3b3VsZCBub3QgaGF2ZQ0KPnRoZWlyIFBB
-R0VfTUFQUElOR19BTk9OIHNldC4NCj4NCj5EYXZlDQpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+This patch introduces timeout API for purgatory code.
+
+Because we don't want to use interrupts in purgatory, this timeout
+API is based on polling of the clock.
+
+If you want to start a timer, call init_timeout() with seconds to
+the timeout and an instance of struct timeout_info which manages the
+timer virtually.  Then, you call EXIT_ON_TIMEOUT() macro periodically
+to check if the timeout happens.  If it happens, the control jumps
+to timed_out label to handle it.  This means you need to place
+timed_out label in each caller function.
+
+To make this timeout API work, an actual implementation of
+get_unix_time() which returns the current UNIX epoch time is needed.
+
+Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+---
+ purgatory/Makefile       |    4 ++-
+ purgatory/include/time.h |   33 ++++++++++++++++++++++++++
+ purgatory/time.c         |   59 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 95 insertions(+), 1 deletion(-)
+ create mode 100644 purgatory/include/time.h
+ create mode 100644 purgatory/time.c
+
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index 2b5c061..4a30b94 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -12,10 +12,12 @@ PURGATORY_SRCS =
+ PURGATORY_SRCS += purgatory/purgatory.c
+ PURGATORY_SRCS += purgatory/printf.c
+ PURGATORY_SRCS += purgatory/string.c
++PURGATORY_SRCS += purgatory/time.c
+ PURGATORY_MAP = purgatory/purgatory.map
+ 
+ dist += purgatory/Makefile $(PURGATORY_SRCS)				\
+-	purgatory/include/purgatory.h purgatory/include/string.h
++	purgatory/include/purgatory.h purgatory/include/string.h	\
++	purgatory/include/time.h
+ 
+ include $(srcdir)/purgatory/arch/alpha/Makefile
+ include $(srcdir)/purgatory/arch/arm/Makefile
+diff --git a/purgatory/include/time.h b/purgatory/include/time.h
+new file mode 100644
+index 0000000..5d63423
+--- /dev/null
++++ b/purgatory/include/time.h
+@@ -0,0 +1,33 @@
++#ifndef TIME_H
++#define TIME_H
++
++typedef long long time64_t;
++
++struct timeout_info {
++	time64_t start; /* Start time in second */
++	time64_t end;   /* Expiration time in second */
++	int timed_out;  /* Fast check flag. Set to 1 on the timeout */
++};
++
++time64_t date2unix(int year, int mon, int day, int hour, int min, int sec);
++int check_timeout(struct timeout_info *toi);
++void init_timeout(struct timeout_info *toi, time64_t left);
++
++/**
++ * Check if the timeout happens, and if so, jump to timed_out label.
++ *
++ * @toi: an instance of struct timeout_info initialized by init_timeout().
++ * @check_clock: if this value is 0, this macro doesn't check the actual
++ *               clock.  This is useful for the exit path after timeout.
++ */
++#define EXIT_ON_TIMEOUT(toi, check_clock)       	\
++do {                                    		\
++	if ((toi)->timed_out)				\
++		goto timed_out;				\
++	if ((check_clock) && check_timeout((toi))) {	\
++		(toi)->timed_out = 1;			\
++		goto timed_out;				\
++	}						\
++} while (0)
++
++#endif /* TIME_H */
+diff --git a/purgatory/time.c b/purgatory/time.c
+new file mode 100644
+index 0000000..2d803f6
+--- /dev/null
++++ b/purgatory/time.c
+@@ -0,0 +1,59 @@
++#include "time.h"
++
++/* Calculate unix-epoch time based on Julian day number calculation. */
++time64_t date2unix(int year, int mon, int day, int hour, int min, int sec)
++{
++	time64_t days, seconds;
++
++	mon -= 3;
++	if (mon < 0) {
++		year--;
++		mon += 12;
++	}
++
++	/* days since 1970/1/1 (= 0 day) */
++	days = 365*year + year/4 - year/100 + year/400 + (153*mon + 2)/5 +
++		day - 719469;
++
++	seconds = ((days*24 + hour)*60 + min)*60 + sec;
++
++	return seconds;
++}
++
++/*
++ * Dummy for systems which doesn't have clock access implementation.
++ * You need to override this to enable the timeout mechanism.
++ */
++time64_t __attribute__((weak)) get_unix_time(void)
++{
++	/* This means it never times out. */
++	return 0;
++}
++
++/* Retrun 1 if the timeout has happend, otherwise 0. */
++int check_timeout(struct timeout_info *toi)
++{
++	time64_t now;
++
++	if (toi->timed_out)
++		return 1;
++
++	now = get_unix_time();
++	if (toi->end <= now)
++		toi->timed_out = 1;
++
++	return toi->timed_out;
++}
++
++void init_timeout(struct timeout_info *toi, time64_t left)
++{
++	toi->start = get_unix_time();
++
++	/*
++	 * The precision of RTC is one second.  To wait at least specified
++	 * seconds, we do +1.
++	 */
++	toi->end = toi->start + left + 1;
++
++	toi->timed_out = 0;
++}
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
