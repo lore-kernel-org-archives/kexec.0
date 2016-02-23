@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aY7yZ-0000kR-PV
- for kexec@lists.infradead.org; Tue, 23 Feb 2016 08:05:47 +0000
+ id 1aY7yx-0000pU-Mh
+ for kexec@lists.infradead.org; Tue, 23 Feb 2016 08:06:10 +0000
 From: Minoru Usui <min-usui@ti.jp.nec.com>
-Subject: Re: [PATCH v2] Improve the performance of --num-threads -d 31
-Date: Tue, 23 Feb 2016 08:00:24 +0000
-Message-ID: <BE691E4CBA06214BB0FA8EEFC7C61A4D0180D50E@BPXM02GP.gisp.nec.co.jp>
-References: <1455692739-14878-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0180CCEE@BPXM02GP.gisp.nec.co.jp>
- <56CBD5D1.5060407@cn.fujitsu.com>
-In-Reply-To: <56CBD5D1.5060407@cn.fujitsu.com>
+Subject: Re: [PATCH v1] Improve the performance of --num-threads -d 31
+Date: Tue, 23 Feb 2016 07:46:27 +0000
+Message-ID: <BE691E4CBA06214BB0FA8EEFC7C61A4D0180D4AA@BPXM02GP.gisp.nec.co.jp>
+References: <1454307740-2761-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <BE691E4CBA06214BB0FA8EEFC7C61A4D017F494B@BPXM02GP.gisp.nec.co.jp>
+ <BE691E4CBA06214BB0FA8EEFC7C61A4D017F8C30@BPXM02GP.gisp.nec.co.jp>
+ <56C134C1.7050005@cn.fujitsu.com>
+ <BE691E4CBA06214BB0FA8EEFC7C61A4D0180CE26@BPXM02GP.gisp.nec.co.jp>
+ <56CBD78B.5010905@cn.fujitsu.com>
+In-Reply-To: <56CBD78B.5010905@cn.fujitsu.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -21,707 +24,503 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?iso-2022-jp?B?Ilpob3UsIFdlbmppYW4vGyRCPH5KOBsoQj8i?= <zhouwj-fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
- Hi,
-
-> -----Original Message-----
-> From: "Zhou, Wenjian/周文?" [mailto:zhouwj-fnst@cn.fujitsu.com]
-> Sent: Tuesday, February 23, 2016 12:45 PM
-> To: Usui Minoru(碓井 成) <min-usui@ti.jp.nec.com>; kexec@lists.infradead.org
-> Subject: Re: [PATCH v2] Improve the performance of --num-threads -d 31
-> 
-> Hello Usui,
-> 
-> On 02/23/2016 09:32 AM, Minoru Usui wrote:
-> > Hello, Zhou
-> >
-> > Thank you for reflecting my comments.
-> > I have other comments.
-> >
-> > See below.
-> >
-> >> -----Original Message-----
-> >> From: kexec [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Zhou Wenjian
-> >> Sent: Wednesday, February 17, 2016 4:06 PM
-> >> To: kexec@lists.infradead.org
-> >> Subject: [PATCH v2] Improve the performance of --num-threads -d 31
-> >>
-> >> v2:
-> >>          1. address Minoru Usui's comments about magic number and error message
-> >>          2. fix a bug in cyclic mode caused by optimizing
-> >>
-> >> v1:
-> >>          1. change page_flag.ready's value to enum
-> >>          2. change the patch description
-> >>          3. cleanup some codes
-> >>          4. fix a bug in cyclic mode
-> >>
-> >> multi-threads implementation will introduce extra cost when handling
-> >> each page. The origin implementation will also do the extra work for
-> >> filtered pages. So there is a big performance degradation in
-> >> --num-threads -d 31.
-> >> The new implementation won't do the extra work for filtered pages any
-> >> more. So the performance of -d 31 is close to that of serial processing.
-> >>
-> >> The new implementation is just like the following:
-> >>          * The basic idea is producer producing page and consumer writing page.
-> >>          * Each producer have a page_flag_buf list which is used for storing
-> >>            page's description.
-> >>          * The size of page_flag_buf is little so it won't take too much memory.
-> >>          * And all producers will share a page_data_buf array which is
-> >>            used for storing page's compressed data.
-> >>          * The main thread is the consumer. It will find the next pfn and write
-> >>            it into file.
-> >>          * The next pfn is smallest pfn in all page_flag_buf.
-> >>
-> >> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-> >> ---
-> >>   makedumpfile.c | 266 ++++++++++++++++++++++++++++++++++++++-------------------
-> >>   makedumpfile.h |  31 ++++---
-> >>   2 files changed, 200 insertions(+), 97 deletions(-)
-> >>
-> >> diff --git a/makedumpfile.c b/makedumpfile.c
-> >> index fa0b779..31329b5 100644
-> >> --- a/makedumpfile.c
-> >> +++ b/makedumpfile.c
-> >> @@ -3483,7 +3483,8 @@ initial_for_parallel()
-> >>   	unsigned long page_data_buf_size;
-> >>   	unsigned long limit_size;
-> >>   	int page_data_num;
-> >> -	int i;
-> >> +	struct page_flag *current;
-> >> +	int i, j;
-> >>
-> >>   	len_buf_out = calculate_len_buf_out(info->page_size);
-> >>
-> >> @@ -3562,8 +3563,10 @@ initial_for_parallel()
-> >>   		      - MAP_REGION * info->num_threads) * 0.6;
-> >>
-> >>   	page_data_num = limit_size / page_data_buf_size;
-> >> +	info->num_buffers = 3 * info->num_threads;
-> >>
-> >> -	info->num_buffers = MIN(NUM_BUFFERS, page_data_num);
-> >> +	info->num_buffers = MAX(info->num_buffers, NUM_BUFFERS);
-> >> +	info->num_buffers = MIN(info->num_buffers, page_data_num);
-> >>
-> >>   	DEBUG_MSG("Number of struct page_data for produce/consume: %d\n",
-> >>   			info->num_buffers);
-> >> @@ -3588,6 +3591,36 @@ initial_for_parallel()
-> >>   	}
-> >>
-> >>   	/*
-> >> +	 * initial page_flag for each thread
-> >> +	 */
-> >> +	if ((info->page_flag_buf = malloc(sizeof(void *) * info->num_threads))
-> >> +	    == NULL) {
-> >> +		MSG("Can't allocate memory for page_flag_buf. %s\n",
-> >> +				strerror(errno));
-> >> +		return FALSE;
-> >> +	}
-> >> +	memset(info->page_flag_buf, 0, sizeof(void *) * info->num_threads);
-> >> +
-> >> +	for (i = 0; i < info->num_threads; i++) {
-> >> +		if ((info->page_flag_buf[i] = calloc(1, sizeof(struct page_flag))) == NULL) {
-> >> +			MSG("Can't allocate memory for page_flag. %s\n",
-> >> +				strerror(errno));
-> >> +			return FALSE;
-> >> +		}
-> >> +		current = info->page_flag_buf[i];
-> >> +
-> >> +		for (j = 1; j < NUM_BUFFERS; j++) {
-> >> +			if ((current->next = calloc(1, sizeof(struct page_flag))) == NULL) {
-> >> +				MSG("Can't allocate memory for page_flag. %s\n",
-> >> +					strerror(errno));
-> >> +				return FALSE;
-> >> +			}
-> >> +			current = current->next;
-> >> +		}
-> >> +		current->next = info->page_flag_buf[i];
-> >> +	}
-> >> +
-> >> +	/*
-> >>   	 * initial fd_memory for threads
-> >>   	 */
-> >>   	for (i = 0; i < info->num_threads; i++) {
-> >> @@ -3612,7 +3645,8 @@ initial_for_parallel()
-> >>   void
-> >>   free_for_parallel()
-> >>   {
-> >> -	int i;
-> >> +	int i, j;
-> >> +	struct page_flag *current;
-> >>
-> >>   	if (info->threads != NULL) {
-> >>   		for (i = 0; i < info->num_threads; i++) {
-> >> @@ -3655,6 +3689,19 @@ free_for_parallel()
-> >>   		free(info->page_data_buf);
-> >>   	}
-> >>
-> >> +	if (info->page_flag_buf != NULL) {
-> >> +		for (i = 0; i < info->num_threads; i++) {
-> >> +			for (j = 0; j < NUM_BUFFERS; j++) {
-> >> +				if (info->page_flag_buf[i] != NULL) {
-> >> +					current = info->page_flag_buf[i];
-> >> +					info->page_flag_buf[i] = current->next;
-> >> +					free(current);
-> >> +				}
-> >> +			}
-> >> +		}
-> >> +		free(info->page_flag_buf);
-> >> +	}
-> >> +
-> >>   	if (info->parallel_info == NULL)
-> >>   		return;
-> >>
-> >> @@ -7076,10 +7123,10 @@ kdump_thread_function_cyclic(void *arg) {
-> >>   	void *retval = PTHREAD_FAIL;
-> >>   	struct thread_args *kdump_thread_args = (struct thread_args *)arg;
-> >>   	struct page_data *page_data_buf = kdump_thread_args->page_data_buf;
-> >> +	struct page_flag *page_flag_buf = kdump_thread_args->page_flag_buf;
-> >>   	struct cycle *cycle = kdump_thread_args->cycle;
-> >> -	int page_data_num = kdump_thread_args->page_data_num;
-> >> -	mdf_pfn_t pfn;
-> >> -	int index;
-> >> +	mdf_pfn_t pfn = cycle->start_pfn;
-> >> +	int index = kdump_thread_args->thread_num;
-> >>   	int buf_ready;
-> >>   	int dumpable;
-> >>   	int fd_memory = 0;
-> >> @@ -7125,47 +7172,46 @@ kdump_thread_function_cyclic(void *arg) {
-> >>   						kdump_thread_args->thread_num);
-> >>   	}
-> >>
-> >> -	while (1) {
-> >> -		/* get next pfn */
-> >> -		pthread_mutex_lock(&info->current_pfn_mutex);
-> >> -		pfn = info->current_pfn;
-> >> -		info->current_pfn++;
-> >> -		pthread_mutex_unlock(&info->current_pfn_mutex);
-> >> +	/*
-> >> +	 * filtered page won't take anything
-> >> +	 * unfiltered zero page will only take a page_flag_buf
-> >> +	 * unfiltered non-zero page will take a page_flag_buf and a page_data_buf
-> >> +	 */
-> >> +	while (pfn < kdump_thread_args->end_pfn) {
-> >> +		buf_ready = FALSE;
-> >>
-> >> -		if (pfn >= kdump_thread_args->end_pfn)
-> >> -			break;
-> >> +		while (page_data_buf[index].used != FALSE ||
-> >> +				pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
-> >> +			index = (index + 1) % info->num_buffers;
-> >> -		index = -1;
-> >> -		buf_ready = FALSE;
-> >> +		page_data_buf[index].used = TRUE;
-> >>
-> >>   		while (buf_ready == FALSE) {
-> >>   			pthread_testcancel();
-> >> -
-> >> -			index = pfn % page_data_num;
-> >> -
-> >> -			if (pfn - info->consumed_pfn > info->num_buffers)
-> >> -				continue;
-> >> -
-> >> -			if (page_data_buf[index].ready != 0)
-> >> +			if (page_flag_buf->ready == FLAG_READY)
-> >>   				continue;
-> >>
-> >> -			pthread_mutex_lock(&page_data_buf[index].mutex);
-> >> -
-> >> -			if (page_data_buf[index].ready != 0)
-> >> -				goto unlock;
-> >> +			/* get next pfn */
-> >> +			pthread_mutex_lock(&info->current_pfn_mutex);
-> >> +			pfn = info->current_pfn;
-> >> +			info->current_pfn++;
-> >> +			page_flag_buf->ready = FLAG_FILLING;
-> >> +			pthread_mutex_unlock(&info->current_pfn_mutex);
-> >>
-> >> -			buf_ready = TRUE;
-> >> +			page_flag_buf->pfn = pfn;
-> >>
-> >> -			page_data_buf[index].pfn = pfn;
-> >> -			page_data_buf[index].ready = 1;
-> >> +			if (pfn >= kdump_thread_args->end_pfn) {
-> >> +				page_data_buf[index].used = FALSE;
-> >> +				page_flag_buf->ready = FLAG_READY;
-> >> +				break;
-> >> +			}
-> >>
-> >>   			dumpable = is_dumpable(
-> >>   				info->fd_bitmap ? &bitmap_parallel : info->bitmap2,
-> >>   				pfn,
-> >>   				cycle);
-> >> -			page_data_buf[index].dumpable = dumpable;
-> >>   			if (!dumpable)
-> >> -				goto unlock;
-> >> +				continue;
-> >>
-> >>   			if (!read_pfn_parallel(fd_memory, pfn, buf,
-> >>   					       &bitmap_memory_parallel,
-> >> @@ -7178,11 +7224,11 @@ kdump_thread_function_cyclic(void *arg) {
-> >>
-> >>   			if ((info->dump_level & DL_EXCLUDE_ZERO)
-> >>   			    && is_zero_page(buf, info->page_size)) {
-> >> -				page_data_buf[index].zero = TRUE;
-> >> -				goto unlock;
-> >> +				page_flag_buf->zero = TRUE;
-> >> +				goto next;
-> >>   			}
-> >>
-> >> -			page_data_buf[index].zero = FALSE;
-> >> +			page_flag_buf->zero = FALSE;
-> >>
-> >>   			/*
-> >>   			 * Compress the page data.
-> >> @@ -7232,12 +7278,16 @@ kdump_thread_function_cyclic(void *arg) {
-> >>   				page_data_buf[index].size  = info->page_size;
-> >>   				memcpy(page_data_buf[index].buf, buf, info->page_size);
-> >>   			}
-> >> -unlock:
-> >> -			pthread_mutex_unlock(&page_data_buf[index].mutex);
-> >> +			page_flag_buf->index = index;
-> >> +			buf_ready = TRUE;
-> >> +next:
-> >> +			page_flag_buf->ready = FLAG_READY;
-> >> +			page_flag_buf = page_flag_buf->next;
-> >>
-> >>   		}
-> >> -	}
-> >>
-> >> +		pthread_mutex_unlock(&page_data_buf[index].mutex);
-> >> +	}
-> >>   	retval = NULL;
-> >>
-> >>   fail:
-> >> @@ -7265,14 +7315,15 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
-> >>   	struct page_desc pd;
-> >>   	struct timeval tv_start;
-> >>   	struct timeval last, new;
-> >> -	unsigned long long consuming_pfn;
-> >>   	pthread_t **threads = NULL;
-> >>   	struct thread_args *kdump_thread_args = NULL;
-> >>   	void *thread_result;
-> >> -	int page_data_num;
-> >> +	int page_buf_num;
-> >>   	struct page_data *page_data_buf = NULL;
-> >>   	int i;
-> >>   	int index;
-> >> +	int end_count, consuming, check_count;
-> >> +	mdf_pfn_t current_pfn, temp_pfn;
-> >>
-> >>   	if (info->flag_elf_dumpfile)
-> >>   		return FALSE;
-> >> @@ -7319,16 +7370,11 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
-> >>   	threads = info->threads;
-> >>   	kdump_thread_args = info->kdump_thread_args;
-> >>
-> >> -	page_data_num = info->num_buffers;
-> >> +	page_buf_num = info->num_buffers;
-> >>   	page_data_buf = info->page_data_buf;
-> >>
-> >> -	for (i = 0; i < page_data_num; i++) {
-> >> -		/*
-> >> -		 * producer will use pfn in page_data_buf to decide the
-> >> -		 * consumed pfn
-> >> -		 */
-> >> -		page_data_buf[i].pfn = start_pfn - 1;
-> >> -		page_data_buf[i].ready = 0;
-> >> +	for (i = 0; i < page_buf_num; i++) {
-> >> +		page_data_buf[i].used = FALSE;
-> >>   		res = pthread_mutex_init(&page_data_buf[i].mutex, NULL);
-> >>   		if (res != 0) {
-> >>   			ERRMSG("Can't initialize mutex of page_data_buf. %s\n",
-> >> @@ -7342,8 +7388,9 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
-> >>   		kdump_thread_args[i].len_buf_out = len_buf_out;
-> >>   		kdump_thread_args[i].start_pfn = start_pfn;
-> >>   		kdump_thread_args[i].end_pfn = end_pfn;
-> >> -		kdump_thread_args[i].page_data_num = page_data_num;
-> >> +		kdump_thread_args[i].page_buf_num = page_buf_num;
-> >>   		kdump_thread_args[i].page_data_buf = page_data_buf;
-> >> +		kdump_thread_args[i].page_flag_buf = info->page_flag_buf[i];
-> >>   		kdump_thread_args[i].cycle = cycle;
-> >>
-> >>   		res = pthread_create(threads[i], NULL,
-> >> @@ -7356,55 +7403,101 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
-> >>   		}
-> >>   	}
-> >>
-> >> -	consuming_pfn = start_pfn;
-> >> -	index = -1;
-> >> +	end_count = 0;
-> >> +	while (1) {
-> >> +		consuming = 0;
-> >> +		check_count = 0;
-> >>
-> >> -	gettimeofday(&last, NULL);
-> >> +		/*
-> >> +		 * The basic idea is producer producing page and consumer writing page.
-> >> +		 * Each producer have a page_flag_buf list which is used for storing page's description.
-> >> +		 * The size of page_flag_buf is little so it won't take too much memory.
-> >> +		 * And all producers will share a page_data_buf array which is used for storing page's compressed data.
-> >> +		 * The main thread is the consumer. It will find the next pfn and write it into file.
-> >> +		 * The next pfn is smallest pfn in all page_flag_buf.
-> >> +		 */
-> >> +		gettimeofday(&last, NULL);
-> >> +		while (1) {
-> >> +			current_pfn = end_pfn;
-> >>
-> >> -	while (consuming_pfn < end_pfn) {
-> >> -		index = consuming_pfn % page_data_num;
-> >> +			/*
-> >> +			 * page_flag_buf is in circular linked list.
-> >> +			 * The array info->page_flag_buf[] records the current page_flag_buf in each thread's
-> >> +			 * page_flag_buf list.
-> >> +			 * consuming is used for recording in which thread the pfn is the smallest.
-> >> +			 * current_pfn is used for recording the value of pfn when checking the pfn.
-> >> +			 */
-> >> +			for (i = 0; i < info->num_threads; i++) {
-> >> +				if (info->page_flag_buf[i]->ready == FLAG_UNUSED)
-> >> +					continue;
-> >> +				temp_pfn = info->page_flag_buf[i]->pfn;
-> >>
-> >> -		gettimeofday(&new, NULL);
-> >> -		if (new.tv_sec - last.tv_sec > WAIT_TIME) {
-> >> -			ERRMSG("Can't get data of pfn %llx.\n", consuming_pfn);
-> >> -			goto out;
-> >> -		}
-> >> +				/*
-> >> +				 * count how many threads have reached the end.
-> >> +				 */
-> >> +				if (temp_pfn >= end_pfn) {
-> >> +					/*
-> >> +					 * prevent setting FLAG_UNUSED being optimized.
-> >> +					 */
-> >> +					MSG("-");
-> >
-> > Why does this line need?
-> > Please clarify why FLAG_UNUSED is optimized.
-> >
-> 
-> I tried but still can't figure out the reason or get better solution.
-> I will be so happy if you can help me.
-> 
-> In gdb, I run it by step.
-> The code "info->page_flag_buf[i]->ready = FLAG_UNUSED;" can never be reached.
-> If a breakpoint is set here, the code will never be skipped.
-
-On my environment, RHEL7.2, gdb stops at this line even if MSG("-") is deleted.
-See below.
-
-===
-[root@ark crash]# gdb makedumpfile-code-3d32567394bac85ee3247780bfa41072b0d9bfe9/makedumpfile
-GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-80.el7                                           
-Copyright (C) 2013 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
-and "show warranty" for details.
-This GDB was configured as "x86_64-redhat-linux-gnu".
-For bug reporting instructions, please see:
-<http://www.gnu.org/software/gdb/bugs/>...
-Reading symbols from /work/crash/makedumpfile-code-3d32567394bac85ee3247780bfa41072b0d9bfe9/makedumpfile...done.
-(gdb) set args -l -d0 --num-threads=2 ./vmcore ./vmcore.new.2                                 
-(gdb) l 7780                                                                                  
-7775                                    if (info->page_flag_buf[i]->ready == FLAG_UNUSED)
-7776                                            continue;
-7777                                    temp_pfn = info->page_flag_buf[i]->pfn;
-7778    
-7779                                    /*
-7780                                     * count how many threads have reached the end.
-7781                                     */
-7782                                    if (temp_pfn >= end_pfn) {
-7783                                            info->page_flag_buf[i]->ready = FLAG_UNUSED;
-7784    
-(gdb) b 7783
-Breakpoint 1 at 0x433778: file makedumpfile.c, line 7783.
-(gdb)
-(gdb) run
-Starting program: /work/crash/makedumpfile-code-3d32567394bac85ee3247780bfa41072b0d9bfe9/makedumpfile -l -d0 --num-threads=2 ./vmcore ./vmcore.new.2
-[Thread debugging using libthread_db enabled]
-Using host libthread_db library "/lib64/libthread_db.so.1".
-The kernel version is not supported.
-The makedumpfile operation may be incomplete.
-Checking for memory holes          : [100.0 %] |[New Thread 0x7ffff6530700 (LWP 32123)]
-[New Thread 0x7ffff5d2f700 (LWP 32124)]
-Copying data                       : [ 98.8 %] |
-Breakpoint 1, write_kdump_pages_parallel_cyclic (cd_header=<optimized out>, 
-    cd_page=<optimized out>, pd_zero=<optimized out>, offset_data=<optimized out>, 
-    cycle=<optimized out>) at makedumpfile.c:7783
-7783                                            info->page_flag_buf[i]->ready = FLAG_UNUSED;
-Missing separate debuginfos, use: debuginfo-install bzip2-libs-1.0.6-13.el7.x86_64 elfutils-libelf-0.163-3.el7.x86_64 elfutils-libs-0.163-3.el7.x86_64 glibc-2.17-105.el7.x86_64 lzo-2.06-8.el7.x86_64 xz-libs-5.1.2-12alpha.el7.x86_64 zlib-1.2.7-15.el7.x86_64
-(gdb) bt
-#0  write_kdump_pages_parallel_cyclic (cd_header=<optimized out>, cd_page=<optimized out>, 
-    pd_zero=<optimized out>, offset_data=<optimized out>, cycle=<optimized out>)
-    at makedumpfile.c:7783
-#1  0x0000000000439a15 in write_kdump_pages_and_bitmap_cyclic (
-    cd_header=cd_header@entry=0x7fffffffe2d0, cd_page=cd_page@entry=0x7fffffffe300)
-    at makedumpfile.c:8501
-#2  0x000000000043a918 in writeout_dumpfile () at makedumpfile.c:9497
-#3  0x000000000044181c in create_dumpfile () at makedumpfile.c:9724
-#4  0x00000000004086df in main (argc=<optimized out>, argv=0x7fffffffe468)
-    at makedumpfile.c:11159
-(gdb)
-===
-
-> >>
-> >> -		/*
-> >> -		 * check pfn first without mutex locked to reduce the time
-> >> -		 * trying to lock the mutex
-> >> -		 */
-> >> -		if (page_data_buf[index].pfn != consuming_pfn)
-> >> -			continue;
-> >> +					info->page_flag_buf[i]->ready = FLAG_UNUSED;
-> >>
-> >> -		if (pthread_mutex_trylock(&page_data_buf[index].mutex) != 0)
-> >> -			continue;
-> >> +					info->current_pfn = end_pfn;
-> >
-> > This part doesn't get info->current_pfn_mutex.
-> > It becomes bigger than end_pfn at the end of producer thread in following case.
-> >
-> > ===
-> >    producer                   Consumer
-> > ---------------------------------------------------------
-> >    pthread_mutex_lock()
-> >    pfn = info->current_pfn
-> >                               info->current_pfn = end_pfn
-> >    info->current_pfn++
-> >      -> end_pfn + 1
-> >    pthread_mutex_unlock()
-> > ===
-> >
-> > But I know, if this race is happened, processing other producer thread and consumer thread works well
-> > in current cycle.
-> > Because each thread checks whether info->current_pfn >= end_pfn.
-> >
-> > On the other hand, info->current_pfn is initialized to cycle->start_pfn before pthread_create()
-> > in write_kdump_pages_parallel_cyclic().
-> > This means it does not cause a problem in next cycle, too.
-> >
-> > In other words, my point is following.
-> >
-> >    a) When info->current_pfn changes, you have to get info->current_pfn_mutex.
-> >    b) If you allow info->current_pfn is bigger than end_pfn at the end of each cycle,
-> >       "info->current_pfn = end_pfn;" is unnecessary.
-> >
-> > Honestly, I don't like approach b).
-> 
-> You're right. Some thing I thought is wrong.
-> But I don't like lock if I have other choice.
-> I will set info->current_pfn before returning.
-> How about it?
-
-If you mean you set info->current_pfn by producer side, 
-this race will occur between producer A and producer B.
-
-I think you can't avoid getting mutex lock, if you will change info->current_pfn.
-
-Thanks,
-Minoru Usui
-
-
-> --
-> Thanks
-> Zhou
-> 
-> >
-> > Thanks,
-> > Minoru Usui
-> >
-> >> +					end_count++;
-> >> +					continue;
-> >> +				}
-> >> +
-> >> +				if (current_pfn < temp_pfn)
-> >> +					continue;
-> >>
-> >> -		/* check whether the found one is ready to be consumed */
-> >> -		if (page_data_buf[index].pfn != consuming_pfn ||
-> >> -		    page_data_buf[index].ready != 1) {
-> >> -			goto unlock;
-> >> +				check_count++;
-> >> +				consuming = i;
-> >> +				current_pfn = temp_pfn;
-> >> +			}
-> >> +
-> >> +			/*
-> >> +			 * If all the threads have reached the end, we will finish writing.
-> >> +			 */
-> >> +			if (end_count >= info->num_threads)
-> >> +				goto finish;
-> >> +
-> >> +			/*
-> >> +			 * Since it has the probabilty that there is no page_flag_buf being ready,
-> >> +			 * we should recheck if it happens.
-> >> +			 */
-> >> +			if (check_count == 0)
-> >> +				continue;
-> >> +
-> >> +			/*
-> >> +			 * If the page_flag_buf is not ready, the pfn recorded may be changed.
-> >> +			 * So we should recheck.
-> >> +			 */
-> >> +			if (info->page_flag_buf[consuming]->ready != FLAG_READY) {
-> >> +				gettimeofday(&new, NULL);
-> >> +				if (new.tv_sec - last.tv_sec > WAIT_TIME) {
-> >> +					ERRMSG("Can't get data of pfn.\n");
-> >> +					goto out;
-> >> +				}
-> >> +				continue;
-> >> +			}
-> >> +
-> >> +			if (current_pfn == info->page_flag_buf[consuming]->pfn)
-> >> +				break;
-> >>   		}
-> >>
-> >>   		if ((num_dumped % per) == 0)
-> >>   			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
-> >>
-> >> -		/* next pfn is found, refresh last here */
-> >> -		last = new;
-> >> -		consuming_pfn++;
-> >> -		info->consumed_pfn++;
-> >> -		page_data_buf[index].ready = 0;
-> >> -
-> >> -		if (page_data_buf[index].dumpable == FALSE)
-> >> -			goto unlock;
-> >> -
-> >>   		num_dumped++;
-> >>
-> >> -		if (page_data_buf[index].zero == TRUE) {
-> >> +
-> >> +		if (info->page_flag_buf[consuming]->zero == TRUE) {
-> >>   			if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
-> >>   				goto out;
-> >>   			pfn_zero++;
-> >>   		} else {
-> >> +			index = info->page_flag_buf[consuming]->index;
-> >>   			pd.flags      = page_data_buf[index].flags;
-> >>   			pd.size       = page_data_buf[index].size;
-> >>   			pd.page_flags = 0;
-> >> @@ -7420,12 +7513,12 @@ write_kdump_pages_parallel_cyclic(struct cache_data *cd_header,
-> >>   			 */
-> >>   			if (!write_cache(cd_page, page_data_buf[index].buf, pd.size))
-> >>   				goto out;
-> >> -
-> >> +			page_data_buf[index].used = FALSE;
-> >>   		}
-> >> -unlock:
-> >> -		pthread_mutex_unlock(&page_data_buf[index].mutex);
-> >> +		info->page_flag_buf[consuming]->ready = FLAG_UNUSED;
-> >> +		info->page_flag_buf[consuming] = info->page_flag_buf[consuming]->next;
-> >>   	}
-> >> -
-> >> +finish:
-> >>   	ret = TRUE;
-> >>   	/*
-> >>   	 * print [100 %]
-> >> @@ -7464,7 +7557,7 @@ out:
-> >>   	}
-> >>
-> >>   	if (page_data_buf != NULL) {
-> >> -		for (i = 0; i < page_data_num; i++) {
-> >> +		for (i = 0; i < page_buf_num; i++) {
-> >>   			pthread_mutex_destroy(&page_data_buf[i].mutex);
-> >>   		}
-> >>   	}
-> >> @@ -7564,6 +7657,7 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> >>   		num_dumped++;
-> >>   		if (!read_pfn(pfn, buf))
-> >>   			goto out;
-> >> +
-> >>   		filter_data_buffer(buf, pfn_to_paddr(pfn), info->page_size);
-> >>
-> >>   		/*
-> >> diff --git a/makedumpfile.h b/makedumpfile.h
-> >> index e0b5bbf..8a9a5b2 100644
-> >> --- a/makedumpfile.h
-> >> +++ b/makedumpfile.h
-> >> @@ -977,7 +977,7 @@ typedef unsigned long long int ulonglong;
-> >>   #define PAGE_DATA_NUM	(50)
-> >>   #define WAIT_TIME	(60 * 10)
-> >>   #define PTHREAD_FAIL	((void *)-2)
-> >> -#define NUM_BUFFERS	(50)
-> >> +#define NUM_BUFFERS	(20)
-> >>
-> >>   struct mmap_cache {
-> >>   	char	*mmap_buf;
-> >> @@ -985,28 +985,36 @@ struct mmap_cache {
-> >>   	off_t   mmap_end_offset;
-> >>   };
-> >>
-> >> +enum {
-> >> +	FLAG_UNUSED,
-> >> +	FLAG_READY,
-> >> +	FLAG_FILLING
-> >> +};
-> >> +struct page_flag {
-> >> +	mdf_pfn_t pfn;
-> >> +	char zero;
-> >> +	char ready;
-> >> +	short index;
-> >> +	struct page_flag *next;
-> >> +};
-> >> +
-> >>   struct page_data
-> >>   {
-> >> -	mdf_pfn_t pfn;
-> >> -	int dumpable;
-> >> -	int zero;
-> >> -	unsigned int flags;
-> >> +	pthread_mutex_t mutex;
-> >>   	long size;
-> >>   	unsigned char *buf;
-> >> -	pthread_mutex_t mutex;
-> >> -	/*
-> >> -	 * whether the page_data is ready to be consumed
-> >> -	 */
-> >> -	int ready;
-> >> +	int flags;
-> >> +	int used;
-> >>   };
-> >>
-> >>   struct thread_args {
-> >>   	int thread_num;
-> >>   	unsigned long len_buf_out;
-> >>   	mdf_pfn_t start_pfn, end_pfn;
-> >> -	int page_data_num;
-> >> +	int page_buf_num;
-> >>   	struct cycle *cycle;
-> >>   	struct page_data *page_data_buf;
-> >> +	struct page_flag *page_flag_buf;
-> >>   };
-> >>
-> >>   /*
-> >> @@ -1295,6 +1303,7 @@ struct DumpInfo {
-> >>   	pthread_t **threads;
-> >>   	struct thread_args *kdump_thread_args;
-> >>   	struct page_data *page_data_buf;
-> >> +	struct page_flag **page_flag_buf;
-> >>   	pthread_rwlock_t usemmap_rwlock;
-> >>   	mdf_pfn_t current_pfn;
-> >>   	pthread_mutex_t current_pfn_mutex;
-> >> --
-> >> 1.8.3.1
-> >>
-> >>
-> >>
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogIlpob3UsIFdlbmpp
+YW4v5ZGo5paH5YmRIiBbbWFpbHRvOnpob3V3ai1mbnN0QGNuLmZ1aml0c3UuY29tXQ0KPiBTZW50
+OiBUdWVzZGF5LCBGZWJydWFyeSAyMywgMjAxNiAxMjo1MyBQTQ0KPiBUbzogVXN1aSBNaW5vcnUo
+56KT5LqVIOaIkCkgPG1pbi11c3VpQHRpLmpwLm5lYy5jb20+OyBrZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjFdIEltcHJvdmUgdGhlIHBlcmZvcm1hbmNl
+IG9mIC0tbnVtLXRocmVhZHMgLWQgMzENCj4gDQo+IE9uIDAyLzIzLzIwMTYgMTA6MTYgQU0sIE1p
+bm9ydSBVc3VpIHdyb3RlOg0KPiA+IEhlbGxvIFpob3UNCj4gPg0KPiA+IEknbSBzb3JyeSBmb3Ig
+bGF0ZSByZXBseSwgdG9vLg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+ID4+IEZyb206ICJaaG91LCBXZW5qaWFuL+WRqOaWh+WJkSIgW21haWx0bzp6aG91d2otZm5zdEBj
+bi5mdWppdHN1LmNvbV0NCj4gPj4gU2VudDogTW9uZGF5LCBGZWJydWFyeSAxNSwgMjAxNiAxMTox
+NSBBTQ0KPiA+PiBUbzogVXN1aSBNaW5vcnUo56KT5LqVIOaIkCkgPG1pbi11c3VpQHRpLmpwLm5l
+Yy5jb20+OyBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjFdIEltcHJvdmUgdGhlIHBlcmZvcm1hbmNlIG9mIC0tbnVtLXRocmVhZHMgLWQgMzENCj4g
+Pj4NCj4gPj4gSGVsbG8gVXN1aSwNCj4gPj4NCj4gPj4gVGhhbmtzIHZlcnkgbXVjaCBmb3IgeW91
+ciBjb21tZW50cy4NCj4gPj4gQW5kIHNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseS4NCj4gPj4NCj4g
+Pj4gU2VlIGJlbG93Lg0KPiA+Pg0KPiA+PiBPbiAwMi8wOC8yMDE2IDAxOjAwIFBNLCBNaW5vcnUg
+VXN1aSB3cm90ZToNCj4gPj4+IEhlbGxvLA0KPiA+Pj4NCj4gPj4+PiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+Pj4+IEZyb206IGtleGVjIFttYWlsdG86a2V4ZWMtYm91bmNlc0BsaXN0
+cy5pbmZyYWRlYWQub3JnXSBPbiBCZWhhbGYgT2YgTWlub3J1IFVzdWkNCj4gPj4+PiBTZW50OiBU
+aHVyc2RheSwgRmVicnVhcnkgMDQsIDIwMTYgODo1MiBBTQ0KPiA+Pj4+IFRvOiBaaG91IFdlbmpp
+YW4gPHpob3V3ai1mbnN0QGNuLmZ1aml0c3UuY29tPjsga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+Zw0KPiA+Pj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjFdIEltcHJvdmUgdGhlIHBlcmZvcm1hbmNl
+IG9mIC0tbnVtLXRocmVhZHMgLWQgMzENCj4gPj4+Pg0KPiA+Pj4+IEhpLCBaaG91DQo+ID4+Pj4N
+Cj4gPj4+PiBJIGhhdmUgc29tZSBjb21tZW50cy4NCj4gPj4+PiBJJ20gc29ycnkgaWYgSSBoYXZl
+IG1pc3VuZGVyc3Rvb2QgeW91ciBjb2RlLg0KPiA+Pj4+DQo+ID4+Pj4+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+ID4+Pj4+IEZyb206IGtleGVjIFttYWlsdG86a2V4ZWMtYm91bmNlc0Bs
+aXN0cy5pbmZyYWRlYWQub3JnXSBPbiBCZWhhbGYgT2YgWmhvdSBXZW5qaWFuDQo+ID4+Pj4+IFNl
+bnQ6IE1vbmRheSwgRmVicnVhcnkgMDEsIDIwMTYgMzoyMiBQTQ0KPiA+Pj4+PiBUbzoga2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+Pj4+PiBTdWJqZWN0OiBbUEFUQ0ggdjFdIEltcHJvdmUg
+dGhlIHBlcmZvcm1hbmNlIG9mIC0tbnVtLXRocmVhZHMgLWQgMzENCj4gPj4+Pj4NCj4gPj4+Pj4g
+djE6DQo+ID4+Pj4+ICAgICAgICAgICAxLiBjaGFuZ2UgcGFnZV9mbGFnLnJlYWR5J3MgdmFsdWUg
+dG8gZW51bQ0KPiA+Pj4+PiAgICAgICAgICAgMi4gY2hhbmdlIHRoZSBwYXRjaCBkZXNjcmlwdGlv
+bg0KPiA+Pj4+PiAgICAgICAgICAgMy4gY2xlYW51cCBzb21lIGNvZGVzDQo+ID4+Pj4+IAk0LiBm
+aXggYSBidWcgaW4gY3ljbGljIG1vZGUNCj4gPj4+Pj4NCj4gPj4+Pj4gbXVsdGktdGhyZWFkcyBp
+bXBsZW1lbnRhdGlvbiB3aWxsIGludHJvZHVjZSBleHRyYSBjb3N0IHdoZW4gaGFuZGxpbmcNCj4g
+Pj4+Pj4gZWFjaCBwYWdlLiBUaGUgb3JpZ2luIGltcGxlbWVudGF0aW9uIHdpbGwgYWxzbyBkbyB0
+aGUgZXh0cmEgd29yayBmb3INCj4gPj4+Pj4gZmlsdGVyZWQgcGFnZXMuIFNvIHRoZXJlIGlzIGEg
+YmlnIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9uIGluDQo+ID4+Pj4+IC0tbnVtLXRocmVhZHMgLWQg
+MzEuDQo+ID4+Pj4+IFRoZSBuZXcgaW1wbGVtZW50YXRpb24gd29uJ3QgZG8gdGhlIGV4dHJhIHdv
+cmsgZm9yIGZpbHRlcmVkIHBhZ2VzIGFueQ0KPiA+Pj4+PiBtb3JlLiBTbyB0aGUgcGVyZm9ybWFu
+Y2Ugb2YgLWQgMzEgaXMgY2xvc2UgdG8gdGhhdCBvZiBzZXJpYWwgcHJvY2Vzc2luZy4NCj4gPj4+
+Pj4NCj4gPj4+Pj4gVGhlIG5ldyBpbXBsZW1lbnRhdGlvbiBpcyBqdXN0IGxpa2UgdGhlIGZvbGxv
+d2luZzoNCj4gPj4+Pj4gICAgICAgICAgICogVGhlIGJhc2ljIGlkZWEgaXMgcHJvZHVjZXIgcHJv
+ZHVjaW5nIHBhZ2UgYW5kIGNvbnN1bWVyIHdyaXRpbmcgcGFnZS4NCj4gPj4+Pj4gICAgICAgICAg
+ICogRWFjaCBwcm9kdWNlciBoYXZlIGEgcGFnZV9mbGFnX2J1ZiBsaXN0IHdoaWNoIGlzIHVzZWQg
+Zm9yIHN0b3JpbmcNCj4gPj4+Pj4gICAgICAgICAgICAgcGFnZSdzIGRlc2NyaXB0aW9uLg0KPiA+
+Pj4+PiAgICAgICAgICAgKiBUaGUgc2l6ZSBvZiBwYWdlX2ZsYWdfYnVmIGlzIGxpdHRsZSBzbyBp
+dCB3b24ndCB0YWtlIHRvbyBtdWNoIG1lbW9yeS4NCj4gPj4+Pj4gICAgICAgICAgICogQW5kIGFs
+bCBwcm9kdWNlcnMgd2lsbCBzaGFyZSBhIHBhZ2VfZGF0YV9idWYgYXJyYXkgd2hpY2ggaXMNCj4g
+Pj4+Pj4gICAgICAgICAgICAgdXNlZCBmb3Igc3RvcmluZyBwYWdlJ3MgY29tcHJlc3NlZCBkYXRh
+Lg0KPiA+Pj4+PiAgICAgICAgICAgKiBUaGUgbWFpbiB0aHJlYWQgaXMgdGhlIGNvbnN1bWVyLiBJ
+dCB3aWxsIGZpbmQgdGhlIG5leHQgcGZuIGFuZCB3cml0ZQ0KPiA+Pj4+PiAgICAgICAgICAgICBp
+dCBpbnRvIGZpbGUuDQo+ID4+Pj4+ICAgICAgICAgICAqIFRoZSBuZXh0IHBmbiBpcyBzbWFsbGVz
+dCBwZm4gaW4gYWxsIHBhZ2VfZmxhZ19idWYuDQo+ID4+Pj4+DQo+ID4+Pj4+IFNpZ25lZC1vZmYt
+Ynk6IFpob3UgV2VuamlhbiA8emhvdXdqLWZuc3RAY24uZnVqaXRzdS5jb20+DQo+ID4+Pj4+IC0t
+LQ0KPiA+Pj4+PiAgICBtYWtlZHVtcGZpbGUuYyB8IDI1OCArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPj4+Pj4gICAgbWFrZWR1bXBm
+aWxlLmggfCAgMzEgKysrKy0tLQ0KPiA+Pj4+PiAgICAyIGZpbGVzIGNoYW5nZWQsIDE5MyBpbnNl
+cnRpb25zKCspLCA5NiBkZWxldGlvbnMoLSkNCj4gPj4+Pj4NCj4gPj4+Pj4gZGlmZiAtLWdpdCBh
+L21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxlLmMNCj4gPj4+Pj4gaW5kZXggZmEwYjc3OS4u
+MGVjZDA2NSAxMDA2NDQNCj4gPj4+Pj4gLS0tIGEvbWFrZWR1bXBmaWxlLmMNCj4gPj4+Pj4gKysr
+IGIvbWFrZWR1bXBmaWxlLmMNCj4gPj4+Pj4gQEAgLTM0ODMsNyArMzQ4Myw4IEBAIGluaXRpYWxf
+Zm9yX3BhcmFsbGVsKCkNCj4gPj4+Pj4gICAgCXVuc2lnbmVkIGxvbmcgcGFnZV9kYXRhX2J1Zl9z
+aXplOw0KPiA+Pj4+PiAgICAJdW5zaWduZWQgbG9uZyBsaW1pdF9zaXplOw0KPiA+Pj4+PiAgICAJ
+aW50IHBhZ2VfZGF0YV9udW07DQo+ID4+Pj4+IC0JaW50IGk7DQo+ID4+Pj4+ICsJc3RydWN0IHBh
+Z2VfZmxhZyAqY3VycmVudDsNCj4gPj4+Pj4gKwlpbnQgaSwgajsNCj4gPj4+Pj4NCj4gPj4+Pj4g
+ICAgCWxlbl9idWZfb3V0ID0gY2FsY3VsYXRlX2xlbl9idWZfb3V0KGluZm8tPnBhZ2Vfc2l6ZSk7
+DQo+ID4+Pj4+DQo+ID4+Pj4+IEBAIC0zNTYyLDggKzM1NjMsMTAgQEAgaW5pdGlhbF9mb3JfcGFy
+YWxsZWwoKQ0KPiA+Pj4+PiAgICAJCSAgICAgIC0gTUFQX1JFR0lPTiAqIGluZm8tPm51bV90aHJl
+YWRzKSAqIDAuNjsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCXBhZ2VfZGF0YV9udW0gPSBsaW1pdF9z
+aXplIC8gcGFnZV9kYXRhX2J1Zl9zaXplOw0KPiA+Pj4+PiArCWluZm8tPm51bV9idWZmZXJzID0g
+MyAqIGluZm8tPm51bV90aHJlYWRzOw0KPiA+Pj4+Pg0KPiA+Pj4+PiAtCWluZm8tPm51bV9idWZm
+ZXJzID0gTUlOKE5VTV9CVUZGRVJTLCBwYWdlX2RhdGFfbnVtKTsNCj4gPj4+Pj4gKwlpbmZvLT5u
+dW1fYnVmZmVycyA9IE1BWChpbmZvLT5udW1fYnVmZmVycywgTlVNX0JVRkZFUlMpOw0KPiA+Pj4+
+PiArCWluZm8tPm51bV9idWZmZXJzID0gTUlOKGluZm8tPm51bV9idWZmZXJzLCBwYWdlX2RhdGFf
+bnVtKTsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCURFQlVHX01TRygiTnVtYmVyIG9mIHN0cnVjdCBw
+YWdlX2RhdGEgZm9yIHByb2R1Y2UvY29uc3VtZTogJWRcbiIsDQo+ID4+Pj4+ICAgIAkJCWluZm8t
+Pm51bV9idWZmZXJzKTsNCj4gPj4+Pj4gQEAgLTM1ODgsNiArMzU5MSwzNiBAQCBpbml0aWFsX2Zv
+cl9wYXJhbGxlbCgpDQo+ID4+Pj4+ICAgIAl9DQo+ID4+Pj4+DQo+ID4+Pj4+ICAgIAkvKg0KPiA+
+Pj4+PiArCSAqIGluaXRpYWwgcGFnZV9mbGFnIGZvciBlYWNoIHRocmVhZA0KPiA+Pj4+PiArCSAq
+Lw0KPiA+Pj4+PiArCWlmICgoaW5mby0+cGFnZV9mbGFnX2J1ZiA9IG1hbGxvYyhzaXplb2Yodm9p
+ZCAqKSAqIGluZm8tPm51bV90aHJlYWRzKSkNCj4gPj4+Pj4gKwkgICAgPT0gTlVMTCkgew0KPiA+
+Pj4+PiArCQlNU0coIkNhbid0IGFsbG9jYXRlIG1lbW9yeSBmb3IgcGFnZV9mbGFnX2J1Zi4gJXNc
+biIsDQo+ID4+Pj4+ICsJCQkJc3RyZXJyb3IoZXJybm8pKTsNCj4gPj4+Pj4gKwkJcmV0dXJuIEZB
+TFNFOw0KPiA+Pj4+PiArCX0NCj4gPj4+Pj4gKwltZW1zZXQoaW5mby0+cGFnZV9mbGFnX2J1Ziwg
+MCwgc2l6ZW9mKHZvaWQgKikgKiBpbmZvLT5udW1fdGhyZWFkcyk7DQo+ID4+Pj4+ICsNCj4gPj4+
+Pj4gKwlmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX3RocmVhZHM7IGkrKykgew0KPiA+Pj4+PiAr
+CQlpZiAoKGluZm8tPnBhZ2VfZmxhZ19idWZbaV0gPSBtYWxsb2Moc2l6ZW9mKHN0cnVjdCBwYWdl
+X2ZsYWcpKSkgPT0gTlVMTCkgew0KPiA+Pj4+DQo+ID4+Pj4gRmlzdCBlbGVtZW50IG9mIHN0cnVj
+dCBwYWdlX2ZsYWcgaW4gY2lyY3VsYXIgbGlzdCBpcyBhbGxvY2F0ZWQgYnkgbWFsbG9jKCksDQo+
+ID4+Pj4gYnV0IG90aGVyIGVsZW1lbnRzIGFyZSBhbGxvY2F0ZWQgYnkgY2FsbG9jKCkuKHNlZSBi
+ZWxvdykNCj4gPj4+PiBJIHRoaW5rIGJvdGggZWxlbWVudHMgc2hvdWxkIGJlIGFsbG9jYXRlZCBi
+eSBjYWxsb2MoKS4NCj4gPj4+Pg0KPiA+Pg0KPiA+PiBZZXMsIHlvdSBhcmUgcmlnaHQuDQo+ID4+
+IEkgaGF2ZSBtYWRlIGEgbWlzdGFrZS4NCj4gPj4NCj4gPj4+Pj4gKwkJCU1TRygiQ2FuJ3QgYWxs
+b2NhdGUgbWVtb3J5IGZvciBwYWdlX2ZsYWdfYnVmLiAlc1xuIiwNCj4gPj4+Pj4gKwkJCQlzdHJl
+cnJvcihlcnJubykpOw0KPiA+Pj4+PiArCQkJcmV0dXJuIEZBTFNFOw0KPiA+Pj4+PiArCQl9DQo+
+ID4+Pj4+ICsJCWN1cnJlbnQgPSBpbmZvLT5wYWdlX2ZsYWdfYnVmW2ldOw0KPiA+Pj4+PiArDQo+
+ID4+Pj4+ICsJCWZvciAoaiA9IDE7IGogPCBOVU1fQlVGRkVSUzsgaisrKSB7DQo+ID4+Pj4+ICsJ
+CQlpZiAoKGN1cnJlbnQtPm5leHQgPSBjYWxsb2MoMCwgc2l6ZW9mKHN0cnVjdCBwYWdlX2ZsYWcp
+KSkgPT0gTlVMTCkgew0KPiA+Pj4+PiArCQkJCU1TRygiQ2FuJ3QgYWxsb2NhdGUgbWVtb3J5IGZv
+ciBkYXRhIG9mIHBhZ2VfZGF0YV9idWYuICVzXG4iLA0KPiA+Pj4+PiArCQkJCQlzdHJlcnJvcihl
+cnJubykpOw0KPiA+Pj4+PiArCQkJCXJldHVybiBGQUxTRTsNCj4gPj4+Pj4gKwkJCX0NCj4gPj4+
+Pg0KPiA+Pj4+DQo+ID4+Pj4gRmlyc3QgYXJndW1lbnQgb2YgY2FsbG9jKCkgc2hvdWxkIGJlIDEs
+IG5vdCAwLg0KPiA+Pj4+IEFuZCB0aGVyZSBpcyB0eXBvIGluIGVycm9yIG1lc3NhZ2UuDQo+ID4+
+Pj4gQWxsb2NhdGVkIGVsZW1lbnQgaXMgbm90IHBhZ2VfZGF0YV9idWYuDQo+ID4+Pj4NCj4gPj4N
+Cj4gPj4gSSBhZ3JlZS4NCj4gPj4NCj4gPj4+Pj4gKwkJCWN1cnJlbnQgPSBjdXJyZW50LT5uZXh0
+Ow0KPiA+Pj4+PiArCQl9DQo+ID4+Pj4+ICsJCWN1cnJlbnQtPm5leHQgPSBpbmZvLT5wYWdlX2Zs
+YWdfYnVmW2ldOw0KPiA+Pj4+PiArCX0NCj4gPj4+Pj4gKw0KPiA+Pj4+PiArCS8qDQo+ID4+Pj4+
+ICAgIAkgKiBpbml0aWFsIGZkX21lbW9yeSBmb3IgdGhyZWFkcw0KPiA+Pj4+PiAgICAJICovDQo+
+ID4+Pj4+ICAgIAlmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX3RocmVhZHM7IGkrKykgew0KPiA+
+Pj4+PiBAQCAtMzYxMiw3ICszNjQ1LDggQEAgaW5pdGlhbF9mb3JfcGFyYWxsZWwoKQ0KPiA+Pj4+
+PiAgICB2b2lkDQo+ID4+Pj4+ICAgIGZyZWVfZm9yX3BhcmFsbGVsKCkNCj4gPj4+Pj4gICAgew0K
+PiA+Pj4+PiAtCWludCBpOw0KPiA+Pj4+PiArCWludCBpLCBqOw0KPiA+Pj4+PiArCXN0cnVjdCBw
+YWdlX2ZsYWcgKmN1cnJlbnQ7DQo+ID4+Pj4+DQo+ID4+Pj4+ICAgIAlpZiAoaW5mby0+dGhyZWFk
+cyAhPSBOVUxMKSB7DQo+ID4+Pj4+ICAgIAkJZm9yIChpID0gMDsgaSA8IGluZm8tPm51bV90aHJl
+YWRzOyBpKyspIHsNCj4gPj4+Pj4gQEAgLTM2NTUsNiArMzY4OSwxOSBAQCBmcmVlX2Zvcl9wYXJh
+bGxlbCgpDQo+ID4+Pj4+ICAgIAkJZnJlZShpbmZvLT5wYWdlX2RhdGFfYnVmKTsNCj4gPj4+Pj4g
+ICAgCX0NCj4gPj4+Pj4NCj4gPj4+Pj4gKwlpZiAoaW5mby0+cGFnZV9mbGFnX2J1ZiAhPSBOVUxM
+KSB7DQo+ID4+Pj4+ICsJCWZvciAoaSA9IDA7IGkgPCBpbmZvLT5udW1fdGhyZWFkczsgaSsrKSB7
+DQo+ID4+Pj4+ICsJCQlmb3IgKGogPSAwOyBqIDwgTlVNX0JVRkZFUlM7IGorKykgew0KPiA+Pj4+
+PiArCQkJCWlmIChpbmZvLT5wYWdlX2ZsYWdfYnVmW2ldICE9IE5VTEwpIHsNCj4gPj4+Pj4gKwkJ
+CQkJY3VycmVudCA9IGluZm8tPnBhZ2VfZmxhZ19idWZbaV07DQo+ID4+Pj4+ICsJCQkJCWluZm8t
+PnBhZ2VfZmxhZ19idWZbaV0gPSBjdXJyZW50LT5uZXh0Ow0KPiA+Pj4+PiArCQkJCQlmcmVlKGN1
+cnJlbnQpOw0KPiA+Pj4+PiArCQkJCX0NCj4gPj4+Pj4gKwkJCX0NCj4gPj4+Pj4gKwkJfQ0KPiA+
+Pj4+PiArCQlmcmVlKGluZm8tPnBhZ2VfZmxhZ19idWYpOw0KPiA+Pj4+PiArCX0NCj4gPj4+Pj4g
+Kw0KPiA+Pj4+PiAgICAJaWYgKGluZm8tPnBhcmFsbGVsX2luZm8gPT0gTlVMTCkNCj4gPj4+Pj4g
+ICAgCQlyZXR1cm47DQo+ID4+Pj4+DQo+ID4+Pj4+IEBAIC03MDc2LDEwICs3MTIzLDEwIEBAIGtk
+dW1wX3RocmVhZF9mdW5jdGlvbl9jeWNsaWModm9pZCAqYXJnKSB7DQo+ID4+Pj4+ICAgIAl2b2lk
+ICpyZXR2YWwgPSBQVEhSRUFEX0ZBSUw7DQo+ID4+Pj4+ICAgIAlzdHJ1Y3QgdGhyZWFkX2FyZ3Mg
+KmtkdW1wX3RocmVhZF9hcmdzID0gKHN0cnVjdCB0aHJlYWRfYXJncyAqKWFyZzsNCj4gPj4+Pj4g
+ICAgCXN0cnVjdCBwYWdlX2RhdGEgKnBhZ2VfZGF0YV9idWYgPSBrZHVtcF90aHJlYWRfYXJncy0+
+cGFnZV9kYXRhX2J1ZjsNCj4gPj4+Pj4gKwlzdHJ1Y3QgcGFnZV9mbGFnICpwYWdlX2ZsYWdfYnVm
+ID0ga2R1bXBfdGhyZWFkX2FyZ3MtPnBhZ2VfZmxhZ19idWY7DQo+ID4+Pj4+ICAgIAlzdHJ1Y3Qg
+Y3ljbGUgKmN5Y2xlID0ga2R1bXBfdGhyZWFkX2FyZ3MtPmN5Y2xlOw0KPiA+Pj4+PiAtCWludCBw
+YWdlX2RhdGFfbnVtID0ga2R1bXBfdGhyZWFkX2FyZ3MtPnBhZ2VfZGF0YV9udW07DQo+ID4+Pj4+
+ICAgIAltZGZfcGZuX3QgcGZuOw0KPiA+Pj4+PiAtCWludCBpbmRleDsNCj4gPj4+Pj4gKwlpbnQg
+aW5kZXggPSBrZHVtcF90aHJlYWRfYXJncy0+dGhyZWFkX251bTsNCj4gPj4+Pj4gICAgCWludCBi
+dWZfcmVhZHk7DQo+ID4+Pj4+ICAgIAlpbnQgZHVtcGFibGU7DQo+ID4+Pj4+ICAgIAlpbnQgZmRf
+bWVtb3J5ID0gMDsNCj4gPj4+Pj4gQEAgLTcxMjUsNDcgKzcxNzIsNDcgQEAga2R1bXBfdGhyZWFk
+X2Z1bmN0aW9uX2N5Y2xpYyh2b2lkICphcmcpIHsNCj4gPj4+Pj4gICAgCQkJCQkJa2R1bXBfdGhy
+ZWFkX2FyZ3MtPnRocmVhZF9udW0pOw0KPiA+Pj4+PiAgICAJfQ0KPiA+Pj4+Pg0KPiA+Pj4+PiAt
+CXdoaWxlICgxKSB7DQo+ID4+Pj4+IC0JCS8qIGdldCBuZXh0IHBmbiAqLw0KPiA+Pj4+PiAtCQlw
+dGhyZWFkX211dGV4X2xvY2soJmluZm8tPmN1cnJlbnRfcGZuX211dGV4KTsNCj4gPj4+Pj4gLQkJ
+cGZuID0gaW5mby0+Y3VycmVudF9wZm47DQo+ID4+Pj4+IC0JCWluZm8tPmN1cnJlbnRfcGZuKys7
+DQo+ID4+Pj4+IC0JCXB0aHJlYWRfbXV0ZXhfdW5sb2NrKCZpbmZvLT5jdXJyZW50X3Bmbl9tdXRl
+eCk7DQo+ID4+Pj4+ICsJLyoNCj4gPj4+Pj4gKwkgKiBmaWx0ZXJlZCBwYWdlIHdvbid0IHRha2Ug
+YW55dGhpbmcNCj4gPj4+Pj4gKwkgKiB1bmZpbHRlcmVkIHplcm8gcGFnZSB3aWxsIG9ubHkgdGFr
+ZSBhIHBhZ2VfZmxhZ19idWYNCj4gPj4+Pj4gKwkgKiB1bmZpbHRlcmVkIG5vbi16ZXJvIHBhZ2Ug
+d2lsbCB0YWtlIGEgcGFnZV9mbGFnX2J1ZiBhbmQgYSBwYWdlX2RhdGFfYnVmDQo+ID4+Pj4+ICsJ
+ICovDQo+ID4+Pj4+ICsJd2hpbGUgKHBhZ2VfZmxhZ19idWYtPnBmbiA8IGtkdW1wX3RocmVhZF9h
+cmdzLT5lbmRfcGZuKSB7DQo+ID4+Pj4NCj4gPj4+PiBBdCBmaXJzdCwgcGFnZV9mbGFnX2J1Zi0+
+cGZuIGlzIG5vdCBpbml0aWFsaXplZC4NCj4gPj4+PiBJIHRoaW5rIHRoaXMgYmxvY2sgc2hvdWxk
+IGJlIHJlcGxhY2VkIHdpdGggdGhlIGZvbGxvd2luZyBjb2RlLg0KPiA+Pj4+DQo+ID4+Pj4gPT09
+DQo+ID4+Pj4gICAgIGRvIHsNCj4gPj4+PiAgICAgICA6DQo+ID4+Pj4gICAgIH0gd2hpbGUocGFn
+ZV9mbGFnX2J1Zi0+cGZuIDwga2R1bXBfdGhyZWFkX2FyZ3MtPmVuZF9wZm4pDQo+ID4+Pj4gPT09
+DQo+ID4+Pg0KPiA+Pj4gSSdtIHNvcnJ5LCBhYm92ZSBzdWdnZXN0aW9uIGlzIG1lYW5pbmdsZXNz
+IGluIHRlcm1zIG9mIHBhZ2VfZmxhZ19idWYtPnBmbiBpcyB1bmluaXRpYWxpemVkLg0KPiA+Pj4g
+SXQgc2hvdWxkIGJlIHJlcGxhY2VkIGxpa2UgZm9sbG93aW5nLg0KPiA+Pj4NCj4gPj4+ID09PQ0K
+PiA+Pj4gICAgIHdoaWxlICgxKSB7DQo+ID4+PiAgICAgICA6DQo+ID4+PiAgICAgICB3aGlsZSAo
+YnVmX3JlYWR5ID09IEZBTFNFKSB7DQo+ID4+PiAgICAgICAgICA6DQo+ID4+PiAgICAgICAgIGlm
+IChwZm4gPj0ga2R1bXBfdGhyZWFkX2FyZ3MtPmVuZF9wZm4pIHsNCj4gPj4+ICAgICAgICAgICAg
+Og0KPiA+Pj4gICAgICAgICAgIGdvdG8gZmluaXNoOw0KPiA+Pj4gICAgICAgICB9DQo+ID4+PiAg
+ICAgICAgIDoNCj4gPj4+ICAgICAgIH0NCj4gPj4+ICAgICAgIDoNCj4gPj4+ICAgICB9DQo+ID4+
+PiBmaW5pc2g6DQo+ID4+PiA9PT0NCj4gPj4+DQo+ID4+DQo+ID4+IHBhZ2VfZmxhZ19idWYgaXMg
+YWxsb2NhdGVkIGJ5IGNhbGxvYygpLg0KPiA+PiBUaGUgcGFnZV9mbGFnX2J1Zi0+cGZuJ3MgdmFs
+dWUgaXMgMC4NCj4gPj4gU28gSSB0aGluayBpdCBpcyBub3QgbmVjZXNzYXJ5IHRvIG1vZGlmeSB0
+aGUgY29kZS4NCj4gPj4NCj4gPj4+IFRoYW5rcywNCj4gPj4+IE1pbm9ydSBVc3VpDQo+ID4+Pg0K
+PiA+Pj4NCj4gPj4+Pj4gKwkJYnVmX3JlYWR5ID0gRkFMU0U7DQo+ID4+Pj4+DQo+ID4+Pj4+IC0J
+CWlmIChwZm4gPj0ga2R1bXBfdGhyZWFkX2FyZ3MtPmVuZF9wZm4pDQo+ID4+Pj4+IC0JCQlicmVh
+azsNCj4gPj4+Pj4gKwkJd2hpbGUgKHBhZ2VfZGF0YV9idWZbaW5kZXhdLnVzZWQgIT0gMCB8fA0K
+PiA+Pj4+PiArCQkJCXB0aHJlYWRfbXV0ZXhfdHJ5bG9jaygmcGFnZV9kYXRhX2J1ZltpbmRleF0u
+bXV0ZXgpICE9IDApDQo+ID4+Pj4+ICsJCQlpbmRleCA9IChpbmRleCArIDEpICUgaW5mby0+bnVt
+X2J1ZmZlcnM7DQo+ID4+Pj4+DQo+ID4+Pj4+IC0JCWluZGV4ID0gLTE7DQo+ID4+Pj4+IC0JCWJ1
+Zl9yZWFkeSA9IEZBTFNFOw0KPiA+Pj4+PiArCQlwYWdlX2RhdGFfYnVmW2luZGV4XS51c2VkID0g
+MTsNCj4gPj4+Pg0KPiA+Pj4+ICIxIiBpcyBhIG1hZ2ljIG51bWJlci4NCj4gPj4+PiBJdCBzaG91
+bGQgYmUgY2hhbmdlZCBUUlVFIG9yIEZBTFNFLg0KPiA+Pj4+DQo+ID4+DQo+ID4+IEkgc2VlLg0K
+PiA+Pg0KPiA+Pj4+PiAgICAJCXdoaWxlIChidWZfcmVhZHkgPT0gRkFMU0UpIHsNCj4gPj4+Pj4g
+ICAgCQkJcHRocmVhZF90ZXN0Y2FuY2VsKCk7DQo+ID4+Pj4+IC0NCj4gPj4+Pj4gLQkJCWluZGV4
+ID0gcGZuICUgcGFnZV9kYXRhX251bTsNCj4gPj4+Pj4gLQ0KPiA+Pj4+PiAtCQkJaWYgKHBmbiAt
+IGluZm8tPmNvbnN1bWVkX3BmbiA+IGluZm8tPm51bV9idWZmZXJzKQ0KPiA+Pj4+PiArCQkJaWYg
+KHBhZ2VfZmxhZ19idWYtPnJlYWR5ID09IEZMQUdfUkVBRFkpDQo+ID4+Pj4+ICAgIAkJCQljb250
+aW51ZTsNCj4gPj4+Pg0KPiA+Pj4+IEF0IGZpcnN0LCBwYWdlX2ZsYWdfYnVmLT5yZWFkeSBpcyB1
+bmluaXRpYWxpemVkLCB0b28uDQo+ID4+Pj4gU2hvdWxkIGl0IGJlIGluaXRpYWxpemVkIGluIGhl
+YWQgcGFydCBvZiB0aGlzIGZ1bmN0aW9uLCBldmVuIGlmIEZMQUdfVU5VU0VEIGlzIGRlZmluZWQg
+MD8NCj4gPj4+Pg0KPiA+Pj4+DQo+ID4+DQo+ID4+IFRoZSBzYW1lIHRvcGljIGFzIHRoZSBwYWdl
+X2ZsYWdfYnVmIGlzIGFsbG9jYXRlZCBieSBjYWxsb2MoKS4NCj4gPj4NCj4gPj4+Pj4NCj4gPj4+
+Pj4gLQkJCWlmIChwYWdlX2RhdGFfYnVmW2luZGV4XS5yZWFkeSAhPSAwKQ0KPiA+Pj4+PiAtCQkJ
+CWNvbnRpbnVlOw0KPiA+Pj4+PiAtDQo+ID4+Pj4+IC0JCQlwdGhyZWFkX211dGV4X2xvY2soJnBh
+Z2VfZGF0YV9idWZbaW5kZXhdLm11dGV4KTsNCj4gPj4+Pj4gKwkJCS8qIGdldCBuZXh0IHBmbiAq
+Lw0KPiA+Pj4+PiArCQkJcHRocmVhZF9tdXRleF9sb2NrKCZpbmZvLT5jdXJyZW50X3Bmbl9tdXRl
+eCk7DQo+ID4+Pj4+ICsJCQlwZm4gPSBpbmZvLT5jdXJyZW50X3BmbjsNCj4gPj4+Pj4gKwkJCWlu
+Zm8tPmN1cnJlbnRfcGZuKys7DQo+ID4+Pj4+ICsJCQlwYWdlX2ZsYWdfYnVmLT5yZWFkeSA9IEZM
+QUdfRklMTElORzsNCj4gPj4+Pj4gKwkJCXB0aHJlYWRfbXV0ZXhfdW5sb2NrKCZpbmZvLT5jdXJy
+ZW50X3Bmbl9tdXRleCk7DQo+ID4+Pj4+DQo+ID4+Pj4+IC0JCQlpZiAocGFnZV9kYXRhX2J1Zltp
+bmRleF0ucmVhZHkgIT0gMCkNCj4gPj4+Pj4gLQkJCQlnb3RvIHVubG9jazsNCj4gPj4+Pj4gKwkJ
+CXBhZ2VfZmxhZ19idWYtPnBmbiA9IHBmbjsNCj4gPj4+Pg0KPiA+Pj4+IEl0IHNldCBGTEFHX0ZJ
+TExJTkcgdG8gcGFnZV9mbGFnX2J1Zi0+cmVhZHkgYmVmb3JlIHNldHRpbmcgcGZuIHRvIHBhZ2Vf
+ZmxhZ19idWYtPnBmbi4NCj4gPj4+PiBCdXQgY29uc3VtZXIgZ2V0cyBwYWdlX2ZsYWdfYnVmLT5w
+Zm4gYWZ0ZXIgY2hlY2tpbmcgcGFnZV9mbGFnX2J1Zi0+cmVhZHkgIT0gRkxBR19VTlVTRUQNCj4g
+Pj4+PiBpbiBnZXR0aW5nIG1pbmltdW0gcGZuIG9mIGVhY2ggdGhyZWFkIGJsb2NrLg0KPiA+Pj4+
+IFNob3VsZCBpdCBzZXQgcGFnZV9mbGFnX2J1Zi0+cGZuIGZpcnN0Pw0KPiA+Pj4+DQo+ID4+DQo+
+ID4+IEhhdmUgeW91IG5vdGljZWQgdGhlIGZvbGxvd2luZyBjb2RlIGluIHRoZSBjb25zdW1lcj8N
+Cj4gPj4gPGN1dD4NCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAoY3VycmVudF9w
+Zm4gPT0gaW5mby0+cGFnZV9mbGFnX2J1Zltjb25zdW1pbmddLT5wZm4pDQo+ID4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBicmVhazsNCj4gPj4gPGN1dD4NCj4gPg0KPiA+IE5v
+LCBJIHBvaW50ZWQgZm9sbG93aW5nIGNvZGUuDQo+ID4gVGhpcyBwYXJ0IGFjY2Vzc2VzIGluZm8t
+PnBhZ2VfZmxhZ19idWZbaV0tPnJlYWR5LCB0aGVuIGl0IGFjY2Vzc2VzIGluZm8tPnBhZ2VfZmxh
+Z19idWZbaV0tPnBmbiBpbW1lZGlhdGVseS4NCj4gPiBTbywgdGVtcF9wZm4gbWF5IGJlIHdyb25n
+IHBmbiBhdCB0aGlzIG1vbWVudC4NCj4gPg0KPiA+IC0tLQ0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICBmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX3RocmVhZHM7IGkrKykgew0KPiA+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChpbmZvLT5wYWdlX2ZsYWdfYnVmW2ld
+LT5yZWFkeSA9PSBGTEFHX1VOVVNFRCkNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHRlbXBfcGZuID0gaW5mby0+cGFnZV9mbGFnX2J1ZltpXS0+cGZuOw0KPiA+IC0tLQ0KPiA+
+DQo+ID4+IFRoZSBjb25zdW1lciB3aWxsIGNoZWNrIGlmIHRoZSBwZm4gaXMgY2hhbmdlZCBhZnRl
+ciB0aGUgcGFnZV9mbGFnX2J1Zi0+cmVhZHkgdHVybnMgdG8gYmUgRkxBR19SRUFEWS4NCj4gPj4g
+U28gaXQncyBub3QgaW1wb3J0YW50IHdoZXRoZXIgc2V0dGluZyBwYWdlX2ZsYWdfYnVmLT5wZm4g
+Zmlyc3Qgb3Igbm90Lg0KPiA+DQo+ID4gQXMgeW91IHNhaWQsIGNvbnN1bWVyIGNoZWNrcyBwZm4g
+d2hpY2ggaXMgY2hhbmdlZC4NCj4gPiBTbyBpdCB3b3JrcyB3ZWxsLg0KPiA+DQo+ID4+IEluIHRo
+ZSBvdGhlciBoYW5kLCBldmVuIHNldHRpbmcgcGFnZV9mbGFnX2J1Zi0+cGZuIGZpcnN0LCBpZiB0
+aGUgcGZuIGlzIG5vdCBkdW1wYWJsZSwgdGhlIHByb2R1Y2VyDQo+ID4+IHdpbGwgYWxzbyByZXNl
+dCB0aGUgcGFnZV9mbGFnX2J1Zi0+cGZuLg0KPiA+DQo+ID4gVGhhbmsgeW91IGZvciB5b3VyIGV4
+cGxhbmF0aW9uLg0KPiA+IEkgZGlkbid0IG5vdGljZSB0aGF0IHBmbiBjYW4gYmUgdW5kdW1wYWJs
+ZS4NCj4gPg0KPiA+Pj4+Pg0KPiA+Pj4+PiAtCQkJYnVmX3JlYWR5ID0gVFJVRTsNCj4gPj4+Pj4g
+LQ0KPiA+Pj4+PiAtCQkJcGFnZV9kYXRhX2J1ZltpbmRleF0ucGZuID0gcGZuOw0KPiA+Pj4+PiAt
+CQkJcGFnZV9kYXRhX2J1ZltpbmRleF0ucmVhZHkgPSAxOw0KPiA+Pj4+PiArCQkJaWYgKHBmbiA+
+PSBrZHVtcF90aHJlYWRfYXJncy0+ZW5kX3Bmbikgew0KPiA+Pj4+PiArCQkJCXBhZ2VfZGF0YV9i
+dWZbaW5kZXhdLnVzZWQgPSAwOw0KPiA+Pj4+PiArCQkJCXBhZ2VfZmxhZ19idWYtPnJlYWR5ID0g
+RkxBR19SRUFEWTsNCj4gPj4+Pj4gKwkJCQlpbmZvLT5jdXJyZW50X3Bmbi0tOw0KPiA+Pj4+PiAr
+CQkJCWJyZWFrOw0KPiA+Pj4+PiArCQkJfQ0KPiA+Pj4+DQo+ID4+Pj4gVGhpcyBibG9jayBkZWNy
+ZW1lbnRzIGluZm8tPmN1cnJlbnRfcGZuIHdpdGhvdXQgaW5mby0+Y3VycmVudF9wZm5fbXV0ZXgu
+DQo+ID4+Pj4gSSB0aGluayB0aGlzIGJsb2NrIHNob3VsZCBiZSBtb3ZlZCBpbnRvIHByZXZpb3Vz
+IHB0aHJlYWRfbXV0ZXhfbG9jayhpbmZvLT5jdXJyZW50X3Bmbl9tdXRleCkgYmxvY2ssIHNvIGl0
+IGNhbiByZW1vdmUuDQo+ID4+Pj4NCj4gPj4NCj4gPj4gV2h5IGRvIHlvdSB0aGluayBpdCBzaG91
+bGQgaGF2ZSBjdXJyZW50X3Bmbl9tdXRleD8NCj4gPj4NCj4gPj4gSWYgcGZuID49IGtkdW1wX3Ro
+cmVhZF9hcmdzLT5lbmRfcGZuLCBpbmZvLT5jdXJyZW50X3BmbiB3aWxsIGFsd2F5cyBsYXJnZXIg
+dGhhbg0KPiA+PiBrZHVtcF90aHJlYWRfYXJncy0+ZW5kX3Bmbi4gaW5mby0+Y3VycmVudF9wZm4t
+LSB3b24ndCBhZmZlY3QgYW55dGhpbmcuDQo+ID4+DQo+ID4+IFRoZSBkZWNyZW1lbnQgb3BlcmF0
+aW9uIGlzIGZvciBjeWNsaWMgbW9kZS4NCj4gPj4NCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCQkJZHVt
+cGFibGUgPSBpc19kdW1wYWJsZSgNCj4gPj4+Pj4gICAgCQkJCWluZm8tPmZkX2JpdG1hcCA/ICZi
+aXRtYXBfcGFyYWxsZWwgOiBpbmZvLT5iaXRtYXAyLA0KPiA+Pj4+PiAgICAJCQkJcGZuLA0KPiA+
+Pj4+PiAgICAJCQkJY3ljbGUpOw0KPiA+Pj4+PiAtCQkJcGFnZV9kYXRhX2J1ZltpbmRleF0uZHVt
+cGFibGUgPSBkdW1wYWJsZTsNCj4gPj4+Pj4gICAgCQkJaWYgKCFkdW1wYWJsZSkNCj4gPj4+Pj4g
+LQkJCQlnb3RvIHVubG9jazsNCj4gPj4+Pj4gKwkJCQljb250aW51ZTsNCj4gPj4+Pj4NCj4gPj4+
+Pj4gICAgCQkJaWYgKCFyZWFkX3Bmbl9wYXJhbGxlbChmZF9tZW1vcnksIHBmbiwgYnVmLA0KPiA+
+Pj4+PiAgICAJCQkJCSAgICAgICAmYml0bWFwX21lbW9yeV9wYXJhbGxlbCwNCj4gPj4+Pj4gQEAg
+LTcxNzgsMTEgKzcyMjUsMTEgQEAga2R1bXBfdGhyZWFkX2Z1bmN0aW9uX2N5Y2xpYyh2b2lkICph
+cmcpIHsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCQkJaWYgKChpbmZvLT5kdW1wX2xldmVsICYgRExf
+RVhDTFVERV9aRVJPKQ0KPiA+Pj4+PiAgICAJCQkgICAgJiYgaXNfemVyb19wYWdlKGJ1ZiwgaW5m
+by0+cGFnZV9zaXplKSkgew0KPiA+Pj4+PiAtCQkJCXBhZ2VfZGF0YV9idWZbaW5kZXhdLnplcm8g
+PSBUUlVFOw0KPiA+Pj4+PiAtCQkJCWdvdG8gdW5sb2NrOw0KPiA+Pj4+PiArCQkJCXBhZ2VfZmxh
+Z19idWYtPnplcm8gPSBUUlVFOw0KPiA+Pj4+PiArCQkJCWdvdG8gbmV4dDsNCj4gPj4+Pj4gICAg
+CQkJfQ0KPiA+Pj4+DQo+ID4+Pj4gRmlyc3QsIHRoaXMgY29kZSBnZXRzIHBhZ2VfZGF0YV9idWYs
+IHRoZW4gaXQgZ2V0cyBwYWdlX2ZsYWdfYnVmLg0KPiA+Pj4+IEhvd2V2ZXIsIGlmIHByb2Nlc3Nl
+ZCBwZm4gaXMgemVybyBwYWdlLA0KPiA+Pj4+IGl0IHByb2Nlc3NlcyBuZXh0IHBmbiB3aGlsZSBr
+ZWVwaW5nIHBhZ2VfZGF0YV9idWYuDQo+ID4+Pj4NCj4gPj4+PiBJIHRoaW5rIGl0IHNob3VsZCBn
+ZXQgcGFnZV9mbGFnX2J1ZiwgdGhlbiBnZXQgcGFnZV9kYXRhX2J1Zg0KPiA+Pj4+IGluIG9yZGVy
+IHRvIHNob3J0ZW4gdGhlIGhvbGRpbmcgcGVyaW9kIG9mIHRoZSBwYWdlX2RhdGFfYnVmW2luZGV4
+XS5tdXRleC4NCj4gPj4+Pg0KPiA+Pg0KPiA+PiBEbyB5b3UgbWVhbiB0aGUgZm9sbG93aW5nIGxv
+Z2ljPw0KPiA+PiAxLiBnZXQgdGhlIHBhZ2VfZmxhZ19idWYgZmlyc3QNCj4gPj4gMi4gaWYgdGhl
+IHBmbiBpcyBub3QgemVybyBwYWdlLCB0aGVuIGdldCB0aGUgcGFnZV9kYXRhX2J1Zi4NCj4gPg0K
+PiA+IFllcy4NCj4gPg0KPiA+PiBUaGluayBhYm91dCB0aGUgZm9sbG93aW5nIGNhc2UuDQo+ID4+
+IEEgcHJvZHVjZXIgZ2V0IHRoZSBwYWdlX2ZsYWdfYnVmLCBhbmQgdGhlIHBmbiBpcyBub3QgemVy
+byBwYWdlLg0KPiA+PiBJdCB3YW50cyB0byBnZXQgYSBwYWdlX2RhdGFfYnVmLCBidXQgdGhlcmUg
+aXMgbm8gbW9yZSBwYWdlX2RhdGFfYnVmLg0KPiA+PiBUaGVuIC4uLg0KPiA+DQo+ID4gSXQncyBu
+b3QgYSBwcm9ibGVtLg0KPiA+IEluIG5vdCB6ZXJvIHBhZ2UgY2FzZSwgdGhpcyBsb2dpYyBuZWVk
+cyBib3RoIHBhZ2VfZmxhZ19idWYgYW5kIHBhZ2VfZGF0YV9idWYsDQo+ID4gc28gd2FpdGluZyBi
+dWZmZXIgaXMgb2J2aW91cyB3aGVuIGl0IGlzbid0IGFibGUgdG8gZ2V0IHBhZ2VfZmxhZ19idWYg
+b3IgcGFnZV9kYXRhX2J1Zi4NCj4gPg0KPiANCj4gT2YgY291cnNlLCB3YWl0aW5nIGlzIG5vdCBh
+IHByb2JsZW0uDQo+IEJ1dCBpZiBvdGhlciBwYWdlX2RhdGFfYnVmcyBhcmUgYWxsIHVzZWQgYnkg
+bGF0ZXIgcGZucywgaXQgd2lsbA0KPiB3YWl0IGZvcmV2ZXIuIFRoYXQncyB0aGUgcHJvYmxlbS4N
+Cg0KSSB1bmRlcnN0YW5kLg0KVGhhbmsgeW91IGZvciB5b3VyIGV4cGxhbmF0aW9uLg0KDQpNaW5v
+cnUgVXN1aQ0KDQo+IC0tDQo+IFRoYW5rcw0KPiBaaG91DQo+IA0KPiA+PiBTaW5jZSB0aGVyZSBh
+cmUgc2V2ZXJhbCBwYWdlX2RhdGFfYnVmcywgaXQncyBub3QgYSBwcm9ibGVtIHRoYXQgZWFjaCBw
+cm9kdWNlcg0KPiA+PiB3aWxsIGFsd2F5cyBob2xkIGEgcGFnZV9kYXRhX2J1Zi4NCj4gPg0KPiA+
+IEl0IGRlcGVuZHMgb24gdGhlIHNwZWVkIG9mIGNvbnN1bWVyIGFuZCBwcm9kdWNlci4NCj4gPiBJ
+dCdzIG5vdCBwb3NzaWJsZSB0byBwcmVkaWN0IGl0Lg0KPiA+DQo+ID4gSW4gemVybyBwYWdlIGNh
+c2UsIEkgdGhpbmsgZWFjaCBwcm9kdWNlciBleGVjdXRlcyBtb3JlIHBhcmFsbGVsIHRoZW9yZXRp
+Y2FsbHkNCj4gPiBpZiBwYWdlX2RhdGFfYnVmIGRvZXNuJ3QgZ2V0Lg0KPiA+DQo+ID4gVGhhbmtz
+LA0KPiA+IE1pbm9ydSBVc3VpDQo+ID4NCj4gPj4NCj4gPj4gVGhhbmtzIGFnYWluIGZvciB5b3Vy
+IGNvbW1lbnRzLg0KPiA+PiBBbmQgSSB3aWxsIHBvc3QgdGhlIG5leHQgdmVyc2lvbiBsYXRlci4N
+Cj4gPj4NCj4gPj4gLS0NCj4gPj4gVGhhbmtzDQo+ID4+IFpob3UNCj4gPj4NCj4gPj4+PiBUaGFu
+a3MsDQo+ID4+Pj4gTWlub3J1IFVzdWkNCj4gPj4+Pg0KPiA+Pj4+Pg0KPiA+Pj4+PiAtCQkJcGFn
+ZV9kYXRhX2J1ZltpbmRleF0uemVybyA9IEZBTFNFOw0KPiA+Pj4+PiArCQkJcGFnZV9mbGFnX2J1
+Zi0+emVybyA9IEZBTFNFOw0KPiA+Pj4+Pg0KPiA+Pj4+PiAgICAJCQkvKg0KPiA+Pj4+PiAgICAJ
+CQkgKiBDb21wcmVzcyB0aGUgcGFnZSBkYXRhLg0KPiA+Pj4+PiBAQCAtNzIzMiwxMiArNzI3OSwx
+NiBAQCBrZHVtcF90aHJlYWRfZnVuY3Rpb25fY3ljbGljKHZvaWQgKmFyZykgew0KPiA+Pj4+PiAg
+ICAJCQkJcGFnZV9kYXRhX2J1ZltpbmRleF0uc2l6ZSAgPSBpbmZvLT5wYWdlX3NpemU7DQo+ID4+
+Pj4+ICAgIAkJCQltZW1jcHkocGFnZV9kYXRhX2J1ZltpbmRleF0uYnVmLCBidWYsIGluZm8tPnBh
+Z2Vfc2l6ZSk7DQo+ID4+Pj4+ICAgIAkJCX0NCj4gPj4+Pj4gLXVubG9jazoNCj4gPj4+Pj4gLQkJ
+CXB0aHJlYWRfbXV0ZXhfdW5sb2NrKCZwYWdlX2RhdGFfYnVmW2luZGV4XS5tdXRleCk7DQo+ID4+
+Pj4+ICsJCQlwYWdlX2ZsYWdfYnVmLT5pbmRleCA9IGluZGV4Ow0KPiA+Pj4+PiArCQkJYnVmX3Jl
+YWR5ID0gVFJVRTsNCj4gPj4+Pj4gK25leHQ6DQo+ID4+Pj4+ICsJCQlwYWdlX2ZsYWdfYnVmLT5y
+ZWFkeSA9IEZMQUdfUkVBRFk7DQo+ID4+Pj4+ICsJCQlwYWdlX2ZsYWdfYnVmID0gcGFnZV9mbGFn
+X2J1Zi0+bmV4dDsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCQl9DQo+ID4+Pj4+IC0JfQ0KPiA+Pj4+
+Pg0KPiA+Pj4+PiArCQlwdGhyZWFkX211dGV4X3VubG9jaygmcGFnZV9kYXRhX2J1ZltpbmRleF0u
+bXV0ZXgpOw0KPiA+Pj4+PiArCX0NCj4gPj4+Pj4gICAgCXJldHZhbCA9IE5VTEw7DQo+ID4+Pj4+
+DQo+ID4+Pj4+ICAgIGZhaWw6DQo+ID4+Pj4+IEBAIC03MjY1LDE0ICs3MzE2LDE1IEBAIHdyaXRl
+X2tkdW1wX3BhZ2VzX3BhcmFsbGVsX2N5Y2xpYyhzdHJ1Y3QgY2FjaGVfZGF0YSAqY2RfaGVhZGVy
+LA0KPiA+Pj4+PiAgICAJc3RydWN0IHBhZ2VfZGVzYyBwZDsNCj4gPj4+Pj4gICAgCXN0cnVjdCB0
+aW1ldmFsIHR2X3N0YXJ0Ow0KPiA+Pj4+PiAgICAJc3RydWN0IHRpbWV2YWwgbGFzdCwgbmV3Ow0K
+PiA+Pj4+PiAtCXVuc2lnbmVkIGxvbmcgbG9uZyBjb25zdW1pbmdfcGZuOw0KPiA+Pj4+PiAgICAJ
+cHRocmVhZF90ICoqdGhyZWFkcyA9IE5VTEw7DQo+ID4+Pj4+ICAgIAlzdHJ1Y3QgdGhyZWFkX2Fy
+Z3MgKmtkdW1wX3RocmVhZF9hcmdzID0gTlVMTDsNCj4gPj4+Pj4gICAgCXZvaWQgKnRocmVhZF9y
+ZXN1bHQ7DQo+ID4+Pj4+IC0JaW50IHBhZ2VfZGF0YV9udW07DQo+ID4+Pj4+ICsJaW50IHBhZ2Vf
+YnVmX251bTsNCj4gPj4+Pj4gICAgCXN0cnVjdCBwYWdlX2RhdGEgKnBhZ2VfZGF0YV9idWYgPSBO
+VUxMOw0KPiA+Pj4+PiAgICAJaW50IGk7DQo+ID4+Pj4+ICAgIAlpbnQgaW5kZXg7DQo+ID4+Pj4+
+ICsJaW50IGVuZF9jb3VudCwgY29uc3VtaW5nLCBjaGVja19jb3VudDsNCj4gPj4+Pj4gKwltZGZf
+cGZuX3QgY3VycmVudF9wZm4sIHRlbXBfcGZuOw0KPiA+Pj4+Pg0KPiA+Pj4+PiAgICAJaWYgKGlu
+Zm8tPmZsYWdfZWxmX2R1bXBmaWxlKQ0KPiA+Pj4+PiAgICAJCXJldHVybiBGQUxTRTsNCj4gPj4+
+Pj4gQEAgLTczMTksMTYgKzczNzEsMTEgQEAgd3JpdGVfa2R1bXBfcGFnZXNfcGFyYWxsZWxfY3lj
+bGljKHN0cnVjdCBjYWNoZV9kYXRhICpjZF9oZWFkZXIsDQo+ID4+Pj4+ICAgIAl0aHJlYWRzID0g
+aW5mby0+dGhyZWFkczsNCj4gPj4+Pj4gICAgCWtkdW1wX3RocmVhZF9hcmdzID0gaW5mby0+a2R1
+bXBfdGhyZWFkX2FyZ3M7DQo+ID4+Pj4+DQo+ID4+Pj4+IC0JcGFnZV9kYXRhX251bSA9IGluZm8t
+Pm51bV9idWZmZXJzOw0KPiA+Pj4+PiArCXBhZ2VfYnVmX251bSA9IGluZm8tPm51bV9idWZmZXJz
+Ow0KPiA+Pj4+PiAgICAJcGFnZV9kYXRhX2J1ZiA9IGluZm8tPnBhZ2VfZGF0YV9idWY7DQo+ID4+
+Pj4+DQo+ID4+Pj4+IC0JZm9yIChpID0gMDsgaSA8IHBhZ2VfZGF0YV9udW07IGkrKykgew0KPiA+
+Pj4+PiAtCQkvKg0KPiA+Pj4+PiAtCQkgKiBwcm9kdWNlciB3aWxsIHVzZSBwZm4gaW4gcGFnZV9k
+YXRhX2J1ZiB0byBkZWNpZGUgdGhlDQo+ID4+Pj4+IC0JCSAqIGNvbnN1bWVkIHBmbg0KPiA+Pj4+
+PiAtCQkgKi8NCj4gPj4+Pj4gLQkJcGFnZV9kYXRhX2J1ZltpXS5wZm4gPSBzdGFydF9wZm4gLSAx
+Ow0KPiA+Pj4+PiAtCQlwYWdlX2RhdGFfYnVmW2ldLnJlYWR5ID0gMDsNCj4gPj4+Pj4gKwlmb3Ig
+KGkgPSAwOyBpIDwgcGFnZV9idWZfbnVtOyBpKyspIHsNCj4gPj4+Pj4gKwkJcGFnZV9kYXRhX2J1
+ZltpXS51c2VkID0gMDsNCj4gPj4+Pj4gICAgCQlyZXMgPSBwdGhyZWFkX211dGV4X2luaXQoJnBh
+Z2VfZGF0YV9idWZbaV0ubXV0ZXgsIE5VTEwpOw0KPiA+Pj4+PiAgICAJCWlmIChyZXMgIT0gMCkg
+ew0KPiA+Pj4+PiAgICAJCQlFUlJNU0coIkNhbid0IGluaXRpYWxpemUgbXV0ZXggb2YgcGFnZV9k
+YXRhX2J1Zi4gJXNcbiIsDQo+ID4+Pj4+IEBAIC03MzQyLDggKzczODksOSBAQCB3cml0ZV9rZHVt
+cF9wYWdlc19wYXJhbGxlbF9jeWNsaWMoc3RydWN0IGNhY2hlX2RhdGEgKmNkX2hlYWRlciwNCj4g
+Pj4+Pj4gICAgCQlrZHVtcF90aHJlYWRfYXJnc1tpXS5sZW5fYnVmX291dCA9IGxlbl9idWZfb3V0
+Ow0KPiA+Pj4+PiAgICAJCWtkdW1wX3RocmVhZF9hcmdzW2ldLnN0YXJ0X3BmbiA9IHN0YXJ0X3Bm
+bjsNCj4gPj4+Pj4gICAgCQlrZHVtcF90aHJlYWRfYXJnc1tpXS5lbmRfcGZuID0gZW5kX3BmbjsN
+Cj4gPj4+Pj4gLQkJa2R1bXBfdGhyZWFkX2FyZ3NbaV0ucGFnZV9kYXRhX251bSA9IHBhZ2VfZGF0
+YV9udW07DQo+ID4+Pj4+ICsJCWtkdW1wX3RocmVhZF9hcmdzW2ldLnBhZ2VfYnVmX251bSA9IHBh
+Z2VfYnVmX251bTsNCj4gPj4+Pj4gICAgCQlrZHVtcF90aHJlYWRfYXJnc1tpXS5wYWdlX2RhdGFf
+YnVmID0gcGFnZV9kYXRhX2J1ZjsNCj4gPj4+Pj4gKwkJa2R1bXBfdGhyZWFkX2FyZ3NbaV0ucGFn
+ZV9mbGFnX2J1ZiA9IGluZm8tPnBhZ2VfZmxhZ19idWZbaV07DQo+ID4+Pj4+ICAgIAkJa2R1bXBf
+dGhyZWFkX2FyZ3NbaV0uY3ljbGUgPSBjeWNsZTsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCQlyZXMg
+PSBwdGhyZWFkX2NyZWF0ZSh0aHJlYWRzW2ldLCBOVUxMLA0KPiA+Pj4+PiBAQCAtNzM1Niw1NSAr
+NzQwNCw5NCBAQCB3cml0ZV9rZHVtcF9wYWdlc19wYXJhbGxlbF9jeWNsaWMoc3RydWN0IGNhY2hl
+X2RhdGEgKmNkX2hlYWRlciwNCj4gPj4+Pj4gICAgCQl9DQo+ID4+Pj4+ICAgIAl9DQo+ID4+Pj4+
+DQo+ID4+Pj4+IC0JY29uc3VtaW5nX3BmbiA9IHN0YXJ0X3BmbjsNCj4gPj4+Pj4gLQlpbmRleCA9
+IC0xOw0KPiA+Pj4+PiArCXdoaWxlICgxKSB7DQo+ID4+Pj4+ICsJCWNvbnN1bWluZyA9IDA7DQo+
+ID4+Pj4+ICsJCWNoZWNrX2NvdW50ID0gMDsNCj4gPj4+Pj4gKwkJZW5kX2NvdW50ID0gMDsNCj4g
+Pj4+Pj4NCj4gPj4+Pj4gLQlnZXR0aW1lb2ZkYXkoJmxhc3QsIE5VTEwpOw0KPiA+Pj4+PiArCQkv
+Kg0KPiA+Pj4+PiArCQkgKiBUaGUgYmFzaWMgaWRlYSBpcyBwcm9kdWNlciBwcm9kdWNpbmcgcGFn
+ZSBhbmQgY29uc3VtZXIgd3JpdGluZyBwYWdlLg0KPiA+Pj4+PiArCQkgKiBFYWNoIHByb2R1Y2Vy
+IGhhdmUgYSBwYWdlX2ZsYWdfYnVmIGxpc3Qgd2hpY2ggaXMgdXNlZCBmb3Igc3RvcmluZyBwYWdl
+J3MgZGVzY3JpcHRpb24uDQo+ID4+Pj4+ICsJCSAqIFRoZSBzaXplIG9mIHBhZ2VfZmxhZ19idWYg
+aXMgbGl0dGxlIHNvIGl0IHdvbid0IHRha2UgdG9vIG11Y2ggbWVtb3J5Lg0KPiA+Pj4+PiArCQkg
+KiBBbmQgYWxsIHByb2R1Y2VycyB3aWxsIHNoYXJlIGEgcGFnZV9kYXRhX2J1ZiBhcnJheSB3aGlj
+aCBpcyB1c2VkIGZvciBzdG9yaW5nIHBhZ2UncyBjb21wcmVzc2VkIGRhdGEuDQo+ID4+Pj4+ICsJ
+CSAqIFRoZSBtYWluIHRocmVhZCBpcyB0aGUgY29uc3VtZXIuIEl0IHdpbGwgZmluZCB0aGUgbmV4
+dCBwZm4gYW5kIHdyaXRlIGl0IGludG8gZmlsZS4NCj4gPj4+Pj4gKwkJICogVGhlIG5leHQgcGZu
+IGlzIHNtYWxsZXN0IHBmbiBpbiBhbGwgcGFnZV9mbGFnX2J1Zi4NCj4gPj4+Pj4gKwkJICovDQo+
+ID4+Pj4+ICsJCXdoaWxlICgxKSB7DQo+ID4+Pj4+ICsJCQljdXJyZW50X3BmbiA9IGVuZF9wZm47
+DQo+ID4+Pj4+DQo+ID4+Pj4+IC0Jd2hpbGUgKGNvbnN1bWluZ19wZm4gPCBlbmRfcGZuKSB7DQo+
+ID4+Pj4+IC0JCWluZGV4ID0gY29uc3VtaW5nX3BmbiAlIHBhZ2VfZGF0YV9udW07DQo+ID4+Pj4+
+ICsJCQkvKg0KPiA+Pj4+PiArCQkJICogcGFnZV9mbGFnX2J1ZiBpcyBpbiBjaXJjdWxhciBsaW5r
+ZWQgbGlzdC4NCj4gPj4+Pj4gKwkJCSAqIFRoZSBhcnJheSBpbmZvLT5wYWdlX2ZsYWdfYnVmW10g
+cmVjb3JkcyB0aGUgY3VycmVudCBwYWdlX2ZsYWdfYnVmIGluIGVhY2ggdGhyZWFkJ3MNCj4gPj4+
+Pj4gKwkJCSAqIHBhZ2VfZmxhZ19idWYgbGlzdC4NCj4gPj4+Pj4gKwkJCSAqIGNvbnN1bWluZyBp
+cyB1c2VkIGZvciByZWNvcmRpbmcgaW4gd2hpY2ggdGhyZWFkIHRoZSBwZm4gaXMgdGhlIHNtYWxs
+ZXN0Lg0KPiA+Pj4+PiArCQkJICogY3VycmVudF9wZm4gaXMgdXNlZCBmb3IgcmVjb3JkaW5nIHRo
+ZSB2YWx1ZSBvZiBwZm4gd2hlbiBjaGVja2luZyB0aGUgcGZuLg0KPiA+Pj4+PiArCQkJICovDQo+
+ID4+Pj4+ICsJCQlmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX3RocmVhZHM7IGkrKykgew0KPiA+
+Pj4+PiArCQkJCWlmIChpbmZvLT5wYWdlX2ZsYWdfYnVmW2ldLT5yZWFkeSA9PSBGTEFHX1VOVVNF
+RCkNCj4gPj4+Pj4gKwkJCQkJY29udGludWU7DQo+ID4+Pj4+ICsJCQkJdGVtcF9wZm4gPSBpbmZv
+LT5wYWdlX2ZsYWdfYnVmW2ldLT5wZm47DQo+ID4+Pj4+DQo+ID4+Pj4+IC0JCWdldHRpbWVvZmRh
+eSgmbmV3LCBOVUxMKTsNCj4gPj4+Pj4gLQkJaWYgKG5ldy50dl9zZWMgLSBsYXN0LnR2X3NlYyA+
+IFdBSVRfVElNRSkgew0KPiA+Pj4+PiAtCQkJRVJSTVNHKCJDYW4ndCBnZXQgZGF0YSBvZiBwZm4g
+JWxseC5cbiIsIGNvbnN1bWluZ19wZm4pOw0KPiA+Pj4+PiAtCQkJZ290byBvdXQ7DQo+ID4+Pj4+
+IC0JCX0NCj4gPj4+Pj4gKwkJCQkvKg0KPiA+Pj4+PiArCQkJCSAqIGNvdW50IGhvdyBtYW55IHRo
+cmVhZHMgaGF2ZSByZWFjaGVkIHRoZSBlbmQuDQo+ID4+Pj4+ICsJCQkJICovDQo+ID4+Pj4+ICsJ
+CQkJaWYgKHRlbXBfcGZuID49IGVuZF9wZm4pIHsNCj4gPj4+Pj4gKwkJCQkJZW5kX2NvdW50Kys7
+DQo+ID4+Pj4+ICsJCQkJCWluZm8tPnBhZ2VfZmxhZ19idWZbaV0tPnJlYWR5ID0gRkxBR19VTlVT
+RUQ7DQo+ID4+Pj4+ICsJCQkJCWNvbnRpbnVlOw0KPiA+Pj4+PiArCQkJCX0NCj4gPj4+Pj4NCj4g
+Pj4+Pj4gLQkJLyoNCj4gPj4+Pj4gLQkJICogY2hlY2sgcGZuIGZpcnN0IHdpdGhvdXQgbXV0ZXgg
+bG9ja2VkIHRvIHJlZHVjZSB0aGUgdGltZQ0KPiA+Pj4+PiAtCQkgKiB0cnlpbmcgdG8gbG9jayB0
+aGUgbXV0ZXgNCj4gPj4+Pj4gLQkJICovDQo+ID4+Pj4+IC0JCWlmIChwYWdlX2RhdGFfYnVmW2lu
+ZGV4XS5wZm4gIT0gY29uc3VtaW5nX3BmbikNCj4gPj4+Pj4gLQkJCWNvbnRpbnVlOw0KPiA+Pj4+
+PiArCQkJCWlmIChjdXJyZW50X3BmbiA8IHRlbXBfcGZuKQ0KPiA+Pj4+PiArCQkJCQljb250aW51
+ZTsNCj4gPj4+Pj4NCj4gPj4+Pj4gLQkJaWYgKHB0aHJlYWRfbXV0ZXhfdHJ5bG9jaygmcGFnZV9k
+YXRhX2J1ZltpbmRleF0ubXV0ZXgpICE9IDApDQo+ID4+Pj4+IC0JCQljb250aW51ZTsNCj4gPj4+
+Pj4gKwkJCQljaGVja19jb3VudCsrOw0KPiA+Pj4+PiArCQkJCWNvbnN1bWluZyA9IGk7DQo+ID4+
+Pj4+ICsJCQkJY3VycmVudF9wZm4gPSB0ZW1wX3BmbjsNCj4gPj4+Pj4gKwkJCX0NCj4gPj4+Pj4g
+Kw0KPiA+Pj4+PiArCQkJLyoNCj4gPj4+Pj4gKwkJCSAqIElmIGFsbCB0aGUgdGhyZWFkcyBoYXZl
+IHJlYWNoZWQgdGhlIGVuZCwgd2Ugd2lsbCBmaW5pc2ggd3JpdGluZy4NCj4gPj4+Pj4gKwkJCSAq
+Lw0KPiA+Pj4+PiArCQkJaWYgKGVuZF9jb3VudCA+PSBpbmZvLT5udW1fdGhyZWFkcykNCj4gPj4+
+Pj4gKwkJCQlnb3RvIGZpbmlzaDsNCj4gPj4+Pj4gKw0KPiA+Pj4+PiArCQkJLyoNCj4gPj4+Pj4g
+KwkJCSAqIFNpbmNlIGl0IGhhcyB0aGUgcHJvYmFiaWx0eSB0aGF0IHRoZXJlIGlzIG5vIHBhZ2Vf
+ZmxhZ19idWYgYmVpbmcgcmVhZHksDQo+ID4+Pj4+ICsJCQkgKiB3ZSBzaG91bGQgcmVjaGVjayBp
+ZiBpdCBoYXBwZW5zLg0KPiA+Pj4+PiArCQkJICovDQo+ID4+Pj4+ICsJCQlpZiAoY2hlY2tfY291
+bnQgPT0gMCkNCj4gPj4+Pj4gKwkJCQljb250aW51ZTsNCj4gPj4+Pj4gKw0KPiA+Pj4+PiArCQkJ
+LyoNCj4gPj4+Pj4gKwkJCSAqIFdoZW4gd2UgY2hlY2sgdGhlIHBmbiBpbiBwYWdlX2ZsYWdfYnVm
+LCBpdCBtYXkgYmUgYmVpbmcgcHJvZHVjZWQuDQo+ID4+Pj4+ICsJCQkgKiBTbyB3ZSBzaG91bGQg
+d2FpdCB1bnRpbCBpdCBpcyByZWFkeSB0byB1c2UuIEFuZCBpZiB0aGUgcGZuIGlzDQo+ID4+Pj4+
+ICsJCQkgKiBkaWZmZXJlbnQgZnJvbSB0aGUgdmFsdWUgd2hlbiB3ZSBjaGVjaywgd2Ugc2hvdWxk
+IHJlY2hvb3NlIHRoZSBidWYuDQo+ID4+Pj4+ICsJCQkgKi8NCj4gPj4+Pj4gKwkJCWdldHRpbWVv
+ZmRheSgmbGFzdCwgTlVMTCk7DQo+ID4+Pj4+ICsJCQl3aGlsZSAoaW5mby0+cGFnZV9mbGFnX2J1
+Zltjb25zdW1pbmddLT5yZWFkeSAhPSBGTEFHX1JFQURZKSB7DQo+ID4+Pj4+ICsJCQkJZ2V0dGlt
+ZW9mZGF5KCZuZXcsIE5VTEwpOw0KPiA+Pj4+PiArCQkJCWlmIChuZXcudHZfc2VjIC0gbGFzdC50
+dl9zZWMgPiBXQUlUX1RJTUUpIHsNCj4gPj4+Pj4gKwkJCQkJRVJSTVNHKCJDYW4ndCBnZXQgZGF0
+YSBvZiBwZm4uXG4iKTsNCj4gPj4+Pj4gKwkJCQkJZ290byBvdXQ7DQo+ID4+Pj4+ICsJCQkJfQ0K
+PiA+Pj4+PiArCQkJfQ0KPiA+Pj4+Pg0KPiA+Pj4+PiAtCQkvKiBjaGVjayB3aGV0aGVyIHRoZSBm
+b3VuZCBvbmUgaXMgcmVhZHkgdG8gYmUgY29uc3VtZWQgKi8NCj4gPj4+Pj4gLQkJaWYgKHBhZ2Vf
+ZGF0YV9idWZbaW5kZXhdLnBmbiAhPSBjb25zdW1pbmdfcGZuIHx8DQo+ID4+Pj4+IC0JCSAgICBw
+YWdlX2RhdGFfYnVmW2luZGV4XS5yZWFkeSAhPSAxKSB7DQo+ID4+Pj4+IC0JCQlnb3RvIHVubG9j
+azsNCj4gPj4+Pj4gKwkJCWlmIChjdXJyZW50X3BmbiA9PSBpbmZvLT5wYWdlX2ZsYWdfYnVmW2Nv
+bnN1bWluZ10tPnBmbikNCj4gPj4+Pj4gKwkJCQlicmVhazsNCj4gPj4+Pj4gICAgCQl9DQo+ID4+
+Pj4+DQo+ID4+Pj4+ICAgIAkJaWYgKChudW1fZHVtcGVkICUgcGVyKSA9PSAwKQ0KPiA+Pj4+PiAg
+ICAJCQlwcmludF9wcm9ncmVzcyhQUk9HUkVTU19DT1BZLCBudW1fZHVtcGVkLCBpbmZvLT5udW1f
+ZHVtcGFibGUpOw0KPiA+Pj4+Pg0KPiA+Pj4+PiAtCQkvKiBuZXh0IHBmbiBpcyBmb3VuZCwgcmVm
+cmVzaCBsYXN0IGhlcmUgKi8NCj4gPj4+Pj4gLQkJbGFzdCA9IG5ldzsNCj4gPj4+Pj4gLQkJY29u
+c3VtaW5nX3BmbisrOw0KPiA+Pj4+PiAtCQlpbmZvLT5jb25zdW1lZF9wZm4rKzsNCj4gPj4+Pj4g
+LQkJcGFnZV9kYXRhX2J1ZltpbmRleF0ucmVhZHkgPSAwOw0KPiA+Pj4+PiAtDQo+ID4+Pj4+IC0J
+CWlmIChwYWdlX2RhdGFfYnVmW2luZGV4XS5kdW1wYWJsZSA9PSBGQUxTRSkNCj4gPj4+Pj4gLQkJ
+CWdvdG8gdW5sb2NrOw0KPiA+Pj4+PiAtDQo+ID4+Pj4+ICAgIAkJbnVtX2R1bXBlZCsrOw0KPiA+
+Pj4+Pg0KPiA+Pj4+PiAtCQlpZiAocGFnZV9kYXRhX2J1ZltpbmRleF0uemVybyA9PSBUUlVFKSB7
+DQo+ID4+Pj4+ICsNCj4gPj4+Pj4gKwkJaWYgKGluZm8tPnBhZ2VfZmxhZ19idWZbY29uc3VtaW5n
+XS0+emVybyA9PSBUUlVFKSB7DQo+ID4+Pj4+ICAgIAkJCWlmICghd3JpdGVfY2FjaGUoY2RfaGVh
+ZGVyLCBwZF96ZXJvLCBzaXplb2YocGFnZV9kZXNjX3QpKSkNCj4gPj4+Pj4gICAgCQkJCWdvdG8g
+b3V0Ow0KPiA+Pj4+PiAgICAJCQlwZm5femVybysrOw0KPiA+Pj4+PiAgICAJCX0gZWxzZSB7DQo+
+ID4+Pj4+ICsJCQlpbmRleCA9IGluZm8tPnBhZ2VfZmxhZ19idWZbY29uc3VtaW5nXS0+aW5kZXg7
+DQo+ID4+Pj4+ICAgIAkJCXBkLmZsYWdzICAgICAgPSBwYWdlX2RhdGFfYnVmW2luZGV4XS5mbGFn
+czsNCj4gPj4+Pj4gICAgCQkJcGQuc2l6ZSAgICAgICA9IHBhZ2VfZGF0YV9idWZbaW5kZXhdLnNp
+emU7DQo+ID4+Pj4+ICAgIAkJCXBkLnBhZ2VfZmxhZ3MgPSAwOw0KPiA+Pj4+PiBAQCAtNzQyMCwx
+MiArNzUwNywxMiBAQCB3cml0ZV9rZHVtcF9wYWdlc19wYXJhbGxlbF9jeWNsaWMoc3RydWN0IGNh
+Y2hlX2RhdGEgKmNkX2hlYWRlciwNCj4gPj4+Pj4gICAgCQkJICovDQo+ID4+Pj4+ICAgIAkJCWlm
+ICghd3JpdGVfY2FjaGUoY2RfcGFnZSwgcGFnZV9kYXRhX2J1ZltpbmRleF0uYnVmLCBwZC5zaXpl
+KSkNCj4gPj4+Pj4gICAgCQkJCWdvdG8gb3V0Ow0KPiA+Pj4+PiAtDQo+ID4+Pj4+ICsJCQlwYWdl
+X2RhdGFfYnVmW2luZGV4XS51c2VkID0gMDsNCj4gPj4+Pj4gICAgCQl9DQo+ID4+Pj4+IC11bmxv
+Y2s6DQo+ID4+Pj4+IC0JCXB0aHJlYWRfbXV0ZXhfdW5sb2NrKCZwYWdlX2RhdGFfYnVmW2luZGV4
+XS5tdXRleCk7DQo+ID4+Pj4+ICsJCWluZm8tPnBhZ2VfZmxhZ19idWZbY29uc3VtaW5nXS0+cmVh
+ZHkgPSBGTEFHX1VOVVNFRDsNCj4gPj4+Pj4gKwkJaW5mby0+cGFnZV9mbGFnX2J1Zltjb25zdW1p
+bmddID0gaW5mby0+cGFnZV9mbGFnX2J1Zltjb25zdW1pbmddLT5uZXh0Ow0KPiA+Pj4+PiAgICAJ
+fQ0KPiA+Pj4+PiAtDQo+ID4+Pj4+ICtmaW5pc2g6DQo+ID4+Pj4+ICAgIAlyZXQgPSBUUlVFOw0K
+PiA+Pj4+PiAgICAJLyoNCj4gPj4+Pj4gICAgCSAqIHByaW50IFsxMDAgJV0NCj4gPj4+Pj4gQEAg
+LTc0NjQsNyArNzU1MSw3IEBAIG91dDoNCj4gPj4+Pj4gICAgCX0NCj4gPj4+Pj4NCj4gPj4+Pj4g
+ICAgCWlmIChwYWdlX2RhdGFfYnVmICE9IE5VTEwpIHsNCj4gPj4+Pj4gLQkJZm9yIChpID0gMDsg
+aSA8IHBhZ2VfZGF0YV9udW07IGkrKykgew0KPiA+Pj4+PiArCQlmb3IgKGkgPSAwOyBpIDwgcGFn
+ZV9idWZfbnVtOyBpKyspIHsNCj4gPj4+Pj4gICAgCQkJcHRocmVhZF9tdXRleF9kZXN0cm95KCZw
+YWdlX2RhdGFfYnVmW2ldLm11dGV4KTsNCj4gPj4+Pj4gICAgCQl9DQo+ID4+Pj4+ICAgIAl9DQo+
+ID4+Pj4+IEBAIC03NTY0LDYgKzc2NTEsNyBAQCB3cml0ZV9rZHVtcF9wYWdlc19jeWNsaWMoc3Ry
+dWN0IGNhY2hlX2RhdGEgKmNkX2hlYWRlciwgc3RydWN0IGNhY2hlX2RhdGEgKmNkX3BhZw0KPiA+
+Pj4+PiAgICAJCW51bV9kdW1wZWQrKzsNCj4gPj4+Pj4gICAgCQlpZiAoIXJlYWRfcGZuKHBmbiwg
+YnVmKSkNCj4gPj4+Pj4gICAgCQkJZ290byBvdXQ7DQo+ID4+Pj4+ICsNCj4gPj4+Pj4gICAgCQlm
+aWx0ZXJfZGF0YV9idWZmZXIoYnVmLCBwZm5fdG9fcGFkZHIocGZuKSwgaW5mby0+cGFnZV9zaXpl
+KTsNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgCQkvKg0KPiA+Pj4+PiBkaWZmIC0tZ2l0IGEvbWFrZWR1
+bXBmaWxlLmggYi9tYWtlZHVtcGZpbGUuaA0KPiA+Pj4+PiBpbmRleCBlMGI1YmJmLi44YTlhNWIy
+IDEwMDY0NA0KPiA+Pj4+PiAtLS0gYS9tYWtlZHVtcGZpbGUuaA0KPiA+Pj4+PiArKysgYi9tYWtl
+ZHVtcGZpbGUuaA0KPiA+Pj4+PiBAQCAtOTc3LDcgKzk3Nyw3IEBAIHR5cGVkZWYgdW5zaWduZWQg
+bG9uZyBsb25nIGludCB1bG9uZ2xvbmc7DQo+ID4+Pj4+ICAgICNkZWZpbmUgUEFHRV9EQVRBX05V
+TQkoNTApDQo+ID4+Pj4+ICAgICNkZWZpbmUgV0FJVF9USU1FCSg2MCAqIDEwKQ0KPiA+Pj4+PiAg
+ICAjZGVmaW5lIFBUSFJFQURfRkFJTAkoKHZvaWQgKiktMikNCj4gPj4+Pj4gLSNkZWZpbmUgTlVN
+X0JVRkZFUlMJKDUwKQ0KPiA+Pj4+PiArI2RlZmluZSBOVU1fQlVGRkVSUwkoMjApDQo+ID4+Pj4+
+DQo+ID4+Pj4+ICAgIHN0cnVjdCBtbWFwX2NhY2hlIHsNCj4gPj4+Pj4gICAgCWNoYXIJKm1tYXBf
+YnVmOw0KPiA+Pj4+PiBAQCAtOTg1LDI4ICs5ODUsMzYgQEAgc3RydWN0IG1tYXBfY2FjaGUgew0K
+PiA+Pj4+PiAgICAJb2ZmX3QgICBtbWFwX2VuZF9vZmZzZXQ7DQo+ID4+Pj4+ICAgIH07DQo+ID4+
+Pj4+DQo+ID4+Pj4+ICtlbnVtIHsNCj4gPj4+Pj4gKwlGTEFHX1VOVVNFRCwNCj4gPj4+Pj4gKwlG
+TEFHX1JFQURZLA0KPiA+Pj4+PiArCUZMQUdfRklMTElORw0KPiA+Pj4+PiArfTsNCj4gPj4+Pj4g
+K3N0cnVjdCBwYWdlX2ZsYWcgew0KPiA+Pj4+PiArCW1kZl9wZm5fdCBwZm47DQo+ID4+Pj4+ICsJ
+Y2hhciB6ZXJvOw0KPiA+Pj4+PiArCWNoYXIgcmVhZHk7DQo+ID4+Pj4+ICsJc2hvcnQgaW5kZXg7
+DQo+ID4+Pj4+ICsJc3RydWN0IHBhZ2VfZmxhZyAqbmV4dDsNCj4gPj4+Pj4gK307DQo+ID4+Pj4+
+ICsNCj4gPj4+Pj4gICAgc3RydWN0IHBhZ2VfZGF0YQ0KPiA+Pj4+PiAgICB7DQo+ID4+Pj4+IC0J
+bWRmX3Bmbl90IHBmbjsNCj4gPj4+Pj4gLQlpbnQgZHVtcGFibGU7DQo+ID4+Pj4+IC0JaW50IHpl
+cm87DQo+ID4+Pj4+IC0JdW5zaWduZWQgaW50IGZsYWdzOw0KPiA+Pj4+PiArCXB0aHJlYWRfbXV0
+ZXhfdCBtdXRleDsNCj4gPj4+Pj4gICAgCWxvbmcgc2l6ZTsNCj4gPj4+Pj4gICAgCXVuc2lnbmVk
+IGNoYXIgKmJ1ZjsNCj4gPj4+Pj4gLQlwdGhyZWFkX211dGV4X3QgbXV0ZXg7DQo+ID4+Pj4+IC0J
+LyoNCj4gPj4+Pj4gLQkgKiB3aGV0aGVyIHRoZSBwYWdlX2RhdGEgaXMgcmVhZHkgdG8gYmUgY29u
+c3VtZWQNCj4gPj4+Pj4gLQkgKi8NCj4gPj4+Pj4gLQlpbnQgcmVhZHk7DQo+ID4+Pj4+ICsJaW50
+IGZsYWdzOw0KPiA+Pj4+PiArCWludCB1c2VkOw0KPiA+Pj4+PiAgICB9Ow0KPiA+Pj4+Pg0KPiA+
+Pj4+PiAgICBzdHJ1Y3QgdGhyZWFkX2FyZ3Mgew0KPiA+Pj4+PiAgICAJaW50IHRocmVhZF9udW07
+DQo+ID4+Pj4+ICAgIAl1bnNpZ25lZCBsb25nIGxlbl9idWZfb3V0Ow0KPiA+Pj4+PiAgICAJbWRm
+X3Bmbl90IHN0YXJ0X3BmbiwgZW5kX3BmbjsNCj4gPj4+Pj4gLQlpbnQgcGFnZV9kYXRhX251bTsN
+Cj4gPj4+Pj4gKwlpbnQgcGFnZV9idWZfbnVtOw0KPiA+Pj4+PiAgICAJc3RydWN0IGN5Y2xlICpj
+eWNsZTsNCj4gPj4+Pj4gICAgCXN0cnVjdCBwYWdlX2RhdGEgKnBhZ2VfZGF0YV9idWY7DQo+ID4+
+Pj4+ICsJc3RydWN0IHBhZ2VfZmxhZyAqcGFnZV9mbGFnX2J1ZjsNCj4gPj4+Pj4gICAgfTsNCj4g
+Pj4+Pj4NCj4gPj4+Pj4gICAgLyoNCj4gPj4+Pj4gQEAgLTEyOTUsNiArMTMwMyw3IEBAIHN0cnVj
+dCBEdW1wSW5mbyB7DQo+ID4+Pj4+ICAgIAlwdGhyZWFkX3QgKip0aHJlYWRzOw0KPiA+Pj4+PiAg
+ICAJc3RydWN0IHRocmVhZF9hcmdzICprZHVtcF90aHJlYWRfYXJnczsNCj4gPj4+Pj4gICAgCXN0
+cnVjdCBwYWdlX2RhdGEgKnBhZ2VfZGF0YV9idWY7DQo+ID4+Pj4+ICsJc3RydWN0IHBhZ2VfZmxh
+ZyAqKnBhZ2VfZmxhZ19idWY7DQo+ID4+Pj4+ICAgIAlwdGhyZWFkX3J3bG9ja190IHVzZW1tYXBf
+cndsb2NrOw0KPiA+Pj4+PiAgICAJbWRmX3Bmbl90IGN1cnJlbnRfcGZuOw0KPiA+Pj4+PiAgICAJ
+cHRocmVhZF9tdXRleF90IGN1cnJlbnRfcGZuX211dGV4Ow0KPiA+Pj4+PiAtLQ0KPiA+Pj4+PiAx
+LjguMy4xDQo+ID4+Pj4+DQo+ID4+Pj4+DQo+ID4+Pj4+DQo+ID4+Pj4+DQo+ID4+Pj4+IF9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4+Pj4+IGtleGVj
+IG1haWxpbmcgbGlzdA0KPiA+Pj4+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4+Pj4+
+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMNCj4gPj4+
+Pg0KPiA+Pj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+DQo+ID4+Pj4ga2V4ZWMgbWFpbGluZyBsaXN0DQo+ID4+Pj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZw0KPiA+Pj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMNCj4gPj4+DQo+ID4+Pg0KPiA+Pg0KPiANCj4gDQoNCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
