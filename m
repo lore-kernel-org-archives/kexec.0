@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from hr2.samba.org ([2a01:4f8:192:486::147:1])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aYomm-0002J9-Pv
- for kexec@lists.infradead.org; Thu, 25 Feb 2016 05:48:25 +0000
-Date: Thu, 25 Feb 2016 16:47:52 +1100
-From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH 2/2] ppc64: purgatory: Handle local symbols in ELF ABIv2
-Message-ID: <20160225164752.04076869@kryten>
-In-Reply-To: <20160225164446.44d8b2be@kryten>
-References: <20160225164446.44d8b2be@kryten>
-MIME-Version: 1.0
+Received: from vms173019pub.verizon.net ([206.46.173.19])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aYwLF-00039K-JL
+ for kexec@lists.infradead.org; Thu, 25 Feb 2016 13:52:30 +0000
+Received: from vz-proxy-l008.mx.aol.com ([64.236.82.152])
+ by vms173019.mailsrvcs.net
+ (Oracle Communications Messaging Server 7.0.5.32.0 64bit (built Jul 16 2014))
+ with ESMTPA id <0O33005SNVU26700@vms173019.mailsrvcs.net> for
+ kexec@lists.infradead.org; Thu, 25 Feb 2016 07:51:43 -0600 (CST)
+From: minyard@acm.org
+Subject: [PATCH] kdump: Fix gdb macros work work with newer and 64-bit kernels
+Date: Thu, 25 Feb 2016 07:51:31 -0600
+Message-id: <1456408291-29559-1-git-send-email-minyard@acm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,64 +20,214 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Bill Schmidt <wschmidt@us.ibm.com>, Alan Modra <amodra@gmail.com>, Tony Breeds <tony@bakeyournoodle.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>
+Cc: Corey Minyard <cminyard@mvista.com>, minyard@acm.org
 
-The PowerPC64 ELF ABIv2 has the concept of global and local symbols
-and information on this is encoded in sym->st_other. When doing a
-R_PPC64_REL24 branch we want to hit the local entry point, so adjust
-it as necessary.
+From: Corey Minyard <cminyard@mvista.com>
 
-Signed-off-by: Anton Blanchard <anton@samba.org>
+Lots of little changes needed to be made to clean these up, remove the
+four byte pointer assumption and traverse the pid queue properly.
+Also consolidate the traceback code into a single function instead
+of having three copies of it.
+
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 ---
- kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/kdump/gdbmacros.txt | 90 +++++++++++++++++----------------------
+ 1 file changed, 40 insertions(+), 50 deletions(-)
 
-Note: This fixes a hang we see when kexec is built with recent ABIv2
-toolchains. Alan and I have no idea how this ever worked, we must
-have got lucky.
+I sent this earlier, but I didn't get a response.  These are clearly
+wrong.  I'd be happy to take over maintenance of these macros.  It
+might be better to move them someplace else, too, since they are also
+useful for kgdb.
 
-diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-index 8604c4f..35c8229 100644
---- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-@@ -5,6 +5,24 @@
- #include "../../kexec-elf.h"
- #include "kexec-ppc64.h"
+diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/kdump/gdbmacros.txt
+index 9b9b454..e5bbd8d 100644
+--- a/Documentation/kdump/gdbmacros.txt
++++ b/Documentation/kdump/gdbmacros.txt
+@@ -15,14 +15,14 @@
  
-+#if defined(_CALL_ELF) && _CALL_ELF == 2
-+#define STO_PPC64_LOCAL_BIT	5
-+#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
-+#define PPC64_LOCAL_ENTRY_OFFSET(other) \
-+ (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
-+
-+static unsigned int local_entry_offset(struct mem_sym *sym)
-+{
-+	/* If this symbol has a local entry point, use it. */
-+	return PPC64_LOCAL_ENTRY_OFFSET(sym->st_other);
-+}
-+#else
-+static unsigned int local_entry_offset(struct mem_sym *sym)
-+{
-+	return 0;
-+}
-+#endif
-+
- int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- {
- 	if (ehdr->ei_class != ELFCLASS64) {
-@@ -114,6 +132,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
- 		break;
+ define bttnobp
+ 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
++	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+ 	set $init_t=&init_task
+ 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+ 	while ($next_t != $init_t)
+ 		set $next_t=(struct task_struct *)$next_t
+ 		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+ 		printf "===================\n"
+-		set var $stackp = $next_t.thread.esp
++		set var $stackp = $next_t.thread.sp
+ 		set var $stack_top = ($stackp & ~4095) + 4096
  
- 	case R_PPC64_REL24:
-+		value += local_entry_offset(sym);
- 		/* Convert value to relative */
- 		value -= address;
- 		if (value + 0x2000000 > 0x3ffffff || (value & 3) != 0) {
+ 		while ($stackp < $stack_top)
+@@ -31,12 +31,12 @@ define bttnobp
+ 			end
+ 			set $stackp += 4
+ 		end
+-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
++		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+ 		while ($next_th != $next_t)
+ 			set $next_th=(struct task_struct *)$next_th
+ 			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+ 			printf "===================\n"
+-			set var $stackp = $next_t.thread.esp
++			set var $stackp = $next_t.thread.sp
+ 			set var $stack_top = ($stackp & ~4095) + 4096
+ 
+ 			while ($stackp < $stack_top)
+@@ -45,7 +45,7 @@ define bttnobp
+ 				end
+ 				set $stackp += 4
+ 			end
+-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
++			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+ 		end
+ 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+ 	end
+@@ -54,42 +54,43 @@ document bttnobp
+ 	dump all thread stack traces on a kernel compiled with !CONFIG_FRAME_POINTER
+ end
+ 
++define btthreadstruct
++	set var $pid_task = $arg0
++
++	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
++	printf "task struct: "
++	print $pid_task
++	printf "===================\n"
++	set var $stackp = $pid_task.thread.sp
++	set var $stack_top = ($stackp & ~4095) + 4096
++	set var $stack_bot = ($stackp & ~4095)
++
++	set $stackp = *((unsigned long *) $stackp)
++	while (($stackp < $stack_top) && ($stackp > $stack_bot))
++		set var $addr = *(((unsigned long *) $stackp) + 1)
++		info symbol $addr
++		set $stackp = *((unsigned long *) $stackp)
++	end
++end
++document btthreadstruct
++	 dump a thread stack using the given task structure pointer
++end
++
++
+ define btt
+ 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
++	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+ 	set $init_t=&init_task
+ 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+ 	while ($next_t != $init_t)
+ 		set $next_t=(struct task_struct *)$next_t
+-		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+-		printf "===================\n"
+-		set var $stackp = $next_t.thread.esp
+-		set var $stack_top = ($stackp & ~4095) + 4096
+-		set var $stack_bot = ($stackp & ~4095)
++		btthreadstruct $next_t
+ 
+-		set $stackp = *($stackp)
+-		while (($stackp < $stack_top) && ($stackp > $stack_bot))
+-			set var $addr = *($stackp + 4)
+-			info symbol $addr
+-			set $stackp = *($stackp)
+-		end
+-
+-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
++		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+ 		while ($next_th != $next_t)
+ 			set $next_th=(struct task_struct *)$next_th
+-			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+-			printf "===================\n"
+-			set var $stackp = $next_t.thread.esp
+-			set var $stack_top = ($stackp & ~4095) + 4096
+-			set var $stack_bot = ($stackp & ~4095)
+-
+-			set $stackp = *($stackp)
+-			while (($stackp < $stack_top) && ($stackp > $stack_bot))
+-				set var $addr = *($stackp + 4)
+-				info symbol $addr
+-				set $stackp = *($stackp)
+-			end
+-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
++			btthreadstruct $next_th
++			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+ 		end
+ 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+ 	end
+@@ -101,7 +102,7 @@ end
+ define btpid
+ 	set var $pid = $arg0
+ 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
++	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+ 	set $init_t=&init_task
+ 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+ 	set var $pid_task = 0
+@@ -113,29 +114,18 @@ define btpid
+ 			set $pid_task = $next_t
+ 		end
+ 
+-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
++		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+ 		while ($next_th != $next_t)
+ 			set $next_th=(struct task_struct *)$next_th
+ 			if ($next_th.pid == $pid)
+ 				set $pid_task = $next_th
+ 			end
+-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
++			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+ 		end
+ 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+ 	end
+ 
+-	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
+-	printf "===================\n"
+-	set var $stackp = $pid_task.thread.esp
+-	set var $stack_top = ($stackp & ~4095) + 4096
+-	set var $stack_bot = ($stackp & ~4095)
+-
+-	set $stackp = *($stackp)
+-	while (($stackp < $stack_top) && ($stackp > $stack_bot))
+-		set var $addr = *($stackp + 4)
+-		info symbol $addr
+-		set $stackp = *($stackp)
+-	end
++	btthreadstruct $pid_task
+ end
+ document btpid
+ 	backtrace of pid
+@@ -145,7 +135,7 @@ end
+ define trapinfo
+ 	set var $pid = $arg0
+ 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
++	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+ 	set $init_t=&init_task
+ 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+ 	set var $pid_task = 0
+@@ -157,13 +147,13 @@ define trapinfo
+ 			set $pid_task = $next_t
+ 		end
+ 
+-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
++		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+ 		while ($next_th != $next_t)
+ 			set $next_th=(struct task_struct *)$next_th
+ 			if ($next_th.pid == $pid)
+ 				set $pid_task = $next_th
+ 			end
+-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
++			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+ 		end
+ 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+ 	end
 -- 
 2.5.0
 
