@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from hr2.samba.org ([2a01:4f8:192:486::147:1])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aZCUC-0001R8-KP
- for kexec@lists.infradead.org; Fri, 26 Feb 2016 07:06:49 +0000
-Date: Fri, 26 Feb 2016 18:06:15 +1100
-From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH 3/3] Properly align powerpc64 .toc
-Message-ID: <20160226180615.20d86d70@kryten>
-In-Reply-To: <20160226180311.2938d804@kryten>
-References: <20160226180311.2938d804@kryten>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aZCVy-00025c-Cv
+ for kexec@lists.infradead.org; Fri, 26 Feb 2016 07:08:38 +0000
+Date: Fri, 26 Feb 2016 15:08:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec/fs2dt.c: wrong dt node fix
+Message-ID: <20160226070804.GA6285@dhcp-128-65.nay.redhat.com>
+References: <20160226034329.GA4878@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160226034329.GA4878@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,73 +23,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Bill Schmidt <wschmidt@us.ibm.com>, Alan Modra <amodra@gmail.com>, Tony Breeds <tony@bakeyournoodle.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Andrew Jones <drjones@redhat.com>, Simon Horman <horms@verge.net.au>
 
-From: Alan Modra <amodra@gmail.com>
+Simon,
 
-gcc leaves .toc byte aligned, relying on the linker to align the section.
+Oops, the patchlog need a revise since I tested a local branch with latest
+upstream kexec-tools, but it is not necessary in F23.
 
-	* kexec/arch/ppc64/kexec-elf-rel-ppc64.c (machine_verify_elf_rel):
-	Fudge alignment of .toc section.
+But the code change is still valid to me, will repost with an updated
+patch descriptioin.
 
-Signed-off-by: Alan Modra <amodra@gmail.com>
-Signed-off-by: Anton Blanchard <anton@samba.org>
----
- kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
-
-diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-index 43851f6..5f8e3f2 100644
---- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-@@ -23,18 +23,6 @@ static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
- }
- #endif
- 
--int machine_verify_elf_rel(struct mem_ehdr *ehdr)
--{
--	if (ehdr->ei_class != ELFCLASS64) {
--		return 0;
--	}
--	if (ehdr->e_machine != EM_PPC64) {
--		return 0;
--	}
--
--	return 1;
--}
--
- static struct mem_shdr *toc_section(const struct mem_ehdr *ehdr)
- {
- 	struct mem_shdr *shdr, *shdr_end;
-@@ -52,6 +40,24 @@ static struct mem_shdr *toc_section(const struct mem_ehdr *ehdr)
- 	return NULL;
- }
- 
-+int machine_verify_elf_rel(struct mem_ehdr *ehdr)
-+{
-+	struct mem_shdr *toc;
-+
-+	if (ehdr->ei_class != ELFCLASS64) {
-+		return 0;
-+	}
-+	if (ehdr->e_machine != EM_PPC64) {
-+		return 0;
-+	}
-+
-+	/* Ensure .toc is sufficiently aligned.  */
-+	toc = toc_section(ehdr);
-+	if (toc && toc->sh_addralign < 256)
-+		toc->sh_addralign = 256;
-+	return 1;
-+}
-+
- /* r2 is the TOC pointer: it actually points 0x8000 into the TOC (this
-    gives the value maximum span in an instruction which uses a signed
-    offset) */
--- 
-2.5.0
-
+On 02/26/16 at 11:43am, Dave Young wrote:
+> There is a report for ppc64le kexec fail in below Fedora 23 bug:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1310495
+> 
+> 2nd kernel hangs early because of a regression caused by below commit:
+> commit 68262155d8c661586b809bc5301a7dff1c378137
+> Author: Andrew Jones <drjones@redhat.com>
+> Date:   Fri Nov 20 12:31:53 2015 -0500
+> 
+>     kexec/fs2dt: cleanup pathname
+>     
+>     putnode() will add the trailing '/', avoid having two. Also
+>     pathstart is unused, get rid of it.
+>     
+>     Signed-off-by: Andrew Jones <drjones@redhat.com>
+>     Signed-off-by: Simon Horman <horms@verge.net.au>
+> 
+> The actual purpose of the commit is to avoid double slash in pathname.
+> But unfortunately in function putnode() we have below magics to get the node
+> name:
+> 	basename = strrchr(pathname,'/') + 1;
+> 	...
+> 	strcpy((void *)dt, *basename ? basename : "");
+> 	...
+> 	strcat(pathname, "/");
+> 
+> We treat none zero basename as a node name, then concat a slash to open the
+> directory for later property handling.
+> pathname originally was "/proc/device-tree/" so for the first run of putnode
+> it will cause double slashes. With the commit above mentioned there are no
+> double slashes but we will copy "device-tree" to dt. Thus kexec kernel is not
+> happy..
+> 
+> Instead let's fix it by only concating slash when the basenanme is not empty
+> and restore the initial value of pathname as "/proc/device-tree/"
+> 
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  kexec/fs2dt.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> --- kexec-tools.orig/kexec/fs2dt.c
+> +++ kexec-tools/kexec/fs2dt.c
+> @@ -577,7 +577,8 @@ static void putnode(void)
+>  	strcpy((void *)dt, *basename ? basename : "");
+>  	dt += ((plen + 4)/4);
+>  
+> -	strcat(pathname, "/");
+> +	if (*basename)
+> +		strcat(pathname, "/");
+>  	dn = pathname + strlen(pathname);
+>  
+>  	putprops(dn, namelist, numlist);
+> @@ -804,7 +805,7 @@ static void add_boot_block(char **bufp,
+>  
+>  void create_flatten_tree(char **bufp, off_t *sizep, const char *cmdline)
+>  {
+> -	strcpy(pathname, "/proc/device-tree");
+> +	strcpy(pathname, "/proc/device-tree/");
+>  
+>  	dt_cur_size = INIT_TREE_WORDS;
+>  	dt_base = malloc(dt_cur_size*4);
 
 _______________________________________________
 kexec mailing list
