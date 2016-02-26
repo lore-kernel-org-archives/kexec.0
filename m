@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from hr2.samba.org ([2a01:4f8:192:486::147:1])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aZCRS-0008W5-RS
- for kexec@lists.infradead.org; Fri, 26 Feb 2016 07:03:59 +0000
-Date: Fri, 26 Feb 2016 18:03:11 +1100
+ id 1aZCSG-00007V-9I
+ for kexec@lists.infradead.org; Fri, 26 Feb 2016 07:04:48 +0000
+Date: Fri, 26 Feb 2016 18:04:16 +1100
 From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH 1/3] Pass struct mem_sym into machine_apply_elf_rel()
-Message-ID: <20160226180311.2938d804@kryten>
+Subject: [PATCH 2/3] ppc64: purgatory: Handle local symbols in ELF ABIv2
+Message-ID: <20160226180416.0748cb9f@kryten>
+In-Reply-To: <20160226180311.2938d804@kryten>
+References: <20160226180311.2938d804@kryten>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,227 +25,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, Bill Schmidt <wschmidt@us.ibm.com>, Alan Modra <amodra@gmail.com>, Tony Breeds <tony@bakeyournoodle.com>
 Cc: kexec@lists.infradead.org
 
-On PowerPC64 ABIv2 we need to look at the symbol to determine
-if it has a local entry point. Pass struct mem_sym into
-machine_apply_elf_rel() so we can.
+The PowerPC64 ELF ABIv2 has the concept of global and local symbols
+and information on this is encoded in sym->st_other. When doing a
+R_PPC64_REL24 branch we want to hit the local entry point, so adjust
+it as necessary.
 
 Signed-off-by: Anton Blanchard <anton@samba.org>
 ---
- kexec/arch/arm/kexec-elf-rel-arm.c       | 5 +++--
- kexec/arch/cris/kexec-elf-rel-cris.c     | 5 +++--
- kexec/arch/i386/kexec-elf-rel-x86.c      | 5 +++--
- kexec/arch/ia64/kexec-elf-rel-ia64.c     | 5 +++--
- kexec/arch/m68k/kexec-elf-rel-m68k.c     | 4 +++-
- kexec/arch/mips/kexec-elf-rel-mips.c     | 4 +++-
- kexec/arch/ppc/kexec-elf-rel-ppc.c       | 5 +++--
- kexec/arch/ppc64/kexec-elf-rel-ppc64.c   | 5 +++--
- kexec/arch/s390/kexec-elf-rel-s390.c     | 3 ++-
- kexec/arch/sh/kexec-elf-rel-sh.c         | 5 +++--
- kexec/arch/x86_64/kexec-elf-rel-x86_64.c | 5 +++--
- kexec/kexec-elf-rel.c                    | 2 +-
- kexec/kexec-elf.h                        | 5 +++--
- 13 files changed, 36 insertions(+), 22 deletions(-)
+ kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/kexec/arch/arm/kexec-elf-rel-arm.c b/kexec/arch/arm/kexec-elf-rel-arm.c
-index 214f0cc..a939cf4 100644
---- a/kexec/arch/arm/kexec-elf-rel-arm.c
-+++ b/kexec/arch/arm/kexec-elf-rel-arm.c
-@@ -18,8 +18,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-+	unsigned long address, unsigned long value)
- {
- 	switch(r_type) {
- 	case R_ARM_ABS32:
-diff --git a/kexec/arch/cris/kexec-elf-rel-cris.c b/kexec/arch/cris/kexec-elf-rel-cris.c
-index c4427cc..255cc2c 100644
---- a/kexec/arch/cris/kexec-elf-rel-cris.c
-+++ b/kexec/arch/cris/kexec-elf-rel-cris.c
-@@ -29,8 +29,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-+	unsigned long address, unsigned long value)
- {
- 	switch(r_type) {
- 
-diff --git a/kexec/arch/i386/kexec-elf-rel-x86.c b/kexec/arch/i386/kexec-elf-rel-x86.c
-index fdc3d52..55a214e 100644
---- a/kexec/arch/i386/kexec-elf-rel-x86.c
-+++ b/kexec/arch/i386/kexec-elf-rel-x86.c
-@@ -18,8 +18,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-+	unsigned long address, unsigned long value)
- {
- 	switch(r_type) {
- 	case R_386_32:
-diff --git a/kexec/arch/ia64/kexec-elf-rel-ia64.c b/kexec/arch/ia64/kexec-elf-rel-ia64.c
-index cfb1061..f847626 100644
---- a/kexec/arch/ia64/kexec-elf-rel-ia64.c
-+++ b/kexec/arch/ia64/kexec-elf-rel-ia64.c
-@@ -72,8 +72,9 @@ bundle (const uint64_t insn)
-         return insn & ~0xfUL;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-+	unsigned long address, unsigned long value)
- {
- 	uint64_t gp_value = ehdr->rel_addr + 0x200000;
- 	switch(r_type) {
-diff --git a/kexec/arch/m68k/kexec-elf-rel-m68k.c b/kexec/arch/m68k/kexec-elf-rel-m68k.c
-index fa12a16..0cc38cc 100644
---- a/kexec/arch/m68k/kexec-elf-rel-m68k.c
-+++ b/kexec/arch/m68k/kexec-elf-rel-m68k.c
-@@ -23,7 +23,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+			   struct mem_sym *UNUSED(sym),
-+			   unsigned long r_type,
- 			   void *UNUSED(location),
- 			   unsigned long UNUSED(address),
- 			   unsigned long UNUSED(value))
-diff --git a/kexec/arch/mips/kexec-elf-rel-mips.c b/kexec/arch/mips/kexec-elf-rel-mips.c
-index 6f43639..5bc22d5 100644
---- a/kexec/arch/mips/kexec-elf-rel-mips.c
-+++ b/kexec/arch/mips/kexec-elf-rel-mips.c
-@@ -29,7 +29,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+			   struct mem_sym *UNUSED(sym),
-+			   unsigned long r_type,
- 			   void *UNUSED(location),
- 			   unsigned long UNUSED(address),
- 			   unsigned long UNUSED(value))
-diff --git a/kexec/arch/ppc/kexec-elf-rel-ppc.c b/kexec/arch/ppc/kexec-elf-rel-ppc.c
-index 90a66f4..1acbd86 100644
---- a/kexec/arch/ppc/kexec-elf-rel-ppc.c
-+++ b/kexec/arch/ppc/kexec-elf-rel-ppc.c
-@@ -17,8 +17,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-+	unsigned long address, unsigned long value)
- {
- 	switch(r_type) {
- 	case R_PPC_ADDR32:
+v2: In local_entry_offset() mark sym as unused when compiling ABIv1.
+
 diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-index 9b191d0..8604c4f 100644
+index 8604c4f..43851f6 100644
 --- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
 +++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-@@ -63,8 +63,9 @@ static void do_relative_toc(unsigned long value, uint16_t *location,
- 	*location = (*location & ~mask) | (value & mask);
- }
+@@ -5,6 +5,24 @@
+ #include "../../kexec-elf.h"
+ #include "kexec-ppc64.h"
  
--void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
-+	unsigned long r_type, void *location, unsigned long address,
-+	unsigned long value)
++#if defined(_CALL_ELF) && _CALL_ELF == 2
++#define STO_PPC64_LOCAL_BIT	5
++#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
++#define PPC64_LOCAL_ENTRY_OFFSET(other) \
++ (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
++
++static unsigned int local_entry_offset(struct mem_sym *sym)
++{
++	/* If this symbol has a local entry point, use it. */
++	return PPC64_LOCAL_ENTRY_OFFSET(sym->st_other);
++}
++#else
++static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
++{
++	return 0;
++}
++#endif
++
+ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
  {
- 	switch(r_type) {
- 	case R_PPC64_ADDR32:
-diff --git a/kexec/arch/s390/kexec-elf-rel-s390.c b/kexec/arch/s390/kexec-elf-rel-s390.c
-index 80bcd1b..a5e1b73 100644
---- a/kexec/arch/s390/kexec-elf-rel-s390.c
-+++ b/kexec/arch/s390/kexec-elf-rel-s390.c
-@@ -23,7 +23,8 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
+ 	if (ehdr->ei_class != ELFCLASS64) {
+@@ -114,6 +132,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
+ 		break;
  
--void machine_apply_elf_rel(struct mem_ehdr *ehdr,
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+			   struct mem_sym *UNUSED(sym),
- 			   unsigned long r_type,
- 			   void *loc,
- 			   unsigned long address,
-diff --git a/kexec/arch/sh/kexec-elf-rel-sh.c b/kexec/arch/sh/kexec-elf-rel-sh.c
-index 0bfc45e..3993ee8 100644
---- a/kexec/arch/sh/kexec-elf-rel-sh.c
-+++ b/kexec/arch/sh/kexec-elf-rel-sh.c
-@@ -28,8 +28,9 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- 	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
--	void *orig_loc, unsigned long UNUSED(address), unsigned long relocation)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *orig_loc,
-+	unsigned long UNUSED(address), unsigned long relocation)
- {
- 	uint32_t *location = orig_loc;
- 	uint32_t value;
-diff --git a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-index c795037..7fdde73 100644
---- a/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-@@ -57,8 +57,9 @@ static const char *reloc_name(unsigned long r_type)
- 	return name;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr), unsigned long r_type,
--	void *location, unsigned long address, unsigned long value)
-+void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-+	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-+	unsigned long address, unsigned long value)
- {
- 	dbgprintf("%s\n", reloc_name(r_type));
- 	switch(r_type) {
-diff --git a/kexec/kexec-elf-rel.c b/kexec/kexec-elf-rel.c
-index c625f30..9a6e63d 100644
---- a/kexec/kexec-elf-rel.c
-+++ b/kexec/kexec-elf-rel.c
-@@ -408,7 +408,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
- 			dbgprintf("sym: %s value: %lx addr: %lx\n",
- 				name, value, address);
- 
--			machine_apply_elf_rel(ehdr, rel.r_type,
-+			machine_apply_elf_rel(ehdr, &sym, rel.r_type,
- 				(void *)location, address, value);
- 		}
- 	}
-diff --git a/kexec/kexec-elf.h b/kexec/kexec-elf.h
-index d0e9dc0..1164db4 100644
---- a/kexec/kexec-elf.h
-+++ b/kexec/kexec-elf.h
-@@ -129,7 +129,8 @@ unsigned long elf_max_addr(const struct mem_ehdr *ehdr);
- 
- /* Architecture specific helper functions */
- extern int machine_verify_elf_rel(struct mem_ehdr *ehdr);
--extern void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type, 
--	void *location, unsigned long address, unsigned long value);
-+extern void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
-+	unsigned long r_type, void *location, unsigned long address,
-+	unsigned long value);
- #endif /* KEXEC_ELF_H */
- 
+ 	case R_PPC64_REL24:
++		value += local_entry_offset(sym);
+ 		/* Convert value to relative */
+ 		value -= address;
+ 		if (value + 0x2000000 > 0x3ffffff || (value & 3) != 0) {
 -- 
 2.5.0
 
