@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from hr2.samba.org ([2a01:4f8:192:486::147:1])
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aZCSG-00007V-9I
- for kexec@lists.infradead.org; Fri, 26 Feb 2016 07:04:48 +0000
-Date: Fri, 26 Feb 2016 18:04:16 +1100
+ id 1aZCUC-0001R8-KP
+ for kexec@lists.infradead.org; Fri, 26 Feb 2016 07:06:49 +0000
+Date: Fri, 26 Feb 2016 18:06:15 +1100
 From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH 2/3] ppc64: purgatory: Handle local symbols in ELF ABIv2
-Message-ID: <20160226180416.0748cb9f@kryten>
+Subject: [PATCH 3/3] Properly align powerpc64 .toc
+Message-ID: <20160226180615.20d86d70@kryten>
 In-Reply-To: <20160226180311.2938d804@kryten>
 References: <20160226180311.2938d804@kryten>
 MIME-Version: 1.0
@@ -25,55 +25,67 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, Bill Schmidt <wschmidt@us.ibm.com>, Alan Modra <amodra@gmail.com>, Tony Breeds <tony@bakeyournoodle.com>
 Cc: kexec@lists.infradead.org
 
-The PowerPC64 ELF ABIv2 has the concept of global and local symbols
-and information on this is encoded in sym->st_other. When doing a
-R_PPC64_REL24 branch we want to hit the local entry point, so adjust
-it as necessary.
+From: Alan Modra <amodra@gmail.com>
 
+gcc leaves .toc byte aligned, relying on the linker to align the section.
+
+	* kexec/arch/ppc64/kexec-elf-rel-ppc64.c (machine_verify_elf_rel):
+	Fudge alignment of .toc section.
+
+Signed-off-by: Alan Modra <amodra@gmail.com>
 Signed-off-by: Anton Blanchard <anton@samba.org>
 ---
- kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-v2: In local_entry_offset() mark sym as unused when compiling ABIv1.
+ kexec/arch/ppc64/kexec-elf-rel-ppc64.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
 diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-index 8604c4f..43851f6 100644
+index 43851f6..5f8e3f2 100644
 --- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
 +++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
-@@ -5,6 +5,24 @@
- #include "../../kexec-elf.h"
- #include "kexec-ppc64.h"
+@@ -23,18 +23,6 @@ static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
+ }
+ #endif
  
-+#if defined(_CALL_ELF) && _CALL_ELF == 2
-+#define STO_PPC64_LOCAL_BIT	5
-+#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
-+#define PPC64_LOCAL_ENTRY_OFFSET(other) \
-+ (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
-+
-+static unsigned int local_entry_offset(struct mem_sym *sym)
-+{
-+	/* If this symbol has a local entry point, use it. */
-+	return PPC64_LOCAL_ENTRY_OFFSET(sym->st_other);
-+}
-+#else
-+static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
-+{
-+	return 0;
-+}
-+#endif
-+
- int machine_verify_elf_rel(struct mem_ehdr *ehdr)
+-int machine_verify_elf_rel(struct mem_ehdr *ehdr)
+-{
+-	if (ehdr->ei_class != ELFCLASS64) {
+-		return 0;
+-	}
+-	if (ehdr->e_machine != EM_PPC64) {
+-		return 0;
+-	}
+-
+-	return 1;
+-}
+-
+ static struct mem_shdr *toc_section(const struct mem_ehdr *ehdr)
  {
- 	if (ehdr->ei_class != ELFCLASS64) {
-@@ -114,6 +132,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *sym,
- 		break;
+ 	struct mem_shdr *shdr, *shdr_end;
+@@ -52,6 +40,24 @@ static struct mem_shdr *toc_section(const struct mem_ehdr *ehdr)
+ 	return NULL;
+ }
  
- 	case R_PPC64_REL24:
-+		value += local_entry_offset(sym);
- 		/* Convert value to relative */
- 		value -= address;
- 		if (value + 0x2000000 > 0x3ffffff || (value & 3) != 0) {
++int machine_verify_elf_rel(struct mem_ehdr *ehdr)
++{
++	struct mem_shdr *toc;
++
++	if (ehdr->ei_class != ELFCLASS64) {
++		return 0;
++	}
++	if (ehdr->e_machine != EM_PPC64) {
++		return 0;
++	}
++
++	/* Ensure .toc is sufficiently aligned.  */
++	toc = toc_section(ehdr);
++	if (toc && toc->sh_addralign < 256)
++		toc->sh_addralign = 256;
++	return 1;
++}
++
+ /* r2 is the TOC pointer: it actually points 0x8000 into the TOC (this
+    gives the value maximum span in an instruction which uses a signed
+    offset) */
 -- 
 2.5.0
 
