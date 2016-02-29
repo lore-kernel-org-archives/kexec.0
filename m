@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aaGq7-0001VD-8z
- for kexec@lists.infradead.org; Mon, 29 Feb 2016 05:57:54 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [Crash-utility] makedumpfile: 4.5 kernel commit breaks page
- filtering
-Date: Mon, 29 Feb 2016 05:56:02 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E2597E@BPXM01GP.gisp.nec.co.jp>
-References: <349750156.30030224.1455814657685.JavaMail.zimbra@redhat.com>
- <649995246.30033929.1455815111557.JavaMail.zimbra@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E21775@BPXM01GP.gisp.nec.co.jp>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E24FD4@BPXM01GP.gisp.nec.co.jp>
- <56D1ACC8.3000400@stratus.com>
-In-Reply-To: <56D1ACC8.3000400@stratus.com>
-Content-Language: ja-JP
+ id 1aaLbh-0000Xk-Ew
+ for kexec@lists.infradead.org; Mon, 29 Feb 2016 11:03:18 +0000
+Date: Mon, 29 Feb 2016 19:06:46 +0800
+From: Minfei Huang <mhuang@redhat.com>
+Subject: Re: [PATCH] kexec: Make a pair of map/unmap reserved pages in error
+ path
+Message-ID: <20160229110646.GA27178@dhcp-128-25.nay.redhat.com>
+References: <1456408960-12296-1-git-send-email-mhuang@redhat.com>
+ <20160226165605.efc4bc6fe3e90faccff79fd9@linux-foundation.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160226165605.efc4bc6fe3e90faccff79fd9@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,56 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joe Lawrence <joe.lawrence@stratus.com>, "anderson@redhat.com" <anderson@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Laurence Oberman <loberman@redhat.com>, "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Minfei Huang <mnfhuang@gmail.com>, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
 
-Hello Joe,
+On 02/26/16 at 04:56pm, Andrew Morton wrote:
+> On Thu, 25 Feb 2016 22:02:40 +0800 Minfei Huang <mhuang@redhat.com> wrote:
+> 
+> > From: Minfei Huang <mnfhuang@gmail.com>
+> > 
+> > For some arch, kexec shall map the reserved pages, then use them, when
+> > we try to start the kdump service.
+> > 
+> > kexec may return directly, without unmaping the reserved pages, if it
+> > fails during starting service. To fix it, we make a pair of map/unmap
+> > reserved pages both in generic path and error path.
+> 
+> This patch both refactors the code AND fixes the bug.  It is a
+> decent-looking refactoring, but mixing the two together makes it *much*
+> harder to review the bugfix.  These two steps should be separated
+> please, with the bugfix patch coming first.
 
->On 02/25/2016 07:35 PM, Atsushi Kumagai wrote:
->> Hello Dave,
->>
->>>> Note that PAGE_MAPPING_ANON is now only set in the compound_head page,
->>>> so when makedumpfile walks though the pages, it will have to look
->>>> at each page's head page for the bit setting.
->>>
->>> Thanks for your report.
->>> As you said, it seems checking the head page like kernel does is necessary.
->>> I'll try to work it out, please give me some time.
->>
->> Reading head page's page->mapping for each tail page will take extra time,
->> so I contrived another way.
->>
->> It's just skipping compound tail pages for filtering.
->> If makedumpfile excludes compound pages, it will be done at a time by
->> exclude_range() at the time of checking the compound head page. We don't
->> need to check compound tail pages individually.
->>
->> I made the patch, could you test the *compound* branch below ?
->> This version requires a new unexported symbol, you need to specify
->> -x vmlinux for now.
->>
->>    https://sourceforge.net/p/makedumpfile/code/ci/compound/tree/
->
->Hi Atsushi, Dave,
->
->Running the makedumpfile compound branch on 4.5-rc5 and this kdump.conf
->setting:
->
->core_collector makedumpfile -l --message-level 1 -d 31 -x
->/kdumproot/var/crash/vmlinux
->
->I was able to collect and successfully read a few test dumps without
->incident.  This was inside a VM without any interesting system load, but
->was regularly giving me issues before the patch.
+I will bisect this patch to make it more simple to be reviewed.
+> 
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -103,6 +103,68 @@ out_free_image:
+> >  	return ret;
+> >  }
+> >  
+> > +static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+> > +		struct kexec_segment __user *segments, unsigned long flags)
+> > +{
+> > +	struct kimage **dest_image, *image;
+> > +	unsigned long i;
+> > +	int ret;
+> > +
+> > +	if (flags & KEXEC_ON_CRASH)
+> > +		dest_image = &kexec_crash_image;
+> > +	else
+> > +		dest_image = &kexec_image;
+> > +
+> > +	if (nr_segments == 0) {
+> > +		/* Uninstall image */
+> > +		kimage_free(xchg(dest_image, NULL));
+> > +		return 0;
+> > +	}
+> > +	if (flags & KEXEC_ON_CRASH) {
+> > +		/*
+> > +		 * Loading another kernel to switch to if this one
+> > +		 * crashes.  Free any current crash dump kernel before
+> > +		 * we corrupt it.
+> > +		 */
+> > +		kimage_free(xchg(&kexec_crash_image, NULL));
+> > +	}
+> > +
+> > +	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
+> > +	if (ret)
+> > +		return ret;
+> 
+> This is a bug, isn't it?  Missed kimage_free().
 
-Great, thanks for your help.
-I'll post the kernel side patch to export the necessary symbol
-"OFFSET(page.compound_head)" soon.
+The variable image is NULL, if kimage_alloc_init returns with error. And
+kimage_alloc_init will do the cleanup before returning. So it's fine
+without calling kimage_free.
 
+Thanks
+Minfei
 
-Thanks,
-Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
