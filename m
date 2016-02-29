@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aaLbh-0000Xk-Ew
- for kexec@lists.infradead.org; Mon, 29 Feb 2016 11:03:18 +0000
-Date: Mon, 29 Feb 2016 19:06:46 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH] kexec: Make a pair of map/unmap reserved pages in error
- path
-Message-ID: <20160229110646.GA27178@dhcp-128-25.nay.redhat.com>
-References: <1456408960-12296-1-git-send-email-mhuang@redhat.com>
- <20160226165605.efc4bc6fe3e90faccff79fd9@linux-foundation.org>
+ id 1aaSyr-0004iY-Fh
+ for kexec@lists.infradead.org; Mon, 29 Feb 2016 18:55:44 +0000
+Date: Mon, 29 Feb 2016 19:55:14 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH 3/3] makedumpfile: Rewrite readpage_elf
+Message-ID: <20160229195514.335108c9@hananiah.suse.cz>
+In-Reply-To: <20160210085009.4df4d14d@hananiah.suse.cz>
+References: <20160210084737.3060fb5a@hananiah.suse.cz>
+ <20160210085009.4df4d14d@hananiah.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160226165605.efc4bc6fe3e90faccff79fd9@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +23,180 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Minfei Huang <mnfhuang@gmail.com>, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Ivan Delalande <colona@arista.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-On 02/26/16 at 04:56pm, Andrew Morton wrote:
-> On Thu, 25 Feb 2016 22:02:40 +0800 Minfei Huang <mhuang@redhat.com> wrote:
-> 
-> > From: Minfei Huang <mnfhuang@gmail.com>
-> > 
-> > For some arch, kexec shall map the reserved pages, then use them, when
-> > we try to start the kdump service.
-> > 
-> > kexec may return directly, without unmaping the reserved pages, if it
-> > fails during starting service. To fix it, we make a pair of map/unmap
-> > reserved pages both in generic path and error path.
-> 
-> This patch both refactors the code AND fixes the bug.  It is a
-> decent-looking refactoring, but mixing the two together makes it *much*
-> harder to review the bugfix.  These two steps should be separated
-> please, with the bugfix patch coming first.
+Hi,
 
-I will bisect this patch to make it more simple to be reviewed.
-> 
-> > --- a/kernel/kexec.c
-> > +++ b/kernel/kexec.c
-> > @@ -103,6 +103,68 @@ out_free_image:
-> >  	return ret;
-> >  }
-> >  
-> > +static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
-> > +		struct kexec_segment __user *segments, unsigned long flags)
-> > +{
-> > +	struct kimage **dest_image, *image;
-> > +	unsigned long i;
-> > +	int ret;
-> > +
-> > +	if (flags & KEXEC_ON_CRASH)
-> > +		dest_image = &kexec_crash_image;
-> > +	else
-> > +		dest_image = &kexec_image;
-> > +
-> > +	if (nr_segments == 0) {
-> > +		/* Uninstall image */
-> > +		kimage_free(xchg(dest_image, NULL));
-> > +		return 0;
-> > +	}
-> > +	if (flags & KEXEC_ON_CRASH) {
-> > +		/*
-> > +		 * Loading another kernel to switch to if this one
-> > +		 * crashes.  Free any current crash dump kernel before
-> > +		 * we corrupt it.
-> > +		 */
-> > +		kimage_free(xchg(&kexec_crash_image, NULL));
-> > +	}
-> > +
-> > +	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
-> > +	if (ret)
-> > +		return ret;
-> 
-> This is a bug, isn't it?  Missed kimage_free().
+I just found a silly typo in my patch, see below.
 
-The variable image is NULL, if kimage_alloc_init returns with error. And
-kimage_alloc_init will do the cleanup before returning. So it's fine
-without calling kimage_free.
+On Wed, 10 Feb 2016 08:50:09 +0100
+Petr Tesarik <ptesarik@suse.cz> wrote:
 
-Thanks
-Minfei
+> The current code in readpage_elf (and readpage_elf_parallel) is extremely
+> hard to follow. Additionally, it still does not cover all possible cases.
+> For example, attempts to read outside of any ELF segment will end up with
+> phys_start being 0, frac_head a negative number, interpreted as a large
+> positive number by memset() and write past buffer end.
+> 
+> Instead of trying to handle even more "corner cases", I rewrote the
+> algorithm from scratch. The basic idea is simple: set a goal to fill the
+> page buffer with data, then work towards that goal by:
+> 
+>   - filling holes with zeroes (see Note below),
+>   - p_filesz portions with file data and
+>   - remaining p_memsz portions again with zeroes.
+> 
+> Repeat this method for each LOAD until the goal is achieved, or an error
+> occurs. In most cases, the loop runs only once.
+> 
+> Note: A "hole" is data at a physical address that is not covered by any
+> ELF LOAD program header. In other words, the ELF file does not specify
+> any data for such a hole (not even zeroes). So, why does makedumpfile
+> fill them with zeroes? It's because makedumpfile works with page
+> granularity (the compressed format does not even have a way to store
+> a partial page), so if only part of a page is stored, a complete page
+> must be provided to make this partial data accessible.
+> 
+> Credits to Ivan Delalande <colona@arista.com> who first found the
+> problem and wrote the original fix.
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> 
+> ---
+>  elf_info.c     |   28 +++++++
+>  elf_info.h     |    1 
+>  makedumpfile.c |  208 ++++++++++++++++++++++-----------------------------------
+>  3 files changed, 110 insertions(+), 127 deletions(-)
+> 
+>[...]
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -648,73 +648,51 @@ read_from_vmcore_parallel(int fd_memory,
+>  static int
+>  readpage_elf(unsigned long long paddr, void *bufptr)
+>  {
+> -	off_t offset1, offset2;
+> -	size_t size1, size2;
+> -	unsigned long long phys_start, phys_end, frac_head = 0;
+> -
+> -	offset1 = paddr_to_offset(paddr);
+> -	offset2 = paddr_to_offset(paddr + info->page_size);
+> -	phys_start = paddr;
+> -	phys_end = paddr + info->page_size;
+> -
+> -	/*
+> -	 * Check the case phys_start isn't aligned by page size like below:
+> -	 *
+> -	 *                           phys_start
+> -	 *                           = 0x40ffda7000
+> -	 *         |<-- frac_head -->|------------- PT_LOAD -------------
+> -	 *     ----+-----------------------+---------------------+----
+> -	 *         |         pfn:N         |       pfn:N+1       | ...
+> -	 *     ----+-----------------------+---------------------+----
+> -	 *         |
+> -	 *     pfn_to_paddr(pfn:N)               # page size = 16k
+> -	 *     = 0x40ffda4000
+> -	 */
+> -	if (!offset1) {
+> -		phys_start = page_head_to_phys_start(paddr);
+> -		offset1 = paddr_to_offset(phys_start);
+> -		frac_head = phys_start - paddr;
+> -		memset(bufptr, 0, frac_head);
+> -	}
+> -
+> -	/*
+> -	 * Check the case phys_end isn't aligned by page size like the
+> -	 * phys_start's case.
+> -	 */
+> -	if (!offset2) {
+> -		phys_end = page_head_to_phys_end(paddr);
+> -		offset2 = paddr_to_offset(phys_end);
+> -		memset(bufptr + (phys_end - paddr), 0, info->page_size - (phys_end - paddr));
+> -	}
+> +	int idx;
+> +	off_t offset, size;
+> +	void *p, *endp;
+> +	unsigned long long phys_start, phys_end;
+> +
+> +	p = bufptr;
+> +	endp = p + info->page_size;
+> +	while (p < endp) {
+> +		idx = closest_pt_load(paddr + (p - bufptr), endp - p);
+> +		if (idx < 0)
+> +			break;
+> +
+> +		get_pt_load_extents(idx, &phys_start, &phys_end, &offset, &size);
+> +		if (phys_start > paddr + (p - bufptr)) {
+> +			memset(p, 0, phys_start - paddr);
+> +			p += phys_start - paddr;
+> +		}
+>  
+> -	/*
+> -	 * Check the separated page on different PT_LOAD segments.
+> -	 */
+> -	if (offset1 + (phys_end - phys_start) == offset2) {
+> -		size1 = phys_end - phys_start;
+> -	} else {
+> -		for (size1 = 1; size1 < info->page_size - frac_head; size1++) {
+> -			offset2 = paddr_to_offset(phys_start + size1);
+> -			if (offset1 + size1 != offset2)
+> -				break;
+> +		offset += paddr - phys_start;
+> +		if (size > paddr - phys_start) {
+> +			size -= paddr - phys_start;
+> +			if (size > endp - p)
+> +				size = endp - p;
+> +			if (!read_from_vmcore(offset, p, size)) {
+> +				ERRMSG("Can't read the dump memory(%s).\n",
+> +				       info->name_memory);
+> +				return FALSE;
+> +			}
+> +			p += size;
+> +		}
+> +		if (p < endp) {
+> +			size = phys_end - paddr;
+> +			if (size > endp - p)
+> +				size = endp - p;
+> +			memset(p, 0, size);
+> +			p += size;
+>  		}
+>  	}
+>  
+> -	if(!read_from_vmcore(offset1, bufptr + frac_head, size1)) {
+> -		ERRMSG("Can't read the dump memory(%s).\n",
+> -		       info->name_memory);
+> +	if (p == bufptr) {
+> +		ERRMSG("Attempt to read non-existent page at 0x%llx.\n",
+> +		       paddr);
+>  		return FALSE;
+> -	}
+> -
+> -	if (size1 + frac_head != info->page_size) {
+> -		size2 = phys_end - (phys_start + size1);
+> -
+> -		if(!read_from_vmcore(offset2, bufptr + frac_head + size1, size2)) {
+> -			ERRMSG("Can't read the dump memory(%s).\n",
+> -			       info->name_memory);
+> -			return FALSE;
+> -		}
+> -	}
+> +	} else if (p < bufptr)
+
+Here, of course, it should be:
+
+	} else if (p < endp)
+
+> +		memset(p, 0, endp - p);
+>  
+>  	return TRUE;
+>  }
+
+And same in the second hunk.
+
+I'm sending a patch in a minute.
+
+Petr Tesarik
 
 _______________________________________________
 kexec mailing list
