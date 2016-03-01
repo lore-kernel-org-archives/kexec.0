@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aadam-0001S6-Rh
- for kexec@lists.infradead.org; Tue, 01 Mar 2016 06:15:34 +0000
+ id 1aadbG-0001UW-BQ
+ for kexec@lists.infradead.org; Tue, 01 Mar 2016 06:16:03 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: [PATCH 0/2] Export new VMCOREINFO about compound page
-Date: Tue, 1 Mar 2016 06:14:23 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FC7@BPXM01GP.gisp.nec.co.jp>
+Subject: [PATCH 1/2] kexec: update VMCOREINFO for compound_order/dtor
+Date: Tue, 1 Mar 2016 06:14:32 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FCE@BPXM01GP.gisp.nec.co.jp>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,29 +23,50 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello,
+makedumpfile refers page.lru.next to get the order of compound pages
+for page filtering. However, now the order is stored in page.compound_order,
+hence VMCOREINFO should be updated to export the offset of
+page.compound_order.
 
-This patch set is to follow up modifications of struct page for 
-makedumpfile which filters dump file.
-It's necessary to filter unnecessary compound pages in newer kernel
-as usual.
+The fact is, page.compound_order was introduced already in kernel 4.0,
+but the offset of it was the same as page.lru.next until kernel 4.3,
+so this was not actual problem.
 
-Incidentally, [PATCH 1/2] was post in:
+The above can be said also for page.lru.prev and page.compound_dtor,
+it's necessary to detect hugetlbfs pages. Further, the content was
+changed from direct address to the ID which means dtor.
 
-  https://lkml.org/lkml/2016/1/27/92
+Signed-off-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+---
+ kernel/kexec_core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-but it didn't get any response, I repost it here.
-
-Atsushi Kumagai (2):
-      kexec: update VMCOREINFO for compound_order/dtor
-      kexec: export OFFSET(page.compound_head) to check anonymous page
-
-kernel/kexec_core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-
-Thanks,
-Atsushi Kumagai
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 8dc6591..7c0b61d 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1413,6 +1413,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_OFFSET(page, lru);
+ 	VMCOREINFO_OFFSET(page, _mapcount);
+ 	VMCOREINFO_OFFSET(page, private);
++	VMCOREINFO_OFFSET(page, compound_dtor);
++	VMCOREINFO_OFFSET(page, compound_order);
+ 	VMCOREINFO_OFFSET(pglist_data, node_zones);
+ 	VMCOREINFO_OFFSET(pglist_data, nr_zones);
+ #ifdef CONFIG_FLAT_NODE_MEM_MAP
+@@ -1445,8 +1447,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+ #ifdef CONFIG_X86
+ 	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+ #endif
+-#ifdef CONFIG_HUGETLBFS
+-	VMCOREINFO_SYMBOL(free_huge_page);
++#ifdef CONFIG_HUGETLB_PAGE
++	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+ #endif
+ 
+ 	arch_crash_save_vmcoreinfo();
+-- 
+2.7.2
 
 _______________________________________________
 kexec mailing list
