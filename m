@@ -1,12 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 00/19] arm64 kexec kernel patches v13
-References: <cover.1452884156.git.geoff@infradead.org>
- <c7575f853ccc491bb0212e025aab1cc9@NASANEXM01H.na.qualcomm.com>
-From: Azriel Samson <asamson@codeaurora.org>
-Message-ID: <56D5D763.4030304@codeaurora.org>
-Date: Tue, 1 Mar 2016 10:54:43 -0700
-MIME-Version: 1.0
-In-Reply-To: <c7575f853ccc491bb0212e025aab1cc9@NASANEXM01H.na.qualcomm.com>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aasIC-00034A-4D
+ for kexec@lists.infradead.org; Tue, 01 Mar 2016 21:57:20 +0000
+Date: Tue, 1 Mar 2016 13:56:58 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH V2 1/2] kexec: Make a pair of map/unmap reserved pages
+ in error path
+Message-Id: <20160301135658.341928989a18949d97998abd@linux-foundation.org>
+In-Reply-To: <1456819349-8650-2-git-send-email-mnfhuang@gmail.com>
+References: <1456819349-8650-1-git-send-email-mnfhuang@gmail.com>
+ <1456819349-8650-2-git-send-email-mnfhuang@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,49 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, marc.zyngier@arm.com, catalin.marinas@arm.com, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, james.morse@arm.com, christoffer.dall@linaro.org, virajm@codeaurora.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Minfei Huang <mnfhuang@gmail.com>
+Cc: mhuang@redhat.com, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
 
-Hi Geoff,
+On Tue,  1 Mar 2016 16:02:28 +0800 Minfei Huang <mnfhuang@gmail.com> wrote:
 
-On 01/15/16 at 07:18pm, Geoff Levand wrote:
-> This series adds the core support for kexec re-boot and kdump on
-> ARM64.This version of the series combines Takahiro's kdump patches
-> with my kexec patches. Please consider all patches for inclusion.
->
-> I just tested all the endian combinations of kexec LE->LE, LE->BE,
-> BE->BE, BE->LE, and both LE an BE kdump, and all work as expected.
->
-> To load a second stage kernel and execute a kexec re-boot or to work
-> with kdump on ARM64 systems a series of patches to kexec-tools [2],
-> which have not yet been merged upstream, are needed.
->
-> To examine vmcore (/proc/vmcore), you should use - gdb v7.7 or later
-> - crash v7.1.1 or later
->
-> [1]
-> https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
-> [2]
-> https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
->
+> For some arch, kexec shall map the reserved pages, then use them, when
+> we try to start the kdump service.
 
-We have been using the kexec/kdump patches on ARM64 and would like to 
-use them from upstream.
+Which architectures are these, by the way?
 
-Assuming these are not going to be in Linux-4.5, a rebased set on 
-Linux-4.5 would be very useful.
+> kexec may return directly, without unmaping the reserved pages, if it
+> fails during starting service. To fix it, we make a pair of map/unmap
+> reserved pages both in generic path and error path.
 
-Thank you for your work.
--- 
-Thanks,
-Azriel Samson
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I'm having trouble understanding the urgency of this patch.  Do you
+think it is needed in 4.5?  -stable?  If so, why?
+
+Thanks.
 
 _______________________________________________
 kexec mailing list
