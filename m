@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aaTgz-0007xJ-VJ
- for kexec@lists.infradead.org; Mon, 29 Feb 2016 19:41:18 +0000
-Date: Mon, 29 Feb 2016 20:40:51 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: When reading partial ELF pages, check
- final pointer against buffer end
-Message-ID: <20160229204051.2f4d238d@hananiah.suse.cz>
-In-Reply-To: <20160229195952.47c1738b@hananiah.suse.cz>
-References: <20160210084737.3060fb5a@hananiah.suse.cz>
- <20160210085009.4df4d14d@hananiah.suse.cz>
- <20160229195514.335108c9@hananiah.suse.cz>
- <20160229195952.47c1738b@hananiah.suse.cz>
+ id 1aadam-0001S6-Rh
+ for kexec@lists.infradead.org; Tue, 01 Mar 2016 06:15:34 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: [PATCH 0/2] Export new VMCOREINFO about compound page
+Date: Tue, 1 Mar 2016 06:14:23 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FC7@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,52 +21,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Ivan Delalande <colona@arista.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi again,
+Hello,
 
-On Mon, 29 Feb 2016 19:59:52 +0100
-Petr Tesarik <ptesarik@suse.cz> wrote:
+This patch set is to follow up modifications of struct page for 
+makedumpfile which filters dump file.
+It's necessary to filter unnecessary compound pages in newer kernel
+as usual.
 
-> If the last part of a page is not present in the ELF file, it should
-> be replaced with zeroes. However, the check is incorrect.
+Incidentally, [PATCH 1/2] was post in:
 
-While this fix is correct, it seems there are a few more errors in the
-logic. I found this issues while adapting the code for libkdumpfile
-(https://github.com/ptesarik/libkdumpfile). This project includes a
-test suite, so let's postpone fixing the code in makedumpfile until I'm
-done with writing a good set of tests for this other project and making
-sure that all of them pass.
+  https://lkml.org/lkml/2016/1/27/92
 
-Stay tuned,
-Petr Tesarik
+but it didn't get any response, I repost it here.
 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 867b953..138ddec 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -691,7 +691,7 @@ readpage_elf(unsigned long long paddr, void
-> *bufptr) ERRMSG("Attempt to read non-existent page at 0x%llx.\n",
->  		       paddr);
->  		return FALSE;
-> -	} else if (p < bufptr)
-> +	} else if (p < endp)
->  		memset(p, 0, endp - p);
->  
->  	return TRUE;
-> @@ -744,7 +744,7 @@ readpage_elf_parallel(int fd_memory, unsigned
-> long long paddr, void *bufptr) ERRMSG("Attempt to read non-existent
-> page at 0x%llx.\n", paddr);
->  		return FALSE;
-> -	} else if (p < bufptr)
-> +	} else if (p < endp)
->  		memset(p, 0, endp - p);
->  
->  	return TRUE;
+Atsushi Kumagai (2):
+      kexec: update VMCOREINFO for compound_order/dtor
+      kexec: export OFFSET(page.compound_head) to check anonymous page
 
+kernel/kexec_core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+
+Thanks,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
