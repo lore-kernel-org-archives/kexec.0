@@ -1,14 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 2 Mar 2016 08:07:47 +0000
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 00/19] arm64 kexec kernel patches v13
-Message-ID: <20160302080747.05f0c01a@arm.com>
-In-Reply-To: <1456881475.6738.18.camel@infradead.org>
-References: <cover.1452884156.git.geoff@infradead.org>
- <c7575f853ccc491bb0212e025aab1cc9@NASANEXM01H.na.qualcomm.com>
- <56D5D763.4030304@codeaurora.org>
- <1456881475.6738.18.camel@infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ab3v1-0008PE-Pn
+ for kexec@lists.infradead.org; Wed, 02 Mar 2016 10:22:12 +0000
+Date: Wed, 2 Mar 2016 18:25:43 +0800
+From: Minfei Huang <mhuang@redhat.com>
+Subject: Re: [PATCH v2] Improve the performance of --num-threads -d 31
+Message-ID: <20160302102543.GA923@dhcp-128-25.nay.redhat.com>
+References: <1455692739-14878-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <20160222165817.GA20170@dhcp-128-25.nay.redhat.com>
+ <20160223052616.GA19420@dhcp-128-25.nay.redhat.com>
+ <56CBF266.8070107@cn.fujitsu.com>
+ <20160224014323.GA23058@dhcp-128-25.nay.redhat.com>
+ <56CD1369.3050905@cn.fujitsu.com>
+ <A315254E-BB2A-46C0-B3C7-0BDAAF89883C@redhat.com>
+ <56D53DEA.1080307@cn.fujitsu.com>
+ <20160301081626.GA10288@dhcp-128-25.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160301081626.GA10288@dhcp-128-25.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,59 +27,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: 'Mark Rutland' <mark.rutland@arm.com>, catalin.marinas@arm.com, Azriel Samson <asamson@codeaurora.org>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, james.morse@arm.com, christoffer.dall@linaro.org, virajm@codeaurora.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
+Cc: kexec@lists.infradead.org
 
-On Tue, 1 Mar 2016 17:17:55 -0800
-Geoff Levand <geoff@infradead.org> wrote:
-
-Geoff,
-
-> Hi,
-> 
-> On Tue, 2016-03-01 at 10:54 -0700, Azriel Samson wrote:
-> 
-> > We have been using the kexec/kdump patches on ARM64 and would like to
-> > use them from upstream.
-> > 
-> > Assuming these are not going to be in Linux-4.5, a rebased set on 
-> > Linux-4.5 would be very useful.
-> 
-> I'm waiting for one of two things to happen, either Marc Zyngier gives
-> an ack for the patch 'arm64: kvm: allows kvm cpu hotplug', or the arm64
-> maintainers decide they will accept my proposal to merge kexec with a
-> conditional in the Kconfig that only allows one of KVM or kexec to be
-> selected.
-
-Do you expect me to give my Ack on a series that I cannot even apply
-(let alone test) with mainline?
-
-> The kexec patches have been in review for 20 months now, with only
-> minor changes in the past 15.
-
-Given the amount of comment each posting of this series has attracted, I
-think we have a different appreciation of what a minor change is.
-
-> I don't expect much would be gained in posting the kexec series again
-> unless there is a chance they would be merged.
-
-I think that's perfectly fine. Akashi Takahiro and James Morse have
-been working together for a while now, reusing part of the kexec series
-for the hibernate support (and not breaking KVM, oddly enough). My vote
-is that they both take over the maintenance of this series on top the
-the hibernate support, and finish the job.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDMvMDEvMTYgYXQgMDQ6MTZwbSwgTWluZmVpIEh1YW5nIHdyb3RlOgo+IE9uIDAzLzAxLzE2
+IGF0IDAyOjU5cG0sICJaaG91LCBXZW5qaWFuL+WRqOaWh+WJkSIgd3JvdGU6Cj4gPiBIaSBNaW5m
+ZWksCj4gPiAKPiA+IENvdWxkIHlvdSBoZWxwIG1lIHRlc3QgdGhlIHBhdGNoIGluIHRoZSBhdHRh
+Y2htZW50Pwo+IAo+IE9rLiBJIHdpbGwgdmVyaWZ5IGl0IHdpdGggdGhpcyBwYXRjaC4gRmVlZGJh
+Y2sgd2lsbCBiZSBnaXZlbiBpbiBuZXh0IGZldwo+IGRheXMuIFRoYW5rcyBmb3IgeW91ciBlZmZv
+cnQuCj4gCj4gVGhhbmtzCj4gTWluZmVpCj4gCj4gPiAKPiA+IEkgaGF2ZSBydW4gaXQgYSB0aG91
+c2FuZCB0aW1lcyBhbmQgaGF2ZW4ndCBnb3QgYSBmYWlsdXJlLgo+ID4gUHJldmlvdXNseSwgSSBj
+YW4gYWx3YXlzIGdldCBhIGZhaWx1cmUgYWZ0ZXIgcnVubmluZyBodW5kcmVkcyBvZiB0aW1lcy4K
+PiA+IAo+ID4gQnV0IEknbSBub3Qgc3VyZSBpZiBpdCBpcyB0aGUgc2FtZSBwcm9ibGVtIHlvdSBo
+YXZlIG1ldC4KCkhpLgoKSSBoYXZlIHZlcmlmaWVkIHRoaXMgcGF0Y2ggYmFzZWQgb24gMS41Ljku
+IG1ha2VkdW1wZmlsZSB3b3JrcyB3ZWxsIGJvdGgKd2l0aCBhbmQgd2l0aG91dCBvcHRpb24gLS1u
+dW0tdGhyZWFkcyBhZnRlciBhcHBseWluZyB0aGlzIHBhdGNoLgoKVGhlcmUgYXJlIDEyOCBhY3Rp
+dmUgQ1BVcyBhbmQgNFQgbWVtb3J5IGluIGtkdW1wIGtlcm5lbC4KCndpdGggb3B0aW9uIC1kIDMx
+CnJlYWwgICAgM200NS45MTZzCgp3aXRoIG9wdGlvbiAtLW51bS10aHJlYWRzIDEgLWQgMzEKcmVh
+bCAgICA2bTMwLjI4NnMKCndpdGggb3B0aW9uIC0tbnVtLXRocmVhZHMgMiAtZCAzMQpyZWFsICAg
+IDdtNDUuNTk3cwoKd2l0aCBvcHRpb24gLS1udW0tdGhyZWFkcyA4IC1kIDMxCnJlYWwgICAgMTNt
+Ny45MTRzCgp3aXRoIG9wdGlvbiAtLW51bS10aHJlYWRzIDMyIC1kIDMxCnJlYWwgICAgMTBtMTAu
+MjQ4cwoKb3JpZ2luYWwgbWFrZWR1bXBmaWxlIHdpdGggb3B0aW9uIC1kIDMxCnJlYWwgICAgNG0y
+Ny42MTdzCgpTZWVtIG1vcmUgdGltZSB3aWxsIGJlIHRha2VuIGJ5IGluY3JlYXNpbmcgdGhyZWFk
+IG51bWJlci4KClRoYW5rcwpNaW5mZWkKCj4gPiAKPiA+IC0tIAo+ID4gVGhhbmtzCj4gPiBaaG91
+Cj4gPiAKPiA+IE9uIDAyLzI0LzIwMTYgMTA6MjQgQU0sIE1pbmZlaSBIdWFuZyB3cm90ZToKPiA+
+ID4KPiA+ID4+T24gRmViIDI0LCAyMDE2LCBhdCAxMDoyMCwgWmhvdSwgV2Vuamlhbi/lkajmlofl
+iZEgPHpob3V3ai1mbnN0QGNuLmZ1aml0c3UuY29tPiB3cm90ZToKPiA+ID4+Cj4gPiA+PkhpLAo+
+ID4gPj4KPiA+ID4+T24gMDIvMjQvMjAxNiAwOTo0MyBBTSwgTWluZmVpIEh1YW5nIHdyb3RlOgo+
+ID4gPj4+T24gMDIvMjMvMTYgYXQgMDE6NDdwbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3
+cm90ZToKPiA+ID4+Pj5IZWxsbywgTWluZmVpLAo+ID4gPj4+Pgo+ID4gPj4+PkRvZXMgaXQgb2Nj
+dXIgZXZlcnkgdGltZT8KPiA+ID4+Pj5JZiBub3QsIEkgdGhpbmsgSSBoYXZlIGtub3duIHRoZSBy
+ZWFzb24uCj4gPiA+Pj4KPiA+ID4+PkhpLCBXZW5qaWFuLgo+ID4gPj4+Cj4gPiA+Pj5UaGlzIHBh
+dGNoIGlzIGFwcGxpZWQgZGlyZWN0bHkgb24gdmVyc2lvbiAxLjUuOS4gQW5kIG1ha2VkdW1wZmls
+ZSBoYW5ncwo+ID4gPj4+aWYgb3B0aW9uIG51bS10aHJlYWQgaXMgYXBwZW5kZWQuCj4gPiA+Pj4K
+PiA+ID4+Cj4gPiA+Pkkgc2VlLgo+ID4gPj5JJ20gd29ya2luZyBvbiBpdC4KPiA+ID4+Cj4gPiA+
+PkJUVywgZGlkIHlvdSBvbmx5IHRlc3QgaXQgd2l0aCAtLW51bS10aHJlYWRzIDEyOD8KPiA+ID4+
+SG93IGlzIGl0IHdpdGggLS1udW0tdGhyZWFkcyAzMihvciBzbWFsbGVyIHZhbHVlKT8KPiA+ID4K
+PiA+ID5ZZXMuIEkgaGF2ZSB0ZXN0ZWQgd2l0aCBudW0tdGhyZWFkIDEsIDIsIDggYW5kIDMyLiBF
+eGNlcHQgZm9yIOKAlG51bS10aHJlYWRzIDEsCj4gPiA+YWxsIG9mIHRoZSB0ZXN0IGZhaWwuCj4g
+PiA+Cj4gPiA+VGhhbmtzCj4gPiA+TWluZmVpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
