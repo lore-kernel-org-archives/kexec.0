@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aauUn-00072S-8z
- for kexec@lists.infradead.org; Wed, 02 Mar 2016 00:18:30 +0000
-Received: from reginn.isobedori.kobe.vergenet.net
- (p5023-ipbfp803kobeminato.hyogo.ocn.ne.jp [123.221.39.23])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 6369325B751
- for <kexec@lists.infradead.org>; Wed,  2 Mar 2016 11:18:08 +1100 (AEDT)
-Date: Wed, 2 Mar 2016 09:18:06 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools v2.0.12 preparation
-Message-ID: <20160302001806.GE17986@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+Message-ID: <1456881475.6738.18.camel@infradead.org>
+Subject: Re: [PATCH 00/19] arm64 kexec kernel patches v13
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 01 Mar 2016 17:17:55 -0800
+In-Reply-To: <56D5D763.4030304@codeaurora.org>
+References: <cover.1452884156.git.geoff@infradead.org>
+ <c7575f853ccc491bb0212e025aab1cc9@NASANEXM01H.na.qualcomm.com>
+ <56D5D763.4030304@codeaurora.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,36 +20,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Azriel Samson <asamson@codeaurora.org>, catalin.marinas@arm.com, 'Will Deacon' <will.deacon@arm.com>, marc.zyngier@arm.com
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, kexec@lists.infradead.org, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, virajm@codeaurora.org, christoffer.dall@linaro.org
 
-Hi all,
+Hi,
 
-I am planning to release kexec-tools v2.0.12 around the time that
-the v4.5 kernel is released.
+On Tue, 2016-03-01 at 10:54 -0700, Azriel Samson wrote:
 
-As I estimate that the latter occur within the few weeks I
-would like to ask interested parties to send any patches they would like
-included in v2.0.12 within the next week so that I can make an rc release.
+> We have been using the kexec/kdump patches on ARM64 and would like to
+> use them from upstream.
+> 
+> Assuming these are not going to be in Linux-4.5, a rebased set on 
+> Linux-4.5 would be very useful.
 
-For reference the patches queued up since v2.0.12 are as follows:
+I'm waiting for one of two things to happen, either Marc Zyngier gives
+an ack for the patch 'arm64: kvm: allows kvm cpu hotplug', or the arm64
+maintainers decide they will accept my proposal to merge kexec with a
+conditional in the Kconfig that only allows one of KVM or kexec to be
+selected.
 
-7c53754e5da8 kexec/fs2dt.c: wrong dt node fix
-61cfab4e2ce0 vmcore-dmesg: Collect full dmesg regardless of logged_chars
-35cb8a0761a0 ppc64: Add a flag to tell the kernel it's booting from kexec
-eff306e8914c Revert "crashdump/x86: Add option to get crash kernel region size"
-8a1aa35a1077 crashdump/x86: Add option to get crash kernel region size
-6ba9e97c5b5f x86: Make sure E820_PM[AE]M are defined if needed
-56a12abc1df1 kexec: fix mmap return code handling
-0e1030b345b9 Improve device tree directory sorting
-4bad06c3cd2a arm: use /sys/firmware/fdt in case without --atags and --dtb
-4580c372000b kexec/fs2dt: check for /chosen/stdout-path first
-68262155d8c6 kexec/fs2dt: cleanup pathname
-65a15228b570 kexec/fs2dt: s/diabled/disabled/
-e0e7a11783c1 kexex: arm: create ATAGS_MEM tag from devicetree memory node
-084ed28061e1 uImage: fix pointer-sign warning
-bc1d49d51dd1 kexec: determine size of block device
-95741713e790 kexec/s390x: use mmap instead of read for slurp_file()
-8d8c6bcee593 kexec-tools 2.0.12.git
+The kexec patches have been in review for 20 months now, with only
+minor changes in the past 15.  I don't expect much would be gained in
+posting the kexec series again unless there is a chance they would be
+merged.
+
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
