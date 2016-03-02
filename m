@@ -1,23 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ab0EW-0002P9-Hq
- for kexec@lists.infradead.org; Wed, 02 Mar 2016 06:26:05 +0000
-From: Minoru Usui <min-usui@ti.jp.nec.com>
-Subject: Re: [PATCH v2] Improve the performance of --num-threads -d 31
-Date: Wed, 2 Mar 2016 06:23:56 +0000
-Message-ID: <BE691E4CBA06214BB0FA8EEFC7C61A4D0181942B@BPXM02GP.gisp.nec.co.jp>
-References: <1455692739-14878-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0180CCEE@BPXM02GP.gisp.nec.co.jp>
- <56CBD5D1.5060407@cn.fujitsu.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0180D50E@BPXM02GP.gisp.nec.co.jp>
- <56CC187F.3000300@cn.fujitsu.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0180E77E@BPXM02GP.gisp.nec.co.jp>
- <56D5499E.10809@cn.fujitsu.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0181914F@BPXM02GP.gisp.nec.co.jp>
- <56D6651D.2050705@cn.fujitsu.com>
-In-Reply-To: <56D6651D.2050705@cn.fujitsu.com>
-Content-Language: ja-JP
+Date: Wed, 2 Mar 2016 08:07:47 +0000
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 00/19] arm64 kexec kernel patches v13
+Message-ID: <20160302080747.05f0c01a@arm.com>
+In-Reply-To: <1456881475.6738.18.camel@infradead.org>
+References: <cover.1452884156.git.geoff@infradead.org>
+ <c7575f853ccc491bb0212e025aab1cc9@NASANEXM01H.na.qualcomm.com>
+ <56D5D763.4030304@codeaurora.org>
+ <1456881475.6738.18.camel@infradead.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,119 +17,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?iso-2022-jp?B?Ilpob3UsIFdlbmppYW4vGyRCPH5KOBsoQj8i?= <zhouwj-fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: 'Mark Rutland' <mark.rutland@arm.com>, catalin.marinas@arm.com, Azriel Samson <asamson@codeaurora.org>, 'Will Deacon' <will.deacon@arm.com>, 'AKASHI Takahiro' <takahiro.akashi@linaro.org>, james.morse@arm.com, christoffer.dall@linaro.org, virajm@codeaurora.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi, Zhou
+On Tue, 1 Mar 2016 17:17:55 -0800
+Geoff Levand <geoff@infradead.org> wrote:
 
-> -----Original Message-----
-> From: "Zhou, Wenjian/周文?" [mailto:zhouwj-fnst@cn.fujitsu.com]
-> Sent: Wednesday, March 02, 2016 12:59 PM
-> To: Usui Minoru(碓井 成) <min-usui@ti.jp.nec.com>; kexec@lists.infradead.org
-> Subject: Re: [PATCH v2] Improve the performance of --num-threads -d 31
-> 
+Geoff,
+
 > Hi,
 > 
-> On 03/02/2016 11:05 AM, Minoru Usui wrote:
-> > Hi, Zhou
-> >
-> >>>>>>> ===
-> >>>>>>>       producer                   Consumer
-> >>>>>>> ---------------------------------------------------------
-> >>>>>>>       pthread_mutex_lock()
-> >>>>>>>       pfn = info->current_pfn
-> >>>>>>>                                  info->current_pfn = end_pfn
-> >>>>>>>       info->current_pfn++
-> >>>>>>>         -> end_pfn + 1
-> >>>>>>>       pthread_mutex_unlock()
-> >>>>>>> ===
-> >>
-> >> How about just changing "info->current_pfn = end_pfn" to "info->current_pfn--" ?
-> >> Just like the first version of the patch.
-> >
-> > If you don't get mutex lock in consumer side, this change is meaningless.
-> > Of course, info->current_pfn may equal to end_pfn at the end of the cycle,
-> > but there is a timing that info->current_pfn is bigger than end_pfn in processing producer thread.
-> >
-> > The root cause is producer increments info->current_pfn everytime, even if info->current_pfn == end_pfn
-> > in following code.
-> >
+> On Tue, 2016-03-01 at 10:54 -0700, Azriel Samson wrote:
 > 
-> Actually, I didn't get what you mean exactly until this letter...
+> > We have been using the kexec/kdump patches on ARM64 and would like to
+> > use them from upstream.
+> > 
+> > Assuming these are not going to be in Linux-4.5, a rebased set on 
+> > Linux-4.5 would be very useful.
 > 
-> I think there is no problem if the info->current_pfn is larger than the end_pfn
-> in the function write_kdump_pages_parallel_cyclic(), for no other one will use
-> current_pfn here.
+> I'm waiting for one of two things to happen, either Marc Zyngier gives
+> an ack for the patch 'arm64: kvm: allows kvm cpu hotplug', or the arm64
+> maintainers decide they will accept my proposal to merge kexec with a
+> conditional in the Kconfig that only allows one of KVM or kexec to be
+> selected.
 
-Right.
-As I said previously, your code works well.
-But I merely don't like this even if there is no problem.
+Do you expect me to give my Ack on a series that I cannot even apply
+(let alone test) with mainline?
 
-If you allow info->current_pfn is bigger than end_pfn, I think it's ok.
+> The kexec patches have been in review for 20 months now, with only
+> minor changes in the past 15.
 
-> Since we can't and needn't prevent using info->current_pfn outside the function,
-> we should keep info->current_pfn correct before returning from the function.
+Given the amount of comment each posting of this series has attracted, I
+think we have a different appreciation of what a minor change is.
 
-As I also said previously, in the head of write_kdump_pages_parallel_cyclic(), 
-info->current_pfn is initialized by start_pfn.
-I think we don't need to keep info->current_pfn correct before returning from write_kdump_pages_parallel_cyclic().
+> I don't expect much would be gained in posting the kexec series again
+> unless there is a chance they would be merged.
 
-> > ===
-> >>>>> +			/* get next pfn */
-> >>>>> +			pthread_mutex_lock(&info->current_pfn_mutex);
-> >>>>> +			pfn = info->current_pfn;
-> >>>>> +			info->current_pfn++;                        # increment everytime
-> >>>>> +			page_flag_buf->ready = FLAG_FILLING;
-> >>>>> +			pthread_mutex_unlock(&info->current_pfn_mutex);
-> >>>>>
-> >>>>> -			buf_ready = TRUE;
-> >>>>> +			page_flag_buf->pfn = pfn;
-> >>>>>
-> >>>>> -			page_data_buf[index].pfn = pfn;
-> >>>>> -			page_data_buf[index].ready = 1;
-> >>>>> +			if (pfn >= kdump_thread_args->end_pfn) {
-> >>>>> +				page_data_buf[index].used = FALSE;
-> >>>>> +				page_flag_buf->ready = FLAG_READY;
-> >>>>> +				break;                             # not decrement
-> >>>>> +			}
-> > ===
-> >
-> > If you don't allow info->current_pfn is bigger than end_pfn,
-> > you don't need to increment info->current_pfn when pfn >= kdump_thread_args->end_pfn like following.
-> >
-> > ===
-> >                          /* get next pfn */
-> >                          pthread_mutex_lock(&info->current_pfn_mutex);
-> >                          pfn = info->current_pfn;
-> >                          page_flag_buf->pfn = pfn;
-> >                          if (pfn >= kdump_thread_args->end_pfn) {
-> >                                  page_data_buf[index].used = FALSE;
-> >                                  page_flag_buf->ready = FLAG_READY;
-> >                                  pthread_mutex_unlock(&info->current_pfn_mutex);
-> >                                  break;
-> >                          }
-> >                          page_flag_buf->ready = FLAG_FILLING;
-> >                          info->current_pfn++;
-> >                          pthread_mutex_unlock(&info->current_pfn_mutex);
-> > ===
-> >
-> > If you allow info->current_pfn is bigger than end_pfn, producer doesn't need to change info->current_pfn.
-> >
-> 
-> I also have thought about it.
-> It can keep current_pfn never larger than the end.
-> But it also makes the code a bit more complex.
-> If there aren't any special reason, I don't think it's worth to do it.
-
-Personally, I think the above code isn't complex, and locking period is almost unchanged except pfn >= end_pfn case.
-
-But the original works well, so I don't stick to it.
+I think that's perfectly fine. Akashi Takahiro and James Morse have
+been working together for a while now, reusing part of the kexec series
+for the hibernate support (and not breaking KVM, oddly enough). My vote
+is that they both take over the maintenance of this series on top the
+the hibernate support, and finish the job.
 
 Thanks,
-Minoru Usui
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
 
 _______________________________________________
 kexec mailing list
