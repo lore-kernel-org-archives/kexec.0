@@ -1,10 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <26b0a3f07b0b50aed9f87be48338f48bb26898bf.1457135058.git.geoff@infradead.org>
+Message-Id: <6f794d4b23d333dfd70be30dfb7dbf2d0f9fd75c.1457135058.git.geoff@infradead.org>
 In-Reply-To: <cover.1457135058.git.geoff@infradead.org>
 References: <cover.1457135058.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v14 07/20] arm64: Promote KERNEL_START/KERNEL_END definitions
- to a header file
+Subject: [PATCH v14 11/20] Revert "arm64: remove dead code"
 Date: Fri, 04 Mar 2016 23:51:14 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,46 +21,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-From: James Morse <james.morse@arm.com>
+This reverts commit b08d4640a3dca68670fc5af2fe9205b395a02388.
 
-KERNEL_START and KERNEL_END are useful outside head.S, move them to a
-header file.
+Add back the setup_mm_for_reboot() needed for kexec.
+Rename setup_mm_for_reboot() to cpu_install_idmap() in preparation
+for the pagetable rework series.
 
-Signed-off-by: James Morse <james.morse@arm.com>
 Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
- arch/arm64/include/asm/memory.h | 3 +++
- arch/arm64/kernel/head.S        | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/mmu.h |  1 +
+ arch/arm64/mm/mmu.c          | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index 853953c..5773a66 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -70,6 +70,9 @@
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 990124a..ce63a20 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -29,6 +29,7 @@ typedef struct {
+ #define ASID(mm)	((mm)->context.id.counter & 0xffff)
  
- #define TASK_UNMAPPED_BASE	(PAGE_ALIGN(TASK_SIZE / 4))
+ extern void paging_init(void);
++extern void cpu_install_idmap(void);
+ extern void __iomem *early_io_map(phys_addr_t phys, unsigned long virt);
+ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 58faeaa..e43d060 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -479,6 +479,17 @@ void __init paging_init(void)
+ }
  
-+#define KERNEL_START      _text
-+#define KERNEL_END        _end
+ /*
++ * Enable the identity mapping to allow the MMU disabling.
++ */
++void cpu_install_idmap(void)
++{
++	cpu_set_reserved_ttbr0();
++	flush_tlb_all();
++	cpu_set_idmap_tcr_t0sz();
++	cpu_switch_mm(idmap_pg_dir, &init_mm);
++}
 +
- /*
-  * Physical vs virtual RAM address space conversion.  These are
-  * private definitions which should NOT be used outside memory.h
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 917d981..21bfb5d 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -48,9 +48,6 @@
- #error TEXT_OFFSET must be less than 2MB
- #endif
- 
--#define KERNEL_START	_text
--#define KERNEL_END	_end
--
- /*
-  * Kernel startup entry point.
-  * ---------------------------
++/*
+  * Check whether a kernel address is valid (derived from arch/x86/).
+  */
+ int kern_addr_valid(unsigned long addr)
 -- 
 2.5.0
 
