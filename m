@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <b434c117ad29c98c7a3b9b36a52dc2f93f6aab99.1457135058.git.geoff@infradead.org>
+Message-Id: <ed0bef8ad5b0295542840f648b85135040a7bda6.1457135058.git.geoff@infradead.org>
 In-Reply-To: <cover.1457135058.git.geoff@infradead.org>
 References: <cover.1457135058.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v14 20/20] arm64: kdump: update a kernel doc
+Subject: [PATCH v14 15/20] arm64: kdump: reserve memory for crash dump kernel
 Date: Fri, 04 Mar 2016 23:51:15 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,70 +23,134 @@ Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infra
 
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-This patch adds arch specific descriptions about kdump usage on arm64
-to kdump.txt.
+On the startup of primary kernel, the memory region used by crash dump
+kernel must be specified by "crashkernel=" kernel parameter.
+reserve_crashkernel() will allocate and reserve the region for later use.
+
+User space tools, like kexec-tools, will be able to find that region marked
+as "Crash kernel" in /proc/iomem.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Signed-off-by: Mark Salter <msalter@redhat.com>
+Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- Documentation/kdump/kdump.txt | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/setup.c |  7 +++++-
+ arch/arm64/mm/init.c      | 60 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index bc4bd5a..acc4d98 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
- 
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--s390x and arm architectures.
-+s390x, arm and arm64 architectures.
- 
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -249,6 +249,12 @@ Dump-capture kernel config options (Arch Dependent, arm)
- 
-     AUTO_ZRELADDR=y
- 
-+Dump-capture kernel config options (Arch Dependent, arm64)
-+----------------------------------------------------------
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 8119479..293cee2 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -31,7 +31,6 @@
+ #include <linux/screen_info.h>
+ #include <linux/init.h>
+ #include <linux/kexec.h>
+-#include <linux/crash_dump.h>
+ #include <linux/root_dev.h>
+ #include <linux/cpu.h>
+ #include <linux/interrupt.h>
+@@ -221,6 +220,12 @@ static void __init request_standard_resources(void)
+ 		    kernel_data.end <= res->end)
+ 			request_resource(res, &kernel_data);
+ 	}
 +
-+1) Currently, kvm will not be enabled on the dump-capture kernel even
-+   if it is configured.
++#ifdef CONFIG_KEXEC_CORE
++	/* User space tools will find "Crash kernel" region in /proc/iomem. */
++	if (crashk_res.end)
++		insert_resource(&iomem_resource, &crashk_res);
++#endif
+ }
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f3b061e..ff5e01a 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -34,6 +34,7 @@
+ #include <linux/dma-contiguous.h>
+ #include <linux/efi.h>
+ #include <linux/swiotlb.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/fixmap.h>
+ #include <asm/memory.h>
+@@ -66,6 +67,63 @@ static int __init early_initrd(char *p)
+ early_param("initrd", early_initrd);
+ #endif
+ 
++#ifdef CONFIG_KEXEC_CORE
++/*
++ * reserve_crashkernel() - reserves memory for crash kernel
++ *
++ * This function reserves memory area given in "crashkernel=" kernel command
++ * line parameter. The memory reserved is used by dump capture kernel when
++ * primary kernel is crashing.
++ */
++static void __init reserve_crashkernel(void)
++{
++	unsigned long long crash_size = 0, crash_base = 0;
++	int ret;
 +
- Extended crashkernel syntax
- ===========================
- 
-@@ -312,6 +318,8 @@ Boot into System Kernel
-    any space below the alignment point may be overwritten by the dump-capture kernel,
-    which means it is possible that the vmcore is not that precise as expected.
- 
-+   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-@@ -334,6 +342,8 @@ For s390x:
- 	- Use image or bzImage
- For arm:
- 	- Use zImage
-+For arm64:
-+	- Use vmlinux or Image
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -377,6 +387,9 @@ For s390x:
- For arm:
- 	"1 maxcpus=1 reset_devices"
- 
-+For arm64:
-+	"1 maxcpus=1 reset_devices"
++	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++				&crash_size, &crash_base);
++	if (ret)
++		return;
 +
- Notes on loading the dump-capture kernel:
++	if (crash_base == 0) {
++		crash_base = memblock_find_in_range(0,
++				MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, 1 << 21);
++		if (crash_base == 0) {
++			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
++				crash_size);
++			return;
++		}
++		memblock_reserve(crash_base, crash_size);
++
++	} else {
++		/* User specifies base address explicitly. */
++		if (!memblock_is_region_memory(crash_base, crash_size) ||
++			memblock_is_region_reserved(crash_base, crash_size)) {
++			pr_warn("crashkernel has wrong address or size\n");
++			return;
++		}
++
++		if (crash_base & ((1 << 21) - 1)) {
++			pr_warn("crashkernel base address is not 2MB aligned\n");
++			return;
++		}
++
++		memblock_reserve(crash_base, crash_size);
++	}
++
++	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
++		crash_size >> 20, crash_base >> 20);
++
++	crashk_res.start = crash_base;
++	crashk_res.end = crash_base + crash_size - 1;
++}
++#else
++static void __init reserve_crashkernel(void)
++{
++	;
++}
++#endif /* CONFIG_KEXEC_CORE */
++
+ /*
+  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
+  * currently assumes that for memory starting above 4G, 32-bit devices will
+@@ -171,6 +229,8 @@ void __init arm64_memblock_init(void)
+ 		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
+ #endif
  
- * By default, the ELF headers are stored in ELF64 format to support
++	reserve_crashkernel();
++
+ 	early_init_fdt_scan_reserved_mem();
+ 
+ 	/* 4GB maximum for 32-bit only capable devices */
 -- 
 2.5.0
+
 
 
 _______________________________________________
