@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <12a9fd6a3e684827e9633c129940309bea428fb4.1457135058.git.geoff@infradead.org>
+Message-Id: <d2f2ab9626d97991017336ebc03fd2aa023f6483.1457135058.git.geoff@infradead.org>
 In-Reply-To: <cover.1457135058.git.geoff@infradead.org>
 References: <cover.1457135058.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v14 04/20] arm64: Add new hcall HVC_CALL_FUNC
+Subject: [PATCH v14 08/20] arm64: Add new asm macro copy_page
 Date: Fri, 04 Mar 2016 23:51:14 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,87 +21,57 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
-During CPU reset the CPU must be brought to the exception level it had on
-entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
-needed for this exception level switch.
+Kexec and hibernate need to copy pages of memory, but may not have all
+of the kernel mapped, and are unable to call copy_page().
 
-To allow the HVC_CALL_FUNC exception vector to work without a stack, which
-is needed to support an hcall at CPU reset, this implementation uses
-register x18 to store the link register across the caller provided
-function.  This dictates that the caller provided function must preserve
-the contents of register x18.
+Add a simplistic copy_page() macro, that can be inlined in these
+situations. lib/copy_page.S provides a bigger better version, but
+uses more registers.
 
 Signed-off-by: Geoff Levand <geoff@infradead.org>
-[Renumbered labels in el1_sync()]
+[Changed asm label to 9998, added commit message]
 Signed-off-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/include/asm/virt.h | 13 +++++++++++++
- arch/arm64/kernel/hyp-stub.S  | 19 +++++++++++++++----
- 2 files changed, 28 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/assembler.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index eb10368..3070096 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -45,6 +45,19 @@
+diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+index ec4e37c..f3854d9 100644
+--- a/arch/arm64/include/asm/assembler.h
++++ b/arch/arm64/include/asm/assembler.h
+@@ -24,6 +24,7 @@
+ #define __ASM_ASSEMBLER_H
  
- #define HVC_SET_VECTORS 2
+ #include <asm/asm-offsets.h>
++#include <asm/page.h>
+ #include <asm/pgtable-hwdef.h>
+ #include <asm/ptrace.h>
+ #include <asm/thread_info.h>
+@@ -285,6 +286,24 @@ lr	.req	x30		// link register
+ 	.endm
  
-+/*
-+ * HVC_CALL_FUNC - Execute a function at EL2.
-+ *
-+ * @x0: Physical address of the function to be executed.
-+ * @x1: Passed as the first argument to the function.
-+ * @x2: Passed as the second argument to the function.
-+ * @x3: Passed as the third argument to the function.
-+ *
-+ * The called function must preserve the contents of register x18.
+ /*
++ * copy_page - copy src to dest using temp registers t1-t8
 + */
++	.macro copy_page dest:req src:req t1:req t2:req t3:req t4:req t5:req t6:req t7:req t8:req
++9998:	ldp	\t1, \t2, [\src]
++	ldp	\t3, \t4, [\src, #16]
++	ldp	\t5, \t6, [\src, #32]
++	ldp	\t7, \t8, [\src, #48]
++	add	\src, \src, #64
++	stnp	\t1, \t2, [\dest]
++	stnp	\t3, \t4, [\dest, #16]
++	stnp	\t5, \t6, [\dest, #32]
++	stnp	\t7, \t8, [\dest, #48]
++	add	\dest, \dest, #64
++	tst	\src, #(PAGE_SIZE - 1)
++	b.ne	9998b
++	.endm
 +
-+#define HVC_CALL_FUNC 3
-+
- #define BOOT_CPU_MODE_EL1	(0xe11)
- #define BOOT_CPU_MODE_EL2	(0xe12)
- 
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index 017ab519..cfacfe5 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -59,18 +59,29 @@ el1_sync:
- 	and	x18, x18, #ESR_ELx_ISS_MASK
- 
- 	cmp	x17, #ESR_ELx_EC_HVC64
--	b.ne	2f				// Not an HVC trap
-+	b.ne	9f				// Not an HVC trap
- 
- 	cmp	x18, #HVC_GET_VECTORS
- 	b.ne	1f
- 	mrs	x0, vbar_el2
--	b	2f
-+	b	9f
- 
- 1:	cmp	x18, #HVC_SET_VECTORS
- 	b.ne	2f
- 	msr	vbar_el2, x0
--
--2:	eret
-+	b	9f
-+
-+2:	cmp	x18, #HVC_CALL_FUNC
-+	b.ne	9f
-+	mov	x18, lr
-+	mov	lr, x0
-+	mov	x0, x1
-+	mov	x1, x2
-+	mov	x2, x3
-+	blr	lr
-+	mov	lr, x18
-+
-+9:	eret
- ENDPROC(el1_sync)
- 
- .macro invalid_vector	label
++/*
+  * Annotate a function as position independent, i.e., safe to be called before
+  * the kernel virtual mapping is activated.
+  */
 -- 
 2.5.0
 
