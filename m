@@ -1,10 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <b11ec7d6be4debe94cd91c20d218f4015980d057.1457135058.git.geoff@infradead.org>
-In-Reply-To: <cover.1457135058.git.geoff@infradead.org>
-References: <cover.1457135058.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v14 14/20] arm64/kexec: Add pr_debug output
-Date: Fri, 04 Mar 2016 23:51:15 +0000
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1acitk-0002PC-EJ
+ for kexec@lists.infradead.org; Mon, 07 Mar 2016 00:19:44 +0000
+Message-ID: <56DCC8AB.5090109@cn.fujitsu.com>
+Date: Mon, 7 Mar 2016 08:17:47 +0800
+From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
+ <zhouwj-fnst@cn.fujitsu.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v3] Improve the performance of --num-threads -d 31
+References: <1457080544-16469-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <56D95069.5030903@cn.fujitsu.com>
+In-Reply-To: <56D95069.5030903@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -13,139 +20,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Minfei Huang <mhuang@redhat.com>, Minoru Usui <min-usui@ti.jp.nec.com>
+Cc: kexec@lists.infradead.org
 
-To aid in debugging kexec problems or when adding new functionality to kexec add
-a new routine kexec_image_info() and several inline pr_debug statements.
-
-Signed-off-by: Geoff Levand <geoff@infradead.org>
----
- arch/arm64/kernel/machine_kexec.c | 70 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 68 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 6fd0f0c..747f0a6 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/highmem.h>
- #include <linux/kexec.h>
-+#include <linux/libfdt_env.h>
- #include <linux/of_fdt.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-@@ -26,6 +27,50 @@ extern const unsigned long arm64_relocate_new_kernel_size;
- 
- static unsigned long kimage_start;
- 
-+/**
-+ * kexec_is_dtb - Helper routine to check the device tree header signature.
-+ */
-+static bool kexec_is_dtb(const void *dtb)
-+{
-+	__be32 magic;
-+
-+	if (get_user(magic, (__be32 *)dtb))
-+		return false;
-+
-+	return fdt32_to_cpu(magic) == OF_DT_HEADER;
-+}
-+
-+/**
-+ * kexec_image_info - For debugging output.
-+ */
-+#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
-+static void _kexec_image_info(const char *func, int line,
-+	const struct kimage *kimage)
-+{
-+	unsigned long i;
-+
-+#ifndef DEBUG
-+	return;
-+#endif
-+	pr_debug("%s:%d:\n", func, line);
-+	pr_debug("  kexec kimage info:\n");
-+	pr_debug("    type:        %d\n", kimage->type);
-+	pr_debug("    start:       %lx\n", kimage->start);
-+	pr_debug("    head:        %lx\n", kimage->head);
-+	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
-+
-+	for (i = 0; i < kimage->nr_segments; i++) {
-+		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages%s\n",
-+			i,
-+			kimage->segment[i].mem,
-+			kimage->segment[i].mem + kimage->segment[i].memsz,
-+			kimage->segment[i].memsz,
-+			kimage->segment[i].memsz /  PAGE_SIZE,
-+			(kexec_is_dtb(kimage->segment[i].buf) ?
-+				", dtb segment" : ""));
-+	}
-+}
-+
- void machine_kexec_cleanup(struct kimage *kimage)
- {
- 	/* Empty routine needed to avoid build errors. */
-@@ -39,6 +84,8 @@ void machine_kexec_cleanup(struct kimage *kimage)
- int machine_kexec_prepare(struct kimage *kimage)
- {
- 	kimage_start = kimage->start;
-+	kexec_image_info(kimage);
-+
- 	return 0;
- }
- 
-@@ -81,10 +128,10 @@ static void kexec_segment_flush(const struct kimage *kimage)
- {
- 	unsigned long i;
- 
--	pr_devel("%s:\n", __func__);
-+	pr_debug("%s:\n", __func__);
- 
- 	for (i = 0; i < kimage->nr_segments; i++) {
--		pr_devel("  segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages\n",
-+		pr_debug("  segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
- 			i,
- 			kimage->segment[i].mem,
- 			kimage->segment[i].mem + kimage->segment[i].memsz,
-@@ -111,6 +158,25 @@ void machine_kexec(struct kimage *kimage)
- 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
- 	reboot_code_buffer = kmap(kimage->control_code_page);
- 
-+	kexec_image_info(kimage);
-+
-+	pr_debug("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
-+		kimage->control_code_page);
-+	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
-+		&reboot_code_buffer_phys);
-+	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
-+		reboot_code_buffer);
-+	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
-+		arm64_relocate_new_kernel);
-+	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
-+		__func__, __LINE__, arm64_relocate_new_kernel_size,
-+		arm64_relocate_new_kernel_size);
-+
-+	pr_debug("%s:%d: kimage_head:              %lx\n", __func__, __LINE__,
-+		kimage->head);
-+	pr_debug("%s:%d: kimage_start:             %lx\n", __func__, __LINE__,
-+		kimage_start);
-+
- 	/*
- 	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
- 	 * after the kernel is shut down.
--- 
-2.5.0
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDMvMDQvMjAxNiAwNTowNyBQTSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
+PiBIZWxsbyBNaW5mZWkgYW5kIE1pbm9ydSwKPgo+IFRoaXMgaXMgYSByZXBseSB0byB0aGUgcHJl
+dmlvdXMgbGV0dGVycy4KPiBTb3JyeSBmb3Igc28gbGF0ZS4KPiBBbmQgaXQgaXMgYWxzbyBhbiBp
+bnRyb2R1Y3Rpb24gb2YgdGhlIHBhdGNoIHYzLgo+Cj4gQWJvdXQgcGVyZm9ybWFuY2U6Cj4gSSBt
+b2RpZmllZCB0aGUgcGF0Y2ggYWZ0ZXIgcmVhZGluZyBNaW5vcnUncyBjb2RlLgo+IFRoYW5rcyBN
+aW5vcnUsIGl0IGhhcyBiZXR0ZXIgcGVyZm9ybWFuY2Ugbm93Lgo+Cj4gQWJvdXQgYnVnczoKPiBU
+aGVyZSBhcmUgdHdvIGJ1Z3MgaW4gdGhlIHBhdGNoIHYyLgo+IEZpcnN0IGlzIHJlcG9ydGVkIGJ5
+IE1pbmZlaS4KPiBNaW5vcnUncyBleHBsYW5hdGlvbiBhbmQgc29sdXRpb24gYXJlIHJpZ2h0Lgo+
+IEJ1dCBJIHVzZWQgYW5vdGhlciBzb2x1dGlvbi4KPiArICAgICAgICAgICAgaWYgKHBmbiA+PSBr
+ZHVtcF90aHJlYWRfYXJncy0+ZW5kX3Bmbikgewo+ICsgICAgICAgICAgICAgICAgcGFnZV9kYXRh
+X2J1ZltpbmRleF0udXNlZCA9IEZBTFNFOwo+ICsgICAgICAgICAgICAgICAgcGFnZV9mbGFnX2J1
+Zi0+cmVhZHkgPSBGTEFHX1JFQURZOwo+ICsgICAgICAgICAgICAgICAgYnJlYWs7Cj4gKyAgICAg
+ICAgICAgIH0KPiBUaGUgYnVnIGlzIGNhdXNlZCBieSB0aGUgYWJvdmUgY29kZS4KPiBKdXN0IHJl
+bW92ZSAicGFnZV9mbGFnX2J1Zi0+cmVhZHkgPSBGTEFHX1JFQURZOyIgaXMgT0suCj4KPiBTZWNv
+bmQgYnVnIGlzIHdoYXQgSSBtZXQuCj4gSWYgcnVuIG1ha2VkdW1wZmlsZSBhIGxvdCBvZiB0aW1l
+cywgYSBmZXcgcGFnZXMnIGRhdGEgd2lsbCBub3QgYmUgY29ycmVjdC4KPiBJIGZpeCBpdCBieSB1
+c2luZyAidm9sYXRpbGUiIGFuZCBpbmZvLT5wYWdlX2RhdGFfbXV0ZXguCj4gU28gSSBkZWxldGUg
+dGhlIG9yaWdpbmFsIG11dGV4IGluIHBhZ2VfZGF0YV9idWYuIEl0IGNhbiBhbHNvIHVzZSBsZXNz
+IG1lbW9yeS4KPiBJIGhhdmUgcnVuIGl0IDUwMCB0aW1lcyBhbmQgaGF2ZW4ndCBnb3QgYW55IHdy
+b25nIHBhZ2UgZGF0YS4KPgoKU29ycnksIHRoZSBzZWNvbmQgYnVnIHN0aWxsIGV4aXN0cy4KCgot
+LSAKVGhhbmtzClpob3UKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
