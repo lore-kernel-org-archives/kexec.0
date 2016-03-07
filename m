@@ -1,20 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1acr6r-0000lV-FP
- for kexec@lists.infradead.org; Mon, 07 Mar 2016 09:05:50 +0000
-Message-ID: <56DD43F7.8060703@cn.fujitsu.com>
-Date: Mon, 7 Mar 2016 17:03:51 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+Subject: Re: [PATCH v14 00/20] arm64 kexec kernel patches v14
+References: <cover.1457135058.git.geoff@infradead.org>
+From: Azriel Samson <asamson@codeaurora.org>
+Message-ID: <56DDFFC4.1040206@codeaurora.org>
+Date: Mon, 7 Mar 2016 15:25:08 -0700
 MIME-Version: 1.0
-Subject: Re: [PATCH v3] Improve the performance of --num-threads -d 31
-References: <1457080544-16469-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160307070458.GA6016@dhcp-128-25.nay.redhat.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0181E2B9@BPXM02GP.gisp.nec.co.jp>
- <56DD3A3E.1000402@cn.fujitsu.com> <56DD3F27.4030105@cn.fujitsu.com>
- <BE691E4CBA06214BB0FA8EEFC7C61A4D0181E6B9@BPXM02GP.gisp.nec.co.jp>
-In-Reply-To: <BE691E4CBA06214BB0FA8EEFC7C61A4D0181E6B9@BPXM02GP.gisp.nec.co.jp>
+In-Reply-To: <cover.1457135058.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +14,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Minoru Usui <min-usui@ti.jp.nec.com>
-Cc: Minfei Huang <mhuang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 'Pratyush Anand' <panand@redhat.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-SGkgTWlub3J1LAoKSSBndWVzcyBpZiB5b3UgY2hhbmdlIHRoZSBwYXJ0IG9mIGxvY2tpbmcgcGFn
-ZV9kYXRhX2J1ZiB0byB0aGUgZm9sbG93aW5nLAppdCB3aWxsIGJlIG1vcmUgY29ycmVjdC4KQnV0
-IEknbSBub3Qgc3VyZSBpZiB5b3Ugd2lsbCBnZXQgdGhlIHNhbWUgcHJvYmxlbSBhcyB3aGljaCBp
-biBteSBwYXRjaCB2My4KCisJCXB0aHJlYWRfbXV0ZXhfbG9jaygmaW5mby0+cGFnZV9kYXRhX211
-dGV4KTsKKwkJd2hpbGUgKHBhZ2VfZGF0YV9idWZbaW5kZXhdLnVzZWQgIT0gRkFMU0UpIHsKKwkJ
-CWluZGV4ID0gKGluZGV4ICsgMSkgJSBpbmZvLT5udW1fYnVmZmVyczsKKwkJfQorCQlwYWdlX2Rh
-dGFfYnVmW2luZGV4XS51c2VkID0gVFJVRTsKKwkJcHRocmVhZF9tdXRleF91bmxvY2soJmluZm8t
-PnBhZ2VfZGF0YV9tdXRleCk7CgotLSAKVGhhbmtzClpob3UKCk9uIDAzLzA3LzIwMTYgMDQ6NTIg
-UE0sIE1pbm9ydSBVc3VpIHdyb3RlOgo+IEhpLCBaaG91Cj4KPj4gLS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0KPj4gRnJvbToga2V4ZWMgW21haWx0bzprZXhlYy1ib3VuY2VzQGxpc3RzLmluZnJh
-ZGVhZC5vcmddIE9uIEJlaGFsZiBPZiAiWmhvdSwgV2Vuamlhbi/lkajmloc/Igo+PiBTZW50OiBN
-b25kYXksIE1hcmNoIDA3LCAyMDE2IDU6NDMgUE0KPj4gVG86IFVzdWkgTWlub3J1KOeik+S6lSDm
-iJApIDxtaW4tdXN1aUB0aS5qcC5uZWMuY29tPgo+PiBDYzogTWluZmVpIEh1YW5nIDxtaHVhbmdA
-cmVkaGF0LmNvbT47IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gU3ViamVjdDogUmU6IFtQ
-QVRDSCB2M10gSW1wcm92ZSB0aGUgcGVyZm9ybWFuY2Ugb2YgLS1udW0tdGhyZWFkcyAtZCAzMQo+
-Pgo+PiBIaSBNaW5vcnUsCj4+Cj4+IEkgZ290IHR3byBlcnJvciBkdW1wZmlsZXMgYnkgcnVubmlu
-ZyBpdCBsZXNzIHRoYW4gMTAwIHRpbWVzLgo+Cj4gT2gsIEknbSBzb3JyeS4KPiBUaGFuayB5b3Ug
-Zm9yIHlvdXIgdGVzdC4KPgo+IEknbSB3YWl0aW5nIGZvciB5b3VyIHY0IHBhdGNoLgo+Cj4gVGhh
-bmtzCj4gTWlub3J1IFVzdWkKPgo+Cj4KPj4gLS0KPj4gVGhhbmtzCj4+IFpob3UKPj4KPj4gT24g
-MDMvMDcvMjAxNiAwNDoyMiBQTSwgIlpob3UsIFdlbmppYW4v5ZGo5paHPyIgd3JvdGU6Cj4+PiBI
-aSBNaW5vcnUsCj4+Pgo+Pj4gSSBoYXZlIHRlc3QgeW91ciBwYXRjaCBzaW5jZSB5b3UgcG9zdC4K
-Pj4+IEkgY2FuIGdldCBhIGZhaWx1cmUgZWFzaWx5Lgo+Pj4gSWYgeW91IHJ1biBpdCBzZXZlcmFs
-IHRpbWVzLCB0aGUgZHVtcGZpbGUgaXQgcHJvZHVjZXMgbWF5IGJlIGRpZmZlcmVudCBmcm9tIHRo
-ZSBjb3JyZWN0IG9uZS4KPj4+Cj4+PiArCQkJaW5mby0+Y3VycmVudF9wZm4gPSBwZm4gKyAxOwo+
-Pj4gKwkJCXB0aHJlYWRfbXV0ZXhfdW5sb2NrKCZpbmZvLT5jdXJyZW50X3Bmbl9tdXRleCk7Cj4+
-PiArCQkJcGFnZV9mbGFnX2J1Zi0+cGZuID0gcGZuOwo+Pj4gKwkJCXBhZ2VfZmxhZ19idWYtPnJl
-YWR5ID0gRkxBR19GSUxMSU5HOwo+Pj4gVGhlIGFib3ZlIGNvZGUgc2hvdWxkIGJlIGNoYW5nZWQg
-dG8gdGhlIGZvbGxvd2luZzoKPj4+Cj4+PiArCQkJaW5mby0+Y3VycmVudF9wZm4gPSBwZm4gKyAx
-Owo+Pj4gKwkJCXBhZ2VfZmxhZ19idWYtPnBmbiA9IHBmbjsKPj4+ICsJCQlwYWdlX2ZsYWdfYnVm
-LT5yZWFkeSA9IEZMQUdfRklMTElORzsKPj4+ICsJCQlwdGhyZWFkX211dGV4X3VubG9jaygmaW5m
-by0+Y3VycmVudF9wZm5fbXV0ZXgpOwo+Pj4KPj4+IEkgaGF2ZW4ndCBydW4geW91ciBjb2RlIHdp
-dGggdGhlIGJ1ZyBmaXhlZC4KPj4+IEknbGwgdHJ5IG5vdy4KPj4+Cj4+PiBCeSB0aGUgd2F5LCB3
-aXRoIG15IHBhdGNoIHYzLCBJIGNhbid0IGdldCBhbiBlcnJvciBkdW1wZmlsZSB1bnRpbCBydW4g
-aXQgYnkgNTAwMCB0aW1lcy4KPj4KPj4KPj4KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KPj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4+IGtleGVjQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwoKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Geoff,
+
+On 3/4/2016 4:51 PM, Geoff Levand wrote:
+
+> To load a second stage kernel and execute a kexec re-boot or to work with kdump
+> on ARM64 systems a series of patches to kexec-tools [2], which have not yet been
+> merged upstream, are needed.  Please update to the latest if you have been using
+> an older version.
+>
+> To examine vmcore (/proc/vmcore), you should use
+>    - gdb v7.7 or later
+>    - crash v7.1.1 or later
+>
+> [1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+> [2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+>
+
+kexec-tools is still passing "mem=" parameter to the crash dump kernel 
+which causes it to crash with ACPI. You can revert commit "arm64: kdump: 
+pass "mem=" parameter to a crash dump kernel" in kexec-tools.
+
+Also, some version of the following patch from Pratyush is also still 
+needed: 
+https://github.com/pratyushanand/kexec-tools/commit/85f403cabb9ae0d7a37d1656a00fb609a9525086
+
+-- 
+Thanks,
+Azriel Samson
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
