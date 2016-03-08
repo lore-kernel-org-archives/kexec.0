@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ad5RC-0007kW-Le
- for kexec@lists.infradead.org; Tue, 08 Mar 2016 00:23:47 +0000
-Received: by mail-pf0-x234.google.com with SMTP id 129so44825037pfw.1
- for <kexec@lists.infradead.org>; Mon, 07 Mar 2016 16:23:26 -0800 (PST)
-Subject: Re: [PATCH v14 00/20] arm64 kexec kernel patches v14
-References: <cover.1457135058.git.geoff@infradead.org>
- <56DDFFC4.1040206@codeaurora.org> <1457393737.3560.36.camel@infradead.org>
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Message-ID: <56DE1B78.3000201@linaro.org>
-Date: Tue, 8 Mar 2016 07:23:20 +0700
+ id 1adGHw-0003dz-Un
+ for kexec@lists.infradead.org; Tue, 08 Mar 2016 11:58:58 +0000
+Date: Tue, 8 Mar 2016 12:58:32 +0100
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: [PATCH] makedumpfile: Fix several issues with reading ELF pages
+Message-ID: <20160308125832.68ceffc2@hananiah.suse.cz>
+In-Reply-To: <20160229204051.2f4d238d@hananiah.suse.cz>
+References: <20160210084737.3060fb5a@hananiah.suse.cz>
+ <20160210085009.4df4d14d@hananiah.suse.cz>
+ <20160229195514.335108c9@hananiah.suse.cz>
+ <20160229195952.47c1738b@hananiah.suse.cz>
+ <20160229204051.2f4d238d@hananiah.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1457393737.3560.36.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,40 +22,144 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, Azriel Samson <asamson@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, 'Pratyush Anand' <panand@redhat.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-Geoff,
+While adopting the algorithm for libkdumpfile, several corner cases
+were found by a test case:
 
-On 03/08/2016 06:35 AM, Geoff Levand wrote:
-> On Mon, 2016-03-07 at 15:25 -0700, Azriel Samson wrote:
->
->> kexec-tools is still passing "mem=" parameter to the crash dump
->> kernel
->> which causes it to crash with ACPI. You can revert commit "arm64:
->> kdump:
->> pass "mem=" parameter to a crash dump kernel" in kexec-tools.
->
-> Takahiro, can you verify this?
+  1. If the last part of a page is not present in the ELF file, it
+     should be replaced with zeroes. However, the check is incorrect.
 
-I know what happened. You didn't merge my changes on kexec-tools correctly.
-Once I'm ready for a clean code on top of your tree, I'll let you know.
+  2. If the beginning of a page is not present, following data is
+     read from an incorrect file offset.
 
--Takahiro AKASHI
+  3. If the page is split among several segments, the current
+     position in the buffer is not always taken into account.
 
->> Also, some version of the following patch from Pratyush is also still
->> needed:
->> https://github.com/pratyushanand/kexec-tools/commit/85f403cabb9ae0d7a
->> 37d1656a00fb609a9525086
->
-> I added that in.
+Case 1 is a simple typo/braino (writing bufptr instead of endp).
 
-> -Geoff
->
+To fix cases 2 and 3, it is best to update the paddr variable so that
+it always corresponds to the current read position in the buffer.
+
+I have tested the new code with a specially crafted ELF dump where one
+page had the following (artificial) layout:
+
+  #  PAGE RANGE    STORED IN   DATA
+  --------------------------------------------------
+  1  0x000-0x007   nowhere     fake zero
+  2  0x008-0x067   LOAD #1     read from file
+  3  0x068-0x06f   nowhere     fake zero
+  4  0x070-0x13f   LOAD #2     read from file
+  5  0x140-0x147   LOAD #2     zero (memsz > filesz)
+  6  0x148-0xff7   LOAD #3     read from file
+  7  0xff8-0xfff   nowhere     fake zero
+
+Case 1 tests the conditional right after get_pt_load_extents().
+Case 2 tests file read after missing data.
+Case 3 tests the conditional from case 1 with non-zero buffer position.
+Case 5 tests the last conditional in the loop (p < endp).
+Case 6 tests exact match in get_pt_load_extents().
+Case 7 tests the final conditional after the loop.
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+
+---
+ makedumpfile.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -656,14 +656,15 @@ readpage_elf(unsigned long long paddr, v
+ 	p = bufptr;
+ 	endp = p + info->page_size;
+ 	while (p < endp) {
+-		idx = closest_pt_load(paddr + (p - bufptr), endp - p);
++		idx = closest_pt_load(paddr, endp - p);
+ 		if (idx < 0)
+ 			break;
+ 
+ 		get_pt_load_extents(idx, &phys_start, &phys_end, &offset, &size);
+-		if (phys_start > paddr + (p - bufptr)) {
++		if (phys_start > paddr) {
+ 			memset(p, 0, phys_start - paddr);
+ 			p += phys_start - paddr;
++			paddr = phys_start;
+ 		}
+ 
+ 		offset += paddr - phys_start;
+@@ -677,6 +678,7 @@ readpage_elf(unsigned long long paddr, v
+ 				return FALSE;
+ 			}
+ 			p += size;
++			paddr += size;
+ 		}
+ 		if (p < endp) {
+ 			size = phys_end - paddr;
+@@ -684,6 +686,7 @@ readpage_elf(unsigned long long paddr, v
+ 				size = endp - p;
+ 			memset(p, 0, size);
+ 			p += size;
++			paddr += size;
+ 		}
+ 	}
+ 
+@@ -691,7 +694,7 @@ readpage_elf(unsigned long long paddr, v
+ 		ERRMSG("Attempt to read non-existent page at 0x%llx.\n",
+ 		       paddr);
+ 		return FALSE;
+-	} else if (p < bufptr)
++	} else if (p < endp)
+ 		memset(p, 0, endp - p);
+ 
+ 	return TRUE;
+@@ -708,14 +711,15 @@ readpage_elf_parallel(int fd_memory, uns
+ 	p = bufptr;
+ 	endp = p + info->page_size;
+ 	while (p < endp) {
+-		idx = closest_pt_load(paddr + (p - bufptr), endp - p);
++		idx = closest_pt_load(paddr, endp - p);
+ 		if (idx < 0)
+ 			break;
+ 
+ 		get_pt_load_extents(idx, &phys_start, &phys_end, &offset, &size);
+-		if (phys_start > paddr + (p - bufptr)) {
++		if (phys_start > paddr) {
+ 			memset(p, 0, phys_start - paddr);
+ 			p += phys_start - paddr;
++			paddr = phys_start;
+ 		}
+ 
+ 		offset += paddr - phys_start;
+@@ -730,6 +734,7 @@ readpage_elf_parallel(int fd_memory, uns
+ 				return FALSE;
+ 			}
+ 			p += size;
++			paddr += size;
+ 		}
+ 		if (p < endp) {
+ 			size = phys_end - paddr;
+@@ -737,6 +742,7 @@ readpage_elf_parallel(int fd_memory, uns
+ 				size = endp - p;
+ 			memset(p, 0, size);
+ 			p += size;
++			paddr += size;
+ 		}
+ 	}
+ 
+@@ -744,7 +750,7 @@ readpage_elf_parallel(int fd_memory, uns
+ 		ERRMSG("Attempt to read non-existent page at 0x%llx.\n",
+ 		       paddr);
+ 		return FALSE;
+-	} else if (p < bufptr)
++	} else if (p < endp)
+ 		memset(p, 0, endp - p);
+ 
+ 	return TRUE;
 
 _______________________________________________
 kexec mailing list
