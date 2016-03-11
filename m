@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-x231.google.com ([2607:f8b0:4003:c01::231])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aeHNJ-0002cb-JZ
- for kexec@lists.infradead.org; Fri, 11 Mar 2016 07:20:43 +0000
-Received: by mail-ob0-x231.google.com with SMTP id m7so104818751obh.3
- for <kexec@lists.infradead.org>; Thu, 10 Mar 2016 23:20:20 -0800 (PST)
+ id 1aeHol-0008MW-1k
+ for kexec@lists.infradead.org; Fri, 11 Mar 2016 07:49:03 +0000
+Date: Fri, 11 Mar 2016 15:48:27 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 2/2] [PATCH 2/2] proc-vmcore: wrong data type casting fix
+Message-ID: <20160311074827.GA8337@dhcp-128-65.nay.redhat.com>
+References: <20160311062953.623220113@redhat.com>
+ <20160311071935.GA28205@dhcp-128-25.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20160311062953.571397512@redhat.com>
-References: <20160311062953.571397512@redhat.com>
-From: Jianyu Zhan <nasa4836@gmail.com>
-Date: Fri, 11 Mar 2016 15:19:40 +0800
-Message-ID: <CAHz2CGXmo87ZNha-Kzy_1Vk8vuWg_9CY5oYqtNGdw1iat1F_5A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] [PATCH 1/2] Introduce new macros min_lt and max_lt
- for comparing with larger type
+Content-Disposition: inline
+In-Reply-To: <20160311071935.GA28205@dhcp-128-25.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +24,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: bhe@redhat.com, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, d.hatayama@jp.fujitsu.com, Andrew Morton <akpm@linux-foundation.org>, vgoyal@redhat.com
+To: Minfei Huang <mhuang@redhat.com>
+Cc: bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, d.hatayama@jp.fujitsu.com, akpm@linux-foundation.org, vgoyal@redhat.com
 
-On Fri, Mar 11, 2016 at 2:21 PM,  <dyoung@redhat.com> wrote:
-> A useful use case for min_t and max_t is comparing two values with larger
-> type. For example comparing an u64 and an u32, usually we do not want to
-> truncate the u64, so we need use min_t or max_t with u64.
->
-> To simplify the usage introducing two more macros min_lt and max_lt,
-> 'lt' means larger type.
->
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  include/linux/kernel.h |   13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> --- linux.orig/include/linux/kernel.h
-> +++ linux/include/linux/kernel.h
-> @@ -798,6 +798,19 @@ static inline void ftrace_dump(enum ftra
->         type __max2 = (y);                      \
->         __max1 > __max2 ? __max1: __max2; })
->
-> +/*
-> + * use type of larger size in min_lt and max_lt
-> + */
-> +#define min_lt(x, y) ({                        \
-> +       int sx = sizeof(typeof(x));             \
-> +       int sy = sizeof(typeof(y));             \
-> +       sx > sy ? min_t(typeof(x), x, y) : min_t(typeof(y), x, y); })
-> +
-> +#define max_lt(x, y) ({                        \
-> +       int sx = sizeof(typeof(x));             \
-> +       int sy = sizeof(typeof(y));             \
-> +       sx > sy ? max_t(typeof(x), x, y) : max_t(typeof(y), x, y); })
-> +
->  /**
->   * clamp_t - return a value clamped to a given range using a given type
->   * @type: the type of variable to use
->
->
+Hi, Minfei
 
-No no!
+On 03/11/16 at 03:19pm, Minfei Huang wrote:
+> On 03/11/16 at 02:21pm, dyoung@redhat.com wrote:
+> > @@ -231,7 +231,8 @@ static ssize_t __read_vmcore(char *buffe
+> >  
+> >  	list_for_each_entry(m, &vmcore_list, list) {
+> >  		if (*fpos < m->offset + m->size) {
+> > -			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
+> > +			tsz = (size_t)min_lt(m->offset + m->size - *fpos,
+> > +					    buflen);
+> >  			start = m->paddr + *fpos - m->offset;
+> >  			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
+> >  			if (tmp < 0)
+> > @@ -461,7 +462,7 @@ static int mmap_vmcore(struct file *file
+> >  		if (start < m->offset + m->size) {
+> >  			u64 paddr = 0;
+> >  
+> > -			tsz = min_t(size_t, m->offset + m->size - start, size);
+> > +			tsz = (size_t)min_lt(m->offset + m->size - start, size);
+> >  			paddr = m->paddr + start - m->offset;
+> >  			if (vmcore_remap_oldmem_pfn(vma, vma->vm_start + len,
+> >  						    paddr >> PAGE_SHIFT, tsz,
+> 
+> Hi, Dave.
+> 
+> Seems the previous parameter is unsigned long long, and the later one is
+> size_t. The size of both these types doesn't change in running time, why
+> not use min_t(unsigned long long, a, b) instead?
 
-C standard has defined "usual arithmetic conversions" rules[1], which
-decides the type promotion rules in binary operators.
+Just want a common macro so it can benefit other users so that we can simply
+use it without knowning type details and avoid such similar bugs also.
 
-The interfaces in this patch just bluntly overrides this rule to
-choose the bigger type size
-for operation.  Most of time it might work well, because most time the
-operands used in min_t()/max_t() in Linux kernel
-have same sign'ness and this rule works.
-
-But if two operands have same size type but have different different
-sign'ness,  this interfaces will exhibit Undefind Behavior,
-i.e.  you choose the typeof(y) as the final type to use in operation
-when they have the same type size,  so it might be signed
-or unsigned, depending on the type of y.
-
-So,  in this /proc/fs/vmcore case you should rather just explicit cast
-the operand to avoid truncation.
-
-
-[1] http://www.tti.unipa.it/~ricrizzo/KS/Data/PBurden/chap4.usual.conversions.html
-
-Regards,
-Jianyu Zhan
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
