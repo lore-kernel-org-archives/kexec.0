@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aeJCH-0005Ts-9K
- for kexec@lists.infradead.org; Fri, 11 Mar 2016 09:17:26 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Fix several issues with reading ELF pages
-Date: Fri, 11 Mar 2016 09:16:04 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E291D8@BPXM01GP.gisp.nec.co.jp>
-References: <20160210084737.3060fb5a@hananiah.suse.cz>
- <20160210085009.4df4d14d@hananiah.suse.cz>
- <20160229195514.335108c9@hananiah.suse.cz>
- <20160229195952.47c1738b@hananiah.suse.cz>
- <20160229204051.2f4d238d@hananiah.suse.cz>
- <20160308125832.68ceffc2@hananiah.suse.cz>
-In-Reply-To: <20160308125832.68ceffc2@hananiah.suse.cz>
-Content-Language: ja-JP
+Message-ID: <56E2AE12.4020604@arm.com>
+Date: Fri, 11 Mar 2016 11:37:54 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v14 12/20] arm64/kexec: Add core kexec support
+References: <cover.1457135058.git.geoff@infradead.org>
+ <cdab8a2001a9f8beb605bfcd565201c37dad78e6.1457135058.git.geoff@infradead.org>
+In-Reply-To: <cdab8a2001a9f8beb605bfcd565201c37dad78e6.1457135058.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,148 +19,154 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello Petr,
+Hi Geoff,
 
-Thanks for your investigation and fixing the issue.
-I'll merge this into v1.6.0.
+On 04/03/16 23:51, Geoff Levand wrote:
+> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
+> arm64 architecture that add support for the kexec re-boot mechanism
+> (CONFIG_KEXEC) on arm64 platforms.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-Regards,
-Atsushi Kumagai
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> new file mode 100644
+> index 0000000..6fd0f0c
+> --- /dev/null
+> +++ b/arch/arm64/kernel/machine_kexec.c
 
->While adopting the algorithm for libkdumpfile, several corner cases
->were found by a test case:
->
->  1. If the last part of a page is not present in the ELF file, it
->     should be replaced with zeroes. However, the check is incorrect.
->
->  2. If the beginning of a page is not present, following data is
->     read from an incorrect file offset.
->
->  3. If the page is split among several segments, the current
->     position in the buffer is not always taken into account.
->
->Case 1 is a simple typo/braino (writing bufptr instead of endp).
->
->To fix cases 2 and 3, it is best to update the paddr variable so that
->it always corresponds to the current read position in the buffer.
->
->I have tested the new code with a specially crafted ELF dump where one
->page had the following (artificial) layout:
->
->  #  PAGE RANGE    STORED IN   DATA
->  --------------------------------------------------
->  1  0x000-0x007   nowhere     fake zero
->  2  0x008-0x067   LOAD #1     read from file
->  3  0x068-0x06f   nowhere     fake zero
->  4  0x070-0x13f   LOAD #2     read from file
->  5  0x140-0x147   LOAD #2     zero (memsz > filesz)
->  6  0x148-0xff7   LOAD #3     read from file
->  7  0xff8-0xfff   nowhere     fake zero
->
->Case 1 tests the conditional right after get_pt_load_extents().
->Case 2 tests file read after missing data.
->Case 3 tests the conditional from case 1 with non-zero buffer position.
->Case 5 tests the last conditional in the loop (p < endp).
->Case 6 tests exact match in get_pt_load_extents().
->Case 7 tests the final conditional after the loop.
->
->Signed-off-by: Petr Tesarik <ptesarik@suse.com>
->
->---
-> makedumpfile.c |   18 ++++++++++++------
-> 1 file changed, 12 insertions(+), 6 deletions(-)
->
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -656,14 +656,15 @@ readpage_elf(unsigned long long paddr, v
-> 	p = bufptr;
-> 	endp = p + info->page_size;
-> 	while (p < endp) {
->-		idx = closest_pt_load(paddr + (p - bufptr), endp - p);
->+		idx = closest_pt_load(paddr, endp - p);
-> 		if (idx < 0)
-> 			break;
->
-> 		get_pt_load_extents(idx, &phys_start, &phys_end, &offset, &size);
->-		if (phys_start > paddr + (p - bufptr)) {
->+		if (phys_start > paddr) {
-> 			memset(p, 0, phys_start - paddr);
-> 			p += phys_start - paddr;
->+			paddr = phys_start;
-> 		}
->
-> 		offset += paddr - phys_start;
->@@ -677,6 +678,7 @@ readpage_elf(unsigned long long paddr, v
-> 				return FALSE;
-> 			}
-> 			p += size;
->+			paddr += size;
-> 		}
-> 		if (p < endp) {
-> 			size = phys_end - paddr;
->@@ -684,6 +686,7 @@ readpage_elf(unsigned long long paddr, v
-> 				size = endp - p;
-> 			memset(p, 0, size);
-> 			p += size;
->+			paddr += size;
-> 		}
-> 	}
->
->@@ -691,7 +694,7 @@ readpage_elf(unsigned long long paddr, v
-> 		ERRMSG("Attempt to read non-existent page at 0x%llx.\n",
-> 		       paddr);
-> 		return FALSE;
->-	} else if (p < bufptr)
->+	} else if (p < endp)
-> 		memset(p, 0, endp - p);
->
-> 	return TRUE;
->@@ -708,14 +711,15 @@ readpage_elf_parallel(int fd_memory, uns
-> 	p = bufptr;
-> 	endp = p + info->page_size;
-> 	while (p < endp) {
->-		idx = closest_pt_load(paddr + (p - bufptr), endp - p);
->+		idx = closest_pt_load(paddr, endp - p);
-> 		if (idx < 0)
-> 			break;
->
-> 		get_pt_load_extents(idx, &phys_start, &phys_end, &offset, &size);
->-		if (phys_start > paddr + (p - bufptr)) {
->+		if (phys_start > paddr) {
-> 			memset(p, 0, phys_start - paddr);
-> 			p += phys_start - paddr;
->+			paddr = phys_start;
-> 		}
->
-> 		offset += paddr - phys_start;
->@@ -730,6 +734,7 @@ readpage_elf_parallel(int fd_memory, uns
-> 				return FALSE;
-> 			}
-> 			p += size;
->+			paddr += size;
-> 		}
-> 		if (p < endp) {
-> 			size = phys_end - paddr;
->@@ -737,6 +742,7 @@ readpage_elf_parallel(int fd_memory, uns
-> 				size = endp - p;
-> 			memset(p, 0, size);
-> 			p += size;
->+			paddr += size;
-> 		}
-> 	}
->
->@@ -744,7 +750,7 @@ readpage_elf_parallel(int fd_memory, uns
-> 		ERRMSG("Attempt to read non-existent page at 0x%llx.\n",
-> 		       paddr);
-> 		return FALSE;
->-	} else if (p < bufptr)
->+	} else if (p < endp)
-> 		memset(p, 0, endp - p);
->
-> 	return TRUE;
+[ ... snip ... ]
+
+> +/**
+> + * kexec_list_flush - Helper to flush the kimage list to PoC.
+> + */
+> +static void kexec_list_flush(struct kimage *kimage)
+> +{
+> +	kimage_entry_t *entry;
+> +	unsigned int flag;
+> +
+> +	for (entry = &kimage->head, flag = 0; flag != IND_DONE; entry++) {
+> +		void *addr = kmap(phys_to_page(*entry & PAGE_MASK));
+
+Isn't kmap() only needed for highmem? All memory should be accessible via the
+linear map, so this could just be a call to phys_to_virt(), without the
+intermediate page step.
+
+
+> +
+> +		flag = *entry & IND_FLAGS;
+> +
+> +		switch (flag) {
+> +		case IND_INDIRECTION:
+> +			entry = (kimage_entry_t *)addr - 1;
+> +			__flush_dcache_area(addr, PAGE_SIZE);
+> +			break;
+> +		case IND_DESTINATION:
+> +			break;
+> +		case IND_SOURCE:
+> +			__flush_dcache_area(addr, PAGE_SIZE);
+> +			break;
+> +		case IND_DONE:
+> +			break;
+> +		default:
+> +			BUG();
+> +		}
+> +		kunmap(addr);
+> +	}
+> +}
+> +
+> +/**
+> + * kexec_segment_flush - Helper to flush the kimage segments to PoC.
+> + */
+> +static void kexec_segment_flush(const struct kimage *kimage)
+> +{
+> +	unsigned long i;
+> +
+> +	pr_devel("%s:\n", __func__);
+> +
+> +	for (i = 0; i < kimage->nr_segments; i++) {
+> +		pr_devel("  segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages\n",
+> +			i,
+> +			kimage->segment[i].mem,
+> +			kimage->segment[i].mem + kimage->segment[i].memsz,
+> +			kimage->segment[i].memsz,
+> +			kimage->segment[i].memsz /  PAGE_SIZE);
+> +
+> +		__flush_dcache_area(phys_to_virt(kimage->segment[i].mem),
+> +			kimage->segment[i].memsz);
+> +	}
+> +}
+> +
+> +/**
+> + * machine_kexec - Do the kexec reboot.
+> + *
+> + * Called from the core kexec code for a sys_reboot with LINUX_REBOOT_CMD_KEXEC.
+> + */
+> +void machine_kexec(struct kimage *kimage)
+> +{
+> +	phys_addr_t reboot_code_buffer_phys;
+> +	void *reboot_code_buffer;
+> +
+> +	BUG_ON(num_online_cpus() > 1);
+> +
+> +	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+> +	reboot_code_buffer = kmap(kimage->control_code_page);
+
+page_address()?
+
+
+> +
+> +	/*
+> +	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
+> +	 * after the kernel is shut down.
+> +	 */
+> +	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
+> +		arm64_relocate_new_kernel_size);
+> +
+> +	/* Flush the reboot_code_buffer in preparation for its execution. */
+> +	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
+> +	flush_icache_range((uintptr_t)reboot_code_buffer,
+> +		arm64_relocate_new_kernel_size);
+> +
+> +	/* Flush the kimage list. */
+> +	kexec_list_flush(kimage);
+> +
+> +	/* Flush the new image if already in place. */
+> +	if (kimage->head & IND_DONE)
+> +		kexec_segment_flush(kimage);
+> +
+> +	pr_info("Bye!\n");
+> +
+> +	/* Disable all DAIF exceptions. */
+> +	asm volatile ("msr daifset, #0xf" : : : "memory");
+> +
+> +	cpu_install_idmap();
+> +
+> +	/*
+> +	 * cpu_soft_restart will shutdown the MMU, disable data caches, then
+> +	 * transfer control to the reboot_code_buffer which contains a copy of
+> +	 * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
+> +	 * uses physical addressing to relocate the new image to its final
+> +	 * position and transfers control to the image entry point when the
+> +	 * relocation is complete.
+> +	 */
+> +
+> +	cpu_soft_restart(is_hyp_mode_available(),
+> +		reboot_code_buffer_phys, kimage->head, kimage_start, 0);
+> +
+> +	BUG(); /* Should never get here. */
+> +}
+> +
+> +void machine_crash_shutdown(struct pt_regs *regs)
+> +{
+> +	/* Empty routine needed to avoid build errors. */
+> +}
+
+Thanks!
+
+James
 
 _______________________________________________
 kexec mailing list
