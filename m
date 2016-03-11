@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56E2AE12.4020604@arm.com>
-Date: Fri, 11 Mar 2016 11:37:54 +0000
+Message-ID: <56E2AE87.4060209@arm.com>
+Date: Fri, 11 Mar 2016 11:39:51 +0000
 From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v14 12/20] arm64/kexec: Add core kexec support
+Subject: Re: [PATCH v14 14/20] arm64/kexec: Add pr_debug output
 References: <cover.1457135058.git.geoff@infradead.org>
- <cdab8a2001a9f8beb605bfcd565201c37dad78e6.1457135058.git.geoff@infradead.org>
-In-Reply-To: <cdab8a2001a9f8beb605bfcd565201c37dad78e6.1457135058.git.geoff@infradead.org>
+ <b11ec7d6be4debe94cd91c20d218f4015980d057.1457135058.git.geoff@infradead.org>
+In-Reply-To: <b11ec7d6be4debe94cd91c20d218f4015980d057.1457135058.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,148 +25,65 @@ Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <
 Hi Geoff,
 
 On 04/03/16 23:51, Geoff Levand wrote:
-> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
-> arm64 architecture that add support for the kexec re-boot mechanism
-> (CONFIG_KEXEC) on arm64 platforms.
+> To aid in debugging kexec problems or when adding new functionality to kexec add
+> a new routine kexec_image_info() and several inline pr_debug statements.
 > 
 > Signed-off-by: Geoff Levand <geoff@infradead.org>
 
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> new file mode 100644
-> index 0000000..6fd0f0c
-> --- /dev/null
-> +++ b/arch/arm64/kernel/machine_kexec.c
-
-[ ... snip ... ]
+[ ... snip ...]
 
 > +/**
-> + * kexec_list_flush - Helper to flush the kimage list to PoC.
+> + * kexec_image_info - For debugging output.
 > + */
-> +static void kexec_list_flush(struct kimage *kimage)
-> +{
-> +	kimage_entry_t *entry;
-> +	unsigned int flag;
-> +
-> +	for (entry = &kimage->head, flag = 0; flag != IND_DONE; entry++) {
-> +		void *addr = kmap(phys_to_page(*entry & PAGE_MASK));
-
-Isn't kmap() only needed for highmem? All memory should be accessible via the
-linear map, so this could just be a call to phys_to_virt(), without the
-intermediate page step.
-
-
-> +
-> +		flag = *entry & IND_FLAGS;
-> +
-> +		switch (flag) {
-> +		case IND_INDIRECTION:
-> +			entry = (kimage_entry_t *)addr - 1;
-> +			__flush_dcache_area(addr, PAGE_SIZE);
-> +			break;
-> +		case IND_DESTINATION:
-> +			break;
-> +		case IND_SOURCE:
-> +			__flush_dcache_area(addr, PAGE_SIZE);
-> +			break;
-> +		case IND_DONE:
-> +			break;
-> +		default:
-> +			BUG();
-> +		}
-> +		kunmap(addr);
-> +	}
-> +}
-> +
-> +/**
-> + * kexec_segment_flush - Helper to flush the kimage segments to PoC.
-> + */
-> +static void kexec_segment_flush(const struct kimage *kimage)
+> +#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
+> +static void _kexec_image_info(const char *func, int line,
+> +	const struct kimage *kimage)
 > +{
 > +	unsigned long i;
 > +
-> +	pr_devel("%s:\n", __func__);
+
+> +#ifndef DEBUG
+> +	return;
+> +#endif
+
+From include/linux/printk.h on pr_foo():
+> * All of these will print unconditionally, although note that pr_debug()
+> * and other debug macros are compiled out unless either DEBUG is defined
+
+So you can remove the #ifdef ... return, as all the pr_debug() calls will be
+removed by the compiler in this case. (which also explains why it doesn't
+complain about unreachable code!)
+
+
+> +	pr_debug("%s:%d:\n", func, line);
+> +	pr_debug("  kexec kimage info:\n");
+> +	pr_debug("    type:        %d\n", kimage->type);
+> +	pr_debug("    start:       %lx\n", kimage->start);
+> +	pr_debug("    head:        %lx\n", kimage->head);
+> +	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
 > +
 > +	for (i = 0; i < kimage->nr_segments; i++) {
-> +		pr_devel("  segment[%lu]: %016lx - %016lx, %lx bytes, %lu pages\n",
+> +		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages%s\n",
 > +			i,
 > +			kimage->segment[i].mem,
 > +			kimage->segment[i].mem + kimage->segment[i].memsz,
 > +			kimage->segment[i].memsz,
-> +			kimage->segment[i].memsz /  PAGE_SIZE);
-> +
-> +		__flush_dcache_area(phys_to_virt(kimage->segment[i].mem),
-> +			kimage->segment[i].memsz);
+> +			kimage->segment[i].memsz /  PAGE_SIZE,
+> +			(kexec_is_dtb(kimage->segment[i].buf) ?
+> +				", dtb segment" : ""));
 > +	}
 > +}
 > +
-> +/**
-> + * machine_kexec - Do the kexec reboot.
-> + *
-> + * Called from the core kexec code for a sys_reboot with LINUX_REBOOT_CMD_KEXEC.
-> + */
-> +void machine_kexec(struct kimage *kimage)
-> +{
-> +	phys_addr_t reboot_code_buffer_phys;
-> +	void *reboot_code_buffer;
-> +
-> +	BUG_ON(num_online_cpus() > 1);
-> +
-> +	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
-> +	reboot_code_buffer = kmap(kimage->control_code_page);
-
-page_address()?
+>  void machine_kexec_cleanup(struct kimage *kimage)
+>  {
+>  	/* Empty routine needed to avoid build errors. */
 
 
-> +
-> +	/*
-> +	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
-> +	 * after the kernel is shut down.
-> +	 */
-> +	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
-> +		arm64_relocate_new_kernel_size);
-> +
-> +	/* Flush the reboot_code_buffer in preparation for its execution. */
-> +	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
-> +	flush_icache_range((uintptr_t)reboot_code_buffer,
-> +		arm64_relocate_new_kernel_size);
-> +
-> +	/* Flush the kimage list. */
-> +	kexec_list_flush(kimage);
-> +
-> +	/* Flush the new image if already in place. */
-> +	if (kimage->head & IND_DONE)
-> +		kexec_segment_flush(kimage);
-> +
-> +	pr_info("Bye!\n");
-> +
-> +	/* Disable all DAIF exceptions. */
-> +	asm volatile ("msr daifset, #0xf" : : : "memory");
-> +
-> +	cpu_install_idmap();
-> +
-> +	/*
-> +	 * cpu_soft_restart will shutdown the MMU, disable data caches, then
-> +	 * transfer control to the reboot_code_buffer which contains a copy of
-> +	 * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
-> +	 * uses physical addressing to relocate the new image to its final
-> +	 * position and transfers control to the image entry point when the
-> +	 * relocation is complete.
-> +	 */
-> +
-> +	cpu_soft_restart(is_hyp_mode_available(),
-> +		reboot_code_buffer_phys, kimage->head, kimage_start, 0);
-> +
-> +	BUG(); /* Should never get here. */
-> +}
-> +
-> +void machine_crash_shutdown(struct pt_regs *regs)
-> +{
-> +	/* Empty routine needed to avoid build errors. */
-> +}
-
-Thanks!
+Thanks,
 
 James
+
+
 
 _______________________________________________
 kexec mailing list
