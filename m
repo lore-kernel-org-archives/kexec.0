@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <56E2AE87.4060209@arm.com>
-Date: Fri, 11 Mar 2016 11:39:51 +0000
-From: James Morse <james.morse@arm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v14 14/20] arm64/kexec: Add pr_debug output
-References: <cover.1457135058.git.geoff@infradead.org>
- <b11ec7d6be4debe94cd91c20d218f4015980d057.1457135058.git.geoff@infradead.org>
-In-Reply-To: <b11ec7d6be4debe94cd91c20d218f4015980d057.1457135058.git.geoff@infradead.org>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1aeTen-0007oj-Tl
+ for kexec@lists.infradead.org; Fri, 11 Mar 2016 20:27:34 +0000
+Date: Fri, 11 Mar 2016 12:27:11 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH V2] proc-vmcore: wrong data type casting fix
+Message-Id: <20160311122711.f738d878070641f113dfd348@linux-foundation.org>
+In-Reply-To: <20160311084248.GA9417@dhcp-128-65.nay.redhat.com>
+References: <20160311084248.GA9417@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,71 +22,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: bhe@redhat.com, mhuang@redhat.com, kexec@lists.infradead.org, nasa4836@gmail.com, linux-kernel@vger.kernel.org, d.hatayama@jp.fujitsu.com, vgoyal@redhat.com
 
-Hi Geoff,
+On Fri, 11 Mar 2016 16:42:48 +0800 Dave Young <dyoung@redhat.com> wrote:
 
-On 04/03/16 23:51, Geoff Levand wrote:
-> To aid in debugging kexec problems or when adding new functionality to kexec add
-> a new routine kexec_image_info() and several inline pr_debug statements.
+> On i686 PAE enabled machine the contiguous physical area could be large
+> and it can cause trimming down variables in below calculation in
+> read_vmcore() and mmap_vmcore():
 > 
-> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> 	tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
+> 
+> Then the real size passed down is not correct any more.
+> Suppose m->offset + m->size - *fpos being truncated to 0, buflen >0 then
+> we will get tsz = 0. It is of course not an expected result.
 
-[ ... snip ...]
+I don't really understand this.
 
-> +/**
-> + * kexec_image_info - For debugging output.
-> + */
-> +#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
-> +static void _kexec_image_info(const char *func, int line,
-> +	const struct kimage *kimage)
-> +{
-> +	unsigned long i;
-> +
+vmcore.offset if loff_t which is 64-bit
+vmcore.size is long long
+*fpos is loff_t
 
-> +#ifndef DEBUG
-> +	return;
-> +#endif
+so the expression should all be done with 64-bit arithmetic anyway.
 
-From include/linux/printk.h on pr_foo():
-> * All of these will print unconditionally, although note that pr_debug()
-> * and other debug macros are compiled out unless either DEBUG is defined
+Maybe buflen (size_t) has the wrong type, but the result of the other
+expression should be in-range by the time we come to doing the
+comparison.
 
-So you can remove the #ifdef ... return, as all the pr_debug() calls will be
-removed by the compiler in this case. (which also explains why it doesn't
-complain about unreachable code!)
+> During our tests there are two problems caused by it:
+> 1) read_vmcore will refuse to continue so makedumpfile fails.
+> 2) mmap_vmcore will trigger BUG_ON() in remap_pfn_range().
+> 
+> Use unsigned long long in min_t instead so that the variables are not
+> truncated.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Signed-off-by: Dave Young <dyoung@redhat.com>
 
+I think we'll need a cc:stable here.
 
-> +	pr_debug("%s:%d:\n", func, line);
-> +	pr_debug("  kexec kimage info:\n");
-> +	pr_debug("    type:        %d\n", kimage->type);
-> +	pr_debug("    start:       %lx\n", kimage->start);
-> +	pr_debug("    head:        %lx\n", kimage->head);
-> +	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
-> +
-> +	for (i = 0; i < kimage->nr_segments; i++) {
-> +		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages%s\n",
-> +			i,
-> +			kimage->segment[i].mem,
-> +			kimage->segment[i].mem + kimage->segment[i].memsz,
-> +			kimage->segment[i].memsz,
-> +			kimage->segment[i].memsz /  PAGE_SIZE,
-> +			(kexec_is_dtb(kimage->segment[i].buf) ?
-> +				", dtb segment" : ""));
-> +	}
-> +}
-> +
->  void machine_kexec_cleanup(struct kimage *kimage)
->  {
->  	/* Empty routine needed to avoid build errors. */
+> --- linux-x86.orig/fs/proc/vmcore.c
+> +++ linux-x86/fs/proc/vmcore.c
+> @@ -231,7 +231,9 @@ static ssize_t __read_vmcore(char *buffe
+>  
+>  	list_for_each_entry(m, &vmcore_list, list) {
+>  		if (*fpos < m->offset + m->size) {
+> -			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
+> +			tsz = (size_t)min_t(unsigned long long,
+> +					    m->offset + m->size - *fpos,
+> +					    buflen);
+
+This is rather a mess.  Can we please try to fix this bug by choosing
+appropriate types rather than all the typecasting?
 
 
-Thanks,
-
-James
-
-
+>  			start = m->paddr + *fpos - m->offset;
+>  			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
+>  			if (tmp < 0)
+> @@ -461,7 +463,8 @@ static int mmap_vmcore(struct file *file
+>  		if (start < m->offset + m->size) {
+>  			u64 paddr = 0;
+>  
+> -			tsz = min_t(size_t, m->offset + m->size - start, size);
+> +			tsz = (size_t)min_t(unsigned long long,
+> +					    m->offset + m->size - start, size);
+>  			paddr = m->paddr + start - m->offset;
+>  			if (vmcore_remap_oldmem_pfn(vma, vma->vm_start + len,
+>  						    paddr >> PAGE_SHIFT, tsz,
 
 _______________________________________________
 kexec mailing list
