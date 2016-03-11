@@ -1,10 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1adS8A-0008IT-TQ
- for kexec@lists.infradead.org; Wed, 09 Mar 2016 00:37:41 +0000
-Message-ID: <56DF6FE6.6000707@cn.fujitsu.com>
-Date: Wed, 9 Mar 2016 08:35:50 +0800
+ id 1aeBTO-00030H-Gi
+ for kexec@lists.infradead.org; Fri, 11 Mar 2016 01:02:39 +0000
+Received: from G08CNEXCHPEKD02.g08.fujitsu.local (unknown [10.167.33.83])
+ by cn.fujitsu.com (Postfix) with ESMTP id 5B8F642B4B05
+ for <kexec@lists.infradead.org>; Fri, 11 Mar 2016 09:01:57 +0800 (CST)
+Message-ID: <56E218B1.4010809@cn.fujitsu.com>
+Date: Fri, 11 Mar 2016 09:00:33 +0800
 From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
  <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
@@ -24,11 +27,10 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Minfei Huang <mhuang@redhat.com>, Minoru Usui <min-usui@ti.jp.nec.com>
 
-Hi Minfei and Minoru,
+Hello all,
 
-The bug has been fixed.
+Do you have any comments ?
 
 -- 
 Thanks
