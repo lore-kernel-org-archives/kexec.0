@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aeIUM-00047h-L2
- for kexec@lists.infradead.org; Fri, 11 Mar 2016 08:32:03 +0000
-Date: Fri, 11 Mar 2016 16:31:33 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] proc-vmcore: wrong data type casting fix
-Message-ID: <20160311083133.GA3207@x1.redhat.com>
-References: <20160311081501.GA9147@dhcp-128-65.nay.redhat.com>
+ id 1aeIfM-0000fP-EM
+ for kexec@lists.infradead.org; Fri, 11 Mar 2016 08:43:24 +0000
+Date: Fri, 11 Mar 2016 16:42:48 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH V2] proc-vmcore: wrong data type casting fix
+Message-ID: <20160311084248.GA9417@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160311081501.GA9147@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,57 +21,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, nasa4836@gmail.com, linux-kernel@vger.kernel.org, d.hatayama@jp.fujitsu.com, Andrew Morton <akpm@linux-foundation.org>, vgoyal@redhat.com
+To: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, d.hatayama@jp.fujitsu.com, bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org
+Cc: mhuang@redhat.com, dyoung@redhat.com, nasa4836@gmail.com
 
-On 03/11/16 at 04:15pm, Dave Young wrote:
-> On i686 PAE enabled machine the contiguous physical area could be large
-> and it can cause triming down variables in below calculation in
-> read_vmcore() and mmap_vmcore():
-> 
-> 	tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
-> 
-> Then the real size passed down is not correct any more.
-> Suppose m->offset + m->size - *fpos being truncated to 0, buflen >0 then
-> we will get tsz = 0. It is of course not an expected result.
-> 
-> During out test there are two problems caused by it:
-	  ~ our
-> 1) read_vmcore will refuse to continue so makedumpfile fails.
-> 2) mmap_vmcore will trigger BUG_ON() in remap_pfn_range().
-> 
-> Use unsigned long long in min_t instead so that the variables are not
-> truncated.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  fs/proc/vmcore.c |    7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> --- linux-x86.orig/fs/proc/vmcore.c
-> +++ linux-x86/fs/proc/vmcore.c
-> @@ -231,7 +231,9 @@ static ssize_t __read_vmcore(char *buffe
->  
->  	list_for_each_entry(m, &vmcore_list, list) {
->  		if (*fpos < m->offset + m->size) {
-> -			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
-> +			tsz = (size_t)min_t(unsigned long long,
-> +					    m->offset + m->size - *fpos,
-> +					    buflen);
->  			start = m->paddr + *fpos - m->offset;
->  			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
->  			if (tmp < 0)
-> @@ -461,7 +463,8 @@ static int mmap_vmcore(struct file *file
->  		if (start < m->offset + m->size) {
->  			u64 paddr = 0;
->  
-> -			tsz = min_t(size_t, m->offset + m->size - start, size);
-> +			tsz = (size_t)min_t(unsigned long long,
-> +					    m->offset + m->size - start, size);
->  			paddr = m->paddr + start - m->offset;
->  			if (vmcore_remap_oldmem_pfn(vma, vma->vm_start + len,
->  						    paddr >> PAGE_SHIFT, tsz,
+On i686 PAE enabled machine the contiguous physical area could be large
+and it can cause trimming down variables in below calculation in
+read_vmcore() and mmap_vmcore():
+
+	tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
+
+Then the real size passed down is not correct any more.
+Suppose m->offset + m->size - *fpos being truncated to 0, buflen >0 then
+we will get tsz = 0. It is of course not an expected result.
+
+During our tests there are two problems caused by it:
+1) read_vmcore will refuse to continue so makedumpfile fails.
+2) mmap_vmcore will trigger BUG_ON() in remap_pfn_range().
+
+Use unsigned long long in min_t instead so that the variables are not
+truncated.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+v1->v2: spelling fix in patch log
+ fs/proc/vmcore.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+--- linux-x86.orig/fs/proc/vmcore.c
++++ linux-x86/fs/proc/vmcore.c
+@@ -231,7 +231,9 @@ static ssize_t __read_vmcore(char *buffe
+ 
+ 	list_for_each_entry(m, &vmcore_list, list) {
+ 		if (*fpos < m->offset + m->size) {
+-			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
++			tsz = (size_t)min_t(unsigned long long,
++					    m->offset + m->size - *fpos,
++					    buflen);
+ 			start = m->paddr + *fpos - m->offset;
+ 			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
+ 			if (tmp < 0)
+@@ -461,7 +463,8 @@ static int mmap_vmcore(struct file *file
+ 		if (start < m->offset + m->size) {
+ 			u64 paddr = 0;
+ 
+-			tsz = min_t(size_t, m->offset + m->size - start, size);
++			tsz = (size_t)min_t(unsigned long long,
++					    m->offset + m->size - start, size);
+ 			paddr = m->paddr + start - m->offset;
+ 			if (vmcore_remap_oldmem_pfn(vma, vma->vm_start + len,
+ 						    paddr >> PAGE_SHIFT, tsz,
 
 _______________________________________________
 kexec mailing list
