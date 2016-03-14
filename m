@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1afJEd-0006IE-Rf
- for kexec@lists.infradead.org; Mon, 14 Mar 2016 03:32:00 +0000
-Date: Mon, 14 Mar 2016 11:31:31 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1afJTy-00031H-F2
+ for kexec@lists.infradead.org; Mon, 14 Mar 2016 03:47:51 +0000
+Date: Mon, 14 Mar 2016 11:47:22 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH V2] proc-vmcore: wrong data type casting fix
-Message-ID: <20160314033131.GA16436@dhcp-128-65.nay.redhat.com>
+Message-ID: <20160314034722.GD2522@x1.redhat.com>
 References: <20160311084248.GA9417@dhcp-128-65.nay.redhat.com>
  <20160314.122539.338096075.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
@@ -25,9 +25,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: bhe@redhat.com, mhuang@redhat.com, kexec@lists.infradead.org, nasa4836@gmail.com, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, vgoyal@redhat.com
-
-Hi, HATAYAMA
+Cc: mhuang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, nasa4836@gmail.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
 On 03/14/16 at 12:25pm, HATAYAMA Daisuke wrote:
 > From: Dave Young <dyoung@redhat.com>
@@ -54,8 +52,15 @@ On 03/14/16 at 12:25pm, HATAYAMA Daisuke wrote:
 > 
 > Then, if (m->offset + m->size - *fpos) is equal to or larger than 4GB,
 > and is aligned with 4GB, the resulted value is 0, and
+
+Truncating doesn't mean align. If (m->offset + m->size - *fpos) is
+larger than 4G, E.g 0x10000000f, the truncating result will be 0xf.
+
 > 
 > > we will get tsz = 0. It is of course not an expected result.
+
+We won't always get "tsz=0", just get the lower 32 bit value.
+
 > > 
 > > During our tests there are two problems caused by it:
 > > 1) read_vmcore will refuse to continue so makedumpfile fails.
@@ -72,14 +77,8 @@ On 03/14/16 at 12:25pm, HATAYAMA Daisuke wrote:
 > and we after all reach the errors.
 > 
 > I think your patch description needs a bit more detail.
-
-I will add your extra comments into the patch description and resend it.
-
 > 
 > It seems good to me that the patch itself.
-
-Thank you.
-
 > 
 > > Use unsigned long long in min_t instead so that the variables are not
 > > truncated.
