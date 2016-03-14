@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <1083d7e4a6285c39d2955fb99dc9fa4c345d00fa.1457977403.git.geoff@infradead.org>
+Message-Id: <ae755be8b6f8b37f891b9534a5174785ebea4a69.1457977402.git.geoff@infradead.org>
 In-Reply-To: <cover.1457977401.git.geoff@infradead.org>
 References: <cover.1457977401.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v15 15/20] arm64: kdump: reserve memory for crash dump kernel
-Date: Mon, 14 Mar 2016 17:48:01 +0000
+Subject: [PATCH v15 04/20] arm64: Add new hcall HVC_CALL_FUNC
+Date: Mon, 14 Mar 2016 17:48:00 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,133 +21,87 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Add the new hcall HVC_CALL_FUNC that allows execution of a function at EL2.
+During CPU reset the CPU must be brought to the exception level it had on
+entry to the kernel.  The HVC_CALL_FUNC hcall will provide the mechanism
+needed for this exception level switch.
 
-On the startup of primary kernel, the memory region used by crash dump
-kernel must be specified by "crashkernel=" kernel parameter.
-reserve_crashkernel() will allocate and reserve the region for later use.
+To allow the HVC_CALL_FUNC exception vector to work without a stack, which
+is needed to support an hcall at CPU reset, this implementation uses
+register x18 to store the link register across the caller provided
+function.  This dictates that the caller provided function must preserve
+the contents of register x18.
 
-User space tools, like kexec-tools, will be able to find that region marked
-as "Crash kernel" in /proc/iomem.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Signed-off-by: Mark Salter <msalter@redhat.com>
-Signed-off-by: Pratyush Anand <panand@redhat.com>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+[Renumbered labels in el1_sync()]
+Signed-off-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/kernel/setup.c |  7 +++++-
- arch/arm64/mm/init.c      | 60 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 66 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/virt.h | 13 +++++++++++++
+ arch/arm64/kernel/hyp-stub.S  | 19 +++++++++++++++----
+ 2 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 8119479..293cee2 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -31,7 +31,6 @@
- #include <linux/screen_info.h>
- #include <linux/init.h>
- #include <linux/kexec.h>
--#include <linux/crash_dump.h>
- #include <linux/root_dev.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
-@@ -221,6 +220,12 @@ static void __init request_standard_resources(void)
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
- 	}
-+
-+#ifdef CONFIG_KEXEC_CORE
-+	/* User space tools will find "Crash kernel" region in /proc/iomem. */
-+	if (crashk_res.end)
-+		insert_resource(&iomem_resource, &crashk_res);
-+#endif
- }
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index eb10368..3070096 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -45,6 +45,19 @@
  
- #ifdef CONFIG_BLK_DEV_INITRD
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 7802f21..4edf181 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -34,6 +34,7 @@
- #include <linux/dma-contiguous.h>
- #include <linux/efi.h>
- #include <linux/swiotlb.h>
-+#include <linux/kexec.h>
+ #define HVC_SET_VECTORS 2
  
- #include <asm/fixmap.h>
- #include <asm/memory.h>
-@@ -66,6 +67,63 @@ static int __init early_initrd(char *p)
- early_param("initrd", early_initrd);
- #endif
- 
-+#ifdef CONFIG_KEXEC_CORE
 +/*
-+ * reserve_crashkernel() - reserves memory for crash kernel
++ * HVC_CALL_FUNC - Execute a function at EL2.
 + *
-+ * This function reserves memory area given in "crashkernel=" kernel command
-+ * line parameter. The memory reserved is used by dump capture kernel when
-+ * primary kernel is crashing.
++ * @x0: Physical address of the function to be executed.
++ * @x1: Passed as the first argument to the function.
++ * @x2: Passed as the second argument to the function.
++ * @x3: Passed as the third argument to the function.
++ *
++ * The called function must preserve the contents of register x18.
 + */
-+static void __init reserve_crashkernel(void)
-+{
-+	unsigned long long crash_size = 0, crash_base = 0;
-+	int ret;
 +
-+	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+				&crash_size, &crash_base);
-+	if (ret)
-+		return;
++#define HVC_CALL_FUNC 3
 +
-+	if (crash_base == 0) {
-+		crash_base = memblock_find_in_range(0,
-+				MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, 1 << 21);
-+		if (crash_base == 0) {
-+			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-+				crash_size);
-+			return;
-+		}
-+		memblock_reserve(crash_base, crash_size);
-+
-+	} else {
-+		/* User specifies base address explicitly. */
-+		if (!memblock_is_region_memory(crash_base, crash_size) ||
-+			memblock_is_region_reserved(crash_base, crash_size)) {
-+			pr_warn("crashkernel has wrong address or size\n");
-+			return;
-+		}
-+
-+		if (crash_base & ((1 << 21) - 1)) {
-+			pr_warn("crashkernel base address is not 2MB aligned\n");
-+			return;
-+		}
-+
-+		memblock_reserve(crash_base, crash_size);
-+	}
-+
-+	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-+		crash_size >> 20, crash_base >> 20);
-+
-+	crashk_res.start = crash_base;
-+	crashk_res.end = crash_base + crash_size - 1;
-+}
-+#else
-+static void __init reserve_crashkernel(void)
-+{
-+	;
-+}
-+#endif /* CONFIG_KEXEC_CORE */
-+
- /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -171,6 +229,8 @@ void __init arm64_memblock_init(void)
- 		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
- #endif
+ #define BOOT_CPU_MODE_EL1	(0xe11)
+ #define BOOT_CPU_MODE_EL2	(0xe12)
  
-+	reserve_crashkernel();
-+
- 	early_init_fdt_scan_reserved_mem();
+diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+index 017ab519..cfacfe5 100644
+--- a/arch/arm64/kernel/hyp-stub.S
++++ b/arch/arm64/kernel/hyp-stub.S
+@@ -59,18 +59,29 @@ el1_sync:
+ 	and	x18, x18, #ESR_ELx_ISS_MASK
  
- 	/* 4GB maximum for 32-bit only capable devices */
+ 	cmp	x17, #ESR_ELx_EC_HVC64
+-	b.ne	2f				// Not an HVC trap
++	b.ne	9f				// Not an HVC trap
+ 
+ 	cmp	x18, #HVC_GET_VECTORS
+ 	b.ne	1f
+ 	mrs	x0, vbar_el2
+-	b	2f
++	b	9f
+ 
+ 1:	cmp	x18, #HVC_SET_VECTORS
+ 	b.ne	2f
+ 	msr	vbar_el2, x0
+-
+-2:	eret
++	b	9f
++
++2:	cmp	x18, #HVC_CALL_FUNC
++	b.ne	9f
++	mov	x18, lr
++	mov	lr, x0
++	mov	x0, x1
++	mov	x1, x2
++	mov	x2, x3
++	blr	lr
++	mov	lr, x18
++
++9:	eret
+ ENDPROC(el1_sync)
+ 
+ .macro invalid_vector	label
 -- 
 2.5.0
 
