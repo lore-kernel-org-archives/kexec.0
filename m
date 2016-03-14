@@ -1,14 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1afMmi-0004uh-Rr
- for kexec@lists.infradead.org; Mon, 14 Mar 2016 07:19:25 +0000
-Date: Mon, 14 Mar 2016 15:18:56 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH V3] proc-vmcore: wrong data type casting fix
-Message-ID: <20160314071856.GA17310@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+Message-Id: <fbf2124ca97f5e074ba7a45da4152dd4217c2b60.1457977402.git.geoff@infradead.org>
+In-Reply-To: <cover.1457977401.git.geoff@infradead.org>
+References: <cover.1457977401.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH v15 07/20] arm64: Promote KERNEL_START/KERNEL_END definitions
+ to a header file
+Date: Mon, 14 Mar 2016 17:48:00 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,75 +14,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, d.hatayama@jp.fujitsu.com, bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org
-Cc: mhuang@redhat.com, dyoung@redhat.com, nasa4836@gmail.com
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-On i686 PAE enabled machine the contiguous physical area could be large
-and it can cause trimming down variables in below calculation in
-read_vmcore() and mmap_vmcore():
+From: James Morse <james.morse@arm.com>
 
-	tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
+KERNEL_START and KERNEL_END are useful outside head.S, move them to a
+header file.
 
-That is, the types being used is like below on i686:
-m->offset: unsigned long long int
-m->size:   unsigned long long int
-*fpos:     loff_t (long long int)
-buflen:    size_t (unsigned int)
-
-So casting (m->offset + m->size - *fpos) by size_t means truncating a given
-value by 4GB.
-
-Suppose (m->offset + m->size - *fpos) being truncated to 0, buflen >0 then
-we will get tsz = 0. It is of course not an expected result. Similarly we
-could also get other truncated values less than buflen. Then the real size
-passed down is not correct any more.
-
-If (m->offset + m->size - *fpos) is above 4GB, read_vmcore or mmap_vmcore
-use the min_t result with truncated values being compared to buflen.
-Then, fpos proceeds with the wrong value so that we reach below bugs:
-
-1) read_vmcore will refuse to continue so makedumpfile fails.
-2) mmap_vmcore will trigger BUG_ON() in remap_pfn_range().
-
-Use unsigned long long in min_t instead so that the variables in  are not
-truncated.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
 ---
-v2->v3: tweak patch description about bug details for people to get the
-problem easier.
-v1->v2: spelling fix in patch log
- fs/proc/vmcore.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/memory.h | 3 +++
+ arch/arm64/kernel/head.S        | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- linux-x86.orig/fs/proc/vmcore.c
-+++ linux-x86/fs/proc/vmcore.c
-@@ -231,7 +231,9 @@ static ssize_t __read_vmcore(char *buffe
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index 853953c..5773a66 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -70,6 +70,9 @@
  
- 	list_for_each_entry(m, &vmcore_list, list) {
- 		if (*fpos < m->offset + m->size) {
--			tsz = min_t(size_t, m->offset + m->size - *fpos, buflen);
-+			tsz = (size_t)min_t(unsigned long long,
-+					    m->offset + m->size - *fpos,
-+					    buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start, userbuf);
- 			if (tmp < 0)
-@@ -461,7 +463,8 @@ static int mmap_vmcore(struct file *file
- 		if (start < m->offset + m->size) {
- 			u64 paddr = 0;
+ #define TASK_UNMAPPED_BASE	(PAGE_ALIGN(TASK_SIZE / 4))
  
--			tsz = min_t(size_t, m->offset + m->size - start, size);
-+			tsz = (size_t)min_t(unsigned long long,
-+					    m->offset + m->size - start, size);
- 			paddr = m->paddr + start - m->offset;
- 			if (vmcore_remap_oldmem_pfn(vma, vma->vm_start + len,
- 						    paddr >> PAGE_SHIFT, tsz,
++#define KERNEL_START      _text
++#define KERNEL_END        _end
++
+ /*
+  * Physical vs virtual RAM address space conversion.  These are
+  * private definitions which should NOT be used outside memory.h
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 917d981..21bfb5d 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -48,9 +48,6 @@
+ #error TEXT_OFFSET must be less than 2MB
+ #endif
+ 
+-#define KERNEL_START	_text
+-#define KERNEL_END	_end
+-
+ /*
+  * Kernel startup entry point.
+  * ---------------------------
+-- 
+2.5.0
+
+
 
 _______________________________________________
 kexec mailing list
