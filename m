@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <7b0e437a6375c13497cfa480c1488858648a4a79.1457977401.git.geoff@infradead.org>
+Message-Id: <1083d7e4a6285c39d2955fb99dc9fa4c345d00fa.1457977403.git.geoff@infradead.org>
 In-Reply-To: <cover.1457977401.git.geoff@infradead.org>
 References: <cover.1457977401.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v15 01/20] arm64: Fold proc-macros.S into assembler.h
-Date: Mon, 14 Mar 2016 17:48:00 +0000
+Subject: [PATCH v15 15/20] arm64: kdump: reserve memory for crash dump kernel
+Date: Mon, 14 Mar 2016 17:48:01 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,261 +21,133 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-To allow the assembler macros defined in arch/arm64/mm/proc-macros.S to
-be used outside the mm code move the contents of proc-macros.S to
-asm/assembler.h.  Also, delete proc-macros.S, and fix up all references
-to proc-macros.S.
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Signed-off-by: Geoff Levand <geoff@infradead.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-[rebased, included dcache_by_line_op]
-Signed-off-by: James Morse <james.morse@arm.com>
+On the startup of primary kernel, the memory region used by crash dump
+kernel must be specified by "crashkernel=" kernel parameter.
+reserve_crashkernel() will allocate and reserve the region for later use.
+
+User space tools, like kexec-tools, will be able to find that region marked
+as "Crash kernel" in /proc/iomem.
+
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Signed-off-by: Mark Salter <msalter@redhat.com>
+Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- arch/arm64/include/asm/assembler.h | 82 ++++++++++++++++++++++++++++++-
- arch/arm64/mm/cache.S              |  2 -
- arch/arm64/mm/proc-macros.S        | 98 --------------------------------------
- arch/arm64/mm/proc.S               |  3 --
- 4 files changed, 81 insertions(+), 104 deletions(-)
- delete mode 100644 arch/arm64/mm/proc-macros.S
+ arch/arm64/kernel/setup.c |  7 +++++-
+ arch/arm64/mm/init.c      | 60 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 66 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index bb7b727..ec4e37c 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -1,5 +1,5 @@
- /*
-- * Based on arch/arm/include/asm/assembler.h
-+ * Based on arch/arm/include/asm/assembler.h, arch/arm/mm/proc-macros.S
-  *
-  * Copyright (C) 1996-2000 Russell King
-  * Copyright (C) 2012 ARM Ltd.
-@@ -23,6 +23,8 @@
- #ifndef __ASM_ASSEMBLER_H
- #define __ASM_ASSEMBLER_H
- 
-+#include <asm/asm-offsets.h>
-+#include <asm/pgtable-hwdef.h>
- #include <asm/ptrace.h>
- #include <asm/thread_info.h>
- 
-@@ -205,6 +207,84 @@ lr	.req	x30		// link register
- 	.endm
- 
- /*
-+ * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-+ */
-+	.macro	vma_vm_mm, rd, rn
-+	ldr	\rd, [\rn, #VMA_VM_MM]
-+	.endm
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 8119479..293cee2 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -31,7 +31,6 @@
+ #include <linux/screen_info.h>
+ #include <linux/init.h>
+ #include <linux/kexec.h>
+-#include <linux/crash_dump.h>
+ #include <linux/root_dev.h>
+ #include <linux/cpu.h>
+ #include <linux/interrupt.h>
+@@ -221,6 +220,12 @@ static void __init request_standard_resources(void)
+ 		    kernel_data.end <= res->end)
+ 			request_resource(res, &kernel_data);
+ 	}
 +
-+/*
-+ * mmid - get context id from mm pointer (mm->context.id)
-+ */
-+	.macro	mmid, rd, rn
-+	ldr	\rd, [\rn, #MM_CONTEXT_ID]
-+	.endm
-+
-+/*
-+ * dcache_line_size - get the minimum D-cache line size from the CTR register.
-+ */
-+	.macro	dcache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
-+
-+/*
-+ * icache_line_size - get the minimum I-cache line size from the CTR register.
-+ */
-+	.macro	icache_line_size, reg, tmp
-+	mrs	\tmp, ctr_el0			// read CTR
-+	and	\tmp, \tmp, #0xf		// cache line size encoding
-+	mov	\reg, #4			// bytes per word
-+	lsl	\reg, \reg, \tmp		// actual cache line size
-+	.endm
-+
-+/*
-+ * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
-+ */
-+	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
-+#ifndef CONFIG_ARM64_VA_BITS_48
-+	ldr_l	\tmpreg, idmap_t0sz
-+	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
++#ifdef CONFIG_KEXEC_CORE
++	/* User space tools will find "Crash kernel" region in /proc/iomem. */
++	if (crashk_res.end)
++		insert_resource(&iomem_resource, &crashk_res);
 +#endif
-+	.endm
-+
+ }
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 7802f21..4edf181 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -34,6 +34,7 @@
+ #include <linux/dma-contiguous.h>
+ #include <linux/efi.h>
+ #include <linux/swiotlb.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/fixmap.h>
+ #include <asm/memory.h>
+@@ -66,6 +67,63 @@ static int __init early_initrd(char *p)
+ early_param("initrd", early_initrd);
+ #endif
+ 
++#ifdef CONFIG_KEXEC_CORE
 +/*
-+ * Macro to perform a data cache maintenance for the interval
-+ * [kaddr, kaddr + size)
++ * reserve_crashkernel() - reserves memory for crash kernel
 + *
-+ * 	op:		operation passed to dc instruction
-+ * 	domain:		domain used in dsb instruciton
-+ * 	kaddr:		starting virtual address of the region
-+ * 	size:		size of the region
-+ * 	Corrupts:	kaddr, size, tmp1, tmp2
++ * This function reserves memory area given in "crashkernel=" kernel command
++ * line parameter. The memory reserved is used by dump capture kernel when
++ * primary kernel is crashing.
 + */
-+	.macro dcache_by_line_op op, domain, kaddr, size, tmp1, tmp2
-+	dcache_line_size \tmp1, \tmp2
-+	add	\size, \kaddr, \size
-+	sub	\tmp2, \tmp1, #1
-+	bic	\kaddr, \kaddr, \tmp2
-+9998:	dc	\op, \kaddr
-+	add	\kaddr, \kaddr, \tmp1
-+	cmp	\kaddr, \size
-+	b.lo	9998b
-+	dsb	\domain
-+	.endm
++static void __init reserve_crashkernel(void)
++{
++	unsigned long long crash_size = 0, crash_base = 0;
++	int ret;
 +
-+/*
-+ * reset_pmuserenr_el0 - reset PMUSERENR_EL0 if PMUv3 present
-+ */
-+	.macro	reset_pmuserenr_el0, tmpreg
-+	mrs	\tmpreg, id_aa64dfr0_el1	// Check ID_AA64DFR0_EL1 PMUVer
-+	sbfx	\tmpreg, \tmpreg, #8, #4
-+	cmp	\tmpreg, #1			// Skip if no PMU present
-+	b.lt	9000f
-+	msr	pmuserenr_el0, xzr		// Disable PMU access from EL0
-+9000:
-+	.endm
++	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
++				&crash_size, &crash_base);
++	if (ret)
++		return;
 +
-+/*
-  * Annotate a function as position independent, i.e., safe to be called before
-  * the kernel virtual mapping is activated.
-  */
-diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
-index 6df0706..50ff9ba 100644
---- a/arch/arm64/mm/cache.S
-+++ b/arch/arm64/mm/cache.S
-@@ -24,8 +24,6 @@
- #include <asm/cpufeature.h>
- #include <asm/alternative.h>
- 
--#include "proc-macros.S"
--
++	if (crash_base == 0) {
++		crash_base = memblock_find_in_range(0,
++				MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, 1 << 21);
++		if (crash_base == 0) {
++			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
++				crash_size);
++			return;
++		}
++		memblock_reserve(crash_base, crash_size);
++
++	} else {
++		/* User specifies base address explicitly. */
++		if (!memblock_is_region_memory(crash_base, crash_size) ||
++			memblock_is_region_reserved(crash_base, crash_size)) {
++			pr_warn("crashkernel has wrong address or size\n");
++			return;
++		}
++
++		if (crash_base & ((1 << 21) - 1)) {
++			pr_warn("crashkernel base address is not 2MB aligned\n");
++			return;
++		}
++
++		memblock_reserve(crash_base, crash_size);
++	}
++
++	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
++		crash_size >> 20, crash_base >> 20);
++
++	crashk_res.start = crash_base;
++	crashk_res.end = crash_base + crash_size - 1;
++}
++#else
++static void __init reserve_crashkernel(void)
++{
++	;
++}
++#endif /* CONFIG_KEXEC_CORE */
++
  /*
-  *	flush_icache_range(start,end)
-  *
-diff --git a/arch/arm64/mm/proc-macros.S b/arch/arm64/mm/proc-macros.S
-deleted file mode 100644
-index e6a30e1..0000000
---- a/arch/arm64/mm/proc-macros.S
-+++ /dev/null
-@@ -1,98 +0,0 @@
--/*
-- * Based on arch/arm/mm/proc-macros.S
-- *
-- * Copyright (C) 2012 ARM Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- */
--
--#include <asm/asm-offsets.h>
--#include <asm/thread_info.h>
--
--/*
-- * vma_vm_mm - get mm pointer from vma pointer (vma->vm_mm)
-- */
--	.macro	vma_vm_mm, rd, rn
--	ldr	\rd, [\rn, #VMA_VM_MM]
--	.endm
--
--/*
-- * mmid - get context id from mm pointer (mm->context.id)
-- */
--	.macro	mmid, rd, rn
--	ldr	\rd, [\rn, #MM_CONTEXT_ID]
--	.endm
--
--/*
-- * dcache_line_size - get the minimum D-cache line size from the CTR register.
-- */
--	.macro	dcache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	ubfm	\tmp, \tmp, #16, #19		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
--
--/*
-- * icache_line_size - get the minimum I-cache line size from the CTR register.
-- */
--	.macro	icache_line_size, reg, tmp
--	mrs	\tmp, ctr_el0			// read CTR
--	and	\tmp, \tmp, #0xf		// cache line size encoding
--	mov	\reg, #4			// bytes per word
--	lsl	\reg, \reg, \tmp		// actual cache line size
--	.endm
--
--/*
-- * tcr_set_idmap_t0sz - update TCR.T0SZ so that we can load the ID map
-- */
--	.macro	tcr_set_idmap_t0sz, valreg, tmpreg
--#ifndef CONFIG_ARM64_VA_BITS_48
--	ldr_l	\tmpreg, idmap_t0sz
--	bfi	\valreg, \tmpreg, #TCR_T0SZ_OFFSET, #TCR_TxSZ_WIDTH
--#endif
--	.endm
--
--/*
-- * Macro to perform a data cache maintenance for the interval
-- * [kaddr, kaddr + size)
-- *
-- * 	op:		operation passed to dc instruction
-- * 	domain:		domain used in dsb instruciton
-- * 	kaddr:		starting virtual address of the region
-- * 	size:		size of the region
-- * 	Corrupts: 	kaddr, size, tmp1, tmp2
-- */
--	.macro dcache_by_line_op op, domain, kaddr, size, tmp1, tmp2
--	dcache_line_size \tmp1, \tmp2
--	add	\size, \kaddr, \size
--	sub	\tmp2, \tmp1, #1
--	bic	\kaddr, \kaddr, \tmp2
--9998:	dc	\op, \kaddr
--	add	\kaddr, \kaddr, \tmp1
--	cmp	\kaddr, \size
--	b.lo	9998b
--	dsb	\domain
--	.endm
--
--/*
-- * reset_pmuserenr_el0 - reset PMUSERENR_EL0 if PMUv3 present
-- */
--	.macro	reset_pmuserenr_el0, tmpreg
--	mrs	\tmpreg, id_aa64dfr0_el1	// Check ID_AA64DFR0_EL1 PMUVer
--	sbfx	\tmpreg, \tmpreg, #8, #4
--	cmp	\tmpreg, #1			// Skip if no PMU present
--	b.lt	9000f
--	msr	pmuserenr_el0, xzr		// Disable PMU access from EL0
--9000:
--	.endm
-diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-index c164d2c..5e01309 100644
---- a/arch/arm64/mm/proc.S
-+++ b/arch/arm64/mm/proc.S
-@@ -23,11 +23,8 @@
- #include <asm/assembler.h>
- #include <asm/asm-offsets.h>
- #include <asm/hwcap.h>
--#include <asm/pgtable-hwdef.h>
- #include <asm/pgtable.h>
+  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
+  * currently assumes that for memory starting above 4G, 32-bit devices will
+@@ -171,6 +229,8 @@ void __init arm64_memblock_init(void)
+ 		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
+ #endif
  
--#include "proc-macros.S"
--
- #ifdef CONFIG_ARM64_64K_PAGES
- #define TCR_TG_FLAGS	TCR_TG0_64K | TCR_TG1_64K
- #elif defined(CONFIG_ARM64_16K_PAGES)
++	reserve_crashkernel();
++
+ 	early_init_fdt_scan_reserved_mem();
+ 
+ 	/* 4GB maximum for 32-bit only capable devices */
 -- 
 2.5.0
 
