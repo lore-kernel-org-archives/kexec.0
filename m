@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1agRqn-0000k0-9S
- for kexec@lists.infradead.org; Thu, 17 Mar 2016 06:56:06 +0000
+ id 1agRpy-0007rA-Hp
+ for kexec@lists.infradead.org; Thu, 17 Mar 2016 06:55:16 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makdumpfile: clean up the in-accurate message printing
- about mmap
-Date: Thu, 17 Mar 2016 06:46:49 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E32706@BPXM01GP.gisp.nec.co.jp>
-References: <1458112379-10969-1-git-send-email-bhe@redhat.com>
-In-Reply-To: <1458112379-10969-1-git-send-email-bhe@redhat.com>
+Subject: RE: Kernel support for makedumpfile upcoming release
+Date: Thu, 17 Mar 2016 06:46:37 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E326FE@BPXM01GP.gisp.nec.co.jp>
+References: <56E985A5.7060104@canonical.com> <56E98663.9060303@canonical.com>
+In-Reply-To: <56E98663.9060303@canonical.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -24,58 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: Louis Bouchard <louis.bouchard@canonical.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello Baoquan,
+Hello Louis,
 
->mmap() is not used either caused by failure of mmap() in initialize_mmap(),
->or because user explictly specify '--non-mmap'. So the message need be changed
->according these different cases.
+>Hello,
 >
->Signed-off-by: Baoquan He <bhe@redhat.com>
+>I see in the development branch for makedumpfile that the upcoming release plans
+>to support kernels for up to 4.2
+>
+>Are there any plans to go any higher than that before the next release comes out
+>? This way I can prepare a bit as our next release will come with a 4.4 kernel
+>and it will also be made available in our previous LTS release.
+>
+>Kind regards,
 
-Sounds reasonable, thanks.
+makedumpfile v1.6.0 will support kernel 4.5, and it will be released in May.
 
-Acked-by: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+I have updated the devel branch, now it includes the fixes for 4.4 and 4.5.
+(please see the tag "Required for kernel X.Y")
+The fix for 4.4 is necessary to exclude hugepages correctly in 4.4 and latter.
+Moreover, the upstream kernel doesn't export the required VMCOREINFO yet,
+you need to pull the patch below into your 4.4 kernel.
 
->---
-> makedumpfile.c | 19 +++++++++++--------
-> 1 file changed, 11 insertions(+), 8 deletions(-)
+  https://lkml.org/lkml/2016/3/1/25
+
+Thanks,
+Atsushi Kumagai
+
+>...Louis
 >
->diff --git a/makedumpfile.c b/makedumpfile.c
->index fa0b779..5703369 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -3949,14 +3949,17 @@ out:
-> 	if (info->dump_level & DL_EXCLUDE_FREE)
-> 		setup_page_is_buddy();
->
->-	if (info->flag_usemmap == MMAP_TRY && initialize_mmap()) {
->-		DEBUG_MSG("mmap() is available on the kernel.\n");
->-		info->flag_usemmap = MMAP_ENABLE;
->-	} else {
->-		DEBUG_MSG("The kernel doesn't support mmap(),");
->-		DEBUG_MSG("read() will be used instead.\n");
->-		info->flag_usemmap = MMAP_DISABLE;
->-        }
->+	if (info->flag_usemmap == MMAP_TRY ) {
->+		if (initialize_mmap()) {
->+			DEBUG_MSG("mmap() is available on the kernel.\n");
->+			info->flag_usemmap = MMAP_ENABLE;
->+		} else {
->+			DEBUG_MSG("The kernel doesn't support mmap(),");
->+			DEBUG_MSG("read() will be used instead.\n");
->+			info->flag_usemmap = MMAP_DISABLE;
->+		}
->+        } else if (info->flag_usemmap == MMAP_DISABLE)
->+		DEBUG_MSG("mmap() is disabled by specified option '--non-mmap'.\n");
->
-> 	return TRUE;
-> }
 >--
->2.5.0
-
+>Louis Bouchard
+>Software engineer, Cloud & Sustaining eng.
+>Canonical Ltd
+>Ubuntu developer                       Debian Maintainer
+>GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
 
 _______________________________________________
 kexec mailing list
