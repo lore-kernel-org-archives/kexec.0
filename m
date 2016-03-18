@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1agpKF-0002TX-Qv
- for kexec@lists.infradead.org; Fri, 18 Mar 2016 08:00:04 +0000
-Date: Fri, 18 Mar 2016 16:59:39 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [ANNOUNCE] kexec-tools 2.0.12-rc1
-Message-ID: <20160318075939.GA19880@verge.net.au>
-References: <20160314003731.GA8772@verge.net.au> <56EBABD8.9040003@redhat.com>
+Message-ID: <56EC440F.4050406@arm.com>
+Date: Fri, 18 Mar 2016 18:08:15 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56EBABD8.9040003@redhat.com>
+Subject: Re: [PATCH v15 17/20] arm64: kdump: implement machine_crash_shutdown()
+References: <cover.1457977401.git.geoff@infradead.org>
+ <8f53a31cf8bbfdd73eb289e078addc31c5a19fcf.1457977403.git.geoff@infradead.org>
+In-Reply-To: <8f53a31cf8bbfdd73eb289e078addc31c5a19fcf.1457977403.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,98 +19,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Freeman Zhang <zhezhang@redhat.com>
-Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, Mar 18, 2016 at 03:18:48PM +0800, Freeman Zhang wrote:
-> On 03/14/2016 08:37 AM, Simon Horman wrote:
-> >Hi all,
-> >
-> >I am happy to announce the release of kexec-tools 2.0.12-rc1.
-> >
-> >This is an incremental feature pre-release.
-> >
-> >So long as no serious problems arise I intend to release kexec-tools 2.0.12
-> >in a weeks time. Testing of 2.0.12-rc1 would be greatly appreciated.
-> >
-> >I do not have any outstanding changes for 2.0.12 at this time.
-> >And I would like to only accept bug fixes at this time and take take
-> >features patches once 2.0.12 has been released.
-> >
-> >The pre-release can be downloaded from kernel.org:
-> >
-> >	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.12-rc1.tar.xz
-> >	https://kernel.org/pub/linux/utils/kernel/kexec/
-> >
-> >I have also tagged it in git:
-> >
-> >	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> >
-> >Thanks to everyone who has contributed to kexec.
-> >
-> >
-> >For reference the changes since v2.0.11 are:
-> >
-> >93d3a61783ec kexec-tools 2.0.12-rc1
-> >7c53754e5da8 kexec/fs2dt.c: wrong dt node fix
-> >61cfab4e2ce0 vmcore-dmesg: Collect full dmesg regardless of logged_chars
-> >35cb8a0761a0 ppc64: Add a flag to tell the kernel it's booting from kexec
-> >eff306e8914c Revert "crashdump/x86: Add option to get crash kernel region size"
-> >8a1aa35a1077 crashdump/x86: Add option to get crash kernel region size
-> >6ba9e97c5b5f x86: Make sure E820_PM[AE]M are defined if needed
-> >56a12abc1df1 kexec: fix mmap return code handling
-> >0e1030b345b9 Improve device tree directory sorting
-> >4bad06c3cd2a arm: use /sys/firmware/fdt in case without --atags and --dtb
-> >4580c372000b kexec/fs2dt: check for /chosen/stdout-path first
-> >68262155d8c6 kexec/fs2dt: cleanup pathname
-> >65a15228b570 kexec/fs2dt: s/diabled/disabled/
-> >e0e7a11783c1 kexex: arm: create ATAGS_MEM tag from devicetree memory node
-> >084ed28061e1 uImage: fix pointer-sign warning
-> >bc1d49d51dd1 kexec: determine size of block device
-> >95741713e790 kexec/s390x: use mmap instead of read for slurp_file()
-> >8d8c6bcee593 kexec-tools 2.0.12.git
-> >
-> >
+Hi!
+
+On 14/03/16 17:48, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> Hi Simon!
+> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
+> and save registers' status in per-cpu ELF notes before starting crash
+> dump kernel. See kernel_kexec().
+> Even if not all secondary cpus have shut down, we do kdump anyway.
 > 
-> I am confused about this: I got 'kexec/arch/ppc64/include/arch/ftb.h'  in
-> the directory cloned with git, while 'ftb.h' is absent in the corresponding
-> directory decompressed from the tar.gz you provided above.
+> As we don't have to make non-boot(crashed) cpus offline (to preserve
+> correct status of cpus at crash dump) before shutting down, this patch
+> also adds a variant of smp_send_stop().
 > 
-> All the best!
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Hi Freeman,
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index b1adc51..76402c6cd 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -701,6 +705,28 @@ static void ipi_cpu_stop(unsigned int cpu)
+>  		cpu_relax();
+>  }
+>  
+> +static atomic_t waiting_for_crash_ipi;
+> +
+> +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
+> +{
+> +	crash_save_cpu(regs, cpu);
+> +
+> +	raw_spin_lock(&stop_lock);
+> +	pr_debug("CPU%u: stopping\n", cpu);
+> +	raw_spin_unlock(&stop_lock);
+> +
+> +	atomic_dec(&waiting_for_crash_ipi);
+> +
+> +	local_irq_disable();
 
-thanks for reporting this problem. I have applied the following patch with
-the intention of including it in v2.0.12. I believe it should resolve
-the problem you see by including ftb.h in the tarball.
+Aren't irqs already disabled here? - or is this a 'just make sure'....
 
 
-From 6508f8dbe82b7b0564df5b3f9f7be621ea1f37d8 Mon Sep 17 00:00:00 2001
-From: Simon Horman <horms@verge.net.au>
-Date: Fri, 18 Mar 2016 16:56:55 +0900
-Subject: [PATCH] ppc64: include ftb.h in distribution
+> +
+> +	if (cpu_ops[cpu]->cpu_die)
+> +		cpu_ops[cpu]->cpu_die(cpu);
+> +
+> +	/* just in case */
+> +	while (1)
+> +		wfi();
+> +}
+> +
+>  /*
+>   * Main handler for inter-processor interrupts
+>   */
+> @@ -731,6 +757,12 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>  		irq_exit();
+>  		break;
+>  
+> +	case IPI_CPU_CRASH_STOP:
+> +		irq_enter();
+> +		ipi_cpu_crash_stop(cpu, regs);
+> +		irq_exit();
 
-Reported-by: Freeman Zhang <zhezhang@redhat.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- kexec/arch/ppc64/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+This made me jump: irq_exit() may end up in the __do_softirq() (with irqs turned
+back on!) ... but these lines are impossible to reach. Maybe get the compiler to
+enforce this with an unreachable() instead?
 
-diff --git a/kexec/arch/ppc64/Makefile b/kexec/arch/ppc64/Makefile
-index 37cd233b63bc..9caf501d233b 100644
---- a/kexec/arch/ppc64/Makefile
-+++ b/kexec/arch/ppc64/Makefile
-@@ -21,5 +21,6 @@ ppc64_CPPFLAGS = -I$(srcdir)/kexec/libfdt
- 
- dist += kexec/arch/ppc64/Makefile $(ppc64_KEXEC_SRCS)			\
- 	kexec/arch/ppc64/kexec-ppc64.h kexec/arch/ppc64/crashdump-ppc64.h \
-+	kexec/arch/ppc64/include/arch/fdt.h \
- 	kexec/arch/ppc64/include/arch/options.h
- 
--- 
-2.1.4
+
+> +		break;
+> +
+>  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+>  	case IPI_TIMER:
+>  		irq_enter();
+> @@ -791,6 +823,30 @@ void smp_send_stop(void)
+>  		pr_warning("SMP: failed to stop secondary CPUs\n");
+>  }
+>  
+> +void smp_send_crash_stop(void)
+> +{
+> +	cpumask_t mask;
+> +	unsigned long timeout;
+> +
+> +	if (num_online_cpus() == 1)
+> +		return;
+> +
+> +	cpumask_copy(&mask, cpu_online_mask);
+> +	cpumask_clear_cpu(smp_processor_id(), &mask);
+> +
+> +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+> +
+> +	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
+> +
+> +	/* Wait up to one second for other CPUs to stop */
+> +	timeout = USEC_PER_SEC;
+> +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
+> +		udelay(1);
+> +
+> +	if (atomic_read(&waiting_for_crash_ipi) > 0)
+> +		pr_warn("SMP: failed to stop secondary CPUs\n");
+> +}
+> +
+>  /*
+>   * not supported here
+>   */
+> 
+
+
+Thanks,
+
+James
+
 
 
 _______________________________________________
