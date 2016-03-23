@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([103.22.144.67])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aiaA4-0007cP-9E
- for kexec@lists.infradead.org; Wed, 23 Mar 2016 04:12:49 +0000
-Date: Wed, 23 Mar 2016 15:10:26 +1100
-From: Tony Breeds <tony@bakeyournoodle.com>
-Subject: Re: [PATCH 1/3] Pass struct mem_sym into machine_apply_elf_rel()
-Message-ID: <20160323041025.GP46309@thor.bakeyournoodle.com>
-References: <20160226180311.2938d804@kryten>
+ id 1aihxs-0004wR-FZ
+ for kexec@lists.infradead.org; Wed, 23 Mar 2016 12:32:45 +0000
+Date: Wed, 23 Mar 2016 20:32:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH V2 0/2] kexec: Make a pair of map/unmap reserved pages in
+ error path
+Message-ID: <20160323123215.GA16421@x1.redhat.com>
+References: <1456819349-8650-1-git-send-email-mnfhuang@gmail.com>
+ <56D56684.9000908@redhat.com> <20160323024836.GC2567@x1.redhat.com>
+ <56F20E34.5040303@redhat.com> <20160323082344.GB4048@x1.redhat.com>
+ <56F268F3.4020806@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20160226180311.2938d804@kryten>
+Content-Disposition: inline
+In-Reply-To: <56F268F3.4020806@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,66 +23,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============4984021146119431233=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Alan Modra <amodra@gmail.com>, Simon Horman <horms@verge.net.au>, Anton Blanchard <anton@samba.org>, Bill Schmidt <wschmidt@us.ibm.com>
+To: xlpang@redhat.com
+Cc: mhuang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Minfei Huang <mnfhuang@gmail.com>
 
+On 03/23/16 at 05:59pm, Xunlei Pang wrote:
+> On 2016/03/23 at 16:23, Baoquan He wrote:
+> > On 03/23/16 at 11:32am, Xunlei Pang wrote:
+> >> On 2016/03/23 at 10:48, Baoquan He wrote:
+> >>> On 03/01/16 at 05:53pm, Xunlei Pang wrote:
+> >>>> This is a bug fix.
+> >>>>
+> >>>> After this, I will try to do a cleanup for crash_unmap/map_reserved_pages()
+> >>>> (only used by S390) to consolidate it with arch_kexec_unprotect/protect_crashkres().
+> >>> Hi Xunlei, Minfei,
+> >>>
+> >>> I think you need discuss together about how to do clean up codes in this
+> >>> place. From my point of view, arch_map/unmap_reserved_pages and
+> >>> arch_kexec_protect/unprotect_crashkres() are for the same goal but by
+> >>> different ways on different arch. So for Xunlei's patchset, you might
+> >>> need to rethink your implementation, the name of function. I personally
+> >>> think you just implement a x86 specific arch_map/unmap_reserved_pages.
+> >>> It may need a more generic name, and then add your x86 arch specific
+> >>> implementation. Sorry I can't see your patches on my mail client,
+> >> Like what you said, I think arch_kexec_unprotect/protect_crashkres() are
+> >> generic enough, but any other better name is welcome :-)
+> >>
+> >> It also covered the newly-added kexec file path, and we can easily transfer
+> >> arch_map/unmap_reserved_pages into this new interface.
+> > I don't know the status of your patchset. If possible I think the 1st
+> > patch in your patchset shoule rename arch_map/unmap_reserved_pages to
+> > arch_kexec_protect/unprotect_crashkres, 2nd patch is to add your x86
+> > specific patch.
+> 
+> Yes, actually when I filed my patchset, I didn't notice arch_map/unmap_reserved_pages,
+> too much back then, s390 is its only user, and hard to get the purpose from its name.
+> 
+> But from other point of view, they are a bit different, crash_map_reserved_pages()
+> is also called by crash_shrink_memory(), it is a bit more complex(and needs some
+> s390 arch code modification) than just simply renaming/consolidating them, so I think
+> it's  ok to provide a new generic mechanism first and then put renaming/consolidating
+> arch work back a little as a separate patch.
 
---===============4984021146119431233==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xNm6VWMD3PcA105u"
-Content-Disposition: inline
+OK, sounds good, I am fine with this.
 
+How do you think about Minfei's patch? You pick it up into your patchset
+in next post with his author, or just wait for him to repost? Apparently
+his patch has conflict with yours.
 
---xNm6VWMD3PcA105u
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 26, 2016 at 06:03:11PM +1100, Anton Blanchard wrote:
-> On PowerPC64 ABIv2 we need to look at the symbol to determine
-> if it has a local entry point. Pass struct mem_sym into
-> machine_apply_elf_rel() so we can.
->=20
-> Signed-off-by: Anton Blanchard <anton@samba.org>
-
-Anton, Alan and Bill clearly know this stuff inside and out but can we get a
-review from other PPC folks ?
-
-It'd be awesom to see this merged in distros.
-
-Tony.
-
---xNm6VWMD3PcA105u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW8hcxAAoJELsOJpO+HXxJxCwIAJ791NO715u1xx8f6f0W19ep
-FakpuL8OVXgpJ0vqo8yPx6RyxSu4o7VJWskXcK3CXEoVvWosNkw7yH8wVLvLBXXf
-brm7VRVCbxM82VhaixnmCwKBZPfAT0eKM/93w8grqY9An8vQPFthVzQsTgXpkee2
-HUCVuAlvkwCQ/h1RVE8pcpm9JhZqE21YcHC1MA8TdCIqH2zRbpmxlJs6Xpt5pqAs
-b7Bslz/hHb7q2C8r6he2Poji6v4SM8CZ1CsiYFdOphyEbgBelMefXZFVAkONv0Jy
-QJyR+bFjDhLVYNG0ziWDl8Jc0PJ3MYyB6aW6oAWuXeTW2UjUJd5DM2OfUVrUj3k=
-=LrGn
------END PGP SIGNATURE-----
-
---xNm6VWMD3PcA105u--
-
-
---===============4984021146119431233==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> 
+> Regards,
+> Xunlei
+> 
+> >
+> >> I was planning doing that, but sick recently, I will try to send a patch
+> >> doing that later.
+> > Yeah, totally understand. This is not urgent, please take care of
+> > yourself.
+> >
+> >> Regards,
+> >> Xunlei
+> >>
+> >>> Xunlei. Since Andrew asked, I just checked these.
+> >>>
+> >>> I am fine with Minfei's patch 1/2. But for patch 2/2, it's a little
+> >>> comfortable to me. Is it really necessary to abstract code block from
+> >>> kexec_load, then wrap them into a newly added function do_kexec_load()?
+> >>> Without this wrapping is there a way to do your bug fix? Is there
+> >>> possibility that do_kexec_load will be called in other places? What's
+> >>> the benefit to wrap it into do_kexec_load against not wrapping?
+> >>>
+> >>> Thanks
+> >>> Baoquan
+> >>>
+> >>>> Regards,
+> >>>> Xunlei
+> >>>>
+> >>>> On 03/01/2016 at 04:02 PM, Minfei Huang wrote:
+> >>>>> v1:
+> >>>>> - Bisect the patch according to Andrew Morton's suggestion
+> >>>>>
+> >>>>> Minfei Huang (2):
+> >>>>>   kexec: Make a pair of map/unmap reserved pages in error path
+> >>>>>   kexec: Do a cleanup for function kexec_load
+> >>>>>
+> >>>>>  kernel/kexec.c | 112 ++++++++++++++++++++++++++++++++-------------------------
+> >>>>>  1 file changed, 63 insertions(+), 49 deletions(-)
+> >>>>>
+> >>>> _______________________________________________
+> >>>> kexec mailing list
+> >>>> kexec@lists.infradead.org
+> >>>> http://lists.infradead.org/mailman/listinfo/kexec
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============4984021146119431233==--
-
