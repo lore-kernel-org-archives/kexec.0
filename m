@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aixzp-0006BC-LV
- for kexec@lists.infradead.org; Thu, 24 Mar 2016 05:39:51 +0000
+ id 1aj0lH-0006HM-PI
+ for kexec@lists.infradead.org; Thu, 24 Mar 2016 08:37:00 +0000
+Subject: Re: [PATCH V2 0/2] kexec: Make a pair of map/unmap reserved pages in
+ error path
+References: <1456819349-8650-1-git-send-email-mnfhuang@gmail.com>
+ <56D56684.9000908@redhat.com> <20160323024836.GC2567@x1.redhat.com>
+ <56F20E34.5040303@redhat.com> <20160323082344.GB4048@x1.redhat.com>
+ <56F268F3.4020806@redhat.com> <20160323123215.GA16421@x1.redhat.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <56F3A712.1010902@redhat.com>
+Date: Thu, 24 Mar 2016 16:36:34 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH v4] Improve the performance of --num-threads -d 31
-From: Minfei Huang <mhuang@redhat.com>
-In-Reply-To: <56F37AEA.3050306@cn.fujitsu.com>
-Date: Thu, 24 Mar 2016 01:39:20 -0400 (EDT)
-Message-Id: <08A608F7-3686-4857-8889-B0F9F0380D38@redhat.com>
-References: <1457483231-2092-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
- <56EB6C06.30205@cn.fujitsu.com>
- <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
- <56EB96B8.7010103@cn.fujitsu.com> <56F37AEA.3050306@cn.fujitsu.com>
+In-Reply-To: <20160323123215.GA16421@x1.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +22,113 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Reply-To: xlpang@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "=?GB2312?Q? Zhou,
- _Wenjian/=D6=DC=CE=C4=BD=A3 ?=" <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: mhuang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Minfei Huang <mnfhuang@gmail.com>
 
-SGksIFpob3UuDQoNCkknbSBvbiBob2xpZGF5IG5vdywgeW91IGNhbiBhc2sgb3RoZXIgcGVvcGxl
-IHRvIGhlbHAgdGVzdCwgaWYgbmVjZXNzYXJ5Lg0KDQpUaGFua3MNCk1pbmZlaQ0KDQo+INTaIDIw
-MTbE6jPUwjI0yNWjrDEyOjI5o6xaaG91LCBXZW5qaWFuL9bczsS9oyA8emhvdXdqLWZuc3RAY24u
-ZnVqaXRzdS5jb20+INC0tcCjug0KPiANCj4gSGVsbG8gTWluZmVpLA0KPiANCj4gSG93IGRvIHRo
-ZXNlIHR3byBwYXRjaGVzIHdvcms/DQo+IA0KPiAtLSANCj4gVGhhbmtzDQo+IFpob3UNCj4gDQo+
-PiBPbiAwMy8xOC8yMDE2IDAxOjQ4IFBNLCAiWmhvdSwgV2Vuamlhbi/W3M7EvaMiIHdyb3RlOg0K
-Pj4+IE9uIDAzLzE4LzIwMTYgMTI6MTYgUE0sIE1pbmZlaSBIdWFuZyB3cm90ZToNCj4+Pj4gT24g
-MDMvMTgvMTYgYXQgMTA6NDZhbSwgIlpob3UsIFdlbmppYW4v1tzOxL2jIiB3cm90ZToNCj4+Pj4g
-SGVsbG8gTWluZmVpLA0KPj4+PiANCj4+Pj4gU2luY2UgSSBjYW4ndCBwcm9kdWNlIHRoZSBidWcs
-IEkgcmV2aWV3ZWQgdGhlIHBhdGNoIGFuZCB3cm90ZSBhbiBpbmNyZW1lbnQgcGF0Y2guDQo+Pj4+
-IFRob3VnaCB0aGVyZSBhcmUgc29tZSBidWdzIGluIHRoZSBpbmNyZW1lbnQgcGF0Y2gsDQo+Pj4+
-IEkgd29uZGVyIGlmIHRoZSBwcmV2aW91cyBidWcgc3RpbGwgZXhpc3RzIHdpdGggdGhpcyBwYXRj
-aC4NCj4+Pj4gQ291bGQgeW91IGhlbHAgbWUgY29uZmlybSBpdD8NCj4+PiANCj4+PiBPay4gSSB3
-aWxsIGhlbHAgdmVyaWZ5IHRoaXMgaW5jcmVhc2luZyBwYXRjaC4NCj4+IA0KPj4gVGhhbmsgeW91
-IHZlcnkgbXVjaC4NCj4+IA0KPj4+PiANCj4+Pj4gQW5kIEkgaGF2ZSBhbm90aGVyIHF1ZXN0aW9u
-Lg0KPj4+PiBEaWQgaXQgb25seSBvY2N1ciBpbiBwYXRjaCB2ND8NCj4+PiANCj4+PiBUaGlzIGlz
-c3VlIGRvZXNuJ3QgZXhpc3QgaW4gdjMuIEkgaGF2ZSBwYXN0ZWQgdGhlIHRlc3QgcmVzdWx0IHdp
-dGgNCj4+PiAtLW51bS10aHJlYWQgMzIgaW4gdGhhdCB0aHJlYWQuDQo+Pj4gDQo+Pj4gYXBwbGll
-ZCBtYWtlZHVtcGZpbGUgd2l0aCBvcHRpb24gLWQgMzEgLS1udW0tdGhyZWFkcyAzMg0KPj4+IHJl
-YWwgICAgM20zLjUzM3MNCj4+IA0KPj4gT2gsIHRoZW4gdGhlIHBhdGNoIGluIHRoZSBwcmV2aW91
-cyBtYWlsIG1heSBub3Qgd29yay4NCj4+IA0KPj4gSSdtIGFwcHJlY2lhdGVkIGlmIHlvdSBjYW4g
-YWxzbyB0ZXN0IHRoZSBwYXRjaCBpbiB0aGlzIGxldHRlci4NCj4+IA0KPj4gSSBpbnRyb2R1Y2Vk
-IHNlbWFwaG9yZSB0byBmaXggdGhlIGJ1ZyBpbiB0aGUgdjMuDQo+PiBTbyBJIHdhbnQgdG8ga25v
-dyBpZiBpdCBpcyB0aGlzIHdoaWNoIGFmZmVjdHMgdGhlIHJlc3VsdC4NCj4+IFRoZSBhdHRhY2hl
-ZCBwYXRjaCBpcyBiYXNlZCBvbiB2NCwgdXNlZCB0byByZW1vdmUgc2VtYW9ob3JlLg0KPj4gDQo+
-PiANCj4+IA0KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18NCj4+IGtleGVjIG1haWxpbmcgbGlzdA0KPj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
-Pj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYw0KPiAN
-Cj4gDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 2016/03/23 at 20:32, Baoquan He wrote:
+> On 03/23/16 at 05:59pm, Xunlei Pang wrote:
+>> On 2016/03/23 at 16:23, Baoquan He wrote:
+>>> On 03/23/16 at 11:32am, Xunlei Pang wrote:
+>>>> On 2016/03/23 at 10:48, Baoquan He wrote:
+>>>>> On 03/01/16 at 05:53pm, Xunlei Pang wrote:
+>>>>>> This is a bug fix.
+>>>>>>
+>>>>>> After this, I will try to do a cleanup for crash_unmap/map_reserved_pages()
+>>>>>> (only used by S390) to consolidate it with arch_kexec_unprotect/protect_crashkres().
+>>>>> Hi Xunlei, Minfei,
+>>>>>
+>>>>> I think you need discuss together about how to do clean up codes in this
+>>>>> place. From my point of view, arch_map/unmap_reserved_pages and
+>>>>> arch_kexec_protect/unprotect_crashkres() are for the same goal but by
+>>>>> different ways on different arch. So for Xunlei's patchset, you might
+>>>>> need to rethink your implementation, the name of function. I personally
+>>>>> think you just implement a x86 specific arch_map/unmap_reserved_pages.
+>>>>> It may need a more generic name, and then add your x86 arch specific
+>>>>> implementation. Sorry I can't see your patches on my mail client,
+>>>> Like what you said, I think arch_kexec_unprotect/protect_crashkres() are
+>>>> generic enough, but any other better name is welcome :-)
+>>>>
+>>>> It also covered the newly-added kexec file path, and we can easily transfer
+>>>> arch_map/unmap_reserved_pages into this new interface.
+>>> I don't know the status of your patchset. If possible I think the 1st
+>>> patch in your patchset shoule rename arch_map/unmap_reserved_pages to
+>>> arch_kexec_protect/unprotect_crashkres, 2nd patch is to add your x86
+>>> specific patch.
+>> Yes, actually when I filed my patchset, I didn't notice arch_map/unmap_reserved_pages,
+>> too much back then, s390 is its only user, and hard to get the purpose from its name.
+>>
+>> But from other point of view, they are a bit different, crash_map_reserved_pages()
+>> is also called by crash_shrink_memory(), it is a bit more complex(and needs some
+>> s390 arch code modification) than just simply renaming/consolidating them, so I think
+>> it's  ok to provide a new generic mechanism first and then put renaming/consolidating
+>> arch work back a little as a separate patch.
+> OK, sounds good, I am fine with this.
+>
+> How do you think about Minfei's patch? You pick it up into your patchset
+> in next post with his author, or just wait for him to repost? Apparently
+> his patch has conflict with yours.
+
+Essentially, Minfei's patchset has nothing to do with mine, his is a bug fix,
+I think bugs have priority. Conflicts are commonplace in upstream patches,
+should not be a problem. Just my two cents.
+
+Regards,
+Xunlei
+
+>
+>> Regards,
+>> Xunlei
+>>
+>>>> I was planning doing that, but sick recently, I will try to send a patch
+>>>> doing that later.
+>>> Yeah, totally understand. This is not urgent, please take care of
+>>> yourself.
+>>>
+>>>> Regards,
+>>>> Xunlei
+>>>>
+>>>>> Xunlei. Since Andrew asked, I just checked these.
+>>>>>
+>>>>> I am fine with Minfei's patch 1/2. But for patch 2/2, it's a little
+>>>>> comfortable to me. Is it really necessary to abstract code block from
+>>>>> kexec_load, then wrap them into a newly added function do_kexec_load()?
+>>>>> Without this wrapping is there a way to do your bug fix? Is there
+>>>>> possibility that do_kexec_load will be called in other places? What's
+>>>>> the benefit to wrap it into do_kexec_load against not wrapping?
+>>>>>
+>>>>> Thanks
+>>>>> Baoquan
+>>>>>
+>>>>>> Regards,
+>>>>>> Xunlei
+>>>>>>
+>>>>>> On 03/01/2016 at 04:02 PM, Minfei Huang wrote:
+>>>>>>> v1:
+>>>>>>> - Bisect the patch according to Andrew Morton's suggestion
+>>>>>>>
+>>>>>>> Minfei Huang (2):
+>>>>>>>   kexec: Make a pair of map/unmap reserved pages in error path
+>>>>>>>   kexec: Do a cleanup for function kexec_load
+>>>>>>>
+>>>>>>>  kernel/kexec.c | 112 ++++++++++++++++++++++++++++++++-------------------------
+>>>>>>>  1 file changed, 63 insertions(+), 49 deletions(-)
+>>>>>>>
+>>>>>> _______________________________________________
+>>>>>> kexec mailing list
+>>>>>> kexec@lists.infradead.org
+>>>>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>> _______________________________________________
+>>>> kexec mailing list
+>>>> kexec@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
