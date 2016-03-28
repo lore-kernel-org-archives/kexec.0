@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ajptn-0007D8-5U
- for kexec@lists.infradead.org; Sat, 26 Mar 2016 15:13:11 +0000
-Date: Sat, 26 Mar 2016 23:17:13 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH V2 0/2] kexec: Make a pair of map/unmap reserved pages in
- error path
-Message-ID: <20160326151713.GA28137@dhcp-128-25.nay.redhat.com>
-References: <1456819349-8650-1-git-send-email-mnfhuang@gmail.com>
- <56D56684.9000908@redhat.com> <20160323024836.GC2567@x1.redhat.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1akLvj-0000vi-48
+ for kexec@lists.infradead.org; Mon, 28 Mar 2016 01:25:20 +0000
+Message-ID: <56F8878B.8080909@cn.fujitsu.com>
+Date: Mon, 28 Mar 2016 09:23:23 +0800
+From: =?gbk?Q?=22Zhou=2C_Wenjian/=D6=DC=CE=C4=BD=A3=22?=
+ <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160323024836.GC2567@x1.redhat.com>
+Subject: Re: [PATCH v4] Improve the performance of --num-threads -d 31
+References: <1457483231-2092-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
+ <56EB6C06.30205@cn.fujitsu.com>
+ <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
+ <56EB96B8.7010103@cn.fujitsu.com> <56F37AEA.3050306@cn.fujitsu.com>
+ <08A608F7-3686-4857-8889-B0F9F0380D38@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E341B4@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E341B4@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,76 +25,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="gbk"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Xunlei Pang <xlpang@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minfei Huang <mnfhuang@gmail.com>, akpm@linux-foundation.org, ebiederm@xmission.com
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Minfei Huang <mhuang@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 03/23/16 at 10:48am, Baoquan He wrote:
-> On 03/01/16 at 05:53pm, Xunlei Pang wrote:
-> > This is a bug fix.
-> > 
-> > After this, I will try to do a cleanup for crash_unmap/map_reserved_pages()
-> > (only used by S390) to consolidate it with arch_kexec_unprotect/protect_crashkres().
-> 
-> Hi Xunlei, Minfei,
-> 
-> I think you need discuss together about how to do clean up codes in this
-> place. From my point of view, arch_map/unmap_reserved_pages and
-> arch_kexec_protect/unprotect_crashkres() are for the same goal but by
-> different ways on different arch. So for Xunlei's patchset, you might
-> need to rethink your implementation, the name of function. I personally
-> think you just implement a x86 specific arch_map/unmap_reserved_pages.
-> It may need a more generic name, and then add your x86 arch specific
-> implementation. Sorry I can't see your patches on my mail client,
-> Xunlei. Since Andrew asked, I just checked these.
-> 
-> I am fine with Minfei's patch 1/2. But for patch 2/2, it's a little
-> comfortable to me. Is it really necessary to abstract code block from
-> kexec_load, then wrap them into a newly added function do_kexec_load()?
-> Without this wrapping is there a way to do your bug fix? Is there
-> possibility that do_kexec_load will be called in other places? What's
-> the benefit to wrap it into do_kexec_load against not wrapping?
-
-Hi, Bao.
-
-There is a suggestion from Vivek to wrap a new function do_kexec_load to
-fix this issue, since there are a lot of logic handling in function
-kexec_load. And this issue doesn't conflict with xlpang@'s patchset,
-except for code confliction.
-
-Thanks
-Minfei
-
-> 
-> Thanks
-> Baoquan
-> 
-> > 
-> > Regards,
-> > Xunlei
-> > 
-> > On 03/01/2016 at 04:02 PM, Minfei Huang wrote:
-> > > v1:
-> > > - Bisect the patch according to Andrew Morton's suggestion
-> > >
-> > > Minfei Huang (2):
-> > >   kexec: Make a pair of map/unmap reserved pages in error path
-> > >   kexec: Do a cleanup for function kexec_load
-> > >
-> > >  kernel/kexec.c | 112 ++++++++++++++++++++++++++++++++-------------------------
-> > >  1 file changed, 63 insertions(+), 49 deletions(-)
-> > >
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDMvMjUvMjAxNiAxMDo1NyBBTSwgQXRzdXNoaSBLdW1hZ2FpIHdyb3RlOgo+IEhlbGxvLAo+
+Cj4gVGhpcyBpcyBqdXN0IGEgcXVpY2sgbm90ZSB0byBpbmZvcm0geW91Lgo+IEkgbWVhc3VyZWQg
+dGhlIG1lbW9yeSBjb25zdW1wdGlvbiB3aXRoIC1kMzEgYnkgVm1IV00gaW4KPiAvcHJvYy9QSUQv
+c3RhdHVzIGFuZCBjb21wYXJlZCB0aGVtIGJldHdlZW4gdjMgYW5kIHY0IHNpbmNlCj4gTWluZmVp
+IHNhaWQgdGhlIHByb2JsZW0gb25seSBvY2N1cnMgaW4gdjQuCj4KPiAgICAgICAgICAgICAgfCAg
+ICAgICAgICBWbUhXTVtrQl0KPiBudW0tdGhyZWFkICB8ICAgICAgdjMgICAgICAgICAgICB2NAo+
+IC0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAgICAgIDEgICAgICB8
+ICAgIDIwLDUxNiAgICAgICAgMjAsNTE2Cj4gICAgICAgMiAgICAgIHwgICAgMjAsNjI0ICAgICAg
+ICAyMCw2MjgKPiAgICAgICA0ICAgICAgfCAgICAyMCw4MzIgICAgICAgIDIwLDgzMgo+ICAgICAg
+IDggICAgICB8ICAgIDIxLDI5MiAgICAgICAgMjEsMjg4Cj4gICAgICAxNiAgICAgIHwgICAgMjIs
+MjQwICAgICAgICAyMiwyMzYKPiAgICAgIDMyICAgICAgfCAgICAyNCwwOTYgICAgICAgIDI0LDEw
+MAo+ICAgICAgNjQgICAgICB8ICAgIDI3LDkwMCAgICAgICAgMjcsODg4Cj4KPiBBY2NvcmRpbmcg
+dG8gdGhpcyByZXN1bHQsIHRoZSBwcm9ibGVtIHdlIGZhY2Ugc2VlbXMgbm90IGp1c3QKPiBhbnkg
+bGFjayBvZiBtZW1vcnkgaXNzdWUuCj4KClllcywgSSBoYWQgcmVhbGl6ZWQgaXQsIGZvciB0aGVy
+ZSBpc24ndCBtdWNoIGRpZmZlcmVuY2UgYmV0d2VlbiB2MyBhbmQgdjQuCkFuZCBpdCBpcyBoYXJk
+bHkgdG8gc29tZSBmdXJ0aGVyIGludmVzdGlnYXRpb24sIHVudGlsIGdldCBNaW5mZWkncyByZXN1
+bHQuCgpCVFcsIGNhbiB5b3UgcmVwcm9kdWNlIHRoZSBidWc/Cgo+IEJUVywgdGhlIG1lbW9yeSBj
+b25zdW1wdGlvbiBpbmNyZWFzZXMgZGVwZW5kaW5nIG9uIG51bS10aHJlYWQsCj4gSSB0aGluayBp
+dCBzaG91bGQgYmUgY29uc2lkZXJlZCBpbiB0aGUgY2FsY3VsYXRlX2N5Y2xpY19idWZmZXJfc2l6
+ZSgpLgo+CgpJIHdpbGwgdGhpbmsgYWJvdXQgaXQuCgotLSAKVGhhbmtzClpob3UKCj4KPiBUaGFu
+a3MsCj4gQXRzdXNoaSBLdW1hZ2FpCj4KPiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9t
+YWtlZHVtcGZpbGUuYwo+IGluZGV4IDQwNzVmM2UuLmQ1NjI2ZjkgMTAwNjQ0Cj4gLS0tIGEvbWFr
+ZWR1bXBmaWxlLmMKPiArKysgYi9tYWtlZHVtcGZpbGUuYwo+IEBAIC00NCw2ICs0NCwxNCBAQCBl
+eHRlcm4gaW50IGZpbmRfdm1lbW1hcCgpOwo+Cj4gICBjaGFyIGZpbGVuYW1lX3N0ZG91dFtdID0g
+RklMRU5BTUVfU1RET1VUOwo+Cj4gK3ZvaWQKPiArcHJpbnRfVm1IV00odm9pZCkKPiArewo+ICsg
+ICAgICAgY2hhciBjb21tYW5kWzY0XTsKPiArICAgICAgIHNwcmludGYoY29tbWFuZCwgImdyZXAg
+Vm1IV00gL3Byb2MvJWQvc3RhdHVzIiwgZ2V0cGlkKCkpOwo+ICsgICAgICAgc3lzdGVtKGNvbW1h
+bmQpOwo+ICt9Cj4gKwo+ICAgLyogQ2FjaGUgc3RhdGlzdGljcyAqLwo+ICAgc3RhdGljIHVuc2ln
+bmVkIGxvbmcgbG9uZyAgICAgIGNhY2hlX2hpdDsKPiAgIHN0YXRpYyB1bnNpZ25lZCBsb25nIGxv
+bmcgICAgICBjYWNoZV9taXNzOwo+IEBAIC0xMTE4NSw1ICsxMTE5Myw3IEBAIG91dDoKPiAgICAg
+ICAgICB9Cj4gICAgICAgICAgZnJlZV9lbGZfaW5mbygpOwo+Cj4gKyAgICAgICBwcmludF9WbUhX
+TSgpOwo+ICsKPiAgICAgICAgICByZXR1cm4gcmV0Y2Q7Cj4gICB9Cj4KPgo+PiBIaSwgWmhvdS4K
+Pj4KPj4gSSdtIG9uIGhvbGlkYXkgbm93LCB5b3UgY2FuIGFzayBvdGhlciBwZW9wbGUgdG8gaGVs
+cCB0ZXN0LCBpZiBuZWNlc3NhcnkuCj4+Cj4+IFRoYW5rcwo+PiBNaW5mZWkKPj4KPj4+INTaIDIw
+MTbE6jPUwjI0yNWjrDEyOjI5o6xaaG91LCBXZW5qaWFuL9bczsS9oyA8emhvdXdqLWZuc3RAY24u
+ZnVqaXRzdS5jb20+INC0tcCjugo+Pj4KPj4+IEhlbGxvIE1pbmZlaSwKPj4+Cj4+PiBIb3cgZG8g
+dGhlc2UgdHdvIHBhdGNoZXMgd29yaz8KPj4+Cj4+PiAtLQo+Pj4gVGhhbmtzCj4+PiBaaG91Cj4+
+Pgo+Pj4+IE9uIDAzLzE4LzIwMTYgMDE6NDggUE0sICJaaG91LCBXZW5qaWFuL9bczsS9oyIgd3Jv
+dGU6Cj4+Pj4+IE9uIDAzLzE4LzIwMTYgMTI6MTYgUE0sIE1pbmZlaSBIdWFuZyB3cm90ZToKPj4+
+Pj4+IE9uIDAzLzE4LzE2IGF0IDEwOjQ2YW0sICJaaG91LCBXZW5qaWFuL9bczsS9oyIgd3JvdGU6
+Cj4+Pj4+PiBIZWxsbyBNaW5mZWksCj4+Pj4+Pgo+Pj4+Pj4gU2luY2UgSSBjYW4ndCBwcm9kdWNl
+IHRoZSBidWcsIEkgcmV2aWV3ZWQgdGhlIHBhdGNoIGFuZCB3cm90ZSBhbiBpbmNyZW1lbnQgcGF0
+Y2guCj4+Pj4+PiBUaG91Z2ggdGhlcmUgYXJlIHNvbWUgYnVncyBpbiB0aGUgaW5jcmVtZW50IHBh
+dGNoLAo+Pj4+Pj4gSSB3b25kZXIgaWYgdGhlIHByZXZpb3VzIGJ1ZyBzdGlsbCBleGlzdHMgd2l0
+aCB0aGlzIHBhdGNoLgo+Pj4+Pj4gQ291bGQgeW91IGhlbHAgbWUgY29uZmlybSBpdD8KPj4+Pj4K
+Pj4+Pj4gT2suIEkgd2lsbCBoZWxwIHZlcmlmeSB0aGlzIGluY3JlYXNpbmcgcGF0Y2guCj4+Pj4K
+Pj4+PiBUaGFuayB5b3UgdmVyeSBtdWNoLgo+Pj4+Cj4+Pj4+Pgo+Pj4+Pj4gQW5kIEkgaGF2ZSBh
+bm90aGVyIHF1ZXN0aW9uLgo+Pj4+Pj4gRGlkIGl0IG9ubHkgb2NjdXIgaW4gcGF0Y2ggdjQ/Cj4+
+Pj4+Cj4+Pj4+IFRoaXMgaXNzdWUgZG9lc24ndCBleGlzdCBpbiB2My4gSSBoYXZlIHBhc3RlZCB0
+aGUgdGVzdCByZXN1bHQgd2l0aAo+Pj4+PiAtLW51bS10aHJlYWQgMzIgaW4gdGhhdCB0aHJlYWQu
+Cj4+Pj4+Cj4+Pj4+IGFwcGxpZWQgbWFrZWR1bXBmaWxlIHdpdGggb3B0aW9uIC1kIDMxIC0tbnVt
+LXRocmVhZHMgMzIKPj4+Pj4gcmVhbCAgICAzbTMuNTMzcwo+Pj4+Cj4+Pj4gT2gsIHRoZW4gdGhl
+IHBhdGNoIGluIHRoZSBwcmV2aW91cyBtYWlsIG1heSBub3Qgd29yay4KPj4+Pgo+Pj4+IEknbSBh
+cHByZWNpYXRlZCBpZiB5b3UgY2FuIGFsc28gdGVzdCB0aGUgcGF0Y2ggaW4gdGhpcyBsZXR0ZXIu
+Cj4+Pj4KPj4+PiBJIGludHJvZHVjZWQgc2VtYXBob3JlIHRvIGZpeCB0aGUgYnVnIGluIHRoZSB2
+My4KPj4+PiBTbyBJIHdhbnQgdG8ga25vdyBpZiBpdCBpcyB0aGlzIHdoaWNoIGFmZmVjdHMgdGhl
+IHJlc3VsdC4KPj4+PiBUaGUgYXR0YWNoZWQgcGF0Y2ggaXMgYmFzZWQgb24gdjQsIHVzZWQgdG8g
+cmVtb3ZlIHNlbWFvaG9yZS4KPj4+Pgo+Pj4+Cj4+Pj4KPj4+PiBfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4+IGtleGVjIG1haWxpbmcgbGlzdAo+Pj4+
+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCj4+Pgo+Pj4KPj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4+IGtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo+Cj4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
