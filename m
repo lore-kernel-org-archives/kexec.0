@@ -1,23 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from pandora.arm.linux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1akQ0T-00042W-8y
- for kexec@lists.infradead.org; Mon, 28 Mar 2016 05:46:31 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH v4] Improve the performance of --num-threads -d 31
-Date: Mon, 28 Mar 2016 05:43:15 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E34987@BPXM01GP.gisp.nec.co.jp>
-References: <1457483231-2092-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
- <56EB6C06.30205@cn.fujitsu.com>
- <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
- <56EB96B8.7010103@cn.fujitsu.com> <56F37AEA.3050306@cn.fujitsu.com>
- <08A608F7-3686-4857-8889-B0F9F0380D38@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E341B4@BPXM01GP.gisp.nec.co.jp>
- <56F8878B.8080909@cn.fujitsu.com>
-In-Reply-To: <56F8878B.8080909@cn.fujitsu.com>
-Content-Language: ja-JP
+ id 1akqbc-0005nj-QD
+ for kexec@lists.infradead.org; Tue, 29 Mar 2016 10:10:40 +0000
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH] ARM: kexec: fix crashkernel= handling
 MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <E1akqb5-0002LZ-1f@rmk-PC.arm.linux.org.uk>
+Date: Tue, 29 Mar 2016 11:10:03 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,82 +18,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?gb2312?B?Ilpob3UsIFdlbmppYW4v1tzOxL2jIg==?= <zhouwj-fnst@cn.fujitsu.com>, Minfei Huang <mhuang@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-Pj4gSGVsbG8sDQo+Pg0KPj4gVGhpcyBpcyBqdXN0IGEgcXVpY2sgbm90ZSB0byBpbmZvcm0geW91
-Lg0KPj4gSSBtZWFzdXJlZCB0aGUgbWVtb3J5IGNvbnN1bXB0aW9uIHdpdGggLWQzMSBieSBWbUhX
-TSBpbg0KPj4gL3Byb2MvUElEL3N0YXR1cyBhbmQgY29tcGFyZWQgdGhlbSBiZXR3ZWVuIHYzIGFu
-ZCB2NCBzaW5jZQ0KPj4gTWluZmVpIHNhaWQgdGhlIHByb2JsZW0gb25seSBvY2N1cnMgaW4gdjQu
-DQo+Pg0KPj4gICAgICAgICAgICAgIHwgICAgICAgICAgVm1IV01ba0JdDQo+PiBudW0tdGhyZWFk
-ICB8ICAgICAgdjMgICAgICAgICAgICB2NA0KPj4gLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tDQo+PiAgICAgICAxICAgICAgfCAgICAyMCw1MTYgICAgICAgIDIwLDUxNg0K
-Pj4gICAgICAgMiAgICAgIHwgICAgMjAsNjI0ICAgICAgICAyMCw2MjgNCj4+ICAgICAgIDQgICAg
-ICB8ICAgIDIwLDgzMiAgICAgICAgMjAsODMyDQo+PiAgICAgICA4ICAgICAgfCAgICAyMSwyOTIg
-ICAgICAgIDIxLDI4OA0KPj4gICAgICAxNiAgICAgIHwgICAgMjIsMjQwICAgICAgICAyMiwyMzYN
-Cj4+ICAgICAgMzIgICAgICB8ICAgIDI0LDA5NiAgICAgICAgMjQsMTAwDQo+PiAgICAgIDY0ICAg
-ICAgfCAgICAyNyw5MDAgICAgICAgIDI3LDg4OA0KPj4NCj4+IEFjY29yZGluZyB0byB0aGlzIHJl
-c3VsdCwgdGhlIHByb2JsZW0gd2UgZmFjZSBzZWVtcyBub3QganVzdA0KPj4gYW55IGxhY2sgb2Yg
-bWVtb3J5IGlzc3VlLg0KPj4NCj4NCj5ZZXMsIEkgaGFkIHJlYWxpemVkIGl0LCBmb3IgdGhlcmUg
-aXNuJ3QgbXVjaCBkaWZmZXJlbmNlIGJldHdlZW4gdjMgYW5kIHY0Lg0KPkFuZCBpdCBpcyBoYXJk
-bHkgdG8gc29tZSBmdXJ0aGVyIGludmVzdGlnYXRpb24sIHVudGlsIGdldCBNaW5mZWkncyByZXN1
-bHQuDQo+DQo+QlRXLCBjYW4geW91IHJlcHJvZHVjZSB0aGUgYnVnPw0KDQpVbmZvcnR1bmF0ZWx5
-LCBJIGNhbid0IHJlcHJvZHVjZSBpdCB5ZXQuDQpJJ20gYWxzbyB3YWl0aW5nIGZvciBNaW5mZWkn
-cyByZXN1bHQuDQoNCg0KVGhhbmtzLA0KQXRzdXNoaSBLdW1hZ2FpDQoNCj4+IEJUVywgdGhlIG1l
-bW9yeSBjb25zdW1wdGlvbiBpbmNyZWFzZXMgZGVwZW5kaW5nIG9uIG51bS10aHJlYWQsDQo+PiBJ
-IHRoaW5rIGl0IHNob3VsZCBiZSBjb25zaWRlcmVkIGluIHRoZSBjYWxjdWxhdGVfY3ljbGljX2J1
-ZmZlcl9zaXplKCkuDQo+Pg0KPg0KPkkgd2lsbCB0aGluayBhYm91dCBpdC4NCj4NCj4tLQ0KPlRo
-YW5rcw0KPlpob3UNCj4NCj4+DQo+PiBUaGFua3MsDQo+PiBBdHN1c2hpIEt1bWFnYWkNCj4+DQo+
-PiBkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9tYWtlZHVtcGZpbGUuYw0KPj4gaW5kZXgg
-NDA3NWYzZS4uZDU2MjZmOSAxMDA2NDQNCj4+IC0tLSBhL21ha2VkdW1wZmlsZS5jDQo+PiArKysg
-Yi9tYWtlZHVtcGZpbGUuYw0KPj4gQEAgLTQ0LDYgKzQ0LDE0IEBAIGV4dGVybiBpbnQgZmluZF92
-bWVtbWFwKCk7DQo+Pg0KPj4gICBjaGFyIGZpbGVuYW1lX3N0ZG91dFtdID0gRklMRU5BTUVfU1RE
-T1VUOw0KPj4NCj4+ICt2b2lkDQo+PiArcHJpbnRfVm1IV00odm9pZCkNCj4+ICt7DQo+PiArICAg
-ICAgIGNoYXIgY29tbWFuZFs2NF07DQo+PiArICAgICAgIHNwcmludGYoY29tbWFuZCwgImdyZXAg
-Vm1IV00gL3Byb2MvJWQvc3RhdHVzIiwgZ2V0cGlkKCkpOw0KPj4gKyAgICAgICBzeXN0ZW0oY29t
-bWFuZCk7DQo+PiArfQ0KPj4gKw0KPj4gICAvKiBDYWNoZSBzdGF0aXN0aWNzICovDQo+PiAgIHN0
-YXRpYyB1bnNpZ25lZCBsb25nIGxvbmcgICAgICBjYWNoZV9oaXQ7DQo+PiAgIHN0YXRpYyB1bnNp
-Z25lZCBsb25nIGxvbmcgICAgICBjYWNoZV9taXNzOw0KPj4gQEAgLTExMTg1LDUgKzExMTkzLDcg
-QEAgb3V0Og0KPj4gICAgICAgICAgfQ0KPj4gICAgICAgICAgZnJlZV9lbGZfaW5mbygpOw0KPj4N
-Cj4+ICsgICAgICAgcHJpbnRfVm1IV00oKTsNCj4+ICsNCj4+ICAgICAgICAgIHJldHVybiByZXRj
-ZDsNCj4+ICAgfQ0KPj4NCj4+DQo+Pj4gSGksIFpob3UuDQo+Pj4NCj4+PiBJJ20gb24gaG9saWRh
-eSBub3csIHlvdSBjYW4gYXNrIG90aGVyIHBlb3BsZSB0byBoZWxwIHRlc3QsIGlmIG5lY2Vzc2Fy
-eS4NCj4+Pg0KPj4+IFRoYW5rcw0KPj4+IE1pbmZlaQ0KPj4+DQo+Pj4+INTaIDIwMTbE6jPUwjI0
-yNWjrDEyOjI5o6xaaG91LCBXZW5qaWFuL9bczsS9oyA8emhvdXdqLWZuc3RAY24uZnVqaXRzdS5j
-b20+INC0tcCjug0KPj4+Pg0KPj4+PiBIZWxsbyBNaW5mZWksDQo+Pj4+DQo+Pj4+IEhvdyBkbyB0
-aGVzZSB0d28gcGF0Y2hlcyB3b3JrPw0KPj4+Pg0KPj4+PiAtLQ0KPj4+PiBUaGFua3MNCj4+Pj4g
-WmhvdQ0KPj4+Pg0KPj4+Pj4gT24gMDMvMTgvMjAxNiAwMTo0OCBQTSwgIlpob3UsIFdlbmppYW4v
-1tzOxL2jIiB3cm90ZToNCj4+Pj4+PiBPbiAwMy8xOC8yMDE2IDEyOjE2IFBNLCBNaW5mZWkgSHVh
-bmcgd3JvdGU6DQo+Pj4+Pj4+IE9uIDAzLzE4LzE2IGF0IDEwOjQ2YW0sICJaaG91LCBXZW5qaWFu
-L9bczsS9oyIgd3JvdGU6DQo+Pj4+Pj4+IEhlbGxvIE1pbmZlaSwNCj4+Pj4+Pj4NCj4+Pj4+Pj4g
-U2luY2UgSSBjYW4ndCBwcm9kdWNlIHRoZSBidWcsIEkgcmV2aWV3ZWQgdGhlIHBhdGNoIGFuZCB3
-cm90ZSBhbiBpbmNyZW1lbnQgcGF0Y2guDQo+Pj4+Pj4+IFRob3VnaCB0aGVyZSBhcmUgc29tZSBi
-dWdzIGluIHRoZSBpbmNyZW1lbnQgcGF0Y2gsDQo+Pj4+Pj4+IEkgd29uZGVyIGlmIHRoZSBwcmV2
-aW91cyBidWcgc3RpbGwgZXhpc3RzIHdpdGggdGhpcyBwYXRjaC4NCj4+Pj4+Pj4gQ291bGQgeW91
-IGhlbHAgbWUgY29uZmlybSBpdD8NCj4+Pj4+Pg0KPj4+Pj4+IE9rLiBJIHdpbGwgaGVscCB2ZXJp
-ZnkgdGhpcyBpbmNyZWFzaW5nIHBhdGNoLg0KPj4+Pj4NCj4+Pj4+IFRoYW5rIHlvdSB2ZXJ5IG11
-Y2guDQo+Pj4+Pg0KPj4+Pj4+Pg0KPj4+Pj4+PiBBbmQgSSBoYXZlIGFub3RoZXIgcXVlc3Rpb24u
-DQo+Pj4+Pj4+IERpZCBpdCBvbmx5IG9jY3VyIGluIHBhdGNoIHY0Pw0KPj4+Pj4+DQo+Pj4+Pj4g
-VGhpcyBpc3N1ZSBkb2Vzbid0IGV4aXN0IGluIHYzLiBJIGhhdmUgcGFzdGVkIHRoZSB0ZXN0IHJl
-c3VsdCB3aXRoDQo+Pj4+Pj4gLS1udW0tdGhyZWFkIDMyIGluIHRoYXQgdGhyZWFkLg0KPj4+Pj4+
-DQo+Pj4+Pj4gYXBwbGllZCBtYWtlZHVtcGZpbGUgd2l0aCBvcHRpb24gLWQgMzEgLS1udW0tdGhy
-ZWFkcyAzMg0KPj4+Pj4+IHJlYWwgICAgM20zLjUzM3MNCj4+Pj4+DQo+Pj4+PiBPaCwgdGhlbiB0
-aGUgcGF0Y2ggaW4gdGhlIHByZXZpb3VzIG1haWwgbWF5IG5vdCB3b3JrLg0KPj4+Pj4NCj4+Pj4+
-IEknbSBhcHByZWNpYXRlZCBpZiB5b3UgY2FuIGFsc28gdGVzdCB0aGUgcGF0Y2ggaW4gdGhpcyBs
-ZXR0ZXIuDQo+Pj4+Pg0KPj4+Pj4gSSBpbnRyb2R1Y2VkIHNlbWFwaG9yZSB0byBmaXggdGhlIGJ1
-ZyBpbiB0aGUgdjMuDQo+Pj4+PiBTbyBJIHdhbnQgdG8ga25vdyBpZiBpdCBpcyB0aGlzIHdoaWNo
-IGFmZmVjdHMgdGhlIHJlc3VsdC4NCj4+Pj4+IFRoZSBhdHRhY2hlZCBwYXRjaCBpcyBiYXNlZCBv
-biB2NCwgdXNlZCB0byByZW1vdmUgc2VtYW9ob3JlLg0KPj4+Pj4NCj4+Pj4+DQo+Pj4+Pg0KPj4+
-Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4+Pj4+
-IGtleGVjIG1haWxpbmcgbGlzdA0KPj4+Pj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPj4+
-Pj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYw0KPj4+
-Pg0KPj4+Pg0KPj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fDQo+Pj4ga2V4ZWMgbWFpbGluZyBsaXN0DQo+Pj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
-Zw0KPj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMN
-Cj4+DQo+Pg0KPg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+When the kernel crashkernel parameter is specified with just a size, we
+are supposed to allocate a region from RAM to store the crashkernel.
+However, ARM merely reserves physical address zero with no checking
+that there is even RAM there.
+
+Fix this by lifting similar code from x86, importing it to ARM with
+the ARM specific parameters added.
+
+Update the kdump documentation to reflect this change.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ Documentation/kdump/kdump.txt | 13 +++----------
+ arch/arm/kernel/setup.c       | 26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 10 deletions(-)
+
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index bc4bd5a44b88..88ff63d5fde3 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -263,12 +263,6 @@ been removed from the machine.
+     crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+     range=start-[end]
+ 
+-Please note, on arm, the offset is required.
+-    crashkernel=<range1>:<size1>[,<range2>:<size2>,...]@offset
+-    range=start-[end]
+-
+-    'start' is inclusive and 'end' is exclusive.
+-
+ For example:
+ 
+     crashkernel=512M-2G:64M,2G-:128M
+@@ -307,10 +301,9 @@ Boot into System Kernel
+    on the memory consumption of the kdump system. In general this is not
+    dependent on the memory size of the production system.
+ 
+-   On arm, use "crashkernel=Y@X". Note that the start address of the kernel
+-   will be aligned to 128MiB (0x08000000), so if the start address is not then
+-   any space below the alignment point may be overwritten by the dump-capture kernel,
+-   which means it is possible that the vmcore is not that precise as expected.
++   On arm, the use of "crashkernel=Y@X" is no longer necessary; the
++   kernel will automatically locate the crash kernel image within the
++   first 512MB of RAM if X is not given.
+ 
+ 
+ Load the Dump-capture Kernel
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 7d0cba6f1cc5..5d8511c425f0 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -938,6 +938,13 @@ static int __init init_machine_late(void)
+ late_initcall(init_machine_late);
+ 
+ #ifdef CONFIG_KEXEC
++/*
++ * The crash region must be aligned to 128MB to avoid
++ * zImage relocating below the reserved region.
++ */
++#define CRASH_ALIGN	(128 << 20)
++#define CRASH_ADDR_MAX	(PHYS_OFFSET + (512 << 20))
++
+ static inline unsigned long long get_total_mem(void)
+ {
+ 	unsigned long total;
+@@ -965,6 +972,25 @@ static void __init reserve_crashkernel(void)
+ 	if (ret)
+ 		return;
+ 
++	if (crash_base <= 0) {
++		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_MAX,
++						    crash_size, CRASH_ALIGN);
++		if (!crash_base) {
++			pr_err("crashkernel reservation failed - No suitable area found.\n");
++			return;
++		}
++	} else {
++		unsigned long long start;
++
++		start = memblock_find_in_range(crash_base,
++					       crash_base + crash_size,
++					       crash_size, SECTION_SIZE);
++		if (start != crash_base) {
++			pr_err("crashkernel reservation failed - memory is in use.\n");
++			return;
++		}
++	}
++
+ 	ret = memblock_reserve(crash_base, crash_size);
+ 	if (ret < 0) {
+ 		pr_warn("crashkernel reservation failed - memory is in use (0x%lx)\n",
+-- 
+2.1.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
