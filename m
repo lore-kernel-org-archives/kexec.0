@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mout.kundenserver.de ([212.227.126.135])
+Received: from mout.kundenserver.de ([212.227.126.131])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aleZM-0007hE-61
- for kexec@lists.infradead.org; Thu, 31 Mar 2016 15:31:37 +0000
+ id 1aleZN-0007hT-Tj
+ for kexec@lists.infradead.org; Thu, 31 Mar 2016 15:31:39 +0000
 From: Alban Bedel <alban.bedel@avionic-design.de>
-Subject: [PATCH 3/3] zImage-arm: Add support for booting android images
-Date: Thu, 31 Mar 2016 17:31:00 +0200
-Message-Id: <1459438260-8205-3-git-send-email-alban.bedel@avionic-design.de>
-In-Reply-To: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
-References: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
+Subject: [PATCH 1/3] arm: properly handle a missing /chosen node in the DT
+Date: Thu, 31 Mar 2016 17:30:58 +0200
+Message-Id: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,103 +23,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>, horms@verge.net.au, Alban Bedel <alban.bedel@avionic-design.de>
 
-Add very basic support for booting an android image. The ramdisk and
-command line from the image are only used if none has been given on
-the command line.
+From: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
 
-Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+When adding a new node to the DT in the setup_dtb_prop function, the
+parent offset need be passed to fdt_add_subnode.  Currently a bogus
+error code is used.  Fix that by adding the parent offset as an extra
+function argument to setup_dtb_prop, and change the handling of the
+/chosen node to operate on a relative path plus (zero) offset instead of
+an absolute path.
+
+Signed-off-by: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
 ---
- kexec/arch/arm/kexec-zImage-arm.c | 56 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 54 insertions(+), 2 deletions(-)
+ kexec/arch/arm/kexec-zImage-arm.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index c436b83..6b548c3 100644
+index d85ab9b..78518fd 100644
 --- a/kexec/arch/arm/kexec-zImage-arm.c
 +++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -27,6 +27,23 @@ off_t initrd_base = 0, initrd_size = 0;
- unsigned int kexec_arm_image_size = 0;
- unsigned long long user_page_offset = (-1ULL);
+@@ -257,8 +257,9 @@ int atag_arm_load(struct kexec_info *info, unsigned long base,
+ 	return 0;
+ }
  
-+struct android_image {
-+	char magic[8];
-+	uint32_t kernel_size;
-+	uint32_t kernel_addr;
-+	uint32_t ramdisk_size;
-+	uint32_t ramdisk_addr;
-+	uint32_t stage2_size;
-+	uint32_t stage2_addr;
-+	uint32_t tags_addr;
-+	uint32_t page_size;
-+	uint32_t reserved1;
-+	uint32_t reserved2;
-+	char name[16];
-+	char command_line[512];
-+	uint32_t chksum[8];
-+};
-+
- struct tag_header {
- 	uint32_t size;
- 	uint32_t tag;
-@@ -329,7 +346,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	char *modified_cmdline = NULL;
- 	off_t command_line_len;
- 	const char *ramdisk;
--	char *ramdisk_buf;
-+	const char *ramdisk_buf;
- 	int opt;
- 	int use_atags;
+-static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
+-		const char *prop_name, const void *val, int len)
++static int setup_dtb_prop(char **bufp, off_t *sizep, int parentoffset,
++		const char *node_name, const char *prop_name,
++		const void *val, int len)
+ {
  	char *dtb_buf;
-@@ -416,6 +433,41 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	if (dtb_file)
- 		dtb_buf = slurp_file(dtb_file, &dtb_length);
+ 	off_t dtb_size;
+@@ -273,14 +274,14 @@ static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_name,
+ 	dtb_size = *sizep;
  
-+	/* Handle android images, 2048 is the minimum page size */
-+	if (len > 2048 && !strncmp(buf, "ANDROID!", 8)) {
-+		const struct android_image *aimg = (const void *)buf;
-+		uint32_t page_size = le32_to_cpu(aimg->page_size);
-+		uint32_t kernel_size = le32_to_cpu(aimg->kernel_size);
-+		uint32_t ramdisk_size = le32_to_cpu(aimg->ramdisk_size);
-+		uint32_t stage2_size = le32_to_cpu(aimg->stage2_size);
-+		off_t aimg_size = page_size + _ALIGN(kernel_size, page_size) +
-+			_ALIGN(ramdisk_size, page_size) + stage2_size;
-+
-+		if (len < aimg_size) {
-+			fprintf(stderr, "Android image size is incorrect\n");
-+			return -1;
-+		}
-+
-+		/* Get the kernel */
-+		buf = buf + page_size;
-+		len = kernel_size;
-+
-+		/* And the ramdisk if none was given on the command line */
-+		if (!ramdisk && ramdisk_size) {
-+			initrd_size = ramdisk_size;
-+			ramdisk_buf = buf + _ALIGN(kernel_size, page_size);
-+		}
-+
-+		/* Likewise for the command line */
-+		if (!command_line && aimg->command_line[0]) {
-+			command_line = aimg->command_line;
-+			if (command_line[sizeof(aimg->command_line) - 1])
-+				command_line_len = sizeof(aimg->command_line);
-+			else
-+				command_line_len = strlen(command_line) + 1;
-+		}
-+	}
-+
- 	/*
- 	 * If we are loading a dump capture kernel, we need to update kernel
- 	 * command line and also add some additional segments.
-@@ -535,7 +587,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			initrd_base = initrd_base_new;
- 		}
+ 	/* check if the subnode has already exist */
+-	off = fdt_path_offset(dtb_buf, node_name);
++	off = fdt_subnode_offset(dtb_buf, parentoffset, node_name);
+ 	if (off == -FDT_ERR_NOTFOUND) {
+ 		dtb_size += fdt_node_len(node_name);
+ 		fdt_set_totalsize(dtb_buf, dtb_size);
+ 		dtb_buf = xrealloc(dtb_buf, dtb_size);
+ 		if (dtb_buf == NULL)
+ 			die("xrealloc failed\n");
+-		off = fdt_add_subnode(dtb_buf, off, node_name);
++		off = fdt_add_subnode(dtb_buf, parentoffset, node_name);
+ 	}
  
--		if (ramdisk) {
-+		if (ramdisk_buf) {
- 			add_segment(info, ramdisk_buf, initrd_size,
- 			            initrd_base, initrd_size);
+ 	if (off < 0) {
+@@ -496,7 +497,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 				 *  Error should have been reported so
+ 				 *  directly return -1
+ 				 */
+-				if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
++				if (setup_dtb_prop(&dtb_buf, &dtb_length, 0, "chosen",
+ 						"bootargs", command_line,
+ 						strlen(command_line) + 1))
+ 					return -1;
+@@ -542,11 +543,11 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 			start = cpu_to_be32((unsigned long)(initrd_base));
+ 			end = cpu_to_be32((unsigned long)(initrd_base + initrd_size));
  
+-			if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
++			if (setup_dtb_prop(&dtb_buf, &dtb_length, 0, "chosen",
+ 					"linux,initrd-start", &start,
+ 					sizeof(start)))
+ 				return -1;
+-			if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
++			if (setup_dtb_prop(&dtb_buf, &dtb_length, 0, "chosen",
+ 					"linux,initrd-end", &end,
+ 					sizeof(end)))
+ 				return -1;
 -- 
 2.8.0
 
