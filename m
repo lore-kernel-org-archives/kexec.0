@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x230.google.com ([2607:f8b0:400e:c03::230])
+Received: from mail-pf0-x236.google.com ([2607:f8b0:400e:c00::236])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1alWqx-0006tF-4R
- for kexec@lists.infradead.org; Thu, 31 Mar 2016 07:17:16 +0000
-Received: by mail-pa0-x230.google.com with SMTP id tt10so60065451pab.3
- for <kexec@lists.infradead.org>; Thu, 31 Mar 2016 00:16:54 -0700 (PDT)
-Date: Thu, 31 Mar 2016 16:19:03 +0900
+ id 1alXHb-0004CQ-0E
+ for kexec@lists.infradead.org; Thu, 31 Mar 2016 07:44:48 +0000
+Received: by mail-pf0-x236.google.com with SMTP id 4so63551396pfd.0
+ for <kexec@lists.infradead.org>; Thu, 31 Mar 2016 00:44:26 -0700 (PDT)
+Date: Thu, 31 Mar 2016 16:46:35 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v15 15/20] arm64: kdump: reserve memory for crash dump
- kernel
-Message-ID: <20160331071903.GB2267@linaro.org>
+Subject: Re: [PATCH v15 17/20] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20160331074635.GC2267@linaro.org>
 References: <cover.1457977401.git.geoff@infradead.org>
- <1083d7e4a6285c39d2955fb99dc9fa4c345d00fa.1457977403.git.geoff@infradead.org>
- <56EC441E.2040606@arm.com>
+ <8f53a31cf8bbfdd73eb289e078addc31c5a19fcf.1457977403.git.geoff@infradead.org>
+ <56EC440F.4050406@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <56EC441E.2040606@arm.com>
+In-Reply-To: <56EC440F.4050406@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,120 +30,122 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, Mar 18, 2016 at 06:08:30PM +0000, James Morse wrote:
+On Fri, Mar 18, 2016 at 06:08:15PM +0000, James Morse wrote:
 > Hi!
 > 
 > On 14/03/16 17:48, Geoff Levand wrote:
 > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > > 
-> > On the startup of primary kernel, the memory region used by crash dump
-> > kernel must be specified by "crashkernel=" kernel parameter.
-> > reserve_crashkernel() will allocate and reserve the region for later use.
+> > Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
+> > and save registers' status in per-cpu ELF notes before starting crash
+> > dump kernel. See kernel_kexec().
+> > Even if not all secondary cpus have shut down, we do kdump anyway.
 > > 
-> > User space tools, like kexec-tools, will be able to find that region marked
-> > as "Crash kernel" in /proc/iomem.
+> > As we don't have to make non-boot(crashed) cpus offline (to preserve
+> > correct status of cpus at crash dump) before shutting down, this patch
+> > also adds a variant of smp_send_stop().
+> > 
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> [NB: Re-ordered diff hunks ]
-> 
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index 7802f21..4edf181 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -171,6 +229,8 @@ void __init arm64_memblock_init(void)
-> >  		memblock_reserve(__virt_to_phys(initrd_start), initrd_end - initrd_start);
-> >  #endif
-> >
-> > +	reserve_crashkernel();
+> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> > index b1adc51..76402c6cd 100644
+> > --- a/arch/arm64/kernel/smp.c
+> > +++ b/arch/arm64/kernel/smp.c
+> > @@ -701,6 +705,28 @@ static void ipi_cpu_stop(unsigned int cpu)
+> >  		cpu_relax();
+> >  }
+> >  
+> > +static atomic_t waiting_for_crash_ipi;
 > > +
-> >  	early_init_fdt_scan_reserved_mem();
-> >
-> >  	/* 4GB maximum for 32-bit only capable devices */
-> >
+> > +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
+> > +{
+> > +	crash_save_cpu(regs, cpu);
+> > +
+> > +	raw_spin_lock(&stop_lock);
+> > +	pr_debug("CPU%u: stopping\n", cpu);
+> > +	raw_spin_unlock(&stop_lock);
+> > +
+> > +	atomic_dec(&waiting_for_crash_ipi);
+> > +
+> > +	local_irq_disable();
 > 
-> 
-> This is 'nit' territory, but if you were to make this:
-> >	if (IS_ENABLED(CONFIG_KEXEC_CORE))
-> >		reserve_crashkernel();
-> 
-> then the #ifdefs around reserve_crashkernel() can go, and the compiler will work
-> out that this static function can be optimised out. It also means the
-> compiler performs its checks, even if CONFIG_KEXEC_CORE isn't selected. The same
-> trick can be applied in patch 18 (around reserve_elfcorehdr()).
+> Aren't irqs already disabled here? - or is this a 'just make sure'....
 
-It will also make the code more understandable.
+Well, it also exists in ipi_cpu_stop() ...
+
+> > +
+> > +	if (cpu_ops[cpu]->cpu_die)
+> > +		cpu_ops[cpu]->cpu_die(cpu);
+> > +
+> > +	/* just in case */
+> > +	while (1)
+> > +		wfi();
+> > +}
+> > +
+> >  /*
+> >   * Main handler for inter-processor interrupts
+> >   */
+> > @@ -731,6 +757,12 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+> >  		irq_exit();
+> >  		break;
+> >  
+> > +	case IPI_CPU_CRASH_STOP:
+> > +		irq_enter();
+> > +		ipi_cpu_crash_stop(cpu, regs);
+> > +		irq_exit();
+> 
+> This made me jump: irq_exit() may end up in the __do_softirq() (with irqs turned
+> back on!) ... but these lines are impossible to reach. Maybe get the compiler to
+> enforce this with an unreachable() instead?
+
+I'm not sure how effective unreachable() is here, but OK I will add it.
 
 Thanks,
 -Takahiro AKASHI
 
-> > @@ -66,6 +67,63 @@ static int __init early_initrd(char *p)
-> >  early_param("initrd", early_initrd);
-> >  #endif
-> >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +/*
-> > + * reserve_crashkernel() - reserves memory for crash kernel
-> > + *
-> > + * This function reserves memory area given in "crashkernel=" kernel command
-> > + * line parameter. The memory reserved is used by dump capture kernel when
-> > + * primary kernel is crashing.
-> > + */
-> > +static void __init reserve_crashkernel(void)
-> > +{
-> > +	unsigned long long crash_size = 0, crash_base = 0;
-> > +	int ret;
+> > +		break;
 > > +
-> > +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> > +				&crash_size, &crash_base);
-> > +	if (ret)
+> >  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+> >  	case IPI_TIMER:
+> >  		irq_enter();
+> > @@ -791,6 +823,30 @@ void smp_send_stop(void)
+> >  		pr_warning("SMP: failed to stop secondary CPUs\n");
+> >  }
+> >  
+> > +void smp_send_crash_stop(void)
+> > +{
+> > +	cpumask_t mask;
+> > +	unsigned long timeout;
+> > +
+> > +	if (num_online_cpus() == 1)
 > > +		return;
 > > +
-> > +	if (crash_base == 0) {
-> > +		crash_base = memblock_find_in_range(0,
-> > +				MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, 1 << 21);
-> > +		if (crash_base == 0) {
-> > +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> > +				crash_size);
-> > +			return;
-> > +		}
-> > +		memblock_reserve(crash_base, crash_size);
+> > +	cpumask_copy(&mask, cpu_online_mask);
+> > +	cpumask_clear_cpu(smp_processor_id(), &mask);
 > > +
-> > +	} else {
-> > +		/* User specifies base address explicitly. */
-> > +		if (!memblock_is_region_memory(crash_base, crash_size) ||
-> > +			memblock_is_region_reserved(crash_base, crash_size)) {
-> > +			pr_warn("crashkernel has wrong address or size\n");
-> > +			return;
-> > +		}
+> > +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
 > > +
-> > +		if (crash_base & ((1 << 21) - 1)) {
-> > +			pr_warn("crashkernel base address is not 2MB aligned\n");
-> > +			return;
-> > +		}
+> > +	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
 > > +
-> > +		memblock_reserve(crash_base, crash_size);
-> > +	}
+> > +	/* Wait up to one second for other CPUs to stop */
+> > +	timeout = USEC_PER_SEC;
+> > +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
+> > +		udelay(1);
 > > +
-> > +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-> > +		crash_size >> 20, crash_base >> 20);
-> > +
-> > +	crashk_res.start = crash_base;
-> > +	crashk_res.end = crash_base + crash_size - 1;
+> > +	if (atomic_read(&waiting_for_crash_ipi) > 0)
+> > +		pr_warn("SMP: failed to stop secondary CPUs\n");
 > > +}
-> > +#else
-> > +static void __init reserve_crashkernel(void)
-> > +{
-> > +	;
-> > +}
-> > +#endif /* CONFIG_KEXEC_CORE */
 > > +
 > >  /*
-> >   * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-> >   * currently assumes that for memory starting above 4G, 32-bit devices will
+> >   * not supported here
+> >   */
+> > 
 > 
 > 
 > Thanks,
 > 
 > James
+> 
 > 
 
 _______________________________________________
