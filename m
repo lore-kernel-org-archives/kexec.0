@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 31 Mar 2016 11:10:38 +0100
-From: Mark Rutland <mark.rutland@arm.com>
+Message-ID: <56FCFA6F.7040800@arm.com>
+Date: Thu, 31 Mar 2016 11:22:39 +0100
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH v15 17/20] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20160331101038.GB26532@leverpostej>
 References: <cover.1457977401.git.geoff@infradead.org>
  <8f53a31cf8bbfdd73eb289e078addc31c5a19fcf.1457977403.git.geoff@infradead.org>
- <56EC440F.4050406@arm.com> <56EFF738.1040308@arm.com>
- <20160331075659.GD2267@linaro.org> <56FCDBF0.2010505@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <56FCDBF0.2010505@arm.com>
+ <56EC440F.4050406@arm.com> <20160331074635.GC2267@linaro.org>
+In-Reply-To: <20160331074635.GC2267@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,40 +20,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Geoff Levand <geoff@infradead.org>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Thu, Mar 31, 2016 at 09:12:32AM +0100, Marc Zyngier wrote:
-> On 31/03/16 08:57, AKASHI Takahiro wrote:
-> > On Mon, Mar 21, 2016 at 01:29:28PM +0000, James Morse wrote:
-> >> On 18/03/16 18:08, James Morse wrote:
-> >>> On 14/03/16 17:48, Geoff Levand wrote:
-> >>>> +	/* just in case */
-> >>>> +	while (1)
-> >>>> +		wfi();
-> >>
-> >> Having thought about this some more: I don't think spinning like this is safe.
-> >> We need to spin with the MMU turned off, otherwise this core will pollute the
-> >> kdump kernel with TLB entries from the old page tables.
-> > 
-> > I think that wfi() will never wake up since local interrupts are disabled
-> > here. So how can it pollute the kdump kernel?
-> 
-> Having interrupts disabled doesn't prevent an exit from WFI. Quite the
-> opposite, actually. It is designed to wake-up the core when something
-> happens on the external interface.
+On 31/03/16 08:46, AKASHI Takahiro wrote:
+> James Morse wrote:
+> > This made me jump: irq_exit() may end up in the __do_softirq() (with irqs turned
+> > back on!) ... but these lines are impossible to reach. Maybe get the compiler to
+> > enforce this with an unreachable() instead?
+>
+> I'm not sure how effective unreachable() is here, but OK I will add it.
 
-Further, WFI is a hint, and may simply act as a NOP. 
+I thought '__builtin_unreachable()' would generate a warning if it was
+reachable, but from [0] it looks like it just suppresses warnings.
 
-The ARM ARM calls this out (see "D1.17.2" Wait For Interrupt in ARM DDI
-0487A.i):
-
-	Because the architecture permits a PE to leave the low-power
-	state for any reason, it is permissible for a PE to treat WFI as
-	a NOP , but this is not recommended for lowest power operation.
+You're right, it won't help.
 
 Thanks,
-Mark.
+
+
+James
+
+[0] https://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html
 
 _______________________________________________
 kexec mailing list
