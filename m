@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mout.kundenserver.de ([212.227.17.10])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aleZM-0007hD-5b
- for kexec@lists.infradead.org; Thu, 31 Mar 2016 15:31:37 +0000
-From: Alban Bedel <alban.bedel@avionic-design.de>
-Subject: [PATCH 2/3] zImage-arm: Fix a return value check that use the wrong
- variable
-Date: Thu, 31 Mar 2016 17:30:59 +0200
-Message-Id: <1459438260-8205-2-git-send-email-alban.bedel@avionic-design.de>
-In-Reply-To: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
-References: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
+Date: Fri, 1 Apr 2016 09:59:47 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v15 00/20] arm64 kexec kernel patches v15
+Message-ID: <20160401015947.GA3835@dhcp-128-65.nay.redhat.com>
+References: <cover.1457977401.git.geoff@infradead.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <cover.1457977401.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,38 +15,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>, horms@verge.net.au, Alban Bedel <alban.bedel@avionic-design.de>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-When looking for a hole to put the initrd in the error check used the
-wrong variable.
+On 03/14/16 at 05:47pm, Geoff Levand wrote:
+> This series adds the core support for kexec re-boot and kdump on ARM64.  This
+> version of the series combines Takahiro's kdump patches with my kexec patches.
+> Please consider all patches for inclusion.
+> 
+> To load a second stage kernel and execute a kexec re-boot or to work with kdump
+> on ARM64 systems a series of patches to kexec-tools [2], which have not yet been
+> merged upstream, are needed.  Please update to the latest if you have been using
+> an older version.
+> 
+> To examine vmcore (/proc/vmcore), you should use
+>   - gdb v7.7 or later
+>   - crash v7.1.1 or later
+> 
+> [1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
+> [2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+> 
 
-Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
----
- kexec/arch/arm/kexec-zImage-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Geoff, for easier to review maybe you can send kexec patches first then AKASHI Takahiro
+can send the kdump patches as a standalone patchset?
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 78518fd..c436b83 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -530,7 +530,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 			unsigned long initrd_base_new = locate_hole(info,
- 					hole_size, page_size,
- 					initrd_base, ULONG_MAX, INT_MAX);
--			if (base == ULONG_MAX)
-+			if (initrd_base_new == ULONG_MAX)
- 				return -1;
- 			initrd_base = initrd_base_new;
- 		}
--- 
-2.8.0
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
