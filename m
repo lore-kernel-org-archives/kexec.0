@@ -1,32 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp10.uk.ibm.com ([195.75.94.106])
+Received: from e06smtp16.uk.ibm.com ([195.75.94.112])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1am25j-0000He-Mi
- for kexec@lists.infradead.org; Fri, 01 Apr 2016 16:38:37 +0000
+ id 1am35S-0001Fg-AQ
+ for kexec@lists.infradead.org; Fri, 01 Apr 2016 17:42:23 +0000
 Received: from localhost
- by e06smtp10.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e06smtp16.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Fri, 1 Apr 2016 17:38:12 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com
- (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
- by d06dlp03.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8DEF71B08067
- for <kexec@lists.infradead.org>; Fri,  1 Apr 2016 17:38:45 +0100 (BST)
+ Fri, 1 Apr 2016 18:42:00 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com
+ (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+ by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7475C219004D
+ for <kexec@lists.infradead.org>; Fri,  1 Apr 2016 18:41:36 +0100 (BST)
 Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
  [9.149.37.249])
- by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u31Gc9Pu6947202
- for <kexec@lists.infradead.org>; Fri, 1 Apr 2016 16:38:09 GMT
+ by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u31HfuYZ60293326
+ for <kexec@lists.infradead.org>; Fri, 1 Apr 2016 17:41:56 GMT
 Received: from d06av08.portsmouth.uk.ibm.com (localhost [127.0.0.1])
  by d06av08.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u31Gc8ND017586
- for <kexec@lists.infradead.org>; Fri, 1 Apr 2016 10:38:09 -0600
-Date: Fri, 1 Apr 2016 18:38:07 +0200
+ u31HftDj014009
+ for <kexec@lists.infradead.org>; Fri, 1 Apr 2016 11:41:56 -0600
+Date: Fri, 1 Apr 2016 19:41:54 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Subject: Re: [PATCH] s390/kexec: Consolidate
  crash_map/unmap_reserved_pages() and
  arch_kexec_protect(unprotect)_crashkres()
-Message-ID: <20160401183807.236a115d@holzheu>
+Message-ID: <20160401194154.1b4c623f@holzheu>
 In-Reply-To: <1459338441-21919-1-git-send-email-xlpang@redhat.com>
 References: <1459338441-21919-1-git-send-email-xlpang@redhat.com>
 Mime-Version: 1.0
@@ -45,15 +45,9 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Xunlei Pang <xlpang@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>, Minfei Huang <mhuang@redhat.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, Martin Schwidefsky <schwidefsky@de.ibm.com>, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-Hello Xunlei,
+Hello Xunlei again,
 
-This patch can has potential to create some funny side effects.
-Especially the change from memblock_remove() to memblock_reserve()
-and the later call of reserve_crashkernel().
-
-Give me some time. I will look into this next week.
-
-Michael
+Some initial comments below...
 
 On Wed, 30 Mar 2016 19:47:21 +0800
 Xunlei Pang <xlpang@redhat.com> wrote:
@@ -144,6 +138,10 @@ Xunlei Pang <xlpang@redhat.com> wrote:
 > +			os_info_crashkernel_add(0, 0);
 > +	}
 > +}
+
+Please do not move these functions in the file. If you leave it at their
+old location, the patch will be *much* smaller.
+
 > +
 > +/*
 > + * Map crashkernel memory
@@ -170,6 +168,28 @@ Xunlei Pang <xlpang@redhat.com> wrote:
 > +{
 > +	crash_map_reserved_pages();
 > +}
+
+Please replace the crash_(un)map_reserved_pages functions
+with the new arch_kexec_(un)protect() functions like the following:
+
+/*
+ * Unmap crashkernel memory
+ */
+void arch_kexec_protect_crashkres(void)
+{
+        crash_map_pages(0);
+}
+
+/*
+ * Map crashkernel memory
+ */
+void arch_kexec_unprotect_crashkres(void)
+{
+        crash_map_pages(1);
+}
+
+... and remove the old functions.
+
 > +
 > +/*
 >   * PM notifier callback for kdump
@@ -181,13 +201,25 @@ Xunlei Pang <xlpang@redhat.com> wrote:
 >  	case PM_HIBERNATION_PREPARE:
 > -		if (crashk_res.start)
 > +		if (kexec_crash_image)
+
+Why this change?
+
 >  			crash_map_reserved_pages();
+
+arch_kexec_unprotect_crashkres();
+
 >  		break;
 >  	case PM_POST_SUSPEND:
 >  	case PM_POST_HIBERNATION:
 > -		if (crashk_res.start)
 > +		if (kexec_crash_image)
+
+Why this change?
+
 >  			crash_unmap_reserved_pages();
+
+arch_kexec_protect_crashkres();
+
 >  		break;
 >  	default:
 > @@ -147,42 +193,6 @@ static int kdump_csum_valid(struct kimage *image)
@@ -243,6 +275,9 @@ Xunlei Pang <xlpang@redhat.com> wrote:
 >  	insert_resource(&iomem_resource, &crashk_res);
 > -	memblock_remove(crash_base, crash_size);
 > +	memblock_reserve(crash_base, crash_size);
+
+I will discuss this next week in our team.
+
 >  	pr_info("Reserving %lluMB of memory at %lluMB "
 >  		"for crashkernel (System RAM: %luMB)\n",
 >  		crash_size >> 20, crash_base >> 20,
@@ -262,99 +297,10 @@ Xunlei Pang <xlpang@redhat.com> wrote:
 > +	paging_init();
 > +
 > +	reserve_crashkernel();
-> 
->          /* Setup default console */
->  	conmode_default();
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index f82d6a2..c76641c 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -230,8 +230,6 @@ extern void crash_kexec(struct pt_regs *);
->  int kexec_should_crash(struct task_struct *);
->  void crash_save_cpu(struct pt_regs *regs, int cpu);
->  void crash_save_vmcoreinfo(void);
-> -void crash_map_reserved_pages(void);
-> -void crash_unmap_reserved_pages(void);
->  void arch_crash_save_vmcoreinfo(void);
->  __printf(1, 2)
->  void vmcoreinfo_append_str(const char *fmt, ...);
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index b73dc21..4384672 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -136,9 +136,6 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
->  	if (ret)
->  		return ret;
-> 
-> -	if (flags & KEXEC_ON_CRASH)
-> -		crash_map_reserved_pages();
-> -
->  	if (flags & KEXEC_PRESERVE_CONTEXT)
->  		image->preserve_context = 1;
-> 
-> @@ -161,12 +158,6 @@ out:
->  	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
->  		arch_kexec_protect_crashkres();
-> 
-> -	/*
-> -	 * Once the reserved memory is mapped, we should unmap this memory
-> -	 * before returning
-> -	 */
-> -	if (flags & KEXEC_ON_CRASH)
-> -		crash_unmap_reserved_pages();
->  	kimage_free(image);
->  	return ret;
->  }
-> @@ -232,9 +223,6 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
-> 
->  	result = do_kexec_load(entry, nr_segments, segments, flags);
-> 
-> -	if ((flags & KEXEC_ON_CRASH) && kexec_crash_image)
-> -		arch_kexec_protect_crashkres();
-> -
->  	mutex_unlock(&kexec_mutex);
-> 
->  	return result;
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index f826e11..58cd872 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -953,7 +953,6 @@ int crash_shrink_memory(unsigned long new_size)
->  	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
->  	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
-> 
-> -	crash_map_reserved_pages();
->  	crash_free_reserved_phys_range(end, crashk_res.end);
-> 
->  	if ((start == end) && (crashk_res.parent != NULL))
-> @@ -967,7 +966,6 @@ int crash_shrink_memory(unsigned long new_size)
->  	crashk_res.end = end - 1;
-> 
->  	insert_resource(&iomem_resource, ram_res);
-> -	crash_unmap_reserved_pages();
-> 
->  unlock:
->  	mutex_unlock(&kexec_mutex);
-> @@ -1549,17 +1547,12 @@ int kernel_kexec(void)
->  }
-> 
->  /*
-> - * Add and remove page tables for crashkernel memory
-> + * Protection mechanism for crashkernel reserved memory after
-> + * the kdump kernel is loaded.
->   *
->   * Provide an empty default implementation here -- architecture
->   * code may override this
->   */
-> -void __weak crash_map_reserved_pages(void)
-> -{}
-> -
-> -void __weak crash_unmap_reserved_pages(void)
-> -{}
-> -
->  void __weak arch_kexec_protect_crashkres(void)
->  {}
-> 
+
+I will discuss this next week in our team.
+
+Michael
 
 
 _______________________________________________
