@@ -1,12 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 1 Apr 2016 09:59:47 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v15 00/20] arm64 kexec kernel patches v15
-Message-ID: <20160401015947.GA3835@dhcp-128-65.nay.redhat.com>
-References: <cover.1457977401.git.geoff@infradead.org>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1als3H-0001ux-Lr
+ for kexec@lists.infradead.org; Fri, 01 Apr 2016 05:55:25 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH 0/2] Export new VMCOREINFO about compound page
+Date: Fri, 1 Apr 2016 05:53:58 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E35EA4@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FC7@BPXM01GP.gisp.nec.co.jp>
+ <20160304080459.GA3056@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20160304080459.GA3056@dhcp-128-65.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <cover.1457977401.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,32 +24,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
 
-On 03/14/16 at 05:47pm, Geoff Levand wrote:
-> This series adds the core support for kexec re-boot and kdump on ARM64.  This
-> version of the series combines Takahiro's kdump patches with my kexec patches.
-> Please consider all patches for inclusion.
-> 
-> To load a second stage kernel and execute a kexec re-boot or to work with kdump
-> on ARM64 systems a series of patches to kexec-tools [2], which have not yet been
-> merged upstream, are needed.  Please update to the latest if you have been using
-> an older version.
-> 
-> To examine vmcore (/proc/vmcore), you should use
->   - gdb v7.7 or later
->   - crash v7.1.1 or later
-> 
-> [1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
-> [2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
-> 
+Hello Andrew,
 
-Geoff, for easier to review maybe you can send kexec patches first then AKASHI Takahiro
-can send the kdump patches as a standalone patchset?
+>> This patch set is to follow up modifications of struct page for
+>> makedumpfile which filters dump file.
+>> It's necessary to filter unnecessary compound pages in newer kernel
+>> as usual.
+>>
+>> Incidentally, [PATCH 1/2] was post in:
+>>
+>>   https://lkml.org/lkml/2016/1/27/92
+>>
+>> but it didn't get any response, I repost it here.
+>>
+>> Atsushi Kumagai (2):
+>>       kexec: update VMCOREINFO for compound_order/dtor
+>>       kexec: export OFFSET(page.compound_head) to check anonymous page
+>>
+>> kernel/kexec_core.c | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>>
+>
+>Acked-by: Dave Young <dyoung@redhat.com>
+>
+>Thanks
+>Dave
 
-Thanks
-Dave
+Could you pick these patches ?
+
+  https://lkml.org/lkml/2016/3/1/25
+  https://lkml.org/lkml/2016/3/1/26
+
+Thanks,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
