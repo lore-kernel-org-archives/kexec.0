@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 1 Apr 2016 10:36:35 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v15 17/20] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20160401093635.GA29876@leverpostej>
-References: <cover.1457977401.git.geoff@infradead.org>
- <8f53a31cf8bbfdd73eb289e078addc31c5a19fcf.1457977403.git.geoff@infradead.org>
- <56EC440F.4050406@arm.com> <56EFF738.1040308@arm.com>
- <20160331075659.GD2267@linaro.org> <56FCDBF0.2010505@arm.com>
- <20160331101038.GB26532@leverpostej>
- <20160401084509.GA11108@linaro.org>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1alxB3-0007nY-0k
+ for kexec@lists.infradead.org; Fri, 01 Apr 2016 11:23:46 +0000
+Message-ID: <56FE59C9.6060307@cn.fujitsu.com>
+Date: Fri, 1 Apr 2016 19:21:45 +0800
+From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
+ <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160401084509.GA11108@linaro.org>
+Subject: Re: [PATCH v4] Improve the performance of --num-threads -d 31
+References: <1457483231-2092-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
+ <56EB6C06.30205@cn.fujitsu.com>
+ <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
+ <56EB96B8.7010103@cn.fujitsu.com>
+ <20160331083854.GA7343@dhcp-128-25.nay.redhat.com>
+ <56FCE93C.2020401@cn.fujitsu.com>
+ <20160401062714.GA23403@dhcp-128-25.nay.redhat.com>
+In-Reply-To: <20160401062714.GA23403@dhcp-128-25.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,56 +26,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, James Morse <james.morse@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Minfei Huang <mhuang@redhat.com>
+Cc: kexec@lists.infradead.org
 
-On Fri, Apr 01, 2016 at 05:45:09PM +0900, AKASHI Takahiro wrote:
-> On Thu, Mar 31, 2016 at 11:10:38AM +0100, Mark Rutland wrote:
-> > On Thu, Mar 31, 2016 at 09:12:32AM +0100, Marc Zyngier wrote:
-> > > On 31/03/16 08:57, AKASHI Takahiro wrote:
-> > > > On Mon, Mar 21, 2016 at 01:29:28PM +0000, James Morse wrote:
-> > > >> On 18/03/16 18:08, James Morse wrote:
-> > > >>> On 14/03/16 17:48, Geoff Levand wrote:
-> > > >>>> +	/* just in case */
-> > > >>>> +	while (1)
-> > > >>>> +		wfi();
-> > > >>
-> > > >> Having thought about this some more: I don't think spinning like this is safe.
-> > > >> We need to spin with the MMU turned off, otherwise this core will pollute the
-> > > >> kdump kernel with TLB entries from the old page tables.
-> > > > 
-> > > > I think that wfi() will never wake up since local interrupts are disabled
-> > > > here. So how can it pollute the kdump kernel?
-> > > 
-> > > Having interrupts disabled doesn't prevent an exit from WFI. Quite the
-> > > opposite, actually. It is designed to wake-up the core when something
-> > > happens on the external interface.
-> > 
-> > Further, WFI is a hint, and may simply act as a NOP. 
-> 
-> Ah, OK. But even so, none of interrupt handlers (nor other code) will
-> be executed after cpu wakes up, and the memory won't be polluted.
-
-The code comprising the while(1) loop will be executed, and TLB walks,
-speculative fetches, etc may occur regardless.
-
-We don't share TLB entries between cores (we don't have support for
-ARMv8.2s CnP), and the kdump kernel should be running in a carveout from
-main memory (which IIUC is not mapped by the original kernel). So
-normally, this would not be a problem.
-
-However, if there is a problem with the page tables (e.g. entries
-erroneously point into a PA range the kdump kernel is using), then
-unavoidable background memory traffic from the CPU may cause problems
-for the kdump kernel.
-
-Thanks,
-Mark.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDQvMDEvMjAxNiAwMjoyNyBQTSwgTWluZmVpIEh1YW5nIHdyb3RlOgo+IE9uIDAzLzMxLzE2
+IGF0IDA1OjA5cG0sICJaaG91LCBXZW5qaWFuL+WRqOaWh+WJkSIgd3JvdGU6Cj4+IEhlbGxvIE1p
+bmZlaSwKPj4KPj4gVGhhbmtzIGZvciB5b3VyIHJlc3VsdHMuCj4+IEFuZCBJIGhhdmUgc29tZSBx
+dWVzdGlvbnMuCj4+Cj4+IE9uIDAzLzMxLzIwMTYgMDQ6MzggUE0sIE1pbmZlaSBIdWFuZyB3cm90
+ZToKPj4+IEhpLCBaaG91Lgo+Pj4KPj4+IEkgaGF2ZSB0ZXN0ZWQgdGhlIGluY3JlYXNpbmcgcGF0
+Y2ggb24gNFQgbWVtb3J5IG1hY2hpbmUuCj4+Pgo+Pj4gbWFrZWR1bXBmaWxlIGZhaWxzIHRvIGR1
+bXAgdm1jb3JlLCBpZiB0aGVyZSBhcmUgYWJvdXQgMzg0TSBtZW1vcnkgaW4gMm5kCj4+PiBrZXJu
+ZWwgd2hpY2ggaXMgcmVzZXJ2ZWQgYnkgY3Jhc2hrZXJuZWw9YXV0by4gQnV0IG9uY2UgdGhlIHJl
+c2VydmVkCj4+PiBtZW1vcnkgaXMgZW5sYXJnZWQgdXAgdG8gMTBHLCBtYWtlZHVtcGZpbGUgY2Fu
+IGR1bXAgdm1jb3JlIHN1Y2Nlc3NmdWxseS4KPj4+Cj4+Cj4+IFdpbGwgaXQgZmFpbCB3aXRoIHBh
+dGNoIHYzPyBvciBqdXN0IHY0Pwo+Cj4gQm90aCB2MyBhbmQgdjQgY2FuIHdvcmsgd2VsbCwgb25j
+ZSByZXNlcnZlZCBtZW1vcnkgaXMgZW5sYXJnZWQgbWFudWFsbHkuCj4KPj4gSSBkb24ndCB0aGlu
+ayBpdCBpcyBhIHByb2JsZW0uCj4+IElmIDEyOCBjcHVzIGFyZSBlbmFibGVkIGluIHNlY29uZCBr
+ZXJuZWwsIHRoZXJlIHdvbid0IGJlIG11Y2ggbWVtb3J5IGxlZnQgaWYgdG90YWwgbWVtb3J5IGlz
+IDM4NE0uCj4KPiBFbmFibGUgMTI4IENQVXMgd2l0aCAxR0IgcmVzZXJ2ZWQgbWVtb3J5Lgo+IGtk
+dW1wOi8jIC9zeXNyb290L2Jpbi9mcmVlIC1tCj4gICAgICAgICAgICAgICAgdG90YWwgICAgICAg
+IHVzZWQgICAgICAgIGZyZWUgICAgICBzaGFyZWQgIGJ1ZmYvY2FjaGUgICBhdmFpbGFibGUKPiBN
+ZW06ICAgICAgICAgICAgOTc2ICAgICAgICAgIDk3ICAgICAgICAgNzMyICAgICAgICAgICA2ICAg
+ICAgICAgMTQ2ICAgICAgICAgNzc0Cj4KPiBFbmFibGUgMSBDUFUgd2l0aCAxR0IgcmVzZXJ2ZWQg
+bWVtb3J5Lgo+IGtkdW1wOi8jIC9zeXNyb290L2Jpbi9mcmVlIC1tCj4gICAgICAgICAgICAgICAg
+dG90YWwgICAgICAgIHVzZWQgICAgICAgIGZyZWUgICAgICBzaGFyZWQgIGJ1ZmYvY2FjaGUgICBh
+dmFpbGFibGUKPiBNZW06ICAgICAgICAgICAgOTkxICAgICAgICAgIDMyICAgICAgICAgODczICAg
+ICAgICAgICA2ICAgICAgICAgIDg1ICAgICAgICAgOTA5Cj4KPiBFeHRyYSBlbmFibGVkIDEyNyBD
+UFVzIHdpbGwgY29uc3VtZSA2NU1CLiBTbyBJIHRoaW5rIGl0IGlzIGFjY2VwdGFibGUKPiBpbiBr
+ZHVtcCBrZXJuZWwuCj4KPiBUaGUgbWFqb3IgbWVtb3J5IGlzIGNvbnN1bWVkIGJ5IG1ha2VkdW1w
+ZmlsZSBmcm9tIHRoZSB0ZXN0IHJlc3VsdC4KPiBjcmFzaGtlcm5lbD1hdXRvIGRvZXNuJ3Qgd29y
+ayBhbnkgbW9yZSwgaWYgb3B0aW9uIC0tbnVtLXRocmVhZHMgaXMKPiBzZXQuIEV2ZW4gbW9yZSwg
+dGhlcmUgaXMgbm8gd2FybmluZyB0byBsZXQgdXNlciBlbmxhcmdlIHRoZSByZXNlcnZlZAo+IG1l
+bW9yeS4KPgoKWWVzLCB3ZSBzaG91bGQgcmVtaW5kIHVzZXIgaWYgdGhleSB3YW50IHRvIHVzZSB0
+b28gbXVjaCB0aHJlYWRzLgoKPj4KPj4gQW5kIEkgdGhpbmsgaXQgd2lsbCBhbHNvIHdvcmsgaWYg
+dGhlIHJlc2VydmVkIG1lbW9yeSBpcyBzZXQgdG8gMUcuCj4KPiBZZXMsIG1ha2VkdW1wZmlsZSBj
+YW4gd29yayB3ZWxsIHVuZGVyIDFHQiByZXNlcnZlZCBtZW1vcnkuCj4KPj4KPj4+IFRoZSBjYWNo
+ZSBzaG91bGQgYmUgZHJvcHBlZCBiZWZvcmUgdGVzdGluZywgb3RoZXJ3aXNlIG1ha2VkdW1wZmls
+ZSB3aWxsCj4+PiBmYWlsIHRvIGR1bXAgdm1jb3JlLgo+Pj4gZWNobyAzID4gL3Byb2Mvc3lzL3Zt
+L2Ryb3BfY2FjaGVzCj4+PiBNYXliZSB0aGVyZSBpcyBzb21ldGhpbmcgY2xlYW51cCB3ZSBjYW4g
+ZG8gdG8gYXZvaWQgdGhpcy4KPj4+Cj4+PiBGb2xsb3dpbmcgaXMgdGhlIHJlc3VsdCB3aXRoIGRp
+ZmZlcmVudCBwYXJhbWV0ZXIgZm9yIG9wdGlvbgo+Pj4gLS1udW0tdGhyZWFkcy4KPj4+Cj4+PiBt
+YWtlZHVtcGZpbGUgLWwgLS1udW0tdGhyZWFkcyAxMjggLS1tZXNzYWdlLWxldmVsIDEgLWQgMzEg
+L3Byb2Mvdm1jb3JlIGEuMTI4Cj4+PiByZWFsICAgIDVtMzQuMTE2cwo+Pj4gdXNlciAgICAxMDNt
+NDIuNTMxcwo+Pj4gc3lzIDg2bTEyLjU4NnMKPiBbIHNuaXAgXQo+Pj4gbWFrZWR1bXBmaWxlIC1s
+IC0tbnVtLXRocmVhZHMgMCAtLW1lc3NhZ2UtbGV2ZWwgMSAtZCAzMSAvcHJvYy92bWNvcmUgYS4w
+Cj4+PiByZWFsICAgIDNtNDYuNTMxcwo+Pj4gdXNlciAgICAzbTI5LjM3MXMKPj4+IHN5cyAwbTE2
+LjkwOXMKPj4+Cj4+PiBtYWtlZHVtcGZpbGUuYmFjayAtbCAtLW1lc3NhZ2UtbGV2ZWwgMSAtZCAz
+MSAvcHJvYy92bWNvcmUgYQo+Pj4gcmVhbCAgICAzbTU1LjcxMnMKPj4+IHVzZXIgICAgM20zOS4y
+NTRzCj4+PiBzeXMgMG0xNi4yODdzCj4+Pgo+Pj4gT25jZSB0aGUgcmVzZXJ2ZWQgbWVtb3J5IGlz
+IGVubGFyZ2VkLCBtYWtlZHVtcGZpbGUgd29ya3Mgd2VsbCB3aXRoIG9yCj4+PiB3aXRob3V0IHRo
+aXMgaW5jcmVhc2VpbmcgcGF0Y2guCj4+Pgo+Pj4gQnV0IHRoZXJlIGlzIGFuIGFub3RoZXIgaXNz
+dWUgSSBmb3VuZCBkdXJpbmcgdGVzdGluZy4gbWFrZWR1bXBmaWxlIG1heQo+Pj4gaGFuZyBpbiBh
+Ym91dCAyNCUuIEFuZCB3aXRoIG9wdGlvbiAtLW51bS10aHJlYWRzIDY0LCB0aGlzIGlzc3VlIGlz
+IGFsc28KPj4+IG9jY3VyZWQuCj4+Pgo+Pgo+PiBXaWxsIGl0IG9jY3VyIHdpdGggcGF0Y2ggdjM/
+Cj4+IElmIGl0IG5vdCBvY2N1cnMsIHRoZW4gbmVpdGhlciBvZiB0aGUgcHJldmlvdXMgdHdvIGlu
+Y3JlYXNpbmcgcGF0Y2hlcyB3aWxsIHdvcms/Cj4+Cj4+IEFuZCBkaWQgeW91IHRlc3QgaXQgd2l0
+aCBvciB3aXRob3V0IHRoZSBpbmNyZWFzaW5nIHBhdGNoPwo+Cj4gd2l0aG91dCB0aGlzIGluY3Jl
+YXNpbmcgcGF0Y2gsIHY0IHdvcmtzIHdlbGwuCj4KCkRvIHlvdSBtZWFuIG1ha2VkdW1wZmlsZSB3
+b24ndCBoYW5nIHdpdGhvdXQgdGhlIGluY3JlYXNpbmcgcGF0Y2g/CgotLSAKVGhhbmtzClpob3UK
+Pj4KPj4+IG1ha2VkdW1wZmlsZSAtbCAtLW51bS10aHJlYWRzIDEyOCAtLW1lc3NhZ2UtbGV2ZWwg
+MSAtZCAzMSAvcHJvYy92bWNvcmUgYS4xMjgKPj4+IEV4Y2x1ZGluZyB1bm5lY2Vzc2FyeSBwYWdl
+cyAgICAgICAgOiBbMTAwLjAgJV0gfAo+Pj4gRXhjbHVkaW5nIHVubmVjZXNzYXJ5IHBhZ2VzICAg
+ICAgICA6IFsxMDAuMCAlXSAvCj4+PiBFeGNsdWRpbmcgdW5uZWNlc3NhcnkgcGFnZXMgICAgICAg
+IDogWzEwMC4wICVdIC0KPj4+IENvcHlpbmcgZGF0YSAgICAgICAgICAgICAgICAgICAgICAgOiBb
+IDExLjIgJV0gfAo+Pj4gQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICA6IFsgMTIu
+NCAlXSAtCj4+PiBFeGNsdWRpbmcgdW5uZWNlc3NhcnkgcGFnZXMgICAgICAgIDogWzEwMC4wICVd
+IFwKPj4+IEV4Y2x1ZGluZyB1bm5lY2Vzc2FyeSBwYWdlcyAgICAgICAgOiBbMTAwLjAgJV0gfAo+
+Pj4gQ29weWluZyBkYXRhICAgICAgICAgICAgICAgICAgICAgICA6IFsgMjMuNiAlXSAtCj4+PiBD
+b3B5aW5nIGRhdGEgICAgICAgICAgICAgICAgICAgICAgIDogWyAyNC40ICVdIC8KPj4+Cj4+Cj4+
+IENvdWxkIHlvdSBoZWxwIG1lIGZpbmQgd2hpY2ggbGluZSBvZiB0aGUgY29kZSBpcyBydW5uaW5n
+IGF0IHdoZW4gaXQgaGFuZ2luZz8KPj4gbWFrZWR1bXBmaWxlIG1heSBiZSBpbiBhIGxvb3AgYW5k
+IGNhbid0IGdvIG91dCBieSBzb21lIGJ1Z3MuCj4KPiBUaGlzIGlzc3VlIGhhcHBlbnMgdmVyeSBv
+Y2Nhc2lvbmFsbHkuIEkgY2FuIHVwZGF0ZSBpdCBvbmNlIG1lZXQgaXQuCj4KPiBUaGFua3MKPiBN
+aW5mZWkKPgo+CgoKCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
