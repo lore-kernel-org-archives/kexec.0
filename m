@@ -1,11 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1459535954.20121.3.camel@infradead.org>
-Subject: Re: [PATCH v15 00/20] arm64 kexec kernel patches v15
-From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 01 Apr 2016 11:39:14 -0700
-In-Reply-To: <20160401015947.GA3835@dhcp-128-65.nay.redhat.com>
-References: <cover.1457977401.git.geoff@infradead.org>
- <20160401015947.GA3835@dhcp-128-65.nay.redhat.com>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1am5cZ-0002oF-HK
+ for kexec@lists.infradead.org; Fri, 01 Apr 2016 20:24:44 +0000
+Date: Fri, 1 Apr 2016 13:24:21 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] kexec: update VMCOREINFO for compound_order/dtor
+Message-Id: <20160401132421.7cadaeb967dc342f643d8c38@linux-foundation.org>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FCE@BPXM01GP.gisp.nec.co.jp>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FCE@BPXM01GP.gisp.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,21 +22,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hi,
+On Tue, 1 Mar 2016 06:14:32 +0000 Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
 
-On Fri, 2016-04-01 at 09:59 +0800, Dave Young wrote:
-> Geoff, for easier to review maybe you can send kexec patches first
-> then AKASHI Takahiro
-> can send the kdump patches as a standalone patchset?
+> makedumpfile refers page.lru.next to get the order of compound pages
+> for page filtering. However, now the order is stored in page.compound_order,
+> hence VMCOREINFO should be updated to export the offset of
+> page.compound_order.
+> 
+> The fact is, page.compound_order was introduced already in kernel 4.0,
+> but the offset of it was the same as page.lru.next until kernel 4.3,
+> so this was not actual problem.
+> 
+> The above can be said also for page.lru.prev and page.compound_dtor,
+> it's necessary to detect hugetlbfs pages. Further, the content was
+> changed from direct address to the ID which means dtor.
 
-Marc Zyngier specifically asked for an integrated set
-of patches for easier review.  I will keep it that way
-for now.
+It's unclear which kernels need the patch and why.  I *think* that the
+patch is needed in 4.3.x, 4.4.x, 4.5.x and 4.6 in order to make
+makedumpfile work correctly.  Is that right?
 
--Geoff
+And it appears that [patch 2/2] is needed in 4.0+?
+
+However in both cases I am uncertain - what are the end-user visible
+effects of these regressions?  Why can bugs remain in place for so long
+without having been observed?
+
+
+Please make all these things clear when perparing changelogs for
+bugfixes: which kernel versions need fixing and why (ie: what are the
+end-user visible effects of the bug).
+
 
 _______________________________________________
 kexec mailing list
