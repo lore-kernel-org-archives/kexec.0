@@ -1,25 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-pa0-x22a.google.com ([2607:f8b0:400e:c03::22a])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1amxZA-0004nD-Au
- for kexec@lists.infradead.org; Mon, 04 Apr 2016 06:00:49 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH v4] Improve the performance of --num-threads -d 31
-Date: Mon, 4 Apr 2016 05:46:16 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E37518@BPXM01GP.gisp.nec.co.jp>
-References: <1457483231-2092-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
- <56EB6C06.30205@cn.fujitsu.com>
- <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
- <56EB96B8.7010103@cn.fujitsu.com>
- <20160331083854.GA7343@dhcp-128-25.nay.redhat.com>
- <56FCE93C.2020401@cn.fujitsu.com>
- <20160401062714.GA23403@dhcp-128-25.nay.redhat.com>
- <56FE59C9.6060307@cn.fujitsu.com>
- <20160401131512.GA28817@dhcp-128-25.nay.redhat.com>
-In-Reply-To: <20160401131512.GA28817@dhcp-128-25.nay.redhat.com>
-Content-Language: ja-JP
+ id 1an0ld-0002fI-5w
+ for kexec@lists.infradead.org; Mon, 04 Apr 2016 09:25:54 +0000
+Received: by mail-pa0-x22a.google.com with SMTP id tt10so140251541pab.3
+ for <kexec@lists.infradead.org>; Mon, 04 Apr 2016 02:25:31 -0700 (PDT)
+Date: Mon, 4 Apr 2016 18:27:38 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v15 17/20] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20160404092738.GB14218@linaro.org>
+References: <cover.1457977401.git.geoff@infradead.org>
+ <8f53a31cf8bbfdd73eb289e078addc31c5a19fcf.1457977403.git.geoff@infradead.org>
+ <56EC440F.4050406@arm.com> <56EFF738.1040308@arm.com>
+ <20160331075659.GD2267@linaro.org> <56FCDBF0.2010505@arm.com>
+ <20160331101038.GB26532@leverpostej>
+ <20160401084509.GA11108@linaro.org>
+ <20160401093635.GA29876@leverpostej>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160401093635.GA29876@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,167 +31,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Minfei Huang <mhuang@redhat.com>, =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, kexec@lists.infradead.org, Geoff Levand <geoff@infradead.org>, James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 
-Hello,
+Mark,
 
-Let me get this straight.
+On Fri, Apr 01, 2016 at 10:36:35AM +0100, Mark Rutland wrote:
+> On Fri, Apr 01, 2016 at 05:45:09PM +0900, AKASHI Takahiro wrote:
+> > On Thu, Mar 31, 2016 at 11:10:38AM +0100, Mark Rutland wrote:
+> > > On Thu, Mar 31, 2016 at 09:12:32AM +0100, Marc Zyngier wrote:
+> > > > On 31/03/16 08:57, AKASHI Takahiro wrote:
+> > > > > On Mon, Mar 21, 2016 at 01:29:28PM +0000, James Morse wrote:
+> > > > >> On 18/03/16 18:08, James Morse wrote:
+> > > > >>> On 14/03/16 17:48, Geoff Levand wrote:
+> > > > >>>> +	/* just in case */
+> > > > >>>> +	while (1)
+> > > > >>>> +		wfi();
+> > > > >>
+> > > > >> Having thought about this some more: I don't think spinning like this is safe.
+> > > > >> We need to spin with the MMU turned off, otherwise this core will pollute the
+> > > > >> kdump kernel with TLB entries from the old page tables.
+> > > > > 
+> > > > > I think that wfi() will never wake up since local interrupts are disabled
+> > > > > here. So how can it pollute the kdump kernel?
+> > > > 
+> > > > Having interrupts disabled doesn't prevent an exit from WFI. Quite the
+> > > > opposite, actually. It is designed to wake-up the core when something
+> > > > happens on the external interface.
+> > > 
+> > > Further, WFI is a hint, and may simply act as a NOP. 
+> > 
+> > Ah, OK. But even so, none of interrupt handlers (nor other code) will
+> > be executed after cpu wakes up, and the memory won't be polluted.
+> 
+> The code comprising the while(1) loop will be executed, and TLB walks,
+> speculative fetches, etc may occur regardless.
+> 
+> We don't share TLB entries between cores (we don't have support for
+> ARMv8.2s CnP), and the kdump kernel should be running in a carveout from
+> main memory (which IIUC is not mapped by the original kernel). So
+> normally, this would not be a problem.
 
->> >>Hello Minfei,
->> >>
->> >>Thanks for your results.
->> >>And I have some questions.
->> >>
->> >>On 03/31/2016 04:38 PM, Minfei Huang wrote:
->> >>>Hi, Zhou.
->> >>>
->> >>>I have tested the increasing patch on 4T memory machine.
->> >>>
->> >>>makedumpfile fails to dump vmcore, if there are about 384M memory in 2nd
->> >>>kernel which is reserved by crashkernel=auto. But once the reserved
->> >>>memory is enlarged up to 10G, makedumpfile can dump vmcore successfully.
->> >>>
->> >>
->> >>Will it fail with patch v3? or just v4?
->> >
->> >Both v3 and v4 can work well, once reserved memory is enlarged manually.
->> >
->> >>I don't think it is a problem.
->> >>If 128 cpus are enabled in second kernel, there won't be much memory left if total memory is 384M.
->> >
->> >Enable 128 CPUs with 1GB reserved memory.
->> >kdump:/# /sysroot/bin/free -m
->> >               total        used        free      shared  buff/cache   available
->> >Mem:            976          97         732           6         146         774
->> >
->> >Enable 1 CPU with 1GB reserved memory.
->> >kdump:/# /sysroot/bin/free -m
->> >               total        used        free      shared  buff/cache   available
->> >Mem:            991          32         873           6          85         909
->> >
->> >Extra enabled 127 CPUs will consume 65MB. So I think it is acceptable
->> >in kdump kernel.
->> >
->> >The major memory is consumed by makedumpfile from the test result.
->> >crashkernel=auto doesn't work any more, if option --num-threads is
->> >set. Even more, there is no warning to let user enlarge the reserved
->> >memory.
->> >
->>
->> Yes, we should remind user if they want to use too much threads.
+In fact, the memory region for crash kernel will be just memblock_reserve()'d.
+We can't do memblock_remove() here because that region is expected to
+exist as part of system memory.
+(For details, see kimage_load_crash_segment() in kexec_core.c.)
+Should we remove it from kernel mapping?
+ 
+> However, if there is a problem with the page tables (e.g. entries
+> erroneously point into a PA range the kdump kernel is using), then
+> unavoidable background memory traffic from the CPU may cause problems
+> for the kdump kernel.
 
-After all, the ENOMEM issue isn't peculiar to a specific patch but
-just a matter of course "more threads consume more memory" ?
-(At least I expect so.)
+But the traffic generated by the cpu will concentrate on the area around
+the while loop, ipi_cpu_crash_stop(), in the *crashed* kernel's memory.
+(I'm not sure about speculative behaviors.)
 
->This new feature multi-threads will consume more memory during dumping
->vmcore in 2nd kernel. Is it possible to improve it?
-
-makedumpfile is designed to work in limited memory space, but the extra
-memory consumption for each thread isn't considered.
-I think it can be estimated by checking code and measured by actual test.
-
-e.g. If we find that each thread requires 100KB more memory, 100KB * num-thread
-should be reserved before filtering processing.
-As I said to Zhou, the logic should be inserted into the cyclic buffer
-allocation method (calculate_cyclic_buffer_size()).
-
->> >>And I think it will also work if the reserved memory is set to 1G.
->> >
->> >Yes, makedumpfile can work well under 1GB reserved memory.
->> >
->> >>
->> >>>The cache should be dropped before testing, otherwise makedumpfile will
->> >>>fail to dump vmcore.
->> >>>echo 3 > /proc/sys/vm/drop_caches
->> >>>Maybe there is something cleanup we can do to avoid this.
->> >>>
->> >>>Following is the result with different parameter for option
->> >>>--num-threads.
->> >>>
->> >>>makedumpfile -l --num-threads 128 --message-level 1 -d 31 /proc/vmcore a.128
->> >>>real    5m34.116s
->> >>>user    103m42.531s
->> >>>sys 86m12.586s
->> >[ snip ]
->> >>>makedumpfile -l --num-threads 0 --message-level 1 -d 31 /proc/vmcore a.0
->> >>>real    3m46.531s
->> >>>user    3m29.371s
->> >>>sys 0m16.909s
->> >>>
->> >>>makedumpfile.back -l --message-level 1 -d 31 /proc/vmcore a
->> >>>real    3m55.712s
->> >>>user    3m39.254s
->> >>>sys 0m16.287s
->> >>>
->> >>>Once the reserved memory is enlarged, makedumpfile works well with or
->> >>>without this increaseing patch.
->> >>>
->> >>>But there is an another issue I found during testing. makedumpfile may
->> >>>hang in about 24%. And with option --num-threads 64, this issue is also
->> >>>occured.
->> >>>
->> >>
->> >>Will it occur with patch v3?
->> >>If it not occurs, then neither of the previous two increasing patches will work?
->> >>
->> >>And did you test it with or without the increasing patch?
->> >
->> >without this increasing patch, v4 works well.
->> >
->>
->> Do you mean makedumpfile won't hang without the increasing patch?
->
->Seem that, but I cann't confirm it, since this issue occurs very
->occasionally.
-
-I want to know how many times were the two cases (v4 and v4+inc) tested
-and how often did them hang.
-
+So I don't think it will hurt kdump kernel.
 
 Thanks,
-Atsushi Kumagai
+-Takahiro AKASHI
 
->Thanks
->Minfei
->
->>
->> --
->> Thanks
->> Zhou
->> >>
->> >>>makedumpfile -l --num-threads 128 --message-level 1 -d 31 /proc/vmcore a.128
->> >>>Excluding unnecessary pages        : [100.0 %] |
->> >>>Excluding unnecessary pages        : [100.0 %] /
->> >>>Excluding unnecessary pages        : [100.0 %] -
->> >>>Copying data                       : [ 11.2 %] |
->> >>>Copying data                       : [ 12.4 %] -
->> >>>Excluding unnecessary pages        : [100.0 %] \
->> >>>Excluding unnecessary pages        : [100.0 %] |
->> >>>Copying data                       : [ 23.6 %] -
->> >>>Copying data                       : [ 24.4 %] /
->> >>>
->> >>
->> >>Could you help me find which line of the code is running at when it hanging?
->> >>makedumpfile may be in a loop and can't go out by some bugs.
->> >
->> >This issue happens very occasionally. I can update it once meet it.
->> >
->> >Thanks
->> >Minfei
->> >
->> >
->>
->>
->>
->>
->>
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+ 
+> Thanks,
+> Mark.
+
+-- 
+Thanks,
+-Takahiro AKASHI
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
