@@ -1,15 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1amsyP-0007Aa-Ue
- for kexec@lists.infradead.org; Mon, 04 Apr 2016 01:06:35 +0000
+ id 1amxZA-0004nD-Au
+ for kexec@lists.infradead.org; Mon, 04 Apr 2016 06:00:49 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 1/2] kexec: update VMCOREINFO for compound_order/dtor
-Date: Mon, 4 Apr 2016 01:04:38 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E373ED@BPXM01GP.gisp.nec.co.jp>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701E25FCE@BPXM01GP.gisp.nec.co.jp>
- <20160401132421.7cadaeb967dc342f643d8c38@linux-foundation.org>
-In-Reply-To: <20160401132421.7cadaeb967dc342f643d8c38@linux-foundation.org>
+Subject: RE: [PATCH v4] Improve the performance of --num-threads -d 31
+Date: Mon, 4 Apr 2016 05:46:16 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E37518@BPXM01GP.gisp.nec.co.jp>
+References: <1457483231-2092-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
+ <56EB6C06.30205@cn.fujitsu.com>
+ <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
+ <56EB96B8.7010103@cn.fujitsu.com>
+ <20160331083854.GA7343@dhcp-128-25.nay.redhat.com>
+ <56FCE93C.2020401@cn.fujitsu.com>
+ <20160401062714.GA23403@dhcp-128-25.nay.redhat.com>
+ <56FE59C9.6060307@cn.fujitsu.com>
+ <20160401131512.GA28817@dhcp-128-25.nay.redhat.com>
+In-Reply-To: <20160401131512.GA28817@dhcp-128-25.nay.redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -24,58 +32,167 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Minfei Huang <mhuang@redhat.com>, =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
->On Tue, 1 Mar 2016 06:14:32 +0000 Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
->
->> makedumpfile refers page.lru.next to get the order of compound pages
->> for page filtering. However, now the order is stored in page.compound_order,
->> hence VMCOREINFO should be updated to export the offset of
->> page.compound_order.
+Hello,
+
+Let me get this straight.
+
+>> >>Hello Minfei,
+>> >>
+>> >>Thanks for your results.
+>> >>And I have some questions.
+>> >>
+>> >>On 03/31/2016 04:38 PM, Minfei Huang wrote:
+>> >>>Hi, Zhou.
+>> >>>
+>> >>>I have tested the increasing patch on 4T memory machine.
+>> >>>
+>> >>>makedumpfile fails to dump vmcore, if there are about 384M memory in 2nd
+>> >>>kernel which is reserved by crashkernel=auto. But once the reserved
+>> >>>memory is enlarged up to 10G, makedumpfile can dump vmcore successfully.
+>> >>>
+>> >>
+>> >>Will it fail with patch v3? or just v4?
+>> >
+>> >Both v3 and v4 can work well, once reserved memory is enlarged manually.
+>> >
+>> >>I don't think it is a problem.
+>> >>If 128 cpus are enabled in second kernel, there won't be much memory left if total memory is 384M.
+>> >
+>> >Enable 128 CPUs with 1GB reserved memory.
+>> >kdump:/# /sysroot/bin/free -m
+>> >               total        used        free      shared  buff/cache   available
+>> >Mem:            976          97         732           6         146         774
+>> >
+>> >Enable 1 CPU with 1GB reserved memory.
+>> >kdump:/# /sysroot/bin/free -m
+>> >               total        used        free      shared  buff/cache   available
+>> >Mem:            991          32         873           6          85         909
+>> >
+>> >Extra enabled 127 CPUs will consume 65MB. So I think it is acceptable
+>> >in kdump kernel.
+>> >
+>> >The major memory is consumed by makedumpfile from the test result.
+>> >crashkernel=auto doesn't work any more, if option --num-threads is
+>> >set. Even more, there is no warning to let user enlarge the reserved
+>> >memory.
+>> >
 >>
->> The fact is, page.compound_order was introduced already in kernel 4.0,
->> but the offset of it was the same as page.lru.next until kernel 4.3,
->> so this was not actual problem.
+>> Yes, we should remind user if they want to use too much threads.
+
+After all, the ENOMEM issue isn't peculiar to a specific patch but
+just a matter of course "more threads consume more memory" ?
+(At least I expect so.)
+
+>This new feature multi-threads will consume more memory during dumping
+>vmcore in 2nd kernel. Is it possible to improve it?
+
+makedumpfile is designed to work in limited memory space, but the extra
+memory consumption for each thread isn't considered.
+I think it can be estimated by checking code and measured by actual test.
+
+e.g. If we find that each thread requires 100KB more memory, 100KB * num-thread
+should be reserved before filtering processing.
+As I said to Zhou, the logic should be inserted into the cyclic buffer
+allocation method (calculate_cyclic_buffer_size()).
+
+>> >>And I think it will also work if the reserved memory is set to 1G.
+>> >
+>> >Yes, makedumpfile can work well under 1GB reserved memory.
+>> >
+>> >>
+>> >>>The cache should be dropped before testing, otherwise makedumpfile will
+>> >>>fail to dump vmcore.
+>> >>>echo 3 > /proc/sys/vm/drop_caches
+>> >>>Maybe there is something cleanup we can do to avoid this.
+>> >>>
+>> >>>Following is the result with different parameter for option
+>> >>>--num-threads.
+>> >>>
+>> >>>makedumpfile -l --num-threads 128 --message-level 1 -d 31 /proc/vmcore a.128
+>> >>>real    5m34.116s
+>> >>>user    103m42.531s
+>> >>>sys 86m12.586s
+>> >[ snip ]
+>> >>>makedumpfile -l --num-threads 0 --message-level 1 -d 31 /proc/vmcore a.0
+>> >>>real    3m46.531s
+>> >>>user    3m29.371s
+>> >>>sys 0m16.909s
+>> >>>
+>> >>>makedumpfile.back -l --message-level 1 -d 31 /proc/vmcore a
+>> >>>real    3m55.712s
+>> >>>user    3m39.254s
+>> >>>sys 0m16.287s
+>> >>>
+>> >>>Once the reserved memory is enlarged, makedumpfile works well with or
+>> >>>without this increaseing patch.
+>> >>>
+>> >>>But there is an another issue I found during testing. makedumpfile may
+>> >>>hang in about 24%. And with option --num-threads 64, this issue is also
+>> >>>occured.
+>> >>>
+>> >>
+>> >>Will it occur with patch v3?
+>> >>If it not occurs, then neither of the previous two increasing patches will work?
+>> >>
+>> >>And did you test it with or without the increasing patch?
+>> >
+>> >without this increasing patch, v4 works well.
+>> >
 >>
->> The above can be said also for page.lru.prev and page.compound_dtor,
->> it's necessary to detect hugetlbfs pages. Further, the content was
->> changed from direct address to the ID which means dtor.
+>> Do you mean makedumpfile won't hang without the increasing patch?
 >
->It's unclear which kernels need the patch and why.  I *think* that the
->patch is needed in 4.3.x, 4.4.x, 4.5.x and 4.6 in order to make
->makedumpfile work correctly.  Is that right?
+>Seem that, but I cann't confirm it, since this issue occurs very
+>occasionally.
 
-The patch is necessary for 4.4.x, 4.5.x and 4.6.
-4.3.x don't have the problem.
-
->And it appears that [patch 2/2] is needed in 4.0+?
-
-[patch 2/2] is for 4.5.x and latter:
-
-  $ git name-rev 1c290f642101e6
-  1c290f642101e6 tags/v4.5-rc1~77^2~129
-  $
-
->However in both cases I am uncertain - what are the end-user visible
->effects of these regressions?  Why can bugs remain in place for so long
->without having been observed?
-
-The problem is that unnecessary hugepages wouldn't be removed from
-a dump file in the older kernels. This means that extra disk space
-would be consumed.
-It's a problem, but not critical.
-
->Please make all these things clear when perparing changelogs for
->bugfixes: which kernel versions need fixing and why (ie: what are the
->end-user visible effects of the bug).
-
-Sure, I will be careful about it.
+I want to know how many times were the two cases (v4 and v4+inc) tested
+and how often did them hang.
 
 
 Thanks,
 Atsushi Kumagai
 
+>Thanks
+>Minfei
+>
+>>
+>> --
+>> Thanks
+>> Zhou
+>> >>
+>> >>>makedumpfile -l --num-threads 128 --message-level 1 -d 31 /proc/vmcore a.128
+>> >>>Excluding unnecessary pages        : [100.0 %] |
+>> >>>Excluding unnecessary pages        : [100.0 %] /
+>> >>>Excluding unnecessary pages        : [100.0 %] -
+>> >>>Copying data                       : [ 11.2 %] |
+>> >>>Copying data                       : [ 12.4 %] -
+>> >>>Excluding unnecessary pages        : [100.0 %] \
+>> >>>Excluding unnecessary pages        : [100.0 %] |
+>> >>>Copying data                       : [ 23.6 %] -
+>> >>>Copying data                       : [ 24.4 %] /
+>> >>>
+>> >>
+>> >>Could you help me find which line of the code is running at when it hanging?
+>> >>makedumpfile may be in a loop and can't go out by some bugs.
+>> >
+>> >This issue happens very occasionally. I can update it once meet it.
+>> >
+>> >Thanks
+>> >Minfei
+>> >
+>> >
+>>
+>>
+>>
+>>
+>>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
