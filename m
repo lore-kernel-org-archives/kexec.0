@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mout.kundenserver.de ([212.227.17.10])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1anN3s-00031w-OW
- for kexec@lists.infradead.org; Tue, 05 Apr 2016 09:14:13 +0000
-Date: Tue, 5 Apr 2016 17:18:28 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH v4] Improve the performance of --num-threads -d 31
-Message-ID: <20160405091828.GA25769@dhcp-128-25.nay.redhat.com>
-References: <20160315063430.GA12981@dhcp-128-25.nay.redhat.com>
- <56EB6C06.30205@cn.fujitsu.com>
- <20160318041622.GB29025@dhcp-128-25.nay.redhat.com>
- <56EB96B8.7010103@cn.fujitsu.com>
- <20160331083854.GA7343@dhcp-128-25.nay.redhat.com>
- <56FCE93C.2020401@cn.fujitsu.com>
- <20160401062714.GA23403@dhcp-128-25.nay.redhat.com>
- <56FE59C9.6060307@cn.fujitsu.com>
- <20160401131512.GA28817@dhcp-128-25.nay.redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E37518@BPXM01GP.gisp.nec.co.jp>
+ id 1anNNk-0003uw-2D
+ for kexec@lists.infradead.org; Tue, 05 Apr 2016 09:34:45 +0000
+Date: Tue, 5 Apr 2016 11:34:33 +0200
+From: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
+Subject: Re: [PATCH 1/3] arm: properly handle a missing /chosen node in the DT
+Message-ID: <20160405093433.GA14598@avionic-0071.adnet.avionic-design.de>
+References: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
+ <20160405063306.GA19694@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E37518@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <20160405063306.GA19694@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,122 +20,163 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Alban Bedel <alban.bedel@avionic-design.de>
 
-On 04/04/16 at 05:46am, Atsushi Kumagai wrote:
-> Hello,
-> 
-> Let me get this straight.
-> >> >The major memory is consumed by makedumpfile from the test result.
-> >> >crashkernel=auto doesn't work any more, if option --num-threads is
-> >> >set. Even more, there is no warning to let user enlarge the reserved
-> >> >memory.
-> >> >
-> >>
-> >> Yes, we should remind user if they want to use too much threads.
-> 
-> After all, the ENOMEM issue isn't peculiar to a specific patch but
-> just a matter of course "more threads consume more memory" ?
-> (At least I expect so.)
+On Tue, Apr 05, 2016 at 03:33:06PM +0900, Simon Horman wrote:
+> On Thu, Mar 31, 2016 at 05:30:58PM +0200, Alban Bedel wrote:
+> > From: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
+> > =
 
-Hi, Atsushi.
+> > When adding a new node to the DT in the setup_dtb_prop function, the
+> > parent offset need be passed to fdt_add_subnode.  Currently a bogus
+> > error code is used.  Fix that by adding the parent offset as an extra
+> > function argument to setup_dtb_prop, and change the handling of the
+> > /chosen node to operate on a relative path plus (zero) offset instead of
+> > an absolute path.
+> > =
 
-Yes, it is, because ENOMEM never happen once the reserved memory is
-enlarged manually from my testing.
+> > Signed-off-by: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
+> =
 
-Maybe there should be a generic formular to estimate how
-much memory will be consumed by specific makedumpfile config.
+> Hi,
+> =
 
-> 
-> >This new feature multi-threads will consume more memory during dumping
-> >vmcore in 2nd kernel. Is it possible to improve it?
-> 
-> makedumpfile is designed to work in limited memory space, but the extra
-> memory consumption for each thread isn't considered.
-> I think it can be estimated by checking code and measured by actual test.
-> 
-> e.g. If we find that each thread requires 100KB more memory, 100KB * num-thread
-> should be reserved before filtering processing.
-> As I said to Zhou, the logic should be inserted into the cyclic buffer
-> allocation method (calculate_cyclic_buffer_size()).
+> I am struggling to see the problem that this patch tries to solve.
+> =
 
-Agree.
+> * Where and when is a bogus error code used?
 
-> 
-> >> >>And I think it will also work if the reserved memory is set to 1G.
-> >> >
-> >> >Yes, makedumpfile can work well under 1GB reserved memory.
-> >> >
-> >> >>
-> >> >>>The cache should be dropped before testing, otherwise makedumpfile will
-> >> >>>fail to dump vmcore.
-> >> >>>echo 3 > /proc/sys/vm/drop_caches
-> >> >>>Maybe there is something cleanup we can do to avoid this.
-> >> >>>
-> >> >>>Following is the result with different parameter for option
-> >> >>>--num-threads.
-> >> >>>
-> >> >>>makedumpfile -l --num-threads 128 --message-level 1 -d 31 /proc/vmcore a.128
-> >> >>>real    5m34.116s
-> >> >>>user    103m42.531s
-> >> >>>sys 86m12.586s
-> >> >[ snip ]
-> >> >>>makedumpfile -l --num-threads 0 --message-level 1 -d 31 /proc/vmcore a.0
-> >> >>>real    3m46.531s
-> >> >>>user    3m29.371s
-> >> >>>sys 0m16.909s
-> >> >>>
-> >> >>>makedumpfile.back -l --message-level 1 -d 31 /proc/vmcore a
-> >> >>>real    3m55.712s
-> >> >>>user    3m39.254s
-> >> >>>sys 0m16.287s
-> >> >>>
-> >> >>>Once the reserved memory is enlarged, makedumpfile works well with or
-> >> >>>without this increaseing patch.
-> >> >>>
-> >> >>>But there is an another issue I found during testing. makedumpfile may
-> >> >>>hang in about 24%. And with option --num-threads 64, this issue is also
-> >> >>>occured.
-> >> >>>
-> >> >>
-> >> >>Will it occur with patch v3?
-> >> >>If it not occurs, then neither of the previous two increasing patches will work?
-> >> >>
-> >> >>And did you test it with or without the increasing patch?
-> >> >
-> >> >without this increasing patch, v4 works well.
-> >> >
-> >>
-> >> Do you mean makedumpfile won't hang without the increasing patch?
-> >
-> >Seem that, but I cann't confirm it, since this issue occurs very
-> >occasionally.
-> 
-> I want to know how many times were the two cases (v4 and v4+inc) tested
-> and how often did them hang.
+Hi Simon!
 
-I have test it more than twenty times with patch v4, and there is no
-hang during testing.
+The bogus error code is passed to fdt_add_subnode, see comment inline in
+the patch below.
 
-Appending option --num-threads 32 or bigger thread number, makedumpfile
-will hang in about every five times with increasing patch based on patch
-v4.
+> * Why is a new parameter added to fdt_add_subnode and always passed as ze=
+ro?
 
-Thanks
-Minfei
+Yeah, this might look irritating... the point is, setup_dtb_prop looks
+like a generic function that could be used for finding/adding any nodes,
+which need not be top-level in the DT.  In practice though, the function
+is only used for the top-level /chosen node, and currently it can't add
+nodes that aren't top-level.
 
-> 
-> 
-> Thanks,
-> Atsushi Kumagai
-> 
-> >Thanks
-> >Minfei
+So, one could either a) make the function non-generic, handling
+top-level nodes only, or b) pass it the offset of the parent node, or c)
+let it operate on aribtrary DT paths with possibly multiple components.
+a) and b) are trivial to do.  libfdt typically does b) for similar
+functions, so I added that extra parameter to fdt_add_subnode.
+
+> * If it is inappropriate to pass off to fdt_add_subnode() can
+>   that be resolved by simply passing 0 instead?
+
+If we know that we're adding a top-level node, then yes.  Basically,
+one can do that either in fdt_add_subnode, or when calling it in
+zImage_arm_load.  My patch does the latter.
+
+Best regards,
+Nikolaus
+
+> > ---
+> >  kexec/arch/arm/kexec-zImage-arm.c | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > =
+
+> > diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-z=
+Image-arm.c
+> > index d85ab9b..78518fd 100644
+> > --- a/kexec/arch/arm/kexec-zImage-arm.c
+> > +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> > @@ -257,8 +257,9 @@ int atag_arm_load(struct kexec_info *info, unsigned=
+ long base,
+> >  	return 0;
+> >  }
+> >  =
+
+> > -static int setup_dtb_prop(char **bufp, off_t *sizep, const char *node_=
+name,
+> > -		const char *prop_name, const void *val, int len)
+> > +static int setup_dtb_prop(char **bufp, off_t *sizep, int parentoffset,
+> > +		const char *node_name, const char *prop_name,
+> > +		const void *val, int len)
+> >  {
+> >  	char *dtb_buf;
+> >  	off_t dtb_size;
+> > @@ -273,14 +274,14 @@ static int setup_dtb_prop(char **bufp, off_t *siz=
+ep, const char *node_name,
+> >  	dtb_size =3D *sizep;
+> >  =
+
+> >  	/* check if the subnode has already exist */
+> > -	off =3D fdt_path_offset(dtb_buf, node_name);
+> > +	off =3D fdt_subnode_offset(dtb_buf, parentoffset, node_name);
+> >  	if (off =3D=3D -FDT_ERR_NOTFOUND) {
+> >  		dtb_size +=3D fdt_node_len(node_name);
+> >  		fdt_set_totalsize(dtb_buf, dtb_size);
+> >  		dtb_buf =3D xrealloc(dtb_buf, dtb_size);
+> >  		if (dtb_buf =3D=3D NULL)
+> >  			die("xrealloc failed\n");
+> > -		off =3D fdt_add_subnode(dtb_buf, off, node_name);
+
+Here, off =3D=3D -FDT_ERR_NOTFOUND, which makes no sense.
+
+> > +		off =3D fdt_add_subnode(dtb_buf, parentoffset, node_name);
+> >  	}
+> >  =
+
+> >  	if (off < 0) {
+> > @@ -496,7 +497,7 @@ int zImage_arm_load(int argc, char **argv, const ch=
+ar *buf, off_t len,
+> >  				 *  Error should have been reported so
+> >  				 *  directly return -1
+> >  				 */
+> > -				if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
+> > +				if (setup_dtb_prop(&dtb_buf, &dtb_length, 0, "chosen",
+> >  						"bootargs", command_line,
+> >  						strlen(command_line) + 1))
+> >  					return -1;
+> > @@ -542,11 +543,11 @@ int zImage_arm_load(int argc, char **argv, const =
+char *buf, off_t len,
+> >  			start =3D cpu_to_be32((unsigned long)(initrd_base));
+> >  			end =3D cpu_to_be32((unsigned long)(initrd_base + initrd_size));
+> >  =
+
+> > -			if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
+> > +			if (setup_dtb_prop(&dtb_buf, &dtb_length, 0, "chosen",
+> >  					"linux,initrd-start", &start,
+> >  					sizeof(start)))
+> >  				return -1;
+> > -			if (setup_dtb_prop(&dtb_buf, &dtb_length, "/chosen",
+> > +			if (setup_dtb_prop(&dtb_buf, &dtb_length, 0, "chosen",
+> >  					"linux,initrd-end", &end,
+> >  					sizeof(end)))
+> >  				return -1;
+> > -- =
+
+> > 2.8.0
+> > =
+
+
+-- =
+
+Avionic Design GmbH
+Nikolaus Schulz
+Wragekamp 10
+D-22397 Hamburg
+Germany
+
+Tel.:  +49 40 88187-163
+Fax:   +49 40 88187-150
+Email: nikolaus.schulz@avionic-design.de
+
+Avionic Design GmbH
+Amtsgericht Hamburg HRB 82598
+Gesch=E4ftsf=FChrung: Cornelis Broers
+Ust.-Ident-Nr.: DE813378254
 
 _______________________________________________
 kexec mailing list
