@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1anbNL-0001tR-BJ
- for kexec@lists.infradead.org; Wed, 06 Apr 2016 00:31:16 +0000
-Date: Wed, 6 Apr 2016 09:30:51 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] arm: properly handle a missing /chosen node in the DT
-Message-ID: <20160406003050.GB27262@verge.net.au>
-References: <1459438260-8205-1-git-send-email-alban.bedel@avionic-design.de>
- <20160405063306.GA19694@verge.net.au>
- <20160405093433.GA14598@avionic-0071.adnet.avionic-design.de>
+Date: Wed, 6 Apr 2016 14:57:20 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] ARM: kexec: fix crashkernel= handling
+Message-ID: <20160406065720.GA9157@dhcp-128-65.nay.redhat.com>
+References: <E1akqb5-0002LZ-1f@rmk-PC.arm.linux.org.uk>
+ <20160330014638.GA6993@dhcp-128-65.nay.redhat.com>
+ <20160330123922.GA11351@dhcppc0.redhat.com>
+ <20160330130530.GH19428@n2100.arm.linux.org.uk>
+ <20160330132708.GC32738@redhat.com>
+ <20160401132535.GP19428@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160405093433.GA14598@avionic-0071.adnet.avionic-design.de>
+In-Reply-To: <20160401132535.GP19428@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,70 +24,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
-Cc: Alban Bedel <alban.bedel@avionic-design.de>, kexec@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Pratyush Anand <panand@redhat.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, linux-arm-kernel@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Apr 05, 2016 at 11:34:33AM +0200, Nikolaus Schulz wrote:
-> On Tue, Apr 05, 2016 at 03:33:06PM +0900, Simon Horman wrote:
-> > On Thu, Mar 31, 2016 at 05:30:58PM +0200, Alban Bedel wrote:
-> > > From: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
-> > > 
-> > > When adding a new node to the DT in the setup_dtb_prop function, the
-> > > parent offset need be passed to fdt_add_subnode.  Currently a bogus
-> > > error code is used.  Fix that by adding the parent offset as an extra
-> > > function argument to setup_dtb_prop, and change the handling of the
-> > > /chosen node to operate on a relative path plus (zero) offset instead of
-> > > an absolute path.
-> > > 
-> > > Signed-off-by: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
-> > 
-> > Hi,
-> > 
-> > I am struggling to see the problem that this patch tries to solve.
-> > 
-> > * Where and when is a bogus error code used?
+On 04/01/16 at 02:25pm, Russell King - ARM Linux wrote:
+
+[snip]
+
+> Well, if we want to remove it, we then need to sort out a method of
+> specifying a limit on the address - where platforms physical memory
+> bridges the 4GB CPU-accessible limit, the crashkernel region must be
+> allocated below that so that it is boot-time accessible.
 > 
-> Hi Simon!
+> Some patches also have boot-time only aliases of RAM, with the normal
+> alias above 4GB (eg, TI Keystone2) where the running view of RAM is
+> at 0x800000000, but it has a non-coherent boot alias at 0x80000000.
 > 
-> The bogus error code is passed to fdt_add_subnode, see comment inline in
-> the patch below.
-
-Thanks, I see that clearly now.
-
-For some reason I inverted the "if (off == -FDT_ERR_NOTFOUND)" in my
-mind when I was reviewing your patch yesterday.
-
-> > * Why is a new parameter added to fdt_add_subnode and always passed as zero?
+> I've patches which resolve some of the issues there, and making that
+> change would make this patch dependent on those changes.  So, I
+> recommend that this patch remains as-is for the time being, and this
+> issue is addressed in a later patch after the Keystone2 idmap_to_phys()
+> patches, similar to:
 > 
-> Yeah, this might look irritating... the point is, setup_dtb_prop looks
-> like a generic function that could be used for finding/adding any nodes,
-> which need not be top-level in the DT.  In practice though, the function
-> is only used for the top-level /chosen node, and currently it can't add
-> nodes that aren't top-level.
+> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> index 0a12fcf1aff6..74781e6d4e87 100644
+> --- a/arch/arm/kernel/setup.c
+> +++ b/arch/arm/kernel/setup.c
+> @@ -962,7 +962,6 @@ late_initcall(init_machine_late);
+>   * zImage relocating below the reserved region.
+>   */
+>  #define CRASH_ALIGN	(128 << 20)
+> -#define CRASH_ADDR_MAX	(PHYS_OFFSET + (512 << 20))
+>  
+>  static inline unsigned long long get_total_mem(void)
+>  {
+> @@ -992,7 +991,8 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  
+>  	if (crash_base <= 0) {
+> -		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_MAX,
+> +		unsigned long long crash_max = idmap_to_phys((u32)~0);
+> +		crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
+>  						    crash_size, CRASH_ALIGN);
+>  		if (!crash_base) {
+>  			pr_err("crashkernel reservation failed - No suitable area found.\n");
 > 
-> So, one could either a) make the function non-generic, handling
-> top-level nodes only, or b) pass it the offset of the parent node, or c)
-> let it operate on aribtrary DT paths with possibly multiple components.
-> a) and b) are trivial to do.  libfdt typically does b) for similar
-> functions, so I added that extra parameter to fdt_add_subnode.
+> Right now, I don't want to tie this facility to TI Keystone2 support
+> as what this patch is doing is something that the ARM kexec support
+> should have been doing since it was first introduced, so folk may
+> want to backport this change to stable trees.
 
-Thanks, I understand now.
-With the above explanation in mind I prefer b).
+Is it possible for PHYS_OFFSET + (512 << 20) be larger than 4G assume that phys_addr_t is 32bit, if so it can be trunked to a small value then
+the max will be wrong?
 
-Could you re-work the changelog to explain things as you have done so above
-and then resubmit the entire series?
+Otherwise I think use it temprarily is fine.
 
-> > * If it is inappropriate to pass off to fdt_add_subnode() can
-> >   that be resolved by simply passing 0 instead?
-> 
-> If we know that we're adding a top-level node, then yes.  Basically,
-> one can do that either in fdt_add_subnode, or when calling it in
-> zImage_arm_load.  My patch does the latter.
-
-Understood.
-
-> Best regards,
-> Nikolaus
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
