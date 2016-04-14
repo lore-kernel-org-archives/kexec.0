@@ -2,14 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aqnSt-0005EY-9b
- for kexec@lists.infradead.org; Thu, 14 Apr 2016 20:02:12 +0000
-Date: Thu, 14 Apr 2016 20:59:38 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: [PATCH 0/3] Initial Kexec patches
-Message-ID: <20160414195938.GV19428@n2100.arm.linux.org.uk>
+ id 1aqnT8-0005zV-7H
+ for kexec@lists.infradead.org; Thu, 14 Apr 2016 20:02:27 +0000
+In-Reply-To: <20160414195938.GV19428@n2100.arm.linux.org.uk>
+References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 1/3] kexec: don't invoke OOM-killer for control page allocation
 MIME-Version: 1.0
 Content-Disposition: inline
+Message-Id: <E1aqnQo-0001Tu-Ch@rmk-PC.arm.linux.org.uk>
+Date: Thu, 14 Apr 2016 21:00:02 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +25,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eric Biederman <ebiederm@xmission.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org
 
-Eric,
+If we are unable to find a suitable page when allocating the control
+page, do not invoke the OOM-killer: killing processes probably isn't
+going to help.
 
-Here are some initial patches from my stack to bring functional kexec
-support to the TI Keystone 2 platform.  These are relatively independent
-of that work, but I believe are useful changes in their own regard.
-Each patch is independent of each other; these do not really comprise
-a strict series.
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ include/linux/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The first fixes an obscure problem - if we try to allocate the control
-page, and we're unable to allocate a page within the memory region we
-want, we end up killing processes, trying to gain that page.  In the
-case where there is no memory located within the desired range, this
-results in the OOM killer killing off many processes rather than a
-graceful failure.  The patch changes the behaviour to allow a graceful
-failure instead without invoking the OOM killer.
-
-The second patch fixes a missing check in the kexec code, where the
-user could supply a start and size address for a segment which causes
-the calculation to wrap.  Eg, the case where segment[0].mem = 0xffff0000,
-segment[0].memsz = 0x10000 would pass this check.  This patch adds an
-explicit check for cases such as these.
-
-The third patch allows the vmcoreinfo note data to be located above
-4GB in physical memory space.  Since kexec tools only use this value
-when opening /dev/mem, having this located above 4GB physical is not
-a problem - kexec tools even expect this to potentially be a 64-bit
-value already.  Making this change means there is one less area which
-becomes Keystone 2 specific.
-
- arch/ia64/kernel/machine_kexec.c | 2 +-
- include/linux/kexec.h            | 4 ++--
- kernel/kexec_core.c              | 4 +++-
- kernel/ksysfs.c                  | 4 ++--
- 4 files changed, 8 insertions(+), 6 deletions(-)
-
-Thanks.
-
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 2cc643c6e870..1b32ab587f66 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -41,7 +41,7 @@
+ #endif
+ 
+ #ifndef KEXEC_CONTROL_MEMORY_GFP
+-#define KEXEC_CONTROL_MEMORY_GFP GFP_KERNEL
++#define KEXEC_CONTROL_MEMORY_GFP (GFP_KERNEL | __GFP_NORETRY)
+ #endif
+ 
+ #ifndef KEXEC_CONTROL_PAGE_SIZE
 -- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.1.0
+
 
 _______________________________________________
 kexec mailing list
