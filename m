@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-io0-x242.google.com ([2607:f8b0:4001:c06::242])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aqfzy-0003K3-3d
- for kexec@lists.infradead.org; Thu, 14 Apr 2016 12:03:50 +0000
-Date: Thu, 14 Apr 2016 20:03:21 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: kexec loading fails without kernel code address in /proc/iomem
-Message-ID: <20160414120321.GA3502@dhcp-128-65.nay.redhat.com>
+ id 1aqlGM-0006xp-IH
+ for kexec@lists.infradead.org; Thu, 14 Apr 2016 17:41:08 +0000
+Received: by mail-io0-x242.google.com with SMTP id s2so12031995iod.3
+ for <kexec@lists.infradead.org>; Thu, 14 Apr 2016 10:40:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
+In-Reply-To: <2f4d7dee6bb0e4afdc05f2b7457fcf79@abdsec.com>
+References: <570F6D99.6090400@gmail.com>
+ <2f4d7dee6bb0e4afdc05f2b7457fcf79@abdsec.com>
+Date: Thu, 14 Apr 2016 10:40:45 -0700
+Message-ID: <CA+55aFwprUFh+cjB2fWmkMJ3Zgh6XSan0VO8Vr-80Qh0n0Rx+A@mail.gmail.com>
+Subject: Re: Removal of the kernel code/data/bss resources does break
+ kexec/kdump
+From: Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,37 +26,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: torvalds@linux-foundation.org
-Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, zhezhang@redhat.com
+To: Emrah Demir <ed@abdsec.com>
+Cc: Freeman Zhang <freeman.zhang1992@gmail.com>, kexec@lists.infradead.org
 
-Hi, Linus
+On Thu, Apr 14, 2016 at 4:07 AM, Emrah Demir <ed@abdsec.com> wrote:
+>
+> Kees Cook proposed to write a %pK formatted patch. This would solve most of
+> the problems.
 
-Zhengyu Zhang <zhezhang@redhat.com> found a kexec failure caused by below commit:
+Actually, %pK is horrible in /proc and /sys files, and does the wrong thing.
 
-commit c4004b02f8e5b9ce357a0bb1641756cc86962664
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed Apr 6 13:45:07 2016 -0700
+It uses the current creds for deciding what to do, which is exactly
+the wrong thing (for all the usual reasons) for a file access from a
+security standpoint. Sadly, almost every use of %pK gets this wrong.
+Thankfully, it's much less of a problem for reads than for writes, but
+it's still wrong.
 
-    x86: remove the kernel code/data/bss resources from /proc/iomem
-    
-    Let's see if anybody even notices.  I doubt anybody uses this, and it
-    does expose addresses that should be randomized, so let's just remove
-    the code.  It's old and traditional, and it used to be cute, but we
-    should have removed this long ago.
-    
-    If it turns out anybody notices and this breaks something, we'll have to
-    revert this, and maybe we'll end up using other approaches instead
-    (using %pK or similar).  But removing unnecessary code is always the
-    preferred option.
-    
-    Noted-by: Emrah Demir <ed@abdsec.com>
-    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+A file access should use "file->f_cred", but the seq_file interface
+sadly doesn't expose any way to do that.
 
+I'll take a look, but it's non-trivial to get right. %pK turns out to
+have been seriously mis-designed, and is basically almost always a
+bug.
 
-Probably we should revert the commit and do it in other way ..
-
-Thanks
-Dave
+          Linus
 
 _______________________________________________
 kexec mailing list
