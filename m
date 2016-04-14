@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.arm.linux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from bisque.oak.relay.mailchannels.net ([23.83.215.18])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aqnTN-0006Pg-1J
- for kexec@lists.infradead.org; Thu, 14 Apr 2016 20:02:41 +0000
-In-Reply-To: <20160414195938.GV19428@n2100.arm.linux.org.uk>
-References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 3/3] kexec: arrange for paddr_vmcoreinfo_note() to return
- phys_addr_t
+ id 1aqns8-0002BN-Q2
+ for kexec@lists.infradead.org; Thu, 14 Apr 2016 20:28:17 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <E1aqnQy-0001U9-SR@rmk-PC.arm.linux.org.uk>
-Date: Thu, 14 Apr 2016 21:00:12 +0100
+Date: Thu, 14 Apr 2016 16:27:48 -0400
+From: Emrah Demir <ed@abdsec.com>
+Subject: Re: Removal of the kernel code/data/bss resources does break
+ kexec/kdump
+In-Reply-To: <CA+55aFwprUFh+cjB2fWmkMJ3Zgh6XSan0VO8Vr-80Qh0n0Rx+A@mail.gmail.com>
+References: <570F6D99.6090400@gmail.com>
+ <2f4d7dee6bb0e4afdc05f2b7457fcf79@abdsec.com>
+ <CA+55aFwprUFh+cjB2fWmkMJ3Zgh6XSan0VO8Vr-80Qh0n0Rx+A@mail.gmail.com>
+Message-ID: <f80ca230bf1fab7527d355e535de305f@abdsec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,85 +21,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Freeman Zhang <freeman.zhang1992@gmail.com>, linus971@gmail.com, kexec@lists.infradead.org
 
-On PAE systems (eg, ARM LPAE) the vmcore note may be located above
-4GB physical on 32-bit architectures, so we need a wider type than
-"unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
-a phys_addr_t, thereby allowing it to be located above 4GB.
+On 2016-04-14 13:40, Linus Torvalds wrote:
+> 
+> Actually, %pK is horrible in /proc and /sys files, and does the wrong 
+> thing.
+> 
 
-This makes no difference for kexec-tools, as they already assume a
-64-bit type when reading from this file.
+I agree with that, but for now there is no way to make things right in 
+/proc or /sys.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- arch/ia64/kernel/machine_kexec.c | 2 +-
- include/linux/kexec.h            | 2 +-
- kernel/kexec_core.c              | 2 +-
- kernel/ksysfs.c                  | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-index b72cd7a07222..599507bcec91 100644
---- a/arch/ia64/kernel/machine_kexec.c
-+++ b/arch/ia64/kernel/machine_kexec.c
-@@ -163,7 +163,7 @@ void arch_crash_save_vmcoreinfo(void)
- #endif
- }
- 
--unsigned long paddr_vmcoreinfo_note(void)
-+phys_addr_t paddr_vmcoreinfo_note(void)
- {
- 	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
- }
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 1b32ab587f66..52a3a221bcb2 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -235,7 +235,7 @@ void crash_unmap_reserved_pages(void);
- void arch_crash_save_vmcoreinfo(void);
- __printf(1, 2)
- void vmcoreinfo_append_str(const char *fmt, ...);
--unsigned long paddr_vmcoreinfo_note(void);
-+phys_addr_t paddr_vmcoreinfo_note(void);
- 
- #define VMCOREINFO_OSRELEASE(value) \
- 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d719a4d0ef55..f9847e5822e6 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1377,7 +1377,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- void __weak arch_crash_save_vmcoreinfo(void)
- {}
- 
--unsigned long __weak paddr_vmcoreinfo_note(void)
-+phys_addr_t __weak paddr_vmcoreinfo_note(void)
- {
- 	return __pa((unsigned long)(char *)&vmcoreinfo_note);
- }
-diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-index 152da4a48867..9f1920d2d0c6 100644
---- a/kernel/ksysfs.c
-+++ b/kernel/ksysfs.c
-@@ -128,8 +128,8 @@ KERNEL_ATTR_RW(kexec_crash_size);
- static ssize_t vmcoreinfo_show(struct kobject *kobj,
- 			       struct kobj_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%lx %x\n",
--		       paddr_vmcoreinfo_note(),
-+	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
-+	return sprintf(buf, "%pa %x\n", &vmcore_base,
- 		       (unsigned int)sizeof(vmcoreinfo_note));
- }
- KERNEL_ATTR_RO(vmcoreinfo);
--- 
-2.1.0
+> 
+> A file access should use "file->f_cred", but the seq_file interface
+> sadly doesn't expose any way to do that.
+> 
+> I'll take a look, but it's non-trivial to get right. %pK turns out to
+> have been seriously mis-designed, and is basically almost always a
+> bug.
+> 
+>           Linus
+
+In another way, maybe it's good to remove code dependencies on /proc 
+sensitive files like /proc/iomem.
+
+Kees Coook: "it looks like at least Ubuntu's kernel security test suite
+expects to find these entries (when it verifies that STRICT_DEVMEM
+hasn't regressed)"
+
+Freeman Zhang: "Removal of these information causes 'kexec/kdump' to 
+fail in the newer
+kernel"
+
+Removing such dependencies would make things better and code/bss/data 
+sections could be removed.
+
 
 
 _______________________________________________
