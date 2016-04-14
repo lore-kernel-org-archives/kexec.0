@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <c71b0ed54847078a25697777148e559c779bdecb.1460668521.git.geoff@infradead.org>
+Message-Id: <9001c7d079ccc488b19579d6896993ac60087a9b.1460668521.git.geoff@infradead.org>
 In-Reply-To: <cover.1460668521.git.geoff@infradead.org>
 References: <cover.1460668521.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v16 10/20] arm64: head.S: el2_setup() to accept sctlr_el1 as
- an argument
+Subject: [PATCH v16 16/20] arm64: limit memory regions based on DT property,
+ usable-memory
 Date: Thu, 14 Apr 2016 21:21:37 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,134 +22,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-From: James Morse <james.morse@arm.com>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-el2_setup() doesn't just configure el2, it configures el1 too. This
-means we can't use it to re-configure el2 after resume from hibernate,
-as we will be returned to el1 with the MMU turned off.
+Crash dump kernel will be run with a limited range of memory as System
+RAM.
 
-Split the sctlr_el1 setting code up, so that el2_setup() accepts an
-initial value as an argument. This value will be ignored if el2_setup()
-is called at el1: the running value will be preserved with endian
-correction.
+On arm64, we will use a device-tree property under /chosen,
+   linux,usable-memory = <BASE SIZE>
+in order for primary kernel either on uefi or non-uefi (device tree only)
+system to hand over the information about usable memory region to crash
+dump kernel. This property will supercede entries in uefi memory map table
+and "memory" nodes in a device tree.
 
-Hibernate can now call el2_setup() to re-configure el2, passing the
-current sctlr_el1 as an argument.
-
-Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- arch/arm64/include/asm/assembler.h | 10 ++++++++++
- arch/arm64/kernel/head.S           | 19 ++++++++++++-------
- arch/arm64/kernel/sleep.S          |  1 +
- 3 files changed, 23 insertions(+), 7 deletions(-)
+ arch/arm64/mm/init.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index a04fd7a..627d66e 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -311,6 +311,16 @@ lr	.req	x30		// link register
- 	.endm
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 3589d78..cfdc7c4 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -224,10 +224,48 @@ static int __init early_mem(char *p)
+ }
+ early_param("mem", early_mem);
  
- /*
-+ * Generate the initial sctlr_el1 value for el2_setup to set if we boot at EL2.
-+ */
-+	.macro init_sctlr_el1 reg
-+		mov	\reg, #0x0800		// Set/clear RES{1,0} bits
-+CPU_BE(		movk	\reg, #0x33d0, lsl #16)	// Set EE and E0E on BE systems
-+CPU_LE(		movk	\reg, #0x30d0, lsl #16)	// Clear EE and E0E on LE systems
-+	.endm
++static int __init early_init_dt_scan_usablemem(unsigned long node,
++		const char *uname, int depth, void *data)
++{
++	struct memblock_region *usablemem = (struct memblock_region *)data;
++	const __be32 *reg;
++	int len;
 +
-+/*
++	usablemem->size = 0;
 +
-  * Annotate a function as position independent, i.e., safe to be called before
-  * the kernel virtual mapping is activated.
-  */
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 6e8e803..e8a15163 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -208,6 +208,7 @@ section_table:
++	if (depth != 1 || strcmp(uname, "chosen") != 0)
++		return 0;
++
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &len);
++	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
++		return 1;
++
++	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++	return 1;
++}
++
++static void __init fdt_enforce_memory_region(void)
++{
++	struct memblock_region reg;
++
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++
++	if (reg.size) {
++		memblock_remove(0, PAGE_ALIGN(reg.base));
++		memblock_remove(round_down(reg.base + reg.size, PAGE_SIZE),
++				ULLONG_MAX);
++	}
++}
++
+ void __init arm64_memblock_init(void)
+ {
+ 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
  
- ENTRY(stext)
- 	bl	preserve_boot_args
-+	init_sctlr_el1	x0
- 	bl	el2_setup			// Drop to EL1, w20=cpu_boot_mode
- 	mov	x23, xzr			// KASLR offset, defaults to 0
- 	adrp	x24, __PHYS_OFFSET
-@@ -514,8 +515,12 @@ ENTRY(kimage_vaddr)
-  *
-  * Returns either BOOT_CPU_MODE_EL1 or BOOT_CPU_MODE_EL2 in x20 if
-  * booted in EL1 or EL2 respectively.
-+ *
-+ * If booted in EL2, SCTLR_EL1 will be initialised with the value in x0
-+ * (otherwise the existing value will be preserved, with endian correction).
-  */
- ENTRY(el2_setup)
-+	mov	x1, x0				// preserve passed-in sctlr_el1
- 	mrs	x0, CurrentEL
- 	cmp	x0, #CurrentEL_EL2
- 	b.ne	1f
-@@ -524,7 +529,7 @@ CPU_BE(	orr	x0, x0, #(1 << 25)	)	// Set the EE bit for EL2
- CPU_LE(	bic	x0, x0, #(1 << 25)	)	// Clear the EE bit for EL2
- 	msr	sctlr_el2, x0
- 	b	2f
--1:	mrs	x0, sctlr_el1
-+1:	mrs	x0, sctlr_el1			// ignore passed-in sctlr_el1
- CPU_BE(	orr	x0, x0, #(3 << 24)	)	// Set the EE and E0E bits for EL1
- CPU_LE(	bic	x0, x0, #(3 << 24)	)	// Clear the EE and E0E bits for EL1
- 	msr	sctlr_el1, x0
-@@ -578,6 +583,10 @@ set_hcr:
- 
- 3:
- #endif
-+	/* use sctlr_el1 value we were provided with */
-+CPU_BE(	orr	x1, x1, #(3 << 24)	)	// Set the EE and E0E bits for EL1
-+CPU_LE(	bic	x1, x1, #(3 << 24)	)	// Clear the EE and E0E bits for EL1
-+	msr	sctlr_el1, x1
- 
- 	/* Populate ID registers. */
- 	mrs	x0, midr_el1
-@@ -585,12 +594,6 @@ set_hcr:
- 	msr	vpidr_el2, x0
- 	msr	vmpidr_el2, x1
- 
--	/* sctlr_el1 */
--	mov	x0, #0x0800			// Set/clear RES{1,0} bits
--CPU_BE(	movk	x0, #0x33d0, lsl #16	)	// Set EE and E0E on BE systems
--CPU_LE(	movk	x0, #0x30d0, lsl #16	)	// Clear EE and E0E on LE systems
--	msr	sctlr_el1, x0
--
- 	/* Coprocessor traps. */
- 	mov	x0, #0x33ff
- 	msr	cptr_el2, x0			// Disable copro. traps to EL2
-@@ -667,6 +670,7 @@ ENTRY(__boot_cpu_mode)
- 	 * cores are held until we're ready for them to initialise.
- 	 */
- ENTRY(secondary_holding_pen)
-+	init_sctlr_el1	x0
- 	bl	el2_setup			// Drop to EL1, w20=cpu_boot_mode
- 	bl	set_cpu_boot_mode_flag
- 	mrs	x0, mpidr_el1
-@@ -685,6 +689,7 @@ ENDPROC(secondary_holding_pen)
- 	 * be used where CPUs are brought online dynamically by the kernel.
- 	 */
- ENTRY(secondary_entry)
-+	init_sctlr_el1	x0
- 	bl	el2_setup			// Drop to EL1
- 	bl	set_cpu_boot_mode_flag
- 	b	secondary_startup
-diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
-index fd10eb6..f60ddc7 100644
---- a/arch/arm64/kernel/sleep.S
-+++ b/arch/arm64/kernel/sleep.S
-@@ -160,6 +160,7 @@ cpu_resume_after_mmu:
- ENDPROC(cpu_resume_after_mmu)
- 
- ENTRY(cpu_resume)
-+	init_sctlr_el1	x0
- 	bl	el2_setup		// if in EL2 drop to EL1 cleanly
- 	mrs	x1, mpidr_el1
- 	adrp	x8, mpidr_hash
++	/* Handle linux,usable-memory property */
++	fdt_enforce_memory_region();
++
+ 	/*
+ 	 * Ensure that the linear region takes up exactly half of the kernel
+ 	 * virtual address space. This way, we can distinguish a linear address
 -- 
 2.5.0
 
