@@ -1,18 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ar0mI-0005KR-EX
- for kexec@lists.infradead.org; Fri, 15 Apr 2016 10:15:07 +0000
-Message-ID: <5710BEB6.6020503@cn.fujitsu.com>
-Date: Fri, 15 Apr 2016 18:13:10 +0800
-From: =?ISO-2022-JP?B?Ilpob3UsIFdlbmppYW4vGyRCPH5KOBsoQj8i?=
- <zhouwj-fnst@cn.fujitsu.com>
+Received: from mail-ig0-x242.google.com ([2607:f8b0:4001:c05::242])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1ar6vX-0004D3-Fa
+ for kexec@lists.infradead.org; Fri, 15 Apr 2016 16:49:06 +0000
+Received: by mail-ig0-x242.google.com with SMTP id g8so3634803igr.0
+ for <kexec@lists.infradead.org>; Fri, 15 Apr 2016 09:48:43 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH v7] Improve the performance of --num-threads -d 31
-References: <1460689191-21923-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E3ACC1@BPXM01GP.gisp.nec.co.jp>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E3AD43@BPXM01GP.gisp.nec.co.jp>
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E3AD43@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0cc6c4836fae00b175b4595446e1ed4f@abdsec.com>
+References: <570F6D99.6090400@gmail.com>
+ <2f4d7dee6bb0e4afdc05f2b7457fcf79@abdsec.com>
+ <CA+55aFwprUFh+cjB2fWmkMJ3Zgh6XSan0VO8Vr-80Qh0n0Rx+A@mail.gmail.com>
+ <f80ca230bf1fab7527d355e535de305f@abdsec.com>
+ <CA+55aFxtuUBBJS4xxM5OiyZs04xjrpHPif+cO4U_s4OppeN-gg@mail.gmail.com>
+ <CAGXu5jLRnabqSBjdPoaAs-h2VCd_Hn3=hj3JSWTsJvi-cPEjtg@mail.gmail.com>
+ <0cc6c4836fae00b175b4595446e1ed4f@abdsec.com>
+Date: Fri, 15 Apr 2016 09:48:42 -0700
+Message-ID: <CA+55aFywMZ+X2o7LRt3KVNO9+gJt2yBmdyWR8M-k8WHhjJbf9w@mail.gmail.com>
+Subject: Re: Removal of the kernel code/data/bss resources does break
+ kexec/kdump
+From: Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,188 +31,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Emrah Demir <ed@abdsec.com>
+Cc: Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, Freeman Zhang <freeman.zhang1992@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, Zhengyu Zhang <zhezhang@redhat.com>, Kees Cook <keescook@google.com>, Dave Young <dyoung@redhat.com>
 
-On 04/15/2016 01:46 PM, Atsushi Kumagai wrote:
->>> v7:
->>> 	1. fix a bug pointed by Minfei Huang
->>> v6:
->>>         1. address Atsushi Kumagai's comments about calculating and reserving memory
->>> v5:
->>>         1. remove unused variable check_out
->>>         2. reset num_threads if memory is not enough
->>> v4:
->>>         1. fix a bug caused by the logic
->>> v3:
->>>         1. remove some unused variables
->>>         2. fix a bug caused by the wrong logic
->>>         3. fix a bug caused by optimising
->>>         4. improve more performance by using Minoru Usui's code
->>
->> I have just one comment for this version:
->>
->> [snip]
->>
->>> @@ -10223,6 +10263,26 @@ calculate_cyclic_buffer_size(void) {
->>> 	 *  free memory for safety.
->>> 	 */
->>> 	limit_size = get_free_memory_size() * 0.6;
->>> +
->>> +	/*
->>> +	 * Recalculate the limit_size according to num_threads.
->>> +	 * And reset num_threads if there is not enough memory.
->>> +	 */
->>> +	if (limit_size < maximun_size) {
->                                 ^
-> I found a typo.
-> 
->>> +		if (info->num_threads > 0) {
->>> +			MSG("There isn't enough memory for multi-threads.\n");
->>> +			info->num_threads = 0;
->>> +		}
->>> +	}
->>
->> This condition should be "limit_size <= maximun_size", otherwise
->> division by zero can occur below:
->>
->>
->>> +	else if ((limit_size - maximum_size) / info->num_threads < THREAD_REGION) {
->>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> Sorry, I misunderstood that.
-> However, you still should check info->num_threads, this patch causes division
-> by zero by default.
-> 
+On Fri, Apr 15, 2016 at 8:46 AM, Emrah Demir <ed@abdsec.com> wrote:
+>
+> file_ns_capable bring some problems.
 
-I see.
+No it does not. file_ns_capable() is _required_ for security. We have
+had several security issues with file IO doing "capable()", and it's
+wrong and insecure.
 
--- 
-Thanks
-Zhou
+> I used capable and now there is no problem as far as I tested.
 
-> 
-> Thanks,
-> Atsushi Kumagai
-> 
->> Thanks,
->> Atsushi Kumagai
->>
->>> +		MSG("There isn't enough memory for %d threads.\n", info->num_threads);
->>> +
->>> +		info->num_threads = (limit_size - maximum_size) / THREAD_REGION;
->>> +		MSG("--num_threads is set to %d.\n", info->num_threads);
->>> +	}
->>> +
->>> +	limit_size = limit_size - THREAD_REGION * info->num_threads;
->>> +
->>> 	/* Try to keep both 1st and 2nd bitmap at the same time. */
->>> 	bitmap_size = info->max_mapnr * 2 / BITPERBYTE;
->>>
->>> diff --git a/makedumpfile.h b/makedumpfile.h
->>> index e0b5bbf..322d31b 100644
->>> --- a/makedumpfile.h
->>> +++ b/makedumpfile.h
->>> @@ -44,6 +44,7 @@
->>> #include "print_info.h"
->>> #include "sadump_mod.h"
->>> #include <pthread.h>
->>> +#include <semaphore.h>
->>>
->>> /*
->>>   * Result of command
->>> @@ -974,10 +975,11 @@ typedef unsigned long long int ulonglong;
->>>   * for parallel process
->>>   */
->>>
->>> -#define PAGE_DATA_NUM	(50)
->>> +#define PAGE_FLAG_NUM	(20)
->>> +#define PAGE_DATA_NUM	(5)
->>> #define WAIT_TIME	(60 * 10)
->>> #define PTHREAD_FAIL	((void *)-2)
->>> -#define NUM_BUFFERS	(50)
->>> +#define THREAD_REGION	(200 * 1024)
->>>
->>> struct mmap_cache {
->>> 	char	*mmap_buf;
->>> @@ -985,28 +987,33 @@ struct mmap_cache {
->>> 	off_t   mmap_end_offset;
->>> };
->>>
->>> +enum {
->>> +	FLAG_UNUSED,
->>> +	FLAG_READY,
->>> +	FLAG_FILLING
->>> +};
->>> +struct page_flag {
->>> +	mdf_pfn_t pfn;
->>> +	char zero;
->>> +	char ready;
->>> +	short index;
->>> +	struct page_flag *next;
->>> +};
->>> +
->>> struct page_data
->>> {
->>> -	mdf_pfn_t pfn;
->>> -	int dumpable;
->>> -	int zero;
->>> -	unsigned int flags;
->>> 	long size;
->>> 	unsigned char *buf;
->>> -	pthread_mutex_t mutex;
->>> -	/*
->>> -	 * whether the page_data is ready to be consumed
->>> -	 */
->>> -	int ready;
->>> +	int flags;
->>> +	int used;
->>> };
->>>
->>> struct thread_args {
->>> 	int thread_num;
->>> 	unsigned long len_buf_out;
->>> -	mdf_pfn_t start_pfn, end_pfn;
->>> -	int page_data_num;
->>> 	struct cycle *cycle;
->>> 	struct page_data *page_data_buf;
->>> +	struct page_flag *page_flag_buf;
->>> };
->>>
->>> /*
->>> @@ -1295,11 +1302,12 @@ struct DumpInfo {
->>> 	pthread_t **threads;
->>> 	struct thread_args *kdump_thread_args;
->>> 	struct page_data *page_data_buf;
->>> +	struct page_flag **page_flag_buf;
->>> +	sem_t page_flag_buf_sem;
->>> 	pthread_rwlock_t usemmap_rwlock;
->>> 	mdf_pfn_t current_pfn;
->>> 	pthread_mutex_t current_pfn_mutex;
->>> -	mdf_pfn_t consumed_pfn;
->>> -	pthread_mutex_t consumed_pfn_mutex;
->>> +	pthread_mutex_t page_data_mutex;
->>> 	pthread_mutex_t filter_mutex;
->>> };
->>> extern struct DumpInfo		*info;
->>> --
->>> 1.8.3.1
->>>
->>>
->>>
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+You just screwed up the security, and with your change, a suid
+application can be fooled into making the hidden data available to
+non-secure users.
 
+"capable()" is wrong. For file reading,  you *have* to use
+file_ns_capable(). It really is that simple. You should not test the
+capabilities of the process, you should be testing the capabilities of
+the file descriptor, which comes from the *open-time* capabilities.
 
+It sounds like you applied just the patch to kernel/resource.c,
+without applying the infrastructure patch.
 
+You also need commit 34dbbcdbf633 ("Make file credentials available to
+the seqfile interfaces").
+
+          Linus
 
 _______________________________________________
 kexec mailing list
