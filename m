@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1as6Aa-0004T1-0P
- for kexec@lists.infradead.org; Mon, 18 Apr 2016 10:12:40 +0000
-Date: Mon, 18 Apr 2016 18:12:14 +0800
+ id 1as6G4-0007Az-D1
+ for kexec@lists.infradead.org; Mon, 18 Apr 2016 10:18:20 +0000
+Date: Mon, 18 Apr 2016 18:17:56 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 1/3] kexec: don't invoke OOM-killer for control page
- allocation
-Message-ID: <20160418101214.GA6694@x1.redhat.com>
+Subject: Re: [PATCH 2/3] kexec: ensure user memory sizes do not wrap
+Message-ID: <20160418101756.GD3602@x1.redhat.com>
 References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
- <E1aqnQo-0001Tu-Ch@rmk-PC.arm.linux.org.uk>
- <20160418053253.GA3602@x1.redhat.com>
- <20160418083932.GA19428@n2100.arm.linux.org.uk>
+ <E1aqnQt-0001U2-Oa@rmk-PC.arm.linux.org.uk>
+ <20160418053534.GB3602@x1.redhat.com>
+ <20160418083715.GZ19428@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160418083932.GA19428@n2100.arm.linux.org.uk>
+In-Reply-To: <20160418083715.GZ19428@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,26 +29,48 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
 
-On 04/18/16 at 09:39am, Russell King - ARM Linux wrote:
-> On Mon, Apr 18, 2016 at 01:32:53PM +0800, Baoquan He wrote:
+On 04/18/16 at 09:37am, Russell King - ARM Linux wrote:
+> On Mon, Apr 18, 2016 at 01:35:34PM +0800, Baoquan He wrote:
 > > On 04/14/16 at 09:00pm, Russell King wrote:
-> > > If we are unable to find a suitable page when allocating the control
-> > > page, do not invoke the OOM-killer: killing processes probably isn't
-> > > going to help.
+> > > Ensure that user memory sizes do not wrap around when validating the
+> > > user input, which can lead to the following input validation working
+> > > incorrectly.
+> > > 
+> > > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> > > ---
+> > >  kernel/kexec_core.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > > index 8d34308ea449..d719a4d0ef55 100644
+> > > --- a/kernel/kexec_core.c
+> > > +++ b/kernel/kexec_core.c
+> > > @@ -169,6 +169,8 @@ int sanity_check_segment_list(struct kimage *image)
+> > >  
+> > >  		mstart = image->segment[i].mem;
+> > >  		mend   = mstart + image->segment[i].memsz;
+> > > +		if (mstart > mend)
+> > > +			return result;
 > > 
-> > Originally kexec was made to reboot to test kernel quickly. If 1st
-> > kernel is palyed and hurted in a bad state and developer want to discard
-> > it and take a quick reboot, why don't we have a best try to make a
-> > successful kexec load?
+> > These segments are built in kexec utility, their availability should be
+> > guaranteed there. If without some alignment handling, wrapping around
+> > might not happen here. But I don't have strong objection to it.
 > 
-> And if it kills off every process trying to get a suitable page,
-> which then means you can't do anything other than power cycle,
-> that's okay?
+> In which case, what's the point of all the other validation which is done,
+> like the check below:
+> 
+> > >  		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+> > >  			return result;
+> > >  		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
+> 
+> Your reply is contradictory to the whole suite of tests which kexec does
+> to validate its input from userspace.
 
-Yes, I agree on that it's non-sense if every process is killed. But will
-each kexec load which need OOM-killer go that far? And there's only one
-page (if 32 bit) or 2 pages (if 64 bit) for control page, it may not
-need kill that many processes to pick one.
+It's not contradictory. In kexec utility it will call
+valid_memory_segment() to check each segment. And there it will check if
+the start is bigger than end. What I meant is if start is 5000, end is
+5100, an alignment of end will make start> end case happen. Anyway I am
+fine with this check adding, the safer, the better.
 
 > 
 > -- 
