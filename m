@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1as1oE-0006rX-Rj
- for kexec@lists.infradead.org; Mon, 18 Apr 2016 05:33:19 +0000
-Date: Mon, 18 Apr 2016 13:32:53 +0800
+ id 1as1qn-0000VG-7l
+ for kexec@lists.infradead.org; Mon, 18 Apr 2016 05:35:57 +0000
+Date: Mon, 18 Apr 2016 13:35:34 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 1/3] kexec: don't invoke OOM-killer for control page
- allocation
-Message-ID: <20160418053253.GA3602@x1.redhat.com>
+Subject: Re: [PATCH 2/3] kexec: ensure user memory sizes do not wrap
+Message-ID: <20160418053534.GB3602@x1.redhat.com>
 References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
- <E1aqnQo-0001Tu-Ch@rmk-PC.arm.linux.org.uk>
+ <E1aqnQt-0001U2-Oa@rmk-PC.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E1aqnQo-0001Tu-Ch@rmk-PC.arm.linux.org.uk>
+In-Reply-To: <E1aqnQt-0001U2-Oa@rmk-PC.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,36 +28,33 @@ To: Russell King <rmk+kernel@arm.linux.org.uk>
 Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
 
 On 04/14/16 at 09:00pm, Russell King wrote:
-> If we are unable to find a suitable page when allocating the control
-> page, do not invoke the OOM-killer: killing processes probably isn't
-> going to help.
-
-Originally kexec was made to reboot to test kernel quickly. If 1st
-kernel is palyed and hurted in a bad state and developer want to discard
-it and take a quick reboot, why don't we have a best try to make a
-successful kexec load?
-
-I personally think this change sounds un-reasonable.
-
+> Ensure that user memory sizes do not wrap around when validating the
+> user input, which can lead to the following input validation working
+> incorrectly.
 > 
 > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 > ---
->  include/linux/kexec.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  kernel/kexec_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 2cc643c6e870..1b32ab587f66 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -41,7 +41,7 @@
->  #endif
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 8d34308ea449..d719a4d0ef55 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -169,6 +169,8 @@ int sanity_check_segment_list(struct kimage *image)
 >  
->  #ifndef KEXEC_CONTROL_MEMORY_GFP
-> -#define KEXEC_CONTROL_MEMORY_GFP GFP_KERNEL
-> +#define KEXEC_CONTROL_MEMORY_GFP (GFP_KERNEL | __GFP_NORETRY)
->  #endif
->  
->  #ifndef KEXEC_CONTROL_PAGE_SIZE
+>  		mstart = image->segment[i].mem;
+>  		mend   = mstart + image->segment[i].memsz;
+> +		if (mstart > mend)
+> +			return result;
+
+These segments are built in kexec utility, their availability should be
+guaranteed there. If without some alignment handling, wrapping around
+might not happen here. But I don't have strong objection to it.
+
+>  		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
+>  			return result;
+>  		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
 > -- 
 > 2.1.0
 > 
