@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1as6G4-0007Az-D1
- for kexec@lists.infradead.org; Mon, 18 Apr 2016 10:18:20 +0000
-Date: Mon, 18 Apr 2016 18:17:56 +0800
+ id 1as6Ud-0005Dv-7X
+ for kexec@lists.infradead.org; Mon, 18 Apr 2016 10:33:23 +0000
+Date: Mon, 18 Apr 2016 18:32:58 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 2/3] kexec: ensure user memory sizes do not wrap
-Message-ID: <20160418101756.GD3602@x1.redhat.com>
+Subject: Re: [PATCH 3/3] kexec: arrange for paddr_vmcoreinfo_note() to return
+ phys_addr_t
+Message-ID: <20160418103258.GE3602@x1.redhat.com>
 References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
- <E1aqnQt-0001U2-Oa@rmk-PC.arm.linux.org.uk>
- <20160418053534.GB3602@x1.redhat.com>
- <20160418083715.GZ19428@n2100.arm.linux.org.uk>
+ <E1aqnQy-0001U9-SR@rmk-PC.arm.linux.org.uk>
+ <20160418053820.GC3602@x1.redhat.com>
+ <20160418083601.GY19428@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160418083715.GZ19428@n2100.arm.linux.org.uk>
+In-Reply-To: <20160418083601.GY19428@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,48 +30,58 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
 
-On 04/18/16 at 09:37am, Russell King - ARM Linux wrote:
-> On Mon, Apr 18, 2016 at 01:35:34PM +0800, Baoquan He wrote:
+On 04/18/16 at 09:36am, Russell King - ARM Linux wrote:
+> On Mon, Apr 18, 2016 at 01:38:20PM +0800, Baoquan He wrote:
 > > On 04/14/16 at 09:00pm, Russell King wrote:
-> > > Ensure that user memory sizes do not wrap around when validating the
-> > > user input, which can lead to the following input validation working
-> > > incorrectly.
-> > > 
-> > > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> > > ---
-> > >  kernel/kexec_core.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > > index 8d34308ea449..d719a4d0ef55 100644
-> > > --- a/kernel/kexec_core.c
-> > > +++ b/kernel/kexec_core.c
-> > > @@ -169,6 +169,8 @@ int sanity_check_segment_list(struct kimage *image)
-> > >  
-> > >  		mstart = image->segment[i].mem;
-> > >  		mend   = mstart + image->segment[i].memsz;
-> > > +		if (mstart > mend)
-> > > +			return result;
+> > > On PAE systems (eg, ARM LPAE) the vmcore note may be located above
+> > > 4GB physical on 32-bit architectures, so we need a wider type than
+> > > "unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
+> > > a phys_addr_t, thereby allowing it to be located above 4GB.
 > > 
-> > These segments are built in kexec utility, their availability should be
-> > guaranteed there. If without some alignment handling, wrapping around
-> > might not happen here. But I don't have strong objection to it.
+> > At first glance, it sounds great. But I can't imagine a scenario where
+> > on pae system kernel can be located above 4G. As far as I know i386 and
+> > its pae can't do this because the current linux VM implementation can't
+> > allow that. I am not familiar with arm system. So please correct me if
+> > I was wrong.
 > 
-> In which case, what's the point of all the other validation which is done,
-> like the check below:
-> 
-> > >  		if ((mstart & ~PAGE_MASK) || (mend & ~PAGE_MASK))
-> > >  			return result;
-> > >  		if (mend >= KEXEC_DESTINATION_MEMORY_LIMIT)
-> 
-> Your reply is contradictory to the whole suite of tests which kexec does
-> to validate its input from userspace.
+> You are wrong.  That's precisely why this patch exists.
 
-It's not contradictory. In kexec utility it will call
-valid_memory_segment() to check each segment. And there it will check if
-the start is bigger than end. What I meant is if start is 5000, end is
-5100, an alignment of end will make start> end case happen. Anyway I am
-fine with this check adding, the safer, the better.
+I don't know arm is different then i386. On i386 the kernel text mapping
+is linear, just as follow:
+
+#define __phys_addr_nodebug(x)  ((x) - PAGE_OFFSET)
+
+
+But arm seems not linear. 
+static inline phys_addr_t __virt_to_phys(unsigned long x)
+{
+        phys_addr_t t;
+
+        if (sizeof(phys_addr_t) == 4) {
+                __pv_stub(x, t, "add", __PV_BITS_31_24);
+        } else {
+                __pv_stub_mov_hi(t);
+                __pv_add_carry_stub(x, t);
+        }
+        return t;
+}
+
+So on arm PAE this change makes sense.
+
+Besides, I checked kexec/arch/arm/kexec-zImage-arm.c and found function
+locate_hole() is used to find position for arm kernel. 
+
+unsigned long locate_hole(struct kexec_info *info,
+        unsigned long hole_size, unsigned long hole_align,
+        unsigned long hole_min, unsigned long hole_max, 
+        int hole_end)
+
+The type unsigned long for hole_max limit the region where arm kernel is
+loaded. So withough modifying this I doubt arm PAE can really be loaded
+above 4G.
+
+Thanks
+Baoquan
 
 > 
 > -- 
