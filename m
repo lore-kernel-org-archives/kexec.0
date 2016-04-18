@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f175.google.com ([209.85.192.175])
+Received: from mail-pf0-f176.google.com ([209.85.192.176])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1as1Di-0008Df-9z
- for kexec@lists.infradead.org; Mon, 18 Apr 2016 04:55:35 +0000
-Received: by mail-pf0-f175.google.com with SMTP id c20so76645859pfc.1
- for <kexec@lists.infradead.org>; Sun, 17 Apr 2016 21:55:14 -0700 (PDT)
+ id 1as1P6-0004d0-N6
+ for kexec@lists.infradead.org; Mon, 18 Apr 2016 05:07:21 +0000
+Received: by mail-pf0-f176.google.com with SMTP id c20so76754454pfc.1
+ for <kexec@lists.infradead.org>; Sun, 17 Apr 2016 22:06:59 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH] makedumpfile: fix module core base and size offset for kernel
- v4.5
-Date: Mon, 18 Apr 2016 10:25:09 +0530
-Message-Id: <ff5f22b5595d3801e8334a4e6b486838d499edc7.1460955261.git.panand@redhat.com>
+Subject: [PATCH] arm64: fix two level pmd calculation
+Date: Mon, 18 Apr 2016 10:36:45 +0530
+Message-Id: <4a8e32226b69988de610c86f2d81bb02d2b1da4c.1460955342.git.panand@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,65 +18,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org
+Cc: Pratyush Anand <panand@redhat.com>, sgoel@codeaurora.org, mansip@codeaurora.org, asamson@codeaurora.org, kexec@lists.infradead.org
 
-Following commit in kernel v4.5 changed struct module, which affects offset
-calculation of core layout's base and size.
-
-commit 7523e4dc5057e157212b4741abd6256e03404cf1
-Author: Rusty Russell <rusty@rustcorp.com.au>
-Date:   Thu Nov 26 09:44:08 2015 +1030
-
-    module: use a structure to encapsulate layout.
-
-This patch fixes makedumpfile code to cater above kernel modification.
-
-Signed-off-by: Pratyush Anand <panand@redhat.com>
----
- makedumpfile.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 94c969c16ccc..12227ea1fbd8 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1669,7 +1669,25 @@ get_structure_info(void)
- 	OFFSET_INIT(module.list, "module", "list");
- 	OFFSET_INIT(module.name, "module", "name");
- 	OFFSET_INIT(module.module_core, "module", "module_core");
-+	if (OFFSET(module.module_core) == NOT_FOUND_STRUCTURE) {
-+		/* for kernel version 4.5 and above */
-+		long core_layout;
-+
-+		OFFSET_INIT(module.module_core, "module", "core_layout");
-+		core_layout = OFFSET(module.module_core);
-+		OFFSET_INIT(module.module_core, "module_layout", "base");
-+		OFFSET(module.module_core) += core_layout;
-+	}
- 	OFFSET_INIT(module.core_size, "module", "core_size");
-+	if (OFFSET(module.core_size) == NOT_FOUND_STRUCTURE) {
-+		/* for kernel version 4.5 and above */
-+		long core_layout;
-+
-+		OFFSET_INIT(module.core_size, "module", "core_layout");
-+		core_layout = OFFSET(module.core_size);
-+		OFFSET_INIT(module.core_size, "module_layout", "size");
-+		OFFSET(module.core_size) += core_layout;
-+	}
- 	OFFSET_INIT(module.module_init, "module", "module_init");
- 	OFFSET_INIT(module.init_size, "module", "init_size");
- 
--- 
-2.5.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+V2hpbGUgcmV2aWV3aW5nIGNvbW1pdCAiYTkwODViNzA1MDFjIGFybTY0OiBGaXggZm9yIEFSTTY0
+IDMgbGV2ZWwKdHJhbnNsYXRpb24gdGFibGVzIiB3ZSBtaXNzZWQgdGhhdCwgaXQgYnJlYWtzIHBt
+ZF9vZmZzZXQgY2FsY3VsYXRpb24gZm9yIDIKbGV2ZWwgdHJhbnNsYXRpb24gdGFibGUuIEJlY2F1
+c2Ugb2YgdGhhdCB3ZSBnZXQgZm9sbG93aW5nIGVycm9yIG1lc3NhZ2VzOgoKLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+CnZ0b3BfYXJtNjQ6IENhbid0IHJlYWQgcG1kCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKQ3VycmVudCBwYXRjaGVz
+IGZpeGVzIGl0LgoKQXMgYSBzaWRlIGVmZmVjdCBvZiBhYm92ZSBmaXgsIGl0IGFsc28gZml4ZXMg
+Zm9sbG93aW5nIGNvbXBpbGF0aW9uIHdhcm5pbmcKaW50cm9kdWNlZCBpbiBhYm92ZSBjb21taXQu
+CgotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0KYXJjaC9hcm02NC5jOiBJbiBmdW5jdGlvbiDigJhwbWRfb2Zmc2V04oCZ
+OgphcmNoL2FybTY0LmM6MTE5OjM6IHdhcm5pbmc6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1
+bmN0aW9uCuKAmGdldF9wYWdlX3NoaWZ0X2FybTY04oCZIFstV2ltcGxpY2l0LWZ1bmN0aW9uLWRl
+Y2xhcmF0aW9uXQogICByZXR1cm4gcG1kX29mZnNldF9wZ3RibF9sdmxfMyhwdWQsIHZhZGRyKTsK
+ICAgXgphcmNoL2FybTY0LmM6IEluIGZ1bmN0aW9uIOKAmHZ0b3BfYXJtNjTigJk6CmFyY2gvYXJt
+NjQuYzoyNDY6OTogd2FybmluZzogdW51c2VkIHZhcmlhYmxlIOKAmHB1ZGHigJkgWy1XdW51c2Vk
+LXZhcmlhYmxlXQogIHB1ZF90ICpwdWRhLCBwdWR2OwogICAgICAgICBeCi0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoK
+U2lnbmVkLW9mZi1ieTogUHJhdHl1c2ggQW5hbmQgPHBhbmFuZEByZWRoYXQuY29tPgotLS0KCkFj
+dHVhbGx5IHdlIG5lZWQgc29tZSBjbGVhbnVwIGFyb3VuZCBwbGF0IHNwZWNpZmljIGNvbmZpZyBj
+YWxjdWxhdGlvbi4gVGhhdAp3aWxsIGhlbHAgdG8gYWRkIHN1cHBvcnQgb2YgZGlmZmVyZW50IHBh
+Z2UgdGFibGUgbGV2ZWwgYW5kIHNpemVzIHdpdGhvdXQKYW55IHF1aXJrLiBIb3dldmVyLCB0aGF0
+IG5lZWRzIGtlcm5lbCBjaGFuZ2VzIFsxXSBpbiBhcm02NCBrZXhlYyBjb2RlLiBPdXIKcGxhbiBp
+cyB0byBpbnRyb2R1Y2UgdGhhdCBrZXJuZWwgY2hhbmdlcyBvbmNlIGFybTY0IGtleGVjIGtlcm5l
+bCBwYXRjaGVzCmFyZSB1cHN0cmVhbWVkLiBPbmNlLCBtb2RpZmljYXRpb24gaW4ga2VybmVsIGlz
+IGRvbmUgdGhlbiB3ZSBjYW4gaGF2ZQptYWtlZHVtcGZpbGUgbW9kaWZpY2F0aW9ucyBbMiwgM10g
+dG8gc3VwcG9ydCBtb3JlIHBhZ2UgdGFibGUgbGV2ZWxzLgoKWzFdIGh0dHBzOi8vZ2l0aHViLmNv
+bS9wcmF0eXVzaGFuYW5kL2xpbnV4L2NvbW1pdC8zZDlhMmU5NmJkNDljNjk2MzdiODhmNjFjYmVm
+YTk3MzZlMDI5MzcwClsyXSBodHRwczovL2dpdGh1Yi5jb20vcHJhdHl1c2hhbmFuZC9tYWtlZHVt
+cGZpbGUvY29tbWl0Lzk0MzJkODE3ZWUzNzU4M2U4N2U3MTgyYjFmODZhOWRhNDJkODgzYmMKWzNd
+IGh0dHBzOi8vZ2l0aHViLmNvbS9wcmF0eXVzaGFuYW5kL21ha2VkdW1wZmlsZS9jb21taXQvMjMx
+ZTk5N2I5NmRlMmExMjRhNTUzZTJmZGQ4MzgwYmQ4ZTcwMzQ5MwoKIGFyY2gvYXJtNjQuYyB8IDIy
+ICsrKysrKysrKysrKy0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCsp
+LCAxMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0LmMgYi9hcmNoL2FybTY0
+LmMKaW5kZXggYWIyMDM4OWZhNjczLi5mNzU0MDI2MmE2YWUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
+NjQuYworKysgYi9hcmNoL2FybTY0LmMKQEAgLTExMCwxNSArMTEwLDYgQEAgc3RhdGljIGludCBw
+Z3RhYmxlX2xldmVsOwogc3RhdGljIGludCB2YV9iaXRzOwogc3RhdGljIGludCBwYWdlX3NoaWZ0
+OwogCi1wbWRfdCAqCi1wbWRfb2Zmc2V0KHB1ZF90ICpwdWQsIHVuc2lnbmVkIGxvbmcgdmFkZHIp
+Ci17Ci0JaWYgKHBndGFibGVfbGV2ZWwgPT0gMikgewotCQlyZXR1cm4gcG1kX29mZnNldF9wZ3Ri
+bF9sdmxfMihwdWQsIHZhZGRyKTsKLQl9IGVsc2UgewotCQlyZXR1cm4gcG1kX29mZnNldF9wZ3Ri
+bF9sdmxfMyhwdWQsIHZhZGRyKTsKLQl9Ci19CiBpbnQKIGdldF9wZ3RhYmxlX2xldmVsX2FybTY0
+KHZvaWQpCiB7CkBAIC0xMzcsNiArMTI4LDE2IEBAIGdldF9wYWdlX3NoaWZ0X2FybTY0KHZvaWQp
+CiAJcmV0dXJuIHBhZ2Vfc2hpZnQ7CiB9CiAKK3BtZF90ICoKK3BtZF9vZmZzZXQocHVkX3QgKnB1
+ZGEsIHB1ZF90ICpwdWR2LCB1bnNpZ25lZCBsb25nIHZhZGRyKQoreworCWlmIChwZ3RhYmxlX2xl
+dmVsID09IDIpIHsKKwkJcmV0dXJuIHBtZF9vZmZzZXRfcGd0YmxfbHZsXzIocHVkYSwgdmFkZHIp
+OworCX0gZWxzZSB7CisJCXJldHVybiBwbWRfb2Zmc2V0X3BndGJsX2x2bF8zKHB1ZHYsIHZhZGRy
+KTsKKwl9Cit9CisKICNkZWZpbmUgUEFHRV9PRkZTRVRfMzkgKDB4ZmZmZmZmZmZmZmZmZmZmZlVM
+IDw8IDM5KQogI2RlZmluZSBQQUdFX09GRlNFVF80MiAoMHhmZmZmZmZmZmZmZmZmZmZmVUwgPDwg
+NDIpCiBzdGF0aWMgaW50IGNhbGN1bGF0ZV9wbGF0X2NvbmZpZyh2b2lkKQpAQCAtMjk0LDggKzI5
+NSw5IEBAIHZ0b3BfYXJtNjQodW5zaWduZWQgbG9uZyB2YWRkcikKIAl9CiAKIAlwdWR2LnBnZCA9
+IHBnZHY7CisJcHVkYSA9IChwdWRfdCAqKXBnZGE7CiAKLQlwbWRhID0gcG1kX29mZnNldCgmcHVk
+diwgdmFkZHIpOworCXBtZGEgPSBwbWRfb2Zmc2V0KHB1ZGEsICZwdWR2LCB2YWRkcik7CiAJaWYg
+KCFyZWFkbWVtKFZBRERSLCAodW5zaWduZWQgbG9uZyBsb25nKXBtZGEsICZwbWR2LCBzaXplb2Yo
+cG1kdikpKSB7CiAJCUVSUk1TRygiQ2FuJ3QgcmVhZCBwbWRcbiIpOwogCQlyZXR1cm4gTk9UX1BB
+RERSOwotLSAKMi41LjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
