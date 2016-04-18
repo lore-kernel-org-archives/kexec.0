@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f42.google.com ([209.85.220.42])
+Received: from mail-pf0-f175.google.com ([209.85.192.175])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1as1CU-0006mz-BY
- for kexec@lists.infradead.org; Mon, 18 Apr 2016 04:54:19 +0000
-Received: by mail-pa0-f42.google.com with SMTP id zm5so74948503pac.0
- for <kexec@lists.infradead.org>; Sun, 17 Apr 2016 21:53:57 -0700 (PDT)
+ id 1as1Di-0008Df-9z
+ for kexec@lists.infradead.org; Mon, 18 Apr 2016 04:55:35 +0000
+Received: by mail-pf0-f175.google.com with SMTP id c20so76645859pfc.1
+ for <kexec@lists.infradead.org>; Sun, 17 Apr 2016 21:55:14 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH] makedumpfile: fix compilation warning
-Date: Mon, 18 Apr 2016 10:23:52 +0530
-Message-Id: <4ffb6afbec353adffa906f4148c177535e29397c.1460955092.git.panand@redhat.com>
-MIME-Version: 1.0
+Subject: [PATCH] makedumpfile: fix module core base and size offset for kernel
+ v4.5
+Date: Mon, 18 Apr 2016 10:25:09 +0530
+Message-Id: <ff5f22b5595d3801e8334a4e6b486838d499edc7.1460955261.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,43 +18,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org
 
-Y29tbWl0ICI0NjE3NmE5N2YzMjk6IEV4Y2x1ZGUgcGFnZSBzdHJ1Y3R1cmVzIG9mIG5vbi1kdW1w
-ZWQgcGFnZXMiIHNldHMKZGlkX2RlbGV0ZXMgYnV0IG5ldmVyIHVzZXMgdGhhdCwgd2hpY2ggZ2Vu
-ZXJhdGVzIGZvbGxvd2luZyBjb21waWxhdGlvbgp3YXJuaW5nLiAgRml4IHRoYXQuCgptYWtlZHVt
-cGZpbGUuYzogSW4gZnVuY3Rpb24g4oCYZmluZF91bnVzZWRfdm1lbW1hcF9wYWdlc+KAmToKbWFr
-ZWR1bXBmaWxlLmM6NTkxMjoyNTogd2FybmluZzogdmFyaWFibGUg4oCYZGlkX2RlbGV0ZXPigJkg
-c2V0IGJ1dCBub3QgdXNlZApbLVd1bnVzZWQtYnV0LXNldC12YXJpYWJsZV0KICBpbnQgaSwgc3os
-IG51bXBhZ2VzPTAsIGRpZF9kZWxldGVzOwoKU2lnbmVkLW9mZi1ieTogUHJhdHl1c2ggQW5hbmQg
-PHBhbmFuZEByZWRoYXQuY29tPgotLS0KIG1ha2VkdW1wZmlsZS5jIHwgNSArLS0tLQogMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCA0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL21h
-a2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxlLmMKaW5kZXggZGFiN2M0ZGU0NGQ0Li45NGM5Njlj
-MTZjY2MgMTAwNjQ0Ci0tLSBhL21ha2VkdW1wZmlsZS5jCisrKyBiL21ha2VkdW1wZmlsZS5jCkBA
-IC01OTQ4LDcgKzU5NDgsNyBAQCBmaW5kX3VudXNlZF92bWVtbWFwX3BhZ2VzKHZvaWQpCiAJdW5z
-aWduZWQgbG9uZyBsb25nIHBmbjsKIAl1bnNpZ25lZCBsb25nICpscDEsICpscDIsIHN0YXJ0cGZu
-LCBlbmRwZm47CiAJdW5zaWduZWQgbG9uZyB2bWFwc3RhcnRwZm4sIHZtYXBudW1wZm5zOwotCWlu
-dCBpLCBzeiwgbnVtcGFnZXM9MCwgZGlkX2RlbGV0ZXM7CisJaW50IGksIHN6LCBudW1wYWdlcz0w
-OwogCWludCBzdGFydHdvcmQsIG51bXdvcmRzLCBkb19icmVhaz0wOwogCWxvbmcgZGVsZXRlZF9w
-YWdlcyA9IDA7CiAJb2ZmX3QgbmV3X29mZnNldDEsIG5ld19vZmZzZXQyOwpAQCAtNTk1Niw3ICs1
-OTU2LDYgQEAgZmluZF91bnVzZWRfdm1lbW1hcF9wYWdlcyh2b2lkKQogCS8qIHJlYWQgZWFjaCBi
-bG9jayBvZiBib3RoIGJpdG1hcHMgKi8KIAlmb3IgKHBmbiA9IDA7IHBmbiA8IGluZm8tPm1heF9t
-YXBucjsgcGZuICs9IFBGTl9CVUZCSVRNQVApIHsgLyogc2l6ZSBpbiBiaXRzICovCiAJCW51bXBh
-Z2VzKys7Ci0JCWRpZF9kZWxldGVzID0gMDsKIAkJbmV3X29mZnNldDEgPSBiaXRtYXAxLT5vZmZz
-ZXQgKyBCVUZTSVpFX0JJVE1BUCAqIChwZm4gLyBQRk5fQlVGQklUTUFQKTsKIAkJaWYgKGxzZWVr
-KGJpdG1hcDEtPmZkLCBuZXdfb2Zmc2V0MSwgU0VFS19TRVQpIDwgMCApIHsKIAkJCUVSUk1TRygi
-Q2FuJ3Qgc2VlayB0aGUgYml0bWFwKCVzKS4gJXNcbiIsCkBAIC02MDMyLDcgKzYwMzEsNiBAQCBm
-aW5kX3VudXNlZF92bWVtbWFwX3BhZ2VzKHZvaWQpCiAJCQkJCQkJCXJldHVybiBGQUlMRUQ7CiAJ
-CQkJCQkJfQogCQkJCQkJCWRlbGV0ZWRfcGFnZXMgKz0gdm1hcG51bXBmbnM7Ci0JCQkJCQkJZGlk
-X2RlbGV0ZXMgPSAxOwogCQkJCQkJfQogCQkJCQl9CiAJCQkJfQpAQCAtNjA1NCw3ICs2MDUyLDYg
-QEAgZmluZF91bnVzZWRfdm1lbW1hcF9wYWdlcyh2b2lkKQogCQkJCQkJcmV0dXJuIEZBSUxFRDsK
-IAkJCQkJfQogCQkJCQlkZWxldGVkX3BhZ2VzICs9IHZtYXBudW1wZm5zOwotCQkJCQlkaWRfZGVs
-ZXRlcyA9IDE7CiAJCQkJfQogCQkJfQogCQl9Ci0tIAoyLjUuMAoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMK
+Following commit in kernel v4.5 changed struct module, which affects offset
+calculation of core layout's base and size.
+
+commit 7523e4dc5057e157212b4741abd6256e03404cf1
+Author: Rusty Russell <rusty@rustcorp.com.au>
+Date:   Thu Nov 26 09:44:08 2015 +1030
+
+    module: use a structure to encapsulate layout.
+
+This patch fixes makedumpfile code to cater above kernel modification.
+
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ makedumpfile.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 94c969c16ccc..12227ea1fbd8 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1669,7 +1669,25 @@ get_structure_info(void)
+ 	OFFSET_INIT(module.list, "module", "list");
+ 	OFFSET_INIT(module.name, "module", "name");
+ 	OFFSET_INIT(module.module_core, "module", "module_core");
++	if (OFFSET(module.module_core) == NOT_FOUND_STRUCTURE) {
++		/* for kernel version 4.5 and above */
++		long core_layout;
++
++		OFFSET_INIT(module.module_core, "module", "core_layout");
++		core_layout = OFFSET(module.module_core);
++		OFFSET_INIT(module.module_core, "module_layout", "base");
++		OFFSET(module.module_core) += core_layout;
++	}
+ 	OFFSET_INIT(module.core_size, "module", "core_size");
++	if (OFFSET(module.core_size) == NOT_FOUND_STRUCTURE) {
++		/* for kernel version 4.5 and above */
++		long core_layout;
++
++		OFFSET_INIT(module.core_size, "module", "core_layout");
++		core_layout = OFFSET(module.core_size);
++		OFFSET_INIT(module.core_size, "module_layout", "size");
++		OFFSET(module.core_size) += core_layout;
++	}
+ 	OFFSET_INIT(module.module_init, "module", "module_init");
+ 	OFFSET_INIT(module.init_size, "module", "init_size");
+ 
+-- 
+2.5.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
