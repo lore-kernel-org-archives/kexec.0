@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1asQJL-00068s-H5
- for kexec@lists.infradead.org; Tue, 19 Apr 2016 07:43:04 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: fix module core base and size offset for
- kernel v4.5
-Date: Tue, 19 Apr 2016 07:41:11 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E3BBCE@BPXM01GP.gisp.nec.co.jp>
-References: <ff5f22b5595d3801e8334a4e6b486838d499edc7.1460955261.git.panand@redhat.com>
-In-Reply-To: <ff5f22b5595d3801e8334a4e6b486838d499edc7.1460955261.git.panand@redhat.com>
-Content-Language: ja-JP
+ id 1asRa8-0002oi-70
+ for kexec@lists.infradead.org; Tue, 19 Apr 2016 09:04:29 +0000
+Date: Tue, 19 Apr 2016 17:04:01 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: Removal of the kernel code/data/bss resources does break
+ kexec/kdump
+Message-ID: <20160419090401.GA4348@dhcp-128-65.nay.redhat.com>
+References: <570F6D99.6090400@gmail.com>
+ <2f4d7dee6bb0e4afdc05f2b7457fcf79@abdsec.com>
+ <CA+55aFwprUFh+cjB2fWmkMJ3Zgh6XSan0VO8Vr-80Qh0n0Rx+A@mail.gmail.com>
+ <f80ca230bf1fab7527d355e535de305f@abdsec.com>
+ <CA+55aFxtuUBBJS4xxM5OiyZs04xjrpHPif+cO4U_s4OppeN-gg@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CA+55aFxtuUBBJS4xxM5OiyZs04xjrpHPif+cO4U_s4OppeN-gg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,69 +28,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, Freeman Zhang <freeman.zhang1992@gmail.com>, kexec@lists.infradead.org, Zhengyu Zhang <zhezhang@redhat.com>, Emrah Demir <ed@abdsec.com>
 
-Hello Pratyush,
+On 04/14/16 at 06:02pm, Linus Torvalds wrote:
+> On Thu, Apr 14, 2016 at 1:27 PM, Emrah Demir <ed@abdsec.com> wrote:
+> > On 2016-04-14 13:40, Linus Torvalds wrote:
+> >>
+> >>
+> >> Actually, %pK is horrible in /proc and /sys files, and does the wrong
+> >> thing.
+> >
+> > I agree with that, but for now there is no way to make things right in /proc
+> > or /sys.
+> 
+> Well, there is now.
+> 
+> I've pushed out my attempt at fixing things properly. Please check
+> that kexec works - and if kexec ends up reading that file as non-root,
+> I don't know what to say/do.
+> 
 
->Following commit in kernel v4.5 changed struct module, which affects offset
->calculation of core layout's base and size.
->
->commit 7523e4dc5057e157212b4741abd6256e03404cf1
->Author: Rusty Russell <rusty@rustcorp.com.au>
->Date:   Thu Nov 26 09:44:08 2015 +1030
->
->    module: use a structure to encapsulate layout.
->
->This patch fixes makedumpfile code to cater above kernel modification.
->
->Signed-off-by: Pratyush Anand <panand@redhat.com>
+Checked kexec/kdump, for kdump it will read /proc/kcore, /proc/kcore is root
+only thus it will be fine with the changes.
 
-This patch fixes only the path for -x, but the symbols are only used for
---config(erase command) which requires vmlinux.
-So we don't need to fix the VMCOREINFO path, I got it.
+Though in the comment of kexec_load syscall it says "for obvious reasons only
+root may call it", but in the code it is using:
+        if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+                return -EPERM;
 
-I'll merge this patch into v1.6.0, thanks.
+So for kexec CAP_SYS_BOOT is enough, not necessarily to be root.
 
-Regards,
-Atsushi Kumagai
+It is not clear how to handle it, maybe we can assume nobody is using it as
+non-root, leave it as is or just add |CAP_SYS_BOOT for /proc/iomem?
 
->---
-> makedumpfile.c | 18 ++++++++++++++++++
-> 1 file changed, 18 insertions(+)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 94c969c16ccc..12227ea1fbd8 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -1669,7 +1669,25 @@ get_structure_info(void)
-> 	OFFSET_INIT(module.list, "module", "list");
-> 	OFFSET_INIT(module.name, "module", "name");
-> 	OFFSET_INIT(module.module_core, "module", "module_core");
->+	if (OFFSET(module.module_core) == NOT_FOUND_STRUCTURE) {
->+		/* for kernel version 4.5 and above */
->+		long core_layout;
->+
->+		OFFSET_INIT(module.module_core, "module", "core_layout");
->+		core_layout = OFFSET(module.module_core);
->+		OFFSET_INIT(module.module_core, "module_layout", "base");
->+		OFFSET(module.module_core) += core_layout;
->+	}
-> 	OFFSET_INIT(module.core_size, "module", "core_size");
->+	if (OFFSET(module.core_size) == NOT_FOUND_STRUCTURE) {
->+		/* for kernel version 4.5 and above */
->+		long core_layout;
->+
->+		OFFSET_INIT(module.core_size, "module", "core_layout");
->+		core_layout = OFFSET(module.core_size);
->+		OFFSET_INIT(module.core_size, "module_layout", "size");
->+		OFFSET(module.core_size) += core_layout;
->+	}
-> 	OFFSET_INIT(module.module_init, "module", "module_init");
-> 	OFFSET_INIT(module.init_size, "module", "init_size");
->
->--
->2.5.0
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
