@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1as7M8-0000Ls-BU
- for kexec@lists.infradead.org; Mon, 18 Apr 2016 11:28:40 +0000
-Date: Mon, 18 Apr 2016 19:28:15 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 3/3] kexec: arrange for paddr_vmcoreinfo_note() to return
- phys_addr_t
-Message-ID: <20160418112815.GF3602@x1.redhat.com>
-References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
- <E1aqnQy-0001U9-SR@rmk-PC.arm.linux.org.uk>
- <20160418053820.GC3602@x1.redhat.com>
- <20160418083601.GY19428@n2100.arm.linux.org.uk>
- <20160418103258.GE3602@x1.redhat.com>
- <20160418105236.GB19428@n2100.arm.linux.org.uk>
+ id 1asKHi-0001XO-Eo
+ for kexec@lists.infradead.org; Tue, 19 Apr 2016 01:16:59 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: fix compilation warning
+Date: Tue, 19 Apr 2016 01:14:35 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E3B93C@BPXM01GP.gisp.nec.co.jp>
+References: <4ffb6afbec353adffa906f4148c177535e29397c.1460955092.git.panand@redhat.com>
+In-Reply-To: <4ffb6afbec353adffa906f4148c177535e29397c.1460955092.git.panand@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160418105236.GB19428@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,102 +19,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 04/18/16 at 11:52am, Russell King - ARM Linux wrote:
-> On Mon, Apr 18, 2016 at 06:32:58PM +0800, Baoquan He wrote:
-> > On 04/18/16 at 09:36am, Russell King - ARM Linux wrote:
-> > > On Mon, Apr 18, 2016 at 01:38:20PM +0800, Baoquan He wrote:
-> > > > On 04/14/16 at 09:00pm, Russell King wrote:
-> > > > > On PAE systems (eg, ARM LPAE) the vmcore note may be located above
-> > > > > 4GB physical on 32-bit architectures, so we need a wider type than
-> > > > > "unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
-> > > > > a phys_addr_t, thereby allowing it to be located above 4GB.
-> > > > 
-> > > > At first glance, it sounds great. But I can't imagine a scenario where
-> > > > on pae system kernel can be located above 4G. As far as I know i386 and
-> > > > its pae can't do this because the current linux VM implementation can't
-> > > > allow that. I am not familiar with arm system. So please correct me if
-> > > > I was wrong.
-> > > 
-> > > You are wrong.  That's precisely why this patch exists.
-> > 
-> > I don't know arm is different then i386. On i386 the kernel text mapping
-> > is linear, just as follow:
-> > 
-> > #define __phys_addr_nodebug(x)  ((x) - PAGE_OFFSET)
-> > 
-> > 
-> > But arm seems not linear. 
-> > static inline phys_addr_t __virt_to_phys(unsigned long x)
-> > {
-> >         phys_addr_t t;
-> > 
-> >         if (sizeof(phys_addr_t) == 4) {
-> >                 __pv_stub(x, t, "add", __PV_BITS_31_24);
-> >         } else {
-> >                 __pv_stub_mov_hi(t);
-> >                 __pv_add_carry_stub(x, t);
-> >         }
-> >         return t;
-> > }
-> > 
-> > So on arm PAE this change makes sense.
-> 
-> No.  This has nothing to do with whether memory is linear or not.  The
-> above code has nothing to do with that either.  The above code you quote
-> allows us to efficiently runtime modify the virtual to physical
-> translation offset, nothing more.
-
-OK, thanks for telling this. Learned it.
-
-> 
-> > Besides, I checked kexec/arch/arm/kexec-zImage-arm.c and found function
-> > locate_hole() is used to find position for arm kernel. 
-> > 
-> > unsigned long locate_hole(struct kexec_info *info,
-> >         unsigned long hole_size, unsigned long hole_align,
-> >         unsigned long hole_min, unsigned long hole_max, 
-> >         int hole_end)
-> > 
-> > The type unsigned long for hole_max limit the region where arm kernel is
-> > loaded. So withough modifying this I doubt arm PAE can really be loaded
-> > above 4G.
-> 
-> Please, stop "doubting" the patches.
-> 
-> I have here a machine which requires these patches, and they're all
-> tested.  Without these patches, it doesn't work - and in fact trying
-> to use kexec on the platform takes out userspace due to the OOM killer.
-> With these patches, it does work - fully.  It has the start of system
-> memory above 4GB physical, with a non-DMA coherent boot time alias
-> below 4GB.
-> 
-> On a running system, the kernel ignores the boot alias below 4GB.
-> Having discussed with Eric, kexec is designed to use the boot time
-> alias, and we need to teach kexec about the difference between the
-> boot time alias and the running system memory layout.
-> 
-> That's what these patches are all about.
-> 
-> I've been discussing the problem with Eric on and off over the last
-> six months, and he's the one who suggested in part the solution
-> implemented in this series.
-
-Got it. Just pass by to have a look:) Since Erci suggested these I stop
-making noise right now.
-
-Thanks for telling above knowledge about arm.
-
-Thanks
-Baoquan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gUHJhdHl1c2gsDQoNCj5jb21taXQgIjQ2MTc2YTk3ZjMyOTogRXhjbHVkZSBwYWdlIHN0
+cnVjdHVyZXMgb2Ygbm9uLWR1bXBlZCBwYWdlcyIgc2V0cw0KPmRpZF9kZWxldGVzIGJ1dCBuZXZl
+ciB1c2VzIHRoYXQsIHdoaWNoIGdlbmVyYXRlcyBmb2xsb3dpbmcgY29tcGlsYXRpb24NCj53YXJu
+aW5nLiAgRml4IHRoYXQuDQo+DQo+bWFrZWR1bXBmaWxlLmM6IEluIGZ1bmN0aW9uIOKAmGZpbmRf
+dW51c2VkX3ZtZW1tYXBfcGFnZXPigJk6DQo+bWFrZWR1bXBmaWxlLmM6NTkxMjoyNTogd2Fybmlu
+ZzogdmFyaWFibGUg4oCYZGlkX2RlbGV0ZXPigJkgc2V0IGJ1dCBub3QgdXNlZA0KPlstV3VudXNl
+ZC1idXQtc2V0LXZhcmlhYmxlXQ0KPiAgaW50IGksIHN6LCBudW1wYWdlcz0wLCBkaWRfZGVsZXRl
+czsNCj4NCj5TaWduZWQtb2ZmLWJ5OiBQcmF0eXVzaCBBbmFuZCA8cGFuYW5kQHJlZGhhdC5jb20+
+DQoNClRoYW5rcywgSSBkaWRuJ3Qgbm90aWNlIHRoYXQgZHVlIHRvIG9sZGVyIGdjYy4NCkknbGwg
+bWVyZ2UgdGhpcyBpbnRvIHYxLjYuMC4NCg0KUmVnYXJkcywNCkF0c3VzaGkgS3VtYWdhaQ0KDQo+
+LS0tDQo+IG1ha2VkdW1wZmlsZS5jIHwgNSArLS0tLQ0KPiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKyksIDQgZGVsZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5j
+IGIvbWFrZWR1bXBmaWxlLmMNCj5pbmRleCBkYWI3YzRkZTQ0ZDQuLjk0Yzk2OWMxNmNjYyAxMDA2
+NDQNCj4tLS0gYS9tYWtlZHVtcGZpbGUuYw0KPisrKyBiL21ha2VkdW1wZmlsZS5jDQo+QEAgLTU5
+NDgsNyArNTk0OCw3IEBAIGZpbmRfdW51c2VkX3ZtZW1tYXBfcGFnZXModm9pZCkNCj4gCXVuc2ln
+bmVkIGxvbmcgbG9uZyBwZm47DQo+IAl1bnNpZ25lZCBsb25nICpscDEsICpscDIsIHN0YXJ0cGZu
+LCBlbmRwZm47DQo+IAl1bnNpZ25lZCBsb25nIHZtYXBzdGFydHBmbiwgdm1hcG51bXBmbnM7DQo+
+LQlpbnQgaSwgc3osIG51bXBhZ2VzPTAsIGRpZF9kZWxldGVzOw0KPisJaW50IGksIHN6LCBudW1w
+YWdlcz0wOw0KPiAJaW50IHN0YXJ0d29yZCwgbnVtd29yZHMsIGRvX2JyZWFrPTA7DQo+IAlsb25n
+IGRlbGV0ZWRfcGFnZXMgPSAwOw0KPiAJb2ZmX3QgbmV3X29mZnNldDEsIG5ld19vZmZzZXQyOw0K
+PkBAIC01OTU2LDcgKzU5NTYsNiBAQCBmaW5kX3VudXNlZF92bWVtbWFwX3BhZ2VzKHZvaWQpDQo+
+IAkvKiByZWFkIGVhY2ggYmxvY2sgb2YgYm90aCBiaXRtYXBzICovDQo+IAlmb3IgKHBmbiA9IDA7
+IHBmbiA8IGluZm8tPm1heF9tYXBucjsgcGZuICs9IFBGTl9CVUZCSVRNQVApIHsgLyogc2l6ZSBp
+biBiaXRzICovDQo+IAkJbnVtcGFnZXMrKzsNCj4tCQlkaWRfZGVsZXRlcyA9IDA7DQo+IAkJbmV3
+X29mZnNldDEgPSBiaXRtYXAxLT5vZmZzZXQgKyBCVUZTSVpFX0JJVE1BUCAqIChwZm4gLyBQRk5f
+QlVGQklUTUFQKTsNCj4gCQlpZiAobHNlZWsoYml0bWFwMS0+ZmQsIG5ld19vZmZzZXQxLCBTRUVL
+X1NFVCkgPCAwICkgew0KPiAJCQlFUlJNU0coIkNhbid0IHNlZWsgdGhlIGJpdG1hcCglcykuICVz
+XG4iLA0KPkBAIC02MDMyLDcgKzYwMzEsNiBAQCBmaW5kX3VudXNlZF92bWVtbWFwX3BhZ2VzKHZv
+aWQpDQo+IAkJCQkJCQkJcmV0dXJuIEZBSUxFRDsNCj4gCQkJCQkJCX0NCj4gCQkJCQkJCWRlbGV0
+ZWRfcGFnZXMgKz0gdm1hcG51bXBmbnM7DQo+LQkJCQkJCQlkaWRfZGVsZXRlcyA9IDE7DQo+IAkJ
+CQkJCX0NCj4gCQkJCQl9DQo+IAkJCQl9DQo+QEAgLTYwNTQsNyArNjA1Miw2IEBAIGZpbmRfdW51
+c2VkX3ZtZW1tYXBfcGFnZXModm9pZCkNCj4gCQkJCQkJcmV0dXJuIEZBSUxFRDsNCj4gCQkJCQl9
+DQo+IAkJCQkJZGVsZXRlZF9wYWdlcyArPSB2bWFwbnVtcGZuczsNCj4tCQkJCQlkaWRfZGVsZXRl
+cyA9IDE7DQo+IAkJCQl9DQo+IAkJCX0NCj4gCQl9DQo+LS0NCj4yLjUuMA0KDQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
