@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1asKh0-000261-NW
- for kexec@lists.infradead.org; Tue, 19 Apr 2016 01:43:07 +0000
+ id 1asQJL-00068s-H5
+ for kexec@lists.infradead.org; Tue, 19 Apr 2016 07:43:04 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] arm64: fix two level pmd calculation
-Date: Tue, 19 Apr 2016 01:38:54 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E3B996@BPXM01GP.gisp.nec.co.jp>
-References: <4a8e32226b69988de610c86f2d81bb02d2b1da4c.1460955342.git.panand@redhat.com>
-In-Reply-To: <4a8e32226b69988de610c86f2d81bb02d2b1da4c.1460955342.git.panand@redhat.com>
+Subject: RE: [PATCH] makedumpfile: fix module core base and size offset for
+ kernel v4.5
+Date: Tue, 19 Apr 2016 07:41:11 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E3BBCE@BPXM01GP.gisp.nec.co.jp>
+References: <ff5f22b5595d3801e8334a4e6b486838d499edc7.1460955261.git.panand@redhat.com>
+In-Reply-To: <ff5f22b5595d3801e8334a4e6b486838d499edc7.1460955261.git.panand@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -19,73 +20,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pratyush Anand <panand@redhat.com>
-Cc: "sgoel@codeaurora.org" <sgoel@codeaurora.org>, "mansip@codeaurora.org" <mansip@codeaurora.org>, "asamson@codeaurora.org" <asamson@codeaurora.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-SGVsbG8gUHJhdHl1c2gsDQoNCj5XaGlsZSByZXZpZXdpbmcgY29tbWl0ICJhOTA4NWI3MDUwMWMg
-YXJtNjQ6IEZpeCBmb3IgQVJNNjQgMyBsZXZlbA0KPnRyYW5zbGF0aW9uIHRhYmxlcyIgd2UgbWlz
-c2VkIHRoYXQsIGl0IGJyZWFrcyBwbWRfb2Zmc2V0IGNhbGN1bGF0aW9uIGZvciAyDQo+bGV2ZWwg
-dHJhbnNsYXRpb24gdGFibGUuIEJlY2F1c2Ugb2YgdGhhdCB3ZSBnZXQgZm9sbG93aW5nIGVycm9y
-IG1lc3NhZ2VzOg0KPg0KPi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPnZ0b3BfYXJtNjQ6IENhbid0IHJlYWQgcG1k
-DQo+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+DQo+Q3VycmVudCBwYXRjaGVzIGZpeGVzIGl0Lg0KPg0KPkFzIGEg
-c2lkZSBlZmZlY3Qgb2YgYWJvdmUgZml4LCBpdCBhbHNvIGZpeGVzIGZvbGxvd2luZyBjb21waWxh
-dGlvbiB3YXJuaW5nDQo+aW50cm9kdWNlZCBpbiBhYm92ZSBjb21taXQuDQo+DQo+LS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tDQo+YXJjaC9hcm02NC5jOiBJbiBmdW5jdGlvbiDigJhwbWRfb2Zmc2V04oCZOg0KPmFyY2gv
-YXJtNjQuYzoxMTk6Mzogd2FybmluZzogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24N
-Cj7igJhnZXRfcGFnZV9zaGlmdF9hcm02NOKAmSBbLVdpbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJh
-dGlvbl0NCj4gICByZXR1cm4gcG1kX29mZnNldF9wZ3RibF9sdmxfMyhwdWQsIHZhZGRyKTsNCj4g
-ICBeDQo+YXJjaC9hcm02NC5jOiBJbiBmdW5jdGlvbiDigJh2dG9wX2FybTY04oCZOg0KPmFyY2gv
-YXJtNjQuYzoyNDY6OTogd2FybmluZzogdW51c2VkIHZhcmlhYmxlIOKAmHB1ZGHigJkgWy1XdW51
-c2VkLXZhcmlhYmxlXQ0KPiAgcHVkX3QgKnB1ZGEsIHB1ZHY7DQo+ICAgICAgICAgXg0KPi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLQ0KPg0KPlNpZ25lZC1vZmYtYnk6IFByYXR5dXNoIEFuYW5kIDxwYW5hbmRAcmVkaGF0
-LmNvbT4NCj4tLS0NCg0KVGhhbmtzLCBJJ2xsIG1lcmdlIHRoaXMgcGF0Y2ggaW50byB2MS42LjAu
-DQoNCj4NCj5BY3R1YWxseSB3ZSBuZWVkIHNvbWUgY2xlYW51cCBhcm91bmQgcGxhdCBzcGVjaWZp
-YyBjb25maWcgY2FsY3VsYXRpb24uIFRoYXQNCj53aWxsIGhlbHAgdG8gYWRkIHN1cHBvcnQgb2Yg
-ZGlmZmVyZW50IHBhZ2UgdGFibGUgbGV2ZWwgYW5kIHNpemVzIHdpdGhvdXQNCj5hbnkgcXVpcmsu
-IEhvd2V2ZXIsIHRoYXQgbmVlZHMga2VybmVsIGNoYW5nZXMgWzFdIGluIGFybTY0IGtleGVjIGNv
-ZGUuIE91cg0KPnBsYW4gaXMgdG8gaW50cm9kdWNlIHRoYXQga2VybmVsIGNoYW5nZXMgb25jZSBh
-cm02NCBrZXhlYyBrZXJuZWwgcGF0Y2hlcw0KPmFyZSB1cHN0cmVhbWVkLiBPbmNlLCBtb2RpZmlj
-YXRpb24gaW4ga2VybmVsIGlzIGRvbmUgdGhlbiB3ZSBjYW4gaGF2ZQ0KPm1ha2VkdW1wZmlsZSBt
-b2RpZmljYXRpb25zIFsyLCAzXSB0byBzdXBwb3J0IG1vcmUgcGFnZSB0YWJsZSBsZXZlbHMuDQo+
-DQo+WzFdIGh0dHBzOi8vZ2l0aHViLmNvbS9wcmF0eXVzaGFuYW5kL2xpbnV4L2NvbW1pdC8zZDlh
-MmU5NmJkNDljNjk2MzdiODhmNjFjYmVmYTk3MzZlMDI5MzcwDQo+WzJdIGh0dHBzOi8vZ2l0aHVi
-LmNvbS9wcmF0eXVzaGFuYW5kL21ha2VkdW1wZmlsZS9jb21taXQvOTQzMmQ4MTdlZTM3NTgzZTg3
-ZTcxODJiMWY4NmE5ZGE0MmQ4ODNiYw0KPlszXSBodHRwczovL2dpdGh1Yi5jb20vcHJhdHl1c2hh
-bmFuZC9tYWtlZHVtcGZpbGUvY29tbWl0LzIzMWU5OTdiOTZkZTJhMTI0YTU1M2UyZmRkODM4MGJk
-OGU3MDM0OTMNCg0KU291bmRzIGxpa2UgYSBnb29kIHBsYW4sIEknbGwgd2FpdCBmb3IgdGhhdC4N
-Cg0KVGhhbmtzLA0KQXRzdXNoaSBLdW1hZ2FpDQoNCj4gYXJjaC9hcm02NC5jIHwgMjIgKysrKysr
-KysrKysrLS0tLS0tLS0tLQ0KPiAxIGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMTAg
-ZGVsZXRpb25zKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQuYyBiL2FyY2gvYXJtNjQu
-Yw0KPmluZGV4IGFiMjAzODlmYTY3My4uZjc1NDAyNjJhNmFlIDEwMDY0NA0KPi0tLSBhL2FyY2gv
-YXJtNjQuYw0KPisrKyBiL2FyY2gvYXJtNjQuYw0KPkBAIC0xMTAsMTUgKzExMCw2IEBAIHN0YXRp
-YyBpbnQgcGd0YWJsZV9sZXZlbDsNCj4gc3RhdGljIGludCB2YV9iaXRzOw0KPiBzdGF0aWMgaW50
-IHBhZ2Vfc2hpZnQ7DQo+DQo+LXBtZF90ICoNCj4tcG1kX29mZnNldChwdWRfdCAqcHVkLCB1bnNp
-Z25lZCBsb25nIHZhZGRyKQ0KPi17DQo+LQlpZiAocGd0YWJsZV9sZXZlbCA9PSAyKSB7DQo+LQkJ
-cmV0dXJuIHBtZF9vZmZzZXRfcGd0YmxfbHZsXzIocHVkLCB2YWRkcik7DQo+LQl9IGVsc2Ugew0K
-Pi0JCXJldHVybiBwbWRfb2Zmc2V0X3BndGJsX2x2bF8zKHB1ZCwgdmFkZHIpOw0KPi0JfQ0KPi19
-DQo+IGludA0KPiBnZXRfcGd0YWJsZV9sZXZlbF9hcm02NCh2b2lkKQ0KPiB7DQo+QEAgLTEzNyw2
-ICsxMjgsMTYgQEAgZ2V0X3BhZ2Vfc2hpZnRfYXJtNjQodm9pZCkNCj4gCXJldHVybiBwYWdlX3No
-aWZ0Ow0KPiB9DQo+DQo+K3BtZF90ICoNCj4rcG1kX29mZnNldChwdWRfdCAqcHVkYSwgcHVkX3Qg
-KnB1ZHYsIHVuc2lnbmVkIGxvbmcgdmFkZHIpDQo+K3sNCj4rCWlmIChwZ3RhYmxlX2xldmVsID09
-IDIpIHsNCj4rCQlyZXR1cm4gcG1kX29mZnNldF9wZ3RibF9sdmxfMihwdWRhLCB2YWRkcik7DQo+
-Kwl9IGVsc2Ugew0KPisJCXJldHVybiBwbWRfb2Zmc2V0X3BndGJsX2x2bF8zKHB1ZHYsIHZhZGRy
-KTsNCj4rCX0NCj4rfQ0KPisNCj4gI2RlZmluZSBQQUdFX09GRlNFVF8zOSAoMHhmZmZmZmZmZmZm
-ZmZmZmZmVUwgPDwgMzkpDQo+ICNkZWZpbmUgUEFHRV9PRkZTRVRfNDIgKDB4ZmZmZmZmZmZmZmZm
-ZmZmZlVMIDw8IDQyKQ0KPiBzdGF0aWMgaW50IGNhbGN1bGF0ZV9wbGF0X2NvbmZpZyh2b2lkKQ0K
-PkBAIC0yOTQsOCArMjk1LDkgQEAgdnRvcF9hcm02NCh1bnNpZ25lZCBsb25nIHZhZGRyKQ0KPiAJ
-fQ0KPg0KPiAJcHVkdi5wZ2QgPSBwZ2R2Ow0KPisJcHVkYSA9IChwdWRfdCAqKXBnZGE7DQo+DQo+
-LQlwbWRhID0gcG1kX29mZnNldCgmcHVkdiwgdmFkZHIpOw0KPisJcG1kYSA9IHBtZF9vZmZzZXQo
-cHVkYSwgJnB1ZHYsIHZhZGRyKTsNCj4gCWlmICghcmVhZG1lbShWQUREUiwgKHVuc2lnbmVkIGxv
-bmcgbG9uZylwbWRhLCAmcG1kdiwgc2l6ZW9mKHBtZHYpKSkgew0KPiAJCUVSUk1TRygiQ2FuJ3Qg
-cmVhZCBwbWRcbiIpOw0KPiAJCXJldHVybiBOT1RfUEFERFI7DQo+LS0NCj4yLjUuMA0KDQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Pratyush,
+
+>Following commit in kernel v4.5 changed struct module, which affects offset
+>calculation of core layout's base and size.
+>
+>commit 7523e4dc5057e157212b4741abd6256e03404cf1
+>Author: Rusty Russell <rusty@rustcorp.com.au>
+>Date:   Thu Nov 26 09:44:08 2015 +1030
+>
+>    module: use a structure to encapsulate layout.
+>
+>This patch fixes makedumpfile code to cater above kernel modification.
+>
+>Signed-off-by: Pratyush Anand <panand@redhat.com>
+
+This patch fixes only the path for -x, but the symbols are only used for
+--config(erase command) which requires vmlinux.
+So we don't need to fix the VMCOREINFO path, I got it.
+
+I'll merge this patch into v1.6.0, thanks.
+
+Regards,
+Atsushi Kumagai
+
+>---
+> makedumpfile.c | 18 ++++++++++++++++++
+> 1 file changed, 18 insertions(+)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 94c969c16ccc..12227ea1fbd8 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -1669,7 +1669,25 @@ get_structure_info(void)
+> 	OFFSET_INIT(module.list, "module", "list");
+> 	OFFSET_INIT(module.name, "module", "name");
+> 	OFFSET_INIT(module.module_core, "module", "module_core");
+>+	if (OFFSET(module.module_core) == NOT_FOUND_STRUCTURE) {
+>+		/* for kernel version 4.5 and above */
+>+		long core_layout;
+>+
+>+		OFFSET_INIT(module.module_core, "module", "core_layout");
+>+		core_layout = OFFSET(module.module_core);
+>+		OFFSET_INIT(module.module_core, "module_layout", "base");
+>+		OFFSET(module.module_core) += core_layout;
+>+	}
+> 	OFFSET_INIT(module.core_size, "module", "core_size");
+>+	if (OFFSET(module.core_size) == NOT_FOUND_STRUCTURE) {
+>+		/* for kernel version 4.5 and above */
+>+		long core_layout;
+>+
+>+		OFFSET_INIT(module.core_size, "module", "core_layout");
+>+		core_layout = OFFSET(module.core_size);
+>+		OFFSET_INIT(module.core_size, "module_layout", "size");
+>+		OFFSET(module.core_size) += core_layout;
+>+	}
+> 	OFFSET_INIT(module.module_init, "module", "module_init");
+> 	OFFSET_INIT(module.init_size, "module", "init_size");
+>
+>--
+>2.5.0
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
