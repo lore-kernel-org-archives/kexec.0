@@ -2,14 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aviED-0003io-JP
- for kexec@lists.infradead.org; Thu, 28 Apr 2016 09:27:22 +0000
-Date: Thu, 28 Apr 2016 10:26:44 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: [PATCH 00/12] Fixing TI Keystone2 kexec
-Message-ID: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ id 1aviFB-0004PO-VS
+ for kexec@lists.infradead.org; Thu, 28 Apr 2016 09:28:23 +0000
+In-Reply-To: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 01/12] ARM: kexec: fix crashkernel= handling
 MIME-Version: 1.0
 Content-Disposition: inline
+Message-Id: <E1aviEe-0000if-VZ@rmk-PC.arm.linux.org.uk>
+Date: Thu, 28 Apr 2016 10:27:48 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,48 +27,105 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
 
-These changes are required for TI Keystone2 kexec to be functional.  TI
-Keystone2 has the run-time view of physical memory above 4GiB, but with
-a boot time alias below 4GiB which can only be used during the early
-boot.
+When the kernel crashkernel parameter is specified with just a size, we
+are supposed to allocate a region from RAM to store the crashkernel.
+However, ARM merely reserves physical address zero with no checking that
+there is even RAM there.
 
-This means we need to translate run-time physical addresses (which the
-kernel uses) to boot-time physical addresses, which, having discussed
-with Eric, is what the kexec tools and kexec kernel API requires.
+Fix this by lifting similar code from x86, importing it to ARM with the
+ARM specific parameters added.  In the absence of any platform specific
+information, we allocate the crashkernel region from the first 512MB of
+physical memory.
 
-We publish a special set of boot time resources in /proc/iomem, which
-the (modified) kexec tools look for in preference to the normal resources.
-Hence, if these are found, the kexec tools make use of these resources,
-and thus kexec tools use the boot-time view of physical memory.
+Update the kdump documentation to reflect this change.
 
-The first three patches have been sitting in linux-next for a while.
-I'm going to put the next ARM specific three into linux-next next week.
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ Documentation/kdump/kdump.txt | 13 +++----------
+ arch/arm/kernel/setup.c       | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 10 deletions(-)
 
-I've sent Eric over a month ago all the patches, including the kexec
-tools patches, but I've heard nothing back.  I'm at a loss how to
-make progress on these patches - and as I'm being hassled about this,
-I'm going to be hassling the community about it, possibly with regular
-re-posts until there is some progress.
-
- Documentation/kdump/kdump.txt     | 13 ++------
- arch/arm/boot/dts/keystone.dtsi   |  8 +++++
- arch/arm/include/asm/kexec.h      | 24 +++++++++++++++
- arch/arm/include/asm/memory.h     | 38 ++++++++++++++++++-----
- arch/arm/kernel/machine_kexec.c   |  2 +-
- arch/arm/kernel/setup.c           | 65 +++++++++++++++++++++++++++++++++++++--
- arch/arm/mach-keystone/keystone.c |  7 +----
- arch/arm/mm/idmap.c               |  2 +-
- arch/ia64/kernel/machine_kexec.c  |  2 +-
- include/linux/kexec.h             | 42 +++++++++++++++++++++++--
- kernel/kexec.c                    |  3 +-
- kernel/kexec_core.c               | 30 +++++++++---------
- kernel/ksysfs.c                   |  4 +--
- 13 files changed, 193 insertions(+), 47 deletions(-)
-
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index bc4bd5a44b88..88ff63d5fde3 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -263,12 +263,6 @@ been removed from the machine.
+     crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+     range=start-[end]
+ 
+-Please note, on arm, the offset is required.
+-    crashkernel=<range1>:<size1>[,<range2>:<size2>,...]@offset
+-    range=start-[end]
+-
+-    'start' is inclusive and 'end' is exclusive.
+-
+ For example:
+ 
+     crashkernel=512M-2G:64M,2G-:128M
+@@ -307,10 +301,9 @@ Boot into System Kernel
+    on the memory consumption of the kdump system. In general this is not
+    dependent on the memory size of the production system.
+ 
+-   On arm, use "crashkernel=Y@X". Note that the start address of the kernel
+-   will be aligned to 128MiB (0x08000000), so if the start address is not then
+-   any space below the alignment point may be overwritten by the dump-capture kernel,
+-   which means it is possible that the vmcore is not that precise as expected.
++   On arm, the use of "crashkernel=Y@X" is no longer necessary; the
++   kernel will automatically locate the crash kernel image within the
++   first 512MB of RAM if X is not given.
+ 
+ 
+ Load the Dump-capture Kernel
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 139791ed473d..77b54c461c52 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -938,6 +938,13 @@ static int __init init_machine_late(void)
+ late_initcall(init_machine_late);
+ 
+ #ifdef CONFIG_KEXEC
++/*
++ * The crash region must be aligned to 128MB to avoid
++ * zImage relocating below the reserved region.
++ */
++#define CRASH_ALIGN	(128 << 20)
++#define CRASH_ADDR_MAX	(PHYS_OFFSET + (512 << 20))
++
+ static inline unsigned long long get_total_mem(void)
+ {
+ 	unsigned long total;
+@@ -965,6 +972,28 @@ static void __init reserve_crashkernel(void)
+ 	if (ret)
+ 		return;
+ 
++	if (crash_base <= 0) {
++		unsigned long long crash_max = CRASH_ADDR_MAX;
++		if (crash_max > (u32)~0)
++			crash_max = (u32)~0;
++		crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
++						    crash_size, CRASH_ALIGN);
++		if (!crash_base) {
++			pr_err("crashkernel reservation failed - No suitable area found.\n");
++			return;
++		}
++	} else {
++		unsigned long long start;
++
++		start = memblock_find_in_range(crash_base,
++					       crash_base + crash_size,
++					       crash_size, SECTION_SIZE);
++		if (start != crash_base) {
++			pr_err("crashkernel reservation failed - memory is in use.\n");
++			return;
++		}
++	}
++
+ 	ret = memblock_reserve(crash_base, crash_size);
+ 	if (ret < 0) {
+ 		pr_warn("crashkernel reservation failed - memory is in use (0x%lx)\n",
 -- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.1.0
+
 
 _______________________________________________
 kexec mailing list
