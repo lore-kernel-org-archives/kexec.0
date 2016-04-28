@@ -2,23 +2,14 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1avhnO-0001Tu-45
- for kexec@lists.infradead.org; Thu, 28 Apr 2016 08:59:39 +0000
-Date: Thu, 28 Apr 2016 09:56:54 +0100
+ id 1aviED-0003io-JP
+ for kexec@lists.infradead.org; Thu, 28 Apr 2016 09:27:22 +0000
+Date: Thu, 28 Apr 2016 10:26:44 +0100
 From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 3/3] kexec: arrange for paddr_vmcoreinfo_note() to return
- phys_addr_t
-Message-ID: <20160428085654.GV19428@n2100.arm.linux.org.uk>
-References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
- <E1aqnQy-0001U9-SR@rmk-PC.arm.linux.org.uk>
- <20160418053820.GC3602@x1.redhat.com>
- <20160418083601.GY19428@n2100.arm.linux.org.uk>
- <20160418103258.GE3602@x1.redhat.com>
- <20160418105236.GB19428@n2100.arm.linux.org.uk>
- <20160418112815.GF3602@x1.redhat.com>
+Subject: [PATCH 00/12] Fixing TI Keystone2 kexec
+Message-ID: <20160428092644.GX19428@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160418112815.GF3602@x1.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,102 +22,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
 
-What's the status of these three patches then?  It's been a fortnight
-since they were sent, and I've heard nothing about whether they're
-going to be applied or not.
+These changes are required for TI Keystone2 kexec to be functional.  TI
+Keystone2 has the run-time view of physical memory above 4GiB, but with
+a boot time alias below 4GiB which can only be used during the early
+boot.
 
+This means we need to translate run-time physical addresses (which the
+kernel uses) to boot-time physical addresses, which, having discussed
+with Eric, is what the kexec tools and kexec kernel API requires.
 
-On Mon, Apr 18, 2016 at 07:28:15PM +0800, Baoquan He wrote:
-> On 04/18/16 at 11:52am, Russell King - ARM Linux wrote:
-> > On Mon, Apr 18, 2016 at 06:32:58PM +0800, Baoquan He wrote:
-> > > On 04/18/16 at 09:36am, Russell King - ARM Linux wrote:
-> > > > On Mon, Apr 18, 2016 at 01:38:20PM +0800, Baoquan He wrote:
-> > > > > On 04/14/16 at 09:00pm, Russell King wrote:
-> > > > > > On PAE systems (eg, ARM LPAE) the vmcore note may be located above
-> > > > > > 4GB physical on 32-bit architectures, so we need a wider type than
-> > > > > > "unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
-> > > > > > a phys_addr_t, thereby allowing it to be located above 4GB.
-> > > > > 
-> > > > > At first glance, it sounds great. But I can't imagine a scenario where
-> > > > > on pae system kernel can be located above 4G. As far as I know i386 and
-> > > > > its pae can't do this because the current linux VM implementation can't
-> > > > > allow that. I am not familiar with arm system. So please correct me if
-> > > > > I was wrong.
-> > > > 
-> > > > You are wrong.  That's precisely why this patch exists.
-> > > 
-> > > I don't know arm is different then i386. On i386 the kernel text mapping
-> > > is linear, just as follow:
-> > > 
-> > > #define __phys_addr_nodebug(x)  ((x) - PAGE_OFFSET)
-> > > 
-> > > 
-> > > But arm seems not linear. 
-> > > static inline phys_addr_t __virt_to_phys(unsigned long x)
-> > > {
-> > >         phys_addr_t t;
-> > > 
-> > >         if (sizeof(phys_addr_t) == 4) {
-> > >                 __pv_stub(x, t, "add", __PV_BITS_31_24);
-> > >         } else {
-> > >                 __pv_stub_mov_hi(t);
-> > >                 __pv_add_carry_stub(x, t);
-> > >         }
-> > >         return t;
-> > > }
-> > > 
-> > > So on arm PAE this change makes sense.
-> > 
-> > No.  This has nothing to do with whether memory is linear or not.  The
-> > above code has nothing to do with that either.  The above code you quote
-> > allows us to efficiently runtime modify the virtual to physical
-> > translation offset, nothing more.
-> 
-> OK, thanks for telling this. Learned it.
-> 
-> > 
-> > > Besides, I checked kexec/arch/arm/kexec-zImage-arm.c and found function
-> > > locate_hole() is used to find position for arm kernel. 
-> > > 
-> > > unsigned long locate_hole(struct kexec_info *info,
-> > >         unsigned long hole_size, unsigned long hole_align,
-> > >         unsigned long hole_min, unsigned long hole_max, 
-> > >         int hole_end)
-> > > 
-> > > The type unsigned long for hole_max limit the region where arm kernel is
-> > > loaded. So withough modifying this I doubt arm PAE can really be loaded
-> > > above 4G.
-> > 
-> > Please, stop "doubting" the patches.
-> > 
-> > I have here a machine which requires these patches, and they're all
-> > tested.  Without these patches, it doesn't work - and in fact trying
-> > to use kexec on the platform takes out userspace due to the OOM killer.
-> > With these patches, it does work - fully.  It has the start of system
-> > memory above 4GB physical, with a non-DMA coherent boot time alias
-> > below 4GB.
-> > 
-> > On a running system, the kernel ignores the boot alias below 4GB.
-> > Having discussed with Eric, kexec is designed to use the boot time
-> > alias, and we need to teach kexec about the difference between the
-> > boot time alias and the running system memory layout.
-> > 
-> > That's what these patches are all about.
-> > 
-> > I've been discussing the problem with Eric on and off over the last
-> > six months, and he's the one who suggested in part the solution
-> > implemented in this series.
-> 
-> Got it. Just pass by to have a look:) Since Erci suggested these I stop
-> making noise right now.
-> 
-> Thanks for telling above knowledge about arm.
-> 
-> Thanks
-> Baoquan
+We publish a special set of boot time resources in /proc/iomem, which
+the (modified) kexec tools look for in preference to the normal resources.
+Hence, if these are found, the kexec tools make use of these resources,
+and thus kexec tools use the boot-time view of physical memory.
+
+The first three patches have been sitting in linux-next for a while.
+I'm going to put the next ARM specific three into linux-next next week.
+
+I've sent Eric over a month ago all the patches, including the kexec
+tools patches, but I've heard nothing back.  I'm at a loss how to
+make progress on these patches - and as I'm being hassled about this,
+I'm going to be hassling the community about it, possibly with regular
+re-posts until there is some progress.
+
+ Documentation/kdump/kdump.txt     | 13 ++------
+ arch/arm/boot/dts/keystone.dtsi   |  8 +++++
+ arch/arm/include/asm/kexec.h      | 24 +++++++++++++++
+ arch/arm/include/asm/memory.h     | 38 ++++++++++++++++++-----
+ arch/arm/kernel/machine_kexec.c   |  2 +-
+ arch/arm/kernel/setup.c           | 65 +++++++++++++++++++++++++++++++++++++--
+ arch/arm/mach-keystone/keystone.c |  7 +----
+ arch/arm/mm/idmap.c               |  2 +-
+ arch/ia64/kernel/machine_kexec.c  |  2 +-
+ include/linux/kexec.h             | 42 +++++++++++++++++++++++--
+ kernel/kexec.c                    |  3 +-
+ kernel/kexec_core.c               | 30 +++++++++---------
+ kernel/ksysfs.c                   |  4 +--
+ 13 files changed, 193 insertions(+), 47 deletions(-)
 
 -- 
 RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
