@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-oi0-f41.google.com ([209.85.218.41])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aw5qx-0007Wv-RA
- for kexec@lists.infradead.org; Fri, 29 Apr 2016 10:40:56 +0000
-Date: Fri, 29 Apr 2016 18:45:39 +0800
-From: Minfei Huang <mhuang@redhat.com>
-Subject: Re: [PATCH 2/3] kexec: ensure user memory sizes do not wrap
-Message-ID: <20160429104539.GB23421@dhcp-128-25.nay.redhat.com>
-References: <20160414195938.GV19428@n2100.arm.linux.org.uk>
- <E1aqnQt-0001U2-Oa@rmk-PC.arm.linux.org.uk>
- <20160428110722.GA28541@dhcp-128-25.nay.redhat.com>
- <20160428122209.GZ19428@n2100.arm.linux.org.uk>
- <20160429093221.GA23421@dhcp-128-25.nay.redhat.com>
- <20160429093046.GR19428@n2100.arm.linux.org.uk>
+ id 1aw9F6-0004ou-VY
+ for kexec@lists.infradead.org; Fri, 29 Apr 2016 14:18:05 +0000
+Received: by mail-oi0-f41.google.com with SMTP id x201so119809992oif.3
+ for <kexec@lists.infradead.org>; Fri, 29 Apr 2016 07:17:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160429093046.GR19428@n2100.arm.linux.org.uk>
+In-Reply-To: <E1aviEe-0000if-VZ@rmk-PC.arm.linux.org.uk>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ <E1aviEe-0000if-VZ@rmk-PC.arm.linux.org.uk>
+Date: Fri, 29 Apr 2016 19:47:43 +0530
+Message-ID: <CAHB_GuqsoZn=i8KXtiuD5oiVAb5vj+gAr_apOtuFiEwiwPREGw@mail.gmail.com>
+Subject: Re: [PATCH 01/12] ARM: kexec: fix crashkernel= handling
+From: Pratyush Anand <panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,52 +25,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 
-On 04/29/16 at 10:30am, Russell King - ARM Linux wrote:
-> > > > > @@ -169,6 +169,8 @@ int sanity_check_segment_list(struct kimage *image)
-> > > > >  
-> > > > >  		mstart = image->segment[i].mem;
-> > > > >  		mend   = mstart + image->segment[i].memsz;
-> > > > > +		if (mstart > mend)
-> > > > > +			return result;
-> > > > 
-> > > > The type of image->segment[i].memsz is unsigned. So it is no need to
-> > > > have a test here.
-> > > 
-> > > Absolutely wrong.  Consider the case:
-> > > 
-> > > 	segment[i].mem = 0xfff00000;
-> > > 	segment[i].size = 0x00200000;
-> > > 
-> > > Here, mstart will be 0xfff00000, and mend will be 0x00100000.  Just
-> > > because it's some random type does not make things magically work.
-> > 
-> > Hi, Russell.
-> > 
-> > Do you mean in PAE mode? If so, we will be in big trouble, because there
-> > are a lot of functions which use unsigned long to store memory address,
-> > and this type is 32 bit in PAE mode.
-> 
-> This is basic input validation stuff, it's got nothing to do with whether
-> we're in PAE mode.  If we get passed such a segment as I illustrate above,
-> we should detect and fail it, just as we detect and fail other similar
-> errors.
-> 
-> I'm not sure what the big deal here is.  This is basic validation checks
-> for stuff coming from userspace which the kernel should be doing as a
-> matter of course to protect itself.
+Hi Russell,
 
-Hi, Russell.
+On Thu, Apr 28, 2016 at 2:57 PM, Russell King
+<rmk+kernel@arm.linux.org.uk> wrote:
 
-Thanks for your reply. I'm fine with this basic test now.
+[...]
 
-Please feel free to add
-Reviewed-by: Minfei Huang <mhuang@redhat.com>.
+> +   On arm, the use of "crashkernel=Y@X" is no longer necessary; the
+> +   kernel will automatically locate the crash kernel image within the
+> +   first 512MB of RAM if X is not given.
+>
+>
+>  Load the Dump-capture Kernel
+> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> index 139791ed473d..77b54c461c52 100644
+> --- a/arch/arm/kernel/setup.c
+> +++ b/arch/arm/kernel/setup.c
+> @@ -938,6 +938,13 @@ static int __init init_machine_late(void)
+>  late_initcall(init_machine_late);
+>
+>  #ifdef CONFIG_KEXEC
+> +/*
+> + * The crash region must be aligned to 128MB to avoid
+> + * zImage relocating below the reserved region.
+> + */
+> +#define CRASH_ALIGN    (128 << 20)
+> +#define CRASH_ADDR_MAX (PHYS_OFFSET + (512 << 20))
+> +
+>  static inline unsigned long long get_total_mem(void)
+>  {
+>         unsigned long total;
+> @@ -965,6 +972,28 @@ static void __init reserve_crashkernel(void)
+>         if (ret)
+>                 return;
+>
+> +       if (crash_base <= 0) {
+> +               unsigned long long crash_max = CRASH_ADDR_MAX;
+> +               if (crash_max > (u32)~0)
+> +                       crash_max = (u32)~0;
+> +               crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
 
-Thanks
-Minfei
+Although it does not matter, memblock_find_in_range would be able to
+locate correct free area even when there is no valid RAM at address
+CRASH_ALIGN. However passing PHYS_OFFSET as start argument may be more
+readable probably.
+
+> +                                                   crash_size, CRASH_ALIGN);
+> +               if (!crash_base) {
+> +                       pr_err("crashkernel reservation failed - No suitable area found.\n");
+> +                       return;
+> +               }
+> +       } else {
+> +               unsigned long long start;
+> +
+> +               start = memblock_find_in_range(crash_base,
+> +                                              crash_base + crash_size,
+> +                                              crash_size, SECTION_SIZE);
+> +               if (start != crash_base) {
+> +                       pr_err("crashkernel reservation failed - memory is in use.\n");
+> +                       return;
+> +               }
+> +       }
+> +
+>         ret = memblock_reserve(crash_base, crash_size);
+>         if (ret < 0) {
+>                 pr_warn("crashkernel reservation failed - memory is in use (0x%lx)\n",
+> --
+
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 
 _______________________________________________
 kexec mailing list
