@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mout.kundenserver.de ([217.72.192.73])
+Received: from mout.kundenserver.de ([212.227.17.24])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1aw9Js-0008Ev-09
- for kexec@lists.infradead.org; Fri, 29 Apr 2016 14:23:00 +0000
+ id 1aw9K0-0008Jq-BU
+ for kexec@lists.infradead.org; Fri, 29 Apr 2016 14:23:08 +0000
 From: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
-Subject: 
-Date: Fri, 29 Apr 2016 16:22:20 +0200
-Message-Id: <1461939743-21775-1-git-send-email-nikolaus.schulz@avionic-design.de>
+Subject: [PATCH v2 1/3] zImage-arm: Fix a return value check that use the
+ wrong variable
+Date: Fri, 29 Apr 2016 16:22:21 +0200
+Message-Id: <1461939743-21775-2-git-send-email-nikolaus.schulz@avionic-design.de>
+In-Reply-To: <1461939743-21775-1-git-send-email-nikolaus.schulz@avionic-design.de>
+References: <1461939743-21775-1-git-send-email-nikolaus.schulz@avionic-design.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,14 +26,32 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: Alban Bedel <alban.bedel@avionic-design.de>, kexec@lists.infradead.org
 
-Hi Simon,
+From: Alban Bedel <alban.bedel@avionic-design.de>
 
-here is v2 of the patch series from Avionic Design.  There are no
-content changes, only the setup_dtb_prop patch has a reworked commit
-message, as requested.
+When looking for a hole to put the initrd in the error check used the
+wrong variable.
 
-Best regards,
-Nikolaus
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ kexec/arch/arm/kexec-zImage-arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index d85ab9b..0ac194d 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -529,7 +529,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 			unsigned long initrd_base_new = locate_hole(info,
+ 					hole_size, page_size,
+ 					initrd_base, ULONG_MAX, INT_MAX);
+-			if (base == ULONG_MAX)
++			if (initrd_base_new == ULONG_MAX)
+ 				return -1;
+ 			initrd_base = initrd_base_new;
+ 		}
+-- 
+2.1.4
+
 
 _______________________________________________
 kexec mailing list
