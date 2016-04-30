@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f49.google.com ([209.85.218.49])
+Received: from pandora.arm.linux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1awLhw-0007Jd-Ao
- for kexec@lists.infradead.org; Sat, 30 Apr 2016 03:36:41 +0000
-Received: by mail-oi0-f49.google.com with SMTP id x201so139316406oif.3
- for <kexec@lists.infradead.org>; Fri, 29 Apr 2016 20:36:20 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20160429181008.GV19428@n2100.arm.linux.org.uk>
+ id 1awQ9h-0006vo-Io
+ for kexec@lists.infradead.org; Sat, 30 Apr 2016 08:21:39 +0000
+Date: Sat, 30 Apr 2016 09:20:55 +0100
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 06/12] ARM: kexec: advertise location of bootable RAM
+Message-ID: <20160430082055.GG19428@n2100.arm.linux.org.uk>
 References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviEp-0000ir-7s@rmk-PC.arm.linux.org.uk>
- <CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg@mail.gmail.com>
- <20160429181008.GV19428@n2100.arm.linux.org.uk>
-Date: Sat, 30 Apr 2016 09:06:19 +0530
-Message-ID: <CAHB_GuoQM9dzgyd+67QPOReLW4HYNqyuzKGzB7Fzq=dpWYHf_w@mail.gmail.com>
-Subject: Re: [PATCH 03/12] ARM: kexec: remove 512MB restriction on kexec
- crashdump
-From: Pratyush Anand <panand@redhat.com>
+ <E1aviF4-0000jG-MO@rmk-PC.arm.linux.org.uk>
+ <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+ <20160429180024.GS19428@n2100.arm.linux.org.uk>
+ <CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,65 +28,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+To: Pratyush Anand <panand@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 
-On Fri, Apr 29, 2016 at 11:40 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Fri, Apr 29, 2016 at 07:49:45PM +0530, Pratyush Anand wrote:
->> On Thu, Apr 28, 2016 at 2:57 PM, Russell King
->> <rmk+kernel@arm.linux.org.uk> wrote:
->> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
->> > ---
->> >  arch/arm/kernel/setup.c | 5 +----
->> >  1 file changed, 1 insertion(+), 4 deletions(-)
->> >
->> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
->> > index 77b54c461c52..d9317eec1eba 100644
->> > --- a/arch/arm/kernel/setup.c
->> > +++ b/arch/arm/kernel/setup.c
->> > @@ -943,7 +943,6 @@ late_initcall(init_machine_late);
->> >   * zImage relocating below the reserved region.
->> >   */
->> >  #define CRASH_ALIGN    (128 << 20)
->> > -#define CRASH_ADDR_MAX (PHYS_OFFSET + (512 << 20))
->> >
->> >  static inline unsigned long long get_total_mem(void)
->> >  {
->> > @@ -973,9 +972,7 @@ static void __init reserve_crashkernel(void)
->> >                 return;
->> >
->> >         if (crash_base <= 0) {
->> > -               unsigned long long crash_max = CRASH_ADDR_MAX;
->> > -               if (crash_max > (u32)~0)
->> > -                       crash_max = (u32)~0;
->> > +               unsigned long long crash_max = idmap_to_phys((u32)~0);
->> >                 crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
->> >                                                     crash_size, CRASH_ALIGN);
->> >                 if (!crash_base) {
->>
->> Reviewed-by: Pratyush Anand <panand@redhat.com>
->>
->> Unrelated to these modification:
->> In function arch/arm/mm/init.c: arm_memblock_steal() may be  following
->> would be more appropriate?
->> memblock_alloc_base(size, align, idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE));
->
-> No, arm_memblock_steal() is totally unsuitable.  arm_memblock_steal()
-> *removes* the memory range from memblock, including removing the
-> mapping of that memory.  It will make the memory range inaccessible to
-> the kernel.
->
-> Since kexec wants to write directly to this memory, using
-> arm_memblock_steal() will have the cause the kernel to OOPS when
-> it hits the resulting hole.
->
+On Sat, Apr 30, 2016 at 08:57:34AM +0530, Pratyush Anand wrote:
+> On Fri, Apr 29, 2016 at 11:30 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> > On Fri, Apr 29, 2016 at 08:26:00PM +0530, Pratyush Anand wrote:
+> >> Hi Russell,
+> >>
+> >> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
+> >> <rmk+kernel@arm.linux.org.uk> wrote:
+> >> > Advertise the location of bootable RAM to kexec-tools.  kexec needs to
+> >> > know where it can place the kernel in RAM, and so be executable when
+> >> > the system needs to jump into it.
+> >> >
+> >> > Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
+> >> > tag.
+> >> >
+> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> >>
+> >> Can you please also share git tree path of corresponding kexec-tools changes?
+> >>
+> >> Could it be a better idea (if things in user space become simpler)
+> >> that in stead of patch 5 and 6, we pass arch_phys_to_idmap_offset to
+> >> user space, and then user space manipulates existing "Crash kernel"
+> >> and "System RAM" resources.
+> >
+> > Given that it's only _one_ platform right now, I don't think that
+> > additional complexity is worth it.  It means that we have to invent
+> 
+> Probably, I could not communicate it well.  I was not trying  to have
+> *additional* complexity. Wanted to see if things could be simpler
+> rather. So this is what my understanding was:
+> -- We create one patch to pass arch_phys_to_idmap_offset to user space
+> (say in /sys/kernel/bootmem_idmap_offset)
+> -- We do not use patch 5,6,11 and 12 of this series. Probably few more
+> content of the series will go away.
 
-Sorry, I was not trying to say that we should use arm_memblock_steal()
-here. As I said, this comment is totally unrelated to this patch
-series. In arm_memblock_steal() we pass MEMBLOCK_ALLOC_ANYWHERE as
-max_addr. Probably,  it would be good to pass
-idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE).
+Patches 11 and 12 don't go away with what you're suggesting.  Patches
+11 and 12 are necessary to allow the boot-view addresses to be passed
+into the kernel through kexec, and to allow kexec to find appropriate
+memory resources.
+
+For example, from patch 11:
+
+@@ -48,7 +48,8 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned
+long entry,
+
+-               if ((entry < crashk_res.start) || (entry > crashk_res.end))
++               if ((entry < phys_to_boot_phys(crashk_res.start)) ||
++                   (entry > phys_to_boot_phys(crashk_res.end)))
+
+"entry" is limited to a 32-bit physical address as it is unsigned long,
+and is the boot-view physical address.  crashk_res.start is the
+running-view physical address.  Without this change, the rest will
+always be true on Keystone 2.
+
+@@ -229,8 +229,8 @@ int sanity_check_segment_list(struct kimage *image)
+-                       if ((mstart < crashk_res.start) ||
+-                           (mend > crashk_res.end))
++                       if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
++                           (mend > phys_to_boot_phys(crashk_res.end)))
+
+Same problem - mstart and mend are both 32-bit quantities.  The result
+is the segment list validation always fails.
+
+@@ -354,7 +354,7 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
+-               pfn   = page_to_pfn(pages);
++               pfn   = page_to_boot_pfn(pages);
+
+The result without this change is that we allocate _all_ system memory
+looking for a suitable page, never finding one because we never find
+a page which matches.  Without a previous patch, killing many
+processes and taking the system down.
+
+@@ -480,7 +480,7 @@ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
+-               *image->entry = virt_to_phys(ind_page) | IND_INDIRECTION;
++               *image->entry = virt_to_boot_phys(ind_page) | IND_INDIRECTION;
+
+The physical address would end up being truncated to 32-bits, but
+would actually be larger than 4GiB.  So, *image->entry would point
+at the incorrect address, and kexec would fail.
+
+@@ -535,13 +535,13 @@ void kimage_terminate(struct kimage *image)
+ #define for_each_kimage_entry(image, ptr, entry) \
+        for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
+                ptr = (entry & IND_INDIRECTION) ? \
+-                       phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
++                       boot_phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
+
+"entry" is truncated to 32-bit, and so this passes an invalid
+physical address which is not part of the lowmem mapping to
+phys_to_virt().  The resulting virtual address is undefined.
+
+-       page = pfn_to_page(entry >> PAGE_SHIFT);
++       page = boot_pfn_to_page(entry >> PAGE_SHIFT);
+
+Same, except the resulting struct page pointer is undefined.
+
+... and so it goes on.
+
+The only patches which get replaced are patches 5 and 6 with a new
+userspace API.
+
+-- 
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
