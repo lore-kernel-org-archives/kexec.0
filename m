@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.arm.linux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mail-oi0-f43.google.com ([209.85.218.43])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1awQEE-0000TZ-8k
- for kexec@lists.infradead.org; Sat, 30 Apr 2016 08:26:21 +0000
-Date: Sat, 30 Apr 2016 09:25:47 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 03/12] ARM: kexec: remove 512MB restriction on kexec
- crashdump
-Message-ID: <20160430082547.GH19428@n2100.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviEp-0000ir-7s@rmk-PC.arm.linux.org.uk>
- <CAHB_GuqOvRof94QdHztPy2B2kKuyKzQ-9uxXHY_g+i5WxsexZg@mail.gmail.com>
- <20160429181008.GV19428@n2100.arm.linux.org.uk>
- <CAHB_GuoQM9dzgyd+67QPOReLW4HYNqyuzKGzB7Fzq=dpWYHf_w@mail.gmail.com>
+ id 1ax8NV-000321-KI
+ for kexec@lists.infradead.org; Mon, 02 May 2016 07:34:50 +0000
+Received: by mail-oi0-f43.google.com with SMTP id x201so180693400oif.3
+ for <kexec@lists.infradead.org>; Mon, 02 May 2016 00:34:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAHB_GuoQM9dzgyd+67QPOReLW4HYNqyuzKGzB7Fzq=dpWYHf_w@mail.gmail.com>
+In-Reply-To: <20160430082055.GG19428@n2100.arm.linux.org.uk>
+References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
+ <E1aviF4-0000jG-MO@rmk-PC.arm.linux.org.uk>
+ <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+ <20160429180024.GS19428@n2100.arm.linux.org.uk>
+ <CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
+ <20160430082055.GG19428@n2100.arm.linux.org.uk>
+Date: Mon, 2 May 2016 13:04:28 +0530
+Message-ID: <CAHB_Guq+w7JKXEpLHkefMaYuYowh7dqsdvxgG_dnGv-GdkX39A@mail.gmail.com>
+Subject: Re: [PATCH 06/12] ARM: kexec: advertise location of bootable RAM
+From: Pratyush Anand <panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,88 +29,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 
-On Sat, Apr 30, 2016 at 09:06:19AM +0530, Pratyush Anand wrote:
-> On Fri, Apr 29, 2016 at 11:40 PM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
-> > On Fri, Apr 29, 2016 at 07:49:45PM +0530, Pratyush Anand wrote:
-> >> On Thu, Apr 28, 2016 at 2:57 PM, Russell King
-> >> <rmk+kernel@arm.linux.org.uk> wrote:
-> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> >> > ---
-> >> >  arch/arm/kernel/setup.c | 5 +----
-> >> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> >> >
-> >> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-> >> > index 77b54c461c52..d9317eec1eba 100644
-> >> > --- a/arch/arm/kernel/setup.c
-> >> > +++ b/arch/arm/kernel/setup.c
-> >> > @@ -943,7 +943,6 @@ late_initcall(init_machine_late);
-> >> >   * zImage relocating below the reserved region.
-> >> >   */
-> >> >  #define CRASH_ALIGN    (128 << 20)
-> >> > -#define CRASH_ADDR_MAX (PHYS_OFFSET + (512 << 20))
-> >> >
-> >> >  static inline unsigned long long get_total_mem(void)
-> >> >  {
-> >> > @@ -973,9 +972,7 @@ static void __init reserve_crashkernel(void)
-> >> >                 return;
-> >> >
-> >> >         if (crash_base <= 0) {
-> >> > -               unsigned long long crash_max = CRASH_ADDR_MAX;
-> >> > -               if (crash_max > (u32)~0)
-> >> > -                       crash_max = (u32)~0;
-> >> > +               unsigned long long crash_max = idmap_to_phys((u32)~0);
-> >> >                 crash_base = memblock_find_in_range(CRASH_ALIGN, crash_max,
-> >> >                                                     crash_size, CRASH_ALIGN);
-> >> >                 if (!crash_base) {
-> >>
-> >> Reviewed-by: Pratyush Anand <panand@redhat.com>
-> >>
-> >> Unrelated to these modification:
-> >> In function arch/arm/mm/init.c: arm_memblock_steal() may be  following
-> >> would be more appropriate?
-> >> memblock_alloc_base(size, align, idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE));
-> >
-> > No, arm_memblock_steal() is totally unsuitable.  arm_memblock_steal()
-> > *removes* the memory range from memblock, including removing the
-> > mapping of that memory.  It will make the memory range inaccessible to
-> > the kernel.
-> >
-> > Since kexec wants to write directly to this memory, using
-> > arm_memblock_steal() will have the cause the kernel to OOPS when
-> > it hits the resulting hole.
-> >
-> 
-> Sorry, I was not trying to say that we should use arm_memblock_steal()
-> here. As I said, this comment is totally unrelated to this patch
-> series. In arm_memblock_steal() we pass MEMBLOCK_ALLOC_ANYWHERE as
-> max_addr. Probably,  it would be good to pass
-> idmap_to_phys(MEMBLOCK_ALLOC_ANYWHERE).
+On Sat, Apr 30, 2016 at 1:50 PM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Sat, Apr 30, 2016 at 08:57:34AM +0530, Pratyush Anand wrote:
+>> On Fri, Apr 29, 2016 at 11:30 PM, Russell King - ARM Linux
+>> <linux@arm.linux.org.uk> wrote:
+>> > On Fri, Apr 29, 2016 at 08:26:00PM +0530, Pratyush Anand wrote:
+>> >> Hi Russell,
+>> >>
+>> >> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
+>> >> <rmk+kernel@arm.linux.org.uk> wrote:
+>> >> > Advertise the location of bootable RAM to kexec-tools.  kexec needs to
+>> >> > know where it can place the kernel in RAM, and so be executable when
+>> >> > the system needs to jump into it.
+>> >> >
+>> >> > Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
+>> >> > tag.
+>> >> >
+>> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+>> >>
+>> >> Can you please also share git tree path of corresponding kexec-tools changes?
+>> >>
+>> >> Could it be a better idea (if things in user space become simpler)
+>> >> that in stead of patch 5 and 6, we pass arch_phys_to_idmap_offset to
+>> >> user space, and then user space manipulates existing "Crash kernel"
+>> >> and "System RAM" resources.
+>> >
+>> > Given that it's only _one_ platform right now, I don't think that
+>> > additional complexity is worth it.  It means that we have to invent
+>>
+>> Probably, I could not communicate it well.  I was not trying  to have
+>> *additional* complexity. Wanted to see if things could be simpler
+>> rather. So this is what my understanding was:
+>> -- We create one patch to pass arch_phys_to_idmap_offset to user space
+>> (say in /sys/kernel/bootmem_idmap_offset)
+>> -- We do not use patch 5,6,11 and 12 of this series. Probably few more
+>> content of the series will go away.
+>
+> Patches 11 and 12 don't go away with what you're suggesting.  Patches
+> 11 and 12 are necessary to allow the boot-view addresses to be passed
+> into the kernel through kexec, and to allow kexec to find appropriate
+> memory resources.
 
-No.
+But once we would have manipulated "start" and "end" of "Crash Kernel"
+and "System RAM" resources in user space using
+/sys/kernel/bootmem_idmap_offset , then kernel through kexec system
+call would have already receive boot-view addresses, no?
 
-	idmap_to_phys((u32)~0)
-
-This returns the maximum running-view physical address that corresponds
-with the top of the boot-view physical address space.  That's exactly
-what we want, not "any physical address".  In any case,
-MEMBLOCK_ALLOC_ANYWHERE is a 64-bit physical address consisting of all-
-ones.  The compiler will truncate it down to a 32-bit address due to
-idmap_to_phys()'s prototype, but that's really not the point - it's the
-wrong constant to be used here.  This isn't a memblock function, and
-it shouldn't be passed a 64-bit address.
-
-The difference is that arm_memblock_steal() is about stealing memory
-from the system which can be allocated in the running-view.  It's got
-nothing to do with boot-view stuff.
-
--- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+~Pratyush
 
 _______________________________________________
 kexec mailing list
