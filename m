@@ -2,17 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1axXUQ-0006rN-Pw
- for kexec@lists.infradead.org; Tue, 03 May 2016 10:23:46 +0000
+ id 1axXan-0001IS-3p
+ for kexec@lists.infradead.org; Tue, 03 May 2016 10:30:14 +0000
 In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools 01/32] kdump: mmap() and munmap() only work on
- page-aligned quantites
+Subject: [PATCH kexec-tools 16/32] arm: fix ELF32/ELF64 check
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1axXS0-0004gz-5a@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Tue, 03 May 2016 11:21:08 +0100
+Message-Id: <E1axXTG-0004iV-C6@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:22:26 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,58 +27,30 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-The man page for mmap() and munmap() says that mmap() and munmap()
-only works for page-aligned addresses, sizes and offsets.  Arrange
-to give these interfaces what they want.
+Rather than using ULONG_MAX to decide whether to use the ELF64 or ELF32
+core dump format, use UINT32_MAX instead - we include stdint.h, so we
+might as well use a constant which is meaningful for the limits of
+the 32-bit ELF format.
 
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kdump/kdump.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ kexec/arch/arm/crashdump-arm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kdump/kdump.c b/kdump/kdump.c
-index 821ee7c..3247a54 100644
---- a/kdump/kdump.c
-+++ b/kdump/kdump.c
-@@ -25,22 +25,35 @@
- #define MAP_WINDOW_SIZE (64*1024*1024)
- #define DEV_MEM "/dev/mem"
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index a390187..fcc4d42 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -369,8 +369,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
+ 	if (last_ranges < 0)
+ 		last_ranges = 0;
  
-+#define ALIGN_MASK(x,y) (((x) + (y)) & ~(y))
-+#define ALIGN(x,y)	ALIGN_MASK(x, (y) - 1)
-+
- static void *map_addr(int fd, unsigned long size, off_t offset)
- {
-+	unsigned long page_size = getpagesize();
-+	unsigned long map_offset = offset & (page_size - 1);
-+	size_t len = ALIGN(size + map_offset, page_size);
- 	void *result;
--	result = mmap(0, size, PROT_READ, MAP_SHARED, fd, offset);
-+
-+	result = mmap(0, len, PROT_READ, MAP_SHARED, fd, offset - map_offset);
- 	if (result == MAP_FAILED) {
- 		fprintf(stderr, "Cannot mmap " DEV_MEM " offset: %llu size: %lu: %s\n",
- 			(unsigned long long)offset, size, strerror(errno));
- 		exit(5);
- 	}
--	return result;
-+	return result + map_offset;
- }
+-	if (crash_memory_ranges[last_ranges].end > ULONG_MAX) {
+-
++	if (crash_memory_ranges[last_ranges].end > UINT32_MAX) {
+ 		/* for support LPAE enabled kernel*/
+ 		elf_info.class = ELFCLASS64;
  
- static void unmap_addr(void *addr, unsigned long size)
- {
-+	unsigned long page_size = getpagesize();
-+	unsigned long map_offset = (uintptr_t)addr & (page_size - 1);
-+	size_t len = ALIGN(size + map_offset, page_size);
- 	int ret;
--	ret = munmap(addr, size);
-+
-+	addr -= map_offset;
-+
-+	ret = munmap(addr, len);
- 	if (ret < 0) {
- 		fprintf(stderr, "munmap failed: %s\n",
- 			strerror(errno));
 -- 
 1.9.1
 
