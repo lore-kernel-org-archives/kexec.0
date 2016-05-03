@@ -2,17 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1axXVc-0001re-Ux
- for kexec@lists.infradead.org; Tue, 03 May 2016 10:24:53 +0000
+ id 1axXV7-0001vC-93
+ for kexec@lists.infradead.org; Tue, 03 May 2016 10:24:21 +0000
 In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools 11/32] kexec: add mem_regions sorting
- implementation
+Subject: [PATCH kexec-tools 31/32] arm: clean up phys/page offset debug
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1axXSq-0004hx-8H@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Tue, 03 May 2016 11:22:00 +0100
+Message-Id: <E1axXUW-0004jy-CS@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:23:44 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,65 +27,40 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-Add a mem_regions sorting implementation taken from the arm code.
+Clean up the physical and page offset debug prints.
 
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/mem_regions.c | 27 +++++++++++++++++++++++++++
- kexec/mem_regions.h |  2 ++
- 2 files changed, 29 insertions(+)
+ kexec/arch/arm/crashdump-arm.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
-index a4952ff..804984a 100644
---- a/kexec/mem_regions.c
-+++ b/kexec/mem_regions.c
-@@ -1,6 +1,33 @@
-+#include <stdlib.h>
-+
- #include "kexec.h"
- #include "mem_regions.h"
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 2589582..3b71267 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -136,7 +136,6 @@ static int get_kernel_page_offset(struct kexec_info *info,
+ 				user_page_offset);
+ 	}
+ 	elf_info->page_offset = stext_sym_addr & (~KVBASE_MASK);
+-	dbgprintf("page_offset is set to %llx\n", elf_info->page_offset);
+ 	return 0;
+ }
  
-+static int mem_range_cmp(const void *a1, const void *a2)
-+{
-+	const struct memory_range *r1 = a1;
-+	const struct memory_range *r2 = a2;
-+
-+	if (r1->start > r2->start)
-+		return 1;
-+	if (r1->start < r2->start)
-+		return -1;
-+
-+	return 0;
-+}
-+
-+/**
-+ * mem_regions_sort() - sort ranges into ascending address order
-+ * @ranges: ranges to sort
-+ *
-+ * Sort the memory regions into ascending address order.
-+ */
-+void mem_regions_sort(struct memory_ranges *ranges)
-+{
-+	qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
-+	      mem_range_cmp);
-+}
-+
- /**
-  * mem_regions_add() - add a memory region to a set of ranges
-  * @ranges: ranges to add the memory region to
-diff --git a/kexec/mem_regions.h b/kexec/mem_regions.h
-index b9cfba1..da7b5e8 100644
---- a/kexec/mem_regions.h
-+++ b/kexec/mem_regions.h
-@@ -3,6 +3,8 @@
+@@ -293,11 +292,13 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
+ 	 * region as PHYS_OFFSET.
+ 	 */
+ 	phys_offset = usablemem_rgns.ranges->start;
+-	dbgprintf("phys_offset: %#llx\n", phys_offset);
  
- struct memory_ranges;
+ 	if (get_kernel_page_offset(info, &elf_info))
+ 		return -1;
  
-+void mem_regions_sort(struct memory_ranges *ranges);
++	dbgprintf("phys offset = %#llx, page offset = %llx\n",
++		  phys_offset, elf_info.page_offset);
 +
- int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
-                     unsigned long long length, int type);
- 
+ 	/*
+ 	 * Ensure that the crash kernel memory range is sane. The crash kernel
+ 	 * must be located within memory which is visible during booting.
 -- 
 1.9.1
 
