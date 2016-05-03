@@ -2,16 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1axXZ3-00020m-7E
+ id 1axXZ2-00020n-Bk
  for kexec@lists.infradead.org; Tue, 03 May 2016 10:28:25 +0000
 In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools 18/32] arm: report if crash kernel is out of bounds
+Subject: [PATCH kexec-tools 27/32] arm: add support for multiple reserved
+ regions
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1axXTQ-0004ih-NN@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Tue, 03 May 2016 11:22:36 +0100
+Message-Id: <E1axXUB-0004ja-JE@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:23:23 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,50 +28,119 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-Report an error if the crash kernel memory region is outside of the
-boot-view memory range - this can happen with systems such as
-Keystone 2.
+Add support for reserving multiple memory regions rather than just a
+single region.
 
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/crashdump-arm.c | 11 +++++++++++
- kexec/arch/arm/crashdump-arm.h |  1 +
- 2 files changed, 12 insertions(+)
+ kexec/arch/arm/crashdump-arm.c | 66 ++++++++++++++++--------------------------
+ 1 file changed, 25 insertions(+), 41 deletions(-)
 
 diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index fcc4d42..739c906 100644
+index 1a6ab88..9113f5e 100644
 --- a/kexec/arch/arm/crashdump-arm.c
 +++ b/kexec/arch/arm/crashdump-arm.c
-@@ -365,6 +365,17 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	if (get_kernel_page_offset(info, &elf_info))
- 		return -1;
+@@ -55,6 +55,14 @@ struct memory_ranges usablemem_rgns = {
+ /* memory range reserved for crashkernel */
+ static struct memory_range crash_kernel_mem;
  
-+	/*
-+	 * Ensure that the crash kernel memory range is sane. The crash kernel
-+	 * must be located within memory which is visible during booting.
-+	 */
-+	if (crash_reserved_mem.end > ARM_MAX_VIRTUAL) {
-+		fprintf(stderr,
-+			"Crash kernel memory [0x%llx-0x%llx] is inaccessible at boot - unable to load crash kernel\n",
-+			crash_reserved_mem.start, crash_reserved_mem.end);
-+		return -1;
-+	}
++/* reserved regions */
++#define CRASH_MAX_RESERVED_RANGES 2
++static struct memory_range crash_reserved_ranges[CRASH_MAX_RESERVED_RANGES];
++static struct memory_ranges crash_reserved_rgns = {
++	.max_size = CRASH_MAX_RESERVED_RANGES,
++	.ranges = crash_reserved_ranges,
++};
 +
- 	last_ranges = usablemem_rgns.size - 1;
- 	if (last_ranges < 0)
- 		last_ranges = 0;
-diff --git a/kexec/arch/arm/crashdump-arm.h b/kexec/arch/arm/crashdump-arm.h
-index 2dbde04..7314960 100644
---- a/kexec/arch/arm/crashdump-arm.h
-+++ b/kexec/arch/arm/crashdump-arm.h
-@@ -9,6 +9,7 @@ extern "C" {
- #define DEFAULT_PAGE_OFFSET		(0xc0000000)
- #define KVBASE_MASK	(0x1ffffff)
- #define CRASH_MAX_MEMORY_RANGES	32
-+#define ARM_MAX_VIRTUAL		UINT32_MAX
+ static struct crash_elf_info elf_info = {
+ 	.class		= ELFCLASS32,
+ 	.data		= ELFDATANATIVE,
+@@ -133,44 +141,6 @@ static int get_kernel_page_offset(struct kexec_info *info,
+ }
  
+ /**
+- * crash_exclude_range() - excludes memory region reserved for crashkernel
+- *
+- * Function locates where crashkernel reserved memory is and removes that region
+- * from the available memory regions.
+- */
+-static void crash_exclude_range(void)
+-{
+-	const struct memory_range *range = &crash_kernel_mem;
+-	int i;
+-
+-	for (i = 0; i < usablemem_rgns.size; i++) {
+-		struct memory_range *r = usablemem_rgns.ranges + i;
+-
+-		/*
+-		 * We assume that crash area is fully contained in
+-		 * some larger memory area.
+-		 */
+-		if (r->start <= range->start && r->end >= range->end) {
+-			struct memory_range *new;
+-			/*
+-			 * Let's split this area into 2 smaller ones and
+-			 * remove excluded range from between. First create
+-			 * new entry for the remaining area.
+-			 */
+-			new = usablemem_rgns.ranges + usablemem_rgns.size;
+-			new->start = range->end + 1;
+-			new->end = r->end;
+-			usablemem_rgns.size++;
+-			/*
+-			 * Next update this area to end before excluded range.
+-			 */
+-			r->end = range->start - 1;
+-			break;
+-		}
+-	}
+-}
+-
+-/**
+  * crash_get_memory_ranges() - read system physical memory
+  *
+  * Function reads through system physical memory and stores found memory regions
+@@ -181,16 +151,28 @@ static void crash_exclude_range(void)
+  */
+ static int crash_get_memory_ranges(void)
+ {
++	int i;
++
+ 	if (usablemem_rgns.size < 1) {
+ 		errno = EINVAL;
+ 		return -1;
+ 	}
  
- extern struct memory_ranges usablemem_rgns;
+ 	/*
+-	 * Exclude memory reserved for crashkernel (this may result a split memory
+-	 * region).
++	 * Exclude all reserved memory from the usable memory regions.
++	 * We want to avoid dumping the crashkernel region itself.  Note
++	 * that this may result memory regions in usablemem_rgns being
++	 * split.
+ 	 */
+-	crash_exclude_range();
++	for (i = 0; i < crash_reserved_rgns.size; i++) {
++		if (mem_regions_exclude(&usablemem_rgns,
++					&crash_reserved_rgns.ranges[i])) {
++			fprintf(stderr,
++				"Error: Number of crash memory ranges excedeed the max limit\n");
++			errno = ENOMEM;
++			return -1;
++		}
++	}
+ 
+ 	/*
+ 	 * Make sure that the memory regions are sorted.
+@@ -388,6 +370,8 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 		crash_kernel_mem.start = base;
+ 		crash_kernel_mem.end = base + length - 1;
+ 		crash_kernel_mem.type = RANGE_RAM;
++		return mem_regions_add(&crash_reserved_rgns,
++				       base, length, RANGE_RAM);
+ 	}
+ 	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0) {
+ 		return mem_regions_add(&usablemem_rgns,
 -- 
 1.9.1
 
