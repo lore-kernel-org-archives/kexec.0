@@ -2,16 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1axXYx-00020m-QV
- for kexec@lists.infradead.org; Tue, 03 May 2016 10:28:21 +0000
+ id 1axXVc-0001re-Ux
+ for kexec@lists.infradead.org; Tue, 03 May 2016 10:24:53 +0000
 In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools 19/32] arm: add memory ranges debug
+Subject: [PATCH kexec-tools 11/32] kexec: add mem_regions sorting
+ implementation
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1axXTV-0004in-Sw@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Tue, 03 May 2016 11:22:41 +0100
+Message-Id: <E1axXSq-0004hx-8H@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:22:00 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,27 +28,64 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-Add the call to dbgprint_mem_range() into the ARM version of
-get_memory_ranges().
+Add a mem_regions sorting implementation taken from the arm code.
 
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/kexec-arm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kexec/mem_regions.c | 27 +++++++++++++++++++++++++++
+ kexec/mem_regions.h |  2 ++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
-index e47fc00..eeb27b4 100644
---- a/kexec/arch/arm/kexec-arm.c
-+++ b/kexec/arch/arm/kexec-arm.c
-@@ -70,6 +70,9 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 	fclose(fp);
- 	*range = memory_range;
- 	*ranges = memory_ranges;
+diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
+index a4952ff..804984a 100644
+--- a/kexec/mem_regions.c
++++ b/kexec/mem_regions.c
+@@ -1,6 +1,33 @@
++#include <stdlib.h>
 +
-+	dbgprint_mem_range("MEMORY RANGES", *range, *ranges);
+ #include "kexec.h"
+ #include "mem_regions.h"
+ 
++static int mem_range_cmp(const void *a1, const void *a2)
++{
++	const struct memory_range *r1 = a1;
++	const struct memory_range *r2 = a2;
 +
- 	return 0;
- }
++	if (r1->start > r2->start)
++		return 1;
++	if (r1->start < r2->start)
++		return -1;
++
++	return 0;
++}
++
++/**
++ * mem_regions_sort() - sort ranges into ascending address order
++ * @ranges: ranges to sort
++ *
++ * Sort the memory regions into ascending address order.
++ */
++void mem_regions_sort(struct memory_ranges *ranges)
++{
++	qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
++	      mem_range_cmp);
++}
++
+ /**
+  * mem_regions_add() - add a memory region to a set of ranges
+  * @ranges: ranges to add the memory region to
+diff --git a/kexec/mem_regions.h b/kexec/mem_regions.h
+index b9cfba1..da7b5e8 100644
+--- a/kexec/mem_regions.h
++++ b/kexec/mem_regions.h
+@@ -3,6 +3,8 @@
+ 
+ struct memory_ranges;
+ 
++void mem_regions_sort(struct memory_ranges *ranges);
++
+ int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+                     unsigned long long length, int type);
  
 -- 
 1.9.1
