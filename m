@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f42.google.com ([209.85.218.42])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1axBPY-0002qv-T7
- for kexec@lists.infradead.org; Mon, 02 May 2016 10:49:09 +0000
-Received: by mail-oi0-f42.google.com with SMTP id x201so184485569oif.3
- for <kexec@lists.infradead.org>; Mon, 02 May 2016 03:48:48 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20160502101030.GK19428@n2100.arm.linux.org.uk>
+Date: Tue, 3 May 2016 12:24:41 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
+ return phys_addr_t
+Message-ID: <20160503042441.GA2518@x1.redhat.com>
 References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviF4-0000jG-MO@rmk-PC.arm.linux.org.uk>
- <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <20160429180024.GS19428@n2100.arm.linux.org.uk>
- <CAHB_GuqhPJ7J-MNbjxqeQnogW-J6=Bt2e1STKSG5kzJT+4PJpg@mail.gmail.com>
- <20160430082055.GG19428@n2100.arm.linux.org.uk>
- <CAHB_Guq+w7JKXEpLHkefMaYuYowh7dqsdvxgG_dnGv-GdkX39A@mail.gmail.com>
- <20160502101030.GK19428@n2100.arm.linux.org.uk>
-Date: Mon, 2 May 2016 16:18:47 +0530
-Message-ID: <CAHB_GuoUcVPexeaHzZ6O1bVTSksd39jVZpO63+jX=rACEe1QsA@mail.gmail.com>
-Subject: Re: [PATCH 06/12] ARM: kexec: advertise location of bootable RAM
-From: Pratyush Anand <panand@redhat.com>
+ <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
+ <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
+ <20160429151639.GC23726@leverpostej>
+ <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,94 +24,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>, Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On Mon, May 2, 2016 at 3:40 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Mon, May 02, 2016 at 01:04:28PM +0530, Pratyush Anand wrote:
->> On Sat, Apr 30, 2016 at 1:50 PM, Russell King - ARM Linux
->> <linux@arm.linux.org.uk> wrote:
->> > On Sat, Apr 30, 2016 at 08:57:34AM +0530, Pratyush Anand wrote:
->> >> On Fri, Apr 29, 2016 at 11:30 PM, Russell King - ARM Linux
->> >> <linux@arm.linux.org.uk> wrote:
->> >> > On Fri, Apr 29, 2016 at 08:26:00PM +0530, Pratyush Anand wrote:
->> >> >> Hi Russell,
->> >> >>
->> >> >> On Thu, Apr 28, 2016 at 2:58 PM, Russell King
->> >> >> <rmk+kernel@arm.linux.org.uk> wrote:
->> >> >> > Advertise the location of bootable RAM to kexec-tools.  kexec needs to
->> >> >> > know where it can place the kernel in RAM, and so be executable when
->> >> >> > the system needs to jump into it.
->> >> >> >
->> >> >> > Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
->> >> >> > tag.
->> >> >> >
->> >> >> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
->> >> >>
->> >> >> Can you please also share git tree path of corresponding kexec-tools changes?
->> >> >>
->> >> >> Could it be a better idea (if things in user space become simpler)
->> >> >> that in stead of patch 5 and 6, we pass arch_phys_to_idmap_offset to
->> >> >> user space, and then user space manipulates existing "Crash kernel"
->> >> >> and "System RAM" resources.
->> >> >
->> >> > Given that it's only _one_ platform right now, I don't think that
->> >> > additional complexity is worth it.  It means that we have to invent
->> >>
->> >> Probably, I could not communicate it well.  I was not trying  to have
->> >> *additional* complexity. Wanted to see if things could be simpler
->> >> rather. So this is what my understanding was:
->> >> -- We create one patch to pass arch_phys_to_idmap_offset to user space
->> >> (say in /sys/kernel/bootmem_idmap_offset)
->> >> -- We do not use patch 5,6,11 and 12 of this series. Probably few more
->> >> content of the series will go away.
->> >
->> > Patches 11 and 12 don't go away with what you're suggesting.  Patches
->> > 11 and 12 are necessary to allow the boot-view addresses to be passed
->> > into the kernel through kexec, and to allow kexec to find appropriate
->> > memory resources.
->>
->> But once we would have manipulated "start" and "end" of "Crash Kernel"
->> and "System RAM" resources in user space using
->> /sys/kernel/bootmem_idmap_offset , then kernel through kexec system
->> call would have already receive boot-view addresses, no?
->
-> Correct, but that's still a problem for all the reasons I gave in the
-> email to which you replied to.
->
-> I'm not sure where the misunderstanding is.
+This patch is clearly related to kdump. The prefix of subject should be
+changed to kdump. Kexec doesn't need to handle vmcore things. 
 
-No, no..there is no misunderstanding. I agreed to your implementation
-because that will work for generic cases and for me complete series is
-OK.
+And patches realted to kexec/kdump should be CCed to Andrew, he usually
+picks up and add them into akpm tree.
 
-I just wanted to clarify my understanding, and so was the last argument.
+Hi Pratyush,
 
->
-> Let me repeat: even if we do what you're suggesting, patches 11 and 12
-> do *not* go away.  I've explained in detail why each of the changes are
-> necessary (which you have cut from your reply.)
->
+Could you please help tell why arm PAE kernel can be put above 4G?
+Since the change is related to common code, I am curious about how
+it's so different with other ARCHs.
 
-Again, it is just for clarifying myself.
-I cut the reply because I understood that in patch 11 and 12, you
-convert addresses passed by kexec tools from run time view to boot
-view using different helpers like phys_to_boot_phys(). So, had kexec
-system call passed boot view addresses, we would have not needed 11
-and 12. This is what I wanted to clarify.
+Thanks
+Baoquan
 
-> In other words: exporting this offset via
-> /sys/kernel/bootmem_idmap_offset is technically inferior to the solution
-> I have come up with here, and it saves very little complexity and code.
 
-I still have opinion that code will probably be more simple and reduce
-significantly, however solution will siege to work the moment
-idmap_offset is not a simple additive value.
-
-Therefore, I am OK with your implementation.
-
-~Pratyush
+On 04/29/16 at 09:17pm, Pratyush Anand wrote:
+> On Fri, Apr 29, 2016 at 8:46 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Fri, Apr 29, 2016 at 08:36:43PM +0530, Pratyush Anand wrote:
+> >> > +       phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
+> >> > +       return sprintf(buf, "%pa %x\n", &vmcore_base,
+> >>
+> >> Why do we pass &vmcore_base? Shouldn't it be vmcore_base?
+> >
+> > The %pa* printk format specifiers take the value by reference (as
+> > phys_addr_t and friends are not necessarily the same width as a
+> > pointer). Per Documentation/printk-formats.txt:
+> >
+> > Physical addresses types phys_addr_t:
+> >
+> >         %pa[p]  0x01234567 or 0x0123456789abcdef
+> >
+> >         For printing a phys_addr_t type (and its derivatives, such as
+> >         resource_size_t) which can vary based on build options, regardless of
+> >         the width of the CPU data path. Passed by reference.
+> >
+> > So the above prints the value of vmcore_base as expected.
+> 
+> Thanks a lot Mark for explaining :-)
+> 
+> Reviewed-by: Pratyush Anand <panand@redhat.com>
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
