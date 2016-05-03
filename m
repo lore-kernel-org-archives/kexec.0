@@ -2,22 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1axXL2-0004Q7-Ag
- for kexec@lists.infradead.org; Tue, 03 May 2016 10:14:06 +0000
-Date: Tue, 3 May 2016 11:12:59 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 10/12] kexec: arrange for paddr_vmcoreinfo_note() to
- return phys_addr_t
-Message-ID: <20160503101258.GL19428@n2100.arm.linux.org.uk>
-References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
- <E1aviFP-0000je-5t@rmk-PC.arm.linux.org.uk>
- <CAHB_Gur-6oyEheN-Pom7OwivdvrQpCBaXvM1V2H0JPFRCFZthA@mail.gmail.com>
- <20160429151639.GC23726@leverpostej>
- <CAHB_GurwYqPbccLU9UHppLxbBr4Cfs47myKAer-RJicT=T7uBw@mail.gmail.com>
- <20160503042441.GA2518@x1.redhat.com>
+ id 1axXSa-0006x6-6w
+ for kexec@lists.infradead.org; Tue, 03 May 2016 10:21:45 +0000
+In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+From: Russell King <rmk@arm.linux.org.uk>
+Subject: [PATCH kexec-tools 02/32] kdump: fix multiple program header entries
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160503042441.GA2518@x1.redhat.com>
+Message-Id: <E1axXS5-0004h5-Cb@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:21:13 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,22 +24,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Pratyush Anand <panand@redhat.com>
 
-On Tue, May 03, 2016 at 12:24:41PM +0800, Baoquan He wrote:
-> Could you please help tell why arm PAE kernel can be put above 4G?
-> Since the change is related to common code, I am curious about how
-> it's so different with other ARCHs.
+generate_new_headers() forgot to increment the program header pointer
+after adding each program header from the kexec template. Fix it to
+increment it correctly.
 
-This is explained in the covering email to the series.
+Without this, the program headers contain only the last entry, which
+means we will be missing most of the kernel image in the dump.
 
-The explanation given by Pratyush was incomplete.
+Signed-off-by: Russell King <rmk@arm.linux.org.uk>
+---
+ kdump/kdump.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kdump/kdump.c b/kdump/kdump.c
+index 3247a54..99a1789 100644
+--- a/kdump/kdump.c
++++ b/kdump/kdump.c
+@@ -192,6 +192,7 @@ static void *generate_new_headers(
+ 		}
+ 		memcpy(nphdr, &phdr[i], sizeof(*nphdr));
+ 		nphdr->p_offset = offset;
++		nphdr++;
+ 		offset += phdr[i].p_filesz;
+ 	}
+ 	
 -- 
-RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+1.9.1
+
 
 _______________________________________________
 kexec mailing list
