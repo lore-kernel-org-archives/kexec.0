@@ -2,16 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1axXTC-0007Mz-9R
- for kexec@lists.infradead.org; Tue, 03 May 2016 10:22:26 +0000
+ id 1axXTM-0007SR-9I
+ for kexec@lists.infradead.org; Tue, 03 May 2016 10:22:39 +0000
 In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools 08/32] kexec: add max_size to memory_ranges
+Subject: [PATCH kexec-tools 09/32] kexec: phys_to_virt() must take unsigned
+ long long
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1axXSa-0004hf-Iz@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Tue, 03 May 2016 11:21:44 +0100
+Message-Id: <E1axXSf-0004hl-PC@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:21:49 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,27 +28,56 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-Many implementations statically allocate the memory range array, which
-therefore will have a maximum allowable size.  Add this information to
-the memory_ranges structure, so we don't have to carry it around.
+crashdump-elf.c passes unsigned long long addresses into phys_to_virt()
+so make phys_to_virt() accept such addresses without truncating them.
+This is important for ARM LPAE systems.
 
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/kexec.h | 1 +
- 1 file changed, 1 insertion(+)
+ kexec/arch/arm/phys_to_virt.c | 2 +-
+ kexec/crashdump.h             | 2 +-
+ kexec/phys_to_virt.c          | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index c02ac8f..9194f1c 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -142,6 +142,7 @@ struct memory_range {
+diff --git a/kexec/arch/arm/phys_to_virt.c b/kexec/arch/arm/phys_to_virt.c
+index bcced52..c2fe2ea 100644
+--- a/kexec/arch/arm/phys_to_virt.c
++++ b/kexec/arch/arm/phys_to_virt.c
+@@ -14,7 +14,7 @@
+  * http://lists.arm.linux.org.uk/lurker/message/20010723.185051.94ce743c.en.html
+  */
+ unsigned long
+-phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
++phys_to_virt(struct crash_elf_info *elf_info, unsigned long long paddr)
+ {
+ 	return paddr + elf_info->page_offset - phys_offset;
+ }
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 95f1f0c..96219a8 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -55,7 +55,7 @@ int crash_create_elf64_headers(struct kexec_info *info,
+ unsigned long crash_architecture(struct crash_elf_info *elf_info);
  
- struct memory_ranges {
-         unsigned int size;
-+	unsigned int max_size;
-         struct memory_range *ranges;
- };
+ unsigned long phys_to_virt(struct crash_elf_info *elf_info,
+-			   unsigned long paddr);
++			   unsigned long long paddr);
  
+ unsigned long xen_architecture(struct crash_elf_info *elf_info);
+ int xen_get_nr_phys_cpus(void);
+diff --git a/kexec/phys_to_virt.c b/kexec/phys_to_virt.c
+index 91b6d01..5e8c4e3 100644
+--- a/kexec/phys_to_virt.c
++++ b/kexec/phys_to_virt.c
+@@ -10,7 +10,7 @@
+  * their own implementation.
+  */
+ unsigned long
+-phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
++phys_to_virt(struct crash_elf_info *elf_info, unsigned long long paddr)
+ {
+ 	return paddr + elf_info->page_offset;
+ }
 -- 
 1.9.1
 
