@@ -2,17 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.arm.linux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1axXaJ-0002rU-OW
- for kexec@lists.infradead.org; Tue, 03 May 2016 10:29:44 +0000
+ id 1axXaA-0002rT-FF
+ for kexec@lists.infradead.org; Tue, 03 May 2016 10:29:35 +0000
 In-Reply-To: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools 26/32] arm: rename crash_reserved_mem to
- crash_kernel_mem
+Subject: [PATCH kexec-tools 28/32] arm: add support for boot-time crash kernel
+ resource
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1axXU6-0004jU-At@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Tue, 03 May 2016 11:23:18 +0100
+Message-Id: <E1axXUG-0004jg-PD@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Tue, 03 May 2016 11:23:28 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,109 +28,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>
 
-Rename crash_reserved_mem to crash_kernel_mem as we want to support
-multiple reserved memory ranges.
+Add support for detecting and using the boot-time crash kernel
+resource, which is needed for systems which have special boot-time
+memory views, such as Keystone 2.
 
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/crashdump-arm.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ kexec/arch/arm/crashdump-arm.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index f2e6a0d..1a6ab88 100644
+index 9113f5e..25fdbe9 100644
 --- a/kexec/arch/arm/crashdump-arm.c
 +++ b/kexec/arch/arm/crashdump-arm.c
-@@ -53,7 +53,7 @@ struct memory_ranges usablemem_rgns = {
+@@ -52,7 +52,7 @@ struct memory_ranges usablemem_rgns = {
+ 	.ranges = crash_memory_ranges,
  };
  
- /* memory range reserved for crashkernel */
--static struct memory_range crash_reserved_mem;
-+static struct memory_range crash_kernel_mem;
+-/* memory range reserved for crashkernel */
++/* The boot-time physical memory range reserved for crashkernel region */
+ static struct memory_range crash_kernel_mem;
  
- static struct crash_elf_info elf_info = {
- 	.class		= ELFCLASS32,
-@@ -140,7 +140,7 @@ static int get_kernel_page_offset(struct kexec_info *info,
-  */
- static void crash_exclude_range(void)
- {
--	const struct memory_range *range = &crash_reserved_mem;
-+	const struct memory_range *range = &crash_kernel_mem;
- 	int i;
- 
- 	for (i = 0; i < usablemem_rgns.size; i++) {
-@@ -262,8 +262,8 @@ static void dump_memory_ranges(void)
- 		return;
- 
- 	dbgprintf("crashkernel: [%#llx - %#llx] (%ldM)\n",
--		  crash_reserved_mem.start, crash_reserved_mem.end,
--		  (unsigned long)range_size(&crash_reserved_mem) >> 20);
-+		  crash_kernel_mem.start, crash_kernel_mem.end,
-+		  (unsigned long)range_size(&crash_kernel_mem) >> 20);
- 
- 	for (i = 0; i < usablemem_rgns.size; i++) {
- 		struct memory_range *r = usablemem_rgns.ranges + i;
-@@ -313,10 +313,10 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	 * Ensure that the crash kernel memory range is sane. The crash kernel
- 	 * must be located within memory which is visible during booting.
- 	 */
--	if (crash_reserved_mem.end > ARM_MAX_VIRTUAL) {
-+	if (crash_kernel_mem.end > ARM_MAX_VIRTUAL) {
- 		fprintf(stderr,
- 			"Crash kernel memory [0x%llx-0x%llx] is inaccessible at boot - unable to load crash kernel\n",
--			crash_reserved_mem.start, crash_reserved_mem.end);
-+			crash_kernel_mem.start, crash_kernel_mem.end);
- 		return -1;
- 	}
- 
-@@ -349,8 +349,8 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	 * regions to be aligned to SECTION_SIZE.
- 	 */
- 	elfcorehdr = add_buffer_phys_virt(info, buf, bufsz, bufsz, 1 << 20,
--					  crash_reserved_mem.start,
--					  crash_reserved_mem.end, -1, 0);
-+					  crash_kernel_mem.start,
-+					  crash_kernel_mem.end, -1, 0);
- 
- 	dbgprintf("elfcorehdr: %#lx\n", elfcorehdr);
- 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
-@@ -360,7 +360,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	 * prevents the dump capture kernel from using any other memory regions
- 	 * which belong to the primary kernel.
- 	 */
--	cmdline_add_mem(mod_cmdline, elfcorehdr - crash_reserved_mem.start);
-+	cmdline_add_mem(mod_cmdline, elfcorehdr - crash_kernel_mem.start);
- 
- 	dump_memory_ranges();
- 	dbgprintf("kernel command line: \"%s\"\n", mod_cmdline);
-@@ -377,7 +377,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
-  * @length: size of the memory region
-  *
-  * This function is called for each memory range in /proc/iomem, stores
-- * the location of the crash kernel range into @crash_reserved_mem, and
-+ * the location of the crash kernel range into @crash_kernel_mem, and
-  * stores the system RAM into @usablemem_rgns.
-  */
- static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
-@@ -385,9 +385,9 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ /* reserved regions */
+@@ -366,13 +366,22 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 				char *str, unsigned long long base,
  				unsigned long long length)
  {
- 	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0) {
--		crash_reserved_mem.start = base;
--		crash_reserved_mem.end = base + length - 1;
--		crash_reserved_mem.type = RANGE_RAM;
-+		crash_kernel_mem.start = base;
-+		crash_kernel_mem.end = base + length - 1;
-+		crash_kernel_mem.type = RANGE_RAM;
+-	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0) {
++	if (strncmp(str, CRASH_KERNEL_BOOT, strlen(CRASH_KERNEL_BOOT)) == 0) {
+ 		crash_kernel_mem.start = base;
+ 		crash_kernel_mem.end = base + length - 1;
+ 		crash_kernel_mem.type = RANGE_RAM;
+ 		return mem_regions_add(&crash_reserved_rgns,
+ 				       base, length, RANGE_RAM);
  	}
++	else if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0) {
++		if (crash_kernel_mem.start == crash_kernel_mem.end) {
++			crash_kernel_mem.start = base;
++			crash_kernel_mem.end = base + length - 1;
++			crash_kernel_mem.type = RANGE_RAM;
++		}
++		return mem_regions_add(&crash_reserved_rgns,
++				       base, length, RANGE_RAM);
++	}
  	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0) {
  		return mem_regions_add(&usablemem_rgns,
-@@ -407,5 +407,5 @@ int is_crashkernel_mem_reserved(void)
- {
- 	kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
- 
--	return crash_reserved_mem.start != crash_reserved_mem.end;
-+	return crash_kernel_mem.start != crash_kernel_mem.end;
- }
+ 				       base, length, RANGE_RAM);
 -- 
 1.9.1
 
