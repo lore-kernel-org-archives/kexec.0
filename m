@@ -8,11 +8,12 @@ References: <5728A7C3.4010001@roeck-us.net>
  <20160504155932.GH13045@dhcppc6.redhat.com> <572A2099.4070901@codeaurora.org>
  <20160505164300.GA16914@roeck-us.net>
  <20160505182031.GB12434@dhcppc6.redhat.com> <572B8F52.2000709@codeaurora.org>
-From: Guenter Roeck <linux@roeck-us.net>
-Message-ID: <572BD8E3.4070707@roeck-us.net>
-Date: Thu, 5 May 2016 16:36:03 -0700
+ <572BD8E3.4070707@roeck-us.net>
+From: Timur Tabi <timur@codeaurora.org>
+Message-ID: <572BD959.3090507@codeaurora.org>
+Date: Thu, 5 May 2016 18:38:01 -0500
 MIME-Version: 1.0
-In-Reply-To: <572B8F52.2000709@codeaurora.org>
+In-Reply-To: <572BD8E3.4070707@roeck-us.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,23 +26,20 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Timur Tabi <timur@codeaurora.org>, Pratyush Anand <panand@redhat.com>
+To: Guenter Roeck <linux@roeck-us.net>, Pratyush Anand <panand@redhat.com>
 Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, wim@iguana.be, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On 05/05/2016 11:22 AM, Timur Tabi wrote:
-> Pratyush Anand wrote:
->> I think, in the long run we must have SBSA
->> watchdog specification improvement to keep WOR as 64 bit.
->
-> I agree with this 100%.  IMHO, using a 32-bit WOR was just a bad decision.
->
+Guenter Roeck wrote:
+> A 32-bit counter is absolutely fine. Letting it run with a 400MHz clock
+> (or was it 200 MHz ?) is the problem. A resolution of 2.5ns for a watchdog
+> timer does not really make any sense.
 
-A 32-bit counter is absolutely fine. Letting it run with a 400MHz clock
-(or was it 200 MHz ?) is the problem. A resolution of 2.5ns for a watchdog
-timer does not really make any sense.
+The 10 second limit is based on a 20MHz clock.
 
-Guenter
-
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+Forum, a Linux Foundation collaborative project.
 
 _______________________________________________
 kexec mailing list
