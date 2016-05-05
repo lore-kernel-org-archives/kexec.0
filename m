@@ -7,12 +7,12 @@ References: <5728A7C3.4010001@roeck-us.net>
  <20160504141449.GG13045@dhcppc6.redhat.com> <572A0577.1070000@codeaurora.org>
  <20160504155932.GH13045@dhcppc6.redhat.com> <572A2099.4070901@codeaurora.org>
  <20160505164300.GA16914@roeck-us.net>
- <20160505182031.GB12434@dhcppc6.redhat.com>
-From: Timur Tabi <timur@codeaurora.org>
-Message-ID: <572B8F52.2000709@codeaurora.org>
-Date: Thu, 5 May 2016 13:22:10 -0500
+ <20160505182031.GB12434@dhcppc6.redhat.com> <572B8F52.2000709@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Message-ID: <572BD8E3.4070707@roeck-us.net>
+Date: Thu, 5 May 2016 16:36:03 -0700
 MIME-Version: 1.0
-In-Reply-To: <20160505182031.GB12434@dhcppc6.redhat.com>
+In-Reply-To: <572B8F52.2000709@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,19 +25,23 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, Guenter Roeck <linux@roeck-us.net>
+To: Timur Tabi <timur@codeaurora.org>, Pratyush Anand <panand@redhat.com>
 Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, wim@iguana.be, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-Pratyush Anand wrote:
-> I think, in the long run we must have SBSA
-> watchdog specification improvement to keep WOR as 64 bit.
+On 05/05/2016 11:22 AM, Timur Tabi wrote:
+> Pratyush Anand wrote:
+>> I think, in the long run we must have SBSA
+>> watchdog specification improvement to keep WOR as 64 bit.
+>
+> I agree with this 100%.  IMHO, using a 32-bit WOR was just a bad decision.
+>
 
-I agree with this 100%.  IMHO, using a 32-bit WOR was just a bad decision.
+A 32-bit counter is absolutely fine. Letting it run with a 400MHz clock
+(or was it 200 MHz ?) is the problem. A resolution of 2.5ns for a watchdog
+timer does not really make any sense.
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-Forum, a Linux Foundation collaborative project.
+Guenter
+
 
 _______________________________________________
 kexec mailing list
