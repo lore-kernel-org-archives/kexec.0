@@ -1,18 +1,27 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-pf0-f181.google.com ([209.85.192.181])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1ay9BH-0006fg-OF
- for kexec@lists.infradead.org; Thu, 05 May 2016 02:38:24 +0000
-Date: Thu, 5 May 2016 10:37:58 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kdump: Fix gdb macros work work with newer and 64-bit
- kernels
-Message-ID: <20160505023758.GA2558@x1.redhat.com>
-References: <1456408291-29559-1-git-send-email-minyard@acm.org>
- <5720AEDC.3080409@acm.org>
+ id 1ayNtP-0006Qw-DH
+ for kexec@lists.infradead.org; Thu, 05 May 2016 18:20:56 +0000
+Received: by mail-pf0-f181.google.com with SMTP id 77so40174937pfv.2
+ for <kexec@lists.infradead.org>; Thu, 05 May 2016 11:20:34 -0700 (PDT)
+Date: Thu, 5 May 2016 23:50:31 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH RFC] Watchdog: sbsa_gwdt: Enhance timeout range
+Message-ID: <20160505182031.GB12434@dhcppc6.redhat.com>
+References: <5728A7C3.4010001@roeck-us.net>
+ <20160503143856.GE13045@dhcppc6.redhat.com>
+ <5728BEC4.6050603@codeaurora.org>
+ <20160503155141.GF13045@dhcppc6.redhat.com>
+ <20160503171602.GA2518@roeck-us.net>
+ <20160504141449.GG13045@dhcppc6.redhat.com>
+ <572A0577.1070000@codeaurora.org>
+ <20160504155932.GH13045@dhcppc6.redhat.com>
+ <572A2099.4070901@codeaurora.org>
+ <20160505164300.GA16914@roeck-us.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5720AEDC.3080409@acm.org>
+In-Reply-To: <20160505164300.GA16914@roeck-us.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,216 +33,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Corey Minyard <minyard@acm.org>
-Cc: Corey Minyard <cminyard@mvista.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-watchdog@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, wim@iguana.be, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On 04/27/16 at 07:21am, Corey Minyard wrote:
-> Any comments on this?  If no one else cares I'd be willing to take over
-> maintenance of this.
++kexec list
 
-Vivek is busy with some other issues. He asked Dave and me to test and
-review this patch. Will check this recently.
+Hi Guenter,
 
-Thanks
-Baoquan
+On 05/05/2016:09:43:00 AM, Guenter Roeck wrote:
+> On Wed, May 04, 2016 at 11:17:29AM -0500, Timur Tabi wrote:
+> > Pratyush Anand wrote:
+> > >Its unique to SBSA because you have very little timeout here. kexec-tools
+> > >upstream does not have any mechanism to handle watchdog timeout. Lets say even
+> > >if we implement a framework there, the best it can do is to ping the watchdog
+> > >again.
+> > 
+> > Ok, so it's more accurate to say that kexec has a minimum watchdog timeout
+> > requirement.  What happens if the system admin sets the timeout to 5 seconds
+> > arbitrarily?  The system will reset during kexec, no matter which hardware
+> > is used.
+> > 
+> > This still sounds like a band-aid to me.  We're just assuming that we need a
+> > timeout of at least 20 seconds to support kexec.  Frankly, this still sounds
+> > like a problem the kexec developers needs to acknowledge and deal with.
+> > 
+> > Still I'm okay with a patch that extends the timeout by programming WCV, but
+> > it has to be commented as a hack specifically to support kexec because the
+> > timeout might be too short.  Then Wim can decide whether he supports such
+> > changes.
+> > 
+> I don't even understand how kexec-tools is involved in the first place.
+> kexec-tools sounds like user space, which should execute _after_ the kernel
+
+So _after_ the 1st kernel and _before_ the second kernel. It is an application
+for the 1st kernel, which creates a tiny boot loader for 2nd kernel. After the
+1st kernel is loaded, kexec-tools is executed in user space, which provides a
+sane 2nd kernel and initramfs to the kernel using kexec() system call. Now 1st
+kernel keep these information loaded into a specific memory called "Crash
+Kernel" memory. When 1st kernel crashes, kernel kexec code passes control to
+kexec boot loader, which does sha verification of 2nd kernel and initramfs and
+passes control to 2nd kernel.
+
+> and its modules are loaded (assuming modules are loaded from initramfs).
+> If kexec-tools can somehow ping the watchdog (presumably by writing into
+> the HW directly), I don't understand why it doesn't simply load the watchdog
+> driver instead and let the watchdog core handle the heartbeats.
+
+Because that tiny boot loader (which called purgatory) does not have any
+knowledge about driver.
 
 > 
-> -corey
-> 
-> On 02/25/2016 07:51 AM, minyard@acm.org wrote:
-> >From: Corey Minyard <cminyard@mvista.com>
-> >
-> >Lots of little changes needed to be made to clean these up, remove the
-> >four byte pointer assumption and traverse the pid queue properly.
-> >Also consolidate the traceback code into a single function instead
-> >of having three copies of it.
-> >
-> >Signed-off-by: Corey Minyard <cminyard@mvista.com>
-> >---
-> >  Documentation/kdump/gdbmacros.txt | 90 +++++++++++++++++----------------------
-> >  1 file changed, 40 insertions(+), 50 deletions(-)
-> >
-> >I sent this earlier, but I didn't get a response.  These are clearly
-> >wrong.  I'd be happy to take over maintenance of these macros.  It
-> >might be better to move them someplace else, too, since they are also
-> >useful for kgdb.
-> >
-> >diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/kdump/gdbmacros.txt
-> >index 9b9b454..e5bbd8d 100644
-> >--- a/Documentation/kdump/gdbmacros.txt
-> >+++ b/Documentation/kdump/gdbmacros.txt
-> >@@ -15,14 +15,14 @@
-> >  define bttnobp
-> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
-> >  	set $init_t=&init_task
-> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> >  	while ($next_t != $init_t)
-> >  		set $next_t=(struct task_struct *)$next_t
-> >  		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> >  		printf "===================\n"
-> >-		set var $stackp = $next_t.thread.esp
-> >+		set var $stackp = $next_t.thread.sp
-> >  		set var $stack_top = ($stackp & ~4095) + 4096
-> >  		while ($stackp < $stack_top)
-> >@@ -31,12 +31,12 @@ define bttnobp
-> >  			end
-> >  			set $stackp += 4
-> >  		end
-> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
-> >  		while ($next_th != $next_t)
-> >  			set $next_th=(struct task_struct *)$next_th
-> >  			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> >  			printf "===================\n"
-> >-			set var $stackp = $next_t.thread.esp
-> >+			set var $stackp = $next_t.thread.sp
-> >  			set var $stack_top = ($stackp & ~4095) + 4096
-> >  			while ($stackp < $stack_top)
-> >@@ -45,7 +45,7 @@ define bttnobp
-> >  				end
-> >  				set $stackp += 4
-> >  			end
-> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
-> >  		end
-> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
-> >  	end
-> >@@ -54,42 +54,43 @@ document bttnobp
-> >  	dump all thread stack traces on a kernel compiled with !CONFIG_FRAME_POINTER
-> >  end
-> >+define btthreadstruct
-> >+	set var $pid_task = $arg0
-> >+
-> >+	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
-> >+	printf "task struct: "
-> >+	print $pid_task
-> >+	printf "===================\n"
-> >+	set var $stackp = $pid_task.thread.sp
-> >+	set var $stack_top = ($stackp & ~4095) + 4096
-> >+	set var $stack_bot = ($stackp & ~4095)
-> >+
-> >+	set $stackp = *((unsigned long *) $stackp)
-> >+	while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> >+		set var $addr = *(((unsigned long *) $stackp) + 1)
-> >+		info symbol $addr
-> >+		set $stackp = *((unsigned long *) $stackp)
-> >+	end
-> >+end
-> >+document btthreadstruct
-> >+	 dump a thread stack using the given task structure pointer
-> >+end
-> >+
-> >+
-> >  define btt
-> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
-> >  	set $init_t=&init_task
-> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> >  	while ($next_t != $init_t)
-> >  		set $next_t=(struct task_struct *)$next_t
-> >-		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> >-		printf "===================\n"
-> >-		set var $stackp = $next_t.thread.esp
-> >-		set var $stack_top = ($stackp & ~4095) + 4096
-> >-		set var $stack_bot = ($stackp & ~4095)
-> >+		btthreadstruct $next_t
-> >-		set $stackp = *($stackp)
-> >-		while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> >-			set var $addr = *($stackp + 4)
-> >-			info symbol $addr
-> >-			set $stackp = *($stackp)
-> >-		end
-> >-
-> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
-> >  		while ($next_th != $next_t)
-> >  			set $next_th=(struct task_struct *)$next_th
-> >-			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> >-			printf "===================\n"
-> >-			set var $stackp = $next_t.thread.esp
-> >-			set var $stack_top = ($stackp & ~4095) + 4096
-> >-			set var $stack_bot = ($stackp & ~4095)
-> >-
-> >-			set $stackp = *($stackp)
-> >-			while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> >-				set var $addr = *($stackp + 4)
-> >-				info symbol $addr
-> >-				set $stackp = *($stackp)
-> >-			end
-> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> >+			btthreadstruct $next_th
-> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
-> >  		end
-> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
-> >  	end
-> >@@ -101,7 +102,7 @@ end
-> >  define btpid
-> >  	set var $pid = $arg0
-> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
-> >  	set $init_t=&init_task
-> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> >  	set var $pid_task = 0
-> >@@ -113,29 +114,18 @@ define btpid
-> >  			set $pid_task = $next_t
-> >  		end
-> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
-> >  		while ($next_th != $next_t)
-> >  			set $next_th=(struct task_struct *)$next_th
-> >  			if ($next_th.pid == $pid)
-> >  				set $pid_task = $next_th
-> >  			end
-> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
-> >  		end
-> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
-> >  	end
-> >-	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
-> >-	printf "===================\n"
-> >-	set var $stackp = $pid_task.thread.esp
-> >-	set var $stack_top = ($stackp & ~4095) + 4096
-> >-	set var $stack_bot = ($stackp & ~4095)
-> >-
-> >-	set $stackp = *($stackp)
-> >-	while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> >-		set var $addr = *($stackp + 4)
-> >-		info symbol $addr
-> >-		set $stackp = *($stackp)
-> >-	end
-> >+	btthreadstruct $pid_task
-> >  end
-> >  document btpid
-> >  	backtrace of pid
-> >@@ -145,7 +135,7 @@ end
-> >  define trapinfo
-> >  	set var $pid = $arg0
-> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
-> >  	set $init_t=&init_task
-> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> >  	set var $pid_task = 0
-> >@@ -157,13 +147,13 @@ define trapinfo
-> >  			set $pid_task = $next_t
-> >  		end
-> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
-> >  		while ($next_th != $next_t)
-> >  			set $next_th=(struct task_struct *)$next_th
-> >  			if ($next_th.pid == $pid)
-> >  				set $pid_task = $next_th
-> >  			end
-> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
-> >  		end
-> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
-> >  	end
+> I am really missing something here. How can kexec-tools do anything before
+> the kernel is loaded ?
+
+So, if we _do_  _not_ go with the current version of patch, probably this could
+be the only available option. However, Even when we would kick watchdog once in
+kexec boot loader, we will have to make sure the 2nd kernel is light enough to
+load watchdog module before timeout.  I think, in the long run we must have SBSA
+watchdog specification improvement to keep WOR as 64 bit.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
