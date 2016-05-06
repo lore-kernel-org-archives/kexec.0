@@ -9,11 +9,12 @@ References: <5728A7C3.4010001@roeck-us.net>
  <20160505164300.GA16914@roeck-us.net>
  <20160505182031.GB12434@dhcppc6.redhat.com> <572B8F52.2000709@codeaurora.org>
  <572BD8E3.4070707@roeck-us.net> <572BD959.3090507@codeaurora.org>
+ <572BDB30.9060602@codeaurora.org>
 From: Guenter Roeck <linux@roeck-us.net>
-Message-ID: <572BDC72.5050304@roeck-us.net>
-Date: Thu, 5 May 2016 16:51:14 -0700
+Message-ID: <572BE2CC.4020606@roeck-us.net>
+Date: Thu, 5 May 2016 17:18:20 -0700
 MIME-Version: 1.0
-In-Reply-To: <572BD959.3090507@codeaurora.org>
+In-Reply-To: <572BDB30.9060602@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,16 +30,34 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Timur Tabi <timur@codeaurora.org>, Pratyush Anand <panand@redhat.com>
 Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, wim@iguana.be, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On 05/05/2016 04:38 PM, Timur Tabi wrote:
-> Guenter Roeck wrote:
->> A 32-bit counter is absolutely fine. Letting it run with a 400MHz clock
->> (or was it 200 MHz ?) is the problem. A resolution of 2.5ns for a watchdog
->> timer does not really make any sense.
+On 05/05/2016 04:45 PM, Timur Tabi wrote:
+> Timur Tabi wrote:
+>>
+>>> A 32-bit counter is absolutely fine. Letting it run with a 400MHz clock
+>>> (or was it 200 MHz ?) is the problem. A resolution of 2.5ns for a
+>>> watchdog
+>>> timer does not really make any sense.
+>>
+>> The 10 second limit is based on a 20MHz clock.
 >
-> The 10 second limit is based on a 20MHz clock.
+> No, that's not true.  I misread the code.  I knew something was wrong, but it didn't click until just now.
 >
-Not that a resolution of 50 ns makes sense either, but 4294967296 / 20971520 = 204,
-and 20971520 * 10 = 209715200 = 0x0c800000. Where does the resolution get lost ?
+> The default timeout is 10 seconds.  The max timeout on a 20MHz system (which is what we're running) is over 200 seconds.
+>
+> The problem is that Pratyush's system is running at a clock that's way too fast:
+>
+>   [  131.187562] sbsa-gwdt sbsa-gwdt.0: Initialized with 40s timeout @ 250000000 Hz, action=1.
+>
+> 250MHz is unreasonable.  Pratyush, why is your system counter so high? On our ARM64 system, it's set to 20MHz.
+>
+
+Guess that answers my earlier question. Problem is that the specification
+_permits_ those unreasonable frequencies, and quite obviously they are
+being used, no matter if it makes sense or not.
+
+With a (still unreasonable) maximum frequency of 100 MHz, the problem
+would not exist. So, if anything, someone with influence on the standard
+might suggest to reduce the maximum permitted frequency.
 
 Guenter
 
