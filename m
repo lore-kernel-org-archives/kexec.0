@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH RFC] Watchdog: sbsa_gwdt: Enhance timeout range
-References: <5728A7C3.4010001@roeck-us.net>
- <20160503143856.GE13045@dhcppc6.redhat.com> <5728BEC4.6050603@codeaurora.org>
- <20160503155141.GF13045@dhcppc6.redhat.com>
- <20160503171602.GA2518@roeck-us.net>
- <20160504141449.GG13045@dhcppc6.redhat.com> <572A0577.1070000@codeaurora.org>
- <20160504155932.GH13045@dhcppc6.redhat.com> <572A2099.4070901@codeaurora.org>
- <20160505164300.GA16914@roeck-us.net>
- <20160505182031.GB12434@dhcppc6.redhat.com> <572B8F52.2000709@codeaurora.org>
- <572BD8E3.4070707@roeck-us.net> <572BD959.3090507@codeaurora.org>
- <572BDB30.9060602@codeaurora.org>
-From: Guenter Roeck <linux@roeck-us.net>
-Message-ID: <572BE2CC.4020606@roeck-us.net>
-Date: Thu, 5 May 2016 17:18:20 -0700
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1azdam-00061V-HH
+ for kexec@lists.infradead.org; Mon, 09 May 2016 05:18:54 +0000
+Date: Mon, 9 May 2016 13:18:26 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kdump: Fix gdb macros work work with newer and 64-bit
+ kernels
+Message-ID: <20160509051724.GA2460@x1.redhat.com>
+References: <1456408291-29559-1-git-send-email-minyard@acm.org>
+ <5720AEDC.3080409@acm.org>
 MIME-Version: 1.0
-In-Reply-To: <572BDB30.9060602@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <5720AEDC.3080409@acm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +21,241 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Timur Tabi <timur@codeaurora.org>, Pratyush Anand <panand@redhat.com>
-Cc: linux-watchdog@vger.kernel.org, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, wim@iguana.be, fu.wei@linaro.org, Suravee.Suthikulpanit@amd.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Corey Minyard <minyard@acm.org>
+Cc: Corey Minyard <cminyard@mvista.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On 05/05/2016 04:45 PM, Timur Tabi wrote:
-> Timur Tabi wrote:
->>
->>> A 32-bit counter is absolutely fine. Letting it run with a 400MHz clock
->>> (or was it 200 MHz ?) is the problem. A resolution of 2.5ns for a
->>> watchdog
->>> timer does not really make any sense.
->>
->> The 10 second limit is based on a 20MHz clock.
->
-> No, that's not true.  I misread the code.  I knew something was wrong, but it didn't click until just now.
->
-> The default timeout is 10 seconds.  The max timeout on a 20MHz system (which is what we're running) is over 200 seconds.
->
-> The problem is that Pratyush's system is running at a clock that's way too fast:
->
->   [  131.187562] sbsa-gwdt sbsa-gwdt.0: Initialized with 40s timeout @ 250000000 Hz, action=1.
->
-> 250MHz is unreasonable.  Pratyush, why is your system counter so high? On our ARM64 system, it's set to 20MHz.
->
+Hi Corey,
 
-Guess that answers my earlier question. Problem is that the specification
-_permits_ those unreasonable frequencies, and quite obviously they are
-being used, no matter if it makes sense or not.
+I am trying to review this patch now, and these fixes contained are very
+great. Just several concerns are added in inline comment.
 
-With a (still unreasonable) maximum frequency of 100 MHz, the problem
-would not exist. So, if anything, someone with influence on the standard
-might suggest to reduce the maximum permitted frequency.
+By the way, did you run this in your side?
 
-Guenter
+Hi Vivek,
 
+Member variable was added into task_struct in below commit replacing
+pids[PIDTYPE_TGID], and from then on nobody complained about it. Seems
+people rarely use this utility.
+
+commit 47e65328a7b1cdfc4e3102e50d60faf94ebba7d3
+Author: Oleg Nesterov <oleg@tv-sign.ru>
+Date:   Tue Mar 28 16:11:25 2006 -0800
+
+    [PATCH] pids: kill PIDTYPE_TGID
+
+
+
+On 04/27/16 at 07:21am, Corey Minyard wrote:
+> Any comments on this?  If no one else cares I'd be willing to take over
+> maintenance of this.
+> 
+> -corey
+> 
+> On 02/25/2016 07:51 AM, minyard@acm.org wrote:
+> >From: Corey Minyard <cminyard@mvista.com>
+> >
+> >Lots of little changes needed to be made to clean these up, remove the
+> >four byte pointer assumption and traverse the pid queue properly.
+> >Also consolidate the traceback code into a single function instead
+> >of having three copies of it.
+> >
+> >Signed-off-by: Corey Minyard <cminyard@mvista.com>
+> >---
+> >  Documentation/kdump/gdbmacros.txt | 90 +++++++++++++++++----------------------
+> >  1 file changed, 40 insertions(+), 50 deletions(-)
+> >
+> >I sent this earlier, but I didn't get a response.  These are clearly
+> >wrong.  I'd be happy to take over maintenance of these macros.  It
+> >might be better to move them someplace else, too, since they are also
+> >useful for kgdb.
+> >
+> >diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/kdump/gdbmacros.txt
+> >index 9b9b454..e5bbd8d 100644
+> >--- a/Documentation/kdump/gdbmacros.txt
+> >+++ b/Documentation/kdump/gdbmacros.txt
+> >@@ -15,14 +15,14 @@
+> >  define bttnobp
+> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
+> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+
+This is a quite nice fix.
+
+> >  	set $init_t=&init_task
+> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+> >  	while ($next_t != $init_t)
+> >  		set $next_t=(struct task_struct *)$next_t
+> >  		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+> >  		printf "===================\n"
+> >-		set var $stackp = $next_t.thread.esp
+> >+		set var $stackp = $next_t.thread.sp
+> >  		set var $stack_top = ($stackp & ~4095) + 4096
+> >  		while ($stackp < $stack_top)
+> >@@ -31,12 +31,12 @@ define bttnobp
+> >  			end
+> >  			set $stackp += 4
+> >  		end
+> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
+> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+> >  		while ($next_th != $next_t)
+> >  			set $next_th=(struct task_struct *)$next_th
+> >  			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+> >  			printf "===================\n"
+> >-			set var $stackp = $next_t.thread.esp
+> >+			set var $stackp = $next_t.thread.sp
+> >  			set var $stack_top = ($stackp & ~4095) + 4096
+> >  			while ($stackp < $stack_top)
+> >@@ -45,7 +45,7 @@ define bttnobp
+> >  				end
+> >  				set $stackp += 4
+> >  			end
+> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
+> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+> >  		end
+> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+> >  	end
+> >@@ -54,42 +54,43 @@ document bttnobp
+> >  	dump all thread stack traces on a kernel compiled with !CONFIG_FRAME_POINTER
+> >  end
+> >+define btthreadstruct
+
+This is a nice wrapping, but I guess you want to name it as
+btthreadstack, right? Since I didn't get at all why it's related to
+thread_struct except of getting 'sp'.
+
+> >+	set var $pid_task = $arg0
+> >+
+> >+	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
+> >+	printf "task struct: "
+> >+	print $pid_task
+> >+	printf "===================\n"
+> >+	set var $stackp = $pid_task.thread.sp
+> >+	set var $stack_top = ($stackp & ~4095) + 4096
+> >+	set var $stack_bot = ($stackp & ~4095)
+> >+
+> >+	set $stackp = *((unsigned long *) $stackp)
+> >+	while (($stackp < $stack_top) && ($stackp > $stack_bot))
+> >+		set var $addr = *(((unsigned long *) $stackp) + 1)
+> >+		info symbol $addr
+> >+		set $stackp = *((unsigned long *) $stackp)
+> >+	end
+> >+end
+> >+document btthreadstruct
+> >+	 dump a thread stack using the given task structure pointer
+> >+end
+> >+
+> >+
+> >  define btt
+> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
+> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+> >  	set $init_t=&init_task
+> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+> >  	while ($next_t != $init_t)
+> >  		set $next_t=(struct task_struct *)$next_t
+> >-		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+> >-		printf "===================\n"
+> >-		set var $stackp = $next_t.thread.esp
+> >-		set var $stack_top = ($stackp & ~4095) + 4096
+> >-		set var $stack_bot = ($stackp & ~4095)
+> >+		btthreadstruct $next_t
+> >-		set $stackp = *($stackp)
+> >-		while (($stackp < $stack_top) && ($stackp > $stack_bot))
+> >-			set var $addr = *($stackp + 4)
+> >-			info symbol $addr
+> >-			set $stackp = *($stackp)
+> >-		end
+> >-
+> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
+> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+> >  		while ($next_th != $next_t)
+> >  			set $next_th=(struct task_struct *)$next_th
+> >-			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
+> >-			printf "===================\n"
+> >-			set var $stackp = $next_t.thread.esp
+> >-			set var $stack_top = ($stackp & ~4095) + 4096
+> >-			set var $stack_bot = ($stackp & ~4095)
+> >-
+> >-			set $stackp = *($stackp)
+> >-			while (($stackp < $stack_top) && ($stackp > $stack_bot))
+> >-				set var $addr = *($stackp + 4)
+> >-				info symbol $addr
+> >-				set $stackp = *($stackp)
+> >-			end
+> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
+> >+			btthreadstruct $next_th
+> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+> >  		end
+> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+> >  	end
+> >@@ -101,7 +102,7 @@ end
+> >  define btpid
+> >  	set var $pid = $arg0
+> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
+> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+> >  	set $init_t=&init_task
+> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+> >  	set var $pid_task = 0
+> >@@ -113,29 +114,18 @@ define btpid
+> >  			set $pid_task = $next_t
+> >  		end
+> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
+> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+> >  		while ($next_th != $next_t)
+> >  			set $next_th=(struct task_struct *)$next_th
+> >  			if ($next_th.pid == $pid)
+> >  				set $pid_task = $next_th
+> >  			end
+> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
+> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+> >  		end
+> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+> >  	end
+> >-	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
+> >-	printf "===================\n"
+> >-	set var $stackp = $pid_task.thread.esp
+> >-	set var $stack_top = ($stackp & ~4095) + 4096
+> >-	set var $stack_bot = ($stackp & ~4095)
+> >-
+> >-	set $stackp = *($stackp)
+> >-	while (($stackp < $stack_top) && ($stackp > $stack_bot))
+> >-		set var $addr = *($stackp + 4)
+> >-		info symbol $addr
+> >-		set $stackp = *($stackp)
+> >-	end
+> >+	btthreadstruct $pid_task
+> >  end
+> >  document btpid
+> >  	backtrace of pid
+> >@@ -145,7 +135,7 @@ end
+> >  define trapinfo
+> >  	set var $pid = $arg0
+> >  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
+> >-	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
+> >+	set $pid_off=((size_t)&((struct task_struct *)0)->thread_group.next)
+> >  	set $init_t=&init_task
+> >  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
+> >  	set var $pid_task = 0
+> >@@ -157,13 +147,13 @@ define trapinfo
+> >  			set $pid_task = $next_t
+> >  		end
+> >-		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
+> >+		set $next_th=(((char *)$next_t->thread_group.next) - $pid_off)
+> >  		while ($next_th != $next_t)
+> >  			set $next_th=(struct task_struct *)$next_th
+> >  			if ($next_th.pid == $pid)
+> >  				set $pid_task = $next_th
+> >  			end
+> >-			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
+> >+			set $next_th=(((char *)$next_th->thread_group.next) - $pid_off)
+> >  		end
+> >  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
+> >  	end
 
 _______________________________________________
 kexec mailing list
