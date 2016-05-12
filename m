@@ -1,13 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b0ZJZ-0005bd-Tm
- for kexec@lists.infradead.org; Wed, 11 May 2016 18:57:01 +0000
-Date: Wed, 11 May 2016 19:56:17 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Date: Thu, 12 May 2016 14:26:27 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH 11/12] kexec: allow architectures to override boot mapping
-Message-ID: <20160511185616.GP19428@n2100.arm.linux.org.uk>
+Message-ID: <20160512062627.GB2711@x1.redhat.com>
 References: <20160428092644.GX19428@n2100.arm.linux.org.uk>
  <E1aviFU-0000jk-9q@rmk-PC.arm.linux.org.uk>
 MIME-Version: 1.0
@@ -25,34 +20,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, Fenghua Yu <fenghua.yu@intel.com>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Rob Herring <robh+dt@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 
-I was going to send the patches to Andrew, but then I noticed this
-one has received no acks.  What's the situation for this patch?
-
-On Thu, Apr 28, 2016 at 10:28:40AM +0100, Russell King wrote:
-> kexec physical addresses are the boot-time view of the system.  For
-> certain ARM systems (such as Keystone 2), the boot view of the system
-> does not match the kernel's view of the system: the boot view uses a
-> special alias in the lower 4GB of the physical address space.
-> 
-> To cater for these kinds of setups, we need to translate between the
-> boot view physical addresses and the normal kernel view physical
-> addresses.  This patch extracts the current transation points into
-> linux/kexec.h, and allows an architecture to override the functions.
-> 
-> Due to the translations required, we unfortunately end up with six
-> translation functions, which are reduced down to four that the
-> architecture can override.
-> 
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> ---
->  include/linux/kexec.h | 38 ++++++++++++++++++++++++++++++++++++++
->  kernel/kexec.c        |  3 ++-
->  kernel/kexec_core.c   | 26 +++++++++++++-------------
->  3 files changed, 53 insertions(+), 14 deletions(-)
-> 
+On 04/28/16 at 10:28am, Russell King wrote:
 > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
 > index 52a3a221bcb2..99cb9dac7909 100644
 > --- a/include/linux/kexec.h
@@ -67,6 +38,15 @@ On Thu, Apr 28, 2016 at 10:28:40AM +0100, Russell King wrote:
 > +	return page_to_pfn(page);
 > +}
 > +#endif
+
+I am thinking if it's appropriate to introduce a new concept which only
+exists in a certain system of a certain ARCH. Is it unavoidable? If have
+to can we name it as kexec_page_to_pfn/kexec_pfn_to_page, etc? People
+might not need to know about boot view physical address and kernel view
+physical address things when they just want to understand kexec
+implementation related to one ARCH except of ARM, even related to ARM
+but not Keystone 2.
+
 > +
 > +#ifndef boot_pfn_to_page
 > +static inline struct page *boot_pfn_to_page(unsigned long boot_pfn)
@@ -230,14 +210,9 @@ On Thu, Apr 28, 2016 at 10:28:40AM +0100, Russell King wrote:
 > 
 > 
 > _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
