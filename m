@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 18 May 2016 10:09:17 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v15 00/20] arm64 kexec kernel patches v15
-Message-ID: <20160518020917.GB3073@dhcp-128-65.nay.redhat.com>
-References: <cover.1457977401.git.geoff@infradead.org>
- <20160401015947.GA3835@dhcp-128-65.nay.redhat.com>
- <1459535954.20121.3.camel@infradead.org>
- <20160517054216.GA12543@dhcp-128-65.nay.redhat.com>
- <573AD11E.1030301@arm.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1b2wJ0-0007b8-VZ
+ for kexec@lists.infradead.org; Wed, 18 May 2016 07:54:12 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH 2/3] makedumpfile: Mark unstored ELF pages as filtered
+Date: Wed, 18 May 2016 07:44:26 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E44B52@BPXM01GP.gisp.nec.co.jp>
+References: <20160210084737.3060fb5a@hananiah.suse.cz>
+ <20160210084941.026830dc@hananiah.suse.cz>
+In-Reply-To: <20160210084941.026830dc@hananiah.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <573AD11E.1030301@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +24,164 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-Hi Marc
+Hello Petr,
 
-On 05/17/16 at 09:06am, Marc Zyngier wrote:
-> Hi Dave,
-> 
-> On 17/05/16 06:42, Dave Young wrote:
-> > Marc, it has been discussed for long time, I think kdump code can be
-> > logically splitted from this series so that we can get the kexec
-> > done first? 
-> 
-> The basis for kexec are already on their way to mainline, as part of the
-> hibernate series that James has put together.
-> 
-> I'd expect someone to:
-> 
-> 1) rebase the remaining kexec/kdump patches based on the current
-> arm64/for-next/core,
-> 2) post these patches when -rc1 gets cut in two weeks from now,
-> 3) address the review comments in a timely manner,
-> 4) update the series once a week so that we see some actual progress
-> 
-> If this happens, I can't see any reason why this code wouldn't get
-> merged. But keeping kexec and kdump together is not what has prevented
-> the code from getting merged until now.
+Sorry for my late comment:
 
-Cool, thanks a lot for the clarification about the situation.
+>Pages that were filtered in the original dump file should also be filtered
+>in the destination file, i.e. pages between p_filesz and p_memsz must have
+>their corresponding bit cleared in the 2nd bitmap. Note that in theory,
+>such ELF segments might not refer to filtered pages, because the crash
+>kernel copies the program headers verbatim from elfcorehdr=. However, all
+>common sources of /proc/vmcore program headers use the same value for each
+>p_memsz and p_filesz:
+>
+>a. kexec(8)
+>   Program headers are created in two places, but in both cases the value
+>   of p_memsz is equal to p_filesz.
+>   Reference: kexec/crashdump-elf.c in kexec-tools
+>
+>b. kexec_file_load(2)
+>   Conceptually the same code as kexec(8): two places, both set p_filesz
+>   and p_memsz to the same value.
+>   Reference: kexec/crashdump-elf.c in Linux kernel
+>
+>c. created in the crash kernel (s390)
+>   On s390, program headers are created in the crash kernel, but both
+>   p_filesz and p_memsz are set to "end - start", i.e. the same value.
+>   Reference: arch/s390/kernel/crash_dump.c in Linux kernel
+>
+>The above means that p_memsz > p_filesz only in ELF files that were
+>processed by makedumpfile, hence it can be safely assumed that pages
+>between p_filesz and p_memsz were filtered out.
+>
+>Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>
+>---
+> elf_info.c     |   26 ++++++++++++++++++++++++++
+> elf_info.h     |    5 +++++
+> makedumpfile.c |   32 ++++++++++++++++++++++++++++++++
+> 3 files changed, 63 insertions(+)
+>
+>--- a/elf_info.c
+>+++ b/elf_info.c
+>@@ -1096,6 +1096,32 @@ get_pt_load(int idx,
+> 	return TRUE;
+> }
+>
+>+int
+>+get_pt_load_extents(int idx,
+>+	unsigned long long *phys_start,
+>+	unsigned long long *phys_end,
+>+	off_t *file_offset,
+>+	off_t *file_size)
+>+{
+>+	struct pt_load_segment *pls;
+>+
+>+	if (num_pt_loads <= idx)
+>+		return FALSE;
+>+
+>+	pls = &pt_loads[idx];
+>+
+>+	if (phys_start)
+>+		*phys_start  = pls->phys_start;
+>+	if (phys_end)
+>+		*phys_end    = pls->phys_end;
+>+	if (file_offset)
+>+		*file_offset = pls->file_offset;
+>+	if (file_size)
+>+		*file_size   = pls->file_size;
+>+
+>+	return TRUE;
+>+}
+>+
+> unsigned int
+> get_num_pt_loads(void)
+> {
+>--- a/elf_info.h
+>+++ b/elf_info.h
+>@@ -61,6 +61,11 @@ int get_pt_load(int idx,
+> 	unsigned long long *phys_end,
+> 	unsigned long long *virt_start,
+> 	unsigned long long *virt_end);
+>+int get_pt_load_extents(int idx,
+>+	unsigned long long *phys_start,
+>+	unsigned long long *phys_end,
+>+	off_t *file_offset,
+>+	off_t *file_size);
+> unsigned int get_num_pt_loads(void);
+>
+> void set_nr_cpus(int num);
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -4395,6 +4395,32 @@ read_start_flat_header(void)
+> 	return TRUE;
+> }
+>
+>+static void
+>+exclude_nodata_pages(struct cycle *cycle)
+>+{
+>+	int i;
+>+	unsigned long long phys_start, phys_end;
+>+	off_t file_size;
+>+
+>+	i = 0;
+>+	while (get_pt_load_extents(i, &phys_start, &phys_end,
+>+				   NULL, &file_size)) {
+>+		unsigned long long pfn, pfn_end;
+>+
+>+		pfn = paddr_to_pfn(phys_start + file_size);
+>+		pfn_end = paddr_to_pfn(phys_end);
 
-Dave
+Does this code exclude the first pfn of out of PT_LOAD even if there is
+no unstored pages ? pfn and pfn_end will point at the next pfn to the
+last pfn of PT_LOAD.
+This will be problem for the environments which have a overlapped PT_LOAD
+segment like ia64.
+
+>+		if (pfn < cycle->start_pfn)
+>+			pfn = cycle->start_pfn;
+>+		if (pfn_end >= cycle->end_pfn)
+>+			pfn_end = cycle->end_pfn - 1;
+>+		while (pfn <= pfn_end) {
+
+Should we change this condition to "pfn < pfn_end" ?
+
+>+			clear_bit_on_2nd_bitmap(pfn, cycle);
+>+			++pfn;
+>+		}
+>+		++i;
+>+	}
+>+}
+
+Thanks,
+Atsushi Kumagai
+
+>+
+> int
+> read_flat_data_header(struct makedumpfile_data_header *fdh)
+> {
+>@@ -6087,6 +6113,12 @@ create_2nd_bitmap(struct cycle *cycle)
+> 	}
+>
+> 	/*
+>+	 * If re-filtering ELF dump, exclude pages that were already
+>+	 * excluded in the original file.
+>+	 */
+>+	exclude_nodata_pages(cycle);
+>+
+>+	/*
+> 	 * Exclude cache pages, cache private pages, user data pages,
+> 	 * and hwpoison pages.
+> 	 */
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
