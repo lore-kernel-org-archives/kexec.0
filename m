@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f54.google.com ([209.85.218.54])
+Received: from mail-oi0-f43.google.com ([209.85.218.43])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b5TkB-0003A5-Ik
- for kexec@lists.infradead.org; Wed, 25 May 2016 08:00:45 +0000
-Received: by mail-oi0-f54.google.com with SMTP id b65so66252198oia.1
- for <kexec@lists.infradead.org>; Wed, 25 May 2016 01:00:28 -0700 (PDT)
+ id 1b5TkY-0003KJ-5k
+ for kexec@lists.infradead.org; Wed, 25 May 2016 08:01:08 +0000
+Received: by mail-oi0-f43.google.com with SMTP id k23so66260351oih.0
+ for <kexec@lists.infradead.org>; Wed, 25 May 2016 01:00:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <E1axXSq-0004hx-8H@e0050434b2927.dyn.arm.linux.org.uk>
+In-Reply-To: <E1axXSv-0004i3-Gi@e0050434b2927.dyn.arm.linux.org.uk>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <E1axXSq-0004hx-8H@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Wed, 25 May 2016 13:30:27 +0530
-Message-ID: <CAHB_Gur=Lf7-wX+=ddfEwXrC7U0mduSGTbV2hPp4HSG7nx-8yA@mail.gmail.com>
-Subject: Re: [PATCH kexec-tools 11/32] kexec: add mem_regions sorting
- implementation
+ <E1axXSv-0004i3-Gi@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Wed, 25 May 2016 13:30:44 +0530
+Message-ID: <CAHB_Guo_ozXhAnkGk_NrdBME2fSYDoKTHwu3kLBvsrmbwxOdww@mail.gmail.com>
+Subject: Re: [PATCH kexec-tools 12/32] kexec: add helper to exlude a region
+ from a set of memory ranges
 From: Pratyush Anand <panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,64 +30,97 @@ To: Russell King <rmk@arm.linux.org.uk>
 Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
 On Tue, May 3, 2016 at 3:52 PM, Russell King <rmk@arm.linux.org.uk> wrote:
-> Add a mem_regions sorting implementation taken from the arm code.
+> Add a helper to exclude a region from a set of memory ranges.
 >
 > Signed-off-by: Russell King <rmk@arm.linux.org.uk>
-
-Reviewed-by: Pratyush Anand <panand@redhat.com>
-
 > ---
->  kexec/mem_regions.c | 27 +++++++++++++++++++++++++++
->  kexec/mem_regions.h |  2 ++
->  2 files changed, 29 insertions(+)
+>  kexec/mem_regions.c | 55 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  kexec/mem_regions.h |  4 ++++
+>  2 files changed, 59 insertions(+)
 >
 > diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
-> index a4952ff..804984a 100644
+> index 804984a..c6ba942 100644
 > --- a/kexec/mem_regions.c
 > +++ b/kexec/mem_regions.c
-> @@ -1,6 +1,33 @@
-> +#include <stdlib.h>
-> +
->  #include "kexec.h"
->  #include "mem_regions.h"
+> @@ -29,6 +29,61 @@ void mem_regions_sort(struct memory_ranges *ranges)
+>  }
 >
-> +static int mem_range_cmp(const void *a1, const void *a2)
+>  /**
+> + * mem_regions_exclude() - excludes a memory region from a set of memory ranges
+> + * @ranges: memory ranges to exclude the region from
+> + * @range: memory range to exclude
+> + *
+> + * Exclude a memory region from a set of memory ranges.  We assume that
+> + * the region to be excluded is either wholely located within one of the
+> + * memory ranges, or not at all.
+> + */
+> +int mem_regions_exclude(struct memory_ranges *ranges,
+> +                       const struct memory_range *range)
 > +{
-> +       const struct memory_range *r1 = a1;
-> +       const struct memory_range *r2 = a2;
+> +       int i;
 > +
-> +       if (r1->start > r2->start)
-> +               return 1;
-> +       if (r1->start < r2->start)
-> +               return -1;
+> +       for (i = 0; i < ranges->size; i++) {
+> +               struct memory_range *r = ranges->ranges + i;
 > +
+> +               /*
+> +                * We assume that crash area is fully contained in
+> +                * some larger memory area.
+> +                */
+> +               if (r->start <= range->start && r->end >= range->end) {
+> +                       if (r->start == range->start) {
+> +                               /* Shrink the start of this memory range */
+> +                               r->start = range->end + 1;
+> +                       } else if (r->end == range->end) {
+> +                               /* Shrink the end of this memory range */
+> +                               r->end = range->start - 1;
+
+What if r->start == range->start) && (r->end == range->end)?
+
+> +                       } else {
+> +                               struct memory_range *new;
+> +
+> +                               /*
+> +                                * Split this area into 2 smaller ones and
+> +                                * remove excluded range from between. First
+> +                                * create new entry for the remaining area.
+> +                                */
+> +                               if (ranges->size >= ranges->max_size)
+> +                                       return -1;
+> +
+> +                               new = ranges->ranges + ranges->size++;
+> +                               new->start = range->end + 1;
+> +                               new->end = r->end;
+> +
+> +                               /*
+> +                                * Update this area to end before excluded
+> +                                * range.
+> +                                */
+> +                               r->end = range->start - 1;
+> +                               break;
+> +                       }
+> +               }
+> +       }
 > +       return 0;
 > +}
 > +
 > +/**
-> + * mem_regions_sort() - sort ranges into ascending address order
-> + * @ranges: ranges to sort
-> + *
-> + * Sort the memory regions into ascending address order.
-> + */
-> +void mem_regions_sort(struct memory_ranges *ranges)
-> +{
-> +       qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
-> +             mem_range_cmp);
-> +}
-> +
->  /**
 >   * mem_regions_add() - add a memory region to a set of ranges
 >   * @ranges: ranges to add the memory region to
+>   * @max: maximum number of entries in memory region
 > diff --git a/kexec/mem_regions.h b/kexec/mem_regions.h
-> index b9cfba1..da7b5e8 100644
+> index da7b5e8..ae9e972 100644
 > --- a/kexec/mem_regions.h
 > +++ b/kexec/mem_regions.h
-> @@ -3,6 +3,8 @@
+> @@ -2,9 +2,13 @@
+>  #define MEM_REGIONS_H
 >
 >  struct memory_ranges;
+> +struct memory_range;
 >
-> +void mem_regions_sort(struct memory_ranges *ranges);
+>  void mem_regions_sort(struct memory_ranges *ranges);
+>
+> +int mem_regions_exclude(struct memory_ranges *ranges,
+> +                       const struct memory_range *range);
 > +
 >  int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
 >                      unsigned long long length, int type);
