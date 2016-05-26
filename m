@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b5khs-0002Ps-SU
- for kexec@lists.infradead.org; Thu, 26 May 2016 02:07:29 +0000
-Date: Thu, 26 May 2016 11:07:04 +0900
-From: Simon Horman <horms@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1b5l3U-0001aV-6S
+ for kexec@lists.infradead.org; Thu, 26 May 2016 02:29:48 +0000
+Date: Thu, 26 May 2016 10:29:18 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] MAINTAINERS: Kdump maintainers update
-Message-ID: <20160526020704.GD18393@verge.net.au>
+Message-ID: <20160526022918.GA3419@dhcp-128-65.nay.redhat.com>
 References: <20160525131616.GB27291@redhat.com>
  <1464182650.16344.6.camel@perches.com>
  <20160525133713.GA2590@redhat.com>
@@ -21,51 +21,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>
 
-T24gV2VkLCBNYXkgMjUsIDIwMTYgYXQgMDk6Mzc6MTNBTSAtMDQwMCwgVml2ZWsgR295YWwgd3Jv
-dGU6Cj4gT24gV2VkLCBNYXkgMjUsIDIwMTYgYXQgMDY6MjQ6MTBBTSAtMDcwMCwgSm9lIFBlcmNo
-ZXMgd3JvdGU6Cj4gPiBPbiBXZWQsIDIwMTYtMDUtMjUgYXQgMDk6MTYgLTA0MDAsIFZpdmVrIEdv
-eWFsIHdyb3RlOgo+ID4gPiBJIGFtIHByb3Bvc2luZyBmb2xsb3dpbmcgdXBkYXRlcyB0byBrZHVt
-cCBtYWludGFpbmVyc2hpcC4gSSBoYXZlIGdvdAo+ID4gPiBidXN5IGluIG90aGVyIHRoaW5ncyBh
-bmQgbm90IGdldHRpbmcgdGltZSB0byBzcGVuZCBvbiBrZHVtcC7CoAo+ID4gPiAKPiA+ID4gUmVt
-b3ZlZCBIYXJlbiBNeW5lbmkgYXMgaGUgaGFzIG5vdCBwYXJ0aWNpcGF0ZWQgaW4ga2R1bXAgZGV2
-ZWxvcG1lbnQgZm9yCj4gPiA+IGEgbG9uZyB0aW1lIG5vdy4KPiA+ID4gCj4gPiA+IFByb3Bvc2lu
-ZyBhZGRpbmcgdGhlIG5hbWVzIG9mIERhdmUgYW5kIEJhb3F1YW4gYXMga2R1bXAgbWFpbnRhaW5l
-cnMgYXMKPiA+ID4gdGhleSBoYXZlIGJlZW4gY29udHJpYnV0aW5nIHRvIGtkdW1wIGZvciBhIGxv
-bmcgdGltZSBub3cgYW5kIHRoZXkgYXJlIGluCj4gPiA+IGEgbXVjaCBiZXR0ZXIgcG9zaXRpb24g
-dG8gc3BlbmQgdGltZSBvbiB0aGlzIHRoYW4gbWUuCj4gPiBbXQo+ID4gPiBkaWZmIC0tZ2l0IGEv
-TUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwo+ID4gW10KPiA+ID4gQEAgLTYxODksOCArNjE4OSw5
-IEBAIEY6CURvY3VtZW50YXRpb24va2J1aWxkL2tjb25maWctbGFuZ3VhZ2UudHh0Cj4gPiA+IMKg
-RjoJc2NyaXB0cy9rY29uZmlnLwo+ID4gPiDCoAo+ID4gPiDCoEtEVU1QCj4gPiA+ICtNOglEYXZl
-IFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KPiA+ID4gK006CUJhb3F1YW4gSGUgPGJoZUByZWRo
-YXQuY29tPgo+ID4gPiDCoE06CVZpdmVrIEdveWFsIDx2Z295YWxAcmVkaGF0LmNvbT4KPiA+IAo+
-ID4gWW91IGNvdWxkIG1hcmsgeW91cnNlbGYgYXMgYW4gIlI6IiByZXZpZXdlcgo+ID4gaW5zdGVh
-ZCBvZiBhbiAiTToiIG1haW50YWluZXIuCj4gCj4gVGhhdCdzIGEgZ29vZCBpZGVhLiBJIHVwZGF0
-ZWQgdGhlIHBhdGNoIGFuZCBtYXJrZWQgbXlzZWxmIHJldmlld2VyLgo+IAo+IFJlbW92ZWQgSGFy
-ZW4gTXluZW5pIGFzIGhlIGhhcyBub3QgcGFydGljaXBhdGVkIGluIGtkdW1wIGRldmVsb3BtZW50
-IGZvcgo+IGEgbG9uZyB0aW1lIG5vdy4KPiAKPiBQcm9wb3NpbmcgYWRkaW5nIHRoZSBuYW1lcyBv
-ZiBEYXZlIGFuZCBCYW9xdWFuIGFzIGtkdW1wIG1haW50YWluZXJzIGFzCj4gdGhleSBoYXZlIGJl
-ZW4gd29ya2luZyBvbiBpdCBmb3IgcXVpdGUgc29tZSB0aW1lIG9uIGl0IHVwc3RyZWFtIGFuZAo+
-IHRoZXkgYXJlIGluIGEgbXVjaCBiZXR0ZXIgcG9zaXRpb24gdG8gc3BlbmQgdGltZSBvbiB0aGlz
-IHRoYW4gbWUuCj4gCj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR295YWwgPHZnb3lhbEByZWRoYXQu
-Y29tPgoKRldJVyBJIGFtIGZpbmUgd2l0aCB0aGlzIGNoYW5nZS4KCkFja2VkLWJ5OiBTaW1vbiBI
-b3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4KCj4gLS0tCj4gIE1BSU5UQUlORVJTIHwgNSArKyst
-LQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+IAo+
-IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gaW5kZXggOWM1NjdhNC4u
-NTc5MmVjMiAxMDA2NDQKPiAtLS0gYS9NQUlOVEFJTkVSUwo+ICsrKyBiL01BSU5UQUlORVJTCj4g
-QEAgLTYxODksOCArNjE4OSw5IEBAIEY6CURvY3VtZW50YXRpb24va2J1aWxkL2tjb25maWctbGFu
-Z3VhZ2UudHh0Cj4gIEY6CXNjcmlwdHMva2NvbmZpZy8KPiAgCj4gIEtEVU1QCj4gLU06CVZpdmVr
-IEdveWFsIDx2Z295YWxAcmVkaGF0LmNvbT4KPiAtTToJSGFyZW4gTXluZW5pIDxoYmFidUB1cy5p
-Ym0uY29tPgo+ICtNOglEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KPiArTToJQmFvcXVh
-biBIZSA8YmhlQHJlZGhhdC5jb20+Cj4gK1I6CVZpdmVrIEdveWFsIDx2Z295YWxAcmVkaGF0LmNv
-bT4KPiAgTDoJa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+ICBXOglodHRwOi8vbHNlLnNvdXJj
-ZWZvcmdlLm5ldC9rZHVtcC8KPiAgUzoJTWFpbnRhaW5lZAo+IC0tIAo+IDIuNy40Cj4gCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi, Vivek
+
+On 05/25/16 at 09:37am, Vivek Goyal wrote:
+> On Wed, May 25, 2016 at 06:24:10AM -0700, Joe Perches wrote:
+> > On Wed, 2016-05-25 at 09:16 -0400, Vivek Goyal wrote:
+> > > I am proposing following updates to kdump maintainership. I have got
+> > > busy in other things and not getting time to spend on kdump.=A0
+> > > =
+
+> > > Removed Haren Myneni as he has not participated in kdump development =
+for
+> > > a long time now.
+> > > =
+
+> > > Proposing adding the names of Dave and Baoquan as kdump maintainers as
+> > > they have been contributing to kdump for a long time now and they are=
+ in
+> > > a much better position to spend time on this than me.
+> > []
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > []
+> > > @@ -6189,8 +6189,9 @@ F:	Documentation/kbuild/kconfig-language.txt
+> > > =A0F:	scripts/kconfig/
+> > > =A0
+> > > =A0KDUMP
+> > > +M:	Dave Young <dyoung@redhat.com>
+> > > +M:	Baoquan He <bhe@redhat.com>
+> > > =A0M:	Vivek Goyal <vgoyal@redhat.com>
+> > =
+
+> > You could mark yourself as an "R:" reviewer
+> > instead of an "M:" maintainer.
+> =
+
+> That's a good idea. I updated the patch and marked myself reviewer.
+> =
+
+> Removed Haren Myneni as he has not participated in kdump development for
+> a long time now.
+> =
+
+> Proposing adding the names of Dave and Baoquan as kdump maintainers as
+> they have been working on it for quite some time on it upstream and
+> they are in a much better position to spend time on this than me.
+
+Thanks a lot for the patch! I will do my best to work with Baoquan to maint=
+ain
+it. Very appreciated for your guidiance before and in the future.
+
+> =
+
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  MAINTAINERS | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> =
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9c567a4..5792ec2 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6189,8 +6189,9 @@ F:	Documentation/kbuild/kconfig-language.txt
+>  F:	scripts/kconfig/
+>  =
+
+>  KDUMP
+> -M:	Vivek Goyal <vgoyal@redhat.com>
+> -M:	Haren Myneni <hbabu@us.ibm.com>
+> +M:	Dave Young <dyoung@redhat.com>
+> +M:	Baoquan He <bhe@redhat.com>
+> +R:	Vivek Goyal <vgoyal@redhat.com>
+>  L:	kexec@lists.infradead.org
+>  W:	http://lse.sourceforge.net/kdump/
+
+It is not related to this patch, just to be curious, who is maintain the
+above page? Seems some links are outdated.
+
+>  S:	Maintained
+> -- =
+
+> 2.7.4
+> =
+
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
