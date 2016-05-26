@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b5l3U-0001aV-6S
- for kexec@lists.infradead.org; Thu, 26 May 2016 02:29:48 +0000
-Date: Thu, 26 May 2016 10:29:18 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] MAINTAINERS: Kdump maintainers update
-Message-ID: <20160526022918.GA3419@dhcp-128-65.nay.redhat.com>
-References: <20160525131616.GB27291@redhat.com>
- <1464182650.16344.6.camel@perches.com>
- <20160525133713.GA2590@redhat.com>
+ id 1b5qlu-0000vY-CP
+ for kexec@lists.infradead.org; Thu, 26 May 2016 08:36:03 +0000
+Date: Thu, 26 May 2016 09:35:28 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH kexec-tools 01/32] kdump: mmap() and munmap() only work
+ on page-aligned quantites
+Message-ID: <20160526083528.GE19428@n2100.arm.linux.org.uk>
+References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+ <E1axXS0-0004gz-5a@e0050434b2927.dyn.arm.linux.org.uk>
+ <CAHB_GupQcopOR7Qn5Nk0kNvYT_p0AWTzp+vJe87b+BsQTwr1CQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160525133713.GA2590@redhat.com>
+In-Reply-To: <CAHB_GupQcopOR7Qn5Nk0kNvYT_p0AWTzp+vJe87b+BsQTwr1CQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,99 +23,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi, Vivek
+On Wed, May 25, 2016 at 11:46:08AM +0530, Pratyush Anand wrote:
+> On Tue, May 3, 2016 at 3:51 PM, Russell King <rmk@arm.linux.org.uk> wrote:
+> > The man page for mmap() and munmap() says that mmap() and munmap()
+> > only works for page-aligned addresses, sizes and offsets.  Arrange
+> > to give these interfaces what they want.
+> >
+> 
+> If I read correctly, it talks only offsets to be page aligned.
 
-On 05/25/16 at 09:37am, Vivek Goyal wrote:
-> On Wed, May 25, 2016 at 06:24:10AM -0700, Joe Perches wrote:
-> > On Wed, 2016-05-25 at 09:16 -0400, Vivek Goyal wrote:
-> > > I am proposing following updates to kdump maintainership. I have got
-> > > busy in other things and not getting time to spend on kdump.=A0
-> > > =
+Yes, it's not really needed, but as we have to adjust the size anyway to
+compensate for the reduced file offset, it makes little difference whether
+we align the size or not.
 
-> > > Removed Haren Myneni as he has not participated in kdump development =
-for
-> > > a long time now.
-> > > =
-
-> > > Proposing adding the names of Dave and Baoquan as kdump maintainers as
-> > > they have been contributing to kdump for a long time now and they are=
- in
-> > > a much better position to spend time on this than me.
-> > []
-> > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > []
-> > > @@ -6189,8 +6189,9 @@ F:	Documentation/kbuild/kconfig-language.txt
-> > > =A0F:	scripts/kconfig/
-> > > =A0
-> > > =A0KDUMP
-> > > +M:	Dave Young <dyoung@redhat.com>
-> > > +M:	Baoquan He <bhe@redhat.com>
-> > > =A0M:	Vivek Goyal <vgoyal@redhat.com>
-> > =
-
-> > You could mark yourself as an "R:" reviewer
-> > instead of an "M:" maintainer.
-> =
-
-> That's a good idea. I updated the patch and marked myself reviewer.
-> =
-
-> Removed Haren Myneni as he has not participated in kdump development for
-> a long time now.
-> =
-
-> Proposing adding the names of Dave and Baoquan as kdump maintainers as
-> they have been working on it for quite some time on it upstream and
-> they are in a much better position to spend time on this than me.
-
-Thanks a lot for the patch! I will do my best to work with Baoquan to maint=
-ain
-it. Very appreciated for your guidiance before and in the future.
-
-> =
-
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  MAINTAINERS | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> =
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9c567a4..5792ec2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6189,8 +6189,9 @@ F:	Documentation/kbuild/kconfig-language.txt
->  F:	scripts/kconfig/
->  =
-
->  KDUMP
-> -M:	Vivek Goyal <vgoyal@redhat.com>
-> -M:	Haren Myneni <hbabu@us.ibm.com>
-> +M:	Dave Young <dyoung@redhat.com>
-> +M:	Baoquan He <bhe@redhat.com>
-> +R:	Vivek Goyal <vgoyal@redhat.com>
->  L:	kexec@lists.infradead.org
->  W:	http://lse.sourceforge.net/kdump/
-
-It is not related to this patch, just to be curious, who is maintain the
-above page? Seems some links are outdated.
-
->  S:	Maintained
-> -- =
-
-> 2.7.4
-> =
-
-
-Thanks
-Dave
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
