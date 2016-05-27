@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Sun, 29 May 2016 21:29:10 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH kexec-tools 07/32] kexec: fix warnings caused by
- selecting 64-bit file IO on 32-bit platforms
-Message-ID: <20160529132910.GA5752@x1.redhat.com>
-References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <E1axXSV-0004hZ-CH@e0050434b2927.dyn.arm.linux.org.uk>
- <20160528113354.GB2429@x1.redhat.com>
- <20160528135320.GQ19428@n2100.arm.linux.org.uk>
+Received: from mail-lb0-x241.google.com ([2a00:1450:4010:c04::241])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1b6ELp-00020R-Oc
+ for kexec@lists.infradead.org; Fri, 27 May 2016 09:46:42 +0000
+Received: by mail-lb0-x241.google.com with SMTP id rs7so1149466lbb.0
+ for <kexec@lists.infradead.org>; Fri, 27 May 2016 02:46:20 -0700 (PDT)
+Date: Fri, 27 May 2016 12:46:17 +0300
+From: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Subject: Re: [PATCH] makedumpfile: Fix compilation warning
+Message-ID: <20160527094617.GB4189@localhost.localdomain>
+References: <1463737874-4610-1-git-send-email-andrej.skvortzov@gmail.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E473DC@BPXM01GP.gisp.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160528135320.GQ19428@n2100.arm.linux.org.uk>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E473DC@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,48 +21,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2528648260216917050=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 05/28/16 at 02:53pm, Russell King - ARM Linux wrote:
-> On Sat, May 28, 2016 at 07:33:54PM +0800, Baoquan He wrote:
-> > On 05/03/16 at 11:21am, Russell King wrote:
-> > > diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
-> > > index 9df601b..5e24629 100644
-> > > --- a/kexec/kexec-uImage.c
-> > > +++ b/kexec/kexec-uImage.c
-> > > @@ -82,7 +82,8 @@ int uImage_probe(const unsigned char *buf, off_t len, unsigned int arch)
-> > >  	if (be32_to_cpu(header.ih_size) > len - sizeof(header)) {
-> > >  		printf("uImage header claims that image has %d bytes\n",
-> > >  				be32_to_cpu(header.ih_size));
-> > > -		printf("we read only %ld bytes.\n", len - sizeof(header));
-> > > +		printf("we read only %lld bytes.\n",
-> > > +		       (long long)len - sizeof(header));
-> > 
-> > With "D_FILE_OFFSET_BITS=64" adding, off_t is identical to off64_t, is
-> > that necessary to still take a type conversion here?
-> 
-> The printf format specifies an argument of "long long" type, which is
-> defined as a data type of at least 64-bits wide.  So, it's more
-> correct to cast to long long, rather than relying on off64_t being
-> the same size as long long.
 
-Ok, it's fine to have an explict cast here so that people don't need
-to consider off_t is long or long long.
+--===============2528648260216917050==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
+Content-Disposition: inline
 
-Ack this patch.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
-Baoquan
+On 27 May, Atsushi Kumagai wrote:
+> Hello, Andrey
+>=20
+> Sorry for my late reply, I'll merge this into v1.6.0.
+>=20
+> Thanks,
+> Atsushi Kumagai
 
+No problem. Thanks.
+
+>=20
+> >After commit 5bc1f520
+> >[Looking for page.compound_order/compound_dtor to exclude hugepages]
+> >during build appears following compilation warning:
+> >
+> >makedumpfile.c: In function =E2=80=98isHugetlb=E2=80=99:
+> >makedumpfile.c:244:1: warning: type of =E2=80=98dtor=E2=80=99 defaults t=
+o =E2=80=98int=E2=80=99
+> >[-Wimplicit-int]
+> > isHugetlb(dtor)
+> >  ^
+> >
+> >Tested with gcc 5.3.1.
+> >
+> >Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+> >---
+> > makedumpfile.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/makedumpfile.c b/makedumpfile.c
+> >index ce9fba6..4f17686 100644
+> >--- a/makedumpfile.c
+> >+++ b/makedumpfile.c
+> >@@ -241,7 +241,7 @@ is_in_same_page(unsigned long vaddr1, unsigned long =
+vaddr2)
+> > }
+> >
+> > static inline int
+> >-isHugetlb(dtor)
+> >+isHugetlb(int dtor)
+> > {
+> >         return ((NUMBER(HUGETLB_PAGE_DTOR) !=3D NOT_FOUND_NUMBER)
+> > 		&& (NUMBER(HUGETLB_PAGE_DTOR) =3D=3D dtor))
+> >--
+> >2.8.1
+> >
+> >
+> >_______________________________________________
+> >kexec mailing list
+> >kexec@lists.infradead.org
+> >http://lists.infradead.org/mailman/listinfo/kexec
+
+--=20
+Best regards,
+Andrey Skvortsov
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCAAGBQJXSBdpAAoJEAF8y6L1SLCtHx4P/jNHyL26R/eQiW1PeN8pTt5i
+sEhoMIXaEooQ4ndLsmUIumar9TjKmS3EUP5u8xh5c9SUZHkQ/ZPW3q9RrF5v44Ss
+z2vCdte9s/fgsg4dlUzbwBa55JUYgrNkdxOmwMo0kYrKAMp92Nb3AzbjKrd5ivmy
+8/+MMjFnqC9xTs0WHcE9MKMCl2Y6umOU2EftXErYRqqn6/QMyxo/nOqjS0rIfZr3
+CAhrKRQ4nu6NxpHk4wkGOyNa+6AQDVOXtBX/jkiRmQF3k2oCVcSAcIzL6kuBsMw4
+qT+zyqVk+vR3gtgcJeH5XKTkynG5xGT4B7px7ia26hqlhmy4X8aeyaXCAWd/Ve78
+14KHa5mSAtxGm3dr0oJ+H9z15Pfi1iLsrmvf5fmzcYeE8cKw2BguP0x6Y+7xcsTh
+5Y5yZEBHf24blZBtwG+QQTKxJ2GqUPwXgwSKTu6yO/EDc0rgHHXDyFN6pw2tr6WZ
+cgZTLL/LrMUxXBZXbC1bh3SI2fyPGjsA3ARr99H9DwbMGlO3CZhRQ92dvsZ4zr8F
+vYTlMoPthL90irsUb9uCPOjRuFUvqv6YJ7RtYrEwiovLF7WlT1p7f8GVB2PkpP8J
+932hfTOfhytK3Ob3s5+zAgJ7jCPM1NXoUzbSoB+FwYzfTtheZeAd1yoFESXqjjwD
+5HvlrClngy/AqNogn6py
+=3EiX
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
+
+
+--===============2528648260216917050==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2528648260216917050==--
+
