@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-oi0-f53.google.com ([209.85.218.53])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b6Dzr-0007zh-PQ
- for kexec@lists.infradead.org; Fri, 27 May 2016 09:24:00 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Fix compilation warning
-Date: Fri, 27 May 2016 09:22:25 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E473DC@BPXM01GP.gisp.nec.co.jp>
-References: <1463737874-4610-1-git-send-email-andrej.skvortzov@gmail.com>
-In-Reply-To: <1463737874-4610-1-git-send-email-andrej.skvortzov@gmail.com>
-Content-Language: ja-JP
+ id 1b6FvN-0003ee-PJ
+ for kexec@lists.infradead.org; Fri, 27 May 2016 11:27:30 +0000
+Received: by mail-oi0-f53.google.com with SMTP id j1so168909450oih.3
+ for <kexec@lists.infradead.org>; Fri, 27 May 2016 04:27:09 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <E1axXTL-0004ib-Ho@e0050434b2927.dyn.arm.linux.org.uk>
+References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+ <E1axXTL-0004ib-Ho@e0050434b2927.dyn.arm.linux.org.uk>
+Date: Fri, 27 May 2016 16:57:08 +0530
+Message-ID: <CAHB_GuptCq67COZdXN=5QPghXgchpHFgbao0RhNGKobrehvMwQ@mail.gmail.com>
+Subject: Re: [PATCH kexec-tools 17/32] arm: return proper error for missing
+ crash kernel
+From: Pratyush Anand <panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,33 +22,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Russell King <rmk@arm.linux.org.uk>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-SGVsbG8sIEFuZHJleQ0KDQpTb3JyeSBmb3IgbXkgbGF0ZSByZXBseSwgSSdsbCBtZXJnZSB0aGlz
-IGludG8gdjEuNi4wLg0KDQpUaGFua3MsDQpBdHN1c2hpIEt1bWFnYWkNCg0KPkFmdGVyIGNvbW1p
-dCA1YmMxZjUyMA0KPltMb29raW5nIGZvciBwYWdlLmNvbXBvdW5kX29yZGVyL2NvbXBvdW5kX2R0
-b3IgdG8gZXhjbHVkZSBodWdlcGFnZXNdDQo+ZHVyaW5nIGJ1aWxkIGFwcGVhcnMgZm9sbG93aW5n
-IGNvbXBpbGF0aW9uIHdhcm5pbmc6DQo+DQo+bWFrZWR1bXBmaWxlLmM6IEluIGZ1bmN0aW9uIOKA
-mGlzSHVnZXRsYuKAmToNCj5tYWtlZHVtcGZpbGUuYzoyNDQ6MTogd2FybmluZzogdHlwZSBvZiDi
-gJhkdG9y4oCZIGRlZmF1bHRzIHRvIOKAmGludOKAmQ0KPlstV2ltcGxpY2l0LWludF0NCj4gaXNI
-dWdldGxiKGR0b3IpDQo+ICBeDQo+DQo+VGVzdGVkIHdpdGggZ2NjIDUuMy4xLg0KPg0KPlNpZ25l
-ZC1vZmYtYnk6IEFuZHJleSBTa3ZvcnRzb3YgPGFuZHJlai5za3ZvcnR6b3ZAZ21haWwuY29tPg0K
-Pi0tLQ0KPiBtYWtlZHVtcGZpbGUuYyB8IDIgKy0NCj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+DQo+ZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIv
-bWFrZWR1bXBmaWxlLmMNCj5pbmRleCBjZTlmYmE2Li40ZjE3Njg2IDEwMDY0NA0KPi0tLSBhL21h
-a2VkdW1wZmlsZS5jDQo+KysrIGIvbWFrZWR1bXBmaWxlLmMNCj5AQCAtMjQxLDcgKzI0MSw3IEBA
-IGlzX2luX3NhbWVfcGFnZSh1bnNpZ25lZCBsb25nIHZhZGRyMSwgdW5zaWduZWQgbG9uZyB2YWRk
-cjIpDQo+IH0NCj4NCj4gc3RhdGljIGlubGluZSBpbnQNCj4taXNIdWdldGxiKGR0b3IpDQo+K2lz
-SHVnZXRsYihpbnQgZHRvcikNCj4gew0KPiAgICAgICAgIHJldHVybiAoKE5VTUJFUihIVUdFVExC
-X1BBR0VfRFRPUikgIT0gTk9UX0ZPVU5EX05VTUJFUikNCj4gCQkmJiAoTlVNQkVSKEhVR0VUTEJf
-UEFHRV9EVE9SKSA9PSBkdG9yKSkNCj4tLQ0KPjIuOC4xDQo+DQo+DQo+X19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj5rZXhlYyBtYWlsaW5nIGxpc3QNCj5r
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYw0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Tue, May 3, 2016 at 3:52 PM, Russell King <rmk@arm.linux.org.uk> wrote:
+> Return the proper error code (ENOCRASHKERNEL) for a missing crash
+> kernel region in /proc/iomem, so the error handling in kexec.c can
+> print the appropriate message.
+>
+> Signed-off-by: Russell King <rmk@arm.linux.org.uk>
+
+Reviewed-by: Pratyush Anand <panand@redhat.com>
+
+> ---
+>  kexec/arch/arm/kexec-zImage-arm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index d85ab9b..4755f06 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -451,7 +451,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>                          * No crash kernel memory reserved. We cannot do more
+>                          * but just bail out.
+>                          */
+> -                       return -1;
+> +                       return ENOCRASHKERNEL;
+>                 }
+>                 base = start;
+>         } else {
+> --
+> 1.9.1
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
