@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f52.google.com ([209.85.218.52])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b6GBa-0000ye-JF
- for kexec@lists.infradead.org; Fri, 27 May 2016 11:44:15 +0000
-Received: by mail-oi0-f52.google.com with SMTP id b65so169652627oia.1
- for <kexec@lists.infradead.org>; Fri, 27 May 2016 04:43:54 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <E1axXSa-0004hf-Iz@e0050434b2927.dyn.arm.linux.org.uk>
+ id 1b6Hwg-0006Yl-0e
+ for kexec@lists.infradead.org; Fri, 27 May 2016 13:37:00 +0000
+Date: Fri, 27 May 2016 14:36:25 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH kexec-tools 18/32] arm: report if crash kernel is out of
+ bounds
+Message-ID: <20160527133624.GL19428@n2100.arm.linux.org.uk>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <E1axXSa-0004hf-Iz@e0050434b2927.dyn.arm.linux.org.uk>
-Date: Fri, 27 May 2016 17:13:53 +0530
-Message-ID: <CAHB_GuruHfjF_YRbP+1wTybGfvX02xQcUefbo0rv4xAtDdhakw@mail.gmail.com>
-Subject: Re: [PATCH kexec-tools 08/32] kexec: add max_size to memory_ranges
-From: Pratyush Anand <panand@redhat.com>
+ <E1axXTQ-0004ih-NN@e0050434b2927.dyn.arm.linux.org.uk>
+ <CAHB_Guo-N0Coxj=fHBBM=QULMo6QK3uKbzOh15R6FCihGERjMA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAHB_Guo-N0Coxj=fHBBM=QULMo6QK3uKbzOh15R6FCihGERjMA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +27,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King <rmk@arm.linux.org.uk>
+To: Pratyush Anand <panand@redhat.com>
 Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, May 3, 2016 at 3:51 PM, Russell King <rmk@arm.linux.org.uk> wrote:
-> Many implementations statically allocate the memory range array, which
-> therefore will have a maximum allowable size.  Add this information to
-> the memory_ranges structure, so we don't have to carry it around.
->
-> Signed-off-by: Russell King <rmk@arm.linux.org.uk>
+On Fri, May 27, 2016 at 04:57:47PM +0530, Pratyush Anand wrote:
+> On Tue, May 3, 2016 at 3:52 PM, Russell King <rmk@arm.linux.org.uk> wrote:
+> > diff --git a/kexec/arch/arm/crashdump-arm.h b/kexec/arch/arm/crashdump-arm.h
+> > index 2dbde04..7314960 100644
+> > --- a/kexec/arch/arm/crashdump-arm.h
+> > +++ b/kexec/arch/arm/crashdump-arm.h
+> > @@ -9,6 +9,7 @@ extern "C" {
+> >  #define DEFAULT_PAGE_OFFSET            (0xc0000000)
+> >  #define KVBASE_MASK    (0x1ffffff)
+> >  #define CRASH_MAX_MEMORY_RANGES        32
+> > +#define ARM_MAX_VIRTUAL                UINT32_MAX
+> 
+> If I see a kernel code then a virtual address is always defined as
+> unsigned long. So, shouldn't we use ULONG_MAX instead?
 
-Reviewed-by: Pratyush Anand <panand@redhat.com>
+What is the definition of ULONG_MAX?  The maximum unsigned value that
+can fit in an unsigned long quantity.
 
-> ---
->  kexec/kexec.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index c02ac8f..9194f1c 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -142,6 +142,7 @@ struct memory_range {
->
->  struct memory_ranges {
->          unsigned int size;
-> +       unsigned int max_size;
->          struct memory_range *ranges;
->  };
->
-> --
-> 1.9.1
->
+While unsigned long _may_ be 32-bit, it's a very round-about way to
+say "the maximum virtual address is the maximum unsigned 32-bit value".
+Hence why I'm using UINT32_MAX here - it's a tighter and accurate
+macro for what we're wanting.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
