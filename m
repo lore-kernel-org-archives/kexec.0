@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mail-qg0-f42.google.com ([209.85.192.42])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b5wM7-0002jU-14
- for kexec@lists.infradead.org; Thu, 26 May 2016 14:33:48 +0000
-Date: Thu, 26 May 2016 15:33:15 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH kexec-tools 04/32] kdump: fix kdump mapping
-Message-ID: <20160526143315.GJ19428@n2100.arm.linux.org.uk>
-References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <E1axXSF-0004hH-Oo@e0050434b2927.dyn.arm.linux.org.uk>
- <CAHB_GurQ44ybkxaYJJQeGgnuw=3tKOk7xyB6FTAursMLuZGrJg@mail.gmail.com>
+ id 1b6A0G-0001lu-Sx
+ for kexec@lists.infradead.org; Fri, 27 May 2016 05:08:10 +0000
+Received: by mail-qg0-f42.google.com with SMTP id 90so46387340qgz.1
+ for <kexec@lists.infradead.org>; Thu, 26 May 2016 22:07:47 -0700 (PDT)
+Date: Fri, 27 May 2016 10:37:38 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [Crash-utility] [PATCH v2] arm64: fix kernel memory map handling
+ for kaslr-enabled kernel
+Message-ID: <20160527050738.GD14808@dhcppc6>
+References: <20160524100222.GC20774@linaro.org>
+ <1339221549.8621933.1464112745983.JavaMail.zimbra@redhat.com>
+ <20160525083541.GG20774@linaro.org>
+ <865362232.8962993.1464186490862.JavaMail.zimbra@redhat.com>
+ <20160526081328.GI20774@linaro.org>
+ <20160526093955.GA26004@dhcppc6>
+ <20160527040355.GL20774@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAHB_GurQ44ybkxaYJJQeGgnuw=3tKOk7xyB6FTAursMLuZGrJg@mail.gmail.com>
+In-Reply-To: <20160527040355.GL20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +32,123 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, kexec@lists.infradead.org
 
-On Wed, May 25, 2016 at 11:47:33AM +0530, Pratyush Anand wrote:
-> On Tue, May 3, 2016 at 3:51 PM, Russell King <rmk@arm.linux.org.uk> wrote:
-> > diff --git a/kdump/kdump.c b/kdump/kdump.c
-> > index 1f5b984..34d2149 100644
-> > --- a/kdump/kdump.c
-> > +++ b/kdump/kdump.c
-> > @@ -284,7 +284,8 @@ int main(int argc, char **argv)
-> >         }
-> >
-> >         /* Get the program header */
-> > -       phdr = map_addr(fd, sizeof(*phdr)*(ehdr->e_phnum), ehdr->e_phoff);
-> > +       phdr = map_addr(fd, sizeof(*phdr)*(ehdr->e_phnum),
-> > +                       start_addr + ehdr->e_phoff);
+On 27/05/2016:01:03:56 PM, AKASHI Takahiro wrote:
+> On Thu, May 26, 2016 at 03:09:55PM +0530, Pratyush Anand wrote:
+> > On 26/05/2016:05:13:30 PM, AKASHI Takahiro wrote:
+> > > On Wed, May 25, 2016 at 10:28:10AM -0400, Dave Anderson wrote:
+> > 
+> > [...]
+> > 
+> > > > > (This is the reason that I don't think we need a VMCOREINFO for
+> > > > > CONFIG_RANDOMIZE_BASE.)
+> > > > 
+> > > > Well, as long as there's a way to avoid that unnecessary/confusing
+> > > > warning message for non-KASLR new-vmemmap kernels.
+> > > > 
+> > > > I also wonder whether makedumpfile could use it?
+> > > 
+> > > -> Pratyush?
+> > 
+> > Since  second kernel's initrd cannot include a large file like VMLINUX, so
+> > makedumpfile should also work without passing '-x vmlinux'.  Therefore,
+> > makedumpfile will need some minimal symbol's values to be passed in vmcore.
 > 
-> This is fine. But at the same time should n't we also fix the offset
-> for mmap of memory segments?  For memory segments, offset is
-> phdr[i].p_offset, and I do not see generate_new_headers() taking care
-> of start_addr.
+> I understand.
+> (but I wonder why makedumpfile doesn't utilize System.map nor .config.)
 
-Unfortunately not.  The reason is, p_offset is not an offset, but an
-absolute address - see kexec/crashdump-elf.c, which is the bit of
-code which creates the table and writes it into kernel memory when
-loading the panic kernel:
+So far makedumpfile has been designed to work only with vmcore as input in it's
+minimal form (specially in second kernel).
++Atsushi & makedumpfile list: He will have better idea about it.
 
-                phdr->p_offset  = phdr->p_paddr = notes_addr;
+Moreover, there are few variables, whose values are needed in order to translate
+phys to virt and vice versa. So, passing their symbol address would not be of
+much help. For example, we need to know value of kimage_voffset for __pa(), and
+so symbol address of kimage_voffset will not help.
 
-                phdr->p_offset  = phdr->p_paddr = vmcoreinfo_addr;
+> 
+> > IIUC, then you need to pass CONFIG_RANDOMIZE_BASE in order to calculate
+> > PHYS_OFFSET. If yes, then why not to pass PHYS_OFFSET itself into vmcore.
+> 
+> No, as I said in the discussions, I don't think that we need
+> CONFIG_RANDOMIZE_BASE *if* we can read a kernel symbol's value
+> from /proc/vmcore.
 
-                phdr->p_offset  = phdr->p_paddr = elf_info->kern_paddr_start;
+What I understand that, we can read only those symbols/variables from vmcore
+which have been embedded using VMCOREINFO_xxxx macros (if we do not pass
+vmlinux, like in second kernel). Atsushi, please correct me if I am wrong.
 
-                mstart = range->start;
-                phdr->p_offset  = mstart;
-                phdr->p_paddr = mstart;
+> 
+> > Following numbers in vmcore [1] is helping me out in implementing __pa() and
+> > __va() for all page table sizes and levels.
+> > 
+> > VMCOREINFO_NUMBER(pgtable_levels);
+> > VMCOREINFO_NUMBER(va_bits);
+> > VMCOREINFO_NUMBER(page_shift);
+> 
+> Since We already have VMCOREINFO(PAGESIZE), we won't nedd page_shift.
 
-etc.  So, p_offset is also the physical address, not the file offset.
-Of course, that could be a bug in crashdump-elf.c.  To change that,
-we would also need to fix crashdump-elf.c in lock-step as well.
+Yes, agreed.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> As well, pgtable_levels can be determined by va_bits and PAGESIZE.
+> See arch/arm64/Kconfig.
+
+Yes, agreed.
+
+> 
+> > VMCOREINFO_NUMBER(phys_offset);
+> > VMCOREINFO_NUMBER(config_kasan);
+> 
+> Let me ask some questions.
+> * What kind of data in vmcore and how does makedumpfile access
+>   without vmlinux nor System.map?
+
+Well, I do not have the deep idea, again Atsushi can help here.
+
+makedumpfile mainly compresses vmcore (ram image of panicked kernel),
+additionally it also excludes unnecessary pages for analysis. It will need
+symbol information to exclude unnecessary pages, where vmlinux is needed mainly.
+So, normally we do not perform erase(exclude) functionality in second kernel. It
+is being performed latter, on a compressed dumpfile.
+
+> * Why do you need CONFIG_KASAN?
+
+KASAN_SHADOW_SIZE is dependent on CONFIG_KASAN.
+MODULES_VADDR is dependent on KASAN_SHADOW_SIZE.
+
+We need MODULES_VADDR,VMALLOC_START,VMEMMAP_START and their END addresses in
+order to define whether a virtual to physical translation can be obtained using
+linear mapping or need to read from page table instead.
+
+Thanks for the questions and inputs.  Those are helpful. :-)
+~Pratyush
+> 
+> Thanks,
+> -Takahiro AKASHI
+> 
+> > VMCOREINFO_NUMBER(kimage_voffset);
+> > 
+> > ~Pratyush
+> > 
+> > [1]
+> > https://github.com/pratyushanand/linux/blob/7011e478aae3e568cc8dca15b6c128fe728416f7/arch/arm64/kernel/machine_kexec.c#L275
+> > 
+> > --
+> > Crash-utility mailing list
+> > Crash-utility@redhat.com
+> > https://www.redhat.com/mailman/listinfo/crash-utility
+> 
+> -- 
+> Thanks,
+> -Takahiro AKASHI
+> 
+> --
+> Crash-utility mailing list
+> Crash-utility@redhat.com
+> https://www.redhat.com/mailman/listinfo/crash-utility
 
 _______________________________________________
 kexec mailing list
