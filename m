@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mail-oi0-f54.google.com ([209.85.218.54])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b6Hwg-0006Yl-0e
- for kexec@lists.infradead.org; Fri, 27 May 2016 13:37:00 +0000
-Date: Fri, 27 May 2016 14:36:25 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH kexec-tools 18/32] arm: report if crash kernel is out of
- bounds
-Message-ID: <20160527133624.GL19428@n2100.arm.linux.org.uk>
-References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <E1axXTQ-0004ih-NN@e0050434b2927.dyn.arm.linux.org.uk>
- <CAHB_Guo-N0Coxj=fHBBM=QULMo6QK3uKbzOh15R6FCihGERjMA@mail.gmail.com>
+ id 1b6JMo-0004FY-Sq
+ for kexec@lists.infradead.org; Fri, 27 May 2016 15:08:04 +0000
+Received: by mail-oi0-f54.google.com with SMTP id b65so178200567oia.1
+ for <kexec@lists.infradead.org>; Fri, 27 May 2016 08:07:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAHB_Guo-N0Coxj=fHBBM=QULMo6QK3uKbzOh15R6FCihGERjMA@mail.gmail.com>
+In-Reply-To: <20160526085638.GF19428@n2100.arm.linux.org.uk>
+References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
+ <E1axXSv-0004i3-Gi@e0050434b2927.dyn.arm.linux.org.uk>
+ <CAHB_Guo_ozXhAnkGk_NrdBME2fSYDoKTHwu3kLBvsrmbwxOdww@mail.gmail.com>
+ <20160526085638.GF19428@n2100.arm.linux.org.uk>
+Date: Fri, 27 May 2016 20:37:41 +0530
+Message-ID: <CAHB_GuoRuQwhe-bXKAzmjOn=3=7KQ7LtT2JTooO1kjx+V3VgpQ@mail.gmail.com>
+Subject: Re: [PATCH kexec-tools 12/32] kexec: add helper to exlude a region
+ from a set of memory ranges
+From: Pratyush Anand <panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,36 +28,188 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
 Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, May 27, 2016 at 04:57:47PM +0530, Pratyush Anand wrote:
-> On Tue, May 3, 2016 at 3:52 PM, Russell King <rmk@arm.linux.org.uk> wrote:
-> > diff --git a/kexec/arch/arm/crashdump-arm.h b/kexec/arch/arm/crashdump-arm.h
-> > index 2dbde04..7314960 100644
-> > --- a/kexec/arch/arm/crashdump-arm.h
-> > +++ b/kexec/arch/arm/crashdump-arm.h
-> > @@ -9,6 +9,7 @@ extern "C" {
-> >  #define DEFAULT_PAGE_OFFSET            (0xc0000000)
-> >  #define KVBASE_MASK    (0x1ffffff)
-> >  #define CRASH_MAX_MEMORY_RANGES        32
-> > +#define ARM_MAX_VIRTUAL                UINT32_MAX
-> 
-> If I see a kernel code then a virtual address is always defined as
-> unsigned long. So, shouldn't we use ULONG_MAX instead?
+On Thu, May 26, 2016 at 2:26 PM, Russell King - ARM Linux
+<linux@armlinux.org.uk> wrote:
+> On Wed, May 25, 2016 at 01:30:44PM +0530, Pratyush Anand wrote:
+>> On Tue, May 3, 2016 at 3:52 PM, Russell King <rmk@arm.linux.org.uk> wrote:
+>> > +int mem_regions_exclude(struct memory_ranges *ranges,
+>> > +                       const struct memory_range *range)
+>> > +{
+>> > +       int i;
+>> > +
+>> > +       for (i = 0; i < ranges->size; i++) {
+>> > +               struct memory_range *r = ranges->ranges + i;
+>> > +
+>> > +               /*
+>> > +                * We assume that crash area is fully contained in
+>> > +                * some larger memory area.
+>> > +                */
+>> > +               if (r->start <= range->start && r->end >= range->end) {
+>> > +                       if (r->start == range->start) {
+>> > +                               /* Shrink the start of this memory range */
+>> > +                               r->start = range->end + 1;
+>> > +                       } else if (r->end == range->end) {
+>> > +                               /* Shrink the end of this memory range */
+>> > +                               r->end = range->start - 1;
+>>
+>> What if r->start == range->start) && (r->end == range->end)?
+>
+> I suppose that could happen, so what about this patch on top (untested).
 
-What is the definition of ULONG_MAX?  The maximum unsigned value that
-can fit in an unsigned long quantity.
+I think, it should be fine, except.....
 
-While unsigned long _may_ be 32-bit, it's a very round-about way to
-say "the maximum virtual address is the maximum unsigned 32-bit value".
-Hence why I'm using UINT32_MAX here - it's a tighter and accurate
-macro for what we're wanting.
+> This isn't something I'd be able to test on real hardware, it needs a
+> separate test-suite to be written to do modular testing...
+>
+>  kexec/mem_regions.c | 94 +++++++++++++++++++++++++++++++----------------------
+>  1 file changed, 55 insertions(+), 39 deletions(-)
+>
+> diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
+> index c6ba942..4e7061b 100644
+> --- a/kexec/mem_regions.c
+> +++ b/kexec/mem_regions.c
+> @@ -29,6 +29,50 @@ void mem_regions_sort(struct memory_ranges *ranges)
+>  }
+>
+>  /**
+> + * mem_regions_add() - add a memory region to a set of ranges
+> + * @ranges: ranges to add the memory region to
+> + * @max: maximum number of entries in memory region
+> + * @base: base address of memory region
+> + * @length: length of memory region in bytes
+> + * @type: type of memory region
+> + *
+> + * Add the memory region to the set of ranges, and return %0 if successful,
+> + * or %-1 if we ran out of space.
+> + */
+> +int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+> +                    unsigned long long length, int type)
+> +{
+> +       struct memory_range *range;
+> +
+> +       if (ranges->size >= ranges->max_size)
+> +               return -1;
+> +
+> +       range = ranges->ranges + ranges->size++;
+> +       range->start = base;
+> +       range->end = base + length - 1;
+> +       range->type = type;
+> +
+> +       return 0;
+> +}
+> +
+> +static void mem_regions_remove(struct memory_ranges *ranges, int index)
+> +{
+> +       int tail_entries;
+> +
+> +       /* we are assured to have at least one entry */
+> +       ranges->size -= 1;
+> +
+> +       /* if we have following entries, shuffle them down one place */
+> +       tail_entries = ranges->size - index;
+> +       if (tail_entries)
+> +               memmove(ranges->ranges + index, ranges->ranges + index + 1,
+> +                       tail_entries * sizeof(*ranges->ranges));
+> +
+> +       /* zero the new tail entry */
+> +       memset(ranges->ranges + ranges->size, 0, sizeof(*ranges->ranges));
+> +}
+> +
+> +/**
+>   * mem_regions_exclude() - excludes a memory region from a set of memory ranges
+>   * @ranges: memory ranges to exclude the region from
+>   * @range: memory range to exclude
+> @@ -40,7 +84,7 @@ void mem_regions_sort(struct memory_ranges *ranges)
+>  int mem_regions_exclude(struct memory_ranges *ranges,
+>                         const struct memory_range *range)
+>  {
+> -       int i;
+> +       int i, ret;
+>
+>         for (i = 0; i < ranges->size; i++) {
+>                 struct memory_range *r = ranges->ranges + i;
+> @@ -51,25 +95,25 @@ int mem_regions_exclude(struct memory_ranges *ranges,
+>                  */
+>                 if (r->start <= range->start && r->end >= range->end) {
+>                         if (r->start == range->start) {
+> -                               /* Shrink the start of this memory range */
+> -                               r->start = range->end + 1;
+> +                               if (r->end == range->end)
+> +                                       /* Remove this entry */
+> +                                       mem_regions_remove(ranges, i);
+> +                               else
+> +                                       /* Shrink the start of this memory range */
+> +                                       r->start = range->end + 1;
+>                         } else if (r->end == range->end) {
+>                                 /* Shrink the end of this memory range */
+>                                 r->end = range->start - 1;
+>                         } else {
+> -                               struct memory_range *new;
+> -
+>                                 /*
+>                                  * Split this area into 2 smaller ones and
+>                                  * remove excluded range from between. First
+>                                  * create new entry for the remaining area.
+>                                  */
+> -                               if (ranges->size >= ranges->max_size)
+> -                                       return -1;
+> -
+> -                               new = ranges->ranges + ranges->size++;
+> -                               new->start = range->end + 1;
+> -                               new->end = r->end;
+> +                               ret = mem_regions_add(ranges, range->end + 1,
+> +                                                     r->end, 0);
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+3rd argument should be (r->end - range->end)
+
+> +                               if (ret < 0)
+> +                                       return ret;
+>
+>                                 /*
+>                                  * Update this area to end before excluded
+> @@ -82,31 +126,3 @@ int mem_regions_exclude(struct memory_ranges *ranges,
+>         }
+>         return 0;
+>  }
+> -
+> -/**
+> - * mem_regions_add() - add a memory region to a set of ranges
+> - * @ranges: ranges to add the memory region to
+> - * @max: maximum number of entries in memory region
+> - * @base: base address of memory region
+> - * @length: length of memory region in bytes
+> - * @type: type of memory region
+> - *
+> - * Add the memory region to the set of ranges, and return %0 if successful,
+> - * or %-1 if we ran out of space.
+> - */
+> -int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+> -                    unsigned long long length, int type)
+> -{
+> -       struct memory_range *range;
+> -
+> -       if (ranges->size >= ranges->max_size)
+> -               return -1;
+> -
+> -       range = ranges->ranges + ranges->size++;
+> -       range->start = base;
+> -       range->end = base + length - 1;
+> -       range->type = type;
+> -
+> -       return 0;
+> -}
+> -
+>
+>
+> --
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
