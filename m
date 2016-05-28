@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b6JRF-0006Cx-V5
- for kexec@lists.infradead.org; Fri, 27 May 2016 15:12:39 +0000
-Date: Fri, 27 May 2016 16:12:08 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH kexec-tools 12/32] kexec: add helper to exlude a region
- from a set of memory ranges
-Message-ID: <20160527151208.GO19428@n2100.arm.linux.org.uk>
+Date: Sat, 28 May 2016 19:28:42 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH kexec-tools 05/32] arm: fix kdump to work on LPAE systems
+Message-ID: <20160528112842.GA2429@x1.redhat.com>
 References: <CAHB_GurHc1aVfzJATpNW5yf5s5KkF=t5s09FbWq3+9+ZX39KUg@mail.gmail.com>
- <E1axXSv-0004i3-Gi@e0050434b2927.dyn.arm.linux.org.uk>
- <CAHB_Guo_ozXhAnkGk_NrdBME2fSYDoKTHwu3kLBvsrmbwxOdww@mail.gmail.com>
- <20160526085638.GF19428@n2100.arm.linux.org.uk>
- <CAHB_GuoRuQwhe-bXKAzmjOn=3=7KQ7LtT2JTooO1kjx+V3VgpQ@mail.gmail.com>
+ <E1axXSK-0004hN-V7@e0050434b2927.dyn.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAHB_GuoRuQwhe-bXKAzmjOn=3=7KQ7LtT2JTooO1kjx+V3VgpQ@mail.gmail.com>
+In-Reply-To: <E1axXSK-0004hN-V7@e0050434b2927.dyn.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,26 +20,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Russell King <rmk@arm.linux.org.uk>
+Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, May 27, 2016 at 08:37:41PM +0530, Pratyush Anand wrote:
-> On Thu, May 26, 2016 at 2:26 PM, Russell King - ARM Linux
-> <linux@armlinux.org.uk> wrote:
-> > -                               new = ranges->ranges + ranges->size++;
-> > -                               new->start = range->end + 1;
-> > -                               new->end = r->end;
-> > +                               ret = mem_regions_add(ranges, range->end + 1,
-> > +                                                     r->end, 0);
+On 05/03/16 at 11:21am, Russell King wrote:
+> We need to use 64-bit file IO when mapping system memory and the core
+> dump file as we may be running on a LPAE system, otherwise we risk
+> mapping memory we shouldn't, and causing a kernel oops:
 > 
-> 3rd argument should be (r->end - range->end)
+> Unhandled fault: asynchronous external abort (0x211) at 0x00000000
+> pgd = edd2c740
+> [00000000] *pgd=82ec98003, *pmd=82dcd2003, *pte=00000000
+> 
+> Signed-off-by: Russell King <rmk@arm.linux.org.uk>
+> ---
+>  kexec/arch/arm/Makefile | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
+> index 38137d7..60e433a 100644
+> --- a/kexec/arch/arm/Makefile
+> +++ b/kexec/arch/arm/Makefile
+> @@ -18,6 +18,9 @@ libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
+>  
+>  arm_CPPFLAGS = -I$(srcdir)/kexec/libfdt
+>  
+> +# We want 64-bit file IO for kdump to work correctly on LPAE systems
+> +arm_CPPFLAGS += -D_FILE_OFFSET_BITS=64
+> +
 
-Yes indeed, thanks for pointing that out.
+It makes sense in this situation.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+In "man 2 stat" and /usr/include/features.h, we can find the relevant
+information.
+
+EOVERFLOW
+	pathname or fd refers to a file whose size, inode number, or number
+	of blocks cannot be represented in, respectively, the types off_t, ino_t,
+	or blkcnt_t.  This error can occur when, for example, an  application
+	compiled  on  a  32-bit  platform  without -D_FILE_OFFSET_BITS=64 calls
+	stat() on a file whose size exceeds (1<<31)-1 bytes.
+
+Ack this patch.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+Baoquan
+Thanks
 
 _______________________________________________
 kexec mailing list
