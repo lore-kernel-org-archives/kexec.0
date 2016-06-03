@@ -2,14 +2,15 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b8kqs-00072v-Tn
+ id 1b8kqs-00073U-U8
  for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:53:12 +0000
 From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 6/8] kexec: allow architectures to override boot mapping
+Subject: [PATCH 5/8] kdump: arrange for paddr_vmcoreinfo_note() to return
+ phys_addr_t
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b8koP-0004HZ-Vf@rmk-PC.armlinux.org.uk>
-Date: Fri, 03 Jun 2016 09:50:37 +0100
+Message-Id: <E1b8koK-0004HS-K9@rmk-PC.armlinux.org.uk>
+Date: Fri, 03 Jun 2016 09:50:32 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,201 +24,80 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-arm-kernel@lists.infradead.org
+Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-arm-kernel@lists.infradead.org
 
-kexec physical addresses are the boot-time view of the system.  For
-certain ARM systems (such as Keystone 2), the boot view of the system
-does not match the kernel's view of the system: the boot view uses a
-special alias in the lower 4GB of the physical address space.
+On PAE systems (eg, ARM LPAE) the vmcore note may be located above
+4GB physical on 32-bit architectures, so we need a wider type than
+"unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
+a phys_addr_t, thereby allowing it to be located above 4GB.
 
-To cater for these kinds of setups, we need to translate between the
-boot view physical addresses and the normal kernel view physical
-addresses.  This patch extracts the current transation points into
-linux/kexec.h, and allows an architecture to override the functions.
+This makes no difference for kexec-tools, as they already assume a
+64-bit type when reading from this file.
 
-Due to the translations required, we unfortunately end up with six
-translation functions, which are reduced down to four that the
-architecture can override.
-
+Acked-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- include/linux/kexec.h | 38 ++++++++++++++++++++++++++++++++++++++
- kernel/kexec.c        |  3 ++-
- kernel/kexec_core.c   | 26 +++++++++++++-------------
- 3 files changed, 53 insertions(+), 14 deletions(-)
+ arch/ia64/kernel/machine_kexec.c | 2 +-
+ include/linux/kexec.h            | 2 +-
+ kernel/kexec_core.c              | 2 +-
+ kernel/ksysfs.c                  | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+index b72cd7a07222..599507bcec91 100644
+--- a/arch/ia64/kernel/machine_kexec.c
++++ b/arch/ia64/kernel/machine_kexec.c
+@@ -163,7 +163,7 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ }
+ 
+-unsigned long paddr_vmcoreinfo_note(void)
++phys_addr_t paddr_vmcoreinfo_note(void)
+ {
+ 	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
+ }
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 52a3a221bcb2..99cb9dac7909 100644
+index 1b32ab587f66..52a3a221bcb2 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -318,6 +318,44 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
- int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 					unsigned int relsec);
+@@ -235,7 +235,7 @@ void crash_unmap_reserved_pages(void);
+ void arch_crash_save_vmcoreinfo(void);
+ __printf(1, 2)
+ void vmcoreinfo_append_str(const char *fmt, ...);
+-unsigned long paddr_vmcoreinfo_note(void);
++phys_addr_t paddr_vmcoreinfo_note(void);
  
-+#ifndef page_to_boot_pfn
-+static inline unsigned long page_to_boot_pfn(struct page *page)
-+{
-+	return page_to_pfn(page);
-+}
-+#endif
-+
-+#ifndef boot_pfn_to_page
-+static inline struct page *boot_pfn_to_page(unsigned long boot_pfn)
-+{
-+	return pfn_to_page(boot_pfn);
-+}
-+#endif
-+
-+#ifndef phys_to_boot_phys
-+static inline unsigned long phys_to_boot_phys(phys_addr_t phys)
-+{
-+	return phys;
-+}
-+#endif
-+
-+#ifndef boot_phys_to_phys
-+static inline phys_addr_t boot_phys_to_phys(unsigned long boot_phys)
-+{
-+	return boot_phys;
-+}
-+#endif
-+
-+static inline unsigned long virt_to_boot_phys(void *addr)
-+{
-+	return phys_to_boot_phys(__pa((unsigned long)addr));
-+}
-+
-+static inline void *boot_phys_to_virt(unsigned long entry)
-+{
-+	return phys_to_virt(boot_phys_to_phys(entry));
-+}
-+
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index ee70aef5cd81..dd49d572a5e2 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -48,7 +48,8 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 
- 	if (kexec_on_panic) {
- 		/* Verify we have a valid entry point */
--		if ((entry < crashk_res.start) || (entry > crashk_res.end))
-+		if ((entry < phys_to_boot_phys(crashk_res.start)) ||
-+		    (entry > phys_to_boot_phys(crashk_res.end)))
- 			return -EADDRNOTAVAIL;
- 	}
- 
+ #define VMCOREINFO_OSRELEASE(value) \
+ 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index f9847e5822e6..d04940ccc58d 100644
+index d719a4d0ef55..f9847e5822e6 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -229,8 +229,8 @@ int sanity_check_segment_list(struct kimage *image)
- 			mstart = image->segment[i].mem;
- 			mend = mstart + image->segment[i].memsz - 1;
- 			/* Ensure we are within the crash kernel limits */
--			if ((mstart < crashk_res.start) ||
--			    (mend > crashk_res.end))
-+			if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
-+			    (mend > phys_to_boot_phys(crashk_res.end)))
- 				return result;
- 		}
- 	}
-@@ -354,7 +354,7 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
- 		pages = kimage_alloc_pages(KEXEC_CONTROL_MEMORY_GFP, order);
- 		if (!pages)
- 			break;
--		pfn   = page_to_pfn(pages);
-+		pfn   = page_to_boot_pfn(pages);
- 		epfn  = pfn + count;
- 		addr  = pfn << PAGE_SHIFT;
- 		eaddr = epfn << PAGE_SHIFT;
-@@ -480,7 +480,7 @@ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
- 			return -ENOMEM;
+@@ -1377,7 +1377,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+ void __weak arch_crash_save_vmcoreinfo(void)
+ {}
  
- 		ind_page = page_address(page);
--		*image->entry = virt_to_phys(ind_page) | IND_INDIRECTION;
-+		*image->entry = virt_to_boot_phys(ind_page) | IND_INDIRECTION;
- 		image->entry = ind_page;
- 		image->last_entry = ind_page +
- 				      ((PAGE_SIZE/sizeof(kimage_entry_t)) - 1);
-@@ -535,13 +535,13 @@ void kimage_terminate(struct kimage *image)
- #define for_each_kimage_entry(image, ptr, entry) \
- 	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
- 		ptr = (entry & IND_INDIRECTION) ? \
--			phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
-+			boot_phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
- 
- static void kimage_free_entry(kimage_entry_t entry)
+-unsigned long __weak paddr_vmcoreinfo_note(void)
++phys_addr_t __weak paddr_vmcoreinfo_note(void)
  {
- 	struct page *page;
- 
--	page = pfn_to_page(entry >> PAGE_SHIFT);
-+	page = boot_pfn_to_page(entry >> PAGE_SHIFT);
- 	kimage_free_pages(page);
+ 	return __pa((unsigned long)(char *)&vmcoreinfo_note);
  }
- 
-@@ -635,7 +635,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 	 * have a match.
- 	 */
- 	list_for_each_entry(page, &image->dest_pages, lru) {
--		addr = page_to_pfn(page) << PAGE_SHIFT;
-+		addr = page_to_boot_pfn(page) << PAGE_SHIFT;
- 		if (addr == destination) {
- 			list_del(&page->lru);
- 			return page;
-@@ -650,12 +650,12 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 		if (!page)
- 			return NULL;
- 		/* If the page cannot be used file it away */
--		if (page_to_pfn(page) >
-+		if (page_to_boot_pfn(page) >
- 				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
- 			list_add(&page->lru, &image->unusable_pages);
- 			continue;
- 		}
--		addr = page_to_pfn(page) << PAGE_SHIFT;
-+		addr = page_to_boot_pfn(page) << PAGE_SHIFT;
- 
- 		/* If it is the destination page we want use it */
- 		if (addr == destination)
-@@ -678,7 +678,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 			struct page *old_page;
- 
- 			old_addr = *old & PAGE_MASK;
--			old_page = pfn_to_page(old_addr >> PAGE_SHIFT);
-+			old_page = boot_pfn_to_page(old_addr >> PAGE_SHIFT);
- 			copy_highpage(page, old_page);
- 			*old = addr | (*old & ~PAGE_MASK);
- 
-@@ -734,7 +734,7 @@ static int kimage_load_normal_segment(struct kimage *image,
- 			result  = -ENOMEM;
- 			goto out;
- 		}
--		result = kimage_add_page(image, page_to_pfn(page)
-+		result = kimage_add_page(image, page_to_boot_pfn(page)
- 								<< PAGE_SHIFT);
- 		if (result < 0)
- 			goto out;
-@@ -795,7 +795,7 @@ static int kimage_load_crash_segment(struct kimage *image,
- 		char *ptr;
- 		size_t uchunk, mchunk;
- 
--		page = pfn_to_page(maddr >> PAGE_SHIFT);
-+		page = boot_pfn_to_page(maddr >> PAGE_SHIFT);
- 		if (!page) {
- 			result  = -ENOMEM;
- 			goto out;
-@@ -922,7 +922,7 @@ void __weak crash_free_reserved_phys_range(unsigned long begin,
- 	unsigned long addr;
- 
- 	for (addr = begin; addr < end; addr += PAGE_SIZE)
--		free_reserved_page(pfn_to_page(addr >> PAGE_SHIFT));
-+		free_reserved_page(boot_pfn_to_page(addr >> PAGE_SHIFT));
+diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+index 152da4a48867..9f1920d2d0c6 100644
+--- a/kernel/ksysfs.c
++++ b/kernel/ksysfs.c
+@@ -128,8 +128,8 @@ KERNEL_ATTR_RW(kexec_crash_size);
+ static ssize_t vmcoreinfo_show(struct kobject *kobj,
+ 			       struct kobj_attribute *attr, char *buf)
+ {
+-	return sprintf(buf, "%lx %x\n",
+-		       paddr_vmcoreinfo_note(),
++	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
++	return sprintf(buf, "%pa %x\n", &vmcore_base,
+ 		       (unsigned int)sizeof(vmcoreinfo_note));
  }
- 
- int crash_shrink_memory(unsigned long new_size)
+ KERNEL_ATTR_RO(vmcoreinfo);
 -- 
 2.1.0
 
