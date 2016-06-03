@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1b8kpJ-0002nM-Nx
- for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:51:34 +0000
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 7/8] ARM: keystone: dts: add psci command definition
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1b8kqO-0006oq-Pu
+ for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:52:41 +0000
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH 1/8] ARM: kdump: advertise boot aliased crash kernel resource
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b8koV-0004Hf-2j@rmk-PC.armlinux.org.uk>
-Date: Fri, 03 Jun 2016 09:50:43 +0100
+Message-Id: <E1b8knz-0004H4-Bd@rmk-PC.armlinux.org.uk>
+Date: Fri, 03 Jun 2016 09:50:11 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +23,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-From: Vitaly Andrianov <vitalya@ti.com>
+Advertise a resource which describes where the crash kernel is located
+in the boot view of RAM.  This allows kexec-tools to have this vital
+information.
 
-This commit adds definition for cpu_on, cpu_off and cpu_suspend commands.
-These definitions must match the corresponding PSCI definitions in
-boot monitor.
-
-Having those command and corresponding PSCI support in boot monitor allows
-run time CPU hot plugin.
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- arch/arm/boot/dts/keystone.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/kernel/setup.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 3f272826f537..007648971744 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -59,6 +59,14 @@
- 			     <GIC_SPI 23 IRQ_TYPE_EDGE_RISING>;
- 	};
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index d9317eec1eba..19b25ad61385 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -1003,9 +1003,25 @@ static void __init reserve_crashkernel(void)
+ 		(unsigned long)(crash_base >> 20),
+ 		(unsigned long)(total_mem >> 20));
  
-+	psci {
-+		compatible	= "arm,psci";
-+		method		= "smc";
-+		cpu_suspend	= <0x84000001>;
-+		cpu_off		= <0x84000002>;
-+		cpu_on		= <0x84000003>;
-+	};
++	/* The crashk resource must always be located in normal mem */
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
+ 	insert_resource(&iomem_resource, &crashk_res);
 +
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
++	if (arm_has_idmap_alias()) {
++		/*
++		 * If we have a special RAM alias for use at boot, we
++		 * need to advertise to kexec tools where the alias is.
++		 */
++		static struct resource crashk_boot_res = {
++			.name = "Crash kernel (boot alias)",
++			.flags = IORESOURCE_BUSY | IORESOURCE_MEM,
++		};
++
++		crashk_boot_res.start = phys_to_idmap(crash_base);
++		crashk_boot_res.end = crashk_boot_res.start + crash_size - 1;
++		insert_resource(&iomem_resource, &crashk_boot_res);
++	}
+ }
+ #else
+ static inline void reserve_crashkernel(void) {}
 -- 
 2.1.0
 
