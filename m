@@ -2,14 +2,14 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b8kqT-0006rU-NX
- for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:52:46 +0000
+ id 1b8kqY-0006ux-NC
+ for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:52:51 +0000
 From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 2/8] ARM: kexec: advertise location of bootable RAM
+Subject: [PATCH 3/8] kexec: don't invoke OOM-killer for control page allocation
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b8ko4-0004HA-GF@rmk-PC.armlinux.org.uk>
-Date: Fri, 03 Jun 2016 09:50:16 +0100
+Message-Id: <E1b8ko9-0004HG-R5@rmk-PC.armlinux.org.uk>
+Date: Fri, 03 Jun 2016 09:50:21 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,57 +23,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-arm-kernel@lists.infradead.org
 
-Advertise the location of bootable RAM to kexec-tools.  kexec needs to
-know where it can place the kernel in RAM, and so be executable when
-the system needs to jump into it.
+If we are unable to find a suitable page when allocating the control
+page, do not invoke the OOM-killer: killing processes probably isn't
+going to help.
 
-Advertise these areas in /proc/iomem with a "System RAM (boot alias)"
-tag.
-
+Acked-by: Baoquan He <bhe@redhat.com>
 Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- arch/arm/kernel/setup.c | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+ include/linux/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index 19b25ad61385..612740788996 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -847,10 +847,29 @@ static void __init request_standard_resources(const struct machine_desc *mdesc)
- 	kernel_data.end     = virt_to_phys(_end - 1);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 2cc643c6e870..1b32ab587f66 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -41,7 +41,7 @@
+ #endif
  
- 	for_each_memblock(memory, region) {
-+		phys_addr_t start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
-+		phys_addr_t end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
-+		unsigned long boot_alias_start;
-+
-+		/*
-+		 * Some systems have a special memory alias which is only
-+		 * used for booting.  We need to advertise this region to
-+		 * kexec-tools so they know where bootable RAM is located.
-+		 */
-+		boot_alias_start = phys_to_idmap(start);
-+		if (arm_has_idmap_alias() && boot_alias_start != IDMAP_INVALID_ADDR) {
-+			res = memblock_virt_alloc(sizeof(*res), 0);
-+			res->name = "System RAM (boot alias)";
-+			res->start = boot_alias_start;
-+			res->end = phys_to_idmap(end);
-+			res->flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+			request_resource(&iomem_resource, res);
-+		}
-+
- 		res = memblock_virt_alloc(sizeof(*res), 0);
- 		res->name  = "System RAM";
--		res->start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
--		res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
-+		res->start = start;
-+		res->end = end;
- 		res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ #ifndef KEXEC_CONTROL_MEMORY_GFP
+-#define KEXEC_CONTROL_MEMORY_GFP GFP_KERNEL
++#define KEXEC_CONTROL_MEMORY_GFP (GFP_KERNEL | __GFP_NORETRY)
+ #endif
  
- 		request_resource(&iomem_resource, res);
+ #ifndef KEXEC_CONTROL_PAGE_SIZE
 -- 
 2.1.0
 
