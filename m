@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f180.google.com ([209.85.220.180])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b8JPu-00013t-BT
- for kexec@lists.infradead.org; Thu, 02 Jun 2016 03:35:31 +0000
-Received: by mail-qk0-f180.google.com with SMTP id n63so29449519qkf.0
- for <kexec@lists.infradead.org>; Wed, 01 Jun 2016 20:35:09 -0700 (PDT)
-Date: Thu, 2 Jun 2016 09:05:04 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] kexec-tools: find sysfs smarter
-Message-ID: <20160602033504.GB30865@dhcppc6>
-References: <1464812798-9034-1-git-send-email-jbacik@fb.com>
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+ by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1b8kpJ-0002nM-Nx
+ for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:51:34 +0000
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 7/8] ARM: keystone: dts: add psci command definition
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1464812798-9034-1-git-send-email-jbacik@fb.com>
+Message-Id: <E1b8koV-0004Hf-2j@rmk-PC.armlinux.org.uk>
+Date: Fri, 03 Jun 2016 09:50:43 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,58 +22,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Josef Bacik <jbacik@fb.com>
-Cc: kernel-team@fb.com, kexec@lists.infradead.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-ia64@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, kexec@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 
-On 01/06/2016:04:26:38 PM, Josef Bacik wrote:
-> Some systems may not have /etc/mtab, so fall back to using /proc/mounts if we
-> fail to open /etc/mtab.  Also if a user does
-> 
-> mount -t sysfs none /sys
-> 
-> we won't find the sysfs directory.  We need to check mnt->mnt_type, not
-> mnt->mnt_fsname.
+From: Vitaly Andrianov <vitalya@ti.com>
 
-yes, mnt_fsname is actually "device for filesystem" and mnt_type is "type of
-filesystem". Therefore, checking mnt->mnt_type is appropriate.
-> 
-> Signed-off-by: Josef Bacik <jbacik@fb.com>
+This commit adds definition for cpu_on, cpu_off and cpu_suspend commands.
+These definitions must match the corresponding PSCI definitions in
+boot monitor.
 
-Reviewed-by: Pratyush Anand <panand@redhat.com>
+Having those command and corresponding PSCI support in boot monitor allows
+run time CPU hot plugin.
 
-> ---
->  kexec/arch/i386/x86-linux-setup.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> index c75adaa..c24abaa 100644
-> --- a/kexec/arch/i386/x86-linux-setup.c
-> +++ b/kexec/arch/i386/x86-linux-setup.c
-> @@ -425,10 +425,13 @@ char *find_mnt_by_fsname(char *fsname)
->  	char *mntdir;
->  
->  	mtab = setmntent("/etc/mtab", "r");
-> -	if (!mtab)
-> -		return NULL;
-> +	if (!mtab) {
-> +		mtab = setmntent("/proc/mounts", "r");
-> +		if (!mtab)
-> +			return NULL;
-> +	}
->  	for(mnt = getmntent(mtab); mnt; mnt = getmntent(mtab)) {
-> -		if (strcmp(mnt->mnt_fsname, fsname) == 0)
-> +		if (strcmp(mnt->mnt_type, fsname) == 0)
->  			break;
->  	}
->  	mntdir = mnt ? strdup(mnt->mnt_dir) : NULL;
-> -- 
-> 2.5.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Vitaly Andrianov <vitalya@ti.com>
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+---
+ arch/arm/boot/dts/keystone.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 3f272826f537..007648971744 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -59,6 +59,14 @@
+ 			     <GIC_SPI 23 IRQ_TYPE_EDGE_RISING>;
+ 	};
+ 
++	psci {
++		compatible	= "arm,psci";
++		method		= "smc";
++		cpu_suspend	= <0x84000001>;
++		cpu_off		= <0x84000002>;
++		cpu_on		= <0x84000003>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+2.1.0
+
 
 _______________________________________________
 kexec mailing list
