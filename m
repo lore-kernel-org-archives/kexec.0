@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <a5fc5b1281cb46610d45f46fc72f84433792c4c4.1464974516.git.geoff@infradead.org>
+Message-Id: <9e75a7b75b38b37ded3e361498eaf1486107ce5d.1464974516.git.geoff@infradead.org>
 In-Reply-To: <cover.1464974516.git.geoff@infradead.org>
 References: <cover.1464974516.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v17 07/13] arm64: limit memory regions based on DT property,
- usable-memory
+Subject: [PATCH v17 10/13] arm64: kdump: add VMCOREINFO for user-space
+ coredump tools
 Date: Fri, 03 Jun 2016 18:13:41 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,74 +24,38 @@ Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infra
 
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Crash dump kernel will be run with a limited range of memory as System
-RAM.
+For the current crash utility, we need to know, at least, a value of
+"kimage_voffset" to handle the contents of core dump file (/proc/vmcore)
+correctly due to the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
 
-On arm64, we will use a device-tree property under /chosen,
-   linux,usable-memory = <BASE SIZE>
-in order for primary kernel either on uefi or non-uefi (device tree only)
-system to hand over the information about usable memory region to crash
-dump kernel. This property will supercede entries in uefi memory map table
-and "memory" nodes in a device tree.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+More VMCOREINFO may be added later for makedumpfile command.
 ---
- arch/arm64/mm/init.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ arch/arm64/kernel/machine_kexec.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 45f1319..f679918 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -249,10 +249,48 @@ static int __init early_mem(char *p)
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 92e8a92..ac3655f 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -22,6 +22,7 @@
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/cpu_ops.h>
++#include <asm/memory.h>
+ #include <asm/mmu_context.h>
+ #include <asm/system_misc.h>
+ 
+@@ -299,3 +300,10 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ 
+ 	pr_info("Starting crashdump kernel...\n");
  }
- early_param("mem", early_mem);
- 
-+static int __init early_init_dt_scan_usablemem(unsigned long node,
-+		const char *uname, int depth, void *data)
++
++void arch_crash_save_vmcoreinfo(void)
 +{
-+	struct memblock_region *usablemem = (struct memblock_region *)data;
-+	const __be32 *reg;
-+	int len;
-+
-+	usablemem->size = 0;
-+
-+	if (depth != 1 || strcmp(uname, "chosen") != 0)
-+		return 0;
-+
-+	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &len);
-+	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+		return 1;
-+
-+	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+	return 1;
++	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
++	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
++						kimage_voffset);
 +}
-+
-+static void __init fdt_enforce_memory_region(void)
-+{
-+	struct memblock_region reg;
-+
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+
-+	if (reg.size) {
-+		memblock_remove(0, PAGE_ALIGN(reg.base));
-+		memblock_remove(round_down(reg.base + reg.size, PAGE_SIZE),
-+				ULLONG_MAX);
-+	}
-+}
-+
- void __init arm64_memblock_init(void)
- {
- 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
- 
-+	/* Handle linux,usable-memory property */
-+	fdt_enforce_memory_region();
-+
- 	/*
- 	 * Ensure that the linear region takes up exactly half of the kernel
- 	 * virtual address space. This way, we can distinguish a linear address
 -- 
 2.5.0
 
