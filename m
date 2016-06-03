@@ -2,15 +2,14 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b8kqs-00073U-U8
- for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:53:12 +0000
+ id 1b8kr7-0007FM-NT
+ for kexec@lists.infradead.org; Fri, 03 Jun 2016 08:53:26 +0000
 From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH 5/8] kdump: arrange for paddr_vmcoreinfo_note() to return
- phys_addr_t
+Subject: [PATCH 8/8] ARM: kexec: fix kexec for Keystone 2
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b8koK-0004HS-K9@rmk-PC.armlinux.org.uk>
-Date: Fri, 03 Jun 2016 09:50:32 +0100
+Message-Id: <E1b8koa-0004Hl-Ey@rmk-PC.armlinux.org.uk>
+Date: Fri, 03 Jun 2016 09:50:48 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,80 +23,68 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On PAE systems (eg, ARM LPAE) the vmcore note may be located above
-4GB physical on 32-bit architectures, so we need a wider type than
-"unsigned long" here.  Arrange for paddr_vmcoreinfo_note() to return
-a phys_addr_t, thereby allowing it to be located above 4GB.
+Provide kexec with the boot view of memory by overriding the normal
+kexec translation functions added in a previous patch.  We also need
+to fix a call to memblock in machine_kexec_prepare() so that we
+provide it with a running-view physical address rather than a boot-
+view physical address.
 
-This makes no difference for kexec-tools, as they already assume a
-64-bit type when reading from this file.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- arch/ia64/kernel/machine_kexec.c | 2 +-
- include/linux/kexec.h            | 2 +-
- kernel/kexec_core.c              | 2 +-
- kernel/ksysfs.c                  | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/include/asm/kexec.h    | 24 ++++++++++++++++++++++++
+ arch/arm/kernel/machine_kexec.c |  2 +-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-index b72cd7a07222..599507bcec91 100644
---- a/arch/ia64/kernel/machine_kexec.c
-+++ b/arch/ia64/kernel/machine_kexec.c
-@@ -163,7 +163,7 @@ void arch_crash_save_vmcoreinfo(void)
- #endif
- }
+diff --git a/arch/arm/include/asm/kexec.h b/arch/arm/include/asm/kexec.h
+index c2b9b4bdec00..1869af6bac5c 100644
+--- a/arch/arm/include/asm/kexec.h
++++ b/arch/arm/include/asm/kexec.h
+@@ -53,6 +53,30 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
+ /* Function pointer to optional machine-specific reinitialization */
+ extern void (*kexec_reinit)(void);
  
--unsigned long paddr_vmcoreinfo_note(void)
-+phys_addr_t paddr_vmcoreinfo_note(void)
- {
- 	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
- }
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 1b32ab587f66..52a3a221bcb2 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -235,7 +235,7 @@ void crash_unmap_reserved_pages(void);
- void arch_crash_save_vmcoreinfo(void);
- __printf(1, 2)
- void vmcoreinfo_append_str(const char *fmt, ...);
--unsigned long paddr_vmcoreinfo_note(void);
-+phys_addr_t paddr_vmcoreinfo_note(void);
++static inline unsigned long phys_to_boot_phys(phys_addr_t phys)
++{
++	return phys_to_idmap(phys);
++}
++#define phys_to_boot_phys phys_to_boot_phys
++
++static inline phys_addr_t boot_phys_to_phys(unsigned long entry)
++{
++	return idmap_to_phys(entry);
++}
++#define boot_phys_to_phys boot_phys_to_phys
++
++static inline unsigned long page_to_boot_pfn(struct page *page)
++{
++	return page_to_pfn(page) + (arch_phys_to_idmap_offset >> PAGE_SHIFT);
++}
++#define page_to_boot_pfn page_to_boot_pfn
++
++static inline struct page *boot_pfn_to_page(unsigned long boot_pfn)
++{
++	return pfn_to_page(boot_pfn - (arch_phys_to_idmap_offset >> PAGE_SHIFT));
++}
++#define boot_pfn_to_page boot_pfn_to_page
++
+ #endif /* __ASSEMBLY__ */
  
- #define VMCOREINFO_OSRELEASE(value) \
- 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index d719a4d0ef55..f9847e5822e6 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1377,7 +1377,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- void __weak arch_crash_save_vmcoreinfo(void)
- {}
+ #endif /* CONFIG_KEXEC */
+diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+index 59fd0e24c56b..b18c1ea56bed 100644
+--- a/arch/arm/kernel/machine_kexec.c
++++ b/arch/arm/kernel/machine_kexec.c
+@@ -57,7 +57,7 @@ int machine_kexec_prepare(struct kimage *image)
+ 	for (i = 0; i < image->nr_segments; i++) {
+ 		current_segment = &image->segment[i];
  
--unsigned long __weak paddr_vmcoreinfo_note(void)
-+phys_addr_t __weak paddr_vmcoreinfo_note(void)
- {
- 	return __pa((unsigned long)(char *)&vmcoreinfo_note);
- }
-diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-index 152da4a48867..9f1920d2d0c6 100644
---- a/kernel/ksysfs.c
-+++ b/kernel/ksysfs.c
-@@ -128,8 +128,8 @@ KERNEL_ATTR_RW(kexec_crash_size);
- static ssize_t vmcoreinfo_show(struct kobject *kobj,
- 			       struct kobj_attribute *attr, char *buf)
- {
--	return sprintf(buf, "%lx %x\n",
--		       paddr_vmcoreinfo_note(),
-+	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
-+	return sprintf(buf, "%pa %x\n", &vmcore_base,
- 		       (unsigned int)sizeof(vmcoreinfo_note));
- }
- KERNEL_ATTR_RO(vmcoreinfo);
+-		if (!memblock_is_region_memory(current_segment->mem,
++		if (!memblock_is_region_memory(idmap_to_phys(current_segment->mem),
+ 					       current_segment->memsz))
+ 			return -EINVAL;
+ 
 -- 
 2.1.0
 
