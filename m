@@ -2,17 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9y35-0005p2-B1
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:10:51 +0000
+ id 1b9y3d-0007qr-Bg
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:11:27 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 29/32] arm: add debug of reserved and coredump
- memory ranges
+Subject: [PATCH kexec-tools v2 12/32] kexec: add helper to exlude a region
+ from a set of memory ranges
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xtp-0003uE-KF@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 18:01:13 +0100
+Message-Id: <E1b9xsO-0003sa-Sr@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 17:59:44 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,38 +28,110 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Add debug of the reserved and coredump memory ranges for validation.
+Add a helper to exclude a region from a set of memory ranges.
 
-Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/crashdump-arm.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ kexec/mem_regions.c | 71 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ kexec/mem_regions.h |  4 +++
+ 2 files changed, 75 insertions(+)
 
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 25fdbe9..2dc8846 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -158,6 +158,10 @@ static int crash_get_memory_ranges(void)
- 		return -1;
- 	}
- 
-+	dbgprint_mem_range("Reserved memory ranges",
-+			   crash_reserved_rgns.ranges,
-+			   crash_reserved_rgns.size);
-+
- 	/*
- 	 * Exclude all reserved memory from the usable memory regions.
- 	 * We want to avoid dumping the crashkernel region itself.  Note
-@@ -179,6 +183,9 @@ static int crash_get_memory_ranges(void)
- 	 */
- 	mem_regions_sort(&usablemem_rgns);
- 
-+	dbgprint_mem_range("Coredump memory ranges",
-+			   usablemem_rgns.ranges, usablemem_rgns.size);
-+
+diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
+index 804984a..b01a5c8 100644
+--- a/kexec/mem_regions.c
++++ b/kexec/mem_regions.c
+@@ -55,3 +55,74 @@ int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
  	return 0;
  }
+ 
++static void mem_regions_remove(struct memory_ranges *ranges, int index)
++{
++	int tail_entries;
++
++	/* we are assured to have at least one entry */
++	ranges->size -= 1;
++
++	/* if we have following entries, shuffle them down one place */
++	tail_entries = ranges->size - index;
++	if (tail_entries)
++		memmove(ranges->ranges + index, ranges->ranges + index + 1,
++			tail_entries * sizeof(*ranges->ranges));
++
++	/* zero the new tail entry */
++	memset(ranges->ranges + ranges->size, 0, sizeof(*ranges->ranges));
++}
++
++/**
++ * mem_regions_exclude() - excludes a memory region from a set of memory ranges
++ * @ranges: memory ranges to exclude the region from
++ * @range: memory range to exclude
++ *
++ * Exclude a memory region from a set of memory ranges.  We assume that
++ * the region to be excluded is either wholely located within one of the
++ * memory ranges, or not at all.
++ */
++int mem_regions_exclude(struct memory_ranges *ranges,
++			const struct memory_range *range)
++{
++	int i, ret;
++
++	for (i = 0; i < ranges->size; i++) {
++		struct memory_range *r = ranges->ranges + i;
++
++		/*
++		 * We assume that crash area is fully contained in
++		 * some larger memory area.
++		 */
++		if (r->start <= range->start && r->end >= range->end) {
++			if (r->start == range->start) {
++				if (r->end == range->end)
++					/* Remove this entry */
++					mem_regions_remove(ranges, i);
++				else
++					/* Shrink the start of this memory range */
++					r->start = range->end + 1;
++			} else if (r->end == range->end) {
++				/* Shrink the end of this memory range */
++				r->end = range->start - 1;
++			} else {
++				/*
++				 * Split this area into 2 smaller ones and
++				 * remove excluded range from between. First
++				 * create new entry for the remaining area.
++				 */
++				ret = mem_regions_add(ranges, range->end + 1,
++						      r->end - range->end, 0);
++				if (ret < 0)
++					return ret;
++
++				/*
++				 * Update this area to end before excluded
++				 * range.
++				 */
++				r->end = range->start - 1;
++				break;
++			}
++		}
++	}
++	return 0;
++}
+diff --git a/kexec/mem_regions.h b/kexec/mem_regions.h
+index da7b5e8..ae9e972 100644
+--- a/kexec/mem_regions.h
++++ b/kexec/mem_regions.h
+@@ -2,9 +2,13 @@
+ #define MEM_REGIONS_H
+ 
+ struct memory_ranges;
++struct memory_range;
+ 
+ void mem_regions_sort(struct memory_ranges *ranges);
+ 
++int mem_regions_exclude(struct memory_ranges *ranges,
++			const struct memory_range *range);
++
+ int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+                     unsigned long long length, int type);
  
 -- 
 1.9.1
