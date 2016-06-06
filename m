@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9y3u-0007y9-Lu
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:11:48 +0000
+ by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1b9y1J-0001Xf-T5
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:08:58 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 09/32] kexec: phys_to_virt() must take unsigned
- long long
+Subject: [PATCH kexec-tools v2 24/32] arm: add support for platforms with boot
+ memory aliases
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xs9-0003sI-95@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 17:59:29 +0100
+Message-Id: <E1b9xtP-0003tk-HN@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 18:00:47 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,57 +28,70 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-crashdump-elf.c passes unsigned long long addresses into phys_to_virt()
-so make phys_to_virt() accept such addresses without truncating them.
-This is important for ARM LPAE systems.
+The kexec API deals with boot-view addresses, rather than normal system
+view addresses.  This causes problems for platforms such as Keystone 2,
+where the boot view is substantially different from the normal system
+view.
+
+This is because Keystone 2 boots from a memory alias in the lower 4GiB,
+before switching to a high alias at 32GiB.
+
+We handle this in a generic way by introducing boot alias resources in
+/proc/iomem:
+
+80000000-dfffffff : System RAM (boot alias)
+  9f800000-9fffffff : Crash kernel (boot alias)
+800000000-85fffffff : System RAM
+  800008000-800790e37 : Kernel code
+  8007ec000-8008b856f : Kernel data
+  81f800000-81fffffff : Crash kernel
+
+To allow kexec to load a kernel, we need to add the boot alias of RAM
+to the memory ranges returned by get_memory_ranges().  Parse the
+system RAM boot alias into the memory ranges.
 
 Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/phys_to_virt.c | 2 +-
- kexec/crashdump.h             | 2 +-
- kexec/phys_to_virt.c          | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ kexec/arch/arm/iomem.h     | 2 ++
+ kexec/arch/arm/kexec-arm.c | 4 +++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/arm/phys_to_virt.c b/kexec/arch/arm/phys_to_virt.c
-index bcced52..c2fe2ea 100644
---- a/kexec/arch/arm/phys_to_virt.c
-+++ b/kexec/arch/arm/phys_to_virt.c
-@@ -14,7 +14,7 @@
-  * http://lists.arm.linux.org.uk/lurker/message/20010723.185051.94ce743c.en.html
-  */
- unsigned long
--phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
-+phys_to_virt(struct crash_elf_info *elf_info, unsigned long long paddr)
- {
- 	return paddr + elf_info->page_offset - phys_offset;
- }
-diff --git a/kexec/crashdump.h b/kexec/crashdump.h
-index 95f1f0c..96219a8 100644
---- a/kexec/crashdump.h
-+++ b/kexec/crashdump.h
-@@ -55,7 +55,7 @@ int crash_create_elf64_headers(struct kexec_info *info,
- unsigned long crash_architecture(struct crash_elf_info *elf_info);
+diff --git a/kexec/arch/arm/iomem.h b/kexec/arch/arm/iomem.h
+index 81c593d..85f958e 100644
+--- a/kexec/arch/arm/iomem.h
++++ b/kexec/arch/arm/iomem.h
+@@ -2,6 +2,8 @@
+ #define IOMEM_H
  
- unsigned long phys_to_virt(struct crash_elf_info *elf_info,
--			   unsigned long paddr);
-+			   unsigned long long paddr);
+ #define SYSTEM_RAM		"System RAM\n"
++#define SYSTEM_RAM_BOOT		"System RAM (boot alias)\n"
+ #define CRASH_KERNEL		"Crash kernel\n"
++#define CRASH_KERNEL_BOOT	"Crash kernel (boot alias)\n"
  
- unsigned long xen_architecture(struct crash_elf_info *elf_info);
- int xen_get_nr_phys_cpus(void);
-diff --git a/kexec/phys_to_virt.c b/kexec/phys_to_virt.c
-index 91b6d01..5e8c4e3 100644
---- a/kexec/phys_to_virt.c
-+++ b/kexec/phys_to_virt.c
-@@ -10,7 +10,7 @@
-  * their own implementation.
-  */
- unsigned long
--phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
-+phys_to_virt(struct crash_elf_info *elf_info, unsigned long long paddr)
- {
- 	return paddr + elf_info->page_offset;
- }
+ #endif
+diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
+index eeb27b4..2194b7c 100644
+--- a/kexec/arch/arm/kexec-arm.c
++++ b/kexec/arch/arm/kexec-arm.c
+@@ -18,6 +18,7 @@
+ #include "kexec-arm.h"
+ #include <arch/options.h>
+ #include "../../fs2dt.h"
++#include "iomem.h"
+ 
+ #define MAX_MEMORY_RANGES 64
+ #define MAX_LINE 160
+@@ -52,7 +53,8 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 			continue;
+ 		str = line + consumed;
+ 
+-		if (memcmp(str, "System RAM\n", 11) == 0) {
++		if (memcmp(str, SYSTEM_RAM_BOOT, strlen(SYSTEM_RAM_BOOT)) == 0 ||
++		    memcmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0) {
+ 			type = RANGE_RAM;
+ 		}
+ 		else if (memcmp(str, "reserved\n", 9) == 0) {
 -- 
 1.9.1
 
