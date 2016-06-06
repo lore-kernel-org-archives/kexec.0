@@ -2,17 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9xtz-0003eg-84
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:01:29 +0000
+ id 1b9xu0-0001Vv-59
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:01:33 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 22/32] arm: use generic mem_region sorting
- implementation
+Subject: [PATCH kexec-tools v2 02/32] kdump: fix multiple program header
+ entries
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xtE-0003tY-W5@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 18:00:36 +0100
+Message-Id: <E1b9xrY-0003rb-Na@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 17:58:52 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,48 +28,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Use the generic mem_region sorting implementation.
+generate_new_headers() forgot to increment the program header pointer
+after adding each program header from the kexec template. Fix it to
+increment it correctly.
+
+Without this, the program headers contain only the last entry, which
+means we will be missing most of the kernel image in the dump.
 
 Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/crashdump-arm.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+ kdump/kdump.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 85afd9f..d6db566 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -202,19 +202,6 @@ static void crash_exclude_range(void)
+diff --git a/kdump/kdump.c b/kdump/kdump.c
+index 3247a54..99a1789 100644
+--- a/kdump/kdump.c
++++ b/kdump/kdump.c
+@@ -192,6 +192,7 @@ static void *generate_new_headers(
+ 		}
+ 		memcpy(nphdr, &phdr[i], sizeof(*nphdr));
+ 		nphdr->p_offset = offset;
++		nphdr++;
+ 		offset += phdr[i].p_filesz;
  	}
- }
- 
--static int range_cmp(const void *a1, const void *a2)
--{
--	const struct memory_range *r1 = a1;
--	const struct memory_range *r2 = a2;
--
--	if (r1->start > r2->start)
--		return 1;
--	if (r1->start < r2->start)
--		return -1;
--
--	return 0;
--}
--
- /**
-  * crash_get_memory_ranges() - read system physical memory
-  *
-@@ -246,8 +233,7 @@ static int crash_get_memory_ranges(void)
- 	/*
- 	 * Make sure that the memory regions are sorted.
- 	 */
--	qsort(usablemem_rgns.ranges, usablemem_rgns.size,
--	      sizeof(*usablemem_rgns.ranges), range_cmp);
-+	mem_regions_sort(&usablemem_rgns);
- 
- 	return 0;
- }
+ 	
 -- 
 1.9.1
 
