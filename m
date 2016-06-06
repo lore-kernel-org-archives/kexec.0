@@ -2,16 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9xuU-0004OT-Iu
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:02:03 +0000
+ id 1b9xuZ-0001Wu-2h
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:02:06 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 31/32] arm: clean up phys/page offset debug
+Subject: [PATCH kexec-tools v2 05/32] arm: fix kdump to work on LPAE systems
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xu0-0003uQ-0Y@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 18:01:24 +0100
+Message-Id: <E1b9xro-0003rt-BQ@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 17:59:08 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,41 +27,34 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Clean up the physical and page offset debug prints.
+We need to use 64-bit file IO when mapping system memory and the core
+dump file as we may be running on a LPAE system, otherwise we risk
+mapping memory we shouldn't, and causing a kernel oops:
 
-Reviewed-by: Pratyush Anand <panand@redhat.com>
+Unhandled fault: asynchronous external abort (0x211) at 0x00000000
+pgd = edd2c740
+[00000000] *pgd=82ec98003, *pmd=82dcd2003, *pte=00000000
+
+Acked-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/crashdump-arm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ kexec/arch/arm/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 2589582..3b71267 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -136,7 +136,6 @@ static int get_kernel_page_offset(struct kexec_info *info,
- 				user_page_offset);
- 	}
- 	elf_info->page_offset = stext_sym_addr & (~KVBASE_MASK);
--	dbgprintf("page_offset is set to %llx\n", elf_info->page_offset);
- 	return 0;
- }
+diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
+index 38137d7..60e433a 100644
+--- a/kexec/arch/arm/Makefile
++++ b/kexec/arch/arm/Makefile
+@@ -18,6 +18,9 @@ libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
  
-@@ -293,11 +292,13 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	 * region as PHYS_OFFSET.
- 	 */
- 	phys_offset = usablemem_rgns.ranges->start;
--	dbgprintf("phys_offset: %#llx\n", phys_offset);
+ arm_CPPFLAGS = -I$(srcdir)/kexec/libfdt
  
- 	if (get_kernel_page_offset(info, &elf_info))
- 		return -1;
- 
-+	dbgprintf("phys offset = %#llx, page offset = %llx\n",
-+		  phys_offset, elf_info.page_offset);
++# We want 64-bit file IO for kdump to work correctly on LPAE systems
++arm_CPPFLAGS += -D_FILE_OFFSET_BITS=64
 +
- 	/*
- 	 * Ensure that the crash kernel memory range is sane. The crash kernel
- 	 * must be located within memory which is visible during booting.
+ arm_KEXEC_SRCS += $(libfdt_SRCS)
+ 
+ arm_UIMAGE = kexec/kexec-uImage.c
 -- 
 1.9.1
 
