@@ -2,17 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9y23-0005XA-Mf
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:09:46 +0000
+ id 1b9y26-0005R7-KE
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:09:48 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 23/32] arm: move crash system RAM parsing
- earlier
+Subject: [PATCH kexec-tools v2 11/32] kexec: add mem_regions sorting
+ implementation
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xtK-0003te-8s@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 18:00:42 +0100
+Message-Id: <E1b9xsJ-0003sU-LJ@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 17:59:39 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,123 +28,66 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
+Add a mem_regions sorting implementation taken from the arm code.
+
 Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/Makefile        |  2 ++
- kexec/arch/arm/crashdump-arm.c | 51 ++++++++----------------------------------
- 2 files changed, 11 insertions(+), 42 deletions(-)
+ kexec/mem_regions.c | 27 +++++++++++++++++++++++++++
+ kexec/mem_regions.h |  2 ++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-index 60e433a..71db8c3 100644
---- a/kexec/arch/arm/Makefile
-+++ b/kexec/arch/arm/Makefile
-@@ -7,6 +7,8 @@ arm_FS2DT              = kexec/fs2dt.c
- arm_FS2DT_INCLUDE      = -include $(srcdir)/kexec/arch/arm/crashdump-arm.h \
-                          -include $(srcdir)/kexec/arch/arm/kexec-arm.h
- 
-+arm_MEM_REGIONS        = kexec/mem_regions.c
+diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
+index a4952ff..804984a 100644
+--- a/kexec/mem_regions.c
++++ b/kexec/mem_regions.c
+@@ -1,6 +1,33 @@
++#include <stdlib.h>
 +
- arm_KEXEC_SRCS=  kexec/arch/arm/kexec-elf-rel-arm.c
- arm_KEXEC_SRCS+= kexec/arch/arm/kexec-zImage-arm.c
- arm_KEXEC_SRCS+= kexec/arch/arm/kexec-uImage-arm.c
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index d6db566..f2e6a0d 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -30,6 +30,7 @@
- #include "../../kexec.h"
- #include "../../kexec-elf.h"
- #include "../../crashdump.h"
-+#include "../../mem_regions.h"
- #include "crashdump-arm.h"
- #include "iomem.h"
+ #include "kexec.h"
+ #include "mem_regions.h"
  
-@@ -132,39 +133,6 @@ static int get_kernel_page_offset(struct kexec_info *info,
- }
- 
++static int mem_range_cmp(const void *a1, const void *a2)
++{
++	const struct memory_range *r1 = a1;
++	const struct memory_range *r2 = a2;
++
++	if (r1->start > r2->start)
++		return 1;
++	if (r1->start < r2->start)
++		return -1;
++
++	return 0;
++}
++
++/**
++ * mem_regions_sort() - sort ranges into ascending address order
++ * @ranges: ranges to sort
++ *
++ * Sort the memory regions into ascending address order.
++ */
++void mem_regions_sort(struct memory_ranges *ranges)
++{
++	qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
++	      mem_range_cmp);
++}
++
  /**
-- * crash_range_callback() - callback called for each iomem region
-- * @data: not used
-- * @nr: not used
-- * @str: name of the memory region
-- * @base: start address of the memory region
-- * @length: size of the memory region
-- *
-- * This function is called once for each memory region found in /proc/iomem. It
-- * locates system RAM and places these into @crash_memory_ranges. Number of
-- * memory regions is placed in @crash_memory_nr_ranges.
-- */
--static int crash_range_callback(void *UNUSED(data), int UNUSED(nr),
--				char *str, unsigned long long base,
--				unsigned long long length)
--{
--	struct memory_range *range;
--
--	if (usablemem_rgns.size >= CRASH_MAX_MEMORY_RANGES)
--		return 1;
--
--	range = usablemem_rgns.ranges + usablemem_rgns.size;
--
--	if (strncmp(str, "System RAM\n", 11) == 0) {
--		range->start = base;
--		range->end = base + length - 1;
--		range->type = RANGE_RAM;
--		usablemem_rgns.size++;
--	}
--
--	return 0;
--}
--
--/**
-  * crash_exclude_range() - excludes memory region reserved for crashkernel
-  *
-  * Function locates where crashkernel reserved memory is and removes that region
-@@ -213,12 +181,6 @@ static void crash_exclude_range(void)
-  */
- static int crash_get_memory_ranges(void)
- {
--	/*
--	 * First read all memory regions that can be considered as
--	 * system memory including the crash area.
--	 */
--	kexec_iomem_for_each_line(NULL, crash_range_callback, NULL);
--
- 	if (usablemem_rgns.size < 1) {
- 		errno = EINVAL;
- 		return -1;
-@@ -414,8 +376,9 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
-  * @base: start address of the memory region
-  * @length: size of the memory region
-  *
-- * This function is called for each memory range in /proc/iomem, and stores
-- * the location of the crash kernel range into @crash_reserved_mem.
-+ * This function is called for each memory range in /proc/iomem, stores
-+ * the location of the crash kernel range into @crash_reserved_mem, and
-+ * stores the system RAM into @usablemem_rgns.
-  */
- static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
- 				char *str, unsigned long long base,
-@@ -426,6 +389,10 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
- 		crash_reserved_mem.end = base + length - 1;
- 		crash_reserved_mem.type = RANGE_RAM;
- 	}
-+	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0) {
-+		return mem_regions_add(&usablemem_rgns,
-+				       base, length, RANGE_RAM);
-+	}
- 	return 0;
- }
+  * mem_regions_add() - add a memory region to a set of ranges
+  * @ranges: ranges to add the memory region to
+diff --git a/kexec/mem_regions.h b/kexec/mem_regions.h
+index b9cfba1..da7b5e8 100644
+--- a/kexec/mem_regions.h
++++ b/kexec/mem_regions.h
+@@ -3,6 +3,8 @@
  
-@@ -434,7 +401,7 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
-  *
-  * Check for the crashkernel reserved region in /proc/iomem, and return
-  * true if it is present, or false otherwise. We use this to store the
-- * location of this region.
-+ * location of this region, and system RAM regions.
-  */
- int is_crashkernel_mem_reserved(void)
- {
+ struct memory_ranges;
+ 
++void mem_regions_sort(struct memory_ranges *ranges);
++
+ int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+                     unsigned long long length, int type);
+ 
 -- 
 1.9.1
 
