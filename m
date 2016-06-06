@@ -2,14 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9xbG-0003Aa-7l
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 16:42:03 +0000
-Date: Mon, 6 Jun 2016 17:41:29 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: [PATCH kexec-tools v2 00/32] Keystone II updates for kexec tools
-Message-ID: <20160606164129.GM1041@n2100.armlinux.org.uk>
+ id 1b9xt0-0001ax-VU
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:00:24 +0000
+In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
+References: <20160606164129.GM1041@n2100.armlinux.org.uk>
+From: Russell King <rmk@arm.linux.org.uk>
+Subject: [PATCH kexec-tools v2 08/32] kexec: add max_size to memory_ranges
 MIME-Version: 1.0
 Content-Disposition: inline
+Message-Id: <E1b9xs4-0003sB-0u@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 17:59:24 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,41 +27,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Here's the latest set of kexec-tools patches to support Keystone II
-platforms, which work in conjunction with the kernel patches which
-Andrew Morton has already taken.
+Many implementations statically allocate the memory range array, which
+therefore will have a maximum allowable size.  Add this information to
+the memory_ranges structure, so we don't have to carry it around.
 
-Most of the patches have been reviewed, but there are a small number
-which do not have Reviewed-by or Acked-by tags; these are due to
-comments, which I've replied to, which have yet to have further
-responses.
+Reviewed-by: Pratyush Anand <panand@redhat.com>
+Signed-off-by: Russell King <rmk@arm.linux.org.uk>
+---
+ kexec/kexec.h | 1 +
+ 1 file changed, 1 insertion(+)
 
- kdump/kdump.c                     |  27 ++++-
- kexec/Makefile                    |   4 +
- kexec/arch/arm/Makefile           |   5 +
- kexec/arch/arm/crashdump-arm.c    | 247 +++++++++++++++++++-------------------
- kexec/arch/arm/crashdump-arm.h    |   2 +-
- kexec/arch/arm/iomem.h            |   9 ++
- kexec/arch/arm/kexec-arm.c        |   8 +-
- kexec/arch/arm/kexec-uImage-arm.c |   3 +-
- kexec/arch/arm/kexec-zImage-arm.c |   6 +-
- kexec/arch/arm/phys_to_virt.c     |   6 +-
- kexec/arch/arm/phys_to_virt.h     |   8 ++
- kexec/crashdump.h                 |   2 +-
- kexec/kexec-uImage.c              |   3 +-
- kexec/kexec.c                     |   4 +-
- kexec/kexec.h                     |   1 +
- kexec/mem_regions.c               | 128 ++++++++++++++++++++
- kexec/mem_regions.h               |  15 +++
- kexec/phys_to_virt.c              |   2 +-
- kexec/zlib.c                      |   4 +-
- 19 files changed, 339 insertions(+), 145 deletions(-)
-
-
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index c02ac8f..9194f1c 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -142,6 +142,7 @@ struct memory_range {
+ 
+ struct memory_ranges {
+         unsigned int size;
++	unsigned int max_size;
+         struct memory_range *ranges;
+ };
+ 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+1.9.1
+
 
 _______________________________________________
 kexec mailing list
