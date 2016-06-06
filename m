@@ -2,16 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1b9xvt-0005Fq-W8
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:03:23 +0000
+ id 1b9xxM-0005JV-J7
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:04:53 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 21/32] arm: parse crash_reserved_mem early
+Subject: [PATCH kexec-tools v2 13/32] arm: fix pointer signedness warning in
+ kexec-uImage-arm.c
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xt9-0003tS-Ng@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 18:00:31 +0100
+Message-Id: <E1b9xsU-0003sg-4H@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 17:59:50 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,115 +28,29 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-We parse the crash kernel memory region in several locations in the
-kexec tools - once to check that there's a region, another time for
-real when we're locating the memory regions to dump, and another
-while loading the image.
-
-Move the real parsing step to is_crashkernel_mem_reserved(), which
-matches what x86 is doing.
+kexec/arch/arm/kexec-uImage-arm.c: In function 'uImage_arm_probe':
+kexec/arch/arm/kexec-uImage-arm.c:14:2: warning: pointer targets in passing argument 1 of 'uImage_probe_kernel' differ in signedness [-Wpointer-sign]
 
 Reviewed-by: Pratyush Anand <panand@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/arch/arm/crashdump-arm.c | 47 +++++++++++++++++++++++++++++++-----------
- kexec/arch/arm/iomem.h         |  7 +++++++
- 2 files changed, 42 insertions(+), 12 deletions(-)
- create mode 100644 kexec/arch/arm/iomem.h
+ kexec/arch/arm/kexec-uImage-arm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 195b43f..85afd9f 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -31,6 +31,7 @@
- #include "../../kexec-elf.h"
- #include "../../crashdump.h"
- #include "crashdump-arm.h"
-+#include "iomem.h"
+diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
+index 03c2f4d..8e0a9ac 100644
+--- a/kexec/arch/arm/kexec-uImage-arm.c
++++ b/kexec/arch/arm/kexec-uImage-arm.c
+@@ -11,7 +11,8 @@
  
- #if __BYTE_ORDER == __LITTLE_ENDIAN
- #define ELFDATANATIVE ELFDATA2LSB
-@@ -139,9 +140,8 @@ static int get_kernel_page_offset(struct kexec_info *info,
-  * @length: size of the memory region
-  *
-  * This function is called once for each memory region found in /proc/iomem. It
-- * locates system RAM and crashkernel reserved memory and places these to
-- * variables: @crash_memory_ranges and @crash_reserved_mem. Number of memory
-- * regions is placed in @crash_memory_nr_ranges.
-+ * locates system RAM and places these into @crash_memory_ranges. Number of
-+ * memory regions is placed in @crash_memory_nr_ranges.
-  */
- static int crash_range_callback(void *UNUSED(data), int UNUSED(nr),
- 				char *str, unsigned long long base,
-@@ -159,10 +159,6 @@ static int crash_range_callback(void *UNUSED(data), int UNUSED(nr),
- 		range->end = base + length - 1;
- 		range->type = RANGE_RAM;
- 		usablemem_rgns.size++;
--	} else if (strncmp(str, "Crash kernel\n", 13) == 0) {
--		crash_reserved_mem.start = base;
--		crash_reserved_mem.end = base + length - 1;
--		crash_reserved_mem.type = RANGE_RAM;
- 	}
- 
- 	return 0;
-@@ -424,12 +420,39 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
- 	return 0;
- }
- 
--int is_crashkernel_mem_reserved(void)
-+/**
-+ * iomem_range_callback() - callback called for each iomem region
-+ * @data: not used
-+ * @nr: not used
-+ * @str: name of the memory region (not NULL terminated)
-+ * @base: start address of the memory region
-+ * @length: size of the memory region
-+ *
-+ * This function is called for each memory range in /proc/iomem, and stores
-+ * the location of the crash kernel range into @crash_reserved_mem.
-+ */
-+static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
-+				char *str, unsigned long long base,
-+				unsigned long long length)
+ int uImage_arm_probe(const char *buf, off_t len)
  {
--	uint64_t start, end;
-+	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0) {
-+		crash_reserved_mem.start = base;
-+		crash_reserved_mem.end = base + length - 1;
-+		crash_reserved_mem.type = RANGE_RAM;
-+	}
-+	return 0;
-+}
- 
--	if (parse_iomem_single("Crash kernel\n", &start, &end) == 0)
--		return start != end;
-+/**
-+ * is_crashkernel_mem_reserved() - check for the crashkernel reserved region
-+ *
-+ * Check for the crashkernel reserved region in /proc/iomem, and return
-+ * true if it is present, or false otherwise. We use this to store the
-+ * location of this region.
-+ */
-+int is_crashkernel_mem_reserved(void)
-+{
-+	kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
- 
--	return 0;
-+	return crash_reserved_mem.start != crash_reserved_mem.end;
+-	return uImage_probe_kernel(buf, len, IH_ARCH_ARM);
++	return uImage_probe_kernel((const unsigned char *)buf, len,
++				   IH_ARCH_ARM);
  }
-diff --git a/kexec/arch/arm/iomem.h b/kexec/arch/arm/iomem.h
-new file mode 100644
-index 0000000..81c593d
---- /dev/null
-+++ b/kexec/arch/arm/iomem.h
-@@ -0,0 +1,7 @@
-+#ifndef IOMEM_H
-+#define IOMEM_H
-+
-+#define SYSTEM_RAM		"System RAM\n"
-+#define CRASH_KERNEL		"Crash kernel\n"
-+
-+#endif
+ 
+ int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
 -- 
 1.9.1
 
