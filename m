@@ -2,17 +2,17 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pandora.armlinux.org.uk
  ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1b9xsx-0001ZQ-HY
- for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:00:21 +0000
+ id 1b9xtQ-000379-7m
+ for kexec@lists.infradead.org; Mon, 06 Jun 2016 17:00:50 +0000
 In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
 From: Russell King <rmk@arm.linux.org.uk>
-Subject: [PATCH kexec-tools v2 07/32] kexec: fix warnings caused by selecting
- 64-bit file IO on 32-bit platforms
+Subject: [PATCH kexec-tools v2 18/32] arm: report if crash kernel is out of
+ bounds
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <E1b9xry-0003s5-Qd@e0050434b2927.dyn.armlinux.org.uk>
-Date: Mon, 06 Jun 2016 17:59:18 +0100
+Message-Id: <E1b9xsu-0003tA-3i@e0050434b2927.dyn.armlinux.org.uk>
+Date: Mon, 06 Jun 2016 18:00:16 +0100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,65 +28,50 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>
 
-Fix warnings caused by selecting 64-bit file IO on 32-bit platforms.
+Report an error if the crash kernel memory region is outside of the
+boot-view memory range - this can happen with systems such as
+Keystone 2.
 
-kexec/kexec.c:710:2: warning: format '%lx' expects argument of type 'long unsigned int', but argument 4 has type 'off_t' [-Wformat]
-kexec/zlib.c:63:4: warning: format '%ld' expects argument of type 'long int', but argument 4 has type 'off_t' [-Wformat]
-kexec/kexec-uImage.c:85:3: warning: format '%ld' expects argument of type 'long
-int', but argument 2 has type 'off_t' [-Wformat]
-
-Acked-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Russell King <rmk@arm.linux.org.uk>
 ---
- kexec/kexec-uImage.c | 3 ++-
- kexec/kexec.c        | 4 ++--
- kexec/zlib.c         | 4 ++--
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ kexec/arch/arm/crashdump-arm.c | 11 +++++++++++
+ kexec/arch/arm/crashdump-arm.h |  1 +
+ 2 files changed, 12 insertions(+)
 
-diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
-index 9df601b..5e24629 100644
---- a/kexec/kexec-uImage.c
-+++ b/kexec/kexec-uImage.c
-@@ -82,7 +82,8 @@ int uImage_probe(const unsigned char *buf, off_t len, unsigned int arch)
- 	if (be32_to_cpu(header.ih_size) > len - sizeof(header)) {
- 		printf("uImage header claims that image has %d bytes\n",
- 				be32_to_cpu(header.ih_size));
--		printf("we read only %ld bytes.\n", len - sizeof(header));
-+		printf("we read only %lld bytes.\n",
-+		       (long long)len - sizeof(header));
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index fcc4d42..739c906 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -365,6 +365,17 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
+ 	if (get_kernel_page_offset(info, &elf_info))
  		return -1;
- 	}
- #ifdef HAVE_LIBZ
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index f0bd527..500e5a9 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -707,8 +707,8 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 	/* slurp in the input kernel */
- 	kernel_buf = slurp_decompress_file(kernel, &kernel_size);
  
--	dbgprintf("kernel: %p kernel_size: 0x%lx\n",
--		  kernel_buf, kernel_size);
-+	dbgprintf("kernel: %p kernel_size: %#llx\n",
-+		  kernel_buf, (unsigned long long)kernel_size);
++	/*
++	 * Ensure that the crash kernel memory range is sane. The crash kernel
++	 * must be located within memory which is visible during booting.
++	 */
++	if (crash_reserved_mem.end > ARM_MAX_VIRTUAL) {
++		fprintf(stderr,
++			"Crash kernel memory [0x%llx-0x%llx] is inaccessible at boot - unable to load crash kernel\n",
++			crash_reserved_mem.start, crash_reserved_mem.end);
++		return -1;
++	}
++
+ 	last_ranges = usablemem_rgns.size - 1;
+ 	if (last_ranges < 0)
+ 		last_ranges = 0;
+diff --git a/kexec/arch/arm/crashdump-arm.h b/kexec/arch/arm/crashdump-arm.h
+index 2dbde04..7314960 100644
+--- a/kexec/arch/arm/crashdump-arm.h
++++ b/kexec/arch/arm/crashdump-arm.h
+@@ -9,6 +9,7 @@ extern "C" {
+ #define DEFAULT_PAGE_OFFSET		(0xc0000000)
+ #define KVBASE_MASK	(0x1ffffff)
+ #define CRASH_MAX_MEMORY_RANGES	32
++#define ARM_MAX_VIRTUAL		UINT32_MAX
  
- 	if (get_memory_ranges(&info.memory_range, &info.memory_ranges,
- 		info.kexec_flags) < 0 || info.memory_ranges == 0) {
-diff --git a/kexec/zlib.c b/kexec/zlib.c
-index 7170ac3..95b6080 100644
---- a/kexec/zlib.c
-+++ b/kexec/zlib.c
-@@ -60,8 +60,8 @@ char *zlib_decompress_file(const char *filename, off_t *r_size)
- 			if ((errno == EINTR) || (errno == EAGAIN))
- 				continue;
- 			_gzerror(fp, &errnum, &msg);
--			dbgprintf("Read on %s of %ld bytes failed: %s\n",
--					filename, (allocated - size) + 0UL, msg);
-+			dbgprintf("Read on %s of %d bytes failed: %s\n",
-+				  filename, (int)(allocated - size), msg);
- 			size = 0;
- 			goto fail;
- 		}
+ 
+ extern struct memory_ranges usablemem_rgns;
 -- 
 1.9.1
 
