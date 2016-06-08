@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 8 Jun 2016 09:27:20 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools v2 00/32] Keystone II updates for kexec tools
-Message-ID: <20160608002719.GB9566@verge.net.au>
+Date: Wed, 8 Jun 2016 09:13:44 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH kexec-tools v2 10/32] kexec: add generic helper to add to
+ memory_regions
+Message-ID: <20160608011344.GA3321@x1.redhat.com>
 References: <20160606164129.GM1041@n2100.armlinux.org.uk>
+ <E1b9xsE-0003sO-FZ@e0050434b2927.dyn.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160606164129.GM1041@n2100.armlinux.org.uk>
+In-Reply-To: <E1b9xsE-0003sO-FZ@e0050434b2927.dyn.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,24 +21,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Russell King <rmk@arm.linux.org.uk>
+Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi Russell,
+On 06/06/16 at 05:59pm, Russell King wrote:
+> diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
+> new file mode 100644
+> index 0000000..a4952ff
+> --- /dev/null
+> +++ b/kexec/mem_regions.c
+> @@ -0,0 +1,30 @@
+> +#include "kexec.h"
+> +#include "mem_regions.h"
+> +
+> +/**
+> + * mem_regions_add() - add a memory region to a set of ranges
+> + * @ranges: ranges to add the memory region to
+> + * @max: maximum number of entries in memory region
 
-On Mon, Jun 06, 2016 at 05:41:29PM +0100, Russell King - ARM Linux wrote:
-> Here's the latest set of kexec-tools patches to support Keystone II
-> platforms, which work in conjunction with the kernel patches which
-> Andrew Morton has already taken.
+This need be removed. It should be a remnant of intermediate attempt.
+
+> + * @base: base address of memory region
+> + * @length: length of memory region in bytes
+> + * @type: type of memory region
+> + *
+> + * Add the memory region to the set of ranges, and return %0 if successful,
+> + * or %-1 if we ran out of space.
+> + */
+> +int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+> +                    unsigned long long length, int type)
+> +{
+> +	struct memory_range *range;
+> +
+> +	if (ranges->size >= ranges->max_size)
+> +		return -1;
+> +
+> +	range = ranges->ranges + ranges->size++;
+> +	range->start = base;
+> +	range->end = base + length - 1;
+> +	range->type = type;
+> +
+> +	return 0;
+> +}
+> +
+> diff --git a/kexec/mem_regions.h b/kexec/mem_regions.h
+> new file mode 100644
+> index 0000000..b9cfba1
+> --- /dev/null
+> +++ b/kexec/mem_regions.h
+> @@ -0,0 +1,9 @@
+> +#ifndef MEM_REGIONS_H
+> +#define MEM_REGIONS_H
+> +
+> +struct memory_ranges;
+> +
+> +int mem_regions_add(struct memory_ranges *ranges, unsigned long long base,
+> +                    unsigned long long length, int type);
+> +
+> +#endif
+> -- 
+> 1.9.1
 > 
-> Most of the patches have been reviewed, but there are a small number
-> which do not have Reviewed-by or Acked-by tags; these are due to
-> comments, which I've replied to, which have yet to have further
-> responses.
-
-I see that Pratyush has now reviewed the patches which did not
-have any Reviewed-by or Acked-by tags. I have applied the series.
-Please let me know if I messed anything up.
 
 _______________________________________________
 kexec mailing list
