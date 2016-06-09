@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qg0-f49.google.com ([209.85.192.49])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bB3Pu-0001YU-ND
- for kexec@lists.infradead.org; Thu, 09 Jun 2016 17:06:51 +0000
-Received: by mail-qg0-f49.google.com with SMTP id l44so22385839qgd.0
- for <kexec@lists.infradead.org>; Thu, 09 Jun 2016 10:06:30 -0700 (PDT)
-Date: Thu, 9 Jun 2016 22:36:24 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] Remove "max" parameter comment
-Message-ID: <20160609170624.GA28087@dhcppc6>
-References: <20160608012257.GA28638@verge.net.au>
- <E1bB2em-0004ll-0u@e0050434b2927.dyn.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E1bB2em-0004ll-0u@e0050434b2927.dyn.armlinux.org.uk>
+Message-ID: <1465496750.3105.24.camel@infradead.org>
+Subject: Re: [PATCH v17 01/13] arm64: Add back cpu reset routines
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 09 Jun 2016 11:25:50 -0700
+In-Reply-To: <5759823C.3070208@arm.com>
+References: <cover.1464974516.git.geoff@infradead.org>
+ <78ef589316b3f538938324efcbbb0361519c3393.1464974516.git.geoff@infradead.org>
+ <5759823C.3070208@arm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,32 +20,160 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King <rmk@armlinux.org.uk>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Baoquan He <bhe@redhat.com>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 09/06/2016:05:18:08 PM, Russell King wrote:
-> Remove the "max" parameter in the documentation for mem_regions_add()
+On Thu, 2016-06-09 at 15:50 +0100, James Morse wrote:
+> Hi Geoff,
 > 
-> Signed-off-by: Russell King <rmk@armlinux.org.uk>
-Reviewed-by: Pratyush Anand <panand@redhat.com> 
-> ---
->  kexec/mem_regions.c | 1 -
->  1 file changed, 1 deletion(-)
+> On 03/06/16 19:13, Geoff Levand wrote:
+> > Commit 68234df4ea7939f98431aa81113fbdce10c4a84b (arm64: kill flush_cache_all())
+> > removed the global arm64 routines cpu_reset() and cpu_soft_restart() needed by
+> > the arm64 kexec and kdump support.  Add simplified versions of those two
+> > routines back with some changes needed for kexec in the new files cpu_reset.S,
+> > and cpu_reset.h.
+> > 
+> > When a CPU is reset it needs to be put into the exception level it had when it
+> > entered the kernel. Update cpu_soft_restart() to accept an argument which
+> > signals if the reset address needs to be entered at EL1 or EL2, and add a
+> > new hypercall HVC_SOFT_RESTART which is used for the EL2 switch.
+> > 
+> > Signed-off-by: Geoff Levand <geoff@infradead.org>
 > 
-> diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
-> index b01a5c89..e61c0747 100644
-> --- a/kexec/mem_regions.c
-> +++ b/kexec/mem_regions.c
-> @@ -31,7 +31,6 @@ void mem_regions_sort(struct memory_ranges *ranges)
->  /**
->   * mem_regions_add() - add a memory region to a set of ranges
->   * @ranges: ranges to add the memory region to
-> - * @max: maximum number of entries in memory region
->   * @base: base address of memory region
->   * @length: length of memory region in bytes
->   * @type: type of memory region
-> -- 
-> 1.9.1
+> 
+> > diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+> > new file mode 100644
+> > index 0000000..c321957
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/cpu-reset.S
+> 
+> > +ENTRY(__cpu_soft_restart)
+> > +> > 	> > /* Clear sctlr_el1 flags. */
+> > +> > 	> > mrs> > 	> > x12, sctlr_el1
+> > +> > 	> > ldr> > 	> > x13, =SCTLR_ELx_FLAGS
+> > +> > 	> > bic> > 	> > x12, x12, x13
+> > +> > 	> > msr> > 	> > sctlr_el1, x12
+> > +> > 	> > isb
+> > +
+> > +> > 	> > cbz> > 	> > x0, 1f> > 	> > 	> > 	> > 	> > // el2_switch?
+> > +> > 	> > mov> > 	> > x0, #HVC_SOFT_RESTART
+> > +> > 	> > hvc> > 	> > #0> > 	> > 	> > 	> > 	> > // no return
+> > +
+> > +1:> > 	> > mov> > 	> > x18, x1> > 	> > 	> > 	> > 	> > // entry
+> > +> > 	> > mov> > 	> > x0, x2> > 	> > 	> > 	> > 	> > // arg0
+> > +> > 	> > mov> > 	> > x1, x3> > 	> > 	> > 	> > 	> > // arg1
+> > +> > 	> > mov> > 	> > x2, x4> > 	> > 	> > 	> > 	> > // arg2
+> > +> > 	> > ret> > 	> > x18
+> 
+> Why ret not br?
+
+Sure.
+
+> 
+> 
+> > +ENDPROC(__cpu_soft_restart)
+> > +
+> > +.popsection
+> > diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+> > new file mode 100644
+> > index 0000000..5a5ea0a
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/cpu-reset.h
+> > @@ -0,0 +1,29 @@
+> > +/*
+> > + * CPU reset routines
+> > + *
+> > + * Copyright (C) 2015 Huawei Futurewei Technologies.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#ifndef _ARM64_CPU_RESET_H
+> > +#define _ARM64_CPU_RESET_H
+> > +
+> > +#include 
+> > +
+> > +void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+> > +> > 	> > unsigned long arg0, unsigned long arg1, unsigned long arg2);
+> > +
+> > +static inline void __noreturn cpu_soft_restart(unsigned long el2_switch,
+> > +> > 	> > unsigned long entry, unsigned long arg0, unsigned long arg1,
+> > +> > 	> > unsigned long arg2)
+> 
+> What is the last arg for? machine_kexec() passes zero, but
+> arm64_relocate_new_kernel() never reads this value..
+
+cpu_soft_restart is a generic routine, and I thought 3 args would be
+good.  It also allows for passing something extra to
+arm64_relocate_new_kernel when debugging. 
+
+> > +{
+> > +> > 	> > typeof(__cpu_soft_restart) *restart;
+> > +> > 	> > restart = (void *)virt_to_phys(__cpu_soft_restart);
+> > +> > 	> > restart(el2_switch, entry, arg0, arg1, arg2);
+> 
+> This confuses me each time I see it, I think it would be clearer if the
+> 'cpu_install_idmap()' call were moved into this function. Any other user of this
+> function would need to do the same.
+
+Sure.
+
+> 
+> By the end of the series, the caller of this has:
+> > is_kernel_in_hyp_mode() ? 0 : (in_crash_kexec ? 0 : is_hyp_mode_available())
+> which is difficult to read, I had to write out the values to work it out.
+> 
+> I thinks it makes more sense to move the hyp-aware logic into this
+> cpu_soft_restart(), obviously kdump still needs a 'skip el2 jump' flag.
+> 
+
+I'll try it.
+
+> +	unreachable();
+> > +}
+> > +
+> > +#endif
+> > diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+> > index 8727f44..a129e57 100644
+> > --- a/arch/arm64/kernel/hyp-stub.S
+> > +++ b/arch/arm64/kernel/hyp-stub.S
+> > @@ -71,8 +71,17 @@ el1_sync:
+> >  > > 	> > msr> > 	> > vbar_el2, x1
+> >  > > 	> > b> > 	> > 9f
+> >  
+> > +2:> > 	> > cmp> > 	> > x0, #HVC_SOFT_RESTART
+> > +> > 	> > b.ne> > 	> > 3f
+> > +> > 	> > mov> > 	> > x0, x2
+> > +> > 	> > mov> > 	> > x2, x4
+> > +> > 	> > mov> > 	> > x4, x1
+> > +> > 	> > mov> > 	> > x1, x3
+> > +> > 	> > blr> > 	> > x4
+> 
+> blr not branch? If we ever did return from here, wouldn't we run the 'entry'
+> function again at EL1?
+
+Yes, this should not return.
+
+> 
+> > +> > 	> > b> > 	> > 9f
+> > +
+> >  > > 	> > /* Someone called kvm_call_hyp() against the hyp-stub... */
+> > -2:> > 	> > mov     x0, #ARM_EXCEPTION_HYP_GONE
+> > +3:> > 	> > mov> > 	> > x0, #ARM_EXCEPTION_HYP_GONE
+> >  
+> >  9:> > 	> > eret
+> >  ENDPROC(el1_sync)
+> > 
+> 
+> For what its worth:
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks for the comments.
+
+-Geoff
 
 _______________________________________________
 kexec mailing list
