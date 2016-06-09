@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x229.google.com ([2607:f8b0:400e:c03::229])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bAWxP-0007cf-Qt
- for kexec@lists.infradead.org; Wed, 08 Jun 2016 06:27:17 +0000
-Received: by mail-pa0-x229.google.com with SMTP id ec8so47698651pac.0
- for <kexec@lists.infradead.org>; Tue, 07 Jun 2016 23:26:53 -0700 (PDT)
-Date: Wed, 8 Jun 2016 15:31:19 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v17 00/13] arm64 kexec kernel patches
-Message-ID: <20160608063117.GD20774@linaro.org>
-References: <cover.1464974516.git.geoff@infradead.org>
- <20160607013618.GY20774@linaro.org>
+ id 1bAr2y-0006gJ-Ge
+ for kexec@lists.infradead.org; Thu, 09 Jun 2016 03:54:21 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.197])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u593rugp011785
+ for <kexec@lists.infradead.org>; Thu, 9 Jun 2016 12:53:56 +0900 (JST)
+Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id u593ruR22199 for <kexec@lists.infradead.org>;
+ Thu, 9 Jun 2016 12:53:56 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id u593ruZ4023924
+ for <kexec@lists.infradead.org>; Thu, 9 Jun 2016 12:53:56 +0900 (JST)
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: makedumpfile-1.6.0: Exclude page structures of non-dumped pages
+Date: Thu, 9 Jun 2016 03:51:44 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E4A7D3@BPXM01GP.gisp.nec.co.jp>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160607013618.GY20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,249 +31,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, Geoff Levand <geoff@infradead.org>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Tue, Jun 07, 2016 at 10:36:19AM +0900, AKASHI Takahiro wrote:
-> On Fri, Jun 03, 2016 at 06:13:40PM +0000, Geoff Levand wrote:
-> > This series adds the core support for kexec re-boot and kdump on ARM64.  This
-> > version of the series combines Takahiro's kdump patches with my kexec patches.
-> > Please consider all patches for inclusion.
-> > 
-> > Takahiro has done some extensive testing for this version with various
-> > configurations af endian, image format, memory options and layouts, etc.
-> > 
-> > To load a second stage kernel and execute a kexec re-boot or to work with kdump
-> > on ARM64 systems a series of patches to kexec-tools [2], which have not yet been
-> > merged upstream, are needed.  Please update to the latest if you have been using
-> > an older version.
-> > 
-> > To examine vmcore (/proc/vmcore), you should use
-> >   - gdb v7.7 or later
-> >   - crash v7.1.1 or later
-> 
-> If KASLR (CONFIG_RANDOMIZE_BASE) is activated at runtime, those tools won't
-> work at this moment. For crash utility, we need to apply the following patch:
-> 
->  [3] https://www.redhat.com/archives/crash-utility/2016-May/msg00078.html
-> 
-> > [1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/linux-kexec.git
-> > [2]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
-> >
-> > Changes for v17 (June 3, 2016, 25m):
-> > 
-> >   o Rebase to Linux-4.7-rc1.
-> >   o Added one VMCOREINFO parameter to vmcore for crash utility.
-> >   o Added a check for CPUs stuck in kernel.
-> 
-> For completeness, apart from some minor/cosmetic changes,
->     o Re-implemented cpu_soft_restart() to be executed only in hyp-stub.
->     o Added some kernel documentation about added device tree properties.
->       (contributed by James)
+Hello,
 
-and
-      o Fixed a returned value of pstate in crash_setup_regs(). Now return
-        a faked pstate since we have no way to get the current pstate.
+makedumpfile version 1.6.0 is released.
+Your comments/patches are welcome.
 
-> Thanks,
-> -Takahiro AKASHI
-> 
-> > Changes for v16 (Apr 14, 2016, 23m):
-> > 
-> >   o Rebase to Linux-4.6-rc3.
-> >   o Don't try to explicitly enter EL2 at machine_kexec() when VHE in use
-> >   o Add unreachable() in case of ipi_cpu_crash_stop()
-> >   o Add more "#ifdef" to eliminate code unused when !CONFIG_KEXEC_CORE
-> >   o Fix a build error around ipi_cpu_crash_stop() when !CONFIG_HOTPLUG_CPU
-> >   o Revert "arm64: Add new hcall HVC_CALL_FUNC"
-> >   o Revert "Convert hcalls to use HVC immediate value"
-> >     (replaced by James' "hyp/kvm: Extend hyp-stub API to allow function calls
-> >      at EL2")
-> > 
-> >   Modified by James:
-> >   o Add missing icache maintenance + isb to __kvm_hyp_reset()
-> >   o Rework kvm cpu hotplug for VHE
-> > 
-> >   Added by James:
-> >   o arm64: head.S: el2_setup() to accept sctlr_el1 as an argument
-> >   o arm64: hyp/kvm: Extend hyp-stub API to allow function calls at EL2
-> >   o arm64: kvm: Move lr save/restore from do_el2_call into EL1
-> >   o arm64: kvm: Move the do_el2_call macro to a header file
-> > 
-> > Changes for v15 (Mar 14, 2016, 22m):
-> > 
-> >   o Rebase to Linux-4.5.
-> >   o Remove DEBUG conditional in 'Add pr_debug output'.
-> > 
-> > Changes for v14 (Mar 4, 2016, 22m):
-> > 
-> >   o Rebase to Linux-4.5-rc6.
-> >   o Rename setup_mm_for_reboot to cpu_install_idmap.
-> >   o kdump: leave non-boot cpus online at crash dump
-> >     As we don't have to make non-boot (crashed) cpus offline at crash dump,
-> >     this patch adds a variant of smp_send_stop().
-> >   o kdump: use a new device-tree property, "linux,elfcorehdr", instead of
-> >     traditional "elfcorehdr=" kernel parameter
-> >   o limit memory regions based on DT property, "usable-memory", instead of
-> >     "mem=" kernel parameter
-> >   o kdump: fix a build error when !CONFIG_KEXEC_CORE
-> >   o kvm: use generic kvm_call_hyp() interface instead of kvm_cpu_reset()
-> >   o kvm: initialize only a primary cpu at init_hyp_mode()
-> > 
-> > Changes for v13 (Jan 15, 2016, 20m):
-> > 
-> >   o Rebase to Linux-4.4.
-> >   o Remove align directive from cpu_reset.c.
-> >   o Use inline C wrapper for cpu_soft_restart.
-> >   o Revert the new image d-cache flush changes of v10.
-> >   o Add SCTLR cleanup patch.
-> >   o Change pr_devel to pr_debug.
-> >   o Call flush_icache_range() for reboot_code_buffer.
-> >   o Add .ltorg directive to arm64_relocate_new_kernel.
-> >   o Make new asm macro copy_page.
-> >   o Change cache maintenence from inner-shareable to non-shareable.
-> >   o Rename KEXEC_ARCH_ARM64 to KEXEC_ARCH_AARCH64.
-> > 
-> >   o arm64: kvm: allows kvm cpu hotplug
-> >     - remove some garbage code from kvm_host.h
-> >   o arm64: kdump: reserve memory for crash dump kernel
-> >     - change CONFIG_KEXEC to CONFIG_KEXEC_CORE
-> >     - don't panic on crash kernel alloc failure
-> >       (thanks to Mark Salter, RH)
-> >   o arm64: kdump: implement machine_crash_shutdown()
-> >     - change "boot/non-boot cpu" to "crashing/non-crashing cpu"
-> >     - introduce is_in_crash_kexec() for readability
-> >     - re-introduce machine_kexec_mask_interrupts(), as arch/arm has,
-> >       to discard unexpected interrupts
-> >     - call crash_save_cpu() before making cpus offline to avoid a possible race
-> >       (thanks to Pratyush Anand/Mark Salter, RH)
-> >   o arm64: kdump: update a kernel doc
-> >     - clarify that we support "Image" format as well as vmlinux in kdump.txt
-> >   o arm64: kdump: relax BUG_ON() if more than one cpus are still active
-> >     - change a warning message at the failure of shooting down non-crahsing cpus
-> > 
-> > Changes for v12 (Nov 24, 2015, 18m):
-> > 
-> >   o No changes, rebase to Linux-4.4-rc2.
-> > 
-> > Changes for v11 (Nov 6, 2015, 18m):
-> > 
-> >   o Rebase to Linux-4.3.
-> >   o Move the new image d-cache flush from arm64_relocate_new_kernel to machine_kexec.
-> >   o Pass values to arm64_relocate_new_kernel in registers, not in global variables.
-> >   o Fixups to setting the sctlr_el1 and sctlr_el2 flags.
-> > 
-> > Changes for v10 (Oct 18, 2015, 17m):
-> > 
-> >   o Rebase to Linux-4.3-rc6.
-> >   o Move tcr_set_idmap_t0sz to assembler.h.
-> >   o Add back simplified cpu_reset routines.
-> >   o Combine kexec + kdump patches.
-> > 
-> > Changes for v9 (Apr 7, 2015, 11m):
-> > 
-> >   o Use new upstream flag IND_FLAGS.
-> > 
-> > Changes for v8 (Mar 19, 2015, 10m):
-> > 
-> >   o Rebase to Linux-4.0-rc4.
-> >   o Re-boot using purgatory only.
-> > 
-> > Changes for v7 (Jan 16, 2015, 8m):
-> > 
-> >   o Rebase to Linux-3.19-rc4.
-> >   o Change from ESR_EL2_ to ESR_ELx_.
-> >   o Remove work-arounds for EFI systems.
-> >   
-> > Changes for v6 (Dec 2, 2014, 7m):
-> > 
-> >   o Rebase to Linux-3.18-rc2
-> > 
-> > Changes for v5 (Nov 16, 2014, 6m):
-> > 
-> > Changes for v4 (Oct 3, 2014, 5m):
-> > 
-> > Changes for v3 (Sept 23, 2014, 4m):
-> > 
-> > Changes for v2 (Sep 9, 2014, 4m):
-> > 
-> >   o Rebase to Linux-3.17-rc4.
-> >   o Move macros from proc-macros.S to assembler.h.
-> >   o Convert hcalls to use ISS field.
-> >   o Add new hcall HVC_CALL_FUNC.
-> >   o Add EL2 switch to soft_restart.
-> > 
-> > First submission v1 (May 13, 2014):
-> > 
-> >   o Based on Linux-3.15-rc4.
-> > 
-> > -Geoff
-> > 
-> > The following changes since commit 1a695a905c18548062509178b98bc91e67510864:
-> > 
-> >   Linux 4.7-rc1 (2016-05-29 09:29:24 -0700)
-> > 
-> > are available in the git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/geoff/linux-kexec.git kexec-v17
-> > 
-> > for you to fetch changes up to 89f1e3dfe16477c732dac8f407300039c0947568:
-> > 
-> >   Documentation: dt: usable-memory and elfcorehdr nodes for arm64 kexec (2016-06-03 10:12:45 -0700)
-> > 
-> > ----------------------------------------------------------------
-> > AKASHI Takahiro (7):
-> >       arm64: kdump: reserve memory for crash dump kernel
-> >       arm64: limit memory regions based on DT property, usable-memory
-> >       arm64: kdump: implement machine_crash_shutdown()
-> >       arm64: kdump: add kdump support
-> >       arm64: kdump: add VMCOREINFO for user-space coredump tools
-> >       arm64: kdump: enable kdump in the arm64 defconfig
-> >       arm64: kdump: update a kernel doc
-> > 
-> > Geoff Levand (4):
-> >       arm64: Add back cpu reset routines
-> >       arm64/kexec: Add core kexec support
-> >       arm64/kexec: Add pr_debug output
-> >       arm64/kexec: Enable kexec in the arm64 defconfig
-> > 
-> > James Morse (2):
-> >       arm64: Add cpus_are_stuck_in_kernel
-> >       Documentation: dt: usable-memory and elfcorehdr nodes for arm64 kexec
-> > 
-> >  Documentation/devicetree/bindings/chosen.txt |  28 +++
-> >  Documentation/kdump/kdump.txt                |  15 +-
-> >  arch/arm64/Kconfig                           |  21 ++
-> >  arch/arm64/configs/defconfig                 |   2 +
-> >  arch/arm64/include/asm/hardirq.h             |   2 +-
-> >  arch/arm64/include/asm/kexec.h               |  87 ++++++++
-> >  arch/arm64/include/asm/smp.h                 |  14 ++
-> >  arch/arm64/include/asm/virt.h                |   5 +
-> >  arch/arm64/kernel/Makefile                   |   3 +
-> >  arch/arm64/kernel/cpu-reset.S                |  54 +++++
-> >  arch/arm64/kernel/cpu-reset.h                |  29 +++
-> >  arch/arm64/kernel/crash_dump.c               |  71 ++++++
-> >  arch/arm64/kernel/hyp-stub.S                 |  11 +-
-> >  arch/arm64/kernel/machine_kexec.c            | 309 +++++++++++++++++++++++++++
-> >  arch/arm64/kernel/relocate_kernel.S          | 131 ++++++++++++
-> >  arch/arm64/kernel/setup.c                    |   7 +-
-> >  arch/arm64/kernel/smp.c                      |  66 ++++++
-> >  arch/arm64/mm/init.c                         | 154 +++++++++++++
-> >  include/uapi/linux/kexec.h                   |   1 +
-> >  19 files changed, 1006 insertions(+), 4 deletions(-)
-> >  create mode 100644 arch/arm64/include/asm/kexec.h
-> >  create mode 100644 arch/arm64/kernel/cpu-reset.S
-> >  create mode 100644 arch/arm64/kernel/cpu-reset.h
-> >  create mode 100644 arch/arm64/kernel/crash_dump.c
-> >  create mode 100644 arch/arm64/kernel/machine_kexec.c
-> >  create mode 100644 arch/arm64/kernel/relocate_kernel.S
-> > 
-> > -- 
-> > 2.5.0
-> > 
-> 
-> -- 
-> Thanks,
-> -Takahiro AKASHI
+Main new feature:
+o Exclude page structures of non-dumped pages
+ - Add the new option "-e" to exclude the page structures which correspond
+   to excluded pages. This option will bring a great performance, but it 
+   will harm analyticity a little bit. Please see the note below:
+
+   NOTE: If you specify this option, crash will show the message below
+         and the 'kmem' command will not work.
+
+       This dumpfile is incomplete because the page structures associated
+       with excluded pages may also be excluded.  This may cause the crash
+       session to fail entirely, may cause commands to fail (most notably
+       the "kmem" command), or may result in unpredictable runtime behavior.
+
+   Now this option supports only x86_64.
+
+o Support new kernels
+ - The supported kernel is updated to 4.5 in this version.
+
+Changelog:
+o New feature
+    - [PATCH V7] Exclude page structures of non-dumped pages. (by Cliff Wickman) 46176a9
+    - [PATCH 1/4] ARM64: Refactor code to support multiple page level. (by Pratyush Anand) 28a4729
+    - [PATCH 2/4] ARM64: Decide VA Bits on the basis of _stext symbol value. (by Pratyush Anand) a93301d
+    - [PATCH 3/4] ARM64: Fix KVBASE. (by Pratyush Anand) ec85257
+    - [PATCH 4/4] ARM64: Fix for ARM64 3 level translation tables. (by Sameer Goel) c92a63d
+
+o Bugfix
+    - [PATCH] Fix bitmap buffer release code. (by Atsushi Kumagai) 7556e69
+    - [PATCH 1/3] Keep segment memory size when re-filtering ELF dumps (by Petr Tesarik) 606fe8c
+    - [PATCH 2/3] Mark unstored ELF pages as filtered (by Petr Tesarik) 1cdabcd
+    - [PATCH 3/3] Rewrite readpage_elf (by Petr Tesarik) 7a7cebc
+    - [PATCH] Looking for page.compound_order/compound_dtor to exclude hugepages
+      (by Atsushi Kumagai) 5bc1f52
+    - [PATCH] Skip examining compound tail pages (by Atsushi Kumagai) 13b4233
+    - [PATCH] arm64: fix two level pmd calculation (by Pratyush Anand) 6759c72
+    - [PATCH] Fix module core base and size offset for kernel v4.5 (by Pratyush Anand) fa6a75a
+    - [PATCH] Fix deleted macro by mistake for ia64 (by Atsushi Kumagai) cfe652e
+    - [PATCH] Fix boundary value bug for checking memory holes (by Atsushi Kumagai) 11a6dae
+    - [PATCH] Skip null entries to walk page tables correctly (by Atsushi Kumagai) ecf7a13
+    - [PATCH] Fix read data corruption for multi thread feature. (by Atsushi Kumagai) ae848e8
+
+o Cleanup
+    - [PATCH] Remove useless definitions of return value. (by Atsushi Kumagai) 3d32567
+    - [PATCH] Clean up the in-accurate message printing about mmap (by Baoquan He) 2b8c001
+    - [PATCH v8] Improve the performance of --num-threads -d 31 (by Zhou Wenjian) dfa2447
+    - [PATCH] Fix compilation warning (by Pratyush Anand) 7dda810
+    - [PATCH] Fix compilation warnings for x86_64 (by Atsushi Kumagai) 27b5fb5
+    - [PATCH] Fix man page to add -p option (by Atsushi Kumagai) e444aad
+    - [PATCH] Fix compilation warning (by Andrey Skvortsov) 484c6b1
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c|-l|-p] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.	
+
+  # makedumpfile -c -d 31 /proc/vmcore dumpfile
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
