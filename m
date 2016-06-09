@@ -1,24 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bAr2y-0006gJ-Ge
- for kexec@lists.infradead.org; Thu, 09 Jun 2016 03:54:21 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.197])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u593rugp011785
- for <kexec@lists.infradead.org>; Thu, 9 Jun 2016 12:53:56 +0900 (JST)
-Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id u593ruR22199 for <kexec@lists.infradead.org>;
- Thu, 9 Jun 2016 12:53:56 +0900 (JST)
-Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id u593ruZ4023924
- for <kexec@lists.infradead.org>; Thu, 9 Jun 2016 12:53:56 +0900 (JST)
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: makedumpfile-1.6.0: Exclude page structures of non-dumped pages
-Date: Thu, 9 Jun 2016 03:51:44 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E4A7D3@BPXM01GP.gisp.nec.co.jp>
-Content-Language: ja-JP
+Message-ID: <5759823C.3070208@arm.com>
+Date: Thu, 09 Jun 2016 15:50:36 +0100
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v17 01/13] arm64: Add back cpu reset routines
+References: <cover.1464974516.git.geoff@infradead.org>
+ <78ef589316b3f538938324efcbbb0361519c3393.1464974516.git.geoff@infradead.org>
+In-Reply-To: <78ef589316b3f538938324efcbbb0361519c3393.1464974516.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,95 +19,149 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello,
+Hi Geoff,
 
-makedumpfile version 1.6.0 is released.
-Your comments/patches are welcome.
-
-Main new feature:
-o Exclude page structures of non-dumped pages
- - Add the new option "-e" to exclude the page structures which correspond
-   to excluded pages. This option will bring a great performance, but it 
-   will harm analyticity a little bit. Please see the note below:
-
-   NOTE: If you specify this option, crash will show the message below
-         and the 'kmem' command will not work.
-
-       This dumpfile is incomplete because the page structures associated
-       with excluded pages may also be excluded.  This may cause the crash
-       session to fail entirely, may cause commands to fail (most notably
-       the "kmem" command), or may result in unpredictable runtime behavior.
-
-   Now this option supports only x86_64.
-
-o Support new kernels
- - The supported kernel is updated to 4.5 in this version.
-
-Changelog:
-o New feature
-    - [PATCH V7] Exclude page structures of non-dumped pages. (by Cliff Wickman) 46176a9
-    - [PATCH 1/4] ARM64: Refactor code to support multiple page level. (by Pratyush Anand) 28a4729
-    - [PATCH 2/4] ARM64: Decide VA Bits on the basis of _stext symbol value. (by Pratyush Anand) a93301d
-    - [PATCH 3/4] ARM64: Fix KVBASE. (by Pratyush Anand) ec85257
-    - [PATCH 4/4] ARM64: Fix for ARM64 3 level translation tables. (by Sameer Goel) c92a63d
-
-o Bugfix
-    - [PATCH] Fix bitmap buffer release code. (by Atsushi Kumagai) 7556e69
-    - [PATCH 1/3] Keep segment memory size when re-filtering ELF dumps (by Petr Tesarik) 606fe8c
-    - [PATCH 2/3] Mark unstored ELF pages as filtered (by Petr Tesarik) 1cdabcd
-    - [PATCH 3/3] Rewrite readpage_elf (by Petr Tesarik) 7a7cebc
-    - [PATCH] Looking for page.compound_order/compound_dtor to exclude hugepages
-      (by Atsushi Kumagai) 5bc1f52
-    - [PATCH] Skip examining compound tail pages (by Atsushi Kumagai) 13b4233
-    - [PATCH] arm64: fix two level pmd calculation (by Pratyush Anand) 6759c72
-    - [PATCH] Fix module core base and size offset for kernel v4.5 (by Pratyush Anand) fa6a75a
-    - [PATCH] Fix deleted macro by mistake for ia64 (by Atsushi Kumagai) cfe652e
-    - [PATCH] Fix boundary value bug for checking memory holes (by Atsushi Kumagai) 11a6dae
-    - [PATCH] Skip null entries to walk page tables correctly (by Atsushi Kumagai) ecf7a13
-    - [PATCH] Fix read data corruption for multi thread feature. (by Atsushi Kumagai) ae848e8
-
-o Cleanup
-    - [PATCH] Remove useless definitions of return value. (by Atsushi Kumagai) 3d32567
-    - [PATCH] Clean up the in-accurate message printing about mmap (by Baoquan He) 2b8c001
-    - [PATCH v8] Improve the performance of --num-threads -d 31 (by Zhou Wenjian) dfa2447
-    - [PATCH] Fix compilation warning (by Pratyush Anand) 7dda810
-    - [PATCH] Fix compilation warnings for x86_64 (by Atsushi Kumagai) 27b5fb5
-    - [PATCH] Fix man page to add -p option (by Atsushi Kumagai) e444aad
-    - [PATCH] Fix compilation warning (by Andrey Skvortsov) 484c6b1
-
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Download:
-  You can download the latest makedumpfile from the following URL.
-  Details of the change are written on the git page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
-  2. "cd makedumpfile-x.y.z"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c|-l|-p] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.	
-
-  # makedumpfile -c -d 31 /proc/vmcore dumpfile
+On 03/06/16 19:13, Geoff Levand wrote:
+> Commit 68234df4ea7939f98431aa81113fbdce10c4a84b (arm64: kill flush_cache_all())
+> removed the global arm64 routines cpu_reset() and cpu_soft_restart() needed by
+> the arm64 kexec and kdump support.  Add simplified versions of those two
+> routines back with some changes needed for kexec in the new files cpu_reset.S,
+> and cpu_reset.h.
+> 
+> When a CPU is reset it needs to be put into the exception level it had when it
+> entered the kernel. Update cpu_soft_restart() to accept an argument which
+> signals if the reset address needs to be entered at EL1 or EL2, and add a
+> new hypercall HVC_SOFT_RESTART which is used for the EL2 switch.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
 
 
-Thanks
-Atsushi Kumagai
+> diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+> new file mode 100644
+> index 0000000..c321957
+> --- /dev/null
+> +++ b/arch/arm64/kernel/cpu-reset.S
+
+> +ENTRY(__cpu_soft_restart)
+> +	/* Clear sctlr_el1 flags. */
+> +	mrs	x12, sctlr_el1
+> +	ldr	x13, =SCTLR_ELx_FLAGS
+> +	bic	x12, x12, x13
+> +	msr	sctlr_el1, x12
+> +	isb
+> +
+> +	cbz	x0, 1f				// el2_switch?
+> +	mov	x0, #HVC_SOFT_RESTART
+> +	hvc	#0				// no return
+> +
+> +1:	mov	x18, x1				// entry
+> +	mov	x0, x2				// arg0
+> +	mov	x1, x3				// arg1
+> +	mov	x2, x4				// arg2
+> +	ret	x18
+
+Why ret not br?
+
+
+> +ENDPROC(__cpu_soft_restart)
+> +
+> +.popsection
+> diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+> new file mode 100644
+> index 0000000..5a5ea0a
+> --- /dev/null
+> +++ b/arch/arm64/kernel/cpu-reset.h
+> @@ -0,0 +1,29 @@
+> +/*
+> + * CPU reset routines
+> + *
+> + * Copyright (C) 2015 Huawei Futurewei Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _ARM64_CPU_RESET_H
+> +#define _ARM64_CPU_RESET_H
+> +
+> +#include <asm/virt.h>
+> +
+> +void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+> +	unsigned long arg0, unsigned long arg1, unsigned long arg2);
+> +
+> +static inline void __noreturn cpu_soft_restart(unsigned long el2_switch,
+> +	unsigned long entry, unsigned long arg0, unsigned long arg1,
+> +	unsigned long arg2)
+
+What is the last arg for? machine_kexec() passes zero, but
+arm64_relocate_new_kernel() never reads this value..
+
+
+> +{
+> +	typeof(__cpu_soft_restart) *restart;
+> +	restart = (void *)virt_to_phys(__cpu_soft_restart);
+> +	restart(el2_switch, entry, arg0, arg1, arg2);
+
+This confuses me each time I see it, I think it would be clearer if the
+'cpu_install_idmap()' call were moved into this function. Any other user of this
+function would need to do the same.
+
+By the end of the series, the caller of this has:
+> is_kernel_in_hyp_mode() ? 0 : (in_crash_kexec ? 0 : is_hyp_mode_available())
+which is difficult to read, I had to write out the values to work it out.
+
+I thinks it makes more sense to move the hyp-aware logic into this
+cpu_soft_restart(), obviously kdump still needs a 'skip el2 jump' flag.
+
+
+> +	unreachable();
+> +}
+> +
+> +#endif
+> diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
+> index 8727f44..a129e57 100644
+> --- a/arch/arm64/kernel/hyp-stub.S
+> +++ b/arch/arm64/kernel/hyp-stub.S
+> @@ -71,8 +71,17 @@ el1_sync:
+>  	msr	vbar_el2, x1
+>  	b	9f
+>  
+> +2:	cmp	x0, #HVC_SOFT_RESTART
+> +	b.ne	3f
+> +	mov	x0, x2
+> +	mov	x2, x4
+> +	mov	x4, x1
+> +	mov	x1, x3
+> +	blr	x4
+
+blr not branch? If we ever did return from here, wouldn't we run the 'entry'
+function again at EL1?
+
+
+> +	b	9f
+> +
+>  	/* Someone called kvm_call_hyp() against the hyp-stub... */
+> -2:	mov     x0, #ARM_EXCEPTION_HYP_GONE
+> +3:	mov	x0, #ARM_EXCEPTION_HYP_GONE
+>  
+>  9:	eret
+>  ENDPROC(el1_sync)
+> 
+
+For what its worth:
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+Thanks,
+
+James
+
+
 
 _______________________________________________
 kexec mailing list
