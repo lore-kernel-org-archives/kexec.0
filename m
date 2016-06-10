@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22a.google.com ([2607:f8b0:400e:c00::22a])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bB9Ab-0003a6-R1
- for kexec@lists.infradead.org; Thu, 09 Jun 2016 23:15:27 +0000
-Received: by mail-pf0-x22a.google.com with SMTP id t190so17230135pfb.3
- for <kexec@lists.infradead.org>; Thu, 09 Jun 2016 16:15:05 -0700 (PDT)
-Date: Fri, 10 Jun 2016 08:19:34 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v17 10/13] arm64: kdump: add VMCOREINFO for user-space
- coredump tools
-Message-ID: <20160609231933.GE20774@linaro.org>
-References: <cover.1464974516.git.geoff@infradead.org>
- <9e75a7b75b38b37ded3e361498eaf1486107ce5d.1464974516.git.geoff@infradead.org>
- <575986B5.9000701@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <575986B5.9000701@arm.com>
+Message-ID: <1465576876.3105.54.camel@infradead.org>
+Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
+ start address
+From: Geoff Levand <geoff@infradead.org>
+Date: Fri, 10 Jun 2016 09:41:16 -0700
+In-Reply-To: <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
+References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
+ <1461715120.27026.4.camel@infradead.org>
+ <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,30 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "Goel, Sameer" <sgoel@codeaurora.org>, kexec@lists.infradead.org
+Cc: timur@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org
 
-On Thu, Jun 09, 2016 at 04:09:41PM +0100, Suzuki K Poulose wrote:
-> On 03/06/16 19:13, Geoff Levand wrote:
-> >From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >
-> >For the current crash utility, we need to know, at least, a value of
-> >"kimage_voffset" to handle the contents of core dump file (/proc/vmcore)
-> >correctly due to the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
-> >
-> >More VMCOREINFO may be added later for makedumpfile command.
-> >---
-> 
-> Missing Signed-off-by: ?
+Hi Sameer,
 
-Thank you for pointing this out.
-I didn't run checkpatch.pl for this version.
+> > > On Tue, 2016-04-26 at 16:14 -0600, Sameer Goel wrote:
+> > > > Starting 4.6-rc4 the kernel memblock start is rounded down to a desirable
+> > > > alignment. So, the kernel can see reserved memory regions before the kernel
+> > > > start address in the iomem query.
+> > > > Need to make sure that the right kernel start address is picked from the iomem
+> > > > query.
+> > > > ---
 
--Takahiro AKASHI
+It is still in question whether or not your's is the correct
+fix.  Could you provide a test case that hits this problem
+so we can work on the solution?
 
-> Suzuki
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
-> 
+Thanks.
+
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
