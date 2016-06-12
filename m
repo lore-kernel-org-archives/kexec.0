@@ -2,38 +2,36 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bBvns-0006lN-4t
- for kexec@lists.infradead.org; Sun, 12 Jun 2016 03:11:12 +0000
+ id 1bBvns-0006lG-4x
+ for kexec@lists.infradead.org; Sun, 12 Jun 2016 03:11:13 +0000
 Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
  by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5C38t9h062659
- for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:55 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0b-001b2d01.pphosted.com with ESMTP id 23get04k2u-1
+ u5C38qtX062605
+ for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:49 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 23get04k13-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:54 -0400
+ for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:49 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Sun, 12 Jun 2016 00:10:53 -0300
-Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id F3A78352005C
- for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:35 -0400 (EDT)
+ Sun, 12 Jun 2016 00:10:47 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id B42DE3520068
+ for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:28 -0400 (EDT)
 Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
- by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5C3ApiU4636876
- for <kexec@lists.infradead.org>; Sun, 12 Jun 2016 00:10:51 -0300
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5C3Ai1b15204830
+ for <kexec@lists.infradead.org>; Sun, 12 Jun 2016 00:10:44 -0300
 Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
  by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5C3ApsV029646
- for <kexec@lists.infradead.org>; Sun, 12 Jun 2016 00:10:51 -0300
+ u5C3AiSN029563
+ for <kexec@lists.infradead.org>; Sun, 12 Jun 2016 00:10:44 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH 1/8] kexec_file: Remove unused members from struct kexec_buf.
-Date: Sun, 12 Jun 2016 00:10:15 -0300
-In-Reply-To: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
-References: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1465701022-11601-2-git-send-email-bauerman@linux.vnet.ibm.com>
+Subject: [PATCH 0/8] kexec_file_load implementation for PowerPC
+Date: Sun, 12 Jun 2016 00:10:14 -0300
+Message-Id: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,57 +46,105 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
-Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-kexec_add_buffer uses kexec_buf.buffer and kexec_buf.bufsz to pass along
-its own arguments buffer and bufsz, but since they aren't used anywhere
-else, it's pointless.
+Hello,
 
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- kernel/kexec_file.c     | 6 ++----
- kernel/kexec_internal.h | 2 --
- 2 files changed, 2 insertions(+), 6 deletions(-)
+This patch series implements the kexec_file_load system call on PowerPC.
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 01ab82a40d22..b6eec7527e9f 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -464,8 +464,6 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	memset(&buf, 0, sizeof(struct kexec_buf));
- 	kbuf = &buf;
- 	kbuf->image = image;
--	kbuf->buffer = buffer;
--	kbuf->bufsz = bufsz;
- 
- 	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
- 	kbuf->buf_align = max(buf_align, PAGE_SIZE);
-@@ -489,8 +487,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 
- 	/* Found a suitable memory range */
- 	ksegment = &image->segment[image->nr_segments];
--	ksegment->kbuf = kbuf->buffer;
--	ksegment->bufsz = kbuf->bufsz;
-+	ksegment->kbuf = buffer;
-+	ksegment->bufsz = bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
- 	image->nr_segments++;
-diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-index 0a52315d9c62..eefd5bf960c2 100644
---- a/kernel/kexec_internal.h
-+++ b/kernel/kexec_internal.h
-@@ -26,8 +26,6 @@ struct kexec_sha_region {
-  */
- struct kexec_buf {
- 	struct kimage *image;
--	char *buffer;
--	unsigned long bufsz;
- 	unsigned long mem;
- 	unsigned long memsz;
- 	unsigned long buf_align;
+It starts by removing an x86 assumption from kexec_file: kexec_add_buffer uses
+iomem to find reserved memory ranges, but PowerPC uses the memblock subsystem.
+Hooks are added so that each arch can specify how memory ranges can be found.
+
+Also, the memory-walking logic in kexec_add_buffer is useful in this
+implementation to find a free area for the purgatory's stack, so that same
+patch moves that logic to kexec_locate_mem_hole.
+
+The kexec_file_load system call needs to apply relocations to the purgatory
+but adding code for that would duplicate functionality with the module loading
+mechanism, which also needs to apply relocations to the kernel modules.
+Therefore, this patch series factors out the module relocation code so that it
+can be shared.
+
+One thing that is still missing is crashkernel support, which I intend to
+submit shortly.
+
+This code is based on kexec-tools, but with many modifications to adapt it to
+the kernel environment and facilities. Except the purgatory, which only has
+minimal changes.
+
+Thiago Jung Bauermann (8):
+  kexec_file: Remove unused members from struct kexec_buf.
+  kexec_file: Generalize kexec_add_buffer.
+  powerpc: Factor out relocation code from module_64.c to elf_util_64.c.
+  powerpc: Generalize elf64_apply_relocate_add.
+  powerpc: Add functions to read ELF files of any endianness.
+  powerpc: Implement kexec_file_load.
+  powerpc: Add support for loading ELF kernels with kexec_file_load.
+  powerpc: Add purgatory for kexec_file_load implementation.
+
+ arch/powerpc/Kconfig                      |  13 +
+ arch/powerpc/Makefile                     |   4 +
+ arch/powerpc/include/asm/elf_util.h       |  92 +++++
+ arch/powerpc/include/asm/kexec_elf_64.h   |  10 +
+ arch/powerpc/include/asm/module.h         |  14 +-
+ arch/powerpc/include/asm/systbl.h         |   1 +
+ arch/powerpc/include/asm/unistd.h         |   2 +-
+ arch/powerpc/include/uapi/asm/unistd.h    |   1 +
+ arch/powerpc/kernel/Makefile              |   7 +
+ arch/powerpc/kernel/elf_util.c            | 476 +++++++++++++++++++++++++
+ arch/powerpc/kernel/elf_util_64.c         | 373 ++++++++++++++++++++
+ arch/powerpc/kernel/kexec_elf_64.c        | 564 ++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/machine_kexec_64.c    | 142 ++++++++
+ arch/powerpc/kernel/module_64.c           | 328 +++--------------
+ arch/powerpc/purgatory/.gitignore         |   2 +
+ arch/powerpc/purgatory/Makefile           |  36 ++
+ arch/powerpc/purgatory/console-ppc64.c    |  43 +++
+ arch/powerpc/purgatory/crashdump-ppc64.h  |  42 +++
+ arch/powerpc/purgatory/crashdump_backup.c |  40 +++
+ arch/powerpc/purgatory/crtsavres.S        |   5 +
+ arch/powerpc/purgatory/hvCall.S           |  27 ++
+ arch/powerpc/purgatory/hvCall.h           |   8 +
+ arch/powerpc/purgatory/kexec-sha256.h     |  11 +
+ arch/powerpc/purgatory/ppc64_asm.h        |  18 +
+ arch/powerpc/purgatory/printf.c           | 171 +++++++++
+ arch/powerpc/purgatory/purgatory-ppc64.c  |  46 +++
+ arch/powerpc/purgatory/purgatory-ppc64.h  |   6 +
+ arch/powerpc/purgatory/purgatory.c        |  66 ++++
+ arch/powerpc/purgatory/purgatory.h        |  11 +
+ arch/powerpc/purgatory/sha256.c           |   6 +
+ arch/powerpc/purgatory/sha256.h           |   1 +
+ arch/powerpc/purgatory/string.S           |   1 +
+ arch/powerpc/purgatory/v2wrap.S           | 139 ++++++++
+ include/linux/kexec.h                     |  10 +
+ kernel/kexec_file.c                       | 102 ++++--
+ kernel/kexec_internal.h                   |   2 -
+ 36 files changed, 2504 insertions(+), 316 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/elf_util.h
+ create mode 100644 arch/powerpc/include/asm/kexec_elf_64.h
+ create mode 100644 arch/powerpc/kernel/elf_util.c
+ create mode 100644 arch/powerpc/kernel/elf_util_64.c
+ create mode 100644 arch/powerpc/kernel/kexec_elf_64.c
+ create mode 100644 arch/powerpc/purgatory/.gitignore
+ create mode 100644 arch/powerpc/purgatory/Makefile
+ create mode 100644 arch/powerpc/purgatory/console-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/crashdump_backup.c
+ create mode 100644 arch/powerpc/purgatory/crtsavres.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.h
+ create mode 100644 arch/powerpc/purgatory/kexec-sha256.h
+ create mode 100644 arch/powerpc/purgatory/ppc64_asm.h
+ create mode 100644 arch/powerpc/purgatory/printf.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/purgatory.c
+ create mode 100644 arch/powerpc/purgatory/purgatory.h
+ create mode 100644 arch/powerpc/purgatory/sha256.c
+ create mode 100644 arch/powerpc/purgatory/sha256.h
+ create mode 100644 arch/powerpc/purgatory/string.S
+ create mode 100644 arch/powerpc/purgatory/v2wrap.S
+
 -- 
 1.9.1
 
