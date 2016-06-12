@@ -1,14 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1465576876.3105.54.camel@infradead.org>
-Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
- start address
-From: Geoff Levand <geoff@infradead.org>
-Date: Fri, 10 Jun 2016 09:41:16 -0700
-In-Reply-To: <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
-References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
- <1461715120.27026.4.camel@infradead.org>
- <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
-Mime-Version: 1.0
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1bBvns-0006lN-4t
+ for kexec@lists.infradead.org; Sun, 12 Jun 2016 03:11:12 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5C38t9h062659
+ for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:55 -0400
+Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 23get04k2u-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:54 -0400
+Received: from localhost
+ by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Sun, 12 Jun 2016 00:10:53 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id F3A78352005C
+ for <kexec@lists.infradead.org>; Sat, 11 Jun 2016 23:10:35 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5C3ApiU4636876
+ for <kexec@lists.infradead.org>; Sun, 12 Jun 2016 00:10:51 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5C3ApsV029646
+ for <kexec@lists.infradead.org>; Sun, 12 Jun 2016 00:10:51 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: [PATCH 1/8] kexec_file: Remove unused members from struct kexec_buf.
+Date: Sun, 12 Jun 2016 00:10:15 -0300
+In-Reply-To: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1465701022-11601-2-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,30 +42,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Goel, Sameer" <sgoel@codeaurora.org>, kexec@lists.infradead.org
-Cc: timur@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-Hi Sameer,
+kexec_add_buffer uses kexec_buf.buffer and kexec_buf.bufsz to pass along
+its own arguments buffer and bufsz, but since they aren't used anywhere
+else, it's pointless.
 
-> > > On Tue, 2016-04-26 at 16:14 -0600, Sameer Goel wrote:
-> > > > Starting 4.6-rc4 the kernel memblock start is rounded down to a desirable
-> > > > alignment. So, the kernel can see reserved memory regions before the kernel
-> > > > start address in the iomem query.
-> > > > Need to make sure that the right kernel start address is picked from the iomem
-> > > > query.
-> > > > ---
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/kexec_file.c     | 6 ++----
+ kernel/kexec_internal.h | 2 --
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-It is still in question whether or not your's is the correct
-fix.  Could you provide a test case that hits this problem
-so we can work on the solution?
-
-Thanks.
-
--Geoff
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 01ab82a40d22..b6eec7527e9f 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -464,8 +464,6 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 	memset(&buf, 0, sizeof(struct kexec_buf));
+ 	kbuf = &buf;
+ 	kbuf->image = image;
+-	kbuf->buffer = buffer;
+-	kbuf->bufsz = bufsz;
+ 
+ 	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
+ 	kbuf->buf_align = max(buf_align, PAGE_SIZE);
+@@ -489,8 +487,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 
+ 	/* Found a suitable memory range */
+ 	ksegment = &image->segment[image->nr_segments];
+-	ksegment->kbuf = kbuf->buffer;
+-	ksegment->bufsz = kbuf->bufsz;
++	ksegment->kbuf = buffer;
++	ksegment->bufsz = bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
+ 	image->nr_segments++;
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index 0a52315d9c62..eefd5bf960c2 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -26,8 +26,6 @@ struct kexec_sha_region {
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+-	char *buffer;
+-	unsigned long bufsz;
+ 	unsigned long mem;
+ 	unsigned long memsz;
+ 	unsigned long buf_align;
+-- 
+1.9.1
 
 
 _______________________________________________
