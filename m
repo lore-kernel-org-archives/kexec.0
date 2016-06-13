@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bCM3D-0007sJ-7B
- for kexec@lists.infradead.org; Mon, 13 Jun 2016 07:12:48 +0000
-Date: Mon, 13 Jun 2016 15:12:21 +0800
+ by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bCMK0-0005RZ-31
+ for kexec@lists.infradead.org; Mon, 13 Jun 2016 07:30:09 +0000
+Date: Mon, 13 Jun 2016 15:29:39 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH 2/8] kexec_file: Generalize kexec_add_buffer.
-Message-ID: <20160613071221.GC4974@dhcp-128-65.nay.redhat.com>
+Message-ID: <20160613072939.GD4974@dhcp-128-65.nay.redhat.com>
 References: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
  <1465701022-11601-3-git-send-email-bauerman@linux.vnet.ibm.com>
 MIME-Version: 1.0
@@ -31,13 +31,14 @@ On 06/12/16 at 12:10am, Thiago Jung Bauermann wrote:
 > Allow architectures to specify different memory walking functions for
 > kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
 > but PowerPC uses the memblock subsystem.
+
+Can the crashk_res be inserted to iomem_resource so that only one
+weak function for system ram is needed?
+
 > 
 > Also, factor kexec_locate_mem_hole out of kexec_add_buffer. It will be
 > used by the PowerPC kexec_file_load implementation to find free memory
 > for the purgatory stack.
-
-Split factoring locate hole function to another patch will be clearer.
-
 > 
 > Cc: Eric Biederman <ebiederm@xmission.com>
 > Cc: kexec@lists.infradead.org
