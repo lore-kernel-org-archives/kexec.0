@@ -1,19 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bCiTb-00037Q-NT
- for kexec@lists.infradead.org; Tue, 14 Jun 2016 07:09:33 +0000
-Received: by mail-pa0-x22f.google.com with SMTP id hl6so53709887pac.2
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 00:09:11 -0700 (PDT)
-Date: Tue, 14 Jun 2016 16:13:49 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v18 08/13] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20160614071348.GN20774@linaro.org>
-References: <cover.1465502767.git.geoff@infradead.org>
- <9bc011f03f5dd30fc66178461d303d3ec1b7ac35.1465502767.git.geoff@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9bc011f03f5dd30fc66178461d303d3ec1b7ac35.1465502767.git.geoff@infradead.org>
+ id 1bCpoj-0007Gf-C0
+ for kexec@lists.infradead.org; Tue, 14 Jun 2016 14:59:50 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5EEsVuO127916
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:27 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23jj0ddnvd-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:27 -0400
+Received: from localhost
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Tue, 14 Jun 2016 11:59:24 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 09B141DC0054
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:15 -0400 (EDT)
+Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5EExL5F31457648
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:59:22 -0300
+Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
+ by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5EExLBs017380
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:59:21 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/9] kexec_file_load implementation for PowerPC
+Date: Tue, 14 Jun 2016 11:59:00 -0300
+Message-Id: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,329 +39,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Geoff,
+Hello,
 
-On Thu, Jun 09, 2016 at 08:08:44PM +0000, Geoff Levand wrote:
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> 
-> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
-> and save registers' status in per-cpu ELF notes before starting crash
-> dump kernel. See kernel_kexec().
-> Even if not all secondary cpus have shut down, we do kdump anyway.
-> 
-> As we don't have to make non-boot(crashed) cpus offline (to preserve
-> correct status of cpus at crash dump) before shutting down, this patch
-> also adds a variant of smp_send_stop().
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm64/include/asm/hardirq.h  |  2 +-
->  arch/arm64/include/asm/kexec.h    | 41 +++++++++++++++++++++++++-
->  arch/arm64/include/asm/smp.h      |  4 +++
->  arch/arm64/kernel/machine_kexec.c | 56 +++++++++++++++++++++++++++++++++--
->  arch/arm64/kernel/smp.c           | 61 +++++++++++++++++++++++++++++++++++++++
->  5 files changed, 159 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
-> index 8740297..1473fc2 100644
-> --- a/arch/arm64/include/asm/hardirq.h
-> +++ b/arch/arm64/include/asm/hardirq.h
-> @@ -20,7 +20,7 @@
->  #include <linux/threads.h>
->  #include <asm/irq.h>
->  
-> -#define NR_IPI	6
-> +#define NR_IPI	7
->  
->  typedef struct {
->  	unsigned int __softirq_pending;
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 04744dc..600b960 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -40,7 +40,46 @@
->  static inline void crash_setup_regs(struct pt_regs *newregs,
->  				    struct pt_regs *oldregs)
->  {
-> -	/* Empty routine needed to avoid build errors. */
-> +	if (oldregs) {
-> +		memcpy(newregs, oldregs, sizeof(*newregs));
-> +	} else {
-> +		u64 tmp1, tmp2;
-> +
-> +		__asm__ __volatile__ (
-> +			"stp	 x0,   x1, [%2, #16 *  0]\n"
-> +			"stp	 x2,   x3, [%2, #16 *  1]\n"
-> +			"stp	 x4,   x5, [%2, #16 *  2]\n"
-> +			"stp	 x6,   x7, [%2, #16 *  3]\n"
-> +			"stp	 x8,   x9, [%2, #16 *  4]\n"
-> +			"stp	x10,  x11, [%2, #16 *  5]\n"
-> +			"stp	x12,  x13, [%2, #16 *  6]\n"
-> +			"stp	x14,  x15, [%2, #16 *  7]\n"
-> +			"stp	x16,  x17, [%2, #16 *  8]\n"
-> +			"stp	x18,  x19, [%2, #16 *  9]\n"
-> +			"stp	x20,  x21, [%2, #16 * 10]\n"
-> +			"stp	x22,  x23, [%2, #16 * 11]\n"
-> +			"stp	x24,  x25, [%2, #16 * 12]\n"
-> +			"stp	x26,  x27, [%2, #16 * 13]\n"
-> +			"stp	x28,  x29, [%2, #16 * 14]\n"
-> +			"mov	 %0,  sp\n"
-> +			"stp	x30,  %0,  [%2, #16 * 15]\n"
-> +
-> +			"/* faked current PSTATE */\n"
-> +			"mrs	 %0, CurrentEL\n"
-> +			"mrs	 %1, DAIF\n"
-> +			"orr	 %0, %0, %1\n"
-> +			"mrs	 %1, NZCV\n"
-> +			"orr	 %0, %0, %1\n"
-> +
-> +			/* pc */
-> +			"adr	 %1, 1f\n"
-> +		"1:"
-> +			"stp	 %1, %0,   [%2, #16 * 16]\n"
-> +			: "=r" (tmp1), "=r" (tmp2), "+r" (newregs)
-> +			:
-> +			: "memory"
-> +		);
-> +	}
->  }
->  
->  #endif /* __ASSEMBLY__ */
-> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> index 38712f4..979154a 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -134,6 +134,10 @@ static inline void cpu_panic_kernel(void)
->   */
->  bool cpus_are_stuck_in_kernel(void);
->  
-> +#ifdef CONFIG_KEXEC_CORE
-> +extern void smp_send_crash_stop(void);
-> +#endif
-> +
->  #endif /* ifndef __ASSEMBLY__ */
->  
->  #endif /* ifndef __ASM_SMP_H */
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index 0a8b04d..93588b2 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -10,6 +10,9 @@
->   */
->  
->  #include <linux/highmem.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
->  #include <linux/kexec.h>
->  #include <linux/libfdt_env.h>
->  #include <linux/of_fdt.h>
-> @@ -28,6 +31,7 @@
->  extern const unsigned char arm64_relocate_new_kernel[];
->  extern const unsigned long arm64_relocate_new_kernel_size;
->  
-> +bool in_crash_kexec;
->  static unsigned long kimage_start;
->  
->  /**
-> @@ -179,7 +183,8 @@ void machine_kexec(struct kimage *kimage)
->  	/*
->  	 * New cpus may have become stuck_in_kernel after we loaded the image.
->  	 */
-> -	BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1));
-> +	BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1) &&
-> +			!WARN_ON(in_crash_kexec));
->  
->  	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
->  	reboot_code_buffer = kmap(kimage->control_code_page);
-> @@ -236,13 +241,58 @@ void machine_kexec(struct kimage *kimage)
->  	 * relocation is complete.
->  	 */
->  
-> -	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
-> +	cpu_soft_restart(in_crash_kexec, reboot_code_buffer_phys, kimage->head,
+This patch series implements the kexec_file_load system call on PowerPC.
 
-                        => !in_crash_kexec
+It starts by removing an x86 assumption from kexec_file: kexec_add_buffer uses
+iomem to find reserved memory ranges, but PowerPC uses the memblock subsystem.
+A hook is added so that each arch can specify how memory ranges can be found.
 
-Please let me recognize any changes you made clearly if you modified my part
-in the patchset before posting it.
+Also, the memory-walking logic in kexec_add_buffer is useful in this
+implementation to find a free area for the purgatory's stack, so the next
+patch moves that logic to kexec_locate_mem_hole.
 
-Thanks,
--Takahiro AKASHI
+The kexec_file_load system call needs to apply relocations to the purgatory
+but adding code for that would duplicate functionality with the module loading
+mechanism, which also needs to apply relocations to the kernel modules.
+Therefore, this patch series factors out the module relocation code so that it
+can be shared.
 
->  		kimage_start, 0);
->  
->  	BUG(); /* Should never get here. */
->  }
->  
-> +static void machine_kexec_mask_interrupts(void)
-> +{
-> +	unsigned int i;
-> +	struct irq_desc *desc;
-> +
-> +	for_each_irq_desc(i, desc) {
-> +		struct irq_chip *chip;
-> +		int ret;
-> +
-> +		chip = irq_desc_get_chip(desc);
-> +		if (!chip)
-> +			continue;
-> +
-> +		/*
-> +		 * First try to remove the active state. If this
-> +		 * fails, try to EOI the interrupt.
-> +		 */
-> +		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
-> +
-> +		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
-> +		    chip->irq_eoi)
-> +			chip->irq_eoi(&desc->irq_data);
-> +
-> +		if (chip->irq_mask)
-> +			chip->irq_mask(&desc->irq_data);
-> +
-> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
-> +			chip->irq_disable(&desc->irq_data);
-> +	}
-> +}
-> +
-> +/**
-> + * machine_crash_shutdown - shutdown non-crashing cpus and save registers
-> + */
->  void machine_crash_shutdown(struct pt_regs *regs)
->  {
-> -	/* Empty routine needed to avoid build errors. */
-> +	local_irq_disable();
-> +
-> +	in_crash_kexec = true;
-> +
-> +	/* shutdown non-crashing cpus */
-> +	smp_send_crash_stop();
-> +
-> +	/* for crashing cpu */
-> +	crash_save_cpu(regs, smp_processor_id());
-> +	machine_kexec_mask_interrupts();
-> +
-> +	pr_info("Starting crashdump kernel...\n");
->  }
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index d0bcd55..f6461ef 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -37,6 +37,7 @@
->  #include <linux/completion.h>
->  #include <linux/of.h>
->  #include <linux/irq_work.h>
-> +#include <linux/kexec.h>
->  
->  #include <asm/alternative.h>
->  #include <asm/atomic.h>
-> @@ -71,6 +72,7 @@ enum ipi_msg_type {
->  	IPI_RESCHEDULE,
->  	IPI_CALL_FUNC,
->  	IPI_CPU_STOP,
-> +	IPI_CPU_CRASH_STOP,
->  	IPI_TIMER,
->  	IPI_IRQ_WORK,
->  	IPI_WAKEUP
-> @@ -726,6 +728,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
->  	S(IPI_RESCHEDULE, "Rescheduling interrupts"),
->  	S(IPI_CALL_FUNC, "Function call interrupts"),
->  	S(IPI_CPU_STOP, "CPU stop interrupts"),
-> +	S(IPI_CPU_CRASH_STOP, "CPU stop (for crash dump) interrupts"),
->  	S(IPI_TIMER, "Timer broadcast interrupts"),
->  	S(IPI_IRQ_WORK, "IRQ work interrupts"),
->  	S(IPI_WAKEUP, "CPU wake-up interrupts"),
-> @@ -800,6 +803,28 @@ static void ipi_cpu_stop(unsigned int cpu)
->  		cpu_relax();
->  }
->  
-> +#ifdef CONFIG_KEXEC_CORE
-> +static atomic_t waiting_for_crash_ipi;
-> +
-> +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
-> +{
-> +	crash_save_cpu(regs, cpu);
-> +
-> +	atomic_dec(&waiting_for_crash_ipi);
-> +
-> +	local_irq_disable();
-> +
-> +#ifdef CONFIG_HOTPLUG_CPU
-> +	if (cpu_ops[cpu]->cpu_die)
-> +		cpu_ops[cpu]->cpu_die(cpu);
-> +#endif
-> +
-> +	/* just in case */
-> +	while (1)
-> +		wfi();
-> +}
-> +#endif
-> +
->  /*
->   * Main handler for inter-processor interrupts
->   */
-> @@ -830,6 +855,14 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
->  		irq_exit();
->  		break;
->  
-> +#ifdef CONFIG_KEXEC_CORE
-> +	case IPI_CPU_CRASH_STOP:
-> +		irq_enter();
-> +		ipi_cpu_crash_stop(cpu, regs);
-> +
-> +		unreachable();
-> +#endif
-> +
->  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
->  	case IPI_TIMER:
->  		irq_enter();
-> @@ -902,6 +935,34 @@ void smp_send_stop(void)
->  			   cpumask_pr_args(cpu_online_mask));
->  }
->  
-> +#ifdef CONFIG_KEXEC_CORE
-> +void smp_send_crash_stop(void)
-> +{
-> +	cpumask_t mask;
-> +	unsigned long timeout;
-> +
-> +	if (num_online_cpus() == 1)
-> +		return;
-> +
-> +	cpumask_copy(&mask, cpu_online_mask);
-> +	cpumask_clear_cpu(smp_processor_id(), &mask);
-> +
-> +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
-> +
-> +	pr_crit("SMP: stopping secondary CPUs\n");
-> +	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
-> +
-> +	/* Wait up to one second for other CPUs to stop */
-> +	timeout = USEC_PER_SEC;
-> +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
-> +		udelay(1);
-> +
-> +	if (atomic_read(&waiting_for_crash_ipi) > 0)
-> +		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
-> +			   cpumask_pr_args(cpu_online_mask));
-> +}
-> +#endif
-> +
->  /*
->   * not supported here
->   */
-> -- 
-> 2.5.0
-> 
-> 
+One thing that is still missing is crashkernel support, which I intend to
+submit shortly. For now, arch_kexec_kernel_image_probe rejects crash kernels.
+
+This code is based on kexec-tools, but with many modifications to adapt it to
+the kernel environment and facilities. Except the purgatory, which only has
+minimal changes.
+
+Changes for v2:
+
+- All patches: forgot to add Signed-off-by lines in v1, so added them now.
+- Patch "kexec_file: Generalize kexec_add_buffer.": broke in two, one
+  adding arch_kexec_walk_mem and the other adding kexec_locate_mem_hole.
+- Patch "powerpc: Implement kexec_file_load.":
+    - Moved relocation changes and the arch_kexec_walk_mem implementation to
+      the next patch in the series.
+    - Removed pr_fmt from machine_kexec_64.c, since the patch doesn't add
+      any call to pr_debug in that file.
+    - Changed arch_kexec_kernel_image_probe to reject crash kernels.
+
+Thiago Jung Bauermann (9):
+  kexec_file: Remove unused members from struct kexec_buf.
+  kexec_file: Generalize kexec_add_buffer.
+  kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.
+  powerpc: Factor out relocation code from module_64.c to elf_util_64.c.
+  powerpc: Generalize elf64_apply_relocate_add.
+  powerpc: Add functions to read ELF files of any endianness.
+  powerpc: Implement kexec_file_load.
+  powerpc: Add support for loading ELF kernels with kexec_file_load.
+  powerpc: Add purgatory for kexec_file_load implementation.
+
+ arch/powerpc/Kconfig                      |  13 +
+ arch/powerpc/Makefile                     |   4 +
+ arch/powerpc/include/asm/elf_util.h       |  92 +++++
+ arch/powerpc/include/asm/kexec_elf_64.h   |  10 +
+ arch/powerpc/include/asm/module.h         |  14 +-
+ arch/powerpc/include/asm/systbl.h         |   1 +
+ arch/powerpc/include/asm/unistd.h         |   2 +-
+ arch/powerpc/include/uapi/asm/unistd.h    |   1 +
+ arch/powerpc/kernel/Makefile              |   7 +
+ arch/powerpc/kernel/elf_util.c            | 476 +++++++++++++++++++++++++
+ arch/powerpc/kernel/elf_util_64.c         | 372 ++++++++++++++++++++
+ arch/powerpc/kernel/kexec_elf_64.c        | 564 ++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/machine_kexec_64.c    | 151 ++++++++
+ arch/powerpc/kernel/module_64.c           | 328 +++--------------
+ arch/powerpc/purgatory/.gitignore         |   2 +
+ arch/powerpc/purgatory/Makefile           |  36 ++
+ arch/powerpc/purgatory/console-ppc64.c    |  43 +++
+ arch/powerpc/purgatory/crashdump-ppc64.h  |  42 +++
+ arch/powerpc/purgatory/crashdump_backup.c |  40 +++
+ arch/powerpc/purgatory/crtsavres.S        |   5 +
+ arch/powerpc/purgatory/hvCall.S           |  27 ++
+ arch/powerpc/purgatory/hvCall.h           |   8 +
+ arch/powerpc/purgatory/kexec-sha256.h     |  11 +
+ arch/powerpc/purgatory/ppc64_asm.h        |  18 +
+ arch/powerpc/purgatory/printf.c           | 171 +++++++++
+ arch/powerpc/purgatory/purgatory-ppc64.c  |  46 +++
+ arch/powerpc/purgatory/purgatory-ppc64.h  |   6 +
+ arch/powerpc/purgatory/purgatory.c        |  66 ++++
+ arch/powerpc/purgatory/purgatory.h        |  11 +
+ arch/powerpc/purgatory/sha256.c           |   6 +
+ arch/powerpc/purgatory/sha256.h           |   1 +
+ arch/powerpc/purgatory/string.S           |   1 +
+ arch/powerpc/purgatory/v2wrap.S           | 139 ++++++++
+ include/linux/kexec.h                     |   7 +
+ kernel/kexec_file.c                       | 116 ++++--
+ kernel/kexec_internal.h                   |   2 -
+ 36 files changed, 2523 insertions(+), 316 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/elf_util.h
+ create mode 100644 arch/powerpc/include/asm/kexec_elf_64.h
+ create mode 100644 arch/powerpc/kernel/elf_util.c
+ create mode 100644 arch/powerpc/kernel/elf_util_64.c
+ create mode 100644 arch/powerpc/kernel/kexec_elf_64.c
+ create mode 100644 arch/powerpc/purgatory/.gitignore
+ create mode 100644 arch/powerpc/purgatory/Makefile
+ create mode 100644 arch/powerpc/purgatory/console-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/crashdump_backup.c
+ create mode 100644 arch/powerpc/purgatory/crtsavres.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.h
+ create mode 100644 arch/powerpc/purgatory/kexec-sha256.h
+ create mode 100644 arch/powerpc/purgatory/ppc64_asm.h
+ create mode 100644 arch/powerpc/purgatory/printf.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/purgatory.c
+ create mode 100644 arch/powerpc/purgatory/purgatory.h
+ create mode 100644 arch/powerpc/purgatory/sha256.c
+ create mode 100644 arch/powerpc/purgatory/sha256.h
+ create mode 100644 arch/powerpc/purgatory/string.S
+ create mode 100644 arch/powerpc/purgatory/v2wrap.S
+
+-- 
+1.9.1
+
 
 _______________________________________________
 kexec mailing list
