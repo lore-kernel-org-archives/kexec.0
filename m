@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bCd4e-0004yH-AL
- for kexec@lists.infradead.org; Tue, 14 Jun 2016 01:23:24 +0000
-Date: Tue, 14 Jun 2016 09:22:55 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 2/8] kexec_file: Generalize kexec_add_buffer.
-Message-ID: <20160614012255.GA9425@dhcp-128-65.nay.redhat.com>
-References: <1465701022-11601-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1465701022-11601-3-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160613072939.GD4974@dhcp-128-65.nay.redhat.com>
- <11831785.bAnhpkoBlL@hactar>
+ id 1bCiTb-00037Q-NT
+ for kexec@lists.infradead.org; Tue, 14 Jun 2016 07:09:33 +0000
+Received: by mail-pa0-x22f.google.com with SMTP id hl6so53709887pac.2
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 00:09:11 -0700 (PDT)
+Date: Tue, 14 Jun 2016 16:13:49 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v18 08/13] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20160614071348.GN20774@linaro.org>
+References: <cover.1465502767.git.geoff@infradead.org>
+ <9bc011f03f5dd30fc66178461d303d3ec1b7ac35.1465502767.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <11831785.bAnhpkoBlL@hactar>
+In-Reply-To: <9bc011f03f5dd30fc66178461d303d3ec1b7ac35.1465502767.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,80 +26,325 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 06/13/16 at 04:08pm, Thiago Jung Bauermann wrote:
-> Hello Dave,
-> 
-> Thanks for the quick review and for your comments.
-> 
-> I'll separate the change to add arch_walk_system_ram and the change to add 
-> kexec_locate_mem_hole into different patches, and add error handling for 
-> KEXEC_ON_CRASH.
-> 
-> Am Montag, 13 Juni 2016, 15:29:39 schrieb Dave Young:
-> > On 06/12/16 at 12:10am, Thiago Jung Bauermann wrote:
-> > > Allow architectures to specify different memory walking functions for
-> > > kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
-> > > but PowerPC uses the memblock subsystem.
-> > 
-> > Can the crashk_res be inserted to iomem_resource so that only one
-> > weak function for system ram is needed?
-> 
-> Sorry, it's not clear to me what you mean by inserting crashk_res into 
+Geoff,
 
-Hmm, I means exporting crashkernel mem to /proc/iomem like other arches
-It is just oneline:
-insert_resource(&iomem_resource, &crashk_res)
-
-But your proposal below is also fine.
-
-> iomem_resource, but I can add a bool for_crashkernel to arch_walk_system_ram 
-> so that it can decide which kind of memory to traverse, so the default 
-> implementation of kexec_file.c would be:
+On Thu, Jun 09, 2016 at 08:08:44PM +0000, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> int __weak arch_walk_system_ram(bool for_crashkernel, unsigned long start,
-> 				unsigned long end, bool top_down,
-> 				void *data,
-> 				int (*func)(u64, u64, void *))
+> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
+> and save registers' status in per-cpu ELF notes before starting crash
+> dump kernel. See kernel_kexec().
+> Even if not all secondary cpus have shut down, we do kdump anyway.
+> 
+> As we don't have to make non-boot(crashed) cpus offline (to preserve
+> correct status of cpus at crash dump) before shutting down, this patch
+> also adds a variant of smp_send_stop().
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  arch/arm64/include/asm/hardirq.h  |  2 +-
+>  arch/arm64/include/asm/kexec.h    | 41 +++++++++++++++++++++++++-
+>  arch/arm64/include/asm/smp.h      |  4 +++
+>  arch/arm64/kernel/machine_kexec.c | 56 +++++++++++++++++++++++++++++++++--
+>  arch/arm64/kernel/smp.c           | 61 +++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 159 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
+> index 8740297..1473fc2 100644
+> --- a/arch/arm64/include/asm/hardirq.h
+> +++ b/arch/arm64/include/asm/hardirq.h
+> @@ -20,7 +20,7 @@
+>  #include <linux/threads.h>
+>  #include <asm/irq.h>
+>  
+> -#define NR_IPI	6
+> +#define NR_IPI	7
+>  
+>  typedef struct {
+>  	unsigned int __softirq_pending;
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 04744dc..600b960 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -40,7 +40,46 @@
+>  static inline void crash_setup_regs(struct pt_regs *newregs,
+>  				    struct pt_regs *oldregs)
+>  {
+> -	/* Empty routine needed to avoid build errors. */
+> +	if (oldregs) {
+> +		memcpy(newregs, oldregs, sizeof(*newregs));
+> +	} else {
+> +		u64 tmp1, tmp2;
+> +
+> +		__asm__ __volatile__ (
+> +			"stp	 x0,   x1, [%2, #16 *  0]\n"
+> +			"stp	 x2,   x3, [%2, #16 *  1]\n"
+> +			"stp	 x4,   x5, [%2, #16 *  2]\n"
+> +			"stp	 x6,   x7, [%2, #16 *  3]\n"
+> +			"stp	 x8,   x9, [%2, #16 *  4]\n"
+> +			"stp	x10,  x11, [%2, #16 *  5]\n"
+> +			"stp	x12,  x13, [%2, #16 *  6]\n"
+> +			"stp	x14,  x15, [%2, #16 *  7]\n"
+> +			"stp	x16,  x17, [%2, #16 *  8]\n"
+> +			"stp	x18,  x19, [%2, #16 *  9]\n"
+> +			"stp	x20,  x21, [%2, #16 * 10]\n"
+> +			"stp	x22,  x23, [%2, #16 * 11]\n"
+> +			"stp	x24,  x25, [%2, #16 * 12]\n"
+> +			"stp	x26,  x27, [%2, #16 * 13]\n"
+> +			"stp	x28,  x29, [%2, #16 * 14]\n"
+> +			"mov	 %0,  sp\n"
+> +			"stp	x30,  %0,  [%2, #16 * 15]\n"
+> +
+> +			"/* faked current PSTATE */\n"
+> +			"mrs	 %0, CurrentEL\n"
+> +			"mrs	 %1, DAIF\n"
+> +			"orr	 %0, %0, %1\n"
+> +			"mrs	 %1, NZCV\n"
+> +			"orr	 %0, %0, %1\n"
+> +
+> +			/* pc */
+> +			"adr	 %1, 1f\n"
+> +		"1:"
+> +			"stp	 %1, %0,   [%2, #16 * 16]\n"
+> +			: "=r" (tmp1), "=r" (tmp2), "+r" (newregs)
+> +			:
+> +			: "memory"
+> +		);
+> +	}
+>  }
+>  
+>  #endif /* __ASSEMBLY__ */
+> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> index 38712f4..979154a 100644
+> --- a/arch/arm64/include/asm/smp.h
+> +++ b/arch/arm64/include/asm/smp.h
+> @@ -134,6 +134,10 @@ static inline void cpu_panic_kernel(void)
+>   */
+>  bool cpus_are_stuck_in_kernel(void);
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +extern void smp_send_crash_stop(void);
+> +#endif
+> +
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+>  #endif /* ifndef __ASM_SMP_H */
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index 0a8b04d..93588b2 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -10,6 +10,9 @@
+>   */
+>  
+>  #include <linux/highmem.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/kernel.h>
+>  #include <linux/kexec.h>
+>  #include <linux/libfdt_env.h>
+>  #include <linux/of_fdt.h>
+> @@ -28,6 +31,7 @@
+>  extern const unsigned char arm64_relocate_new_kernel[];
+>  extern const unsigned long arm64_relocate_new_kernel_size;
+>  
+> +bool in_crash_kexec;
+>  static unsigned long kimage_start;
+>  
+>  /**
+> @@ -179,7 +183,8 @@ void machine_kexec(struct kimage *kimage)
+>  	/*
+>  	 * New cpus may have become stuck_in_kernel after we loaded the image.
+>  	 */
+> -	BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1));
+> +	BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1) &&
+> +			!WARN_ON(in_crash_kexec));
+>  
+>  	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+>  	reboot_code_buffer = kmap(kimage->control_code_page);
+> @@ -236,13 +241,58 @@ void machine_kexec(struct kimage *kimage)
+>  	 * relocation is complete.
+>  	 */
+>  
+> -	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
+> +	cpu_soft_restart(in_crash_kexec, reboot_code_buffer_phys, kimage->head,
 
-arch_walk_mem sounds better?
+                        => !in_crash_kexec
 
-> {
-> 	int ret;
-> 
-> 	if (for_crashkernel)
-> 		ret = walk_iomem_res_desc(crashk_res.desc,
-> 					  IORESOURCE_SYSTEM_RAM |
-> 					  IORESOURCE_BUSY,
-> 					  start, end, data, func);
-> 	else
-> 		ret = walk_system_ram_res(start, end, data, func);
-> 
-> 	if (ret != 1) {
-> 		/* A suitable memory range could not be found for buffer */
-> 		return -EADDRNOTAVAIL;
-> 	}
-> }
-> 
-> and kexec_add_buffer / kexec_locate_mem_hole would call it with:
-> 
-> 	if (image->type == KEXEC_TYPE_CRASH)
-> 		ret = arch_walk_system_ram(true, crashk_res.start,
-> 					   crashk_res.end, top_down, &buf,
-> 					   locate_mem_hole_callback);
-> 	else
-> 		ret = arch_walk_system_ram(false, 0, -1, top_down, &buf,
-> 					   locate_mem_hole_callback);
-> 
-> What do you think?
+Please let me recognize any changes you made clearly if you modified my part
+in the patchset before posting it.
 
-Sounds good, but for_crashkernel can be image_type instead. and
-image->type can be passed to the arch_walk_mem function directly.
+Thanks,
+-Takahiro AKASHI
 
-Thanks
-Dave
+>  		kimage_start, 0);
+>  
+>  	BUG(); /* Should never get here. */
+>  }
+>  
+> +static void machine_kexec_mask_interrupts(void)
+> +{
+> +	unsigned int i;
+> +	struct irq_desc *desc;
+> +
+> +	for_each_irq_desc(i, desc) {
+> +		struct irq_chip *chip;
+> +		int ret;
+> +
+> +		chip = irq_desc_get_chip(desc);
+> +		if (!chip)
+> +			continue;
+> +
+> +		/*
+> +		 * First try to remove the active state. If this
+> +		 * fails, try to EOI the interrupt.
+> +		 */
+> +		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
+> +
+> +		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
+> +		    chip->irq_eoi)
+> +			chip->irq_eoi(&desc->irq_data);
+> +
+> +		if (chip->irq_mask)
+> +			chip->irq_mask(&desc->irq_data);
+> +
+> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+> +			chip->irq_disable(&desc->irq_data);
+> +	}
+> +}
+> +
+> +/**
+> + * machine_crash_shutdown - shutdown non-crashing cpus and save registers
+> + */
+>  void machine_crash_shutdown(struct pt_regs *regs)
+>  {
+> -	/* Empty routine needed to avoid build errors. */
+> +	local_irq_disable();
+> +
+> +	in_crash_kexec = true;
+> +
+> +	/* shutdown non-crashing cpus */
+> +	smp_send_crash_stop();
+> +
+> +	/* for crashing cpu */
+> +	crash_save_cpu(regs, smp_processor_id());
+> +	machine_kexec_mask_interrupts();
+> +
+> +	pr_info("Starting crashdump kernel...\n");
+>  }
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index d0bcd55..f6461ef 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -37,6 +37,7 @@
+>  #include <linux/completion.h>
+>  #include <linux/of.h>
+>  #include <linux/irq_work.h>
+> +#include <linux/kexec.h>
+>  
+>  #include <asm/alternative.h>
+>  #include <asm/atomic.h>
+> @@ -71,6 +72,7 @@ enum ipi_msg_type {
+>  	IPI_RESCHEDULE,
+>  	IPI_CALL_FUNC,
+>  	IPI_CPU_STOP,
+> +	IPI_CPU_CRASH_STOP,
+>  	IPI_TIMER,
+>  	IPI_IRQ_WORK,
+>  	IPI_WAKEUP
+> @@ -726,6 +728,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
+>  	S(IPI_RESCHEDULE, "Rescheduling interrupts"),
+>  	S(IPI_CALL_FUNC, "Function call interrupts"),
+>  	S(IPI_CPU_STOP, "CPU stop interrupts"),
+> +	S(IPI_CPU_CRASH_STOP, "CPU stop (for crash dump) interrupts"),
+>  	S(IPI_TIMER, "Timer broadcast interrupts"),
+>  	S(IPI_IRQ_WORK, "IRQ work interrupts"),
+>  	S(IPI_WAKEUP, "CPU wake-up interrupts"),
+> @@ -800,6 +803,28 @@ static void ipi_cpu_stop(unsigned int cpu)
+>  		cpu_relax();
+>  }
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +static atomic_t waiting_for_crash_ipi;
+> +
+> +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
+> +{
+> +	crash_save_cpu(regs, cpu);
+> +
+> +	atomic_dec(&waiting_for_crash_ipi);
+> +
+> +	local_irq_disable();
+> +
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +	if (cpu_ops[cpu]->cpu_die)
+> +		cpu_ops[cpu]->cpu_die(cpu);
+> +#endif
+> +
+> +	/* just in case */
+> +	while (1)
+> +		wfi();
+> +}
+> +#endif
+> +
+>  /*
+>   * Main handler for inter-processor interrupts
+>   */
+> @@ -830,6 +855,14 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>  		irq_exit();
+>  		break;
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +	case IPI_CPU_CRASH_STOP:
+> +		irq_enter();
+> +		ipi_cpu_crash_stop(cpu, regs);
+> +
+> +		unreachable();
+> +#endif
+> +
+>  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+>  	case IPI_TIMER:
+>  		irq_enter();
+> @@ -902,6 +935,34 @@ void smp_send_stop(void)
+>  			   cpumask_pr_args(cpu_online_mask));
+>  }
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +void smp_send_crash_stop(void)
+> +{
+> +	cpumask_t mask;
+> +	unsigned long timeout;
+> +
+> +	if (num_online_cpus() == 1)
+> +		return;
+> +
+> +	cpumask_copy(&mask, cpu_online_mask);
+> +	cpumask_clear_cpu(smp_processor_id(), &mask);
+> +
+> +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+> +
+> +	pr_crit("SMP: stopping secondary CPUs\n");
+> +	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
+> +
+> +	/* Wait up to one second for other CPUs to stop */
+> +	timeout = USEC_PER_SEC;
+> +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
+> +		udelay(1);
+> +
+> +	if (atomic_read(&waiting_for_crash_ipi) > 0)
+> +		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
+> +			   cpumask_pr_args(cpu_online_mask));
+> +}
+> +#endif
+> +
+>  /*
+>   * not supported here
+>   */
+> -- 
+> 2.5.0
+> 
+> 
 
 _______________________________________________
 kexec mailing list
