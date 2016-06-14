@@ -1,38 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bCppD-0007JL-LJ
- for kexec@lists.infradead.org; Tue, 14 Jun 2016 15:00:23 +0000
+ id 1bCppI-0007s7-LO
+ for kexec@lists.infradead.org; Tue, 14 Jun 2016 15:00:28 +0000
 Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5EEsXtO115878
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:59 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 23jgpcgpgp-1
+ u5EEsUDr115700
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:00:08 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23jgpcgpr8-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:59 -0400
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:00:08 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Tue, 14 Jun 2016 11:59:56 -0300
+ Tue, 14 Jun 2016 12:00:05 -0300
 Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id CA0141DC0071
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:46 -0400 (EDT)
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id DB8EC352005C
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 10:59:45 -0400 (EDT)
 Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
  by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5EExr8r28639606
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:59:53 -0300
+ u5EF01Xm52690978
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 12:00:01 -0300
 Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
  by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5EExrCa018546
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:59:53 -0300
+ u5EF01XH018928
+ for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 12:00:01 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
-Date: Tue, 14 Jun 2016 11:59:02 -0300
+Subject: [PATCH v2 5/9] powerpc: Generalize elf64_apply_relocate_add.
+Date: Tue, 14 Jun 2016 11:59:05 -0300
 In-Reply-To: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1465916349-3398-3-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1465916349-3398-6-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,105 +47,217 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev@lists.ozlabs.org
-Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Torsten Duwe <duwe@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 
-Allow architectures to specify different memory walking functions for
-kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
-but PowerPC uses the memblock subsystem.
+When apply_relocate_add is called, modules are already loaded at their
+final location in memory so Elf64_Shdr.sh_addr can be used for accessing
+the section contents as well as the base address for relocations.
+
+This is not the case for kexec's purgatory, because it will only be
+copied to its final location right before being executed. Therefore,
+it needs to be relocated while it is still in a temporary buffer. In
+this case, Elf64_Shdr.sh_addr can't be used to access the sections'
+contents.
+
+This patch allows elf64_apply_relocate_add to be used when the ELF
+binary is not yet at its final location by adding an addr_base argument
+to specify the address at which the section will be loaded, and rela,
+loc_base and syms_base to point to the sections' contents.
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Dave Young <dyoung@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Torsten Duwe <duwe@suse.de>
 Cc: kexec@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- include/linux/kexec.h |  3 +++
- kernel/kexec_file.c   | 44 ++++++++++++++++++++++++++++++++++++--------
- 2 files changed, 39 insertions(+), 8 deletions(-)
+ arch/powerpc/include/asm/elf_util.h |  6 ++--
+ arch/powerpc/kernel/elf_util_64.c   | 63 +++++++++++++++++++++++++------------
+ arch/powerpc/kernel/module_64.c     | 17 ++++++++--
+ 3 files changed, 61 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index e8acb2b43dd9..7321043aa65a 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -315,6 +315,9 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
- 					Elf_Shdr *sechdrs, unsigned int relsec);
- int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 					unsigned int relsec);
-+int __weak arch_kexec_walk_mem(unsigned int image_type, unsigned long start,
-+			       unsigned long end, bool top_down, void *data,
-+			       int (*func)(u64, u64, void *));
- void arch_kexec_protect_crashkres(void);
- void arch_kexec_unprotect_crashkres(void);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b6eec7527e9f..a3ca7cfe070e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -428,6 +428,31 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
- 	return locate_mem_hole_bottom_up(start, end, kbuf);
+diff --git a/arch/powerpc/include/asm/elf_util.h b/arch/powerpc/include/asm/elf_util.h
+index 13d3ca113299..19ff3335d17d 100644
+--- a/arch/powerpc/include/asm/elf_util.h
++++ b/arch/powerpc/include/asm/elf_util.h
+@@ -64,7 +64,9 @@ static inline unsigned long my_r2(const struct elf_info *elf_info)
  }
  
-+/**
-+ * arch_kexec_walk_mem - call func(data) on free memory regions
-+ * @image_type:	kimage.type
-+ * @start:	Don't visit memory regions below this address.
-+ * @end:	Don't visit memory regions above this address.
-+ * @top_down:	Start from the highest address?
-+ * @data:	Argument to pass to @func.
-+ * @func:	Function to call for each memory region.
+ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+-			     const char *strtab, unsigned int symindex,
+-			     unsigned int relsec, const char *obj_name);
++			     const char *strtab, const Elf64_Rela *rela,
++			     unsigned int num_rela, void *syms_base,
++			     void *loc_base, Elf64_Addr addr_base,
++			     const char *obj_name);
+ 
+ #endif /* _ASM_POWERPC_ELF_UTIL_H */
+diff --git a/arch/powerpc/kernel/elf_util_64.c b/arch/powerpc/kernel/elf_util_64.c
+index b53b3959a605..cde0420add9e 100644
+--- a/arch/powerpc/kernel/elf_util_64.c
++++ b/arch/powerpc/kernel/elf_util_64.c
+@@ -69,33 +69,56 @@ static void squash_toc_save_inst(const char *name, unsigned long addr) { }
+  * elf64_apply_relocate_add - apply 64 bit RELA relocations
+  * @elf_info:		Support information for the ELF binary being relocated.
+  * @strtab:		String table for the associated symbol table.
+- * @symindex:		Section header index for the associated symbol table.
+- * @relsec:		Section header index for the relocations to apply.
++ * @rela:		Contents of the section with the relocations to apply.
++ * @num_rela:		Number of relocation entries in the section.
++ * @syms_base:		Contents of the associated symbol table.
++ * @loc_base:		Contents of the section to which relocations apply.
++ * @addr_base:		The address where the section will be loaded in memory.
+  * @obj_name:		The name of the ELF binary, for information messages.
 + *
-+ * Return: The memory walk will stop when func returns a non-zero value
-+ * and that value will be returned. If all free regions are visited without
-+ * func returning non-zero, then zero will be returned.
++ * Applies RELA relocations to an ELF file already at its final location
++ * in memory (in which case loc_base == addr_base), or still in a temporary
++ * buffer.
+  */
+ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+-			     const char *strtab, unsigned int symindex,
+-			     unsigned int relsec, const char *obj_name)
++			     const char *strtab, const Elf64_Rela *rela,
++			     unsigned int num_rela, void *syms_base,
++			     void *loc_base, Elf64_Addr addr_base,
++			     const char *obj_name)
+ {
+ 	unsigned int i;
+-	Elf64_Shdr *sechdrs = elf_info->sechdrs;
+-	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
+-	Elf64_Sym *sym;
+ 	unsigned long *location;
++	unsigned long address;
+ 	unsigned long value;
++	const char *name;
++	Elf64_Sym *sym;
++
++	for (i = 0; i < num_rela; i++) {
++		/*
++		 * rels[i].r_offset contains the byte offset from the beginning
++		 * of section to the storage unit affected.
++		 *
++		 * This is the location to update in the temporary buffer where
++		 * the section is currently loaded. The section will finally
++		 * be loaded to a different address later, pointed to by
++		 * addr_base.
++		 */
++		location = loc_base + rela[i].r_offset;
++
++		/* Final address of the location. */
++		address = addr_base + rela[i].r_offset;
+ 
++		/* This is the symbol the relocation is referring to. */
++		sym = (Elf64_Sym *) syms_base + ELF64_R_SYM(rela[i].r_info);
+ 
+-	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rela); i++) {
+-		/* This is where to make the change */
+-		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
+-			+ rela[i].r_offset;
+-		/* This is the symbol it is referring to */
+-		sym = (Elf64_Sym *)sechdrs[symindex].sh_addr
+-			+ ELF64_R_SYM(rela[i].r_info);
++		if (sym->st_name)
++			name = strtab + sym->st_name;
++		else
++			name = "<unnamed symbol>";
+ 
+ 		pr_debug("RELOC at %p: %li-type as %s (0x%lx) + %li\n",
+ 		       location, (long)ELF64_R_TYPE(rela[i].r_info),
+-		       strtab + sym->st_name, (unsigned long)sym->st_value,
++		       name, (unsigned long)sym->st_value,
+ 		       (long)rela[i].r_addend);
+ 
+ 		/* `Everything is relative'. */
+@@ -187,7 +210,7 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+ 				value += local_entry_offset(sym);
+ 
+ 			/* Convert value to relative */
+-			value -= (unsigned long)location;
++			value -= address;
+ 			if (value + 0x2000000 > 0x3ffffff || (value & 3) != 0){
+ 				pr_err("%s: REL24 %li out of range!\n",
+ 				       obj_name, (long int)value);
+@@ -202,7 +225,7 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+ 
+ 		case R_PPC64_REL64:
+ 			/* 64 bits relative (used by features fixups) */
+-			*location = value - (unsigned long)location;
++			*location = value - address;
+ 			break;
+ 
+ 		case R_PPC64_TOCSAVE:
+@@ -218,7 +241,7 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+ 			 * Optimize ELFv2 large code model entry point if
+ 			 * the TOC is within 2GB range of current location.
+ 			 */
+-			value = my_r2(elf_info) - (unsigned long)location;
++			value = my_r2(elf_info) - address;
+ 			if (value + 0x80008000 > 0xffffffff)
+ 				break;
+ 			/*
+@@ -242,7 +265,7 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+ 
+ 		case R_PPC64_REL16_HA:
+ 			/* Subtract location pointer */
+-			value -= (unsigned long)location;
++			value -= address;
+ 			value = ((value + 0x8000) >> 16);
+ 			*((uint16_t *) location)
+ 				= (*((uint16_t *) location) & ~0xffff)
+@@ -251,7 +274,7 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+ 
+ 		case R_PPC64_REL16_LO:
+ 			/* Subtract location pointer */
+-			value -= (unsigned long)location;
++			value -= address;
+ 			*((uint16_t *) location)
+ 				= (*((uint16_t *) location) & ~0xffff)
+ 				| (value & 0xffff);
+diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
+index 5f2eeab93651..a3cb0f6e83bb 100644
+--- a/arch/powerpc/kernel/module_64.c
++++ b/arch/powerpc/kernel/module_64.c
+@@ -438,16 +438,26 @@ int restore_r2(u32 *instruction, const char *obj_name)
+ 	return 1;
+ }
+ 
++/*
++ * When this function is called, the module is already at its final location in
++ * memory, so Elf64_Shdr.sh_addr can be used for accessing the section
++ * contents as well as the base address for relocations.
 + */
-+int __weak arch_kexec_walk_mem(unsigned int image_type, unsigned long start,
-+			       unsigned long end, bool top_down, void *data,
-+			       int (*func)(u64, u64, void *))
-+{
-+	if (image_type == KEXEC_TYPE_CRASH)
-+		return walk_iomem_res_desc(crashk_res.desc,
-+					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-+					   start, end, data, func);
-+	else
-+		return walk_system_ram_res(start, end, data, func);
-+}
-+
- /*
-  * Helper function for placing a buffer in a kexec segment. This assumes
-  * that kexec_mutex is held.
-@@ -441,6 +466,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	struct kexec_segment *ksegment;
- 	struct kexec_buf buf, *kbuf;
- 	int ret;
-+	unsigned long start, end;
+ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		       const char *strtab,
+ 		       unsigned int symindex,
+ 		       unsigned int relsec,
+ 		       struct module *me)
+ {
++	Elf64_Shdr *rel_section = &sechdrs[relsec];
++	void *syms_base = (void *) sechdrs[symindex].sh_addr;
++	Elf64_Addr addr_base = sechdrs[rel_section->sh_info].sh_addr;
++	const Elf64_Rela *rela = (const Elf64_Rela *) rel_section->sh_addr;
++	unsigned int num_rela = rel_section->sh_size / sizeof(Elf64_Rela);
+ 	Elf64_Sym *sym;
  
- 	/* Currently adding segment this way is allowed only in file mode */
- 	if (!image->file_mode)
-@@ -472,14 +498,16 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	kbuf->top_down = top_down;
+ 	pr_debug("Applying ADD relocate section %u to %u\n", relsec,
+-	       sechdrs[relsec].sh_info);
++		 rel_section->sh_info);
  
- 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
--	if (image->type == KEXEC_TYPE_CRASH)
--		ret = walk_iomem_res_desc(crashk_res.desc,
--				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
--				crashk_res.start, crashk_res.end, kbuf,
--				locate_mem_hole_callback);
--	else
--		ret = walk_system_ram_res(0, -1, kbuf,
--					  locate_mem_hole_callback);
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		start = crashk_res.start;
-+		end = crashk_res.end;
-+	} else {
-+		start = 0;
-+		end = ULONG_MAX;
-+	}
-+
-+	ret = arch_kexec_walk_mem(image->type, start, end, top_down, kbuf,
-+				   locate_mem_hole_callback);
- 	if (ret != 1) {
- 		/* A suitable memory range could not be found for buffer */
- 		return -EADDRNOTAVAIL;
+ 	/* First time we're called, we can fix up .TOC. */
+ 	if (!me->arch.toc_fixed) {
+@@ -459,8 +469,9 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		me->arch.toc_fixed = true;
+ 	}
+ 
+-	return elf64_apply_relocate_add(&me->arch.elf_info, strtab, symindex,
+-					relsec, me->name);
++	return elf64_apply_relocate_add(&me->arch.elf_info, strtab, rela,
++					num_rela, syms_base, (void *) addr_base,
++					addr_base, me->name);
+ }
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
 -- 
 1.9.1
 
