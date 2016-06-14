@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x233.google.com ([2a00:1450:400c:c09::233])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bCsih-00014s-RX
- for kexec@lists.infradead.org; Tue, 14 Jun 2016 18:05:48 +0000
-Received: by mail-wm0-x233.google.com with SMTP id k204so2361481wmk.0
- for <kexec@lists.infradead.org>; Tue, 14 Jun 2016 11:05:27 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20160614175920.GD1041@n2100.armlinux.org.uk>
-References: <20160614175920.GD1041@n2100.armlinux.org.uk>
-From: Kees Cook <keescook@google.com>
-Date: Tue, 14 Jun 2016 11:05:23 -0700
-Message-ID: <CAGXu5j+5j32HO0rQtF2hcqMUBaa8cyxgLT4JvaZ6LL2WPj_zjw@mail.gmail.com>
-Subject: Re: kexec failures with DEBUG_RODATA
+Message-ID: <1465941398.21058.1.camel@infradead.org>
+Subject: Re: [PATCH v18 08/13] arm64: kdump: implement machine_crash_shutdown()
+From: Geoff Levand <geoff@infradead.org>
+Date: Tue, 14 Jun 2016 14:56:38 -0700
+In-Reply-To: <20160614071348.GN20774@linaro.org>
+References: <cover.1465502767.git.geoff@infradead.org>
+ <9bc011f03f5dd30fc66178461d303d3ec1b7ac35.1465502767.git.geoff@infradead.org>
+ <20160614071348.GN20774@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,119 +20,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Jun 14, 2016 at 10:59 AM, Russell King - ARM Linux
-<linux@armlinux.org.uk> wrote:
-> Guys,
->
-> Having added Keystone2 support to kexec, and asking TI to validate
-> linux-next with mainline kexec-tools, I received two reports from
-> them.
->
-> The first was a report of success, but was kexecing a 4.4 kernel
-> from linux-next.
->
-> The second was a failure report, kexecing current linux-next from
-> linux-next on this platform.  However, my local tests (using my
-> 4.7-rc3 derived kernel) showed there to be no problem.
->
-> Building my 4.7-rc3 derived kernel with TI's configuration they
-> were using with linux-next similarly failed.  So, it came down to
-> a configuration difference.
->
-> After trialling several configurations, it turns out that the
-> failure is, in part, caused by CONFIG_DEBUG_RODATA being enabled
-> on TI's kernel but not mine.  Why should this make any difference?
->
-> Well, CONFIG_DEBUG_RODATA has the side effect that the kernel
-> contains a lot of additional padding - we pad out to section size
-> (1MB) the ELF sections with differing attributes.  This should not
-> normally be a problem, except kexec contains this assumption:
->
->                 /* Otherwise, assume the maximum kernel compression ratio
->                  * is 4, and just to be safe, place ramdisk after that */
->                 initrd_base = base + _ALIGN(len * 4, getpagesize());
->
-> Now, first things first.  Don't get misled by the comment - it's
-> totally false.  That may be what's desired, but that is far from
-> what actually happens in reality.
->
-> "base" is _not_ the address of the start of the kernel image, but
-> is the base address of the start of the region that the kernel is
-> to be loaded into - remember that the kernel is normally loaded
-> 32k higher than the start of memory.  This 32k offset is _not_
-> included in either "base" nor "len".  So, even if we did want to
-> assume that there was a maximum compression ratio of 4, the above
-> always calculates 32k short of that value.
->
-> The other invalid thing here is this whole "maximum kernel compression
-> ratio" assumption.  Consider this non-DEBUG_RODATA kernel image:
->
->    text    data     bss     dec     hex filename
-> 6583513 2273816  215344 9072673  8a7021 ../build/ks2/vmlinux
->
-> This results in an image and zimage of:
-> -rwxrwxr-x 1 rmk rmk 8871936 Jun 14 18:02 ../build/ks2/arch/arm/boot/Image
-> -rwxrwxr-x 1 rmk rmk 4381592 Jun 14 18:02 ../build/ks2/arch/arm/boot/zImage
->
-> which is a ratio of about a 49%.  On entry to the decompressor, the
-> compressed image will be relocated above the expected resulting
-> kernel size.  So, let's say that it's relocated to 9MB.  This means
-> the zImage will occupy around 9MB-14MB above the start of memory.
-> Going by the 4x ratio, we place the other images at 16.7MB.  This
-> leaves around 2.7MB free.  So that's probably fine... but think
-> about this.  We assumed a ratio of 4x, but really we're in a rather
-> tight squeeze - we actually have only about 50% of the compressed
-> image size spare.
->
-> Now let's look at the DEBUG_RODATA case:
->
->    text    data     bss     dec     hex filename
-> 6585305 2273952  215344 9074601  8a77a9 ../build/ks2/vmlinux
->
-> And the resulting sizes:
-> -rwxrwxr-x 1 rmk rmk 15024128 Jun 14 18:49 ../build/ks2/arch/arm/boot/Image
-> -rwxrwxr-x 1 rmk rmk  4399040 Jun 14 18:49 ../build/ks2/arch/arm/boot/zImage
->
-> That's a compression ratio of about 29%.  Still within the 4x limit,
-> but going through the same calculation above shows that we end up
-> totally overflowing the available space this time.
->
-> That's exactly the same kernel configuration except for
-> CONFIG_DEBUG_RODATA - enabling this has almost _doubled_ the
-> decompressed image size without affecting the compressed size.
->
-> We've known for some time that this ratio of 4x doesn't work - we
-> used to use the same assumption in the decompressor when self-
-> relocating, and we found that there are images which achieve a
-> better compression ratio and make this invalid.  Yet, the 4x thing
-> has persisted in kexec code... and buggily too.
->
-> Since the kernel now has CONFIG_DEBUG_RODATA by default, this means
-> that these kinds of ratio-based assumptions are even more invalid
-> than they have been.
->
-> Right now, a zImage doesn't advertise the size of its uncompressed
-> image, but I think with things like CONFIG_DEBUG_RODATA, we can no
-> longer make assumptions like we have done in the past, and we need
-> the zImage to provide this information so that the boot environment
-> can be setup sanely by boot loaders/kexec rather than relying on
-> broken heuristics like this.
->
-> Thoughts?
+On Tue, 2016-06-14 at 16:13 +0900, AKASHI Takahiro wrote:
+> On Thu, Jun 09, 2016 at 08:08:44PM +0000, Geoff Levand wrote:
+> >  
+> > -> > 	> > cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
+> > +> > 	> > cpu_soft_restart(in_crash_kexec, reboot_code_buffer_phys, kimage->head,
+> 
+>                         => !in_crash_kexec
+> 
+> Please let me recognize any changes you made clearly if you modified my part
+> in the patchset before posting it.
 
-I'm much less familiar with the ARM decompression stub, but is there a
-boot image header (like x86 has)? If not, perhaps we can invent one,
-and it can carry all the details needed for a bootloader to do the
-right things.
+I pushed out a new branch kexec-v18.1 with this fix.  Thanks for
+checking!
 
--Kees
-
--- 
-Kees Cook
-Chrome OS & Brillo Security
+-Geoff
 
 _______________________________________________
 kexec mailing list
