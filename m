@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f182.google.com ([209.85.192.182])
+Received: from mail-pf0-x229.google.com ([2607:f8b0:400e:c00::229])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bD5fg-0007un-DB
- for kexec@lists.infradead.org; Wed, 15 Jun 2016 07:55:33 +0000
-Received: by mail-pf0-f182.google.com with SMTP id i123so2624423pfg.0
- for <kexec@lists.infradead.org>; Wed, 15 Jun 2016 00:55:11 -0700 (PDT)
-Date: Wed, 15 Jun 2016 13:25:08 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: kexec failures with DEBUG_RODATA
-Message-ID: <20160615075508.GB21202@dhcppc6>
-References: <20160614175920.GD1041@n2100.armlinux.org.uk>
+ id 1bD5tO-0005dU-9X
+ for kexec@lists.infradead.org; Wed, 15 Jun 2016 08:09:44 +0000
+Received: by mail-pf0-x229.google.com with SMTP id c2so6529252pfa.2
+ for <kexec@lists.infradead.org>; Wed, 15 Jun 2016 01:09:21 -0700 (PDT)
+Date: Wed, 15 Jun 2016 17:14:02 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v18 03/13] arm64/kexec: Add core kexec support
+Message-ID: <20160615081401.GO20774@linaro.org>
+References: <cover.1465502767.git.geoff@infradead.org>
+ <84e50e4043a2061e0f5d9273f55e158c59754af0.1465502767.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160614175920.GD1041@n2100.armlinux.org.uk>
+In-Reply-To: <84e50e4043a2061e0f5d9273f55e158c59754af0.1465502767.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,135 +26,268 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Baoquan He <bhe@redhat.com>, Kees Cook <keescook@google.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi Russell,
+Geoff,
 
-On 14/06/2016:06:59:20 PM, Russell King - ARM Linux wrote:
-> Guys,
+On Thu, Jun 09, 2016 at 08:08:44PM +0000, Geoff Levand wrote:
+> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
+> arm64 architecture that add support for the kexec re-boot mechanism
+> (CONFIG_KEXEC) on arm64 platforms.
 > 
-> Having added Keystone2 support to kexec, and asking TI to validate
-> linux-next with mainline kexec-tools, I received two reports from
-> them.
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  arch/arm64/Kconfig                  |  10 ++
+>  arch/arm64/include/asm/kexec.h      |  48 ++++++++++
+>  arch/arm64/kernel/Makefile          |   2 +
+>  arch/arm64/kernel/machine_kexec.c   | 185 ++++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/relocate_kernel.S | 131 +++++++++++++++++++++++++
+>  include/uapi/linux/kexec.h          |   1 +
+>  6 files changed, 377 insertions(+)
+>  create mode 100644 arch/arm64/include/asm/kexec.h
+>  create mode 100644 arch/arm64/kernel/machine_kexec.c
+>  create mode 100644 arch/arm64/kernel/relocate_kernel.S
 > 
-> The first was a report of success, but was kexecing a 4.4 kernel
-> from linux-next.
-> 
-> The second was a failure report, kexecing current linux-next from
-> linux-next on this platform.  However, my local tests (using my
-> 4.7-rc3 derived kernel) showed there to be no problem.
-> 
-> Building my 4.7-rc3 derived kernel with TI's configuration they
-> were using with linux-next similarly failed.  So, it came down to
-> a configuration difference.
-> 
-> After trialling several configurations, it turns out that the
-> failure is, in part, caused by CONFIG_DEBUG_RODATA being enabled
-> on TI's kernel but not mine.  Why should this make any difference?
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 5a0a691..330786d 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -664,6 +664,16 @@ config PARAVIRT_TIME_ACCOUNTING
+>  
+>  	  If in doubt, say N here.
+>  
+> +config KEXEC
+> +	depends on PM_SLEEP_SMP
+> +	select KEXEC_CORE
+> +	bool "kexec system call"
+> +	---help---
+> +	  kexec is a system call that implements the ability to shutdown your
+> +	  current kernel, and to start another kernel.  It is like a reboot
+> +	  but it is independent of the system firmware.   And like a reboot
+> +	  you can start any kernel with it, not just Linux.
+> +
+>  config XEN_DOM0
+>  	def_bool y
+>  	depends on XEN
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> new file mode 100644
+> index 0000000..04744dc
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -0,0 +1,48 @@
+> +/*
+> + * kexec for arm64
+> + *
+> + * Copyright (C) Linaro.
+> + * Copyright (C) Huawei Futurewei Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _ARM64_KEXEC_H
+> +#define _ARM64_KEXEC_H
+> +
+> +/* Maximum physical address we can use pages from */
+> +
+> +#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+> +
+> +/* Maximum address we can reach in physical address mode */
+> +
+> +#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
+> +
+> +/* Maximum address we can use for the control code buffer */
+> +
+> +#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
+> +
+> +#define KEXEC_CONTROL_PAGE_SIZE 4096
+> +
+> +#define KEXEC_ARCH KEXEC_ARCH_AARCH64
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +/**
+> + * crash_setup_regs() - save registers for the panic kernel
+> + *
+> + * @newregs: registers are saved here
+> + * @oldregs: registers to be saved (may be %NULL)
+> + */
+> +
+> +static inline void crash_setup_regs(struct pt_regs *newregs,
+> +				    struct pt_regs *oldregs)
+> +{
+> +	/* Empty routine needed to avoid build errors. */
+> +}
+> +
+> +#endif /* __ASSEMBLY__ */
+> +
+> +#endif
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index 2173149..7700c0c 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -46,6 +46,8 @@ arm64-obj-$(CONFIG_ARM64_ACPI_PARKING_PROTOCOL)	+= acpi_parking_protocol.o
+>  arm64-obj-$(CONFIG_PARAVIRT)		+= paravirt.o
+>  arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+>  arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+> +arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
+> +					   cpu-reset.o
+>  
+>  obj-y					+= $(arm64-obj-y) vdso/
+>  obj-m					+= $(arm64-obj-m)
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> new file mode 100644
+> index 0000000..05f7c21
+> --- /dev/null
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -0,0 +1,185 @@
+> +/*
+> + * kexec for arm64
+> + *
+> + * Copyright (C) Linaro.
+> + * Copyright (C) Huawei Futurewei Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/highmem.h>
+> +#include <linux/kexec.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/slab.h>
+> +#include <linux/smp.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include <asm/cacheflush.h>
+> +#include <asm/cpu_ops.h>
+> +#include <asm/mmu_context.h>
+> +#include <asm/system_misc.h>
+> +
+> +#include "cpu-reset.h"
+> +
+> +/* Global variables for the arm64_relocate_new_kernel routine. */
+> +extern const unsigned char arm64_relocate_new_kernel[];
+> +extern const unsigned long arm64_relocate_new_kernel_size;
+> +
+> +static unsigned long kimage_start;
+> +
+> +void machine_kexec_cleanup(struct kimage *kimage)
+> +{
+> +	/* Empty routine needed to avoid build errors. */
+> +}
+> +
+> +/**
+> + * machine_kexec_prepare - Prepare for a kexec reboot.
+> + *
+> + * Called from the core kexec code when a kernel image is loaded.
+> + * Forbid loading a kexec kernel if we have no way of hotplugging cpus or cpus
+> + * are stuck in the kernel. This avoids a panic once we hit machine_kexec().
+> + */
+> +int machine_kexec_prepare(struct kimage *kimage)
+> +{
+> +	kimage_start = kimage->start;
+> +
+> +	if (kimage->type != KEXEC_TYPE_CRASH) {
+> +		if (cpus_are_stuck_in_kernel()) {
+> +			pr_err("Can't kexec: failed CPUs are stuck in the kernel.\n");
+> +			return -EBUSY;
+> +		}
+> +
+> +		if (num_online_cpus() > 1) {
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +			/* any_cpu as we don't mind being preempted */
+> +			int any_cpu = raw_smp_processor_id();
+> +
+> +			if (cpu_ops[any_cpu]->cpu_die)
+> +				return 0;
+> +#endif /* CONFIG_HOTPLUG_CPU */
+> +
+> +			pr_err("Can't kexec: no mechanism to offline secondary CPUs.\n");
+> +			return -EBUSY;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * kexec_list_flush - Helper to flush the kimage list to PoC.
+> + */
+> +static void kexec_list_flush(struct kimage *kimage)
+> +{
+> +	kimage_entry_t *entry;
+> +	unsigned int flag;
+> +
+> +	for (entry = &kimage->head, flag = 0; flag != IND_DONE; entry++) {
+> +		void *addr = kmap(phys_to_page(*entry & PAGE_MASK));
+> +
+> +		flag = *entry & IND_FLAGS;
 
-> 
-> Well, CONFIG_DEBUG_RODATA has the side effect that the kernel
-> contains a lot of additional padding - we pad out to section size
-> (1MB) the ELF sections with differing attributes.  This should not
-> normally be a problem, except kexec contains this assumption:
-> 
->                 /* Otherwise, assume the maximum kernel compression ratio
->                  * is 4, and just to be safe, place ramdisk after that */
->                 initrd_base = base + _ALIGN(len * 4, getpagesize());
-> 
-> Now, first things first.  Don't get misled by the comment - it's
-> totally false.  That may be what's desired, but that is far from
-> what actually happens in reality.
-> 
-> "base" is _not_ the address of the start of the kernel image, but
-> is the base address of the start of the region that the kernel is
-> to be loaded into - remember that the kernel is normally loaded
-> 32k higher than the start of memory.  This 32k offset is _not_
-> included in either "base" nor "len".  So, even if we did want to
-> assume that there was a maximum compression ratio of 4, the above
-> always calculates 32k short of that value.
-> 
-> The other invalid thing here is this whole "maximum kernel compression
-> ratio" assumption.  Consider this non-DEBUG_RODATA kernel image:
-> 
->    text    data     bss     dec     hex filename
-> 6583513 2273816  215344 9072673  8a7021 ../build/ks2/vmlinux
-> 
-> This results in an image and zimage of:
-> -rwxrwxr-x 1 rmk rmk 8871936 Jun 14 18:02 ../build/ks2/arch/arm/boot/Image
-> -rwxrwxr-x 1 rmk rmk 4381592 Jun 14 18:02 ../build/ks2/arch/arm/boot/zImage
-> 
-> which is a ratio of about a 49%.  On entry to the decompressor, the
-> compressed image will be relocated above the expected resulting
-> kernel size.  So, let's say that it's relocated to 9MB.  This means
-> the zImage will occupy around 9MB-14MB above the start of memory.
-> Going by the 4x ratio, we place the other images at 16.7MB.  This
-> leaves around 2.7MB free.  So that's probably fine... but think
-> about this.  We assumed a ratio of 4x, but really we're in a rather
-> tight squeeze - we actually have only about 50% of the compressed
-> image size spare.
-> 
-> Now let's look at the DEBUG_RODATA case:
-> 
->    text    data     bss     dec     hex filename
-> 6585305 2273952  215344 9074601  8a77a9 ../build/ks2/vmlinux
-> 
-> And the resulting sizes:
-> -rwxrwxr-x 1 rmk rmk 15024128 Jun 14 18:49 ../build/ks2/arch/arm/boot/Image
-> -rwxrwxr-x 1 rmk rmk  4399040 Jun 14 18:49 ../build/ks2/arch/arm/boot/zImage
-> 
-> That's a compression ratio of about 29%.  Still within the 4x limit,
-> but going through the same calculation above shows that we end up
-> totally overflowing the available space this time.
-> 
-> That's exactly the same kernel configuration except for
-> CONFIG_DEBUG_RODATA - enabling this has almost _doubled_ the
-> decompressed image size without affecting the compressed size.
-> 
-> We've known for some time that this ratio of 4x doesn't work - we
-> used to use the same assumption in the decompressor when self-
-> relocating, and we found that there are images which achieve a
-> better compression ratio and make this invalid.  Yet, the 4x thing
-> has persisted in kexec code... and buggily too.
-> 
-> Since the kernel now has CONFIG_DEBUG_RODATA by default, this means
-> that these kinds of ratio-based assumptions are even more invalid
-> than they have been.
-> 
-> Right now, a zImage doesn't advertise the size of its uncompressed
-> image, but I think with things like CONFIG_DEBUG_RODATA, we can no
-> longer make assumptions like we have done in the past, and we need
-> the zImage to provide this information so that the boot environment
-> can be setup sanely by boot loaders/kexec rather than relying on
-> broken heuristics like this.
-> 
-> Thoughts?
+I found a bug here when I tested the kernel *without* CONFIG_SPARSEMEM_VMEMMAP.
+We need to check 'flag == IND_DONE' first before calculating
+phys_to_page(*entry & PAGE_MASK), otherwise we will see a kernel page fault
+(around the address 0x0) in case of IND_DONE.
+This bug was harmless with CONFIG_SPARSEMEM_VMEMMAP because phys_to_page()
+macro doesn't contain any memory access and 'addr' can be bogus but never used
+in IND_DONE.
 
-Sure, having a header information would be handy to do it. Other alternative
-could be that we define "HAVE_LIBZ" and then we can have something like
-kexec-Image-arm.c which handles plane Image.  We can also have something like
-get_zlib_decompressed_length() which can give us exact length we need for kernel
-and then we can place initrd accordingly in zImage_arm_load().
+See my fix.
+(As James mentioned before, we may use phys_to_virt() instead of kmap() here.)
 
-Other than that:
+Thanks,
+-Takahiro AKASHI
 
-I see at least another issue clearly in ARM kernel code with CONFIG_DEBUG_RODATA
-enabled.  When CONFIG_DEBUG_RODATA is enabled, we can not write text area.
-kexec_start_address has been defined in relocate_kernel.S as a text area.
-machine_kexec() writes at kexec_start_address with image->start. Similarly there
-would be issues for overwriting of kexec_indirection_page, kexec_mach_type and
-kexec_boot_atags. If arm mmu mapping configures text pages as RO, then we should
-see an abort as soon as we do these writes.
+===8<===
+From b814922d74bcd1746265fa0fcdb7fc6f4cb1515e Mon Sep 17 00:00:00 2001
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Wed, 15 Jun 2016 16:32:21 +0900
+Subject: [PATCH] arm64: kexec: bugfix
 
-I think there could be two alternatives to fix it (i) We pass all of above
-values as function argument to soft_restart() till relocate_new_kernel().  (ii)
-Remove kexec_start_address and others from relocate_new_kernel(). Now in
-machine_kexec(), copy kexec_start_address and friends directly to
-(reboot_code_buffer+relocate_new_kernel_size)
+---
+ arch/arm64/kernel/machine_kexec.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 0d99fde..ea8e5fe 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -124,23 +124,22 @@ static void kexec_list_flush(struct kimage *kimage)
+ {
+ 	kimage_entry_t *entry;
+ 	unsigned int flag;
++	void *addr;
+ 
+-	for (entry = &kimage->head, flag = 0; flag != IND_DONE; entry++) {
+-		void *addr = kmap(phys_to_page(*entry & PAGE_MASK));
+-
++	for (entry = &kimage->head; ; entry++) {
+ 		flag = *entry & IND_FLAGS;
++		if (flag == IND_DONE)
++			break;
++
++		addr = kmap(phys_to_page(*entry & PAGE_MASK));
+ 
+ 		switch (flag) {
+ 		case IND_INDIRECTION:
+ 			entry = (kimage_entry_t *)addr - 1;
+-			__flush_dcache_area(addr, PAGE_SIZE);
+-			break;
+-		case IND_DESTINATION:
+-			break;
+ 		case IND_SOURCE:
+ 			__flush_dcache_area(addr, PAGE_SIZE);
+ 			break;
+-		case IND_DONE:
++		case IND_DESTINATION:
+ 			break;
+ 		default:
+ 			BUG();
+-- 
+2.8.1
 
-~Pratyush
 
 _______________________________________________
 kexec mailing list
