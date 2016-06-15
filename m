@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-f182.google.com ([209.85.192.182])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bD5KL-0006Le-LW
- for kexec@lists.infradead.org; Wed, 15 Jun 2016 07:33:30 +0000
-Date: Wed, 15 Jun 2016 15:33:02 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
-Message-ID: <20160615073302.GA5684@dhcp-128-65.nay.redhat.com>
-References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1465916349-3398-3-git-send-email-bauerman@linux.vnet.ibm.com>
+ id 1bD5fg-0007un-DB
+ for kexec@lists.infradead.org; Wed, 15 Jun 2016 07:55:33 +0000
+Received: by mail-pf0-f182.google.com with SMTP id i123so2624423pfg.0
+ for <kexec@lists.infradead.org>; Wed, 15 Jun 2016 00:55:11 -0700 (PDT)
+Date: Wed, 15 Jun 2016 13:25:08 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: kexec failures with DEBUG_RODATA
+Message-ID: <20160615075508.GB21202@dhcppc6>
+References: <20160614175920.GD1041@n2100.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1465916349-3398-3-git-send-email-bauerman@linux.vnet.ibm.com>
+In-Reply-To: <20160614175920.GD1041@n2100.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,126 +25,135 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Baoquan He <bhe@redhat.com>, Kees Cook <keescook@google.com>
 
-Hi, Thiago
+Hi Russell,
 
-On 06/14/16 at 11:59am, Thiago Jung Bauermann wrote:
-> Allow architectures to specify different memory walking functions for
-> kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
-> but PowerPC uses the memblock subsystem.
+On 14/06/2016:06:59:20 PM, Russell King - ARM Linux wrote:
+> Guys,
 > 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: kexec@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/kexec.h |  3 +++
->  kernel/kexec_file.c   | 44 ++++++++++++++++++++++++++++++++++++--------
->  2 files changed, 39 insertions(+), 8 deletions(-)
+> Having added Keystone2 support to kexec, and asking TI to validate
+> linux-next with mainline kexec-tools, I received two reports from
+> them.
 > 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index e8acb2b43dd9..7321043aa65a 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -315,6 +315,9 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
->  					Elf_Shdr *sechdrs, unsigned int relsec);
->  int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
->  					unsigned int relsec);
-> +int __weak arch_kexec_walk_mem(unsigned int image_type, unsigned long start,
-> +			       unsigned long end, bool top_down, void *data,
-> +			       int (*func)(u64, u64, void *));
->  void arch_kexec_protect_crashkres(void);
->  void arch_kexec_unprotect_crashkres(void);
->  
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index b6eec7527e9f..a3ca7cfe070e 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -428,6 +428,31 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
->  	return locate_mem_hole_bottom_up(start, end, kbuf);
->  }
->  
-> +/**
-> + * arch_kexec_walk_mem - call func(data) on free memory regions
-> + * @image_type:	kimage.type
-> + * @start:	Don't visit memory regions below this address.
-> + * @end:	Don't visit memory regions above this address.
-> + * @top_down:	Start from the highest address?
-> + * @data:	Argument to pass to @func.
-> + * @func:	Function to call for each memory region.
-> + *
-> + * Return: The memory walk will stop when func returns a non-zero value
-> + * and that value will be returned. If all free regions are visited without
-> + * func returning non-zero, then zero will be returned.
-> + */
-> +int __weak arch_kexec_walk_mem(unsigned int image_type, unsigned long start,
-> +			       unsigned long end, bool top_down, void *data,
-> +			       int (*func)(u64, u64, void *))
-> +{
-> +	if (image_type == KEXEC_TYPE_CRASH)
-> +		return walk_iomem_res_desc(crashk_res.desc,
-> +					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-> +					   start, end, data, func);
-> +	else
-> +		return walk_system_ram_res(start, end, data, func);
-> +}
-> +
->  /*
->   * Helper function for placing a buffer in a kexec segment. This assumes
->   * that kexec_mutex is held.
-> @@ -441,6 +466,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
->  	struct kexec_segment *ksegment;
->  	struct kexec_buf buf, *kbuf;
->  	int ret;
-> +	unsigned long start, end;
->  
->  	/* Currently adding segment this way is allowed only in file mode */
->  	if (!image->file_mode)
-> @@ -472,14 +498,16 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
->  	kbuf->top_down = top_down;
->  
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
-> -	if (image->type == KEXEC_TYPE_CRASH)
-> -		ret = walk_iomem_res_desc(crashk_res.desc,
-> -				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-> -				crashk_res.start, crashk_res.end, kbuf,
-> -				locate_mem_hole_callback);
-> -	else
-> -		ret = walk_system_ram_res(0, -1, kbuf,
-> -					  locate_mem_hole_callback);
-> +	if (image->type == KEXEC_TYPE_CRASH) {
-> +		start = crashk_res.start;
-> +		end = crashk_res.end;
-> +	} else {
-> +		start = 0;
-> +		end = ULONG_MAX;
-> +	}
-
-For crashk_res, start and end is global, the non-crash values are
-hard coded, thus it is not necessary to pass these two in arguments.
-
-Moving above to arch_kexec_walk_mem will make it cleaner.
-
-> +
-> +	ret = arch_kexec_walk_mem(image->type, start, end, top_down, kbuf,
-> +				   locate_mem_hole_callback);
->  	if (ret != 1) {
->  		/* A suitable memory range could not be found for buffer */
->  		return -EADDRNOTAVAIL;
-> -- 
-> 1.9.1
+> The first was a report of success, but was kexecing a 4.4 kernel
+> from linux-next.
 > 
+> The second was a failure report, kexecing current linux-next from
+> linux-next on this platform.  However, my local tests (using my
+> 4.7-rc3 derived kernel) showed there to be no problem.
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Building my 4.7-rc3 derived kernel with TI's configuration they
+> were using with linux-next similarly failed.  So, it came down to
+> a configuration difference.
+> 
+> After trialling several configurations, it turns out that the
+> failure is, in part, caused by CONFIG_DEBUG_RODATA being enabled
+> on TI's kernel but not mine.  Why should this make any difference?
 
-Thanks
-Dave
+> 
+> Well, CONFIG_DEBUG_RODATA has the side effect that the kernel
+> contains a lot of additional padding - we pad out to section size
+> (1MB) the ELF sections with differing attributes.  This should not
+> normally be a problem, except kexec contains this assumption:
+> 
+>                 /* Otherwise, assume the maximum kernel compression ratio
+>                  * is 4, and just to be safe, place ramdisk after that */
+>                 initrd_base = base + _ALIGN(len * 4, getpagesize());
+> 
+> Now, first things first.  Don't get misled by the comment - it's
+> totally false.  That may be what's desired, but that is far from
+> what actually happens in reality.
+> 
+> "base" is _not_ the address of the start of the kernel image, but
+> is the base address of the start of the region that the kernel is
+> to be loaded into - remember that the kernel is normally loaded
+> 32k higher than the start of memory.  This 32k offset is _not_
+> included in either "base" nor "len".  So, even if we did want to
+> assume that there was a maximum compression ratio of 4, the above
+> always calculates 32k short of that value.
+> 
+> The other invalid thing here is this whole "maximum kernel compression
+> ratio" assumption.  Consider this non-DEBUG_RODATA kernel image:
+> 
+>    text    data     bss     dec     hex filename
+> 6583513 2273816  215344 9072673  8a7021 ../build/ks2/vmlinux
+> 
+> This results in an image and zimage of:
+> -rwxrwxr-x 1 rmk rmk 8871936 Jun 14 18:02 ../build/ks2/arch/arm/boot/Image
+> -rwxrwxr-x 1 rmk rmk 4381592 Jun 14 18:02 ../build/ks2/arch/arm/boot/zImage
+> 
+> which is a ratio of about a 49%.  On entry to the decompressor, the
+> compressed image will be relocated above the expected resulting
+> kernel size.  So, let's say that it's relocated to 9MB.  This means
+> the zImage will occupy around 9MB-14MB above the start of memory.
+> Going by the 4x ratio, we place the other images at 16.7MB.  This
+> leaves around 2.7MB free.  So that's probably fine... but think
+> about this.  We assumed a ratio of 4x, but really we're in a rather
+> tight squeeze - we actually have only about 50% of the compressed
+> image size spare.
+> 
+> Now let's look at the DEBUG_RODATA case:
+> 
+>    text    data     bss     dec     hex filename
+> 6585305 2273952  215344 9074601  8a77a9 ../build/ks2/vmlinux
+> 
+> And the resulting sizes:
+> -rwxrwxr-x 1 rmk rmk 15024128 Jun 14 18:49 ../build/ks2/arch/arm/boot/Image
+> -rwxrwxr-x 1 rmk rmk  4399040 Jun 14 18:49 ../build/ks2/arch/arm/boot/zImage
+> 
+> That's a compression ratio of about 29%.  Still within the 4x limit,
+> but going through the same calculation above shows that we end up
+> totally overflowing the available space this time.
+> 
+> That's exactly the same kernel configuration except for
+> CONFIG_DEBUG_RODATA - enabling this has almost _doubled_ the
+> decompressed image size without affecting the compressed size.
+> 
+> We've known for some time that this ratio of 4x doesn't work - we
+> used to use the same assumption in the decompressor when self-
+> relocating, and we found that there are images which achieve a
+> better compression ratio and make this invalid.  Yet, the 4x thing
+> has persisted in kexec code... and buggily too.
+> 
+> Since the kernel now has CONFIG_DEBUG_RODATA by default, this means
+> that these kinds of ratio-based assumptions are even more invalid
+> than they have been.
+> 
+> Right now, a zImage doesn't advertise the size of its uncompressed
+> image, but I think with things like CONFIG_DEBUG_RODATA, we can no
+> longer make assumptions like we have done in the past, and we need
+> the zImage to provide this information so that the boot environment
+> can be setup sanely by boot loaders/kexec rather than relying on
+> broken heuristics like this.
+> 
+> Thoughts?
+
+Sure, having a header information would be handy to do it. Other alternative
+could be that we define "HAVE_LIBZ" and then we can have something like
+kexec-Image-arm.c which handles plane Image.  We can also have something like
+get_zlib_decompressed_length() which can give us exact length we need for kernel
+and then we can place initrd accordingly in zImage_arm_load().
+
+Other than that:
+
+I see at least another issue clearly in ARM kernel code with CONFIG_DEBUG_RODATA
+enabled.  When CONFIG_DEBUG_RODATA is enabled, we can not write text area.
+kexec_start_address has been defined in relocate_kernel.S as a text area.
+machine_kexec() writes at kexec_start_address with image->start. Similarly there
+would be issues for overwriting of kexec_indirection_page, kexec_mach_type and
+kexec_boot_atags. If arm mmu mapping configures text pages as RO, then we should
+see an abort as soon as we do these writes.
+
+I think there could be two alternatives to fix it (i) We pass all of above
+values as function argument to soft_restart() till relocate_new_kernel().  (ii)
+Remove kexec_start_address and others from relocate_new_kernel(). Now in
+machine_kexec(), copy kexec_start_address and friends directly to
+(reboot_code_buffer+relocate_new_kernel_size)
+
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
