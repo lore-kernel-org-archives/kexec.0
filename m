@@ -1,13 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1466117929.21058.55.camel@infradead.org>
-Subject: Re: [PATCH v18 04/13] arm64/kexec: Add pr_debug output
+Message-Id: <dd245cadf97ea0d8fd5b0fe5743ecf9fa512d3c0.1466120418.git.geoff@infradead.org>
+In-Reply-To: <cover.1466120418.git.geoff@infradead.org>
+References: <cover.1466120418.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 16 Jun 2016 15:58:49 -0700
-In-Reply-To: <57618CEB.6040807@arm.com>
-References: <cover.1465502767.git.geoff@infradead.org>
- <cfd2d457d5f1991c82b641970ce20475bcc6c7dd.1465502767.git.geoff@infradead.org>
- <57618CEB.6040807@arm.com>
-Mime-Version: 1.0
+Subject: [PATCH v19 05/13] arm64/kexec: Add pr_debug output
+Date: Thu, 16 Jun 2016 23:48:27 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,77 +13,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-On Wed, 2016-06-15 at 18:14 +0100, James Morse wrote:
-> On 09/06/16 21:08, Geoff Levand wrote:
-> > To aid in debugging kexec problems or when adding new functionality to kexec add
-> > a new routine kexec_image_info() and several inline pr_debug statements.
+To aid in debugging kexec problems or when adding new functionality to
+kexec add a new routine kexec_image_info() and several inline pr_debug
+statements.
 
-> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> > +/**
-> > + * kexec_is_dtb - Helper routine to check the device tree header signature.
-> > + */
-> > +static bool kexec_is_dtb(const void *dtb)
-> > +{
-> > +> > 	> > __be32 magic;
-> > +
-> > +> > 	> > if (get_user(magic, (__be32 *)dtb))
-> > +> > 	> > 	> > return false;
-> > +
-> 
-> You pass this function 'kimage->segment[i].buf', this looks like the user space
-> memory that contained the dtb when kexec-tools first ran to load the image.
-> 
-> This will work when you call it from machine_kexec_prepare(), but by the time we
-> get to machine_kexec() that process is long gone, and this pointer should be
-> considered junk.
-> 
-> I don't think its possible to find this information from machine_kexec(), as the
-> DTB will be split up into page size chunks and scattered through memory.
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ arch/arm64/kernel/machine_kexec.c | 48 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-That's correct.  I don't think it that important to print the
-dtb segment, so I'll just remove this kexec_is_dtb() routine.
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index a6dcb9c..7372e58 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -11,6 +11,7 @@
+ 
+ #include <linux/kexec.h>
+ #include <linux/smp.h>
++#include <linux/uaccess.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/cpu_ops.h>
+@@ -24,6 +25,32 @@ extern const unsigned long arm64_relocate_new_kernel_size;
+ 
+ static unsigned long kimage_start;
+ 
++/**
++ * kexec_image_info - For debugging output.
++ */
++#define kexec_image_info(_i) _kexec_image_info(__func__, __LINE__, _i)
++static void _kexec_image_info(const char *func, int line,
++	const struct kimage *kimage)
++{
++	unsigned long i;
++
++	pr_debug("%s:%d:\n", func, line);
++	pr_debug("  kexec kimage info:\n");
++	pr_debug("    type:        %d\n", kimage->type);
++	pr_debug("    start:       %lx\n", kimage->start);
++	pr_debug("    head:        %lx\n", kimage->head);
++	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
++
++	for (i = 0; i < kimage->nr_segments; i++) {
++		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
++			i,
++			kimage->segment[i].mem,
++			kimage->segment[i].mem + kimage->segment[i].memsz,
++			kimage->segment[i].memsz,
++			kimage->segment[i].memsz /  PAGE_SIZE);
++	}
++}
++
+ void machine_kexec_cleanup(struct kimage *kimage)
+ {
+ 	/* Empty routine needed to avoid build errors. */
+@@ -40,6 +67,8 @@ int machine_kexec_prepare(struct kimage *kimage)
+ {
+ 	kimage_start = kimage->start;
+ 
++	kexec_image_info(kimage);
++
+ 	if (kimage->type != KEXEC_TYPE_CRASH) {
+ 		if (cpus_are_stuck_in_kernel()) {
+ 			pr_err("Can't kexec: failed CPUs are stuck in the kernel.\n");
+@@ -137,6 +166,25 @@ void machine_kexec(struct kimage *kimage)
+ 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+ 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+ 
++	kexec_image_info(kimage);
++
++	pr_debug("%s:%d: control_code_page:        %p\n", __func__, __LINE__,
++		kimage->control_code_page);
++	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
++		&reboot_code_buffer_phys);
++	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
++		reboot_code_buffer);
++	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
++		arm64_relocate_new_kernel);
++	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
++		__func__, __LINE__, arm64_relocate_new_kernel_size,
++		arm64_relocate_new_kernel_size);
++
++	pr_debug("%s:%d: kimage_head:              %lx\n", __func__, __LINE__,
++		kimage->head);
++	pr_debug("%s:%d: kimage_start:             %lx\n", __func__, __LINE__,
++		kimage_start);
++
+ 	/*
+ 	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
+ 	 * after the kernel is shut down.
+-- 
+2.5.0
 
-> > +
-> >  void machine_kexec_cleanup(struct kimage *kimage)
-> >  {
-> >  > > 	> > /* Empty routine needed to avoid build errors. */
-> > @@ -65,6 +107,8 @@ int machine_kexec_prepare(struct kimage *kimage)
-> >  > > 	> > 	> > }
-> >  > > 	> > }
-> >  
-> > +> > 	> > kexec_image_info(kimage);
-> > +
-> 
-> You want to put this at the start of machine_kexec_prepare(), otherwise we may
-> return from:
-> > #ifdef CONFIG_HOTPLUG_CPU
-> > 	> > /* any_cpu as we don't mind being preempted */
-> > 	> > int any_cpu = raw_smp_processor_id();
-> > 
-> > 	> > if (cpu_ops[any_cpu]->cpu_die)
-> > 	> > 	> > return 0;
-> > #endif /* CONFIG_HOTPLUG_CPU */
-> 
-> This maybe-return-an-error block needs to be the last thing in the function.
-
-OK.
-
-> I'm not sure if the debug output is actually useful this early: kexec-tools
-> prints out exactly the same information shortly after this function returns.
-
-I thought it good to do it here, kexec-tools is not the only user
-of kexec see https://github.com/antonblanchard/kexec-lite.
-
-Thanks for checking.
-
--Geoff
 
 
 _______________________________________________
