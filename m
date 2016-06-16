@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm0-f66.google.com ([74.125.82.66])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bDVNs-0006qC-TQ
- for kexec@lists.infradead.org; Thu, 16 Jun 2016 11:22:53 +0000
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH] Revert "mm: rename _count, field of the struct page,
- to _refcount"
+ id 1bDVTJ-0001T4-9A
+ for kexec@lists.infradead.org; Thu, 16 Jun 2016 11:28:29 +0000
+Received: by mail-wm0-f66.google.com with SMTP id r5so10754231wmr.0
+ for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 04:28:08 -0700 (PDT)
+Date: Thu, 16 Jun 2016 13:28:06 +0200
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH] Revert "mm: rename _count, field of the struct page, to
+ _refcount"
+Message-ID: <20160616112805.GI6836@dhcp22.suse.cz>
 References: <1466068966-24620-1-git-send-email-vkuznets@redhat.com>
  <20160616093235.GA14640@infradead.org>
  <87eg7xfmtj.fsf@vitty.brq.redhat.com>
  <20160616105928.GA12437@dhcp22.suse.cz>
-Date: Thu, 16 Jun 2016 13:22:27 +0200
-In-Reply-To: <20160616105928.GA12437@dhcp22.suse.cz> (Michal Hocko's message
- of "Thu, 16 Jun 2016 12:59:28 +0200")
-Message-ID: <87a8ilfkek.fsf@vitty.brq.redhat.com>
+ <87a8ilfkek.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87a8ilfkek.fsf@vitty.brq.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,48 +30,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Hocko <mhocko@kernel.org>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
 Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-doc@vger.kernel.org, Hugh Dickins <hughd@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>
 
-Michal Hocko <mhocko@kernel.org> writes:
+On Thu 16-06-16 13:22:27, Vitaly Kuznetsov wrote:
+> Michal Hocko <mhocko@kernel.org> writes:
+> 
+> > On Thu 16-06-16 12:30:16, Vitaly Kuznetsov wrote:
+> >> Christoph Hellwig <hch@infradead.org> writes:
+> >> 
+> >> > On Thu, Jun 16, 2016 at 11:22:46AM +0200, Vitaly Kuznetsov wrote:
+> >> >> _count -> _refcount rename in commit 0139aa7b7fa12 ("mm: rename _count,
+> >> >> field of the struct page, to _refcount") broke kdump. makedumpfile(8) does
+> >> >> stuff like READ_MEMBER_OFFSET("page._count", page._count) and fails. While
+> >> >> it is definitely possible to fix this particular tool I'm not sure about
+> >> >> other tools which might be doing the same.
+> >> >> 
+> >> >> I suggest we remember the "we don't break userspace" rule and revert for
+> >> >> 4.7 while it's not too late.
+> >> >
+> >> > Err, sorry - this is not "userspace".  It's crazy crap digging into
+> >> > kernel internal structure.
+> >> >
+> >> > The rename was absolutely useful, so fix up your stinking pike in kdump.
+> >> 
+> >> Ok, sure, I'll send a patch to it. I was worried about other tools out
+> >> there which e.g. inspect /proc/vmcore. As it is something we support
+> >> some conservatism around it is justified.
+> >
+> > struct page layout as some others that such a tool might depend on has
+> > changes several times in the past so I fail to see how is it any
+> > different this time.
+> 
+> IMO this time the change doesn't give us any advantage, it was just a
+> rename.
 
-> On Thu 16-06-16 12:30:16, Vitaly Kuznetsov wrote:
->> Christoph Hellwig <hch@infradead.org> writes:
->> 
->> > On Thu, Jun 16, 2016 at 11:22:46AM +0200, Vitaly Kuznetsov wrote:
->> >> _count -> _refcount rename in commit 0139aa7b7fa12 ("mm: rename _count,
->> >> field of the struct page, to _refcount") broke kdump. makedumpfile(8) does
->> >> stuff like READ_MEMBER_OFFSET("page._count", page._count) and fails. While
->> >> it is definitely possible to fix this particular tool I'm not sure about
->> >> other tools which might be doing the same.
->> >> 
->> >> I suggest we remember the "we don't break userspace" rule and revert for
->> >> 4.7 while it's not too late.
->> >
->> > Err, sorry - this is not "userspace".  It's crazy crap digging into
->> > kernel internal structure.
->> >
->> > The rename was absolutely useful, so fix up your stinking pike in kdump.
->> 
->> Ok, sure, I'll send a patch to it. I was worried about other tools out
->> there which e.g. inspect /proc/vmcore. As it is something we support
->> some conservatism around it is justified.
->
-> struct page layout as some others that such a tool might depend on has
-> changes several times in the past so I fail to see how is it any
-> different this time.
-
-IMO this time the change doesn't give us any advantage, it was just a
-rename.
-
-> struct page is nothing the userspace should depend on.
-
-True but at least makedumpfile(8) is special and even if it's a 'crazy
-crap digging into ...' we could avoid breaking it for no technical
-reason.
+Which would catch all the pending users who are not using the
+appropriate API. This is IMHO very useful as the sole purpose of the
+change is to catch _all_ users. So the reason is pretty much technicall.
 
 -- 
-  Vitaly
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
