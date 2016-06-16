@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bDK0C-0000Fg-NM
- for kexec@lists.infradead.org; Wed, 15 Jun 2016 23:13:41 +0000
-Date: Thu, 16 Jun 2016 00:13:03 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: kexec failures with DEBUG_RODATA
-Message-ID: <20160615231303.GL1041@n2100.armlinux.org.uk>
-References: <20160614175920.GD1041@n2100.armlinux.org.uk>
- <CAGXu5j+5j32HO0rQtF2hcqMUBaa8cyxgLT4JvaZ6LL2WPj_zjw@mail.gmail.com>
- <20160615211359.GJ1041@n2100.armlinux.org.uk>
- <CAGXu5jKRBA9b6gos+FG7iV2ppxtAERstNPschxA0z=aDL_y1YA@mail.gmail.com>
- <20160615224228.GK1041@n2100.armlinux.org.uk>
- <CAGXu5jLqNeYe_=7a5XC6UW4G3WiRQrrBvgernmugw_r2y0Nshg@mail.gmail.com>
+ id 1bDMaX-0004JZ-4b
+ for kexec@lists.infradead.org; Thu, 16 Jun 2016 01:59:22 +0000
+Date: Thu, 16 Jun 2016 09:58:53 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
+Message-ID: <20160616015853.GA4103@dhcp-128-65.nay.redhat.com>
+References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1465916349-3398-3-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160615073302.GA5684@dhcp-128-65.nay.redhat.com>
+ <3237367.XLxdnj8q4x@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAGXu5jLqNeYe_=7a5XC6UW4G3WiRQrrBvgernmugw_r2y0Nshg@mail.gmail.com>
+In-Reply-To: <3237367.XLxdnj8q4x@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,42 +26,130 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@google.com>
-Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-On Wed, Jun 15, 2016 at 03:54:38PM -0700, Kees Cook wrote:
-> On Wed, Jun 15, 2016 at 3:42 PM, Russell King - ARM Linux
-> <linux@armlinux.org.uk> wrote:
-> > In fact, the apparent confusion over this reinforces my belief that we
-> > should _not_ give the size of the uncompressed image at all.
-> >
-> > The boot environment must be setup such that there is room for the
-> > uncompressed image (aligned currently to 256 bytes) followed by the
-> > size of the compressed image, with any appended DTBs included.
-> > Anything which is located below that is likely to get trampled by
-> > the decompressor.
+On 06/15/16 at 01:21pm, Thiago Jung Bauermann wrote:
+> Hello Dave,
 > 
-> Okay, sounds reasonable to me. :)
+> Am Mittwoch, 15 Juni 2016, 15:33:02 schrieb Dave Young:
+> > > @@ -472,14 +498,16 @@ int kexec_add_buffer(struct kimage *image, char
+> > > *buffer, unsigned long bufsz,> 
+> > >  	kbuf->top_down = top_down;
+> > >  	
+> > >  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+> > > 
+> > > -	if (image->type == KEXEC_TYPE_CRASH)
+> > > -		ret = walk_iomem_res_desc(crashk_res.desc,
+> > > -				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> > > -				crashk_res.start, crashk_res.end, kbuf,
+> > > -				locate_mem_hole_callback);
+> > > -	else
+> > > -		ret = walk_system_ram_res(0, -1, kbuf,
+> > > -					  locate_mem_hole_callback);
+> > > +	if (image->type == KEXEC_TYPE_CRASH) {
+> > > +		start = crashk_res.start;
+> > > +		end = crashk_res.end;
+> > > +	} else {
+> > > +		start = 0;
+> > > +		end = ULONG_MAX;
+> > > +	}
+> > 
+> > For crashk_res, start and end is global, the non-crash values are
+> > hard coded, thus it is not necessary to pass these two in arguments.
+> > 
+> > Moving above to arch_kexec_walk_mem will make it cleaner.
+> 
+> That's true. What about this version?
+> 
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
+> 
+>     kexec_file: Generalize kexec_add_buffer.
+>     
+>     Allow architectures to specify different memory walking functions for
+>     kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
+>     but PowerPC uses the memblock subsystem.
+>     
+>     Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+>     Cc: Eric Biederman <ebiederm@xmission.com>
+>     Cc: Dave Young <dyoung@redhat.com>
+>     Cc: kexec@lists.infradead.org
+>     Cc: linux-kernel@vger.kernel.org
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index e8acb2b43dd9..9b02f907b40a 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -315,6 +315,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+>  					Elf_Shdr *sechdrs, unsigned int relsec);
+>  int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  					unsigned int relsec);
+> +int __weak arch_kexec_walk_mem(unsigned int image_type, bool top_down,
+> +			       void *data, int (*func)(u64, u64, void *));
+>  void arch_kexec_protect_crashkres(void);
+>  void arch_kexec_unprotect_crashkres(void);
+>  
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b6eec7527e9f..2d066c458222 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -428,6 +428,29 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
+>  	return locate_mem_hole_bottom_up(start, end, kbuf);
+>  }
+>  
+> +/**
+> + * arch_kexec_walk_mem - call func(data) on free memory regions
+> + * @image_type:	kimage.type
+> + * @top_down:	Start from the highest address?
+> + * @data:	Argument to pass to @func.
+> + * @func:	Function to call for each memory region.
+> + *
+> + * Return: The memory walk will stop when func returns a non-zero value
+> + * and that value will be returned. If all free regions are visited without
+> + * func returning non-zero, then zero will be returned.
+> + */
+> +int __weak arch_kexec_walk_mem(unsigned int image_type, bool top_down,
+> +			       void *data, int (*func)(u64, u64, void *))
+> +{
 
-I should point out that this method should work for a zImage without
-an appended DTB, and we have no way to update this header block for
-the appended DTB case.
+top_down is also not used?
 
-So, an alternative standpoint is that we supply only the uncompressed
-image size.  Then, the boot environment needs to understand that they
-must allow for the compressed image and any appended DTB on top of that
-(which it would see as one - the size of the combined image.)
+Rethink about the argument name type should be better than image_type,
+it is obvious in the comments and the code and simpler.
 
-However, while that may sound like a good idea, we're falling into the
-same trap that we've fallen into at the beginning of this thread: the
-boot environment has to understand how the decompressor currently works,
-and if we were to change that, this we're back to the calculation which
-the boot environment is using not matching reality.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> +	if (image_type == KEXEC_TYPE_CRASH)
+> +		return walk_iomem_res_desc(crashk_res.desc,
+> +					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> +					   crashk_res.start, crashk_res.end,
+> +					   data, func);
+> +	else
+> +		return walk_system_ram_res(0, ULONG_MAX, data, func);
+> +}
+> +
+>  /*
+>   * Helper function for placing a buffer in a kexec segment. This assumes
+>   * that kexec_mutex is held.
+> @@ -472,14 +495,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+>  	kbuf->top_down = top_down;
+>  
+>  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+> -	if (image->type == KEXEC_TYPE_CRASH)
+> -		ret = walk_iomem_res_desc(crashk_res.desc,
+> -				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> -				crashk_res.start, crashk_res.end, kbuf,
+> -				locate_mem_hole_callback);
+> -	else
+> -		ret = walk_system_ram_res(0, -1, kbuf,
+> -					  locate_mem_hole_callback);
+> +	ret = arch_kexec_walk_mem(image->type, top_down, kbuf,
+> +				   locate_mem_hole_callback);
+>  	if (ret != 1) {
+>  		/* A suitable memory range could not be found for buffer */
+>  		return -EADDRNOTAVAIL;
+> 
 
 _______________________________________________
 kexec mailing list
