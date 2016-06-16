@@ -1,40 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bDdOb-0004N6-TQ
- for kexec@lists.infradead.org; Thu, 16 Jun 2016 19:56:10 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ id 1bDe4u-0000Mn-93
+ for kexec@lists.infradead.org; Thu, 16 Jun 2016 20:39:53 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5GJs2Y4039256
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 15:55:46 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 23ktnhvh86-1
+ u5GKcUhm050098
+ for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:39:30 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23kqt2m3vu-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 15:55:46 -0400
+ for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:39:30 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 16 Jun 2016 16:55:44 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 5846B352005C
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 15:55:24 -0400 (EDT)
-Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5GJteoX17433000
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:55:40 -0300
-Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
- by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5GJtdGq028075
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:55:39 -0300
+ Thu, 16 Jun 2016 17:39:28 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id CF79C3520068
+ for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:39:10 -0400 (EDT)
+Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5GKdQBG26607972
+ for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 17:39:27 -0300
+Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
+ by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5GKdQPA012889
+ for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 17:39:26 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 0/9] kexec_file_load implementation for PowerPC
-Date: Thu, 16 Jun 2016 16:55:33 -0300
-In-Reply-To: <1466056110.5400.8.camel@ellerman.id.au>
+Subject: Re: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
+Date: Thu, 16 Jun 2016 17:39:21 -0300
+In-Reply-To: <20160616015853.GA4103@dhcp-128-65.nay.redhat.com>
 References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1466056110.5400.8.camel@ellerman.id.au>
+ <3237367.XLxdnj8q4x@hactar>
+ <20160616015853.GA4103@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Message-Id: <17475630.nMjKSPkg4b@hactar>
+Message-Id: <16133071.BqvF7Se0c2@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,48 +49,142 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-Am Donnerstag, 16 Juni 2016, 15:48:30 schrieb Michael Ellerman:
-> On Tue, 2016-06-14 at 11:59 -0300, Thiago Jung Bauermann wrote:
-> > Hello,
-> > 
-> > This patch series implements the kexec_file_load system call on PowerPC.
+Am Donnerstag, 16 Juni 2016, 09:58:53 schrieb Dave Young:
+> On 06/15/16 at 01:21pm, Thiago Jung Bauermann wrote:
+> > +/**
+> > + * arch_kexec_walk_mem - call func(data) on free memory regions
+> > + * @image_type:	kimage.type
+> > + * @top_down:	Start from the highest address?
+> > + * @data:	Argument to pass to @func.
+> > + * @func:	Function to call for each memory region.
+> > + *
+> > + * Return: The memory walk will stop when func returns a non-zero value
+> > + * and that value will be returned. If all free regions are visited
+> > without + * func returning non-zero, then zero will be returned.
+> > + */
+> > +int __weak arch_kexec_walk_mem(unsigned int image_type, bool top_down,
+> > +			       void *data, int (*func)(u64, u64, void *))
+> > +{
 > 
-> Can you tell me what this syscall does and why I would want it?
+> top_down is also not used?
 
-Sorry, should have provided the motivation when I posted the patches.
+It's unused in the default implementation, but the powerpc implementation in patch 8 uses it:
 
-This system call moves the reading of the kernel, initrd and the device tree 
-from the userspace kexec tool to the kernel. This is needed if you want to 
-do one or both of the following:
+int arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
+			int (*func)(u64, u64, void *))
+{
+	int ret = 0;
+	u64 i;
+	phys_addr_t mstart, mend;
 
-1. only allow loading of signed kernels.
-2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel command 
-line and other boot inputs for the  Integrity Measurement Architecture 
-subsystem.
+	if (top_down) {
+		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
+						&mstart, &mend, NULL) {
+			ret = func(mstart, mend, data);
+			if (ret)
+				break;
+		}
+	} else {
+		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
+					NULL) {
+			ret = func(mstart, mend, data);
+			if (ret)
+				break;
+		}
+	}
 
-The above are the functions kexec already has built into kexec_file_load. I 
-will soon post a set of patches which will allow a third feature:
+	return ret;
+}
 
-3. have IMA pass-on its event log (where integrity measurements are 
-registered) accross kexec to the second kernel, so that the event history is 
-preserved.
+> Rethink about the argument name type should be better than image_type,
+> it is obvious in the comments and the code and simpler.
 
-Because OpenPower uses an intermediary Linux instance as a boot loader 
-(skiroot), feature 1 is needed to implement secure boot for the platform, 
-while features 2 and 3 are needed to implement trusted boot.
+Ok, renamed in the patch below.
 
-There's an LWN article giving more context on the origins of the system 
-call, if you are interested:
-
-https://lwn.net/Articles/603116/
-
--- 
 []'s
 Thiago Jung Bauermann
 IBM Linux Technology Center
+
+
+    kexec_file: Generalize kexec_add_buffer.
+    
+    Allow architectures to specify different memory walking functions for
+    kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
+    but PowerPC uses the memblock subsystem.
+    
+    Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+    Cc: Eric Biederman <ebiederm@xmission.com>
+    Cc: Dave Young <dyoung@redhat.com>
+    Cc: kexec@lists.infradead.org
+    Cc: linux-kernel@vger.kernel.org
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index e8acb2b43dd9..42b31f2e1d88 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -315,6 +315,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+ 					Elf_Shdr *sechdrs, unsigned int relsec);
+ int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 					unsigned int relsec);
++int __weak arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
++			       int (*func)(u64, u64, void *));
+ void arch_kexec_protect_crashkres(void);
+ void arch_kexec_unprotect_crashkres(void);
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b6eec7527e9f..989647a324f2 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -428,6 +428,29 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
+ 	return locate_mem_hole_bottom_up(start, end, kbuf);
+ }
+ 
++/**
++ * arch_kexec_walk_mem - call func(data) on free memory regions
++ * @type:	kimage.type
++ * @top_down:	Start from the highest address?
++ * @data:	Argument to pass to @func.
++ * @func:	Function to call for each memory region.
++ *
++ * Return: The memory walk will stop when func returns a non-zero value
++ * and that value will be returned. If all free regions are visited without
++ * func returning non-zero, then zero will be returned.
++ */
++int __weak arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
++			       int (*func)(u64, u64, void *))
++{
++	if (type == KEXEC_TYPE_CRASH)
++		return walk_iomem_res_desc(crashk_res.desc,
++					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
++					   crashk_res.start, crashk_res.end,
++					   data, func);
++	else
++		return walk_system_ram_res(0, ULONG_MAX, data, func);
++}
++
+ /*
+  * Helper function for placing a buffer in a kexec segment. This assumes
+  * that kexec_mutex is held.
+@@ -472,14 +495,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 	kbuf->top_down = top_down;
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+-	if (image->type == KEXEC_TYPE_CRASH)
+-		ret = walk_iomem_res_desc(crashk_res.desc,
+-				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+-				crashk_res.start, crashk_res.end, kbuf,
+-				locate_mem_hole_callback);
+-	else
+-		ret = walk_system_ram_res(0, -1, kbuf,
+-					  locate_mem_hole_callback);
++	ret = arch_kexec_walk_mem(image->type, top_down, kbuf,
++				   locate_mem_hole_callback);
+ 	if (ret != 1) {
+ 		/* A suitable memory range could not be found for buffer */
+ 		return -EADDRNOTAVAIL;
 
 
 _______________________________________________
