@@ -1,23 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-f66.google.com ([74.125.82.66])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bDVTJ-0001T4-9A
- for kexec@lists.infradead.org; Thu, 16 Jun 2016 11:28:29 +0000
-Received: by mail-wm0-f66.google.com with SMTP id r5so10754231wmr.0
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 04:28:08 -0700 (PDT)
-Date: Thu, 16 Jun 2016 13:28:06 +0200
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH] Revert "mm: rename _count, field of the struct page, to
- _refcount"
-Message-ID: <20160616112805.GI6836@dhcp22.suse.cz>
-References: <1466068966-24620-1-git-send-email-vkuznets@redhat.com>
- <20160616093235.GA14640@infradead.org>
- <87eg7xfmtj.fsf@vitty.brq.redhat.com>
- <20160616105928.GA12437@dhcp22.suse.cz>
- <87a8ilfkek.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87a8ilfkek.fsf@vitty.brq.redhat.com>
+ id 1bDXR0-00035O-ES
+ for kexec@lists.infradead.org; Thu, 16 Jun 2016 13:34:15 +0000
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH] makedumpfile: support _count -> _refcount rename in struct
+ page
+Date: Thu, 16 Jun 2016 15:33:49 +0200
+Message-Id: <1466084029-22290-1-git-send-email-vkuznets@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,52 +16,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-doc@vger.kernel.org, Hugh Dickins <hughd@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>
+To: kexec@lists.infradead.org
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, David Anderson <anderson@redhat.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>
 
-On Thu 16-06-16 13:22:27, Vitaly Kuznetsov wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
-> 
-> > On Thu 16-06-16 12:30:16, Vitaly Kuznetsov wrote:
-> >> Christoph Hellwig <hch@infradead.org> writes:
-> >> 
-> >> > On Thu, Jun 16, 2016 at 11:22:46AM +0200, Vitaly Kuznetsov wrote:
-> >> >> _count -> _refcount rename in commit 0139aa7b7fa12 ("mm: rename _count,
-> >> >> field of the struct page, to _refcount") broke kdump. makedumpfile(8) does
-> >> >> stuff like READ_MEMBER_OFFSET("page._count", page._count) and fails. While
-> >> >> it is definitely possible to fix this particular tool I'm not sure about
-> >> >> other tools which might be doing the same.
-> >> >> 
-> >> >> I suggest we remember the "we don't break userspace" rule and revert for
-> >> >> 4.7 while it's not too late.
-> >> >
-> >> > Err, sorry - this is not "userspace".  It's crazy crap digging into
-> >> > kernel internal structure.
-> >> >
-> >> > The rename was absolutely useful, so fix up your stinking pike in kdump.
-> >> 
-> >> Ok, sure, I'll send a patch to it. I was worried about other tools out
-> >> there which e.g. inspect /proc/vmcore. As it is something we support
-> >> some conservatism around it is justified.
-> >
-> > struct page layout as some others that such a tool might depend on has
-> > changes several times in the past so I fail to see how is it any
-> > different this time.
-> 
-> IMO this time the change doesn't give us any advantage, it was just a
-> rename.
+_count member was renamed to _refcount in linux commit commit 0139aa7b7fa12
+("mm: rename _count, field of the struct page, to _refcount") and this
+broke makedumpfile. The reason for making the change was to find all users
+accessing it directly and not through the recommended API. I tried
+suggesting to revert the change but failed, I see no other choice than to
+start supporting both _count and _refcount in makedumpfile.
 
-Which would catch all the pending users who are not using the
-appropriate API. This is IMHO very useful as the sole purpose of the
-change is to catch _all_ users. So the reason is pretty much technicall.
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+- 'crash' tool is now broken as well.
+---
+ makedumpfile.c | 18 +++++++++++++++++-
+ makedumpfile.h |  1 +
+ 2 files changed, 18 insertions(+), 1 deletion(-)
 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 853b999..96dfe39 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1580,6 +1580,13 @@ get_structure_info(void)
+ 	SIZE_INIT(page, "page");
+ 	OFFSET_INIT(page.flags, "page", "flags");
+ 	OFFSET_INIT(page._count, "page", "_count");
++	if (OFFSET(page._count) == NOT_FOUND_STRUCTURE) {
++		info->flag_refcount = TRUE;
++		OFFSET_INIT(page._count, "page", "_refcount");
++	} else {
++		info->flag_refcount = FALSE;
++	}
++
+ 	OFFSET_INIT(page.mapping, "page", "mapping");
+ 	OFFSET_INIT(page._mapcount, "page", "_mapcount");
+ 	OFFSET_INIT(page.private, "page", "private");
+@@ -2151,7 +2158,10 @@ write_vmcoreinfo_data(void)
+ 	 * write the member offset of 1st kernel
+ 	 */
+ 	WRITE_MEMBER_OFFSET("page.flags", page.flags);
+-	WRITE_MEMBER_OFFSET("page._count", page._count);
++	if (info->flag_refcount)
++		WRITE_MEMBER_OFFSET("page._refcount", page._count);
++	else
++		WRITE_MEMBER_OFFSET("page._count", page._count);
+ 	WRITE_MEMBER_OFFSET("page.mapping", page.mapping);
+ 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
+ 	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
+@@ -2492,6 +2502,12 @@ read_vmcoreinfo(void)
+ 
+ 	READ_MEMBER_OFFSET("page.flags", page.flags);
+ 	READ_MEMBER_OFFSET("page._count", page._count);
++	if (OFFSET(page._count) == NOT_FOUND_STRUCTURE) {
++		info->flag_refcount = TRUE;
++		READ_MEMBER_OFFSET("page._refcount", page._count);
++	} else {
++		info->flag_refcount = FALSE;
++	}
+ 	READ_MEMBER_OFFSET("page.mapping", page.mapping);
+ 	READ_MEMBER_OFFSET("page.lru", page.lru);
+ 	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 251d4bf..3742389 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1100,6 +1100,7 @@ struct DumpInfo {
+ 	int		flag_nospace;	     /* the flag of "No space on device" error */
+ 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+ 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
++	int		flag_refcount;       /* _count is renamed to _refcount */
+ 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
+ 	long		page_size;           /* size of page */
+ 	long		page_shift;
 -- 
-Michal Hocko
-SUSE Labs
+2.5.5
+
 
 _______________________________________________
 kexec mailing list
