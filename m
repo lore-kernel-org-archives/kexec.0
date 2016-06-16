@@ -1,42 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bDe4u-0000Mn-93
- for kexec@lists.infradead.org; Thu, 16 Jun 2016 20:39:53 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5GKcUhm050098
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:39:30 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0a-001b2d01.pphosted.com with ESMTP id 23kqt2m3vu-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:39:30 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 16 Jun 2016 17:39:28 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id CF79C3520068
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 16:39:10 -0400 (EDT)
-Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5GKdQBG26607972
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 17:39:27 -0300
-Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
- by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5GKdQPA012889
- for <kexec@lists.infradead.org>; Thu, 16 Jun 2016 17:39:26 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
-Date: Thu, 16 Jun 2016 17:39:21 -0300
-In-Reply-To: <20160616015853.GA4103@dhcp-128-65.nay.redhat.com>
-References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <3237367.XLxdnj8q4x@hactar>
- <20160616015853.GA4103@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Message-Id: <16133071.BqvF7Se0c2@hactar>
+Message-ID: <1466116866.21058.48.camel@infradead.org>
+Subject: Re: [PATCH v18 03/13] arm64/kexec: Add core kexec support
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 16 Jun 2016 15:41:06 -0700
+In-Reply-To: <57618C1B.6000202@arm.com>
+References: <cover.1465502767.git.geoff@infradead.org>
+ <84e50e4043a2061e0f5d9273f55e158c59754af0.1465502767.git.geoff@infradead.org>
+ <57618C1B.6000202@arm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,142 +20,232 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Am Donnerstag, 16 Juni 2016, 09:58:53 schrieb Dave Young:
-> On 06/15/16 at 01:21pm, Thiago Jung Bauermann wrote:
-> > +/**
-> > + * arch_kexec_walk_mem - call func(data) on free memory regions
-> > + * @image_type:	kimage.type
-> > + * @top_down:	Start from the highest address?
-> > + * @data:	Argument to pass to @func.
-> > + * @func:	Function to call for each memory region.
+On Wed, 2016-06-15 at 18:10 +0100, James Morse wrote:
+> On 09/06/16 21:08, Geoff Levand wrote:
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -0,0 +1,185 @@
+> > +/*
+> > + * kexec for arm64
 > > + *
-> > + * Return: The memory walk will stop when func returns a non-zero value
-> > + * and that value will be returned. If all free regions are visited
-> > without + * func returning non-zero, then zero will be returned.
+> > + * Copyright (C) Linaro.
+> > + * Copyright (C) Huawei Futurewei Technologies.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
 > > + */
-> > +int __weak arch_kexec_walk_mem(unsigned int image_type, bool top_down,
-> > +			       void *data, int (*func)(u64, u64, void *))
-> > +{
+> > +
+> > +#include 
 > 
-> top_down is also not used?
+> We don't have/need highmem on arm64. The kmap()/kunmap() calls just obscure what
+> is going on.
+> 
+> 
+> > +#include 
+> > +#include 
+> 
+> What do you need of_fdt.h for? I guess this should be in patch 4.
+> 
+> 
+> > +#include 
+> 
+> The control page was already allocated, I can't see anything else being
+> allocated... What do you need slab.h for?
+> 
+> 
+> > +#include 
+> > +#include 
+> 
+> User space access? I guess this should be in patch 4.
+> 
+> 
+> > +
+> > +#include 
+> > +#include 
+> > +#include 
+> > +#include 
+> 
+> I can't see anything in system_misc.h that you are using in here.
 
-It's unused in the default implementation, but the powerpc implementation in patch 8 uses it:
+I cleaned up all these includes.
 
-int arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
-			int (*func)(u64, u64, void *))
-{
-	int ret = 0;
-	u64 i;
-	phys_addr_t mstart, mend;
+> > + * kexec_list_flush - Helper to flush the kimage list to PoC.
+> > + */
+> > +static void kexec_list_flush(struct kimage *kimage)
+> > +{
+> > +> > 	> > kimage_entry_t *entry;
+> > +> > 	> > unsigned int flag;
+> > +
+> > +> > 	> > for (entry = &kimage->head, flag = 0; flag != IND_DONE; entry++) {
+> > +> > 	> > 	> > void *addr = kmap(phys_to_page(*entry & PAGE_MASK));
+> > +
+> > +> > 	> > 	> > flag = *entry & IND_FLAGS;
+> > +
+> > +> > 	> > 	> > switch (flag) {
+> > +> > 	> > 	> > case IND_INDIRECTION:
+> > +> > 	> > 	> > 	> > entry = (kimage_entry_t *)addr - 1;
+> 
+> This '-1' is so that entry points before the first entry of the new table,
+> and is un-done by entry++ next time round the loop...
+> If I'm right, could you add a comment to that effect? It took me a little while
+> to work out!
 
-	if (top_down) {
-		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
-						&mstart, &mend, NULL) {
-			ret = func(mstart, mend, data);
-			if (ret)
-				break;
-		}
-	} else {
-		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
-					NULL) {
-			ret = func(mstart, mend, data);
-			if (ret)
-				break;
-		}
-	}
+I added a comment.
 
-	return ret;
-}
+> kexec_core.c has a snazzy macro: for_each_kimage_entry(), its a shame its not in
+> a header file.
+> This loop does the same but with two variables instead of three. These
+> IN_INDIRECTION pages only appear at the end of a list, this list-walking looks
+> correct.
+> 
+> 
+> > +> > 	> > 	> > 	> > __flush_dcache_area(addr, PAGE_SIZE);
+> 
+> So if we find an indirection pointer, we switch entry to the new page, and clean
+> it to the PoC, because later we walk this list with the MMU off.
+> 
+> But what cleans the very first page?
 
-> Rethink about the argument name type should be better than image_type,
-> it is obvious in the comments and the code and simpler.
+I don't think this routine was doing the quite the right thing.  The
+arm64_relocate_new_kernel routine uses the list (the entry's), and
+the second stage kernel buffers (the IND_SOURCE's). Those two things
+are what should be flushed here.
 
-Ok, renamed in the patch below.
+> > +> > 	> > 	> > 	> > break;
+> > +> > 	> > 	> > case IND_DESTINATION:
+> > +> > 	> > 	> > 	> > break;
+> > +> > 	> > 	> > case IND_SOURCE:
+> > +> > 	> > 	> > 	> > __flush_dcache_area(addr, PAGE_SIZE);
+> > +> > 	> > 	> > 	> > break;
+> > +> > 	> > 	> > case IND_DONE:
+> > +> > 	> > 	> > 	> > break;
+> > +> > 	> > 	> > default:
+> > +> > 	> > 	> > 	> > BUG();
+> 
+> Unless you think its less readable, you could group the clauses together:
 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Takahiro found a bug when CONFIG_SPARSEMEM_VMEMMAP=n, and this code
+has now been reworked.
 
+> > 	> > 	> > case IND_INDIRECTION:
+> > 	> > 	> > 	> > entry = (kimage_entry_t *)addr - 1;
+> > 	> > 	> > case IND_SOURCE:
+> > 	> > 	> > 	> > __flush_dcache_area(addr, PAGE_SIZE);
+> > 	> > 	> > case IND_DESTINATION:
+> > 	> > 	> > case IND_DONE:
+> > 	> > 	> > 	> > break;
+> diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+> > new file mode 100644
+> > index 0000000..e380db3
+> > --- /dev/null
+> > +++ b/arch/arm64/kernel/relocate_kernel.S
+> > @@ -0,0 +1,131 @@
+> > +.globl arm64_relocate_new_kernel
+> > +arm64_relocate_new_kernel:
+> 
+> All the other asm functions use ENTRY(), which would do the .globl and alignment
+> for you. (You would need a ENDPROC(arm64_relocate_new_kernel) too.)
 
-    kexec_file: Generalize kexec_add_buffer.
-    
-    Allow architectures to specify different memory walking functions for
-    kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
-    but PowerPC uses the memblock subsystem.
-    
-    Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-    Cc: Eric Biederman <ebiederm@xmission.com>
-    Cc: Dave Young <dyoung@redhat.com>
-    Cc: kexec@lists.infradead.org
-    Cc: linux-kernel@vger.kernel.org
+Sure.
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index e8acb2b43dd9..42b31f2e1d88 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -315,6 +315,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
- 					Elf_Shdr *sechdrs, unsigned int relsec);
- int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
- 					unsigned int relsec);
-+int __weak arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
-+			       int (*func)(u64, u64, void *));
- void arch_kexec_protect_crashkres(void);
- void arch_kexec_unprotect_crashkres(void);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b6eec7527e9f..989647a324f2 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -428,6 +428,29 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
- 	return locate_mem_hole_bottom_up(start, end, kbuf);
- }
- 
-+/**
-+ * arch_kexec_walk_mem - call func(data) on free memory regions
-+ * @type:	kimage.type
-+ * @top_down:	Start from the highest address?
-+ * @data:	Argument to pass to @func.
-+ * @func:	Function to call for each memory region.
-+ *
-+ * Return: The memory walk will stop when func returns a non-zero value
-+ * and that value will be returned. If all free regions are visited without
-+ * func returning non-zero, then zero will be returned.
-+ */
-+int __weak arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
-+			       int (*func)(u64, u64, void *))
-+{
-+	if (type == KEXEC_TYPE_CRASH)
-+		return walk_iomem_res_desc(crashk_res.desc,
-+					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-+					   crashk_res.start, crashk_res.end,
-+					   data, func);
-+	else
-+		return walk_system_ram_res(0, ULONG_MAX, data, func);
-+}
-+
- /*
-  * Helper function for placing a buffer in a kexec segment. This assumes
-  * that kexec_mutex is held.
-@@ -472,14 +495,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	kbuf->top_down = top_down;
- 
- 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
--	if (image->type == KEXEC_TYPE_CRASH)
--		ret = walk_iomem_res_desc(crashk_res.desc,
--				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
--				crashk_res.start, crashk_res.end, kbuf,
--				locate_mem_hole_callback);
--	else
--		ret = walk_system_ram_res(0, -1, kbuf,
--					  locate_mem_hole_callback);
-+	ret = arch_kexec_walk_mem(image->type, top_down, kbuf,
-+				   locate_mem_hole_callback);
- 	if (ret != 1) {
- 		/* A suitable memory range could not be found for buffer */
- 		return -EADDRNOTAVAIL;
+> > +
+> > +> > 	> > /* Setup the list loop variables. */
+> > +> > 	> > mov> > 	> > x18, x1> > 	> > 	> > 	> > 	> > /* x18 = kimage_start */
+> > +> > 	> > mov> > 	> > x17, x0> > 	> > 	> > 	> > 	> > /* x17 = kimage_head */
+> > +> > 	> > dcache_line_size x16, x0> > 	> > 	> > /* x16 = dcache line size */
+> > +> > 	> > mov> > 	> > x15, xzr> > 	> > 	> > 	> > /* x15 = segment start */
+> 
+> What uses this 'segment start'?
+
+That is left over from when we booted without purgatory (as
+the arm arch does).
+
+> > +> > 	> > mov> > 	> > x14, xzr> > 	> > 	> > 	> > /* x14 = entry ptr */
+> > +> > 	> > mov> > 	> > x13, xzr> > 	> > 	> > 	> > /* x13 = copy dest */
+> > +
+> > +> > 	> > /* Clear the sctlr_el2 flags. */
+> > +> > 	> > mrs> > 	> > x0, CurrentEL
+> > +> > 	> > cmp> > 	> > x0, #CurrentEL_EL2
+> > +> > 	> > b.ne> > 	> > 1f
+> > +> > 	> > mrs> > 	> > x0, sctlr_el2
+> > +> > 	> > ldr> > 	> > x1, =SCTLR_ELx_FLAGS
+> > +> > 	> > bic> > 	> > x0, x0, x1
+> > +> > 	> > msr> > 	> > sctlr_el2, x0
+> > +> > 	> > isb
+> > +1:
+> > +
+> > +> > 	> > /* Check if the new image needs relocation. */
+> > +> > 	> > cbz> > 	> > x17, .Ldone
+> 
+> Does this happen? Do we ever come across an empty slot in the tables?
+> 
+> kimage_terminate() adds the IND_DONE entry, so we should never see an empty
+> slot. kexec_list_flush() would BUG() on this too, and we call that
+> unconditionally on the way in here.
+
+I put that in just in case, but never checked if it would
+ever actually happen.  I can take it out.
+
+> > +> > 	> > tbnz> > 	> > x17, IND_DONE_BIT, .Ldone
+> > +
+> > +.Lloop:
+> > +> > 	> > and> > 	> > x12, x17, PAGE_MASK> > 	> > 	> > /* x12 = addr */
+> > +
+> > +> > 	> > /* Test the entry flags. */
+> > +.Ltest_source:
+> > +> > 	> > tbz> > 	> > x17, IND_SOURCE_BIT, .Ltest_indirection
+> > +
+> > +> > 	> > /* Invalidate dest page to PoC. */
+> > +> > 	> > mov     x0, x13
+> > +> > 	> > add     x20, x0, #PAGE_SIZE
+> > +> > 	> > sub     x1, x16, #1
+> > +> > 	> > bic     x0, x0, x1
+> > +2:> > 	> > dc      ivac, x0
+> 
+> This relies on an IND_DESTINATION being found first for x13 to be set to
+> something other than 0. I guess if kexec-core hands us a broken list, all bets
+> are off!
+
+Yes, assumed to be IND_DESTINATION.
+
+> > +
+> > +.Ldone:
+> 
+>         /* wait for writes from copy_page to finish */
+
+Added.
+
+> > +	dsb	nsh
+> > +> > 	> > ic> > 	> > iallu
+> > +> > 	> > dsb> > 	> > nsh
+> > +> > 	> > isb
+> > +
+> > +> > 	> > /* Start new image. */
+> > +> > 	> > mov> > 	> > x0, xzr
+> > +> > 	> > mov> > 	> > x1, xzr
+> > +> > 	> > mov> > 	> > x2, xzr
+> > +> > 	> > mov> > 	> > x3, xzr
+> > +> > 	> > br> > 	> > x18
+> > +
+> > +.ltorg
+> > +
+> > +.align 3> > 	> > /* To keep the 64-bit values below naturally aligned. */
+> > +
+> > +.Lcopy_end:
+> > +.org> > 	> > KEXEC_CONTROL_PAGE_SIZE
+> 
+> Why do we need to pad up to KEXEC_CONTROL_PAGE_SIZE?
+> In machine_kexec() we only copy arm64_relocate_new_kernel_size bytes, so it
+> shouldn't matter what is here. As far as I can see we don't even access it.
+
+This is to check if arm64_relocate_new_kernel gets too
+big.  The assembler should give an error if the location
+counter is set backwards.
+
+-Geoff
 
 
 _______________________________________________
