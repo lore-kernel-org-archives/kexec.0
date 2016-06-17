@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bDl1T-0002kk-A8
- for kexec@lists.infradead.org; Fri, 17 Jun 2016 04:04:49 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: support _count -> _refcount rename in
- struct page
-Date: Fri, 17 Jun 2016 04:02:22 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E4C4F5@BPXM01GP.gisp.nec.co.jp>
-References: <1466084029-22290-1-git-send-email-vkuznets@redhat.com>
-In-Reply-To: <1466084029-22290-1-git-send-email-vkuznets@redhat.com>
-Content-Language: ja-JP
+ id 1bDoJj-0008DK-AP
+ for kexec@lists.infradead.org; Fri, 17 Jun 2016 07:35:52 +0000
+Date: Fri, 17 Jun 2016 15:35:23 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
+Message-ID: <20160617073523.GA5091@dhcp-128-65.nay.redhat.com>
+References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <3237367.XLxdnj8q4x@hactar>
+ <20160616015853.GA4103@dhcp-128-65.nay.redhat.com>
+ <16133071.BqvF7Se0c2@hactar>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <16133071.BqvF7Se0c2@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +26,159 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-Hello Vitaly,
+On 06/16/16 at 05:39pm, Thiago Jung Bauermann wrote:
+> Am Donnerstag, 16 Juni 2016, 09:58:53 schrieb Dave Young:
+> > On 06/15/16 at 01:21pm, Thiago Jung Bauermann wrote:
+> > > +/**
+> > > + * arch_kexec_walk_mem - call func(data) on free memory regions
+> > > + * @image_type:	kimage.type
+> > > + * @top_down:	Start from the highest address?
+> > > + * @data:	Argument to pass to @func.
+> > > + * @func:	Function to call for each memory region.
+> > > + *
+> > > + * Return: The memory walk will stop when func returns a non-zero value
+> > > + * and that value will be returned. If all free regions are visited
+> > > without + * func returning non-zero, then zero will be returned.
+> > > + */
+> > > +int __weak arch_kexec_walk_mem(unsigned int image_type, bool top_down,
+> > > +			       void *data, int (*func)(u64, u64, void *))
+> > > +{
+> > 
+> > top_down is also not used?
+> 
+> It's unused in the default implementation, but the powerpc implementation in patch 8 uses it:
 
->_count member was renamed to _refcount in linux commit commit 0139aa7b7fa12
->("mm: rename _count, field of the struct page, to _refcount") and this
->broke makedumpfile. The reason for making the change was to find all users
->accessing it directly and not through the recommended API. I tried
->suggesting to revert the change but failed, I see no other choice than to
->start supporting both _count and _refcount in makedumpfile.
->
->Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Well, arch_kexec_walk_mem use kbuf as "data", you can even drop
+"image_type" since kbuf has all you want kbuf->image->type, and
+kbuf->top_down 
 
-Thanks for your report and fixing it.
+int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+			       int (*func)(u64, u64, void *))
+> 
+> int arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
+> 			int (*func)(u64, u64, void *))
+> {
+> 	int ret = 0;
+> 	u64 i;
+> 	phys_addr_t mstart, mend;
+> 
+> 	if (top_down) {
+> 		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, 0,
+> 						&mstart, &mend, NULL) {
+> 			ret = func(mstart, mend, data);
+> 			if (ret)
+> 				break;
+> 		}
+> 	} else {
+> 		for_each_free_mem_range(i, NUMA_NO_NODE, 0, &mstart, &mend,
+> 					NULL) {
+> 			ret = func(mstart, mend, data);
+> 			if (ret)
+> 				break;
+> 		}
+> 	}
+> 
+> 	return ret;
+> }
+> 
+> > Rethink about the argument name type should be better than image_type,
+> > it is obvious in the comments and the code and simpler.
+> 
+> Ok, renamed in the patch below.
+> 
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
+> 
+>     kexec_file: Generalize kexec_add_buffer.
+>     
+>     Allow architectures to specify different memory walking functions for
+>     kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
+>     but PowerPC uses the memblock subsystem.
+>     
+>     Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+>     Cc: Eric Biederman <ebiederm@xmission.com>
+>     Cc: Dave Young <dyoung@redhat.com>
+>     Cc: kexec@lists.infradead.org
+>     Cc: linux-kernel@vger.kernel.org
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index e8acb2b43dd9..42b31f2e1d88 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -315,6 +315,8 @@ int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+>  					Elf_Shdr *sechdrs, unsigned int relsec);
+>  int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+>  					unsigned int relsec);
+> +int __weak arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
+> +			       int (*func)(u64, u64, void *));
+>  void arch_kexec_protect_crashkres(void);
+>  void arch_kexec_unprotect_crashkres(void);
+>  
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b6eec7527e9f..989647a324f2 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -428,6 +428,29 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
+>  	return locate_mem_hole_bottom_up(start, end, kbuf);
+>  }
+>  
+> +/**
+> + * arch_kexec_walk_mem - call func(data) on free memory regions
+> + * @type:	kimage.type
+> + * @top_down:	Start from the highest address?
+> + * @data:	Argument to pass to @func.
+> + * @func:	Function to call for each memory region.
+> + *
+> + * Return: The memory walk will stop when func returns a non-zero value
+> + * and that value will be returned. If all free regions are visited without
+> + * func returning non-zero, then zero will be returned.
+> + */
+> +int __weak arch_kexec_walk_mem(unsigned int type, bool top_down, void *data,
+> +			       int (*func)(u64, u64, void *))
+> +{
+> +	if (type == KEXEC_TYPE_CRASH)
+> +		return walk_iomem_res_desc(crashk_res.desc,
+> +					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> +					   crashk_res.start, crashk_res.end,
+> +					   data, func);
+> +	else
+> +		return walk_system_ram_res(0, ULONG_MAX, data, func);
+> +}
+> +
+>  /*
+>   * Helper function for placing a buffer in a kexec segment. This assumes
+>   * that kexec_mutex is held.
+> @@ -472,14 +495,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+>  	kbuf->top_down = top_down;
+>  
+>  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+> -	if (image->type == KEXEC_TYPE_CRASH)
+> -		ret = walk_iomem_res_desc(crashk_res.desc,
+> -				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
+> -				crashk_res.start, crashk_res.end, kbuf,
+> -				locate_mem_hole_callback);
+> -	else
+> -		ret = walk_system_ram_res(0, -1, kbuf,
+> -					  locate_mem_hole_callback);
+> +	ret = arch_kexec_walk_mem(image->type, top_down, kbuf,
+> +				   locate_mem_hole_callback);
+>  	if (ret != 1) {
+>  		/* A suitable memory range could not be found for buffer */
+>  		return -EADDRNOTAVAIL;
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
->---
->- 'crash' tool is now broken as well.
->---
-> makedumpfile.c | 18 +++++++++++++++++-
-> makedumpfile.h |  1 +
-> 2 files changed, 18 insertions(+), 1 deletion(-)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 853b999..96dfe39 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -1580,6 +1580,13 @@ get_structure_info(void)
-> 	SIZE_INIT(page, "page");
-> 	OFFSET_INIT(page.flags, "page", "flags");
-> 	OFFSET_INIT(page._count, "page", "_count");
->+	if (OFFSET(page._count) == NOT_FOUND_STRUCTURE) {
->+		info->flag_refcount = TRUE;
->+		OFFSET_INIT(page._count, "page", "_refcount");
->+	} else {
->+		info->flag_refcount = FALSE;
->+	}
->+
-
-I prefer to check the new symbol name first since it's likely
-from now on.
-
-> 	OFFSET_INIT(page.mapping, "page", "mapping");
-> 	OFFSET_INIT(page._mapcount, "page", "_mapcount");
-> 	OFFSET_INIT(page.private, "page", "private");
->@@ -2151,7 +2158,10 @@ write_vmcoreinfo_data(void)
-> 	 * write the member offset of 1st kernel
-> 	 */
-> 	WRITE_MEMBER_OFFSET("page.flags", page.flags);
->-	WRITE_MEMBER_OFFSET("page._count", page._count);
->+	if (info->flag_refcount)
->+		WRITE_MEMBER_OFFSET("page._refcount", page._count);
->+	else
->+		WRITE_MEMBER_OFFSET("page._count", page._count);
-> 	WRITE_MEMBER_OFFSET("page.mapping", page.mapping);
-> 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
-> 	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
->@@ -2492,6 +2502,12 @@ read_vmcoreinfo(void)
->
-> 	READ_MEMBER_OFFSET("page.flags", page.flags);
-> 	READ_MEMBER_OFFSET("page._count", page._count);
->+	if (OFFSET(page._count) == NOT_FOUND_STRUCTURE) {
->+		info->flag_refcount = TRUE;
->+		READ_MEMBER_OFFSET("page._refcount", page._count);
->+	} else {
->+		info->flag_refcount = FALSE;
->+	}
-
-same as OFFSET_INIT.
-
-Thanks,
-Atsushi Kumagai
-
-> 	READ_MEMBER_OFFSET("page.mapping", page.mapping);
-> 	READ_MEMBER_OFFSET("page.lru", page.lru);
-> 	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
->diff --git a/makedumpfile.h b/makedumpfile.h
->index 251d4bf..3742389 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -1100,6 +1100,7 @@ struct DumpInfo {
-> 	int		flag_nospace;	     /* the flag of "No space on device" error */
-> 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
-> 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
->+	int		flag_refcount;       /* _count is renamed to _refcount */
-> 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
-> 	long		page_size;           /* size of page */
-> 	long		page_shift;
->--
->2.5.5
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
