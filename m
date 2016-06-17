@@ -1,11 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <eedcb4f4fde3530a1a6745bf18a716330e077eba.1466120418.git.geoff@infradead.org>
-In-Reply-To: <cover.1466120418.git.geoff@infradead.org>
-References: <cover.1466120418.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v19 13/13] Documentation: dt: usable-memory and elfcorehdr
- nodes for arm64 kexec
-Date: Thu, 16 Jun 2016 23:48:28 +0000
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
+ id 1bDl1T-0002kk-A8
+ for kexec@lists.infradead.org; Fri, 17 Jun 2016 04:04:49 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: support _count -> _refcount rename in
+ struct page
+Date: Fri, 17 Jun 2016 04:02:22 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E4C4F5@BPXM01GP.gisp.nec.co.jp>
+References: <1466084029-22290-1-git-send-email-vkuznets@redhat.com>
+In-Reply-To: <1466084029-22290-1-git-send-email-vkuznets@redhat.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,64 +20,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: James Morse <james.morse@arm.com>
+Hello Vitaly,
 
-Add documentation for linux,usable-memory and linux,elfcorehdr chosen nodes
-used by arm64 kexec to decribe the kdump reserved area, and the elfcorehdr's
-location within it.
+>_count member was renamed to _refcount in linux commit commit 0139aa7b7fa12
+>("mm: rename _count, field of the struct page, to _refcount") and this
+>broke makedumpfile. The reason for making the change was to find all users
+>accessing it directly and not through the recommended API. I tried
+>suggesting to revert the change but failed, I see no other choice than to
+>start supporting both _count and _refcount in makedumpfile.
+>
+>Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Signed-off-by: James Morse <james.morse@arm.com>
----
- Documentation/devicetree/bindings/chosen.txt | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Thanks for your report and fixing it.
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..443f88b 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,31 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,usable-memory
-+-------------------
-+
-+This property is set on PowerPC and arm64 by kexec-tools during kdump
-+to tell the crash kernel the base address of its reserved area of memory, and
-+the size. e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property is set (currently only on arm64) by kexec-tools during kdump
-+to tell the crash kernel the address and size of the elfcorehdr that describes
-+the old kernel's memory as an elf file. This memory must reside within the area
-+described by 'linux,usable-memory'. e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
--- 
-2.5.0
+>---
+>- 'crash' tool is now broken as well.
+>---
+> makedumpfile.c | 18 +++++++++++++++++-
+> makedumpfile.h |  1 +
+> 2 files changed, 18 insertions(+), 1 deletion(-)
+>
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 853b999..96dfe39 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -1580,6 +1580,13 @@ get_structure_info(void)
+> 	SIZE_INIT(page, "page");
+> 	OFFSET_INIT(page.flags, "page", "flags");
+> 	OFFSET_INIT(page._count, "page", "_count");
+>+	if (OFFSET(page._count) == NOT_FOUND_STRUCTURE) {
+>+		info->flag_refcount = TRUE;
+>+		OFFSET_INIT(page._count, "page", "_refcount");
+>+	} else {
+>+		info->flag_refcount = FALSE;
+>+	}
+>+
 
+I prefer to check the new symbol name first since it's likely
+from now on.
+
+> 	OFFSET_INIT(page.mapping, "page", "mapping");
+> 	OFFSET_INIT(page._mapcount, "page", "_mapcount");
+> 	OFFSET_INIT(page.private, "page", "private");
+>@@ -2151,7 +2158,10 @@ write_vmcoreinfo_data(void)
+> 	 * write the member offset of 1st kernel
+> 	 */
+> 	WRITE_MEMBER_OFFSET("page.flags", page.flags);
+>-	WRITE_MEMBER_OFFSET("page._count", page._count);
+>+	if (info->flag_refcount)
+>+		WRITE_MEMBER_OFFSET("page._refcount", page._count);
+>+	else
+>+		WRITE_MEMBER_OFFSET("page._count", page._count);
+> 	WRITE_MEMBER_OFFSET("page.mapping", page.mapping);
+> 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
+> 	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
+>@@ -2492,6 +2502,12 @@ read_vmcoreinfo(void)
+>
+> 	READ_MEMBER_OFFSET("page.flags", page.flags);
+> 	READ_MEMBER_OFFSET("page._count", page._count);
+>+	if (OFFSET(page._count) == NOT_FOUND_STRUCTURE) {
+>+		info->flag_refcount = TRUE;
+>+		READ_MEMBER_OFFSET("page._refcount", page._count);
+>+	} else {
+>+		info->flag_refcount = FALSE;
+>+	}
+
+same as OFFSET_INIT.
+
+Thanks,
+Atsushi Kumagai
+
+> 	READ_MEMBER_OFFSET("page.mapping", page.mapping);
+> 	READ_MEMBER_OFFSET("page.lru", page.lru);
+> 	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 251d4bf..3742389 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1100,6 +1100,7 @@ struct DumpInfo {
+> 	int		flag_nospace;	     /* the flag of "No space on device" error */
+> 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+> 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
+>+	int		flag_refcount;       /* _count is renamed to _refcount */
+> 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
+> 	long		page_size;           /* size of page */
+> 	long		page_shift;
+>--
+>2.5.5
 
 _______________________________________________
 kexec mailing list
