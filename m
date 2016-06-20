@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mgwym02.jp.fujitsu.com ([211.128.242.41])
- by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bEsGn-0005VZ-JV
- for kexec@lists.infradead.org; Mon, 20 Jun 2016 06:01:14 +0000
-Received: from m3050.s.css.fujitsu.com (msm.b.css.fujitsu.com [10.134.21.208])
- by yt-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id 23AF5AC03BE
- for <kexec@lists.infradead.org>;
- Mon, 20 Jun 2016 15:00:46 +0900 (JST)
-Date: Mon, 20 Jun 2016 15:00:37 +0900 (JST)
-Message-Id: <20160620.150037.194320068.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 2/2] sadump: fix wrong progress report on sadump formats
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20160620.145744.403680288.d.hatayama@jp.fujitsu.com>
-References: <20160620.145744.403680288.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Message-ID: <57680D94.6080704@arm.com>
+Date: Mon, 20 Jun 2016 16:36:52 +0100
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v19 03/13] arm64/kexec: Add core kexec support
+References: <cover.1466120418.git.geoff@infradead.org>
+ <b5534d3ea3662d9f7fc5909b158ab36d135d8f6d.1466120418.git.geoff@infradead.org>
+In-Reply-To: <b5534d3ea3662d9f7fc5909b158ab36d135d8f6d.1466120418.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,98 +19,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: kexec@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Currently, makedumpfile displays wrong progress report on sadump
-formats and could result in "Floating point exception" in the worst
-case:
+Hi Geoff,
 
-    Original pages  : 0x0000000000000000
-      Excluded pages   : 0x0000000001f2b44a
-        Pages filled with zero  : 0x0000000000b160b5
-        Non-private cache pages : 0x0000000000007a7e
-        Private cache pages     : 0x0000000000000431
-        User process data pages : 0x000000000140d4dc
-        Free pages              : 0x0000000000000000
-        Hwpoison pages          : 0x000000000000000a
-      Remaining pages  : 0xfffffffffe0d4bb6
-    Floating point exception (core dumped)
+On 17/06/16 00:48, Geoff Levand wrote:
+> Add three new files, kexec.h, machine_kexec.c and relocate_kernel.S to the
+> arm64 architecture that add support for the kexec re-boot mechanism
+> (CONFIG_KEXEC) on arm64 platforms.
 
-This is because on sadump-related formats, the number of memory hole
-pages is not counted, the number of original pages becomes 0 and zero
-division exception occurs below:
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> new file mode 100644
+> index 0000000..a6dcb9c
+> --- /dev/null
+> +++ b/arch/arm64/kernel/machine_kexec.c
 
-    9409void
-    9410print_report(void)
-    9411{
-    9412        mdf_pfn_t pfn_original, pfn_excluded, shrinking;
-    9413
-    9414        /*
-    9415         * /proc/vmcore doesn't contain the memory hole area.
-    9416         */
-    9417        pfn_original = info->max_mapnr - pfn_memhole;
-    9418
-    9419        pfn_excluded = pfn_zero + pfn_cache + pfn_cache_private
-    9420            + pfn_user + pfn_free + pfn_hwpoison;
-    9421        shrinking = (pfn_original - pfn_excluded) * 100;
-    9422        shrinking = shrinking / pfn_original;  <-- Here.
+[ ... ]
 
-This commit fixes this issue by counting the number of memory hole
-pages and so the number of original pages. As a result, makedumpfile
-displays correct progress report on sadump formats and doesn't exit
-abnormally:
+> +
+> +/**
+> + * kexec_list_flush - Helper to flush the kimage list and source pages to PoC.
+> + */
+> +static void kexec_list_flush(struct kimage *kimage)
+> +{
+> +	kimage_entry_t *entry;
+> +
+> +	for (entry = &kimage->head; ; entry++) {
+> +		unsigned int flag;
+> +		void *addr;
+> +
+> +		__flush_dcache_area(entry, sizeof(kimage_entry_t));
+> +
+> +		flag = *entry & IND_FLAGS;
+> +		if (flag == IND_DONE)
+> +			break;
+> +
+> +		addr = phys_to_virt(*entry & PAGE_MASK);
+> +
+> +		switch (flag) {
+> +		case IND_INDIRECTION:
+> +			/* Set entry point just before the new list page. */
+> +			entry = (kimage_entry_t *)addr - 1;
 
-    Original pages  : 0x0000000001ffaa23
-      Excluded pages   : 0x0000000001f2b44a
-        Pages filled with zero  : 0x0000000000b160b5
-        Non-private cache pages : 0x0000000000007a7e
-        Private cache pages     : 0x0000000000000431
-        User process data pages : 0x000000000140d4dc
-        Free pages              : 0x0000000000000000
-        Hwpoison pages          : 0x000000000000000a
-      Remaining pages  : 0x00000000000cf5d9
-      (The number of pages is reduced to 2%.)
-    Memory Hole     : 0x00000000000a55dd
-    --------------------------------------------------
-    Total pages     : 0x00000000020a0000
+Ah, after this restructuring we end up cleaning this page as we fall-through,
+and one kimage_entry_t at a time as we walk the list.
 
-    Cache hit: 1570176, miss: 12997082, hit rate: 10.8%
+			break;
+?
 
-Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
----
- sadump_info.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> +		case IND_SOURCE:
+> +			__flush_dcache_area(addr, PAGE_SIZE);
+> +			break;
+> +		case IND_DESTINATION:
+> +			break;
+> +		default:
+> +			BUG();
+> +		}
+> +	}
+> +}
 
-diff --git a/sadump_info.c b/sadump_info.c
-index 8716167..5ff5595 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -213,6 +213,8 @@ sadump_copy_1st_bitmap_from_memory(void)
- 	char buf[si->sh_memory->block_size];
- 	off_t offset_page;
- 	unsigned long bitmap_offset, bitmap_len;
-+	mdf_pfn_t pfn, pfn_bitmap1;
-+	extern mdf_pfn_t pfn_memhole;
- 
- 	bitmap_offset =	si->sub_hdr_offset + sh->block_size*sh->sub_hdr_size;
- 	bitmap_len = sh->block_size * sh->bitmap_blocks;
-@@ -250,6 +252,13 @@ sadump_copy_1st_bitmap_from_memory(void)
- 		offset_page += sizeof(buf);
- 	}
- 
-+	pfn_bitmap1 = 0;
-+	for (pfn = 0; pfn < info->max_mapnr; ++pfn) {
-+		if (sadump_is_ram(pfn))
-+			pfn_bitmap1++;
-+	}
-+	pfn_memhole = info->max_mapnr - pfn_bitmap1;
-+
- 	/*
- 	 * kdump uses the first 640kB on the 2nd kernel. But both
- 	 * bitmaps should reflect the 1st kernel memory situation. We
--- 
-1.9.3
+
+> diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+> new file mode 100644
+> index 0000000..51b73cd
+> --- /dev/null
+> +++ b/arch/arm64/kernel/relocate_kernel.S
+
+[ ... ]
+
+> +.ltorg
+> +
+> +.align 3	/* To keep the 64-bit values below naturally aligned. */
+> +
+> +.Lcopy_end:
+> +.org	KEXEC_CONTROL_PAGE_SIZE
+
+
+On 16/06/16 23:41, Geoff Levand wrote:
+> This is to check if arm64_relocate_new_kernel gets too
+> big.  The assembler should give an error if the location
+> counter is set backwards.
+
+Cunning. (probably worth a comment).
+
+This looks like it is need because we hard-coded KEXEC_CONTROL_PAGE_SIZE in
+kexec.h, so the code must be smaller than that size.
+It looks like this value is only ever passed to get_order(), could we just pass
+the actual size? It shouldn't matter if it grows >4K, as the core code will
+allocate enough memory, and the memcpy() in machine_kexec() uses the size too.
+
+
+Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks,
+
+
+James
 
 
 _______________________________________________
