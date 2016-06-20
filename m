@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qk0-f182.google.com ([209.85.220.182])
  by bombadil.infradead.org with esmtps (Exim 4.80.1 #2 (Red Hat Linux))
- id 1bEov2-0003Os-VV
- for kexec@lists.infradead.org; Mon, 20 Jun 2016 02:26:33 +0000
-Date: Mon, 20 Jun 2016 10:26:05 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 2/9] kexec_file: Generalize kexec_add_buffer.
-Message-ID: <20160620022605.GA3180@dhcp-128-65.nay.redhat.com>
-References: <1465916349-3398-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <16133071.BqvF7Se0c2@hactar>
- <20160617073523.GA5091@dhcp-128-65.nay.redhat.com>
- <12025213.W8oVnaovm1@hactar>
+ id 1bErpI-0003Wq-Lk
+ for kexec@lists.infradead.org; Mon, 20 Jun 2016 05:32:49 +0000
+Received: by mail-qk0-f182.google.com with SMTP id a186so148779028qkf.0
+ for <kexec@lists.infradead.org>; Sun, 19 Jun 2016 22:32:28 -0700 (PDT)
+Date: Mon, 20 Jun 2016 11:02:22 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
+ coredump tools
+Message-ID: <20160620053222.GB14309@dhcppc9>
+References: <cover.1466120418.git.geoff@infradead.org>
+ <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <12025213.W8oVnaovm1@hactar>
+In-Reply-To: <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,81 +27,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Geoff Levand <geoff@infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 06/17/16 at 05:51pm, Thiago Jung Bauermann wrote:
-> Am Freitag, 17 Juni 2016, 15:35:23 schrieb Dave Young:
-> > On 06/16/16 at 05:39pm, Thiago Jung Bauermann wrote:
-> > > Am Donnerstag, 16 Juni 2016, 09:58:53 schrieb Dave Young:
-> > > > On 06/15/16 at 01:21pm, Thiago Jung Bauermann wrote:
-> > > > > +int __weak arch_kexec_walk_mem(unsigned int image_type, bool
-> > > > > top_down,
-> > > > > +			       void *data, int (*func)(u64, u64, void *))
-> > > > > +{
-> > > > 
-> > > > top_down is also not used?
-> > > 
-> > > It's unused in the default implementation, but the powerpc implementation
-> > > in patch 8 uses it:
-> > Well, arch_kexec_walk_mem use kbuf as "data", you can even drop
-> > "image_type" since kbuf has all you want kbuf->image->type, and
-> > kbuf->top_down
-> > 
-> > int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> > 			       int (*func)(u64, u64, void *))
++Atsushi
+
+Hi Takahiro,
+
+On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> Sounds good to me, but I had to move struct kexec_buf from
-> kernel/kexec_internal.h to include/linux/kexec.h.
+> For the current crash utility, we need to know, at least,
+>   - kimage_voffset
+>   - PHYS_OFFSET
+> to handle the contents of core dump file (/proc/vmcore) correctly due to
+> the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
+> This patch puts them as VMCOREINFO's into the file.
 > 
-> Here's the updated patch. What do you think?
+>   - VA_BITS
+> is also added for makedumpfile command.
+
+Thanks for adding them. They are quite helpful for makedumpfile as well.
+
+> More VMCOREINFO's may be added later.
+
+Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
+in order to work with makedumpfile.
+
+I already have makedumpfile patches [1]  which uses _text and _end, but not
+sending them to makedumpfile upstream, until you will be agreeing to take [2] in
+future. Please let me know your opinion about it. If it would be acceptable then
+I may send aarch64 makedumpfile improvements to upstream.
+
+[1] https://github.com/pratyushanand/makedumpfile/commit/d9590fec049976b8fee0d6b4e66e6f3e99ff1113
+[2] https://github.com/pratyushanand/linux/commit/1d94df20c575c725910c9c29a129b9f14e7e900b
+
+~Pratyush
+
 > 
-> []'s
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  arch/arm64/kernel/machine_kexec.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> 
->     kexec_file: Generalize kexec_add_buffer.
->     
->     Allow architectures to specify different memory walking functions for
->     kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
->     but PowerPC uses the memblock subsystem.
->     
->     Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
->     Cc: Eric Biederman <ebiederm@xmission.com>
->     Cc: Dave Young <dyoung@redhat.com>
->     Cc: kexec@lists.infradead.org
->     Cc: linux-kernel@vger.kernel.org
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index e8acb2b43dd9..d8df01107ae2 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -201,6 +201,20 @@ struct kimage {
->  #endif
->  };
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index f270967..57a30fb 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -18,6 +18,7 @@
 >  
-> +/*
-> + * Keeps track of buffer parameters as provided by caller for requesting
-> + * memory placement of buffer.
-> + */
-> +struct kexec_buf {
-> +	struct kimage *image;
-> +	unsigned long mem;
-> +	unsigned long memsz;
-> +	unsigned long buf_align;
-> +	unsigned long buf_min;
-> +	unsigned long buf_max;
-> +	bool top_down;		/* allocate from top of memory hole */
-> +};
+>  #include <asm/cacheflush.h>
+>  #include <asm/cpu_ops.h>
+> +#include <asm/memory.h>
+>  #include <asm/mmu_context.h>
+>  
+>  #include "cpu-reset.h"
+> @@ -278,3 +279,13 @@ void machine_crash_shutdown(struct pt_regs *regs)
+>  
+>  	pr_info("Starting crashdump kernel...\n");
+>  }
 > +
-
-kexec_buf should go within #ifdef for kexec file like struct purgatory_info
-
-Other than that it looks good.
-
-Thanks
-Dave
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +	VMCOREINFO_NUMBER(VA_BITS);
+> +	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
+> +	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
+> +						kimage_voffset);
+> +	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+> +						PHYS_OFFSET);
+> +}
+> -- 
+> 2.5.0
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 _______________________________________________
 kexec mailing list
