@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFJ3N-0000Ij-CE
- for kexec@lists.infradead.org; Tue, 21 Jun 2016 10:37:10 +0000
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH v2] makedumpfile: support _count -> _refcount rename in
- struct page
-References: <1466156479-9659-1-git-send-email-vkuznets@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E4CE36@BPXM01GP.gisp.nec.co.jp>
- <20160621064508.GD29309@dhcppc9> <87k2hjhsq1.fsf@vitty.brq.redhat.com>
- <20160621100329.GE29309@dhcppc9>
-Date: Tue, 21 Jun 2016 12:36:44 +0200
-In-Reply-To: <20160621100329.GE29309@dhcppc9> (Pratyush Anand's message of
- "Tue, 21 Jun 2016 15:33:29 +0530")
-Message-ID: <8737o6j0ar.fsf@vitty.brq.redhat.com>
+Date: Tue, 21 Jun 2016 03:38:11 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/2] arm: fix kernel image size
+Message-ID: <20160621103810.GI22406@atomide.com>
+References: <20160617194405.GN1041@n2100.armlinux.org.uk>
+ <E1bDzh4-0006a4-7p@e0050434b2927.dyn.armlinux.org.uk>
+ <20160621074319.GH22406@atomide.com>
+ <20160621094737.GA5783@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160621094737.GA5783@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,82 +22,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Anderson <anderson@redhat.com>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Kees Cook <keescook@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Pratyush Anand <panand@redhat.com> writes:
+* Russell King - ARM Linux <linux@armlinux.org.uk> [160621 02:50]:
+> On Tue, Jun 21, 2016 at 12:43:21AM -0700, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > * Russell King <rmk@armlinux.org.uk> [160617 12:52]:
+> > > If we want to assume that the compressed image will expand by a maximum
+> > > of 4x, we actually need to reserve 5x the space, since we need to keep
+> > > a copy of the compessed image around while decompressing.
+> > 
+> > Looks like 5x is not enough with omap2plus_defconfig at least..
+> > This one needs to be set to 6x for that. Maybe we should just make
+> > it go all the way to 11 :)
+> 
+> That's not really what this commit is about - it's about making the
+> code consistent with the comments in the file.  I could have instead
+> changed the comment saying "4x" to "3x" instead.
+> 
+> There isn't really an answer which will always work for this problem,
+> as I've already detailed in a previous thread discussing the issue.
+> Adding a zImage header don't fix the problem.
 
-> On 21/06/2016:10:05:42 AM, Vitaly Kuznetsov wrote:
->> Pratyush Anand <panand@redhat.com> writes:
->> 
->> > On 21/06/2016:05:43:29 AM, Atsushi Kumagai wrote:
->> >> Hello Vitaly,
->> >> 
->> >> >_count member was renamed to _refcount in linux commit 0139aa7b7fa12
->> >> >("mm: rename _count, field of the struct page, to _refcount") and this
->> >> >broke makedumpfile. The reason for making the change was to find all users
->> >> >accessing it directly and not through the recommended API. I tried
->> >> >suggesting to revert the change but failed, I see no other choice than to
->> >> >start supporting both _count and _refcount in makedumpfile.
->> >> >
->> >> >Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
->> >> >---
->> >> >Changes since 'v1':
->> >> >- Make '_refcount' the default [Atsushi Kumagai]
->> >
->> > Sorry, I missed this conversation earlier.
->> >
->> >> 
->> >> Good fix, I'll merge this into v1.6.1.
->> >> 
->> >> Thanks,
->> >> Atsushi Kumagai
->> >> 
->> >> >---
->> >> > makedumpfile.c | 26 +++++++++++++++++++++-----
->> >> > makedumpfile.h |  3 ++-
->> >> > 2 files changed, 23 insertions(+), 6 deletions(-)
->> >> >
->> >> >diff --git a/makedumpfile.c b/makedumpfile.c
->> >> >index 853b999..fd884d3 100644
->> >> >--- a/makedumpfile.c
->> >> >+++ b/makedumpfile.c
->> >> >@@ -1579,7 +1579,14 @@ get_structure_info(void)
->> >> > 	 */
->> >> > 	SIZE_INIT(page, "page");
->> >> > 	OFFSET_INIT(page.flags, "page", "flags");
->> >> >-	OFFSET_INIT(page._count, "page", "_count");
->> >> >+	OFFSET_INIT(page._refcount, "page", "_refcount");
->> >> >+	if (OFFSET(page._refcount) == NOT_FOUND_STRUCTURE) {
->> >> >+		info->flag_use_count = TRUE;
->> >> >+		OFFSET_INIT(page._refcount, "page", "_count");
->> >> >+	} else {
->> >> >+		info->flag_use_count = FALSE;
->> >
->> > Probably we could have avoided this flag and could have solved it same way as we
->> > have solved for other such kernel changes, like that of "module.module_core".
->> > Infact, we do not need to add "_refcount" in makedumpfile's page struct.
->> >
->> 
->> Yes, the flag is only needed to do the write. Why do you think we don't
->> need it?
->
-> IMHO, even if we write with "page._count", we would be able to get correct
-> value in next read, because we prefer reading with "page._count" over
-> "page._refcount". I think "crash utility" also gives priority for reading with
-> _count, so things should work without any issue.
+Well how about we change both comments and code to use a value
+that works?
 
-While things will probably work now while everyone still remembers the
-old "_count" name it may happen that some tool will drop this support in
-future and this will lead to an awkward situation when everythin works
-with /proc/vmcore but doesn't work with makedumpfile's output. Said that
-I think it makes sense for makedumpfile to be precise and write what we
-read. IMO, of course, I'm not a regular makedumpfile contributor.
-
-<skip>
-
--- 
-  Vitaly
+Tony
 
 _______________________________________________
 kexec mailing list
