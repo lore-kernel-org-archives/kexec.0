@@ -1,21 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFALP-0002Ba-4Q
- for kexec@lists.infradead.org; Tue, 21 Jun 2016 01:19:13 +0000
-Received: by mail-pa0-x233.google.com with SMTP id b13so653856pat.0
- for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 18:18:50 -0700 (PDT)
-Date: Tue, 21 Jun 2016 10:23:42 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v19 06/13] arm64: kdump: reserve memory for crash dump
+ id 1bFAkh-0004mm-1K
+ for kexec@lists.infradead.org; Tue, 21 Jun 2016 01:45:19 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5L1hXD8007638
+ for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 21:44:59 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 23n2fyffyf-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 21:44:59 -0400
+Received: from localhost
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 20 Jun 2016 22:44:57 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id D676B3520077
+ for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 21:44:37 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5L1isKH14876994
+ for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 22:44:54 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5L1irfE029947
+ for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 22:44:54 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: [PATCH 1/6] kexec_file: Add buffer hand-over support for the next
  kernel
-Message-ID: <20160621012337.GV20774@linaro.org>
-References: <cover.1466120418.git.geoff@infradead.org>
- <d0486ff8419e38844ecb524d0ac86ea81a6ec67d.1466120418.git.geoff@infradead.org>
- <576814AF.5060307@arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <576814AF.5060307@arm.com>
+Date: Mon, 20 Jun 2016 22:44:31 -0300
+In-Reply-To: <1466473476-10104-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1466473476-10104-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1466473476-10104-2-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,152 +43,170 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Eric Richter <erichte@linux.vnet.ibm.com>
 
-On Mon, Jun 20, 2016 at 05:07:11PM +0100, James Morse wrote:
-> Hi,
-> 
-> On 17/06/16 00:48, Geoff Levand wrote:
-> > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > 
-> > On the startup of primary kernel, the memory region used by crash dump
-> > kernel must be specified by "crashkernel=" kernel parameter.
-> > reserve_crashkernel() will allocate and reserve the region for later use.
-> > 
-> > User space tools, like kexec-tools, will be able to find that region marked
-> > as "Crash kernel" in /proc/iomem.
-> 
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index d45f862..45f1319 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -34,6 +34,7 @@
-> >  #include <linux/dma-contiguous.h>
-> >  #include <linux/efi.h>
-> >  #include <linux/swiotlb.h>
-> > +#include <linux/kexec.h>
-> >  
-> >  #include <asm/boot.h>
-> >  #include <asm/fixmap.h>
-> > @@ -76,6 +77,65 @@ static int __init early_initrd(char *p)
-> >  early_param("initrd", early_initrd);
-> >  #endif
-> >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +/*
-> > + * reserve_crashkernel() - reserves memory for crash kernel
-> > + *
-> > + * This function reserves memory area given in "crashkernel=" kernel command
-> > + * line parameter. The memory reserved is used by dump capture kernel when
-> > + * primary kernel is crashing.
-> > + */
-> > +static void __init reserve_crashkernel(void)
-> > +{
-> > +	unsigned long long crash_size = 0, crash_base = 0;
-> > +	int ret;
-> > +
-> > +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> > +				&crash_size, &crash_base);
-> > +	/* no crashkernel= or invalid value specified */
-> > +	if (!crash_size)
-> > +		return;
-> 
-> Should we check ret too?
+The buffer hand-over mechanism allows the currently running kernel to pass
+data to kernel that will be kexec'd via a kexec segment. The second kernel
+can check whether the previous kernel sent data and retrieve it.
 
-I thought that it was almost OK, but there is the only erroneous case,
-"crashkernel=SIZE@". Will fix it.
+This is the architecture-independent part of the feature.
 
-> 
-> > +
-> > +	if (crash_base == 0) {
-> > +		/* Current arm64 boot protocol requires 2MB alignment */
-> > +		crash_base = memblock_find_in_range(0,
-> > +				MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, SZ_2M);
-> > +		if (crash_base == 0) {
-> > +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> > +				crash_size);
-> > +			return;
-> > +		}
-> > +		memblock_reserve(crash_base, crash_size);
-> 
-> What if memblock_reserve() fails?
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+---
+ include/linux/kexec.h | 40 ++++++++++++++++++++++++++
+ kernel/kexec_file.c   | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 119 insertions(+)
 
-I don't think it fails because the region has been allocated
-by memblock_find_in_range() just before.
-> 
-> > +
-> > +	} else {
-> > +		/* User specifies base address explicitly. */
-> > +		if (!memblock_is_region_memory(crash_base, crash_size) ||
-> > +			memblock_is_region_reserved(crash_base, crash_size)) {
-> > +			pr_warn("crashkernel has wrong address or size\n");
-> > +			return;
-> > +		}
-> > +
-> > +		if (IS_ALIGNED(crash_base, SZ_2M)) {
-> 
-> !IS_ALIGNED()...
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index a08cd986b5a1..72db95c623b3 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -325,6 +325,46 @@ int __weak arch_kexec_walk_mem(unsigned int image_type, unsigned long start,
+ void arch_kexec_protect_crashkres(void);
+ void arch_kexec_unprotect_crashkres(void);
+ 
++#ifdef CONFIG_KEXEC_FILE
++bool __weak kexec_can_hand_over_buffer(void);
++int __weak arch_kexec_add_handover_buffer(struct kimage *image,
++					  unsigned long load_addr,
++					  unsigned long size);
++int kexec_add_handover_buffer(struct kimage *image, void *buffer,
++			      unsigned long bufsz, unsigned long memsz,
++			      unsigned long buf_align, unsigned long buf_min,
++			      unsigned long buf_max, bool top_down,
++			      unsigned long *load_addr);
++int __weak kexec_get_handover_buffer(void **addr, unsigned long *size);
++int __weak kexec_free_handover_buffer(void);
++#else
++static inline bool kexec_can_hand_over_buffer(void)
++{
++	return false;
++}
++
++static inline int kexec_add_handover_buffer(struct kimage *image, void *buffer,
++					    unsigned long bufsz,
++					    unsigned long memsz,
++					    unsigned long buf_align,
++					    unsigned long buf_min,
++					    unsigned long buf_max,
++					    bool top_down, bool checksum,
++					    unsigned long *load_addr)
++{
++	return -ENOTSUPP;
++}
++
++static inline int kexec_get_handover_buffer(void **addr, unsigned long *size)
++{
++	return -ENOTSUPP;
++}
++
++static inline int kexec_free_handover_buffer(void)
++{
++	return -ENOTSUPP;
++}
++#endif /* CONFIG_KEXEC_FILE */
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3e494261d32a..d6ba702654f5 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -113,6 +113,85 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+ 	image->image_loader_data = NULL;
+ }
+ 
++/**
++ * kexec_can_hand_over_buffer - can we pass data to the kexec'd kernel?
++ */
++bool __weak kexec_can_hand_over_buffer(void)
++{
++	return false;
++}
++
++/**
++ * arch_kexec_add_handover_buffer - do arch-specific steps to handover buffer
++ *
++ * Architectures should use this function to pass on the handover buffer
++ * information to the next kernel.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int __weak arch_kexec_add_handover_buffer(struct kimage *image,
++					  unsigned long load_addr,
++					  unsigned long size)
++{
++	return -ENOTSUPP;
++}
++
++/**
++ * kexec_add_handover_buffer - add buffer to be used by the next kernel
++ * @image:	kexec image to add buffer to.
++ * @buffer:	Contents of the handover buffer.
++ * @bufsz:	@buffer size.
++ * @memsz:	Handover buffer size in memory.
++ * @buf_align:	Buffer alignment restriction.
++ * @buf_min:	Minimum address where buffer can be placed.
++ * @buf_max:	Maximum address where buffer can be placed.
++ * @top_down:	Find the highest available memory position for the buffer?
++ * @load_addr:	On successful return, set to the physical memory address of the
++ * 		buffer in the next kernel.
++ *
++ * This function assumes that kexec_mutex is held.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int kexec_add_handover_buffer(struct kimage *image, void *buffer,
++			      unsigned long bufsz, unsigned long memsz,
++			      unsigned long buf_align, unsigned long buf_min,
++			      unsigned long buf_max, bool top_down,
++			      unsigned long *load_addr)
++{
++	int ret;
++
++	if (!kexec_can_hand_over_buffer())
++		return -ENOTSUPP;
++
++	ret = kexec_add_buffer(image, buffer, bufsz, memsz, buf_align, buf_min,
++			       buf_max, top_down, load_addr);
++	if (ret)
++		return ret;
++
++	return arch_kexec_add_handover_buffer(image, *load_addr, memsz);
++}
++
++/**
++ * kexec_get_handover_buffer - get the handover buffer from the previous kernel
++ * @addr:	On successful return, set to point to the buffer contents.
++ * @size:	On successful return, set to the buffer size.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int __weak kexec_get_handover_buffer(void **addr, unsigned long *size)
++{
++	return -ENOTSUPP;
++}
++
++/**
++ * kexec_free_handover_buffer - free memory used by the handover buffer
++ */
++int __weak kexec_free_handover_buffer(void)
++{
++	return -ENOTSUPP;
++}
++
+ /*
+  * In file mode list of segments is prepared by kernel. Copy relevant
+  * data from user space, do error checking, prepare segment list
+-- 
+1.9.1
 
-Oops, will fix it.
-
-> 
-> > +			pr_warn("crashkernel base address is not 2MB aligned\n");
-> > +			return;
-> > +		}
-> > +
-> > +		memblock_reserve(crash_base, crash_size);
-> 
-> What if memblock_reserve() fails?
-
-The region has been checked with memblock_is_region_reserved().
-
-> 
-> > +	}
-> > +
-> > +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-> > +		crash_size >> 20, crash_base >> 20);
-> > +
-> > +	crashk_res.start = crash_base;
-> > +	crashk_res.end = crash_base + crash_size - 1;
-> > +}
-> > +#else
-> > +static void __init reserve_crashkernel(void)
-> > +{
-> > +	;
-> > +}
-> > +#endif /* CONFIG_KEXEC_CORE */
-> > +
-> >  /*
-> >   * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-> >   * currently assumes that for memory starting above 4G, 32-bit devices will
-> > @@ -291,6 +351,8 @@ void __init arm64_memblock_init(void)
-> >  	}
-> >  #endif
-> >  
-> > +	reserve_crashkernel();
-> > +
-> >  	early_init_fdt_scan_reserved_mem();
-> >  
-> >  	/* 4GB maximum for 32-bit only capable devices */
-> > 
-> 
-> 
-> With those,
-> Reviewed-by: James Morse <james.morse@arm.com>
-
-Thanks,
--Takahiro AKASHI
-
-> 
-> Thanks,
-> 
-> James
-> 
 
 _______________________________________________
 kexec mailing list
