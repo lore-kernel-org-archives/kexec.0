@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x241.google.com ([2607:f8b0:400e:c03::241])
+Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bF1Pr-0001Ra-1x
- for kexec@lists.infradead.org; Mon, 20 Jun 2016 15:47:12 +0000
-Received: by mail-pa0-x241.google.com with SMTP id fg1so11266103pad.3
- for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 08:46:50 -0700 (PDT)
-Message-ID: <1466437603.12792.10.camel@gmail.com>
-Subject: Proposal for run time memory allocation for crash kernel
-From: Ronit halder <ronit.crj@gmail.com>
-Date: Mon, 20 Jun 2016 11:46:43 -0400
-Content-Type: multipart/mixed; boundary="=-KHo5I/pHiFSYIQT1ZGgx"
-Mime-Version: 1.0
+ id 1bFALP-0002Ba-4Q
+ for kexec@lists.infradead.org; Tue, 21 Jun 2016 01:19:13 +0000
+Received: by mail-pa0-x233.google.com with SMTP id b13so653856pat.0
+ for <kexec@lists.infradead.org>; Mon, 20 Jun 2016 18:18:50 -0700 (PDT)
+Date: Tue, 21 Jun 2016 10:23:42 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v19 06/13] arm64: kdump: reserve memory for crash dump
+ kernel
+Message-ID: <20160621012337.GV20774@linaro.org>
+References: <cover.1466120418.git.geoff@infradead.org>
+ <d0486ff8419e38844ecb524d0ac86ea81a6ec67d.1466120418.git.geoff@infradead.org>
+ <576814AF.5060307@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <576814AF.5060307@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,187 +24,154 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
+On Mon, Jun 20, 2016 at 05:07:11PM +0100, James Morse wrote:
+> Hi,
+> 
+> On 17/06/16 00:48, Geoff Levand wrote:
+> > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > 
+> > On the startup of primary kernel, the memory region used by crash dump
+> > kernel must be specified by "crashkernel=" kernel parameter.
+> > reserve_crashkernel() will allocate and reserve the region for later use.
+> > 
+> > User space tools, like kexec-tools, will be able to find that region marked
+> > as "Crash kernel" in /proc/iomem.
+> 
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > index d45f862..45f1319 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -34,6 +34,7 @@
+> >  #include <linux/dma-contiguous.h>
+> >  #include <linux/efi.h>
+> >  #include <linux/swiotlb.h>
+> > +#include <linux/kexec.h>
+> >  
+> >  #include <asm/boot.h>
+> >  #include <asm/fixmap.h>
+> > @@ -76,6 +77,65 @@ static int __init early_initrd(char *p)
+> >  early_param("initrd", early_initrd);
+> >  #endif
+> >  
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +/*
+> > + * reserve_crashkernel() - reserves memory for crash kernel
+> > + *
+> > + * This function reserves memory area given in "crashkernel=" kernel command
+> > + * line parameter. The memory reserved is used by dump capture kernel when
+> > + * primary kernel is crashing.
+> > + */
+> > +static void __init reserve_crashkernel(void)
+> > +{
+> > +	unsigned long long crash_size = 0, crash_base = 0;
+> > +	int ret;
+> > +
+> > +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> > +				&crash_size, &crash_base);
+> > +	/* no crashkernel= or invalid value specified */
+> > +	if (!crash_size)
+> > +		return;
+> 
+> Should we check ret too?
 
---=-KHo5I/pHiFSYIQT1ZGgx
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+I thought that it was almost OK, but there is the only erroneous case,
+"crashkernel=SIZE@". Will fix it.
 
-Hi,
-Currenty linux kernel allocates memory at the boot time for crash
-kernel booted using kexec system call in kernel crash. It will be very
-useful if we can allocate memory in run time.
-It is possible to allocate memory for crash kernel at the boot time
-using CMA (Contiguous Memory Allocator). CMA is capable of allocating
-big chunk of memory. At the boot time we will create one (if only low
-memory is used) or two (if we use both high and low memory) CMA areas
-of size given in "crashkernel" boot time command line parameter. Then
-the user can allocate or free memory from those CMA areas using
-"/sys/kernel/kexec_crash_size" sysfs entry.
+> 
+> > +
+> > +	if (crash_base == 0) {
+> > +		/* Current arm64 boot protocol requires 2MB alignment */
+> > +		crash_base = memblock_find_in_range(0,
+> > +				MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, SZ_2M);
+> > +		if (crash_base == 0) {
+> > +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
+> > +				crash_size);
+> > +			return;
+> > +		}
+> > +		memblock_reserve(crash_base, crash_size);
+> 
+> What if memblock_reserve() fails?
 
-I am attaching a prototype patch with the mail. I have made the patch
-against kernel version v4.4.11.
-Please give your opinions.
---=-KHo5I/pHiFSYIQT1ZGgx
-Content-Disposition: attachment; filename="cma.patch"
-Content-Type: text/x-patch; name="cma.patch"; charset="UTF-8"
-Content-Transfer-Encoding: base64
+I don't think it fails because the region has been allocated
+by memblock_find_in_range() just before.
+> 
+> > +
+> > +	} else {
+> > +		/* User specifies base address explicitly. */
+> > +		if (!memblock_is_region_memory(crash_base, crash_size) ||
+> > +			memblock_is_region_reserved(crash_base, crash_size)) {
+> > +			pr_warn("crashkernel has wrong address or size\n");
+> > +			return;
+> > +		}
+> > +
+> > +		if (IS_ALIGNED(crash_base, SZ_2M)) {
+> 
+> !IS_ALIGNED()...
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9zZXR1cC5jIGIvYXJjaC94ODYva2VybmVsL3Nl
-dHVwLmMKaW5kZXggZDJiYmUzNC4uNDJjNzIyNiAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVs
-L3NldHVwLmMKKysrIGIvYXJjaC94ODYva2VybmVsL3NldHVwLmMKQEAgLTY5LDYgKzY5LDcgQEAK
-ICNpbmNsdWRlIDxsaW51eC9jcmFzaF9kdW1wLmg+CiAjaW5jbHVkZSA8bGludXgvdGJvb3QuaD4K
-ICNpbmNsdWRlIDxsaW51eC9qaWZmaWVzLmg+CisjaW5jbHVkZSA8bGludXgvY21hLmg+CiAKICNp
-bmNsdWRlIDx2aWRlby9lZGlkLmg+CiAKQEAgLTEyMiw3ICsxMjMsOCBAQAogICovCiB1bnNpZ25l
-ZCBsb25nIG1heF9sb3dfcGZuX21hcHBlZDsKIHVuc2lnbmVkIGxvbmcgbWF4X3Bmbl9tYXBwZWQ7
-Ci0KK3N0cnVjdCBjbWEgKmNyYXNoa19jbWEgPSBOVUxMOworc3RydWN0IGNtYSAqY3Jhc2hrX2Nt
-YV9sb3cgPSBOVUxMOwogI2lmZGVmIENPTkZJR19ETUkKIFJFU0VSVkVfQlJLKGRtaV9hbGxvYywg
-NjU1MzYpOwogI2VuZGlmCkBAIC01MzIsOSArNTM0LDkgQEAgc3RhdGljIGludCBfX2luaXQgcmVz
-ZXJ2ZV9jcmFzaGtlcm5lbF9sb3codm9pZCkKIAkJcmV0dXJuIC1FTk9NRU07CiAJfQogCi0JcmV0
-ID0gbWVtYmxvY2tfcmVzZXJ2ZShsb3dfYmFzZSwgbG93X3NpemUpOworCXJldCA9ICBjbWFfZGVj
-bGFyZV9jb250aWd1b3VzKGxvd19iYXNlLCBsb3dfc2l6ZSwgMCwgQ1JBU0hfQUxJR04sIDAsIDEs
-ICZjcmFzaGtfY21hX2xvdyk7CiAJaWYgKHJldCkgewotCQlwcl9lcnIoIiVzOiBFcnJvciByZXNl
-cnZpbmcgY3Jhc2hrZXJuZWwgbG93IG1lbWJsb2NrLlxuIiwgX19mdW5jX18pOworCQlwcl9lcnIo
-IiVzOiBFcnJvciByZXNlcnZpbmcgQ01BIGFyZWEgZm9yIGNyYXNoa2VybmVsIGxvdy5cbiIsIF9f
-ZnVuY19fKTsKIAkJcmV0dXJuIHJldDsKIAl9CiAKQEAgLTU0Myw5ICs1NDUsNyBAQCBzdGF0aWMg
-aW50IF9faW5pdCByZXNlcnZlX2NyYXNoa2VybmVsX2xvdyh2b2lkKQogCQkodW5zaWduZWQgbG9u
-ZykobG93X2Jhc2UgPj4gMjApLAogCQkodW5zaWduZWQgbG9uZykodG90YWxfbG93X21lbSA+PiAy
-MCkpOwogCi0JY3Jhc2hrX2xvd19yZXMuc3RhcnQgPSBsb3dfYmFzZTsKLQljcmFzaGtfbG93X3Jl
-cy5lbmQgICA9IGxvd19iYXNlICsgbG93X3NpemUgLSAxOwotCWluc2VydF9yZXNvdXJjZSgmaW9t
-ZW1fcmVzb3VyY2UsICZjcmFzaGtfbG93X3Jlcyk7CisKICNlbmRpZgogCXJldHVybiAwOwogfQpA
-QCAtNTc4LDYgKzU3OCw4IEBAIHN0YXRpYyB2b2lkIF9faW5pdCByZXNlcnZlX2NyYXNoa2VybmVs
-KHZvaWQpCiAJCQkJCQkgICAgaGlnaCA/IENSQVNIX0FERFJfSElHSF9NQVgKIAkJCQkJCQkgOiBD
-UkFTSF9BRERSX0xPV19NQVgsCiAJCQkJCQkgICAgY3Jhc2hfc2l6ZSwgQ1JBU0hfQUxJR04pOwor
-CQlwcl9pbmZvKCJyb25pdCAwIGNyYXNoX2Jhc2UgJWxsdSBjcmFzaF9zaXplICVsbHUgXG4iLCBj
-cmFzaF9iYXNlLCBjcmFzaF9zaXplKTsKKwogCQlpZiAoIWNyYXNoX2Jhc2UpIHsKIAkJCXByX2lu
-Zm8oImNyYXNoa2VybmVsIHJlc2VydmF0aW9uIGZhaWxlZCAtIE5vIHN1aXRhYmxlIGFyZWEgZm91
-bmQuXG4iKTsKIAkJCXJldHVybjsKQEAgLTU4OSwzMCArNTkxLDI1IEBAIHN0YXRpYyB2b2lkIF9f
-aW5pdCByZXNlcnZlX2NyYXNoa2VybmVsKHZvaWQpCiAJCXN0YXJ0ID0gbWVtYmxvY2tfZmluZF9p
-bl9yYW5nZShjcmFzaF9iYXNlLAogCQkJCQkgICAgICAgY3Jhc2hfYmFzZSArIGNyYXNoX3NpemUs
-CiAJCQkJCSAgICAgICBjcmFzaF9zaXplLCAxIDw8IDIwKTsKKwkJcHJfaW5mbygicm9uaXQgYmFz
-ZV9tZW50aW9uZWQgY3Jhc2hfYmFzZSAlbGx1IGNyYXNoX3NpemUgJWxsdSBcbiIsIGNyYXNoX2Jh
-c2UsIGNyYXNoX3NpemUpOwogCQlpZiAoc3RhcnQgIT0gY3Jhc2hfYmFzZSkgewogCQkJcHJfaW5m
-bygiY3Jhc2hrZXJuZWwgcmVzZXJ2YXRpb24gZmFpbGVkIC0gbWVtb3J5IGlzIGluIHVzZS5cbiIp
-OwogCQkJcmV0dXJuOwogCQl9CiAJfQotCXJldCA9IG1lbWJsb2NrX3Jlc2VydmUoY3Jhc2hfYmFz
-ZSwgY3Jhc2hfc2l6ZSk7Ci0JaWYgKHJldCkgewotCQlwcl9lcnIoIiVzOiBFcnJvciByZXNlcnZp
-bmcgY3Jhc2hrZXJuZWwgbWVtYmxvY2suXG4iLCBfX2Z1bmNfXyk7CisJaWYgKGNyYXNoX2Jhc2Ug
-Pj0gKDFVTEwgPDwgMzIpICYmIHJlc2VydmVfY3Jhc2hrZXJuZWxfbG93KCkpIHsKIAkJcmV0dXJu
-OwogCX0KLQotCWlmIChjcmFzaF9iYXNlID49ICgxVUxMIDw8IDMyKSAmJiByZXNlcnZlX2NyYXNo
-a2VybmVsX2xvdygpKSB7Ci0JCW1lbWJsb2NrX2ZyZWUoY3Jhc2hfYmFzZSwgY3Jhc2hfc2l6ZSk7
-CisJcmV0ID0gIGNtYV9kZWNsYXJlX2NvbnRpZ3VvdXMoY3Jhc2hfYmFzZSwgY3Jhc2hfc2l6ZSwg
-MCwgQ1JBU0hfQUxJR04sIDAsIDEsICZjcmFzaGtfY21hKTsKKwlpZiAocmV0KSB7CisJCXByX2Vy
-cigiJXM6IEVycm9yIHJlc2VydmluZyBDTUEgYXJlYSBmb3IgY3Jhc2hrZXJuZWwuXG4iLCBfX2Z1
-bmNfXyk7CiAJCXJldHVybjsKIAl9CiAKLQlwcl9pbmZvKCJSZXNlcnZpbmcgJWxkTUIgb2YgbWVt
-b3J5IGF0ICVsZE1CIGZvciBjcmFzaGtlcm5lbCAoU3lzdGVtIFJBTTogJWxkTUIpXG4iLAorCXBy
-X2luZm8oInJvbml0IGhhbGRlciBSZXNlcnZpbmcgJWxkTUIgb2YgbWVtb3J5IGF0ICVsZE1CIGZv
-ciBjcmFzaGtlcm5lbCAoU3lzdGVtIFJBTTogJWxkTUIpXG4iLAogCQkodW5zaWduZWQgbG9uZyko
-Y3Jhc2hfc2l6ZSA+PiAyMCksCiAJCSh1bnNpZ25lZCBsb25nKShjcmFzaF9iYXNlID4+IDIwKSwK
-IAkJKHVuc2lnbmVkIGxvbmcpKHRvdGFsX21lbSA+PiAyMCkpOwotCi0JY3Jhc2hrX3Jlcy5zdGFy
-dCA9IGNyYXNoX2Jhc2U7Ci0JY3Jhc2hrX3Jlcy5lbmQgICA9IGNyYXNoX2Jhc2UgKyBjcmFzaF9z
-aXplIC0gMTsKLQlpbnNlcnRfcmVzb3VyY2UoJmlvbWVtX3Jlc291cmNlLCAmY3Jhc2hrX3Jlcyk7
-CiB9CiAjZWxzZQogc3RhdGljIHZvaWQgX19pbml0IHJlc2VydmVfY3Jhc2hrZXJuZWwodm9pZCkK
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgva2V4ZWMuaCBiL2luY2x1ZGUvbGludXgva2V4ZWMu
-aAppbmRleCBkMTQwYjFlLi5kNmEyNGQ2IDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2tleGVj
-LmgKKysrIGIvaW5jbHVkZS9saW51eC9rZXhlYy5oCkBAIC0zMDcsNyArMzA3LDcgQEAgZXh0ZXJu
-IHNpemVfdCB2bWNvcmVpbmZvX21heF9zaXplOwogCiAvKiBmbGFnIHRvIHRyYWNrIGlmIGtleGVj
-IHJlYm9vdCBpcyBpbiBwcm9ncmVzcyAqLwogZXh0ZXJuIGJvb2wga2V4ZWNfaW5fcHJvZ3Jlc3M7
-Ci0KK2V4dGVybiBzdHJ1Y3QgY21hICpjcmFzaGtfY21hLCAqY3Jhc2hrX2NtYV9sb3c7CiBpbnQg
-X19pbml0IHBhcnNlX2NyYXNoa2VybmVsKGNoYXIgKmNtZGxpbmUsIHVuc2lnbmVkIGxvbmcgbG9u
-ZyBzeXN0ZW1fcmFtLAogCQl1bnNpZ25lZCBsb25nIGxvbmcgKmNyYXNoX3NpemUsIHVuc2lnbmVk
-IGxvbmcgbG9uZyAqY3Jhc2hfYmFzZSk7CiBpbnQgcGFyc2VfY3Jhc2hrZXJuZWxfaGlnaChjaGFy
-ICpjbWRsaW5lLCB1bnNpZ25lZCBsb25nIGxvbmcgc3lzdGVtX3JhbSwKQEAgLTMxOCw2ICszMTgs
-MTMgQEAgaW50IGNyYXNoX3Nocmlua19tZW1vcnkodW5zaWduZWQgbG9uZyBuZXdfc2l6ZSk7CiBz
-aXplX3QgY3Jhc2hfZ2V0X21lbW9yeV9zaXplKHZvaWQpOwogdm9pZCBjcmFzaF9mcmVlX3Jlc2Vy
-dmVkX3BoeXNfcmFuZ2UodW5zaWduZWQgbG9uZyBiZWdpbiwgdW5zaWduZWQgbG9uZyBlbmQpOwog
-CisvL2N1c3RvbSBmdW5jdGlvbnMKK2ludCBjcmFzaF9mcmVlX21lbW9yeSh1bnNpZ25lZCBpbnQg
-c2l6ZSk7CitpbnQgY3Jhc2hfYWxsb2NfbWVtb3J5KHVuc2lnbmVkIGludCBzaXplKTsKK2ludCBj
-cmFzaF9hbGxvY19tZW1vcnlfbG93KHZvaWQpOworaW50IGNyYXNoX2ZyZWVfbWVtb3J5X2xvdyh2
-b2lkKTsKK3NpemVfdCBjcmFzaF9nZXRfbWVtb3J5X3NpemVfbG93KHZvaWQpOworCiBpbnQgX193
-ZWFrIGFyY2hfa2V4ZWNfa2VybmVsX2ltYWdlX3Byb2JlKHN0cnVjdCBraW1hZ2UgKmltYWdlLCB2
-b2lkICpidWYsCiAJCQkJCSB1bnNpZ25lZCBsb25nIGJ1Zl9sZW4pOwogdm9pZCAqIF9fd2VhayBh
-cmNoX2tleGVjX2tlcm5lbF9pbWFnZV9sb2FkKHN0cnVjdCBraW1hZ2UgKmltYWdlKTsKZGlmZiAt
-LWdpdCBhL2tlcm5lbC9rZXhlY19jb3JlLmMgYi9rZXJuZWwva2V4ZWNfY29yZS5jCmluZGV4IDEx
-YjY0YTYuLjQzNGE4YjQgMTAwNjQ0Ci0tLSBhL2tlcm5lbC9rZXhlY19jb3JlLmMKKysrIGIva2Vy
-bmVsL2tleGVjX2NvcmUuYwpAQCAtMzksNiArMzksNyBAQAogI2luY2x1ZGUgPGxpbnV4L2NvbXBp
-bGVyLmg+CiAjaW5jbHVkZSA8bGludXgvaHVnZXRsYi5oPgogCisjaW5jbHVkZSA8bGludXgvY21h
-Lmg+CiAjaW5jbHVkZSA8YXNtL3BhZ2UuaD4KICNpbmNsdWRlIDxhc20vc2VjdGlvbnMuaD4KIApA
-QCAtNDYsNyArNDcsOSBAQAogI2luY2x1ZGUgPGNyeXB0by9zaGEuaD4KICNpbmNsdWRlICJrZXhl
-Y19pbnRlcm5hbC5oIgogCisjZGVmaW5lIENSQVNIX0FMSUdOCQkoMTYgPDwgMjApCiBERUZJTkVf
-TVVURVgoa2V4ZWNfbXV0ZXgpOworREVGSU5FX01VVEVYKGtleGVjX211dGV4X2xvdyk7CiAKIC8q
-IFBlciBjcHUgbWVtb3J5IGZvciBzdG9yaW5nIGNwdSBzdGF0ZXMgaW4gY2FzZSBvZiBzeXN0ZW0g
-Y3Jhc2guICovCiBub3RlX2J1Zl90IF9fcGVyY3B1ICpjcmFzaF9ub3RlczsKQEAgLTU3LDYgKzYw
-LDcgQEAgdTMyIHZtY29yZWluZm9fbm90ZVtWTUNPUkVJTkZPX05PVEVfU0laRS80XTsKIHNpemVf
-dCB2bWNvcmVpbmZvX3NpemU7CiBzaXplX3Qgdm1jb3JlaW5mb19tYXhfc2l6ZSA9IHNpemVvZih2
-bWNvcmVpbmZvX2RhdGEpOwogCitzdGF0aWMgc3RydWN0IHBhZ2UgKnBhZ2VzLCAqcGFnZXNfbG93
-OwogLyogRmxhZyB0byBpbmRpY2F0ZSB3ZSBhcmUgZ29pbmcgdG8ga2V4ZWMgYSBuZXcga2VybmVs
-ICovCiBib29sIGtleGVjX2luX3Byb2dyZXNzID0gZmFsc2U7CiAKQEAgLTg4Nyw2ICs4OTEsMTcg
-QEAgc2l6ZV90IGNyYXNoX2dldF9tZW1vcnlfc2l6ZSh2b2lkKQogCXJldHVybiBzaXplOwogfQog
-CitzaXplX3QgY3Jhc2hfZ2V0X21lbW9yeV9zaXplX2xvdyh2b2lkKQoreworCXNpemVfdCBzaXpl
-ID0gMDsKKworCW11dGV4X2xvY2soJmtleGVjX211dGV4X2xvdyk7CisJaWYgKGNyYXNoa19sb3df
-cmVzLmVuZCAhPSBjcmFzaGtfbG93X3Jlcy5zdGFydCkKKwkJc2l6ZSA9IHJlc291cmNlX3NpemUo
-JmNyYXNoa19sb3dfcmVzKTsKKwltdXRleF91bmxvY2soJmtleGVjX211dGV4X2xvdyk7CisJcmV0
-dXJuIHNpemU7Cit9CisKIHZvaWQgX193ZWFrIGNyYXNoX2ZyZWVfcmVzZXJ2ZWRfcGh5c19yYW5n
-ZSh1bnNpZ25lZCBsb25nIGJlZ2luLAogCQkJCQkgICB1bnNpZ25lZCBsb25nIGVuZCkKIHsKQEAg
-LTk0Niw2ICs5NjEsNzEgQEAgdW5sb2NrOgogCW11dGV4X3VubG9jaygma2V4ZWNfbXV0ZXgpOwog
-CXJldHVybiByZXQ7CiB9CitpbnQgY3Jhc2hfZnJlZV9tZW1vcnkodW5zaWduZWQgaW50IHNpemUp
-Cit7CisJaW50IHJldDsKKworCWlmICghY3Jhc2hrX2NtYSkKKwkJcmV0dXJuIDA7CisJcmV0ID0g
-Y21hX3JlbGVhc2UoY3Jhc2hrX2NtYSwgcGFnZXMsIHNpemU+PlBBR0VfU0hJRlQpOworCisJaWYg
-KCFyZXQpIHsKKwkJcHJfaW5mbygiQ3Jhc2ggbWVtb3J5IHJlbGVhc2UgZmFpbGVkIik7CisJCXJl
-dHVybiAwOworCX0KKwlyZWxlYXNlX3Jlc291cmNlKCZjcmFzaGtfcmVzKTsKKwlyZXR1cm4gMTsK
-K30KKworaW50IGNyYXNoX2FsbG9jX21lbW9yeSh1bnNpZ25lZCBpbnQgc2l6ZSkKK3sKKwlpZiAo
-IWNyYXNoa19jbWEpCisJCXJldHVybiAwOworCXBhZ2VzID0gY21hX2FsbG9jKGNyYXNoa19jbWEs
-IHNpemU+PlBBR0VfU0hJRlQsIEtFWEVDX0NSQVNIX01FTV9BTElHTik7CisJcHJfaW5mbygiSW4g
-Y3Jhc2hfYWxsb2NfbWVtb3J5IGZ1Y250aW9uIik7CisJaWYgKCFwYWdlcyl7CisJCXByX2luZm8o
-Ik1lbW9yeSBmb3IgY3Jhc2gga2VybmVsIG5vdCBhbGxvY2F0ZWQiKTsKKwkJcmV0dXJuIDA7CisJ
-fQorCisJY3Jhc2hrX3Jlcy5zdGFydCA9IHBhZ2VfdG9fcGZuKHBhZ2VzKTw8UEFHRV9TSElGVDsK
-KwljcmFzaGtfcmVzLmVuZCA9IGNyYXNoa19yZXMuc3RhcnQgKyBzaXplIC0gMTsKKwlpbnNlcnRf
-cmVzb3VyY2UoJmlvbWVtX3Jlc291cmNlLCAmY3Jhc2hrX3Jlcyk7CisJcmV0dXJuIDE7Cit9CisK
-K2ludCBjcmFzaF9mcmVlX21lbW9yeV9sb3codm9pZCkKK3sKKwlpbnQgcmV0OworCisJaWYgKCFj
-cmFzaGtfY21hX2xvdykKKwkJcmV0dXJuIDA7CisJcmV0ID0gY21hX3JlbGVhc2UoY3Jhc2hrX2Nt
-YV9sb3csIHBhZ2VzX2xvdywgY21hX2dldF9zaXplKGNyYXNoa19jbWFfbG93KT4+UEFHRV9TSElG
-VCk7CisKKwlpZiAoIXJldCkgeworCQlwcl9pbmZvKCJDcmFzaCBsb3cgbWVtb3J5IHJlbGVhc2Ug
-ZmFpbGVkIik7CisJCXJldHVybiAwOworCX0KKwlyZWxlYXNlX3Jlc291cmNlKCZjcmFzaGtfbG93
-X3Jlcyk7CisJcmV0dXJuIDE7Cit9CisKK2ludCBjcmFzaF9hbGxvY19tZW1vcnlfbG93KHZvaWQp
-Cit7CisJaWYgKCFjcmFzaGtfY21hX2xvdykKKwkJcmV0dXJuIDA7CisJcGFnZXMgPSBjbWFfYWxs
-b2MoY3Jhc2hrX2NtYV9sb3csIGNtYV9nZXRfc2l6ZShjcmFzaGtfY21hX2xvdyk+PlBBR0VfU0hJ
-RlQsIEtFWEVDX0NSQVNIX01FTV9BTElHTik7CisJcHJfaW5mbygiSW4gY3Jhc2hfYWxsb2NfbWVt
-b3J5IGZ1Y250aW9uIik7CisJaWYgKCFwYWdlcyl7CisJCXByX2luZm8oIkxvdyBtZW1vcnkgZm9y
-IGNyYXNoIGtlcm5lbCBub3QgYWxsb2NhdGVkIik7CisJCXJldHVybiAwOworCX0KKworCWNyYXNo
-a19sb3dfcmVzLnN0YXJ0ID0gcGFnZV90b19wZm4ocGFnZXMpPDxQQUdFX1NISUZUOworCWNyYXNo
-a19sb3dfcmVzLmVuZCA9IGNyYXNoa19sb3dfcmVzLnN0YXJ0ICsgY21hX2dldF9zaXplKGNyYXNo
-a19jbWFfbG93KSAtIDE7CisJaW5zZXJ0X3Jlc291cmNlKCZpb21lbV9yZXNvdXJjZSwgJmNyYXNo
-a19sb3dfcmVzKTsKKwlyZXR1cm4gMTsKK30KIAogc3RhdGljIHUzMiAqYXBwZW5kX2VsZl9ub3Rl
-KHUzMiAqYnVmLCBjaGFyICpuYW1lLCB1bnNpZ25lZCB0eXBlLCB2b2lkICpkYXRhLAogCQkJICAg
-IHNpemVfdCBkYXRhX2xlbikKZGlmZiAtLWdpdCBhL2tlcm5lbC9rc3lzZnMuYyBiL2tlcm5lbC9r
-c3lzZnMuYwppbmRleCBlODNiMjY0Li5mYmM1MzE0IDEwMDY0NAotLS0gYS9rZXJuZWwva3N5c2Zz
-LmMKKysrIGIva2VybmVsL2tzeXNmcy5jCkBAIC0xMTYsMTIgKzExNiwyMyBAQCBzdGF0aWMgc3Np
-emVfdCBrZXhlY19jcmFzaF9zaXplX3N0b3JlKHN0cnVjdCBrb2JqZWN0ICprb2JqLAogewogCXVu
-c2lnbmVkIGxvbmcgY250OwogCWludCByZXQ7CisJaW50IHNpemU7CiAKIAlpZiAoa3N0cnRvdWwo
-YnVmLCAwLCAmY250KSkKIAkJcmV0dXJuIC1FSU5WQUw7CiAKLQlyZXQgPSBjcmFzaF9zaHJpbmtf
-bWVtb3J5KGNudCk7Ci0JcmV0dXJuIHJldCA8IDAgPyByZXQgOiBjb3VudDsKKwlzaXplID0gY250
-PDwyMDsKKwlpZiAoY250ID09IDApIHsKKwkJY3Jhc2hfZnJlZV9tZW1vcnlfbG93KCk7CisJCXJl
-dCA9IGNyYXNoX2ZyZWVfbWVtb3J5KGNyYXNoX2dldF9tZW1vcnlfc2l6ZSgpKTsKKwl9CisJZWxz
-ZSBpZiAoY250ID4gMCkgeworCQlpZiAoY3Jhc2hfZ2V0X21lbW9yeV9zaXplX2xvdygpID09IDAp
-CisJCQljcmFzaF9hbGxvY19tZW1vcnlfbG93KCk7CisJCXJldCA9IGNyYXNoX2ZyZWVfbWVtb3J5
-KGNyYXNoX2dldF9tZW1vcnlfc2l6ZSgpKTsKKwkJcmV0ID0gY3Jhc2hfYWxsb2NfbWVtb3J5KHNp
-emUpOworCX0KKwlyZXR1cm4gY291bnQ7CiB9CiBLRVJORUxfQVRUUl9SVyhrZXhlY19jcmFzaF9z
-aXplKTsKIAo=
+Oops, will fix it.
 
+> 
+> > +			pr_warn("crashkernel base address is not 2MB aligned\n");
+> > +			return;
+> > +		}
+> > +
+> > +		memblock_reserve(crash_base, crash_size);
+> 
+> What if memblock_reserve() fails?
 
---=-KHo5I/pHiFSYIQT1ZGgx
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+The region has been checked with memblock_is_region_reserved().
+
+> 
+> > +	}
+> > +
+> > +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
+> > +		crash_size >> 20, crash_base >> 20);
+> > +
+> > +	crashk_res.start = crash_base;
+> > +	crashk_res.end = crash_base + crash_size - 1;
+> > +}
+> > +#else
+> > +static void __init reserve_crashkernel(void)
+> > +{
+> > +	;
+> > +}
+> > +#endif /* CONFIG_KEXEC_CORE */
+> > +
+> >  /*
+> >   * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
+> >   * currently assumes that for memory starting above 4G, 32-bit devices will
+> > @@ -291,6 +351,8 @@ void __init arm64_memblock_init(void)
+> >  	}
+> >  #endif
+> >  
+> > +	reserve_crashkernel();
+> > +
+> >  	early_init_fdt_scan_reserved_mem();
+> >  
+> >  	/* 4GB maximum for 32-bit only capable devices */
+> > 
+> 
+> 
+> With those,
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thanks,
+-Takahiro AKASHI
+
+> 
+> Thanks,
+> 
+> James
+> 
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---=-KHo5I/pHiFSYIQT1ZGgx--
-
-
