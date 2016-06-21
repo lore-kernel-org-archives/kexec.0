@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mail-qk0-f180.google.com ([209.85.220.180])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFII6-0002dK-Ph
- for kexec@lists.infradead.org; Tue, 21 Jun 2016 09:48:20 +0000
-Date: Tue, 21 Jun 2016 10:47:38 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 2/2] arm: fix kernel image size
-Message-ID: <20160621094737.GA5783@n2100.arm.linux.org.uk>
-References: <20160617194405.GN1041@n2100.armlinux.org.uk>
- <E1bDzh4-0006a4-7p@e0050434b2927.dyn.armlinux.org.uk>
- <20160621074319.GH22406@atomide.com>
+ id 1bFIXF-0002BM-2b
+ for kexec@lists.infradead.org; Tue, 21 Jun 2016 10:04:01 +0000
+Received: by mail-qk0-f180.google.com with SMTP id t127so13514739qkf.1
+ for <kexec@lists.infradead.org>; Tue, 21 Jun 2016 03:03:34 -0700 (PDT)
+Date: Tue, 21 Jun 2016 15:33:29 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v2] makedumpfile: support _count -> _refcount rename in
+ struct page
+Message-ID: <20160621100329.GE29309@dhcppc9>
+References: <1466156479-9659-1-git-send-email-vkuznets@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E4CE36@BPXM01GP.gisp.nec.co.jp>
+ <20160621064508.GD29309@dhcppc9>
+ <87k2hjhsq1.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160621074319.GH22406@atomide.com>
+In-Reply-To: <87k2hjhsq1.fsf@vitty.brq.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,33 +29,159 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Kees Cook <keescook@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, David Anderson <anderson@redhat.com>
 
-On Tue, Jun 21, 2016 at 12:43:21AM -0700, Tony Lindgren wrote:
-> Hi,
+On 21/06/2016:10:05:42 AM, Vitaly Kuznetsov wrote:
+> Pratyush Anand <panand@redhat.com> writes:
 > 
-> * Russell King <rmk@armlinux.org.uk> [160617 12:52]:
-> > If we want to assume that the compressed image will expand by a maximum
-> > of 4x, we actually need to reserve 5x the space, since we need to keep
-> > a copy of the compessed image around while decompressing.
+> > On 21/06/2016:05:43:29 AM, Atsushi Kumagai wrote:
+> >> Hello Vitaly,
+> >> 
+> >> >_count member was renamed to _refcount in linux commit 0139aa7b7fa12
+> >> >("mm: rename _count, field of the struct page, to _refcount") and this
+> >> >broke makedumpfile. The reason for making the change was to find all users
+> >> >accessing it directly and not through the recommended API. I tried
+> >> >suggesting to revert the change but failed, I see no other choice than to
+> >> >start supporting both _count and _refcount in makedumpfile.
+> >> >
+> >> >Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >> >---
+> >> >Changes since 'v1':
+> >> >- Make '_refcount' the default [Atsushi Kumagai]
+> >
+> > Sorry, I missed this conversation earlier.
+> >
+> >> 
+> >> Good fix, I'll merge this into v1.6.1.
+> >> 
+> >> Thanks,
+> >> Atsushi Kumagai
+> >> 
+> >> >---
+> >> > makedumpfile.c | 26 +++++++++++++++++++++-----
+> >> > makedumpfile.h |  3 ++-
+> >> > 2 files changed, 23 insertions(+), 6 deletions(-)
+> >> >
+> >> >diff --git a/makedumpfile.c b/makedumpfile.c
+> >> >index 853b999..fd884d3 100644
+> >> >--- a/makedumpfile.c
+> >> >+++ b/makedumpfile.c
+> >> >@@ -1579,7 +1579,14 @@ get_structure_info(void)
+> >> > 	 */
+> >> > 	SIZE_INIT(page, "page");
+> >> > 	OFFSET_INIT(page.flags, "page", "flags");
+> >> >-	OFFSET_INIT(page._count, "page", "_count");
+> >> >+	OFFSET_INIT(page._refcount, "page", "_refcount");
+> >> >+	if (OFFSET(page._refcount) == NOT_FOUND_STRUCTURE) {
+> >> >+		info->flag_use_count = TRUE;
+> >> >+		OFFSET_INIT(page._refcount, "page", "_count");
+> >> >+	} else {
+> >> >+		info->flag_use_count = FALSE;
+> >
+> > Probably we could have avoided this flag and could have solved it same way as we
+> > have solved for other such kernel changes, like that of "module.module_core".
+> > Infact, we do not need to add "_refcount" in makedumpfile's page struct.
+> >
 > 
-> Looks like 5x is not enough with omap2plus_defconfig at least..
-> This one needs to be set to 6x for that. Maybe we should just make
-> it go all the way to 11 :)
+> Yes, the flag is only needed to do the write. Why do you think we don't
+> need it?
 
-That's not really what this commit is about - it's about making the
-code consistent with the comments in the file.  I could have instead
-changed the comment saying "4x" to "3x" instead.
+IMHO, even if we write with "page._count", we would be able to get correct
+value in next read, because we prefer reading with "page._count" over
+"page._refcount". I think "crash utility" also gives priority for reading with
+_count, so things should work without any issue.
 
-There isn't really an answer which will always work for this problem,
-as I've already detailed in a previous thread discussing the issue.
-Adding a zImage header don't fix the problem.
+~Pratyush
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> 
+> > See:
+> > https://github.com/pratyushanand/makedumpfile/commit/8c58c177d27d4ac31db2ee42442ef056dbbd2c93
+> >
+> > ~Pratyush
+> >
+> >> >+	}
+> >> >+
+> >> > 	OFFSET_INIT(page.mapping, "page", "mapping");
+> >> > 	OFFSET_INIT(page._mapcount, "page", "_mapcount");
+> >> > 	OFFSET_INIT(page.private, "page", "private");
+> >> >@@ -2044,7 +2051,7 @@ get_mem_type(void)
+> >> >
+> >> > 	if ((SIZE(page) == NOT_FOUND_STRUCTURE)
+> >> > 	    || (OFFSET(page.flags) == NOT_FOUND_STRUCTURE)
+> >> >-	    || (OFFSET(page._count) == NOT_FOUND_STRUCTURE)
+> >> >+	    || (OFFSET(page._refcount) == NOT_FOUND_STRUCTURE)
+> >> > 	    || (OFFSET(page.mapping) == NOT_FOUND_STRUCTURE)) {
+> >> > 		ret = NOT_FOUND_MEMTYPE;
+> >> > 	} else if ((((SYMBOL(node_data) != NOT_FOUND_SYMBOL)
+> >> >@@ -2151,7 +2158,10 @@ write_vmcoreinfo_data(void)
+> >> > 	 * write the member offset of 1st kernel
+> >> > 	 */
+> >> > 	WRITE_MEMBER_OFFSET("page.flags", page.flags);
+> >> >-	WRITE_MEMBER_OFFSET("page._count", page._count);
+> >> >+	if (info->flag_use_count)
+> >> >+		WRITE_MEMBER_OFFSET("page._count", page._refcount);
+> >> >+	else
+> >> >+		WRITE_MEMBER_OFFSET("page._refcount", page._refcount);
+> >> > 	WRITE_MEMBER_OFFSET("page.mapping", page.mapping);
+> >> > 	WRITE_MEMBER_OFFSET("page.lru", page.lru);
+> >> > 	WRITE_MEMBER_OFFSET("page._mapcount", page._mapcount);
+> >> >@@ -2491,7 +2501,13 @@ read_vmcoreinfo(void)
+> >> >
+> >> >
+> >> > 	READ_MEMBER_OFFSET("page.flags", page.flags);
+> >> >-	READ_MEMBER_OFFSET("page._count", page._count);
+> >> >+	READ_MEMBER_OFFSET("page._refcount", page._refcount);
+> >> >+	if (OFFSET(page._refcount) == NOT_FOUND_STRUCTURE) {
+> >> >+		info->flag_use_count = TRUE;
+> >> >+		READ_MEMBER_OFFSET("page._count", page._refcount);
+> >> >+	} else {
+> >> >+		info->flag_use_count = FALSE;
+> >> >+	}
+> >> > 	READ_MEMBER_OFFSET("page.mapping", page.mapping);
+> >> > 	READ_MEMBER_OFFSET("page.lru", page.lru);
+> >> > 	READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
+> >> >@@ -5615,7 +5631,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+> >> > 		pcache  = page_cache + (index_pg * SIZE(page));
+> >> >
+> >> > 		flags   = ULONG(pcache + OFFSET(page.flags));
+> >> >-		_count  = UINT(pcache + OFFSET(page._count));
+> >> >+		_count  = UINT(pcache + OFFSET(page._refcount));
+> >> > 		mapping = ULONG(pcache + OFFSET(page.mapping));
+> >> >
+> >> > 		if (OFFSET(page.compound_order) != NOT_FOUND_STRUCTURE) {
+> >> >diff --git a/makedumpfile.h b/makedumpfile.h
+> >> >index 251d4bf..533e5b8 100644
+> >> >--- a/makedumpfile.h
+> >> >+++ b/makedumpfile.h
+> >> >@@ -1100,6 +1100,7 @@ struct DumpInfo {
+> >> > 	int		flag_nospace;	     /* the flag of "No space on device" error */
+> >> > 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+> >> > 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
+> >> >+	int		flag_use_count;      /* _refcount is named _count in struct page */
+> >> > 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
+> >> > 	long		page_size;           /* size of page */
+> >> > 	long		page_shift;
+> >> >@@ -1483,7 +1484,7 @@ struct size_table {
+> >> > struct offset_table {
+> >> > 	struct page {
+> >> > 		long	flags;
+> >> >-		long	_count;
+> >> >+		long	_refcount;
+> >> > 		long	mapping;
+> >> > 		long	lru;
+> >> > 		long	_mapcount;
+> >> >--
+> >> >2.5.5
+> >> 
+> >> 
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> -- 
+>   Vitaly
 
 _______________________________________________
 kexec mailing list
