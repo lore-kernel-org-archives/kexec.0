@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 22 Jun 2016 01:51:07 -0700
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/2] arm: fix kernel image size
-Message-ID: <20160622085105.GE22406@atomide.com>
-References: <E1bDzh4-0006a4-7p@e0050434b2927.dyn.armlinux.org.uk>
- <20160621074319.GH22406@atomide.com>
- <20160621094737.GA5783@n2100.arm.linux.org.uk>
- <20160621103810.GI22406@atomide.com>
- <20160621105720.GK22406@atomide.com>
- <20160621154407.GB5783@n2100.arm.linux.org.uk>
- <20160621165523.GY22406@atomide.com>
- <20160621215141.GC5783@n2100.arm.linux.org.uk>
- <20160622073614.GZ22406@atomide.com>
- <20160622082958.GD5783@n2100.arm.linux.org.uk>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bFfEr-0007LW-Tk
+ for kexec@lists.infradead.org; Wed, 22 Jun 2016 10:18:30 +0000
+Date: Wed, 22 Jun 2016 18:18:01 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
+ kexec_add_buffer.
+Message-ID: <20160622101801.GB7752@dhcp-128-65.nay.redhat.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1466538521-31216-4-git-send-email-bauerman@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160622082958.GD5783@n2100.arm.linux.org.uk>
+In-Reply-To: <1466538521-31216-4-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,41 +25,147 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Kees Cook <keescook@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-* Russell King - ARM Linux <linux@armlinux.org.uk> [160622 01:32]:
-> When CONFIG_DEBUG_RODATA is enabled, we align the text, read-only data,
-> data, and so on to 1MB boundaries so that we can change the permissions
-> of the sections to enforce the properties of the various ELF segments.
-> This padding massively inflates the size of the run-time kernel image,
-> and can result in megabytes of wastage (if we're as little as one byte
-> into 1MB, we have to round up to the next megabyte.)
-
-Yes understood, and looks like we cannot make any assumptions about
-what the alignment might be.
-
-> The padding, being a string of zeros, is very compressable, and this
-> increases the compression ratio.
+On 06/21/16 at 04:48pm, Thiago Jung Bauermann wrote:
+> kexec_locate_mem_hole will be used by the PowerPC kexec_file_load
+> implementation to find free memory for the purgatory stack.
 > 
-> The BSS is not included in the compressed image, but needs to be taken
-> account of when avoiding overwriting the DTB.
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: kexec@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  include/linux/kexec.h |  4 ++++
+>  kernel/kexec_file.c   | 66 ++++++++++++++++++++++++++++++++++++++-------------
+>  2 files changed, 53 insertions(+), 17 deletions(-)
 > 
-> > How about we check the size of RAM available, and if there is plenty
-> > of RAM we use a safe compression ratio of 8. If RAM is a problem,
-> > we could make the compression ratio smaller and warn about it. And
-> > we could also allow passing the compression ratio to kexec as an
-> > option.
-> 
-> You do know that you can already pass the "size" of the kernel to be
-> reserved to kexec.  --image-size.  It's not documented in --help, but
-> it is there (which is another annoying thing about ARM kexec...)
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 3d91bcfc180d..4ca6f5f95d66 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -227,6 +227,10 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
+>  					struct kexec_segment __user *segments,
+>  					unsigned long flags);
+>  extern int kernel_kexec(void);
+> +int kexec_locate_mem_hole(struct kimage *image, unsigned long size,
+> +			  unsigned long align, unsigned long min_addr,
+> +			  unsigned long max_addr, bool top_down,
+> +			  unsigned long *addr);
+>  extern int kexec_add_buffer(struct kimage *image, char *buffer,
+>  			    unsigned long bufsz, unsigned long memsz,
+>  			    unsigned long buf_align, unsigned long buf_min,
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b1f1f6402518..85a515511925 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -449,6 +449,46 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+>  		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+>  }
+>  
+> +/**
+> + * kexec_locate_mem_hole - find free memory to load segment or use in purgatory
+> + * @image:	kexec image being updated.
+> + * @size:	Memory size.
+> + * @align:	Minimum alignment needed.
+> + * @min_addr:	Minimum starting address.
+> + * @max_addr:	Maximum end address.
+> + * @top_down	Find the highest free memory region?
+> + * @addr	On success, will have start address of the memory region found.
+> + *
+> + * Return: 0 on success, negative errno on error.
+> + */
+> +int kexec_locate_mem_hole(struct kimage *image, unsigned long size,
+> +			  unsigned long align, unsigned long min_addr,
+> +			  unsigned long max_addr, bool top_down,
+> +			  unsigned long *addr)
+> +{
+> +	int ret;
+> +	struct kexec_buf buf;
+> +
+> +	memset(&buf, 0, sizeof(struct kexec_buf));
+> +	buf.image = image;
+> +
+> +	buf.memsz = size;
+> +	buf.buf_align = align;
+> +	buf.buf_min = min_addr;
+> +	buf.buf_max = max_addr;
+> +	buf.top_down = top_down;
 
-Oh ok that's nice.
+Since patch 2/9 moved kexec_buf from internal header file to kexec.h it
+will be natural to passing a kexec_buf pointer intead of passing all
+these arguments in kexec_locate_mem_hole.
 
-Regards,
+kbuf.mem can be used for addr.
 
-Tony
+> +
+> +	ret = arch_kexec_walk_mem(&buf, locate_mem_hole_callback);
+> +	if (ret != 1) {
+> +		/* A suitable memory range could not be found for buffer */
+> +		return -EADDRNOTAVAIL;
+> +	}
+> +
+> +	*addr = buf.mem;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Helper function for placing a buffer in a kexec segment. This assumes
+>   * that kexec_mutex is held.
+> @@ -460,8 +500,8 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+>  {
+>  
+>  	struct kexec_segment *ksegment;
+> -	struct kexec_buf buf, *kbuf;
+>  	int ret;
+> +	unsigned long addr, align, size;
+>  
+>  	/* Currently adding segment this way is allowed only in file mode */
+>  	if (!image->file_mode)
+> @@ -482,29 +522,21 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+>  		return -EINVAL;
+>  	}
+>  
+> -	memset(&buf, 0, sizeof(struct kexec_buf));
+> -	kbuf = &buf;
+> -	kbuf->image = image;
+> -
+> -	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
+> -	kbuf->buf_align = max(buf_align, PAGE_SIZE);
+> -	kbuf->buf_min = buf_min;
+> -	kbuf->buf_max = buf_max;
+> -	kbuf->top_down = top_down;
+> +	size = ALIGN(memsz, PAGE_SIZE);
+> +	align = max(buf_align, PAGE_SIZE);
+>  
+>  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+> -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+> -	if (ret != 1) {
+> -		/* A suitable memory range could not be found for buffer */
+> -		return -EADDRNOTAVAIL;
+> -	}
+> +	ret = kexec_locate_mem_hole(image, size, align, buf_min, buf_max,
+> +				    top_down, &addr);
+> +	if (ret)
+> +		return ret;
+>  
+>  	/* Found a suitable memory range */
+>  	ksegment = &image->segment[image->nr_segments];
+>  	ksegment->kbuf = buffer;
+>  	ksegment->bufsz = bufsz;
+> -	ksegment->mem = kbuf->mem;
+> -	ksegment->memsz = kbuf->memsz;
+> +	ksegment->mem = addr;
+> +	ksegment->memsz = size;
+>  	image->nr_segments++;
+>  	*load_addr = ksegment->mem;
+>  	return 0;
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
