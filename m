@@ -1,17 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFfHW-0000oI-NL
- for kexec@lists.infradead.org; Wed, 22 Jun 2016 10:21:15 +0000
-Date: Wed, 22 Jun 2016 18:20:47 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 2/9] kexec_file: Generalize kexec_add_buffer.
-Message-ID: <20160622102046.GC7752@dhcp-128-65.nay.redhat.com>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1466538521-31216-3-git-send-email-bauerman@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1466538521-31216-3-git-send-email-bauerman@linux.vnet.ibm.com>
+ id 1bFi4t-00049y-VY
+ for kexec@lists.infradead.org; Wed, 22 Jun 2016 13:20:24 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5MDIYWk032586
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 09:20:01 -0400
+Received: from e28smtp05.in.ibm.com (e28smtp05.in.ibm.com [125.16.236.5])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23q1qnvhmf-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 09:20:01 -0400
+Received: from localhost
+ by e28smtp05.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 22 Jun 2016 18:49:57 +0530
+Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
+ by d28dlp03.in.ibm.com (Postfix) with ESMTP id E7CA5125805F
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 18:52:31 +0530 (IST)
+Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
+ by d28relay03.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5MDJtEP65142904
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 18:49:55 +0530
+Received: from d28av02.in.ibm.com (localhost [127.0.0.1])
+ by d28av02.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5MDJsYg003817
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 18:49:55 +0530
+Subject: Re: [PATCH 0/6] kexec_file: Add buffer hand-over for the next kernel
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Wed, 22 Jun 2016 09:19:48 -0400
+In-Reply-To: <20160622012046.GD2938@dhcp-128-65.nay.redhat.com>
+References: <1466473476-10104-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160622012046.GD2938@dhcp-128-65.nay.redhat.com>
+Mime-Version: 1.0
+Message-Id: <1466601588.2650.185.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,137 +47,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Eric Richter <erichte@linux.vnet.ibm.com>
 
+Hi Dave,
 
-The patch looks good, but could the subject be more specific?
-
-For example just like the first sentence of the patch descriotion:
-Allow architectures to specify their own memory walking function
-
-On 06/21/16 at 04:48pm, Thiago Jung Bauermann wrote:
-> Allow architectures to specify different memory walking functions for
-> kexec_add_buffer. Intel uses iomem to track reserved memory ranges,
-> but PowerPC uses the memblock subsystem.
+On Wed, 2016-06-22 at 09:20 +0800, Dave Young wrote:
+> On 06/20/16 at 10:44pm, Thiago Jung Bauermann wrote:
+> > Hello,
+> > 
+> > This patch series implements a mechanism which allows the kernel to pass on
+> > a buffer to the kernel that will be kexec'd. This buffer is passed as a
+> > segment which is added to the kimage when it is being prepared by
+> > kexec_file_load.
+> > 
+> > How the second kernel is informed of this buffer is architecture-specific.
+> > On PowerPC, this is done via the device tree, by checking the properties
+> > /chosen/linux,kexec-handover-buffer-start and
+> > /chosen/linux,kexec-handover-buffer-end, which is analogous to how the
+> > kernel finds the initrd.
+> > 
+> > This feature was implemented because the Integrity Measurement Architecture
+> > subsystem needs to preserve its measurement list accross the kexec reboot.
+> > This is so that IMA can implement trusted boot support on the OpenPower
+> > platform, because on such systems an intermediary Linux instance running as
+> > part of the firmware is used to boot the target operating system via kexec.
+> > Using this mechanism, IMA on this intermediary instance can hand over to the
+> > target OS the measurements of the components that were used to boot it.
 > 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: kexec@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/kexec.h   | 19 ++++++++++++++++++-
->  kernel/kexec_file.c     | 30 ++++++++++++++++++++++--------
->  kernel/kexec_internal.h | 14 --------------
->  3 files changed, 40 insertions(+), 23 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index e8acb2b43dd9..3d91bcfc180d 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -146,7 +146,24 @@ struct kexec_file_ops {
->  	kexec_verify_sig_t *verify_sig;
->  #endif
->  };
-> -#endif
-> +
-> +/*
-> + * Keeps track of buffer parameters as provided by caller for requesting
-> + * memory placement of buffer.
-> + */
-> +struct kexec_buf {
-> +	struct kimage *image;
-> +	unsigned long mem;
-> +	unsigned long memsz;
-> +	unsigned long buf_align;
-> +	unsigned long buf_min;
-> +	unsigned long buf_max;
-> +	bool top_down;		/* allocate from top of memory hole */
-> +};
-> +
-> +int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> +			       int (*func)(u64, u64, void *));
-> +#endif /* CONFIG_KEXEC_FILE */
->  
->  struct kimage {
->  	kimage_entry_t head;
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index b6eec7527e9f..b1f1f6402518 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -428,6 +428,27 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
->  	return locate_mem_hole_bottom_up(start, end, kbuf);
->  }
->  
-> +/**
-> + * arch_kexec_walk_mem - call func(data) on free memory regions
-> + * @kbuf:	Context info for the search. Also passed to @func.
-> + * @func:	Function to call for each memory region.
-> + *
-> + * Return: The memory walk will stop when func returns a non-zero value
-> + * and that value will be returned. If all free regions are visited without
-> + * func returning non-zero, then zero will be returned.
-> + */
-> +int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> +			       int (*func)(u64, u64, void *))
-> +{
-> +	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> +		return walk_iomem_res_desc(crashk_res.desc,
-> +					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-> +					   crashk_res.start, crashk_res.end,
-> +					   kbuf, func);
-> +	else
-> +		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-> +}
-> +
->  /*
->   * Helper function for placing a buffer in a kexec segment. This assumes
->   * that kexec_mutex is held.
-> @@ -472,14 +493,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
->  	kbuf->top_down = top_down;
->  
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
-> -	if (image->type == KEXEC_TYPE_CRASH)
-> -		ret = walk_iomem_res_desc(crashk_res.desc,
-> -				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-> -				crashk_res.start, crashk_res.end, kbuf,
-> -				locate_mem_hole_callback);
-> -	else
-> -		ret = walk_system_ram_res(0, -1, kbuf,
-> -					  locate_mem_hole_callback);
-> +	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
->  	if (ret != 1) {
->  		/* A suitable memory range could not be found for buffer */
->  		return -EADDRNOTAVAIL;
-> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-> index eefd5bf960c2..4cef7e4706b0 100644
-> --- a/kernel/kexec_internal.h
-> +++ b/kernel/kexec_internal.h
-> @@ -20,20 +20,6 @@ struct kexec_sha_region {
->  	unsigned long len;
->  };
->  
-> -/*
-> - * Keeps track of buffer parameters as provided by caller for requesting
-> - * memory placement of buffer.
-> - */
-> -struct kexec_buf {
-> -	struct kimage *image;
-> -	unsigned long mem;
-> -	unsigned long memsz;
-> -	unsigned long buf_align;
-> -	unsigned long buf_min;
-> -	unsigned long buf_max;
-> -	bool top_down;		/* allocate from top of memory hole */
-> -};
-> -
->  void kimage_file_post_load_cleanup(struct kimage *image);
->  #else /* CONFIG_KEXEC_FILE */
->  static inline void kimage_file_post_load_cleanup(struct kimage *image) { }
+> We have CONFIG_KEXEC_VERIFY_SIG, why not verifying the kernel to be
+> loaded instead?  I feel IMA should rebuild its measurement instead of
+> passing it to another kernel. Kexec reboot is also a reboot. If we have
+> to preserve something get from firmware we can do it, but other than
+> that I think it sounds not a good idea.
 
-Thanks
-Dave
+The signature verification is needed for secure boot.  Carrying the IMA
+measurement list across kexec is needed for trusted boot.  In this case,
+the boot loader is Linux, which needs to carry the measurements, stored
+in memory, across kexec to the target system.
+
+The kernel_read_file_from_fd() calls the pre and post security
+kernel_read hooks.  These hooks can verify file signatures, store
+measurements in the IMA measurement list and extend the TPM.  To enable
+both measuring and appraising (signature verification) of the kernel
+image and the initramfs, include the following rules in the IMA policy:
+
+measure func=KEXEC_KERNEL_CHECK
+appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig
+#
+measure func=KEXEC_INITRAMFS_CHECK
+appraise func=KEXEC_INITRAMFS_CHECK appraise_type=imasig
+
+Thiago's path set provides the means for carrying the trusted boot
+measurements across kexec.
+
+Mimi
+
 
 _______________________________________________
 kexec mailing list
