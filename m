@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pa0-x236.google.com ([2607:f8b0:400e:c03::236])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFWqy-0007Zc-NB
- for kexec@lists.infradead.org; Wed, 22 Jun 2016 01:21:17 +0000
-Date: Wed, 22 Jun 2016 09:20:46 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 0/6] kexec_file: Add buffer hand-over for the next kernel
-Message-ID: <20160622012046.GD2938@dhcp-128-65.nay.redhat.com>
-References: <1466473476-10104-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ id 1bFb7y-0005xm-VR
+ for kexec@lists.infradead.org; Wed, 22 Jun 2016 05:55:08 +0000
+Received: by mail-pa0-x236.google.com with SMTP id wo6so13548959pac.3
+ for <kexec@lists.infradead.org>; Tue, 21 Jun 2016 22:54:46 -0700 (PDT)
+Date: Wed, 22 Jun 2016 14:59:41 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
+ coredump tools
+Message-ID: <20160622055940.GY20774@linaro.org>
+References: <cover.1466120418.git.geoff@infradead.org>
+ <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
+ <20160620053222.GB14309@dhcppc9>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1466473476-10104-1-git-send-email-bauerman@linux.vnet.ibm.com>
+In-Reply-To: <20160620053222.GB14309@dhcppc9>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,92 +28,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Eric Richter <erichte@linux.vnet.ibm.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 06/20/16 at 10:44pm, Thiago Jung Bauermann wrote:
-> Hello,
+On Mon, Jun 20, 2016 at 11:02:22AM +0530, Pratyush Anand wrote:
+> +Atsushi
 > 
-> This patch series implements a mechanism which allows the kernel to pass on
-> a buffer to the kernel that will be kexec'd. This buffer is passed as a
-> segment which is added to the kimage when it is being prepared by
-> kexec_file_load.
+> Hi Takahiro,
 > 
-> How the second kernel is informed of this buffer is architecture-specific.
-> On PowerPC, this is done via the device tree, by checking the properties
-> /chosen/linux,kexec-handover-buffer-start and
-> /chosen/linux,kexec-handover-buffer-end, which is analogous to how the
-> kernel finds the initrd.
+> On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
+> > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > 
+> > For the current crash utility, we need to know, at least,
+> >   - kimage_voffset
+> >   - PHYS_OFFSET
+> > to handle the contents of core dump file (/proc/vmcore) correctly due to
+> > the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
+> > This patch puts them as VMCOREINFO's into the file.
+> > 
+> >   - VA_BITS
+> > is also added for makedumpfile command.
 > 
-> This feature was implemented because the Integrity Measurement Architecture
-> subsystem needs to preserve its measurement list accross the kexec reboot.
-> This is so that IMA can implement trusted boot support on the OpenPower
-> platform, because on such systems an intermediary Linux instance running as
-> part of the firmware is used to boot the target operating system via kexec.
-> Using this mechanism, IMA on this intermediary instance can hand over to the
-> target OS the measurements of the components that were used to boot it.
+> Thanks for adding them. They are quite helpful for makedumpfile as well.
+> 
+> > More VMCOREINFO's may be added later.
+> 
+> Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
+> in order to work with makedumpfile.
 
-We have CONFIG_KEXEC_VERIFY_SIG, why not verifying the kernel to be
-loaded instead?  I feel IMA should rebuild its measurement instead of
-passing it to another kernel. Kexec reboot is also a reboot. If we have
-to preserve something get from firmware we can do it, but other than
-that I think it sounds not a good idea.
+I know that adding those symbols is the easiest way, but
+theoretically, if we know the physical address of "swapper_pg_dir",
+instead of its virtual address, we can access all the memory pointed to
+by any kernel virtual address.
+How do you rationalize that we need to know "_text" and "_end"?
 
-> 
-> Because there could be additional measurement events between the
-> kexec_file_load call and the actual reboot, IMA needs a way to update the
-> buffer with those additional events before rebooting. One can minimize
-> the interval between the kexec_file_load and the reboot syscalls, but as
-> small as it can be, there is always the possibility that the measurement
-> list will be out of date at the time of reboot.
-> 
-> To address this issue, this patch series also introduces kexec_update_segment,
-> which allows a reboot notifier to change the contents of the image segment
-> during the reboot process.
-> 
-> There's one patch which makes kimage_load_normal_segment and
-> kexec_update_segment share code. It's not much code that they can share
-> though, so I'm not sure if it's worth including this patch.
-> 
-> The last patch is not intended to be merged, it just demonstrates how this
-> feature can be used.
-> 
-> This series applies on top of v2 of the "kexec_file_load implementation
-> for PowerPC" patch series at:
+Thanks,
+-Takahiro AKASHI
 
-The kexec_file_load patches should be addressed first, no?
-
+> I already have makedumpfile patches [1]  which uses _text and _end, but not
+> sending them to makedumpfile upstream, until you will be agreeing to take [2] in
+> future. Please let me know your opinion about it. If it would be acceptable then
+> I may send aarch64 makedumpfile improvements to upstream.
 > 
-> http://lists.infradead.org/pipermail/kexec/2016-June/016078.html
+> [1] https://github.com/pratyushanand/makedumpfile/commit/d9590fec049976b8fee0d6b4e66e6f3e99ff1113
+> [2] https://github.com/pratyushanand/linux/commit/1d94df20c575c725910c9c29a129b9f14e7e900b
 > 
-> Thiago Jung Bauermann (6):
->   kexec_file: Add buffer hand-over support for the next kernel
->   powerpc: kexec_file: Add buffer hand-over support for the next kernel
->   kexec_file: Allow skipping checksum calculation for some segments.
->   kexec_file: Add mechanism to update kexec segments.
->   kexec: Share logic to copy segment page contents.
->   IMA: Demonstration code for kexec buffer passing.
+> ~Pratyush
 > 
->  arch/powerpc/include/asm/kexec.h       |   9 ++
->  arch/powerpc/kernel/kexec_elf_64.c     |  50 +++++++-
->  arch/powerpc/kernel/machine_kexec_64.c |  64 ++++++++++
->  arch/x86/kernel/crash.c                |   4 +-
->  arch/x86/kernel/kexec-bzimage64.c      |   6 +-
->  include/linux/ima.h                    |  11 ++
->  include/linux/kexec.h                  |  47 +++++++-
->  kernel/kexec_core.c                    | 205 ++++++++++++++++++++++++++-------
->  kernel/kexec_file.c                    | 102 ++++++++++++++--
->  security/integrity/ima/ima.h           |   5 +
->  security/integrity/ima/ima_init.c      |  26 +++++
->  security/integrity/ima/ima_template.c  |  79 +++++++++++++
->  12 files changed, 547 insertions(+), 61 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-
-Thanks
-Dave
+> > 
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > ---
+> >  arch/arm64/kernel/machine_kexec.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index f270967..57a30fb 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -18,6 +18,7 @@
+> >  
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/cpu_ops.h>
+> > +#include <asm/memory.h>
+> >  #include <asm/mmu_context.h>
+> >  
+> >  #include "cpu-reset.h"
+> > @@ -278,3 +279,13 @@ void machine_crash_shutdown(struct pt_regs *regs)
+> >  
+> >  	pr_info("Starting crashdump kernel...\n");
+> >  }
+> > +
+> > +void arch_crash_save_vmcoreinfo(void)
+> > +{
+> > +	VMCOREINFO_NUMBER(VA_BITS);
+> > +	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
+> > +	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
+> > +						kimage_voffset);
+> > +	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+> > +						PHYS_OFFSET);
+> > +}
+> > -- 
+> > 2.5.0
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 _______________________________________________
 kexec mailing list
