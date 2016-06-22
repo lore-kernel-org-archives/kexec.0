@@ -1,8 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 22 Jun 2016 00:36:16 -0700
-From: Tony Lindgren <tony@atomide.com>
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bFdYV-0004XY-QB
+ for kexec@lists.infradead.org; Wed, 22 Jun 2016 08:30:40 +0000
+Date: Wed, 22 Jun 2016 09:29:59 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [PATCH 2/2] arm: fix kernel image size
-Message-ID: <20160622073614.GZ22406@atomide.com>
+Message-ID: <20160622082958.GD5783@n2100.arm.linux.org.uk>
 References: <20160617194405.GN1041@n2100.armlinux.org.uk>
  <E1bDzh4-0006a4-7p@e0050434b2927.dyn.armlinux.org.uk>
  <20160621074319.GH22406@atomide.com>
@@ -12,9 +17,10 @@ References: <20160617194405.GN1041@n2100.armlinux.org.uk>
  <20160621154407.GB5783@n2100.arm.linux.org.uk>
  <20160621165523.GY22406@atomide.com>
  <20160621215141.GC5783@n2100.arm.linux.org.uk>
+ <20160622073614.GZ22406@atomide.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160621215141.GC5783@n2100.arm.linux.org.uk>
+In-Reply-To: <20160622073614.GZ22406@atomide.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,55 +33,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
+To: Tony Lindgren <tony@atomide.com>
 Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Kees Cook <keescook@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-* Russell King - ARM Linux <linux@armlinux.org.uk> [160621 14:54]:
-> So that's 20.7MB, and the zImage was 3.6MB.  You're getting an
-> expansion ratio of 5.7x.
+On Wed, Jun 22, 2016 at 12:36:16AM -0700, Tony Lindgren wrote:
+> * Russell King - ARM Linux <linux@armlinux.org.uk> [160621 14:54]:
+> > So that's 20.7MB, and the zImage was 3.6MB.  You're getting an
+> > expansion ratio of 5.7x.
+> > 
+> > To fix that, we'd need to up it to 7x, but the problem with upping
+> > it in this way is that it increases the requirements for the
+> > crashdump region too.  We can play with this number, but there will
+> > always be cases where it doesn't work - either because the ratio is
+> > too big or too small.
 > 
-> To fix that, we'd need to up it to 7x, but the problem with upping
-> it in this way is that it increases the requirements for the
-> crashdump region too.  We can play with this number, but there will
-> always be cases where it doesn't work - either because the ratio is
-> too big or too small.
-
-OK
-
-> By way of illustration, "zImage size + MAX_RODATA_SZ + 4x zImage size"
-> doesn't even work for this case, since you need about 25MB.  Your
-> calculation comes out at 22MB, which is 3MB short.  Not only that, but
-> it introduces (from what I can see) an irrelevant fudge factor of
-> "MAX_RODATA_SZ" which has no basis in what's really going on here, and
-> I'm left wondering what "MAX_RODATA_SZ" is actually referring to.
-
-Well I thinking the section alignment split might give us some
-known size for rodata, but looking at it more it's only with
-DEBUG_ALIGN_RODATA. If we can't make any assumptions about the
-size of the rodata, then no point adding it.
-
-> So... I'm of the opinion that we shouldn't play with it - but instead
-> try to come up with a solution which *doesn't* involve teaching kexec
-> a whole load of internals about how the ARM kernel booting happens.
+> OK
 > 
-> What's more worrying to me at the moment, though, is that the kexec code
-> only tries to find memory for the actual "kernel" size, not the actual
-> space required to decompress the kernel.  It could find a chunk of
-> memory large enough to fit the kernel image to be loaded, but is not big
-> enough to allow its decompression.  kexec is really quite a mess on
-> ARM. :(
+> > By way of illustration, "zImage size + MAX_RODATA_SZ + 4x zImage size"
+> > doesn't even work for this case, since you need about 25MB.  Your
+> > calculation comes out at 22MB, which is 3MB short.  Not only that, but
+> > it introduces (from what I can see) an irrelevant fudge factor of
+> > "MAX_RODATA_SZ" which has no basis in what's really going on here, and
+> > I'm left wondering what "MAX_RODATA_SZ" is actually referring to.
+> 
+> Well I thinking the section alignment split might give us some
+> known size for rodata, but looking at it more it's only with
+> DEBUG_ALIGN_RODATA. If we can't make any assumptions about the
+> size of the rodata, then no point adding it.
 
-How about we check the size of RAM available, and if there is plenty
-of RAM we use a safe compression ratio of 8. If RAM is a problem,
-we could make the compression ratio smaller and warn about it. And
-we could also allow passing the compression ratio to kexec as an
-option.
+I think you're just getting completely confused about what the problem
+is, due to the naming of the config option.
 
-I forgot if we still have some 128MB limits too..
+It's got nothing to do with the size of the read-only data.  Really.
 
-Regards,
+When CONFIG_DEBUG_RODATA is enabled, we align the text, read-only data,
+data, and so on to 1MB boundaries so that we can change the permissions
+of the sections to enforce the properties of the various ELF segments.
+This padding massively inflates the size of the run-time kernel image,
+and can result in megabytes of wastage (if we're as little as one byte
+into 1MB, we have to round up to the next megabyte.)
 
-Tony
+The padding, being a string of zeros, is very compressable, and this
+increases the compression ratio.
+
+The BSS is not included in the compressed image, but needs to be taken
+account of when avoiding overwriting the DTB.
+
+> How about we check the size of RAM available, and if there is plenty
+> of RAM we use a safe compression ratio of 8. If RAM is a problem,
+> we could make the compression ratio smaller and warn about it. And
+> we could also allow passing the compression ratio to kexec as an
+> option.
+
+You do know that you can already pass the "size" of the kernel to be
+reserved to kexec.  --image-size.  It's not documented in --help, but
+it is there (which is another annoying thing about ARM kexec...)
+
+> I forgot if we still have some 128MB limits too..
+
+We do.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
