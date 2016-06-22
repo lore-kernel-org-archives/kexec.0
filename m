@@ -1,17 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x243.google.com ([2607:f8b0:400e:c00::243])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFiIs-0003v9-J9
- for kexec@lists.infradead.org; Wed, 22 Jun 2016 13:34:53 +0000
-Received: by mail-pf0-x243.google.com with SMTP id t190so4118943pfb.2
- for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 06:34:29 -0700 (PDT)
-Date: Wed, 22 Jun 2016 23:29:46 +1000
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH v3 0/9] kexec_file_load implementation for PowerPC
-Message-ID: <20160622232946.793d6c04@350D>
-In-Reply-To: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
-MIME-Version: 1.0
+ id 1bFiJg-00061Y-4m
+ for kexec@lists.infradead.org; Wed, 22 Jun 2016 13:35:41 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5MDXncf076289
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 09:35:19 -0400
+Received: from e23smtp04.au.ibm.com (e23smtp04.au.ibm.com [202.81.31.146])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23q6ym0cac-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 09:35:19 -0400
+Received: from localhost
+ by e23smtp04.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 22 Jun 2016 23:35:16 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 41A7B2CE8046
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 23:35:14 +1000 (EST)
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5MDZEwP21102620
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 23:35:14 +1000
+Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5MDZDZv001537
+ for <kexec@lists.infradead.org>; Wed, 22 Jun 2016 23:35:13 +1000
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH 0/3] support other types of measurements 
+Date: Wed, 22 Jun 2016 09:35:02 -0400
+Message-Id: <1466602505-21915-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,43 +39,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: linux-security-module <linux-security-module@vger.kernel.org>, linux-ima-devel <linux-ima-devel@lists.sourceforge.net>
+Cc: kexec@lists.infradead.org, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-On Tue, 21 Jun 2016 16:48:32 -0300
-Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> wrote:
+In addition to file measurements, other types of measurements should be
+included in the IMA measurement list to attest to the integrity of the
+running system.  This patch set introduces two new types of measurements -
+buffer and pre-calculated digests.
 
-> Hello,
-> 
-> This patch series implements the kexec_file_load system call on
-> PowerPC.
-> 
-> This system call moves the reading of the kernel, initrd and the
-> device tree from the userspace kexec tool to the kernel. This is
-> needed if you want to do one or both of the following:
-> 
-> 1. only allow loading of signed kernels.
-> 2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
->    command line and other boot inputs for the Integrity Measurement
->    Architecture subsystem.
-> 
-> The above are the functions kexec already has built into
-> kexec_file_load. Yesterday I posted a set of patches which allows a
-> third feature:
-> 
-> 3. have IMA pass-on its event log (where integrity measurements are
->    registered) accross kexec to the second kernel, so that the event
->    history is preserved.
+The first, for example, can be used to measure the kexec boot command
+line, while the latter could be used for including asymmetric key id
+information.
 
-OK.. and this is safe? Do both the kernels need to be signed by the
-same certificate?
+Mimi Zohar (3):
+  ima: measure other types of data
+  kexec: measure boot command line
+  ima: add pre-calculated measurements (experimental)
 
+ Documentation/ABI/testing/ima_policy |   1 +
+ include/linux/ima.h                  |  24 +++++
+ kernel/kexec_file.c                  |   4 +
+ security/integrity/ima/Kconfig       |   8 ++
+ security/integrity/ima/Makefile      |   2 +-
+ security/integrity/ima/ima.h         |   4 +
+ security/integrity/ima/ima_buffer.c  | 164 +++++++++++++++++++++++++++++++++++
+ security/integrity/ima/ima_policy.c  |  51 ++++++++++-
+ 8 files changed, 255 insertions(+), 3 deletions(-)
+ create mode 100644 security/integrity/ima/ima_buffer.c
+-- 
+2.1.0
 
-Balbir Singh
 
 _______________________________________________
 kexec mailing list
