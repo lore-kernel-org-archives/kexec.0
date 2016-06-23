@@ -1,23 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bG092-0002gU-Do
- for kexec@lists.infradead.org; Thu, 23 Jun 2016 08:37:53 +0000
-Received: by mail-pf0-x22b.google.com with SMTP id h14so26706863pfe.1
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 01:37:31 -0700 (PDT)
-Date: Thu, 23 Jun 2016 17:42:28 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
- coredump tools
-Message-ID: <20160623081545.GA20774@linaro.org>
-References: <cover.1466120418.git.geoff@infradead.org>
- <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
- <20160620053222.GB14309@dhcppc9>
- <20160622055940.GY20774@linaro.org>
- <20160623071412.GA16398@dhcppc9>
+ id 1bG6hy-00046M-VX
+ for kexec@lists.infradead.org; Thu, 23 Jun 2016 15:38:23 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5NFY0CS098878
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 11:38:00 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23qq3ma43b-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 11:37:59 -0400
+Received: from localhost
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 23 Jun 2016 12:37:57 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id AA293352005C
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 11:37:38 -0400 (EDT)
+Received: from d24av01.br.ibm.com (d24av01.br.ibm.com [9.8.31.91])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5NFbtZE16646558
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 12:37:55 -0300
+Received: from d24av01.br.ibm.com (localhost [127.0.0.1])
+ by d24av01.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5NFbtSQ017673
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 12:37:55 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
+ kexec_add_buffer.
+Date: Thu, 23 Jun 2016 12:37:49 -0300
+In-Reply-To: <2090497645.1524307.1466660647378.JavaMail.zimbra@redhat.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160623023052.GB12575@dhcp-128-11.nay.redhat.com>
+ <2090497645.1524307.1466660647378.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160623071412.GA16398@dhcppc9>
+Message-Id: <4923900.bfxGnX6mM2@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,76 +49,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-On Thu, Jun 23, 2016 at 12:44:12PM +0530, Pratyush Anand wrote:
-> Hi Takahiro,
-> 
-> Thanks for your reply.
-> 
-> On 22/06/2016:02:59:41 PM, AKASHI Takahiro wrote:
-> > On Mon, Jun 20, 2016 at 11:02:22AM +0530, Pratyush Anand wrote:
-> > > +Atsushi
-> > > 
-> > > Hi Takahiro,
-> > > 
-> > > On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
-> > > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > 
-> > > > For the current crash utility, we need to know, at least,
-> > > >   - kimage_voffset
-> > > >   - PHYS_OFFSET
-> > > > to handle the contents of core dump file (/proc/vmcore) correctly due to
-> > > > the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
-> > > > This patch puts them as VMCOREINFO's into the file.
-> > > > 
-> > > >   - VA_BITS
-> > > > is also added for makedumpfile command.
-> > > 
-> > > Thanks for adding them. They are quite helpful for makedumpfile as well.
-> > > 
-> > > > More VMCOREINFO's may be added later.
-> > > 
-> > > Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
-> > > in order to work with makedumpfile.
-> > 
-> > I know that adding those symbols is the easiest way, but
-> > theoretically, if we know the physical address of "swapper_pg_dir",
-> 
-> But, we know only it's virtual address. 
+Am Donnerstag, 23 Juni 2016, 01:44:07 schrieb Dave Young:
+> Hmm, hold on. For declaring a struct in a header file, comment should be
+> just after each fields, like below, your format is for a function instead:
+> struct pci_slot {
+>         struct pci_bus *bus;            /* The bus this slot is on */
+>         struct list_head list;          /* node in list of slots on this
+> bus */ struct hotplug_slot *hotplug;   /* Hotplug info (migrate over
+> time) */ unsigned char number;           /* PCI_SLOT(pci_dev->devfn) */
+> struct kobject kobj;
+> };
 
-What I meant here is that, if we know the physical address of "swapper_pg_dir",
-we don't have to know neither of "_text", "_end", "kimage_voffset" nor
-"PHYS_OFFSET".
-I just wanted to ask you whether you thought of this possibility.
-> 
-> > instead of its virtual address, we can access all the memory pointed to
-> > by any kernel virtual address.
-> > How do you rationalize that we need to know "_text" and "_end"?
-> 
-> Well, we need some mechanism so that we can decide if an address can be
-> translated using linear mapping of virt_to_phys(). 
+The comment style you mention above is not extractable documentation. The 
+style I used is what is described in section "kernel-doc for structs, 
+unions, enums, and typedefs" in Documentation/kernel-doc-nano-HOWTO.txt.
+ 
+> BTW, what is @size? there's no size field in kexec_buf. I think it is not
+> necessary to add these comment, they are easy to understand. If you really
+> want, please rewrite them correctly, for example "image" description is
+> wrong. It is not only for searching memory only, top_down description is
+> also bad.
 
-All the entries in MMU tables are based on "physical" addresses,
-and so we don't care whether a given address is in linear mapping or not
-in walking through MMU.
-See what I mean?
+Sorry, I moved these comments from kexec_locate_mem_hole but forgot to 
+rename the parameters to what they are called in struct kexec_buf. @size 
+should have been @memsz (other fields also have wrong names, I'll fix them 
+as well). The image description is correct in the context of where struct 
+kexec_buf is used and explains what it will be used for in the function 
+taking kexec_buf as an argument. It is not meant as a general description of 
+the purpose of struct kimage. What is bad about the description of top_down?
 
-Thanks,
--Takahiro AKASHI
+I decided to add these comments because struct kexec_buf is now part of the 
+kernel API for kexec. kernel-doc-nano-HOWTO.txt says:
 
-> Alternatively, probably we can do like this:
-> -- Translate all address between "SYMBOL(swapper_pg_dir)"  and "SYMBOL(swapper_pg_dir)
->  + SWAPPER_DIR_SIZE" using virt_to_phys() and now we can read values from
->  dumpfile using that physical address. This way we can get PGD/PMD/PUD values.
-> -- PTE values may lie out side this range, however that address should still be
-> linearly translatable. We can use virt_to_phys() macro from them as well.
+> We definitely need kernel-doc formatted documentation for functions
+> that are exported to loadable modules using EXPORT_SYMBOL.
 > 
-> In summary, we can translate address of PGD/PMD/PUD/PTE using virt_to_phys()
-> and rest all can be translated using page table entries.
+> We also look to provide kernel-doc formatted documentation for
+> functions externally visible to other kernel files (not marked
+> "static").
 > 
-> ~Pratyush
+> We also recommend providing kernel-doc formatted documentation
+> for private (file "static") routines, for consistency of kernel
+> source code layout.  But this is lower priority and at the
+> discretion of the MAINTAINER of that kernel source file.
+
+If you think they are not necessary or just add clutter I can leave them 
+out.
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
