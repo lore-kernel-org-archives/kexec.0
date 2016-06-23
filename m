@@ -1,24 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f169.google.com ([209.85.220.169])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bG6qA-0007lj-6W
- for kexec@lists.infradead.org; Thu, 23 Jun 2016 15:46:51 +0000
-Received: by mail-qk0-f169.google.com with SMTP id t127so111972063qkf.1
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 08:46:29 -0700 (PDT)
-Date: Thu, 23 Jun 2016 21:16:24 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
- coredump tools
-Message-ID: <20160623154624.GC16398@dhcppc9>
-References: <cover.1466120418.git.geoff@infradead.org>
- <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
- <20160620053222.GB14309@dhcppc9>
- <20160622055940.GY20774@linaro.org>
- <20160623071412.GA16398@dhcppc9>
- <20160623081545.GA20774@linaro.org>
+ id 1bG7kY-0000eM-VS
+ for kexec@lists.infradead.org; Thu, 23 Jun 2016 16:45:07 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5NGi5DP016887
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 12:44:44 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23q6ynj3tu-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 12:44:44 -0400
+Received: from localhost
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 23 Jun 2016 13:44:37 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 754E01DC006F
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 12:44:27 -0400 (EDT)
+Received: from d24av01.br.ibm.com (d24av01.br.ibm.com [9.8.31.91])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5NGiYE931457498
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 13:44:34 -0300
+Received: from d24av01.br.ibm.com (localhost [127.0.0.1])
+ by d24av01.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5NGiYHS008366
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 13:44:34 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 0/9] kexec_file_load implementation for PowerPC
+Date: Thu, 23 Jun 2016 13:44:30 -0300
+In-Reply-To: <576B25FF.1010307@gmail.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <2895031.4C8tZ3BP2G@hactar> <576B25FF.1010307@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160623081545.GA20774@linaro.org>
+Message-Id: <1612090.Qxo4UiJulB@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,104 +47,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Balbir Singh <bsingharora@gmail.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 
-On 23/06/2016:05:42:28 PM, AKASHI Takahiro wrote:
-> On Thu, Jun 23, 2016 at 12:44:12PM +0530, Pratyush Anand wrote:
-> > Hi Takahiro,
+Am Donnerstag, 23 Juni 2016, 09:57:51 schrieb Balbir Singh:
+> On 23/06/16 03:02, Thiago Jung Bauermann wrote:
+> >>> 3. have IMA pass-on its event log (where integrity measurements are
+> >>> 
+> >>>    registered) accross kexec to the second kernel, so that the event
+> >>>    history is preserved.
+> >> 
+> >> OK.. and this is safe? Do both the kernels need to be signed by the
+> >> same certificate?
 > > 
-> > Thanks for your reply.
-> > 
-> > On 22/06/2016:02:59:41 PM, AKASHI Takahiro wrote:
-> > > On Mon, Jun 20, 2016 at 11:02:22AM +0530, Pratyush Anand wrote:
-> > > > +Atsushi
-> > > > 
-> > > > Hi Takahiro,
-> > > > 
-> > > > On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
-> > > > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > > 
-> > > > > For the current crash utility, we need to know, at least,
-> > > > >   - kimage_voffset
-> > > > >   - PHYS_OFFSET
-> > > > > to handle the contents of core dump file (/proc/vmcore) correctly due to
-> > > > > the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
-> > > > > This patch puts them as VMCOREINFO's into the file.
-> > > > > 
-> > > > >   - VA_BITS
-> > > > > is also added for makedumpfile command.
-> > > > 
-> > > > Thanks for adding them. They are quite helpful for makedumpfile as well.
-> > > > 
-> > > > > More VMCOREINFO's may be added later.
-> > > > 
-> > > > Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
-> > > > in order to work with makedumpfile.
-> > > 
-> > > I know that adding those symbols is the easiest way, but
-> > > theoretically, if we know the physical address of "swapper_pg_dir",
-> > 
-> > But, we know only it's virtual address. 
+> > They don't. The integrity of the event log (assuming that is what you
+> > mean by "this" in "this is safe") is guaranteed by the TPM device. Each
+> > event in the measurement list extends a PCR and records its PCR value.
+> > It is cryptographically guaranteed that if you replay the PCR extends
+> > recorded in the event log and in the end of the process they match the
+> > current PCR values in the TPM device, then that event log is correct.
 > 
-> What I meant here is that, if we know the physical address of "swapper_pg_dir",
-> we don't have to know neither of "_text", "_end", "kimage_voffset" nor
-> "PHYS_OFFSET".
-> I just wanted to ask you whether you thought of this possibility.
+> What I meant was how does the new kernel know that the old kernel did not
+> cheat while passing on the values? I presume because we trust that kernel
+> via a signature.
 
-OK, Let me clarify the needs from makedumpfile perspective. Atsushi can correct
-me if I am wrong:
+Sorry, I still don't understand your concern. What kind of cheating? Which 
+values? If it's the values in the event log, there's no need to trust the 
+old kernel. The new kernel knows that the old kernel didn't pass wrong 
+measurement values in the event log because it can recalculate the PCR 
+extend operations recorded in the log and compare the results of the replay 
+with the current PCR values stored in the TPM device. If they match, then 
+the event log is guaranteed to be correct. If they don't match, either the 
+memory was corrupted somehow during the kexec process, or the old kernel 
+tried to pass a falsified event log.
 
-- As a minimal we need some way of reading page table entries. Currently vmcore
-  has only virtual address of swapper_pg_dir, but if you can provide
-  __pa(swapper_pg_dir) in vmcore, then we do not need either "_text", "_end" or
-  "kimage_voffset". 
-- However, "PHYS_OFFSET" might still be needed. makedumpfile core code needs to
-  know phys_base. Currently we find it from the PT_LOAD segments. We treat the
-  lowest start of segment's LMAs as the physical base. I am not sure, if that is
-  still true with latest KASAN changes.
-- Further, if you do not provide "_text" and "_end", then we will have to translate
-  each address with complex page table read process, which would slow
-  makedumpfile execution significantly.
+There's no known way to construct an alternative series of PCR extend 
+operations that will result in the same final value in the PCR register of 
+the TPM device. If you can do that, you discovered a hash collision attack 
+on the SHA-1 or SHA-256 algorithms (depending on which algorithm is being 
+used by IMA in the event log). Or a bug in the TPM device implementation.
 
-Now, please let us know that what will be the kernel strategy, so that I can
-re-organise makedumpfile accordingly.
-
-> > 
-> > > instead of its virtual address, we can access all the memory pointed to
-> > > by any kernel virtual address.
-> > > How do you rationalize that we need to know "_text" and "_end"?
-> > 
-> > Well, we need some mechanism so that we can decide if an address can be
-> > translated using linear mapping of virt_to_phys(). 
+> and
 > 
-> All the entries in MMU tables are based on "physical" addresses,
-> and so we don't care whether a given address is in linear mapping or not
-> in walking through MMU.
-> See what I mean?
+> How do we know the new kernel is safe to load - I guess via a signature
+> that the new kernel is signed with (assuming it is present in the key
+> ring).
 
-Yes, yes, I thought, we have only virtual swapper_pg_dir, so I was looking for a
-way to translate *atleast* that into physical.
+Correct. That goal is met by signature verification, not by integrity 
+assurance.
 
-Thanks for your input. Those are helpful.
+I'll note that even with both of my patch series there's still code missing 
+for kernel signature verification in PowerPC. I believe there's not a file 
+format defined yet for how to store a signature in a PowerPC kernel image.
 
-~Pratyush
+Integrity assurance doesn't depend on kernel signature verification though. 
+There's value in both my patch series even without kernel signature 
+verification support. They're complementary features.
+ 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
-> > Alternatively, probably we can do like this:
-> > -- Translate all address between "SYMBOL(swapper_pg_dir)"  and "SYMBOL(swapper_pg_dir)
-> >  + SWAPPER_DIR_SIZE" using virt_to_phys() and now we can read values from
-> >  dumpfile using that physical address. This way we can get PGD/PMD/PUD values.
-> > -- PTE values may lie out side this range, however that address should still be
-> > linearly translatable. We can use virt_to_phys() macro from them as well.
-> > 
-> > In summary, we can translate address of PGD/PMD/PUD/PTE using virt_to_phys()
-> > and rest all can be translated using page table entries.
-> > 
-> > ~Pratyush
 
 _______________________________________________
 kexec mailing list
