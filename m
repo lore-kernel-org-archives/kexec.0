@@ -1,10 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <43a9f5735dff7aceef7611412460d53930ebb8e3.1466702804.git.geoff@infradead.org>
-In-Reply-To: <cover.1466702804.git.geoff@infradead.org>
-References: <cover.1466702804.git.geoff@infradead.org>
-From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v20 10/14] arm64: kdump: add kdump support
-Date: Thu, 23 Jun 2016 17:54:48 +0000
+Received: from mail-pa0-x243.google.com ([2607:f8b0:400e:c03::243])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bGDC1-0008Bw-NR
+ for kexec@lists.infradead.org; Thu, 23 Jun 2016 22:33:50 +0000
+Received: by mail-pa0-x243.google.com with SMTP id hf6so7404381pac.2
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 15:33:28 -0700 (PDT)
+Subject: Re: [PATCH v3 0/9] kexec_file_load implementation for PowerPC
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <2895031.4C8tZ3BP2G@hactar> <576B25FF.1010307@gmail.com>
+ <1612090.Qxo4UiJulB@hactar>
+From: Balbir Singh <bsingharora@gmail.com>
+Message-ID: <576C63B4.8060302@gmail.com>
+Date: Fri, 24 Jun 2016 08:33:24 +1000
+MIME-Version: 1.0
+In-Reply-To: <1612090.Qxo4UiJulB@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -13,235 +22,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
-
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-
-On crash dump kernel, all the information about primary kernel's system
-memory (core image) is available in elf core header.
-The primary kernel will set aside this header with reserve_elfcorehdr()
-at boot time and inform crash dump kernel of its location via a new
-device-tree property, "linux,elfcorehdr".
-
-Please note that all other architectures use traditional "elfcorehdr="
-kernel parameter for this purpose.
-
-Then crash dump kernel will access the primary kernel's memory with
-copy_oldmem_page(), which reads one page by ioremap'ing it since it does
-not reside in linear mapping on crash dump kernel.
-
-We also need our own elfcorehdr_read() here since the header is placed
-within crash dump kernel's usable memory.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- arch/arm64/Kconfig             | 11 +++++++
- arch/arm64/kernel/Makefile     |  1 +
- arch/arm64/kernel/crash_dump.c | 71 ++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/mm/init.c           | 54 ++++++++++++++++++++++++++++++++
- 4 files changed, 137 insertions(+)
- create mode 100644 arch/arm64/kernel/crash_dump.c
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 330786d..b5e0eb4 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -674,6 +674,17 @@ config KEXEC
- 	  but it is independent of the system firmware.   And like a reboot
- 	  you can start any kernel with it, not just Linux.
- 
-+config CRASH_DUMP
-+	bool "Build kdump crash kernel"
-+	help
-+	  Generate crash dump after being started by kexec. This should
-+	  be normally only set in special crash dump kernels which are
-+	  loaded in the main kernel with kexec-tools into a specially
-+	  reserved region and then later executed after a crash by
-+	  kdump/kexec.
-+
-+	  For more details see Documentation/kdump/kdump.txt
-+
- config XEN_DOM0
- 	def_bool y
- 	depends on XEN
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 7700c0c..c13d3eb 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -48,6 +48,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
- arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
-+arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
- 
- obj-y					+= $(arm64-obj-y) vdso/
- obj-m					+= $(arm64-obj-m)
-diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-new file mode 100644
-index 0000000..2dc54d1
---- /dev/null
-+++ b/arch/arm64/kernel/crash_dump.c
-@@ -0,0 +1,71 @@
-+/*
-+ * Routines for doing kexec-based kdump
-+ *
-+ * Copyright (C) 2014 Linaro Limited
-+ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/crash_dump.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+#include <linux/uaccess.h>
-+#include <asm/memory.h>
-+
-+/**
-+ * copy_oldmem_page() - copy one page from old kernel memory
-+ * @pfn: page frame number to be copied
-+ * @buf: buffer where the copied page is placed
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page
-+ * @userbuf: if set, @buf is in a user address space
-+ *
-+ * This function copies one page from old kernel memory into buffer pointed by
-+ * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
-+ * copied or negative error in case of failure.
-+ */
-+ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-+			 size_t csize, unsigned long offset,
-+			 int userbuf)
-+{
-+	void *vaddr;
-+
-+	if (!csize)
-+		return 0;
-+
-+	vaddr = ioremap_cache(__pfn_to_phys(pfn), PAGE_SIZE);
-+	if (!vaddr)
-+		return -ENOMEM;
-+
-+	if (userbuf) {
-+		if (copy_to_user(buf, vaddr + offset, csize)) {
-+			iounmap(vaddr);
-+			return -EFAULT;
-+		}
-+	} else {
-+		memcpy(buf, vaddr + offset, csize);
-+	}
-+
-+	iounmap(vaddr);
-+
-+	return csize;
-+}
-+
-+/**
-+ * elfcorehdr_read - read from ELF core header
-+ * @buf: buffer where the data is placed
-+ * @csize: number of bytes to read
-+ * @ppos: address in the memory
-+ *
-+ * This function reads @count bytes from elf core header which exists
-+ * on crash dump kernel's memory.
-+ */
-+ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-+{
-+	memcpy(buf, phys_to_virt((phys_addr_t)*ppos), count);
-+	return count;
-+}
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 22e7bcf..5f8f43c 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -35,6 +35,7 @@
- #include <linux/efi.h>
- #include <linux/swiotlb.h>
- #include <linux/kexec.h>
-+#include <linux/crash_dump.h>
- 
- #include <asm/boot.h>
- #include <asm/fixmap.h>
-@@ -136,6 +137,57 @@ static void __init reserve_crashkernel(void)
- }
- #endif /* CONFIG_KEXEC_CORE */
- 
-+#ifdef CONFIG_CRASH_DUMP
-+static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-+		const char *uname, int depth, void *data)
-+{
-+	const __be32 *reg;
-+	int len;
-+
-+	if (depth != 1 || strcmp(uname, "chosen") != 0)
-+		return 0;
-+
-+	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
-+	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+		return 1;
-+
-+	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+	return 1;
-+}
-+
-+/*
-+ * reserve_elfcorehdr() - reserves memory for elf core header
-+ *
-+ * This function reserves elf core header given in "elfcorehdr=" kernel
-+ * command line parameter. This region contains all the information about
-+ * primary kernel's core image and is used by a dump capture kernel to
-+ * access the system memory on primary kernel.
-+ */
-+static void __init reserve_elfcorehdr(void)
-+{
-+	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
-+
-+	if (!elfcorehdr_size)
-+		return;
-+
-+	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-+		pr_warn("elfcorehdr is overlapped\n");
-+		return;
-+	}
-+
-+	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-+
-+	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
-+		elfcorehdr_size >> 10, elfcorehdr_addr);
-+}
-+#else
-+static void __init reserve_elfcorehdr(void)
-+{
-+	;
-+}
-+#endif /* CONFIG_CRASH_DUMP */
- /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -391,6 +443,8 @@ void __init arm64_memblock_init(void)
- 
- 	reserve_crashkernel();
- 
-+	reserve_elfcorehdr();
-+
- 	early_init_fdt_scan_reserved_mem();
- 
- 	/* 4GB maximum for 32-bit only capable devices */
--- 
-2.5.0
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 
 
+
+On 24/06/16 02:44, Thiago Jung Bauermann wrote:
+> Am Donnerstag, 23 Juni 2016, 09:57:51 schrieb Balbir Singh:
+>> On 23/06/16 03:02, Thiago Jung Bauermann wrote:
+>>>>> 3. have IMA pass-on its event log (where integrity measurements are
+>>>>>
+>>>>>    registered) accross kexec to the second kernel, so that the event
+>>>>>    history is preserved.
+>>>>
+>>>> OK.. and this is safe? Do both the kernels need to be signed by the
+>>>> same certificate?
+>>>
+>>> They don't. The integrity of the event log (assuming that is what you
+>>> mean by "this" in "this is safe") is guaranteed by the TPM device. Each
+>>> event in the measurement list extends a PCR and records its PCR value.
+>>> It is cryptographically guaranteed that if you replay the PCR extends
+>>> recorded in the event log and in the end of the process they match the
+>>> current PCR values in the TPM device, then that event log is correct.
+>>
+>> What I meant was how does the new kernel know that the old kernel did not
+>> cheat while passing on the values? I presume because we trust that kernel
+>> via a signature.
+> 
+> Sorry, I still don't understand your concern. What kind of cheating? Which 
+> values? If it's the values in the event log, there's no need to trust the 
+> old kernel. The new kernel knows that the old kernel didn't pass wrong 
+> measurement values in the event log because it can recalculate the PCR 
+> extend operations recorded in the log and compare the results of the replay 
+> with the current PCR values stored in the TPM device. If they match, then 
+> the event log is guaranteed to be correct. If they don't match, either the 
+> memory was corrupted somehow during the kexec process, or the old kernel 
+> tried to pass a falsified event log.
+> 
+
+Yep, get it/got it. My concern was anything using passed on the values should
+compare the results with the current PCR values.
+
+BTW, what do we gain by passing the values if we are relying on the PCR registers
+anyway, can't we directly read them off from there? Aren't we going to ready anyway
+to compare, what does passing the values gain?
+
+[snip]
+
+>> and
+>>
+>> How do we know the new kernel is safe to load - I guess via a signature
+>> that the new kernel is signed with (assuming it is present in the key
+>> ring).
+> 
+> Correct. That goal is met by signature verification, not by integrity 
+> assurance.
+> 
+> I'll note that even with both of my patch series there's still code missing 
+> for kernel signature verification in PowerPC. I believe there's not a file 
+> format defined yet for how to store a signature in a PowerPC kernel image.
+> 
+> Integrity assurance doesn't depend on kernel signature verification though. 
+> There's value in both my patch series even without kernel signature 
+> verification support. They're complementary features.
+>  
+
+Thanks for clarifying
+
+Balbir Singh.
 
 _______________________________________________
 kexec mailing list
