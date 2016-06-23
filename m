@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <938f5ec9deff917f8e4ad276c01b5c753b7ee83a.1466702804.git.geoff@infradead.org>
+Message-Id: <e212cd53fdf9d09923408eb906fe0228d22432a9.1466702804.git.geoff@infradead.org>
 In-Reply-To: <cover.1466702804.git.geoff@infradead.org>
 References: <cover.1466702804.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v20 02/14] arm64: smp: Add function to determine if cpus are
- stuck in the kernel
-Date: Thu, 23 Jun 2016 17:54:48 +0000
+Subject: [PATCH v20 14/14] Documentation: dt: usable-memory and elfcorehdr
+ nodes for arm64 kexec
+Date: Thu, 23 Jun 2016 17:54:49 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,80 +24,53 @@ Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infra
 
 From: James Morse <james.morse@arm.com>
 
-kernel/smp.c has a fancy counter that keeps track of the number of CPUs
-it marked as not-present and left in cpu_park_loop(). If there are any
-CPUs spinning in here, features like kexec or hibernate may release them
-by overwriting this memory.
-
-This problem also occurs on machines using spin-tables to release
-secondary cores.
-After commit 44dbcc93ab67 ("arm64: Fix behavior of maxcpus=N")
-we bring all known cpus into the secondary holding pen, meaning this
-memory can't be re-used by kexec or hibernate.
-
-Add a function cpus_are_stuck_in_kernel() to determine if either of these
-cases have occurred.
+Add documentation for linux,usable-memory and linux,elfcorehdr chosen nodes
+used by arm64 kexec to decribe the kdump reserved area, and the elfcorehdr's
+location within it.
 
 Signed-off-by: James Morse <james.morse@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm64/include/asm/smp.h | 12 ++++++++++++
- arch/arm64/kernel/smp.c      | 18 ++++++++++++++++++
- 2 files changed, 30 insertions(+)
+ Documentation/devicetree/bindings/chosen.txt | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index 433e504..0226447 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -124,6 +124,18 @@ static inline void cpu_panic_kernel(void)
- 	cpu_park_loop();
- }
- 
-+/*
-+ * If a secondary CPU enters the kernel but fails to come online,
-+ * (e.g. due to mismatched features), and cannot exit the kernel,
-+ * we increment cpus_stuck_in_kernel and leave the CPU in a
-+ * quiesecent loop within the kernel text. The memory containing
-+ * this loop must not be re-used for anything else as the 'stuck'
-+ * core is executing it.
-+ *
-+ * This function is used to inhibit features like kexec and hibernate.
-+ */
-+bool cpus_are_stuck_in_kernel(void);
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82..443f88b 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,31 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
 +
- #endif /* ifndef __ASSEMBLY__ */
- 
- #endif /* ifndef __ASM_SMP_H */
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 678e084..62ff3c0 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -909,3 +909,21 @@ int setup_profiling_timer(unsigned int multiplier)
- {
- 	return -EINVAL;
- }
++linux,usable-memory
++-------------------
 +
-+static bool have_cpu_die(void)
-+{
-+#ifdef CONFIG_HOTPLUG_CPU
-+	int any_cpu = raw_smp_processor_id();
++This property is set on PowerPC and arm64 by kexec-tools during kdump
++to tell the crash kernel the base address of its reserved area of memory, and
++the size. e.g.
 +
-+	if (cpu_ops[any_cpu]->cpu_die)
-+		return true;
-+#endif
-+	return false;
-+}
++/ {
++	chosen {
++		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
 +
-+bool cpus_are_stuck_in_kernel(void)
-+{
-+	bool smp_spin_tables = (num_possible_cpus() > 1 && !have_cpu_die());
++linux,elfcorehdr
++----------------
 +
-+	return !!cpus_stuck_in_kernel || smp_spin_tables;
-+}
++This property is set (currently only on arm64) by kexec-tools during kdump
++to tell the crash kernel the address and size of the elfcorehdr that describes
++the old kernel's memory as an elf file. This memory must reside within the area
++described by 'linux,usable-memory'. e.g.
++
++/ {
++	chosen {
++		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
 -- 
 2.5.0
-
 
 
 _______________________________________________
