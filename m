@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx5-phx2.redhat.com ([209.132.183.37])
+Received: from mail-qk0-f172.google.com ([209.85.220.172])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bFxRN-0000pZ-S5
- for kexec@lists.infradead.org; Thu, 23 Jun 2016 05:44:38 +0000
-Date: Thu, 23 Jun 2016 01:44:07 -0400 (EDT)
-From: Dave Young <dyoung@redhat.com>
-Message-ID: <2090497645.1524307.1466660647378.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20160623023052.GB12575@dhcp-128-11.nay.redhat.com>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1466538521-31216-4-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160622101801.GB7752@dhcp-128-65.nay.redhat.com>
- <5025034.R6Ttz76WZM@hactar>
- <20160623023052.GB12575@dhcp-128-11.nay.redhat.com>
-Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole
- from kexec_add_buffer.
+ id 1bFyr8-0003XV-IR
+ for kexec@lists.infradead.org; Thu, 23 Jun 2016 07:15:19 +0000
+Received: by mail-qk0-f172.google.com with SMTP id a186so96323665qkf.0
+ for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 00:14:57 -0700 (PDT)
+Date: Thu, 23 Jun 2016 12:44:12 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
+ coredump tools
+Message-ID: <20160623071412.GA16398@dhcppc9>
+References: <cover.1466120418.git.geoff@infradead.org>
+ <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
+ <20160620053222.GB14309@dhcppc9>
+ <20160622055940.GY20774@linaro.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160622055940.GY20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,117 +29,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 
+Hi Takahiro,
 
+Thanks for your reply.
 
------ Original Message -----
-From: "Dave Young" <dyoung@redhat.com>
-To: "Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric Biederman" <ebiederm@xmission.com>
-Sent: Thursday, June 23, 2016 10:30:52 AM
-Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.
-
-On 06/22/16 at 08:34pm, Thiago Jung Bauermann wrote:
-> Am Mittwoch, 22 Juni 2016, 18:18:01 schrieb Dave Young:
-> > On 06/21/16 at 04:48pm, Thiago Jung Bauermann wrote:
-> > > +/**
-> > > + * kexec_locate_mem_hole - find free memory to load segment or use in
-> > > purgatory + * @image:	kexec image being updated.
-> > > + * @size:	Memory size.
-> > > + * @align:	Minimum alignment needed.
-> > > + * @min_addr:	Minimum starting address.
-> > > + * @max_addr:	Maximum end address.
-> > > + * @top_down	Find the highest free memory region?
-> > > + * @addr	On success, will have start address of the memory region
-> > > found.
-> > > + *
-> > > + * Return: 0 on success, negative errno on error.
-> > > + */
-> > > +int kexec_locate_mem_hole(struct kimage *image, unsigned long size,
-> > > +			  unsigned long align, unsigned long min_addr,
-> > > +			  unsigned long max_addr, bool top_down,
-> > > +			  unsigned long *addr)
-> > > +{
-> > > +	int ret;
-> > > +	struct kexec_buf buf;
-> > > +
-> > > +	memset(&buf, 0, sizeof(struct kexec_buf));
-> > > +	buf.image = image;
-> > > +
-> > > +	buf.memsz = size;
-> > > +	buf.buf_align = align;
-> > > +	buf.buf_min = min_addr;
-> > > +	buf.buf_max = max_addr;
-> > > +	buf.top_down = top_down;
+On 22/06/2016:02:59:41 PM, AKASHI Takahiro wrote:
+> On Mon, Jun 20, 2016 at 11:02:22AM +0530, Pratyush Anand wrote:
+> > +Atsushi
 > > 
-> > Since patch 2/9 moved kexec_buf from internal header file to kexec.h it
-> > will be natural to passing a kexec_buf pointer intead of passing all
-> > these arguments in kexec_locate_mem_hole.
+> > Hi Takahiro,
 > > 
-> > kbuf.mem can be used for addr.
+> > On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
+> > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > 
+> > > For the current crash utility, we need to know, at least,
+> > >   - kimage_voffset
+> > >   - PHYS_OFFSET
+> > > to handle the contents of core dump file (/proc/vmcore) correctly due to
+> > > the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
+> > > This patch puts them as VMCOREINFO's into the file.
+> > > 
+> > >   - VA_BITS
+> > > is also added for makedumpfile command.
+> > 
+> > Thanks for adding them. They are quite helpful for makedumpfile as well.
+> > 
+> > > More VMCOREINFO's may be added later.
+> > 
+> > Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
+> > in order to work with makedumpfile.
 > 
-> Ok. What about this version?
-> -- 
-> []'s
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
-> 
-> 
-> Subject: [PATCH 3/9] kexec_file: Factor out kexec_locate_mem_hole from
->  kexec_add_buffer.
-> 
-> kexec_locate_mem_hole will be used by the PowerPC kexec_file_load
-> implementation to find free memory for the purgatory stack.
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: kexec@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/kexec.h | 12 +++++++++---
->  kernel/kexec_file.c   | 25 ++++++++++++++++++++-----
->  2 files changed, 29 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 3d91bcfc180d..e8b099da47f5 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -147,9 +147,14 @@ struct kexec_file_ops {
->  #endif
->  };
->  
-> -/*
-> - * Keeps track of buffer parameters as provided by caller for requesting
-> - * memory placement of buffer.
-> +/**
-> + * struct kexec_buf - parameters for finding a place for a buffer in memory
-> + * @image:	kexec image in which memory to search.
-> + * @size:	Memory size for the buffer.
-> + * @align:	Minimum alignment needed.
-> + * @min_addr:	Minimum starting address.
-> + * @max_addr:	Maximum end address.
-> + * @top_down:	Find the highest free memory region?
+> I know that adding those symbols is the easiest way, but
+> theoretically, if we know the physical address of "swapper_pg_dir",
 
-Hmm, hold on. For declaring a struct in a header file, comment should be
-just after each fields, like below, your format is for a function instead:
-struct pci_slot {
-        struct pci_bus *bus;            /* The bus this slot is on */
-        struct list_head list;          /* node in list of slots on this bus */
-        struct hotplug_slot *hotplug;   /* Hotplug info (migrate over time) */
-        unsigned char number;           /* PCI_SLOT(pci_dev->devfn) */
-        struct kobject kobj;
-};
+But, we know only it's virtual address. 
 
-BTW, what is @size? there's no size field in kexec_buf. I think it is not
-necessary to add these comment, they are easy to understand. If you really
-want, please rewrite them correctly, for example "image" description is wrong.
-It is not only for searching memory only, top_down description is also bad.
+> instead of its virtual address, we can access all the memory pointed to
+> by any kernel virtual address.
+> How do you rationalize that we need to know "_text" and "_end"?
 
-Thanks
-Dave
+Well, we need some mechanism so that we can decide if an address can be
+translated using linear mapping of virt_to_phys(). 
+
+Alternatively, probably we can do like this:
+-- Translate all address between "SYMBOL(swapper_pg_dir)"  and "SYMBOL(swapper_pg_dir)
+ + SWAPPER_DIR_SIZE" using virt_to_phys() and now we can read values from
+ dumpfile using that physical address. This way we can get PGD/PMD/PUD values.
+-- PTE values may lie out side this range, however that address should still be
+linearly translatable. We can use virt_to_phys() macro from them as well.
+
+In summary, we can translate address of PGD/PMD/PUD/PTE using virt_to_phys()
+and rest all can be translated using page table entries.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
