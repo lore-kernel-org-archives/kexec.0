@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-Id: <8af036007d022b18ea7264b9b97f782988033318.1466702804.git.geoff@infradead.org>
+Message-Id: <938f5ec9deff917f8e4ad276c01b5c753b7ee83a.1466702804.git.geoff@infradead.org>
 In-Reply-To: <cover.1466702804.git.geoff@infradead.org>
 References: <cover.1466702804.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Subject: [PATCH v20 11/14] arm64: kdump: add VMCOREINFO's for user-space
- coredump tools
+Subject: [PATCH v20 02/14] arm64: smp: Add function to determine if cpus are
+ stuck in the kernel
 Date: Thu, 23 Jun 2016 17:54:48 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,49 +22,78 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+From: James Morse <james.morse@arm.com>
 
-For the current crash utility, we need to know, at least,
-  - kimage_voffset
-  - PHYS_OFFSET
-to handle the contents of core dump file (/proc/vmcore) correctly due to
-the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
-This patch puts them as VMCOREINFO's into the file.
+kernel/smp.c has a fancy counter that keeps track of the number of CPUs
+it marked as not-present and left in cpu_park_loop(). If there are any
+CPUs spinning in here, features like kexec or hibernate may release them
+by overwriting this memory.
 
-  - VA_BITS
-is also added for makedumpfile command.
-More VMCOREINFO's may be added later.
+This problem also occurs on machines using spin-tables to release
+secondary cores.
+After commit 44dbcc93ab67 ("arm64: Fix behavior of maxcpus=N")
+we bring all known cpus into the secondary holding pen, meaning this
+memory can't be re-used by kexec or hibernate.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Add a function cpus_are_stuck_in_kernel() to determine if either of these
+cases have occurred.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm64/kernel/machine_kexec.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/include/asm/smp.h | 12 ++++++++++++
+ arch/arm64/kernel/smp.c      | 18 ++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 1f75187..413fb14 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -17,6 +17,7 @@
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index 433e504..0226447 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -124,6 +124,18 @@ static inline void cpu_panic_kernel(void)
+ 	cpu_park_loop();
+ }
  
- #include <asm/cacheflush.h>
- #include <asm/cpu_ops.h>
-+#include <asm/memory.h>
- #include <asm/mmu_context.h>
++/*
++ * If a secondary CPU enters the kernel but fails to come online,
++ * (e.g. due to mismatched features), and cannot exit the kernel,
++ * we increment cpus_stuck_in_kernel and leave the CPU in a
++ * quiesecent loop within the kernel text. The memory containing
++ * this loop must not be re-used for anything else as the 'stuck'
++ * core is executing it.
++ *
++ * This function is used to inhibit features like kexec and hibernate.
++ */
++bool cpus_are_stuck_in_kernel(void);
++
+ #endif /* ifndef __ASSEMBLY__ */
  
- #include "cpu-reset.h"
-@@ -275,3 +276,13 @@ void machine_crash_shutdown(struct pt_regs *regs)
- 
- 	pr_info("Starting crashdump kernel...\n");
+ #endif /* ifndef __ASM_SMP_H */
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 678e084..62ff3c0 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -909,3 +909,21 @@ int setup_profiling_timer(unsigned int multiplier)
+ {
+ 	return -EINVAL;
  }
 +
-+void arch_crash_save_vmcoreinfo(void)
++static bool have_cpu_die(void)
 +{
-+	VMCOREINFO_NUMBER(VA_BITS);
-+	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
-+	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-+						kimage_voffset);
-+	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
-+						PHYS_OFFSET);
++#ifdef CONFIG_HOTPLUG_CPU
++	int any_cpu = raw_smp_processor_id();
++
++	if (cpu_ops[any_cpu]->cpu_die)
++		return true;
++#endif
++	return false;
++}
++
++bool cpus_are_stuck_in_kernel(void)
++{
++	bool smp_spin_tables = (num_possible_cpus() > 1 && !have_cpu_die());
++
++	return !!cpus_stuck_in_kernel || smp_spin_tables;
 +}
 -- 
 2.5.0
