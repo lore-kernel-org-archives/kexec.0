@@ -1,41 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from ozlabs.org ([103.22.144.67])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bGENO-0001yX-Tq
- for kexec@lists.infradead.org; Thu, 23 Jun 2016 23:49:39 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5NNnGAV122236
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 19:49:16 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0b-001b2d01.pphosted.com with ESMTP id 23ra2mtt6t-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 19:49:16 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 23 Jun 2016 20:49:14 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id EC59C1DC006D
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 19:49:04 -0400 (EDT)
-Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5NNnCfC26935628
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 20:49:12 -0300
-Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
- by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5NNnBV8023503
- for <kexec@lists.infradead.org>; Thu, 23 Jun 2016 20:49:12 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 0/9] kexec_file_load implementation for PowerPC
-Date: Thu, 23 Jun 2016 20:49:10 -0300
-In-Reply-To: <576C63B4.8060302@gmail.com>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1612090.Qxo4UiJulB@hactar> <576C63B4.8060302@gmail.com>
-MIME-Version: 1.0
-Message-Id: <1489849.szMRu2Hvtq@hactar>
+ id 1bGJdJ-0005Do-UJ
+ for kexec@lists.infradead.org; Fri, 24 Jun 2016 05:26:27 +0000
+In-Reply-To: <20160622192507.11192.84463.stgit@hbathini.in.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [v2,1/2] refactor code parsing size based on memory range
+Message-Id: <3rbRd54y9Vz9t0p@ozlabs.org>
+Date: Fri, 24 Jun 2016 15:26:01 +1000 (AEST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,74 +16,250 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Balbir Singh <bsingharora@gmail.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Am Freitag, 24 Juni 2016, 08:33:24 schrieb Balbir Singh:
-> On 24/06/16 02:44, Thiago Jung Bauermann wrote:
-> > Sorry, I still don't understand your concern. What kind of cheating?
-> > Which values? If it's the values in the event log, there's no need to
-> > trust the old kernel. The new kernel knows that the old kernel didn't
-> > pass wrong measurement values in the event log because it can
-> > recalculate the PCR extend operations recorded in the log and compare
-> > the results of the replay with the current PCR values stored in the TPM
-> > device. If they match, then the event log is guaranteed to be correct.
-> > If they don't match, either the memory was corrupted somehow during the
-> > kexec process, or the old kernel tried to pass a falsified event log.
+On Wed, 2016-22-06 at 19:25:26 UTC, Hari Bathini wrote:
+> Currently, crashkernel parameter supports the below syntax to parse size
+> based on memory range:
 > 
-> Yep, get it/got it. My concern was anything using passed on the values
-> should compare the results with the current PCR values.
+> 	crashkernel=<range1>:<size1>[,<range2>:<size2>,...]
 > 
-> BTW, what do we gain by passing the values if we are relying on the PCR
-> registers anyway, can't we directly read them off from there? Aren't we
-> going to ready anyway to compare, what does passing the values gain?
-
-The PCR values themselves change for reasons that the application/user may 
-not care about. For example, just changing the order in which measurements 
-are made changes the final value of the PCR, even if all the measurements 
-themselves don't change. And in current multi-processor machines this order 
-does change at each boot, so you can't rely on two boots of the same machine 
-with the same software to have the same PCR values.
-
-Also, you may want to verify only the measurement of one of the components 
-and not care about the other components.
-
-With an event log, you can verify the checksum of each measured component 
-individually, and the PCR value serves to confirm that the event log is 
-correct. Just having the final PCR value without the event log, you don't 
-know which measurements were made.
-
-> >> and
-> >> 
-> >> How do we know the new kernel is safe to load - I guess via a signature
-> >> that the new kernel is signed with (assuming it is present in the key
-> >> ring).
-> > 
-> > Correct. That goal is met by signature verification, not by integrity
-> > assurance.
-> > 
-> > I'll note that even with both of my patch series there's still code
-> > missing for kernel signature verification in PowerPC. I believe there's
-> > not a file format defined yet for how to store a signature in a PowerPC
-> > kernel image.
-> > 
-> > Integrity assurance doesn't depend on kernel signature verification
-> > though. There's value in both my patch series even without kernel
-> > signature verification support. They're complementary features.
+> While such parsing is implemented for crashkernel parameter, it applies to
+> other parameters with similar syntax. So, move this code to a more generic
+> place for code reuse.
 > 
-> Thanks for clarifying
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Rusty Russell <rusty@rustcorp.com.au>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
 
-Thank you for your interest.
+Hari, it's not immediately clear that this makes no change to the logic in the
+kexec code. Can you reply with a longer change log explaining why the old & new
+logic is the same for kexec.
 
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+cheers
 
+
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 94aa10f..72f55e5 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -436,6 +436,11 @@ extern char *get_options(const char *str, int nints, int *ints);
+>  extern unsigned long long memparse(const char *ptr, char **retptr);
+>  extern bool parse_option_str(const char *str, const char *option);
+>  
+> +extern bool __init is_param_range_based(const char *cmdline);
+> +extern unsigned long long __init parse_mem_range_size(const char *param,
+> +						      char **str,
+> +						      unsigned long long system_ram);
+> +
+>  extern int core_kernel_text(unsigned long addr);
+>  extern int core_kernel_data(unsigned long addr);
+>  extern int __kernel_text_address(unsigned long addr);
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 56b3ed0..d43f5cc 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1083,59 +1083,9 @@ static int __init parse_crashkernel_mem(char *cmdline,
+>  	char *cur = cmdline, *tmp;
+>  
+>  	/* for each entry of the comma-separated list */
+> -	do {
+> -		unsigned long long start, end = ULLONG_MAX, size;
+> -
+> -		/* get the start of the range */
+> -		start = memparse(cur, &tmp);
+> -		if (cur == tmp) {
+> -			pr_warn("crashkernel: Memory value expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur = tmp;
+> -		if (*cur != '-') {
+> -			pr_warn("crashkernel: '-' expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur++;
+> -
+> -		/* if no ':' is here, than we read the end */
+> -		if (*cur != ':') {
+> -			end = memparse(cur, &tmp);
+> -			if (cur == tmp) {
+> -				pr_warn("crashkernel: Memory value expected\n");
+> -				return -EINVAL;
+> -			}
+> -			cur = tmp;
+> -			if (end <= start) {
+> -				pr_warn("crashkernel: end <= start\n");
+> -				return -EINVAL;
+> -			}
+> -		}
+> -
+> -		if (*cur != ':') {
+> -			pr_warn("crashkernel: ':' expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur++;
+> -
+> -		size = memparse(cur, &tmp);
+> -		if (cur == tmp) {
+> -			pr_warn("Memory value expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur = tmp;
+> -		if (size >= system_ram) {
+> -			pr_warn("crashkernel: invalid size\n");
+> -			return -EINVAL;
+> -		}
+> -
+> -		/* match ? */
+> -		if (system_ram >= start && system_ram < end) {
+> -			*crash_size = size;
+> -			break;
+> -		}
+> -	} while (*cur++ == ',');
+> +	*crash_size = parse_mem_range_size("crashkernel", &cur, system_ram);
+> +	if (cur == cmdline)
+> +		return -EINVAL;
+>  
+>  	if (*crash_size > 0) {
+>  		while (*cur && *cur != ' ' && *cur != '@')
+> @@ -1272,7 +1222,6 @@ static int __init __parse_crashkernel(char *cmdline,
+>  			     const char *name,
+>  			     const char *suffix)
+>  {
+> -	char	*first_colon, *first_space;
+>  	char	*ck_cmdline;
+>  
+>  	BUG_ON(!crash_size || !crash_base);
+> @@ -1290,12 +1239,10 @@ static int __init __parse_crashkernel(char *cmdline,
+>  		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>  				suffix);
+>  	/*
+> -	 * if the commandline contains a ':', then that's the extended
+> +	 * if the parameter is range based, then that's the extended
+>  	 * syntax -- if not, it must be the classic syntax
+>  	 */
+> -	first_colon = strchr(ck_cmdline, ':');
+> -	first_space = strchr(ck_cmdline, ' ');
+> -	if (first_colon && (!first_space || first_colon < first_space))
+> +	if (is_param_range_based(ck_cmdline))
+>  		return parse_crashkernel_mem(ck_cmdline, system_ram,
+>  				crash_size, crash_base);
+>  
+> diff --git a/kernel/params.c b/kernel/params.c
+> index a6d6149..84e40ae 100644
+> --- a/kernel/params.c
+> +++ b/kernel/params.c
+> @@ -268,6 +268,102 @@ char *parse_args(const char *doing,
+>  	return err;
+>  }
+>  
+> +/*
+> + * is_param_range_based - check if current parameter is range based
+> + * @cmdline: points to the parameter to check
+> + *
+> + * Returns true when the current paramer is range based, false otherwise
+> + */
+> +bool __init is_param_range_based(const char *cmdline)
+> +{
+> +	char    *first_colon, *first_space;
+> +
+> +	first_colon = strchr(cmdline, ':');
+> +	first_space = strchr(cmdline, ' ');
+> +	if (first_colon && (!first_space || first_colon < first_space))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * parse_mem_range_size - parse size based on memory range
+> + * @param:  the thing being parsed
+> + * @str: (input)  where parse begins
+> + *                expected format - <range1>:<size1>[,<range2>:<size2>,...]
+> + *       (output) On success - next char after parse completes
+> + *                On failure - unchanged
+> + * @system_ram: system ram size to check memory range against
+> + *
+> + * Returns the memory size on success and 0 on failure
+> + */
+> +unsigned long long __init parse_mem_range_size(const char *param,
+> +					       char **str,
+> +					       unsigned long long system_ram)
+> +{
+> +	char *cur = *str, *tmp;
+> +	unsigned long long mem_size = 0;
+> +
+> +	/* for each entry of the comma-separated list */
+> +	do {
+> +		unsigned long long start, end = ULLONG_MAX, size;
+> +
+> +		/* get the start of the range */
+> +		start = memparse(cur, &tmp);
+> +		if (cur == tmp) {
+> +			printk(KERN_INFO "%s: Memory value expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur = tmp;
+> +		if (*cur != '-') {
+> +			printk(KERN_INFO "%s: '-' expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur++;
+> +
+> +		/* if no ':' is here, than we read the end */
+> +		if (*cur != ':') {
+> +			end = memparse(cur, &tmp);
+> +			if (cur == tmp) {
+> +				printk(KERN_INFO "%s: Memory value expected\n",
+> +					param);
+> +				return mem_size;
+> +			}
+> +			cur = tmp;
+> +			if (end <= start) {
+> +				printk(KERN_INFO "%s: end <= start\n", param);
+> +				return mem_size;
+> +			}
+> +		}
+> +
+> +		if (*cur != ':') {
+> +			printk(KERN_INFO "%s: ':' expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur++;
+> +
+> +		size = memparse(cur, &tmp);
+> +		if (cur == tmp) {
+> +			printk(KERN_INFO "%s: Memory value expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur = tmp;
+> +		if (size >= system_ram) {
+> +			printk(KERN_INFO "%s: invalid size\n", param);
+> +			return mem_size;
+> +		}
+> +
+> +		/* match ? */
+> +		if (system_ram >= start && system_ram < end) {
+> +			mem_size = size;
+> +			*str = cur;
+> +			break;
+> +		}
+> +	} while (*cur++ == ',');
+> +
+> +	return mem_size;
+> +}
+> +
+>  /* Lazy bastard, eh? */
+>  #define STANDARD_PARAM_DEF(name, type, format, strtolfn)      		\
+>  	int param_set_##name(const char *val, const struct kernel_param *kp) \
 
 _______________________________________________
 kexec mailing list
