@@ -1,14 +1,43 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <57715471.7020005@arm.com>
-Date: Mon, 27 Jun 2016 17:29:37 +0100
-From: James Morse <james.morse@arm.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bHZYJ-0000c5-K4
+ for kexec@lists.infradead.org; Mon, 27 Jun 2016 16:38:28 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5RGTrVA063260
+ for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 12:38:05 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 23skjyq2h2-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 12:38:05 -0400
+Received: from localhost
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 27 Jun 2016 13:38:03 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 56F571DC0054
+ for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 12:37:53 -0400 (EDT)
+Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5RGc0gJ17105378
+ for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 13:38:00 -0300
+Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
+ by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5RGc0C3000997
+ for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 13:38:00 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
+ kexec_add_buffer.
+Date: Mon, 27 Jun 2016 13:37:58 -0300
+In-Reply-To: <20160627161948.GA5876@dhcp-128-65.nay.redhat.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <4923900.bfxGnX6mM2@hactar>
+ <20160627161948.GA5876@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v20 04/14] arm64/kexec: Add core kexec support
-References: <cover.1466702804.git.geoff@infradead.org>
- <018ac873d87fbfc45185cdab91ebc8731f64f94c.1466702804.git.geoff@infradead.org>
- <57710B92.2080603@arm.com>
- <20160627143939.GC6847@e104818-lin.cambridge.arm.com>
-In-Reply-To: <20160627143939.GC6847@e104818-lin.cambridge.arm.com>
+Message-Id: <5428891.iJNV8CI1We@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +50,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-Hi Catalin,
+Am Dienstag, 28 Juni 2016, 00:19:48 schrieb Dave Young:
+> On 06/23/16 at 12:37pm, Thiago Jung Bauermann wrote:
+> > Am Donnerstag, 23 Juni 2016, 01:44:07 schrieb Dave Young:
+> > What is bad about the description of top_down?
+> It is not clear enough to me, I personally think the original one in
+> source code is better:
+> /* allocate from top of memory hole */
 
-On 27/06/16 15:39, Catalin Marinas wrote:
-> On Mon, Jun 27, 2016 at 12:18:42PM +0100, James Morse wrote:
->> This if() {} hunk isn't necessary with the version of cpus_are_stuck_in_kernel()
->> you have in patch 2. This logic is the '|| smp_spin_tables' part of that helper
->> function. (hibernate needed it too)
-> 
-> I can make the changes locally but just to be clear I understand what
-> you meant, here's the diff on top of Geoff's patch:
+Actually I realized there's some discrepancy in how the x86 code uses 
+top_down and how I need it to work in powerpc. This may be what is confusing 
+about my comment and the existing comment.
 
-Ah, I see my 'if() {}' comment is ambiguous as there are two ...
+x86 always walks memory from bottom to top but if top_down is true, in each 
+memory region it will allocate the memory hole in the highest address within 
+that region. I don't know why it is done that way, though.
 
-> 
-> ----8<-------------------------
-> 
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index 945ce326654c..bc96c8a7fc79 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -68,24 +68,9 @@ int machine_kexec_prepare(struct kimage *kimage)
->  
->  	kexec_image_info(kimage);
->  
-> -	if (kimage->type != KEXEC_TYPE_CRASH) {
-> -		if (cpus_are_stuck_in_kernel()) {
-> -			pr_err("Can't kexec: failed CPUs are stuck in the kernel.\n");
-> -			return -EBUSY;
-> -		}
-> -
-> -		if (num_online_cpus() > 1) {
-> -			if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
-> -				/* any_cpu as we don't mind being preempted */
-> -				int any_cpu = raw_smp_processor_id();
-> -
-> -				if (cpu_ops[any_cpu]->cpu_die)
-> -					return 0;
-> -			}
-> -
-> -			pr_err("Can't kexec: no mechanism to offline secondary CPUs.\n");
-> -			return -EBUSY;
-> -		}
-> +	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
-> +		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
-> +		return -EBUSY;
->  	}
->  
->  	return 0;
-> @@ -163,7 +148,7 @@ void machine_kexec(struct kimage *kimage)
->  	/*
->  	 * New cpus may have become stuck_in_kernel after we loaded the image.
->  	 */
-> -	BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1));
-> +	BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
->  
->  	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
->  	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
-> 
+On powerpc, the memory walk itself should be from top to bottom, as well as 
+the memory hole allocation within each memory region.
 
-Yes, that's what I meant, thanks Catalin.
+Should I add a separate top_down argument to kexec_locate_mem_hole to 
+control if the memory walk should be from top to bottom, and then the 
+bottom_up member of struct kexec_buf controls where inside each memory 
+region the memory hole will be allocated?
 
-The 'num_online_cpus() > 1' is still needed as disable_nonboot_cpus() called via
-machine_shutdown() may have failed and this is where we check. (we can't return
-an error from either path).
-
-Geoff, I assume you agree?
-
-
-Thanks,
-
-James
-
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
