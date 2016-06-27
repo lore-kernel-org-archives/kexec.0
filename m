@@ -1,42 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bHbBH-0007zx-Gu
- for kexec@lists.infradead.org; Mon, 27 Jun 2016 18:22:48 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5RIJMPp061984
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 14:22:25 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0b-001b2d01.pphosted.com with ESMTP id 23sjvwu9fh-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 14:22:25 -0400
-Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Mon, 27 Jun 2016 15:22:23 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 202A41DC006F
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 14:22:14 -0400 (EDT)
-Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5RIMLm329098424
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 15:22:21 -0300
-Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
- by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5RIML0x020798
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 15:22:21 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v20 14/14] Documentation: dt: usable-memory and elfcorehdr
- nodes for arm64 kexec
-Date: Mon, 27 Jun 2016 15:22:18 -0300
-In-Reply-To: <e212cd53fdf9d09923408eb906fe0228d22432a9.1466702804.git.geoff@infradead.org>
-References: <cover.1466702804.git.geoff@infradead.org>
- <e212cd53fdf9d09923408eb906fe0228d22432a9.1466702804.git.geoff@infradead.org>
+ id 1bHbX1-0008L6-Sa
+ for kexec@lists.infradead.org; Mon, 27 Jun 2016 18:45:17 +0000
+Date: Tue, 28 Jun 2016 02:44:46 +0800
+From: Dave Young <dyoung@redhat.com>
+Message-ID: <20160627184446.GB5876@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Message-Id: <9127562.8x2DzY0I6N@hactar>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,35 +20,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, James Morse <james.morseatarm.com@hactar>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 
-Hello,
+vgoyal@redhat.com
+	linux-kernel@vger.kernel.org,
+	Eric Biederman <ebiederm@xmission.com>
+Bcc: ruyang@redhat.com
+Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
+ kexec_add_buffer.
+Reply-To: 
+In-Reply-To: <5428891.iJNV8CI1We@hactar>
 
-Am Donnerstag, 23 Juni 2016, 17:54:49 schrieb Geoff Levand:
-> +linux,usable-memory
-> +-------------------
-> +
-> +This property is set on PowerPC and arm64 by kexec-tools during kdump
-> +to tell the crash kernel the base address of its reserved area of memory,
-> and +the size. e.g.
-> +
-> +/ {
-> +	chosen {
-> +		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-> +	};
-> +};
+On 06/27/16 at 01:37pm, Thiago Jung Bauermann wrote:
+> Am Dienstag, 28 Juni 2016, 00:19:48 schrieb Dave Young:
+> > On 06/23/16 at 12:37pm, Thiago Jung Bauermann wrote:
+> > > Am Donnerstag, 23 Juni 2016, 01:44:07 schrieb Dave Young:
+> > > What is bad about the description of top_down?
+> > It is not clear enough to me, I personally think the original one in
+> > source code is better:
+> > /* allocate from top of memory hole */
+> 
+> Actually I realized there's some discrepancy in how the x86 code uses 
+> top_down and how I need it to work in powerpc. This may be what is confusing 
+> about my comment and the existing comment.
+> 
+> x86 always walks memory from bottom to top but if top_down is true, in each 
+> memory region it will allocate the memory hole in the highest address within 
+> that region. I don't know why it is done that way, though.
 
-On powerpc, linux,usable-memory isn't in /chosen. It is put by kexec-tools 
-in each /memory node and has the same format as the reg property. During 
-early boot, the kernel goes through the /memory nodes to find usable memory 
-and for each node, if there's a linux,usable-memory property it will use it 
-instead of the reg property to find the ranges of memory it can use (see 
-early_init_dt_scan_memory in drivers/of/fdt.c).
+I think we did not meaning to do this, considering kdump we have only
+one crashkernel region for searching (crashk_res) so it is fine.
+For kexec maybe changing the walking function to accept top_down is
+reasonable.
 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Ccing Vivek see if he can remember something..
 
+> 
+> On powerpc, the memory walk itself should be from top to bottom, as well as 
+> the memory hole allocation within each memory region.
+> 
+> Should I add a separate top_down argument to kexec_locate_mem_hole to 
+> control if the memory walk should be from top to bottom, and then the 
+> bottom_up member of struct kexec_buf controls where inside each memory 
+> region the memory hole will be allocated?
+> 
+> -- 
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
