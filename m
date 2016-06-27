@@ -1,43 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bHZlA-0006dU-IK
- for kexec@lists.infradead.org; Mon, 27 Jun 2016 16:51:45 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5RGnJE4145405
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 12:51:23 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0b-001b2d01.pphosted.com with ESMTP id 23sjvwrar8-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 12:51:23 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Mon, 27 Jun 2016 13:51:20 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id E3EC41DC006F
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 12:51:09 -0400 (EDT)
-Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5RGpHVJ29098398
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 13:51:17 -0300
-Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
- by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5RGpHrf032374
- for <kexec@lists.infradead.org>; Mon, 27 Jun 2016 13:51:17 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
- kexec_add_buffer.
-Date: Mon, 27 Jun 2016 13:51:16 -0300
-In-Reply-To: <5428891.iJNV8CI1We@hactar>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160627161948.GA5876@dhcp-128-65.nay.redhat.com>
- <5428891.iJNV8CI1We@hactar>
-MIME-Version: 1.0
-Message-Id: <1915759.R1Bukpmjaj@hactar>
+Message-ID: <1467046826.7965.35.camel@infradead.org>
+Subject: Re: [PATCH v20 04/14] arm64/kexec: Add core kexec support
+From: Geoff Levand <geoff@infradead.org>
+Date: Mon, 27 Jun 2016 10:00:26 -0700
+In-Reply-To: <57715471.7020005@arm.com>
+References: <cover.1466702804.git.geoff@infradead.org>
+ <018ac873d87fbfc45185cdab91ebc8731f64f94c.1466702804.git.geoff@infradead.org>
+ <57710B92.2080603@arm.com>
+ <20160627143939.GC6847@e104818-lin.cambridge.arm.com>
+ <57715471.7020005@arm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,22 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: James Morse <james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org
 
-Am Montag, 27 Juni 2016, 13:37:58 schrieb Thiago Jung Bauermann:
-> Should I add a separate top_down argument to kexec_locate_mem_hole to
-> control if the memory walk should be from top to bottom, and then the
-> bottom_up member of struct kexec_buf controls where inside each memory
-> region the memory hole will be allocated?
+Hi,
 
-Er, "...the bottom_up member of struct kexec_buf..." should read "...the 
-top_down member of struct kexec buf...".
+On Mon, 2016-06-27 at 17:29 +0100, James Morse wrote:
+> On 27/06/16 15:39, Catalin Marinas wrote:
+> > @@ -163,7 +148,7 @@ void machine_kexec(struct kimage *kimage)
+> >  > > 	> > /*
+> >  > > 	> >  * New cpus may have become stuck_in_kernel after we loaded the image.
+> >  > > 	> >  */
+> > -> > 	> > BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1));
+> > +> > 	> > BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
+> >  
+> >  > > 	> > reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+> >  > > 	> > reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+> > 
+> 
+> Yes, that's what I meant, thanks Catalin.
+> 
+> The 'num_online_cpus() > 1' is still needed as disable_nonboot_cpus() called via
+> machine_shutdown() may have failed and this is where we check. (we can't return
+> an error from either path).
+> 
+> Geoff, I assume you agree?
 
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Yes, we should do a final check, and abort the reboot if if we have
+more than a single cpu running.
+
+-Geoff
 
 
 _______________________________________________
