@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 27 Jun 2016 15:39:39 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v20 04/14] arm64/kexec: Add core kexec support
-Message-ID: <20160627143939.GC6847@e104818-lin.cambridge.arm.com>
-References: <cover.1466702804.git.geoff@infradead.org>
- <018ac873d87fbfc45185cdab91ebc8731f64f94c.1466702804.git.geoff@infradead.org>
- <57710B92.2080603@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bHZGm-0007a9-4X
+ for kexec@lists.infradead.org; Mon, 27 Jun 2016 16:20:20 +0000
+Date: Tue, 28 Jun 2016 00:19:48 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
+ kexec_add_buffer.
+Message-ID: <20160627161948.GA5876@dhcp-128-65.nay.redhat.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160623023052.GB12575@dhcp-128-11.nay.redhat.com>
+ <2090497645.1524307.1466660647378.JavaMail.zimbra@redhat.com>
+ <4923900.bfxGnX6mM2@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <57710B92.2080603@arm.com>
+In-Reply-To: <4923900.bfxGnX6mM2@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +27,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, marc.zyngier@arm.com, linux-arm-kernel@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-On Mon, Jun 27, 2016 at 12:18:42PM +0100, James Morse wrote:
-> On 23/06/16 18:54, Geoff Levand wrote:
-> > "Can't kexec: secondary CPUs are stuck in the kernel.\n"
+On 06/23/16 at 12:37pm, Thiago Jung Bauermann wrote:
+> Am Donnerstag, 23 Juni 2016, 01:44:07 schrieb Dave Young:
+> > Hmm, hold on. For declaring a struct in a header file, comment should be
+> > just after each fields, like below, your format is for a function instead:
+> > struct pci_slot {
+> >         struct pci_bus *bus;            /* The bus this slot is on */
+> >         struct list_head list;          /* node in list of slots on this
+> > bus */ struct hotplug_slot *hotplug;   /* Hotplug info (migrate over
+> > time) */ unsigned char number;           /* PCI_SLOT(pci_dev->devfn) */
+> > struct kobject kobj;
+> > };
 > 
-> > +			return -EBUSY;
-> > +		}
-> > +
+> The comment style you mention above is not extractable documentation. The 
+> style I used is what is described in section "kernel-doc for structs, 
+> unions, enums, and typedefs" in Documentation/kernel-doc-nano-HOWTO.txt.
+
+You are right and I was wrong!
+
+>  
+> > BTW, what is @size? there's no size field in kexec_buf. I think it is not
+> > necessary to add these comment, they are easy to understand. If you really
+> > want, please rewrite them correctly, for example "image" description is
+> > wrong. It is not only for searching memory only, top_down description is
+> > also bad.
 > 
-> > +		if (num_online_cpus() > 1) {
-> > +			if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
-> > +				/* any_cpu as we don't mind being preempted */
-> > +				int any_cpu = raw_smp_processor_id();
-> > +
-> > +				if (cpu_ops[any_cpu]->cpu_die)
-> > +					return 0;
-> > +			}
-> > +
-> > +			pr_err("Can't kexec: no mechanism to offline secondary CPUs.\n");
-> > +			return -EBUSY;
-> > +		}
+> Sorry, I moved these comments from kexec_locate_mem_hole but forgot to 
+> rename the parameters to what they are called in struct kexec_buf. @size 
+> should have been @memsz (other fields also have wrong names, I'll fix them 
+> as well). The image description is correct in the context of where struct 
+> kexec_buf is used and explains what it will be used for in the function 
+> taking kexec_buf as an argument. It is not meant as a general description of 
+> the purpose of struct kimage. What is bad about the description of top_down?
+
+It is not clear enough to me, I personally think the original one in
+source code is better:
+/* allocate from top of memory hole */
+
 > 
-> This if() {} hunk isn't necessary with the version of cpus_are_stuck_in_kernel()
-> you have in patch 2. This logic is the '|| smp_spin_tables' part of that helper
-> function. (hibernate needed it too)
+> I decided to add these comments because struct kexec_buf is now part of the 
+> kernel API for kexec. kernel-doc-nano-HOWTO.txt says:
+> 
+> > We definitely need kernel-doc formatted documentation for functions
+> > that are exported to loadable modules using EXPORT_SYMBOL.
+> > 
+> > We also look to provide kernel-doc formatted documentation for
+> > functions externally visible to other kernel files (not marked
+> > "static").
+> > 
+> > We also recommend providing kernel-doc formatted documentation
+> > for private (file "static") routines, for consistency of kernel
+> > source code layout.  But this is lower priority and at the
+> > discretion of the MAINTAINER of that kernel source file.
+> 
+> If you think they are not necessary or just add clutter I can leave them 
+> out.
 
-I can make the changes locally but just to be clear I understand what
-you meant, here's the diff on top of Geoff's patch:
+I'm fine with either way.
 
-----8<-------------------------
-
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 945ce326654c..bc96c8a7fc79 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -68,24 +68,9 @@ int machine_kexec_prepare(struct kimage *kimage)
- 
- 	kexec_image_info(kimage);
- 
--	if (kimage->type != KEXEC_TYPE_CRASH) {
--		if (cpus_are_stuck_in_kernel()) {
--			pr_err("Can't kexec: failed CPUs are stuck in the kernel.\n");
--			return -EBUSY;
--		}
--
--		if (num_online_cpus() > 1) {
--			if (IS_ENABLED(CONFIG_HOTPLUG_CPU)) {
--				/* any_cpu as we don't mind being preempted */
--				int any_cpu = raw_smp_processor_id();
--
--				if (cpu_ops[any_cpu]->cpu_die)
--					return 0;
--			}
--
--			pr_err("Can't kexec: no mechanism to offline secondary CPUs.\n");
--			return -EBUSY;
--		}
-+	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
-+		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
-+		return -EBUSY;
- 	}
- 
- 	return 0;
-@@ -163,7 +148,7 @@ void machine_kexec(struct kimage *kimage)
- 	/*
- 	 * New cpus may have become stuck_in_kernel after we loaded the image.
- 	 */
--	BUG_ON(cpus_are_stuck_in_kernel() && (num_online_cpus() > 1));
-+	BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
- 
- 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
- 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+THanks
+Dave
 
 _______________________________________________
 kexec mailing list
