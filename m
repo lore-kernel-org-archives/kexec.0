@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
+Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bIQ1U-0005nI-6G
- for kexec@lists.infradead.org; Thu, 30 Jun 2016 00:40:05 +0000
-Received: by mail-pf0-x232.google.com with SMTP id i123so23182455pfg.0
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 17:39:43 -0700 (PDT)
-Date: Thu, 30 Jun 2016 09:44:54 +0900
+ id 1bIQyf-0007CW-9G
+ for kexec@lists.infradead.org; Thu, 30 Jun 2016 01:41:14 +0000
+Received: by mail-pf0-x231.google.com with SMTP id t190so23719608pfb.3
+ for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 18:40:52 -0700 (PDT)
+Date: Thu, 30 Jun 2016 10:46:04 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
- coredump tools
-Message-ID: <20160630004453.GH20774@linaro.org>
-References: <cover.1466120418.git.geoff@infradead.org>
- <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
- <20160620053222.GB14309@dhcppc9>
- <20160622055940.GY20774@linaro.org>
- <20160623071412.GA16398@dhcppc9>
- <20160623081545.GA20774@linaro.org>
- <20160623154624.GC16398@dhcppc9>
+Subject: Re: [PATCH v20 00/14] arm64 kexec kernel patches
+Message-ID: <20160630014603.GK20774@linaro.org>
+References: <cover.1466702804.git.geoff@infradead.org>
+ <20160627170039.GD6847@e104818-lin.cambridge.arm.com>
+ <20160629005414.GC20774@linaro.org>
+ <20160629092049.GA2522@e104818-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160623154624.GC16398@dhcppc9>
+In-Reply-To: <20160629092049.GA2522@e104818-lin.cambridge.arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,120 +28,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-Pratyush,
-
-On Thu, Jun 23, 2016 at 09:16:24PM +0530, Pratyush Anand wrote:
-> On 23/06/2016:05:42:28 PM, AKASHI Takahiro wrote:
-> > On Thu, Jun 23, 2016 at 12:44:12PM +0530, Pratyush Anand wrote:
-> > > Hi Takahiro,
-> > > 
-> > > Thanks for your reply.
-> > > 
-> > > On 22/06/2016:02:59:41 PM, AKASHI Takahiro wrote:
-> > > > On Mon, Jun 20, 2016 at 11:02:22AM +0530, Pratyush Anand wrote:
-> > > > > +Atsushi
-> > > > > 
-> > > > > Hi Takahiro,
-> > > > > 
-> > > > > On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
-> > > > > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > > > 
-> > > > > > For the current crash utility, we need to know, at least,
-> > > > > >   - kimage_voffset
-> > > > > >   - PHYS_OFFSET
-> > > > > > to handle the contents of core dump file (/proc/vmcore) correctly due to
-> > > > > > the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
-> > > > > > This patch puts them as VMCOREINFO's into the file.
-> > > > > > 
-> > > > > >   - VA_BITS
-> > > > > > is also added for makedumpfile command.
-> > > > > 
-> > > > > Thanks for adding them. They are quite helpful for makedumpfile as well.
-> > > > > 
-> > > > > > More VMCOREINFO's may be added later.
-> > > > > 
-> > > > > Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
-> > > > > in order to work with makedumpfile.
+On Wed, Jun 29, 2016 at 10:20:50AM +0100, Catalin Marinas wrote:
+> On Wed, Jun 29, 2016 at 09:54:15AM +0900, AKASHI Takahiro wrote:
+> > On Mon, Jun 27, 2016 at 06:00:39PM +0100, Catalin Marinas wrote:
+> > > On Thu, Jun 23, 2016 at 05:54:47PM +0000, Geoff Levand wrote:
+> > > > AKASHI Takahiro (7):
+> > > >       arm64: kdump: reserve memory for crash dump kernel
+> > > >       arm64: limit memory regions based on DT property, usable-memory
+> > > >       arm64: kdump: implement machine_crash_shutdown()
+> > > >       arm64: kdump: add kdump support
+> > > >       arm64: kdump: add VMCOREINFO's for user-space coredump tools
+> > > >       arm64: kdump: enable kdump in the arm64 defconfig
+> > > >       arm64: kdump: update a kernel doc
 > > > > 
-> > > > I know that adding those symbols is the easiest way, but
-> > > > theoretically, if we know the physical address of "swapper_pg_dir",
+> > > > Geoff Levand (4):
+> > > >       arm64: Add back cpu reset routines
+> > > >       arm64/kexec: Add core kexec support
+> > > >       arm64/kexec: Enable kexec in the arm64 defconfig
+> > > >       arm64/kexec: Add pr_debug output
+> > > > 
+> > > > James Morse (3):
+> > > >       arm64: hibernate: Don't hibernate on systems with stuck CPUs
+> > > >       arm64: smp: Add function to determine if cpus are stuck in the kernel
+> > > >       Documentation: dt: usable-memory and elfcorehdr nodes for arm64 kexec
 > > > 
-> > > But, we know only it's virtual address. 
+> > > I dropped patch 1 (hibernate), cherry-picked patch 2 from mainline
+> > > ("cpus stuck in the kernel", already pushed by Will to 4.7-rc5) and
+> > > merged patches 3-6, with the amendments that James mentioned.
+> > > 
+> > > The kdump patches, including the "Documentation" one from James require
+> > > more review, testing and acks by the corresponding maintainers (kdump,
+> > > DT).
 > > 
-> > What I meant here is that, if we know the physical address of "swapper_pg_dir",
-> > we don't have to know neither of "_text", "_end", "kimage_voffset" nor
-> > "PHYS_OFFSET".
-> > I just wanted to ask you whether you thought of this possibility.
+> > I see what you mean, but even for Geoff's kexec part, the maintainer
+> > (Eric) have not given his ack.
 > 
-> OK, Let me clarify the needs from makedumpfile perspective. Atsushi can correct
-> me if I am wrong:
+> I just assumed he won't object ;). The only generic change is the
+> KEXEC_ARCH_AARCH64 in the uapi/linux/kexec.h file and the value chosen
+> matches EM_AARCH64.
 > 
-> - As a minimal we need some way of reading page table entries. Currently vmcore
->   has only virtual address of swapper_pg_dir, but if you can provide
->   __pa(swapper_pg_dir) in vmcore, then we do not need either "_text", "_end" or
->   "kimage_voffset". 
-> - However, "PHYS_OFFSET" might still be needed. makedumpfile core code needs to
->   know phys_base. Currently we find it from the PT_LOAD segments. We treat the
->   lowest start of segment's LMAs as the physical base. I am not sure, if that is
->   still true with latest KASAN changes.
+> The kdump patches make such changes to Documentation and I would like
+> those acked by the kdump and DT maintainers.
 
-PHYS_OFFSET is now there in patch 10/13.
+OK, I asked the corresponding maintainers to review them.
 
-> - Further, if you do not provide "_text" and "_end", then we will have to translate
->   each address with complex page table read process, which would slow
->   makedumpfile execution significantly.
+> Pratyush Anand also had comments on the kdump patches in v19, so it's
+> fair to wait for him to complete the reviewing of the latest series.
 
-I believe that this is the only reason that you want both symbols
-though I don't know how much performance penalty it may cause.
+I think that it was my mistake that I referred to makedumpfile-related
+VMCOREINFO's in my patch.
+Since I'm not a user nor author of makedumpfile command for arm64,
+my changes should have been minimized, exluding any non-mandatory symbols.
+(Patch#13/14 is necessary for me to verify generated vmcore files
+with crash utility.)
+So I asked Pratyush to post his kernel patch based on his own requirements
+as he wants.
+I believe it's fair enough.
 
-> Now, please let us know that what will be the kernel strategy, so that I can
-> re-organise makedumpfile accordingly.
+> > > You also don't seem to have added a s-o-b for those patches (since
+> > > you are submitting them; unless you plan to let Akashi-san submit them
+> > > in the future).
+> > 
+> > Basically Geoff has not reviewed nor tested kdump part, and
+> > so I'm not sure that adding his s-o-b is appropriate.
+> 
+> It is appropriate. See the "Developer's Certificate of Origin" in
+> Documentation/SubmittingPatches. A s-o-b from Geoff doesn't necessarily
+> mean that he reviewed the patches but that he has the right to pass them
+> on under the open source license indicated in the file (and AFAICT it is
+> legally binding but IANAL).
+> 
+> > Anyhow, I will post my future version of kdump by myself as kexec has
+> > been queued in for-next/core.
+> 
+> Thanks.
 
-Given that I'm not a user nor author of makedumpfile command for arm64,
-as we discussed locally before, I'm now convinced that you'd better post
-your own kernel patch based on your requirements as you like.
+Since I've got no comments on kdump patches and had no updates
+so far, I don't plan to post v21 this week (at this point).
+(I will add "reviewed-by James" to patch#7/14 in future releases.)
 
 Thanks,
 -Takahiro AKASHI
 
-> > > 
-> > > > instead of its virtual address, we can access all the memory pointed to
-> > > > by any kernel virtual address.
-> > > > How do you rationalize that we need to know "_text" and "_end"?
-> > > 
-> > > Well, we need some mechanism so that we can decide if an address can be
-> > > translated using linear mapping of virt_to_phys(). 
-> > 
-> > All the entries in MMU tables are based on "physical" addresses,
-> > and so we don't care whether a given address is in linear mapping or not
-> > in walking through MMU.
-> > See what I mean?
-> 
-> Yes, yes, I thought, we have only virtual swapper_pg_dir, so I was looking for a
-> way to translate *atleast* that into physical.
-> 
-> Thanks for your input. Those are helpful.
-> 
-> ~Pratyush
-> 
-> > 
-> > Thanks,
-> > -Takahiro AKASHI
-> > 
-> > > Alternatively, probably we can do like this:
-> > > -- Translate all address between "SYMBOL(swapper_pg_dir)"  and "SYMBOL(swapper_pg_dir)
-> > >  + SWAPPER_DIR_SIZE" using virt_to_phys() and now we can read values from
-> > >  dumpfile using that physical address. This way we can get PGD/PMD/PUD values.
-> > > -- PTE values may lie out side this range, however that address should still be
-> > > linearly translatable. We can use virt_to_phys() macro from them as well.
-> > > 
-> > > In summary, we can translate address of PGD/PMD/PUD/PTE using virt_to_phys()
-> > > and rest all can be translated using page table entries.
-> > > 
-> > > ~Pratyush
+> -- 
+> Catalin
 
 _______________________________________________
 kexec mailing list
