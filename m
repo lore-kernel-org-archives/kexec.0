@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bIcbt-0006hi-Tp
- for kexec@lists.infradead.org; Thu, 30 Jun 2016 14:06:30 +0000
-Date: Thu, 30 Jun 2016 10:05:58 -0400
+ id 1bIdYy-0006AO-4P
+ for kexec@lists.infradead.org; Thu, 30 Jun 2016 15:07:32 +0000
+Date: Thu, 30 Jun 2016 11:07:00 -0400
 From: Dave Young <dyoung@redhat.com>
-Subject: kexec_file_load signature verification failure
-Message-ID: <20160630140558.GA5142@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v3 2/9] kexec_file: Generalize kexec_add_buffer.
+Message-ID: <20160630150700.GA3058@dhcp-128-65.nay.redhat.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <2060648.f0n9OPAato@hactar>
+ <20160629194751.GB5488@dhcp-128-65.nay.redhat.com>
+ <1994502.0E8c14rYFh@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1994502.0E8c14rYFh@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +26,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Howells <dhowells@redhat.com>
-Cc: pjones@redhat.com, kexec@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-Hi, David
+On 06/29/16 at 06:18pm, Thiago Jung Bauermann wrote:
+> Am Mittwoch, 29 Juni 2016, 15:47:51 schrieb Dave Young:
+> > On 06/28/16 at 07:18pm, Thiago Jung Bauermann wrote:
+> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > > index e8acb2b43dd9..e16d845d587f 100644
+> > > --- a/include/linux/kexec.h
+> > > +++ b/include/linux/kexec.h
+> > > @@ -146,7 +146,30 @@ struct kexec_file_ops {
+> > > 
+> > >       kexec_verify_sig_t *verify_sig;
+> > >  
+> > >  #endif
+> > >  };
+> > > 
+> > > -#endif
+> > > +
+> > > +/**
+> > > + * struct kexec_buf - parameters for finding a place for a buffer in
+> > > memory + * @image:   kexec image in which memory to search.
+> > > + * @mem:     On return will have address of the buffer in memory.
+> > > + * @memsz:   Size for the buffer in memory.
+> > > + * @buf_align:       Minimum alignment needed.
+> > > + * @buf_min: The buffer can't be placed below this address.
+> > > + * @buf_max: The buffer can't be placed above this address.
+> > > + * @top_down:        Allocate from top of memory.
+> > > + */
+> > > +struct kexec_buf {
+> > > +     struct kimage *image;
+> > > +     unsigned long mem;
+> > > +     unsigned long memsz;
+> > > +     unsigned long buf_align;
+> > > +     unsigned long buf_min;
+> > > +     unsigned long buf_max;
+> > > +     bool top_down;
+> > > +};
+> > 
+> > Rethink about the first patch, you dropped the user buffer in kexec_buf
+> > But later your passing IMA digests buffer patchset may need use it.
+> > 
+> > So keep it in kexec_buf should be better.
+> 
+> I'm not following. The IMA buffer patchset doesn't use kexec_locate_mem_hole 
+> nor struct kexec_buf.
 
-kexec_file_load fails with a Bad Message error with recent kernel:
+It does not use kexec_locate_mem_hole, but the buffer being passed is
+very similar to a kexec_buf struct, no? 
 
-kexec_file_load failed: Bad message
+So you may refactor kexec_add_buffer and your new function to pass only kimage
+and a kbuf, it will be better than passing all those arguments separately.
 
-Debug messages:
-
-[ 3463.794391] PEFILE: checksum @ da
-[ 3463.794395] PEFILE: header size = 200
-[ 3463.794397] PEFILE: cert = 898 @4a5370 [97 08 00 00 00 02 02 00 30 82
-08 8b 06 09 2a 86 48 86 f7 0d 01 07 02 a0 82 08 7c 30 82 08 78 02 01 01
-31 0f 30 0d 06 09 60 86 48 01 65 03 04 02 01 05 00 30 5c 06 0a 2b 06 01
-04 01 82 37 02 01]
-[ 3463.794399] PEFILE: sig wrapper = { 897, 200, 2 }
-[ 3463.794404] PKCS7: Got data
-[ 3463.794407] X.509: PubKey Algo: 9
-[ 3463.794411] X.509: Extension: 53
-[ 3463.794412] X.509: Extension: 50
-[ 3463.794413] X.509: Extension: 49
-[ 3463.794414] X.509: subjkeyid 9d5c9a70fe6578e1ba171ba2ab9f3449d6688559
-[ 3463.794415] X.509: Extension: 56
-[ 3463.794417] X.509: x509_note_tbs_certificate(,4,04,8,780)!
-[ 3463.794418] X.509: Signature type: 9 size 513
-[ 3463.794419] X.509: AKID: keyid:
-9d5c9a70fe6578e1ba171ba2ab9f3449d6688559
-[ 3463.794420] X.509: authkeyid 9d5c9a70fe6578e1ba171ba2ab9f3449d6688559
-[ 3463.795236] PKCS7: Got cert 1 for dyoung kernel test key
-[ 3463.795238] PKCS7: - fingerprint
-00d4a0934d161cab68311f301d06035504030c1664796f756e67206b65726e656c2074657374206b6579
-[ 3463.795950] PKCS7: verify dyoung kernel test key: 00d4a0934d161cab68
-[ 3463.795951] PKCS7: - issuer dyoung kernel test key
-[ 3463.795952] PKCS7: - authkeyid.skid
-9d5c9a70fe6578e1ba171ba2ab9f3449d6688559
-[ 3463.795952] PKCS7: - self-signed
-[ 3463.795954] Look up:
-"ex:00d4a0934d161cab68311f301d06035504030c1664796f756e67206b65726e656c2074657374206b6579"
-[ 3463.796642] PEFILE: Digest: 0 []
-[ 3463.796644] PEFILE: Digest size mismatch (20 != 0)
-
-Bisect results:
-
-Bisecting: 0 revisions left to test after this (roughly 0 steps)
-[e68503bd6836ba765dc8e0ee77ea675fedc07e41] KEYS: Generalise
-system_verify_data() to provide access to internal content
-
-I can not revert this comment only to test, seems there are a lot of
-dependencies.
-
-Could you please help on this issue?
+> 
+> > For the IMA buffer patchset I'm still reading and learning the
+> > background, will reply them later.
+> 
+> Thank you!
+> 
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
 
 Thanks
 Dave
