@@ -1,42 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bIMt5-0008Jv-9t
- for kexec@lists.infradead.org; Wed, 29 Jun 2016 21:19:11 +0000
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u5TLIZJW048232
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 17:18:50 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0b-001b2d01.pphosted.com with ESMTP id 23sm3wvhrv-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 17:18:50 -0400
-Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Wed, 29 Jun 2016 18:18:48 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id AC4C6352006C
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 17:18:28 -0400 (EDT)
-Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u5TLIiOs3932472
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 18:18:44 -0300
-Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
- by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u5TLIi6B022276
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 18:18:44 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 2/9] kexec_file: Generalize kexec_add_buffer.
-Date: Wed, 29 Jun 2016 18:18:43 -0300
-In-Reply-To: <20160629194751.GB5488@dhcp-128-65.nay.redhat.com>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <2060648.f0n9OPAato@hactar>
- <20160629194751.GB5488@dhcp-128-65.nay.redhat.com>
+ id 1bIQ1U-0005nI-6G
+ for kexec@lists.infradead.org; Thu, 30 Jun 2016 00:40:05 +0000
+Received: by mail-pf0-x232.google.com with SMTP id i123so23182455pfg.0
+ for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 17:39:43 -0700 (PDT)
+Date: Thu, 30 Jun 2016 09:44:54 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v19 10/13] arm64: kdump: add VMCOREINFO's for user-space
+ coredump tools
+Message-ID: <20160630004453.GH20774@linaro.org>
+References: <cover.1466120418.git.geoff@infradead.org>
+ <6e96110e85e7b1167043d789e85f9c916fdf281a.1466120418.git.geoff@infradead.org>
+ <20160620053222.GB14309@dhcppc9>
+ <20160622055940.GY20774@linaro.org>
+ <20160623071412.GA16398@dhcppc9>
+ <20160623081545.GA20774@linaro.org>
+ <20160623154624.GC16398@dhcppc9>
 MIME-Version: 1.0
-Message-Id: <1994502.0E8c14rYFh@hactar>
+Content-Disposition: inline
+In-Reply-To: <20160623154624.GC16398@dhcppc9>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,61 +32,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Am Mittwoch, 29 Juni 2016, 15:47:51 schrieb Dave Young:
-> On 06/28/16 at 07:18pm, Thiago Jung Bauermann wrote:
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index e8acb2b43dd9..e16d845d587f 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -146,7 +146,30 @@ struct kexec_file_ops {
+Pratyush,
+
+On Thu, Jun 23, 2016 at 09:16:24PM +0530, Pratyush Anand wrote:
+> On 23/06/2016:05:42:28 PM, AKASHI Takahiro wrote:
+> > On Thu, Jun 23, 2016 at 12:44:12PM +0530, Pratyush Anand wrote:
+> > > Hi Takahiro,
+> > > 
+> > > Thanks for your reply.
+> > > 
+> > > On 22/06/2016:02:59:41 PM, AKASHI Takahiro wrote:
+> > > > On Mon, Jun 20, 2016 at 11:02:22AM +0530, Pratyush Anand wrote:
+> > > > > +Atsushi
+> > > > > 
+> > > > > Hi Takahiro,
+> > > > > 
+> > > > > On 16/06/2016:11:48:28 PM, Geoff Levand wrote:
+> > > > > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > > > > 
+> > > > > > For the current crash utility, we need to know, at least,
+> > > > > >   - kimage_voffset
+> > > > > >   - PHYS_OFFSET
+> > > > > > to handle the contents of core dump file (/proc/vmcore) correctly due to
+> > > > > > the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
+> > > > > > This patch puts them as VMCOREINFO's into the file.
+> > > > > > 
+> > > > > >   - VA_BITS
+> > > > > > is also added for makedumpfile command.
+> > > > > 
+> > > > > Thanks for adding them. They are quite helpful for makedumpfile as well.
+> > > > > 
+> > > > > > More VMCOREINFO's may be added later.
+> > > > > 
+> > > > > Yes, we will need to pass VMCOREINFO_SYMBOL(_text) and VMCOREINFO_SYMBOL(_end)
+> > > > > in order to work with makedumpfile.
+> > > > 
+> > > > I know that adding those symbols is the easiest way, but
+> > > > theoretically, if we know the physical address of "swapper_pg_dir",
+> > > 
+> > > But, we know only it's virtual address. 
 > > 
-> >       kexec_verify_sig_t *verify_sig;
-> >  
-> >  #endif
-> >  };
+> > What I meant here is that, if we know the physical address of "swapper_pg_dir",
+> > we don't have to know neither of "_text", "_end", "kimage_voffset" nor
+> > "PHYS_OFFSET".
+> > I just wanted to ask you whether you thought of this possibility.
+> 
+> OK, Let me clarify the needs from makedumpfile perspective. Atsushi can correct
+> me if I am wrong:
+> 
+> - As a minimal we need some way of reading page table entries. Currently vmcore
+>   has only virtual address of swapper_pg_dir, but if you can provide
+>   __pa(swapper_pg_dir) in vmcore, then we do not need either "_text", "_end" or
+>   "kimage_voffset". 
+> - However, "PHYS_OFFSET" might still be needed. makedumpfile core code needs to
+>   know phys_base. Currently we find it from the PT_LOAD segments. We treat the
+>   lowest start of segment's LMAs as the physical base. I am not sure, if that is
+>   still true with latest KASAN changes.
+
+PHYS_OFFSET is now there in patch 10/13.
+
+> - Further, if you do not provide "_text" and "_end", then we will have to translate
+>   each address with complex page table read process, which would slow
+>   makedumpfile execution significantly.
+
+I believe that this is the only reason that you want both symbols
+though I don't know how much performance penalty it may cause.
+
+> Now, please let us know that what will be the kernel strategy, so that I can
+> re-organise makedumpfile accordingly.
+
+Given that I'm not a user nor author of makedumpfile command for arm64,
+as we discussed locally before, I'm now convinced that you'd better post
+your own kernel patch based on your requirements as you like.
+
+Thanks,
+-Takahiro AKASHI
+
+> > > 
+> > > > instead of its virtual address, we can access all the memory pointed to
+> > > > by any kernel virtual address.
+> > > > How do you rationalize that we need to know "_text" and "_end"?
+> > > 
+> > > Well, we need some mechanism so that we can decide if an address can be
+> > > translated using linear mapping of virt_to_phys(). 
 > > 
-> > -#endif
-> > +
-> > +/**
-> > + * struct kexec_buf - parameters for finding a place for a buffer in
-> > memory + * @image:   kexec image in which memory to search.
-> > + * @mem:     On return will have address of the buffer in memory.
-> > + * @memsz:   Size for the buffer in memory.
-> > + * @buf_align:       Minimum alignment needed.
-> > + * @buf_min: The buffer can't be placed below this address.
-> > + * @buf_max: The buffer can't be placed above this address.
-> > + * @top_down:        Allocate from top of memory.
-> > + */
-> > +struct kexec_buf {
-> > +     struct kimage *image;
-> > +     unsigned long mem;
-> > +     unsigned long memsz;
-> > +     unsigned long buf_align;
-> > +     unsigned long buf_min;
-> > +     unsigned long buf_max;
-> > +     bool top_down;
-> > +};
+> > All the entries in MMU tables are based on "physical" addresses,
+> > and so we don't care whether a given address is in linear mapping or not
+> > in walking through MMU.
+> > See what I mean?
 > 
-> Rethink about the first patch, you dropped the user buffer in kexec_buf
-> But later your passing IMA digests buffer patchset may need use it.
+> Yes, yes, I thought, we have only virtual swapper_pg_dir, so I was looking for a
+> way to translate *atleast* that into physical.
 > 
-> So keep it in kexec_buf should be better.
-
-I'm not following. The IMA buffer patchset doesn't use kexec_locate_mem_hole 
-nor struct kexec_buf.
-
-> For the IMA buffer patchset I'm still reading and learning the
-> background, will reply them later.
-
-Thank you!
-
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+> Thanks for your input. Those are helpful.
+> 
+> ~Pratyush
+> 
+> > 
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > Alternatively, probably we can do like this:
+> > > -- Translate all address between "SYMBOL(swapper_pg_dir)"  and "SYMBOL(swapper_pg_dir)
+> > >  + SWAPPER_DIR_SIZE" using virt_to_phys() and now we can read values from
+> > >  dumpfile using that physical address. This way we can get PGD/PMD/PUD values.
+> > > -- PTE values may lie out side this range, however that address should still be
+> > > linearly translatable. We can use virt_to_phys() macro from them as well.
+> > > 
+> > > In summary, we can translate address of PGD/PMD/PUD/PTE using virt_to_phys()
+> > > and rest all can be translated using page table entries.
+> > > 
+> > > ~Pratyush
 
 _______________________________________________
 kexec mailing list
