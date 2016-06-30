@@ -1,20 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bIe6C-0002eR-Dx
- for kexec@lists.infradead.org; Thu, 30 Jun 2016 15:41:53 +0000
-Date: Thu, 30 Jun 2016 11:41:19 -0400
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 3/9] kexec_file: Factor out kexec_locate_mem_hole from
- kexec_add_buffer.
-Message-ID: <20160630154119.GB3058@dhcp-128-65.nay.redhat.com>
+ id 1bIeEH-0006NG-5o
+ for kexec@lists.infradead.org; Thu, 30 Jun 2016 15:50:13 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u5UFjCxB002985
+ for <kexec@lists.infradead.org>; Thu, 30 Jun 2016 11:49:52 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 23uw5rjcmf-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 30 Jun 2016 11:49:51 -0400
+Received: from localhost
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 30 Jun 2016 12:49:49 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id AB3783520068
+ for <kexec@lists.infradead.org>; Thu, 30 Jun 2016 11:49:29 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u5UFnkQA4460784
+ for <kexec@lists.infradead.org>; Thu, 30 Jun 2016 12:49:46 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u5UFnkFM024214
+ for <kexec@lists.infradead.org>; Thu, 30 Jun 2016 12:49:46 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 2/9] kexec_file: Generalize kexec_add_buffer.
+Date: Thu, 30 Jun 2016 12:49:44 -0300
+In-Reply-To: <20160630150700.GA3058@dhcp-128-65.nay.redhat.com>
 References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1495163.EskJqap5EJ@hactar>
- <20160629194518.GA5488@dhcp-128-65.nay.redhat.com>
- <1736656.LVyt5NrzWE@hactar>
+ <1994502.0E8c14rYFh@hactar>
+ <20160630150700.GA3058@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1736656.LVyt5NrzWE@hactar>
+Message-Id: <1866019.1p7Z0CLUZh@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,44 +49,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, Eric Biederman <ebiederm@xmission.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-On 06/29/16 at 06:09pm, Thiago Jung Bauermann wrote:
-> Am Mittwoch, 29 Juni 2016, 15:45:18 schrieb Dave Young:
-> > On 06/28/16 at 07:18pm, Thiago Jung Bauermann wrote:
-> > > Am Dienstag, 28 Juni 2016, 15:20:55 schrieb Dave Young:
-> > > > On 06/27/16 at 04:21pm, Dave Young wrote:
-> > > > Using one argument for both sounds more reasonable than using a
-> > > > separate
-> > > > argument for memory walk..
+Am Donnerstag, 30 Juni 2016, 11:07:00 schrieb Dave Young:
+> On 06/29/16 at 06:18pm, Thiago Jung Bauermann wrote:
+> > Am Mittwoch, 29 Juni 2016, 15:47:51 schrieb Dave Young:
+> > > On 06/28/16 at 07:18pm, Thiago Jung Bauermann wrote:
+> > > > +/**
+> > > > + * struct kexec_buf - parameters for finding a place for a buffer
+> > > > in
+> > > > memory + * @image:   kexec image in which memory to search.
+> > > > + * @mem:     On return will have address of the buffer in memory.
+> > > > + * @memsz:   Size for the buffer in memory.
+> > > > + * @buf_align:       Minimum alignment needed.
+> > > > + * @buf_min: The buffer can't be placed below this address.
+> > > > + * @buf_max: The buffer can't be placed above this address.
+> > > > + * @top_down:        Allocate from top of memory.
+> > > > + */
+> > > > +struct kexec_buf {
+> > > > +     struct kimage *image;
+> > > > +     unsigned long mem;
+> > > > +     unsigned long memsz;
+> > > > +     unsigned long buf_align;
+> > > > +     unsigned long buf_min;
+> > > > +     unsigned long buf_max;
+> > > > +     bool top_down;
+> > > > +};
 > > > 
-> > > I agree. This patch doesn't use a separate top_down argument, it's the
-> > > same patch I sent earlier except that the comments to struct kexec_buf
-> > > are in patch 2/9. What do you think?
+> > > Rethink about the first patch, you dropped the user buffer in
+> > > kexec_buf
+> > > But later your passing IMA digests buffer patchset may need use it.
+> > > 
+> > > So keep it in kexec_buf should be better.
 > > 
-> > It looks good except one nitpick inline..
-> > 
-> >
-> > > +/**
-> > > + * kexec_locate_mem_hole - find free memory to load segment or use in
-> > > purgatory
->  
-> > It is not necessary to use only for purgatory load..
+> > I'm not following. The IMA buffer patchset doesn't use
+> > kexec_locate_mem_hole nor struct kexec_buf.
 > 
-> Ok, what about this?
-> 
-> /**
->  * kexec_locate_mem_hole - find free memory in a given kimage.
+> It does not use kexec_locate_mem_hole, but the buffer being passed is
+> very similar to a kexec_buf struct, no?
 
-Hmm, a given kimage sounds not correct, I can not get a better way to
-describe it. How about below with a little change to your previous one:
+If what you're saying is that the arguments passed to 
+kexec_add_handover_buffer in the IMA buffer patchset are very similar to the 
+arguments passed to kexec_add_buffer then yes, it's true.
 
-kexec_locate_mem_hole - find a free chunk of memory to load kexec segment.
-In powerpc the memory chunk can also be used for the purgatory stack.
+> So you may refactor kexec_add_buffer and your new function to pass only
+> kimage and a kbuf, it will be better than passing all those arguments
+> separately.
 
-Thanks
-Dave
+To be honest I think struct kexec_buf is an implementation detail inside 
+kexec_locate_mem_hole, made necessary because the callback functions it uses 
+need to access its arguments. Callers of kexec_locate_mem_hole, 
+kexec_add_handover_buffer and kexec_add_buffer shouldn't need to know it 
+exists.
+
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
