@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bIQyf-0007CW-9G
- for kexec@lists.infradead.org; Thu, 30 Jun 2016 01:41:14 +0000
-Received: by mail-pf0-x231.google.com with SMTP id t190so23719608pfb.3
- for <kexec@lists.infradead.org>; Wed, 29 Jun 2016 18:40:52 -0700 (PDT)
-Date: Thu, 30 Jun 2016 10:46:04 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v20 00/14] arm64 kexec kernel patches
-Message-ID: <20160630014603.GK20774@linaro.org>
+Date: Thu, 30 Jun 2016 17:00:45 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v20 13/14] arm64: kdump: update a kernel doc
+Message-ID: <20160630090045.GA16958@x1.redhat.com>
 References: <cover.1466702804.git.geoff@infradead.org>
- <20160627170039.GD6847@e104818-lin.cambridge.arm.com>
- <20160629005414.GC20774@linaro.org>
- <20160629092049.GA2522@e104818-lin.cambridge.arm.com>
+ <ef07d5dafe5c69b621dc4ec01ef1c6f3f9753e60.1466702804.git.geoff@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160629092049.GA2522@e104818-lin.cambridge.arm.com>
+In-Reply-To: <ef07d5dafe5c69b621dc4ec01ef1c6f3f9753e60.1466702804.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,93 +20,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Jun 29, 2016 at 10:20:50AM +0100, Catalin Marinas wrote:
-> On Wed, Jun 29, 2016 at 09:54:15AM +0900, AKASHI Takahiro wrote:
-> > On Mon, Jun 27, 2016 at 06:00:39PM +0100, Catalin Marinas wrote:
-> > > On Thu, Jun 23, 2016 at 05:54:47PM +0000, Geoff Levand wrote:
-> > > > AKASHI Takahiro (7):
-> > > >       arm64: kdump: reserve memory for crash dump kernel
-> > > >       arm64: limit memory regions based on DT property, usable-memory
-> > > >       arm64: kdump: implement machine_crash_shutdown()
-> > > >       arm64: kdump: add kdump support
-> > > >       arm64: kdump: add VMCOREINFO's for user-space coredump tools
-> > > >       arm64: kdump: enable kdump in the arm64 defconfig
-> > > >       arm64: kdump: update a kernel doc
-> > > > 
-> > > > Geoff Levand (4):
-> > > >       arm64: Add back cpu reset routines
-> > > >       arm64/kexec: Add core kexec support
-> > > >       arm64/kexec: Enable kexec in the arm64 defconfig
-> > > >       arm64/kexec: Add pr_debug output
-> > > > 
-> > > > James Morse (3):
-> > > >       arm64: hibernate: Don't hibernate on systems with stuck CPUs
-> > > >       arm64: smp: Add function to determine if cpus are stuck in the kernel
-> > > >       Documentation: dt: usable-memory and elfcorehdr nodes for arm64 kexec
-> > > 
-> > > I dropped patch 1 (hibernate), cherry-picked patch 2 from mainline
-> > > ("cpus stuck in the kernel", already pushed by Will to 4.7-rc5) and
-> > > merged patches 3-6, with the amendments that James mentioned.
-> > > 
-> > > The kdump patches, including the "Documentation" one from James require
-> > > more review, testing and acks by the corresponding maintainers (kdump,
-> > > DT).
-> > 
-> > I see what you mean, but even for Geoff's kexec part, the maintainer
-> > (Eric) have not given his ack.
+On 06/23/16 at 05:54pm, Geoff Levand wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> I just assumed he won't object ;). The only generic change is the
-> KEXEC_ARCH_AARCH64 in the uapi/linux/kexec.h file and the value chosen
-> matches EM_AARCH64.
+> This patch adds arch specific descriptions about kdump usage on arm64
+> to kdump.txt.
 > 
-> The kdump patches make such changes to Documentation and I would like
-> those acked by the kdump and DT maintainers.
-
-OK, I asked the corresponding maintainers to review them.
-
-> Pratyush Anand also had comments on the kdump patches in v19, so it's
-> fair to wait for him to complete the reviewing of the latest series.
-
-I think that it was my mistake that I referred to makedumpfile-related
-VMCOREINFO's in my patch.
-Since I'm not a user nor author of makedumpfile command for arm64,
-my changes should have been minimized, exluding any non-mandatory symbols.
-(Patch#13/14 is necessary for me to verify generated vmcore files
-with crash utility.)
-So I asked Pratyush to post his kernel patch based on his own requirements
-as he wants.
-I believe it's fair enough.
-
-> > > You also don't seem to have added a s-o-b for those patches (since
-> > > you are submitting them; unless you plan to let Akashi-san submit them
-> > > in the future).
-> > 
-> > Basically Geoff has not reviewed nor tested kdump part, and
-> > so I'm not sure that adding his s-o-b is appropriate.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  Documentation/kdump/kdump.txt | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
-> It is appropriate. See the "Developer's Certificate of Origin" in
-> Documentation/SubmittingPatches. A s-o-b from Geoff doesn't necessarily
-> mean that he reviewed the patches but that he has the right to pass them
-> on under the open source license indicated in the file (and AFAICT it is
-> legally binding but IANAL).
-> 
-> > Anyhow, I will post my future version of kdump by myself as kexec has
-> > been queued in for-next/core.
-> 
-> Thanks.
+> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> index 88ff63d..5d6da09 100644
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+>  a remote system.
+>  
+>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> -s390x and arm architectures.
+> +s390x, arm and arm64 architectures.
+>  
+>  When the system kernel boots, it reserves a small section of memory for
+>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> @@ -249,6 +249,12 @@ Dump-capture kernel config options (Arch Dependent, arm)
+>  
+>      AUTO_ZRELADDR=y
+>  
+> +Dump-capture kernel config options (Arch Dependent, arm64)
+> +----------------------------------------------------------
+> +
+> +1) Currently, kvm will not be enabled on the dump-capture kernel even
+> +   if it is configured.
+> +
+>  Extended crashkernel syntax
+>  ===========================
+>  
+> @@ -305,6 +311,8 @@ Boot into System Kernel
+>     kernel will automatically locate the crash kernel image within the
+>     first 512MB of RAM if X is not given.
+>  
+> +   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+				  ~ Why square brackets here, is it
+different than other arch?
 
-Since I've got no comments on kdump patches and had no updates
-so far, I don't plan to post v21 this week (at this point).
-(I will add "reviewed-by James" to patch#7/14 in future releases.)
 
-Thanks,
--Takahiro AKASHI
+Except for this, it looks good to me.
 
+Thanks
+Baoquan
+
+> +   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+>  
+>  Load the Dump-capture Kernel
+>  ============================
+> @@ -327,6 +335,8 @@ For s390x:
+>  	- Use image or bzImage
+>  For arm:
+>  	- Use zImage
+> +For arm64:
+> +	- Use vmlinux or Image
+>  
+>  If you are using a uncompressed vmlinux image then use following command
+>  to load dump-capture kernel.
+> @@ -370,6 +380,9 @@ For s390x:
+>  For arm:
+>  	"1 maxcpus=1 reset_devices"
+>  
+> +For arm64:
+> +	"1 maxcpus=1 reset_devices"
+> +
+>  Notes on loading the dump-capture kernel:
+>  
+>  * By default, the ELF headers are stored in ELF64 format to support
 > -- 
-> Catalin
+> 2.5.0
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
