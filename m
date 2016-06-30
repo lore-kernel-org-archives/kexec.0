@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 30 Jun 2016 17:00:45 +0800
-From: Baoquan He <bhe@redhat.com>
+Date: Thu, 30 Jun 2016 09:00:17 -0400
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH v20 13/14] arm64: kdump: update a kernel doc
-Message-ID: <20160630090045.GA16958@x1.redhat.com>
+Message-ID: <20160630130017.GA2987@dhcp-128-65.nay.redhat.com>
 References: <cover.1466702804.git.geoff@infradead.org>
  <ef07d5dafe5c69b621dc4ec01ef1c6f3f9753e60.1466702804.git.geoff@infradead.org>
 MIME-Version: 1.0
@@ -65,15 +65,6 @@ On 06/23/16 at 05:54pm, Geoff Levand wrote:
 >     first 512MB of RAM if X is not given.
 >  
 > +   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-				  ~ Why square brackets here, is it
-different than other arch?
-
-
-Except for this, it looks good to me.
-
-Thanks
-Baoquan
-
 > +   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
 >  
 >  Load the Dump-capture Kernel
@@ -97,15 +88,13 @@ Baoquan
 >  Notes on loading the dump-capture kernel:
 >  
 >  * By default, the ELF headers are stored in ELF64 format to support
-> -- 
-> 2.5.0
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+
+Looks good to me.
+
+Acked-by: Dave Young <dyoung@redhat.com>
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
