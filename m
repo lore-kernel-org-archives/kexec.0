@@ -1,15 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 1 Jul 2016 15:45:05 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v20 13/14] arm64: kdump: update a kernel doc
-Message-ID: <20160701074505.GB10467@x1.redhat.com>
-References: <cover.1466702804.git.geoff@infradead.org>
- <ef07d5dafe5c69b621dc4ec01ef1c6f3f9753e60.1466702804.git.geoff@infradead.org>
- <20160630090045.GA16958@x1.redhat.com>
- <20160701073707.GM20774@linaro.org>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bJ0ek-0007ve-1n
+ for kexec@lists.infradead.org; Fri, 01 Jul 2016 15:47:02 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u61Fhbjf117366
+ for <kexec@lists.infradead.org>; Fri, 1 Jul 2016 11:46:40 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 23wbbbwvrk-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 01 Jul 2016 11:46:39 -0400
+Received: from localhost
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Fri, 1 Jul 2016 12:46:38 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [RFC] arm64: kexec_file_load support
+Date: Fri, 01 Jul 2016 12:46:31 -0300
+In-Reply-To: <20160701051111.GL20774@linaro.org>
+References: <20160701051111.GL20774@linaro.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160701073707.GM20774@linaro.org>
+Message-Id: <3300473.zhbeG65qgA@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,117 +36,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, marc.zyngier@arm.com, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, catalin.marinas@arm.com, linuxppc-dev@lists.ozlabs.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
 
-On 07/01/16 at 04:37pm, AKASHI Takahiro wrote:
-> Dave, Boaquan,
+Am Freitag, 01 Juli 2016, 14:11:12 schrieb AKASHI Takahiro:
+> I'm not sure whether there is any demand for kexec_file_load
+> support on arm64, but anyhow I'm working on this and now
+> my early prototype code does work fine.
+
+It is necessary if you want to support loading only signed kernels, and also 
+if you want IMA to measure the kernel in its event log.
+
+> There is, however, one essential issue:
+> While arm64 kernel requires a device tree blob to be set up
+> correctly at boot time, the current system call API doesn't
+> have this parameter.
+>     int kexec_file_load(int kernel_fd, int initrd_fd,
+>                         unsigned long cmdline_len, const char
+> *cmdline_ptr, unsigned long flags);
 > 
-> Thank you for your reviewing.
-> 
-> On Thu, Jun 30, 2016 at 05:00:45PM +0800, Baoquan He wrote:
-> > On 06/23/16 at 05:54pm, Geoff Levand wrote:
-> > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > 
-> > > This patch adds arch specific descriptions about kdump usage on arm64
-> > > to kdump.txt.
-> > > 
-> > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > ---
-> > >  Documentation/kdump/kdump.txt | 15 ++++++++++++++-
-> > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> > > index 88ff63d..5d6da09 100644
-> > > --- a/Documentation/kdump/kdump.txt
-> > > +++ b/Documentation/kdump/kdump.txt
-> > > @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
-> > >  a remote system.
-> > >  
-> > >  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
-> > > -s390x and arm architectures.
-> > > +s390x, arm and arm64 architectures.
-> > >  
-> > >  When the system kernel boots, it reserves a small section of memory for
-> > >  the dump-capture kernel. This ensures that ongoing Direct Memory Access
-> > > @@ -249,6 +249,12 @@ Dump-capture kernel config options (Arch Dependent, arm)
-> > >  
-> > >      AUTO_ZRELADDR=y
-> > >  
-> > > +Dump-capture kernel config options (Arch Dependent, arm64)
-> > > +----------------------------------------------------------
-> > > +
-> > > +1) Currently, kvm will not be enabled on the dump-capture kernel even
-> > > +   if it is configured.
+> Should we invent a new system call, like kexec_file_load2,
+> and, if so, what kind of interface would be desired?
 
-And here, could you say more about it?
+I'm facing the same issue on powerpc. What I'm doing is taking the device 
+tree that was used to boot the current kernel and modifying it as necessary 
+to pass it to the next kernel.
 
-> > > +
-> > >  Extended crashkernel syntax
-> > >  ===========================
-> > >  
-> > > @@ -305,6 +311,8 @@ Boot into System Kernel
-> > >     kernel will automatically locate the crash kernel image within the
-> > >     first 512MB of RAM if X is not given.
-> > >  
-> > > +   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-> > 				  ~ Why square brackets here, is it
-> > different than other arch?
-> 
-> I want to clearly indicate that "@X" is optional, and that, when you explicitly
-> specify it, X must be properly aligned.
-> I think that "[..]" notation is quite common.
+I agree that it would be better if we could have a system call where a 
+custom device tree could be passed. One suggestion is:
 
-Yes, I see that. Just that has been noted in "Extended crashkernel
-syntax" section, and adding "[]" is not consistent with other places
-where "crashkernel=Y@X" is referred to in this section. Just feel it's
-a little redundent. Anyway it's not very critical, and Dave has acked
-it, I am fine if you want to keep it.
 
-Thanks
-Baoquan
+kexec_file_load2(int fds[], int fd_types[], int nr_fds,
+		 unsigned long cmdline_len, const char *cmdline_ptr,
+		unsigned long flags);
 
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
-> > 
-> > Except for this, it looks good to me.
-> > 
-> > Thanks
-> > Baoquan
-> > 
-> > > +   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-> > >  
-> > >  Load the Dump-capture Kernel
-> > >  ============================
-> > > @@ -327,6 +335,8 @@ For s390x:
-> > >  	- Use image or bzImage
-> > >  For arm:
-> > >  	- Use zImage
-> > > +For arm64:
-> > > +	- Use vmlinux or Image
-> > >  
-> > >  If you are using a uncompressed vmlinux image then use following command
-> > >  to load dump-capture kernel.
-> > > @@ -370,6 +380,9 @@ For s390x:
-> > >  For arm:
-> > >  	"1 maxcpus=1 reset_devices"
-> > >  
-> > > +For arm64:
-> > > +	"1 maxcpus=1 reset_devices"
-> > > +
-> > >  Notes on loading the dump-capture kernel:
-> > >  
-> > >  * By default, the ELF headers are stored in ELF64 format to support
-> > > -- 
-> > > 2.5.0
-> > > 
-> > > 
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
+Where fds is an array with nr_fds file descriptors and fd_types is an array 
+specifying what each fd in fds is. So for example, if fds[i] is the kernel, 
+then fd_types[i] would have the value KEXEC_FILE_KERNEL_FD. If fds[i] is the 
+device tree blob, fd_types[i], would have the value KEXEC_FILE_DTB and so 
+on. That way, the syscall can be extended for an arbitrary number and types 
+of segments that have to be loaded, just like kexec_load.
+
+Another option is to have a struct:
+
+kexec_file_load2(struct kexec_file_params *params, unsigned long params_sz);
+
+Where:
+
+struct kexec_file_params {
+	int version;	/* allows struct to be extended in the future */
+	int fds[];
+	int fd_types[];
+	int nr_fds;
+	unsigned long cmdline_len;
+	const char *cmdline_ptr;
+	unsigned long flags;
+};
+
+This is even more flexible.
+
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
