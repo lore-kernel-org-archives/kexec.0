@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f179.google.com ([209.85.220.179])
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bK0vO-0000B4-RK
- for kexec@lists.infradead.org; Mon, 04 Jul 2016 10:16:25 +0000
-Received: by mail-qk0-f179.google.com with SMTP id e3so60353341qkd.0
- for <kexec@lists.infradead.org>; Mon, 04 Jul 2016 03:16:02 -0700 (PDT)
-Date: Mon, 4 Jul 2016 15:45:56 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v20 00/14] arm64 kexec kernel patches
-Message-ID: <20160704101556.GA11075@dhcppc9>
-References: <cover.1466702804.git.geoff@infradead.org>
- <20160627170039.GD6847@e104818-lin.cambridge.arm.com>
- <20160629005414.GC20774@linaro.org>
- <20160629092049.GA2522@e104818-lin.cambridge.arm.com>
- <20160630014603.GK20774@linaro.org>
- <20160701023957.GC20766@dhcppc9>
- <20160704071408.GP20774@linaro.org>
+ id 1bK4LT-0002y8-AF
+ for kexec@lists.infradead.org; Mon, 04 Jul 2016 13:55:31 +0000
+From: "Tautschnig, Michael" <tautschn@amazon.co.uk>
+Subject: [PATCH] scripts: Fix size mismatch of kexec_purgatory_size
+Date: Mon, 4 Jul 2016 13:55:04 +0000
+Message-ID: <BE389624-FFFE-42F1-A89F-5E5598190D4A@amazon.com>
+Content-Language: en-US
+Content-ID: <4D79288BAE707244A17A0CCC53700D7D@ant.amazon.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160704071408.GP20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,88 +22,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Michal Marek <mmarek@suse.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 04/07/2016:04:14:09 PM, AKASHI Takahiro wrote:
-> On Fri, Jul 01, 2016 at 08:09:57AM +0530, Pratyush Anand wrote:
-> > Hi Takahiro,
-> > 
-> > On 30/06/2016:10:46:04 AM, AKASHI Takahiro wrote:
-> > > On Wed, Jun 29, 2016 at 10:20:50AM +0100, Catalin Marinas wrote:
-> > > > On Wed, Jun 29, 2016 at 09:54:15AM +0900, AKASHI Takahiro wrote:
-> > > > > On Mon, Jun 27, 2016 at 06:00:39PM +0100, Catalin Marinas wrote:
-> > > > > > On Thu, Jun 23, 2016 at 05:54:47PM +0000, Geoff Levand wrote:
-> > > > > > > AKASHI Takahiro (7):
-> > > > > > >       arm64: kdump: reserve memory for crash dump kernel
-> > > > > > >       arm64: limit memory regions based on DT property, usable-memory
-> > > > > > >       arm64: kdump: implement machine_crash_shutdown()
-> > > > > > >       arm64: kdump: add kdump support
-> > > > > > >       arm64: kdump: add VMCOREINFO's for user-space coredump tools
-> > > > > > >       arm64: kdump: enable kdump in the arm64 defconfig
-> > > > > > >       arm64: kdump: update a kernel doc
-> > > > > > > 
-> > > > > > > Geoff Levand (4):
-> > > > > > >       arm64: Add back cpu reset routines
-> > > > > > >       arm64/kexec: Add core kexec support
-> > > > > > >       arm64/kexec: Enable kexec in the arm64 defconfig
-> > > > > > >       arm64/kexec: Add pr_debug output
-> > > > > > > 
-> > > > > > > James Morse (3):
-> > > > > > >       arm64: hibernate: Don't hibernate on systems with stuck CPUs
-> > > > > > >       arm64: smp: Add function to determine if cpus are stuck in the kernel
-> > > > > > >       Documentation: dt: usable-memory and elfcorehdr nodes for arm64 kexec
-> > > > > > 
-> > > > > > I dropped patch 1 (hibernate), cherry-picked patch 2 from mainline
-> > > > > > ("cpus stuck in the kernel", already pushed by Will to 4.7-rc5) and
-> > > > > > merged patches 3-6, with the amendments that James mentioned.
-> > > > > > 
-> > > > > > The kdump patches, including the "Documentation" one from James require
-> > > > > > more review, testing and acks by the corresponding maintainers (kdump,
-> > > > > > DT).
-> > > > > 
-> > > > > I see what you mean, but even for Geoff's kexec part, the maintainer
-> > > > > (Eric) have not given his ack.
-> > > > 
-> > > > I just assumed he won't object ;). The only generic change is the
-> > > > KEXEC_ARCH_AARCH64 in the uapi/linux/kexec.h file and the value chosen
-> > > > matches EM_AARCH64.
-> > > > 
-> > > > The kdump patches make such changes to Documentation and I would like
-> > > > those acked by the kdump and DT maintainers.
-> > > 
-> > > OK, I asked the corresponding maintainers to review them.
-> > > 
-> > > > Pratyush Anand also had comments on the kdump patches in v19, so it's
-> > > > fair to wait for him to complete the reviewing of the latest series.
-> > > 
-> > > I think that it was my mistake that I referred to makedumpfile-related
-> > > VMCOREINFO's in my patch.
-> > > Since I'm not a user nor author of makedumpfile command for arm64,
-> > > my changes should have been minimized, exluding any non-mandatory symbols.
-> > > (Patch#13/14 is necessary for me to verify generated vmcore files
-> > > with crash utility.)
-> > > So I asked Pratyush to post his kernel patch based on his own requirements
-> > > as he wants.
-> > > I believe it's fair enough.
-> > 
-> > Sorry for delayed response.
-> > I am agreeing to this patchset. makedumpfile would also be able to work by
-> > directly reading page table entries for all virtual addresses.
-> 
-> So are you going to add a physical address of swapper_pg_dir?
+bin2c is used to create a valid C file out of a binary file where two
+symbols will be globally defined: <name> and <name>_size. <name> is
+passed as the first parameter of the host binary.
 
-NO, I think, I can take it for-granted that swapper_pg_dir will always lie in
-identity mapped region. So, I will use __pa() macro only to translate
-swapper_pg_dir.  Rest all virtual addresses will be translated using page table
-entries.
+Building using goto-cc reported that the purgatory binary code (the only
+current user of this utility) declares kexec_purgatory_size as 'size_t'
+where bin2c generate <name>_size to be 'int' so in a 64-bit host where
+sizeof(size_t) > sizeof(int) this type mismatch will always yield the
+wrong value for big-endian architectures while for little-endian it will
+be wrong if the object laid in memory directly after
+kexec_purgatory_size contains non-zero value at the time of reading.
 
-> Do you see any visible speed down of makedumpfile?
+This commit changes <name>_size to be size_t instead.
 
-I will take back my comment here. Its almost negligible. About 2 Sec slower when
-whole dump process took around 2m 44 S.
+Note:
 
-~Pratyush
+Another way to fix the problem is to change the type of
+kexec_purgatory_size to be 'int' as there's this check in code:
+(kexec_purgatory_size <= 0)
+
+Signed-off-by: Michael Tautschnig <tautschn@amazon.com>
+Cc: Michal Marek <mmarek@suse.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+---
+ scripts/basic/bin2c.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/basic/bin2c.c b/scripts/basic/bin2c.c
+index af187e6..c3d7eef 100644
+--- a/scripts/basic/bin2c.c
++++ b/scripts/basic/bin2c.c
+@@ -29,7 +29,8 @@ int main(int argc, char *argv[])
+ 	} while (ch != EOF);
+
+ 	if (argc > 1)
+-		printf("\t;\n\nconst int %s_size = %d;\n", argv[1], total);
++		printf("\t;\n\n#include <linux/types.h>\n\nconst size_t %s_size = %d;\n",
++		       argv[1], total);
+
+ 	return 0;
+ }
+--
+2.7.3.AMZN
 
 _______________________________________________
 kexec mailing list
