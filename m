@@ -1,42 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bJ56v-0007Kr-V6
- for kexec@lists.infradead.org; Fri, 01 Jul 2016 20:32:26 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u61KOjNG071252
- for <kexec@lists.infradead.org>; Fri, 1 Jul 2016 16:32:04 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0b-001b2d01.pphosted.com with ESMTP id 23wpww1s2g-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 01 Jul 2016 16:32:04 -0400
-Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 1 Jul 2016 17:32:02 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 7F9DF1DC006F
- for <kexec@lists.infradead.org>; Fri,  1 Jul 2016 16:31:52 -0400 (EDT)
-Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u61KW09T4653458
- for <kexec@lists.infradead.org>; Fri, 1 Jul 2016 17:32:00 -0300
-Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
- by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u61KVxwL027722
- for <kexec@lists.infradead.org>; Fri, 1 Jul 2016 17:32:00 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 2/9] kexec_file: Generalize kexec_add_buffer.
-Date: Fri, 01 Jul 2016 17:31:23 -0300
-In-Reply-To: <3789971.1TYeJNg8TK@hactar>
-References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160701183602.GA4553@dhcp-128-65.nay.redhat.com>
- <3789971.1TYeJNg8TK@hactar>
+ id 1bJu6N-0005KI-St
+ for kexec@lists.infradead.org; Mon, 04 Jul 2016 02:59:17 +0000
+Received: by mail-pa0-x22d.google.com with SMTP id zl15so14221871pab.3
+ for <kexec@lists.infradead.org>; Sun, 03 Jul 2016 19:58:55 -0700 (PDT)
+Date: Mon, 4 Jul 2016 12:04:14 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v20 13/14] arm64: kdump: update a kernel doc
+Message-ID: <20160704030413.GN20774@linaro.org>
+References: <cover.1466702804.git.geoff@infradead.org>
+ <ef07d5dafe5c69b621dc4ec01ef1c6f3f9753e60.1466702804.git.geoff@infradead.org>
+ <20160630090045.GA16958@x1.redhat.com>
+ <20160701073707.GM20774@linaro.org>
+ <20160701074505.GB10467@x1.redhat.com>
 MIME-Version: 1.0
-Message-Id: <1923446.CtvhM7vr7E@hactar>
+Content-Disposition: inline
+In-Reply-To: <20160701074505.GB10467@x1.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,141 +29,131 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, marc.zyngier@arm.com, James Morse <james.morse@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Am Freitag, 01 Juli 2016, 17:02:23 schrieb Thiago Jung Bauermann:
-> Am Freitag, 01 Juli 2016, 14:36:02 schrieb Dave Young:
-> > On 07/01/16 at 02:51pm, Thiago Jung Bauermann wrote:
-> > > Am Donnerstag, 30 Juni 2016, 17:43:57 schrieb Dave Young:
-> > > > On 06/30/16 at 01:42pm, Thiago Jung Bauermann wrote:
-> > > > > Am Donnerstag, 30 Juni 2016, 12:49:44 schrieb Thiago Jung Bauermann:
-> > > I understand that this is all somewhat subjective, so if you still
-> > > disagree with my points I can provide a patch set implementing the
-> > > change above.
+Baoquan,
+
+On Fri, Jul 01, 2016 at 03:45:05PM +0800, Baoquan He wrote:
+> On 07/01/16 at 04:37pm, AKASHI Takahiro wrote:
+> > Dave, Boaquan,
 > > 
-> > I still feel it should be changed if more callbacks being introduced,
-> > though you can regard it is internal api, like above comment we do not
-> > need to assign them seperately, the member values can be assigned
-> > from the beginning.
+> > Thank you for your reviewing.
+> > 
+> > On Thu, Jun 30, 2016 at 05:00:45PM +0800, Baoquan He wrote:
+> > > On 06/23/16 at 05:54pm, Geoff Levand wrote:
+> > > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > > 
+> > > > This patch adds arch specific descriptions about kdump usage on arm64
+> > > > to kdump.txt.
+> > > > 
+> > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > > ---
+> > > >  Documentation/kdump/kdump.txt | 15 ++++++++++++++-
+> > > >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> > > > index 88ff63d..5d6da09 100644
+> > > > --- a/Documentation/kdump/kdump.txt
+> > > > +++ b/Documentation/kdump/kdump.txt
+> > > > @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+> > > >  a remote system.
+> > > >  
+> > > >  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> > > > -s390x and arm architectures.
+> > > > +s390x, arm and arm64 architectures.
+> > > >  
+> > > >  When the system kernel boots, it reserves a small section of memory for
+> > > >  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> > > > @@ -249,6 +249,12 @@ Dump-capture kernel config options (Arch Dependent, arm)
+> > > >  
+> > > >      AUTO_ZRELADDR=y
+> > > >  
+> > > > +Dump-capture kernel config options (Arch Dependent, arm64)
+> > > > +----------------------------------------------------------
+> > > > +
+> > > > +1) Currently, kvm will not be enabled on the dump-capture kernel even
+> > > > +   if it is configured.
 > 
-> Ok, I'll implement the changes and submit a v4. Thanks for your review.
+> And here, could you say more about it?
 
-Sorry for creating more email traffic, but it'll be better if I ask this 
-before I change all other places in the code. Is the code below what you
-have in mind?
+On non-VHE (Virtualization Host Environment) system, the kernel, which
+normally runs in EL1 mode, must be started in EL2 mode to enable kvm, but
+the current code uses cpu pm notifier to reset CPU state to EL2 and
+we have no chance to do that on panic.
 
-In particular, this version doesn't do the memset(&buf, 0, sizeof(buf))
-that the previous code I sent earlier did. Is that ok?
+I will clarify this in kdump.txt.
 
-@@ -643,13 +632,14 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 				  unsigned long max, int top_down)
- {
- 	struct purgatory_info *pi = &image->purgatory_info;
--	unsigned long align, buf_align, bss_align, buf_sz, bss_sz, bss_pad;
--	unsigned long memsz, entry, load_addr, curr_load_addr, bss_addr, offset;
-+	unsigned long align, bss_align, bss_sz, bss_pad;
-+	unsigned long entry, load_addr, curr_load_addr, bss_addr, offset;
- 	unsigned char *buf_addr, *src;
- 	int i, ret = 0, entry_sidx = -1;
- 	const Elf_Shdr *sechdrs_c;
- 	Elf_Shdr *sechdrs = NULL;
--	void *purgatory_buf = NULL;
-+	struct kexec_buf buf = { .image = image, .buf_min = min,
-+				.buf_max = max, .top_down = top_down };
- 
- 	/*
- 	 * sechdrs_c points to section headers in purgatory and are read
-@@ -715,9 +705,9 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	}
- 
- 	/* Determine how much memory is needed to load relocatable object. */
--	buf_align = 1;
-+	buf.buf_align = 1;
- 	bss_align = 1;
--	buf_sz = 0;
-+	buf.bufsz = 0;
- 	bss_sz = 0;
- 
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-@@ -726,10 +716,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 
- 		align = sechdrs[i].sh_addralign;
- 		if (sechdrs[i].sh_type != SHT_NOBITS) {
--			if (buf_align < align)
--				buf_align = align;
--			buf_sz = ALIGN(buf_sz, align);
--			buf_sz += sechdrs[i].sh_size;
-+			if (buf.buf_align < align)
-+				buf.buf_align = align;
-+			buf.bufsz = ALIGN(buf.bufsz, align);
-+			buf.bufsz += sechdrs[i].sh_size;
- 		} else {
- 			/* bss section */
- 			if (bss_align < align)
-@@ -741,32 +731,31 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 
- 	/* Determine the bss padding required to align bss properly */
- 	bss_pad = 0;
--	if (buf_sz & (bss_align - 1))
--		bss_pad = bss_align - (buf_sz & (bss_align - 1));
-+	if (buf.bufsz & (bss_align - 1))
-+		bss_pad = bss_align - (buf.bufsz & (bss_align - 1));
- 
--	memsz = buf_sz + bss_pad + bss_sz;
-+	buf.memsz = buf.bufsz + bss_pad + bss_sz;
- 
- 	/* Allocate buffer for purgatory */
--	purgatory_buf = vzalloc(buf_sz);
--	if (!purgatory_buf) {
-+	buf.buffer = vzalloc(buf.bufsz);
-+	if (!buf.buffer) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--	if (buf_align < bss_align)
--		buf_align = bss_align;
-+	if (buf.buf_align < bss_align)
-+		buf.buf_align = bss_align;
- 
- 	/* Add buffer to segment list */
--	ret = kexec_add_buffer(image, purgatory_buf, buf_sz, memsz,
--				buf_align, min, max, top_down,
--				&pi->purgatory_load_addr);
-+	ret = kexec_add_buffer(&buf);
- 	if (ret)
- 		goto out;
-+	pi->purgatory_load_addr = buf.mem;
- 
- 	/* Load SHF_ALLOC sections */
--	buf_addr = purgatory_buf;
-+	buf_addr = buf.buffer;
- 	load_addr = curr_load_addr = pi->purgatory_load_addr;
--	bss_addr = load_addr + buf_sz + bss_pad;
-+	bss_addr = load_addr + buf.bufsz + bss_pad;
- 
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
- 		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
-@@ -812,11 +801,11 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	 * Used later to identify which section is purgatory and skip it
- 	 * from checksumming.
- 	 */
--	pi->purgatory_buf = purgatory_buf;
-+	pi->purgatory_buf = buf.buffer;
- 	return ret;
- out:
- 	vfree(sechdrs);
--	vfree(purgatory_buf);
-+	vfree(buf.buffer);
- 	return ret;
- }
- 
+> > > > +
+> > > >  Extended crashkernel syntax
+> > > >  ===========================
+> > > >  
+> > > > @@ -305,6 +311,8 @@ Boot into System Kernel
+> > > >     kernel will automatically locate the crash kernel image within the
+> > > >     first 512MB of RAM if X is not given.
+> > > >  
+> > > > +   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+> > > 				  ~ Why square brackets here, is it
+> > > different than other arch?
+> > 
+> > I want to clearly indicate that "@X" is optional, and that, when you explicitly
+> > specify it, X must be properly aligned.
+> > I think that "[..]" notation is quite common.
+> 
+> Yes, I see that. Just that has been noted in "Extended crashkernel
+> syntax" section, and adding "[]" is not consistent with other places
+> where "crashkernel=Y@X" is referred to in this section. Just feel it's
+> a little redundent. Anyway it's not very critical, and Dave has acked
+> it, I am fine if you want to keep it.
 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Thanks,
+-Takahiro AKASHI
 
+> Thanks
+> Baoquan
+> 
+> > 
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > 
+> > > Except for this, it looks good to me.
+> > > 
+> > > Thanks
+> > > Baoquan
+> > > 
+> > > > +   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+> > > >  
+> > > >  Load the Dump-capture Kernel
+> > > >  ============================
+> > > > @@ -327,6 +335,8 @@ For s390x:
+> > > >  	- Use image or bzImage
+> > > >  For arm:
+> > > >  	- Use zImage
+> > > > +For arm64:
+> > > > +	- Use vmlinux or Image
+> > > >  
+> > > >  If you are using a uncompressed vmlinux image then use following command
+> > > >  to load dump-capture kernel.
+> > > > @@ -370,6 +380,9 @@ For s390x:
+> > > >  For arm:
+> > > >  	"1 maxcpus=1 reset_devices"
+> > > >  
+> > > > +For arm64:
+> > > > +	"1 maxcpus=1 reset_devices"
+> > > > +
+> > > >  Notes on loading the dump-capture kernel:
+> > > >  
+> > > >  * By default, the ELF headers are stored in ELF64 format to support
+> > > > -- 
+> > > > 2.5.0
+> > > > 
+> > > > 
+> > > > 
+> > > > _______________________________________________
+> > > > kexec mailing list
+> > > > kexec@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
