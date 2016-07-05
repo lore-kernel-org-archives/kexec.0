@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 5 Jul 2016 09:25:56 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC] arm64: kexec_file_load support
-Message-ID: <20160705012556.GC8190@dhcp-128-65.nay.redhat.com>
-References: <20160701051111.GL20774@linaro.org> <3300473.zhbeG65qgA@hactar>
- <20160704065814.GO20774@linaro.org>
+Received: from ozlabs.org ([2401:3900:2:1::2])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bKIkf-0002Nm-5y
+ for kexec@lists.infradead.org; Tue, 05 Jul 2016 05:18:29 +0000
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [v2,1/2] refactor code parsing size based on memory range
+In-Reply-To: <52b513d4-16a2-ca16-975e-a755b7a5ea8d@linux.vnet.ibm.com>
+References: <3rbRd54y9Vz9t0p@ozlabs.org>
+ <52b513d4-16a2-ca16-975e-a755b7a5ea8d@linux.vnet.ibm.com>
+Date: Tue, 05 Jul 2016 15:18:01 +1000
+Message-ID: <87twg4br3q.fsf@@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160704065814.GO20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,101 +23,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com, will.deacon@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Cc: Rusty Russell <rusty@rustcorp.com.au>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 07/04/16 at 03:58pm, AKASHI Takahiro wrote:
-> Hi,
-> 
-> On Fri, Jul 01, 2016 at 12:46:31PM -0300, Thiago Jung Bauermann wrote:
-> > Am Freitag, 01 Juli 2016, 14:11:12 schrieb AKASHI Takahiro:
-> > > I'm not sure whether there is any demand for kexec_file_load
-> > > support on arm64, but anyhow I'm working on this and now
-> > > my early prototype code does work fine.
-> > 
-> > It is necessary if you want to support loading only signed kernels, and also 
-> > if you want IMA to measure the kernel in its event log.
-> > 
-> > > There is, however, one essential issue:
-> > > While arm64 kernel requires a device tree blob to be set up
-> > > correctly at boot time, the current system call API doesn't
-> > > have this parameter.
-> > >     int kexec_file_load(int kernel_fd, int initrd_fd,
-> > >                         unsigned long cmdline_len, const char
-> > > *cmdline_ptr, unsigned long flags);
-> > > 
-> > > Should we invent a new system call, like kexec_file_load2,
-> > > and, if so, what kind of interface would be desired?
-> > 
-> > I'm facing the same issue on powerpc. What I'm doing is taking the device 
-> > tree that was used to boot the current kernel and modifying it as necessary 
-> > to pass it to the next kernel.
-> 
-> That is exactly what I do.
-> 
-> > I agree that it would be better if we could have a system call where a 
-> > custom device tree could be passed. One suggestion is:
-> 
-> For powerpc, you might be able to use dtbImage instead of Image
-> without changing the kernel interfaces.
-> > 
-> > kexec_file_load2(int fds[], int fd_types[], int nr_fds,
-> > 		 unsigned long cmdline_len, const char *cmdline_ptr,
-> > 		unsigned long flags);
-> 
-> You don't want to simply add one more argument, i.e. dtb_fd, don't you.
-> 
-> I prefer a slightly-simpler interface:
->         struct kexec_file_fd {
->                 enum kexec_file_type;
->                 int fd;
->         }
-> 
->         int kexec_file_load2(struct kexec_file_fd[], int nr_fds, int flags);
-> 
-> Or if you want to keep the compatibility with the existing system call,
-> 
->         int kexec_file_load(int kernel_fd, int initrd_fd,
->                         unsigned long cmdline_len, const char *cmdline_ptr,
->                         unsigned long flags,
->                         int struct kexec_file_fd[], int nr_fds);
-> 
-> Here SYSCALL_DEFINE7() have to be defined, and I'm not sure that we will not
-> have a problem in adding a system call with more than 6 arguments.
-> 
-> > Where fds is an array with nr_fds file descriptors and fd_types is an array 
-> > specifying what each fd in fds is. So for example, if fds[i] is the kernel, 
-> > then fd_types[i] would have the value KEXEC_FILE_KERNEL_FD. If fds[i] is the 
-> > device tree blob, fd_types[i], would have the value KEXEC_FILE_DTB and so 
-> > on. That way, the syscall can be extended for an arbitrary number and types 
-> > of segments that have to be loaded, just like kexec_load.
-> > 
-> > Another option is to have a struct:
-> > 
-> > kexec_file_load2(struct kexec_file_params *params, unsigned long params_sz);
-> 
-> Wow, we can add any number of new parameters with this interface.
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
-> > Where:
-> > 
-> > struct kexec_file_params {
-> > 	int version;	/* allows struct to be extended in the future */
-> > 	int fds[];
-> > 	int fd_types[];
-> > 	int nr_fds;
-> > 	unsigned long cmdline_len;
-> > 	const char *cmdline_ptr;
-> > 	unsigned long flags;
-> > };
-> > 
-> > This is even more flexible.
 
-I would like to vote for this one, and use kexec_file_fd fds[] in the struct 
- 
-Thanks
-Dave
+> On 06/24/2016 10:56 AM, Michael Ellerman wrote:
+>> On Wed, 2016-22-06 at 19:25:26 UTC, Hari Bathini wrote:
+...
+> While the code is moved to kernel/params.c file, there is no change in logic
+> for crashkernel parameter parsing as the moved code is invoked with function
+> calls at appropriate places.
+
+Are you sure that's true?
+
+The old code would return -EINVAL from parse_crashkernel_mem() for any
+error, regardless of whether it had already parsed some of the string.
+
+eg:
+
+>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>> index 56b3ed0..d43f5cc 100644
+>>> --- a/kernel/kexec_core.c
+>>> +++ b/kernel/kexec_core.c
+>>> @@ -1083,59 +1083,9 @@ static int __init parse_crashkernel_mem(char *cmdline,
+>>>   	char *cur = cmdline, *tmp;
+>>>   
+>>>   	/* for each entry of the comma-separated list */
+>>> -	do {
+>>> -		unsigned long long start, end = ULLONG_MAX, size;
+>>> -
+>>> -		/* get the start of the range */
+>>> -		start = memparse(cur, &tmp);
+>>> -		if (cur == tmp) {
+>>> -			pr_warn("crashkernel: Memory value expected\n");
+>>> -			return -EINVAL;
+>>> -		}
+>>> -		cur = tmp;
+>>> -		if (*cur != '-') {
+>>> -			pr_warn("crashkernel: '-' expected\n");
+>>> -			return -EINVAL;
+>>> -		}
+>>> -		cur++;
+>>> -
+>>> -		/* if no ':' is here, than we read the end */
+>>> -		if (*cur != ':') {
+>>> -			end = memparse(cur, &tmp);
+>>> -			if (cur == tmp) {
+>>> -				pr_warn("crashkernel: Memory value expected\n");
+>>> -				return -EINVAL;
+>>> -			}
+
+So eg, if I give it "128M-foo" it will modify cur, and then error out here ^
+
+You've changed that to:
+
+>>> +	*crash_size = parse_mem_range_size("crashkernel", &cur, system_ram);
+>>> +	if (cur == cmdline)
+>>> +		return -EINVAL;
+
+Which only returns EINVAL if cur is not modified at all.
+
+And looking below:
+
+>>> diff --git a/kernel/params.c b/kernel/params.c
+>>> index a6d6149..84e40ae 100644
+>>> --- a/kernel/params.c
+>>> +++ b/kernel/params.c
+...
+>>> +unsigned long long __init parse_mem_range_size(const char *param,
+>>> +					       char **str,
+>>> +					       unsigned long long system_ram)
+>>> +{
+>>> +	char *cur = *str, *tmp;
+>>> +	unsigned long long mem_size = 0;
+>>> +
+>>> +	/* for each entry of the comma-separated list */
+>>> +	do {
+>>> +		unsigned long long start, end = ULLONG_MAX, size;
+>>> +
+>>> +		/* get the start of the range */
+>>> +		start = memparse(cur, &tmp);
+>>> +		if (cur == tmp) {
+>>> +			printk(KERN_INFO "%s: Memory value expected\n", param);
+>>> +			return mem_size;
+>>> +		}
+>>> +		cur = tmp;
+>>> +		if (*cur != '-') {
+>>> +			printk(KERN_INFO "%s: '-' expected\n", param);
+>>> +			return mem_size;
+>>> +		}
+>>> +		cur++;
+>>> +
+>>> +		/* if no ':' is here, than we read the end */
+>>> +		if (*cur != ':') {
+>>> +			end = memparse(cur, &tmp);
+>>> +			if (cur == tmp) {
+>>> +				printk(KERN_INFO "%s: Memory value expected\n",
+>>> +					param);
+>>> +				return mem_size;
+
+If we error out here for example, we have modified cur, so the code above
+*won't* return EINVAL.
+
+Which looks like a behaviour change to me?
+
+cheers
 
 _______________________________________________
 kexec mailing list
