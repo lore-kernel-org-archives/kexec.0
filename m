@@ -1,29 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bKChU-0005YN-9M
- for kexec@lists.infradead.org; Mon, 04 Jul 2016 22:50:48 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u64MiHiJ050782
- for <kexec@lists.infradead.org>; Mon, 4 Jul 2016 18:50:26 -0400
-Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
- by mx0a-001b2d01.pphosted.com with ESMTP id 23x6gjetug-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 04 Jul 2016 18:50:26 -0400
-Received: from localhost
- by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Mon, 4 Jul 2016 19:50:23 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [RFC] arm64: kexec_file_load support
-Date: Mon, 04 Jul 2016 19:50:19 -0300
-In-Reply-To: <20160704065814.GO20774@linaro.org>
-References: <20160701051111.GL20774@linaro.org> <3300473.zhbeG65qgA@hactar>
- <20160704065814.GO20774@linaro.org>
+ id 1bKEek-0005hD-Ax
+ for kexec@lists.infradead.org; Tue, 05 Jul 2016 00:56:07 +0000
+Date: Tue, 5 Jul 2016 08:55:37 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 2/9] kexec_file: Generalize kexec_add_buffer.
+Message-ID: <20160705005537.GA8190@dhcp-128-65.nay.redhat.com>
+References: <1466538521-31216-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160701183602.GA4553@dhcp-128-65.nay.redhat.com>
+ <3789971.1TYeJNg8TK@hactar> <1923446.CtvhM7vr7E@hactar>
 MIME-Version: 1.0
-Message-Id: <5766907.oiVi8ABPsz@hactar>
+Content-Disposition: inline
+In-Reply-To: <1923446.CtvhM7vr7E@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,85 +25,148 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, catalin.marinas@arm.com, dyoung@redhat.com, vgoyal@redhat.com
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-Hello,
-
-Am Montag, 04 Juli 2016, 15:58:15 schrieb AKASHI Takahiro:
-> On Fri, Jul 01, 2016 at 12:46:31PM -0300, Thiago Jung Bauermann wrote:
-> > I agree that it would be better if we could have a system call where a
-> 
-> > custom device tree could be passed. One suggestion is:
-> For powerpc, you might be able to use dtbImage instead of Image
-> without changing the kernel interfaces.
-
-That works for custom kernels, but for signed kernels from a distro, I 
-believe that's not an option.
-
-> > kexec_file_load2(int fds[], int fd_types[], int nr_fds,
+On 07/01/16 at 05:31pm, Thiago Jung Bauermann wrote:
+> Am Freitag, 01 Juli 2016, 17:02:23 schrieb Thiago Jung Bauermann:
+> > Am Freitag, 01 Juli 2016, 14:36:02 schrieb Dave Young:
+> > > On 07/01/16 at 02:51pm, Thiago Jung Bauermann wrote:
+> > > > Am Donnerstag, 30 Juni 2016, 17:43:57 schrieb Dave Young:
+> > > > > On 06/30/16 at 01:42pm, Thiago Jung Bauermann wrote:
+> > > > > > Am Donnerstag, 30 Juni 2016, 12:49:44 schrieb Thiago Jung Bauermann:
+> > > > I understand that this is all somewhat subjective, so if you still
+> > > > disagree with my points I can provide a patch set implementing the
+> > > > change above.
+> > > 
+> > > I still feel it should be changed if more callbacks being introduced,
+> > > though you can regard it is internal api, like above comment we do not
+> > > need to assign them seperately, the member values can be assigned
+> > > from the beginning.
 > > 
-> > 		 unsigned long cmdline_len, const char *cmdline_ptr,
-> > 		
-> > 		unsigned long flags);
+> > Ok, I'll implement the changes and submit a v4. Thanks for your review.
 > 
-> You don't want to simply add one more argument, i.e. dtb_fd, don't you.
+> Sorry for creating more email traffic, but it'll be better if I ask this 
+> before I change all other places in the code. Is the code below what you
+> have in mind?
 
-I'm just trying to avoid having to add another argument later if we find out 
-someone is loading another segment that we didn't know about. :-)
+Thanks for the update, almost except a nitpick :)
 
-The older kexec_load system call allows passing an arbitrary number of 
-segments (sort of, currently capped at 16) to the kernel, so my suggestions 
-preserve that feature.
-
-If people think that adding another argument for dtb_fd is enough, I won't 
-mind.
-
-> I prefer a slightly-simpler interface:
->         struct kexec_file_fd {
->                 enum kexec_file_type;
->                 int fd;
->         }
 > 
->         int kexec_file_load2(struct kexec_file_fd[], int nr_fds, int
-> flags);
-
-I like this one.
-
-> Or if you want to keep the compatibility with the existing system call,
+> In particular, this version doesn't do the memset(&buf, 0, sizeof(buf))
+> that the previous code I sent earlier did. Is that ok?
 > 
->         int kexec_file_load(int kernel_fd, int initrd_fd,
->                         unsigned long cmdline_len, const char
-> *cmdline_ptr, unsigned long flags,
->                         int struct kexec_file_fd[], int nr_fds);
+> @@ -643,13 +632,14 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  				  unsigned long max, int top_down)
+>  {
+>  	struct purgatory_info *pi = &image->purgatory_info;
+> -	unsigned long align, buf_align, bss_align, buf_sz, bss_sz, bss_pad;
+> -	unsigned long memsz, entry, load_addr, curr_load_addr, bss_addr, offset;
+> +	unsigned long align, bss_align, bss_sz, bss_pad;
+> +	unsigned long entry, load_addr, curr_load_addr, bss_addr, offset;
+>  	unsigned char *buf_addr, *src;
+>  	int i, ret = 0, entry_sidx = -1;
+>  	const Elf_Shdr *sechdrs_c;
+>  	Elf_Shdr *sechdrs = NULL;
+> -	void *purgatory_buf = NULL;
+> +	struct kexec_buf buf = { .image = image, .buf_min = min,
+> +				.buf_max = max, .top_down = top_down };
+>  
+>  	/*
+>  	 * sechdrs_c points to section headers in purgatory and are read
+> @@ -715,9 +705,9 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	}
+>  
+>  	/* Determine how much memory is needed to load relocatable object. */
+> -	buf_align = 1;
+> +	buf.buf_align = 1;
+>  	bss_align = 1;
+> -	buf_sz = 0;
+> +	buf.bufsz = 0;
+>  	bss_sz = 0;
+
+Above chunk can go to the initializatioin of struct kexec buf ealier.
+
+>  
+>  	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+> @@ -726,10 +716,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  
+>  		align = sechdrs[i].sh_addralign;
+>  		if (sechdrs[i].sh_type != SHT_NOBITS) {
+> -			if (buf_align < align)
+> -				buf_align = align;
+> -			buf_sz = ALIGN(buf_sz, align);
+> -			buf_sz += sechdrs[i].sh_size;
+> +			if (buf.buf_align < align)
+> +				buf.buf_align = align;
+> +			buf.bufsz = ALIGN(buf.bufsz, align);
+> +			buf.bufsz += sechdrs[i].sh_size;
+>  		} else {
+>  			/* bss section */
+>  			if (bss_align < align)
+> @@ -741,32 +731,31 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  
+>  	/* Determine the bss padding required to align bss properly */
+>  	bss_pad = 0;
+> -	if (buf_sz & (bss_align - 1))
+> -		bss_pad = bss_align - (buf_sz & (bss_align - 1));
+> +	if (buf.bufsz & (bss_align - 1))
+> +		bss_pad = bss_align - (buf.bufsz & (bss_align - 1));
+>  
+> -	memsz = buf_sz + bss_pad + bss_sz;
+> +	buf.memsz = buf.bufsz + bss_pad + bss_sz;
+>  
+>  	/* Allocate buffer for purgatory */
+> -	purgatory_buf = vzalloc(buf_sz);
+> -	if (!purgatory_buf) {
+> +	buf.buffer = vzalloc(buf.bufsz);
+> +	if (!buf.buffer) {
+>  		ret = -ENOMEM;
+>  		goto out;
+>  	}
+>  
+> -	if (buf_align < bss_align)
+> -		buf_align = bss_align;
+> +	if (buf.buf_align < bss_align)
+> +		buf.buf_align = bss_align;
+>  
+>  	/* Add buffer to segment list */
+> -	ret = kexec_add_buffer(image, purgatory_buf, buf_sz, memsz,
+> -				buf_align, min, max, top_down,
+> -				&pi->purgatory_load_addr);
+> +	ret = kexec_add_buffer(&buf);
+>  	if (ret)
+>  		goto out;
+> +	pi->purgatory_load_addr = buf.mem;
+>  
+>  	/* Load SHF_ALLOC sections */
+> -	buf_addr = purgatory_buf;
+> +	buf_addr = buf.buffer;
+>  	load_addr = curr_load_addr = pi->purgatory_load_addr;
+> -	bss_addr = load_addr + buf_sz + bss_pad;
+> +	bss_addr = load_addr + buf.bufsz + bss_pad;
+>  
+>  	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+>  		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
+> @@ -812,11 +801,11 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	 * Used later to identify which section is purgatory and skip it
+>  	 * from checksumming.
+>  	 */
+> -	pi->purgatory_buf = purgatory_buf;
+> +	pi->purgatory_buf = buf.buffer;
+>  	return ret;
+>  out:
+>  	vfree(sechdrs);
+> -	vfree(purgatory_buf);
+> +	vfree(buf.buffer);
+>  	return ret;
+>  }
+>  
 > 
-> Here SYSCALL_DEFINE7() have to be defined, and I'm not sure that we will
-> not have a problem in adding a system call with more than 6 arguments.
-
-That's very clever. We can do what you suggest above or even just add dtb_fd 
-with SYSCALL_DEFINE6. Either option would be good.
-
-> > Where fds is an array with nr_fds file descriptors and fd_types is an
-> > array specifying what each fd in fds is. So for example, if fds[i] is
-> > the kernel, then fd_types[i] would have the value KEXEC_FILE_KERNEL_FD.
-> > If fds[i] is the device tree blob, fd_types[i], would have the value
-> > KEXEC_FILE_DTB and so on. That way, the syscall can be extended for an
-> > arbitrary number and types of segments that have to be loaded, just
-> > like kexec_load.
-> > 
-> > Another option is to have a struct:
-> > 
-> > kexec_file_load2(struct kexec_file_params *params, unsigned long
-> > params_sz);
-> Wow, we can add any number of new parameters with this interface.
-
-Yeah, maybe it's a bit too much.
-
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
 
 _______________________________________________
 kexec mailing list
