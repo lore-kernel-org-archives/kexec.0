@@ -1,46 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail4.hitachi.co.jp ([133.145.228.5])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bKkYX-000684-ME
- for kexec@lists.infradead.org; Wed, 06 Jul 2016 10:59:50 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u66Ax86V026316
- for <kexec@lists.infradead.org>; Wed, 6 Jul 2016 06:59:28 -0400
-Received: from e06smtp17.uk.ibm.com (e06smtp17.uk.ibm.com [195.75.94.113])
- by mx0b-001b2d01.pphosted.com with ESMTP id 240nbyty94-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 06:59:28 -0400
-Received: from localhost
- by e06smtp17.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hutzl@linux.vnet.ibm.com>;
- Wed, 6 Jul 2016 11:59:26 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com
- (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
- by d06dlp02.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3BD062190056
- for <kexec@lists.infradead.org>; Wed,  6 Jul 2016 11:58:52 +0100 (BST)
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
- [9.149.37.250])
- by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u66AxN0q10224068
- for <kexec@lists.infradead.org>; Wed, 6 Jul 2016 10:59:23 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (localhost [127.0.0.1])
- by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u66AxMXe026563
- for <kexec@lists.infradead.org>; Wed, 6 Jul 2016 04:59:22 -0600
-Received: from dyn-9-152-224-56.boeblingen.de.ibm.com
- (dyn-9-152-224-56.boeblingen.de.ibm.com [9.152.224.56])
- by d06av09.portsmouth.uk.ibm.com (8.14.4/8.14.4/NCO v10.0 AVin) with ESMTP id
- u66AxMbl026554
- for <kexec@lists.infradead.org>; Wed, 6 Jul 2016 04:59:22 -0600
-From: Guenther Hutzl <hutzl@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: fix module init base and size offset for kernel
- v4.5
-Date: Wed, 6 Jul 2016 12:59:22 +0200
+ id 1bKOfC-000422-Uq
+ for kexec@lists.infradead.org; Tue, 05 Jul 2016 11:37:17 +0000
+Subject: [V3 PATCH 1/2] x86/panic: Replace smp_send_stop() with kdump
+ friendly version
+From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Date: Tue, 05 Jul 2016 20:33:25 +0900
+Message-ID: <20160705113325.5864.74840.stgit@softrs>
+In-Reply-To: <20160705113323.5864.66834.stgit@softrs>
+References: <20160705113323.5864.66834.stgit@softrs>
 MIME-Version: 1.0
-Message-Id: <8140a1f8-55c9-b725-ba31-fc410527d201@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -53,72 +23,200 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, Toshi Kani <toshi.kani@hpe.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Minfei Huang <mnfhuang@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Daniel Walker <dwalker@fifo99.com>, Ingo Molnar <mingo@kernel.org>, Takao Indoh <indou.takao@jp.fujitsu.com>, x86@kernel.org, "Lee, 
+ Chun-Yi" <joeyli.kernel@gmail.com>, Borislav Petkov <bp@suse.de>, Vivek Goyal <vgoyal@redhat.com>, Petr Mladek <pmladek@suse.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <mhiramat@kernel.org>, Tejun Heo <tj@kernel.org>, Vitaly Kuznetsov <vkuznets@redhat.com>
 
-Hello!
+This patch fixes one of the problems reported by Daniel Walker
+(https://lkml.org/lkml/2015/6/24/44).
 
-This is a follow-up patch on the patch provided in post:
+If crash_kexec_post_notifiers boot option is specified, other CPUs
+are stopped by smp_send_stop() instead of machine_crash_shutdown()
+in crash_kexec() path.  This behavior change leads two problems.
 
-"[PATCH] makedumpfile: fix module core base and size offset for kernel v4.5"
-by Pratyush Anand
+ Problem 1:
+ octeon_generic_shutdown() for MIPS OCTEON assumes that other CPUs are
+ still online and try to stop their watchdog timer.  If
+ smp_send_stop() is called before octeon_generic_shutdown(), stopping
+ watchdog timer will fail because other CPUs have been offlined by
+ smp_send_stop().
 
-What is missing there is the changes that were done to the module_init entry
-of the struct module. The patch does basically the same as the patch for
-module_core adapted to module_init.
-Here is the patch:
+   panic()
+     if crash_kexec_post_notifiers == 1
+       smp_send_stop()
+       atomic_notifier_call_chain()
+       kmsg_dump()
+     crash_kexec()
+       machine_crash_shutdown()
+         octeon_generic_shutdown() // shutdown watchdog for ONLINE CPUs
+
+ Problem 2:
+ Most of architectures stop other CPUs in machine_crash_shutdown()
+ path, and they also do something needed for kdump.  For example,
+ they save registers, disable virtualization extensions, and so on.
+ However, if smp_send_stop() stops other CPUs before
+ machine_crash_shutdown(), we miss those operations.
+
+How do we fix these problems?  In the first place, we should stop
+other CPUs as soon as possible when panic() was called, otherwise
+other CPUs may wipe out a clue to the cause of the failure.  So, we
+replace smp_send_stop() with more suitable one for kdump.
+
+This patch solves Problem 2 by replacing smp_send_stop() in panic()
+with panic_smp_send_stop().  This is a weak function which calls
+smp_send_stop(), and architecture dependent code may override this
+with appropriate one.  This patch only provides x86-specific version.
+
+Changes in V3:
+- Revise comments, description, and symbol names
+
+Changes in V2:
+- Replace smp_send_stop() call with crash_kexec version which
+  saves cpu states and cleans up VMX/SVM
+- Drop a fix for Problem 1 at this moment
+
+Reported-by: Daniel Walker <dwalker@fifo99.com>
+Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
+Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Toshi Kani <toshi.kani@hpe.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc: Minfei Huang <mnfhuang@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
-Following commit in kernel v4.5 changed struct module, which affects offset
-calculation of core and init layout's base and size.
+ arch/x86/kernel/crash.c |   14 ++++++++++----
+ kernel/panic.c          |   43 ++++++++++++++++++++++++++++++++-----------
+ 2 files changed, 42 insertions(+), 15 deletions(-)
 
-commit 7523e4dc5057e157212b4741abd6256e03404cf1
-Author: Rusty Russell <rusty at rustcorp.com.au>
-Date:   Thu Nov 26 09:44:08 2015 +1030
-
-    module: use a structure to encapsulate layout.
-
-This patch fixes makedumpfile code to cater the module_init modification.
-
-Signed-off-by: Guenther Hutzl <hutzl@linux.vnet.ibm.com>
----
- makedumpfile.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 853b999..f33a90d 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1689,7 +1689,25 @@ get_structure_info(void)
- 		OFFSET(module.core_size) += core_layout;
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 9ef978d..3305433 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -133,15 +133,21 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+ 	disable_local_APIC();
+ }
+ 
+-static void kdump_nmi_shootdown_cpus(void)
++/* Override the weak function in kernel/panic.c */
++void panic_smp_send_stop(void)
+ {
+-	nmi_shootdown_cpus(kdump_nmi_callback);
++	static int cpus_stopped;
++
++	if (cpus_stopped)
++		return;
+ 
++	nmi_shootdown_cpus(kdump_nmi_callback);
+ 	disable_local_APIC();
++	cpus_stopped = 1;
+ }
+ 
+ #else
+-static void kdump_nmi_shootdown_cpus(void)
++void panic_smp_send_stop(void)
+ {
+ 	/* There are no cpus to shootdown */
+ }
+@@ -160,7 +166,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+ 	/* The kernel is broken so disable interrupts */
+ 	local_irq_disable();
+ 
+-	kdump_nmi_shootdown_cpus();
++	panic_smp_send_stop();
+ 
+ 	/*
+ 	 * VMCLEAR VMCSs loaded on this cpu if needed.
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 8aa7449..da8062d2 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -71,6 +71,32 @@ void __weak nmi_panic_self_stop(struct pt_regs *regs)
+ 	panic_smp_self_stop();
+ }
+ 
++/*
++ * Stop other CPUs in panic.  Architecture dependent code may override this
++ * with more suitable version.  For example, if the architecture supports
++ * crash dump, it should save registers of each stopped CPU and disable
++ * per-CPU features such as virtualization extensions.
++ */
++void __weak panic_smp_send_stop(void)
++{
++	static int cpus_stopped;
++
++	/*
++	 * This function can be called twice in panic path, but obviously
++	 * we execute this only once.
++	 */
++	if (cpus_stopped)
++		return;
++
++	/*
++	 * Note smp_send_stop is the usual smp shutdown function, which
++	 * unfortunately means it may not be hardened to work in a panic
++	 * situation.
++	 */
++	smp_send_stop();
++	cpus_stopped = 1;
++}
++
+ atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
+ 
+ /*
+@@ -125,7 +151,7 @@ void panic(const char *fmt, ...)
+ 	 * Only one CPU is allowed to execute the panic code from here. For
+ 	 * multiple parallel invocations of panic, all other CPUs either
+ 	 * stop themself or will wait until they are stopped by the 1st CPU
+-	 * with smp_send_stop().
++	 * with panic_smp_send_stop().
+ 	 *
+ 	 * `old_cpu == PANIC_CPU_INVALID' means this is the 1st CPU which
+ 	 * comes here, so go ahead.
+@@ -165,12 +191,7 @@ void panic(const char *fmt, ...)
+ 		__crash_kexec(NULL);
  	}
- 	OFFSET_INIT(module.module_init, "module", "module_init");
-+	if (OFFSET(module.module_init) == NOT_FOUND_STRUCTURE) {
-+		/* for kernel version 4.5 and above */
-+		long init_layout;
-+
-+		OFFSET_INIT(module.module_init, "module", "init_layout");
-+		init_layout = OFFSET(module.module_init);
-+		OFFSET_INIT(module.module_init, "module_layout", "base");
-+		OFFSET(module.module_init) += init_layout;
-+	}
- 	OFFSET_INIT(module.init_size, "module", "init_size");
-+	if (OFFSET(module.init_size) == NOT_FOUND_STRUCTURE) {
-+		/* for kernel version 4.5 and above */
-+		long init_layout;
-+
-+		OFFSET_INIT(module.init_size, "module", "init_layout");
-+		init_layout = OFFSET(module.init_size);
-+		OFFSET_INIT(module.init_size, "module_layout", "size");
-+		OFFSET(module.init_size) += init_layout;
-+	}
+ 
+-	/*
+-	 * Note smp_send_stop is the usual smp shutdown function, which
+-	 * unfortunately means it may not be hardened to work in a panic
+-	 * situation.
+-	 */
+-	smp_send_stop();
++	panic_smp_send_stop();
+ 
+ 	/*
+ 	 * Run any panic handlers, including those that might need to
+@@ -198,10 +219,10 @@ void panic(const char *fmt, ...)
+ 
+ 	/*
+ 	 * We may have ended up stopping the CPU holding the lock (in
+-	 * smp_send_stop()) while still having some valuable data in the console
+-	 * buffer.  Try to acquire the lock then release it regardless of the
+-	 * result.  The release will also print the buffers out.  Locks debug
+-	 * should be disabled to avoid reporting bad unlock balance when
++	 * panic_smp_send_stop()) while still having some valuable data in the
++	 * console buffer.  Try to acquire the lock then release it regardless
++	 * of the result.  The release will also print the buffers out.  Locks
++	 * debug should be disabled to avoid reporting bad unlock balance when
+ 	 * panic() is not being callled from OOPS.
+ 	 */
+ 	debug_locks_off();
 
- 	ENUM_NUMBER_INIT(NR_FREE_PAGES, "NR_FREE_PAGES");
- 	ENUM_NUMBER_INIT(N_ONLINE, "N_ONLINE");
---
-2.6.6
-
--- 
-Guenther Hutzl
-Linux on System z & Virtualization Development
 
 
 _______________________________________________
