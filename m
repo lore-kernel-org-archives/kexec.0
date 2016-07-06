@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1467826689.8880.39.camel@infradead.org>
-Subject: Re: [PATCH v21 4/8] arm64: kdump: add kdump support
+Message-ID: <1467827067.8880.43.camel@infradead.org>
+Subject: Re: [PATCH v21 7/8] arm64: kdump: update a kernel doc
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 06 Jul 2016 10:38:09 -0700
-In-Reply-To: <20160706075226.27609-5-takahiro.akashi@linaro.org>
+Date: Wed, 06 Jul 2016 10:44:27 -0700
+In-Reply-To: <20160706075226.27609-8-takahiro.akashi@linaro.org>
 References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <20160706075226.27609-5-takahiro.akashi@linaro.org>
+ <20160706075226.27609-8-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -15,55 +15,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
 Cc: kexec@lists.infradead.org, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-T24gV2VkLCAyMDE2LTA3LTA2IGF0IDE2OjUyICswOTAwLCBBS0FTSEkgVGFrYWhpcm8gd3JvdGU6
-Cj4gLS0tIGEvYXJjaC9hcm02NC9tbS9pbml0LmMKPiArKysgYi9hcmNoL2FybTY0L21tL2luaXQu
-Ywo+IEBAIC0xMzYsNiArMTM3LDU3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCByZXNlcnZlX2NyYXNo
-a2VybmVsKHZvaWQpCj4gIH0KPiAgI2VuZGlmIC8qIENPTkZJR19LRVhFQ19DT1JFICovCj4gIAo+
-ICsjaWZkZWYgQ09ORklHX0NSQVNIX0RVTVAKPiArc3RhdGljIGludCBfX2luaXQgZWFybHlfaW5p
-dF9kdF9zY2FuX2VsZmNvcmVoZHIodW5zaWduZWQgbG9uZyBub2RlLAo+ICs+IAk+IAk+IGNvbnN0
-IGNoYXIgKnVuYW1lLCBpbnQgZGVwdGgsIHZvaWQgKmRhdGEpCj4gK3sKPiArPiAJPiBjb25zdCBf
-X2JlMzIgKnJlZzsKPiArPiAJPiBpbnQgbGVuOwo+ICsKPiArPiAJPiBpZiAoZGVwdGggIT0gMSB8
-fCBzdHJjbXAodW5hbWUsICJjaG9zZW4iKSAhPSAwKQo+ICs+IAk+IAk+IHJldHVybiAwOwo+ICsK
-PiArPiAJPiByZWcgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUsICJsaW51eCxlbGZjb3JlaGRy
-IiwgJmxlbik7Cj4gKz4gCT4gaWYgKCFyZWcgfHwgKGxlbiA8IChkdF9yb290X2FkZHJfY2VsbHMg
-KyBkdF9yb290X3NpemVfY2VsbHMpKSkKPiArPiAJPiAJPiByZXR1cm4gMTsKPiArCj4gKz4gCT4g
-ZWxmY29yZWhkcl9hZGRyID0gZHRfbWVtX25leHRfY2VsbChkdF9yb290X2FkZHJfY2VsbHMsIMKu
-KTsKPiArPiAJPiBlbGZjb3JlaGRyX3NpemUgPSBkdF9tZW1fbmV4dF9jZWxsKGR0X3Jvb3Rfc2l6
-ZV9jZWxscywgwq4pOwo+ICsKPiArPiAJPiByZXR1cm4gMTsKPiArfQo+ICsKPiArLyoKPiArICog
-cmVzZXJ2ZV9lbGZjb3JlaGRyKCkgLSByZXNlcnZlcyBtZW1vcnkgZm9yIGVsZiBjb3JlIGhlYWRl
-cgo+ICsgKgo+ICsgKiBUaGlzIGZ1bmN0aW9uIHJlc2VydmVzIGVsZiBjb3JlIGhlYWRlciBnaXZl
-biBpbiAiZWxmY29yZWhkcj0iIGtlcm5lbAo+ICsgKiBjb21tYW5kIGxpbmUgcGFyYW1ldGVyLiBU
-aGlzIHJlZ2lvbiBjb250YWlucyBhbGwgdGhlIGluZm9ybWF0aW9uIGFib3V0Cj4gKyAqIHByaW1h
-cnkga2VybmVsJ3MgY29yZSBpbWFnZSBhbmQgaXMgdXNlZCBieSBhIGR1bXAgY2FwdHVyZSBrZXJu
-ZWwgdG8KPiArICogYWNjZXNzIHRoZSBzeXN0ZW0gbWVtb3J5IG9uIHByaW1hcnkga2VybmVsLgo+
-ICsgKi8KPiArc3RhdGljIHZvaWQgX19pbml0IHJlc2VydmVfZWxmY29yZWhkcih2b2lkKQo+ICt7
-CgpJdCBzZWVtcyBsaWtlIHlvdSBjb3VsZCBnZXQgcmlkIG9mIGFsbCB0aGVzZSBjb25kaXRpb25h
-bHMgYnkKanVzdCBwdXR0aW5nIHRoaXMgaGVyZToKCglpZiAoIUlTX0VOQUJMRUQoQ09ORklHX0NS
-QVNIX0RVTVApKQoJCXJldHVybjsKCgo+ICs+IAk+IG9mX3NjYW5fZmxhdF9kdChlYXJseV9pbml0
-X2R0X3NjYW5fZWxmY29yZWhkciwgTlVMTCk7Cj4gKwo+ICs+IAk+IGlmICghZWxmY29yZWhkcl9z
-aXplKQo+ICs+IAk+IAk+IHJldHVybjsKPiArCj4gKz4gCT4gaWYgKG1lbWJsb2NrX2lzX3JlZ2lv
-bl9yZXNlcnZlZChlbGZjb3JlaGRyX2FkZHIsIGVsZmNvcmVoZHJfc2l6ZSkpIHsKPiArPiAJPiAJ
-PiBwcl93YXJuKCJlbGZjb3JlaGRyIGlzIG92ZXJsYXBwZWRcbiIpOwo+ICs+IAk+IAk+IHJldHVy
-bjsKPiArPiAJPiB9Cj4gKwo+ICs+IAk+IG1lbWJsb2NrX3Jlc2VydmUoZWxmY29yZWhkcl9hZGRy
-LCBlbGZjb3JlaGRyX3NpemUpOwo+ICsKPiArPiAJPiBwcl9pbmZvKCJSZXNlcnZpbmcgJWxsZEtC
-IG9mIG1lbW9yeSBhdCAweCVsbHggZm9yIGVsZmNvcmVoZHJcbiIsCj4gKz4gCT4gCT4gZWxmY29y
-ZWhkcl9zaXplID4+IDEwLCBlbGZjb3JlaGRyX2FkZHIpOwo+ICt9Cj4gKyNlbHNlCj4gK3N0YXRp
-YyB2b2lkIF9faW5pdCByZXNlcnZlX2VsZmNvcmVoZHIodm9pZCkKPiArewo+ICs+IAk+IDsKPiAr
-fQo+ICsjZW5kaWYgLyogQ09ORklHX0NSQVNIX0RVTVAgKi8KPiAgLyoKPiAgICogUmV0dXJuIHRo
-ZSBtYXhpbXVtIHBoeXNpY2FsIGFkZHJlc3MgZm9yIFpPTkVfRE1BIChETUFfQklUX01BU0soMzIp
-KS4gSXQKPiAgICogY3VycmVudGx5IGFzc3VtZXMgdGhhdCBmb3IgbWVtb3J5IHN0YXJ0aW5nIGFi
-b3ZlIDRHLCAzMi1iaXQgZGV2aWNlcyB3aWxsCj4gQEAgLTM4OSw2ICs0NDEsOCBAQCB2b2lkIF9f
-aW5pdCBhcm02NF9tZW1ibG9ja19pbml0KHZvaWQpCj4gIAo+ICA+IAk+IHJlc2VydmVfY3Jhc2hr
-ZXJuZWwoKTsKPiAgCj4gKz4gCT4gcmVzZXJ2ZV9lbGZjb3JlaGRyKCk7Cj4gKwo+ICA+IAk+IGVh
-cmx5X2luaXRfZmR0X3NjYW5fcmVzZXJ2ZWRfbWVtKCk7Cj4gIAo+ICA+IAk+IC8qIDRHQiBtYXhp
-bXVtIGZvciAzMi1iaXQgb25seSBjYXBhYmxlIGRldmljZXMgKi8KCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+On Wed, 2016-07-06 at 16:52 +0900, AKASHI Takahiro wrote:
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+>  a remote system.
+>  
+>  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+> -s390x and arm architectures.
+> +s390x, arm and arm64 architectures.
+>  
+>  When the system kernel boots, it reserves a small section of memory for
+>  the dump-capture kernel. This ensures that ongoing Direct Memory Access
+> @@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
+>  
+>      AUTO_ZRELADDR=y
+>  
+> +Dump-capture kernel config options (Arch Dependent, arm64)
+> +----------------------------------------------------------
+> +
+> +- Please note that kvm at the dump-capture kernel will not be enabled
+
+kvm of the dump-capture kernel
+
+> +  on non-VHE system even if it is configured. This is because we have
+
+on non-VHE systems
+
+> +  no chance to reset CPU state to EL2 on panic.
+
+This is because the CPU state cannot be reset to EL2 on panic.
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
