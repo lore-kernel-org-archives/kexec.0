@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
+Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bKOfC-00041u-Up
- for kexec@lists.infradead.org; Tue, 05 Jul 2016 11:37:15 +0000
-Subject: [V3 PATCH 0/2] kexec: crash_kexec_post_notifiers boot option
- related fixes
-From: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Date: Tue, 05 Jul 2016 20:33:23 +0900
-Message-ID: <20160705113323.5864.66834.stgit@softrs>
-MIME-Version: 1.0
+ id 1bKhYs-0005cp-GV
+ for kexec@lists.infradead.org; Wed, 06 Jul 2016 07:47:59 +0000
+Received: by mail-pf0-x22c.google.com with SMTP id t190so77760716pfb.3
+ for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 00:47:38 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v21 0/8] arm64: kdump support
+Date: Wed,  6 Jul 2016 16:52:18 +0900
+Message-Id: <20160706075226.27609-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,63 +17,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Daniel Walker <dwalker@fifo99.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-This is the update version of the patch which I posted one year ago
-(https://lkml.org/lkml/2015/7/23/864).  Because I couldn't received
-positive opinions against the previous version, I had changed the
-approach to another one which utilizes kexec purgatory.  Then I'm
-back here.
+This patch series adds kdump support on arm64.
 
-PATCH 1/2 is a bugfix for crash_kexec_post_notifiers boot option
-which allows users to call panic notifiers and kmsg dumpers before
-kdump.  When this option is enabled, smp_send_stop() is used to stop
-other CPUs instead of a function provided by kdump.  smp_send_stop()
-just stops other CPUs and doesn't other things needed for kdump.
-So, fix it by replacing smp_send_stop() with new appropriate one,
-panic_smp_send_stop().  Since panic_smp_send_stop() is architecture
-specific and I can't simply copy from kdump routines, only
-x86-specific version is provided.
+To load a crash-dump kernel to the systems, a series of patches to
+kexec-tools [1], which have not yet been merged upstream, are needed.
+Please update to the latest if you have been using an older version.
 
-PATCH 2/2 makes crash_kexec_post_notifiers boot option modifiable
-after boot.  We don't need to limit it to being modifiable at boot
-time.
+To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+  - crash utility (coming v7.1.6 or later) [2]
+    (Necessary patches have already been queued in the master.)
 
-Changes in V3:
-- Revise comments, description, and symbol names (the logic doesn't
-  change)
-- Make crash_kexec_post_notifiers boot option modifiable after boot
+[1]  https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git
+[2]  https://github.com/crash-utility/crash.git
 
-Changes in V2: https://lkml.org/lkml/2015/7/23/864
-- Replace smp_send_stop() call with crash_kexec version which
-  saves cpu states and does cleanups instead of changing execution
-  flow
-- Drop a fix for Problem 1
-- Drop other patches because they aren't needed anymore
+Changes for v21 (July 6, 2016):
 
-V1: https://lkml.org/lkml/2015/7/10/316
+  o Remove kexec patches.
+  o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+  o Clarify the description about kvm in kdump.txt.
 
----
+See the following link [3] for older changes:
+[3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
 
-Hidehiro Kawai (2):
-      x86/panic: Replace smp_send_stop() with kdump friendly version
-      kexec: Use core_param for crash_kexec_post_notifiers boot option
+AKASHI Takahiro (7):
+  arm64: kdump: reserve memory for crash dump kernel
+  arm64: limit memory regions based on DT property, usable-memory
+  arm64: kdump: implement machine_crash_shutdown()
+  arm64: kdump: add kdump support
+  arm64: kdump: add VMCOREINFO's for user-space coredump tools
+  arm64: kdump: enable kdump in the arm64 defconfig
+  arm64: kdump: update a kernel doc
 
+James Morse (1):
+  Documentation: dt: usable-memory and elfcorehdr nodes for arm64 kexec
 
- arch/x86/kernel/crash.c |   14 ++++++++----
- kernel/panic.c          |   56 ++++++++++++++++++++++++++++++-----------------
- 2 files changed, 46 insertions(+), 24 deletions(-)
-
+ Documentation/devicetree/bindings/chosen.txt |  28 +++++
+ Documentation/kdump/kdump.txt                |  16 ++-
+ arch/arm64/Kconfig                           |  11 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/hardirq.h             |   2 +-
+ arch/arm64/include/asm/kexec.h               |  41 ++++++-
+ arch/arm64/include/asm/smp.h                 |   4 +
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/crash_dump.c               |  71 ++++++++++++
+ arch/arm64/kernel/machine_kexec.c            |  67 +++++++++++-
+ arch/arm64/kernel/setup.c                    |   7 +-
+ arch/arm64/kernel/smp.c                      |  61 +++++++++++
+ arch/arm64/mm/init.c                         | 154 +++++++++++++++++++++++++++
+ 13 files changed, 457 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/kernel/crash_dump.c
 
 -- 
-Hidehiro Kawai
-Hitachi, Ltd. Research & Development Group
-
+2.9.0
 
 
 _______________________________________________
