@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1467824418.8880.21.camel@infradead.org>
-Subject: Re: [PATCH v21 1/8] arm64: kdump: reserve memory for crash dump kernel
+Message-ID: <1467826137.8880.35.camel@infradead.org>
+Subject: Re: [PATCH v21 3/8] arm64: kdump: implement machine_crash_shutdown()
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 06 Jul 2016 10:00:18 -0700
-In-Reply-To: <20160706075226.27609-2-takahiro.akashi@linaro.org>
+Date: Wed, 06 Jul 2016 10:28:57 -0700
+In-Reply-To: <20160706075226.27609-4-takahiro.akashi@linaro.org>
 References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <20160706075226.27609-2-takahiro.akashi@linaro.org>
+ <20160706075226.27609-4-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,82 +20,82 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, Mark Salter <msalter@redhat.com>
+Cc: kexec@lists.infradead.org, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
 On Wed, 2016-07-06 at 16:52 +0900, AKASHI Takahiro wrote:
+> --- a/arch/arm64/include/asm/smp.h
+> +++ b/arch/arm64/include/asm/smp.h
+> @@ -136,6 +136,10 @@ static inline void cpu_panic_kernel(void)
+>   */
+>  bool cpus_are_stuck_in_kernel(void);
 >  
 > +#ifdef CONFIG_KEXEC_CORE
-> +/*
-> + * reserve_crashkernel() - reserves memory for crash kernel
-> + *
-> + * This function reserves memory area given in "crashkernel=" kernel command
-> + * line parameter. The memory reserved is used by dump capture kernel when
-> + * primary kernel is crashing.
-> + */
-> +static void __init reserve_crashkernel(void)
+> +extern void smp_send_crash_stop(void);
+> +#endif
+
+It seems this could be simplified by removing these
+conditionals, then move the conditionals that are
+around the smp_send_crash_stop definition to inside
+that definition.
+
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 62ff3c0..51e0b73 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -800,6 +803,28 @@ static void ipi_cpu_stop(unsigned int cpu)
+>  > 	> 	> cpu_relax();
+>  }
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +static atomic_t waiting_for_crash_ipi;
+> +
+> +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
 > +{
-> +> 	> unsigned long long crash_size = 0, crash_base = 0;
-> +> 	> int ret;
+> +> 	> crash_save_cpu(regs, cpu);
 > +
-> +> 	> ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> +> 	> 	> 	> 	> &crash_size, &crash_base);
-> +> 	> /* no crashkernel= or invalid value specified */
-> +> 	> if (ret || !crash_size)
-> +> 	> 	> return;
+> +> 	> atomic_dec(&waiting_for_crash_ipi);
 > +
-> +> 	> if (crash_base == 0) {
-> +> 	> 	> /* Current arm64 boot protocol requires 2MB alignment */
-> +> 	> 	> crash_base = memblock_find_in_range(0,
-> +> 	> 	> 	> 	> MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, SZ_2M);
-> +> 	> 	> if (crash_base == 0) {
-> +> 	> 	> 	> pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> +> 	> 	> 	> 	> crash_size);
-> +> 	> 	> 	> return;
-> +> 	> 	> }
-> +> 	> 	> memblock_reserve(crash_base, crash_size);
+> +> 	> local_irq_disable();
 > +
-> +> 	> } else {
-> +> 	> 	> /* User specifies base address explicitly. */
-> +> 	> 	> if (!memblock_is_region_memory(crash_base, crash_size) ||
-> +> 	> 	> 	> memblock_is_region_reserved(crash_base, crash_size)) {
-> +> 	> 	> 	> pr_warn("crashkernel has wrong address or size\n");
-> +> 	> 	> 	> return;
-> +> 	> 	> }
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +> 	> if (cpu_ops[cpu]->cpu_die)
+> +> 	> 	> cpu_ops[cpu]->cpu_die(cpu);
+> +#endif
 > +
-> +> 	> 	> if (!IS_ALIGNED(crash_base, SZ_2M)) {
-> +> 	> 	> 	> pr_warn("crashkernel base address is not 2MB aligned\n");
-> +> 	> 	> 	> return;
-> +> 	> 	> }
-> +
-> +> 	> 	> memblock_reserve(crash_base, crash_size);
-> +> 	> }
-> +
-> +> 	> pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-> +> 	> 	> crash_size >> 20, crash_base >> 20);
-> +
-> +> 	> crashk_res.start = crash_base;
-> +> 	> crashk_res.end = crash_base + crash_size - 1;
+> +> 	> /* just in case */
+> +> 	> while (1)
+> +> 	> 	> wfi();
 > +}
-> +#else
-> +static void __init reserve_crashkernel(void)
-> +{
-> +> 	> ;
-> +}
-> +#endif /* CONFIG_KEXEC_CORE */
+> +#endif
+
+ /*
+>   * Main handler for inter-processor interrupts
+>   */
+> @@ -830,6 +855,14 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>  > 	> 	> irq_exit();
+>  > 	> 	> break;
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +> 	> case IPI_CPU_CRASH_STOP:
+> +> 	> 	> irq_enter();
+> +> 	> 	> ipi_cpu_crash_stop(cpu, regs);
 > +
+> +> 	> 	> unreachable();
+> +#endif
 
-I think it is a bit cleaner if you move this conditional
-into the function and have something like:
+It seems like you could simplifiy with something like:
 
-static void __init reserve_crashkernel(void)
-{
-#ifdef CONFIG_KEXEC_CORE
-#else
-#endif
-}
+	case IPI_CPU_CRASH_STOP:
+		if (IS_ENABLED(CONFIG_KEXEC_CORE) {
+			irq_enter();
+			ipi_cpu_crash_stop(cpu, regs);
+			unreachable();
+		}
 
--Geoff
+Then move the CONFIG_KEXEC_CORE conditional around
+ipi_cpu_crash_stop to just around crash_save_cpu().
 
+ -Geoff
 
 _______________________________________________
 kexec mailing list
