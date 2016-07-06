@@ -1,11 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1467827067.8880.43.camel@infradead.org>
-Subject: Re: [PATCH v21 7/8] arm64: kdump: update a kernel doc
+Message-ID: <1467827215.8880.44.camel@infradead.org>
+Subject: Re: [PATCH v21 8/8] Documentation: dt: usable-memory and elfcorehdr
+ nodes for arm64 kexec
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 06 Jul 2016 10:44:27 -0700
-In-Reply-To: <20160706075226.27609-8-takahiro.akashi@linaro.org>
+Date: Wed, 06 Jul 2016 10:46:55 -0700
+In-Reply-To: <20160706075226.27609-9-takahiro.akashi@linaro.org>
 References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <20160706075226.27609-8-takahiro.akashi@linaro.org>
+ <20160706075226.27609-9-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,38 +24,19 @@ To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.
 Cc: kexec@lists.infradead.org, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
 On Wed, 2016-07-06 at 16:52 +0900, AKASHI Takahiro wrote:
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
->  a remote system.
->  
->  Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
-> -s390x and arm architectures.
-> +s390x, arm and arm64 architectures.
->  
->  When the system kernel boots, it reserves a small section of memory for
->  the dump-capture kernel. This ensures that ongoing Direct Memory Access
-> @@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
->  
->      AUTO_ZRELADDR=y
->  
-> +Dump-capture kernel config options (Arch Dependent, arm64)
-> +----------------------------------------------------------
-> +
-> +- Please note that kvm at the dump-capture kernel will not be enabled
+> From: James Morse <james.morse@arm.com>
+> 
+> Add documentation for linux,usable-memory and linux,elfcorehdr chosen
+> nodes used by arm64 kexec to decribe the kdump reserved area, and the
+> elfcorehdr's location within it.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> [akashi: wrap the commit description to avoid a checkpatch warning]
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-kvm of the dump-capture kernel
+Look OK.
 
-> +  on non-VHE system even if it is configured. This is because we have
-
-on non-VHE systems
-
-> +  no chance to reset CPU state to EL2 on panic.
-
-This is because the CPU state cannot be reset to EL2 on panic.
-
-
-
+Reviewed-by: Geoff Levand <geoff@infradead.org>
 
 _______________________________________________
 kexec mailing list
