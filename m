@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
- by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bKxKl-0002SI-AT
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 00:38:28 +0000
-Received: by mail-pf0-x234.google.com with SMTP id h14so904812pfe.1
- for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 17:38:06 -0700 (PDT)
-Date: Thu, 7 Jul 2016 09:43:31 +0900
+Received: from mail-pa0-x235.google.com ([2607:f8b0:400e:c03::235])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bKxQj-00018w-Lk
+ for kexec@lists.infradead.org; Thu, 07 Jul 2016 00:44:39 +0000
+Received: by mail-pa0-x235.google.com with SMTP id uj8so1063150pab.3
+ for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 17:44:17 -0700 (PDT)
+Date: Thu, 7 Jul 2016 09:49:43 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v21 3/8] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20160707004330.GU20774@linaro.org>
+Subject: Re: [PATCH v21 4/8] arm64: kdump: add kdump support
+Message-ID: <20160707004942.GV20774@linaro.org>
 References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <20160706075226.27609-4-takahiro.akashi@linaro.org>
- <1467826137.8880.35.camel@infradead.org>
+ <20160706075226.27609-5-takahiro.akashi@linaro.org>
+ <1467826689.8880.39.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1467826137.8880.35.camel@infradead.org>
+In-Reply-To: <1467826689.8880.39.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,94 +30,94 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
 Cc: catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
 
-On Wed, Jul 06, 2016 at 10:28:57AM -0700, Geoff Levand wrote:
+On Wed, Jul 06, 2016 at 10:38:09AM -0700, Geoff Levand wrote:
 > On Wed, 2016-07-06 at 16:52 +0900, AKASHI Takahiro wrote:
-> > --- a/arch/arm64/include/asm/smp.h
-> > +++ b/arch/arm64/include/asm/smp.h
-> > @@ -136,6 +136,10 @@ static inline void cpu_panic_kernel(void)
-> >   */
-> >  bool cpus_are_stuck_in_kernel(void);
-> >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +extern void smp_send_crash_stop(void);
-> > +#endif
-> 
-> It seems this could be simplified by removing these
-> conditionals, then move the conditionals that are
-> around the smp_send_crash_stop definition to inside
-> that definition.
-
-OK.
-
-> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> > index 62ff3c0..51e0b73 100644
-> > --- a/arch/arm64/kernel/smp.c
-> > +++ b/arch/arm64/kernel/smp.c
-> > @@ -800,6 +803,28 @@ static void ipi_cpu_stop(unsigned int cpu)
-> >  > 	> 	> cpu_relax();
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -136,6 +137,57 @@ static void __init reserve_crashkernel(void)
 > >  }
+> >  #endif /* CONFIG_KEXEC_CORE */
 > >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +static atomic_t waiting_for_crash_ipi;
-> > +
-> > +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
+> > +#ifdef CONFIG_CRASH_DUMP
+> > +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+> > +> 	> 	> const char *uname, int depth, void *data)
 > > +{
-> > +> 	> crash_save_cpu(regs, cpu);
+> > +> 	> const __be32 *reg;
+> > +> 	> int len;
 > > +
-> > +> 	> atomic_dec(&waiting_for_crash_ipi);
+> > +> 	> if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > +> 	> 	> return 0;
 > > +
-> > +> 	> local_irq_disable();
+> > +> 	> reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
+> > +> 	> if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > +> 	> 	> return 1;
 > > +
-> > +#ifdef CONFIG_HOTPLUG_CPU
-> > +> 	> if (cpu_ops[cpu]->cpu_die)
-> > +> 	> 	> cpu_ops[cpu]->cpu_die(cpu);
-> > +#endif
+> > +> 	> elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, ??);
+> > +> 	> elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, ??);
 > > +
-> > +> 	> /* just in case */
-> > +> 	> while (1)
-> > +> 	> 	> wfi();
+> > +> 	> return 1;
 > > +}
-> > +#endif
-> 
->  /*
-> >   * Main handler for inter-processor interrupts
-> >   */
-> > @@ -830,6 +855,14 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
-> >  > 	> 	> irq_exit();
-> >  > 	> 	> break;
-> >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +> 	> case IPI_CPU_CRASH_STOP:
-> > +> 	> 	> irq_enter();
-> > +> 	> 	> ipi_cpu_crash_stop(cpu, regs);
 > > +
-> > +> 	> 	> unreachable();
-> > +#endif
+> > +/*
+> > + * reserve_elfcorehdr() - reserves memory for elf core header
+> > + *
+> > + * This function reserves elf core header given in "elfcorehdr=" kernel
+> > + * command line parameter. This region contains all the information about
+> > + * primary kernel's core image and is used by a dump capture kernel to
+> > + * access the system memory on primary kernel.
+> > + */
+> > +static void __init reserve_elfcorehdr(void)
+> > +{
 > 
-> It seems like you could simplifiy with something like:
+> It seems like you could get rid of all these conditionals by
+> just putting this here:
 > 
-> 	case IPI_CPU_CRASH_STOP:
-> 		if (IS_ENABLED(CONFIG_KEXEC_CORE) {
-> 			irq_enter();
-> 			ipi_cpu_crash_stop(cpu, regs);
-> 			unreachable();
-> 		}
+> 	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
+> 		return;
 
-OK, I will take this.
-
-> Then move the CONFIG_KEXEC_CORE conditional around
-> ipi_cpu_crash_stop to just around crash_save_cpu().
-
-Yeah, we can do that, but I added these conditionals just because
-the kernel size can be reduced (a bit, obviously) if kexec is
-not needed.
-So instead of removing the conditional around ipi_cpu_crash_stop(),
-an empty definition will be added for !CONFIG_KEXEC_CORE.
+Add this to reserve_elfcorehdr()?
+Unfortunately, it won't work because this function accesses
+elfcorehdr_addr & elfcorehdr_size which are defined only
+if CONFIG_CRASH_DUMP.
 
 Thanks,
 -Takahiro AKASHI
 
->  -Geoff
+> 
+> > +> 	> of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
+> > +
+> > +> 	> if (!elfcorehdr_size)
+> > +> 	> 	> return;
+> > +
+> > +> 	> if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+> > +> 	> 	> pr_warn("elfcorehdr is overlapped\n");
+> > +> 	> 	> return;
+> > +> 	> }
+> > +
+> > +> 	> memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> > +
+> > +> 	> pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
+> > +> 	> 	> elfcorehdr_size >> 10, elfcorehdr_addr);
+> > +}
+> > +#else
+> > +static void __init reserve_elfcorehdr(void)
+> > +{
+> > +> 	> ;
+> > +}
+> > +#endif /* CONFIG_CRASH_DUMP */
+> >  /*
+> >   * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
+> >   * currently assumes that for memory starting above 4G, 32-bit devices will
+> > @@ -389,6 +441,8 @@ void __init arm64_memblock_init(void)
+> >  
+> >  > 	> reserve_crashkernel();
+> >  
+> > +> 	> reserve_elfcorehdr();
+> > +
+> >  > 	> early_init_fdt_scan_reserved_mem();
+> >  
+> >  > 	> /* 4GB maximum for 32-bit only capable devices */
+> 
 
 _______________________________________________
 kexec mailing list
