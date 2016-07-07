@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
+Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bKxs2-0007Aw-LI
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 01:12:51 +0000
-Received: by mail-pf0-x231.google.com with SMTP id c2so1139881pfa.2
- for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 18:12:30 -0700 (PDT)
-Date: Thu, 7 Jul 2016 10:17:47 +0900
+ id 1bKyXA-0006yL-Tb
+ for kexec@lists.infradead.org; Thu, 07 Jul 2016 01:55:21 +0000
+Received: by mail-pa0-x22d.google.com with SMTP id b13so1572448pat.0
+ for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 18:54:59 -0700 (PDT)
+Date: Thu, 7 Jul 2016 11:00:25 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v21 1/8] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20160707011745.GX20774@linaro.org>
+Subject: Re: [PATCH v21 8/8] Documentation: dt: usable-memory and elfcorehdr
+ nodes for arm64 kexec
+Message-ID: <20160707020025.GY20774@linaro.org>
 References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <20160706075226.27609-2-takahiro.akashi@linaro.org>
- <2543175.KeBui093Sr@hactar>
+ <20160706075226.27609-9-takahiro.akashi@linaro.org>
+ <6483018.WWW2TSJB10@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2543175.KeBui093Sr@hactar>
+In-Reply-To: <6483018.WWW2TSJB10@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,38 +29,51 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, linux-arm-kernel@lists.infradead.org
+Cc: geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, will.deacon@arm.com, james.morse@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Jul 06, 2016 at 03:11:45PM -0300, Thiago Jung Bauermann wrote:
-> Am Mittwoch, 06 Juli 2016, 16:52:19 schrieb AKASHI Takahiro:
-> > On the startup of primary kernel, the memory region used by crash dump
-> > kernel must be specified by "crashkernel=" kernel parameter.
-> > reserve_crashkernel() will allocate and reserve the region for later use.
-> > 
-> > User space tools, like kexec-tools, will be able to find that region
-> > marked as "Crash kernel" in /proc/iomem.
+On Wed, Jul 06, 2016 at 04:29:18PM -0300, Thiago Jung Bauermann wrote:
+> Hi,
 > 
-> On powerpc, userspace tools get everything from the device tree (exposed to 
-> userspace in /proc/device-tree/), not /proc/iomem.
-
-I started my kdump patches with arm (not arm64) implementation, and
-so /proc/iomem is used for consistency. Since my kexec-tools (for arm64)
-have to access /proc/iomem to identify usable memory regions on
-*UEFI* systems anyway, I didn't think it was odd.
-
-(Please note that UEFI won't expose memory regions information via
-a device tree, but via ACPI table.)
-
-> In the case of the crashkernel reserved region, that information is in 
-> /chosen/linux,crashkernel-base and /chosen/linux,crashkernel-size.
+> Am Mittwoch, 06 Juli 2016, 16:52:26 schrieb AKASHI Takahiro:
+> > +linux,usable-memory
+> > +-------------------
+> > +
+> > +This property is set on PowerPC and arm64 by kexec-tools during kdump
+> > +to tell the crash kernel the base address of its reserved area of memory,
+> > and +the size. e.g.
+> > +
+> > +/ {
+> > +	chosen {
+> > +		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
+> > +	};
+> > +};
 > 
-> Either way is fine I think. I'm just mentioning this for reference in case 
-> you want the ARM implementation to be closer to another arch which is also 
-> based on the device tree.
+> Again, this description is wrong for PowerPC. See messages from myself and 
+> Michael Ellerman:
+> 
+> https://lists.infradead.org/pipermail/kexec/2016-June/016250.html
+> 
+> https://lists.infradead.org/pipermail/kexec/2016-June/016253.html
 
-Adding those properties to a device tree is quite easy
-(and it won't conflict with /proc/iomem), so I'd like 
-to defer to arm64 maintainers.
+Oops, I must have missed your previous comments. Apologies.
+
+Yes, I know that, and I used to implement the same functionality before.
+It did work for dtb-based systems, but not for UEFI(ACPI)-based systems
+because UEFI doesn't export memory regions information via a device tree,
+but rather via ACPI table. So "/memory" node won't appear.
+So I went back with "mem=" command line approach, and later this "/chosen/"
+approach.
+
+> IMHO, it would be simpler if ARM used linux,usable-memory in the same way 
+> that PowerPC does, for consistency.
+
+Well, this property won't conflict with per-"/memory" ones
+if we take it that the former, if present, supersedes the latter.
+Sophistic?
+What about changing the name to usable-memory-limit?
+(I know that you have another one, "memory-limit" though.)
+
+Again, I would like to defer to arm64 maintainers.
 
 Thanks,
 -Takahiro AKASHI
