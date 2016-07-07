@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bL6QF-0002cA-0b
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 10:20:45 +0000
-Date: Thu, 7 Jul 2016 11:20:04 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: kexec failures with DEBUG_RODATA
-Message-ID: <20160707102003.GO1041@n2100.armlinux.org.uk>
-References: <20160614175920.GD1041@n2100.armlinux.org.uk>
- <CAGXu5j+5j32HO0rQtF2hcqMUBaa8cyxgLT4JvaZ6LL2WPj_zjw@mail.gmail.com>
- <20160615211359.GJ1041@n2100.armlinux.org.uk>
- <CAGXu5jKRBA9b6gos+FG7iV2ppxtAERstNPschxA0z=aDL_y1YA@mail.gmail.com>
- <20160615224228.GK1041@n2100.armlinux.org.uk>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bL6QF-0002fU-Fa
+ for kexec@lists.infradead.org; Thu, 07 Jul 2016 10:20:46 +0000
+From: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
+Subject: [PATCH v2] kexec: Fix kdump failure with notsc
+Date: Thu, 7 Jul 2016 18:17:26 +0800
+Message-ID: <1467886646-2638-1-git-send-email-weijg.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160615224228.GK1041@n2100.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,38 +20,161 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@google.com>
-Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Wei Jiangang <weijg.fnst@cn.fujitsu.com>
 
-On Wed, Jun 15, 2016 at 11:42:28PM +0100, Russell King - ARM Linux wrote:
-> The boot environment must be setup such that there is room for the
-> uncompressed image (aligned currently to 256 bytes) followed by the
-> size of the compressed image, with any appended DTBs included.
-> Anything which is located below that is likely to get trampled by
-> the decompressor.
+If we specify the 'notsc' boot parameter for the dump-capture kernel,
+and then trigger a crash(panic) by using "ALT-SysRq-c" or "echo c >
+/proc/sysrq-trigger",
+the dump-capture kernel will hang in calibrate_delay_converge():
 
-There's a question that's been lingering, which hasn't been brought up
-by anyone yet: should we even support zImage files with an appended
-DTB for kexec?
+    /* wait for "start of" clock tick */
+    ticks = jiffies;
+    while (ticks == jiffies)
+        ; /* nothing */
 
-When kexec is operating in DTB mode, it will provide the DTB to the
-kernel from the host environment, possibly with some modifications (eg,
-to change the command line arguments.)  Since an appended DTB would
-override the kexec-provided DTB, this would wipe out those changes,
-some of which are necessary for things like crashdump to work.
+serial log of the hang is as follows:
 
-So, I'm thinking that kexec should not support a zImage with appended
-DTB - in fact, I think it should truncate the zImage to be loaded, and
-ensure that the word following the zImage does not contain a DTB magic
-number, in case the zImage has been built with CONFIG_ARM_APPENDED_DTB
-enabled.
+    tsc: Fast TSC calibration using PIT
+    tsc: Detected 2099.947 MHz processor
+    Calibrating delay loop...
 
-Thoughts?
+The reason is that the dump-capture kernel hangs in while loops and
+waits for jiffies to be updated, but no timer interrupts is passed
+to BSP by APIC.
 
+In fact, the local APIC was disabled in reboot and crash path by
+lapic_shutdown(). We need to put APIC in legacy mode in kexec jump path
+(put the system into PIT during the crash kernel),
+so that the dump-capture kernel can get timer interrupts.
+
+BTW,
+I found the buggy commit 522e66464467 ("x86/apic: Disable I/O APIC
+before shutdown of the local APIC") via bisection.
+
+Originally, I want to revert it.
+But Ingo Molnar comments that "By reverting the change can paper over
+the bug, but re-introduce the bug that can result in certain CPUs hanging
+if IO-APIC sends an APIC message if the lapic is disabled prematurely"
+And I think it's pertinent.
+
+Signed-off-by: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
+---
+ arch/x86/include/asm/apic.h        | 5 +++++
+ arch/x86/kernel/apic/apic.c        | 9 +++++++++
+ arch/x86/kernel/machine_kexec_32.c | 5 ++---
+ arch/x86/kernel/machine_kexec_64.c | 6 +++---
+ 4 files changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index bc27611fa58f..5d7e635e580a 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -128,6 +128,7 @@ extern void clear_local_APIC(void);
+ extern void disconnect_bsp_APIC(int virt_wire_setup);
+ extern void disable_local_APIC(void);
+ extern void lapic_shutdown(void);
++extern int lapic_disabled(void);
+ extern void sync_Arb_IDs(void);
+ extern void init_bsp_APIC(void);
+ extern void setup_local_APIC(void);
+@@ -165,6 +166,10 @@ extern int setup_APIC_eilvt(u8 lvt_off, u8 vector, u8 msg_type, u8 mask);
+ 
+ #else /* !CONFIG_X86_LOCAL_APIC */
+ static inline void lapic_shutdown(void) { }
++static inline int lapic_disabled(void)
++{
++	return 0;
++}
+ #define local_apic_timer_c2_ok		1
+ static inline void init_apic_mappings(void) { }
+ static inline void disable_local_APIC(void) { }
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index 60078a67d7e3..d1df250994bb 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -133,6 +133,9 @@ static inline void imcr_apic_to_pic(void)
+ }
+ #endif
+ 
++/* Local APIC is disabled by the kernel for crash or reboot path */
++static int disabled_local_apic;
++
+ /*
+  * Knob to control our willingness to enable the local APIC.
+  *
+@@ -1097,10 +1100,16 @@ void lapic_shutdown(void)
+ #endif
+ 		disable_local_APIC();
+ 
++	disabled_local_apic = 1;
+ 
+ 	local_irq_restore(flags);
+ }
+ 
++int lapic_disabled(void)
++{
++	return disabled_local_apic;
++}
++
+ /**
+  * sync_Arb_IDs - synchronize APIC bus arbitration IDs
+  */
+diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+index 469b23d6acc2..c934a7868e6b 100644
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -202,14 +202,13 @@ void machine_kexec(struct kimage *image)
+ 	local_irq_disable();
+ 	hw_breakpoint_disable();
+ 
+-	if (image->preserve_context) {
++	if (image->preserve_context || lapic_disabled()) {
+ #ifdef CONFIG_X86_IO_APIC
+ 		/*
+ 		 * We need to put APICs in legacy mode so that we can
+ 		 * get timer interrupts in second kernel. kexec/kdump
+ 		 * paths already have calls to disable_IO_APIC() in
+-		 * one form or other. kexec jump path also need
+-		 * one.
++		 * one form or other. kexec jump path also need one.
+ 		 */
+ 		disable_IO_APIC();
+ #endif
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 5a294e48b185..d3598cdd6437 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -23,6 +23,7 @@
+ #include <asm/pgtable.h>
+ #include <asm/tlbflush.h>
+ #include <asm/mmu_context.h>
++#include <asm/apic.h>
+ #include <asm/io_apic.h>
+ #include <asm/debugreg.h>
+ #include <asm/kexec-bzimage64.h>
+@@ -269,14 +270,13 @@ void machine_kexec(struct kimage *image)
+ 	local_irq_disable();
+ 	hw_breakpoint_disable();
+ 
+-	if (image->preserve_context) {
++	if (image->preserve_context || lapic_disabled()) {
+ #ifdef CONFIG_X86_IO_APIC
+ 		/*
+ 		 * We need to put APICs in legacy mode so that we can
+ 		 * get timer interrupts in second kernel. kexec/kdump
+ 		 * paths already have calls to disable_IO_APIC() in
+-		 * one form or other. kexec jump path also need
+-		 * one.
++		 * one form or other. kexec jump path also need one.
+ 		 */
+ 		disable_IO_APIC();
+ #endif
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+1.9.3
+
+
+
 
 _______________________________________________
 kexec mailing list
