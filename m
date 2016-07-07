@@ -1,17 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bL9uC-0000Ys-AR
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 14:03:53 +0000
-In-Reply-To: <20160707102003.GO1041@n2100.armlinux.org.uk>
-References: <20160707102003.GO1041@n2100.armlinux.org.uk>
-From: Russell King <rmk@armlinux.org.uk>
-Subject: [PATCH 1/2] arm: plug a zImage corner case
-MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <E1bL9rj-0002Ow-6i@e0050434b2927.dyn.armlinux.org.uk>
-Date: Thu, 07 Jul 2016 15:01:19 +0100
+ id 1bLC5w-0007LC-Sc
+ for kexec@lists.infradead.org; Thu, 07 Jul 2016 16:24:10 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u67FxM4g066691
+ for <kexec@lists.infradead.org>; Thu, 7 Jul 2016 12:23:46 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2415xmtnrf-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 07 Jul 2016 12:23:46 -0400
+Received: from localhost
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 7 Jul 2016 13:23:44 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id D66E81DC006D
+ for <kexec@lists.infradead.org>; Thu,  7 Jul 2016 12:23:33 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u67GNfTd16843210
+ for <kexec@lists.infradead.org>; Thu, 7 Jul 2016 13:23:41 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u67GNfjK003665
+ for <kexec@lists.infradead.org>; Thu, 7 Jul 2016 13:23:41 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v4 0/9] kexec_file_load implementation for PowerPC
+Date: Thu,  7 Jul 2016 13:23:26 -0300
+Message-Id: <1467908615-18952-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,65 +40,191 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>, linux-arm-kernel@lists.infradead.org, Kees Cook <keescook@google.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-If a zImage is built with ARM_APPENDED_DTB enabled, the zImage will
-look at the word following the zImage and check whether it contains
-the DTB magic number.
+Hello,
 
-Generally, kexec will clear the destination pages before copying the
-zImage, but there is a corner case where the zImage is a multiple of
-the page size, where the following page will not be touched.  Should
-the first word in this page contain the DTB magic number, the data
-following will be interpreted as a DTB image.
+Note: We are currently discussing whether we need a new syscall so that
+userspace can provide a custom device tree for the new kernel. Even if
+that ends up being the way forward, it would affect only patches 7 and 8,
+and even in those patches a significant part of the code would stay
+the same. Therefore, it's still important for me to get feedback on
+this series.
 
-In order to make this bullet-proof, we must always initialise the word
-following the zImage.  Arrange this by specifying the zImage memory
-size one word bigger than the buffer size.
+Cover letter:
 
-Signed-off-by: Russell King <rmk@armlinux.org.uk>
----
- kexec/arch/arm/kexec-zImage-arm.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+This patch series implements the kexec_file_load system call on PowerPC.
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 9400d1f4..c8b90f96 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -343,6 +343,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	unsigned long base, kernel_base;
- 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
- 	unsigned int extra_size = 0x8000; /* TEXT_OFFSET */
-+	size_t kernel_mem_size;
- 	const char *command_line;
- 	char *modified_cmdline = NULL;
- 	off_t command_line_len;
-@@ -470,6 +471,12 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 	}
- 
- 	/*
-+	 * Always extend the zImage by four bytes to ensure that an appended
-+	 * DTB image always sees an initialised value after _edata.
-+	 */
-+	kernel_mem_size = len + 4;
-+
-+	/*
- 	 * If we are loading a dump capture kernel, we need to update kernel
- 	 * command line and also add some additional segments.
- 	 */
-@@ -621,7 +628,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
- 		            dtb_offset, dtb_length);
- 	}
- 
--	add_segment(info, buf, len, kernel_base, len);
-+	add_segment(info, buf, len, kernel_base, kernel_mem_size);
- 
- 	info->entry = (void*)kernel_base;
- 
+This system call moves the reading of the kernel, initrd and the device tree
+from the userspace kexec tool to the kernel. This is needed if you want to
+do one or both of the following:
+
+1. only allow loading of signed kernels.
+2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
+   command line and other boot inputs for the Integrity Measurement
+   Architecture subsystem.
+
+The above are the functions kexec already has built into kexec_file_load.
+Yesterday I posted a set of patches which allows a third feature:
+
+3. have IMA pass-on its event log (where integrity measurements are
+   registered) accross kexec to the second kernel, so that the event
+   history is preserved.
+
+Because OpenPower uses an intermediary Linux instance as a boot loader
+(skiroot), feature 1 is needed to implement secure boot for the platform,
+while features 2 and 3 are needed to implement trusted boot.
+
+This patch series starts by removing an x86 assumption from kexec_file:
+kexec_add_buffer uses iomem to find reserved memory ranges, but PowerPC
+uses the memblock subsystem.  A hook is added so that each arch can
+specify how memory ranges can be found.
+
+Also, the memory-walking logic in kexec_add_buffer is useful in this
+implementation to find a free area for the purgatory's stack, so the
+next patch moves that logic to kexec_locate_mem_hole.
+
+The kexec_file_load system call needs to apply relocations to the
+purgatory but adding code for that would duplicate functionality with
+the module loading mechanism, which also needs to apply relocations to
+the kernel modules.  Therefore, this patch series factors out the module
+relocation code so that it can be shared.
+
+One thing that is still missing is crashkernel support, which I intend
+to submit shortly. For now, arch_kexec_kernel_image_probe rejects crash
+kernels.
+
+This code is based on kexec-tools, but with many modifications to adapt
+it to the kernel environment and facilities. Except the purgatory,
+which only has minimal changes.
+
+Changes for v4:
+- Rebased series on today's powerpc/next.
+- Patch "kexec_file: Remove unused members from struct kexec_buf.":
+    - Dropped from the series.
+- Patch "kexec_file: Allow arch-specific memory walking function for
+  kexec_add_buffer":
+    - Changed subject line to be more specific. Was: "kexec_file: Generalize
+      kexec_add_buffer.".
+    - Changed description to refer to x86 arch instead of Intel arch.
+    - Moved documentation comments for struct kexec_buf to this patch.
+- Patch "kexec_file: Change kexec_add_buffer to take kexec_buf as argument.":
+    - New patch.
+- Patch "kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.":
+    - Changed kexec_locate_mem_hole to take kexec_buf as argument.
+    - Improved description of kexec_locate_mem_hole in documentation comment.
+
+Changes for v3:
+- Rebased series on today's powerpc/next.
+- Patch "kexec_file: Generalize kexec_add_buffer.":
+    - Removed most arguments from arch_kexec_walk_mem and pass kbuf
+      explicitly.
+- Patch "powerpc: Add functions to read ELF files of any endianness.":
+    - Fixed whitespace issues found by checkpatch.pl.
+- Patch "powerpc: Factor out relocation code from module_64.c to
+  elf_util_64.c.":
+    - Changed to use the new PPC64_ELF_ABI_v2 macro.
+- Patch "powerpc: Add support for loading ELF kernels with
+  kexec_file_load.":
+    - Adapted arch_kexec_walk_mem implementation to changes in its
+      argument list.
+    - Fixed whitespace and GPL header issues found by checkpatch.pl.
+- Patch "powerpc: Add purgatory for kexec_file_load implementation.":
+    - Fixed whitespace and GPL header issues found by checkpatch.pl.
+    - Changed to use the new PPC64_ELF_ABI_v2 macro.
+
+Changes for v2:
+- All patches: forgot to add Signed-off-by lines in v1, so added them now.
+- Patch "kexec_file: Generalize kexec_add_buffer.": broke in two, one
+  adding arch_kexec_walk_mem and the other adding kexec_locate_mem_hole.
+- Patch "powerpc: Implement kexec_file_load.":
+    - Moved relocation changes and the arch_kexec_walk_mem implementation
+      to the next patch in the series.
+    - Removed pr_fmt from machine_kexec_64.c, since the patch doesn't add
+      any call to pr_debug in that file.
+    - Changed arch_kexec_kernel_image_probe to reject crash kernels.
+
+Thiago Jung Bauermann (9):
+  kexec_file: Allow arch-specific memory walking for kexec_add_buffer
+  kexec_file: Change kexec_add_buffer to take kexec_buf as argument.
+  kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.
+  powerpc: Factor out relocation code from module_64.c to elf_util_64.c.
+  powerpc: Generalize elf64_apply_relocate_add.
+  powerpc: Add functions to read ELF files of any endianness.
+  powerpc: Implement kexec_file_load.
+  powerpc: Add support for loading ELF kernels with kexec_file_load.
+  powerpc: Add purgatory for kexec_file_load implementation.
+
+ arch/powerpc/Kconfig                      |  13 +
+ arch/powerpc/Makefile                     |   4 +
+ arch/powerpc/include/asm/elf_util.h       |  92 +++++
+ arch/powerpc/include/asm/kexec_elf_64.h   |  10 +
+ arch/powerpc/include/asm/module.h         |  14 +-
+ arch/powerpc/include/asm/systbl.h         |   1 +
+ arch/powerpc/include/asm/unistd.h         |   2 +-
+ arch/powerpc/include/uapi/asm/unistd.h    |   1 +
+ arch/powerpc/kernel/Makefile              |   7 +
+ arch/powerpc/kernel/elf_util.c            | 476 +++++++++++++++++++++++++
+ arch/powerpc/kernel/elf_util_64.c         | 374 +++++++++++++++++++
+ arch/powerpc/kernel/kexec_elf_64.c        | 575 ++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/machine_kexec_64.c    | 134 +++++++
+ arch/powerpc/kernel/module_64.c           | 328 +++--------------
+ arch/powerpc/purgatory/.gitignore         |   2 +
+ arch/powerpc/purgatory/Makefile           |  36 ++
+ arch/powerpc/purgatory/console-ppc64.c    |  38 ++
+ arch/powerpc/purgatory/crashdump-ppc64.h  |  42 +++
+ arch/powerpc/purgatory/crashdump_backup.c |  36 ++
+ arch/powerpc/purgatory/crtsavres.S        |   5 +
+ arch/powerpc/purgatory/hvCall.S           |  27 ++
+ arch/powerpc/purgatory/hvCall.h           |   8 +
+ arch/powerpc/purgatory/kexec-sha256.h     |  11 +
+ arch/powerpc/purgatory/ppc64_asm.h        |  20 ++
+ arch/powerpc/purgatory/printf.c           | 164 +++++++++
+ arch/powerpc/purgatory/purgatory-ppc64.c  |  41 +++
+ arch/powerpc/purgatory/purgatory-ppc64.h  |   6 +
+ arch/powerpc/purgatory/purgatory.c        |  62 ++++
+ arch/powerpc/purgatory/purgatory.h        |  11 +
+ arch/powerpc/purgatory/sha256.c           |   6 +
+ arch/powerpc/purgatory/sha256.h           |   1 +
+ arch/powerpc/purgatory/string.S           |   1 +
+ arch/powerpc/purgatory/v2wrap.S           | 134 +++++++
+ arch/x86/kernel/crash.c                   |  37 +-
+ arch/x86/kernel/kexec-bzimage64.c         |  48 +--
+ include/linux/kexec.h                     |  36 +-
+ kernel/kexec_file.c                       | 141 ++++----
+ kernel/kexec_internal.h                   |  16 -
+ 38 files changed, 2553 insertions(+), 407 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/elf_util.h
+ create mode 100644 arch/powerpc/include/asm/kexec_elf_64.h
+ create mode 100644 arch/powerpc/kernel/elf_util.c
+ create mode 100644 arch/powerpc/kernel/elf_util_64.c
+ create mode 100644 arch/powerpc/kernel/kexec_elf_64.c
+ create mode 100644 arch/powerpc/purgatory/.gitignore
+ create mode 100644 arch/powerpc/purgatory/Makefile
+ create mode 100644 arch/powerpc/purgatory/console-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/crashdump_backup.c
+ create mode 100644 arch/powerpc/purgatory/crtsavres.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.h
+ create mode 100644 arch/powerpc/purgatory/kexec-sha256.h
+ create mode 100644 arch/powerpc/purgatory/ppc64_asm.h
+ create mode 100644 arch/powerpc/purgatory/printf.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/purgatory.c
+ create mode 100644 arch/powerpc/purgatory/purgatory.h
+ create mode 100644 arch/powerpc/purgatory/sha256.c
+ create mode 100644 arch/powerpc/purgatory/sha256.h
+ create mode 100644 arch/powerpc/purgatory/string.S
+ create mode 100644 arch/powerpc/purgatory/v2wrap.S
+
 -- 
 1.9.1
 
