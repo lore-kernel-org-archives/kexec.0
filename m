@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bL3ko-0000mL-E6
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 07:29:47 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: fix module init base and size offset for
- kernel v4.5
-Date: Thu, 7 Jul 2016 07:26:33 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E50826@BPXM01GP.gisp.nec.co.jp>
-References: <8140a1f8-55c9-b725-ba31-fc410527d201@linux.vnet.ibm.com>
-In-Reply-To: <8140a1f8-55c9-b725-ba31-fc410527d201@linux.vnet.ibm.com>
-Content-Language: ja-JP
+ id 1bL69d-0005v1-18
+ for kexec@lists.infradead.org; Thu, 07 Jul 2016 10:03:34 +0000
+Date: Thu, 7 Jul 2016 11:00:53 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: kexec failures with DEBUG_RODATA
+Message-ID: <20160707100053.GN1041@n2100.armlinux.org.uk>
+References: <20160614175920.GD1041@n2100.armlinux.org.uk>
+ <CAGXu5j+5j32HO0rQtF2hcqMUBaa8cyxgLT4JvaZ6LL2WPj_zjw@mail.gmail.com>
+ <20160615211359.GJ1041@n2100.armlinux.org.uk>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160615211359.GJ1041@n2100.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,87 +26,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Guenther Hutzl <hutzl@linux.vnet.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Kees Cook <keescook@google.com>
+Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hello Guenther,
+On Wed, Jun 15, 2016 at 10:13:59PM +0100, Russell King - ARM Linux wrote:
+> On Tue, Jun 14, 2016 at 11:05:23AM -0700, Kees Cook wrote:
+> > I'm much less familiar with the ARM decompression stub, but is there a
+> > boot image header (like x86 has)? If not, perhaps we can invent one,
+> > and it can carry all the details needed for a bootloader to do the
+> > right things.
+> 
+> With a bit of tinkering around, I now have this:
+> 
+> 00000000 <.data>:
+>        0:       e1a00000        nop                     ; (mov r0, r0)
+>        4:       e1a00000        nop                     ; (mov r0, r0)
+>        8:       e1a00000        nop                     ; (mov r0, r0)
+>        c:       e1a00000        nop                     ; (mov r0, r0)
+>       10:       e1a00000        nop                     ; (mov r0, r0)
+>       14:       e1a00000        nop                     ; (mov r0, r0)
+>       18:       e1a00000        nop                     ; (mov r0, r0)
+>       1c:       e1a00000        nop                     ; (mov r0, r0)
+>       20:       ea00000f        b       0x64
+> 
+> Then follows the existing "header" which we've had there for years:
+> 
+>       24:       016f2818	; LE magic number
+>       28:       00000000	; LE zImage start address (always zero now)
+>       2c:       00431fe0	; LE zImage _edata
+>       30:       04030201	; endian flag
+> 
+> And now comes the new header:
+> 
+>       34:       016f2818	; LE magic number
+>       38:       00000001	; LE version number (v1)
+>       3c:       01287000	; LE total space required for decompressor
+>       40:       00e54000	; LE uncompressed image size
+> 
+> Up to 64 bytes available here for future expansion, currently filled
+> with zeros.
+>         ...
+> 
+> Remainder of the zImage code:
+>       64:       e10f9000        mrs     r9, CPSR
 
->Hello!
->
->This is a follow-up patch on the patch provided in post:
->
->"[PATCH] makedumpfile: fix module core base and size offset for kernel v4.5"
->by Pratyush Anand
->
->What is missing there is the changes that were done to the module_init entry
->of the struct module. The patch does basically the same as the patch for
->module_core adapted to module_init.
+Looking at this again, this can't work for another _two_ reasons:
 
-Thanks, I'll merge this patch into v1.6.1.
+1. Thumb2 kernels - we rely on a relative address to jump to for the
+   remainder of the zImage code, using an "adr" instruction.  The offset
+   needs to be known at assembly time, but with my approach of moving
+   the header into the linker script, this is no longer the case.
 
-Regards,
-Atsushi Kumagai
+2. EFI images need the header offset at 0x3c, which gets in the way of
+   us appending to our existing header.
 
->Here is the patch:
->---
->Following commit in kernel v4.5 changed struct module, which affects offset
->calculation of core and init layout's base and size.
->
->commit 7523e4dc5057e157212b4741abd6256e03404cf1
->Author: Rusty Russell <rusty at rustcorp.com.au>
->Date:   Thu Nov 26 09:44:08 2015 +1030
->
->    module: use a structure to encapsulate layout.
->
->This patch fixes makedumpfile code to cater the module_init modification.
->
->Signed-off-by: Guenther Hutzl <hutzl@linux.vnet.ibm.com>
->---
-> makedumpfile.c | 18 ++++++++++++++++++
-> 1 file changed, 18 insertions(+)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index 853b999..f33a90d 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -1689,7 +1689,25 @@ get_structure_info(void)
-> 		OFFSET(module.core_size) += core_layout;
-> 	}
-> 	OFFSET_INIT(module.module_init, "module", "module_init");
->+	if (OFFSET(module.module_init) == NOT_FOUND_STRUCTURE) {
->+		/* for kernel version 4.5 and above */
->+		long init_layout;
->+
->+		OFFSET_INIT(module.module_init, "module", "init_layout");
->+		init_layout = OFFSET(module.module_init);
->+		OFFSET_INIT(module.module_init, "module_layout", "base");
->+		OFFSET(module.module_init) += init_layout;
->+	}
-> 	OFFSET_INIT(module.init_size, "module", "init_size");
->+	if (OFFSET(module.init_size) == NOT_FOUND_STRUCTURE) {
->+		/* for kernel version 4.5 and above */
->+		long init_layout;
->+
->+		OFFSET_INIT(module.init_size, "module", "init_layout");
->+		init_layout = OFFSET(module.init_size);
->+		OFFSET_INIT(module.init_size, "module_layout", "size");
->+		OFFSET(module.init_size) += init_layout;
->+	}
->
-> 	ENUM_NUMBER_INIT(NR_FREE_PAGES, "NR_FREE_PAGES");
-> 	ENUM_NUMBER_INIT(N_ONLINE, "N_ONLINE");
->--
->2.6.6
->
->--
->Guenther Hutzl
->Linux on System z & Virtualization Development
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+So... I don't think we can solve it this way, and I'm all out of ideas
+how to solve this in a sane manner - I'm currently of the opinion that
+it _isn't_ solvable given where we are without defining a new format
+for a zImage, which is really quite depressing.
+
+I think people are just going to have to get used to using --image-size
+to kexec on ARM to work around this problem.  So, let's document it
+in kexec's --help - though this could do with something better, but I
+fear it'll turn into a multi-line description of the option:
+
+ kexec/arch/arm/kexec-zImage-arm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index 9400d1f4..45c587c2 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -122,6 +122,8 @@ void zImage_arm_usage(void)
+ 		"     --initrd=FILE         Use FILE as the kernel's initial ramdisk.\n"
+ 		"     --ramdisk=FILE        Use FILE as the kernel's initial ramdisk.\n"
+ 		"     --dtb=FILE            Use FILE as the fdt blob.\n"
++		"     --image-size=IMAGE_SIZE\n"
++		"                           Reserve IMAGE_SIZE between kernel and initrd.\n"
+ 		"     --atags               Use ATAGs instead of device-tree.\n"
+ 		"     --page-offset=PAGE_OFFSET\n"
+ 		"                           Set PAGE_OFFSET of crash dump vmcore\n"
+
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
