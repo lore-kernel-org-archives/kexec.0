@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bKyXA-0006yL-Tb
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 01:55:21 +0000
-Received: by mail-pa0-x22d.google.com with SMTP id b13so1572448pat.0
- for <kexec@lists.infradead.org>; Wed, 06 Jul 2016 18:54:59 -0700 (PDT)
-Date: Thu, 7 Jul 2016 11:00:25 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v21 8/8] Documentation: dt: usable-memory and elfcorehdr
- nodes for arm64 kexec
-Message-ID: <20160707020025.GY20774@linaro.org>
-References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <20160706075226.27609-9-takahiro.akashi@linaro.org>
- <6483018.WWW2TSJB10@hactar>
+Date: Thu, 7 Jul 2016 14:12:45 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC] arm64: kexec_file_load support
+Message-ID: <20160707061245.GA18459@dhcp-128-65.nay.redhat.com>
+References: <20160701051111.GL20774@linaro.org> <3300473.zhbeG65qgA@hactar>
+ <20160704065814.GO20774@linaro.org>
+ <20160705012556.GC8190@dhcp-128-65.nay.redhat.com>
+ <20160705080355.GQ20774@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <6483018.WWW2TSJB10@hactar>
+In-Reply-To: <20160705080355.GQ20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,61 +22,151 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, will.deacon@arm.com, james.morse@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com, will.deacon@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 
-On Wed, Jul 06, 2016 at 04:29:18PM -0300, Thiago Jung Bauermann wrote:
-> Hi,
+On 07/05/16 at 05:03pm, AKASHI Takahiro wrote:
+> Hi Dave,
 > 
-> Am Mittwoch, 06 Juli 2016, 16:52:26 schrieb AKASHI Takahiro:
-> > +linux,usable-memory
-> > +-------------------
-> > +
-> > +This property is set on PowerPC and arm64 by kexec-tools during kdump
-> > +to tell the crash kernel the base address of its reserved area of memory,
-> > and +the size. e.g.
-> > +
-> > +/ {
-> > +	chosen {
-> > +		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-> > +	};
-> > +};
+> On Tue, Jul 05, 2016 at 09:25:56AM +0800, Dave Young wrote:
+> > On 07/04/16 at 03:58pm, AKASHI Takahiro wrote:
+> > > Hi,
+> > > 
+> > > On Fri, Jul 01, 2016 at 12:46:31PM -0300, Thiago Jung Bauermann wrote:
+> > > > Am Freitag, 01 Juli 2016, 14:11:12 schrieb AKASHI Takahiro:
+> > > > > I'm not sure whether there is any demand for kexec_file_load
+> > > > > support on arm64, but anyhow I'm working on this and now
+> > > > > my early prototype code does work fine.
+> > > > 
+> > > > It is necessary if you want to support loading only signed kernels, and also 
+> > > > if you want IMA to measure the kernel in its event log.
+> > > > 
+> > > > > There is, however, one essential issue:
+> > > > > While arm64 kernel requires a device tree blob to be set up
+> > > > > correctly at boot time, the current system call API doesn't
+> > > > > have this parameter.
+> > > > >     int kexec_file_load(int kernel_fd, int initrd_fd,
+> > > > >                         unsigned long cmdline_len, const char
+> > > > > *cmdline_ptr, unsigned long flags);
+> > > > > 
+> > > > > Should we invent a new system call, like kexec_file_load2,
+> > > > > and, if so, what kind of interface would be desired?
+> > > > 
+> > > > I'm facing the same issue on powerpc. What I'm doing is taking the device 
+> > > > tree that was used to boot the current kernel and modifying it as necessary 
+> > > > to pass it to the next kernel.
+> > > 
+> > > That is exactly what I do.
+> > > 
+> > > > I agree that it would be better if we could have a system call where a 
+> > > > custom device tree could be passed. One suggestion is:
+> > > 
+> > > For powerpc, you might be able to use dtbImage instead of Image
+> > > without changing the kernel interfaces.
+> > > > 
+> > > > kexec_file_load2(int fds[], int fd_types[], int nr_fds,
+> > > > 		 unsigned long cmdline_len, const char *cmdline_ptr,
+> > > > 		unsigned long flags);
+> > > 
+> > > You don't want to simply add one more argument, i.e. dtb_fd, don't you.
+> > > 
+> > > I prefer a slightly-simpler interface:
+> > >         struct kexec_file_fd {
+> > >                 enum kexec_file_type;
+> > >                 int fd;
+> > >         }
+> > > 
+> > >         int kexec_file_load2(struct kexec_file_fd[], int nr_fds, int flags);
+> > > 
+> > > Or if you want to keep the compatibility with the existing system call,
+> > > 
+> > >         int kexec_file_load(int kernel_fd, int initrd_fd,
+> > >                         unsigned long cmdline_len, const char *cmdline_ptr,
+> > >                         unsigned long flags,
+> > >                         int struct kexec_file_fd[], int nr_fds);
+> > > 
+> > > Here SYSCALL_DEFINE7() have to be defined, and I'm not sure that we will not
+> > > have a problem in adding a system call with more than 6 arguments.
+> > > 
+> > > > Where fds is an array with nr_fds file descriptors and fd_types is an array 
+> > > > specifying what each fd in fds is. So for example, if fds[i] is the kernel, 
+> > > > then fd_types[i] would have the value KEXEC_FILE_KERNEL_FD. If fds[i] is the 
+> > > > device tree blob, fd_types[i], would have the value KEXEC_FILE_DTB and so 
+> > > > on. That way, the syscall can be extended for an arbitrary number and types 
+> > > > of segments that have to be loaded, just like kexec_load.
+> > > > 
+> > > > Another option is to have a struct:
+> > > > 
+> > > > kexec_file_load2(struct kexec_file_params *params, unsigned long params_sz);
+> > > 
+> > > Wow, we can add any number of new parameters with this interface.
+> > > 
+> > > Thanks,
+> > > -Takahiro AKASHI
+> > > 
+> > > > Where:
+> > > > 
+> > > > struct kexec_file_params {
+> > > > 	int version;	/* allows struct to be extended in the future */
+> > > > 	int fds[];
+> > > > 	int fd_types[];
+> > > > 	int nr_fds;
+> > > > 	unsigned long cmdline_len;
+> > > > 	const char *cmdline_ptr;
+> > > > 	unsigned long flags;
+> > > > };
+> > > > 
+> > > > This is even more flexible.
+> > 
+> > I would like to vote for this one, and use kexec_file_fd fds[] in the struct 
 > 
-> Again, this description is wrong for PowerPC. See messages from myself and 
-> Michael Ellerman:
+> If we take this approach, we'd better take "flags" out of struct,
+> and my preference would be:
 > 
-> https://lists.infradead.org/pipermail/kexec/2016-June/016250.html
+>         enum kexec_file_type {
+>                 KEXEC_FILE_TYPE_KERNEL;
+>                 KEXEC_FILE_TYPE_INITRD;
+>                 KEXEC_FILE_TYPE_DTB;
+>         }
 > 
-> https://lists.infradead.org/pipermail/kexec/2016-June/016253.html
-
-Oops, I must have missed your previous comments. Apologies.
-
-Yes, I know that, and I used to implement the same functionality before.
-It did work for dtb-based systems, but not for UEFI(ACPI)-based systems
-because UEFI doesn't export memory regions information via a device tree,
-but rather via ACPI table. So "/memory" node won't appear.
-So I went back with "mem=" command line approach, and later this "/chosen/"
-approach.
-
-> IMHO, it would be simpler if ARM used linux,usable-memory in the same way 
-> that PowerPC does, for consistency.
-
-Well, this property won't conflict with per-"/memory" ones
-if we take it that the former, if present, supersedes the latter.
-Sophistic?
-What about changing the name to usable-memory-limit?
-(I know that you have another one, "memory-limit" though.)
-
-Again, I would like to defer to arm64 maintainers.
-
-Thanks,
--Takahiro AKASHI
-
-> -- 
-> []'s
-> Thiago Jung Bauermann
-> IBM Linux Technology Center
+>         struct kexec_file_fd {
+>                 enum kexec_file_type;
+>                 int fd;
+>         }
 > 
+>         sturct kexec_file_params {
+>                 int version;
+>                 unsigned char *cmdline;
+>                 unsigned long cmdline_len;
+>                 int nr_fds;
+>                 struct kexec_file_fd fds[0];
+>         }
+> 
+>         int kexec_file_load2(int kernel_fd, unsigned long flags,
+>                                 sturct kexec_file_params extra);
+> 
+> So we don't have to retrieve extra if KEXEC_FILE_UNLOAD
+> (or kernel_fd < 0?),
+> and only once retrieve extra if extra != NULL && nr_fds == 0.
+
+If so maybe change a bit from your precious mentioned 7 args proposal like
+below?
+
+struct kexec_file_fd {
+	enum kexec_file_type;
+	int fd;
+}
+
+struct kexec_fdset {
+	int nr_fd;
+	struct kexec_file_fd fd[0];
+}
+
+int kexec_file_load(int kernel_fd, int initrd_fd,
+		    unsigned long cmdline_len, const char *cmdline_ptr,
+		    unsigned long flags, struct kexec_fdset *extra_fds);
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
