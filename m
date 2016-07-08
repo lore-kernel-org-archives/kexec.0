@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bLEKG-0004xN-EF
- for kexec@lists.infradead.org; Thu, 07 Jul 2016 18:47:04 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u67IjlR0002029
- for <kexec@lists.infradead.org>; Thu, 7 Jul 2016 14:46:42 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2415xmqqyu-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 07 Jul 2016 14:46:42 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 7 Jul 2016 15:46:39 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v21 8/8] Documentation: dt: usable-memory and elfcorehdr
- nodes for arm64 kexec
-Date: Thu, 07 Jul 2016 15:46:35 -0300
-In-Reply-To: <20160707020025.GY20774@linaro.org>
-References: <20160706075226.27609-1-takahiro.akashi@linaro.org>
- <6483018.WWW2TSJB10@hactar> <20160707020025.GY20774@linaro.org>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bLNj3-0003x8-QJ
+ for kexec@lists.infradead.org; Fri, 08 Jul 2016 04:49:19 +0000
+From: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH v2] kexec: Fix kdump failure with notsc
+Date: Fri, 8 Jul 2016 04:48:45 +0000
+Message-ID: <1467953195.2119.98.camel@localhost>
+References: <1467886646-2638-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <87r3b5z626.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87r3b5z626.fsf@x220.int.ebiederm.org>
+Content-Language: en-US
+Content-ID: <31F89E62CA861642A1E1B833473BB1CD@fujitsu.local>
 MIME-Version: 1.0
-Message-Id: <1629887.9vk1SlhCGj@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,69 +25,233 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, will.deacon@arm.com, james.morse@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: "ebiederm@xmission.com" <ebiederm@xmission.com>
+Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "hpa@zytor.com" <hpa@zytor.com>, "Izumi,
+ Taku" <izumi.taku@jp.fujitsu.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-Am Donnerstag, 07 Juli 2016, 11:00:25 schrieb AKASHI Takahiro:
-> On Wed, Jul 06, 2016 at 04:29:18PM -0300, Thiago Jung Bauermann wrote:
-> > Hi,
-> > 
-> > Am Mittwoch, 06 Juli 2016, 16:52:26 schrieb AKASHI Takahiro:
-> > > +linux,usable-memory
-> > > +-------------------
-> > > +
-> > > +This property is set on PowerPC and arm64 by kexec-tools during kdump
-> > > +to tell the crash kernel the base address of its reserved area of
-> > > memory, and +the size. e.g.
-> > > +
-> > > +/ {
-> > > +	chosen {
-> > > +		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-> > > +	};
-> > > +};
-> > 
-> > Again, this description is wrong for PowerPC. See messages from myself
-> > and Michael Ellerman:
-> > 
-> > https://lists.infradead.org/pipermail/kexec/2016-June/016250.html
-> > 
-> > https://lists.infradead.org/pipermail/kexec/2016-June/016253.html
+Hi , Eric
+
+Thanks for your comments firstly.
+
+On Thu, 2016-07-07 at 12:55 -0500, Eric W. Biederman wrote:
+> Wei Jiangang <weijg.fnst@cn.fujitsu.com> writes:
 > 
-> Oops, I must have missed your previous comments. Apologies.
-
-No problem.
-
-> Yes, I know that, and I used to implement the same functionality before.
-> It did work for dtb-based systems, but not for UEFI(ACPI)-based systems
-> because UEFI doesn't export memory regions information via a device tree,
-> but rather via ACPI table. So "/memory" node won't appear.
-> So I went back with "mem=" command line approach, and later this
-> "/chosen/" approach.
-
-Ah, I didn't realize there could be dtb and UEFI systems.
-
-> > IMHO, it would be simpler if ARM used linux,usable-memory in the same
-> > way
-> > that PowerPC does, for consistency.
+> > If we specify the 'notsc' boot parameter for the dump-capture kernel,
+> > and then trigger a crash(panic) by using "ALT-SysRq-c" or "echo c >
+> > /proc/sysrq-trigger",
+> > the dump-capture kernel will hang in calibrate_delay_converge():
+> >
+> >     /* wait for "start of" clock tick */
+> >     ticks = jiffies;
+> >     while (ticks == jiffies)
+> >         ; /* nothing */
+> >
+> > serial log of the hang is as follows:
+> >
+> >     tsc: Fast TSC calibration using PIT
+> >     tsc: Detected 2099.947 MHz processor
+> >     Calibrating delay loop...
+> >
+> > The reason is that the dump-capture kernel hangs in while loops and
+> > waits for jiffies to be updated, but no timer interrupts is passed
+> > to BSP by APIC.
+> >
+> > In fact, the local APIC was disabled in reboot and crash path by
+> > lapic_shutdown(). We need to put APIC in legacy mode in kexec jump path
+> > (put the system into PIT during the crash kernel),
+> > so that the dump-capture kernel can get timer interrupts.
+> >
+> > BTW,
+> > I found the buggy commit 522e66464467 ("x86/apic: Disable I/O APIC
+> > before shutdown of the local APIC") via bisection.
+> >
+> > Originally, I want to revert it.
+> > But Ingo Molnar comments that "By reverting the change can paper over
+> > the bug, but re-introduce the bug that can result in certain CPUs hanging
+> > if IO-APIC sends an APIC message if the lapic is disabled prematurely"
+> > And I think it's pertinent.
 > 
-> Well, this property won't conflict with per-"/memory" ones
-> if we take it that the former, if present, supersedes the latter.
-> Sophistic?
-> What about changing the name to usable-memory-limit?
-> (I know that you have another one, "memory-limit" though.)
+> Sigh.  Can we please just do the work to rip out the apic shutdown code
+> from the kexec on panic code path?
+
+Do you mean remove the calls for disable_IO_APIC() and lapic_shutdown()
+in native_machine_crash_shutdown()?
+
+If so, I have tried it, but it doesn't work for this problem.
 > 
-> Again, I would like to defer to arm64 maintainers.
+> I forgetting details but the only reason we have do any apic shutdown
+> is bugs in older kernels that could not initialize a system properly
+> if we did not shut down the apics.
+> 
+> I certainly don't see an issue with goofy cases like notsc not working
+> on a crash capture kernel if we are not initializing the hardware
+> properly.
+> 
+> The strategy really needs to be to only do the absolutely essential
+> hardware shutdown in the crashing kernel, every adintional line of code
+> we execute in the crashing kernel increases our chances of hitting a
+> bug.
+> 
+> Under that policy things like requring we don't pass boot options that
+> inhibit the dump catpure kernel from initializing the hardware from a
+> random state are reasonable requirements.  AKA I don't see any
+> justification in this as to why we would even want to support notsc
+> on the dump capture kernel.  Especially when things clearly work when
+> that option is not specified.
 
-My personal opinion is that having a property with a different name would be 
-less confusing, but it's not a strong opinion.
+firstly do some clarification,
 
-I would suggest calling it usable-memory-range, but I'm fine with whatever 
-is decided by the maintainers.
+My commit message metioned that "specify the 'notsc' boot parameter for
+the dump-capture kernel ....". 
+That's just the reproducing method used by myself for this problem.
 
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+In fact, If we specify notsc only for the first kernel,  which also can
+trigger the bug.
+
+
+And secondly,
+
+In multiple CPU configurations the TSC values on different processors
+may be different, 
+which may cause random (bad) results.
+
+for example,
+FUJITSU's server (PRIMEQUEST 2000 series) supports Dynamic
+Reconfiguration.
+http://www.fujitsu.com/global/products/computing/servers/mission-critical/primequest/technology/availability/dynamic-reconfiguration.html
+
+This feature enables to hot-add system board which contains cpus and
+memories, this means some cpus can be hot-added to system. 
+tsc of hot-added cpus is not consistent with tsc of
+existing-from-boot-time cpus. (though hardware and firmware make an
+effort to speficy the same tsc value as existing one)
+
+PRIMEQUEST can happen this tsc-inconsistency, we recommend to specify
+"notsc" boot option for Dynamic Reconfiguration users.
+
+so we really need to specify 'notsc'.
+
+Regards,
+wei
+
+> Eric
+> 
+> 
+> > Signed-off-by: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
+> > ---
+> >  arch/x86/include/asm/apic.h        | 5 +++++
+> >  arch/x86/kernel/apic/apic.c        | 9 +++++++++
+> >  arch/x86/kernel/machine_kexec_32.c | 5 ++---
+> >  arch/x86/kernel/machine_kexec_64.c | 6 +++---
+> >  4 files changed, 19 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+> > index bc27611fa58f..5d7e635e580a 100644
+> > --- a/arch/x86/include/asm/apic.h
+> > +++ b/arch/x86/include/asm/apic.h
+> > @@ -128,6 +128,7 @@ extern void clear_local_APIC(void);
+> >  extern void disconnect_bsp_APIC(int virt_wire_setup);
+> >  extern void disable_local_APIC(void);
+> >  extern void lapic_shutdown(void);
+> > +extern int lapic_disabled(void);
+> >  extern void sync_Arb_IDs(void);
+> >  extern void init_bsp_APIC(void);
+> >  extern void setup_local_APIC(void);
+> > @@ -165,6 +166,10 @@ extern int setup_APIC_eilvt(u8 lvt_off, u8 vector, u8 msg_type, u8 mask);
+> >  
+> >  #else /* !CONFIG_X86_LOCAL_APIC */
+> >  static inline void lapic_shutdown(void) { }
+> > +static inline int lapic_disabled(void)
+> > +{
+> > +	return 0;
+> > +}
+> >  #define local_apic_timer_c2_ok		1
+> >  static inline void init_apic_mappings(void) { }
+> >  static inline void disable_local_APIC(void) { }
+> > diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+> > index 60078a67d7e3..d1df250994bb 100644
+> > --- a/arch/x86/kernel/apic/apic.c
+> > +++ b/arch/x86/kernel/apic/apic.c
+> > @@ -133,6 +133,9 @@ static inline void imcr_apic_to_pic(void)
+> >  }
+> >  #endif
+> >  
+> > +/* Local APIC is disabled by the kernel for crash or reboot path */
+> > +static int disabled_local_apic;
+> > +
+> >  /*
+> >   * Knob to control our willingness to enable the local APIC.
+> >   *
+> > @@ -1097,10 +1100,16 @@ void lapic_shutdown(void)
+> >  #endif
+> >  		disable_local_APIC();
+> >  
+> > +	disabled_local_apic = 1;
+> >  
+> >  	local_irq_restore(flags);
+> >  }
+> >  
+> > +int lapic_disabled(void)
+> > +{
+> > +	return disabled_local_apic;
+> > +}
+> > +
+> >  /**
+> >   * sync_Arb_IDs - synchronize APIC bus arbitration IDs
+> >   */
+> > diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+> > index 469b23d6acc2..c934a7868e6b 100644
+> > --- a/arch/x86/kernel/machine_kexec_32.c
+> > +++ b/arch/x86/kernel/machine_kexec_32.c
+> > @@ -202,14 +202,13 @@ void machine_kexec(struct kimage *image)
+> >  	local_irq_disable();
+> >  	hw_breakpoint_disable();
+> >  
+> > -	if (image->preserve_context) {
+> > +	if (image->preserve_context || lapic_disabled()) {
+> >  #ifdef CONFIG_X86_IO_APIC
+> >  		/*
+> >  		 * We need to put APICs in legacy mode so that we can
+> >  		 * get timer interrupts in second kernel. kexec/kdump
+> >  		 * paths already have calls to disable_IO_APIC() in
+> > -		 * one form or other. kexec jump path also need
+> > -		 * one.
+> > +		 * one form or other. kexec jump path also need one.
+> >  		 */
+> >  		disable_IO_APIC();
+> >  #endif
+> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> > index 5a294e48b185..d3598cdd6437 100644
+> > --- a/arch/x86/kernel/machine_kexec_64.c
+> > +++ b/arch/x86/kernel/machine_kexec_64.c
+> > @@ -23,6 +23,7 @@
+> >  #include <asm/pgtable.h>
+> >  #include <asm/tlbflush.h>
+> >  #include <asm/mmu_context.h>
+> > +#include <asm/apic.h>
+> >  #include <asm/io_apic.h>
+> >  #include <asm/debugreg.h>
+> >  #include <asm/kexec-bzimage64.h>
+> > @@ -269,14 +270,13 @@ void machine_kexec(struct kimage *image)
+> >  	local_irq_disable();
+> >  	hw_breakpoint_disable();
+> >  
+> > -	if (image->preserve_context) {
+> > +	if (image->preserve_context || lapic_disabled()) {
+> >  #ifdef CONFIG_X86_IO_APIC
+> >  		/*
+> >  		 * We need to put APICs in legacy mode so that we can
+> >  		 * get timer interrupts in second kernel. kexec/kdump
+> >  		 * paths already have calls to disable_IO_APIC() in
+> > -		 * one form or other. kexec jump path also need
+> > -		 * one.
+> > +		 * one form or other. kexec jump path also need one.
+> >  		 */
+> >  		disable_IO_APIC();
+> >  #endif
+> 
+> 
+
 
 
 _______________________________________________
