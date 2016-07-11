@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bMme9-0004mJ-JS
- for kexec@lists.infradead.org; Tue, 12 Jul 2016 01:38:03 +0000
-Received: by mail-pf0-x230.google.com with SMTP id t190so771737pfb.3
- for <kexec@lists.infradead.org>; Mon, 11 Jul 2016 18:37:40 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [RFC 3/3] kexec: extend kexec_file_load system call
-Date: Tue, 12 Jul 2016 10:42:01 +0900
-Message-Id: <20160712014201.11456-4-takahiro.akashi@linaro.org>
-In-Reply-To: <20160712014201.11456-1-takahiro.akashi@linaro.org>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ id 1bMWgV-00076Z-8d
+ for kexec@lists.infradead.org; Mon, 11 Jul 2016 08:35:24 +0000
+Date: Mon, 11 Jul 2016 16:34:49 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [V3 PATCH 1/2] x86/panic: Replace smp_send_stop() with kdump
+ friendly version
+Message-ID: <20160711083449.GA19320@dhcp-128-65.nay.redhat.com>
+References: <20160705113323.5864.66834.stgit@softrs>
+ <20160705113325.5864.74840.stgit@softrs>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160705113325.5864.74840.stgit@softrs>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,237 +21,231 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, vgoyal@redhat.com, dyoung@redhat.com, bhe@redhat.com, bauerman@linux.vnet.ibm.com, arnd@arndb.de
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Michal Hocko <mhocko@suse.com>, Toshi Kani <toshi.kani@hpe.com>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, Minfei Huang <mnfhuang@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Daniel Walker <dwalker@fifo99.com>, Ingo Molnar <mingo@kernel.org>, Takao Indoh <indou.takao@jp.fujitsu.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, "Lee,
+ Chun-Yi" <joeyli.kernel@gmail.com>, Borislav Petkov <bp@suse.de>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Petr Mladek <pmladek@suse.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 
-Device tree blob must be passed to a second kernel on DTB-capable
-archs, like powerpc and arm64, but the current kernel interface
-lacks this support.
+On 07/05/16 at 08:33pm, Hidehiro Kawai wrote:
+> This patch fixes one of the problems reported by Daniel Walker
+> (https://lkml.org/lkml/2015/6/24/44).
+> 
+> If crash_kexec_post_notifiers boot option is specified, other CPUs
+> are stopped by smp_send_stop() instead of machine_crash_shutdown()
+> in crash_kexec() path.  This behavior change leads two problems.
+> 
+>  Problem 1:
+>  octeon_generic_shutdown() for MIPS OCTEON assumes that other CPUs are
+>  still online and try to stop their watchdog timer.  If
+>  smp_send_stop() is called before octeon_generic_shutdown(), stopping
+>  watchdog timer will fail because other CPUs have been offlined by
+>  smp_send_stop().
+> 
+>    panic()
+>      if crash_kexec_post_notifiers == 1
+>        smp_send_stop()
+>        atomic_notifier_call_chain()
+>        kmsg_dump()
+>      crash_kexec()
+>        machine_crash_shutdown()
+>          octeon_generic_shutdown() // shutdown watchdog for ONLINE CPUs
+> 
+>  Problem 2:
+>  Most of architectures stop other CPUs in machine_crash_shutdown()
+>  path, and they also do something needed for kdump.  For example,
+>  they save registers, disable virtualization extensions, and so on.
+>  However, if smp_send_stop() stops other CPUs before
+>  machine_crash_shutdown(), we miss those operations.
+> 
+> How do we fix these problems?  In the first place, we should stop
+> other CPUs as soon as possible when panic() was called, otherwise
+> other CPUs may wipe out a clue to the cause of the failure.  So, we
+> replace smp_send_stop() with more suitable one for kdump.
 
-This patch extends kexec_file_load system call by adding an extra
-argument to this syscall so that an arbitrary number of file descriptors
-can be handed out from user space to the kernel.
+We have been avoiding extra things in panic path, but unfortunately
+crash_kexec_post_notifiers were added. I tend to agree the best place
+for this stuff is in 2nd kernel or purgatory instead of in 1st kernel.
 
-	long sys_kexec_file_load(int kernel_fd, int initrd_fd,
-				 unsigned long cmdline_len,
-				 const char __user *cmdline_ptr,
-				 unsigned long flags,
-				 const struct kexec_fdset __user *ufdset);
+As for this patch I'm not sure it is safe to replace the smp_send_stop
+with the kdump friendly function. I'm also not sure if the kdump friendly
+function is safe for kdump. Will glad to hear opinions from other
+arch experts.
 
-If KEXEC_FILE_EXTRA_FDS is set to the "flags" argument, the "ufdset"
-argument points to the following struct buffer:
+BTW, if one want to use crash_kexec_post_notifiers he should take the
+risk of unreliable kdump. How about only call smp_send_stop in case no
+crash_kexec_post_notifiers being used.
 
-	struct kexec_fdset {
-		int nr_fds;
-		struct kexec_file_fd fds[0];
-	}
+> 
+> This patch solves Problem 2 by replacing smp_send_stop() in panic()
+> with panic_smp_send_stop().  This is a weak function which calls
+> smp_send_stop(), and architecture dependent code may override this
+> with appropriate one.  This patch only provides x86-specific version.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- include/linux/fs.h         |  1 +
- include/linux/kexec.h      |  2 +-
- include/linux/syscalls.h   |  4 +++-
- include/uapi/linux/kexec.h | 17 ++++++++++++++
- kernel/kexec_file.c        | 57 ++++++++++++++++++++++++++++++++++++++++------
- 5 files changed, 72 insertions(+), 9 deletions(-)
+It does not fix the Problem 1, it seem not possible to fix it?
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dd28814..6dd6fdf 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2634,6 +2634,7 @@ extern int do_pipe_flags(int *, int);
- 	id(MODULE, kernel-module)		\
- 	id(KEXEC_IMAGE, kexec-image)		\
- 	id(KEXEC_INITRAMFS, kexec-initramfs)	\
-+	id(KEXEC_DTB, kexec-dtb)		\
- 	id(POLICY, security-policy)		\
- 	id(MAX_ID, )
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 554c848..5f11bd5 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -277,7 +277,7 @@ extern int kexec_load_disabled;
- 
- /* List of defined/legal kexec file flags */
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
--				 KEXEC_FILE_NO_INITRAMFS)
-+				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_EXTRA_FDS)
- 
- #define VMCOREINFO_BYTES           (4096)
- #define VMCOREINFO_NOTE_NAME       "VMCOREINFO"
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index d022390..fc072bd 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -66,6 +66,7 @@ struct perf_event_attr;
- struct file_handle;
- struct sigaltstack;
- union bpf_attr;
-+struct kexec_fdset;
- 
- #include <linux/types.h>
- #include <linux/aio_abi.h>
-@@ -321,7 +322,8 @@ asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
- asmlinkage long sys_kexec_file_load(int kernel_fd, int initrd_fd,
- 				    unsigned long cmdline_len,
- 				    const char __user *cmdline_ptr,
--				    unsigned long flags);
-+				    unsigned long flags,
-+				    const struct kexec_fdset __user *ufdset);
- 
- asmlinkage long sys_exit(int error_code);
- asmlinkage long sys_exit_group(int error_code);
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index aae5ebf..adf53b6 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -23,6 +23,23 @@
- #define KEXEC_FILE_UNLOAD	0x00000001
- #define KEXEC_FILE_ON_CRASH	0x00000002
- #define KEXEC_FILE_NO_INITRAMFS	0x00000004
-+#define KEXEC_FILE_EXTRA_FDS	0x00000008
-+
-+enum kexec_file_type {
-+	KEXEC_FILE_TYPE_KERNEL,
-+	KEXEC_FILE_TYPE_INITRAMFS,
-+	KEXEC_FILE_TYPE_DTB,
-+};
-+
-+struct kexec_file_fd {
-+	enum kexec_file_type type;
-+	int fd;
-+};
-+
-+struct kexec_fdset {
-+	int nr_fds;
-+	struct kexec_file_fd fds[0];
-+};
- 
- /* These values match the ELF architecture values.
-  * Unless there is a good reason that should continue to be the case.
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 7278329..451b4b0 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -137,11 +137,14 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- static int
- kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			     const char __user *cmdline_ptr,
--			     unsigned long cmdline_len, unsigned flags)
-+			     unsigned long cmdline_len, unsigned long flags,
-+			     const struct kexec_fdset __user *ufdset)
- {
--	int ret = 0;
-+	int ret = 0, nr_fds, i;
- 	void *ldata;
- 	loff_t size;
-+	struct kexec_fdset *fdset = NULL;
-+	size_t fdset_size;
- 
- 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
- 				       &size, INT_MAX, READING_KEXEC_IMAGE);
-@@ -174,6 +177,42 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		image->initrd_buf_len = size;
- 	}
- 
-+	if (flags & KEXEC_FILE_EXTRA_FDS) {
-+		ret = copy_from_user(&nr_fds, ufdset, sizeof(int));
-+		if (ret) {
-+			ret = -EFAULT;
-+			goto out;
-+		}
-+
-+		fdset_size = sizeof(struct kexec_fdset)
-+				+ nr_fds * sizeof(struct kexec_file_fd);
-+		fdset = kmalloc(fdset_size, GFP_KERNEL);
-+		if (!fdset) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+
-+		ret = copy_from_user(fdset, ufdset, fdset_size);
-+		if (ret) {
-+			ret = -EFAULT;
-+			goto out;
-+		}
-+
-+		for (i = 0; i < fdset->nr_fds; i++) {
-+			if (fdset->fds[i].type == KEXEC_FILE_TYPE_DTB) {
-+				ret = kernel_read_file_from_fd(fdset->fds[i].fd,
-+						&image->dtb_buf, &size, INT_MAX,
-+						READING_KEXEC_DTB);
-+				if (ret)
-+					goto out;
-+				image->dtb_buf_len = size;
-+			} else {
-+				pr_debug("unknown file type %d failed.\n",
-+						fdset->fds[i].type);
-+			}
-+		}
-+	}
-+
- 	if (cmdline_len) {
- 		image->cmdline_buf = kzalloc(cmdline_len, GFP_KERNEL);
- 		if (!image->cmdline_buf) {
-@@ -208,6 +247,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	image->image_loader_data = ldata;
- out:
- 	/* In case of error, free up all allocated memory in this function */
-+	kfree(fdset);
-+
- 	if (ret)
- 		kimage_file_post_load_cleanup(image);
- 	return ret;
-@@ -216,7 +257,8 @@ out:
- static int
- kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
- 		       int initrd_fd, const char __user *cmdline_ptr,
--		       unsigned long cmdline_len, unsigned long flags)
-+		       unsigned long cmdline_len, unsigned long flags,
-+		       const struct kexec_fdset __user *ufdset)
- {
- 	int ret;
- 	struct kimage *image;
-@@ -235,7 +277,8 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
- 	}
- 
- 	ret = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
--					   cmdline_ptr, cmdline_len, flags);
-+					   cmdline_ptr, cmdline_len, flags,
-+					   ufdset);
- 	if (ret)
- 		goto out_free_image;
- 
-@@ -270,9 +313,9 @@ out_free_image:
- 	return ret;
- }
- 
--SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-+SYSCALL_DEFINE6(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
--		unsigned long, flags)
-+		unsigned long, flags, const struct kexec_fdset __user *, ufdset)
- {
- 	int ret = 0, i;
- 	struct kimage **dest_image, *image;
-@@ -309,7 +352,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 		kimage_free(xchg(&kexec_crash_image, NULL));
- 
- 	ret = kimage_file_alloc_init(&image, kernel_fd, initrd_fd, cmdline_ptr,
--				     cmdline_len, flags);
-+				     cmdline_len, flags, ufdset);
- 	if (ret)
- 		goto out;
- 
--- 
-2.9.0
+> 
+> Changes in V3:
+> - Revise comments, description, and symbol names
+> 
+> Changes in V2:
+> - Replace smp_send_stop() call with crash_kexec version which
+>   saves cpu states and cleans up VMX/SVM
+> - Drop a fix for Problem 1 at this moment
+> 
+> Reported-by: Daniel Walker <dwalker@fifo99.com>
+> Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
+> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Toshi Kani <toshi.kani@hpe.com>
+> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> Cc: Takao Indoh <indou.takao@jp.fujitsu.com>
+> Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+> Cc: Minfei Huang <mnfhuang@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+>  arch/x86/kernel/crash.c |   14 ++++++++++----
+>  kernel/panic.c          |   43 ++++++++++++++++++++++++++++++++-----------
+>  2 files changed, 42 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 9ef978d..3305433 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -133,15 +133,21 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+>  	disable_local_APIC();
+>  }
+>  
+> -static void kdump_nmi_shootdown_cpus(void)
+> +/* Override the weak function in kernel/panic.c */
+> +void panic_smp_send_stop(void)
+>  {
+> -	nmi_shootdown_cpus(kdump_nmi_callback);
+> +	static int cpus_stopped;
+> +
+> +	if (cpus_stopped)
+> +		return;
+>  
+> +	nmi_shootdown_cpus(kdump_nmi_callback);
+>  	disable_local_APIC();
+> +	cpus_stopped = 1;
+>  }
+>  
+>  #else
+> -static void kdump_nmi_shootdown_cpus(void)
+> +void panic_smp_send_stop(void)
+>  {
+>  	/* There are no cpus to shootdown */
+>  }
+> @@ -160,7 +166,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  	/* The kernel is broken so disable interrupts */
+>  	local_irq_disable();
+>  
+> -	kdump_nmi_shootdown_cpus();
+> +	panic_smp_send_stop();
+>  
+>  	/*
+>  	 * VMCLEAR VMCSs loaded on this cpu if needed.
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 8aa7449..da8062d2 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -71,6 +71,32 @@ void __weak nmi_panic_self_stop(struct pt_regs *regs)
+>  	panic_smp_self_stop();
+>  }
+>  
+> +/*
+> + * Stop other CPUs in panic.  Architecture dependent code may override this
+> + * with more suitable version.  For example, if the architecture supports
+> + * crash dump, it should save registers of each stopped CPU and disable
+> + * per-CPU features such as virtualization extensions.
+> + */
+> +void __weak panic_smp_send_stop(void)
+> +{
+> +	static int cpus_stopped;
+> +
+> +	/*
+> +	 * This function can be called twice in panic path, but obviously
+> +	 * we execute this only once.
+> +	 */
+> +	if (cpus_stopped)
+> +		return;
+> +
+> +	/*
+> +	 * Note smp_send_stop is the usual smp shutdown function, which
+> +	 * unfortunately means it may not be hardened to work in a panic
+> +	 * situation.
+> +	 */
+> +	smp_send_stop();
+> +	cpus_stopped = 1;
+> +}
+> +
+>  atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
+>  
+>  /*
+> @@ -125,7 +151,7 @@ void panic(const char *fmt, ...)
+>  	 * Only one CPU is allowed to execute the panic code from here. For
+>  	 * multiple parallel invocations of panic, all other CPUs either
+>  	 * stop themself or will wait until they are stopped by the 1st CPU
+> -	 * with smp_send_stop().
+> +	 * with panic_smp_send_stop().
+>  	 *
+>  	 * `old_cpu == PANIC_CPU_INVALID' means this is the 1st CPU which
+>  	 * comes here, so go ahead.
+> @@ -165,12 +191,7 @@ void panic(const char *fmt, ...)
+>  		__crash_kexec(NULL);
+>  	}
+>  
+> -	/*
+> -	 * Note smp_send_stop is the usual smp shutdown function, which
+> -	 * unfortunately means it may not be hardened to work in a panic
+> -	 * situation.
+> -	 */
+> -	smp_send_stop();
+> +	panic_smp_send_stop();
+>  
+>  	/*
+>  	 * Run any panic handlers, including those that might need to
+> @@ -198,10 +219,10 @@ void panic(const char *fmt, ...)
+>  
+>  	/*
+>  	 * We may have ended up stopping the CPU holding the lock (in
+> -	 * smp_send_stop()) while still having some valuable data in the console
+> -	 * buffer.  Try to acquire the lock then release it regardless of the
+> -	 * result.  The release will also print the buffers out.  Locks debug
+> -	 * should be disabled to avoid reporting bad unlock balance when
+> +	 * panic_smp_send_stop()) while still having some valuable data in the
+> +	 * console buffer.  Try to acquire the lock then release it regardless
+> +	 * of the result.  The release will also print the buffers out.  Locks
+> +	 * debug should be disabled to avoid reporting bad unlock balance when
+>  	 * panic() is not being callled from OOPS.
+>  	 */
+>  	debug_locks_off();
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
