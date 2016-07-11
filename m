@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bMRni-0003IB-53
- for kexec@lists.infradead.org; Mon, 11 Jul 2016 03:22:30 +0000
-Date: Mon, 11 Jul 2016 11:22:03 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 3/9] kexec_file: Factor out kexec_locate_mem_hole from
- kexec_add_buffer.
-Message-ID: <20160711032203.GD2850@dhcp-128-65.nay.redhat.com>
-References: <1467908615-18952-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1467908615-18952-4-git-send-email-bauerman@linux.vnet.ibm.com>
+ id 1bMVQ6-00031n-9Y
+ for kexec@lists.infradead.org; Mon, 11 Jul 2016 07:14:23 +0000
+Received: by mail-pa0-x22b.google.com with SMTP id ks6so7050749pab.0
+ for <kexec@lists.infradead.org>; Mon, 11 Jul 2016 00:14:01 -0700 (PDT)
+Date: Mon, 11 Jul 2016 16:19:35 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [RFC] arm64: kexec_file_load support
+Message-ID: <20160711071934.GZ20774@linaro.org>
+References: <20160701051111.GL20774@linaro.org>
+ <20160705080355.GQ20774@linaro.org>
+ <20160707061245.GA18459@dhcp-128-65.nay.redhat.com>
+ <11139482.zLvCKVycQr@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1467908615-18952-4-git-send-email-bauerman@linux.vnet.ibm.com>
+In-Reply-To: <11139482.zLvCKVycQr@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,83 +29,54 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, catalin.marinas@arm.com, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-On 07/07/16 at 01:23pm, Thiago Jung Bauermann wrote:
-> kexec_locate_mem_hole will be used by the PowerPC kexec_file_load
-> implementation to find free memory for the purgatory stack.
+On Fri, Jul 08, 2016 at 11:48:44AM -0300, Thiago Jung Bauermann wrote:
+> Am Donnerstag, 07 Juli 2016, 14:12:45 schrieb Dave Young:
+> > If so maybe change a bit from your precious mentioned 7 args proposal like
+> > below?
+> > 
+> > struct kexec_file_fd {
+> > 	enum kexec_file_type;
+> > 	int fd;
+> > }
+> > 
+> > struct kexec_fdset {
+> > 	int nr_fd;
+> > 	struct kexec_file_fd fd[0];
+> > }
+> > 
+> > int kexec_file_load(int kernel_fd, int initrd_fd,
+> > 		    unsigned long cmdline_len, const char *cmdline_ptr,
+> > 		    unsigned long flags, struct kexec_fdset *extra_fds);
 > 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> ---
->  include/linux/kexec.h |  1 +
->  kernel/kexec_file.c   | 25 ++++++++++++++++++++-----
->  2 files changed, 21 insertions(+), 5 deletions(-)
 > 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index ff5fa7707bd7..803f563df81d 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -174,6 +174,7 @@ struct kexec_buf {
->  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
->  			       int (*func)(u64, u64, void *));
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
-> +int kexec_locate_mem_hole(struct kexec_buf *kbuf);
->  #endif /* CONFIG_KEXEC_FILE */
->  
->  struct kimage {
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 82ccfc4ee97e..3125d1689712 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -450,6 +450,23 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
->  }
->  
->  /**
-> + * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
-> + * @kbuf:	Parameters for the memory search.
-> + *
-> + * On success, kbuf->mem will have the start address of the memory region found.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> +{
-> +	int ret;
-> +
-> +	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> +
-> +	return ret == 1 ? 0 : -EADDRNOTAVAIL;
-> +}
-> +
-> +/**
->   * kexec_add_buffer - place a buffer in a kexec segment
->   * @kbuf:	Buffer contents and memory parameters.
->   *
-> @@ -489,11 +506,9 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
->  
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
-> -	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-> -	if (ret != 1) {
-> -		/* A suitable memory range could not be found for buffer */
-> -		return -EADDRNOTAVAIL;
-> -	}
-> +	ret = kexec_locate_mem_hole(kbuf);
-> +	if (ret)
-> +		return ret;
->  
->  	/* Found a suitable memory range */
->  	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
+> Is there a way for the kernel to distinguish whether the process passed 5 or 
+> 6 arguments? How can it know whether extra_fds is a valid argument or just 
+> garbage? I think we have to define a new flag KEXEC_FILE_EXTRA_FDS so that 
+> the process can signal that it is using the new interface.
+
+Good point. What I had in my mind is "open" system call.
+Glibc's implementation of open() checks for the second argument, flags,
+to determine whether or not the third argument, mode, is required.
+
+So our current consensus is that, for the time being, we will extend
+the existing system call interface to allow extra file descriptors,
+and *if* we really need a different type of parameters in the future,
+we will add another system call.
+
+If we all agree, I can post a kernel patch for this change as a RFC.
+(I've already verified it with my prototype of kexec_file_load support
+on arm64.)
+
+Thanks,
+-Takahiro AKASHI
+
 > -- 
-> 1.9.1
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
 > 
-
-Acked-by: Dave Young <dyoung@redhat.com>
-
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
