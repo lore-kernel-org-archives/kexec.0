@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 11 Jul 2016 16:14:52 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC] arm64: kexec_file_load support
-Message-ID: <20160711081452.GA20771@dhcp-128-65.nay.redhat.com>
-References: <20160701051111.GL20774@linaro.org>
- <20160705080355.GQ20774@linaro.org>
- <20160707061245.GA18459@dhcp-128-65.nay.redhat.com>
- <11139482.zLvCKVycQr@hactar> <20160711071934.GZ20774@linaro.org>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bMYUL-0006RG-Ac
+ for kexec@lists.infradead.org; Mon, 11 Jul 2016 10:30:59 +0000
+From: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH v2] kexec: Fix kdump failure with notsc
+Date: Mon, 11 Jul 2016 10:30:23 +0000
+Message-ID: <1468232891.15074.45.camel@localhost>
+References: <1467886646-2638-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <87r3b5z626.fsf@x220.int.ebiederm.org> <20160708073828.GA3216@gmail.com>
+In-Reply-To: <20160708073828.GA3216@gmail.com>
+Content-Language: en-US
+Content-ID: <2CF79CEF14AEFA4890B058F1FA51D9C3@fujitsu.local>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160711071934.GZ20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,67 +21,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, ebiederm@xmission.com, bhe@redhat.com, vgoyal@redhat.com, will.deacon@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: "mingo@kernel.org" <mingo@kernel.org>
+Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-On 07/11/16 at 04:19pm, AKASHI Takahiro wrote:
-> On Fri, Jul 08, 2016 at 11:48:44AM -0300, Thiago Jung Bauermann wrote:
-> > Am Donnerstag, 07 Juli 2016, 14:12:45 schrieb Dave Young:
-> > > If so maybe change a bit from your precious mentioned 7 args proposal like
-> > > below?
-> > > 
-> > > struct kexec_file_fd {
-> > > 	enum kexec_file_type;
-> > > 	int fd;
-> > > }
-> > > 
-> > > struct kexec_fdset {
-> > > 	int nr_fd;
-> > > 	struct kexec_file_fd fd[0];
-> > > }
-> > > 
-> > > int kexec_file_load(int kernel_fd, int initrd_fd,
-> > > 		    unsigned long cmdline_len, const char *cmdline_ptr,
-> > > 		    unsigned long flags, struct kexec_fdset *extra_fds);
-> > 
-> > 
-> > Is there a way for the kernel to distinguish whether the process passed 5 or 
-> > 6 arguments? How can it know whether extra_fds is a valid argument or just 
-> > garbage? I think we have to define a new flag KEXEC_FILE_EXTRA_FDS so that 
-> > the process can signal that it is using the new interface.
-> 
-> Good point. What I had in my mind is "open" system call.
-> Glibc's implementation of open() checks for the second argument, flags,
-> to determine whether or not the third argument, mode, is required.
-> 
-> So our current consensus is that, for the time being, we will extend
-> the existing system call interface to allow extra file descriptors,
-> and *if* we really need a different type of parameters in the future,
-> we will add another system call.
-
-Sounds good to me.
-
-> 
-> If we all agree, I can post a kernel patch for this change as a RFC.
-> (I've already verified it with my prototype of kexec_file_load support
-> on arm64.)
-> 
-> Thanks,
-> -Takahiro AKASHI
-> 
-> > -- 
-> > []'s
-> > Thiago Jung Bauermann
-> > IBM Linux Technology Center
-> > 
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgLCBJbmdvDQoNCk9uIEZyaSwgMjAxNi0wNy0wOCBhdCAwOTozOCArMDIwMCwgSW5nbyBNb2xu
+YXIgd3JvdGU6DQo+ICogRXJpYyBXLiBCaWVkZXJtYW4gPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4g
+d3JvdGU6DQo+IA0KPiA+IFNpZ2guICBDYW4gd2UgcGxlYXNlIGp1c3QgZG8gdGhlIHdvcmsgdG8g
+cmlwIG91dCB0aGUgYXBpYyBzaHV0ZG93biBjb2RlIGZyb20gdGhlIA0KPiA+IGtleGVjIG9uIHBh
+bmljIGNvZGUgcGF0aD8NCj4gPiANCj4gPiBJIGZvcmdldHRpbmcgZGV0YWlscyBidXQgdGhlIG9u
+bHkgcmVhc29uIHdlIGhhdmUgZG8gYW55IGFwaWMgc2h1dGRvd24gaXMgYnVncyBpbiANCj4gPiBv
+bGRlciBrZXJuZWxzIHRoYXQgY291bGQgbm90IGluaXRpYWxpemUgYSBzeXN0ZW0gcHJvcGVybHkg
+aWYgd2UgZGlkIG5vdCBzaHV0IA0KPiA+IGRvd24gdGhlIGFwaWNzLg0KPiA+IA0KPiA+IEkgY2Vy
+dGFpbmx5IGRvbid0IHNlZSBhbiBpc3N1ZSB3aXRoIGdvb2Z5IGNhc2VzIGxpa2Ugbm90c2Mgbm90
+IHdvcmtpbmcgb24gYSANCj4gPiBjcmFzaCBjYXB0dXJlIGtlcm5lbCBpZiB3ZSBhcmUgbm90IGlu
+aXRpYWxpemluZyB0aGUgaGFyZHdhcmUgcHJvcGVybHkuDQo+ID4gDQo+ID4gVGhlIHN0cmF0ZWd5
+IHJlYWxseSBuZWVkcyB0byBiZSB0byBvbmx5IGRvIHRoZSBhYnNvbHV0ZWx5IGVzc2VudGlhbCBo
+YXJkd2FyZSANCj4gPiBzaHV0ZG93biBpbiB0aGUgY3Jhc2hpbmcga2VybmVsLCBldmVyeSBhZGlu
+dGlvbmFsIGxpbmUgb2YgY29kZSB3ZSBleGVjdXRlIGluIHRoZSANCj4gPiBjcmFzaGluZyBrZXJu
+ZWwgaW5jcmVhc2VzIG91ciBjaGFuY2VzIG9mIGhpdHRpbmcgYSBidWcuDQo+IA0KPiBGdWxseSBh
+Z3JlZWQuDQo+IA0KPiA+IFVuZGVyIHRoYXQgcG9saWN5IHRoaW5ncyBsaWtlIHJlcXVyaW5nIHdl
+IGRvbid0IHBhc3MgYm9vdCBvcHRpb25zIHRoYXQgaW5oaWJpdCANCj4gPiB0aGUgZHVtcCBjYXRw
+dXJlIGtlcm5lbCBmcm9tIGluaXRpYWxpemluZyB0aGUgaGFyZHdhcmUgZnJvbSBhIHJhbmRvbSBz
+dGF0ZSBhcmUgDQo+ID4gcmVhc29uYWJsZSByZXF1aXJlbWVudHMuICBBS0EgSSBkb24ndCBzZWUg
+YW55IGp1c3RpZmljYXRpb24gaW4gdGhpcyBhcyB0byB3aHkgd2UgDQo+ID4gd291bGQgZXZlbiB3
+YW50IHRvIHN1cHBvcnQgbm90c2Mgb24gdGhlIGR1bXAgY2FwdHVyZSBrZXJuZWwuICBFc3BlY2lh
+bGx5IHdoZW4gDQo+ID4gdGhpbmdzIGNsZWFybHkgd29yayB3aGVuIHRoYXQgb3B0aW9uIGlzIG5v
+dCBzcGVjaWZpZWQuDQo+IA0KPiBTbyBhdCBsZWFzdCBvbiB0aGUgc3VyZmFjZSBpdCBhcHBlYXJz
+ICdzdXJwcmlzaW5nJyB0aGF0IHRoZSAnbm90c2MnIG9wdGlvbiAod2hpY2gsIA0KPiBzdXBwb3Nl
+ZGx5LCBkaXNhYmxlcyBUU0MgaGFuZGxpbmcpIGludGVyZmVyZXMgd2l0aCBiZWluZyBhYmxlIHRv
+IGZ1bGx5IGJvb3QuIEV2ZW4gDQo+IGlmICdub3RzYycgaXMgc3BlY2lmaWVkIHdlIGFyZSBzdGls
+bCB1c2luZyB0aGUgbG9jYWwgQVBJQywgcmlnaHQ/DQoNCkluIG1vc3QgY2FzZSwgIEl0J3Mgbm8g
+cHJvYmxlbSB0aGF0IHVzaW5nIGxvY2FsIEFQSUMgd2hpbGUgbm90c2MgaXMNCnNwZWNpZmllZC4N
+CkJ1dCBub3QgZm9yIGtkdW1wLg0KDQpXZSBjYW4gZ2V0IGV2aWRlbmNlLCBFc3BlY2lhbGx5IGZy
+b20gIlNwdXJpb3VzIExBUElDIHRpbWVyIGludGVycnVwdCBvbg0KY3B1IDAiLg0KDQojIyNzZXJp
+YWwgbG9nLA0KDQpbICAgIDAuMDAwMDAwXSBOUl9JUlFTOjUyNDU0NCBucl9pcnFzOjI1NiAxNg0K
+WyAgICAwLjAwMDAwMF0gU3B1cmlvdXMgTEFQSUMgdGltZXIgaW50ZXJydXB0IG9uIGNwdSAwDQpb
+ICAgIDAuMDAwMDAwXSBDb25zb2xlOiBjb2xvdXIgZHVtbXkgZGV2aWNlIDgweDI1DQpbICAgIDAu
+MDAwMDAwXSBjb25zb2xlIFt0dHkwXSBlbmFibGVkDQpbICAgIDAuMDAwMDAwXSBjb25zb2xlIFt0
+dHlTMF0gZW5hYmxlZA0KWyAgICAwLjAwMDAwMF0gdHNjOiBGYXN0IFRTQyBjYWxpYnJhdGlvbiB1
+c2luZyBQSVQNClsgICAgMC4wMDAwMDBdIHRzYzogRGV0ZWN0ZWQgMjA5OS45NDcgTUh6IHByb2Nl
+c3Nvcg0KWyAgICAwLjAwMDAwMF0gQ2FsaWJyYXRpbmcgZGVsYXkgbG9vcC4uLg0KDQoNCkR1ZSB0
+byB0aGUgbG9jYWwgYXBpYyBhbmQgbG9jYWwgYXBpYyB0aW1lciBoYXNuJ3QgYmVlbiBzZXR1cCBh
+bmQgZW5hYmxlZA0KZnVsbHksIFRoZSBldmVudF9oYW5kbGVyIG9mIGNsb2NrIGV2ZW50IGlzIE5V
+TEwuDQoNCiMjI2NvZGVzLA0KDQpzdGF0aWMgdm9pZCBsb2NhbF9hcGljX3RpbWVyX2ludGVycnVw
+dCh2b2lkKQ0Kew0KICAgIGludCBjcHUgPSBzbXBfcHJvY2Vzc29yX2lkKCk7DQogICAgc3RydWN0
+IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0ID0gJnBlcl9jcHUobGFwaWNfZXZlbnRzLCBjcHUpOw0K
+DQogICAgLyoNCiAgICAgKiBOb3JtYWxseSB3ZSBzaG91bGQgbm90IGJlIGhlcmUgdGlsbCBMQVBJ
+QyBoYXMgYmVlbiBpbml0aWFsaXplZA0KYnV0DQogICAgICogaW4gc29tZSBjYXNlcyBsaWtlIGtk
+dW1wLCBpdHMgcG9zc2libGUgdGhhdCB0aGVyZSBpcyBhIHBlbmRpbmcNCkxBUElDDQogICAgICog
+dGltZXIgaW50ZXJydXB0IGZyb20gcHJldmlvdXMga2VybmVsJ3MgY29udGV4dCBhbmQgaXMgZGVs
+aXZlcmVkDQppbg0KICAgICAqIG5ldyBrZXJuZWwgdGhlIG1vbWVudCBpbnRlcnJ1cHRzIGFyZSBl
+bmFibGVkLg0KICAgICAqDQogICAgICogSW50ZXJydXB0cyBhcmUgZW5hYmxlZCBlYXJseSBhbmQg
+TEFQSUMgaXMgc2V0dXAgbXVjaCBsYXRlciwgaGVuY2UNCiAgICAgKiBpdHMgcG9zc2libGUgdGhh
+dCB3aGVuIHdlIGdldCBoZXJlIGV2dC0+ZXZlbnRfaGFuZGxlciBpcyBOVUxMLg0KICAgICAqIENo
+ZWNrIGZvciBldmVudF9oYW5kbGVyIGJlaW5nIE5VTEwgYW5kIGRpc2NhcmQgdGhlIGludGVycnVw
+dCBhcw0KICAgICAqIHNwdXJpb3VzLg0KICAgICAqLw0KICAgIGlmICghZXZ0LT5ldmVudF9oYW5k
+bGVyKSB7DQogICAgICAgIHByX3dhcm5pbmcoIlNwdXJpb3VzIExBUElDIHRpbWVyIGludGVycnVw
+dCBvbiBjcHUgJWRcbiIsIGNwdSk7DQogICAgICAgIC8qIFN3aXRjaCBpdCBvZmYgKi8NCiAgICAg
+ICAgbGFwaWNfdGltZXJfc2h1dGRvd24oZXZ0KTsNCiAgICAgICAgcmV0dXJuOw0KICAgIH0NCg0K
+ICAgICAuLi4uLi4uLi4uLi4uDQp9DQoNCg0KSU1ITywgDQpJZiB3ZSBzcGVjaWZ5IG5vdHNjLCB0
+aGUgZHVtcC1jYXB0dXJlIGtlcm5lbCB3YWl0cyBmb3IgamlmZmllcyBiZWluZw0KdXBkYXRlZCBl
+YXJseSBhbmQgTEFQSUMgYW5kIHRpbWVyIGFyZSBzZXR1cCBtdWNoIGxhdGVyLCB3aGljaCBjYXVz
+ZXMgbm8NCnRpbWVyIGludGVycnVwdHMgaXMgcGFzc2VkIHRvIEJTUC4gYXMgZm9sbG93aW5nLA0K
+DQpzdGFydF9rZXJuZWwgIC0tPg0KMSktPiBjYWxpYnJhdGVfZGVsYXkoKSAgLT4gY2FsaWJyYXRl
+X2RlbGF5X2NvbnZlcmdlKCkgICMgaGFuZyBhbmQgd2FpdA0KZm9yIGppZmZpZXMgY2hhbmdlZA0K
+ICAgICAgICAgICAgICAgICAgIA0KMiktPiByZXN0X2luaXQoKSAtPiBrZXJuZWxfaW5pdCgpIC0+
+IC4uLi4gLT4gYXBpY19ic3Bfc2V0dXAoKSAtPg0Kc2V0dXBfbG9jYWxfQVBJQygpDQoNCi0+IHNl
+dHVwX3BlcmNwdV9jbG9ja2V2KCkuDQoNCnRoZSBzZXR1cF9wZXJjcHVfY2xvY2tldiBwb2ludHMg
+c2V0dXBfYm9vdF9BUElDX2Nsb2NrKCkgd2hpY2ggdXNlZCB0bw0Kc2V0dXAgdGhlIGJvb3QgQVBJ
+QyBhbmQgdGltZXIuDQoNCg0KPiBTbyBpdCBtaWdodCBiZSBhIGdvb2QgaWRlYSB0byBmaW5kIHRo
+ZSByb290IGNhdXNlIG9mIHRoaXMgYm9vdHVwIGZyYWdpbGl0eSBldmVuIGlmIA0KPiAnbm90c2Mn
+IGlzIHNwZWNpZmllZC4gQW5kIEkgZnVsbHkgYWdyZWUgdGhhdCBpdCBzaG91bGQgYmUgZml4ZWQg
+aW4gdGhlIGJvb3R1cCBwYXRoIA0KPiBvZiB0aGUgZHVtcCBrZXJuZWwsIG5vdCB0aGUgY3Jhc2gg
+a2VybmVsIHJlYm9vdCBwYXRoLg0KDQpCZWNhdXNlIHRoZSBsYXBpYyBhbmQgdGltZXIgYXJlIG5v
+dCByZWFkeSB3aGVuIGR1bXAtY2FwdHVyZSB3YWl0cyB0aGVtDQp0byB1cGRhdGUgdGhlIGppZmZp
+ZXMgdmFsdWUuIHNvIEkgc3VnZ2VzdCB0byBwdXQgQVBJQyBpbiBsZWdhY3kgbW9kZSBpbg0KbG9j
+YWxfYXBpY190aW1lcl9pbnRlcnJ1cHQoKSB0ZW1wb3JhcmlseSwgd2hpY2ggaW4gdGhlIGJvb3R1
+cCBwYXRoIG9mDQpkdW1wIGtlcm5lbC4gDQoNCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwv
+YXBpYy9hcGljLmMgYi9hcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMNCmluZGV4IGRjYjUyODUw
+YTI4Zi4uYWYzYmU5Mzk5N2VkIDEwMDY0NA0KLS0tIGEvYXJjaC94ODYva2VybmVsL2FwaWMvYXBp
+Yy5jDQorKysgYi9hcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMNCkBAIC04NzksNiArODc5LDcg
+QEAgc3RhdGljIHZvaWQgbG9jYWxfYXBpY190aW1lcl9pbnRlcnJ1cHQodm9pZCkNCiAgICAgICAg
+ICAgICAgICBwcl93YXJuaW5nKCJTcHVyaW91cyBMQVBJQyB0aW1lciBpbnRlcnJ1cHQgb24gY3B1
+ICVkXG4iLA0KY3B1KTsNCiAgICAgICAgICAgICAgICAvKiBTd2l0Y2ggaXQgb2ZmICovDQogICAg
+ICAgICAgICAgICAgbGFwaWNfdGltZXJfc2h1dGRvd24oZXZ0KTsNCisgICAgICAgICAgICAgZGlz
+YWJsZV9JT19BUElDKCk7DQogICAgICAgICAgICAgICAgcmV0dXJuOw0KICAgICAgICB9DQoNCkFu
+ZCB0aGUgbmV3IHNvbHV0aW9uIGNhbiBmaXggdGhlIHByb2JsZW0uDQpXaGF04oCYcyB5b3VyIG9w
+aW5pb24gYWJvdXQgaXQ/DQoNClRoYW5rcywNCndlaQ0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAJ
+SW5nbw0KPiANCj4gDQoNCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
