@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bMu0M-0005uo-O6
- for kexec@lists.infradead.org; Tue, 12 Jul 2016 09:29:27 +0000
-Date: Tue, 12 Jul 2016 17:29:01 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] kexec: Fix kdump failure with notsc
-Message-ID: <20160712092901.GD3524@x1.redhat.com>
-References: <1467886646-2638-1-git-send-email-weijg.fnst@cn.fujitsu.com>
- <578493AD.3000403@redhat.com> <1468314444.15074.65.camel@localhost>
+Date: Tue, 12 Jul 2016 11:07:45 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v22 8/8] Documentation: dt: chosen properties for arm64
+ kdump
+Message-ID: <20160712100745.GA21909@leverpostej>
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-9-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1468314444.15074.65.camel@localhost>
+In-Reply-To: <20160712050514.22307-9-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,78 +21,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>, ying.huang@intel.com
-Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>, "xlpang@redhat.com" <xlpang@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 07/12/16 at 09:09am, Wei, Jiangang wrote:
-> On Tue, 2016-07-12 at 14:52 +0800, Xunlei Pang wrote:
-> > On 2016/07/07 at 18:17, Wei Jiangang wrote:
+Hi,
 
-> > > diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
-> > > index 469b23d6acc2..c934a7868e6b 100644
-> > > --- a/arch/x86/kernel/machine_kexec_32.c
-> > > +++ b/arch/x86/kernel/machine_kexec_32.c
-> > > @@ -202,14 +202,13 @@ void machine_kexec(struct kimage *image)
-> > >  	local_irq_disable();
-> > >  	hw_breakpoint_disable();
-> > >  
-> > > -	if (image->preserve_context) {
-> > > +	if (image->preserve_context || lapic_disabled()) {
-> > >  #ifdef CONFIG_X86_IO_APIC
-> > >  		/*
-> > >  		 * We need to put APICs in legacy mode so that we can
-> > >  		 * get timer interrupts in second kernel. kexec/kdump
-> > >  		 * paths already have calls to disable_IO_APIC() in
-> > > -		 * one form or other. kexec jump path also need
-> > > -		 * one.
-> > > +		 * one form or other. kexec jump path also need one.
-> > >  		 */
-> > >  		disable_IO_APIC();
-> > 
-> > Hi Wei,
-> > 
-> > As the comment says, kexec/kdump paths already have disable_IO_APIC(), why again here?
-> Frankly, I am not very clear about it as well...
+Apologies for the delay on this.
+
+On Tue, Jul 12, 2016 at 02:05:14PM +0900, AKASHI Takahiro wrote:
+> From: James Morse <james.morse@arm.com>
 > 
-> Originally the codes and comment added by Huang Ying
-> <ying.huang@intel.com>
-> There may be some special reason...
-
-Check code again, it might be native_disable_io_apic() is called in
-disable_IO_APIC(). See the code comments at the beginning of
-native_disable_io_apic(), ioapic_i8259 is used to record the pin of
-ioapic which connect to 8259. Here ioapic is configured to virtual wire
-mode to pass through interrupt to cpu. That might be why Huang Ying
-said it can put it into legacy irq mode with calling with
-disable_IO_APIC.
-
-void native_disable_io_apic(void)
-{
-        /*
-         * If the i8259 is routed through an IOAPIC
-         * Put that IOAPIC in virtual wire mode
-         * so legacy interrupts can be delivered.
-         */
-...
-}
-
-Now question is why disable_IO_APIC need be called twice to make ioapic
-to be virtual wire mode.
-
-Add Huang Ying to this thread, don't know if he can help explain.
-
+> Add documentation for
+> 	linux,crashkernel-base and crashkernel-size,
+> 	linux,usable-memory-range, and
+> 	linux,elfcorehdr
+> used by arm64 kexec/kdump to decribe the kdump reserved area, and
+> the elfcorehdr's location within it.
 > 
-> The comment also said that it's used to put APICs in legacy mode so that
-> we can get timer interrupts in second kernel. and we also need it in
-> kexec jump path.
+> Signed-off-by: James Morse <james.morse@arm.com>
+> [takahiro.akashi@linaro.org:
+>     renamed "usable-memory" to "usable-memory-range",
+>     added "linux,crashkernel-base" and "-size" ]
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
 > 
-> In fact, the jiffies calibration needs timer interrupts in second
-> kernel. and the lapic and timer are not ready when second kernel waits
-> them to update the jiffies value.
-> 
-> so I just want to reuse them and enable legacy mode (PIT timer) for
-> notsc case.
-> kernel.
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 6ae9d82..d7a3a86 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
+>  book3e) by some versions of kexec-tools to tell the new kernel that it
+>  is being booted by kexec, as the booting environment may differ (e.g.
+>  a different secondary CPU release mechanism)
+> +
+> +linux,crashkernel-base
+> +linux,crashkernel-size
+> +----------------------
+> +These properties are set (on PowerPC and arm64) during kdump to tell
+> +use-space tools, like kexec-tools, the base address of the crash-dump
+> +kernel's reserved area of memory and the size. e.g.
+
+No need to mention what consumes this. Just state what it describes,
+e.g.
+
+	These properties describe the base and size of the crash-dump
+	kernel's reserved area of memory. Valid for PowerPC and arm64.
+
+> +
+> +/ {
+> +	chosen {
+> +		linux,crashkernel-base = <0x9 0xf0000000>;
+> +		linux,crashkernel-size = <0x0 0x10000000>;
+> +	};
+> +};
+> +
+> +linux,usable-memory-range
+> +-------------------------
+> +
+> +This property is set (currently only on arm64) during kdump to tell
+> +the crash-dump kernel the base address of its reserved area of memory,
+> +and the size. e.g.
+
+The description sounds like this duplicates linux,crashkernel-*. What is
+the difference between the two?
+
+On powerpc it looks like there's a linux,usable-memory property (without
+the -range suffix). How do these differ?
+
+> +
+> +/ {
+> +	chosen {
+> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+> +	};
+> +};
+> +
+> +Please note that, if this property is present, any memory regions under
+> +"memory" nodes will be ignored.
+
+What exactly do you mean by "ignored"?
+
+Do we truly ignore this property, or do we map that memory at some
+point, even if not used for general allocation?
+
+> +
+> +linux,elfcorehdr
+> +----------------
+> +
+> +This property is set (currently only on arm64) during kdump to tell
+> +the crash-dump kernel the address and size of the elfcorehdr that describes
+> +the old kernel's memory as an elf file. This memory must reside within
+> +the area described by 'linux,usable-memory-range'. e.g.
+
+
+As with the linux,crashkernel-* properties, just state what this
+describes, e.g.
+
+	This property describes the base and size of the ELF core
+	header, which describes the old kernel's memory as an ELF file.
+	This memory must reside within the range described by
+	linux,usable-memory-range.
+
+That said, this falling within usable-memory feels very odd, because
+it's not actually usable for general purposes. Why can the kernel not
+memremap this, such that it need not be in usable-memory?
+
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
