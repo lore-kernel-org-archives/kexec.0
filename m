@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 12 Jul 2016 11:07:45 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v22 8/8] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20160712100745.GA21909@leverpostej>
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-9-takahiro.akashi@linaro.org>
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+Date: Tue, 12 Jul 2016 08:25:48 -0500
+In-Reply-To: <20160712014201.11456-1-takahiro.akashi@linaro.org> (AKASHI
+ Takahiro's message of "Tue, 12 Jul 2016 10:41:58 +0900")
+Message-ID: <87furf7ztv.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160712050514.22307-9-takahiro.akashi@linaro.org>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,113 +20,46 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: bhe@redhat.com, arnd@arndb.de, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, vgoyal@redhat.com
 
-Hi,
+AKASHI Takahiro <takahiro.akashi@linaro.org> writes:
 
-Apologies for the delay on this.
+> Device tree blob must be passed to a second kernel on DTB-capable
+> archs, like powerpc and arm64, but the current kernel interface
+> lacks this support.
+>   
+> This patch extends kexec_file_load system call by adding an extra
+> argument to this syscall so that an arbitrary number of file descriptors
+> can be handed out from user space to the kernel.
+>
+> See the background [1].
+>
+> Please note that the new interface looks quite similar to the current
+> system call, but that it won't always mean that it provides the "binary
+> compatibility."
+>
+> [1] http://lists.infradead.org/pipermail/kexec/2016-June/016276.html
 
-On Tue, Jul 12, 2016 at 02:05:14PM +0900, AKASHI Takahiro wrote:
-> From: James Morse <james.morse@arm.com>
-> 
-> Add documentation for
-> 	linux,crashkernel-base and crashkernel-size,
-> 	linux,usable-memory-range, and
-> 	linux,elfcorehdr
-> used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> the elfcorehdr's location within it.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> [takahiro.akashi@linaro.org:
->     renamed "usable-memory" to "usable-memory-range",
->     added "linux,crashkernel-base" and "-size" ]
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 6ae9d82..d7a3a86 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
->  book3e) by some versions of kexec-tools to tell the new kernel that it
->  is being booted by kexec, as the booting environment may differ (e.g.
->  a different secondary CPU release mechanism)
-> +
-> +linux,crashkernel-base
-> +linux,crashkernel-size
-> +----------------------
-> +These properties are set (on PowerPC and arm64) during kdump to tell
-> +use-space tools, like kexec-tools, the base address of the crash-dump
-> +kernel's reserved area of memory and the size. e.g.
+So this design is wrong.  The kernel already has the device tree blob,
+you should not be extracting it from the kernel munging it, and then
+reinserting it in the kernel if you want signatures and everything to
+pass.
 
-No need to mention what consumes this. Just state what it describes,
-e.g.
+What x86 does is pass it's equivalent of the device tree blob from one
+kernel to another directly and behind the scenes.  It does not go
+through userspace for this.
 
-	These properties describe the base and size of the crash-dump
-	kernel's reserved area of memory. Valid for PowerPC and arm64.
+Until a persuasive case can be made for going around the kernel and
+probably adding a feature (like code execution) that can be used to
+defeat the signature scheme I am going to nack this.
 
-> +
-> +/ {
-> +	chosen {
-> +		linux,crashkernel-base = <0x9 0xf0000000>;
-> +		linux,crashkernel-size = <0x0 0x10000000>;
-> +	};
-> +};
-> +
-> +linux,usable-memory-range
-> +-------------------------
-> +
-> +This property is set (currently only on arm64) during kdump to tell
-> +the crash-dump kernel the base address of its reserved area of memory,
-> +and the size. e.g.
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-The description sounds like this duplicates linux,crashkernel-*. What is
-the difference between the two?
+I am happy to see support for other architectures, but for the sake of
+not moving some code in the kernel let's not build an attackable
+infrastructure.
 
-On powerpc it looks like there's a linux,usable-memory property (without
-the -range suffix). How do these differ?
-
-> +
-> +/ {
-> +	chosen {
-> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> +	};
-> +};
-> +
-> +Please note that, if this property is present, any memory regions under
-> +"memory" nodes will be ignored.
-
-What exactly do you mean by "ignored"?
-
-Do we truly ignore this property, or do we map that memory at some
-point, even if not used for general allocation?
-
-> +
-> +linux,elfcorehdr
-> +----------------
-> +
-> +This property is set (currently only on arm64) during kdump to tell
-> +the crash-dump kernel the address and size of the elfcorehdr that describes
-> +the old kernel's memory as an elf file. This memory must reside within
-> +the area described by 'linux,usable-memory-range'. e.g.
-
-
-As with the linux,crashkernel-* properties, just state what this
-describes, e.g.
-
-	This property describes the base and size of the ELF core
-	header, which describes the old kernel's memory as an ELF file.
-	This memory must reside within the range described by
-	linux,usable-memory-range.
-
-That said, this falling within usable-memory feels very odd, because
-it's not actually usable for general purposes. Why can the kernel not
-memremap this, such that it need not be in usable-memory?
-
-Thanks,
-Mark.
+Eric
 
 _______________________________________________
 kexec mailing list
