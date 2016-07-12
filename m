@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bN05e-00034f-Dh
- for kexec@lists.infradead.org; Tue, 12 Jul 2016 15:59:19 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
- <1468299403-27954-2-git-send-email-zhongjiang@huawei.com>
-Date: Tue, 12 Jul 2016 10:46:17 -0500
-In-Reply-To: <1468299403-27954-2-git-send-email-zhongjiang@huawei.com>
- (zhongjiang@huawei.com's message of "Tue, 12 Jul 2016 12:56:43 +0800")
-Message-ID: <87a8hm3lme.fsf@x220.int.ebiederm.org>
+ id 1bN0V8-0006sf-T6
+ for kexec@lists.infradead.org; Tue, 12 Jul 2016 16:25:39 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6CGJsiB079437
+ for <kexec@lists.infradead.org>; Tue, 12 Jul 2016 12:25:17 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 243es61esx-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 12 Jul 2016 12:25:16 -0400
+Received: from localhost
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Tue, 12 Jul 2016 13:25:15 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Date: Tue, 12 Jul 2016 13:25:11 -0300
+In-Reply-To: <87furf7ztv.fsf@x220.int.ebiederm.org>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <87furf7ztv.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] kexec: add a pmd huge entry condition during the page
- table
+Message-Id: <50662781.Utjsnse3nb@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,88 +37,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhongjiang <zhongjiang@huawei.com>
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: bhe@redhat.com, arnd@arndb.de, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, dyoung@redhat.com, vgoyal@redhat.com
 
-zhongjiang <zhongjiang@huawei.com> writes:
+Hi Eric,
 
-> From: zhong jiang <zhongjiang@huawei.com>
->
-> when image is loaded into kernel, we need set up page table for it. and 
-> all valid pfn also set up new mapping. it will tend to establish a pmd 
-> page table in the form of a large page if pud_present is true. relocate_kernel 
-> points to code segment can locate in the pmd huge entry in init_transtion_pgtable. 
-> therefore, we need to take the situation into account.
+I'm trying to understand your concerns leading to your nack. I hope you 
+don't mind expanding your thoughts on them a bit.
 
-I can see how in theory this might be necessary but when is a kernel virtual
-address on x86_64 that is above 0x8000000000000000 in conflict with an
-identity mapped physicall address that are all below 0x8000000000000000?
+Am Dienstag, 12 Juli 2016, 08:25:48 schrieb Eric W. Biederman:
+> AKASHI Takahiro <takahiro.akashi@linaro.org> writes:
+> > Device tree blob must be passed to a second kernel on DTB-capable
+> > archs, like powerpc and arm64, but the current kernel interface
+> > lacks this support.
+> > 
+> > This patch extends kexec_file_load system call by adding an extra
+> > argument to this syscall so that an arbitrary number of file descriptors
+> > can be handed out from user space to the kernel.
+> > 
+> > See the background [1].
+> > 
+> > Please note that the new interface looks quite similar to the current
+> > system call, but that it won't always mean that it provides the "binary
+> > compatibility."
+> > 
+> > [1] http://lists.infradead.org/pipermail/kexec/2016-June/016276.html
+> 
+> So this design is wrong.  The kernel already has the device tree blob,
+> you should not be extracting it from the kernel munging it, and then
+> reinserting it in the kernel if you want signatures and everything to
+> pass.
 
-If anything the code could be simplified to always assume those mappings
-are unoccupied.
+I don't understand how the kernel signature will be invalidated. 
 
-Did you run into an actual failure somewhere?
+There are some types of boot images that can embed a device tree blob in 
+them, but the kernel can also be handed a separate device tree blob from 
+firmware, the boot loader, or kexec. This latter case is what we are 
+discussing, so we are not talking about modifying an embedded blob in the 
+kernel image.
 
-Eric
+> What x86 does is pass it's equivalent of the device tree blob from one
+> kernel to another directly and behind the scenes.  It does not go
+> through userspace for this.
+> 
+> Until a persuasive case can be made for going around the kernel and
+> probably adding a feature (like code execution) that can be used to
+> defeat the signature scheme I am going to nack this.
 
+I also don't understand what you mean by code execution. How does passing a 
+device tree blob via kexec enables code execution? How can the signature 
+scheme be defeated?
 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index 5a294e4..c33e344 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -14,6 +14,7 @@
->  #include <linux/gfp.h>
->  #include <linux/reboot.h>
->  #include <linux/numa.h>
-> +#include <linux/hugetlb.h>
->  #include <linux/ftrace.h>
->  #include <linux/io.h>
->  #include <linux/suspend.h>
-> @@ -34,6 +35,17 @@ static struct kexec_file_ops *kexec_file_loaders[] = {
->  };
->  #endif
->  
-> +static void split_pmd(pmd_t *pmd, pte_t *pte)
-> +{
-> +	unsigned long pfn = pmd_pfn(*pmd);
-> +	int i = 0;
-> +
-> +	do {
-> +		set_pte(pte, pfn_pte(pfn, PAGE_KERNEL_EXEC));
-> +		pfn++;
-> +	} while (pte++, i++, i < PTRS_PER_PTE);
-> +}
-> +
->  static void free_transition_pgtable(struct kimage *image)
->  {
->  	free_page((unsigned long)image->arch.pud);
-> @@ -68,15 +80,19 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
->  		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
->  	}
->  	pmd = pmd_offset(pud, vaddr);
-> -	if (!pmd_present(*pmd)) {
-> +	if (!pmd_present(*pmd) || pmd_huge(*pmd)) {
->  		pte = (pte_t *)get_zeroed_page(GFP_KERNEL);
->  		if (!pte)
->  			goto err;
->  		image->arch.pte = pte;
-> -		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
-> +		if (pmd_huge(*pmd))
-> +			split_pmd(pmd, pte);
-> +		else
-> +			set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
->  	}
->  	pte = pte_offset_kernel(pmd, vaddr);
->  	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC));
-> +
->  	return 0;
->  err:
->  	free_transition_pgtable(image);
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
