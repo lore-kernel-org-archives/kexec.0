@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 12 Jul 2016 23:53:25 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bN62r-00075L-Sn
+ for kexec@lists.infradead.org; Tue, 12 Jul 2016 22:20:50 +0000
+Date: Tue, 12 Jul 2016 23:18:05 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160712235325.48cc0fee@hananiah.suse.cz>
-In-Reply-To: <87a8hm1ri8.fsf@x220.int.ebiederm.org>
+Message-ID: <20160712221804.GV1041@n2100.armlinux.org.uk>
 References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
  <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
  <20160712225805.0d27fe5d@hananiah.suse.cz>
- <87a8hm1ri8.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160712225805.0d27fe5d@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +26,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: bhe@redhat.com, arnd@arndb.de, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, linux-arm-kernel@lists.infradead.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, dyoung@redhat.com, vgoyal@redhat.com
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, arnd@arndb.de, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, dyoung@redhat.com, vgoyal@redhat.com
 
-On Tue, 12 Jul 2016 16:22:07 -0500
-ebiederm@xmission.com (Eric W. Biederman) wrote:
+On Tue, Jul 12, 2016 at 10:58:05PM +0200, Petr Tesarik wrote:
+> I'm not an expert on DTB, so I can't provide an example of code
+> execution, but you have already mentioned the /chosen/linux,stdout-path
+> property. If an attacker redirects the bootloader to an insecure
+> console, they may get access to the system that would otherwise be
+> impossible.
 
-> Petr Tesarik <ptesarik@suse.cz> writes:
-> 
-> > On Tue, 12 Jul 2016 13:25:11 -0300
-> > Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> wrote:
->[...]
-> >> I also don't understand what you mean by code execution. How does passing a 
-> >> device tree blob via kexec enables code execution? How can the signature 
-> >> scheme be defeated?
-> >
-> > I'm not an expert on DTB, so I can't provide an example of code
-> > execution, but you have already mentioned the /chosen/linux,stdout-path
-> > property. If an attacker redirects the bootloader to an insecure
-> > console, they may get access to the system that would otherwise be
-> > impossible.
-> >
-> > In general, tampering with the hardware inventory of a machine opens up
-> > a security hole, and one must be very cautious which modifications are
-> > allowed. You're giving this power to an (unsigned, hence untrusted)
-> > userspace application; Eric argues that only the kernel should have
-> > this power.
-> 
-> At the very least it should be signed.  And of course the more signed
-> images we have in different combinations the more easily someone can
-> find a combination that does things the people performing the signing
-> didn't realizing they were allowing.
+I fail to see how kexec connects with the boot loader - the DTB image
+that's being talked about is one which is passed from the currently
+running kernel to the to-be-kexec'd kernel.  For ARM (and I suspect
+also ARM64) that's a direct call chain which doesn't involve any
+boot loader or firmware, and certainly none that would involve the
+passed DTB image.
 
-Exactly. Reminds me of nasty setuid application exploits when one or
-more of stdin, stdout and stderr are closed before exec(), so the first
-file to be opened gets one of those special file descriptors. Imagine
-what happens if the application opens a secret file for reading (now
-file descriptor 0), then expects user input on stdin, detects a syntax
-error and complains on stderr, including the full input for reference
-("%s is not a valid command")...
+However, your point is valid as an attacker can redirect the console
+and/or mounted root on the to-be-kexec'd kernel if they can modify
+the DTB - and there's a whole host of subtle ways to do that, not
+necessarily just modification of the kernel command line.
 
-No one has designed bootloaders to cope with similar unexpected
-situations.
+> In general, tampering with the hardware inventory of a machine opens up
+> a security hole, and one must be very cautious which modifications are
+> allowed. You're giving this power to an (unsigned, hence untrusted)
+> userspace application; Eric argues that only the kernel should have
+> this power.
 
-> So if we can not add an extra variable into the mix it would be good.
+Given that, how does crashdump work in this scenario?
 
-Indeed. Writing boot loaders is difficult enough already. Adding the
-same kind of precautions that are necessary to write secure setuid
-applications is over the top IMO.
+crashdump works by adding an elfcorehdr=address argument to the
+crash-booted kernel's command line.  If you can add to the kernel
+command line, you can redirect the console and do all sorts of
+other stuff like specifying a different filesystem to mount, etc.
 
-Petr T
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
