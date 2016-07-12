@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bMzfr-0006zR-Av
- for kexec@lists.infradead.org; Tue, 12 Jul 2016 15:32:40 +0000
+ id 1bN05e-00034f-Dh
+ for kexec@lists.infradead.org; Tue, 12 Jul 2016 15:59:19 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
-Date: Tue, 12 Jul 2016 10:19:43 -0500
-In-Reply-To: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
- (zhongjiang@huawei.com's message of "Tue, 12 Jul 2016 12:56:42 +0800")
-Message-ID: <87poqi3muo.fsf@x220.int.ebiederm.org>
+ <1468299403-27954-2-git-send-email-zhongjiang@huawei.com>
+Date: Tue, 12 Jul 2016 10:46:17 -0500
+In-Reply-To: <1468299403-27954-2-git-send-email-zhongjiang@huawei.com>
+ (zhongjiang@huawei.com's message of "Tue, 12 Jul 2016 12:56:43 +0800")
+Message-ID: <87a8hm3lme.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] kexec: remove unnecessary unusable_pages
+Subject: Re: [PATCH 2/2] kexec: add a pmd huge entry condition during the page
+ table
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,77 +32,81 @@ zhongjiang <zhongjiang@huawei.com> writes:
 
 > From: zhong jiang <zhongjiang@huawei.com>
 >
-> In general, kexec alloc pages from buddy system, it cannot exceed
-> the physical address in the system.
->
-> The patch just remove this unnecessary code, no functional change.
+> when image is loaded into kernel, we need set up page table for it. and 
+> all valid pfn also set up new mapping. it will tend to establish a pmd 
+> page table in the form of a large page if pud_present is true. relocate_kernel 
+> points to code segment can locate in the pmd huge entry in init_transtion_pgtable. 
+> therefore, we need to take the situation into account.
 
-On 32bit systems with highmem support kexec can very easily receive a
-page from the buddy allocator that can exceed 4GiB.  This doesn't show
-up on 64bit systems as typically the memory limits are less than the
-address space.  But this code is very necessary on some systems and
-removing it is not ok.
+I can see how in theory this might be necessary but when is a kernel virtual
+address on x86_64 that is above 0x8000000000000000 in conflict with an
+identity mapped physicall address that are all below 0x8000000000000000?
 
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+If anything the code could be simplified to always assume those mappings
+are unoccupied.
+
+Did you run into an actual failure somewhere?
+
+Eric
 
 
->
 > Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 > ---
->  include/linux/kexec.h |  1 -
->  kernel/kexec_core.c   | 13 -------------
->  2 files changed, 14 deletions(-)
+>  arch/x86/kernel/machine_kexec_64.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
 >
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index e8acb2b..26e4917 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -162,7 +162,6 @@ struct kimage {
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 5a294e4..c33e344 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/gfp.h>
+>  #include <linux/reboot.h>
+>  #include <linux/numa.h>
+> +#include <linux/hugetlb.h>
+>  #include <linux/ftrace.h>
+>  #include <linux/io.h>
+>  #include <linux/suspend.h>
+> @@ -34,6 +35,17 @@ static struct kexec_file_ops *kexec_file_loaders[] = {
+>  };
+>  #endif
 >  
->  	struct list_head control_pages;
->  	struct list_head dest_pages;
-> -	struct list_head unusable_pages;
->  
->  	/* Address of next control page to allocate for crash kernels. */
->  	unsigned long control_page;
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 56b3ed0..448127d 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -257,9 +257,6 @@ struct kimage *do_kimage_alloc_init(void)
->  	/* Initialize the list of destination pages */
->  	INIT_LIST_HEAD(&image->dest_pages);
->  
-> -	/* Initialize the list of unusable pages */
-> -	INIT_LIST_HEAD(&image->unusable_pages);
-> -
->  	return image;
->  }
->  
-> @@ -517,10 +514,6 @@ static void kimage_free_extra_pages(struct kimage *image)
+> +static void split_pmd(pmd_t *pmd, pte_t *pte)
+> +{
+> +	unsigned long pfn = pmd_pfn(*pmd);
+> +	int i = 0;
+> +
+> +	do {
+> +		set_pte(pte, pfn_pte(pfn, PAGE_KERNEL_EXEC));
+> +		pfn++;
+> +	} while (pte++, i++, i < PTRS_PER_PTE);
+> +}
+> +
+>  static void free_transition_pgtable(struct kimage *image)
 >  {
->  	/* Walk through and free any extra destination pages I may have */
->  	kimage_free_page_list(&image->dest_pages);
-> -
-> -	/* Walk through and free any unusable pages I have cached */
-> -	kimage_free_page_list(&image->unusable_pages);
-> -
->  }
->  void kimage_terminate(struct kimage *image)
->  {
-> @@ -647,12 +640,6 @@ static struct page *kimage_alloc_page(struct kimage *image,
->  		page = kimage_alloc_pages(gfp_mask, 0);
->  		if (!page)
->  			return NULL;
-> -		/* If the page cannot be used file it away */
-> -		if (page_to_pfn(page) >
-> -				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
-> -			list_add(&page->lru, &image->unusable_pages);
-> -			continue;
-> -		}
->  		addr = page_to_pfn(page) << PAGE_SHIFT;
->  
->  		/* If it is the destination page we want use it */
+>  	free_page((unsigned long)image->arch.pud);
+> @@ -68,15 +80,19 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+>  		set_pud(pud, __pud(__pa(pmd) | _KERNPG_TABLE));
+>  	}
+>  	pmd = pmd_offset(pud, vaddr);
+> -	if (!pmd_present(*pmd)) {
+> +	if (!pmd_present(*pmd) || pmd_huge(*pmd)) {
+>  		pte = (pte_t *)get_zeroed_page(GFP_KERNEL);
+>  		if (!pte)
+>  			goto err;
+>  		image->arch.pte = pte;
+> -		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
+> +		if (pmd_huge(*pmd))
+> +			split_pmd(pmd, pte);
+> +		else
+> +			set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
+>  	}
+>  	pte = pte_offset_kernel(pmd, vaddr);
+>  	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC));
+> +
+>  	return 0;
+>  err:
+>  	free_transition_pgtable(image);
 
 _______________________________________________
 kexec mailing list
