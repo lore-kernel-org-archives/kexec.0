@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 12 Jul 2016 15:50:10 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160712145010.GA8447@leverpostej>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <1911992.H2WpLRr2Fi@wuerfel> <20160712141810.GB30181@redhat.com>
- <293705810.hBL93OOmOz@wuerfel>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bMzfr-0006zR-Av
+ for kexec@lists.infradead.org; Tue, 12 Jul 2016 15:32:40 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
+Date: Tue, 12 Jul 2016 10:19:43 -0500
+In-Reply-To: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
+ (zhongjiang@huawei.com's message of "Tue, 12 Jul 2016 12:56:42 +0800")
+Message-ID: <87poqi3muo.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <293705810.hBL93OOmOz@wuerfel>
+Subject: Re: [PATCH 1/2] kexec: remove unnecessary unusable_pages
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +23,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: bhe@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: zhongjiang <zhongjiang@huawei.com>
+Cc: dyoung@redhat.com, kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
 
-On Tue, Jul 12, 2016 at 04:24:10PM +0200, Arnd Bergmann wrote:
-> On Tuesday, July 12, 2016 10:18:11 AM CEST Vivek Goyal wrote:
-> > > 
-> > > On Open Firmware, the DT is extracted from running firmware and copied
-> > > into dynamically allocated data structures. After a kexec, the runtime
-> > > interface to the firmware is not available, so the flattened DT format
-> > > was created as a way to pass the same data in a binary blob to the new
-> > > kernel in a format that can be read from the kernel by walking the
-> > > directories in /proc/device-tree/*.
-> > 
-> > So this DT is available inside kernel and running kernel can still
-> > retrieve it and pass it to second kernel?
-> 
-> The kernel only uses the flattened DT blob at boot time and converts
-> it into the runtime data structures (struct device_node). The original
-> dtb is typically overwritten later.
+zhongjiang <zhongjiang@huawei.com> writes:
 
-On arm64 we deliberately preserved the DTB, so we can take that and
-build a new DTB from that kernel-side.
+> From: zhong jiang <zhongjiang@huawei.com>
+>
+> In general, kexec alloc pages from buddy system, it cannot exceed
+> the physical address in the system.
+>
+> The patch just remove this unnecessary code, no functional change.
 
-> > > - we typically ship devicetree sources for embedded machines with the
-> > >   kernel sources. As more hardware of the system gets enabled, the
-> > >   devicetree gains extra nodes and properties that describe the hardware
-> > >   more completely, so we need to use the latest DT blob to use all
-> > >   the drivers
-> > > 
-> > > - in some cases, kernels will fail to boot at all with an older version
-> > >   of the DT, or fail to use the devices that were working on the
-> > >   earlier kernel. This is usually considered a bug, but it's not rare
-> > > 
-> > > - In some cases, the kernel can update its DT at runtime, and the new
-> > >   settings are expected to be available in the new kernel too, though
-> > >   there are cases where you actually don't want the modified contents.
-> > 
-> > I am assuming that modified DT and unmodifed one both are accessible to
-> > kernel. And if user space can make decisions which modfied fields to use
-> > for new kernels and which ones not, then same can be done in kernel too?
-> 
-> The unmodified DT can typically be found on disk next to the kernel binary.
-> The option you have is to either read it from /proc/devicetree or to
-> read it from from /boot/*.dtb.
+On 32bit systems with highmem support kexec can very easily receive a
+page from the buddy allocator that can exceed 4GiB.  This doesn't show
+up on 64bit systems as typically the memory limits are less than the
+address space.  But this code is very necessary on some systems and
+removing it is not ok.
 
-/proc/devicetree (aka /sys/firmware/devicetree) is a filesystem derived
-from the raw DTB (which is exposed at /sys/firmware/fdt).
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-The blob that was handed to the kernel at boot time is exposed at
-/sys/firmware/fdt.
 
-Thanks,
-Mark.
+>
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>  include/linux/kexec.h |  1 -
+>  kernel/kexec_core.c   | 13 -------------
+>  2 files changed, 14 deletions(-)
+>
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index e8acb2b..26e4917 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -162,7 +162,6 @@ struct kimage {
+>  
+>  	struct list_head control_pages;
+>  	struct list_head dest_pages;
+> -	struct list_head unusable_pages;
+>  
+>  	/* Address of next control page to allocate for crash kernels. */
+>  	unsigned long control_page;
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 56b3ed0..448127d 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -257,9 +257,6 @@ struct kimage *do_kimage_alloc_init(void)
+>  	/* Initialize the list of destination pages */
+>  	INIT_LIST_HEAD(&image->dest_pages);
+>  
+> -	/* Initialize the list of unusable pages */
+> -	INIT_LIST_HEAD(&image->unusable_pages);
+> -
+>  	return image;
+>  }
+>  
+> @@ -517,10 +514,6 @@ static void kimage_free_extra_pages(struct kimage *image)
+>  {
+>  	/* Walk through and free any extra destination pages I may have */
+>  	kimage_free_page_list(&image->dest_pages);
+> -
+> -	/* Walk through and free any unusable pages I have cached */
+> -	kimage_free_page_list(&image->unusable_pages);
+> -
+>  }
+>  void kimage_terminate(struct kimage *image)
+>  {
+> @@ -647,12 +640,6 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  		page = kimage_alloc_pages(gfp_mask, 0);
+>  		if (!page)
+>  			return NULL;
+> -		/* If the page cannot be used file it away */
+> -		if (page_to_pfn(page) >
+> -				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
+> -			list_add(&page->lru, &image->unusable_pages);
+> -			continue;
+> -		}
+>  		addr = page_to_pfn(page) << PAGE_SHIFT;
+>  
+>  		/* If it is the destination page we want use it */
 
 _______________________________________________
 kexec mailing list
