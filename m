@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNFCB-0007Gm-GI
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 08:07:05 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 2/3] makedumpfile: Mark unstored ELF pages as filtered
-Date: Wed, 13 Jul 2016 07:43:13 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E54DB1@BPXM01GP.gisp.nec.co.jp>
-References: <20160210084737.3060fb5a@hananiah.suse.cz>
- <20160210084941.026830dc@hananiah.suse.cz>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E44B52@BPXM01GP.gisp.nec.co.jp>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E49B8A@BPXM01GP.gisp.nec.co.jp>
- <20160712233835.20af3622@hananiah.suse.cz>
-In-Reply-To: <20160712233835.20af3622@hananiah.suse.cz>
-Content-Language: ja-JP
+ id 1bNFFb-0000uV-1t
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 08:10:37 +0000
+Date: Wed, 13 Jul 2016 09:09:55 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Message-ID: <20160713080955.GY1041@n2100.armlinux.org.uk>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
+ <20160712225805.0d27fe5d@hananiah.suse.cz>
+ <20160712221804.GV1041@n2100.armlinux.org.uk>
+ <87twfunneg.fsf@linux.vnet.ibm.com>
+ <20160713073657.GX1041@n2100.armlinux.org.uk>
+ <CAKv+Gu9kEeVuW6Hj7HYOMojE5SLEZ69uAW2t9xZySw0uWNLcBQ@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9kEeVuW6Hj7HYOMojE5SLEZ69uAW2t9xZySw0uWNLcBQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,106 +30,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "ptesarik@suse.cz" <ptesarik@suse.cz>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Petr Tesarik <ptesarik@suse.cz>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hello Petr,
+On Wed, Jul 13, 2016 at 09:47:56AM +0200, Ard Biesheuvel wrote:
+> On 13 July 2016 at 09:36, Russell King - ARM Linux
+> <linux@armlinux.org.uk> wrote:
+> > On Wed, Jul 13, 2016 at 02:59:51PM +1000, Stewart Smith wrote:
+> >> Russell King - ARM Linux <linux@armlinux.org.uk> writes:
+> >> > On Tue, Jul 12, 2016 at 10:58:05PM +0200, Petr Tesarik wrote:
+> >> >> I'm not an expert on DTB, so I can't provide an example of code
+> >> >> execution, but you have already mentioned the /chosen/linux,stdout-path
+> >> >> property. If an attacker redirects the bootloader to an insecure
+> >> >> console, they may get access to the system that would otherwise be
+> >> >> impossible.
+> >> >
+> >> > I fail to see how kexec connects with the boot loader - the DTB image
+> >> > that's being talked about is one which is passed from the currently
+> >> > running kernel to the to-be-kexec'd kernel.  For ARM (and I suspect
+> >> > also ARM64) that's a direct call chain which doesn't involve any
+> >> > boot loader or firmware, and certainly none that would involve the
+> >> > passed DTB image.
+> >>
+> >> For OpenPOWER machines, kexec is the bootloader. Our bootloader is a
+> >> linux kernel and initramfs with a UI (petitboot) - this means we never
+> >> have to write a device driver twice: write a kernel one and you're done
+> >> (for booting from the device and using it in your OS).
+> >
+> > I think you misunderstood my point.
+> >
+> > On ARM, we do not go:
+> >
+> >         kernel (kexec'd from) -> boot loader -> kernel (kexec'd to)
+> >
+> > but we go:
+> >
+> >         kernel (kexec'd from) -> kernel (kexec'd to)
+> >
+> > There's no intermediate step involving any bootloader.
+> >
+> > Hence, my point is that the dtb loaded by kexec is _only_ used by the
+> > kernel which is being kexec'd to, not by the bootloader, nor indeed
+> > the kernel which it is loaded into.
+> >
+> > Moreover, if you read the bit that I quoted (which is what I was
+> > replying to), you'll notice that it is talking about the DTB loaded
+> > by kexec somehow causing the _bootloader_ to be redirected to an
+> > alternative console.  This point is wholely false on ARM.
+> >
+> 
+> The particular example may not apply, but the argument that the DTB
+> -as a description of the hardware topology- needs to be signed if the
+> kernel is also signed is valid. We do the same in the UEFI stub, i.e.,
+> it normally takes a dtb= argument to allow the DTB to be overridden,
+> but this feature is disabled when Secure Boot is in effect. By the
+> same reasoning, if any kind of kexec kernel image validation is in
+> effect, we should either validate the DTB image as well, or disallow
+> external DTBs and only perform kexec with the kernel's current DTB
+> (the blob it was booted with, not the unflattened data structure)
 
-I'm happy to get your reply.
+*Sigh*  yes, I know full well, which is why I said what I said in my
+_first_ reply:
 
->On Tue, 7 Jun 2016 04:18:48 +0000
->Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
->
->> >>+static void
->> >>+exclude_nodata_pages(struct cycle *cycle)
->> >>+{
->> >>+	int i;
->> >>+	unsigned long long phys_start, phys_end;
->> >>+	off_t file_size;
->> >>+
->> >>+	i = 0;
->> >>+	while (get_pt_load_extents(i, &phys_start, &phys_end,
->> >>+				   NULL, &file_size)) {
->> >>+		unsigned long long pfn, pfn_end;
->> >>+
->> >>+		pfn = paddr_to_pfn(phys_start + file_size);
->> >>+		pfn_end = paddr_to_pfn(phys_end);
->> >
->> >Does this code exclude the first pfn of out of PT_LOAD even if there is
->> >no unstored pages ? pfn and pfn_end will point at the next pfn to the
->> >last pfn of PT_LOAD.
->
->Indeed, phys_end is in fact the first physical address that is _not_
->contained in the segment.
->
->Good catch!
->
->> >This will be problem for the environments which have a overlapped PT_LOAD
->> >segment like ia64.
->
->I think it's quite the opposite. Partial pages on IA64 are the only
->ones that were handled correctly with the old code.
+"However, your point is valid as an attacker can redirect the console
+ and/or mounted root on the to-be-kexec'd kernel if they can modify
+ the DTB - and there's a whole host of subtle ways to do that, not
+ necessarily just modification of the kernel command line."
 
-I didn't take care partial pages, just considered the case below:
+and I went on to raise a valid point about the necessity to do that
+for crashdump, which has been _completely_ ignored.
 
-   pfn             1   2   3   4   5   6   7
-------------------------------------------------
-PT_LAOD(1)       |---+---+---+---|
-PT_LAOD(2)               |---+---+---+---|
+So, I just stopped reading your reply after the first three lines,
+because we are in fact in agreement... but thanks for trying to waste
+my time.
 
-During checking PT_LOAD(1), the bit of pfn:5 will be dropped if
-mem_size equals file_size, but practically the pfn is an used page
-as PT_LAOD(2) shows.
-If there is only PT_LOAD(1), pfn:5 must be on hole and the actual
-harm doesn't occur.
+Please, keep with the overall discussion, and stop replying to a single
+email as a whole point in isolation to every other email in the thread.
+And stop bikeshedding, by picking up on the easy stuff but ignoring the
+more fundamental points, like the crashdump issue I mentioned in my
+first reply and now this reply.
 
->> >
->> >>+		if (pfn < cycle->start_pfn)
->> >>+			pfn = cycle->start_pfn;
->> >>+		if (pfn_end >= cycle->end_pfn)
->> >>+			pfn_end = cycle->end_pfn - 1;
->> >>+		while (pfn <= pfn_end) {
->> >
->> >Should we change this condition to "pfn < pfn_end" ?
->
->Better than nothing, but if the last page of a LOAD segment is not
->partial, it will not be excluded. Except for partial pages, end_pfn
->refers to the first PFN _after_ the current segment.
+Thanks.
 
-If mem_size equals file_size, the last page of a LOAD also shouldn't
-be removed. However, the condition of "pfn <= pfn_end" can remove it
-since end_pfn refers to the first PFN _after_ the current segment.
-I just fixed it.
-
->> >
->> >>+			clear_bit_on_2nd_bitmap(pfn, cycle);
->> >>+			++pfn;
->> >>+		}
->> >>+		++i;
->> >>+	}
->> >>+}
->>
->> I fixed this as below for v1.6.0.
->> Of course your comment would still be helpful.
->
->It comes too late, I'm afraid.
->
->In all ia64 dumps with partial pages I have seen, the full content of
->the partial page is indeed stored in another segment, so the page would
->be marked incorrectly. OTOH I think the off-by-one bug you fixed
->affected all segments, even those without any partial pages; it would
->incorrectly mark the first PFN after the segment as filtered.
->
->The perfect solution is to round the starting PFN up instead of down to
->preserve partial pages, but I'll have to think about it some more
->before I can send a patch.
-
-Again, I didn't consider partial page cases, I also should reconsider this.
-Thank you for pointing it out.
-
-
-Regards,
-Atsushi Kumagai
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
