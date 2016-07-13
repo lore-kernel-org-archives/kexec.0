@@ -1,30 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bN7NF-0006qH-NS
- for kexec@lists.infradead.org; Tue, 12 Jul 2016 23:45:59 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u6CNcw25147385
- for <kexec@lists.infradead.org>; Tue, 12 Jul 2016 19:45:37 -0400
-Received: from e18.ny.us.ibm.com (e18.ny.us.ibm.com [129.33.205.208])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2452xr64g6-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 12 Jul 2016 19:45:36 -0400
-Received: from localhost
- by e18.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <stewart@linux.vnet.ibm.com>;
- Tue, 12 Jul 2016 19:45:35 -0400
-From: Stewart Smith <stewart@linux.vnet.ibm.com>
+Date: Wed, 13 Jul 2016 10:36:14 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [RFC 0/3] extend kexec_file_load system call
-In-Reply-To: <20160712140242.GA30181@redhat.com>
+Message-ID: <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
 References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <87furf7ztv.fsf@x220.int.ebiederm.org> <2675986.6AfrV5PCe0@hactar>
- <20160712140242.GA30181@redhat.com>
-Date: Wed, 13 Jul 2016 09:45:22 +1000
+ <1911992.H2WpLRr2Fi@wuerfel> <20160712141810.GB30181@redhat.com>
+ <293705810.hBL93OOmOz@wuerfel> <20160712145010.GA8447@leverpostej>
 MIME-Version: 1.0
-Message-Id: <877fcqpgj1.fsf@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20160712145010.GA8447@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,68 +21,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: bhe@redhat.com, arnd@arndb.de, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
-> On Tue, Jul 12, 2016 at 10:58:09AM -0300, Thiago Jung Bauermann wrote:
->> Hello Eric,
->> 
->> Am Dienstag, 12 Juli 2016, 08:25:48 schrieb Eric W. Biederman:
->> > AKASHI Takahiro <takahiro.akashi@linaro.org> writes:
->> > > Device tree blob must be passed to a second kernel on DTB-capable
->> > > archs, like powerpc and arm64, but the current kernel interface
->> > > lacks this support.
->> > > 
->> > > This patch extends kexec_file_load system call by adding an extra
->> > > argument to this syscall so that an arbitrary number of file descriptors
->> > > can be handed out from user space to the kernel.
->> > > 
->> > > See the background [1].
->> > > 
->> > > Please note that the new interface looks quite similar to the current
->> > > system call, but that it won't always mean that it provides the "binary
->> > > compatibility."
->> > > 
->> > > [1] http://lists.infradead.org/pipermail/kexec/2016-June/016276.html
->> > 
->> > So this design is wrong.  The kernel already has the device tree blob,
->> > you should not be extracting it from the kernel munging it, and then
->> > reinserting it in the kernel if you want signatures and everything to
->> > pass.
->> > 
->> > What x86 does is pass it's equivalent of the device tree blob from one
->> > kernel to another directly and behind the scenes.  It does not go
->> > through userspace for this.
->> > 
->> > Until a persuasive case can be made for going around the kernel and
->> > probably adding a feature (like code execution) that can be used to
->> > defeat the signature scheme I am going to nack this.
->> 
->> There are situations where userspace needs to change things in the device 
->> tree to be used by the next kernel.
->> 
->> For example, Petitboot (the boot loader used in OpenPOWER machines) is a 
->> userspace application running in an intermediary Linux instance and uses 
->> kexec to load the target OS. It has to modify the device tree that will be 
->> used by the next kernel so that the next kernel uses the same console that 
->> petitboot was configured to use (i.e., set the /chosen/linux,stdout-path 
->> property). It also modifies the device tree to allow the kernel to inherit 
->> Petitboot's Openfirmware framebuffer.
->
-> Can some of this be done with the help of kernel command line options for
-> second kernel?
+On 07/12/16 at 03:50pm, Mark Rutland wrote:
+> On Tue, Jul 12, 2016 at 04:24:10PM +0200, Arnd Bergmann wrote:
+> > On Tuesday, July 12, 2016 10:18:11 AM CEST Vivek Goyal wrote:
+> > > > 
+> > > > On Open Firmware, the DT is extracted from running firmware and copied
+> > > > into dynamically allocated data structures. After a kexec, the runtime
+> > > > interface to the firmware is not available, so the flattened DT format
+> > > > was created as a way to pass the same data in a binary blob to the new
+> > > > kernel in a format that can be read from the kernel by walking the
+> > > > directories in /proc/device-tree/*.
+> > > 
+> > > So this DT is available inside kernel and running kernel can still
+> > > retrieve it and pass it to second kernel?
+> > 
+> > The kernel only uses the flattened DT blob at boot time and converts
+> > it into the runtime data structures (struct device_node). The original
+> > dtb is typically overwritten later.
+> 
+> On arm64 we deliberately preserved the DTB, so we can take that and
+> build a new DTB from that kernel-side.
+> 
+> > > > - we typically ship devicetree sources for embedded machines with the
+> > > >   kernel sources. As more hardware of the system gets enabled, the
+> > > >   devicetree gains extra nodes and properties that describe the hardware
+> > > >   more completely, so we need to use the latest DT blob to use all
+> > > >   the drivers
+> > > > 
+> > > > - in some cases, kernels will fail to boot at all with an older version
+> > > >   of the DT, or fail to use the devices that were working on the
+> > > >   earlier kernel. This is usually considered a bug, but it's not rare
+> > > > 
+> > > > - In some cases, the kernel can update its DT at runtime, and the new
+> > > >   settings are expected to be available in the new kernel too, though
+> > > >   there are cases where you actually don't want the modified contents.
+> > > 
+> > > I am assuming that modified DT and unmodifed one both are accessible to
+> > > kernel. And if user space can make decisions which modfied fields to use
+> > > for new kernels and which ones not, then same can be done in kernel too?
+> > 
+> > The unmodified DT can typically be found on disk next to the kernel binary.
+> > The option you have is to either read it from /proc/devicetree or to
+> > read it from from /boot/*.dtb.
+> 
+> /proc/devicetree (aka /sys/firmware/devicetree) is a filesystem derived
+> from the raw DTB (which is exposed at /sys/firmware/fdt).
+> 
+> The blob that was handed to the kernel at boot time is exposed at
+> /sys/firmware/fdt.
 
-how would this be any more secure?
+I believe the blob can be read and passed to kexec kernel in kernel code without
+the extra fd.
 
-Passing in an address for a framebuffer via command line option means
-you could scribble over any bit of memory, which is the same kind of
-damage you could do by modifying the device tree.
+But consider we can kexec to a different kernel and a different initrd so there
+will be use cases to pass a total different dtb as well. From my understanding
+it is reasonable but yes I think we should think carefully about the design.
 
--- 
-Stewart Smith
-OPAL Architect, IBM.
+Thanks
+Dave
 
+> Thanks,
+> Mark.
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
