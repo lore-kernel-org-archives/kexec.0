@@ -1,16 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([58.251.152.64])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNBVS-0003sc-Ih
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 04:10:50 +0000
-Message-ID: <5785BEA6.2060404@huawei.com>
-Date: Wed, 13 Jul 2016 12:08:06 +0800
-From: zhong jiang <zhongjiang@huawei.com>
+ id 1bNCHc-0005oB-2m
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 05:00:28 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6D4xJ0Z134183
+ for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 01:00:06 -0400
+Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24566wnta8-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 01:00:05 -0400
+Received: from localhost
+ by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <stewart@linux.vnet.ibm.com>;
+ Tue, 12 Jul 2016 23:00:05 -0600
+From: Stewart Smith <stewart@linux.vnet.ibm.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+In-Reply-To: <20160712221804.GV1041@n2100.armlinux.org.uk>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
+ <20160712225805.0d27fe5d@hananiah.suse.cz>
+ <20160712221804.GV1041@n2100.armlinux.org.uk>
+Date: Wed, 13 Jul 2016 14:59:51 +1000
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] kexec: remove unnecessary unusable_pages
-References: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
- <87poqi3muo.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87poqi3muo.fsf@x220.int.ebiederm.org>
+Message-Id: <87twfunneg.fsf@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,95 +39,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Petr Tesarik <ptesarik@suse.cz>
+Cc: bhe@redhat.com, arnd@arndb.de, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 
-On 2016/7/12 23:19, Eric W. Biederman wrote:
-> zhongjiang <zhongjiang@huawei.com> writes:
+Russell King - ARM Linux <linux@armlinux.org.uk> writes:
+> On Tue, Jul 12, 2016 at 10:58:05PM +0200, Petr Tesarik wrote:
+>> I'm not an expert on DTB, so I can't provide an example of code
+>> execution, but you have already mentioned the /chosen/linux,stdout-path
+>> property. If an attacker redirects the bootloader to an insecure
+>> console, they may get access to the system that would otherwise be
+>> impossible.
 >
->> From: zhong jiang <zhongjiang@huawei.com>
->>
->> In general, kexec alloc pages from buddy system, it cannot exceed
->> the physical address in the system.
->>
->> The patch just remove this unnecessary code, no functional change.
-> On 32bit systems with highmem support kexec can very easily receive a
-> page from the buddy allocator that can exceed 4GiB.  This doesn't show
-> up on 64bit systems as typically the memory limits are less than the
-> address space.  But this code is very necessary on some systems and
-> removing it is not ok.
->
-> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
->
-  This viewpoint is as opposed to me,  32bit systems architectural decide it can not
-  access exceed 4GiB whether the highmem or not.   but there is one exception, 
-  when PAE enable, its physical address should be extended to 36,  new paging  mechanism
-  established for it.  therefore, the  page from the buddy allocator can exceed 4GiB.
+> I fail to see how kexec connects with the boot loader - the DTB image
+> that's being talked about is one which is passed from the currently
+> running kernel to the to-be-kexec'd kernel.  For ARM (and I suspect
+> also ARM64) that's a direct call chain which doesn't involve any
+> boot loader or firmware, and certainly none that would involve the
+> passed DTB image.
 
-  moreover,  on 32bit systems I can not understand why KEXEC_SOURCE_MEMORY_LIMIT
-  is defined to -1UL. therefore, kimge_aloc_page allocate page will always add to unusable_pages.
+For OpenPOWER machines, kexec is the bootloader. Our bootloader is a
+linux kernel and initramfs with a UI (petitboot) - this means we never
+have to write a device driver twice: write a kernel one and you're done
+(for booting from the device and using it in your OS).
 
-  Thanks
-  zhongjiang
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  include/linux/kexec.h |  1 -
->>  kernel/kexec_core.c   | 13 -------------
->>  2 files changed, 14 deletions(-)
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index e8acb2b..26e4917 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -162,7 +162,6 @@ struct kimage {
->>  
->>  	struct list_head control_pages;
->>  	struct list_head dest_pages;
->> -	struct list_head unusable_pages;
->>  
->>  	/* Address of next control page to allocate for crash kernels. */
->>  	unsigned long control_page;
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 56b3ed0..448127d 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -257,9 +257,6 @@ struct kimage *do_kimage_alloc_init(void)
->>  	/* Initialize the list of destination pages */
->>  	INIT_LIST_HEAD(&image->dest_pages);
->>  
->> -	/* Initialize the list of unusable pages */
->> -	INIT_LIST_HEAD(&image->unusable_pages);
->> -
->>  	return image;
->>  }
->>  
->> @@ -517,10 +514,6 @@ static void kimage_free_extra_pages(struct kimage *image)
->>  {
->>  	/* Walk through and free any extra destination pages I may have */
->>  	kimage_free_page_list(&image->dest_pages);
->> -
->> -	/* Walk through and free any unusable pages I have cached */
->> -	kimage_free_page_list(&image->unusable_pages);
->> -
->>  }
->>  void kimage_terminate(struct kimage *image)
->>  {
->> @@ -647,12 +640,6 @@ static struct page *kimage_alloc_page(struct kimage *image,
->>  		page = kimage_alloc_pages(gfp_mask, 0);
->>  		if (!page)
->>  			return NULL;
->> -		/* If the page cannot be used file it away */
->> -		if (page_to_pfn(page) >
->> -				(KEXEC_SOURCE_MEMORY_LIMIT >> PAGE_SHIFT)) {
->> -			list_add(&page->lru, &image->unusable_pages);
->> -			continue;
->> -		}
->>  		addr = page_to_pfn(page) << PAGE_SHIFT;
->>  
->>  		/* If it is the destination page we want use it */
-> .
->
-
+-- 
+Stewart Smith
+OPAL Architect, IBM.
 
 
 _______________________________________________
