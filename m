@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNEJp-000261-51
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 07:10:55 +0000
-Message-ID: <5785E8A3.7060109@huawei.com>
-Date: Wed, 13 Jul 2016 15:07:15 +0800
-From: zhong jiang <zhongjiang@huawei.com>
+ id 1bNEjn-0007A0-EE
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 07:37:47 +0000
+Date: Wed, 13 Jul 2016 08:36:57 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Message-ID: <20160713073657.GX1041@n2100.armlinux.org.uk>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
+ <20160712225805.0d27fe5d@hananiah.suse.cz>
+ <20160712221804.GV1041@n2100.armlinux.org.uk>
+ <87twfunneg.fsf@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] kexec: remove unnecessary unusable_pages
-References: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
- <87poqi3muo.fsf@x220.int.ebiederm.org> <5785BEA6.2060404@huawei.com>
- <87lh16unw9.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87lh16unw9.fsf@x220.int.ebiederm.org>
+Content-Disposition: inline
+In-Reply-To: <87twfunneg.fsf@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,56 +28,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
+To: Stewart Smith <stewart@linux.vnet.ibm.com>
+Cc: bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, vgoyal@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 
-On 2016/7/13 13:07, Eric W. Biederman wrote:
-> zhong jiang <zhongjiang@huawei.com> writes:
->
->> On 2016/7/12 23:19, Eric W. Biederman wrote:
->>> zhongjiang <zhongjiang@huawei.com> writes:
->>>
->>>> From: zhong jiang <zhongjiang@huawei.com>
->>>>
->>>> In general, kexec alloc pages from buddy system, it cannot exceed
->>>> the physical address in the system.
->>>>
->>>> The patch just remove this unnecessary code, no functional change.
->>> On 32bit systems with highmem support kexec can very easily receive a
->>> page from the buddy allocator that can exceed 4GiB.  This doesn't show
->>> up on 64bit systems as typically the memory limits are less than the
->>> address space.  But this code is very necessary on some systems and
->>> removing it is not ok.
->>>
->>> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
->>>
->>   This viewpoint is as opposed to me,  32bit systems architectural decide it can not
->>   access exceed 4GiB whether the highmem or not.   but there is one exception, 
->>   when PAE enable, its physical address should be extended to 36,  new paging  mechanism
->>   established for it.  therefore, the  page from the buddy allocator
->>   can exceed 4GiB.
-> Exactly.  And I was dealing with PAE systems in 2001 or so with > 4GiB
-> of RAM.  Which is where the unusable_pages work comes from.
->
-> Other architectures such as ARM also followed a similar path, so
-> it isn't just x86 that has 32bit systems with > 32 address lines.
->
->>   moreover,  on 32bit systems I can not understand why KEXEC_SOURCE_MEMORY_LIMIT
->>   is defined to -1UL. therefore, kimge_aloc_page allocate page will always add to unusable_pages.
-> -1UL is a short way of writing 0xffffffffUL  Which is as close as you
-> can get to writing 0x100000000UL in 32bits.
->
-> kimage_alloc_page won't always add to unusable_pages as there is memory
-> below 4GiB but it isn't easily found so there may temporarily be a
-> memory shortage, as it allocates it's way there.  Unfortunately whenever
-> I have looked there are memory zones that line up with the memory the
-> kexec is looking for.  So it does a little bit of a weird dance to get
-> the memory it needs and to discard the memory it can't use.
->
-> Eric
->
-  Thanks , I get it.
+On Wed, Jul 13, 2016 at 02:59:51PM +1000, Stewart Smith wrote:
+> Russell King - ARM Linux <linux@armlinux.org.uk> writes:
+> > On Tue, Jul 12, 2016 at 10:58:05PM +0200, Petr Tesarik wrote:
+> >> I'm not an expert on DTB, so I can't provide an example of code
+> >> execution, but you have already mentioned the /chosen/linux,stdout-path
+> >> property. If an attacker redirects the bootloader to an insecure
+> >> console, they may get access to the system that would otherwise be
+> >> impossible.
+> >
+> > I fail to see how kexec connects with the boot loader - the DTB image
+> > that's being talked about is one which is passed from the currently
+> > running kernel to the to-be-kexec'd kernel.  For ARM (and I suspect
+> > also ARM64) that's a direct call chain which doesn't involve any
+> > boot loader or firmware, and certainly none that would involve the
+> > passed DTB image.
+> 
+> For OpenPOWER machines, kexec is the bootloader. Our bootloader is a
+> linux kernel and initramfs with a UI (petitboot) - this means we never
+> have to write a device driver twice: write a kernel one and you're done
+> (for booting from the device and using it in your OS).
 
+I think you misunderstood my point.
+
+On ARM, we do not go:
+
+	kernel (kexec'd from) -> boot loader -> kernel (kexec'd to)
+
+but we go:
+
+	kernel (kexec'd from) -> kernel (kexec'd to)
+
+There's no intermediate step involving any bootloader.
+
+Hence, my point is that the dtb loaded by kexec is _only_ used by the
+kernel which is being kexec'd to, not by the bootloader, nor indeed
+the kernel which it is loaded into.
+
+Moreover, if you read the bit that I quoted (which is what I was
+replying to), you'll notice that it is talking about the DTB loaded
+by kexec somehow causing the _bootloader_ to be redirected to an
+alternative console.  This point is wholely false on ARM.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
