@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Date: Wed, 13 Jul 2016 10:01:33 +0200
-Message-ID: <5352106.oQ0Ff9gWJA@wuerfel>
-In-Reply-To: <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <20160712145010.GA8447@leverpostej>
- <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bNFCB-0007Gm-GI
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 08:07:05 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH 2/3] makedumpfile: Mark unstored ELF pages as filtered
+Date: Wed, 13 Jul 2016 07:43:13 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E54DB1@BPXM01GP.gisp.nec.co.jp>
+References: <20160210084737.3060fb5a@hananiah.suse.cz>
+ <20160210084941.026830dc@hananiah.suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E44B52@BPXM01GP.gisp.nec.co.jp>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E49B8A@BPXM01GP.gisp.nec.co.jp>
+ <20160712233835.20af3622@hananiah.suse.cz>
+In-Reply-To: <20160712233835.20af3622@hananiah.suse.cz>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,49 +27,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Mark Rutland <mark.rutland@arm.com>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: "ptesarik@suse.cz" <ptesarik@suse.cz>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Wednesday, July 13, 2016 10:36:14 AM CEST Dave Young wrote:
-> On 07/12/16 at 03:50pm, Mark Rutland wrote:
-> > On Tue, Jul 12, 2016 at 04:24:10PM +0200, Arnd Bergmann wrote:
-> > > On Tuesday, July 12, 2016 10:18:11 AM CEST Vivek Goyal wrote:
-> > 
-> > /proc/devicetree (aka /sys/firmware/devicetree) is a filesystem derived
-> > from the raw DTB (which is exposed at /sys/firmware/fdt).
-> > 
-> > The blob that was handed to the kernel at boot time is exposed at
-> > /sys/firmware/fdt.
-> 
-> I believe the blob can be read and passed to kexec kernel in kernel code without
-> the extra fd.
-> 
-> But consider we can kexec to a different kernel and a different initrd so there
-> will be use cases to pass a total different dtb as well. From my understanding
-> it is reasonable but yes I think we should think carefully about the design.
+Hello Petr,
 
-Ok, I can see four interesting use cases here:
+I'm happy to get your reply.
 
-- Using the dtb that the kernel has saved at boot time. Ideally this should not
-  require an additional step of signing it, since the running kernel already
-  trusts it.
+>On Tue, 7 Jun 2016 04:18:48 +0000
+>Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
+>
+>> >>+static void
+>> >>+exclude_nodata_pages(struct cycle *cycle)
+>> >>+{
+>> >>+	int i;
+>> >>+	unsigned long long phys_start, phys_end;
+>> >>+	off_t file_size;
+>> >>+
+>> >>+	i = 0;
+>> >>+	while (get_pt_load_extents(i, &phys_start, &phys_end,
+>> >>+				   NULL, &file_size)) {
+>> >>+		unsigned long long pfn, pfn_end;
+>> >>+
+>> >>+		pfn = paddr_to_pfn(phys_start + file_size);
+>> >>+		pfn_end = paddr_to_pfn(phys_end);
+>> >
+>> >Does this code exclude the first pfn of out of PT_LOAD even if there is
+>> >no unstored pages ? pfn and pfn_end will point at the next pfn to the
+>> >last pfn of PT_LOAD.
+>
+>Indeed, phys_end is in fact the first physical address that is _not_
+>contained in the segment.
+>
+>Good catch!
+>
+>> >This will be problem for the environments which have a overlapped PT_LOAD
+>> >segment like ia64.
+>
+>I think it's quite the opposite. Partial pages on IA64 are the only
+>ones that were handled correctly with the old code.
 
-- A dtb blob from the file system that was produced along with the kernel image.
-  If we require a signature on the kernel, the the same requirement should be
-  made on the dtb. Whoever signs the kernel can also sign the dtb.
-  The tricky part here is the kernel command line that is part of the dtb
-  and that may need to be modified.
+I didn't take care partial pages, just considered the case below:
 
-- Modifying the dtb at for any of the reasons I listed: This should always
-  be possible when we do not use secure boot, just like booting an unsigned
-  kernel is.
+   pfn             1   2   3   4   5   6   7
+------------------------------------------------
+PT_LAOD(1)       |---+---+---+---|
+PT_LAOD(2)               |---+---+---+---|
 
-- kboot/petitboot with all of the user space being part of the trusted boot
-  chain: it would be good to allow these to modify the dtb as needed without
-  breaking the trust chain, just like we allow grub or u-boot to modify the dtb
-  before passing it to the kernel.
+During checking PT_LOAD(1), the bit of pfn:5 will be dropped if
+mem_size equals file_size, but practically the pfn is an used page
+as PT_LAOD(2) shows.
+If there is only PT_LOAD(1), pfn:5 must be on hole and the actual
+harm doesn't occur.
 
-	Arnd
+>> >
+>> >>+		if (pfn < cycle->start_pfn)
+>> >>+			pfn = cycle->start_pfn;
+>> >>+		if (pfn_end >= cycle->end_pfn)
+>> >>+			pfn_end = cycle->end_pfn - 1;
+>> >>+		while (pfn <= pfn_end) {
+>> >
+>> >Should we change this condition to "pfn < pfn_end" ?
+>
+>Better than nothing, but if the last page of a LOAD segment is not
+>partial, it will not be excluded. Except for partial pages, end_pfn
+>refers to the first PFN _after_ the current segment.
+
+If mem_size equals file_size, the last page of a LOAD also shouldn't
+be removed. However, the condition of "pfn <= pfn_end" can remove it
+since end_pfn refers to the first PFN _after_ the current segment.
+I just fixed it.
+
+>> >
+>> >>+			clear_bit_on_2nd_bitmap(pfn, cycle);
+>> >>+			++pfn;
+>> >>+		}
+>> >>+		++i;
+>> >>+	}
+>> >>+}
+>>
+>> I fixed this as below for v1.6.0.
+>> Of course your comment would still be helpful.
+>
+>It comes too late, I'm afraid.
+>
+>In all ia64 dumps with partial pages I have seen, the full content of
+>the partial page is indeed stored in another segment, so the page would
+>be marked incorrectly. OTOH I think the off-by-one bug you fixed
+>affected all segments, even those without any partial pages; it would
+>incorrectly mark the first PFN after the segment as filtered.
+>
+>The perfect solution is to round the starting PFN up instead of down to
+>preserve partial pages, but I'll have to think about it some more
+>before I can send a patch.
+
+Again, I didn't consider partial page cases, I also should reconsider this.
+Thank you for pointing it out.
+
+
+Regards,
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
