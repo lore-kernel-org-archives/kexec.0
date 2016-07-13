@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 13 Jul 2016 10:34:47 +0100
+Date: Wed, 13 Jul 2016 10:41:28 +0100
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160713093432.GB14522@leverpostej>
+Message-ID: <20160713094127.GC14522@leverpostej>
 References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <1911992.H2WpLRr2Fi@wuerfel> <20160712141810.GB30181@redhat.com>
- <293705810.hBL93OOmOz@wuerfel> <20160712145010.GA8447@leverpostej>
+ <20160712145010.GA8447@leverpostej>
  <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
+ <5352106.oQ0Ff9gWJA@wuerfel>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <5352106.oQ0Ff9gWJA@wuerfel>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,37 +22,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On Wed, Jul 13, 2016 at 10:36:14AM +0800, Dave Young wrote:
-> But consider we can kexec to a different kernel and a different initrd so there
-> will be use cases to pass a total different dtb as well.
+On Wed, Jul 13, 2016 at 10:01:33AM +0200, Arnd Bergmann wrote:
+> On Wednesday, July 13, 2016 10:36:14 AM CEST Dave Young wrote:
+> > On 07/12/16 at 03:50pm, Mark Rutland wrote:
+> > > On Tue, Jul 12, 2016 at 04:24:10PM +0200, Arnd Bergmann wrote:
+> > > > On Tuesday, July 12, 2016 10:18:11 AM CEST Vivek Goyal wrote:
+> > > 
+> > > /proc/devicetree (aka /sys/firmware/devicetree) is a filesystem derived
+> > > from the raw DTB (which is exposed at /sys/firmware/fdt).
+> > > 
+> > > The blob that was handed to the kernel at boot time is exposed at
+> > > /sys/firmware/fdt.
+> > 
+> > I believe the blob can be read and passed to kexec kernel in kernel code without
+> > the extra fd.
+> > 
+> > But consider we can kexec to a different kernel and a different initrd so there
+> > will be use cases to pass a total different dtb as well. From my understanding
+> > it is reasonable but yes I think we should think carefully about the design.
+> 
+> Ok, I can see four interesting use cases here:
+> 
+> - Using the dtb that the kernel has saved at boot time. Ideally this should not
+>   require an additional step of signing it, since the running kernel already
+>   trusts it.
 
-It depends on what you mean by "a different kernel", and what this
-implies for the DTB.
+We have sufficient information from the existing kexec_file_load syscall
+prototype to do this in-kernel.
 
-I expect future arm64 Linux kernels to function with today's DTBs, and
-the existing boot protocol. The kexec_file_load syscall already has
-enough information for the kernel to inject the initrd and bootargs
-properties into a DTB.
+> - A dtb blob from the file system that was produced along with the kernel image.
+>   If we require a signature on the kernel, the the same requirement should be
+>   made on the dtb. Whoever signs the kernel can also sign the dtb.
+>   The tricky part here is the kernel command line that is part of the dtb
+>   and that may need to be modified.
 
-In practice on x86 today, kexec_file_load only supports booting to a
-Linux kernel, because the in-kernel purgatory only implements the x86
-Linux boot protocol. Analagously, for arm64 I think that the first
-kernel should use its internal copy of the boot DTB, with /chosen fixed
-up appropriately, assuming the next kernel is an arm64 Linux image.
+I suspect that for this case, following the example of the existing
+sycall, we'd allow the kernel to modify bootargs and initrd properties
+after verfiying the signature of the DTB.
 
-If booting another OS, the only parts of the DTB I would expect to
-change are the properties under chosen, as everything else *should* be
-OS-independent. However the other OS may have a completely different
-boot protocol, might not even take a DTB, and will likely need a
-compeltely different purgatory implementation. So just allowing the DTB
-to be altered isn't sufficient for that case.
+The big question is whether this is a realistic case on a secure boot
+system.
 
-There might be cases where we want a different DTB, but as far as I can
-tell we have nothing analagous on x86 today. If we do need this, we
-should have an idea of what real case(s) were trying to solve.
+> - Modifying the dtb at for any of the reasons I listed: This should always
+>   be possible when we do not use secure boot, just like booting an unsigned
+>   kernel is.
+
+This is possible with the existing kexec_load syscall, for the non
+secure boot case.
+
+> - kboot/petitboot with all of the user space being part of the trusted boot
+>   chain: it would be good to allow these to modify the dtb as needed without
+>   breaking the trust chain, just like we allow grub or u-boot to modify the dtb
+>   before passing it to the kernel.
+
+It depends on *what* we need to modify here. We can modify the bootargs
+and initrd properties as part of the kexec_file_load syscall, so what
+else would we want to alter?
 
 Thanks,
 Mark.
