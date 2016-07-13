@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x234.google.com ([2607:f8b0:400e:c03::234])
+Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNLsZ-0006Hc-JT
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 15:15:16 +0000
-Received: by mail-pa0-x234.google.com with SMTP id pp5so11991493pac.3
- for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 08:14:54 -0700 (PDT)
-Date: Thu, 14 Jul 2016 00:14:46 +0900
+ id 1bNMJQ-0008Tv-VY
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 15:43:02 +0000
+Received: by mail-pf0-x230.google.com with SMTP id t190so19801366pfb.3
+ for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 08:42:40 -0700 (PDT)
+Date: Thu, 14 Jul 2016 00:42:26 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v22 8/8] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20160713151438.GB25106@porco>
+Subject: Re: [PATCH v22 1/8] arm64: kdump: reserve memory for crash dump kernel
+Message-ID: <20160713154225.GA25403@porco>
 References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-9-takahiro.akashi@linaro.org>
- <20160712100745.GA21909@leverpostej>
+ <20160712050514.22307-2-takahiro.akashi@linaro.org>
+ <e7034684-00ec-c441-c806-ae090d10cceb@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160712100745.GA21909@leverpostej>
+In-Reply-To: <e7034684-00ec-c441-c806-ae090d10cceb@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,159 +27,141 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: mark.rutland@arm.com, Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Mark,
+Hi,
 
-On Tue, Jul 12, 2016 at 11:07:45AM +0100, Mark Rutland wrote:
-> Hi,
+On Wed, Jul 13, 2016 at 10:12:12AM +0100, Suzuki K Poulose wrote:
+> On 12/07/16 06:05, AKASHI Takahiro wrote:
+> >On the startup of primary kernel, the memory region used by crash dump
+> >kernel must be specified by "crashkernel=" kernel parameter.
+> >reserve_crashkernel() will allocate and reserve the region for later use.
+> >
+> >User space tools, like kexec-tools, will be able to find that region as
+> >	- "Crash kernel" in /proc/iomem, or
+> >	- "linux,crashkernel-base" and "linux,crashkernel-size" under
+> >	  /sys/firmware/devicetree/base/chosen
+> >
+> >Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> >Signed-off-by: Mark Salter <msalter@redhat.com>
+> >Signed-off-by: Pratyush Anand <panand@redhat.com>
+> >Reviewed-by: James Morse <james.morse@arm.com>
 > 
-> Apologies for the delay on this.
+> Minor nits below.
 > 
-> On Tue, Jul 12, 2016 at 02:05:14PM +0900, AKASHI Takahiro wrote:
-> > From: James Morse <james.morse@arm.com>
-> > 
-> > Add documentation for
-> > 	linux,crashkernel-base and crashkernel-size,
-> > 	linux,usable-memory-range, and
-> > 	linux,elfcorehdr
-> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> > the elfcorehdr's location within it.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > [takahiro.akashi@linaro.org:
-> >     renamed "usable-memory" to "usable-memory-range",
-> >     added "linux,crashkernel-base" and "-size" ]
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
-> >  1 file changed, 45 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > index 6ae9d82..d7a3a86 100644
-> > --- a/Documentation/devicetree/bindings/chosen.txt
-> > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > @@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
-> >  book3e) by some versions of kexec-tools to tell the new kernel that it
-> >  is being booted by kexec, as the booting environment may differ (e.g.
-> >  a different secondary CPU release mechanism)
-> > +
-> > +linux,crashkernel-base
-> > +linux,crashkernel-size
-> > +----------------------
-> > +These properties are set (on PowerPC and arm64) during kdump to tell
-> > +use-space tools, like kexec-tools, the base address of the crash-dump
-> > +kernel's reserved area of memory and the size. e.g.
+> >---
+> > arch/arm64/kernel/setup.c |   7 ++-
+> > arch/arm64/mm/init.c      | 115 ++++++++++++++++++++++++++++++++++++++++++++++
+> > 2 files changed, 121 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> >index c1509e6..cb5eee0 100644
+> >--- a/arch/arm64/kernel/setup.c
+> >+++ b/arch/arm64/kernel/setup.c
+> >@@ -31,7 +31,6 @@
+> > #include <linux/screen_info.h>
+> > #include <linux/init.h>
+> > #include <linux/kexec.h>
+> >-#include <linux/crash_dump.h>
+> > #include <linux/root_dev.h>
+> > #include <linux/cpu.h>
+> > #include <linux/interrupt.h>
+> >@@ -222,6 +221,12 @@ static void __init request_standard_resources(void)
+> > 		    kernel_data.end <= res->end)
+> > 			request_resource(res, &kernel_data);
+> > 	}
+> >+
+> >+#ifdef CONFIG_KEXEC_CORE
+> >+	/* User space tools will find "Crash kernel" region in /proc/iomem. */
+> >+	if (crashk_res.end)
+> >+		insert_resource(&iomem_resource, &crashk_res);
+> >+#endif
 > 
-> No need to mention what consumes this. Just state what it describes,
-> e.g.
+> nit: Could we not do this from reserve_crashkernel() ?
+
+Reserve_crashkernel() should be called before arm64_memblock_init().
+If the code above is put in reserve_crashkernel(), the inserted
+resource will be gone later by calling request_resource() in
+request_standard_resource() because the crashkernel memory is part of
+System RAM.
+
+> >
+> > #include <asm/boot.h>
+> > #include <asm/fixmap.h>
+> >@@ -76,6 +78,117 @@ static int __init early_initrd(char *p)
+> > early_param("initrd", early_initrd);
+> > #endif
+> >
+> >+#ifdef CONFIG_KEXEC_CORE
+> >+static unsigned long long crash_size, crash_base;
+> >+static struct property crash_base_prop = {
+> >+	.name = "linux,crashkernel-base",
+> >+	.length = sizeof(u64),
+> >+	.value = &crash_base
+> >+};
+> >+static struct property crash_size_prop = {
+> >+	.name = "linux,crashkernel-size",
+> >+	.length = sizeof(u64),
+> >+	.value = &crash_size,
+> >+};
+> >+
 > 
-> 	These properties describe the base and size of the crash-dump
-> 	kernel's reserved area of memory. Valid for PowerPC and arm64.
+> >+
+> >+/*
+> >+ * reserve_crashkernel() - reserves memory for crash kernel
+> >+ *
+> >+ * This function reserves memory area given in "crashkernel=" kernel command
+> >+ * line parameter. The memory reserved is used by dump capture kernel when
+> >+ * primary kernel is crashing.
+> >+ */
+> >+static void __init reserve_crashkernel(void)
+> >+{
+> >+	int ret;
+> >+
+> >+	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> >+				&crash_size, &crash_base);
+> >+	/* no crashkernel= or invalid value specified */
+> >+	if (ret || !crash_size)
+> >+		return;
+> >+
+> >+	if (crash_base == 0) {
+> 
+> ...
+> 
+> >+		memblock_reserve(crash_base, crash_size);
+> >+
+> >+	} else {
+> 
+> ...
+> 
+> >+
+> >+		memblock_reserve(crash_base, crash_size);
+> 
+> >+	}
+> 
+> Nit: you could move the memblock_reserve() here to a single place.
 
 Sure.
-
-> > +
-> > +/ {
-> > +	chosen {
-> > +		linux,crashkernel-base = <0x9 0xf0000000>;
-> > +		linux,crashkernel-size = <0x0 0x10000000>;
-> > +	};
-> > +};
-> > +
-> > +linux,usable-memory-range
-> > +-------------------------
-> > +
-> > +This property is set (currently only on arm64) during kdump to tell
-> > +the crash-dump kernel the base address of its reserved area of memory,
-> > +and the size. e.g.
-> 
-> The description sounds like this duplicates linux,crashkernel-*. What is
-> the difference between the two?
-
-Simply saying, crashkernel-* are for the first(normal) kernel,
-while usable-memory-range is for the second(crash-dump) kernel.
-
-The former appears only under /sys/firmware/devicetree/base/
-on kdump-enabled kernel  whenever "crashkernel=" command line parameter
-is specified. So user space tools, like kexec-tools, will be able to know
-what memory region is reserved for kdump.
-
-The latter is added in device-tree blob which is passed to
-crash-dump kernel so the kernel recognize what memory region is usable
-for system ram. We will see it in /sys/firmware/devicetree/base
-as well as /sys/firmware/fdt on crash dump kernel. 
-
-So both can potentially appear at the same time on crash dump kernel, but
-they will have different values in that case.
-(So we need different names.)
-
-> On powerpc it looks like there's a linux,usable-memory property (without
-> the -range suffix). How do these differ?
-
-Please also see Thiago's comment.
-Basically "linux,usable-memory" property imposes further restriction
-on memory node's "reg" property.
-
-Currently kdump only supports a single memory region as usable memory
-of crash dump kernel, and so adding "linux,usable-memory" to every
-memory node in dtb is sort of "doing too much" IMHO.
-In addition, there are no memory nodes on UEFI(w/ACPI) systems.
-
-> > +
-> > +/ {
-> > +	chosen {
-> > +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> > +	};
-> > +};
-> > +
-> > +Please note that, if this property is present, any memory regions under
-> > +"memory" nodes will be ignored.
-> 
-> What exactly do you mean by "ignored"?
-> 
-> Do we truly ignore this property, or do we map that memory at some
-> point, even if not used for general allocation?
-
-Totally ignored. All the regions are excluded from memblock.
-See my patch #1.
-
-> > +
-> > +linux,elfcorehdr
-> > +----------------
-> > +
-> > +This property is set (currently only on arm64) during kdump to tell
-> > +the crash-dump kernel the address and size of the elfcorehdr that describes
-> > +the old kernel's memory as an elf file. This memory must reside within
-> > +the area described by 'linux,usable-memory-range'. e.g.
-> 
-> 
-> As with the linux,crashkernel-* properties, just state what this
-> describes, e.g.
-> 
-> 	This property describes the base and size of the ELF core
-> 	header, which describes the old kernel's memory as an ELF file.
-> 	This memory must reside within the range described by
-> 	linux,usable-memory-range.
-> 
-> That said, this falling within usable-memory feels very odd, because
-> it's not actually usable for general purposes. Why can the kernel not
-> memremap this, such that it need not be in usable-memory?
-
-Well, James made a similar comment on this before.
-By putting elfcorehdr in usable memory of crash dump kernel,
-it doesn't even have to call memremap() to access the data.
-
-Initially, I thought that it would also reduce the possibility
-of the elfcorehdr region being corrupted by accident on crash, but
-there will be no difference even if it is allocated anywhere else.
 
 Thanks,
 -Takahiro AKASHI
 
-> Thanks,
-> Mark.
+> >+
+> >+	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
+> >+		crash_size >> 20, crash_base >> 20);
+> >+
+> >+	crashk_res.start = crash_base;
+> >+	crashk_res.end = crash_base + crash_size - 1;
+> 
+> As mentioned above, may be we could move the insert_resource() here, which
+> would keep the generic setup.c code cleaner and is a bit more reader friendly.
+> 
+> >+}
+> >+#else
+> 
+> Suzuki
+> 
 
 _______________________________________________
 kexec mailing list
