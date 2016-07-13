@@ -1,20 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 13 Jul 2016 14:22:47 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bNPAh-00025h-5G
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 18:46:11 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6DIht6G059036
+ for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 14:45:50 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2452xs89df-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 14:45:50 -0400
+Received: from localhost
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Wed, 13 Jul 2016 15:45:47 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160713182247.GA25232@redhat.com>
-References: <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
- <20160712225805.0d27fe5d@hananiah.suse.cz>
- <20160712221804.GV1041@n2100.armlinux.org.uk>
- <87twfunneg.fsf@linux.vnet.ibm.com>
- <20160713073657.GX1041@n2100.armlinux.org.uk>
- <87poqinf9m.fsf@linux.vnet.ibm.com>
- <20160713082639.GZ1041@n2100.armlinux.org.uk>
- <20160713130338.GB16900@redhat.com>
- <20160713174009.GA1041@n2100.armlinux.org.uk>
+Date: Wed, 13 Jul 2016 15:45:41 -0300
+In-Reply-To: <7352796.seiSnHrYPy@wuerfel>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <20160713094127.GC14522@leverpostej> <7352796.seiSnHrYPy@wuerfel>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160713174009.GA1041@n2100.armlinux.org.uk>
+Message-Id: <2222184.ZN0KkkXgPC@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,71 +36,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, Petr Tesarik <ptesarik@suse.cz>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On Wed, Jul 13, 2016 at 06:40:10PM +0100, Russell King - ARM Linux wrote:
-> On Wed, Jul 13, 2016 at 09:03:38AM -0400, Vivek Goyal wrote:
-> > On Wed, Jul 13, 2016 at 09:26:39AM +0100, Russell King - ARM Linux wrote:
-> > > Indeed - maybe Eric knows better, but I can't see any situation where
-> > > the dtb we load via kexec should ever affect "the bootloader", unless
-> > > the "kernel" that's being loaded into kexec is "the bootloader".
-> > > 
-> > > Now, going back to the more fundamental issue raised in my first reply,
-> > > about the kernel command line.
-> > > 
-> > > On x86, I can see that it _is_ possible for userspace to specify a
-> > > command line, and the kernel loading the image provides the command
-> > > line to the to-be-kexeced kernel with very little checking.  So, if
-> > > your kernel is signed, what stops the "insecure userspace" loading
-> > > a signed kernel but giving it an insecure rootfs and/or console?
+Am Mittwoch, 13 Juli 2016, 15:13:42 schrieb Arnd Bergmann:
+> On Wednesday, July 13, 2016 10:41:28 AM CEST Mark Rutland wrote:
+> > On Wed, Jul 13, 2016 at 10:01:33AM +0200, Arnd Bergmann wrote:
+> > > - kboot/petitboot with all of the user space being part of the trusted
+> > > boot> > 
+> > >   chain: it would be good to allow these to modify the dtb as needed
+> > >   without breaking the trust chain, just like we allow grub or u-boot
+> > >   to modify the dtb before passing it to the kernel.
 > > 
-> > It is not kexec specific. I could do this for regular boot too, right?
-> > 
-> > Command line options are not signed. I thought idea behind secureboot
-> > was to execute only trusted code and command line options don't enforce
-> > you to execute unsigned code.
-> > 
-> > So it sounds like different class of security problems which you are
-> > referring to and not necessarily covered by secureboot or signed
-> > kernel.
+> > It depends on *what* we need to modify here. We can modify the bootargs
+> > and initrd properties as part of the kexec_file_load syscall, so what
+> > else would we want to alter?
 > 
-> Let me give you an example.
-> 
-> You have a secure boot setup, where the firmware/ROM validates the boot
-> loader.  Good, the boot loader hasn't been tampered with.
-> 
-> You interrupt the boot loader and are able to modify the command line
-> for the booted kernel.
-> 
-> The boot loader loads the kernel and verifies the kernel's signature.
-> Good, the kernel hasn't been tampered with.  The kernel starts running.
-> 
-> You've plugged in a USB drive to the device, and specified a partition
-> containing a root filesystem that you control to the kernel.  The
-> validated kernel finds the USB drive, and mounts it, and executes
-> your own binaries on the USB drive.
+> I guess petitboot can also just use kexec_load() instead of
+> kexec_file_load(), as long as the initramfs containing petitboot is
+> trusted by the kernel.
 
-You will require physical access to the machine to be able to
-insert your usb drive. And IIRC, argument was that if attacker has
-physical access to machine, all bets are off anyway.
+For secure boot, Petitboot needs to use kexec_file_load, because of the 
+following two features which the system call enables:
 
-> 
-> You run a shell on the console.  You now have control of the system,
-> and can mount the real rootfs, inspect it, and work out what it does,
-> etc.
-> 
-> At this point, what use was all the validation that the secure boot
-> has done?  Absolutely useless.
-> 
-> If you can change the command line arguments given to the kernel, you
-> have no security, no matter how much you verify signatures.  It's
-> the illusion of security, nothing more, nothing less.
-> 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
+1. only allow loading of signed kernels.
+2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
+   command line and other boot inputs for the Integrity Measurement
+   Architecture subsystem.
+
+Those can't be done with kexec_load.
+
+As for what we need to modify, Petitboot does the following modifications to 
+the DTB:
+
+1. Set /chosen/linux,stdout-path based on which console is being used to 
+interact with it, as Stewart mentioned in another email.
+2. Set display properties on /pciex@n/.../vga@0 in machines with an 
+OpenFirmware framebuffer.
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
