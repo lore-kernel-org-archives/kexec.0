@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNJsF-0008OP-4K
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 13:06:51 +0000
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1468399874-5880-2-git-send-email-jia.zhang@windriver.com>
-References: <1468399874-5880-2-git-send-email-jia.zhang@windriver.com>
- <1468399874-5880-1-git-send-email-jia.zhang@windriver.com>
-Subject: Re: [PATCH 2/2] pefile: Fix the failure of calculation for digest
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Date: Wed, 13 Jul 2016 15:13:42 +0200
+Message-ID: <7352796.seiSnHrYPy@wuerfel>
+In-Reply-To: <20160713094127.GC14522@leverpostej>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <5352106.oQ0Ff9gWJA@wuerfel> <20160713094127.GC14522@leverpostej>
 MIME-Version: 1.0
-Content-ID: <4332.1468415184.1@warthog.procyon.org.uk>
-Date: Wed, 13 Jul 2016 14:06:24 +0100
-Message-ID: <4333.1468415184@warthog.procyon.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,18 +19,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lans Zhang <jia.zhang@windriver.com>
-Cc: dhowells@redhat.com, kexec@lists.infradead.org, vgoyal@redhat.com, bhe@redhat.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-Lans Zhang <jia.zhang@windriver.com> wrote:
+On Wednesday, July 13, 2016 10:41:28 AM CEST Mark Rutland wrote:
+> On Wed, Jul 13, 2016 at 10:01:33AM +0200, Arnd Bergmann wrote:
+> > On Wednesday, July 13, 2016 10:36:14 AM CEST Dave Young wrote:
+> > > On 07/12/16 at 03:50pm, Mark Rutland wrote:
+> > > > On Tue, Jul 12, 2016 at 04:24:10PM +0200, Arnd Bergmann wrote:
+> > > > > On Tuesday, July 12, 2016 10:18:11 AM CEST Vivek Goyal wrote:
+> > > > 
+> > > > /proc/devicetree (aka /sys/firmware/devicetree) is a filesystem derived
+> > > > from the raw DTB (which is exposed at /sys/firmware/fdt).
+> > > > 
+> > > > The blob that was handed to the kernel at boot time is exposed at
+> > > > /sys/firmware/fdt.
+> > > 
+> > > I believe the blob can be read and passed to kexec kernel in kernel code without
+> > > the extra fd.
+> > > 
+> > > But consider we can kexec to a different kernel and a different initrd so there
+> > > will be use cases to pass a total different dtb as well. From my understanding
+> > > it is reasonable but yes I think we should think carefully about the design.
+> > 
+> > Ok, I can see four interesting use cases here:
+> > 
+> > - Using the dtb that the kernel has saved at boot time. Ideally this should not
+> >   require an additional step of signing it, since the running kernel already
+> >   trusts it.
+> 
+> We have sufficient information from the existing kexec_file_load syscall
+> prototype to do this in-kernel.
 
-> The commit e68503bd forgot to set digest_len and thus cause the following
-> error reported by kexec when launching a crash kernel:
-> "kexec_file_load failed: Bad message"
+Ok.
 
-You need to put the commit ID in a "Fixes:" line as per SubmittingPatches.
+> > - A dtb blob from the file system that was produced along with the kernel image.
+> >   If we require a signature on the kernel, the the same requirement should be
+> >   made on the dtb. Whoever signs the kernel can also sign the dtb.
+> >   The tricky part here is the kernel command line that is part of the dtb
+> >   and that may need to be modified.
+> 
+> I suspect that for this case, following the example of the existing
+> sycall, we'd allow the kernel to modify bootargs and initrd properties
+> after verfiying the signature of the DTB.
 
-David
+Makes sense.
+ 
+> The big question is whether this is a realistic case on a secure boot
+> system.
+
+What does x86 do here? I assume changes to the command line are also
+limited.
+
+> > - Modifying the dtb at for any of the reasons I listed: This should always
+> >   be possible when we do not use secure boot, just like booting an unsigned
+> >   kernel is.
+> 
+> This is possible with the existing kexec_load syscall, for the non
+> secure boot case.
+
+Ok, let's skip that then.
+
+> > - kboot/petitboot with all of the user space being part of the trusted boot
+> >   chain: it would be good to allow these to modify the dtb as needed without
+> >   breaking the trust chain, just like we allow grub or u-boot to modify the dtb
+> >   before passing it to the kernel.
+> 
+> It depends on *what* we need to modify here. We can modify the bootargs
+> and initrd properties as part of the kexec_file_load syscall, so what
+> else would we want to alter?
+
+I guess petitboot can also just use kexec_load() instead of kexec_file_load(),
+as long as the initramfs containing petitboot is trusted by the kernel.
+
+	Arnd
 
 _______________________________________________
 kexec mailing list
