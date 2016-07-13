@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNEjn-0007A0-EE
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 07:37:47 +0000
-Date: Wed, 13 Jul 2016 08:36:57 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160713073657.GX1041@n2100.armlinux.org.uk>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
- <20160712225805.0d27fe5d@hananiah.suse.cz>
- <20160712221804.GV1041@n2100.armlinux.org.uk>
- <87twfunneg.fsf@linux.vnet.ibm.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bNEt3-0004Mb-FE
+ for kexec@lists.infradead.org; Wed, 13 Jul 2016 07:47:19 +0000
+From: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH v2] kexec: Fix kdump failure with notsc
+Date: Wed, 13 Jul 2016 07:46:48 +0000
+Message-ID: <1468395865.2020.10.camel@localhost>
+References: <1467886646-2638-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <87r3b5z626.fsf@x220.int.ebiederm.org> <20160708073828.GA3216@gmail.com>
+ <1468232891.15074.45.camel@localhost>
+In-Reply-To: <1468232891.15074.45.camel@localhost>
+Content-Language: en-US
+Content-ID: <24654B2400953143906A45295F77040D@fujitsu.local>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87twfunneg.fsf@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +22,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stewart Smith <stewart@linux.vnet.ibm.com>
-Cc: bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, vgoyal@redhat.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: "mingo@kernel.org" <mingo@kernel.org>
+Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-On Wed, Jul 13, 2016 at 02:59:51PM +1000, Stewart Smith wrote:
-> Russell King - ARM Linux <linux@armlinux.org.uk> writes:
-> > On Tue, Jul 12, 2016 at 10:58:05PM +0200, Petr Tesarik wrote:
-> >> I'm not an expert on DTB, so I can't provide an example of code
-> >> execution, but you have already mentioned the /chosen/linux,stdout-path
-> >> property. If an attacker redirects the bootloader to an insecure
-> >> console, they may get access to the system that would otherwise be
-> >> impossible.
-> >
-> > I fail to see how kexec connects with the boot loader - the DTB image
-> > that's being talked about is one which is passed from the currently
-> > running kernel to the to-be-kexec'd kernel.  For ARM (and I suspect
-> > also ARM64) that's a direct call chain which doesn't involve any
-> > boot loader or firmware, and certainly none that would involve the
-> > passed DTB image.
-> 
-> For OpenPOWER machines, kexec is the bootloader. Our bootloader is a
-> linux kernel and initramfs with a UI (petitboot) - this means we never
-> have to write a device driver twice: write a kernel one and you're done
-> (for booting from the device and using it in your OS).
-
-I think you misunderstood my point.
-
-On ARM, we do not go:
-
-	kernel (kexec'd from) -> boot loader -> kernel (kexec'd to)
-
-but we go:
-
-	kernel (kexec'd from) -> kernel (kexec'd to)
-
-There's no intermediate step involving any bootloader.
-
-Hence, my point is that the dtb loaded by kexec is _only_ used by the
-kernel which is being kexec'd to, not by the bootloader, nor indeed
-the kernel which it is loaded into.
-
-Moreover, if you read the bit that I quoted (which is what I was
-replying to), you'll notice that it is talking about the DTB loaded
-by kexec somehow causing the _bootloader_ to be redirected to an
-alternative console.  This point is wholely false on ARM.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCAyMDE2LTA3LTExIGF0IDE4OjI4ICswODAwLCBXZWkgSmlhbmdhbmcgd3JvdGU6DQo+
+IEhpICwgSW5nbw0KPiANCj4gT24gRnJpLCAyMDE2LTA3LTA4IGF0IDA5OjM4ICswMjAwLCBJbmdv
+IE1vbG5hciB3cm90ZToNCj4gPiAqIEVyaWMgVy4gQmllZGVybWFuIDxlYmllZGVybUB4bWlzc2lv
+bi5jb20+IHdyb3RlOg0KPiA+IA0KPiA+ID4gU2lnaC4gIENhbiB3ZSBwbGVhc2UganVzdCBkbyB0
+aGUgd29yayB0byByaXAgb3V0IHRoZSBhcGljIHNodXRkb3duIGNvZGUgZnJvbSB0aGUgDQo+ID4g
+PiBrZXhlYyBvbiBwYW5pYyBjb2RlIHBhdGg/DQo+ID4gPiANCj4gPiA+IEkgZm9yZ2V0dGluZyBk
+ZXRhaWxzIGJ1dCB0aGUgb25seSByZWFzb24gd2UgaGF2ZSBkbyBhbnkgYXBpYyBzaHV0ZG93biBp
+cyBidWdzIGluIA0KPiA+ID4gb2xkZXIga2VybmVscyB0aGF0IGNvdWxkIG5vdCBpbml0aWFsaXpl
+IGEgc3lzdGVtIHByb3Blcmx5IGlmIHdlIGRpZCBub3Qgc2h1dCANCj4gPiA+IGRvd24gdGhlIGFw
+aWNzLg0KPiA+ID4gDQo+ID4gPiBJIGNlcnRhaW5seSBkb24ndCBzZWUgYW4gaXNzdWUgd2l0aCBn
+b29meSBjYXNlcyBsaWtlIG5vdHNjIG5vdCB3b3JraW5nIG9uIGEgDQo+ID4gPiBjcmFzaCBjYXB0
+dXJlIGtlcm5lbCBpZiB3ZSBhcmUgbm90IGluaXRpYWxpemluZyB0aGUgaGFyZHdhcmUgcHJvcGVy
+bHkuDQo+ID4gPiANCj4gPiA+IFRoZSBzdHJhdGVneSByZWFsbHkgbmVlZHMgdG8gYmUgdG8gb25s
+eSBkbyB0aGUgYWJzb2x1dGVseSBlc3NlbnRpYWwgaGFyZHdhcmUgDQo+ID4gPiBzaHV0ZG93biBp
+biB0aGUgY3Jhc2hpbmcga2VybmVsLCBldmVyeSBhZGludGlvbmFsIGxpbmUgb2YgY29kZSB3ZSBl
+eGVjdXRlIGluIHRoZSANCj4gPiA+IGNyYXNoaW5nIGtlcm5lbCBpbmNyZWFzZXMgb3VyIGNoYW5j
+ZXMgb2YgaGl0dGluZyBhIGJ1Zy4NCj4gPiANCj4gPiBGdWxseSBhZ3JlZWQuDQo+ID4gDQo+ID4g
+PiBVbmRlciB0aGF0IHBvbGljeSB0aGluZ3MgbGlrZSByZXF1cmluZyB3ZSBkb24ndCBwYXNzIGJv
+b3Qgb3B0aW9ucyB0aGF0IGluaGliaXQgDQo+ID4gPiB0aGUgZHVtcCBjYXRwdXJlIGtlcm5lbCBm
+cm9tIGluaXRpYWxpemluZyB0aGUgaGFyZHdhcmUgZnJvbSBhIHJhbmRvbSBzdGF0ZSBhcmUgDQo+
+ID4gPiByZWFzb25hYmxlIHJlcXVpcmVtZW50cy4gIEFLQSBJIGRvbid0IHNlZSBhbnkganVzdGlm
+aWNhdGlvbiBpbiB0aGlzIGFzIHRvIHdoeSB3ZSANCj4gPiA+IHdvdWxkIGV2ZW4gd2FudCB0byBz
+dXBwb3J0IG5vdHNjIG9uIHRoZSBkdW1wIGNhcHR1cmUga2VybmVsLiAgRXNwZWNpYWxseSB3aGVu
+IA0KPiA+ID4gdGhpbmdzIGNsZWFybHkgd29yayB3aGVuIHRoYXQgb3B0aW9uIGlzIG5vdCBzcGVj
+aWZpZWQuDQo+ID4gDQo+ID4gU28gYXQgbGVhc3Qgb24gdGhlIHN1cmZhY2UgaXQgYXBwZWFycyAn
+c3VycHJpc2luZycgdGhhdCB0aGUgJ25vdHNjJyBvcHRpb24gKHdoaWNoLCANCj4gPiBzdXBwb3Nl
+ZGx5LCBkaXNhYmxlcyBUU0MgaGFuZGxpbmcpIGludGVyZmVyZXMgd2l0aCBiZWluZyBhYmxlIHRv
+IGZ1bGx5IGJvb3QuIEV2ZW4gDQo+ID4gaWYgJ25vdHNjJyBpcyBzcGVjaWZpZWQgd2UgYXJlIHN0
+aWxsIHVzaW5nIHRoZSBsb2NhbCBBUElDLCByaWdodD8NCj4gDQo+IEluIG1vc3QgY2FzZSwgIEl0
+J3Mgbm8gcHJvYmxlbSB0aGF0IHVzaW5nIGxvY2FsIEFQSUMgd2hpbGUgbm90c2MgaXMNCj4gc3Bl
+Y2lmaWVkLg0KPiBCdXQgbm90IGZvciBrZHVtcC4NCj4gDQo+IFdlIGNhbiBnZXQgZXZpZGVuY2Us
+IEVzcGVjaWFsbHkgZnJvbSAiU3B1cmlvdXMgTEFQSUMgdGltZXIgaW50ZXJydXB0IG9uDQo+IGNw
+dSAwIi4NCj4gDQo+ICMjI3NlcmlhbCBsb2csDQo+IA0KPiBbICAgIDAuMDAwMDAwXSBOUl9JUlFT
+OjUyNDU0NCBucl9pcnFzOjI1NiAxNg0KPiBbICAgIDAuMDAwMDAwXSBTcHVyaW91cyBMQVBJQyB0
+aW1lciBpbnRlcnJ1cHQgb24gY3B1IDANCj4gWyAgICAwLjAwMDAwMF0gQ29uc29sZTogY29sb3Vy
+IGR1bW15IGRldmljZSA4MHgyNQ0KPiBbICAgIDAuMDAwMDAwXSBjb25zb2xlIFt0dHkwXSBlbmFi
+bGVkDQo+IFsgICAgMC4wMDAwMDBdIGNvbnNvbGUgW3R0eVMwXSBlbmFibGVkDQo+IFsgICAgMC4w
+MDAwMDBdIHRzYzogRmFzdCBUU0MgY2FsaWJyYXRpb24gdXNpbmcgUElUDQo+IFsgICAgMC4wMDAw
+MDBdIHRzYzogRGV0ZWN0ZWQgMjA5OS45NDcgTUh6IHByb2Nlc3Nvcg0KPiBbICAgIDAuMDAwMDAw
+XSBDYWxpYnJhdGluZyBkZWxheSBsb29wLi4uDQo+IA0KPiANCj4gRHVlIHRvIHRoZSBsb2NhbCBh
+cGljIGFuZCBsb2NhbCBhcGljIHRpbWVyIGhhc24ndCBiZWVuIHNldHVwIGFuZCBlbmFibGVkDQo+
+IGZ1bGx5LCBUaGUgZXZlbnRfaGFuZGxlciBvZiBjbG9jayBldmVudCBpcyBOVUxMLg0KPiANCj4g
+IyMjY29kZXMsDQo+IA0KPiBzdGF0aWMgdm9pZCBsb2NhbF9hcGljX3RpbWVyX2ludGVycnVwdCh2
+b2lkKQ0KPiB7DQo+ICAgICBpbnQgY3B1ID0gc21wX3Byb2Nlc3Nvcl9pZCgpOw0KPiAgICAgc3Ry
+dWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0ID0gJnBlcl9jcHUobGFwaWNfZXZlbnRzLCBjcHUp
+Ow0KPiANCj4gICAgIC8qDQo+ICAgICAgKiBOb3JtYWxseSB3ZSBzaG91bGQgbm90IGJlIGhlcmUg
+dGlsbCBMQVBJQyBoYXMgYmVlbiBpbml0aWFsaXplZA0KPiBidXQNCj4gICAgICAqIGluIHNvbWUg
+Y2FzZXMgbGlrZSBrZHVtcCwgaXRzIHBvc3NpYmxlIHRoYXQgdGhlcmUgaXMgYSBwZW5kaW5nDQo+
+IExBUElDDQo+ICAgICAgKiB0aW1lciBpbnRlcnJ1cHQgZnJvbSBwcmV2aW91cyBrZXJuZWwncyBj
+b250ZXh0IGFuZCBpcyBkZWxpdmVyZWQNCj4gaW4NCj4gICAgICAqIG5ldyBrZXJuZWwgdGhlIG1v
+bWVudCBpbnRlcnJ1cHRzIGFyZSBlbmFibGVkLg0KPiAgICAgICoNCj4gICAgICAqIEludGVycnVw
+dHMgYXJlIGVuYWJsZWQgZWFybHkgYW5kIExBUElDIGlzIHNldHVwIG11Y2ggbGF0ZXIsIGhlbmNl
+DQo+ICAgICAgKiBpdHMgcG9zc2libGUgdGhhdCB3aGVuIHdlIGdldCBoZXJlIGV2dC0+ZXZlbnRf
+aGFuZGxlciBpcyBOVUxMLg0KPiAgICAgICogQ2hlY2sgZm9yIGV2ZW50X2hhbmRsZXIgYmVpbmcg
+TlVMTCBhbmQgZGlzY2FyZCB0aGUgaW50ZXJydXB0IGFzDQo+ICAgICAgKiBzcHVyaW91cy4NCj4g
+ICAgICAqLw0KPiAgICAgaWYgKCFldnQtPmV2ZW50X2hhbmRsZXIpIHsNCj4gICAgICAgICBwcl93
+YXJuaW5nKCJTcHVyaW91cyBMQVBJQyB0aW1lciBpbnRlcnJ1cHQgb24gY3B1ICVkXG4iLCBjcHUp
+Ow0KPiAgICAgICAgIC8qIFN3aXRjaCBpdCBvZmYgKi8NCj4gICAgICAgICBsYXBpY190aW1lcl9z
+aHV0ZG93bihldnQpOw0KPiAgICAgICAgIHJldHVybjsNCj4gICAgIH0NCj4gDQo+ICAgICAgLi4u
+Li4uLi4uLi4uLg0KPiB9DQo+IA0KPiANCj4gSU1ITywgDQo+IElmIHdlIHNwZWNpZnkgbm90c2Ms
+IHRoZSBkdW1wLWNhcHR1cmUga2VybmVsIHdhaXRzIGZvciBqaWZmaWVzIGJlaW5nDQo+IHVwZGF0
+ZWQgZWFybHkgYW5kIExBUElDIGFuZCB0aW1lciBhcmUgc2V0dXAgbXVjaCBsYXRlciwgd2hpY2gg
+Y2F1c2VzIG5vDQo+IHRpbWVyIGludGVycnVwdHMgaXMgcGFzc2VkIHRvIEJTUC4gYXMgZm9sbG93
+aW5nLA0KPiANCj4gc3RhcnRfa2VybmVsICAtLT4NCj4gMSktPiBjYWxpYnJhdGVfZGVsYXkoKSAg
+LT4gY2FsaWJyYXRlX2RlbGF5X2NvbnZlcmdlKCkgICMgaGFuZyBhbmQgd2FpdA0KPiBmb3Igamlm
+ZmllcyBjaGFuZ2VkDQo+ICAgICAgICAgICAgICAgICAgICANCj4gMiktPiByZXN0X2luaXQoKSAt
+PiBrZXJuZWxfaW5pdCgpIC0+IC4uLi4gLT4gYXBpY19ic3Bfc2V0dXAoKSAtPg0KPiBzZXR1cF9s
+b2NhbF9BUElDKCkNCj4gDQo+IC0+IHNldHVwX3BlcmNwdV9jbG9ja2V2KCkuDQo+IA0KPiB0aGUg
+c2V0dXBfcGVyY3B1X2Nsb2NrZXYgcG9pbnRzIHNldHVwX2Jvb3RfQVBJQ19jbG9jaygpIHdoaWNo
+IHVzZWQgdG8NCj4gc2V0dXAgdGhlIGJvb3QgQVBJQyBhbmQgdGltZXIuDQo+IA0KPiANCj4gPiBT
+byBpdCBtaWdodCBiZSBhIGdvb2QgaWRlYSB0byBmaW5kIHRoZSByb290IGNhdXNlIG9mIHRoaXMg
+Ym9vdHVwIGZyYWdpbGl0eSBldmVuIGlmIA0KPiA+ICdub3RzYycgaXMgc3BlY2lmaWVkLiBBbmQg
+SSBmdWxseSBhZ3JlZSB0aGF0IGl0IHNob3VsZCBiZSBmaXhlZCBpbiB0aGUgYm9vdHVwIHBhdGgg
+DQo+ID4gb2YgdGhlIGR1bXAga2VybmVsLCBub3QgdGhlIGNyYXNoIGtlcm5lbCByZWJvb3QgcGF0
+aC4NCj4gDQoNCkNhbiBhbnlvbmUgZ2l2ZSBzb21lIGFkdmljZSBvciBjb21tZXQgb24gdGhlIGZv
+bGxvd2luZyBpZGVh77yfDQpUaGFua3MgaW4gYWR2YW5jZS4NCg0KPiBCZWNhdXNlIHRoZSBsYXBp
+YyBhbmQgdGltZXIgYXJlIG5vdCByZWFkeSB3aGVuIGR1bXAtY2FwdHVyZSB3YWl0cyB0aGVtDQo+
+IHRvIHVwZGF0ZSB0aGUgamlmZmllcyB2YWx1ZS4gc28gSSBzdWdnZXN0IHRvIHB1dCBBUElDIGlu
+IGxlZ2FjeSBtb2RlIGluDQo+IGxvY2FsX2FwaWNfdGltZXJfaW50ZXJydXB0KCkgdGVtcG9yYXJp
+bHksIHdoaWNoIGluIHRoZSBib290dXAgcGF0aCBvZg0KPiBkdW1wIGtlcm5lbC4gDQo+IA0KPiBk
+aWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2FwaWMvYXBpYy5jIGIvYXJjaC94ODYva2VybmVs
+L2FwaWMvYXBpYy5jDQo+IGluZGV4IGRjYjUyODUwYTI4Zi4uYWYzYmU5Mzk5N2VkIDEwMDY0NA0K
+PiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMNCj4gKysrIGIvYXJjaC94ODYva2Vy
+bmVsL2FwaWMvYXBpYy5jDQo+IEBAIC04NzksNiArODc5LDcgQEAgc3RhdGljIHZvaWQgbG9jYWxf
+YXBpY190aW1lcl9pbnRlcnJ1cHQodm9pZCkNCj4gICAgICAgICAgICAgICAgIHByX3dhcm5pbmco
+IlNwdXJpb3VzIExBUElDIHRpbWVyIGludGVycnVwdCBvbiBjcHUgJWRcbiIsDQo+IGNwdSk7DQo+
+ICAgICAgICAgICAgICAgICAvKiBTd2l0Y2ggaXQgb2ZmICovDQo+ICAgICAgICAgICAgICAgICBs
+YXBpY190aW1lcl9zaHV0ZG93bihldnQpOw0KPiArICAgICAgICAgICAgIGRpc2FibGVfSU9fQVBJ
+QygpOw0KPiAgICAgICAgICAgICAgICAgcmV0dXJuOw0KPiAgICAgICAgIH0NCj4gDQo+IEFuZCB0
+aGUgbmV3IHNvbHV0aW9uIGNhbiBmaXggdGhlIHByb2JsZW0uDQo+IFdoYXTigJhzIHlvdXIgb3Bp
+bmlvbiBhYm91dCBpdD8NCj4gDQo+IFRoYW5rcywNCj4gd2VpDQo+IA0KPiA+IA0KPiA+IFRoYW5r
+cywNCj4gPiANCj4gPiAJSW5nbw0KPiA+IA0KPiA+IA0KPiANCg0KCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
