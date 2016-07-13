@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNJpT-0006Zm-O3
- for kexec@lists.infradead.org; Wed, 13 Jul 2016 13:03:56 +0000
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1468399874-5880-1-git-send-email-jia.zhang@windriver.com>
-References: <1468399874-5880-1-git-send-email-jia.zhang@windriver.com>
-Subject: Re: [PATCH 1/2] PKCS#7: Fix kernel panic when referring to the empty
- AuthorityKeyIdentifier
+Date: Wed, 13 Jul 2016 09:03:38 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Message-ID: <20160713130338.GB16900@redhat.com>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <87furf7ztv.fsf@x220.int.ebiederm.org> <50662781.Utjsnse3nb@hactar>
+ <20160712225805.0d27fe5d@hananiah.suse.cz>
+ <20160712221804.GV1041@n2100.armlinux.org.uk>
+ <87twfunneg.fsf@linux.vnet.ibm.com>
+ <20160713073657.GX1041@n2100.armlinux.org.uk>
+ <87poqinf9m.fsf@linux.vnet.ibm.com>
+ <20160713082639.GZ1041@n2100.armlinux.org.uk>
 MIME-Version: 1.0
-Content-ID: <4079.1468415011.1@warthog.procyon.org.uk>
-Date: Wed, 13 Jul 2016 14:03:31 +0100
-Message-ID: <4080.1468415011@warthog.procyon.org.uk>
+Content-Disposition: inline
+In-Reply-To: <20160713082639.GZ1041@n2100.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,21 +26,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lans Zhang <jia.zhang@windriver.com>
-Cc: dhowells@redhat.com, kexec@lists.infradead.org, vgoyal@redhat.com, bhe@redhat.com
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 
-Lans Zhang <jia.zhang@windriver.com> wrote:
+On Wed, Jul 13, 2016 at 09:26:39AM +0100, Russell King - ARM Linux wrote:
+> On Wed, Jul 13, 2016 at 05:55:33PM +1000, Stewart Smith wrote:
+> > Russell King - ARM Linux <linux@armlinux.org.uk> writes:
+> > > On Wed, Jul 13, 2016 at 02:59:51PM +1000, Stewart Smith wrote:
+> > >> Russell King - ARM Linux <linux@armlinux.org.uk> writes:
+> > >> > On Tue, Jul 12, 2016 at 10:58:05PM +0200, Petr Tesarik wrote:
+> > >> >> I'm not an expert on DTB, so I can't provide an example of code
+> > >> >> execution, but you have already mentioned the /chosen/linux,stdout-path
+> > >> >> property. If an attacker redirects the bootloader to an insecure
+> > >> >> console, they may get access to the system that would otherwise be
+> > >> >> impossible.
+> > >> >
+> > >> > I fail to see how kexec connects with the boot loader - the DTB image
+> > >> > that's being talked about is one which is passed from the currently
+> > >> > running kernel to the to-be-kexec'd kernel.  For ARM (and I suspect
+> > >> > also ARM64) that's a direct call chain which doesn't involve any
+> > >> > boot loader or firmware, and certainly none that would involve the
+> > >> > passed DTB image.
+> > >> 
+> > >> For OpenPOWER machines, kexec is the bootloader. Our bootloader is a
+> > >> linux kernel and initramfs with a UI (petitboot) - this means we never
+> > >> have to write a device driver twice: write a kernel one and you're done
+> > >> (for booting from the device and using it in your OS).
+> > >
+> > > I think you misunderstood my point.
+> > >
+> > > On ARM, we do not go:
+> > >
+> > > 	kernel (kexec'd from) -> boot loader -> kernel (kexec'd to)
+> > >
+> > > but we go:
+> > >
+> > > 	kernel (kexec'd from) -> kernel (kexec'd to)
+> > >
+> > > There's no intermediate step involving any bootloader.
+> > >
+> > > Hence, my point is that the dtb loaded by kexec is _only_ used by the
+> > > kernel which is being kexec'd to, not by the bootloader, nor indeed
+> > > the kernel which it is loaded into.
+> > >
+> > > Moreover, if you read the bit that I quoted (which is what I was
+> > > replying to), you'll notice that it is talking about the DTB loaded
+> > > by kexec somehow causing the _bootloader_ to be redirected to an
+> > > alternative console.  This point is wholely false on ARM.
+> > 
+> > Ahh.. I missed the bootloader bit there.
+> > 
+> > In which case, we're the same on OpenPOWER, there is no intermediate
+> > bootloader - in our case we have linux (with kexec) taking on what uboot
+> > or grub is typically used for on other platforms.
+> 
+> Indeed - maybe Eric knows better, but I can't see any situation where
+> the dtb we load via kexec should ever affect "the bootloader", unless
+> the "kernel" that's being loaded into kexec is "the bootloader".
+> 
+> Now, going back to the more fundamental issue raised in my first reply,
+> about the kernel command line.
+> 
+> On x86, I can see that it _is_ possible for userspace to specify a
+> command line, and the kernel loading the image provides the command
+> line to the to-be-kexeced kernel with very little checking.  So, if
+> your kernel is signed, what stops the "insecure userspace" loading
+> a signed kernel but giving it an insecure rootfs and/or console?
 
-> -		} else {
-> -			auth = sig->auth_ids[1];
-> +		} else if ((auth = sig->auth_ids[1])) {
+It is not kexec specific. I could do this for regular boot too, right?
 
-Better to say:
+Command line options are not signed. I thought idea behind secureboot
+was to execute only trusted code and command line options don't enforce
+you to execute unsigned code.
 
-	} else if (auth) {
-		auth = sig->auth_ids[1];
+So it sounds like different class of security problems which you are
+referring to and not necessarily covered by secureboot or signed
+kernel.
 
-David
+Vivek
 
 _______________________________________________
 kexec mailing list
