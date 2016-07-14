@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 14 Jul 2016 09:54:47 +0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bNWAu-0002jT-9V
+ for kexec@lists.infradead.org; Thu, 14 Jul 2016 02:14:52 +0000
+Date: Thu, 14 Jul 2016 10:14:26 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160714015447.GB3121@dhcp-128-65.nay.redhat.com>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <1911992.H2WpLRr2Fi@wuerfel> <20160712141810.GB30181@redhat.com>
- <293705810.hBL93OOmOz@wuerfel> <20160712145010.GA8447@leverpostej>
- <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
- <20160713093432.GB14522@leverpostej> <20160713173804.GA25723@porco>
+Subject: Re: [V2][PATCH 2/2] pefile: Fix the failure of calculation for digest
+Message-ID: <20160714021426.GA3798@dhcp-128-65.nay.redhat.com>
+References: <1468416937-21237-1-git-send-email-jia.zhang@windriver.com>
+ <1468416937-21237-2-git-send-email-jia.zhang@windriver.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160713173804.GA25723@porco>
+In-Reply-To: <1468416937-21237-2-git-send-email-jia.zhang@windriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,64 +24,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Lans Zhang <jia.zhang@windriver.com>
+Cc: dhowells@redhat.com, kexec@lists.infradead.org, bhe@redhat.com, vgoyal@redhat.com
 
-On 07/14/16 at 02:38am, AKASHI Takahiro wrote:
-> Apologies for the slow response. I'm attending LinuxCon this week.
+On 07/13/16 at 09:35pm, Lans Zhang wrote:
+> The commit e68503bd68 forgot to set digest_len and thus cause the following
+> error reported by kexec when launching a crash kernel:
+> "kexec_file_load failed: Bad message"
 > 
-> On Wed, Jul 13, 2016 at 10:34:47AM +0100, Mark Rutland wrote:
-> > On Wed, Jul 13, 2016 at 10:36:14AM +0800, Dave Young wrote:
-> > > But consider we can kexec to a different kernel and a different initrd so there
-> > > will be use cases to pass a total different dtb as well.
-> > 
-> > It depends on what you mean by "a different kernel", and what this
-> > implies for the DTB.
-> > 
-> > I expect future arm64 Linux kernels to function with today's DTBs, and
-> > the existing boot protocol. The kexec_file_load syscall already has
-> > enough information for the kernel to inject the initrd and bootargs
-> > properties into a DTB.
-> > 
-> > In practice on x86 today, kexec_file_load only supports booting to a
-> > Linux kernel, because the in-kernel purgatory only implements the x86
-> > Linux boot protocol. Analagously, for arm64 I think that the first
-> > kernel should use its internal copy of the boot DTB, with /chosen fixed
-> > up appropriately, assuming the next kernel is an arm64 Linux image.
-> > 
-> > If booting another OS, the only parts of the DTB I would expect to
-> > change are the properties under chosen, as everything else *should* be
-> > OS-independent. However the other OS may have a completely different
-> > boot protocol, might not even take a DTB, and will likely need a
-> > compeltely different purgatory implementation. So just allowing the DTB
-> > to be altered isn't sufficient for that case.
-> > 
-> > There might be cases where we want a different DTB, but as far as I can
-> > tell we have nothing analagous on x86 today. If we do need this, we
-> > should have an idea of what real case(s) were trying to solve.
+> Fixes: e68503bd68 (KEYS: Generalise system_verify_data() to provide access to internal content)
+> Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  crypto/asymmetric_keys/mscode_parser.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> What I had in my mind was:
+> diff --git a/crypto/asymmetric_keys/mscode_parser.c b/crypto/asymmetric_keys/mscode_parser.c
+> index 6a76d5c..9492e1c 100644
+> --- a/crypto/asymmetric_keys/mscode_parser.c
+> +++ b/crypto/asymmetric_keys/mscode_parser.c
+> @@ -124,5 +124,10 @@ int mscode_note_digest(void *context, size_t hdrlen,
+>  	struct pefile_context *ctx = context;
+>  
+>  	ctx->digest = kmemdup(value, vlen, GFP_KERNEL);
+> -	return ctx->digest ? 0 : -ENOMEM;
+> +	if (!ctx->digest)
+> +		return -ENOMEM;
+> +
+> +	ctx->digest_len = vlen;
+> +
+> +	return 0;
+>  }
+> -- 
+> 1.9.1
 > 
-> - Kdump
->   As Russel said, we definitely need to modify dtb.
->   In addition to bootargs and initrd proerties (FYI, in my arm64
->   implementation for arm64, eflcorehdr info is also passed as DT
->   property), we may want to remove unnecessary devices and
->   even add a dedicated storage device for storing a core dump image.
-> - Say, booting BE kernel on ACPI LE kernel
->   In this case, there is no useful dtb in the kernel.
 > 
-> Have said that, as Mark said, we may be able to use normal kexec_load
-> system call if we don't need a "secure" kexec.
-> 
-> BTW, why doesn't the current kexec_load have ability of verifying
-> a signature of initramfs image? Is IMA/EVM expected to be used
-> at runtime?
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-I believe there are some limitations for verify signatures in kexec_load.
-First kexec-tools need to be trusted, but there's no way to sign and
-verify signature of shared libraries. There maybe other limitations I
-can not remember which are also reasons why Vivek moved to current
-file based syscall.
+Tested-by: Dave Young <dyoung@redhat.com>
 
 Thanks
 Dave
