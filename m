@@ -1,29 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNWEW-0004Qi-3B
- for kexec@lists.infradead.org; Thu, 14 Jul 2016 02:18:37 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u6E2ENwe028325
- for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 22:18:14 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2452yqb7ps-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 13 Jul 2016 22:18:13 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Wed, 13 Jul 2016 23:18:11 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Date: Wed, 13 Jul 2016 23:18:04 -0300
-In-Reply-To: <5108278.va6WuahHro@wuerfel>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <2222184.ZN0KkkXgPC@hactar> <5108278.va6WuahHro@wuerfel>
+ id 1bNWEu-0004T4-6T
+ for kexec@lists.infradead.org; Thu, 14 Jul 2016 02:19:00 +0000
+Date: Thu, 14 Jul 2016 10:18:34 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [V2][PATCH 2/2] pefile: Fix the failure of calculation for digest
+Message-ID: <20160714021834.GC3798@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Message-Id: <1678419.ODVtyXKVYJ@hactar>
+Content-Disposition: inline
+In-Reply-To: <1468416937-21237-2-git-send-email-jia.zhang@windriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,63 +22,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Lans Zhang <jia.zhang@windriver.com>
+Cc: herbert@gondor.apana.org.au, bhe@redhat.com, kexec@lists.infradead.org, dhowells@redhat.com, linux-crypto@vger.kernel.org, vgoyal@redhat.com
 
-Am Mittwoch, 13 Juli 2016, 21:59:18 schrieb Arnd Bergmann:
-> On Wednesday, July 13, 2016 3:45:41 PM CEST Thiago Jung Bauermann wrote:
-> > Am Mittwoch, 13 Juli 2016, 15:13:42 schrieb Arnd Bergmann:
-> > > On Wednesday, July 13, 2016 10:41:28 AM CEST Mark Rutland wrote:
-> > > > On Wed, Jul 13, 2016 at 10:01:33AM +0200, Arnd Bergmann wrote:
-> > > > > - kboot/petitboot with all of the user space being part of the
-> > > > > trusted
-> > > > > boot> >
-> > > > > 
-> > > > >   chain: it would be good to allow these to modify the dtb as
-> > > > >   needed
-> > > > >   without breaking the trust chain, just like we allow grub or
-> > > > >   u-boot
-> > > > >   to modify the dtb before passing it to the kernel.
-> > > > 
-> > > > It depends on *what* we need to modify here. We can modify the
-> > > > bootargs
-> > > > and initrd properties as part of the kexec_file_load syscall, so
-> > > > what
-> > > > else would we want to alter?
-> > > 
-> > > I guess petitboot can also just use kexec_load() instead of
-> > > kexec_file_load(), as long as the initramfs containing petitboot is
-> > > trusted by the kernel.
-> > 
-> > For secure boot, Petitboot needs to use kexec_file_load, because of the
-> > following two features which the system call enables:
-> > 
-> > 1. only allow loading of signed kernels.
-> > 2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
-> > 
-> >    command line and other boot inputs for the Integrity Measurement
-> >    Architecture subsystem.
-> > 
-> > Those can't be done with kexec_load.
+Cc crypto list
+
+On 07/13/16 at 09:35pm, Lans Zhang wrote:
+> The commit e68503bd68 forgot to set digest_len and thus cause the following
+> error reported by kexec when launching a crash kernel:
+> "kexec_file_load failed: Bad message"
 > 
-> Can't petitboot do both of these in user space?
-
-To be honest I'm not sure if it *can't* be done from userspace but if you do 
-it from the kernel you can guarantee that any kernel image that is loaded 
-gets verified and measured.
-
-Whereas if you verify and measure the kernel in userspace then if there's a 
-vulnerability in the system which allows an attacker to upload their own 
-binary, then they can use kexec_load directly and bypass the verification 
-and measurement.
-
-So it's a more resilient design.
-
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+> Fixes: e68503bd68 (KEYS: Generalise system_verify_data() to provide access to internal content)
+> Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  crypto/asymmetric_keys/mscode_parser.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/crypto/asymmetric_keys/mscode_parser.c b/crypto/asymmetric_keys/mscode_parser.c
+> index 6a76d5c..9492e1c 100644
+> --- a/crypto/asymmetric_keys/mscode_parser.c
+> +++ b/crypto/asymmetric_keys/mscode_parser.c
+> @@ -124,5 +124,10 @@ int mscode_note_digest(void *context, size_t hdrlen,
+>  	struct pefile_context *ctx = context;
+>  
+>  	ctx->digest = kmemdup(value, vlen, GFP_KERNEL);
+> -	return ctx->digest ? 0 : -ENOMEM;
+> +	if (!ctx->digest)
+> +		return -ENOMEM;
+> +
+> +	ctx->digest_len = vlen;
+> +
+> +	return 0;
+>  }
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
