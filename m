@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 14 Jul 2016 13:42:06 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Message-ID: <20160714124206.GB26061@leverpostej>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <20160713173804.GA25723@porco> <20160713175630.GA2668@leverpostej>
- <7927804.6bj1abO0d2@wuerfel>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bNgkm-0007tE-Mv
+ for kexec@lists.infradead.org; Thu, 14 Jul 2016 13:32:39 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1468299403-27954-1-git-send-email-zhongjiang@huawei.com>
+ <1468299403-27954-2-git-send-email-zhongjiang@huawei.com>
+ <87a8hm3lme.fsf@x220.int.ebiederm.org> <5785E764.8050304@huawei.com>
+Date: Thu, 14 Jul 2016 08:19:21 -0500
+In-Reply-To: <5785E764.8050304@huawei.com> (zhong jiang's message of "Wed, 13
+ Jul 2016 15:01:56 +0800")
+Message-ID: <87vb08ich2.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <7927804.6bj1abO0d2@wuerfel>
+Subject: Re: [PATCH 2/2] kexec: add a pmd huge entry condition during the page
+ table
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,60 +26,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: zhong jiang <zhongjiang@huawei.com>
+Cc: dyoung@redhat.com, kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, akpm@linux-foundation.org, yinghai@kernel.org, vgoyal@redhat.com
 
-On Wed, Jul 13, 2016 at 09:57:28PM +0200, Arnd Bergmann wrote:
-> On Wednesday, July 13, 2016 6:58:32 PM CEST Mark Rutland wrote:
-> > 
-> > >   we may want to remove unnecessary devices and even add a dedicated
-> > >   storage device for storing a core dump image.
-> > 
-> > I suspect that bringing up a minimal number of devices is better
-> > controlled by a cmdline option. In general, figuring out what is
-> > necessary and what is not is going to be board specific, so hacking the
-> > FW tables (DTB or ACPI) is not a very portable/reliable approach.
-> > 
-> > Do we actually add devices in practice? More so than the above that
-> > requires special knowledge of the platform (including things that were
-> > not described in the boot DTB).
-> > 
-> > In the ACPI case modifying a DTB alone is not sufficient to change the
-> > information regarding devices, as those won't be described in the DTB.
-> > It's not possible to convert ACPI to DTB in general.
-> 
-> A more likely scenario would be replacing ACPI tables with a DTB that
-> describes the platform in order to use devices that the ACPI tables
-> don't contain.
+zhong jiang <zhongjiang@huawei.com> writes:
 
-To do so, you need special knowledge of the platform, which users are
-unlikely to have in practice for ACPI-based platforms.
+> On 2016/7/12 23:46, Eric W. Biederman wrote:
+>> zhongjiang <zhongjiang@huawei.com> writes:
+>>
+>>> From: zhong jiang <zhongjiang@huawei.com>
+>>>
+>>> when image is loaded into kernel, we need set up page table for it. and 
+>>> all valid pfn also set up new mapping. it will tend to establish a pmd 
+>>> page table in the form of a large page if pud_present is true. relocate_kernel 
+>>> points to code segment can locate in the pmd huge entry in init_transtion_pgtable. 
+>>> therefore, we need to take the situation into account.
+>> I can see how in theory this might be necessary but when is a kernel virtual
+>> address on x86_64 that is above 0x8000000000000000 in conflict with an
+>> identity mapped physicall address that are all below 0x8000000000000000?
+>>
+>> If anything the code could be simplified to always assume those mappings
+>> are unoccupied.
+>>
+>> Did you run into an actual failure somewhere?
+>>
+>> Eric
+>>
+>    I  do not understand what you trying to say,  Maybe I miss your point.
+>   
+>   The key is how to ensure that relocate_kernel points to the pmd
+>   entry is not huge page.
 
-So, I think that boils down to the same problem, and the same comments
-apply.
+Kernel virtual addresses are in the negative half of the address space.
+Identity mapped physical addresses are in the positive half of the
+address space.
 
-> > > - Say, booting BE kernel on ACPI LE kernel
-> > >   In this case, there is no useful dtb in the kernel.
-> 
-> > If the platform only has ACPI, then you cannot boot a BE kernel to begin
-> > with. As above one cannot convert ACPI to DTB, so one would need
-> > extensive platform knowledge for this to work.
-> 
-> I think what he meant was to pass a DTB to the kexec kernel in order
-> to run BE, while the original kernel can only run LE due to ACPI.
+As the entire negative half of the address space at the time that page
+table entry is being created the are no huge pages present.
 
-I understood that. My point was that to build that DTB, you need to have
-knowledge of the platform that you are unlikely to have.
+Even testing pmd_present is a redundant, and that is probably the bug.
 
-The platform firmware may expect to interact with AML, which you can't
-place in DT or run in a BE context.
-
-If you need to run BE kernels on a platform, you would likely get a
-platform that could boot a BE kernel from the outset (i.e. one that
-provides a DTB), or run that code ina VM under an LE host.
-
-Thanks,
-Mark.
+Eric
 
 _______________________________________________
 kexec mailing list
