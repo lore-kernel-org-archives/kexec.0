@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nue.novell.com ([195.135.221.5])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNdze-0000Fp-I9
- for kexec@lists.infradead.org; Thu, 14 Jul 2016 10:35:48 +0000
-Date: Thu, 14 Jul 2016 18:35:10 +0800
-From: joeyli <jlee@suse.com>
-Subject: Re: [PATCH] kexec: Add option to fallback to old kexec syscall when
- kexec file based syscall failed
-Message-ID: <20160714103510.GX11998@linux-rxt1.site>
-References: <1468485911-21427-1-git-send-email-jlee@suse.com>
- <20160714095124.GA9366@x1.redhat.com>
+Date: Thu, 14 Jul 2016 13:42:06 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Message-ID: <20160714124206.GB26061@leverpostej>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <20160713173804.GA25723@porco> <20160713175630.GA2668@leverpostej>
+ <7927804.6bj1abO0d2@wuerfel>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160714095124.GA9366@x1.redhat.com>
+In-Reply-To: <7927804.6bj1abO0d2@wuerfel>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,141 +21,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, Simon Horman <horms@verge.net.au>, Petr Tesarik <ptesarik@suse.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Baoquan, 
-
-Thanks for your response!
-
-On Thu, Jul 14, 2016 at 05:51:24PM +0800, Baoquan He wrote:
-> On 07/14/16 at 04:45pm, Lee, Chun-Yi wrote:
-> > This patch adds a new "--fallback-kexec" option to give a chance to
-> > fallback to old kexec syscall when file based kexec syscall operation
-> > failed.
+On Wed, Jul 13, 2016 at 09:57:28PM +0200, Arnd Bergmann wrote:
+> On Wednesday, July 13, 2016 6:58:32 PM CEST Mark Rutland wrote:
 > > 
-> > This option works with --kexec-file-syscall to provide more flexible
-> > way to adapt to different kernels that those kernels built with
-> > different kexec syscall config or have different verification policy.
+> > >   we may want to remove unnecessary devices and even add a dedicated
+> > >   storage device for storing a core dump image.
+> > 
+> > I suspect that bringing up a minimal number of devices is better
+> > controlled by a cmdline option. In general, figuring out what is
+> > necessary and what is not is going to be board specific, so hacking the
+> > FW tables (DTB or ACPI) is not a very portable/reliable approach.
+> > 
+> > Do we actually add devices in practice? More so than the above that
+> > requires special knowledge of the platform (including things that were
+> > not described in the boot DTB).
+> > 
+> > In the ACPI case modifying a DTB alone is not sufficient to change the
+> > information regarding devices, as those won't be described in the DTB.
+> > It's not possible to convert ACPI to DTB in general.
 > 
-> Usually distribuition system uses script to build a framework to
-> connect the kexec/kdump, makedumpfile utility chain. This can make user
-> execute a very simple script command to implement kexec load or kexec
-> jumping job. In this case script can do what you are trying to do.
+> A more likely scenario would be replacing ACPI tables with a DTB that
+> describes the platform in order to use devices that the ACPI tables
+> don't contain.
+
+To do so, you need special knowledge of the platform, which users are
+unlikely to have in practice for ACPI-based platforms.
+
+So, I think that boils down to the same problem, and the same comments
+apply.
+
+> > > - Say, booting BE kernel on ACPI LE kernel
+> > >   In this case, there is no useful dtb in the kernel.
 > 
-
-Yes, the fallback function can be implemented by script. But a new kexec
-option is useful to the distro that it may not provides help scripts to
-user.
-
-> Besides, have you actually met that kexec-file failed but old kexec
-> syscall works? I mean how did you test it? I am wondering when it will
-> happen.
+> > If the platform only has ACPI, then you cannot boot a BE kernel to begin
+> > with. As above one cannot convert ACPI to DTB, so one would need
+> > extensive platform knowledge for this to work.
 > 
-> Thanks
-> Baoquan
->
+> I think what he meant was to pass a DTB to the kexec kernel in order
+> to run BE, while the original kernel can only run LE due to ACPI.
 
-The currently mainline kernel allows to set CONFIG_KEXEC or CONFIG_KEXEC_FILE
-individual. So if kexec found that the file based kexec syscall isn't
-available then this is a case to fallback to old kexec.
+I understood that. My point was that to build that DTB, you need to have
+knowledge of the platform that you are unlikely to have.
 
-Another case is when KEXEC_VERIFY_SIG is set, The fallback function is more
-convenient to user to build his own kernel for using or testing. The kexec
-tool can try old syscall when verification failed.
+The platform firmware may expect to interact with AML, which you can't
+place in DT or run in a BE context.
 
+If you need to run BE kernels on a platform, you would likely get a
+platform that could boot a BE kernel from the outset (i.e. one that
+provides a DTB), or run that code ina VM under an LE host.
 
-Thanks a lot!
-Joey Lee
- 
-> > 
-> > Cc: Simon Horman <horms@verge.net.au>
-> > Cc: Petr Tesarik <ptesarik@suse.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
-> > ---
-> >  kexec/kexec.c | 13 +++++++++++++
-> >  kexec/kexec.h |  4 +++-
-> >  2 files changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index 500e5a9..e05b43f 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -969,6 +969,7 @@ void usage(void)
-> >  	       "                      preserve context)\n"
-> >  	       "                      to original kernel.\n"
-> >  	       " -s, --kexec-file-syscall Use file based syscall for kexec operation\n"
-> > +	       "     --fallback-kexec     Fallback to old kexec when file based syscall failed\n"
-> >  	       " -d, --debug           Enable debugging to help spot a failure.\n"
-> >  	       "\n"
-> >  	       "Supported kernel file types and options: \n");
-> > @@ -1204,6 +1205,7 @@ int main(int argc, char *argv[])
-> >  	int do_unload = 0;
-> >  	int do_reuse_initrd = 0;
-> >  	int do_kexec_file_syscall = 0;
-> > +	int do_fallback_kexec_syscall = 0;
-> >  	void *entry = 0;
-> >  	char *type = 0;
-> >  	char *endptr;
-> > @@ -1226,9 +1228,13 @@ int main(int argc, char *argv[])
-> >  		case OPT_KEXEC_FILE_SYSCALL:
-> >  			do_kexec_file_syscall = 1;
-> >  			break;
-> > +		case OPT_FALLBACK_KEXEC:
-> > +			do_fallback_kexec_syscall = 1;
-> > +			break;
-> >  		}
-> >  	}
-> >  
-> > +fallback:
-> >  	/* Reset getopt for the next pass. */
-> >  	opterr = 1;
-> >  	optind = 1;
-> > @@ -1407,6 +1413,13 @@ int main(int argc, char *argv[])
-> >  			result = my_load(type, fileind, argc, argv,
-> >  						kexec_flags, entry);
-> >  	}
-> > +	/* fallback to old kexec syscall */
-> > +	if (do_kexec_file_syscall && result != 0 && do_fallback_kexec_syscall) {
-> > +		fprintf(stderr, "Fallback to kexec syscall\n");
-> > +		do_kexec_file_syscall = 0;
-> > +		do_fallback_kexec_syscall = 0;
-> > +		goto fallback;
-> > +	}
-> >  	/* Don't shutdown unless there is something to reboot to! */
-> >  	if ((result == 0) && (do_shutdown || do_exec) && !kexec_loaded()) {
-> >  		die("Nothing has been loaded!\n");
-> > diff --git a/kexec/kexec.h b/kexec/kexec.h
-> > index 9194f1c..65dbd56 100644
-> > --- a/kexec/kexec.h
-> > +++ b/kexec/kexec.h
-> > @@ -225,7 +225,8 @@ extern int file_types;
-> >  #define OPT_LOAD_PRESERVE_CONTEXT 259
-> >  #define OPT_LOAD_JUMP_BACK_HELPER 260
-> >  #define OPT_ENTRY		261
-> > -#define OPT_MAX			262
-> > +#define OPT_FALLBACK_KEXEC	262
-> > +#define OPT_MAX			263
-> >  #define KEXEC_OPTIONS \
-> >  	{ "help",		0, 0, OPT_HELP }, \
-> >  	{ "version",		0, 0, OPT_VERSION }, \
-> > @@ -244,6 +245,7 @@ extern int file_types;
-> >  	{ "mem-max",		1, 0, OPT_MEM_MAX }, \
-> >  	{ "reuseinitrd",	0, 0, OPT_REUSE_INITRD }, \
-> >  	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
-> > +	{ "fallback-kexec",     0, 0, OPT_FALLBACK_KEXEC }, \
-> >  	{ "debug",		0, 0, OPT_DEBUG }, \
-> >  
-> >  #define KEXEC_OPT_STR "h?vdfxyluet:ps"
-> > -- 
-> > 2.6.6
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
