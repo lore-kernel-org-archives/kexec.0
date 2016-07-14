@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp.nue.novell.com ([195.135.221.5])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNdTT-0000YE-Fu
- for kexec@lists.infradead.org; Thu, 14 Jul 2016 10:02:32 +0000
-Date: Thu, 14 Jul 2016 18:02:06 +0800
-From: Baoquan He <bhe@redhat.com>
+ id 1bNdze-0000Fp-I9
+ for kexec@lists.infradead.org; Thu, 14 Jul 2016 10:35:48 +0000
+Date: Thu, 14 Jul 2016 18:35:10 +0800
+From: joeyli <jlee@suse.com>
 Subject: Re: [PATCH] kexec: Add option to fallback to old kexec syscall when
  kexec file based syscall failed
-Message-ID: <20160714100206.GA2946@x1.redhat.com>
+Message-ID: <20160714103510.GX11998@linux-rxt1.site>
 References: <1468485911-21427-1-git-send-email-jlee@suse.com>
  <20160714095124.GA9366@x1.redhat.com>
 MIME-Version: 1.0
@@ -25,10 +25,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc: "Lee, Chun-Yi" <jlee@suse.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, Petr Tesarik <ptesarik@suse.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, Simon Horman <horms@verge.net.au>, Petr Tesarik <ptesarik@suse.com>
 
-On 07/14/16 at 05:51pm, Baoquan He wrote:
+Hi Baoquan, 
+
+Thanks for your response!
+
+On Thu, Jul 14, 2016 at 05:51:24PM +0800, Baoquan He wrote:
 > On 07/14/16 at 04:45pm, Lee, Chun-Yi wrote:
 > > This patch adds a new "--fallback-kexec" option to give a chance to
 > > fallback to old kexec syscall when file based kexec syscall operation
@@ -39,18 +43,35 @@ On 07/14/16 at 05:51pm, Baoquan He wrote:
 > > different kexec syscall config or have different verification policy.
 > 
 > Usually distribuition system uses script to build a framework to
-	   ~ I mean distro here.
 > connect the kexec/kdump, makedumpfile utility chain. This can make user
 > execute a very simple script command to implement kexec load or kexec
 > jumping job. In this case script can do what you are trying to do.
 > 
+
+Yes, the fallback function can be implemented by script. But a new kexec
+option is useful to the distro that it may not provides help scripts to
+user.
+
 > Besides, have you actually met that kexec-file failed but old kexec
 > syscall works? I mean how did you test it? I am wondering when it will
 > happen.
 > 
 > Thanks
 > Baoquan
-> 
+>
+
+The currently mainline kernel allows to set CONFIG_KEXEC or CONFIG_KEXEC_FILE
+individual. So if kexec found that the file based kexec syscall isn't
+available then this is a case to fallback to old kexec.
+
+Another case is when KEXEC_VERIFY_SIG is set, The fallback function is more
+convenient to user to build his own kernel for using or testing. The kexec
+tool can try old syscall when verification failed.
+
+
+Thanks a lot!
+Joey Lee
+ 
 > > 
 > > Cc: Simon Horman <horms@verge.net.au>
 > > Cc: Petr Tesarik <ptesarik@suse.com>
@@ -139,11 +160,6 @@ On 07/14/16 at 05:51pm, Baoquan He wrote:
 > > kexec mailing list
 > > kexec@lists.infradead.org
 > > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
