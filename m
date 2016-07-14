@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 14 Jul 2016 09:50:27 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Date: Wed, 13 Jul 2016 21:59:18 +0200
-Message-ID: <5108278.va6WuahHro@wuerfel>
-In-Reply-To: <2222184.ZN0KkkXgPC@hactar>
+Message-ID: <20160714015027.GA3121@dhcp-128-65.nay.redhat.com>
 References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <7352796.seiSnHrYPy@wuerfel> <2222184.ZN0KkkXgPC@hactar>
+ <1911992.H2WpLRr2Fi@wuerfel> <20160712141810.GB30181@redhat.com>
+ <293705810.hBL93OOmOz@wuerfel> <20160712145010.GA8447@leverpostej>
+ <20160713023614.GB3222@dhcp-128-65.nay.redhat.com>
+ <20160713093432.GB14522@leverpostej>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160713093432.GB14522@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,40 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, bhe@redhat.com, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Wednesday, July 13, 2016 3:45:41 PM CEST Thiago Jung Bauermann wrote:
-> Am Mittwoch, 13 Juli 2016, 15:13:42 schrieb Arnd Bergmann:
-> > On Wednesday, July 13, 2016 10:41:28 AM CEST Mark Rutland wrote:
-> > > On Wed, Jul 13, 2016 at 10:01:33AM +0200, Arnd Bergmann wrote:
-> > > > - kboot/petitboot with all of the user space being part of the trusted
-> > > > boot> > 
-> > > >   chain: it would be good to allow these to modify the dtb as needed
-> > > >   without breaking the trust chain, just like we allow grub or u-boot
-> > > >   to modify the dtb before passing it to the kernel.
-> > > 
-> > > It depends on *what* we need to modify here. We can modify the bootargs
-> > > and initrd properties as part of the kexec_file_load syscall, so what
-> > > else would we want to alter?
-> > 
-> > I guess petitboot can also just use kexec_load() instead of
-> > kexec_file_load(), as long as the initramfs containing petitboot is
-> > trusted by the kernel.
+On 07/13/16 at 10:34am, Mark Rutland wrote:
+> On Wed, Jul 13, 2016 at 10:36:14AM +0800, Dave Young wrote:
+> > But consider we can kexec to a different kernel and a different initrd so there
+> > will be use cases to pass a total different dtb as well.
 > 
-> For secure boot, Petitboot needs to use kexec_file_load, because of the 
-> following two features which the system call enables:
+> It depends on what you mean by "a different kernel", and what this
+> implies for the DTB.
 > 
-> 1. only allow loading of signed kernels.
-> 2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
->    command line and other boot inputs for the Integrity Measurement
->    Architecture subsystem.
-> 
-> Those can't be done with kexec_load.
 
-Can't petitboot do both of these in user space?
+I thought about kexec as a boot loader just like other bootloaders.
+So just like a normal boot kexec should also accept external dtb.
+But acutally kexec is different because it can get original dtb and
+use it. So I agreed if we can not find a real use case that we have
+to extend it we should keep current interface.
 
-	Arnd
+> I expect future arm64 Linux kernels to function with today's DTBs, and
+> the existing boot protocol. The kexec_file_load syscall already has
+> enough information for the kernel to inject the initrd and bootargs
+> properties into a DTB.
+> 
+> In practice on x86 today, kexec_file_load only supports booting to a
+> Linux kernel, because the in-kernel purgatory only implements the x86
+> Linux boot protocol. Analagously, for arm64 I think that the first
+> kernel should use its internal copy of the boot DTB, with /chosen fixed
+> up appropriately, assuming the next kernel is an arm64 Linux image.
+> 
+> If booting another OS, the only parts of the DTB I would expect to
+> change are the properties under chosen, as everything else *should* be
+> OS-independent. However the other OS may have a completely different
+> boot protocol, might not even take a DTB, and will likely need a
+> compeltely different purgatory implementation. So just allowing the DTB
+> to be altered isn't sufficient for that case.
+> 
+> There might be cases where we want a different DTB, but as far as I can
+> tell we have nothing analagous on x86 today. If we do need this, we
+> should have an idea of what real case(s) were trying to solve.
+
+Agreed.
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
