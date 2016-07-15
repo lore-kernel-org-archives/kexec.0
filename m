@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.provo.novell.com ([137.65.250.81])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bNy1L-00008u-5v
- for kexec@lists.infradead.org; Fri, 15 Jul 2016 07:58:52 +0000
-Date: Fri, 15 Jul 2016 09:58:22 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-Subject: Re: [PATCH] kexec: Add option to fallback to old kexec syscall when
- kexec file based syscall failed
-Message-ID: <20160715095822.5caaaa16@hananiah.suse.cz>
-In-Reply-To: <20160714235722.GA27155@linux-rxt1.site>
-References: <1468485911-21427-1-git-send-email-jlee@suse.com>
- <20160714145328.GD6789@redhat.com>
- <20160714235722.GA27155@linux-rxt1.site>
+ id 1bNyp0-0001gX-DT
+ for kexec@lists.infradead.org; Fri, 15 Jul 2016 08:50:11 +0000
+Date: Fri, 15 Jul 2016 09:49:25 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Message-ID: <20160715084925.GD1041@n2100.armlinux.org.uk>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <5352106.oQ0Ff9gWJA@wuerfel> <20160713094127.GC14522@leverpostej>
+ <7352796.seiSnHrYPy@wuerfel>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <7352796.seiSnHrYPy@wuerfel>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,36 +26,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: joeyli <jlee@suse.com>
-Cc: Simon Horman <horms@verge.net.au>, "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, bhe@redhat.com, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On Fri, 15 Jul 2016 07:57:22 +0800
-joeyli <jlee@suse.com> wrote:
-
-> Hi Vivek
+On Wed, Jul 13, 2016 at 03:13:42PM +0200, Arnd Bergmann wrote:
+> On Wednesday, July 13, 2016 10:41:28 AM CEST Mark Rutland wrote:
+> > The big question is whether this is a realistic case on a secure boot
+> > system.
 > 
-> On Thu, Jul 14, 2016 at 10:53:28AM -0400, Vivek Goyal wrote:
-> > On Thu, Jul 14, 2016 at 04:45:11PM +0800, Lee, Chun-Yi wrote:
-> > > This patch adds a new "--fallback-kexec" option to give a chance to
-> > > fallback to old kexec syscall when file based kexec syscall operation
-> > > failed.
-> > 
-> > I think caller should switch to using different interface if need be. But
-> > I don't see much point in providing an option for this in kexec-tools.
-> > 
-> > Vivek
-> >
-> 
-> OK~ Understood!
-> 
-> Thanks for Baoquan's and your opinion for this patch.
+> What does x86 do here? I assume changes to the command line are also
+> limited.
 
-Is there some sort of diagnostics, so a calling script can determine
-whether kexec failed, because there's no suppor for kexec_file_load(2)
-or for a different reason? 
+They aren't.  You can specify /anything/ even with a fully-signed kernel
+and initrd, which was one of the things I pointed out in my previous
+set of responses.
 
-Thanks,
-Petr T
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
