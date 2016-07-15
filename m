@@ -1,22 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.provo.novell.com ([137.65.250.81])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bO50p-0008PX-Ao
- for kexec@lists.infradead.org; Fri, 15 Jul 2016 15:26:48 +0000
-Date: Fri, 15 Jul 2016 17:26:14 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-Subject: Re: [PATCH] kexec: Add option to fallback to old kexec syscall when
- kexec file based syscall failed
-Message-ID: <20160715172614.45ff7975@hananiah.suse.cz>
-In-Reply-To: <20160715151346.GA29818@redhat.com>
-References: <1468485911-21427-1-git-send-email-jlee@suse.com>
- <20160714145328.GD6789@redhat.com>
- <20160714235722.GA27155@linux-rxt1.site>
- <20160715095822.5caaaa16@hananiah.suse.cz>
- <20160715125114.GA23514@redhat.com>
- <20160715164240.6a4741bc@hananiah.suse.cz>
- <20160715151346.GA29818@redhat.com>
+ id 1bO53d-0000Ge-AL
+ for kexec@lists.infradead.org; Fri, 15 Jul 2016 15:29:42 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6FFTHjx012056
+ for <kexec@lists.infradead.org>; Fri, 15 Jul 2016 11:29:20 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 246hek73mw-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 15 Jul 2016 11:29:20 -0400
+Received: from localhost
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Fri, 15 Jul 2016 12:29:17 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Date: Fri, 15 Jul 2016 12:29:09 -0300
+In-Reply-To: <20160715133346.GD19840@leverpostej>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <20160715132610.GD23514@redhat.com> <20160715133346.GD19840@leverpostej>
 MIME-Version: 1.0
+Message-Id: <1565504.8BCDUlPeYg@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,64 +36,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: joeyli <jlee@suse.com>, "Lee, Chun-Yi" <joeyli.kernel@gmail.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Vivek Goyal <vgoyal@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, 15 Jul 2016 11:13:46 -0400
-Vivek Goyal <vgoyal@redhat.com> wrote:
-
-> On Fri, Jul 15, 2016 at 04:42:40PM +0200, Petr Tesarik wrote:
-> > On Fri, 15 Jul 2016 08:51:14 -0400
-> > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > 
-> > > On Fri, Jul 15, 2016 at 09:58:22AM +0200, Petr Tesarik wrote:
-> > > > On Fri, 15 Jul 2016 07:57:22 +0800
-> > > > joeyli <jlee@suse.com> wrote:
+Am Freitag, 15 Juli 2016, 14:33:47 schrieb Mark Rutland:
+> On Fri, Jul 15, 2016 at 09:26:10AM -0400, Vivek Goyal wrote:
+> > On Fri, Jul 15, 2016 at 09:31:02AM +0200, Arnd Bergmann wrote:
+> > > On Thursday, July 14, 2016 10:44:14 PM CEST Thiago Jung Bauermann 
+wrote:
+> > > > Am Donnerstag, 14 Juli 2016, 10:29:11 schrieb Arnd Bergmann:
+> > > > > Right, but the question remains whether this helps while you allow
+> > > > > the
+> > > > > boot loader to modify the dtb. If an attacker gets in and cannot
+> > > > > modify
+> > > > > the kernel or initid but can modify the DT, a successful attack
+> > > > > would
+> > > > > be a bit harder than having a modified kernel, but you may still
+> > > > > need
+> > > > > to treat the system as compromised.
 > > > > 
-> > > > > Hi Vivek
-> > > > > 
-> > > > > On Thu, Jul 14, 2016 at 10:53:28AM -0400, Vivek Goyal wrote:
-> > > > > > On Thu, Jul 14, 2016 at 04:45:11PM +0800, Lee, Chun-Yi wrote:
-> > > > > > > This patch adds a new "--fallback-kexec" option to give a chance to
-> > > > > > > fallback to old kexec syscall when file based kexec syscall operation
-> > > > > > > failed.
-> > > > > > 
-> > > > > > I think caller should switch to using different interface if need be. But
-> > > > > > I don't see much point in providing an option for this in kexec-tools.
-> > > > > > 
-> > > > > > Vivek
-> > > > > >
-> > > > > 
-> > > > > OK~ Understood!
-> > > > > 
-> > > > > Thanks for Baoquan's and your opinion for this patch.
+> > > > Yes, and the same question also remains regarding the kernel command
+> > > > line.
 > > > > 
-> > > > Is there some sort of diagnostics, so a calling script can determine
-> > > > whether kexec failed, because there's no suppor for kexec_file_load(2)
-> > > > or for a different reason? 
+> > > > We can have the kernel perform sanity checks on the device tree,
+> > > > just as the kernel needs to sanity check the command line.
+> > > > 
+> > > > There's the point that was raised about not wanting to increase the
+> > > > attack surface, and that's a valid point. But at least in the way
+> > > > Petitboot works today, it needs to modify the device tree and pass
+> > > > it to the kernel.
+> > > > 
+> > > > One thing that is unavoidable to come from userspace is
+> > > > /chosen/linux,stdout-path, because it's Petitboot that knows from
+> > > > which
+> > > > console the user is interacting with. The other modification to set
+> > > > properties in vga@0 can be done in the kernel.
+> > > > 
+> > > > Given that on DTB-based systems /chosen is an important and
+> > > > established way to pass information to the operating system being
+> > > > booted, I'd like to suggest the following, then:
+> > > > 
+> > > > Extend the syscall as shown in this RFC from Takahiro AKASHI, but
+> > > > instead of accepting a complete DTB from userspace, the syscall
+> > > > would accept a DTB containing only a /chosen node. If the DTB
+> > > > contains any other node, the syscall fails with EINVAL. The kernel
+> > > > can then add the properties in /chosen to the device tree that it
+> > > > will pass to the next kernel.
+> > > > 
+> > > > What do you think?
 > > > 
-> > > Will we not get -ENOSYS if kexec_file_load() is not implemented?
+> > > I think that helps, as it makes the problem space correspond to that
+> > > of modifying the command line, but I can still come up with countless
+> > > attacks based on modifications of the /chosen node and/or the command
+> > > line, in fact it's probably easier than any other node.
 > > 
-> > Sure, the kexec code will see a beautiful ENOSYS in errno, but it
-> > merely prints this message on stderr (possibly with a different error
-> > string if not linked against glibc):
-> > 
-> > kexec_file_load failed: Function not implemented
-> > 
-> > ...and exits with status 255 (same for any other error). Which is, um,
-> > not very friendly to automated error handling...
+> > I don't know anything about DTB. So here comes a very basic question.
+> > Does DTB allow passing an executable blob to kernel or pass the
+> > location of some unsigned executable code at kernel level. I think from
+> > secureboot point of view that would be a concern. Being able to trick
+> > kernel to execute an unsigned code at privileged level.
 > 
-> So what are the options? One should return different error codes as
-> returned by glibc? But bash or other script will not have a library
-> to translate it. I guess scripts will have to hard code the meaning
-> of a particular return code.
+> The DTB itself won't contain executable code.
 > 
-> BTW, user can always try kexec_file_load() and if it fails, try older
-> version of syscall and that should work for lot of use cases?
+> However, arbitrary bindings could point kernel at such code. For
+> instance, /chosen/linux,uefi-system-table could point the kernel at a
+> faked EFI system table, with pointers to malicious code. So
+> arbitrary modification of /chosen is not safe.
 
-Yes, I can blindly retry. Thanks for considering other options.
+PowerPC doesn't have UEFI so this option is not a concern in that 
+architecture. I'm having a look at what a PowerPC kernel gets from /chosen 
+and haven't found anything of concern so far, but I'm still looking.
 
-Petr T
+On the other hand, the kernel command line has the option acpi_rsdp, which 
+is used to pass the address of the RSDP. I don't really know much about EFI 
+so I'm not sure if it can be used to point to code that the kernel can 
+execute, but it does point to tables that contain AML code.
+
+> Bindings describe arbitrary system features (devices, firmware
+> interfaces, etc), so in general they might provide mechanisms to execute
+> code.
+
+Even bindings in /chosen?
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
