@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bOvDI-0006Iu-U4
- for kexec@lists.infradead.org; Sun, 17 Jul 2016 23:11:09 +0000
-Subject: [PATCH 2/3] pefile: Fix the failure of calculation for digest
-From: David Howells <dhowells@redhat.com>
-Date: Mon, 18 Jul 2016 00:10:47 +0100
-Message-ID: <146879704739.32133.1831526981378509732.stgit@warthog.procyon.org.uk>
-In-Reply-To: <146879703192.32133.3670984393495441516.stgit@warthog.procyon.org.uk>
-References: <146879703192.32133.3670984393495441516.stgit@warthog.procyon.org.uk>
+Date: Mon, 18 Jul 2016 10:30:24 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC 3/3] kexec: extend kexec_file_load system call
+Message-ID: <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <20160712014201.11456-4-takahiro.akashi@linaro.org>
+ <20160715130955.GC23514@redhat.com>
+ <20160715131950.GB19840@leverpostej>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160715131950.GB19840@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,46 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: jmorris@namei.org
-Cc: keyring@vger.kernel.org, Lans Zhang <jia.zhang@windriver.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, linux-crypto@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-From: Lans Zhang <jia.zhang@windriver.com>
+On 07/15/16 at 02:19pm, Mark Rutland wrote:
+> On Fri, Jul 15, 2016 at 09:09:55AM -0400, Vivek Goyal wrote:
+> > On Tue, Jul 12, 2016 at 10:42:01AM +0900, AKASHI Takahiro wrote:
+> > 
+> > [..]
+> > > -SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> > > +SYSCALL_DEFINE6(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> > >  		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
+> > > -		unsigned long, flags)
+> > > +		unsigned long, flags, const struct kexec_fdset __user *, ufdset)
+> > 
+> > Can one add more parameters to existing syscall. Can it break existing
+> > programs with new kernel? I was of the impression that one can't do that.
+> > But may be I am missing something.
+> 
+> I think the idea was that we would only look at the new params if a new
+> flags was set, and otherwise it would behave as the old syscall.
+> 
+> Regardless, I think it makes far more sense to add a kexec_file_load2
+> syscall if we're going to modify the prototype at all. It's a rather
+> different proposition to the existing syscall, and needs to be treated
+> as such.
 
-Commit e68503bd68 forgot to set digest_len and thus cause the following
-error reported by kexec when launching a crash kernel:
+I do not think it is worth to add another syscall for extra fds.
+We have open(2) as an example for different numbers of arguments
+already.
 
-	kexec_file_load failed: Bad message
-
-Fixes: e68503bd68 (KEYS: Generalise system_verify_data() to provide access to internal content)
-Signed-off-by: Lans Zhang <jia.zhang@windriver.com>
-Tested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-cc: kexec@lists.infradead.org
-cc: linux-crypto@vger.kernel.org
----
-
- crypto/asymmetric_keys/mscode_parser.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/crypto/asymmetric_keys/mscode_parser.c b/crypto/asymmetric_keys/mscode_parser.c
-index 6a76d5c70ef6..9492e1c22d38 100644
---- a/crypto/asymmetric_keys/mscode_parser.c
-+++ b/crypto/asymmetric_keys/mscode_parser.c
-@@ -124,5 +124,10 @@ int mscode_note_digest(void *context, size_t hdrlen,
- 	struct pefile_context *ctx = context;
- 
- 	ctx->digest = kmemdup(value, vlen, GFP_KERNEL);
--	return ctx->digest ? 0 : -ENOMEM;
-+	if (!ctx->digest)
-+		return -ENOMEM;
-+
-+	ctx->digest_len = vlen;
-+
-+	return 0;
- }
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
