@@ -1,11 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1468845964.2800.3.camel@gmail.com>
+Date: Mon, 18 Jul 2016 09:26:29 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [RFC 0/3] extend kexec_file_load system call
-From: Balbir Singh <bsingharora@gmail.com>
-Date: Mon, 18 Jul 2016 22:46:04 +1000
-In-Reply-To: <20160713182247.GA25232@redhat.com>
-References: <87furf7ztv.fsf@x220.int.ebiederm.org>
- <50662781.Utjsnse3nb@hactar> <20160712225805.0d27fe5d@hananiah.suse.cz>
+Message-ID: <20160718132629.GB32512@redhat.com>
+References: <20160712225805.0d27fe5d@hananiah.suse.cz>
  <20160712221804.GV1041@n2100.armlinux.org.uk>
  <87twfunneg.fsf@linux.vnet.ibm.com>
  <20160713073657.GX1041@n2100.armlinux.org.uk>
@@ -14,7 +12,10 @@ References: <87furf7ztv.fsf@x220.int.ebiederm.org>
  <20160713130338.GB16900@redhat.com>
  <20160713174009.GA1041@n2100.armlinux.org.uk>
  <20160713182247.GA25232@redhat.com>
-Mime-Version: 1.0
+ <1468845964.2800.3.camel@gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1468845964.2800.3.camel@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,70 +24,125 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Balbir Singh <bsingharora@gmail.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 
-T24gV2VkLCAyMDE2LTA3LTEzIGF0IDE0OjIyIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKPiBP
-biBXZWQsIEp1bCAxMywgMjAxNiBhdCAwNjo0MDoxMFBNICswMTAwLCBSdXNzZWxsIEtpbmcgLSBB
-Uk0gTGludXggd3JvdGU6Cj4gPsKgCj4gPiBPbiBXZWQsIEp1bCAxMywgMjAxNiBhdCAwOTowMzoz
-OEFNIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKPiA+ID7CoAo+ID4gPiBPbiBXZWQsIEp1bCAx
-MywgMjAxNiBhdCAwOToyNjozOUFNICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3Jv
-dGU6Cj4gPiA+ID7CoAo+ID4gPiA+IEluZGVlZCAtIG1heWJlIEVyaWMga25vd3MgYmV0dGVyLCBi
-dXQgSSBjYW4ndCBzZWUgYW55IHNpdHVhdGlvbiB3aGVyZQo+ID4gPiA+IHRoZSBkdGIgd2UgbG9h
-ZCB2aWEga2V4ZWMgc2hvdWxkIGV2ZXIgYWZmZWN0ICJ0aGUgYm9vdGxvYWRlciIsIHVubGVzcwo+
-ID4gPiA+IHRoZSAia2VybmVsIiB0aGF0J3MgYmVpbmcgbG9hZGVkIGludG8ga2V4ZWMgaXMgInRo
-ZSBib290bG9hZGVyIi4KPiA+ID4gPsKgCj4gPiA+ID4gTm93LCBnb2luZyBiYWNrIHRvIHRoZSBt
-b3JlIGZ1bmRhbWVudGFsIGlzc3VlIHJhaXNlZCBpbiBteSBmaXJzdCByZXBseSwKPiA+ID4gPiBh
-Ym91dCB0aGUga2VybmVsIGNvbW1hbmQgbGluZS4KPiA+ID4gPsKgCj4gPiA+ID4gT24geDg2LCBJ
-IGNhbiBzZWUgdGhhdCBpdCBfaXNfIHBvc3NpYmxlIGZvciB1c2Vyc3BhY2UgdG8gc3BlY2lmeSBh
-Cj4gPiA+ID4gY29tbWFuZCBsaW5lLCBhbmQgdGhlIGtlcm5lbCBsb2FkaW5nIHRoZSBpbWFnZSBw
-cm92aWRlcyB0aGUgY29tbWFuZAo+ID4gPiA+IGxpbmUgdG8gdGhlIHRvLWJlLWtleGVjZWQga2Vy
-bmVsIHdpdGggdmVyeSBsaXR0bGUgY2hlY2tpbmcuwqDCoFNvLCBpZgo+ID4gPiA+IHlvdXIga2Vy
-bmVsIGlzIHNpZ25lZCwgd2hhdCBzdG9wcyB0aGUgImluc2VjdXJlIHVzZXJzcGFjZSIgbG9hZGlu
-Zwo+ID4gPiA+IGEgc2lnbmVkIGtlcm5lbCBidXQgZ2l2aW5nIGl0IGFuIGluc2VjdXJlIHJvb3Rm
-cyBhbmQvb3IgY29uc29sZT8KPiA+ID4gSXQgaXMgbm90IGtleGVjIHNwZWNpZmljLiBJIGNvdWxk
-IGRvIHRoaXMgZm9yIHJlZ3VsYXIgYm9vdCB0b28sIHJpZ2h0Pwo+ID4gPsKgCj4gPiA+IENvbW1h
-bmQgbGluZSBvcHRpb25zIGFyZSBub3Qgc2lnbmVkLiBJIHRob3VnaHQgaWRlYSBiZWhpbmQgc2Vj
-dXJlYm9vdAo+ID4gPiB3YXMgdG8gZXhlY3V0ZSBvbmx5IHRydXN0ZWQgY29kZSBhbmQgY29tbWFu
-ZCBsaW5lIG9wdGlvbnMgZG9uJ3QgZW5mb3JjZQo+ID4gPiB5b3UgdG8gZXhlY3V0ZSB1bnNpZ25l
-ZCBjb2RlLgo+ID4gPsKgCgpZb3UgY2FuIHNldCBtb2R1bGUuc2lnX2VuZm9yY2U9MCBhbmQgb3Bl
-biB1cCB0aGUgc3lzdGVtIGEgYml0IGFzc3VtaW5nCnRoYXQgeW91IGNhbiBnZXQgYSBtb2R1bGUg
-dG8gbG9hZCB3aXRoIGFub3RoZXIgYXR0YWNrCgo+ID4gPiBTbyBpdCBzb3VuZHMgbGlrZSBkaWZm
-ZXJlbnQgY2xhc3Mgb2Ygc2VjdXJpdHkgcHJvYmxlbXMgd2hpY2ggeW91IGFyZQo+ID4gPiByZWZl
-cnJpbmcgdG8gYW5kIG5vdCBuZWNlc3NhcmlseSBjb3ZlcmVkIGJ5IHNlY3VyZWJvb3Qgb3Igc2ln
-bmVkCj4gPiA+IGtlcm5lbC4KPiA+IExldCBtZSBnaXZlIHlvdSBhbiBleGFtcGxlLgo+ID7CoAo+
-ID4gWW91IGhhdmUgYSBzZWN1cmUgYm9vdCBzZXR1cCwgd2hlcmUgdGhlIGZpcm13YXJlL1JPTSB2
-YWxpZGF0ZXMgdGhlIGJvb3QKPiA+IGxvYWRlci7CoMKgR29vZCwgdGhlIGJvb3QgbG9hZGVyIGhh
-c24ndCBiZWVuIHRhbXBlcmVkIHdpdGguCj4gPsKgCj4gPiBZb3UgaW50ZXJydXB0IHRoZSBib290
-IGxvYWRlciBhbmQgYXJlIGFibGUgdG8gbW9kaWZ5IHRoZSBjb21tYW5kIGxpbmUKPiA+IGZvciB0
-aGUgYm9vdGVkIGtlcm5lbC4KPiA+wqAKPiA+IFRoZSBib290IGxvYWRlciBsb2FkcyB0aGUga2Vy
-bmVsIGFuZCB2ZXJpZmllcyB0aGUga2VybmVsJ3Mgc2lnbmF0dXJlLgo+ID4gR29vZCwgdGhlIGtl
-cm5lbCBoYXNuJ3QgYmVlbiB0YW1wZXJlZCB3aXRoLsKgwqBUaGUga2VybmVsIHN0YXJ0cyBydW5u
-aW5nLgo+ID7CoAo+ID4gWW91J3ZlIHBsdWdnZWQgaW4gYSBVU0IgZHJpdmUgdG8gdGhlIGRldmlj
-ZSwgYW5kIHNwZWNpZmllZCBhIHBhcnRpdGlvbgo+ID4gY29udGFpbmluZyBhIHJvb3QgZmlsZXN5
-c3RlbSB0aGF0IHlvdSBjb250cm9sIHRvIHRoZSBrZXJuZWwuwqDCoFRoZQo+ID4gdmFsaWRhdGVk
-IGtlcm5lbCBmaW5kcyB0aGUgVVNCIGRyaXZlLCBhbmQgbW91bnRzIGl0LCBhbmQgZXhlY3V0ZXMK
-PiA+IHlvdXIgb3duIGJpbmFyaWVzIG9uIHRoZSBVU0IgZHJpdmUuCj4gWW91IHdpbGwgcmVxdWly
-ZSBwaHlzaWNhbCBhY2Nlc3MgdG8gdGhlIG1hY2hpbmUgdG8gYmUgYWJsZSB0bwo+IGluc2VydCB5
-b3VyIHVzYiBkcml2ZS4gQW5kIElJUkMsIGFyZ3VtZW50IHdhcyB0aGF0IGlmIGF0dGFja2VyIGhh
-cwo+IHBoeXNpY2FsIGFjY2VzcyB0byBtYWNoaW5lLCBhbGwgYmV0cyBhcmUgb2ZmIGFueXdheS4K
-PgoKWW91IGRvbid0IG5lZWQgcGh5c2ljYWwgYWNjZXNzIC0tIHlvdXIgbWFjaGluZSBjb250cm9s
-bGVyIEJNQyBjYW4KZG8gdGhlIG1hZ2ljIGZvciB5b3UuIFNvIGl0cyBub3QgYWx3YXlzIHBoeXNp
-Y2FsIGFjY2VzcywgaXMgaXQ/CsKgCj4gPsKgCj4gPsKgCj4gPiBZb3UgcnVuIGEgc2hlbGwgb24g
-dGhlIGNvbnNvbGUuwqDCoFlvdSBub3cgaGF2ZSBjb250cm9sIG9mIHRoZSBzeXN0ZW0sCj4gPiBh
-bmQgY2FuIG1vdW50IHRoZSByZWFsIHJvb3RmcywgaW5zcGVjdCBpdCwgYW5kIHdvcmsgb3V0IHdo
-YXQgaXQgZG9lcywKPiA+IGV0Yy4KPiA+wqAKPiA+IEF0IHRoaXMgcG9pbnQsIHdoYXQgdXNlIHdh
-cyBhbGwgdGhlIHZhbGlkYXRpb24gdGhhdCB0aGUgc2VjdXJlIGJvb3QKPiA+IGhhcyBkb25lP8Kg
-wqBBYnNvbHV0ZWx5IHVzZWxlc3MuCj4gPsKgCj4gPiBJZiB5b3UgY2FuIGNoYW5nZSB0aGUgY29t
-bWFuZCBsaW5lIGFyZ3VtZW50cyBnaXZlbiB0byB0aGUga2VybmVsLCB5b3UKPiA+IGhhdmUgbm8g
-c2VjdXJpdHksIG5vIG1hdHRlciBob3cgbXVjaCB5b3UgdmVyaWZ5IHNpZ25hdHVyZXMuwqDCoEl0
-J3MKPiA+IHRoZSBpbGx1c2lvbiBvZiBzZWN1cml0eSwgbm90aGluZyBtb3JlLCBub3RoaW5nIGxl
-c3MuCj4gPsKgCgpJIGFncmVlLCBpZiB5b3UgY2FuIGNoYW5nZSBjb21tYW5kIGxpbmUgYXJndW1l
-bnRzLCBhbGwgYmV0cyBhcmUgb2YgbGVzc2VyIHZhbHVlCgpCYWxiaXIgU2luZ2gKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Mon, Jul 18, 2016 at 10:46:04PM +1000, Balbir Singh wrote:
+> On Wed, 2016-07-13 at 14:22 -0400, Vivek Goyal wrote:
+> > On Wed, Jul 13, 2016 at 06:40:10PM +0100, Russell King - ARM Linux wrot=
+e:
+> > >=A0
+> > > On Wed, Jul 13, 2016 at 09:03:38AM -0400, Vivek Goyal wrote:
+> > > >=A0
+> > > > On Wed, Jul 13, 2016 at 09:26:39AM +0100, Russell King - ARM Linux =
+wrote:
+> > > > >=A0
+> > > > > Indeed - maybe Eric knows better, but I can't see any situation w=
+here
+> > > > > the dtb we load via kexec should ever affect "the bootloader", un=
+less
+> > > > > the "kernel" that's being loaded into kexec is "the bootloader".
+> > > > >=A0
+> > > > > Now, going back to the more fundamental issue raised in my first =
+reply,
+> > > > > about the kernel command line.
+> > > > >=A0
+> > > > > On x86, I can see that it _is_ possible for userspace to specify a
+> > > > > command line, and the kernel loading the image provides the comma=
+nd
+> > > > > line to the to-be-kexeced kernel with very little checking.=A0=A0=
+So, if
+> > > > > your kernel is signed, what stops the "insecure userspace" loading
+> > > > > a signed kernel but giving it an insecure rootfs and/or console?
+> > > > It is not kexec specific. I could do this for regular boot too, rig=
+ht?
+> > > >=A0
+> > > > Command line options are not signed. I thought idea behind securebo=
+ot
+> > > > was to execute only trusted code and command line options don't enf=
+orce
+> > > > you to execute unsigned code.
+> > > >=A0
+> =
+
+> You can set module.sig_enforce=3D0 and open up the system a bit assuming
+> that you can get a module to load with another attack
+
+IIUC, sig_enforce bool_enable_only so it can only be enabled. Default
+value of it is 0 if CONFIG_MODULE_SIG_FORCE=3Dn.
+
+IOW, if your kernel forced signature verification, you should not be
+able to do sig_enforce=3D0. If you kernel did not have
+CONFIG_MODULE_SIG_FORCE=3Dy, then sig_enforce should be 0 by default anyway
+and you are not making it worse using command line.
+
+> =
+
+> > > > So it sounds like different class of security problems which you are
+> > > > referring to and not necessarily covered by secureboot or signed
+> > > > kernel.
+> > > Let me give you an example.
+> > >=A0
+> > > You have a secure boot setup, where the firmware/ROM validates the bo=
+ot
+> > > loader.=A0=A0Good, the boot loader hasn't been tampered with.
+> > >=A0
+> > > You interrupt the boot loader and are able to modify the command line
+> > > for the booted kernel.
+> > >=A0
+> > > The boot loader loads the kernel and verifies the kernel's signature.
+> > > Good, the kernel hasn't been tampered with.=A0=A0The kernel starts ru=
+nning.
+> > >=A0
+> > > You've plugged in a USB drive to the device, and specified a partition
+> > > containing a root filesystem that you control to the kernel.=A0=A0The
+> > > validated kernel finds the USB drive, and mounts it, and executes
+> > > your own binaries on the USB drive.
+> > You will require physical access to the machine to be able to
+> > insert your usb drive. And IIRC, argument was that if attacker has
+> > physical access to machine, all bets are off anyway.
+> >
+> =
+
+> You don't need physical access -- your machine controller BMC can
+> do the magic for you. So its not always physical access, is it?
+
+Well, idea was that if you have physical access to machine, then all
+bets are off. If BMC can do something which allows running unsigned
+code at ring level 0, its a problem I think from secureboot model of
+security.
+
+> =A0
+> > >=A0
+> > >=A0
+> > > You run a shell on the console.=A0=A0You now have control of the syst=
+em,
+> > > and can mount the real rootfs, inspect it, and work out what it does,
+> > > etc.
+> > >=A0
+> > > At this point, what use was all the validation that the secure boot
+> > > has done?=A0=A0Absolutely useless.
+> > >=A0
+> > > If you can change the command line arguments given to the kernel, you
+> > > have no security, no matter how much you verify signatures.=A0=A0It's
+> > > the illusion of security, nothing more, nothing less.
+> > >=A0
+> =
+
+> I agree, if you can change command line arguments, all bets are of lesser=
+ value
+
+If changing command line allows execution of unsigned code at ring level
+0, then it is a problem. Otherwise we are talking of security issues which
+are not covered by secureboot model.
+
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
