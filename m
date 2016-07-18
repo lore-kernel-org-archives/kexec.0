@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 18 Jul 2016 11:07:05 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC 3/3] kexec: extend kexec_file_load system call
-Message-ID: <20160718100704.GB10069@leverpostej>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <20160712014201.11456-4-takahiro.akashi@linaro.org>
- <20160715130955.GC23514@redhat.com>
- <20160715131950.GB19840@leverpostej>
- <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
+Message-ID: <1468845964.2800.3.camel@gmail.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+From: Balbir Singh <bsingharora@gmail.com>
+Date: Mon, 18 Jul 2016 22:46:04 +1000
+In-Reply-To: <20160713182247.GA25232@redhat.com>
+References: <87furf7ztv.fsf@x220.int.ebiederm.org>
+ <50662781.Utjsnse3nb@hactar> <20160712225805.0d27fe5d@hananiah.suse.cz>
+ <20160712221804.GV1041@n2100.armlinux.org.uk>
+ <87twfunneg.fsf@linux.vnet.ibm.com>
+ <20160713073657.GX1041@n2100.armlinux.org.uk>
+ <87poqinf9m.fsf@linux.vnet.ibm.com>
+ <20160713082639.GZ1041@n2100.armlinux.org.uk>
+ <20160713130338.GB16900@redhat.com>
+ <20160713174009.GA1041@n2100.armlinux.org.uk>
+ <20160713182247.GA25232@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,57 +23,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, dyoung@redhat.com, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 
-On Mon, Jul 18, 2016 at 10:30:24AM +0800, Dave Young wrote:
-> On 07/15/16 at 02:19pm, Mark Rutland wrote:
-> > On Fri, Jul 15, 2016 at 09:09:55AM -0400, Vivek Goyal wrote:
-> > > On Tue, Jul 12, 2016 at 10:42:01AM +0900, AKASHI Takahiro wrote:
-> > > 
-> > > [..]
-> > > > -SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> > > > +SYSCALL_DEFINE6(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> > > >  		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
-> > > > -		unsigned long, flags)
-> > > > +		unsigned long, flags, const struct kexec_fdset __user *, ufdset)
-> > > 
-> > > Can one add more parameters to existing syscall. Can it break existing
-> > > programs with new kernel? I was of the impression that one can't do that.
-> > > But may be I am missing something.
-> > 
-> > I think the idea was that we would only look at the new params if a new
-> > flags was set, and otherwise it would behave as the old syscall.
-> > 
-> > Regardless, I think it makes far more sense to add a kexec_file_load2
-> > syscall if we're going to modify the prototype at all. It's a rather
-> > different proposition to the existing syscall, and needs to be treated
-> > as such.
-> 
-> I do not think it is worth to add another syscall for extra fds.
-> We have open(2) as an example for different numbers of arguments
-> already.
-
-Did we change the syscall interface for that?
-
-I was under the impression that there was always one underlying syscall,
-and the C library did the right thing to pass the expected information
-to the underlying syscall.
-
-That's rather different to changing the underlying syscall.
-
-Regardless of how this is wrapped in userspace, I do not think modifying
-the existing prototype is a good idea, and I think this kind of
-extension needs to be a new syscall.
-
-Thanks,
-Mark.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDE2LTA3LTEzIGF0IDE0OjIyIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKPiBP
+biBXZWQsIEp1bCAxMywgMjAxNiBhdCAwNjo0MDoxMFBNICswMTAwLCBSdXNzZWxsIEtpbmcgLSBB
+Uk0gTGludXggd3JvdGU6Cj4gPsKgCj4gPiBPbiBXZWQsIEp1bCAxMywgMjAxNiBhdCAwOTowMzoz
+OEFNIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKPiA+ID7CoAo+ID4gPiBPbiBXZWQsIEp1bCAx
+MywgMjAxNiBhdCAwOToyNjozOUFNICswMTAwLCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3Jv
+dGU6Cj4gPiA+ID7CoAo+ID4gPiA+IEluZGVlZCAtIG1heWJlIEVyaWMga25vd3MgYmV0dGVyLCBi
+dXQgSSBjYW4ndCBzZWUgYW55IHNpdHVhdGlvbiB3aGVyZQo+ID4gPiA+IHRoZSBkdGIgd2UgbG9h
+ZCB2aWEga2V4ZWMgc2hvdWxkIGV2ZXIgYWZmZWN0ICJ0aGUgYm9vdGxvYWRlciIsIHVubGVzcwo+
+ID4gPiA+IHRoZSAia2VybmVsIiB0aGF0J3MgYmVpbmcgbG9hZGVkIGludG8ga2V4ZWMgaXMgInRo
+ZSBib290bG9hZGVyIi4KPiA+ID4gPsKgCj4gPiA+ID4gTm93LCBnb2luZyBiYWNrIHRvIHRoZSBt
+b3JlIGZ1bmRhbWVudGFsIGlzc3VlIHJhaXNlZCBpbiBteSBmaXJzdCByZXBseSwKPiA+ID4gPiBh
+Ym91dCB0aGUga2VybmVsIGNvbW1hbmQgbGluZS4KPiA+ID4gPsKgCj4gPiA+ID4gT24geDg2LCBJ
+IGNhbiBzZWUgdGhhdCBpdCBfaXNfIHBvc3NpYmxlIGZvciB1c2Vyc3BhY2UgdG8gc3BlY2lmeSBh
+Cj4gPiA+ID4gY29tbWFuZCBsaW5lLCBhbmQgdGhlIGtlcm5lbCBsb2FkaW5nIHRoZSBpbWFnZSBw
+cm92aWRlcyB0aGUgY29tbWFuZAo+ID4gPiA+IGxpbmUgdG8gdGhlIHRvLWJlLWtleGVjZWQga2Vy
+bmVsIHdpdGggdmVyeSBsaXR0bGUgY2hlY2tpbmcuwqDCoFNvLCBpZgo+ID4gPiA+IHlvdXIga2Vy
+bmVsIGlzIHNpZ25lZCwgd2hhdCBzdG9wcyB0aGUgImluc2VjdXJlIHVzZXJzcGFjZSIgbG9hZGlu
+Zwo+ID4gPiA+IGEgc2lnbmVkIGtlcm5lbCBidXQgZ2l2aW5nIGl0IGFuIGluc2VjdXJlIHJvb3Rm
+cyBhbmQvb3IgY29uc29sZT8KPiA+ID4gSXQgaXMgbm90IGtleGVjIHNwZWNpZmljLiBJIGNvdWxk
+IGRvIHRoaXMgZm9yIHJlZ3VsYXIgYm9vdCB0b28sIHJpZ2h0Pwo+ID4gPsKgCj4gPiA+IENvbW1h
+bmQgbGluZSBvcHRpb25zIGFyZSBub3Qgc2lnbmVkLiBJIHRob3VnaHQgaWRlYSBiZWhpbmQgc2Vj
+dXJlYm9vdAo+ID4gPiB3YXMgdG8gZXhlY3V0ZSBvbmx5IHRydXN0ZWQgY29kZSBhbmQgY29tbWFu
+ZCBsaW5lIG9wdGlvbnMgZG9uJ3QgZW5mb3JjZQo+ID4gPiB5b3UgdG8gZXhlY3V0ZSB1bnNpZ25l
+ZCBjb2RlLgo+ID4gPsKgCgpZb3UgY2FuIHNldCBtb2R1bGUuc2lnX2VuZm9yY2U9MCBhbmQgb3Bl
+biB1cCB0aGUgc3lzdGVtIGEgYml0IGFzc3VtaW5nCnRoYXQgeW91IGNhbiBnZXQgYSBtb2R1bGUg
+dG8gbG9hZCB3aXRoIGFub3RoZXIgYXR0YWNrCgo+ID4gPiBTbyBpdCBzb3VuZHMgbGlrZSBkaWZm
+ZXJlbnQgY2xhc3Mgb2Ygc2VjdXJpdHkgcHJvYmxlbXMgd2hpY2ggeW91IGFyZQo+ID4gPiByZWZl
+cnJpbmcgdG8gYW5kIG5vdCBuZWNlc3NhcmlseSBjb3ZlcmVkIGJ5IHNlY3VyZWJvb3Qgb3Igc2ln
+bmVkCj4gPiA+IGtlcm5lbC4KPiA+IExldCBtZSBnaXZlIHlvdSBhbiBleGFtcGxlLgo+ID7CoAo+
+ID4gWW91IGhhdmUgYSBzZWN1cmUgYm9vdCBzZXR1cCwgd2hlcmUgdGhlIGZpcm13YXJlL1JPTSB2
+YWxpZGF0ZXMgdGhlIGJvb3QKPiA+IGxvYWRlci7CoMKgR29vZCwgdGhlIGJvb3QgbG9hZGVyIGhh
+c24ndCBiZWVuIHRhbXBlcmVkIHdpdGguCj4gPsKgCj4gPiBZb3UgaW50ZXJydXB0IHRoZSBib290
+IGxvYWRlciBhbmQgYXJlIGFibGUgdG8gbW9kaWZ5IHRoZSBjb21tYW5kIGxpbmUKPiA+IGZvciB0
+aGUgYm9vdGVkIGtlcm5lbC4KPiA+wqAKPiA+IFRoZSBib290IGxvYWRlciBsb2FkcyB0aGUga2Vy
+bmVsIGFuZCB2ZXJpZmllcyB0aGUga2VybmVsJ3Mgc2lnbmF0dXJlLgo+ID4gR29vZCwgdGhlIGtl
+cm5lbCBoYXNuJ3QgYmVlbiB0YW1wZXJlZCB3aXRoLsKgwqBUaGUga2VybmVsIHN0YXJ0cyBydW5u
+aW5nLgo+ID7CoAo+ID4gWW91J3ZlIHBsdWdnZWQgaW4gYSBVU0IgZHJpdmUgdG8gdGhlIGRldmlj
+ZSwgYW5kIHNwZWNpZmllZCBhIHBhcnRpdGlvbgo+ID4gY29udGFpbmluZyBhIHJvb3QgZmlsZXN5
+c3RlbSB0aGF0IHlvdSBjb250cm9sIHRvIHRoZSBrZXJuZWwuwqDCoFRoZQo+ID4gdmFsaWRhdGVk
+IGtlcm5lbCBmaW5kcyB0aGUgVVNCIGRyaXZlLCBhbmQgbW91bnRzIGl0LCBhbmQgZXhlY3V0ZXMK
+PiA+IHlvdXIgb3duIGJpbmFyaWVzIG9uIHRoZSBVU0IgZHJpdmUuCj4gWW91IHdpbGwgcmVxdWly
+ZSBwaHlzaWNhbCBhY2Nlc3MgdG8gdGhlIG1hY2hpbmUgdG8gYmUgYWJsZSB0bwo+IGluc2VydCB5
+b3VyIHVzYiBkcml2ZS4gQW5kIElJUkMsIGFyZ3VtZW50IHdhcyB0aGF0IGlmIGF0dGFja2VyIGhh
+cwo+IHBoeXNpY2FsIGFjY2VzcyB0byBtYWNoaW5lLCBhbGwgYmV0cyBhcmUgb2ZmIGFueXdheS4K
+PgoKWW91IGRvbid0IG5lZWQgcGh5c2ljYWwgYWNjZXNzIC0tIHlvdXIgbWFjaGluZSBjb250cm9s
+bGVyIEJNQyBjYW4KZG8gdGhlIG1hZ2ljIGZvciB5b3UuIFNvIGl0cyBub3QgYWx3YXlzIHBoeXNp
+Y2FsIGFjY2VzcywgaXMgaXQ/CsKgCj4gPsKgCj4gPsKgCj4gPiBZb3UgcnVuIGEgc2hlbGwgb24g
+dGhlIGNvbnNvbGUuwqDCoFlvdSBub3cgaGF2ZSBjb250cm9sIG9mIHRoZSBzeXN0ZW0sCj4gPiBh
+bmQgY2FuIG1vdW50IHRoZSByZWFsIHJvb3RmcywgaW5zcGVjdCBpdCwgYW5kIHdvcmsgb3V0IHdo
+YXQgaXQgZG9lcywKPiA+IGV0Yy4KPiA+wqAKPiA+IEF0IHRoaXMgcG9pbnQsIHdoYXQgdXNlIHdh
+cyBhbGwgdGhlIHZhbGlkYXRpb24gdGhhdCB0aGUgc2VjdXJlIGJvb3QKPiA+IGhhcyBkb25lP8Kg
+wqBBYnNvbHV0ZWx5IHVzZWxlc3MuCj4gPsKgCj4gPiBJZiB5b3UgY2FuIGNoYW5nZSB0aGUgY29t
+bWFuZCBsaW5lIGFyZ3VtZW50cyBnaXZlbiB0byB0aGUga2VybmVsLCB5b3UKPiA+IGhhdmUgbm8g
+c2VjdXJpdHksIG5vIG1hdHRlciBob3cgbXVjaCB5b3UgdmVyaWZ5IHNpZ25hdHVyZXMuwqDCoEl0
+J3MKPiA+IHRoZSBpbGx1c2lvbiBvZiBzZWN1cml0eSwgbm90aGluZyBtb3JlLCBub3RoaW5nIGxl
+c3MuCj4gPsKgCgpJIGFncmVlLCBpZiB5b3UgY2FuIGNoYW5nZSBjb21tYW5kIGxpbmUgYXJndW1l
+bnRzLCBhbGwgYmV0cyBhcmUgb2YgbGVzc2VyIHZhbHVlCgpCYWxiaXIgU2luZ2gKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
