@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22a.google.com ([2607:f8b0:400e:c00::22a])
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPeS4-0005w1-Rb
- for kexec@lists.infradead.org; Tue, 19 Jul 2016 23:29:35 +0000
-Received: by mail-pf0-x22a.google.com with SMTP id h186so11998910pfg.3
- for <kexec@lists.infradead.org>; Tue, 19 Jul 2016 16:29:04 -0700 (PDT)
-Date: Wed, 20 Jul 2016 08:34:54 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v22 1/8] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20160719233452.GG20774@linaro.org>
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-2-takahiro.akashi@linaro.org>
- <20160719093906.GA20732@arm.com>
- <20160719102815.GE20774@linaro.org>
- <20160719104103.GB20990@arm.com>
- <1468932537.27473.6.camel@redhat.com>
+ id 1bPNyB-0006mF-Tj
+ for kexec@lists.infradead.org; Tue, 19 Jul 2016 05:53:30 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: Re: [V3 PATCH 1/2] x86/panic: Replace smp_send_stop() with
+ kdump friendly version
+Date: Tue, 19 Jul 2016 05:51:18 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454C83B25@GSjpTKYDCembx31.service.hitachi.net>
+References: <20160705113323.5864.66834.stgit@softrs>
+ <20160705113325.5864.74840.stgit@softrs>
+ <20160711083449.GA19320@dhcp-128-65.nay.redhat.com>
+ <04EAB7311EE43145B2D3536183D1A84454C6F889@GSjpTKYDCembx31.service.hitachi.net>
+ <20160713020336.GA3222@dhcp-128-65.nay.redhat.com>
+ <04EAB7311EE43145B2D3536183D1A84454C7A1B1@GSjpTKYDCembx31.service.hitachi.net>
+ <20160718090204.GA9749@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20160718090204.GA9749@dhcp-128-65.nay.redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1468932537.27473.6.camel@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,263 +27,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Salter <msalter@redhat.com>
-Cc: mark.rutland@arm.com, Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, Dennis Chen <dennis.chen@arm.com>, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: 'Dave Young' <dyoung@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, Toshi Kani <toshi.kani@hpe.com>, "Peter
+ Zijlstra (Intel)" <peterz@infradead.org>, Minfei Huang <mnfhuang@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Daniel Walker <dwalker@fifo99.com>, Ingo Molnar <mingo@kernel.org>, Takao Indoh <indou.takao@jp.fujitsu.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "Lee,
+ Chun-Yi" <joeyli.kernel@gmail.com>, Borislav Petkov <bp@suse.de>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Petr Mladek <pmladek@suse.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <mhiramat@kernel.org>, Tejun Heo <tj@kernel.org>, Vitaly Kuznetsov <vkuznets@redhat.com>
 
-On Tue, Jul 19, 2016 at 08:48:57AM -0400, Mark Salter wrote:
-> On Tue, 2016-07-19 at 18:41 +0800, Dennis Chen wrote:
-> > On Tue, Jul 19, 2016 at 07:28:16PM +0900, AKASHI Takahiro wrote:
-> > > 
-> > > On Tue, Jul 19, 2016 at 05:39:07PM +0800, Dennis Chen wrote:
-> > > > 
-> > > > Hello AKASHI,
-> > > > 
-> > > > On Tue, Jul 12, 2016 at 02:05:07PM +0900, AKASHI Takahiro wrote:
-> > > > > 
-> > > > > On the startup of primary kernel, the memory region used by crash dump
-> > > > > kernel must be specified by "crashkernel=" kernel parameter.
-> > > > > reserve_crashkernel() will allocate and reserve the region for later use.
-> > > > > 
-> > > > > User space tools, like kexec-tools, will be able to find that region as
-> > > > > ????????????- "Crash kernel" in /proc/iomem, or
-> > > > > ????????????- "linux,crashkernel-base" and "linux,crashkernel-size" under
-> > > > > ????????????????/sys/firmware/devicetree/base/chosen
-> > > > > 
-> > > > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > > > Signed-off-by: Mark Salter <msalter@redhat.com>
-> > > > > Signed-off-by: Pratyush Anand <panand@redhat.com>
-> > > > > Reviewed-by: James Morse <james.morse@arm.com>
-> > > > > ---
-> > > > > ??arch/arm64/kernel/setup.c |??????7 ++-
-> > > > > ??arch/arm64/mm/init.c????????????| 115 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > > > ??2 files changed, 121 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > > > > index c1509e6..cb5eee0 100644
-> > > > > --- a/arch/arm64/kernel/setup.c
-> > > > > +++ b/arch/arm64/kernel/setup.c
-> > > > > @@ -31,7 +31,6 @@
-> > > > > ??#include <linux/screen_info.h>
-> > > > > ??#include <linux/init.h>
-> > > > > ??#include <linux/kexec.h>
-> > > > > -#include <linux/crash_dump.h>
-> > > > > ??#include <linux/root_dev.h>
-> > > > > ??#include <linux/cpu.h>
-> > > > > ??#include <linux/interrupt.h>
-> > > > > @@ -222,6 +221,12 @@ static void __init request_standard_resources(void)
-> > > > > ????????????????????????????????????kernel_data.end <= res->end)
-> > > > > ????????????????????????????????????????????request_resource(res, &kernel_data);
-> > > > > ????????????}
-> > > > > +
-> > > > > +#ifdef CONFIG_KEXEC_CORE
-> > > > > +??????????/* User space tools will find "Crash kernel" region in /proc/iomem. */
-> > > > > +??????????if (crashk_res.end)
-> > > > > +??????????????????????????insert_resource(&iomem_resource, &crashk_res);
-> > > > > +#endif
-> > > > > ??}
-> > > > > 
-> > > > > ??u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
-> > > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > > > > index 2ade7a6..51b1302 100644
-> > > > > --- a/arch/arm64/mm/init.c
-> > > > > +++ b/arch/arm64/mm/init.c
-> > > > > @@ -29,11 +29,13 @@
-> > > > > ??#include <linux/gfp.h>
-> > > > > ??#include <linux/memblock.h>
-> > > > > ??#include <linux/sort.h>
-> > > > > +#include <linux/of.h>
-> > > > > ??#include <linux/of_fdt.h>
-> > > > > ??#include <linux/dma-mapping.h>
-> > > > > ??#include <linux/dma-contiguous.h>
-> > > > > ??#include <linux/efi.h>
-> > > > > ??#include <linux/swiotlb.h>
-> > > > > +#include <linux/kexec.h>
-> > > > > 
-> > > > > ??#include <asm/boot.h>
-> > > > > ??#include <asm/fixmap.h>
-> > > > > @@ -76,6 +78,117 @@ static int __init early_initrd(char *p)
-> > > > > ??early_param("initrd", early_initrd);
-> > > > > ??#endif
-> > > > > 
-> > > > > +#ifdef CONFIG_KEXEC_CORE
-> > > > > +static unsigned long long crash_size, crash_base;
-> > > > > +static struct property crash_base_prop = {
-> > > > > +??????????.name = "linux,crashkernel-base",
-> > > > > +??????????.length = sizeof(u64),
-> > > > > +??????????.value = &crash_base
-> > > > > +};
-> > > > > +static struct property crash_size_prop = {
-> > > > > +??????????.name = "linux,crashkernel-size",
-> > > > > +??????????.length = sizeof(u64),
-> > > > > +??????????.value = &crash_size,
-> > > > > +};
-> > > > > +
-> > > > > +static int __init export_crashkernel(void)
-> > > > > +{
-> > > > > +??????????struct device_node *node;
-> > > > > +??????????int ret;
-> > > > > +
-> > > > > +??????????if (!crashk_res.end)
-> > > > > +??????????????????????????return 0;
-> > > > > +
-> > > > > +??????????crash_base = cpu_to_be64(crashk_res.start);
-> > > > > +??????????crash_size = cpu_to_be64(crashk_res.end - crashk_res.start + 1);
-> > > > > +
-> > > > > +??????????/* Add /chosen/linux,crashkernel-* properties */
-> > > > > +??????????node = of_find_node_by_path("/chosen");
-> > > > > +??????????if (!node)
-> > > > > +??????????????????????????return -ENOENT;
-> > > > > +
-> > > > > +??????????/*
-> > > > > +????????????* There might be existing crash kernel properties, but we can't
-> > > > > +????????????* be sure what's in them, so remove them.
-> > > > > +????????????*/
-> > > > > +??????????of_remove_property(node, of_find_property(node,
-> > > > > +??????????????????????????????????????????????????????????"linux,crashkernel-base", NULL));
-> > > > > +??????????of_remove_property(node, of_find_property(node,
-> > > > > +??????????????????????????????????????????????????????????"linux,crashkernel-size", NULL));
-> > > > > +
-> > > > > +??????????ret = of_add_property(node, &crash_base_prop);
-> > > > > +??????????if (ret)
-> > > > > +??????????????????????????goto ret_err;
-> > > > > +
-> > > > > +??????????ret = of_add_property(node, &crash_size_prop);
-> > > > > +??????????if (ret)
-> > > > > +??????????????????????????goto ret_err;
-> > > > > +
-> > > > > +??????????return 0;
-> > > > > +
-> > > > > +ret_err:
-> > > > > +??????????pr_warn("Exporting crashkernel region to device tree failed\n");
-> > > > > +??????????return ret;
-> > > > > +}
-> > > > > +late_initcall(export_crashkernel);
-> > > > > +
-> > > > > +/*
-> > > > > + * reserve_crashkernel() - reserves memory for crash kernel
-> > > > > + *
-> > > > > + * This function reserves memory area given in "crashkernel=" kernel command
-> > > > > + * line parameter. The memory reserved is used by dump capture kernel when
-> > > > > + * primary kernel is crashing.
-> > > > > + */
-> > > > > +static void __init reserve_crashkernel(void)
-> > > > > +{
-> > > > > +??????????int ret;
-> > > > > +
-> > > > > +??????????ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> > > > > +??????????????????????????????????????????????????????????&crash_size, &crash_base);
-> > > > > +??????????/* no crashkernel= or invalid value specified */
-> > > > > +??????????if (ret || !crash_size)
-> > > > > +??????????????????????????return;
-> > > > > +
-> > > > > +??????????if (crash_base == 0) {
-> > > > > +??????????????????????????/* Current arm64 boot protocol requires 2MB alignment */
-> > > > > +??????????????????????????crash_base = memblock_find_in_range(0,
-> > > > > +??????????????????????????????????????????????????????????MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, SZ_2M);
-> > > > > +??????????????????????????if (crash_base == 0) {
-> > > > > +??????????????????????????????????????????pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> > > > > +??????????????????????????????????????????????????????????crash_size);
-> > > > > +??????????????????????????????????????????return;
-> > > > > +??????????????????????????}
-> > > > > +??????????????????????????memblock_reserve(crash_base, crash_size);
-> > > > > 
-> > > > I am not pretty sure the context here, but
-> > > > can we use below code piece instead of the above lines?
-> > > > ????????????????if (crash_base == 0)
-> > > > ????????????????????????????????memblock_alloc(crash_size, SZ_2M);
-> > > Either would be fine here.
-> > > 
-> > Hello AKASHI, maybe you can succeed to find the base with memblock_find_in_range(),??
-> > but that doesn't mean you will also succeed to reserve them with memblock_reserve followed.
-> 
-> We avoid memblock_alloc() here because it panics on failure. This could happen
-
-Thank you for pointing this out. I forgot it.
-
-> if user asks for an unusually large crashkernel size. Better to print a message
-> and keep booting. Checking the return value of memblock_reserve() seems like a
-> good thing to do though.
-
-Yeah, but it is unlikely that the function fails in this context (just
-after find_in_range at early boot time) and nobody in arm64/mm/*.c checks
-a return value of memblock_reserve() as well.
-So I want to keep the code unchanged.
-
-Thanks,
--Takahiro AKASHI
-
-> 
-> > 
-> > Thanks,
-> > Dennis
-> > > 
-> > > 
-> > > Thanks,
-> > > -Takahiro AKASHI
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > Dennis
-> > > > 
-> > > > > 
-> > > > > +
-> > > > > +??????????} else {
-> > > > > +??????????????????????????/* User specifies base address explicitly. */
-> > > > > +??????????????????????????if (!memblock_is_region_memory(crash_base, crash_size) ||
-> > > > > +??????????????????????????????????????????memblock_is_region_reserved(crash_base, crash_size)) {
-> > > > > +??????????????????????????????????????????pr_warn("crashkernel has wrong address or size\n");
-> > > > > +??????????????????????????????????????????return;
-> > > > > +??????????????????????????}
-> > > > > +
-> > > > > +??????????????????????????if (!IS_ALIGNED(crash_base, SZ_2M)) {
-> > > > > +??????????????????????????????????????????pr_warn("crashkernel base address is not 2MB aligned\n");
-> > > > > +??????????????????????????????????????????return;
-> > > > > +??????????????????????????}
-> > > > > +
-> > > > > +??????????????????????????memblock_reserve(crash_base, crash_size);
-> > > > > +??????????}
-> > > > > +
-> > > > > +??????????pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-> > > > > +??????????????????????????crash_size >> 20, crash_base >> 20);
-> > > > > +
-> > > > > +??????????crashk_res.start = crash_base;
-> > > > > +??????????crashk_res.end = crash_base + crash_size - 1;
-> > > > > +}
-> > > > > +#else
-> > > > > +static void __init reserve_crashkernel(void)
-> > > > > +{
-> > > > > +??????????;
-> > > > > +}
-> > > > > +#endif /* CONFIG_KEXEC_CORE */
-> > > > > +
-> > > > > ??/*
-> > > > > ?? * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-> > > > > ?? * currently assumes that for memory starting above 4G, 32-bit devices will
-> > > > > @@ -289,6 +402,8 @@ void __init arm64_memblock_init(void)
-> > > > > ????????????}
-> > > > > ??#endif
-> > > > > 
-> > > > > +??????????reserve_crashkernel();
-> > > > > +
-> > > > > ????????????early_init_fdt_scan_reserved_mem();
-> > > > > 
-> > > > > ????????????/* 4GB maximum for 32-bit only capable devices */
-> > > > > --
-> > > > > 2.9.0
-> > > > > 
-> > > > > 
-> > > > > _______________________________________________
-> > > > > linux-arm-kernel mailing list
-> > > > > linux-arm-kernel@lists.infradead.org
-> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > > > > 
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksDQoNCj4gRnJvbTogJ0RhdmUgWW91bmcnIFttYWlsdG86ZHlvdW5nQHJlZGhhdC5jb21dDQo+
+IFNlbnQ6IE1vbmRheSwgSnVseSAxOCwgMjAxNiA2OjAyIFBNDQo+IE9uIDA3LzE1LzE2IGF0IDEx
+OjUwYW0sIOays+WQiOiLseWujyAvIEtBV0FJ77yMSElERUhJUk8gd3JvdGU6DQo+ID4gSGkgRGF2
+ZSwNCj4gPg0KPiA+IFRoYW5rcyBmb3IgeW91ciByZXBseS4NCj4gPg0KPiA+ID4gRnJvbTogJ0Rh
+dmUgWW91bmcnIFttYWlsdG86ZHlvdW5nQHJlZGhhdC5jb21dDQo+ID4gPiBTZW50OiBXZWRuZXNk
+YXksIEp1bHkgMTMsIDIwMTYgMTE6MDQgQU0NCj4gPiA+DQo+ID4gPiBPbiAwNy8xMi8xNiBhdCAw
+Mjo0OWFtLCDmsrPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+ID4gPiBI
+aSBEYXZlLA0KPiA+ID4gPg0KPiA+ID4gPiBUaGFua3MgZm9yIHRoZSBjb21tZW50cy4NCj4gPiA+
+ID4NCj4gPiA+ID4gPiBGcm9tOiBEYXZlIFlvdW5nIFttYWlsdG86ZHlvdW5nQHJlZGhhdC5jb21d
+DQo+ID4gPiA+ID4gU2VudDogTW9uZGF5LCBKdWx5IDExLCAyMDE2IDU6MzUgUE0NCj4gPiA+ID4g
+Pg0KPiA+ID4gPiA+IE9uIDA3LzA1LzE2IGF0IDA4OjMzcG0sIEhpZGVoaXJvIEthd2FpIHdyb3Rl
+Og0KW3NuaXBdIA0KPiA+ID4gPiA+IEFzIGZvciB0aGlzIHBhdGNoIEknbSBub3Qgc3VyZSBpdCBp
+cyBzYWZlIHRvIHJlcGxhY2UgdGhlDQo+ID4gPiA+ID4gc21wX3NlbmRfc3RvcCB3aXRoIHRoZSBr
+ZHVtcCBmcmllbmRseSBmdW5jdGlvbi4gSSdtIGFsc28gbm90IHN1cmUgaWYNCj4gPiA+ID4gPiB0
+aGUga2R1bXAgZnJpZW5kbHkgZnVuY3Rpb24gaXMgc2FmZSBmb3Iga2R1bXAuIFdpbGwgZ2xhZCB0
+byBoZWFyDQo+ID4gPiA+ID4gb3BpbmlvbnMgZnJvbSBvdGhlciBhcmNoIGV4cGVydHMuDQo+ID4g
+PiA+DQo+ID4gPiA+IFRoaXMgc3R1ZmYgZGVwZW5kcyBvbiBhcmNoaXRlY3R1cmVzLCBzbyBJIHNw
+ZWFrIG9ubHkgYWJvdXQNCj4gPiA+ID4geDg2ICh0aGUgbG9naWMgZG9lc24ndCBjaGFuZ2Ugb24g
+b3RoZXIgYXJjaGl0ZWN0dXJlcyBhdCB0aGlzIHRpbWUpLg0KPiA+ID4gPg0KPiA+ID4gPiBrZHVt
+cCBwYXRoIHdpdGggY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMgZGlzYWJsZWQ6DQo+ID4gPiA+
+ICBwYW5pYygpDQo+ID4gPiA+ICAgIF9fY3Jhc2hfa2V4ZWMoKQ0KPiA+ID4gPiAgICAgIGNyYXNo
+X3NldHVwX3JlZ3MoKQ0KPiA+ID4gPiAgICAgIGNyYXNoX3NhdmVfdm1jb3JlaW5mbygpDQo+ID4g
+PiA+ICAgICAgbWFjaGluZV9jcmFzaF9zaHV0ZG93bigpDQo+ID4gPiA+ICAgICAgICBuYXRpdmVf
+bWFjaGluZV9jcmFzaF9zaHV0ZG93bigpDQo+ID4gPiA+ICAgICAgICAgIHBhbmljX3NtcF9zZW5k
+X3N0b3AoKSAvKiBtb3N0bHkgc2FtZSBhcyBvcmlnaW5hbA0KPiA+ID4gPiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICoga2R1bXBfbm1pX3Nob290ZG93bl9jcHVzKCkNCj4gPiA+ID4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqLw0KPiA+ID4gPg0KPiA+ID4gPiBrZHVt
+cCBwYXRoIHdpdGggY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMgZW5hYmxlZDoNCj4gPiA+ID4g
+IHBhbmljKCkNCj4gPiA+ID4gICAgcGFuaWNfc21wX3NlbmRfc3RvcCgpDQo+ID4gPiA+ICAgIF9f
+Y3Jhc2hfa2V4ZWMoKQ0KPiA+ID4gPiAgICAgIGNyYXNoX3NldHVwX3JlZ3MoKQ0KPiA+ID4gPiAg
+ICAgIGNyYXNoX3NhdmVfdm1jb3JlaW5mbygpDQo+ID4gPiA+ICAgICAgbWFjaGluZV9jcmFzaF9z
+aHV0ZG93bigpDQo+ID4gPiA+ICAgICAgICBuYXRpdmVfbWFjaGluZV9jcmFzaF9zaHV0ZG93bigp
+DQo+ID4gPiA+ICAgICAgICAgIHBhbmljX3NtcF9zZW5kX3N0b3AoKSAvLyBkbyBub3RoaW5nDQo+
+ID4gPiA+DQo+ID4gPiA+IFRoZSBkaWZmZXJlbmNlIGlzIHRoYXQgc3RvcHBpbmcgb3RoZXIgQ1BV
+cyBiZWZvcmUgY3Jhc2hfc2V0dXBfcmVncygpDQo+ID4gPiA+IGFuZCBjcmFzaF9zYXZlX3ZtY29y
+ZWluZm8oKSBvciBub3QuICBTaW5jZSBjcmFzaF9zZXR1cF9yZWdzKCkgYW5kDQo+ID4gPiA+IGNy
+YXNoX3NhdmVfdm1jb3JlaW5mbygpIGp1c3Qgc2F2ZSBpbmZvcm1hdGlvbiB0byBzb21lIG1lbW9y
+eSBhcmVhLA0KPiA+ID4gPiB0aGV5IHdvdWxkbid0IGJlIGFmZmVjdGVkIGJ5IHBhbmljX3NtcF9z
+ZW5kX3N0b3AoKS4gIFRoaXMgbWVhbnMNCj4gPiA+ID4gcGxhY2luZyBwYW5pY19zbXBfc2VuZF9z
+dG9wIGJlZm9yZSBfX2NyYXNoX2tleGVjIGlzIHNhZmUuDQo+ID4gPiA+DQo+ID4gPiA+IEJUVywg
+SSBub3RpY2VkIG15IHBhdGNoIGJyZWFrcyBYZW4ga2VybmVsLiAgSSdsbCBmaXggaXQgaW4gdGhl
+IG5leHQNCj4gPiA+ID4gdmVyc2lvbi4NCj4gPiA+DQo+ID4gPiBCdXQgaXQgZG9lcyBicmVha3Mg
+c3R1ZmYgd2hpY2ggZGVwZW5kcyBvbiBjcHUgbm90IGJlaW5nIGRpc2FibGVkIGxpa2UgcHJvYmxl
+bSAxIHlvdSBtZW50aW9uZWQgaW4gcGF0Y2ggbG9nLg0KPiA+DQo+ID4gQXMgSSBtZW50aW9uZWQg
+aW4gdGhlIGRlc2NyaXB0aW9uIG9mIHRoaXMgcGF0Y2gsIHdlIHNob3VsZCBzdG9wDQo+ID4gb3Ro
+ZXIgQ1BVcyBBU0FQIHRvIHByZXNlcnZlIGN1cnJlbnQgc3RhdGUgZWl0aGVyDQo+ID4gY3Jhc2hf
+a2V4ZWNfcG9zdF9ub3RpZmllcnMgaXMgZW5hYmxlZCBvciBub3QuDQo+ID4gVGhlbiwgYWxsIHJl
+bWFpbmluZyBwcm9jZWR1cmVzIHNob3VsZCB3b3JrIHdlbGwNCj4gPiBhZnRlciBzdG9wcGluZyBv
+dGhlciBDUFVzIChidXQga2VlcCB0aGUgQ1BVIG1hcCBvbmxpbmUpLg0KPiA+DQo+ID4gVml2ZWsg
+YWxzbyBtZW50aW9uZWQgc2ltaWxhciB0aGluZ3M6DQo+ID4gaHR0cHM6Ly9sa21sLm9yZy9sa21s
+LzIwMTUvNy8xNC80MzMNCj4gDQo+IFRoZSBpbXBsZW1lbnRhdGlvbiBpbiB0aGlzIHBhdGNoc2V0
+IGlzIGRpZmZlcmVudCBmcm9tIHN1Z2dlc3Rpb24gaW4gYWJvdmUgbGluaz8NCj4gDQo+IEkgdGhp
+bmsgVml2ZWsncyBzdWdnZXN0aW9uIGlzIGEgZ29vZCBpZGVhLCB0byBkcm9wIHNtcF9zZW5kX3N0
+b3AgYW5kIGRvIGJlbG93Og0KPiANCj4gc3RvcF9jcHVzX3NhdmVfcmVnaXN0ZXJfc3RhdGU7DQo+
+IA0KPiBpZiAoIWNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzKQ0KPiAJY3Jhc2hfa2V4ZWMoKQ0K
+PiBhdG9taWNfbm90aWZpZXJfY2FsbF9jaGFpbigpDQo+IGttc2dfZHVtcCgpDQo+IA0KPiBJJ20g
+anVzdCBjb21tZW50aW5nIGZyb20gY29kZSBmbG93IHBvaW50IG9mIHZpZXcsIHRoZSBkZXRhaWwg
+aW1wbGVtZW50YXRpb24NCj4gZGVmaW5pdGVseSBuZWVkIG1vcmUgY29tbWVudHMgZnJvbSBBcmNo
+IGV4cGVydHMuDQo+IA0KPiBBbnkgcmVhc29uIGRpZCBub3QgbW92ZSB0aGUga2R1bXAgZnJpZW5k
+bHkgZnVuY3Rpb24gdG8gZWFybGllciBwb2ludCBsaWtlDQo+IGJlZm9yZSBwcmV2aW91cyBfX2Ny
+YXNoX2tleGVjKCkgYmVsb3c/DQo+ICAgICAgICAgaWYgKCFjcmFzaF9rZXhlY19wb3N0X25vdGlm
+aWVycykgew0KPiAgICAgICAgICAgICAgICAgcHJpbnRrX25taV9mbHVzaF9vbl9wYW5pYygpOw0K
+PiAgICAgICAgICAgICAgICAgX19jcmFzaF9rZXhlYyhOVUxMKTsNCj4gICAgICAgICB9DQoNClRo
+ZSByZWFzb24gd2h5IHRoZSBpbXBsZW1lbnRhdGlvbiBkaWZmZXJzIGZyb20gVml2ZWsncyBpcyB0
+byBrZWVwDQp0aGUgY3VycmVudCBjb2RlIGZsb3cgaWYgY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmll
+cnMgaXMgbm90IHNwZWNpZmllZC4NCg0KSWYgd2UgYXBwbHkgVml2ZWsncyBvciB5b3VyIHN1Z2dl
+c3Rpb24sIGl0IG1heSBhbHdheXMgY2F1c2Uga2R1bXANCnRvIGZhaWwgb24gTUlQUyBPQ1RFT04g
+ZHVlIHRvIFByb2JsZW0gMS4gIEkgZG9uJ3Qgd2FudCB0byBtYWtlIHRoaW5ncw0KYW55IHdvcnNl
+LiAgSSBtYXkgcG9zdCBhIHBhdGNoIGZvciBNSVBTIE9DVEVPTiwgYnV0IEkgY2FuJ3QgdGVzdCBp
+dC4NCkZvciBvdGhlciBhcmNoaXRlY3R1cmVzLCBJJ20gbm90IHN1cmUgd2hhdCBwcm9ibGVtcyB0
+aGVyZSBhcmUuDQpTbyBhdCBmaXJzdCwgSSB3YW50IHRvIGZpeCB0aGUgY2FzZSB3aGVyZSBjcmFz
+aF9rZXhlY19wb3N0X25vdGlmaWVycyBpcw0Kc3BlY2lmaWVkIG9uIHg4Ni4gIFRoZW4sIGlmIGFs
+bCBvdGhlciBhcmNoaXRlY3R1cmVzIHN1cHBvcnQNCmBzdG9wIG90aGVyIENQVXMgYmVmb3JlIGNy
+YXNoX2tleGVjJywgc3dpdGNoIHRvIHlvdXIgb3IgVml2ZWsncw0Kc3VnZ2VzdGluZyBjb2RlLg0K
+DQpJcyB0aGlzIGFjY2VwdGFibGU/DQoNCkJlc3QgcmVnYXJkcywNCg0KSGlkZWhpcm8gS2F3YWkN
+CkhpdGFjaGksIEx0ZC4gUmVzZWFyY2ggJiBEZXZlbG9wbWVudCBHcm91cA0KDQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
