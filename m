@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 19 Jul 2016 09:26:19 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC 3/3] kexec: extend kexec_file_load system call
-Message-ID: <20160719132619.GA3290@redhat.com>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <20160712014201.11456-4-takahiro.akashi@linaro.org>
- <20160715130955.GC23514@redhat.com>
- <20160715131950.GB19840@leverpostej>
- <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
- <20160718100704.GB10069@leverpostej>
- <20160719005556.GE3326@dhcp-128-65.nay.redhat.com>
- <20160719105049.GD27022@leverpostej>
- <20160719122406.GA18124@redhat.com>
- <20160719124651.GA21007@leverpostej>
+Date: Tue, 19 Jul 2016 14:27:54 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v22 1/8] arm64: kdump: reserve memory for crash dump kernel
+Message-ID: <20160719132736.GB21007@leverpostej>
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-2-takahiro.akashi@linaro.org>
+ <20160719093906.GA20732@arm.com>
+ <20160719102815.GE20774@linaro.org>
+ <20160719104103.GB20990@arm.com>
+ <1468932537.27473.6.camel@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160719124651.GA21007@leverpostej>
+In-Reply-To: <1468932537.27473.6.camel@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,72 +20,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: bhe@redhat.com, arnd@arndb.de, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Mark Salter <msalter@redhat.com>
+Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, Dennis Chen <dennis.chen@arm.com>, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Jul 19, 2016 at 01:47:28PM +0100, Mark Rutland wrote:
-> On Tue, Jul 19, 2016 at 08:24:06AM -0400, Vivek Goyal wrote:
-> > On Tue, Jul 19, 2016 at 11:52:00AM +0100, Mark Rutland wrote:
-> > > Regardless, this extended syscall changes some underlying assumptions
-> > > made with the development of kexec_file_load, and I think treating this
-> > > as an extension is not a great idea. From a user's perspective there is
-> > > little difference between passing an additional flag or using a
-> > > different syscall number, so I don't think that we gain much by altering
-> > > the existing prototype relative to allocating a new syscall number.
-> > 
-> > If we are providing/opening up additional flags, I can't think what will
-> > it break. Same flag was invalid in old kernel but new kernel supports 
-> > it and will accept it. So it sounds reasonable to me to add new flags.
-> > 
-> > If existing users are not broken, then I think it might be a good idea
-> > to extend existing syscall. Otherwise userspace will have to be modified
-> > to understand a 3rd syscall also and an additional option will show up
-> > which asks users to specify which syscall to use. So extending existing
-> > syscall might keep it little simple for users.
-> 
-> I don't follow.
-> 
-> To use the new feature, you have to modify userspace anyway, as you
-> require userspace to pass information which it did not previously pass
-> (in the new arguments added to the syscall).
-> 
-> The presence of a new syscall does not imply the absence of the old
-> syscall, so you can always use that be default unless the user asks for
-> asomething only the new syscall provides. Regardless of the
-> syscall/flags difference, you still have to detect whether the new
-> functionality is present somehow.
-> 
-
-Hmm., so current idea is that we have two syscalls() which are *ideally*
-supposed to work for all arches. Difference between two is that first
-one does not support kernel signature verification while second one does.
-
-By default old syscall is used and user can force using new syscall using
-option --kexec-file-load.
-
-If a user DTB is present, I was hoping that it will continue to work the
-same way. Both the sycalls can be used and can handle DTB. If we introduce
-a 3rd syscall, that means only first and 3rd syscall can handle DTB and
-we need to introduce one more option which tells whether to use
-kexec_load() or use the 3rd new syscall. And that's what I am trying
-to avoid.
-
-Vivek
-
-> > BTW, does kexec_load() needs to be modified too to handle DT?
-> 
-> No, at least for arm64. In the kexec_load case userspace provides the
-> DTB as a raw segment, and the user-provided purgatory sets up registers
-> to pass that to the new kernel.
-> 
-> Thanks,
-> Mark.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBKdWwgMTksIDIwMTYgYXQgMDg6NDg6NTdBTSAtMDQwMCwgTWFyayBTYWx0ZXIgd3Jv
+dGU6Cj4gT24gVHVlLCAyMDE2LTA3LTE5IGF0IDE4OjQxICswODAwLCBEZW5uaXMgQ2hlbiB3cm90
+ZToKPiA+IE9uIFR1ZSwgSnVsIDE5LCAyMDE2IGF0IDA3OjI4OjE2UE0gKzA5MDAsIEFLQVNISSBU
+YWthaGlybyB3cm90ZToKPiA+ID4gT24gVHVlLCBKdWwgMTksIDIwMTYgYXQgMDU6Mzk6MDdQTSAr
+MDgwMCwgRGVubmlzIENoZW4gd3JvdGU6Cj4gPiA+ID4gT24gVHVlLCBKdWwgMTIsIDIwMTYgYXQg
+MDI6MDU6MDdQTSArMDkwMCwgQUtBU0hJIFRha2FoaXJvIHdyb3RlOgo+ID4gPiA+ID4gKy8qCj4g
+PiA+ID4gPiArICogcmVzZXJ2ZV9jcmFzaGtlcm5lbCgpIC0gcmVzZXJ2ZXMgbWVtb3J5IGZvciBj
+cmFzaCBrZXJuZWwKPiA+ID4gPiA+ICsgKgo+ID4gPiA+ID4gKyAqIFRoaXMgZnVuY3Rpb24gcmVz
+ZXJ2ZXMgbWVtb3J5IGFyZWEgZ2l2ZW4gaW4gImNyYXNoa2VybmVsPSIga2VybmVsIGNvbW1hbmQK
+PiA+ID4gPiA+ICsgKiBsaW5lIHBhcmFtZXRlci4gVGhlIG1lbW9yeSByZXNlcnZlZCBpcyB1c2Vk
+IGJ5IGR1bXAgY2FwdHVyZSBrZXJuZWwgd2hlbgo+ID4gPiA+ID4gKyAqIHByaW1hcnkga2VybmVs
+IGlzIGNyYXNoaW5nLgo+ID4gPiA+ID4gKyAqLwo+ID4gPiA+ID4gK3N0YXRpYyB2b2lkIF9faW5p
+dCByZXNlcnZlX2NyYXNoa2VybmVsKHZvaWQpCj4gPiA+ID4gPiArewo+ID4gPiA+ID4gK8KgwqDC
+oMKgwqBpbnQgcmV0Owo+ID4gPiA+ID4gKwo+ID4gPiA+ID4gK8KgwqDCoMKgwqByZXQgPSBwYXJz
+ZV9jcmFzaGtlcm5lbChib290X2NvbW1hbmRfbGluZSwgbWVtYmxvY2tfcGh5c19tZW1fc2l6ZSgp
+LAo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAmY3Jhc2hfc2l6ZSwgJmNyYXNoX2Jhc2UpOwo+ID4gPiA+ID4gK8KgwqDC
+oMKgwqAvKiBubyBjcmFzaGtlcm5lbD0gb3IgaW52YWxpZCB2YWx1ZSBzcGVjaWZpZWQgKi8KPiA+
+ID4gPiA+ICvCoMKgwqDCoMKgaWYgKHJldCB8fCAhY3Jhc2hfc2l6ZSkKPiA+ID4gPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsKPiA+ID4gPiA+ICsKPiA+ID4gPiA+ICvCoMKg
+wqDCoMKgaWYgKGNyYXNoX2Jhc2UgPT0gMCkgewo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgLyogQ3VycmVudCBhcm02NCBib290IHByb3RvY29sIHJlcXVpcmVzIDJNQiBhbGln
+bm1lbnQgKi8KPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNyYXNoX2Jhc2Ug
+PSBtZW1ibG9ja19maW5kX2luX3JhbmdlKDAsCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE1FTUJMT0NLX0FMTE9DX0FD
+Q0VTU0lCTEUsIGNyYXNoX3NpemUsIFNaXzJNKTsKPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGlmIChjcmFzaF9iYXNlID09IDApIHsKPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl93YXJuKCJVbmFibGUgdG8gYWxsb2NhdGUg
+Y3Jhc2hrZXJuZWwgKHNpemU6JWxseClcbiIsCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNyYXNoX3NpemUpOwo+ID4g
+PiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsK
+PiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiA+ID4gPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoG1lbWJsb2NrX3Jlc2VydmUoY3Jhc2hfYmFzZSwgY3Jhc2hfc2l6
+ZSk7Cj4gPiA+ID4gPiAKPiA+ID4gPiBJIGFtIG5vdCBwcmV0dHkgc3VyZSB0aGUgY29udGV4dCBo
+ZXJlLCBidXQKPiA+ID4gPiBjYW4gd2UgdXNlIGJlbG93IGNvZGUgcGllY2UgaW5zdGVhZCBvZiB0
+aGUgYWJvdmUgbGluZXM/Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoGlmIChjcmFzaF9iYXNlID09
+IDApCj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtZW1ibG9ja19hbGxv
+YyhjcmFzaF9zaXplLCBTWl8yTSk7Cj4gPiA+IEVpdGhlciB3b3VsZCBiZSBmaW5lIGhlcmUuCj4g
+PiA+IAo+ID4gSGVsbG8gQUtBU0hJLCBtYXliZSB5b3UgY2FuIHN1Y2NlZWQgdG8gZmluZCB0aGUg
+YmFzZSB3aXRoIG1lbWJsb2NrX2ZpbmRfaW5fcmFuZ2UoKSzCoAo+ID4gYnV0IHRoYXQgZG9lc24n
+dCBtZWFuIHlvdSB3aWxsIGFsc28gc3VjY2VlZCB0byByZXNlcnZlIHRoZW0gd2l0aCBtZW1ibG9j
+a19yZXNlcnZlIGZvbGxvd2VkLgo+IAo+IFdlIGF2b2lkIG1lbWJsb2NrX2FsbG9jKCkgaGVyZSBi
+ZWNhdXNlIGl0IHBhbmljcyBvbiBmYWlsdXJlLiBUaGlzIGNvdWxkIGhhcHBlbgo+IGlmIHVzZXIg
+YXNrcyBmb3IgYW4gdW51c3VhbGx5IGxhcmdlIGNyYXNoa2VybmVsIHNpemUuIEJldHRlciB0byBw
+cmludCBhIG1lc3NhZ2UKPiBhbmQga2VlcCBib290aW5nLiBDaGVja2luZyB0aGUgcmV0dXJuIHZh
+bHVlIG9mIG1lbWJsb2NrX3Jlc2VydmUoKSBzZWVtcyBsaWtlIGEKPiBnb29kIHRoaW5nIHRvIGRv
+IHRob3VnaC4KCkFub3RoZXIgb3B0aW9uIHdvdWxkIGJlIHRvIGFkZCBhIG1lbWJsb2NrX3RyeV9h
+bGxvYygpIGZ1bmN0aW9uIHRvIHRoZQptZW1ibG9jayBBUEksIHdoaWNoIGluIGNhc2Ugb2YgZmFp
+bHVyZSByZXR1cm5zIDAgcmF0aGVyIHRoYW4gdHJpZ2dlcmluZwphIHBhbmljKCkuIFdlJ2Qgc3Rp
+bGwgaGF2ZSB0byBjaGVjayB0aGUgcmV0dXJuIHZhbHVlLCBidXQgYWxsIHRoZQptZW1ibG9jayBt
+YW5pcHVsYXRpb24gd291bGQgYmUgaW4gb25lIHBsYWNlLgoKSXQgbG9va3MgbGlrZSBhZGRpbmcg
+dGhhdCBpcyBmYWlybHkgc2ltcGxlOgoKcGh5c19hZGRyX3QgX19pbml0IG1lbWJsb2NrX3RyeV9h
+bGxvYyhwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbikKewoJcmV0dXJuIF9fbWVt
+YmxvY2tfYWxsb2NfYmFzZShzaXplLCBhbGlnbiwgTUVNQkxPQ0tfQUxMT0NfQUNDRVNTSUJMRSk7
+Cn0KClRoYW5rcywKTWFyay4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
