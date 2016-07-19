@@ -1,17 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 19 Jul 2016 14:27:54 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v22 1/8] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20160719132736.GB21007@leverpostej>
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-2-takahiro.akashi@linaro.org>
- <20160719093906.GA20732@arm.com>
- <20160719102815.GE20774@linaro.org>
- <20160719104103.GB20990@arm.com>
- <1468932537.27473.6.camel@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1468932537.27473.6.camel@redhat.com>
+Message-Id: <cover.1468970114.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH v1 0/4] arm64 kexec-tools patches
+Date: Tue, 19 Jul 2016 23:28:13 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,67 +11,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Salter <msalter@redhat.com>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, Dennis Chen <dennis.chen@arm.com>, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-T24gVHVlLCBKdWwgMTksIDIwMTYgYXQgMDg6NDg6NTdBTSAtMDQwMCwgTWFyayBTYWx0ZXIgd3Jv
-dGU6Cj4gT24gVHVlLCAyMDE2LTA3LTE5IGF0IDE4OjQxICswODAwLCBEZW5uaXMgQ2hlbiB3cm90
-ZToKPiA+IE9uIFR1ZSwgSnVsIDE5LCAyMDE2IGF0IDA3OjI4OjE2UE0gKzA5MDAsIEFLQVNISSBU
-YWthaGlybyB3cm90ZToKPiA+ID4gT24gVHVlLCBKdWwgMTksIDIwMTYgYXQgMDU6Mzk6MDdQTSAr
-MDgwMCwgRGVubmlzIENoZW4gd3JvdGU6Cj4gPiA+ID4gT24gVHVlLCBKdWwgMTIsIDIwMTYgYXQg
-MDI6MDU6MDdQTSArMDkwMCwgQUtBU0hJIFRha2FoaXJvIHdyb3RlOgo+ID4gPiA+ID4gKy8qCj4g
-PiA+ID4gPiArICogcmVzZXJ2ZV9jcmFzaGtlcm5lbCgpIC0gcmVzZXJ2ZXMgbWVtb3J5IGZvciBj
-cmFzaCBrZXJuZWwKPiA+ID4gPiA+ICsgKgo+ID4gPiA+ID4gKyAqIFRoaXMgZnVuY3Rpb24gcmVz
-ZXJ2ZXMgbWVtb3J5IGFyZWEgZ2l2ZW4gaW4gImNyYXNoa2VybmVsPSIga2VybmVsIGNvbW1hbmQK
-PiA+ID4gPiA+ICsgKiBsaW5lIHBhcmFtZXRlci4gVGhlIG1lbW9yeSByZXNlcnZlZCBpcyB1c2Vk
-IGJ5IGR1bXAgY2FwdHVyZSBrZXJuZWwgd2hlbgo+ID4gPiA+ID4gKyAqIHByaW1hcnkga2VybmVs
-IGlzIGNyYXNoaW5nLgo+ID4gPiA+ID4gKyAqLwo+ID4gPiA+ID4gK3N0YXRpYyB2b2lkIF9faW5p
-dCByZXNlcnZlX2NyYXNoa2VybmVsKHZvaWQpCj4gPiA+ID4gPiArewo+ID4gPiA+ID4gK8KgwqDC
-oMKgwqBpbnQgcmV0Owo+ID4gPiA+ID4gKwo+ID4gPiA+ID4gK8KgwqDCoMKgwqByZXQgPSBwYXJz
-ZV9jcmFzaGtlcm5lbChib290X2NvbW1hbmRfbGluZSwgbWVtYmxvY2tfcGh5c19tZW1fc2l6ZSgp
-LAo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAmY3Jhc2hfc2l6ZSwgJmNyYXNoX2Jhc2UpOwo+ID4gPiA+ID4gK8KgwqDC
-oMKgwqAvKiBubyBjcmFzaGtlcm5lbD0gb3IgaW52YWxpZCB2YWx1ZSBzcGVjaWZpZWQgKi8KPiA+
-ID4gPiA+ICvCoMKgwqDCoMKgaWYgKHJldCB8fCAhY3Jhc2hfc2l6ZSkKPiA+ID4gPiA+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsKPiA+ID4gPiA+ICsKPiA+ID4gPiA+ICvCoMKg
-wqDCoMKgaWYgKGNyYXNoX2Jhc2UgPT0gMCkgewo+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgLyogQ3VycmVudCBhcm02NCBib290IHByb3RvY29sIHJlcXVpcmVzIDJNQiBhbGln
-bm1lbnQgKi8KPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNyYXNoX2Jhc2Ug
-PSBtZW1ibG9ja19maW5kX2luX3JhbmdlKDAsCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE1FTUJMT0NLX0FMTE9DX0FD
-Q0VTU0lCTEUsIGNyYXNoX3NpemUsIFNaXzJNKTsKPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGlmIChjcmFzaF9iYXNlID09IDApIHsKPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl93YXJuKCJVbmFibGUgdG8gYWxsb2NhdGUg
-Y3Jhc2hrZXJuZWwgKHNpemU6JWxseClcbiIsCj4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNyYXNoX3NpemUpOwo+ID4g
-PiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsK
-PiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiA+ID4gPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoG1lbWJsb2NrX3Jlc2VydmUoY3Jhc2hfYmFzZSwgY3Jhc2hfc2l6
-ZSk7Cj4gPiA+ID4gPiAKPiA+ID4gPiBJIGFtIG5vdCBwcmV0dHkgc3VyZSB0aGUgY29udGV4dCBo
-ZXJlLCBidXQKPiA+ID4gPiBjYW4gd2UgdXNlIGJlbG93IGNvZGUgcGllY2UgaW5zdGVhZCBvZiB0
-aGUgYWJvdmUgbGluZXM/Cj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoGlmIChjcmFzaF9iYXNlID09
-IDApCj4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtZW1ibG9ja19hbGxv
-YyhjcmFzaF9zaXplLCBTWl8yTSk7Cj4gPiA+IEVpdGhlciB3b3VsZCBiZSBmaW5lIGhlcmUuCj4g
-PiA+IAo+ID4gSGVsbG8gQUtBU0hJLCBtYXliZSB5b3UgY2FuIHN1Y2NlZWQgdG8gZmluZCB0aGUg
-YmFzZSB3aXRoIG1lbWJsb2NrX2ZpbmRfaW5fcmFuZ2UoKSzCoAo+ID4gYnV0IHRoYXQgZG9lc24n
-dCBtZWFuIHlvdSB3aWxsIGFsc28gc3VjY2VlZCB0byByZXNlcnZlIHRoZW0gd2l0aCBtZW1ibG9j
-a19yZXNlcnZlIGZvbGxvd2VkLgo+IAo+IFdlIGF2b2lkIG1lbWJsb2NrX2FsbG9jKCkgaGVyZSBi
-ZWNhdXNlIGl0IHBhbmljcyBvbiBmYWlsdXJlLiBUaGlzIGNvdWxkIGhhcHBlbgo+IGlmIHVzZXIg
-YXNrcyBmb3IgYW4gdW51c3VhbGx5IGxhcmdlIGNyYXNoa2VybmVsIHNpemUuIEJldHRlciB0byBw
-cmludCBhIG1lc3NhZ2UKPiBhbmQga2VlcCBib290aW5nLiBDaGVja2luZyB0aGUgcmV0dXJuIHZh
-bHVlIG9mIG1lbWJsb2NrX3Jlc2VydmUoKSBzZWVtcyBsaWtlIGEKPiBnb29kIHRoaW5nIHRvIGRv
-IHRob3VnaC4KCkFub3RoZXIgb3B0aW9uIHdvdWxkIGJlIHRvIGFkZCBhIG1lbWJsb2NrX3RyeV9h
-bGxvYygpIGZ1bmN0aW9uIHRvIHRoZQptZW1ibG9jayBBUEksIHdoaWNoIGluIGNhc2Ugb2YgZmFp
-bHVyZSByZXR1cm5zIDAgcmF0aGVyIHRoYW4gdHJpZ2dlcmluZwphIHBhbmljKCkuIFdlJ2Qgc3Rp
-bGwgaGF2ZSB0byBjaGVjayB0aGUgcmV0dXJuIHZhbHVlLCBidXQgYWxsIHRoZQptZW1ibG9jayBt
-YW5pcHVsYXRpb24gd291bGQgYmUgaW4gb25lIHBsYWNlLgoKSXQgbG9va3MgbGlrZSBhZGRpbmcg
-dGhhdCBpcyBmYWlybHkgc2ltcGxlOgoKcGh5c19hZGRyX3QgX19pbml0IG1lbWJsb2NrX3RyeV9h
-bGxvYyhwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbikKewoJcmV0dXJuIF9fbWVt
-YmxvY2tfYWxsb2NfYmFzZShzaXplLCBhbGlnbiwgTUVNQkxPQ0tfQUxMT0NfQUNDRVNTSUJMRSk7
-Cn0KClRoYW5rcywKTWFyay4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+This series adds the core support for kexec re-boot on ARM64.
+
+Linux kernel support for kexec reboot [1] has been merged to the ARM64
+for-next/core branch with the expectation that it will be included in the v4.8
+stable kernel release.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+
+- Geoff
+
+The following changes since commit 8d614008609f6ad5d09263767ebc771e06a173f0:
+
+  arm: use zImage size from header (2016-07-15 13:12:28 +0900)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geoff/kexec-tools.git for-merge-arm64-v1
+
+for you to fetch changes up to 5b7aa684a9f2cf26a71b78f82d279f1d93fd644a:
+
+  arm64: Add support for binary image files (2016-07-19 16:08:38 -0700)
+
+----------------------------------------------------------------
+AKASHI Takahiro (1):
+      kexec: (bugfix) calc correct end address of memory ranges in device tree
+
+Geoff Levand (2):
+      kexec: Add common device tree routines
+      arm64: Add arm64 kexec support
+
+Pratyush Anand (1):
+      arm64: Add support for binary image files
+
+ configure.ac                            |   3 +
+ kexec/Makefile                          |   5 +
+ kexec/arch/arm64/Makefile               |  40 ++
+ kexec/arch/arm64/crashdump-arm64.c      |  21 +
+ kexec/arch/arm64/crashdump-arm64.h      |  12 +
+ kexec/arch/arm64/image-header.h         |  94 +++
+ kexec/arch/arm64/include/arch/options.h |  43 ++
+ kexec/arch/arm64/kexec-arm64.c          | 995 ++++++++++++++++++++++++++++++++
+ kexec/arch/arm64/kexec-arm64.h          |  58 ++
+ kexec/arch/arm64/kexec-elf-arm64.c      | 130 +++++
+ kexec/arch/arm64/kexec-image-arm64.c    |  63 ++
+ kexec/dt-ops.c                          | 139 +++++
+ kexec/dt-ops.h                          |  13 +
+ kexec/fs2dt.c                           |   5 +-
+ kexec/kexec-syscall.h                   |   8 +-
+ purgatory/Makefile                      |   1 +
+ purgatory/arch/arm64/Makefile           |  18 +
+ purgatory/arch/arm64/entry.S            |  59 ++
+ purgatory/arch/arm64/purgatory-arm64.c  |  35 ++
+ 19 files changed, 1738 insertions(+), 4 deletions(-)
+ create mode 100644 kexec/arch/arm64/Makefile
+ create mode 100644 kexec/arch/arm64/crashdump-arm64.c
+ create mode 100644 kexec/arch/arm64/crashdump-arm64.h
+ create mode 100644 kexec/arch/arm64/image-header.h
+ create mode 100644 kexec/arch/arm64/include/arch/options.h
+ create mode 100644 kexec/arch/arm64/kexec-arm64.c
+ create mode 100644 kexec/arch/arm64/kexec-arm64.h
+ create mode 100644 kexec/arch/arm64/kexec-elf-arm64.c
+ create mode 100644 kexec/arch/arm64/kexec-image-arm64.c
+ create mode 100644 kexec/dt-ops.c
+ create mode 100644 kexec/dt-ops.h
+ create mode 100644 purgatory/arch/arm64/Makefile
+ create mode 100644 purgatory/arch/arm64/entry.S
+ create mode 100644 purgatory/arch/arm64/purgatory-arm64.c
+
+-- 
+2.5.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
