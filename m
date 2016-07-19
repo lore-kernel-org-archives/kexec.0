@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 19 Jul 2016 08:55:56 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC 3/3] kexec: extend kexec_file_load system call
-Message-ID: <20160719005556.GE3326@dhcp-128-65.nay.redhat.com>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <20160712014201.11456-4-takahiro.akashi@linaro.org>
- <20160715130955.GC23514@redhat.com>
- <20160715131950.GB19840@leverpostej>
- <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
- <20160718100704.GB10069@leverpostej>
+Received: from szxga01-in.huawei.com ([58.251.152.64])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bPMP3-00036a-Vg
+ for kexec@lists.infradead.org; Tue, 19 Jul 2016 04:13:07 +0000
+From: zhongjiang <zhongjiang@huawei.com>
+Subject: [PATCH] kexec: add resriction on the kexec_load
+Date: Tue, 19 Jul 2016 12:10:59 +0800
+Message-ID: <1468901459-55185-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160718100704.GB10069@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,63 +20,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, bhe@redhat.com, arnd@arndb.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, ebiederm@xmission.com, bauerman@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: ebiederm@xmission.com, yinghai@kernel.org, horms@verge.net.au, akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org
 
-On 07/18/16 at 11:07am, Mark Rutland wrote:
-> On Mon, Jul 18, 2016 at 10:30:24AM +0800, Dave Young wrote:
-> > On 07/15/16 at 02:19pm, Mark Rutland wrote:
-> > > On Fri, Jul 15, 2016 at 09:09:55AM -0400, Vivek Goyal wrote:
-> > > > On Tue, Jul 12, 2016 at 10:42:01AM +0900, AKASHI Takahiro wrote:
-> > > > 
-> > > > [..]
-> > > > > -SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> > > > > +SYSCALL_DEFINE6(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> > > > >  		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
-> > > > > -		unsigned long, flags)
-> > > > > +		unsigned long, flags, const struct kexec_fdset __user *, ufdset)
-> > > > 
-> > > > Can one add more parameters to existing syscall. Can it break existing
-> > > > programs with new kernel? I was of the impression that one can't do that.
-> > > > But may be I am missing something.
-> > > 
-> > > I think the idea was that we would only look at the new params if a new
-> > > flags was set, and otherwise it would behave as the old syscall.
-> > > 
-> > > Regardless, I think it makes far more sense to add a kexec_file_load2
-> > > syscall if we're going to modify the prototype at all. It's a rather
-> > > different proposition to the existing syscall, and needs to be treated
-> > > as such.
-> > 
-> > I do not think it is worth to add another syscall for extra fds.
-> > We have open(2) as an example for different numbers of arguments
-> > already.
-> 
-> Did we change the syscall interface for that?
-> 
-> I was under the impression that there was always one underlying syscall,
-> and the C library did the right thing to pass the expected information
-> to the underlying syscall.
+From: zhong jiang <zhongjiang@huawei.com>
 
-I'm not sure kexec_load and kexec_file_load were included in glibc, we use
-syscall directly in kexec-tools.
+I hit the following question when run trinity in my system. The
+kernel is 3.4 version. but the mainline have same question to be
+solved. The root cause is the segment size is too large, it can
+expand the most of the area or the whole memory, therefore, it
+may waste an amount of time to abtain a useable page. and other
+cases will block until the test case quit. at the some time,
+OOM will come up.
 
-kexec_load man pages says there are no wrappers for both kexec_load and
-kexec_file_load in glibc.
+ck time:20160628120131-243c5
+rlock reason:SOFT-WATCHDOG detected! on cpu 5.
+CPU 5 Pid: 9485, comm: trinity-c5
+RIP: 0010:[<ffffffff8111a4cf>]  [<ffffffff8111a4cf>] next_zones_zonelist+0x3f/0x60
+RSP: 0018:ffff88088783bc38  EFLAGS: 00000283
+RAX: ffff8808bffd9b08 RBX: ffff88088783bbb8 RCX: ffff88088783bd30
+RDX: ffff88088f15a248 RSI: 0000000000000002 RDI: 0000000000000000
+RBP: ffff88088783bc38 R08: ffff8808bffd8d80 R09: 0000000412c4d000
+R10: 0000000412c4e000 R11: 0000000000000000 R12: 0000000000000002
+R13: 0000000000000000 R14: ffff8808bffd9b00 R15: 0000000000000000
+FS:  00007f91137ee700(0000) GS:ffff88089f2a0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000016161a CR3: 0000000887820000 CR4: 00000000000407e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Process trinity-c5 (pid: 9485, threadinfo ffff88088783a000, task ffff88088f159980)
+Stack:
+ ffff88088783bd88 ffffffff81106eac ffff8808bffd8d80 0000000000000000
+ 0000000000000000 ffffffff8124c2be 0000000000000001 000000000000001e
+ 0000000000000000 ffffffff8124c2be 0000000000000002 ffffffff8124c2be
+Call Trace:
+ [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
+ [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
+ [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
+ [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
+ [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
+ [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
+ [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
+ [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
 
-> 
-> That's rather different to changing the underlying syscall.
-> 
-> Regardless of how this is wrapped in userspace, I do not think modifying
-> the existing prototype is a good idea, and I think this kind of
-> extension needs to be a new syscall.
+The patch just add condition on sanity_check_segment_list to
+restriction the segment size.
 
-Hmm, as I replied to Vivek, there is one case about the flags, previously
-the new flag will be regarded as invalid, but not we extend it it will be
-valid, this maybe the only potential bad case.
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ arch/x86/include/asm/kexec.h |  1 +
+ kernel/kexec_core.c          | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
 
-Thanks
-Dave
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index d2434c1..b31a723 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -67,6 +67,7 @@ struct kimage;
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+ #define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_MAX_SEGMENT_SIZE	(5 * 1024 * 1024UL)	/* 5M */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 448127d..35c5159 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -209,6 +209,18 @@ int sanity_check_segment_list(struct kimage *image)
+ 			return result;
+ 	}
+ 
++
++	/* Verity all segment size donnot exceed the specified size.
++ 	 * if segment size from user space is too large,  a large 
++ 	 * amount of time will be wasted when allocating page. so,
++ 	 * softlockup may be come up.
++ 	 */
++	for (i = 0; i< nr_segments; i++) {
++		if (image->segment[i].memsz > KEXEC_MAX_SEGMENT_SIZE)
++			return result;
++	}
++
++
+ 	/*
+ 	 * Verify we have good destination addresses.  Normally
+ 	 * the caller is responsible for making certain we don't
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
