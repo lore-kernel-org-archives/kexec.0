@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([58.251.152.64])
+Received: from mail-pf0-x22d.google.com ([2607:f8b0:400e:c00::22d])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPMP3-00036a-Vg
- for kexec@lists.infradead.org; Tue, 19 Jul 2016 04:13:07 +0000
-From: zhongjiang <zhongjiang@huawei.com>
-Subject: [PATCH] kexec: add resriction on the kexec_load
-Date: Tue, 19 Jul 2016 12:10:59 +0800
-Message-ID: <1468901459-55185-1-git-send-email-zhongjiang@huawei.com>
+ id 1bPQQ5-0004LB-NR
+ for kexec@lists.infradead.org; Tue, 19 Jul 2016 08:30:29 +0000
+Received: by mail-pf0-x22d.google.com with SMTP id h186so5184279pfg.3
+ for <kexec@lists.infradead.org>; Tue, 19 Jul 2016 01:30:04 -0700 (PDT)
+Date: Tue, 19 Jul 2016 17:35:55 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT
+ property, usable-memory-range
+Message-ID: <20160719083554.GD20774@linaro.org>
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-3-takahiro.akashi@linaro.org>
+ <578D1A31.5080509@arm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <578D1A31.5080509@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,102 +28,201 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, yinghai@kernel.org, horms@verge.net.au, akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bauerman@linux.vnet.ibm.com, dennis.chen@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+James,
 
-I hit the following question when run trinity in my system. The
-kernel is 3.4 version. but the mainline have same question to be
-solved. The root cause is the segment size is too large, it can
-expand the most of the area or the whole memory, therefore, it
-may waste an amount of time to abtain a useable page. and other
-cases will block until the test case quit. at the some time,
-OOM will come up.
+On Mon, Jul 18, 2016 at 07:04:33PM +0100, James Morse wrote:
+> Hi!
+> 
+> (CC: Dennis Chen)
+> 
+> On 12/07/16 06:05, AKASHI Takahiro wrote:
+> > Crash dump kernel will be run with a limited range of memory as System
+> > RAM.
+> > 
+> > On arm64, we will use a device-tree property under /chosen,
+> >    linux,usable-memory-range = <BASE SIZE>
+> > in order for primary kernel either on uefi or non-uefi (device tree only)
+> > system to hand over the information about usable memory region to crash
+> > dump kernel. This property will supercede entries in uefi memory map table
+> > and "memory" nodes in a device tree.
+> 
+> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > index 51b1302..d8b296f 100644
+> > --- a/arch/arm64/mm/init.c
+> > +++ b/arch/arm64/mm/init.c
+> > @@ -300,10 +300,48 @@ static int __init early_mem(char *p)
+> >  }
+> >  early_param("mem", early_mem);
+> >  
+> > +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> > +		const char *uname, int depth, void *data)
+> > +{
+> > +	struct memblock_region *usablemem = (struct memblock_region *)data;
+> > +	const __be32 *reg;
+> > +	int len;
+> > +
+> > +	usablemem->size = 0;
+> > +
+> > +	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > +		return 0;
+> > +
+> > +	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> > +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > +		return 1;
+> > +
+> > +	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> > +	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +static void __init fdt_enforce_memory_region(void)
+> > +{
+> > +	struct memblock_region reg;
+> > +
+> > +	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> > +
+> > +	if (reg.size) {
+> > +		memblock_remove(0, PAGE_ALIGN(reg.base));
+> > +		memblock_remove(round_down(reg.base + reg.size, PAGE_SIZE),
+> > +				ULLONG_MAX);
+> 
+> I think this is a new way to trip the problem Dennis Chen has been working on
+> [0]. If I kdump with --reuse-cmdline on a kernel booted with 'acpi=on', I get
+> the panic below [1]...
 
-ck time:20160628120131-243c5
-rlock reason:SOFT-WATCHDOG detected! on cpu 5.
-CPU 5 Pid: 9485, comm: trinity-c5
-RIP: 0010:[<ffffffff8111a4cf>]  [<ffffffff8111a4cf>] next_zones_zonelist+0x3f/0x60
-RSP: 0018:ffff88088783bc38  EFLAGS: 00000283
-RAX: ffff8808bffd9b08 RBX: ffff88088783bbb8 RCX: ffff88088783bd30
-RDX: ffff88088f15a248 RSI: 0000000000000002 RDI: 0000000000000000
-RBP: ffff88088783bc38 R08: ffff8808bffd8d80 R09: 0000000412c4d000
-R10: 0000000412c4e000 R11: 0000000000000000 R12: 0000000000000002
-R13: 0000000000000000 R14: ffff8808bffd9b00 R15: 0000000000000000
-FS:  00007f91137ee700(0000) GS:ffff88089f2a0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000016161a CR3: 0000000887820000 CR4: 00000000000407e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-Process trinity-c5 (pid: 9485, threadinfo ffff88088783a000, task ffff88088f159980)
-Stack:
- ffff88088783bd88 ffffffff81106eac ffff8808bffd8d80 0000000000000000
- 0000000000000000 ffffffff8124c2be 0000000000000001 000000000000001e
- 0000000000000000 ffffffff8124c2be 0000000000000002 ffffffff8124c2be
-Call Trace:
- [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
- [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
- [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
- [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
- [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
- [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
- [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
- [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
- [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
- [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
- [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
- [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
- [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
- [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
+Yeah, it can be.
 
-The patch just add condition on sanity_check_segment_list to
-restriction the segment size.
+> It looks like Dennis's fix involves changes in mm/memblock.c, maybe they can be
+> extended to support a range instead of just a limit?
+>
+> (It looks like x86 explicitly adds the acpi regions to the crash-kernels memory
+> map in crash_setup_memmap_entries()).
+> 
+> 
+> 
+> Is it possible for the kernel text to be outside this range? (a bug in
+> kexec-tools, or another user of the DT property) If we haven't already failed in
+> this case, it may be worth printing a warning, or refusing to
+> restrict-memory/expose-vmcore.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- arch/x86/include/asm/kexec.h |  1 +
- kernel/kexec_core.c          | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
+In my implementation of kdump, the usable memory for crash dump
+kernel will be allocated within memblock.memory after ACPI-related
+regions have been mapped. "linux,usable-memory-range" indicates
+this exact memory range.
+On crash dump kernel, my fdt_enforce_memory_region() in arm64_memblock_init()
+will exclude all the other regions from memblock.memory.
+So the kernel (with acpi=on) won't recognize ACPI-regions as
+normal memory, and map them by ioremap().
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index d2434c1..b31a723 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -67,6 +67,7 @@ struct kimage;
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
- #define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_MAX_SEGMENT_SIZE	(5 * 1024 * 1024UL)	/* 5M */
- 
- /*
-  * CPU does not save ss and sp on stack if execution is already
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 448127d..35c5159 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -209,6 +209,18 @@ int sanity_check_segment_list(struct kimage *image)
- 			return result;
- 	}
- 
-+
-+	/* Verity all segment size donnot exceed the specified size.
-+ 	 * if segment size from user space is too large,  a large 
-+ 	 * amount of time will be wasted when allocating page. so,
-+ 	 * softlockup may be come up.
-+ 	 */
-+	for (i = 0; i< nr_segments; i++) {
-+		if (image->segment[i].memsz > KEXEC_MAX_SEGMENT_SIZE)
-+			return result;
-+	}
-+
-+
- 	/*
- 	 * Verify we have good destination addresses.  Normally
- 	 * the caller is responsible for making certain we don't
--- 
-1.8.3.1
+I thought that it was safe, but actually not due to unaligned accesses.
+As you suggested, we will probably be able to do the same thing of
+Chen's solution in fdt_enforce_memory_region().
 
+Thanks,
+-Takahiro AKASHI
+
+> 
+> 
+> Thanks, > > James
+> 
+> 
+> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/443356.html
+> [1]
+> [    0.000000] efi: Getting EFI parameters from FDT:
+> [    0.000000] efi: EFI v2.50 by ARM Juno EFI Nov 24 2015 12:36:35
+> [    0.000000] efi:  ACPI=0xf95b0000  ACPI 2.0=0xf95b0014  PROP=0xfe8db4d8
+> [    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
+> [    0.000000] cma: Reserved 16 MiB at 0x00000009fec00000
+> [    0.000000] ACPI: Early table checksum verification disabled
+> [    0.000000] ACPI: RSDP 0x00000000F95B0014 000024 (v02 ARMLTD)
+> [    0.000000] ACPI: XSDT 0x00000000F95A00E8 00004C (v01 ARMLTD ARM-JUNO 2014072
+> 7      01000013)
+> [    0.000000] ACPI: FACP 0x00000000F9500000 00010C (v05 ARMLTD ARM-JUNO 2014072
+> 7 ARM  00000099)
+> [    0.000000] ACPI: DSDT 0x00000000F94C0000 000396 (v01 ARMLTD ARM-JUNO 2014072
+> 7 INTL 20150619)
+> [    0.000000] ACPI: GTDT 0x00000000F94F0000 000060 (v02 ARMLTD ARM-JUNO 2014072
+> 7 ARM  00000099)
+> [    0.000000] ACPI: APIC 0x00000000F94E0000 000224 (v03 ARMLTD ARM-JUNO 2014072
+> 7 ARM  00000099)
+> [    0.000000] ACPI: SSDT 0x00000000F94D0000 0001E3 (v01 ARMLTD ARM-JUNO 2014072
+> 7 INTL 20150619)
+> [    0.000000] ACPI: MCFG 0x00000000F94B0000 00003C (v01 ARMLTD ARM-JUNO 2014072
+> 7 ARM  00000099)
+> ...
+> [    0.737577] Serial: AMBA PL011 UART driver
+> [    0.786086] HugeTLB registered 2 MB page size, pre-allocated 0 pages
+> [    0.794203] ACPI: Added _OSI(Module Device)
+> [    0.798659] ACPI: Added _OSI(Processor Device)
+> [    0.803190] ACPI: Added _OSI(3.0 _SCP Extensions)
+> [    0.807973] ACPI: Added _OSI(Processor Aggregator Device)
+> [    0.813653] Unable to handle kernel paging request at virtual address ffff000
+> 00804e027
+> [    0.821704] pgd = ffff000008cce000
+> [    0.825155] [ffff00000804e027] *pgd=00000009ffffd003, *pud=00000009ffffc003,
+> *pmd=00000009ffffb003, *pte=00e80000f94c0707
+> [    0.836319] Internal error: Oops: 96000021 [#1] PREEMPT SMP
+> [    0.841972] Modules linked in:
+> [    0.845073] CPU: 2 PID: 1 Comm: swapper/0 Tainted: G S              4.7.0-rc4
+> + #4569
+> [    0.852927] Hardware name: ARM Juno development board (r1) (DT)
+> [    0.858936] task: ffff80003d898000 ti: ffff80003d894000 task.ti: ffff80003d89
+> 4000
+> [    0.866537] PC is at acpi_ns_lookup+0x23c/0x378
+> [    0.871131] LR is at acpi_ds_load1_begin_op+0x88/0x260
+> [    0.876340] pc : [<ffff0000084061a4>] lr : [<ffff0000083fc08c>] pstate: 60000
+> 045
+> [    0.883846] sp : ffff80003d8979b0
+> [    0.887206] x29: ffff80003d8979b0 x28: 0000000000000000
+> [    0.892596] x27: 000000000000001b x26: ffff000008a80a07
+> [    0.897986] x25: ffff80003d897a48 x24: 0000000000000001
+> [    0.903377] x23: 0000000000000001 x22: ffff00000804e027
+> [    0.908769] x21: 000000000000001b x20: 0000000000000001
+> [    0.914158] x19: 0000000000000000 x18: ffff00000804efff
+> [    0.919547] x17: 00000000000038ff x16: 0000000000000002
+> [    0.924937] x15: ffff00000804efff x14: 0000008000000000
+> [    0.930326] x13: ffff000008c942b2 x12: ffff00000804efff
+> [    0.935717] x11: ffff000008bf0000 x10: 00000000ffffff76
+> [    0.941107] x9 : 0000000000000000 x8 : ffff000008cb6000
+> [    0.946498] x7 : 0000000000000000 x6 : ffff80003d897aa8
+> [    0.951891] x5 : ffff80003d028400 x4 : 0000000000000001
+> [    0.957281] x3 : 0000000000000003 x2 : ffff000008cb6090
+> [    0.962673] x1 : 000000000000005f x0 : 0000000000000000
+> [    0.968063]
+> [    0.969569] Process swapper/0 (pid: 1, stack limit = 0xffff80003d894020)
+> [    1.387661] Call trace:
+> ...
+> [    1.473172] [<ffff0000084061a4>] acpi_ns_lookup+0x23c/0x378
+> [    1.478832] [<ffff0000083fc08c>] acpi_ds_load1_begin_op+0x88/0x260
+> [    1.485105] [<ffff00000840c0e8>] acpi_ps_build_named_op+0xa8/0x170
+> [    1.491378] [<ffff00000840c2e0>] acpi_ps_create_op+0x130/0x230
+> [    1.497299] [<ffff00000840bc28>] acpi_ps_parse_loop+0x168/0x580
+> [    1.503302] [<ffff00000840cb44>] acpi_ps_parse_aml+0xa0/0x278
+> [    1.509135] [<ffff0000084081d0>] acpi_ns_one_complete_parse+0x128/0x150
+> [    1.515852] [<ffff00000840821c>] acpi_ns_parse_table+0x24/0x44
+> [    1.521775] [<ffff0000084079e8>] acpi_ns_load_table+0x54/0xdc
+> [    1.527612] [<ffff000008411038>] acpi_tb_load_namespace+0xd0/0x230
+> [    1.533887] [<ffff000008b2695c>] acpi_load_tables+0x3c/0xa8
+> [    1.539542] [<ffff000008b25974>] acpi_init+0x88/0x2b0
+> [    1.544670] [<ffff000008081a08>] do_one_initcall+0x38/0x128
+> [    1.550325] [<ffff000008b00cc0>] kernel_init_freeable+0x14c/0x1f0
+> [    1.556517] [<ffff0000087d2088>] kernel_init+0x10/0x100
+> [    1.561823] [<ffff000008084e10>] ret_from_fork+0x10/0x40
+> [    1.567216] Code: b9008fbb 2a000318 36380054 32190318 (b94002c0)
+> [    1.573451] ---[ end trace dec6cecdcba673b7 ]---
+> [    1.578158] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00
+> 00000b
+> [    1.578158]
+> [    1.587428] SMP: stopping secondary CPUs
+> [    1.591411] ---[ end Kernel panic - not syncing: Attempted to kill init! exit
+> code=0x0000000b
+> [    0.969225] Process swapper/0 (pid: 1, stack limit = 0xffff80003d894020)
+> 
+> 
 
 _______________________________________________
 kexec mailing list
