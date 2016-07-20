@@ -1,18 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPivI-0003D0-1T
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 04:15:54 +0000
-Date: Wed, 20 Jul 2016 12:15:27 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH 0/3] Enable legacy irq mode before jump to kexec/kdump
- kernel
-Message-ID: <20160720041527.GA5273@x1.redhat.com>
-References: <1468983483-3952-1-git-send-email-bhe@redhat.com>
- <1468986741.2020.41.camel@localhost>
+ id 1bPivx-0003fY-DF
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 04:16:35 +0000
+Received: by mail-pf0-x22c.google.com with SMTP id y134so14476056pfg.0
+ for <kexec@lists.infradead.org>; Tue, 19 Jul 2016 21:16:12 -0700 (PDT)
+Date: Wed, 20 Jul 2016 13:22:05 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT
+ property, usable-memory-range
+Message-ID: <20160720042204.GI20774@linaro.org>
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-3-takahiro.akashi@linaro.org>
+ <578D1A31.5080509@arm.com> <20160719083554.GD20774@linaro.org>
+ <20160719100616.GA20990@arm.com>
+ <20160719110120.GF20774@linaro.org>
+ <20160720033909.GA30575@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1468986741.2020.41.camel@localhost>
+In-Reply-To: <20160720033909.GA30575@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,101 +27,160 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
-Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Dennis Chen <dennis.chen@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-SGkgSmlhbmdhbmcsCgpPbiAwNy8yMC8xNiBhdCAwMzo1NGFtLCBXZWksIEppYW5nYW5nIHdyb3Rl
-Ogo+IEhpIEJhb3F1YW4gSGUsCj4gCj4gV2VsbCwgSW5kZWVkIHRoZXJl4oCYcyBhIHJlbGF0aW9u
-c2hpcCBiZXR3ZWVuIHRoZSBkdW1wLWNhcHR1cmUgaGFuZ3MgaW4KPiBjYWxpYnJhdGVfZGVsYXlf
-Y29udmVyZ2UoKSBhbmQgdGhlIGludGVycnVwdCBtb2RlLgo+IAo+IGJ1dCB0aGVyZeKAmHMgbm8g
-ZXNzZW50aWFsIGRpZmZlcmVuY2UgYmV0d2VlbiB5b3VyIHBhdGNoZXMgYW5kIG1pbmUgdGhhdAo+
-IGNhbGxzIGRpc2FibGVfSU9fQVBJQygpIGFnYWluLiAgCj4gQWN0dWFsbHksIGRpc2FibGVfSU9f
-QVBJQyB3aWxsIHNldCBBUElDIHRvIHZpcnR1YWwgd2lyZSBtb2RlLgoKWW91IGRpZG4ndCByZWFk
-IG15IHBhdGNoIGxvZyBjYXJlZnVsbHkuIGRpc2FibGVfSU9fQVBJQyBub3Qgb25seSBzZXQKQVBJ
-QyB0byBQSUMgbW9kZSBvciB2aXJ0dWFsIHdpcmUgbW9kZSwgYnV0IGNhbGwgY2xlYXJfSU9fQVBJ
-Qy4KCj4gCj4gSW4gZmFjdCwKPiBFcmljIGFuZCBJbmdvIHN1Z2dlc3RlZCB0aGF0ICJpdCBzaG91
-bGQgYmUgZml4ZWQgaW4gdGhlIGJvb3R1cCBwYXRoIG9mCj4gdGhlIGR1bXAga2VybmVsLCBub3Qg
-dGhlIGNyYXNoIGtlcm5lbCByZWJvb3QgcGF0aCIsIHdoaWNoIGlzIGNvbnZpbmNpbmcKPiBhbmQg
-cmVhc29uYWJsZS4KCldlbGwgdGhpcyBwYXRjaCBkb2Vzbid0IGRvIGRpZmZlcmVudGx5IHdpdGgg
-RXJpYydzIG9yaWdpbmFsIGltcGxlbWVudGlvbgppbiBrZXhlYy9rZHVtcCBwYXRoLgpCeSB0YWtp
-bmcgb3V0IGNsZWFyX0lPX0FQSUMgZnJvbSBkaXNhYmxlX0lPX0FQSUMsIHRoZSBsZWZ0IGNvZGUg
-b2YKZGlzYWJsZV9JT19BUElDIHdpbGwgb25seSBkbyB0aGUgdmlydHVhbCB3aXJlIHNldHRpbmcu
-IFNvIGZvcgprZXhlYy9rZHVtcCBwYXRoLCBjb2RlIGJhc2ljYWxseSBpcyB0aGUgc2FtZSBhcyBF
-cmljJ3MgbWV0aG9kLiBCdXQgZm9yCnBvd2Vyb2ZmL2hhbHQvcmVib290LCBpdCdzIGVub3VnaCB0
-byBjYWxsIGNsZWFyX0lPX0FQSUMgdG8gZGlzYWJsZQpJTy1BUElDLgoKPiAKPiBBbmQgaSBmaW5k
-IGEgYmV0dGVyIG1ldGhvZCBjYW4gZml4IHRoZSBwcm9ibGVtLgo+IEl0J3MgYmV0dGVyIHRvIHNl
-dCB2aXJ0dWFsIHdpcmUgbW9kZSBmb3IgYXBpYyBpbiBpbml0X2JzcF9BUElDKCksIHdoaWNoCj4g
-aW4gdGhlIGJvb3R1cCBwYXRoIG9mIGR1bXAga2VybmVsLgo+IEJ1dCBub3csIGluaXRfYnNwX0FQ
-SUMgZG9lc24ndCBpbml0aWFsaXplIHRoZSBhcGljIHRvIHZpdHVhbCB3aXJlIG1vZGUKPiB3aGVu
-IHNtcF9mb3VuZF9jb25maWcgaXMgbm9uLXplcm8uCgpBbmQgdmlydHVhbCB3aXJlIG1vZGUgaGF2
-ZSB0d28ga2luZHMsIElPLUFQSUMgdmlydHVhbCB3aXJlIG1vZGUgYW5kCkxBUElDIHZpcnR1YWwg
-d2lyZSBtb2RlLiBQbGVhc2UgcmVhZCBjb2RlIGNvbW1lbnRzIGluIGluaXRfYnNwX0FQSUMsCklP
-LUFQSUMgdmlydHVhbCB3aXJlIG1vZGUgY291bGQgYmUgYWN0aXZlIG9yIG5lZWQgYmUgc2V0LCB5
-b3UgY2FuJ3QKZGV0ZWN0IElPLUFQSUMgcGluIGNvbm5lY3RlZCB0byBpODI1OSBlcXV2aWFsZW50
-IFBJQy4KCj4gCj4gRllJLCBJJ20gd29ya2luZyBvbiB0aGlzIHBvaW50LiBsYXRlciBpIHdpbGwg
-c2VuZCBwYXRjaGVzIHRvIG1haWwgbGlzdC4KPiAKPiBXZWkKPiAKPiBPbiBXZWQsIDIwMTYtMDct
-MjAgYXQgMTA6NTggKzA4MDAsIEJhb3F1YW4gSGUgd3JvdGU6Cj4gPiBXZWkgSmlhbmdhbmcgcmVw
-b3J0ZWQga2R1bXAga2VybmVsIGFsd2F5cyBoYW5nIHdoZW4gIm5vdHNjIiBpcyBzcGVjaWZpZWQK
-PiA+IGluIGJvb3QgcGFyYW1ldGVyLiBBZnRlciBkZWJ1Z2dpbmcgSSBmb3VuZCB0aGVyZSdzIG5v
-IHRpbWVyIGludGVycnVwdAo+ID4gaW4gdGhlIGN1cnJlbnQga2V4ZWMva2R1bXAga2VybmVsLiBU
-aGlzIGlzIGNhdXNlZCBieSBjb21taXQgNTIyZTY2NDY0NDY3Cj4gPiAoIng4Ni9hcGljOiBEaXNh
-YmxlIEkvTyBBUElDIGJlZm9yZSBzaHV0ZG93biBvZiB0aGUgbG9jYWwgQVBJQyIpLiBPcmlnaW5h
-bGx5Cj4gPiBFcmljIHBvc3RlZCBiZWxvdyBwYXRjaCB0byBtYWtlIHN5c3RlbSBiZSB2aXJ0dWFs
-IHdpcmUgbW9kZSBpbiB3aGljaCA4MjU5LQo+ID4gZXF1aXZhbGVudCBQSUMgZmllbGRzIGFsbCBp
-bnRlcnJ1cHRzIGFuZCB0aGUgTEFQSUMgYmVjb21lcyBhIHZpcnR1YWwgd2lyZS4KPiA+IExpa2Ug
-dGhpcyBpbnRlcnJ1cHRzIGNhbiBiZSBkZWxpdmVyZWQgZnJvbSBQSUMgdG8gQ1BVIHZpYSB0aGUg
-TEFQSUMncyBsb2NhbAo+ID4gaW50ZXJydXB0IDAgKExJTlRJTjApLiBJbiB2aXJ0dWFsIHdpcmUg
-QVBJQyBtb2RlIGlzIGRpc2FibGVkIHdoaWxlIExBUElDCj4gPiBpcyBzb2Z0d2FyZSBlbmFibGVk
-IGFuZCBpdHMgTElOVDAgYW5kIExJTlQxIG5lZWQgYmUgcHJvZ3JhbW1lZCBzcGVjaWZpY2FsbHku
-Cj4gPiAKPiA+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvcHViL2xpbnV4L2tlcm5lbC9wZW9wbGUv
-YWtwbS9wYXRjaGVzLzIuNi8yLjYuMTEvMi42LjExLW1tMS9icm9rZW4tb3V0L3g4Nl82NC1hcGlj
-LXZpcnR3aXJlLW9uLXNodXRkb3duLnBhdGNoCj4gPiAKPiA+IEJ1dCB3aXRoIGNvbW1pdCA1MjJl
-NjY0NjQgeW91IGNhbiBzZWUgYWZ0ZXIgZGlzYWJsZV9JT19BUElDIGhhZCBzZXR0aW5nCj4gPiB2
-aXJ0dWFsIHdpcmUgbW9kZSwgbGFwaWNfc2h1dGRvd24gZGlzYWJsZWQgTEFQSUMgYWdhaW4uIE5v
-dyB2aXJ0dWFsIHdpcmUKPiA+IG1vZGUgZG9lc24ndCB3b3JrLCB0aGVuIGl0IGNhdXNlIG5vIHRp
-bWVyIGludGVycnVwdCBkdXJpbmcga2R1bXAga2VybmVsCj4gPiBpbml0aWFsaXphdGlvbiBzdGFn
-ZSB1bnRpbCBzeXN0ZW0gZW50ZXIgaW50byBBUElDIG1vZGUuCj4gPiAKPiA+IFNvIHBlb3BsZSBt
-YXkgYmUgd29uZGVyaW5nIHdoeSBvbmx5IGtkdW1wIGtlcm5lbCBoYW5nLCB0aGUgbm9ybWFsIGtl
-cm5lbAo+ID4gd2l0aCAibm90c2MiIGNhbiBzdGlsbCB3b3JrLiBUaGlzIGlzIGJlY2F1c2UgQklP
-UyBoYXMgYWxyZWFkeSBidWlsdCBQSUMgbW9kZQo+ID4gb3IgdmlydHVhbCB3aXJlIG1vZGUgd2hp
-bGUga2V4ZWMva2R1bXAga2VybmVsIGRvZXNuJ3QgZ28gdGhyb3VnaCBCSU9TCj4gPiBpbml0aWFs
-aXphdGlvbi4gVGhhdCBpcyB3aHkgd2UgaGF2ZSB0byBjaGFuZ2Ugc3lzdGVtIHRvIGJlIFBJQyBt
-b2RlIG9yCj4gPiB2aXJ0dWFsIHdpcmUgbW9kZSBiZWZvcmUganVtcCB0byBrZXhlYy9rZHVtcCBr
-ZXJuZWwuCj4gPiAKPiA+IFRoZW4gd2h5IGtkdW1wIGtlcm5lbCBkaWRuJ3QgaGFuZyB3aGVuICJu
-b3RzYyIgaXMgbm90IHNwZWNpZmllZC4gVGhpcyBpcwo+ID4gYmVjYXVzZSB0c2NfaW5pdCB3aWxs
-IGFzc2lnbiB0aGUgYWxyZWFkeSBjYWxpYnJhdGVkIHZhbHVlIHRvIGxwal9maW5lLgo+ID4gVGhl
-biBrZXJuZWwgZG9lc24ndCBuZWVkIHRvIGNvdW50IGNwdSBsb29wcyBiZXR3ZWVuIGppZmZpZXMg
-d2l0aCB0aGUgaGVscAo+ID4gb2YgdGltZXIgaW50ZXJydXB0LiBTbyAibm90c2MiIGlzIG5vdCB2
-aWN0aW0sIGJ1dCBhIGluZm9ybWVyLgo+ID4gCj4gPiBJbiBwYXRjaCAxLzMgZGlzYWJsZV9JT19B
-UElDIGlzIGNoYW5nZWQgdG8gb25seSBjb250YWluIGNvZGUgb2YgY2hhbmdlaW5nCj4gPiBzeXN0
-ZW0gdG8gYmUgUElDIG1vZGUgb3IgdmlydHVhbCB3aXJlIG1vZGUgYW5kIGlzIHJlbmFtZWQgYXMK
-PiA+IHN3aXRjaF90b19sZWdhY3lfaXJxX21vZGUuIE5vdyBvbmx5IGNhbGwgY2xlYXJfSU9fQVBJ
-QyB3aGVyZSBJTy1BUElDIG5lZWQKPiA+IGJlIGRpc2FibGVkLCBhbmQgY2FsbCBzd2l0Y2hfdG9f
-bGVnYWN5X2lycV9tb2RlIGJlZm9yZSBqdW1wIHRvIGtleGUva2R1bXAKPiA+IGtlcm5lbC4KPiA+
-IAo+ID4gUGF0Y2ggMi8zIGFuZCAzLzMgYXJlIGNsZWFuIHVwIHBhdGNoLgo+ID4gCj4gPiBCYW9x
-dWFuIEhlICgzKToKPiA+ICAgeDg2L2FwaWMva2V4ZWM6IEVuYWJsZSBsZWdhY3kgaXJxIG1vZGUg
-YmVmb3JlIGp1bXAgdG8ga2V4ZWMva2R1bXAKPiA+ICAgICBrZXJuZWwKPiA+ICAgeDg2L2FwaWM6
-IENsZWFuIHVwIHRoZSBuYW1lcyBvZiBsZWdhY3kgaXJxIG1vZGUgc2V0dGluZyByZWxhdGVkCj4g
-PiAgICAgZnVuY3Rpb25zCj4gPiAgIHg4Ni9hcGljOiBDbGVhbiB1cCB0aGUgYXBpYyBkZWxpdmVy
-eSBtb2RlIG1hY3JvIGRlZmluaXRpb24KPiA+IAo+ID4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2Fw
-aWMuaCAgICAgICAgfCAgMiArLQo+ID4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2FwaWNkZWYuaCAg
-ICAgfCAgMSAtCj4gPiAgYXJjaC94ODYvaW5jbHVkZS9hc20vaW9fYXBpYy5oICAgICB8ICA2ICsr
-Ky0tLQo+ID4gIGFyY2gveDg2L2tlcm5lbC9hcGljL2FwaWMuYyAgICAgICAgfCAxOSArKysrKysr
-KysrKy0tLS0tLS0tCj4gPiAgYXJjaC94ODYva2VybmVsL2FwaWMvaW9fYXBpYy5jICAgICB8IDMy
-ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tCj4gPiAgYXJjaC94ODYva2VybmVsL2Ny
-YXNoLmMgICAgICAgICAgICB8ICAyICstCj4gPiAgYXJjaC94ODYva2VybmVsL21hY2hpbmVfa2V4
-ZWNfMzIuYyB8IDE1ICsrKysrLS0tLS0tLS0tLQo+ID4gIGFyY2gveDg2L2tlcm5lbC9tYWNoaW5l
-X2tleGVjXzY0LmMgfCAxNSArKysrKy0tLS0tLS0tLS0KPiA+ICBhcmNoL3g4Ni9rZXJuZWwvcmVi
-b290LmMgICAgICAgICAgIHwgIDIgKy0KPiA+ICBhcmNoL3g4Ni9rZXJuZWwveDg2X2luaXQuYyAg
-ICAgICAgIHwgIDIgKy0KPiA+ICBkcml2ZXJzL2lvbW11L2lycV9yZW1hcHBpbmcuYyAgICAgIHwg
-IDIgKy0KPiA+ICAxMSBmaWxlcyBjaGFuZ2VkLCA0NiBpbnNlcnRpb25zKCspLCA1MiBkZWxldGlv
-bnMoLSkKPiA+IAo+IAo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Wed, Jul 20, 2016 at 11:39:11AM +0800, Dennis Chen wrote:
+> On Tue, Jul 19, 2016 at 08:01:21PM +0900, AKASHI Takahiro wrote:
+> > On Tue, Jul 19, 2016 at 06:06:18PM +0800, Dennis Chen wrote:
+> > > Hello AKASHI,
+> > > 
+> > > On Tue, Jul 19, 2016 at 05:35:55PM +0900, AKASHI Takahiro wrote:
+> > > > James,
+> > > >
+> > > > On Mon, Jul 18, 2016 at 07:04:33PM +0100, James Morse wrote:
+> > > > > Hi!
+> > > > >
+> > > > > (CC: Dennis Chen)
+> > > > >
+> > > > > On 12/07/16 06:05, AKASHI Takahiro wrote:
+> > > > > > Crash dump kernel will be run with a limited range of memory as System
+> > > > > > RAM.
+> > > > > >
+> > > > > > On arm64, we will use a device-tree property under /chosen,
+> > > > > >    linux,usable-memory-range = <BASE SIZE>
+> > > > > > in order for primary kernel either on uefi or non-uefi (device tree only)
+> > > > > > system to hand over the information about usable memory region to crash
+> > > > > > dump kernel. This property will supercede entries in uefi memory map table
+> > > > > > and "memory" nodes in a device tree.
+> > > > >
+> > > > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > > > > > index 51b1302..d8b296f 100644
+> > > > > > --- a/arch/arm64/mm/init.c
+> > > > > > +++ b/arch/arm64/mm/init.c
+> > > > > > @@ -300,10 +300,48 @@ static int __init early_mem(char *p)
+> > > > > >  }
+> > > > > >  early_param("mem", early_mem);
+> > > > > >
+> > > > > > +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> > > > > > +         const char *uname, int depth, void *data)
+> > > > > > +{
+> > > > > > + struct memblock_region *usablemem = (struct memblock_region *)data;
+> > > > > > + const __be32 *reg;
+> > > > > > + int len;
+> > > > > > +
+> > > > > > + usablemem->size = 0;
+> > > > > > +
+> > > > > > + if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > > > > > +         return 0;
+> > > > > > +
+> > > > > > + reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> > > > > > + if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > > > > > +         return 1;
+> > > > > > +
+> > > > > > + usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> > > > > > + usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> > > > > > +
+> > > > > > + return 1;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static void __init fdt_enforce_memory_region(void)
+> > > > > > +{
+> > > > > > + struct memblock_region reg;
+> > > > > > +
+> > > > > > + of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> > > > > > +
+> > > > > > + if (reg.size) {
+> > > > > > +         memblock_remove(0, PAGE_ALIGN(reg.base));
+> > > > > > +         memblock_remove(round_down(reg.base + reg.size, PAGE_SIZE),
+> > > > > > +                         ULLONG_MAX);
+> > > > >
+> > > 
+> > > According to the panic message from James, I guess the ACPI regions are out of the range
+> > > [reg.base, reg.base + reg.size] and removed by your above codes. On ARM64, those ACPI
+> > > regions have been added into memblock and marked as NOMAP, so I think it should be
+> > > easy to adapt my fix to retain the NOMAP regions here
+> > 
+> > See below.
+> > 
+> > > Thanks,
+> > > Dennis
+> > > 
+> > > > > I think this is a new way to trip the problem Dennis Chen has been working on
+> > > > > [0]. If I kdump with --reuse-cmdline on a kernel booted with 'acpi=on', I get
+> > > > > the panic below [1]...
+> > > >
+> > > > Yeah, it can be.
+> > > >
+> > > > > It looks like Dennis's fix involves changes in mm/memblock.c, maybe they can be
+> > > > > extended to support a range instead of just a limit?
+> > > > >
+> > > > > (It looks like x86 explicitly adds the acpi regions to the crash-kernels memory
+> > > > > map in crash_setup_memmap_entries()).
+> > > > >
+> > > > >
+> > > > >
+> > > > > Is it possible for the kernel text to be outside this range? (a bug in
+> > > > > kexec-tools, or another user of the DT property) If we haven't already failed in
+> > > > > this case, it may be worth printing a warning, or refusing to
+> > > > > restrict-memory/expose-vmcore.
+> > > >
+> > > > In my implementation of kdump, the usable memory for crash dump
+> > > > kernel will be allocated within memblock.memory after ACPI-related
+> > > > regions have been mapped. "linux,usable-memory-range" indicates
+> > > > this exact memory range.
+> > > > On crash dump kernel, my fdt_enforce_memory_region() in arm64_memblock_init()
+> > > > will exclude all the other regions from memblock.memory.
+> > > > So the kernel (with acpi=on) won't recognize ACPI-regions as
+> > > > normal memory, and map them by ioremap().
+> > > >
+> > > > I thought that it was safe, but actually not due to unaligned accesses.
+> > > > As you suggested, we will probably be able to do the same thing of
+> > > > Chen's solution in fdt_enforce_memory_region().
+> > 
+> > memblock_isolate_range() and memblock_remove_range() are not exported.
+> > So we'd better implement an unified interface like:
+> >     memblock_cap_memory_range(phys_addr_t base, size_t size);
+> > 
+> > If base == NULL, it would behave in the exact same way as your
+> > memblock_mem_limit_remove_map().
+> >
+> Hello AKASHI, it's not reasonable to change the prototype of an existing memblock API
+
+I didn't say memblock_enforce_memory_limit(), but
+*your* memblock_memblock_remove_limit().
+
+> which will be used by other components as we did with memblock_enforce_memory_limit. 
+> Moreover the @size in you case is to specify a memory range of the memblock, which is
+> different from the @limit as an indicator of the total size of memblocks being limited. 
+> But I can be help to post an new memblock API patch to cater for your case.
+
+Thanks, but I have already prototyped the function.
+If you don't agree to my opinion, I will have to submit
+a patch for a quite similar but different function.
+I think that nobody will accept this.
+
+-Takahiro AKASHI
+
+> Thanks,
+> Dennis
+>   
+> >
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > >
+> > > >
+> > > > Thanks,
+> > > > -Takahiro AKASHI
+> > > >
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
