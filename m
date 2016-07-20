@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPhiU-0001Br-RV
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 02:58:36 +0000
+ id 1bPhiX-0001CV-FC
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 02:58:38 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH 1/3] x86/apic/kexec: Enable legacy irq mode before jump to
- kexec/kdump kernel
-Date: Wed, 20 Jul 2016 10:58:01 +0800
-Message-Id: <1468983483-3952-2-git-send-email-bhe@redhat.com>
+Subject: [PATCH 2/3] x86/apic: Clean up the names of legacy irq mode setting
+ related functions
+Date: Wed, 20 Jul 2016 10:58:02 +0800
+Message-Id: <1468983483-3952-3-git-send-email-bhe@redhat.com>
 In-Reply-To: <1468983483-3952-1-git-send-email-bhe@redhat.com>
 References: <1468983483-3952-1-git-send-email-bhe@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,189 +19,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: fenghua.yu@intel.com, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, weijg.fnst@cn.fujitsu.com, jiang.liu@linux.intel.com, vgoyal@redhat.com
 
-It's reported that if kernel parameter "notsc" is specified kdump kernel
-always hang after printing boot log as below:
-    ---
-    tsc: Fast TSC calibration using PIT
-    tsc: Detected 2099.947 MHz processor
-    Calibrating delay loop...
-    ---
-
-The reason is no timer interrupt during kdump kernel initialization.
-With "notsc" specified the function tsc_init() will return early and won't
-assign already calibrated value to lpj_fine, we have to rely on timer
-interrupt to get cpu loops between jiffies. Then system hangs to wait for
-the never coming timer interrupt.
-
-This is caused by buggy 'commit 522e66464467 ("x86/apic: Disable I/O APIC
-before shutdown of the local APIC")'. In normal kernel it defaults to be
-PIC mode or Virtual Wire mode during system initialization before APIC
-mode is enabled and this is done by BIOS initialization. With this timer
-interrupt can be handled in legacy irq way. But kexec/kdump kernel won't
-go through BIOS, so we have to set system as PIC or Virtual Wire mode
-before jump to kdump kernel code directly. This is done in disable_IO_APIC
-which includes two parts, firstly it calls clear_IO_APIC() to disable
-IO-APIC, then it sets LAPIC and IO-APIC to make system be PIC or Virtual
-Wire mode. In commit 522e66464 it put disable_IO_APIC earlier so that
-local apic is completely disabled.
-
-So in this patch take clear_IO_APIC out from disable_IO_APIC and rename
-disable_IO_APIC as switch_to_legacy_irq_mode. Then only call clear_IO_APIC
-when IO-APIC need be disabled. And call switch_to_legacy_irq_mode before
-kexec/kdump jumping.
-
-Reported-by: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/include/asm/io_apic.h     |  3 ++-
- arch/x86/kernel/apic/io_apic.c     | 12 ++++--------
- arch/x86/kernel/crash.c            |  2 +-
- arch/x86/kernel/machine_kexec_32.c | 15 +++++----------
- arch/x86/kernel/machine_kexec_64.c | 15 +++++----------
- arch/x86/kernel/reboot.c           |  2 +-
- 6 files changed, 18 insertions(+), 31 deletions(-)
-
-diff --git a/arch/x86/include/asm/io_apic.h b/arch/x86/include/asm/io_apic.h
-index 6cbf2cf..d15192e 100644
---- a/arch/x86/include/asm/io_apic.h
-+++ b/arch/x86/include/asm/io_apic.h
-@@ -191,7 +191,8 @@ static inline unsigned int io_apic_read(unsigned int apic, unsigned int reg)
- 
- extern void setup_IO_APIC(void);
- extern void enable_IO_APIC(void);
--extern void disable_IO_APIC(void);
-+extern void clear_IO_APIC (void);
-+extern void switch_to_legacy_irq_mode(void);
- extern void setup_ioapic_dest(void);
- extern int IO_APIC_get_PCI_irq_vector(int bus, int devfn, int pin);
- extern void print_IO_APICs(void);
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 446702e..d8f5cbe 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -587,7 +587,7 @@ static void clear_IO_APIC_pin(unsigned int apic, unsigned int pin)
- 		       mpc_ioapic_id(apic), pin);
- }
- 
--static void clear_IO_APIC (void)
-+void clear_IO_APIC (void)
- {
- 	int apic, pin;
- 
-@@ -1459,15 +1459,11 @@ void native_disable_io_apic(void)
- }
- 
- /*
-- * Not an __init, needed by the reboot code
-+ * Not an __init, needed by kexec/kdump code.
-+ * For safety IO-APIC and Local APIC need be cleared before this.
-  */
--void disable_IO_APIC(void)
-+void switch_to_legacy_irq_mode(void)
- {
--	/*
--	 * Clear the IO-APIC before rebooting:
--	 */
--	clear_IO_APIC();
--
- 	if (!nr_legacy_irqs())
- 		return;
- 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 9ef978d..236317b 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -182,7 +182,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- #ifdef CONFIG_X86_IO_APIC
- 	/* Prevent crash_kexec() from deadlocking on ioapic_lock. */
- 	ioapic_zap_locks();
--	disable_IO_APIC();
-+	clear_IO_APIC();
- #endif
- 	lapic_shutdown();
- #ifdef CONFIG_HPET_TIMER
-diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
-index 469b23d..26cacf6 100644
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -202,18 +202,13 @@ void machine_kexec(struct kimage *image)
- 	local_irq_disable();
- 	hw_breakpoint_disable();
- 
--	if (image->preserve_context) {
- #ifdef CONFIG_X86_IO_APIC
--		/*
--		 * We need to put APICs in legacy mode so that we can
--		 * get timer interrupts in second kernel. kexec/kdump
--		 * paths already have calls to disable_IO_APIC() in
--		 * one form or other. kexec jump path also need
--		 * one.
--		 */
--		disable_IO_APIC();
-+	/*
-+	 * We need to put APICs in legacy mode so that we can
-+	 * get timer interrupts in second kernel.
-+	 */
-+	switch_to_legacy_irq_mode();
- #endif
--	}
- 
- 	control_page = page_address(image->control_code_page);
- 	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 5a294e4..a720716 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -269,18 +269,13 @@ void machine_kexec(struct kimage *image)
- 	local_irq_disable();
- 	hw_breakpoint_disable();
- 
--	if (image->preserve_context) {
- #ifdef CONFIG_X86_IO_APIC
--		/*
--		 * We need to put APICs in legacy mode so that we can
--		 * get timer interrupts in second kernel. kexec/kdump
--		 * paths already have calls to disable_IO_APIC() in
--		 * one form or other. kexec jump path also need
--		 * one.
--		 */
--		disable_IO_APIC();
-+	/*
-+	 * We need to put APICs in legacy mode so that we can
-+	 * get timer interrupts in second kernel.
-+	 */
-+	switch_to_legacy_irq_mode();
- #endif
--	}
- 
- 	control_page = page_address(image->control_code_page) + PAGE_SIZE;
- 	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index a9b31eb..466c860 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -624,7 +624,7 @@ void native_machine_shutdown(void)
- 	 * Even without the erratum, it still makes sense to quiet IO APIC
- 	 * before disabling Local APIC.
- 	 */
--	disable_IO_APIC();
-+	clear_IO_APIC();
- #endif
- 
- #ifdef CONFIG_SMP
--- 
-2.5.5
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+WDg2IE1QIHNwZWMgZGVmaW5lcyAzIGRpZmZlcmVudCBpbnRlcnJ1cHQgbW9kZXM6CiAgMSkgUElD
+IE1vZGXigJRieXBhc3NlcyBhbGwgQVBJQyBjb21wb25lbnRzIGFuZCBmb3JjZXMgdGhlIHN5c3Rl
+bSB0bwogICAgIG9wZXJhdGUgaW4gc2luZ2xlLXByb2Nlc3NvciBtb2RlLgogIDIpIFZpcnR1YWwg
+V2lyZSBNb2Rl4oCUdXNlcyBhbiBBUElDIGFzIGEgdmlydHVhbCB3aXJlLCBidXQgb3RoZXJ3aXNl
+CiAgICAgb3BlcmF0ZXMgdGhlIHNhbWUgYXMgUElDIE1vZGUuCiAgMykgU3ltbWV0cmljIEkvTyBN
+b2Rl4oCUZW5hYmxlcyB0aGUgc3lzdGVtIHRvIG9wZXJhdGUgd2l0aCBtb3JlIHRoYW4KICAgICBv
+bmUgcHJvY2Vzc29yLgoKVGhlIGN1cnJlbnQgZGlzY29ubmVjdF9ic3BfQVBJQyBpbmNsdWRlcyB0
+d28gcGFydHM6IG9uZSBpcyB0byBzZXQgc3lzdGVtCmFzIFBJQyBtb2RlIGlmIGl0J3MgYXZhaWxh
+YmxlLCB0aGUgb3RoZXIgaXMgdG8gY2hhbmdlIHN5c3RlbSBiYWNrIHRvClZpcnR1YWwgV2lyZSBt
+b2RlLiBPbmx5IFBJQyBtb2RlIHdpbGwgZGV0YWNoIHRoZSBBUElDIGZyb20gdGhlIGludGVycnVw
+dApzeXN0ZW0sIFZpcnR1YWwgV2lyZSBtb2RlIGRvZXNuJ3QuCgpCZXNpZGVzIFZpcnV0YWwgV2ly
+ZSBtb2RlIGhhcyB0d28ga2luZHM6IG9uZSBpcyBvbmx5IHNldHRpbmcgTG9jYWwgQVBJQwphcyBW
+aXJ0dWFsIFdpcmUgbW9kZSBhbmQgaW50ZXJydXB0cyBhcmUgZGVsaXZlcmVkIGZyb20gdGhlIFBJ
+QyB0byB0aGUKQ1BVIHdoaWNoIExvY2FsIEFQSUMgY29ubmVjdGVkIHRvLCB0aGUgb3RoZXIgaXMg
+Ym90aCBMb2NhIEFQSUMgYW5kIElPLUFQSUMKbmVlZCBiZSBzZXQgYXMgVmlydHVhbCBXaXJlIG1v
+ZGUuCgpTbyBiYXNlZCBvbiBhYm92ZSBrbm93bGVkZ2UsIHRha2UgSU8tQVBJQyBWaXJ0dWFsIFdp
+cmUgbW9kZSBzZXR0aW5nIGNvZGUKb3V0IGFuZCB3cmFwIGl0IGlub3QgYSBuZXcgZnVuY3Rpb24g
+aW9hcGljX3NldF92aXJ0dWFsX3dpcmVfbW9kZS4gTWVhbndoaWxlCmNoYW5nZSB0aGUgbmFtZSBv
+ZiBkaXNjb25uZWN0X2JzcF9BUElDIGFzIGxhcGljX3NldF9sZWdhY3lfaXJxX21vZGUuIFRoZXNl
+Cm1ha2VzIHRoZSBsZWdhY3kgaXJxIG1vZGUgc2V0dGluZyBtb3JlIHVuZGVyc3RhbmRhYmxlLgoK
+U2lnbmVkLW9mZi1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+Ci0tLQogYXJjaC94ODYv
+aW5jbHVkZS9hc20vYXBpYy5oICAgIHwgIDIgKy0KIGFyY2gveDg2L2luY2x1ZGUvYXNtL2lvX2Fw
+aWMuaCB8ICA1ICsrLS0tCiBhcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMgICAgfCAxMSArKysr
+KystLS0tLQogYXJjaC94ODYva2VybmVsL2FwaWMvaW9fYXBpYy5jIHwgMTcgKysrKysrKysrKy0t
+LS0tLS0KIGFyY2gveDg2L2tlcm5lbC94ODZfaW5pdC5jICAgICB8ICAyICstCiBkcml2ZXJzL2lv
+bW11L2lycV9yZW1hcHBpbmcuYyAgfCAgMiArLQogNiBmaWxlcyBjaGFuZ2VkLCAyMSBpbnNlcnRp
+b25zKCspLCAxOCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2Fz
+bS9hcGljLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9hcGljLmgKaW5kZXggYmMyNzYxMS4uZGZl
+NDU5OCAxMDA2NDQKLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9hc20vYXBpYy5oCisrKyBiL2FyY2gv
+eDg2L2luY2x1ZGUvYXNtL2FwaWMuaApAQCAtMTI1LDcgKzEyNSw3IEBAIGV4dGVybiBpbnQgZ2V0
+X3BoeXNpY2FsX2Jyb2FkY2FzdCh2b2lkKTsKIAogZXh0ZXJuIGludCBsYXBpY19nZXRfbWF4bHZ0
+KHZvaWQpOwogZXh0ZXJuIHZvaWQgY2xlYXJfbG9jYWxfQVBJQyh2b2lkKTsKLWV4dGVybiB2b2lk
+IGRpc2Nvbm5lY3RfYnNwX0FQSUMoaW50IHZpcnRfd2lyZV9zZXR1cCk7CitleHRlcm4gdm9pZCBs
+YXBpY19zZXRfbGVnYWN5X2lycV9tb2RlKGludCB2aXJ0X3dpcmVfc2V0dXApOwogZXh0ZXJuIHZv
+aWQgZGlzYWJsZV9sb2NhbF9BUElDKHZvaWQpOwogZXh0ZXJuIHZvaWQgbGFwaWNfc2h1dGRvd24o
+dm9pZCk7CiBleHRlcm4gdm9pZCBzeW5jX0FyYl9JRHModm9pZCk7CmRpZmYgLS1naXQgYS9hcmNo
+L3g4Ni9pbmNsdWRlL2FzbS9pb19hcGljLmggYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pb19hcGlj
+LmgKaW5kZXggZDE1MTkyZS4uMWFlZDk5NSAxMDA2NDQKLS0tIGEvYXJjaC94ODYvaW5jbHVkZS9h
+c20vaW9fYXBpYy5oCisrKyBiL2FyY2gveDg2L2luY2x1ZGUvYXNtL2lvX2FwaWMuaApAQCAtMTgy
+LDcgKzE4Miw3IEBAIGV4dGVybiB2b2lkIGRpc2FibGVfaW9hcGljX3N1cHBvcnQodm9pZCk7CiAK
+IGV4dGVybiB2b2lkIF9faW5pdCBpb19hcGljX2luaXRfbWFwcGluZ3Modm9pZCk7CiBleHRlcm4g
+dW5zaWduZWQgaW50IG5hdGl2ZV9pb19hcGljX3JlYWQodW5zaWduZWQgaW50IGFwaWMsIHVuc2ln
+bmVkIGludCByZWcpOwotZXh0ZXJuIHZvaWQgbmF0aXZlX2Rpc2FibGVfaW9fYXBpYyh2b2lkKTsK
+K2V4dGVybiB2b2lkIHN3aXRjaF90b19sZWdhY3lfaXJxX21vZGUodm9pZCk7CiAKIHN0YXRpYyBp
+bmxpbmUgdW5zaWduZWQgaW50IGlvX2FwaWNfcmVhZCh1bnNpZ25lZCBpbnQgYXBpYywgdW5zaWdu
+ZWQgaW50IHJlZykKIHsKQEAgLTE5Miw3ICsxOTIsNiBAQCBzdGF0aWMgaW5saW5lIHVuc2lnbmVk
+IGludCBpb19hcGljX3JlYWQodW5zaWduZWQgaW50IGFwaWMsIHVuc2lnbmVkIGludCByZWcpCiBl
+eHRlcm4gdm9pZCBzZXR1cF9JT19BUElDKHZvaWQpOwogZXh0ZXJuIHZvaWQgZW5hYmxlX0lPX0FQ
+SUModm9pZCk7CiBleHRlcm4gdm9pZCBjbGVhcl9JT19BUElDICh2b2lkKTsKLWV4dGVybiB2b2lk
+IHN3aXRjaF90b19sZWdhY3lfaXJxX21vZGUodm9pZCk7CiBleHRlcm4gdm9pZCBzZXR1cF9pb2Fw
+aWNfZGVzdCh2b2lkKTsKIGV4dGVybiBpbnQgSU9fQVBJQ19nZXRfUENJX2lycV92ZWN0b3IoaW50
+IGJ1cywgaW50IGRldmZuLCBpbnQgcGluKTsKIGV4dGVybiB2b2lkIHByaW50X0lPX0FQSUNzKHZv
+aWQpOwpAQCAtMjI5LDcgKzIyOCw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtcF9zYXZlX2lycShz
+dHJ1Y3QgbXBjX2ludHNyYyAqbSkgeyB9CiBzdGF0aWMgaW5saW5lIHZvaWQgZGlzYWJsZV9pb2Fw
+aWNfc3VwcG9ydCh2b2lkKSB7IH0KIHN0YXRpYyBpbmxpbmUgdm9pZCBpb19hcGljX2luaXRfbWFw
+cGluZ3Modm9pZCkgeyB9CiAjZGVmaW5lIG5hdGl2ZV9pb19hcGljX3JlYWQJCU5VTEwKLSNkZWZp
+bmUgbmF0aXZlX2Rpc2FibGVfaW9fYXBpYwkJTlVMTAorI2RlZmluZSBzd2l0Y2hfdG9fbGVnYWN5
+X2lycV9tb2RlCU5VTEwKIAogc3RhdGljIGlubGluZSB2b2lkIHNldHVwX0lPX0FQSUModm9pZCkg
+eyB9CiBzdGF0aWMgaW5saW5lIHZvaWQgZW5hYmxlX0lPX0FQSUModm9pZCkgeyB9CmRpZmYgLS1n
+aXQgYS9hcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMgYi9hcmNoL3g4Ni9rZXJuZWwvYXBpYy9h
+cGljLmMKaW5kZXggNjAwNzhhNi4uOWJiMjc3MCAxMDA2NDQKLS0tIGEvYXJjaC94ODYva2VybmVs
+L2FwaWMvYXBpYy5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9hcGljL2FwaWMuYwpAQCAtMTkzNCwx
+MyArMTkzNCwxNCBAQCBzdGF0aWMgdm9pZCBfX2luaXQgY29ubmVjdF9ic3BfQVBJQyh2b2lkKQog
+fQogCiAvKioKLSAqIGRpc2Nvbm5lY3RfYnNwX0FQSUMgLSBkZXRhY2ggdGhlIEFQSUMgZnJvbSB0
+aGUgaW50ZXJydXB0IHN5c3RlbQotICogQHZpcnRfd2lyZV9zZXR1cDoJaW5kaWNhdGVzLCB3aGV0
+aGVyIHZpcnR1YWwgd2lyZSBtb2RlIGlzIHNlbGVjdGVkCisgKiBsYXBpY19zZXRfbGVnYWN5X2ly
+cV9tb2RlIC0gc3dpdGNoIExvY2FsIEFQSUMgYmFjayB0byBiZSBsZWdhY3kgaXJxIG1vZGUuCisg
+KiBAdmlydF93aXJlX3NldHVwOiAgIGluZGljYXRlcywgd2hldGhlciB2aXJ0dWFsIHdpcmUgbW9k
+ZSBpcyBzZWxlY3RlZAogICoKLSAqIFZpcnR1YWwgd2lyZSBtb2RlIGlzIG5lY2Vzc2FyeSB0byBk
+ZWxpdmVyIGxlZ2FjeSBpbnRlcnJ1cHRzIGV2ZW4gd2hlbiB0aGUKLSAqIEFQSUMgaXMgZGlzYWJs
+ZWQuCisgKiBJZiBQSUMgbW9kZSBpcyBhdmFpbGFibGUsIExBUElDIG5lZWQgYmUgZGlzY29ubmVj
+dGVkIHdpdGggQ1BVLiBPdGhlcndpc2UKKyAqIGVuYWJsZSBMQVBJQyBhbmQgc2V0IGl0IHRvIGJl
+IHZpcnR1YWwgd2lyZSBtb2RlLiBIb3dldmVyIGlmIElPLUFQSUMgaGFzCisgKiBiZWVuIHZpcnR1
+YWwgd2lyZSBtb2RlLCBMVlQwIG9mIExBUElDIG5lZWQgYmUgbWFza2VkLgogICovCi12b2lkIGRp
+c2Nvbm5lY3RfYnNwX0FQSUMoaW50IHZpcnRfd2lyZV9zZXR1cCkKK3ZvaWQgbGFwaWNfc2V0X2xl
+Z2FjeV9pcnFfbW9kZShpbnQgdmlydF93aXJlX3NldHVwKQogewogCXVuc2lnbmVkIGludCB2YWx1
+ZTsKIApkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL2FwaWMvaW9fYXBpYy5jIGIvYXJjaC94
+ODYva2VybmVsL2FwaWMvaW9fYXBpYy5jCmluZGV4IGQ4ZjVjYmUuLmYzZjNhYmUgMTAwNjQ0Ci0t
+LSBhL2FyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMuYworKysgYi9hcmNoL3g4Ni9rZXJuZWwv
+YXBpYy9pb19hcGljLmMKQEAgLTE0MzAsNyArMTQzMCw3IEBAIHZvaWQgX19pbml0IGVuYWJsZV9J
+T19BUElDKHZvaWQpCiAJY2xlYXJfSU9fQVBJQygpOwogfQogCi12b2lkIG5hdGl2ZV9kaXNhYmxl
+X2lvX2FwaWModm9pZCkKK3N0YXRpYyB2b2lkIGlvYXBpY19zZXRfdmlydHVhbF93aXJlX21vZGUo
+dm9pZCkKIHsKIAkvKgogCSAqIElmIHRoZSBpODI1OSBpcyByb3V0ZWQgdGhyb3VnaCBhbiBJT0FQ
+SUMKQEAgLTE0NTMsMjEgKzE0NTMsMjQgQEAgdm9pZCBuYXRpdmVfZGlzYWJsZV9pb19hcGljKHZv
+aWQpCiAJCSAqLwogCQlpb2FwaWNfd3JpdGVfZW50cnkoaW9hcGljX2k4MjU5LmFwaWMsIGlvYXBp
+Y19pODI1OS5waW4sIGVudHJ5KTsKIAl9Ci0KLQlpZiAoYm9vdF9jcHVfaGFzKFg4Nl9GRUFUVVJF
+X0FQSUMpIHx8IGFwaWNfZnJvbV9zbXBfY29uZmlnKCkpCi0JCWRpc2Nvbm5lY3RfYnNwX0FQSUMo
+aW9hcGljX2k4MjU5LnBpbiAhPSAtMSk7CiB9CiAKIC8qCi0gKiBOb3QgYW4gX19pbml0LCBuZWVk
+ZWQgYnkga2V4ZWMva2R1bXAgY29kZS4KLSAqIEZvciBzYWZldHkgSU8tQVBJQyBhbmQgTG9jYWwg
+QVBJQyBuZWVkIGJlIGNsZWFyZWQgYmVmb3JlIHRoaXMuCisgKiBJbiBsZWdhY3kgaXJxIG1vZGUs
+IGZ1bGwgRE9TIGNvbXBhdGliaWxpdHkgd2l0aCB0aGUgdW5pcHJvY2Vzc29yIFBDL0FUIGlzCisg
+KiBwcm92aWRlZCBieSB1c2luZyB0aGUgQVBJQ3MgaW4gY29uanVuY3Rpb24gd2l0aCBzdGFuZGFy
+ZCA4MjU5QS1lcXVpdmFsZW50CisgKiBwcm9ncmFtbWFibGUgaW50ZXJydXB0IGNvbnRyb2xsZXJz
+IChQSUNzKS4gSXQncyBuZWNlc3NhcnkgdG8gZGVsaXZlciBsZWdhY3kKKyAqIGludGVycnVwdHMg
+ZXZlbiB3aGVuIEFQSUMgbW9kZSBpcyBub3QgZW5hYmxlZC4gVGhpcyBpcyByZXF1aXJlZCBieSBr
+ZXhlYy8KKyAqIGtkdW1wIGJlZm9yZSBlbnRlciBpbnRvIHRoZSAybmQga2VybmVsLgogICovCiB2
+b2lkIHN3aXRjaF90b19sZWdhY3lfaXJxX21vZGUodm9pZCkKIHsKIAlpZiAoIW5yX2xlZ2FjeV9p
+cnFzKCkpCiAJCXJldHVybjsKIAotCXg4Nl9pb19hcGljX29wcy5kaXNhYmxlKCk7CisJaW9hcGlj
+X3NldF92aXJ0dWFsX3dpcmVfbW9kZSgpOworCisJaWYgKGJvb3RfY3B1X2hhcyhYODZfRkVBVFVS
+RV9BUElDKSB8fCBhcGljX2Zyb21fc21wX2NvbmZpZygpKQorCQlsYXBpY19zZXRfbGVnYWN5X2ly
+cV9tb2RlKGlvYXBpY19pODI1OS5waW4gIT0gLTEpOwogfQogCiAjaWZkZWYgQ09ORklHX1g4Nl8z
+MgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva2VybmVsL3g4Nl9pbml0LmMgYi9hcmNoL3g4Ni9rZXJu
+ZWwveDg2X2luaXQuYwppbmRleCBkYWQ1ZmU5Li4xMTc3YzY0IDEwMDY0NAotLS0gYS9hcmNoL3g4
+Ni9rZXJuZWwveDg2X2luaXQuYworKysgYi9hcmNoL3g4Ni9rZXJuZWwveDg2X2luaXQuYwpAQCAt
+MTM4LDUgKzEzOCw1IEBAIHZvaWQgYXJjaF9yZXN0b3JlX21zaV9pcnFzKHN0cnVjdCBwY2lfZGV2
+ICpkZXYpCiAKIHN0cnVjdCB4ODZfaW9fYXBpY19vcHMgeDg2X2lvX2FwaWNfb3BzID0gewogCS5y
+ZWFkCQkJPSBuYXRpdmVfaW9fYXBpY19yZWFkLAotCS5kaXNhYmxlCQk9IG5hdGl2ZV9kaXNhYmxl
+X2lvX2FwaWMsCisJLmRpc2FibGUJCT0gc3dpdGNoX3RvX2xlZ2FjeV9pcnFfbW9kZSwKIH07CmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2lycV9yZW1hcHBpbmcuYyBiL2RyaXZlcnMvaW9tbXUv
+aXJxX3JlbWFwcGluZy5jCmluZGV4IDQ5NzIxYjQuLjc1MTQ3MmQgMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvaW9tbXUvaXJxX3JlbWFwcGluZy5jCisrKyBiL2RyaXZlcnMvaW9tbXUvaXJxX3JlbWFwcGlu
+Zy5jCkBAIC0zNyw3ICszNyw3IEBAIHN0YXRpYyB2b2lkIGlycV9yZW1hcHBpbmdfZGlzYWJsZV9p
+b19hcGljKHZvaWQpCiAJICogbm93LgogCSAqLwogCWlmIChib290X2NwdV9oYXMoWDg2X0ZFQVRV
+UkVfQVBJQykgfHwgYXBpY19mcm9tX3NtcF9jb25maWcoKSkKLQkJZGlzY29ubmVjdF9ic3BfQVBJ
+QygwKTsKKwkJbGFwaWNfc2V0X2xlZ2FjeV9pcnFfbW9kZSgwKTsKIH0KIAogc3RhdGljIHZvaWQg
+X19pbml0IGlycV9yZW1hcHBpbmdfbW9kaWZ5X3g4Nl9vcHModm9pZCkKLS0gCjIuNS41CgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
