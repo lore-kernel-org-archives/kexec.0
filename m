@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1469042361.2977.90.camel@infradead.org>
+Message-ID: <1469046828.2977.122.camel@infradead.org>
 Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
 From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 20 Jul 2016 12:19:21 -0700
-In-Reply-To: <20160720153859.GG24691@leverpostej>
+Date: Wed, 20 Jul 2016 13:33:48 -0700
+In-Reply-To: <20160720175305.GB4797@localhost.localdomain>
 References: <cover.1468970114.git.geoff@infradead.org>
  <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
- <20160720153859.GG24691@leverpostej>
+ <20160720175305.GB4797@localhost.localdomain>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,87 +20,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi Mark,
+Hi Pratyush,
 
-On Wed, 2016-07-20 at 16:39 +0100, Mark Rutland wrote:
-> On Tue, Jul 19, 2016 at 11:28:13PM +0000, Geoff Levand wrote:
-> > +/**
-> > + * struct arm64_image_header - arm64 kernel image header.
-> > + *
-> > + * @pe_sig: Optional PE format 'MZ' signature.
-> > + * @branch_code: Reserved for instructions to branch to stext.
-> > + * @text_offset: The image load offset in LSB byte order.
-> > + * @image_size: An estimated size of the memory image size in LSB byte order.
-> > + * @flags: Bit flags:
-> > + *  Bit 7.0: Image byte order, 1=MSB.
-> > + * @reserved_1: Reserved.
-> > + * @magic: Magic number, "ARM\x64".
-> > + * @pe_header: Optional offset to a PE format header.
-> > + **/
+On Wed, 2016-07-20 at 23:23 +0530, Pratyush Anand wrote:
+> On 19/07/2016:11:28:13 PM, Geoff Levand wrote:
+
+> > +++ b/kexec/arch/arm64/include/arch/options.h
+> > @@ -0,0 +1,43 @@
+> > +#if !defined(KEXEC_ARCH_ARM64_OPTIONS_H)
+> > +#define KEXEC_ARCH_ARM64_OPTIONS_H
 > > +
-> > +struct arm64_image_header {
-> > +> > 	> > uint8_t pe_sig[2];
-> > +> > 	> > uint16_t branch_code[3];
-> > +> > 	> > uint64_t text_offset;
-> > +> > 	> > uint64_t image_size;
-> > +> > 	> > uint8_t flags[8];
-> 
-> The flags field is a 64-bit quantity, and it's rather confusing to treat
-> it as something else.
-> 
-> I think it would be better to have it as a uint64_t, and use explicit
-> endianness conversion as necessary to swizzle it. I beleive that's less
-> confusing than grabbing individual bytes.
-> 
-> > +static const uint64_t arm64_image_flag_7_be = 0x01U;
-> 
-> For this we could have:
-> 
-> #define ARM64_IMAGE_FLAG_BE> 	> 	> (1UL << 0)
-
-Sure, we can do it that way.
-
-> > +static inline int arm64_header_check_magic(const struct arm64_image_header *h)
-> > +{
-> > +> > 	> > if (!h)
-> > +> > 	> > 	> > return 0;
+> > +#define OPT_APPEND> > 	> > 	> > ((OPT_MAX)+0)
+> > +#define OPT_DTB> > 	> > 	> > 	> > ((OPT_MAX)+1)
+> > +#define OPT_INITRD> > 	> > 	> > ((OPT_MAX)+2)
+> > +#define OPT_PORT> > 	> > 	> > ((OPT_MAX)+3)
+> > +#define OPT_REUSE_CMDLINE> > 	> > ((OPT_MAX)+4)
+> > +#define OPT_ARCH_MAX> > 	> > 	> > ((OPT_MAX)+5)
 > > +
-> > +> > 	> > if (!h->text_offset)
-> > +> > 	> > 	> > return 0;
+> > +#define KEXEC_ARCH_OPTIONS \
+> > +> > 	> > KEXEC_OPTIONS \
+> > +> > 	> > { "append",        1, NULL, OPT_APPEND }, \
+> > +> > 	> > { "command-line",  1, NULL, OPT_APPEND }, \
+> > +> > 	> > { "dtb",           1, NULL, OPT_DTB }, \
+> > +> > 	> > { "initrd",        1, NULL, OPT_INITRD }, \
+> > +> > 	> > { "port",          1, NULL, OPT_PORT }, \
 > 
-> I believe that with CONFIG_RANDOMIZE_TEXT_OFFSET, it is possible that
-> text_offset is 0.
-> Regardless, I'm not sure I follow the point of this check; why isn't
-> checking the magic sufficient?
+> I still think that we should have a way to check TX buffer overflow..Anyway, I
+> will send top up patch for that when these patch set are merged.
 
-I'll remove it.
+I was very tempted to just not support the purgatory printing,
+as other arches do, because of all the trouble with different
+UARTs.  Is it really so important to see the 'I'm in purgatory'
+message?
 
+> > +> > 	> > { "ramdisk",       1, NULL, OPT_INITRD }, \
+> > +> > 	> > { "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
 > > +
-> > +> > 	> > return (h->magic[0] == arm64_image_magic[0]
-> > +> > 	> > 	> > && h->magic[1] == arm64_image_magic[1]
-> > +> > 	> > 	> > && h->magic[2] == arm64_image_magic[2]
-> > +> > 	> > 	> > && h->magic[3] == arm64_image_magic[3]);
-> > +}
-> 
-> > +static inline int arm64_header_check_msb(const struct arm64_image_header *h)
-> > +{
-> > +> > 	> > if (!h)
-> > +> > 	> > 	> > return 0;
+> > +#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR /* Only accept long arch options. */
+> > +#define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
+> > +#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
 > > +
-> > +> > 	> > return !!(h->flags[7] & arm64_image_flag_7_be);
-> > +}
+> > +static const char arm64_opts_usage[] __attribute__ ((unused)) =
+> > +"     --append=STRING       Set the kernel command line to STRING.\n"
 > 
-> As above, I think this would be better as the below, perhaps wrapped
-> with !! if people don't like implicit bool conversion.
+> "Update the kernel command line with STRING.\n" may be a better description.
+
+That is the text the other arches use, so I'll keep it for consistency.
+
 > 
-> static inline bool arm64_header_is_be(const struct arm64_image_header *h)
-> {
-> 	> return le64_to_cpu(h->flags) & ARM64_IMAGE_FLAG_BE;
-> }
-> 
+> > +"     --command-line=STRING Set the kernel command line to STRING.\n"
+> > +"     --dtb=FILE            Use FILE as the device tree blob.\n"
+> > +"     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
+> > +"     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
+> > +"     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
+> > +"     --reuse-cmdline       Use kernel command line from running system.\n";
+> > +
+> > +
 > > +static int check_cpu_properties(const struct cpu_properties *cp_1,
 > > +> > 	> > const struct cpu_properties *cp_2)
 > > +{
@@ -122,107 +100,35 @@ I'll remove it.
 > > +> > 	> > 	> > 	> > cpu_enable_method_str(cp_1->method));
 > > +> > 	> > 	> > return -EINVAL;
 > > +> > 	> > }
-> > +
-> > +> > 	> > dbgprintf("%s: hwid-%" PRIx64 ": OK\n", __func__, cp_1->hwid);
-> > +
-> > +> > 	> > return 0;
-> > +}
 > 
-> Does this really matter to userspace?
->
-> I agree that it makes sense to warn the user that kexec might not be
-> possible, but producing an error and failing doesn't seem right. Who
-> knows what the kernel might support in future?
-
-As of now, we just ignore the return values of the call and
-continue on. 
- 
-> > +static uint64_t read_sink(const char *command_line)
-> > +{
-> > +> > 	> > uint64_t v;
-> > +> > 	> > const char *p;
-> > +
-> > +> > 	> > if (arm64_opts.port)
-> > +> > 	> > 	> > return arm64_opts.port;
-> > +
-> > +#if defined(ARM64_DEBUG_PORT)
-> > +> > 	> > return (uint64_t)(ARM64_DEBUG_PORT);
-> > +#endif
-> > +> > 	> > if (!command_line)
-> > +> > 	> > 	> > return 0;
-> > +
-> > +> > 	> > if (!(p = strstr(command_line, "earlyprintk=")) &&
-> > +> > 	> > 	> > !(p = strstr(command_line, "earlycon=")))
-> > +> > 	> > 	> > return 0;
-> > +
-> > +> > 	> > while (*p != ',')
-> > +> > 	> > 	> > p++;
-> > +
-> > +> > 	> > p++;
-> > +
-> > +> > 	> > while (isspace(*p))
-> > +> > 	> > 	> > p++;
+> What if cp_1->method = cp_2->method = cpu_enable_method_spin_table?
 > 
-> Why do we skip spaces? As far as I am aware, there should not be any
-> spaces in the option.
+> I think, second if loop should be within 1st loop's scope.
 
-Sure, I can remove it.
+There is no way to get a cpu back into a spin, so spin_table is not supported.
 
+> +> 	> for (cpu_1 = 0; cpu_1 < info_1.cpu_count; cpu_1++) {
+> > +> > 	> > 	> > struct cpu_properties *cp_1 = &info_1.cp[cpu_1];
+> > +> > 	> > 	> > unsigned int cpu_2;
 > > +
-> > +> > 	> > if (*p == 0)
-> > +> > 	> > 	> > return 0;
+> > +> > 	> > 	> > for (cpu_2 = 0; cpu_2 < info_2.cpu_count; cpu_2++) {
+> > +> > 	> > 	> > 	> > struct cpu_properties *cp_2 = &info_2.cp[cpu_2];
 > > +
-> > +> > 	> > errno = 0;
+> > +> > 	> > 	> > 	> > if (cp_1->hwid != cp_2->hwid)
+> > +> > 	> > 	> > 	> > 	> > continue;
 > > +
-> > +> > 	> > v = strtoull(p, NULL, 0);
+> > +> > 	> > 	> > 	> > to_process--;
 > > +
-> > +> > 	> > if (errno)
-> > +> > 	> > 	> > return 0;
+> > +> > 	> > 	> > 	> > result = check_cpu_properties(cp_1, cp_2);
 > > +
-> > +> > 	> > return v;
-> > +}
+> > +> > 	> > 	> > 	> > if (result)
+> > +> > 	> > 	> > 	> > 	> > goto on_exit;
 > 
-> It looks like the purgatory code expects angel SWI as the earlycon,
+> I think, you can break the loop when cp_1->hwid and cp_2->hwid matches.
 
-Maybe you saw the debug_brk macro in entry.S?  I should remove
-that and just loop.
+OK.
 
-> whereas many other earlycons exist (with pl011 being extremely popular).
-> Regardless, if we assume a particular UART type, we should explicitly
-> verify that here. Otherwise the purgatory code will likely bring down
-> the system, and it will be very painful to debug.
-> 
-> Please explicitly check for the supported earlycon name.
-
-Purgatory just writes bytes to the address given.  Are there
-UARTs that don't have TX as the first port?
-
-To be safe, we could do a check when we get the address from
-an earlycon parameter.  Here's what I found in the dts'.  The
-first three are OK, but I don't know about the others.  
-
-pl011
-ns16550
-ns16550a
-
-primecell
-meson-uart
-dw-apb-uart
-exynos4210-uart
-ls1021a-lpuart
-dw-apb-uart
-armada-3700-uart
-mt6795-uart
-mt6577-uart
-mt8173-uart
-
-
-> > +
-> > +/**
-> > + * arm64_load_other_segments - Prepare the dtb, initrd and purgatory segments.
-> > + */
-> > +
-> > +int arm64_load_other_segments(struct kexec_info *info,
+> +int arm64_load_other_segments(struct kexec_info *info,
 > > +> > 	> > uint64_t kernel_entry)
 > > +{
 > > +> > 	> > int result;
@@ -270,69 +176,51 @@ mt8173-uart
 > > +> > 	> > 	> > return result;
 > > +> > 	
 > > +> > 	> > result =  check_cpu_nodes(&dtb_1, &dtb_2);
+> 
+> Probably, we can skip check_cpu_nodes() when dtb_2 = dtb_1.               
+
+OK.
+
+> > +unsigned long virt_to_phys(unsigned long v)
+> > +{
+> > +> > 	> > unsigned long p;
+> > +
+> > +> > 	> > p = v - get_page_offset() + get_phys_offset();
+> 
+> 
+> Do we need to take care of kaslr while converting from virtual to physical?
+
+From what I understand of kaslr, the kernel relocates parts of
+itself after startup.
+
+This virt_to_phys conversion here is to just convert the (virtual
+address) values in the vmlinux elf file to physical addresses we
+can use to load the elf segments.  I don't think kaslr should
+affect how the elf file is loaded.
+
+> > +
+> > +int get_memory_ranges(struct memory_range **range, int *ranges,
+> > +> > 	> > unsigned long kexec_flags)
+> > +{
+> > +> > 	> > static struct memory_range array[KEXEC_SEGMENT_MAX];
+> > +> > 	> > unsigned int count;
+> > +> > 	> > int result;
+> > +
+> > +> > 	> > result = get_memory_ranges_dt(array, &count);
 > > +
 > > +> > 	> > if (result)
-> > +> > 	> > 	> > fprintf(stderr, "kexec: Warning: No device tree available.\n");
+> > +> > 	> > 	> > result = get_memory_ranges_iomem(array, &count);
 > 
-> There are other reasons we'd return an error (e.g. mismatched enable
-> methods), so this is somewhat misleading.
+> IMO, reading from iomem should be preferred over reading from dt, because
+> /proc/iomem would have updated information whether it is DT or ACPI. 
 > 
-> I believe that in all cases we log the specific reason first anyway, so
-> perhaps it's best to jsut remove this warning.
+> Actually, there are some platform's DT file (such as mustang) which expects that
+> firmware will update memory node information. Now, if firmware is not doing that
+> (ofcourse its a firmware issue) then, kexec will fail with above code. However,
+> it will work fine even with those systems if memory ranges are read from
+> /proc/iomem.
 
-Yes, this could be removed.
-
-> Won't this also be very noisy in the case of ACPI with a stub DTB? In
-> that case ther are no cpu nodes, and may be no memory nodes.
-
-Should we just remove check_cpu_nodes and everything associated with
-it?  It is a lot of code, and all it does now is issue warnings.
-It is still around from the early days of spin_table support.  
-
-As for memory nodes, we currently look at the dt, then fall back
-to iomem. We could switch the order, iomem then dt, but then
-those just issue dbgprintf's.
-
-> [...]
-> 
-> > +int arm64_process_image_header(const struct arm64_image_header *h)
-> > +{
-> > +#if !defined(KERNEL_IMAGE_SIZE)
-> > +# define KERNEL_IMAGE_SIZE (768 * 1024)
-> > +#endif
-> > +
-> > +> > 	> > if (!arm64_header_check_magic(h))
-> > +> > 	> > 	> > return -EINVAL;
-> > +
-> > +> > 	> > if (h->image_size) {
-> > +> > 	> > 	> > arm64_mem.text_offset = le64_to_cpu(h->text_offset);
-> > +> > 	> > 	> > arm64_mem.image_size = le64_to_cpu(h->image_size);
-> > +> > 	> > } else {
-> > +> > 	> > 	> > /* For 3.16 and older kernels. */
-> > +> > 	> > 	> > arm64_mem.text_offset = 0x80000;
-> > +> > 	> > 	> > arm64_mem.image_size = KERNEL_IMAGE_SIZE;
-> > +> > 	> > }
-> > +
-> > +> > 	> > return 0;
-> > +}
-> 
-> A v3.16 defconfig Image with the Linaro 14.09 GCC 4.9 toolchain is
-> 6.3MB, so the chosen value for KERNEL_IMAGE_SIZE is far too small. I'm
-> not sure what to suggest as a better value, however, as I know that some
-> configurations are far bigger than that.
-
-OK, I'll make it bigger, say 7.  When I set this up I expected
-the distro maintainer to choose KERNEL_IMAGE_SIZE to match their
-needs.
-
-> Do we expect to kexec to a v3.16 or earlier kernel, given we need a much
-> newer first kernel to have kexec in the first place? We could mandate
-> having a header with a non-zero image_size (i.e. the target kernel has
-> to be v3.16 or newer).
-
-Kexec could be installed as a bootloader, and users may want the
-ability to boot older installations, so I think it worthwile to
-have.
+That's a good point.  I will switch the order.
 
 Thanks for the review.
 
