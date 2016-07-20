@@ -1,24 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPivx-0003fY-DF
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 04:16:35 +0000
-Received: by mail-pf0-x22c.google.com with SMTP id y134so14476056pfg.0
- for <kexec@lists.infradead.org>; Tue, 19 Jul 2016 21:16:12 -0700 (PDT)
-Date: Wed, 20 Jul 2016 13:22:05 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT
- property, usable-memory-range
-Message-ID: <20160720042204.GI20774@linaro.org>
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-3-takahiro.akashi@linaro.org>
- <578D1A31.5080509@arm.com> <20160719083554.GD20774@linaro.org>
- <20160719100616.GA20990@arm.com>
- <20160719110120.GF20774@linaro.org>
- <20160720033909.GA30575@arm.com>
+ id 1bPj2e-0007Iw-7F
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 04:23:29 +0000
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6K4JQEu095068
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 00:23:06 -0400
+Received: from e28smtp01.in.ibm.com (e28smtp01.in.ibm.com [125.16.236.1])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2495radkw3-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 00:23:06 -0400
+Received: from localhost
+ by e28smtp01.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Wed, 20 Jul 2016 09:53:03 +0530
+Received: from d28relay06.in.ibm.com (d28relay06.in.ibm.com [9.184.220.150])
+ by d28dlp03.in.ibm.com (Postfix) with ESMTP id A6EB11258026
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 09:55:54 +0530 (IST)
+Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
+ by d28relay06.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u6K4Mx4n46465232
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 09:52:59 +0530
+Received: from d28av02.in.ibm.com (localhost [127.0.0.1])
+ by d28av02.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u6K4Mx6Q009402
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 09:52:59 +0530
+Subject: Re: [v2,1/2] refactor code parsing size based on memory range
+References: <3rbRd54y9Vz9t0p@ozlabs.org>
+ <52b513d4-16a2-ca16-975e-a755b7a5ea8d@linux.vnet.ibm.com>
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Wed, 20 Jul 2016 09:52:57 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160720033909.GA30575@arm.com>
+In-Reply-To: <52b513d4-16a2-ca16-975e-a755b7a5ea8d@linux.vnet.ibm.com>
+Message-Id: <578EFCA1.1070405@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,158 +43,307 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dennis Chen <dennis.chen@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Rusty Russell <rusty@rustcorp.com.au>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>
 
-On Wed, Jul 20, 2016 at 11:39:11AM +0800, Dennis Chen wrote:
-> On Tue, Jul 19, 2016 at 08:01:21PM +0900, AKASHI Takahiro wrote:
-> > On Tue, Jul 19, 2016 at 06:06:18PM +0800, Dennis Chen wrote:
-> > > Hello AKASHI,
-> > > 
-> > > On Tue, Jul 19, 2016 at 05:35:55PM +0900, AKASHI Takahiro wrote:
-> > > > James,
-> > > >
-> > > > On Mon, Jul 18, 2016 at 07:04:33PM +0100, James Morse wrote:
-> > > > > Hi!
-> > > > >
-> > > > > (CC: Dennis Chen)
-> > > > >
-> > > > > On 12/07/16 06:05, AKASHI Takahiro wrote:
-> > > > > > Crash dump kernel will be run with a limited range of memory as System
-> > > > > > RAM.
-> > > > > >
-> > > > > > On arm64, we will use a device-tree property under /chosen,
-> > > > > >    linux,usable-memory-range = <BASE SIZE>
-> > > > > > in order for primary kernel either on uefi or non-uefi (device tree only)
-> > > > > > system to hand over the information about usable memory region to crash
-> > > > > > dump kernel. This property will supercede entries in uefi memory map table
-> > > > > > and "memory" nodes in a device tree.
-> > > > >
-> > > > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > > > > > index 51b1302..d8b296f 100644
-> > > > > > --- a/arch/arm64/mm/init.c
-> > > > > > +++ b/arch/arm64/mm/init.c
-> > > > > > @@ -300,10 +300,48 @@ static int __init early_mem(char *p)
-> > > > > >  }
-> > > > > >  early_param("mem", early_mem);
-> > > > > >
-> > > > > > +static int __init early_init_dt_scan_usablemem(unsigned long node,
-> > > > > > +         const char *uname, int depth, void *data)
-> > > > > > +{
-> > > > > > + struct memblock_region *usablemem = (struct memblock_region *)data;
-> > > > > > + const __be32 *reg;
-> > > > > > + int len;
-> > > > > > +
-> > > > > > + usablemem->size = 0;
-> > > > > > +
-> > > > > > + if (depth != 1 || strcmp(uname, "chosen") != 0)
-> > > > > > +         return 0;
-> > > > > > +
-> > > > > > + reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
-> > > > > > + if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-> > > > > > +         return 1;
-> > > > > > +
-> > > > > > + usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> > > > > > + usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> > > > > > +
-> > > > > > + return 1;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static void __init fdt_enforce_memory_region(void)
-> > > > > > +{
-> > > > > > + struct memblock_region reg;
-> > > > > > +
-> > > > > > + of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-> > > > > > +
-> > > > > > + if (reg.size) {
-> > > > > > +         memblock_remove(0, PAGE_ALIGN(reg.base));
-> > > > > > +         memblock_remove(round_down(reg.base + reg.size, PAGE_SIZE),
-> > > > > > +                         ULLONG_MAX);
-> > > > >
-> > > 
-> > > According to the panic message from James, I guess the ACPI regions are out of the range
-> > > [reg.base, reg.base + reg.size] and removed by your above codes. On ARM64, those ACPI
-> > > regions have been added into memblock and marked as NOMAP, so I think it should be
-> > > easy to adapt my fix to retain the NOMAP regions here
-> > 
-> > See below.
-> > 
-> > > Thanks,
-> > > Dennis
-> > > 
-> > > > > I think this is a new way to trip the problem Dennis Chen has been working on
-> > > > > [0]. If I kdump with --reuse-cmdline on a kernel booted with 'acpi=on', I get
-> > > > > the panic below [1]...
-> > > >
-> > > > Yeah, it can be.
-> > > >
-> > > > > It looks like Dennis's fix involves changes in mm/memblock.c, maybe they can be
-> > > > > extended to support a range instead of just a limit?
-> > > > >
-> > > > > (It looks like x86 explicitly adds the acpi regions to the crash-kernels memory
-> > > > > map in crash_setup_memmap_entries()).
-> > > > >
-> > > > >
-> > > > >
-> > > > > Is it possible for the kernel text to be outside this range? (a bug in
-> > > > > kexec-tools, or another user of the DT property) If we haven't already failed in
-> > > > > this case, it may be worth printing a warning, or refusing to
-> > > > > restrict-memory/expose-vmcore.
-> > > >
-> > > > In my implementation of kdump, the usable memory for crash dump
-> > > > kernel will be allocated within memblock.memory after ACPI-related
-> > > > regions have been mapped. "linux,usable-memory-range" indicates
-> > > > this exact memory range.
-> > > > On crash dump kernel, my fdt_enforce_memory_region() in arm64_memblock_init()
-> > > > will exclude all the other regions from memblock.memory.
-> > > > So the kernel (with acpi=on) won't recognize ACPI-regions as
-> > > > normal memory, and map them by ioremap().
-> > > >
-> > > > I thought that it was safe, but actually not due to unaligned accesses.
-> > > > As you suggested, we will probably be able to do the same thing of
-> > > > Chen's solution in fdt_enforce_memory_region().
-> > 
-> > memblock_isolate_range() and memblock_remove_range() are not exported.
-> > So we'd better implement an unified interface like:
-> >     memblock_cap_memory_range(phys_addr_t base, size_t size);
-> > 
-> > If base == NULL, it would behave in the exact same way as your
-> > memblock_mem_limit_remove_map().
-> >
-> Hello AKASHI, it's not reasonable to change the prototype of an existing memblock API
 
-I didn't say memblock_enforce_memory_limit(), but
-*your* memblock_memblock_remove_limit().
+Ping..
 
-> which will be used by other components as we did with memblock_enforce_memory_limit. 
-> Moreover the @size in you case is to specify a memory range of the memblock, which is
-> different from the @limit as an indicator of the total size of memblocks being limited. 
-> But I can be help to post an new memblock API patch to cater for your case.
 
-Thanks, but I have already prototyped the function.
-If you don't agree to my opinion, I will have to submit
-a patch for a quite similar but different function.
-I think that nobody will accept this.
+On Friday 24 June 2016 10:45 PM, Hari Bathini wrote:
+>
+>
+> On 06/24/2016 10:56 AM, Michael Ellerman wrote:
+>> On Wed, 2016-22-06 at 19:25:26 UTC, Hari Bathini wrote:
+>>> Currently, crashkernel parameter supports the below syntax to parse 
+>>> size
+>>> based on memory range:
+>>>
+>>>     crashkernel=<range1>:<size1>[,<range2>:<size2>,...]
+>>>
+>>> While such parsing is implemented for crashkernel parameter, it 
+>>> applies to
+>>> other parameters with similar syntax. So, move this code to a more 
+>>> generic
+>>> place for code reuse.
+>>>
+>>> Cc: Eric Biederman <ebiederm@xmission.com>
+>>> Cc: Vivek Goyal <vgoyal@redhat.com>
+>>> Cc: Rusty Russell <rusty@rustcorp.com.au>
+>>> Cc: kexec@lists.infradead.org
+>>> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+>> Hari, it's not immediately clear that this makes no change to the 
+>> logic in the
+>> kexec code. Can you reply with a longer change log explaining why the 
+>> old & new
+>> logic is the same for kexec.
+>>
+>
+> Hi Michael,
+>
+> Please consider this changelog for this patch:
+>
+> -- 
+> crashkernel parameter supports different syntaxes to specify the amount
+> of memory to be reserved for kdump kernel. Below is one of the supported
+> syntaxes that needs parsing to find the memory size to reserve, based on
+> memory range:
+>
+> crashkernel=<range1>:<size1>[,<range2>:<size2>,...]
+>
+> While such parsing is implemented for crashkernel parameter, it 
+> applies to
+> other parameters, like fadump_reserve_mem, which could use similar 
+> syntax.
+> So, to reuse code, moving the code that checks if the parameter syntax 
+> is as
+> above and also the code that parses memory size to reserve, for this 
+> syntax.
+> While the code is moved to kernel/params.c file, there is no change in 
+> logic
+> for crashkernel parameter parsing as the moved code is invoked with 
+> function
+> calls at appropriate places.
+> -- 
+>
+> Thanks
+> Hari
+>
+>>
+>>
+>>> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+>>> index 94aa10f..72f55e5 100644
+>>> --- a/include/linux/kernel.h
+>>> +++ b/include/linux/kernel.h
+>>> @@ -436,6 +436,11 @@ extern char *get_options(const char *str, int 
+>>> nints, int *ints);
+>>>   extern unsigned long long memparse(const char *ptr, char **retptr);
+>>>   extern bool parse_option_str(const char *str, const char *option);
+>>>   +extern bool __init is_param_range_based(const char *cmdline);
+>>> +extern unsigned long long __init parse_mem_range_size(const char 
+>>> *param,
+>>> +                              char **str,
+>>> +                              unsigned long long system_ram);
+>>> +
+>>>   extern int core_kernel_text(unsigned long addr);
+>>>   extern int core_kernel_data(unsigned long addr);
+>>>   extern int __kernel_text_address(unsigned long addr);
+>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>> index 56b3ed0..d43f5cc 100644
+>>> --- a/kernel/kexec_core.c
+>>> +++ b/kernel/kexec_core.c
+>>> @@ -1083,59 +1083,9 @@ static int __init parse_crashkernel_mem(char 
+>>> *cmdline,
+>>>       char *cur = cmdline, *tmp;
+>>>         /* for each entry of the comma-separated list */
+>>> -    do {
+>>> -        unsigned long long start, end = ULLONG_MAX, size;
+>>> -
+>>> -        /* get the start of the range */
+>>> -        start = memparse(cur, &tmp);
+>>> -        if (cur == tmp) {
+>>> -            pr_warn("crashkernel: Memory value expected\n");
+>>> -            return -EINVAL;
+>>> -        }
+>>> -        cur = tmp;
+>>> -        if (*cur != '-') {
+>>> -            pr_warn("crashkernel: '-' expected\n");
+>>> -            return -EINVAL;
+>>> -        }
+>>> -        cur++;
+>>> -
+>>> -        /* if no ':' is here, than we read the end */
+>>> -        if (*cur != ':') {
+>>> -            end = memparse(cur, &tmp);
+>>> -            if (cur == tmp) {
+>>> -                pr_warn("crashkernel: Memory value expected\n");
+>>> -                return -EINVAL;
+>>> -            }
+>>> -            cur = tmp;
+>>> -            if (end <= start) {
+>>> -                pr_warn("crashkernel: end <= start\n");
+>>> -                return -EINVAL;
+>>> -            }
+>>> -        }
+>>> -
+>>> -        if (*cur != ':') {
+>>> -            pr_warn("crashkernel: ':' expected\n");
+>>> -            return -EINVAL;
+>>> -        }
+>>> -        cur++;
+>>> -
+>>> -        size = memparse(cur, &tmp);
+>>> -        if (cur == tmp) {
+>>> -            pr_warn("Memory value expected\n");
+>>> -            return -EINVAL;
+>>> -        }
+>>> -        cur = tmp;
+>>> -        if (size >= system_ram) {
+>>> -            pr_warn("crashkernel: invalid size\n");
+>>> -            return -EINVAL;
+>>> -        }
+>>> -
+>>> -        /* match ? */
+>>> -        if (system_ram >= start && system_ram < end) {
+>>> -            *crash_size = size;
+>>> -            break;
+>>> -        }
+>>> -    } while (*cur++ == ',');
+>>> +    *crash_size = parse_mem_range_size("crashkernel", &cur, 
+>>> system_ram);
+>>> +    if (cur == cmdline)
+>>> +        return -EINVAL;
+>>>         if (*crash_size > 0) {
+>>>           while (*cur && *cur != ' ' && *cur != '@')
+>>> @@ -1272,7 +1222,6 @@ static int __init __parse_crashkernel(char 
+>>> *cmdline,
+>>>                    const char *name,
+>>>                    const char *suffix)
+>>>   {
+>>> -    char    *first_colon, *first_space;
+>>>       char    *ck_cmdline;
+>>>         BUG_ON(!crash_size || !crash_base);
+>>> @@ -1290,12 +1239,10 @@ static int __init __parse_crashkernel(char 
+>>> *cmdline,
+>>>           return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>>>                   suffix);
+>>>       /*
+>>> -     * if the commandline contains a ':', then that's the extended
+>>> +     * if the parameter is range based, then that's the extended
+>>>        * syntax -- if not, it must be the classic syntax
+>>>        */
+>>> -    first_colon = strchr(ck_cmdline, ':');
+>>> -    first_space = strchr(ck_cmdline, ' ');
+>>> -    if (first_colon && (!first_space || first_colon < first_space))
+>>> +    if (is_param_range_based(ck_cmdline))
+>>>           return parse_crashkernel_mem(ck_cmdline, system_ram,
+>>>                   crash_size, crash_base);
+>>>   diff --git a/kernel/params.c b/kernel/params.c
+>>> index a6d6149..84e40ae 100644
+>>> --- a/kernel/params.c
+>>> +++ b/kernel/params.c
+>>> @@ -268,6 +268,102 @@ char *parse_args(const char *doing,
+>>>       return err;
+>>>   }
+>>>   +/*
+>>> + * is_param_range_based - check if current parameter is range based
+>>> + * @cmdline: points to the parameter to check
+>>> + *
+>>> + * Returns true when the current paramer is range based, false 
+>>> otherwise
+>>> + */
+>>> +bool __init is_param_range_based(const char *cmdline)
+>>> +{
+>>> +    char    *first_colon, *first_space;
+>>> +
+>>> +    first_colon = strchr(cmdline, ':');
+>>> +    first_space = strchr(cmdline, ' ');
+>>> +    if (first_colon && (!first_space || first_colon < first_space))
+>>> +        return true;
+>>> +
+>>> +    return false;
+>>> +}
+>>> +
+>>> +/*
+>>> + * parse_mem_range_size - parse size based on memory range
+>>> + * @param:  the thing being parsed
+>>> + * @str: (input)  where parse begins
+>>> + *                expected format - 
+>>> <range1>:<size1>[,<range2>:<size2>,...]
+>>> + *       (output) On success - next char after parse completes
+>>> + *                On failure - unchanged
+>>> + * @system_ram: system ram size to check memory range against
+>>> + *
+>>> + * Returns the memory size on success and 0 on failure
+>>> + */
+>>> +unsigned long long __init parse_mem_range_size(const char *param,
+>>> +                           char **str,
+>>> +                           unsigned long long system_ram)
+>>> +{
+>>> +    char *cur = *str, *tmp;
+>>> +    unsigned long long mem_size = 0;
+>>> +
+>>> +    /* for each entry of the comma-separated list */
+>>> +    do {
+>>> +        unsigned long long start, end = ULLONG_MAX, size;
+>>> +
+>>> +        /* get the start of the range */
+>>> +        start = memparse(cur, &tmp);
+>>> +        if (cur == tmp) {
+>>> +            printk(KERN_INFO "%s: Memory value expected\n", param);
+>>> +            return mem_size;
+>>> +        }
+>>> +        cur = tmp;
+>>> +        if (*cur != '-') {
+>>> +            printk(KERN_INFO "%s: '-' expected\n", param);
+>>> +            return mem_size;
+>>> +        }
+>>> +        cur++;
+>>> +
+>>> +        /* if no ':' is here, than we read the end */
+>>> +        if (*cur != ':') {
+>>> +            end = memparse(cur, &tmp);
+>>> +            if (cur == tmp) {
+>>> +                printk(KERN_INFO "%s: Memory value expected\n",
+>>> +                    param);
+>>> +                return mem_size;
+>>> +            }
+>>> +            cur = tmp;
+>>> +            if (end <= start) {
+>>> +                printk(KERN_INFO "%s: end <= start\n", param);
+>>> +                return mem_size;
+>>> +            }
+>>> +        }
+>>> +
+>>> +        if (*cur != ':') {
+>>> +            printk(KERN_INFO "%s: ':' expected\n", param);
+>>> +            return mem_size;
+>>> +        }
+>>> +        cur++;
+>>> +
+>>> +        size = memparse(cur, &tmp);
+>>> +        if (cur == tmp) {
+>>> +            printk(KERN_INFO "%s: Memory value expected\n", param);
+>>> +            return mem_size;
+>>> +        }
+>>> +        cur = tmp;
+>>> +        if (size >= system_ram) {
+>>> +            printk(KERN_INFO "%s: invalid size\n", param);
+>>> +            return mem_size;
+>>> +        }
+>>> +
+>>> +        /* match ? */
+>>> +        if (system_ram >= start && system_ram < end) {
+>>> +            mem_size = size;
+>>> +            *str = cur;
+>>> +            break;
+>>> +        }
+>>> +    } while (*cur++ == ',');
+>>> +
+>>> +    return mem_size;
+>>> +}
+>>> +
+>>>   /* Lazy bastard, eh? */
+>>>   #define STANDARD_PARAM_DEF(name, type, format, 
+>>> strtolfn)              \
+>>>       int param_set_##name(const char *val, const struct 
+>>> kernel_param *kp) \
+>> _______________________________________________
+>> Linuxppc-dev mailing list
+>> Linuxppc-dev@lists.ozlabs.org
+>> https://lists.ozlabs.org/listinfo/linuxppc-dev
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
--Takahiro AKASHI
-
-> Thanks,
-> Dennis
->   
-> >
-> > Thanks,
-> > -Takahiro AKASHI
-> > 
-> > > >
-> > > >
-> > > > Thanks,
-> > > > -Takahiro AKASHI
-> > > >
-> 
 
 _______________________________________________
 kexec mailing list
