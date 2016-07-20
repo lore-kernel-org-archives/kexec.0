@@ -1,13 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 20 Jul 2016 16:39:00 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
-Message-ID: <20160720153859.GG24691@leverpostej>
-References: <cover.1468970114.git.geoff@infradead.org>
- <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bPtlh-0006Ib-Iu
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 15:50:42 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6KFnKRV088978
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 11:50:20 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 24a8eya0uk-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 11:50:20 -0400
+Received: from localhost
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Wed, 20 Jul 2016 12:50:17 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [RFC 0/3] extend kexec_file_load system call
+Date: Wed, 20 Jul 2016 12:50:11 -0300
+In-Reply-To: <34243612.Gid3QHG1hd@wuerfel>
+References: <87twfunneg.fsf@linux.vnet.ibm.com>
+ <20160720083530.GK1041@n2100.armlinux.org.uk> <34243612.Gid3QHG1hd@wuerfel>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
+Message-Id: <2545578.SWp0m9VQX8@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,269 +36,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, Balbir Singh <bsingharora@gmail.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-Hi,
+Am Mittwoch, 20 Juli 2016, 13:12:20 schrieb Arnd Bergmann:
+> On Wednesday, July 20, 2016 8:47:45 PM CEST Michael Ellerman wrote:
+> > At least for stdout-path, I can't really see how that would
+> > significantly help an attacker, but I'm all ears if anyone has ideas.
+> 
+> That's actually an easy one that came up before: If an attacker controls
+> a tty device (e.g. network console) that can be used to enter a debugger
+> (kdb, kgdb, xmon, ...), enabling that to be the console device
+> gives you a direct attack vector. The same thing will happen if you
+> have a piece of software that intentially gives extra rights to the
+> owner of the console device by treating it as "physical presence".
 
-On Tue, Jul 19, 2016 at 11:28:13PM +0000, Geoff Levand wrote:
-> +/**
-> + * struct arm64_image_header - arm64 kernel image header.
-> + *
-> + * @pe_sig: Optional PE format 'MZ' signature.
-> + * @branch_code: Reserved for instructions to branch to stext.
-> + * @text_offset: The image load offset in LSB byte order.
-> + * @image_size: An estimated size of the memory image size in LSB byte order.
-> + * @flags: Bit flags:
-> + *  Bit 7.0: Image byte order, 1=MSB.
-> + * @reserved_1: Reserved.
-> + * @magic: Magic number, "ARM\x64".
-> + * @pe_header: Optional offset to a PE format header.
-> + **/
-> +
-> +struct arm64_image_header {
-> +	uint8_t pe_sig[2];
-> +	uint16_t branch_code[3];
-> +	uint64_t text_offset;
-> +	uint64_t image_size;
-> +	uint8_t flags[8];
+I think people are talking past each other a bit in these arguments about 
+what is relevant to security or not.
 
-The flags field is a 64-bit quantity, and it's rather confusing to treat
-it as something else.
+For the kexec maintainers, kexec_file_load has one very specific and narrow 
+purpose: enable Secure Boot as defined by UEFI.
 
-I think it would be better to have it as a uint64_t, and use explicit
-endianness conversion as necessary to swizzle it. I beleive that's less
-confusing than grabbing individual bytes.
+And from what I understand of their arguments so far, there is one and only 
+one security concern: when in Secure Boot mode, a system must not allow 
+execution of unsigned code with kernel privileges. So even if one can 
+specify a different root filesystem and do a lot of nasty things to the 
+system with a rogue userspace in that root filesystem, as long as the kernel 
+won't load unsigned modules that's not a problem as far as they're 
+concerned.
 
-> +static const uint64_t arm64_image_flag_7_be = 0x01U;
+Also, AFAIK attacks requiring "physical presence" are out of scope for the 
+UEFI Secure Boot security model. Thus an attack that involves control of a 
+console of plugging an USB device is also not a concern.
 
-For this we could have:
+One thing I don't know is whether an attack involving a networked IPMI 
+console or a USB device that can be "plugged" virtually by a managing system 
+(BMC) is considered a physical attack or a remote attack in the context of 
+UEFI Secure Boot.
 
-#define ARM64_IMAGE_FLAG_BE		(1UL << 0)
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-> +static inline int arm64_header_check_magic(const struct arm64_image_header *h)
-> +{
-> +	if (!h)
-> +		return 0;
-> +
-> +	if (!h->text_offset)
-> +		return 0;
-
-I believe that with CONFIG_RANDOMIZE_TEXT_OFFSET, it is possible that
-text_offset is 0.
-
-Regardless, I'm not sure I follow the point of this check; why isn't
-checking the magic sufficient?
-
-> +
-> +	return (h->magic[0] == arm64_image_magic[0]
-> +		&& h->magic[1] == arm64_image_magic[1]
-> +		&& h->magic[2] == arm64_image_magic[2]
-> +		&& h->magic[3] == arm64_image_magic[3]);
-> +}
-
-> +static inline int arm64_header_check_msb(const struct arm64_image_header *h)
-> +{
-> +	if (!h)
-> +		return 0;
-> +
-> +	return !!(h->flags[7] & arm64_image_flag_7_be);
-> +}
-
-As above, I think this would be better as the below, perhaps wrapped
-with !! if people don't like implicit bool conversion.
-
-static inline bool arm64_header_is_be(const struct arm64_image_header *h)
-{
-	return le64_to_cpu(h->flags) & ARM64_IMAGE_FLAG_BE;
-}
-
-> +static int check_cpu_properties(const struct cpu_properties *cp_1,
-> +	const struct cpu_properties *cp_2)
-> +{
-> +	assert(cp_1->hwid == cp_2->hwid);
-> +
-> +	if (cp_1->method != cp_2->method) {
-> +		fprintf(stderr,
-> +			"%s:%d: hwid-%" PRIx64 ": Error: Different cpu enable methods: %s -> %s\n",
-> +			__func__, __LINE__, cp_1->hwid,
-> +			cpu_enable_method_str(cp_1->method),
-> +			cpu_enable_method_str(cp_2->method));
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (cp_2->method != cpu_enable_method_psci) {
-> +		fprintf(stderr,
-> +			"%s:%d: hwid-%" PRIx64 ": Error: Unsupported cpu enable method: %s\n",
-> +			__func__, __LINE__, cp_1->hwid,
-> +			cpu_enable_method_str(cp_1->method));
-> +		return -EINVAL;
-> +	}
-> +
-> +	dbgprintf("%s: hwid-%" PRIx64 ": OK\n", __func__, cp_1->hwid);
-> +
-> +	return 0;
-> +}
-
-Does this really matter to userspace?
-
-I agree that it makes sense to warn the user that kexec might not be
-possible, but producing an error and failing doesn't seem right. Who
-knows what the kernel might support in future?
-
-> +static uint64_t read_sink(const char *command_line)
-> +{
-> +	uint64_t v;
-> +	const char *p;
-> +
-> +	if (arm64_opts.port)
-> +		return arm64_opts.port;
-> +
-> +#if defined(ARM64_DEBUG_PORT)
-> +	return (uint64_t)(ARM64_DEBUG_PORT);
-> +#endif
-> +	if (!command_line)
-> +		return 0;
-> +
-> +	if (!(p = strstr(command_line, "earlyprintk=")) &&
-> +		!(p = strstr(command_line, "earlycon=")))
-> +		return 0;
-> +
-> +	while (*p != ',')
-> +		p++;
-> +
-> +	p++;
-> +
-> +	while (isspace(*p))
-> +		p++;
-
-Why do we skip spaces? As far as I am aware, there should not be any
-spaces in the option.
-
-> +
-> +	if (*p == 0)
-> +		return 0;
-> +
-> +	errno = 0;
-> +
-> +	v = strtoull(p, NULL, 0);
-> +
-> +	if (errno)
-> +		return 0;
-> +
-> +	return v;
-> +}
-
-It looks like the purgatory code expects angel SWI as the earlycon,
-whereas many other earlycons exist (with pl011 being extremely popular).
-
-Regardless, if we assume a particular UART type, we should explicitly
-verify that here. Otherwise the purgatory code will likely bring down
-the system, and it will be very painful to debug.
-
-Please explicitly check for the supported earlycon name.
-
-> +
-> +/**
-> + * arm64_load_other_segments - Prepare the dtb, initrd and purgatory segments.
-> + */
-> +
-> +int arm64_load_other_segments(struct kexec_info *info,
-> +	uint64_t kernel_entry)
-> +{
-> +	int result;
-> +	uint64_t dtb_base;
-> +	uint64_t image_base;
-> +	unsigned long hole_min;
-> +	unsigned long hole_max;
-> +	uint64_t purgatory_sink;
-> +	char *initrd_buf = NULL;
-> +	struct dtb dtb_1 = {.name = "dtb_1"};
-> +	struct dtb dtb_2 = {.name = "dtb_2"};
-> +	char command_line[COMMAND_LINE_SIZE] = "";
-> +
-> +	if (arm64_opts.command_line) {
-> +		strncpy(command_line, arm64_opts.command_line,
-> +			sizeof(command_line));
-> +		command_line[sizeof(command_line) - 1] = 0;
-> +	}
-> +
-> +	purgatory_sink = read_sink(command_line);
-> +
-> +	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
-> +		purgatory_sink);
-> +
-> +	if (arm64_opts.dtb) {
-> +		dtb_2.buf = slurp_file(arm64_opts.dtb, &dtb_2.size);
-> +		assert(dtb_2.buf);
-> +	}
-> +
-> +	result = read_1st_dtb(&dtb_1, command_line);
-> +
-> +	if (result && !arm64_opts.dtb) {
-> +		fprintf(stderr, "kexec: Error: No device tree available.\n");
-> +		return result;
-> +	}
-> +
-> +	if (result && arm64_opts.dtb)
-> +		dtb_1 = dtb_2;
-> +	else if (!result && !arm64_opts.dtb)
-> +		dtb_2 = dtb_1;
-> +
-> +	result = setup_2nd_dtb(command_line, &dtb_2);
-> +
-> +	if (result)
-> +		return result;
-> +	
-> +	result =  check_cpu_nodes(&dtb_1, &dtb_2);
-> +
-> +	if (result)
-> +		fprintf(stderr, "kexec: Warning: No device tree available.\n");
-
-There are other reasons we'd return an error (e.g. mismatched enable
-methods), so this is somewhat misleading.
-
-I believe that in all cases we log the specific reason first anyway, so
-perhaps it's best to jsut remove this warning.
-
-Won't this also be very noisy in the case of ACPI with a stub DTB? In
-that case ther are no cpu nodes, and may be no memory nodes.
-
-[...]
-
-> +int arm64_process_image_header(const struct arm64_image_header *h)
-> +{
-> +#if !defined(KERNEL_IMAGE_SIZE)
-> +# define KERNEL_IMAGE_SIZE (768 * 1024)
-> +#endif
-> +
-> +	if (!arm64_header_check_magic(h))
-> +		return -EINVAL;
-> +
-> +	if (h->image_size) {
-> +		arm64_mem.text_offset = le64_to_cpu(h->text_offset);
-> +		arm64_mem.image_size = le64_to_cpu(h->image_size);
-> +	} else {
-> +		/* For 3.16 and older kernels. */
-> +		arm64_mem.text_offset = 0x80000;
-> +		arm64_mem.image_size = KERNEL_IMAGE_SIZE;
-> +	}
-> +
-> +	return 0;
-> +}
-
-A v3.16 defconfig Image with the Linaro 14.09 GCC 4.9 toolchain is
-6.3MB, so the chosen value for KERNEL_IMAGE_SIZE is far too small. I'm
-not sure what to suggest as a better value, however, as I know that some
-configurations are far bigger than that.
-
-Do we expect to kexec to a v3.16 or earlier kernel, given we need a much
-newer first kernel to have kexec in the first place? We could mandate
-having a header with a non-zero image_size (i.e. the target kernel has
-to be v3.16 or newer).
-
-Thanks,
-Mark.
 
 _______________________________________________
 kexec mailing list
