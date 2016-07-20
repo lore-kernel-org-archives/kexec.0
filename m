@@ -1,25 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail4.hitachi.co.jp ([133.145.228.5])
+Received: from szxga02-in.huawei.com ([119.145.14.65])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPT9T-00061H-2a
- for kexec@lists.infradead.org; Tue, 19 Jul 2016 11:25:29 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: Re: [V3 PATCH 1/2] x86/panic: Replace smp_send_stop() with
- kdump friendly version
-Date: Tue, 19 Jul 2016 11:23:52 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A84454C8463B@GSjpTKYDCembx31.service.hitachi.net>
-References: <20160705113323.5864.66834.stgit@softrs>
- <20160705113325.5864.74840.stgit@softrs>
- <20160711083449.GA19320@dhcp-128-65.nay.redhat.com>
- <04EAB7311EE43145B2D3536183D1A84454C6F889@GSjpTKYDCembx31.service.hitachi.net>
- <20160713020336.GA3222@dhcp-128-65.nay.redhat.com>
- <04EAB7311EE43145B2D3536183D1A84454C7A1B1@GSjpTKYDCembx31.service.hitachi.net>
- <20160718090204.GA9749@dhcp-128-65.nay.redhat.com>
- <04EAB7311EE43145B2D3536183D1A84454C83B25@GSjpTKYDCembx31.service.hitachi.net>
- <20160719065207.GF3326@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20160719065207.GF3326@dhcp-128-65.nay.redhat.com>
-Content-Language: ja-JP
+ id 1bPgqk-00006m-4T
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 02:03:07 +0000
+From: zhongjiang <zhongjiang@huawei.com>
+Subject: [PATCH] kexec: add resriction on the kexec_load
+Date: Wed, 20 Jul 2016 10:00:49 +0800
+Message-ID: <1468980049-1753-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,117 +16,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Dave Young' <dyoung@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>, Toshi Kani <toshi.kani@hpe.com>, "Peter
- Zijlstra (Intel)" <peterz@infradead.org>, Minfei Huang <mnfhuang@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Daniel Walker <dwalker@fifo99.com>, Ingo Molnar <mingo@kernel.org>, Takao Indoh <indou.takao@jp.fujitsu.com>, Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "Lee,
- Chun-Yi" <joeyli.kernel@gmail.com>, Borislav Petkov <bp@suse.de>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Petr Mladek <pmladek@suse.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <mhiramat@kernel.org>, Tejun Heo <tj@kernel.org>, Vitaly Kuznetsov <vkuznets@redhat.com>
+To: ebiederm@xmission.com, yinghai@kernel.org, horms@verge.net.au, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org
 
-PiBGcm9tOiAnRGF2ZSBZb3VuZycgW21haWx0bzpkeW91bmdAcmVkaGF0LmNvbV0NCj4gU2VudDog
-VHVlc2RheSwgSnVseSAxOSwgMjAxNiAzOjUyIFBNDQo+IEhpLA0KPiBPbiAwNy8xOS8xNiBhdCAw
-NTo1MWFtLCDmsrPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+IEhpLA0K
-PiA+DQo+ID4gPiBGcm9tOiAnRGF2ZSBZb3VuZycgW21haWx0bzpkeW91bmdAcmVkaGF0LmNvbV0N
-Cj4gPiA+IFNlbnQ6IE1vbmRheSwgSnVseSAxOCwgMjAxNiA2OjAyIFBNDQo+ID4gPiBPbiAwNy8x
-NS8xNiBhdCAxMTo1MGFtLCDmsrPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0K
-PiA+ID4gPiBIaSBEYXZlLA0KPiA+ID4gPg0KPiA+ID4gPiBUaGFua3MgZm9yIHlvdXIgcmVwbHku
-DQo+ID4gPiA+DQo+ID4gPiA+ID4gRnJvbTogJ0RhdmUgWW91bmcnIFttYWlsdG86ZHlvdW5nQHJl
-ZGhhdC5jb21dDQo+ID4gPiA+ID4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDEzLCAyMDE2IDExOjA0
-IEFNDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiAwNy8xMi8xNiBhdCAwMjo0OWFtLCDmsrPlkIjo
-i7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+ID4gPiA+ID4gSGkgRGF2ZSwNCj4g
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBUaGFua3MgZm9yIHRoZSBjb21tZW50cy4NCj4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+IEZyb206IERhdmUgWW91bmcgW21haWx0bzpkeW91bmdAcmVkaGF0
-LmNvbV0NCj4gPiA+ID4gPiA+ID4gU2VudDogTW9uZGF5LCBKdWx5IDExLCAyMDE2IDU6MzUgUE0N
-Cj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gT24gMDcvMDUvMTYgYXQgMDg6MzNwbSwgSGlk
-ZWhpcm8gS2F3YWkgd3JvdGU6DQo+ID4gW3NuaXBdDQo+ID4gPiA+ID4gPiA+IEFzIGZvciB0aGlz
-IHBhdGNoIEknbSBub3Qgc3VyZSBpdCBpcyBzYWZlIHRvIHJlcGxhY2UgdGhlDQo+ID4gPiA+ID4g
-PiA+IHNtcF9zZW5kX3N0b3Agd2l0aCB0aGUga2R1bXAgZnJpZW5kbHkgZnVuY3Rpb24uIEknbSBh
-bHNvIG5vdCBzdXJlIGlmDQo+ID4gPiA+ID4gPiA+IHRoZSBrZHVtcCBmcmllbmRseSBmdW5jdGlv
-biBpcyBzYWZlIGZvciBrZHVtcC4gV2lsbCBnbGFkIHRvIGhlYXINCj4gPiA+ID4gPiA+ID4gb3Bp
-bmlvbnMgZnJvbSBvdGhlciBhcmNoIGV4cGVydHMuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4g
-VGhpcyBzdHVmZiBkZXBlbmRzIG9uIGFyY2hpdGVjdHVyZXMsIHNvIEkgc3BlYWsgb25seSBhYm91
-dA0KPiA+ID4gPiA+ID4geDg2ICh0aGUgbG9naWMgZG9lc24ndCBjaGFuZ2Ugb24gb3RoZXIgYXJj
-aGl0ZWN0dXJlcyBhdCB0aGlzIHRpbWUpLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IGtkdW1w
-IHBhdGggd2l0aCBjcmFzaF9rZXhlY19wb3N0X25vdGlmaWVycyBkaXNhYmxlZDoNCj4gPiA+ID4g
-PiA+ICBwYW5pYygpDQo+ID4gPiA+ID4gPiAgICBfX2NyYXNoX2tleGVjKCkNCj4gPiA+ID4gPiA+
-ICAgICAgY3Jhc2hfc2V0dXBfcmVncygpDQo+ID4gPiA+ID4gPiAgICAgIGNyYXNoX3NhdmVfdm1j
-b3JlaW5mbygpDQo+ID4gPiA+ID4gPiAgICAgIG1hY2hpbmVfY3Jhc2hfc2h1dGRvd24oKQ0KPiA+
-ID4gPiA+ID4gICAgICAgIG5hdGl2ZV9tYWNoaW5lX2NyYXNoX3NodXRkb3duKCkNCj4gPiA+ID4g
-PiA+ICAgICAgICAgIHBhbmljX3NtcF9zZW5kX3N0b3AoKSAvKiBtb3N0bHkgc2FtZSBhcyBvcmln
-aW5hbA0KPiA+ID4gPiA+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqIGtkdW1w
-X25taV9zaG9vdGRvd25fY3B1cygpDQo+ID4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICovDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4ga2R1bXAgcGF0aCB3aXRoIGNy
-YXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzIGVuYWJsZWQ6DQo+ID4gPiA+ID4gPiAgcGFuaWMoKQ0K
-PiA+ID4gPiA+ID4gICAgcGFuaWNfc21wX3NlbmRfc3RvcCgpDQo+ID4gPiA+ID4gPiAgICBfX2Ny
-YXNoX2tleGVjKCkNCj4gPiA+ID4gPiA+ICAgICAgY3Jhc2hfc2V0dXBfcmVncygpDQo+ID4gPiA+
-ID4gPiAgICAgIGNyYXNoX3NhdmVfdm1jb3JlaW5mbygpDQo+ID4gPiA+ID4gPiAgICAgIG1hY2hp
-bmVfY3Jhc2hfc2h1dGRvd24oKQ0KPiA+ID4gPiA+ID4gICAgICAgIG5hdGl2ZV9tYWNoaW5lX2Ny
-YXNoX3NodXRkb3duKCkNCj4gPiA+ID4gPiA+ICAgICAgICAgIHBhbmljX3NtcF9zZW5kX3N0b3Ao
-KSAvLyBkbyBub3RoaW5nDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhlIGRpZmZlcmVuY2Ug
-aXMgdGhhdCBzdG9wcGluZyBvdGhlciBDUFVzIGJlZm9yZSBjcmFzaF9zZXR1cF9yZWdzKCkNCj4g
-PiA+ID4gPiA+IGFuZCBjcmFzaF9zYXZlX3ZtY29yZWluZm8oKSBvciBub3QuICBTaW5jZSBjcmFz
-aF9zZXR1cF9yZWdzKCkgYW5kDQo+ID4gPiA+ID4gPiBjcmFzaF9zYXZlX3ZtY29yZWluZm8oKSBq
-dXN0IHNhdmUgaW5mb3JtYXRpb24gdG8gc29tZSBtZW1vcnkgYXJlYSwNCj4gPiA+ID4gPiA+IHRo
-ZXkgd291bGRuJ3QgYmUgYWZmZWN0ZWQgYnkgcGFuaWNfc21wX3NlbmRfc3RvcCgpLiAgVGhpcyBt
-ZWFucw0KPiA+ID4gPiA+ID4gcGxhY2luZyBwYW5pY19zbXBfc2VuZF9zdG9wIGJlZm9yZSBfX2Ny
-YXNoX2tleGVjIGlzIHNhZmUuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gQlRXLCBJIG5vdGlj
-ZWQgbXkgcGF0Y2ggYnJlYWtzIFhlbiBrZXJuZWwuICBJJ2xsIGZpeCBpdCBpbiB0aGUgbmV4dA0K
-PiA+ID4gPiA+ID4gdmVyc2lvbi4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEJ1dCBpdCBkb2VzIGJy
-ZWFrcyBzdHVmZiB3aGljaCBkZXBlbmRzIG9uIGNwdSBub3QgYmVpbmcgZGlzYWJsZWQgbGlrZSBw
-cm9ibGVtIDEgeW91IG1lbnRpb25lZCBpbiBwYXRjaCBsb2cuDQo+ID4gPiA+DQo+ID4gPiA+IEFz
-IEkgbWVudGlvbmVkIGluIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGlzIHBhdGNoLCB3ZSBzaG91bGQg
-c3RvcA0KPiA+ID4gPiBvdGhlciBDUFVzIEFTQVAgdG8gcHJlc2VydmUgY3VycmVudCBzdGF0ZSBl
-aXRoZXINCj4gPiA+ID4gY3Jhc2hfa2V4ZWNfcG9zdF9ub3RpZmllcnMgaXMgZW5hYmxlZCBvciBu
-b3QuDQo+ID4gPiA+IFRoZW4sIGFsbCByZW1haW5pbmcgcHJvY2VkdXJlcyBzaG91bGQgd29yayB3
-ZWxsDQo+ID4gPiA+IGFmdGVyIHN0b3BwaW5nIG90aGVyIENQVXMgKGJ1dCBrZWVwIHRoZSBDUFUg
-bWFwIG9ubGluZSkuDQo+ID4gPiA+DQo+ID4gPiA+IFZpdmVrIGFsc28gbWVudGlvbmVkIHNpbWls
-YXIgdGhpbmdzOg0KPiA+ID4gPiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS83LzE0LzQzMw0K
-PiA+ID4NCj4gPiA+IFRoZSBpbXBsZW1lbnRhdGlvbiBpbiB0aGlzIHBhdGNoc2V0IGlzIGRpZmZl
-cmVudCBmcm9tIHN1Z2dlc3Rpb24gaW4gYWJvdmUgbGluaz8NCj4gPiA+DQo+ID4gPiBJIHRoaW5r
-IFZpdmVrJ3Mgc3VnZ2VzdGlvbiBpcyBhIGdvb2QgaWRlYSwgdG8gZHJvcCBzbXBfc2VuZF9zdG9w
-IGFuZCBkbyBiZWxvdzoNCj4gPiA+DQo+ID4gPiBzdG9wX2NwdXNfc2F2ZV9yZWdpc3Rlcl9zdGF0
-ZTsNCj4gPiA+DQo+ID4gPiBpZiAoIWNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzKQ0KPiA+ID4g
-CWNyYXNoX2tleGVjKCkNCj4gPiA+IGF0b21pY19ub3RpZmllcl9jYWxsX2NoYWluKCkNCj4gPiA+
-IGttc2dfZHVtcCgpDQo+ID4gPg0KPiA+ID4gSSdtIGp1c3QgY29tbWVudGluZyBmcm9tIGNvZGUg
-ZmxvdyBwb2ludCBvZiB2aWV3LCB0aGUgZGV0YWlsIGltcGxlbWVudGF0aW9uDQo+ID4gPiBkZWZp
-bml0ZWx5IG5lZWQgbW9yZSBjb21tZW50cyBmcm9tIEFyY2ggZXhwZXJ0cy4NCj4gPiA+DQo+ID4g
-PiBBbnkgcmVhc29uIGRpZCBub3QgbW92ZSB0aGUga2R1bXAgZnJpZW5kbHkgZnVuY3Rpb24gdG8g
-ZWFybGllciBwb2ludCBsaWtlDQo+ID4gPiBiZWZvcmUgcHJldmlvdXMgX19jcmFzaF9rZXhlYygp
-IGJlbG93Pw0KPiA+ID4gICAgICAgICBpZiAoIWNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzKSB7
-DQo+ID4gPiAgICAgICAgICAgICAgICAgcHJpbnRrX25taV9mbHVzaF9vbl9wYW5pYygpOw0KPiA+
-ID4gICAgICAgICAgICAgICAgIF9fY3Jhc2hfa2V4ZWMoTlVMTCk7DQo+ID4gPiAgICAgICAgIH0N
-Cj4gPg0KPiA+IFRoZSByZWFzb24gd2h5IHRoZSBpbXBsZW1lbnRhdGlvbiBkaWZmZXJzIGZyb20g
-Vml2ZWsncyBpcyB0byBrZWVwDQo+ID4gdGhlIGN1cnJlbnQgY29kZSBmbG93IGlmIGNyYXNoX2tl
-eGVjX3Bvc3Rfbm90aWZpZXJzIGlzIG5vdCBzcGVjaWZpZWQuDQo+ID4NCj4gPiBJZiB3ZSBhcHBs
-eSBWaXZlaydzIG9yIHlvdXIgc3VnZ2VzdGlvbiwgaXQgbWF5IGFsd2F5cyBjYXVzZSBrZHVtcA0K
-PiA+IHRvIGZhaWwgb24gTUlQUyBPQ1RFT04gZHVlIHRvIFByb2JsZW0gMS4gIEkgZG9uJ3Qgd2Fu
-dCB0byBtYWtlIHRoaW5ncw0KPiA+IGFueSB3b3JzZS4gIEkgbWF5IHBvc3QgYSBwYXRjaCBmb3Ig
-TUlQUyBPQ1RFT04sIGJ1dCBJIGNhbid0IHRlc3QgaXQuDQo+ID4gRm9yIG90aGVyIGFyY2hpdGVj
-dHVyZXMsIEknbSBub3Qgc3VyZSB3aGF0IHByb2JsZW1zIHRoZXJlIGFyZS4NCj4gPiBTbyBhdCBm
-aXJzdCwgSSB3YW50IHRvIGZpeCB0aGUgY2FzZSB3aGVyZSBjcmFzaF9rZXhlY19wb3N0X25vdGlm
-aWVycyBpcw0KPiA+IHNwZWNpZmllZCBvbiB4ODYuICBUaGVuLCBpZiBhbGwgb3RoZXIgYXJjaGl0
-ZWN0dXJlcyBzdXBwb3J0DQo+ID4gYHN0b3Agb3RoZXIgQ1BVcyBiZWZvcmUgY3Jhc2hfa2V4ZWMn
-LCBzd2l0Y2ggdG8geW91ciBvciBWaXZlaydzDQo+ID4gc3VnZ2VzdGluZyBjb2RlLg0KPiA+DQo+
-ID4gSXMgdGhpcyBhY2NlcHRhYmxlPw0KPiANCj4gTWF5YmUgeW91IGNhbiBmaW5kIHNvbWVvbmUg
-d2hvIGNhbiB0ZXN0IE1JUFMgT0NURU9OIHNvIHRoYXQgdGhleSBjYW4gZ2l2ZQ0KPiBzb21lIHRo
-b3VnaHRzIGZpcnN0IGFuZCBtYXliZSB0ZXN0IGEgZml4Pw0KPiANCj4gW2R5b3VuZ0Bsb2NhbGhv
-c3QgbGludXhdJCAuL3NjcmlwdHMvZ2V0X21haW50YWluZXIucGwgLWYgYXJjaC9taXBzL2Nhdml1
-bS1vY3Rlb24NCj4gUmFsZiBCYWVjaGxlIDxyYWxmQGxpbnV4LW1pcHMub3JnPiAoc3VwcG9ydGVy
-Ok1JUFMsY29tbWl0X3NpZ25lcjozMi8zNT05MSUpDQo+IERhdmlkIERhbmV5IDxkYXZpZC5kYW5l
-eUBjYXZpdW0uY29tPiAoY29tbWl0X3NpZ25lcjoyMS8zNT02MCUsYXV0aG9yZWQ6OC8zNT0yMyUp
-DQo+IEFhcm8gS29za2luZW4gPGFhcm8ua29za2luZW5AaWtpLmZpPiAoY29tbWl0X3NpZ25lcjox
-NS8zNT00MyUsYXV0aG9yZWQ6OC8zNT0yMyUpDQo+IEphbm5lIEh1dHR1bmVuIDxqYW5uZS5odXR0
-dW5lbkBub2tpYS5jb20+DQo+IChjb21taXRfc2lnbmVyOjcvMzU9MjAlLGF1dGhvcmVkOjcvMzU9
-MjAlKQ0KPiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4gKGNvbW1pdF9zaWdu
-ZXI6NC8zNT0xMSUsYXV0aG9yZWQ6Mi8zNT02JSkNCj4gbGludXgtbWlwc0BsaW51eC1taXBzLm9y
-ZyAob3BlbiBsaXN0Ok1JUFMpDQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcgKG9wZW4g
-bGlzdCkNCg0KU28gSSdsbCB0cnkgdG8gZml4IGZvciBNSVBTIE9DVEVPTiwgYnV0IEknbSBnb2lu
-ZyB0byBrZWVwIHRoZSBjdXJyZW50DQpiZWhhdmlvciB3aGVuIGNyYXNoX2tleGVjX3Bvc3Rfbm90
-aWZpZXJzIGlzIG5vdCBzcGVjaWZpZWQgYmVjYXVzZQ0KSSdtIG5vdCBzdXJlIHdoYXQgd2lsbCBo
-YXBwZW4gb24gb3RoZXIgYXJjaGl0ZWN0dXJlcy4NCg0KQmVzdCByZWdhcmRzLA0KDQpIaWRlaGly
-byBLYXdhaQ0KSGl0YWNoaSwgTHRkLiBSZXNlYXJjaCAmIERldmVsb3BtZW50IEdyb3VwDQoNCg0K
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+From: zhong jiang <zhongjiang@huawei.com>
+
+I hit the following question when run trinity in my system. The
+kernel is 3.4 version. but the mainline have same question to be
+solved. The root cause is the segment size is too large, it can
+expand the most of the area or the whole memory, therefore, it
+may waste an amount of time to abtain a useable page. and other
+cases will block until the test case quit. at the some time,
+OOM will come up.
+
+ck time:20160628120131-243c5
+rlock reason:SOFT-WATCHDOG detected! on cpu 5.
+CPU 5 Pid: 9485, comm: trinity-c5
+RIP: 0010:[<ffffffff8111a4cf>]  [<ffffffff8111a4cf>] next_zones_zonelist+0x3f/0x60
+RSP: 0018:ffff88088783bc38  EFLAGS: 00000283
+RAX: ffff8808bffd9b08 RBX: ffff88088783bbb8 RCX: ffff88088783bd30
+RDX: ffff88088f15a248 RSI: 0000000000000002 RDI: 0000000000000000
+RBP: ffff88088783bc38 R08: ffff8808bffd8d80 R09: 0000000412c4d000
+R10: 0000000412c4e000 R11: 0000000000000000 R12: 0000000000000002
+R13: 0000000000000000 R14: ffff8808bffd9b00 R15: 0000000000000000
+FS:  00007f91137ee700(0000) GS:ffff88089f2a0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000016161a CR3: 0000000887820000 CR4: 00000000000407e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Process trinity-c5 (pid: 9485, threadinfo ffff88088783a000, task ffff88088f159980)
+Stack:
+ ffff88088783bd88 ffffffff81106eac ffff8808bffd8d80 0000000000000000
+ 0000000000000000 ffffffff8124c2be 0000000000000001 000000000000001e
+ 0000000000000000 ffffffff8124c2be 0000000000000002 ffffffff8124c2be
+Call Trace:
+ [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
+ [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
+ [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
+ [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
+ [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
+ [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
+ [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
+ [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
+
+The patch just add condition on sanity_check_segment_list to
+restriction the segment size.
+
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ arch/x86/include/asm/kexec.h |  1 +
+ kernel/kexec_core.c          | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index d2434c1..b31a723 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -67,6 +67,7 @@ struct kimage;
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+ #define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_MAX_SEGMENT_SIZE	(5 * 1024 * 1024UL)	/* 5M */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 448127d..35c5159 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -209,6 +209,18 @@ int sanity_check_segment_list(struct kimage *image)
+ 			return result;
+ 	}
+ 
++
++	/* Verity all segment size donnot exceed the specified size.
++ 	 * if segment size from user space is too large,  a large 
++ 	 * amount of time will be wasted when allocating page. so,
++ 	 * softlockup may be come up.
++ 	 */
++	for (i = 0; i< nr_segments; i++) {
++		if (image->segment[i].memsz > KEXEC_MAX_SEGMENT_SIZE)
++			return result;
++	}
++
++
+ 	/*
+ 	 * Verify we have good destination addresses.  Normally
+ 	 * the caller is responsible for making certain we don't
+-- 
+1.8.3.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
