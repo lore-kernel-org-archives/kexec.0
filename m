@@ -1,29 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from rcdn-iport-5.cisco.com ([173.37.86.76])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPtlh-0006Ib-Iu
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 15:50:42 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u6KFnKRV088978
- for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 11:50:20 -0400
-Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24a8eya0uk-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 20 Jul 2016 11:50:20 -0400
-Received: from localhost
- by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Wed, 20 Jul 2016 12:50:17 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [RFC 0/3] extend kexec_file_load system call
-Date: Wed, 20 Jul 2016 12:50:11 -0300
-In-Reply-To: <34243612.Gid3QHG1hd@wuerfel>
-References: <87twfunneg.fsf@linux.vnet.ibm.com>
- <20160720083530.GK1041@n2100.armlinux.org.uk> <34243612.Gid3QHG1hd@wuerfel>
+ id 1bPx1V-0004PO-9G
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 19:19:13 +0000
+Subject: Re: IO memory read from /proc/vmcore leads to hang.
+References: <57841399.1030703@cisco.com>
+From: Daniel Walker <danielwa@cisco.com>
+Message-ID: <578FCE9A.50305@cisco.com>
+Date: Wed, 20 Jul 2016 12:18:50 -0700
 MIME-Version: 1.0
-Message-Id: <2545578.SWp0m9VQX8@hactar>
+In-Reply-To: <57841399.1030703@cisco.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,52 +18,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, bhe@redhat.com, Michael Ellerman <mpe@ellerman.id.au>, Balbir Singh <bsingharora@gmail.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, dyoung@redhat.com, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org, "xe-kernel@external.cisco.com" <xe-kernel@external.cisco.com>, mahesh@linux.vnet.ibm.com
 
-Am Mittwoch, 20 Juli 2016, 13:12:20 schrieb Arnd Bergmann:
-> On Wednesday, July 20, 2016 8:47:45 PM CEST Michael Ellerman wrote:
-> > At least for stdout-path, I can't really see how that would
-> > significantly help an attacker, but I'm all ears if anyone has ideas.
-> 
-> That's actually an easy one that came up before: If an attacker controls
-> a tty device (e.g. network console) that can be used to enter a debugger
-> (kdb, kgdb, xmon, ...), enabling that to be the console device
-> gives you a direct attack vector. The same thing will happen if you
-> have a piece of software that intentially gives extra rights to the
-> owner of the console device by treating it as "physical presence".
 
-I think people are talking past each other a bit in these arguments about 
-what is relevant to security or not.
+Mahesh, I didn't get your email for some reason . I saw it in the Archives.
 
-For the kexec maintainers, kexec_file_load has one very specific and narrow 
-purpose: enable Secure Boot as defined by UEFI.
+makedumpfile doesn't appear to have a way to drop free form memory 
+areas. So I need to drop 00800000 to 00807fff , but I don't see a way to 
+do that. Any other suggestions on how to prevent this hang ?
 
-And from what I understand of their arguments so far, there is one and only 
-one security concern: when in Secure Boot mode, a system must not allow 
-execution of unsigned code with kernel privileges. So even if one can 
-specify a different root filesystem and do a lot of nasty things to the 
-system with a rogue userspace in that root filesystem, as long as the kernel 
-won't load unsigned modules that's not a problem as far as they're 
-concerned.
 
-Also, AFAIK attacks requiring "physical presence" are out of scope for the 
-UEFI Secure Boot security model. Thus an attack that involves control of a 
-console of plugging an USB device is also not a concern.
 
-One thing I don't know is whether an attack involving a networked IPMI 
-console or a USB device that can be "plugged" virtually by a managing system 
-(BMC) is considered a physical attack or a remote attack in the context of 
-UEFI Secure Boot.
-
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+On 07/11/2016 02:46 PM, Daniel Walker wrote:
+>
+> Hi,
+>
+> I found found that on my Powerpc machine there is some IO memory which 
+> will cause the box to hang if I read it. It's a custom device that was 
+> added to the board for a special purpose.
+>
+> I was looking for a way to exclude this memory from the dump, and 
+> while doing that I found that kexec makes a list of memory segments 
+> that go into the core file. I was wondering why most of the kexec 
+> architecture don't appear to exclude device memory like what's listed 
+> in /proc/iomem.
+>
+> Is there a good reason why that's not the case?
+>
+> Daniel
 
 
 _______________________________________________
