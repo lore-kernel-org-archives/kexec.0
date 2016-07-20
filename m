@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([58.251.152.64])
+Received: from eu-smtp-delivery-143.mimecast.com ([207.82.80.143])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPiLo-0001Vh-UX
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 03:39:15 +0000
-Message-ID: <578EF21A.80509@huawei.com>
-Date: Wed, 20 Jul 2016 11:38:02 +0800
-From: zhong jiang <zhongjiang@huawei.com>
+ id 1bPiMN-0001bn-9Y
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 03:39:49 +0000
+Date: Wed, 20 Jul 2016 11:39:11 +0800
+From: Dennis Chen <dennis.chen@arm.com>
+Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT
+ property, usable-memory-range
+Message-ID: <20160720033909.GA30575@arm.com>
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-3-takahiro.akashi@linaro.org>
+ <578D1A31.5080509@arm.com> <20160719083554.GD20774@linaro.org>
+ <20160719100616.GA20990@arm.com>
+ <20160719110120.GF20774@linaro.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: add resriction on the kexec_load
-References: <1468980049-1753-1-git-send-email-zhongjiang@huawei.com>
- <878twxcbae.fsf@x220.int.ebiederm.org>
-In-Reply-To: <878twxcbae.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20160719110120.GF20774@linaro.org>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,126 +28,141 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, horms@verge.net.au, yinghai@kernel.org, linux-mm@kvack.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: nd@arm.com
 
-On 2016/7/20 10:07, Eric W. Biederman wrote:
-> zhongjiang <zhongjiang@huawei.com> writes:
+On Tue, Jul 19, 2016 at 08:01:21PM +0900, AKASHI Takahiro wrote:
+> On Tue, Jul 19, 2016 at 06:06:18PM +0800, Dennis Chen wrote:
+> > Hello AKASHI,
+> > 
+> > On Tue, Jul 19, 2016 at 05:35:55PM +0900, AKASHI Takahiro wrote:
+> > > James,
+> > >
+> > > On Mon, Jul 18, 2016 at 07:04:33PM +0100, James Morse wrote:
+> > > > Hi!
+> > > >
+> > > > (CC: Dennis Chen)
+> > > >
+> > > > On 12/07/16 06:05, AKASHI Takahiro wrote:
+> > > > > Crash dump kernel will be run with a limited range of memory as System
+> > > > > RAM.
+> > > > >
+> > > > > On arm64, we will use a device-tree property under /chosen,
+> > > > >    linux,usable-memory-range = <BASE SIZE>
+> > > > > in order for primary kernel either on uefi or non-uefi (device tree only)
+> > > > > system to hand over the information about usable memory region to crash
+> > > > > dump kernel. This property will supercede entries in uefi memory map table
+> > > > > and "memory" nodes in a device tree.
+> > > >
+> > > > > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> > > > > index 51b1302..d8b296f 100644
+> > > > > --- a/arch/arm64/mm/init.c
+> > > > > +++ b/arch/arm64/mm/init.c
+> > > > > @@ -300,10 +300,48 @@ static int __init early_mem(char *p)
+> > > > >  }
+> > > > >  early_param("mem", early_mem);
+> > > > >
+> > > > > +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> > > > > +         const char *uname, int depth, void *data)
+> > > > > +{
+> > > > > + struct memblock_region *usablemem = (struct memblock_region *)data;
+> > > > > + const __be32 *reg;
+> > > > > + int len;
+> > > > > +
+> > > > > + usablemem->size = 0;
+> > > > > +
+> > > > > + if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > > > > +         return 0;
+> > > > > +
+> > > > > + reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> > > > > + if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > > > > +         return 1;
+> > > > > +
+> > > > > + usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> > > > > + usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> > > > > +
+> > > > > + return 1;
+> > > > > +}
+> > > > > +
+> > > > > +static void __init fdt_enforce_memory_region(void)
+> > > > > +{
+> > > > > + struct memblock_region reg;
+> > > > > +
+> > > > > + of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> > > > > +
+> > > > > + if (reg.size) {
+> > > > > +         memblock_remove(0, PAGE_ALIGN(reg.base));
+> > > > > +         memblock_remove(round_down(reg.base + reg.size, PAGE_SIZE),
+> > > > > +                         ULLONG_MAX);
+> > > >
+> > 
+> > According to the panic message from James, I guess the ACPI regions are out of the range
+> > [reg.base, reg.base + reg.size] and removed by your above codes. On ARM64, those ACPI
+> > regions have been added into memblock and marked as NOMAP, so I think it should be
+> > easy to adapt my fix to retain the NOMAP regions here
+> 
+> See below.
+> 
+> > Thanks,
+> > Dennis
+> > 
+> > > > I think this is a new way to trip the problem Dennis Chen has been working on
+> > > > [0]. If I kdump with --reuse-cmdline on a kernel booted with 'acpi=on', I get
+> > > > the panic below [1]...
+> > >
+> > > Yeah, it can be.
+> > >
+> > > > It looks like Dennis's fix involves changes in mm/memblock.c, maybe they can be
+> > > > extended to support a range instead of just a limit?
+> > > >
+> > > > (It looks like x86 explicitly adds the acpi regions to the crash-kernels memory
+> > > > map in crash_setup_memmap_entries()).
+> > > >
+> > > >
+> > > >
+> > > > Is it possible for the kernel text to be outside this range? (a bug in
+> > > > kexec-tools, or another user of the DT property) If we haven't already failed in
+> > > > this case, it may be worth printing a warning, or refusing to
+> > > > restrict-memory/expose-vmcore.
+> > >
+> > > In my implementation of kdump, the usable memory for crash dump
+> > > kernel will be allocated within memblock.memory after ACPI-related
+> > > regions have been mapped. "linux,usable-memory-range" indicates
+> > > this exact memory range.
+> > > On crash dump kernel, my fdt_enforce_memory_region() in arm64_memblock_init()
+> > > will exclude all the other regions from memblock.memory.
+> > > So the kernel (with acpi=on) won't recognize ACPI-regions as
+> > > normal memory, and map them by ioremap().
+> > >
+> > > I thought that it was safe, but actually not due to unaligned accesses.
+> > > As you suggested, we will probably be able to do the same thing of
+> > > Chen's solution in fdt_enforce_memory_region().
+> 
+> memblock_isolate_range() and memblock_remove_range() are not exported.
+> So we'd better implement an unified interface like:
+>     memblock_cap_memory_range(phys_addr_t base, size_t size);
+> 
+> If base == NULL, it would behave in the exact same way as your
+> memblock_mem_limit_remove_map().
 >
->> From: zhong jiang <zhongjiang@huawei.com>
->>
->> I hit the following question when run trinity in my system. The
->> kernel is 3.4 version. but the mainline have same question to be
->> solved. The root cause is the segment size is too large, it can
->> expand the most of the area or the whole memory, therefore, it
->> may waste an amount of time to abtain a useable page. and other
->> cases will block until the test case quit. at the some time,
->> OOM will come up.
-> 5MiB is way too small.  I have seen vmlinux images not to mention
-> ramdisks that get larger than that.  Depending on the system
-> 1GiB might not be an unreasonable ramdisk size.  AKA run an entire live
-> system out of a ramfs.  It works well if you have enough memory.
->
-> I think there is a practical limit at about 50% of memory (because we
-> need two copies in memory the source and the destination pages), but
-> anything else is pretty much reasonable and should have a fair chance of
-> working.
->
-> A limit that reflected that reality above would be interesting.
-> Anything else will likely cause someone trouble in the futrue.
->
-> Eric
-  In addition, I had tested when set max segment size to 1G when system memory have 32G,
-  the rlock probabilistic come up when trinity run.
->> ck time:20160628120131-243c5
->> rlock reason:SOFT-WATCHDOG detected! on cpu 5.
->> CPU 5 Pid: 9485, comm: trinity-c5
->> RIP: 0010:[<ffffffff8111a4cf>]  [<ffffffff8111a4cf>] next_zones_zonelist+0x3f/0x60
->> RSP: 0018:ffff88088783bc38  EFLAGS: 00000283
->> RAX: ffff8808bffd9b08 RBX: ffff88088783bbb8 RCX: ffff88088783bd30
->> RDX: ffff88088f15a248 RSI: 0000000000000002 RDI: 0000000000000000
->> RBP: ffff88088783bc38 R08: ffff8808bffd8d80 R09: 0000000412c4d000
->> R10: 0000000412c4e000 R11: 0000000000000000 R12: 0000000000000002
->> R13: 0000000000000000 R14: ffff8808bffd9b00 R15: 0000000000000000
->> FS:  00007f91137ee700(0000) GS:ffff88089f2a0000(0000) knlGS:0000000000000000
->> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> CR2: 000000000016161a CR3: 0000000887820000 CR4: 00000000000407e0
->> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
->> Process trinity-c5 (pid: 9485, threadinfo ffff88088783a000, task ffff88088f159980)
->> Stack:
->>  ffff88088783bd88 ffffffff81106eac ffff8808bffd8d80 0000000000000000
->>  0000000000000000 ffffffff8124c2be 0000000000000001 000000000000001e
->>  0000000000000000 ffffffff8124c2be 0000000000000002 ffffffff8124c2be
->> Call Trace:
->>  [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
->>  [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
->>  [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
->>  [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
->>  [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
->>  [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
->>  [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
->>  [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
->>
->> The patch just add condition on sanity_check_segment_list to
->> restriction the segment size.
->>
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->> ---
->>  arch/x86/include/asm/kexec.h |  1 +
->>  kernel/kexec_core.c          | 12 ++++++++++++
->>  2 files changed, 13 insertions(+)
->>
->> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
->> index d2434c1..b31a723 100644
->> --- a/arch/x86/include/asm/kexec.h
->> +++ b/arch/x86/include/asm/kexec.h
->> @@ -67,6 +67,7 @@ struct kimage;
->>  /* Memory to backup during crash kdump */
->>  #define KEXEC_BACKUP_SRC_START	(0UL)
->>  #define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
->> +#define KEXEC_MAX_SEGMENT_SIZE	(5 * 1024 * 1024UL)	/* 5M */
->>  
->>  /*
->>   * CPU does not save ss and sp on stack if execution is already
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 448127d..35c5159 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -209,6 +209,18 @@ int sanity_check_segment_list(struct kimage *image)
->>  			return result;
->>  	}
->>  
->> +
->> +	/* Verity all segment size donnot exceed the specified size.
->> + 	 * if segment size from user space is too large,  a large 
->> + 	 * amount of time will be wasted when allocating page. so,
->> + 	 * softlockup may be come up.
->> + 	 */
->> +	for (i = 0; i< nr_segments; i++) {
->> +		if (image->segment[i].memsz > KEXEC_MAX_SEGMENT_SIZE)
->> +			return result;
->> +	}
->> +
->> +
->>  	/*
->>  	 * Verify we have good destination addresses.  Normally
->>  	 * the caller is responsible for making certain we don't
-> --
-> To unsubscribe, send a message with 'unsubscribe linux-mm' in
-> the body to majordomo@kvack.org.  For more info on Linux MM,
-> see: http://www.linux-mm.org/ .
-> Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
->
-> .
->
+Hello AKASHI, it's not reasonable to change the prototype of an existing memblock API
+which will be used by other components as we did with memblock_enforce_memory_limit. 
+Moreover the @size in you case is to specify a memory range of the memblock, which is
+different from the @limit as an indicator of the total size of memblocks being limited. 
+But I can be help to post an new memblock API patch to cater for your case.
 
+Thanks,
+Dennis
+  
+>
+> Thanks,
+> -Takahiro AKASHI
+> 
+> > >
+> > >
+> > > Thanks,
+> > > -Takahiro AKASHI
+> > >
 
 
 _______________________________________________
