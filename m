@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from eu-smtp-delivery-143.mimecast.com ([207.82.80.143])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPiWQ-0006Fw-B8
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 03:50:11 +0000
-Date: Wed, 20 Jul 2016 11:48:40 +0800
-From: Dennis Chen <dennis.chen@arm.com>
-Subject: Re: [PATCH v22 1/8] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20160720034838.GB30575@arm.com>
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-2-takahiro.akashi@linaro.org>
- <20160719093906.GA20732@arm.com>
- <20160719102815.GE20774@linaro.org>
- <20160719104103.GB20990@arm.com>
- <1468932537.27473.6.camel@redhat.com>
- <20160719132736.GB21007@leverpostej>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bPibh-0008Dt-HB
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 03:55:38 +0000
+From: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Subject: Re: [PATCH 0/3] Enable legacy irq mode before jump to kexec/kdump
+ kernel
+Date: Wed, 20 Jul 2016 03:54:51 +0000
+Message-ID: <1468986741.2020.41.camel@localhost>
+References: <1468983483-3952-1-git-send-email-bhe@redhat.com>
+In-Reply-To: <1468983483-3952-1-git-send-email-bhe@redhat.com>
+Content-Language: en-US
+Content-ID: <BAC3D238CFAF754EBB240DBC46C735BF@fujitsu.local>
 MIME-Version: 1.0
-In-Reply-To: <20160719132736.GB21007@leverpostej>
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,119 +21,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, robh+dt@kernel.org, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-On Tue, Jul 19, 2016 at 02:27:54PM +0100, Mark Rutland wrote:
-> On Tue, Jul 19, 2016 at 08:48:57AM -0400, Mark Salter wrote:
-> > On Tue, 2016-07-19 at 18:41 +0800, Dennis Chen wrote:
-> > > On Tue, Jul 19, 2016 at 07:28:16PM +0900, AKASHI Takahiro wrote:
-> > > > On Tue, Jul 19, 2016 at 05:39:07PM +0800, Dennis Chen wrote:
-> > > > > On Tue, Jul 12, 2016 at 02:05:07PM +0900, AKASHI Takahiro wrote:
-> > > > > > +/*
-> > > > > > + * reserve_crashkernel() - reserves memory for crash kernel
-> > > > > > + *
-> > > > > > + * This function reserves memory area given in "crashkernel=3D=
-" kernel command
-> > > > > > + * line parameter. The memory reserved is used by dump capture=
- kernel when
-> > > > > > + * primary kernel is crashing.
-> > > > > > + */
-> > > > > > +static void __init reserve_crashkernel(void)
-> > > > > > +{
-> > > > > > +=A0=A0=A0=A0=A0int ret;
-> > > > > > +
-> > > > > > +=A0=A0=A0=A0=A0ret =3D parse_crashkernel(boot_command_line, me=
-mblock_phys_mem_size(),
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0&crash_size, &crash_base);
-> > > > > > +=A0=A0=A0=A0=A0/* no crashkernel=3D or invalid value specified=
- */
-> > > > > > +=A0=A0=A0=A0=A0if (ret || !crash_size)
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return;
-> > > > > > +
-> > > > > > +=A0=A0=A0=A0=A0if (crash_base =3D=3D 0) {
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/* Current arm64 boot p=
-rotocol requires 2MB alignment */
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0crash_base =3D memblock=
-_find_in_range(0,
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0MEMBLOCK_ALLOC_ACCESSIBLE, crash_size, SZ_2M);
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (crash_base =3D=3D 0=
-) {
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0crash_size);
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0return;
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0}
-> > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0memblock_reserve(crash_=
-base, crash_size);
-> > > > > > =
-
-> > > > > I am not pretty sure the context here, but
-> > > > > can we use below code piece instead of the above lines?
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0if (crash_base =3D=3D 0)
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0memblock_alloc(cr=
-ash_size, SZ_2M);
-> > > > Either would be fine here.
-> > > > =
-
-> > > Hello AKASHI, maybe you can succeed to find the base with memblock_fi=
-nd_in_range(),=A0
-> > > but that doesn't mean you will also succeed to reserve them with memb=
-lock_reserve followed.
-> > =
-
-> > We avoid memblock_alloc() here because it panics on failure. This could=
- happen
-> > if user asks for an unusually large crashkernel size. Better to print a=
- message
-> > and keep booting. Checking the return value of memblock_reserve() seems=
- like a
-> > good thing to do though.
-> =
-
-> Another option would be to add a memblock_try_alloc() function to the
-> memblock API, which in case of failure returns 0 rather than triggering
-> a panic(). We'd still have to check the return value, but all the
-> memblock manipulation would be in one place.
-> =
-
-> It looks like adding that is fairly simple:
-> =
-
-> phys_addr_t __init memblock_try_alloc(phys_addr_t size, phys_addr_t align)
-> {
-> 	return __memblock_alloc_base(size, align, MEMBLOCK_ALLOC_ACCESSIBLE);
-> }
->
-Hi Mark, memblock_alloc() should remove the panic just as we did in kmalloc=
- IMO, as a memory allocation
-API, it should handover the failure case to the user and the latter should =
-make the final decision.
-Just take a look at the usage case of the memblock_alloc() in the kernel tr=
-ee, codes have been messed
-up by -- some codes check the return value of memblock_alloc, while others =
-not.
-
-Thanks,
-Dennis =
-
-> =
-
-> Thanks,
-> Mark.
-> =
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgQmFvcXVhbiBIZSwNCg0KV2VsbCwgSW5kZWVkIHRoZXJl4oCYcyBhIHJlbGF0aW9uc2hpcCBi
+ZXR3ZWVuIHRoZSBkdW1wLWNhcHR1cmUgaGFuZ3MgaW4NCmNhbGlicmF0ZV9kZWxheV9jb252ZXJn
+ZSgpIGFuZCB0aGUgaW50ZXJydXB0IG1vZGUuDQoNCmJ1dCB0aGVyZeKAmHMgbm8gZXNzZW50aWFs
+IGRpZmZlcmVuY2UgYmV0d2VlbiB5b3VyIHBhdGNoZXMgYW5kIG1pbmUgdGhhdA0KY2FsbHMgZGlz
+YWJsZV9JT19BUElDKCkgYWdhaW4uICANCkFjdHVhbGx5LCBkaXNhYmxlX0lPX0FQSUMgd2lsbCBz
+ZXQgQVBJQyB0byB2aXJ0dWFsIHdpcmUgbW9kZS4NCg0KSW4gZmFjdCwNCkVyaWMgYW5kIEluZ28g
+c3VnZ2VzdGVkIHRoYXQgIml0IHNob3VsZCBiZSBmaXhlZCBpbiB0aGUgYm9vdHVwIHBhdGggb2YN
+CnRoZSBkdW1wIGtlcm5lbCwgbm90IHRoZSBjcmFzaCBrZXJuZWwgcmVib290IHBhdGgiLCB3aGlj
+aCBpcyBjb252aW5jaW5nDQphbmQgcmVhc29uYWJsZS4NCg0KQW5kIGkgZmluZCBhIGJldHRlciBt
+ZXRob2QgY2FuIGZpeCB0aGUgcHJvYmxlbS4NCkl0J3MgYmV0dGVyIHRvIHNldCB2aXJ0dWFsIHdp
+cmUgbW9kZSBmb3IgYXBpYyBpbiBpbml0X2JzcF9BUElDKCksIHdoaWNoDQppbiB0aGUgYm9vdHVw
+IHBhdGggb2YgZHVtcCBrZXJuZWwuDQpCdXQgbm93LCBpbml0X2JzcF9BUElDIGRvZXNuJ3QgaW5p
+dGlhbGl6ZSB0aGUgYXBpYyB0byB2aXR1YWwgd2lyZSBtb2RlDQp3aGVuIHNtcF9mb3VuZF9jb25m
+aWcgaXMgbm9uLXplcm8uDQoNCkZZSSwgSSdtIHdvcmtpbmcgb24gdGhpcyBwb2ludC4gbGF0ZXIg
+aSB3aWxsIHNlbmQgcGF0Y2hlcyB0byBtYWlsIGxpc3QuDQoNCldlaQ0KDQpPbiBXZWQsIDIwMTYt
+MDctMjAgYXQgMTA6NTggKzA4MDAsIEJhb3F1YW4gSGUgd3JvdGU6DQo+IFdlaSBKaWFuZ2FuZyBy
+ZXBvcnRlZCBrZHVtcCBrZXJuZWwgYWx3YXlzIGhhbmcgd2hlbiAibm90c2MiIGlzIHNwZWNpZmll
+ZA0KPiBpbiBib290IHBhcmFtZXRlci4gQWZ0ZXIgZGVidWdnaW5nIEkgZm91bmQgdGhlcmUncyBu
+byB0aW1lciBpbnRlcnJ1cHQNCj4gaW4gdGhlIGN1cnJlbnQga2V4ZWMva2R1bXAga2VybmVsLiBU
+aGlzIGlzIGNhdXNlZCBieSBjb21taXQgNTIyZTY2NDY0NDY3DQo+ICgieDg2L2FwaWM6IERpc2Fi
+bGUgSS9PIEFQSUMgYmVmb3JlIHNodXRkb3duIG9mIHRoZSBsb2NhbCBBUElDIikuIE9yaWdpbmFs
+bHkNCj4gRXJpYyBwb3N0ZWQgYmVsb3cgcGF0Y2ggdG8gbWFrZSBzeXN0ZW0gYmUgdmlydHVhbCB3
+aXJlIG1vZGUgaW4gd2hpY2ggODI1OS0NCj4gZXF1aXZhbGVudCBQSUMgZmllbGRzIGFsbCBpbnRl
+cnJ1cHRzIGFuZCB0aGUgTEFQSUMgYmVjb21lcyBhIHZpcnR1YWwgd2lyZS4NCj4gTGlrZSB0aGlz
+IGludGVycnVwdHMgY2FuIGJlIGRlbGl2ZXJlZCBmcm9tIFBJQyB0byBDUFUgdmlhIHRoZSBMQVBJ
+QydzIGxvY2FsDQo+IGludGVycnVwdCAwIChMSU5USU4wKS4gSW4gdmlydHVhbCB3aXJlIEFQSUMg
+bW9kZSBpcyBkaXNhYmxlZCB3aGlsZSBMQVBJQw0KPiBpcyBzb2Z0d2FyZSBlbmFibGVkIGFuZCBp
+dHMgTElOVDAgYW5kIExJTlQxIG5lZWQgYmUgcHJvZ3JhbW1lZCBzcGVjaWZpY2FsbHkuDQo+IA0K
+PiBodHRwczovL3d3dy5rZXJuZWwub3JnL3B1Yi9saW51eC9rZXJuZWwvcGVvcGxlL2FrcG0vcGF0
+Y2hlcy8yLjYvMi42LjExLzIuNi4xMS1tbTEvYnJva2VuLW91dC94ODZfNjQtYXBpYy12aXJ0d2ly
+ZS1vbi1zaHV0ZG93bi5wYXRjaA0KPiANCj4gQnV0IHdpdGggY29tbWl0IDUyMmU2NjQ2NCB5b3Ug
+Y2FuIHNlZSBhZnRlciBkaXNhYmxlX0lPX0FQSUMgaGFkIHNldHRpbmcNCj4gdmlydHVhbCB3aXJl
+IG1vZGUsIGxhcGljX3NodXRkb3duIGRpc2FibGVkIExBUElDIGFnYWluLiBOb3cgdmlydHVhbCB3
+aXJlDQo+IG1vZGUgZG9lc24ndCB3b3JrLCB0aGVuIGl0IGNhdXNlIG5vIHRpbWVyIGludGVycnVw
+dCBkdXJpbmcga2R1bXAga2VybmVsDQo+IGluaXRpYWxpemF0aW9uIHN0YWdlIHVudGlsIHN5c3Rl
+bSBlbnRlciBpbnRvIEFQSUMgbW9kZS4NCj4gDQo+IFNvIHBlb3BsZSBtYXkgYmUgd29uZGVyaW5n
+IHdoeSBvbmx5IGtkdW1wIGtlcm5lbCBoYW5nLCB0aGUgbm9ybWFsIGtlcm5lbA0KPiB3aXRoICJu
+b3RzYyIgY2FuIHN0aWxsIHdvcmsuIFRoaXMgaXMgYmVjYXVzZSBCSU9TIGhhcyBhbHJlYWR5IGJ1
+aWx0IFBJQyBtb2RlDQo+IG9yIHZpcnR1YWwgd2lyZSBtb2RlIHdoaWxlIGtleGVjL2tkdW1wIGtl
+cm5lbCBkb2Vzbid0IGdvIHRocm91Z2ggQklPUw0KPiBpbml0aWFsaXphdGlvbi4gVGhhdCBpcyB3
+aHkgd2UgaGF2ZSB0byBjaGFuZ2Ugc3lzdGVtIHRvIGJlIFBJQyBtb2RlIG9yDQo+IHZpcnR1YWwg
+d2lyZSBtb2RlIGJlZm9yZSBqdW1wIHRvIGtleGVjL2tkdW1wIGtlcm5lbC4NCj4gDQo+IFRoZW4g
+d2h5IGtkdW1wIGtlcm5lbCBkaWRuJ3QgaGFuZyB3aGVuICJub3RzYyIgaXMgbm90IHNwZWNpZmll
+ZC4gVGhpcyBpcw0KPiBiZWNhdXNlIHRzY19pbml0IHdpbGwgYXNzaWduIHRoZSBhbHJlYWR5IGNh
+bGlicmF0ZWQgdmFsdWUgdG8gbHBqX2ZpbmUuDQo+IFRoZW4ga2VybmVsIGRvZXNuJ3QgbmVlZCB0
+byBjb3VudCBjcHUgbG9vcHMgYmV0d2VlbiBqaWZmaWVzIHdpdGggdGhlIGhlbHANCj4gb2YgdGlt
+ZXIgaW50ZXJydXB0LiBTbyAibm90c2MiIGlzIG5vdCB2aWN0aW0sIGJ1dCBhIGluZm9ybWVyLg0K
+PiANCj4gSW4gcGF0Y2ggMS8zIGRpc2FibGVfSU9fQVBJQyBpcyBjaGFuZ2VkIHRvIG9ubHkgY29u
+dGFpbiBjb2RlIG9mIGNoYW5nZWluZw0KPiBzeXN0ZW0gdG8gYmUgUElDIG1vZGUgb3IgdmlydHVh
+bCB3aXJlIG1vZGUgYW5kIGlzIHJlbmFtZWQgYXMNCj4gc3dpdGNoX3RvX2xlZ2FjeV9pcnFfbW9k
+ZS4gTm93IG9ubHkgY2FsbCBjbGVhcl9JT19BUElDIHdoZXJlIElPLUFQSUMgbmVlZA0KPiBiZSBk
+aXNhYmxlZCwgYW5kIGNhbGwgc3dpdGNoX3RvX2xlZ2FjeV9pcnFfbW9kZSBiZWZvcmUganVtcCB0
+byBrZXhlL2tkdW1wDQo+IGtlcm5lbC4NCj4gDQo+IFBhdGNoIDIvMyBhbmQgMy8zIGFyZSBjbGVh
+biB1cCBwYXRjaC4NCj4gDQo+IEJhb3F1YW4gSGUgKDMpOg0KPiAgIHg4Ni9hcGljL2tleGVjOiBF
+bmFibGUgbGVnYWN5IGlycSBtb2RlIGJlZm9yZSBqdW1wIHRvIGtleGVjL2tkdW1wDQo+ICAgICBr
+ZXJuZWwNCj4gICB4ODYvYXBpYzogQ2xlYW4gdXAgdGhlIG5hbWVzIG9mIGxlZ2FjeSBpcnEgbW9k
+ZSBzZXR0aW5nIHJlbGF0ZWQNCj4gICAgIGZ1bmN0aW9ucw0KPiAgIHg4Ni9hcGljOiBDbGVhbiB1
+cCB0aGUgYXBpYyBkZWxpdmVyeSBtb2RlIG1hY3JvIGRlZmluaXRpb24NCj4gDQo+ICBhcmNoL3g4
+Ni9pbmNsdWRlL2FzbS9hcGljLmggICAgICAgIHwgIDIgKy0NCj4gIGFyY2gveDg2L2luY2x1ZGUv
+YXNtL2FwaWNkZWYuaCAgICAgfCAgMSAtDQo+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9pb19hcGlj
+LmggICAgIHwgIDYgKysrLS0tDQo+ICBhcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMgICAgICAg
+IHwgMTkgKysrKysrKysrKystLS0tLS0tLQ0KPiAgYXJjaC94ODYva2VybmVsL2FwaWMvaW9fYXBp
+Yy5jICAgICB8IDMyICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tDQo+ICBhcmNoL3g4
+Ni9rZXJuZWwvY3Jhc2guYyAgICAgICAgICAgIHwgIDIgKy0NCj4gIGFyY2gveDg2L2tlcm5lbC9t
+YWNoaW5lX2tleGVjXzMyLmMgfCAxNSArKysrKy0tLS0tLS0tLS0NCj4gIGFyY2gveDg2L2tlcm5l
+bC9tYWNoaW5lX2tleGVjXzY0LmMgfCAxNSArKysrKy0tLS0tLS0tLS0NCj4gIGFyY2gveDg2L2tl
+cm5lbC9yZWJvb3QuYyAgICAgICAgICAgfCAgMiArLQ0KPiAgYXJjaC94ODYva2VybmVsL3g4Nl9p
+bml0LmMgICAgICAgICB8ICAyICstDQo+ICBkcml2ZXJzL2lvbW11L2lycV9yZW1hcHBpbmcuYyAg
+ICAgIHwgIDIgKy0NCj4gIDExIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDUyIGRl
+bGV0aW9ucygtKQ0KPiANCg0KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
