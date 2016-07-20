@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPl06-00082B-9F
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 06:28:59 +0000
-Date: Wed, 20 Jul 2016 14:28:33 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
+ id 1bPl5b-0002Rv-ML
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 06:34:40 +0000
+Date: Wed, 20 Jul 2016 08:32:01 +0200 (CEST)
+From: Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH 0/3] Enable legacy irq mode before jump to kexec/kdump
  kernel
-Message-ID: <20160720062833.GB2608@x1.redhat.com>
+In-Reply-To: <20160720041527.GA5273@x1.redhat.com>
+Message-ID: <alpine.DEB.2.11.1607200830270.3564@nanos>
 References: <1468983483-3952-1-git-send-email-bhe@redhat.com>
- <1468986741.2020.41.camel@localhost>
+ <1468986741.2020.41.camel@localhost> <20160720041527.GA5273@x1.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1468986741.2020.41.camel@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,102 +20,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
-Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: "bhe@redhat.com" <bhe@redhat.com>
+Cc: "fenghua.yu@intel.com" <fenghua.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-T24gMDcvMjAvMTYgYXQgMDM6NTRhbSwgV2VpLCBKaWFuZ2FuZyB3cm90ZToKPiBIaSBCYW9xdWFu
-IEhlLAo+IAo+IFdlbGwsIEluZGVlZCB0aGVyZeKAmHMgYSByZWxhdGlvbnNoaXAgYmV0d2VlbiB0
-aGUgZHVtcC1jYXB0dXJlIGhhbmdzIGluCj4gY2FsaWJyYXRlX2RlbGF5X2NvbnZlcmdlKCkgYW5k
-IHRoZSBpbnRlcnJ1cHQgbW9kZS4KPiAKPiBidXQgdGhlcmXigJhzIG5vIGVzc2VudGlhbCBkaWZm
-ZXJlbmNlIGJldHdlZW4geW91ciBwYXRjaGVzIGFuZCBtaW5lIHRoYXQKPiBjYWxscyBkaXNhYmxl
-X0lPX0FQSUMoKSBhZ2Fpbi4gIAo+IEFjdHVhbGx5LCBkaXNhYmxlX0lPX0FQSUMgd2lsbCBzZXQg
-QVBJQyB0byB2aXJ0dWFsIHdpcmUgbW9kZS4KCldlbGwsIGFib3V0IHRoaXMgSSB3YW50IHRvIGV4
-cGxhaW4gYSBsaXR0bGUgYml0LiBVc3VhbGx5IHBlb3BsZSBwb3N0ZWQgYQpwYXRjaCwgcmV2aWV3
-ZXJzIGNhbiBnaXZlIGNvbW1lbnRzLCBzdWdnZXN0aW9ucyBvciBvdGhlciBpZGVhcy4gRHVyaW5n
-CnJldmlld2luZyBzdGFnZSBwYXRjaCBhdXRob3IgbmVlZCBhbnN3ZXIgcXVlc3Rpb25zIGZyb20g
-cGVvcGxlCmludGVyZXN0ZWQuIFNvIHRoaXMgaXMgYW4gaW50ZXJhY3RpdmUgYWN0aW9uLCByZXZp
-ZXdlcnMgY2FuIGFsc28gbGVhcm4Ka25vd2xlZGdlLCBtZWFud2hpbGUgZ2l2ZSBjb21tZW50cy4K
-CldoZW4gcmV2aWV3aW5nIHlvdXIgcGF0Y2gsIEkgaGF2ZSBtYW55IHF1ZXN0aW9ucywgYW5kIG9u
-bHkgZ2V0IHR3bwpwaWVjZXMgb2YgaW5mb3JtYXRpb24sIGtkdW1wIGtlcm5lbCBoYW5nIHdpdGgg
-bm90c2MsIGFuZCBkaXNhYmxlX0lPX0FQSUMKY2FuIHNhdmUgaXQuIFlvdSBldmVuIGNhbid0IGFu
-c3dlciBwZW9wbGUncyBxdWVzdGlvbiB3aHkgZGlzYWJsZV9JT19BUElDCm5lZWQgYmUgY2FsbGVk
-IHR3aWNlIHdpdGggeW91ciBwYXRjaC4gSSBoYXZlIHRvIGRpZyBjb2RlIGFuZCByZWFkIGludGVs
-CmFyY2ggbWFudWFsIGFuZCBNUCBzcGVjIGFuZCBFcmljJ3Mgb3JpZ2luYWwgcGF0Y2ggdGhyZWFk
-LCBhbmQgYWRkIGRlYnVnCmJ1ZyB0byB2ZXJpZnkgYWxsLiBIb3cgY2FuIGl0IGJlIGxpa2UgeW91
-IHNhaWQgIm5vIGVzc2VudGlhbCBkaWZmZXJlbmNlCmJldHdlZW4geW91ciBwYXRjaGVzIGFuZCBt
-aW5lIj8gCgoKPiAKPiBJbiBmYWN0LAo+IEVyaWMgYW5kIEluZ28gc3VnZ2VzdGVkIHRoYXQgIml0
-IHNob3VsZCBiZSBmaXhlZCBpbiB0aGUgYm9vdHVwIHBhdGggb2YKPiB0aGUgZHVtcCBrZXJuZWws
-IG5vdCB0aGUgY3Jhc2gga2VybmVsIHJlYm9vdCBwYXRoIiwgd2hpY2ggaXMgY29udmluY2luZwo+
-IGFuZCByZWFzb25hYmxlLgo+IAo+IEFuZCBpIGZpbmQgYSBiZXR0ZXIgbWV0aG9kIGNhbiBmaXgg
-dGhlIHByb2JsZW0uCj4gSXQncyBiZXR0ZXIgdG8gc2V0IHZpcnR1YWwgd2lyZSBtb2RlIGZvciBh
-cGljIGluIGluaXRfYnNwX0FQSUMoKSwgd2hpY2gKPiBpbiB0aGUgYm9vdHVwIHBhdGggb2YgZHVt
-cCBrZXJuZWwuCj4gQnV0IG5vdywgaW5pdF9ic3BfQVBJQyBkb2Vzbid0IGluaXRpYWxpemUgdGhl
-IGFwaWMgdG8gdml0dWFsIHdpcmUgbW9kZQo+IHdoZW4gc21wX2ZvdW5kX2NvbmZpZyBpcyBub24t
-emVyby4KClRoaXMgbWF5IGJlIGRvLWFibGUsIGxldCdzIHNlZSB3aGF0IEVyaWMgYW5kIEluZ28g
-d2lsbCBzYXkuCgo+IAo+IEZZSSwgSSdtIHdvcmtpbmcgb24gdGhpcyBwb2ludC4gbGF0ZXIgaSB3
-aWxsIHNlbmQgcGF0Y2hlcyB0byBtYWlsIGxpc3QuCj4gCj4gV2VpCj4gCj4gT24gV2VkLCAyMDE2
-LTA3LTIwIGF0IDEwOjU4ICswODAwLCBCYW9xdWFuIEhlIHdyb3RlOgo+ID4gV2VpIEppYW5nYW5n
-IHJlcG9ydGVkIGtkdW1wIGtlcm5lbCBhbHdheXMgaGFuZyB3aGVuICJub3RzYyIgaXMgc3BlY2lm
-aWVkCj4gPiBpbiBib290IHBhcmFtZXRlci4gQWZ0ZXIgZGVidWdnaW5nIEkgZm91bmQgdGhlcmUn
-cyBubyB0aW1lciBpbnRlcnJ1cHQKPiA+IGluIHRoZSBjdXJyZW50IGtleGVjL2tkdW1wIGtlcm5l
-bC4gVGhpcyBpcyBjYXVzZWQgYnkgY29tbWl0IDUyMmU2NjQ2NDQ2Nwo+ID4gKCJ4ODYvYXBpYzog
-RGlzYWJsZSBJL08gQVBJQyBiZWZvcmUgc2h1dGRvd24gb2YgdGhlIGxvY2FsIEFQSUMiKS4gT3Jp
-Z2luYWxseQo+ID4gRXJpYyBwb3N0ZWQgYmVsb3cgcGF0Y2ggdG8gbWFrZSBzeXN0ZW0gYmUgdmly
-dHVhbCB3aXJlIG1vZGUgaW4gd2hpY2ggODI1OS0KPiA+IGVxdWl2YWxlbnQgUElDIGZpZWxkcyBh
-bGwgaW50ZXJydXB0cyBhbmQgdGhlIExBUElDIGJlY29tZXMgYSB2aXJ0dWFsIHdpcmUuCj4gPiBM
-aWtlIHRoaXMgaW50ZXJydXB0cyBjYW4gYmUgZGVsaXZlcmVkIGZyb20gUElDIHRvIENQVSB2aWEg
-dGhlIExBUElDJ3MgbG9jYWwKPiA+IGludGVycnVwdCAwIChMSU5USU4wKS4gSW4gdmlydHVhbCB3
-aXJlIEFQSUMgbW9kZSBpcyBkaXNhYmxlZCB3aGlsZSBMQVBJQwo+ID4gaXMgc29mdHdhcmUgZW5h
-YmxlZCBhbmQgaXRzIExJTlQwIGFuZCBMSU5UMSBuZWVkIGJlIHByb2dyYW1tZWQgc3BlY2lmaWNh
-bGx5Lgo+ID4gCj4gPiBodHRwczovL3d3dy5rZXJuZWwub3JnL3B1Yi9saW51eC9rZXJuZWwvcGVv
-cGxlL2FrcG0vcGF0Y2hlcy8yLjYvMi42LjExLzIuNi4xMS1tbTEvYnJva2VuLW91dC94ODZfNjQt
-YXBpYy12aXJ0d2lyZS1vbi1zaHV0ZG93bi5wYXRjaAo+ID4gCj4gPiBCdXQgd2l0aCBjb21taXQg
-NTIyZTY2NDY0IHlvdSBjYW4gc2VlIGFmdGVyIGRpc2FibGVfSU9fQVBJQyBoYWQgc2V0dGluZwo+
-ID4gdmlydHVhbCB3aXJlIG1vZGUsIGxhcGljX3NodXRkb3duIGRpc2FibGVkIExBUElDIGFnYWlu
-LiBOb3cgdmlydHVhbCB3aXJlCj4gPiBtb2RlIGRvZXNuJ3Qgd29yaywgdGhlbiBpdCBjYXVzZSBu
-byB0aW1lciBpbnRlcnJ1cHQgZHVyaW5nIGtkdW1wIGtlcm5lbAo+ID4gaW5pdGlhbGl6YXRpb24g
-c3RhZ2UgdW50aWwgc3lzdGVtIGVudGVyIGludG8gQVBJQyBtb2RlLgo+ID4gCj4gPiBTbyBwZW9w
-bGUgbWF5IGJlIHdvbmRlcmluZyB3aHkgb25seSBrZHVtcCBrZXJuZWwgaGFuZywgdGhlIG5vcm1h
-bCBrZXJuZWwKPiA+IHdpdGggIm5vdHNjIiBjYW4gc3RpbGwgd29yay4gVGhpcyBpcyBiZWNhdXNl
-IEJJT1MgaGFzIGFscmVhZHkgYnVpbHQgUElDIG1vZGUKPiA+IG9yIHZpcnR1YWwgd2lyZSBtb2Rl
-IHdoaWxlIGtleGVjL2tkdW1wIGtlcm5lbCBkb2Vzbid0IGdvIHRocm91Z2ggQklPUwo+ID4gaW5p
-dGlhbGl6YXRpb24uIFRoYXQgaXMgd2h5IHdlIGhhdmUgdG8gY2hhbmdlIHN5c3RlbSB0byBiZSBQ
-SUMgbW9kZSBvcgo+ID4gdmlydHVhbCB3aXJlIG1vZGUgYmVmb3JlIGp1bXAgdG8ga2V4ZWMva2R1
-bXAga2VybmVsLgo+ID4gCj4gPiBUaGVuIHdoeSBrZHVtcCBrZXJuZWwgZGlkbid0IGhhbmcgd2hl
-biAibm90c2MiIGlzIG5vdCBzcGVjaWZpZWQuIFRoaXMgaXMKPiA+IGJlY2F1c2UgdHNjX2luaXQg
-d2lsbCBhc3NpZ24gdGhlIGFscmVhZHkgY2FsaWJyYXRlZCB2YWx1ZSB0byBscGpfZmluZS4KPiA+
-IFRoZW4ga2VybmVsIGRvZXNuJ3QgbmVlZCB0byBjb3VudCBjcHUgbG9vcHMgYmV0d2VlbiBqaWZm
-aWVzIHdpdGggdGhlIGhlbHAKPiA+IG9mIHRpbWVyIGludGVycnVwdC4gU28gIm5vdHNjIiBpcyBu
-b3QgdmljdGltLCBidXQgYSBpbmZvcm1lci4KPiA+IAo+ID4gSW4gcGF0Y2ggMS8zIGRpc2FibGVf
-SU9fQVBJQyBpcyBjaGFuZ2VkIHRvIG9ubHkgY29udGFpbiBjb2RlIG9mIGNoYW5nZWluZwo+ID4g
-c3lzdGVtIHRvIGJlIFBJQyBtb2RlIG9yIHZpcnR1YWwgd2lyZSBtb2RlIGFuZCBpcyByZW5hbWVk
-IGFzCj4gPiBzd2l0Y2hfdG9fbGVnYWN5X2lycV9tb2RlLiBOb3cgb25seSBjYWxsIGNsZWFyX0lP
-X0FQSUMgd2hlcmUgSU8tQVBJQyBuZWVkCj4gPiBiZSBkaXNhYmxlZCwgYW5kIGNhbGwgc3dpdGNo
-X3RvX2xlZ2FjeV9pcnFfbW9kZSBiZWZvcmUganVtcCB0byBrZXhlL2tkdW1wCj4gPiBrZXJuZWwu
-Cj4gPiAKPiA+IFBhdGNoIDIvMyBhbmQgMy8zIGFyZSBjbGVhbiB1cCBwYXRjaC4KPiA+IAo+ID4g
-QmFvcXVhbiBIZSAoMyk6Cj4gPiAgIHg4Ni9hcGljL2tleGVjOiBFbmFibGUgbGVnYWN5IGlycSBt
-b2RlIGJlZm9yZSBqdW1wIHRvIGtleGVjL2tkdW1wCj4gPiAgICAga2VybmVsCj4gPiAgIHg4Ni9h
-cGljOiBDbGVhbiB1cCB0aGUgbmFtZXMgb2YgbGVnYWN5IGlycSBtb2RlIHNldHRpbmcgcmVsYXRl
-ZAo+ID4gICAgIGZ1bmN0aW9ucwo+ID4gICB4ODYvYXBpYzogQ2xlYW4gdXAgdGhlIGFwaWMgZGVs
-aXZlcnkgbW9kZSBtYWNybyBkZWZpbml0aW9uCj4gPiAKPiA+ICBhcmNoL3g4Ni9pbmNsdWRlL2Fz
-bS9hcGljLmggICAgICAgIHwgIDIgKy0KPiA+ICBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9hcGljZGVm
-LmggICAgIHwgIDEgLQo+ID4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2lvX2FwaWMuaCAgICAgfCAg
-NiArKystLS0KPiA+ICBhcmNoL3g4Ni9rZXJuZWwvYXBpYy9hcGljLmMgICAgICAgIHwgMTkgKysr
-KysrKysrKystLS0tLS0tLQo+ID4gIGFyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMuYyAgICAg
-fCAzMiArKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQo+ID4gIGFyY2gveDg2L2tlcm5l
-bC9jcmFzaC5jICAgICAgICAgICAgfCAgMiArLQo+ID4gIGFyY2gveDg2L2tlcm5lbC9tYWNoaW5l
-X2tleGVjXzMyLmMgfCAxNSArKysrKy0tLS0tLS0tLS0KPiA+ICBhcmNoL3g4Ni9rZXJuZWwvbWFj
-aGluZV9rZXhlY182NC5jIHwgMTUgKysrKystLS0tLS0tLS0tCj4gPiAgYXJjaC94ODYva2VybmVs
-L3JlYm9vdC5jICAgICAgICAgICB8ICAyICstCj4gPiAgYXJjaC94ODYva2VybmVsL3g4Nl9pbml0
-LmMgICAgICAgICB8ICAyICstCj4gPiAgZHJpdmVycy9pb21tdS9pcnFfcmVtYXBwaW5nLmMgICAg
-ICB8ICAyICstCj4gPiAgMTEgZmlsZXMgY2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygrKSwgNTIgZGVs
-ZXRpb25zKC0pCj4gPiAKPiAKPiAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, 20 Jul 2016, bhe@redhat.com wrote:
+> On 07/20/16 at 03:54am, Wei, Jiangang wrote:
+>
+> >  In fact, Eric and Ingo suggested that "it should be fixed in the bootup
+> > path of the dump kernel, not the crash kernel reboot path", which is
+> > convincing and reasonable.
+> 
+> Well this patch doesn't do differently with Eric's original implemention
+> in kexec/kdump path.
+> By taking out clear_IO_APIC from disable_IO_APIC, the left code of
+> disable_IO_APIC will only do the virtual wire setting. So for
+> kexec/kdump path, code basically is the same as Eric's method. But for
+> poweroff/halt/reboot, it's enough to call clear_IO_APIC to disable
+> IO-APIC.
+
+You're completely ignoring what Jiangang said: 
+
+ "it should be fixed in the bootup path of the dump kernel, not the crash
+  kernel reboot path"
+
+and that's the right way to do it. End of story.
+
+Thanks,
+
+	tglx
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
