@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga03-in.huawei.com ([119.145.14.66])
+Received: from szxga01-in.huawei.com ([58.251.152.64])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bPht0-0007gT-H2
- for kexec@lists.infradead.org; Wed, 20 Jul 2016 03:09:28 +0000
-Message-ID: <578EEB24.5090402@huawei.com>
-Date: Wed, 20 Jul 2016 11:08:20 +0800
+ id 1bPiLo-0001Vh-UX
+ for kexec@lists.infradead.org; Wed, 20 Jul 2016 03:39:15 +0000
+Message-ID: <578EF21A.80509@huawei.com>
+Date: Wed, 20 Jul 2016 11:38:02 +0800
 From: zhong jiang <zhongjiang@huawei.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH] kexec: add resriction on the kexec_load
@@ -51,9 +51,9 @@ On 2016/7/20 10:07, Eric W. Biederman wrote:
 > A limit that reflected that reality above would be interesting.
 > Anything else will likely cause someone trouble in the futrue.
 >
-> Eric  
-   en, limit the total segment size to 50% of memory.  I agree that.
-     can you accept the change when I resend it ?
+> Eric
+  In addition, I had tested when set max segment size to 1G when system memory have 32G,
+  the rlock probabilistic come up when trinity run.
 >> ck time:20160628120131-243c5
 >> rlock reason:SOFT-WATCHDOG detected! on cpu 5.
 >> CPU 5 Pid: 9485, comm: trinity-c5
