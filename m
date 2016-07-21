@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQADg-0007HG-MQ
- for kexec@lists.infradead.org; Thu, 21 Jul 2016 09:24:43 +0000
-Date: Thu, 21 Jul 2016 10:21:55 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [RFC 3/3] kexec: extend kexec_file_load system call
-Message-ID: <20160721092155.GM1041@n2100.armlinux.org.uk>
-References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
- <20160712014201.11456-4-takahiro.akashi@linaro.org>
- <20160715130955.GC23514@redhat.com>
- <20160715131950.GB19840@leverpostej>
- <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
- <063D6719AE5E284EB5DD2968C1650D6D5F4FE82B@AcuExch.aculab.com>
+Date: Thu, 21 Jul 2016 11:31:21 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
+Message-ID: <20160721103120.GB20559@leverpostej>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
+ <20160720153859.GG24691@leverpostej>
+ <1469042361.2977.90.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D5F4FE82B@AcuExch.aculab.com>
+In-Reply-To: <1469042361.2977.90.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,47 +22,176 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Laight <David.Laight@ACULAB.COM>
-Cc: Mark Rutland <mark.rutland@arm.com>, "bhe@redhat.com" <bhe@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "bauerman@linux.vnet.ibm.com" <bauerman@linux.vnet.ibm.com>, 'Dave Young' <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Jul 20, 2016 at 11:41:35AM +0000, David Laight wrote:
-> From: Dave Young
-> > I do not think it is worth to add another syscall for extra fds.
-> > We have open(2) as an example for different numbers of arguments
-> > already.
+On Wed, Jul 20, 2016 at 12:19:21PM -0700, Geoff Levand wrote:
+> > > +static uint64_t read_sink(const char *command_line)
+> > > +{
+> > > +> > 	> > uint64_t v;
+> > > +> > 	> > const char *p;
+> > > +
+> > > +> > 	> > if (arm64_opts.port)
+> > > +> > 	> > 	> > return arm64_opts.port;
+> > > +
+> > > +#if defined(ARM64_DEBUG_PORT)
+> > > +> > 	> > return (uint64_t)(ARM64_DEBUG_PORT);
+> > > +#endif
+> > > +> > 	> > if (!command_line)
+> > > +> > 	> > 	> > return 0;
+> > > +
+> > > +> > 	> > if (!(p = strstr(command_line, "earlyprintk=")) &&
+> > > +> > 	> > 	> > !(p = strstr(command_line, "earlycon=")))
+> > > +> > 	> > 	> > return 0;
+> > > +
+> > > +> > 	> > while (*p != ',')
+> > > +> > 	> > 	> > p++;
+> > > +
+> > > +> > 	> > p++;
+> > > +
+> > > +> > 	> > while (isspace(*p))
+> > > +> > 	> > 	> > p++;
+> > 
+> > Why do we skip spaces? As far as I am aware, there should not be any
+> > spaces in the option.
 > 
-> Probably works 'by luck' and no one has actually thought about why.
-> That ioctl() works is (probably) even more lucky.
+> Sure, I can remove it.
 > 
-> There are ABI that use different calling conventions for varags functions
-> (eg always stack all the arguments). I guess linux doesn't run on any of them.
+> > > +
+> > > +> > 	> > if (*p == 0)
+> > > +> > 	> > 	> > return 0;
+> > > +
+> > > +> > 	> > errno = 0;
+> > > +
+> > > +> > 	> > v = strtoull(p, NULL, 0);
+> > > +
+> > > +> > 	> > if (errno)
+> > > +> > 	> > 	> > return 0;
+> > > +
+> > > +> > 	> > return v;
+> > > +}
+> > 
+> > It looks like the purgatory code expects angel SWI as the earlycon,
 > 
-> ioctl() is a particular problem because the 'arg' might be an integer or a pointer.
-> Fortunately all the 64bit ABI linux uses pass the arg parameter in a register
-> (and don't use different registers for pointer and data arguments).
+> Maybe you saw the debug_brk macro in entry.S?  I should remove
+> that and just loop.
+
+Ah, sorry. For some reason I got that confused with the sink code. My
+bad.
+
+Now I see that's assuming an 8-bit MMIO register.
+
+> > whereas many other earlycons exist (with pl011 being extremely popular).
+> > Regardless, if we assume a particular UART type, we should explicitly
+> > verify that here. Otherwise the purgatory code will likely bring down
+> > the system, and it will be very painful to debug.
+> > 
+> > Please explicitly check for the supported earlycon name.
 > 
-> You could have two 'libc' functions that refer to the same system call entry.
-> Certainly safer than a varargs function.
+> Purgatory just writes bytes to the address given.  Are there
+> UARTs that don't have TX as the first port?
 
-Don't forget that the syscall API is not a normal C function API - it's
-special, because there's little point stacking arguments on the userspace
-stack and then having the kernel function try and read them off the
-kernelspace stack.
+I'm not sure, but it's certainly possible. The generic earlycon binding
+doesn't guarantee that the first address is a TX register. Even if they
+don't exist today, they could in a month's time, so I don't think we
+should assume anything.
 
-If an architecture does such a thing, then it needs special veneers to
-handle that (reading off the userspace stack and placing them onto the
-kernelspace stack, or the arch needs to define some other method of
-handling the situation.)
+Additionally, the width of that TX register can differ (e.g.
+uart8250,mmio vs uart8250,mmio32), and some UARTs aren't very forgiving
+if accessed with the wrong width.
 
-So, really, the actual C APIs don't matter that much - what matters more
-is the definition of a sane way to pass such arguments.  Given the
-extensive historical nature of open() and ioctl(), it would be completely
-silly not to create something which allows these calls to work.
+> To be safe, we could do a check when we get the address from
+> an earlycon parameter. 
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Yup. I think you need a whitelist of UARTs that can be handled, along
+with parsing for their options (e.g. mmio vs mmio32), giving up if
+unknown options are spotted.
+
+> Here's what I found in the dts'.  The
+> first three are OK, but I don't know about the others.  
+
+I believe you can find the full set with:
+
+$ git grep EARLYCON_DECLARE
+
+[...]
+
+> > > +> > 	> > if (result)
+> > > +> > 	> > 	> > fprintf(stderr, "kexec: Warning: No device tree available.\n");
+> > 
+> > There are other reasons we'd return an error (e.g. mismatched enable
+> > methods), so this is somewhat misleading.
+> > 
+> > I believe that in all cases we log the specific reason first anyway, so
+> > perhaps it's best to jsut remove this warning.
+> 
+> Yes, this could be removed.
+> 
+> > Won't this also be very noisy in the case of ACPI with a stub DTB? In
+> > that case ther are no cpu nodes, and may be no memory nodes.
+> 
+> Should we just remove check_cpu_nodes and everything associated with
+> it?  It is a lot of code, and all it does now is issue warnings.
+> It is still around from the early days of spin_table support.  
+
+That sounds fine to me.
+
+> As for memory nodes, we currently look at the dt, then fall back
+> to iomem. We could switch the order, iomem then dt, but then
+> those just issue dbgprintf's.
+
+Sure.
+
+> > > +int arm64_process_image_header(const struct arm64_image_header *h)
+> > > +{
+> > > +#if !defined(KERNEL_IMAGE_SIZE)
+> > > +# define KERNEL_IMAGE_SIZE (768 * 1024)
+> > > +#endif
+> > > +
+> > > +> > 	> > if (!arm64_header_check_magic(h))
+> > > +> > 	> > 	> > return -EINVAL;
+> > > +
+> > > +> > 	> > if (h->image_size) {
+> > > +> > 	> > 	> > arm64_mem.text_offset = le64_to_cpu(h->text_offset);
+> > > +> > 	> > 	> > arm64_mem.image_size = le64_to_cpu(h->image_size);
+> > > +> > 	> > } else {
+> > > +> > 	> > 	> > /* For 3.16 and older kernels. */
+> > > +> > 	> > 	> > arm64_mem.text_offset = 0x80000;
+> > > +> > 	> > 	> > arm64_mem.image_size = KERNEL_IMAGE_SIZE;
+> > > +> > 	> > }
+> > > +
+> > > +> > 	> > return 0;
+> > > +}
+> > 
+> > A v3.16 defconfig Image with the Linaro 14.09 GCC 4.9 toolchain is
+> > 6.3MB, so the chosen value for KERNEL_IMAGE_SIZE is far too small. I'm
+> > not sure what to suggest as a better value, however, as I know that some
+> > configurations are far bigger than that.
+> 
+> OK, I'll make it bigger, say 7.  When I set this up I expected
+> the distro maintainer to choose KERNEL_IMAGE_SIZE to match their
+> needs.
+
+To give some headroom, bumping to 16 or so is probably a safer bet.
+
+Perhaps it's worth logging a warning that we're guessing the effective
+image size in this case? That could avoid a lot of head-scratching if
+things do end up overlapping.
+
+> > Do we expect to kexec to a v3.16 or earlier kernel, given we need a much
+> > newer first kernel to have kexec in the first place? We could mandate
+> > having a header with a non-zero image_size (i.e. the target kernel has
+> > to be v3.16 or newer).
+> 
+> Kexec could be installed as a bootloader, and users may want the
+> ability to boot older installations, so I think it worthwile to
+> have.
+
+Sure. I was under the impression that most distros had chosen v3.16 or
+later, but I have no problem with trying to support earlier kernels.
+
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
