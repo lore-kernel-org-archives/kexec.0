@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
-References: <cover.1468970114.git.geoff@infradead.org>
- <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
- <20160720153859.GG24691@leverpostej> <1469042361.2977.90.camel@infradead.org>
- <20160721103120.GB20559@leverpostej>
-From: Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5790A902.6070601@arm.com>
-Date: Thu, 21 Jul 2016 11:50:42 +0100
+Received: from bgl-iport-2.cisco.com ([72.163.197.26])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bQFlk-000681-1E
+ for kexec@lists.infradead.org; Thu, 21 Jul 2016 15:20:14 +0000
+Subject: Re: IO memory read from /proc/vmcore leads to hang.
+References: <57841399.1030703@cisco.com> <578FCE9A.50305@cisco.com>
+ <CAJGZr0KwbB+2Qdv4AAp1qVr60PQPGiJqQum5awSFrptATmHYUA@mail.gmail.com>
+From: Daniel Walker <danielwa@cisco.com>
+Message-ID: <5790E80F.7080109@cisco.com>
+Date: Thu, 21 Jul 2016 08:19:43 -0700
 MIME-Version: 1.0
-In-Reply-To: <20160721103120.GB20559@leverpostej>
+In-Reply-To: <CAJGZr0KwbB+2Qdv4AAp1qVr60PQPGiJqQum5awSFrptATmHYUA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,59 +19,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>
-Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: "xe-kernel@external.cisco.com" <xe-kernel@external.cisco.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 21/07/16 11:31, Mark Rutland wrote:
-[...]
->>>> +
->>>> +> > 	> > if (*p == 0)
->>>> +> > 	> > 	> > return 0;
->>>> +
->>>> +> > 	> > errno = 0;
->>>> +
->>>> +> > 	> > v = strtoull(p, NULL, 0);
->>>> +
->>>> +> > 	> > if (errno)
->>>> +> > 	> > 	> > return 0;
->>>> +
->>>> +> > 	> > return v;
->>>> +}
->>>
->>> It looks like the purgatory code expects angel SWI as the earlycon,
+
+  There appears to be no code which checks what is or is not System ram, 
+there is nothing that checks the device tree to see what is IO memory, 
+and nothing reads /proc/iomem .. So AFAIK nothing cares if it's IO 
+memory, or system ram, and there's no method to config things to skip 
+any memory in the system, except in makedumpfile which can skip symbols 
+not IO memory.
+
+
+On 07/21/2016 12:34 AM, Maxim Uvarov wrote:
+> Second kernel should already know that it's not system ram of the
+> first kernel and in that case makedumpfile will not dump that memory.
+> Simple way is to pass additional kernel argument to kexec is when you
+> load the kernel. If it works than you can think how it's better to
+> pass this parameter.  Variants might be request_resource() in first
+> kernel or add some logic to kexec tools.
+>
+> Best regards,
+> Maxim.
+>
+> 2016-07-20 22:18 GMT+03:00 Daniel Walker <danielwa@cisco.com>:
+>> Mahesh, I didn't get your email for some reason . I saw it in the Archives.
 >>
->> Maybe you saw the debug_brk macro in entry.S?  I should remove
->> that and just loop.
-> 
-> Ah, sorry. For some reason I got that confused with the sink code. My
-> bad.
-> 
-> Now I see that's assuming an 8-bit MMIO register.
-> 
->>> whereas many other earlycons exist (with pl011 being extremely popular).
->>> Regardless, if we assume a particular UART type, we should explicitly
->>> verify that here. Otherwise the purgatory code will likely bring down
->>> the system, and it will be very painful to debug.
->>>
->>> Please explicitly check for the supported earlycon name.
+>> makedumpfile doesn't appear to have a way to drop free form memory areas. So
+>> I need to drop 00800000 to 00807fff , but I don't see a way to do that. Any
+>> other suggestions on how to prevent this hang ?
 >>
->> Purgatory just writes bytes to the address given.  Are there
->> UARTs that don't have TX as the first port?
-> 
-> I'm not sure, but it's certainly possible. The generic earlycon binding
-> doesn't guarantee that the first address is a TX register. Even if they
-> don't exist today, they could in a month's time, so I don't think we
-> should assume anything.
+>>
+>>
+>> On 07/11/2016 02:46 PM, Daniel Walker wrote:
+>>>
+>>> Hi,
+>>>
+>>> I found found that on my Powerpc machine there is some IO memory which
+>>> will cause the box to hang if I read it. It's a custom device that was added
+>>> to the board for a special purpose.
+>>>
+>>> I was looking for a way to exclude this memory from the dump, and while
+>>> doing that I found that kexec makes a list of memory segments that go into
+>>> the core file. I was wondering why most of the kexec architecture don't
+>>> appear to exclude device memory like what's listed in /proc/iomem.
+>>>
+>>> Is there a good reason why that's not the case?
+>>>
+>>> Daniel
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+>
 
-The Exynos UART (drivers/tty/serial/samsung.c) is one which comes to
-mind as definitely existing, and on arm64 systems to boot. The TX
-register is at offset 0x20 there.
-
-Robin.
 
 _______________________________________________
 kexec mailing list
