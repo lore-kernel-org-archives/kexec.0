@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 21 Jul 2016 00:00:36 -0700
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: kexec failures with DEBUG_RODATA
-Message-ID: <20160721070035.GV28140@atomide.com>
-References: <20160614175920.GD1041@n2100.armlinux.org.uk>
- <CAGXu5j+5j32HO0rQtF2hcqMUBaa8cyxgLT4JvaZ6LL2WPj_zjw@mail.gmail.com>
- <20160615211359.GJ1041@n2100.armlinux.org.uk>
- <CAGXu5jKRBA9b6gos+FG7iV2ppxtAERstNPschxA0z=aDL_y1YA@mail.gmail.com>
- <20160615224228.GK1041@n2100.armlinux.org.uk>
- <20160707102003.GO1041@n2100.armlinux.org.uk>
+Received: from mail-yw0-x22e.google.com ([2607:f8b0:4002:c05::22e])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bQ8V1-0003z3-E2
+ for kexec@lists.infradead.org; Thu, 21 Jul 2016 07:34:28 +0000
+Received: by mail-yw0-x22e.google.com with SMTP id j12so60041422ywb.2
+ for <kexec@lists.infradead.org>; Thu, 21 Jul 2016 00:34:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160707102003.GO1041@n2100.armlinux.org.uk>
+In-Reply-To: <578FCE9A.50305@cisco.com>
+References: <57841399.1030703@cisco.com> <578FCE9A.50305@cisco.com>
+From: Maxim Uvarov <muvarov@gmail.com>
+Date: Thu, 21 Jul 2016 10:34:05 +0300
+Message-ID: <CAJGZr0KwbB+2Qdv4AAp1qVr60PQPGiJqQum5awSFrptATmHYUA@mail.gmail.com>
+Subject: Re: IO memory read from /proc/vmcore leads to hang.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,45 +24,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Pratyush Anand <panand@redhat.com>, Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>, Kees Cook <keescook@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Daniel Walker <danielwa@cisco.com>
+Cc: "xe-kernel@external.cisco.com" <xe-kernel@external.cisco.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-* Russell King - ARM Linux <linux@armlinux.org.uk> [160707 03:25]:
-> On Wed, Jun 15, 2016 at 11:42:28PM +0100, Russell King - ARM Linux wrote:
-> > The boot environment must be setup such that there is room for the
-> > uncompressed image (aligned currently to 256 bytes) followed by the
-> > size of the compressed image, with any appended DTBs included.
-> > Anything which is located below that is likely to get trampled by
-> > the decompressor.
-> 
-> There's a question that's been lingering, which hasn't been brought up
-> by anyone yet: should we even support zImage files with an appended
-> DTB for kexec?
-> 
-> When kexec is operating in DTB mode, it will provide the DTB to the
-> kernel from the host environment, possibly with some modifications (eg,
-> to change the command line arguments.)  Since an appended DTB would
-> override the kexec-provided DTB, this would wipe out those changes,
-> some of which are necessary for things like crashdump to work.
-> 
-> So, I'm thinking that kexec should not support a zImage with appended
-> DTB - in fact, I think it should truncate the zImage to be loaded, and
-> ensure that the word following the zImage does not contain a DTB magic
-> number, in case the zImage has been built with CONFIG_ARM_APPENDED_DTB
-> enabled.
-> 
-> Thoughts?
+Second kernel should already know that it's not system ram of the
+first kernel and in that case makedumpfile will not dump that memory.
+Simple way is to pass additional kernel argument to kexec is when you
+load the kernel. If it works than you can think how it's better to
+pass this parameter.  Variants might be request_resource() in first
+kernel or add some logic to kexec tools.
 
-Sorry for a late reply, I've been offline.
+Best regards,
+Maxim.
 
-Sounds like a good idea to me as this as we can properly error out
-with appendd dtb before anything nasty happens making new kernel
-fail. And if somebody really needs it, we can add an option for
---force-appended-dtb.
+2016-07-20 22:18 GMT+03:00 Daniel Walker <danielwa@cisco.com>:
+>
+> Mahesh, I didn't get your email for some reason . I saw it in the Archives.
+>
+> makedumpfile doesn't appear to have a way to drop free form memory areas. So
+> I need to drop 00800000 to 00807fff , but I don't see a way to do that. Any
+> other suggestions on how to prevent this hang ?
+>
+>
+>
+> On 07/11/2016 02:46 PM, Daniel Walker wrote:
+>>
+>>
+>> Hi,
+>>
+>> I found found that on my Powerpc machine there is some IO memory which
+>> will cause the box to hang if I read it. It's a custom device that was added
+>> to the board for a special purpose.
+>>
+>> I was looking for a way to exclude this memory from the dump, and while
+>> doing that I found that kexec makes a list of memory segments that go into
+>> the core file. I was wondering why most of the kexec architecture don't
+>> appear to exclude device memory like what's listed in /proc/iomem.
+>>
+>> Is there a good reason why that's not the case?
+>>
+>> Daniel
+>
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-Regards,
 
-Tony
+
+-- 
+Best regards,
+Maxim Uvarov
 
 _______________________________________________
 kexec mailing list
