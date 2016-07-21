@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQ94g-0005k0-2v
- for kexec@lists.infradead.org; Thu, 21 Jul 2016 08:11:18 +0000
-Date: Thu, 21 Jul 2016 16:10:49 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: add resriction on the kexec_load
-Message-ID: <20160721081049.GA7544@dhcp-128-65.nay.redhat.com>
-References: <1468980049-1753-1-git-send-email-zhongjiang@huawei.com>
- <878twxcbae.fsf@x220.int.ebiederm.org>
+ id 1bQADg-0007HG-MQ
+ for kexec@lists.infradead.org; Thu, 21 Jul 2016 09:24:43 +0000
+Date: Thu, 21 Jul 2016 10:21:55 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [RFC 3/3] kexec: extend kexec_file_load system call
+Message-ID: <20160721092155.GM1041@n2100.armlinux.org.uk>
+References: <20160712014201.11456-1-takahiro.akashi@linaro.org>
+ <20160712014201.11456-4-takahiro.akashi@linaro.org>
+ <20160715130955.GC23514@redhat.com>
+ <20160715131950.GB19840@leverpostej>
+ <20160718023024.GB6310@dhcp-128-65.nay.redhat.com>
+ <063D6719AE5E284EB5DD2968C1650D6D5F4FE82B@AcuExch.aculab.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <878twxcbae.fsf@x220.int.ebiederm.org>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D5F4FE82B@AcuExch.aculab.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,80 +29,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: zhongjiang <zhongjiang@huawei.com>, kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, akpm@linux-foundation.org, yinghai@kernel.org
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: Mark Rutland <mark.rutland@arm.com>, "bhe@redhat.com" <bhe@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "bauerman@linux.vnet.ibm.com" <bauerman@linux.vnet.ibm.com>, 'Dave Young' <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 07/19/16 at 09:07pm, Eric W. Biederman wrote:
-> zhongjiang <zhongjiang@huawei.com> writes:
+On Wed, Jul 20, 2016 at 11:41:35AM +0000, David Laight wrote:
+> From: Dave Young
+> > I do not think it is worth to add another syscall for extra fds.
+> > We have open(2) as an example for different numbers of arguments
+> > already.
 > 
-> > From: zhong jiang <zhongjiang@huawei.com>
-> >
-> > I hit the following question when run trinity in my system. The
-> > kernel is 3.4 version. but the mainline have same question to be
-> > solved. The root cause is the segment size is too large, it can
-> > expand the most of the area or the whole memory, therefore, it
-> > may waste an amount of time to abtain a useable page. and other
-> > cases will block until the test case quit. at the some time,
-> > OOM will come up.
+> Probably works 'by luck' and no one has actually thought about why.
+> That ioctl() works is (probably) even more lucky.
 > 
-> 5MiB is way too small.  I have seen vmlinux images not to mention
-> ramdisks that get larger than that.  Depending on the system
-> 1GiB might not be an unreasonable ramdisk size.  AKA run an entire live
-> system out of a ramfs.  It works well if you have enough memory.
-
-There was a use case from Michael Holzheu about a 1.5G ramdisk, see below
-kexec-tools commit:
-
-commit 95741713e790fa6bde7780bbfb772ad88e81a744
-Author: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date:   Fri Oct 30 16:02:04 2015 +0100
-
-    kexec/s390x: use mmap instead of read for slurp_file()
-    
-    The slurp_fd() function allocates memory and uses the read() system
-call.
-    This results in double memory consumption for image and initrd:
-    
-     1) Memory allocated in user space by the kexec tool
-     2) Memory allocated in kernel by the kexec() system call
-    
-    The following illustrates the use case that we have on s390x:
-    
-     1) Boot a 4 GB Linux system
-     2) Copy kernel and 1,5 GB ramdisk from external source into tmpfs
-(ram)
-     3) Use kexec to boot kernel with ramdisk
-    
-     Therefore for kexec runtime we need:
-    
-     1,5 GB (tmpfs) + 1,5 GB (kexec malloc) + 1,5 GB (kernel memory) =
-4,5 GB
-    
-    This patch introduces slurp_file_mmap() which for "normal" files
-uses
-    mmap() instead of malloc()/read(). This reduces the runtime memory
-    consumption of the kexec tool as follows:
-    
-     1,5 GB (tmpfs) + 1,5 GB (kernel memory) = 3 GB
-    
-    Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-    Reviewed-by: Dave Young <dyoung@redhat.com>
-    Signed-off-by: Simon Horman <horms@verge.net.au>
-
+> There are ABI that use different calling conventions for varags functions
+> (eg always stack all the arguments). I guess linux doesn't run on any of them.
 > 
-> I think there is a practical limit at about 50% of memory (because we
-> need two copies in memory the source and the destination pages), but
-> anything else is pretty much reasonable and should have a fair chance of
-> working.
+> ioctl() is a particular problem because the 'arg' might be an integer or a pointer.
+> Fortunately all the 64bit ABI linux uses pass the arg parameter in a register
+> (and don't use different registers for pointer and data arguments).
 > 
-> A limit that reflected that reality above would be interesting.
-> Anything else will likely cause someone trouble in the futrue.
+> You could have two 'libc' functions that refer to the same system call entry.
+> Certainly safer than a varargs function.
 
-Maybe one should test his ramdisk first to ensure it works first before
-really using it.
+Don't forget that the syscall API is not a normal C function API - it's
+special, because there's little point stacking arguments on the userspace
+stack and then having the kernel function try and read them off the
+kernelspace stack.
 
-Thanks
-Dave
+If an architecture does such a thing, then it needs special veneers to
+handle that (reading off the userspace stack and placing them onto the
+kernelspace stack, or the arch needs to define some other method of
+handling the situation.)
+
+So, really, the actual C APIs don't matter that much - what matters more
+is the definition of a sane way to pass such arguments.  Given the
+extensive historical nature of open() and ioctl(), it would be completely
+silly not to create something which allows these calls to work.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
