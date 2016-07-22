@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bR61Z-0005jM-3j
- for kexec@lists.infradead.org; Sat, 23 Jul 2016 23:08:01 +0000
-Date: Sun, 24 Jul 2016 07:06:26 +0800
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 3/3] x86/apic: Clean up the apic delivery mode macro
- definition
-Message-ID: <201607240756.tnwlpsag%fengguang.wu@intel.com>
+Received: from mail-pf0-x22a.google.com ([2607:f8b0:400e:c00::22a])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bQUXX-0004ET-VW
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 07:06:39 +0000
+Received: by mail-pf0-x22a.google.com with SMTP id y134so38665351pfg.0
+ for <kexec@lists.infradead.org>; Fri, 22 Jul 2016 00:06:11 -0700 (PDT)
+Date: Fri, 22 Jul 2016 16:12:08 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v1.2 3/4] arm64: Add arm64 kexec support
+Message-ID: <20160722071204.GP20774@linaro.org>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
+ <1469048065.2977.124.camel@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="zhXaljGHf11kAtnf"
 Content-Disposition: inline
-In-Reply-To: <1468983483-3952-4-git-send-email-bhe@redhat.com>
+In-Reply-To: <1469048065.2977.124.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,547 +23,1800 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: fenghua.yu@intel.com, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kbuild-all@01.org, hpa@zytor.com, tglx@linutronix.de, weijg.fnst@cn.fujitsu.com, jiang.liu@linux.intel.com, vgoyal@redhat.com, ebiederm@xmission.com
+To: Geoff Levand <geoff@infradead.org>
+Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
+On Wed, Jul 20, 2016 at 01:54:25PM -0700, Geoff Levand wrote:
+> Add kexec reboot support for ARM64 platforms.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  configure.ac                            |   3 +
+>  kexec/Makefile                          |   1 +
+>  kexec/arch/arm64/Makefile               |  40 ++
+>  kexec/arch/arm64/crashdump-arm64.c      |  21 +
+>  kexec/arch/arm64/crashdump-arm64.h      |  12 +
+>  kexec/arch/arm64/image-header.h         | 104 ++++
+>  kexec/arch/arm64/include/arch/options.h |  43 ++
+>  kexec/arch/arm64/kexec-arm64.c          | 979 ++++++++++++++++++++++++++++++++
+>  kexec/arch/arm64/kexec-arm64.h          |  70 +++
+>  kexec/arch/arm64/kexec-elf-arm64.c      | 130 +++++
+>  kexec/arch/arm64/kexec-image-arm64.c    |  44 ++
+>  kexec/kexec-syscall.h                   |   8 +-
+>  purgatory/Makefile                      |   1 +
+>  purgatory/arch/arm64/Makefile           |  18 +
+>  purgatory/arch/arm64/entry.S            |  52 ++
+>  purgatory/arch/arm64/purgatory-arm64.c  |  35 ++
+>  16 files changed, 1559 insertions(+), 2 deletions(-)
+>  create mode 100644 kexec/arch/arm64/Makefile
+>  create mode 100644 kexec/arch/arm64/crashdump-arm64.c
+>  create mode 100644 kexec/arch/arm64/crashdump-arm64.h
+>  create mode 100644 kexec/arch/arm64/image-header.h
+>  create mode 100644 kexec/arch/arm64/include/arch/options.h
+>  create mode 100644 kexec/arch/arm64/kexec-arm64.c
+>  create mode 100644 kexec/arch/arm64/kexec-arm64.h
+>  create mode 100644 kexec/arch/arm64/kexec-elf-arm64.c
+>  create mode 100644 kexec/arch/arm64/kexec-image-arm64.c
+>  create mode 100644 purgatory/arch/arm64/Makefile
+>  create mode 100644 purgatory/arch/arm64/entry.S
+>  create mode 100644 purgatory/arch/arm64/purgatory-arm64.c
+> 
+> diff --git a/configure.ac b/configure.ac
+> index ca3a9d5..8858c94 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -34,6 +34,9 @@ case $target_cpu in
+>  		ARCH="ppc64"
+>  		SUBARCH="LE"
+>  		;;
+> +	aarch64* )
+> +		ARCH="arm64"
+> +		;;
+>  	arm* )
+>  		ARCH="arm"
+>  		;;
+> diff --git a/kexec/Makefile b/kexec/Makefile
+> index cc3f08b..39f365f 100644
+> --- a/kexec/Makefile
+> +++ b/kexec/Makefile
+> @@ -79,6 +79,7 @@ KEXEC_SRCS			+= $($(ARCH)_DT_OPS)
+>  
+>  include $(srcdir)/kexec/arch/alpha/Makefile
+>  include $(srcdir)/kexec/arch/arm/Makefile
+> +include $(srcdir)/kexec/arch/arm64/Makefile
+>  include $(srcdir)/kexec/arch/i386/Makefile
+>  include $(srcdir)/kexec/arch/ia64/Makefile
+>  include $(srcdir)/kexec/arch/m68k/Makefile
+> diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
+> new file mode 100644
+> index 0000000..37414dc
+> --- /dev/null
+> +++ b/kexec/arch/arm64/Makefile
+> @@ -0,0 +1,40 @@
+> +
+> +arm64_FS2DT += kexec/fs2dt.c
+> +arm64_FS2DT_INCLUDE += -include $(srcdir)/kexec/arch/arm64/kexec-arm64.h \
+> +	-include $(srcdir)/kexec/arch/arm64/crashdump-arm64.h
+> +
+> +arm64_DT_OPS += kexec/dt-ops.c
+> +
+> +arm64_CPPFLAGS += -I $(srcdir)/kexec/
+> +
+> +arm64_KEXEC_SRCS += \
+> +	kexec/arch/arm64/kexec-arm64.c \
+> +	kexec/arch/arm64/kexec-image-arm64.c \
+> +	kexec/arch/arm64/kexec-elf-arm64.c \
+> +	kexec/arch/arm64/crashdump-arm64.c
+> +
+> +arm64_ARCH_REUSE_INITRD =
+> +arm64_ADD_SEGMENT =
+> +arm64_VIRT_TO_PHYS =
+> +arm64_PHYS_TO_VIRT =
+> +
+> +dist += $(arm64_KEXEC_SRCS) \
+> +	kexec/arch/arm64/Makefile \
+> +	kexec/arch/arm64/kexec-arm64.h \
+> +	kexec/arch/arm64/crashdump-arm64.h
+> +
+> +ifdef HAVE_LIBFDT
+> +
+> +LIBS += -lfdt
+> +
+> +else
+> +
+> +include $(srcdir)/kexec/libfdt/Makefile.libfdt
+> +
+> +libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/libfdt/%)
+> +
+> +arm64_CPPFLAGS += -I$(srcdir)/kexec/libfdt
+> +
+> +arm64_KEXEC_SRCS += $(libfdt_SRCS)
+> +
+> +endif
+> diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+> new file mode 100644
+> index 0000000..d2272c8
+> --- /dev/null
+> +++ b/kexec/arch/arm64/crashdump-arm64.c
+> @@ -0,0 +1,21 @@
+> +/*
+> + * ARM64 crashdump.
+> + */
+> +
+> +#define _GNU_SOURCE
+> +
+> +#include <errno.h>
+> +#include <linux/elf.h>
+> +
+> +#include "kexec.h"
+> +#include "crashdump.h"
+> +#include "crashdump-arm64.h"
+> +#include "kexec-arm64.h"
+> +#include "kexec-elf.h"
+> +
+> +struct memory_ranges usablemem_rgns = {};
+> +
+> +int is_crashkernel_mem_reserved(void)
+> +{
+> +	return 0;
+> +}
+> diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+> new file mode 100644
+> index 0000000..f33c7a2
+> --- /dev/null
+> +++ b/kexec/arch/arm64/crashdump-arm64.h
+> @@ -0,0 +1,12 @@
+> +/*
+> + * ARM64 crashdump.
+> + */
+> +
+> +#if !defined(CRASHDUMP_ARM64_H)
+> +#define CRASHDUMP_ARM64_H
+> +
+> +#include "kexec.h"
+> +
+> +extern struct memory_ranges usablemem_rgns;
+> +
+> +#endif
+> diff --git a/kexec/arch/arm64/image-header.h b/kexec/arch/arm64/image-header.h
+> new file mode 100644
+> index 0000000..126ca15
+> --- /dev/null
+> +++ b/kexec/arch/arm64/image-header.h
+> @@ -0,0 +1,104 @@
+> +/*
+> + * ARM64 binary image support.
+> + */
+> +
+> +#if !defined(__ARM64_IMAGE_HEADER_H)
+> +#define __ARM64_IMAGE_HEADER_H
+> +
+> +#if !defined(__KERNEL__)
+> +#include <stdint.h>
+> +#include <endian.h>
+> +#endif
+> +
+> +#if !defined(__ASSEMBLY__)
+> +
+> +/**
+> + * struct arm64_image_header - arm64 kernel image header.
+> + *
+> + * @pe_sig: Optional PE format 'MZ' signature.
+> + * @branch_code: Reserved for instructions to branch to stext.
+> + * @text_offset: The image load offset in LSB byte order.
+> + * @image_size: An estimated size of the memory image size in LSB byte order.
+> + * @flags: Bit flags in LSB byte order:
+> + *  Bit 7.0: Image byte order, 1=MSB.
+> + * @reserved_1: Reserved.
+> + * @magic: Magic number, "ARM\x64".
+> + * @pe_header: Optional offset to a PE format header.
+> + **/
+> +
+> +struct arm64_image_header {
+> +	uint8_t pe_sig[2];
+> +	uint16_t branch_code[3];
+> +	uint64_t text_offset;
+> +	uint64_t image_size;
+> +	uint64_t flags;
+> +	uint64_t reserved_1[3];
+> +	uint8_t magic[4];
+> +	uint32_t pe_header;
+> +};
+> +
+> +static const uint8_t arm64_image_magic[4] = {'A', 'R', 'M', 0x64U};
+> +static const uint8_t arm64_image_pe_sig[2] = {'M', 'Z'};
+> +static const uint64_t arm64_image_flag_be = (1UL << 0);
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Should static variables not be in a header?
 
-Hi,
+> +/**
+> + * arm64_header_check_magic - Helper to check the arm64 image header.
+> + *
+> + * Returns non-zero if header is OK.
+> + */
+> +
+> +static inline int arm64_header_check_magic(const struct arm64_image_header *h)
+> +{
+> +	if (!h)
+> +		return 0;
+> +
+> +	return (h->magic[0] == arm64_image_magic[0]
+> +		&& h->magic[1] == arm64_image_magic[1]
+> +		&& h->magic[2] == arm64_image_magic[2]
+> +		&& h->magic[3] == arm64_image_magic[3]);
+> +}
+> +
+> +/**
+> + * arm64_header_check_pe_sig - Helper to check the arm64 image header.
+> + *
+> + * Returns non-zero if 'MZ' signature is found.
+> + */
+> +
+> +static inline int arm64_header_check_pe_sig(const struct arm64_image_header *h)
+> +{
+> +	if (!h)
+> +		return 0;
+> +
+> +	return (h->pe_sig[0] == arm64_image_pe_sig[0]
+> +		&& h->pe_sig[1] == arm64_image_pe_sig[1]);
+> +}
+> +
+> +/**
+> + * arm64_header_check_msb - Helper to check the arm64 image header.
+> + *
+> + * Returns non-zero if the image was built as big endian.
+> + */
+> +
+> +static inline int arm64_header_check_msb(const struct arm64_image_header *h)
+> +{
+> +	if (!h)
+> +		return 0;
+> +
+> +	return le64toh(h->flags) & arm64_image_flag_be;
+> +}
+> +
+> +static inline uint64_t arm64_header_text_offset(
+> +	const struct arm64_image_header *h)
+> +{
+> +	return le64toh(h->text_offset);
+> +}
+> +
+> +static inline uint64_t arm64_header_image_size(
+> +	const struct arm64_image_header *h)
+> +{
+> +	return le64toh(h->image_size);
+> +}
+> +
+> +#endif /* !defined(__ASSEMBLY__) */
+> +
+> +#endif
+> diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
+> new file mode 100644
+> index 0000000..419e867
+> --- /dev/null
+> +++ b/kexec/arch/arm64/include/arch/options.h
+> @@ -0,0 +1,43 @@
+> +#if !defined(KEXEC_ARCH_ARM64_OPTIONS_H)
+> +#define KEXEC_ARCH_ARM64_OPTIONS_H
+> +
+> +#define OPT_APPEND		((OPT_MAX)+0)
+> +#define OPT_DTB			((OPT_MAX)+1)
+> +#define OPT_INITRD		((OPT_MAX)+2)
+> +#define OPT_PORT		((OPT_MAX)+3)
+> +#define OPT_REUSE_CMDLINE	((OPT_MAX)+4)
+> +#define OPT_ARCH_MAX		((OPT_MAX)+5)
+> +
+> +#define KEXEC_ARCH_OPTIONS \
+> +	KEXEC_OPTIONS \
+> +	{ "append",        1, NULL, OPT_APPEND }, \
+> +	{ "command-line",  1, NULL, OPT_APPEND }, \
+> +	{ "dtb",           1, NULL, OPT_DTB }, \
+> +	{ "initrd",        1, NULL, OPT_INITRD }, \
+> +	{ "port",          1, NULL, OPT_PORT }, \
+> +	{ "ramdisk",       1, NULL, OPT_INITRD }, \
+> +	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
+> +
+> +#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR /* Only accept long arch options. */
+> +#define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
+> +#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
+> +
+> +static const char arm64_opts_usage[] __attribute__ ((unused)) =
+> +"     --append=STRING       Set the kernel command line to STRING.\n"
+> +"     --command-line=STRING Set the kernel command line to STRING.\n"
+> +"     --dtb=FILE            Use FILE as the device tree blob.\n"
+> +"     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
+> +"     --port=ADDRESS        Purgatory output to port ADDRESS.\n"
+> +"     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
+> +"     --reuse-cmdline       Use kernel command line from running system.\n";
 
-[auto build test ERROR on iommu/next]
-[also build test ERROR on v4.7-rc7 next-20160722]
-[cannot apply to tip/x86/core]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+Ditto
 
-url:    https://github.com/0day-ci/linux/commits/Baoquan-He/Enable-legacy-irq-mode-before-jump-to-kexec-kdump-kernel/20160724-054857
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
-config: i386-randconfig-i0-201630 (attached as .config)
-compiler: gcc-4.8 (Debian 4.8.4-1) 4.8.4
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=i386 
+> +struct arm64_opts {
+> +	const char *command_line;
+> +	const char *dtb;
+> +	const char *initrd;
+> +	uint64_t port;
+> +};
+> +
+> +extern struct arm64_opts arm64_opts;
+> +
+> +#endif
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> new file mode 100644
+> index 0000000..24031f6
+> --- /dev/null
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -0,0 +1,979 @@
+> +/*
+> + * ARM64 kexec.
+> + */
+> +
+> +#define _GNU_SOURCE
+> +
+> +#include <assert.h>
+> +#include <errno.h>
+> +#include <getopt.h>
+> +#include <inttypes.h>
+> +#include <libfdt.h>
+> +#include <limits.h>
+> +#include <stdlib.h>
+> +#include <sys/stat.h>
+> +#include <linux/elf.h>
+> +
+> +#include "dt-ops.h"
+> +#include "kexec.h"
+> +#include "crashdump.h"
+> +#include "crashdump-arm64.h"
+> +#include "kexec-arm64.h"
+> +#include "fs2dt.h"
+> +#include "kexec-syscall.h"
+> +#include "arch/options.h"
 
-All errors (new ones prefixed by >>):
+Can those be sorted in an alphabetic order?
+> +
+> +/* Global varables the core kexec routines expect. */
+> +
+> +unsigned char reuse_initrd;
+> +
+> +off_t initrd_base;
+> +off_t initrd_size;
+> +
+> +const struct arch_map_entry arches[] = {
+> +	{ "aarch64", KEXEC_ARCH_ARM64 },
+> +	{ "aarch64_be", KEXEC_ARCH_ARM64 },
+> +	{ NULL, 0 },
+> +};
+> +
+> +/* arm64 global varables. */
+> +
+> +struct arm64_opts arm64_opts;
+> +struct arm64_mem arm64_mem = {
+> +	.phys_offset = arm64_mem_ngv,
+> +	.page_offset = arm64_mem_ngv,
+> +};
+> +
+> +uint64_t get_phys_offset(void)
+> +{
+> +	assert(arm64_mem.phys_offset != arm64_mem_ngv);
 
-   arch/x86/kvm/lapic.c: In function '__apic_accept_irq':
->> arch/x86/kvm/lapic.c:963:7: error: 'APIC_DM_EXTINT' undeclared (first use in this function)
-     case APIC_DM_EXTINT:
-          ^
-   arch/x86/kvm/lapic.c:963:7: note: each undeclared identifier is reported only once for each function it appears in
+Assertion here?
 
-vim +/APIC_DM_EXTINT +963 arch/x86/kvm/lapic.c
+> +	return arm64_mem.phys_offset;
+> +}
+> +
+> +uint64_t get_page_offset(void)
+> +{
+> +	assert(arm64_mem.page_offset != arm64_mem_ngv);
+> +	return arm64_mem.page_offset;
+> +}
+> +
+> +void arch_usage(void)
+> +{
+> +	printf(arm64_opts_usage);
+> +}
+> +
+> +int arch_process_options(int argc, char **argv)
+> +{
+> +	static const char short_options[] = KEXEC_OPT_STR "";
+> +	static const struct option options[] = {
+> +		KEXEC_ARCH_OPTIONS
+> +		{ 0 }
+> +	};
+> +	int opt;
+> +	char *cmdline = NULL;
+> +	const char *append = NULL;
+> +
+> +	for (opt = 0; opt != -1; ) {
+> +		opt = getopt_long(argc, argv, short_options, options, 0);
+> +
+> +		switch (opt) {
+> +		case OPT_APPEND:
+> +			append = optarg;
+> +			break;
+> +		case OPT_REUSE_CMDLINE:
+> +			cmdline = get_command_line();
+> +			break;
+> +		case OPT_DTB:
+> +			arm64_opts.dtb = optarg;
+> +			break;
+> +		case OPT_INITRD:
+> +			arm64_opts.initrd = optarg;
+> +			break;
+> +		case OPT_PORT:
+> +			arm64_opts.port = strtoull(optarg, NULL, 0);
+> +			break;
+> +		default:
+> +			break; /* Ignore core and unknown options. */
+> +		}
+> +	}
+> +
+> +	arm64_opts.command_line = concat_cmdline(cmdline, append);
+> +
+> +	dbgprintf("%s:%d: command_line: %s\n", __func__, __LINE__,
+> +		arm64_opts.command_line);
+> +	dbgprintf("%s:%d: initrd: %s\n", __func__, __LINE__,
+> +		arm64_opts.initrd);
+> +	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__, arm64_opts.dtb);
+> +	dbgprintf("%s:%d: port: 0x%" PRIx64 "\n", __func__, __LINE__,
+> +		arm64_opts.port);
+> +
+> +	return 0;
+> +}
+> +
+> +struct dtb {
+> +	char *buf;
+> +	off_t size;
+> +	const char *name;
+> +	const char *path;
+> +};
+> +
+> +static void dump_reservemap(const struct dtb *dtb)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; ; i++) {
+> +		uint64_t address;
+> +		uint64_t size;
+> +
+> +		fdt_get_mem_rsv(dtb->buf, i, &address, &size);
+> +
+> +		if (!size)
+> +			break;
+> +
+> +		dbgprintf("%s: %s {%" PRIx64 ", %" PRIx64 "}\n", __func__,
+> +			dtb->name, address, size);
+> +	}
+> +}
+> +
+> +enum cpu_enable_method {
+> +	cpu_enable_method_unknown,
+> +	cpu_enable_method_psci,
+> +	cpu_enable_method_spin_table,
+> +};
+> +
+> +static const char *cpu_enable_method_str(enum cpu_enable_method m)
+> +{
+> +	if (m == cpu_enable_method_psci)
+> +		return "psci";
+> +	if (m == cpu_enable_method_spin_table)
+> +		return "spin_table";
+> +	return "unknown";
+> +}
+> +
+> +/**
+> + * struct cpu_properties - Various properties from a device tree cpu node.
+> + *
+> + * These properties will be valid over a dtb re-size.
+> + */
+> +
+> +struct cpu_properties {
+> +	uint64_t hwid;
+> +	char node_path[128];
+> +	enum cpu_enable_method method;
+> +};
+> +
+> +/**
+> + * read_cpu_properties - Helper to read the device tree cpu properties.
+> + */
+> +
+> +static int read_cpu_properties(struct cpu_properties *cp,
+> +	const struct dtb *dtb, int node_offset, unsigned int address_cells)
+> +{
+> +	int result;
+> +	const void *data;
+> +
+> +	result = fdt_get_path(dtb->buf, node_offset, cp->node_path,
+> +		sizeof(cp->node_path));
+> +
+> +	if (result < 0) {
+> +		fprintf(stderr, "kexec: %s:%d: %s: fdt_get_path failed: %s\n",
+> +			__func__, __LINE__, dtb->name, fdt_strerror(result));
+> +		return result;
+> +	}
+> +
+> +	data = fdt_getprop(dtb->buf, node_offset, "device_type", &result);
+> +
+> +	if (!data) {
+> +		dbgprintf("%s: %s (%s) read device_type failed: %s\n",
+> +			__func__, dtb->name, cp->node_path,
+> +			fdt_strerror(result));
+> +		return result == -FDT_ERR_NOTFOUND ? 0 : result;
+> +	}
+> +
+> +	if (strcmp(data, "cpu")) {
+> +		dbgprintf("%s: %s (%s): '%s'\n", __func__, dtb->name,
+> +			cp->node_path, (const char *)data);
+> +		return 0;
+> +	}
+> +
+> +	data = fdt_getprop(dtb->buf, node_offset, "reg", &result);
+> +
+> +	if (!data) {
+> +		fprintf(stderr, "kexec: %s:%d: read hwid failed: %s\n",
+> +			__func__, __LINE__, fdt_strerror(result));
+> +		return result;
+> +	}
+> +
+> +	cp->hwid = (address_cells == 1) ? fdt32_to_cpu(*(uint32_t *)data) :
+> +		fdt64_to_cpu(*(uint64_t *)data);
+> +
+> +	data = fdt_getprop(dtb->buf, node_offset, "enable-method", &result);
+> +
+> +	if (!data) {
+> +		fprintf(stderr,
+> +			"kexec: %s:%d: read enable_method failed: %s\n",
+> +			__func__, __LINE__, fdt_strerror(result));
+> +		return result;
+> +	}
+> +
+> +	if (!strcmp(data, "psci")) {
+> +		cp->method = cpu_enable_method_psci;
+> +		return 1;
+> +	}
+> +
+> +	if (!strcmp(data, "spin-table")) {
+> +		cp->method = cpu_enable_method_spin_table;
+> +		return 1;
+> +	}
+> +
+> +	cp->method = cpu_enable_method_unknown;
+> +	return 1;
+> +}
+> +
+> +static int check_cpu_properties(const struct cpu_properties *cp_1,
+> +	const struct cpu_properties *cp_2)
+> +{
+> +	assert(cp_1->hwid == cp_2->hwid);
+> +
+> +	if (cp_1->method != cp_2->method) {
+> +		fprintf(stderr,
+> +			"%s:%d: hwid-%" PRIx64 ": Error: Different cpu enable methods: %s -> %s\n",
+> +			__func__, __LINE__, cp_1->hwid,
+> +			cpu_enable_method_str(cp_1->method),
+> +			cpu_enable_method_str(cp_2->method));
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (cp_2->method != cpu_enable_method_psci) {
+> +		fprintf(stderr,
+> +			"%s:%d: hwid-%" PRIx64 ": Error: Unsupported cpu enable method: %s\n",
+> +			__func__, __LINE__, cp_1->hwid,
+> +			cpu_enable_method_str(cp_1->method));
+> +		return -EINVAL;
+> +	}
+> +
+> +	dbgprintf("%s: hwid-%" PRIx64 ": OK\n", __func__, cp_1->hwid);
+> +
+> +	return 0;
+> +}
+> +
+> +struct cpu_info {
+> +	unsigned int cpu_count;
+> +	struct cpu_properties *cp;
+> +};
+> +
+> +static int read_cpu_info(struct cpu_info *info, const struct dtb *dtb)
+> +{
+> +	int i;
+> +	int offset;
+> +	int result;
+> +	int depth;
+> +	const void *data;
+> +	unsigned int address_cells;
+> +
+> +	offset = fdt_subnode_offset(dtb->buf, 0, "cpus");
+> +
+> +	if (offset < 0) {
+> +		fprintf(stderr, "kexec: %s:%d: read cpus node failed: %s\n",
+> +			__func__, __LINE__, fdt_strerror(offset));
+> +		return offset;
+> +	}
+> +
+> +	data = fdt_getprop(dtb->buf, offset, "#address-cells", &result);
+> +
+> +	if (!data) {
+> +		fprintf(stderr,
+> +			"kexec: %s:%d: read cpus address-cells failed: %s\n",
+> +			__func__, __LINE__, fdt_strerror(result));
+> +		return result;
+> +	}
+> +
+> +	address_cells = fdt32_to_cpu(*(uint32_t *)data);
+> +
+> +	if (address_cells < 1 || address_cells > 2) {
+> +		fprintf(stderr,
+> +			"kexec: %s:%d: bad cpus address-cells value: %u\n",
+> +			__func__, __LINE__, address_cells);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0, depth = 0; ; i++) {
+> +		info->cp = realloc(info->cp, (i + 1) * sizeof(*info->cp));
+> +
+> +		if (!info->cp) {
+> +			fprintf(stderr, "kexec: %s:%d: malloc failed: %s\n",
+> +				__func__, __LINE__, fdt_strerror(offset));
+> +			result = -ENOMEM;
+> +			goto on_error;
+> +		}
+> +
+> +next_node:
+> +		memset(&info->cp[i], 0, sizeof(*info->cp));
+> +
+> +		offset = fdt_next_node(dtb->buf, offset, &depth);
+> +
+> +		if (offset < 0) {
+> +			fprintf(stderr,
+> +				"kexec: %s:%d: read cpu node failed: %s\n",
+> +				__func__, __LINE__, fdt_strerror(offset));
+> +			result = offset;
+> +			goto on_error;
+> +		}
+> +
+> +		if (depth != 1)
+> +			break;
+> +
+> +		result = read_cpu_properties(&info->cp[i], dtb, offset,
+> +			address_cells);
+> +
+> +		if (result == 0)
+> +			goto next_node;
+> +
+> +		if (result < 0)
+> +			goto on_error;
+> +
+> +		dbgprintf("%s: %s cpu-%d (%s): hwid-%" PRIx64 ", '%s'\n",
+> +			__func__, dtb->name, i, info->cp[i].node_path,
+> +			info->cp[i].hwid,
+> +			cpu_enable_method_str(info->cp[i].method));
+> +	}
+> +
+> +	info->cpu_count = i;
+> +	return 0;
+> +
+> +on_error:
+> +	free(info->cp);
+> +	info->cp = NULL;
+> +	return result;
+> +}
+> +
+> +static int check_cpu_nodes(const struct dtb *dtb_1, const struct dtb *dtb_2)
+> +{
+> +	int result;
+> +	unsigned int cpu_1;
+> +	struct cpu_info info_1;
+> +	struct cpu_info info_2;
+> +	unsigned int to_process;
+> +
+> +	memset(&info_1, 0, sizeof(info_1));
+> +	memset(&info_2, 0, sizeof(info_2));
+> +
+> +	result = read_cpu_info(&info_1, dtb_1);
+> +
+> +	if (result)
+> +		goto on_exit;
+> +
+> +	result = read_cpu_info(&info_2, dtb_2);
+> +
+> +	if (result)
+> +		goto on_exit;
+> +
+> +	to_process = info_1.cpu_count < info_2.cpu_count
+> +		? info_1.cpu_count : info_2.cpu_count;
+> +
+> +	for (cpu_1 = 0; cpu_1 < info_1.cpu_count; cpu_1++) {
+> +		struct cpu_properties *cp_1 = &info_1.cp[cpu_1];
+> +		unsigned int cpu_2;
+> +
+> +		for (cpu_2 = 0; cpu_2 < info_2.cpu_count; cpu_2++) {
+> +			struct cpu_properties *cp_2 = &info_2.cp[cpu_2];
+> +
+> +			if (cp_1->hwid != cp_2->hwid)
+> +				continue;
+> +
+> +			to_process--;
+> +
+> +			result = check_cpu_properties(cp_1, cp_2);
+> +
+> +			if (result)
+> +				goto on_exit;
+> +
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (to_process) {
+> +		fprintf(stderr,
+> +			"kexec: %s:%d: Warning: Failed to process %u CPUs.\n",
+> +			__func__, __LINE__, to_process);
+> +		result = -EINVAL;
+> +		goto on_exit;
+> +	}
+> +
+> +on_exit:
+> +	free(info_1.cp);
+> +	free(info_2.cp);
+> +	return result;
+> +}
+> +
+> +static int set_bootargs(struct dtb *dtb, const char *command_line)
+> +{
+> +	int result;
+> +
+> +	if (!command_line || !command_line[0])
+> +		return 0;
+> +
+> +	result = dtb_set_bootargs(&dtb->buf, &dtb->size, command_line);
+> +
+> +	if (result)
+> +		fprintf(stderr,
+> +			"kexec: Set device tree bootargs failed.\n");
+> +
+> +	return result;
+> +}
+> +
+> +static int read_proc_dtb(struct dtb *dtb, const char *command_line)
+> +{
+> +	int result;
+> +	struct stat s;
+> +	static const char path[] = "/proc/device-tree";
+> +
+> +	result = stat(path, &s);
+> +
+> +	if (result) {
+> +		dbgprintf("%s: %s\n", __func__, strerror(errno));
 
-66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  957  		smp_wmb();
-66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  958  		set_bit(KVM_APIC_SIPI, &apic->pending_events);
-3842d135f arch/x86/kvm/lapic.c Avi Kivity      2010-07-27  959  		kvm_make_request(KVM_REQ_EVENT, vcpu);
-d76901750 arch/x86/kvm/lapic.c Marcelo Tosatti 2008-09-08  960  		kvm_vcpu_kick(vcpu);
-97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  961  		break;
-97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  962  
-23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26 @963  	case APIC_DM_EXTINT:
-23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  964  		/*
-23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  965  		 * Should only be called by kvm_apic_local_deliver() with LVT0,
-23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  966  		 * before NMI watchdog was enabled. Already handled by
+I think that you always use fprintf() in case of failures.
 
-:::::: The code at line 963 was first introduced by commit
-:::::: 23930f9521c9c4d4aa96cdb9d1e1703f3782bb94 KVM: x86: Enable NMI Watchdog via in-kernel PIT source
+> +		return -1;
+> +	}
+> +
+> +	dtb->path = path;
+> +	create_flatten_tree((char **)&dtb->buf, &dtb->size,
+> +		(command_line && command_line[0]) ? command_line : NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int read_sys_dtb(struct dtb *dtb, const char *command_line)
+> +{
+> +	int result;
+> +	struct stat s;
+> +	static const char path[] = "/sys/firmware/fdt";
+> +
+> +	result = stat(path, &s);
+> +
+> +	if (result) {
+> +		dbgprintf("%s: %s\n", __func__, strerror(errno));
 
-:::::: TO: Jan Kiszka <jan.kiszka@siemens.com>
-:::::: CC: Avi Kivity <avi@redhat.com>
+Ditto
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> +		return -1;
+> +	}
+> +
+> +	dtb->path = path;
+> +	dtb->buf = slurp_file("/sys/firmware/fdt", &dtb->size);
+> +
+> +	return set_bootargs(dtb, command_line);
+> +}
+> +
+> +static int read_1st_dtb(struct dtb *dtb, const char *command_line)
+> +{
+> +	int result;
+> +
+> +	result = read_sys_dtb(dtb, command_line);
+> +
+> +	if (!result)
+> +		goto on_success;
+> +
+> +	result = read_proc_dtb(dtb, command_line);
+> +
+> +	if (!result)
+> +		goto on_success;
+> +
+> +	dbgprintf("%s: not found\n", __func__);
+> +	return -1;
 
---zhXaljGHf11kAtnf
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+Ditto
 
-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
-2E5ZOu4qM3n0AvgfzyY0wyJ2AQA=
+> +on_success:
+> +	dbgprintf("%s: found %s\n", __func__, dtb->path);
+> +	return 0;
+> +}
+> +
+> +static int setup_2nd_dtb(char *command_line, struct dtb *dtb_2)
+> +{
+> +	int result;
+> +
+> +	result = fdt_check_header(dtb_2->buf);
+> +
+> +	if (result) {
+> +		fprintf(stderr, "kexec: Invalid 2nd device tree.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	result = set_bootargs(dtb_2, command_line);
+> +
+> +	dump_reservemap(dtb_2);
+> +
+> +	return result;
+> +}
+> +
+> +static uint64_t read_sink(const char *command_line)
+> +{
+> +	uint64_t v;
+> +	const char *p;
+> +
+> +	if (arm64_opts.port)
+> +		return arm64_opts.port;
+> +
+> +#if defined(ARM64_DEBUG_PORT)
+> +	return (uint64_t)(ARM64_DEBUG_PORT);
+> +#endif
+> +	if (!command_line)
+> +		return 0;
+> +
+> +	if (!(p = strstr(command_line, "earlyprintk=")) &&
+> +		!(p = strstr(command_line, "earlycon=")))
+> +		return 0;
+> +
+> +	while (*p != ',')
+> +		p++;
+> +
+> +	p++;
+> +
+> +	if (*p == 0)
+> +		return 0;
+> +
+> +	errno = 0;
+> +
+> +	v = strtoull(p, NULL, 0);
+> +
+> +	if (errno)
+> +		return 0;
+> +
+> +	return v;
+> +}
+> +
+> +/**
+> + * arm64_load_other_segments - Prepare the dtb, initrd and purgatory segments.
+> + */
+> +
+> +int arm64_load_other_segments(struct kexec_info *info,
+> +	uint64_t kernel_entry)
+> +{
+> +	int result;
+> +	uint64_t dtb_base;
+> +	uint64_t image_base;
+> +	unsigned long hole_min;
+> +	unsigned long hole_max;
+> +	uint64_t purgatory_sink;
+> +	char *initrd_buf = NULL;
+> +	struct dtb dtb_1 = {.name = "dtb_1"};
+> +	struct dtb dtb_2 = {.name = "dtb_2"};
+> +	char command_line[COMMAND_LINE_SIZE] = "";
+> +
+> +	if (arm64_opts.command_line) {
+> +		strncpy(command_line, arm64_opts.command_line,
+> +			sizeof(command_line));
+> +		command_line[sizeof(command_line) - 1] = 0;
+> +	}
+> +
+> +	purgatory_sink = read_sink(command_line);
+> +
+> +	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
+> +		purgatory_sink);
+> +
+> +	if (arm64_opts.dtb) {
+> +		dtb_2.buf = slurp_file(arm64_opts.dtb, &dtb_2.size);
+> +		assert(dtb_2.buf);
+> +	}
+> +
+> +	result = read_1st_dtb(&dtb_1, command_line);
+> +
+> +	if (result && !arm64_opts.dtb) {
+> +		fprintf(stderr, "kexec: Error: No device tree available.\n");
+> +		return result;
+> +	}
+> +
+> +	if (result && arm64_opts.dtb)
+> +		dtb_1 = dtb_2;
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+In this case, dtb_1 might also be modified (unintentionally).
+So be careful.
+
+> +	else if (!result && !arm64_opts.dtb)
+> +		dtb_2 = dtb_1;
+> +
+> +	result = setup_2nd_dtb(command_line, &dtb_2);
+> +
+> +	if (result)
+> +		return result;
+> +	
+> +	check_cpu_nodes(&dtb_1, &dtb_2);
+> +
+> +	/* Put the other segments after the image. */
+> +
+> +	image_base = arm64_mem.phys_offset + arm64_mem.text_offset;
+> +	hole_min = image_base + arm64_mem.image_size;
+> +	hole_max = ULONG_MAX;
+> +
+> +	if (arm64_opts.initrd) {
+> +		initrd_buf = slurp_file(arm64_opts.initrd, &initrd_size);
+> +
+> +		if (!initrd_buf)
+> +			fprintf(stderr, "kexec: Empty ramdisk file.\n");
+
+Why not fail?
+Empty is not the only reason of failure.
+
+> +		else {
+> +			/*
+> +			 * Put the initrd after the kernel.  As specified in
+> +			 * booting.txt, align to 1 GiB.
+> +			 */
+> +
+> +			initrd_base = add_buffer_phys_virt(info, initrd_buf,
+> +				initrd_size, initrd_size, GiB(1),
+> +				hole_min, hole_max, 1, 0);
+> +
+> +			/* initrd_base is valid if we got here. */
+> +
+> +			dbgprintf("initrd: base %lx, size %lxh (%ld)\n",
+> +				initrd_base, initrd_size, initrd_size);
+> +
+> +			/* Check size limit as specified in booting.txt. */
+> +
+> +			if (initrd_base - image_base + initrd_size > GiB(32)) {
+> +				fprintf(stderr, "kexec: Error: image + initrd too big.\n");
+> +				return -EINVAL;
+
+Some dtb_*/fdt_* functions may return -FDT_ERR_*.
+Don't mix different type of error codes.
+
+> +			}
+> +
+> +			result = dtb_set_initrd((char **)&dtb_2.buf,
+> +				&dtb_2.size, initrd_base,
+> +				initrd_base + initrd_size);
+> +
+> +			if (result)
+> +				return result;
+> +		}
+> +	}
+> +
+> +	/* Check size limit as specified in booting.txt. */
+> +
+> +	if (dtb_2.size > MiB(2)) {
+> +		fprintf(stderr, "kexec: Error: dtb too big.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dtb_base = add_buffer_phys_virt(info, dtb_2.buf, dtb_2.size, dtb_2.size,
+> +		0, hole_min, hole_max, 1, 0);
+> +
+> +	/* dtb_base is valid if we got here. */
+> +
+> +	dbgprintf("dtb:    base %lx, size %lxh (%ld)\n", dtb_base, dtb_2.size,
+> +		dtb_2.size);
+> +
+> +	elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+> +		hole_min, hole_max, 1, 0);
+> +
+> +	info->entry = (void *)elf_rel_get_addr(&info->rhdr, "purgatory_start");
+> +
+> +	elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
+> +		sizeof(purgatory_sink));
+> +
+> +	elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry", &kernel_entry,
+> +		sizeof(kernel_entry));
+> +
+> +	elf_rel_set_symbol(&info->rhdr, "arm64_dtb_addr", &dtb_base,
+> +		sizeof(dtb_base));
+> +
+> +	return 0;
+> +}
+> +
+> +unsigned long virt_to_phys(unsigned long v)
+> +{
+> +	unsigned long p;
+> +
+> +	p = v - get_page_offset() + get_phys_offset();
+> +
+> +	return p;
+> +}
+> +
+> +unsigned long phys_to_virt(struct crash_elf_info *elf_info,
+> +	unsigned long long p)
+> +{
+> +	unsigned long v;
+> +
+> +	v = p - get_phys_offset() + elf_info->page_offset;
+> +
+> +	return v;
+> +}
+> +
+> +void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+> +	unsigned long base, size_t memsz)
+> +{
+> +	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
+> +}
+> +
+> +int arm64_process_image_header(const struct arm64_image_header *h)
+> +{
+> +#if !defined(KERNEL_IMAGE_SIZE)
+> +# define KERNEL_IMAGE_SIZE MiB(7)
+> +#endif
+
+Move this to a header?
+
+> +
+> +	if (!arm64_header_check_magic(h))
+> +		return -EINVAL;
+> +
+> +	if (h->image_size) {
+> +		arm64_mem.text_offset = arm64_header_text_offset(h);
+> +		arm64_mem.image_size = arm64_header_image_size(h);
+> +	} else {
+> +		/* For 3.16 and older kernels. */
+> +		arm64_mem.text_offset = 0x80000;
+> +		arm64_mem.image_size = KERNEL_IMAGE_SIZE;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int get_memory_ranges_dt(struct memory_range *array, unsigned int *count)
+> +{
+> +	struct region {uint64_t base; uint64_t size;};
+> +	struct dtb dtb = {.name = "range_dtb"};
+> +	int offset;
+> +	int result;
+> +
+> +	*count = 0;
+> +
+> +	result = read_1st_dtb(&dtb, NULL);
+> +
+> +	if (result) {
+> +		goto on_error;
+> +	}
+> +
+> +	result = fdt_check_header(dtb.buf);
+> +
+> +	if (result) {
+> +		dbgprintf("%s:%d: %s: fdt_check_header failed:%s\n", __func__,
+> +			__LINE__, dtb.path, fdt_strerror(result));
+> +		goto on_error;
+> +	}
+> +
+> +	for (offset = 0; ; ) {
+> +		const struct region *region;
+> +		const struct region *end;
+> +		int len;
+> +
+> +		offset = fdt_subnode_offset(dtb.buf, offset, "memory");
+> +
+> +		if (offset == -FDT_ERR_NOTFOUND)
+> +			break;
+> +
+> +		if (offset <= 0) {
+> +			dbgprintf("%s:%d: fdt_subnode_offset failed: %d %s\n",
+> +				__func__, __LINE__, offset,
+> +				fdt_strerror(offset));
+> +			goto on_error;
+> +		}
+> +
+> +		dbgprintf("%s:%d: node_%d %s\n", __func__, __LINE__, offset,
+> +			fdt_get_name(dtb.buf, offset, NULL));
+> +
+> +		region = fdt_getprop(dtb.buf, offset, "reg", &len);
+> +
+> +		if (region <= 0) {
+> +			dbgprintf("%s:%d: fdt_getprop failed: %d %s\n",
+> +				__func__, __LINE__, offset,
+> +				fdt_strerror(offset));
+> +			goto on_error;
+> +		}
+> +
+> +		for (end = region + len / sizeof(*region);
+> +			region < end && *count < KEXEC_SEGMENT_MAX;
+> +			region++) {
+> +			struct memory_range r;
+> +
+> +			r.type = RANGE_RAM;
+> +			r.start = fdt64_to_cpu(region->base);
+> +			r.end = r.start + fdt64_to_cpu(region->size) - 1;
+> +
+> +			if (!region->size) {
+> +				dbgprintf("%s:%d: SKIP: %016llx - %016llx\n",
+> +					__func__, __LINE__, r.start, r.end);
+> +				continue;
+> +			}
+> +
+> +			dbgprintf("%s:%d:  RAM: %016llx - %016llx\n", __func__,
+> +				__LINE__, r.start, r.end);
+> +
+> +			array[(*count)++] = r;
+> +
+> +			set_phys_offset(r.start);
+> +		}
+> +	}
+> +
+> +	if (!*count) {
+> +		dbgprintf("%s:%d: %s: No RAM found.\n", __func__, __LINE__,
+> +			dtb.path);
+> +		goto on_error;
+> +	}
+> +
+> +	dbgprintf("%s:%d: %s: Success\n", __func__, __LINE__, dtb.path);
+> +	result = 0;
+> +	goto on_exit;
+> +
+> +on_error:
+> +	fprintf(stderr, "%s:%d: %s: Unusable device-tree file\n", __func__,
+> +		__LINE__, dtb.path);
+> +	result = -1;
+> +
+> +on_exit:
+> +	free(dtb.buf);
+> +	return result;
+> +}
+> +
+> +static int get_memory_ranges_iomem(struct memory_range *array,
+> +	unsigned int *count)
+> +{
+> +	const char *iomem;
+> +	char line[MAX_LINE];
+> +	FILE *fp;
+> +
+> +	*count = 0;
+> +
+> +	iomem = proc_iomem();
+> +	fp = fopen(iomem, "r");
+> +
+> +	if (!fp) {
+> +		fprintf(stderr, "Cannot open %s: %s\n", iomem, strerror(errno));
+> +		return -1;
+> +	}
+> +
+> +	while(fgets(line, sizeof(line), fp) != 0) {
+
+There is an existing interface: kexec_iomem_for_each_line().
+
+> +		struct memory_range r;
+> +		char *str;
+> +		int consumed;
+> +
+> +		if (*count >= KEXEC_SEGMENT_MAX)
+> +			break;
+> +
+> +		if (sscanf(line, "%Lx-%Lx : %n", &r.start, &r.end, &consumed)
+> +			!= 2)
+> +			continue;
+> +
+> +		str = line + consumed;
+> +
+> +		if (memcmp(str, "System RAM\n", 11)) {
+> +			dbgprintf("%s:%d: SKIP: %016Lx - %016Lx : %s", __func__,
+> +				__LINE__, r.start, r.end, str);
+> +			continue;
+> +		}
+> +
+> +		r.type = RANGE_RAM;
+> +
+> +		dbgprintf("%s:%d: RAM:  %016llx - %016llx : %s", __func__,
+> +			__LINE__, r.start, r.end, str);
+> +
+> +		array[(*count)++] = r;
+> +
+> +		set_phys_offset(r.start);
+> +	}
+> +
+> +	fclose(fp);
+> +
+> +	if (!*count) {
+> +		dbgprintf("%s:%d: failed: No RAM found.\n", __func__, __LINE__);
+> +		return -1;
+> +	}
+> +
+> +	dbgprintf("%s:%d: Success\n", __func__, __LINE__);
+> +	return 0;
+> +}
+> +
+> +int get_memory_ranges(struct memory_range **range, int *ranges,
+> +	unsigned long kexec_flags)
+> +{
+> +	static struct memory_range array[KEXEC_SEGMENT_MAX];
+> +	unsigned int count;
+> +	int result;
+> +
+> +	result = get_memory_ranges_iomem(array, &count);
+> +
+> +	if (result)
+> +		result = get_memory_ranges_dt(array, &count);
+> +
+> +	*range = result ? NULL : array;
+> +	*ranges = result ? 0 : count;
+> +
+> +	return result;
+> +}
+> +
+> +struct file_type file_type[] = {
+> +	{"vmlinux", elf_arm64_probe, elf_arm64_load, elf_arm64_usage},
+> +	{"Image", image_arm64_probe, image_arm64_load, image_arm64_usage},
+> +};
+> +
+> +int file_types = sizeof(file_type) / sizeof(file_type[0]);
+> +
+> +int arch_compat_trampoline(struct kexec_info *info)
+> +{
+> +	return 0;
+> +}
+> +
+> +int machine_verify_elf_rel(struct mem_ehdr *ehdr)
+> +{
+> +	return (ehdr->e_machine == EM_AARCH64);
+> +}
+> +
+> +void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+> +	unsigned long r_type, void *ptr, unsigned long address,
+> +	unsigned long value)
+> +{
+> +#if !defined(R_AARCH64_ABS64)
+> +# define R_AARCH64_ABS64 257
+> +#endif
+> +
+> +#if !defined(R_AARCH64_LD_PREL_LO19)
+> +# define R_AARCH64_LD_PREL_LO19 273
+> +#endif
+> +
+> +#if !defined(R_AARCH64_ADR_PREL_LO21)
+> +# define R_AARCH64_ADR_PREL_LO21 274
+> +#endif
+> +
+> +#if !defined(R_AARCH64_JUMP26)
+> +# define R_AARCH64_JUMP26 282
+> +#endif
+> +
+> +#if !defined(R_AARCH64_CALL26)
+> +# define R_AARCH64_CALL26 283
+> +#endif
+
+Move those definitions to a header(elf.h)?
+
+> +
+> +	uint64_t *loc64;
+> +	uint32_t *loc32;
+> +	uint64_t *location = (uint64_t *)ptr;
+> +	uint64_t data = *location;
+> +	const char *type = NULL;
+> +
+> +	switch(r_type) {
+> +	case R_AARCH64_ABS64:
+> +		type = "ABS64";
+> +		loc64 = ptr;
+> +		*loc64 = cpu_to_elf64(ehdr, elf64_to_cpu(ehdr, *loc64) + value);
+> +		break;
+> +	case R_AARCH64_LD_PREL_LO19:
+> +		type = "LD_PREL_LO19";
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ (((value - address) << 3) & 0xffffe0));
+> +		break;
+> +	case R_AARCH64_ADR_PREL_LO21:
+> +		if (value & 3)
+> +			die("%s: ERROR Unaligned value: %lx\n", __func__,
+> +				value);
+> +		type = "ADR_PREL_LO21";
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ (((value - address) << 3) & 0xffffe0));
+> +		break;
+> +	case R_AARCH64_JUMP26:
+> +		type = "JUMP26";
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ (((value - address) >> 2) & 0x3ffffff));
+> +		break;
+> +	case R_AARCH64_CALL26:
+> +		type = "CALL26";
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ (((value - address) >> 2) & 0x3ffffff));
+> +		break;
+> +	default:
+> +		die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
+> +		break;
+> +	}
+> +
+> +	dbgprintf("%s: %s %016lx->%016lx\n", __func__, type, data, *location);
+> +}
+> +
+> +void arch_reuse_initrd(void)
+> +{
+> +	reuse_initrd = 1;
+> +}
+> +
+> +void arch_update_purgatory(struct kexec_info *UNUSED(info))
+> +{
+> +}
+> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> new file mode 100644
+> index 0000000..3514b24
+> --- /dev/null
+> +++ b/kexec/arch/arm64/kexec-arm64.h
+> @@ -0,0 +1,70 @@
+> +/*
+> + * ARM64 kexec.
+> + */
+> +
+> +#if !defined(KEXEC_ARM64_H)
+> +#define KEXEC_ARM64_H
+> +
+> +#include <stdbool.h>
+> +#include <sys/types.h>
+> +
+> +#include "image-header.h"
+> +#include "kexec.h"
+> +
+> +#define KEXEC_SEGMENT_MAX 16
+> +
+> +#define BOOT_BLOCK_VERSION 17
+> +#define BOOT_BLOCK_LAST_COMP_VERSION 16
+> +#define COMMAND_LINE_SIZE 512
+> +
+> +#define KiB(x) ((x) * 1024UL)
+> +#define MiB(x) (KiB(x) * 1024UL)
+> +#define GiB(x) (MiB(x) * 1024UL)
+> +
+> +int elf_arm64_probe(const char *kernel_buf, off_t kernel_size);
+> +int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
+> +	off_t kernel_size, struct kexec_info *info);
+> +void elf_arm64_usage(void);
+> +
+> +int image_arm64_probe(const char *kernel_buf, off_t kernel_size);
+> +int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+> +	off_t kernel_size, struct kexec_info *info);
+> +void image_arm64_usage(void);
+> +
+> +off_t initrd_base;
+> +off_t initrd_size;
+
+Add "extern" for consistent usages.
+
+> +
+> +/**
+> + * struct arm64_mem - Memory layout info.
+> + */
+> +
+> +struct arm64_mem {
+> +	uint64_t phys_offset;
+> +	uint64_t text_offset;
+> +	uint64_t image_size;
+> +	uint64_t page_offset;
+> +};
+> +
+> +#define arm64_mem_ngv UINT64_MAX
+
+What does "ngv" stand for?
+
+> +extern struct arm64_mem arm64_mem;
+> +
+> +uint64_t get_phys_offset(void);
+> +uint64_t get_page_offset(void);
+> +
+> +static inline void reset_page_offset(void)
+> +{
+> +	arm64_mem.page_offset = arm64_mem_ngv;
+> +}
+> +
+> +static inline void set_phys_offset(uint64_t v)
+> +{
+> +	if (arm64_mem.phys_offset == arm64_mem_ngv
+> +		|| v < arm64_mem.phys_offset)
+> +		arm64_mem.phys_offset = v;
+> +}
+> +
+> +int arm64_process_image_header(const struct arm64_image_header *h);
+> +int arm64_load_other_segments(struct kexec_info *info,
+> +	uint64_t kernel_entry);
+> +
+> +#endif
+> diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
+> new file mode 100644
+> index 0000000..27161e8
+> --- /dev/null
+> +++ b/kexec/arch/arm64/kexec-elf-arm64.c
+> @@ -0,0 +1,130 @@
+> +/*
+> + * ARM64 kexec elf support.
+> + */
+> +
+> +#define _GNU_SOURCE
+> +
+> +#include <errno.h>
+> +#include <stdlib.h>
+> +#include <linux/elf.h>
+> +
+> +#include "kexec-arm64.h"
+> +#include "kexec-elf.h"
+> +#include "kexec-syscall.h"
+> +
+> +int elf_arm64_probe(const char *kernel_buf, off_t kernel_size)
+> +{
+> +	struct mem_ehdr ehdr;
+> +	int result;
+> +
+> +	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
+> +
+> +	if (result < 0) {
+> +		dbgprintf("%s: Not an ELF executable.\n", __func__);
+> +		goto on_exit;
+> +	}
+> +
+> +	if (ehdr.e_machine != EM_AARCH64) {
+> +		dbgprintf("%s: Not an AARCH64 ELF executable.\n", __func__);
+> +		result = -1;
+> +		goto on_exit;
+> +	}
+> +
+> +	result = 0;
+> +on_exit:
+> +	free_elf_info(&ehdr);
+> +	return result;
+> +}
+> +
+> +int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
+> +	off_t kernel_size, struct kexec_info *info)
+> +{
+> +	struct mem_ehdr ehdr;
+> +	int result;
+> +	int i;
+> +
+> +	if (info->kexec_flags & KEXEC_ON_CRASH) {
+> +		fprintf(stderr, "kexec: kdump not yet supported on arm64\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
+> +
+> +	if (result < 0) {
+> +		dbgprintf("%s: build_elf_exec_info failed\n", __func__);
+> +		goto exit;
+> +	}
+> +
+> +	/* Find and process the arm64 image header. */
+> +
+> +	for (i = 0; i < ehdr.e_phnum; i++) {
+> +		struct mem_phdr *phdr = &ehdr.e_phdr[i];
+> +		const struct arm64_image_header *h;
+> +		unsigned long header_offset;
+> +
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		/*
+> +		 * When CONFIG_ARM64_RANDOMIZE_TEXT_OFFSET=y the image header
+> +		 * could be offset in the elf segment.  The linker script sets
+> +		 * ehdr.e_entry to the start of text.
+> +		 */
+> +
+> +		header_offset = ehdr.e_entry - phdr->p_vaddr;
+> +
+> +		h = (const struct arm64_image_header *)(
+> +			kernel_buf + phdr->p_offset + header_offset);
+> +
+> +		if (arm64_process_image_header(h))
+> +			continue;
+> +
+> +		arm64_mem.page_offset = ehdr.e_entry - arm64_mem.text_offset;
+> +
+> +		dbgprintf("%s: e_entry:       %016llx -> %016lx\n", __func__,
+> +			ehdr.e_entry,
+> +			virt_to_phys(ehdr.e_entry));
+> +		dbgprintf("%s: p_vaddr:       %016llx -> %016lx\n", __func__,
+> +			phdr->p_vaddr,
+> +			virt_to_phys(phdr->p_vaddr));
+> +		dbgprintf("%s: header_offset: %016lx\n", __func__,
+> +			header_offset);
+> +		dbgprintf("%s: text_offset:   %016lx\n", __func__,
+> +			arm64_mem.text_offset);
+> +		dbgprintf("%s: image_size:    %016lx\n", __func__,
+> +			arm64_mem.image_size);
+> +		dbgprintf("%s: phys_offset:   %016lx\n", __func__,
+> +			arm64_mem.phys_offset);
+> +		dbgprintf("%s: page_offset:   %016lx\n", __func__,
+> +			arm64_mem.page_offset);
+> +		dbgprintf("%s: PE format:     %s\n", __func__,
+> +			(arm64_header_check_pe_sig(h) ? "yes" : "no"));
+> +
+> +		result = elf_exec_load(&ehdr, info);
+> +
+> +		if (result) {
+> +			fprintf(stderr, "kexec: Elf load failed.\n");
+> +			goto exit;
+> +		}
+> +
+> +		result = arm64_load_other_segments(info,
+> +			virt_to_phys(ehdr.e_entry));
+> +		goto exit;
+> +	}
+> +
+> +	fprintf(stderr, "kexec: Bad arm64 image header.\n");
+> +	result = -EINVAL;
+> +	goto exit;
+> +
+> +exit:
+> +	reset_page_offset();
+> +	free_elf_info(&ehdr);
+> +	return result;
+> +}
+> +
+> +void elf_arm64_usage(void)
+> +{
+> +	printf(
+> +"     An ARM64 ELF image, big or little endian.\n"
+> +"     Typically vmlinux or a stripped version of vmlinux.\n\n");
+> +}
+> diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+> new file mode 100644
+> index 0000000..caf90c7
+> --- /dev/null
+> +++ b/kexec/arch/arm64/kexec-image-arm64.c
+> @@ -0,0 +1,44 @@
+> +/*
+> + * ARM64 kexec binary image support.
+> + */
+> +
+> +#define _GNU_SOURCE
+> +
+> +#include <errno.h>
+> +
+> +#include "kexec-arm64.h"
+> +
+> +int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
+> +{
+> +	const struct arm64_image_header *h;
+> +
+> +	if (kernel_size < sizeof(struct arm64_image_header)) {
+> +		dbgprintf("%s: No arm64 image header.\n", __func__);
+> +		return -1;
+> +	}
+> +
+> +	h = (const struct arm64_image_header *)(kernel_buf);
+> +
+> +	if (!arm64_header_check_magic(h)) {
+> +		dbgprintf("%s: Bad arm64 image header.\n", __func__);
+> +		return -1;
+> +	}
+> +
+> +	fprintf(stderr, "kexec: ARM64 binary image files are currently NOT SUPPORTED.\n");
+> +
+> +	return -1;
+> +}
+> +
+> +int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+> +	off_t kernel_size, struct kexec_info *info)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+> +void image_arm64_usage(void)
+> +{
+> +	printf(
+> +"     An ARM64 binary image, compressed or not, big or little endian.\n"
+> +"     Typically an Image, Image.gz or Image.lzma file.\n\n");
+> +"     This file type is currently NOT SUPPORTED.\n\n");
+> +}
+> diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+> index ce2e20b..c0d0bea 100644
+> --- a/kexec/kexec-syscall.h
+> +++ b/kexec/kexec-syscall.h
+> @@ -39,8 +39,8 @@
+>  #ifdef __s390__
+>  #define __NR_kexec_load		277
+>  #endif
+> -#ifdef __arm__
+> -#define __NR_kexec_load		__NR_SYSCALL_BASE + 347  
+> +#if defined(__arm__) || defined(__arm64__)
+> +#define __NR_kexec_load		__NR_SYSCALL_BASE + 347
+>  #endif
+>  #if defined(__mips__)
+>  #define __NR_kexec_load                4311
+> @@ -108,6 +108,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+>  #define KEXEC_ARCH_PPC64   (21 << 16)
+>  #define KEXEC_ARCH_IA_64   (50 << 16)
+>  #define KEXEC_ARCH_ARM     (40 << 16)
+> +#define KEXEC_ARCH_ARM64   (183 << 16)
+>  #define KEXEC_ARCH_S390    (22 << 16)
+>  #define KEXEC_ARCH_SH      (42 << 16)
+>  #define KEXEC_ARCH_MIPS_LE (10 << 16)
+> @@ -153,5 +154,8 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+>  #ifdef __m68k__
+>  #define KEXEC_ARCH_NATIVE	KEXEC_ARCH_68K
+>  #endif
+> +#if defined(__arm64__)
+> +#define KEXEC_ARCH_NATIVE	KEXEC_ARCH_ARM64
+> +#endif
+>  
+>  #endif /* KEXEC_SYSCALL_H */
+> diff --git a/purgatory/Makefile b/purgatory/Makefile
+> index 2b5c061..ca0443c 100644
+> --- a/purgatory/Makefile
+> +++ b/purgatory/Makefile
+> @@ -19,6 +19,7 @@ dist += purgatory/Makefile $(PURGATORY_SRCS)				\
+>  
+>  include $(srcdir)/purgatory/arch/alpha/Makefile
+>  include $(srcdir)/purgatory/arch/arm/Makefile
+> +include $(srcdir)/purgatory/arch/arm64/Makefile
+>  include $(srcdir)/purgatory/arch/i386/Makefile
+>  include $(srcdir)/purgatory/arch/ia64/Makefile
+>  include $(srcdir)/purgatory/arch/mips/Makefile
+> diff --git a/purgatory/arch/arm64/Makefile b/purgatory/arch/arm64/Makefile
+> new file mode 100644
+> index 0000000..636abea
+> --- /dev/null
+> +++ b/purgatory/arch/arm64/Makefile
+> @@ -0,0 +1,18 @@
+> +
+> +arm64_PURGATORY_EXTRA_CFLAGS = \
+> +	-mcmodel=large \
+> +	-fno-stack-protector \
+> +	-fno-asynchronous-unwind-tables \
+> +	-Wundef \
+> +	-Werror-implicit-function-declaration \
+> +	-Wdeclaration-after-statement \
+> +	-Werror=implicit-int \
+> +	-Werror=strict-prototypes
+> +
+> +arm64_PURGATORY_SRCS += \
+> +	purgatory/arch/arm64/entry.S \
+> +	purgatory/arch/arm64/purgatory-arm64.c
+> +
+> +dist += \
+> +	$(arm64_PURGATORY_SRCS) \
+> +	purgatory/arch/arm64/Makefile
+> diff --git a/purgatory/arch/arm64/entry.S b/purgatory/arch/arm64/entry.S
+> new file mode 100644
+> index 0000000..8dfdb47
+> --- /dev/null
+> +++ b/purgatory/arch/arm64/entry.S
+> @@ -0,0 +1,52 @@
+> +/*
+> + * ARM64 purgatory.
+> + */
+> +
+> +.macro	size, sym:req
+> +	.size \sym, . - \sym
+> +.endm
+> +
+> +.text
+> +
+> +.globl purgatory_start
+> +purgatory_start:
+> +
+> +	adr	x19, .Lstack
+> +	mov	sp, x19
+> +
+> +	bl	purgatory
+> +
+> +1:
+> +	b	1b
+> +
+> +size purgatory_start
+> +
+> +.align 4
+> +	.rept	256
+> +	.quad	0
+> +	.endr
+> +.Lstack:
+> +
+> +.data
+> +
+> +.align 3
+> +
+> +.globl arm64_sink
+> +arm64_sink:
+> +	.quad	0
+> +size arm64_sink
+> +
+> +.globl arm64_kernel_entry
+> +arm64_kernel_entry:
+> +	.quad	0
+> +size arm64_kernel_entry
+> +
+> +.globl arm64_dtb_addr
+> +arm64_dtb_addr:
+> +	.quad	0
+> +size arm64_dtb_addr
+
+Those variables can be defined in purgatory-arm64.c
+by adding section attributes.
+
+> +
+> +.globl arm64_kexec_lite
+> +arm64_kexec_lite:
+> +	.quad	0
+> +size arm64_kexec_lite
+
+You have removed "lite" option.
+
+> diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
+> new file mode 100644
+> index 0000000..fd76405
+> --- /dev/null
+> +++ b/purgatory/arch/arm64/purgatory-arm64.c
+> @@ -0,0 +1,35 @@
+> +/*
+> + * ARM64 purgatory.
+> + */
+> +
+> +#include <stdint.h>
+> +#include <purgatory.h>
+> +
+> +/* Symbols set by kexec. */
+> +
+> +extern uint8_t *arm64_sink;
+> +extern void (*arm64_kernel_entry)(uint64_t, uint64_t, uint64_t, uint64_t);
+> +extern uint64_t arm64_dtb_addr;
+> +
+> +void putchar(int ch)
+> +{
+> +	if (!arm64_sink)
+> +		return;
+> +
+> +	*arm64_sink = ch;
+> +
+> +	if (ch == '\n')
+> +		*arm64_sink = '\r';
+> +}
+> +
+> +void post_verification_setup_arch(void)
+> +{
+> +	arm64_kernel_entry(arm64_dtb_addr, 0, 0, 0);
+
+I think most archs jump into the next kernel from purgatory_start in entry.S.
+
+Thanks,
+-Takahiro AKASHI
+
+> +}
+> +
+> +void setup_arch(void)
+> +{
+> +	printf("purgatory: entry=%lx\n", (unsigned long)arm64_kernel_entry);
+> +	printf("purgatory: dtb=%lx\n", arm64_dtb_addr);
+> +}
+> +
+> -- 
+> 2.5.0
+> 
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---zhXaljGHf11kAtnf--
-
