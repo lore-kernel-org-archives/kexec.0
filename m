@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
-References: <cover.1468970114.git.geoff@infradead.org>
- <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
- <20160720153859.GG24691@leverpostej> <1469042361.2977.90.camel@infradead.org>
- <20160721103120.GB20559@leverpostej> <5790A902.6070601@arm.com>
- <1469137776.2977.128.camel@infradead.org>
- <20160722040842.GA14911@localhost.localdomain>
-From: Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5791EF62.5070006@arm.com>
-Date: Fri, 22 Jul 2016 11:03:14 +0100
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bQXt5-00005q-8K
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 10:41:01 +0000
+Date: Fri, 22 Jul 2016 18:40:34 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 3/3] x86/apic: Improved the setting of interrupt mode for
+ bsp
+Message-ID: <20160722104034.GB3543@x1.redhat.com>
+References: <1469175026-29447-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <1469175026-29447-3-git-send-email-weijg.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <20160722040842.GA14911@localhost.localdomain>
+Content-Disposition: inline
+In-Reply-To: <1469175026-29447-3-git-send-email-weijg.fnst@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,61 +21,155 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
+Cc: xpang@redhat.com, joro@8bytes.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Cao jin <caoj.fnst@cn.fujitsu.com>, mingo@redhat.com, kernel@kyup.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de
 
-On 22/07/16 05:08, Pratyush Anand wrote:
-> On 21/07/2016:02:49:36 PM, Geoff Levand wrote:
->> On Thu, 2016-07-21 at 11:50 +0100, Robin Murphy wrote:
->>> The Exynos UART (drivers/tty/serial/samsung.c) is one which comes to
->>> mind as definitely existing, and on arm64 systems to boot. The TX
->>> register is at offset 0x20 there.
->>
->> Here's what I came up with.
->>
->>
->> +	struct data {const char *name; int tx_offset;};
->> +	static const struct data ok_list[] = {
->> +	/*	{"armada-3700-uart", ?},	*/
->> +		{"exynos4210-uart", 0x20},
->> +	/*	{"ls1021a-lpuart", ?},		*/
->> +	/*	{"meson-uart", ?},		*/
->> +	/*	{"mt6577-uart", ?},		*/
->> +		{"ns16550", 0},
->> +		{"ns16550a", 0},
->> +		{"pl011", 0},
->> +		{NULL, 0}
->> +	};
-> 
-> sinc functionality is just to debug the scenario when something goes wrong in
-> purgatory. IMHO, it should be disabled by default. So, why not to keep it as
-> simple as possible. Its a low level debugging mainly for developer, so user
-> should know the absolute address. Therefore, I think no need to parse earlycon
-> or earlyprintk from command line.  Whatever user passes in --port can be treated
-> as address of TX register. If TX offset is 0x20, then user can pass --port as
-> base+0x20. Additionally, we can pass TX register width as well. So what about
-> something like "--port=0x1c020000,1" where 0x1c020000 is TX register address and
-> 1 says about it's width in bytes.
-
-I don't think even that is worthwhile, since without any polling it
-still relies on the UART having FIFOs, someone having already enabled
-the FIFOs, the FIFOs being deep enough and/or the output being short
-enough. In short, it's fragile enough that I'm not convinced it's even
-useful as a debug option. I suggest we simply copy the purgatory console
-implementation from, say, ARM or Alpha.
-
-Robin.
-
-> 
-> ~Pratyush
-> 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSmlhbmdhbmcsCgpUaGlzIGlzIHZlcnkgbmljZSwgc2hvdWxkIGJlIHRoZSBzdHVmZiBFcmlj
+IGFuZCBJbmdvIHdvdWxkIGxpa2UgdG8gc2VlLgpCdXQgSSBoYXZlIHNldmVyYWwgcXVlc3Rpb25z
+OgoKMSkgQXJlIHlvdSBub3QgZ29pbmcgdG8gY2xlYW4gdXAgdGhlIG9sZCBsZWdhY3kgaXJxIG1v
+ZGUgc2V0dGluZyBjb2RlIGluCjFzdCBrZXJuZWw/CgoyKUkgY2FsbCB0aGVtIGxlZ2FjeSBpcnEg
+bW9kZSBiZWNhdXNlIG5vdCBvbmx5IGFwaWMgdmlydHVhbCB3aXJlIG1vZGUKZXhpc3RzLCBidXQg
+dGhlIFBJQyBtb2RlIGluIHg4NiAzMmJpdCBzeXN0ZW0uIFlvdSBuZWVkIGNvbnNpZGVyIGl0IHRv
+by4KVGhlbiBpbml0X2JzcF9BUElDIG5lZWQgYmUgcmVuYW1hZWQgdG8gYW4gYXBwcm9wcmlhdGUg
+b25lLiBBbmQgYXNzdW1lCnRoaXMgaGFzIGJlZW4gdGVzdGVkIG9uIHg4NiAzMmJpdCBzeXN0ZW0u
+IAoKMykgCgoqKUFib3V0IElPLUFQSUMgc2V0dGluZyBhcyB2aXJ0dWFsIHdpcmUgbW9kZSwgSSBh
+bSBhbHdheXMgY29uZnVzZWQuIEluCk1QIFNwZWMgMy42LjIuMiwgaXQgc2F5cyAidGhlIGludGVy
+cnVwdCBzaWduYWwgcGFzc2VzIHRocm91Z2ggYm90aCB0aGUKSS9PIEFQSUMgYW5kIHRoZSBCU1Di
+gJlzIGxvY2FsIEFQSUMiLiBUaGF0IG1lYW5zIElPLUFQSUMgdmlydHVhbCB3aXJlIG1vZGUKbmVl
+ZCBib3RoIElPLUFQSUMgYW5kIExBUElDIHRvIGJlIHNldCwgYW5kIHdpdGggbXkgdW5kZXJzdGFu
+ZGluZyBvbmx5CnBpbiBvZiBJTy1BUElDIGlzIHNldCBhcyBFeHRJbnQsIExBUElDIHNob3VsZCBi
+ZSBwYXNzLXRocm91Z2guCgoqKUJ1dCBpbiBJbnRlbCBBcmNoIG1hbnVhbCAzQSAxMC4xLCB0aGVy
+ZSdzIG9ubHkgYmVsb3cgc2VudGVuY2VzIHRvIG1lbnRpb24KaXQ6Cgp+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KVGhlIEkvTyBB
+UElDIGFsc28gaGFzIGEg4oCcdmlydHVhbCB3aXJlIG1vZGXigJ0gdGhhdCBhbGxvd3MgaXQgdG8g
+Y29tbXVuaWNhdGUKd2l0aCBhIHN0YW5kYXJkIDgyNTlBLXN0eWxlIGV4dGVybmFsIGludGVycnVw
+dCBjb250cm9sbGVyLiBOb3RlIHRoYXQgdGhlCmxvY2FsIEFQSUMgY2FuIGJlIGRpc2FibGVkLiBU
+aGlzIGFsbG93cyBhbiBhc3NvY2lhdGVkIHByb2Nlc3NvciBjb3JlIHRvCnJlY2VpdmUgaW50ZXJy
+dXB0cyBkaXJlY3RseSBmcm9tIGFuIDgyNTlBIGludGVycnVwdCBjb250cm9sbGVyLgp+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+CgpFcmljJ3MgY29kZSBpbiBuYXRpdmVfZGlzYWJsZV9pb19hcGljKCkgaGFzIHRoZSBzYW1lIHBv
+aW50IGFzIGFib3ZlCndvcmRzLgoKKilIb3dldmVyIHBsZWFzZSByZWFkIGNvZGUgY29tbWVudHMg
+aW4gaXJxX3JlbWFwcGluZ19kaXNhYmxlX2lvX2FwaWMoKSwKSm9lcmcncyBkZXNjcmlwdGlvbiBn
+aXZlIG1lIGEgZGlmZmVyZW50IGltcHJlc3Npb24gdGhhdCB3ZSBjYW4gY2hvb3NlCnRvIG9ubHkg
+dXNlIExBUElDIHZpcnR1YWwgd2lyZSBtb2RlLiBKb2VyZyBpcyBJT01NVSBtYWludGFpbmVycywg
+aGUgaXMKdmVyeSBmYW1pbGlhciB3aXRoIGlvLWFwaWMgc2luY2UgSU9NTVUgbmVlZCB0YWtlIG92
+ZXIgaW8tYXBpYyBlbnRyeQpmaWxsaW5nLCB0aGVyZSBtdXN0IGJlIHJlYXNvbiBoZSB3cm90ZSB0
+aGF0LiBBZGQgSm9lcmcgdG8gQ0MgbGlzdC4KClNlZW1zIGl0J3MgZGlmZmljdWx0IHRvIGZpbmQg
+YSBzeXN0ZW0gd2l0aCBJTy1BUElDIHZpcnR1YWwgd2lyZSBtb2RlLAptYXliZSB3ZSBjYW4ganVz
+dCBrZWVwIGl0IGFzIGlzLiBOb3Qgc3VyZSBpZiBJbnRlbCBlbmdpbmVlcnMgY2FuIGhlbHAKZXhw
+bGFpbiBhbmQgY29uZmlybSB0aGlzLgoKVGhhdCdzIGFsbCBJIGNhbiB0aGluayBvZi4KClRoYW5r
+cwpCYW9xdWFuCgpPbiAwNy8yMi8xNiBhdCAwNDoxMHBtLCBXZWkgSmlhbmdhbmcgd3JvdGU6Cj4g
+SWYgd2Ugc3BlY2lmeSB0aGUgJ25vdHNjJyBwYXJhbWV0ZXIgZm9yIHRoZSBkdW1wLWNhcHR1cmUg
+a2VybmVsLAo+IGFuZCB0aGVuIHRyaWdnZXIgYSBjcmFzaChwYW5pYykgYnkgdXNpbmcgIkFMVC1T
+eXNScS1jIiBvcgo+ICJlY2hvIGMgPiAvcHJvYy9zeXNycS10cmlnZ2VyIiwgdGhlIGR1bXAtY2Fw
+dHVyZSBrZXJuZWwgd2lsbAo+IGhhbmcgaW4gY2FsaWJyYXRlX2RlbGF5X2NvbnZlcmdlKCkgYW5k
+IHdhaXQgZm9yIGppZmZpZXMgY2hhbmdlcy4KPiBzZXJpYWwgbG9nIGFzIGZvbGxvd3M6Cj4gCj4g
+ICAgIHRzYzogRmFzdCBUU0MgY2FsaWJyYXRpb24gdXNpbmcgUElUCj4gICAgIHRzYzogRGV0ZWN0
+ZWQgMjA5OS45NDcgTUh6IHByb2Nlc3Nvcgo+ICAgICBDYWxpYnJhdGluZyBkZWxheSBsb29wLi4u
+Cj4gCj4gVGhlIHJlYXNvbiBmb3IgamlmZmllcyBub3QgY2hhbmdlcyBpcyB0aGVyZSdzIG5vIHRp
+bWVyIGludGVycnVwdAo+IHBhc3NlZCB0byBkdW1wLWNhcHR1cmUga2VybmVsLgo+IAo+IEluIGZh
+Y3QsIG9uY2Uga2VybmVsIHBhbmljIG9jY3VycywgdGhlIGxvY2FsIEFQSUMgaXMgZGlzYWJsZWQK
+PiBieSBsYXBpY19zaHV0ZG93bigpIGluIHJlYm9vdCBwYXRoLgo+IGdlbmVybHkgc3BlYWtpbmcs
+IGxvY2FsIEFQSUMgc3RhdGUgY2FuIGJlIGluaXRpYWxpemVkIGJ5IEJJT1MKPiBhZnRlciBQb3dl
+ci1VcCBvciBSZXNldCwgd2hpY2ggZG9lc24ndCBhcHBseSB0byBrZHVtcCBjYXNlLgo+IHNvIHRo
+ZSBrZXJuZWwgaGFzIHRvIGJlIHJlc3BvbnNpYmxlIGZvciBpbml0aWFsaXplIHRoZSBpbnRlcnJ1
+cHQKPiBtb2RlIHByb3Blcmx5IGFjY29yZGluZyB0aGUgbGF0ZXN0IHN0YXR1cyBvZiBBUElDIGlu
+IGJvb3R1cCBwYXRoLgo+IAo+IEFuIE1QIG9wZXJhdGluZyBzeXN0ZW0gaXMgYm9vdGVkIHVuZGVy
+IGVpdGhlciBQSUMgbW9kZSBvcgo+IHZpcnR1YWwgd2lyZSBtb2RlLiBMYXRlciwgdGhlIG9wZXJh
+dGluZyBzeXN0ZW0gc3dpdGNoZXMgdG8KPiBzeW1tZXRyaWMgSS9PIG1vZGUgYXMgaXQgZW50ZXJz
+IG11bHRpcHJvY2Vzc29yIG1vZGUuCj4gVHdvIGtpbmRzIG9mIHZpcnR1YWwgd2lyZSBtb2RlIGFy
+ZSBkZWZpbmVkIGluIEludGVsIE1QIHNwZWM6Cj4gdmlydHVhbCB3aXJlIG1vZGUgdmlhIGxvY2Fs
+IEFQSUMgb3IgdmlhIEkvTyBBUElDLgo+IAo+IE5vdyB3ZSBkZXRlcm1pbmUgdGhlIG1vZGUgb2Yg
+QVBJQyBvbmx5IHRocm91Z2ggYSBTTVAgQklPUyhNUCB0YWJsZSkuCj4gVGhhdCdzIG5vdCBlbm91
+Z2guCj4gSXQncyBiZXR0ZXIgdG8gZG8gZnVydGhlciBjaGVjayBpZiBBUElDIHdvcmtzIHdpdGgg
+ZWZmZWN0aXZlIG1vZGUsCj4gYW5kIGRvIHNvbWUgcG9ycGVyIHNldHRpbmcuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogQ2FvIGppbiA8Y2Fvai5mbnN0QGNuLmZ1aml0c3UuY29tPgo+IFNpZ25lZC1vZmYt
+Ynk6IFdlaSBKaWFuZ2FuZyA8d2VpamcuZm5zdEBjbi5mdWppdHN1LmNvbT4KPiAtLS0KPiAgYXJj
+aC94ODYvaW5jbHVkZS9hc20vaW9fYXBpYy5oIHwgIDUgKysrKwo+ICBhcmNoL3g4Ni9rZXJuZWwv
+YXBpYy9hcGljLmMgICAgfCA1NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKy0KPiAgYXJjaC94ODYva2VybmVsL2FwaWMvaW9fYXBpYy5jIHwgMjggKysrKysrKysrKysr
+KysrKysrKysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgODcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
+bigtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pb19hcGljLmggYi9h
+cmNoL3g4Ni9pbmNsdWRlL2FzbS9pb19hcGljLmgKPiBpbmRleCA2Y2JmMmNmYjNmOGEuLjY1NTBi
+ZDQzZmEzOSAxMDA2NDQKPiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pb19hcGljLmgKPiAr
+KysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9pb19hcGljLmgKPiBAQCAtMTkwLDYgKzE5MCw3IEBA
+IHN0YXRpYyBpbmxpbmUgdW5zaWduZWQgaW50IGlvX2FwaWNfcmVhZCh1bnNpZ25lZCBpbnQgYXBp
+YywgdW5zaWduZWQgaW50IHJlZykKPiAgfQo+ICAKPiAgZXh0ZXJuIHZvaWQgc2V0dXBfSU9fQVBJ
+Qyh2b2lkKTsKPiArZXh0ZXJuIGJvb2wgdmlydHVhbF93aXJlX3ZpYV9pb2FwaWModm9pZCk7Cj4g
+IGV4dGVybiB2b2lkIGVuYWJsZV9JT19BUElDKHZvaWQpOwo+ICBleHRlcm4gdm9pZCBkaXNhYmxl
+X0lPX0FQSUModm9pZCk7Cj4gIGV4dGVybiB2b2lkIHNldHVwX2lvYXBpY19kZXN0KHZvaWQpOwo+
+IEBAIC0yMzEsNiArMjMyLDEwIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBpb19hcGljX2luaXRfbWFw
+cGluZ3Modm9pZCkgeyB9Cj4gICNkZWZpbmUgbmF0aXZlX2Rpc2FibGVfaW9fYXBpYwkJTlVMTAo+
+ICAKPiAgc3RhdGljIGlubGluZSB2b2lkIHNldHVwX0lPX0FQSUModm9pZCkgeyB9Cj4gK3N0YXRp
+YyBpbmxpbmUgYm9vbCB2aXJ0dWFsX3dpcmVfdmlhX2lvYXBpYyh2b2lkKQo+ICt7Cj4gKwlyZXR1
+cm4gdHJ1ZTsKPiArfQo+ICBzdGF0aWMgaW5saW5lIHZvaWQgZW5hYmxlX0lPX0FQSUModm9pZCkg
+eyB9Cj4gIHN0YXRpYyBpbmxpbmUgdm9pZCBzZXR1cF9pb2FwaWNfZGVzdCh2b2lkKSB7IH0KPiAg
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9hcGljL2FwaWMuYyBiL2FyY2gveDg2L2tl
+cm5lbC9hcGljL2FwaWMuYwo+IGluZGV4IDhlMjViOWIyZDM1MS4uMDQzNThlMGNmMWUyIDEwMDY0
+NAo+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9hcGljL2FwaWMuYwo+ICsrKyBiL2FyY2gveDg2L2tl
+cm5lbC9hcGljL2FwaWMuYwo+IEBAIC0xMTI0LDYgKzExMjQsNTMgQEAgdm9pZCBfX2luaXQgc3lu
+Y19BcmJfSURzKHZvaWQpCj4gIH0KPiAgCj4gIC8qCj4gKyAqIFJldHVybiBmYWxzZSBtZWFucyB0
+aGUgdmlydHVhbCB3aXJlIG1vZGUgdGhyb3VnaC1sb2NhbC1hcGljIGlzIGluYWN0aXZlCj4gKyAq
+Lwo+ICtzdGF0aWMgYm9vbCB2aXJ0dWFsX3dpcmVfdmlhX2xhcGljKHZvaWQpCj4gK3sKPiArCXVu
+c2lnbmVkIGludCB2YWx1ZTsKPiArCj4gKwkvKiBDaGVjayB0aGUgQVBJQyBnbG9iYWwgZW5hYmxl
+L2Rpc2FibGUgZmxhZyBmaXJzdGx5ICovCj4gKwlpZiAoYm9vdF9jcHVfZGF0YS54ODYgPj0gNikg
+ewo+ICsJCXUzMiBoLCBsOwo+ICsKPiArCQlyZG1zcihNU1JfSUEzMl9BUElDQkFTRSwgbCwgaCk7
+Cj4gKwkJLyoKPiArCQkgKiBJZiBsb2NhbCBBUElDIGlzIGRpc2FibGVkIGJ5IEJJT1MKPiArCQkg
+KiBkbyBub3RoaW5nLCBidXQgcmV0dXJuIHRydWUKPiArCQkgKi8KPiArCQlpZiAoIShsICYgTVNS
+X0lBMzJfQVBJQ0JBU0VfRU5BQkxFKSkKPiArCQkJcmV0dXJuIHRydWU7Cj4gKwl9Cj4gKwo+ICsJ
+LyogQ2hlY2sgdGhlIHNvZnR3YXJlIGVuYWJsZS9kaXNhYmxlIGZsYWcgKi8KPiArCXZhbHVlID0g
+YXBpY19yZWFkKEFQSUNfU1BJVik7Cj4gKwlpZiAoISh2YWx1ZSAmIEFQSUNfU1BJVl9BUElDX0VO
+QUJMRUQpKQo+ICsJCXJldHVybiBmYWxzZTsKPiArCj4gKwkvKgo+ICsJICogVmlydHVhbCB3aXJl
+IG1vZGUgdmlhIGxvY2FsIEFQSUMgcmVxdWVzdHMKPiArCSAqIEFQSUMgdG8gZW5hYmxlIHRoZSBM
+SU5UMCBmb3IgZWRnZS10cmdnZXJlZCBFeHRJTlQgZGVsaXZlcnkgbW9kZQo+ICsJICogYW5kIExJ
+TlQxIGZvciBsZXZlbC10cmlnZ2VyZWQgTk1JIGRlbGl2ZXJ5IG1vZGUKPiArCSAqLwo+ICsJdmFs
+dWUgPSBhcGljX3JlYWQoQVBJQ19MVlQwKTsKPiArCWlmIChHRVRfQVBJQ19ERUxJVkVSWV9NT0RF
+KHZhbHVlKSAhPSBBUElDX01PREVfRVhUSU5UKQo+ICsJCXJldHVybiBmYWxzZTsKPiArCj4gKwl2
+YWx1ZSA9IGFwaWNfcmVhZChBUElDX0xWVDEpOwo+ICsJaWYgKEdFVF9BUElDX0RFTElWRVJZX01P
+REUodmFsdWUpICE9IEFQSUNfTU9ERV9OTUkpCj4gKwkJcmV0dXJuIGZhbHNlOwo+ICsKPiArCXJl
+dHVybiB0cnVlOwo+ICt9Cj4gKwo+ICtzdGF0aWMgYm9vbCBjaGVja192aXJ0dWFsX3dpcmVfbW9k
+ZSh2b2lkKQo+ICt7Cj4gKwkvKiBOZWl0aGVyIG9mIHZpcnR1YWwgd2lyZSBtb2RlIGlzIGFjdGl2
+ZSwgcmV0dXJuIGZhbHNlICovCj4gKwlyZXR1cm4gIHZpcnR1YWxfd2lyZV92aWFfbGFwaWMoKSB8
+fCB2aXJ0dWFsX3dpcmVfdmlhX2lvYXBpYygpOwo+ICt9Cj4gKwo+ICsvKgo+ICAgKiBBbiBpbml0
+aWFsIHNldHVwIG9mIHRoZSB2aXJ0dWFsIHdpcmUgbW9kZS4KPiAgICovCj4gIHZvaWQgX19pbml0
+IGluaXRfYnNwX0FQSUModm9pZCkKPiBAQCAtMTEzMyw4ICsxMTgwLDE0IEBAIHZvaWQgX19pbml0
+IGluaXRfYnNwX0FQSUModm9pZCkKPiAgCS8qCj4gIAkgKiBEb24ndCBkbyB0aGUgc2V0dXAgbm93
+IGlmIHdlIGhhdmUgYSBTTVAgQklPUyBhcyB0aGUKPiAgCSAqIHRocm91Z2gtSS9PLUFQSUMgdmly
+dHVhbCB3aXJlIG1vZGUgbWlnaHQgYmUgYWN0aXZlLgo+ICsJICoKPiArCSAqIEl0J3MgYmV0dGVy
+IHRvIGRvIGZ1cnRoZXIgY2hlY2sgaWYgZWl0aGVyIHRocm91Z2gtSS9PLUFQSUMKPiArCSAqIG9y
+IHRocm91Z2gtbG9jYWwtQVBJQyBpcyBhY3RpdmUuCj4gKwkgKiB0aGUgd29yc3QgY2FzZSBpcyB0
+aGF0IGJvdGggb2YgdGhlbSBhcmUgaW5hY3RpdmUsCj4gKwkgKiBJZiBzbywgV2UgbmVlZCB0byBl
+bmFibGUgdGhlIHZpcnR1YWwgd2lyZSBtb2RlIHZpYSB0aHJvdWdoLWxvY2FsLUFQSUMKPiAgCSAq
+Lwo+IC0JaWYgKHNtcF9mb3VuZF9jb25maWcgfHwgIWJvb3RfY3B1X2hhcyhYODZfRkVBVFVSRV9B
+UElDKSkKPiArCWlmICgoc21wX2ZvdW5kX2NvbmZpZyAmJiBjaGVja192aXJ0dWFsX3dpcmVfbW9k
+ZSgpKSB8fAo+ICsJCSFib290X2NwdV9oYXMoWDg2X0ZFQVRVUkVfQVBJQykpCj4gIAkJcmV0dXJu
+Owo+ICAKPiAgCS8qCj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMu
+YyBiL2FyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMuYwo+IGluZGV4IDQ0NjcwMmVkOTlkYy4u
+NWEzMmMyNjkzOGFjIDEwMDY0NAo+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMu
+Ywo+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9hcGljL2lvX2FwaWMuYwo+IEBAIC0xMzc5LDYgKzEz
+NzksMzQgQEAgdm9pZCBfX2luaXQgcHJpbnRfSU9fQVBJQ3Modm9pZCkKPiAgLyogV2hlcmUgaWYg
+YW55d2hlcmUgaXMgdGhlIGk4MjU5IGNvbm5lY3QgaW4gZXh0ZXJuYWwgaW50IG1vZGUgKi8KPiAg
+c3RhdGljIHN0cnVjdCB7IGludCBwaW4sIGFwaWM7IH0gaW9hcGljX2k4MjU5ID0geyAtMSwgLTEg
+fTsKPiAgCj4gKy8qCj4gKyAqIFJldHVybiBmYWxzZSBtZWFucyB0aGUgdmlydHVhbCB3aXJlIG1v
+ZGUgdmlhIEkvTyBBUElDIGlzIGluYWN0aXZlCj4gKyAqLwo+ICtib29sIHZpcnR1YWxfd2lyZV92
+aWFfaW9hcGljKHZvaWQpCj4gK3sKPiArCWludCBhcGljLCBwaW47Cj4gKwo+ICsJZm9yX2VhY2hf
+aW9hcGljX3BpbihhcGljLCBwaW4pIHsKPiArCQkvKiBTZWUgaWYgYW55IG9mIHRoZSBwaW5zIGlz
+IGluIEV4dElOVCBtb2RlICovCj4gKwkJc3RydWN0IElPX0FQSUNfcm91dGVfZW50cnkgZW50cnkg
+PSBpb2FwaWNfcmVhZF9lbnRyeShhcGljLCBwaW4pOwo+ICsKPiArCQkvKgo+ICsJCSAqIElmIHRo
+ZSBpbnRlcnJ1cHQgbGluZSBpcyBlbmFibGVkIGFuZCBpbiBFeHRJbnQgbW9kZQo+ICsJCSAqIEkg
+aGF2ZSBmb3VuZCB0aGUgcGluIHdoZXJlIHRoZSBpODI1OSBpcyBjb25uZWN0ZWQuCj4gKwkJICov
+Cj4gKwkJaWYgKChlbnRyeS5tYXNrID09IDApICYmIChlbnRyeS5kZWxpdmVyeV9tb2RlID09IGRl
+c3RfRXh0SU5UKSkKPiArCQkJcmV0dXJuIHRydWU7Cj4gKwl9Cj4gKwo+ICsJLyoKPiArCSAqIFZp
+cnR1YWwgd2lyZSBtb2RlIHZpYSBJL08gQVBJQyByZXF1ZXN0cwo+ICsJICogSS9PIEFQSUMgYmUg
+Y29ubmVjdGVkIHRvIGk4MjU5IGluIGNoYXB0ZXIgMy42LjIuMiBvZiB0aGUgTVAgdjEuNCBzcGVj
+Cj4gKwkgKiBJZiBubyBwaW4gaW4gRXh0SW50IG1vZGUsCj4gKwkgKiB0aGUgdGhyb3VnaC1JL08t
+QVBJQyB2aXJ0dWFsIHdpcmUgbW9kZSBjYW4gYmUgcmVnYXJkZWQgaW5hY3RpdmUuCj4gKwkgKi8K
+PiArCXJldHVybiBmYWxzZTsKPiArfQo+ICsKPiAgdm9pZCBfX2luaXQgZW5hYmxlX0lPX0FQSUMo
+dm9pZCkKPiAgewo+ICAJaW50IGk4MjU5X2FwaWMsIGk4MjU5X3BpbjsKPiAtLSAKPiAxLjkuMwo+
+IAo+IAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
