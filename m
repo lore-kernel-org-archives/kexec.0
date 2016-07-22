@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQVbK-0006yV-Fh
- for kexec@lists.infradead.org; Fri, 22 Jul 2016 08:14:31 +0000
-From: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
-Subject: [PATCH 1/3] x86/apic: Remove "focus disabled" for 64bit case
-Date: Fri, 22 Jul 2016 16:10:24 +0800
-Message-ID: <1469175026-29447-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+Date: Fri, 22 Jul 2016 10:54:53 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
+Message-ID: <20160722095452.GA17088@leverpostej>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
+ <20160720153859.GG24691@leverpostej>
+ <1469042361.2977.90.camel@infradead.org>
+ <20160721103120.GB20559@leverpostej> <5790A902.6070601@arm.com>
+ <1469137776.2977.128.camel@infradead.org>
+ <20160722040842.GA14911@localhost.localdomain>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160722040842.GA14911@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,61 +25,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, xpang@redhat.com, x86@kernel.org, kexec@lists.infradead.org, Cao jin <caoj.fnst@cn.fujitsu.com>, mingo@redhat.com, kernel@kyup.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Wei Jiangang <weijg.fnst@cn.fujitsu.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
 
-Disable processor focus for 64bit causes a crash,
-Call Trace as following:
+On Fri, Jul 22, 2016 at 09:38:42AM +0530, Pratyush Anand wrote:
+> On 21/07/2016:02:49:36 PM, Geoff Levand wrote:
+> > On Thu, 2016-07-21 at 11:50 +0100, Robin Murphy wrote:
+> > > The Exynos UART (drivers/tty/serial/samsung.c) is one which comes to
+> > > mind as definitely existing, and on arm64 systems to boot. The TX
+> > > register is at offset 0x20 there.
+> > 
+> > Here's what I came up with.
+> > 
+> > 
+> > +	struct data {const char *name; int tx_offset;};
+> > +	static const struct data ok_list[] = {
+> > +	/*	{"armada-3700-uart", ?},	*/
+> > +		{"exynos4210-uart", 0x20},
+> > +	/*	{"ls1021a-lpuart", ?},		*/
+> > +	/*	{"meson-uart", ?},		*/
+> > +	/*	{"mt6577-uart", ?},		*/
+> > +		{"ns16550", 0},
+> > +		{"ns16550a", 0},
+> > +		{"pl011", 0},
+> > +		{NULL, 0}
+> > +	};
+> 
+> sinc functionality is just to debug the scenario when something goes wrong in
+> purgatory. IMHO, it should be disabled by default. So, why not to keep it as
+> simple as possible. Its a low level debugging mainly for developer, so user
+> should know the absolute address. Therefore, I think no need to parse earlycon
+> or earlyprintk from command line.  Whatever user passes in --port can be treated
+> as address of TX register. If TX offset is 0x20, then user can pass --port as
+> base+0x20. Additionally, we can pass TX register width as well. So what about
+> something like "--port=0x1c020000,1" where 0x1c020000 is TX register address and
+> 1 says about it's width in bytes.
 
-  [<ffffffff8133499f>] dump_stack+0x63/0x84
-  [<ffffffff810800f1>] __warn+0xd1/0xf0
-  [<ffffffff8108016f>] warn_slowpath_fmt+0x5f/0x80
-  [<ffffffff81068ab2>] ex_handler_wrmsr_unsafe+0x62/0x70
-  [<ffffffff81068b29>] fixup_exception+0x39/0x50
-  [<ffffffff8102e030>] do_general_protection+0x80/0x160
-  [<ffffffff816a89a8>] general_protection+0x28/0x30
-  [<ffffffff81062554>] ? native_write_msr+0x4/0x30
-  [<ffffffff81059c52>] ? native_apic_msr_write+0x32/0x40
-  [<ffffffff81d92964>] init_bsp_APIC+0x5f/0x118
-  [<ffffffff81d87489>] init_ISA_irqs+0x19/0x4c
-  [<ffffffff81d87512>] native_init_IRQ+0xd/0x377
-  [<ffffffff81d874fe>] init_IRQ+0x42/0x49
-  [<ffffffff81d7afc6>] start_kernel+0x2ce/0x4c8
-  [<ffffffff81d7aae6>] ? set_init_arg+0x55/0x55
-  [<ffffffff81d7a120>] ? early_idt_handler_array+0x120/0x120
-  [<ffffffff81d7a5db>] x86_64_start_reservations+0x2f/0x31
-  [<ffffffff81d7a729>] x86_64_start_kernel+0x14c/0x16f
+That all sounds sensible to me. 
 
-Keep a consistent implementation with the setup_local_APIC(),
-always use processor focus for 64bit.
-more details refer to commit 89c38c2867eb ("x86: apic - unify
-setup_local_APIC")
+Given it's rather messy w.r.t. address and size, leaving this up to the
+user is better than trying to handle this automatically and getting
+something wrong.
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
-Signed-off-by: Wei Jiangang <weijg.fnst@cn.fujitsu.com>
----
- arch/x86/kernel/apic/apic.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index 60078a67d7e3..0273b652c689 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1154,9 +1154,7 @@ void __init init_bsp_APIC(void)
- 	if ((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) &&
- 	    (boot_cpu_data.x86 == 15))
- 		value &= ~APIC_SPIV_FOCUS_DISABLED;
--	else
- #endif
--		value |= APIC_SPIV_FOCUS_DISABLED;
- 	value |= SPURIOUS_APIC_VECTOR;
- 	apic_write(APIC_SPIV, value);
- 
--- 
-1.9.3
-
-
-
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
