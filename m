@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([58.251.152.64])
+Received: from mail-pf0-x22f.google.com ([2607:f8b0:400e:c00::22f])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQTPY-0001gO-LP
- for kexec@lists.infradead.org; Fri, 22 Jul 2016 05:54:14 +0000
-Message-ID: <5791B490.2010607@huawei.com>
-Date: Fri, 22 Jul 2016 13:52:16 +0800
-From: zhong jiang <zhongjiang@huawei.com>
+ id 1bQUeZ-0006m6-Ss
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 07:13:50 +0000
+Received: by mail-pf0-x22f.google.com with SMTP id p64so38729382pfb.1
+ for <kexec@lists.infradead.org>; Fri, 22 Jul 2016 00:13:27 -0700 (PDT)
+Date: Fri, 22 Jul 2016 16:19:25 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v1 2/4] kexec: Add common device tree routines
+Message-ID: <20160722071924.GQ20774@linaro.org>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <8ed220ee82b4819a9107a6ce0f020497d1688c7b.1468970114.git.geoff@infradead.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: add resriction on the kexec_load
-References: <1468980049-1753-1-git-send-email-zhongjiang@huawei.com>
- <878twxcbae.fsf@x220.int.ebiederm.org>
- <20160721081049.GA7544@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20160721081049.GA7544@dhcp-128-65.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <8ed220ee82b4819a9107a6ce0f020497d1688c7b.1468970114.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,85 +26,214 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, yinghai@kernel.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 2016/7/21 16:10, Dave Young wrote:
-> On 07/19/16 at 09:07pm, Eric W. Biederman wrote:
->> zhongjiang <zhongjiang@huawei.com> writes:
->>
->>> From: zhong jiang <zhongjiang@huawei.com>
->>>
->>> I hit the following question when run trinity in my system. The
->>> kernel is 3.4 version. but the mainline have same question to be
->>> solved. The root cause is the segment size is too large, it can
->>> expand the most of the area or the whole memory, therefore, it
->>> may waste an amount of time to abtain a useable page. and other
->>> cases will block until the test case quit. at the some time,
->>> OOM will come up.
->> 5MiB is way too small.  I have seen vmlinux images not to mention
->> ramdisks that get larger than that.  Depending on the system
->> 1GiB might not be an unreasonable ramdisk size.  AKA run an entire live
->> system out of a ramfs.  It works well if you have enough memory.
-> There was a use case from Michael Holzheu about a 1.5G ramdisk, see below
-> kexec-tools commit:
->
-> commit 95741713e790fa6bde7780bbfb772ad88e81a744
-> Author: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> Date:   Fri Oct 30 16:02:04 2015 +0100
->
->     kexec/s390x: use mmap instead of read for slurp_file()
->     
->     The slurp_fd() function allocates memory and uses the read() system
-> call.
->     This results in double memory consumption for image and initrd:
->     
->      1) Memory allocated in user space by the kexec tool
->      2) Memory allocated in kernel by the kexec() system call
->     
->     The following illustrates the use case that we have on s390x:
->     
->      1) Boot a 4 GB Linux system
->      2) Copy kernel and 1,5 GB ramdisk from external source into tmpfs
-> (ram)
->      3) Use kexec to boot kernel with ramdisk
->     
->      Therefore for kexec runtime we need:
->     
->      1,5 GB (tmpfs) + 1,5 GB (kexec malloc) + 1,5 GB (kernel memory) =
-> 4,5 GB
->     
->     This patch introduces slurp_file_mmap() which for "normal" files
-> uses
->     mmap() instead of malloc()/read(). This reduces the runtime memory
->     consumption of the kexec tool as follows:
->     
->      1,5 GB (tmpfs) + 1,5 GB (kernel memory) = 3 GB
->     
->     Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
->     Reviewed-by: Dave Young <dyoung@redhat.com>
->     Signed-off-by: Simon Horman <horms@verge.net.au>
->
->> I think there is a practical limit at about 50% of memory (because we
->> need two copies in memory the source and the destination pages), but
->> anything else is pretty much reasonable and should have a fair chance of
->> working.
->>
->> A limit that reflected that reality above would be interesting.
->> Anything else will likely cause someone trouble in the futrue.
-> Maybe one should test his ramdisk first to ensure it works first before
-> really using it.
->
-> Thanks
-> Dave
->
-> .
->
- Thank you reply.  I just test the syscall kexec_load, I don't really run kexec iamge to boot machine.
- Recently , I hit the question. I fix it by passing resonable parameters to kernel from user space.
- no functional change.   is right?  
- according to the W. Biederman advice, I agree so. 
+On Tue, Jul 19, 2016 at 11:28:13PM +0000, Geoff Levand wrote:
+> Common device tree routines that can be shared between all arches
+> that have device tree support.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
+>  kexec/Makefile |   4 ++
+>  kexec/dt-ops.c | 139 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  kexec/dt-ops.h |  13 ++++++
+>  3 files changed, 156 insertions(+)
+>  create mode 100644 kexec/dt-ops.c
+>  create mode 100644 kexec/dt-ops.h
+> 
+> diff --git a/kexec/Makefile b/kexec/Makefile
+> index e2aee84..cc3f08b 100644
+> --- a/kexec/Makefile
+> +++ b/kexec/Makefile
+> @@ -73,6 +73,10 @@ dist				+= kexec/mem_regions.c kexec/mem_regions.h
+>  $(ARCH)_MEM_REGIONS		=
+>  KEXEC_SRCS			+= $($(ARCH)_MEM_REGIONS)
+>  
+> +dist				+= kexec/dt-ops.c kexec/dt-ops.h
+> +$(ARCH)_DT_OPS		=
+> +KEXEC_SRCS			+= $($(ARCH)_DT_OPS)
+> +
+>  include $(srcdir)/kexec/arch/alpha/Makefile
+>  include $(srcdir)/kexec/arch/arm/Makefile
+>  include $(srcdir)/kexec/arch/i386/Makefile
+> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+> new file mode 100644
+> index 0000000..060776a
+> --- /dev/null
+> +++ b/kexec/dt-ops.c
+> @@ -0,0 +1,139 @@
+> +#include <assert.h>
+> +#include <errno.h>
+> +#include <inttypes.h>
+> +#include <libfdt.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +
+> +#include "kexec.h"
+> +#include "dt-ops.h"
+> +
+> +static const char n_chosen[] = "/chosen";
+> +
+> +static const char p_bootargs[] = "bootargs";
+> +static const char p_initrd_start[] = "linux,initrd-start";
+> +static const char p_initrd_end[] = "linux,initrd-end";
+> +
+> +int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end)
+> +{
+> +	int result;
+> +	uint64_t value;
+> +
+> +	dbgprintf("%s: start %jd, end %jd, size %jd (%jd KiB)\n",
+> +		__func__, (intmax_t)start, (intmax_t)end,
+> +		(intmax_t)(end - start),
+> +		(intmax_t)(end - start) / 1024);
+> +
+> +	value = cpu_to_fdt64(start);
+> +
+> +	result = dtb_set_property(dtb, dtb_size, n_chosen, p_initrd_start,
+> +		&value, sizeof(value));
+> +
+> +	if (result)
+> +		return result;
+> +
+> +	value = cpu_to_fdt64(end);
+> +
+> +	result = dtb_set_property(dtb, dtb_size, n_chosen, p_initrd_end,
+> +		&value, sizeof(value));
+> +
+> +	if (result) {
+> +		dtb_delete_property(*dtb, n_chosen, p_initrd_start);
+> +		return result;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line)
+> +{
+> +	return dtb_set_property(dtb, dtb_size, n_chosen, p_bootargs,
+> +		command_line, strlen(command_line) + 1);
+> +}
+> +
+> +int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+> +	const char *prop, const void *value, int value_len)
+> +{
+> +	int result;
+> +	int nodeoffset;
+> +	void *new_dtb;
+> +	int new_size;
+> +
+> +	value_len = FDT_TAGALIGN(value_len);
+> +
+> +	new_size = FDT_TAGALIGN(*dtb_size + fdt_node_len(node)
+> +		+ fdt_prop_len(prop, value_len));
 
+As James pointed out before, this will increase the size of dtb
+if kexec is executed repeatedly.
+
+> +	new_dtb = malloc(new_size);
+> +
+> +	if (!new_dtb) {
+> +		dbgprintf("%s: malloc failed\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	result = fdt_open_into(*dtb, new_dtb, new_size);
+> +
+> +	if (result) {
+> +		dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+> +			fdt_strerror(result));
+> +		goto on_error;
+> +	}
+> +
+> +	nodeoffset = fdt_path_offset(new_dtb, node);
+> +	
+> +	if (nodeoffset == -FDT_ERR_NOTFOUND) {
+> +		result = fdt_add_subnode(new_dtb, nodeoffset, node);
+> +
+> +		if (result) {
+> +			dbgprintf("%s: fdt_add_subnode failed: %s\n", __func__,
+> +				fdt_strerror(result));
+> +			goto on_error;
+> +		}
+> +	} else if (nodeoffset < 0) {
+> +		dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
+> +			fdt_strerror(nodeoffset));
+> +		goto on_error;
+> +	}
+> +
+> +	result = fdt_setprop(new_dtb, nodeoffset, prop, value, value_len);
+> +
+> +	if (result) {
+> +		dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+> +			fdt_strerror(result));
+> +		goto on_error;
+> +	}
+> +
+> +	/*
+> +	 * Can't call free on dtb since dtb may have been mmaped by
+> +	 * slurp_file().
+> +	 */
+> +
+> +	*dtb = new_dtb;
+> +	*dtb_size = new_size;
+
+So you might better call fdt_pack(), which will set "totalsize" of
+the blob to an appropriate value.
+
+Thanks,
+-Takahiro AKASHI
+
+> +	return 0;
+> +
+> +on_error:
+> +	free(new_dtb);
+> +	return result;
+> +}
+> +
+> +int dtb_delete_property(char *dtb, const char *node, const char *prop)
+> +{
+> +	int result;
+> +	int nodeoffset = fdt_path_offset(dtb, node);
+> +
+> +	if (nodeoffset < 0) {
+> +		dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
+> +			fdt_strerror(nodeoffset));
+> +		return nodeoffset;
+> +	}
+> +
+> +	result = fdt_delprop(dtb, nodeoffset, prop);
+> +
+> +	if (result)
+> +		dbgprintf("%s: fdt_delprop failed: %s\n", __func__,
+> +			fdt_strerror(nodeoffset));
+> +
+> +	return result;
+> +}
+> diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+> new file mode 100644
+> index 0000000..e70d15d
+> --- /dev/null
+> +++ b/kexec/dt-ops.h
+> @@ -0,0 +1,13 @@
+> +#if !defined(KEXEC_DT_OPS_H)
+> +#define KEXEC_DT_OPS_H
+> +
+> +#include <sys/types.h>
+> +
+> +int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end);
+> +int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line);
+> +int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+> +	const char *prop, const void *value, int value_len);
+> +
+> +int dtb_delete_property(char *dtb, const char *node, const char *prop);
+> +
+> +#endif
+> -- 
+> 2.5.0
+> 
+> 
 
 _______________________________________________
 kexec mailing list
