@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQZE5-0007Wn-0o
- for kexec@lists.infradead.org; Fri, 22 Jul 2016 12:06:46 +0000
-Subject: Re: [PATCH] scripts: Fix size mismatch of kexec_purgatory_size
-References: <BE389624-FFFE-42F1-A89F-5E5598190D4A@amazon.com>
- <20160706084538.GA11783@dhcp-128-65.nay.redhat.com>
-From: Michal Marek <mmarek@suse.com>
-Message-ID: <57920C3C.1060701@suse.com>
-Date: Fri, 22 Jul 2016 14:06:20 +0200
+Message-ID: <579225B6.3090209@arm.com>
+Date: Fri, 22 Jul 2016 14:55:02 +0100
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20160706084538.GA11783@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT property, 
+ usable-memory-range
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-3-takahiro.akashi@linaro.org>
+ <578D1A31.5080509@arm.com> <20160721005756.GN20774@linaro.org>
+In-Reply-To: <20160721005756.GN20774@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,40 +21,139 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, "Tautschnig, Michael" <tautschn@amazon.co.uk>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bauerman@linux.vnet.ibm.com, dennis.chen@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 2016-07-06 10:45, Dave Young wrote:
-> On 07/04/16 at 01:55pm, Tautschnig, Michael wrote:
->> bin2c is used to create a valid C file out of a binary file where two
->> symbols will be globally defined: <name> and <name>_size. <name> is
->> passed as the first parameter of the host binary.
->>
->> Building using goto-cc reported that the purgatory binary code (the only
->> current user of this utility) declares kexec_purgatory_size as 'size_t'
->> where bin2c generate <name>_size to be 'int' so in a 64-bit host where
->> sizeof(size_t) > sizeof(int) this type mismatch will always yield the
->> wrong value for big-endian architectures while for little-endian it will
->> be wrong if the object laid in memory directly after
->> kexec_purgatory_size contains non-zero value at the time of reading.
->>
->> This commit changes <name>_size to be size_t instead.
->>
->> Note:
->>
->> Another way to fix the problem is to change the type of
->> kexec_purgatory_size to be 'int' as there's this check in code:
->> (kexec_purgatory_size <= 0)
->>
->> Signed-off-by: Michael Tautschnig <tautschn@amazon.com>
->> Cc: Michal Marek <mmarek@suse.com>
->> Cc: Vivek Goyal <vgoyal@redhat.com>
-[...]
-> Acked-by: Dave Young <dyoung@redhat.com>
+Hi,
 
-Applied to kbuild.git#kbuild.
+On 21/07/16 01:57, AKASHI Takahiro wrote:
+> Could you please apply the diff attached below and confirm that
+> kdump works in your environment?
+> I can't test it by myself since my hikey board seems to be broken now.
 
-Michal
+With this I get a failure even earlier, even with 'acpi=off'.
+With this patch, on boot of the kdump kernel I get:
+[    0.000000] Linux version 4.7.0-rc4+ (morse@melchizedek) (gcc version 5.2.1 6
+[    0.000000] Boot CPU: AArch64 Processor [411fd071]
+[    0.000000] earlycon: pl11 at MMIO 0x000000007ff80000 (options '')
+[    0.000000] bootconsole [pl11] enabled
+[    0.000000] debug: ignoring loglevel setting.
+[    0.000000] efi: Getting EFI parameters from FDT:
+[    0.000000] efi: EFI v2.50 by ARM Juno EFI Nov 24 2015 12:36:35
+[    0.000000] efi:  ACPI=0xf95b0000  ACPI 2.0=0xf95b0014  PROP=0xfe8db4d8
+[    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
+[    0.000000] cma: Failed to reserve 16 MiB
+[    0.000000] On node 0 totalpages: 132160
+[    0.000000]   DMA zone: 17 pages used for memmap
+[    0.000000]   DMA zone: 0 pages reserved
+[    0.000000]   DMA zone: 1088 pages, LIFO batch:0
+[    0.000000]   Normal zone: 2048 pages used for memmap
+[    0.000000]   Normal zone: 131072 pages, LIFO batch:31
+[    0.000000] bootmem alloc of 64 bytes failed!
+[    0.000000] Kernel panic - not syncing: Out of memory
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.7.0-rc4+ #4600
+[    0.000000] Hardware name: ARM Juno development board (r1) (DT)
+[    0.000000] Call trace:
+[    0.000000] [<ffff0000080889a8>] dump_backtrace+0x0/0x1e8
+[    0.000000] [<ffff000008088ba4>] show_stack+0x14/0x20
+[    0.000000] [<ffff000008363274>] dump_stack+0x94/0xb8
+[    0.000000] [<ffff00000816192c>] panic+0x10c/0x278
+[    0.000000] [<ffff000008b14980>] free_bootmem_late+0x0/0xa0
+[    0.000000] [<ffff000008b14e68>] __alloc_bootmem_low+0x2c/0x38
+[    0.000000] [<ffff000008b02954>] setup_arch+0x2e4/0x5ac
+[    0.000000] [<ffff000008b00854>] start_kernel+0x70/0x390
+[    0.000000] [<ffff000008b001bc>] __primary_switched+0x30/0x6c
+[    0.000000] ---[ end Kernel panic - not syncing: Out of memory
+
+
+Trying again, booted with:
+> console=ttyAMA0,115200 earlycon=pl011,0x7ff80000 root=/dev/nfs
+> nfsroot=10.X.X.X:/ubuntu-15.04-server-arm64,v3 resume=/dev/sda2 no_console_suspend
+> ip=dhcp rw crashkernel=512M stacktrace ignore_loglevel=1 acpi=off efi=debug
+memblock=debug
+
+kexec-tools invoked as:
+> kexec -x --reuse-cmdline --dtb=/sys/firmware/fdt -p /aarch64-Image
+
+cat /proc/iomem | grep Crash:
+> 9e0000000-9ffffffff : Crash kernel
+
+crash kernel memblock before call to memblock_cap_memory_range():
+[    0.000000] MEMBLOCK configuration:
+[    0.000000]  memory size = 0x1fef10000 reserved size = 0x4f3b
+[    0.000000]  memory.cnt  = 0x9
+[    0.000000]  memory[0x0]     [0x00000080000000-0x000000dfffffff], 0x60000000
+bytes flags: 0x0
+[    0.000000]  memory[0x1]     [0x000000e00f0000-0x000000f949ffff], 0x193b0000
+bytes flags: 0x0
+(uefi runtime code|data|acpi:)
+[    0.000000]  memory[0x2]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
+bytes flags: 0x4
+[    0.000000]  memory[0x3]     [0x000000f9850000-0x000000fe81ffff], 0x4fd0000
+bytes flags: 0x0
+(uefi runtime data:)
+[    0.000000]  memory[0x4]     [0x000000fe820000-0x000000fe85ffff], 0x40000
+bytes flags: 0x4
+[    0.000000]  memory[0x5]     [0x000000fe860000-0x000000fe86ffff], 0x10000
+bytes flags: 0x0
+(uefi runtime data:)
+[    0.000000]  memory[0x6]     [0x000000fe870000-0x000000fe8bffff], 0x50000
+bytes flags: 0x4
+[    0.000000]  memory[0x7]     [0x000000fe8c0000-0x000000feffffff], 0x740000
+bytes flags: 0x0
+[    0.000000]  memory[0x8]     [0x00000880000000-0x000009ffffffff], 0x180000000
+bytes flags: 0x0
+[    0.000000]  reserved.cnt  = 0x2
+(uefi memory map:)
+[    0.000000]  reserved[0x0]   [0x000000f985a000-0x000000f985afff], 0x1000
+bytes flags: 0x0
+(device tree:)
+[    0.000000]  reserved[0x1]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
+bytes flags: 0x0
+
+crash kernel memblock after call to memblock_cap_memory_range():
+[    0.000000] MEMBLOCK configuration:
+[    0.000000]  memory size = 0x20440000 reserved size = 0x3f3b
+[    0.000000]  memory.cnt  = 0x4
+[    0.000000]  memory[0x0]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
+bytes flags: 0x4
+[    0.000000]  memory[0x1]     [0x000000fe820000-0x000000fe85ffff], 0x40000
+bytes flags: 0x4
+[    0.000000]  memory[0x2]     [0x000000fe870000-0x000000fe8bffff], 0x50000
+bytes flags: 0x4
+[    0.000000]  memory[0x3]     [0x000009e0000000-0x000009ffffffff], 0x20000000
+bytes flags: 0x0
+[    0.000000]  reserved.cnt  = 0x1
+[    0.000000]  reserved[0x0]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
+bytes flags: 0x0
+(reserve kernel text:)
+[    0.000000] memblock_reserve: [0x000009e0080000-0x000009e0cd0fff] flags 0x0
+arm64_memblock_init+0x1e0/0x40c
+(reserve elfcorehdr:)
+[    0.000000] memblock_reserve: [0x000009fffff000-0x000009fffff3ff] flags 0x0
+arm64_memblock_init+0x37c/0x40c
+[    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
+[    0.000000] cma: Failed to reserve 16 MiB
+...
+
+It looks like memblock_cap_memory_range() did exactly what you intended
+
+This first fault seems to be because memblock_start_of_DRAM() is being dragged
+down by the preserved nomap areas, this means there isn't any usable memory
+within ~4G of memblock_start_of_DRAM()...
+
+I will dig into the bootmem alloc failure next week...
+
+(let me know if you want the full boot logs... they are more noise than signal)
+
+
+Thanks,
+
+James
+
+
+
+
 
 _______________________________________________
 kexec mailing list
