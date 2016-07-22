@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-x234.google.com ([2607:f8b0:4002:c05::234])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQYMZ-0004YI-6l
- for kexec@lists.infradead.org; Fri, 22 Jul 2016 11:11:27 +0000
-Received: by mail-yw0-x234.google.com with SMTP id r9so100344362ywg.0
- for <kexec@lists.infradead.org>; Fri, 22 Jul 2016 04:11:06 -0700 (PDT)
+ id 1bQZE5-0007Wn-0o
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 12:06:46 +0000
+Subject: Re: [PATCH] scripts: Fix size mismatch of kexec_purgatory_size
+References: <BE389624-FFFE-42F1-A89F-5E5598190D4A@amazon.com>
+ <20160706084538.GA11783@dhcp-128-65.nay.redhat.com>
+From: Michal Marek <mmarek@suse.com>
+Message-ID: <57920C3C.1060701@suse.com>
+Date: Fri, 22 Jul 2016 14:06:20 +0200
 MIME-Version: 1.0
-In-Reply-To: <57912ADF.8070803@cisco.com>
-References: <57841399.1030703@cisco.com> <578FCE9A.50305@cisco.com>
- <CAJGZr0KwbB+2Qdv4AAp1qVr60PQPGiJqQum5awSFrptATmHYUA@mail.gmail.com>
- <5790E80F.7080109@cisco.com>
- <CAJGZr0LrWsQzM-UYS6chQsRYeLNzgyENpzaNxQGHjWfJ+w232g@mail.gmail.com>
- <57912ADF.8070803@cisco.com>
-From: Maxim Uvarov <muvarov@gmail.com>
-Date: Fri, 22 Jul 2016 14:11:05 +0300
-Message-ID: <CAJGZr0LzrwM0qbLJJnfyFoJ2y_TYqzYw+=C-_w-vbeioQU09dA@mail.gmail.com>
-Subject: Re: IO memory read from /proc/vmcore leads to hang.
+In-Reply-To: <20160706084538.GA11783@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,48 +23,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Walker <danielwa@cisco.com>
-Cc: "xe-kernel@external.cisco.com" <xe-kernel@external.cisco.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>, "Tautschnig, Michael" <tautschn@amazon.co.uk>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
 
-I might be wrong but as I remember powerpc32 is deprecated in
-kexec-tools and all code use ppc64 directory even for 32 bit code...
-
-2016-07-21 23:04 GMT+03:00 Daniel Walker <danielwa@cisco.com>:
-> On 07/21/2016 12:33 PM, Maxim Uvarov wrote:
+On 2016-07-06 10:45, Dave Young wrote:
+> On 07/04/16 at 01:55pm, Tautschnig, Michael wrote:
+>> bin2c is used to create a valid C file out of a binary file where two
+>> symbols will be globally defined: <name> and <name>_size. <name> is
+>> passed as the first parameter of the host binary.
 >>
->> 2016-07-21 18:19 GMT+03:00 Daniel Walker <danielwa@cisco.com>:
->>>
->>>   There appears to be no code which checks what is or is not System ram,
->>> there is nothing that checks the device tree to see what is IO memory,
->>> and
->>> nothing reads /proc/iomem .. So AFAIK nothing cares if it's IO memory, or
->>> system ram, and there's no method to config things to skip any memory in
->>> the
->>> system, except in makedumpfile which can skip symbols not IO memory.
->>>
->>>
->> Daniel,  unfortunately it's long time for me when I looked to powerpc
->> code. But I just
->> checked that here:
+>> Building using goto-cc reported that the purgatory binary code (the only
+>> current user of this utility) declares kexec_purgatory_size as 'size_t'
+>> where bin2c generate <name>_size to be 'int' so in a 64-bit host where
+>> sizeof(size_t) > sizeof(int) this type mismatch will always yield the
+>> wrong value for big-endian architectures while for little-endian it will
+>> be wrong if the object laid in memory directly after
+>> kexec_purgatory_size contains non-zero value at the time of reading.
 >>
->> kexec-tools-2.0.6/kexec/arch/ppc64/kexec-ppc64.c
+>> This commit changes <name>_size to be size_t instead.
 >>
->> is probably what you need.
->
->
-> I have a powerpc32 .. In the powerpc64 file I only see something called
-> "reserved-ranges" which may do what I want, however, that doesn't exist in
-> the 32bit version.  It appers the reserved-ranges is used by OPAL firmware ,
-> which I don't have. There doesn't appear to be anything generic in ppc64 to
-> exclude device IO memory.
->
-> Daniel
+>> Note:
+>>
+>> Another way to fix the problem is to change the type of
+>> kexec_purgatory_size to be 'int' as there's this check in code:
+>> (kexec_purgatory_size <= 0)
+>>
+>> Signed-off-by: Michael Tautschnig <tautschn@amazon.com>
+>> Cc: Michal Marek <mmarek@suse.com>
+>> Cc: Vivek Goyal <vgoyal@redhat.com>
+[...]
+> Acked-by: Dave Young <dyoung@redhat.com>
 
+Applied to kbuild.git#kbuild.
 
-
--- 
-Best regards,
-Maxim Uvarov
+Michal
 
 _______________________________________________
 kexec mailing list
