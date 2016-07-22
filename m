@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
+Received: from szxga01-in.huawei.com ([58.251.152.64])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQSzv-00006t-VN
- for kexec@lists.infradead.org; Fri, 22 Jul 2016 05:27:44 +0000
-Received: by mail-pa0-x22f.google.com with SMTP id fi15so36106477pac.1
- for <kexec@lists.infradead.org>; Thu, 21 Jul 2016 22:27:23 -0700 (PDT)
-Date: Fri, 22 Jul 2016 14:33:17 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
-Message-ID: <20160722053316.GO20774@linaro.org>
-References: <cover.1468970114.git.geoff@infradead.org>
- <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
- <20160720153859.GG24691@leverpostej>
- <1469042361.2977.90.camel@infradead.org>
- <20160721103120.GB20559@leverpostej> <5790A902.6070601@arm.com>
- <1469137776.2977.128.camel@infradead.org>
- <20160722040842.GA14911@localhost.localdomain>
+ id 1bQT71-0003ZK-EV
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 05:35:05 +0000
+From: zhongjiang <zhongjiang@huawei.com>
+Subject: [PATCH v2] kexec: add resriction on the kexec_load
+Date: Fri, 22 Jul 2016 13:32:46 +0800
+Message-ID: <1469165566-12897-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160722040842.GA14911@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,49 +20,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+To: ebiederm@xmission.com, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org
 
-On Fri, Jul 22, 2016 at 09:38:42AM +0530, Pratyush Anand wrote:
-> On 21/07/2016:02:49:36 PM, Geoff Levand wrote:
-> > On Thu, 2016-07-21 at 11:50 +0100, Robin Murphy wrote:
-> > > The Exynos UART (drivers/tty/serial/samsung.c) is one which comes to
-> > > mind as definitely existing, and on arm64 systems to boot. The TX
-> > > register is at offset 0x20 there.
-> > 
-> > Here's what I came up with.
-> > 
-> > 
-> > +	struct data {const char *name; int tx_offset;};
-> > +	static const struct data ok_list[] = {
-> > +	/*	{"armada-3700-uart", ?},	*/
-> > +		{"exynos4210-uart", 0x20},
-> > +	/*	{"ls1021a-lpuart", ?},		*/
-> > +	/*	{"meson-uart", ?},		*/
-> > +	/*	{"mt6577-uart", ?},		*/
-> > +		{"ns16550", 0},
-> > +		{"ns16550a", 0},
-> > +		{"pl011", 0},
-> > +		{NULL, 0}
-> > +	};
-> 
-> sinc functionality is just to debug the scenario when something goes wrong in
-> purgatory. IMHO, it should be disabled by default.
+From: zhong jiang <zhongjiang@huawei.com>
 
-+1
+I hit the following question when run trinity in my system. The
+kernel is 3.4 version. but the mainline have same question to be
+solved. The root cause is the segment size is too large, it can
+expand the most of the area or the whole memory, therefore, it
+may waste an amount of time to abtain a useable page. and other
+cases will block until the test case quit. at the some time,
+OOM will come up.
 
--Takahiro AKASHI
+Call Trace:
+ [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
+ [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
+ [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
+ [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
+ [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
+ [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
+ [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
+ [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
 
-> So, why not to keep it as
-> simple as possible. Its a low level debugging mainly for developer, so user
-> should know the absolute address. Therefore, I think no need to parse earlycon
-> or earlyprintk from command line.  Whatever user passes in --port can be treated
-> as address of TX register. If TX offset is 0x20, then user can pass --port as
-> base+0x20. Additionally, we can pass TX register width as well. So what about
-> something like "--port=0x1c020000,1" where 0x1c020000 is TX register address and
-> 1 says about it's width in bytes.
-> 
-> ~Pratyush
+The patch just add condition on sanity_check_segment_list to
+restriction the segment size.
+
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ kernel/kexec_core.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 56b3ed0..b8751c3 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -148,6 +148,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ int sanity_check_segment_list(struct kimage *image)
+ {
+ 	int result, i;
++	unsigned long total_segments = 0;
+ 	unsigned long nr_segments = image->nr_segments;
+ 
+ 	/*
+@@ -209,6 +210,21 @@ int sanity_check_segment_list(struct kimage *image)
+ 			return result;
+ 	}
+ 
++	/* Verity all segment size donnot exceed the specified size.
++	 * if segment size from user space is too large,  a large
++	 * amount of time will be wasted when allocating page. so,
++	 * softlockup may be come up.
++	 */
++	for (i = 0; i < nr_segments; i++) {
++		if (image->segment[i].memsz > (totalram_pages / 2))
++			return result;
++
++		total += image->segment[i].memsz;
++	}
++
++	if (total > (totalram_pages / 2))
++		return result;
++
+ 	/*
+ 	 * Verify we have good destination addresses.  Normally
+ 	 * the caller is responsible for making certain we don't
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
