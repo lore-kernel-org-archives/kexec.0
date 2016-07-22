@@ -1,14 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <579225B6.3090209@arm.com>
-Date: Fri, 22 Jul 2016 14:55:02 +0100
-From: James Morse <james.morse@arm.com>
+Received: from mail-pa0-f53.google.com ([209.85.220.53])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bQawh-0001pI-1I
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 13:56:56 +0000
+Received: by mail-pa0-f53.google.com with SMTP id iw10so39935209pac.2
+ for <kexec@lists.infradead.org>; Fri, 22 Jul 2016 06:56:34 -0700 (PDT)
+Date: Fri, 22 Jul 2016 19:26:30 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
+Message-ID: <20160722135630.GC14911@localhost.localdomain>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
+ <20160720153859.GG24691@leverpostej>
+ <1469042361.2977.90.camel@infradead.org>
+ <20160721103120.GB20559@leverpostej> <5790A902.6070601@arm.com>
+ <1469137776.2977.128.camel@infradead.org>
+ <20160722040842.GA14911@localhost.localdomain>
+ <5791EF62.5070006@arm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT property, 
- usable-memory-range
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-3-takahiro.akashi@linaro.org>
- <578D1A31.5080509@arm.com> <20160721005756.GN20774@linaro.org>
-In-Reply-To: <20160721005756.GN20774@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <5791EF62.5070006@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,139 +32,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, bauerman@linux.vnet.ibm.com, dennis.chen@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 
-Hi,
+Hi Robin,
 
-On 21/07/16 01:57, AKASHI Takahiro wrote:
-> Could you please apply the diff attached below and confirm that
-> kdump works in your environment?
-> I can't test it by myself since my hikey board seems to be broken now.
+On 22/07/2016:11:03:14 AM, Robin Murphy wrote:
+> On 22/07/16 05:08, Pratyush Anand wrote:
+> > On 21/07/2016:02:49:36 PM, Geoff Levand wrote:
+> >> On Thu, 2016-07-21 at 11:50 +0100, Robin Murphy wrote:
+> >>> The Exynos UART (drivers/tty/serial/samsung.c) is one which comes to
+> >>> mind as definitely existing, and on arm64 systems to boot. The TX
+> >>> register is at offset 0x20 there.
+> >>
+> >> Here's what I came up with.
+> >>
+> >>
+> >> +	struct data {const char *name; int tx_offset;};
+> >> +	static const struct data ok_list[] = {
+> >> +	/*	{"armada-3700-uart", ?},	*/
+> >> +		{"exynos4210-uart", 0x20},
+> >> +	/*	{"ls1021a-lpuart", ?},		*/
+> >> +	/*	{"meson-uart", ?},		*/
+> >> +	/*	{"mt6577-uart", ?},		*/
+> >> +		{"ns16550", 0},
+> >> +		{"ns16550a", 0},
+> >> +		{"pl011", 0},
+> >> +		{NULL, 0}
+> >> +	};
+> > 
+> > sinc functionality is just to debug the scenario when something goes wrong in
+> > purgatory. IMHO, it should be disabled by default. So, why not to keep it as
+> > simple as possible. Its a low level debugging mainly for developer, so user
+> > should know the absolute address. Therefore, I think no need to parse earlycon
+> > or earlyprintk from command line.  Whatever user passes in --port can be treated
+> > as address of TX register. If TX offset is 0x20, then user can pass --port as
+> > base+0x20. Additionally, we can pass TX register width as well. So what about
+> > something like "--port=0x1c020000,1" where 0x1c020000 is TX register address and
+> > 1 says about it's width in bytes.
+> 
+> I don't think even that is worthwhile, since without any polling it
+> still relies on the UART having FIFOs, someone having already enabled
+> the FIFOs, the FIFOs being deep enough and/or the output being short
+> enough. In short, it's fragile enough that I'm not convinced it's even
+> useful as a debug option. I suggest we simply copy the purgatory console
+> implementation from, say, ARM or Alpha.
 
-With this I get a failure even earlier, even with 'acpi=off'.
-With this patch, on boot of the kdump kernel I get:
-[    0.000000] Linux version 4.7.0-rc4+ (morse@melchizedek) (gcc version 5.2.1 6
-[    0.000000] Boot CPU: AArch64 Processor [411fd071]
-[    0.000000] earlycon: pl11 at MMIO 0x000000007ff80000 (options '')
-[    0.000000] bootconsole [pl11] enabled
-[    0.000000] debug: ignoring loglevel setting.
-[    0.000000] efi: Getting EFI parameters from FDT:
-[    0.000000] efi: EFI v2.50 by ARM Juno EFI Nov 24 2015 12:36:35
-[    0.000000] efi:  ACPI=0xf95b0000  ACPI 2.0=0xf95b0014  PROP=0xfe8db4d8
-[    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
-[    0.000000] cma: Failed to reserve 16 MiB
-[    0.000000] On node 0 totalpages: 132160
-[    0.000000]   DMA zone: 17 pages used for memmap
-[    0.000000]   DMA zone: 0 pages reserved
-[    0.000000]   DMA zone: 1088 pages, LIFO batch:0
-[    0.000000]   Normal zone: 2048 pages used for memmap
-[    0.000000]   Normal zone: 131072 pages, LIFO batch:31
-[    0.000000] bootmem alloc of 64 bytes failed!
-[    0.000000] Kernel panic - not syncing: Out of memory
-[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.7.0-rc4+ #4600
-[    0.000000] Hardware name: ARM Juno development board (r1) (DT)
-[    0.000000] Call trace:
-[    0.000000] [<ffff0000080889a8>] dump_backtrace+0x0/0x1e8
-[    0.000000] [<ffff000008088ba4>] show_stack+0x14/0x20
-[    0.000000] [<ffff000008363274>] dump_stack+0x94/0xb8
-[    0.000000] [<ffff00000816192c>] panic+0x10c/0x278
-[    0.000000] [<ffff000008b14980>] free_bootmem_late+0x0/0xa0
-[    0.000000] [<ffff000008b14e68>] __alloc_bootmem_low+0x2c/0x38
-[    0.000000] [<ffff000008b02954>] setup_arch+0x2e4/0x5ac
-[    0.000000] [<ffff000008b00854>] start_kernel+0x70/0x390
-[    0.000000] [<ffff000008b001bc>] __primary_switched+0x30/0x6c
-[    0.000000] ---[ end Kernel panic - not syncing: Out of memory
+May be I am missing, but deep TX FIFO should not be an issue. Whatever, we write
+in TX register, that will go to the port eventually. However, I do agree that
+short FIFO could be an issue and overflow is quite possible in that case. I had
+been trying to convince Geoff to take [1], which will help to resolve it.
 
+[1] https://github.com/pratyushanand/kexec-tools/commit/0d49d420810f070bcff9c96e377477d96f909d11
 
-Trying again, booted with:
-> console=ttyAMA0,115200 earlycon=pl011,0x7ff80000 root=/dev/nfs
-> nfsroot=10.X.X.X:/ubuntu-15.04-server-arm64,v3 resume=/dev/sda2 no_console_suspend
-> ip=dhcp rw crashkernel=512M stacktrace ignore_loglevel=1 acpi=off efi=debug
-memblock=debug
-
-kexec-tools invoked as:
-> kexec -x --reuse-cmdline --dtb=/sys/firmware/fdt -p /aarch64-Image
-
-cat /proc/iomem | grep Crash:
-> 9e0000000-9ffffffff : Crash kernel
-
-crash kernel memblock before call to memblock_cap_memory_range():
-[    0.000000] MEMBLOCK configuration:
-[    0.000000]  memory size = 0x1fef10000 reserved size = 0x4f3b
-[    0.000000]  memory.cnt  = 0x9
-[    0.000000]  memory[0x0]     [0x00000080000000-0x000000dfffffff], 0x60000000
-bytes flags: 0x0
-[    0.000000]  memory[0x1]     [0x000000e00f0000-0x000000f949ffff], 0x193b0000
-bytes flags: 0x0
-(uefi runtime code|data|acpi:)
-[    0.000000]  memory[0x2]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
-bytes flags: 0x4
-[    0.000000]  memory[0x3]     [0x000000f9850000-0x000000fe81ffff], 0x4fd0000
-bytes flags: 0x0
-(uefi runtime data:)
-[    0.000000]  memory[0x4]     [0x000000fe820000-0x000000fe85ffff], 0x40000
-bytes flags: 0x4
-[    0.000000]  memory[0x5]     [0x000000fe860000-0x000000fe86ffff], 0x10000
-bytes flags: 0x0
-(uefi runtime data:)
-[    0.000000]  memory[0x6]     [0x000000fe870000-0x000000fe8bffff], 0x50000
-bytes flags: 0x4
-[    0.000000]  memory[0x7]     [0x000000fe8c0000-0x000000feffffff], 0x740000
-bytes flags: 0x0
-[    0.000000]  memory[0x8]     [0x00000880000000-0x000009ffffffff], 0x180000000
-bytes flags: 0x0
-[    0.000000]  reserved.cnt  = 0x2
-(uefi memory map:)
-[    0.000000]  reserved[0x0]   [0x000000f985a000-0x000000f985afff], 0x1000
-bytes flags: 0x0
-(device tree:)
-[    0.000000]  reserved[0x1]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
-bytes flags: 0x0
-
-crash kernel memblock after call to memblock_cap_memory_range():
-[    0.000000] MEMBLOCK configuration:
-[    0.000000]  memory size = 0x20440000 reserved size = 0x3f3b
-[    0.000000]  memory.cnt  = 0x4
-[    0.000000]  memory[0x0]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
-bytes flags: 0x4
-[    0.000000]  memory[0x1]     [0x000000fe820000-0x000000fe85ffff], 0x40000
-bytes flags: 0x4
-[    0.000000]  memory[0x2]     [0x000000fe870000-0x000000fe8bffff], 0x50000
-bytes flags: 0x4
-[    0.000000]  memory[0x3]     [0x000009e0000000-0x000009ffffffff], 0x20000000
-bytes flags: 0x0
-[    0.000000]  reserved.cnt  = 0x1
-[    0.000000]  reserved[0x0]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
-bytes flags: 0x0
-(reserve kernel text:)
-[    0.000000] memblock_reserve: [0x000009e0080000-0x000009e0cd0fff] flags 0x0
-arm64_memblock_init+0x1e0/0x40c
-(reserve elfcorehdr:)
-[    0.000000] memblock_reserve: [0x000009fffff000-0x000009fffff3ff] flags 0x0
-arm64_memblock_init+0x37c/0x40c
-[    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
-[    0.000000] cma: Failed to reserve 16 MiB
-...
-
-It looks like memblock_cap_memory_range() did exactly what you intended
-
-This first fault seems to be because memblock_start_of_DRAM() is being dragged
-down by the preserved nomap areas, this means there isn't any usable memory
-within ~4G of memblock_start_of_DRAM()...
-
-I will dig into the bootmem alloc failure next week...
-
-(let me know if you want the full boot logs... they are more noise than signal)
-
-
-Thanks,
-
-James
-
-
-
-
+~Pratyush
+> 
+> Robin.
+> 
+> > 
+> > ~Pratyush
+> > 
 
 _______________________________________________
 kexec mailing list
