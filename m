@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from szxga01-in.huawei.com ([58.251.152.64])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQT71-0003ZK-EV
- for kexec@lists.infradead.org; Fri, 22 Jul 2016 05:35:05 +0000
+ id 1bQTDR-0006Y5-IM
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 05:41:42 +0000
 From: zhongjiang <zhongjiang@huawei.com>
 Subject: [PATCH v2] kexec: add resriction on the kexec_load
-Date: Fri, 22 Jul 2016 13:32:46 +0800
-Message-ID: <1469165566-12897-1-git-send-email-zhongjiang@huawei.com>
+Date: Fri, 22 Jul 2016 13:36:22 +0800
+Message-ID: <1469165782-13193-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -58,7 +58,7 @@ Signed-off-by: zhong jiang <zhongjiang@huawei.com>
  1 file changed, 16 insertions(+)
 
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 56b3ed0..b8751c3 100644
+index 56b3ed0..1f58824 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
 @@ -148,6 +148,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
@@ -82,10 +82,10 @@ index 56b3ed0..b8751c3 100644
 +		if (image->segment[i].memsz > (totalram_pages / 2))
 +			return result;
 +
-+		total += image->segment[i].memsz;
++		total_segments += image->segment[i].memsz;
 +	}
 +
-+	if (total > (totalram_pages / 2))
++	if (total_segments > (totalram_pages / 2))
 +		return result;
 +
  	/*
