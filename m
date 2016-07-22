@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v1 3/4] arm64: Add arm64 kexec support
-References: <cover.1468970114.git.geoff@infradead.org>
- <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
- <20160720153859.GG24691@leverpostej> <1469042361.2977.90.camel@infradead.org>
- <20160721103120.GB20559@leverpostej> <5790A902.6070601@arm.com>
- <1469137776.2977.128.camel@infradead.org>
- <20160722040842.GA14911@localhost.localdomain> <5791EF62.5070006@arm.com>
- <20160722135630.GC14911@localhost.localdomain>
-From: Robin Murphy <robin.murphy@arm.com>
-Message-ID: <57925EFC.20205@arm.com>
-Date: Fri, 22 Jul 2016 18:59:24 +0100
-MIME-Version: 1.0
-In-Reply-To: <20160722135630.GC14911@localhost.localdomain>
+Received: from mail.linuxfoundation.org ([140.211.169.12])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bQgbN-0006dW-Px
+ for kexec@lists.infradead.org; Fri, 22 Jul 2016 19:59:18 +0000
+Date: Fri, 22 Jul 2016 12:58:56 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] kexec: add resriction on the kexec_load
+Message-Id: <20160722125856.59eb02d94a57f9871e2a38b2@linux-foundation.org>
+In-Reply-To: <1469165782-13193-1-git-send-email-zhongjiang@huawei.com>
+References: <1469165782-13193-1-git-send-email-zhongjiang@huawei.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +22,180 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+To: zhongjiang <zhongjiang@huawei.com>
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org, ebiederm@xmission.com
 
-On 22/07/16 14:56, Pratyush Anand wrote:
-> Hi Robin,
+On Fri, 22 Jul 2016 13:36:22 +0800 zhongjiang <zhongjiang@huawei.com> wrote:
+
+> From: zhong jiang <zhongjiang@huawei.com>
 > 
-> On 22/07/2016:11:03:14 AM, Robin Murphy wrote:
->> On 22/07/16 05:08, Pratyush Anand wrote:
->>> On 21/07/2016:02:49:36 PM, Geoff Levand wrote:
->>>> On Thu, 2016-07-21 at 11:50 +0100, Robin Murphy wrote:
->>>>> The Exynos UART (drivers/tty/serial/samsung.c) is one which comes to
->>>>> mind as definitely existing, and on arm64 systems to boot. The TX
->>>>> register is at offset 0x20 there.
->>>>
->>>> Here's what I came up with.
->>>>
->>>>
->>>> +	struct data {const char *name; int tx_offset;};
->>>> +	static const struct data ok_list[] = {
->>>> +	/*	{"armada-3700-uart", ?},	*/
->>>> +		{"exynos4210-uart", 0x20},
->>>> +	/*	{"ls1021a-lpuart", ?},		*/
->>>> +	/*	{"meson-uart", ?},		*/
->>>> +	/*	{"mt6577-uart", ?},		*/
->>>> +		{"ns16550", 0},
->>>> +		{"ns16550a", 0},
->>>> +		{"pl011", 0},
->>>> +		{NULL, 0}
->>>> +	};
->>>
->>> sinc functionality is just to debug the scenario when something goes wrong in
->>> purgatory. IMHO, it should be disabled by default. So, why not to keep it as
->>> simple as possible. Its a low level debugging mainly for developer, so user
->>> should know the absolute address. Therefore, I think no need to parse earlycon
->>> or earlyprintk from command line.  Whatever user passes in --port can be treated
->>> as address of TX register. If TX offset is 0x20, then user can pass --port as
->>> base+0x20. Additionally, we can pass TX register width as well. So what about
->>> something like "--port=0x1c020000,1" where 0x1c020000 is TX register address and
->>> 1 says about it's width in bytes.
->>
->> I don't think even that is worthwhile, since without any polling it
->> still relies on the UART having FIFOs, someone having already enabled
->> the FIFOs, the FIFOs being deep enough and/or the output being short
->> enough. In short, it's fragile enough that I'm not convinced it's even
->> useful as a debug option. I suggest we simply copy the purgatory console
->> implementation from, say, ARM or Alpha.
+> I hit the following question when run trinity in my system. The
+> kernel is 3.4 version. but the mainline have same question to be
+> solved. The root cause is the segment size is too large, it can
+> expand the most of the area or the whole memory, therefore, it
+> may waste an amount of time to abtain a useable page. and other
+> cases will block until the test case quit. at the some time,
+> OOM will come up.
 > 
-> May be I am missing, but deep TX FIFO should not be an issue. Whatever, we write
-> in TX register, that will go to the port eventually. However, I do agree that
+> Call Trace:
+>  [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
+>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+>  [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
+>  [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
+>  [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
+>  [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
+>  [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
+>  [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
+>  [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
+>  [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
+> 
+> The patch just add condition on sanity_check_segment_list to
+> restriction the segment size.
+> 
+> ...
+>
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -148,6 +148,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  int sanity_check_segment_list(struct kimage *image)
+>  {
+>  	int result, i;
+> +	unsigned long total_segments = 0;
+>  	unsigned long nr_segments = image->nr_segments;
+>  
+>  	/*
+> @@ -209,6 +210,21 @@ int sanity_check_segment_list(struct kimage *image)
+>  			return result;
+>  	}
+>  
+> +	/* Verity all segment size donnot exceed the specified size.
+> +	 * if segment size from user space is too large,  a large
+> +	 * amount of time will be wasted when allocating page. so,
+> +	 * softlockup may be come up.
+> +	 */
+> +	for (i = 0; i < nr_segments; i++) {
+> +		if (image->segment[i].memsz > (totalram_pages / 2))
+> +			return result;
+> +
+> +		total_segments += image->segment[i].memsz;
+> +	}
+> +
+> +	if (total_segments > (totalram_pages / 2))
+> +		return result;
+> +
+>  	/*
+>  	 * Verify we have good destination addresses.  Normally
+>  	 * the caller is responsible for making certain we don't
 
-"Deep" is an issue when in the sense of "not %s enough" ;)
+This needed a few adjustments for pending changes in linux-next's
+sanity_check_segment_list().  Mainly s/return result/return -EINVAL/. 
+I also tweaked the patch changelog.  Please check.
 
-(of which "disabled" is also really just a special case of depth=1)
+From: zhong jiang <zhongjiang@huawei.com>
+Subject: kexec: add restriction on kexec_load() segment sizes
 
-> short FIFO could be an issue and overflow is quite possible in that case. I had
-> been trying to convince Geoff to take [1], which will help to resolve it.
+I hit the following issue when run trinity in my system.  The kernel is
+3.4 version, but mainline has the same issue.
 
-That would make things more useful, yes. As above it would also want
-extending to specify the MMIO access size, so for completeness I guess
-we'd end up with something like:
+The root cause is that the segment size is too large so the kerenl spends
+too long trying to allocate a page.  Other cases will block until the test
+case quits.  Also, OOM conditions will occur.
 
---console-tx=<addr>[,{8|16|16be|32|32be}]
---console-status=<addr>,<mask>[,{8|16|16be|32|32be}]
+Call Trace:
+ [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
+ [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
+ [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
+ [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
+ [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
+ [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
+ [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
+ [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
+ [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
 
-which, other than probably needing some inline asm to guarantee the
-appropriate accesses, seems like it could be shared across other
-architectures too. Or more bother than it's worth; I can't really decide.
+The patch chnages sanity_check_segment_list() to verify that no segment is
+larger than half of memory.
 
-Robin.
+Link: http://lkml.kernel.org/r/1469165782-13193-1-git-send-email-zhongjiang@huawei.com
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ kernel/kexec_core.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff -puN kernel/kexec_core.c~kexec-add-resriction-on-the-kexec_load kernel/kexec_core.c
+--- a/kernel/kexec_core.c~kexec-add-resriction-on-the-kexec_load
++++ a/kernel/kexec_core.c
+@@ -154,6 +154,7 @@ static struct page *kimage_alloc_page(st
+ int sanity_check_segment_list(struct kimage *image)
+ {
+ 	int i;
++	unsigned long total_segments = 0;
+ 	unsigned long nr_segments = image->nr_segments;
+ 
+ 	/*
+@@ -214,6 +215,21 @@ int sanity_check_segment_list(struct kim
+ 			return -EINVAL;
+ 	}
+ 
++	/* Verity all segment size donnot exceed the specified size.
++	 * if segment size from user space is too large,  a large
++	 * amount of time will be wasted when allocating page. so,
++	 * softlockup may be come up.
++	 */
++	for (i = 0; i < nr_segments; i++) {
++		if (image->segment[i].memsz > (totalram_pages / 2))
++			return -EINVAL;
++
++		total_segments += image->segment[i].memsz;
++	}
++
++	if (total_segments > (totalram_pages / 2))
++		return -EINVAL;
++
+ 	/*
+ 	 * Verify we have good destination addresses.  Normally
+ 	 * the caller is responsible for making certain we don't
+_
+
+
+
+
+also I tweaked the comments a bit:
+
+--- a/kernel/kexec_core.c~kexec-add-resriction-on-the-kexec_load-fix
++++ a/kernel/kexec_core.c
+@@ -215,10 +215,10 @@ int sanity_check_segment_list(struct kim
+ 			return -EINVAL;
+ 	}
+ 
+-	/* Verity all segment size donnot exceed the specified size.
+-	 * if segment size from user space is too large,  a large
+-	 * amount of time will be wasted when allocating page. so,
+-	 * softlockup may be come up.
++	/*
++	 * Verify that no segment is larger than half of memory.  If a segment
++	 * from userspace is too large,  a large amount of time will be wasted
++	 * allocating pages, which can cause a soft lockup.
+ 	 */
+ 	for (i = 0; i < nr_segments; i++) {
+ 		if (image->segment[i].memsz > (totalram_pages / 2))
+_
+
+
+Eric ack?
 
 _______________________________________________
 kexec mailing list
