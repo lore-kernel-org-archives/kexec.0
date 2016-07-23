@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga01-in.huawei.com ([58.251.152.64])
+Received: from szxga02-in.huawei.com ([119.145.14.65])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQv2z-0003Bc-Ip
- for kexec@lists.infradead.org; Sat, 23 Jul 2016 11:24:48 +0000
-Message-ID: <579353BE.9010600@huawei.com>
-Date: Sat, 23 Jul 2016 19:23:42 +0800
+ id 1bQx8x-0003Eq-Uu
+ for kexec@lists.infradead.org; Sat, 23 Jul 2016 13:39:07 +0000
+Message-ID: <57937307.8060306@huawei.com>
+Date: Sat, 23 Jul 2016 21:37:11 +0800
 From: zhong jiang <zhongjiang@huawei.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH v2] kexec: add resriction on the kexec_load
@@ -186,7 +186,11 @@ On 2016/7/23 3:58, Andrew Morton wrote:
 > -	 * if segment size from user space is too large,  a large
 > -	 * amount of time will be wasted when allocating page. so,
 > -	 * softlockup may be come up.
->
+> +	/*
+> +	 * Verify that no segment is larger than half of memory.  If a segment
+> +	 * from userspace is too large,  a large amount of time will be wasted
+> +	 * allocating pages, which can cause a soft lockup.
+>  	 */
 >  	for (i = 0; i < nr_segments; i++) {
 >  		if (image->segment[i].memsz > (totalram_pages / 2))
 > _
@@ -196,40 +200,8 @@ On 2016/7/23 3:58, Andrew Morton wrote:
 >
 > .
 >
- Hi,  Andrew
-when I review the patch, I find the following question. please fix it by rebaseing.
- 
-Subject: [PATCH] kexec: fix the add restriction on the kexec_load
-
-Because segments size is in bytes, while totalram_pages is in pages
-so we should fix it.
-
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- kernel/kexec_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 22e41a1..88cf3f9 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -216,13 +216,13 @@ int sanity_check_segment_list(struct kimage *image)
-         * allocating pages, which can cause a soft lockup.
-         */
-        for (i = 0; i < nr_segments; i++) {
--               if (image->segment[i].memsz > (totalram_pages / 2))
-+               if (image->segment[i].memsz > (totalram_pages << 12) / 2)
-                        return result;
-
-                total_segments += image->segment[i].memsz;
-        }
-
--       if (total_segments > (totalram_pages / 2))
-+       if (total_segments > (totalram_pages << 12) / 2)
-                return result;
-
-        /*
-
+  I am so sorry,  I think that page_shift is more suitable than 12.  it should like as follow.
+  if (total_segments > (totalram_pages << PAGE_SHIFT) / 2)
 
 
 _______________________________________________
