@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([119.145.14.65])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bQx8x-0003Eq-Uu
- for kexec@lists.infradead.org; Sat, 23 Jul 2016 13:39:07 +0000
-Message-ID: <57937307.8060306@huawei.com>
-Date: Sat, 23 Jul 2016 21:37:11 +0800
-From: zhong jiang <zhongjiang@huawei.com>
+Received: from mga04.intel.com ([192.55.52.120])
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bR62p-0005nh-1O
+ for kexec@lists.infradead.org; Sat, 23 Jul 2016 23:09:19 +0000
+Date: Sun, 24 Jul 2016 07:07:40 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 3/3] x86/apic: Clean up the apic delivery mode macro
+ definition
+Message-ID: <201607240725.hpXEwlCH%fengguang.wu@intel.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] kexec: add resriction on the kexec_load
-References: <1469165782-13193-1-git-send-email-zhongjiang@huawei.com>
- <20160722125856.59eb02d94a57f9871e2a38b2@linux-foundation.org>
-In-Reply-To: <20160722125856.59eb02d94a57f9871e2a38b2@linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <1468983483-3952-4-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,186 +23,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, kexec@lists.infradead.org, ebiederm@xmission.com
+To: Baoquan He <bhe@redhat.com>
+Cc: fenghua.yu@intel.com, Baoquan He <bhe@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kbuild-all@01.org, hpa@zytor.com, tglx@linutronix.de, weijg.fnst@cn.fujitsu.com, jiang.liu@linux.intel.com, vgoyal@redhat.com, ebiederm@xmission.com
 
-On 2016/7/23 3:58, Andrew Morton wrote:
-> On Fri, 22 Jul 2016 13:36:22 +0800 zhongjiang <zhongjiang@huawei.com> wrote:
->
->> From: zhong jiang <zhongjiang@huawei.com>
->>
->> I hit the following question when run trinity in my system. The
->> kernel is 3.4 version. but the mainline have same question to be
->> solved. The root cause is the segment size is too large, it can
->> expand the most of the area or the whole memory, therefore, it
->> may waste an amount of time to abtain a useable page. and other
->> cases will block until the test case quit. at the some time,
->> OOM will come up.
->>
->> Call Trace:
->>  [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->>  [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
->>  [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
->>  [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
->>  [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
->>  [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
->>  [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
->>  [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
->>  [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
->>
->> The patch just add condition on sanity_check_segment_list to
->> restriction the segment size.
->>
->> ...
->>
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -148,6 +148,7 @@ static struct page *kimage_alloc_page(struct kimage *image,
->>  int sanity_check_segment_list(struct kimage *image)
->>  {
->>  	int result, i;
->> +	unsigned long total_segments = 0;
->>  	unsigned long nr_segments = image->nr_segments;
->>  
->>  	/*
->> @@ -209,6 +210,21 @@ int sanity_check_segment_list(struct kimage *image)
->>  			return result;
->>  	}
->>  
->> +	/* Verity all segment size donnot exceed the specified size.
->> +	 * if segment size from user space is too large,  a large
->> +	 * amount of time will be wasted when allocating page. so,
->> +	 * softlockup may be come up.
->> +	 */
->> +	for (i = 0; i < nr_segments; i++) {
->> +		if (image->segment[i].memsz > (totalram_pages / 2))
->> +			return result;
->> +
->> +		total_segments += image->segment[i].memsz;
->> +	}
->> +
->> +	if (total_segments > (totalram_pages / 2))
->> +		return result;
->> +
->>  	/*
->>  	 * Verify we have good destination addresses.  Normally
->>  	 * the caller is responsible for making certain we don't
-> This needed a few adjustments for pending changes in linux-next's
-> sanity_check_segment_list().  Mainly s/return result/return -EINVAL/. 
-> I also tweaked the patch changelog.  Please check.
->
-> From: zhong jiang <zhongjiang@huawei.com>
-> Subject: kexec: add restriction on kexec_load() segment sizes
->
-> I hit the following issue when run trinity in my system.  The kernel is
-> 3.4 version, but mainline has the same issue.
->
-> The root cause is that the segment size is too large so the kerenl spends
-> too long trying to allocate a page.  Other cases will block until the test
-> case quits.  Also, OOM conditions will occur.
->
-> Call Trace:
->  [<ffffffff81106eac>] __alloc_pages_nodemask+0x14c/0x8f0
->  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->  [<ffffffff8124c2be>] ? trace_hardirqs_on_thunk+0x3a/0x3c
->  [<ffffffff8113e5ef>] alloc_pages_current+0xaf/0x120
->  [<ffffffff810a0da0>] kimage_alloc_pages+0x10/0x60
->  [<ffffffff810a15ad>] kimage_alloc_control_pages+0x5d/0x270
->  [<ffffffff81027e85>] machine_kexec_prepare+0xe5/0x6c0
->  [<ffffffff810a0d52>] ? kimage_free_page_list+0x52/0x70
->  [<ffffffff810a1921>] sys_kexec_load+0x141/0x600
->  [<ffffffff8115e6b0>] ? vfs_write+0x100/0x180
->  [<ffffffff8145fbd9>] system_call_fastpath+0x16/0x1b
->
-> The patch chnages sanity_check_segment_list() to verify that no segment is
-> larger than half of memory.
->
-> Link: http://lkml.kernel.org/r/1469165782-13193-1-git-send-email-zhongjiang@huawei.com
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
->
->  kernel/kexec_core.c |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff -puN kernel/kexec_core.c~kexec-add-resriction-on-the-kexec_load kernel/kexec_core.c
-> --- a/kernel/kexec_core.c~kexec-add-resriction-on-the-kexec_load
-> +++ a/kernel/kexec_core.c
-> @@ -154,6 +154,7 @@ static struct page *kimage_alloc_page(st
->  int sanity_check_segment_list(struct kimage *image)
->  {
->  	int i;
-> +	unsigned long total_segments = 0;
->  	unsigned long nr_segments = image->nr_segments;
->  
->  	/*
-> @@ -214,6 +215,21 @@ int sanity_check_segment_list(struct kim
->  			return -EINVAL;
->  	}
->  
-> +	/* Verity all segment size donnot exceed the specified size.
-> +	 * if segment size from user space is too large,  a large
-> +	 * amount of time will be wasted when allocating page. so,
-> +	 * softlockup may be come up.
-> +	 */
-> +	for (i = 0; i < nr_segments; i++) {
-> +		if (image->segment[i].memsz > (totalram_pages / 2))
-> +			return -EINVAL;
-> +
-> +		total_segments += image->segment[i].memsz;
-> +	}
-> +
-> +	if (total_segments > (totalram_pages / 2))
-> +		return -EINVAL;
-> +
->  	/*
->  	 * Verify we have good destination addresses.  Normally
->  	 * the caller is responsible for making certain we don't
-> _
->
->
->
->
-> also I tweaked the comments a bit:
->
-> --- a/kernel/kexec_core.c~kexec-add-resriction-on-the-kexec_load-fix
-> +++ a/kernel/kexec_core.c
-> @@ -215,10 +215,10 @@ int sanity_check_segment_list(struct kim
->  			return -EINVAL;
->  	}
->  
-> -	/* Verity all segment size donnot exceed the specified size.
-> -	 * if segment size from user space is too large,  a large
-> -	 * amount of time will be wasted when allocating page. so,
-> -	 * softlockup may be come up.
-> +	/*
-> +	 * Verify that no segment is larger than half of memory.  If a segment
-> +	 * from userspace is too large,  a large amount of time will be wasted
-> +	 * allocating pages, which can cause a soft lockup.
->  	 */
->  	for (i = 0; i < nr_segments; i++) {
->  		if (image->segment[i].memsz > (totalram_pages / 2))
-> _
->
->
-> Eric ack?
->
-> .
->
-  I am so sorry,  I think that page_shift is more suitable than 12.  it should like as follow.
-  if (total_segments > (totalram_pages << PAGE_SHIFT) / 2)
+Hi,
 
+[auto build test WARNING on iommu/next]
+[also build test WARNING on v4.7-rc7 next-20160722]
+[cannot apply to tip/x86/core]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Baoquan-He/Enable-legacy-irq-mode-before-jump-to-kexec-kdump-kernel/20160724-054857
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
+
+
+sparse warnings: (new ones prefixed by >>)
+
+   include/linux/compiler.h:232:8: sparse: attribute 'no_sanitize_address': unknown attribute
+   arch/x86/kvm/lapic.c:186:15: sparse: incompatible types in comparison expression (different address spaces)
+   arch/x86/kvm/lapic.c:963:14: sparse: undefined identifier 'APIC_DM_EXTINT'
+>> arch/x86/kvm/lapic.c:963:14: sparse: incompatible types for 'case' statement
+   arch/x86/kvm/lapic.c:699:15: sparse: incompatible types in comparison expression (different address spaces)
+   arch/x86/kvm/lapic.c:799:15: sparse: incompatible types in comparison expression (different address spaces)
+   arch/x86/kvm/lapic.c:963:14: sparse: Expected constant expression in case statement
+   arch/x86/kvm/lapic.c: In function '__apic_accept_irq':
+   arch/x86/kvm/lapic.c:963:7: error: 'APIC_DM_EXTINT' undeclared (first use in this function)
+     case APIC_DM_EXTINT:
+          ^~~~~~~~~~~~~~
+   arch/x86/kvm/lapic.c:963:7: note: each undeclared identifier is reported only once for each function it appears in
+
+vim +/case +963 arch/x86/kvm/lapic.c
+
+c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  947  				   vcpu->vcpu_id);
+c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  948  		}
+97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  949  		break;
+97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  950  
+97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  951  	case APIC_DM_STARTUP:
+1b10bf31a arch/x86/kvm/lapic.c Jan Kiszka      2008-09-30  952  		apic_debug("SIPI to vcpu %d vector 0x%02x\n",
+c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  953  			   vcpu->vcpu_id, vector);
+6da7e3f64 arch/x86/kvm/lapic.c Gleb Natapov    2009-03-05  954  		result = 1;
+66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  955  		apic->sipi_vector = vector;
+66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  956  		/* make sure sipi_vector is visible for the receiver */
+66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  957  		smp_wmb();
+66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  958  		set_bit(KVM_APIC_SIPI, &apic->pending_events);
+3842d135f arch/x86/kvm/lapic.c Avi Kivity      2010-07-27  959  		kvm_make_request(KVM_REQ_EVENT, vcpu);
+d76901750 arch/x86/kvm/lapic.c Marcelo Tosatti 2008-09-08  960  		kvm_vcpu_kick(vcpu);
+97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  961  		break;
+97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  962  
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26 @963  	case APIC_DM_EXTINT:
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  964  		/*
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  965  		 * Should only be called by kvm_apic_local_deliver() with LVT0,
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  966  		 * before NMI watchdog was enabled. Already handled by
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  967  		 * kvm_apic_accept_pic_intr().
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  968  		 */
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  969  		break;
+23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  970  
+97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  971  	default:
+
+:::::: The code at line 963 was first introduced by commit
+:::::: 23930f9521c9c4d4aa96cdb9d1e1703f3782bb94 KVM: x86: Enable NMI Watchdog via in-kernel PIT source
+
+:::::: TO: Jan Kiszka <jan.kiszka@siemens.com>
+:::::: CC: Avi Kivity <avi@redhat.com>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 _______________________________________________
 kexec mailing list
