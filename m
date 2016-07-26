@@ -1,23 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bS3NH-0004MY-B0
- for kexec@lists.infradead.org; Tue, 26 Jul 2016 14:30:24 +0000
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
- by mx0a-00082601.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u6QES0a3024186
- for <kexec@lists.infradead.org>; Tue, 26 Jul 2016 07:30:00 -0700
-Received: from mail.thefacebook.com ([199.201.64.23])
- by mx0a-00082601.pphosted.com with ESMTP id 24dx653p7c-1
- (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 26 Jul 2016 07:30:00 -0700
-From: Vinnie Magro <vmagro@fb.com>
-Subject: kexec-tools built with musl-libc can't load kernel
-Date: Tue, 26 Jul 2016 14:29:58 +0000
-Message-ID: <DA43C421-4BD8-4202-B7E9-918AF4210E64@fb.com>
-Content-Language: en-US
-Content-ID: <C1C41D08722E1942850A210833930EEF@namprd15.prod.outlook.com>
-MIME-Version: 1.0
+Message-Id: <c4af21ba365767f88a2516719dd0f3b70777b549.1469559530.git.geoff@infradead.org>
+In-Reply-To: <cover.1469559530.git.geoff@infradead.org>
+References: <cover.1469559530.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH v2 1/4] kexec: (bugfix) calc correct end address of memory
+ ranges in device tree
+Date: Tue, 26 Jul 2016 20:18:57 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,25 +14,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello,
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+
+The end address of "reg" attribute in device tree's memory should be
+inclusive.
+
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ kexec/fs2dt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 6ed2399..f00fd98 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -236,7 +236,8 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+ 						    ranges_size*8);
+ 				}
+ 				ranges[rlen++] = cpu_to_be64(loc_base);
+-				ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
++				ranges[rlen++] = cpu_to_be64(loc_end
++								- loc_base + 1);
+ 				rngs_cnt++;
+ 			}
+ 		}
+@@ -350,7 +351,7 @@ static void add_usable_mem_property(int fd, size_t len)
+ 					    ranges_size*sizeof(*ranges));
+ 			}
+ 			ranges[rlen++] = cpu_to_be64(loc_base);
+-			ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
++			ranges[rlen++] = cpu_to_be64(loc_end - loc_base + 1);
+ 		}
+ 	}
  
-I have built kexec-tools with musl-libc (using musl-gcc version 1.1.15), but kexec is unable to load my kernel with the error:
-Overlapping memory segments at 0x40d000
-sort_segments failed
-Nothing has been loaded!
- 
-Building kexec with glibc produces a binary that is able to load the kernel, so the problem is not with the kernel that I am trying to load. However, the binary built with glibc is much larger, so I would prefer to be able to use a smaller libc.
- 
-Has anyone managed to compile a functioning kexec with musl-libc?
- 
-Thanks,
-Vinnie
+-- 
+2.5.0
+
 
 
 _______________________________________________
