@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x231.google.com ([2607:f8b0:400e:c03::231])
+Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bRxIu-0000PZ-Ft
- for kexec@lists.infradead.org; Tue, 26 Jul 2016 08:01:35 +0000
-Received: by mail-pa0-x231.google.com with SMTP id iw10so69643999pac.2
- for <kexec@lists.infradead.org>; Tue, 26 Jul 2016 01:01:08 -0700 (PDT)
+ id 1bRxJ6-0000ZC-MX
+ for kexec@lists.infradead.org; Tue, 26 Jul 2016 08:01:45 +0000
+Received: by mail-pf0-x230.google.com with SMTP id h186so72853106pfg.3
+ for <kexec@lists.infradead.org>; Tue, 26 Jul 2016 01:01:20 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 5/6] arm64: kdump: add DT properties to crash dump kernel's dtb
-Date: Tue, 26 Jul 2016 17:05:24 +0900
-Message-Id: <20160726080525.2539-6-takahiro.akashi@linaro.org>
+Subject: [PATCH 6/6] arm64: kdump: Add support for binary image
+Date: Tue, 26 Jul 2016 17:05:25 +0900
+Message-Id: <20160726080525.2539-7-takahiro.akashi@linaro.org>
 In-Reply-To: <20160726080525.2539-1-takahiro.akashi@linaro.org>
 References: <20160726080525.2539-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,136 +27,62 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-We pass the following properties to crash dump kernel:
-linux,elfcorehdr: elf core header segment,
-		  same as "elfcorehdr=" as on other archs
-linxu,usable-memory-range: usable memory reserved for crash dump kernel
+From: Pratyush Anand <panand@redhat.com>
 
-Then, we are ready to support kdump.
+This patch adds support to use binary image ie arch/arm64/boot/Image
+with kdump.
 
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+[takahiro.akashi@linaro.org: a bit reworked]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/arch/arm64/kexec-arm64.c     | 72 ++++++++++++++++++++++++++++++++++++--
- kexec/arch/arm64/kexec-elf-arm64.c |  5 ---
- 2 files changed, 70 insertions(+), 7 deletions(-)
+ kexec/arch/arm64/kexec-image-arm64.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 22ab098..3de0ead 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -482,8 +482,12 @@ on_success:
- 	return 0;
- }
+diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+index cad7c73..fe1e145 100644
+--- a/kexec/arch/arm64/kexec-image-arm64.c
++++ b/kexec/arch/arm64/kexec-image-arm64.c
+@@ -6,7 +6,9 @@
  
--static int setup_2nd_dtb(char *command_line, struct dtb *dtb_2)
-+static int setup_2nd_dtb(char *command_line, struct dtb *dtb_2, int on_crash)
+ #include <errno.h>
+ 
++#include "crashdump-arm64.h"
+ #include "kexec-arm64.h"
++#include "kexec-syscall.h"
+ 
+ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
  {
-+	char *new_buf;
-+	int new_size;
-+	int nodeoffset;
-+	uint64_t range[2];
- 	int result;
+@@ -32,6 +34,7 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ {
+ 	const struct arm64_image_header *h;
+ 	unsigned long image_base;
++	int result;
  
- 	result = fdt_check_header(dtb_2->buf);
-@@ -495,9 +499,72 @@ static int setup_2nd_dtb(char *command_line, struct dtb *dtb_2)
+ 	h = (const struct arm64_image_header *)(kernel_buf);
  
- 	result = set_bootargs(dtb_2, command_line);
+@@ -47,8 +50,19 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	dbgprintf("%s: PE format:     %s\n", __func__,
+ 		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
  
-+	/* remove those anyway */
-+	nodeoffset = fdt_path_offset(dtb_2->buf, "/chosen");
-+	fdt_delprop(dtb_2->buf, nodeoffset, "linux,crashkernel-base");
-+	fdt_delprop(dtb_2->buf, nodeoffset, "linux,crashkernel-size");
+-	image_base = get_phys_offset() + arm64_mem.text_offset;
+-	
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		result = load_crashdump_segments(info);
 +
-+	if (on_crash) {
-+		nodeoffset = fdt_path_offset(dtb_2->buf, "/chosen");
-+		fdt_delprop(dtb_2->buf, nodeoffset, "linux,elfcorehdr");
-+		fdt_delprop(dtb_2->buf, nodeoffset, "linux,usable-memory-range");
-+		new_size = fdt_totalsize(dtb_2->buf)
-+			+ 2 * (sizeof(struct fdt_property)
-+					+ FDT_TAGALIGN(sizeof(range)))
-+			+ strlen("linux,elfcorehdr") + 1
-+			+ strlen("linux,usable-memory-range") + 1;
-+
-+		new_buf = xmalloc(new_size);
-+		result = fdt_open_into(dtb_2->buf, new_buf, new_size);
 +		if (result) {
-+			dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
-+				fdt_strerror(result));
-+			result = -ENOSPC;
-+			goto on_error;
++			fprintf(stderr,
++				"kexec: load crashdump segments failed.\n");
++			return -1;
 +		}
-+
-+		range[0] = cpu_to_be64(elfcorehdr_mem.start);
-+		range[1] = cpu_to_be64(elfcorehdr_mem.end
-+				- elfcorehdr_mem.start + 1);
-+		nodeoffset = fdt_path_offset(new_buf, "/chosen");
-+		result = fdt_setprop(new_buf, nodeoffset, "linux,elfcorehdr",
-+				(void *)range, sizeof(range));
-+		if (result) {
-+			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-+				fdt_strerror(result));
-+			result = -EINVAL;
-+			goto on_error;
-+		}
-+
-+		range[0] = cpu_to_be64(crash_reserved_mem.start);
-+		range[1] = cpu_to_be64(crash_reserved_mem.end
-+				- crash_reserved_mem.start + 1);
-+		nodeoffset = fdt_path_offset(new_buf, "/chosen");
-+		result = fdt_setprop(new_buf, nodeoffset,
-+				"linux,usable-memory-range",
-+				(void *)range, sizeof(range));
-+		if (result) {
-+			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-+				fdt_strerror(result));
-+			result = -EINVAL;
-+			goto on_error;
-+		}
-+
-+		/* don't free dtb_2->buf which might also be shared by dtb_1 */
-+		dtb_2->buf = new_buf;
-+		dtb_2->size = new_size;
++		image_base = crash_reserved_mem.start + arm64_mem.text_offset;
++	} else {
++		image_base = get_phys_offset() + arm64_mem.text_offset;
 +	}
 +
- 	dump_reservemap(dtb_2);
+ 	add_segment_phys_virt(info, kernel_buf, kernel_size, image_base,
+ 		arm64_mem.image_size, 0);
  
- 	return result;
-+
-+on_error:
-+	fprintf(stderr, "kexec: %s failed.\n", __func__);
-+	if (new_buf)
-+		free(new_buf);
-+
-+	return result;
- }
- 
- static uint64_t read_sink(const char *command_line)
-@@ -581,7 +648,8 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	else if (!result && !arm64_opts.dtb)
- 		dtb_2 = dtb_1;
- 
--	result = setup_2nd_dtb(command_line, &dtb_2);
-+	result = setup_2nd_dtb(command_line, &dtb_2,
-+			info->kexec_flags & KEXEC_ON_CRASH);
- 
- 	if (result)
- 		return result;
-diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
-index 1e5deb4..57bf43b 100644
---- a/kexec/arch/arm64/kexec-elf-arm64.c
-+++ b/kexec/arch/arm64/kexec-elf-arm64.c
-@@ -44,11 +44,6 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	int result;
- 	int i;
- 
--	if (info->kexec_flags & KEXEC_ON_CRASH) {
--		fprintf(stderr, "kexec: kdump not yet supported on arm64\n");
--		return -EINVAL;
--	}
--
- 	result = build_elf_exec_info(kernel_buf, kernel_size, &ehdr, 0);
- 
- 	if (result < 0) {
 -- 
 2.9.0
 
