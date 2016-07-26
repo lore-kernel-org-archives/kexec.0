@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x229.google.com ([2607:f8b0:400e:c00::229])
+Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bRxFC-0004bV-20
- for kexec@lists.infradead.org; Tue, 26 Jul 2016 07:57:59 +0000
-Received: by mail-pf0-x229.google.com with SMTP id p64so72983270pfb.1
- for <kexec@lists.infradead.org>; Tue, 26 Jul 2016 00:57:17 -0700 (PDT)
+ id 1bRxI8-0007qY-CG
+ for kexec@lists.infradead.org; Tue, 26 Jul 2016 08:00:42 +0000
+Received: by mail-pa0-x22b.google.com with SMTP id fi15so69778767pac.1
+ for <kexec@lists.infradead.org>; Tue, 26 Jul 2016 01:00:19 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v23 9/9] Documentation: dt: chosen properties for arm64 kdump
-Date: Tue, 26 Jul 2016 17:02:06 +0900
-Message-Id: <20160726080206.2441-1-takahiro.akashi@linaro.org>
-In-Reply-To: <20160726075659.2290-1-takahiro.akashi@linaro.org>
-References: <20160726075659.2290-1-takahiro.akashi@linaro.org>
+Subject: [PATCH 0/6] (kexec-tools) arm64: add kdump support
+Date: Tue, 26 Jul 2016 17:05:19 +0900
+Message-Id: <20160726080525.2539-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,80 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-From: James Morse <james.morse@arm.com>
+My kernel patches of kdump suport on arm64 are currently under reviews [1].
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,usable-memory-range, and
-	linux,elfcorehdr
-used by arm64 kexec/kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
+This patchset is synced with them (v23) and provides necessary changes for
+kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+v1/1.2 [2].
 
-Signed-off-by: James Morse <james.morse@arm.com>
-[takahiro.akashi@linaro.org:
-    renamed "usable-memory" to "usable-memory-range",
-    added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/445558.html
+[2] http://lists.infradead.org/pipermail/kexec/2016-July/016532.html
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..d7a3a86 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+These properties are set (on PowerPC and arm64) during kdump to tell
-+use-space tools, like kexec-tools, the base address of the crash-dump
-+kernel's reserved area of memory and the size. e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property is set (currently only on arm64) during kdump to tell
-+the crash-dump kernel the base address of its reserved area of memory,
-+and the size. e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+Please note that, if this property is present, any memory regions under
-+"memory" nodes will be ignored.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property is set (currently only on arm64) during kdump to tell
-+the crash-dump kernel the address and size of the elfcorehdr that describes
-+the old kernel's memory as an elf file. This memory must reside within
-+the area described by 'linux,usable-memory-range'. e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
+AKASHI Takahiro (5):
+  arm64: kdump: identify memory regions
+  arm64: kdump: add elf core header segment
+  arm64: kdump: set up kernel image segment
+  arm64: kdump: set up other segments
+  arm64: kdump: add DT properties to crash dump kernel's dtb
+
+Pratyush Anand (1):
+  arm64: kdump: Add support for binary image
+
+ kexec/arch/arm64/Makefile            |   2 +
+ kexec/arch/arm64/crashdump-arm64.c   | 188 ++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h   |  18 +++-
+ kexec/arch/arm64/kexec-arm64.c       |  85 ++++++++++++++--
+ kexec/arch/arm64/kexec-elf-arm64.c   |  23 ++++-
+ kexec/arch/arm64/kexec-image-arm64.c |  18 +++-
+ 6 files changed, 318 insertions(+), 16 deletions(-)
+
 -- 
 2.9.0
 
