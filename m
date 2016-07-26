@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1469570056.2889.60.camel@infradead.org>
-Subject: Re: [PATCH v1.2 3/4] arm64: Add arm64 kexec support
-From: Geoff Levand <geoff@infradead.org>
-Date: Tue, 26 Jul 2016 14:54:16 -0700
-In-Reply-To: <CAB=otbRyTrmVHapv-==2ta_JLy8dqJwVZjDJagQiHRcvKUiVyg@mail.gmail.com>
+Date: Wed, 27 Jul 2016 08:05:27 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v1 0/4] arm64 kexec-tools patches
+Message-ID: <20160726230526.GD28591@verge.net.au>
 References: <cover.1468970114.git.geoff@infradead.org>
- <9ed513fd44a19b2f49b4da99477cedfff7341bf0.1468970114.git.geoff@infradead.org>
- <1469048065.2977.124.camel@infradead.org>
- <CAB=otbSObtEE7n4LjWWZZ0G=oA1Xd5QUmHnX44+uyUiWP4qXpw@mail.gmail.com>
- <1469479817.2889.4.camel@infradead.org>
- <CAB=otbS8Okq+f2SvWkXX1rHO6N+nYTjsF7=Qo9MVU5NSV5Xfsg@mail.gmail.com>
- <20160726081602.GB2363@linaro.org>
- <CAB=otbRyTrmVHapv-==2ta_JLy8dqJwVZjDJagQiHRcvKUiVyg@mail.gmail.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <cover.1468970114.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,15 +19,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ruslan Bilovol <ruslan.bilovol@gmail.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, 2016-07-27 at 00:26 +0300, Ruslan Bilovol wrote:
+Hi Geoff.
 
-> Another question: have you tested it in big endian mode as well?
+On Tue, Jul 19, 2016 at 11:28:13PM +0000, Geoff Levand wrote:
+> This series adds the core support for kexec re-boot on ARM64.
+> 
+> Linux kernel support for kexec reboot [1] has been merged to the ARM64
+> for-next/core branch with the expectation that it will be included in the v4.8
+> stable kernel release.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
 
-Yes, it should work.  Please report any problems.
+There seems to have been quite a bit of discussion of this patchset.
 
--Geoff
+I am of a mind to release kexec-tools v2.0.12-rc1 (and thus v2.0.12)
+without these changes as the v4.7 kernel is already out and that
+is the timing I had in mind for kexec-tools v2.0.12 (the lateness on
+my shoulders).
+
+The implication is the arm64 patches would likely end up in the v2.0.13
+release of kexec-tools which I aim to release around the time of the v4.9
+kernel.
 
 _______________________________________________
 kexec mailing list
