@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f53.google.com ([209.85.218.53])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bST0f-0006o1-R9
- for kexec@lists.infradead.org; Wed, 27 Jul 2016 17:52:46 +0000
-Received: by mail-oi0-f53.google.com with SMTP id l72so28561482oig.2
- for <kexec@lists.infradead.org>; Wed, 27 Jul 2016 10:52:25 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <7514609d50e28f6632e3a265fdd08020c33353b6.1469641659.git.panand@redhat.com>
-References: <7514609d50e28f6632e3a265fdd08020c33353b6.1469641659.git.panand@redhat.com>
-From: Pratyush Anand <panand@redhat.com>
-Date: Wed, 27 Jul 2016 23:22:24 +0530
-Message-ID: <CAHB_GuoySL5Dwns9a5OD8V1t2Eq3o6ZxXBZ5a35MfV216LaDvw@mail.gmail.com>
-Subject: Re: [PATCH] kexec: fix mem_regions_sort()
+Message-ID: <1469643107.2889.65.camel@infradead.org>
+Subject: Re: [PATCH v1 2/4] kexec: Add common device tree routines
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 27 Jul 2016 11:11:47 -0700
+In-Reply-To: <20160722071924.GQ20774@linaro.org>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <8ed220ee82b4819a9107a6ce0f020497d1688c7b.1468970114.git.geoff@infradead.org>
+ <20160722071924.GQ20774@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,41 +20,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>
-Cc: Russell King <rmk@arm.linux.org.uk>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Missed CCing Russell because of --suppress-cc :(
+Hi,
 
-CCing now.
+On Fri, 2016-07-22 at 16:19 +0900, AKASHI Takahiro wrote:
+> On Tue, Jul 19, 2016 at 11:28:13PM +0000, Geoff Levand wrote:
+> > --- /dev/null
+> > +++ b/kexec/dt-ops.c
+> > +int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+> > +> > 	> > const char *prop, const void *value, int value_len)
+> > +{
+> > +> > 	> > int result;
+> > +> > 	> > int nodeoffset;
+> > +> > 	> > void *new_dtb;
+> > +> > 	> > int new_size;
+> > +
+> > +> > 	> > value_len = FDT_TAGALIGN(value_len);
+> > +
+> > +> > 	> > new_size = FDT_TAGALIGN(*dtb_size + fdt_node_len(node)
+> > +> > 	> > 	> > + fdt_prop_len(prop, value_len));
+> 
+> As James pointed out before, this will increase the size of dtb
+> if kexec is executed repeatedly.
 
-On Wed, Jul 27, 2016 at 11:19 PM, Pratyush Anand <panand@redhat.com> wrote:
-> ranges->ranges is  "struct memory_range *", however each element which need
-> to be sorted is of type "struct memory_range". So, correct "size" argument
-> of qsort() as sizeof(*ranges->ranges).
->
-> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> Cc:Russell King <rmk@arm.linux.org.uk>
-> Cc:Simon Horman <horms@verge.net.au>
-> ---
->  kexec/mem_regions.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
-> index e61c07472f1b..50c8abccb93a 100644
-> --- a/kexec/mem_regions.c
-> +++ b/kexec/mem_regions.c
-> @@ -24,7 +24,7 @@ static int mem_range_cmp(const void *a1, const void *a2)
->   */
->  void mem_regions_sort(struct memory_ranges *ranges)
->  {
-> -       qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
-> +       qsort(ranges->ranges, ranges->size, sizeof(*ranges->ranges),
->               mem_range_cmp);
->  }
->
-> --
-> 2.5.5
->
+I will look into this later, as it will take some time to
+do, and I don't think it should hold up merge of the arm64
+support.
+
+> > +> > 	> > new_dtb = malloc(new_size);
+> > +
+> > +> > 	> > if (!new_dtb) {
+> > +> > 	> > 	> > dbgprintf("%s: malloc failed\n", __func__);
+> > +> > 	> > 	> > return -ENOMEM;
+> > +> > 	> > }
+> > +
+> > +> > 	> > result = fdt_open_into(*dtb, new_dtb, new_size);
+> > +
+> > +> > 	> > if (result) {
+> > +> > 	> > 	> > dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
+> > +> > 	> > 	> > 	> > fdt_strerror(result));
+> > +> > 	> > 	> > goto on_error;
+> > +> > 	> > }
+> > +
+> > +> > 	> > nodeoffset = fdt_path_offset(new_dtb, node);
+> > +> > 	
+> > +> > 	> > if (nodeoffset == -FDT_ERR_NOTFOUND) {
+> > +> > 	> > 	> > result = fdt_add_subnode(new_dtb, nodeoffset, node);
+> > +
+> > +> > 	> > 	> > if (result) {
+> > +> > 	> > 	> > 	> > dbgprintf("%s: fdt_add_subnode failed: %s\n", __func__,
+> > +> > 	> > 	> > 	> > 	> > fdt_strerror(result));
+> > +> > 	> > 	> > 	> > goto on_error;
+> > +> > 	> > 	> > }
+> > +> > 	> > } else if (nodeoffset < 0) {
+> > +> > 	> > 	> > dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
+> > +> > 	> > 	> > 	> > fdt_strerror(nodeoffset));
+> > +> > 	> > 	> > goto on_error;
+> > +> > 	> > }
+> > +
+> > +> > 	> > result = fdt_setprop(new_dtb, nodeoffset, prop, value, value_len);
+> > +
+> > +> > 	> > if (result) {
+> > +> > 	> > 	> > dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+> > +> > 	> > 	> > 	> > fdt_strerror(result));
+> > +> > 	> > 	> > goto on_error;
+> > +> > 	> > }
+> > +
+> > +> > 	> > /*
+> > +> > 	> >  * Can't call free on dtb since dtb may have been mmaped by
+> > +> > 	> >  * slurp_file().
+> > +> > 	> >  */
+> > +
+> > +> > 	> > *dtb = new_dtb;
+> > +> > 	> > *dtb_size = new_size;
+> 
+> So you might better call fdt_pack(), which will set "totalsize" of
+> the blob to an appropriate value.
+
+I fixed this.  It is in my master branch now, and will post with v3.
+
+Thanks for the review.
+
+-Geoff
 
 _______________________________________________
 kexec mailing list
