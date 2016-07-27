@@ -1,18 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bSXCc-0001qf-Vx
- for kexec@lists.infradead.org; Wed, 27 Jul 2016 22:21:24 +0000
-Date: Thu, 28 Jul 2016 06:20:58 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 3/3] x86/apic: Clean up the apic delivery mode macro
- definition
-Message-ID: <20160727222058.GA2595@x1.redhat.com>
-References: <1468983483-3952-4-git-send-email-bhe@redhat.com>
- <201607240725.hpXEwlCH%fengguang.wu@intel.com>
+ id 1bSXaB-0001u1-LK
+ for kexec@lists.infradead.org; Wed, 27 Jul 2016 22:45:44 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u6RMiBHE085917
+ for <kexec@lists.infradead.org>; Wed, 27 Jul 2016 18:45:22 -0400
+Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24eauhqgjt-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 27 Jul 2016 18:45:22 -0400
+Received: from localhost
+ by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Wed, 27 Jul 2016 19:45:20 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v1 1/4] kexec: (bugfix) calc correct end address of memory
+ ranges in device tree
+Date: Wed, 27 Jul 2016 19:45:13 -0300
+In-Reply-To: <c4af21ba365767f88a2516719dd0f3b70777b549.1468970114.git.geoff@infradead.org>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <c4af21ba365767f88a2516719dd0f3b70777b549.1468970114.git.geoff@infradead.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <201607240725.hpXEwlCH%fengguang.wu@intel.com>
+Message-Id: <3562841.ROYbCgkeeq@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,88 +38,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kbuild test robot <lkp@intel.com>
-Cc: fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kbuild-all@01.org, hpa@zytor.com, tglx@linutronix.de, weijg.fnst@cn.fujitsu.com, jiang.liu@linux.intel.com, vgoyal@redhat.com, ebiederm@xmission.com
+To: kexec@lists.infradead.org
+Cc: Geoff Levand <geoff@infradead.org>, Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On 07/24/16 at 07:07am, kbuild test robot wrote:
-> Hi,
+Hello,
 
+Am Dienstag, 19 Juli 2016, 23:28:13 schrieb Geoff Levand:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> 
+> The end address of "reg" attribute in device tree's memory should be
+> inclusive.
 
-Sorry, I didn't notice this. And after checking code, APIC_DM_EXTINT
-could be added for kvm on purpose thought it's not defined in Intel Arch
-manual. I am not familiar with KVM, so please drop this patch to avoid
-warning. I will make time to study it later.
+Actually, there's a bug/inconsistency in kexec-tools right now.
 
+crashdump-arm.c expect usablemem_rgns.ranges[i].end to be the last byte in 
+the range, but crashdump-powerpc.c, crashdump-ppc64.c and fs2dt.c expect it 
+to be the first byte after the range.
 
-Thanks
-Baoquan
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-> 
-> [auto build test WARNING on iommu/next]
-> [also build test WARNING on v4.7-rc7 next-20160722]
-> [cannot apply to tip/x86/core]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/Enable-legacy-irq-mode-before-jump-to-kexec-kdump-kernel/20160724-054857
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
-> reproduce:
->         # apt-get install sparse
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF=-D__CHECK_ENDIAN__
-> 
-> 
-> sparse warnings: (new ones prefixed by >>)
-> 
->    include/linux/compiler.h:232:8: sparse: attribute 'no_sanitize_address': unknown attribute
->    arch/x86/kvm/lapic.c:186:15: sparse: incompatible types in comparison expression (different address spaces)
->    arch/x86/kvm/lapic.c:963:14: sparse: undefined identifier 'APIC_DM_EXTINT'
-> >> arch/x86/kvm/lapic.c:963:14: sparse: incompatible types for 'case' statement
->    arch/x86/kvm/lapic.c:699:15: sparse: incompatible types in comparison expression (different address spaces)
->    arch/x86/kvm/lapic.c:799:15: sparse: incompatible types in comparison expression (different address spaces)
->    arch/x86/kvm/lapic.c:963:14: sparse: Expected constant expression in case statement
->    arch/x86/kvm/lapic.c: In function '__apic_accept_irq':
->    arch/x86/kvm/lapic.c:963:7: error: 'APIC_DM_EXTINT' undeclared (first use in this function)
->      case APIC_DM_EXTINT:
->           ^~~~~~~~~~~~~~
->    arch/x86/kvm/lapic.c:963:7: note: each undeclared identifier is reported only once for each function it appears in
-> 
-> vim +/case +963 arch/x86/kvm/lapic.c
-> 
-> c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  947  				   vcpu->vcpu_id);
-> c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  948  		}
-> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  949  		break;
-> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  950  
-> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  951  	case APIC_DM_STARTUP:
-> 1b10bf31a arch/x86/kvm/lapic.c Jan Kiszka      2008-09-30  952  		apic_debug("SIPI to vcpu %d vector 0x%02x\n",
-> c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  953  			   vcpu->vcpu_id, vector);
-> 6da7e3f64 arch/x86/kvm/lapic.c Gleb Natapov    2009-03-05  954  		result = 1;
-> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  955  		apic->sipi_vector = vector;
-> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  956  		/* make sure sipi_vector is visible for the receiver */
-> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  957  		smp_wmb();
-> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  958  		set_bit(KVM_APIC_SIPI, &apic->pending_events);
-> 3842d135f arch/x86/kvm/lapic.c Avi Kivity      2010-07-27  959  		kvm_make_request(KVM_REQ_EVENT, vcpu);
-> d76901750 arch/x86/kvm/lapic.c Marcelo Tosatti 2008-09-08  960  		kvm_vcpu_kick(vcpu);
-> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  961  		break;
-> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  962  
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26 @963  	case APIC_DM_EXTINT:
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  964  		/*
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  965  		 * Should only be called by kvm_apic_local_deliver() with LVT0,
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  966  		 * before NMI watchdog was enabled. Already handled by
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  967  		 * kvm_apic_accept_pic_intr().
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  968  		 */
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  969  		break;
-> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  970  
-> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  971  	default:
-> 
-> :::::: The code at line 963 was first introduced by commit
-> :::::: 23930f9521c9c4d4aa96cdb9d1e1703f3782bb94 KVM: x86: Enable NMI Watchdog via in-kernel PIT source
-> 
-> :::::: TO: Jan Kiszka <jan.kiszka@siemens.com>
-> :::::: CC: Avi Kivity <avi@redhat.com>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 _______________________________________________
 kexec mailing list
