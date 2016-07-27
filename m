@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1469643107.2889.65.camel@infradead.org>
-Subject: Re: [PATCH v1 2/4] kexec: Add common device tree routines
-From: Geoff Levand <geoff@infradead.org>
-Date: Wed, 27 Jul 2016 11:11:47 -0700
-In-Reply-To: <20160722071924.GQ20774@linaro.org>
-References: <cover.1468970114.git.geoff@infradead.org>
- <8ed220ee82b4819a9107a6ce0f020497d1688c7b.1468970114.git.geoff@infradead.org>
- <20160722071924.GQ20774@linaro.org>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bSXCc-0001qf-Vx
+ for kexec@lists.infradead.org; Wed, 27 Jul 2016 22:21:24 +0000
+Date: Thu, 28 Jul 2016 06:20:58 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 3/3] x86/apic: Clean up the apic delivery mode macro
+ definition
+Message-ID: <20160727222058.GA2595@x1.redhat.com>
+References: <1468983483-3952-4-git-send-email-bhe@redhat.com>
+ <201607240725.hpXEwlCH%fengguang.wu@intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <201607240725.hpXEwlCH%fengguang.wu@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,90 +25,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kbuild test robot <lkp@intel.com>
+Cc: fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, kbuild-all@01.org, hpa@zytor.com, tglx@linutronix.de, weijg.fnst@cn.fujitsu.com, jiang.liu@linux.intel.com, vgoyal@redhat.com, ebiederm@xmission.com
 
-Hi,
+On 07/24/16 at 07:07am, kbuild test robot wrote:
+> Hi,
 
-On Fri, 2016-07-22 at 16:19 +0900, AKASHI Takahiro wrote:
-> On Tue, Jul 19, 2016 at 11:28:13PM +0000, Geoff Levand wrote:
-> > --- /dev/null
-> > +++ b/kexec/dt-ops.c
-> > +int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
-> > +> > 	> > const char *prop, const void *value, int value_len)
-> > +{
-> > +> > 	> > int result;
-> > +> > 	> > int nodeoffset;
-> > +> > 	> > void *new_dtb;
-> > +> > 	> > int new_size;
-> > +
-> > +> > 	> > value_len = FDT_TAGALIGN(value_len);
-> > +
-> > +> > 	> > new_size = FDT_TAGALIGN(*dtb_size + fdt_node_len(node)
-> > +> > 	> > 	> > + fdt_prop_len(prop, value_len));
+
+Sorry, I didn't notice this. And after checking code, APIC_DM_EXTINT
+could be added for kvm on purpose thought it's not defined in Intel Arch
+manual. I am not familiar with KVM, so please drop this patch to avoid
+warning. I will make time to study it later.
+
+
+Thanks
+Baoquan
+
 > 
-> As James pointed out before, this will increase the size of dtb
-> if kexec is executed repeatedly.
-
-I will look into this later, as it will take some time to
-do, and I don't think it should hold up merge of the arm64
-support.
-
-> > +> > 	> > new_dtb = malloc(new_size);
-> > +
-> > +> > 	> > if (!new_dtb) {
-> > +> > 	> > 	> > dbgprintf("%s: malloc failed\n", __func__);
-> > +> > 	> > 	> > return -ENOMEM;
-> > +> > 	> > }
-> > +
-> > +> > 	> > result = fdt_open_into(*dtb, new_dtb, new_size);
-> > +
-> > +> > 	> > if (result) {
-> > +> > 	> > 	> > dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
-> > +> > 	> > 	> > 	> > fdt_strerror(result));
-> > +> > 	> > 	> > goto on_error;
-> > +> > 	> > }
-> > +
-> > +> > 	> > nodeoffset = fdt_path_offset(new_dtb, node);
-> > +> > 	
-> > +> > 	> > if (nodeoffset == -FDT_ERR_NOTFOUND) {
-> > +> > 	> > 	> > result = fdt_add_subnode(new_dtb, nodeoffset, node);
-> > +
-> > +> > 	> > 	> > if (result) {
-> > +> > 	> > 	> > 	> > dbgprintf("%s: fdt_add_subnode failed: %s\n", __func__,
-> > +> > 	> > 	> > 	> > 	> > fdt_strerror(result));
-> > +> > 	> > 	> > 	> > goto on_error;
-> > +> > 	> > 	> > }
-> > +> > 	> > } else if (nodeoffset < 0) {
-> > +> > 	> > 	> > dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
-> > +> > 	> > 	> > 	> > fdt_strerror(nodeoffset));
-> > +> > 	> > 	> > goto on_error;
-> > +> > 	> > }
-> > +
-> > +> > 	> > result = fdt_setprop(new_dtb, nodeoffset, prop, value, value_len);
-> > +
-> > +> > 	> > if (result) {
-> > +> > 	> > 	> > dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
-> > +> > 	> > 	> > 	> > fdt_strerror(result));
-> > +> > 	> > 	> > goto on_error;
-> > +> > 	> > }
-> > +
-> > +> > 	> > /*
-> > +> > 	> >  * Can't call free on dtb since dtb may have been mmaped by
-> > +> > 	> >  * slurp_file().
-> > +> > 	> >  */
-> > +
-> > +> > 	> > *dtb = new_dtb;
-> > +> > 	> > *dtb_size = new_size;
+> [auto build test WARNING on iommu/next]
+> [also build test WARNING on v4.7-rc7 next-20160722]
+> [cannot apply to tip/x86/core]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 > 
-> So you might better call fdt_pack(), which will set "totalsize" of
-> the blob to an appropriate value.
-
-I fixed this.  It is in my master branch now, and will post with v3.
-
-Thanks for the review.
-
--Geoff
+> url:    https://github.com/0day-ci/linux/commits/Baoquan-He/Enable-legacy-irq-mode-before-jump-to-kexec-kdump-kernel/20160724-054857
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git next
+> reproduce:
+>         # apt-get install sparse
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF=-D__CHECK_ENDIAN__
+> 
+> 
+> sparse warnings: (new ones prefixed by >>)
+> 
+>    include/linux/compiler.h:232:8: sparse: attribute 'no_sanitize_address': unknown attribute
+>    arch/x86/kvm/lapic.c:186:15: sparse: incompatible types in comparison expression (different address spaces)
+>    arch/x86/kvm/lapic.c:963:14: sparse: undefined identifier 'APIC_DM_EXTINT'
+> >> arch/x86/kvm/lapic.c:963:14: sparse: incompatible types for 'case' statement
+>    arch/x86/kvm/lapic.c:699:15: sparse: incompatible types in comparison expression (different address spaces)
+>    arch/x86/kvm/lapic.c:799:15: sparse: incompatible types in comparison expression (different address spaces)
+>    arch/x86/kvm/lapic.c:963:14: sparse: Expected constant expression in case statement
+>    arch/x86/kvm/lapic.c: In function '__apic_accept_irq':
+>    arch/x86/kvm/lapic.c:963:7: error: 'APIC_DM_EXTINT' undeclared (first use in this function)
+>      case APIC_DM_EXTINT:
+>           ^~~~~~~~~~~~~~
+>    arch/x86/kvm/lapic.c:963:7: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> vim +/case +963 arch/x86/kvm/lapic.c
+> 
+> c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  947  				   vcpu->vcpu_id);
+> c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  948  		}
+> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  949  		break;
+> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  950  
+> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  951  	case APIC_DM_STARTUP:
+> 1b10bf31a arch/x86/kvm/lapic.c Jan Kiszka      2008-09-30  952  		apic_debug("SIPI to vcpu %d vector 0x%02x\n",
+> c5ec15340 drivers/kvm/lapic.c  He, Qing        2007-09-03  953  			   vcpu->vcpu_id, vector);
+> 6da7e3f64 arch/x86/kvm/lapic.c Gleb Natapov    2009-03-05  954  		result = 1;
+> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  955  		apic->sipi_vector = vector;
+> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  956  		/* make sure sipi_vector is visible for the receiver */
+> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  957  		smp_wmb();
+> 66450a21f arch/x86/kvm/lapic.c Jan Kiszka      2013-03-13  958  		set_bit(KVM_APIC_SIPI, &apic->pending_events);
+> 3842d135f arch/x86/kvm/lapic.c Avi Kivity      2010-07-27  959  		kvm_make_request(KVM_REQ_EVENT, vcpu);
+> d76901750 arch/x86/kvm/lapic.c Marcelo Tosatti 2008-09-08  960  		kvm_vcpu_kick(vcpu);
+> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  961  		break;
+> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  962  
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26 @963  	case APIC_DM_EXTINT:
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  964  		/*
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  965  		 * Should only be called by kvm_apic_local_deliver() with LVT0,
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  966  		 * before NMI watchdog was enabled. Already handled by
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  967  		 * kvm_apic_accept_pic_intr().
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  968  		 */
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  969  		break;
+> 23930f952 arch/x86/kvm/lapic.c Jan Kiszka      2008-09-26  970  
+> 97222cc83 drivers/kvm/lapic.c  Eddie Dong      2007-09-12  971  	default:
+> 
+> :::::: The code at line 963 was first introduced by commit
+> :::::: 23930f9521c9c4d4aa96cdb9d1e1703f3782bb94 KVM: x86: Enable NMI Watchdog via in-kernel PIT source
+> 
+> :::::: TO: Jan Kiszka <jan.kiszka@siemens.com>
+> :::::: CC: Avi Kivity <avi@redhat.com>
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 _______________________________________________
 kexec mailing list
