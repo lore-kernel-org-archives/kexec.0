@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 27 Jul 2016 10:09:33 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v23 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20160727150933.GA25732@rob-hp-laptop>
-References: <20160726075659.2290-1-takahiro.akashi@linaro.org>
- <20160726080206.2441-1-takahiro.akashi@linaro.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160726080206.2441-1-takahiro.akashi@linaro.org>
+Received: from mail-qt0-f171.google.com ([209.85.216.171])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bSSy8-0005SR-Np
+ for kexec@lists.infradead.org; Wed, 27 Jul 2016 17:50:09 +0000
+Received: by mail-qt0-f171.google.com with SMTP id u25so33997986qtb.1
+ for <kexec@lists.infradead.org>; Wed, 27 Jul 2016 10:49:48 -0700 (PDT)
+Received: from localhost ([182.64.127.149])
+ by smtp.gmail.com with ESMTPSA id z32sm4870570qtz.0.2016.07.27.10.49.45
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+ Wed, 27 Jul 2016 10:49:46 -0700 (PDT)
+From: Pratyush Anand <panand@redhat.com>
+Subject: [PATCH] kexec: fix mem_regions_sort()
+Date: Wed, 27 Jul 2016 23:19:42 +0530
+Message-Id: <7514609d50e28f6632e3a265fdd08020c33353b6.1469641659.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,102 +22,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, catalin.marinas@arm.com, dyoung@redhat.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, frowand.list@gmail.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Tue, Jul 26, 2016 at 05:02:06PM +0900, AKASHI Takahiro wrote:
-> From: James Morse <james.morse@arm.com>
-> 
-> Add documentation for
-> 	linux,crashkernel-base and crashkernel-size,
-> 	linux,usable-memory-range, and
-> 	linux,elfcorehdr
-> used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> the elfcorehdr's location within it.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> [takahiro.akashi@linaro.org:
->     renamed "usable-memory" to "usable-memory-range",
->     added "linux,crashkernel-base" and "-size" ]
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 6ae9d82..d7a3a86 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
->  book3e) by some versions of kexec-tools to tell the new kernel that it
->  is being booted by kexec, as the booting environment may differ (e.g.
->  a different secondary CPU release mechanism)
-> +
-> +linux,crashkernel-base
-> +linux,crashkernel-size
-> +----------------------
-> +These properties are set (on PowerPC and arm64) during kdump to tell
-> +use-space tools, like kexec-tools, the base address of the crash-dump
+ranges->ranges is  "struct memory_range *", however each element which need
+to be sorted is of type "struct memory_range". So, correct "size" argument
+of qsort() as sizeof(*ranges->ranges).
 
-s/use/user/
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+Cc:Russell King <rmk@arm.linux.org.uk>
+Cc:Simon Horman <horms@verge.net.au>
+---
+ kexec/mem_regions.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ideally, userspace should not care whether this comes from DT, kernel 
-command-line or somewhere else and should be exposed in some source 
-independent way. However, that's not really the problem for the binding.
+diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
+index e61c07472f1b..50c8abccb93a 100644
+--- a/kexec/mem_regions.c
++++ b/kexec/mem_regions.c
+@@ -24,7 +24,7 @@ static int mem_range_cmp(const void *a1, const void *a2)
+  */
+ void mem_regions_sort(struct memory_ranges *ranges)
+ {
+-	qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
++	qsort(ranges->ranges, ranges->size, sizeof(*ranges->ranges),
+ 	      mem_range_cmp);
+ }
+ 
+-- 
+2.5.5
 
-> +kernel's reserved area of memory and the size. e.g.
-> +
-> +/ {
-> +	chosen {
-> +		linux,crashkernel-base = <0x9 0xf0000000>;
-> +		linux,crashkernel-size = <0x0 0x10000000>;
-> +	};
-> +};
-> +
-> +linux,usable-memory-range
-> +-------------------------
-> +
-> +This property is set (currently only on arm64) during kdump to tell
-> +the crash-dump kernel the base address of its reserved area of memory,
-> +and the size. e.g.
-> +
-> +/ {
-> +	chosen {
-> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-
-This is the same range as linux,crashkernel-*, but used by the 2nd 
-kernel? Why not just update the memory node or use command line mem= 
-parameter?
-
-Why has PPC not need this and ARM does? 
-
-> +	};
-> +};
-> +
-> +Please note that, if this property is present, any memory regions under
-> +"memory" nodes will be ignored.
-> +
-> +linux,elfcorehdr
-> +----------------
-> +
-> +This property is set (currently only on arm64) during kdump to tell
-> +the crash-dump kernel the address and size of the elfcorehdr that describes
-> +the old kernel's memory as an elf file. This memory must reside within
-> +the area described by 'linux,usable-memory-range'. e.g.
-> +
-> +/ {
-> +	chosen {
-> +		linux,usable-memory = <0x9 0xf0000000 0x0 0x10000000>;
-> +		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-> +	};
-> +};
-> -- 
-> 2.9.0
-> 
 
 _______________________________________________
 kexec mailing list
