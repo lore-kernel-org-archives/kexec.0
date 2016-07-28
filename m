@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1469727192.16559.1.camel@infradead.org>
-Subject: Re: [PATCH v2 3/4] arm64: Add arm64 kexec support
+Message-ID: <1469729083.16559.26.camel@infradead.org>
+Subject: Re: [PATCH v2 4/4] arm64: Add support for binary image files
 From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 28 Jul 2016 10:33:12 -0700
-In-Reply-To: <20160728041053.GB27150@localhost.localdomain>
+Date: Thu, 28 Jul 2016 11:04:43 -0700
+In-Reply-To: <20160728040125.GA27150@localhost.localdomain>
 References: <cover.1469559530.git.geoff@infradead.org>
- <fbb0f30aa1493b40c53264c9b5ae62b46606bd61.1469559530.git.geoff@infradead.org>
- <20160728041053.GB27150@localhost.localdomain>
+ <f352dcfc827a4cbb3878dd1043877a4154b1bd08.1469559530.git.geoff@infradead.org>
+ <20160728040125.GA27150@localhost.localdomain>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,29 +20,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
+To: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Thu, 2016-07-28 at 09:40 +0530, Pratyush Anand wrote:
+Hi Pratyush,
+
+On Thu, 2016-07-28 at 09:31 +0530, Pratyush Anand wrote:
 > On 26/07/2016:08:18:57 PM, Geoff Levand wrote:
-> > Add kexec reboot support for ARM64 platforms.
-> > 
-> > Signed-off-by: Geoff Levand <geoff@infradead.org>
-> > ---
-> 
-> [...]
-> 
-> > +
-> > +#define OPT_APPEND		((OPT_MAX)+0)
-> > +#define OPT_DTB			((OPT_MAX)+1)
-> > +#define OPT_INITRD		((OPT_MAX)+2)
-> > +#define OPT_REUSE_CMDLINE	((OPT_MAX)+4)
-> 
-> Option count 3 is missing. 
 
-From the recently removed OPT_PORT.
+> You removed page_offset calculation in rework.
+> I am unable to understand that how arm64_mem.page_offset will be filled up now
+> for binary image case.
+> 
+> I think, we still need to keep page_offset user input. 
 
-Thanks for checking.
+The current kernel linker scripts are setup to output virtual
+address values to the vmlinux elf file.  
+
+To load the elf sections of vmlinux using the provided elf
+file loader, elf_exec_load(), we need to convert those elf
+header values to physical addresses since we work with
+physical addresses in the kernel's kimage structure.
+
+That conversion is 
+
+  p = v - page_offset + phys_offset;
+
+We get phys_offset from the memory ranges, and we calculate
+page_offset from the elf header info.
+
+As for the binary image file, we load that with
+add_segment_phys_virt(), which can put the binary data of the
+Image file into memory at a physical address we specify:
+
+  image_base = phys_offset + text_offset.
+
+phys_offset is again from the memory ranges, and text_offset
+from the arm64 image header.
+
+
+> You may take following
+> two patches which does this, or you may leave binary image support patch which I
+> will send after your patches are merged.
+> 
+> https://github.com/pratyushanand/kexec-tools/commit/5b7e49a75d1d6cd4ac846f50ff10275fd54cb545
+
+This one may be useful, for debugging if anything.
+
+> https://github.com/pratyushanand/kexec-tools/commit/a0ce0ce673755c4061c1f081170a3a75dfa1d1fb
+
+We do not need, nor want, a PAGE_OFFSET option.
+
+-Geoff
+
 
 _______________________________________________
 kexec mailing list
