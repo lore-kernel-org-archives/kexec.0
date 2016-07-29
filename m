@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bT3Ay-0000OV-1a
- for kexec@lists.infradead.org; Fri, 29 Jul 2016 08:29:48 +0000
-Date: Fri, 29 Jul 2016 09:27:14 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 1/4] kexec: (bugfix) calc correct end address of
- memory ranges in device tree
-Message-ID: <20160729082714.GA1041@n2100.armlinux.org.uk>
-References: <cover.1468970114.git.geoff@infradead.org>
- <3562841.ROYbCgkeeq@hactar>
- <20160727232331.GY1041@n2100.armlinux.org.uk>
- <1860371.lT9GInp2C3@hactar>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1860371.lT9GInp2C3@hactar>
+In-Reply-To: <20160726080925.GA2363@linaro.org>
+References: <20160726075659.2290-1-takahiro.akashi@linaro.org>
+ <20160726080925.GA2363@linaro.org>
+From: Ruslan Bilovol <ruslan.bilovol@gmail.com>
+Date: Fri, 29 Jul 2016 19:26:03 +0300
+Message-ID: <CAB=otbTODnOwFiLZT7bm1_MLyORQ1cx-gaeg7bm+bReaMRhYwg@mail.gmail.com>
+Subject: Re: [PATCH v23 0/9] arm64: add kdump support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,72 +19,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Geoff Levand <geoff@infradead.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On Thu, Jul 28, 2016 at 08:54:55PM -0300, Thiago Jung Bauermann wrote:
-> Am Donnerstag, 28 Juli 2016, 00:23:31 schrieb Russell King - ARM Linux:
-> > Well, ARM (and the generic code I introduced for mem_ranges) follows
-> > what i386, ia64, mips, s390, and sh all do with struct memory_range
-> > when used for crashdump.
-> > 
-> > It is extremely bad for a project to have a single structure used
-> > inconsistently like this - even with generic helpers, you can't be
-> > sure that the right helpers are used on the right structures, and
-> > it will lead to off-by-one errors all over the place.  Just don't
-> > pull crap like this, it's asking for trouble - settle on one way
-> > and stick to it.
-> 
-> Agreed. Personally, I prefer base address and size because it's unambiguous. 
-> But as long as just one convention is used and the structure and helpers 
-> make it clear which one they expect, it doesn't matter that much.
+Hi,
 
-Indeed.
+On Tue, Jul 26, 2016 at 11:09 AM, AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+> On Tue, Jul 26, 2016 at 04:56:51PM +0900, AKASHI Takahiro wrote:
+>> This patch series adds kdump support on arm64.
+>>
+>> To load a crash-dump kernel to the systems, a series of patches to
+>> kexec-tools, which have not yet been merged upstream, are needed.
+>> Please pick Geoff's kexec patches [1] and my kdump patches [2].
+>>
+>> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+>>   - crash utility (coming v7.1.6 or later) [3]
+>>     (Necessary patches have already been queued in the master.)
+>>
+>> [1]  http://lists.infradead.org/pipermail/kexec/2016-July/016532.html
+>> [2]  TBD
+>
+> See my kexec-tools patches in:
+> http://lists.infradead.org/pipermail/kexec/2016-July/016642.html
 
-> > Given that the majority of architectures treat .end as inclusive, I
-> > think ppc* and fs2dt need to conform to the convention establised by
-> > the other architectures for this structure.
-> 
-> So do valid_memory_range and find_memory_range in kexec/kexec.c, which 
-> assume struct memory_range is end-exclusive too. I'm not sure about 
-> locate_hole, it seems to assume end-inclusive but it does have a line saying 
-> "size = end - start".
+I tired this patch series with mentioned Geoff's kexec patches and
+your kdump patches, but unfortunately it doesn't work for me.
 
-Unfortunately, valid_memory_range() is a mess of doing this one way and
-the other:
+While I can successfully load and kexec the kernel ('kexec --load' +
+'kexec -e'), same combination of kernel+ramdisk+dtb doesn't boot
+if I do kdump combination ('kexec -p' + sysrq crash), there is no
+any output after sysrq crash trace.
+Unfortunately I don't have any debugger here for deep investigation
+of this issue.
 
-        send   = sstart + segment->memsz - 1;
-        return valid_memory_range(info, sstart, send);
-...
-        last = base + memsz -1;
-        if (!valid_memory_range(info, base, last)) {
+Also for some reason in case of 'load and kexec the kernel' it
+takes 1-2 minutes to start booting after I do kexec -e, need to
+investigate it further.
 
-So, callers of valid_memory_range pass a start and inclusive end address
-to valid_memory_range(), and the end address becomes "send" in this
-function.
+Which hardware do you use for validating your patches?
 
-                /* Check to see if we are fully contained */
-                if ((mstart <= sstart) && (mend >= send)) {
+Also, could you please share exact commands you use for
+kdump validation?
 
-So, this also points to an inclusive end address for mend, but the
-preceding line has:
-
-                    && mend == info->memory_range[i+1].start
-
-which doesn't, so this is buggy because it inconsistently treats the
-end address as inclusive vs exclusive.
-
-find_memory_range() looks like end-exclusive.
-
-locate_hole() in one place treats it as end-inclusive while doing the
-merge, and end-exclusive while looking for a hole.
-
-So, these functions are a mess and need fixing.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Best regaerds,
+Ruslan
 
 _______________________________________________
 kexec mailing list
