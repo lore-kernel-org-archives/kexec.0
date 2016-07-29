@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-f53.google.com ([209.85.220.53])
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bT37L-0000Eg-7Y
- for kexec@lists.infradead.org; Fri, 29 Jul 2016 08:26:04 +0000
-Received: by mail-pa0-f53.google.com with SMTP id ks6so29319363pab.0
- for <kexec@lists.infradead.org>; Fri, 29 Jul 2016 01:25:41 -0700 (PDT)
-Date: Fri, 29 Jul 2016 13:55:37 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] kexec: (bugfix) mem_regions_sort()
-Message-ID: <20160729082537.GA28046@localhost.localdomain>
-References: <20160729082323.12253-1-takahiro.akashi@linaro.org>
+ id 1bT3Ay-0000OV-1a
+ for kexec@lists.infradead.org; Fri, 29 Jul 2016 08:29:48 +0000
+Date: Fri, 29 Jul 2016 09:27:14 +0100
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1 1/4] kexec: (bugfix) calc correct end address of
+ memory ranges in device tree
+Message-ID: <20160729082714.GA1041@n2100.armlinux.org.uk>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <3562841.ROYbCgkeeq@hactar>
+ <20160727232331.GY1041@n2100.armlinux.org.uk>
+ <1860371.lT9GInp2C3@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160729082323.12253-1-takahiro.akashi@linaro.org>
+In-Reply-To: <1860371.lT9GInp2C3@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,41 +28,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: rmk@armlinux.org.uk, horms@verge.net.au, kexec@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 
-On 29/07/2016:05:23:23 PM, AKASHI Takahiro wrote:
-> The third argument of qsort() must be the size of each array element.
+On Thu, Jul 28, 2016 at 08:54:55PM -0300, Thiago Jung Bauermann wrote:
+> Am Donnerstag, 28 Juli 2016, 00:23:31 schrieb Russell King - ARM Linux:
+> > Well, ARM (and the generic code I introduced for mem_ranges) follows
+> > what i386, ia64, mips, s390, and sh all do with struct memory_range
+> > when used for crashdump.
+> > 
+> > It is extremely bad for a project to have a single structure used
+> > inconsistently like this - even with generic helpers, you can't be
+> > sure that the right helpers are used on the right structures, and
+> > it will lead to off-by-one errors all over the place.  Just don't
+> > pull crap like this, it's asking for trouble - settle on one way
+> > and stick to it.
+> 
+> Agreed. Personally, I prefer base address and size because it's unambiguous. 
+> But as long as just one convention is used and the structure and helpers 
+> make it clear which one they expect, it doesn't matter that much.
 
-Yes, I had sent it day before yesterday which has been ACKed by Russell.
+Indeed.
 
+> > Given that the majority of architectures treat .end as inclusive, I
+> > think ppc* and fs2dt need to conform to the convention establised by
+> > the other architectures for this structure.
 > 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  kexec/mem_regions.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kexec/mem_regions.c b/kexec/mem_regions.c
-> index e61c074..a8cb510 100644
-> --- a/kexec/mem_regions.c
-> +++ b/kexec/mem_regions.c
-> @@ -24,7 +24,7 @@ static int mem_range_cmp(const void *a1, const void *a2)
->   */
->  void mem_regions_sort(struct memory_ranges *ranges)
->  {
-> -	qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges),
-> +	qsort(ranges->ranges, ranges->size, sizeof(ranges->ranges[0]),
->  	      mem_range_cmp);
->  }
->  
-> -- 
-> 2.9.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> So do valid_memory_range and find_memory_range in kexec/kexec.c, which 
+> assume struct memory_range is end-exclusive too. I'm not sure about 
+> locate_hole, it seems to assume end-inclusive but it does have a line saying 
+> "size = end - start".
+
+Unfortunately, valid_memory_range() is a mess of doing this one way and
+the other:
+
+        send   = sstart + segment->memsz - 1;
+        return valid_memory_range(info, sstart, send);
+...
+        last = base + memsz -1;
+        if (!valid_memory_range(info, base, last)) {
+
+So, callers of valid_memory_range pass a start and inclusive end address
+to valid_memory_range(), and the end address becomes "send" in this
+function.
+
+                /* Check to see if we are fully contained */
+                if ((mstart <= sstart) && (mend >= send)) {
+
+So, this also points to an inclusive end address for mend, but the
+preceding line has:
+
+                    && mend == info->memory_range[i+1].start
+
+which doesn't, so this is buggy because it inconsistently treats the
+end address as inclusive vs exclusive.
+
+find_memory_range() looks like end-exclusive.
+
+locate_hole() in one place treats it as end-inclusive while doing the
+merge, and end-exclusive while looking for a hole.
+
+So, these functions are a mess and need fixing.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
