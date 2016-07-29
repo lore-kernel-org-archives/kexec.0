@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pandora.armlinux.org.uk
- ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bTBWP-00075s-Oc
- for kexec@lists.infradead.org; Fri, 29 Jul 2016 17:24:30 +0000
-Date: Fri, 29 Jul 2016 18:23:56 +0100
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 1/4] kexec: (bugfix) calc correct end address of
- memory ranges in device tree
-Message-ID: <20160729172356.GD1041@n2100.armlinux.org.uk>
-References: <cover.1468970114.git.geoff@infradead.org>
- <3562841.ROYbCgkeeq@hactar>
- <20160727232331.GY1041@n2100.armlinux.org.uk>
- <1860371.lT9GInp2C3@hactar>
- <20160729082714.GA1041@n2100.armlinux.org.uk>
- <1469812346.16559.40.camel@infradead.org>
+ id 1bTGkL-0006c2-V6
+ for kexec@lists.infradead.org; Fri, 29 Jul 2016 22:59:14 +0000
+Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
+ start address
+References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
+ <1461715120.27026.4.camel@infradead.org>
+ <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
+ <1465576876.3105.54.camel@infradead.org>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
+Date: Fri, 29 Jul 2016 16:58:50 -0600
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1469812346.16559.40.camel@infradead.org>
+In-Reply-To: <1465576876.3105.54.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,27 +22,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-arm-kernel@lists.infradead.org
+To: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org
+Cc: timur@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org
 
-On Fri, Jul 29, 2016 at 10:12:26AM -0700, Geoff Levand wrote:
-> On Fri, 2016-07-29 at 09:27 +0100, Russell King - ARM Linux wrote:
-> 
-> > So, these functions are a mess and need fixing.
-> 
-> Since this change isn't really related to arm64 support, I'll
-> drop this patch from my series.
+Hi Geoff,
+In our setup we cannot place the kernel starting at 0 address. So, it it 
+placed at the first valid aligned address after placing the reserved 
+regions in memory.
 
-Do you have a case which triggers bugs in this code?
+The code from the change (https://patchwork.kernel.org/patch/8325221/) 
+adds the reserved regions to iomem ranges. So, when the kexec tool is 
+run it picks up the first reserved region as the start address for 
+physical ram. When the kernel is loaded at this address, it fails to boot.
+
+So, I have put in a filter in the code that would pick up the right 
+address of the primary kernel after this change was introduced.
+Thanks,
+Sameer
+
+On 6/10/2016 10:41 AM, Geoff Levand wrote:
+> Hi Sameer,
+>
+>>>> On Tue, 2016-04-26 at 16:14 -0600, Sameer Goel wrote:
+>>>>> Starting 4.6-rc4 the kernel memblock start is rounded down to a desirable
+>>>>> alignment. So, the kernel can see reserved memory regions before the kernel
+>>>>> start address in the iomem query.
+>>>>> Need to make sure that the right kernel start address is picked from the iomem
+>>>>> query.
+>>>>> ---
+>
+> It is still in question whether or not your's is the correct
+> fix.  Could you provide a test case that hits this problem
+> so we can work on the solution?
+>
+> Thanks.
+>
+> -Geoff
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
