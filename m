@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bTGkL-0006c2-V6
- for kexec@lists.infradead.org; Fri, 29 Jul 2016 22:59:14 +0000
-Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
- start address
-References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
- <1461715120.27026.4.camel@infradead.org>
- <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
- <1465576876.3105.54.camel@infradead.org>
-From: "Goel, Sameer" <sgoel@codeaurora.org>
-Message-ID: <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
-Date: Fri, 29 Jul 2016 16:58:50 -0600
+ id 1bTIj5-0005bg-3I
+ for kexec@lists.infradead.org; Sat, 30 Jul 2016 01:06:03 +0000
+Date: Sat, 30 Jul 2016 09:05:38 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] makedumpfile: Add more descriptions of multi-threads
+ feature
+Message-ID: <20160730010538.GA2583@x1.redhat.com>
+References: <1469763242-2221-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <1465576876.3105.54.camel@infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1469763242-2221-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,58 +20,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org
-Cc: timur@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org
+To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Cc: dyoung@redhat.com, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com
 
-Hi Geoff,
-In our setup we cannot place the kernel starting at 0 address. So, it it 
-placed at the first valid aligned address after placing the reserved 
-regions in memory.
+On 07/29/16 at 11:34am, Zhou Wenjian wrote:
+> It will have a bad performance if the threads number is larger than
+> the usable cpu number. So we should remind user of it.
+> 
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
 
-The code from the change (https://patchwork.kernel.org/patch/8325221/) 
-adds the reserved regions to iomem ranges. So, when the kexec tool is 
-run it picks up the first reserved region as the start address for 
-physical ram. When the kernel is loaded at this address, it fails to boot.
+It makes sense to tell people who use option "-num-threads".
+Ack it.
 
-So, I have put in a filter in the code that would pick up the right 
-address of the primary kernel after this change was introduced.
-Thanks,
-Sameer
+Acked-by: Baoquan He <bhe@redhat.com>
 
-On 6/10/2016 10:41 AM, Geoff Levand wrote:
-> Hi Sameer,
->
->>>> On Tue, 2016-04-26 at 16:14 -0600, Sameer Goel wrote:
->>>>> Starting 4.6-rc4 the kernel memblock start is rounded down to a desirable
->>>>> alignment. So, the kernel can see reserved memory regions before the kernel
->>>>> start address in the iomem query.
->>>>> Need to make sure that the right kernel start address is picked from the iomem
->>>>> query.
->>>>> ---
->
-> It is still in question whether or not your's is the correct
-> fix.  Could you provide a test case that hits this problem
-> so we can work on the solution?
->
-> Thanks.
->
-> -Geoff
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> ---
+>  makedumpfile.8 | 2 ++
+>  print_info.c   | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/makedumpfile.8 b/makedumpfile.8
+> index 3b6f7e2..f74abea 100644
+> --- a/makedumpfile.8
+> +++ b/makedumpfile.8
+> @@ -376,6 +376,8 @@ the kdump\-compressed format.
+>  \fB\-\-num\-threads\fR \fITHREADNUM\fR
+>  Using multiple threads to read and compress data of each page in parallel.
+>  And it will reduces time for saving \fIDUMPFILE\fR.
+> +Note that if the usable cpu number is less than the thread number, it may
+> +lead to great performance degradation.
+>  This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
+>  format from \fIVMCORE\fR in kdump\-compressed format or elf format.
+>  .br
+> diff --git a/print_info.c b/print_info.c
+> index 1a9f70c..2fbfb12 100644
+> --- a/print_info.c
+> +++ b/print_info.c
+> @@ -200,6 +200,8 @@ print_usage(void)
+>  	MSG("  [--num-threads THREADNUM]:\n");
+>  	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
+>  	MSG("      And it will reduces time for saving DUMPFILE.\n");
+> +	MSG("      Note that if the usable cpu number is less than the thread number, it may\n");
+> +	MSG("      lead to great performance degradation.\n");
+>  	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
+>  	MSG("      VMCORE in kdump-compressed format or elf format.\n");
+>  	MSG("\n");
+> -- 
+> 1.8.3.1
+> 
+> 
+> 
 
 _______________________________________________
 kexec mailing list
