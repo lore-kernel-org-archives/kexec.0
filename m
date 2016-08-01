@@ -1,19 +1,17 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from prv-mh.provo.novell.com ([137.65.248.74])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUBod-0007em-Qw
- for kexec@lists.infradead.org; Mon, 01 Aug 2016 11:55:28 +0000
-Message-Id: <579F54B502000078001013F1@prv-mh.provo.novell.com>
-Date: Mon, 01 Aug 2016 05:55:01 -0600
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCH 2/2] Allow kdump with
- crash_kexec_post_notifiers
-References: <20160713121950.14969.78606.stgit@hananiah.suse.cz>
- <20160713122000.14969.99963.stgit@hananiah.suse.cz>
- <578639AE.10500@citrix.com>
-In-Reply-To: <578639AE.10500@citrix.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+ id 1bUGvZ-0002kj-Tl
+ for kexec@lists.infradead.org; Mon, 01 Aug 2016 17:22:59 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1469501995-2991-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <1470033660.7811.99.camel@localhost>
+Date: Mon, 01 Aug 2016 12:09:18 -0500
+In-Reply-To: <1470033660.7811.99.camel@localhost> (Jiangang Wei's message of
+ "Mon, 1 Aug 2016 06:44:03 +0000")
+Message-ID: <87twf4xvpd.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2 0/3] Fix dump-capture kernel hangs with notsc
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,26 +23,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: David Vrabel <david.vrabel@citrix.com>, Petr Tesarik <PTesarik@suse.com>
-Cc: Juergen Gross <JGross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, "maintainer:X86 ARCHITECTURE 32-BIT AND64-BIT" <x86@kernel.org>, "open list:KEXEC" <kexec@lists.infradead.org>, JoshTriplett <josh@joshtriplett.org>, open list <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H.Peter Anvin" <hpa@zytor.com>, "moderated list:XEN HYPERVISOR INTERFACE" <xen-devel@lists.xenproject.org>, ThomasGleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "xpang@redhat.com" <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "kernel@kyup.com" <kernel@kyup.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
->>> On 13.07.16 at 14:53, <david.vrabel@citrix.com> wrote:
-> On 13/07/16 13:20, Petr Tesarik wrote:
->> If a crash kernel is loaded, do not crash the running domain. This is
->> needed if the kernel is loaded with crash_kexec_post_notifiers, because
->> panic notifiers are run before __crash_kexec() in that case, and this
->> Xen hook prevents its being called later.
-> 
-> Prioritising the in-kernel kexec image over the hypervisor one seems
-> sensible behaviour to me.
+"Wei, Jiangang" <weijg.fnst@cn.fujitsu.com> writes:
 
-For HVM guests certainly; does loading of an in-kernel crash kernel
-properly fail for PV guests (and namely PV Dom0), or does such a
-setup work nowadays?
+> Ping ...
+> May I ask for some community attention to this series?
+> I purpose is fixing  the dump-capture kernel hangs in
+> calibrate_delay_converge() while specifying notsc.
 
-Jan
+Did you not see my reply to patch 3/3?
 
+The short version of my feedback is that you seem to be fixing a case
+that should not exist.  So the good fix is to skip completely past
+virtual wire mode and into full apic mode as soon as possible.
+
+For a subset of cases the code already supports that.
+
+Eric
 
 _______________________________________________
 kexec mailing list
