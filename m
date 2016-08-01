@@ -1,16 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1470079910.16559.49.camel@infradead.org>
-Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
- start address
-From: Geoff Levand <geoff@infradead.org>
-Date: Mon, 01 Aug 2016 12:31:50 -0700
-In-Reply-To: <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
-References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
- <1461715120.27026.4.camel@infradead.org>
- <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
- <1465576876.3105.54.camel@infradead.org>
- <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
-Mime-Version: 1.0
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bUMwj-0007oa-Ra
+ for kexec@lists.infradead.org; Mon, 01 Aug 2016 23:48:34 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u71NiPaT037124
+ for <kexec@lists.infradead.org>; Mon, 1 Aug 2016 19:48:12 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24gpcwgebx-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 01 Aug 2016 19:48:11 -0400
+Received: from localhost
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 1 Aug 2016 20:48:09 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id 3AE5A352005F
+ for <kexec@lists.infradead.org>; Mon,  1 Aug 2016 19:47:47 -0400 (EDT)
+Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u71Nm6Kg21496290
+ for <kexec@lists.infradead.org>; Mon, 1 Aug 2016 20:48:06 -0300
+Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
+ by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u71Nm6V1000322
+ for <kexec@lists.infradead.org>; Mon, 1 Aug 2016 20:48:06 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 0/9] kexec_file_load implementation for PowerPC
+Date: Mon, 01 Aug 2016 20:48:05 -0300
+In-Reply-To: <1467908615-18952-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1467908615-18952-1-git-send-email-bauerman@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Message-Id: <1610701.WIqt6fioh4@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +47,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Goel, Sameer" <sgoel@codeaurora.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org, shankerd@codeaurora.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On Fri, 2016-07-29 at 16:58 -0600, Goel, Sameer wrote:
-> In our setup we cannot place the kernel starting at 0 address. So, it it 
-> placed at the first valid aligned address after placing the reserved 
-> regions in memory.
-> 
-> The code from the change (https://patchwork.kernel.org/patch/8325221/) 
-> adds the reserved regions to iomem ranges. So, when the kexec tool is 
-> run it picks up the first reserved region as the start address for 
-> physical ram. When the kernel is loaded at this address, it fails to boot.
-> 
-> So, I have put in a filter in the code that would pick up the right 
-> address of the primary kernel after this change was introduced.
-> Thanks,
-> Sameer
+Am Donnerstag, 07 Juli 2016, 13:23:26 schrieb Thiago Jung Bauermann:
+> Note: We are currently discussing whether we need a new syscall so that
+> userspace can provide a custom device tree for the new kernel. Even if
+> that ends up being the way forward, it would affect only patches 7 and 8,
+> and even in those patches a significant part of the code would stay
+> the same. Therefore, it's still important for me to get feedback on
+> this series.
 
+The discussion about how to pass device tree nodes/properties via 
+kexec_file_load seems a bit stuck at the moment. Since I'm targeting kernel 
+4.9 for this patch series, and considering that this code is functional and 
+useful as it is, I'd like to keep the process of upstreaming it in motion.
 
-Your patch no longer applies.  Please rebase it to my
-for-merge-arm64-v2 branch and re-post.
+Ping?
 
--Geoff
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
