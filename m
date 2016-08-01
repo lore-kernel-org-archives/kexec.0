@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bTQxA-0006Y3-8H
- for kexec@lists.infradead.org; Sat, 30 Jul 2016 09:53:09 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: Add more descriptions of multi-threads
- feature
-Date: Sat, 30 Jul 2016 09:49:50 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E59336@BPXM01GP.gisp.nec.co.jp>
-References: <1469763242-2221-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160730010538.GA2583@x1.redhat.com>
-In-Reply-To: <20160730010538.GA2583@x1.redhat.com>
-Content-Language: ja-JP
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bU13S-0003mO-13
+ for kexec@lists.infradead.org; Mon, 01 Aug 2016 00:26:04 +0000
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v2] Documentation: kdump: add description of bringing up SMP
+ dump-capture kernel
+Date: Mon, 1 Aug 2016 08:23:08 +0800
+Message-ID: <1470010988-18050-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,63 +21,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "d.hatayama@jp.fujitsu.com" <d.hatayama@jp.fujitsu.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, bhe@redhat.com
 
-Hello, 
+v1->v2: change nr_cpus to maxcpus
 
->On 07/29/16 at 11:34am, Zhou Wenjian wrote:
->> It will have a bad performance if the threads number is larger than
->> the usable cpu number. So we should remind user of it.
->>
->> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
->
->It makes sense to tell people who use option "-num-threads".
->Ack it.
->
->Acked-by: Baoquan He <bhe@redhat.com>
+SMP dump-capture kernel is useful to improve the performance of kdump in
+some cases. So add the description of bringing up SMP dump-capture kernel.
 
-Looks good to me, I'll merge this into v1.6.1.
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+---
+ Documentation/kdump/kdump.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks,
-Atsushi Kumagai
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 88ff63d..c5762b7 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -394,6 +394,12 @@ Notes on loading the dump-capture kernel:
+   dump. Hence generally it is useful either to build a UP dump-capture
+   kernel or specify maxcpus=1 option while loading dump-capture kernel.
+ 
++* We should bring up a SMP dump-capture kernel if we intend to use multi-threads
++  programs with it, such as parallel dump feature of makedumpfile. Otherwise,
++  the multi-threads program may have a great performance degradation.
++  To bring up a SMP dump-capture kernel, we should specify maxcpus=[X] and
++  disable_cpu_apic=[Y] options while loading it.
++
+ * For s390x there are two kdump modes: If a ELF header is specified with
+   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
+   is done on all other architectures. If no elfcorehdr= kernel parameter is
+-- 
+1.8.3.1
 
->> ---
->>  makedumpfile.8 | 2 ++
->>  print_info.c   | 2 ++
->>  2 files changed, 4 insertions(+)
->>
->> diff --git a/makedumpfile.8 b/makedumpfile.8
->> index 3b6f7e2..f74abea 100644
->> --- a/makedumpfile.8
->> +++ b/makedumpfile.8
->> @@ -376,6 +376,8 @@ the kdump\-compressed format.
->>  \fB\-\-num\-threads\fR \fITHREADNUM\fR
->>  Using multiple threads to read and compress data of each page in parallel.
->>  And it will reduces time for saving \fIDUMPFILE\fR.
->> +Note that if the usable cpu number is less than the thread number, it may
->> +lead to great performance degradation.
->>  This feature only supports creating \fIDUMPFILE\fR in kdump\-comressed
->>  format from \fIVMCORE\fR in kdump\-compressed format or elf format.
->>  .br
->> diff --git a/print_info.c b/print_info.c
->> index 1a9f70c..2fbfb12 100644
->> --- a/print_info.c
->> +++ b/print_info.c
->> @@ -200,6 +200,8 @@ print_usage(void)
->>  	MSG("  [--num-threads THREADNUM]:\n");
->>  	MSG("      Using multiple threads to read and compress data of each page in parallel.\n");
->>  	MSG("      And it will reduces time for saving DUMPFILE.\n");
->> +	MSG("      Note that if the usable cpu number is less than the thread number, it may\n");
->> +	MSG("      lead to great performance degradation.\n");
->>  	MSG("      This feature only supports creating DUMPFILE in kdump-comressed format from\n");
->>  	MSG("      VMCORE in kdump-compressed format or elf format.\n");
->>  	MSG("\n");
->> --
->> 1.8.3.1
->>
->>
->>
+
+
 
 _______________________________________________
 kexec mailing list
