@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUaOi-0003pb-6T
- for kexec@lists.infradead.org; Tue, 02 Aug 2016 14:10:24 +0000
-Date: Tue, 2 Aug 2016 22:09:55 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] Documentation: kdump: add description of bringing up
- SMP dump-capture kernel
-Message-ID: <20160802140955.GB3663@x1.redhat.com>
-References: <1470010988-18050-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160802074602.GA3663@x1.redhat.com>
- <57A05E7D.90101@cn.fujitsu.com>
+ id 1bUaaG-0001VI-WC
+ for kexec@lists.infradead.org; Tue, 02 Aug 2016 14:22:20 +0000
+Date: Tue, 2 Aug 2016 22:21:52 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
+Subject: Re: [PATCH v2 0/3] Fix dump-capture kernel hangs with notsc
+Message-ID: <20160802142152.GC3663@x1.redhat.com>
+References: <1469501995-2991-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <1470033660.7811.99.camel@localhost>
+ <87twf4xvpd.fsf@x220.int.ebiederm.org>
+ <1470123720.2274.53.camel@localhost>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <57A05E7D.90101@cn.fujitsu.com>
+In-Reply-To: <1470123720.2274.53.camel@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,55 +22,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
-Cc: dyoung@redhat.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Cc: "xpang@redhat.com" <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cao,
+ Jin" <caoj.fnst@cn.fujitsu.com>, "mingo@redhat.com" <mingo@redhat.com>, "kernel@kyup.com" <kernel@kyup.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "hpa@zytor.com" <hpa@zytor.com>, "Izumi, Taku" <izumi.taku@jp.fujitsu.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-T24gMDgvMDIvMTYgYXQgMDQ6NDlwbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
-PiBIaSBCYW9xdWFuLAo+IAo+IE9uIDA4LzAyLzIwMTYgMDM6NDYgUE0sIEJhb3F1YW4gSGUgd3Jv
-dGU6Cj4gPkhpIFdlbmppYW4sCj4gPgo+ID5PbiAwOC8wMS8xNiBhdCAwODoyM2FtLCBaaG91IFdl
-bmppYW4gd3JvdGU6Cj4gPj52MS0+djI6IGNoYW5nZSBucl9jcHVzIHRvIG1heGNwdXMKPiA+Pgo+
-ID4+U01QIGR1bXAtY2FwdHVyZSBrZXJuZWwgaXMgdXNlZnVsIHRvIGltcHJvdmUgdGhlIHBlcmZv
-cm1hbmNlIG9mIGtkdW1wIGluCj4gPj5zb21lIGNhc2VzLiBTbyBhZGQgdGhlIGRlc2NyaXB0aW9u
-IG9mIGJyaW5naW5nIHVwIFNNUCBkdW1wLWNhcHR1cmUga2VybmVsLgo+ID4+Cj4gPj5TaWduZWQt
-b2ZmLWJ5OiBaaG91IFdlbmppYW4gPHpob3V3ai1mbnN0QGNuLmZ1aml0c3UuY29tPgo+ID4KPiA+
-RGlzY3Vzc2VkIHdpdGggcGVvcGxlLCBpdCBjb3VsZCBiZSBiZXR0ZXIgdG8gYWRqdXN0IHRoZQo+
-ID5kZXNjcmlwdGlvbiBhYm91dCBucl9jcHVzIGFuZCBtYXhjcHVzIHBhcnQuIEkgdGhpbmsgeW91
-IGNhbiBzdGlsbAo+ID5kZXNjcmliZSBucl9jcHVzL21heGNwdXMgaW4gcGF0Y2ggMS8yLCBhbmQg
-a2VlcCBwYXJhbGxlbCBkdW1waW5nIHBhcnQgaW4KPiA+Mi8yLgo+ID4KPiA+T3JpZ2luYWxseSBt
-YXhjcHVzPTEgaXMgdXNlZCBmb3IgYWxsIEFSQ0hlcy4gTGF0ZXIgcGVvcGxlIGZvdW5kCj4gPm5y
-X2NwdXM9MSBpcyBiZXR0ZXIgc2luY2UgbnJfY3B1cyBkZWNpZGVzIHRoZSBudW1iZXIgb2YgcG9z
-c2libGUgY3B1Cj4gPndoaWxlIG1heGNwdXMgZGVjaWRlcyB0aGUgbWF4IHdvcmtpbmcgY3B1IGFm
-dGVyIHN5c3RlbSBib290LiBTbyBucl9jcHVzCj4gPmNhbiBzYXZlIG1lbW9yeSBiZWNhdXNlIHBl
-cmNwdSB3aWxsIHByZS1hbGxvY2F0ZSBtZW1vcnkgZm9yIGVhY2gKPiA+cG9zc2libGUgY3B1IGZv
-ciBob3RwbHVnLiBTbyBvbiB4ODYgbnJfY3B1cyBpcyB1c2VkIGJlY2F1c2UgbXVjaCBtZW1vcnkK
-PiA+Y2FuIGJlIHNhdmVkIGlmIHBvc3NpYmxlIGNwdSBudW1iZXIgaXMgdmVyeSBsYXJnZS4KPiA+
-Cj4gPlNvIHlvdSBjYW4gbWVudGlvbiB0aGF0IGJvdGggbWF4Y3B1cyBhbmQgbnJfY3B1cyBjYW4g
-YmUgdXNlZCBidXQgbnJfY3B1cwo+ID5oYXMgYWR2YW50YWdlIGlmIGl0IGhhcyBiZWVuIGltcGxl
-bWVudGVkIGluIHNvbWUgQVJDSGVzIGxpa2UgeDg2XzY0LiBBbmQKPiA+SSBndWVzcyB5b3UgbXVz
-aCBoYXZlIHRlc3RlZCBwYXJhbGxlbCBkdW1waW5nIGZlYXR1cmUgd2l0aCBucl9jcHVzCj4gPnNw
-ZWNpZmllZCwgaXQgbWFrZXMgc2Vuc2UgdG8gdGVsbCBwZW9wbGUgd2l0aCB0aGUgcmVhbCBzaXR1
-YXRpb24uCj4gPgo+IAo+IEkgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIGRlc2NyaWJlIHRoZSBkaWZm
-ZXJlbmNlIGluIHNvbWV3aGVyZSBlbHNlLgo+IE1heWJlLCBpdCdzIGEgZ29vZCBjaG9pY2Ugd2hp
-Y2gganVzdCByZXBsYWNlIG1heGNwdXMgYnkgbWF4Y3B1cy9ucl9jcHVzLgo+IFRoZW4gdXNlciBj
-YW4gY2hvb3NlIG1heGNwdXMgb3IgbnJfY3B1cy4KPiBXaGF0IGRvIHlvdSB0aGluayBhYm91dCBp
-dD8KClB1dHRpbmcgaXQgaW4ga2R1bXAudHh0IGNvdWxkIGJlIGJldHRlci4gbnJfY3B1cy9tYXhj
-cHVzIGFyZSBub3JtYWwKa2VybmVsIG9wdGlvbnMsIHRoZSByZWFzb24gd2UgbWVudGlvbmVkIHRo
-ZW0gaGVyZSBpcyBjcmFzaGtlcm5lbCBtZW1vcnkKaXMgdXN1YWxseSBsaW1pdGVkLCB3ZSBoYXZl
-IHRvIHRyeSBvdXIgYmVzdCB0byBzYXZlIG1lbW9yeS4gU28gaWYKbnJfY3B1cyBpcyBhdmFpbGFi
-bGUgb24gc29tZSBBUkNIZXMsIHdlIHNob3VsZCB1c2UgaXQuIE9uIHg4NiBucl9jcHVzPTEKaGFz
-IGJlZW4gdGFrZW4gZm9yIGtkdW1wIGtlcm5lbCBmb3IgYSB2ZXJ5IGxvbmcgdGltZS4gSSB0aGlu
-ayBsZXR0aW5nCnBlb3BsZSBrbm93IGJlbG93IHRoaW5ncyB3b3VsZCBiZSBnb29kOgoKfn5+fn5+
-fn5+fgpGaXJzbHR5IGJvdGggbWF4Y3B1cyBhbmQgbnJfY3B1cyBjYW4gYmUgdXNlZCBmb3Iga2R1
-bXAga2VybmVsIHRvIHNwZWNpZnkKbnVtYmVyIG9mIGFsbG93ZWQgY3B1LgoKbWF4Y3B1cyBvbmx5
-IHNwZWNpZnkgdGhlIG51bWJlciBvZiBhdmFpbGFibGUgY3B1LCB3aGlsZSBucl9jcHVzIHdpbGwK
-c3BlY2lmeSB0aGUgbnVtYmVyIG9mIHBvc3NpYmxlIGNwdSB3aGljaCBpcyBuZWNlc3NhcnkgZm9y
-IGhvdHBsdWcuCm5yX2NwdXMgY2FuIGJlIHVzZWQgdG8gbGltaXQgdGhlIGFtb3VudCBvZiBwZXJj
-cHUgbWVtb3J5IHByZS1hbGxvY2F0aW9uLgpBbmQgbm93IHlvdSBqdXN0IHRlc3QgcGFyYWxsZWwg
-ZHVtcGluZyBmZWF0dXJlIG9uIHg4Niwgb3IgbW9yZQpzcGVjaWZpY2FsbHkgb24geDg2XzY0Lgp+
-fn5+fn5+fn5+fgoKVGhhbmtzCkJhb3F1YW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 08/02/16 at 07:45am, Wei, Jiangang wrote:
+> Hi Eric,
+> 
+> Thanks for your reply firstly.
+> 
+> On Mon, 2016-08-01 at 12:09 -0500, Eric W. Biederman wrote:
+> > "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com> writes:
+> > 
+> > > Ping ...
+> > > May I ask for some community attention to this series?
+> > > I purpose is fixing  the dump-capture kernel hangs in
+> > > calibrate_delay_converge() while specifying notsc.
+> > 
+> > Did you not see my reply to patch 3/3?
+> 
+> Yes, I read your email and made a reply
+> (https://lkml.org/lkml/2016/7/26/112) . I put forward several questions
+> in that letter, but no feedback...
+> 
+> > 
+> > The short version of my feedback is that you seem to be fixing a case
+> > that should not exist.  So the good fix is to skip completely past
+> > virtual wire mode and into full apic mode as soon as possible.
+> 
+> I am afraid that there are some disagreements between us.
+> 
+> 1)  The case that dump-capture kernel boot up with the disabled APIC is
+> very real, and the bug can be reproduced 100%.  I want to emphasize that
+> there is no guarantee of the interrupt mode of APIC and status of local
+> APIC, Especially for the dump-capture kernel that won't through the BIOS
+> phrase. That's why I do more check in init_bsp_APIC(), not only depends
+> on the MP tables which be generated before the first kernel boots up.
+> 
+> Make a point here, The BIOS must disable interrupts to all processors
+> and set the APICs to the system initial state before giving control to
+> the operating system. That means APICs won't be reset to initial state
+> without BIOS phrase.
+> 
+> 2)  Your proposal (switch into full apic mode as soon as possible) seems
+> to contradict the Intel Spec, "An MP operating system is booted under
+> either one of the two PC/AT-compatible modes. Later the operating system
+> switches to Symmetric I/O Mode **as it enters multiprocessor mode**."
+> And in other words, the BSP should be in PIC mode or Virtual wire mode
+> in startup stage.
+
+Well, Eric has clearly told hardware-reduced ACPI platform doesn't have
+legacy mode irq. It only has APIC mode. The quotation from MP spec is
+very old.
+
+I check code and think now you should investigate the current
+implementation, see if APIC mode can be enabled as soon as possible.
+Though it can't, detailed explanation need be given to convince people.
+
+> 
+> 3)  The apic initialization codes maybe need a overhaul, but it goes out
+> the scope of this patch. I focus on fixing kdump failure with notsc. And
+> the apic initialization codes has no modification for a long time and
+> can be regard as stable.  Overhaul of it increases the chances of
+> hitting a bug.
+> If there's anything wrong with my understanding, please point out.
+> 
+> Thanks,
+> wei
+> > 
+> > For a subset of cases the code already supports that.
+> > 
+> > Eric
+> > 
+> > 
+> 
+> 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
