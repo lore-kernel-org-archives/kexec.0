@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUVPN-0001Rp-Px
- for kexec@lists.infradead.org; Tue, 02 Aug 2016 08:50:43 +0000
-Message-ID: <57A05E7D.90101@cn.fujitsu.com>
-Date: Tue, 2 Aug 2016 16:49:01 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2] Documentation: kdump: add description of bringing
- up SMP dump-capture kernel
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bUaOi-0003pb-6T
+ for kexec@lists.infradead.org; Tue, 02 Aug 2016 14:10:24 +0000
+Date: Tue, 2 Aug 2016 22:09:55 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] Documentation: kdump: add description of bringing up
+ SMP dump-capture kernel
+Message-ID: <20160802140955.GB3663@x1.redhat.com>
 References: <1470010988-18050-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
  <20160802074602.GA3663@x1.redhat.com>
-In-Reply-To: <20160802074602.GA3663@x1.redhat.com>
+ <57A05E7D.90101@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <57A05E7D.90101@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,88 +22,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
 Cc: dyoung@redhat.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi Baoquan,
-
-On 08/02/2016 03:46 PM, Baoquan He wrote:
-> Hi Wenjian,
->
-> On 08/01/16 at 08:23am, Zhou Wenjian wrote:
->> v1->v2: change nr_cpus to maxcpus
->>
->> SMP dump-capture kernel is useful to improve the performance of kdump in
->> some cases. So add the description of bringing up SMP dump-capture kernel.
->>
->> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
->
-> Discussed with people, it could be better to adjust the
-> description about nr_cpus and maxcpus part. I think you can still
-> describe nr_cpus/maxcpus in patch 1/2, and keep parallel dumping part in
-> 2/2.
->
-> Originally maxcpus=1 is used for all ARCHes. Later people found
-> nr_cpus=1 is better since nr_cpus decides the number of possible cpu
-> while maxcpus decides the max working cpu after system boot. So nr_cpus
-> can save memory because percpu will pre-allocate memory for each
-> possible cpu for hotplug. So on x86 nr_cpus is used because much memory
-> can be saved if possible cpu number is very large.
->
-> So you can mention that both maxcpus and nr_cpus can be used but nr_cpus
-> has advantage if it has been implemented in some ARCHes like x86_64. And
-> I guess you mush have tested parallel dumping feature with nr_cpus
-> specified, it makes sense to tell people with the real situation.
->
-
-I think it is better to describe the difference in somewhere else.
-Maybe, it's a good choice which just replace maxcpus by maxcpus/nr_cpus.
-Then user can choose maxcpus or nr_cpus.
-What do you think about it?
-
--- 
-Thanks
-Zhou
-
-> Thanks
-> Baoquan
->
->> ---
->>   Documentation/kdump/kdump.txt | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
->> index 88ff63d..c5762b7 100644
->> --- a/Documentation/kdump/kdump.txt
->> +++ b/Documentation/kdump/kdump.txt
->> @@ -394,6 +394,12 @@ Notes on loading the dump-capture kernel:
->>     dump. Hence generally it is useful either to build a UP dump-capture
->>     kernel or specify maxcpus=1 option while loading dump-capture kernel.
->>
->> +* We should bring up a SMP dump-capture kernel if we intend to use multi-threads
->> +  programs with it, such as parallel dump feature of makedumpfile. Otherwise,
->> +  the multi-threads program may have a great performance degradation.
->> +  To bring up a SMP dump-capture kernel, we should specify maxcpus=[X] and
->> +  disable_cpu_apic=[Y] options while loading it.
->> +
->>   * For s390x there are two kdump modes: If a ELF header is specified with
->>     the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
->>     is done on all other architectures. If no elfcorehdr= kernel parameter is
->> --
->> 1.8.3.1
->>
->>
->>
->
->
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDgvMDIvMTYgYXQgMDQ6NDlwbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
+PiBIaSBCYW9xdWFuLAo+IAo+IE9uIDA4LzAyLzIwMTYgMDM6NDYgUE0sIEJhb3F1YW4gSGUgd3Jv
+dGU6Cj4gPkhpIFdlbmppYW4sCj4gPgo+ID5PbiAwOC8wMS8xNiBhdCAwODoyM2FtLCBaaG91IFdl
+bmppYW4gd3JvdGU6Cj4gPj52MS0+djI6IGNoYW5nZSBucl9jcHVzIHRvIG1heGNwdXMKPiA+Pgo+
+ID4+U01QIGR1bXAtY2FwdHVyZSBrZXJuZWwgaXMgdXNlZnVsIHRvIGltcHJvdmUgdGhlIHBlcmZv
+cm1hbmNlIG9mIGtkdW1wIGluCj4gPj5zb21lIGNhc2VzLiBTbyBhZGQgdGhlIGRlc2NyaXB0aW9u
+IG9mIGJyaW5naW5nIHVwIFNNUCBkdW1wLWNhcHR1cmUga2VybmVsLgo+ID4+Cj4gPj5TaWduZWQt
+b2ZmLWJ5OiBaaG91IFdlbmppYW4gPHpob3V3ai1mbnN0QGNuLmZ1aml0c3UuY29tPgo+ID4KPiA+
+RGlzY3Vzc2VkIHdpdGggcGVvcGxlLCBpdCBjb3VsZCBiZSBiZXR0ZXIgdG8gYWRqdXN0IHRoZQo+
+ID5kZXNjcmlwdGlvbiBhYm91dCBucl9jcHVzIGFuZCBtYXhjcHVzIHBhcnQuIEkgdGhpbmsgeW91
+IGNhbiBzdGlsbAo+ID5kZXNjcmliZSBucl9jcHVzL21heGNwdXMgaW4gcGF0Y2ggMS8yLCBhbmQg
+a2VlcCBwYXJhbGxlbCBkdW1waW5nIHBhcnQgaW4KPiA+Mi8yLgo+ID4KPiA+T3JpZ2luYWxseSBt
+YXhjcHVzPTEgaXMgdXNlZCBmb3IgYWxsIEFSQ0hlcy4gTGF0ZXIgcGVvcGxlIGZvdW5kCj4gPm5y
+X2NwdXM9MSBpcyBiZXR0ZXIgc2luY2UgbnJfY3B1cyBkZWNpZGVzIHRoZSBudW1iZXIgb2YgcG9z
+c2libGUgY3B1Cj4gPndoaWxlIG1heGNwdXMgZGVjaWRlcyB0aGUgbWF4IHdvcmtpbmcgY3B1IGFm
+dGVyIHN5c3RlbSBib290LiBTbyBucl9jcHVzCj4gPmNhbiBzYXZlIG1lbW9yeSBiZWNhdXNlIHBl
+cmNwdSB3aWxsIHByZS1hbGxvY2F0ZSBtZW1vcnkgZm9yIGVhY2gKPiA+cG9zc2libGUgY3B1IGZv
+ciBob3RwbHVnLiBTbyBvbiB4ODYgbnJfY3B1cyBpcyB1c2VkIGJlY2F1c2UgbXVjaCBtZW1vcnkK
+PiA+Y2FuIGJlIHNhdmVkIGlmIHBvc3NpYmxlIGNwdSBudW1iZXIgaXMgdmVyeSBsYXJnZS4KPiA+
+Cj4gPlNvIHlvdSBjYW4gbWVudGlvbiB0aGF0IGJvdGggbWF4Y3B1cyBhbmQgbnJfY3B1cyBjYW4g
+YmUgdXNlZCBidXQgbnJfY3B1cwo+ID5oYXMgYWR2YW50YWdlIGlmIGl0IGhhcyBiZWVuIGltcGxl
+bWVudGVkIGluIHNvbWUgQVJDSGVzIGxpa2UgeDg2XzY0LiBBbmQKPiA+SSBndWVzcyB5b3UgbXVz
+aCBoYXZlIHRlc3RlZCBwYXJhbGxlbCBkdW1waW5nIGZlYXR1cmUgd2l0aCBucl9jcHVzCj4gPnNw
+ZWNpZmllZCwgaXQgbWFrZXMgc2Vuc2UgdG8gdGVsbCBwZW9wbGUgd2l0aCB0aGUgcmVhbCBzaXR1
+YXRpb24uCj4gPgo+IAo+IEkgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIGRlc2NyaWJlIHRoZSBkaWZm
+ZXJlbmNlIGluIHNvbWV3aGVyZSBlbHNlLgo+IE1heWJlLCBpdCdzIGEgZ29vZCBjaG9pY2Ugd2hp
+Y2gganVzdCByZXBsYWNlIG1heGNwdXMgYnkgbWF4Y3B1cy9ucl9jcHVzLgo+IFRoZW4gdXNlciBj
+YW4gY2hvb3NlIG1heGNwdXMgb3IgbnJfY3B1cy4KPiBXaGF0IGRvIHlvdSB0aGluayBhYm91dCBp
+dD8KClB1dHRpbmcgaXQgaW4ga2R1bXAudHh0IGNvdWxkIGJlIGJldHRlci4gbnJfY3B1cy9tYXhj
+cHVzIGFyZSBub3JtYWwKa2VybmVsIG9wdGlvbnMsIHRoZSByZWFzb24gd2UgbWVudGlvbmVkIHRo
+ZW0gaGVyZSBpcyBjcmFzaGtlcm5lbCBtZW1vcnkKaXMgdXN1YWxseSBsaW1pdGVkLCB3ZSBoYXZl
+IHRvIHRyeSBvdXIgYmVzdCB0byBzYXZlIG1lbW9yeS4gU28gaWYKbnJfY3B1cyBpcyBhdmFpbGFi
+bGUgb24gc29tZSBBUkNIZXMsIHdlIHNob3VsZCB1c2UgaXQuIE9uIHg4NiBucl9jcHVzPTEKaGFz
+IGJlZW4gdGFrZW4gZm9yIGtkdW1wIGtlcm5lbCBmb3IgYSB2ZXJ5IGxvbmcgdGltZS4gSSB0aGlu
+ayBsZXR0aW5nCnBlb3BsZSBrbm93IGJlbG93IHRoaW5ncyB3b3VsZCBiZSBnb29kOgoKfn5+fn5+
+fn5+fgpGaXJzbHR5IGJvdGggbWF4Y3B1cyBhbmQgbnJfY3B1cyBjYW4gYmUgdXNlZCBmb3Iga2R1
+bXAga2VybmVsIHRvIHNwZWNpZnkKbnVtYmVyIG9mIGFsbG93ZWQgY3B1LgoKbWF4Y3B1cyBvbmx5
+IHNwZWNpZnkgdGhlIG51bWJlciBvZiBhdmFpbGFibGUgY3B1LCB3aGlsZSBucl9jcHVzIHdpbGwK
+c3BlY2lmeSB0aGUgbnVtYmVyIG9mIHBvc3NpYmxlIGNwdSB3aGljaCBpcyBuZWNlc3NhcnkgZm9y
+IGhvdHBsdWcuCm5yX2NwdXMgY2FuIGJlIHVzZWQgdG8gbGltaXQgdGhlIGFtb3VudCBvZiBwZXJj
+cHUgbWVtb3J5IHByZS1hbGxvY2F0aW9uLgpBbmQgbm93IHlvdSBqdXN0IHRlc3QgcGFyYWxsZWwg
+ZHVtcGluZyBmZWF0dXJlIG9uIHg4Niwgb3IgbW9yZQpzcGVjaWZpY2FsbHkgb24geDg2XzY0Lgp+
+fn5+fn5+fn5+fgoKVGhhbmtzCkJhb3F1YW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
