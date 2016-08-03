@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUarJ-0007xw-4H
- for kexec@lists.infradead.org; Tue, 02 Aug 2016 14:39:57 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1469501995-2991-1-git-send-email-weijg.fnst@cn.fujitsu.com>
- <1469501995-2991-4-git-send-email-weijg.fnst@cn.fujitsu.com>
- <87k2g92gxb.fsf@x220.int.ebiederm.org>
- <1469520148.7811.54.camel@localhost>
-Date: Tue, 02 Aug 2016 09:26:16 -0500
-In-Reply-To: <1469520148.7811.54.camel@localhost> (Jiangang Wei's message of
- "Tue, 26 Jul 2016 08:05:20 +0000")
-Message-ID: <87h9b3s0vr.fsf@x220.int.ebiederm.org>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bUkYK-0002dX-Sa
+ for kexec@lists.infradead.org; Wed, 03 Aug 2016 01:00:57 +0000
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v3 1/2] Documentation: kdump: remind user of nr_cpus
+Date: Wed, 3 Aug 2016 08:59:11 +0800
+Message-ID: <1470185952-23477-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 3/3] x86/apic: Improved the setting of interrupt mode
- for bsp
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,117 +16,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
-Cc: "bhe@redhat.com" <bhe@redhat.com>, "xpang@redhat.com" <xpang@redhat.com>, "joro@8bytes.org" <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cao,
- Jin" <caoj.fnst@cn.fujitsu.com>, "mingo@redhat.com" <mingo@redhat.com>, "kernel@kyup.com" <kernel@kyup.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, bhe@redhat.com
 
-IldlaSwgSmlhbmdhbmciIDx3ZWlqZy5mbnN0QGNuLmZ1aml0c3UuY29tPiB3cml0ZXM6Cgo+IEhp
-IEVyaWMsCj4KPiBUaGFua3MgZm9yIHlvdXIgcmVzcG9uc2UuCj4gQnV0IEkgaGF2ZSBzb21lIGRp
-ZmZlcmVudCBpZGVhcy4uLgoKQXBvbG9naWVzIGZvciBub3QgcmVwbHlpbmcgdG8gdGhpcyBlYXJs
-aWVyIHlvdXIgcmVwbHkgZ290IGxvc3QgaW4gbXkKc3BhbSBmb2xkZXIgYW5kIEkgb3Zlcmxvb2tl
-ZCBpdC4KCj4gT24gTW9uLCAyMDE2LTA3LTI1IGF0IDIyOjUzIC0wNTAwLCBFcmljIFcuIEJpZWRl
-cm1hbiB3cm90ZToKPj4gV2VpIEppYW5nYW5nIDx3ZWlqZy5mbnN0QGNuLmZ1aml0c3UuY29tPiB3
-cml0ZXM6Cj4+IAo+PiA+IElmIHdlIHNwZWNpZnkgdGhlICdub3RzYycgcGFyYW1ldGVyIGZvciB0
-aGUgZHVtcC1jYXB0dXJlIGtlcm5lbCwKPj4gPiBhbmQgdGhlbiB0cmlnZ2VyIGEgY3Jhc2gocGFu
-aWMpIGJ5IHVzaW5nICJBTFQtU3lzUnEtYyIgb3IKPj4gPiAiZWNobyBjID4gL3Byb2Mvc3lzcnEt
-dHJpZ2dlciIsIHRoZSBkdW1wLWNhcHR1cmUga2VybmVsIHdpbGwKPj4gPiBoYW5nIGluIGNhbGli
-cmF0ZV9kZWxheV9jb252ZXJnZSgpIGFuZCB3YWl0IGZvciBqaWZmaWVzIGNoYW5nZXMuCj4+ID4g
-c2VyaWFsIGxvZyBhcyBmb2xsb3dzOgo+PiA+Cj4+ID4gICAgIHRzYzogRmFzdCBUU0MgY2FsaWJy
-YXRpb24gdXNpbmcgUElUCj4+ID4gICAgIHRzYzogRGV0ZWN0ZWQgMjA5OS45NDcgTUh6IHByb2Nl
-c3Nvcgo+PiA+ICAgICBDYWxpYnJhdGluZyBkZWxheSBsb29wLi4uCj4+ID4KPj4gPiBUaGUgcmVh
-c29uIGZvciBqaWZmaWVzIG5vdCBjaGFuZ2VzIGlzIHRoZXJlJ3Mgbm8gdGltZXIgaW50ZXJydXB0
-Cj4+ID4gcGFzc2VkIHRvIGR1bXAtY2FwdHVyZSBrZXJuZWwuCj4+ID4KPj4gPiBJbiBmYWN0LCBv
-bmNlIGtlcm5lbCBwYW5pYyBvY2N1cnMsIHRoZSBsb2NhbCBBUElDIGlzIGRpc2FibGVkCj4+ID4g
-YnkgbGFwaWNfc2h1dGRvd24oKSBpbiByZWJvb3QgcGF0aC4KPj4gPiBnZW5lcmx5IHNwZWFraW5n
-LCBsb2NhbCBBUElDIHN0YXRlIGNhbiBiZSBpbml0aWFsaXplZCBieSBCSU9TCj4+ID4gYWZ0ZXIg
-UG93ZXItVXAgb3IgUmVzZXQsIHdoaWNoIGRvZXNuJ3QgYXBwbHkgdG8ga2R1bXAgY2FzZS4KPj4g
-PiBzbyB0aGUga2VybmVsIGhhcyB0byBiZSByZXNwb25zaWJsZSBmb3IgaW5pdGlhbGl6ZSB0aGUg
-aW50ZXJydXB0Cj4+ID4gbW9kZSBwcm9wZXJseSBhY2NvcmRpbmcgdGhlIGxhdGVzdCBzdGF0dXMg
-b2YgQVBJQyBpbiBib290dXAgcGF0aC4KPj4gPgo+PiA+IEFuIE1QIG9wZXJhdGluZyBzeXN0ZW0g
-aXMgYm9vdGVkIHVuZGVyIGVpdGhlciBQSUMgbW9kZSBvcgo+PiA+IHZpcnR1YWwgd2lyZSBtb2Rl
-LiBMYXRlciwgdGhlIG9wZXJhdGluZyBzeXN0ZW0gc3dpdGNoZXMgdG8KPj4gPiBzeW1tZXRyaWMg
-SS9PIG1vZGUgYXMgaXQgZW50ZXJzIG11bHRpcHJvY2Vzc29yIG1vZGUuCj4+ID4gVHdvIGtpbmRz
-IG9mIHZpcnR1YWwgd2lyZSBtb2RlIGFyZSBkZWZpbmVkIGluIEludGVsIE1QIHNwZWM6Cj4+ID4g
-dmlydHVhbCB3aXJlIG1vZGUgdmlhIGxvY2FsIEFQSUMgb3IgdmlhIEkvTyBBUElDLgo+PiA+Cj4+
-ID4gTm93IHdlIGRldGVybWluZSB0aGUgbW9kZSBvZiBBUElDIG9ubHkgdGhyb3VnaCBhIFNNUCBC
-SU9TKE1QIHRhYmxlKS4KPj4gPiBUaGF0J3Mgbm90IGVub3VnaC4gSXQncyBiZXR0ZXIgdG8gZG8g
-ZnVydGhlciBjaGVjayBpZiBBUElDIHdvcmtzCj4+ID4gd2l0aCBlZmZlY3RpdmUgaW50ZXJydXB0
-IG1vZGUsIGFuZCB0aGVuLCBkbyBzb21lIHByb3BlciBzZXR0aW5nLgo+PiAKPj4gUmVhZGluZyB0
-aHJvdWdoIHRoZSBjb2RlIGxldCBtZSBwYXVzZSBhIG1vbWVudCBhbmQgc2F5Ogo+PiAiWW93emVy
-cyB0aGUgaW50ZXJydXB0IGluaXRpYWxpemF0aW9uIGNvZGUgaGFzIGdvdHRlbiBoYXJkIHRvIGZv
-bGxvdy4gIEl0Cj4+IGlzIG5vdyBmdWxsIG9mIGluZGlyZWN0aW9uIHdpdGggaWxsIGRlZmluZWQg
-c2VtYW50aWNzLiIgIHByZV92ZWN0b3JfaW5pdAo+PiBpbmRlZWQuCj4+IAo+PiBJIHdpbGwgYXJn
-dWUgdGhpcyBpcyB0aGUgd3JvbmcgZml4Lgo+PiAKPj4gV2UgcmVhbGx5IHNob3VsZCBub3QgaGF2
-ZSB0byB3b3JyeSBhYm91dCBnZXR0aW5nIHRoZSBzeXN0ZW0gZnVuY3Rpb25hbAo+PiBpbiB2aXJ0
-dWFsIHdpcmUgbW9kZSBvbiBhIG1vZGVybiBzeXN0ZW0uICBBbmQgbG9va2luZyBhdCB0aGUgY29k
-ZQo+PiBzb21lb25lIGhhcyBkb25lIGhhbGYgdGhlIHdvcmsgYW5kIG1hZGUgaXQgY29uZGl0aW9u
-YWwgdW5kZXIKPj4gYWNwaV9nYmxfcmVkdWNlZF9oYXJkd2FyZS4KPj4gCj4+IE5vdyByZWR1Y2Vk
-IGhhcmR3YXJlIGltcGxpZXMgYSBiaXQgbW9yZSB0aGFuIHdlIHdhcmUgdGFsa2luZyBhYm91dCBi
-dXQKPj4gaWYgdGhlcmUgaXMgQUNQSSBhcGljIGluZm9ybWF0aW9uIHdlIHNob3VsZCBub3QgbmVl
-ZCB0byB3b3JyeSBhYm91dAo+PiBleHRlcm5hbCBpbnRlcnJ1cHRzIGFuZCBjYW4ganVzdCBlbmFi
-bGUgdGhlIGFwaWNzLgo+PiAKPj4gSW4gZmFjdCBJIHRoaW5rIGhhdmluZyBNUHRhYmxlIGluZm9y
-bWF0aW9uIGlzIGVub3VnaCBmb3IgdGhhdC4KPgo+IEluIG15IG9waW5pb24sIFRoZSBNUCB0YWJs
-ZSBpcyBub3QgdG8gYmUgdHJ1c3RlZCBpZiBzeXN0ZW0gc3RhcnRzCj4gd2l0aG91dCBCSU9TIHBo
-cmFzZS4gCj4KPiBUaGUgY2hhcHRlciAzLjggU3lzdGVtIEluaXRpYWwgU3RhdGUgKE1QIHYxLjQg
-c3BlYykgc2FpZCBiZWxvdzoKPiAiMS4gQWxsIGxvY2FsIEFQSUNzIGFyZSBkaXNhYmxlZCwgZXhj
-ZXB0IGZvciB0aGUgbG9jYWwgQVBJQyBvZiB0aGUgQlNQCj4gaWYgdGhlIHN5c3RlbSBzdGFydHMg
-aW4gVmlydHVhbCBXaXJlIE1vZGUuIgo+Cj4gQW5kCj4gLi4uLi4KPiAiVGhlIEJJT1MgbXVzdCBk
-aXNhYmxlIGludGVycnVwdHMgdG8gYWxsIHByb2Nlc3NvcnMgYW5kIHNldCB0aGUgQVBJQ3MgdG8K
-PiB0aGUgc3lzdGVtIGluaXRpYWwgc3RhdGUgYmVmb3JlIGdpdmluZyBjb250cm9sIHRvIHRoZSBv
-cGVyYXRpbmcgc3lzdGVtLgo+IFRoZSBvcGVyYXRpbmcgc3lzdGVtIGlzIHJlc3BvbnNpYmxlIGZv
-ciBpbml0aWFsaXppbmcgYWxsIG9mIHRoZSBBUElDcyIKPgo+IFRoZSBkdW1wLWNhcHR1cmUga2Vy
-bmVsIHdvbid0IHRocm91Z2ggdGhlIEJJT1MgcGhyYXNlLAo+IHNvIHRoZXJlIGlzIG5vIGd1YXJh
-bnRlZSBvZiB0aGUgaW50ZXJydXB0IG1vZGUgb2YgQVBJQyBhbmQgdGhlIHN0YXR1cyBvZgo+IGxv
-Y2FsIEFQSUMuCj4KPiBBbHRob3VnaCB0aGUgTVAgdGFibGUgaXMgcmVhZC1vbmx5LAo+IHRoZSBk
-dW1wLWNhcHR1cmUga2VybmVsIHVzZXMgdGhlIE1QIHRhYmxlIHdoaWNoIGJlIGdlbmVyYXRlZCBi
-ZWZvcmUgdGhlCj4gZmlyc3Qga2VybmVsIGJvb3RzIHVwIGlzIHVucmVhc29uYWJsZS4gCj4gQXQg
-bGVhc3QsIG9ubHkgY2hlY2tpbmcgTVAgdGFibGUgaXMgbm90IGVub3VnaC4KPiBUaGF0J3MgdGhl
-IHN0YXJ0aW5nIHBvaW50IG9mIG15IHBhdGNoLgo+Cj4gWW91IHNhaWQg4oCcdGhpcyBpcyB0aGUg
-d3JvbmcgZml44oCdLCAKPiBJcyB0aGVyZSBhbnkgd3Jvbmcgd2l0aCB0aGUgY29kZXMgb3IgbXkg
-c29sdXRpb24gdG8gY2hlY2sgdGhlIHN0YXR1cyBvZgo+IEFQSUMgaW4gYm9vdHVwIHBhdGg/CgpU
-b2RheSBpbiBhIGR1bXAgY2FwdHVyZSBrZXJuZWwgaXQgdXNlcyB0aGUgTVAgdGFibGUgb3IgdGhl
-IEFDUEkgTVAKaW5mb3JtYXRpb24gdG8gc2V0IHVwIHRoZSBhcGljcy4KCkhvdyBJIHJlYWQgeW91
-ciBwYXRjaCBpcyB5b3UgZG8gc29tZXRoaW5nIGNsZXZlciB0byBnZXQgaW4gdmlydHVhbCB3aXJl
-Cm1vZGUuICBBS0EgYSBoaXN0b3JpY2FsIFBDL0FUIGNvbXBhdGlibGUgbW9kZS4gIEkgdGhpbmsg
-d2Ugc2hvdWxkIGp1c3QKc2tpcCB0aGF0IG1vZGUgZW50aXJlbHkuCgo+PiBTbyBJIHRoaW5rIHdo
-YXQgbmVlZHMgdG8gaGFwcGVucyBpcyBmb3IgdGhlIGFwaWMgaW5pdGlhbGl6YXRpb24gdG8gZ2V0
-Cj4+IGFuIG92ZXJoYXVsIHRoYXQgbWFrZXMgYXBpYyBpbml0aWFsaXphdGlvbiB0aGUgaGFwcHkg
-cGF0aCBhbmQgdGhlIG90aGVyCj4+IGlycSBjb250cm9sbGVycyB0aGUgb2RkIGJhY2t3YXJkcyBj
-b21wYXRpYmlsaXR5IHBhdGguICBBbmQgd2hlbiB3ZQo+PiBhcmUgZG9uZSB3ZSBuZXZlciBydW4g
-aW4gYW55dGhpbmcgZXhjZXB0IGZ1bGwgYXBpYyBtb2RlIHVubGVzcyB0aGUKPj4gaGFyZHdhcmUg
-ZG9lc24ndCBzdXBwb3J0IGl0Lgo+IFRoZSBzcGVjIHJlcXVlc3RzICJBbiBNUCBvcGVyYXRpbmcg
-c3lzdGVtIGlzIGJvb3RlZCB1bmRlciBlaXRoZXIgb25lIG9mCj4gdGhlIHR3byBQQy9BVC1jb21w
-YXRpYmxlIG1vZGVzLiBMYXRlciB0aGUgb3BlcmF0aW5nIHN5c3RlbSBzd2l0Y2hlcyB0bwo+IFN5
-bW1ldHJpYyBJL08gTW9kZSBhcyBpdCBlbnRlcnMgbXVsdGlwcm9jZXNzb3IgbW9kZS4iCj4gQW5k
-IGl0IHNlZW1zIHRoYXQgdGhlIGxhdGVzdCBrZXJuZWwgZm9sbG93cyB0aGUgcnVsZS4KPiBEb2Vz
-IHRoZSBhcGljIGluaXRpYWxpemF0aW9uIHJlYWxseSBuZWVkIHRvIGJlIGNoYW5nZWQ/CgpGb3Ig
-c2ltcGxpY2l0eSB3aGVuIE1QIHN1cHBvcnQgd2FzIGZpcnN0IGFkZGVkLCBhIGZldyBwYXJ0cyBv
-ZiBlYXJseQpib290dXAgd2VyZSBsZWZ0IGhhbmRsZWQgaW4gUEMvQVQgY29tcGF0aWJsZSBtb2Rl
-LiAgTW9zdGx5IGl0IGlzIGp1c3QKc2lsbHkuCgpVbmxlc3MgdGhlcmUgaXMgYSBnb29kIHJlYXNv
-biBJIHRoaW5rIHdlIHNob3VsZCBzdHJpdmUgdG8gcmVtb3ZlIHRob3NlCmZldyBtb21lbnRzIHdo
-ZW4gdGhlIHN5c3RlbSBpcyB1c2luZyBpbnRlcnJ1cHRzIGluIFBDL0FUIG1vZGUgYW5kIGFsd2F5
-cwpydW4gaW50ZXJydXB0cyBpbiB0aGUgZmluYWwgbW9kZSB3ZSBpbnRlbmQgdG8gcnVuIGludGVy
-cnVwdHMgaW4uCkluIGZhY3QgdGhlIGNvZGUgdW5kZXIgYWNwaV9nYmxfcmVkdWNlZF9oYXJkd2Fy
-ZSBkb2VzIHRoYXQgZm9yIHNvbWUKc3BlY2lhbCBjYXNlcyBhbHJlYWR5IHRvZGF5LgoKQXQgdGhl
-IGVuZCBvZiB0aGUgZGF5IHRoYXQgc2hvdWxkIGVuZCB1cCB3aXRoIGEgc2ltcGxlciBtb3JlIHJl
-bGlhYmxlCmtlcm5lbC4gIEVzcGVjaWFsbHkgZm9yIHRoZSBkdW1wIGNhcHR1cmUga2VybmVsLgoK
-QUtBOgpJIGFtIHByb3Bvc2luZyBtYWtlIHRoZSBjb2RlIHNheSBzb21ldGhpbmcgbGlrZToKCWlm
-IChwY19hdF9jb21wYXRpYmxlX3BpY19tb2RlKSB7CiAgICAgICAgCWRvX2xlZ2FjeV9waWNfbW9k
-ZSgpOwogICAgICAgIH0gZWxzZSB7CiAgICAgICAgCWRvX21wX21vZGUoKTsKICAgICAgICB9CgpJ
-ZiBteSBtZW1vcnkgc2VydmVzIHZpcnR1YWwgd2lyZSBtb2RlIGRvZXMgbm90IG5lZWQgdG8gYmUg
-ZW5hYmxlZCBhdCBhbGwKaW4gbXAgbW9kZSwgc28gaWYgd2UgYXJlIGNvbWluZyBmcm9tIG1wIG1v
-ZGUgKHdpdGggbm8gc2h1dGRvd24gb2YgdGhlCmFwaWNzIGluIHRoZSBmaXJzdCBrZXJuZWwpLiAg
-VGhlbiB0aGVyZSB3aWxsIGJlIG5vIGluZm9ybWF0aW9uIGFueXdoZXJlCmFib3V0IHdoaWNoIGFw
-aWNzIG5lZWQgdG8gYmUgcHJvZ3JhbW1lZCBpbnRvIGFwaWMgbW9kZS4KCkFzIHN1Y2ggdG8gc2lt
-cGxpZnkgdGhlIGtkdW1wIHByb2Nlc3MgaXQgaXMgdGhlIHdyb25nIHByb2Nlc3MgdG8gZ28gYmFj
-awppbnRvIHZpcnR1YWwgd2lyZSBQQy9BVCBjb21wYXRpYmxlIHBpYyBtb2RlLiAgQmVjYXVzZSBv
-bmNlIHdlIHJlbW92ZSB0aGUKY29kZSBmcm9tIHRoZSBjcmFzaGluZyBrZXJuZWwgd2Ugd29uJ3Qg
-aGF2ZSBlbm91Z2ggaW5mb3JtYXRpb24gdG8gbWFrZQppdCB3b3JrLiAgVW5mb3J0dW5hdGVseSBp
-biBzb21lIGNhc2VzIGl0IGlzIGEgb25lIHdheSB0cmFuc2l0aW9uLgoKRXJpYwoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+v2->v3: add description of nr_cpus.
+v1->v2: change nr_cpus to maxcpus
+
+nr_cpus can help to save memory. So we should remind user of it.
+
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+---
+ Documentation/kdump/kdump.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 88ff63d..4aa194e 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -393,6 +393,8 @@ Notes on loading the dump-capture kernel:
+ * We generally don' have to bring up a SMP kernel just to capture the
+   dump. Hence generally it is useful either to build a UP dump-capture
+   kernel or specify maxcpus=1 option while loading dump-capture kernel.
++  Note, though maxcpus always works, we should replace it by nr_cpus to
++  save memory if supported by the current ARCH, such as x86. 
+ 
+ * For s390x there are two kdump modes: If a ELF header is specified with
+   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
+-- 
+1.8.3.1
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
