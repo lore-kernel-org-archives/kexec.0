@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUlnx-0007hz-I6
- for kexec@lists.infradead.org; Wed, 03 Aug 2016 02:21:11 +0000
-Message-ID: <57A154B7.4090407@cn.fujitsu.com>
-Date: Wed, 3 Aug 2016 10:19:35 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+ id 1bUlzb-0002uq-4M
+ for kexec@lists.infradead.org; Wed, 03 Aug 2016 02:33:12 +0000
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v4 1/2] Documentation: kdump: remind user of nr_cpus
+Date: Wed, 3 Aug 2016 10:31:34 +0800
+Message-ID: <1470191495-32020-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 2/2] Documentation: kdump: add description of bringing
- up SMP dump-capture kernel
-References: <1470185952-23477-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1470185952-23477-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160803015818.GB2465@x1.redhat.com> <57A15156.3060507@cn.fujitsu.com>
- <20160803021825.GB3637@x1.redhat.com>
-In-Reply-To: <20160803021825.GB3637@x1.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,62 +16,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com, dyoung@redhat.com, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: dyoung@redhat.com, d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, bhe@redhat.com
 
-T24gMDgvMDMvMjAxNiAxMDoxOCBBTSwgQmFvcXVhbiBIZSB3cm90ZToKPiBPbiAwOC8wMy8xNiBh
-dCAxMDowNWFtLCAiWmhvdSwgV2Vuamlhbi/lkajmlofliZEiIHdyb3RlOgo+PiBPbiAwOC8wMy8y
-MDE2IDA5OjU4IEFNLCBCYW9xdWFuIEhlIHdyb3RlOgo+Pj4gT24gMDgvMDMvMTYgYXQgMDg6NTlh
-bSwgWmhvdSBXZW5qaWFuIHdyb3RlOgo+Pj4+IFNNUCBkdW1wLWNhcHR1cmUga2VybmVsIGlzIHVz
-ZWZ1bCB0byBpbXByb3ZlIHRoZSBwZXJmb3JtYW5jZSBvZiBrZHVtcCBpbgo+Pj4+IHNvbWUgY2Fz
-ZXMuIFNvIGFkZCB0aGUgZGVzY3JpcHRpb24gb2YgYnJpbmdpbmcgdXAgU01QIGR1bXAtY2FwdHVy
-ZSBrZXJuZWwuCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBaaG91IFdlbmppYW4gPHpob3V3ai1m
-bnN0QGNuLmZ1aml0c3UuY29tPgo+Pj4+IC0tLQo+Pj4+ICAgRG9jdW1lbnRhdGlvbi9rZHVtcC9r
-ZHVtcC50eHQgfCA3ICsrKysrKysKPj4+PiAgIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMo
-KykKPj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnR4dCBi
-L0RvY3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0Cj4+Pj4gaW5kZXggNGFhMTk0ZS4uOTQ4YjQy
-ZCAxMDA2NDQKPj4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnR4dAo+Pj4+ICsr
-KyBiL0RvY3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0Cj4+Pj4gQEAgLTM5Niw2ICszOTYsMTMg
-QEAgTm90ZXMgb24gbG9hZGluZyB0aGUgZHVtcC1jYXB0dXJlIGtlcm5lbDoKPj4+PiAgICAgTm90
-ZSwgdGhvdWdoIG1heGNwdXMgYWx3YXlzIHdvcmtzLCB3ZSBzaG91bGQgcmVwbGFjZSBpdCBieSBu
-cl9jcHVzIHRvCj4+Pj4gICAgIHNhdmUgbWVtb3J5IGlmIHN1cHBvcnRlZCBieSB0aGUgY3VycmVu
-dCBBUkNILCBzdWNoIGFzIHg4Ni4KPj4+Pgo+Pj4+ICsqIFdlIHNob3VsZCBicmluZyB1cCBhIFNN
-UCBkdW1wLWNhcHR1cmUga2VybmVsIGlmIHdlIGludGVuZCB0byB1c2UKPj4+Cj4+PiBXZWxsLCBo
-ZXJlIGFib3V0IFNNUCBkdW1wLWNhcHR1cmUga2VybmVsIGRvIHlvdSBtZWFuIGtkdW1wIGtlcm5l
-bCB3aXRoCj4+PiBtdWx0aS1jcHU/IElmIEkgdW5kZXJzdGFuZCBpdCBjb3JyZWN0bHksIGl0J3Mg
-c3RpbGwgU01QIGtkdW1wIGtlcm5lbAo+Pj4gdGhvdWdoIG5yX2NwdXM9MSBpcyBzcGVjaWZpZWQu
-Cj4+Pgo+Pgo+PiBBY3R1YWxseSwgSSBoYXZlbid0IGtub3cgdGhlIGRldGFpbCBhYm91dCBpdC4g
-SSB3cm90ZSB0aGUgc2VudGVuY2UgYWxtb3N0Cj4+IGJhc2VkIG9uIHRoZSBvcmlnaW5hbCBkZXNj
-cmlwdGlvbjoKPj4KPj4gKiBXZSBnZW5lcmFsbHkgZG9uJyBoYXZlIHRvIGJyaW5nIHVwIGEgU01Q
-IGtlcm5lbCBqdXN0IHRvIGNhcHR1cmUgdGhlCj4+ICAgIGR1bXAuIEhlbmNlIGdlbmVyYWxseSBp
-dCBpcyB1c2VmdWwgZWl0aGVyIHRvIGJ1aWxkIGEgVVAgZHVtcC1jYXB0dXJlCj4+ICAgIGtlcm5l
-bCBvciBzcGVjaWZ5IG1heGNwdXM9MSBvcHRpb24gd2hpbGUgbG9hZGluZyBkdW1wLWNhcHR1cmUg
-a2VybmVsLgo+Cj4gVGhpcyBpcyByaWdodC4gSGVyZSBpdCBtZWFucyBlaXRoZXIgeW91IGJ1aWxk
-IGEgVVAga2VybmVsIHVzZWQgZm9yIGtkdW1wCj4ga2VybmVsIGJlY2F1c2Uga2R1bXAga2VybmVs
-IGRvZXNuJ3QgaGF2ZSB0byBiZSB0aGUgc2FtZSBhcyB0aGUgMXN0Cj4ga2VybmVsLCBvciB5b3Ug
-dXNlIHNtcCBrZXJuZWwgd2l0aCBtYXhjcHVzPTEgc3BlY2lmaWVkLiBTbyBpZiB5b3Ugd2FudAo+
-IHRvIHNheSBrZHVtcCBrZXJuZWwgd2l0aCBtdWx0aS1jcHUgbmVlZCBiZSBicm91Z2h0IHVwIHRv
-IGltcHJvdmUgdGhlCj4gcGVyZm9ybWFuY2Ugb2YgcGFyYWxsZWwgZHVtcGluZywgeW91IG5lZWQg
-cG9pbnQgaXQgb3V0IGNsZWFybHkuCj4KCkkgc2VlLiBJIHdpbGwgdXBkYXRlIHRoZSBwYXRjaC4K
-Cj4+Cj4+Pj4gKyAgbXVsdGktdGhyZWFkcyBwcm9ncmFtcyB3aXRoIGl0LCBzdWNoIGFzIHBhcmFs
-bGVsIGR1bXAgZmVhdHVyZSBvZgo+Pj4+ICsgIG1ha2VkdW1wZmlsZS4gT3RoZXJ3aXNlLCB0aGUg
-bXVsdGktdGhyZWFkcyBwcm9ncmFtIG1heSBoYXZlIGEgZ3JlYXQKPj4+PiArICBwZXJmb3JtYW5j
-ZSBkZWdyYWRhdGlvbi4gVG8gYnJpbmcgdXAgYSBTTVAgZHVtcC1jYXB0dXJlIGtlcm5lbCwgd2UK
-Pj4+PiArICBzaG91bGQgc3BlY2lmeSBtYXhjcHVzXG5yX2NwdXMgYW5kIGRpc2FibGVfY3B1X2Fw
-aWM9W1hdIG9wdGlvbnMgd2hpbGUKPj4+PiArICBsb2FkaW5nIGl0Lgo+Pj4+ICsKPj4+PiAgICog
-Rm9yIHMzOTB4IHRoZXJlIGFyZSB0d28ga2R1bXAgbW9kZXM6IElmIGEgRUxGIGhlYWRlciBpcyBz
-cGVjaWZpZWQgd2l0aAo+Pj4+ICAgICB0aGUgZWxmY29yZWhkcj0ga2VybmVsIHBhcmFtZXRlciwg
-aXQgaXMgdXNlZCBieSB0aGUga2R1bXAga2VybmVsIGFzIGl0Cj4+Pj4gICAgIGlzIGRvbmUgb24g
-YWxsIG90aGVyIGFyY2hpdGVjdHVyZXMuIElmIG5vIGVsZmNvcmVoZHI9IGtlcm5lbCBwYXJhbWV0
-ZXIgaXMKPj4+PiAtLQo+Pj4+IDEuOC4zLjEKPj4+Pgo+Pj4+Cj4+Pj4KPj4+Pgo+Pj4+IF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+Pj4ga2V4ZWMgbWFp
-bGluZyBsaXN0Cj4+Pj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+Pj4+IGh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKPj4+Cj4+Pgo+Pgo+Pgo+PiAt
-LQo+PiBUaGFua3MKPj4gWmhvdQo+Pgo+Pgo+Cj4KCgotLSAKVGhhbmtzClpob3UKCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+v3->v4: update the description of bring up SMP dump-capture kernel
+v2->v3: add description of nr_cpus.
+v1->v2: change nr_cpus to maxcpus
+
+nr_cpus can help to save memory. So we should remind user of it.
+
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+---
+ Documentation/kdump/kdump.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 88ff63d..b474060 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -393,6 +393,8 @@ Notes on loading the dump-capture kernel:
+ * We generally don' have to bring up a SMP kernel just to capture the
+   dump. Hence generally it is useful either to build a UP dump-capture
+   kernel or specify maxcpus=1 option while loading dump-capture kernel.
++  Note, though maxcpus always works, we should replace it by nr_cpus to
++  save memory if supported by the current ARCH, such as x86.
+ 
+ * For s390x there are two kdump modes: If a ELF header is specified with
+   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
+-- 
+1.8.3.1
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
