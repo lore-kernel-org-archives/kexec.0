@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUla5-000253-Nk
- for kexec@lists.infradead.org; Wed, 03 Aug 2016 02:06:50 +0000
-Message-ID: <57A15156.3060507@cn.fujitsu.com>
-Date: Wed, 3 Aug 2016 10:05:10 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bUlll-0006Oc-0u
+ for kexec@lists.infradead.org; Wed, 03 Aug 2016 02:18:54 +0000
+Date: Wed, 3 Aug 2016 10:18:25 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v3 2/2] Documentation: kdump: add description of bringing
  up SMP dump-capture kernel
+Message-ID: <20160803021825.GB3637@x1.redhat.com>
 References: <1470185952-23477-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
  <1470185952-23477-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
  <20160803015818.GB2465@x1.redhat.com>
-In-Reply-To: <20160803015818.GB2465@x1.redhat.com>
+ <57A15156.3060507@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <57A15156.3060507@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,75 +23,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: =?utf-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?= <zhouwj-fnst@cn.fujitsu.com>
 Cc: kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com, dyoung@redhat.com, linux-kernel@vger.kernel.org
 
-On 08/03/2016 09:58 AM, Baoquan He wrote:
-> On 08/03/16 at 08:59am, Zhou Wenjian wrote:
->> SMP dump-capture kernel is useful to improve the performance of kdump in
->> some cases. So add the description of bringing up SMP dump-capture kernel.
->>
->> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
->> ---
->>   Documentation/kdump/kdump.txt | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
->> index 4aa194e..948b42d 100644
->> --- a/Documentation/kdump/kdump.txt
->> +++ b/Documentation/kdump/kdump.txt
->> @@ -396,6 +396,13 @@ Notes on loading the dump-capture kernel:
->>     Note, though maxcpus always works, we should replace it by nr_cpus to
->>     save memory if supported by the current ARCH, such as x86.
->>
->> +* We should bring up a SMP dump-capture kernel if we intend to use
->
-> Well, here about SMP dump-capture kernel do you mean kdump kernel with
-> multi-cpu? If I understand it correctly, it's still SMP kdump kernel
-> though nr_cpus=1 is specified.
->
-
-Actually, I haven't know the detail about it. I wrote the sentence almost
-based on the original description:
-
-* We generally don' have to bring up a SMP kernel just to capture the
-   dump. Hence generally it is useful either to build a UP dump-capture
-   kernel or specify maxcpus=1 option while loading dump-capture kernel.
-
->> +  multi-threads programs with it, such as parallel dump feature of
->> +  makedumpfile. Otherwise, the multi-threads program may have a great
->> +  performance degradation. To bring up a SMP dump-capture kernel, we
->> +  should specify maxcpus\nr_cpus and disable_cpu_apic=[X] options while
->> +  loading it.
->> +
->>   * For s390x there are two kdump modes: If a ELF header is specified with
->>     the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
->>     is done on all other architectures. If no elfcorehdr= kernel parameter is
->> --
->> 1.8.3.1
->>
->>
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->
->
-
-
--- 
-Thanks
-Zhou
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDgvMDMvMTYgYXQgMTA6MDVhbSwgIlpob3UsIFdlbmppYW4v5ZGo5paH5YmRIiB3cm90ZToK
+PiBPbiAwOC8wMy8yMDE2IDA5OjU4IEFNLCBCYW9xdWFuIEhlIHdyb3RlOgo+ID5PbiAwOC8wMy8x
+NiBhdCAwODo1OWFtLCBaaG91IFdlbmppYW4gd3JvdGU6Cj4gPj5TTVAgZHVtcC1jYXB0dXJlIGtl
+cm5lbCBpcyB1c2VmdWwgdG8gaW1wcm92ZSB0aGUgcGVyZm9ybWFuY2Ugb2Yga2R1bXAgaW4KPiA+
+PnNvbWUgY2FzZXMuIFNvIGFkZCB0aGUgZGVzY3JpcHRpb24gb2YgYnJpbmdpbmcgdXAgU01QIGR1
+bXAtY2FwdHVyZSBrZXJuZWwuCj4gPj4KPiA+PlNpZ25lZC1vZmYtYnk6IFpob3UgV2VuamlhbiA8
+emhvdXdqLWZuc3RAY24uZnVqaXRzdS5jb20+Cj4gPj4tLS0KPiA+PiAgRG9jdW1lbnRhdGlvbi9r
+ZHVtcC9rZHVtcC50eHQgfCA3ICsrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0
+aW9ucygrKQo+ID4+Cj4gPj5kaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9rZHVtcC9rZHVtcC50
+eHQgYi9Eb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnR4dAo+ID4+aW5kZXggNGFhMTk0ZS4uOTQ4
+YjQyZCAxMDA2NDQKPiA+Pi0tLSBhL0RvY3VtZW50YXRpb24va2R1bXAva2R1bXAudHh0Cj4gPj4r
+KysgYi9Eb2N1bWVudGF0aW9uL2tkdW1wL2tkdW1wLnR4dAo+ID4+QEAgLTM5Niw2ICszOTYsMTMg
+QEAgTm90ZXMgb24gbG9hZGluZyB0aGUgZHVtcC1jYXB0dXJlIGtlcm5lbDoKPiA+PiAgICBOb3Rl
+LCB0aG91Z2ggbWF4Y3B1cyBhbHdheXMgd29ya3MsIHdlIHNob3VsZCByZXBsYWNlIGl0IGJ5IG5y
+X2NwdXMgdG8KPiA+PiAgICBzYXZlIG1lbW9yeSBpZiBzdXBwb3J0ZWQgYnkgdGhlIGN1cnJlbnQg
+QVJDSCwgc3VjaCBhcyB4ODYuCj4gPj4KPiA+PisqIFdlIHNob3VsZCBicmluZyB1cCBhIFNNUCBk
+dW1wLWNhcHR1cmUga2VybmVsIGlmIHdlIGludGVuZCB0byB1c2UKPiA+Cj4gPldlbGwsIGhlcmUg
+YWJvdXQgU01QIGR1bXAtY2FwdHVyZSBrZXJuZWwgZG8geW91IG1lYW4ga2R1bXAga2VybmVsIHdp
+dGgKPiA+bXVsdGktY3B1PyBJZiBJIHVuZGVyc3RhbmQgaXQgY29ycmVjdGx5LCBpdCdzIHN0aWxs
+IFNNUCBrZHVtcCBrZXJuZWwKPiA+dGhvdWdoIG5yX2NwdXM9MSBpcyBzcGVjaWZpZWQuCj4gPgo+
+IAo+IEFjdHVhbGx5LCBJIGhhdmVuJ3Qga25vdyB0aGUgZGV0YWlsIGFib3V0IGl0LiBJIHdyb3Rl
+IHRoZSBzZW50ZW5jZSBhbG1vc3QKPiBiYXNlZCBvbiB0aGUgb3JpZ2luYWwgZGVzY3JpcHRpb246
+Cj4gCj4gKiBXZSBnZW5lcmFsbHkgZG9uJyBoYXZlIHRvIGJyaW5nIHVwIGEgU01QIGtlcm5lbCBq
+dXN0IHRvIGNhcHR1cmUgdGhlCj4gICBkdW1wLiBIZW5jZSBnZW5lcmFsbHkgaXQgaXMgdXNlZnVs
+IGVpdGhlciB0byBidWlsZCBhIFVQIGR1bXAtY2FwdHVyZQo+ICAga2VybmVsIG9yIHNwZWNpZnkg
+bWF4Y3B1cz0xIG9wdGlvbiB3aGlsZSBsb2FkaW5nIGR1bXAtY2FwdHVyZSBrZXJuZWwuCgpUaGlz
+IGlzIHJpZ2h0LiBIZXJlIGl0IG1lYW5zIGVpdGhlciB5b3UgYnVpbGQgYSBVUCBrZXJuZWwgdXNl
+ZCBmb3Iga2R1bXAKa2VybmVsIGJlY2F1c2Uga2R1bXAga2VybmVsIGRvZXNuJ3QgaGF2ZSB0byBi
+ZSB0aGUgc2FtZSBhcyB0aGUgMXN0Cmtlcm5lbCwgb3IgeW91IHVzZSBzbXAga2VybmVsIHdpdGgg
+bWF4Y3B1cz0xIHNwZWNpZmllZC4gU28gaWYgeW91IHdhbnQKdG8gc2F5IGtkdW1wIGtlcm5lbCB3
+aXRoIG11bHRpLWNwdSBuZWVkIGJlIGJyb3VnaHQgdXAgdG8gaW1wcm92ZSB0aGUKcGVyZm9ybWFu
+Y2Ugb2YgcGFyYWxsZWwgZHVtcGluZywgeW91IG5lZWQgcG9pbnQgaXQgb3V0IGNsZWFybHkuCgo+
+IAo+ID4+KyAgbXVsdGktdGhyZWFkcyBwcm9ncmFtcyB3aXRoIGl0LCBzdWNoIGFzIHBhcmFsbGVs
+IGR1bXAgZmVhdHVyZSBvZgo+ID4+KyAgbWFrZWR1bXBmaWxlLiBPdGhlcndpc2UsIHRoZSBtdWx0
+aS10aHJlYWRzIHByb2dyYW0gbWF5IGhhdmUgYSBncmVhdAo+ID4+KyAgcGVyZm9ybWFuY2UgZGVn
+cmFkYXRpb24uIFRvIGJyaW5nIHVwIGEgU01QIGR1bXAtY2FwdHVyZSBrZXJuZWwsIHdlCj4gPj4r
+ICBzaG91bGQgc3BlY2lmeSBtYXhjcHVzXG5yX2NwdXMgYW5kIGRpc2FibGVfY3B1X2FwaWM9W1hd
+IG9wdGlvbnMgd2hpbGUKPiA+PisgIGxvYWRpbmcgaXQuCj4gPj4rCj4gPj4gICogRm9yIHMzOTB4
+IHRoZXJlIGFyZSB0d28ga2R1bXAgbW9kZXM6IElmIGEgRUxGIGhlYWRlciBpcyBzcGVjaWZpZWQg
+d2l0aAo+ID4+ICAgIHRoZSBlbGZjb3JlaGRyPSBrZXJuZWwgcGFyYW1ldGVyLCBpdCBpcyB1c2Vk
+IGJ5IHRoZSBrZHVtcCBrZXJuZWwgYXMgaXQKPiA+PiAgICBpcyBkb25lIG9uIGFsbCBvdGhlciBh
+cmNoaXRlY3R1cmVzLiBJZiBubyBlbGZjb3JlaGRyPSBrZXJuZWwgcGFyYW1ldGVyIGlzCj4gPj4t
+LQo+ID4+MS44LjMuMQo+ID4+Cj4gPj4KPiA+Pgo+ID4+Cj4gPj5fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+ID4+a2V4ZWMgbWFpbGluZyBsaXN0Cj4gPj5r
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPj5odHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCj4gPgo+ID4KPiAKPiAKPiAtLSAKPiBUaGFua3MKPiBaaG91
+Cj4gCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
