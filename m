@@ -1,40 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bV1vq-0000x1-Ct
- for kexec@lists.infradead.org; Wed, 03 Aug 2016 19:34:23 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u73JXjxC005228
- for <kexec@lists.infradead.org>; Wed, 3 Aug 2016 15:34:01 -0400
-Received: from e23smtp01.au.ibm.com (e23smtp01.au.ibm.com [202.81.31.143])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24kkag94pj-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 03 Aug 2016 15:34:01 -0400
-Received: from localhost
- by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Thu, 4 Aug 2016 05:33:58 +1000
-Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 1E19C3578052
- for <kexec@lists.infradead.org>; Thu,  4 Aug 2016 05:33:55 +1000 (EST)
-Received: from d23av05.au.ibm.com (d23av05.au.ibm.com [9.190.234.119])
- by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u73JXtqO33554686
- for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 05:33:55 +1000
-Received: from d23av05.au.ibm.com (localhost [127.0.0.1])
- by d23av05.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u73JXsXF007398
- for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 05:33:54 +1000
-Subject: [RESEND][PATCH v2 2/2] powerpc/fadump: parse fadump reserve memory
- size based on memory range
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Thu, 04 Aug 2016 01:03:49 +0530
-In-Reply-To: <147025270324.29229.8322429758761407397.stgit@hbathini.in.ibm.com>
-References: <147025270324.29229.8322429758761407397.stgit@hbathini.in.ibm.com>
+ id 1bV5qG-0004FM-U5
+ for kexec@lists.infradead.org; Wed, 03 Aug 2016 23:44:53 +0000
+Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
+ start address
+References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
+ <1461715120.27026.4.camel@infradead.org>
+ <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
+ <1465576876.3105.54.camel@infradead.org>
+ <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
+ <1470079910.16559.49.camel@infradead.org> <20160802012551.GF7995@linaro.org>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <d3e36e72-6975-c0fd-346d-5e7a79ba2e1a@codeaurora.org>
+Date: Wed, 3 Aug 2016 17:44:30 -0600
 MIME-Version: 1.0
-Message-Id: <147025281599.29229.9962999599360876220.stgit@hbathini.in.ibm.com>
+In-Reply-To: <20160802012551.GF7995@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,124 +24,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>, rusty@rustcorp.com.au, ebiederm@xmission.com, vgoyal@redhat.com, linuxppc-dev <linuxppc-dev@ozlabs.org>
-Cc: kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, timur@codeaurora.org, rruigrok@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org, kexec@lists.infradead.org
 
-Currently, memory for fadump can be specified with fadump_reserve_mem=size,
-where only a fixed size can be specified. Add the below syntax as well, to
-support conditional reservation based on system memory size:
+Hi,
+I am using vmlinux in this case. Usually the kernel code start is at a 
+2M alignment from the System RAM start address. Since, kexec default 
+options were not loading the image at the right address (same as the 
+original kernel) and the API used to get iomem listing does not 
+differentiate between the reserved and memblock addresses, I recommended 
+that we look for the Kernel Code segment and round this down to get the 
+right start address.
+The above should not impact any current functionality or ignore any ram 
+regions when booting the patched kernel.
+I will report the patch on V2.
+Thanks,
+Sameer
 
-	fadump_reserve_mem=<range1>:<size1>[,<range2>:<size2>,...]
 
-This syntax helps using the same commandline parameter for different system
-memory sizes.
+On 8/1/2016 7:25 PM, AKASHI Takahiro wrote:
+> On Mon, Aug 01, 2016 at 12:31:50PM -0700, Geoff Levand wrote:
+>> Hi,
+>>
+>> On Fri, 2016-07-29 at 16:58 -0600, Goel, Sameer wrote:
+>>> In our setup we cannot place the kernel starting at 0 address. So, it it
+>>> placed at the first valid aligned address after placing the reserved
+>>> regions in memory.
+>>>
+>>> The code from the change (https://patchwork.kernel.org/patch/8325221/)
+>>> adds the reserved regions to iomem ranges. So, when the kexec tool is
+>>> run it picks up the first reserved region as the start address for
+>>> physical ram. When the kernel is loaded at this address, it fails to boot.
+>>>
+>>> So, I have put in a filter in the code that would pick up the right
+>>> address of the primary kernel after this change was introduced.
+>
+> You're using Image, not vmlinux, right?
+> I don't think that it's a good idea to add this sort of restriction
+> because it is very system-specific.
+> You'd better use "--mem-min=" parameter in your case.
+> (In fact, this option doesn't work on the current arm64 port of kexec-tools,
+> though.)
+>
+> Thanks,
+> -Takahiro AKASHI
+>
+>>> Thanks,
+>>> Sameer
+>>
+>>
+>> Your patch no longer applies.  Please rebase it to my
+>> for-merge-arm64-v2 branch and re-post.
+>>
+>> -Geoff
+>>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Reviewed-by: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/fadump.c |   64 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 55 insertions(+), 9 deletions(-)
-
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index b3a6633..4661ae6 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -193,6 +193,56 @@ static unsigned long init_fadump_mem_struct(struct fadump_mem_struct *fdm,
- 	return addr;
- }
- 
-+/*
-+ * This function parses command line for fadump_reserve_mem=
-+ *
-+ * Supports the below two syntaxes:
-+ *    1. fadump_reserve_mem=size
-+ *    2. fadump_reserve_mem=ramsize-range:size[,...]
-+ *
-+ * Sets fw_dump.reserve_bootvar with the memory size
-+ * provided, 0 otherwise
-+ *
-+ * The function returns -EINVAL on failure, 0 otherwise.
-+ */
-+static int __init parse_fadump_reserve_mem(void)
-+{
-+	char *name = "fadump_reserve_mem=";
-+	char *fadump_cmdline = NULL, *cur;
-+
-+	fw_dump.reserve_bootvar = 0;
-+
-+	/* find fadump_reserve_mem and use the last one if there are many */
-+	cur = strstr(boot_command_line, name);
-+	while (cur) {
-+		fadump_cmdline = cur;
-+		cur = strstr(cur+1, name);
-+	}
-+
-+	/* when no fadump_reserve_mem= cmdline option is provided */
-+	if (!fadump_cmdline)
-+		return 0;
-+
-+	fadump_cmdline += strlen(name);
-+
-+	/* for fadump_reserve_mem=size cmdline syntax */
-+	if (!is_param_range_based(fadump_cmdline)) {
-+		fw_dump.reserve_bootvar = memparse(fadump_cmdline, NULL);
-+		return 0;
-+	}
-+
-+	/* for fadump_reserve_mem=ramsize-range:size[,...] cmdline syntax */
-+	cur = fadump_cmdline;
-+	fw_dump.reserve_bootvar = parse_mem_range_size("fadump_reserve_mem",
-+					&cur, memblock_phys_mem_size());
-+	if (cur == fadump_cmdline) {
-+		printk(KERN_INFO "fadump_reserve_mem: Invaild syntax!\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * fadump_calculate_reserve_size(): reserve variable boot area 5% of System RAM
-  *
-@@ -212,12 +262,17 @@ static inline unsigned long fadump_calculate_reserve_size(void)
- {
- 	unsigned long size;
- 
-+	/* sets fw_dump.reserve_bootvar */
-+	parse_fadump_reserve_mem();
-+
- 	/*
- 	 * Check if the size is specified through fadump_reserve_mem= cmdline
- 	 * option. If yes, then use that.
- 	 */
- 	if (fw_dump.reserve_bootvar)
- 		return fw_dump.reserve_bootvar;
-+	else
-+		printk(KERN_INFO "fadump: calculating default boot size\n");
- 
- 	/* divide by 20 to get 5% of value */
- 	size = memblock_end_of_DRAM() / 20;
-@@ -348,15 +403,6 @@ static int __init early_fadump_param(char *p)
- }
- early_param("fadump", early_fadump_param);
- 
--/* Look for fadump_reserve_mem= cmdline option */
--static int __init early_fadump_reserve_mem(char *p)
--{
--	if (p)
--		fw_dump.reserve_bootvar = memparse(p, &p);
--	return 0;
--}
--early_param("fadump_reserve_mem", early_fadump_reserve_mem);
--
- static void register_fw_dump(struct fadump_mem_struct *fdm)
- {
- 	int rc;
-
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
