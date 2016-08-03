@@ -1,16 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bUmR0-0004Kn-N4
- for kexec@lists.infradead.org; Wed, 03 Aug 2016 03:01:31 +0000
-Date: Wed, 3 Aug 2016 11:01:02 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v4 1/2] Documentation: kdump: remind user of nr_cpus
-Message-ID: <20160803030102.GC2465@x1.redhat.com>
-References: <1470191495-32020-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ id 1bV1uh-0000pq-2l
+ for kexec@lists.infradead.org; Wed, 03 Aug 2016 19:33:11 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u73JNdUb139775
+ for <kexec@lists.infradead.org>; Wed, 3 Aug 2016 15:32:49 -0400
+Received: from e23smtp02.au.ibm.com (e23smtp02.au.ibm.com [202.81.31.144])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24kkahs11a-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 03 Aug 2016 15:32:49 -0400
+Received: from localhost
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Thu, 4 Aug 2016 05:32:46 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 3EF062CE8056
+ for <kexec@lists.infradead.org>; Thu,  4 Aug 2016 05:32:43 +1000 (EST)
+Received: from d23av05.au.ibm.com (d23av05.au.ibm.com [9.190.234.119])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u73JWhm724314094
+ for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 05:32:43 +1000
+Received: from d23av05.au.ibm.com (localhost [127.0.0.1])
+ by d23av05.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u73JWggN006400
+ for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 05:32:42 +1000
+Subject: [RESEND][PATCH v2 0/2] powerpc/fadump: support memory range syntax
+ for fadump memory reservation
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Thu, 04 Aug 2016 01:02:37 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1470191495-32020-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Message-Id: <147025270324.29229.8322429758761407397.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,61 +46,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>, akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org, d.hatayama@jp.fujitsu.com, dyoung@redhat.com, linux-kernel@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, rusty@rustcorp.com.au, ebiederm@xmission.com, vgoyal@redhat.com, linuxppc-dev <linuxppc-dev@ozlabs.org>
+Cc: kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
 
-Hi Wenjian,
+This patchset adds support to input system memory range based memory size
+for fadump reservation. The crashkernel parameter already supports such
+syntax. The first patch refactors the parsing code of crashkernel parameter
+for reuse. The second patch uses the newly refactored parsing code to reserve
+memory for fadump based on system memory size.
 
-On 08/03/16 at 10:31am, Zhou Wenjian wrote:
-> v3->v4: update the description of bring up SMP dump-capture kernel
-> v2->v3: add description of nr_cpus.
-> v1->v2: change nr_cpus to maxcpus
-> 
-> nr_cpus can help to save memory. So we should remind user of it.
-> 
-> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+---
 
-The change log can be put in cover-letter if you are posting a patchset,
-or put it below the three dashes where it will be discarded
-automatically when maintainer apply your patch to his/her branch.
+Hari Bathini (2):
+      kexec: refactor code parsing size based on memory range
+      powerpc/fadump: parse fadump reserve memory size based on memory range
 
-Next time please CC akpm too, he helps to pick up these kexec related
-patches.
 
-Except for this, I am fine with this patchset. Ack it again.
+ arch/powerpc/kernel/fadump.c |   64 ++++++++++++++++++++++++----
+ include/linux/kernel.h       |    5 ++
+ kernel/kexec_core.c          |   63 ++--------------------------
+ kernel/params.c              |   96 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 161 insertions(+), 67 deletions(-)
 
-Acked-by: Baoquan He <bhe@redhat.com>
-
-Thanks
-Baoquan
-
-> ---
->  Documentation/kdump/kdump.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index 88ff63d..b474060 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -393,6 +393,8 @@ Notes on loading the dump-capture kernel:
->  * We generally don' have to bring up a SMP kernel just to capture the
->    dump. Hence generally it is useful either to build a UP dump-capture
->    kernel or specify maxcpus=1 option while loading dump-capture kernel.
-> +  Note, though maxcpus always works, we should replace it by nr_cpus to
-> +  save memory if supported by the current ARCH, such as x86.
->  
->  * For s390x there are two kdump modes: If a ELF header is specified with
->    the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
-> -- 
-> 1.8.3.1
-> 
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
