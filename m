@@ -1,39 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVHiU-0001DN-KY
- for kexec@lists.infradead.org; Thu, 04 Aug 2016 12:25:40 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u74COHiT100804
- for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 08:25:18 -0400
-Received: from e23smtp09.au.ibm.com (e23smtp09.au.ibm.com [202.81.31.142])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24kkakh5v6-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 04 Aug 2016 08:25:17 -0400
-Received: from localhost
- by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 4 Aug 2016 22:25:14 +1000
-Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id AC4F12CE802D
- for <kexec@lists.infradead.org>; Thu,  4 Aug 2016 22:25:11 +1000 (EST)
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u74CPBWQ28049444
- for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 22:25:11 +1000
-Received: from d23av03.au.ibm.com (localhost [127.0.0.1])
- by d23av03.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u74CPBYq019841
- for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 22:25:11 +1000
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH 7/7] ima: support restoring multiple template formats
-Date: Thu,  4 Aug 2016 08:24:35 -0400
-In-Reply-To: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1470313475-20090-8-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1bVJKo-0005t7-TP
+ for kexec@lists.infradead.org; Thu, 04 Aug 2016 14:09:19 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [PATCH v2 3/3] x86/apic: Improved the setting of interrupt mode
+ for bsp
+References: <1469501995-2991-1-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <1469501995-2991-4-git-send-email-weijg.fnst@cn.fujitsu.com>
+ <87k2g92gxb.fsf@x220.int.ebiederm.org>
+ <1469520148.7811.54.camel@localhost>
+ <87h9b3s0vr.fsf@x220.int.ebiederm.org>
+ <1470305688.2274.85.camel@localhost>
+Date: Thu, 04 Aug 2016 08:52:58 -0500
+In-Reply-To: <1470305688.2274.85.camel@localhost> (Jiangang Wei's message of
+ "Thu, 4 Aug 2016 10:17:59 +0000")
+Message-ID: <871t248wud.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,128 +25,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-security-module@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-ima-devel@lists.sourceforge.net, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+To: "Wei, Jiangang" <weijg.fnst@cn.fujitsu.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "xpang@redhat.com" <xpang@redhat.com>, "joro@8bytes.org" <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cao,
+ Jin" <caoj.fnst@cn.fujitsu.com>, "mingo@redhat.com" <mingo@redhat.com>, "kernel@kyup.com" <kernel@kyup.com>, "hpa@zytor.com" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-The configured IMA measurement list template format can be replaced at
-runtime on the boot command line, including a custom template format.
-This patch adds support for restoring a measuremement list containing
-multiple builtin/custom template formats.
+"Wei, Jiangang" <weijg.fnst@cn.fujitsu.com> writes:
 
-Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
----
- security/integrity/ima/ima_template.c | 58 +++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 3 deletions(-)
+> Hi Eric,
+>
+> I have several questions about kdump and APIC mode.
+> specific issues at the end of the mail.
+>
+> On Tue, 2016-08-02 at 09:26 -0500, Eric W. Biederman wrote:
+[snip]
+>> For simplicity when MP support was first added, a few parts of early
+>> bootup were left handled in PC/AT compatible mode.  Mostly it is just
+>> silly.
+>> 
+>> Unless there is a good reason I think we should strive to remove those
+>> few moments when the system is using interrupts in PC/AT mode and always
+>> run interrupts in the final mode we intend to run interrupts in.
+>> In fact the code under acpi_gbl_reduced_hardware does that for some
+>> special cases already today.
+>> 
+>> At the end of the day that should end up with a simpler more reliable
+>> kernel.  Especially for the dump capture kernel.
+>> 
+>> AKA:
+>> I am proposing make the code say something like:
+>> 	if (pc_at_compatible_pic_mode) {
+>>         	do_legacy_pic_mode();
+>>         } else {
+>>         	do_mp_mode();
+>>         }
+>> 
+>> If my memory serves virtual wire mode does not need to be enabled at all
+>> in mp mode, so if we are coming from mp mode (with no shutdown of the
+>> apics in the first kernel).  Then there will be no information anywhere
+>> about which apics need to be programmed into apic mode.
+> "mp mode" you mentioned means "Symmetric I/O Mode", right ?
 
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index b7bcb62..3923718 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -56,6 +56,8 @@ static int __init ima_template_setup(char *str)
- 	if (ima_template)
- 		return 1;
- 
-+	ima_init_template_list();
-+
- 	/*
- 	 * Verify that a template with the supplied name exists.
- 	 * If not, use CONFIG_IMA_DEFAULT_TEMPLATE.
-@@ -150,9 +152,14 @@ static int template_desc_init_fields(const char *template_fmt,
- {
- 	const char *template_fmt_ptr;
- 	struct ima_template_field *found_fields[IMA_TEMPLATE_NUM_FIELDS_MAX];
--	int template_num_fields = template_fmt_size(template_fmt);
-+	int template_num_fields;
- 	int i, len;
- 
-+	if (num_fields && *num_fields > 0) /* already initialized? */
-+		return 0;
-+
-+	template_num_fields = template_fmt_size(template_fmt);
-+
- 	if (template_num_fields > IMA_TEMPLATE_NUM_FIELDS_MAX) {
- 		pr_err("format string '%s' contains too many fields\n",
- 		       template_fmt);
-@@ -202,6 +209,9 @@ void __init ima_init_template_list(void)
- {
- 	int i;
- 
-+	if (!list_empty(&defined_templates))
-+		return;
-+
- 	spin_lock(&template_list);
- 	for (i = 0; i < ARRAY_SIZE(builtin_templates); i++) {
- 		list_add_tail_rcu(&builtin_templates[i].list,
-@@ -227,6 +237,35 @@ int __init ima_init_template(void)
- 	return result;
- }
- 
-+static struct ima_template_desc *restore_template_fmt(char *template_name)
-+{
-+	struct ima_template_desc *template_desc = NULL;
-+	int ret;
-+
-+	ret = template_desc_init_fields(template_name, NULL, NULL);
-+	if (ret < 0) {
-+		pr_err("attempting to initialize the template \"%s\" failed\n",
-+			template_name);
-+		goto out;
-+	}
-+
-+	template_desc = kzalloc(sizeof(*template_desc), GFP_KERNEL);
-+	if (!template_desc)
-+		goto out;
-+
-+	template_desc->name = "";
-+	template_desc->fmt = kstrdup(template_name, GFP_KERNEL);
-+	if (!template_desc->fmt)
-+		goto out;
-+
-+	spin_lock(&template_list);
-+	list_add_tail_rcu(&template_desc->list, &defined_templates);
-+	spin_unlock(&template_list);
-+	synchronize_rcu();
-+out:
-+	return template_desc;
-+}
-+
- static int ima_restore_template_data(struct ima_template_desc *template_desc,
- 				     void *template_data,
- 				     int template_data_size,
-@@ -359,10 +398,23 @@ int ima_restore_measurement_list(loff_t size, void *buf)
- 		}
- 		data_v1 = bufp += (u_int8_t)hdr_v1->template_name_len;
- 
--		/* get template format */
- 		template_desc = lookup_template_desc(template_name);
- 		if (!template_desc) {
--			pr_err("template \"%s\" not found\n", template_name);
-+			template_desc = restore_template_fmt(template_name);
-+			if (!template_desc)
-+				break;
-+		}
-+
-+		/*
-+		 * Only the running system's template format is initialized
-+		 * on boot.  As needed, initialize the other template formats.
-+		 */
-+		ret = template_desc_init_fields(template_desc->fmt,
-+						&(template_desc->fields),
-+						&(template_desc->num_fields));
-+		if (ret < 0) {
-+			pr_err("attempting to restore the template fmt \"%s\" \
-+				failed\n", template_desc->fmt);
- 			ret = -EINVAL;
- 			break;
- 		}
--- 
-2.1.0
+Yes.
 
+>> As such to simplify the kdump process it is the wrong process to go back
+>> into virtual wire PC/AT compatible pic mode.  Because once we remove the
+>> code from the crashing kernel we won't have enough information to make
+>> it work.  Unfortunately in some cases it is a one way transition.
+>
+> You ever told me that the only reason we have do any apic shutdown is
+> bugs in older kernels. and looks like you're inclined to remove the
+> codes used to shutdown APIC.
+> That's an import start point you suggest me to enable "Symmetric I/O
+> Mode" at the bootup stage of kernel, right?
+
+Limitations in older kernels that made it very hard to initialize
+Symmetric I/O mode during bootup.  So the code started by doing the
+pragmatic thing.  The limitations in the older kernels that required we
+transition through PIC mode on bootup appear long since gone.  But the
+code in the bootup path is still doing that silly thing, and enabling
+interrupts and running in PIC mode for just a moment before switching to
+the final way we handle interrupts.
+
+Except for the history that got us there it is a ludicrous way to
+operation.
+
+> but In my opinion, the kdump-capture kernel don't need to run on MP
+> system, but only on BSP. generally, we use kdump with nr_cpus=1. 
+> If only one cpu is enabled and used,  do we still need to set "Symmetric
+> I/O Mode" for APIC ? I think the answer is no.
+
+We still need to set "Symmetric I/O Mode"  Part of the problem is that
+we can not guarantee that we are running on the BSP when we crash.  We
+can not guarantee that we can switch CPUs.  Which makes anything that
+explicitly requires the use of the bootstrap processor a problem.
+
+Today the state of the code is we transition through PIC mode before
+landing in "Symmetric I/O Mode".
+
+Further the most reliable thing we can do is to disable interrupts (aka
+local_irq_disable) with the APICs in "Symmetric I/O Mode" in the
+crashing kernel.  Then in the kernel that is comming up we can reprogram
+the APICs to be in the same mode they are already in, and then call
+(local_irq_enable).
+
+Returning to PIC mode even with a fully working kernel is a little
+tricky during ordinary kexec (as not all of the information is there) I
+updated the code to probe for the missing information at bootup (while
+we are still in PIC mode) years ago.  So it seems to work when
+everything is perfect.
+
+We got into this entire conversation because what we are doing on the
+crash shutdown epath is not enough to return us to PIC mode and allow a
+kernel that assumes virtual wire mode is working to boot.  Which to me
+means it is time to short circuit things and go directly to the normal
+non-PIC mode and not have a detour through PIC mode of any sort during
+boot of up a crash capture kernel.
+
+> In other words, It's intended that go back into virtual wire PC/AT
+> compatible pic mode by shutdown APIC.
+
+On the kexec on panic apic shutdown path yes.  That is what the code
+currently attempts to do and as demonstrated by the existence of this
+thread that code is no longer good enough.
+
+Eric
 
 _______________________________________________
 kexec mailing list
