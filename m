@@ -1,42 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVNxH-0003TG-HW
- for kexec@lists.infradead.org; Thu, 04 Aug 2016 19:05:20 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u74J4Eh3056403
- for <kexec@lists.infradead.org>; Thu, 4 Aug 2016 15:04:58 -0400
-Received: from e23smtp09.au.ibm.com (e23smtp09.au.ibm.com [202.81.31.142])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24kkahces0-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 04 Aug 2016 15:04:58 -0400
-Received: from localhost
- by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 5 Aug 2016 05:04:56 +1000
-Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 385CE3578052
- for <kexec@lists.infradead.org>; Fri,  5 Aug 2016 05:04:53 +1000 (EST)
-Received: from d23av05.au.ibm.com (d23av05.au.ibm.com [9.190.234.119])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u74J4rr922413534
- for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 05:04:53 +1000
-Received: from d23av05.au.ibm.com (localhost [127.0.0.1])
- by d23av05.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u74J4q4Z013297
- for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 05:04:53 +1000
-Subject: Re: [RESEND][PATCH v2 1/2] kexec: refactor code parsing size based on
- memory range
-References: <147025270324.29229.8322429758761407397.stgit@hbathini.in.ibm.com>
- <147025276793.29229.17307767327276387636.stgit@hbathini.in.ibm.com>
- <20160804092654.GA23001@dhcp-128-65.nay.redhat.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Fri, 5 Aug 2016 00:34:48 +0530
+ id 1bVRrr-0006t9-Ja
+ for kexec@lists.infradead.org; Thu, 04 Aug 2016 23:16:01 +0000
+Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
+ start address
+References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
+ <1461715120.27026.4.camel@infradead.org>
+ <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
+ <1465576876.3105.54.camel@infradead.org>
+ <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
+ <1470079910.16559.49.camel@infradead.org> <20160802012551.GF7995@linaro.org>
+ <d3e36e72-6975-c0fd-346d-5e7a79ba2e1a@codeaurora.org>
+ <20160804011600.GI7995@linaro.org>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <49ceb561-af9e-6ffc-926f-05bdb02c0304@codeaurora.org>
+Date: Thu, 4 Aug 2016 17:15:36 -0600
 MIME-Version: 1.0
-In-Reply-To: <20160804092654.GA23001@dhcp-128-65.nay.redhat.com>
-Message-Id: <219ccf59-df37-e9ee-d339-71f57c30a700@linux.vnet.ibm.com>
+In-Reply-To: <20160804011600.GI7995@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -46,302 +27,127 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, rusty@rustcorp.com.au, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, ebiederm@xmission.com, vgoyal@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, timur@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org, kexec@lists.infradead.org
 
-Hi Dave
+ > In your original email, you said that you cannot place the kernel
+ > at the address 0x0. Is this your problem, isn't it?
+
+Not being able to put the kernel at 0 should not be considered a  
+restriction. The kernel is not mandated to start at 0 address. The tools  
+code was working fine till arm linux developers released a new set of  
+changes to get the alignment right for performance reasons.
+
+This change makes sure that he kernel start is 1GB aligned. So, once the  
+round doen happens the regions that are reserved memblocks are also seen  
+using the iomem query API. The reserved regions should not be considered  
+as a part of the kernel RAM.
+
+ > If so, you can explicitly specify the start address with  
+"crashkernel=X@Y"
+ > parameter. Or we might better add "mem-min" support as I said.
+
+I agree that the above options will solve this case.
+
+As I mentioned before that not starting at address 0x0 should not be  
+considered a limitation.So, default case of reuse-cmdline should work as  
+is.
+In this code we are trying to find where the kernel code start is. Based  
+on this info we can always clearly determine the kernel ram start. This  
+would not be a limitation.
+
+Any system ram region located before kernel ram should not be used  
+unless explicitly reclaimed or added.
+
+Thanks,
+Sameer
 
 
-Thanks for the review..
-
-
-On Thursday 04 August 2016 02:56 PM, Dave Young wrote:
-> Hi Hari,
+On 8/3/2016 7:16 PM, AKASHI Takahiro wrote:
+> On Wed, Aug 03, 2016 at 05:44:30PM -0600, Goel, Sameer wrote:
+>> Hi,
+>> I am using vmlinux in this case. Usually the kernel code start is at
+>> a 2M alignment from the System RAM start address. Since, kexec
+>> default options were not loading the image at the right address
+>> (same as the original kernel) and the API used to get iomem listing
+>> does not differentiate between the reserved and memblock addresses,
 >
-> On 08/04/16 at 01:03am, Hari Bathini wrote:
->> crashkernel parameter supports different syntaxes to specify the amount
->> of memory to be reserved for kdump kernel. Below is one of the supported
->> syntaxes that needs parsing to find the memory size to reserve, based on
->> memory range:
+> In your original email, you said that you cannot place the kernel
+> at the address 0x0. Is this your problem, isn't it?
+>
+> If so, you can explicitly specify the start address with "crashkernel=X@Y"
+> parameter. Or we might better add "mem-min" support as I said.
+>
+>> I recommended that we look for the Kernel Code segment and round
+>> this down to get the right start address.
+>> The above should not impact any current functionality or ignore any
+>> ram regions when booting the patched kernel.
+>
+> no need to impose such a unnecessary restriction.
+>
+> Thanks,
+> -Takahiro AKASHI
+>
+>> I will report the patch on V2.
+>> Thanks,
+>> Sameer
 >>
->>          crashkernel=<range1>:<size1>[,<range2>:<size2>,...]
 >>
->> While such parsing is implemented for crashkernel parameter, it applies
->> to other parameters, like fadump_reserve_mem=, which could use similar
->> syntax. This patch moves crashkernel's parsing code for above syntax to
->> to kernel/params.c file for reuse. Two functions is_param_range_based()
->> and parse_mem_range_size() are added to kernel/params.c file for this
->> purpose.
+>> On 8/1/2016 7:25 PM, AKASHI Takahiro wrote:
+>>> On Mon, Aug 01, 2016 at 12:31:50PM -0700, Geoff Levand wrote:
+>>>> Hi,
+>>>>
+>>>> On Fri, 2016-07-29 at 16:58 -0600, Goel, Sameer wrote:
+>>>>> In our setup we cannot place the kernel starting at 0 address. So, it it
+>>>>> placed at the first valid aligned address after placing the reserved
+>>>>> regions in memory.
+>>>>>
+>>>>> The code from the change (https://patchwork.kernel.org/patch/8325221/)
+>>>>> adds the reserved regions to iomem ranges. So, when the kexec tool is
+>>>>> run it picks up the first reserved region as the start address for
+>>>>> physical ram. When the kernel is loaded at this address, it fails to boot.
+>>>>>
+>>>>> So, I have put in a filter in the code that would pick up the right
+>>>>> address of the primary kernel after this change was introduced.
+>>>
+>>> You're using Image, not vmlinux, right?
+>>> I don't think that it's a good idea to add this sort of restriction
+>>> because it is very system-specific.
+>>> You'd better use "--mem-min=" parameter in your case.
+>>> (In fact, this option doesn't work on the current arm64 port of kexec-tools,
+>>> though.)
+>>>
+>>> Thanks,
+>>> -Takahiro AKASHI
+>>>
+>>>>> Thanks,
+>>>>> Sameer
+>>>>
+>>>>
+>>>> Your patch no longer applies.  Please rebase it to my
+>>>> for-merge-arm64-v2 branch and re-post.
+>>>>
+>>>> -Geoff
+>>>>
+>>>
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>
 >>
->> Any parameter that uses the above syntax can use is_param_range_based()
->> function to validate the syntax and parse_mem_range_size() function to
->> get the parsed memory size. While some code is moved to kernel/params.c
->> file, there is no change functionality wise in parsing the crashkernel
->> parameter.
->>
->> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
->> ---
->>
->> Changes from v1:
->> 1. Updated changelog
->>
->>   include/linux/kernel.h |    5 +++
->>   kernel/kexec_core.c    |   63 +++-----------------------------
->>   kernel/params.c        |   96 ++++++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 106 insertions(+), 58 deletions(-)
->>
->> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
->> index d96a611..2df7ba2 100644
->> --- a/include/linux/kernel.h
->> +++ b/include/linux/kernel.h
->> @@ -435,6 +435,11 @@ extern char *get_options(const char *str, int nints, int *ints);
->>   extern unsigned long long memparse(const char *ptr, char **retptr);
->>   extern bool parse_option_str(const char *str, const char *option);
->>   
->> +extern bool __init is_param_range_based(const char *cmdline);
->> +extern unsigned long long __init parse_mem_range_size(const char *param,
->> +						      char **str,
->> +						      unsigned long long system_ram);
->> +
->>   extern int core_kernel_text(unsigned long addr);
->>   extern int core_kernel_data(unsigned long addr);
->>   extern int __kernel_text_address(unsigned long addr);
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 5616755..3a74024 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -1104,59 +1104,9 @@ static int __init parse_crashkernel_mem(char *cmdline,
->>   	char *cur = cmdline, *tmp;
->>   
->>   	/* for each entry of the comma-separated list */
->> -	do {
->> -		unsigned long long start, end = ULLONG_MAX, size;
->> -
->> -		/* get the start of the range */
->> -		start = memparse(cur, &tmp);
->> -		if (cur == tmp) {
->> -			pr_warn("crashkernel: Memory value expected\n");
->> -			return -EINVAL;
->> -		}
->> -		cur = tmp;
->> -		if (*cur != '-') {
->> -			pr_warn("crashkernel: '-' expected\n");
->> -			return -EINVAL;
->> -		}
->> -		cur++;
->> -
->> -		/* if no ':' is here, than we read the end */
->> -		if (*cur != ':') {
->> -			end = memparse(cur, &tmp);
->> -			if (cur == tmp) {
->> -				pr_warn("crashkernel: Memory value expected\n");
->> -				return -EINVAL;
->> -			}
->> -			cur = tmp;
->> -			if (end <= start) {
->> -				pr_warn("crashkernel: end <= start\n");
->> -				return -EINVAL;
->> -			}
->> -		}
->> -
->> -		if (*cur != ':') {
->> -			pr_warn("crashkernel: ':' expected\n");
->> -			return -EINVAL;
->> -		}
->> -		cur++;
->> -
->> -		size = memparse(cur, &tmp);
->> -		if (cur == tmp) {
->> -			pr_warn("Memory value expected\n");
->> -			return -EINVAL;
->> -		}
->> -		cur = tmp;
->> -		if (size >= system_ram) {
->> -			pr_warn("crashkernel: invalid size\n");
->> -			return -EINVAL;
->> -		}
->> -
->> -		/* match ? */
->> -		if (system_ram >= start && system_ram < end) {
->> -			*crash_size = size;
->> -			break;
->> -		}
->> -	} while (*cur++ == ',');
->> +	*crash_size = parse_mem_range_size("crashkernel", &cur, system_ram);
->> +	if (cur == cmdline)
->> +		return -EINVAL;
->>   
->>   	if (*crash_size > 0) {
->>   		while (*cur && *cur != ' ' && *cur != '@')
->> @@ -1293,7 +1243,6 @@ static int __init __parse_crashkernel(char *cmdline,
->>   			     const char *name,
->>   			     const char *suffix)
->>   {
->> -	char	*first_colon, *first_space;
->>   	char	*ck_cmdline;
->>   
->>   	BUG_ON(!crash_size || !crash_base);
->> @@ -1311,12 +1260,10 @@ static int __init __parse_crashkernel(char *cmdline,
->>   		return parse_crashkernel_suffix(ck_cmdline, crash_size,
->>   				suffix);
->>   	/*
->> -	 * if the commandline contains a ':', then that's the extended
->> +	 * if the parameter is range based, then that's the extended
->>   	 * syntax -- if not, it must be the classic syntax
->>   	 */
->> -	first_colon = strchr(ck_cmdline, ':');
->> -	first_space = strchr(ck_cmdline, ' ');
->> -	if (first_colon && (!first_space || first_colon < first_space))
->> +	if (is_param_range_based(ck_cmdline))
->>   		return parse_crashkernel_mem(ck_cmdline, system_ram,
->>   				crash_size, crash_base);
->>   
->> diff --git a/kernel/params.c b/kernel/params.c
->> index a6d6149..84e40ae 100644
->> --- a/kernel/params.c
->> +++ b/kernel/params.c
-> /lib/cmdline.c is a better place for this?
-
-True. Will change accordingly..
-
->> @@ -268,6 +268,102 @@ char *parse_args(const char *doing,
->>   	return err;
->>   }
->>   
->> +/*
->> + * is_param_range_based - check if current parameter is range based
->> + * @cmdline: points to the parameter to check
->> + *
->> + * Returns true when the current paramer is range based, false otherwise
->> + */
-> It is not necessary to be range specific? Maybe is_colon_in_param or
-> something else. If it is range based we need know what is the range
-> like.
-
-Hmmm.. I prefer to rename it to is_colon_in_param() and avoid
-adding anymore checks here..
-
->> +bool __init is_param_range_based(const char *cmdline)
->> +{
->> +	char    *first_colon, *first_space;
->> +
->> +	first_colon = strchr(cmdline, ':');
->> +	first_space = strchr(cmdline, ' ');
->> +	if (first_colon && (!first_space || first_colon < first_space))
->> +		return true;
->> +
->> +	return false;
->> +}
->> +
->> +/*
->> + * parse_mem_range_size - parse size based on memory range
->> + * @param:  the thing being parsed
->> + * @str: (input)  where parse begins
->> + *                expected format - <range1>:<size1>[,<range2>:<size2>,...]
-> There should be detail example about the range format, especially about
-> the "-" separator.
+>> --
+>> Qualcomm Innovation Center, Inc.
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project.
 >
 
-Sure..
-
->> + *       (output) On success - next char after parse completes
->> + *                On failure - unchanged
->> + * @system_ram: system ram size to check memory range against
->> + *
->> + * Returns the memory size on success and 0 on failure
->> + */
->> +unsigned long long __init parse_mem_range_size(const char *param,
->> +					       char **str,
->> +					       unsigned long long system_ram)
->> +{
->> +	char *cur = *str, *tmp;
->> +	unsigned long long mem_size = 0;
->> +
->> +	/* for each entry of the comma-separated list */
->> +	do {
->> +		unsigned long long start, end = ULLONG_MAX, size;
->> +
->> +		/* get the start of the range */
->> +		start = memparse(cur, &tmp);
->> +		if (cur == tmp) {
->> +			printk(KERN_INFO "%s: Memory value expected\n", param);
->> +			return mem_size;
->> +		}
->> +		cur = tmp;
->> +		if (*cur != '-') {
->> +			printk(KERN_INFO "%s: '-' expected\n", param);
->> +			return mem_size;
->> +		}
->> +		cur++;
->> +
->> +		/* if no ':' is here, than we read the end */
->> +		if (*cur != ':') {
->> +			end = memparse(cur, &tmp);
->> +			if (cur == tmp) {
->> +				printk(KERN_INFO "%s: Memory value expected\n",
-> s/Memory/memory?
-
-I haven't changed the content of print messages while moving them around.
-Probably I should..
-
-- Hari
-
->> +					param);
->> +				return mem_size;
->> +			}
->> +			cur = tmp;
->> +			if (end <= start) {
->> +				printk(KERN_INFO "%s: end <= start\n", param);
->> +				return mem_size;
->> +			}
->> +		}
->> +
->> +		if (*cur != ':') {
->> +			printk(KERN_INFO "%s: ':' expected\n", param);
->> +			return mem_size;
->> +		}
->> +		cur++;
->> +
->> +		size = memparse(cur, &tmp);
->> +		if (cur == tmp) {
->> +			printk(KERN_INFO "%s: Memory value expected\n", param);
-> Ditto.
->
->> +			return mem_size;
->> +		}
->> +		cur = tmp;
->> +		if (size >= system_ram) {
->> +			printk(KERN_INFO "%s: invalid size\n", param);
->> +			return mem_size;
->> +		}
->> +
->> +		/* match ? */
->> +		if (system_ram >= start && system_ram < end) {
->> +			mem_size = size;
->> +			*str = cur;
->> +			break;
->> +		}
->> +	} while (*cur++ == ',');
->> +
->> +	return mem_size;
->> +}
->> +
->>   /* Lazy bastard, eh? */
->>   #define STANDARD_PARAM_DEF(name, type, format, strtolfn)      		\
->>   	int param_set_##name(const char *val, const struct kernel_param *kp) \
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> Thanks
-> Dave
->
-
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
