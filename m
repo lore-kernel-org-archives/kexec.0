@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
+Received: from mail-pa0-x22a.google.com ([2607:f8b0:400e:c03::22a])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVB0E-0005Q1-ET
- for kexec@lists.infradead.org; Thu, 04 Aug 2016 05:15:31 +0000
-Received: by mail-pa0-x22d.google.com with SMTP id ti13so1787268pac.0
- for <kexec@lists.infradead.org>; Wed, 03 Aug 2016 22:15:09 -0700 (PDT)
-Date: Thu, 4 Aug 2016 14:20:49 +0900
+ id 1bVBx0-0000sQ-QX
+ for kexec@lists.infradead.org; Thu, 04 Aug 2016 06:16:16 +0000
+Received: by mail-pa0-x22a.google.com with SMTP id iw10so80443689pac.2
+ for <kexec@lists.infradead.org>; Wed, 03 Aug 2016 23:15:54 -0700 (PDT)
+Date: Thu, 4 Aug 2016 15:21:32 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v23 0/9] arm64: add kdump support
-Message-ID: <20160804052048.GL7995@linaro.org>
-References: <20160726075659.2290-1-takahiro.akashi@linaro.org>
- <20160726080925.GA2363@linaro.org>
- <CAB=otbTODnOwFiLZT7bm1_MLyORQ1cx-gaeg7bm+bReaMRhYwg@mail.gmail.com>
+Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT
+ property, usable-memory-range
+Message-ID: <20160804062131.GM7995@linaro.org>
+References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
+ <20160712050514.22307-3-takahiro.akashi@linaro.org>
+ <578D1A31.5080509@arm.com> <20160721005756.GN20774@linaro.org>
+ <579225B6.3090209@arm.com> <20160725052754.GA8855@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAB=otbTODnOwFiLZT7bm1_MLyORQ1cx-gaeg7bm+bReaMRhYwg@mail.gmail.com>
+In-Reply-To: <20160725052754.GA8855@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,65 +29,164 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ruslan Bilovol <ruslan.bilovol@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, dennis.chen@arm.com
 
-Ruslan,
+James,
 
-On Fri, Jul 29, 2016 at 07:26:03PM +0300, Ruslan Bilovol wrote:
-> Hi,
+On Mon, Jul 25, 2016 at 02:27:55PM +0900, AKASHI Takahiro wrote:
+> James,
 > 
-> On Tue, Jul 26, 2016 at 11:09 AM, AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> > On Tue, Jul 26, 2016 at 04:56:51PM +0900, AKASHI Takahiro wrote:
-> >> This patch series adds kdump support on arm64.
-> >>
-> >> To load a crash-dump kernel to the systems, a series of patches to
-> >> kexec-tools, which have not yet been merged upstream, are needed.
-> >> Please pick Geoff's kexec patches [1] and my kdump patches [2].
-> >>
-> >> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
-> >>   - crash utility (coming v7.1.6 or later) [3]
-> >>     (Necessary patches have already been queued in the master.)
-> >>
-> >> [1]  http://lists.infradead.org/pipermail/kexec/2016-July/016532.html
-> >> [2]  TBD
-> >
-> > See my kexec-tools patches in:
-> > http://lists.infradead.org/pipermail/kexec/2016-July/016642.html
+> On Fri, Jul 22, 2016 at 02:55:02PM +0100, James Morse wrote:
+> > Hi,
+> > 
+> > On 21/07/16 01:57, AKASHI Takahiro wrote:
+> > > Could you please apply the diff attached below and confirm that
+> > > kdump works in your environment?
+> > > I can't test it by myself since my hikey board seems to be broken now.
+> > 
+> > With this I get a failure even earlier, even with 'acpi=off'.
+> > With this patch, on boot of the kdump kernel I get:
 > 
-> I tired this patch series with mentioned Geoff's kexec patches and
-> your kdump patches, but unfortunately it doesn't work for me.
+> I think you ran into the problem that I mentioned in:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/444500.html
 > 
-> While I can successfully load and kexec the kernel ('kexec --load' +
-> 'kexec -e'), same combination of kernel+ramdisk+dtb doesn't boot
-> if I do kdump combination ('kexec -p' + sysrq crash), there is no
-> any output after sysrq crash trace.
-> Unfortunately I don't have any debugger here for deep investigation
-> of this issue.
+> You may want to
+> - apply the change stated above, or
+>   (Given that we don't know about the configuration of crash dump kernel,
+>   checking for CONFIG_ZONE_DMA doesn't make sense. Instead, we'd better
+>   always enforce ARCH_LOW_ADDRESS_LIMIT.)
+> - explicitly specify the start address (Y) below ARCH_LOW_ADDRESS_LIMIT
+>   at "crashkernel=X@Y"
+> Either would work.
 
-- Can you try to do kdump without ramdisk?
-- Show me
-    - kernel boot log, particularly, "Virtual kernel memory layout:"
-    - cat /proc/iomem
-    - log from kexec command
+Have these methods fixed your problem in the end?
 
-> Also for some reason in case of 'load and kexec the kernel' it
-> takes 1-2 minutes to start booting after I do kexec -e, need to
-> investigate it further.
-> 
-> Which hardware do you use for validating your patches?
-
-I always test my patches on ARM fast model.
-
-Thanks,
 -Takahiro AKASHI
 
-> Also, could you please share exact commands you use for
-> kdump validation?
->
-> Best regaerds,
-> Ruslan
+> Thanks,
+> -Takahiro AKASHI
+> 
+> > [    0.000000] Linux version 4.7.0-rc4+ (morse@melchizedek) (gcc version 5.2.1 6
+> > [    0.000000] Boot CPU: AArch64 Processor [411fd071]
+> > [    0.000000] earlycon: pl11 at MMIO 0x000000007ff80000 (options '')
+> > [    0.000000] bootconsole [pl11] enabled
+> > [    0.000000] debug: ignoring loglevel setting.
+> > [    0.000000] efi: Getting EFI parameters from FDT:
+> > [    0.000000] efi: EFI v2.50 by ARM Juno EFI Nov 24 2015 12:36:35
+> > [    0.000000] efi:  ACPI=0xf95b0000  ACPI 2.0=0xf95b0014  PROP=0xfe8db4d8
+> > [    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
+> > [    0.000000] cma: Failed to reserve 16 MiB
+> > [    0.000000] On node 0 totalpages: 132160
+> > [    0.000000]   DMA zone: 17 pages used for memmap
+> > [    0.000000]   DMA zone: 0 pages reserved
+> > [    0.000000]   DMA zone: 1088 pages, LIFO batch:0
+> > [    0.000000]   Normal zone: 2048 pages used for memmap
+> > [    0.000000]   Normal zone: 131072 pages, LIFO batch:31
+> > [    0.000000] bootmem alloc of 64 bytes failed!
+> > [    0.000000] Kernel panic - not syncing: Out of memory
+> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.7.0-rc4+ #4600
+> > [    0.000000] Hardware name: ARM Juno development board (r1) (DT)
+> > [    0.000000] Call trace:
+> > [    0.000000] [<ffff0000080889a8>] dump_backtrace+0x0/0x1e8
+> > [    0.000000] [<ffff000008088ba4>] show_stack+0x14/0x20
+> > [    0.000000] [<ffff000008363274>] dump_stack+0x94/0xb8
+> > [    0.000000] [<ffff00000816192c>] panic+0x10c/0x278
+> > [    0.000000] [<ffff000008b14980>] free_bootmem_late+0x0/0xa0
+> > [    0.000000] [<ffff000008b14e68>] __alloc_bootmem_low+0x2c/0x38
+> > [    0.000000] [<ffff000008b02954>] setup_arch+0x2e4/0x5ac
+> > [    0.000000] [<ffff000008b00854>] start_kernel+0x70/0x390
+> > [    0.000000] [<ffff000008b001bc>] __primary_switched+0x30/0x6c
+> > [    0.000000] ---[ end Kernel panic - not syncing: Out of memory
+> > 
+> > 
+> > Trying again, booted with:
+> > > console=ttyAMA0,115200 earlycon=pl011,0x7ff80000 root=/dev/nfs
+> > > nfsroot=10.X.X.X:/ubuntu-15.04-server-arm64,v3 resume=/dev/sda2 no_console_suspend
+> > > ip=dhcp rw crashkernel=512M stacktrace ignore_loglevel=1 acpi=off efi=debug
+> > memblock=debug
+> > 
+> > kexec-tools invoked as:
+> > > kexec -x --reuse-cmdline --dtb=/sys/firmware/fdt -p /aarch64-Image
+> > 
+> > cat /proc/iomem | grep Crash:
+> > > 9e0000000-9ffffffff : Crash kernel
+> > 
+> > crash kernel memblock before call to memblock_cap_memory_range():
+> > [    0.000000] MEMBLOCK configuration:
+> > [    0.000000]  memory size = 0x1fef10000 reserved size = 0x4f3b
+> > [    0.000000]  memory.cnt  = 0x9
+> > [    0.000000]  memory[0x0]     [0x00000080000000-0x000000dfffffff], 0x60000000
+> > bytes flags: 0x0
+> > [    0.000000]  memory[0x1]     [0x000000e00f0000-0x000000f949ffff], 0x193b0000
+> > bytes flags: 0x0
+> > (uefi runtime code|data|acpi:)
+> > [    0.000000]  memory[0x2]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
+> > bytes flags: 0x4
+> > [    0.000000]  memory[0x3]     [0x000000f9850000-0x000000fe81ffff], 0x4fd0000
+> > bytes flags: 0x0
+> > (uefi runtime data:)
+> > [    0.000000]  memory[0x4]     [0x000000fe820000-0x000000fe85ffff], 0x40000
+> > bytes flags: 0x4
+> > [    0.000000]  memory[0x5]     [0x000000fe860000-0x000000fe86ffff], 0x10000
+> > bytes flags: 0x0
+> > (uefi runtime data:)
+> > [    0.000000]  memory[0x6]     [0x000000fe870000-0x000000fe8bffff], 0x50000
+> > bytes flags: 0x4
+> > [    0.000000]  memory[0x7]     [0x000000fe8c0000-0x000000feffffff], 0x740000
+> > bytes flags: 0x0
+> > [    0.000000]  memory[0x8]     [0x00000880000000-0x000009ffffffff], 0x180000000
+> > bytes flags: 0x0
+> > [    0.000000]  reserved.cnt  = 0x2
+> > (uefi memory map:)
+> > [    0.000000]  reserved[0x0]   [0x000000f985a000-0x000000f985afff], 0x1000
+> > bytes flags: 0x0
+> > (device tree:)
+> > [    0.000000]  reserved[0x1]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
+> > bytes flags: 0x0
+> > 
+> > crash kernel memblock after call to memblock_cap_memory_range():
+> > [    0.000000] MEMBLOCK configuration:
+> > [    0.000000]  memory size = 0x20440000 reserved size = 0x3f3b
+> > [    0.000000]  memory.cnt  = 0x4
+> > [    0.000000]  memory[0x0]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
+> > bytes flags: 0x4
+> > [    0.000000]  memory[0x1]     [0x000000fe820000-0x000000fe85ffff], 0x40000
+> > bytes flags: 0x4
+> > [    0.000000]  memory[0x2]     [0x000000fe870000-0x000000fe8bffff], 0x50000
+> > bytes flags: 0x4
+> > [    0.000000]  memory[0x3]     [0x000009e0000000-0x000009ffffffff], 0x20000000
+> > bytes flags: 0x0
+> > [    0.000000]  reserved.cnt  = 0x1
+> > [    0.000000]  reserved[0x0]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
+> > bytes flags: 0x0
+> > (reserve kernel text:)
+> > [    0.000000] memblock_reserve: [0x000009e0080000-0x000009e0cd0fff] flags 0x0
+> > arm64_memblock_init+0x1e0/0x40c
+> > (reserve elfcorehdr:)
+> > [    0.000000] memblock_reserve: [0x000009fffff000-0x000009fffff3ff] flags 0x0
+> > arm64_memblock_init+0x37c/0x40c
+> > [    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
+> > [    0.000000] cma: Failed to reserve 16 MiB
+> > ...
+> > 
+> > It looks like memblock_cap_memory_range() did exactly what you intended
+> > 
+> > This first fault seems to be because memblock_start_of_DRAM() is being dragged
+> > down by the preserved nomap areas, this means there isn't any usable memory
+> > within ~4G of memblock_start_of_DRAM()...
+> > 
+> > I will dig into the bootmem alloc failure next week...
+> > 
+> > (let me know if you want the full boot logs... they are more noise than signal)
+> > 
+> > 
+> > Thanks,
+> > 
+> > James
+> > 
+> > 
+> > 
+> > 
 
 _______________________________________________
 kexec mailing list
