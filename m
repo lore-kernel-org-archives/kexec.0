@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22a.google.com ([2607:f8b0:400e:c03::22a])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVBx0-0000sQ-QX
- for kexec@lists.infradead.org; Thu, 04 Aug 2016 06:16:16 +0000
-Received: by mail-pa0-x22a.google.com with SMTP id iw10so80443689pac.2
- for <kexec@lists.infradead.org>; Wed, 03 Aug 2016 23:15:54 -0700 (PDT)
-Date: Thu, 4 Aug 2016 15:21:32 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v22 2/8] arm64: limit memory regions based on DT
- property, usable-memory-range
-Message-ID: <20160804062131.GM7995@linaro.org>
-References: <20160712050514.22307-1-takahiro.akashi@linaro.org>
- <20160712050514.22307-3-takahiro.akashi@linaro.org>
- <578D1A31.5080509@arm.com> <20160721005756.GN20774@linaro.org>
- <579225B6.3090209@arm.com> <20160725052754.GA8855@linaro.org>
+ id 1bVEw6-0001SU-FE
+ for kexec@lists.infradead.org; Thu, 04 Aug 2016 09:27:53 +0000
+Date: Thu, 4 Aug 2016 17:26:54 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RESEND][PATCH v2 1/2] kexec: refactor code parsing size based
+ on memory range
+Message-ID: <20160804092654.GA23001@dhcp-128-65.nay.redhat.com>
+References: <147025270324.29229.8322429758761407397.stgit@hbathini.in.ibm.com>
+ <147025276793.29229.17307767327276387636.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160725052754.GA8855@linaro.org>
+In-Reply-To: <147025276793.29229.17307767327276387636.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,164 +25,283 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, dennis.chen@arm.com
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, rusty@rustcorp.com.au, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, ebiederm@xmission.com, vgoyal@redhat.com
 
-James,
+Hi Hari,
 
-On Mon, Jul 25, 2016 at 02:27:55PM +0900, AKASHI Takahiro wrote:
-> James,
+On 08/04/16 at 01:03am, Hari Bathini wrote:
+> crashkernel parameter supports different syntaxes to specify the amount
+> of memory to be reserved for kdump kernel. Below is one of the supported
+> syntaxes that needs parsing to find the memory size to reserve, based on
+> memory range:
 > 
-> On Fri, Jul 22, 2016 at 02:55:02PM +0100, James Morse wrote:
-> > Hi,
-> > 
-> > On 21/07/16 01:57, AKASHI Takahiro wrote:
-> > > Could you please apply the diff attached below and confirm that
-> > > kdump works in your environment?
-> > > I can't test it by myself since my hikey board seems to be broken now.
-> > 
-> > With this I get a failure even earlier, even with 'acpi=off'.
-> > With this patch, on boot of the kdump kernel I get:
+>         crashkernel=<range1>:<size1>[,<range2>:<size2>,...]
 > 
-> I think you ran into the problem that I mentioned in:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/444500.html
+> While such parsing is implemented for crashkernel parameter, it applies
+> to other parameters, like fadump_reserve_mem=, which could use similar
+> syntax. This patch moves crashkernel's parsing code for above syntax to
+> to kernel/params.c file for reuse. Two functions is_param_range_based()
+> and parse_mem_range_size() are added to kernel/params.c file for this
+> purpose.
 > 
-> You may want to
-> - apply the change stated above, or
->   (Given that we don't know about the configuration of crash dump kernel,
->   checking for CONFIG_ZONE_DMA doesn't make sense. Instead, we'd better
->   always enforce ARCH_LOW_ADDRESS_LIMIT.)
-> - explicitly specify the start address (Y) below ARCH_LOW_ADDRESS_LIMIT
->   at "crashkernel=X@Y"
-> Either would work.
-
-Have these methods fixed your problem in the end?
-
--Takahiro AKASHI
-
-> Thanks,
-> -Takahiro AKASHI
+> Any parameter that uses the above syntax can use is_param_range_based()
+> function to validate the syntax and parse_mem_range_size() function to
+> get the parsed memory size. While some code is moved to kernel/params.c
+> file, there is no change functionality wise in parsing the crashkernel
+> parameter.
 > 
-> > [    0.000000] Linux version 4.7.0-rc4+ (morse@melchizedek) (gcc version 5.2.1 6
-> > [    0.000000] Boot CPU: AArch64 Processor [411fd071]
-> > [    0.000000] earlycon: pl11 at MMIO 0x000000007ff80000 (options '')
-> > [    0.000000] bootconsole [pl11] enabled
-> > [    0.000000] debug: ignoring loglevel setting.
-> > [    0.000000] efi: Getting EFI parameters from FDT:
-> > [    0.000000] efi: EFI v2.50 by ARM Juno EFI Nov 24 2015 12:36:35
-> > [    0.000000] efi:  ACPI=0xf95b0000  ACPI 2.0=0xf95b0014  PROP=0xfe8db4d8
-> > [    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
-> > [    0.000000] cma: Failed to reserve 16 MiB
-> > [    0.000000] On node 0 totalpages: 132160
-> > [    0.000000]   DMA zone: 17 pages used for memmap
-> > [    0.000000]   DMA zone: 0 pages reserved
-> > [    0.000000]   DMA zone: 1088 pages, LIFO batch:0
-> > [    0.000000]   Normal zone: 2048 pages used for memmap
-> > [    0.000000]   Normal zone: 131072 pages, LIFO batch:31
-> > [    0.000000] bootmem alloc of 64 bytes failed!
-> > [    0.000000] Kernel panic - not syncing: Out of memory
-> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.7.0-rc4+ #4600
-> > [    0.000000] Hardware name: ARM Juno development board (r1) (DT)
-> > [    0.000000] Call trace:
-> > [    0.000000] [<ffff0000080889a8>] dump_backtrace+0x0/0x1e8
-> > [    0.000000] [<ffff000008088ba4>] show_stack+0x14/0x20
-> > [    0.000000] [<ffff000008363274>] dump_stack+0x94/0xb8
-> > [    0.000000] [<ffff00000816192c>] panic+0x10c/0x278
-> > [    0.000000] [<ffff000008b14980>] free_bootmem_late+0x0/0xa0
-> > [    0.000000] [<ffff000008b14e68>] __alloc_bootmem_low+0x2c/0x38
-> > [    0.000000] [<ffff000008b02954>] setup_arch+0x2e4/0x5ac
-> > [    0.000000] [<ffff000008b00854>] start_kernel+0x70/0x390
-> > [    0.000000] [<ffff000008b001bc>] __primary_switched+0x30/0x6c
-> > [    0.000000] ---[ end Kernel panic - not syncing: Out of memory
-> > 
-> > 
-> > Trying again, booted with:
-> > > console=ttyAMA0,115200 earlycon=pl011,0x7ff80000 root=/dev/nfs
-> > > nfsroot=10.X.X.X:/ubuntu-15.04-server-arm64,v3 resume=/dev/sda2 no_console_suspend
-> > > ip=dhcp rw crashkernel=512M stacktrace ignore_loglevel=1 acpi=off efi=debug
-> > memblock=debug
-> > 
-> > kexec-tools invoked as:
-> > > kexec -x --reuse-cmdline --dtb=/sys/firmware/fdt -p /aarch64-Image
-> > 
-> > cat /proc/iomem | grep Crash:
-> > > 9e0000000-9ffffffff : Crash kernel
-> > 
-> > crash kernel memblock before call to memblock_cap_memory_range():
-> > [    0.000000] MEMBLOCK configuration:
-> > [    0.000000]  memory size = 0x1fef10000 reserved size = 0x4f3b
-> > [    0.000000]  memory.cnt  = 0x9
-> > [    0.000000]  memory[0x0]     [0x00000080000000-0x000000dfffffff], 0x60000000
-> > bytes flags: 0x0
-> > [    0.000000]  memory[0x1]     [0x000000e00f0000-0x000000f949ffff], 0x193b0000
-> > bytes flags: 0x0
-> > (uefi runtime code|data|acpi:)
-> > [    0.000000]  memory[0x2]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
-> > bytes flags: 0x4
-> > [    0.000000]  memory[0x3]     [0x000000f9850000-0x000000fe81ffff], 0x4fd0000
-> > bytes flags: 0x0
-> > (uefi runtime data:)
-> > [    0.000000]  memory[0x4]     [0x000000fe820000-0x000000fe85ffff], 0x40000
-> > bytes flags: 0x4
-> > [    0.000000]  memory[0x5]     [0x000000fe860000-0x000000fe86ffff], 0x10000
-> > bytes flags: 0x0
-> > (uefi runtime data:)
-> > [    0.000000]  memory[0x6]     [0x000000fe870000-0x000000fe8bffff], 0x50000
-> > bytes flags: 0x4
-> > [    0.000000]  memory[0x7]     [0x000000fe8c0000-0x000000feffffff], 0x740000
-> > bytes flags: 0x0
-> > [    0.000000]  memory[0x8]     [0x00000880000000-0x000009ffffffff], 0x180000000
-> > bytes flags: 0x0
-> > [    0.000000]  reserved.cnt  = 0x2
-> > (uefi memory map:)
-> > [    0.000000]  reserved[0x0]   [0x000000f985a000-0x000000f985afff], 0x1000
-> > bytes flags: 0x0
-> > (device tree:)
-> > [    0.000000]  reserved[0x1]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
-> > bytes flags: 0x0
-> > 
-> > crash kernel memblock after call to memblock_cap_memory_range():
-> > [    0.000000] MEMBLOCK configuration:
-> > [    0.000000]  memory size = 0x20440000 reserved size = 0x3f3b
-> > [    0.000000]  memory.cnt  = 0x4
-> > [    0.000000]  memory[0x0]     [0x000000f94a0000-0x000000f984ffff], 0x3b0000
-> > bytes flags: 0x4
-> > [    0.000000]  memory[0x1]     [0x000000fe820000-0x000000fe85ffff], 0x40000
-> > bytes flags: 0x4
-> > [    0.000000]  memory[0x2]     [0x000000fe870000-0x000000fe8bffff], 0x50000
-> > bytes flags: 0x4
-> > [    0.000000]  memory[0x3]     [0x000009e0000000-0x000009ffffffff], 0x20000000
-> > bytes flags: 0x0
-> > [    0.000000]  reserved.cnt  = 0x1
-> > [    0.000000]  reserved[0x0]   [0x000009e0ce0000-0x000009e0ce3f3a], 0x3f3b
-> > bytes flags: 0x0
-> > (reserve kernel text:)
-> > [    0.000000] memblock_reserve: [0x000009e0080000-0x000009e0cd0fff] flags 0x0
-> > arm64_memblock_init+0x1e0/0x40c
-> > (reserve elfcorehdr:)
-> > [    0.000000] memblock_reserve: [0x000009fffff000-0x000009fffff3ff] flags 0x0
-> > arm64_memblock_init+0x37c/0x40c
-> > [    0.000000] Reserving 1KB of memory at 0x9fffff000 for elfcorehdr
-> > [    0.000000] cma: Failed to reserve 16 MiB
-> > ...
-> > 
-> > It looks like memblock_cap_memory_range() did exactly what you intended
-> > 
-> > This first fault seems to be because memblock_start_of_DRAM() is being dragged
-> > down by the preserved nomap areas, this means there isn't any usable memory
-> > within ~4G of memblock_start_of_DRAM()...
-> > 
-> > I will dig into the bootmem alloc failure next week...
-> > 
-> > (let me know if you want the full boot logs... they are more noise than signal)
-> > 
-> > 
-> > Thanks,
-> > 
-> > James
-> > 
-> > 
-> > 
-> > 
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> ---
+> 
+> Changes from v1:
+> 1. Updated changelog
+> 
+>  include/linux/kernel.h |    5 +++
+>  kernel/kexec_core.c    |   63 +++-----------------------------
+>  kernel/params.c        |   96 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 106 insertions(+), 58 deletions(-)
+> 
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index d96a611..2df7ba2 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -435,6 +435,11 @@ extern char *get_options(const char *str, int nints, int *ints);
+>  extern unsigned long long memparse(const char *ptr, char **retptr);
+>  extern bool parse_option_str(const char *str, const char *option);
+>  
+> +extern bool __init is_param_range_based(const char *cmdline);
+> +extern unsigned long long __init parse_mem_range_size(const char *param,
+> +						      char **str,
+> +						      unsigned long long system_ram);
+> +
+>  extern int core_kernel_text(unsigned long addr);
+>  extern int core_kernel_data(unsigned long addr);
+>  extern int __kernel_text_address(unsigned long addr);
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..3a74024 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1104,59 +1104,9 @@ static int __init parse_crashkernel_mem(char *cmdline,
+>  	char *cur = cmdline, *tmp;
+>  
+>  	/* for each entry of the comma-separated list */
+> -	do {
+> -		unsigned long long start, end = ULLONG_MAX, size;
+> -
+> -		/* get the start of the range */
+> -		start = memparse(cur, &tmp);
+> -		if (cur == tmp) {
+> -			pr_warn("crashkernel: Memory value expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur = tmp;
+> -		if (*cur != '-') {
+> -			pr_warn("crashkernel: '-' expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur++;
+> -
+> -		/* if no ':' is here, than we read the end */
+> -		if (*cur != ':') {
+> -			end = memparse(cur, &tmp);
+> -			if (cur == tmp) {
+> -				pr_warn("crashkernel: Memory value expected\n");
+> -				return -EINVAL;
+> -			}
+> -			cur = tmp;
+> -			if (end <= start) {
+> -				pr_warn("crashkernel: end <= start\n");
+> -				return -EINVAL;
+> -			}
+> -		}
+> -
+> -		if (*cur != ':') {
+> -			pr_warn("crashkernel: ':' expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur++;
+> -
+> -		size = memparse(cur, &tmp);
+> -		if (cur == tmp) {
+> -			pr_warn("Memory value expected\n");
+> -			return -EINVAL;
+> -		}
+> -		cur = tmp;
+> -		if (size >= system_ram) {
+> -			pr_warn("crashkernel: invalid size\n");
+> -			return -EINVAL;
+> -		}
+> -
+> -		/* match ? */
+> -		if (system_ram >= start && system_ram < end) {
+> -			*crash_size = size;
+> -			break;
+> -		}
+> -	} while (*cur++ == ',');
+> +	*crash_size = parse_mem_range_size("crashkernel", &cur, system_ram);
+> +	if (cur == cmdline)
+> +		return -EINVAL;
+>  
+>  	if (*crash_size > 0) {
+>  		while (*cur && *cur != ' ' && *cur != '@')
+> @@ -1293,7 +1243,6 @@ static int __init __parse_crashkernel(char *cmdline,
+>  			     const char *name,
+>  			     const char *suffix)
+>  {
+> -	char	*first_colon, *first_space;
+>  	char	*ck_cmdline;
+>  
+>  	BUG_ON(!crash_size || !crash_base);
+> @@ -1311,12 +1260,10 @@ static int __init __parse_crashkernel(char *cmdline,
+>  		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>  				suffix);
+>  	/*
+> -	 * if the commandline contains a ':', then that's the extended
+> +	 * if the parameter is range based, then that's the extended
+>  	 * syntax -- if not, it must be the classic syntax
+>  	 */
+> -	first_colon = strchr(ck_cmdline, ':');
+> -	first_space = strchr(ck_cmdline, ' ');
+> -	if (first_colon && (!first_space || first_colon < first_space))
+> +	if (is_param_range_based(ck_cmdline))
+>  		return parse_crashkernel_mem(ck_cmdline, system_ram,
+>  				crash_size, crash_base);
+>  
+> diff --git a/kernel/params.c b/kernel/params.c
+> index a6d6149..84e40ae 100644
+> --- a/kernel/params.c
+> +++ b/kernel/params.c
+
+/lib/cmdline.c is a better place for this?
+
+> @@ -268,6 +268,102 @@ char *parse_args(const char *doing,
+>  	return err;
+>  }
+>  
+> +/*
+> + * is_param_range_based - check if current parameter is range based
+> + * @cmdline: points to the parameter to check
+> + *
+> + * Returns true when the current paramer is range based, false otherwise
+> + */
+
+It is not necessary to be range specific? Maybe is_colon_in_param or
+something else. If it is range based we need know what is the range
+like.
+
+> +bool __init is_param_range_based(const char *cmdline)
+> +{
+> +	char    *first_colon, *first_space;
+> +
+> +	first_colon = strchr(cmdline, ':');
+> +	first_space = strchr(cmdline, ' ');
+> +	if (first_colon && (!first_space || first_colon < first_space))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * parse_mem_range_size - parse size based on memory range
+> + * @param:  the thing being parsed
+> + * @str: (input)  where parse begins
+> + *                expected format - <range1>:<size1>[,<range2>:<size2>,...]
+
+There should be detail example about the range format, especially about
+the "-" separator.
+
+> + *       (output) On success - next char after parse completes
+> + *                On failure - unchanged
+> + * @system_ram: system ram size to check memory range against
+> + *
+> + * Returns the memory size on success and 0 on failure
+> + */
+> +unsigned long long __init parse_mem_range_size(const char *param,
+> +					       char **str,
+> +					       unsigned long long system_ram)
+> +{
+> +	char *cur = *str, *tmp;
+> +	unsigned long long mem_size = 0;
+> +
+> +	/* for each entry of the comma-separated list */
+> +	do {
+> +		unsigned long long start, end = ULLONG_MAX, size;
+> +
+> +		/* get the start of the range */
+> +		start = memparse(cur, &tmp);
+> +		if (cur == tmp) {
+> +			printk(KERN_INFO "%s: Memory value expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur = tmp;
+> +		if (*cur != '-') {
+> +			printk(KERN_INFO "%s: '-' expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur++;
+> +
+> +		/* if no ':' is here, than we read the end */
+> +		if (*cur != ':') {
+> +			end = memparse(cur, &tmp);
+> +			if (cur == tmp) {
+> +				printk(KERN_INFO "%s: Memory value expected\n",
+
+s/Memory/memory?
+
+> +					param);
+> +				return mem_size;
+> +			}
+> +			cur = tmp;
+> +			if (end <= start) {
+> +				printk(KERN_INFO "%s: end <= start\n", param);
+> +				return mem_size;
+> +			}
+> +		}
+> +
+> +		if (*cur != ':') {
+> +			printk(KERN_INFO "%s: ':' expected\n", param);
+> +			return mem_size;
+> +		}
+> +		cur++;
+> +
+> +		size = memparse(cur, &tmp);
+> +		if (cur == tmp) {
+> +			printk(KERN_INFO "%s: Memory value expected\n", param);
+
+Ditto.
+
+> +			return mem_size;
+> +		}
+> +		cur = tmp;
+> +		if (size >= system_ram) {
+> +			printk(KERN_INFO "%s: invalid size\n", param);
+> +			return mem_size;
+> +		}
+> +
+> +		/* match ? */
+> +		if (system_ram >= start && system_ram < end) {
+> +			mem_size = size;
+> +			*str = cur;
+> +			break;
+> +		}
+> +	} while (*cur++ == ',');
+> +
+> +	return mem_size;
+> +}
+> +
+>  /* Lazy bastard, eh? */
+>  #define STANDARD_PARAM_DEF(name, type, format, strtolfn)      		\
+>  	int param_set_##name(const char *val, const struct kernel_param *kp) \
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
