@@ -1,41 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVfHt-00032I-PD
- for kexec@lists.infradead.org; Fri, 05 Aug 2016 13:35:46 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u75DZ5B2085727
- for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 09:35:24 -0400
-Received: from e28smtp04.in.ibm.com (e28smtp04.in.ibm.com [125.16.236.4])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24kkak98tr-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 05 Aug 2016 09:35:13 -0400
-Received: from localhost
- by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 5 Aug 2016 19:04:48 +0530
-Received: from d28relay07.in.ibm.com (d28relay07.in.ibm.com [9.184.220.158])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id 3F094125805B
- for <kexec@lists.infradead.org>; Fri,  5 Aug 2016 19:07:49 +0530 (IST)
-Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
- by d28relay07.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u75DYhpj37093520
- for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 19:04:43 +0530
-Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
- by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u75DYgSL026294
- for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 19:04:42 +0530
+ id 1bVhUF-0008KP-RK
+ for kexec@lists.infradead.org; Fri, 05 Aug 2016 15:56:41 +0000
+Date: Fri, 5 Aug 2016 18:56:02 +0300
+From: Petko Manolov <petkan@mip-labs.com>
 Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Fri, 05 Aug 2016 09:34:38 -0400
-In-Reply-To: <20160805084425.GA7572@localhost>
+Message-ID: <20160805155602.GA1738@localhost>
 References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
  <1470313475-20090-2-git-send-email-zohar@linux.vnet.ibm.com>
  <20160805084425.GA7572@localhost>
-Mime-Version: 1.0
-Message-Id: <1470404078.2471.123.camel@linux.vnet.ibm.com>
+ <1470404078.2471.123.camel@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1470404078.2471.123.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,89 +22,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petko Manolov <petkan@mip-labs.com>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
 Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, Dave Young <dyoung@redhat.com>
 
-Hi Petko,
-
-Thank you for review!
-
-On Fri, 2016-08-05 at 11:44 +0300, Petko Manolov wrote:
-> On 16-08-04 08:24:29, Mimi Zohar wrote:
-> > The TPM PCRs are only reset on a hard reboot.  In order to validate a
-> > TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
-> > of the running kernel must be saved and restored on boot.  This patch
-> > restores the measurement list.
-> > 
-> > Changelog:
-> > - call ima_load_kexec_buffer() (Thiago)
-> > 
-> > Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> > ---
-> >  security/integrity/ima/Makefile       |   1 +
-> >  security/integrity/ima/ima.h          |  10 ++
-> >  security/integrity/ima/ima_init.c     |   2 +
-> >  security/integrity/ima/ima_kexec.c    |  55 +++++++++++
-> >  security/integrity/ima/ima_queue.c    |  10 ++
-> >  security/integrity/ima/ima_template.c | 171 ++++++++++++++++++++++++++++++++++
-> >  6 files changed, 249 insertions(+)
-> >  create mode 100644 security/integrity/ima/ima_kexec.c
-> > 
-> > diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-> > index c34599f..c0ce7b1 100644
-> > --- a/security/integrity/ima/Makefile
-> > +++ b/security/integrity/ima/Makefile
-> > @@ -8,4 +8,5 @@ obj-$(CONFIG_IMA) += ima.o
-> >  ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
-> >  	 ima_policy.o ima_template.o ima_template_lib.o ima_buffer.o
-> >  ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
-> > +ima-$(CONFIG_KEXEC_FILE) += ima_kexec.o
-> >  obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-> > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> > index b5728da..84e8d36 100644
-> > --- a/security/integrity/ima/ima.h
-> > +++ b/security/integrity/ima/ima.h
-> > @@ -102,6 +102,13 @@ struct ima_queue_entry {
-> >  };
-> >  extern struct list_head ima_measurements;	/* list of all measurements */
-> >  
-> > +/* Some details preceding the binary serialized measurement list */
-> > +struct ima_kexec_hdr {
-> > +	unsigned short version;
-> > +	unsigned long buffer_size;
-> > +	unsigned long count;
-> > +} __packed;
-> 
-> Unless there is no real need for this structure to be packed i suggest dropping 
-> the attribute.  When referenced through pointer 32bit ARM and MIPS (and likely 
-> all other 32bit RISC CPUs) use rather inefficient byte loads and stores.
-> 
-> Worse, if, for example, ->count is going to be read/written concurrently from 
-> multiple threads we get torn loads/stores thus losing atomicity of the access.
-
-This header is used to prefix the serialized binary measurement list
-with some meta-data about the measurement list being restored.
-Unfortunately kexec_get_handover_buffer() returns the segment size, not
-the actual ima measurement list buffer size.  The header info is set
-using memcpy() once in ima_dump_measurement_list() and then the fields
-are used in ima_restore_measurement_list() to verify the buffer.
-
-The binary runtime measurement list is packed, so the other two
-structures - binary_hdr_v1 and binary_data_v1 - must be packed.  Does it
-make sense for this header not to be packed as well?  Would copying the
-header fields to local variables before being used solve your concern?
-
-Remember this code is used once on the kexec execute and again on
-reboot.
-
-Mimi
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTYtMDgtMDUgMDk6MzQ6MzgsIE1pbWkgWm9oYXIgd3JvdGU6Cj4gSGkgUGV0a28sCj4gCj4g
+VGhhbmsgeW91IGZvciByZXZpZXchCj4gCj4gT24gRnJpLCAyMDE2LTA4LTA1IGF0IDExOjQ0ICsw
+MzAwLCBQZXRrbyBNYW5vbG92IHdyb3RlOgo+ID4gT24gMTYtMDgtMDQgMDg6MjQ6MjksIE1pbWkg
+Wm9oYXIgd3JvdGU6Cj4gPiA+IFRoZSBUUE0gUENScyBhcmUgb25seSByZXNldCBvbiBhIGhhcmQg
+cmVib290LiAgSW4gb3JkZXIgdG8gdmFsaWRhdGUgYQo+ID4gPiBUUE0ncyBxdW90ZSBhZnRlciBh
+IHNvZnQgcmVib290IChlZy4ga2V4ZWMgLWUpLCB0aGUgSU1BIG1lYXN1cmVtZW50IGxpc3QKPiA+
+ID4gb2YgdGhlIHJ1bm5pbmcga2VybmVsIG11c3QgYmUgc2F2ZWQgYW5kIHJlc3RvcmVkIG9uIGJv
+b3QuICBUaGlzIHBhdGNoCj4gPiA+IHJlc3RvcmVzIHRoZSBtZWFzdXJlbWVudCBsaXN0Lgo+ID4g
+PiAKPiA+ID4gQ2hhbmdlbG9nOgo+ID4gPiAtIGNhbGwgaW1hX2xvYWRfa2V4ZWNfYnVmZmVyKCkg
+KFRoaWFnbykKPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pbWkgWm9oYXIgPHpvaGFyQGxp
+bnV4LnZuZXQuaWJtLmNvbT4KPiA+ID4gLS0tCj4gPiA+ICBzZWN1cml0eS9pbnRlZ3JpdHkvaW1h
+L01ha2VmaWxlICAgICAgIHwgICAxICsKPiA+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1h
+LmggICAgICAgICAgfCAgMTAgKysKPiA+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2lu
+aXQuYyAgICAgfCAgIDIgKwo+ID4gPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfa2V4ZWMu
+YyAgICB8ICA1NSArKysrKysrKysrKwo+ID4gPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFf
+cXVldWUuYyAgICB8ICAxMCArKwo+ID4gPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfdGVt
+cGxhdGUuYyB8IDE3MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+ICA2
+IGZpbGVzIGNoYW5nZWQsIDI0OSBpbnNlcnRpb25zKCspCj4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2
+NDQgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfa2V4ZWMuYwo+ID4gPiAKPiA+ID4gZGlmZiAt
+LWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvTWFrZWZpbGUgYi9zZWN1cml0eS9pbnRlZ3Jp
+dHkvaW1hL01ha2VmaWxlCj4gPiA+IGluZGV4IGMzNDU5OWYuLmMwY2U3YjEgMTAwNjQ0Cj4gPiA+
+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvTWFrZWZpbGUKPiA+ID4gKysrIGIvc2VjdXJp
+dHkvaW50ZWdyaXR5L2ltYS9NYWtlZmlsZQo+ID4gPiBAQCAtOCw0ICs4LDUgQEAgb2JqLSQoQ09O
+RklHX0lNQSkgKz0gaW1hLm8KPiA+ID4gIGltYS15IDo9IGltYV9mcy5vIGltYV9xdWV1ZS5vIGlt
+YV9pbml0Lm8gaW1hX21haW4ubyBpbWFfY3J5cHRvLm8gaW1hX2FwaS5vIFwKPiA+ID4gIAkgaW1h
+X3BvbGljeS5vIGltYV90ZW1wbGF0ZS5vIGltYV90ZW1wbGF0ZV9saWIubyBpbWFfYnVmZmVyLm8K
+PiA+ID4gIGltYS0kKENPTkZJR19JTUFfQVBQUkFJU0UpICs9IGltYV9hcHByYWlzZS5vCj4gPiA+
+ICtpbWEtJChDT05GSUdfS0VYRUNfRklMRSkgKz0gaW1hX2tleGVjLm8KPiA+ID4gIG9iai0kKENP
+TkZJR19JTUFfQkxBQ0tMSVNUX0tFWVJJTkcpICs9IGltYV9tb2subwo+ID4gPiBkaWZmIC0tZ2l0
+IGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaCBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEv
+aW1hLmgKPiA+ID4gaW5kZXggYjU3MjhkYS4uODRlOGQzNiAxMDA2NDQKPiA+ID4gLS0tIGEvc2Vj
+dXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaAo+ID4gPiArKysgYi9zZWN1cml0eS9pbnRlZ3JpdHkv
+aW1hL2ltYS5oCj4gPiA+IEBAIC0xMDIsNiArMTAyLDEzIEBAIHN0cnVjdCBpbWFfcXVldWVfZW50
+cnkgewo+ID4gPiAgfTsKPiA+ID4gIGV4dGVybiBzdHJ1Y3QgbGlzdF9oZWFkIGltYV9tZWFzdXJl
+bWVudHM7CS8qIGxpc3Qgb2YgYWxsIG1lYXN1cmVtZW50cyAqLwo+ID4gPiAgCj4gPiA+ICsvKiBT
+b21lIGRldGFpbHMgcHJlY2VkaW5nIHRoZSBiaW5hcnkgc2VyaWFsaXplZCBtZWFzdXJlbWVudCBs
+aXN0ICovCj4gPiA+ICtzdHJ1Y3QgaW1hX2tleGVjX2hkciB7Cj4gPiA+ICsJdW5zaWduZWQgc2hv
+cnQgdmVyc2lvbjsKPiA+ID4gKwl1bnNpZ25lZCBsb25nIGJ1ZmZlcl9zaXplOwo+ID4gPiArCXVu
+c2lnbmVkIGxvbmcgY291bnQ7Cj4gPiA+ICt9IF9fcGFja2VkOwo+ID4gCj4gPiBVbmxlc3MgdGhl
+cmUgaXMgbm8gcmVhbCBuZWVkIGZvciB0aGlzIHN0cnVjdHVyZSB0byBiZSBwYWNrZWQgaSBzdWdn
+ZXN0IAo+ID4gZHJvcHBpbmcgdGhlIGF0dHJpYnV0ZS4gIFdoZW4gcmVmZXJlbmNlZCB0aHJvdWdo
+IHBvaW50ZXIgMzJiaXQgQVJNIGFuZCBNSVBTIAo+ID4gKGFuZCBsaWtlbHkgYWxsIG90aGVyIDMy
+Yml0IFJJU0MgQ1BVcykgdXNlIHJhdGhlciBpbmVmZmljaWVudCBieXRlIGxvYWRzIGFuZCAKPiA+
+IHN0b3Jlcy4KPiA+IAo+ID4gV29yc2UsIGlmLCBmb3IgZXhhbXBsZSwgLT5jb3VudCBpcyBnb2lu
+ZyB0byBiZSByZWFkL3dyaXR0ZW4gY29uY3VycmVudGx5IAo+ID4gZnJvbSBtdWx0aXBsZSB0aHJl
+YWRzIHdlIGdldCB0b3JuIGxvYWRzL3N0b3JlcyB0aHVzIGxvc2luZyBhdG9taWNpdHkgb2YgdGhl
+IAo+ID4gYWNjZXNzLgo+IAo+IFRoaXMgaGVhZGVyIGlzIHVzZWQgdG8gcHJlZml4IHRoZSBzZXJp
+YWxpemVkIGJpbmFyeSBtZWFzdXJlbWVudCBsaXN0IHdpdGggc29tZSAKPiBtZXRhLWRhdGEgYWJv
+dXQgdGhlIG1lYXN1cmVtZW50IGxpc3QgYmVpbmcgcmVzdG9yZWQuIFVuZm9ydHVuYXRlbHkgCj4g
+a2V4ZWNfZ2V0X2hhbmRvdmVyX2J1ZmZlcigpIHJldHVybnMgdGhlIHNlZ21lbnQgc2l6ZSwgbm90
+IHRoZSBhY3R1YWwgaW1hIAo+IG1lYXN1cmVtZW50IGxpc3QgYnVmZmVyIHNpemUuICBUaGUgaGVh
+ZGVyIGluZm8gaXMgc2V0IHVzaW5nIG1lbWNweSgpIG9uY2UgaW4gCj4gaW1hX2R1bXBfbWVhc3Vy
+ZW1lbnRfbGlzdCgpIGFuZCB0aGVuIHRoZSBmaWVsZHMgYXJlIHVzZWQgaW4gCj4gaW1hX3Jlc3Rv
+cmVfbWVhc3VyZW1lbnRfbGlzdCgpIHRvIHZlcmlmeSB0aGUgYnVmZmVyLgoKQXMgbG9uZyBhcyB0
+aGVyZSBpcyBubyBjb25jdXJyZW50IHJlYWRzL3dyaXRlcyB0aGlzIHNob3VsZCBiZSBPSy4KCj4g
+VGhlIGJpbmFyeSBydW50aW1lIG1lYXN1cmVtZW50IGxpc3QgaXMgcGFja2VkLCBzbyB0aGUgb3Ro
+ZXIgdHdvIHN0cnVjdHVyZXMgLSAKPiBiaW5hcnlfaGRyX3YxIGFuZCBiaW5hcnlfZGF0YV92MSAt
+IG11c3QgYmUgcGFja2VkLiAgRG9lcyBpdCBtYWtlIHNlbnNlIGZvciAKPiB0aGlzIGhlYWRlciBu
+b3QgdG8gYmUgcGFja2VkIGFzIHdlbGw/ICBXb3VsZCBjb3B5aW5nIHRoZSBoZWFkZXIgZmllbGRz
+IHRvIAo+IGxvY2FsIHZhcmlhYmxlcyBiZWZvcmUgYmVpbmcgdXNlZCBzb2x2ZSB5b3VyIGNvbmNl
+cm4/CgpDb3B5aW5nIHRvIGFsaWduZWQgdmFyaWFibGVzIHdvdWxkIGJlIG5lY2Vzc2FyeSBvbmx5
+IGlmOgoKCWEpIHNvbWUgc29ydCBvZiBhdG9taWNpdHkgaXMgbmVlZGVkLCBhbmQvb3IKCdCxKSBz
+cGVlZCBpcyBvZiBjb25jZXJuOwoKPiBSZW1lbWJlciB0aGlzIGNvZGUgaXMgdXNlZCBvbmNlIG9u
+IHRoZSBrZXhlYyBleGVjdXRlIGFuZCBhZ2FpbiBvbiByZWJvb3QuCgpJZiB3ZSBkb24ndCBuZWVk
+IGEpIF9hbmRfIGIpIHRoZW4geW91IGRvbid0IG5lZWQgdG8gYm90aGVyLgoKCgkJUGV0a28KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
+bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
