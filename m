@@ -1,19 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVhUF-0008KP-RK
- for kexec@lists.infradead.org; Fri, 05 Aug 2016 15:56:41 +0000
-Date: Fri, 5 Aug 2016 18:56:02 +0300
-From: Petko Manolov <petkan@mip-labs.com>
-Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
-Message-ID: <20160805155602.GA1738@localhost>
-References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1470313475-20090-2-git-send-email-zohar@linux.vnet.ibm.com>
- <20160805084425.GA7572@localhost>
- <1470404078.2471.123.camel@linux.vnet.ibm.com>
+ id 1bVm1Q-0007Mm-Sg
+ for kexec@lists.infradead.org; Fri, 05 Aug 2016 20:47:13 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u75KiZ0u002296
+ for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 16:46:51 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24mud8pwhh-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 05 Aug 2016 16:46:51 -0400
+Received: from localhost
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Fri, 5 Aug 2016 17:46:49 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 3/3] kexec: extend kexec_file_load system call
+Date: Fri, 05 Aug 2016 17:46:43 -0300
+In-Reply-To: <1469579069-28472-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <20160712014201.11456-4-takahiro.akashi@linaro.org>
+ <1469579069-28472-1-git-send-email-bauerman@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1470404078.2471.123.camel@linux.vnet.ibm.com>
+Message-Id: <1988385.QMVjiCbb5e@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,78 +33,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Michael Ellerman <michael@ellerman.id.au>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-T24gMTYtMDgtMDUgMDk6MzQ6MzgsIE1pbWkgWm9oYXIgd3JvdGU6Cj4gSGkgUGV0a28sCj4gCj4g
-VGhhbmsgeW91IGZvciByZXZpZXchCj4gCj4gT24gRnJpLCAyMDE2LTA4LTA1IGF0IDExOjQ0ICsw
-MzAwLCBQZXRrbyBNYW5vbG92IHdyb3RlOgo+ID4gT24gMTYtMDgtMDQgMDg6MjQ6MjksIE1pbWkg
-Wm9oYXIgd3JvdGU6Cj4gPiA+IFRoZSBUUE0gUENScyBhcmUgb25seSByZXNldCBvbiBhIGhhcmQg
-cmVib290LiAgSW4gb3JkZXIgdG8gdmFsaWRhdGUgYQo+ID4gPiBUUE0ncyBxdW90ZSBhZnRlciBh
-IHNvZnQgcmVib290IChlZy4ga2V4ZWMgLWUpLCB0aGUgSU1BIG1lYXN1cmVtZW50IGxpc3QKPiA+
-ID4gb2YgdGhlIHJ1bm5pbmcga2VybmVsIG11c3QgYmUgc2F2ZWQgYW5kIHJlc3RvcmVkIG9uIGJv
-b3QuICBUaGlzIHBhdGNoCj4gPiA+IHJlc3RvcmVzIHRoZSBtZWFzdXJlbWVudCBsaXN0Lgo+ID4g
-PiAKPiA+ID4gQ2hhbmdlbG9nOgo+ID4gPiAtIGNhbGwgaW1hX2xvYWRfa2V4ZWNfYnVmZmVyKCkg
-KFRoaWFnbykKPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE1pbWkgWm9oYXIgPHpvaGFyQGxp
-bnV4LnZuZXQuaWJtLmNvbT4KPiA+ID4gLS0tCj4gPiA+ICBzZWN1cml0eS9pbnRlZ3JpdHkvaW1h
-L01ha2VmaWxlICAgICAgIHwgICAxICsKPiA+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1h
-LmggICAgICAgICAgfCAgMTAgKysKPiA+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2lu
-aXQuYyAgICAgfCAgIDIgKwo+ID4gPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfa2V4ZWMu
-YyAgICB8ICA1NSArKysrKysrKysrKwo+ID4gPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFf
-cXVldWUuYyAgICB8ICAxMCArKwo+ID4gPiAgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfdGVt
-cGxhdGUuYyB8IDE3MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+ICA2
-IGZpbGVzIGNoYW5nZWQsIDI0OSBpbnNlcnRpb25zKCspCj4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfa2V4ZWMuYwo+ID4gPiAKPiA+ID4gZGlmZiAt
-LWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvTWFrZWZpbGUgYi9zZWN1cml0eS9pbnRlZ3Jp
-dHkvaW1hL01ha2VmaWxlCj4gPiA+IGluZGV4IGMzNDU5OWYuLmMwY2U3YjEgMTAwNjQ0Cj4gPiA+
-IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvTWFrZWZpbGUKPiA+ID4gKysrIGIvc2VjdXJp
-dHkvaW50ZWdyaXR5L2ltYS9NYWtlZmlsZQo+ID4gPiBAQCAtOCw0ICs4LDUgQEAgb2JqLSQoQ09O
-RklHX0lNQSkgKz0gaW1hLm8KPiA+ID4gIGltYS15IDo9IGltYV9mcy5vIGltYV9xdWV1ZS5vIGlt
-YV9pbml0Lm8gaW1hX21haW4ubyBpbWFfY3J5cHRvLm8gaW1hX2FwaS5vIFwKPiA+ID4gIAkgaW1h
-X3BvbGljeS5vIGltYV90ZW1wbGF0ZS5vIGltYV90ZW1wbGF0ZV9saWIubyBpbWFfYnVmZmVyLm8K
-PiA+ID4gIGltYS0kKENPTkZJR19JTUFfQVBQUkFJU0UpICs9IGltYV9hcHByYWlzZS5vCj4gPiA+
-ICtpbWEtJChDT05GSUdfS0VYRUNfRklMRSkgKz0gaW1hX2tleGVjLm8KPiA+ID4gIG9iai0kKENP
-TkZJR19JTUFfQkxBQ0tMSVNUX0tFWVJJTkcpICs9IGltYV9tb2subwo+ID4gPiBkaWZmIC0tZ2l0
-IGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaCBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEv
-aW1hLmgKPiA+ID4gaW5kZXggYjU3MjhkYS4uODRlOGQzNiAxMDA2NDQKPiA+ID4gLS0tIGEvc2Vj
-dXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEuaAo+ID4gPiArKysgYi9zZWN1cml0eS9pbnRlZ3JpdHkv
-aW1hL2ltYS5oCj4gPiA+IEBAIC0xMDIsNiArMTAyLDEzIEBAIHN0cnVjdCBpbWFfcXVldWVfZW50
-cnkgewo+ID4gPiAgfTsKPiA+ID4gIGV4dGVybiBzdHJ1Y3QgbGlzdF9oZWFkIGltYV9tZWFzdXJl
-bWVudHM7CS8qIGxpc3Qgb2YgYWxsIG1lYXN1cmVtZW50cyAqLwo+ID4gPiAgCj4gPiA+ICsvKiBT
-b21lIGRldGFpbHMgcHJlY2VkaW5nIHRoZSBiaW5hcnkgc2VyaWFsaXplZCBtZWFzdXJlbWVudCBs
-aXN0ICovCj4gPiA+ICtzdHJ1Y3QgaW1hX2tleGVjX2hkciB7Cj4gPiA+ICsJdW5zaWduZWQgc2hv
-cnQgdmVyc2lvbjsKPiA+ID4gKwl1bnNpZ25lZCBsb25nIGJ1ZmZlcl9zaXplOwo+ID4gPiArCXVu
-c2lnbmVkIGxvbmcgY291bnQ7Cj4gPiA+ICt9IF9fcGFja2VkOwo+ID4gCj4gPiBVbmxlc3MgdGhl
-cmUgaXMgbm8gcmVhbCBuZWVkIGZvciB0aGlzIHN0cnVjdHVyZSB0byBiZSBwYWNrZWQgaSBzdWdn
-ZXN0IAo+ID4gZHJvcHBpbmcgdGhlIGF0dHJpYnV0ZS4gIFdoZW4gcmVmZXJlbmNlZCB0aHJvdWdo
-IHBvaW50ZXIgMzJiaXQgQVJNIGFuZCBNSVBTIAo+ID4gKGFuZCBsaWtlbHkgYWxsIG90aGVyIDMy
-Yml0IFJJU0MgQ1BVcykgdXNlIHJhdGhlciBpbmVmZmljaWVudCBieXRlIGxvYWRzIGFuZCAKPiA+
-IHN0b3Jlcy4KPiA+IAo+ID4gV29yc2UsIGlmLCBmb3IgZXhhbXBsZSwgLT5jb3VudCBpcyBnb2lu
-ZyB0byBiZSByZWFkL3dyaXR0ZW4gY29uY3VycmVudGx5IAo+ID4gZnJvbSBtdWx0aXBsZSB0aHJl
-YWRzIHdlIGdldCB0b3JuIGxvYWRzL3N0b3JlcyB0aHVzIGxvc2luZyBhdG9taWNpdHkgb2YgdGhl
-IAo+ID4gYWNjZXNzLgo+IAo+IFRoaXMgaGVhZGVyIGlzIHVzZWQgdG8gcHJlZml4IHRoZSBzZXJp
-YWxpemVkIGJpbmFyeSBtZWFzdXJlbWVudCBsaXN0IHdpdGggc29tZSAKPiBtZXRhLWRhdGEgYWJv
-dXQgdGhlIG1lYXN1cmVtZW50IGxpc3QgYmVpbmcgcmVzdG9yZWQuIFVuZm9ydHVuYXRlbHkgCj4g
-a2V4ZWNfZ2V0X2hhbmRvdmVyX2J1ZmZlcigpIHJldHVybnMgdGhlIHNlZ21lbnQgc2l6ZSwgbm90
-IHRoZSBhY3R1YWwgaW1hIAo+IG1lYXN1cmVtZW50IGxpc3QgYnVmZmVyIHNpemUuICBUaGUgaGVh
-ZGVyIGluZm8gaXMgc2V0IHVzaW5nIG1lbWNweSgpIG9uY2UgaW4gCj4gaW1hX2R1bXBfbWVhc3Vy
-ZW1lbnRfbGlzdCgpIGFuZCB0aGVuIHRoZSBmaWVsZHMgYXJlIHVzZWQgaW4gCj4gaW1hX3Jlc3Rv
-cmVfbWVhc3VyZW1lbnRfbGlzdCgpIHRvIHZlcmlmeSB0aGUgYnVmZmVyLgoKQXMgbG9uZyBhcyB0
-aGVyZSBpcyBubyBjb25jdXJyZW50IHJlYWRzL3dyaXRlcyB0aGlzIHNob3VsZCBiZSBPSy4KCj4g
-VGhlIGJpbmFyeSBydW50aW1lIG1lYXN1cmVtZW50IGxpc3QgaXMgcGFja2VkLCBzbyB0aGUgb3Ro
-ZXIgdHdvIHN0cnVjdHVyZXMgLSAKPiBiaW5hcnlfaGRyX3YxIGFuZCBiaW5hcnlfZGF0YV92MSAt
-IG11c3QgYmUgcGFja2VkLiAgRG9lcyBpdCBtYWtlIHNlbnNlIGZvciAKPiB0aGlzIGhlYWRlciBu
-b3QgdG8gYmUgcGFja2VkIGFzIHdlbGw/ICBXb3VsZCBjb3B5aW5nIHRoZSBoZWFkZXIgZmllbGRz
-IHRvIAo+IGxvY2FsIHZhcmlhYmxlcyBiZWZvcmUgYmVpbmcgdXNlZCBzb2x2ZSB5b3VyIGNvbmNl
-cm4/CgpDb3B5aW5nIHRvIGFsaWduZWQgdmFyaWFibGVzIHdvdWxkIGJlIG5lY2Vzc2FyeSBvbmx5
-IGlmOgoKCWEpIHNvbWUgc29ydCBvZiBhdG9taWNpdHkgaXMgbmVlZGVkLCBhbmQvb3IKCdCxKSBz
-cGVlZCBpcyBvZiBjb25jZXJuOwoKPiBSZW1lbWJlciB0aGlzIGNvZGUgaXMgdXNlZCBvbmNlIG9u
-IHRoZSBrZXhlYyBleGVjdXRlIGFuZCBhZ2FpbiBvbiByZWJvb3QuCgpJZiB3ZSBkb24ndCBuZWVk
-IGEpIF9hbmRfIGIpIHRoZW4geW91IGRvbid0IG5lZWQgdG8gYm90aGVyLgoKCgkJUGV0a28KCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi,
+
+Am Dienstag, 26 Juli 2016, 21:24:29 schrieb Thiago Jung Bauermann:
+> Notes:
+>     This is a new version of the last patch in this series which adds
+>     a function where each architecture can verify if the DTB is safe
+>     to load:
+> 
+>     int __weak arch_kexec_verify_buffer(enum kexec_file_type type,
+>                                         const void *buf,
+>                                         unsigned long size)
+>     {
+>             return -EINVAL;
+>     }
+> 
+>     I will then provide an implementation in my powerpc patch series
+>     which checks that the DTB only contains nodes and properties from a
+>     whitelist. arch_kexec_kernel_image_load will copy these properties
+>     to the device tree blob the kernel was booted with (and perform
+>     other changes such as setting /chosen/bootargs, of course).
+
+Is this approach ok? If so, I'll post a patch next week adding an 
+arch_kexec_verify_buffer hook for powerpc to enforce the whitelist, and also 
+a new version of the patches implementing kexec_file_load for powerpc on top 
+of this series.
+
+Eric, does this address your concerns?
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
