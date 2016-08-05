@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVRrr-0006t9-Ja
- for kexec@lists.infradead.org; Thu, 04 Aug 2016 23:16:01 +0000
-Subject: Re: [PATCH] arm64:kexec: Memstart should not be before the kernel
- start address
-References: <1461708860-23034-1-git-send-email-sgoel@codeaurora.org>
- <1461715120.27026.4.camel@infradead.org>
- <3624bf19-6569-b631-92f9-cc9fc91b40cd@codeaurora.org>
- <1465576876.3105.54.camel@infradead.org>
- <569f36b7-e153-742f-b7fe-c3a1d7b1febc@codeaurora.org>
- <1470079910.16559.49.camel@infradead.org> <20160802012551.GF7995@linaro.org>
- <d3e36e72-6975-c0fd-346d-5e7a79ba2e1a@codeaurora.org>
- <20160804011600.GI7995@linaro.org>
-From: "Goel, Sameer" <sgoel@codeaurora.org>
-Message-ID: <49ceb561-af9e-6ffc-926f-05bdb02c0304@codeaurora.org>
-Date: Thu, 4 Aug 2016 17:15:36 -0600
+ id 1bVake-0005V7-R9
+ for kexec@lists.infradead.org; Fri, 05 Aug 2016 08:45:11 +0000
+Date: Fri, 5 Aug 2016 11:44:25 +0300
+From: Petko Manolov <petkan@mip-labs.com>
+Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
+Message-ID: <20160805084425.GA7572@localhost>
+References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1470313475-20090-2-git-send-email-zohar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20160804011600.GI7995@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1470313475-20090-2-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,128 +20,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Geoff Levand <geoff@infradead.org>, timur@codeaurora.org, rruigrok@codeaurora.org, shankerd@codeaurora.org, kexec@lists.infradead.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, Dave Young <dyoung@redhat.com>
 
- > In your original email, you said that you cannot place the kernel
- > at the address 0x0. Is this your problem, isn't it?
+On 16-08-04 08:24:29, Mimi Zohar wrote:
+> The TPM PCRs are only reset on a hard reboot.  In order to validate a
+> TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+> of the running kernel must be saved and restored on boot.  This patch
+> restores the measurement list.
+> 
+> Changelog:
+> - call ima_load_kexec_buffer() (Thiago)
+> 
+> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+> ---
+>  security/integrity/ima/Makefile       |   1 +
+>  security/integrity/ima/ima.h          |  10 ++
+>  security/integrity/ima/ima_init.c     |   2 +
+>  security/integrity/ima/ima_kexec.c    |  55 +++++++++++
+>  security/integrity/ima/ima_queue.c    |  10 ++
+>  security/integrity/ima/ima_template.c | 171 ++++++++++++++++++++++++++++++++++
+>  6 files changed, 249 insertions(+)
+>  create mode 100644 security/integrity/ima/ima_kexec.c
+> 
+> diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
+> index c34599f..c0ce7b1 100644
+> --- a/security/integrity/ima/Makefile
+> +++ b/security/integrity/ima/Makefile
+> @@ -8,4 +8,5 @@ obj-$(CONFIG_IMA) += ima.o
+>  ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
+>  	 ima_policy.o ima_template.o ima_template_lib.o ima_buffer.o
+>  ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
+> +ima-$(CONFIG_KEXEC_FILE) += ima_kexec.o
+>  obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index b5728da..84e8d36 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -102,6 +102,13 @@ struct ima_queue_entry {
+>  };
+>  extern struct list_head ima_measurements;	/* list of all measurements */
+>  
+> +/* Some details preceding the binary serialized measurement list */
+> +struct ima_kexec_hdr {
+> +	unsigned short version;
+> +	unsigned long buffer_size;
+> +	unsigned long count;
+> +} __packed;
 
-Not being able to put the kernel at 0 should not be considered a  
-restriction. The kernel is not mandated to start at 0 address. The tools  
-code was working fine till arm linux developers released a new set of  
-changes to get the alignment right for performance reasons.
+Unless there is no real need for this structure to be packed i suggest dropping 
+the attribute.  When referenced through pointer 32bit ARM and MIPS (and likely 
+all other 32bit RISC CPUs) use rather inefficient byte loads and stores.
 
-This change makes sure that he kernel start is 1GB aligned. So, once the  
-round doen happens the regions that are reserved memblocks are also seen  
-using the iomem query API. The reserved regions should not be considered  
-as a part of the kernel RAM.
-
- > If so, you can explicitly specify the start address with  
-"crashkernel=X@Y"
- > parameter. Or we might better add "mem-min" support as I said.
-
-I agree that the above options will solve this case.
-
-As I mentioned before that not starting at address 0x0 should not be  
-considered a limitation.So, default case of reuse-cmdline should work as  
-is.
-In this code we are trying to find where the kernel code start is. Based  
-on this info we can always clearly determine the kernel ram start. This  
-would not be a limitation.
-
-Any system ram region located before kernel ram should not be used  
-unless explicitly reclaimed or added.
-
-Thanks,
-Sameer
+Worse, if, for example, ->count is going to be read/written concurrently from 
+multiple threads we get torn loads/stores thus losing atomicity of the access.
 
 
-On 8/3/2016 7:16 PM, AKASHI Takahiro wrote:
-> On Wed, Aug 03, 2016 at 05:44:30PM -0600, Goel, Sameer wrote:
->> Hi,
->> I am using vmlinux in this case. Usually the kernel code start is at
->> a 2M alignment from the System RAM start address. Since, kexec
->> default options were not loading the image at the right address
->> (same as the original kernel) and the API used to get iomem listing
->> does not differentiate between the reserved and memblock addresses,
->
-> In your original email, you said that you cannot place the kernel
-> at the address 0x0. Is this your problem, isn't it?
->
-> If so, you can explicitly specify the start address with "crashkernel=X@Y"
-> parameter. Or we might better add "mem-min" support as I said.
->
->> I recommended that we look for the Kernel Code segment and round
->> this down to get the right start address.
->> The above should not impact any current functionality or ignore any
->> ram regions when booting the patched kernel.
->
-> no need to impose such a unnecessary restriction.
->
-> Thanks,
-> -Takahiro AKASHI
->
->> I will report the patch on V2.
->> Thanks,
->> Sameer
->>
->>
->> On 8/1/2016 7:25 PM, AKASHI Takahiro wrote:
->>> On Mon, Aug 01, 2016 at 12:31:50PM -0700, Geoff Levand wrote:
->>>> Hi,
->>>>
->>>> On Fri, 2016-07-29 at 16:58 -0600, Goel, Sameer wrote:
->>>>> In our setup we cannot place the kernel starting at 0 address. So, it it
->>>>> placed at the first valid aligned address after placing the reserved
->>>>> regions in memory.
->>>>>
->>>>> The code from the change (https://patchwork.kernel.org/patch/8325221/)
->>>>> adds the reserved regions to iomem ranges. So, when the kexec tool is
->>>>> run it picks up the first reserved region as the start address for
->>>>> physical ram. When the kernel is loaded at this address, it fails to boot.
->>>>>
->>>>> So, I have put in a filter in the code that would pick up the right
->>>>> address of the primary kernel after this change was introduced.
->>>
->>> You're using Image, not vmlinux, right?
->>> I don't think that it's a good idea to add this sort of restriction
->>> because it is very system-specific.
->>> You'd better use "--mem-min=" parameter in your case.
->>> (In fact, this option doesn't work on the current arm64 port of kexec-tools,
->>> though.)
->>>
->>> Thanks,
->>> -Takahiro AKASHI
->>>
->>>>> Thanks,
->>>>> Sameer
->>>>
->>>>
->>>> Your patch no longer applies.  Please rebase it to my
->>>> for-merge-arm64-v2 branch and re-post.
->>>>
->>>> -Geoff
->>>>
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
->>>
->>
->> --
->> Qualcomm Innovation Center, Inc.
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project.
->
-
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+		Petko
 
 _______________________________________________
 kexec mailing list
