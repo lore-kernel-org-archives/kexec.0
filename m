@@ -1,17 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bWhtb-0006UF-VM
- for kexec@lists.infradead.org; Mon, 08 Aug 2016 10:35:00 +0000
-Received: from penelope.kanocho.kobe.vergenet.net (unknown [217.111.208.18])
- by kirsty.vergenet.net (Postfix) with ESMTPSA id BF82A25B74E
- for <kexec@lists.infradead.org>; Mon,  8 Aug 2016 20:34:37 +1000 (AEST)
-Date: Mon, 8 Aug 2016 12:34:34 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.13
-Message-ID: <20160808103434.GF17838@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+Message-Id: <726816b353ad67c222d135117145dd03663bb863.1470693832.git.geoff@infradead.org>
+In-Reply-To: <cover.1470693832.git.geoff@infradead.org>
+References: <cover.1470693832.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH v3 3/3] arm64: Add support for binary image files
+Date: Mon, 08 Aug 2016 22:19:33 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,32 +13,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi all,
+From: Pratyush Anand <panand@redhat.com>
 
-I am happy to announce the release of kexec-tools 2.0.13.
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+[Reworked and cleaned up]
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ kexec/arch/arm64/kexec-image-arm64.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-This is a feature release coinciding with the release of the v4.7 Linux Kernel[*].
+diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+index 84386f7..cad7c73 100644
+--- a/kexec/arch/arm64/kexec-image-arm64.c
++++ b/kexec/arch/arm64/kexec-image-arm64.c
+@@ -24,21 +24,40 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 		return -1;
+ 	}
+ 
+-	fprintf(stderr, "kexec: ARM64 binary image files are currently NOT SUPPORTED.\n");
+-
+-	return -1;
++	return 0;
+ }
+ 
+ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	off_t kernel_size, struct kexec_info *info)
+ {
+-	return -EFAILED;
++	const struct arm64_image_header *h;
++	unsigned long image_base;
++
++	h = (const struct arm64_image_header *)(kernel_buf);
++
++	if (arm64_process_image_header(h))
++		return -EINVAL;
++
++	dbgprintf("%s: text_offset:   %016lx\n", __func__,
++		arm64_mem.text_offset);
++	dbgprintf("%s: image_size:    %016lx\n", __func__,
++		arm64_mem.image_size);
++	dbgprintf("%s: phys_offset:   %016lx\n", __func__,
++		arm64_mem.phys_offset);
++	dbgprintf("%s: PE format:     %s\n", __func__,
++		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
++
++	image_base = get_phys_offset() + arm64_mem.text_offset;
++	
++	add_segment_phys_virt(info, kernel_buf, kernel_size, image_base,
++		arm64_mem.image_size, 0);
++
++	return arm64_load_other_segments(info, image_base);
+ }
+ 
+ void image_arm64_usage(void)
+ {
+ 	printf(
+ "     An ARM64 binary image, compressed or not, big or little endian.\n"
+-"     Typically an Image, Image.gz or Image.lzma file.\n"
+-"     This file type is currently NOT SUPPORTED.\n\n");
++"     Typically an Image, Image.gz or Image.lzma file.\n\n");
+ }
+-- 
+2.5.0
 
-This release can be downloaded from kernel.org:
-
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.13.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
-
-It is also tagged it in git:
-
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-
-[*] I apologise that this release is a little late.
-    I have been unusually busy due to moving home.
 
 _______________________________________________
 kexec mailing list
