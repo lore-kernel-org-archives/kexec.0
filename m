@@ -1,30 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bVm1Q-0007Mm-Sg
- for kexec@lists.infradead.org; Fri, 05 Aug 2016 20:47:13 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u75KiZ0u002296
- for <kexec@lists.infradead.org>; Fri, 5 Aug 2016 16:46:51 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0b-001b2d01.pphosted.com with ESMTP id 24mud8pwhh-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 05 Aug 2016 16:46:51 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 5 Aug 2016 17:46:49 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 3/3] kexec: extend kexec_file_load system call
-Date: Fri, 05 Aug 2016 17:46:43 -0300
-In-Reply-To: <1469579069-28472-1-git-send-email-bauerman@linux.vnet.ibm.com>
-References: <20160712014201.11456-4-takahiro.akashi@linaro.org>
- <1469579069-28472-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ id 1bWa66-00087h-Dg
+ for kexec@lists.infradead.org; Mon, 08 Aug 2016 02:15:23 +0000
+Date: Mon, 8 Aug 2016 10:14:51 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 1/2] Documentation: kdump: remind user of nr_cpus
+Message-ID: <20160808021451.GA5375@dhcp-128-65.nay.redhat.com>
+References: <1470185952-23477-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Message-Id: <1988385.QMVjiCbb5e@hactar>
+Content-Disposition: inline
+In-Reply-To: <1470185952-23477-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,42 +23,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Michael Ellerman <michael@ellerman.id.au>, AKASHI Takahiro <takahiro.akashi@linaro.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Jeremy Kerr <jeremy.kerr@au1.ibm.com>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Cc: d.hatayama@jp.fujitsu.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, bhe@redhat.com
 
-Hi,
-
-Am Dienstag, 26 Juli 2016, 21:24:29 schrieb Thiago Jung Bauermann:
-> Notes:
->     This is a new version of the last patch in this series which adds
->     a function where each architecture can verify if the DTB is safe
->     to load:
+On 08/03/16 at 08:59am, Zhou Wenjian wrote:
+> v2->v3: add description of nr_cpus.
+> v1->v2: change nr_cpus to maxcpus
 > 
->     int __weak arch_kexec_verify_buffer(enum kexec_file_type type,
->                                         const void *buf,
->                                         unsigned long size)
->     {
->             return -EINVAL;
->     }
+> nr_cpus can help to save memory. So we should remind user of it.
 > 
->     I will then provide an implementation in my powerpc patch series
->     which checks that the DTB only contains nodes and properties from a
->     whitelist. arch_kexec_kernel_image_load will copy these properties
->     to the device tree blob the kernel was booted with (and perform
->     other changes such as setting /chosen/bootargs, of course).
+> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+> ---
+>  Documentation/kdump/kdump.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+> index 88ff63d..4aa194e 100644
+> --- a/Documentation/kdump/kdump.txt
+> +++ b/Documentation/kdump/kdump.txt
+> @@ -393,6 +393,8 @@ Notes on loading the dump-capture kernel:
+>  * We generally don' have to bring up a SMP kernel just to capture the
+>    dump. Hence generally it is useful either to build a UP dump-capture
+>    kernel or specify maxcpus=1 option while loading dump-capture kernel.
+> +  Note, though maxcpus always works, we should replace it by nr_cpus to
+> +  save memory if supported by the current ARCH, such as x86. 
 
-Is this approach ok? If so, I'll post a patch next week adding an 
-arch_kexec_verify_buffer hook for powerpc to enforce the whitelist, and also 
-a new version of the patches implementing kexec_file_load for powerpc on top 
-of this series.
+Can you replace "we" with "you" in both these patches?
 
-Eric, does this address your concerns?
-
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
