@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x236.google.com ([2607:f8b0:400e:c00::236])
+Received: from mail-pa0-x231.google.com ([2607:f8b0:400e:c03::231])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bWwJh-0001av-VT
- for kexec@lists.infradead.org; Tue, 09 Aug 2016 01:58:56 +0000
-Received: by mail-pf0-x236.google.com with SMTP id h186so124374321pfg.3
- for <kexec@lists.infradead.org>; Mon, 08 Aug 2016 18:58:33 -0700 (PDT)
-Date: Tue, 9 Aug 2016 11:04:20 +0900
+ id 1bWwJo-0001cV-RO
+ for kexec@lists.infradead.org; Tue, 09 Aug 2016 01:59:01 +0000
+Received: by mail-pa0-x231.google.com with SMTP id fi15so208823pac.1
+ for <kexec@lists.infradead.org>; Mon, 08 Aug 2016 18:58:40 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v24 0/9] arm64: add kdump support
-Message-ID: <20160809020419.GN7995@linaro.org>
-References: <20160809015248.28414-1-takahiro.akashi@linaro.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160809015248.28414-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v24 7/9] arm64: kdump: enable kdump in the arm64 defconfig
+Date: Tue,  9 Aug 2016 10:56:14 +0900
+Message-Id: <20160809015615.28527-5-takahiro.akashi@linaro.org>
+In-Reply-To: <20160809015615.28527-1-takahiro.akashi@linaro.org>
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015615.28527-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,131 +20,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On Tue, Aug 09, 2016 at 10:52:47AM +0900, AKASHI Takahiro wrote:
-> This patch series adds kdump support on arm64.
-> 
-> To load a crash-dump kernel to the systems, a series of patches to
-> kexec-tools, which have not yet been merged upstream, are needed.
-> Please use my kdump patches [1].
-> 
-> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
->   - crash utility (coming v7.1.6 or later) [2]
->     (Necessary patches have already been queued in the master.)
-> 
-> [1] T.B.D.
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-http://lists.infradead.org/pipermail/kexec/2016-August/016779.html
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0555b7c..4c4d7b5 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -73,6 +73,7 @@ CONFIG_TRANSPARENT_HUGEPAGE=y
+ CONFIG_CMA=y
+ CONFIG_XEN=y
+ CONFIG_KEXEC=y
++CONFIG_CRASH_DUMP=y
+ # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+ CONFIG_COMPAT=y
+ CONFIG_CPU_IDLE=y
+-- 
+2.9.0
 
--Takahiro AKASHI
-
-> [2] https://github.com/crash-utility/crash.git
-> 
-> Changes for v24 (Aug 9, 2016):
->   o Rebase to Linux-4.8-rc1
->   o Update descriptions about newly added DT proerties
-> 
-> Changes for v23 (July 26, 2016):
-> 
->   o Move memblock_reserve() to a single place in reserve_crashkernel()
->   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
->   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
->   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
->     (for ACPI) from usable memory at crash kernel
-> 
-> Changes for v22 (July 12, 2016):
-> 
->   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
->     and add some descriptions about them in chosen.txt
->   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
->     with powerpc's "usable-memory"
->   o Make cosmetic changes regarding "ifdef" usage
->   o Correct some wordings in kdump.txt
-> 
-> Changes for v21 (July 6, 2016):
-> 
->   o Remove kexec patches.
->   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
->   o Clarify the description about kvm in kdump.txt.
-> 
-> See the following link [3] for older changes:
-> [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
-> 
-> AKASHI Takahiro (8):
->   arm64: kdump: reserve memory for crash dump kernel
->   memblock: add memblock_cap_memory_range()
->   arm64: limit memory regions based on DT property, usable-memory-range
->   arm64: kdump: implement machine_crash_shutdown()
->   arm64: kdump: add kdump support
->   arm64: kdump: add VMCOREINFO's for user-space coredump tools
->   arm64: kdump: enable kdump in the arm64 defconfig
->   arm64: kdump: update a kernel doc
-> 
-> James Morse (1):
->   Documentation: dt: chosen properties for arm64 kdump
-> 
->  Documentation/devicetree/bindings/chosen.txt |  45 ++++++
->  Documentation/kdump/kdump.txt                |  16 ++-
->  arch/arm64/Kconfig                           |  11 ++
->  arch/arm64/configs/defconfig                 |   1 +
->  arch/arm64/include/asm/hardirq.h             |   2 +-
->  arch/arm64/include/asm/kexec.h               |  41 +++++-
->  arch/arm64/include/asm/smp.h                 |   2 +
->  arch/arm64/kernel/Makefile                   |   1 +
->  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
->  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
->  arch/arm64/kernel/setup.c                    |   7 +-
->  arch/arm64/kernel/smp.c                      |  63 +++++++++
->  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
->  include/linux/memblock.h                     |   1 +
->  mm/memblock.c                                |  28 ++++
->  15 files changed, 551 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm64/kernel/crash_dump.c
-> 
-> -- 
-> 2.9.0
-> 
-> 
-> AKASHI Takahiro (8):
->   arm64: kdump: reserve memory for crash dump kernel
->   memblock: add memblock_cap_memory_range()
->   arm64: limit memory regions based on DT property, usable-memory-range
->   arm64: kdump: implement machine_crash_shutdown()
->   arm64: kdump: add kdump support
->   arm64: kdump: add VMCOREINFO's for user-space coredump tools
->   arm64: kdump: enable kdump in the arm64 defconfig
->   arm64: kdump: update a kernel doc
-> 
-> James Morse (1):
->   Documentation: dt: chosen properties for arm64 kdump
-> 
->  Documentation/devicetree/bindings/chosen.txt |  50 +++++++
->  Documentation/kdump/kdump.txt                |  16 ++-
->  arch/arm64/Kconfig                           |  11 ++
->  arch/arm64/configs/defconfig                 |   1 +
->  arch/arm64/include/asm/hardirq.h             |   2 +-
->  arch/arm64/include/asm/kexec.h               |  41 +++++-
->  arch/arm64/include/asm/smp.h                 |   2 +
->  arch/arm64/kernel/Makefile                   |   1 +
->  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
->  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
->  arch/arm64/kernel/setup.c                    |   7 +-
->  arch/arm64/kernel/smp.c                      |  63 +++++++++
->  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
->  include/linux/memblock.h                     |   1 +
->  mm/memblock.c                                |  28 ++++
->  15 files changed, 556 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm64/kernel/crash_dump.c
-> 
-> -- 
-> 2.9.0
-> 
 
 _______________________________________________
 kexec mailing list
