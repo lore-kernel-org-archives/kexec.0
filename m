@@ -1,40 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bX6Hf-0006x7-Aq
- for kexec@lists.infradead.org; Tue, 09 Aug 2016 12:37:28 +0000
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u79CTjeS083415
- for <kexec@lists.infradead.org>; Tue, 9 Aug 2016 08:37:06 -0400
-Received: from e28smtp09.in.ibm.com (e28smtp09.in.ibm.com [125.16.236.9])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24nbys6ucd-1
+ id 1bX6fg-0004ri-39
+ for kexec@lists.infradead.org; Tue, 09 Aug 2016 13:02:16 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u79Ct1hu058285
+ for <kexec@lists.infradead.org>; Tue, 9 Aug 2016 09:01:54 -0400
+Received: from e28smtp06.in.ibm.com (e28smtp06.in.ibm.com [125.16.236.6])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24na1xsf00-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 09 Aug 2016 08:37:05 -0400
+ for <kexec@lists.infradead.org>; Tue, 09 Aug 2016 09:01:45 -0400
 Received: from localhost
- by e28smtp09.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Tue, 9 Aug 2016 18:07:03 +0530
-Received: from d28relay06.in.ibm.com (d28relay06.in.ibm.com [9.184.220.150])
- by d28dlp01.in.ibm.com (Postfix) with ESMTP id 2DAE9E005B
- for <kexec@lists.infradead.org>; Tue,  9 Aug 2016 18:11:26 +0530 (IST)
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay06.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u79Cb03G46334146
- for <kexec@lists.infradead.org>; Tue, 9 Aug 2016 18:07:00 +0530
-Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u79Caw2f006536
- for <kexec@lists.infradead.org>; Tue, 9 Aug 2016 18:06:59 +0530
-Subject: Re: [PATCH 0/7] ima: carry the measurement list across kexec
+ Tue, 9 Aug 2016 18:31:39 +0530
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+ by d28dlp03.in.ibm.com (Postfix) with ESMTP id 2EE1A1258061
+ for <kexec@lists.infradead.org>; Tue,  9 Aug 2016 18:34:44 +0530 (IST)
+Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
+ by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u79CxeMd5046386
+ for <kexec@lists.infradead.org>; Tue, 9 Aug 2016 18:29:40 +0530
+Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
+ by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u79D1PcT010586
+ for <kexec@lists.infradead.org>; Tue, 9 Aug 2016 18:31:26 +0530
+Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Tue, 09 Aug 2016 08:36:44 -0400
-In-Reply-To: <91fa2f95-4d70-a056-d599-01cb3bbe6771@gmail.com>
+Date: Tue, 09 Aug 2016 09:01:13 -0400
+In-Reply-To: <87wpjqtdg8.fsf@concordia.ellerman.id.au>
 References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
- <91fa2f95-4d70-a056-d599-01cb3bbe6771@gmail.com>
+ <1470313475-20090-2-git-send-email-zohar@linux.vnet.ibm.com>
+ <87wpjqtdg8.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Message-Id: <1470746204.2881.101.camel@linux.vnet.ibm.com>
+Message-Id: <1470747673.2881.118.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,56 +49,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Balbir Singh <bsingharora@gmail.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, linux-security-module@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 
-On Tue, 2016-08-09 at 15:19 +1000, Balbir Singh wrote:
+On Tue, 2016-08-09 at 20:59 +1000, Michael Ellerman wrote:
+> Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
 > 
-> On 04/08/16 22:24, Mimi Zohar wrote:
-> > The TPM PCRs are only reset on a hard reboot.  In order to validate a
-> > TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
-> > of the running kernel must be saved and then restored on the subsequent
-> > boot.
-> > 
-> > The existing securityfs binary_runtime_measurements file conveniently
-> > provides a serialized format of the IMA measurement list. This patch
-> > set serializes the measurement list in this format and restores it.
-> > 
-> > This patch set pre-req's Thiago Bauermann's "kexec_file: Add buffer
-> > hand-over for the next kernel" patch set* for actually carrying the
-> > serialized measurement list across the kexec.
-> > 
-> > Mimi
-> > 
+> > diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> > index b5728da..84e8d36 100644
+> > --- a/security/integrity/ima/ima.h
+> > +++ b/security/integrity/ima/ima.h
+> > @@ -102,6 +102,13 @@ struct ima_queue_entry {
+> >  };
+> >  extern struct list_head ima_measurements;	/* list of all measurements */
+> >  
+> > +/* Some details preceding the binary serialized measurement list */
+> > +struct ima_kexec_hdr {
+> > +	unsigned short version;
+> > +	unsigned long buffer_size;
+> > +	unsigned long count;
+> > +} __packed;
+> > +
 > 
-> Hi, Mimi
-> 
-> I am trying to convince myself of the security of the solution. I asked
-> Thiago as well, but may be I am be lagging behind in understanding.
-> 
-> We trust the kernel to hand over PCR values of the old kernel (which
-> cannot be validated) to the IMA subsystem in the new kernel for storage.
-> I guess the idea is for ima_add_boot_aggregate to do the right thing?
-> How do we validate what the old kernel is giving us? Why do we care for
-> the old measurement list? Is it still of significance in the new kernel?
-> 
+> Am I understanding it correctly that this structure is passed between kernels?
 
-Hi Balbir,
+Yes, the header prefixes the measurement list, which is being passed on
+the same computer to the next kernel.  Could the architecture (eg.
+LE/BE) change between soft re-boots?
 
-To validate the hardware TPM PCR values requires walking the measurement
-list simulating the TPM extend operation.  The resulting values should
-match the hardware TPM PCRs.
+> If so it's an ABI and should use types with well defined sizes, as if it was
+> going out to userspace, shouldn't it?
 
-In the case of a soft reboot, the TPM PCRs are not reset to 0, so all
-the measurements of the running system, including those from previous
-soft reboots, need to be included in the measurement list.   Without
-these measurements, the simulated PCR values will not match the hardware
-TPM PCR values.  Thus the need for this patch set.
-
-Measurements can not be added/removed/changed in the measurement list
-without it being detectable.
+Ok
 
 Mimi
+
 
 
 _______________________________________________
