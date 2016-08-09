@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
+Received: from mail-pf0-x236.google.com ([2607:f8b0:400e:c00::236])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bWwHH-0000HN-B7
- for kexec@lists.infradead.org; Tue, 09 Aug 2016 01:56:33 +0000
-Received: by mail-pa0-x22b.google.com with SMTP id iw10so172493pac.2
- for <kexec@lists.infradead.org>; Mon, 08 Aug 2016 18:56:03 -0700 (PDT)
+ id 1bWwJh-0001av-VT
+ for kexec@lists.infradead.org; Tue, 09 Aug 2016 01:58:56 +0000
+Received: by mail-pf0-x236.google.com with SMTP id h186so124374321pfg.3
+ for <kexec@lists.infradead.org>; Mon, 08 Aug 2016 18:58:33 -0700 (PDT)
+Date: Tue, 9 Aug 2016 11:04:20 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v2 7/7] arm64: kdump: Add support for binary image files
-Date: Tue,  9 Aug 2016 11:00:32 +0900
-Message-Id: <20160809020032.28654-8-takahiro.akashi@linaro.org>
-In-Reply-To: <20160809020032.28654-1-takahiro.akashi@linaro.org>
-References: <20160809020032.28654-1-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v24 0/9] arm64: add kdump support
+Message-ID: <20160809020419.GN7995@linaro.org>
+References: <20160809015248.28414-1-takahiro.akashi@linaro.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160809015248.28414-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,200 +21,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-From: Pratyush Anand <panand@redhat.com>
+On Tue, Aug 09, 2016 at 10:52:47AM +0900, AKASHI Takahiro wrote:
+> This patch series adds kdump support on arm64.
+> 
+> To load a crash-dump kernel to the systems, a series of patches to
+> kexec-tools, which have not yet been merged upstream, are needed.
+> Please use my kdump patches [1].
+> 
+> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+>   - crash utility (coming v7.1.6 or later) [2]
+>     (Necessary patches have already been queued in the master.)
+> 
+> [1] T.B.D.
 
-This patch adds support to use binary image ie arch/arm64/boot/Image with
-kdump.
+http://lists.infradead.org/pipermail/kexec/2016-August/016779.html
 
-Binary image does not have sufficient knowledge to extract page offset
-information, which is needed by kexec tool (specially vmcore-dmesg). Use a
-new command parameter --page-offset, so that user can provide page offset
-information for linear mapping.
+-Takahiro AKASHI
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
-[takahiro.akashi@linaro.org: a bit reworked]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- kexec/arch/arm64/include/arch/options.h |  8 +++--
- kexec/arch/arm64/kexec-arm64.c          |  5 +++
- kexec/arch/arm64/kexec-image-arm64.c    | 60 +++++++++++++++++++++++++++++----
- 3 files changed, 65 insertions(+), 8 deletions(-)
-
-diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-index a17d933..3283985 100644
---- a/kexec/arch/arm64/include/arch/options.h
-+++ b/kexec/arch/arm64/include/arch/options.h
-@@ -5,7 +5,8 @@
- #define OPT_DTB			((OPT_MAX)+1)
- #define OPT_INITRD		((OPT_MAX)+2)
- #define OPT_REUSE_CMDLINE	((OPT_MAX)+3)
--#define OPT_ARCH_MAX		((OPT_MAX)+4)
-+#define OPT_PAGE_OFFSET		((OPT_MAX)+4)
-+#define OPT_ARCH_MAX		((OPT_MAX)+5)
- 
- #define KEXEC_ARCH_OPTIONS \
- 	KEXEC_OPTIONS \
-@@ -15,6 +16,7 @@
- 	{ "initrd",        1, NULL, OPT_INITRD }, \
- 	{ "ramdisk",       1, NULL, OPT_INITRD }, \
- 	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
-+	{ "page-offset",   1, NULL, OPT_PAGE_OFFSET }, \
- 
- #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR /* Only accept long arch options. */
- #define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
-@@ -26,12 +28,14 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
- "     --dtb=FILE            Use FILE as the device tree blob.\n"
- "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
- "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
--"     --reuse-cmdline       Use kernel command line from running system.\n";
-+"     --reuse-cmdline       Use kernel command line from running system.\n"
-+"     --page-offset=OFFSET  Use OFFSET as current kernel's page_offset value.\n";
- 
- struct arm64_opts {
- 	const char *command_line;
- 	const char *dtb;
- 	const char *initrd;
-+	uint64_t page_offset;
- };
- 
- extern struct arm64_opts arm64_opts;
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 83ad966..959f4bb 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -126,6 +126,9 @@ int arch_process_options(int argc, char **argv)
- 		case OPT_INITRD:
- 			arm64_opts.initrd = optarg;
- 			break;
-+		case OPT_PAGE_OFFSET:
-+			arm64_opts.page_offset = strtoull(optarg, NULL, 0);
-+			break;
- 		default:
- 			break; /* Ignore core and unknown options. */
- 		}
-@@ -138,6 +141,8 @@ int arch_process_options(int argc, char **argv)
- 	dbgprintf("%s:%d: initrd: %s\n", __func__, __LINE__,
- 		arm64_opts.initrd);
- 	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__, arm64_opts.dtb);
-+	dbgprintf("%s:%d: page_offset: %016lx\n", __func__, __LINE__,
-+						arm64_opts.page_offset);
- 
- 	return 0;
- }
-diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-index cad7c73..90e8a87 100644
---- a/kexec/arch/arm64/kexec-image-arm64.c
-+++ b/kexec/arch/arm64/kexec-image-arm64.c
-@@ -4,9 +4,15 @@
- 
- #define _GNU_SOURCE
- 
--#include <errno.h>
-+#include <stdint.h>
-+#include <stdlib.h>
-+#include <arch/options.h>
- 
-+#include "../../kexec.h"
-+#include "../../crashdump.h"
-+#include "crashdump-arm64.h"
- #include "kexec-arm64.h"
-+#include "kexec-syscall.h"
- 
- int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
- {
-@@ -27,16 +33,44 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
- 	return 0;
- }
- 
-+static uint64_t get_kernel_page_offset(void)
-+{
-+	uint64_t text_page_offset;
-+
-+	/* 2MB-aligned */
-+	text_page_offset = get_kernel_sym("_text") & (UINT64_MAX << 21);
-+
-+	if (arm64_opts.page_offset) {
-+		if (text_page_offset != arm64_opts.page_offset)
-+			dbgprintf("%s: User page offset %lx did not match with text page offset %lx\n", __func__,
-+				arm64_opts.page_offset, text_page_offset);
-+		return arm64_opts.page_offset;
-+	} else if (text_page_offset) {
-+		dbgprintf("%s: text page offset is %lx\n", __func__,
-+						text_page_offset);
-+		return text_page_offset;
-+	} else {
-+		return UINT64_MAX;
-+	}
-+}
-+
- int image_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	off_t kernel_size, struct kexec_info *info)
- {
- 	const struct arm64_image_header *h;
--	unsigned long image_base;
-+	uint64_t image_base;
-+	int result;
- 
- 	h = (const struct arm64_image_header *)(kernel_buf);
- 
- 	if (arm64_process_image_header(h))
--		return -EINVAL;
-+		return -1;
-+
-+	arm64_mem.page_offset = get_kernel_page_offset();
-+	if (arm64_mem.page_offset == UINT64_MAX) {
-+		fprintf(stderr, "kexec: page_offset is not specified\n");
-+		return -1;
-+	}
- 
- 	dbgprintf("%s: text_offset:   %016lx\n", __func__,
- 		arm64_mem.text_offset);
-@@ -44,11 +78,24 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
- 		arm64_mem.image_size);
- 	dbgprintf("%s: phys_offset:   %016lx\n", __func__,
- 		arm64_mem.phys_offset);
-+	dbgprintf("%s: page_offset:   %016lx\n", __func__,
-+		arm64_mem.page_offset);
- 	dbgprintf("%s: PE format:     %s\n", __func__,
- 		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
- 
--	image_base = get_phys_offset() + arm64_mem.text_offset;
--	
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		result = load_crashdump_segments(info);
-+
-+		if (result) {
-+			fprintf(stderr,
-+				"kexec: load crashdump segments failed.\n");
-+			return -1;
-+		}
-+		image_base = crash_reserved_mem.start + arm64_mem.text_offset;
-+	} else {
-+		image_base = get_phys_offset() + arm64_mem.text_offset;
-+	}
-+
- 	add_segment_phys_virt(info, kernel_buf, kernel_size, image_base,
- 		arm64_mem.image_size, 0);
- 
-@@ -59,5 +106,6 @@ void image_arm64_usage(void)
- {
- 	printf(
- "     An ARM64 binary image, compressed or not, big or little endian.\n"
--"     Typically an Image, Image.gz or Image.lzma file.\n\n");
-+"     Typically an Image, Image.gz or Image.lzma file.\n"
-+"     --page-offset         Kernel page-offset for binary image load.\n\n");
- }
--- 
-2.9.0
-
+> [2] https://github.com/crash-utility/crash.git
+> 
+> Changes for v24 (Aug 9, 2016):
+>   o Rebase to Linux-4.8-rc1
+>   o Update descriptions about newly added DT proerties
+> 
+> Changes for v23 (July 26, 2016):
+> 
+>   o Move memblock_reserve() to a single place in reserve_crashkernel()
+>   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+>   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+>   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+>     (for ACPI) from usable memory at crash kernel
+> 
+> Changes for v22 (July 12, 2016):
+> 
+>   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+>     and add some descriptions about them in chosen.txt
+>   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+>     with powerpc's "usable-memory"
+>   o Make cosmetic changes regarding "ifdef" usage
+>   o Correct some wordings in kdump.txt
+> 
+> Changes for v21 (July 6, 2016):
+> 
+>   o Remove kexec patches.
+>   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+>   o Clarify the description about kvm in kdump.txt.
+> 
+> See the following link [3] for older changes:
+> [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+> 
+> AKASHI Takahiro (8):
+>   arm64: kdump: reserve memory for crash dump kernel
+>   memblock: add memblock_cap_memory_range()
+>   arm64: limit memory regions based on DT property, usable-memory-range
+>   arm64: kdump: implement machine_crash_shutdown()
+>   arm64: kdump: add kdump support
+>   arm64: kdump: add VMCOREINFO's for user-space coredump tools
+>   arm64: kdump: enable kdump in the arm64 defconfig
+>   arm64: kdump: update a kernel doc
+> 
+> James Morse (1):
+>   Documentation: dt: chosen properties for arm64 kdump
+> 
+>  Documentation/devicetree/bindings/chosen.txt |  45 ++++++
+>  Documentation/kdump/kdump.txt                |  16 ++-
+>  arch/arm64/Kconfig                           |  11 ++
+>  arch/arm64/configs/defconfig                 |   1 +
+>  arch/arm64/include/asm/hardirq.h             |   2 +-
+>  arch/arm64/include/asm/kexec.h               |  41 +++++-
+>  arch/arm64/include/asm/smp.h                 |   2 +
+>  arch/arm64/kernel/Makefile                   |   1 +
+>  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
+>  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
+>  arch/arm64/kernel/setup.c                    |   7 +-
+>  arch/arm64/kernel/smp.c                      |  63 +++++++++
+>  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
+>  include/linux/memblock.h                     |   1 +
+>  mm/memblock.c                                |  28 ++++
+>  15 files changed, 551 insertions(+), 7 deletions(-)
+>  create mode 100644 arch/arm64/kernel/crash_dump.c
+> 
+> -- 
+> 2.9.0
+> 
+> 
+> AKASHI Takahiro (8):
+>   arm64: kdump: reserve memory for crash dump kernel
+>   memblock: add memblock_cap_memory_range()
+>   arm64: limit memory regions based on DT property, usable-memory-range
+>   arm64: kdump: implement machine_crash_shutdown()
+>   arm64: kdump: add kdump support
+>   arm64: kdump: add VMCOREINFO's for user-space coredump tools
+>   arm64: kdump: enable kdump in the arm64 defconfig
+>   arm64: kdump: update a kernel doc
+> 
+> James Morse (1):
+>   Documentation: dt: chosen properties for arm64 kdump
+> 
+>  Documentation/devicetree/bindings/chosen.txt |  50 +++++++
+>  Documentation/kdump/kdump.txt                |  16 ++-
+>  arch/arm64/Kconfig                           |  11 ++
+>  arch/arm64/configs/defconfig                 |   1 +
+>  arch/arm64/include/asm/hardirq.h             |   2 +-
+>  arch/arm64/include/asm/kexec.h               |  41 +++++-
+>  arch/arm64/include/asm/smp.h                 |   2 +
+>  arch/arm64/kernel/Makefile                   |   1 +
+>  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
+>  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
+>  arch/arm64/kernel/setup.c                    |   7 +-
+>  arch/arm64/kernel/smp.c                      |  63 +++++++++
+>  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
+>  include/linux/memblock.h                     |   1 +
+>  mm/memblock.c                                |  28 ++++
+>  15 files changed, 556 insertions(+), 7 deletions(-)
+>  create mode 100644 arch/arm64/kernel/crash_dump.c
+> 
+> -- 
+> 2.9.0
+> 
 
 _______________________________________________
 kexec mailing list
