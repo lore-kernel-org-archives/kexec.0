@@ -1,40 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bXQOh-000562-EA
- for kexec@lists.infradead.org; Wed, 10 Aug 2016 10:06:04 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ id 1bXT2L-0004FK-W1
+ for kexec@lists.infradead.org; Wed, 10 Aug 2016 12:55:15 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7AA4qnL082130
- for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 06:05:42 -0400
-Received: from e23smtp05.au.ibm.com (e23smtp05.au.ibm.com [202.81.31.147])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24qm9t67au-1
+ u7ACsTN7015082
+ for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 08:54:48 -0400
+Received: from e23smtp03.au.ibm.com (e23smtp03.au.ibm.com [202.81.31.145])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 24qm9qn50x-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 06:05:42 -0400
+ for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 08:54:48 -0400
 Received: from localhost
- by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp03.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Wed, 10 Aug 2016 20:05:37 +1000
-Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id CB2322CE8056
- for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 20:05:36 +1000 (EST)
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7AA5a9S29360178
- for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 20:05:36 +1000
-Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
- by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7AA5aPW030839
- for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 20:05:36 +1000
-Subject: [PATCH v3 2/2] powerpc/fadump: parse fadump reserve memory size
- based on memory range
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Wed, 10 Aug 2016 15:35:32 +0530
-In-Reply-To: <147082324660.4631.6557186560310369015.stgit@hbathini.in.ibm.com>
-References: <147082324660.4631.6557186560310369015.stgit@hbathini.in.ibm.com>
-MIME-Version: 1.0
-Message-Id: <147082352471.4631.16292252236310652183.stgit@hbathini.in.ibm.com>
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 10 Aug 2016 22:54:43 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id 296342BB0055
+ for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 22:54:41 +1000 (EST)
+Received: from d23av05.au.ibm.com (d23av05.au.ibm.com [9.190.234.119])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7ACsf1g22479074
+ for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 22:54:41 +1000
+Received: from d23av05.au.ibm.com (localhost [127.0.0.1])
+ by d23av05.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7ACse0N000920
+ for <kexec@lists.infradead.org>; Wed, 10 Aug 2016 22:54:41 +1000
+Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Wed, 10 Aug 2016 08:54:36 -0400
+In-Reply-To: <87vaz9rlx2.fsf@concordia.ellerman.id.au>
+References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <3544655.o5QPxko4Ba@hactar> <87r39xthnv.fsf@concordia.ellerman.id.au>
+ <18857164.IzlezsQllh@hactar> <87vaz9rlx2.fsf@concordia.ellerman.id.au>
+Mime-Version: 1.0
+Message-Id: <1470833676.2881.183.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,128 +49,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>, dyoung@redhat.com, ebiederm@xmission.com, vgoyal@redhat.com, linuxppc-dev <linuxppc-dev@ozlabs.org>
-Cc: kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, linux-security-module@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 
-When fadump is enabled, by default 5% of system RAM is reserved for
-fadump kernel. While that works for most cases, it is not good enough
-for every case.
+On Wed, 2016-08-10 at 19:52 +1000, Michael Ellerman wrote:
+> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+> 
+> > Am Mittwoch, 10 August 2016, 13:41:08 schrieb Michael Ellerman:
+> >> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+> >> > Am Dienstag, 09 August 2016, 09:01:13 schrieb Mimi Zohar:
+> >> >> On Tue, 2016-08-09 at 20:59 +1000, Michael Ellerman wrote:
+> >> >> > Mimi Zohar <zohar@linux.vnet.ibm.com> writes: 
+> >> >> > > +/* Some details preceding the binary serialized measurement list
+> >> >> > > */
+> >> >> > > +struct ima_kexec_hdr {
+> >> >> > > +	unsigned short version;
+> >> >> > > +	unsigned long buffer_size;
+> >> >> > > +	unsigned long count;
+> >> >> > > +} __packed;
+> >> >> > > +
+> >> >> > 
+> >> >> > Am I understanding it correctly that this structure is passed between
+> >> >> > kernels?
+> >> >> 
+> >> >> Yes, the header prefixes the measurement list, which is being passed on
+> >> >> the same computer to the next kernel.  Could the architecture (eg.
+> >> >> LE/BE) change between soft re-boots?
+> >> > 
+> >> > Yes. I am able to boot a BE kernel from an LE kernel with my patches.
+> >> > Whether we want to support that or not is another question...
+> >> 
+> >> Yes you must support that. BE -> LE and vice versa.
+> >
+> > I didn't test BE - LE yet, but will do.
+> 
+> Thanks.
 
-Currently, to override the default value, fadump supports specifying
-memory to reserve with fadump_reserve_mem=size, where only a fixed size
-can be specified. This patch adds support to specify memory size to
-reserve for different memory ranges as below:
+Ok. There have been requests for making the binary_runtime_measurements
+architecture independent.  As this was not a network facing interface,
+we left it in native format.  With the kernel now consuming this data,
+it makes sense for the binary_runtime_measurements to be in an
+architecture independent format.
 
-	fadump_reserve_mem=<range1>:<size1>[,<range2>:<size2>,...]
+Unfortunately, as the <securityfs>/ima/binary_runtime_measurements is
+not prefixed with any metadata, this change would need to be Kconfig
+based, but kexec would always use the architecture independent format.
 
-Supporting range based input for "fadump_reserve_mem" parameter helps
-using the same commandline parameter for different system memory sizes.
+> >> You should also consider the possibility that the next kernel is not
+> >> Linux.
 
-Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Reviewed-by: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
----
+Oh!
 
-Changes from v2:
-1. Updated changelog
+> > If the next kernel is an ELF binary and it supports the kexec "calling 
+> > convention", it should work too. What could possibly go wrong? I can try 
+> > FreeBSD (I suppose it's an ELF kernel) and see what happens.
+> 
+> At least for old style kexec (not sys_kexec_load()) I don't think it
+> even needs to be an ELF binary.
+> 
+> I think there are folks working on FreeBSD (or $?BSD), so I think the
+> basic kexec part works.
+> 
+> There's nothing (yet) that wants to use this measurement list obviously,
+> but it should be designed such that it could be used by an unknown
+> future kernel that knows the ABI.
+> 
+> So given what you have above, you'd use something like:
+> 
+> struct ima_kexec_hdr {
+> 	u16 version;
+> 	u16 _reserved0;
+> 	u32 _reserved1;
+> 	u64 buffer_size;
+> 	u64 count;
+> };
+> 
+> cheers
 
+Thanks, I'll make this change.
 
- arch/powerpc/kernel/fadump.c |   63 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 54 insertions(+), 9 deletions(-)
-
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index b3a6633..7c01b5b 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -193,6 +193,55 @@ static unsigned long init_fadump_mem_struct(struct fadump_mem_struct *fdm,
- 	return addr;
- }
- 
-+/*
-+ * This function parses command line for fadump_reserve_mem=
-+ *
-+ * Supports the below two syntaxes:
-+ *    1. fadump_reserve_mem=size
-+ *    2. fadump_reserve_mem=ramsize-range:size[,...]
-+ *
-+ * Sets fw_dump.reserve_bootvar with the memory size
-+ * provided, 0 otherwise
-+ *
-+ * The function returns -EINVAL on failure, 0 otherwise.
-+ */
-+static int __init parse_fadump_reserve_mem(void)
-+{
-+	char *name = "fadump_reserve_mem=";
-+	char *fadump_cmdline = NULL, *cur;
-+
-+	fw_dump.reserve_bootvar = 0;
-+
-+	/* find fadump_reserve_mem and use the last one if there are many */
-+	cur = strstr(boot_command_line, name);
-+	while (cur) {
-+		fadump_cmdline = cur;
-+		cur = strstr(cur+1, name);
-+	}
-+
-+	/* when no fadump_reserve_mem= cmdline option is provided */
-+	if (!fadump_cmdline)
-+		return 0;
-+
-+	fadump_cmdline += strlen(name);
-+
-+	/* for fadump_reserve_mem=size cmdline syntax */
-+	if (!is_colon_in_param(fadump_cmdline)) {
-+		fw_dump.reserve_bootvar = memparse(fadump_cmdline, NULL);
-+		return 0;
-+	}
-+
-+	/* for fadump_reserve_mem=ramsize-range:size[,...] cmdline syntax */
-+	cur = fadump_cmdline;
-+	fw_dump.reserve_bootvar = parse_mem_range_size("fadump_reserve_mem",
-+					&cur, memblock_phys_mem_size());
-+	if (cur == fadump_cmdline) {
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * fadump_calculate_reserve_size(): reserve variable boot area 5% of System RAM
-  *
-@@ -212,12 +261,17 @@ static inline unsigned long fadump_calculate_reserve_size(void)
- {
- 	unsigned long size;
- 
-+	/* sets fw_dump.reserve_bootvar */
-+	parse_fadump_reserve_mem();
-+
- 	/*
- 	 * Check if the size is specified through fadump_reserve_mem= cmdline
- 	 * option. If yes, then use that.
- 	 */
- 	if (fw_dump.reserve_bootvar)
- 		return fw_dump.reserve_bootvar;
-+	else
-+		printk(KERN_INFO "fadump: calculating default boot size\n");
- 
- 	/* divide by 20 to get 5% of value */
- 	size = memblock_end_of_DRAM() / 20;
-@@ -348,15 +402,6 @@ static int __init early_fadump_param(char *p)
- }
- early_param("fadump", early_fadump_param);
- 
--/* Look for fadump_reserve_mem= cmdline option */
--static int __init early_fadump_reserve_mem(char *p)
--{
--	if (p)
--		fw_dump.reserve_bootvar = memparse(p, &p);
--	return 0;
--}
--early_param("fadump_reserve_mem", early_fadump_reserve_mem);
--
- static void register_fw_dump(struct fadump_mem_struct *fdm)
- {
- 	int rc;
+Mimi
 
 
 _______________________________________________
