@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from ozlabs.org ([103.22.144.67])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bXPcj-0005nZ-FD
- for kexec@lists.infradead.org; Wed, 10 Aug 2016 09:16:30 +0000
-Date: Wed, 10 Aug 2016 17:16:00 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v5 2/2] Documentation: kdump: add description of enable
- multi-cpus support
-Message-ID: <20160810091600.GD3147@dhcp-128-65.nay.redhat.com>
-References: <1470810145-8389-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1470810145-8389-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ id 1bXQBc-0008KK-NO
+ for kexec@lists.infradead.org; Wed, 10 Aug 2016 09:52:33 +0000
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
+In-Reply-To: <18857164.IzlezsQllh@hactar>
+References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <3544655.o5QPxko4Ba@hactar> <87r39xthnv.fsf@concordia.ellerman.id.au>
+ <18857164.IzlezsQllh@hactar>
+Date: Wed, 10 Aug 2016 19:52:09 +1000
+Message-ID: <87vaz9rlx2.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1470810145-8389-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,46 +24,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Cc: bhe@redhat.com, corbet@lwn.net, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, vgoyal@redhat.com
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, linuxppc-dev@lists.ozlabs.org
 
-On 08/10/16 at 02:22pm, Zhou Wenjian wrote:
-> multi-cpu support is useful to improve the performance of kdump in
-> some cases. So add the description of enable multi-cpu support in
-> dump-capture kernel.
-> 
-> Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> ---
->  Documentation/kdump/kdump.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index b474060..9c8d18e 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -396,6 +396,13 @@ Notes on loading the dump-capture kernel:
->    Note, though maxcpus always works, we should replace it by nr_cpus to
->    save memory if supported by the current ARCH, such as x86.
->  
-> +* We should enable multi-cpu support in dump-capture kernel if we intend
-> +  to use multi-thread programs with it, such as parallel dump feature of
-> +  makedumpfile. Otherwise, the multi-thread program may have a great
-> +  performance degradation. To enable multi-cpu support, we should bring up
-> +  a SMP dump-capture kernel and specify maxcpus\nr_cpus, disable_cpu_apic=[X]
-> +  options while loading it.
+Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
 
-Again, please replace "we" with second person "you"..
+> Am Mittwoch, 10 August 2016, 13:41:08 schrieb Michael Ellerman:
+>> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+>> > Am Dienstag, 09 August 2016, 09:01:13 schrieb Mimi Zohar:
+>> >> On Tue, 2016-08-09 at 20:59 +1000, Michael Ellerman wrote:
+>> >> > Mimi Zohar <zohar@linux.vnet.ibm.com> writes: 
+>> >> > > +/* Some details preceding the binary serialized measurement list
+>> >> > > */
+>> >> > > +struct ima_kexec_hdr {
+>> >> > > +	unsigned short version;
+>> >> > > +	unsigned long buffer_size;
+>> >> > > +	unsigned long count;
+>> >> > > +} __packed;
+>> >> > > +
+>> >> > 
+>> >> > Am I understanding it correctly that this structure is passed between
+>> >> > kernels?
+>> >> 
+>> >> Yes, the header prefixes the measurement list, which is being passed on
+>> >> the same computer to the next kernel.  Could the architecture (eg.
+>> >> LE/BE) change between soft re-boots?
+>> > 
+>> > Yes. I am able to boot a BE kernel from an LE kernel with my patches.
+>> > Whether we want to support that or not is another question...
+>> 
+>> Yes you must support that. BE -> LE and vice versa.
+>
+> I didn't test BE - LE yet, but will do.
 
-> +
->  * For s390x there are two kdump modes: If a ELF header is specified with
->    the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
->    is done on all other architectures. If no elfcorehdr= kernel parameter is
-> -- 
-> 1.8.3.1
-> 
-> 
-> 
+Thanks.
+
+>> You should also consider the possibility that the next kernel is not
+>> Linux.
+>
+> If the next kernel is an ELF binary and it supports the kexec "calling 
+> convention", it should work too. What could possibly go wrong? I can try 
+> FreeBSD (I suppose it's an ELF kernel) and see what happens.
+
+At least for old style kexec (not sys_kexec_load()) I don't think it
+even needs to be an ELF binary.
+
+I think there are folks working on FreeBSD (or $?BSD), so I think the
+basic kexec part works.
+
+There's nothing (yet) that wants to use this measurement list obviously,
+but it should be designed such that it could be used by an unknown
+future kernel that knows the ABI.
+
+So given what you have above, you'd use something like:
+
+struct ima_kexec_hdr {
+	u16 version;
+	u16 _reserved0;
+	u32 _reserved1;
+	u64 buffer_size;
+	u64 count;
+};
+
+cheers
 
 _______________________________________________
 kexec mailing list
