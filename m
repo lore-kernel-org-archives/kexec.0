@@ -1,21 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out4.electric.net ([192.162.216.184])
+Received: from lan.nucleusys.com ([92.247.61.126] helo=zztop.nucleusys.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bXUiM-00009c-HR
- for kexec@lists.infradead.org; Wed, 10 Aug 2016 14:42:39 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [Linux-ima-devel] [PATCH 1/7] ima: on soft reboot, restore the
+ id 1bXVkq-0008Kn-VH
+ for kexec@lists.infradead.org; Wed, 10 Aug 2016 15:49:17 +0000
+Date: Wed, 10 Aug 2016 18:48:49 +0300
+From: Petko Manolov <petkan@mip-labs.com>
+Subject: Re: [Linux-ima-devel] [PATCH 1/7] ima: on soft reboot, restore the
  measurement list
-Date: Wed, 10 Aug 2016 14:40:13 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6D5F50F2BB@AcuExch.aculab.com>
+Message-ID: <20160810154849.GE4087@localhost>
 References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
- <3544655.o5QPxko4Ba@hactar> <87r39xthnv.fsf@concordia.ellerman.id.au>
- <18857164.IzlezsQllh@hactar> <87vaz9rlx2.fsf@concordia.ellerman.id.au>
+ <3544655.o5QPxko4Ba@hactar>
+ <87r39xthnv.fsf@concordia.ellerman.id.au>
+ <18857164.IzlezsQllh@hactar>
+ <87vaz9rlx2.fsf@concordia.ellerman.id.au>
  <1470833676.2881.183.camel@linux.vnet.ibm.com>
  <20160810143230.GD4087@localhost>
-In-Reply-To: <20160810143230.GD4087@localhost>
-Content-Language: en-US
+ <063D6719AE5E284EB5DD2968C1650D6D5F50F2BB@AcuExch.aculab.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D5F50F2BB@AcuExch.aculab.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,44 +31,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Petko Manolov' <petkan@mip-labs.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ima-devel@lists.sourceforge.net" <linux-ima-devel@lists.sourceforge.net>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ima-devel@lists.sourceforge.net" <linux-ima-devel@lists.sourceforge.net>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-From: Linuxppc-dev [mailto:linuxppc-dev-bounces+david.laight=aculab.com@lists.ozlabs.org] On Behalf Of
-> > > So given what you have above, you'd use something like:
+On 16-08-10 14:40:13, David Laight wrote:
+> From: Linuxppc-dev [mailto:linuxppc-dev-bounces+david.laight=aculab.com@lists.ozlabs.org] On Behalf Of
+> > > > So given what you have above, you'd use something like:
+> > > >
+> > > > struct ima_kexec_hdr {
+> > > > 	u16 version;
+> > > > 	u16 _reserved0;
+> > > > 	u32 _reserved1;
+> > > > 	u64 buffer_size;
+> > > > 	u64 count;
+> > > > };
+> > > >
+> > > > cheers
 > > >
-> > > struct ima_kexec_hdr {
-> > > 	u16 version;
-> > > 	u16 _reserved0;
-> > > 	u32 _reserved1;
-> > > 	u64 buffer_size;
-> > > 	u64 count;
-> > > };
-> > >
-> > > cheers
-> >
-> > Thanks, I'll make this change.
+> > > Thanks, I'll make this change.
+> > 
+> > I would suggest:
+> > 
+> > struct ima_kexec_hdr {
+> > 	u64 buffer_size;
+> > 	u64 count;
+> > 	u16 version;
+> > };
+> > 
+> > and let the compiler add the proper padding, depending on the architecture.  On
+> > 32bit machine we'll have 4 bytes smaller allocations (compared to 64bit) while
+> > retaining the same functionality.
 > 
-> I would suggest:
+> AAAArrrrgggg.....
 > 
-> struct ima_kexec_hdr {
-> 	u64 buffer_size;
-> 	u64 count;
-> 	u16 version;
-> };
-> 
-> and let the compiler add the proper padding, depending on the architecture.  On
-> 32bit machine we'll have 4 bytes smaller allocations (compared to 64bit) while
-> retaining the same functionality.
+> That doesn't work for 32bit applications on 64bit hosts.
 
-AAAArrrrgggg.....
+Which part won't work?
 
-That doesn't work for 32bit applications on 64bit hosts.
-The extra bytes will make 0 difference to the allocation cost and
-lots to the processing.
+> The extra bytes will make 0 difference to the allocation cost and lots to the 
+> processing.
 
-	David
+An example?
 
+
+		Petko
 
 _______________________________________________
 kexec mailing list
