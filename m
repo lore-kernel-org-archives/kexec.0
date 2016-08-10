@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2401:3900:2:1::2])
+Received: from mail-pf0-f174.google.com ([209.85.192.174])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bXKOb-0007CH-FP
- for kexec@lists.infradead.org; Wed, 10 Aug 2016 03:41:34 +0000
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 1/7] ima: on soft reboot, restore the measurement list
-In-Reply-To: <3544655.o5QPxko4Ba@hactar>
-References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
- <87wpjqtdg8.fsf@concordia.ellerman.id.au>
- <1470747673.2881.118.camel@linux.vnet.ibm.com> <3544655.o5QPxko4Ba@hactar>
-Date: Wed, 10 Aug 2016 13:41:08 +1000
-Message-ID: <87r39xthnv.fsf@concordia.ellerman.id.au>
+ id 1bXKed-0003aY-FI
+ for kexec@lists.infradead.org; Wed, 10 Aug 2016 03:58:08 +0000
+Received: by mail-pf0-f174.google.com with SMTP id p64so11455121pfb.1
+ for <kexec@lists.infradead.org>; Tue, 09 Aug 2016 20:57:46 -0700 (PDT)
+Date: Wed, 10 Aug 2016 09:27:43 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v3 2/3] arm64: Add arm64 kexec support
+Message-ID: <20160810035743.GA27500@localhost.localdomain>
+References: <cover.1470693832.git.geoff@infradead.org>
+ <177affa377979b1f10d5bd39107b96fe506eb683.1470693832.git.geoff@infradead.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <177affa377979b1f10d5bd39107b96fe506eb683.1470693832.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +26,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, Dave Young <dyoung@redhat.com>
+To: Geoff Levand <geoff@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+Hi Geoff,
 
-> Am Dienstag, 09 August 2016, 09:01:13 schrieb Mimi Zohar:
->> On Tue, 2016-08-09 at 20:59 +1000, Michael Ellerman wrote:
->> > Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
->> > > diff --git a/security/integrity/ima/ima.h
->> > > b/security/integrity/ima/ima.h
->> > > index b5728da..84e8d36 100644
->> > > --- a/security/integrity/ima/ima.h
->> > > +++ b/security/integrity/ima/ima.h
->> > > @@ -102,6 +102,13 @@ struct ima_queue_entry {
->> > > 
->> > >  };
->> > >  extern struct list_head ima_measurements;	/* list of all 
-> measurements
->> > >  */
->> > > 
->> > > +/* Some details preceding the binary serialized measurement list */
->> > > +struct ima_kexec_hdr {
->> > > +	unsigned short version;
->> > > +	unsigned long buffer_size;
->> > > +	unsigned long count;
->> > > +} __packed;
->> > > +
->> > 
->> > Am I understanding it correctly that this structure is passed between
->> > kernels?
->> Yes, the header prefixes the measurement list, which is being passed on
->> the same computer to the next kernel.  Could the architecture (eg.
->> LE/BE) change between soft re-boots?
->
-> Yes. I am able to boot a BE kernel from an LE kernel with my patches. 
-> Whether we want to support that or not is another question...
+On 08/08/2016:10:19:33 PM, Geoff Levand wrote:
+> Add kexec reboot support for ARM64 platforms.
+> 
+> Signed-off-by: Geoff Levand <geoff@infradead.org>
+> ---
 
-Yes you must support that. BE -> LE and vice versa.
+> +
+> +		arm64_mem.page_offset = ehdr.e_entry - arm64_mem.text_offset;
+> +
+> +		dbgprintf("%s: e_entry:       %016llx -> %016lx\n", __func__,
+> +			ehdr.e_entry,
+> +			virt_to_phys(ehdr.e_entry));
+> +		dbgprintf("%s: p_vaddr:       %016llx -> %016lx\n", __func__,
+> +			phdr->p_vaddr,
+> +			virt_to_phys(phdr->p_vaddr));
+> +		dbgprintf("%s: header_offset: %016lx\n", __func__,
+> +			header_offset);
+> +		dbgprintf("%s: text_offset:   %016lx\n", __func__,
+> +			arm64_mem.text_offset);
+> +		dbgprintf("%s: image_size:    %016lx\n", __func__,
+> +			arm64_mem.image_size);
+> +		dbgprintf("%s: phys_offset:   %016lx\n", __func__,
+> +			arm64_mem.phys_offset);
+> +		dbgprintf("%s: page_offset:   %016lx\n", __func__,
+> +			arm64_mem.page_offset);
 
-You should also consider the possibility that the next kernel is not
-Linux.
+Although it works on mustang, I would like to understand few things:
 
-cheers
+This is what is being printed by kexec-tools:
+
+elf_arm64_load: e_entry:       fffffc0008080000 -> 0000004000080000
+elf_arm64_load: p_vaddr:       fffffc0008080000 -> 0000004000080000
+elf_arm64_load: header_offset: 0000000000000000
+elf_arm64_load: text_offset:   0000000000080000
+elf_arm64_load: image_size:    00000000013a0000
+elf_arm64_load: phys_offset:   0000004000000000
+elf_arm64_load: page_offset:   fffffc0008000000
+
+kernel is having 42 VA Bits, so a debug print in kernel says that
+PAGE_OFFSET=fffffe0000000000. Notice the difference between the values
+calculated by kernel and kexec-tools. Isn't it confusing? I think kexec-tools
+page_offset is text_page_offset and not the one which kernel uses. So, probably
+we can rename it accordingly. Otherwise, we may sync kexec-tools's
+virt_to_phys() and vice-versa definitions with that of kernel definitions.
+
+In my case, kernel has kimage_voffset=fffffbc008000000. So kernel translate
+virtual address fffffc0008080000 as fffffc0008080000 - fffffbc008000000 =
+0000004000080000 which is matching to the one calculated by kexec-tools (for
+e_entry).
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
