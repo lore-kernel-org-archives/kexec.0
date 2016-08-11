@@ -1,22 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f174.google.com ([209.85.161.174])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bXmpr-0001oC-Ss
- for kexec@lists.infradead.org; Thu, 11 Aug 2016 10:03:37 +0000
-Received: by mail-yw0-f174.google.com with SMTP id u134so40580226ywg.3
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 03:03:15 -0700 (PDT)
-Date: Thu, 11 Aug 2016 15:33:10 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-Message-ID: <20160811100310.GA29357@localhost.localdomain>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
- <57AB586D.3080900@arm.com>
- <20160810181827.GC24137@localhost.localdomain>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160810181827.GC24137@localhost.localdomain>
+ id 1bXo7r-0004E1-Ig
+ for kexec@lists.infradead.org; Thu, 11 Aug 2016 11:26:16 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7BBOTXv103389
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 07:25:54 -0400
+Received: from e28smtp04.in.ibm.com (e28smtp04.in.ibm.com [125.16.236.4])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 24qm9u3qe7-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 07:25:54 -0400
+Received: from localhost
+ by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 11 Aug 2016 16:55:50 +0530
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+ by d28dlp01.in.ibm.com (Postfix) with ESMTP id DC610E0060
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 17:00:11 +0530 (IST)
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+ by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7BBNsVw11731388
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 16:53:54 +0530
+Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
+ by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7BBPfN8003388
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 16:55:42 +0530
+Subject: Re: [PATCH 0/7] ima: carry the measurement list across kexec
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Thu, 11 Aug 2016 07:25:36 -0400
+In-Reply-To: <46d115a8-de96-1e9f-9d08-b0e9b6cca93a@gmail.com>
+References: <1470313475-20090-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <91fa2f95-4d70-a056-d599-01cb3bbe6771@gmail.com>
+ <1470746204.2881.101.camel@linux.vnet.ibm.com>
+ <46d115a8-de96-1e9f-9d08-b0e9b6cca93a@gmail.com>
+Mime-Version: 1.0
+Message-Id: <1470914736.10123.34.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,75 +49,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Balbir Singh <bsingharora@gmail.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, linux-security-module@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 
-On 10/08/2016:11:48:27 PM, Pratyush Anand wrote:
-> On 10/08/2016:05:38:05 PM, James Morse wrote:
-> > =========================%<=========================
-> > diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-> > index 2dc54d129be1..784d4c30b534 100644
-> > --- a/arch/arm64/kernel/crash_dump.c
-> > +++ b/arch/arm64/kernel/crash_dump.c
-> > @@ -37,6 +37,11 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-> >         if (!csize)
-> >                 return 0;
+On Thu, 2016-08-11 at 17:38 +1000, Balbir Singh wrote:
+> 
+> On 09/08/16 22:36, Mimi Zohar wrote:
+> > On Tue, 2016-08-09 at 15:19 +1000, Balbir Singh wrote:
+> >>
+> >> On 04/08/16 22:24, Mimi Zohar wrote:
+> >>> The TPM PCRs are only reset on a hard reboot.  In order to validate a
+> >>> TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+> >>> of the running kernel must be saved and then restored on the subsequent
+> >>> boot.
+> >>>
+> >>> The existing securityfs binary_runtime_measurements file conveniently
+> >>> provides a serialized format of the IMA measurement list. This patch
+> >>> set serializes the measurement list in this format and restores it.
+> >>>
+> >>> This patch set pre-req's Thiago Bauermann's "kexec_file: Add buffer
+> >>> hand-over for the next kernel" patch set* for actually carrying the
+> >>> serialized measurement list across the kexec.
+> >>>
+> >>> Mimi
+> >>>
+> >>
+> >> Hi, Mimi
+> >>
+> >> I am trying to convince myself of the security of the solution. I asked
+> >> Thiago as well, but may be I am be lagging behind in understanding.
+> >>
+> >> We trust the kernel to hand over PCR values of the old kernel (which
+> >> cannot be validated) to the IMA subsystem in the new kernel for storage.
+> >> I guess the idea is for ima_add_boot_aggregate to do the right thing?
+> >> How do we validate what the old kernel is giving us? Why do we care for
+> >> the old measurement list? Is it still of significance in the new kernel?
+> >>
 > > 
-> > +       if (memblock_is_memory(pfn << PAGE_SHIFT) &&
-> > +           !memblock_is_map_memory(pfn << PAGE_SHIFT))
-> > +               /* skip this nomap memory region, reserved by firmware */
-> > +               return 0;
-
-This should return 0 or -EINVAL? because, its caller does not care properly
-about 0 return value (when csize is non-zero). So either we need to return
--EINVAL or we need to fix it's caller so that pread() would know that required
-number of data were not read.
-
-> > +
-> >         vaddr = ioremap_cache(__pfn_to_phys(pfn), PAGE_SIZE);
-> >         if (!vaddr)
-> >                 return -ENOMEM;
-> > =========================%<=========================
+> > Hi Balbir,
+> > 
+> > To validate the hardware TPM PCR values requires walking the measurement
+> > list simulating the TPM extend operation.  The resulting values should
+> > match the hardware TPM PCRs.
+> > 
+> > In the case of a soft reboot, the TPM PCRs are not reset to 0, so all
+> > the measurements of the running system, including those from previous
+> > soft reboots, need to be included in the measurement list.   Without
+> > these measurements, the simulated PCR values will not match the hardware
+> > TPM PCR values.  Thus the need for this patch set.
+> > 
+> > Measurements can not be added/removed/changed in the measurement list
+> > without it being detectable.
+> > 
 > 
-> In any case kernel must not panic, so I think we must have above hunk. However,
-> we also need to look into kexec-tools that why it is asking kernel to copy those
-> unneeded chunks.
+> Thanks Mimi
 > 
-> I will test tomorrow with above hunk.
+> I think that makes sense
+> 
+> So effectively we do
+> 
+> first kernel boot -> <measurements match PCR and measurements are saved>
+> second kernel boot -> <new PCR = first save measurements + new measurements>
+> 
+> and so on
 
-After that hunk it did not crash but vmcore-dmesg fails with following message:
-"No program header covering vaddr 0x401ff0found kexec bug?"
+No, the running system doesn't verify the measurement list against the
+PCRs, before saving and carrying it across kexec. If the system has been
+compromised, it can't be trusted to verify itself.  Verifying the
+measurement list needs to be done by a trusted third party.  The system
+just carries the measurement list(s) across kexec.
 
-It happened because vmcore-dmesg is sending wrong offset to the pread(), and so
-it did not crash after the above kernel hunk but it still read garbage wrong
-log_buf virtual address pointer.
+Mimi
 
-vmcore-dmesg is sending wrong offset because page_offset(vp_offset) calculation
-is not perfect for my case, explained here [1].
-
-So, if I correct page_offset(vp_offset) (as arm64_mem.page_offset = ehdr.e_entry
-- "kernel Code Start PA" + phys_offset), then vmcore-dmesg and vmcore copy
-worked fine, however if I use makedumpfile to copy(compressed) data from
-/proc/vmcore then it still generates "synchronous external abort". I think, it
-generated because it would have found garbage data in EFI memory region. My
-/proc/iomem shows following:
-
-8000000000-8001e7ffff : System RAM
-8001e80000-83ff17ffff : System RAM
-  8002080000-8002b3ffff : Kernel code
-  8002c40000-800348ffff : Kernel data
-  807fe00000-80ffdfffff : Crash kernel
-83ff180000-83ff1cffff : System RAM
-83ff1d0000-83ff21ffff : System RAM
-83ff220000-83ffe4ffff : System RAM
-83ffe50000-83ffffffff : System RAM
-
-If I clip all the region before "kernel code" and provide that clipped
-input to kexec-tools then everything works fine.
-
-~Pratyush
-
-[1] http://lists.infradead.org/pipermail/kexec/2016-August/016834.html
 
 _______________________________________________
 kexec mailing list
