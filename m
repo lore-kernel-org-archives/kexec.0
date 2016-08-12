@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 12 Aug 2016 18:17:39 +1000
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH v2 2/2] kexec: extend kexec_file_load system call
-Message-ID: <20160812081739.GB22218@350D>
-References: <1470956638-3589-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1470956638-3589-3-git-send-email-bauerman@linux.vnet.ibm.com>
+Received: from mail-pf0-x22a.google.com ([2607:f8b0:400e:c00::22a])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bYCwQ-00011N-2f
+ for kexec@lists.infradead.org; Fri, 12 Aug 2016 13:56:08 +0000
+Received: by mail-pf0-x22a.google.com with SMTP id p64so9453470pfb.1
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 06:55:45 -0700 (PDT)
+Subject: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
+ friendly version in panic path
+References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
+From: Corey Minyard <cminyard@mvista.com>
+Message-ID: <57ADD55D.1050003@mvista.com>
+Date: Fri, 12 Aug 2016 08:55:41 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1470956638-3589-3-git-send-email-bauerman@linux.vnet.ibm.com>
+In-Reply-To: <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,301 +23,163 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: bsingharora@gmail.com
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, AKASHI Takahiro <takahiro.akashi@linaro.org>, David Laight <David.Laight@ACULAB.COM>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Daniel Walker <dwalker@fifo99.com>, linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, xen-devel@lists.xenproject.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
 
-On Thu, Aug 11, 2016 at 08:03:58PM -0300, Thiago Jung Bauermann wrote:
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> 
-> Device tree blob must be passed to a second kernel on DTB-capable
-> archs, like powerpc and arm64, but the current kernel interface
-> lacks this support.
-> 
-> This patch extends kexec_file_load system call by adding an extra
-> argument to this syscall so that an arbitrary number of file descriptors
-> can be handed out from user space to the kernel.
-> 
-> 	long sys_kexec_file_load(int kernel_fd, int initrd_fd,
-> 				 unsigned long cmdline_len,
-> 				 const char __user *cmdline_ptr,
-> 				 unsigned long flags,
-> 				 const struct kexec_fdset __user *ufdset);
-> 
-> If KEXEC_FILE_EXTRA_FDS is set to the "flags" argument, the "ufdset"
-> argument points to the following struct buffer:
-> 
-> 	struct kexec_fdset {
-> 		int nr_fds;
-> 		struct kexec_file_fd fds[0];
-> 	}
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> ---
->  include/linux/fs.h         |  1 +
->  include/linux/kexec.h      |  7 ++--
->  include/linux/syscalls.h   |  4 ++-
->  include/uapi/linux/kexec.h | 22 ++++++++++++
->  kernel/kexec_file.c        | 83 ++++++++++++++++++++++++++++++++++++++++++----
->  5 files changed, 108 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 3523bf62f328..847d9c31f428 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2656,6 +2656,7 @@ extern int do_pipe_flags(int *, int);
->  	id(MODULE, kernel-module)		\
->  	id(KEXEC_IMAGE, kexec-image)		\
->  	id(KEXEC_INITRAMFS, kexec-initramfs)	\
-> +	id(KEXEC_PARTIAL_DTB, kexec-partial-dtb)		\
+I'll try to test this, but I have one comment inline...
 
-The backspace is over-indented?
+On 08/11/2016 10:17 PM, Dave Young wrote:
+> On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
+>> Daniel Walker reported problems which happens when
+>> crash_kexec_post_notifiers kernel option is enabled
+>> (https://lkml.org/lkml/2015/6/24/44).
+>>
+>> In that case, smp_send_stop() is called before entering kdump routines
+>> which assume other CPUs are still online.  As the result, kdump
+>> routines fail to save other CPUs' registers.  Additionally for MIPS
+>> OCTEON, it misses to stop the watchdog timer.
+>>
+>> To fix this problem, call a new kdump friendly function,
+>> crash_smp_send_stop(), instead of the smp_send_stop() when
+>> crash_kexec_post_notifiers is enabled.  crash_smp_send_stop() is a
+>> weak function, and it just call smp_send_stop().  Architecture
+>> codes should override it so that kdump can work appropriately.
+>> This patch provides MIPS version.
+>>
+>> Reported-by: Daniel Walker <dwalker@fifo99.com>
+>> Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
+>> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+>> Cc: Ralf Baechle <ralf@linux-mips.org>
+>> Cc: David Daney <david.daney@cavium.com>
+>> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> Cc: "Steven J. Hill" <steven.hill@cavium.com>
+>> Cc: Corey Minyard <cminyard@mvista.com>
+>>
+>> ---
+>> I'm not familiar with MIPS, and I don't have a test environment and
+>> just did build tests only.  Please don't apply this patch until
+>> someone does enough tests, otherwise simply drop this patch.
+>> ---
+>>   arch/mips/cavium-octeon/setup.c  |   14 ++++++++++++++
+>>   arch/mips/include/asm/kexec.h    |    1 +
+>>   arch/mips/kernel/crash.c         |   18 +++++++++++++++++-
+>>   arch/mips/kernel/machine_kexec.c |    1 +
+>>   4 files changed, 33 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+>> index cb16fcc..5537f95 100644
+>> --- a/arch/mips/cavium-octeon/setup.c
+>> +++ b/arch/mips/cavium-octeon/setup.c
+>> @@ -267,6 +267,17 @@ static void octeon_crash_shutdown(struct pt_regs *regs)
+>>   	default_machine_crash_shutdown(regs);
+>>   }
+>>   
+>> +#ifdef CONFIG_SMP
+>> +void octeon_crash_smp_send_stop(void)
+>> +{
+>> +	int cpu;
+>> +
+>> +	/* disable watchdogs */
+>> +	for_each_online_cpu(cpu)
+>> +		cvmx_write_csr(CVMX_CIU_WDOGX(cpu_logical_map(cpu)), 0);
+>> +}
+>> +#endif
+>> +
+>>   #endif /* CONFIG_KEXEC */
+>>   
+>>   #ifdef CONFIG_CAVIUM_RESERVE32
+>> @@ -911,6 +922,9 @@ void __init prom_init(void)
+>>   	_machine_kexec_shutdown = octeon_shutdown;
+>>   	_machine_crash_shutdown = octeon_crash_shutdown;
+>>   	_machine_kexec_prepare = octeon_kexec_prepare;
+>> +#ifdef CONFIG_SMP
+>> +	_crash_smp_send_stop = octeon_crash_smp_send_stop;
+>> +#endif
+>>   #endif
+>>   
+>>   	octeon_user_io_init();
+>> diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
+>> index ee25ebb..493a3cc 100644
+>> --- a/arch/mips/include/asm/kexec.h
+>> +++ b/arch/mips/include/asm/kexec.h
+>> @@ -45,6 +45,7 @@ extern const unsigned char kexec_smp_wait[];
+>>   extern unsigned long secondary_kexec_args[4];
+>>   extern void (*relocated_kexec_smp_wait) (void *);
+>>   extern atomic_t kexec_ready_to_reboot;
+>> +extern void (*_crash_smp_send_stop)(void);
+>>   #endif
+>>   #endif
+>>   
+>> diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
+>> index 610f0f3..1723b17 100644
+>> --- a/arch/mips/kernel/crash.c
+>> +++ b/arch/mips/kernel/crash.c
+>> @@ -47,9 +47,14 @@ static void crash_shutdown_secondary(void *passed_regs)
+>>   
+>>   static void crash_kexec_prepare_cpus(void)
+>>   {
+>> +	static int cpus_stopped;
+>>   	unsigned int msecs;
+>> +	unsigned int ncpus;
+>>   
+>> -	unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
+>> +	if (cpus_stopped)
+>> +		return;
 
->  	id(POLICY, security-policy)		\
->  	id(MAX_ID, )
->  
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 4f85d284ed0b..29202935055d 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -148,7 +148,10 @@ struct kexec_file_ops {
->  	kexec_verify_sig_t *verify_sig;
->  #endif
->  };
-> -#endif
-> +
-> +int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
-> +				    unsigned long size);
-> +#endif /* CONFIG_KEXEC_FILE */
->  
->  struct kimage {
->  	kimage_entry_t head;
-> @@ -280,7 +283,7 @@ extern int kexec_load_disabled;
->  
->  /* List of defined/legal kexec file flags */
->  #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
-> -				 KEXEC_FILE_NO_INITRAMFS)
-> +				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_EXTRA_FDS)
->  
->  #define VMCOREINFO_BYTES           (4096)
->  #define VMCOREINFO_NOTE_NAME       "VMCOREINFO"
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index d02239022bd0..fc072bdb74e3 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -66,6 +66,7 @@ struct perf_event_attr;
->  struct file_handle;
->  struct sigaltstack;
->  union bpf_attr;
-> +struct kexec_fdset;
->  
->  #include <linux/types.h>
->  #include <linux/aio_abi.h>
-> @@ -321,7 +322,8 @@ asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
->  asmlinkage long sys_kexec_file_load(int kernel_fd, int initrd_fd,
->  				    unsigned long cmdline_len,
->  				    const char __user *cmdline_ptr,
-> -				    unsigned long flags);
-> +				    unsigned long flags,
-> +				    const struct kexec_fdset __user *ufdset);
->  
->  asmlinkage long sys_exit(int error_code);
->  asmlinkage long sys_exit_group(int error_code);
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index aae5ebf2022b..6279be79efba 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
-> @@ -23,6 +23,28 @@
->  #define KEXEC_FILE_UNLOAD	0x00000001
->  #define KEXEC_FILE_ON_CRASH	0x00000002
->  #define KEXEC_FILE_NO_INITRAMFS	0x00000004
-> +#define KEXEC_FILE_EXTRA_FDS	0x00000008
-> +
-> +enum kexec_file_type {
-> +	KEXEC_FILE_TYPE_KERNEL,
-> +	KEXEC_FILE_TYPE_INITRAMFS,
-> +
-> +	/*
-> +	 * Device Tree Blob containing just the nodes and properties that
-> +	 * the kexec_file_load caller wants to add or modify.
-> +	 */
-> +	KEXEC_FILE_TYPE_PARTIAL_DTB,
-> +};
-> +
-> +struct kexec_file_fd {
-> +	enum kexec_file_type type;
-> +	int fd;
-> +};
-> +
-> +struct kexec_fdset {
-> +	int nr_fds;
-> +	struct kexec_file_fd fds[0];
-> +};
->  
->  /* These values match the ELF architecture values.
->   * Unless there is a good reason that should continue to be the case.
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 113af2f219b9..d6803dd884e2 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -25,6 +25,9 @@
->  #include <linux/vmalloc.h>
->  #include "kexec_internal.h"
->  
-> +#define MAX_FDSET_SIZE	(sizeof(struct kexec_fdset) + \
-> +				KEXEC_SEGMENT_MAX * sizeof(struct kexec_file_fd))
-> +
->  /*
->   * Declare these symbols weak so that if architecture provides a purgatory,
->   * these will be overridden.
-> @@ -116,6 +119,22 @@ void kimage_file_post_load_cleanup(struct kimage *image)
->  	image->image_loader_data = NULL;
->  }
->  
-> +/**
-> + * arch_kexec_verify_buffer() - check that the given kexec file is valid
-> + *
-> + * Device trees in particular can contain properties that may make the kernel
-> + * execute code that it wasn't supposed to (e.g., use the wrong entry point
-> + * when calling firmware functions). Because of this, the kernel needs to
-> + * verify that it is safe to use the device tree blob passed from userspace.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
-> +				    unsigned long size)
-> +{
-> +	return -EINVAL;
-> +}
-> +
->  /*
->   * In file mode list of segments is prepared by kernel. Copy relevant
->   * data from user space, do error checking, prepare segment list
-> @@ -123,7 +142,8 @@ void kimage_file_post_load_cleanup(struct kimage *image)
->  static int
->  kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  			     const char __user *cmdline_ptr,
-> -			     unsigned long cmdline_len, unsigned flags)
-> +			     unsigned long cmdline_len, unsigned long flags,
-> +			     const struct kexec_fdset __user *ufdset)
->  {
->  	int ret = 0;
->  	void *ldata;
-> @@ -160,6 +180,55 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  		image->initrd_buf_len = size;
->  	}
->  
-> +	if (flags & KEXEC_FILE_EXTRA_FDS) {
-> +		int nr_fds, i;
-> +		size_t fdset_size;
-> +		char fdset_buf[MAX_FDSET_SIZE];
+Wouldn't you want an atomic operation and some special handling here to
+ensure that only one CPU does this?  So if a CPU comes in here and
+another CPU is already in the process stopping the CPUs it won't result in a
+deadlock.
 
-Do we really want this on the stack?  I presume the size is not large
+-corey
 
-> +		struct kexec_fdset *fdset = (struct kexec_fdset *) fdset_buf;
-> +
-> +		ret = copy_from_user(&nr_fds, ufdset, sizeof(int));
-> +		if (ret) {
-> +			ret = -EFAULT;
-> +			goto out;
-> +		}
-> +
-> +		if (nr_fds > KEXEC_SEGMENT_MAX) {
-
-We need an nr_fds < 0 check as well
-
-> +			ret = -E2BIG;
-> +			goto out;
-> +		}
-> +
-> +		fdset_size = sizeof(struct kexec_fdset)
-> +				+ nr_fds * sizeof(struct kexec_file_fd);
-> +
-> +		ret = copy_from_user(fdset, ufdset, fdset_size);
-
-Can the user change nr_fds between the two copy_from_users, ideally not,
-but we should validate it.
-
-> +		if (ret) {
-> +			ret = -EFAULT;
-> +			goto out;
-> +		}
-> +
-> +		for (i = 0; i < fdset->nr_fds; i++) {
-> +			if (fdset->fds[i].type == KEXEC_FILE_TYPE_PARTIAL_DTB) {
-> +				ret = kernel_read_file_from_fd(fdset->fds[i].fd,
-> +						&image->dtb_buf, &size, INT_MAX,
-> +						READING_KEXEC_PARTIAL_DTB);
-> +				if (ret)
-> +					goto out;
-> +				image->dtb_buf_len = size;
-> +
-> +				ret = arch_kexec_verify_buffer(KEXEC_FILE_TYPE_PARTIAL_DTB,
-> +							       image->dtb_buf,
-> +							       image->dtb_buf_len);
-> +				if (ret)
-> +					goto out;
-> +			} else {
-> +				pr_debug("unknown file type %d failed.\n",
-> +						fdset->fds[i].type);
-> +				ret = -EINVAL;
-> +				goto out;
-> +			}
-> +		}
-> +	}
-> +
->  	if (cmdline_len) {
->  		image->cmdline_buf = kzalloc(cmdline_len, GFP_KERNEL);
->  		if (!image->cmdline_buf) {
-> @@ -202,7 +271,8 @@ out:
->  static int
->  kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
->  		       int initrd_fd, const char __user *cmdline_ptr,
-> -		       unsigned long cmdline_len, unsigned long flags)
-> +		       unsigned long cmdline_len, unsigned long flags,
-> +		       const struct kexec_fdset __user *ufdset)
->  {
->  	int ret;
->  	struct kimage *image;
-> @@ -221,7 +291,8 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
->  	}
->  
->  	ret = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
-> -					   cmdline_ptr, cmdline_len, flags);
-> +					   cmdline_ptr, cmdline_len, flags,
-> +					   ufdset);
->  	if (ret)
->  		goto out_free_image;
->  
-> @@ -256,9 +327,9 @@ out_free_image:
->  	return ret;
->  }
->  
-> -SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
-> +SYSCALL_DEFINE6(kexec_file_load, int, kernel_fd, int, initrd_fd,
->  		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
-> -		unsigned long, flags)
-> +		unsigned long, flags, const struct kexec_fdset __user *, ufdset)
->  {
->  	int ret = 0, i;
->  	struct kimage **dest_image, *image;
-> @@ -295,7 +366,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
->  		kimage_free(xchg(&kexec_crash_image, NULL));
->  
->  	ret = kimage_file_alloc_init(&image, kernel_fd, initrd_fd, cmdline_ptr,
-> -				     cmdline_len, flags);
-> +				     cmdline_len, flags, ufdset);
->  	if (ret)
->  		goto out;
+>> +
+>> +	ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
+>>   
+>>   	dump_send_ipi(crash_shutdown_secondary);
+>>   	smp_wmb();
+>> @@ -64,6 +69,17 @@ static void crash_kexec_prepare_cpus(void)
+>>   		cpu_relax();
+>>   		mdelay(1);
+>>   	}
+>> +
+>> +	cpus_stopped = 1;
+>> +}
+>> +
+>> +/* Override the weak function in kernel/panic.c */
+>> +void crash_smp_send_stop(void)
+>> +{
+>> +	if (_crash_smp_send_stop)
+>> +		_crash_smp_send_stop();
+>> +
+>> +	crash_kexec_prepare_cpus();
+>>   }
+>>   
+>>   #else /* !defined(CONFIG_SMP)  */
+>> diff --git a/arch/mips/kernel/machine_kexec.c b/arch/mips/kernel/machine_kexec.c
+>> index 50980bf3..5972520 100644
+>> --- a/arch/mips/kernel/machine_kexec.c
+>> +++ b/arch/mips/kernel/machine_kexec.c
+>> @@ -25,6 +25,7 @@ void (*_machine_crash_shutdown)(struct pt_regs *regs) = NULL;
+>>   #ifdef CONFIG_SMP
+>>   void (*relocated_kexec_smp_wait) (void *);
+>>   atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
+>> +void (*_crash_smp_send_stop)(void) = NULL;
+>>   #endif
+>>   
+>>   int
+>>
+>>
+> Can any mips people review this patch and have a test?
+>
+> Thanks
+> Dave
 >
 
-
-Balbir Singh.  
 
 _______________________________________________
 kexec mailing list
