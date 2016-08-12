@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.codeaurora.org ([198.145.29.96])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bY1DS-0008Kj-7g
- for kexec@lists.infradead.org; Fri, 12 Aug 2016 01:24:54 +0000
-From: Sameer Goel <sgoel@codeaurora.org>
-Subject: [PATCH V2] arm64:kexec: Memstart should not be before the kernel
- start address
-Date: Thu, 11 Aug 2016 19:24:29 -0600
-Message-Id: <1470965069-20121-1-git-send-email-sgoel@codeaurora.org>
+ id 1bY2zK-0003xn-U0
+ for kexec@lists.infradead.org; Fri, 12 Aug 2016 03:18:28 +0000
+Date: Fri, 12 Aug 2016 11:17:55 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
+ friendly version in panic path
+Message-ID: <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
+References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,100 +21,151 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: geoff@infradead.org
-Cc: panand@redhat.com, timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org, takahiro.akashi@linaro.org, Sameer Goel <sgoel@codeaurora.org>
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Daniel Walker <dwalker@fifo99.com>, Corey Minyard <cminyard@mvista.com>, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, linux-mips@linux-mips.org, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, xen-devel@lists.xenproject.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
 
-Starting 4.6 the kernel memblock start is rounded down to a desirable
-alignment. So, the kernel can see reserved meory regions before the kernel
-start address in the iomem query.
-Need to make sure that the right kernel start address is picked from the iomem
-query.
+On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
+> Daniel Walker reported problems which happens when
+> crash_kexec_post_notifiers kernel option is enabled
+> (https://lkml.org/lkml/2015/6/24/44).
+> 
+> In that case, smp_send_stop() is called before entering kdump routines
+> which assume other CPUs are still online.  As the result, kdump
+> routines fail to save other CPUs' registers.  Additionally for MIPS
+> OCTEON, it misses to stop the watchdog timer.
+> 
+> To fix this problem, call a new kdump friendly function,
+> crash_smp_send_stop(), instead of the smp_send_stop() when
+> crash_kexec_post_notifiers is enabled.  crash_smp_send_stop() is a
+> weak function, and it just call smp_send_stop().  Architecture
+> codes should override it so that kdump can work appropriately.
+> This patch provides MIPS version.
+> 
+> Reported-by: Daniel Walker <dwalker@fifo99.com>
+> Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
+> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: David Daney <david.daney@cavium.com>
+> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Cc: "Steven J. Hill" <steven.hill@cavium.com>
+> Cc: Corey Minyard <cminyard@mvista.com>
+> 
+> ---
+> I'm not familiar with MIPS, and I don't have a test environment and
+> just did build tests only.  Please don't apply this patch until
+> someone does enough tests, otherwise simply drop this patch.
+> ---
+>  arch/mips/cavium-octeon/setup.c  |   14 ++++++++++++++
+>  arch/mips/include/asm/kexec.h    |    1 +
+>  arch/mips/kernel/crash.c         |   18 +++++++++++++++++-
+>  arch/mips/kernel/machine_kexec.c |    1 +
+>  4 files changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
+> index cb16fcc..5537f95 100644
+> --- a/arch/mips/cavium-octeon/setup.c
+> +++ b/arch/mips/cavium-octeon/setup.c
+> @@ -267,6 +267,17 @@ static void octeon_crash_shutdown(struct pt_regs *regs)
+>  	default_machine_crash_shutdown(regs);
+>  }
+>  
+> +#ifdef CONFIG_SMP
+> +void octeon_crash_smp_send_stop(void)
+> +{
+> +	int cpu;
+> +
+> +	/* disable watchdogs */
+> +	for_each_online_cpu(cpu)
+> +		cvmx_write_csr(CVMX_CIU_WDOGX(cpu_logical_map(cpu)), 0);
+> +}
+> +#endif
+> +
+>  #endif /* CONFIG_KEXEC */
+>  
+>  #ifdef CONFIG_CAVIUM_RESERVE32
+> @@ -911,6 +922,9 @@ void __init prom_init(void)
+>  	_machine_kexec_shutdown = octeon_shutdown;
+>  	_machine_crash_shutdown = octeon_crash_shutdown;
+>  	_machine_kexec_prepare = octeon_kexec_prepare;
+> +#ifdef CONFIG_SMP
+> +	_crash_smp_send_stop = octeon_crash_smp_send_stop;
+> +#endif
+>  #endif
+>  
+>  	octeon_user_io_init();
+> diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
+> index ee25ebb..493a3cc 100644
+> --- a/arch/mips/include/asm/kexec.h
+> +++ b/arch/mips/include/asm/kexec.h
+> @@ -45,6 +45,7 @@ extern const unsigned char kexec_smp_wait[];
+>  extern unsigned long secondary_kexec_args[4];
+>  extern void (*relocated_kexec_smp_wait) (void *);
+>  extern atomic_t kexec_ready_to_reboot;
+> +extern void (*_crash_smp_send_stop)(void);
+>  #endif
+>  #endif
+>  
+> diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
+> index 610f0f3..1723b17 100644
+> --- a/arch/mips/kernel/crash.c
+> +++ b/arch/mips/kernel/crash.c
+> @@ -47,9 +47,14 @@ static void crash_shutdown_secondary(void *passed_regs)
+>  
+>  static void crash_kexec_prepare_cpus(void)
+>  {
+> +	static int cpus_stopped;
+>  	unsigned int msecs;
+> +	unsigned int ncpus;
+>  
+> -	unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
+> +	if (cpus_stopped)
+> +		return;
+> +
+> +	ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
+>  
+>  	dump_send_ipi(crash_shutdown_secondary);
+>  	smp_wmb();
+> @@ -64,6 +69,17 @@ static void crash_kexec_prepare_cpus(void)
+>  		cpu_relax();
+>  		mdelay(1);
+>  	}
+> +
+> +	cpus_stopped = 1;
+> +}
+> +
+> +/* Override the weak function in kernel/panic.c */
+> +void crash_smp_send_stop(void)
+> +{
+> +	if (_crash_smp_send_stop)
+> +		_crash_smp_send_stop();
+> +
+> +	crash_kexec_prepare_cpus();
+>  }
+>  
+>  #else /* !defined(CONFIG_SMP)  */
+> diff --git a/arch/mips/kernel/machine_kexec.c b/arch/mips/kernel/machine_kexec.c
+> index 50980bf3..5972520 100644
+> --- a/arch/mips/kernel/machine_kexec.c
+> +++ b/arch/mips/kernel/machine_kexec.c
+> @@ -25,6 +25,7 @@ void (*_machine_crash_shutdown)(struct pt_regs *regs) = NULL;
+>  #ifdef CONFIG_SMP
+>  void (*relocated_kexec_smp_wait) (void *);
+>  atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
+> +void (*_crash_smp_send_stop)(void) = NULL;
+>  #endif
+>  
+>  int
+> 
+> 
 
-Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
----
-This change should be applied on top of geoff kexec-tools v3 branch from
-arm64[1] +  bugfix[2]
+Can any mips people review this patch and have a test?
 
-[1] http://lists.infradead.org/pipermail/kexec/2016-August/016768.html
-[2] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
-
- kexec/arch/arm64/kexec-arm64.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 940cddb..7a1d4fc 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -25,6 +25,11 @@
- 
- /* Global varables the core kexec routines expect. */
- 
-+#define SZ_2M 0x200000
-+#define __round_mask(x, y) ((__typeof__(x))((y)-1))
-+#define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
-+#define round_down(x, y) ((x) & ~__round_mask(x, y))
-+
- unsigned char reuse_initrd;
- 
- off_t initrd_base;
-@@ -448,6 +453,27 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
- 	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
- }
- 
-+static int get_memory_ranges_iomem_kc_cb(void *data, int nr, char *str,
-+	unsigned long long base, unsigned long long length)
-+{
-+	struct memory_range *r;
-+
-+	if (nr >= KEXEC_SEGMENT_MAX)
-+		return -1;
-+
-+	r = (struct memory_range *)data + nr;
-+	r->type = RANGE_RAM;
-+	r->start = base;
-+	r->end = base + length - 1;
-+
-+	set_phys_offset(round_down(r->start, SZ_2M));
-+
-+	dbgprintf("%s: %016llx - %016llx : %s", __func__, r->start,
-+		r->end, str);
-+
-+	return 0;
-+}
-+
- /**
-  * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
-  */
-@@ -465,7 +491,6 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- 	r->start = base;
- 	r->end = base + length - 1;
- 
--	set_phys_offset(r->start);
- 
- 	dbgprintf("%s: %016llx - %016llx : %s", __func__, r->start,
- 		r->end, str);
-@@ -480,6 +505,14 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- static int get_memory_ranges_iomem(struct memory_range *array,
- 	unsigned int *count)
- {
-+	*count = kexec_iomem_for_each_line("Kernel code\n",
-+		get_memory_ranges_iomem_kc_cb, array);
-+
-+	if (!*count) {
-+		dbgprintf("%s: failed: No code segment found.\n", __func__);
-+		return -EFAILED;
-+	}
-+
- 	*count = kexec_iomem_for_each_line("System RAM\n",
- 		get_memory_ranges_iomem_cb, array);
- 
--- 
-Qualcomm Innovation Center, Inc. Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+Thanks
+Dave
 
 
 _______________________________________________
