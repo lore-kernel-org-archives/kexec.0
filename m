@@ -1,40 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mendozajonas.com ([188.166.185.233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bXz5x-0006t2-C9
- for kexec@lists.infradead.org; Thu, 11 Aug 2016 23:09:05 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7BN8f4s072675
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 19:08:42 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24rtx3kwa7-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 19:08:41 -0400
-Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 11 Aug 2016 20:08:35 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id C979D3520068
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 19:08:12 -0400 (EDT)
-Received: from d24av01.br.ibm.com (d24av01.br.ibm.com [9.8.31.91])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7BN8X5G10355176
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 20:08:33 -0300
-Received: from d24av01.br.ibm.com (localhost [127.0.0.1])
- by d24av01.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7BN8WTJ026975
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 20:08:33 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v5 02/13] kexec_file: Change kexec_add_buffer to take
- kexec_buf as argument.
-Date: Thu, 11 Aug 2016 20:08:07 -0300
-In-Reply-To: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ id 1bY0bR-0005tf-Pn
+ for kexec@lists.infradead.org; Fri, 12 Aug 2016 00:45:39 +0000
+Message-ID: <1470962700.2570.6.camel@mendozajonas.com>
+Subject: Re: [PATCH v5 11/13] powerpc: Allow userspace to set device tree
+ properties in kexec_file_load
+From: Samuel Mendoza-Jonas <sam@mendozajonas.com>
+Date: Fri, 12 Aug 2016 10:45:00 +1000
+In-Reply-To: <1470956898-5991-12-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1470956898-5991-3-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1470956898-5991-12-git-send-email-bauerman@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,429 +20,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Adapt all callers to the new function prototype.
-
-In addition, change the type of kexec_buf.buffer from char * to void *.
-There is no particular reason for it to be a char *, and the change
-allows us to get rid of 3 existing casts to char * in the code.
-
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Acked-by: Dave Young <dyoung@redhat.com>
----
- arch/x86/kernel/crash.c           | 37 ++++++++--------
- arch/x86/kernel/kexec-bzimage64.c | 48 +++++++++++----------
- include/linux/kexec.h             |  8 +---
- kernel/kexec_file.c               | 88 ++++++++++++++++++---------------------
- 4 files changed, 87 insertions(+), 94 deletions(-)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 9616cf76940c..38a1cdf6aa05 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -615,9 +615,9 @@ static int determine_backup_region(u64 start, u64 end, void *arg)
- 
- int crash_load_segments(struct kimage *image)
- {
--	unsigned long src_start, src_sz, elf_sz;
--	void *elf_addr;
- 	int ret;
-+	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
-+				  .buf_max = ULONG_MAX, .top_down = false };
- 
- 	/*
- 	 * Determine and load a segment for backup area. First 640K RAM
-@@ -631,43 +631,44 @@ int crash_load_segments(struct kimage *image)
- 	if (ret < 0)
- 		return ret;
- 
--	src_start = image->arch.backup_src_start;
--	src_sz = image->arch.backup_src_sz;
--
- 	/* Add backup segment. */
--	if (src_sz) {
-+	if (image->arch.backup_src_sz) {
-+		kbuf.buffer = &crash_zero_bytes;
-+		kbuf.bufsz = sizeof(crash_zero_bytes);
-+		kbuf.memsz = image->arch.backup_src_sz;
-+		kbuf.buf_align = PAGE_SIZE;
- 		/*
- 		 * Ideally there is no source for backup segment. This is
- 		 * copied in purgatory after crash. Just add a zero filled
- 		 * segment for now to make sure checksum logic works fine.
- 		 */
--		ret = kexec_add_buffer(image, (char *)&crash_zero_bytes,
--				       sizeof(crash_zero_bytes), src_sz,
--				       PAGE_SIZE, 0, -1, 0,
--				       &image->arch.backup_load_addr);
-+		ret = kexec_add_buffer(&kbuf);
- 		if (ret)
- 			return ret;
-+		image->arch.backup_load_addr = kbuf.mem;
- 		pr_debug("Loaded backup region at 0x%lx backup_start=0x%lx memsz=0x%lx\n",
--			 image->arch.backup_load_addr, src_start, src_sz);
-+			 image->arch.backup_load_addr,
-+			 image->arch.backup_src_start, kbuf.memsz);
- 	}
- 
- 	/* Prepare elf headers and add a segment */
--	ret = prepare_elf_headers(image, &elf_addr, &elf_sz);
-+	ret = prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz);
- 	if (ret)
- 		return ret;
- 
--	image->arch.elf_headers = elf_addr;
--	image->arch.elf_headers_sz = elf_sz;
-+	image->arch.elf_headers = kbuf.buffer;
-+	image->arch.elf_headers_sz = kbuf.bufsz;
- 
--	ret = kexec_add_buffer(image, (char *)elf_addr, elf_sz, elf_sz,
--			ELF_CORE_HEADER_ALIGN, 0, -1, 0,
--			&image->arch.elf_load_addr);
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	ret = kexec_add_buffer(&kbuf);
- 	if (ret) {
- 		vfree((void *)image->arch.elf_headers);
- 		return ret;
- 	}
-+	image->arch.elf_load_addr = kbuf.mem;
- 	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--		 image->arch.elf_load_addr, elf_sz, elf_sz);
-+		 image->arch.elf_load_addr, kbuf.bufsz, kbuf.bufsz);
- 
- 	return ret;
- }
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index f2356bda2b05..4b3a75329fb6 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -331,17 +331,17 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 
- 	struct setup_header *header;
- 	int setup_sects, kern16_size, ret = 0;
--	unsigned long setup_header_size, params_cmdline_sz, params_misc_sz;
-+	unsigned long setup_header_size, params_cmdline_sz;
- 	struct boot_params *params;
- 	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
- 	unsigned long purgatory_load_addr;
--	unsigned long kernel_bufsz, kernel_memsz, kernel_align;
--	char *kernel_buf;
- 	struct bzimage64_data *ldata;
- 	struct kexec_entry64_regs regs64;
- 	void *stack;
- 	unsigned int setup_hdr_offset = offsetof(struct boot_params, hdr);
- 	unsigned int efi_map_offset, efi_map_sz, efi_setup_data_offset;
-+	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
-+				  .top_down = true };
- 
- 	header = (struct setup_header *)(kernel + setup_hdr_offset);
- 	setup_sects = header->setup_sects;
-@@ -402,11 +402,11 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
- 				MAX_ELFCOREHDR_STR_LEN;
- 	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
--	params_misc_sz = params_cmdline_sz + efi_map_sz +
-+	kbuf.bufsz = params_cmdline_sz + efi_map_sz +
- 				sizeof(struct setup_data) +
- 				sizeof(struct efi_setup_data);
- 
--	params = kzalloc(params_misc_sz, GFP_KERNEL);
-+	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
- 	if (!params)
- 		return ERR_PTR(-ENOMEM);
- 	efi_map_offset = params_cmdline_sz;
-@@ -418,37 +418,41 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	/* Is there a limit on setup header size? */
- 	memcpy(&params->hdr, (kernel + setup_hdr_offset), setup_header_size);
- 
--	ret = kexec_add_buffer(image, (char *)params, params_misc_sz,
--			       params_misc_sz, 16, MIN_BOOTPARAM_ADDR,
--			       ULONG_MAX, 1, &bootparam_load_addr);
-+	kbuf.buffer = params;
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = 16;
-+	kbuf.buf_min = MIN_BOOTPARAM_ADDR;
-+	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out_free_params;
-+	bootparam_load_addr = kbuf.mem;
- 	pr_debug("Loaded boot_param, command line and misc at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--		 bootparam_load_addr, params_misc_sz, params_misc_sz);
-+		 bootparam_load_addr, kbuf.bufsz, kbuf.bufsz);
- 
- 	/* Load kernel */
--	kernel_buf = kernel + kern16_size;
--	kernel_bufsz =  kernel_len - kern16_size;
--	kernel_memsz = PAGE_ALIGN(header->init_size);
--	kernel_align = header->kernel_alignment;
--
--	ret = kexec_add_buffer(image, kernel_buf,
--			       kernel_bufsz, kernel_memsz, kernel_align,
--			       MIN_KERNEL_LOAD_ADDR, ULONG_MAX, 1,
--			       &kernel_load_addr);
-+	kbuf.buffer = kernel + kern16_size;
-+	kbuf.bufsz =  kernel_len - kern16_size;
-+	kbuf.memsz = PAGE_ALIGN(header->init_size);
-+	kbuf.buf_align = header->kernel_alignment;
-+	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
-+	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out_free_params;
-+	kernel_load_addr = kbuf.mem;
- 
- 	pr_debug("Loaded 64bit kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--		 kernel_load_addr, kernel_memsz, kernel_memsz);
-+		 kernel_load_addr, kbuf.bufsz, kbuf.memsz);
- 
- 	/* Load initrd high */
- 	if (initrd) {
--		ret = kexec_add_buffer(image, initrd, initrd_len, initrd_len,
--				       PAGE_SIZE, MIN_INITRD_LOAD_ADDR,
--				       ULONG_MAX, 1, &initrd_load_addr);
-+		kbuf.buffer = initrd;
-+		kbuf.bufsz = kbuf.memsz = initrd_len;
-+		kbuf.buf_align = PAGE_SIZE;
-+		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
-+		ret = kexec_add_buffer(&kbuf);
- 		if (ret)
- 			goto out_free_params;
-+		initrd_load_addr = kbuf.mem;
- 
- 		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
- 				initrd_load_addr, initrd_len, initrd_len);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 5ffd0011395c..28bc9f335d0d 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -163,7 +163,7 @@ struct kexec_file_ops {
-  */
- struct kexec_buf {
- 	struct kimage *image;
--	char *buffer;
-+	void *buffer;
- 	unsigned long bufsz;
- 	unsigned long mem;
- 	unsigned long memsz;
-@@ -175,6 +175,7 @@ struct kexec_buf {
- 
- int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 			       int (*func)(u64, u64, void *));
-+extern int kexec_add_buffer(struct kexec_buf *kbuf);
- int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
- 				    unsigned long size);
- #endif /* CONFIG_KEXEC_FILE */
-@@ -244,11 +245,6 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
- 					struct kexec_segment __user *segments,
- 					unsigned long flags);
- extern int kernel_kexec(void);
--extern int kexec_add_buffer(struct kimage *image, char *buffer,
--			    unsigned long bufsz, unsigned long memsz,
--			    unsigned long buf_align, unsigned long buf_min,
--			    unsigned long buf_max, bool top_down,
--			    unsigned long *load_addr);
- extern struct page *kimage_alloc_control_pages(struct kimage *image,
- 						unsigned int order);
- extern int kexec_load_purgatory(struct kimage *image, unsigned long min,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index e63fd4592e20..58818264ad0e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -523,25 +523,27 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
- }
- 
--/*
-- * Helper function for placing a buffer in a kexec segment. This assumes
-- * that kexec_mutex is held.
-+/**
-+ * kexec_add_buffer - place a buffer in a kexec segment
-+ * @kbuf:	Buffer contents and memory parameters.
-+ *
-+ * This function assumes that kexec_mutex is held.
-+ * On successful return, @kbuf->mem will have the physical address of
-+ * the buffer in memory.
-+ *
-+ * Return: 0 on success, negative errno on error.
-  */
--int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
--		     unsigned long memsz, unsigned long buf_align,
--		     unsigned long buf_min, unsigned long buf_max,
--		     bool top_down, unsigned long *load_addr)
-+int kexec_add_buffer(struct kexec_buf *kbuf)
- {
- 
- 	struct kexec_segment *ksegment;
--	struct kexec_buf buf, *kbuf;
- 	int ret;
- 
- 	/* Currently adding segment this way is allowed only in file mode */
--	if (!image->file_mode)
-+	if (!kbuf->image->file_mode)
- 		return -EINVAL;
- 
--	if (image->nr_segments >= KEXEC_SEGMENT_MAX)
-+	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
- 		return -EINVAL;
- 
- 	/*
-@@ -551,22 +553,14 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	 * logic goes through list of segments to make sure there are
- 	 * no destination overlaps.
- 	 */
--	if (!list_empty(&image->control_pages)) {
-+	if (!list_empty(&kbuf->image->control_pages)) {
- 		WARN_ON(1);
- 		return -EINVAL;
- 	}
- 
--	memset(&buf, 0, sizeof(struct kexec_buf));
--	kbuf = &buf;
--	kbuf->image = image;
--	kbuf->buffer = buffer;
--	kbuf->bufsz = bufsz;
--
--	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
--	kbuf->buf_align = max(buf_align, PAGE_SIZE);
--	kbuf->buf_min = buf_min;
--	kbuf->buf_max = buf_max;
--	kbuf->top_down = top_down;
-+	/* Ensure minimum alignment needed for segments. */
-+	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
-+	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
- 
- 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
- 	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
-@@ -576,13 +570,12 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	}
- 
- 	/* Found a suitable memory range */
--	ksegment = &image->segment[image->nr_segments];
-+	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
- 	ksegment->kbuf = kbuf->buffer;
- 	ksegment->bufsz = kbuf->bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
--	image->nr_segments++;
--	*load_addr = ksegment->mem;
-+	kbuf->image->nr_segments++;
- 	return 0;
- }
- 
-@@ -704,13 +697,15 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 				  unsigned long max, int top_down)
- {
- 	struct purgatory_info *pi = &image->purgatory_info;
--	unsigned long align, buf_align, bss_align, buf_sz, bss_sz, bss_pad;
--	unsigned long memsz, entry, load_addr, curr_load_addr, bss_addr, offset;
-+	unsigned long align, bss_align, bss_sz, bss_pad;
-+	unsigned long entry, load_addr, curr_load_addr, bss_addr, offset;
- 	unsigned char *buf_addr, *src;
- 	int i, ret = 0, entry_sidx = -1;
- 	const Elf_Shdr *sechdrs_c;
- 	Elf_Shdr *sechdrs = NULL;
--	void *purgatory_buf = NULL;
-+	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
-+				  .buf_min = min, .buf_max = max,
-+				  .top_down = top_down };
- 
- 	/*
- 	 * sechdrs_c points to section headers in purgatory and are read
-@@ -776,9 +771,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	}
- 
- 	/* Determine how much memory is needed to load relocatable object. */
--	buf_align = 1;
- 	bss_align = 1;
--	buf_sz = 0;
- 	bss_sz = 0;
- 
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
-@@ -787,10 +780,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 
- 		align = sechdrs[i].sh_addralign;
- 		if (sechdrs[i].sh_type != SHT_NOBITS) {
--			if (buf_align < align)
--				buf_align = align;
--			buf_sz = ALIGN(buf_sz, align);
--			buf_sz += sechdrs[i].sh_size;
-+			if (kbuf.buf_align < align)
-+				kbuf.buf_align = align;
-+			kbuf.bufsz = ALIGN(kbuf.bufsz, align);
-+			kbuf.bufsz += sechdrs[i].sh_size;
- 		} else {
- 			/* bss section */
- 			if (bss_align < align)
-@@ -802,32 +795,31 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 
- 	/* Determine the bss padding required to align bss properly */
- 	bss_pad = 0;
--	if (buf_sz & (bss_align - 1))
--		bss_pad = bss_align - (buf_sz & (bss_align - 1));
-+	if (kbuf.bufsz & (bss_align - 1))
-+		bss_pad = bss_align - (kbuf.bufsz & (bss_align - 1));
- 
--	memsz = buf_sz + bss_pad + bss_sz;
-+	kbuf.memsz = kbuf.bufsz + bss_pad + bss_sz;
- 
- 	/* Allocate buffer for purgatory */
--	purgatory_buf = vzalloc(buf_sz);
--	if (!purgatory_buf) {
-+	kbuf.buffer = vzalloc(kbuf.bufsz);
-+	if (!kbuf.buffer) {
- 		ret = -ENOMEM;
- 		goto out;
- 	}
- 
--	if (buf_align < bss_align)
--		buf_align = bss_align;
-+	if (kbuf.buf_align < bss_align)
-+		kbuf.buf_align = bss_align;
- 
- 	/* Add buffer to segment list */
--	ret = kexec_add_buffer(image, purgatory_buf, buf_sz, memsz,
--				buf_align, min, max, top_down,
--				&pi->purgatory_load_addr);
-+	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out;
-+	pi->purgatory_load_addr = kbuf.mem;
- 
- 	/* Load SHF_ALLOC sections */
--	buf_addr = purgatory_buf;
-+	buf_addr = kbuf.buffer;
- 	load_addr = curr_load_addr = pi->purgatory_load_addr;
--	bss_addr = load_addr + buf_sz + bss_pad;
-+	bss_addr = load_addr + kbuf.bufsz + bss_pad;
- 
- 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
- 		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
-@@ -873,11 +865,11 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	 * Used later to identify which section is purgatory and skip it
- 	 * from checksumming.
- 	 */
--	pi->purgatory_buf = purgatory_buf;
-+	pi->purgatory_buf = kbuf.buffer;
- 	return ret;
- out:
- 	vfree(sechdrs);
--	vfree(purgatory_buf);
-+	vfree(kbuf.buffer);
- 	return ret;
- }
- 
--- 
-1.9.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAyMDE2LTA4LTExIGF0IDIwOjA4IC0wMzAwLCBUaGlhZ28gSnVuZyBCYXVlcm1hbm4g
+d3JvdGU6Cj4gSW1wbGVtZW50IHRoZSBhcmNoX2tleGVjX3ZlcmlmeV9idWZmZXIgaG9vayB0byB2
+ZXJpZnkgdGhhdCBhIGRldmljZQo+IHRyZWUgYmxvYiBwYXNzZWQgYnkgdXNlcnNwYWNlIHZpYSBr
+ZXhlY19maWxlX2xvYWQgY29udGFpbnMgb25seSBub2Rlcwo+IGFuZCBwcm9wZXJ0aWVzIGZyb20g
+YSB3aGl0ZWxpc3QuCj4gCj4gSW4gZWxmNjRfbG9hZCB3ZSBtZXJnZSB0aG9zZSBwcm9wZXJ0aWVz
+IGludG8gdGhlIGRldmljZSB0cmVlIHRoYXQKPiB3aWxsIGJlIHBhc3NlZCB0byB0aGUgbmV4dCBr
+ZXJuZWwuCj4gCj4gU3VnZ2VzdGVkLWJ5OiBNaWNoYWVsIEVsbGVybWFuIDxtcGVAZWxsZXJtYW4u
+aWQuYXU+Cj4gU2lnbmVkLW9mZi1ieTogVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIDxiYXVlcm1hbkBs
+aW51eC52bmV0LmlibS5jb20+Cj4gLS0tCj4gwqBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20va2V4
+ZWMuaMKgwqDCoMKgwqDCoCB8wqDCoCAxICsKPiDCoGFyY2gvcG93ZXJwYy9rZXJuZWwva2V4ZWNf
+ZWxmXzY0LmPCoMKgwqDCoCB8wqDCoCA5ICsrCj4gwqBhcmNoL3Bvd2VycGMva2VybmVsL21hY2hp
+bmVfa2V4ZWNfNjQuYyB8IDI0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiDC
+oDMgZmlsZXMgY2hhbmdlZCwgMjUyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9wb3dlcnBjL2luY2x1ZGUvYXNtL2tleGVjLmggYi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20v
+a2V4ZWMuaAo+IGluZGV4IGYyNjNjYzg2Nzg5MS4uMzFiYzY0ZTA3YzhmIDEwMDY0NAo+IC0tLSBh
+L2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9rZXhlYy5oCj4gKysrIGIvYXJjaC9wb3dlcnBjL2lu
+Y2x1ZGUvYXNtL2tleGVjLmgKPiBAQCAtOTksNiArOTksNyBAQCBpbnQgc2V0dXBfcHVyZ2F0b3J5
+KHN0cnVjdCBraW1hZ2UgKmltYWdlLCBjb25zdCB2b2lkICpzbGF2ZV9jb2RlLAo+IMKgaW50IHNl
+dHVwX25ld19mZHQodm9pZCAqZmR0LCB1bnNpZ25lZCBsb25nIGluaXRyZF9sb2FkX2FkZHIsCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGluaXRyZF9s
+ZW4sIGNvbnN0IGNoYXIgKmNtZGxpbmUpOwo+IMKgYm9vbCBmaW5kX2RlYnVnX2NvbnNvbGUoY29u
+c3Qgdm9pZCAqZmR0LCBpbnQgY2hvc2VuX25vZGUpOwo+ICtpbnQgbWVyZ2VfcGFydGlhbF9kdGIo
+dm9pZCAqdG8sIGNvbnN0IHZvaWQgKmZyb20pOwo+IMKgI2VuZGlmIC8qIENPTkZJR19LRVhFQ19G
+SUxFICovCj4gwqAKPiDCoCNlbHNlIC8qICFDT05GSUdfS0VYRUMgKi8KPiBkaWZmIC0tZ2l0IGEv
+YXJjaC9wb3dlcnBjL2tlcm5lbC9rZXhlY19lbGZfNjQuYyBiL2FyY2gvcG93ZXJwYy9rZXJuZWwv
+a2V4ZWNfZWxmXzY0LmMKPiBpbmRleCA0OWNiYTk1MDk0NjQuLjFiOTAyYWQ2NmUyYSAxMDA2NDQK
+PiAtLS0gYS9hcmNoL3Bvd2VycGMva2VybmVsL2tleGVjX2VsZl82NC5jCj4gKysrIGIvYXJjaC9w
+b3dlcnBjL2tlcm5lbC9rZXhlY19lbGZfNjQuYwo+IEBAIC0yMTAsNiArMjEwLDE1IEBAIHZvaWQg
+KmVsZjY0X2xvYWQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIGNoYXIgKmtlcm5lbF9idWYsCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBnb3RvIG91dDsKPiDCoMKgwqDCoMKgwqDCoMKg
+fQo+IMKgCj4gK8KgwqDCoMKgwqDCoMKgLyogQWRkIG5vZGVzIGFuZCBwcm9wZXJ0aWVzIGZyb20g
+dGhlIERUQiBwYXNzZWQgYnkgdXNlcnNwYWNlLiAqLwo+ICvCoMKgwqDCoMKgwqDCoGlmIChpbWFn
+ZS0+ZHRiX2J1Zikgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXQgPSBtZXJn
+ZV9wYXJ0aWFsX2R0YihmZHQsIGltYWdlLT5kdGJfYnVmKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgaWYgKHJldCkgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgcHJfZXJyKCJFcnJvciBtZXJnaW5nIHBhcnRpYWwgZGV2aWNlIHRyZWUu
+XG4iKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdv
+dG8gb3V0Owo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4gK8KgwqDCoMKgwqDC
+oMKgfQo+ICsKPiDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gc2V0dXBfbmV3X2ZkdChmZHQsIGluaXRy
+ZF9sb2FkX2FkZHIsIGluaXRyZF9sZW4sIGNtZGxpbmUpOwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAo
+cmV0KQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZ290byBvdXQ7Cj4gZGlmZiAt
+LWdpdCBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIGIvYXJjaC9wb3dl
+cnBjL2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPiBpbmRleCA1MjdmOThlZmU2NTEuLmE0ODRh
+NjM0NjE0NiAxMDA2NDQKPiAtLS0gYS9hcmNoL3Bvd2VycGMva2VybmVsL21hY2hpbmVfa2V4ZWNf
+NjQuYwo+ICsrKyBiL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCj4gQEAg
+LTM1LDYgKzM1LDcgQEAKPiDCoCNpbmNsdWRlIDxhc20va2V4ZWNfZWxmXzY0Lmg+Cj4gwqAKPiDC
+oCNkZWZpbmUgU0xBVkVfQ09ERV9TSVpFwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAy
+NTYKPiArI2RlZmluZSBNQVhfRFRfUEFUSMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDUxMgo+IMKg
+Cj4gwqAjaWZkZWYgQ09ORklHX0tFWEVDX0ZJTEUKPiDCoHN0YXRpYyBzdHJ1Y3Qga2V4ZWNfZmls
+ZV9vcHMgKmtleGVjX2ZpbGVfbG9hZGVyc1tdID0gewo+IEBAIC05MDgsNCArOTA5LDI0NSBAQCBi
+b29sIGZpbmRfZGVidWdfY29uc29sZShjb25zdCB2b2lkICpmZHQsIGludCBjaG9zZW5fbm9kZSkK
+PiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIGZhbHNlOwo+IMKgfQo+IMKgCj4gKy8qKgo+ICsgKiBz
+dHJ1Y3QgYWxsb3dlZF9ub2RlIC0gYSBub2RlIGluIHRoZSB3aGl0ZWxpc3QgYW5kIGl0cyBhbGxv
+d2VkIHByb3BlcnRpZXMuCj4gKyAqIEBuYW1lOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBu
+b2RlIG5hbWUgb3IgZnVsbCBub2RlIHBhdGgKPiArICogQHByb3BlcnRpZXM6wqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBOVUxMLXRlcm1pbmF0ZWQgYXJyYXkgb2YgbmFtZXMgb3IgbmFt
+ZT12YWx1ZSBwYWlycwo+ICsgKgo+ICsgKiBJZiBuYW1lIHN0YXJ0cyB3aXRoIC8sIHRoZW4gdGhl
+IG5vZGUgaGFzIHRvIGJlIGF0IHRoZSBzcGVjaWZpZWQgcGF0aCBpbgo+ICsgKiB0aGUgZGV2aWNl
+IHRyZWUgKGluY2x1ZGluZyB1bml0IGFkZHJlc3NlcyBmb3IgYWxsIG5vZGVzIGluIHRoZSBwYXRo
+KS4KPiArICogSWYgaXQgZG9lc24ndCwgdGhlbiB0aGUgbm9kZSBjYW4gYmUgYW55d2hlcmUgaW4g
+dGhlIGRldmljZSB0cmVlLgo+ICsgKgo+ICsgKiBBbiBlbnRyeSBpbiBwcm9wZXJ0aWVzIGNhbiBz
+cGVjaWZ5IGEgc3RyaW5nIHZhbHVlIHRoYXQgdGhlIHByb3BlcnR5IG11c3QKPiArICogaGF2ZSBi
+eSB1c2luZyB0aGUgIm5hbWU9dmFsdWUiIGZvcm1hdC4gSWYgdGhlIGVudHJ5IGVuZHMgd2l0aCA9
+LCBpdCBtZWFucwo+ICsgKiB0aGF0IHRoZSBwcm9wZXJ0eSBtdXN0IGJlIGVtcHR5Lgo+ICsgKi8K
+PiArc3RhdGljIHN0cnVjdCBhbGxvd2VkX25vZGUgewo+ICvCoMKgwqDCoMKgwqDCoGNvbnN0IGNo
+YXIgKm5hbWU7Cj4gK8KgwqDCoMKgwqDCoMKgY29uc3QgY2hhciAqcHJvcGVydGllc1s5XTsKPiAr
+fSBhbGxvd2VkX25vZGVzW10gPSB7Cj4gK8KgwqDCoMKgwqDCoMKgewo+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAubmFtZSA9ICIvY2hvc2VuIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgLnByb3BlcnRpZXMgPSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAic3Rkb3V0LXBhdGgiLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpbnV4LHN0ZG91dC1wYXRoIiwKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE5VTEwsCj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiArwqDCoMKgwqDCoMKgwqB9LAo+ICvCoMKgwqDCoMKg
+wqDCoHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLm5hbWUgPSAidmdhIiwKPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLnByb3BlcnRpZXMgPSB7Cj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiZGV2aWNlX3R5cGU9ZGlzcGxh
+eSIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiYXNz
+aWduZWQtYWRkcmVzc2VzIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCJ3aWR0aCIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAiaGVpZ2h0IiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCJkZXB0aCIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAibGl0dGxlLWVuZGlhbj0iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpbnV4LG9wZW5lZD0iLAo+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpbnV4LGJvb3QtZGlzcGxheT0iLHNz
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOVUxMLAo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4gK8KgwqDCoMKgwqDCoMKgfSwKPiAr
+fTsKCkhpIFRoaWFnbywKCkFzIG11Y2ggYXMgdGhpcyBzb2x2ZXMgcHJvYmxlbXMgZm9yICptZSos
+IEkgc3VzcGVjdCBhZGRpbmcgJ3ZnYScgaGVyZQptaWdodCBiZSB0aGUgc3ViamVjdCBvZiBzb21l
+IGRpc2N1c3Npb24uIEhhdmluZyAvY2hvc2VuIHdoaXRlbGlzdGVkIG1ha2VzCnNlbnNlIG9uIGl0
+J3Mgb3duLCBidXQgJ3ZnYScgYW5kIGl0cyBwcm9wZXJ0aWVzIGFyZSB2ZXJ5IHNwZWNpZmljIHdp
+dGhvdXQKbXVjaCBleHBsYW5hdGlvbi4KCklmIGV2ZXJ5b25lJ3MgaGFwcHkgdG8gaGF2ZSBpdCB0
+aGVyZSwgY29vbCEgSWYgbm90LCBJIGhhdmUgdGhlIG1ham9yaXR5Cm9mIGEgcGF0Y2ggdGhhdCBo
+YW5kbGVzIHRoZSBvcmlnaW5hbCByZWFzb24gZm9yIHRoZXNlIHByb3BlcnR5IHVwZGF0ZXMKc2Vw
+YXJhdGVseSBpbiB0aGUga2VybmVsIHJhdGhlciB0aGFuIGZyb20gdXNlcnNwYWNlLiBJZiBuZWVk
+ZWQgSSdsbCBjbGVhbgppdCB1cCBhbmQgd2UgY2FuIGhhbmRsZSBpdCB0aGF0IHdheS4KCkNoZWVy
+cywKU2FtCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
