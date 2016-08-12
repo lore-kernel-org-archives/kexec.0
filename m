@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f169.google.com ([209.85.161.169])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bY51r-0008F1-UG
- for kexec@lists.infradead.org; Fri, 12 Aug 2016 05:29:13 +0000
-Received: by mail-yw0-f169.google.com with SMTP id r9so9900079ywg.0
- for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 22:28:51 -0700 (PDT)
-Date: Fri, 12 Aug 2016 10:58:46 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH V2] arm64:kexec: Memstart should not be before the kernel
- start address
-Message-ID: <20160812052846.GA23942@localhost.localdomain>
-References: <1470965069-20121-1-git-send-email-sgoel@codeaurora.org>
+ id 1bY2y3-0003lE-UZ
+ for kexec@lists.infradead.org; Fri, 12 Aug 2016 03:17:09 +0000
+Date: Fri, 12 Aug 2016 11:16:33 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [V4 PATCH 1/2] x86/panic: Replace smp_send_stop() with kdump
+ friendly version in panic path
+Message-ID: <20160812031633.GA2983@dhcp-128-65.nay.redhat.com>
+References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160810080948.11028.15344.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1470965069-20121-1-git-send-email-sgoel@codeaurora.org>
+In-Reply-To: <20160810080948.11028.15344.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,112 +25,242 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sameer Goel <sgoel@codeaurora.org>
-Cc: geoff@infradead.org, takahiro.akashi@linaro.org, timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org
+To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+Cc: Daniel Walker <dwalker@fifo99.com>, linux-mips@linux-mips.org, Toshi Kani <toshi.kani@hpe.com>, Baoquan He <bhe@redhat.com>, Xunlei Pang <xpang@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, xen-devel@lists.xenproject.org, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, David Vrabel <david.vrabel@citrix.com>
 
-Hi Sameer,
+Hi Hidehiro
 
-On 11/08/2016:07:24:29 PM, Sameer Goel wrote:
-> Starting 4.6 the kernel memblock start is rounded down to a desirable
-> alignment. So, the kernel can see reserved meory regions before the kernel
-> start address in the iomem query.
-> Need to make sure that the right kernel start address is picked from the iomem
-> query.
+Thanks for the update.
+On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
+> Daniel Walker reported problems which happens when
+> crash_kexec_post_notifiers kernel option is enabled
+> (https://lkml.org/lkml/2015/6/24/44).
 > 
-> Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
+> In that case, smp_send_stop() is called before entering kdump routines
+> which assume other CPUs are still online.  As the result, for x86,
+> kdump routines fail to save other CPUs' registers  and disable
+> virtualization extensions.
+
+Seems you simplified the changelog, but I think a little more details
+will be helpful to understand the patch. You know sometimes lkml.org
+does not work well.
+
+> 
+> To fix this problem, call a new kdump friendly function,
+> crash_smp_send_stop(), instead of the smp_send_stop() when
+> crash_kexec_post_notifiers is enabled.  crash_smp_send_stop() is a
+> weak function, and it just call smp_send_stop().  Architecture
+> codes should override it so that kdump can work appropriately.
+> This patch only provides x86-specific version.
+> 
+> For Xen's PV kernel, just keep the current behavior.
+
+Could you explain a bit about above Xen PV kernel behavior?
+
+BTW, this version looks better,  I think I'm fine with this version
+besides of the questions about changelog.
+
+> 
+> Changes in V4:
+> - Keep to use smp_send_stop if crash_kexec_post_notifiers is not set
+> - Rename panic_smp_send_stop to crash_smp_send_stop
+> - Don't change the behavior for Xen's PV kernel
+> 
+> Changes in V3:
+> - Revise comments, description, and symbol names
+> 
+> Changes in V2:
+> - Replace smp_send_stop() call with crash_kexec version which
+>   saves cpu states and cleans up VMX/SVM
+> - Drop a fix for Problem 1 at this moment
+> 
+> Reported-by: Daniel Walker <dwalker@fifo99.com>
+> Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
+> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Daniel Walker <dwalker@fifo99.com>
+> Cc: Xunlei Pang <xpang@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: David Vrabel <david.vrabel@citrix.com>
+> Cc: Toshi Kani <toshi.kani@hpe.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
 > ---
-> This change should be applied on top of geoff kexec-tools v3 branch from
-> arm64[1] +  bugfix[2]
+>  arch/x86/include/asm/kexec.h |    1 +
+>  arch/x86/include/asm/smp.h   |    1 +
+>  arch/x86/kernel/crash.c      |   22 +++++++++++++++++---
+>  arch/x86/kernel/smp.c        |    5 ++++
+>  kernel/panic.c               |   47 ++++++++++++++++++++++++++++++++++++------
+>  5 files changed, 66 insertions(+), 10 deletions(-)
 > 
-> [1] http://lists.infradead.org/pipermail/kexec/2016-August/016768.html
-> [2] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
-> 
->  kexec/arch/arm64/kexec-arm64.c | 35 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 940cddb..7a1d4fc 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -25,6 +25,11 @@
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index d2434c1..282630e 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -210,6 +210,7 @@ struct kexec_entry64_regs {
 >  
->  /* Global varables the core kexec routines expect. */
+>  typedef void crash_vmclear_fn(void);
+>  extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
+> +extern void kdump_nmi_shootdown_cpus(void);
 >  
-> +#define SZ_2M 0x200000
-> +#define __round_mask(x, y) ((__typeof__(x))((y)-1))
-> +#define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
-> +#define round_down(x, y) ((x) & ~__round_mask(x, y))
-> +
->  unsigned char reuse_initrd;
+>  #endif /* __ASSEMBLY__ */
 >  
->  off_t initrd_base;
-> @@ -448,6 +453,27 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
->  	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
+> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+> index ebd0c16..f70989c 100644
+> --- a/arch/x86/include/asm/smp.h
+> +++ b/arch/x86/include/asm/smp.h
+> @@ -50,6 +50,7 @@ struct smp_ops {
+>  	void (*smp_cpus_done)(unsigned max_cpus);
+>  
+>  	void (*stop_other_cpus)(int wait);
+> +	void (*crash_stop_other_cpus)(void);
+>  	void (*smp_send_reschedule)(int cpu);
+>  
+>  	int (*cpu_up)(unsigned cpu, struct task_struct *tidle);
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 9616cf7..650830e 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -133,15 +133,31 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+>  	disable_local_APIC();
 >  }
 >  
-> +static int get_memory_ranges_iomem_kc_cb(void *data, int nr, char *str,
-> +	unsigned long long base, unsigned long long length)
+> -static void kdump_nmi_shootdown_cpus(void)
+> +void kdump_nmi_shootdown_cpus(void)
+>  {
+>  	nmi_shootdown_cpus(kdump_nmi_callback);
+>  
+>  	disable_local_APIC();
+>  }
+>  
+> +/* Override the weak function in kernel/panic.c */
+> +void crash_smp_send_stop(void)
 > +{
-> +	struct memory_range *r;
+> +	static int cpus_stopped;
 > +
-> +	if (nr >= KEXEC_SEGMENT_MAX)
-> +		return -1;
+> +	if (cpus_stopped)
+> +		return;
 > +
-> +	r = (struct memory_range *)data + nr;
-> +	r->type = RANGE_RAM;
-> +	r->start = base;
-> +	r->end = base + length - 1;
+> +	if (smp_ops.crash_stop_other_cpus)
+> +		smp_ops.crash_stop_other_cpus();
+> +	else
+> +		smp_send_stop();
 > +
-> +	set_phys_offset(round_down(r->start, SZ_2M));
-> +
-> +	dbgprintf("%s: %016llx - %016llx : %s", __func__, r->start,
-> +		r->end, str);
-> +
-> +	return 0;
+> +	cpus_stopped = 1;
 > +}
 > +
->  /**
->   * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
->   */
-> @@ -465,7 +491,6 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
->  	r->start = base;
->  	r->end = base + length - 1;
->  
-> -	set_phys_offset(r->start);
-
-I think phys_offset definition was already closer with the kernel definition.
-phys_offset has been defined in kernel as start of DRAM rounded down to section
-size alignment.
-Now, with this patch physical offset will be start of Kernel Code rounded to the
-2M alignment, which might not be matching to the physical offset from kernel.
-
->  
->  	dbgprintf("%s: %016llx - %016llx : %s", __func__, r->start,
->  		r->end, str);
-> @@ -480,6 +505,14 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
->  static int get_memory_ranges_iomem(struct memory_range *array,
->  	unsigned int *count)
+>  #else
+> -static void kdump_nmi_shootdown_cpus(void)
+> +void crash_smp_send_stop(void)
 >  {
-> +	*count = kexec_iomem_for_each_line("Kernel code\n",
-> +		get_memory_ranges_iomem_kc_cb, array);
-
-May be I am missing someting...
-IIUC, then the whole purpose of doing the above hunk is to get a physical offset
-value which allows you to pick the correct kernel start address, right? 
-If yes, then IMHO we should correct page_offset definition rather than physical
-offset.
-
-> +
-> +	if (!*count) {
-> +		dbgprintf("%s: failed: No code segment found.\n", __func__);
-> +		return -EFAILED;
-> +	}
-> +
->  	*count = kexec_iomem_for_each_line("System RAM\n",
->  		get_memory_ranges_iomem_cb, array);
+>  	/* There are no cpus to shootdown */
+>  }
+> @@ -160,7 +176,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  	/* The kernel is broken so disable interrupts */
+>  	local_irq_disable();
 >  
-
-~Pratyush
+> -	kdump_nmi_shootdown_cpus();
+> +	crash_smp_send_stop();
+>  
+>  	/*
+>  	 * VMCLEAR VMCSs loaded on this cpu if needed.
+> diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+> index 658777c..68f8cc2 100644
+> --- a/arch/x86/kernel/smp.c
+> +++ b/arch/x86/kernel/smp.c
+> @@ -32,6 +32,8 @@
+>  #include <asm/nmi.h>
+>  #include <asm/mce.h>
+>  #include <asm/trace/irq_vectors.h>
+> +#include <asm/kexec.h>
+> +
+>  /*
+>   *	Some notes on x86 processor bugs affecting SMP operation:
+>   *
+> @@ -342,6 +344,9 @@ struct smp_ops smp_ops = {
+>  	.smp_cpus_done		= native_smp_cpus_done,
+>  
+>  	.stop_other_cpus	= native_stop_other_cpus,
+> +#if defined(CONFIG_KEXEC_CORE)
+> +	.crash_stop_other_cpus	= kdump_nmi_shootdown_cpus,
+> +#endif
+>  	.smp_send_reschedule	= native_smp_send_reschedule,
+>  
+>  	.cpu_up			= native_cpu_up,
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index ca8cea1..e6480e2 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -71,6 +71,32 @@ void __weak nmi_panic_self_stop(struct pt_regs *regs)
+>  	panic_smp_self_stop();
+>  }
+>  
+> +/*
+> + * Stop other CPUs in panic.  Architecture dependent code may override this
+> + * with more suitable version.  For example, if the architecture supports
+> + * crash dump, it should save registers of each stopped CPU and disable
+> + * per-CPU features such as virtualization extensions.
+> + */
+> +void __weak crash_smp_send_stop(void)
+> +{
+> +	static int cpus_stopped;
+> +
+> +	/*
+> +	 * This function can be called twice in panic path, but obviously
+> +	 * we execute this only once.
+> +	 */
+> +	if (cpus_stopped)
+> +		return;
+> +
+> +	/*
+> +	 * Note smp_send_stop is the usual smp shutdown function, which
+> +	 * unfortunately means it may not be hardened to work in a panic
+> +	 * situation.
+> +	 */
+> +	smp_send_stop();
+> +	cpus_stopped = 1;
+> +}
+> +
+>  atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
+>  
+>  /*
+> @@ -164,14 +190,21 @@ void panic(const char *fmt, ...)
+>  	if (!_crash_kexec_post_notifiers) {
+>  		printk_nmi_flush_on_panic();
+>  		__crash_kexec(NULL);
+> -	}
+>  
+> -	/*
+> -	 * Note smp_send_stop is the usual smp shutdown function, which
+> -	 * unfortunately means it may not be hardened to work in a panic
+> -	 * situation.
+> -	 */
+> -	smp_send_stop();
+> +		/*
+> +		 * Note smp_send_stop is the usual smp shutdown function, which
+> +		 * unfortunately means it may not be hardened to work in a
+> +		 * panic situation.
+> +		 */
+> +		smp_send_stop();
+> +	} else {
+> +		/*
+> +		 * If we want to do crash dump after notifier calls and
+> +		 * kmsg_dump, we will need architecture dependent extra
+> +		 * works in addition to stopping other CPUs.
+> +		 */
+> +		crash_smp_send_stop();
+> +	}
+>  
+>  	/*
+>  	 * Run any panic handlers, including those that might need to
+> 
+> 
 
 _______________________________________________
 kexec mailing list
