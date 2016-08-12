@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22a.google.com ([2607:f8b0:400e:c00::22a])
+Received: from mail-pa0-x241.google.com ([2607:f8b0:400e:c03::241])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bYCwQ-00011N-2f
- for kexec@lists.infradead.org; Fri, 12 Aug 2016 13:56:08 +0000
-Received: by mail-pf0-x22a.google.com with SMTP id p64so9453470pfb.1
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 06:55:45 -0700 (PDT)
-Subject: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
- friendly version in panic path
-References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
-From: Corey Minyard <cminyard@mvista.com>
-Message-ID: <57ADD55D.1050003@mvista.com>
-Date: Fri, 12 Aug 2016 08:55:41 -0500
-MIME-Version: 1.0
-In-Reply-To: <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
+ id 1bYDLR-0004PV-M7
+ for kexec@lists.infradead.org; Fri, 12 Aug 2016 14:21:58 +0000
+Received: by mail-pa0-x241.google.com with SMTP id hh10so1572975pac.1
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 07:21:37 -0700 (PDT)
+From: Ronit Halder <ronit.crj@gmail.com>
+Subject: [RFC 1/4] Creating one or two CMA area at Boot time
+Date: Fri, 12 Aug 2016 19:50:32 +0530
+Message-Id: <20160812142032.6036-1-ronit.crj@gmail.com>
+In-Reply-To: <20160812141838.5973-1-ronit.crj@gmail.com>
+References: <20160812141838.5973-1-ronit.crj@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,162 +19,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-Cc: Daniel Walker <dwalker@fifo99.com>, linux-mips@linux-mips.org, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, xen-devel@lists.xenproject.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: vdavydov@parallels.com, jack@suse.cz, linux-mm@kvack.org, krzysiek@podlesie.net, mnfhuang@gmail.com, hpa@zytor.com, Ronit Halder <ronit.crj@gmail.com>, tglx@linutronix.de, aarcange@redhat.com, bhe@redhat.com, mingo@redhat.com, msalter@redhat.com, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, jroedel@suse.de, mchehab@osg.samsung.com, dan.j.williams@intel.com, kexec@lists.infradead.org, ebiederm@xmission.com, akpm@linux-foundation.org, kirill.shutemov@linux.intel.com
 
-I'll try to test this, but I have one comment inline...
+This patch create CMA area(s) at boot time. In case of x86_32
+only one CMA area will be created. In case of x86_64 if the
+user wants to reserve high memory for crash kernel, then there
+must be at least 256MB (needed for swiotlb and DMA buffers)
+low memory. In that case two CMA areas (one in low memory and
+one in high memory) will be created.
 
-On 08/11/2016 10:17 PM, Dave Young wrote:
-> On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
->> Daniel Walker reported problems which happens when
->> crash_kexec_post_notifiers kernel option is enabled
->> (https://lkml.org/lkml/2015/6/24/44).
->>
->> In that case, smp_send_stop() is called before entering kdump routines
->> which assume other CPUs are still online.  As the result, kdump
->> routines fail to save other CPUs' registers.  Additionally for MIPS
->> OCTEON, it misses to stop the watchdog timer.
->>
->> To fix this problem, call a new kdump friendly function,
->> crash_smp_send_stop(), instead of the smp_send_stop() when
->> crash_kexec_post_notifiers is enabled.  crash_smp_send_stop() is a
->> weak function, and it just call smp_send_stop().  Architecture
->> codes should override it so that kdump can work appropriately.
->> This patch provides MIPS version.
->>
->> Reported-by: Daniel Walker <dwalker@fifo99.com>
->> Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
->> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
->> Cc: Ralf Baechle <ralf@linux-mips.org>
->> Cc: David Daney <david.daney@cavium.com>
->> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
->> Cc: "Steven J. Hill" <steven.hill@cavium.com>
->> Cc: Corey Minyard <cminyard@mvista.com>
->>
->> ---
->> I'm not familiar with MIPS, and I don't have a test environment and
->> just did build tests only.  Please don't apply this patch until
->> someone does enough tests, otherwise simply drop this patch.
->> ---
->>   arch/mips/cavium-octeon/setup.c  |   14 ++++++++++++++
->>   arch/mips/include/asm/kexec.h    |    1 +
->>   arch/mips/kernel/crash.c         |   18 +++++++++++++++++-
->>   arch/mips/kernel/machine_kexec.c |    1 +
->>   4 files changed, 33 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
->> index cb16fcc..5537f95 100644
->> --- a/arch/mips/cavium-octeon/setup.c
->> +++ b/arch/mips/cavium-octeon/setup.c
->> @@ -267,6 +267,17 @@ static void octeon_crash_shutdown(struct pt_regs *regs)
->>   	default_machine_crash_shutdown(regs);
->>   }
->>   
->> +#ifdef CONFIG_SMP
->> +void octeon_crash_smp_send_stop(void)
->> +{
->> +	int cpu;
->> +
->> +	/* disable watchdogs */
->> +	for_each_online_cpu(cpu)
->> +		cvmx_write_csr(CVMX_CIU_WDOGX(cpu_logical_map(cpu)), 0);
->> +}
->> +#endif
->> +
->>   #endif /* CONFIG_KEXEC */
->>   
->>   #ifdef CONFIG_CAVIUM_RESERVE32
->> @@ -911,6 +922,9 @@ void __init prom_init(void)
->>   	_machine_kexec_shutdown = octeon_shutdown;
->>   	_machine_crash_shutdown = octeon_crash_shutdown;
->>   	_machine_kexec_prepare = octeon_kexec_prepare;
->> +#ifdef CONFIG_SMP
->> +	_crash_smp_send_stop = octeon_crash_smp_send_stop;
->> +#endif
->>   #endif
->>   
->>   	octeon_user_io_init();
->> diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
->> index ee25ebb..493a3cc 100644
->> --- a/arch/mips/include/asm/kexec.h
->> +++ b/arch/mips/include/asm/kexec.h
->> @@ -45,6 +45,7 @@ extern const unsigned char kexec_smp_wait[];
->>   extern unsigned long secondary_kexec_args[4];
->>   extern void (*relocated_kexec_smp_wait) (void *);
->>   extern atomic_t kexec_ready_to_reboot;
->> +extern void (*_crash_smp_send_stop)(void);
->>   #endif
->>   #endif
->>   
->> diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
->> index 610f0f3..1723b17 100644
->> --- a/arch/mips/kernel/crash.c
->> +++ b/arch/mips/kernel/crash.c
->> @@ -47,9 +47,14 @@ static void crash_shutdown_secondary(void *passed_regs)
->>   
->>   static void crash_kexec_prepare_cpus(void)
->>   {
->> +	static int cpus_stopped;
->>   	unsigned int msecs;
->> +	unsigned int ncpus;
->>   
->> -	unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
->> +	if (cpus_stopped)
->> +		return;
+Signed-off-by: Ronit Halder <ronit.crj@gmail.com>
 
-Wouldn't you want an atomic operation and some special handling here to
-ensure that only one CPU does this?  So if a CPU comes in here and
-another CPU is already in the process stopping the CPUs it won't result in a
-deadlock.
+---
+ arch/x86/kernel/setup.c | 44 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
--corey
-
->> +
->> +	ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
->>   
->>   	dump_send_ipi(crash_shutdown_secondary);
->>   	smp_wmb();
->> @@ -64,6 +69,17 @@ static void crash_kexec_prepare_cpus(void)
->>   		cpu_relax();
->>   		mdelay(1);
->>   	}
->> +
->> +	cpus_stopped = 1;
->> +}
->> +
->> +/* Override the weak function in kernel/panic.c */
->> +void crash_smp_send_stop(void)
->> +{
->> +	if (_crash_smp_send_stop)
->> +		_crash_smp_send_stop();
->> +
->> +	crash_kexec_prepare_cpus();
->>   }
->>   
->>   #else /* !defined(CONFIG_SMP)  */
->> diff --git a/arch/mips/kernel/machine_kexec.c b/arch/mips/kernel/machine_kexec.c
->> index 50980bf3..5972520 100644
->> --- a/arch/mips/kernel/machine_kexec.c
->> +++ b/arch/mips/kernel/machine_kexec.c
->> @@ -25,6 +25,7 @@ void (*_machine_crash_shutdown)(struct pt_regs *regs) = NULL;
->>   #ifdef CONFIG_SMP
->>   void (*relocated_kexec_smp_wait) (void *);
->>   atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
->> +void (*_crash_smp_send_stop)(void) = NULL;
->>   #endif
->>   
->>   int
->>
->>
-> Can any mips people review this patch and have a test?
->
-> Thanks
-> Dave
->
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index d2bbe34..87c16c7 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -69,6 +69,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/tboot.h>
+ #include <linux/jiffies.h>
++#include <linux/cma.h>
+ 
+ #include <video/edid.h>
+ 
+@@ -123,6 +124,10 @@
+ unsigned long max_low_pfn_mapped;
+ unsigned long max_pfn_mapped;
+ 
++#ifdef CONFIG_KEXEC_CMA
++struct cma *crashk_cma;
++struct cma *crashk_cma_low;
++#endif
+ #ifdef CONFIG_DMI
+ RESERVE_BRK(dmi_alloc, 65536);
+ #endif
+@@ -532,6 +537,18 @@ static int __init reserve_crashkernel_low(void)
+ 		return -ENOMEM;
+ 	}
+ 
++#ifdef CONFIG_KEXEC_CMA
++	ret =  cma_declare_contiguous(low_base, low_size, 0, CRASH_ALIGN, 0, 1, &crashk_cma_low);
++	if (ret) {
++		pr_err("%s: Error reserving CMA area for crashkernel low.\n", __func__);
++		return ret;
++	}
++
++	pr_info("Reserving %ldMB of low memory at %ldMB for CMA area for crashkernel low(System low RAM: %ldMB)\n",
++		(unsigned long)(low_size >> 20),
++		(unsigned long)(low_base >> 20),
++		(unsigned long)(total_low_mem >> 20));
++#else
+ 	ret = memblock_reserve(low_base, low_size);
+ 	if (ret) {
+ 		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+@@ -547,6 +564,7 @@ static int __init reserve_crashkernel_low(void)
+ 	crashk_low_res.end   = low_base + low_size - 1;
+ 	insert_resource(&iomem_resource, &crashk_low_res);
+ #endif
++#endif
+ 	return 0;
+ }
+ 
+@@ -578,8 +596,10 @@ static void __init reserve_crashkernel(void)
+ 						    high ? CRASH_ADDR_HIGH_MAX
+ 							 : CRASH_ADDR_LOW_MAX,
+ 						    crash_size, CRASH_ALIGN);
++		pr_info("Crash_base %llu crash_size %llu\n", crash_base, crash_size);
++
+ 		if (!crash_base) {
+-			pr_info("crashkernel reservation failed - No suitable area found.\n");
++			pr_info("Crashkernel reservation failed - No suitable area found.\n");
+ 			return;
+ 		}
+ 
+@@ -589,11 +609,28 @@ static void __init reserve_crashkernel(void)
+ 		start = memblock_find_in_range(crash_base,
+ 					       crash_base + crash_size,
+ 					       crash_size, 1 << 20);
++		pr_info("Base_mentioned crash_base %llu crash_size %llu\n", crash_base, crash_size);
+ 		if (start != crash_base) {
+ 			pr_info("crashkernel reservation failed - memory is in use.\n");
+ 			return;
+ 		}
+ 	}
++#ifdef CONFIG_KEXEC_CMA
++	crashk_cma = NULL;
++	crashk_cma_low = NULL;
++	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low())
++		return;
++	ret =  cma_declare_contiguous(crash_base, crash_size, 0, CRASH_ALIGN, 0, 1, &crashk_cma);
++	if (ret) {
++		pr_err("%s: Error reserving CMA area for crashkernel.\n", __func__);
++		return;
++	}
++
++	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
++		(unsigned long)(crash_size >> 20),
++		(unsigned long)(crash_base >> 20),
++		(unsigned long)(total_mem >> 20));
++#else
+ 	ret = memblock_reserve(crash_base, crash_size);
+ 	if (ret) {
+ 		pr_err("%s: Error reserving crashkernel memblock.\n", __func__);
+@@ -613,6 +650,7 @@ static void __init reserve_crashkernel(void)
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end   = crash_base + crash_size - 1;
+ 	insert_resource(&iomem_resource, &crashk_res);
++#endif
+ }
+ #else
+ static void __init reserve_crashkernel(void)
+@@ -720,7 +758,7 @@ static void __init trim_snb_memory(void)
+ 	 * already been reserved.
+ 	 */
+ 	memblock_reserve(0, 1<<20);
+-	
++
+ 	for (i = 0; i < ARRAY_SIZE(bad_pages); i++) {
+ 		if (memblock_reserve(bad_pages[i], PAGE_SIZE))
+ 			printk(KERN_WARNING "failed to reserve 0x%08lx\n",
+@@ -812,7 +850,7 @@ static void __init trim_low_memory_range(void)
+ {
+ 	memblock_reserve(0, ALIGN(reserve_low, PAGE_SIZE));
+ }
+-	
++
+ /*
+  * Dump out kernel offset information on panic.
+  */
+-- 
+2.9.0.GIT
 
 
 _______________________________________________
