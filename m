@@ -1,17 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mendozajonas.com ([188.166.185.233])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bY0bR-0005tf-Pn
- for kexec@lists.infradead.org; Fri, 12 Aug 2016 00:45:39 +0000
-Message-ID: <1470962700.2570.6.camel@mendozajonas.com>
+ id 1bY0k4-00081Z-Qt
+ for kexec@lists.infradead.org; Fri, 12 Aug 2016 00:54:33 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7C0rulb104561
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 20:54:12 -0400
+Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 24qm9v1rwa-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 20:54:11 -0400
+Received: from localhost
+ by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 11 Aug 2016 21:54:09 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 44ACA1DC006F
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 20:53:57 -0400 (EDT)
+Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7C0s6fL4427978
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 21:54:06 -0300
+Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
+ by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7C0s5c3004844
+ for <kexec@lists.infradead.org>; Thu, 11 Aug 2016 21:54:06 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 Subject: Re: [PATCH v5 11/13] powerpc: Allow userspace to set device tree
  properties in kexec_file_load
-From: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-Date: Fri, 12 Aug 2016 10:45:00 +1000
-In-Reply-To: <1470956898-5991-12-git-send-email-bauerman@linux.vnet.ibm.com>
+Date: Thu, 11 Aug 2016 21:54:02 -0300
+In-Reply-To: <1470962700.2570.6.camel@mendozajonas.com>
 References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
  <1470956898-5991-12-git-send-email-bauerman@linux.vnet.ibm.com>
-Mime-Version: 1.0
+ <1470962700.2570.6.camel@mendozajonas.com>
+MIME-Version: 1.0
+Message-Id: <1516604.QKHlMVtQ9l@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,108 +45,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Samuel Mendoza-Jonas <sam@mendozajonas.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gVGh1LCAyMDE2LTA4LTExIGF0IDIwOjA4IC0wMzAwLCBUaGlhZ28gSnVuZyBCYXVlcm1hbm4g
-d3JvdGU6Cj4gSW1wbGVtZW50IHRoZSBhcmNoX2tleGVjX3ZlcmlmeV9idWZmZXIgaG9vayB0byB2
-ZXJpZnkgdGhhdCBhIGRldmljZQo+IHRyZWUgYmxvYiBwYXNzZWQgYnkgdXNlcnNwYWNlIHZpYSBr
-ZXhlY19maWxlX2xvYWQgY29udGFpbnMgb25seSBub2Rlcwo+IGFuZCBwcm9wZXJ0aWVzIGZyb20g
-YSB3aGl0ZWxpc3QuCj4gCj4gSW4gZWxmNjRfbG9hZCB3ZSBtZXJnZSB0aG9zZSBwcm9wZXJ0aWVz
-IGludG8gdGhlIGRldmljZSB0cmVlIHRoYXQKPiB3aWxsIGJlIHBhc3NlZCB0byB0aGUgbmV4dCBr
-ZXJuZWwuCj4gCj4gU3VnZ2VzdGVkLWJ5OiBNaWNoYWVsIEVsbGVybWFuIDxtcGVAZWxsZXJtYW4u
-aWQuYXU+Cj4gU2lnbmVkLW9mZi1ieTogVGhpYWdvIEp1bmcgQmF1ZXJtYW5uIDxiYXVlcm1hbkBs
-aW51eC52bmV0LmlibS5jb20+Cj4gLS0tCj4gwqBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20va2V4
-ZWMuaMKgwqDCoMKgwqDCoCB8wqDCoCAxICsKPiDCoGFyY2gvcG93ZXJwYy9rZXJuZWwva2V4ZWNf
-ZWxmXzY0LmPCoMKgwqDCoCB8wqDCoCA5ICsrCj4gwqBhcmNoL3Bvd2VycGMva2VybmVsL21hY2hp
-bmVfa2V4ZWNfNjQuYyB8IDI0MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiDC
-oDMgZmlsZXMgY2hhbmdlZCwgMjUyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9wb3dlcnBjL2luY2x1ZGUvYXNtL2tleGVjLmggYi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20v
-a2V4ZWMuaAo+IGluZGV4IGYyNjNjYzg2Nzg5MS4uMzFiYzY0ZTA3YzhmIDEwMDY0NAo+IC0tLSBh
-L2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9rZXhlYy5oCj4gKysrIGIvYXJjaC9wb3dlcnBjL2lu
-Y2x1ZGUvYXNtL2tleGVjLmgKPiBAQCAtOTksNiArOTksNyBAQCBpbnQgc2V0dXBfcHVyZ2F0b3J5
-KHN0cnVjdCBraW1hZ2UgKmltYWdlLCBjb25zdCB2b2lkICpzbGF2ZV9jb2RlLAo+IMKgaW50IHNl
-dHVwX25ld19mZHQodm9pZCAqZmR0LCB1bnNpZ25lZCBsb25nIGluaXRyZF9sb2FkX2FkZHIsCj4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB1bnNpZ25lZCBsb25nIGluaXRyZF9s
-ZW4sIGNvbnN0IGNoYXIgKmNtZGxpbmUpOwo+IMKgYm9vbCBmaW5kX2RlYnVnX2NvbnNvbGUoY29u
-c3Qgdm9pZCAqZmR0LCBpbnQgY2hvc2VuX25vZGUpOwo+ICtpbnQgbWVyZ2VfcGFydGlhbF9kdGIo
-dm9pZCAqdG8sIGNvbnN0IHZvaWQgKmZyb20pOwo+IMKgI2VuZGlmIC8qIENPTkZJR19LRVhFQ19G
-SUxFICovCj4gwqAKPiDCoCNlbHNlIC8qICFDT05GSUdfS0VYRUMgKi8KPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9wb3dlcnBjL2tlcm5lbC9rZXhlY19lbGZfNjQuYyBiL2FyY2gvcG93ZXJwYy9rZXJuZWwv
-a2V4ZWNfZWxmXzY0LmMKPiBpbmRleCA0OWNiYTk1MDk0NjQuLjFiOTAyYWQ2NmUyYSAxMDA2NDQK
-PiAtLS0gYS9hcmNoL3Bvd2VycGMva2VybmVsL2tleGVjX2VsZl82NC5jCj4gKysrIGIvYXJjaC9w
-b3dlcnBjL2tlcm5lbC9rZXhlY19lbGZfNjQuYwo+IEBAIC0yMTAsNiArMjEwLDE1IEBAIHZvaWQg
-KmVsZjY0X2xvYWQoc3RydWN0IGtpbWFnZSAqaW1hZ2UsIGNoYXIgKmtlcm5lbF9idWYsCj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBnb3RvIG91dDsKPiDCoMKgwqDCoMKgwqDCoMKg
-fQo+IMKgCj4gK8KgwqDCoMKgwqDCoMKgLyogQWRkIG5vZGVzIGFuZCBwcm9wZXJ0aWVzIGZyb20g
-dGhlIERUQiBwYXNzZWQgYnkgdXNlcnNwYWNlLiAqLwo+ICvCoMKgwqDCoMKgwqDCoGlmIChpbWFn
-ZS0+ZHRiX2J1Zikgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXQgPSBtZXJn
-ZV9wYXJ0aWFsX2R0YihmZHQsIGltYWdlLT5kdGJfYnVmKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgaWYgKHJldCkgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgcHJfZXJyKCJFcnJvciBtZXJnaW5nIHBhcnRpYWwgZGV2aWNlIHRyZWUu
-XG4iKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdv
-dG8gb3V0Owo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4gK8KgwqDCoMKgwqDC
-oMKgfQo+ICsKPiDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gc2V0dXBfbmV3X2ZkdChmZHQsIGluaXRy
-ZF9sb2FkX2FkZHIsIGluaXRyZF9sZW4sIGNtZGxpbmUpOwo+IMKgwqDCoMKgwqDCoMKgwqBpZiAo
-cmV0KQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZ290byBvdXQ7Cj4gZGlmZiAt
-LWdpdCBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jIGIvYXJjaC9wb3dl
-cnBjL2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmMKPiBpbmRleCA1MjdmOThlZmU2NTEuLmE0ODRh
-NjM0NjE0NiAxMDA2NDQKPiAtLS0gYS9hcmNoL3Bvd2VycGMva2VybmVsL21hY2hpbmVfa2V4ZWNf
-NjQuYwo+ICsrKyBiL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWFjaGluZV9rZXhlY182NC5jCj4gQEAg
-LTM1LDYgKzM1LDcgQEAKPiDCoCNpbmNsdWRlIDxhc20va2V4ZWNfZWxmXzY0Lmg+Cj4gwqAKPiDC
-oCNkZWZpbmUgU0xBVkVfQ09ERV9TSVpFwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAy
-NTYKPiArI2RlZmluZSBNQVhfRFRfUEFUSMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDUxMgo+IMKg
-Cj4gwqAjaWZkZWYgQ09ORklHX0tFWEVDX0ZJTEUKPiDCoHN0YXRpYyBzdHJ1Y3Qga2V4ZWNfZmls
-ZV9vcHMgKmtleGVjX2ZpbGVfbG9hZGVyc1tdID0gewo+IEBAIC05MDgsNCArOTA5LDI0NSBAQCBi
-b29sIGZpbmRfZGVidWdfY29uc29sZShjb25zdCB2b2lkICpmZHQsIGludCBjaG9zZW5fbm9kZSkK
-PiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIGZhbHNlOwo+IMKgfQo+IMKgCj4gKy8qKgo+ICsgKiBz
-dHJ1Y3QgYWxsb3dlZF9ub2RlIC0gYSBub2RlIGluIHRoZSB3aGl0ZWxpc3QgYW5kIGl0cyBhbGxv
-d2VkIHByb3BlcnRpZXMuCj4gKyAqIEBuYW1lOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBu
-b2RlIG5hbWUgb3IgZnVsbCBub2RlIHBhdGgKPiArICogQHByb3BlcnRpZXM6wqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBOVUxMLXRlcm1pbmF0ZWQgYXJyYXkgb2YgbmFtZXMgb3IgbmFt
-ZT12YWx1ZSBwYWlycwo+ICsgKgo+ICsgKiBJZiBuYW1lIHN0YXJ0cyB3aXRoIC8sIHRoZW4gdGhl
-IG5vZGUgaGFzIHRvIGJlIGF0IHRoZSBzcGVjaWZpZWQgcGF0aCBpbgo+ICsgKiB0aGUgZGV2aWNl
-IHRyZWUgKGluY2x1ZGluZyB1bml0IGFkZHJlc3NlcyBmb3IgYWxsIG5vZGVzIGluIHRoZSBwYXRo
-KS4KPiArICogSWYgaXQgZG9lc24ndCwgdGhlbiB0aGUgbm9kZSBjYW4gYmUgYW55d2hlcmUgaW4g
-dGhlIGRldmljZSB0cmVlLgo+ICsgKgo+ICsgKiBBbiBlbnRyeSBpbiBwcm9wZXJ0aWVzIGNhbiBz
-cGVjaWZ5IGEgc3RyaW5nIHZhbHVlIHRoYXQgdGhlIHByb3BlcnR5IG11c3QKPiArICogaGF2ZSBi
-eSB1c2luZyB0aGUgIm5hbWU9dmFsdWUiIGZvcm1hdC4gSWYgdGhlIGVudHJ5IGVuZHMgd2l0aCA9
-LCBpdCBtZWFucwo+ICsgKiB0aGF0IHRoZSBwcm9wZXJ0eSBtdXN0IGJlIGVtcHR5Lgo+ICsgKi8K
-PiArc3RhdGljIHN0cnVjdCBhbGxvd2VkX25vZGUgewo+ICvCoMKgwqDCoMKgwqDCoGNvbnN0IGNo
-YXIgKm5hbWU7Cj4gK8KgwqDCoMKgwqDCoMKgY29uc3QgY2hhciAqcHJvcGVydGllc1s5XTsKPiAr
-fSBhbGxvd2VkX25vZGVzW10gPSB7Cj4gK8KgwqDCoMKgwqDCoMKgewo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAubmFtZSA9ICIvY2hvc2VuIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgLnByb3BlcnRpZXMgPSB7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAic3Rkb3V0LXBhdGgiLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpbnV4LHN0ZG91dC1wYXRoIiwKPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoE5VTEwsCj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiArwqDCoMKgwqDCoMKgwqB9LAo+ICvCoMKgwqDCoMKg
-wqDCoHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLm5hbWUgPSAidmdhIiwKPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLnByb3BlcnRpZXMgPSB7Cj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiZGV2aWNlX3R5cGU9ZGlzcGxh
-eSIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiYXNz
-aWduZWQtYWRkcmVzc2VzIiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCJ3aWR0aCIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAiaGVpZ2h0IiwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCJkZXB0aCIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAibGl0dGxlLWVuZGlhbj0iLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpbnV4LG9wZW5lZD0iLAo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpbnV4LGJvb3QtZGlzcGxheT0iLHNz
-Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBOVUxMLAo+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4gK8KgwqDCoMKgwqDCoMKgfSwKPiAr
-fTsKCkhpIFRoaWFnbywKCkFzIG11Y2ggYXMgdGhpcyBzb2x2ZXMgcHJvYmxlbXMgZm9yICptZSos
-IEkgc3VzcGVjdCBhZGRpbmcgJ3ZnYScgaGVyZQptaWdodCBiZSB0aGUgc3ViamVjdCBvZiBzb21l
-IGRpc2N1c3Npb24uIEhhdmluZyAvY2hvc2VuIHdoaXRlbGlzdGVkIG1ha2VzCnNlbnNlIG9uIGl0
-J3Mgb3duLCBidXQgJ3ZnYScgYW5kIGl0cyBwcm9wZXJ0aWVzIGFyZSB2ZXJ5IHNwZWNpZmljIHdp
-dGhvdXQKbXVjaCBleHBsYW5hdGlvbi4KCklmIGV2ZXJ5b25lJ3MgaGFwcHkgdG8gaGF2ZSBpdCB0
-aGVyZSwgY29vbCEgSWYgbm90LCBJIGhhdmUgdGhlIG1ham9yaXR5Cm9mIGEgcGF0Y2ggdGhhdCBo
-YW5kbGVzIHRoZSBvcmlnaW5hbCByZWFzb24gZm9yIHRoZXNlIHByb3BlcnR5IHVwZGF0ZXMKc2Vw
-YXJhdGVseSBpbiB0aGUga2VybmVsIHJhdGhlciB0aGFuIGZyb20gdXNlcnNwYWNlLiBJZiBuZWVk
-ZWQgSSdsbCBjbGVhbgppdCB1cCBhbmQgd2UgY2FuIGhhbmRsZSBpdCB0aGF0IHdheS4KCkNoZWVy
-cywKU2FtCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Sam,
+
+Thanks for the quick response.
+
+Am Freitag, 12 August 2016, 10:45:00 schrieb Samuel Mendoza-Jonas:
+> On Thu, 2016-08-11 at 20:08 -0300, Thiago Jung Bauermann wrote:
+> > @@ -908,4 +909,245 @@ bool find_debug_console(const void *fdt, int
+> > chosen_node) return false;
+> >  }
+> >  
+> > +/**
+> > + * struct allowed_node - a node in the whitelist and its allowed
+> > properties. + * @name:              node name or full node path
+> > + * @properties:                NULL-terminated array of names or
+> > name=value pairs + *
+> > + * If name starts with /, then the node has to be at the specified path
+> > in + * the device tree (including unit addresses for all nodes in the
+> > path). + * If it doesn't, then the node can be anywhere in the device
+> > tree. + *
+> > + * An entry in properties can specify a string value that the property
+> > must + * have by using the "name=value" format. If the entry ends with
+> > =, it means + * that the property must be empty.
+> > + */
+> > +static struct allowed_node {
+> > +       const char *name;
+> > +       const char *properties[9];
+> > +} allowed_nodes[] = {
+> > +       {
+> > +               .name = "/chosen",
+> > +               .properties = {
+> > +                       "stdout-path",
+> > +                       "linux,stdout-path",
+> > +                       NULL,
+> > +               }
+> > +       },
+> > +       {
+> > +               .name = "vga",
+> > +               .properties = {
+> > +                       "device_type=display",
+> > +                       "assigned-addresses",
+> > +                       "width",
+> > +                       "height",
+> > +                       "depth",
+> > +                       "little-endian=",
+> > +                       "linux,opened=",
+> > +                       "linux,boot-display=",ss
+> > +                       NULL,
+> > +               }
+> > +       },
+> > +};
+> 
+> Hi Thiago,
+> 
+> As much as this solves problems for *me*, I suspect adding 'vga' here
+> might be the subject of some discussion. Having /chosen whitelisted makes
+> sense on it's own, but 'vga' and its properties are very specific without
+> much explanation.
+> 
+> If everyone's happy to have it there, cool! If not, I have the majority
+> of a patch that handles the original reason for these property updates
+> separately in the kernel rather than from userspace. If needed I'll clean
+> it up and we can handle it that way.
+
+Ok, that's good to know. I'm fine with it either way. In any case, 'vga' in 
+this patch also serves a good real-life example of a non-trivial binding 
+outside of /chosen that we might want to whitelist in the future.
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
