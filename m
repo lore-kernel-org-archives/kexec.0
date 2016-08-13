@@ -2,39 +2,36 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bYPTi-00068J-R6
- for kexec@lists.infradead.org; Sat, 13 Aug 2016 03:19:19 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7D3IwQT025446
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:58 -0400
+ id 1bYPTi-000689-R5
+ for kexec@lists.infradead.org; Sat, 13 Aug 2016 03:19:20 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7D3Iqkk141588
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:56 -0400
 Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24rtx5bcey-1
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24scsjayw8-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:58 -0400
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:56 -0400
 Received: from localhost
  by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Sat, 13 Aug 2016 00:18:56 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id C2DAB352006C
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:33 -0400 (EDT)
+ Sat, 13 Aug 2016 00:18:54 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 5FF031DC0051
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:43 -0400 (EDT)
 Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7D3IseF26935756
- for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:18:54 -0300
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7D3Iq6c10223880
+ for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:18:52 -0300
 Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
  by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7D3IraY013834
- for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:18:54 -0300
+ u7D3Ioe1013768
+ for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:18:52 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/6] kexec_file: Add buffer hand-over support for the next
- kernel
-Date: Sat, 13 Aug 2016 00:18:20 -0300
-In-Reply-To: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
-References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1471058305-30198-2-git-send-email-bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/6] kexec_file: Add buffer hand-over for the next kernel
+Date: Sat, 13 Aug 2016 00:18:19 -0300
+Message-Id: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -51,137 +48,97 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Balbir Singh <bsingharora@gmail.com>, Paul Mackerras <paulus@samba.org>, "H. Peter Anvin" <hpa@zytor.com>, linux-ima-devel@lists.sourceforge.net, Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Petko Manolov <petkan@mip-labs.com>, Thomas Gleixner <tglx@linutronix.de>, Eric Richter <erichte@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, linuxppc-dev@lists.ozlabs.org
 
-The buffer hand-over mechanism allows the currently running kernel to pass
-data to kernel that will be kexec'd via a kexec segment. The second kernel
-can check whether the previous kernel sent data and retrieve it.
+Hello,
 
-This is the architecture-independent part of the feature.
+This patch series implements a mechanism which allows the kernel to pass
+on a buffer to the kernel that will be kexec'd. This buffer is passed
+as a segment which is added to the kimage when it is being prepared
+by kexec_file_load.
 
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
----
- include/linux/kexec.h | 29 ++++++++++++++++++++++
- kernel/kexec_file.c   | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+)
+How the second kernel is informed of this buffer is architecture-specific.
+On powerpc, this is done via the device tree, by checking
+the properties /chosen/linux,kexec-handover-buffer-start and
+/chosen/linux,kexec-handover-buffer-end, which is analogous to how the
+kernel finds the initrd.
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index ceccc5856aab..4559a1a01b0a 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -388,6 +388,35 @@ static inline void *boot_phys_to_virt(unsigned long entry)
- 	return phys_to_virt(boot_phys_to_phys(entry));
- }
- 
-+#ifdef CONFIG_KEXEC_FILE
-+bool __weak kexec_can_hand_over_buffer(void);
-+int __weak arch_kexec_add_handover_buffer(struct kimage *image,
-+					  unsigned long load_addr,
-+					  unsigned long size);
-+int kexec_add_handover_buffer(struct kexec_buf *kbuf);
-+int __weak kexec_get_handover_buffer(void **addr, unsigned long *size);
-+int __weak kexec_free_handover_buffer(void);
-+#else
-+static inline bool kexec_can_hand_over_buffer(void)
-+{
-+	return false;
-+}
-+
-+static inline int kexec_add_handover_buffer(struct kexec_buf *kbuf)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int kexec_get_handover_buffer(void **addr, unsigned long *size)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int kexec_free_handover_buffer(void)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif /* CONFIG_KEXEC_FILE */
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 772cb491715e..c8418d62e2fc 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -135,6 +135,74 @@ int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
- 	return -EINVAL;
- }
- 
-+/**
-+ * kexec_can_hand_over_buffer - can we pass data to the kexec'd kernel?
-+ */
-+bool __weak kexec_can_hand_over_buffer(void)
-+{
-+	return false;
-+}
-+
-+/**
-+ * arch_kexec_add_handover_buffer - do arch-specific steps to handover buffer
-+ *
-+ * Architectures should use this function to pass on the handover buffer
-+ * information to the next kernel.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int __weak arch_kexec_add_handover_buffer(struct kimage *image,
-+					  unsigned long load_addr,
-+					  unsigned long size)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+/**
-+ * kexec_add_handover_buffer - add buffer to be used by the next kernel
-+ * @kbuf:	Buffer contents and memory parameters.
-+ *
-+ * This function assumes that kexec_mutex is held.
-+ * On successful return, @kbuf->mem will have the physical address of
-+ * the buffer in the next kernel.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int kexec_add_handover_buffer(struct kexec_buf *kbuf)
-+{
-+	int ret;
-+
-+	if (!kexec_can_hand_over_buffer())
-+		return -ENOTSUPP;
-+
-+	ret = kexec_add_buffer(kbuf);
-+	if (ret)
-+		return ret;
-+
-+	return arch_kexec_add_handover_buffer(kbuf->image, kbuf->mem,
-+					      kbuf->memsz);
-+}
-+
-+/**
-+ * kexec_get_handover_buffer - get the handover buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int __weak kexec_get_handover_buffer(void **addr, unsigned long *size)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+/**
-+ * kexec_free_handover_buffer - free memory used by the handover buffer
-+ */
-+int __weak kexec_free_handover_buffer(void)
-+{
-+	return -ENOTSUPP;
-+}
-+
- /*
-  * In file mode list of segments is prepared by kernel. Copy relevant
-  * data from user space, do error checking, prepare segment list
+This is needed because the Integrity Measurement Architecture subsystem
+needs to preserve its measurement list accross the kexec reboot. The
+following patch series for the IMA subsystem uses this feature for that
+purpose:
+
+https://lists.infradead.org/pipermail/kexec/2016-August/016745.html
+
+This is so that IMA can implement trusted boot support on the OpenPower
+platform, because on such systems an intermediary Linux instance running
+as part of the firmware is used to boot the target operating system via
+kexec. Using this mechanism, IMA on this intermediary instance can
+hand over to the target OS the measurements of the components that were
+used to boot it.
+
+Because there could be additional measurement events between the
+kexec_file_load call and the actual reboot, IMA needs a way to update the
+buffer with those additional events before rebooting. One can minimize
+the interval between the kexec_file_load and the reboot syscalls, but as
+small as it can be, there is always the possibility that the measurement
+list will be out of date at the time of reboot.
+
+To address this issue, this patch series also introduces
+kexec_update_segment, which allows a reboot notifier to change the
+contents of the image segment during the reboot process.
+
+Patch 5 makes kimage_load_normal_segment and kexec_update_segment share
+code. It's not much code that they can share though, so I'm not sure if
+the result is actually better.
+
+The last patch is not intended to be merged, it just demonstrates how
+this feature can be used.
+
+This series applies on top of v5 of the "kexec_file_load implementation
+for PowerPC" patch series (which applies on top of v4.8-rc1):
+
+https://lists.infradead.org/pipermail/kexec/2016-August/016843.html
+
+Changes for v2:
+- Rebased on v5 of kexec_file_load implementation for PowerPC patch series.
+- Patch "kexec_file: Add buffer hand-over support for the next kernel"
+  - Changed kexec_add_handover_buffer to receive a struct kexec_buf, as
+    suggested by Dave Young.
+- Patch "powerpc: kexec_file: Add buffer hand-over support for the next kernel"
+  - Moved setup_handover_buffer from kexec_elf_64.c to machine_kexec_64.c.
+  - Call setup_handover_buffer from setup_new_fdt instead of elf64_load.
+  - Changed kexec_get_handover_buffer to read from the expanded device tree
+    instead of the flattened device tree.
+- Patch "kexec_file: Add mechanism to update kexec segments.":
+  - Removed unnecessary "#include <linux/highmem.h>" in kexec_file.c.
+  - Round up memsz argument to PAGE_SIZE.
+  - Check if kexec_image is NULL in kexec_update_segment.
+- Patch "IMA: Demonstration code for kexec buffer passing."
+  - Avoid registering reboot notifier again if kexec_file_load is called
+    more than once.
+
+
+Thiago Jung Bauermann (6):
+  kexec_file: Add buffer hand-over support for the next kernel
+  powerpc: kexec_file: Add buffer hand-over support for the next kernel
+  kexec_file: Allow skipping checksum calculation for some segments.
+  kexec_file: Add mechanism to update kexec segments.
+  kexec: Share logic to copy segment page contents.
+  IMA: Demonstration code for kexec buffer passing.
+
+ arch/powerpc/include/asm/kexec.h       |  12 +-
+ arch/powerpc/kernel/kexec_elf_64.c     |   8 +-
+ arch/powerpc/kernel/machine_kexec_64.c | 114 ++++++++++++++++-
+ arch/x86/kernel/crash.c                |   4 +-
+ arch/x86/kernel/kexec-bzimage64.c      |   6 +-
+ include/linux/ima.h                    |  11 ++
+ include/linux/kexec.h                  |  37 +++++-
+ kernel/kexec_core.c                    | 216 ++++++++++++++++++++++++++-------
+ kernel/kexec_file.c                    |  91 ++++++++++++--
+ security/integrity/ima/ima.h           |   5 +
+ security/integrity/ima/ima_init.c      |  26 ++++
+ security/integrity/ima/ima_template.c  |  85 +++++++++++++
+ 12 files changed, 546 insertions(+), 69 deletions(-)
+
 -- 
 1.9.1
 
