@@ -1,39 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bYPTs-00068x-0H
- for kexec@lists.infradead.org; Sat, 13 Aug 2016 03:19:29 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7D3ItpM004242
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:19:08 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24sam4hkca-1
+ id 1bYPU2-000699-I4
+ for kexec@lists.infradead.org; Sat, 13 Aug 2016 03:19:39 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7D3IqDg092902
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:19:17 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24rqx3maur-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:19:07 -0400
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:19:17 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Sat, 13 Aug 2016 00:19:05 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id CC1A61DC006F
- for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:18:53 -0400 (EDT)
+ Sat, 13 Aug 2016 00:19:15 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 4552E1DC0054
+ for <kexec@lists.infradead.org>; Fri, 12 Aug 2016 23:19:05 -0400 (EDT)
 Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7D3J2tm10223916
- for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:19:02 -0300
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7D3JEQp16318916
+ for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:19:14 -0300
 Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
  by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7D3J1Ko013995
- for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:19:02 -0300
+ u7D3JCwp014187
+ for <kexec@lists.infradead.org>; Sat, 13 Aug 2016 00:19:14 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation for
- some segments.
-Date: Sat, 13 Aug 2016 00:18:22 -0300
+Subject: [PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
+Date: Sat, 13 Aug 2016 00:18:23 -0300
 In-Reply-To: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1471058305-30198-4-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1471058305-30198-5-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,243 +50,140 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Balbir Singh <bsingharora@gmail.com>, Paul Mackerras <paulus@samba.org>, "H. Peter Anvin" <hpa@zytor.com>, linux-ima-devel@lists.sourceforge.net, Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Petko Manolov <petkan@mip-labs.com>, Thomas Gleixner <tglx@linutronix.de>, Eric Richter <erichte@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, linuxppc-dev@lists.ozlabs.org
 
-Adds checksum argument to kexec_add_buffer specifying whether the given
-segment should be part of the checksum calculation.
-
-The next patch will add a way to update segments after a kimage is loaded.
-Segments that will be updated in this way should not be checksummed,
-otherwise they will cause the purgatory checksum verification to fail
-when the machine is rebooted.
-
-As a bonus, we don't need to special-case the purgatory segment anymore
-to avoid checksumming it.
-
-Adjust call sites for the new argument.
+kexec_update_segment allows a given segment in kexec_image to have
+its contents updated. This is useful if the current kernel wants to
+send information to the next kernel that is up-to-date at the time of
+reboot.
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 ---
- arch/powerpc/kernel/kexec_elf_64.c |  6 +++---
- arch/x86/kernel/crash.c            |  4 ++--
- arch/x86/kernel/kexec-bzimage64.c  |  6 +++---
- include/linux/kexec.h              | 10 +++++++---
- kernel/kexec_file.c                | 23 ++++++++++++-----------
- 5 files changed, 27 insertions(+), 22 deletions(-)
+ include/linux/kexec.h |  2 ++
+ kernel/kexec_core.c   | 99 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
 
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index 22afc7b5ee73..4c528c81b076 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -128,7 +128,7 @@ static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
- 		kbuf.memsz = phdr->p_memsz;
- 		kbuf.buf_align = phdr->p_align;
- 		kbuf.buf_min = phdr->p_paddr + base;
--		ret = kexec_add_buffer(&kbuf);
-+		ret = kexec_add_buffer(&kbuf, true);
- 		if (ret)
- 			goto out;
- 		load_addr = kbuf.mem;
-@@ -188,7 +188,7 @@ void *elf64_load(struct kimage *image, char *kernel_buf,
- 		kbuf.bufsz = kbuf.memsz = initrd_len;
- 		kbuf.buf_align = PAGE_SIZE;
- 		kbuf.top_down = false;
--		ret = kexec_add_buffer(&kbuf);
-+		ret = kexec_add_buffer(&kbuf, true);
- 		if (ret)
- 			goto out;
- 		initrd_load_addr = kbuf.mem;
-@@ -245,7 +245,7 @@ void *elf64_load(struct kimage *image, char *kernel_buf,
- 	kbuf.bufsz = kbuf.memsz = fdt_size;
- 	kbuf.buf_align = PAGE_SIZE;
- 	kbuf.top_down = true;
--	ret = kexec_add_buffer(&kbuf);
-+	ret = kexec_add_buffer(&kbuf, true);
- 	if (ret)
- 		goto out;
- 	fdt_load_addr = kbuf.mem;
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 38a1cdf6aa05..634ab16377b1 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -642,7 +642,7 @@ int crash_load_segments(struct kimage *image)
- 		 * copied in purgatory after crash. Just add a zero filled
- 		 * segment for now to make sure checksum logic works fine.
- 		 */
--		ret = kexec_add_buffer(&kbuf);
-+		ret = kexec_add_buffer(&kbuf, true);
- 		if (ret)
- 			return ret;
- 		image->arch.backup_load_addr = kbuf.mem;
-@@ -661,7 +661,7 @@ int crash_load_segments(struct kimage *image)
- 
- 	kbuf.memsz = kbuf.bufsz;
- 	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
--	ret = kexec_add_buffer(&kbuf);
-+	ret = kexec_add_buffer(&kbuf, true);
- 	if (ret) {
- 		vfree((void *)image->arch.elf_headers);
- 		return ret;
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 4b3a75329fb6..a46e3fbb0639 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -422,7 +422,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	kbuf.memsz = kbuf.bufsz;
- 	kbuf.buf_align = 16;
- 	kbuf.buf_min = MIN_BOOTPARAM_ADDR;
--	ret = kexec_add_buffer(&kbuf);
-+	ret = kexec_add_buffer(&kbuf, true);
- 	if (ret)
- 		goto out_free_params;
- 	bootparam_load_addr = kbuf.mem;
-@@ -435,7 +435,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	kbuf.memsz = PAGE_ALIGN(header->init_size);
- 	kbuf.buf_align = header->kernel_alignment;
- 	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
--	ret = kexec_add_buffer(&kbuf);
-+	ret = kexec_add_buffer(&kbuf, true);
- 	if (ret)
- 		goto out_free_params;
- 	kernel_load_addr = kbuf.mem;
-@@ -449,7 +449,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		kbuf.bufsz = kbuf.memsz = initrd_len;
- 		kbuf.buf_align = PAGE_SIZE;
- 		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
--		ret = kexec_add_buffer(&kbuf);
-+		ret = kexec_add_buffer(&kbuf, true);
- 		if (ret)
- 			goto out_free_params;
- 		initrd_load_addr = kbuf.mem;
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 4559a1a01b0a..37eea32fdff1 100644
+index 37eea32fdff1..14dda81e3e01 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -100,6 +100,9 @@ struct kexec_segment {
- 	size_t bufsz;
- 	unsigned long mem;
- 	size_t memsz;
+@@ -259,6 +259,8 @@ extern int kexec_purgatory_get_set_symbol(struct kimage *image,
+ 					  unsigned int size, bool get_value);
+ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
+ 					     const char *name);
++int kexec_update_segment(const char *buffer, unsigned long bufsz,
++			 unsigned long load_addr, unsigned long memsz);
+ extern void __crash_kexec(struct pt_regs *);
+ extern void crash_kexec(struct pt_regs *);
+ int kexec_should_crash(struct task_struct *);
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 561675589511..806735201de6 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -721,6 +721,105 @@ static struct page *kimage_alloc_page(struct kimage *image,
+ 	return page;
+ }
+ 
++/**
++ * kexec_update_segment - update the contents of a kimage segment
++ * @buffer:	New contents of the segment.
++ * @bufsz:	@buffer size.
++ * @load_addr:	Segment's physical address in the next kernel.
++ * @memsz:	Segment size.
++ *
++ * This function assumes kexec_mutex is held.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int kexec_update_segment(const char *buffer, unsigned long bufsz,
++			 unsigned long load_addr, unsigned long memsz)
++{
++	int i;
++	unsigned long entry;
++	unsigned long *ptr = NULL;
++	void *dest = NULL;
 +
-+	/* Whether this segment is part of the checksum calculation. */
-+	bool do_checksum;
- };
- 
- #ifdef CONFIG_COMPAT
-@@ -175,7 +178,7 @@ struct kexec_buf {
- 
- int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 			       int (*func)(u64, u64, void *));
--extern int kexec_add_buffer(struct kexec_buf *kbuf);
-+extern int kexec_add_buffer(struct kexec_buf *kbuf, bool checksum);
- int kexec_locate_mem_hole(struct kexec_buf *kbuf);
- int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
- 				    unsigned long size);
-@@ -393,7 +396,7 @@ bool __weak kexec_can_hand_over_buffer(void);
- int __weak arch_kexec_add_handover_buffer(struct kimage *image,
- 					  unsigned long load_addr,
- 					  unsigned long size);
--int kexec_add_handover_buffer(struct kexec_buf *kbuf);
-+int kexec_add_handover_buffer(struct kexec_buf *kbuf, bool checksum);
- int __weak kexec_get_handover_buffer(void **addr, unsigned long *size);
- int __weak kexec_free_handover_buffer(void);
- #else
-@@ -402,7 +405,8 @@ static inline bool kexec_can_hand_over_buffer(void)
- 	return false;
- }
- 
--static inline int kexec_add_handover_buffer(struct kexec_buf *kbuf)
-+static inline int kexec_add_handover_buffer(struct kexec_buf *kbuf,
-+					    bool checksum)
- {
- 	return -ENOTSUPP;
- }
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index c8418d62e2fc..aed51175915f 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -161,6 +161,7 @@ int __weak arch_kexec_add_handover_buffer(struct kimage *image,
- /**
-  * kexec_add_handover_buffer - add buffer to be used by the next kernel
-  * @kbuf:	Buffer contents and memory parameters.
-+ * @checksum:	Should the segment checksum be verified by the purgatory?
-  *
-  * This function assumes that kexec_mutex is held.
-  * On successful return, @kbuf->mem will have the physical address of
-@@ -168,14 +169,14 @@ int __weak arch_kexec_add_handover_buffer(struct kimage *image,
-  *
-  * Return: 0 on success, negative errno on error.
-  */
--int kexec_add_handover_buffer(struct kexec_buf *kbuf)
-+int kexec_add_handover_buffer(struct kexec_buf *kbuf, bool checksum)
- {
- 	int ret;
- 
- 	if (!kexec_can_hand_over_buffer())
- 		return -ENOTSUPP;
- 
--	ret = kexec_add_buffer(kbuf);
-+	ret = kexec_add_buffer(kbuf, checksum);
- 	if (ret)
- 		return ret;
- 
-@@ -611,6 +612,7 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
- /**
-  * kexec_add_buffer - place a buffer in a kexec segment
-  * @kbuf:	Buffer contents and memory parameters.
-+ * @checksum:	Should the segment checksum be verified by the purgatory?
-  *
-  * This function assumes that kexec_mutex is held.
-  * On successful return, @kbuf->mem will have the physical address of
-@@ -618,7 +620,7 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
-  *
-  * Return: 0 on success, negative errno on error.
-  */
--int kexec_add_buffer(struct kexec_buf *kbuf)
-+int kexec_add_buffer(struct kexec_buf *kbuf, bool checksum)
- {
- 
- 	struct kexec_segment *ksegment;
-@@ -658,6 +660,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	ksegment->bufsz = kbuf->bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
-+	ksegment->do_checksum = checksum;
- 	kbuf->image->nr_segments++;
- 	return 0;
- }
-@@ -672,7 +675,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	char *digest;
- 	void *zero_buf;
- 	struct kexec_sha_region *sha_regions;
--	struct purgatory_info *pi = &image->purgatory_info;
- 
- 	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
- 	zero_buf_sz = PAGE_SIZE;
-@@ -712,11 +714,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		struct kexec_segment *ksegment;
- 
- 		ksegment = &image->segment[i];
--		/*
--		 * Skip purgatory as it will be modified once we put digest
--		 * info in purgatory.
--		 */
--		if (ksegment->kbuf == pi->purgatory_buf)
-+		if (!ksegment->do_checksum)
- 			continue;
- 
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
-@@ -893,8 +891,11 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	if (kbuf.buf_align < bss_align)
- 		kbuf.buf_align = bss_align;
- 
--	/* Add buffer to segment list */
--	ret = kexec_add_buffer(&kbuf);
++	if (kexec_image == NULL) {
++		pr_err("Can't update segment: no kexec image loaded.\n");
++		return -EINVAL;
++	}
++
 +	/*
-+	 * Add buffer to segment list. Don't checksum the segment as
-+	 * it will be modified once we put digest info in purgatory.
++	 * kexec_add_buffer rounds up segment sizes to PAGE_SIZE, so
++	 * we have to do it here as well.
 +	 */
-+	ret = kexec_add_buffer(&kbuf, false);
- 	if (ret)
- 		goto out;
- 	pi->purgatory_load_addr = kbuf.mem;
++	memsz = ALIGN(memsz, PAGE_SIZE);
++
++	for (i = 0; i < kexec_image->nr_segments; i++)
++		/* We only support updating whole segments. */
++		if (load_addr == kexec_image->segment[i].mem &&
++		    memsz == kexec_image->segment[i].memsz) {
++			if (kexec_image->segment[i].do_checksum) {
++				pr_err("Trying to update non-modifiable segment.\n");
++				return -EINVAL;
++			}
++
++			break;
++		}
++	if (i == kexec_image->nr_segments) {
++		pr_err("Couldn't find segment to update: 0x%lx, size 0x%lx\n",
++		       load_addr, memsz);
++		return -EINVAL;
++	}
++
++	for (entry = kexec_image->head; !(entry & IND_DONE) && memsz;
++	     entry = *ptr++) {
++		void *addr = (void *) (entry & PAGE_MASK);
++
++		switch (entry & IND_FLAGS) {
++		case IND_DESTINATION:
++			dest = addr;
++			break;
++		case IND_INDIRECTION:
++			ptr = __va(addr);
++			break;
++		case IND_SOURCE:
++			/* Shouldn't happen, but verify just to be safe. */
++			if (dest == NULL) {
++				pr_err("Invalid kexec entries list.");
++				return -EINVAL;
++			}
++
++			if (dest == (void *) load_addr) {
++				struct page *page;
++				char *ptr;
++				size_t uchunk, mchunk;
++
++				page = kmap_to_page(addr);
++
++				ptr = kmap(page);
++				ptr += load_addr & ~PAGE_MASK;
++				mchunk = min_t(size_t, memsz,
++					       PAGE_SIZE - (load_addr & ~PAGE_MASK));
++				uchunk = min(bufsz, mchunk);
++				memcpy(ptr, buffer, uchunk);
++
++				kunmap(page);
++
++				bufsz -= uchunk;
++				load_addr += mchunk;
++				buffer += mchunk;
++				memsz -= mchunk;
++			}
++			dest += PAGE_SIZE;
++		}
++
++		/* Shouldn't happen, but verify just to be safe. */
++		if (ptr == NULL) {
++			pr_err("Invalid kexec entries list.");
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
+ static int kimage_load_normal_segment(struct kimage *image,
+ 					 struct kexec_segment *segment)
+ {
 -- 
 1.9.1
 
