@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZGCq-0002Bl-0O
- for kexec@lists.infradead.org; Mon, 15 Aug 2016 11:37:24 +0000
+ id 1bZG0K-00061q-HI
+ for kexec@lists.infradead.org; Mon, 15 Aug 2016 11:24:30 +0000
 From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
  <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with
+Subject: RE: Re: [V4 PATCH 1/2] x86/panic: Replace smp_send_stop() with
  kdump friendly version in panic path
-Date: Mon, 15 Aug 2016 11:35:59 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A84454CBBB00@GSjpTKYDCembx31.service.hitachi.net>
+Date: Mon, 15 Aug 2016 11:22:08 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454CBBABC@GSjpTKYDCembx31.service.hitachi.net>
 References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
- <57ADD55D.1050003@mvista.com>
-In-Reply-To: <57ADD55D.1050003@mvista.com>
+ <20160810080948.11028.15344.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160812031633.GA2983@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20160812031633.GA2983@dhcp-128-65.nay.redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -28,66 +27,266 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Corey Minyard' <cminyard@mvista.com>, Dave Young <dyoung@redhat.com>
-Cc: Daniel Walker <dwalker@fifo99.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
+To: 'Dave Young' <dyoung@redhat.com>
+Cc: Daniel Walker <dwalker@fifo99.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Toshi Kani <toshi.kani@hpe.com>, Baoquan He <bhe@redhat.com>, Xunlei Pang <xpang@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, David Vrabel <david.vrabel@citrix.com>
 
-Hi Corey,
+Hi Dave,
 
-> From: Corey Minyard [mailto:cminyard@mvista.com]
-> Sent: Friday, August 12, 2016 10:56 PM
-> I'll try to test this, but I have one comment inline...
+Thank you for the review.
 
-Thank you very much!
-
-> On 08/11/2016 10:17 PM, Dave Young wrote:
-> > On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
-[snip]
-> >> diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
-> >> index 610f0f3..1723b17 100644
-> >> --- a/arch/mips/kernel/crash.c
-> >> +++ b/arch/mips/kernel/crash.c
-> >> @@ -47,9 +47,14 @@ static void crash_shutdown_secondary(void *passed_regs)
-> >>
-> >>   static void crash_kexec_prepare_cpus(void)
-> >>   {
-> >> +	static int cpus_stopped;
-> >>   	unsigned int msecs;
-> >> +	unsigned int ncpus;
-> >>
-> >> -	unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
-> >> +	if (cpus_stopped)
-> >> +		return;
+> From: Dave Young [mailto:dyoung@redhat.com]
+> Sent: Friday, August 12, 2016 12:17 PM
 > 
-> Wouldn't you want an atomic operation and some special handling here to
-> ensure that only one CPU does this?  So if a CPU comes in here and
-> another CPU is already in the process stopping the CPUs it won't result in a
-> deadlock.
+> Thanks for the update.
+> On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
+> > Daniel Walker reported problems which happens when
+> > crash_kexec_post_notifiers kernel option is enabled
+> > (https://lkml.org/lkml/2015/6/24/44).
+> >
+> > In that case, smp_send_stop() is called before entering kdump routines
+> > which assume other CPUs are still online.  As the result, for x86,
+> > kdump routines fail to save other CPUs' registers  and disable
+> > virtualization extensions.
+> 
+> Seems you simplified the changelog, but I think a little more details
+> will be helpful to understand the patch. You know sometimes lkml.org
+> does not work well.
 
-Because this function can be called only one panicking CPU,
-there is no problem.
+So, I'll try another archives when I post patch set next time.
 
-There are two paths which crash_kexec_prepare_cpus is called.
+> > To fix this problem, call a new kdump friendly function,
+> > crash_smp_send_stop(), instead of the smp_send_stop() when
+> > crash_kexec_post_notifiers is enabled.  crash_smp_send_stop() is a
+> > weak function, and it just call smp_send_stop().  Architecture
+> > codes should override it so that kdump can work appropriately.
+> > This patch only provides x86-specific version.
+> >
+> > For Xen's PV kernel, just keep the current behavior.
+> 
+> Could you explain a bit about above Xen PV kernel behavior?
+> 
+> BTW, this version looks better,  I think I'm fine with this version
+> besides of the questions about changelog.
 
-Path 1 (panic path):
-panic()
-  crash_smp_send_stop()
-    crash_kexec_prepare_cpus()
+As for Dom0 kernel, it doesn't use crash_kexec routines, and
+it relies on panic notifier chain.  At the end of the chain,
+xen_panic_event is called, and it issues a hypercall which
+requests Hypervisor to execute kdump.  This means whether
+crash_kexec_panic_notifiers is set or not, panic notifiers
+are called after smp_send_stop.  Even if we save registers
+in Dom0 kernel, they seem to be ignored (Hypervisor is responsible
+for that).  This is why I kept the current behavior for Xen.
 
-Path 2 (oops path):
-crash_kexec()
-  __crash_kexec()
-    machine_crash_shutdown()
-      default_machine_crash_shutdown() // for MIPS
-        crash_kexec_prepare_cpus()
-
-Here, panic() and crash_kexec() run exclusively via
-panic_cpu atomic variable.  So we can use cpus_stopped as
-normal variable.
+For PV DomU kernel, kdump is not supported.  For PV HVM
+DomU, I'm not sure what will happen on panic because I
+couldn't boot PV HVM DomU and test it.  But I think it will
+work similarly to baremetal kernels with extra cleanups
+for Hypervisor.
 
 Best regards,
 
 Hidehiro Kawai
 
+> > Changes in V4:
+> > - Keep to use smp_send_stop if crash_kexec_post_notifiers is not set
+> > - Rename panic_smp_send_stop to crash_smp_send_stop
+> > - Don't change the behavior for Xen's PV kernel
+> >
+> > Changes in V3:
+> > - Revise comments, description, and symbol names
+> >
+> > Changes in V2:
+> > - Replace smp_send_stop() call with crash_kexec version which
+> >   saves cpu states and cleans up VMX/SVM
+> > - Drop a fix for Problem 1 at this moment
+> >
+> > Reported-by: Daniel Walker <dwalker@fifo99.com>
+> > Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
+> > Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: Eric Biederman <ebiederm@xmission.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Daniel Walker <dwalker@fifo99.com>
+> > Cc: Xunlei Pang <xpang@redhat.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Borislav Petkov <bp@suse.de>
+> > Cc: David Vrabel <david.vrabel@citrix.com>
+> > Cc: Toshi Kani <toshi.kani@hpe.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > ---
+> >  arch/x86/include/asm/kexec.h |    1 +
+> >  arch/x86/include/asm/smp.h   |    1 +
+> >  arch/x86/kernel/crash.c      |   22 +++++++++++++++++---
+> >  arch/x86/kernel/smp.c        |    5 ++++
+> >  kernel/panic.c               |   47 ++++++++++++++++++++++++++++++++++++------
+> >  5 files changed, 66 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> > index d2434c1..282630e 100644
+> > --- a/arch/x86/include/asm/kexec.h
+> > +++ b/arch/x86/include/asm/kexec.h
+> > @@ -210,6 +210,7 @@ struct kexec_entry64_regs {
+> >
+> >  typedef void crash_vmclear_fn(void);
+> >  extern crash_vmclear_fn __rcu *crash_vmclear_loaded_vmcss;
+> > +extern void kdump_nmi_shootdown_cpus(void);
+> >
+> >  #endif /* __ASSEMBLY__ */
+> >
+> > diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+> > index ebd0c16..f70989c 100644
+> > --- a/arch/x86/include/asm/smp.h
+> > +++ b/arch/x86/include/asm/smp.h
+> > @@ -50,6 +50,7 @@ struct smp_ops {
+> >  	void (*smp_cpus_done)(unsigned max_cpus);
+> >
+> >  	void (*stop_other_cpus)(int wait);
+> > +	void (*crash_stop_other_cpus)(void);
+> >  	void (*smp_send_reschedule)(int cpu);
+> >
+> >  	int (*cpu_up)(unsigned cpu, struct task_struct *tidle);
+> > diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> > index 9616cf7..650830e 100644
+> > --- a/arch/x86/kernel/crash.c
+> > +++ b/arch/x86/kernel/crash.c
+> > @@ -133,15 +133,31 @@ static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+> >  	disable_local_APIC();
+> >  }
+> >
+> > -static void kdump_nmi_shootdown_cpus(void)
+> > +void kdump_nmi_shootdown_cpus(void)
+> >  {
+> >  	nmi_shootdown_cpus(kdump_nmi_callback);
+> >
+> >  	disable_local_APIC();
+> >  }
+> >
+> > +/* Override the weak function in kernel/panic.c */
+> > +void crash_smp_send_stop(void)
+> > +{
+> > +	static int cpus_stopped;
+> > +
+> > +	if (cpus_stopped)
+> > +		return;
+> > +
+> > +	if (smp_ops.crash_stop_other_cpus)
+> > +		smp_ops.crash_stop_other_cpus();
+> > +	else
+> > +		smp_send_stop();
+> > +
+> > +	cpus_stopped = 1;
+> > +}
+> > +
+> >  #else
+> > -static void kdump_nmi_shootdown_cpus(void)
+> > +void crash_smp_send_stop(void)
+> >  {
+> >  	/* There are no cpus to shootdown */
+> >  }
+> > @@ -160,7 +176,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+> >  	/* The kernel is broken so disable interrupts */
+> >  	local_irq_disable();
+> >
+> > -	kdump_nmi_shootdown_cpus();
+> > +	crash_smp_send_stop();
+> >
+> >  	/*
+> >  	 * VMCLEAR VMCSs loaded on this cpu if needed.
+> > diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+> > index 658777c..68f8cc2 100644
+> > --- a/arch/x86/kernel/smp.c
+> > +++ b/arch/x86/kernel/smp.c
+> > @@ -32,6 +32,8 @@
+> >  #include <asm/nmi.h>
+> >  #include <asm/mce.h>
+> >  #include <asm/trace/irq_vectors.h>
+> > +#include <asm/kexec.h>
+> > +
+> >  /*
+> >   *	Some notes on x86 processor bugs affecting SMP operation:
+> >   *
+> > @@ -342,6 +344,9 @@ struct smp_ops smp_ops = {
+> >  	.smp_cpus_done		= native_smp_cpus_done,
+> >
+> >  	.stop_other_cpus	= native_stop_other_cpus,
+> > +#if defined(CONFIG_KEXEC_CORE)
+> > +	.crash_stop_other_cpus	= kdump_nmi_shootdown_cpus,
+> > +#endif
+> >  	.smp_send_reschedule	= native_smp_send_reschedule,
+> >
+> >  	.cpu_up			= native_cpu_up,
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index ca8cea1..e6480e2 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -71,6 +71,32 @@ void __weak nmi_panic_self_stop(struct pt_regs *regs)
+> >  	panic_smp_self_stop();
+> >  }
+> >
+> > +/*
+> > + * Stop other CPUs in panic.  Architecture dependent code may override this
+> > + * with more suitable version.  For example, if the architecture supports
+> > + * crash dump, it should save registers of each stopped CPU and disable
+> > + * per-CPU features such as virtualization extensions.
+> > + */
+> > +void __weak crash_smp_send_stop(void)
+> > +{
+> > +	static int cpus_stopped;
+> > +
+> > +	/*
+> > +	 * This function can be called twice in panic path, but obviously
+> > +	 * we execute this only once.
+> > +	 */
+> > +	if (cpus_stopped)
+> > +		return;
+> > +
+> > +	/*
+> > +	 * Note smp_send_stop is the usual smp shutdown function, which
+> > +	 * unfortunately means it may not be hardened to work in a panic
+> > +	 * situation.
+> > +	 */
+> > +	smp_send_stop();
+> > +	cpus_stopped = 1;
+> > +}
+> > +
+> >  atomic_t panic_cpu = ATOMIC_INIT(PANIC_CPU_INVALID);
+> >
+> >  /*
+> > @@ -164,14 +190,21 @@ void panic(const char *fmt, ...)
+> >  	if (!_crash_kexec_post_notifiers) {
+> >  		printk_nmi_flush_on_panic();
+> >  		__crash_kexec(NULL);
+> > -	}
+> >
+> > -	/*
+> > -	 * Note smp_send_stop is the usual smp shutdown function, which
+> > -	 * unfortunately means it may not be hardened to work in a panic
+> > -	 * situation.
+> > -	 */
+> > -	smp_send_stop();
+> > +		/*
+> > +		 * Note smp_send_stop is the usual smp shutdown function, which
+> > +		 * unfortunately means it may not be hardened to work in a
+> > +		 * panic situation.
+> > +		 */
+> > +		smp_send_stop();
+> > +	} else {
+> > +		/*
+> > +		 * If we want to do crash dump after notifier calls and
+> > +		 * kmsg_dump, we will need architecture dependent extra
+> > +		 * works in addition to stopping other CPUs.
+> > +		 */
+> > +		crash_smp_send_stop();
+> > +	}
+> >
+> >  	/*
+> >  	 * Run any panic handlers, including those that might need to
+> >
+> >
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
