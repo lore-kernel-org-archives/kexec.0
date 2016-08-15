@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZ5wf-0006Mz-Hq
- for kexec@lists.infradead.org; Mon, 15 Aug 2016 00:40:02 +0000
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v6 2/2] Documentation: kdump: add description of enable
- multi-cpus support
-Date: Mon, 15 Aug 2016 08:37:11 +0800
-Message-ID: <1471221431-25032-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1471221431-25032-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1471221431-25032-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bZCAF-00087b-A4
+ for kexec@lists.infradead.org; Mon, 15 Aug 2016 07:18:28 +0000
+Date: Mon, 15 Aug 2016 15:17:59 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec: Account crashk_low_res to kexec_crash_size
+Message-ID: <20160815071759.GB10435@dhcp-128-65.nay.redhat.com>
+References: <1471076770-29426-1-git-send-email-xlpang@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1471076770-29426-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,42 +23,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, corbet@lwn.net, linux-doc@vger.kernel.org, kexec@lists.infradead.org, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
+To: Xunlei Pang <xlpang@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-multi-cpu support is useful to improve the performance of kdump in
-some cases. So add the description of enable multi-cpu support in
-dump-capture kernel.
+Hi Xunlei,
 
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- Documentation/kdump/kdump.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 08/13/16 at 04:26pm, Xunlei Pang wrote:
+> "/sys/kernel/kexec_crash_size" only includes crashk_res, it
+> is fine in most cases, but sometimes we have crashk_low_res.
+> For example, when "crashkernel=size[KMG],high" combined with
+> "crashkernel=size[KMG],low" is used for 64-bit x86.
+> 
+> Let "/sys/kernel/kexec_crash_size" reflect all the reserved
+> memory including crashk_low_res, this is more understandable
+> from its naming.
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index 96da2b7..c93a6e0 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -396,6 +396,13 @@ Notes on loading the dump-capture kernel:
-   Note, though maxcpus always works, you should replace it by nr_cpus to
-   save memory if supported by the current ARCH, such as x86.
- 
-+* You should enable multi-cpu support in dump-capture kernel if you intend
-+  to use multi-thread programs with it, such as parallel dump feature of
-+  makedumpfile. Otherwise, the multi-thread program may have a great
-+  performance degradation. To enable multi-cpu support, you should bring up
-+  a SMP dump-capture kernel and specify maxcpus\nr_cpus, disable_cpu_apic=[X]
-+  options while loading it.
-+
- * For s390x there are two kdump modes: If a ELF header is specified with
-   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
-   is done on all other architectures. If no elfcorehdr= kernel parameter is
--- 
-1.8.3.1
+Maybe export another file for the kexec_crash_low_size so that
+we can clearly get how much the low area is.
 
+> 
+> Although we can get all the crash memory from "/proc/iomem"
+> by filtering all "Crash kernel" keyword, it is more convenient
+> to utilize this file, and the two ways should stay consistent.
 
+Shrink low area does not make much sense, one may either use it or
+shrink it to 0.
 
+Actually think more about it, the crashk_low is only for x86,
+it might be even better to move it to x86 code instead of in
+common code.
+
+Opinion?
+
+Thanks
+Dave
+> 
+> Note that write to "/sys/kernel/kexec_crash_size" is to shrink
+> the reserved memory, and we want to shrink crashk_res only.
+> So we add some additional check in crash_shrink_memory() since
+> crashk_low_res now is involved.
+> 
+> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+> ---
+>  kernel/kexec_core.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..d5ae780 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -932,6 +932,8 @@ size_t crash_get_memory_size(void)
+>  	mutex_lock(&kexec_mutex);
+>  	if (crashk_res.end != crashk_res.start)
+>  		size = resource_size(&crashk_res);
+> +	if (crashk_low_res.end != crashk_low_res.start)
+> +		size += resource_size(&crashk_low_res);
+>  	mutex_unlock(&kexec_mutex);
+>  	return size;
+>  }
+> @@ -949,7 +951,7 @@ int crash_shrink_memory(unsigned long new_size)
+>  {
+>  	int ret = 0;
+>  	unsigned long start, end;
+> -	unsigned long old_size;
+> +	unsigned long low_size, old_size;
+>  	struct resource *ram_res;
+>  
+>  	mutex_lock(&kexec_mutex);
+> @@ -958,6 +960,17 @@ int crash_shrink_memory(unsigned long new_size)
+>  		ret = -ENOENT;
+>  		goto unlock;
+>  	}
+> +
+> +	start = crashk_low_res.start;
+> +	end = crashk_low_res.end;
+> +	low_size = (end == 0) ? 0 : end - start + 1;
+> +	/* Do not shrink crashk_low_res. */
+> +	if (new_size <= low_size) {
+> +		ret = -EINVAL;
+> +		goto unlock;
+> +	}
+> +
+> +	new_size -= low_size;
+>  	start = crashk_res.start;
+>  	end = crashk_res.end;
+>  	old_size = (end == 0) ? 0 : end - start + 1;
+> -- 
+> 1.8.3.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
