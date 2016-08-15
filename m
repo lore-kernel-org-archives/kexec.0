@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZCuG-0003QI-Ir
- for kexec@lists.infradead.org; Mon, 15 Aug 2016 08:06:01 +0000
-Subject: Re: [PATCH] kexec: Account crashk_low_res to kexec_crash_size
-References: <1471076770-29426-1-git-send-email-xlpang@redhat.com>
- <20160815071759.GB10435@dhcp-128-65.nay.redhat.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <57B177DA.3030005@redhat.com>
-Date: Mon, 15 Aug 2016 16:05:46 +0800
+ id 1bZGCq-0002Bl-0O
+ for kexec@lists.infradead.org; Mon, 15 Aug 2016 11:37:24 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with
+ kdump friendly version in panic path
+Date: Mon, 15 Aug 2016 11:35:59 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454CBBB00@GSjpTKYDCembx31.service.hitachi.net>
+References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
+ <57ADD55D.1050003@mvista.com>
+In-Reply-To: <57ADD55D.1050003@mvista.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20160815071759.GB10435@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,121 +24,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Xunlei Pang <xlpang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: 'Corey Minyard' <cminyard@mvista.com>, Dave Young <dyoung@redhat.com>
+Cc: Daniel Walker <dwalker@fifo99.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
 
-On 2016/08/15 at 15:17, Dave Young wrote:
-> Hi Xunlei,
->
-> On 08/13/16 at 04:26pm, Xunlei Pang wrote:
->> "/sys/kernel/kexec_crash_size" only includes crashk_res, it
->> is fine in most cases, but sometimes we have crashk_low_res.
->> For example, when "crashkernel=size[KMG],high" combined with
->> "crashkernel=size[KMG],low" is used for 64-bit x86.
->>
->> Let "/sys/kernel/kexec_crash_size" reflect all the reserved
->> memory including crashk_low_res, this is more understandable
->> from its naming.
-> Maybe export another file for the kexec_crash_low_size so that
-> we can clearly get how much the low area is.
+Hi Corey,
 
-I'm fine with it.
+> From: Corey Minyard [mailto:cminyard@mvista.com]
+> Sent: Friday, August 12, 2016 10:56 PM
+> I'll try to test this, but I have one comment inline...
 
->> Although we can get all the crash memory from "/proc/iomem"
->> by filtering all "Crash kernel" keyword, it is more convenient
->> to utilize this file, and the two ways should stay consistent.
-> Shrink low area does not make much sense, one may either use it or
-> shrink it to 0.
->
-> Actually think more about it, the crashk_low is only for x86,
-> it might be even better to move it to x86 code instead of in
-> common code.
->
-> Opinion?
+Thank you very much!
 
-crashk_low is defined in kernel/kexec_core.c, it's an architecture independent definition
-though it's only used by x86 currently, maybe it can be used by others in the future.
-It's why I'm not handling it specifically for x86.
+> On 08/11/2016 10:17 PM, Dave Young wrote:
+> > On 08/10/16 at 05:09pm, Hidehiro Kawai wrote:
+[snip]
+> >> diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
+> >> index 610f0f3..1723b17 100644
+> >> --- a/arch/mips/kernel/crash.c
+> >> +++ b/arch/mips/kernel/crash.c
+> >> @@ -47,9 +47,14 @@ static void crash_shutdown_secondary(void *passed_regs)
+> >>
+> >>   static void crash_kexec_prepare_cpus(void)
+> >>   {
+> >> +	static int cpus_stopped;
+> >>   	unsigned int msecs;
+> >> +	unsigned int ncpus;
+> >>
+> >> -	unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
+> >> +	if (cpus_stopped)
+> >> +		return;
+> 
+> Wouldn't you want an atomic operation and some special handling here to
+> ensure that only one CPU does this?  So if a CPU comes in here and
+> another CPU is already in the process stopping the CPUs it won't result in a
+> deadlock.
 
-I just tested the original proc interface further, and it can be shrinked to be zero.
-So I guess we can ease the restriction on shrinking the low area as well.
+Because this function can be called only one panicking CPU,
+there is no problem.
 
-What do you think?
+There are two paths which crash_kexec_prepare_cpus is called.
 
-Regards,
-Xunlei
+Path 1 (panic path):
+panic()
+  crash_smp_send_stop()
+    crash_kexec_prepare_cpus()
 
->
-> Thanks
-> Dave
->> Note that write to "/sys/kernel/kexec_crash_size" is to shrink
->> the reserved memory, and we want to shrink crashk_res only.
->> So we add some additional check in crash_shrink_memory() since
->> crashk_low_res now is involved.
->>
->> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
->> ---
->>  kernel/kexec_core.c | 15 ++++++++++++++-
->>  1 file changed, 14 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 5616755..d5ae780 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -932,6 +932,8 @@ size_t crash_get_memory_size(void)
->>  	mutex_lock(&kexec_mutex);
->>  	if (crashk_res.end != crashk_res.start)
->>  		size = resource_size(&crashk_res);
->> +	if (crashk_low_res.end != crashk_low_res.start)
->> +		size += resource_size(&crashk_low_res);
->>  	mutex_unlock(&kexec_mutex);
->>  	return size;
->>  }
->> @@ -949,7 +951,7 @@ int crash_shrink_memory(unsigned long new_size)
->>  {
->>  	int ret = 0;
->>  	unsigned long start, end;
->> -	unsigned long old_size;
->> +	unsigned long low_size, old_size;
->>  	struct resource *ram_res;
->>  
->>  	mutex_lock(&kexec_mutex);
->> @@ -958,6 +960,17 @@ int crash_shrink_memory(unsigned long new_size)
->>  		ret = -ENOENT;
->>  		goto unlock;
->>  	}
->> +
->> +	start = crashk_low_res.start;
->> +	end = crashk_low_res.end;
->> +	low_size = (end == 0) ? 0 : end - start + 1;
->> +	/* Do not shrink crashk_low_res. */
->> +	if (new_size <= low_size) {
->> +		ret = -EINVAL;
->> +		goto unlock;
->> +	}
->> +
->> +	new_size -= low_size;
->>  	start = crashk_res.start;
->>  	end = crashk_res.end;
->>  	old_size = (end == 0) ? 0 : end - start + 1;
->> -- 
->> 1.8.3.1
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Path 2 (oops path):
+crash_kexec()
+  __crash_kexec()
+    machine_crash_shutdown()
+      default_machine_crash_shutdown() // for MIPS
+        crash_kexec_prepare_cpus()
 
+Here, panic() and crash_kexec() run exclusively via
+panic_cpu atomic variable.  So we can use cpus_stopped as
+normal variable.
+
+Best regards,
+
+Hidehiro Kawai
 
 _______________________________________________
 kexec mailing list
