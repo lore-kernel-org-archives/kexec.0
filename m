@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x244.google.com ([2607:f8b0:400e:c03::244])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZYFY-0003ek-OB
- for kexec@lists.infradead.org; Tue, 16 Aug 2016 06:53:25 +0000
-Received: by mail-pa0-x244.google.com with SMTP id cf3so4791625pad.2
- for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 23:53:04 -0700 (PDT)
-Subject: Re: [PATCH v5 04/13] powerpc: Factor out relocation code from
- module_64.c to elf_util_64.c.
-References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1470956898-5991-5-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160815074634.GC21080@balbir.ozlabs.ibm.com> <4126991.2tm6WB17SD@hactar>
-From: Balbir Singh <bsingharora@gmail.com>
-Message-ID: <3ca4a2de-0d44-dbc6-b57b-c149d10b048f@gmail.com>
-Date: Tue, 16 Aug 2016 16:52:54 +1000
-MIME-Version: 1.0
-In-Reply-To: <4126991.2tm6WB17SD@hactar>
+ id 1bZQMm-0001Xt-34
+ for kexec@lists.infradead.org; Mon, 15 Aug 2016 22:28:20 +0000
+Date: Mon, 15 Aug 2016 15:27:56 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
+Message-Id: <20160815152756.78ea7a61a3342547b9e694e5@linux-foundation.org>
+In-Reply-To: <1471058305-30198-5-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1471058305-30198-5-git-send-email-bauerman@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,83 +24,125 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Balbir Singh <bsingharora@gmail.com>, Paul Mackerras <paulus@samba.org>, "H. Peter Anvin" <hpa@zytor.com>, linux-ima-devel@lists.sourceforge.net, Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Petko Manolov <petkan@mip-labs.com>, Thomas Gleixner <tglx@linutronix.de>, Eric Richter <erichte@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>, Eric Biederman <ebiederm@xmission.com>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, linuxppc-dev@lists.ozlabs.org
+
+On Sat, 13 Aug 2016 00:18:23 -0300 Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> wrote:
+
+> kexec_update_segment allows a given segment in kexec_image to have
+> its contents updated. This is useful if the current kernel wants to
+> send information to the next kernel that is up-to-date at the time of
+> reboot.
+> 
+> ...
+>
+> @@ -721,6 +721,105 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  	return page;
+>  }
+>  
+> +/**
+> + * kexec_update_segment - update the contents of a kimage segment
+> + * @buffer:	New contents of the segment.
+> + * @bufsz:	@buffer size.
+> + * @load_addr:	Segment's physical address in the next kernel.
+> + * @memsz:	Segment size.
+> + *
+> + * This function assumes kexec_mutex is held.
+> + *
+> + * Return: 0 on success, negative errno on error.
+> + */
+> +int kexec_update_segment(const char *buffer, unsigned long bufsz,
+> +			 unsigned long load_addr, unsigned long memsz)
+> +{
+> +	int i;
+> +	unsigned long entry;
+> +	unsigned long *ptr = NULL;
+> +	void *dest = NULL;
+> +
+> +	if (kexec_image == NULL) {
+> +		pr_err("Can't update segment: no kexec image loaded.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * kexec_add_buffer rounds up segment sizes to PAGE_SIZE, so
+> +	 * we have to do it here as well.
+> +	 */
+> +	memsz = ALIGN(memsz, PAGE_SIZE);
+> +
+> +	for (i = 0; i < kexec_image->nr_segments; i++)
+> +		/* We only support updating whole segments. */
+> +		if (load_addr == kexec_image->segment[i].mem &&
+> +		    memsz == kexec_image->segment[i].memsz) {
+> +			if (kexec_image->segment[i].do_checksum) {
+> +				pr_err("Trying to update non-modifiable segment.\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			break;
+> +		}
+> +	if (i == kexec_image->nr_segments) {
+> +		pr_err("Couldn't find segment to update: 0x%lx, size 0x%lx\n",
+> +		       load_addr, memsz);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (entry = kexec_image->head; !(entry & IND_DONE) && memsz;
+> +	     entry = *ptr++) {
+> +		void *addr = (void *) (entry & PAGE_MASK);
+> +
+> +		switch (entry & IND_FLAGS) {
+> +		case IND_DESTINATION:
+> +			dest = addr;
+> +			break;
+> +		case IND_INDIRECTION:
+> +			ptr = __va(addr);
+> +			break;
+> +		case IND_SOURCE:
+> +			/* Shouldn't happen, but verify just to be safe. */
+> +			if (dest == NULL) {
+> +				pr_err("Invalid kexec entries list.");
+> +				return -EINVAL;
+> +			}
+> +
+> +			if (dest == (void *) load_addr) {
+> +				struct page *page;
+> +				char *ptr;
+> +				size_t uchunk, mchunk;
+> +
+> +				page = kmap_to_page(addr);
+> +
+> +				ptr = kmap(page);
+
+kmap_atomic() could be used here, and it is appreciably faster.
 
 
+> +				ptr += load_addr & ~PAGE_MASK;
+> +				mchunk = min_t(size_t, memsz,
+> +					       PAGE_SIZE - (load_addr & ~PAGE_MASK));
+> +				uchunk = min(bufsz, mchunk);
+> +				memcpy(ptr, buffer, uchunk);
+> +
+> +				kunmap(page);
+> +
+> +				bufsz -= uchunk;
+> +				load_addr += mchunk;
+> +				buffer += mchunk;
+> +				memsz -= mchunk;
+> +			}
+> +			dest += PAGE_SIZE;
+> +		}
+> +
+> +		/* Shouldn't happen, but verify just to be safe. */
+> +		if (ptr == NULL) {
+> +			pr_err("Invalid kexec entries list.");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
 
-On 16/08/16 09:25, Thiago Jung Bauermann wrote:
-> Am Montag, 15 August 2016, 17:46:34 schrieb Balbir Singh:
->> On Thu, Aug 11, 2016 at 08:08:09PM -0300, Thiago Jung Bauermann wrote:
->>> +/**
->>> + * elf64_apply_relocate_add - apply 64 bit RELA relocations
->>> + * @elf_info:		Support information for the ELF binary being 
-> relocated.
->>> + * @strtab:		String table for the associated symbol 
-> table.
->>> + * @symindex:		Section header index for the associated 
-> symbol table.
->>> + * @relsec:		Section header index for the relocations to 
-> apply.
->>> + * @obj_name:		The name of the ELF binary, for information 
-> messages.
->>> + */
->>> +int elf64_apply_relocate_add(const struct elf_info *elf_info,
->>> +			     const char *strtab, unsigned int symindex,
->>> +			     unsigned int relsec, const char *obj_name)
->>> +{
->>> +	unsigned int i;
->>> +	Elf64_Shdr *sechdrs = elf_info->sechdrs;
->>> +	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
->>> +	Elf64_Sym *sym;
->>> +	unsigned long *location;
->>> +	unsigned long value;
->>> +
->>
->> For the relocatable kernel we expect only
->>
->> R_PPC64_RELATIVE
->> R_PPC64_NONE
->> R_PPC64_ADDR64
->>
->> In the future we can use this to check/assert the usage of this
->> for the core kernel (vmlinux) when loaded.
->>
->> Did we check elf64_apply_relocate_add with zImage and vmlinux?
-> 
-> kexec_file_load doesn't call call elf64_apply_relocate_add on the kernel 
-> image, it only uses it to relocate the purgatory. So whether it is loading a 
-> zImage or a vmlinux file, the function will work in the same way since the 
-> purgatory binary is the same regardless of the kernel image format.
-
-Thanks for clarifying.
-
-> 
-> For the same reason, as it currently stands kexec_file_load can't check the 
-> relocation types used in the kernel image. But it is possible to add such a 
-> check/assertion in kexec_elf_64.c:build_elf_exec_info if we want.
-> 
-> I tested kexec_file_load on both relocatable and non-relocatable vmlinux and 
-> it works correctly.
-> 
-> I hadn't tested with zImage yet. I just did, and I had two problems:
-> 
-> 1. For some reason, it has an INTERP segment. This patch series doesn't 
-> support loading program interpreters for ELF binaries, so 
-> kexec_elf_64.c:build_elf_exec_info refuses to load them.
-> 
-> 2. If I disable the check for the INTERP segment, the zImage file loads 
-> correctly, but then I get an exception during reboot when loading the kexec 
-> image, right before jumping into the purgatory. I suspect this is because 
-> the LOAD segment has a virtual address of 0, and the first kernel is not 
-> coping well with that. But I still have to debug it further.
-> 
-> Is there a reason for the zImage ELF header to request an interpreter and to 
-> have a virtual address of 0?
-> 
-
-Not that I am aware of. 
-
-Balbir Singh
 
 _______________________________________________
 kexec mailing list
