@@ -1,23 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZMCy-0006Ww-2I
- for kexec@lists.infradead.org; Mon, 15 Aug 2016 18:01:57 +0000
-Received: by mail-pf0-x22b.google.com with SMTP id h186so18841154pfg.3
- for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 11:01:35 -0700 (PDT)
-Subject: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
- friendly version in panic path
-References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
- <57ADD55D.1050003@mvista.com>
- <04EAB7311EE43145B2D3536183D1A84454CBBB00@GSjpTKYDCembx31.service.hitachi.net>
- <a618ef9b-25d5-da8b-6829-ce124b76033e@mvista.com>
-From: Corey Minyard <cminyard@mvista.com>
-Message-ID: <95d06858-6874-d795-dca5-ec33bf33d5da@mvista.com>
-Date: Mon, 15 Aug 2016 13:01:32 -0500
+ id 1bZRGv-000113-OU
+ for kexec@lists.infradead.org; Mon, 15 Aug 2016 23:26:22 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7FNIaPW135173
+ for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 19:26:00 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 24syq2ys9h-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 19:26:00 -0400
+Received: from localhost
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 15 Aug 2016 20:25:58 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id E507C352006E
+ for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 19:25:33 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7FNPsq04956180
+ for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 20:25:54 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7FNPr3E005368
+ for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 20:25:54 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v5 04/13] powerpc: Factor out relocation code from
+ module_64.c to elf_util_64.c.
+Date: Mon, 15 Aug 2016 20:25:51 -0300
+In-Reply-To: <20160815074634.GC21080@balbir.ozlabs.ibm.com>
+References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1470956898-5991-5-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160815074634.GC21080@balbir.ozlabs.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <a618ef9b-25d5-da8b-6829-ce124b76033e@mvista.com>
+Message-Id: <4126991.2tm6WB17SD@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,56 +45,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>, Dave Young <dyoung@redhat.com>
-Cc: Daniel Walker <dwalker@fifo99.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
+To: bsingharora@gmail.com
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gMDgvMTUvMjAxNiAxMjowNiBQTSwgQ29yZXkgTWlueWFyZCB3cm90ZToKPiBPbiAwOC8xNS8y
-MDE2IDA2OjM1IEFNLCDmsrPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOgo+PiBI
-aSBDb3JleSwKPj4KPj4+IEZyb206IENvcmV5IE1pbnlhcmQgW21haWx0bzpjbWlueWFyZEBtdmlz
-dGEuY29tXQo+Pj4gU2VudDogRnJpZGF5LCBBdWd1c3QgMTIsIDIwMTYgMTA6NTYgUE0KPj4+IEkn
-bGwgdHJ5IHRvIHRlc3QgdGhpcywgYnV0IEkgaGF2ZSBvbmUgY29tbWVudCBpbmxpbmUuLi4KPj4g
-VGhhbmsgeW91IHZlcnkgbXVjaCEKPj4KPj4+IE9uIDA4LzExLzIwMTYgMTA6MTcgUE0sIERhdmUg
-WW91bmcgd3JvdGU6Cj4+Pj4gT24gMDgvMTAvMTYgYXQgMDU6MDlwbSwgSGlkZWhpcm8gS2F3YWkg
-d3JvdGU6Cj4+IFtzbmlwXQo+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9taXBzL2tlcm5lbC9jcmFz
-aC5jIGIvYXJjaC9taXBzL2tlcm5lbC9jcmFzaC5jCj4+Pj4+IGluZGV4IDYxMGYwZjMuLjE3MjNi
-MTcgMTAwNjQ0Cj4+Pj4+IC0tLSBhL2FyY2gvbWlwcy9rZXJuZWwvY3Jhc2guYwo+Pj4+PiArKysg
-Yi9hcmNoL21pcHMva2VybmVsL2NyYXNoLmMKPj4+Pj4gQEAgLTQ3LDkgKzQ3LDE0IEBAIHN0YXRp
-YyB2b2lkIGNyYXNoX3NodXRkb3duX3NlY29uZGFyeSh2b2lkIAo+Pj4+PiAqcGFzc2VkX3JlZ3Mp
-Cj4+Pj4+Cj4+Pj4+ICAgIHN0YXRpYyB2b2lkIGNyYXNoX2tleGVjX3ByZXBhcmVfY3B1cyh2b2lk
-KQo+Pj4+PiAgICB7Cj4+Pj4+ICsgICAgc3RhdGljIGludCBjcHVzX3N0b3BwZWQ7Cj4+Pj4+ICAg
-ICAgICB1bnNpZ25lZCBpbnQgbXNlY3M7Cj4+Pj4+ICsgICAgdW5zaWduZWQgaW50IG5jcHVzOwo+
-Pj4+Pgo+Pj4+PiAtICAgIHVuc2lnbmVkIGludCBuY3B1cyA9IG51bV9vbmxpbmVfY3B1cygpIC0g
-MTsvKiBFeGNsdWRpbmcgdGhlIAo+Pj4+PiBwYW5pYyBjcHUgKi8KPj4+Pj4gKyAgICBpZiAoY3B1
-c19zdG9wcGVkKQo+Pj4+PiArICAgICAgICByZXR1cm47Cj4+PiBXb3VsZG4ndCB5b3Ugd2FudCBh
-biBhdG9taWMgb3BlcmF0aW9uIGFuZCBzb21lIHNwZWNpYWwgaGFuZGxpbmcgaGVyZSB0bwo+Pj4g
-ZW5zdXJlIHRoYXQgb25seSBvbmUgQ1BVIGRvZXMgdGhpcz8gIFNvIGlmIGEgQ1BVIGNvbWVzIGlu
-IGhlcmUgYW5kCj4+PiBhbm90aGVyIENQVSBpcyBhbHJlYWR5IGluIHRoZSBwcm9jZXNzIHN0b3Bw
-aW5nIHRoZSBDUFVzIGl0IHdvbid0IAo+Pj4gcmVzdWx0IGluIGEKPj4+IGRlYWRsb2NrLgo+PiBC
-ZWNhdXNlIHRoaXMgZnVuY3Rpb24gY2FuIGJlIGNhbGxlZCBvbmx5IG9uZSBwYW5pY2tpbmcgQ1BV
-LAo+PiB0aGVyZSBpcyBubyBwcm9ibGVtLgo+Pgo+PiBUaGVyZSBhcmUgdHdvIHBhdGhzIHdoaWNo
-IGNyYXNoX2tleGVjX3ByZXBhcmVfY3B1cyBpcyBjYWxsZWQuCj4+Cj4+IFBhdGggMSAocGFuaWMg
-cGF0aCk6Cj4+IHBhbmljKCkKPj4gICAgY3Jhc2hfc21wX3NlbmRfc3RvcCgpCj4+ICAgICAgY3Jh
-c2hfa2V4ZWNfcHJlcGFyZV9jcHVzKCkKPj4KPj4gUGF0aCAyIChvb3BzIHBhdGgpOgo+PiBjcmFz
-aF9rZXhlYygpCj4+ICAgIF9fY3Jhc2hfa2V4ZWMoKQo+PiAgICAgIG1hY2hpbmVfY3Jhc2hfc2h1
-dGRvd24oKQo+PiAgICAgICAgZGVmYXVsdF9tYWNoaW5lX2NyYXNoX3NodXRkb3duKCkgLy8gZm9y
-IE1JUFMKPj4gICAgICAgICAgY3Jhc2hfa2V4ZWNfcHJlcGFyZV9jcHVzKCkKPj4KPj4gSGVyZSwg
-cGFuaWMoKSBhbmQgY3Jhc2hfa2V4ZWMoKSBydW4gZXhjbHVzaXZlbHkgdmlhCj4+IHBhbmljX2Nw
-dSBhdG9taWMgdmFyaWFibGUuICBTbyB3ZSBjYW4gdXNlIGNwdXNfc3RvcHBlZCBhcwo+PiBub3Jt
-YWwgdmFyaWFibGUuCj4KPiBPaywgaWYgdGhlIGNvZGUgY2FuIG9ubHkgYmUgZW50ZXJlZCBvbmNl
-LCB3aGF0J3MgdGhlIHB1cnBvc2Ugb2YgCj4gY3B1c19zdG9wcGVkPwo+IEkgZ3Vlc3MgdGhhdCdz
-IHdoYXQgY29uZnVzZWQgbWUuICBZb3UgYXJlIHJpZ2h0LCB0aGUgcGFuaWNfY3B1IGF0b21pYyAK
-PiBzaG91bGQKPiBrZWVwIHRoaXMgb24gYSBzaW5nbGUgQ1BVLgoKTmV2ZXIgbWluZCwgSSBzZWUg
-dGhlIHBhdGggdGhyb3VnaCBwYW5pYygpIHdoZXJlIHRoYXQgaXMgcmVxdWlyZWQuIE15IApxdWVz
-dGlvbgpiZWxvdyBzdGlsbCByZW1haW5zLCB0aG91Z2guCgotY29yZXkKCj4KPiBBbHNvLCBwYW5p
-YygpIHdpbGwgY2FsbCBwYW5pY19zbXBfc2VsZl9zdG9wKCkgaWYgaXQgZmluZHMgYW5vdGhlciBD
-UFUgCj4gaGFzIGFscmVhZHkKPiBjYWxsZWQgcGFuaWMsIHdoaWNoIHdpbGwganVzdCBzcGluIHdp
-dGggaW50ZXJydXB0cyBvZmYgYnkgZGVmYXVsdC4gSSAKPiBkaWRuJ3Qgc2VlIGEKPiBkZWZpbml0
-aW9uIGZvciBpdCBpbiBNSVBTLCB3b3VsZG4ndCBpdCBuZWVkIHRvIGJlIG92ZXJyaWRkZW4gdG8g
-YXZvaWQgCj4gYSBkZWFkbG9jaz8KPgo+IC1jb3JleQo+Cj4+Cj4+IEJlc3QgcmVnYXJkcywKPj4K
-Pj4gSGlkZWhpcm8gS2F3YWkKPj4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Am Montag, 15 August 2016, 17:46:34 schrieb Balbir Singh:
+> On Thu, Aug 11, 2016 at 08:08:09PM -0300, Thiago Jung Bauermann wrote:
+> > +/**
+> > + * elf64_apply_relocate_add - apply 64 bit RELA relocations
+> > + * @elf_info:		Support information for the ELF binary being 
+relocated.
+> > + * @strtab:		String table for the associated symbol 
+table.
+> > + * @symindex:		Section header index for the associated 
+symbol table.
+> > + * @relsec:		Section header index for the relocations to 
+apply.
+> > + * @obj_name:		The name of the ELF binary, for information 
+messages.
+> > + */
+> > +int elf64_apply_relocate_add(const struct elf_info *elf_info,
+> > +			     const char *strtab, unsigned int symindex,
+> > +			     unsigned int relsec, const char *obj_name)
+> > +{
+> > +	unsigned int i;
+> > +	Elf64_Shdr *sechdrs = elf_info->sechdrs;
+> > +	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
+> > +	Elf64_Sym *sym;
+> > +	unsigned long *location;
+> > +	unsigned long value;
+> > +
+> 
+> For the relocatable kernel we expect only
+> 
+> R_PPC64_RELATIVE
+> R_PPC64_NONE
+> R_PPC64_ADDR64
+> 
+> In the future we can use this to check/assert the usage of this
+> for the core kernel (vmlinux) when loaded.
+> 
+> Did we check elf64_apply_relocate_add with zImage and vmlinux?
+
+kexec_file_load doesn't call call elf64_apply_relocate_add on the kernel 
+image, it only uses it to relocate the purgatory. So whether it is loading a 
+zImage or a vmlinux file, the function will work in the same way since the 
+purgatory binary is the same regardless of the kernel image format.
+
+For the same reason, as it currently stands kexec_file_load can't check the 
+relocation types used in the kernel image. But it is possible to add such a 
+check/assertion in kexec_elf_64.c:build_elf_exec_info if we want.
+
+I tested kexec_file_load on both relocatable and non-relocatable vmlinux and 
+it works correctly.
+
+I hadn't tested with zImage yet. I just did, and I had two problems:
+
+1. For some reason, it has an INTERP segment. This patch series doesn't 
+support loading program interpreters for ELF binaries, so 
+kexec_elf_64.c:build_elf_exec_info refuses to load them.
+
+2. If I disable the check for the INTERP segment, the zImage file loads 
+correctly, but then I get an exception during reboot when loading the kexec 
+image, right before jumping into the purgatory. I suspect this is because 
+the LOAD segment has a virtual address of 0, and the first kernel is not 
+coping well with that. But I still have to debug it further.
+
+Is there a reason for the zImage ELF header to request an interpreter and to 
+have a virtual address of 0?
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
