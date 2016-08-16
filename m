@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail7.hitachi.co.jp ([133.145.228.42])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZbeY-0008AN-88
- for kexec@lists.infradead.org; Tue, 16 Aug 2016 10:31:28 +0000
-From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
- <hidehiro.kawai.ez@hitachi.com>
-Subject: RE: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
- friendly version in panic path
-Date: Tue, 16 Aug 2016 10:29:54 +0000
-Message-ID: <04EAB7311EE43145B2D3536183D1A84454CC234F@GSjpTKYDCembx31.service.hitachi.net>
-References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
- <57ADD55D.1050003@mvista.com>
- <04EAB7311EE43145B2D3536183D1A84454CBBB00@GSjpTKYDCembx31.service.hitachi.net>
- <a618ef9b-25d5-da8b-6829-ce124b76033e@mvista.com>
- <95d06858-6874-d795-dca5-ec33bf33d5da@mvista.com>
-In-Reply-To: <95d06858-6874-d795-dca5-ec33bf33d5da@mvista.com>
-Content-Language: ja-JP
+ id 1bZbpW-0005GB-A4
+ for kexec@lists.infradead.org; Tue, 16 Aug 2016 10:42:48 +0000
+Date: Tue, 16 Aug 2016 18:42:17 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec: Account crashk_low_res to kexec_crash_size
+Message-ID: <20160816104217.GA15921@dhcp-128-65.nay.redhat.com>
+References: <1471076770-29426-1-git-send-email-xlpang@redhat.com>
+ <20160815071759.GB10435@dhcp-128-65.nay.redhat.com>
+ <57B177DA.3030005@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <57B177DA.3030005@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,71 +21,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Corey Minyard' <cminyard@mvista.com>, Dave Young <dyoung@redhat.com>
-Cc: Daniel Walker <dwalker@fifo99.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
+To: xlpang@redhat.com
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-PiBGcm9tOiBDb3JleSBNaW55YXJkIFttYWlsdG86Y21pbnlhcmRAbXZpc3RhLmNvbV0NCj4gU2Vu
-dDogVHVlc2RheSwgQXVndXN0IDE2LCAyMDE2IDM6MDIgQU0NCj4gT24gMDgvMTUvMjAxNiAxMjow
-NiBQTSwgQ29yZXkgTWlueWFyZCB3cm90ZToNCj4gPiBPbiAwOC8xNS8yMDE2IDA2OjM1IEFNLCDm
-srPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+PiBIaSBDb3JleSwNCj4g
-Pj4NCj4gPj4+IEZyb206IENvcmV5IE1pbnlhcmQgW21haWx0bzpjbWlueWFyZEBtdmlzdGEuY29t
-XQ0KPiA+Pj4gU2VudDogRnJpZGF5LCBBdWd1c3QgMTIsIDIwMTYgMTA6NTYgUE0NCj4gPj4+IEkn
-bGwgdHJ5IHRvIHRlc3QgdGhpcywgYnV0IEkgaGF2ZSBvbmUgY29tbWVudCBpbmxpbmUuLi4NCj4g
-Pj4gVGhhbmsgeW91IHZlcnkgbXVjaCENCj4gPj4NCj4gPj4+IE9uIDA4LzExLzIwMTYgMTA6MTcg
-UE0sIERhdmUgWW91bmcgd3JvdGU6DQo+ID4+Pj4gT24gMDgvMTAvMTYgYXQgMDU6MDlwbSwgSGlk
-ZWhpcm8gS2F3YWkgd3JvdGU6DQo+ID4+IFtzbmlwXQ0KPiA+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJj
-aC9taXBzL2tlcm5lbC9jcmFzaC5jIGIvYXJjaC9taXBzL2tlcm5lbC9jcmFzaC5jDQo+ID4+Pj4+
-IGluZGV4IDYxMGYwZjMuLjE3MjNiMTcgMTAwNjQ0DQo+ID4+Pj4+IC0tLSBhL2FyY2gvbWlwcy9r
-ZXJuZWwvY3Jhc2guYw0KPiA+Pj4+PiArKysgYi9hcmNoL21pcHMva2VybmVsL2NyYXNoLmMNCj4g
-Pj4+Pj4gQEAgLTQ3LDkgKzQ3LDE0IEBAIHN0YXRpYyB2b2lkIGNyYXNoX3NodXRkb3duX3NlY29u
-ZGFyeSh2b2lkDQo+ID4+Pj4+ICpwYXNzZWRfcmVncykNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgc3Rh
-dGljIHZvaWQgY3Jhc2hfa2V4ZWNfcHJlcGFyZV9jcHVzKHZvaWQpDQo+ID4+Pj4+ICAgIHsNCj4g
-Pj4+Pj4gKyAgICBzdGF0aWMgaW50IGNwdXNfc3RvcHBlZDsNCj4gPj4+Pj4gICAgICAgIHVuc2ln
-bmVkIGludCBtc2VjczsNCj4gPj4+Pj4gKyAgICB1bnNpZ25lZCBpbnQgbmNwdXM7DQo+ID4+Pj4+
-DQo+ID4+Pj4+IC0gICAgdW5zaWduZWQgaW50IG5jcHVzID0gbnVtX29ubGluZV9jcHVzKCkgLSAx
-Oy8qIEV4Y2x1ZGluZyB0aGUNCj4gPj4+Pj4gcGFuaWMgY3B1ICovDQo+ID4+Pj4+ICsgICAgaWYg
-KGNwdXNfc3RvcHBlZCkNCj4gPj4+Pj4gKyAgICAgICAgcmV0dXJuOw0KPiA+Pj4gV291bGRuJ3Qg
-eW91IHdhbnQgYW4gYXRvbWljIG9wZXJhdGlvbiBhbmQgc29tZSBzcGVjaWFsIGhhbmRsaW5nIGhl
-cmUgdG8NCj4gPj4+IGVuc3VyZSB0aGF0IG9ubHkgb25lIENQVSBkb2VzIHRoaXM/ICBTbyBpZiBh
-IENQVSBjb21lcyBpbiBoZXJlIGFuZA0KPiA+Pj4gYW5vdGhlciBDUFUgaXMgYWxyZWFkeSBpbiB0
-aGUgcHJvY2VzcyBzdG9wcGluZyB0aGUgQ1BVcyBpdCB3b24ndA0KPiA+Pj4gcmVzdWx0IGluIGEN
-Cj4gPj4+IGRlYWRsb2NrLg0KPiA+PiBCZWNhdXNlIHRoaXMgZnVuY3Rpb24gY2FuIGJlIGNhbGxl
-ZCBvbmx5IG9uZSBwYW5pY2tpbmcgQ1BVLA0KPiA+PiB0aGVyZSBpcyBubyBwcm9ibGVtLg0KPiA+
-Pg0KPiA+PiBUaGVyZSBhcmUgdHdvIHBhdGhzIHdoaWNoIGNyYXNoX2tleGVjX3ByZXBhcmVfY3B1
-cyBpcyBjYWxsZWQuDQo+ID4+DQo+ID4+IFBhdGggMSAocGFuaWMgcGF0aCk6DQo+ID4+IHBhbmlj
-KCkNCj4gPj4gICAgY3Jhc2hfc21wX3NlbmRfc3RvcCgpDQo+ID4+ICAgICAgY3Jhc2hfa2V4ZWNf
-cHJlcGFyZV9jcHVzKCkNCj4gPj4NCj4gPj4gUGF0aCAyIChvb3BzIHBhdGgpOg0KPiA+PiBjcmFz
-aF9rZXhlYygpDQo+ID4+ICAgIF9fY3Jhc2hfa2V4ZWMoKQ0KPiA+PiAgICAgIG1hY2hpbmVfY3Jh
-c2hfc2h1dGRvd24oKQ0KPiA+PiAgICAgICAgZGVmYXVsdF9tYWNoaW5lX2NyYXNoX3NodXRkb3du
-KCkgLy8gZm9yIE1JUFMNCj4gPj4gICAgICAgICAgY3Jhc2hfa2V4ZWNfcHJlcGFyZV9jcHVzKCkN
-Cj4gPj4NCj4gPj4gSGVyZSwgcGFuaWMoKSBhbmQgY3Jhc2hfa2V4ZWMoKSBydW4gZXhjbHVzaXZl
-bHkgdmlhDQo+ID4+IHBhbmljX2NwdSBhdG9taWMgdmFyaWFibGUuICBTbyB3ZSBjYW4gdXNlIGNw
-dXNfc3RvcHBlZCBhcw0KPiA+PiBub3JtYWwgdmFyaWFibGUuDQo+ID4NCj4gPiBPaywgaWYgdGhl
-IGNvZGUgY2FuIG9ubHkgYmUgZW50ZXJlZCBvbmNlLCB3aGF0J3MgdGhlIHB1cnBvc2Ugb2YNCj4g
-PiBjcHVzX3N0b3BwZWQ/DQo+ID4gSSBndWVzcyB0aGF0J3Mgd2hhdCBjb25mdXNlZCBtZS4gIFlv
-dSBhcmUgcmlnaHQsIHRoZSBwYW5pY19jcHUgYXRvbWljDQo+ID4gc2hvdWxkDQo+ID4ga2VlcCB0
-aGlzIG9uIGEgc2luZ2xlIENQVS4NCj4gDQo+IE5ldmVyIG1pbmQsIEkgc2VlIHRoZSBwYXRoIHRo
-cm91Z2ggcGFuaWMoKSB3aGVyZSB0aGF0IGlzIHJlcXVpcmVkLiBNeQ0KPiBxdWVzdGlvbg0KPiBi
-ZWxvdyBzdGlsbCByZW1haW5zLCB0aG91Z2guDQo+IA0KPiA+IEFsc28sIHBhbmljKCkgd2lsbCBj
-YWxsIHBhbmljX3NtcF9zZWxmX3N0b3AoKSBpZiBpdCBmaW5kcyBhbm90aGVyIENQVQ0KPiA+IGhh
-cyBhbHJlYWR5DQo+ID4gY2FsbGVkIHBhbmljLCB3aGljaCB3aWxsIGp1c3Qgc3BpbiB3aXRoIGlu
-dGVycnVwdHMgb2ZmIGJ5IGRlZmF1bHQuIEkNCj4gPiBkaWRuJ3Qgc2VlIGENCj4gPiBkZWZpbml0
-aW9uIGZvciBpdCBpbiBNSVBTLCB3b3VsZG4ndCBpdCBuZWVkIHRvIGJlIG92ZXJyaWRkZW4gdG8g
-YXZvaWQNCj4gPiBhIGRlYWRsb2NrPw0KDQpObyBkZWFkbG9jayBzaG91bGQgaGFwcGVuLiBQYW5p
-Y2tpbmcgQ1BVIGNhbGxzIGNyYXNoX2tleGVjX3ByZXBhcmVfY3B1cygpLA0KYW5kIGl0IGlzc3Vl
-cyBhbiBJUEkgYW5kIHdhaXQgZm9yIG90aGVyIENQVXMgaGFuZGxlIGl0LiAgSWYgc29tZSBvZiB0
-aGVtDQphcmUgbG9vcGluZyBpbiBwYW5pY19zbXBfc2VsZl9zdG9wKCkgd2l0aCBpbnRlcnJ1cHQg
-ZGlzYWJsZWQsIHRoZXkgY2FuJ3QNCmhhbmRsZSB0aGUgSVBJLiAgQnV0IGl0J3Mgbm90IGEgc2V2
-ZXJlIHByb2JsZW0uICBjcmFzaF9rZXhlY19wcmVwYXJlX2NwdXMoKQ0KaGFzIGEgdGltZW91dCBt
-ZWNoYW5pc20sIGFuZCBpdCB3aWxsIGdvIG91dCBmcm9tIHRoZSB3YWl0IGxvb3Agd2hlbiBpdA0K
-aGFwcGVucy4NCg0KSW4gdGhhdCBjYXNlLCBvZiBjb3Vyc2UsIHRoZWlyIHJlZ2lzdGVycyBhcmUg
-bm90IHNhdmVkLiAgVGhpcyBjb3VsZCBiZQ0KaW1wcm92ZWQsIGJ1dCBJJ2QgbGlrZSB0byBlbnRy
-dXN0IE1JUFMgZXhwZXJ0cyB3aXRoIHRoZSBpbXByb3ZlbWVudC4NClRoaXMgaXMgYW5vdGhlciBp
-c3N1ZS4NCg0KQmVzdCByZWdhcmRzLA0KDQpIaWRlaGlybyBLYXdhaQ0KDQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+Hi,
+
+On 08/15/16 at 04:05pm, Xunlei Pang wrote:
+> On 2016/08/15 at 15:17, Dave Young wrote:
+> > Hi Xunlei,
+> >
+> > On 08/13/16 at 04:26pm, Xunlei Pang wrote:
+> >> "/sys/kernel/kexec_crash_size" only includes crashk_res, it
+> >> is fine in most cases, but sometimes we have crashk_low_res.
+> >> For example, when "crashkernel=size[KMG],high" combined with
+> >> "crashkernel=size[KMG],low" is used for 64-bit x86.
+> >>
+> >> Let "/sys/kernel/kexec_crash_size" reflect all the reserved
+> >> memory including crashk_low_res, this is more understandable
+> >> from its naming.
+> > Maybe export another file for the kexec_crash_low_size so that
+> > we can clearly get how much the low area is.
+> 
+> I'm fine with it.
+> 
+> >> Although we can get all the crash memory from "/proc/iomem"
+> >> by filtering all "Crash kernel" keyword, it is more convenient
+> >> to utilize this file, and the two ways should stay consistent.
+> > Shrink low area does not make much sense, one may either use it or
+> > shrink it to 0.
+> >
+> > Actually think more about it, the crashk_low is only for x86,
+> > it might be even better to move it to x86 code instead of in
+> > common code.
+> >
+> > Opinion?
+> 
+> crashk_low is defined in kernel/kexec_core.c, it's an architecture independent definition
+> though it's only used by x86 currently, maybe it can be used by others in the future.
+> It's why I'm not handling it specifically for x86.
+
+Ok, we can leave with it since it is in common code from the very
+beginning but I doubt that any other arches will use it.
+
+> 
+> I just tested the original proc interface further, and it can be shrinked to be zero.
+> So I guess we can ease the restriction on shrinking the low area as well.
+> 
+> What do you think?
+
+Ok, agreed.
+
+Thanks
+Dave
+
+> 
+> Regards,
+> Xunlei
+> 
+> >
+> > Thanks
+> > Dave
+> >> Note that write to "/sys/kernel/kexec_crash_size" is to shrink
+> >> the reserved memory, and we want to shrink crashk_res only.
+> >> So we add some additional check in crash_shrink_memory() since
+> >> crashk_low_res now is involved.
+> >>
+> >> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+> >> ---
+> >>  kernel/kexec_core.c | 15 ++++++++++++++-
+> >>  1 file changed, 14 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> >> index 5616755..d5ae780 100644
+> >> --- a/kernel/kexec_core.c
+> >> +++ b/kernel/kexec_core.c
+> >> @@ -932,6 +932,8 @@ size_t crash_get_memory_size(void)
+> >>  	mutex_lock(&kexec_mutex);
+> >>  	if (crashk_res.end != crashk_res.start)
+> >>  		size = resource_size(&crashk_res);
+> >> +	if (crashk_low_res.end != crashk_low_res.start)
+> >> +		size += resource_size(&crashk_low_res);
+> >>  	mutex_unlock(&kexec_mutex);
+> >>  	return size;
+> >>  }
+> >> @@ -949,7 +951,7 @@ int crash_shrink_memory(unsigned long new_size)
+> >>  {
+> >>  	int ret = 0;
+> >>  	unsigned long start, end;
+> >> -	unsigned long old_size;
+> >> +	unsigned long low_size, old_size;
+> >>  	struct resource *ram_res;
+> >>  
+> >>  	mutex_lock(&kexec_mutex);
+> >> @@ -958,6 +960,17 @@ int crash_shrink_memory(unsigned long new_size)
+> >>  		ret = -ENOENT;
+> >>  		goto unlock;
+> >>  	}
+> >> +
+> >> +	start = crashk_low_res.start;
+> >> +	end = crashk_low_res.end;
+> >> +	low_size = (end == 0) ? 0 : end - start + 1;
+> >> +	/* Do not shrink crashk_low_res. */
+> >> +	if (new_size <= low_size) {
+> >> +		ret = -EINVAL;
+> >> +		goto unlock;
+> >> +	}
+> >> +
+> >> +	new_size -= low_size;
+> >>  	start = crashk_res.start;
+> >>  	end = crashk_res.end;
+> >>  	old_size = (end == 0) ? 0 : end - start + 1;
+> >> -- 
+> >> 1.8.3.1
+> >>
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
