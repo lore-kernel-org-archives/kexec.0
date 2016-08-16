@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZQMm-0001Xt-34
- for kexec@lists.infradead.org; Mon, 15 Aug 2016 22:28:20 +0000
-Date: Mon, 15 Aug 2016 15:27:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 4/6] kexec_file: Add mechanism to update kexec segments.
-Message-Id: <20160815152756.78ea7a61a3342547b9e694e5@linux-foundation.org>
-In-Reply-To: <1471058305-30198-5-git-send-email-bauerman@linux.vnet.ibm.com>
-References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1471058305-30198-5-git-send-email-bauerman@linux.vnet.ibm.com>
-Mime-Version: 1.0
+Message-ID: <57B2E759.201@arm.com>
+Date: Tue, 16 Aug 2016 11:13:45 +0100
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015615.28527-1-takahiro.akashi@linaro.org>
+ <20160809015615.28527-3-takahiro.akashi@linaro.org>
+ <57AB586D.3080900@arm.com> <20160810181827.GC24137@localhost.localdomain>
+ <20160811100310.GA29357@localhost.localdomain>
+In-Reply-To: <20160811100310.GA29357@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,125 +22,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Balbir Singh <bsingharora@gmail.com>, Paul Mackerras <paulus@samba.org>, "H. Peter Anvin" <hpa@zytor.com>, linux-ima-devel@lists.sourceforge.net, Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Petko Manolov <petkan@mip-labs.com>, Thomas Gleixner <tglx@linutronix.de>, Eric Richter <erichte@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>, Eric Biederman <ebiederm@xmission.com>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, linuxppc-dev@lists.ozlabs.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Sat, 13 Aug 2016 00:18:23 -0300 Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> wrote:
+Hi Pratyush,
 
-> kexec_update_segment allows a given segment in kexec_image to have
-> its contents updated. This is useful if the current kernel wants to
-> send information to the next kernel that is up-to-date at the time of
-> reboot.
+On 11/08/16 11:03, Pratyush Anand wrote:
+> On 10/08/2016:11:48:27 PM, Pratyush Anand wrote:
+>> On 10/08/2016:05:38:05 PM, James Morse wrote:
+>>> =========================%<=========================
+>>> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
+>>> index 2dc54d129be1..784d4c30b534 100644
+>>> --- a/arch/arm64/kernel/crash_dump.c
+>>> +++ b/arch/arm64/kernel/crash_dump.c
+>>> @@ -37,6 +37,11 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+>>>         if (!csize)
+>>>                 return 0;
+>>>
+>>> +       if (memblock_is_memory(pfn << PAGE_SHIFT) &&
+>>> +           !memblock_is_map_memory(pfn << PAGE_SHIFT))
+>>> +               /* skip this nomap memory region, reserved by firmware */
+>>> +               return 0;
 > 
-> ...
->
-> @@ -721,6 +721,105 @@ static struct page *kimage_alloc_page(struct kimage *image,
->  	return page;
->  }
->  
-> +/**
-> + * kexec_update_segment - update the contents of a kimage segment
-> + * @buffer:	New contents of the segment.
-> + * @bufsz:	@buffer size.
-> + * @load_addr:	Segment's physical address in the next kernel.
-> + * @memsz:	Segment size.
-> + *
-> + * This function assumes kexec_mutex is held.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int kexec_update_segment(const char *buffer, unsigned long bufsz,
-> +			 unsigned long load_addr, unsigned long memsz)
-> +{
-> +	int i;
-> +	unsigned long entry;
-> +	unsigned long *ptr = NULL;
-> +	void *dest = NULL;
-> +
-> +	if (kexec_image == NULL) {
-> +		pr_err("Can't update segment: no kexec image loaded.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * kexec_add_buffer rounds up segment sizes to PAGE_SIZE, so
-> +	 * we have to do it here as well.
-> +	 */
-> +	memsz = ALIGN(memsz, PAGE_SIZE);
-> +
-> +	for (i = 0; i < kexec_image->nr_segments; i++)
-> +		/* We only support updating whole segments. */
-> +		if (load_addr == kexec_image->segment[i].mem &&
-> +		    memsz == kexec_image->segment[i].memsz) {
-> +			if (kexec_image->segment[i].do_checksum) {
-> +				pr_err("Trying to update non-modifiable segment.\n");
-> +				return -EINVAL;
-> +			}
-> +
-> +			break;
-> +		}
-> +	if (i == kexec_image->nr_segments) {
-> +		pr_err("Couldn't find segment to update: 0x%lx, size 0x%lx\n",
-> +		       load_addr, memsz);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (entry = kexec_image->head; !(entry & IND_DONE) && memsz;
-> +	     entry = *ptr++) {
-> +		void *addr = (void *) (entry & PAGE_MASK);
-> +
-> +		switch (entry & IND_FLAGS) {
-> +		case IND_DESTINATION:
-> +			dest = addr;
-> +			break;
-> +		case IND_INDIRECTION:
-> +			ptr = __va(addr);
-> +			break;
-> +		case IND_SOURCE:
-> +			/* Shouldn't happen, but verify just to be safe. */
-> +			if (dest == NULL) {
-> +				pr_err("Invalid kexec entries list.");
-> +				return -EINVAL;
-> +			}
-> +
-> +			if (dest == (void *) load_addr) {
-> +				struct page *page;
-> +				char *ptr;
-> +				size_t uchunk, mchunk;
-> +
-> +				page = kmap_to_page(addr);
-> +
-> +				ptr = kmap(page);
+> This should return 0 or -EINVAL? because, its caller does not care properly
+> about 0 return value (when csize is non-zero). So either we need to return
+> -EINVAL or we need to fix it's caller so that pread() would know that required
+> number of data were not read.
 
-kmap_atomic() could be used here, and it is appreciably faster.
+I blindly followed 'number of bytes copied' -> 0. It worked for me, but may not
+be correct.
+
+remap_oldmem_pfn_checked() looks like it substitutes the zero page in this (or
+at least a similar) case, maybe we should do the same for nomap pages.
 
 
-> +				ptr += load_addr & ~PAGE_MASK;
-> +				mchunk = min_t(size_t, memsz,
-> +					       PAGE_SIZE - (load_addr & ~PAGE_MASK));
-> +				uchunk = min(bufsz, mchunk);
-> +				memcpy(ptr, buffer, uchunk);
-> +
-> +				kunmap(page);
-> +
-> +				bufsz -= uchunk;
-> +				load_addr += mchunk;
-> +				buffer += mchunk;
-> +				memsz -= mchunk;
-> +			}
-> +			dest += PAGE_SIZE;
-> +		}
-> +
-> +		/* Shouldn't happen, but verify just to be safe. */
-> +		if (ptr == NULL) {
-> +			pr_err("Invalid kexec entries list.");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
+> 
+>>> +
+>>>         vaddr = ioremap_cache(__pfn_to_phys(pfn), PAGE_SIZE);
+>>>         if (!vaddr)
+>>>                 return -ENOMEM;
+>>> =========================%<=========================
+>>
+>> In any case kernel must not panic, so I think we must have above hunk. However,
+>> we also need to look into kexec-tools that why it is asking kernel to copy those
+>> unneeded chunks.
+>>
+>> I will test tomorrow with above hunk.
+> 
+> After that hunk it did not crash but vmcore-dmesg fails with following message:
+> "No program header covering vaddr 0x401ff0found kexec bug?"
+> 
+> It happened because vmcore-dmesg is sending wrong offset to the pread(), and so
+> it did not crash after the above kernel hunk but it still read garbage wrong
+> log_buf virtual address pointer.
+> 
+> vmcore-dmesg is sending wrong offset because page_offset(vp_offset) calculation
+> is not perfect for my case, explained here [1].
+> 
+> So, if I correct page_offset(vp_offset) (as arm64_mem.page_offset = ehdr.e_entry
+> - "kernel Code Start PA" + phys_offset), then vmcore-dmesg and vmcore copy
+> worked fine, however if I use makedumpfile to copy(compressed) data from
+> /proc/vmcore then it still generates "synchronous external abort". I think, it
+
+At a guess makedumpfile is mmap()ing /proc/vmcore so it can use multiple
+threads to read (then compress) the data. This bypasses the check added to
+copy_oldmem_page(). We probably need to provide a remap_oldmem_pfn_range() that
+checks whether the range contains nomap pages.
+
+I will try and send a fixup patch to do this later this week, (unless someone
+beats me to it!)
+
+
+> generated because it would have found garbage data in EFI memory region.
+
+If it was marked as belonging to efi in the efi memory map, the kernel shouldn't
+be touching it. If you add 'efi=debug' to your kernel cmdline you get a table of
+the addresses and properties.
+
+
+Thanks,
+
+James
 
 
 _______________________________________________
