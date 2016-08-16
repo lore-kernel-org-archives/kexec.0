@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x242.google.com ([2607:f8b0:400e:c03::242])
+Received: from mail-pa0-x244.google.com ([2607:f8b0:400e:c03::244])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZXfk-0001NR-VR
- for kexec@lists.infradead.org; Tue, 16 Aug 2016 06:16:25 +0000
-Received: by mail-pa0-x242.google.com with SMTP id cf3so4740024pad.2
- for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 23:16:04 -0700 (PDT)
-Subject: Re: [PATCH v5 02/13] kexec_file: Change kexec_add_buffer to take
- kexec_buf as argument.
+ id 1bZYFY-0003ek-OB
+ for kexec@lists.infradead.org; Tue, 16 Aug 2016 06:53:25 +0000
+Received: by mail-pa0-x244.google.com with SMTP id cf3so4791625pad.2
+ for <kexec@lists.infradead.org>; Mon, 15 Aug 2016 23:53:04 -0700 (PDT)
+Subject: Re: [PATCH v5 04/13] powerpc: Factor out relocation code from
+ module_64.c to elf_util_64.c.
 References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1470956898-5991-3-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160815073049.GB21080@balbir.ozlabs.ibm.com> <1906561.y8blzB2uZ8@hactar>
+ <1470956898-5991-5-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160815074634.GC21080@balbir.ozlabs.ibm.com> <4126991.2tm6WB17SD@hactar>
 From: Balbir Singh <bsingharora@gmail.com>
-Message-ID: <fab1a3ec-5252-3ca7-6382-15b84a19ccdb@gmail.com>
-Date: Tue, 16 Aug 2016 16:15:55 +1000
+Message-ID: <3ca4a2de-0d44-dbc6-b57b-c149d10b048f@gmail.com>
+Date: Tue, 16 Aug 2016 16:52:54 +1000
 MIME-Version: 1.0
-In-Reply-To: <1906561.y8blzB2uZ8@hactar>
+In-Reply-To: <4126991.2tm6WB17SD@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,30 +28,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
 
 
-On 16/08/16 00:49, Thiago Jung Bauermann wrote:
-> Am Montag, 15 August 2016, 17:30:49 schrieb Balbir Singh:
->> On Thu, Aug 11, 2016 at 08:08:07PM -0300, Thiago Jung Bauermann wrote:
->>> Adapt all callers to the new function prototype.
+On 16/08/16 09:25, Thiago Jung Bauermann wrote:
+> Am Montag, 15 August 2016, 17:46:34 schrieb Balbir Singh:
+>> On Thu, Aug 11, 2016 at 08:08:09PM -0300, Thiago Jung Bauermann wrote:
+>>> +/**
+>>> + * elf64_apply_relocate_add - apply 64 bit RELA relocations
+>>> + * @elf_info:		Support information for the ELF binary being 
+> relocated.
+>>> + * @strtab:		String table for the associated symbol 
+> table.
+>>> + * @symindex:		Section header index for the associated 
+> symbol table.
+>>> + * @relsec:		Section header index for the relocations to 
+> apply.
+>>> + * @obj_name:		The name of the ELF binary, for information 
+> messages.
+>>> + */
+>>> +int elf64_apply_relocate_add(const struct elf_info *elf_info,
+>>> +			     const char *strtab, unsigned int symindex,
+>>> +			     unsigned int relsec, const char *obj_name)
+>>> +{
+>>> +	unsigned int i;
+>>> +	Elf64_Shdr *sechdrs = elf_info->sechdrs;
+>>> +	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
+>>> +	Elf64_Sym *sym;
+>>> +	unsigned long *location;
+>>> +	unsigned long value;
+>>> +
 >>
->> Could you please expand on this?
-> 
-> Is the following better?
-> 
-> Adapt all callers to set up a kexec_buf to pass to kexec_add_buffer.
-
-Yes and the reason for doing so? Consolidation/clarity of implementation?
-
-> 
->> Looks good otherwise
+>> For the relocatable kernel we expect only
 >>
->> Acked-by: Balbir Singh <bsingharora@gmail.com>
+>> R_PPC64_RELATIVE
+>> R_PPC64_NONE
+>> R_PPC64_ADDR64
+>>
+>> In the future we can use this to check/assert the usage of this
+>> for the core kernel (vmlinux) when loaded.
+>>
+>> Did we check elf64_apply_relocate_add with zImage and vmlinux?
 > 
-> Thank you for reviewing this series!
+> kexec_file_load doesn't call call elf64_apply_relocate_add on the kernel 
+> image, it only uses it to relocate the purgatory. So whether it is loading a 
+> zImage or a vmlinux file, the function will work in the same way since the 
+> purgatory binary is the same regardless of the kernel image format.
+
+Thanks for clarifying.
+
 > 
+> For the same reason, as it currently stands kexec_file_load can't check the 
+> relocation types used in the kernel image. But it is possible to add such a 
+> check/assertion in kexec_elf_64.c:build_elf_exec_info if we want.
+> 
+> I tested kexec_file_load on both relocatable and non-relocatable vmlinux and 
+> it works correctly.
+> 
+> I hadn't tested with zImage yet. I just did, and I had two problems:
+> 
+> 1. For some reason, it has an INTERP segment. This patch series doesn't 
+> support loading program interpreters for ELF binaries, so 
+> kexec_elf_64.c:build_elf_exec_info refuses to load them.
+> 
+> 2. If I disable the check for the INTERP segment, the zImage file loads 
+> correctly, but then I get an exception during reboot when loading the kexec 
+> image, right before jumping into the purgatory. I suspect this is because 
+> the LOAD segment has a virtual address of 0, and the first kernel is not 
+> coping well with that. But I still have to debug it further.
+> 
+> Is there a reason for the zImage ELF header to request an interpreter and to 
+> have a virtual address of 0?
+> 
+
+Not that I am aware of. 
+
+Balbir Singh
 
 _______________________________________________
 kexec mailing list
