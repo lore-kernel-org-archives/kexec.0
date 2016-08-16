@@ -1,15 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <57B2E759.201@arm.com>
-Date: Tue, 16 Aug 2016 11:13:45 +0100
-From: James Morse <james.morse@arm.com>
+Received: from mail7.hitachi.co.jp ([133.145.228.42])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bZbeY-0008AN-88
+ for kexec@lists.infradead.org; Tue, 16 Aug 2016 10:31:28 +0000
+From: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?=
+ <hidehiro.kawai.ez@hitachi.com>
+Subject: RE: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
+ friendly version in panic path
+Date: Tue, 16 Aug 2016 10:29:54 +0000
+Message-ID: <04EAB7311EE43145B2D3536183D1A84454CC234F@GSjpTKYDCembx31.service.hitachi.net>
+References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+ <20160812031755.GB2983@dhcp-128-65.nay.redhat.com>
+ <57ADD55D.1050003@mvista.com>
+ <04EAB7311EE43145B2D3536183D1A84454CBBB00@GSjpTKYDCembx31.service.hitachi.net>
+ <a618ef9b-25d5-da8b-6829-ce124b76033e@mvista.com>
+ <95d06858-6874-d795-dca5-ec33bf33d5da@mvista.com>
+In-Reply-To: <95d06858-6874-d795-dca5-ec33bf33d5da@mvista.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
- <57AB586D.3080900@arm.com> <20160810181827.GC24137@localhost.localdomain>
- <20160811100310.GA29357@localhost.localdomain>
-In-Reply-To: <20160811100310.GA29357@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,94 +27,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: 'Corey Minyard' <cminyard@mvista.com>, Dave Young <dyoung@redhat.com>
+Cc: Daniel Walker <dwalker@fifo99.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, Baoquan He <bhe@redhat.com>, David Daney <david.daney@cavium.com>, Xunlei Pang <xpang@redhat.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "Steven J. Hill" <steven.hill@cavium.com>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
 
-Hi Pratyush,
-
-On 11/08/16 11:03, Pratyush Anand wrote:
-> On 10/08/2016:11:48:27 PM, Pratyush Anand wrote:
->> On 10/08/2016:05:38:05 PM, James Morse wrote:
->>> =========================%<=========================
->>> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
->>> index 2dc54d129be1..784d4c30b534 100644
->>> --- a/arch/arm64/kernel/crash_dump.c
->>> +++ b/arch/arm64/kernel/crash_dump.c
->>> @@ -37,6 +37,11 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
->>>         if (!csize)
->>>                 return 0;
->>>
->>> +       if (memblock_is_memory(pfn << PAGE_SHIFT) &&
->>> +           !memblock_is_map_memory(pfn << PAGE_SHIFT))
->>> +               /* skip this nomap memory region, reserved by firmware */
->>> +               return 0;
-> 
-> This should return 0 or -EINVAL? because, its caller does not care properly
-> about 0 return value (when csize is non-zero). So either we need to return
-> -EINVAL or we need to fix it's caller so that pread() would know that required
-> number of data were not read.
-
-I blindly followed 'number of bytes copied' -> 0. It worked for me, but may not
-be correct.
-
-remap_oldmem_pfn_checked() looks like it substitutes the zero page in this (or
-at least a similar) case, maybe we should do the same for nomap pages.
-
-
-> 
->>> +
->>>         vaddr = ioremap_cache(__pfn_to_phys(pfn), PAGE_SIZE);
->>>         if (!vaddr)
->>>                 return -ENOMEM;
->>> =========================%<=========================
->>
->> In any case kernel must not panic, so I think we must have above hunk. However,
->> we also need to look into kexec-tools that why it is asking kernel to copy those
->> unneeded chunks.
->>
->> I will test tomorrow with above hunk.
-> 
-> After that hunk it did not crash but vmcore-dmesg fails with following message:
-> "No program header covering vaddr 0x401ff0found kexec bug?"
-> 
-> It happened because vmcore-dmesg is sending wrong offset to the pread(), and so
-> it did not crash after the above kernel hunk but it still read garbage wrong
-> log_buf virtual address pointer.
-> 
-> vmcore-dmesg is sending wrong offset because page_offset(vp_offset) calculation
-> is not perfect for my case, explained here [1].
-> 
-> So, if I correct page_offset(vp_offset) (as arm64_mem.page_offset = ehdr.e_entry
-> - "kernel Code Start PA" + phys_offset), then vmcore-dmesg and vmcore copy
-> worked fine, however if I use makedumpfile to copy(compressed) data from
-> /proc/vmcore then it still generates "synchronous external abort". I think, it
-
-At a guess makedumpfile is mmap()ing /proc/vmcore so it can use multiple
-threads to read (then compress) the data. This bypasses the check added to
-copy_oldmem_page(). We probably need to provide a remap_oldmem_pfn_range() that
-checks whether the range contains nomap pages.
-
-I will try and send a fixup patch to do this later this week, (unless someone
-beats me to it!)
-
-
-> generated because it would have found garbage data in EFI memory region.
-
-If it was marked as belonging to efi in the efi memory map, the kernel shouldn't
-be touching it. If you add 'efi=debug' to your kernel cmdline you get a table of
-the addresses and properties.
-
-
-Thanks,
-
-James
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+PiBGcm9tOiBDb3JleSBNaW55YXJkIFttYWlsdG86Y21pbnlhcmRAbXZpc3RhLmNvbV0NCj4gU2Vu
+dDogVHVlc2RheSwgQXVndXN0IDE2LCAyMDE2IDM6MDIgQU0NCj4gT24gMDgvMTUvMjAxNiAxMjow
+NiBQTSwgQ29yZXkgTWlueWFyZCB3cm90ZToNCj4gPiBPbiAwOC8xNS8yMDE2IDA2OjM1IEFNLCDm
+srPlkIjoi7Hlro8gLyBLQVdBSe+8jEhJREVISVJPIHdyb3RlOg0KPiA+PiBIaSBDb3JleSwNCj4g
+Pj4NCj4gPj4+IEZyb206IENvcmV5IE1pbnlhcmQgW21haWx0bzpjbWlueWFyZEBtdmlzdGEuY29t
+XQ0KPiA+Pj4gU2VudDogRnJpZGF5LCBBdWd1c3QgMTIsIDIwMTYgMTA6NTYgUE0NCj4gPj4+IEkn
+bGwgdHJ5IHRvIHRlc3QgdGhpcywgYnV0IEkgaGF2ZSBvbmUgY29tbWVudCBpbmxpbmUuLi4NCj4g
+Pj4gVGhhbmsgeW91IHZlcnkgbXVjaCENCj4gPj4NCj4gPj4+IE9uIDA4LzExLzIwMTYgMTA6MTcg
+UE0sIERhdmUgWW91bmcgd3JvdGU6DQo+ID4+Pj4gT24gMDgvMTAvMTYgYXQgMDU6MDlwbSwgSGlk
+ZWhpcm8gS2F3YWkgd3JvdGU6DQo+ID4+IFtzbmlwXQ0KPiA+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJj
+aC9taXBzL2tlcm5lbC9jcmFzaC5jIGIvYXJjaC9taXBzL2tlcm5lbC9jcmFzaC5jDQo+ID4+Pj4+
+IGluZGV4IDYxMGYwZjMuLjE3MjNiMTcgMTAwNjQ0DQo+ID4+Pj4+IC0tLSBhL2FyY2gvbWlwcy9r
+ZXJuZWwvY3Jhc2guYw0KPiA+Pj4+PiArKysgYi9hcmNoL21pcHMva2VybmVsL2NyYXNoLmMNCj4g
+Pj4+Pj4gQEAgLTQ3LDkgKzQ3LDE0IEBAIHN0YXRpYyB2b2lkIGNyYXNoX3NodXRkb3duX3NlY29u
+ZGFyeSh2b2lkDQo+ID4+Pj4+ICpwYXNzZWRfcmVncykNCj4gPj4+Pj4NCj4gPj4+Pj4gICAgc3Rh
+dGljIHZvaWQgY3Jhc2hfa2V4ZWNfcHJlcGFyZV9jcHVzKHZvaWQpDQo+ID4+Pj4+ICAgIHsNCj4g
+Pj4+Pj4gKyAgICBzdGF0aWMgaW50IGNwdXNfc3RvcHBlZDsNCj4gPj4+Pj4gICAgICAgIHVuc2ln
+bmVkIGludCBtc2VjczsNCj4gPj4+Pj4gKyAgICB1bnNpZ25lZCBpbnQgbmNwdXM7DQo+ID4+Pj4+
+DQo+ID4+Pj4+IC0gICAgdW5zaWduZWQgaW50IG5jcHVzID0gbnVtX29ubGluZV9jcHVzKCkgLSAx
+Oy8qIEV4Y2x1ZGluZyB0aGUNCj4gPj4+Pj4gcGFuaWMgY3B1ICovDQo+ID4+Pj4+ICsgICAgaWYg
+KGNwdXNfc3RvcHBlZCkNCj4gPj4+Pj4gKyAgICAgICAgcmV0dXJuOw0KPiA+Pj4gV291bGRuJ3Qg
+eW91IHdhbnQgYW4gYXRvbWljIG9wZXJhdGlvbiBhbmQgc29tZSBzcGVjaWFsIGhhbmRsaW5nIGhl
+cmUgdG8NCj4gPj4+IGVuc3VyZSB0aGF0IG9ubHkgb25lIENQVSBkb2VzIHRoaXM/ICBTbyBpZiBh
+IENQVSBjb21lcyBpbiBoZXJlIGFuZA0KPiA+Pj4gYW5vdGhlciBDUFUgaXMgYWxyZWFkeSBpbiB0
+aGUgcHJvY2VzcyBzdG9wcGluZyB0aGUgQ1BVcyBpdCB3b24ndA0KPiA+Pj4gcmVzdWx0IGluIGEN
+Cj4gPj4+IGRlYWRsb2NrLg0KPiA+PiBCZWNhdXNlIHRoaXMgZnVuY3Rpb24gY2FuIGJlIGNhbGxl
+ZCBvbmx5IG9uZSBwYW5pY2tpbmcgQ1BVLA0KPiA+PiB0aGVyZSBpcyBubyBwcm9ibGVtLg0KPiA+
+Pg0KPiA+PiBUaGVyZSBhcmUgdHdvIHBhdGhzIHdoaWNoIGNyYXNoX2tleGVjX3ByZXBhcmVfY3B1
+cyBpcyBjYWxsZWQuDQo+ID4+DQo+ID4+IFBhdGggMSAocGFuaWMgcGF0aCk6DQo+ID4+IHBhbmlj
+KCkNCj4gPj4gICAgY3Jhc2hfc21wX3NlbmRfc3RvcCgpDQo+ID4+ICAgICAgY3Jhc2hfa2V4ZWNf
+cHJlcGFyZV9jcHVzKCkNCj4gPj4NCj4gPj4gUGF0aCAyIChvb3BzIHBhdGgpOg0KPiA+PiBjcmFz
+aF9rZXhlYygpDQo+ID4+ICAgIF9fY3Jhc2hfa2V4ZWMoKQ0KPiA+PiAgICAgIG1hY2hpbmVfY3Jh
+c2hfc2h1dGRvd24oKQ0KPiA+PiAgICAgICAgZGVmYXVsdF9tYWNoaW5lX2NyYXNoX3NodXRkb3du
+KCkgLy8gZm9yIE1JUFMNCj4gPj4gICAgICAgICAgY3Jhc2hfa2V4ZWNfcHJlcGFyZV9jcHVzKCkN
+Cj4gPj4NCj4gPj4gSGVyZSwgcGFuaWMoKSBhbmQgY3Jhc2hfa2V4ZWMoKSBydW4gZXhjbHVzaXZl
+bHkgdmlhDQo+ID4+IHBhbmljX2NwdSBhdG9taWMgdmFyaWFibGUuICBTbyB3ZSBjYW4gdXNlIGNw
+dXNfc3RvcHBlZCBhcw0KPiA+PiBub3JtYWwgdmFyaWFibGUuDQo+ID4NCj4gPiBPaywgaWYgdGhl
+IGNvZGUgY2FuIG9ubHkgYmUgZW50ZXJlZCBvbmNlLCB3aGF0J3MgdGhlIHB1cnBvc2Ugb2YNCj4g
+PiBjcHVzX3N0b3BwZWQ/DQo+ID4gSSBndWVzcyB0aGF0J3Mgd2hhdCBjb25mdXNlZCBtZS4gIFlv
+dSBhcmUgcmlnaHQsIHRoZSBwYW5pY19jcHUgYXRvbWljDQo+ID4gc2hvdWxkDQo+ID4ga2VlcCB0
+aGlzIG9uIGEgc2luZ2xlIENQVS4NCj4gDQo+IE5ldmVyIG1pbmQsIEkgc2VlIHRoZSBwYXRoIHRo
+cm91Z2ggcGFuaWMoKSB3aGVyZSB0aGF0IGlzIHJlcXVpcmVkLiBNeQ0KPiBxdWVzdGlvbg0KPiBi
+ZWxvdyBzdGlsbCByZW1haW5zLCB0aG91Z2guDQo+IA0KPiA+IEFsc28sIHBhbmljKCkgd2lsbCBj
+YWxsIHBhbmljX3NtcF9zZWxmX3N0b3AoKSBpZiBpdCBmaW5kcyBhbm90aGVyIENQVQ0KPiA+IGhh
+cyBhbHJlYWR5DQo+ID4gY2FsbGVkIHBhbmljLCB3aGljaCB3aWxsIGp1c3Qgc3BpbiB3aXRoIGlu
+dGVycnVwdHMgb2ZmIGJ5IGRlZmF1bHQuIEkNCj4gPiBkaWRuJ3Qgc2VlIGENCj4gPiBkZWZpbml0
+aW9uIGZvciBpdCBpbiBNSVBTLCB3b3VsZG4ndCBpdCBuZWVkIHRvIGJlIG92ZXJyaWRkZW4gdG8g
+YXZvaWQNCj4gPiBhIGRlYWRsb2NrPw0KDQpObyBkZWFkbG9jayBzaG91bGQgaGFwcGVuLiBQYW5p
+Y2tpbmcgQ1BVIGNhbGxzIGNyYXNoX2tleGVjX3ByZXBhcmVfY3B1cygpLA0KYW5kIGl0IGlzc3Vl
+cyBhbiBJUEkgYW5kIHdhaXQgZm9yIG90aGVyIENQVXMgaGFuZGxlIGl0LiAgSWYgc29tZSBvZiB0
+aGVtDQphcmUgbG9vcGluZyBpbiBwYW5pY19zbXBfc2VsZl9zdG9wKCkgd2l0aCBpbnRlcnJ1cHQg
+ZGlzYWJsZWQsIHRoZXkgY2FuJ3QNCmhhbmRsZSB0aGUgSVBJLiAgQnV0IGl0J3Mgbm90IGEgc2V2
+ZXJlIHByb2JsZW0uICBjcmFzaF9rZXhlY19wcmVwYXJlX2NwdXMoKQ0KaGFzIGEgdGltZW91dCBt
+ZWNoYW5pc20sIGFuZCBpdCB3aWxsIGdvIG91dCBmcm9tIHRoZSB3YWl0IGxvb3Agd2hlbiBpdA0K
+aGFwcGVucy4NCg0KSW4gdGhhdCBjYXNlLCBvZiBjb3Vyc2UsIHRoZWlyIHJlZ2lzdGVycyBhcmUg
+bm90IHNhdmVkLiAgVGhpcyBjb3VsZCBiZQ0KaW1wcm92ZWQsIGJ1dCBJJ2QgbGlrZSB0byBlbnRy
+dXN0IE1JUFMgZXhwZXJ0cyB3aXRoIHRoZSBpbXByb3ZlbWVudC4NClRoaXMgaXMgYW5vdGhlciBp
+c3N1ZS4NCg0KQmVzdCByZWdhcmRzLA0KDQpIaWRlaGlybyBLYXdhaQ0KDQpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
