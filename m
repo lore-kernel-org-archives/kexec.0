@@ -1,16 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZw5w-0006QS-MB
- for kexec@lists.infradead.org; Wed, 17 Aug 2016 08:21:05 +0000
-Date: Wed, 17 Aug 2016 16:20:34 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 1/2] kexec: Introduce "/sys/kernel/kexec_crash_low_size"
-Message-ID: <20160817082034.GA11837@dhcp-128-65.nay.redhat.com>
-References: <1471398657-20237-1-git-send-email-xlpang@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1471398657-20237-1-git-send-email-xlpang@redhat.com>
+From: James Morse <james.morse@arm.com>
+Subject: [PATCH] fixup! arm64: kdump: add kdump support
+Date: Wed, 17 Aug 2016 16:33:31 +0100
+Message-Id: <1471448011-20386-1-git-send-email-james.morse@arm.com>
+In-Reply-To: <57B2E759.201@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,174 +12,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 08/17/16 at 09:50am, Xunlei Pang wrote:
-> "/sys/kernel/kexec_crash_size" only handles crashk_res, it
-> is fine in most cases, but sometimes we have crashk_low_res.
-> For example, when "crashkernel=size[KMG],high" combined with
-> "crashkernel=size[KMG],low" is used for 64-bit x86.
-> 
-> Like crashk_res, we introduce the corresponding sysfs file
-> "/sys/kernel/kexec_crash_low_size" for crashk_low_res.
-> 
-> So, the exact total reserved memory is the sum of the two.
-> 
-> crashk_low_res can also be shrunk via this new interface,
-> and users should be aware of what they are doing.
+copy_oldmem_page() and mmap_vmcore() provide two ways for userspace to read
+from /proc/vmcore. Neither of these check with memblock to see if the page
+they are accessing is nomap. On Seattle this causes:
 
-Cc Yinghai Lu for review since he introduced the ,high and ,low logic.
+[  174.393875] Unhandled fault: synchronous external abort (0x96000210) at
+0xffffff80096b6000
+[  174.402158] Internal error: : 96000210 [#1] PREEMPT SMP
+[  174.407370] Modules linked in:
+[  174.410417] CPU: 6 PID: 2059 Comm: cp Tainted: G S      W I     4.8.0-rc1+ #4708
+[  174.417799] Hardware name: AMD Overdrive/Supercharger/Default string, BIOS
+ROD1002C 04/08/2016
+[  174.426396] task: ffffffc0fdec5780 task.stack: ffffffc0f34bc000
+[  174.432313] PC is at __arch_copy_to_user+0x180/0x280
+[  174.437274] LR is at copy_oldmem_page+0xac/0xf0
+[  174.441791] pc : [<ffffff800835e080>] lr : [<ffffff8008095b9c>] pstate: 20000145
+[  174.449173] sp : ffffffc0f34bfc90
+[  174.452474] x29: ffffffc0f34bfc90 x28: 0000000000000000
+[  174.457776] x27: 0000000008000000 x26: 000000000000d000
+[  174.463077] x25: 0000000000000001 x24: ffffff8008eb5000
+[  174.468378] x23: 0000000000000000 x22: ffffff80096b6000
+[  174.473679] x21: 0000000000000001 x20: 0000000030127000
+[  174.478979] x19: 0000000000001000 x18: 0000007ff7085d60
+[  174.484279] x17: 0000000000429358 x16: ffffff80081d9e88
+[  174.489579] x15: 0000007fae377590 x14: 0000000000000000
 
-> 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-> ---
->  include/linux/kexec.h |  4 ++--
->  kernel/kexec_core.c   | 23 ++++++++++++-----------
->  kernel/ksysfs.c       | 25 +++++++++++++++++++++++--
->  3 files changed, 37 insertions(+), 15 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index d743777..4f271fc 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -304,8 +304,8 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base);
->  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base);
-> -int crash_shrink_memory(unsigned long new_size);
-> -size_t crash_get_memory_size(void);
-> +int crash_shrink_memory(struct resource *res, unsigned long new_size);
-> +size_t crash_get_memory_size(struct resource *res);
->  void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
->  
->  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 5616755..707d18e 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -925,13 +925,13 @@ void crash_kexec(struct pt_regs *regs)
->  	}
->  }
->  
-> -size_t crash_get_memory_size(void)
-> +size_t crash_get_memory_size(struct resource *res)
->  {
->  	size_t size = 0;
->  
->  	mutex_lock(&kexec_mutex);
-> -	if (crashk_res.end != crashk_res.start)
-> -		size = resource_size(&crashk_res);
-> +	if (res->end != res->start)
-> +		size = resource_size(res);
->  	mutex_unlock(&kexec_mutex);
->  	return size;
->  }
-> @@ -945,7 +945,7 @@ void __weak crash_free_reserved_phys_range(unsigned long begin,
->  		free_reserved_page(boot_pfn_to_page(addr >> PAGE_SHIFT));
->  }
->  
-> -int crash_shrink_memory(unsigned long new_size)
-> +int crash_shrink_memory(struct resource *res, unsigned long new_size)
->  {
->  	int ret = 0;
->  	unsigned long start, end;
-> @@ -958,8 +958,9 @@ int crash_shrink_memory(unsigned long new_size)
->  		ret = -ENOENT;
->  		goto unlock;
->  	}
-> -	start = crashk_res.start;
-> -	end = crashk_res.end;
-> +
-> +	start = res->start;
-> +	end = res->end;
->  	old_size = (end == 0) ? 0 : end - start + 1;
->  	if (new_size >= old_size) {
->  		ret = (new_size == old_size) ? 0 : -EINVAL;
-> @@ -975,17 +976,17 @@ int crash_shrink_memory(unsigned long new_size)
->  	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
->  	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
->  
-> -	crash_free_reserved_phys_range(end, crashk_res.end);
-> +	crash_free_reserved_phys_range(end, res->end);
->  
-> -	if ((start == end) && (crashk_res.parent != NULL))
-> -		release_resource(&crashk_res);
-> +	if ((start == end) && (res->parent != NULL))
-> +		release_resource(res);
->  
->  	ram_res->start = end;
-> -	ram_res->end = crashk_res.end;
-> +	ram_res->end = res->end;
->  	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM;
->  	ram_res->name = "System RAM";
->  
-> -	crashk_res.end = end - 1;
-> +	res->end = end - 1;
->  
->  	insert_resource(&iomem_resource, ram_res);
->  
-> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-> index ee1bc1b..3336fd5 100644
-> --- a/kernel/ksysfs.c
-> +++ b/kernel/ksysfs.c
-> @@ -105,10 +105,30 @@ static ssize_t kexec_crash_loaded_show(struct kobject *kobj,
->  }
->  KERNEL_ATTR_RO(kexec_crash_loaded);
->  
-> +static ssize_t kexec_crash_low_size_show(struct kobject *kobj,
-> +				       struct kobj_attribute *attr, char *buf)
-> +{
-> +	return sprintf(buf, "%zu\n", crash_get_memory_size(&crashk_low_res));
-> +}
-> +static ssize_t kexec_crash_low_size_store(struct kobject *kobj,
-> +				   struct kobj_attribute *attr,
-> +				   const char *buf, size_t count)
-> +{
-> +	unsigned long cnt;
-> +	int ret;
-> +
-> +	if (kstrtoul(buf, 0, &cnt))
-> +		return -EINVAL;
-> +
-> +	ret = crash_shrink_memory(&crashk_low_res, cnt);
-> +	return ret < 0 ? ret : count;
-> +}
-> +KERNEL_ATTR_RW(kexec_crash_low_size);
-> +
->  static ssize_t kexec_crash_size_show(struct kobject *kobj,
->  				       struct kobj_attribute *attr, char *buf)
->  {
-> -	return sprintf(buf, "%zu\n", crash_get_memory_size());
-> +	return sprintf(buf, "%zu\n", crash_get_memory_size(&crashk_res));
->  }
->  static ssize_t kexec_crash_size_store(struct kobject *kobj,
->  				   struct kobj_attribute *attr,
-> @@ -120,7 +140,7 @@ static ssize_t kexec_crash_size_store(struct kobject *kobj,
->  	if (kstrtoul(buf, 0, &cnt))
->  		return -EINVAL;
->  
-> -	ret = crash_shrink_memory(cnt);
-> +	ret = crash_shrink_memory(&crashk_res, cnt);
->  	return ret < 0 ? ret : count;
->  }
->  KERNEL_ATTR_RW(kexec_crash_size);
-> @@ -218,6 +238,7 @@ static struct attribute * kernel_attrs[] = {
->  #ifdef CONFIG_KEXEC_CORE
->  	&kexec_loaded_attr.attr,
->  	&kexec_crash_loaded_attr.attr,
-> +	&kexec_crash_low_size_attr.attr,
->  	&kexec_crash_size_attr.attr,
->  	&vmcoreinfo_attr.attr,
->  #endif
-> -- 
-> 1.8.3.1
-> 
+[  174.494880] x13: 0000000000000000 x12: ffffff8008dd1000
+[  174.500180] x11: ffffff80096b6fff x10: ffffff80096b6fff
+[  174.505480] x9 : 0000000040000000 x8 : ffffff8008db6000
+[  174.510781] x7 : ffffff80096b7000 x6 : 0000000030127000
+[  174.516082] x5 : 0000000030128000 x4 : 0000000000000000
+[  174.521382] x3 : 00e8000000000713 x2 : 0000000000000f80
+[  174.526682] x1 : ffffff80096b6000 x0 : 0000000030127000
+[  174.531982]
+[  174.533461] Process cp (pid: 2059, stack limit = 0xffffffc0f34bc020)
+
+[  174.848448] [<ffffff800835e080>] __arch_copy_to_user+0x180/0x280
+[  174.854448] [<ffffff8008245f34>] read_from_oldmem.part.4+0xb4/0xf4
+[  174.860615] [<ffffff8008246074>] read_vmcore+0x100/0x22c
+[  174.865919] [<ffffff8008239378>] proc_reg_read+0x64/0x90
+[  174.871223] [<ffffff80081d7da8>] __vfs_read+0x28/0x108
+[  174.876348] [<ffffff80081d8ae4>] vfs_read+0x84/0x144
+[  174.881301] [<ffffff80081d9ecc>] SyS_read+0x44/0xa0
+[  174.886167] [<ffffff8008082ef0>] el0_svc_naked+0x24/0x28
+[  174.891466] Code: 00000000 00000000 00000000 00000000 (a8c12027)
+[  174.897562] ---[ end trace 00801b2e35b0cd1f ]---
+
+When reading /proc/vmcore with cat/cp or or mmap()ing it with makedumpfile.
+
+The fs/proc/vmcore.c code provides a hook to indicate whether oldmem pages
+are ram or not. Use this to look for our earlier handiwork in memblock.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+---
+
+Hi Pratyush,
+
+I couldn't get makedumpfile to build, or rather it depends on elfutils which
+wouldn't build for autotools reasons. Does implementing this hook solve your
+makedumpfile issue?
+
+With this patch I can extract a usable vmcore file using read or mmap,
+avoiding the earlier splat.
+
+Akashi, if you agree this is the right thing to do, please consider folding
+this into patch 5. (no need to keep the commit mesage or anything).
+
+Thanks,
+
+James
+
+ arch/arm64/kernel/crash_dump.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
+index 2dc54d129be1..76c71ab42994 100644
+--- a/arch/arm64/kernel/crash_dump.c
++++ b/arch/arm64/kernel/crash_dump.c
+@@ -12,10 +12,38 @@
+ #include <linux/crash_dump.h>
+ #include <linux/errno.h>
+ #include <linux/io.h>
++#include <linux/init.h>
+ #include <linux/memblock.h>
+ #include <linux/uaccess.h>
+ #include <asm/memory.h>
+ 
++#ifdef CONFIG_PROC_VMCORE
++static int oldmem_pfn_is_ram(unsigned long pfn)
++{
++	unsigned long addr = pfn << PAGE_SHIFT;
++
++	/*
++	 * We removed oldmem from memblock.memory, then re-added some regions
++	 * which are reserved by/for firmware as memory and nomap.
++	 * If an address exists as memory, but is marked nomap, return false.
++	 */
++	if (memblock_is_memory(addr) && !memblock_is_map_memory(addr))
++		return 0;
++
++	return 1;
++}
++
++static int __init do_register_oldmem_pfn_is_ram(void)
++{
++	return register_oldmem_pfn_is_ram(&oldmem_pfn_is_ram);
++}
++/*
++ * vmcore_init() is called via fs_initcall, ensure we register
++ * oldmem_pfn_is_ram() before then.
++ */
++arch_initcall(do_register_oldmem_pfn_is_ram);
++#endif
++
+ /**
+  * copy_oldmem_page() - copy one page from old kernel memory
+  * @pfn: page frame number to be copied
+-- 
+2.8.0.rc3
+
 
 _______________________________________________
 kexec mailing list
