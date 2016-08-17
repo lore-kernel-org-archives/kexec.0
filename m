@@ -1,9 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: James Morse <james.morse@arm.com>
-Subject: [PATCH] fixup! arm64: kdump: add kdump support
-Date: Wed, 17 Aug 2016 16:33:31 +0100
-Message-Id: <1471448011-20386-1-git-send-email-james.morse@arm.com>
-In-Reply-To: <57B2E759.201@arm.com>
+Received: from mail-pa0-x235.google.com ([2607:f8b0:400e:c03::235])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1ba419-000738-PN
+ for kexec@lists.infradead.org; Wed, 17 Aug 2016 16:48:40 +0000
+Received: by mail-pa0-x235.google.com with SMTP id fi15so37862176pac.1
+ for <kexec@lists.infradead.org>; Wed, 17 Aug 2016 09:48:18 -0700 (PDT)
+From: Thomas Garnier <thgarnie@google.com>
+Subject: [PATCH v1] kexec/arch/i386: Add support for KASLR memory randomization
+Date: Wed, 17 Aug 2016 09:47:42 -0700
+Message-Id: <1471452462-42560-1-git-send-email-thgarnie@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,127 +22,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Thomas Garnier <thgarnie@google.com>, horms@verge.net.au, keescook@chromium.org, kernel-hardening@lists.openwall.com
 
-copy_oldmem_page() and mmap_vmcore() provide two ways for userspace to read
-from /proc/vmcore. Neither of these check with memblock to see if the page
-they are accessing is nomap. On Seattle this causes:
+Multiple changes were made on KASLR (right now in linux-next). One of
+them is randomizing the virtual address of the physical mapping, vmalloc
+and vmemmap memory sections. It breaks kdump ability to read physical
+memory.
 
-[  174.393875] Unhandled fault: synchronous external abort (0x96000210) at
-0xffffff80096b6000
-[  174.402158] Internal error: : 96000210 [#1] PREEMPT SMP
-[  174.407370] Modules linked in:
-[  174.410417] CPU: 6 PID: 2059 Comm: cp Tainted: G S      W I     4.8.0-rc1+ #4708
-[  174.417799] Hardware name: AMD Overdrive/Supercharger/Default string, BIOS
-ROD1002C 04/08/2016
-[  174.426396] task: ffffffc0fdec5780 task.stack: ffffffc0f34bc000
-[  174.432313] PC is at __arch_copy_to_user+0x180/0x280
-[  174.437274] LR is at copy_oldmem_page+0xac/0xf0
-[  174.441791] pc : [<ffffff800835e080>] lr : [<ffffff8008095b9c>] pstate: 20000145
-[  174.449173] sp : ffffffc0f34bfc90
-[  174.452474] x29: ffffffc0f34bfc90 x28: 0000000000000000
-[  174.457776] x27: 0000000008000000 x26: 000000000000d000
-[  174.463077] x25: 0000000000000001 x24: ffffff8008eb5000
-[  174.468378] x23: 0000000000000000 x22: ffffff80096b6000
-[  174.473679] x21: 0000000000000001 x20: 0000000030127000
-[  174.478979] x19: 0000000000001000 x18: 0000007ff7085d60
-[  174.484279] x17: 0000000000429358 x16: ffffff80081d9e88
-[  174.489579] x15: 0000007fae377590 x14: 0000000000000000
+This change identifies if KASLR memories randomization is used by
+checking if the page_offset_base variable exists. It search for the
+correct PAGE_OFFSET value by looking at the loaded memory section and
+find the lowest aligned on PUD (the randomization level).
 
-[  174.494880] x13: 0000000000000000 x12: ffffff8008dd1000
-[  174.500180] x11: ffffff80096b6fff x10: ffffff80096b6fff
-[  174.505480] x9 : 0000000040000000 x8 : ffffff8008db6000
-[  174.510781] x7 : ffffff80096b7000 x6 : 0000000030127000
-[  174.516082] x5 : 0000000030128000 x4 : 0000000000000000
-[  174.521382] x3 : 00e8000000000713 x2 : 0000000000000f80
-[  174.526682] x1 : ffffff80096b6000 x0 : 0000000030127000
-[  174.531982]
-[  174.533461] Process cp (pid: 2059, stack limit = 0xffffffc0f34bc020)
+Related commits on linux-next:
+ - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
+ - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
 
-[  174.848448] [<ffffff800835e080>] __arch_copy_to_user+0x180/0x280
-[  174.854448] [<ffffff8008245f34>] read_from_oldmem.part.4+0xb4/0xf4
-[  174.860615] [<ffffff8008246074>] read_vmcore+0x100/0x22c
-[  174.865919] [<ffffff8008239378>] proc_reg_read+0x64/0x90
-[  174.871223] [<ffffff80081d7da8>] __vfs_read+0x28/0x108
-[  174.876348] [<ffffff80081d8ae4>] vfs_read+0x84/0x144
-[  174.881301] [<ffffff80081d9ecc>] SyS_read+0x44/0xa0
-[  174.886167] [<ffffff8008082ef0>] el0_svc_naked+0x24/0x28
-[  174.891466] Code: 00000000 00000000 00000000 00000000 (a8c12027)
-[  174.897562] ---[ end trace 00801b2e35b0cd1f ]---
-
-When reading /proc/vmcore with cat/cp or or mmap()ing it with makedumpfile.
-
-The fs/proc/vmcore.c code provides a hook to indicate whether oldmem pages
-are ram or not. Use this to look for our earlier handiwork in memblock.
-
-Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Thomas Garnier <thgarnie@google.com>
 ---
+ kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-Hi Pratyush,
-
-I couldn't get makedumpfile to build, or rather it depends on elfutils which
-wouldn't build for autotools reasons. Does implementing this hook solve your
-makedumpfile issue?
-
-With this patch I can extract a usable vmcore file using read or mmap,
-avoiding the earlier splat.
-
-Akashi, if you agree this is the right thing to do, please consider folding
-this into patch 5. (no need to keep the commit mesage or anything).
-
-Thanks,
-
-James
-
- arch/arm64/kernel/crash_dump.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-index 2dc54d129be1..76c71ab42994 100644
---- a/arch/arm64/kernel/crash_dump.c
-+++ b/arch/arm64/kernel/crash_dump.c
-@@ -12,10 +12,38 @@
- #include <linux/crash_dump.h>
- #include <linux/errno.h>
- #include <linux/io.h>
-+#include <linux/init.h>
- #include <linux/memblock.h>
- #include <linux/uaccess.h>
- #include <asm/memory.h>
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index bbc0f35..ab833d4 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
+ 	return -1;
+ }
  
-+#ifdef CONFIG_PROC_VMCORE
-+static int oldmem_pfn_is_ram(unsigned long pfn)
-+{
-+	unsigned long addr = pfn << PAGE_SHIFT;
+-/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+-static unsigned long long get_kernel_stext_sym(void)
++/* Retrieve kernel symbol virtual address from /proc/kallsyms */
++static unsigned long long get_kernel_sym(const char *symbol)
+ {
+ 	const char *kallsyms = "/proc/kallsyms";
+-	const char *stext = "_stext";
+ 	char sym[128];
+ 	char line[128];
+ 	FILE *fp;
+@@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
+ 	while(fgets(line, sizeof(line), fp) != NULL) {
+ 		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
+ 			continue;
+-		if (strcmp(sym, stext) == 0) {
+-			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
++		if (strcmp(sym, symbol) == 0) {
++			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
+ 			return vaddr;
+ 		}
+ 	}
+ 
+-	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
++	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
+ 	return 0;
+ }
+ 
+@@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 	off_t size;
+ 	uint32_t elf_flags = 0;
+ 	uint64_t stext_sym;
++	const unsigned long long pud_mask = ~((1 << 30) - 1);
++	unsigned long long vaddr, lowest_vaddr = 0;
+ 
+ 	if (elf_info->machine != EM_X86_64)
+ 		return 0;
+@@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 
+ 	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+ 
++	/* Search for the real PAGE_OFFSET when KASLR memory randomization
++	 * is enabled */
++	if (get_kernel_sym("page_offset_base") != 0) {
++		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
++			if (phdr->p_type == PT_LOAD) {
++				vaddr = phdr->p_vaddr & pud_mask;
++				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
++					lowest_vaddr = vaddr;
++			}
++		}
++		if (lowest_vaddr != 0)
++			elf_info->page_offset = lowest_vaddr;
++	}
 +
-+	/*
-+	 * We removed oldmem from memblock.memory, then re-added some regions
-+	 * which are reserved by/for firmware as memory and nomap.
-+	 * If an address exists as memory, but is marked nomap, return false.
-+	 */
-+	if (memblock_is_memory(addr) && !memblock_is_map_memory(addr))
-+		return 0;
-+
-+	return 1;
-+}
-+
-+static int __init do_register_oldmem_pfn_is_ram(void)
-+{
-+	return register_oldmem_pfn_is_ram(&oldmem_pfn_is_ram);
-+}
-+/*
-+ * vmcore_init() is called via fs_initcall, ensure we register
-+ * oldmem_pfn_is_ram() before then.
-+ */
-+arch_initcall(do_register_oldmem_pfn_is_ram);
-+#endif
-+
- /**
-  * copy_oldmem_page() - copy one page from old kernel memory
-  * @pfn: page frame number to be copied
+ 	/* Traverse through the Elf headers and find the region where
+ 	 * _stext symbol is located in. That's where kernel is mapped */
+-	stext_sym = get_kernel_stext_sym();
++	stext_sym = get_kernel_sym("_stext");
+ 	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
+ 		if (phdr->p_type == PT_LOAD) {
+ 			unsigned long long saddr = phdr->p_vaddr;
 -- 
-2.8.0.rc3
+2.8.0.rc3.226.g39d4020
 
 
 _______________________________________________
