@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZvDU-000383-Kk
- for kexec@lists.infradead.org; Wed, 17 Aug 2016 07:25:07 +0000
-Date: Wed, 17 Aug 2016 15:24:20 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 2/2] kexec: Consider crashk_low_res in
- sanity_check_segment_list()
-Message-ID: <20160817072420.GD5498@dhcp-128-65.nay.redhat.com>
-References: <1471398657-20237-1-git-send-email-xlpang@redhat.com>
- <1471398657-20237-2-git-send-email-xlpang@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1471398657-20237-2-git-send-email-xlpang@redhat.com>
+ id 1bZvQJ-0001LJ-El
+ for kexec@lists.infradead.org; Wed, 17 Aug 2016 07:38:06 +0000
+Message-ID: <1471419459.3229.1.camel@suse.de>
+Subject: Re: [PATCH 3/3] close_dump_bitmap: simplify logic
+From: Martin Wilck <mwilck@suse.de>
+Date: Wed, 17 Aug 2016 09:37:39 +0200
+In-Reply-To: <20160816075911.09a0659d@hananiah.suse.cz>
+References: <20160810125658.23366-1-mwilck@suse.de>
+ <20160810125658.23366-4-mwilck@suse.de>
+ <20160810150846.6a257447@hananiah.suse.cz>
+ <1470836145.3194.31.camel@suse.de>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E5CE94@BPXM01GP.gisp.nec.co.jp>
+ <20160816075911.09a0659d@hananiah.suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,71 +23,20 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Petr Tesarik <ptesarik@suse.cz>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi, Xunlei,
-
-On 08/17/16 at 09:50am, Xunlei Pang wrote:
-> We have crashk_res only in most cases, but sometimes we have
-> crashk_low_res.
-> 
-> For example, on 64-bit x86 systems, when "crashkernel=32M,high"
-> combined with "crashkernel=128M,low" is used, so some segments
-> may have the chance to be loaded into crashk_low_res area. We
-> can't fail it as a memory violation in these cases.
-> 
-> Thus, we add the case to regard the segment as valid if it is
-> within crashk_low_res.
-
-crashkernel low is meant for swiotlb, it can be reserved automaticlly
-in case there's only crashkernel high specified in cmdline, I'm not
-sure it is useful to use crashk_res_low for other purpose and
-likely kdump can fail in the case. 
-
-I'm not sure it is really necessary to add this check now, we may
-handle it only when there is an actual use case and bug report in
-the future.
-
-Thanks
-Dave
-> 
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-> ---
->  kernel/kexec_core.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 707d18e..9012a60 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -248,9 +248,14 @@ int sanity_check_segment_list(struct kimage *image)
->  			mstart = image->segment[i].mem;
->  			mend = mstart + image->segment[i].memsz - 1;
->  			/* Ensure we are within the crash kernel limits */
-> -			if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
-> -			    (mend > phys_to_boot_phys(crashk_res.end)))
-> -				return -EADDRNOTAVAIL;
-> +			if ((mstart >= phys_to_boot_phys(crashk_res.start)) &&
-> +			    (mend <= phys_to_boot_phys(crashk_res.end)))
-> +				continue;
-> +			if ((mstart >= phys_to_boot_phys(crashk_low_res.start)) &&
-> +			    (mend <= phys_to_boot_phys(crashk_low_res.end)))
-> +				continue;
-> +
-> +			return -EADDRNOTAVAIL;
->  		}
->  	}
->  
-> -- 
-> 1.8.3.1
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDE2LTA4LTE2IGF0IDA3OjU5ICswMjAwLCBQZXRyIFRlc2FyaWsgd3JvdGU6Cj4g
+T24gVHVlLCAxNiBBdWcgMjAxNiAwMDozNzowOSArMDAwMAo+IEF0c3VzaGkgS3VtYWdhaSA8YXRz
+LWt1bWFnYWlAd20uanAubmVjLmNvbT4gd3JvdGU6Cj7CoAo+ID4gU28sIGNvdWxkIHlvdSB3b3Jr
+IGZvciB0aGF0IGNsZWFudXAgYmVmb3JlIHlvdXIgdGhyZWUgcGF0Y2hlcyBhcyBhbgo+ID4gYWRk
+aXRpb25hbCBjbGVhbnVwIHBhdGNoID8KPiAKPiBPSywgSSB0YWtlIGl0LiA7LSkKPiAKPiBNYXJ0
+aW4sIGRvIHlvdSBtaW5kIHJlYmFzaW5nIHlvdXIgcGF0Y2ggd2hlbiBJJ20gZG9uZSB3aXRoIHRo
+ZQo+IGNsZWFudXA/CgpObyBwcm9ibGVtLgoKUmVnYXJkcwpNYXJ0aW4KCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
