@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bZvVj-0004pd-P7
- for kexec@lists.infradead.org; Wed, 17 Aug 2016 07:43:41 +0000
-Subject: Re: [PATCH v2 2/2] kexec: Consider crashk_low_res in
- sanity_check_segment_list()
+ id 1bZw5w-0006QS-MB
+ for kexec@lists.infradead.org; Wed, 17 Aug 2016 08:21:05 +0000
+Date: Wed, 17 Aug 2016 16:20:34 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 1/2] kexec: Introduce "/sys/kernel/kexec_crash_low_size"
+Message-ID: <20160817082034.GA11837@dhcp-128-65.nay.redhat.com>
 References: <1471398657-20237-1-git-send-email-xlpang@redhat.com>
- <1471398657-20237-2-git-send-email-xlpang@redhat.com>
- <20160817072420.GD5498@dhcp-128-65.nay.redhat.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <57B415A5.60104@redhat.com>
-Date: Wed, 17 Aug 2016 15:43:33 +0800
 MIME-Version: 1.0
-In-Reply-To: <20160817072420.GD5498@dhcp-128-65.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1471398657-20237-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,85 +19,174 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Xunlei Pang <xlpang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Xunlei Pang <xlpang@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, yinghai@kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-On 2016/08/17 at 15:24, Dave Young wrote:
-> Hi, Xunlei,
->
-> On 08/17/16 at 09:50am, Xunlei Pang wrote:
->> We have crashk_res only in most cases, but sometimes we have
->> crashk_low_res.
->>
->> For example, on 64-bit x86 systems, when "crashkernel=32M,high"
->> combined with "crashkernel=128M,low" is used, so some segments
->> may have the chance to be loaded into crashk_low_res area. We
->> can't fail it as a memory violation in these cases.
->>
->> Thus, we add the case to regard the segment as valid if it is
->> within crashk_low_res.
-> crashkernel low is meant for swiotlb, it can be reserved automaticlly
-> in case there's only crashkernel high specified in cmdline, I'm not
-> sure it is useful to use crashk_res_low for other purpose and
-> likely kdump can fail in the case. 
->
-> I'm not sure it is really necessary to add this check now, we may
-> handle it only when there is an actual use case and bug report in
-> the future.
+On 08/17/16 at 09:50am, Xunlei Pang wrote:
+> "/sys/kernel/kexec_crash_size" only handles crashk_res, it
+> is fine in most cases, but sometimes we have crashk_low_res.
+> For example, when "crashkernel=size[KMG],high" combined with
+> "crashkernel=size[KMG],low" is used for 64-bit x86.
+> 
+> Like crashk_res, we introduce the corresponding sysfs file
+> "/sys/kernel/kexec_crash_low_size" for crashk_low_res.
+> 
+> So, the exact total reserved memory is the sum of the two.
+> 
+> crashk_low_res can also be shrunk via this new interface,
+> and users should be aware of what they are doing.
 
-Thanks for the review.
-The reason I added this is that crashk_res is allowed to be shrunk, so the segment
-will surely fall into crashk_low_res if crashk_res was shrunk to be a small range.
+Cc Yinghai Lu for review since he introduced the ,high and ,low logic.
 
-But yes, this should be a corner case, but seems it does no harm adding this check.
-Anyway, if you think it's not necessary, let's simply ignore it :-)
-
-Regards,
-Xunlei
-
->
-> Thanks
-> Dave
->> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
->> ---
->>  kernel/kexec_core.c | 11 ++++++++---
->>  1 file changed, 8 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 707d18e..9012a60 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -248,9 +248,14 @@ int sanity_check_segment_list(struct kimage *image)
->>  			mstart = image->segment[i].mem;
->>  			mend = mstart + image->segment[i].memsz - 1;
->>  			/* Ensure we are within the crash kernel limits */
->> -			if ((mstart < phys_to_boot_phys(crashk_res.start)) ||
->> -			    (mend > phys_to_boot_phys(crashk_res.end)))
->> -				return -EADDRNOTAVAIL;
->> +			if ((mstart >= phys_to_boot_phys(crashk_res.start)) &&
->> +			    (mend <= phys_to_boot_phys(crashk_res.end)))
->> +				continue;
->> +			if ((mstart >= phys_to_boot_phys(crashk_low_res.start)) &&
->> +			    (mend <= phys_to_boot_phys(crashk_low_res.end)))
->> +				continue;
->> +
->> +			return -EADDRNOTAVAIL;
->>  		}
->>  	}
->>  
->> -- 
->> 1.8.3.1
->>
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
+> 
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+> ---
+>  include/linux/kexec.h |  4 ++--
+>  kernel/kexec_core.c   | 23 ++++++++++++-----------
+>  kernel/ksysfs.c       | 25 +++++++++++++++++++++++--
+>  3 files changed, 37 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index d743777..4f271fc 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -304,8 +304,8 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+> -int crash_shrink_memory(unsigned long new_size);
+> -size_t crash_get_memory_size(void);
+> +int crash_shrink_memory(struct resource *res, unsigned long new_size);
+> +size_t crash_get_memory_size(struct resource *res);
+>  void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+>  
+>  int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..707d18e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -925,13 +925,13 @@ void crash_kexec(struct pt_regs *regs)
+>  	}
+>  }
+>  
+> -size_t crash_get_memory_size(void)
+> +size_t crash_get_memory_size(struct resource *res)
+>  {
+>  	size_t size = 0;
+>  
+>  	mutex_lock(&kexec_mutex);
+> -	if (crashk_res.end != crashk_res.start)
+> -		size = resource_size(&crashk_res);
+> +	if (res->end != res->start)
+> +		size = resource_size(res);
+>  	mutex_unlock(&kexec_mutex);
+>  	return size;
+>  }
+> @@ -945,7 +945,7 @@ void __weak crash_free_reserved_phys_range(unsigned long begin,
+>  		free_reserved_page(boot_pfn_to_page(addr >> PAGE_SHIFT));
+>  }
+>  
+> -int crash_shrink_memory(unsigned long new_size)
+> +int crash_shrink_memory(struct resource *res, unsigned long new_size)
+>  {
+>  	int ret = 0;
+>  	unsigned long start, end;
+> @@ -958,8 +958,9 @@ int crash_shrink_memory(unsigned long new_size)
+>  		ret = -ENOENT;
+>  		goto unlock;
+>  	}
+> -	start = crashk_res.start;
+> -	end = crashk_res.end;
+> +
+> +	start = res->start;
+> +	end = res->end;
+>  	old_size = (end == 0) ? 0 : end - start + 1;
+>  	if (new_size >= old_size) {
+>  		ret = (new_size == old_size) ? 0 : -EINVAL;
+> @@ -975,17 +976,17 @@ int crash_shrink_memory(unsigned long new_size)
+>  	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
+>  	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
+>  
+> -	crash_free_reserved_phys_range(end, crashk_res.end);
+> +	crash_free_reserved_phys_range(end, res->end);
+>  
+> -	if ((start == end) && (crashk_res.parent != NULL))
+> -		release_resource(&crashk_res);
+> +	if ((start == end) && (res->parent != NULL))
+> +		release_resource(res);
+>  
+>  	ram_res->start = end;
+> -	ram_res->end = crashk_res.end;
+> +	ram_res->end = res->end;
+>  	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM;
+>  	ram_res->name = "System RAM";
+>  
+> -	crashk_res.end = end - 1;
+> +	res->end = end - 1;
+>  
+>  	insert_resource(&iomem_resource, ram_res);
+>  
+> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+> index ee1bc1b..3336fd5 100644
+> --- a/kernel/ksysfs.c
+> +++ b/kernel/ksysfs.c
+> @@ -105,10 +105,30 @@ static ssize_t kexec_crash_loaded_show(struct kobject *kobj,
+>  }
+>  KERNEL_ATTR_RO(kexec_crash_loaded);
+>  
+> +static ssize_t kexec_crash_low_size_show(struct kobject *kobj,
+> +				       struct kobj_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "%zu\n", crash_get_memory_size(&crashk_low_res));
+> +}
+> +static ssize_t kexec_crash_low_size_store(struct kobject *kobj,
+> +				   struct kobj_attribute *attr,
+> +				   const char *buf, size_t count)
+> +{
+> +	unsigned long cnt;
+> +	int ret;
+> +
+> +	if (kstrtoul(buf, 0, &cnt))
+> +		return -EINVAL;
+> +
+> +	ret = crash_shrink_memory(&crashk_low_res, cnt);
+> +	return ret < 0 ? ret : count;
+> +}
+> +KERNEL_ATTR_RW(kexec_crash_low_size);
+> +
+>  static ssize_t kexec_crash_size_show(struct kobject *kobj,
+>  				       struct kobj_attribute *attr, char *buf)
+>  {
+> -	return sprintf(buf, "%zu\n", crash_get_memory_size());
+> +	return sprintf(buf, "%zu\n", crash_get_memory_size(&crashk_res));
+>  }
+>  static ssize_t kexec_crash_size_store(struct kobject *kobj,
+>  				   struct kobj_attribute *attr,
+> @@ -120,7 +140,7 @@ static ssize_t kexec_crash_size_store(struct kobject *kobj,
+>  	if (kstrtoul(buf, 0, &cnt))
+>  		return -EINVAL;
+>  
+> -	ret = crash_shrink_memory(cnt);
+> +	ret = crash_shrink_memory(&crashk_res, cnt);
+>  	return ret < 0 ? ret : count;
+>  }
+>  KERNEL_ATTR_RW(kexec_crash_size);
+> @@ -218,6 +238,7 @@ static struct attribute * kernel_attrs[] = {
+>  #ifdef CONFIG_KEXEC_CORE
+>  	&kexec_loaded_attr.attr,
+>  	&kexec_crash_loaded_attr.attr,
+> +	&kexec_crash_low_size_attr.attr,
+>  	&kexec_crash_size_attr.attr,
+>  	&vmcoreinfo_attr.attr,
+>  #endif
+> -- 
+> 1.8.3.1
+> 
 
 _______________________________________________
 kexec mailing list
