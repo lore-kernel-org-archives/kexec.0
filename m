@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baD92-0005ER-5U
- for kexec@lists.infradead.org; Thu, 18 Aug 2016 02:33:24 +0000
+ id 1baD9N-0005HI-76
+ for kexec@lists.infradead.org; Thu, 18 Aug 2016 02:33:46 +0000
 From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v8 0/2] update the doc of kdump
-Date: Thu, 18 Aug 2016 10:31:33 +0800
-Message-ID: <1471487495-22787-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v8 1/2] Documentation: kdump: remind user of nr_cpus
+Date: Thu, 18 Aug 2016 10:31:34 +0800
+Message-ID: <1471487495-22787-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1471487495-22787-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1471487495-22787-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,21 +25,32 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: bhe@redhat.com, corbet@lwn.net, xlpang@redhat.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-v7->v8: fix "a SMP kernel" to "an SMP kernel" and replace "\" with "/"
-v6->v7: fix typo
-v5->v6: replace "we" with "you"
-v4->v5: move change log to cover letter
-v3->v4: update the description of bring up SMP dump-capture kernel
-v2->v3: add description of nr_cpus.
-v1->v2: change nr_cpus to maxcpus
+nr_cpus can help to save memory. So we should remind user of it.
 
-Zhou Wenjian (2):
-  Documentation: kdump: remind user of nr_cpus
-  Documentation: kdump: add description of enable multi-cpus support
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Xunlei Pang <xpang@redhat.com>
+---
+ Documentation/kdump/kdump.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- Documentation/kdump/kdump.txt | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 88ff63d..e8da1d5 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -390,9 +390,11 @@ Notes on loading the dump-capture kernel:
+ * Boot parameter "1" boots the dump-capture kernel into single-user
+   mode without networking. If you want networking, use "3".
+ 
+-* We generally don' have to bring up a SMP kernel just to capture the
++* We generally don' have to bring up an SMP kernel just to capture the
+   dump. Hence generally it is useful either to build a UP dump-capture
+   kernel or specify maxcpus=1 option while loading dump-capture kernel.
++  Note, though maxcpus always works, you should replace it by nr_cpus to
++  save memory if supported by the current ARCH, such as x86.
+ 
+ * For s390x there are two kdump modes: If a ELF header is specified with
+   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
 -- 
 1.8.3.1
 
