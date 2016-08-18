@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x235.google.com ([2607:f8b0:400e:c03::235])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1ba419-000738-PN
- for kexec@lists.infradead.org; Wed, 17 Aug 2016 16:48:40 +0000
-Received: by mail-pa0-x235.google.com with SMTP id fi15so37862176pac.1
- for <kexec@lists.infradead.org>; Wed, 17 Aug 2016 09:48:18 -0700 (PDT)
-From: Thomas Garnier <thgarnie@google.com>
-Subject: [PATCH v1] kexec/arch/i386: Add support for KASLR memory randomization
-Date: Wed, 17 Aug 2016 09:47:42 -0700
-Message-Id: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1baCV2-0006LV-BJ
+ for kexec@lists.infradead.org; Thu, 18 Aug 2016 01:52:05 +0000
+From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Subject: [PATCH v7 1/2] Documentation: kdump: remind user of nr_cpus
+Date: Thu, 18 Aug 2016 09:50:10 +0800
+Message-ID: <1471485011-19035-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+In-Reply-To: <1471485011-19035-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+References: <1471485011-19035-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,104 +18,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Thomas Garnier <thgarnie@google.com>, horms@verge.net.au, keescook@chromium.org, kernel-hardening@lists.openwall.com
+To: linux-kernel@vger.kernel.org
+Cc: bhe@redhat.com, corbet@lwn.net, linux-doc@vger.kernel.org, kexec@lists.infradead.org, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-Multiple changes were made on KASLR (right now in linux-next). One of
-them is randomizing the virtual address of the physical mapping, vmalloc
-and vmemmap memory sections. It breaks kdump ability to read physical
-memory.
+nr_cpus can help to save memory. So we should remind user of it.
 
-This change identifies if KASLR memories randomization is used by
-checking if the page_offset_base variable exists. It search for the
-correct PAGE_OFFSET value by looking at the loaded memory section and
-find the lowest aligned on PUD (the randomization level).
-
-Related commits on linux-next:
- - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
- - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
-
-Signed-off-by: Thomas Garnier <thgarnie@google.com>
+Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ Documentation/kdump/kdump.txt | 2 +++-
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index bbc0f35..ab833d4 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
- 	return -1;
- }
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 88ff63d..96da2b7 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -393,6 +393,8 @@ Notes on loading the dump-capture kernel:
+ * We generally don' have to bring up a SMP kernel just to capture the
+   dump. Hence generally it is useful either to build a UP dump-capture
+   kernel or specify maxcpus=1 option while loading dump-capture kernel.
++  Note, though maxcpus always works, you should replace it by nr_cpus to
++  save memory if supported by the current ARCH, such as x86.
  
--/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
--static unsigned long long get_kernel_stext_sym(void)
-+/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-+static unsigned long long get_kernel_sym(const char *symbol)
- {
- 	const char *kallsyms = "/proc/kallsyms";
--	const char *stext = "_stext";
- 	char sym[128];
- 	char line[128];
- 	FILE *fp;
-@@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
- 	while(fgets(line, sizeof(line), fp) != NULL) {
- 		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
- 			continue;
--		if (strcmp(sym, stext) == 0) {
--			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
-+		if (strcmp(sym, symbol) == 0) {
-+			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
- 			return vaddr;
- 		}
- 	}
- 
--	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
-+	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
- 	return 0;
- }
- 
-@@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 	off_t size;
- 	uint32_t elf_flags = 0;
- 	uint64_t stext_sym;
-+	const unsigned long long pud_mask = ~((1 << 30) - 1);
-+	unsigned long long vaddr, lowest_vaddr = 0;
- 
- 	if (elf_info->machine != EM_X86_64)
- 		return 0;
-@@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 
- 	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
- 
-+	/* Search for the real PAGE_OFFSET when KASLR memory randomization
-+	 * is enabled */
-+	if (get_kernel_sym("page_offset_base") != 0) {
-+		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-+			if (phdr->p_type == PT_LOAD) {
-+				vaddr = phdr->p_vaddr & pud_mask;
-+				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-+					lowest_vaddr = vaddr;
-+			}
-+		}
-+		if (lowest_vaddr != 0)
-+			elf_info->page_offset = lowest_vaddr;
-+	}
-+
- 	/* Traverse through the Elf headers and find the region where
- 	 * _stext symbol is located in. That's where kernel is mapped */
--	stext_sym = get_kernel_stext_sym();
-+	stext_sym = get_kernel_sym("_stext");
- 	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
- 		if (phdr->p_type == PT_LOAD) {
- 			unsigned long long saddr = phdr->p_vaddr;
+ * For s390x there are two kdump modes: If a ELF header is specified with
+   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
 -- 
-2.8.0.rc3.226.g39d4020
+1.8.3.1
+
+
 
 
 _______________________________________________
