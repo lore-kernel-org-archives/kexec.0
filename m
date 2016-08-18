@@ -1,12 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1471542334.20164.8.camel@infradead.org>
-Subject: Re: [PATCH V2] arm64:kexec: Memstart should not be before the
- kernel start address
+Message-Id: <7b17bc40e62e90fd92207d4385a0a99aec958d26.1471543843.git.geoff@infradead.org>
+In-Reply-To: <cover.1471543843.git.geoff@infradead.org>
+References: <cover.1471543843.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 18 Aug 2016 10:45:34 -0700
-In-Reply-To: <1470965069-20121-1-git-send-email-sgoel@codeaurora.org>
-References: <1470965069-20121-1-git-send-email-sgoel@codeaurora.org>
-Mime-Version: 1.0
+Subject: [PATCH v4 3/3] arm64: Add support for binary image files
+Date: Thu, 18 Aug 2016 18:21:02 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,25 +13,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sameer Goel <sgoel@codeaurora.org>
-Cc: panand@redhat.com, takahiro.akashi@linaro.org, timur@codeaurora.org, kexec@lists.infradead.org, rruigrok@codeaurora.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-SGkgU2FtZWVyLAoKT24gVGh1LCAyMDE2LTA4LTExIGF0IDE5OjI0IC0wNjAwLCBTYW1lZXIgR29l
-bCB3cm90ZToKPiBTdGFydGluZyA0LjYgdGhlIGtlcm5lbCBtZW1ibG9jayBzdGFydCBpcyByb3Vu
-ZGVkIGRvd24gdG8gYSBkZXNpcmFibGUKPiBhbGlnbm1lbnQuwqAKClBsZWFzZSBtZW50aW9uIGhl
-cmUgdGhlIGtlcm5lbCBjb21taXQgdGhhdCBtYWRlIHRoaXMgY2hhbmdlLCBtYXliZQona2VybmVs
-IGNvbW1pdCBhN2Y4ZGUxNjhhY2UgKCJhcm02NDogYWxsb3cga2VybmVsIEltYWdlIHRvIGJlIGxv
-YWRlZAphbnl3aGVyZSBpbiBwaHlzaWNhbCBtZW1vcnkiKSc/Cgo+IFNvLCB0aGUga2VybmVsIGNh
-biBzZWUgcmVzZXJ2ZWQgbWVvcnkgcmVnaW9ucyBiZWZvcmUgdGhlIGtlcm5lbAo+IHN0YXJ0IGFk
-ZHJlc3MgaW4gdGhlIGlvbWVtIHF1ZXJ5Lgo+IE5lZWQgdG8gbWFrZSBzdXJlIHRoYXQgdGhlIHJp
-Z2h0IGtlcm5lbCBzdGFydCBhZGRyZXNzIGlzIHBpY2tlZCBmcm9tIHRoZSBpb21lbQo+IHF1ZXJ5
-LgoKUGxlYXNlIHJ1biBrZXhlYyB3aXRoIHRoZcKgLS1kZWJ1ZyBvcHRpb24gYW5kIHBvc3QgdGhl
-IGdldF9tZW1vcnlfcmFuZ2VzCm91dHB1dCB0byB0aGUgTUwgb3Igc2VuZCBtZSBkaXJlY3RseSBp
-ZiB5b3UgY29uc2lkZXIgaXQgc2Vuc2l0aXZlLgrCoAotR2VvZmYKCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+From: Pratyush Anand <panand@redhat.com>
+
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+[Reworked and cleaned up]
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ kexec/arch/arm64/kexec-image-arm64.c | 29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+index 42d2ea7..b77b63e 100644
+--- a/kexec/arch/arm64/kexec-image-arm64.c
++++ b/kexec/arch/arm64/kexec-image-arm64.c
+@@ -21,14 +21,35 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 		return -1;
+ 	}
+ 
+-	fprintf(stderr, "kexec: ARM64 binary image files are currently NOT SUPPORTED.\n");
+-	return -1;
++	return 0;
+ }
+ 
+ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	off_t kernel_size, struct kexec_info *info)
+ {
+-	return -1;
++	const struct arm64_image_header *h;
++	unsigned long image_base;
++
++	h = (const struct arm64_image_header *)(kernel_buf);
++
++	if (arm64_process_image_header(h))
++		return -1;
++
++	dbgprintf("%s: text_offset:   %016lx\n", __func__,
++		arm64_mem.text_offset);
++	dbgprintf("%s: image_size:    %016lx\n", __func__,
++		arm64_mem.image_size);
++	dbgprintf("%s: phys_offset:   %016lx\n", __func__,
++		arm64_mem.phys_offset);
++	dbgprintf("%s: PE format:     %s\n", __func__,
++		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
++
++	image_base = get_phys_offset() + arm64_mem.text_offset;
++	
++	add_segment_phys_virt(info, kernel_buf, kernel_size, image_base,
++		arm64_mem.image_size, 0);
++
++	return arm64_load_other_segments(info, image_base);
+ }
+ 
+ void image_arm64_usage(void)
+@@ -36,6 +57,4 @@ void image_arm64_usage(void)
+ 	printf(
+ "     An ARM64 binary image, compressed or not, big or little endian.\n"
+ "     Typically an Image, Image.gz or Image.lzma file.\n\n");
+-	printf(
+-"     ARM64 binary image files are currently NOT SUPPORTED.\n\n");
+ }
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
