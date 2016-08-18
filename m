@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baFQk-0004Pd-5A
- for kexec@lists.infradead.org; Thu, 18 Aug 2016 04:59:51 +0000
-Date: Thu, 18 Aug 2016 12:59:22 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
- randomization
-Message-ID: <20160818045922.GA23981@x1.redhat.com>
-References: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+ id 1baH7E-0002JF-Lj
+ for kexec@lists.infradead.org; Thu, 18 Aug 2016 06:47:49 +0000
+Date: Thu, 18 Aug 2016 14:47:15 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v8 1/2] Documentation: kdump: remind user of nr_cpus
+Message-ID: <20160818064715.GC26001@dhcp-128-65.nay.redhat.com>
+References: <1471487495-22787-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1471487495-22787-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1471487809.4319.15.camel@perches.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+In-Reply-To: <1471487809.4319.15.camel@perches.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,119 +21,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Garnier <thgarnie@google.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, keescook@chromium.org, kernel-hardening@lists.openwall.com
+To: Joe Perches <joe@perches.com>
+Cc: linux-doc@vger.kernel.org, bhe@redhat.com, corbet@lwn.net, xlpang@redhat.com, Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, vgoyal@redhat.com
 
-On 08/17/16 at 09:47am, Thomas Garnier wrote:
-> Multiple changes were made on KASLR (right now in linux-next). One of
-> them is randomizing the virtual address of the physical mapping, vmalloc
-> and vmemmap memory sections. It breaks kdump ability to read physical
-> memory.
-> 
-> This change identifies if KASLR memories randomization is used by
-> checking if the page_offset_base variable exists. It search for the
-> correct PAGE_OFFSET value by looking at the loaded memory section and
-> find the lowest aligned on PUD (the randomization level).
-> 
-> Related commits on linux-next:
->  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
->  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
+On 08/17/16 at 07:36pm, Joe Perches wrote:
+> On Thu, 2016-08-18 at 10:31 +0800, Zhou Wenjian wrote:
+> > nr_cpus can help to save memory. So we should remind user of it.
+> =
 
-Seems above two commits have been inside Linus's tree, while vmemmap
-not yet.
+> trivia:
+> > diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.=
+txt
+> []
+> > @@ -390,9 +390,11 @@ Notes on loading the dump-capture kernel:
+> > =A0* Boot parameter "1" boots the dump-capture kernel into single-user
+> > =A0=A0=A0mode without networking. If you want networking, use "3".
+> > =A0
+> > -* We generally don' have to bring up a SMP kernel just to capture the
+> > +* We generally don' have to bring up an SMP kernel just to capture the
+> =
 
-> 
-> Signed-off-by: Thomas Garnier <thgarnie@google.com>
-> ---
->  kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
->  1 file changed, 22 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index bbc0f35..ab833d4 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
->  	return -1;
->  }
->  
-> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
-> -static unsigned long long get_kernel_stext_sym(void)
-> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-> +static unsigned long long get_kernel_sym(const char *symbol)
->  {
->  	const char *kallsyms = "/proc/kallsyms";
-> -	const char *stext = "_stext";
->  	char sym[128];
->  	char line[128];
->  	FILE *fp;
-> @@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
->  	while(fgets(line, sizeof(line), fp) != NULL) {
->  		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
->  			continue;
-> -		if (strcmp(sym, stext) == 0) {
-> -			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
-> +		if (strcmp(sym, symbol) == 0) {
-> +			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
->  			return vaddr;
->  		}
->  	}
->  
-> -	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
-> +	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
->  	return 0;
->  }
->  
-> @@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  	off_t size;
->  	uint32_t elf_flags = 0;
->  	uint64_t stext_sym;
-> +	const unsigned long long pud_mask = ~((1 << 30) - 1);
-> +	unsigned long long vaddr, lowest_vaddr = 0;
->  
->  	if (elf_info->machine != EM_X86_64)
->  		return 0;
-> @@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  
->  	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
->  
-> +	/* Search for the real PAGE_OFFSET when KASLR memory randomization
-> +	 * is enabled */
+> don't or do not
+> =
 
-Yeah, this is necessary. That would be great if it can be put into
-get_kernel_page_offset. But then it need parse kcore elf file again,
-seems no better way.
 
-> +	if (get_kernel_sym("page_offset_base") != 0) {
-> +		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-> +			if (phdr->p_type == PT_LOAD) {
-> +				vaddr = phdr->p_vaddr & pud_mask;
-> +				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-> +					lowest_vaddr = vaddr;
-> +			}
-> +		}
-> +		if (lowest_vaddr != 0)
-> +			elf_info->page_offset = lowest_vaddr;
-> +	}
-> +
->  	/* Traverse through the Elf headers and find the region where
->  	 * _stext symbol is located in. That's where kernel is mapped */
-> -	stext_sym = get_kernel_stext_sym();
-> +	stext_sym = get_kernel_sym("_stext");
->  	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
->  		if (phdr->p_type == PT_LOAD) {
->  			unsigned long long saddr = phdr->p_vaddr;
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Use do not is better, also need replace 'We' with 'You' to be
+consistent with other part.
 
 _______________________________________________
 kexec mailing list
