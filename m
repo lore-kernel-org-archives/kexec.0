@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baHim-0000c4-P8
- for kexec@lists.infradead.org; Thu, 18 Aug 2016 07:26:38 +0000
-Received: by mail-pa0-x22d.google.com with SMTP id fi15so4058713pac.1
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 00:26:16 -0700 (PDT)
-Date: Thu, 18 Aug 2016 16:32:24 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH] fixup! arm64: kdump: add kdump support
-Message-ID: <20160818073223.GD20080@linaro.org>
-References: <57B2E759.201@arm.com>
- <1471448011-20386-1-git-send-email-james.morse@arm.com>
+Date: Thu, 18 Aug 2016 16:19:46 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 2/2] kexec: extend kexec_file_load system call
+Message-ID: <20160818081907.GA845@dhcp-128-65.nay.redhat.com>
+References: <1470956638-3589-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1470956638-3589-3-git-send-email-bauerman@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1471448011-20386-1-git-send-email-james.morse@arm.com>
+In-Reply-To: <1470956638-3589-3-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,143 +20,302 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, AKASHI Takahiro <takahiro.akashi@linaro.org>, David Laight <David.Laight@ACULAB.COM>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On Wed, Aug 17, 2016 at 04:33:31PM +0100, James Morse wrote:
-> copy_oldmem_page() and mmap_vmcore() provide two ways for userspace to read
-> from /proc/vmcore. Neither of these check with memblock to see if the page
-> they are accessing is nomap. On Seattle this causes:
-> 
-> [  174.393875] Unhandled fault: synchronous external abort (0x96000210) at
-> 0xffffff80096b6000
-> [  174.402158] Internal error: : 96000210 [#1] PREEMPT SMP
-> [  174.407370] Modules linked in:
-> [  174.410417] CPU: 6 PID: 2059 Comm: cp Tainted: G S      W I     4.8.0-rc1+ #4708
-> [  174.417799] Hardware name: AMD Overdrive/Supercharger/Default string, BIOS
-> ROD1002C 04/08/2016
-> [  174.426396] task: ffffffc0fdec5780 task.stack: ffffffc0f34bc000
-> [  174.432313] PC is at __arch_copy_to_user+0x180/0x280
-> [  174.437274] LR is at copy_oldmem_page+0xac/0xf0
-> [  174.441791] pc : [<ffffff800835e080>] lr : [<ffffff8008095b9c>] pstate: 20000145
-> [  174.449173] sp : ffffffc0f34bfc90
-> [  174.452474] x29: ffffffc0f34bfc90 x28: 0000000000000000
-> [  174.457776] x27: 0000000008000000 x26: 000000000000d000
-> [  174.463077] x25: 0000000000000001 x24: ffffff8008eb5000
-> [  174.468378] x23: 0000000000000000 x22: ffffff80096b6000
-> [  174.473679] x21: 0000000000000001 x20: 0000000030127000
-> [  174.478979] x19: 0000000000001000 x18: 0000007ff7085d60
-> [  174.484279] x17: 0000000000429358 x16: ffffff80081d9e88
-> [  174.489579] x15: 0000007fae377590 x14: 0000000000000000
-> 
-> [  174.494880] x13: 0000000000000000 x12: ffffff8008dd1000
-> [  174.500180] x11: ffffff80096b6fff x10: ffffff80096b6fff
-> [  174.505480] x9 : 0000000040000000 x8 : ffffff8008db6000
-> [  174.510781] x7 : ffffff80096b7000 x6 : 0000000030127000
-> [  174.516082] x5 : 0000000030128000 x4 : 0000000000000000
-> [  174.521382] x3 : 00e8000000000713 x2 : 0000000000000f80
-> [  174.526682] x1 : ffffff80096b6000 x0 : 0000000030127000
-> [  174.531982]
-> [  174.533461] Process cp (pid: 2059, stack limit = 0xffffffc0f34bc020)
-> 
-> [  174.848448] [<ffffff800835e080>] __arch_copy_to_user+0x180/0x280
-> [  174.854448] [<ffffff8008245f34>] read_from_oldmem.part.4+0xb4/0xf4
-> [  174.860615] [<ffffff8008246074>] read_vmcore+0x100/0x22c
-> [  174.865919] [<ffffff8008239378>] proc_reg_read+0x64/0x90
-> [  174.871223] [<ffffff80081d7da8>] __vfs_read+0x28/0x108
-> [  174.876348] [<ffffff80081d8ae4>] vfs_read+0x84/0x144
-> [  174.881301] [<ffffff80081d9ecc>] SyS_read+0x44/0xa0
-> [  174.886167] [<ffffff8008082ef0>] el0_svc_naked+0x24/0x28
-> [  174.891466] Code: 00000000 00000000 00000000 00000000 (a8c12027)
-> [  174.897562] ---[ end trace 00801b2e35b0cd1f ]---
-> 
-> When reading /proc/vmcore with cat/cp or or mmap()ing it with makedumpfile.
-> 
-> The fs/proc/vmcore.c code provides a hook to indicate whether oldmem pages
-> are ram or not. Use this to look for our earlier handiwork in memblock.
+Since Eric was objecting the extension, I think you should convince him,
+but I will review from code point of view.
 
-I'm not quite sure about the background that oldmem_pfn_is_ram() was
-originally introduced on x86, but I think that this feature be deserved
-for fixing an issue on Xen.
-See:
-commit 997c136
-Author: Olaf Hering <olaf@aepfle.de>
-Date:   Thu May 26 16:25:54 2011 -0700
-
-    fs/proc/vmcore.c: add hook to read_from_oldmem() to check for non-ram pages
-
-Thanks,
--Takahiro AKASHI
-
+On 08/11/16 at 08:03pm, Thiago Jung Bauermann wrote:
+> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > 
-> Signed-off-by: James Morse <james.morse@arm.com>
+> Device tree blob must be passed to a second kernel on DTB-capable
+> archs, like powerpc and arm64, but the current kernel interface
+> lacks this support.
+> 
+> This patch extends kexec_file_load system call by adding an extra
+> argument to this syscall so that an arbitrary number of file descriptors
+> can be handed out from user space to the kernel.
+> 
+> 	long sys_kexec_file_load(int kernel_fd, int initrd_fd,
+> 				 unsigned long cmdline_len,
+> 				 const char __user *cmdline_ptr,
+> 				 unsigned long flags,
+> 				 const struct kexec_fdset __user *ufdset);
+> 
+> If KEXEC_FILE_EXTRA_FDS is set to the "flags" argument, the "ufdset"
+> argument points to the following struct buffer:
+> 
+> 	struct kexec_fdset {
+> 		int nr_fds;
+> 		struct kexec_file_fd fds[0];
+> 	}
+> 
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 > ---
+>  include/linux/fs.h         |  1 +
+>  include/linux/kexec.h      |  7 ++--
+>  include/linux/syscalls.h   |  4 ++-
+>  include/uapi/linux/kexec.h | 22 ++++++++++++
+>  kernel/kexec_file.c        | 83 ++++++++++++++++++++++++++++++++++++++++++----
+>  5 files changed, 108 insertions(+), 9 deletions(-)
 > 
-> Hi Pratyush,
-> 
-> I couldn't get makedumpfile to build, or rather it depends on elfutils which
-> wouldn't build for autotools reasons. Does implementing this hook solve your
-> makedumpfile issue?
-> 
-> With this patch I can extract a usable vmcore file using read or mmap,
-> avoiding the earlier splat.
-> 
-> Akashi, if you agree this is the right thing to do, please consider folding
-> this into patch 5. (no need to keep the commit mesage or anything).
-> 
-> Thanks,
-> 
-> James
-> 
->  arch/arm64/kernel/crash_dump.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-> index 2dc54d129be1..76c71ab42994 100644
-> --- a/arch/arm64/kernel/crash_dump.c
-> +++ b/arch/arm64/kernel/crash_dump.c
-> @@ -12,10 +12,38 @@
->  #include <linux/crash_dump.h>
->  #include <linux/errno.h>
->  #include <linux/io.h>
-> +#include <linux/init.h>
->  #include <linux/memblock.h>
->  #include <linux/uaccess.h>
->  #include <asm/memory.h>
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 3523bf62f328..847d9c31f428 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2656,6 +2656,7 @@ extern int do_pipe_flags(int *, int);
+>  	id(MODULE, kernel-module)		\
+>  	id(KEXEC_IMAGE, kexec-image)		\
+>  	id(KEXEC_INITRAMFS, kexec-initramfs)	\
+> +	id(KEXEC_PARTIAL_DTB, kexec-partial-dtb)		\
+>  	id(POLICY, security-policy)		\
+>  	id(MAX_ID, )
 >  
-> +#ifdef CONFIG_PROC_VMCORE
-> +static int oldmem_pfn_is_ram(unsigned long pfn)
-> +{
-> +	unsigned long addr = pfn << PAGE_SHIFT;
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 4f85d284ed0b..29202935055d 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -148,7 +148,10 @@ struct kexec_file_ops {
+>  	kexec_verify_sig_t *verify_sig;
+>  #endif
+>  };
+> -#endif
+> +
+> +int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
+> +				    unsigned long size);
+> +#endif /* CONFIG_KEXEC_FILE */
+>  
+>  struct kimage {
+>  	kimage_entry_t head;
+> @@ -280,7 +283,7 @@ extern int kexec_load_disabled;
+>  
+>  /* List of defined/legal kexec file flags */
+>  #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
+> -				 KEXEC_FILE_NO_INITRAMFS)
+> +				 KEXEC_FILE_NO_INITRAMFS | KEXEC_FILE_EXTRA_FDS)
+>  
+>  #define VMCOREINFO_BYTES           (4096)
+>  #define VMCOREINFO_NOTE_NAME       "VMCOREINFO"
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index d02239022bd0..fc072bdb74e3 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -66,6 +66,7 @@ struct perf_event_attr;
+>  struct file_handle;
+>  struct sigaltstack;
+>  union bpf_attr;
+> +struct kexec_fdset;
+>  
+>  #include <linux/types.h>
+>  #include <linux/aio_abi.h>
+> @@ -321,7 +322,8 @@ asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
+>  asmlinkage long sys_kexec_file_load(int kernel_fd, int initrd_fd,
+>  				    unsigned long cmdline_len,
+>  				    const char __user *cmdline_ptr,
+> -				    unsigned long flags);
+> +				    unsigned long flags,
+> +				    const struct kexec_fdset __user *ufdset);
+>  
+>  asmlinkage long sys_exit(int error_code);
+>  asmlinkage long sys_exit_group(int error_code);
+> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
+> index aae5ebf2022b..6279be79efba 100644
+> --- a/include/uapi/linux/kexec.h
+> +++ b/include/uapi/linux/kexec.h
+> @@ -23,6 +23,28 @@
+>  #define KEXEC_FILE_UNLOAD	0x00000001
+>  #define KEXEC_FILE_ON_CRASH	0x00000002
+>  #define KEXEC_FILE_NO_INITRAMFS	0x00000004
+> +#define KEXEC_FILE_EXTRA_FDS	0x00000008
+> +
+> +enum kexec_file_type {
+> +	KEXEC_FILE_TYPE_KERNEL,
+> +	KEXEC_FILE_TYPE_INITRAMFS,
 > +
 > +	/*
-> +	 * We removed oldmem from memblock.memory, then re-added some regions
-> +	 * which are reserved by/for firmware as memory and nomap.
-> +	 * If an address exists as memory, but is marked nomap, return false.
+> +	 * Device Tree Blob containing just the nodes and properties that
+> +	 * the kexec_file_load caller wants to add or modify.
 > +	 */
-> +	if (memblock_is_memory(addr) && !memblock_is_map_memory(addr))
-> +		return 0;
+> +	KEXEC_FILE_TYPE_PARTIAL_DTB,
+> +};
 > +
-> +	return 1;
-> +}
+> +struct kexec_file_fd {
+> +	enum kexec_file_type type;
+> +	int fd;
+> +};
 > +
-> +static int __init do_register_oldmem_pfn_is_ram(void)
-> +{
-> +	return register_oldmem_pfn_is_ram(&oldmem_pfn_is_ram);
-> +}
-> +/*
-> + * vmcore_init() is called via fs_initcall, ensure we register
-> + * oldmem_pfn_is_ram() before then.
+> +struct kexec_fdset {
+> +	int nr_fds;
+> +	struct kexec_file_fd fds[0];
+> +};
+>  
+>  /* These values match the ELF architecture values.
+>   * Unless there is a good reason that should continue to be the case.
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 113af2f219b9..d6803dd884e2 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -25,6 +25,9 @@
+>  #include <linux/vmalloc.h>
+>  #include "kexec_internal.h"
+>  
+> +#define MAX_FDSET_SIZE	(sizeof(struct kexec_fdset) + \
+> +				KEXEC_SEGMENT_MAX * sizeof(struct kexec_file_fd))
+
+How about use KEXEC_EXTRA_FD_MAX = 1, so only allow passing one fd for
+now. In the future if there's other requirement we can extend the
+internal value.
+
+> +
+>  /*
+>   * Declare these symbols weak so that if architecture provides a purgatory,
+>   * these will be overridden.
+> @@ -116,6 +119,22 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  	image->image_loader_data = NULL;
+>  }
+>  
+> +/**
+> + * arch_kexec_verify_buffer() - check that the given kexec file is valid
+> + *
+> + * Device trees in particular can contain properties that may make the kernel
+> + * execute code that it wasn't supposed to (e.g., use the wrong entry point
+> + * when calling firmware functions). Because of this, the kernel needs to
+> + * verify that it is safe to use the device tree blob passed from userspace.
+> + *
+> + * Return: 0 on success, negative errno on error.
 > + */
-> +arch_initcall(do_register_oldmem_pfn_is_ram);
-> +#endif
+> +int __weak arch_kexec_verify_buffer(enum kexec_file_type type, const void *buf,
+> +				    unsigned long size)
+> +{
+> +	return -EINVAL;
+> +}
 > +
->  /**
->   * copy_oldmem_page() - copy one page from old kernel memory
->   * @pfn: page frame number to be copied
+>  /*
+>   * In file mode list of segments is prepared by kernel. Copy relevant
+>   * data from user space, do error checking, prepare segment list
+> @@ -123,7 +142,8 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  static int
+>  kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  			     const char __user *cmdline_ptr,
+> -			     unsigned long cmdline_len, unsigned flags)
+> +			     unsigned long cmdline_len, unsigned long flags,
+> +			     const struct kexec_fdset __user *ufdset)
+>  {
+>  	int ret = 0;
+>  	void *ldata;
+> @@ -160,6 +180,55 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  		image->initrd_buf_len = size;
+>  	}
+>  
+> +	if (flags & KEXEC_FILE_EXTRA_FDS) {
+> +		int nr_fds, i;
+> +		size_t fdset_size;
+> +		char fdset_buf[MAX_FDSET_SIZE];
+> +		struct kexec_fdset *fdset = (struct kexec_fdset *) fdset_buf;
+> +
+> +		ret = copy_from_user(&nr_fds, ufdset, sizeof(int));
+> +		if (ret) {
+> +			ret = -EFAULT;
+> +			goto out;
+> +		}
+> +
+> +		if (nr_fds > KEXEC_SEGMENT_MAX) {
+> +			ret = -E2BIG;
+> +			goto out;
+> +		}
+> +
+> +		fdset_size = sizeof(struct kexec_fdset)
+> +				+ nr_fds * sizeof(struct kexec_file_fd);
+> +
+> +		ret = copy_from_user(fdset, ufdset, fdset_size);
+> +		if (ret) {
+> +			ret = -EFAULT;
+> +			goto out;
+> +		}
+> +
+> +		for (i = 0; i < fdset->nr_fds; i++) {
+> +			if (fdset->fds[i].type == KEXEC_FILE_TYPE_PARTIAL_DTB) {
+> +				ret = kernel_read_file_from_fd(fdset->fds[i].fd,
+> +						&image->dtb_buf, &size, INT_MAX,
+> +						READING_KEXEC_PARTIAL_DTB);
+> +				if (ret)
+> +					goto out;
+> +				image->dtb_buf_len = size;
+> +
+> +				ret = arch_kexec_verify_buffer(KEXEC_FILE_TYPE_PARTIAL_DTB,
+> +							       image->dtb_buf,
+> +							       image->dtb_buf_len);
+> +				if (ret)
+> +					goto out;
+> +			} else {
+> +				pr_debug("unknown file type %d failed.\n",
+> +						fdset->fds[i].type);
+
+Should be pr_err
+
+> +				ret = -EINVAL;
+> +				goto out;
+> +			}
+> +		}
+> +	}
+> +
+>  	if (cmdline_len) {
+>  		image->cmdline_buf = kzalloc(cmdline_len, GFP_KERNEL);
+>  		if (!image->cmdline_buf) {
+> @@ -202,7 +271,8 @@ out:
+>  static int
+>  kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+>  		       int initrd_fd, const char __user *cmdline_ptr,
+> -		       unsigned long cmdline_len, unsigned long flags)
+> +		       unsigned long cmdline_len, unsigned long flags,
+> +		       const struct kexec_fdset __user *ufdset)
+>  {
+>  	int ret;
+>  	struct kimage *image;
+> @@ -221,7 +291,8 @@ kimage_file_alloc_init(struct kimage **rimage, int kernel_fd,
+>  	}
+>  
+>  	ret = kimage_file_prepare_segments(image, kernel_fd, initrd_fd,
+> -					   cmdline_ptr, cmdline_len, flags);
+> +					   cmdline_ptr, cmdline_len, flags,
+> +					   ufdset);
+>  	if (ret)
+>  		goto out_free_image;
+>  
+> @@ -256,9 +327,9 @@ out_free_image:
+>  	return ret;
+>  }
+>  
+> -SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+> +SYSCALL_DEFINE6(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  		unsigned long, cmdline_len, const char __user *, cmdline_ptr,
+> -		unsigned long, flags)
+> +		unsigned long, flags, const struct kexec_fdset __user *, ufdset)
+>  {
+>  	int ret = 0, i;
+>  	struct kimage **dest_image, *image;
+> @@ -295,7 +366,7 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  		kimage_free(xchg(&kexec_crash_image, NULL));
+>  
+>  	ret = kimage_file_alloc_init(&image, kernel_fd, initrd_fd, cmdline_ptr,
+> -				     cmdline_len, flags);
+> +				     cmdline_len, flags, ufdset);
+>  	if (ret)
+>  		goto out;
+>  
 > -- 
-> 2.8.0.rc3
+> 1.9.1
 > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
