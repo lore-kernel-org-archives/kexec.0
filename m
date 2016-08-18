@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baDmR-0002JZ-6k
- for kexec@lists.infradead.org; Thu, 18 Aug 2016 03:14:07 +0000
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Subject: [PATCH v9 2/2] Documentation: kdump: add description of enable
- multi-cpus support
-Date: Thu, 18 Aug 2016 11:11:47 +0800
-Message-ID: <1471489907-27737-3-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-In-Reply-To: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
-References: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1baFQk-0004Pd-5A
+ for kexec@lists.infradead.org; Thu, 18 Aug 2016 04:59:51 +0000
+Date: Thu, 18 Aug 2016 12:59:22 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
+ randomization
+Message-ID: <20160818045922.GA23981@x1.redhat.com>
+References: <1471452462-42560-1-git-send-email-thgarnie@google.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1471452462-42560-1-git-send-email-thgarnie@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +24,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: bhe@redhat.com, corbet@lwn.net, xlpang@redhat.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, joe@perches.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
+To: Thomas Garnier <thgarnie@google.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, keescook@chromium.org, kernel-hardening@lists.openwall.com
 
-multi-cpu support is useful to improve the performance of kdump in
-some cases. So add the description of enable multi-cpu support in
-dump-capture kernel.
+On 08/17/16 at 09:47am, Thomas Garnier wrote:
+> Multiple changes were made on KASLR (right now in linux-next). One of
+> them is randomizing the virtual address of the physical mapping, vmalloc
+> and vmemmap memory sections. It breaks kdump ability to read physical
+> memory.
+> 
+> This change identifies if KASLR memories randomization is used by
+> checking if the page_offset_base variable exists. It search for the
+> correct PAGE_OFFSET value by looking at the loaded memory section and
+> find the lowest aligned on PUD (the randomization level).
+> 
+> Related commits on linux-next:
+>  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
+>  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
 
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Xunlei Pang <xpang@redhat.com>
----
- Documentation/kdump/kdump.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+Seems above two commits have been inside Linus's tree, while vmemmap
+not yet.
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index d900080..31e6b88 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -396,6 +396,13 @@ Notes on loading the dump-capture kernel:
-   Note, though maxcpus always works, you should replace it by nr_cpus to
-   save memory if supported by the current ARCH, such as x86.
- 
-+* You should enable multi-cpu support in dump-capture kernel if you intend
-+  to use multi-thread programs with it, such as parallel dump feature of
-+  makedumpfile. Otherwise, the multi-thread program may have a great
-+  performance degradation. To enable multi-cpu support, you should bring up an
-+  SMP dump-capture kernel and specify maxcpus/nr_cpus, disable_cpu_apicid=[X]
-+  options while loading it.
-+
- * For s390x there are two kdump modes: If a ELF header is specified with
-   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
-   is done on all other architectures. If no elfcorehdr= kernel parameter is
--- 
-1.8.3.1
+> 
+> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+> ---
+>  kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
+>  1 file changed, 22 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index bbc0f35..ab833d4 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
+>  	return -1;
+>  }
+>  
+> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+> -static unsigned long long get_kernel_stext_sym(void)
+> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
+> +static unsigned long long get_kernel_sym(const char *symbol)
+>  {
+>  	const char *kallsyms = "/proc/kallsyms";
+> -	const char *stext = "_stext";
+>  	char sym[128];
+>  	char line[128];
+>  	FILE *fp;
+> @@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
+>  	while(fgets(line, sizeof(line), fp) != NULL) {
+>  		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
+>  			continue;
+> -		if (strcmp(sym, stext) == 0) {
+> -			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
+> +		if (strcmp(sym, symbol) == 0) {
+> +			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
+>  			return vaddr;
+>  		}
+>  	}
+>  
+> -	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
+> +	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
+>  	return 0;
+>  }
+>  
+> @@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>  	off_t size;
+>  	uint32_t elf_flags = 0;
+>  	uint64_t stext_sym;
+> +	const unsigned long long pud_mask = ~((1 << 30) - 1);
+> +	unsigned long long vaddr, lowest_vaddr = 0;
+>  
+>  	if (elf_info->machine != EM_X86_64)
+>  		return 0;
+> @@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>  
+>  	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+>  
+> +	/* Search for the real PAGE_OFFSET when KASLR memory randomization
+> +	 * is enabled */
 
+Yeah, this is necessary. That would be great if it can be put into
+get_kernel_page_offset. But then it need parse kcore elf file again,
+seems no better way.
 
-
+> +	if (get_kernel_sym("page_offset_base") != 0) {
+> +		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+> +			if (phdr->p_type == PT_LOAD) {
+> +				vaddr = phdr->p_vaddr & pud_mask;
+> +				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
+> +					lowest_vaddr = vaddr;
+> +			}
+> +		}
+> +		if (lowest_vaddr != 0)
+> +			elf_info->page_offset = lowest_vaddr;
+> +	}
+> +
+>  	/* Traverse through the Elf headers and find the region where
+>  	 * _stext symbol is located in. That's where kernel is mapped */
+> -	stext_sym = get_kernel_stext_sym();
+> +	stext_sym = get_kernel_sym("_stext");
+>  	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
+>  		if (phdr->p_type == PT_LOAD) {
+>  			unsigned long long saddr = phdr->p_vaddr;
+> -- 
+> 2.8.0.rc3.226.g39d4020
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
