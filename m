@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tex.lwn.net ([70.33.254.29] helo=vena.lwn.net)
+Received: from mail-wm0-x22a.google.com ([2a00:1450:400c:c09::22a])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bamBH-00087p-EX
- for kexec@lists.infradead.org; Fri, 19 Aug 2016 15:58:04 +0000
-Date: Fri, 19 Aug 2016 09:57:40 -0600
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v9 1/2] Documentation: kdump: remind user of nr_cpus
-Message-ID: <20160819095740.1cccc073@lwn.net>
-In-Reply-To: <57B653D1.8060106@cn.fujitsu.com>
-References: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1471489907-27737-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160818111854.362bb972@lwn.net> <57B653D1.8060106@cn.fujitsu.com>
+ id 1bao7F-0003G7-8s
+ for kexec@lists.infradead.org; Fri, 19 Aug 2016 18:02:02 +0000
+Received: by mail-wm0-x22a.google.com with SMTP id o80so52182039wme.1
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 11:01:39 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <20160819024146.GA12340@x1.redhat.com>
+References: <1471531632-23003-1-git-send-email-thgarnie@google.com>
+ <20160819024146.GA12340@x1.redhat.com>
+From: Kees Cook <keescook@chromium.org>
+Date: Fri, 19 Aug 2016 11:01:36 -0700
+Message-ID: <CAGXu5j+2o5iPbesqJA5t2QDM2hK=g7mZAAdoS4EqHzVE76DzcA@mail.gmail.com>
+Subject: Re: [PATCH v1] kdump,
+ vmcoreinfo: report memory sections virtual addresses
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,32 +22,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Zhou, =?UTF-8?B?V2Vuamlhbi/lkajmlofliZE=?=" <zhouwj-fnst@cn.fujitsu.com>
-Cc: bhe@redhat.com, linux-doc@vger.kernel.org, xlpang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, joe@perches.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, Eugene Surovegin <surovegin@google.com>, Kexec Mailing List <kexec@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Garnier <thgarnie@google.com>
 
-T24gRnJpLCAxOSBBdWcgMjAxNiAwODozMzoyMSArMDgwMAoiWmhvdSwgV2Vuamlhbi/lkajmlofl
-iZEiIDx6aG91d2otZm5zdEBjbi5mdWppdHN1LmNvbT4gd3JvdGU6Cgo+IEkgd2FzIGFsc28gY29u
-ZnVzZWQgYnkgbWF4Y3B1cyBhbmQgbnJfY3B1cyBiZWZvcmUgd3JpdGluZyB0aGlzIHBhdGNoLgo+
-IEkgdGhpbmsgaXQgaXMgYSBnb29kIGNob2ljZSB0byBkZXNjcmliZSBpdCBpbiBrZXJuZWwtcGFy
-YW1ldGVycy50eHQuCj4gCj4gVGhlbiwgb25seSB0d28gdGhpbmdzIG5lZWQgdG8gYmUgZG9uZSBJ
-IHRoaW5rLgo+IE9uZSBpcyBtb3ZlIHRoZSBhYm92ZSBkZXNjcmlwdGlvbiB0byBtYXhjcHVzPSBp
-biBrZXJuZWwtcGFyYW1ldGVycy50eHQuCj4gQW5kIHRoZSBvdGhlciBpcyByZXBsYWNlIG1heGNw
-dXMgd2l0aCBtYXhjcHVzL25yX2NwdXMgaW4ga2R1bXAudHh0Lgo+IAo+IEhvdyBkbyB5b3UgdGhp
-bms/CgpUaGF0IGlzIG5vdCBxdWl0ZSB3aGF0IEkgaGFkIGluIG1pbmQsIHNvcnJ5LiAgV2hhdCBJ
-IHdvdWxkIHJlYWxseSBsaWtlIHRvCnNlZSBpbiBrZXJuZWwtcGFyYW1ldGVycy50eHQgaXMgYW4g
-ZXhwbGFuYXRpb24gb2YgaG93IHRob3NlIHR3byBwYXJhbWV0ZXJzCmRpZmZlciAtIHdoYXQgZG8g
-dGhleSBkbyBkaWZmZXJlbnRseSBhbmQgaG93IHNob3VsZCBhIHVzZXIgY2hvb3NlIG9uZSBvdmVy
-CnRoZSBvdGhlcj8gIFdoYXQgd2UgaGF2ZSBub3cgb2ZmZXJzIG5vIGd1aWRhbmNlIGluIHRoYXQg
-bWF0dGVyLgoKSSBzdXNwZWN0IHRoYXQgbWF5IGJlIGEgYml0IG1vcmUgdGhhbiB5b3UgaGFkIHNp
-Z25lZCB1cCB0byBkby4gIEFzIGFuCmludGVybWVkaWF0ZSBzdGVwLCBob3cgYWJvdXQgdGhpczog
-cmF0aGVyIHRoYW4gdGFja2luZyBvbiB0aG9zZSBsaW5lcyBpbgprZHVtcC50eHQsIHJld3JpdGUg
-dGhhdCBwYXJhZ3JhcGggdG8gc2ltcGx5IHNheSB3aGF0IHRoZSByZWFkZXIgc2hvdWxkCnVzZS4g
-IElmIG5yX2NwdXMgaXMgZ29vZCBmb3IgZXZlcnlib2R5LCBqdXN0IHNheSB0aGF0LCBidXQgeW91
-ciBwcmV2aW91cwpwYXRjaCBzdWdnZXN0cyB0aGF0IHRoZSBzaXR1YXRpb24gaXNuJ3QgcXVpdGUg
-dGhhdCBzaW1wbGU/CgpUaGFua3MsCgpqb24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Aug 18, 2016 at 7:41 PM, Baoquan He <bhe@redhat.com> wrote:
+>
+> This makes sense. Makedumpfile need this to parse memory sections.
+
+Yup, good addition.
+
+Acked-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+>
+> Ack.
+>
+> Acked-by: Baoquan He <bhe@redhat.com>
+>
+> On 08/18/16 at 07:47am, Thomas Garnier wrote:
+>> KASLR memory randomization can randomize the base of the physical memory
+>> mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
+>> (VMEMMAP_START). Adding these variables on VMCOREINFO so tools can
+>> easily identify the base of each memory section.
+>>
+>> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+>> ---
+>> Based on next-20160817
+>> ---
+>>  arch/x86/kernel/machine_kexec_64.c | 3 +++
+>>  include/linux/kexec.h              | 6 ++++++
+>>  2 files changed, 9 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+>> index fc3389f..b1f15a2 100644
+>> --- a/arch/x86/kernel/machine_kexec_64.c
+>> +++ b/arch/x86/kernel/machine_kexec_64.c
+>> @@ -338,6 +338,9 @@ void arch_crash_save_vmcoreinfo(void)
+>>       vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+>>                             kaslr_offset());
+>>       VMCOREINFO_PHYS_BASE(phys_base);
+>> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
+>> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
+>> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
+>>  }
+>>
+>>  /* arch-dependent functionality related to kexec file-based syscall */
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index d3ae429..cd3874c 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -261,6 +261,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+>>  #define VMCOREINFO_PHYS_BASE(value) \
+>>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+>
+> Could it be better to define only one MACRO like VMCOREINFO_
+>> +#define VMCOREINFO_PAGE_OFFSET(value) \
+>> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
+>> +#define VMCOREINFO_VMALLOC_START(value) \
+>> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
+>> +#define VMCOREINFO_VMEMMAP_START(value) \
+>> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
+>>
+>>  extern struct kimage *kexec_image;
+>>  extern struct kimage *kexec_crash_image;
+>> --
+>> 2.8.0.rc3.226.g39d4020
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+
+-- 
+Kees Cook
+Nexus Security
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
