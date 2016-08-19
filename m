@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f172.google.com ([209.85.161.172])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bahsp-0006A1-2X
- for kexec@lists.infradead.org; Fri, 19 Aug 2016 11:22:44 +0000
-Received: by mail-yw0-f172.google.com with SMTP id u134so10769001ywg.3
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 04:22:22 -0700 (PDT)
-Date: Fri, 19 Aug 2016 16:52:17 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-Message-ID: <20160819112217.GB22221@localhost.localdomain>
+Date: Fri, 19 Aug 2016 08:26:41 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Message-ID: <20160819132641.GA12709@rob-hp-laptop>
 References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
- <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
- <20160819012651.GE20080@linaro.org>
+ <20160809015747.28591-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160819012651.GE20080@linaro.org>
+In-Reply-To: <20160809015747.28591-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,46 +21,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, catalin.marinas@arm.com, dyoung@redhat.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, frowand.list@gmail.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 19/08/2016:10:26:52 AM, AKASHI Takahiro wrote:
-> >From 740563e4a437f0d6ecf6e421c91433f9b8f19041 Mon Sep 17 00:00:00 2001
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Date: Fri, 19 Aug 2016 09:57:52 +0900
-> Subject: [PATCH] arm64: mark reserved memblock regions explicitly
+On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
+> From: James Morse <james.morse@arm.com>
 > 
+> Add documentation for
+> 	linux,crashkernel-base and crashkernel-size,
+> 	linux,usable-memory-range, and
+> 	linux,elfcorehdr
+> used by arm64 kexec/kdump to decribe the kdump reserved area, and
+> the elfcorehdr's location within it.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> [takahiro.akashi@linaro.org:
+>     renamed "usable-memory" to "usable-memory-range",
+>     added "linux,crashkernel-base" and "-size" ]
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 > ---
->  arch/arm64/kernel/setup.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
 > 
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 38eda13..38589b5 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -205,10 +205,15 @@ static void __init request_standard_resources(void)
->  
->  	for_each_memblock(memory, region) {
->  		res = alloc_bootmem_low(sizeof(*res));
-> -		res->name  = "System RAM";
-> +		if (memblock_is_nomap(region)) {
-> +			res->name  = "reserved";
-> +			res->flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +		} else {
-> +			res->name  = "System RAM";
-> +			res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> +		}
->  		res->start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
->  		res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
-> -		res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
->  
->  		request_resource(&iomem_resource, res);
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 6ae9d82..236188a 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+>  book3e) by some versions of kexec-tools to tell the new kernel that it
+>  is being booted by kexec, as the booting environment may differ (e.g.
+>  a different secondary CPU release mechanism)
+> +
+> +linux,crashkernel-base
+> +linux,crashkernel-size
+> +----------------------
+> +These properties (currently used on PowerPC and arm64) indicates
+> +the base address and the size, respectively, of the reserved memory
+> +range for crash dump kernel.
+> +e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,crashkernel-base = <0x9 0xf0000000>;
+> +		linux,crashkernel-size = <0x0 0x10000000>;
+> +	};
+> +};
+> +
+> +linux,usable-memory-range
+> +-------------------------
+> +
+> +This property (currently used only on arm64) holds the memory range,
+> +the base address and the size, which can be used as system ram on
+> +the *current* kernel. Note that, if this property is present, any memory
+> +regions under "memory" nodes in DT blob or ones marked as "conventional
+> +memory" in EFI memory map should be ignored.
+> +e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+> +	};
+> +};
 
+I've read the discussion on this. I think you should use the existing 
+linux,usable-memory property in the memory nodes. If UEFI systems don't 
+have memory nodes, then you can find an UEFI way to describe this. DT is 
+not the dumping ground for what doesn't fit in UEFI. How do x86 systems 
+work?
 
-It will help kexec-tools to prevent copying  of any unnecessary data. I
-think, then you also need to change phys_offset calculation in kexec-tools. That
-should be start of either of first "reserved" or "System RAM" block.
-
-~Pratyush
+Rob
 
 _______________________________________________
 kexec mailing list
