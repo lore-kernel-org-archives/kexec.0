@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pa0-x22c.google.com ([2607:f8b0:400e:c03::22c])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baZl6-0003hr-OZ
- for kexec@lists.infradead.org; Fri, 19 Aug 2016 02:42:13 +0000
-Date: Fri, 19 Aug 2016 10:41:46 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v1] kdump, vmcoreinfo: report memory sections virtual
- addresses
-Message-ID: <20160819024146.GA12340@x1.redhat.com>
-References: <1471531632-23003-1-git-send-email-thgarnie@google.com>
+ id 1badzp-00015n-6d
+ for kexec@lists.infradead.org; Fri, 19 Aug 2016 07:13:42 +0000
+Received: by mail-pa0-x22c.google.com with SMTP id i5so13579816pat.2
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 00:13:20 -0700 (PDT)
+Date: Fri, 19 Aug 2016 16:19:31 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v2 0/7] (kexec-tools) arm64: add kdump support
+Message-ID: <20160819071930.GG20080@linaro.org>
+References: <20160809020032.28654-1-takahiro.akashi@linaro.org>
+ <20160810175648.GB24137@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1471531632-23003-1-git-send-email-thgarnie@google.com>
+In-Reply-To: <20160810175648.GB24137@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,71 +26,148 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Garnier <thgarnie@google.com>
-Cc: keescook@chromium.org, kernel-hardening@lists.openwall.com, surovegin@google.com, kexec@lists.infradead.org, x86@kernel.org, Xunlei Pang <xlpang@redhat.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: geoff@infradead.org, horms@verge.net.au, kexec@lists.infradead.org
 
+Pratyush, Geoff
 
-This makes sense. Makedumpfile need this to parse memory sections.
+# If I had Seattle, I could debug easily :)
 
-Ack.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-On 08/18/16 at 07:47am, Thomas Garnier wrote:
-> KASLR memory randomization can randomize the base of the physical memory
-> mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
-> (VMEMMAP_START). Adding these variables on VMCOREINFO so tools can
-> easily identify the base of each memory section.
+On Wed, Aug 10, 2016 at 11:26:48PM +0530, Pratyush Anand wrote:
+> Hi Geoff and Takahiro,
 > 
-> Signed-off-by: Thomas Garnier <thgarnie@google.com>
-> ---
-> Based on next-20160817
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 3 +++
->  include/linux/kexec.h              | 6 ++++++
->  2 files changed, 9 insertions(+)
+> I am having some issues with kexec+kdump while working with Seattle platform. On
+> top level, kernel crashes in copy_oldmem_page(), because it gets wrong offset
+> for log_buf during vmcore-dmesg save.
 > 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index fc3389f..b1f15a2 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -338,6 +338,9 @@ void arch_crash_save_vmcoreinfo(void)
->  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
->  			      kaslr_offset());
->  	VMCOREINFO_PHYS_BASE(phys_base);
-> +	VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
-> +	VMCOREINFO_VMALLOC_START(VMALLOC_START);
-> +	VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
->  }
->  
->  /* arch-dependent functionality related to kexec file-based syscall */
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index d3ae429..cd3874c 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -261,6 +261,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->  	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
->  #define VMCOREINFO_PHYS_BASE(value) \
->  	vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+> Here is the detail:
+> 
+> (1) From /proc/iomem, these are the "System RAM" Components:
+> 
+> 8000000000-8001e7ffff : System RAM
+> 8001e80000-83ff17ffff : System RAM
+>         8002080000-8002b3ffff : Kernel code
+>         8002c40000-800348ffff : Kernel data
+>         807fe00000-80ffdfffff : Crash kernel
+> 83ff180000-83ff1cffff : System RAM
+> 83ff1d0000-83ff21ffff : System RAM
+> 83ff220000-83ffe4ffff : System RAM
+> 83ffe50000-83ffffffff : System RAM
+> 
+> (2) From kexec-tools debug print I see following:
+> elf_arm64_load: e_entry:       fffffc0008080000 -> 0000008000080000
+> elf_arm64_load: p_vaddr:       fffffc0008080000 -> 0000008000080000
+> elf_arm64_load: header_offset: 0000000000000000
+> elf_arm64_load: text_offset:   0000000000080000
+> elf_arm64_load: image_size:    0000000001410000
+> elf_arm64_load: phys_offset:   0000008000000000
+> elf_arm64_load: page_offset:   fffffc0008000000
+> 
+> I understand that "Kernel Code start physical address" 0x8002080000 should map
+> to e_entry vaddr which is 0xfffffc0008080000. However, kexec-tools debug print
+> shows that e_entry vaddr maps to PA 8000080000 which seems wrong.
 
-Could it be better to define only one MACRO like VMCOREINFO_
-> +#define VMCOREINFO_PAGE_OFFSET(value) \
-> +	vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
-> +#define VMCOREINFO_VMALLOC_START(value) \
-> +	vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
-> +#define VMCOREINFO_VMEMMAP_START(value) \
-> +	vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
->  
->  extern struct kimage *kexec_image;
->  extern struct kimage *kexec_crash_image;
-> -- 
-> 2.8.0.rc3.226.g39d4020
+Obviously, virt_to_phys() is wrong.
+As you know, we have to calculate virt_to_phys() in a different way
+depending on whether the vaddr is greater than PAGE_OFFSET (linear mapping)
+or not (kernel image mapping).
+See the kernel's include/asm/memory.h.
+
+Geoff, please update this function.
+
+> (3) further page_offset (or vp_offset in your new code) is calculated
+> as:arm64_mem.page_offset = ehdr.e_entry - arm64_mem.text_offset;
 > 
+> Current calcualtion of page_offset leads to wrong configuration of VA of alls
+> PT_LOAD (see below). Ultimately, this is also leading to kernel crash during
+> vmcore-dmesg and vmcore save operations, because we pass an offset to pread()
+> system call which maps to wrong physical address.
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Elf header: p_type = 1, p_offset = 0x8000000000 p_paddr = 0x8000000000
+> p_vaddr = 0xfffffc0008000000 p_filesz = 0x1e80000 p_memsz = 0x1e80000
+> [0xfffffc0008000000 should be mapping to 0x8002000000 and not 0x8000000000]
+
+I think that your comment here is wrong.
+This program header indicates the first memory region in the 1st kernel,
+that is,
+    8000000000-8001e7ffff : System RAM
+
+Is this region really part of "System RAM?"
+Can you show me the "Virtual kernel memory layout" in dmesg?
+
+> Elf header: p_type = 1, p_offset = 0x8001e80000 p_paddr = 0x8001e80000
+> p_vaddr = 0xfffffc0009e80000 p_filesz = 0x7df80000 p_memsz = 0x7df80000
+> Elf header: p_type = 1, p_offset = 0x80ffe00000 p_paddr = 0x80ffe00000
+> p_vaddr = 0xfffffc0107e00000 p_filesz = 0x2ff380000 p_memsz = 0x2ff380000
+> Elf header: p_type = 1, p_offset = 0x83ff180000 p_paddr = 0x83ff180000
+> p_vaddr = 0xfffffc0407180000 p_filesz = 0x50000 p_memsz = 0x50000
+> Elf header: p_type = 1, p_offset = 0x83ff1d0000 p_paddr = 0x83ff1d0000
+> p_vaddr = 0xfffffc04071d0000 p_filesz = 0x50000 p_memsz = 0x50000
+> Elf header: p_type = 1, p_offset = 0x83ff220000 p_paddr = 0x83ff220000
+> p_vaddr = 0xfffffc0407220000 p_filesz = 0xc30000 p_memsz = 0xc30000
+> Elf header: p_type = 1, p_offset = 0x83ffe50000 p_paddr = 0x83ffe50000
+> p_vaddr = 0xfffffc0407e50000 p_filesz = 0x1b0000 p_memsz = 0x1b0000
+> 
+> May be following should be better.
+> arm64_mem.page_offset = ehdr.e_entry - "kernel Code Start PA" + phys_offset.
+
+Probably not.
+
+> (4) Further more,  vmcore must have first PT_LOAD segment as kernel text area.
+
+Which part of the code do you think depends on this assumption?
+
+Thanks,
+-Takahiro AKASHI
+
+> In this platform we have first "System RAM" area as 8000000000-8001e7ffff which
+> is not matching to "Kernel code" area. Therefore, we should provide support of
+> "kern_size" so that first PT_LOAD is kernel text area.
+> 
+> ~Pratyush
+> On 09/08/2016:11:00:25 AM, AKASHI Takahiro wrote:
+> > My kernel patches of kdump suport on arm64 are currently under reviews [1].
+> > 
+> > This patchset is synced with them (v24) and provides necessary changes for
+> > kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+> > v3[2] along with a bugfix[3].
+> > 
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/447597.html
+> > [2] http://lists.infradead.org/pipermail/kexec/2016-August/016768.html
+> > [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
+> > 
+> > Changes for v2:
+> >  - Trim a temoprary buffer in setup_2nd_dtb()
+> >  - Add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+> >  - Update patch#7 from Pratyush
+> >    (re-worked by akashi)
+> > 
+> > AKASHI Takahiro (5):
+> >   arm64: kdump: identify memory regions
+> >   arm64: kdump: add elf core header segment
+> >   arm64: kdump: set up kernel image segment
+> >   arm64: kdump: set up other segments
+> >   arm64: kdump: add DT properties to crash dump kernel's dtb
+> > 
+> > Pratyush Anand (2):
+> >   kexec: generalize and rename get_kernel_stext_sym()
+> >   arm64: kdump: Add support for binary image files
+> > 
+> >  kexec/arch/arm/crashdump-arm.c          |  40 +------
+> >  kexec/arch/arm64/Makefile               |   2 +
+> >  kexec/arch/arm64/crashdump-arm64.c      | 188 +++++++++++++++++++++++++++++++-
+> >  kexec/arch/arm64/crashdump-arm64.h      |  18 ++-
+> >  kexec/arch/arm64/include/arch/options.h |   8 +-
+> >  kexec/arch/arm64/kexec-arm64.c          |  91 ++++++++++++++--
+> >  kexec/arch/arm64/kexec-elf-arm64.c      |  23 +++-
+> >  kexec/arch/arm64/kexec-image-arm64.c    |  60 +++++++++-
+> >  kexec/arch/i386/crashdump-x86.c         |  32 +-----
+> >  kexec/crashdump.c                       |  37 +++++++
+> >  kexec/crashdump.h                       |   1 +
+> >  11 files changed, 407 insertions(+), 93 deletions(-)
+> > 
+> > -- 
+> > 2.9.0
 
 _______________________________________________
 kexec mailing list
