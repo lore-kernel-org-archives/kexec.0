@@ -1,43 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-yb0-f180.google.com ([209.85.213.180])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baUa1-0003A0-BK
- for kexec@lists.infradead.org; Thu, 18 Aug 2016 21:10:26 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7IL8o6q036189
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 17:10:02 -0400
-Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
- by mx0b-001b2d01.pphosted.com with ESMTP id 24vmf25kvc-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 17:10:02 -0400
-Received: from localhost
- by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 18 Aug 2016 18:10:00 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 1FB101DC006F
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 17:09:49 -0400 (EDT)
-Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7IL9wLN54591734
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 18:09:58 -0300
-Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
- by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7IL9vxp010141
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 18:09:58 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation
- for some segments.
-Date: Thu, 18 Aug 2016 18:09:51 -0300
-In-Reply-To: <20160818090330.GC845@dhcp-128-65.nay.redhat.com>
-References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1471058305-30198-4-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160818090330.GC845@dhcp-128-65.nay.redhat.com>
+ id 1baejO-0002hr-GW
+ for kexec@lists.infradead.org; Fri, 19 Aug 2016 08:00:48 +0000
+Received: by mail-yb0-f180.google.com with SMTP id e31so13230150ybi.3
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 01:00:25 -0700 (PDT)
+Date: Fri, 19 Aug 2016 13:30:20 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH] fixup! arm64: kdump: add kdump support
+Message-ID: <20160819080020.GA584@localhost.localdomain>
+References: <57B2E759.201@arm.com>
+ <1471448011-20386-1-git-send-email-james.morse@arm.com>
 MIME-Version: 1.0
-Message-Id: <105132489.pljZvDuEBr@hactar>
+Content-Disposition: inline
+In-Reply-To: <1471448011-20386-1-git-send-email-james.morse@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,222 +26,142 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Balbir Singh <bsingharora@gmail.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Richter <erichte@linux.vnet.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>, linux-ima-devel@lists.sourceforge.net, Thomas Gleixner <tglx@linutronix.de>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello Dave,
+Hi James,
 
-Thanks for your review!
+On 17/08/2016:04:33:31 PM, James Morse wrote:
+> copy_oldmem_page() and mmap_vmcore() provide two ways for userspace to read
+> from /proc/vmcore. Neither of these check with memblock to see if the page
+> they are accessing is nomap. On Seattle this causes:
 
-[ Trimming down Cc: list a little to try to clear the "too many recipients"   
-  mailing list restriction. ]
+Thanks for the patch.It did resolve the kernel crash issue with makedumpfile,
+however neither there was any data in vmcore-dmesg nor crash utility was able to
+work the saved vmcore.
 
-Am Donnerstag, 18 August 2016, 17:03:30 schrieb Dave Young:
-> On 08/13/16 at 12:18am, Thiago Jung Bauermann wrote:
-> > Adds checksum argument to kexec_add_buffer specifying whether the given
-> > segment should be part of the checksum calculation.
+This happened, because we still do not have correct page_offset (or vp_offset as
+per new patches) calculation in kexec-tools. I still need following fixup in
+kexec-tools.
+
+https://github.com/pratyushanand/kexec-tools/commit/2358de3ec614d8282a565b8d031a1a91ebc55475
+
+~Pratyush
 > 
-> Since it is used with add buffer, could it be added to kbuf as a new
-> field?
-
-I was on the fence about adding it as a new argument to kexec_add_buffer or 
-as a new field to struct kexec_buf. Both alternatives make sense to me. I 
-implemented your suggestion in the patch below, what do you think?
-
-> Like kbuf.no_checksum, default value is 0 that means checksum is needed
-> if it is 1 then no need a checksum.
-
-It's an interesting idea and I implemented it that way, though in practice 
-all current users of struct kexec_buf put it on the stack so the field needs 
-to be initialized explicitly.
-
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
-
-Subject: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation for
- some segments.
-
-Add skip_checksum member to struct kexec_buf to specify whether the
-corresponding segment should be part of the checksum calculation.
-
-The next patch will add a way to update segments after a kimage is loaded.
-Segments that will be updated in this way should not be checksummed,
-otherwise they will cause the purgatory checksum verification to fail
-when the machine is rebooted.
-
-As a bonus, we don't need to special-case the purgatory segment anymore
-to avoid checksumming it.
-
-Adjust places using struct kexec_buf to set skip_checksum.
-
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/kexec_elf_64.c |  5 +++--
- arch/x86/kernel/crash.c            |  3 ++-
- arch/x86/kernel/kexec-bzimage64.c  |  2 +-
- include/linux/kexec.h              | 23 ++++++++++++++---------
- kernel/kexec_file.c                | 15 +++++++--------
- 5 files changed, 27 insertions(+), 21 deletions(-)
-
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index 22afc7b5ee73..d009f5363968 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -107,7 +107,7 @@ static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
- 	int ret;
- 	size_t i;
- 	struct kexec_buf kbuf = { .image = image, .buf_max = ppc64_rma_size,
--				  .top_down = false };
-+				  .top_down = false, .skip_checksum = false };
- 
- 	/* Read in the PT_LOAD segments. */
- 	for (i = 0; i < ehdr->e_phnum; i++) {
-@@ -162,7 +162,8 @@ void *elf64_load(struct kimage *image, char *kernel_buf,
- 	struct elf_info elf_info;
- 	struct fdt_reserve_entry *rsvmap;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
--				  .buf_max = ppc64_rma_size };
-+				  .buf_max = ppc64_rma_size,
-+				  .skip_checksum = false };
- 
- 	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
- 	if (ret)
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 38a1cdf6aa05..7b8f62c86651 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -617,7 +617,8 @@ int crash_load_segments(struct kimage *image)
- {
- 	int ret;
- 	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
--				  .buf_max = ULONG_MAX, .top_down = false };
-+				  .buf_max = ULONG_MAX, .top_down = false,
-+				  .skip_checksum = false };
- 
- 	/*
- 	 * Determine and load a segment for backup area. First 640K RAM
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 4b3a75329fb6..449f433cd225 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -341,7 +341,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 	unsigned int setup_hdr_offset = offsetof(struct boot_params, hdr);
- 	unsigned int efi_map_offset, efi_map_sz, efi_setup_data_offset;
- 	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
--				  .top_down = true };
-+				  .top_down = true, .skip_checksum = false };
- 
- 	header = (struct setup_header *)(kernel + setup_hdr_offset);
- 	setup_sects = header->setup_sects;
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 4559a1a01b0a..e5b3d99cbe50 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -100,6 +100,9 @@ struct kexec_segment {
- 	size_t bufsz;
- 	unsigned long mem;
- 	size_t memsz;
-+
-+	/* Whether this segment is ignored in the checksum calculation. */
-+	bool skip_checksum;
- };
- 
- #ifdef CONFIG_COMPAT
-@@ -151,15 +154,16 @@ struct kexec_file_ops {
- 
- /**
-  * struct kexec_buf - parameters for finding a place for a buffer in memory
-- * @image:	kexec image in which memory to search.
-- * @buffer:	Contents which will be copied to the allocated memory.
-- * @bufsz:	Size of @buffer.
-- * @mem:	On return will have address of the buffer in memory.
-- * @memsz:	Size for the buffer in memory.
-- * @buf_align:	Minimum alignment needed.
-- * @buf_min:	The buffer can't be placed below this address.
-- * @buf_max:	The buffer can't be placed above this address.
-- * @top_down:	Allocate from top of memory.
-+ * @image:		kexec image in which memory to search.
-+ * @buffer:		Contents which will be copied to the allocated memory.
-+ * @bufsz:		Size of @buffer.
-+ * @mem:		On return will have address of the buffer in memory.
-+ * @memsz:		Size for the buffer in memory.
-+ * @buf_align:		Minimum alignment needed.
-+ * @buf_min:		The buffer can't be placed below this address.
-+ * @buf_max:		The buffer can't be placed above this address.
-+ * @top_down:		Allocate from top of memory.
-+ * @skip_checksum:	Don't verify checksum for this buffer in purgatory.
-  */
- struct kexec_buf {
- 	struct kimage *image;
-@@ -171,6 +175,7 @@ struct kexec_buf {
- 	unsigned long buf_min;
- 	unsigned long buf_max;
- 	bool top_down;
-+	bool skip_checksum;
- };
- 
- int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index c8418d62e2fc..f6e9958bf578 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -658,6 +658,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
- 	ksegment->bufsz = kbuf->bufsz;
- 	ksegment->mem = kbuf->mem;
- 	ksegment->memsz = kbuf->memsz;
-+	ksegment->skip_checksum = kbuf->skip_checksum;
- 	kbuf->image->nr_segments++;
- 	return 0;
- }
-@@ -672,7 +673,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	char *digest;
- 	void *zero_buf;
- 	struct kexec_sha_region *sha_regions;
--	struct purgatory_info *pi = &image->purgatory_info;
- 
- 	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
- 	zero_buf_sz = PAGE_SIZE;
-@@ -712,11 +712,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		struct kexec_segment *ksegment;
- 
- 		ksegment = &image->segment[i];
--		/*
--		 * Skip purgatory as it will be modified once we put digest
--		 * info in purgatory.
--		 */
--		if (ksegment->kbuf == pi->purgatory_buf)
-+		if (ksegment->skip_checksum)
- 			continue;
- 
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
-@@ -788,7 +784,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	Elf_Shdr *sechdrs = NULL;
- 	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
- 				  .buf_min = min, .buf_max = max,
--				  .top_down = top_down };
-+				  .top_down = top_down, .skip_checksum = true };
- 
- 	/*
- 	 * sechdrs_c points to section headers in purgatory and are read
-@@ -893,7 +889,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	if (kbuf.buf_align < bss_align)
- 		kbuf.buf_align = bss_align;
- 
--	/* Add buffer to segment list */
-+	/*
-+	 * Add buffer to segment list. Don't checksum the segment as
-+	 * it will be modified once we put digest info in purgatory.
-+	 */
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out;
--- 
-1.9.1
-
-
+> [  174.393875] Unhandled fault: synchronous external abort (0x96000210) at
+> 0xffffff80096b6000
+> [  174.402158] Internal error: : 96000210 [#1] PREEMPT SMP
+> [  174.407370] Modules linked in:
+> [  174.410417] CPU: 6 PID: 2059 Comm: cp Tainted: G S      W I     4.8.0-rc1+ #4708
+> [  174.417799] Hardware name: AMD Overdrive/Supercharger/Default string, BIOS
+> ROD1002C 04/08/2016
+> [  174.426396] task: ffffffc0fdec5780 task.stack: ffffffc0f34bc000
+> [  174.432313] PC is at __arch_copy_to_user+0x180/0x280
+> [  174.437274] LR is at copy_oldmem_page+0xac/0xf0
+> [  174.441791] pc : [<ffffff800835e080>] lr : [<ffffff8008095b9c>] pstate: 20000145
+> [  174.449173] sp : ffffffc0f34bfc90
+> [  174.452474] x29: ffffffc0f34bfc90 x28: 0000000000000000
+> [  174.457776] x27: 0000000008000000 x26: 000000000000d000
+> [  174.463077] x25: 0000000000000001 x24: ffffff8008eb5000
+> [  174.468378] x23: 0000000000000000 x22: ffffff80096b6000
+> [  174.473679] x21: 0000000000000001 x20: 0000000030127000
+> [  174.478979] x19: 0000000000001000 x18: 0000007ff7085d60
+> [  174.484279] x17: 0000000000429358 x16: ffffff80081d9e88
+> [  174.489579] x15: 0000007fae377590 x14: 0000000000000000
+> 
+> [  174.494880] x13: 0000000000000000 x12: ffffff8008dd1000
+> [  174.500180] x11: ffffff80096b6fff x10: ffffff80096b6fff
+> [  174.505480] x9 : 0000000040000000 x8 : ffffff8008db6000
+> [  174.510781] x7 : ffffff80096b7000 x6 : 0000000030127000
+> [  174.516082] x5 : 0000000030128000 x4 : 0000000000000000
+> [  174.521382] x3 : 00e8000000000713 x2 : 0000000000000f80
+> [  174.526682] x1 : ffffff80096b6000 x0 : 0000000030127000
+> [  174.531982]
+> [  174.533461] Process cp (pid: 2059, stack limit = 0xffffffc0f34bc020)
+> 
+> [  174.848448] [<ffffff800835e080>] __arch_copy_to_user+0x180/0x280
+> [  174.854448] [<ffffff8008245f34>] read_from_oldmem.part.4+0xb4/0xf4
+> [  174.860615] [<ffffff8008246074>] read_vmcore+0x100/0x22c
+> [  174.865919] [<ffffff8008239378>] proc_reg_read+0x64/0x90
+> [  174.871223] [<ffffff80081d7da8>] __vfs_read+0x28/0x108
+> [  174.876348] [<ffffff80081d8ae4>] vfs_read+0x84/0x144
+> [  174.881301] [<ffffff80081d9ecc>] SyS_read+0x44/0xa0
+> [  174.886167] [<ffffff8008082ef0>] el0_svc_naked+0x24/0x28
+> [  174.891466] Code: 00000000 00000000 00000000 00000000 (a8c12027)
+> [  174.897562] ---[ end trace 00801b2e35b0cd1f ]---
+> 
+> When reading /proc/vmcore with cat/cp or or mmap()ing it with makedumpfile.
+> 
+> The fs/proc/vmcore.c code provides a hook to indicate whether oldmem pages
+> are ram or not. Use this to look for our earlier handiwork in memblock.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> ---
+> 
+> Hi Pratyush,
+> 
+> I couldn't get makedumpfile to build, or rather it depends on elfutils which
+> wouldn't build for autotools reasons. Does implementing this hook solve your
+> makedumpfile issue?
+> 
+> With this patch I can extract a usable vmcore file using read or mmap,
+> avoiding the earlier splat.
+> 
+> Akashi, if you agree this is the right thing to do, please consider folding
+> this into patch 5. (no need to keep the commit mesage or anything).
+> 
+> Thanks,
+> 
+> James
+> 
+>  arch/arm64/kernel/crash_dump.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
+> index 2dc54d129be1..76c71ab42994 100644
+> --- a/arch/arm64/kernel/crash_dump.c
+> +++ b/arch/arm64/kernel/crash_dump.c
+> @@ -12,10 +12,38 @@
+>  #include <linux/crash_dump.h>
+>  #include <linux/errno.h>
+>  #include <linux/io.h>
+> +#include <linux/init.h>
+>  #include <linux/memblock.h>
+>  #include <linux/uaccess.h>
+>  #include <asm/memory.h>
+>  
+> +#ifdef CONFIG_PROC_VMCORE
+> +static int oldmem_pfn_is_ram(unsigned long pfn)
+> +{
+> +	unsigned long addr = pfn << PAGE_SHIFT;
+> +
+> +	/*
+> +	 * We removed oldmem from memblock.memory, then re-added some regions
+> +	 * which are reserved by/for firmware as memory and nomap.
+> +	 * If an address exists as memory, but is marked nomap, return false.
+> +	 */
+> +	if (memblock_is_memory(addr) && !memblock_is_map_memory(addr))
+> +		return 0;
+> +
+> +	return 1;
+> +}
+> +
+> +static int __init do_register_oldmem_pfn_is_ram(void)
+> +{
+> +	return register_oldmem_pfn_is_ram(&oldmem_pfn_is_ram);
+> +}
+> +/*
+> + * vmcore_init() is called via fs_initcall, ensure we register
+> + * oldmem_pfn_is_ram() before then.
+> + */
+> +arch_initcall(do_register_oldmem_pfn_is_ram);
+> +#endif
+> +
+>  /**
+>   * copy_oldmem_page() - copy one page from old kernel memory
+>   * @pfn: page frame number to be copied
+> -- 
+> 2.8.0.rc3
 
 _______________________________________________
 kexec mailing list
