@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x230.google.com ([2607:f8b0:400e:c03::230])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1baUi1-0007CH-TL
- for kexec@lists.infradead.org; Thu, 18 Aug 2016 21:18:46 +0000
-Received: by mail-pa0-x230.google.com with SMTP id pp5so9446013pac.3
- for <kexec@lists.infradead.org>; Thu, 18 Aug 2016 14:18:21 -0700 (PDT)
-Subject: Re: [V4 PATCH 2/2] mips/panic: Replace smp_send_stop() with kdump
- friendly version in panic path
-References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
-From: Corey Minyard <cminyard@mvista.com>
-Message-ID: <bdfd7136-6b0e-3820-dbac-d72529a4f058@mvista.com>
-Date: Thu, 18 Aug 2016 16:18:17 -0500
+Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1baXmA-0000K0-45
+ for kexec@lists.infradead.org; Fri, 19 Aug 2016 00:35:10 +0000
+Message-ID: <57B653D1.8060106@cn.fujitsu.com>
+Date: Fri, 19 Aug 2016 08:33:21 +0800
+From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
+ <zhouwj-fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <20160810080950.11028.28000.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
+Subject: Re: [PATCH v9 1/2] Documentation: kdump: remind user of nr_cpus
+References: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>	<1471489907-27737-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <20160818111854.362bb972@lwn.net>
+In-Reply-To: <20160818111854.362bb972@lwn.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,148 +24,49 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>, Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, David Daney <david.daney@cavium.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Xunlei Pang <xpang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <mhiramat@kernel.org>, "Steven J. Hill" <steven.hill@cavium.com>, Daniel Walker <dwalker@fifo99.com>, xen-devel@lists.xenproject.org, Vivek Goyal <vgoyal@redhat.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, xlpang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, joe@perches.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-Sorry this took so long, but I have finally tested this, it seems to 
-work fine:
+Hi Jonathan,
 
-Tested-by: Corey Minyard <cminyard@mvista.com>
-Reviewed-by: Corey Minyard <cminyard@mvista.com>
+Thanks for your reply.
 
-On 08/10/2016 03:09 AM, Hidehiro Kawai wrote:
-> Daniel Walker reported problems which happens when
-> crash_kexec_post_notifiers kernel option is enabled
-> (https://lkml.org/lkml/2015/6/24/44).
+On 08/19/2016 01:18 AM, Jonathan Corbet wrote:
+> On Thu, 18 Aug 2016 11:11:46 +0800
+> Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com> wrote:
 >
-> In that case, smp_send_stop() is called before entering kdump routines
-> which assume other CPUs are still online.  As the result, kdump
-> routines fail to save other CPUs' registers.  Additionally for MIPS
-> OCTEON, it misses to stop the watchdog timer.
+> Thank you for working to improve the documentation!
 >
-> To fix this problem, call a new kdump friendly function,
-> crash_smp_send_stop(), instead of the smp_send_stop() when
-> crash_kexec_post_notifiers is enabled.  crash_smp_send_stop() is a
-> weak function, and it just call smp_send_stop().  Architecture
-> codes should override it so that kdump can work appropriately.
-> This patch provides MIPS version.
+>>   * We generally don' have to bring up a SMP kernel just to capture the
+>>     dump. Hence generally it is useful either to build a UP dump-capture
+>>     kernel or specify maxcpus=1 option while loading dump-capture kernel.
+>> +  Note, though maxcpus always works, you should replace it by nr_cpus to
+>> +  save memory if supported by the current ARCH, such as x86.
 >
-> Reported-by: Daniel Walker <dwalker@fifo99.com>
-> Fixes: f06e5153f4ae (kernel/panic.c: add "crash_kexec_post_notifiers" option)
-> Signed-off-by: Hidehiro Kawai <hidehiro.kawai.ez@hitachi.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: David Daney <david.daney@cavium.com>
-> Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-> Cc: "Steven J. Hill" <steven.hill@cavium.com>
-> Cc: Corey Minyard <cminyard@mvista.com>
+> So, IMHO, this seems like the wrong place for this.  I've just spent a bit
+> of time staring at kernel-parameters.txt, and there is no way for a
+> clueless user like me to know what the difference is between maxcpus= and
+> nr_cpus= would be.  A far better patch would be to update the
+> documentation there to make that clear.  Any chance you would be willing
+> to do that?
 >
-> ---
-> I'm not familiar with MIPS, and I don't have a test environment and
-> just did build tests only.  Please don't apply this patch until
-> someone does enough tests, otherwise simply drop this patch.
-> ---
->   arch/mips/cavium-octeon/setup.c  |   14 ++++++++++++++
->   arch/mips/include/asm/kexec.h    |    1 +
->   arch/mips/kernel/crash.c         |   18 +++++++++++++++++-
->   arch/mips/kernel/machine_kexec.c |    1 +
->   4 files changed, 33 insertions(+), 1 deletion(-)
+> Then, rather than tacking an "ignore what you just read" note into
+> kdump.txt, it could maybe be rewritten to simply say what users should do?
 >
-> diff --git a/arch/mips/cavium-octeon/setup.c b/arch/mips/cavium-octeon/setup.c
-> index cb16fcc..5537f95 100644
-> --- a/arch/mips/cavium-octeon/setup.c
-> +++ b/arch/mips/cavium-octeon/setup.c
-> @@ -267,6 +267,17 @@ static void octeon_crash_shutdown(struct pt_regs *regs)
->   	default_machine_crash_shutdown(regs);
->   }
->   
-> +#ifdef CONFIG_SMP
-> +void octeon_crash_smp_send_stop(void)
-> +{
-> +	int cpu;
-> +
-> +	/* disable watchdogs */
-> +	for_each_online_cpu(cpu)
-> +		cvmx_write_csr(CVMX_CIU_WDOGX(cpu_logical_map(cpu)), 0);
-> +}
-> +#endif
-> +
->   #endif /* CONFIG_KEXEC */
->   
->   #ifdef CONFIG_CAVIUM_RESERVE32
-> @@ -911,6 +922,9 @@ void __init prom_init(void)
->   	_machine_kexec_shutdown = octeon_shutdown;
->   	_machine_crash_shutdown = octeon_crash_shutdown;
->   	_machine_kexec_prepare = octeon_kexec_prepare;
-> +#ifdef CONFIG_SMP
-> +	_crash_smp_send_stop = octeon_crash_smp_send_stop;
-> +#endif
->   #endif
->   
->   	octeon_user_io_init();
-> diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
-> index ee25ebb..493a3cc 100644
-> --- a/arch/mips/include/asm/kexec.h
-> +++ b/arch/mips/include/asm/kexec.h
-> @@ -45,6 +45,7 @@ extern const unsigned char kexec_smp_wait[];
->   extern unsigned long secondary_kexec_args[4];
->   extern void (*relocated_kexec_smp_wait) (void *);
->   extern atomic_t kexec_ready_to_reboot;
-> +extern void (*_crash_smp_send_stop)(void);
->   #endif
->   #endif
->   
-> diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
-> index 610f0f3..1723b17 100644
-> --- a/arch/mips/kernel/crash.c
-> +++ b/arch/mips/kernel/crash.c
-> @@ -47,9 +47,14 @@ static void crash_shutdown_secondary(void *passed_regs)
->   
->   static void crash_kexec_prepare_cpus(void)
->   {
-> +	static int cpus_stopped;
->   	unsigned int msecs;
-> +	unsigned int ncpus;
->   
-> -	unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
-> +	if (cpus_stopped)
-> +		return;
-> +
-> +	ncpus = num_online_cpus() - 1;/* Excluding the panic cpu */
->   
->   	dump_send_ipi(crash_shutdown_secondary);
->   	smp_wmb();
-> @@ -64,6 +69,17 @@ static void crash_kexec_prepare_cpus(void)
->   		cpu_relax();
->   		mdelay(1);
->   	}
-> +
-> +	cpus_stopped = 1;
-> +}
-> +
-> +/* Override the weak function in kernel/panic.c */
-> +void crash_smp_send_stop(void)
-> +{
-> +	if (_crash_smp_send_stop)
-> +		_crash_smp_send_stop();
-> +
-> +	crash_kexec_prepare_cpus();
->   }
->   
->   #else /* !defined(CONFIG_SMP)  */
-> diff --git a/arch/mips/kernel/machine_kexec.c b/arch/mips/kernel/machine_kexec.c
-> index 50980bf3..5972520 100644
-> --- a/arch/mips/kernel/machine_kexec.c
-> +++ b/arch/mips/kernel/machine_kexec.c
-> @@ -25,6 +25,7 @@ void (*_machine_crash_shutdown)(struct pt_regs *regs) = NULL;
->   #ifdef CONFIG_SMP
->   void (*relocated_kexec_smp_wait) (void *);
->   atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
-> +void (*_crash_smp_send_stop)(void) = NULL;
->   #endif
->   
->   int
->
->
+
+I was also confused by maxcpus and nr_cpus before writing this patch.
+I think it is a good choice to describe it in kernel-parameters.txt.
+
+Then, only two things need to be done I think.
+One is move the above description to maxcpus= in kernel-parameters.txt.
+And the other is replace maxcpus with maxcpus/nr_cpus in kdump.txt.
+
+How do you think?
+
+-- 
+Thanks
+Zhou
+
 
 
 _______________________________________________
