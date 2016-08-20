@@ -1,19 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22a.google.com ([2a00:1450:400c:c09::22a])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bao7F-0003G7-8s
- for kexec@lists.infradead.org; Fri, 19 Aug 2016 18:02:02 +0000
-Received: by mail-wm0-x22a.google.com with SMTP id o80so52182039wme.1
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 11:01:39 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20160819024146.GA12340@x1.redhat.com>
-References: <1471531632-23003-1-git-send-email-thgarnie@google.com>
- <20160819024146.GA12340@x1.redhat.com>
-From: Kees Cook <keescook@chromium.org>
-Date: Fri, 19 Aug 2016 11:01:36 -0700
-Message-ID: <CAGXu5j+2o5iPbesqJA5t2QDM2hK=g7mZAAdoS4EqHzVE76DzcA@mail.gmail.com>
-Subject: Re: [PATCH v1] kdump,
- vmcoreinfo: report memory sections virtual addresses
+ id 1batzI-0004Wh-2D
+ for kexec@lists.infradead.org; Sat, 20 Aug 2016 00:18:14 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7K0Do31042930
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:50 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 24wwec46jy-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:50 -0400
+Received: from localhost
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Fri, 19 Aug 2016 21:17:47 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 50FD51DC006F
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:35 -0400 (EDT)
+Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7K0Hi0K4931790
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:17:44 -0300
+Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
+ by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7K0HhR4004772
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:17:44 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v6 00/12] kexec_file_load implementation for PowerPC
+Date: Fri, 19 Aug 2016 21:17:10 -0300
+Message-Id: <1471652242-14436-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,89 +39,276 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "kernel-hardening@lists.openwall.com" <kernel-hardening@lists.openwall.com>, Eugene Surovegin <surovegin@google.com>, Kexec Mailing List <kexec@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Garnier <thgarnie@google.com>
+To: kexec@lists.infradead.org
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Aug 18, 2016 at 7:41 PM, Baoquan He <bhe@redhat.com> wrote:
->
-> This makes sense. Makedumpfile need this to parse memory sections.
+[ Andrew, since this series touches generic code, x86 and powerpc,
+  Michael Ellerman and Dave Young think it should go via your tree. ]
 
-Yup, good addition.
+I'm sending a new version because of a few problems with version 5 of the
+patch series (more detailed changelog at the end of this email):
 
-Acked-by: Kees Cook <keescook@chromium.org>
+- Since maintainers expressed objections to the "extend kexec_file_load
+  system call" series, this series is now based directly on v4.8-rc1.
 
--Kees
+- When I moved changes from the patch "Add support for loading ELF
+  kernels with kexec_file_load." to simplify it, I broke the build
+  when this series is applied up to patch "powerpc: Adapt
+  elf64_apply_relocate_add for kexec_file_load.". Sorry about that.
+  I verified that all patches in this version of the series build
+  with different combinations of relevant config options.
 
->
-> Ack.
->
-> Acked-by: Baoquan He <bhe@redhat.com>
->
-> On 08/18/16 at 07:47am, Thomas Garnier wrote:
->> KASLR memory randomization can randomize the base of the physical memory
->> mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
->> (VMEMMAP_START). Adding these variables on VMCOREINFO so tools can
->> easily identify the base of each memory section.
->>
->> Signed-off-by: Thomas Garnier <thgarnie@google.com>
->> ---
->> Based on next-20160817
->> ---
->>  arch/x86/kernel/machine_kexec_64.c | 3 +++
->>  include/linux/kexec.h              | 6 ++++++
->>  2 files changed, 9 insertions(+)
->>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> index fc3389f..b1f15a2 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -338,6 +338,9 @@ void arch_crash_save_vmcoreinfo(void)
->>       vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
->>                             kaslr_offset());
->>       VMCOREINFO_PHYS_BASE(phys_base);
->> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
->> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
->> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
->>  }
->>
->>  /* arch-dependent functionality related to kexec file-based syscall */
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index d3ae429..cd3874c 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -261,6 +261,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
->>  #define VMCOREINFO_PHYS_BASE(value) \
->>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
->
-> Could it be better to define only one MACRO like VMCOREINFO_
->> +#define VMCOREINFO_PAGE_OFFSET(value) \
->> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_VMALLOC_START(value) \
->> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_VMEMMAP_START(value) \
->> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
->>
->>  extern struct kimage *kexec_image;
->>  extern struct kimage *kexec_crash_image;
->> --
->> 2.8.0.rc3.226.g39d4020
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+- The purgatory wasn't working on big endian ppc64. One reason was
+  that elf64_apply_relocate_add was complaining of an undefined
+  symbol for the TOC relocations. Now the R_PPC64_TOC relocations
+  are allowed in the same way as the ABIv2 TOC relocations. The other
+  reason was that strings.S didn't define the dot symbols that ABIv1
+  needs. Now all combinations of kexec between LE and BE work.
 
+- When I factored setup_new_fdt out of elf64_load, I introduced a small
+  bug where find_debug_console receives a bogus /chosen offset. As
+  a result, the purgatory wasn't printing it's "I'm in purgatory" message.
+  This is fixed in this version.
 
+Original cover letter:
+
+This patch series implements the kexec_file_load system call on PowerPC.
+
+This system call moves the reading of the kernel, initrd and the device tree
+from the userspace kexec tool to the kernel. This is needed if you want to
+do one or both of the following:
+
+1. only allow loading of signed kernels.
+2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
+   command line and other boot inputs for the Integrity Measurement
+   Architecture subsystem.
+
+The above are the functions kexec already has built into kexec_file_load.
+Yesterday I posted a set of patches which allows a third feature:
+
+3. have IMA pass-on its event log (where integrity measurements are
+   registered) accross kexec to the second kernel, so that the event
+   history is preserved.
+
+Because OpenPower uses an intermediary Linux instance as a boot loader
+(skiroot), feature 1 is needed to implement secure boot for the platform,
+while features 2 and 3 are needed to implement trusted boot.
+
+This patch series starts by removing an x86 assumption from kexec_file:
+kexec_add_buffer uses iomem to find reserved memory ranges, but PowerPC
+uses the memblock subsystem.  A hook is added so that each arch can
+specify how memory ranges can be found.
+
+Also, the memory-walking logic in kexec_add_buffer is useful in this
+implementation to find a free area for the purgatory's stack, so the
+next patch moves that logic to kexec_locate_mem_hole.
+
+The kexec_file_load system call needs to apply relocations to the
+purgatory but adding code for that would duplicate functionality with
+the module loading mechanism, which also needs to apply relocations to
+the kernel modules.  Therefore, this patch series factors out the module
+relocation code so that it can be shared.
+
+One thing that is still missing is crashkernel support, which I intend
+to submit shortly. For now, arch_kexec_kernel_image_probe rejects crash
+kernels.
+
+This code is based on kexec-tools, but with many modifications to adapt
+it to the kernel environment and facilities. Except the purgatory,
+which only has minimal changes.
+
+Changes for v6:
+- Based directly on top of v4.8-rc1.
+- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
+  - Allow undefined symbols if they are relocations for the TOC in the
+    big endian ABI.
+  - Fixed build error in this patch by adding the ehdr member to elf_info
+    here instead of in the next patch.
+  - Initialize elf_info.ehdr in module_64.c:module_frob_arch_sections.
+- Patch "powerpc: Add code to work with device trees in kexec_file_load."
+  - Changed find_debug_console to look for /chosen instead of receiving
+    its offset as an argument.
+  - setup_new_fdt: no need to find /chosen again after deleting the memory
+    reservation for initrd.
+- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
+  - Don't pass the offset to /chosen to find_debug_console.
+- Patch "powerpc: Allow userspace to set device tree properties in kexec_file_load"
+  - Dropped patch.
+- Patch "powerpc: Add purgatory for kexec_file_load implementation."
+  - Make boot/string.S use the DOTSYM macro so that it can be
+    used by the ppc64 big endian purgatory.
+  - Use -mcall-aixdesc to compile the purgatory on big endian ppc64.
+
+Changes for v5:
+- Rebased series on v4.8-rc1 + the extend kexec_file_load series.
+- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
+  - New patch. These changes were previously in patch 10.
+    The code itself is unchanged from v4.
+- Patch "powerpc: Implement kexec_file_load."
+  - Moved arch_kexec_walk_mem, arch_kexec_apply_relocations_add and
+    setup_purgatory from patch 10 to this patch.
+  - arch_kexec_apply_relocations_add is unchanged from v4.
+  - Fixed off-by-one error in arch_kexec_walk_mem when passing range
+    to func.
+  - Moved setup_purgatory from kexec_elf_64.c to machine_kexec_64.c,
+    and changed it to receive a pointer to the slave code directly
+    rather than a struct elf_info and getting the pointer from there.
+- Patch "powerpc: Add code to work with device trees in kexec_file_load."
+  - New patch. These changes were previously in patch 10.
+  - find_debug_console moved from kexec_elf_64.c to machine_kexec_64.c.
+    The code is unchanged from v4.
+  - setup_new_fdt is a new function factored out of elf64_load. The only
+    code change from v4 is to create /chosen if it doesn't exist yet.
+- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
+  - This patch was too big, so moved some of its changes to other patches
+    to facilitate review.
+  - Allow loading ELF file type ET_DYN, which is what the BE kernel uses.
+  - The code adapting the device tree for booting the new kernel was moved
+    out of elf64_load to setup_new_fdt.
+- Patch "powerpc: Allow userspace to set device tree properties in kexec_file_load"
+  - New patch.
+  - The code in this patch didn't exist in v4.
+  - This is the only patch that depends on the extend kexec_file_load series.
+- Patch "powerpc: Enable CONFIG_KEXEC_FILE in powerpc server defconfigs."
+  - New patch.
+
+Changes for v4:
+- Rebased series on today's powerpc/next.
+- Patch "kexec_file: Remove unused members from struct kexec_buf.":
+    - Dropped from the series.
+- Patch "kexec_file: Allow arch-specific memory walking function for
+  kexec_add_buffer":
+    - Changed subject line to be more specific. Was: "kexec_file: Generalize
+      kexec_add_buffer.".
+    - Changed description to refer to x86 arch instead of Intel arch.
+    - Moved documentation comments for struct kexec_buf to this patch.
+- Patch "kexec_file: Change kexec_add_buffer to take kexec_buf as argument.":
+    - New patch.
+- Patch "kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.":
+    - Changed kexec_locate_mem_hole to take kexec_buf as argument.
+    - Improved description of kexec_locate_mem_hole in documentation comment.
+
+Changes for v3:
+- Rebased series on today's powerpc/next.
+- Patch "kexec_file: Generalize kexec_add_buffer.":
+    - Removed most arguments from arch_kexec_walk_mem and pass kbuf
+      explicitly.
+- Patch "powerpc: Add functions to read ELF files of any endianness.":
+    - Fixed whitespace issues found by checkpatch.pl.
+- Patch "powerpc: Factor out relocation code from module_64.c to
+  elf_util_64.c.":
+    - Changed to use the new PPC64_ELF_ABI_v2 macro.
+- Patch "powerpc: Add support for loading ELF kernels with
+  kexec_file_load.":
+    - Adapted arch_kexec_walk_mem implementation to changes in its
+      argument list.
+    - Fixed whitespace and GPL header issues found by checkpatch.pl.
+- Patch "powerpc: Add purgatory for kexec_file_load implementation.":
+    - Fixed whitespace and GPL header issues found by checkpatch.pl.
+    - Changed to use the new PPC64_ELF_ABI_v2 macro.
+
+Changes for v2:
+- All patches: forgot to add Signed-off-by lines in v1, so added them now.
+- Patch "kexec_file: Generalize kexec_add_buffer.": broke in two, one
+  adding arch_kexec_walk_mem and the other adding kexec_locate_mem_hole.
+- Patch "powerpc: Implement kexec_file_load.":
+    - Moved relocation changes and the arch_kexec_walk_mem implementation
+      to the next patch in the series.
+    - Removed pr_fmt from machine_kexec_64.c, since the patch doesn't add
+      any call to pr_debug in that file.
+    - Changed arch_kexec_kernel_image_probe to reject crash kernels.
+
+Thiago Jung Bauermann (12):
+  kexec_file: Allow arch-specific memory walking for kexec_add_buffer
+  kexec_file: Change kexec_add_buffer to take kexec_buf as argument.
+  kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.
+  powerpc: Factor out relocation code from module_64.c to elf_util_64.c.
+  powerpc: Generalize elf64_apply_relocate_add.
+  powerpc: Adapt elf64_apply_relocate_add for kexec_file_load.
+  powerpc: Add functions to read ELF files of any endianness.
+  powerpc: Implement kexec_file_load.
+  powerpc: Add code to work with device trees in kexec_file_load.
+  powerpc: Add support for loading ELF kernels with kexec_file_load.
+  powerpc: Add purgatory for kexec_file_load implementation.
+  powerpc: Enable CONFIG_KEXEC_FILE in powerpc server defconfigs.
+
+ arch/powerpc/Kconfig                      |  13 +
+ arch/powerpc/Makefile                     |   4 +
+ arch/powerpc/boot/string.S                |  67 +++--
+ arch/powerpc/configs/powernv_defconfig    |   2 +
+ arch/powerpc/configs/ppc64_defconfig      |   2 +
+ arch/powerpc/configs/pseries_defconfig    |   2 +
+ arch/powerpc/include/asm/elf_util.h       |  92 ++++++
+ arch/powerpc/include/asm/kexec.h          |  10 +
+ arch/powerpc/include/asm/kexec_elf_64.h   |  10 +
+ arch/powerpc/include/asm/module.h         |  14 +-
+ arch/powerpc/include/asm/systbl.h         |   1 +
+ arch/powerpc/include/asm/unistd.h         |   2 +-
+ arch/powerpc/include/uapi/asm/unistd.h    |   1 +
+ arch/powerpc/kernel/Makefile              |   7 +
+ arch/powerpc/kernel/elf_util.c            | 476 ++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/elf_util_64.c         | 376 +++++++++++++++++++++++
+ arch/powerpc/kernel/kexec_elf_64.c        | 283 ++++++++++++++++++
+ arch/powerpc/kernel/machine_kexec_64.c    | 475 +++++++++++++++++++++++++++++
+ arch/powerpc/kernel/module_64.c           | 329 +++------------------
+ arch/powerpc/purgatory/.gitignore         |   2 +
+ arch/powerpc/purgatory/Makefile           |  46 +++
+ arch/powerpc/purgatory/console-ppc64.c    |  38 +++
+ arch/powerpc/purgatory/crashdump-ppc64.h  |  42 +++
+ arch/powerpc/purgatory/crashdump_backup.c |  36 +++
+ arch/powerpc/purgatory/crtsavres.S        |   5 +
+ arch/powerpc/purgatory/hvCall.S           |  27 ++
+ arch/powerpc/purgatory/hvCall.h           |   8 +
+ arch/powerpc/purgatory/kexec-sha256.h     |  11 +
+ arch/powerpc/purgatory/ppc64_asm.h        |  20 ++
+ arch/powerpc/purgatory/printf.c           | 164 ++++++++++
+ arch/powerpc/purgatory/purgatory-ppc64.c  |  41 +++
+ arch/powerpc/purgatory/purgatory-ppc64.h  |   6 +
+ arch/powerpc/purgatory/purgatory.c        |  62 ++++
+ arch/powerpc/purgatory/purgatory.h        |  11 +
+ arch/powerpc/purgatory/sha256.c           |   6 +
+ arch/powerpc/purgatory/sha256.h           |   1 +
+ arch/powerpc/purgatory/string.S           |   2 +
+ arch/powerpc/purgatory/v2wrap.S           | 134 +++++++++
+ arch/x86/kernel/crash.c                   |  37 +--
+ arch/x86/kernel/kexec-bzimage64.c         |  48 +--
+ include/linux/kexec.h                     |  36 ++-
+ kernel/kexec_file.c                       | 141 +++++----
+ kernel/kexec_internal.h                   |  16 -
+ 43 files changed, 2670 insertions(+), 436 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/elf_util.h
+ create mode 100644 arch/powerpc/include/asm/kexec_elf_64.h
+ create mode 100644 arch/powerpc/kernel/elf_util.c
+ create mode 100644 arch/powerpc/kernel/elf_util_64.c
+ create mode 100644 arch/powerpc/kernel/kexec_elf_64.c
+ create mode 100644 arch/powerpc/purgatory/.gitignore
+ create mode 100644 arch/powerpc/purgatory/Makefile
+ create mode 100644 arch/powerpc/purgatory/console-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/crashdump_backup.c
+ create mode 100644 arch/powerpc/purgatory/crtsavres.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.h
+ create mode 100644 arch/powerpc/purgatory/kexec-sha256.h
+ create mode 100644 arch/powerpc/purgatory/ppc64_asm.h
+ create mode 100644 arch/powerpc/purgatory/printf.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/purgatory.c
+ create mode 100644 arch/powerpc/purgatory/purgatory.h
+ create mode 100644 arch/powerpc/purgatory/sha256.c
+ create mode 100644 arch/powerpc/purgatory/sha256.h
+ create mode 100644 arch/powerpc/purgatory/string.S
+ create mode 100644 arch/powerpc/purgatory/v2wrap.S
 
 -- 
-Kees Cook
-Nexus Security
+1.9.1
+
 
 _______________________________________________
 kexec mailing list
