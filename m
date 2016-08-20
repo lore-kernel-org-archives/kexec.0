@@ -1,40 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1batzW-0004Z5-SV
- for kexec@lists.infradead.org; Sat, 20 Aug 2016 00:18:29 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7K0DmtM136132
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:18:09 -0400
-Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
- by mx0a-001b2d01.pphosted.com with ESMTP id 24x1sk0uy4-1
+ by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1batzZ-0000Jw-Fy
+ for kexec@lists.infradead.org; Sat, 20 Aug 2016 00:18:31 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7K0DmpB143626
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:18:06 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24wyt1f7b0-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:18:08 -0400
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:18:06 -0400
 Received: from localhost
- by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 19 Aug 2016 21:18:07 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 6312B1DC006F
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:56 -0400 (EDT)
+ Fri, 19 Aug 2016 21:18:04 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 411431DC006E
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:51 -0400 (EDT)
 Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7K0I5ws22348264
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:18:05 -0300
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7K0I0k53768454
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:18:00 -0300
 Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
  by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7K0I4ZW005415
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:18:05 -0300
+ u7K0HxUa005295
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:18:00 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v6 09/12] powerpc: Add code to work with device trees in
- kexec_file_load.
-Date: Fri, 19 Aug 2016 21:17:19 -0300
+Subject: [PATCH v6 07/12] powerpc: Add functions to read ELF files of any
+ endianness.
+Date: Fri, 19 Aug 2016 21:17:17 -0300
 In-Reply-To: <1471652242-14436-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1471652242-14436-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1471652242-14436-10-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1471652242-14436-8-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -51,259 +51,554 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-kexec_file_load needs to set up the device tree that will be used
-by the next kernel and check whether it provides a console
-that can be used by the purgatory.
+A little endian kernel might need to kexec a big endian kernel (the
+opposite is less likely but could happen as well), so we can't just cast
+the buffer with the binary to ELF structs and use them as is done
+elsewhere.
+
+This patch adds functions which do byte-swapping as necessary when
+populating the ELF structs. These functions will be used in the next
+patch in the series.
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/kexec.h       |   3 +
- arch/powerpc/kernel/machine_kexec_64.c | 220 +++++++++++++++++++++++++++++++++
- 2 files changed, 223 insertions(+)
+ arch/powerpc/include/asm/elf_util.h |  18 ++
+ arch/powerpc/kernel/Makefile        |   2 +-
+ arch/powerpc/kernel/elf_util.c      | 476 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 495 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 83b81b7bdca1..09813f3ea3c2 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -96,6 +96,9 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
- 		    const void *fdt, unsigned long kernel_load_addr,
- 		    unsigned long fdt_load_addr, unsigned long stack_top,
- 		    int debug);
-+int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
-+		  unsigned long initrd_len, const char *cmdline);
-+bool find_debug_console(const void *fdt);
- #endif /* CONFIG_KEXEC_FILE */
+diff --git a/arch/powerpc/include/asm/elf_util.h b/arch/powerpc/include/asm/elf_util.h
+index 5a27e8ceb88a..18703d56eabd 100644
+--- a/arch/powerpc/include/asm/elf_util.h
++++ b/arch/powerpc/include/asm/elf_util.h
+@@ -20,7 +20,14 @@
+ #include <linux/elf.h>
  
- #else /* !CONFIG_KEXEC */
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 1e678dc5096a..192cf95c15e7 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -683,4 +683,224 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
- 	return 0;
+ struct elf_info {
++	/*
++	 * Where the ELF binary contents are kept.
++	 * Memory managed by the user of the struct.
++	 */
++	const char *buffer;
++
+ 	const struct elfhdr *ehdr;
++	const struct elf_phdr *proghdrs;
+ 	struct elf_shdr *sechdrs;
+ 
+ 	/* Index of stubs section. */
+@@ -64,6 +71,17 @@ static inline unsigned long my_r2(const struct elf_info *elf_info)
+ 	return elf_info->sechdrs[elf_info->toc_section].sh_addr + 0x8000;
  }
  
-+/*
-+ * setup_new_fdt() - modify /chosen and memory reservation for the next kernel
-+ * @fdt:
-+ * @initrd_load_addr:	Address where the next initrd will be loaded.
-+ * @initrd_len:		Size of the next initrd, or 0 if there will be none.
-+ * @cmdline:		Command line for the next kernel, or NULL if there will
-+ * 			be none.
-+ *
-+ * Return: 0 on success, or negative errno on error.
-+ */
-+int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
-+		  unsigned long initrd_len, const char *cmdline)
++static inline bool elf_is_elf_file(const struct elfhdr *ehdr)
 +{
-+	uint64_t oldfdt_addr;
-+	int i, ret, chosen_node;
-+	const void *prop;
++	return memcmp(ehdr->e_ident, ELFMAG, SELFMAG) == 0;
++}
 +
-+	/* Remove memory reservation for the current device tree. */
-+	oldfdt_addr = __pa(initial_boot_params);
-+	for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
-+		uint64_t rsv_start, rsv_size;
++int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
++			 struct elf_info *elf_info);
++void elf_init_elf_info(const struct elfhdr *ehdr, struct elf_shdr *sechdrs,
++		       struct elf_info *elf_info);
++void elf_free_info(struct elf_info *elf_info);
 +
-+		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
-+		if (ret) {
-+			pr_err("Malformed device tree.\n");
-+			return -EINVAL;
-+		}
+ int elf64_apply_relocate_add(const struct elf_info *elf_info,
+ 			     const char *strtab, const Elf64_Rela *rela,
+ 			     unsigned int num_rela, void *syms_base,
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index e38aace0a6e7..6159ec6ac032 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -124,7 +124,7 @@ obj-y				+= iomap.o
+ endif
+ 
+ ifeq ($(CONFIG_MODULES)$(CONFIG_WORD_SIZE),y64)
+-obj-y				+= elf_util_64.o
++obj-y				+= elf_util.o elf_util_64.o
+ endif
+ 
+ obj64-$(CONFIG_PPC_TRANSACTIONAL_MEM)	+= tm.o
+diff --git a/arch/powerpc/kernel/elf_util.c b/arch/powerpc/kernel/elf_util.c
+new file mode 100644
+index 000000000000..1df4a116ad90
+--- /dev/null
++++ b/arch/powerpc/kernel/elf_util.c
+@@ -0,0 +1,476 @@
++/*
++ * Utility functions to work with ELF files.
++ *
++ * Copyright (C) 2016, IBM Corporation
++ *
++ * Based on kexec-tools' kexec-elf.c. Heavily modified for the
++ * kernel by Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation (version 2 of the License).
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+		if (rsv_start == oldfdt_addr &&
-+		    rsv_size == fdt_totalsize(initial_boot_params)) {
-+			ret = fdt_del_mem_rsv(fdt, i);
-+			if (ret) {
-+				pr_err("Error deleting fdt reservation.\n");
-+				return -EINVAL;
-+			}
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+			pr_debug("Removed old device tree reservation.\n");
-+			break;
-+		}
++#include <linux/slab.h>
++#include <asm/elf_util.h>
++#include <asm-generic/module.h>
++
++#if ELF_CLASS == ELFCLASS32
++#define elf_addr_to_cpu	elf32_to_cpu
++
++#ifndef Elf_Rel
++#define Elf_Rel		Elf32_Rel
++#endif /* Elf_Rel */
++#else /* ELF_CLASS == ELFCLASS32 */
++#define elf_addr_to_cpu	elf64_to_cpu
++
++#ifndef Elf_Rel
++#define Elf_Rel		Elf64_Rel
++#endif /* Elf_Rel */
++
++static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
++{
++	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
++		value = le64_to_cpu(value);
++	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
++		value = be64_to_cpu(value);
++
++	return value;
++}
++#endif /* ELF_CLASS == ELFCLASS32 */
++
++static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
++{
++	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
++		value = le16_to_cpu(value);
++	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
++		value = be16_to_cpu(value);
++
++	return value;
++}
++
++static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
++{
++	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
++		value = le32_to_cpu(value);
++	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
++		value = be32_to_cpu(value);
++
++	return value;
++}
++
++/**
++ * elf_is_ehdr_sane - check that it is safe to use the ELF header
++ * @buf_len:	size of the buffer in which the ELF file is loaded.
++ */
++static bool elf_is_ehdr_sane(const struct elfhdr *ehdr, size_t buf_len)
++{
++	if (ehdr->e_phnum > 0 && ehdr->e_phentsize != sizeof(struct elf_phdr)) {
++		pr_debug("Bad program header size.\n");
++		return false;
++	} else if (ehdr->e_shnum > 0 &&
++		   ehdr->e_shentsize != sizeof(struct elf_shdr)) {
++		pr_debug("Bad section header size.\n");
++		return false;
++	} else if (ehdr->e_ident[EI_VERSION] != EV_CURRENT ||
++		   ehdr->e_version != EV_CURRENT) {
++		pr_debug("Unknown ELF version.\n");
++		return false;
 +	}
 +
-+	chosen_node = fdt_path_offset(fdt, "/chosen");
-+	if (chosen_node == -FDT_ERR_NOTFOUND) {
-+		chosen_node = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"),
-+					      "chosen");
-+		if (chosen_node < 0) {
-+			pr_err("Error creating /chosen.\n");
-+			return -EINVAL;
-+		}
-+	} else if (chosen_node < 0) {
-+		pr_err("Malformed device tree: error reading /chosen.\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Did we boot using an initrd? */
-+	prop = fdt_getprop(fdt, chosen_node, "linux,initrd-start", NULL);
-+	if (prop) {
-+		uint64_t tmp_start, tmp_end, tmp_size, tmp_sizepg;
-+
-+		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+		prop = fdt_getprop(fdt, chosen_node, "linux,initrd-end", NULL);
-+		if (!prop) {
-+			pr_err("Malformed device tree.\n");
-+			return -EINVAL;
-+		}
-+		tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
++	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
++		size_t phdr_size;
 +
 +		/*
-+		 * kexec reserves exact initrd size, while firmware may
-+		 * reserve a multiple of PAGE_SIZE, so check for both.
++		 * e_phnum is at most 65535 so calculating the size of the
++		 * program header cannot overflow.
 +		 */
-+		tmp_size = tmp_end - tmp_start;
-+		tmp_sizepg = round_up(tmp_size, PAGE_SIZE);
++		phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
 +
-+		/* Remove memory reservation for the current initrd. */
-+		for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
-+			uint64_t rsv_start, rsv_size;
-+
-+			ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
-+			if (ret) {
-+				pr_err("Malformed device tree.\n");
-+				return -EINVAL;
-+			}
-+
-+			if (rsv_start == tmp_start &&
-+			    (rsv_size == tmp_size || rsv_size == tmp_sizepg)) {
-+				ret = fdt_del_mem_rsv(fdt, i);
-+				if (ret) {
-+					pr_err("Error deleting fdt reservation.\n");
-+					return -EINVAL;
-+				}
-+				pr_debug("Removed old initrd reservation.\n");
-+
-+				break;
-+			}
-+		}
-+
-+		/* If there's no new initrd, delete the old initrd's info. */
-+		if (initrd_len == 0) {
-+			ret = fdt_delprop(fdt, chosen_node, "linux,initrd-start");
-+			if (ret) {
-+				pr_err("Error deleting linux,initrd-start.\n");
-+				return -EINVAL;
-+			}
-+
-+			ret = fdt_delprop(fdt, chosen_node, "linux,initrd-end");
-+			if (ret) {
-+				pr_err("Error deleting linux,initrd-end.\n");
-+				return -EINVAL;
-+			}
++		/* Sanity check the program header table location. */
++		if (ehdr->e_phoff + phdr_size < ehdr->e_phoff) {
++			pr_debug("Program headers at invalid location.\n");
++			return false;
++		} else if (ehdr->e_phoff + phdr_size > buf_len) {
++			pr_debug("Program headers truncated.\n");
++			return false;
 +		}
 +	}
 +
-+	if (initrd_len) {
-+		ret = fdt_setprop_u64(fdt, chosen_node,
-+				      "linux,initrd-start",
-+				      initrd_load_addr);
-+		if (ret < 0) {
-+			pr_err("Error setting up the new device tree.\n");
-+			return -EINVAL;
-+		}
++	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
++		size_t shdr_size;
 +
-+		/* initrd-end is the first address after the initrd image. */
-+		ret = fdt_setprop_u64(fdt, chosen_node, "linux,initrd-end",
-+				      initrd_load_addr + initrd_len);
-+		if (ret < 0) {
-+			pr_err("Error setting up the new device tree.\n");
-+			return -EINVAL;
-+		}
++		/*
++		 * e_shnum is at most 65536 so calculating
++		 * the size of the section header cannot overflow.
++		 */
++		shdr_size = sizeof(struct elf_shdr) * ehdr->e_shnum;
 +
-+		ret = fdt_add_mem_rsv(fdt, initrd_load_addr, initrd_len);
++		/* Sanity check the section header table location. */
++		if (ehdr->e_shoff + shdr_size < ehdr->e_shoff) {
++			pr_debug("Section headers at invalid location.\n");
++			return false;
++		} else if (ehdr->e_shoff + shdr_size > buf_len) {
++			pr_debug("Section headers truncated.\n");
++			return false;
++		}
++	}
++
++	return true;
++}
++
++static int elf_read_ehdr(const char *buf, size_t len, struct elfhdr *ehdr)
++{
++	struct elfhdr *buf_ehdr;
++
++	if (len < sizeof(*buf_ehdr)) {
++		pr_debug("Buffer is too small to hold ELF header.\n");
++		return -ENOEXEC;
++	}
++
++	memset(ehdr, 0, sizeof(*ehdr));
++	memcpy(ehdr->e_ident, buf, sizeof(ehdr->e_ident));
++	if (!elf_is_elf_file(ehdr)) {
++		pr_debug("No ELF header magic.\n");
++		return -ENOEXEC;
++	}
++
++	if (ehdr->e_ident[EI_CLASS] != ELF_CLASS) {
++		pr_debug("Not a supported ELF class.\n");
++		return -1;
++	} else  if (ehdr->e_ident[EI_DATA] != ELFDATA2LSB &&
++		ehdr->e_ident[EI_DATA] != ELFDATA2MSB) {
++		pr_debug("Not a supported ELF data format.\n");
++		return -ENOEXEC;
++	}
++
++	buf_ehdr = (struct elfhdr *) buf;
++	if (elf16_to_cpu(ehdr, buf_ehdr->e_ehsize) != sizeof(*buf_ehdr)) {
++		pr_debug("Bad ELF header size.\n");
++		return -ENOEXEC;
++	}
++
++	ehdr->e_type      = elf16_to_cpu(ehdr, buf_ehdr->e_type);
++	ehdr->e_machine   = elf16_to_cpu(ehdr, buf_ehdr->e_machine);
++	ehdr->e_version   = elf32_to_cpu(ehdr, buf_ehdr->e_version);
++	ehdr->e_entry     = elf_addr_to_cpu(ehdr, buf_ehdr->e_entry);
++	ehdr->e_phoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_phoff);
++	ehdr->e_shoff     = elf_addr_to_cpu(ehdr, buf_ehdr->e_shoff);
++	ehdr->e_flags     = elf32_to_cpu(ehdr, buf_ehdr->e_flags);
++	ehdr->e_phentsize = elf16_to_cpu(ehdr, buf_ehdr->e_phentsize);
++	ehdr->e_phnum     = elf16_to_cpu(ehdr, buf_ehdr->e_phnum);
++	ehdr->e_shentsize = elf16_to_cpu(ehdr, buf_ehdr->e_shentsize);
++	ehdr->e_shnum     = elf16_to_cpu(ehdr, buf_ehdr->e_shnum);
++	ehdr->e_shstrndx  = elf16_to_cpu(ehdr, buf_ehdr->e_shstrndx);
++
++	return elf_is_ehdr_sane(ehdr, len) ? 0 : -ENOEXEC;
++}
++
++/**
++ * elf_is_phdr_sane - check that it is safe to use the program header
++ * @buf_len:	size of the buffer in which the ELF file is loaded.
++ */
++static bool elf_is_phdr_sane(const struct elf_phdr *phdr, size_t buf_len)
++{
++
++	if (phdr->p_offset + phdr->p_filesz < phdr->p_offset) {
++		pr_debug("ELF segment location wraps around.\n");
++		return false;
++	} else if (phdr->p_offset + phdr->p_filesz > buf_len) {
++		pr_debug("ELF segment not in file.\n");
++		return false;
++	} else if (phdr->p_paddr + phdr->p_memsz < phdr->p_paddr) {
++		pr_debug("ELF segment address wraps around.\n");
++		return false;
++	}
++
++	return true;
++}
++
++static int elf_read_phdr(const char *buf, size_t len, struct elf_info *elf_info,
++			 int idx)
++{
++	/* Override the const in proghdrs, we are the ones doing the loading. */
++	struct elf_phdr *phdr = (struct elf_phdr *) &elf_info->proghdrs[idx];
++	const char *pbuf;
++	struct elf_phdr *buf_phdr;
++
++	pbuf = buf + elf_info->ehdr->e_phoff + (idx * sizeof(*buf_phdr));
++	buf_phdr = (struct elf_phdr *) pbuf;
++
++	phdr->p_type   = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_type);
++	phdr->p_offset = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_offset);
++	phdr->p_paddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_paddr);
++	phdr->p_vaddr  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_vaddr);
++	phdr->p_flags  = elf32_to_cpu(elf_info->ehdr, buf_phdr->p_flags);
++
++	/*
++	 * The following fields have a type equivalent to Elf_Addr
++	 * both in 32 bit and 64 bit ELF.
++	 */
++	phdr->p_filesz = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_filesz);
++	phdr->p_memsz  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_memsz);
++	phdr->p_align  = elf_addr_to_cpu(elf_info->ehdr, buf_phdr->p_align);
++
++	return elf_is_phdr_sane(phdr, len) ? 0 : -ENOEXEC;
++}
++
++/**
++ * elf_read_phdrs - read the program headers from the buffer
++ *
++ * This function assumes that the program header table was checked for sanity.
++ * Use elf_is_ehdr_sane() if it wasn't.
++ */
++static int elf_read_phdrs(const char *buf, size_t len,
++			  struct elf_info *elf_info)
++{
++	size_t phdr_size, i;
++	const struct elfhdr *ehdr = elf_info->ehdr;
++
++	/*
++	 * e_phnum is at most 65535 so calculating the size of the
++	 * program header cannot overflow.
++	 */
++	phdr_size = sizeof(struct elf_phdr) * ehdr->e_phnum;
++
++	elf_info->proghdrs = kzalloc(phdr_size, GFP_KERNEL);
++	if (!elf_info->proghdrs)
++		return -ENOMEM;
++
++	for (i = 0; i < ehdr->e_phnum; i++) {
++		int ret;
++
++		ret = elf_read_phdr(buf, len, elf_info, i);
 +		if (ret) {
-+			pr_err("Error reserving initrd memory: %s\n",
-+			       fdt_strerror(ret));
-+			return -EINVAL;
++			kfree(elf_info->proghdrs);
++			elf_info->proghdrs = NULL;
++			return ret;
 +		}
-+	}
-+
-+	if (cmdline != NULL) {
-+		ret = fdt_setprop_string(fdt, chosen_node, "bootargs", cmdline);
-+		if (ret < 0) {
-+			pr_err("Error setting up the new device tree.\n");
-+			return -EINVAL;
-+		}
-+	} else {
-+		ret = fdt_delprop(fdt, chosen_node, "bootargs");
-+		if (ret && ret != -FDT_ERR_NOTFOUND) {
-+			pr_err("Error deleting bootargs.\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
-+	if (ret) {
-+		pr_err("Error setting up the new device tree.\n");
-+		return -EINVAL;
 +	}
 +
 +	return 0;
 +}
 +
 +/**
-+ * find_debug_console() - find out whether there is a console for the purgatory
-+ * @fdt:		Flattened device tree to search.
++ * elf_is_shdr_sane - check that it is safe to use the section header
++ * @buf_len:	size of the buffer in which the ELF file is loaded.
 + */
-+bool find_debug_console(const void *fdt)
++static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
 +{
-+	int len;
-+	int console_node, chosen_node;
-+	const void *prop, *colon;
++	bool size_ok;
 +
-+	chosen_node = fdt_path_offset(fdt, "/chosen");
-+	if (chosen_node < 0) {
-+		pr_err("Malformed device tree: /chosen not found.\n");
++	/* SHT_NULL headers have undefined values, so we can't check them. */
++	if (shdr->sh_type == SHT_NULL)
++		return true;
++
++	/* Now verify sh_entsize */
++	switch (shdr->sh_type) {
++	case SHT_SYMTAB:
++		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
++		break;
++	case SHT_RELA:
++		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
++		break;
++	case SHT_DYNAMIC:
++		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
++		break;
++	case SHT_REL:
++		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
++		break;
++	case SHT_NOTE:
++	case SHT_PROGBITS:
++	case SHT_HASH:
++	case SHT_NOBITS:
++	default:
++		/*
++		 * This is a section whose entsize requirements
++		 * I don't care about.  If I don't know about
++		 * the section I can't care about it's entsize
++		 * requirements.
++		 */
++		size_ok = true;
++		break;
++	}
++
++	if (!size_ok) {
++		pr_debug("ELF section with wrong entry size.\n");
++		return false;
++	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
++		pr_debug("ELF section address wraps around.\n");
 +		return false;
 +	}
 +
-+	prop = fdt_getprop(fdt, chosen_node, "stdout-path", &len);
-+	if (prop == NULL) {
-+		if (len == -FDT_ERR_NOTFOUND) {
-+			prop = fdt_getprop(fdt, chosen_node, "linux,stdout-path",
-+					   &len);
-+			if (prop == NULL) {
-+				pr_debug("Unable to find [linux,]stdout-path.\n");
-+				return false;
-+			}
-+		} else {
-+			pr_debug("Error finding console: %s\n",
-+				 fdt_strerror(len));
++	if (shdr->sh_type != SHT_NOBITS) {
++		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
++			pr_debug("ELF section location wraps around.\n");
++			return false;
++		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
++			pr_debug("ELF section not in file.\n");
 +			return false;
 +		}
 +	}
 +
-+	/*
-+	 * stdout-path can have a ':' separating the path from device-specific
-+	 * information, so we should only consider what's before it.
-+	 */
-+	colon = strchr(prop, ':');
-+	if (colon != NULL)
-+		len = colon - prop;
-+	else
-+		len -= 1;	/* Ignore the terminating NUL. */
-+
-+	console_node = fdt_path_offset_namelen(fdt, prop, len);
-+	if (console_node < 0) {
-+		pr_debug("Error finding console: %s\n",
-+			 fdt_strerror(console_node));
-+		return false;
-+	}
-+
-+	if (fdt_node_check_compatible(fdt, console_node, "hvterm1") == 0)
-+		return true;
-+	else if (fdt_node_check_compatible(fdt, console_node,
-+					   "hvterm-protocol") == 0)
-+		return true;
-+
-+	return false;
++	return true;
 +}
 +
- #endif /* CONFIG_KEXEC_FILE */
++static int elf_read_shdr(const char *buf, size_t len, struct elf_info *elf_info,
++			 int idx)
++{
++	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
++	const struct elfhdr *ehdr = elf_info->ehdr;
++	const char *sbuf;
++	struct elf_shdr *buf_shdr;
++
++	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
++	buf_shdr = (struct elf_shdr *) sbuf;
++
++	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
++	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
++	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
++	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
++	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
++	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
++
++	/*
++	 * The following fields have a type equivalent to Elf_Addr
++	 * both in 32 bit and 64 bit ELF.
++	 */
++	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
++	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
++	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
++	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
++
++	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
++}
++
++/**
++ * elf_read_shdrs - read the section headers from the buffer
++ *
++ * This function assumes that the section header table was checked for sanity.
++ * Use elf_is_ehdr_sane() if it wasn't.
++ */
++static int elf_read_shdrs(const char *buf, size_t len,
++			  struct elf_info *elf_info)
++{
++	size_t shdr_size, i;
++
++	/*
++	 * e_shnum is at most 65536 so calculating
++	 * the size of the section header cannot overflow.
++	 */
++	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
++
++	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
++	if (!elf_info->sechdrs)
++		return -ENOMEM;
++
++	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
++		int ret;
++
++		ret = elf_read_shdr(buf, len, elf_info, i);
++		if (ret) {
++			kfree(elf_info->sechdrs);
++			elf_info->sechdrs = NULL;
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * elf_read_from_buffer - read ELF file and sets up ELF header and ELF info
++ * @buf:	Buffer to read ELF file from.
++ * @len:	Size of @buf.
++ * @ehdr:	Pointer to existing struct which will be populated.
++ * @elf_info:	Pointer to existing struct which will be populated.
++ *
++ * This function allows reading ELF files with different byte order than
++ * the kernel, byte-swapping the fields as needed.
++ *
++ * Return:
++ * On success returns 0, and the caller should call elf_free_info(elf_info) to
++ * free the memory allocated for the section and program headers.
++ */
++int elf_read_from_buffer(const char *buf, size_t len, struct elfhdr *ehdr,
++			 struct elf_info *elf_info)
++{
++	int ret;
++
++	ret = elf_read_ehdr(buf, len, ehdr);
++	if (ret)
++		return ret;
++
++	elf_info->buffer = buf;
++	elf_info->ehdr = ehdr;
++	if (ehdr->e_phoff > 0 && ehdr->e_phnum > 0) {
++		ret = elf_read_phdrs(buf, len, elf_info);
++		if (ret)
++			return ret;
++	}
++	if (ehdr->e_shoff > 0 && ehdr->e_shnum > 0) {
++		ret = elf_read_shdrs(buf, len, elf_info);
++		if (ret) {
++			kfree(elf_info->proghdrs);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * elf_init_elf_info - initialize elf_info from existing information
++ * @ehdr:	Pointer to already loaded ELF header.
++ * @sechdrs:	Pointer to already loaded section headers contents.
++ * @elf_info:	Pointer to existing struct which will be populated.
++ *
++ * If the ELF binary was not loaded using elf_read_from_buffer, this function
++ * can be used to obtain a struct elf_info for use with other ELF utility
++ * functions.
++ *
++ * The caller is responsible for managing @sechdrs memory, users of this
++ * function don't need to call elf_free_info() if they free this memory
++ * separately.
++ */
++void elf_init_elf_info(const struct elfhdr *ehdr, struct elf_shdr *sechdrs,
++		       struct elf_info *elf_info)
++{
++	int i;
++	const char *shstrtab;
++
++	memset(elf_info, 0, sizeof(*elf_info));
++
++	/* Section header string table. */
++	shstrtab = (const char *) sechdrs[ehdr->e_shstrndx].sh_offset;
++
++	for (i = 0; i < ehdr->e_shnum; i++) {
++		if (sechdrs[i].sh_size == 0)
++			continue;
++
++		if (!strcmp(&shstrtab[sechdrs[i].sh_name], ".stubs"))
++			elf_info->stubs_section = i;
++		else if (!strcmp(&shstrtab[sechdrs[i].sh_name], ".toc"))
++			elf_info->toc_section = i;
++	}
++
++	elf_info->ehdr = ehdr;
++	elf_info->sechdrs = sechdrs;
++}
++
++/**
++ * elf_free_info - free memory allocated by elf_read_from_buffer
++ */
++void elf_free_info(struct elf_info *elf_info)
++{
++	kfree(elf_info->proghdrs);
++	kfree(elf_info->sechdrs);
++	memset(elf_info, 0, sizeof(*elf_info));
++}
 -- 
 1.9.1
 
