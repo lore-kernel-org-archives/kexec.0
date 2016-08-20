@@ -2,39 +2,39 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1batzR-0004YU-Ss
- for kexec@lists.infradead.org; Sat, 20 Aug 2016 00:18:24 +0000
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ id 1batzN-0004Y4-4G
+ for kexec@lists.infradead.org; Sat, 20 Aug 2016 00:18:25 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
  by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7K0DmLt110104
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:18:03 -0400
-Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
- by mx0b-001b2d01.pphosted.com with ESMTP id 24vrm6thhb-1
+ u7K0Dnaj028384
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:59 -0400
+Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 24wceju5u3-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:18:03 -0400
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:58 -0400
 Received: from localhost
- by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 19 Aug 2016 21:18:01 -0300
+ Fri, 19 Aug 2016 21:17:56 -0300
 Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 0200C3520070
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:37 -0400 (EDT)
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 3358F1DC006E
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 20:17:44 -0400 (EDT)
 Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
  by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7K0Hwl85136560
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:17:58 -0300
+ u7K0HrRZ4534336
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:17:53 -0300
 Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
  by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7K0Hv0c005258
- for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:17:57 -0300
+ u7K0HqKJ005154
+ for <kexec@lists.infradead.org>; Fri, 19 Aug 2016 21:17:53 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v6 06/12] powerpc: Adapt elf64_apply_relocate_add for
- kexec_file_load.
-Date: Fri, 19 Aug 2016 21:17:16 -0300
+Subject: [PATCH v6 04/12] powerpc: Factor out relocation code from module_64.c
+ to elf_util_64.c.
+Date: Fri, 19 Aug 2016 21:17:14 -0300
 In-Reply-To: <1471652242-14436-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1471652242-14436-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1471652242-14436-7-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1471652242-14436-5-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -51,246 +51,906 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Extend elf64_apply_relocate_add to support relative symbols. This is
-necessary because there is a difference between how the module loading
-mechanism and the kexec purgatory loading code use Elf64_Sym.st_value
-at relocation time: the former changes st_value to point to the absolute
-memory address before relocating the module, while the latter does that
-adjustment during relocation of the purgatory.
+The kexec_file_load system call needs to relocate the purgatory, so
+factor out the module relocation code so that it can be shared.
 
-Also, add a check_symbols argument so that the kexec code can be stricter
-about undefined symbols.
+This patch's purpose is to move the ELF relocation logic from
+apply_relocate_add to elf_util_64.c with as few changes as
+possible. The following changes were needed:
 
-Finally, add relocation types used by the purgatory.
+To avoid having module-specific code in a general purpose utility
+function, struct elf_info was created to contain the information
+needed for ELF binaries manipulation.
+
+my_r2, stub_for_addr and create_stub were changed to use it instead of
+having to receive a struct module, since they are called from
+elf64_apply_relocate_add.
+
+local_entry_offset and squash_toc_save_inst were only used by
+apply_rellocate_add, so they were moved to elf_util_64.c as well.
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/elf_util.h |   2 +
- arch/powerpc/kernel/elf_util_64.c   | 100 +++++++++++++++++++++++++++++++++---
- arch/powerpc/kernel/module_64.c     |   6 ++-
- 3 files changed, 99 insertions(+), 9 deletions(-)
+ arch/powerpc/include/asm/elf_util.h |  70 ++++++++
+ arch/powerpc/include/asm/module.h   |  14 +-
+ arch/powerpc/kernel/Makefile        |   4 +
+ arch/powerpc/kernel/elf_util_64.c   | 269 +++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/module_64.c     | 312 ++++--------------------------------
+ 5 files changed, 386 insertions(+), 283 deletions(-)
 
 diff --git a/arch/powerpc/include/asm/elf_util.h b/arch/powerpc/include/asm/elf_util.h
-index a012ba03282d..5a27e8ceb88a 100644
---- a/arch/powerpc/include/asm/elf_util.h
+new file mode 100644
+index 000000000000..37372559fe62
+--- /dev/null
 +++ b/arch/powerpc/include/asm/elf_util.h
-@@ -20,6 +20,7 @@
- #include <linux/elf.h>
+@@ -0,0 +1,70 @@
++/*
++ * Utility functions to work with ELF files.
++ *
++ * Copyright (C) 2016, IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _ASM_POWERPC_ELF_UTIL_H
++#define _ASM_POWERPC_ELF_UTIL_H
++
++#include <linux/elf.h>
++
++struct elf_info {
++	struct elf_shdr *sechdrs;
++
++	/* Index of stubs section. */
++	unsigned int stubs_section;
++	/* Index of TOC section. */
++	unsigned int toc_section;
++};
++
++#ifdef __powerpc64__
++#ifdef PPC64_ELF_ABI_v2
++
++/* An address is simply the address of the function. */
++typedef unsigned long func_desc_t;
++#else
++
++/* An address is address of the OPD entry, which contains address of fn. */
++typedef struct ppc64_opd_entry func_desc_t;
++#endif /* PPC64_ELF_ABI_v2 */
++
++/* Like PPC32, we need little trampolines to do > 24-bit jumps (into
++   the kernel itself).  But on PPC64, these need to be used for every
++   jump, actually, to reset r2 (TOC+0x8000). */
++struct ppc64_stub_entry
++{
++	/* 28 byte jump instruction sequence (7 instructions). We only
++	 * need 6 instructions on ABIv2 but we always allocate 7 so
++	 * so we don't have to modify the trampoline load instruction. */
++	u32 jump[7];
++	/* Used by ftrace to identify stubs */
++	u32 magic;
++	/* Data for the above code */
++	func_desc_t funcdata;
++};
++#endif
++
++/* r2 is the TOC pointer: it actually points 0x8000 into the TOC (this
++   gives the value maximum span in an instruction which uses a signed
++   offset) */
++static inline unsigned long my_r2(const struct elf_info *elf_info)
++{
++	return elf_info->sechdrs[elf_info->toc_section].sh_addr + 0x8000;
++}
++
++int elf64_apply_relocate_add(const struct elf_info *elf_info,
++			     const char *strtab, unsigned int symindex,
++			     unsigned int relsec, const char *obj_name);
++
++#endif /* _ASM_POWERPC_ELF_UTIL_H */
+diff --git a/arch/powerpc/include/asm/module.h b/arch/powerpc/include/asm/module.h
+index cd4ffd86765f..f2073115d518 100644
+--- a/arch/powerpc/include/asm/module.h
++++ b/arch/powerpc/include/asm/module.h
+@@ -12,7 +12,14 @@
+ #include <linux/list.h>
+ #include <asm/bug.h>
+ #include <asm-generic/module.h>
++#include <asm/elf_util.h>
  
- struct elf_info {
-+	const struct elfhdr *ehdr;
- 	struct elf_shdr *sechdrs;
++/* Both low and high 16 bits are added as SIGNED additions, so if low
++   16 bits has high bit set, high 16 bits must be adjusted.  These
++   macros do that (stolen from binutils). */
++#define PPC_LO(v) ((v) & 0xffff)
++#define PPC_HI(v) (((v) >> 16) & 0xffff)
++#define PPC_HA(v) PPC_HI ((v) + 0x8000)
  
- 	/* Index of stubs section. */
-@@ -67,6 +68,7 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 			     const char *strtab, const Elf64_Rela *rela,
- 			     unsigned int num_rela, void *syms_base,
- 			     void *loc_base, Elf64_Addr addr_base,
-+			     bool relative_symbols, bool check_symbols,
- 			     const char *obj_name);
+ #ifndef __powerpc64__
+ /*
+@@ -33,8 +40,7 @@ struct ppc_plt_entry {
  
- #endif /* _ASM_POWERPC_ELF_UTIL_H */
+ struct mod_arch_specific {
+ #ifdef __powerpc64__
+-	unsigned int stubs_section;	/* Index of stubs section in module */
+-	unsigned int toc_section;	/* What section is the TOC? */
++	struct elf_info elf_info;
+ 	bool toc_fixed;			/* Have we fixed up .TOC.? */
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ 	unsigned long toc;
+@@ -90,6 +96,10 @@ static inline int module_finalize_ftrace(struct module *mod, const Elf_Shdr *sec
+ }
+ #endif
+ 
++unsigned long stub_for_addr(const struct elf_info *elf_info, unsigned long addr,
++			    const char *obj_name);
++int restore_r2(u32 *instruction, const char *obj_name);
++
+ struct exception_table_entry;
+ void sort_ex_table(struct exception_table_entry *start,
+ 		   struct exception_table_entry *finish);
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index b2027a5cf508..e38aace0a6e7 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -123,6 +123,10 @@ ifneq ($(CONFIG_PPC_INDIRECT_PIO),y)
+ obj-y				+= iomap.o
+ endif
+ 
++ifeq ($(CONFIG_MODULES)$(CONFIG_WORD_SIZE),y64)
++obj-y				+= elf_util_64.o
++endif
++
+ obj64-$(CONFIG_PPC_TRANSACTIONAL_MEM)	+= tm.o
+ 
+ obj-$(CONFIG_PPC64)		+= $(obj64-y)
 diff --git a/arch/powerpc/kernel/elf_util_64.c b/arch/powerpc/kernel/elf_util_64.c
-index 8e5d400ac9f2..0a56b0faf3c8 100644
---- a/arch/powerpc/kernel/elf_util_64.c
+new file mode 100644
+index 000000000000..decad2c34f38
+--- /dev/null
 +++ b/arch/powerpc/kernel/elf_util_64.c
-@@ -74,6 +74,8 @@ static void squash_toc_save_inst(const char *name, unsigned long addr) { }
-  * @syms_base:		Contents of the associated symbol table.
-  * @loc_base:		Contents of the section to which relocations apply.
-  * @addr_base:		The address where the section will be loaded in memory.
-+ * @relative_symbols:	Are the symbols' st_value members relative?
-+ * @check_symbols:	Fail if an unexpected symbol is found?
-  * @obj_name:		The name of the ELF binary, for information messages.
-  *
-  * Applies RELA relocations to an ELF file already at its final location
-@@ -84,12 +86,15 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 			     const char *strtab, const Elf64_Rela *rela,
- 			     unsigned int num_rela, void *syms_base,
- 			     void *loc_base, Elf64_Addr addr_base,
-+			     bool relative_symbols, bool check_symbols,
- 			     const char *obj_name)
- {
- 	unsigned int i;
- 	unsigned long *location;
- 	unsigned long address;
-+	unsigned long sec_base;
- 	unsigned long value;
-+	int reloc_type;
- 	const char *name;
- 	Elf64_Sym *sym;
- 
-@@ -116,15 +121,45 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 		else
- 			name = "<unnamed symbol>";
- 
--		pr_debug("RELOC at %p: %li-type as %s (0x%lx) + %li\n",
--		       location, (long)ELF64_R_TYPE(rela[i].r_info),
--		       name, (unsigned long)sym->st_value,
-+		reloc_type = ELF64_R_TYPE(rela[i].r_info);
+@@ -0,0 +1,269 @@
++/*
++ * Utility functions to work with ELF files.
++ *
++ * Copyright (C) 2016, IBM Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+		pr_debug("RELOC at %p: %i-type as %s (0x%lx) + %li\n",
-+		       location, reloc_type, name, (unsigned long)sym->st_value,
- 		       (long)rela[i].r_addend);
- 
-+		if (check_symbols) {
-+			/*
-+			 * TOC symbols appear as undefined but should be
-+			 * resolved as well, so allow them to be processed.
-+			 */
-+			if (sym->st_shndx == SHN_UNDEF &&
-+					strcmp(name, ".TOC.") != 0 &&
-+					reloc_type != R_PPC64_TOC) {
-+				pr_err("Undefined symbol: %s\n", name);
-+				return -ENOEXEC;
-+			} else if (sym->st_shndx == SHN_COMMON) {
-+				pr_err("Symbol '%s' in common section.\n", name);
-+				return -ENOEXEC;
-+			}
-+		}
++#include <asm/ppc-opcode.h>
++#include <asm/elf_util.h>
 +
-+		if (relative_symbols && sym->st_shndx != SHN_ABS) {
-+			if (sym->st_shndx >= elf_info->ehdr->e_shnum) {
-+				pr_err("Invalid section %d for symbol %s\n",
-+				       sym->st_shndx, name);
-+				return -ENOEXEC;
-+			} else {
-+				struct elf_shdr *sechdrs = elf_info->sechdrs;
++/*
++ * We just need to use the functions defined in <asm/module.h>, so just declare
++ * struct module here and avoid having to import <linux/module.h>.
++ */
++struct module;
++#include <asm/module.h>
 +
-+				sec_base = sechdrs[sym->st_shndx].sh_addr;
-+			}
-+		} else
-+			sec_base = 0;
++#ifdef PPC64_ELF_ABI_v2
++/* PowerPC64 specific values for the Elf64_Sym st_other field.  */
++#define STO_PPC64_LOCAL_BIT	5
++#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
++#define PPC64_LOCAL_ENTRY_OFFSET(other)					\
++ (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
 +
- 		/* `Everything is relative'. */
--		value = sym->st_value + rela[i].r_addend;
-+		value = sym->st_value + sec_base + rela[i].r_addend;
- 
--		switch (ELF64_R_TYPE(rela[i].r_info)) {
-+		switch (reloc_type) {
- 		case R_PPC64_ADDR32:
- 			/* Simply set it */
- 			*(u32 *)location = value;
-@@ -135,6 +170,10 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 			*(unsigned long *)location = value;
- 			break;
- 
-+		case R_PPC64_REL32:
-+			*(uint32_t *)location = value - (uint32_t)(uint64_t)location;
++static unsigned int local_entry_offset(const Elf64_Sym *sym)
++{
++	/* sym->st_other indicates offset to local entry point
++	 * (otherwise it will assume r12 is the address of the start
++	 * of function and try to derive r2 from it). */
++	return PPC64_LOCAL_ENTRY_OFFSET(sym->st_other);
++}
++#else
++static unsigned int local_entry_offset(const Elf64_Sym *sym)
++{
++	return 0;
++}
++#endif
++
++#ifdef CC_USING_MPROFILE_KERNEL
++/*
++ * In case of _mcount calls, do not save the current callee's TOC (in r2) into
++ * the original caller's stack frame. If we did we would clobber the saved TOC
++ * value of the original caller.
++ */
++static void squash_toc_save_inst(const char *name, unsigned long addr)
++{
++	struct ppc64_stub_entry *stub = (struct ppc64_stub_entry *)addr;
++
++	/* Only for calls to _mcount */
++	if (strcmp("_mcount", name) != 0)
++		return;
++
++	stub->jump[2] = PPC_INST_NOP;
++}
++#else
++static void squash_toc_save_inst(const char *name, unsigned long addr) { }
++#endif
++
++/**
++ * elf64_apply_relocate_add - apply 64 bit RELA relocations
++ * @elf_info:		Support information for the ELF binary being relocated.
++ * @strtab:		String table for the associated symbol table.
++ * @symindex:		Section header index for the associated symbol table.
++ * @relsec:		Section header index for the relocations to apply.
++ * @obj_name:		The name of the ELF binary, for information messages.
++ */
++int elf64_apply_relocate_add(const struct elf_info *elf_info,
++			     const char *strtab, unsigned int symindex,
++			     unsigned int relsec, const char *obj_name)
++{
++	unsigned int i;
++	Elf64_Shdr *sechdrs = elf_info->sechdrs;
++	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
++	Elf64_Sym *sym;
++	unsigned long *location;
++	unsigned long value;
++
++
++	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rela); i++) {
++		/* This is where to make the change */
++		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
++			+ rela[i].r_offset;
++		/* This is the symbol it is referring to */
++		sym = (Elf64_Sym *)sechdrs[symindex].sh_addr
++			+ ELF64_R_SYM(rela[i].r_info);
++
++		pr_debug("RELOC at %p: %li-type as %s (0x%lx) + %li\n",
++		       location, (long)ELF64_R_TYPE(rela[i].r_info),
++		       strtab + sym->st_name, (unsigned long)sym->st_value,
++		       (long)rela[i].r_addend);
++
++		/* `Everything is relative'. */
++		value = sym->st_value + rela[i].r_addend;
++
++		switch (ELF64_R_TYPE(rela[i].r_info)) {
++		case R_PPC64_ADDR32:
++			/* Simply set it */
++			*(u32 *)location = value;
 +			break;
 +
- 		case R_PPC64_TOC:
- 			*(unsigned long *)location = my_r2(elf_info);
- 			break;
-@@ -186,6 +225,14 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 				| (value & 0xfffc);
- 			break;
- 
-+		case R_PPC64_TOC16_HI:
++		case R_PPC64_ADDR64:
++			/* Simply set it */
++			*(unsigned long *)location = value;
++			break;
++
++		case R_PPC64_TOC:
++			*(unsigned long *)location = my_r2(elf_info);
++			break;
++
++		case R_PPC64_TOC16:
 +			/* Subtract TOC pointer */
 +			value -= my_r2(elf_info);
-+			value = value >> 16;
++			if (value + 0x8000 > 0xffff) {
++				pr_err("%s: bad TOC16 relocation (0x%lx)\n",
++				       obj_name, value);
++				return -ENOEXEC;
++			}
 +			*((uint16_t *) location)
 +				= (*((uint16_t *) location) & ~0xffff)
 +				| (value & 0xffff);
++			break;
 +
- 		case R_PPC64_TOC16_HA:
- 			/* Subtract TOC pointer */
- 			value -= my_r2(elf_info);
-@@ -195,6 +242,21 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 				| (value & 0xffff);
- 			break;
- 
-+		case R_PPC64_REL14:
-+			/* Convert value to relative */
-+			value -= address;
-+			if (value + 0x8000 > 0xffff || (value & 3) != 0) {
-+				pr_err("%s: REL14 %li out of range!\n", obj_name,
-+				       (long int)value);
++		case R_PPC64_TOC16_LO:
++			/* Subtract TOC pointer */
++			value -= my_r2(elf_info);
++			*((uint16_t *) location)
++				= (*((uint16_t *) location) & ~0xffff)
++				| (value & 0xffff);
++			break;
++
++		case R_PPC64_TOC16_DS:
++			/* Subtract TOC pointer */
++			value -= my_r2(elf_info);
++			if ((value & 3) != 0 || value + 0x8000 > 0xffff) {
++				pr_err("%s: bad TOC16_DS relocation (0x%lx)\n",
++				       obj_name, value);
 +				return -ENOEXEC;
 +			}
-+
-+			/* Only replace bits 2 through 16 */
-+			*(uint32_t *)location
-+				= (*(uint32_t *)location & ~0xfffc)
++			*((uint16_t *) location)
++				= (*((uint16_t *) location) & ~0xfffc)
 +				| (value & 0xfffc);
 +			break;
 +
- 		case R_PPC_REL24:
- 			/* FIXME: Handle weak symbols here --RR */
- 			if (sym->st_shndx == SHN_UNDEF) {
-@@ -263,6 +325,29 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 			((uint32_t *)location)[1] = 0x38420000 + PPC_LO(value);
- 			break;
- 
-+		case R_PPC64_ADDR16_LO:
-+			*(uint16_t *)location = value & 0xffff;
++		case R_PPC64_TOC16_LO_DS:
++			/* Subtract TOC pointer */
++			value -= my_r2(elf_info);
++			if ((value & 3) != 0) {
++				pr_err("%s: bad TOC16_LO_DS relocation (0x%lx)\n",
++				       obj_name, value);
++				return -ENOEXEC;
++			}
++			*((uint16_t *) location)
++				= (*((uint16_t *) location) & ~0xfffc)
++				| (value & 0xfffc);
 +			break;
 +
-+		case R_PPC64_ADDR16_HI:
-+			*(uint16_t *)location = (value >> 16) & 0xffff;
++		case R_PPC64_TOC16_HA:
++			/* Subtract TOC pointer */
++			value -= my_r2(elf_info);
++			value = ((value + 0x8000) >> 16);
++			*((uint16_t *) location)
++				= (*((uint16_t *) location) & ~0xffff)
++				| (value & 0xffff);
 +			break;
 +
-+		case R_PPC64_ADDR16_HA:
-+			*(uint16_t *)location = (((value + 0x8000) >> 16) &
-+							0xffff);
++		case R_PPC_REL24:
++			/* FIXME: Handle weak symbols here --RR */
++			if (sym->st_shndx == SHN_UNDEF) {
++				/* External: go via stub */
++				value = stub_for_addr(elf_info, value, obj_name);
++				if (!value)
++					return -ENOENT;
++				if (!restore_r2((u32 *)location + 1, obj_name))
++					return -ENOEXEC;
++
++				squash_toc_save_inst(strtab + sym->st_name, value);
++			} else
++				value += local_entry_offset(sym);
++
++			/* Convert value to relative */
++			value -= (unsigned long)location;
++			if (value + 0x2000000 > 0x3ffffff || (value & 3) != 0){
++				pr_err("%s: REL24 %li out of range!\n",
++				       obj_name, (long int)value);
++				return -ENOEXEC;
++			}
++
++			/* Only replace bits 2 through 26 */
++			*(uint32_t *)location
++				= (*(uint32_t *)location & ~0x03fffffc)
++				| (value & 0x03fffffc);
 +			break;
 +
-+		case R_PPC64_ADDR16_HIGHER:
-+			*(uint16_t *)location = (((uint64_t)value >> 32) &
-+							0xffff);
++		case R_PPC64_REL64:
++			/* 64 bits relative (used by features fixups) */
++			*location = value - (unsigned long)location;
 +			break;
 +
-+		case R_PPC64_ADDR16_HIGHEST:
-+			*(uint16_t *)location = (((uint64_t)value >> 48) &
-+							0xffff);
++		case R_PPC64_TOCSAVE:
++			/*
++			 * Marker reloc indicates we don't have to save r2.
++			 * That would only save us one instruction, so ignore
++			 * it.
++			 */
 +			break;
 +
- 		case R_PPC64_REL16_HA:
- 			/* Subtract location pointer */
- 			value -= address;
-@@ -281,9 +366,8 @@ int elf64_apply_relocate_add(const struct elf_info *elf_info,
- 			break;
- 
- 		default:
--			pr_err("%s: Unknown ADD relocation: %lu\n",
--			       obj_name,
--			       (unsigned long)ELF64_R_TYPE(rela[i].r_info));
-+			pr_err("%s: Unknown ADD relocation: %d\n", obj_name,
-+			       reloc_type);
- 			return -ENOEXEC;
- 		}
- 	}
++		case R_PPC64_ENTRY:
++			/*
++			 * Optimize ELFv2 large code model entry point if
++			 * the TOC is within 2GB range of current location.
++			 */
++			value = my_r2(elf_info) - (unsigned long)location;
++			if (value + 0x80008000 > 0xffffffff)
++				break;
++			/*
++			 * Check for the large code model prolog sequence:
++			 *	ld r2, ...(r12)
++			 *	add r2, r2, r12
++			 */
++			if ((((uint32_t *)location)[0] & ~0xfffc)
++			    != 0xe84c0000)
++				break;
++			if (((uint32_t *)location)[1] != 0x7c426214)
++				break;
++			/*
++			 * If found, replace it with:
++			 *	addis r2, r12, (.TOC.-func)@ha
++			 *	addi r2, r12, (.TOC.-func)@l
++			 */
++			((uint32_t *)location)[0] = 0x3c4c0000 + PPC_HA(value);
++			((uint32_t *)location)[1] = 0x38420000 + PPC_LO(value);
++			break;
++
++		case R_PPC64_REL16_HA:
++			/* Subtract location pointer */
++			value -= (unsigned long)location;
++			value = ((value + 0x8000) >> 16);
++			*((uint16_t *) location)
++				= (*((uint16_t *) location) & ~0xffff)
++				| (value & 0xffff);
++			break;
++
++		case R_PPC64_REL16_LO:
++			/* Subtract location pointer */
++			value -= (unsigned long)location;
++			*((uint16_t *) location)
++				= (*((uint16_t *) location) & ~0xffff)
++				| (value & 0xffff);
++			break;
++
++		default:
++			pr_err("%s: Unknown ADD relocation: %lu\n",
++			       obj_name,
++			       (unsigned long)ELF64_R_TYPE(rela[i].r_info));
++			return -ENOEXEC;
++		}
++	}
++
++	return 0;
++}
 diff --git a/arch/powerpc/kernel/module_64.c b/arch/powerpc/kernel/module_64.c
-index 590e2413974f..ff9ab8194188 100644
+index 183368e008cf..b929560ecd5b 100644
 --- a/arch/powerpc/kernel/module_64.c
 +++ b/arch/powerpc/kernel/module_64.c
-@@ -341,6 +341,7 @@ int module_frob_arch_sections(Elf64_Ehdr *hdr,
- 	sechdrs[me->arch.elf_info.stubs_section].sh_size = get_stubs_size(hdr, sechdrs);
+@@ -19,7 +19,7 @@
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
- 	/* For the elf_util functions. */
-+	me->arch.elf_info.ehdr = hdr;
- 	me->arch.elf_info.sechdrs = sechdrs;
+ #include <linux/module.h>
+-#include <linux/elf.h>
++#include <asm/elf_util.h>
+ #include <linux/moduleloader.h>
+ #include <linux/err.h>
+ #include <linux/vmalloc.h>
+@@ -43,9 +43,6 @@
  
- 	return 0;
-@@ -443,6 +444,9 @@ int restore_r2(u32 *instruction, const char *obj_name)
-  * When this function is called, the module is already at its final location in
-  * memory, so Elf64_Shdr.sh_addr can be used for accessing the section
-  * contents as well as the base address for relocations.
-+ *
-+ * Also, simplify_symbols already changed all symbols' st_value members
-+ * to absolute addresses.
-  */
- int apply_relocate_add(Elf64_Shdr *sechdrs,
- 		       const char *strtab,
-@@ -472,7 +476,7 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ #ifdef PPC64_ELF_ABI_v2
  
- 	return elf64_apply_relocate_add(&me->arch.elf_info, strtab, rela,
- 					num_rela, syms_base, (void *) addr_base,
--					addr_base, me->name);
-+					addr_base, false, false, me->name);
+-/* An address is simply the address of the function. */
+-typedef unsigned long func_desc_t;
+-
+ static func_desc_t func_desc(unsigned long addr)
+ {
+ 	return addr;
+@@ -58,25 +55,8 @@ static unsigned long stub_func_addr(func_desc_t func)
+ {
+ 	return func;
+ }
+-
+-/* PowerPC64 specific values for the Elf64_Sym st_other field.  */
+-#define STO_PPC64_LOCAL_BIT	5
+-#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
+-#define PPC64_LOCAL_ENTRY_OFFSET(other)					\
+- (((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) >> 2) << 2)
+-
+-static unsigned int local_entry_offset(const Elf64_Sym *sym)
+-{
+-	/* sym->st_other indicates offset to local entry point
+-	 * (otherwise it will assume r12 is the address of the start
+-	 * of function and try to derive r2 from it). */
+-	return PPC64_LOCAL_ENTRY_OFFSET(sym->st_other);
+-}
+ #else
+ 
+-/* An address is address of the OPD entry, which contains address of fn. */
+-typedef struct ppc64_opd_entry func_desc_t;
+-
+ static func_desc_t func_desc(unsigned long addr)
+ {
+ 	return *(struct ppc64_opd_entry *)addr;
+@@ -89,29 +69,10 @@ static unsigned long stub_func_addr(func_desc_t func)
+ {
+ 	return func.funcaddr;
+ }
+-static unsigned int local_entry_offset(const Elf64_Sym *sym)
+-{
+-	return 0;
+-}
+ #endif
+ 
+ #define STUB_MAGIC 0x73747562 /* stub */
+ 
+-/* Like PPC32, we need little trampolines to do > 24-bit jumps (into
+-   the kernel itself).  But on PPC64, these need to be used for every
+-   jump, actually, to reset r2 (TOC+0x8000). */
+-struct ppc64_stub_entry
+-{
+-	/* 28 byte jump instruction sequence (7 instructions). We only
+-	 * need 6 instructions on ABIv2 but we always allocate 7 so
+-	 * so we don't have to modify the trampoline load instruction. */
+-	u32 jump[7];
+-	/* Used by ftrace to identify stubs */
+-	u32 magic;
+-	/* Data for the above code */
+-	func_desc_t funcdata;
+-};
+-
+ /*
+  * PPC64 uses 24 bit jumps, but we need to jump into other modules or
+  * the kernel which may be further.  So we jump to a stub.
+@@ -346,9 +307,9 @@ int module_frob_arch_sections(Elf64_Ehdr *hdr,
+ 	for (i = 1; i < hdr->e_shnum; i++) {
+ 		char *p;
+ 		if (strcmp(secstrings + sechdrs[i].sh_name, ".stubs") == 0)
+-			me->arch.stubs_section = i;
++			me->arch.elf_info.stubs_section = i;
+ 		else if (strcmp(secstrings + sechdrs[i].sh_name, ".toc") == 0)
+-			me->arch.toc_section = i;
++			me->arch.elf_info.toc_section = i;
+ 		else if (strcmp(secstrings+sechdrs[i].sh_name,"__versions")==0)
+ 			dedotify_versions((void *)hdr + sechdrs[i].sh_offset,
+ 					  sechdrs[i].sh_size);
+@@ -364,7 +325,7 @@ int module_frob_arch_sections(Elf64_Ehdr *hdr,
+ 				 + sechdrs[sechdrs[i].sh_link].sh_offset);
+ 	}
+ 
+-	if (!me->arch.stubs_section) {
++	if (!me->arch.elf_info.stubs_section) {
+ 		pr_err("%s: doesn't contain .stubs.\n", me->name);
+ 		return -ENOEXEC;
+ 	}
+@@ -373,44 +334,32 @@ int module_frob_arch_sections(Elf64_Ehdr *hdr,
+ 	   to some reasonable value in case the module calls out to
+ 	   other functions via a stub, or if a function pointer escapes
+ 	   the module by some means.  */
+-	if (!me->arch.toc_section)
+-		me->arch.toc_section = me->arch.stubs_section;
++	if (!me->arch.elf_info.toc_section)
++		me->arch.elf_info.toc_section = me->arch.elf_info.stubs_section;
+ 
+ 	/* Override the stubs size */
+-	sechdrs[me->arch.stubs_section].sh_size = get_stubs_size(hdr, sechdrs);
+-	return 0;
+-}
++	sechdrs[me->arch.elf_info.stubs_section].sh_size = get_stubs_size(hdr, sechdrs);
+ 
+-/* r2 is the TOC pointer: it actually points 0x8000 into the TOC (this
+-   gives the value maximum span in an instruction which uses a signed
+-   offset) */
+-static inline unsigned long my_r2(const Elf64_Shdr *sechdrs, struct module *me)
+-{
+-	return sechdrs[me->arch.toc_section].sh_addr + 0x8000;
+-}
++	/* For the elf_util functions. */
++	me->arch.elf_info.sechdrs = sechdrs;
+ 
+-/* Both low and high 16 bits are added as SIGNED additions, so if low
+-   16 bits has high bit set, high 16 bits must be adjusted.  These
+-   macros do that (stolen from binutils). */
+-#define PPC_LO(v) ((v) & 0xffff)
+-#define PPC_HI(v) (((v) >> 16) & 0xffff)
+-#define PPC_HA(v) PPC_HI ((v) + 0x8000)
++	return 0;
++}
+ 
+ /* Patch stub to reference function and correct r2 value. */
+-static inline int create_stub(const Elf64_Shdr *sechdrs,
++static inline int create_stub(const struct elf_info *elf_info,
+ 			      struct ppc64_stub_entry *entry,
+-			      unsigned long addr,
+-			      struct module *me)
++			      unsigned long addr, const char *obj_name)
+ {
+ 	long reladdr;
+ 
+ 	memcpy(entry->jump, ppc64_stub_insns, sizeof(ppc64_stub_insns));
+ 
+ 	/* Stub uses address relative to r2. */
+-	reladdr = (unsigned long)entry - my_r2(sechdrs, me);
++	reladdr = (unsigned long)entry - my_r2(elf_info);
+ 	if (reladdr > 0x7FFFFFFF || reladdr < -(0x80000000L)) {
+ 		pr_err("%s: Address %p of stub out of range of %p.\n",
+-		       me->name, (void *)reladdr, (void *)my_r2);
++		       obj_name, (void *)reladdr, (void *)my_r2);
+ 		return 0;
+ 	}
+ 	pr_debug("Stub %p get data from reladdr %li\n", entry, reladdr);
+@@ -425,17 +374,17 @@ static inline int create_stub(const Elf64_Shdr *sechdrs,
+ 
+ /* Create stub to jump to function described in this OPD/ptr: we need the
+    stub to set up the TOC ptr (r2) for the function. */
+-static unsigned long stub_for_addr(const Elf64_Shdr *sechdrs,
+-				   unsigned long addr,
+-				   struct module *me)
++unsigned long stub_for_addr(const struct elf_info *elf_info, unsigned long addr,
++			    const char *obj_name)
+ {
++	struct elf_shdr *stubs_sec = &elf_info->sechdrs[elf_info->stubs_section];
+ 	struct ppc64_stub_entry *stubs;
+ 	unsigned int i, num_stubs;
+ 
+-	num_stubs = sechdrs[me->arch.stubs_section].sh_size / sizeof(*stubs);
++	num_stubs = stubs_sec->sh_size / sizeof(*stubs);
+ 
+ 	/* Find this stub, or if that fails, the next avail. entry */
+-	stubs = (void *)sechdrs[me->arch.stubs_section].sh_addr;
++	stubs = (void *) stubs_sec->sh_addr;
+ 	for (i = 0; stub_func_addr(stubs[i].funcdata); i++) {
+ 		BUG_ON(i >= num_stubs);
+ 
+@@ -443,7 +392,7 @@ static unsigned long stub_for_addr(const Elf64_Shdr *sechdrs,
+ 			return (unsigned long)&stubs[i];
+ 	}
+ 
+-	if (!create_stub(sechdrs, &stubs[i], addr, me))
++	if (!create_stub(elf_info, &stubs[i], addr, obj_name))
+ 		return 0;
+ 
+ 	return (unsigned long)&stubs[i];
+@@ -465,24 +414,7 @@ static bool is_early_mcount_callsite(u32 *instruction)
+ 	return false;
+ }
+ 
+-/*
+- * In case of _mcount calls, do not save the current callee's TOC (in r2) into
+- * the original caller's stack frame. If we did we would clobber the saved TOC
+- * value of the original caller.
+- */
+-static void squash_toc_save_inst(const char *name, unsigned long addr)
+-{
+-	struct ppc64_stub_entry *stub = (struct ppc64_stub_entry *)addr;
+-
+-	/* Only for calls to _mcount */
+-	if (strcmp("_mcount", name) != 0)
+-		return;
+-
+-	stub->jump[2] = PPC_INST_NOP;
+-}
+ #else
+-static void squash_toc_save_inst(const char *name, unsigned long addr) { }
+-
+ /* without -mprofile-kernel, mcount calls are never early */
+ static bool is_early_mcount_callsite(u32 *instruction)
+ {
+@@ -492,14 +424,14 @@ static bool is_early_mcount_callsite(u32 *instruction)
+ 
+ /* We expect a noop next: if it is, replace it with instruction to
+    restore r2. */
+-static int restore_r2(u32 *instruction, struct module *me)
++int restore_r2(u32 *instruction, const char *obj_name)
+ {
+ 	if (is_early_mcount_callsite(instruction - 1))
+ 		return 1;
+ 
+ 	if (*instruction != PPC_INST_NOP) {
+ 		pr_err("%s: Expect noop after relocate, got %08x\n",
+-		       me->name, *instruction);
++		       obj_name, *instruction);
+ 		return 0;
+ 	}
+ 	/* ld r2,R2_STACK_OFFSET(r1) */
+@@ -513,11 +445,7 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		       unsigned int relsec,
+ 		       struct module *me)
+ {
+-	unsigned int i;
+-	Elf64_Rela *rela = (void *)sechdrs[relsec].sh_addr;
+ 	Elf64_Sym *sym;
+-	unsigned long *location;
+-	unsigned long value;
+ 
+ 	pr_debug("Applying ADD relocate section %u to %u\n", relsec,
+ 	       sechdrs[relsec].sh_info);
+@@ -528,191 +456,12 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
+ 		/* It's theoretically possible that a module doesn't want a
+ 		 * .TOC. so don't fail it just for that. */
+ 		if (sym)
+-			sym->st_value = my_r2(sechdrs, me);
++			sym->st_value = my_r2(&me->arch.elf_info);
+ 		me->arch.toc_fixed = true;
+ 	}
+ 
+-	for (i = 0; i < sechdrs[relsec].sh_size / sizeof(*rela); i++) {
+-		/* This is where to make the change */
+-		location = (void *)sechdrs[sechdrs[relsec].sh_info].sh_addr
+-			+ rela[i].r_offset;
+-		/* This is the symbol it is referring to */
+-		sym = (Elf64_Sym *)sechdrs[symindex].sh_addr
+-			+ ELF64_R_SYM(rela[i].r_info);
+-
+-		pr_debug("RELOC at %p: %li-type as %s (0x%lx) + %li\n",
+-		       location, (long)ELF64_R_TYPE(rela[i].r_info),
+-		       strtab + sym->st_name, (unsigned long)sym->st_value,
+-		       (long)rela[i].r_addend);
+-
+-		/* `Everything is relative'. */
+-		value = sym->st_value + rela[i].r_addend;
+-
+-		switch (ELF64_R_TYPE(rela[i].r_info)) {
+-		case R_PPC64_ADDR32:
+-			/* Simply set it */
+-			*(u32 *)location = value;
+-			break;
+-
+-		case R_PPC64_ADDR64:
+-			/* Simply set it */
+-			*(unsigned long *)location = value;
+-			break;
+-
+-		case R_PPC64_TOC:
+-			*(unsigned long *)location = my_r2(sechdrs, me);
+-			break;
+-
+-		case R_PPC64_TOC16:
+-			/* Subtract TOC pointer */
+-			value -= my_r2(sechdrs, me);
+-			if (value + 0x8000 > 0xffff) {
+-				pr_err("%s: bad TOC16 relocation (0x%lx)\n",
+-				       me->name, value);
+-				return -ENOEXEC;
+-			}
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xffff)
+-				| (value & 0xffff);
+-			break;
+-
+-		case R_PPC64_TOC16_LO:
+-			/* Subtract TOC pointer */
+-			value -= my_r2(sechdrs, me);
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xffff)
+-				| (value & 0xffff);
+-			break;
+-
+-		case R_PPC64_TOC16_DS:
+-			/* Subtract TOC pointer */
+-			value -= my_r2(sechdrs, me);
+-			if ((value & 3) != 0 || value + 0x8000 > 0xffff) {
+-				pr_err("%s: bad TOC16_DS relocation (0x%lx)\n",
+-				       me->name, value);
+-				return -ENOEXEC;
+-			}
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xfffc)
+-				| (value & 0xfffc);
+-			break;
+-
+-		case R_PPC64_TOC16_LO_DS:
+-			/* Subtract TOC pointer */
+-			value -= my_r2(sechdrs, me);
+-			if ((value & 3) != 0) {
+-				pr_err("%s: bad TOC16_LO_DS relocation (0x%lx)\n",
+-				       me->name, value);
+-				return -ENOEXEC;
+-			}
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xfffc)
+-				| (value & 0xfffc);
+-			break;
+-
+-		case R_PPC64_TOC16_HA:
+-			/* Subtract TOC pointer */
+-			value -= my_r2(sechdrs, me);
+-			value = ((value + 0x8000) >> 16);
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xffff)
+-				| (value & 0xffff);
+-			break;
+-
+-		case R_PPC_REL24:
+-			/* FIXME: Handle weak symbols here --RR */
+-			if (sym->st_shndx == SHN_UNDEF) {
+-				/* External: go via stub */
+-				value = stub_for_addr(sechdrs, value, me);
+-				if (!value)
+-					return -ENOENT;
+-				if (!restore_r2((u32 *)location + 1, me))
+-					return -ENOEXEC;
+-
+-				squash_toc_save_inst(strtab + sym->st_name, value);
+-			} else
+-				value += local_entry_offset(sym);
+-
+-			/* Convert value to relative */
+-			value -= (unsigned long)location;
+-			if (value + 0x2000000 > 0x3ffffff || (value & 3) != 0){
+-				pr_err("%s: REL24 %li out of range!\n",
+-				       me->name, (long int)value);
+-				return -ENOEXEC;
+-			}
+-
+-			/* Only replace bits 2 through 26 */
+-			*(uint32_t *)location
+-				= (*(uint32_t *)location & ~0x03fffffc)
+-				| (value & 0x03fffffc);
+-			break;
+-
+-		case R_PPC64_REL64:
+-			/* 64 bits relative (used by features fixups) */
+-			*location = value - (unsigned long)location;
+-			break;
+-
+-		case R_PPC64_TOCSAVE:
+-			/*
+-			 * Marker reloc indicates we don't have to save r2.
+-			 * That would only save us one instruction, so ignore
+-			 * it.
+-			 */
+-			break;
+-
+-		case R_PPC64_ENTRY:
+-			/*
+-			 * Optimize ELFv2 large code model entry point if
+-			 * the TOC is within 2GB range of current location.
+-			 */
+-			value = my_r2(sechdrs, me) - (unsigned long)location;
+-			if (value + 0x80008000 > 0xffffffff)
+-				break;
+-			/*
+-			 * Check for the large code model prolog sequence:
+-		         *	ld r2, ...(r12)
+-			 *	add r2, r2, r12
+-			 */
+-			if ((((uint32_t *)location)[0] & ~0xfffc)
+-			    != 0xe84c0000)
+-				break;
+-			if (((uint32_t *)location)[1] != 0x7c426214)
+-				break;
+-			/*
+-			 * If found, replace it with:
+-			 *	addis r2, r12, (.TOC.-func)@ha
+-			 *	addi r2, r12, (.TOC.-func)@l
+-			 */
+-			((uint32_t *)location)[0] = 0x3c4c0000 + PPC_HA(value);
+-			((uint32_t *)location)[1] = 0x38420000 + PPC_LO(value);
+-			break;
+-
+-		case R_PPC64_REL16_HA:
+-			/* Subtract location pointer */
+-			value -= (unsigned long)location;
+-			value = ((value + 0x8000) >> 16);
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xffff)
+-				| (value & 0xffff);
+-			break;
+-
+-		case R_PPC64_REL16_LO:
+-			/* Subtract location pointer */
+-			value -= (unsigned long)location;
+-			*((uint16_t *) location)
+-				= (*((uint16_t *) location) & ~0xffff)
+-				| (value & 0xffff);
+-			break;
+-
+-		default:
+-			pr_err("%s: Unknown ADD relocation: %lu\n",
+-			       me->name,
+-			       (unsigned long)ELF64_R_TYPE(rela[i].r_info));
+-			return -ENOEXEC;
+-		}
+-	}
+-
+-	return 0;
++	return elf64_apply_relocate_add(&me->arch.elf_info, strtab, symindex,
++					relsec, me->name);
  }
  
  #ifdef CONFIG_DYNAMIC_FTRACE
+@@ -746,10 +495,10 @@ static unsigned long create_ftrace_stub(const Elf64_Shdr *sechdrs, struct module
+ 	};
+ 	long reladdr;
+ 
+-	num_stubs = sechdrs[me->arch.stubs_section].sh_size / sizeof(*entry);
++	num_stubs = sechdrs[me->arch.elf_info.stubs_section].sh_size / sizeof(*entry);
+ 
+ 	/* Find the next available stub entry */
+-	entry = (void *)sechdrs[me->arch.stubs_section].sh_addr;
++	entry = (void *)sechdrs[me->arch.elf_info.stubs_section].sh_addr;
+ 	for (i = 0; i < num_stubs && stub_func_addr(entry->funcdata); i++, entry++);
+ 
+ 	if (i >= num_stubs) {
+@@ -778,13 +527,14 @@ static unsigned long create_ftrace_stub(const Elf64_Shdr *sechdrs, struct module
+ #else
+ static unsigned long create_ftrace_stub(const Elf64_Shdr *sechdrs, struct module *me)
+ {
+-	return stub_for_addr(sechdrs, (unsigned long)ftrace_caller, me);
++	return stub_for_addr(&me->arch.elf_info, (unsigned long)ftrace_caller,
++			     me->name);
+ }
+ #endif
+ 
+ int module_finalize_ftrace(struct module *mod, const Elf_Shdr *sechdrs)
+ {
+-	mod->arch.toc = my_r2(sechdrs, mod);
++	mod->arch.toc = my_r2(&mod->arch.elf_info);
+ 	mod->arch.tramp = create_ftrace_stub(sechdrs, mod);
+ 
+ 	if (!mod->arch.tramp)
 -- 
 1.9.1
 
