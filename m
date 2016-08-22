@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <57BB0272.1000008@arm.com>
-Date: Mon, 22 Aug 2016 14:47:30 +0100
-From: James Morse <james.morse@arm.com>
+Received: from mx1.kapsi.fi ([2001:1bc8:1004::1:25] helo=mail.kapsi.fi)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bbu6k-0003rQ-38
+ for kexec@lists.infradead.org; Mon, 22 Aug 2016 18:38:03 +0000
+From: Mikko Rapeli <mikko.rapeli@iki.fi>
+Subject: [PATCH v05 44/72] include/uapi/linux/kexec.h: use __kernel_size_t
+ instead of size_t
+Date: Mon, 22 Aug 2016 20:33:01 +0200
+Message-Id: <1471890809-4383-45-git-send-email-mikko.rapeli@iki.fi>
+In-Reply-To: <1471890809-4383-1-git-send-email-mikko.rapeli@iki.fi>
+References: <1471890809-4383-1-git-send-email-mikko.rapeli@iki.fi>
 MIME-Version: 1.0
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
- <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
- <20160819012651.GE20080@linaro.org>
- <20160819112217.GB22221@localhost.localdomain>
- <20160822012919.GI20080@linaro.org>
-In-Reply-To: <20160822012919.GI20080@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,56 +19,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mikko Rapeli <mikko.rapeli@iki.fi>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-On 22/08/16 02:29, AKASHI Takahiro wrote:
-> On Fri, Aug 19, 2016 at 04:52:17PM +0530, Pratyush Anand wrote:
->> It will help kexec-tools to prevent copying  of any unnecessary data. I
->> think, then you also need to change phys_offset calculation in kexec-tools. That
->> should be start of either of first "reserved" or "System RAM" block.
-> 
-> Good point, but I'm not sure this is always true.
-
-> Is there any system whose ACPI memory is *not* part of DRAM
-
-From the spec, it looks like this is allowed.
-
-What do you mean by 'DRAM'? Any ACPI region will be in the UEFI memory map, so
-the question is what is its type and memory attributes?
-The UEFI spec[0] says ACPI regions can have a type of EfiACPIReclaimMemory or
-EfiACPIMemoryNVS, the memory attributes aren't specified, so are chosen by the
-firmware.
-
-It is possible these regions have to be mapped non-cacheable, page 40 has a
-couple of:
-> If no information about the table location exists in the UEFI memory map or
-ACPI memory
-> descriptors, the table is assumed to be non-cached.
-
-reserve_regions() in drivers/firmware/efi/arm-init.c will add any entry in the
-memory map that has a 'WB' attribute to the memblock.memory list (via
-early_init_dt_add_memory_arch()), it will also mark as no-map regions that have
-this attribute and aren't in the is_reserve_region() list.
-
-If these ACPI regions have the 'WB' attribute, we add them as memory and mark
-them nomap. These show up as either a hole, or 'reserved' in /proc/iomem.
-If they don't have the 'WB' attribute, then then they are left out of memblock
-and aren't part of DRAM, I don't think these will show up in /proc/iomem at all.
-
-
-Thanks,
-
-James
-
-[0] '2.3.6 AArch64 Platforms' of version 2.6 of the UEFI spec at
-http://uefi.org/specifications
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Rml4ZXMgdXNlcnNwYWNlIGNvbXBpbGF0aW9uIGVycm9yOgoKZXJyb3I6IHVua25vd24gdHlwZSBu
+YW1lIOKAmHNpemVfdOKAmQogIHNpemVfdCBidWZzejsKClNpZ25lZC1vZmYtYnk6IE1pa2tvIFJh
+cGVsaSA8bWlra28ucmFwZWxpQGlraS5maT4KLS0tCiBpbmNsdWRlL3VhcGkvbGludXgva2V4ZWMu
+aCB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgva2V4ZWMuaCBiL2luY2x1ZGUvdWFw
+aS9saW51eC9rZXhlYy5oCmluZGV4IGFhZTVlYmYuLmY5NjRkODMgMTAwNjQ0Ci0tLSBhL2luY2x1
+ZGUvdWFwaS9saW51eC9rZXhlYy5oCisrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9rZXhlYy5oCkBA
+IC01MSw5ICs1MSw5IEBACiAgKi8KIHN0cnVjdCBrZXhlY19zZWdtZW50IHsKIAljb25zdCB2b2lk
+ICpidWY7Ci0Jc2l6ZV90IGJ1ZnN6OworCV9fa2VybmVsX3NpemVfdCBidWZzejsKIAljb25zdCB2
+b2lkICptZW07Ci0Jc2l6ZV90IG1lbXN6OworCV9fa2VybmVsX3NpemVfdCBtZW1zejsKIH07CiAK
+ICNlbmRpZiAvKiBfX0tFUk5FTF9fICovCi0tIAoyLjguMQoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
