@@ -1,21 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
+Received: from mail-yw0-f174.google.com ([209.85.161.174])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bbgkx-0004o8-2D
- for kexec@lists.infradead.org; Mon, 22 Aug 2016 04:22:41 +0000
-Received: by mail-pf0-x230.google.com with SMTP id p64so27929359pfb.1
- for <kexec@lists.infradead.org>; Sun, 21 Aug 2016 21:22:18 -0700 (PDT)
-Date: Mon, 22 Aug 2016 13:28:34 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20160822042832.GJ20080@linaro.org>
+ id 1bbjL3-0006p4-BF
+ for kexec@lists.infradead.org; Mon, 22 Aug 2016 07:08:06 +0000
+Received: by mail-yw0-f174.google.com with SMTP id u134so46392620ywg.3
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 00:07:44 -0700 (PDT)
+Date: Mon, 22 Aug 2016 12:37:39 +0530
+From: Pratyush Anand <panand@redhat.com>
+Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
+Message-ID: <20160822070739.GA4515@localhost.localdomain>
 References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015747.28591-1-takahiro.akashi@linaro.org>
- <20160819132641.GA12709@rob-hp-laptop>
+ <20160809015615.28527-1-takahiro.akashi@linaro.org>
+ <20160809015615.28527-3-takahiro.akashi@linaro.org>
+ <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
+ <20160819012651.GE20080@linaro.org>
+ <20160819112217.GB22221@localhost.localdomain>
+ <20160822012919.GI20080@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160819132641.GA12709@rob-hp-laptop>
+In-Reply-To: <20160822012919.GI20080@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,94 +31,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, catalin.marinas@arm.com, dyoung@redhat.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, frowand.list@gmail.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Rob,
-[Cc: Mark]
-
-On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
-> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
-> > From: James Morse <james.morse@arm.com>
+On 22/08/2016:10:29:20 AM, AKASHI Takahiro wrote:
+> On Fri, Aug 19, 2016 at 04:52:17PM +0530, Pratyush Anand wrote:
+> > On 19/08/2016:10:26:52 AM, AKASHI Takahiro wrote:
+> > > >From 740563e4a437f0d6ecf6e421c91433f9b8f19041 Mon Sep 17 00:00:00 2001
+> > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > Date: Fri, 19 Aug 2016 09:57:52 +0900
+> > > Subject: [PATCH] arm64: mark reserved memblock regions explicitly
+> > > 
+> > > ---
+> > >  arch/arm64/kernel/setup.c | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> > > index 38eda13..38589b5 100644
+> > > --- a/arch/arm64/kernel/setup.c
+> > > +++ b/arch/arm64/kernel/setup.c
+> > > @@ -205,10 +205,15 @@ static void __init request_standard_resources(void)
+> > >  
+> > >  	for_each_memblock(memory, region) {
+> > >  		res = alloc_bootmem_low(sizeof(*res));
+> > > -		res->name  = "System RAM";
+> > > +		if (memblock_is_nomap(region)) {
+> > > +			res->name  = "reserved";
+> > > +			res->flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> > > +		} else {
+> > > +			res->name  = "System RAM";
+> > > +			res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> > > +		}
+> > >  		res->start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
+> > >  		res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
+> > > -		res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> > >  
+> > >  		request_resource(&iomem_resource, res);
 > > 
-> > Add documentation for
-> > 	linux,crashkernel-base and crashkernel-size,
-> > 	linux,usable-memory-range, and
-> > 	linux,elfcorehdr
-> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> > the elfcorehdr's location within it.
 > > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > [takahiro.akashi@linaro.org:
-> >     renamed "usable-memory" to "usable-memory-range",
-> >     added "linux,crashkernel-base" and "-size" ]
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > index 6ae9d82..236188a 100644
-> > --- a/Documentation/devicetree/bindings/chosen.txt
-> > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
-> >  book3e) by some versions of kexec-tools to tell the new kernel that it
-> >  is being booted by kexec, as the booting environment may differ (e.g.
-> >  a different secondary CPU release mechanism)
-> > +
-> > +linux,crashkernel-base
-> > +linux,crashkernel-size
-> > +----------------------
-> > +These properties (currently used on PowerPC and arm64) indicates
-> > +the base address and the size, respectively, of the reserved memory
-> > +range for crash dump kernel.
-> > +e.g.
-> > +
-> > +/ {
-> > +	chosen {
-> > +		linux,crashkernel-base = <0x9 0xf0000000>;
-> > +		linux,crashkernel-size = <0x0 0x10000000>;
-> > +	};
-> > +};
-> > +
-> > +linux,usable-memory-range
-> > +-------------------------
-> > +
-> > +This property (currently used only on arm64) holds the memory range,
-> > +the base address and the size, which can be used as system ram on
-> > +the *current* kernel. Note that, if this property is present, any memory
-> > +regions under "memory" nodes in DT blob or ones marked as "conventional
-> > +memory" in EFI memory map should be ignored.
-> > +e.g.
-> > +
-> > +/ {
-> > +	chosen {
-> > +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> > +	};
-> > +};
+> > It will help kexec-tools to prevent copying  of any unnecessary data. I
+> > think, then you also need to change phys_offset calculation in kexec-tools. That
+> > should be start of either of first "reserved" or "System RAM" block.
 > 
-> I've read the discussion on this. I think you should use the existing 
-> linux,usable-memory property in the memory nodes. If UEFI systems don't 
-> have memory nodes, then you can find an UEFI way to describe this. DT is 
-> not the dumping ground for what doesn't fit in UEFI. How do x86 systems 
-> work?
+> Good point, but I'm not sure this is always true.
+> Is there any system whose ACPI memory is *not* part of DRAM
+> (so not part of linear mapping)?
+> 
 
-Kdump for x86 passes the range of usable memory to crash dump kernel
-either via:
-(a) "memmap=nn@ss" command line parameter, or
-(b) faked BIOS e820 map (a sort of memory map table)
+Looking into kernel/resource.c:reserve_setup(), it seems that there could be
+some none-DRAM area as well, which could be marked as "reserved". So, I think if
+we mark nomap region as "reserved" then applications like kexec-tools may not
+always identify start of DRAM correctly. Probably, we should give an unique name
+to reserved system ram area.
 
-(a) was rejected by Mark [1], and (b) is x86-specific.
-
-I believe that my approach is better because it works in the same way
-either on UEFI systems or DT-based systems.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/400122.html
-
-Thanks,
--Takahiro AKASHI
-
-> Rob
+~Pratyush
 
 _______________________________________________
 kexec mailing list
