@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f174.google.com ([209.85.161.174])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bbjL3-0006p4-BF
- for kexec@lists.infradead.org; Mon, 22 Aug 2016 07:08:06 +0000
-Received: by mail-yw0-f174.google.com with SMTP id u134so46392620ywg.3
- for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 00:07:44 -0700 (PDT)
-Date: Mon, 22 Aug 2016 12:37:39 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-Message-ID: <20160822070739.GA4515@localhost.localdomain>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
- <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
- <20160819012651.GE20080@linaro.org>
- <20160819112217.GB22221@localhost.localdomain>
- <20160822012919.GI20080@linaro.org>
+ id 1bbfkl-0004kc-Uy
+ for kexec@lists.infradead.org; Mon, 22 Aug 2016 03:18:25 +0000
+Date: Mon, 22 Aug 2016 11:17:45 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation
+ for some segments.
+Message-ID: <20160822031745.GA30489@dhcp-128-65.nay.redhat.com>
+References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1471058305-30198-4-git-send-email-bauerman@linux.vnet.ibm.com>
+ <20160818090330.GC845@dhcp-128-65.nay.redhat.com>
+ <105132489.pljZvDuEBr@hactar>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160822012919.GI20080@linaro.org>
+In-Reply-To: <105132489.pljZvDuEBr@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,59 +27,235 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Balbir Singh <bsingharora@gmail.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, linux-ima-devel@lists.sourceforge.net, Thomas Gleixner <tglx@linutronix.de>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Eric Richter <erichte@linux.vnet.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-On 22/08/2016:10:29:20 AM, AKASHI Takahiro wrote:
-> On Fri, Aug 19, 2016 at 04:52:17PM +0530, Pratyush Anand wrote:
-> > On 19/08/2016:10:26:52 AM, AKASHI Takahiro wrote:
-> > > >From 740563e4a437f0d6ecf6e421c91433f9b8f19041 Mon Sep 17 00:00:00 2001
-> > > From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > Date: Fri, 19 Aug 2016 09:57:52 +0900
-> > > Subject: [PATCH] arm64: mark reserved memblock regions explicitly
-> > > 
-> > > ---
-> > >  arch/arm64/kernel/setup.c | 9 +++++++--
-> > >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > > index 38eda13..38589b5 100644
-> > > --- a/arch/arm64/kernel/setup.c
-> > > +++ b/arch/arm64/kernel/setup.c
-> > > @@ -205,10 +205,15 @@ static void __init request_standard_resources(void)
-> > >  
-> > >  	for_each_memblock(memory, region) {
-> > >  		res = alloc_bootmem_low(sizeof(*res));
-> > > -		res->name  = "System RAM";
-> > > +		if (memblock_is_nomap(region)) {
-> > > +			res->name  = "reserved";
-> > > +			res->flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> > > +		} else {
-> > > +			res->name  = "System RAM";
-> > > +			res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> > > +		}
-> > >  		res->start = __pfn_to_phys(memblock_region_memory_base_pfn(region));
-> > >  		res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
-> > > -		res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> > >  
-> > >  		request_resource(&iomem_resource, res);
-> > 
-> > 
-> > It will help kexec-tools to prevent copying  of any unnecessary data. I
-> > think, then you also need to change phys_offset calculation in kexec-tools. That
-> > should be start of either of first "reserved" or "System RAM" block.
+On 08/18/16 at 06:09pm, Thiago Jung Bauermann wrote:
+> Hello Dave,
 > 
-> Good point, but I'm not sure this is always true.
-> Is there any system whose ACPI memory is *not* part of DRAM
-> (so not part of linear mapping)?
+> Thanks for your review!
 > 
+> [ Trimming down Cc: list a little to try to clear the "too many recipients"   
+>   mailing list restriction. ]
 
-Looking into kernel/resource.c:reserve_setup(), it seems that there could be
-some none-DRAM area as well, which could be marked as "reserved". So, I think if
-we mark nomap region as "reserved" then applications like kexec-tools may not
-always identify start of DRAM correctly. Probably, we should give an unique name
-to reserved system ram area.
+I also got "too many recipients".. Thanks for the trimming.
 
-~Pratyush
+> 
+> Am Donnerstag, 18 August 2016, 17:03:30 schrieb Dave Young:
+> > On 08/13/16 at 12:18am, Thiago Jung Bauermann wrote:
+> > > Adds checksum argument to kexec_add_buffer specifying whether the given
+> > > segment should be part of the checksum calculation.
+> > 
+> > Since it is used with add buffer, could it be added to kbuf as a new
+> > field?
+> 
+> I was on the fence about adding it as a new argument to kexec_add_buffer or 
+> as a new field to struct kexec_buf. Both alternatives make sense to me. I 
+> implemented your suggestion in the patch below, what do you think?
+> 
+> > Like kbuf.no_checksum, default value is 0 that means checksum is needed
+> > if it is 1 then no need a checksum.
+> 
+> It's an interesting idea and I implemented it that way, though in practice 
+> all current users of struct kexec_buf put it on the stack so the field needs 
+> to be initialized explicitly.
+> 
+> -- 
+> []'s
+> Thiago Jung Bauermann
+> IBM Linux Technology Center
+> 
+> 
+> Subject: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation for
+>  some segments.
+> 
+> Add skip_checksum member to struct kexec_buf to specify whether the
+> corresponding segment should be part of the checksum calculation.
+> 
+> The next patch will add a way to update segments after a kimage is loaded.
+> Segments that will be updated in this way should not be checksummed,
+> otherwise they will cause the purgatory checksum verification to fail
+> when the machine is rebooted.
+> 
+> As a bonus, we don't need to special-case the purgatory segment anymore
+> to avoid checksumming it.
+> 
+> Adjust places using struct kexec_buf to set skip_checksum.
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/kernel/kexec_elf_64.c |  5 +++--
+>  arch/x86/kernel/crash.c            |  3 ++-
+>  arch/x86/kernel/kexec-bzimage64.c  |  2 +-
+>  include/linux/kexec.h              | 23 ++++++++++++++---------
+>  kernel/kexec_file.c                | 15 +++++++--------
+>  5 files changed, 27 insertions(+), 21 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
+> index 22afc7b5ee73..d009f5363968 100644
+> --- a/arch/powerpc/kernel/kexec_elf_64.c
+> +++ b/arch/powerpc/kernel/kexec_elf_64.c
+> @@ -107,7 +107,7 @@ static int elf_exec_load(struct kimage *image, struct elfhdr *ehdr,
+>  	int ret;
+>  	size_t i;
+>  	struct kexec_buf kbuf = { .image = image, .buf_max = ppc64_rma_size,
+> -				  .top_down = false };
+> +				  .top_down = false, .skip_checksum = false };
+
+No need to set it as false because it will be initialized to 0 by
+default?
+
+>  
+>  	/* Read in the PT_LOAD segments. */
+>  	for (i = 0; i < ehdr->e_phnum; i++) {
+> @@ -162,7 +162,8 @@ void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	struct elf_info elf_info;
+>  	struct fdt_reserve_entry *rsvmap;
+>  	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
+> -				  .buf_max = ppc64_rma_size };
+> +				  .buf_max = ppc64_rma_size,
+> +				  .skip_checksum = false };
+>  
+>  	ret = build_elf_exec_info(kernel_buf, kernel_len, &ehdr, &elf_info);
+>  	if (ret)
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 38a1cdf6aa05..7b8f62c86651 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -617,7 +617,8 @@ int crash_load_segments(struct kimage *image)
+>  {
+>  	int ret;
+>  	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
+> -				  .buf_max = ULONG_MAX, .top_down = false };
+> +				  .buf_max = ULONG_MAX, .top_down = false,
+> +				  .skip_checksum = false };
+>  
+>  	/*
+>  	 * Determine and load a segment for backup area. First 640K RAM
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 4b3a75329fb6..449f433cd225 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -341,7 +341,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+>  	unsigned int setup_hdr_offset = offsetof(struct boot_params, hdr);
+>  	unsigned int efi_map_offset, efi_map_sz, efi_setup_data_offset;
+>  	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
+> -				  .top_down = true };
+> +				  .top_down = true, .skip_checksum = false };
+>  
+>  	header = (struct setup_header *)(kernel + setup_hdr_offset);
+>  	setup_sects = header->setup_sects;
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 4559a1a01b0a..e5b3d99cbe50 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -100,6 +100,9 @@ struct kexec_segment {
+>  	size_t bufsz;
+>  	unsigned long mem;
+>  	size_t memsz;
+> +
+> +	/* Whether this segment is ignored in the checksum calculation. */
+> +	bool skip_checksum;
+>  };
+>  
+>  #ifdef CONFIG_COMPAT
+> @@ -151,15 +154,16 @@ struct kexec_file_ops {
+>  
+>  /**
+>   * struct kexec_buf - parameters for finding a place for a buffer in memory
+> - * @image:	kexec image in which memory to search.
+> - * @buffer:	Contents which will be copied to the allocated memory.
+> - * @bufsz:	Size of @buffer.
+> - * @mem:	On return will have address of the buffer in memory.
+> - * @memsz:	Size for the buffer in memory.
+> - * @buf_align:	Minimum alignment needed.
+> - * @buf_min:	The buffer can't be placed below this address.
+> - * @buf_max:	The buffer can't be placed above this address.
+> - * @top_down:	Allocate from top of memory.
+> + * @image:		kexec image in which memory to search.
+> + * @buffer:		Contents which will be copied to the allocated memory.
+> + * @bufsz:		Size of @buffer.
+> + * @mem:		On return will have address of the buffer in memory.
+> + * @memsz:		Size for the buffer in memory.
+> + * @buf_align:		Minimum alignment needed.
+> + * @buf_min:		The buffer can't be placed below this address.
+> + * @buf_max:		The buffer can't be placed above this address.
+> + * @top_down:		Allocate from top of memory.
+> + * @skip_checksum:	Don't verify checksum for this buffer in purgatory.
+>   */
+>  struct kexec_buf {
+>  	struct kimage *image;
+> @@ -171,6 +175,7 @@ struct kexec_buf {
+>  	unsigned long buf_min;
+>  	unsigned long buf_max;
+>  	bool top_down;
+> +	bool skip_checksum;
+>  };
+>  
+>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index c8418d62e2fc..f6e9958bf578 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -658,6 +658,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>  	ksegment->bufsz = kbuf->bufsz;
+>  	ksegment->mem = kbuf->mem;
+>  	ksegment->memsz = kbuf->memsz;
+> +	ksegment->skip_checksum = kbuf->skip_checksum;
+>  	kbuf->image->nr_segments++;
+>  	return 0;
+>  }
+> @@ -672,7 +673,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  	char *digest;
+>  	void *zero_buf;
+>  	struct kexec_sha_region *sha_regions;
+> -	struct purgatory_info *pi = &image->purgatory_info;
+>  
+>  	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
+>  	zero_buf_sz = PAGE_SIZE;
+> @@ -712,11 +712,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  		struct kexec_segment *ksegment;
+>  
+>  		ksegment = &image->segment[i];
+> -		/*
+> -		 * Skip purgatory as it will be modified once we put digest
+> -		 * info in purgatory.
+> -		 */
+> -		if (ksegment->kbuf == pi->purgatory_buf)
+> +		if (ksegment->skip_checksum)
+>  			continue;
+>  
+>  		ret = crypto_shash_update(desc, ksegment->kbuf,
+> @@ -788,7 +784,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	Elf_Shdr *sechdrs = NULL;
+>  	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
+>  				  .buf_min = min, .buf_max = max,
+> -				  .top_down = top_down };
+> +				  .top_down = top_down, .skip_checksum = true };
+>  
+>  	/*
+>  	 * sechdrs_c points to section headers in purgatory and are read
+> @@ -893,7 +889,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	if (kbuf.buf_align < bss_align)
+>  		kbuf.buf_align = bss_align;
+>  
+> -	/* Add buffer to segment list */
+> +	/*
+> +	 * Add buffer to segment list. Don't checksum the segment as
+> +	 * it will be modified once we put digest info in purgatory.
+> +	 */
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out;
+> -- 
+> 1.9.1
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
