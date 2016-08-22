@@ -1,16 +1,43 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.kapsi.fi ([2001:1bc8:1004::1:25] helo=mail.kapsi.fi)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bbu6k-0003rQ-38
- for kexec@lists.infradead.org; Mon, 22 Aug 2016 18:38:03 +0000
-From: Mikko Rapeli <mikko.rapeli@iki.fi>
-Subject: [PATCH v05 44/72] include/uapi/linux/kexec.h: use __kernel_size_t
- instead of size_t
-Date: Mon, 22 Aug 2016 20:33:01 +0200
-Message-Id: <1471890809-4383-45-git-send-email-mikko.rapeli@iki.fi>
-In-Reply-To: <1471890809-4383-1-git-send-email-mikko.rapeli@iki.fi>
-References: <1471890809-4383-1-git-send-email-mikko.rapeli@iki.fi>
+ id 1bbxT7-0002bF-A7
+ for kexec@lists.infradead.org; Mon, 22 Aug 2016 22:13:22 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7MM8Nw4028774
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 18:13:00 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2502yvr0bs-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 18:12:59 -0400
+Received: from localhost
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 22 Aug 2016 19:12:57 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 790321DC006F
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 18:12:46 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7MMCt4M4718892
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 19:12:55 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7MMCs7k031869
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 19:12:55 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation
+ for some segments.
+Date: Mon, 22 Aug 2016 19:12:52 -0300
+In-Reply-To: <20160822033643.GA30937@dhcp-128-65.nay.redhat.com>
+References: <1471058305-30198-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <3959832.c4ESAKX1ch@hactar>
+ <20160822033643.GA30937@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Message-Id: <6265988.BPvmsBfJYJ@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,24 +46,198 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mikko Rapeli <mikko.rapeli@iki.fi>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
+To: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Eric Richter <erichte@linux.vnet.ibm.com>, linux-ima-devel@lists.sourceforge.net, Samuel Mendoza-Jonas <sam@mendozajonas.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-Rml4ZXMgdXNlcnNwYWNlIGNvbXBpbGF0aW9uIGVycm9yOgoKZXJyb3I6IHVua25vd24gdHlwZSBu
-YW1lIOKAmHNpemVfdOKAmQogIHNpemVfdCBidWZzejsKClNpZ25lZC1vZmYtYnk6IE1pa2tvIFJh
-cGVsaSA8bWlra28ucmFwZWxpQGlraS5maT4KLS0tCiBpbmNsdWRlL3VhcGkvbGludXgva2V4ZWMu
-aCB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvbGludXgva2V4ZWMuaCBiL2luY2x1ZGUvdWFw
-aS9saW51eC9rZXhlYy5oCmluZGV4IGFhZTVlYmYuLmY5NjRkODMgMTAwNjQ0Ci0tLSBhL2luY2x1
-ZGUvdWFwaS9saW51eC9rZXhlYy5oCisrKyBiL2luY2x1ZGUvdWFwaS9saW51eC9rZXhlYy5oCkBA
-IC01MSw5ICs1MSw5IEBACiAgKi8KIHN0cnVjdCBrZXhlY19zZWdtZW50IHsKIAljb25zdCB2b2lk
-ICpidWY7Ci0Jc2l6ZV90IGJ1ZnN6OworCV9fa2VybmVsX3NpemVfdCBidWZzejsKIAljb25zdCB2
-b2lkICptZW07Ci0Jc2l6ZV90IG1lbXN6OworCV9fa2VybmVsX3NpemVfdCBtZW1zejsKIH07CiAK
-ICNlbmRpZiAvKiBfX0tFUk5FTF9fICovCi0tIAoyLjguMQoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+Am Montag, 22 August 2016, 11:36:43 schrieb Dave Young:
+> On 08/22/16 at 12:25am, Thiago Jung Bauermann wrote:
+> > Am Montag, 22 August 2016, 11:17:45 schrieb Dave Young:
+> > > On 08/18/16 at 06:09pm, Thiago Jung Bauermann wrote:
+> > > > Am Donnerstag, 18 August 2016, 17:03:30 schrieb Dave Young:
+> > > > > On 08/13/16 at 12:18am, Thiago Jung Bauermann wrote:
+> > > > > > Adds checksum argument to kexec_add_buffer specifying whether
+> > > > > > the
+> > > > > > given
+> > > > > > segment should be part of the checksum calculation.
+> > > > > 
+> > > > > Since it is used with add buffer, could it be added to kbuf as a
+> > > > > new
+> > > > > field?
+> > > > 
+> > > > I was on the fence about adding it as a new argument to
+> > > > kexec_add_buffer
+> > > > or as a new field to struct kexec_buf. Both alternatives make sense
+> > > > to
+> > > > me. I implemented your suggestion in the patch below, what do you
+> > > > think?>
+> > > > 
+> > > > > Like kbuf.no_checksum, default value is 0 that means checksum is
+> > > > > needed
+> > > > > if it is 1 then no need a checksum.
+> > > > 
+> > > > It's an interesting idea and I implemented it that way, though in
+> > > > practice all current users of struct kexec_buf put it on the stack
+> > > > so
+> > > > the field needs to be initialized explicitly.
+> > > 
+> > > No need to set it as false because it will be initialized to 0 by
+> > > default?
+> > 
+> > As far as I know, variables on the stack are not initialized. Only
+> > global
+> > and static variables are.
+> 
+> But designated initializers will do it.
+
+Here is the new version, relying on the default value for
+kexec_buf.skip_checksum. A nice side effect is that I don't have to
+cc the x86 maintainers anymore.
+
+What do you think?
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+Subject: [PATCH v2 3/6] kexec_file: Allow skipping checksum calculation for
+ some segments.
+
+Add skip_checksum member to struct kexec_buf to specify whether the
+corresponding segment should be part of the checksum calculation.
+
+The next patch will add a way to update segments after a kimage is loaded.
+Segments that will be updated in this way should not be checksummed,
+otherwise they will cause the purgatory checksum verification to fail
+when the machine is rebooted.
+
+As a bonus, we don't need to special-case the purgatory segment anymore
+to avoid checksumming it.
+
+Places currently using struct kexec_buf will get false as the default
+value for skip_checksum since they all use designated initializers.
+Therefore, there will not be any behavior change with this patch and
+their buffers will continue being checksummed.
+
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+---
+ include/linux/kexec.h | 23 ++++++++++++++---------
+ kernel/kexec_file.c   | 15 +++++++--------
+ 2 files changed, 21 insertions(+), 17 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 4559a1a01b0a..e5b3d99cbe50 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -100,6 +100,9 @@ struct kexec_segment {
+ 	size_t bufsz;
+ 	unsigned long mem;
+ 	size_t memsz;
++
++	/* Whether this segment is ignored in the checksum calculation. */
++	bool skip_checksum;
+ };
+ 
+ #ifdef CONFIG_COMPAT
+@@ -151,15 +154,16 @@ struct kexec_file_ops {
+ 
+ /**
+  * struct kexec_buf - parameters for finding a place for a buffer in memory
+- * @image:	kexec image in which memory to search.
+- * @buffer:	Contents which will be copied to the allocated memory.
+- * @bufsz:	Size of @buffer.
+- * @mem:	On return will have address of the buffer in memory.
+- * @memsz:	Size for the buffer in memory.
+- * @buf_align:	Minimum alignment needed.
+- * @buf_min:	The buffer can't be placed below this address.
+- * @buf_max:	The buffer can't be placed above this address.
+- * @top_down:	Allocate from top of memory.
++ * @image:		kexec image in which memory to search.
++ * @buffer:		Contents which will be copied to the allocated memory.
++ * @bufsz:		Size of @buffer.
++ * @mem:		On return will have address of the buffer in memory.
++ * @memsz:		Size for the buffer in memory.
++ * @buf_align:		Minimum alignment needed.
++ * @buf_min:		The buffer can't be placed below this address.
++ * @buf_max:		The buffer can't be placed above this address.
++ * @top_down:		Allocate from top of memory.
++ * @skip_checksum:	Don't verify checksum for this buffer in purgatory.
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+@@ -171,6 +175,7 @@ struct kexec_buf {
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
+ 	bool top_down;
++	bool skip_checksum;
+ };
+ 
+ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index c8418d62e2fc..f6e9958bf578 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -658,6 +658,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
++	ksegment->skip_checksum = kbuf->skip_checksum;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+@@ -672,7 +673,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 	char *digest;
+ 	void *zero_buf;
+ 	struct kexec_sha_region *sha_regions;
+-	struct purgatory_info *pi = &image->purgatory_info;
+ 
+ 	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
+ 	zero_buf_sz = PAGE_SIZE;
+@@ -712,11 +712,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		struct kexec_segment *ksegment;
+ 
+ 		ksegment = &image->segment[i];
+-		/*
+-		 * Skip purgatory as it will be modified once we put digest
+-		 * info in purgatory.
+-		 */
+-		if (ksegment->kbuf == pi->purgatory_buf)
++		if (ksegment->skip_checksum)
+ 			continue;
+ 
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+@@ -788,7 +784,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	Elf_Shdr *sechdrs = NULL;
+ 	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
+ 				  .buf_min = min, .buf_max = max,
+-				  .top_down = top_down };
++				  .top_down = top_down, .skip_checksum = true };
+ 
+ 	/*
+ 	 * sechdrs_c points to section headers in purgatory and are read
+@@ -893,7 +889,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	if (kbuf.buf_align < bss_align)
+ 		kbuf.buf_align = bss_align;
+ 
+-	/* Add buffer to segment list */
++	/*
++	 * Add buffer to segment list. Don't checksum the segment as
++	 * it will be modified once we put digest info in purgatory.
++	 */
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret)
+ 		goto out;
+-- 
+1.9.1
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
