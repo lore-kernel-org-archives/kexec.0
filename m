@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb0-f177.google.com ([209.85.213.177])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bbmxM-0005Dq-Iu
- for kexec@lists.infradead.org; Mon, 22 Aug 2016 10:59:53 +0000
-Received: by mail-yb0-f177.google.com with SMTP id b96so927152ybi.0
- for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 03:59:31 -0700 (PDT)
-Date: Mon, 22 Aug 2016 16:29:25 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [RFC 0/4] Kexec: Enable run time memory resrvation of crash kernel
-Message-ID: <20160822105925.GA17255@localhost.localdomain>
-References: <20160812141838.5973-1-ronit.crj@gmail.com>
+Message-ID: <57BB0272.1000008@arm.com>
+Date: Mon, 22 Aug 2016 14:47:30 +0100
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160812141838.5973-1-ronit.crj@gmail.com>
+Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015615.28527-1-takahiro.akashi@linaro.org>
+ <20160809015615.28527-3-takahiro.akashi@linaro.org>
+ <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
+ <20160819012651.GE20080@linaro.org>
+ <20160819112217.GB22221@localhost.localdomain>
+ <20160822012919.GI20080@linaro.org>
+In-Reply-To: <20160822012919.GI20080@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +24,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ronit Halder <ronit.crj@gmail.com>
-Cc: vdavydov@parallels.com, jack@suse.cz, linux-mm@kvack.org, krzysiek@podlesie.net, mnfhuang@gmail.com, hpa@zytor.com, tglx@linutronix.de, aarcange@redhat.com, bhe@redhat.com, mingo@redhat.com, msalter@redhat.com, bp@suse.de, dyoung@redhat.com, vgoyal@redhat.com, jroedel@suse.de, mchehab@osg.samsung.com, dan.j.williams@intel.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, kirill.shutemov@linux.intel.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 12/08/2016:07:48:38 PM, Ronit Halder wrote:
-> Currenty linux kernel reserves memory at the boot time for crash kernel.
-> It will be very useful if we can reserve memory in run time. The user can 
-> reserve the memory whenerver needed instead of reserving at the boot time.
+On 22/08/16 02:29, AKASHI Takahiro wrote:
+> On Fri, Aug 19, 2016 at 04:52:17PM +0530, Pratyush Anand wrote:
+>> It will help kexec-tools to prevent copying  of any unnecessary data. I
+>> think, then you also need to change phys_offset calculation in kexec-tools. That
+>> should be start of either of first "reserved" or "System RAM" block.
 > 
-> It is possible to reserve memory for crash kernel at the run time using
-> CMA (Contiguous Memory Allocator). CMA is capable of allocating big chunk 
-> of memory. At the boot time we will create one (if only low memory is used)
-> or two (if we use both high memory in case of x86_64) CMA areas of size 
-> given in "crashkernel" boot time command line parameter. This memory in CMA
-> areas can be used as movable pages (used for disk caches, process pages
-> etc) if not allocated. Then the user can reserve or free memory from those
-> CMA areas using "/sys/kernel/kexec_crash_size" sysfs entry. If the user
+> Good point, but I'm not sure this is always true.
 
-But the cma_alloc() is not a guaranteed allocation function, whereas memblock
-api will guarantee that crashkerenel memory is available. 
-More over, most of the system starts kdump service at boot time, so not sure if
-it could be useful enough. Lets see what other says....
+> Is there any system whose ACPI memory is *not* part of DRAM
 
-> usee high memory it will automatically at least 256MB low memory
-> (needed for swiotlb and DMA buffers) when the user allocates memory using
-> mentioned sysfs enrty. In case of high memory reservation the user controls
-> the size of reserved region in high memory with
-> "/sys/kernel/kexec_crash_size" entry. If the size set is zero then the 
-> memory allocated in low memory will automatically be freed.
-> 
-> As the pages under CMA area (when not allocated by CMA) can only be used by
-> movable pages. The pages won't be used for DMA. So, after allocating pages
-> from CMA area for loading the crash kernel, there won't be any chance of
-> DMA on the memory.
-> 
-> Thus is a prototype patch. Please share your opinions on my approach. This
-> patch is only for x86 and x86_64. Please note, this patch is only a
-> prototype just to explain my approach and get the review. This patch is on
-> kernel version v4.4.11.
-> 
-> CMA depends on page migration and only uses movable pages. But, the movable
-> pages become unmovable momentarily for pinning. The CMA fails for this
-> reason. I don't have any solution for that right now. This approach will
-> work when the this problems with CMA will be fixed. The patch is enabled
-> by a kernel configuration option CONFIG_KEXEC_CMA.
-> 
-> Ronit Halder (4):
->   Creating one or two CMA area at Boot time
->   Functions for memory reservation and release
->   Adding a new kernel configuration to enable the feature
->   Enable memory allocation through sysfs interface
-> 
->  arch/x86/kernel/setup.c | 44 ++++++++++++++++++++++++--
->  include/linux/kexec.h   | 11 ++++++-
->  kernel/kexec_core.c     | 83 +++++++++++++++++++++++++++++++++++++++++++++++++
->  kernel/ksysfs.c         | 23 +++++++++++++-
->  mm/Kconfig              |  6 ++++
->  5 files changed, 162 insertions(+), 5 deletions(-)
+From the spec, it looks like this is allowed.
 
-~Pratyush
+What do you mean by 'DRAM'? Any ACPI region will be in the UEFI memory map, so
+the question is what is its type and memory attributes?
+The UEFI spec[0] says ACPI regions can have a type of EfiACPIReclaimMemory or
+EfiACPIMemoryNVS, the memory attributes aren't specified, so are chosen by the
+firmware.
+
+It is possible these regions have to be mapped non-cacheable, page 40 has a
+couple of:
+> If no information about the table location exists in the UEFI memory map or
+ACPI memory
+> descriptors, the table is assumed to be non-cached.
+
+reserve_regions() in drivers/firmware/efi/arm-init.c will add any entry in the
+memory map that has a 'WB' attribute to the memblock.memory list (via
+early_init_dt_add_memory_arch()), it will also mark as no-map regions that have
+this attribute and aren't in the is_reserve_region() list.
+
+If these ACPI regions have the 'WB' attribute, we add them as memory and mark
+them nomap. These show up as either a hole, or 'reserved' in /proc/iomem.
+If they don't have the 'WB' attribute, then then they are left out of memblock
+and aren't part of DRAM, I don't think these will show up in /proc/iomem at all.
+
+
+Thanks,
+
+James
+
+[0] '2.3.6 AArch64 Platforms' of version 2.6 of the UEFI spec at
+http://uefi.org/specifications
 
 _______________________________________________
 kexec mailing list
