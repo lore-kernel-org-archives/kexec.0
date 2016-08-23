@@ -1,42 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bcDje-00011K-Ab
- for kexec@lists.infradead.org; Tue, 23 Aug 2016 15:35:30 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7NFSqA1117613
- for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 11:35:08 -0400
-Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2502yx1ssv-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 11:35:08 -0400
-Received: from localhost
- by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Tue, 23 Aug 2016 12:35:06 -0300
-Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id CE6C0352006C
- for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 11:34:42 -0400 (EDT)
-Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7NFZ4mh4759706
- for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 12:35:04 -0300
-Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
- by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7NFZ33c007230
- for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 12:35:04 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [integrity:next-restore-kexec 18/31]
- include/linux/kexec.h:400:52: warning: 'struct kexec_buf' declared inside
- parameter list will not be visible outside of this definition or declaration
-Date: Tue, 23 Aug 2016 12:34:59 -0300
-In-Reply-To: <201608232256.6ONII0WZ%fengguang.wu@intel.com>
-References: <201608232256.6ONII0WZ%fengguang.wu@intel.com>
+Received: from mail-yw0-x229.google.com ([2607:f8b0:4002:c05::229])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bcDmk-0003Jh-Lr
+ for kexec@lists.infradead.org; Tue, 23 Aug 2016 15:38:45 +0000
+Received: by mail-yw0-x229.google.com with SMTP id r9so74549079ywg.0
+ for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 08:38:21 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1617934.na55SdnaSp@hactar>
+In-Reply-To: <20160818045922.GA23981@x1.redhat.com>
+References: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+ <20160818045922.GA23981@x1.redhat.com>
+From: Thomas Garnier <thgarnie@google.com>
+Date: Tue, 23 Aug 2016 08:38:20 -0700
+Message-ID: <CAJcbSZEKVMvHkbZrz-HD=LJyCkQ-TerK8dTcGzSYYvkyFupZXA@mail.gmail.com>
+Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
+ randomization
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,58 +26,121 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kbuild test robot <fengguang.wu@intel.com>
-Cc: linux-ima-devel@lists.sourceforge.net, linux-security-module@vger.kernel.org, kexec@lists.infradead.org, kbuild-all@01.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Kees Cook <keescook@chromium.org>, Kernel Hardening <kernel-hardening@lists.openwall.com>
 
-Am Dienstag, 23 August 2016, 22:17:59 schrieb kbuild test robot:
-> tree:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
-> next-restore-kexec head:   62bc4b565254de4796a0835f6f67569eb4835f9f
-> commit: f9f57350e53441210120931fc4e0163cf833e648 [18/31] kexec_file: Add
-> buffer hand-over support for the next kernel config: i386-defconfig
-> (attached as .config)
-> compiler: gcc-6 (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         git checkout f9f57350e53441210120931fc4e0163cf833e648
->         # save the attached .config to linux build tree
->         make ARCH=i386
-> 
-> All warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/pci/pci-driver.c:22:0:
-> >> include/linux/kexec.h:400:52: warning: 'struct kexec_buf' declared
-> >> inside parameter list will not be visible outside of this definition
-> >> or declaration
->     static inline int kexec_add_handover_buffer(struct kexec_buf *kbuf)
+On Wed, Aug 17, 2016 at 9:59 PM, Baoquan He <bhe@redhat.com> wrote:
+> On 08/17/16 at 09:47am, Thomas Garnier wrote:
+>> Multiple changes were made on KASLR (right now in linux-next). One of
+>> them is randomizing the virtual address of the physical mapping, vmalloc
+>> and vmemmap memory sections. It breaks kdump ability to read physical
+>> memory.
+>>
+>> This change identifies if KASLR memories randomization is used by
+>> checking if the page_offset_base variable exists. It search for the
+>> correct PAGE_OFFSET value by looking at the loaded memory section and
+>> find the lowest aligned on PUD (the randomization level).
+>>
+>> Related commits on linux-next:
+>>  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
+>>  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
+>
+> Seems above two commits have been inside Linus's tree, while vmemmap
+> not yet.
+>
+>>
+>> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+>> ---
+>>  kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
+>>  1 file changed, 22 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+>> index bbc0f35..ab833d4 100644
+>> --- a/kexec/arch/i386/crashdump-x86.c
+>> +++ b/kexec/arch/i386/crashdump-x86.c
+>> @@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
+>>       return -1;
+>>  }
+>>
+>> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+>> -static unsigned long long get_kernel_stext_sym(void)
+>> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
+>> +static unsigned long long get_kernel_sym(const char *symbol)
+>>  {
+>>       const char *kallsyms = "/proc/kallsyms";
+>> -     const char *stext = "_stext";
+>>       char sym[128];
+>>       char line[128];
+>>       FILE *fp;
+>> @@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
+>>       while(fgets(line, sizeof(line), fp) != NULL) {
+>>               if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
+>>                       continue;
+>> -             if (strcmp(sym, stext) == 0) {
+>> -                     dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
+>> +             if (strcmp(sym, symbol) == 0) {
+>> +                     dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
+>>                       return vaddr;
+>>               }
+>>       }
+>>
+>> -     fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
+>> +     fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
+>>       return 0;
+>>  }
+>>
+>> @@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>>       off_t size;
+>>       uint32_t elf_flags = 0;
+>>       uint64_t stext_sym;
+>> +     const unsigned long long pud_mask = ~((1 << 30) - 1);
+>> +     unsigned long long vaddr, lowest_vaddr = 0;
+>>
+>>       if (elf_info->machine != EM_X86_64)
+>>               return 0;
+>> @@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>>
+>>       end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+>>
+>> +     /* Search for the real PAGE_OFFSET when KASLR memory randomization
+>> +      * is enabled */
+>
+> Yeah, this is necessary. That would be great if it can be put into
+> get_kernel_page_offset. But then it need parse kcore elf file again,
+> seems no better way.
+>
 
-This happens when CONFIG_KEXEC=y but CONFIG_KEXEC_FILE=n, and is fixed by 
-the following change, which will be in my next revision of the kexec
-buffer hand-over series:
+I agree.
 
-    Fix for "kexec_file: Add buffer hand-over support for the next kernel"
-    
-    Declare stub struct kexec_buf when CONFIG_KEXEC_FILE=n.
+Simon: Do you have any comments?
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 6ec09e85efd9..29f98f816e92 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -404,6 +404,8 @@ int kexec_add_handover_buffer(struct kexec_buf *kbuf);
- int __weak kexec_get_handover_buffer(void **addr, unsigned long *size);
- int __weak kexec_free_handover_buffer(void);
- #else
-+struct kexec_buf;
-+
- static inline bool kexec_can_hand_over_buffer(void)
- {
- 	return false;
-
-
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+>> +     if (get_kernel_sym("page_offset_base") != 0) {
+>> +             for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+>> +                     if (phdr->p_type == PT_LOAD) {
+>> +                             vaddr = phdr->p_vaddr & pud_mask;
+>> +                             if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
+>> +                                     lowest_vaddr = vaddr;
+>> +                     }
+>> +             }
+>> +             if (lowest_vaddr != 0)
+>> +                     elf_info->page_offset = lowest_vaddr;
+>> +     }
+>> +
+>>       /* Traverse through the Elf headers and find the region where
+>>        * _stext symbol is located in. That's where kernel is mapped */
+>> -     stext_sym = get_kernel_stext_sym();
+>> +     stext_sym = get_kernel_sym("_stext");
+>>       for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
+>>               if (phdr->p_type == PT_LOAD) {
+>>                       unsigned long long saddr = phdr->p_vaddr;
+>> --
+>> 2.8.0.rc3.226.g39d4020
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
