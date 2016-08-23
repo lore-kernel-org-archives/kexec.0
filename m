@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
+Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bc2Ha-0003uN-1n
- for kexec@lists.infradead.org; Tue, 23 Aug 2016 03:21:46 +0000
-Received: by mail-pf0-x241.google.com with SMTP id i6so7413361pfe.0
- for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 20:21:25 -0700 (PDT)
-Subject: Re: [PATCH v5 04/13] powerpc: Factor out relocation code from
- module_64.c to elf_util_64.c.
-References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <4126991.2tm6WB17SD@hactar> <3ca4a2de-0d44-dbc6-b57b-c149d10b048f@gmail.com>
- <4586138.sszncvQpYx@hactar>
-From: Balbir Singh <bsingharora@gmail.com>
-Message-ID: <239172a5-1952-de2d-e48d-4ca7d882356c@gmail.com>
-Date: Tue, 23 Aug 2016 13:21:04 +1000
+ id 1bc4Az-00029g-J7
+ for kexec@lists.infradead.org; Tue, 23 Aug 2016 05:23:07 +0000
+Received: by mail-pf0-x22b.google.com with SMTP id y134so39804409pfg.0
+ for <kexec@lists.infradead.org>; Mon, 22 Aug 2016 22:22:44 -0700 (PDT)
+Date: Tue, 23 Aug 2016 14:29:03 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v2 0/7] (kexec-tools) arm64: add kdump support
+Message-ID: <20160823052902.GM20080@linaro.org>
+References: <20160809020032.28654-1-takahiro.akashi@linaro.org>
+ <20160810175648.GB24137@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <4586138.sszncvQpYx@hactar>
+Content-Disposition: inline
+In-Reply-To: <20160810175648.GB24137@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,25 +26,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Oliver O'Halloran <oohall@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: geoff@infradead.org, horms@verge.net.au, kexec@lists.infradead.org
 
+Pratyush,
 
-> zImage on ppc64 BE is an ELF32 file. This patch set only supports loading 
-> ELF files of the same class as the kernel, so a 64 bit kernel can't load an 
-> ELF32 file. It would be possible to add such support, but it would be a new 
-> feature.
+On Wed, Aug 10, 2016 at 11:26:48PM +0530, Pratyush Anand wrote:
+> Hi Geoff and Takahiro,
 > 
-> The distros I was able to check on ppc64 LE and BE all use vmlinux.
-> kexec-tools with kexec_load also doesn't support zImage. Do you think it is 
-> important to support zImage?
+> I am having some issues with kexec+kdump while working with Seattle platform. On
+> top level, kernel crashes in copy_oldmem_page(), because it gets wrong offset
+> for log_buf during vmcore-dmesg save.
 > 
+> Here is the detail:
+> 
+> (1) From /proc/iomem, these are the "System RAM" Components:
+> 
+> 8000000000-8001e7ffff : System RAM
+> 8001e80000-83ff17ffff : System RAM
+>         8002080000-8002b3ffff : Kernel code
+>         8002c40000-800348ffff : Kernel data
+>         807fe00000-80ffdfffff : Crash kernel
+> 83ff180000-83ff1cffff : System RAM
+> 83ff1d0000-83ff21ffff : System RAM
+> 83ff220000-83ffe4ffff : System RAM
+> 83ffe50000-83ffffffff : System RAM
+> 
+> (2) From kexec-tools debug print I see following:
+> elf_arm64_load: e_entry:       fffffc0008080000 -> 0000008000080000
+> elf_arm64_load: p_vaddr:       fffffc0008080000 -> 0000008000080000
+> elf_arm64_load: header_offset: 0000000000000000
+> elf_arm64_load: text_offset:   0000000000080000
+> elf_arm64_load: image_size:    0000000001410000
+> elf_arm64_load: phys_offset:   0000008000000000
+> elf_arm64_load: page_offset:   fffffc0008000000
+>
+> I understand that "Kernel Code start physical address" 0x8002080000 should map
+> to e_entry vaddr which is 0xfffffc0008080000. However, kexec-tools debug print
+> shows that e_entry vaddr maps to PA 8000080000 which seems wrong.
 
-Well if it didn't work already, I think its low priority. Michael should be
-able to confirm this. Oliver's been trying to cleanup the zImage to get rid
-the old zImage limitation, cc'ing him
+Who specifies the kernel load address, 0x8002080000 and why?
 
-Balbir Singh
+Since image_arm64_load() also use
+    get_phys_offset() + arm64_mem.text_offset (== 0x8000080000)
+as the load address unconditionally, doesn't kexec fail on Seattle?
+
+-Takahiro AKASHI
+
+> (3) further page_offset (or vp_offset in your new code) is calculated
+> as:arm64_mem.page_offset = ehdr.e_entry - arm64_mem.text_offset;
+> 
+> Current calcualtion of page_offset leads to wrong configuration of VA of alls
+> PT_LOAD (see below). Ultimately, this is also leading to kernel crash during
+> vmcore-dmesg and vmcore save operations, because we pass an offset to pread()
+> system call which maps to wrong physical address.
+> 
+> Elf header: p_type = 1, p_offset = 0x8000000000 p_paddr = 0x8000000000
+> p_vaddr = 0xfffffc0008000000 p_filesz = 0x1e80000 p_memsz = 0x1e80000
+> [0xfffffc0008000000 should be mapping to 0x8002000000 and not 0x8000000000]
+> Elf header: p_type = 1, p_offset = 0x8001e80000 p_paddr = 0x8001e80000
+> p_vaddr = 0xfffffc0009e80000 p_filesz = 0x7df80000 p_memsz = 0x7df80000
+> Elf header: p_type = 1, p_offset = 0x80ffe00000 p_paddr = 0x80ffe00000
+> p_vaddr = 0xfffffc0107e00000 p_filesz = 0x2ff380000 p_memsz = 0x2ff380000
+> Elf header: p_type = 1, p_offset = 0x83ff180000 p_paddr = 0x83ff180000
+> p_vaddr = 0xfffffc0407180000 p_filesz = 0x50000 p_memsz = 0x50000
+> Elf header: p_type = 1, p_offset = 0x83ff1d0000 p_paddr = 0x83ff1d0000
+> p_vaddr = 0xfffffc04071d0000 p_filesz = 0x50000 p_memsz = 0x50000
+> Elf header: p_type = 1, p_offset = 0x83ff220000 p_paddr = 0x83ff220000
+> p_vaddr = 0xfffffc0407220000 p_filesz = 0xc30000 p_memsz = 0xc30000
+> Elf header: p_type = 1, p_offset = 0x83ffe50000 p_paddr = 0x83ffe50000
+> p_vaddr = 0xfffffc0407e50000 p_filesz = 0x1b0000 p_memsz = 0x1b0000
+> 
+> May be following should be better.
+> arm64_mem.page_offset = ehdr.e_entry - "kernel Code Start PA" + phys_offset.
+> 
+> (4) Further more,  vmcore must have first PT_LOAD segment as kernel text area.
+> In this platform we have first "System RAM" area as 8000000000-8001e7ffff which
+> is not matching to "Kernel code" area. Therefore, we should provide support of
+> "kern_size" so that first PT_LOAD is kernel text area.
+> 
+> ~Pratyush
+> On 09/08/2016:11:00:25 AM, AKASHI Takahiro wrote:
+> > My kernel patches of kdump suport on arm64 are currently under reviews [1].
+> > 
+> > This patchset is synced with them (v24) and provides necessary changes for
+> > kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+> > v3[2] along with a bugfix[3].
+> > 
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/447597.html
+> > [2] http://lists.infradead.org/pipermail/kexec/2016-August/016768.html
+> > [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
+> > 
+> > Changes for v2:
+> >  - Trim a temoprary buffer in setup_2nd_dtb()
+> >  - Add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+> >  - Update patch#7 from Pratyush
+> >    (re-worked by akashi)
+> > 
+> > AKASHI Takahiro (5):
+> >   arm64: kdump: identify memory regions
+> >   arm64: kdump: add elf core header segment
+> >   arm64: kdump: set up kernel image segment
+> >   arm64: kdump: set up other segments
+> >   arm64: kdump: add DT properties to crash dump kernel's dtb
+> > 
+> > Pratyush Anand (2):
+> >   kexec: generalize and rename get_kernel_stext_sym()
+> >   arm64: kdump: Add support for binary image files
+> > 
+> >  kexec/arch/arm/crashdump-arm.c          |  40 +------
+> >  kexec/arch/arm64/Makefile               |   2 +
+> >  kexec/arch/arm64/crashdump-arm64.c      | 188 +++++++++++++++++++++++++++++++-
+> >  kexec/arch/arm64/crashdump-arm64.h      |  18 ++-
+> >  kexec/arch/arm64/include/arch/options.h |   8 +-
+> >  kexec/arch/arm64/kexec-arm64.c          |  91 ++++++++++++++--
+> >  kexec/arch/arm64/kexec-elf-arm64.c      |  23 +++-
+> >  kexec/arch/arm64/kexec-image-arm64.c    |  60 +++++++++-
+> >  kexec/arch/i386/crashdump-x86.c         |  32 +-----
+> >  kexec/crashdump.c                       |  37 +++++++
+> >  kexec/crashdump.h                       |   1 +
+> >  11 files changed, 407 insertions(+), 93 deletions(-)
+> > 
+> > -- 
+> > 2.9.0
 
 _______________________________________________
 kexec mailing list
