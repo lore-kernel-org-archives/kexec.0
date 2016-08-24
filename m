@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 24 Aug 2016 16:04:43 +0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bcTQm-0001ML-Sh
+ for kexec@lists.infradead.org; Wed, 24 Aug 2016 08:21:05 +0000
+Date: Wed, 24 Aug 2016 16:20:31 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-Message-ID: <20160824080443.GA12902@dhcp-128-65.nay.redhat.com>
-References: <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
- <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
- <20160819012651.GE20080@linaro.org>
- <20160819112217.GB22221@localhost.localdomain>
- <20160822012919.GI20080@linaro.org> <57BB0272.1000008@arm.com>
- <20160823003815.GL20080@linaro.org>
- <20160823112343.GC13501@localhost.localdomain>
+Subject: Re: [PATCH v2 1/2] kexec: Introduce "/sys/kernel/kexec_crash_low_size"
+Message-ID: <20160824082031.GA13889@dhcp-128-65.nay.redhat.com>
+References: <1471398657-20237-1-git-send-email-xlpang@redhat.com>
+ <20160817082034.GA11837@dhcp-128-65.nay.redhat.com>
+ <CAE9FiQViQiNzz4h=CmeC-KHr9Rf0f_7eR2PMSPs_QChthRd6pg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160823112343.GC13501@localhost.localdomain>
+In-Reply-To: <CAE9FiQViQiNzz4h=CmeC-KHr9Rf0f_7eR2PMSPs_QChthRd6pg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,132 +25,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: mark.rutland@arm.com, linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, matt@codeblueprint.co.uk, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>, Xunlei Pang <xlpang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Ccing uefi people.
-
-On 08/23/16 at 04:53pm, Pratyush Anand wrote:
-> On 23/08/2016:09:38:16 AM, AKASHI Takahiro wrote:
-> > On Mon, Aug 22, 2016 at 02:47:30PM +0100, James Morse wrote:
-> > > On 22/08/16 02:29, AKASHI Takahiro wrote:
-> > > > On Fri, Aug 19, 2016 at 04:52:17PM +0530, Pratyush Anand wrote:
-> > > >> It will help kexec-tools to prevent copying  of any unnecessary data. I
-> > > >> think, then you also need to change phys_offset calculation in kexec-tools. That
-> > > >> should be start of either of first "reserved" or "System RAM" block.
-> > > > 
-> > > > Good point, but I'm not sure this is always true.
-> > > 
-> > > > Is there any system whose ACPI memory is *not* part of DRAM
-> > > 
-> > > From the spec, it looks like this is allowed.
-> > > 
-> > > What do you mean by 'DRAM'? Any ACPI region will be in the UEFI memory map, so
-> > > the question is what is its type and memory attributes?
-> > 
-> > Yes.
-> > 
-> > > The UEFI spec[0] says ACPI regions can have a type of EfiACPIReclaimMemory or
-> > > EfiACPIMemoryNVS, the memory attributes aren't specified, so are chosen by the
-> > > firmware.
-> > > 
-> > > It is possible these regions have to be mapped non-cacheable, page 40 has a
-> > > couple of:
-> > > > If no information about the table location exists in the UEFI memory map or
-> > > ACPI memory
-> > > > descriptors, the table is assumed to be non-cached.
-> > > 
-> > > reserve_regions() in drivers/firmware/efi/arm-init.c will add any entry in the
-> > > memory map that has a 'WB' attribute to the memblock.memory list (via
-> > > early_init_dt_add_memory_arch()), it will also mark as no-map regions that have
-> > > this attribute and aren't in the is_reserve_region() list.
-
-Looking the arm-init.c, I suspect it missed the some efi ranges as
-reserved ranges like runtime code and runtime data etc. But I might be
-wrong.
-
-Below is the is_reserve_region, it will regard any regions which is not
-in the EFI_* below as normal memory, it does not include the runtime
-ranges and other types.
-
-static __init int is_reserve_region(efi_memory_desc_t *md)
-{
-        switch (md->type) {
-        case EFI_LOADER_CODE:
-        case EFI_LOADER_DATA:
-        case EFI_BOOT_SERVICES_CODE:
-        case EFI_BOOT_SERVICES_DATA:
-        case EFI_CONVENTIONAL_MEMORY:
-        case EFI_PERSISTENT_MEMORY:
-                return 0;
-        default:
-                break;
-        }
-        return is_normal_ram(md);
-}
-
-Let's see the x86 do_add_efi_mem_map, the default case set all other
-types as reserved. Shouldn't this be same in all arches though there's
-no e820 in arm(64)?
-
-static void __init do_add_efi_memmap(void)
-{
-
-[snip]
-                switch (md->type) {
-                case EFI_LOADER_CODE:
-                case EFI_LOADER_DATA:
-                case EFI_BOOT_SERVICES_CODE:
-                case EFI_BOOT_SERVICES_DATA:
-                case EFI_CONVENTIONAL_MEMORY:
-                        if (md->attribute & EFI_MEMORY_WB)
-                                e820_type = E820_RAM;
-                        else
-                                e820_type = E820_RESERVED;
-                        break;
-[snip]
-                default:
-                        /*
-                         * EFI_RESERVED_TYPE EFI_RUNTIME_SERVICES_CODE
-                         * EFI_RUNTIME_SERVICES_DATA
-                         * EFI_MEMORY_MAPPED_IO
-                         * EFI_MEMORY_MAPPED_IO_PORT_SPACE EFI_PAL_CODE
-                         */
-                        e820_type = E820_RESERVED;
-                        break;
-                }
-[snip]
-}
-
-> > > 
-> > > If these ACPI regions have the 'WB' attribute, we add them as memory and mark
-> > > them nomap. These show up as either a hole, or 'reserved' in /proc/iomem.
-> > > If they don't have the 'WB' attribute, then then they are left out of memblock
-> > > and aren't part of DRAM, I don't think these will show up in /proc/iomem at all.
-> > 
-> > Let's say,
-> > 0x1000-0x1fff: reserved (SRAM for UEFI, WB)
-> > 0x80000000-0xffffffff: System RAM (DRAM)
+On 08/23/16 at 06:11pm, Yinghai Lu wrote:
+> On Wed, Aug 17, 2016 at 1:20 AM, Dave Young <dyoung@redhat.com> wrote:
+> > On 08/17/16 at 09:50am, Xunlei Pang wrote:
+> >> "/sys/kernel/kexec_crash_size" only handles crashk_res, it
+> >> is fine in most cases, but sometimes we have crashk_low_res.
+> >> For example, when "crashkernel=size[KMG],high" combined with
+> >> "crashkernel=size[KMG],low" is used for 64-bit x86.
+> >>
+> >> Like crashk_res, we introduce the corresponding sysfs file
+> >> "/sys/kernel/kexec_crash_low_size" for crashk_low_res.
+> >>
+> >> So, the exact total reserved memory is the sum of the two.
+> >>
+> >> crashk_low_res can also be shrunk via this new interface,
+> >> and users should be aware of what they are doing.
+> ...
+> >> @@ -218,6 +238,7 @@ static struct attribute * kernel_attrs[] = {
+> >>  #ifdef CONFIG_KEXEC_CORE
+> >>       &kexec_loaded_attr.attr,
+> >>       &kexec_crash_loaded_attr.attr,
+> >> +     &kexec_crash_low_size_attr.attr,
+> >>       &kexec_crash_size_attr.attr,
+> >>       &vmcoreinfo_attr.attr,
+> >>  #endif
 > 
-> May be slightly more complicated:
-> 0x80000000-0x80001fff: System RAM (DRAM) for UEFI, WB
-> 0x80002000-0xffffffff: System RAM (DRAM)
+> would be better if you can use attribute_group .is_visible to control showing of
+> crash_low_size only when the crash_base is above 4G.
+
+I have same feeling that it looks odd to show low in sysfs in case no
+crashkernel=,high being used. Even if crashkernel=,high is used only in
+x86 the resource crashk_low is in common code. What do you think to move
+it to x86?
+
+Thanks
+Dave
+
 > 
-> Kernel will have phys_offset 0x80000000, however kexec-tools will calculate it
-> as 0x80002000.
+> Thanks
 > 
-> > 
-> > If, as Pratyush suggested, "reserved" resources are added to phys_offset
-> > calculation, the kernel linear mapping area starts at PAGE_OFFSET, but
-> > there is no actual mapping around PAGE_OFFSET.
-> > It won't hurt anything, but looks funny.
-> > So we'd better not include "reserved" in phys_offset calculation anyway.
-> >         -> Pratyush
+> Yinghai
 > 
-> My only concern is that, then we will have different values of phys_offset in
-> kernel and kexec-tools, which might lead to further confusion.
-> 
-> ~Pratyush
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
