@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-x229.google.com ([2607:f8b0:4002:c05::229])
+Received: from mail-qk0-x241.google.com ([2607:f8b0:400d:c09::241])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bcDmk-0003Jh-Lr
- for kexec@lists.infradead.org; Tue, 23 Aug 2016 15:38:45 +0000
-Received: by mail-yw0-x229.google.com with SMTP id r9so74549079ywg.0
- for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 08:38:21 -0700 (PDT)
+ id 1bcMP2-0001A0-AS
+ for kexec@lists.infradead.org; Wed, 24 Aug 2016 00:50:49 +0000
+Received: by mail-qk0-x241.google.com with SMTP id v123so121858qkh.3
+ for <kexec@lists.infradead.org>; Tue, 23 Aug 2016 17:50:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20160818045922.GA23981@x1.redhat.com>
-References: <1471452462-42560-1-git-send-email-thgarnie@google.com>
- <20160818045922.GA23981@x1.redhat.com>
-From: Thomas Garnier <thgarnie@google.com>
-Date: Tue, 23 Aug 2016 08:38:20 -0700
-Message-ID: <CAJcbSZEKVMvHkbZrz-HD=LJyCkQ-TerK8dTcGzSYYvkyFupZXA@mail.gmail.com>
-Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
- randomization
+In-Reply-To: <239172a5-1952-de2d-e48d-4ca7d882356c@gmail.com>
+References: <1470956898-5991-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <4126991.2tm6WB17SD@hactar> <3ca4a2de-0d44-dbc6-b57b-c149d10b048f@gmail.com>
+ <4586138.sszncvQpYx@hactar> <239172a5-1952-de2d-e48d-4ca7d882356c@gmail.com>
+From: "Oliver O'Halloran" <oohall@gmail.com>
+Date: Wed, 24 Aug 2016 10:50:26 +1000
+Message-ID: <CAOSf1CGyfz97NLyrfxkHZ3-Hwq7R2ZsN8L3f3=aEjH0zyToz3A@mail.gmail.com>
+Subject: Re: [PATCH v5 04/13] powerpc: Factor out relocation code from
+ module_64.c to elf_util_64.c.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,121 +27,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Kees Cook <keescook@chromium.org>, Kernel Hardening <kernel-hardening@lists.openwall.com>
+To: Balbir Singh <bsingharora@gmail.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, linuxppc-dev@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Aug 17, 2016 at 9:59 PM, Baoquan He <bhe@redhat.com> wrote:
-> On 08/17/16 at 09:47am, Thomas Garnier wrote:
->> Multiple changes were made on KASLR (right now in linux-next). One of
->> them is randomizing the virtual address of the physical mapping, vmalloc
->> and vmemmap memory sections. It breaks kdump ability to read physical
->> memory.
->>
->> This change identifies if KASLR memories randomization is used by
->> checking if the page_offset_base variable exists. It search for the
->> correct PAGE_OFFSET value by looking at the loaded memory section and
->> find the lowest aligned on PUD (the randomization level).
->>
->> Related commits on linux-next:
->>  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
->>  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
+On Tue, Aug 23, 2016 at 1:21 PM, Balbir Singh <bsingharora@gmail.com> wrote:
 >
-> Seems above two commits have been inside Linus's tree, while vmemmap
-> not yet.
+>> zImage on ppc64 BE is an ELF32 file. This patch set only supports loading
+>> ELF files of the same class as the kernel, so a 64 bit kernel can't load an
+>> ELF32 file. It would be possible to add such support, but it would be a new
+>> feature.
+>>
+>> The distros I was able to check on ppc64 LE and BE all use vmlinux.
+>> kexec-tools with kexec_load also doesn't support zImage. Do you think it is
+>> important to support zImage?
 >
->>
->> Signed-off-by: Thomas Garnier <thgarnie@google.com>
->> ---
->>  kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
->>  1 file changed, 22 insertions(+), 7 deletions(-)
->>
->> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
->> index bbc0f35..ab833d4 100644
->> --- a/kexec/arch/i386/crashdump-x86.c
->> +++ b/kexec/arch/i386/crashdump-x86.c
->> @@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
->>       return -1;
->>  }
->>
->> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
->> -static unsigned long long get_kernel_stext_sym(void)
->> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
->> +static unsigned long long get_kernel_sym(const char *symbol)
->>  {
->>       const char *kallsyms = "/proc/kallsyms";
->> -     const char *stext = "_stext";
->>       char sym[128];
->>       char line[128];
->>       FILE *fp;
->> @@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
->>       while(fgets(line, sizeof(line), fp) != NULL) {
->>               if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
->>                       continue;
->> -             if (strcmp(sym, stext) == 0) {
->> -                     dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
->> +             if (strcmp(sym, symbol) == 0) {
->> +                     dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
->>                       return vaddr;
->>               }
->>       }
->>
->> -     fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
->> +     fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
->>       return 0;
->>  }
->>
->> @@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->>       off_t size;
->>       uint32_t elf_flags = 0;
->>       uint64_t stext_sym;
->> +     const unsigned long long pud_mask = ~((1 << 30) - 1);
->> +     unsigned long long vaddr, lowest_vaddr = 0;
->>
->>       if (elf_info->machine != EM_X86_64)
->>               return 0;
->> @@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->>
->>       end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
->>
->> +     /* Search for the real PAGE_OFFSET when KASLR memory randomization
->> +      * is enabled */
->
-> Yeah, this is necessary. That would be great if it can be put into
-> get_kernel_page_offset. But then it need parse kcore elf file again,
-> seems no better way.
->
+> Well if it didn't work already, I think its low priority. Michael should be
+> able to confirm this. Oliver's been trying to cleanup the zImage to get rid
+> the old zImage limitation, cc'ing him
 
-I agree.
+I don't think it's ever worked so I wouldn't worry too much about
+supporting it. Fixing kexec-into-zImage and fixing the 32bit wrapper
+on 64bit BE kernel problem has been on my TODO list for a while, but
+it's not a priority.
 
-Simon: Do you have any comments?
-
->> +     if (get_kernel_sym("page_offset_base") != 0) {
->> +             for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
->> +                     if (phdr->p_type == PT_LOAD) {
->> +                             vaddr = phdr->p_vaddr & pud_mask;
->> +                             if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
->> +                                     lowest_vaddr = vaddr;
->> +                     }
->> +             }
->> +             if (lowest_vaddr != 0)
->> +                     elf_info->page_offset = lowest_vaddr;
->> +     }
->> +
->>       /* Traverse through the Elf headers and find the region where
->>        * _stext symbol is located in. That's where kernel is mapped */
->> -     stext_sym = get_kernel_stext_sym();
->> +     stext_sym = get_kernel_sym("_stext");
->>       for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
->>               if (phdr->p_type == PT_LOAD) {
->>                       unsigned long long saddr = phdr->p_vaddr;
->> --
->> 2.8.0.rc3.226.g39d4020
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+oliver
 
 _______________________________________________
 kexec mailing list
