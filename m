@@ -1,19 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x22d.google.com ([2607:f8b0:4001:c0b::22d])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bcZPr-0003mj-N1
- for kexec@lists.infradead.org; Wed, 24 Aug 2016 14:44:36 +0000
-Received: by mail-it0-x22d.google.com with SMTP id e63so213553393ith.1
- for <kexec@lists.infradead.org>; Wed, 24 Aug 2016 07:44:11 -0700 (PDT)
+ id 1bcgDW-0001te-Bi
+ for kexec@lists.infradead.org; Wed, 24 Aug 2016 22:00:15 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7OLxl6E040972
+ for <kexec@lists.infradead.org>; Wed, 24 Aug 2016 17:59:51 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 250pg9axjs-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 24 Aug 2016 17:59:49 -0400
+Received: from localhost
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Wed, 24 Aug 2016 18:59:28 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id 70F0F3520072
+ for <kexec@lists.infradead.org>; Wed, 24 Aug 2016 17:59:03 -0400 (EDT)
+Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7OLxP3W4882570
+ for <kexec@lists.infradead.org>; Wed, 24 Aug 2016 18:59:25 -0300
+Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
+ by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7OLxOow023572
+ for <kexec@lists.infradead.org>; Wed, 24 Aug 2016 18:59:24 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [integrity:next-restore-kexec 21/31] kernel/kexec_core.c:780:10:
+ warning: passing argument 1 of '__va' makes integer from pointer without a
+ cast
+Date: Wed, 24 Aug 2016 18:59:23 -0300
+In-Reply-To: <201608232218.il5qUAgx%fengguang.wu@intel.com>
+References: <201608232218.il5qUAgx%fengguang.wu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20160809015615.28527-3-takahiro.akashi@linaro.org>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015615.28527-1-takahiro.akashi@linaro.org>
- <20160809015615.28527-3-takahiro.akashi@linaro.org>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Wed, 24 Aug 2016 16:44:09 +0200
-Message-ID: <CAKv+Gu9HabCP5irxZB6pKgtDCVpy23Wdu7eppMsW2++jK7Dk1w@mail.gmail.com>
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
+Message-Id: <14446997.EfN524sbRK@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,247 +48,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kbuild test robot <fengguang.wu@intel.com>
+Cc: linux-ima-devel@lists.sourceforge.net, linux-security-module@vger.kernel.org, kexec@lists.infradead.org, kbuild-all@01.org
 
-On 9 August 2016 at 03:56, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> On crash dump kernel, all the information about primary kernel's system
-> memory (core image) is available in elf core header.
-> The primary kernel will set aside this header with reserve_elfcorehdr()
-> at boot time and inform crash dump kernel of its location via a new
-> device-tree property, "linux,elfcorehdr".
->
-> Please note that all other architectures use traditional "elfcorehdr="
-> kernel parameter for this purpose.
->
-> Then crash dump kernel will access the primary kernel's memory with
-> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
-> not reside in linear mapping on crash dump kernel.
->
-> We also need our own elfcorehdr_read() here since the header is placed
-> within crash dump kernel's usable memory.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  arch/arm64/Kconfig             | 11 +++++++
->  arch/arm64/kernel/Makefile     |  1 +
->  arch/arm64/kernel/crash_dump.c | 71 ++++++++++++++++++++++++++++++++++++++++++
->  arch/arm64/mm/init.c           | 54 ++++++++++++++++++++++++++++++++
->  4 files changed, 137 insertions(+)
->  create mode 100644 arch/arm64/kernel/crash_dump.c
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 69c8787..9ede54b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -682,6 +682,17 @@ config KEXEC
->           but it is independent of the system firmware.   And like a reboot
->           you can start any kernel with it, not just Linux.
->
-> +config CRASH_DUMP
-> +       bool "Build kdump crash kernel"
-> +       help
-> +         Generate crash dump after being started by kexec. This should
-> +         be normally only set in special crash dump kernels which are
-> +         loaded in the main kernel with kexec-tools into a specially
-> +         reserved region and then later executed after a crash by
-> +         kdump/kexec.
-> +
-> +         For more details see Documentation/kdump/kdump.txt
-> +
->  config XEN_DOM0
->         def_bool y
->         depends on XEN
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index 14f7b65..f1cbfc8 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -48,6 +48,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)    += kaslr.o
->  arm64-obj-$(CONFIG_HIBERNATION)                += hibernate.o hibernate-asm.o
->  arm64-obj-$(CONFIG_KEXEC)              += machine_kexec.o relocate_kernel.o    \
->                                            cpu-reset.o
-> +arm64-obj-$(CONFIG_CRASH_DUMP)         += crash_dump.o
->
->  obj-y                                  += $(arm64-obj-y) vdso/ probes/
->  obj-m                                  += $(arm64-obj-m)
-> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-> new file mode 100644
-> index 0000000..2dc54d1
-> --- /dev/null
-> +++ b/arch/arm64/kernel/crash_dump.c
-> @@ -0,0 +1,71 @@
-> +/*
-> + * Routines for doing kexec-based kdump
-> + *
-> + * Copyright (C) 2014 Linaro Limited
-> + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/crash_dump.h>
-> +#include <linux/errno.h>
-> +#include <linux/io.h>
-> +#include <linux/memblock.h>
-> +#include <linux/uaccess.h>
-> +#include <asm/memory.h>
-> +
-> +/**
-> + * copy_oldmem_page() - copy one page from old kernel memory
-> + * @pfn: page frame number to be copied
-> + * @buf: buffer where the copied page is placed
-> + * @csize: number of bytes to copy
-> + * @offset: offset in bytes into the page
-> + * @userbuf: if set, @buf is in a user address space
-> + *
-> + * This function copies one page from old kernel memory into buffer pointed by
-> + * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
-> + * copied or negative error in case of failure.
-> + */
-> +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-> +                        size_t csize, unsigned long offset,
-> +                        int userbuf)
-> +{
-> +       void *vaddr;
-> +
-> +       if (!csize)
-> +               return 0;
-> +
-> +       vaddr = ioremap_cache(__pfn_to_phys(pfn), PAGE_SIZE);
+Am Dienstag, 23 August 2016, 22:44:19 schrieb kbuild test robot:
+> tree:  
+> https://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+> next-restore-kexec head:   62bc4b565254de4796a0835f6f67569eb4835f9f
+> commit: d03a46a7730822305a2264c9defa21c06d4ff861 [21/31] kexec_file: Add
+> mechanism to update kexec segments. config: m68k-sun3_defconfig (attached
+> as .config)
+> compiler: m68k-linux-gcc (GCC) 4.9.0
+> reproduce:
+>         wget
+> https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin
+> /make.cross -O ~/bin/make.cross chmod +x ~/bin/make.cross
+>         git checkout d03a46a7730822305a2264c9defa21c06d4ff861
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=m68k
+> 
+> All warnings (new ones prefixed by >>):
+> 
+<snip>
+>    kernel/kexec_core.c: In function 'kexec_update_segment':
+> >> kernel/kexec_core.c:780:10: warning: passing argument 1 of '__va' makes
+> >> integer from pointer without a cast
+>        ptr = __va(addr);
+>              ^
+>    In file included from arch/m68k/include/asm/page.h:46:0,
+>                     from arch/m68k/include/asm/thread_info.h:5,
+>                     from include/linux/thread_info.h:54,
+>                     from include/asm-generic/preempt.h:4,
+>                     from ./arch/m68k/include/generated/asm/preempt.h:1,
+>                     from include/linux/preempt.h:59,
+>                     from include/linux/spinlock.h:50,
+>                     from include/linux/mmzone.h:7,
+>                     from include/linux/gfp.h:5,
+>                     from include/linux/mm.h:9,
+>                     from kernel/kexec_core.c:12:
+>    arch/m68k/include/asm/page_mm.h:105:21: note: expected 'long unsigned
+> int' but argument is of type 'void *' static inline void *__va(unsigned
+> long x)
+>                         ^
 
-Could we please use memremap() here?
+This doesn't produce a warning on x86 and powerpc because on both arches 
+__va is a macro which does a cast to unsigned long, but on m68k __va is a 
+function expecting an unsigned long argument.
 
-> +       if (!vaddr)
-> +               return -ENOMEM;
-> +
-> +       if (userbuf) {
-> +               if (copy_to_user(buf, vaddr + offset, csize)) {
-> +                       iounmap(vaddr);
-> +                       return -EFAULT;
-> +               }
-> +       } else {
-> +               memcpy(buf, vaddr + offset, csize);
-> +       }
-> +
-> +       iounmap(vaddr);
+>    In file included from include/asm-generic/bug.h:13:0,
+>                     from arch/m68k/include/asm/bug.h:28,
+>                     from include/linux/bug.h:4,
+>                     from include/linux/mmdebug.h:4,
+>                     from include/linux/mm.h:8,
+>                     from kernel/kexec_core.c:12:
+>    include/linux/kernel.h:742:17: warning: comparison of distinct pointer
+> types lacks a cast (void) (&_min1 == &_min2);  \
+>                     ^
+>    kernel/kexec_core.c:800:14: note: in expansion of macro 'min'
+>         uchunk = min(bufsz, mchunk);
+>                  ^
 
-... and memunmap here?
+This is because bufsz is unsigned long but mchunk is size_t.
 
-ioremap_cache() is not very well defined, and memremap() has been
-introduced specifically to replace it, so I think we should use it in
-new code.
+Both warnings are fixed by the changes below, which will be in my next 
+revision of the kexec buffer hand-over series.
 
-Thanks,
-Ard.
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
-> +
-> +       return csize;
-> +}
-> +
-> +/**
-> + * elfcorehdr_read - read from ELF core header
-> + * @buf: buffer where the data is placed
-> + * @csize: number of bytes to read
-> + * @ppos: address in the memory
-> + *
-> + * This function reads @count bytes from elf core header which exists
-> + * on crash dump kernel's memory.
-> + */
-> +ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-> +{
-> +       memcpy(buf, phys_to_virt((phys_addr_t)*ppos), count);
-> +       return count;
-> +}
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index e3771c4..bba1e39 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -36,6 +36,7 @@
->  #include <linux/efi.h>
->  #include <linux/swiotlb.h>
->  #include <linux/kexec.h>
-> +#include <linux/crash_dump.h>
->
->  #include <asm/boot.h>
->  #include <asm/fixmap.h>
-> @@ -186,6 +187,57 @@ static void __init reserve_crashkernel(void)
->  }
->  #endif /* CONFIG_KEXEC_CORE */
->
-> +#ifdef CONFIG_CRASH_DUMP
-> +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-> +               const char *uname, int depth, void *data)
-> +{
-> +       const __be32 *reg;
-> +       int len;
-> +
-> +       if (depth != 1 || strcmp(uname, "chosen") != 0)
-> +               return 0;
-> +
-> +       reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
-> +       if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-> +               return 1;
-> +
-> +       elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> +       elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> +
-> +       return 1;
-> +}
-> +
-> +/*
-> + * reserve_elfcorehdr() - reserves memory for elf core header
-> + *
-> + * This function reserves elf core header given in "elfcorehdr=" kernel
-> + * command line parameter. This region contains all the information about
-> + * primary kernel's core image and is used by a dump capture kernel to
-> + * access the system memory on primary kernel.
-> + */
-> +static void __init reserve_elfcorehdr(void)
-> +{
-> +       of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
-> +
-> +       if (!elfcorehdr_size)
-> +               return;
-> +
-> +       if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-> +               pr_warn("elfcorehdr is overlapped\n");
-> +               return;
-> +       }
-> +
-> +       memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-> +
-> +       pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
-> +               elfcorehdr_size >> 10, elfcorehdr_addr);
-> +}
-> +#else
-> +static void __init reserve_elfcorehdr(void)
-> +{
-> +       ;
-> +}
-> +#endif /* CONFIG_CRASH_DUMP */
->  /*
->   * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
->   * currently assumes that for memory starting above 4G, 32-bit devices will
-> @@ -444,6 +496,8 @@ void __init arm64_memblock_init(void)
->
->         reserve_crashkernel();
->
-> +       reserve_elfcorehdr();
-> +
->         dma_contiguous_reserve(arm64_dma_phys_limit);
->
->         memblock_allow_resize();
-> --
-> 2.9.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 6ec09e85efd9..ea2e5a7b9b69 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -261,8 +261,8 @@ extern int kexec_purgatory_get_set_symbol(struct kimage *image,
+ 					  unsigned int size, bool get_value);
+ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
+ 					     const char *name);
+-int kexec_update_segment(const char *buffer, unsigned long bufsz,
+-			 unsigned long load_addr, unsigned long memsz);
++int kexec_update_segment(const char *buffer, size_t bufsz,
++			 unsigned long load_addr, size_t memsz);
+ extern void __crash_kexec(struct pt_regs *);
+ extern void crash_kexec(struct pt_regs *);
+ int kexec_should_crash(struct task_struct *);
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 3740235d6819..11ca5f8678df 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -732,8 +732,8 @@ static struct page *kimage_alloc_page(struct kimage *image,
+  *
+  * Return: 0 on success, negative errno on error.
+  */
+-int kexec_update_segment(const char *buffer, unsigned long bufsz,
+-			 unsigned long load_addr, unsigned long memsz)
++int kexec_update_segment(const char *buffer, size_t bufsz,
++			 unsigned long load_addr, size_t memsz)
+ {
+ 	int i;
+ 	unsigned long entry;
+@@ -763,7 +763,7 @@ int kexec_update_segment(const char *buffer, unsigned long bufsz,
+ 			break;
+ 		}
+ 	if (i == kexec_image->nr_segments) {
+-		pr_err("Couldn't find segment to update: 0x%lx, size 0x%lx\n",
++		pr_err("Couldn't find segment to update: 0x%lx, size 0x%zx\n",
+ 		       load_addr, memsz);
+ 		return -EINVAL;
+ 	}
+@@ -777,7 +777,7 @@ int kexec_update_segment(const char *buffer, unsigned long bufsz,
+ 			dest = addr;
+ 			break;
+ 		case IND_INDIRECTION:
+-			ptr = __va(addr);
++			ptr = __va(entry & PAGE_MASK);
+ 			break;
+ 		case IND_SOURCE:
+ 			/* Shouldn't happen, but verify just to be safe. */
+
 
 _______________________________________________
 kexec mailing list
