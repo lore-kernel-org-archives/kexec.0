@@ -2,36 +2,39 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bczF4-0003IE-Ty
- for kexec@lists.infradead.org; Thu, 25 Aug 2016 18:19:08 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7PIG7MW133690
- for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 14:18:45 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 250xbkry2a-1
+ id 1bczF4-0003J5-Ty
+ for kexec@lists.infradead.org; Thu, 25 Aug 2016 18:19:09 +0000
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7PIFOqI045212
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 14:18:51 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2512h9gk02-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 14:18:45 -0400
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 14:18:50 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 25 Aug 2016 15:18:42 -0300
-Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 9BA0A352006C
- for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 14:18:19 -0400 (EDT)
+ Thu, 25 Aug 2016 15:18:47 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id DA7CF1DC006F
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 14:18:35 -0400 (EDT)
 Received: from d24av01.br.ibm.com (d24av01.br.ibm.com [9.8.31.91])
- by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7PIIfcU5210298
- for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 15:18:41 -0300
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7PIIjJI9372018
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 15:18:45 -0300
 Received: from d24av01.br.ibm.com (localhost [127.0.0.1])
  by d24av01.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7PIIevA017506
- for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 15:18:41 -0300
+ u7PIIiMI017720
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 15:18:45 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v3 0/5] kexec_file: Add buffer hand-over for the next kernel
-Date: Thu, 25 Aug 2016 15:18:26 -0300
-Message-Id: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v3 3/5] kexec_file: Allow skipping checksum calculation for
+ some segments.
+Date: Thu, 25 Aug 2016 15:18:29 -0300
+In-Reply-To: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1472149111-30598-4-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,112 +51,130 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hello,
+Add skip_checksum member to struct kexec_buf to specify whether the
+corresponding segment should be part of the checksum calculation.
 
-This patch series implements a mechanism which allows the kernel to pass
-on a buffer to the kernel that will be kexec'd. This buffer is passed
-as a segment which is added to the kimage when it is being prepared
-by kexec_file_load.
+The next patch will add a way to update segments after a kimage is loaded.
+Segments that will be updated in this way should not be checksummed,
+otherwise they will cause the purgatory checksum verification to fail
+when the machine is rebooted.
 
-How the second kernel is informed of this buffer is architecture-specific.
-On powerpc, this is done via the device tree, by checking
-the properties /chosen/linux,kexec-handover-buffer-start and
-/chosen/linux,kexec-handover-buffer-end, which is analogous to how the
-kernel finds the initrd.
+As a bonus, we don't need to special-case the purgatory segment anymore
+to avoid checksumming it.
 
-This is needed because the Integrity Measurement Architecture subsystem
-needs to preserve its measurement list accross the kexec reboot. The
-following patch series for the IMA subsystem uses this feature for that
-purpose:
+Places using struct kexec_buf get false as the default value for
+skip_checksum since they all use designated initializers.  Therefore,
+there is no behavior change with this patch and all segments except the
+purgatory are checksummed.
 
-https://lists.infradead.org/pipermail/kexec/2016-August/016745.html
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+---
+ include/linux/kexec.h | 23 ++++++++++++++---------
+ kernel/kexec_file.c   | 15 +++++++--------
+ 2 files changed, 21 insertions(+), 17 deletions(-)
 
-This is so that IMA can implement trusted boot support on the OpenPower
-platform, because on such systems an intermediary Linux instance running
-as part of the firmware is used to boot the target operating system via
-kexec. Using this mechanism, IMA on this intermediary instance can
-hand over to the target OS the measurements of the components that were
-used to boot it.
-
-Because there could be additional measurement events between the
-kexec_file_load call and the actual reboot, IMA needs a way to update the
-buffer with those additional events before rebooting. One can minimize
-the interval between the kexec_file_load and the reboot syscalls, but as
-small as it can be, there is always the possibility that the measurement
-list will be out of date at the time of reboot.
-
-To address this issue, this patch series also introduces
-kexec_update_segment, which allows a reboot notifier to change the
-contents of the image segment during the reboot process.
-
-The last patch is not intended to be merged, it just demonstrates how
-this feature can be used.
-
-This series applies on top of v6 of the "kexec_file_load implementation
-for PowerPC" patch series (which applies on top of v4.8-rc1):
-
-https://lists.infradead.org/pipermail/kexec/2016-August/016960.html
-
-Changes for v3:
-- Rebased series on kexec_file_load patch series v6.
-  Both patch series apply cleanly on todays' Linus master branch, except
-  for a few lines of fuzz in arch/powerpc/Makefile and arch/powerpc/Kconfig.
-- Patch "kexec_file: Add buffer hand-over support for the next kernel"
-  - Fix compilation warning in <linux/kexec.h> by adding a struct kexec_buf
-    forward declaration when CONFIG_KEXEC_FILE=n. (Fenguang Wu)
-- Patch "kexec_file: Allow skipping checksum calculation for some segments."
-  - Substitute checksum argument in kexec_add_buffer with skip_checksum
-    member in struct kexec_buf, as suggested by Dave Young.
-- Patch "kexec_file: Add mechanism to update kexec segments."
-  - Use kmap_atomic in kexec_update_segment, as suggested by Andrew Morton.
-  - Fix build warning on m68k by passing unsigned long value to __va instead
-    of void *. (Fenguang Wu)
-  - Change bufsz and memsz arguments of kexec_update_segment to size_t to fix
-    compilation warning. (Fenguang Wu)
-- Patch "kexec: Share logic to copy segment page contents."
-  - Dropped this patch.
-- Patch "IMA: Demonstration code for kexec buffer passing."
-  - Update to use kexec_buf.skip_checksum instead of passing it in
-    kexec_add_buffer.
-
-Changes for v2:
-- Rebased on v5 of kexec_file_load implementation for PowerPC patch series.
-- Patch "kexec_file: Add buffer hand-over support for the next kernel"
-  - Changed kexec_add_handover_buffer to receive a struct kexec_buf, as
-    suggested by Dave Young.
-- Patch "powerpc: kexec_file: Add buffer hand-over support for the next kernel"
-  - Moved setup_handover_buffer from kexec_elf_64.c to machine_kexec_64.c.
-  - Call setup_handover_buffer from setup_new_fdt instead of elf64_load.
-  - Changed kexec_get_handover_buffer to read from the expanded device tree
-    instead of the flattened device tree.
-- Patch "kexec_file: Add mechanism to update kexec segments.":
-  - Removed unnecessary "#include <linux/highmem.h>" in kexec_file.c.
-  - Round up memsz argument to PAGE_SIZE.
-  - Check if kexec_image is NULL in kexec_update_segment.
-- Patch "IMA: Demonstration code for kexec buffer passing."
-  - Avoid registering reboot notifier again if kexec_file_load is called
-    more than once.
-
-
-Thiago Jung Bauermann (5):
-  kexec_file: Add buffer hand-over support for the next kernel
-  powerpc: kexec_file: Add buffer hand-over support for the next kernel
-  kexec_file: Allow skipping checksum calculation for some segments.
-  kexec_file: Add mechanism to update kexec segments.
-  IMA: Demonstration code for kexec buffer passing.
-
- arch/powerpc/include/asm/kexec.h       |  12 +++-
- arch/powerpc/kernel/kexec_elf_64.c     |   2 +-
- arch/powerpc/kernel/machine_kexec_64.c | 114 +++++++++++++++++++++++++++++++--
- include/linux/ima.h                    |  11 ++++
- include/linux/kexec.h                  |  56 +++++++++++++---
- kernel/kexec_core.c                    |  99 ++++++++++++++++++++++++++++
- kernel/kexec_file.c                    |  87 ++++++++++++++++++++++---
- security/integrity/ima/ima.h           |   5 ++
- security/integrity/ima/ima_init.c      |  26 ++++++++
- security/integrity/ima/ima_template.c  |  85 ++++++++++++++++++++++++
- 10 files changed, 472 insertions(+), 25 deletions(-)
-
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 16561e96a6d7..edadff6c86ff 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -100,6 +100,9 @@ struct kexec_segment {
+ 	size_t bufsz;
+ 	unsigned long mem;
+ 	size_t memsz;
++
++	/* Whether this segment is ignored in the checksum calculation. */
++	bool skip_checksum;
+ };
+ 
+ #ifdef CONFIG_COMPAT
+@@ -151,15 +154,16 @@ struct kexec_file_ops {
+ 
+ /**
+  * struct kexec_buf - parameters for finding a place for a buffer in memory
+- * @image:	kexec image in which memory to search.
+- * @buffer:	Contents which will be copied to the allocated memory.
+- * @bufsz:	Size of @buffer.
+- * @mem:	On return will have address of the buffer in memory.
+- * @memsz:	Size for the buffer in memory.
+- * @buf_align:	Minimum alignment needed.
+- * @buf_min:	The buffer can't be placed below this address.
+- * @buf_max:	The buffer can't be placed above this address.
+- * @top_down:	Allocate from top of memory.
++ * @image:		kexec image in which memory to search.
++ * @buffer:		Contents which will be copied to the allocated memory.
++ * @bufsz:		Size of @buffer.
++ * @mem:		On return will have address of the buffer in memory.
++ * @memsz:		Size for the buffer in memory.
++ * @buf_align:		Minimum alignment needed.
++ * @buf_min:		The buffer can't be placed below this address.
++ * @buf_max:		The buffer can't be placed above this address.
++ * @top_down:		Allocate from top of memory.
++ * @skip_checksum:	Don't verify checksum for this buffer in purgatory.
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+@@ -171,6 +175,7 @@ struct kexec_buf {
+ 	unsigned long buf_min;
+ 	unsigned long buf_max;
+ 	bool top_down;
++	bool skip_checksum;
+ };
+ 
+ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 1e10689f7662..6a48519b5c5b 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -584,6 +584,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
++	ksegment->skip_checksum = kbuf->skip_checksum;
+ 	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+@@ -598,7 +599,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 	char *digest;
+ 	void *zero_buf;
+ 	struct kexec_sha_region *sha_regions;
+-	struct purgatory_info *pi = &image->purgatory_info;
+ 
+ 	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
+ 	zero_buf_sz = PAGE_SIZE;
+@@ -638,11 +638,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		struct kexec_segment *ksegment;
+ 
+ 		ksegment = &image->segment[i];
+-		/*
+-		 * Skip purgatory as it will be modified once we put digest
+-		 * info in purgatory.
+-		 */
+-		if (ksegment->kbuf == pi->purgatory_buf)
++		if (ksegment->skip_checksum)
+ 			continue;
+ 
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+@@ -714,7 +710,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	Elf_Shdr *sechdrs = NULL;
+ 	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
+ 				  .buf_min = min, .buf_max = max,
+-				  .top_down = top_down };
++				  .top_down = top_down, .skip_checksum = true };
+ 
+ 	/*
+ 	 * sechdrs_c points to section headers in purgatory and are read
+@@ -819,7 +815,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	if (kbuf.buf_align < bss_align)
+ 		kbuf.buf_align = bss_align;
+ 
+-	/* Add buffer to segment list */
++	/*
++	 * Add buffer to segment list. Don't checksum the segment as
++	 * it will be modified once we put digest info in purgatory.
++	 */
+ 	ret = kexec_add_buffer(&kbuf);
+ 	if (ret)
+ 		goto out;
 -- 
 1.9.1
 
