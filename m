@@ -1,16 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.linuxfoundation.org ([140.211.169.12])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bd1xR-0004lO-D5
- for kexec@lists.infradead.org; Thu, 25 Aug 2016 21:13:06 +0000
-Date: Thu, 25 Aug 2016 14:12:43 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
+ id 1bd2xz-0002D1-E9
+ for kexec@lists.infradead.org; Thu, 25 Aug 2016 22:17:44 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7PM8cF7146950
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 18:17:22 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 251tmxscxq-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 18:17:22 -0400
+Received: from localhost
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 25 Aug 2016 19:17:19 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id 99BDE3520068
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 18:16:56 -0400 (EDT)
+Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7PMHILE32375288
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 19:17:18 -0300
+Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
+ by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u7PMHHgJ014842
+ for <kexec@lists.infradead.org>; Thu, 25 Aug 2016 19:17:17 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 Subject: Re: [PATCH v3 0/5] kexec_file: Add buffer hand-over for the next
  kernel
-Message-Id: <20160825141243.e8a3f0f864b5d9dee496a1e4@linux-foundation.org>
-In-Reply-To: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Date: Thu, 25 Aug 2016 19:17:15 -0300
+In-Reply-To: <20160825141243.e8a3f0f864b5d9dee496a1e4@linux-foundation.org>
 References: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Mime-Version: 1.0
+ <20160825141243.e8a3f0f864b5d9dee496a1e4@linux-foundation.org>
+MIME-Version: 1.0
+Message-Id: <2766587.yalBJ6tfVf@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,62 +48,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Balbir Singh <bsingharora@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, 25 Aug 2016 15:18:26 -0300 Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> wrote:
+Am Donnerstag, 25 August 2016, 14:12:43 schrieb Andrew Morton:
+> I grabbed these two patch series.  I also merged the "IMA:
+> Demonstration code for kexec buffer passing." demonstration patch just
+> to get things a bit of testing.
 
-> Hello,
-> 
-> This patch series implements a mechanism which allows the kernel to pass
-> on a buffer to the kernel that will be kexec'd. This buffer is passed
-> as a segment which is added to the kimage when it is being prepared
-> by kexec_file_load.
-> 
-> How the second kernel is informed of this buffer is architecture-specific.
-> On powerpc, this is done via the device tree, by checking
-> the properties /chosen/linux,kexec-handover-buffer-start and
-> /chosen/linux,kexec-handover-buffer-end, which is analogous to how the
-> kernel finds the initrd.
-> 
-> This is needed because the Integrity Measurement Architecture subsystem
-> needs to preserve its measurement list accross the kexec reboot. The
-> following patch series for the IMA subsystem uses this feature for that
-> purpose:
-> 
-> https://lists.infradead.org/pipermail/kexec/2016-August/016745.html
-> 
-> This is so that IMA can implement trusted boot support on the OpenPower
-> platform, because on such systems an intermediary Linux instance running
-> as part of the firmware is used to boot the target operating system via
-> kexec. Using this mechanism, IMA on this intermediary instance can
-> hand over to the target OS the measurements of the components that were
-> used to boot it.
-> 
-> Because there could be additional measurement events between the
-> kexec_file_load call and the actual reboot, IMA needs a way to update the
-> buffer with those additional events before rebooting. One can minimize
-> the interval between the kexec_file_load and the reboot syscalls, but as
-> small as it can be, there is always the possibility that the measurement
-> list will be out of date at the time of reboot.
-> 
-> To address this issue, this patch series also introduces
-> kexec_update_segment, which allows a reboot notifier to change the
-> contents of the image segment during the reboot process.
-> 
-> The last patch is not intended to be merged, it just demonstrates how
-> this feature can be used.
-> 
-> This series applies on top of v6 of the "kexec_file_load implementation
-> for PowerPC" patch series (which applies on top of v4.8-rc1):
-> 
-> https://lists.infradead.org/pipermail/kexec/2016-August/016960.html
+Thank you very much!
 
-I grabbed these two patch series.  I also merged the "IMA:
-Demonstration code for kexec buffer passing." demonstration patch just
-to get things a bit of testing.  I assume that once the "ima: carry the
-measurement list across kexec" series has stabilised, I should drop the
-demo patch and also grab those?  If so, pelase start cc'ing me.
+> I assume that once the "ima: carry the
+> measurement list across kexec" series has stabilised, I should drop the
+> demo patch and also grab those?  If so, pelase start cc'ing me.
+
+I'm not sure how Mimi is planning to upstream that series.
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
