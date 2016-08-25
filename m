@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tex.lwn.net ([70.33.254.29] helo=vena.lwn.net)
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bd03d-0007iM-R4
- for kexec@lists.infradead.org; Thu, 25 Aug 2016 19:11:22 +0000
-Date: Thu, 25 Aug 2016 13:10:56 -0600
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v9 1/2] Documentation: kdump: remind user of nr_cpus
-Message-ID: <20160825131056.58bb1379@lwn.net>
-In-Reply-To: <20160824050645.GA8279@x1.redhat.com>
-References: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1471489907-27737-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160818111854.362bb972@lwn.net> <57B653D1.8060106@cn.fujitsu.com>
- <20160819095740.1cccc073@lwn.net> <57BA51E0.1070902@cn.fujitsu.com>
- <20160824050645.GA8279@x1.redhat.com>
-MIME-Version: 1.0
+ id 1bd1xR-0004lO-D5
+ for kexec@lists.infradead.org; Thu, 25 Aug 2016 21:13:06 +0000
+Date: Thu, 25 Aug 2016 14:12:43 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/5] kexec_file: Add buffer hand-over for the next
+ kernel
+Message-Id: <20160825141243.e8a3f0f864b5d9dee496a1e4@linux-foundation.org>
+In-Reply-To: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1472149111-30598-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,22 +23,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-doc@vger.kernel.org, xlpang@redhat.com, "Zhou,
- =?UTF-8?B?V2Vuamlhbi/lkajmlofliZE=?=" <zhouwj-fnst@cn.fujitsu.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, joe@perches.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Balbir Singh <bsingharora@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, 24 Aug 2016 13:06:45 +0800
-Baoquan He <bhe@redhat.com> wrote:
+On Thu, 25 Aug 2016 15:18:26 -0300 Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> wrote:
 
-> Hi Jon, do you think change as below is OK to you?
+> Hello,
+> 
+> This patch series implements a mechanism which allows the kernel to pass
+> on a buffer to the kernel that will be kexec'd. This buffer is passed
+> as a segment which is added to the kimage when it is being prepared
+> by kexec_file_load.
+> 
+> How the second kernel is informed of this buffer is architecture-specific.
+> On powerpc, this is done via the device tree, by checking
+> the properties /chosen/linux,kexec-handover-buffer-start and
+> /chosen/linux,kexec-handover-buffer-end, which is analogous to how the
+> kernel finds the initrd.
+> 
+> This is needed because the Integrity Measurement Architecture subsystem
+> needs to preserve its measurement list accross the kexec reboot. The
+> following patch series for the IMA subsystem uses this feature for that
+> purpose:
+> 
+> https://lists.infradead.org/pipermail/kexec/2016-August/016745.html
+> 
+> This is so that IMA can implement trusted boot support on the OpenPower
+> platform, because on such systems an intermediary Linux instance running
+> as part of the firmware is used to boot the target operating system via
+> kexec. Using this mechanism, IMA on this intermediary instance can
+> hand over to the target OS the measurements of the components that were
+> used to boot it.
+> 
+> Because there could be additional measurement events between the
+> kexec_file_load call and the actual reboot, IMA needs a way to update the
+> buffer with those additional events before rebooting. One can minimize
+> the interval between the kexec_file_load and the reboot syscalls, but as
+> small as it can be, there is always the possibility that the measurement
+> list will be out of date at the time of reboot.
+> 
+> To address this issue, this patch series also introduces
+> kexec_update_segment, which allows a reboot notifier to change the
+> contents of the image segment during the reboot process.
+> 
+> The last patch is not intended to be merged, it just demonstrates how
+> this feature can be used.
+> 
+> This series applies on top of v6 of the "kexec_file_load implementation
+> for PowerPC" patch series (which applies on top of v4.8-rc1):
+> 
+> https://lists.infradead.org/pipermail/kexec/2016-August/016960.html
 
-So nr_cpus is the maximum value, and maxcpus is the current number.
-Figures.  No wonder the documentation is confusing...
+I grabbed these two patch series.  I also merged the "IMA:
+Demonstration code for kexec buffer passing." demonstration patch just
+to get things a bit of testing.  I assume that once the "ima: carry the
+measurement list across kexec" series has stabilised, I should drop the
+demo patch and also grab those?  If so, pelase start cc'ing me.
 
-Anyway, this is much more along the lines of what I was hoping for, yes;
-I'll go ahead and apply it.  Many thanks for humoring me on this!
-
-jon
 
 _______________________________________________
 kexec mailing list
