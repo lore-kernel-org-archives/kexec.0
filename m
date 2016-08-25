@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 25 Aug 2016 09:04:26 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v24 5/9] arm64: kdump: add kdump support
-Message-ID: <20160825010426.GA11824@dhcp-128-65.nay.redhat.com>
-References: <57AB586D.3080900@arm.com> <20160818071547.GC20080@linaro.org>
- <20160819012651.GE20080@linaro.org>
- <20160819112217.GB22221@localhost.localdomain>
- <20160822012919.GI20080@linaro.org> <57BB0272.1000008@arm.com>
- <20160823003815.GL20080@linaro.org>
- <20160823112343.GC13501@localhost.localdomain>
- <20160824080443.GA12902@dhcp-128-65.nay.redhat.com>
- <57BD7619.1040406@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bcjeo-0000Vw-QL
+ for kexec@lists.infradead.org; Thu, 25 Aug 2016 01:40:39 +0000
+Date: Thu, 25 Aug 2016 09:40:14 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec: Fix double-free when failing to relocate the
+ purgatory.
+Message-ID: <20160825014014.GA3574@x1.redhat.com>
+References: <1472083546-23683-1-git-send-email-bauerman@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <57BD7619.1040406@arm.com>
+In-Reply-To: <1472083546-23683-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,119 +24,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, mark.rutland@arm.com, linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, matt@codeblueprint.co.uk, bauerman@linux.vnet.ibm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-On 08/24/16 at 11:25am, James Morse wrote:
-> Hi Dave,
-> 
-> On 24/08/16 09:04, Dave Young wrote:
-> > Looking the arm-init.c, I suspect it missed the some efi ranges as
-> > reserved ranges like runtime code and runtime data etc. But I might be
-> > wrong.
-> 
-> This had me confused for too... I think I get it, my understanding is:
-> 
-James, thanks for your clarification. 
-> 
-> > static __init int is_reserve_region(efi_memory_desc_t *md)
-> > {
-> >         switch (md->type) {
-> >         case EFI_LOADER_CODE:
-> >         case EFI_LOADER_DATA:
-> >         case EFI_BOOT_SERVICES_CODE:
-> >         case EFI_BOOT_SERVICES_DATA:
-> >         case EFI_CONVENTIONAL_MEMORY:
-> >         case EFI_PERSISTENT_MEMORY:
-> >                 return 0;
-> 
-> return false - this is the list of region-types to never reserve, regardless of
-> memory attributes.
-> 
-> 
-> >         default:
-> >                 break;
-> >         }
-> >         return is_normal_ram(md);
-> 
-> If its not in the 'never reserve' list above, then we check if the region is
-> 'normal' ram. If it is then it will end up in memblock.memory so we return true,
-> causing it to be marked nomap too.
-> 
-> reserve_regions() in that same file calls is_normal_ram() directly before adding
-> all regions with the WB attribute to memblock.memory via
-> early_init_dt_add_memory_arch().
-> 
-> A runtime region with the WB attribute will be caught by is_reserve_region(),
-> and is_normal_ram(), so it ends up in memblock.memory and memblock.nomap.
+It's reasonable. Ack.
 
-Hmm, It is not straitforward like the do_add_efi_memmap. I got it.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-BTW, I believe there is same problem in arm as well as arm64, it also
-need mark the runtime ranges as "reserved" /proc/iomem. 
-
+On 08/24/16 at 09:05pm, Thiago Jung Bauermann wrote:
+> If kexec_apply_relocations fails, kexec_load_purgatory frees pi->sechdrs
+> and pi->purgatory_buf. This is redundant, because in case of error
+> kimage_file_prepare_segments calls kimage_file_post_load_cleanup,
+> which will also free those buffers.
+> 
+> This causes two warnings like the following, one for pi->sechdrs and the
+> other for pi->purgatory_buf:
+> 
+> [   18.112843] kexec-bzImage64: Loading purgatory failed
+> [   18.113257] ------------[ cut here ]------------
+> [   18.113263] WARNING: CPU: 1 PID: 2119 at mm/vmalloc.c:1490 __vunmap+0xc1/0xd0
+> [   18.113264] Trying to vfree() nonexistent vm area (ffffc90000e91000)
+> [   18.113367] Modules linked in:
+> [   18.113371] CPU: 1 PID: 2119 Comm: kexec Not tainted 4.8.0-rc3+ #5
+> [   18.113372] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+> [   18.113373]  0000000000000000 ffff88003bbb7dc8 ffffffff8132eca8 ffff88003bbb7e18
+> [   18.113376]  0000000000000000 ffff88003bbb7e08 ffffffff8105f1bb 000005d281175bf8
+> [   18.113377]  ffffc90000e91000 0000000000000000 0000000000000001 ffff88003e5f8c00
+> [   18.113379] Call Trace:
+> [   18.113384]  [<ffffffff8132eca8>] dump_stack+0x4d/0x65
+> [   18.113386]  [<ffffffff8105f1bb>] __warn+0xcb/0xf0
+> [   18.113388]  [<ffffffff8105f22f>] warn_slowpath_fmt+0x4f/0x60
+> [   18.113390]  [<ffffffff81176469>] ? find_vmap_area+0x19/0x70
+> [   18.113393]  [<ffffffff810dbb57>] ? kimage_file_post_load_cleanup+0x47/0xb0
+> [   18.113394]  [<ffffffff81177451>] __vunmap+0xc1/0xd0
+> [   18.113396]  [<ffffffff811774ce>] vfree+0x2e/0x70
+> [   18.113397]  [<ffffffff810dbb6e>] kimage_file_post_load_cleanup+0x5e/0xb0
+> [   18.113398]  [<ffffffff810dc718>] SyS_kexec_file_load+0x448/0x680
+> [   18.113401]  [<ffffffff811a6834>] ? putname+0x54/0x60
+> [   18.113403]  [<ffffffff81195d70>] ? do_sys_open+0x190/0x1f0
+> [   18.113407]  [<ffffffff81824e5b>] entry_SYSCALL_64_fastpath+0x13/0x8f
+> [   18.113408] ---[ end trace 158bb74f5950ca2b ]---
+> 
+> Fix by setting pi->sechdrs an pi->purgatory_buf to NULL, since vfree
+> won't try to free a NULL pointer.
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+> ---
+>  kernel/kexec_file.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 503bc2d348e5..037c321c5618 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -887,7 +887,10 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	return 0;
+>  out:
+>  	vfree(pi->sechdrs);
+> +	pi->sechdrs = NULL;
+> +
+>  	vfree(pi->purgatory_buf);
+> +	pi->purgatory_buf = NULL;
+>  	return ret;
+>  }
+>  
+> -- 
+> 1.9.1
 > 
 > 
-> > }
-> > 
-> > Let's see the x86 do_add_efi_mem_map, the default case set all other
-> > types as reserved. Shouldn't this be same in all arches though there's
-> > no e820 in arm(64)?
-> 
-> > static void __init do_add_efi_memmap(void)
-> > {
-> > 
-> > [snip]
-> >                 switch (md->type) {
-> >                 case EFI_LOADER_CODE:
-> >                 case EFI_LOADER_DATA:
-> >                 case EFI_BOOT_SERVICES_CODE:
-> >                 case EFI_BOOT_SERVICES_DATA:
-> >                 case EFI_CONVENTIONAL_MEMORY:
-> >                         if (md->attribute & EFI_MEMORY_WB)
-> >                                 e820_type = E820_RAM;
-> 
-> In this case reserve_regions() will add the memory to memblock.memory because it
-> has the WB attribute, and not reserve it.
-> 
-> 
-> >                         else
-> >                                 e820_type = E820_RESERVED;
-> 
-> Without the WB attribute, these regions are in neither memblock.memory nor
-> memblock.nomap.
-> 
-> 
-> >                         break;
-> > [snip]
-> >                 default:
-> >                         /*
-> >                          * EFI_RESERVED_TYPE EFI_RUNTIME_SERVICES_CODE
-> >                          * EFI_RUNTIME_SERVICES_DATA
-> >                          * EFI_MEMORY_MAPPED_IO
-> >                          * EFI_MEMORY_MAPPED_IO_PORT_SPACE EFI_PAL_CODE
-> >                          */
-> >                         e820_type = E820_RESERVED;
-> >                         break;
-> 
-> If any other regions has the WB attribute, it will be added to memblock.memory
-> and memblock.nomap. If it doesn't, it will appear in neither.
-> 
-> 
-> >                 }
-> > [snip]
-> > }
-> 
-> Does this help at all?
-> 
-
-Yes, thanks a lot!
-Dave
-
-> 
-> Thanks,
-> 
-> James
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
