@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [59.151.112.132] (helo=heian.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bd5JL-0004pl-PD
- for kexec@lists.infradead.org; Fri, 26 Aug 2016 00:47:57 +0000
-Message-ID: <57BF9142.6060600@cn.fujitsu.com>
-Date: Fri, 26 Aug 2016 08:45:54 +0800
-From: =?UTF-8?B?Ilpob3UsIFdlbmppYW4v5ZGo5paH5YmRIg==?=
- <zhouwj-fnst@cn.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bd6ii-00079N-IN
+ for kexec@lists.infradead.org; Fri, 26 Aug 2016 02:18:13 +0000
+Date: Fri, 26 Aug 2016 10:17:47 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec: socket not released when error situation occur.
+Message-ID: <20160826021747.GB327@x1.redhat.com>
+References: <20160825021524.41728-1-yooyoo.yoo@samsung.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v9 1/2] Documentation: kdump: remind user of nr_cpus
-References: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <1471489907-27737-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
- <20160818111854.362bb972@lwn.net> <57B653D1.8060106@cn.fujitsu.com>
- <20160819095740.1cccc073@lwn.net> <57BA51E0.1070902@cn.fujitsu.com>
- <20160824050645.GA8279@x1.redhat.com>
-In-Reply-To: <20160824050645.GA8279@x1.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20160825021524.41728-1-yooyoo.yoo@samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,123 +19,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, xlpang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, joe@perches.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
+To: YoungHyun Yoo <yooyoo.yoo@samsung.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-SGkgQmFvcXVhbiwKClNvcnJ5LCBJIG1pc3VuZGVyc3Rvb2QgaXQgYmVmb3JlLgpUaGFua3MgZm9y
-IHlvdXIgZGV0YWlsZWQgZXhwbGFuYXRpb24uCgpIaSBKb24gYW5kIEJhb3F1YW4sIEknbSBjb25m
-dXNlZCBhYm91dCBob3cgdG8gYWRqdXN0IHRoZSBrZHVtcC50eHQuCkRvZXMgdGhlIHBhdGNoIHNl
-dCB2OSBzdGlsbCBPSz8KCi0tIApUaGFua3MKWmhvdQoKT24gMDgvMjQvMjAxNiAwMTowNiBQTSwg
-QmFvcXVhbiBIZSB3cm90ZToKPiBPbiAwOC8yMi8xNiBhdCAwOToxNGFtLCAiWmhvdSwgV2Vuamlh
-bi/lkajmlofliZEiIHdyb3RlOgo+PiBPbiAwOC8xOS8yMDE2IDExOjU3IFBNLCBKb25hdGhhbiBD
-b3JiZXQgd3JvdGU6Cj4+PiBPbiBGcmksIDE5IEF1ZyAyMDE2IDA4OjMzOjIxICswODAwCj4+PiAi
-WmhvdSwgV2Vuamlhbi/lkajmlofliZEiIDx6aG91d2otZm5zdEBjbi5mdWppdHN1LmNvbT4gd3Jv
-dGU6Cj4+Pgo+Pj4+IEkgd2FzIGFsc28gY29uZnVzZWQgYnkgbWF4Y3B1cyBhbmQgbnJfY3B1cyBi
-ZWZvcmUgd3JpdGluZyB0aGlzIHBhdGNoLgo+Pj4+IEkgdGhpbmsgaXQgaXMgYSBnb29kIGNob2lj
-ZSB0byBkZXNjcmliZSBpdCBpbiBrZXJuZWwtcGFyYW1ldGVycy50eHQuCj4+Pj4KPj4+PiBUaGVu
-LCBvbmx5IHR3byB0aGluZ3MgbmVlZCB0byBiZSBkb25lIEkgdGhpbmsuCj4+Pj4gT25lIGlzIG1v
-dmUgdGhlIGFib3ZlIGRlc2NyaXB0aW9uIHRvIG1heGNwdXM9IGluIGtlcm5lbC1wYXJhbWV0ZXJz
-LnR4dC4KPj4+PiBBbmQgdGhlIG90aGVyIGlzIHJlcGxhY2UgbWF4Y3B1cyB3aXRoIG1heGNwdXMv
-bnJfY3B1cyBpbiBrZHVtcC50eHQuCj4+Pj4KPj4+PiBIb3cgZG8geW91IHRoaW5rPwo+Pj4KPj4+
-IFRoYXQgaXMgbm90IHF1aXRlIHdoYXQgSSBoYWQgaW4gbWluZCwgc29ycnkuICBXaGF0IEkgd291
-bGQgcmVhbGx5IGxpa2UgdG8KPj4+IHNlZSBpbiBrZXJuZWwtcGFyYW1ldGVycy50eHQgaXMgYW4g
-ZXhwbGFuYXRpb24gb2YgaG93IHRob3NlIHR3byBwYXJhbWV0ZXJzCj4+PiBkaWZmZXIgLSB3aGF0
-IGRvIHRoZXkgZG8gZGlmZmVyZW50bHkgYW5kIGhvdyBzaG91bGQgYSB1c2VyIGNob29zZSBvbmUg
-b3Zlcgo+Pj4gdGhlIG90aGVyPyAgV2hhdCB3ZSBoYXZlIG5vdyBvZmZlcnMgbm8gZ3VpZGFuY2Ug
-aW4gdGhhdCBtYXR0ZXIuCj4+Pgo+Pgo+PiBJIHRob3VnaHQgYWJvdXQgaXQuIEkgdGhpbmsgdXNl
-ciBtYXkgbm90IG5lZWQgdGhpcy4KPj4gV2hhdCB1c2VyIHJlYWxseSB3YW50IHRvIGtub3cgaXMg
-aG93IHRvIGNob29zZS4KPj4gQW5kIGl0IGlzIGFsc28gbm90IGEgaGFyZCB3b3JrLiBJZiBucl9j
-cHVzIGlzIG5vdCBzdXBwb3J0ZWQgYnkgdGhlIEFSQ0gsIHVzZSBtYXhjcHVzLgo+PiBPdGhlcndp
-c2UsIG5yX2NwdXMuIFRoZSByZWFzb24gd2h5IG1heGNwdXMgc3RpbGwgZXhpc3RzIGlzIG5yX2Nw
-dXMgY2FuJ3QgYmUgc3VwcG9ydGVkCj4+IGJ5IHNvbWUgQVJDSGVzLgo+Cj4gSSB0aGluayBKb24g
-aXMgc3VnZ2VzdGluZyB0aGF0IGEgbm90ZSBjYW4gYmUgYWRkZWQgaW50bwo+IGtlcm5lbC1wYXJh
-bWV0ZXIudHh0IHRvIHRlbGwgd2hhdCdzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gbnJfY3B1cyBh
-bmQKPiBtYXhfY3B1cy4gSSBjaGVja2VkIGNvZGUgYW5kIGRpc2N1c3NlZCB3aXRoaW4gb3VyIGtk
-dW1wIHRlYW0sIG1heF9jcHVzCj4gaXMgdXNlZCB0byBsaW1pdCBob3cgbWFueSAncHJlc2VudCcg
-Y3B1cyBhcmUgYWxsb3dlZCB0byBiZSBicm91Z2h0IHVwCj4gZHVyaW5nIHN5c3RlbSBib290dXAs
-IHdoaWxlIG5yX2NwdXMgaXMgdXNlZCB0byBzZXQgdGhlIHVwcGVyIGxpbWl0IG9mCj4gJ3Bvc3Np
-YmxlJyBjcHVzLiBFLmcgb24gbXkgbGFwdG9wLCB0aGVyZSBhcmUgNCBjcHVzIHdoaWxlIDQgaG90
-cGx1Zwo+IGNwdXMsIGFsdG9nZXRoZXIgOCBwb3NzaWJsZSBjcHVzLiBQb3NzaWJsZSBjcHVzIHNs
-b3QgaXMgZm9yIGNwdSBob3QKPiBwbHVnLCBtZWFucyBkdXJpbmcgYm9vdHVwIHlvdSB3YW50IHRv
-IGJyaW5nIHVwIDQgcHJlc2VudCBjcHVzLCBidXQKPiBsYXRlciB5b3UgY291bGQgcGh5c2ljYWxs
-eSBob3QgcGx1ZyA0IG90aGVycy4gQmVjYXVzZSBvZiBhdHRyaWJ1dGUgb2YKPiBzb21lIHN0YXRp
-YyBwZXJjcHUgdmFyaWFibGVzLCB3ZSBuZWVkIHByZS1hbGxvY2F0ZSBtZW1vcnkgZm9yIGFsbAo+
-IHBvc3NpYmxlIGNwdXMgdGhvdWdoIHNvbWUgb2YgdGhlbSBtYXkgbm90IGJlIHJlYWxseSB1c2Vk
-IGlmIG5vIGV4dHJhCj4gY3B1IHBoeXNpY2FsbHkgaG90IHBsdWdnZWQgYWZ0ZXIgc3lzdGVtIGJv
-b3R1cC4KPgo+IEhlbmNlIGZvciBrZHVtcCBrZXJuZWwsIHBlb3BsZSBuZXZlciB3YW50IHRvIGRv
-IGEgY3B1IGhvdCBwbHVnIGluIHRoZXJlLgo+IFRoYXQncyB3aHkgd2Ugd2FudCB0byB1c2UgbnJf
-Y3B1cyB0byBsaW1pdCB0aGUgbnVtYmVyIG9mIHBvc3NpYmxlIGNwdSB0bwo+IHNhdmUgbWVtb3J5
-LiBFLmcgc3RpbGwgb24gbXkgbGFwdG9wLCBpZiBJIHdhbnQgdG8gZG8gYSBrZHVtcCwgdGhlIG51
-bWJlcgo+IG9mIHBvc3NpYmxlIGNwdSBpcyBzdGlsbCA4LCBidXQgeW91IG1heSB3YW50IHRvIHVz
-ZSBvbmx5IDEgY3B1IHRvIGR1bXAsCj4gbWF5YmUgMiBvciAzIGZvciBwYXJhbGxlbCBkdW1waW5n
-LiBCdXQgeW91IGFic29sdXRlbHkgZG9uJ3Qgd2FudCB0byBzZXQKPiBucl9jcHVzPTggaW4geW91
-ciBrZHVtcCBrZXJuZWwgY21kbGluZSwgdGhvdWdoIGl0IGRvZXNuJ3QgY2F1c2UgZmFpbHVyZSwK
-PiBtZW1vcnkgaXMgd2FzdGVkIGJlY2F1c2Ugb2YgcGVyY3B1IHByZS1hbGxvY2F0aW9uLiBTbyBz
-cGVjaWZ5aW5nIG5yX2NwdXM9MQo+IGlzIG11Y2ggYmV0dGVyLiBXaGlsZSB3aXRoIHNwZWNpZnlp
-bmcgbWF4X2NwdXM9MSwgdGhlIG51bWJlciBvZiBwb3NzaWJsZQo+IGNwdSBpcyBzdGlsbCA4LiBU
-aGF0J3MgdGhlIHJlYXNvbi4gT24geDg2XzY0IGFuZCBzMzkwLCB0aGVyZSdzIGFub3RoZXIKPiBr
-ZXJuZWwgcGFyYSAicG9zc2libGVfY3B1cz14eCIgd2hpY2ggY2FuIGJlIHVzZWQgdG8gc2V0IHBv
-c3NpYmxlIGNwdXMgZm9yCj4gY3B1IGhvdCBwbHVnLiBPbmx5IHdoZW4gInBvc3NpYmxlX2NwdXM9
-MCIgaXMgc3BlY2lmaWVkLCBzbXAgaXMgZGlzYWJsZWQuCj4gSSBhbSBub3QgdmVyeSBzdXJlIHdo
-eSB0aGlzIGlzIGludHJvZHVjZWQsIG51bWJlciBvZiBwb3NzaWJsZSBjcHUgaXMKPiBkZWNpZGVk
-IGJ5IHRoZSBtaW4gdmFsdWUgb2YgbnJfY3B1cz0gYW5kIHBvc3NpYmxlX2NwdXM9Lgo+Cj4gbnJf
-Y3B1cyBhbmQgbWF4Y3B1cyBtaWdodCBub3QgYmUgdmVyeSBjbGVhciB0byBwZW9wbGUgd2hpY2gg
-YXJlCj4gZGVzY3JpYmVkIGluIERvY3VtZW50YXRpb24va2VybmVsLXBhcmFtZXRlcnMudHh0Lgo+
-Cj4gSGkgSm9uLCBkbyB5b3UgdGhpbmsgY2hhbmdlIGFzIGJlbG93IGlzIE9LIHRvIHlvdT8KPgo+
-Cj4gIEZyb20gOGI5NDAxOTNhMjlhY2YwODU3ZDQ5NzVkNzdmNGI5ZjQ4ZTJkNmNiOCBNb24gU2Vw
-IDE3IDAwOjAwOjAwIDIwMDEKPiBGcm9tOiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KPiBE
-YXRlOiBXZWQsIDI0IEF1ZyAyMDE2IDExOjE0OjM0ICswODAwCj4gU3ViamVjdDogW1BBVENIXSBk
-b2NzOiBrZXJuZWwtcGFyYW1ldGVyIDogSW1wcm92ZSB0aGUgZGVzY3JpcHRpb24gb2YgbnJfY3B1
-cwo+ICAgYW5kIG1heGNwdXMKPgo+ICBGcm9tIHRoZSBvbGQgZGVzY3JpcHRpb24gcGVvcGxlIHN0
-aWxsIGNhbid0IGdldCB3aGF0J3MgdGhlIGV4YWN0Cj4gZGlmZmVyZW5jZSBiZXR3ZWVuIG5yX2Nw
-dXMgYW5kIG1heGNwdXMuIEVzcGVjaWFsbHkgaW4ga2R1bXAga2VybmVsCj4gbnJfY3B1cyBpcyBh
-bHdheXMgc3VnZ2VzdGVkIGlmIGl0J3MgaW1wbGVtZW50ZWQgaW4gdGhlIEFSQ0guIFRoZQo+IHJl
-YXNvbiBpcyBucl9jcHVzIGlzIHVzZWQgdG8gbGltaXQgdGhlIG1heCBudW1iZXIgb2YgcG9zc2li
-bGUgY3B1Cj4gaW4gc3lzdGVtLCB0aGUgc3VtIG9mIGFscmVhZHkgcGx1Z2dlZCBjcHVzIGFuZCBo
-b3QgcGx1ZyBjcHVzIGNhbid0Cj4gZXhjZWVkIGl0cyB2YWx1ZS4gSG93ZXZlciBtYXhjcHVzIGlz
-IHVzZWQgdG8gbGltaXQgaG93IG1hbnkgY3B1cwo+IGFyZSBhbGxvd2VkIHRvIGJlIGJyb3VnaHQg
-dXAgZHVyaW5nIGJvb3R1cC4KPgo+IFNpZ25lZC1vZmYtYnk6IEJhb3F1YW4gSGUgPGJoZUByZWRo
-YXQuY29tPgo+IC0tLQo+ICAgRG9jdW1lbnRhdGlvbi9rZXJuZWwtcGFyYW1ldGVycy50eHQgfCAy
-MCArKysrKysrKysrKysrLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMo
-KyksIDcgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9rZXJuZWwt
-cGFyYW1ldGVycy50eHQgYi9Eb2N1bWVudGF0aW9uL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dAo+IGlu
-ZGV4IDQ2YzAzMGEuLjI1ZDNiMzYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9rZXJuZWwt
-cGFyYW1ldGVycy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2tlcm5lbC1wYXJhbWV0ZXJzLnR4
-dAo+IEBAIC0yMTYxLDEwICsyMTYxLDEzIEBAIGJ5dGVzIHJlc3BlY3RpdmVseS4gU3VjaCBsZXR0
-ZXIgc3VmZml4ZXMgY2FuIGFsc28gYmUgZW50aXJlbHkgb21pdHRlZC4KPiAgIAkJCXRoYW4gb3Ig
-ZXF1YWwgdG8gdGhpcyBwaHlzaWNhbCBhZGRyZXNzIGlzIGlnbm9yZWQuCj4KPiAgIAltYXhjcHVz
-PQlbU01QXSBNYXhpbXVtIG51bWJlciBvZiBwcm9jZXNzb3JzIHRoYXQJYW4gU01QIGtlcm5lbAo+
-IC0JCQlzaG91bGQgbWFrZSB1c2Ugb2YuICBtYXhjcHVzPW4gOiBuID49IDAgbGltaXRzIHRoZQo+
-IC0JCQlrZXJuZWwgdG8gdXNpbmcgJ24nIHByb2Nlc3NvcnMuICBuPTAgaXMgYSBzcGVjaWFsIGNh
-c2UsCj4gLQkJCWl0IGlzIGVxdWl2YWxlbnQgdG8gIm5vc21wIiwgd2hpY2ggYWxzbyBkaXNhYmxl
-cwo+IC0JCQl0aGUgSU8gQVBJQy4KPiArCQkJd2lsbCBicmluZyB1cCBkdXJpbmcgYm9vdHVwLiAg
-bWF4Y3B1cz1uIDogbiA+PSAwIGxpbWl0cwo+ICsJCQl0aGUga2VybmVsIHRvIGJyaW5nIHVwICdu
-JyBwcm9jZXNzb3JzLiBTdXJlbHkgYWZ0ZXIKPiArCQkJYm9vdHVwIHlvdSBjYW4gYnJpbmcgdXAg
-dGhlIG90aGVyIHBsdWdnZWQgY3B1IGJ5IGV4ZWN1dGluZwo+ICsJCQkiZWNobyAxID4gL3N5cy9k
-ZXZpY2VzL3N5c3RlbS9jcHUvY3B1WC9vbmxpbmUiLiBTbyBtYXhjcHVzCj4gKwkJCW9ubHkgdGFr
-ZXMgZWZmZWN0IGR1cmluZyBzeXN0ZW0gYm9vdHVwLgo+ICsJCQlXaGlsZSBuPTAgaXMgYSBzcGVj
-aWFsIGNhc2UsIGl0IGlzIGVxdWl2YWxlbnQgdG8gIm5vc21wIiwKPiArCQkJd2hpY2ggYWxzbyBk
-aXNhYmxlcyB0aGUgSU8gQVBJQy4KPgo+ICAgCW1heF9sb29wPQlbTE9PUF0gVGhlIG51bWJlciBv
-ZiBsb29wIGJsb2NrIGRldmljZXMgdGhhdCBnZXQKPiAgIAkobG9vcC5tYXhfbG9vcCkJdW5jb25k
-aXRpb25hbGx5IHByZS1jcmVhdGVkIGF0IGluaXQgdGltZS4gVGhlIGRlZmF1bHQKPiBAQCAtMjc3
-Myw5ICsyNzc2LDEyIEBAIGJ5dGVzIHJlc3BlY3RpdmVseS4gU3VjaCBsZXR0ZXIgc3VmZml4ZXMg
-Y2FuIGFsc28gYmUgZW50aXJlbHkgb21pdHRlZC4KPgo+ICAgCW5yX2NwdXM9CVtTTVBdIE1heGlt
-dW0gbnVtYmVyIG9mIHByb2Nlc3NvcnMgdGhhdAlhbiBTTVAga2VybmVsCj4gICAJCQljb3VsZCBz
-dXBwb3J0LiAgbnJfY3B1cz1uIDogbiA+PSAxIGxpbWl0cyB0aGUga2VybmVsIHRvCj4gLQkJCXN1
-cHBvcnRpbmcgJ24nIHByb2Nlc3NvcnMuIExhdGVyIGluIHJ1bnRpbWUgeW91IGNhbiBub3QKPiAt
-CQkJdXNlIGhvdHBsdWcgY3B1IGZlYXR1cmUgdG8gcHV0IG1vcmUgY3B1IGJhY2sgdG8gb25saW5l
-Lgo+IC0JCQlqdXN0IGxpa2UgeW91IGNvbXBpbGUgdGhlIGtlcm5lbCBOUl9DUFVTPW4KPiArCQkJ
-c3VwcG9ydCAnbicgcHJvY2Vzc29ycy4gSXQgY291bGQgYmUgbGFyZ2VyIHRoYW4gdGhlCj4gKwkJ
-CW51bWJlciBvZiBhbHJlYWR5IHBsdWdnZWQgQ1BVIGR1cmluZyBib290dXAsIGxhdGVyIGluCj4g
-KwkJCXJ1bnRpbWUgeW91IGNhbiBwaHlzaWNhbGx5IGFkZCBleHRyYSBjcHUgdW50aWwgaXQgcmVh
-Y2hlcwo+ICsJCQluLiBTbyBkdXJpbmcgYm9vdCB1cCBzb21lIGJvb3QgdGltZSBtZW1vcnkgZm9y
-IHBlci1jcHUKPiArCQkJdmFyaWFibGVzIG5lZWQgYmUgcHJlLWFsbG9jYXRlZCBmb3IgbGF0ZXIg
-cGh5c2ljYWwgY3B1Cj4gKwkJCWhvdCBwbHVnZ2luZy4KPgo+ICAgCW5yX3VhcnRzPQlbU0VSSUFM
-XSBtYXhpbXVtIG51bWJlciBvZiBVQVJUcyB0byBiZSByZWdpc3RlcmVkLgo+Cj4KCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 08/25/16 at 11:15am, YoungHyun Yoo wrote:
+> Fix resourceleek in ifdown function when error occur.
+
+resource leak?
+
+> 
+> Signed-off-by: YoungHyun Yoo <yooyoo.yoo@samsung.com>
+> ---
+>  kexec/ifdown.c | 26 +++++++++++++++-----------
+>  1 file changed, 15 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kexec/ifdown.c b/kexec/ifdown.c
+> index 46b7bef..9679ad7 100644
+> --- a/kexec/ifdown.c
+> +++ b/kexec/ifdown.c
+> @@ -1,6 +1,6 @@
+>  /*
+> - * ifdown.c	Find all network interfaces on the system and
+> - *		shut them down.
+> + * ifdown.c Find all network interfaces on the system and
+> + *      shut them down.
+>   *
+>   */
+>  char *v_ifdown = "@(#)ifdown.c  1.11  02-Jun-1998  miquels@cistron.nl";
+> @@ -20,10 +20,10 @@ char *v_ifdown = "@(#)ifdown.c  1.11  02-Jun-1998  miquels@cistron.nl";
+>  #include <netinet/in.h>
+>  
+>  /*
+> - *	First, we find all shaper devices and down them. Then we
+> - *	down all real interfaces. This is because the comment in the
+> - *	shaper driver says "if you down the shaper device before the
+> - *	attached inerface your computer will follow".
+> + *  First, we find all shaper devices and down them. Then we
+> + *  down all real interfaces. This is because the comment in the
+> + *  shaper driver says "if you down the shaper device before the
+> + *  attached inerface your computer will follow".
+>   */
+>  int ifdown(void)
+>  {
+> @@ -34,13 +34,13 @@ int ifdown(void)
+>  	if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+>  		fprintf(stderr, "ifdown: ");
+>  		perror("socket");
+> -		return -1;
+> +		goto error;
+>  	}
+>  
+>  	if ((ifa = if_nameindex()) == NULL) {
+>  		fprintf(stderr, "ifdown: ");
+>  		perror("if_nameindex");
+> -		return -1;
+> +		goto error;
+>  	}
+>  
+>  	for (shaper = 1; shaper >= 0; shaper--) {
+> @@ -57,18 +57,22 @@ int ifdown(void)
+>  			if (ioctl(fd, SIOCGIFFLAGS, &ifr) < 0) {
+>  				fprintf(stderr, "ifdown: shutdown ");
+>  				perror(ifp->if_name);
+> -				return -1;
+> +				goto error;
+>  			}
+>  			ifr.ifr_flags &= ~(IFF_UP);
+>  			if (ioctl(fd, SIOCSIFFLAGS, &ifr) < 0) {
+>  				fprintf(stderr, "ifdown: shutdown ");
+>  				perror(ifp->if_name);
+> -				return -1;
+> +				goto error;
+>  			}
+>  
+>  		}
+>  	}
+> -	close(fd);
+>  
+> +	close(fd);
+>  	return 0;
+> +
+> +error:
+> +	close(fd);
+> +	return -1;
+>  }
+> -- 
+> 2.9.0.GIT
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
