@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bd7jV-0004bn-1Y
- for kexec@lists.infradead.org; Fri, 26 Aug 2016 03:23:23 +0000
-Date: Fri, 26 Aug 2016 11:22:35 +0800
+ id 1bd9Jb-00065I-Lc
+ for kexec@lists.infradead.org; Fri, 26 Aug 2016 05:04:28 +0000
+Date: Fri, 26 Aug 2016 13:03:58 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 2/2] powerpc/fadump: parse fadump reserve memory size
- based on memory range
-Message-ID: <20160826032235.GA6377@dhcp-128-65.nay.redhat.com>
-References: <147082324660.4631.6557186560310369015.stgit@hbathini.in.ibm.com>
- <147082352471.4631.16292252236310652183.stgit@hbathini.in.ibm.com>
- <20160825070152.GA15879@dhcp-128-65.nay.redhat.com>
- <05642bf1-6e46-bab0-f871-9391996ff264@linux.vnet.ibm.com>
+Subject: Re: Capturing crash with 4.6.0 and above kernel does not work
+Message-ID: <20160826050358.GB6377@dhcp-128-65.nay.redhat.com>
+References: <0140312F-1DD9-4CC7-9484-32F8570B5089@qlogic.com>
+ <20160825081049.GA4235@dhcp22.suse.cz>
+ <36EFE3CC-4D12-4604-96F8-F11F1CEA89A0@qlogic.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <05642bf1-6e46-bab0-f871-9391996ff264@linux.vnet.ibm.com>
+In-Reply-To: <36EFE3CC-4D12-4604-96F8-F11F1CEA89A0@qlogic.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,174 +21,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, ebiederm@xmission.com, vgoyal@redhat.com
+To: Himanshu Madhani <himanshu.madhani@qlogic.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@kernel.org>
 
-On 08/25/16 at 11:00pm, Hari Bathini wrote:
-> 
-> 
-> On Thursday 25 August 2016 12:31 PM, Dave Young wrote:
-> > On 08/10/16 at 03:35pm, Hari Bathini wrote:
-> > > When fadump is enabled, by default 5% of system RAM is reserved for
-> > > fadump kernel. While that works for most cases, it is not good enough
-> > > for every case.
-> > > 
-> > > Currently, to override the default value, fadump supports specifying
-> > > memory to reserve with fadump_reserve_mem=size, where only a fixed size
-> > > can be specified. This patch adds support to specify memory size to
-> > > reserve for different memory ranges as below:
-> > > 
-> > > 	fadump_reserve_mem=<range1>:<size1>[,<range2>:<size2>,...]
-> > Hi, Hari
-> 
-> Hi Dave,
-> 
-> > I do not understand why you need introduce the new cmdline param, what's
-> > the difference between the "fadump reserved" memory and the memory
-> 
-> I am not introducing a new parameter but adding a new syntax for
-> an existing parameter.
-
-Apologize for that, I was not aware it because it is not documented in
-kernel-parameters.txt
-
-> 
-> > reserved by "crashkernel="? Can fadump just use crashkernel= to reserve
-> > memory?
-> 
-> Not all syntaxes supported by crashkernel apply for fadump_reserve_mem.
-> Nonetheless, it is worth considering reuse of crashkernel parameter instead
-> of fadump_reserve_mem. Let me see what I can do about this..
-
-Thanks! I originally thought fadump will reserve memory in firmware
-code, if it is in kernel then it will be better to just extend and reuse
-crashkernel=.
-
-Dave
-> 
-> Thanks
-> Hari
-> 
-> > Thanks
-> > Dave
-> > 
-> > > Supporting range based input for "fadump_reserve_mem" parameter helps
-> > > using the same commandline parameter for different system memory sizes.
-> > > 
-> > > Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> > > Reviewed-by: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-> > > ---
-> > > 
-> > > Changes from v2:
-> > > 1. Updated changelog
-> > > 
-> > > 
-> > >   arch/powerpc/kernel/fadump.c |   63 ++++++++++++++++++++++++++++++++++++------
-> > >   1 file changed, 54 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> > > index b3a6633..7c01b5b 100644
-> > > --- a/arch/powerpc/kernel/fadump.c
-> > > +++ b/arch/powerpc/kernel/fadump.c
-> > > @@ -193,6 +193,55 @@ static unsigned long init_fadump_mem_struct(struct fadump_mem_struct *fdm,
-> > >   	return addr;
-> > >   }
-> > > +/*
-> > > + * This function parses command line for fadump_reserve_mem=
-> > > + *
-> > > + * Supports the below two syntaxes:
-> > > + *    1. fadump_reserve_mem=size
-> > > + *    2. fadump_reserve_mem=ramsize-range:size[,...]
-> > > + *
-> > > + * Sets fw_dump.reserve_bootvar with the memory size
-> > > + * provided, 0 otherwise
-> > > + *
-> > > + * The function returns -EINVAL on failure, 0 otherwise.
-> > > + */
-> > > +static int __init parse_fadump_reserve_mem(void)
-> > > +{
-> > > +	char *name = "fadump_reserve_mem=";
-> > > +	char *fadump_cmdline = NULL, *cur;
-> > > +
-> > > +	fw_dump.reserve_bootvar = 0;
-> > > +
-> > > +	/* find fadump_reserve_mem and use the last one if there are many */
-> > > +	cur = strstr(boot_command_line, name);
-> > > +	while (cur) {
-> > > +		fadump_cmdline = cur;
-> > > +		cur = strstr(cur+1, name);
-> > > +	}
-> > > +
-> > > +	/* when no fadump_reserve_mem= cmdline option is provided */
-> > > +	if (!fadump_cmdline)
-> > > +		return 0;
-> > > +
-> > > +	fadump_cmdline += strlen(name);
-> > > +
-> > > +	/* for fadump_reserve_mem=size cmdline syntax */
-> > > +	if (!is_colon_in_param(fadump_cmdline)) {
-> > > +		fw_dump.reserve_bootvar = memparse(fadump_cmdline, NULL);
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	/* for fadump_reserve_mem=ramsize-range:size[,...] cmdline syntax */
-> > > +	cur = fadump_cmdline;
-> > > +	fw_dump.reserve_bootvar = parse_mem_range_size("fadump_reserve_mem",
-> > > +					&cur, memblock_phys_mem_size());
-> > > +	if (cur == fadump_cmdline) {
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >   /**
-> > >    * fadump_calculate_reserve_size(): reserve variable boot area 5% of System RAM
-> > >    *
-> > > @@ -212,12 +261,17 @@ static inline unsigned long fadump_calculate_reserve_size(void)
-> > >   {
-> > >   	unsigned long size;
-> > > +	/* sets fw_dump.reserve_bootvar */
-> > > +	parse_fadump_reserve_mem();
-> > > +
-> > >   	/*
-> > >   	 * Check if the size is specified through fadump_reserve_mem= cmdline
-> > >   	 * option. If yes, then use that.
-> > >   	 */
-> > >   	if (fw_dump.reserve_bootvar)
-> > >   		return fw_dump.reserve_bootvar;
-> > > +	else
-> > > +		printk(KERN_INFO "fadump: calculating default boot size\n");
-> > >   	/* divide by 20 to get 5% of value */
-> > >   	size = memblock_end_of_DRAM() / 20;
-> > > @@ -348,15 +402,6 @@ static int __init early_fadump_param(char *p)
-> > >   }
-> > >   early_param("fadump", early_fadump_param);
-> > > -/* Look for fadump_reserve_mem= cmdline option */
-> > > -static int __init early_fadump_reserve_mem(char *p)
-> > > -{
-> > > -	if (p)
-> > > -		fw_dump.reserve_bootvar = memparse(p, &p);
-> > > -	return 0;
-> > > -}
-> > > -early_param("fadump_reserve_mem", early_fadump_reserve_mem);
-> > > -
-> > >   static void register_fw_dump(struct fadump_mem_struct *fdm)
-> > >   {
-> > >   	int rc;
-> > > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDgvMjUvMTYgYXQgMDU6NDVwbSwgSGltYW5zaHUgTWFkaGFuaSB3cm90ZToKPiAKPiAKPiBP
+biA4LzI1LzE2LCAxOjEwIEFNLCAiTWljaGFsIEhvY2tvIiA8bWhvY2tvQGtlcm5lbC5vcmc+IHdy
+b3RlOgo+IAo+ID5bTGV0J3MgYWRkIGtkdW1wIHBlb3BsZV0KPiA+Cj4gPk9uIFdlZCAyNC0wOC0x
+NiAxNjozODo1NiwgSGltYW5zaHUgTWFkaGFuaSB3cm90ZToKPiA+PiBIZWxsbyBsaXN0LAo+ID4+
+IAo+ID4+IEkgYW0gd29uZGVyaW5nIGlmIGFueWJvZHkgaGFzIGlzc3VlIGNhcHR1cmluZyBjcmFz
+aCBkdW1wIHdpdGggdGhlIDQuNi4wIGFuZCBhYm92ZSBrZW5yZWwuCj4gPj4gCj4gPj4gSSBoYXZl
+IGEgc3lzdGVtLCB3aGVuIGJvb3RlZCBpbiA0LjUuNyBrZXJuZWwgaXMgYWJsZSB0byBjYXB0dXJl
+IGNyYXNoIGR1bXAuCj4gPj4gSG93ZXZlciwgd2hlbiBJIGJvb3QgdGhpcyBzeXN0ZW0gaW4gNC42
+LjQgYW5kIDQuNy4yIGtlcm5lbCwgY3Jhc2ggZHVtcCBpcyBub3QgCj4gPj4gYWJsZSB0byBjYXB0
+dXJlIGFueSBjcmFzaC4gCj4gPj4gCj4gPj4gSSBhbSBzdGlsbCBmYWNpbmcgc2FtZSBpc3N1ZSB3
+aXRoIDQuOC4wLXJjMisga2VybmVsIGFuZCBmcm9tIHRoZSBlcnJvciBhdCB0aGUgY29tbWFuZCBw
+cm9tcHQsIAo+ID4+IGl0IHNlZW1zIGxpa2Uga2V4ZWMgaXMgaWdub3Jpbmcg4oCcY3Jhc2hrZW5y
+ZWzigJ0gcGFyYW1ldGVyLiAKPiA+PiAKPiA+PiBJIGFkZGVkIGJlbG93IGluZm9ybWF0aW9uIGlu
+IGh0dHBzOi8vYnVnemlsbGEua2VybmVsLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MTE5MjkxLiAKPiA+
+PiAKPiA+PiAjIHVuYW1lIC1yCj4gPj4gNC44LjAtcmMyKwo+ID4+IAo+ID4+ICMgY2F0IC9wcm9j
+L2NtZGxpbmUgCj4gPj4gcm8gcm9vdD0vZGV2L21hcHBlci92Z19kdXQ0MTEwLWx2X3Jvb3QgcmRf
+Tk9fTFVLUyAgS0VZQk9BUkRUWVBFPXBjIEtFWVRBQkxFPXVzIExBTkc9ZW5fVVMuVVRGLTggcmRf
+Tk9fTUQgU1lTRk9OVD1sYXRhcmN5cmhlYi1zdW4xNiBjcmFzaGtlcm5lbD01MTJNIHJkX0xWTV9M
+Vj12Z19kdXQ0MTEwL2x2X3N3YXAgcmRfTFZNX0xWPXZnX2R1dDQxMTAvbHZfcm9vdCByZF9OT19E
+TSByaGdiIHF1aWV0Cj4gPj4gCj4gPj4gIyBzZXJ2aWNlIGtkdW1wIHN0YXR1cwo+ID4+IEtkdW1w
+IGlzIG5vdCBvcGVyYXRpb25hbAo+ID4+IAo+ID4+ICMgc2VydmljZSBrZHVtcCBzdGFydAo+ID4+
+IE1lbW9yeSBmb3IgY3Jhc2hrZXJuZWwgaXMgbm90IHJlc2VydmVkCj4gPj4gUGxlYXNlIHJlc2Vy
+dmUgbWVtb3J5IGJ5IHBhc3NpbmcgImNyYXNoa2VybmVsPVhAWSIgcGFyYW1ldGVyIHRvIHRoZSBr
+ZXJuZWwKPiA+PiBTdGFydGluZyBrZHVtcDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIFtGQUlMRURdCj4gPgo+ID5JdCBzbWVsbHMgbGlrZSB0aGUgY3Jhc2gga2Vy
+bmVsIHJlc2VydmF0aW9uIGhhcyBmYWlsZWQuIENvdWxkIHlvdQo+ID5wcm92aWRlIHRoZSBmdWxs
+IGtlcm5lbCBsb2c/Cj4gCj4gQXR0YWNoZWQgaXMga2VybmVsIGxvZyBmcm9tIGZyZXNoIGtlcm5l
+bCBjb21waWxlIG9mIDQuNi41IChsaW51eC1zdGFibGUpIHRyZWUKCldoZXJlIGlzIHRoZSBrZXJu
+ZWwgbG9nPwoKU2VlbXMgdGhlIGtlcm5lbCBsb2cgaW4gYnVnemlsbGEgaXMgZm9yIGNyYXNoa2Vy
+bmVsPTEyOE0KClRoYW5rcwpEYXZlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
