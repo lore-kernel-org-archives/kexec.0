@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from gibson.whatever-company.com ([87.98.251.113])
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bdGXZ-0006Un-8s
+ id 1bdGXZ-0006Um-90
  for kexec@lists.infradead.org; Fri, 26 Aug 2016 12:47:22 +0000
 From: Sylvain Munaut <s.munaut@whatever-company.com>
-Subject: [PATCH 1/3] kexec elf: Sanity check on the note header before
- accessing it
-Date: Fri, 26 Aug 2016 12:46:14 +0000
-Message-Id: <1472215576-7466-1-git-send-email-s.munaut@whatever-company.com>
+Subject: [PATCH 2/3] multiboot: Fix length computation for the memory zones
+Date: Fri, 26 Aug 2016 12:46:15 +0000
+Message-Id: <1472215576-7466-2-git-send-email-s.munaut@whatever-company.com>
+In-Reply-To: <1472215576-7466-1-git-send-email-s.munaut@whatever-company.com>
+References: <1472215576-7466-1-git-send-email-s.munaut@whatever-company.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,34 +25,24 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Sylvain Munaut <s.munaut@whatever-company.com>
 
-The name[hdr.n_namesz -1] check below can segfault if the header
-is garbage. So we check the computed header side fits within
-the expected area before going further.
-
 Signed-off-by: Sylvain Munaut <s.munaut@whatever-company.com>
 ---
- kexec/kexec-elf.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ kexec/arch/i386/kexec-multiboot-x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kexec/kexec-elf.c b/kexec/kexec-elf.c
-index 3515203..1d6320a 100644
---- a/kexec/kexec-elf.c
-+++ b/kexec/kexec-elf.c
-@@ -720,6 +720,14 @@ static int build_mem_notes(struct mem_ehdr *ehdr)
- 		desc       = note + note_size;
- 		note_size += _ALIGN(hdr.n_descsz, 4);
- 
-+		if (((note+note_size) > note_end) ||
-+		    ((note+note_size) < note_start)) {
-+			/* Something is very wrong here ! Most likely the note
-+			 * header is invalid */
-+			fprintf(stderr, "ELF Note corrupted !\n");
-+			return -1;
-+		}
-+
- 		if ((hdr.n_namesz != 0) && (name[hdr.n_namesz -1] != '\0')) {
- 			/* If note name string is not null terminated, just
- 			 * warn user about it and continue processing. This
+diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
+index 0dbac70..4de237c 100644
+--- a/kexec/arch/i386/kexec-multiboot-x86.c
++++ b/kexec/arch/i386/kexec-multiboot-x86.c
+@@ -252,7 +252,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	mmap = xmalloc(ranges * sizeof(*mmap));
+ 	for (i=0; i<ranges; i++) {
+ 		unsigned long long length;
+-		length = range[i].end - range[i].start;
++		length = range[i].end - range[i].start + 1;
+ 		/* Translate bzImage mmap to multiboot-speak */
+ 		mmap[i].size = sizeof(mmap[i]) - 4;
+ 		mmap[i].base_addr_low  = range[i].start & 0xffffffff;
 -- 
 2.1.4
 
