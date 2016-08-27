@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bdRHc-0002hF-VJ
- for kexec@lists.infradead.org; Sat, 27 Aug 2016 00:15:37 +0000
-Date: Sat, 27 Aug 2016 08:15:11 +0800
+ id 1bdRbP-0001V5-F8
+ for kexec@lists.infradead.org; Sat, 27 Aug 2016 00:36:04 +0000
+Date: Sat, 27 Aug 2016 08:35:38 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: Capturing crash with 4.6.0 and above kernel does not work
-Message-ID: <20160827001511.GC31627@x1.redhat.com>
-References: <0140312F-1DD9-4CC7-9484-32F8570B5089@qlogic.com>
- <20160825081049.GA4235@dhcp22.suse.cz>
- <36EFE3CC-4D12-4604-96F8-F11F1CEA89A0@qlogic.com>
- <20160826053910.GB31627@x1.redhat.com>
- <CE392DFA-3C2A-4A2F-B9F4-A7DB23F2714A@qlogic.com>
+Subject: Re: [PATCH v9 1/2] Documentation: kdump: remind user of nr_cpus
+Message-ID: <20160827003538.GD31627@x1.redhat.com>
+References: <1471489907-27737-1-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <1471489907-27737-2-git-send-email-zhouwj-fnst@cn.fujitsu.com>
+ <20160818111854.362bb972@lwn.net> <57B653D1.8060106@cn.fujitsu.com>
+ <20160819095740.1cccc073@lwn.net> <57BA51E0.1070902@cn.fujitsu.com>
+ <20160824050645.GA8279@x1.redhat.com>
+ <20160825131056.58bb1379@lwn.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CE392DFA-3C2A-4A2F-B9F4-A7DB23F2714A@qlogic.com>
+In-Reply-To: <20160825131056.58bb1379@lwn.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,106 +24,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Himanshu Madhani <himanshu.madhani@qlogic.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, xlpang@redhat.com, =?utf-8?B?WmhvdSwgV2Vuamlhbi/lkajmlofliZE=?= <zhouwj-fnst@cn.fujitsu.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, joe@perches.com, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-T24gMDgvMjYvMTYgYXQgMDQ6NDdwbSwgSGltYW5zaHUgTWFkaGFuaSB3cm90ZToKPiAKPiAKPiBP
-biA4LzI1LzE2LCAxMDozOSBQTSwgIkJhb3F1YW4gSGUiIDxiaGVAcmVkaGF0LmNvbT4gd3JvdGU6
-Cj4gCj4gPk9uIDA4LzI1LzE2IGF0IDA1OjQ1cG0sIEhpbWFuc2h1IE1hZGhhbmkgd3JvdGU6Cj4g
-Pj4gCj4gPgo+ID5jcmFzaGtlcm5lbCBoYXMgYmVlbiByZXNlcnZlZCBzdWNjZXNzZnVsbHkuCj4g
-PkF1ZyAyNSAxMDozNjo0NCBkdXQ0MDYyIGtlcm5lbDogUmVzZXJ2aW5nIDUxMk1CIG9mIG1lbW9y
-eSBhdCAzNjhNQiBmb3IgY3Jhc2hrZXJuZWwgKFN5c3RlbSBSQU06IDEzMDg0N01CKQo+ID4KPiA+
-U28gd2hhdCdzIHRoZSByZXN1bHQgb2YgZXhlY3V0aW5nICJncmVwIENyYXNoIC9wb3JjL2lvbWVt
-IiBvbiB5b3VyIAo+ID5zeXN0ZW0/Cj4gCj4gcm9vdEBkdXQ0MDYyOn4jIGdyZXAgQ3Jhc2ggL3By
-b2MvaW9tZW0KPiAgIDE3MDAwMDAwLTM2ZmZmZmZmIDogQ3Jhc2gga2VybmVsCj4gCj4gV2hpY2gg
-ZG9lcyBpbmRpY2F0ZSB0aGF0IDUxMk1CIGlzIHNldCBhc2lkZSBmb3IgY3Jhc2ggZHVtcAoKUGxl
-YXNlIGdldCBhIGtleGVjLXRvb2xzIGNvZGUgYW5kIGRlYnVnIGl0LiBUaGUgbWVzc2FnZSBpcyBw
-cmludGVkIGluCm1haW4oKSBvZiBrZXhlYy4KCmdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20v
-dXRpbHMva2VybmVsL2tleGVjL2tleGVjLXRvb2xzLmdpdAoKSXQgc2hvdWxkIGJlIGVhc3kgdG8g
-YWRkIGRlYnVnIHByaW50aW5nIG9yIGdkYi4gTm93IHRoZSBsYXRlc3QgaXMKMi4wLjEzLiBXaGF0
-J3MgeW91ciB2ZXJzaW9uPwoKPiAKPiAKPiA+Cj4gPj4gCj4gPj4gT24gOC8yNS8xNiwgMToxMCBB
-TSwgIk1pY2hhbCBIb2NrbyIgPG1ob2Nrb0BrZXJuZWwub3JnPiB3cm90ZToKPiA+PiAKPiA+PiA+
-W0xldCdzIGFkZCBrZHVtcCBwZW9wbGVdCj4gPj4gPgo+ID4+ID5PbiBXZWQgMjQtMDgtMTYgMTY6
-Mzg6NTYsIEhpbWFuc2h1IE1hZGhhbmkgd3JvdGU6Cj4gPj4gPj4gSGVsbG8gbGlzdCwKPiA+PiA+
-PiAKPiA+PiA+PiBJIGFtIHdvbmRlcmluZyBpZiBhbnlib2R5IGhhcyBpc3N1ZSBjYXB0dXJpbmcg
-Y3Jhc2ggZHVtcCB3aXRoIHRoZSA0LjYuMCBhbmQgYWJvdmUga2VucmVsLgo+ID4+ID4+IAo+ID4+
-ID4+IEkgaGF2ZSBhIHN5c3RlbSwgd2hlbiBib290ZWQgaW4gNC41Ljcga2VybmVsIGlzIGFibGUg
-dG8gY2FwdHVyZSBjcmFzaCBkdW1wLgo+ID4+ID4+IEhvd2V2ZXIsIHdoZW4gSSBib290IHRoaXMg
-c3lzdGVtIGluIDQuNi40IGFuZCA0LjcuMiBrZXJuZWwsIGNyYXNoIGR1bXAgaXMgbm90IAo+ID4+
-ID4+IGFibGUgdG8gY2FwdHVyZSBhbnkgY3Jhc2guIAo+ID4+ID4+IAo+ID4+ID4+IEkgYW0gc3Rp
-bGwgZmFjaW5nIHNhbWUgaXNzdWUgd2l0aCA0LjguMC1yYzIrIGtlcm5lbCBhbmQgZnJvbSB0aGUg
-ZXJyb3IgYXQgdGhlIGNvbW1hbmQgcHJvbXB0LCAKPiA+PiA+PiBpdCBzZWVtcyBsaWtlIGtleGVj
-IGlzIGlnbm9yaW5nIOKAnGNyYXNoa2VucmVs4oCdIHBhcmFtZXRlci4gCj4gPj4gPj4gCj4gPj4g
-Pj4gSSBhZGRlZCBiZWxvdyBpbmZvcm1hdGlvbiBpbiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5v
-cmcvc2hvd19idWcuY2dpP2lkPTExOTI5MS4gCj4gPj4gPj4gCj4gPj4gPj4gIyB1bmFtZSAtcgo+
-ID4+ID4+IDQuOC4wLXJjMisKPiA+PiA+PiAKPiA+PiA+PiAjIGNhdCAvcHJvYy9jbWRsaW5lIAo+
-ID4+ID4+IHJvIHJvb3Q9L2Rldi9tYXBwZXIvdmdfZHV0NDExMC1sdl9yb290IHJkX05PX0xVS1Mg
-IEtFWUJPQVJEVFlQRT1wYyBLRVlUQUJMRT11cyBMQU5HPWVuX1VTLlVURi04IHJkX05PX01EIFNZ
-U0ZPTlQ9bGF0YXJjeXJoZWItc3VuMTYgY3Jhc2hrZXJuZWw9NTEyTSByZF9MVk1fTFY9dmdfZHV0
-NDExMC9sdl9zd2FwIHJkX0xWTV9MVj12Z19kdXQ0MTEwL2x2X3Jvb3QgcmRfTk9fRE0gcmhnYiBx
-dWlldAo+ID4+ID4+IAo+ID4+ID4+ICMgc2VydmljZSBrZHVtcCBzdGF0dXMKPiA+PiA+PiBLZHVt
-cCBpcyBub3Qgb3BlcmF0aW9uYWwKPiA+PiA+PiAKPiA+PiA+PiAjIHNlcnZpY2Uga2R1bXAgc3Rh
-cnQKPiA+PiA+PiBNZW1vcnkgZm9yIGNyYXNoa2VybmVsIGlzIG5vdCByZXNlcnZlZAo+ID4+ID4+
-IFBsZWFzZSByZXNlcnZlIG1lbW9yeSBieSBwYXNzaW5nICJjcmFzaGtlcm5lbD1YQFkiIHBhcmFt
-ZXRlciB0byB0aGUga2VybmVsCj4gPj4gPj4gU3RhcnRpbmcga2R1bXA6ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbRkFJTEVEXQo+ID4+ID4KPiA+PiA+SXQgc21l
-bGxzIGxpa2UgdGhlIGNyYXNoIGtlcm5lbCByZXNlcnZhdGlvbiBoYXMgZmFpbGVkLiBDb3VsZCB5
-b3UKPiA+PiA+cHJvdmlkZSB0aGUgZnVsbCBrZXJuZWwgbG9nPwo+ID4+IAo+ID4+IEF0dGFjaGVk
-IGlzIGtlcm5lbCBsb2cgZnJvbSBmcmVzaCBrZXJuZWwgY29tcGlsZSBvZiA0LjYuNSAobGludXgt
-c3RhYmxlKSB0cmVlCj4gPj4gCj4gPj4gcm9vdEBkdXQ0MDYyOn4jIGNhdCAvcHJvYy9jbWRsaW5l
-IAo+ID4+IHJvIHJvb3Q9L2Rldi9tYXBwZXIvVm9sR3JvdXAtbHZfcm9vdCByZF9OT19MVUtTIExB
-Tkc9ZW5fVVMuVVRGLTggcmRfTk9fTUQgcmRfTFZNX0xWPVZvbEdyb3VwL2x2X3N3YXAgU1lTRk9O
-VD1sYXRhcmN5cmhlYi1zdW4xNiBjcmFzaGtlcm5lbD01MTJNIHJkX0xWTV9MVj1Wb2xHcm91cC9s
-dl9yb290ICBLRVlCT0FSRFRZUEU9cGMgS0VZVEFCTEU9dXMgcmRfTk9fRE0gcmhnYiBjb25zb2xl
-PXR0eVMwIGNvbnNvbGU9dHR5UzAsMTE1MjAwbjgKPiA+PiAKPiA+PiByb290QGR1dDQwNjI6fiMg
-c2VydmljZSBrZHVtcCBzdGF0dXMKPiA+PiAKPiA+PiBLZHVtcCBpcyBub3Qgb3BlcmF0aW9uYWwK
-PiA+PiAKPiA+PiByb290QGR1dDQwNjI6fiMgc2VydmljZSBrZHVtcCBzdGFydAo+ID4+IE1lbW9y
-eSBmb3IgY3Jhc2hrZXJuZWwgaXMgbm90IHJlc2VydmVkCj4gPj4gUGxlYXNlIHJlc2VydmUgbWVt
-b3J5IGJ5IHBhc3NpbmcgImNyYXNoa2VybmVsPVhAWSIgcGFyYW1ldGVyIHRvIHRoZSBrZXJuZWwK
-PiA+PiBTdGFydGluZyBrZHVtcDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFtGQUlMRURdCj4gPj4gcm9vdEBkdXQ0MDYyOn4jIAo+ID4+IAo+ID4+IE1lc3NhZ2Vz
-IGluIGxvZyBmaWwKPiA+PiAKPiA+PiBBdWcgMjUgMTA6NDI6MTYgZHV0NDA2MiBrZHVtcDoga2V4
-ZWM6IGZhaWxlZCB0byBsb2FkIGtkdW1wIGtlcm5lbAo+ID4+IEF1ZyAyNSAxMDo0MjoxNiBkdXQ0
-MDYyIGtkdW1wOiBmYWlsZWQgdG8gc3RhcnQgdXAKPiA+PiAKPiA+PiAKPiA+PiByb290QGR1dDQw
-NjI6fiMga2V4ZWMgLS12ZXIKPiA+PiBrZXhlYy10b29scyAyLjAuMCByZWxlYXNlZCAxOXRoIEp1
-bHkgMjAwOAo+ID4+IHJvb3RAZHV0NDA2Mjp+IyAKPiA+PiAKPiA+PiByb290QGR1dDQwNjI6fiMg
-Y3Jhc2ggLS12ZXJzaW9uCj4gPj4gCj4gPj4gY3Jhc2ggNy4xLjUrKwo+ID4+IENvcHlyaWdodCAo
-QykgMjAwMi0yMDE2ICBSZWQgSGF0LCBJbmMuCj4gPj4gQ29weXJpZ2h0IChDKSAyMDA0LCAyMDA1
-LCAyMDA2LCAyMDEwICBJQk0gQ29ycG9yYXRpb24KPiA+PiBDb3B5cmlnaHQgKEMpIDE5OTktMjAw
-NiAgSGV3bGV0dC1QYWNrYXJkIENvCj4gPj4gQ29weXJpZ2h0IChDKSAyMDA1LCAyMDA2LCAyMDEx
-LCAyMDEyICBGdWppdHN1IExpbWl0ZWQKPiA+PiBDb3B5cmlnaHQgKEMpIDIwMDYsIDIwMDcgIFZB
-IExpbnV4IFN5c3RlbXMgSmFwYW4gSy5LLgo+ID4+IENvcHlyaWdodCAoQykgMjAwNSwgMjAxMSAg
-TkVDIENvcnBvcmF0aW9uCj4gPj4gQ29weXJpZ2h0IChDKSAxOTk5LCAyMDAyLCAyMDA3ICBTaWxp
-Y29uIEdyYXBoaWNzLCBJbmMuCj4gPj4gQ29weXJpZ2h0IChDKSAxOTk5LCAyMDAwLCAyMDAxLCAy
-MDAyICBNaXNzaW9uIENyaXRpY2FsIExpbnV4LCBJbmMuCj4gPj4gVGhpcyBwcm9ncmFtIGlzIGZy
-ZWUgc29mdHdhcmUsIGNvdmVyZWQgYnkgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlLAo+
-ID4+IGFuZCB5b3UgYXJlIHdlbGNvbWUgdG8gY2hhbmdlIGl0IGFuZC9vciBkaXN0cmlidXRlIGNv
-cGllcyBvZiBpdCB1bmRlcgo+ID4+IGNlcnRhaW4gY29uZGl0aW9ucy4gIEVudGVyICJoZWxwIGNv
-cHlpbmciIHRvIHNlZSB0aGUgY29uZGl0aW9ucy4KPiA+PiBUaGlzIHByb2dyYW0gaGFzIGFic29s
-dXRlbHkgbm8gd2FycmFudHkuICBFbnRlciAiaGVscCB3YXJyYW50eSIgZm9yIGRldGFpbHMuCj4g
-Pj4gIAo+ID4+IEdOVSBnZGIgKEdEQikgNy42Cj4gPj4gQ29weXJpZ2h0IChDKSAyMDEzIEZyZWUg
-U29mdHdhcmUgRm91bmRhdGlvbiwgSW5jLgo+ID4+IExpY2Vuc2UgR1BMdjMrOiBHTlUgR1BMIHZl
-cnNpb24gMyBvciBsYXRlciA8aHR0cDovL2dudS5vcmcvbGljZW5zZXMvZ3BsLmh0bWw+Cj4gPj4g
-VGhpcyBpcyBmcmVlIHNvZnR3YXJlOiB5b3UgYXJlIGZyZWUgdG8gY2hhbmdlIGFuZCByZWRpc3Ry
-aWJ1dGUgaXQuCj4gPj4gVGhlcmUgaXMgTk8gV0FSUkFOVFksIHRvIHRoZSBleHRlbnQgcGVybWl0
-dGVkIGJ5IGxhdy4gIFR5cGUgInNob3cgY29weWluZyIKPiA+PiBhbmQgInNob3cgd2FycmFudHki
-IGZvciBkZXRhaWxzLgo+ID4+IFRoaXMgR0RCIHdhcyBjb25maWd1cmVkIGFzICJ4ODZfNjQtdW5r
-bm93bi1saW51eC1nbnUiLgo+ID4+IAo+ID4+IExldCBtZSBrbm93IGlmIGFueSBvdGhlciBkZXRh
-aWxzIGFyZSBuZWVkZWQuIEkgaGF2ZSBtdWx0aXBsZSBzZXJ2ZXJzIHdoaWNoIGV4aGliaXQgc2Ft
-ZSBpc3N1ZXMuCj4gPj4gCj4gPj4gCj4gPj4gCj4gPj4gCj4gPj4gCj4gPj4gCj4gPj4gPgo+ID4+
-ID4+IG1lc3NhZ2UgZmlsZSBjb25maXJtcyB0aGF0IGtleGVjIHdhcyBub3QgYWJsZSB0byBzdGFy
-dCB0aGUgc2VydmljZSAKPiA+PiA+PiAKPiA+PiA+PiBBdWcgMTUgMTA6NDE6MTcgZHV0NDExMCBr
-ZHVtcDoga2V4ZWM6IGZhaWxlZCB0byBsb2FkIGtkdW1wIGtlcm5lbAo+ID4+ID4+IEF1ZyAxNSAx
-MDo0MToxNyBkdXQ0MTEwIGtkdW1wOiBmYWlsZWQgdG8gc3RhcnQgdXAKPiA+PiA+PiAKPiA+PiA+
-PiBOb3RlLCB0aGF0IHNhbWUgb3B0aW9uIGlzIGFibGUgdG8gbG9hZCBrZHVtcCBzZXJ2aWNlIGZv
-ciA0LjUuNyBrZXJuZWwuICAKPiA+PiA+PiAKPiA+PiA+PiBJIGNhbiBwcm92aWRlIGFueSBkZXRh
-aWxzIG5lZWRlZCB0byBoZWxwIHJlc29sdmUgdGhpcyBpc3N1ZS4gCj4gPj4gPj4gCj4gPj4gPj4g
-VGhhbmtzLAo+ID4+ID4+IC0gSGltYW5zaHUKPiA+PiA+PiAKPiA+PiA+Cj4gPj4gPi0tIAo+ID4+
-ID5NaWNoYWwgSG9ja28KPiA+PiA+U1VTRSBMYWJzCj4gPgo+ID4KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMK
+On 08/25/16 at 01:10pm, Jonathan Corbet wrote:
+> On Wed, 24 Aug 2016 13:06:45 +0800
+> Baoquan He <bhe@redhat.com> wrote:
+> 
+> > Hi Jon, do you think change as below is OK to you?
+> 
+> So nr_cpus is the maximum value, and maxcpus is the current number.
+> Figures.  No wonder the documentation is confusing...
+
+Yes. Thanks for reviewing this patchset.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
