@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1beHqU-0006Ns-6N
- for kexec@lists.infradead.org; Mon, 29 Aug 2016 08:23:07 +0000
-Received: by mail-pf0-x22c.google.com with SMTP id h186so49673427pfg.3
- for <kexec@lists.infradead.org>; Mon, 29 Aug 2016 01:22:45 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH 2/2] fixup! arm64: Add support for binary image files
-Date: Mon, 29 Aug 2016 17:28:41 +0900
-Message-Id: <20160829082841.3750-3-takahiro.akashi@linaro.org>
-In-Reply-To: <20160829082841.3750-1-takahiro.akashi@linaro.org>
-References: <20160829082841.3750-1-takahiro.akashi@linaro.org>
+ id 1beILA-0004Ke-RK
+ for kexec@lists.infradead.org; Mon, 29 Aug 2016 08:54:49 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/3] makedumpfile: Add support of mm randomization
+Date: Mon, 29 Aug 2016 16:54:19 +0800
+Message-Id: <1472460862-29842-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,80 +20,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, geoff@infradead.org
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, thgarnie@google.com, Baoquan He <bhe@redhat.com>
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- kexec/arch/arm64/kexec-image-arm64.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+Hi Atsushi and Thomas,
 
-diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-index b77b63e..77cff59 100644
---- a/kexec/arch/arm64/kexec-image-arm64.c
-+++ b/kexec/arch/arm64/kexec-image-arm64.c
-@@ -3,7 +3,9 @@
-  */
- 
- #define _GNU_SOURCE
-+
- #include "kexec-arm64.h"
-+#include <limits.h>
- 
- int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
- {
-@@ -29,27 +31,44 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
- {
- 	const struct arm64_image_header *h;
- 	unsigned long image_base;
-+	int result;
- 
- 	h = (const struct arm64_image_header *)(kernel_buf);
- 
- 	if (arm64_process_image_header(h))
- 		return -1;
- 
-+        image_base = arm64_locate_kernel_segment(info);
-+        if (image_base == ULONG_MAX) {
-+                dbgprintf("%s: Kernel segment is not allocated\n", __func__);
-+                result = -EFAILED;
-+                goto exit;
-+        }
-+
-+	dbgprintf("%s: image_base:    %016lx\n", __func__, image_base);
- 	dbgprintf("%s: text_offset:   %016lx\n", __func__,
- 		arm64_mem.text_offset);
- 	dbgprintf("%s: image_size:    %016lx\n", __func__,
- 		arm64_mem.image_size);
- 	dbgprintf("%s: phys_offset:   %016lx\n", __func__,
- 		arm64_mem.phys_offset);
-+	dbgprintf("%s: vp_offset:     %016lx\n", __func__,
-+		arm64_mem.vp_offset);
- 	dbgprintf("%s: PE format:     %s\n", __func__,
- 		(arm64_header_check_pe_sig(h) ? "yes" : "no"));
- 
--	image_base = get_phys_offset() + arm64_mem.text_offset;
--	
--	add_segment_phys_virt(info, kernel_buf, kernel_size, image_base,
--		arm64_mem.image_size, 0);
-+	/* load the kernel */
-+	add_segment_phys_virt(info, kernel_buf, kernel_size,
-+			image_base + arm64_mem.text_offset,
-+			arm64_mem.image_size, 0);
-+
-+	result = arm64_load_other_segments(info,
-+			image_base + arm64_mem.text_offset);
- 
--	return arm64_load_other_segments(info, image_base);
-+exit:
-+        if (result)
-+                fprintf(stderr, "kexec: load failed.\n");
-+        return result;
- }
- 
- void image_arm64_usage(void)
+This is a draft patchset. I just checked x86_64 implementation according to
+Thomas's mm randomization related patches. Not sure if this will affect
+other ARCH or XEN. Especially for patch 1/3 and patch 2/3, just a original
+idea. I tested on x86_64, passed.
+
+And also kernel patch need be adjusted so that number_table.X of makedumpfile
+can be used. Will add comment to Thomas's kernel patch.
+
+Baoquan He (3):
+  makedumpfile: Get info->kernel_version from SYMBOL(init_uts_ns)
+    earlier
+  makedumpfile: Move get_versiondep_info calling earlier
+  makedumpfile: Add support for MM randomization
+
+ arch/x86_64.c  | 26 +++++++++-----------------
+ makedumpfile.c | 45 ++++++++++++++++++++++++++++++++++++---------
+ makedumpfile.h |  3 +++
+ 3 files changed, 48 insertions(+), 26 deletions(-)
+
 -- 
-2.9.0
+2.5.5
 
 
 _______________________________________________
