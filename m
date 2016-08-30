@@ -2,39 +2,36 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1ben5U-0004Xm-7v
- for kexec@lists.infradead.org; Tue, 30 Aug 2016 17:44:41 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7UHhfJ7078812
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:19 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25536b1t5n-1
+ id 1ben5U-0004XP-7w
+ for kexec@lists.infradead.org; Tue, 30 Aug 2016 17:44:42 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
+ u7UHhgNJ118804
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:18 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 255369t0bu-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:19 -0400
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:17 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Tue, 30 Aug 2016 14:44:17 -0300
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.13.184.25])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 80068352005F
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:43:52 -0400 (EDT)
+ Tue, 30 Aug 2016 14:44:15 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 854CC1DC006E
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:03 -0400 (EDT)
 Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7UHiE8R9502982
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:44:14 -0300
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7UHiDQE28836328
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:44:13 -0300
 Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
  by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7UHiDKX010417
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:44:14 -0300
+ u7UHiCQV010367
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:44:13 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v7 01/13] kexec_file: Allow arch-specific memory walking for
- kexec_add_buffer
-Date: Tue, 30 Aug 2016 14:43:49 -0300
-In-Reply-To: <1472579041-26033-1-git-send-email-bauerman@linux.vnet.ibm.com>
-References: <1472579041-26033-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1472579041-26033-2-git-send-email-bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v7 00/13] kexec_file_load implementation for PowerPC
+Date: Tue, 30 Aug 2016 14:43:48 -0300
+Message-Id: <1472579041-26033-1-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -51,134 +48,286 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Samuel Mendoza-Jonas <sam@mendozajonas.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Allow architectures to specify a different memory walking function for
-kexec_add_buffer. x86 uses iomem to track reserved memory ranges, but
-PowerPC uses the memblock subsystem.
+The purpose of this new version of the series is to allow building with
+CONFIG_KEXEC=n and CONFIG_KEXEC_FILE=y. This is done by patch 4, which
+is new in v7. The other patches have very little changes, just to fix
+checkpatch warnings, as noted in the changelog.
 
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Acked-by: Dave Young <dyoung@redhat.com>
-Acked-by: Balbir Singh <bsingharora@gmail.com>
----
- include/linux/kexec.h   | 29 ++++++++++++++++++++++++++++-
- kernel/kexec_file.c     | 30 ++++++++++++++++++++++--------
- kernel/kexec_internal.h | 16 ----------------
- 3 files changed, 50 insertions(+), 25 deletions(-)
+Note that at this moment the powerpc tree doesn't build with
+CONFIG_KEXEC=n even without this series applied. I posted a separate
+patch fixing that issue:
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d7437777baaa..2d6a1ab3b630 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -148,7 +148,34 @@ struct kexec_file_ops {
- 	kexec_verify_sig_t *verify_sig;
- #endif
- };
--#endif
-+
-+/**
-+ * struct kexec_buf - parameters for finding a place for a buffer in memory
-+ * @image:	kexec image in which memory to search.
-+ * @buffer:	Contents which will be copied to the allocated memory.
-+ * @bufsz:	Size of @buffer.
-+ * @mem:	On return will have address of the buffer in memory.
-+ * @memsz:	Size for the buffer in memory.
-+ * @buf_align:	Minimum alignment needed.
-+ * @buf_min:	The buffer can't be placed below this address.
-+ * @buf_max:	The buffer can't be placed above this address.
-+ * @top_down:	Allocate from top of memory.
-+ */
-+struct kexec_buf {
-+	struct kimage *image;
-+	char *buffer;
-+	unsigned long bufsz;
-+	unsigned long mem;
-+	unsigned long memsz;
-+	unsigned long buf_align;
-+	unsigned long buf_min;
-+	unsigned long buf_max;
-+	bool top_down;
-+};
-+
-+int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-+			       int (*func)(u64, u64, void *));
-+#endif /* CONFIG_KEXEC_FILE */
- 
- struct kimage {
- 	kimage_entry_t head;
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 503bc2d348e5..4a9581acbba4 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -428,6 +428,27 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
- 	return locate_mem_hole_bottom_up(start, end, kbuf);
- }
- 
-+/**
-+ * arch_kexec_walk_mem - call func(data) on free memory regions
-+ * @kbuf:	Context info for the search. Also passed to @func.
-+ * @func:	Function to call for each memory region.
-+ *
-+ * Return: The memory walk will stop when func returns a non-zero value
-+ * and that value will be returned. If all free regions are visited without
-+ * func returning non-zero, then zero will be returned.
-+ */
-+int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-+			       int (*func)(u64, u64, void *))
-+{
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-+		return walk_iomem_res_desc(crashk_res.desc,
-+					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
-+					   crashk_res.start, crashk_res.end,
-+					   kbuf, func);
-+	else
-+		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-+}
-+
- /*
-  * Helper function for placing a buffer in a kexec segment. This assumes
-  * that kexec_mutex is held.
-@@ -474,14 +495,7 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
- 	kbuf->top_down = top_down;
- 
- 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
--	if (image->type == KEXEC_TYPE_CRASH)
--		ret = walk_iomem_res_desc(crashk_res.desc,
--				IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
--				crashk_res.start, crashk_res.end, kbuf,
--				locate_mem_hole_callback);
--	else
--		ret = walk_system_ram_res(0, -1, kbuf,
--					  locate_mem_hole_callback);
-+	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
- 	if (ret != 1) {
- 		/* A suitable memory range could not be found for buffer */
- 		return -EADDRNOTAVAIL;
-diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-index 0a52315d9c62..4cef7e4706b0 100644
---- a/kernel/kexec_internal.h
-+++ b/kernel/kexec_internal.h
-@@ -20,22 +20,6 @@ struct kexec_sha_region {
- 	unsigned long len;
- };
- 
--/*
-- * Keeps track of buffer parameters as provided by caller for requesting
-- * memory placement of buffer.
-- */
--struct kexec_buf {
--	struct kimage *image;
--	char *buffer;
--	unsigned long bufsz;
--	unsigned long mem;
--	unsigned long memsz;
--	unsigned long buf_align;
--	unsigned long buf_min;
--	unsigned long buf_max;
--	bool top_down;		/* allocate from top of memory hole */
--};
--
- void kimage_file_post_load_cleanup(struct kimage *image);
- #else /* CONFIG_KEXEC_FILE */
- static inline void kimage_file_post_load_cleanup(struct kimage *image) { }
+https://lists.ozlabs.org/pipermail/linuxppc-dev/2016-August/147909.html
+
+This series doesn't depend on that patch, and they don't conflict in
+any way.
+
+Original cover letter:
+
+This patch series implements the kexec_file_load system call on PowerPC.
+
+This system call moves the reading of the kernel, initrd and the device tree
+from the userspace kexec tool to the kernel. This is needed if you want to
+do one or both of the following:
+
+1. only allow loading of signed kernels.
+2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
+   command line and other boot inputs for the Integrity Measurement
+   Architecture subsystem.
+
+The above are the functions kexec already has built into kexec_file_load.
+Yesterday I posted a set of patches which allows a third feature:
+
+3. have IMA pass-on its event log (where integrity measurements are
+   registered) accross kexec to the second kernel, so that the event
+   history is preserved.
+
+Because OpenPower uses an intermediary Linux instance as a boot loader
+(skiroot), feature 1 is needed to implement secure boot for the platform,
+while features 2 and 3 are needed to implement trusted boot.
+
+This patch series starts by removing an x86 assumption from kexec_file:
+kexec_add_buffer uses iomem to find reserved memory ranges, but PowerPC
+uses the memblock subsystem.  A hook is added so that each arch can
+specify how memory ranges can be found.
+
+Also, the memory-walking logic in kexec_add_buffer is useful in this
+implementation to find a free area for the purgatory's stack, so the
+next patch moves that logic to kexec_locate_mem_hole.
+
+The kexec_file_load system call needs to apply relocations to the
+purgatory but adding code for that would duplicate functionality with
+the module loading mechanism, which also needs to apply relocations to
+the kernel modules.  Therefore, this patch series factors out the module
+relocation code so that it can be shared.
+
+One thing that is still missing is crashkernel support, which I intend
+to submit shortly. For now, arch_kexec_kernel_image_probe rejects crash
+kernels.
+
+This code is based on kexec-tools, but with many modifications to adapt
+it to the kernel environment and facilities. Except the purgatory,
+which only has minimal changes.
+
+Changes for v7:
+- Rebased on top of v4.8-rc4.
+- Patch "powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE
+  instead."
+  - New patch. Fixes build when CONFIG_KEXEC=n and CONFIG_KEXEC_FILE=y.
+- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
+  - Fixed checkpatch warning "else is not generally useful after a break
+    or return".
+  - Fixed checkpatch warnings about line length. (Andrew Morton)
+- Patch "powerpc: Add code to work with device trees in kexec_file_load."
+  - Remove space before tabs in doc comment for setup_new_fdt. (Andrew Morton)
+  - Fixed checkpatch warnings about line length.
+- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
+  - Removed duplicate #include <linux/kexec.h>.
+
+Changes for v6:
+- Based directly on top of v4.8-rc1.
+- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
+  - Allow undefined symbols if they are relocations for the TOC in the
+    big endian ABI.
+  - Fixed build error in this patch by adding the ehdr member to elf_info
+    here instead of in the next patch.
+  - Initialize elf_info.ehdr in module_64.c:module_frob_arch_sections.
+- Patch "powerpc: Add code to work with device trees in kexec_file_load."
+  - Changed find_debug_console to look for /chosen instead of receiving
+    its offset as an argument.
+  - setup_new_fdt: no need to find /chosen again after deleting the memory
+    reservation for initrd.
+- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
+  - Don't pass the offset to /chosen to find_debug_console.
+- Patch "powerpc: Allow userspace to set device tree properties in kexec_file_load"
+  - Dropped patch.
+- Patch "powerpc: Add purgatory for kexec_file_load implementation."
+  - Make boot/string.S use the DOTSYM macro so that it can be
+    used by the ppc64 big endian purgatory.
+  - Use -mcall-aixdesc to compile the purgatory on big endian ppc64.
+
+Changes for v5:
+- Rebased series on v4.8-rc1 + the extend kexec_file_load series.
+- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
+  - New patch. These changes were previously in patch 10.
+    The code itself is unchanged from v4.
+- Patch "powerpc: Implement kexec_file_load."
+  - Moved arch_kexec_walk_mem, arch_kexec_apply_relocations_add and
+    setup_purgatory from patch 10 to this patch.
+  - arch_kexec_apply_relocations_add is unchanged from v4.
+  - Fixed off-by-one error in arch_kexec_walk_mem when passing range
+    to func.
+  - Moved setup_purgatory from kexec_elf_64.c to machine_kexec_64.c,
+    and changed it to receive a pointer to the slave code directly
+    rather than a struct elf_info and getting the pointer from there.
+- Patch "powerpc: Add code to work with device trees in kexec_file_load."
+  - New patch. These changes were previously in patch 10.
+  - find_debug_console moved from kexec_elf_64.c to machine_kexec_64.c.
+    The code is unchanged from v4.
+  - setup_new_fdt is a new function factored out of elf64_load. The only
+    code change from v4 is to create /chosen if it doesn't exist yet.
+- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
+  - This patch was too big, so moved some of its changes to other patches
+    to facilitate review.
+  - Allow loading ELF file type ET_DYN, which is what the BE kernel uses.
+  - The code adapting the device tree for booting the new kernel was moved
+    out of elf64_load to setup_new_fdt.
+- Patch "powerpc: Allow userspace to set device tree properties in kexec_file_load"
+  - New patch.
+  - The code in this patch didn't exist in v4.
+  - This is the only patch that depends on the extend kexec_file_load series.
+- Patch "powerpc: Enable CONFIG_KEXEC_FILE in powerpc server defconfigs."
+  - New patch.
+
+Changes for v4:
+- Rebased series on today's powerpc/next.
+- Patch "kexec_file: Remove unused members from struct kexec_buf.":
+    - Dropped from the series.
+- Patch "kexec_file: Allow arch-specific memory walking function for
+  kexec_add_buffer":
+    - Changed subject line to be more specific. Was: "kexec_file: Generalize
+      kexec_add_buffer.".
+    - Changed description to refer to x86 arch instead of Intel arch.
+    - Moved documentation comments for struct kexec_buf to this patch.
+- Patch "kexec_file: Change kexec_add_buffer to take kexec_buf as argument.":
+    - New patch.
+- Patch "kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.":
+    - Changed kexec_locate_mem_hole to take kexec_buf as argument.
+    - Improved description of kexec_locate_mem_hole in documentation comment.
+
+Changes for v3:
+- Rebased series on today's powerpc/next.
+- Patch "kexec_file: Generalize kexec_add_buffer.":
+    - Removed most arguments from arch_kexec_walk_mem and pass kbuf
+      explicitly.
+- Patch "powerpc: Add functions to read ELF files of any endianness.":
+    - Fixed whitespace issues found by checkpatch.pl.
+- Patch "powerpc: Factor out relocation code from module_64.c to
+  elf_util_64.c.":
+    - Changed to use the new PPC64_ELF_ABI_v2 macro.
+- Patch "powerpc: Add support for loading ELF kernels with
+  kexec_file_load.":
+    - Adapted arch_kexec_walk_mem implementation to changes in its
+      argument list.
+    - Fixed whitespace and GPL header issues found by checkpatch.pl.
+- Patch "powerpc: Add purgatory for kexec_file_load implementation.":
+    - Fixed whitespace and GPL header issues found by checkpatch.pl.
+    - Changed to use the new PPC64_ELF_ABI_v2 macro.
+
+Changes for v2:
+- All patches: forgot to add Signed-off-by lines in v1, so added them now.
+- Patch "kexec_file: Generalize kexec_add_buffer.": broke in two, one
+  adding arch_kexec_walk_mem and the other adding kexec_locate_mem_hole.
+- Patch "powerpc: Implement kexec_file_load.":
+    - Moved relocation changes and the arch_kexec_walk_mem implementation
+      to the next patch in the series.
+    - Removed pr_fmt from machine_kexec_64.c, since the patch doesn't add
+      any call to pr_debug in that file.
+    - Changed arch_kexec_kernel_image_probe to reject crash kernels.
+
+
+Thiago Jung Bauermann (13):
+  kexec_file: Allow arch-specific memory walking for kexec_add_buffer
+  kexec_file: Change kexec_add_buffer to take kexec_buf as argument.
+  kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.
+  powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE
+    instead.
+  powerpc: Factor out relocation code from module_64.c to elf_util_64.c.
+  powerpc: Generalize elf64_apply_relocate_add.
+  powerpc: Adapt elf64_apply_relocate_add for kexec_file_load.
+  powerpc: Add functions to read ELF files of any endianness.
+  powerpc: Implement kexec_file_load.
+  powerpc: Add code to work with device trees in kexec_file_load.
+  powerpc: Add support for loading ELF kernels with kexec_file_load.
+  powerpc: Add purgatory for kexec_file_load implementation.
+  powerpc: Enable CONFIG_KEXEC_FILE in powerpc server defconfigs.
+
+ arch/powerpc/Kconfig                          |  15 +-
+ arch/powerpc/Makefile                         |   4 +
+ arch/powerpc/boot/string.S                    |  67 ++--
+ arch/powerpc/configs/powernv_defconfig        |   2 +
+ arch/powerpc/configs/ppc64_defconfig          |   2 +
+ arch/powerpc/configs/pseries_defconfig        |   2 +
+ arch/powerpc/include/asm/debug.h              |   2 +-
+ arch/powerpc/include/asm/elf_util.h           |  92 +++++
+ arch/powerpc/include/asm/kexec.h              |  16 +-
+ arch/powerpc/include/asm/kexec_elf_64.h       |  10 +
+ arch/powerpc/include/asm/machdep.h            |   4 +-
+ arch/powerpc/include/asm/module.h             |  14 +-
+ arch/powerpc/include/asm/smp.h                |   2 +-
+ arch/powerpc/include/asm/systbl.h             |   1 +
+ arch/powerpc/include/asm/unistd.h             |   2 +-
+ arch/powerpc/include/uapi/asm/unistd.h        |   1 +
+ arch/powerpc/kernel/Makefile                  |  11 +-
+ arch/powerpc/kernel/elf_util.c                | 476 ++++++++++++++++++++++++++
+ arch/powerpc/kernel/elf_util_64.c             | 376 ++++++++++++++++++++
+ arch/powerpc/kernel/head_64.S                 |   2 +-
+ arch/powerpc/kernel/kexec_elf_64.c            | 282 +++++++++++++++
+ arch/powerpc/kernel/machine_kexec_64.c        | 476 ++++++++++++++++++++++++++
+ arch/powerpc/kernel/misc_32.S                 |   2 +-
+ arch/powerpc/kernel/misc_64.S                 |   6 +-
+ arch/powerpc/kernel/module_64.c               | 329 +++---------------
+ arch/powerpc/kernel/prom.c                    |   2 +-
+ arch/powerpc/kernel/setup_64.c                |   4 +-
+ arch/powerpc/kernel/smp.c                     |   6 +-
+ arch/powerpc/kernel/traps.c                   |   2 +-
+ arch/powerpc/platforms/85xx/corenet_generic.c |   2 +-
+ arch/powerpc/platforms/85xx/smp.c             |   8 +-
+ arch/powerpc/platforms/cell/spu_base.c        |   2 +-
+ arch/powerpc/platforms/powernv/setup.c        |   6 +-
+ arch/powerpc/platforms/ps3/setup.c            |   4 +-
+ arch/powerpc/platforms/pseries/Makefile       |   2 +-
+ arch/powerpc/platforms/pseries/setup.c        |   4 +-
+ arch/powerpc/purgatory/.gitignore             |   2 +
+ arch/powerpc/purgatory/Makefile               |  46 +++
+ arch/powerpc/purgatory/console-ppc64.c        |  38 ++
+ arch/powerpc/purgatory/crashdump-ppc64.h      |  42 +++
+ arch/powerpc/purgatory/crashdump_backup.c     |  36 ++
+ arch/powerpc/purgatory/crtsavres.S            |   5 +
+ arch/powerpc/purgatory/hvCall.S               |  27 ++
+ arch/powerpc/purgatory/hvCall.h               |   8 +
+ arch/powerpc/purgatory/kexec-sha256.h         |  11 +
+ arch/powerpc/purgatory/ppc64_asm.h            |  20 ++
+ arch/powerpc/purgatory/printf.c               | 164 +++++++++
+ arch/powerpc/purgatory/purgatory-ppc64.c      |  41 +++
+ arch/powerpc/purgatory/purgatory-ppc64.h      |   6 +
+ arch/powerpc/purgatory/purgatory.c            |  62 ++++
+ arch/powerpc/purgatory/purgatory.h            |  11 +
+ arch/powerpc/purgatory/sha256.c               |   6 +
+ arch/powerpc/purgatory/sha256.h               |   1 +
+ arch/powerpc/purgatory/string.S               |   2 +
+ arch/powerpc/purgatory/v2wrap.S               | 134 ++++++++
+ arch/x86/kernel/crash.c                       |  37 +-
+ arch/x86/kernel/kexec-bzimage64.c             |  48 +--
+ include/linux/kexec.h                         |  36 +-
+ kernel/kexec_file.c                           | 141 ++++----
+ kernel/kexec_internal.h                       |  16 -
+ 60 files changed, 2706 insertions(+), 472 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/elf_util.h
+ create mode 100644 arch/powerpc/include/asm/kexec_elf_64.h
+ create mode 100644 arch/powerpc/kernel/elf_util.c
+ create mode 100644 arch/powerpc/kernel/elf_util_64.c
+ create mode 100644 arch/powerpc/kernel/kexec_elf_64.c
+ create mode 100644 arch/powerpc/purgatory/.gitignore
+ create mode 100644 arch/powerpc/purgatory/Makefile
+ create mode 100644 arch/powerpc/purgatory/console-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/crashdump_backup.c
+ create mode 100644 arch/powerpc/purgatory/crtsavres.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.S
+ create mode 100644 arch/powerpc/purgatory/hvCall.h
+ create mode 100644 arch/powerpc/purgatory/kexec-sha256.h
+ create mode 100644 arch/powerpc/purgatory/ppc64_asm.h
+ create mode 100644 arch/powerpc/purgatory/printf.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.c
+ create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.h
+ create mode 100644 arch/powerpc/purgatory/purgatory.c
+ create mode 100644 arch/powerpc/purgatory/purgatory.h
+ create mode 100644 arch/powerpc/purgatory/sha256.c
+ create mode 100644 arch/powerpc/purgatory/sha256.h
+ create mode 100644 arch/powerpc/purgatory/string.S
+ create mode 100644 arch/powerpc/purgatory/v2wrap.S
+
 -- 
 1.9.1
 
