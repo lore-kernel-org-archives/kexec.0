@@ -1,39 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1ben6S-0000Cw-G3
- for kexec@lists.infradead.org; Tue, 30 Aug 2016 17:45:41 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1ben6V-0005mm-Qk
+ for kexec@lists.infradead.org; Tue, 30 Aug 2016 17:45:46 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.11/8.16.0.11) with SMTP id
- u7UHhgKX044223
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:45:19 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 255364t2h3-1
+ u7UHhfdV015132
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:45:25 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 255364svjc-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:45:19 -0400
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:45:25 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Tue, 30 Aug 2016 14:45:16 -0300
-Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 3B2FB3520068
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:52 -0400 (EDT)
+ Tue, 30 Aug 2016 14:45:22 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id 384053520068
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 13:44:58 -0400 (EDT)
 Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u7UHjEKU4792350
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:45:14 -0300
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u7UHjJ3N23527682
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:45:19 -0300
 Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
  by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u7UHjD7o015564
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:45:13 -0300
+ u7UHjJ0K016013
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 14:45:19 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v4 1/5] kexec_file: Add buffer hand-over support for the next
- kernel
-Date: Tue, 30 Aug 2016 14:45:01 -0300
+Subject: [PATCH v4 5/5] IMA: Demonstration code for kexec buffer passing.
+Date: Tue, 30 Aug 2016 14:45:05 -0300
 In-Reply-To: <1472579105-26296-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1472579105-26296-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1472579105-26296-2-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1472579105-26296-6-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,139 +49,249 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-The buffer hand-over mechanism allows the currently running kernel to pass
-data to kernel that will be kexec'd via a kexec segment. The second kernel
-can check whether the previous kernel sent data and retrieve it.
+This shows how kernel code can use the kexec buffer passing mechanism
+to pass information to the next kernel.
 
-This is the architecture-independent part of the feature.
+This patch is not intended to be committed.
 
+[akpm@linux-foundation.org: coding-style fixes]
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- include/linux/kexec.h | 31 +++++++++++++++++++++++
- kernel/kexec_file.c   | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 99 insertions(+)
+ include/linux/ima.h                   | 11 +++++
+ kernel/kexec_file.c                   |  4 ++
+ security/integrity/ima/ima.h          |  5 +++
+ security/integrity/ima/ima_init.c     | 26 +++++++++++
+ security/integrity/ima/ima_template.c | 85 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 131 insertions(+)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d419d0e51fe5..16561e96a6d7 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -383,6 +383,37 @@ static inline void *boot_phys_to_virt(unsigned long entry)
- 	return phys_to_virt(boot_phys_to_phys(entry));
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 0eb7c2e7f0d6..96528d007139 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -11,6 +11,7 @@
+ #define _LINUX_IMA_H
+ 
+ #include <linux/fs.h>
++#include <linux/kexec.h>
+ struct linux_binprm;
+ 
+ #ifdef CONFIG_IMA
+@@ -23,6 +24,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 			      enum kernel_read_file_id id);
+ extern void ima_post_path_mknod(struct dentry *dentry);
+ 
++#ifdef CONFIG_KEXEC_FILE
++extern void ima_add_kexec_buffer(struct kimage *image);
++#endif
++
+ #else
+ static inline int ima_bprm_check(struct linux_binprm *bprm)
+ {
+@@ -60,6 +65,12 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+ 	return;
  }
  
 +#ifdef CONFIG_KEXEC_FILE
-+bool __weak kexec_can_hand_over_buffer(void);
-+int __weak arch_kexec_add_handover_buffer(struct kimage *image,
-+					  unsigned long load_addr,
-+					  unsigned long size);
-+int kexec_add_handover_buffer(struct kexec_buf *kbuf);
-+int __weak kexec_get_handover_buffer(void **addr, unsigned long *size);
-+int __weak kexec_free_handover_buffer(void);
-+#else
-+struct kexec_buf;
-+
-+static inline bool kexec_can_hand_over_buffer(void)
++static inline void ima_add_kexec_buffer(struct kimage *image)
 +{
-+	return false;
 +}
++#endif
 +
-+static inline int kexec_add_handover_buffer(struct kexec_buf *kbuf)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int kexec_get_handover_buffer(void **addr, unsigned long *size)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int kexec_free_handover_buffer(void)
-+{
-+	return -ENOTSUPP;
-+}
-+#endif /* CONFIG_KEXEC_FILE */
- #else /* !CONFIG_KEXEC_CORE */
- struct pt_regs;
- struct task_struct;
+ #endif /* CONFIG_IMA */
+ 
+ #ifdef CONFIG_IMA_APPRAISE
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 3401816700f3..f5684adfad07 100644
+index 0e90d1446cb0..75c1b8d67a72 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -113,6 +113,74 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- 	image->image_loader_data = NULL;
+@@ -19,6 +19,7 @@
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/fs.h>
++#include <linux/ima.h>
+ #include <crypto/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/syscalls.h>
+@@ -248,6 +249,9 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		}
+ 	}
+ 
++	/* IMA needs to pass the measurement list to the next kernel. */
++	ima_add_kexec_buffer(image);
++
+ 	/* Call arch image load handlers */
+ 	ldata = arch_kexec_kernel_image_load(image);
+ 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index db25f54a04fe..0334001055d7 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -102,6 +102,11 @@ struct ima_queue_entry {
+ };
+ extern struct list_head ima_measurements;	/* list of all measurements */
+ 
++#ifdef CONFIG_KEXEC_FILE
++extern void *kexec_buffer;
++extern size_t kexec_buffer_size;
++#endif
++
+ /* Internal IMA function definitions */
+ int ima_init(void);
+ int ima_fs_init(void);
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 32912bd54ead..a1924d0f3b2b 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -21,6 +21,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
++#include <linux/kexec.h>
+ 
+ #include "ima.h"
+ 
+@@ -104,6 +105,29 @@ void __init ima_load_x509(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_KEXEC_FILE
++static void ima_load_kexec_buffer(void)
++{
++	int rc;
++
++	/* Fetch the buffer from the previous kernel, if any. */
++	rc = kexec_get_handover_buffer(&kexec_buffer, &kexec_buffer_size);
++	if (rc == 0) {
++		/* Demonstrate that buffer handover works. */
++		pr_err("kexec buffer contents: %s\n", (char *) kexec_buffer);
++		pr_err("kexec buffer contents after update: %s\n",
++		       (char *) kexec_buffer + 4 * PAGE_SIZE + 10);
++
++		kexec_free_handover_buffer();
++	} else if (rc == -ENOENT)
++		pr_debug("No kexec buffer from the previous kernel.\n");
++	else
++		pr_debug("Error restoring kexec buffer: %d\n", rc);
++}
++#else
++static void ima_load_kexec_buffer(void) { }
++#endif
++
+ int __init ima_init(void)
+ {
+ 	u8 pcr_i[TPM_DIGEST_SIZE];
+@@ -134,5 +158,7 @@ int __init ima_init(void)
+ 
+ 	ima_init_policy();
+ 
++	ima_load_kexec_buffer();
++
+ 	return ima_fs_init();
+ }
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index febd12ed9b55..e9ac260534b6 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -15,6 +15,8 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/kexec.h>
++#include <linux/reboot.h>
+ #include "ima.h"
+ #include "ima_template_lib.h"
+ 
+@@ -182,6 +184,89 @@ static int template_desc_init_fields(const char *template_fmt,
+ 	return 0;
  }
  
-+/**
-+ * kexec_can_hand_over_buffer - can we pass data to the kexec'd kernel?
-+ */
-+bool __weak kexec_can_hand_over_buffer(void)
-+{
-+	return false;
-+}
++#ifdef CONFIG_KEXEC_FILE
++void *kexec_buffer;
++size_t kexec_buffer_size;
 +
-+/**
-+ * arch_kexec_add_handover_buffer - do arch-specific steps to handover buffer
-+ *
-+ * Architectures should use this function to pass on the handover buffer
-+ * information to the next kernel.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+int __weak arch_kexec_add_handover_buffer(struct kimage *image,
-+					  unsigned long load_addr,
-+					  unsigned long size)
-+{
-+	return -ENOTSUPP;
-+}
++/* Physical address of the measurement buffer in the next kernel. */
++unsigned long kexec_buffer_load_addr;
 +
-+/**
-+ * kexec_add_handover_buffer - add buffer to be used by the next kernel
-+ * @kbuf:	Buffer contents and memory parameters.
-+ *
-+ * This function assumes that kexec_mutex is held.
-+ * On successful return, @kbuf->mem will have the physical address of
-+ * the buffer in the next kernel.
-+ *
-+ * Return: 0 on success, negative errno on error.
++/*
++ * Called during reboot. IMA can add here new events that were generated after
++ * the kexec image was loaded.
 + */
-+int kexec_add_handover_buffer(struct kexec_buf *kbuf)
++static int ima_update_kexec_buffer(struct notifier_block *self,
++				   unsigned long action, void *data)
 +{
 +	int ret;
 +
-+	if (!kexec_can_hand_over_buffer())
-+		return -ENOTSUPP;
++	if (!kexec_in_progress)
++		return NOTIFY_OK;
 +
-+	ret = kexec_add_buffer(kbuf);
++	/*
++	 * Add content deep in the buffer to show that we can update
++	 * all of it.
++	 */
++	strcpy(kexec_buffer + 4 * PAGE_SIZE + 10,
++	       "Updated kexec buffer contents.");
++
++	ret = kexec_update_segment(kexec_buffer, kexec_buffer_size,
++				   kexec_buffer_load_addr, kexec_buffer_size);
 +	if (ret)
-+		return ret;
++		pr_err("Error updating kexec buffer: %d\n", ret);
 +
-+	return arch_kexec_add_handover_buffer(kbuf->image, kbuf->mem,
-+					      kbuf->memsz);
++	return NOTIFY_OK;
 +}
 +
-+/**
-+ * kexec_get_handover_buffer - get the handover buffer from the previous kernel
-+ * @addr:	On successful return, set to point to the buffer contents.
-+ * @size:	On successful return, set to the buffer size.
-+ *
-+ * Return: 0 on success, negative errno on error.
++struct notifier_block update_buffer_nb = {
++	.notifier_call = ima_update_kexec_buffer,
++};
++
++/*
++ * Called during kexec_file_load so that IMA can add a segment to the kexec
++ * image with the measurement event log for the next kernel.
 + */
-+int __weak kexec_get_handover_buffer(void **addr, unsigned long *size)
++void ima_add_kexec_buffer(struct kimage *image)
 +{
-+	return -ENOTSUPP;
-+}
++	/* Ask not to checksum the segment, we may have to update it later. */
++	struct kexec_buf kbuf = { .image = image, .buf_align = PAGE_SIZE,
++				  .buf_min = 0, .buf_max = ULONG_MAX,
++				  .top_down = true, .skip_checksum = true };
++	bool first_kexec_load = kexec_buffer_load_addr == 0;
++	int ret;
 +
-+/**
-+ * kexec_free_handover_buffer - free memory used by the handover buffer
-+ */
-+int __weak kexec_free_handover_buffer(void)
-+{
-+	return -ENOTSUPP;
-+}
++	if (!kexec_can_hand_over_buffer())
++		return;
 +
- /*
-  * In file mode list of segments is prepared by kernel. Copy relevant
-  * data from user space, do error checking, prepare segment list
++	if (!first_kexec_load)
++		kfree(kexec_buffer);
++
++	/* Create a relatively big buffer, for testing. */
++	kexec_buffer_size = kbuf.bufsz = kbuf.memsz = 5 * PAGE_SIZE;
++	kexec_buffer = kbuf.buffer = kzalloc(kexec_buffer_size, GFP_KERNEL);
++	if (!kexec_buffer) {
++		pr_err("Not enough memory for the kexec measurement buffer.\n");
++		return;
++	}
++
++	/* Add some content for demonstration purposes. */
++	strcpy(kexec_buffer, "Buffer contents at kexec load time.");
++
++	ret = kexec_add_handover_buffer(&kbuf);
++	if (ret) {
++		pr_err("Error passing over kexec measurement buffer.\n");
++		return;
++	}
++	kexec_buffer_load_addr = kbuf.mem;
++
++	if (first_kexec_load)
++		register_reboot_notifier(&update_buffer_nb);
++
++	pr_debug("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
++		 kexec_buffer_load_addr);
++}
++#endif /* CONFIG_KEXEC_FILE */
++
+ struct ima_template_desc *ima_template_desc_current(void)
+ {
+ 	if (!ima_template)
 -- 
 1.9.1
 
