@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
+Received: from mail-wm0-x232.google.com ([2a00:1450:400c:c09::232])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1becqQ-0007wW-HE
- for kexec@lists.infradead.org; Tue, 30 Aug 2016 06:48:30 +0000
-Received: by mail-pa0-x22d.google.com with SMTP id ci2so4479684pad.3
- for <kexec@lists.infradead.org>; Mon, 29 Aug 2016 23:48:06 -0700 (PDT)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v25] 9/9] Documentation: dt: chosen properties for arm64 kdump
-Date: Tue, 30 Aug 2016 15:54:31 +0900
-Message-Id: <20160830065431.19663-1-takahiro.akashi@linaro.org>
-In-Reply-To: <20160830064941.19452-2-takahiro.akashi@linaro.org>
-References: <20160830064941.19452-2-takahiro.akashi@linaro.org>
+ id 1bej6W-0003es-Nr
+ for kexec@lists.infradead.org; Tue, 30 Aug 2016 13:29:33 +0000
+Received: by mail-wm0-x232.google.com with SMTP id i5so36063601wmg.0
+ for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 06:29:07 -0700 (PDT)
+Received: from [192.168.1.2] (191.181.12.109.rev.sfr.net. [109.12.181.191])
+ by smtp.gmail.com with ESMTPSA id 207sm18687590wmb.7.2016.08.30.06.29.04
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Tue, 30 Aug 2016 06:29:04 -0700 (PDT)
+From: Louis Bouchard <louis.bouchard@canonical.com>
+Subject: "kernel version not supported" message is causing concerns
+Message-ID: <57C58A20.7000704@canonical.com>
+Date: Tue, 30 Aug 2016 15:29:04 +0200
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,93 +23,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: James Morse <james.morse@arm.com>
+Hello,
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,usable-memory-range, and
-	linux,elfcorehdr
-used by arm64 kexec/kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
+Every so often, I get questions or bug report about the fact that makedumpfile
+issues the following message when running :
 
-Signed-off-by: James Morse <james.morse@arm.com>
-[takahiro.akashi@linaro.org:
-    renamed "usable-memory" to "usable-memory-range",
-    added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+   The kernel version is not supported.
+   The created dumpfile may be incomplete.
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..236188a 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+These properties (currently used on PowerPC and arm64) indicates
-+the base address and the size, respectively, of the reserved memory
-+range for crash dump kernel.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the base address and the size, which can be used as system ram on
-+the *current* kernel. Note that, if this property is present, any memory
-+regions under "memory" nodes in DT blob or ones marked as "conventional
-+memory" in EFI memory map should be ignored.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout in elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
+While I understand the requirement for this message, it almost systematically is
+understood by users as "makedumpfile is broken".
+
+I would like to discuss the opportunity of changing the wording of this message
+so it appears less confusing. Maybe something like :
+
+Warning: makedumpfile has not been tested on this version of the kernel.
+         If the created dumpfile is incomplete, you may need to upgrade to a
+         newer version of makedumpfile.
+
+I would be happy to propose a pull request for such a change if accepted.
+
+Kind regards,
+
+...Louis
+
+
 -- 
-2.9.0
-
+Louis Bouchard
+Software engineer, Cloud & Sustaining eng.
+Canonical Ltd
+Ubuntu developer                       Debian Maintainer
+GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
 
 _______________________________________________
 kexec mailing list
