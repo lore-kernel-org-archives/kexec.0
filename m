@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x232.google.com ([2a00:1450:400c:c09::232])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bej6W-0003es-Nr
- for kexec@lists.infradead.org; Tue, 30 Aug 2016 13:29:33 +0000
-Received: by mail-wm0-x232.google.com with SMTP id i5so36063601wmg.0
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 06:29:07 -0700 (PDT)
-Received: from [192.168.1.2] (191.181.12.109.rev.sfr.net. [109.12.181.191])
- by smtp.gmail.com with ESMTPSA id 207sm18687590wmb.7.2016.08.30.06.29.04
- for <kexec@lists.infradead.org>
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Tue, 30 Aug 2016 06:29:04 -0700 (PDT)
-From: Louis Bouchard <louis.bouchard@canonical.com>
-Subject: "kernel version not supported" message is causing concerns
-Message-ID: <57C58A20.7000704@canonical.com>
-Date: Tue, 30 Aug 2016 15:29:04 +0200
 MIME-Version: 1.0
+In-Reply-To: <20160822042832.GJ20080@linaro.org>
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015747.28591-1-takahiro.akashi@linaro.org>
+ <20160819132641.GA12709@rob-hp-laptop>
+ <20160822042832.GJ20080@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 30 Aug 2016 11:34:10 -0500
+Message-ID: <CAL_JsqJ5SqesEL5QWX_NJj+gL2jpne4NN_WzADiH+1VB7CkvOA@mail.gmail.com>
+Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
+ kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +22,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, James Morse <james.morse@arm.com>, Geoff Levand <geoff@infradead.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, Mark Rutland <mark.rutland@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 
-Hello,
+On Sun, Aug 21, 2016 at 11:28 PM, AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+> Rob,
+> [Cc: Mark]
+>
+> On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
+>> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
+>> > From: James Morse <james.morse@arm.com>
+>> >
+>> > Add documentation for
+>> >     linux,crashkernel-base and crashkernel-size,
+>> >     linux,usable-memory-range, and
+>> >     linux,elfcorehdr
+>> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
+>> > the elfcorehdr's location within it.
+>> >
+>> > Signed-off-by: James Morse <james.morse@arm.com>
+>> > [takahiro.akashi@linaro.org:
+>> >     renamed "usable-memory" to "usable-memory-range",
+>> >     added "linux,crashkernel-base" and "-size" ]
+>> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+>> >  1 file changed, 50 insertions(+)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> > index 6ae9d82..236188a 100644
+>> > --- a/Documentation/devicetree/bindings/chosen.txt
+>> > +++ b/Documentation/devicetree/bindings/chosen.txt
+>> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+>> >  book3e) by some versions of kexec-tools to tell the new kernel that it
+>> >  is being booted by kexec, as the booting environment may differ (e.g.
+>> >  a different secondary CPU release mechanism)
+>> > +
+>> > +linux,crashkernel-base
+>> > +linux,crashkernel-size
+>> > +----------------------
+>> > +These properties (currently used on PowerPC and arm64) indicates
+>> > +the base address and the size, respectively, of the reserved memory
+>> > +range for crash dump kernel.
+>> > +e.g.
+>> > +
+>> > +/ {
+>> > +   chosen {
+>> > +           linux,crashkernel-base = <0x9 0xf0000000>;
+>> > +           linux,crashkernel-size = <0x0 0x10000000>;
+>> > +   };
+>> > +};
+>> > +
+>> > +linux,usable-memory-range
+>> > +-------------------------
+>> > +
+>> > +This property (currently used only on arm64) holds the memory range,
+>> > +the base address and the size, which can be used as system ram on
+>> > +the *current* kernel. Note that, if this property is present, any memory
+>> > +regions under "memory" nodes in DT blob or ones marked as "conventional
+>> > +memory" in EFI memory map should be ignored.
+>> > +e.g.
+>> > +
+>> > +/ {
+>> > +   chosen {
+>> > +           linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+>> > +   };
+>> > +};
+>>
+>> I've read the discussion on this. I think you should use the existing
+>> linux,usable-memory property in the memory nodes. If UEFI systems don't
+>> have memory nodes, then you can find an UEFI way to describe this. DT is
+>> not the dumping ground for what doesn't fit in UEFI. How do x86 systems
+>> work?
+>
+> Kdump for x86 passes the range of usable memory to crash dump kernel
+> either via:
+> (a) "memmap=nn@ss" command line parameter, or
+> (b) faked BIOS e820 map (a sort of memory map table)
+>
+> (a) was rejected by Mark [1], and (b) is x86-specific.
+>
+> I believe that my approach is better because it works in the same way
+> either on UEFI systems or DT-based systems.
 
-Every so often, I get questions or bug report about the fact that makedumpfile
-issues the following message when running :
+So we have a new way for both UEFI and DT. If UEFI folks can't come up
+with a standard way to do things in the UEFI standard, then we just
+dump them into DT? I'd rather see alignment with existing DT systems
+(PPC) and in particular the tools.
 
-   The kernel version is not supported.
-   The created dumpfile may be incomplete.
-
-While I understand the requirement for this message, it almost systematically is
-understood by users as "makedumpfile is broken".
-
-I would like to discuss the opportunity of changing the wording of this message
-so it appears less confusing. Maybe something like :
-
-Warning: makedumpfile has not been tested on this version of the kernel.
-         If the created dumpfile is incomplete, you may need to upgrade to a
-         newer version of makedumpfile.
-
-I would be happy to propose a pull request for such a change if accepted.
-
-Kind regards,
-
-...Louis
-
-
--- 
-Louis Bouchard
-Software engineer, Cloud & Sustaining eng.
-Canonical Ltd
-Ubuntu developer                       Debian Maintainer
-GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
+Rob
 
 _______________________________________________
 kexec mailing list
