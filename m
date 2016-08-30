@@ -1,19 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-x236.google.com ([2607:f8b0:4002:c05::236])
+Received: from mail-by2nam01on0130.outbound.protection.outlook.com
+ ([104.47.34.130] helo=NAM01-BY2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1beNQN-0008Vu-Df
- for kexec@lists.infradead.org; Mon, 29 Aug 2016 14:20:34 +0000
-Received: by mail-yw0-x236.google.com with SMTP id z8so86737943ywa.1
- for <kexec@lists.infradead.org>; Mon, 29 Aug 2016 07:20:10 -0700 (PDT)
+ id 1bebqg-0005Qk-3Z
+ for kexec@lists.infradead.org; Tue, 30 Aug 2016 05:44:39 +0000
+From: Himanshu Madhani <himanshu.madhani@qlogic.com>
+Subject: Re: Capturing crash with 4.6.0 and above kernel does not work
+Date: Tue, 30 Aug 2016 05:44:08 +0000
+Message-ID: <B6F01544-247D-47C8-B5F8-74EEDE0D5BB8@qlogic.com>
+References: <0140312F-1DD9-4CC7-9484-32F8570B5089@qlogic.com>
+ <20160825081049.GA4235@dhcp22.suse.cz>
+ <36EFE3CC-4D12-4604-96F8-F11F1CEA89A0@qlogic.com>
+ <20160826053910.GB31627@x1.redhat.com>
+ <CE392DFA-3C2A-4A2F-B9F4-A7DB23F2714A@qlogic.com>
+ <20160827001511.GC31627@x1.redhat.com>
+In-Reply-To: <20160827001511.GC31627@x1.redhat.com>
+Content-Language: en-US
+Content-ID: <52CFFF3456E27843B9E2E37A450D85FE@namprd11.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20160829101137.GA29344@x1.redhat.com>
-References: <1471531632-23003-1-git-send-email-thgarnie@google.com>
- <20160829101137.GA29344@x1.redhat.com>
-From: Thomas Garnier <thgarnie@google.com>
-Date: Mon, 29 Aug 2016 07:20:08 -0700
-Message-ID: <CAJcbSZFOeFsFH8itdLJqEDiUyhAE+pYPZgb8mFYukiKD4Fd5fA@mail.gmail.com>
-Subject: Re: [PATCH v1] kdump,
- vmcoreinfo: report memory sections virtual addresses
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,99 +26,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Baoquan He <bhe@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>, Kernel Hardening <kernel-hardening@lists.openwall.com>, Eugene Surovegin <surovegin@google.com>, kexec@lists.infradead.org, the arch/x86 maintainers <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@kernel.org>
 
-Great, thanks Baoquan.
-
-On Mon, Aug 29, 2016 at 3:11 AM, Baoquan He <bhe@redhat.com> wrote:
-> Hi Thomas,
->
-> I used below code and it works. Since using VMCOREINFO_NUMBER can reuse
-> the existing struct number_table to import the data. It makes change
-> easier. But the place could be next to KERNEL_IMAGE_SIZE, or as your
-> patch did, both is fine.
->
-> ---
->  kernel/kexec_core.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 5616755..81bde86 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1469,6 +1469,9 @@ static int __init crash_save_vmcoreinfo_init(void)
->         VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
->  #ifdef CONFIG_X86
->         VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
-> +       VMCOREINFO_NUMBER(PAGE_OFFSET);
-> +       VMCOREINFO_NUMBER(VMALLOC_START);
-> +       VMCOREINFO_NUMBER(VMEMMAP_START);
->  #endif
->  #ifdef CONFIG_HUGETLB_PAGE
->         VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
-> --
-> 2.5.5
->
-> On 08/18/16 at 07:47am, Thomas Garnier wrote:
->> KASLR memory randomization can randomize the base of the physical memory
->> mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
->> (VMEMMAP_START). Adding these variables on VMCOREINFO so tools can
->> easily identify the base of each memory section.
->>
->> Signed-off-by: Thomas Garnier <thgarnie@google.com>
->> ---
->> Based on next-20160817
->> ---
->>  arch/x86/kernel/machine_kexec_64.c | 3 +++
->>  include/linux/kexec.h              | 6 ++++++
->>  2 files changed, 9 insertions(+)
->>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> index fc3389f..b1f15a2 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -338,6 +338,9 @@ void arch_crash_save_vmcoreinfo(void)
->>       vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
->>                             kaslr_offset());
->>       VMCOREINFO_PHYS_BASE(phys_base);
->> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
->> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
->> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
->>  }
->>
->>  /* arch-dependent functionality related to kexec file-based syscall */
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index d3ae429..cd3874c 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -261,6 +261,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
->>  #define VMCOREINFO_PHYS_BASE(value) \
->>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_PAGE_OFFSET(value) \
->> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_VMALLOC_START(value) \
->> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_VMEMMAP_START(value) \
->> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
->>
->>  extern struct kimage *kexec_image;
->>  extern struct kimage *kexec_crash_image;
->> --
->> 2.8.0.rc3.226.g39d4020
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+DQoNCg0KDQoNCk9uIDgvMjYvMTYsIDU6MTUgUE0sICJCYW9xdWFuIEhlIiA8YmhlQHJlZGhhdC5j
+b20+IHdyb3RlOg0KDQo+T24gMDgvMjYvMTYgYXQgMDQ6NDdwbSwgSGltYW5zaHUgTWFkaGFuaSB3
+cm90ZToNCj4+IA0KPj4gDQo+PiBPbiA4LzI1LzE2LCAxMDozOSBQTSwgIkJhb3F1YW4gSGUiIDxi
+aGVAcmVkaGF0LmNvbT4gd3JvdGU6DQo+PiANCj4+ID5PbiAwOC8yNS8xNiBhdCAwNTo0NXBtLCBI
+aW1hbnNodSBNYWRoYW5pIHdyb3RlOg0KPj4gPj4gDQo+PiA+DQo+PiA+Y3Jhc2hrZXJuZWwgaGFz
+IGJlZW4gcmVzZXJ2ZWQgc3VjY2Vzc2Z1bGx5Lg0KPj4gPkF1ZyAyNSAxMDozNjo0NCBkdXQ0MDYy
+IGtlcm5lbDogUmVzZXJ2aW5nIDUxMk1CIG9mIG1lbW9yeSBhdCAzNjhNQiBmb3IgY3Jhc2hrZXJu
+ZWwgKFN5c3RlbSBSQU06IDEzMDg0N01CKQ0KPj4gPg0KPj4gPlNvIHdoYXQncyB0aGUgcmVzdWx0
+IG9mIGV4ZWN1dGluZyAiZ3JlcCBDcmFzaCAvcG9yYy9pb21lbSIgb24geW91ciANCj4+ID5zeXN0
+ZW0/DQo+PiANCj4+IHJvb3RAZHV0NDA2Mjp+IyBncmVwIENyYXNoIC9wcm9jL2lvbWVtDQo+PiAg
+IDE3MDAwMDAwLTM2ZmZmZmZmIDogQ3Jhc2gga2VybmVsDQo+PiANCj4+IFdoaWNoIGRvZXMgaW5k
+aWNhdGUgdGhhdCA1MTJNQiBpcyBzZXQgYXNpZGUgZm9yIGNyYXNoIGR1bXANCj4NCj5QbGVhc2Ug
+Z2V0IGEga2V4ZWMtdG9vbHMgY29kZSBhbmQgZGVidWcgaXQuIFRoZSBtZXNzYWdlIGlzIHByaW50
+ZWQgaW4NCj5tYWluKCkgb2Yga2V4ZWMuDQo+DQo+Z2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3Nj
+bS91dGlscy9rZXJuZWwva2V4ZWMva2V4ZWMtdG9vbHMuZ2l0DQo+DQo+SXQgc2hvdWxkIGJlIGVh
+c3kgdG8gYWRkIGRlYnVnIHByaW50aW5nIG9yIGdkYi4gTm93IHRoZSBsYXRlc3QgaXMNCj4yLjAu
+MTMuIFdoYXQncyB5b3VyIHZlcnNpb24/DQoNClNvcnJ5IGdvdCBkaXN0cmFjdGVkIHRvZGF5IHNv
+IGNvdWxkIG5vdCBnZXQgdG8gbXkgc2VydmVyIGF0IGFsbC4gDQoNCknigJlsbCB0cnkgdG8gZ2V0
+IHRvIHRoaXMgb25lIGluIG5leHQgY291cGxlIGRheXMuIA0KDQpIZXJl4oCZcyB3aGF0IEkgaGF2
+ZSBvbiBteSBzZXJ2ZXIgZm9yIGtleGVjIHZlcnNpb24uDQoNCnJvb3RAZHV0NDA2MjovaG9tZS9o
+bWFkaGFuaS93c3BhY2Uva2V4ZWMtdG9vbHMobWFzdGVyKSMga2V4ZWMgLS12ZXJzaW9uDQprZXhl
+Yy10b29scyAyLjAuMCByZWxlYXNlZCAxOXRoIEp1bHkgMjAwOA0KDQoNCj4NCj4+IA0KPj4gDQo+
+PiA+DQo+PiA+PiANCj4+ID4+IE9uIDgvMjUvMTYsIDE6MTAgQU0sICJNaWNoYWwgSG9ja28iIDxt
+aG9ja29Aa2VybmVsLm9yZz4gd3JvdGU6DQo+PiA+PiANCj4+ID4+ID5bTGV0J3MgYWRkIGtkdW1w
+IHBlb3BsZV0NCj4+ID4+ID4NCj4+ID4+ID5PbiBXZWQgMjQtMDgtMTYgMTY6Mzg6NTYsIEhpbWFu
+c2h1IE1hZGhhbmkgd3JvdGU6DQo+PiA+PiA+PiBIZWxsbyBsaXN0LA0KPj4gPj4gPj4gDQo+PiA+
+PiA+PiBJIGFtIHdvbmRlcmluZyBpZiBhbnlib2R5IGhhcyBpc3N1ZSBjYXB0dXJpbmcgY3Jhc2gg
+ZHVtcCB3aXRoIHRoZSA0LjYuMCBhbmQgYWJvdmUga2VucmVsLg0KPj4gPj4gPj4gDQo+PiA+PiA+
+PiBJIGhhdmUgYSBzeXN0ZW0sIHdoZW4gYm9vdGVkIGluIDQuNS43IGtlcm5lbCBpcyBhYmxlIHRv
+IGNhcHR1cmUgY3Jhc2ggZHVtcC4NCj4+ID4+ID4+IEhvd2V2ZXIsIHdoZW4gSSBib290IHRoaXMg
+c3lzdGVtIGluIDQuNi40IGFuZCA0LjcuMiBrZXJuZWwsIGNyYXNoIGR1bXAgaXMgbm90IA0KPj4g
+Pj4gPj4gYWJsZSB0byBjYXB0dXJlIGFueSBjcmFzaC4gDQo+PiA+PiA+PiANCj4+ID4+ID4+IEkg
+YW0gc3RpbGwgZmFjaW5nIHNhbWUgaXNzdWUgd2l0aCA0LjguMC1yYzIrIGtlcm5lbCBhbmQgZnJv
+bSB0aGUgZXJyb3IgYXQgdGhlIGNvbW1hbmQgcHJvbXB0LCANCj4+ID4+ID4+IGl0IHNlZW1zIGxp
+a2Uga2V4ZWMgaXMgaWdub3Jpbmcg4oCcY3Jhc2hrZW5yZWzigJ0gcGFyYW1ldGVyLiANCj4+ID4+
+ID4+IA0KPj4gPj4gPj4gSSBhZGRlZCBiZWxvdyBpbmZvcm1hdGlvbiBpbiBodHRwczovL2J1Z3pp
+bGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTExOTI5MS4gDQo+PiA+PiA+PiANCj4+ID4+
+ID4+ICMgdW5hbWUgLXINCj4+ID4+ID4+IDQuOC4wLXJjMisNCj4+ID4+ID4+IA0KPj4gPj4gPj4g
+IyBjYXQgL3Byb2MvY21kbGluZSANCj4+ID4+ID4+IHJvIHJvb3Q9L2Rldi9tYXBwZXIvdmdfZHV0
+NDExMC1sdl9yb290IHJkX05PX0xVS1MgIEtFWUJPQVJEVFlQRT1wYyBLRVlUQUJMRT11cyBMQU5H
+PWVuX1VTLlVURi04IHJkX05PX01EIFNZU0ZPTlQ9bGF0YXJjeXJoZWItc3VuMTYgY3Jhc2hrZXJu
+ZWw9NTEyTSByZF9MVk1fTFY9dmdfZHV0NDExMC9sdl9zd2FwIHJkX0xWTV9MVj12Z19kdXQ0MTEw
+L2x2X3Jvb3QgcmRfTk9fRE0gcmhnYiBxdWlldA0KPj4gPj4gPj4gDQo+PiA+PiA+PiAjIHNlcnZp
+Y2Uga2R1bXAgc3RhdHVzDQo+PiA+PiA+PiBLZHVtcCBpcyBub3Qgb3BlcmF0aW9uYWwNCj4+ID4+
+ID4+IA0KPj4gPj4gPj4gIyBzZXJ2aWNlIGtkdW1wIHN0YXJ0DQo+PiA+PiA+PiBNZW1vcnkgZm9y
+IGNyYXNoa2VybmVsIGlzIG5vdCByZXNlcnZlZA0KPj4gPj4gPj4gUGxlYXNlIHJlc2VydmUgbWVt
+b3J5IGJ5IHBhc3NpbmcgImNyYXNoa2VybmVsPVhAWSIgcGFyYW1ldGVyIHRvIHRoZSBrZXJuZWwN
+Cj4+ID4+ID4+IFN0YXJ0aW5nIGtkdW1wOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgW0ZBSUxFRF0NCj4+ID4+ID4NCj4+ID4+ID5JdCBzbWVsbHMgbGlrZSB0aGUg
+Y3Jhc2gga2VybmVsIHJlc2VydmF0aW9uIGhhcyBmYWlsZWQuIENvdWxkIHlvdQ0KPj4gPj4gPnBy
+b3ZpZGUgdGhlIGZ1bGwga2VybmVsIGxvZz8NCj4+ID4+IA0KPj4gPj4gQXR0YWNoZWQgaXMga2Vy
+bmVsIGxvZyBmcm9tIGZyZXNoIGtlcm5lbCBjb21waWxlIG9mIDQuNi41IChsaW51eC1zdGFibGUp
+IHRyZWUNCj4+ID4+IA0KPj4gPj4gcm9vdEBkdXQ0MDYyOn4jIGNhdCAvcHJvYy9jbWRsaW5lIA0K
+Pj4gPj4gcm8gcm9vdD0vZGV2L21hcHBlci9Wb2xHcm91cC1sdl9yb290IHJkX05PX0xVS1MgTEFO
+Rz1lbl9VUy5VVEYtOCByZF9OT19NRCByZF9MVk1fTFY9Vm9sR3JvdXAvbHZfc3dhcCBTWVNGT05U
+PWxhdGFyY3lyaGViLXN1bjE2IGNyYXNoa2VybmVsPTUxMk0gcmRfTFZNX0xWPVZvbEdyb3VwL2x2
+X3Jvb3QgIEtFWUJPQVJEVFlQRT1wYyBLRVlUQUJMRT11cyByZF9OT19ETSByaGdiIGNvbnNvbGU9
+dHR5UzAgY29uc29sZT10dHlTMCwxMTUyMDBuOA0KPj4gPj4gDQo+PiA+PiByb290QGR1dDQwNjI6
+fiMgc2VydmljZSBrZHVtcCBzdGF0dXMNCj4+ID4+IA0KPj4gPj4gS2R1bXAgaXMgbm90IG9wZXJh
+dGlvbmFsDQo+PiA+PiANCj4+ID4+IHJvb3RAZHV0NDA2Mjp+IyBzZXJ2aWNlIGtkdW1wIHN0YXJ0
+DQo+PiA+PiBNZW1vcnkgZm9yIGNyYXNoa2VybmVsIGlzIG5vdCByZXNlcnZlZA0KPj4gPj4gUGxl
+YXNlIHJlc2VydmUgbWVtb3J5IGJ5IHBhc3NpbmcgImNyYXNoa2VybmVsPVhAWSIgcGFyYW1ldGVy
+IHRvIHRoZSBrZXJuZWwNCj4+ID4+IFN0YXJ0aW5nIGtkdW1wOiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgW0ZBSUxFRF0NCj4+ID4+IHJvb3RAZHV0NDA2Mjp+IyAN
+Cj4+ID4+IA0KPj4gPj4gTWVzc2FnZXMgaW4gbG9nIGZpbA0KPj4gPj4gDQo+PiA+PiBBdWcgMjUg
+MTA6NDI6MTYgZHV0NDA2MiBrZHVtcDoga2V4ZWM6IGZhaWxlZCB0byBsb2FkIGtkdW1wIGtlcm5l
+bA0KPj4gPj4gQXVnIDI1IDEwOjQyOjE2IGR1dDQwNjIga2R1bXA6IGZhaWxlZCB0byBzdGFydCB1
+cA0KPj4gPj4gDQo+PiA+PiANCj4+ID4+IHJvb3RAZHV0NDA2Mjp+IyBrZXhlYyAtLXZlcg0KPj4g
+Pj4ga2V4ZWMtdG9vbHMgMi4wLjAgcmVsZWFzZWQgMTl0aCBKdWx5IDIwMDgNCj4+ID4+IHJvb3RA
+ZHV0NDA2Mjp+IyANCj4+ID4+IA0KPj4gPj4gcm9vdEBkdXQ0MDYyOn4jIGNyYXNoIC0tdmVyc2lv
+bg0KPj4gPj4gDQo+PiA+PiBjcmFzaCA3LjEuNSsrDQo+PiA+PiBDb3B5cmlnaHQgKEMpIDIwMDIt
+MjAxNiAgUmVkIEhhdCwgSW5jLg0KPj4gPj4gQ29weXJpZ2h0IChDKSAyMDA0LCAyMDA1LCAyMDA2
+LCAyMDEwICBJQk0gQ29ycG9yYXRpb24NCj4+ID4+IENvcHlyaWdodCAoQykgMTk5OS0yMDA2ICBI
+ZXdsZXR0LVBhY2thcmQgQ28NCj4+ID4+IENvcHlyaWdodCAoQykgMjAwNSwgMjAwNiwgMjAxMSwg
+MjAxMiAgRnVqaXRzdSBMaW1pdGVkDQo+PiA+PiBDb3B5cmlnaHQgKEMpIDIwMDYsIDIwMDcgIFZB
+IExpbnV4IFN5c3RlbXMgSmFwYW4gSy5LLg0KPj4gPj4gQ29weXJpZ2h0IChDKSAyMDA1LCAyMDEx
+ICBORUMgQ29ycG9yYXRpb24NCj4+ID4+IENvcHlyaWdodCAoQykgMTk5OSwgMjAwMiwgMjAwNyAg
+U2lsaWNvbiBHcmFwaGljcywgSW5jLg0KPj4gPj4gQ29weXJpZ2h0IChDKSAxOTk5LCAyMDAwLCAy
+MDAxLCAyMDAyICBNaXNzaW9uIENyaXRpY2FsIExpbnV4LCBJbmMuDQo+PiA+PiBUaGlzIHByb2dy
+YW0gaXMgZnJlZSBzb2Z0d2FyZSwgY292ZXJlZCBieSB0aGUgR05VIEdlbmVyYWwgUHVibGljIExp
+Y2Vuc2UsDQo+PiA+PiBhbmQgeW91IGFyZSB3ZWxjb21lIHRvIGNoYW5nZSBpdCBhbmQvb3IgZGlz
+dHJpYnV0ZSBjb3BpZXMgb2YgaXQgdW5kZXINCj4+ID4+IGNlcnRhaW4gY29uZGl0aW9ucy4gIEVu
+dGVyICJoZWxwIGNvcHlpbmciIHRvIHNlZSB0aGUgY29uZGl0aW9ucy4NCj4+ID4+IFRoaXMgcHJv
+Z3JhbSBoYXMgYWJzb2x1dGVseSBubyB3YXJyYW50eS4gIEVudGVyICJoZWxwIHdhcnJhbnR5IiBm
+b3IgZGV0YWlscy4NCj4+ID4+ICANCj4+ID4+IEdOVSBnZGIgKEdEQikgNy42DQo+PiA+PiBDb3B5
+cmlnaHQgKEMpIDIwMTMgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBJbmMuDQo+PiA+PiBMaWNl
+bnNlIEdQTHYzKzogR05VIEdQTCB2ZXJzaW9uIDMgb3IgbGF0ZXIgPGh0dHA6Ly9nbnUub3JnL2xp
+Y2Vuc2VzL2dwbC5odG1sPg0KPj4gPj4gVGhpcyBpcyBmcmVlIHNvZnR3YXJlOiB5b3UgYXJlIGZy
+ZWUgdG8gY2hhbmdlIGFuZCByZWRpc3RyaWJ1dGUgaXQuDQo+PiA+PiBUaGVyZSBpcyBOTyBXQVJS
+QU5UWSwgdG8gdGhlIGV4dGVudCBwZXJtaXR0ZWQgYnkgbGF3LiAgVHlwZSAic2hvdyBjb3B5aW5n
+Ig0KPj4gPj4gYW5kICJzaG93IHdhcnJhbnR5IiBmb3IgZGV0YWlscy4NCj4+ID4+IFRoaXMgR0RC
+IHdhcyBjb25maWd1cmVkIGFzICJ4ODZfNjQtdW5rbm93bi1saW51eC1nbnUiLg0KPj4gPj4gDQo+
+PiA+PiBMZXQgbWUga25vdyBpZiBhbnkgb3RoZXIgZGV0YWlscyBhcmUgbmVlZGVkLiBJIGhhdmUg
+bXVsdGlwbGUgc2VydmVycyB3aGljaCBleGhpYml0IHNhbWUgaXNzdWVzLg0KPj4gPj4gDQo+PiA+
+PiANCj4+ID4+IA0KPj4gPj4gDQo+PiA+PiANCj4+ID4+IA0KPj4gPj4gPg0KPj4gPj4gPj4gbWVz
+c2FnZSBmaWxlIGNvbmZpcm1zIHRoYXQga2V4ZWMgd2FzIG5vdCBhYmxlIHRvIHN0YXJ0IHRoZSBz
+ZXJ2aWNlIA0KPj4gPj4gPj4gDQo+PiA+PiA+PiBBdWcgMTUgMTA6NDE6MTcgZHV0NDExMCBrZHVt
+cDoga2V4ZWM6IGZhaWxlZCB0byBsb2FkIGtkdW1wIGtlcm5lbA0KPj4gPj4gPj4gQXVnIDE1IDEw
+OjQxOjE3IGR1dDQxMTAga2R1bXA6IGZhaWxlZCB0byBzdGFydCB1cA0KPj4gPj4gPj4gDQo+PiA+
+PiA+PiBOb3RlLCB0aGF0IHNhbWUgb3B0aW9uIGlzIGFibGUgdG8gbG9hZCBrZHVtcCBzZXJ2aWNl
+IGZvciA0LjUuNyBrZXJuZWwuICANCj4+ID4+ID4+IA0KPj4gPj4gPj4gSSBjYW4gcHJvdmlkZSBh
+bnkgZGV0YWlscyBuZWVkZWQgdG8gaGVscCByZXNvbHZlIHRoaXMgaXNzdWUuIA0KPj4gPj4gPj4g
+DQo+PiA+PiA+PiBUaGFua3MsDQo+PiA+PiA+PiAtIEhpbWFuc2h1DQo+PiA+PiA+PiANCj4+ID4+
+ID4NCj4+ID4+ID4tLSANCj4+ID4+ID5NaWNoYWwgSG9ja28NCj4+ID4+ID5TVVNFIExhYnMNCj4+
+ID4NCj4+ID4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
