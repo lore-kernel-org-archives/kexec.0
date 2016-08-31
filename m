@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x235.google.com ([2607:f8b0:400e:c03::235])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bey1C-00068a-7o
- for kexec@lists.infradead.org; Wed, 31 Aug 2016 05:25:00 +0000
-Received: by mail-pa0-x235.google.com with SMTP id cy9so14837561pac.0
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 22:24:36 -0700 (PDT)
-Date: Wed, 31 Aug 2016 14:31:10 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v24 0/9] arm64: add kdump support
-Message-ID: <20160831053109.GR20080@linaro.org>
-References: <20160809015248.28414-1-takahiro.akashi@linaro.org>
- <0267060a-d380-2e7a-0c33-0084bfc46d97@caviumnetworks.com>
+ id 1bf0ie-0006jP-35
+ for kexec@lists.infradead.org; Wed, 31 Aug 2016 08:18:04 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH 3/3] makedumpfile: Add support for MM randomization
+Date: Wed, 31 Aug 2016 07:56:49 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E62E28@BPXM01GP.gisp.nec.co.jp>
+References: <1472460862-29842-1-git-send-email-bhe@redhat.com>
+ <1472460862-29842-4-git-send-email-bhe@redhat.com>
+In-Reply-To: <1472460862-29842-4-git-send-email-bhe@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0267060a-d380-2e7a-0c33-0084bfc46d97@caviumnetworks.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,115 +24,182 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Manish Jaggi <mjaggi@caviumnetworks.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "thgarnie@google.com" <thgarnie@google.com>
 
-Manish,
+Hello Baoquan,
 
-Thank you for testing my kdump and reporting issues.
+Thanks for your work, I have some comments below.
 
-On Wed, Aug 31, 2016 at 09:11:52AM +0530, Manish Jaggi wrote:
-> Hi Akashi,
-> 
-> On 08/09/2016 07:22 AM, AKASHI Takahiro wrote:
-> > This patch series adds kdump support on arm64.
-> > 
-> > To load a crash-dump kernel to the systems, a series of patches to
-> > kexec-tools, which have not yet been merged upstream, are needed.
-> > Please use my kdump patches [1].
-> > 
-> > To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
-> >   - crash utility (coming v7.1.6 or later) [2]
-> >     (Necessary patches have already been queued in the master.)
-> > 
-> > [1] T.B.D.
-> > [2] https://github.com/crash-utility/crash.git
-> > 
-> > Changes for v24 (Aug 9, 2016):
-> >   o Rebase to Linux-4.8-rc1
-> >   o Update descriptions about newly added DT proerties
-> > 
-> > Changes for v23 (July 26, 2016):
-> > 
-> >   o Move memblock_reserve() to a single place in reserve_crashkernel()
-> >   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
-> >   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
-> >   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
-> >     (for ACPI) from usable memory at crash kernel
-> > 
-> > Changes for v22 (July 12, 2016):
-> > 
-> >   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
-> >     and add some descriptions about them in chosen.txt
-> >   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
-> >     with powerpc's "usable-memory"
-> >   o Make cosmetic changes regarding "ifdef" usage
-> >   o Correct some wordings in kdump.txt
-> > 
-> > Changes for v21 (July 6, 2016):
-> > 
-> >   o Remove kexec patches.
-> >   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
-> >   o Clarify the description about kvm in kdump.txt.
-> > 
-> > See the following link [3] for older changes:
-> > [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
-> > 
-> > AKASHI Takahiro (8):
-> >   arm64: kdump: reserve memory for crash dump kernel
-> >   memblock: add memblock_cap_memory_range()
-> >   arm64: limit memory regions based on DT property, usable-memory-range
-> >   arm64: kdump: implement machine_crash_shutdown()
-> >   arm64: kdump: add kdump support
-> >   arm64: kdump: add VMCOREINFO's for user-space coredump tools
-> >   arm64: kdump: enable kdump in the arm64 defconfig
-> >   arm64: kdump: update a kernel doc
-> > 
-> > James Morse (1):
-> >   Documentation: dt: chosen properties for arm64 kdump
-> > 
-> >  Documentation/devicetree/bindings/chosen.txt |  45 ++++++
-> >  Documentation/kdump/kdump.txt                |  16 ++-
-> >  arch/arm64/Kconfig                           |  11 ++
-> >  arch/arm64/configs/defconfig                 |   1 +
-> >  arch/arm64/include/asm/hardirq.h             |   2 +-
-> >  arch/arm64/include/asm/kexec.h               |  41 +++++-
-> >  arch/arm64/include/asm/smp.h                 |   2 +
-> >  arch/arm64/kernel/Makefile                   |   1 +
-> >  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
-> >  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
-> >  arch/arm64/kernel/setup.c                    |   7 +-
-> >  arch/arm64/kernel/smp.c                      |  63 +++++++++
-> >  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
-> >  include/linux/memblock.h                     |   1 +
-> >  mm/memblock.c                                |  28 ++++
-> >  15 files changed, 551 insertions(+), 7 deletions(-)
-> >  create mode 100644 arch/arm64/kernel/crash_dump.c
-> > 
-> Couple of points
-> a) Just a note, while testing, the crashkernel reserved memory should be less than ARCH_LOW_ADDRESS_LIMIT (=arm64_dma_phys_limit).
+>In kernel patchset "x86/mm: memory area address KASLR", PAGE_OFFSET,
+>VMALLOC_START and VMEMMAP_START are all randomized. Please check below
+>link:
+>	https://lwn.net/Articles/692289/
+>
+>And these need be exported into vmcoreinfo and tell makedumpfile. In
+>this patch get and handle them to support MM randomization.
+>
+>Signed-off-by: Baoquan He <bhe@redhat.com>
+>---
+> arch/x86_64.c  | 26 +++++++++-----------------
+> makedumpfile.c | 29 ++++++++++++++++++++++++++++-
+> makedumpfile.h |  3 +++
+> 3 files changed, 40 insertions(+), 18 deletions(-)
+>
+>diff --git a/arch/x86_64.c b/arch/x86_64.c
+>index ddf7be6..ff787cc 100644
+>--- a/arch/x86_64.c
+>+++ b/arch/x86_64.c
+>@@ -146,8 +146,9 @@ get_machdep_info_x86_64(void)
+> 	return TRUE;
+> }
+>
+>-int
+>-get_versiondep_info_x86_64(void)
+>+#define VMALLOC_SIZE            (0x200000000000)
+>+#define VMEMMAP_SIZE            (0x10000000000)
+>+int get_versiondep_info_x86_64(void)
+> {
+> 	/*
+> 	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+>@@ -159,22 +160,13 @@ get_versiondep_info_x86_64(void)
+> 	else
+> 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+>
+>-	if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
+>-		info->page_offset = __PAGE_OFFSET_ORIG;
+>-	else
+>-		info->page_offset = __PAGE_OFFSET_2_6_27;
+>+	info->page_offset = NUMBER(page_offset);
+>
+>-	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
+>-		info->vmalloc_start = VMALLOC_START_ORIG;
+>-		info->vmalloc_end   = VMALLOC_END_ORIG;
+>-		info->vmemmap_start = VMEMMAP_START_ORIG;
+>-		info->vmemmap_end   = VMEMMAP_END_ORIG;
+>-	} else {
+>-		info->vmalloc_start = VMALLOC_START_2_6_31;
+>-		info->vmalloc_end   = VMALLOC_END_2_6_31;
+>-		info->vmemmap_start = VMEMMAP_START_2_6_31;
+>-		info->vmemmap_end   = VMEMMAP_END_2_6_31;
+>-	}
 
-I think that this is a common mistake not only for kdump, but also
-for general kernels.
-Since request_standard_resources() calls alloc_bootmem_low(),
-the kernel will panic if any of usable "System RAM" is located
-above ARCH_LOW_ADDRESS_LIMIT.
-For kdump, using "crashkernel=SS" notation is a convenient way
-to avoid this issue.
+These *_END_* are no longer used, it's better to remove the definitions
+of them.
 
-> b) Has anyone tested this on a SoC with Gicv3 ITS ?
-> Should the GICD/R be reset prior to switching to crash kernel ?
-> I am seeing lot of GICv3: RWP timeout, gone fishing while crash kernel boots.
+>+
+>+	info->vmalloc_start = NUMBER(vmalloc_start);
+>+	info->vmalloc_end   = info->vmalloc_start + VMALLOC_SIZE - 1;
+>+	info->vmemmap_start = NUMBER(vmemmap_start);
+>+	info->vmemmap_end   = info->vmemmap_start + VMEMMAP_SIZE - 1;
+>
+> 	return TRUE;
+> }
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 2713f8a..6b0c6ab 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -1985,6 +1985,7 @@ get_value_for_old_linux(void)
+> 			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
+> 			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
+> 	}
+>+	ERRMSG("info->kernel_version=%d\n", info->kernel_version);
 
-I've never seen this kind of messages.
-I usually do my testing on a fast model.
-"compatible" of interrupt-controller is "arm,gic-v3."
+Is this just a debug message ?
+
+> #ifdef __x86_64__
+> 	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
+> 		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+>@@ -1992,6 +1993,26 @@ get_value_for_old_linux(void)
+> 		else
+> 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
+> 	}
+>+	if (NUMBER(page_offset) == NOT_FOUND_NUMBER) {
+>+		if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
+>+			NUMBER(page_offset) = __PAGE_OFFSET_ORIG;
+>+		else
+>+			NUMBER(page_offset) = __PAGE_OFFSET_2_6_27;
+>+	}
+>+	if (NUMBER(vmalloc_start) == NOT_FOUND_NUMBER) {
+>+		if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
+>+			NUMBER(vmalloc_start) = VMALLOC_START_ORIG;
+>+		} else {
+>+			NUMBER(vmalloc_start) = VMALLOC_START_2_6_31;
+>+		}
+>+	}
+>+	if (NUMBER(vmemmap_start) == NOT_FOUND_NUMBER) {
+>+		if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+>+			NUMBER(vmemmap_start) = VMEMMAP_START_ORIG;
+>+		else
+>+			NUMBER(vmemmap_start) = VMEMMAP_START_2_6_31;
+>+	}
+>+
+
+(I should have said this when you post the early kaslr patch.)
+This logic is only for x86_64, I don't like to take it out to 
+here(general pass) with #ifdef. Is there any necessity to write
+this code here ?
+
+> #endif
+> 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+> 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
+>@@ -2249,6 +2270,9 @@ write_vmcoreinfo_data(void)
+>
+> 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+> 	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>+	WRITE_NUMBER("PAGE_OFFSET", page_offset);
+>+	WRITE_NUMBER("VMALLOC_START", vmalloc_start);
+>+	WRITE_NUMBER("VMEMMAP_START", vmemmap_start);
+>
+> 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+>
+>@@ -2595,6 +2619,9 @@ read_vmcoreinfo(void)
+>
+> 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+> 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>+	READ_NUMBER("PAGE_OFFSET", page_offset);
+>+	READ_NUMBER("VMALLOC_START", vmalloc_start);
+>+	READ_NUMBER("VMEMMAP_START", vmemmap_start);
+>
+> 	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+>
+>@@ -3826,7 +3853,7 @@ initial(void)
+> 		debug_info = TRUE;
+> 	}
+>
+>-	info->kernel_version = get_kernel_version(info.release);
+>+	info->kernel_version = get_kernel_version(info->release);
+
+Why don't you write "info->release" in [PATCH 1/3] ?
 
 Thanks,
--Takahiro AKASHI
+Atsushi Kumagai
 
-> Thanks,
-> Manish
+> 	if (info->kernel_version == FALSE) {
+> 		ERRMSG("Can't get the kernel version.\n");
+> 		return FALSE;
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 533e5b8..0e34fae 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1685,6 +1685,9 @@ struct number_table {
+>
+> 	long	PAGE_BUDDY_MAPCOUNT_VALUE;
+> 	long	KERNEL_IMAGE_SIZE;
+>+	long	page_offset;
+>+	long	vmalloc_start;
+>+	long	vmemmap_start;
+> 	long	SECTION_SIZE_BITS;
+> 	long	MAX_PHYSMEM_BITS;
+> 	long    HUGETLB_PAGE_DTOR;
+>--
+>2.5.5
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
