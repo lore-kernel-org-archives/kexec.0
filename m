@@ -1,23 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bescw-00059j-AY
- for kexec@lists.infradead.org; Tue, 30 Aug 2016 23:39:38 +0000
-Received: by mail-pa0-x22b.google.com with SMTP id fi15so12006613pac.1
- for <kexec@lists.infradead.org>; Tue, 30 Aug 2016 16:39:13 -0700 (PDT)
-Date: Wed, 31 Aug 2016 08:45:46 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20160830234545.GP20080@linaro.org>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015747.28591-1-takahiro.akashi@linaro.org>
- <20160819132641.GA12709@rob-hp-laptop>
- <20160822042832.GJ20080@linaro.org>
- <CAL_JsqJ5SqesEL5QWX_NJj+gL2jpne4NN_WzADiH+1VB7CkvOA@mail.gmail.com>
+Subject: Re: [PATCH v24 0/9] arm64: add kdump support
+References: <20160809015248.28414-1-takahiro.akashi@linaro.org>
+From: Manish Jaggi <mjaggi@caviumnetworks.com>
+Message-ID: <0267060a-d380-2e7a-0c33-0084bfc46d97@caviumnetworks.com>
+Date: Wed, 31 Aug 2016 09:11:52 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ5SqesEL5QWX_NJj+gL2jpne4NN_WzADiH+1VB7CkvOA@mail.gmail.com>
+In-Reply-To: <20160809015248.28414-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,131 +18,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, dyoung@redhat.com, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, Frank Rowand <frowand.list@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Rob,
+Hi Akashi,
 
-On Tue, Aug 30, 2016 at 11:34:10AM -0500, Rob Herring wrote:
-> On Sun, Aug 21, 2016 at 11:28 PM, AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> > Rob,
-> > [Cc: Mark]
-> >
-> > On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
-> >> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
-> >> > From: James Morse <james.morse@arm.com>
-> >> >
-> >> > Add documentation for
-> >> >     linux,crashkernel-base and crashkernel-size,
-> >> >     linux,usable-memory-range, and
-> >> >     linux,elfcorehdr
-> >> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> >> > the elfcorehdr's location within it.
-> >> >
-> >> > Signed-off-by: James Morse <james.morse@arm.com>
-> >> > [takahiro.akashi@linaro.org:
-> >> >     renamed "usable-memory" to "usable-memory-range",
-> >> >     added "linux,crashkernel-base" and "-size" ]
-> >> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >> > ---
-> >> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
-> >> >  1 file changed, 50 insertions(+)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> >> > index 6ae9d82..236188a 100644
-> >> > --- a/Documentation/devicetree/bindings/chosen.txt
-> >> > +++ b/Documentation/devicetree/bindings/chosen.txt
-> >> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
-> >> >  book3e) by some versions of kexec-tools to tell the new kernel that it
-> >> >  is being booted by kexec, as the booting environment may differ (e.g.
-> >> >  a different secondary CPU release mechanism)
-> >> > +
-> >> > +linux,crashkernel-base
-> >> > +linux,crashkernel-size
-> >> > +----------------------
-> >> > +These properties (currently used on PowerPC and arm64) indicates
-> >> > +the base address and the size, respectively, of the reserved memory
-> >> > +range for crash dump kernel.
-> >> > +e.g.
-> >> > +
-> >> > +/ {
-> >> > +   chosen {
-> >> > +           linux,crashkernel-base = <0x9 0xf0000000>;
-> >> > +           linux,crashkernel-size = <0x0 0x10000000>;
-> >> > +   };
-> >> > +};
-> >> > +
-> >> > +linux,usable-memory-range
-> >> > +-------------------------
-> >> > +
-> >> > +This property (currently used only on arm64) holds the memory range,
-> >> > +the base address and the size, which can be used as system ram on
-> >> > +the *current* kernel. Note that, if this property is present, any memory
-> >> > +regions under "memory" nodes in DT blob or ones marked as "conventional
-> >> > +memory" in EFI memory map should be ignored.
-> >> > +e.g.
-> >> > +
-> >> > +/ {
-> >> > +   chosen {
-> >> > +           linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> >> > +   };
-> >> > +};
-> >>
-> >> I've read the discussion on this. I think you should use the existing
-> >> linux,usable-memory property in the memory nodes. If UEFI systems don't
-> >> have memory nodes, then you can find an UEFI way to describe this. DT is
-> >> not the dumping ground for what doesn't fit in UEFI. How do x86 systems
-> >> work?
-> >
-> > Kdump for x86 passes the range of usable memory to crash dump kernel
-> > either via:
-> > (a) "memmap=nn@ss" command line parameter, or
-> > (b) faked BIOS e820 map (a sort of memory map table)
-> >
-> > (a) was rejected by Mark [1], and (b) is x86-specific.
-> >
-> > I believe that my approach is better because it works in the same way
-> > either on UEFI systems or DT-based systems.
+On 08/09/2016 07:22 AM, AKASHI Takahiro wrote:
+> This patch series adds kdump support on arm64.
 > 
-> So we have a new way for both UEFI and DT. If UEFI folks can't come up
-> with a standard way to do things in the UEFI standard, then we just
-> dump them into DT?
+> To load a crash-dump kernel to the systems, a series of patches to
+> kexec-tools, which have not yet been merged upstream, are needed.
+> Please use my kdump patches [1].
+> 
+> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+>   - crash utility (coming v7.1.6 or later) [2]
+>     (Necessary patches have already been queued in the master.)
+> 
+> [1] T.B.D.
+> [2] https://github.com/crash-utility/crash.git
+> 
+> Changes for v24 (Aug 9, 2016):
+>   o Rebase to Linux-4.8-rc1
+>   o Update descriptions about newly added DT proerties
+> 
+> Changes for v23 (July 26, 2016):
+> 
+>   o Move memblock_reserve() to a single place in reserve_crashkernel()
+>   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+>   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+>   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+>     (for ACPI) from usable memory at crash kernel
+> 
+> Changes for v22 (July 12, 2016):
+> 
+>   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+>     and add some descriptions about them in chosen.txt
+>   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+>     with powerpc's "usable-memory"
+>   o Make cosmetic changes regarding "ifdef" usage
+>   o Correct some wordings in kdump.txt
+> 
+> Changes for v21 (July 6, 2016):
+> 
+>   o Remove kexec patches.
+>   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+>   o Clarify the description about kvm in kdump.txt.
+> 
+> See the following link [3] for older changes:
+> [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+> 
+> AKASHI Takahiro (8):
+>   arm64: kdump: reserve memory for crash dump kernel
+>   memblock: add memblock_cap_memory_range()
+>   arm64: limit memory regions based on DT property, usable-memory-range
+>   arm64: kdump: implement machine_crash_shutdown()
+>   arm64: kdump: add kdump support
+>   arm64: kdump: add VMCOREINFO's for user-space coredump tools
+>   arm64: kdump: enable kdump in the arm64 defconfig
+>   arm64: kdump: update a kernel doc
+> 
+> James Morse (1):
+>   Documentation: dt: chosen properties for arm64 kdump
+> 
+>  Documentation/devicetree/bindings/chosen.txt |  45 ++++++
+>  Documentation/kdump/kdump.txt                |  16 ++-
+>  arch/arm64/Kconfig                           |  11 ++
+>  arch/arm64/configs/defconfig                 |   1 +
+>  arch/arm64/include/asm/hardirq.h             |   2 +-
+>  arch/arm64/include/asm/kexec.h               |  41 +++++-
+>  arch/arm64/include/asm/smp.h                 |   2 +
+>  arch/arm64/kernel/Makefile                   |   1 +
+>  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
+>  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
+>  arch/arm64/kernel/setup.c                    |   7 +-
+>  arch/arm64/kernel/smp.c                      |  63 +++++++++
+>  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
+>  include/linux/memblock.h                     |   1 +
+>  mm/memblock.c                                |  28 ++++
+>  15 files changed, 551 insertions(+), 7 deletions(-)
+>  create mode 100644 arch/arm64/kernel/crash_dump.c
+> 
+Couple of points
+a) Just a note, while testing, the crashkernel reserved memory should be less than ARCH_LOW_ADDRESS_LIMIT (=arm64_dma_phys_limit).
 
-No, I don't think so.
-According to "Documentation/devicetree/bindings/chosen.txt,
-  "The chosen node does not represent a real device, but serves as a place
-   for passing data between firmware and the operating system, like boot
-   arguments."
-
-Since kexec/dump is some sort of boot loader, it all makes sense to
-add a new property as an interface from the old kernel(kexec/dump)
-to the new kernel. So my approach doesn't break any DT rules.
-
-Please note that, even on UEFI/APCI systems, there are already a few
-properties used under /chosen, like "linux,uefi-system-table" and 
-"linux,mmap-*."
-(Those properties are currently *not* defined in this document, though.)
-
-> I'd rather see alignment with existing DT systems
-> (PPC) and in particular the tools.
-
-I'm not sure what you mean here, but I guess:
-1) On DT-only systems, we should follow the way that PPC does.
-   (That is, adding "usable-memory" property to each "memory" node.)
-2) On UEFI/ACPI system, we must invent a new own way for our purpose
-   because, as I said before, there is no standard, but x86-specific way. 
-
-Is this what you want to do?
-
-If so,
-do you agree to my approach of adding "linux,usable-memory-range" property
-to /chosen *for UEFI/ACPI use*?
+b) Has anyone tested this on a SoC with Gicv3 ITS ?
+Should the GICD/R be reset prior to switching to crash kernel ?
+I am seeing lot of GICv3: RWP timeout, gone fishing while crash kernel boots.
 
 Thanks,
--Takahiro AKASHI
-
-> Rob
+Manish
 
 _______________________________________________
 kexec mailing list
