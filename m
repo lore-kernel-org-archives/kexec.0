@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1472766188.8090.14.camel@infradead.org>
+Message-ID: <1472766278.8090.17.camel@infradead.org>
 Subject: Re: [PATCH 0/2] arm64: support --mem-min and --mem-max parameters
 From: Geoff Levand <geoff@infradead.org>
-Date: Thu, 01 Sep 2016 14:43:08 -0700
 In-Reply-To: <20160829082841.3750-1-takahiro.akashi@linaro.org>
 References: <20160829082841.3750-1-takahiro.akashi@linaro.org>
+Date: Thu, 01 Sep 2016 14:44:38 -0700
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
