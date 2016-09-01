@@ -1,17 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bfHGB-0003A3-R3
- for kexec@lists.infradead.org; Thu, 01 Sep 2016 01:57:45 +0000
-Date: Thu, 1 Sep 2016 09:57:12 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATHC v2 5/9] ima: on soft reboot, save the measurement list
-Message-ID: <20160901015712.GA3425@dhcp-128-65.nay.redhat.com>
-References: <1472596811-9596-1-git-send-email-zohar@linux.vnet.ibm.com>
- <1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1472596811-9596-6-git-send-email-zohar@linux.vnet.ibm.com>
+Message-ID: <1472766188.8090.14.camel@infradead.org>
+Subject: Re: [PATCH 0/2] arm64: support --mem-min and --mem-max parameters
+From: Geoff Levand <geoff@infradead.org>
+Date: Thu, 01 Sep 2016 14:43:08 -0700
+In-Reply-To: <20160829082841.3750-1-takahiro.akashi@linaro.org>
+References: <20160829082841.3750-1-takahiro.akashi@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,221 +14,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, linux-security-module <linux-security-module@vger.kernel.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
+Cc: kexec@lists.infradead.org
 
-Hi, Mimi
-
-On 08/30/16 at 06:40pm, Mimi Zohar wrote:
-> From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> 
-> This patch uses the kexec buffer passing mechanism to pass the
-> serialized IMA binary_runtime_measurements to the next kernel.
-> 
-> Changelog v2:
-> - Fix build issue by defining a stub ima_add_kexec_buffer and stub
->   struct kimage when CONFIG_IMA=n and CONFIG_IMA_KEXEC=n. (Fenguang Wu)
-> - removed kexec_add_handover_buffer() checksum argument.
-> - added skip_checksum member to kexec_buf
-> - only register reboot notifier once
-> 
-> Changelog v1:
-> - updated to call IMA functions  (Mimi)
-> - move code from ima_template.c to ima_kexec.c (Mimi)
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
-> ---
->  include/linux/ima.h                | 12 ++++++
->  kernel/kexec_file.c                |  4 ++
->  security/integrity/ima/ima_kexec.c | 88 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 104 insertions(+)
-> 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 0eb7c2e..7f6952f 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -11,6 +11,7 @@
->  #define _LINUX_IMA_H
->  
->  #include <linux/fs.h>
-> +#include <linux/kexec.h>
->  struct linux_binprm;
->  
->  #ifdef CONFIG_IMA
-> @@ -23,6 +24,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  			      enum kernel_read_file_id id);
->  extern void ima_post_path_mknod(struct dentry *dentry);
->  
-> +#ifdef CONFIG_IMA_KEXEC
-> +extern void ima_add_kexec_buffer(struct kimage *image);
-> +#endif
-> +
->  #else
->  static inline int ima_bprm_check(struct linux_binprm *bprm)
->  {
-> @@ -62,6 +67,13 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
->  
->  #endif /* CONFIG_IMA */
->  
-> +#ifndef CONFIG_IMA_KEXEC
-> +struct kimage;
-> +
-> +static inline void ima_add_kexec_buffer(struct kimage *image)
-> +{}
-> +#endif
-> +
->  #ifdef CONFIG_IMA_APPRAISE
->  extern void ima_inode_post_setattr(struct dentry *dentry);
->  extern int ima_inode_setxattr(struct dentry *dentry, const char *xattr_name,
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 0e90d14..9585861 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -19,6 +19,7 @@
->  #include <linux/mutex.h>
->  #include <linux/list.h>
->  #include <linux/fs.h>
-> +#include <linux/ima.h>
->  #include <crypto/hash.h>
->  #include <crypto/sha.h>
->  #include <linux/syscalls.h>
-> @@ -200,6 +201,9 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  		return ret;
->  	image->kernel_buf_len = size;
->  
-> +	/* IMA needs to pass the measurement list to the next kernel. */
-> +	ima_add_kexec_buffer(image);
-> +
->  	/* Call arch image probe handlers */
->  	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
->  					    image->kernel_buf_len);
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index e77ca9d..0e4d0db 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -23,6 +23,11 @@
->  
->  #include "ima.h"
->  
-> +#ifdef CONFIG_IMA_KEXEC
-> +/* Physical address of the measurement buffer in the next kernel. */
-> +static unsigned long kexec_buffer_load_addr;
-> +static size_t kexec_segment_size;
-> +
->  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  				     unsigned long segment_size)
->  {
-> @@ -75,6 +80,89 @@ out:
->  }
->  
->  /*
-> + * Called during kexec execute so that IMA can save the measurement list.
-> + */
-> +static int ima_update_kexec_buffer(struct notifier_block *self,
-> +				   unsigned long action, void *data)
-> +{
-> +	void *kexec_buffer = NULL;
-> +	size_t kexec_buffer_size;
-> +	int ret;
-> +
-> +	if (!kexec_in_progress)
-> +		return NOTIFY_OK;
-> +
-> +	kexec_buffer_size = ima_get_binary_runtime_size();
-> +	if (kexec_buffer_size >
-> +	    (kexec_segment_size - sizeof(struct ima_kexec_hdr))) {
-> +		pr_err("Binary measurement list grew too large.\n");
-> +		goto out;
-> +	}
-> +
-> +	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
-> +				  kexec_segment_size);
-> +	if (!kexec_buffer) {
-> +		pr_err("Not enough memory for the kexec measurement buffer.\n");
-> +		goto out;
-> +	}
-> +	ret = kexec_update_segment(kexec_buffer, kexec_buffer_size,
-> +				   kexec_buffer_load_addr, kexec_segment_size);
-> +	if (ret)
-> +		pr_err("Error updating kexec buffer: %d\n", ret);
-> +out:
-> +	return NOTIFY_OK;
-> +}
-> +
-> +struct notifier_block update_buffer_nb = {
-> +	.notifier_call = ima_update_kexec_buffer,
-> +};
-> +
-> +/*
-> + * Called during kexec_file_load so that IMA can add a segment to the kexec
-> + * image for the measurement list for the next kernel.
-> + */
-> +void ima_add_kexec_buffer(struct kimage *image)
-> +{
-> +	static int registered = 0;
-> +	struct kexec_buf kbuf = { .image = image, .buf_align = PAGE_SIZE,
-> +				  .buf_min = 0, .buf_max = ULONG_MAX,
-> +				  .top_down = true, .skip_checksum = true };
-> +	int ret;
-> +
-> +	if (!kexec_can_hand_over_buffer())
-> +		return;
-> +
-> +	kexec_segment_size = ALIGN(ima_get_binary_runtime_size() + PAGE_SIZE,
-> +				   PAGE_SIZE);
-> +
-> +	if (kexec_segment_size >= (ULONG_MAX - sizeof(long))) {
-> +		pr_err("Binary measurement list too large.\n");
-> +		return;
-> +	}
-
-Now we added a limitation that total segment size can not be larger than
-half of totalram. see kernel/kexec_core.c sanity_check_segment_list()
-
-So can it fail early here if kexec_segment_size is over half of total
-ram?
-
-> +
-> +	/* Ask not to checksum the segment, we will update it later. */
-> +	kbuf.buffer = NULL;
-> +	kbuf.bufsz = 0;
-> +	kbuf.memsz = kexec_segment_size;
-> +	ret = kexec_add_handover_buffer(&kbuf);
-> +	if (ret) {
-> +		pr_err("Error passing over kexec measurement buffer.\n");
-> +		return;
-> +	}
-> +	kexec_buffer_load_addr = kbuf.mem;
-> +
-> +	pr_debug("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
-> +		 kexec_buffer_load_addr);
-> +
-> +	if (registered)
-> +		return;
-> +
-> +	register_reboot_notifier(&update_buffer_nb);
-> +	registered = 1;
-> +}
-> +#endif /* IMA_KEXEC */
-> +
-> +/*
->   * Restore the measurement list from the previous kernel.
->   */
->  void ima_load_kexec_buffer(void)
-> -- 
-> 2.1.0
-> 
-
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgVGFrYWhpcm8sCgpPbiBNb24sIDIwMTYtMDgtMjkgYXQgMTc6MjggKzA5MDAsIEFLQVNISSBU
+YWthaGlybyB3cm90ZToKPiBHZW9mZidzIGN1cnJlbnQgcGF0Y2hlcyBvZiBrZXhlYyBzdXBwb3J0
+IGZvciBhcm02NCBbMV0gaWdub3Jlcwo+IGNvbW1hbmQKPiBsaW5lIHBhcmFtdGVycywgLS1tZW0t
+bWluIGFuZCAtLW1lbS1tYXggYW5kIGFsd2F5cyBsb2FkIHRoZSBrZXJuZWwgYXQKPiB0aGUgYWRk
+cmVzcyBhYm92ZSAiVEVYVF9PRkZTRVQiIGJ5dGVzIGluIHRoZSBmaXJzdCBtZW1vcnkgcmVnaW9u
+cy4KPiAKPiBNeSBwYXRjaGVzIGFkZCB0aGUgc3VwcG9ydCBvZiBib3RoIHBhcmFtZXRlcnMgYW5k
+LCBtb3Jlb3ZlciwgbWFrZQo+IHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIGVsZl9hcm02NF9sb2Fk
+KCkgYW5kIGltYWdlX2FybTY0X2xvYWQoKSBxdWl0ZQo+IHNtYWxsIGZvciBiZXR0ZXIgdW5kZXJz
+dGFuZGluZ3MuCgpUaGVzZSBsb29rIE9LLiDCoEkgcmVuYW1lZCBzb21lIG9mIHRoZSBzeW1ib2xz
+IHRvIG1ha2UgdGhpbmdzIGNsZWFyZXIuCgotR2VvZmYKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
