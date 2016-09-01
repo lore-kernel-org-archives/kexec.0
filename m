@@ -1,11 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1472766278.8090.17.camel@infradead.org>
-Subject: Re: [PATCH 0/2] arm64: support --mem-min and --mem-max parameters
+Message-Id: <2c5adba8a9e67ec2c4f4254ba84769ce3553a400.1472766405.git.geoff@infradead.org>
+In-Reply-To: <cover.1472766405.git.geoff@infradead.org>
+References: <cover.1472766405.git.geoff@infradead.org>
 From: Geoff Levand <geoff@infradead.org>
-In-Reply-To: <20160829082841.3750-1-takahiro.akashi@linaro.org>
-References: <20160829082841.3750-1-takahiro.akashi@linaro.org>
-Date: Thu, 01 Sep 2016 14:44:38 -0700
-Mime-Version: 1.0
+Subject: [PATCH v5 1/3] kexec: Add common device tree routines
+Date: Thu, 01 Sep 2016 21:51:10 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,23 +13,217 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-SGkgVGFrYWhpcm8sCgpPbiBNb24sIDIwMTYtMDgtMjkgYXQgMTc6MjggKzA5MDAsIEFLQVNISSBU
-YWthaGlybyB3cm90ZToKPiBHZW9mZidzIGN1cnJlbnQgcGF0Y2hlcyBvZiBrZXhlYyBzdXBwb3J0
-IGZvciBhcm02NCBbMV0gaWdub3Jlcwo+IGNvbW1hbmQKPiBsaW5lIHBhcmFtdGVycywgLS1tZW0t
-bWluIGFuZCAtLW1lbS1tYXggYW5kIGFsd2F5cyBsb2FkIHRoZSBrZXJuZWwgYXQKPiB0aGUgYWRk
-cmVzcyBhYm92ZSAiVEVYVF9PRkZTRVQiIGJ5dGVzIGluIHRoZSBmaXJzdCBtZW1vcnkgcmVnaW9u
-cy4KPiAKPiBNeSBwYXRjaGVzIGFkZCB0aGUgc3VwcG9ydCBvZiBib3RoIHBhcmFtZXRlcnMgYW5k
-LCBtb3Jlb3ZlciwgbWFrZQo+IHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIGVsZl9hcm02NF9sb2Fk
-KCkgYW5kIGltYWdlX2FybTY0X2xvYWQoKSBxdWl0ZQo+IHNtYWxsIGZvciBiZXR0ZXIgdW5kZXJz
-dGFuZGluZ3MuCgpUaGVzZSBsb29rIE9LLiDCoEkgcmVuYW1lZCBzb21lIG9mIHRoZSBzeW1ib2xz
-IHRvIG1ha2UgdGhpbmdzIGNsZWFyZXIuCgotR2VvZmYKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+Common device tree routines that can be shared between all arches
+that have device tree support.
+
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ kexec/Makefile |   4 ++
+ kexec/dt-ops.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ kexec/dt-ops.h |  13 ++++++
+ 3 files changed, 162 insertions(+)
+ create mode 100644 kexec/dt-ops.c
+ create mode 100644 kexec/dt-ops.h
+
+diff --git a/kexec/Makefile b/kexec/Makefile
+index e2aee84..cc3f08b 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -73,6 +73,10 @@ dist				+= kexec/mem_regions.c kexec/mem_regions.h
+ $(ARCH)_MEM_REGIONS		=
+ KEXEC_SRCS			+= $($(ARCH)_MEM_REGIONS)
+ 
++dist				+= kexec/dt-ops.c kexec/dt-ops.h
++$(ARCH)_DT_OPS		=
++KEXEC_SRCS			+= $($(ARCH)_DT_OPS)
++
+ include $(srcdir)/kexec/arch/alpha/Makefile
+ include $(srcdir)/kexec/arch/arm/Makefile
+ include $(srcdir)/kexec/arch/i386/Makefile
+diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+new file mode 100644
+index 0000000..915dbf5
+--- /dev/null
++++ b/kexec/dt-ops.c
+@@ -0,0 +1,145 @@
++#include <assert.h>
++#include <errno.h>
++#include <inttypes.h>
++#include <libfdt.h>
++#include <stdio.h>
++#include <stdlib.h>
++
++#include "kexec.h"
++#include "dt-ops.h"
++
++static const char n_chosen[] = "/chosen";
++
++static const char p_bootargs[] = "bootargs";
++static const char p_initrd_start[] = "linux,initrd-start";
++static const char p_initrd_end[] = "linux,initrd-end";
++
++int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end)
++{
++	int result;
++	uint64_t value;
++
++	dbgprintf("%s: start %jd, end %jd, size %jd (%jd KiB)\n",
++		__func__, (intmax_t)start, (intmax_t)end,
++		(intmax_t)(end - start),
++		(intmax_t)(end - start) / 1024);
++
++	value = cpu_to_fdt64(start);
++
++	result = dtb_set_property(dtb, dtb_size, n_chosen, p_initrd_start,
++		&value, sizeof(value));
++
++	if (result)
++		return result;
++
++	value = cpu_to_fdt64(end);
++
++	result = dtb_set_property(dtb, dtb_size, n_chosen, p_initrd_end,
++		&value, sizeof(value));
++
++	if (result) {
++		dtb_delete_property(*dtb, n_chosen, p_initrd_start);
++		return result;
++	}
++
++	return 0;
++}
++
++int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line)
++{
++	return dtb_set_property(dtb, dtb_size, n_chosen, p_bootargs,
++		command_line, strlen(command_line) + 1);
++}
++
++int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
++	const char *prop, const void *value, int value_len)
++{
++	int result;
++	int nodeoffset;
++	void *new_dtb;
++	int new_size;
++
++	value_len = FDT_TAGALIGN(value_len);
++
++	new_size = FDT_TAGALIGN(*dtb_size + fdt_node_len(node)
++		+ fdt_prop_len(prop, value_len));
++
++	new_dtb = malloc(new_size);
++
++	if (!new_dtb) {
++		dbgprintf("%s: malloc failed\n", __func__);
++		return -ENOMEM;
++	}
++
++	result = fdt_open_into(*dtb, new_dtb, new_size);
++
++	if (result) {
++		dbgprintf("%s: fdt_open_into failed: %s\n", __func__,
++			fdt_strerror(result));
++		goto on_error;
++	}
++
++	nodeoffset = fdt_path_offset(new_dtb, node);
++	
++	if (nodeoffset == -FDT_ERR_NOTFOUND) {
++		result = fdt_add_subnode(new_dtb, nodeoffset, node);
++
++		if (result) {
++			dbgprintf("%s: fdt_add_subnode failed: %s\n", __func__,
++				fdt_strerror(result));
++			goto on_error;
++		}
++	} else if (nodeoffset < 0) {
++		dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
++			fdt_strerror(nodeoffset));
++		goto on_error;
++	}
++
++	result = fdt_setprop(new_dtb, nodeoffset, prop, value, value_len);
++
++	if (result) {
++		dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
++			fdt_strerror(result));
++		goto on_error;
++	}
++
++	/*
++	 * Can't call free on dtb since dtb may have been mmaped by
++	 * slurp_file().
++	 */
++
++	result = fdt_pack(new_dtb);
++
++	if (result)
++		dbgprintf("%s: Unable to pack device tree: %s\n", __func__,
++			fdt_strerror(result));
++
++	*dtb = new_dtb;
++	*dtb_size = fdt_totalsize(*dtb);
++
++	return 0;
++
++on_error:
++	free(new_dtb);
++	return result;
++}
++
++int dtb_delete_property(char *dtb, const char *node, const char *prop)
++{
++	int result;
++	int nodeoffset = fdt_path_offset(dtb, node);
++
++	if (nodeoffset < 0) {
++		dbgprintf("%s: fdt_path_offset failed: %s\n", __func__,
++			fdt_strerror(nodeoffset));
++		return nodeoffset;
++	}
++
++	result = fdt_delprop(dtb, nodeoffset, prop);
++
++	if (result)
++		dbgprintf("%s: fdt_delprop failed: %s\n", __func__,
++			fdt_strerror(nodeoffset));
++
++	return result;
++}
+diff --git a/kexec/dt-ops.h b/kexec/dt-ops.h
+new file mode 100644
+index 0000000..e70d15d
+--- /dev/null
++++ b/kexec/dt-ops.h
+@@ -0,0 +1,13 @@
++#if !defined(KEXEC_DT_OPS_H)
++#define KEXEC_DT_OPS_H
++
++#include <sys/types.h>
++
++int dtb_set_initrd(char **dtb, off_t *dtb_size, off_t start, off_t end);
++int dtb_set_bootargs(char **dtb, off_t *dtb_size, const char *command_line);
++int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
++	const char *prop, const void *value, int value_len);
++
++int dtb_delete_property(char *dtb, const char *node, const char *prop);
++
++#endif
+-- 
+2.7.4
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
