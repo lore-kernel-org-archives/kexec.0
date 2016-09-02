@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bfkE6-00059r-8X
- for kexec@lists.infradead.org; Fri, 02 Sep 2016 08:53:32 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: "kernel version not supported" message is causing concerns
-Date: Fri, 2 Sep 2016 08:50:45 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E63A46@BPXM01GP.gisp.nec.co.jp>
-References: <57C58A20.7000704@canonical.com>
-In-Reply-To: <57C58A20.7000704@canonical.com>
-Content-Language: ja-JP
+ id 1bflMk-0000bu-40
+ for kexec@lists.infradead.org; Fri, 02 Sep 2016 10:06:34 +0000
+Received: by mail-pf0-x22b.google.com with SMTP id h186so41057698pfg.3
+ for <kexec@lists.infradead.org>; Fri, 02 Sep 2016 03:06:08 -0700 (PDT)
+Date: Fri, 2 Sep 2016 19:11:54 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Message-ID: <20160902101153.GZ20080@linaro.org>
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015747.28591-1-takahiro.akashi@linaro.org>
+ <20160819132641.GA12709@rob-hp-laptop>
+ <20160822042832.GJ20080@linaro.org>
+ <CAL_JsqJ5SqesEL5QWX_NJj+gL2jpne4NN_WzADiH+1VB7CkvOA@mail.gmail.com>
+ <20160830234545.GP20080@linaro.org>
+ <20160831050215.GQ20080@linaro.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160831050215.GQ20080@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,62 +32,181 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Louis Bouchard <louis.bouchard@canonical.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, dyoung@redhat.com, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, Frank Rowand <frowand.list@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hello Louis,
+Rob,
 
->Hello,
->
->Every so often, I get questions or bug report about the fact that makedumpfile
->issues the following message when running :
->
->   The kernel version is not supported.
->   The created dumpfile may be incomplete.
->
->While I understand the requirement for this message, it almost systematically is
->understood by users as "makedumpfile is broken".
+On Wed, Aug 31, 2016 at 02:02:16PM +0900, AKASHI Takahiro wrote:
+> On Wed, Aug 31, 2016 at 08:45:46AM +0900, AKASHI Takahiro wrote:
+> > Rob,
+> > 
+> > On Tue, Aug 30, 2016 at 11:34:10AM -0500, Rob Herring wrote:
+> > > On Sun, Aug 21, 2016 at 11:28 PM, AKASHI Takahiro
+> > > <takahiro.akashi@linaro.org> wrote:
+> > > > Rob,
+> > > > [Cc: Mark]
+> > > >
+> > > > On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
+> > > >> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
+> > > >> > From: James Morse <james.morse@arm.com>
+> > > >> >
+> > > >> > Add documentation for
+> > > >> >     linux,crashkernel-base and crashkernel-size,
+> > > >> >     linux,usable-memory-range, and
+> > > >> >     linux,elfcorehdr
+> > > >> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
+> > > >> > the elfcorehdr's location within it.
+> > > >> >
+> > > >> > Signed-off-by: James Morse <james.morse@arm.com>
+> > > >> > [takahiro.akashi@linaro.org:
+> > > >> >     renamed "usable-memory" to "usable-memory-range",
+> > > >> >     added "linux,crashkernel-base" and "-size" ]
+> > > >> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > >> > ---
+> > > >> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+> > > >> >  1 file changed, 50 insertions(+)
+> > > >> >
+> > > >> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > > >> > index 6ae9d82..236188a 100644
+> > > >> > --- a/Documentation/devicetree/bindings/chosen.txt
+> > > >> > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > > >> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+> > > >> >  book3e) by some versions of kexec-tools to tell the new kernel that it
+> > > >> >  is being booted by kexec, as the booting environment may differ (e.g.
+> > > >> >  a different secondary CPU release mechanism)
+> > > >> > +
+> > > >> > +linux,crashkernel-base
+> > > >> > +linux,crashkernel-size
+> > > >> > +----------------------
+> > > >> > +These properties (currently used on PowerPC and arm64) indicates
+> > > >> > +the base address and the size, respectively, of the reserved memory
+> > > >> > +range for crash dump kernel.
+> > > >> > +e.g.
+> > > >> > +
+> > > >> > +/ {
+> > > >> > +   chosen {
+> > > >> > +           linux,crashkernel-base = <0x9 0xf0000000>;
+> > > >> > +           linux,crashkernel-size = <0x0 0x10000000>;
+> > > >> > +   };
+> > > >> > +};
+> > > >> > +
+> > > >> > +linux,usable-memory-range
+> > > >> > +-------------------------
+> > > >> > +
+> > > >> > +This property (currently used only on arm64) holds the memory range,
+> > > >> > +the base address and the size, which can be used as system ram on
+> > > >> > +the *current* kernel. Note that, if this property is present, any memory
+> > > >> > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > > >> > +memory" in EFI memory map should be ignored.
+> > > >> > +e.g.
+> > > >> > +
+> > > >> > +/ {
+> > > >> > +   chosen {
+> > > >> > +           linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+> > > >> > +   };
+> > > >> > +};
+> > > >>
+> > > >> I've read the discussion on this. I think you should use the existing
+> > > >> linux,usable-memory property in the memory nodes. If UEFI systems don't
+> > > >> have memory nodes, then you can find an UEFI way to describe this. DT is
+> > > >> not the dumping ground for what doesn't fit in UEFI. How do x86 systems
+> > > >> work?
+> > > >
+> > > > Kdump for x86 passes the range of usable memory to crash dump kernel
+> > > > either via:
+> > > > (a) "memmap=nn@ss" command line parameter, or
+> > > > (b) faked BIOS e820 map (a sort of memory map table)
+> > > >
+> > > > (a) was rejected by Mark [1], and (b) is x86-specific.
+> > > >
+> > > > I believe that my approach is better because it works in the same way
+> > > > either on UEFI systems or DT-based systems.
+> > > 
+> > > So we have a new way for both UEFI and DT. If UEFI folks can't come up
+> > > with a standard way to do things in the UEFI standard, then we just
+> > > dump them into DT?
+> > 
+> > No, I don't think so.
+> > According to "Documentation/devicetree/bindings/chosen.txt,
+> >   "The chosen node does not represent a real device, but serves as a place
+> >    for passing data between firmware and the operating system, like boot
+> >    arguments."
+> > 
+> > Since kexec/dump is some sort of boot loader, it all makes sense to
+> > add a new property as an interface from the old kernel(kexec/dump)
+> > to the new kernel. So my approach doesn't break any DT rules.
+> > 
+> > Please note that, even on UEFI/APCI systems, there are already a few
+> > properties used under /chosen, like "linux,uefi-system-table" and 
+> > "linux,mmap-*."
+> > (Those properties are currently *not* defined in this document, though.)
+> > 
+> > > I'd rather see alignment with existing DT systems
+> > > (PPC) and in particular the tools.
+> > 
+> > I'm not sure what you mean here, but I guess:
+> > 1) On DT-only systems, we should follow the way that PPC does.
+> >    (That is, adding "usable-memory" property to each "memory" node.)
+> > 2) On UEFI/ACPI system, we must invent a new own way for our purpose
+> >    because, as I said before, there is no standard, but x86-specific way. 
+> > 
+> > Is this what you want to do?
 
-I don't think the message itself is bad, the situation for users has
-a problem, I guess.
-If a distribution provides a combination of a kernel and a makedumpfile
-which doesn't support it, it stands to reason that users send a bug report.
+Yes?
 
->I would like to discuss the opportunity of changing the wording of this message
->so it appears less confusing. Maybe something like :
->
->Warning: makedumpfile has not been tested on this version of the kernel.
->         If the created dumpfile is incomplete, you may need to upgrade to a
->         newer version of makedumpfile.
+> > If so,
+> > do you agree to my approach of adding "linux,usable-memory-range" property
+> > to /chosen *for UEFI/ACPI use*?
+> 
+> I've got another idea here: using "/memreserve/" field.
 
-I suspect such message doesn't make sense because even the latest makedumpfile
-doesn't support the kernel version in your most cases, right ?
+We'd better to use "reserved-memory" node:
+  reserved-memory {
+    #address-cells = <2>;
+    #size-cells = <2>;
+    ranges;
 
-I know I have to work harder for following up the latest kernel ASAP,
-but I don't agree with your suggestion.
+    crash_dump@80000000 {
+      reg = <0x0 0x80000000 0x0 0x8000000>;
+      no-map;
+    }
+    ...
+  }
+so that we can clearly state that those regions are for kdump.
+Unfortunately, we can't place "reserved-memory" under /chosen.
+
+> All the memory regions used by the crashed kernel would be added
+> as "/memreserve/" and be memblock_reserve'd later in crash dump kernel.
+> Consequently, they will be excluded from the usable memory.
+> 
+> Obviously,
+> - this approach will work both on UEFI/ACPI and DT-only systems, and
+> - patch#2 ("memblock: add memblock_cap_memory_range()"), as well as
+>   "linux,usable-memory-range" property, is no longer necessary.
+>   (So nothing new, except for "linux.elfcorehdr," will be invented.)
+> 
+> But on the other hand,
+> - arm64 and ppc do the different ways even though both are DT systems,
+> - those reserved regions are still *in* linear mapping and appear as
+>   "System RAM" in /proc/iomem, and
+> - this may imply that we cannot do kexec on crash dump kernel.
+
+If you never accept my approach of adding "linux,usable-memory-range,"
+I will send a new version, v26, based on "reserved-memory" next week.
+
+(The only change is to remove patch#2/#3 from v25, though.)
+
+-Takahiro AKASHI
 
 
-Thanks,
-Atsushi Kumagai
-
->I would be happy to propose a pull request for such a change if accepted.
->
->Kind regards,
->
->...Louis
->
->
->--
->Louis Bouchard
->Software engineer, Cloud & Sustaining eng.
->Canonical Ltd
->Ubuntu developer                       Debian Maintainer
->GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+> -Takahiro AKASHI
+> 
+> 
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > Rob
 
 _______________________________________________
 kexec mailing list
