@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v24 0/9] arm64: add kdump support
-References: <20160809015248.28414-1-takahiro.akashi@linaro.org>
- <0267060a-d380-2e7a-0c33-0084bfc46d97@caviumnetworks.com>
- <20160831053109.GR20080@linaro.org>
- <cca40a49-3500-ded8-35a7-053adf79d12b@caviumnetworks.com>
- <20160905081501.GA16712@linaro.org>
-From: Manish Jaggi <mjaggi@caviumnetworks.com>
-Message-ID: <976ca1f8-5efb-b45c-19b8-bde7bd06f5b8@caviumnetworks.com>
-Date: Mon, 5 Sep 2016 18:12:20 +0530
+Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bh4Ax-0006ql-LL
+ for kexec@lists.infradead.org; Tue, 06 Sep 2016 00:23:45 +0000
+Received: by mail-pf0-x234.google.com with SMTP id w87so10168912pfk.2
+ for <kexec@lists.infradead.org>; Mon, 05 Sep 2016 17:23:23 -0700 (PDT)
+Date: Tue, 6 Sep 2016 09:29:59 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Memory range end be inclusive or exclusive? Re: [PATCH v1 1/4]
+ kexec: (bugfix) calc correct end address of memory ranges in device tree
+Message-ID: <20160906002958.GB16712@linaro.org>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <3562841.ROYbCgkeeq@hactar>
+ <20160727232331.GY1041@n2100.armlinux.org.uk>
+ <1860371.lT9GInp2C3@hactar>
+ <20160729082714.GA1041@n2100.armlinux.org.uk>
+ <1469812346.16559.40.camel@infradead.org>
+ <20160729172356.GD1041@n2100.armlinux.org.uk>
+ <20160801045240.GD7995@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20160905081501.GA16712@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20160801045240.GD7995@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,136 +33,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-arm-kernel@lists.infradead.org
 
+Simon,
 
+What is your opinion on this issue?
 
-On 09/05/2016 01:45 PM, AKASHI Takahiro wrote:
-> [Cc: Marc]
+On Mon, Aug 01, 2016 at 01:52:40PM +0900, AKASHI Takahiro wrote:
+> On Fri, Jul 29, 2016 at 06:23:56PM +0100, Russell King - ARM Linux wrote:
+> > On Fri, Jul 29, 2016 at 10:12:26AM -0700, Geoff Levand wrote:
+> > > On Fri, 2016-07-29 at 09:27 +0100, Russell King - ARM Linux wrote:
+> > > 
+> > > > So, these functions are a mess and need fixing.
+> > > 
+> > > Since this change isn't really related to arm64 support, I'll
+> > > drop this patch from my series.
+> > 
+> > Do you have a case which triggers bugs in this code?
 > 
-> On Fri, Sep 02, 2016 at 06:23:25PM +0530, Manish Jaggi wrote:
->>
->>
->> On 08/31/2016 11:01 AM, AKASHI Takahiro wrote:
->>> Manish,
->>>
->>> Thank you for testing my kdump and reporting issues.
->>>
->>> On Wed, Aug 31, 2016 at 09:11:52AM +0530, Manish Jaggi wrote:
->>>> Hi Akashi,
->>>>
->>>> On 08/09/2016 07:22 AM, AKASHI Takahiro wrote:
->>>>> This patch series adds kdump support on arm64.
->>>>>
->>>>> To load a crash-dump kernel to the systems, a series of patches to
->>>>> kexec-tools, which have not yet been merged upstream, are needed.
->>>>> Please use my kdump patches [1].
->>>>>
->>>>> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
->>>>>   - crash utility (coming v7.1.6 or later) [2]
->>>>>     (Necessary patches have already been queued in the master.)
->>>>>
->>>>> [1] T.B.D.
->>>>> [2] https://github.com/crash-utility/crash.git
->>>>>
->>>>> Changes for v24 (Aug 9, 2016):
->>>>>   o Rebase to Linux-4.8-rc1
->>>>>   o Update descriptions about newly added DT proerties
->>>>>
->>>>> Changes for v23 (July 26, 2016):
->>>>>
->>>>>   o Move memblock_reserve() to a single place in reserve_crashkernel()
->>>>>   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
->>>>>   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
->>>>>   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
->>>>>     (for ACPI) from usable memory at crash kernel
->>>>>
->>>>> Changes for v22 (July 12, 2016):
->>>>>
->>>>>   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
->>>>>     and add some descriptions about them in chosen.txt
->>>>>   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
->>>>>     with powerpc's "usable-memory"
->>>>>   o Make cosmetic changes regarding "ifdef" usage
->>>>>   o Correct some wordings in kdump.txt
->>>>>
->>>>> Changes for v21 (July 6, 2016):
->>>>>
->>>>>   o Remove kexec patches.
->>>>>   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
->>>>>   o Clarify the description about kvm in kdump.txt.
->>>>>
->>>>> See the following link [3] for older changes:
->>>>> [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
->>>>>
->>>>> AKASHI Takahiro (8):
->>>>>   arm64: kdump: reserve memory for crash dump kernel
->>>>>   memblock: add memblock_cap_memory_range()
->>>>>   arm64: limit memory regions based on DT property, usable-memory-range
->>>>>   arm64: kdump: implement machine_crash_shutdown()
->>>>>   arm64: kdump: add kdump support
->>>>>   arm64: kdump: add VMCOREINFO's for user-space coredump tools
->>>>>   arm64: kdump: enable kdump in the arm64 defconfig
->>>>>   arm64: kdump: update a kernel doc
->>>>>
->>>>> James Morse (1):
->>>>>   Documentation: dt: chosen properties for arm64 kdump
->>>>>
->>>>>  Documentation/devicetree/bindings/chosen.txt |  45 ++++++
->>>>>  Documentation/kdump/kdump.txt                |  16 ++-
->>>>>  arch/arm64/Kconfig                           |  11 ++
->>>>>  arch/arm64/configs/defconfig                 |   1 +
->>>>>  arch/arm64/include/asm/hardirq.h             |   2 +-
->>>>>  arch/arm64/include/asm/kexec.h               |  41 +++++-
->>>>>  arch/arm64/include/asm/smp.h                 |   2 +
->>>>>  arch/arm64/kernel/Makefile                   |   1 +
->>>>>  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
->>>>>  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
->>>>>  arch/arm64/kernel/setup.c                    |   7 +-
->>>>>  arch/arm64/kernel/smp.c                      |  63 +++++++++
->>>>>  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
->>>>>  include/linux/memblock.h                     |   1 +
->>>>>  mm/memblock.c                                |  28 ++++
->>>>>  15 files changed, 551 insertions(+), 7 deletions(-)
->>>>>  create mode 100644 arch/arm64/kernel/crash_dump.c
->>>>>
->>>> Couple of points
->>>> a) Just a note, while testing, the crashkernel reserved memory should be less than ARCH_LOW_ADDRESS_LIMIT (=arm64_dma_phys_limit).
->>>
->>> I think that this is a common mistake not only for kdump, but also
->>> for general kernels.
->>> Since request_standard_resources() calls alloc_bootmem_low(),
->>> the kernel will panic if any of usable "System RAM" is located
->>> above ARCH_LOW_ADDRESS_LIMIT.
->>> For kdump, using "crashkernel=SS" notation is a convenient way
->>> to avoid this issue.
->>>
->>>> b) Has anyone tested this on a SoC with Gicv3 ITS ?
->>>> Should the GICD/R be reset prior to switching to crash kernel ?
->>>> I am seeing lot of GICv3: RWP timeout, gone fishing while crash kernel boots.
->>>
->>> I've never seen this kind of messages.
->>> I usually do my testing on a fast model.
->>> "compatible" of interrupt-controller is "arm,gic-v3."
->>>
->> I suspect gic_cpu_pm_notifier is not being called on any of the cores prior to start of crash kernel.
->> We might have to call it explicitly.
+> Actually, this patch was necessary when my kdump used "usable-memory"
+> properties in "memory" nodes, as on ppc64, to limit the usable memory
+> regions that can be used by crash dump kernel.
+> Since then, I've moved to the approach of using "mem=" kernel parameter,
+> then introducing a new property, "linux,usable-memory-range," under /chosen
+> and now we don't need this patch any more.
 > 
-> I'm not sure that it is the cause, but anyway none of any cpu_pm_notifier's
-> will be called at panic. That is the reason why "maxcpus=1" should be
-> specified (for kdump on arm64).
-> 
-What I meant was that since cpu_pm_notifier is not called before crash kernel is started,
-GIC Distributor/re-distributor/ITS is not set in quiescent state.
-In my setup the GICD_CTRL[RWP] bit is not cleared in the crashkernels' distributor init function.
-Marc what do you think?
+> So, we can drop it but I still believe that it is buggy.
+
+Due to the discussions[1], I may want to re-enable "usable-memory"
+property on arm64. In addition, I would like to add a function,
+dtb_add_usable_memory_properties(), a variant of
+add_usable_memory_properties(), to kexec/dt-ops.c.
+So this issue is quite crucial now.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452685.html
+
+-Takahiro AKASHI
+
+> Thanks,
 > -Takahiro AKASHI
 > 
->>> Thanks,
->>> -Takahiro AKASHI
->>>
->>>> Thanks,
->>>> Manish
+> > -- 
+> > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> > FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> > according to speedtest.net.
 
 _______________________________________________
 kexec mailing list
