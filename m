@@ -1,22 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhBem-0005nD-BH
- for kexec@lists.infradead.org; Tue, 06 Sep 2016 08:23:02 +0000
-Date: Tue, 6 Sep 2016 10:22:35 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [PATCH] Cleanup: Use a negative number for uninitialized file
- descriptors
-Message-ID: <20160906102235.7c186773@hananiah.suse.cz>
-In-Reply-To: <1471419459.3229.1.camel@suse.de>
-References: <20160810125658.23366-1-mwilck@suse.de>
- <20160810125658.23366-4-mwilck@suse.de>
- <20160810150846.6a257447@hananiah.suse.cz>
- <1470836145.3194.31.camel@suse.de>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E5CE94@BPXM01GP.gisp.nec.co.jp>
- <20160816075911.09a0659d@hananiah.suse.cz>
- <1471419459.3229.1.camel@suse.de>
-MIME-Version: 1.0
+ id 1bhGyS-0006dq-7m
+ for kexec@lists.infradead.org; Tue, 06 Sep 2016 14:03:42 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u86E31Ee102278
+ for <kexec@lists.infradead.org>; Tue, 6 Sep 2016 10:03:22 -0400
+Received: from e23smtp07.au.ibm.com (e23smtp07.au.ibm.com [202.81.31.140])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 259xmjjkkh-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 10:03:22 -0400
+Received: from localhost
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Wed, 7 Sep 2016 00:03:19 +1000
+Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 12D9B2CE8057
+ for <kexec@lists.infradead.org>; Wed,  7 Sep 2016 00:03:17 +1000 (EST)
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u86E3Hbh7602622
+ for <kexec@lists.infradead.org>; Wed, 7 Sep 2016 00:03:17 +1000
+Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u86E3Ghd027629
+ for <kexec@lists.infradead.org>; Wed, 7 Sep 2016 00:03:16 +1000
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH v3 1/9] ima: on soft reboot, restore the measurement list
+Date: Tue,  6 Sep 2016 10:02:56 -0400
+In-Reply-To: <1473170584-15094-1-git-send-email-zohar@linux.vnet.ibm.com>
+References: <1473170584-15094-1-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1473170584-15094-2-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,318 +41,364 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Martin Wilck <mwilck@suse.de>, kexec@lists.infradead.org
+To: linux-security-module <linux-security-module@vger.kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-Do not use zero to denote an invalid file descriptor.
+The TPM PCRs are only reset on a hard reboot.  In order to validate a
+TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+of the running kernel must be saved and restored on boot.  This patch
+restores the measurement list.
 
-First, zero is a valid value, although quite unlikely to be used for
-anything except standard input.
+Changelog v2:
+- redefined ima_kexec_hdr to use types with well defined sizes (M. Ellerman)
+- defined missing ima_load_kexec_buffer() stub function
 
-Second, open(2) returns a negative value on failure, so there are
-already checks for a negative value in some places.
+Changelog v1:
+- call ima_load_kexec_buffer() (Thiago)
 
-The purpose of this patch is not to allow running in an evil environment
-(with closed stdin), but to aid in debugging by using a consistent value
-for uninitialized file descriptors which is also regarded as invalid by
-the kernel. For example, attempts to close a negative FD will fail
-(unlike an attempt to close FD 0).
-
-Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- makedumpfile.c | 68 +++++++++++++++++++++++++++++++++-------------------------
- makedumpfile.h |  2 +-
- 2 files changed, 40 insertions(+), 30 deletions(-)
+ security/integrity/ima/Makefile       |   1 +
+ security/integrity/ima/ima.h          |  18 ++++
+ security/integrity/ima/ima_init.c     |   2 +
+ security/integrity/ima/ima_kexec.c    |  55 +++++++++++
+ security/integrity/ima/ima_queue.c    |  10 ++
+ security/integrity/ima/ima_template.c | 170 ++++++++++++++++++++++++++++++++++
+ 6 files changed, 256 insertions(+)
+ create mode 100644 security/integrity/ima/ima_kexec.c
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 21784e8..d168dfd 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3730,10 +3730,10 @@ free_for_parallel()
- 		return;
+diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
+index 9aeaeda..56093be 100644
+--- a/security/integrity/ima/Makefile
++++ b/security/integrity/ima/Makefile
+@@ -8,4 +8,5 @@ obj-$(CONFIG_IMA) += ima.o
+ ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
+ 	 ima_policy.o ima_template.o ima_template_lib.o
+ ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
++ima-$(CONFIG_KEXEC_FILE) += ima_kexec.o
+ obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index db25f54..e7b3755 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -102,6 +102,15 @@ struct ima_queue_entry {
+ };
+ extern struct list_head ima_measurements;	/* list of all measurements */
  
- 	for (i = 0; i < info->num_threads; i++) {
--		if (FD_MEMORY_PARALLEL(i) > 0)
-+		if (FD_MEMORY_PARALLEL(i) >= 0)
- 			close(FD_MEMORY_PARALLEL(i));
++/* Some details preceding the binary serialized measurement list */
++struct ima_kexec_hdr {
++	u16 version;
++	u16 _reserved0;
++	u32 _reserved1;
++	u64 buffer_size;
++	u64 count;
++};
++
+ /* Internal IMA function definitions */
+ int ima_init(void);
+ int ima_fs_init(void);
+@@ -122,8 +131,17 @@ int ima_init_crypto(void);
+ void ima_putc(struct seq_file *m, void *data, int datalen);
+ void ima_print_digest(struct seq_file *m, u8 *digest, u32 size);
+ struct ima_template_desc *ima_template_desc_current(void);
++int ima_restore_measurement_entry(struct ima_template_entry *entry);
++int ima_restore_measurement_list(loff_t bufsize, void *buf);
+ int ima_init_template(void);
  
--		if (FD_BITMAP_MEMORY_PARALLEL(i) > 0)
-+		if (FD_BITMAP_MEMORY_PARALLEL(i) >= 0)
- 			close(FD_BITMAP_MEMORY_PARALLEL(i));
- 	}
++#ifdef CONFIG_KEXEC_FILE
++void ima_load_kexec_buffer(void);
++#else
++static inline void ima_load_kexec_buffer(void)
++{}
++#endif
++
+ /*
+  * used to protect h_table and sha_table
+  */
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 32912bd..3ba0ca4 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -128,6 +128,8 @@ int __init ima_init(void)
+ 	if (rc != 0)
+ 		return rc;
+ 
++	ima_load_kexec_buffer();
++
+ 	rc = ima_add_boot_aggregate();	/* boot aggregate must be first entry */
+ 	if (rc != 0)
+ 		return rc;
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+new file mode 100644
+index 0000000..6a046ad
+--- /dev/null
++++ b/security/integrity/ima/ima_kexec.c
+@@ -0,0 +1,55 @@
++/*
++ * Copyright (C) 2016 IBM Corporation
++ *
++ * Authors:
++ * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
++ * Mimi Zohar <zohar@linux.vnet.ibm.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#include <linux/fcntl.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/seq_file.h>
++#include <linux/rculist.h>
++#include <linux/rcupdate.h>
++#include <linux/parser.h>
++#include <linux/vmalloc.h>
++#include <linux/kexec.h>
++#include <linux/reboot.h>
++
++#include "ima.h"
++
++/*
++ * Restore the measurement list from the previous kernel.
++ */
++void ima_load_kexec_buffer(void)
++{
++	void *kexec_buffer = NULL;
++	size_t kexec_buffer_size = 0;
++	int rc;
++
++	rc = kexec_get_handover_buffer(&kexec_buffer, &kexec_buffer_size);
++	switch (rc) {
++	case 0:
++		rc = ima_restore_measurement_list(kexec_buffer_size,
++						  kexec_buffer);
++		if (rc != 0)
++			pr_err("Failed to restore the measurement list: %d\n",
++				rc);
++
++		kexec_free_handover_buffer();
++		break;
++	case -ENOTSUPP:
++		pr_debug("Restoring the measurement list not supported\n");
++		break;
++	case -ENOENT:
++		pr_debug("No measurement list to restore\n");
++		break;
++	default:
++		pr_debug("Error restoring the measurement list: %d\n", rc);
++	}
++}
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index 32f6ac0..4b1bb77 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -149,3 +149,13 @@ out:
+ 			    op, audit_cause, result, audit_info);
+ 	return result;
  }
-@@ -4038,13 +4038,13 @@ out:
- void
- initialize_bitmap(struct dump_bitmap *bitmap)
- {
--	if (info->fd_bitmap) {
-+	if (info->fd_bitmap >= 0) {
- 		bitmap->fd        = info->fd_bitmap;
- 		bitmap->file_name = info->name_bitmap;
- 		bitmap->no_block  = -1;
- 		memset(bitmap->buf, 0, BUFSIZE_BITMAP);
- 	} else {
--		bitmap->fd        = 0;
-+		bitmap->fd        = -1;
- 		bitmap->file_name = NULL;
- 		bitmap->no_block  = -1;
- 		memset(bitmap->buf, 0, info->bufsize_cyclic);
-@@ -4154,7 +4154,7 @@ set_bitmap_buffer(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val, struct cyc
- int
- set_bitmap(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val, struct cycle *cycle)
- {
--	if (bitmap->fd) {
-+	if (bitmap->fd >= 0) {
- 		return set_bitmap_file(bitmap, pfn, val);
- 	} else {
- 		return set_bitmap_buffer(bitmap, pfn, val, cycle);
-@@ -4170,7 +4170,7 @@ sync_bitmap(struct dump_bitmap *bitmap)
- 	/*
- 	 * The bitmap doesn't have the fd, it's a on-memory bitmap.
- 	 */
--	if (bitmap->fd == 0)
-+	if (bitmap->fd < 0)
- 		return TRUE;
- 	/*
- 	 * The bitmap buffer is not dirty, and it is not necessary
-@@ -5403,7 +5403,7 @@ create_1st_bitmap_buffer(struct cycle *cycle)
- int
- create_1st_bitmap(struct cycle *cycle)
- {
--	if (info->bitmap1->fd) {
-+	if (info->bitmap1->fd >= 0) {
- 		return create_1st_bitmap_file();
- 	} else {
- 		return create_1st_bitmap_buffer(cycle);
-@@ -5414,7 +5414,7 @@ static inline int
- is_in_segs(unsigned long long paddr)
- {
- 	if (info->flag_refiltering || info->flag_sadump) {
--		if (info->bitmap1->fd == 0) {
-+		if (info->bitmap1->fd < 0) {
- 			initialize_1st_bitmap(info->bitmap1);
- 			create_1st_bitmap_file();
- 		}
-@@ -5872,7 +5872,7 @@ copy_bitmap_file(void)
- int
- copy_bitmap(void)
- {
--	if (info->fd_bitmap) {
-+	if (info->fd_bitmap >= 0) {
- 		return copy_bitmap_file();
- 	} else {
- 		return copy_bitmap_buffer();
-@@ -6313,7 +6313,7 @@ prepare_bitmap1_buffer(void)
- 		return FALSE;
- 	}
++
++int ima_restore_measurement_entry(struct ima_template_entry *entry)
++{
++	int result = 0;
++
++	mutex_lock(&ima_extend_list_mutex);
++	result = ima_add_digest_entry(entry);
++	mutex_unlock(&ima_extend_list_mutex);
++	return result;
++}
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index febd12e..7c90075 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -37,6 +37,7 @@ static struct ima_template_field supported_fields[] = {
+ 	{.field_id = "sig", .field_init = ima_eventsig_init,
+ 	 .field_show = ima_show_template_sig},
+ };
++#define MAX_TEMPLATE_NAME_LEN 15
  
--	if (info->fd_bitmap) {
-+	if (info->fd_bitmap >= 0) {
- 		if ((info->bitmap1->buf = (char *)malloc(BUFSIZE_BITMAP)) == NULL) {
- 			ERRMSG("Can't allocate memory for the 1st bitmaps's buffer. %s\n",
- 			       strerror(errno));
-@@ -6352,7 +6352,7 @@ prepare_bitmap2_buffer(void)
- 		       strerror(errno));
- 		return FALSE;
- 	}
--	if (info->fd_bitmap) {
-+	if (info->fd_bitmap >= 0) {
- 		if ((info->bitmap2->buf = (char *)malloc(BUFSIZE_BITMAP)) == NULL) {
- 			ERRMSG("Can't allocate memory for the 2nd bitmaps's buffer. %s\n",
- 			       strerror(errno));
-@@ -7582,7 +7582,7 @@ kdump_thread_function_cyclic(void *arg) {
+ static struct ima_template_desc *ima_template;
+ static struct ima_template_desc *lookup_template_desc(const char *name);
+@@ -205,3 +206,172 @@ int __init ima_init_template(void)
  
- 	fd_memory = FD_MEMORY_PARALLEL(kdump_thread_args->thread_num);
- 
--	if (info->fd_bitmap) {
-+	if (info->fd_bitmap >= 0) {
- 		bitmap_parallel.buf = malloc(BUFSIZE_BITMAP);
- 		if (bitmap_parallel.buf == NULL){
- 			ERRMSG("Can't allocate memory for bitmap_parallel.buf. %s\n",
-@@ -7628,7 +7628,7 @@ kdump_thread_function_cyclic(void *arg) {
- 			pthread_mutex_lock(&info->current_pfn_mutex);
- 			for (pfn = info->current_pfn; pfn < cycle->end_pfn; pfn++) {
- 				dumpable = is_dumpable(
--					info->fd_bitmap ? &bitmap_parallel : info->bitmap2,
-+					info->fd_bitmap >= 0 ? &bitmap_parallel : info->bitmap2,
- 					pfn,
- 					cycle);
- 				if (dumpable)
-@@ -7723,7 +7723,7 @@ next:
- 	retval = NULL;
- 
- fail:
--	if (bitmap_memory_parallel.fd > 0)
-+	if (bitmap_memory_parallel.fd >= 0)
- 		close(bitmap_memory_parallel.fd);
- 	if (bitmap_parallel.buf != NULL)
- 		free(bitmap_parallel.buf);
-@@ -8461,7 +8461,7 @@ out:
- 
- int
- write_kdump_bitmap1(struct cycle *cycle) {
--	if (info->bitmap1->fd) {
-+	if (info->bitmap1->fd >= 0) {
- 		return write_kdump_bitmap1_file();
- 	} else {
- 		return write_kdump_bitmap1_buffer(cycle);
-@@ -8470,7 +8470,7 @@ write_kdump_bitmap1(struct cycle *cycle) {
- 
- int
- write_kdump_bitmap2(struct cycle *cycle) {
--	if (info->bitmap2->fd) {
-+	if (info->bitmap2->fd >= 0) {
- 		return write_kdump_bitmap2_file();
- 	} else {
- 		return write_kdump_bitmap2_buffer(cycle);
-@@ -8597,9 +8597,10 @@ close_vmcoreinfo(void)
- void
- close_dump_memory(void)
- {
--	if ((info->fd_memory = close(info->fd_memory)) < 0)
-+	if (close(info->fd_memory) < 0)
- 		ERRMSG("Can't close the dump memory(%s). %s\n",
- 		    info->name_memory, strerror(errno));
-+	info->fd_memory = -1;
+ 	return result;
  }
- 
- void
-@@ -8608,9 +8609,10 @@ close_dump_file(void)
- 	if (info->flag_flatten)
- 		return;
- 
--	if ((info->fd_dumpfile = close(info->fd_dumpfile)) < 0)
-+	if (close(info->fd_dumpfile) < 0)
- 		ERRMSG("Can't close the dump file(%s). %s\n",
- 		    info->name_dumpfile, strerror(errno));
-+	info->fd_dumpfile = -1;
- }
- 
- void
-@@ -8620,9 +8622,10 @@ close_dump_bitmap(void)
- 	    && !info->flag_sadump && !info->flag_mem_usage)
- 		return;
- 
--	if ((info->fd_bitmap = close(info->fd_bitmap)) < 0)
-+	if (close(info->fd_bitmap) < 0)
- 		ERRMSG("Can't close the bitmap file(%s). %s\n",
- 		    info->name_bitmap, strerror(errno));
-+	info->fd_bitmap = -1;
- 	free(info->name_bitmap);
- 	info->name_bitmap = NULL;
- }
-@@ -8631,16 +8634,18 @@ void
- close_kernel_file(void)
- {
- 	if (info->name_vmlinux) {
--		if ((info->fd_vmlinux = close(info->fd_vmlinux)) < 0) {
-+		if (close(info->fd_vmlinux) < 0) {
- 			ERRMSG("Can't close the kernel file(%s). %s\n",
- 			    info->name_vmlinux, strerror(errno));
- 		}
-+		info->fd_vmlinux = -1;
- 	}
- 	if (info->name_xen_syms) {
--		if ((info->fd_xen_syms = close(info->fd_xen_syms)) < 0) {
-+		if (close(info->fd_xen_syms) < 0) {
- 			ERRMSG("Can't close the kernel file(%s). %s\n",
- 			    info->name_xen_syms, strerror(errno));
- 		}
-+		info->fd_xen_syms = -1;
- 	}
- }
- 
-@@ -10202,7 +10207,7 @@ reassemble_kdump_header(void)
- 
- 	ret = TRUE;
- out:
--	if (fd > 0)
-+	if (fd >= 0)
- 		close(fd);
- 	free(buf_bitmap);
- 
-@@ -10212,7 +10217,7 @@ out:
- int
- reassemble_kdump_pages(void)
- {
--	int i, fd = 0, ret = FALSE;
-+	int i, fd = -1, ret = FALSE;
- 	off_t offset_first_ph, offset_ph_org, offset_eraseinfo;
- 	off_t offset_data_new, offset_zero_page = 0;
- 	mdf_pfn_t pfn, start_pfn, end_pfn;
-@@ -10336,7 +10341,7 @@ reassemble_kdump_pages(void)
- 			offset_data_new += pd.size;
- 		}
- 		close(fd);
--		fd = 0;
-+		fd = -1;
- 	}
- 	if (!write_cache_bufsz(&cd_pd))
- 		goto out;
-@@ -10379,7 +10384,7 @@ reassemble_kdump_pages(void)
- 		size_eraseinfo += SPLITTING_SIZE_EI(i);
- 
- 		close(fd);
--		fd = 0;
-+		fd = -1;
- 	}
- 	if (size_eraseinfo) {
- 		if (!write_cache_bufsz(&cd_data))
-@@ -10400,7 +10405,7 @@ out:
- 
- 	if (data)
- 		free(data);
--	if (fd > 0)
-+	if (fd >= 0)
- 		close(fd);
- 
- 	return ret;
-@@ -10973,6 +10978,11 @@ main(int argc, char *argv[])
- 		    strerror(errno));
- 		goto out;
- 	}
-+	info->fd_vmlinux = -1;
-+	info->fd_xen_syms = -1;
-+	info->fd_memory = -1;
-+	info->fd_dumpfile = -1;
-+	info->fd_bitmap = -1;
- 	initialize_tables();
- 
- 	/*
-@@ -11268,11 +11278,11 @@ out:
- 				free(info->bitmap_memory->buf);
- 			free(info->bitmap_memory);
- 		}
--		if (info->fd_memory)
-+		if (info->fd_memory >= 0)
- 			close(info->fd_memory);
--		if (info->fd_dumpfile)
-+		if (info->fd_dumpfile >= 0)
- 			close(info->fd_dumpfile);
--		if (info->fd_bitmap)
-+		if (info->fd_bitmap >= 0)
- 			close(info->fd_bitmap);
- 		if (vt.node_online_map != NULL)
- 			free(vt.node_online_map);
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 533e5b8..1814139 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -1955,7 +1955,7 @@ is_dumpable_file(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
- static inline int
- is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn, struct cycle *cycle)
- {
--	if (bitmap->fd == 0) {
-+	if (bitmap->fd < 0) {
- 		return is_dumpable_buffer(bitmap, pfn, cycle);
- 	} else {
- 		return is_dumpable_file(bitmap, pfn);
++
++static int ima_restore_template_data(struct ima_template_desc *template_desc,
++				     void *template_data,
++				     int template_data_size,
++				     struct ima_template_entry **entry)
++{
++	struct binary_field_data {
++		u32 len;
++		u8 data[0];
++	} __packed;
++
++	struct binary_field_data *field_data;
++	int offset = 0;
++	int ret = 0;
++	int i;
++
++	*entry = kzalloc(sizeof(**entry) +
++		    template_desc->num_fields * sizeof(struct ima_field_data),
++		    GFP_NOFS);
++	if (!*entry)
++		return -ENOMEM;
++
++	(*entry)->template_desc = template_desc;
++	for (i = 0; i < template_desc->num_fields; i++) {
++		field_data = template_data + offset;
++
++		/* Each field of the template data is prefixed with a length. */
++		if (offset > (template_data_size - sizeof(field_data->len))) {
++			pr_err("Restoring the template field failed\n");
++			ret = -EINVAL;
++			break;
++		}
++		offset += sizeof(field_data->len);
++
++		if (offset > (template_data_size - field_data->len)) {
++			pr_err("Restoring the template field data failed\n");
++			ret = -EINVAL;
++			break;
++		}
++		offset += field_data->len;
++
++		(*entry)->template_data[i].len = field_data->len;
++		(*entry)->template_data_len += sizeof(field_data->len);
++
++		(*entry)->template_data[i].data =
++			kzalloc(field_data->len + 1, GFP_KERNEL);
++		if (!(*entry)->template_data[i].data) {
++			ret = -ENOMEM;
++			break;
++		}
++		memcpy((*entry)->template_data[i].data, field_data->data,
++			field_data->len);
++		(*entry)->template_data_len += field_data->len;
++	}
++
++	if (ret < 0) {
++		ima_free_template_entry(*entry);
++		*entry = NULL;
++	}
++
++	return ret;
++}
++
++/* Restore the serialized binary measurement list without extending PCRs. */
++int ima_restore_measurement_list(loff_t size, void *buf)
++{
++	struct binary_hdr_v1 {
++		u32 pcr;
++		u8 digest[TPM_DIGEST_SIZE];
++		u32 template_name_len;
++		char template_name[0];
++	} __packed;
++	char template_name[MAX_TEMPLATE_NAME_LEN];
++
++	struct binary_data_v1 {
++		u32 template_data_size;
++		char template_data[0];
++	} __packed;
++
++	struct ima_kexec_hdr *khdr = buf;
++	struct binary_hdr_v1 *hdr_v1;
++	struct binary_data_v1 *data_v1;
++
++	void *bufp = buf + sizeof(*khdr);
++	void *bufendp = buf + khdr->buffer_size;
++	struct ima_template_entry *entry;
++	struct ima_template_desc *template_desc;
++	unsigned long count = 0;
++	int ret = 0;
++
++	if (!buf || size < sizeof(*khdr))
++		return 0;
++
++	if (khdr->version != 1) {
++		pr_err("attempting to restore a incompatible measurement list");
++		return 0;
++	}
++
++	/*
++	 * ima kexec buffer prefix: version, buffer size, count
++	 * v1 format: pcr, digest, template-name-len, template-name,
++	 *	      template-data-size, template-data
++	 */
++	while ((bufp < bufendp) && (count++ < khdr->count)) {
++		if (count > ULONG_MAX - 1) {
++			pr_err("attempting to restore too many measurements");
++			ret = -EINVAL;
++		}
++
++		hdr_v1 = bufp;
++		if ((hdr_v1->template_name_len > MAX_TEMPLATE_NAME_LEN) ||
++		    ((bufp + hdr_v1->template_name_len) > bufendp)) {
++			pr_err("attempting to restore a template name \
++				that is too long\n");
++			ret = -EINVAL;
++			break;
++		}
++		bufp += sizeof(*hdr_v1);
++
++		/* template name is not null terminated */
++		memcpy(template_name, bufp, hdr_v1->template_name_len);
++		template_name[hdr_v1->template_name_len] = 0;
++
++		if (strcmp(template_name, "ima") == 0) {
++			pr_err("attempting to restore an unsupported \
++				template \"%s\" failed\n", template_name);
++			ret = -EINVAL;
++			break;
++		}
++		data_v1 = bufp += (u_int8_t)hdr_v1->template_name_len;
++
++		/* get template format */
++		template_desc = lookup_template_desc(template_name);
++		if (!template_desc) {
++			pr_err("template \"%s\" not found\n", template_name);
++			ret = -EINVAL;
++			break;
++		}
++
++		if (bufp > (bufendp - sizeof(data_v1->template_data_size))) {
++			pr_err("restoring the template data size failed\n");
++			ret = -EINVAL;
++			break;
++		}
++		bufp += (u_int8_t) sizeof(data_v1->template_data_size);
++
++		if (bufp > (bufendp - data_v1->template_data_size)) {
++			pr_err("restoring the template data failed\n");
++			ret = -EINVAL;
++			break;
++		}
++
++		ret = ima_restore_template_data(template_desc,
++						data_v1->template_data,
++						data_v1->template_data_size,
++						&entry);
++		if (ret < 0)
++			break;
++
++		memcpy(entry->digest, hdr_v1->digest, TPM_DIGEST_SIZE);
++		entry->pcr = hdr_v1->pcr;
++		ret = ima_restore_measurement_entry(entry);
++		if (ret < 0)
++			break;
++
++		bufp += data_v1->template_data_size;
++	}
++	return ret;
++}
 -- 
-2.6.6
+2.1.0
 
 
 _______________________________________________
