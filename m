@@ -2,38 +2,38 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhGym-0006uP-1b
- for kexec@lists.infradead.org; Tue, 06 Sep 2016 14:04:03 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u86E2xF0088077
- for <kexec@lists.infradead.org>; Tue, 6 Sep 2016 10:03:40 -0400
-Received: from e23smtp05.au.ibm.com (e23smtp05.au.ibm.com [202.81.31.147])
- by mx0b-001b2d01.pphosted.com with ESMTP id 259uhfwxa6-1
+ id 1bhGyr-00073y-1l
+ for kexec@lists.infradead.org; Tue, 06 Sep 2016 14:04:08 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u86E312x009287
+ for <kexec@lists.infradead.org>; Tue, 6 Sep 2016 10:03:48 -0400
+Received: from e23smtp08.au.ibm.com (e23smtp08.au.ibm.com [202.81.31.141])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 259x0qcv64-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 10:03:40 -0400
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 10:03:48 -0400
 Received: from localhost
- by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp08.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Wed, 7 Sep 2016 00:03:37 +1000
-Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id A5FCA2CE8046
- for <kexec@lists.infradead.org>; Wed,  7 Sep 2016 00:03:33 +1000 (EST)
+ Wed, 7 Sep 2016 00:03:45 +1000
+Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 87EF02CE8046
+ for <kexec@lists.infradead.org>; Wed,  7 Sep 2016 00:03:42 +1000 (EST)
 Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u86E3X7844826694
- for <kexec@lists.infradead.org>; Wed, 7 Sep 2016 00:03:33 +1000
+ by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u86E3giq63373520
+ for <kexec@lists.infradead.org>; Wed, 7 Sep 2016 00:03:42 +1000
 Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
  by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u86E3Xmf027991
- for <kexec@lists.infradead.org>; Wed, 7 Sep 2016 00:03:33 +1000
+ u86E3g2U028237
+ for <kexec@lists.infradead.org>; Wed, 7 Sep 2016 00:03:42 +1000
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v3 5/9] ima: on soft reboot, save the measurement list
-Date: Tue,  6 Sep 2016 10:03:00 -0400
+Subject: [PATCH v3 7/9] ima: support restoring multiple template formats
+Date: Tue,  6 Sep 2016 10:03:02 -0400
 In-Reply-To: <1473170584-15094-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1473170584-15094-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1473170584-15094-6-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1473170584-15094-8-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,212 +48,143 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-
-This patch uses the kexec buffer passing mechanism to pass the
-serialized IMA binary_runtime_measurements to the next kernel.
+The configured IMA measurement list template format can be replaced at
+runtime on the boot command line, including a custom template format.
+This patch adds support for restoring a measuremement list containing
+multiple builtin/custom template formats.
 
 Changelog v3:
-- Request a kexec segment for storing the measurement list a half page,
-not a full page, more than needed for additional measurements.
-- Added binary_runtime_size overflow test
-- Limit maximum number of pages needed for kexec_segment_size to half
-of totalram_pages. (Dave Young)
+- initialize template format list in ima_template_desc_current(), as it
+might be called during __setup before normal initialization. (kernel
+test robot)
+- remove __init annotation of ima_init_template_list()
 
-Changelog v2:
-- Fix build issue by defining a stub ima_add_kexec_buffer and stub
-  struct kimage when CONFIG_IMA=n and CONFIG_IMA_KEXEC=n. (Fenguang Wu)
-- removed kexec_add_handover_buffer() checksum argument.
-- added skip_checksum member to kexec_buf
-- only register reboot notifier once
-
-Changelog v1:
-- updated to call IMA functions  (Mimi)
-- move code from ima_template.c to ima_kexec.c (Mimi)
-
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- include/linux/ima.h                | 12 +++++
- kernel/kexec_file.c                |  4 ++
- security/integrity/ima/ima_kexec.c | 96 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 112 insertions(+)
+ security/integrity/ima/ima_template.c | 64 ++++++++++++++++++++++++++++++++---
+ 1 file changed, 59 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 0eb7c2e..7f6952f 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -11,6 +11,7 @@
- #define _LINUX_IMA_H
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index e1f9ce7..e689b572f 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -57,6 +57,8 @@ static int __init ima_template_setup(char *str)
+ 	if (ima_template)
+ 		return 1;
  
- #include <linux/fs.h>
-+#include <linux/kexec.h>
- struct linux_binprm;
- 
- #ifdef CONFIG_IMA
-@@ -23,6 +24,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
- extern void ima_post_path_mknod(struct dentry *dentry);
- 
-+#ifdef CONFIG_IMA_KEXEC
-+extern void ima_add_kexec_buffer(struct kimage *image);
-+#endif
++	ima_init_template_list();
 +
- #else
- static inline int ima_bprm_check(struct linux_binprm *bprm)
+ 	/*
+ 	 * Verify that a template with the supplied name exists.
+ 	 * If not, use CONFIG_IMA_DEFAULT_TEMPLATE.
+@@ -153,9 +155,14 @@ static int template_desc_init_fields(const char *template_fmt,
  {
-@@ -62,6 +67,13 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+ 	const char *template_fmt_ptr;
+ 	struct ima_template_field *found_fields[IMA_TEMPLATE_NUM_FIELDS_MAX];
+-	int template_num_fields = template_fmt_size(template_fmt);
++	int template_num_fields;
+ 	int i, len;
  
- #endif /* CONFIG_IMA */
- 
-+#ifndef CONFIG_IMA_KEXEC
-+struct kimage;
++	if (num_fields && *num_fields > 0) /* already initialized? */
++		return 0;
 +
-+static inline void ima_add_kexec_buffer(struct kimage *image)
-+{}
-+#endif
++	template_num_fields = template_fmt_size(template_fmt);
 +
- #ifdef CONFIG_IMA_APPRAISE
- extern void ima_inode_post_setattr(struct dentry *dentry);
- extern int ima_inode_setxattr(struct dentry *dentry, const char *xattr_name,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 0e90d14..9585861 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -19,6 +19,7 @@
- #include <linux/mutex.h>
- #include <linux/list.h>
- #include <linux/fs.h>
-+#include <linux/ima.h>
- #include <crypto/hash.h>
- #include <crypto/sha.h>
- #include <linux/syscalls.h>
-@@ -200,6 +201,9 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		return ret;
- 	image->kernel_buf_len = size;
- 
-+	/* IMA needs to pass the measurement list to the next kernel. */
-+	ima_add_kexec_buffer(image);
-+
- 	/* Call arch image probe handlers */
- 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
- 					    image->kernel_buf_len);
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index e77ca9d..04a2e71 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -23,6 +23,11 @@
- 
- #include "ima.h"
- 
-+#ifdef CONFIG_IMA_KEXEC
-+/* Physical address of the measurement buffer in the next kernel. */
-+static unsigned long kexec_buffer_load_addr;
-+static size_t kexec_segment_size;
-+
- static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
- 				     unsigned long segment_size)
- {
-@@ -75,6 +80,97 @@ out:
+ 	if (template_num_fields > IMA_TEMPLATE_NUM_FIELDS_MAX) {
+ 		pr_err("format string '%s' contains too many fields\n",
+ 		       template_fmt);
+@@ -193,10 +200,13 @@ static int template_desc_init_fields(const char *template_fmt,
+ 	return 0;
  }
  
- /*
-+ * Called during kexec execute so that IMA can save the measurement list.
-+ */
-+static int ima_update_kexec_buffer(struct notifier_block *self,
-+				   unsigned long action, void *data)
+-void __init ima_init_template_list(void)
++void ima_init_template_list(void)
+ {
+ 	int i;
+ 
++	if (!list_empty(&defined_templates))
++		return;
++
+ 	spin_lock(&template_list);
+ 	for (i = 0; i < ARRAY_SIZE(builtin_templates); i++) {
+ 		list_add_tail_rcu(&builtin_templates[i].list,
+@@ -208,9 +218,11 @@ void __init ima_init_template_list(void)
+ 
+ struct ima_template_desc *ima_template_desc_current(void)
+ {
+-	if (!ima_template)
++	if (!ima_template) {
++		ima_init_template_list();
+ 		ima_template =
+ 		    lookup_template_desc(CONFIG_IMA_DEFAULT_TEMPLATE);
++	}
+ 	return ima_template;
+ }
+ 
+@@ -230,6 +242,35 @@ int __init ima_init_template(void)
+ 	return result;
+ }
+ 
++static struct ima_template_desc *restore_template_fmt(char *template_name)
 +{
-+	void *kexec_buffer = NULL;
-+	size_t kexec_buffer_size;
++	struct ima_template_desc *template_desc = NULL;
 +	int ret;
 +
-+	if (!kexec_in_progress)
-+		return NOTIFY_OK;
-+
-+	kexec_buffer_size = ima_get_binary_runtime_size();
-+	if (kexec_buffer_size > kexec_segment_size) {
-+		pr_err("Binary measurement list grew too large.\n");
++	ret = template_desc_init_fields(template_name, NULL, NULL);
++	if (ret < 0) {
++		pr_err("attempting to initialize the template \"%s\" failed\n",
++			template_name);
 +		goto out;
 +	}
 +
-+	ima_dump_measurement_list(&kexec_buffer_size, &kexec_buffer,
-+				  kexec_segment_size);
-+	if (!kexec_buffer) {
-+		pr_err("Not enough memory for the kexec measurement buffer.\n");
++	template_desc = kzalloc(sizeof(*template_desc), GFP_KERNEL);
++	if (!template_desc)
 +		goto out;
-+	}
-+	ret = kexec_update_segment(kexec_buffer, kexec_buffer_size,
-+				   kexec_buffer_load_addr, kexec_segment_size);
-+	if (ret)
-+		pr_err("Error updating kexec buffer: %d\n", ret);
++
++	template_desc->name = "";
++	template_desc->fmt = kstrdup(template_name, GFP_KERNEL);
++	if (!template_desc->fmt)
++		goto out;
++
++	spin_lock(&template_list);
++	list_add_tail_rcu(&template_desc->list, &defined_templates);
++	spin_unlock(&template_list);
++	synchronize_rcu();
 +out:
-+	return NOTIFY_OK;
++	return template_desc;
 +}
 +
-+struct notifier_block update_buffer_nb = {
-+	.notifier_call = ima_update_kexec_buffer,
-+};
+ static int ima_restore_template_data(struct ima_template_desc *template_desc,
+ 				     void *template_data,
+ 				     int template_data_size,
+@@ -360,10 +401,23 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 		}
+ 		data_v1 = bufp += (u_int8_t)hdr_v1->template_name_len;
+ 
+-		/* get template format */
+ 		template_desc = lookup_template_desc(template_name);
+ 		if (!template_desc) {
+-			pr_err("template \"%s\" not found\n", template_name);
++			template_desc = restore_template_fmt(template_name);
++			if (!template_desc)
++				break;
++		}
 +
-+/*
-+ * Called during kexec_file_load so that IMA can add a segment to the kexec
-+ * image for the measurement list for the next kernel.
-+ */
-+void ima_add_kexec_buffer(struct kimage *image)
-+{
-+	static int registered;
-+	struct kexec_buf kbuf = { .image = image, .buf_align = PAGE_SIZE,
-+				  .buf_min = 0, .buf_max = ULONG_MAX,
-+				  .top_down = true, .skip_checksum = true };
-+	unsigned long binary_runtime_size;
-+	int ret;
-+
-+	if (!kexec_can_hand_over_buffer())
-+		return;
-+
-+	/*
-+	 * Reserve at least an extra half page of memory for additional
-+	 * measurements between kexec load and execute.
-+	 */
-+	binary_runtime_size = ima_get_binary_runtime_size();
-+	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
-+		kexec_segment_size = ULONG_MAX;
-+	else
-+		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
-+					   PAGE_SIZE / 2, PAGE_SIZE);
-+	if ((kexec_segment_size == ULONG_MAX) ||
-+	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages / 2)) {
-+		pr_err("Binary measurement list too large.\n");
-+		return;
-+	}
-+
-+	/* Ask not to checksum the segment, we will update it later. */
-+	kbuf.buffer = NULL;
-+	kbuf.bufsz = 0;
-+	kbuf.memsz = kexec_segment_size;
-+	ret = kexec_add_handover_buffer(&kbuf);
-+	if (ret) {
-+		pr_err("Error passing over kexec measurement buffer.\n");
-+		return;
-+	}
-+	kexec_buffer_load_addr = kbuf.mem;
-+
-+	pr_debug("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
-+		 kexec_buffer_load_addr);
-+
-+	if (registered)
-+		return;
-+
-+	register_reboot_notifier(&update_buffer_nb);
-+	registered = 1;
-+}
-+#endif /* IMA_KEXEC */
-+
-+/*
-  * Restore the measurement list from the previous kernel.
-  */
- void ima_load_kexec_buffer(void)
++		/*
++		 * Only the running system's template format is initialized
++		 * on boot.  As needed, initialize the other template formats.
++		 */
++		ret = template_desc_init_fields(template_desc->fmt,
++						&(template_desc->fields),
++						&(template_desc->num_fields));
++		if (ret < 0) {
++			pr_err("attempting to restore the template fmt \"%s\" \
++				failed\n", template_desc->fmt);
+ 			ret = -EINVAL;
+ 			break;
+ 		}
 -- 
 2.1.0
 
