@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22f.google.com ([2607:f8b0:400e:c00::22f])
+Received: from mail-pf0-x22d.google.com ([2607:f8b0:400e:c00::22d])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhUR3-0003OW-29
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:26:12 +0000
-Received: by mail-pf0-x22f.google.com with SMTP id w87so2071570pfk.2
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:25:44 -0700 (PDT)
+ id 1bhUSr-0004tW-Hp
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:03 +0000
+Received: by mail-pf0-x22d.google.com with SMTP id w87so2088591pfk.2
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:27:37 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v26 7/7] Documentation: dt: chosen properties for arm64 kdump
-Date: Wed,  7 Sep 2016 13:32:03 +0900
-Message-Id: <20160907043203.6309-1-takahiro.akashi@linaro.org>
-In-Reply-To: <20160907042908.6232-1-takahiro.akashi@linaro.org>
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
+Date: Wed,  7 Sep 2016 13:33:53 +0900
+Message-Id: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +22,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-From: James Morse <james.morse@arm.com>
+My kernel patches of kdump suport on arm64 are currently under reviews.
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,elfcorehdr
-used by arm64 kexec/kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
+This patchset is synced with them (v26 [1]) and provides necessary changes
+for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+v5[2] along with a bugfix[3].
 
-Signed-off-by: James Morse <james.morse@arm.com>
-[takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- Documentation/devicetree/bindings/chosen.txt | 30 ++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
+[2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
+[3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..6257ee7 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,33 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+
-+These properties (currently used on PowerPC and arm64) indicates
-+the base address and the size, respectively, of the reserved memory
-+range for crash dump kernel.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout as PT_LOAD segments of elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
+Changes for v3:
+ - rebased on Geoff's v5
+ - fix a value of estimated PHYS_OFFSET
+ - add a kernel code/data segment because they now reside out of linear
+   mapping due to KASLR introduction
+ - remove "linux,usable-memory-range" dependency, instead using
+   "reserved-memory" node
+ - add -mem-min/-mem-max support
+
+Changes for v2:
+ - trim a temoprary buffer in setup_2nd_dtb()
+ - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+ - update patch#7 from Pratyush
+   (re-worked by akashi)
+
+AKASHI Takahiro (6):
+  arm64: identify PHYS_OFFSET correctly
+  arm64: kdump: identify memory regions
+  arm64: kdump: add elf core header segment
+  arm64: kdump: set up kernel image segment
+  arm64: kdump: set up other segments
+  arm64: kdump: add DT properties to crash dump kernel's dtb
+
+Pratyush Anand (2):
+  kexec: generalize and rename get_kernel_stext_sym()
+  arm64: kdump: Add support for binary image files
+
+ kexec/Makefile                       |   1 +
+ kexec/arch/arm/crashdump-arm.c       |  40 +---
+ kexec/arch/arm64/Makefile            |   2 +
+ kexec/arch/arm64/crashdump-arm64.c   | 358 ++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h   |  20 +-
+ kexec/arch/arm64/iomem.h             |  10 +
+ kexec/arch/arm64/kexec-arm64.c       |  86 +++++++--
+ kexec/arch/arm64/kexec-elf-arm64.c   |  25 ++-
+ kexec/arch/arm64/kexec-image-arm64.c |  12 ++
+ kexec/arch/i386/crashdump-x86.c      |  32 +---
+ kexec/kexec.h                        |   2 +
+ kexec/symbols.c                      |  41 ++++
+ 12 files changed, 534 insertions(+), 95 deletions(-)
+ create mode 100644 kexec/arch/arm64/iomem.h
+ create mode 100644 kexec/symbols.c
+
 -- 
 2.9.0
 
