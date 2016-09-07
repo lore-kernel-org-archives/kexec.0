@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhdwX-00066l-Lr
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 14:35:17 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1472579105-26296-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <8760q7lswz.fsf@x220.int.ebiederm.org>
-Date: Wed, 07 Sep 2016 09:19:40 -0500
-In-Reply-To: <8760q7lswz.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
- message of "Wed, 07 Sep 2016 08:51:24 -0500")
-Message-ID: <871t0vlrlv.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/5] kexec_file: Add buffer hand-over for the next
- kernel
+Message-ID: <1473292652.8862.14.camel@infradead.org>
+Subject: Re: [PATCH v5 2/3] arm64: Add arm64 kexec support
+From: Geoff Levand <geoff@infradead.org>
+Date: Wed, 07 Sep 2016 16:57:32 -0700
+In-Reply-To: <20160906054359.GC16712@linaro.org>
+References: <cover.1472766405.git.geoff@infradead.org>
+ <3a90727656b958ccf3ca303002785920615c495b.1472766405.git.geoff@infradead.org>
+ <20160906054359.GC16712@linaro.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,42 +16,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Balbir Singh <bsingharora@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-ebiederm@xmission.com (Eric W. Biederman) writes:
-
-> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
->
->> Hello,
->>
->> The purpose of this new version of the series is to fix a small issue that
->> I found, which is that the kernel doesn't remove the memory reservation
->> for the hand-over buffer it received from the previous kernel in the
->> device tree it sets up for the next kernel. The result is that for each
->> successive kexec, a stale hand-over buffer is left behind, wasting memory.
->>
->> This is fixed by changes to kexec_free_handover_buffer and
->> setup_handover_buffer in patch 2. The other change is to fix checkpatch
->> warnings in the last patch.
->
-> This is fundamentally broken.  You do not increase the integrity of a
-> system by dropping integrity checks.
->
-> No. No. No. No.
->
-> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-To be constructive the way we have handled similiar situations in the
-past (hotplu memory) is to call kexec_load again.
-
-Eric
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCAyMDE2LTA5LTA2IGF0IDE0OjQ0ICswOTAwLCBBS0FTSEkgVGFrYWhpcm8gd3JvdGU6
+Cj4gT24gVGh1LCBTZXAgMDEsIDIwMTYgYXQgMDk6NTE6MTBQTSArMDAwMCwgR2VvZmYgTGV2YW5k
+IHdyb3RlOgoKPiA+ICtpbnQgYXJtNjRfbG9hZF9vdGhlcl9zZWdtZW50cyhzdHJ1Y3Qga2V4ZWNf
+aW5mbyAqaW5mbywKPiA+ICsJdW5zaWduZWQgbG9uZyBpbWFnZV9iYXNlKQo+ID4gK3sKPiA+ICsJ
+aW50IHJlc3VsdDsKPiA+ICsJdW5zaWduZWQgbG9uZyBkdGJfYmFzZTsKPiA+ICsJdW5zaWduZWQg
+bG9uZyBob2xlX21pbjsKPiA+ICsJdW5zaWduZWQgbG9uZyBob2xlX21heDsKPiA+ICsJY2hhciAq
+aW5pdHJkX2J1ZiA9IE5VTEw7Cj4gPiArCXN0cnVjdCBkdGIgZHRiOwo+ID4gKwljaGFyIGNvbW1h
+bmRfbGluZVtDT01NQU5EX0xJTkVfU0laRV0gPSAiIjsKPiA+ICsKPiA+ICsJaWYgKGFybTY0X29w
+dHMuY29tbWFuZF9saW5lKSB7Cj4gPiArCQlzdHJuY3B5KGNvbW1hbmRfbGluZSwgYXJtNjRfb3B0
+cy5jb21tYW5kX2xpbmUsCj4gPiArCQkJc2l6ZW9mKGNvbW1hbmRfbGluZSkpOwo+ID4gKwkJY29t
+bWFuZF9saW5lW3NpemVvZihjb21tYW5kX2xpbmUpIC0gMV0gPSAwOwo+ID4gKwl9Cj4gPiArCj4g
+PiArCWlmIChhcm02NF9vcHRzLmR0Yikgewo+ID4gKwkJZHRiLm5hbWUgPSAiZHRiXzIiOwo+ICJk
+dGJfMSIgYW5kICJkdGJfMiIgYXJlIG5vdCB2ZXJ5IG1lYW5pbmdmdWwuCgpkdGJfMSBtZWFucyBm
+cm9tIDFzdCBzdGFnZSwgZHRiXzIgbWVhbnMgYSBuZXcgMm5kIHN0YWdlLgoKPiBJbnN0ZWFkLCBJ
+J20gZ29pbmcgdG8gdXNlOgo+IMKgwqDCoMKgZHRiXzIgPT4gImR0Yl91c2VyIiAoaWYgYSBjb21t
+YW5kIGxpbmUgb3B0aW9uIGlzIHNwZWNpZmllZCkKPiDCoMKgwqDCoGR0Yl8xID0+ICJkdGJfc3lz
+IiAoaWYgZnJvbSAvc3lzL2Zpcm13YXJlL2ZkdCksIG9yCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAiZHRiX3VuZmxhdHRlbiIgKGlmIGNyZWF0ZWQgZnJvbSAvcHJvYy9kZXZpY2UtdHJlZSkK
+PiB0byBkaXN0aW5ndWlzaCB0aGUgb3JpZ2lucyBpbiBteSBrZHVtcCBwYXRjaGVzLgoKU3VyZSwg
+dGhhdCdzIE9LLiAgSWYgeW91IG1ha2UgYSBmaXh1cCBwYXRjaCBJJ2xsIG1lcmdlIGl0IGluLgoK
+PiAKPiA+ICtzdGF0aWMgaW50IGdldF9tZW1vcnlfcmFuZ2VzX2lvbWVtX2NiKHZvaWQgKmRhdGEs
+IGludCBuciwgY2hhciAqc3RyLAo+ID4gKwl1bnNpZ25lZCBsb25nIGxvbmcgYmFzZSwgdW5zaWdu
+ZWQgbG9uZyBsb25nIGxlbmd0aCkKPiA+ICt7Cj4gPiArCXN0cnVjdCBtZW1vcnlfcmFuZ2UgKnI7
+Cj4gPiArCj4gPiArCWlmIChuciA+PSBLRVhFQ19TRUdNRU5UX01BWCkKPiA+ICsJCXJldHVybiAt
+MTsKPiA+ICsKPiA+ICsJciA9IChzdHJ1Y3QgbWVtb3J5X3JhbmdlICopZGF0YSArIG5yOwo+ID4g
+KwlyLT50eXBlID0gUkFOR0VfUkFNOwo+ID4gKwlyLT5zdGFydCA9IGJhc2U7Cj4gPiArCXItPmVu
+ZCA9IGJhc2UgKyBsZW5ndGggLSAxOwo+ID4gKwo+ID4gKwlzZXRfcGh5c19vZmZzZXQoci0+c3Rh
+cnQpOwo+IFRoaXMgd2lsbCBubyBsb25nZXIgd29yayBjb3JyZWN0bHkgZm9yIGlkZW50aWZ5aW5n
+IFBIWVNfT0ZGU0VUCj4gb25jZSB0aGUgZm9sbG93aW5nIHBhdGNoIGlzIGFwcGxpZWQ6Cj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxNi1B
+dWd1c3QvNDUwNDMzLmh0bWwKPiBhbmQgaXQgaXMgbm93IHF1ZXVlZCBpbiBhcm02NC9mb3ItbmV4
+dC4KPiAKPiBJIHdpbGwgaW5jbHVkZSBhIGZpeHVwIGluIG15IGtkdW1wIHBhdGNoZXMgYXMgdGhl
+IGN1cnJlbnQgY29kZSBvZiBrZXhlYwo+IGRvZXNuJ3QgcmVseSBvbiBhIHJlc3VsdCBvZiB2aXJ0
+X3RvX3BoeXMoKSBzZXJpb3VzbHkuCgpPSy4KCj4gK2ludCBnZXRfbWVtb3J5X3JhbmdlcyhzdHJ1
+Y3QgbWVtb3J5X3JhbmdlICoqcmFuZ2UsIGludCAqcmFuZ2VzLAo+ID4gKwl1bnNpZ25lZCBsb25n
+IGtleGVjX2ZsYWdzKQo+ID4gK3sKPiA+ICsJc3RhdGljIHN0cnVjdCBtZW1vcnlfcmFuZ2UgYXJy
+YXlbS0VYRUNfU0VHTUVOVF9NQVhdOwo+ID4gKwl1bnNpZ25lZCBpbnQgY291bnQ7Cj4gPiArCWlu
+dCByZXN1bHQ7Cj4gPiArCj4gPiArCXJlc3VsdCA9IGdldF9tZW1vcnlfcmFuZ2VzX2lvbWVtKGFy
+cmF5LCAmY291bnQpOwo+ID4gKwo+ID4gKwlpZiAocmVzdWx0KQo+ID4gKwkJcmVzdWx0ID0gZ2V0
+X21lbW9yeV9yYW5nZXNfZHQoYXJyYXksICZjb3VudCk7Cj4gRG8gd2UgcmVhbGx5IG5lZWQgdG8g
+c2NhbiBhIERUIGJsb2IgaGVyZT8KPiBJIHRoaW5rIHRoYXQgYWxsIHRoZSAodXNhYmxlKSBtZW1v
+cnkgcmVnaW9ucyBhcmUgYWRkZWQgdG8KPiAvcHJvYy9pb21lbSBhbnl3YXkuCgpJIGd1ZXNzIGl0
+IGlzIG5vdyBleHBlY3RlZCB0aGF0IC9wcm9jL2lvbWVtIGhhcyBtZW1vcnkKaW4gaXQuCgo+ID4g
+K3ZvaWQgbWFjaGluZV9hcHBseV9lbGZfcmVsKHN0cnVjdCBtZW1fZWhkciAqZWhkciwgc3RydWN0
+IG1lbV9zeW0gKlVOVVNFRChzeW0pLAo+ID4gKwl1bnNpZ25lZCBsb25nIHJfdHlwZSwgdm9pZCAq
+cHRyLCB1bnNpZ25lZCBsb25nIGFkZHJlc3MsCj4gPiArCXVuc2lnbmVkIGxvbmcgdmFsdWUpCj4g
+PiArewo+ID4gKyNpZiAhZGVmaW5lZChSX0FBUkNINjRfQUJTNjQpCj4gPiArIyBkZWZpbmUgUl9B
+QVJDSDY0X0FCUzY0IDI1Nwo+ID4gKyNlbmRpZgo+ID4gKwo+ID4gKyNpZiAhZGVmaW5lZChSX0FB
+UkNINjRfTERfUFJFTF9MTzE5KQo+ID4gKyMgZGVmaW5lIFJfQUFSQ0g2NF9MRF9QUkVMX0xPMTkg
+MjczCj4gPiArI2VuZGlmCj4gPiArCj4gPiArI2lmICFkZWZpbmVkKFJfQUFSQ0g2NF9BRFJfUFJF
+TF9MTzIxKQo+ID4gKyMgZGVmaW5lIFJfQUFSQ0g2NF9BRFJfUFJFTF9MTzIxIDI3NAo+ID4gKyNl
+bmRpZgo+ID4gKwo+ID4gKyNpZiAhZGVmaW5lZChSX0FBUkNINjRfSlVNUDI2KQo+ID4gKyMgZGVm
+aW5lIFJfQUFSQ0g2NF9KVU1QMjYgMjgyCj4gPiArI2VuZGlmCj4gPiArCj4gPiArI2lmICFkZWZp
+bmVkKFJfQUFSQ0g2NF9DQUxMMjYpCj4gPiArIyBkZWZpbmUgUl9BQVJDSDY0X0NBTEwyNiAyODMK
+PiA+ICsjZW5kaWYKPiBEaWQgeW91IHNlZSBteSBjb21tZW50Pwo+IGh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL3BpcGVybWFpbC9rZXhlYy8yMDE2LUF1Z3VzdC8wMTY5NDcuaHRtbAoKSSdtIHN0
+aWxsIGV4cGVjdGluZ8KgZWxmLmggdG8gaGF2ZSB0aGVzZS4KCi1HZW9mZgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
