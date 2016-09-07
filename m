@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
+Received: from mail-pa0-x22d.google.com ([2607:f8b0:400e:c03::22d])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhUTA-00059b-1G
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:22 +0000
-Received: by mail-pf0-x232.google.com with SMTP id p64so2102291pfb.1
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:27:55 -0700 (PDT)
+ id 1bhUTI-0005Gx-JN
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:34 +0000
+Received: by mail-pa0-x22d.google.com with SMTP id id6so1964710pad.3
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:28:04 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v3 2/8] kexec: generalize and rename get_kernel_stext_sym()
-Date: Wed,  7 Sep 2016 13:33:55 +0900
-Message-Id: <20160907043401.6403-3-takahiro.akashi@linaro.org>
+Subject: [PATCH v3 3/8] arm64: kdump: identify memory regions
+Date: Wed,  7 Sep 2016 13:33:56 +0900
+Message-Id: <20160907043401.6403-4-takahiro.akashi@linaro.org>
 In-Reply-To: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,201 +27,197 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-From: Pratyush Anand <panand@redhat.com>
+The following regions need to be identified for later use:
+ a) memory regions which belong to the 1st kernel
+ b) usable memory reserved for crash dump kernel
 
-get_kernel_stext_sym() has been defined for both arm and i386. Other
-architecture might need some other kernel symbol address. Therefore rewrite
-this function as generic function to get any kernel symbol address.
+We go through /proc/iomem to find out a) and b) which are marked
+as "System RAM" and "Crash kernel", respectively.
 
-More over, kallsyms is not arch specific representation, therefore have
-common function for all arches.
-
-Signed-off-by: Pratyush Anand <panand@redhat.com>
-[created symbols.c]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/Makefile                  |  1 +
- kexec/arch/arm/crashdump-arm.c  | 40 +---------------------------------------
- kexec/arch/i386/crashdump-x86.c | 32 +-------------------------------
- kexec/kexec.h                   |  2 ++
- kexec/symbols.c                 | 41 +++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 46 insertions(+), 70 deletions(-)
- create mode 100644 kexec/symbols.c
+ kexec/arch/arm64/Makefile          |   2 +
+ kexec/arch/arm64/crashdump-arm64.c | 100 ++++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h |  14 +++++-
+ kexec/arch/arm64/iomem.h           |   1 +
+ 4 files changed, 114 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/Makefile b/kexec/Makefile
-index 39f365f..2b4fb3d 100644
---- a/kexec/Makefile
-+++ b/kexec/Makefile
-@@ -26,6 +26,7 @@ KEXEC_SRCS_base += kexec/kernel_version.c
- KEXEC_SRCS_base += kexec/lzma.c
- KEXEC_SRCS_base += kexec/zlib.c
- KEXEC_SRCS_base += kexec/kexec-xen.c
-+KEXEC_SRCS_base += kexec/symbols.c
+diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
+index 37414dc..c2535c6 100644
+--- a/kexec/arch/arm64/Makefile
++++ b/kexec/arch/arm64/Makefile
+@@ -5,6 +5,8 @@ arm64_FS2DT_INCLUDE += -include $(srcdir)/kexec/arch/arm64/kexec-arm64.h \
  
- KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
+ arm64_DT_OPS += kexec/dt-ops.c
  
-diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
-index 4a89b5e..2bc898b 100644
---- a/kexec/arch/arm/crashdump-arm.c
-+++ b/kexec/arch/arm/crashdump-arm.c
-@@ -73,48 +73,10 @@ static struct crash_elf_info elf_info = {
- 
- extern unsigned long long user_page_offset;
- 
--/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
--static unsigned long long get_kernel_stext_sym(void)
--{
--	const char *kallsyms = "/proc/kallsyms";
--	const char *stext = "_stext";
--	char sym[128];
--	char line[128];
--	FILE *fp;
--	unsigned long long vaddr = 0;
--	char type;
--
--	fp = fopen(kallsyms, "r");
--	if (!fp) {
--		fprintf(stderr, "Cannot open %s\n", kallsyms);
--		return 0;
--	}
--
--	while(fgets(line, sizeof(line), fp) != NULL) {
--		unsigned long long addr;
--
--		if (sscanf(line, "%Lx %c %s", &addr, &type, sym) != 3)
--			continue;
--
--		if (strcmp(sym, stext) == 0) {
--			dbgprintf("kernel symbol %s vaddr = %#llx\n", stext, addr);
--			vaddr = addr;
--			break;
--		}
--	}
--
--	fclose(fp);
--
--	if (vaddr == 0)
--		fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
--
--	return vaddr;
--}
--
- static int get_kernel_page_offset(struct kexec_info *info,
- 		struct crash_elf_info *elf_info)
- {
--	unsigned long long stext_sym_addr = get_kernel_stext_sym();
-+	unsigned long long stext_sym_addr = get_kernel_sym("stext");
- 	if (stext_sym_addr == 0) {
- 		if (user_page_offset != (-1ULL)) {
- 			elf_info->page_offset = user_page_offset;
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index bbc0f35..664eb3b 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -102,36 +102,6 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
- 	return -1;
- }
- 
--/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
--static unsigned long long get_kernel_stext_sym(void)
--{
--	const char *kallsyms = "/proc/kallsyms";
--	const char *stext = "_stext";
--	char sym[128];
--	char line[128];
--	FILE *fp;
--	unsigned long long vaddr;
--	char type;
--
--	fp = fopen(kallsyms, "r");
--	if (!fp) {
--		fprintf(stderr, "Cannot open %s\n", kallsyms);
--		return 0;
--	}
--
--	while(fgets(line, sizeof(line), fp) != NULL) {
--		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
--			continue;
--		if (strcmp(sym, stext) == 0) {
--			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
--			return vaddr;
--		}
--	}
--
--	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
--	return 0;
--}
--
- /* Retrieve info regarding virtual address kernel has been compiled for and
-  * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
-  * from kexec-tools fails because of malformed elf notes. A kernel patch has
-@@ -182,7 +152,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 
- 	/* Traverse through the Elf headers and find the region where
- 	 * _stext symbol is located in. That's where kernel is mapped */
--	stext_sym = get_kernel_stext_sym();
-+	stext_sym = get_kernel_sym("stext");
- 	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
- 		if (phdr->p_type == PT_LOAD) {
- 			unsigned long long saddr = phdr->p_vaddr;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 9194f1c..b4fafad 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -312,4 +312,6 @@ int xen_kexec_load(struct kexec_info *info);
- int xen_kexec_unload(uint64_t kexec_flags);
- void xen_kexec_exec(void);
- 
-+extern unsigned long long get_kernel_sym(const char *text);
++arm64_MEM_REGIONS = kexec/mem_regions.c
 +
- #endif /* KEXEC_H */
-diff --git a/kexec/symbols.c b/kexec/symbols.c
-new file mode 100644
-index 0000000..ea6e327
---- /dev/null
-+++ b/kexec/symbols.c
-@@ -0,0 +1,41 @@
-+#include <stdio.h>
-+#include <string.h>
-+#include "kexec.h"
+ arm64_CPPFLAGS += -I $(srcdir)/kexec/
+ 
+ arm64_KEXEC_SRCS += \
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index d2272c8..dcaca43 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -1,5 +1,13 @@
+ /*
+  * ARM64 crashdump.
++ *     partly derived from arm implementation
++ *
++ * Copyright (c) 2014-2016 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
+  */
+ 
+ #define _GNU_SOURCE
+@@ -10,12 +18,102 @@
+ #include "kexec.h"
+ #include "crashdump.h"
+ #include "crashdump-arm64.h"
++#include "iomem.h"
+ #include "kexec-arm64.h"
+ #include "kexec-elf.h"
++#include "mem_regions.h"
+ 
+-struct memory_ranges usablemem_rgns = {};
++/* memory ranges on crashed kernel */
++static struct memory_range crash_memory_ranges[CRASH_MAX_MEMORY_RANGES];
++static struct memory_ranges crash_memory_rgns = {
++	.size = 0,
++	.max_size = CRASH_MAX_MEMORY_RANGES,
++	.ranges = crash_memory_ranges,
++};
 +
-+/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-+unsigned long long get_kernel_sym(const char *text)
++/* memory range reserved for crashkernel */
++struct memory_range crash_reserved_mem;
++struct memory_ranges usablemem_rgns = {
++	.size = 0,
++	.max_size = 1,
++	.ranges = &crash_reserved_mem,
++};
++
++/*
++ * iomem_range_callback() - callback called for each iomem region
++ * @data: not used
++ * @nr: not used
++ * @str: name of the memory region
++ * @base: start address of the memory region
++ * @length: size of the memory region
++ *
++ * This function is called once for each memory region found in /proc/iomem.
++ * It locates system RAM and crashkernel reserved memory and places these to
++ * variables, respectively, crash_memory_ranges and crash_reserved_mem.
++ */
++
++static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
++				char *str, unsigned long long base,
++				unsigned long long length)
 +{
-+	const char *kallsyms = "/proc/kallsyms";
-+	char sym[128];
-+	char line[128];
-+	FILE *fp;
-+	unsigned long long vaddr = 0;
-+	char type;
++	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0)
++		return mem_regions_add(&usablemem_rgns,
++				       base, length, RANGE_RAM);
++	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
++		return mem_regions_add(&crash_memory_rgns,
++				       base, length, RANGE_RAM);
 +
-+	fp = fopen(kallsyms, "r");
-+	if (!fp) {
-+		fprintf(stderr, "Cannot open %s\n", kallsyms);
-+		return 0;
-+	}
-+
-+	while (fgets(line, sizeof(line), fp) != NULL) {
-+		unsigned long long addr;
-+
-+		if (sscanf(line, "%Lx %c %s", &addr, &type, sym) != 3)
-+			continue;
-+
-+		if (strcmp(sym, text) == 0) {
-+			dbgprintf("kernel symbol %s vaddr = %#llx\n",
-+								text, addr);
-+			vaddr = addr;
-+			break;
-+		}
-+	}
-+
-+	fclose(fp);
-+
-+	if (vaddr == 0)
-+		fprintf(stderr, "Cannot get kernel %s symbol address\n", text);
-+
-+	return vaddr;
++	return 0;
 +}
+ 
+ int is_crashkernel_mem_reserved(void)
+ {
++	if (!crash_reserved_mem.end)
++		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++
++	return crash_reserved_mem.start != crash_reserved_mem.end;
++}
++
++/*
++ * crash_get_memory_ranges() - read system physical memory
++ *
++ * Function reads through system physical memory and stores found memory
++ * regions in crash_memory_ranges.
++ * Regions are sorted in ascending order.
++ *
++ * Returns 0 in case of success and -1 otherwise (errno is set).
++ */
++static int crash_get_memory_ranges(void)
++{
++	/*
++	 * First read all memory regions that can be considered as
++	 * system memory including the crash area.
++	 */
++	if (!usablemem_rgns.size)
++		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++
++	/* allow only a single region for crash dump kernel */
++	if (usablemem_rgns.size != 1) {
++		errno = EINVAL;
++		return -1;
++	}
++
++	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
++
++	if (mem_regions_exclude(&crash_memory_rgns, &crash_reserved_mem)) {
++		fprintf(stderr,
++			"Error: Number of crash memory ranges excedeed the max limit\n");
++		errno = ENOMEM;
++		return -1;
++	}
++
++	/*
++	 * Make sure that the memory regions are sorted.
++	 */
++	mem_regions_sort(&crash_memory_rgns);
++
++	dbgprint_mem_range("Coredump memory ranges",
++			   crash_memory_rgns.ranges, crash_memory_rgns.size);
++
+ 	return 0;
+ }
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index f33c7a2..07a0ed0 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -1,12 +1,22 @@
+ /*
+  * ARM64 crashdump.
++ *
++ * Copyright (c) 2014-2016 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
+  */
+ 
+-#if !defined(CRASHDUMP_ARM64_H)
++#ifndef CRASHDUMP_ARM64_H
+ #define CRASHDUMP_ARM64_H
+ 
+ #include "kexec.h"
+ 
++#define CRASH_MAX_MEMORY_RANGES	32
++
+ extern struct memory_ranges usablemem_rgns;
++extern struct memory_range crash_reserved_mem;
+ 
+-#endif
++#endif /* CRASHDUMP_ARM64_H */
+diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+index 7fd66eb..20cda87 100644
+--- a/kexec/arch/arm64/iomem.h
++++ b/kexec/arch/arm64/iomem.h
+@@ -2,6 +2,7 @@
+ #define IOMEM_H
+ 
+ #define SYSTEM_RAM		"System RAM\n"
++#define CRASH_KERNEL		"Crash kernel\n"
+ #define IOMEM_RESERVED		"reserved\n"
+ 
+ #endif
 -- 
 2.9.0
 
