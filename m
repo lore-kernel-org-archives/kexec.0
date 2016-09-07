@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
+Received: from mail-pf0-x22f.google.com ([2607:f8b0:400e:c00::22f])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhUPY-0001HE-0t
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:24:35 +0000
-Received: by mail-pf0-x230.google.com with SMTP id w87so2056604pfk.2
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:24:11 -0700 (PDT)
+ id 1bhUR3-0003OW-29
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:26:12 +0000
+Received: by mail-pf0-x22f.google.com with SMTP id w87so2071570pfk.2
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:25:44 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v26 6/7] arm64: kdump: update a kernel doc
-Date: Wed,  7 Sep 2016 13:29:08 +0900
-Message-Id: <20160907042908.6232-7-takahiro.akashi@linaro.org>
+Subject: [PATCH v26 7/7] Documentation: dt: chosen properties for arm64 kdump
+Date: Wed,  7 Sep 2016 13:32:03 +0900
+Message-Id: <20160907043203.6309-1-takahiro.akashi@linaro.org>
 In-Reply-To: <20160907042908.6232-1-takahiro.akashi@linaro.org>
 References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -24,74 +24,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-This patch adds arch specific descriptions about kdump usage on arm64
-to kdump.txt.
+From: James Morse <james.morse@arm.com>
 
+Add documentation for
+	linux,crashkernel-base and crashkernel-size,
+	linux,elfcorehdr
+used by arm64 kexec/kdump to decribe the kdump reserved area, and
+the elfcorehdr's location within it.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+[takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
 ---
- Documentation/kdump/kdump.txt | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/chosen.txt | 30 ++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index 88ff63d..c090531 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
- 
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--s390x and arm architectures.
-+s390x, arm and arm64 architectures.
- 
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
- 
-     AUTO_ZRELADDR=y
- 
-+Dump-capture kernel config options (Arch Dependent, arm64)
-+----------------------------------------------------------
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82..6257ee7 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,33 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
 +
-+- Please note that kvm of the dump-capture kernel will not be enabled
-+  on non-VHE systems even if it is configured. This is because the CPU
-+  cannot be reset to EL2 on panic.
++linux,crashkernel-base
++linux,crashkernel-size
++----------------------
 +
- Extended crashkernel syntax
- ===========================
- 
-@@ -305,6 +312,8 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
-+   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-@@ -327,6 +336,8 @@ For s390x:
- 	- Use image or bzImage
- For arm:
- 	- Use zImage
-+For arm64:
-+	- Use vmlinux or Image
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -370,6 +381,9 @@ For s390x:
- For arm:
- 	"1 maxcpus=1 reset_devices"
- 
-+For arm64:
-+	"1 maxcpus=1 reset_devices"
++These properties (currently used on PowerPC and arm64) indicates
++the base address and the size, respectively, of the reserved memory
++range for crash dump kernel.
++e.g.
 +
- Notes on loading the dump-capture kernel:
- 
- * By default, the ELF headers are stored in ELF64 format to support
++/ {
++	chosen {
++		linux,crashkernel-base = <0x9 0xf0000000>;
++		linux,crashkernel-size = <0x0 0x10000000>;
++	};
++};
++
++linux,elfcorehdr
++----------------
++
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout as PT_LOAD segments of elf format.
++e.g.
++
++/ {
++	chosen {
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
 -- 
 2.9.0
 
