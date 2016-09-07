@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x231.google.com ([2607:f8b0:400e:c03::231])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhUWJ-0000Xj-DX
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:31:32 +0000
-Received: by mail-pa0-x231.google.com with SMTP id id6so1993098pad.3
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:31:10 -0700 (PDT)
-Date: Wed, 7 Sep 2016 13:37:46 +0900
+Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
+ by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bhUTY-0005NU-6t
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:41 +0000
+Received: by mail-pf0-x233.google.com with SMTP id 128so2056575pfb.3
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:28:18 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
-Message-ID: <20160907043745.GD16712@linaro.org>
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v3 5/8] arm64: kdump: set up kernel image segment
+Date: Wed,  7 Sep 2016 13:33:58 +0900
+Message-Id: <20160907043401.6403-6-takahiro.akashi@linaro.org>
+In-Reply-To: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,154 +19,143 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On Wed, Sep 07, 2016 at 01:29:02PM +0900, AKASHI Takahiro wrote:
->     v26-specific note: After a comment from Rob[0], an idea of adding
->     "linux,usable-memory-range" was dropped. Instead, an existing
->     "reserved-memory" node will be used to limit usable memory ranges
->     on crash dump kernel.
->     This works not only on UEFI/ACPI systems but also on DT-only systems,
->     but if he really insists on using DT-specific "usable-memory" property,
->     I will post additional patches for kexec-tools. Those would be
->     redundant, though.
->     Even in that case, the kernel will not have to be changed.
-> 
-> This patch series adds kdump support on arm64.
-> There are some prerequisite patches [1],[2].
-> 
-> To load a crash-dump kernel to the systems, a series of patches to
-> kexec-tools, which have not yet been merged upstream, are needed.
-> Please always use my latest kdump patches, v3 [3].
-> 
-> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
->   - crash utility (coming v7.1.6 or later) [4]
->     (Necessary patches have already been queued in the master.)
-> 
-> 
-> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452582.html
-> [1] "arm64: mark reserved memblock regions explicitly in iomem"
->     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/450433.html
-> [2] "efi: arm64: treat regions with WT/WC set but WB cleared as memory"
->     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/451491.html
-> [3] T.B.D.
+On arm64, we can use the same kernel image as 1st kernel, but
+we have to modify the entry point as well as segments' addresses
+in the kernel's elf header in order to load them into correct places.
 
-For kexec-tools, see:
-http://lists.infradead.org/pipermail/kexec/2016-September/017158.html
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 23 +++++++++++++++++++++++
+ kexec/arch/arm64/crashdump-arm64.h |  1 +
+ kexec/arch/arm64/kexec-arm64.c     | 25 ++++++++++++++++++++-----
+ kexec/arch/arm64/kexec-elf-arm64.c | 10 +++++++++-
+ 4 files changed, 53 insertions(+), 6 deletions(-)
 
--Takahiro AKASHI
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 8346131..9517329 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -213,3 +213,26 @@ int load_crashdump_segments(struct kexec_info *info)
+ 
+ 	return 0;
+ }
++
++/*
++ * e_entry and p_paddr are actually in virtual address space.
++ * Those values will be translated to physcal addresses by
++ * using virt_to_phys().
++ * So let's get ready for later use so the memory base (phys_offset)
++ * will be correctly replaced with crash_reserved_mem.start.
++ */
++void modify_ehdr_for_crashdump(struct mem_ehdr *ehdr)
++{
++	struct mem_phdr *phdr;
++	int i;
++
++	ehdr->e_entry += - arm64_mem.phys_offset + crash_reserved_mem.start;
++
++	for (i = 0; i < ehdr->e_phnum; i++) {
++		phdr = &ehdr->e_phdr[i];
++		if (phdr->p_type != PT_LOAD)
++			continue;
++		phdr->p_paddr +=
++			(-arm64_mem.phys_offset + crash_reserved_mem.start);
++	}
++}
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index da75a2d..382f571 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -21,5 +21,6 @@ extern struct memory_range crash_reserved_mem;
+ extern struct memory_range elfcorehdr_mem;
+ 
+ extern int load_crashdump_segments(struct kexec_info *info);
++extern void modify_ehdr_for_crashdump(struct mem_ehdr *ehdr);
+ 
+ #endif /* CRASHDUMP_ARM64_H */
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index bc96c76..498b218 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -305,12 +305,27 @@ unsigned long arm64_locate_kernel_segment(struct kexec_info *info)
+ {
+ 	unsigned long hole;
+ 
+-	hole = locate_hole(info,
+-		arm64_mem.text_offset + arm64_mem.image_size,
+-		MiB(2), 0, ULONG_MAX, 1);
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		unsigned long hole_end;
++
++		hole = (crash_reserved_mem.start < mem_min ?
++				mem_min : crash_reserved_mem.start);
++		hole = _ALIGN_UP(hole, MiB(2));
++		hole_end = hole + arm64_mem.text_offset + arm64_mem.image_size;
++
++		if ((hole_end > mem_max) ||
++		    (hole_end > crash_reserved_mem.end)) {
++			dbgprintf("%s: Crash kernel out of range\n", __func__);
++			hole = ULONG_MAX;
++		}
++	} else {
++		hole = locate_hole(info,
++			arm64_mem.text_offset + arm64_mem.image_size,
++			MiB(2), 0, ULONG_MAX, 1);
+ 
+-	if (hole == ULONG_MAX)
+-		dbgprintf("%s: locate_hole failed\n", __func__);
++		if (hole == ULONG_MAX)
++			dbgprintf("%s: locate_hole failed\n", __func__);
++	}
+ 
+ 	return hole;
+ }
+diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
+index c70a37a..842ce21 100644
+--- a/kexec/arch/arm64/kexec-elf-arm64.c
++++ b/kexec/arch/arm64/kexec-elf-arm64.c
+@@ -9,6 +9,7 @@
+ #include <stdlib.h>
+ #include <linux/elf.h>
+ 
++#include "crashdump-arm64.h"
+ #include "kexec-arm64.h"
+ #include "kexec-elf.h"
+ #include "kexec-syscall.h"
+@@ -105,7 +106,8 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	}
+ 
+ 	arm64_mem.vp_offset = _ALIGN_DOWN(ehdr.e_entry, MiB(2));
+-	arm64_mem.vp_offset -= kernel_segment - get_phys_offset();
++	if (!(info->kexec_flags & KEXEC_ON_CRASH))
++		arm64_mem.vp_offset -= kernel_segment - get_phys_offset();
+ 
+ 	dbgprintf("%s: kernel_segment: %016lx\n", __func__, kernel_segment);
+ 	dbgprintf("%s: text_offset:    %016lx\n", __func__,
+@@ -127,6 +129,12 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 								__func__);
+ 			goto exit;
+ 		}
++
++		/*
++		 * offset addresses in order to fit vmlinux
++		 * (elf_exec) into crash kernel's memory
++		 */
++		modify_ehdr_for_crashdump(&ehdr);
+ 	}
+ 
+ 	/* load the kernel */
+-- 
+2.9.0
 
-> [4] https://github.com/crash-utility/crash.git
-> 
-> 
-> Changes for v26 (Sep 7, 2016):
->   o Use /reserved-memory instead of "linux,usable-memory-range" property
->     (dropping v25's patch#2 and #3, updating ex-patch#9.)
-> 
-> Changes for v25 (Aug 29, 2016):
->   o Rebase to Linux-4.8-rc4
->   o Use memremap() instead of ioremap_cache() [patch#5]
-> 
-> Changes for v24 (Aug 9, 2016):
->   o Rebase to Linux-4.8-rc1
->   o Update descriptions about newly added DT proerties
-> 
-> Changes for v23 (July 26, 2016):
-> 
->   o Move memblock_reserve() to a single place in reserve_crashkernel()
->   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
->   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
->   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
->     (for ACPI) from usable memory at crash kernel
-> 
-> Changes for v22 (July 12, 2016):
-> 
->   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
->     and add some descriptions about them in chosen.txt
->   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
->     with powerpc's "usable-memory"
->   o Make cosmetic changes regarding "ifdef" usage
->   o Correct some wordings in kdump.txt
-> 
-> Changes for v21 (July 6, 2016):
-> 
->   o Remove kexec patches.
->   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
->   o Clarify the description about kvm in kdump.txt.
-> 
-> See the following link [3] for older changes:
-> [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
-> 
-> AKASHI Takahiro (8):
->   arm64: kdump: reserve memory for crash dump kernel
->   memblock: add memblock_cap_memory_range()
->   arm64: limit memory regions based on DT property, usable-memory-range
->   arm64: kdump: implement machine_crash_shutdown()
->   arm64: kdump: add kdump support
->   arm64: kdump: add VMCOREINFO's for user-space coredump tools
->   arm64: kdump: enable kdump in the arm64 defconfig
->   arm64: kdump: update a kernel doc
-> 
-> James Morse (1):
->   Documentation: dt: chosen properties for arm64 kdump
-> 
->  Documentation/devicetree/bindings/chosen.txt |  45 ++++++
->  Documentation/kdump/kdump.txt                |  16 ++-
->  arch/arm64/Kconfig                           |  11 ++
->  arch/arm64/configs/defconfig                 |   1 +
->  arch/arm64/include/asm/hardirq.h             |   2 +-
->  arch/arm64/include/asm/kexec.h               |  41 +++++-
->  arch/arm64/include/asm/smp.h                 |   2 +
->  arch/arm64/kernel/Makefile                   |   1 +
->  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
->  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
->  arch/arm64/kernel/setup.c                    |   7 +-
->  arch/arm64/kernel/smp.c                      |  63 +++++++++
->  arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
->  include/linux/memblock.h                     |   1 +
->  mm/memblock.c                                |  28 ++++
->  15 files changed, 551 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm64/kernel/crash_dump.c
-> 
-> -- 
-> 2.9.0
-> 
-> 
-> AKASHI Takahiro (6):
->   arm64: kdump: reserve memory for crash dump kernel
->   arm64: kdump: implement machine_crash_shutdown()
->   arm64: kdump: add kdump support
->   arm64: kdump: add VMCOREINFO's for user-space coredump tools
->   arm64: kdump: enable kdump in the arm64 defconfig
->   arm64: kdump: update a kernel doc
-> 
-> James Morse (1):
->   Documentation: dt: chosen properties for arm64 kdump
-> 
->  Documentation/devicetree/bindings/chosen.txt |  30 +++++
->  Documentation/kdump/kdump.txt                |  16 ++-
->  arch/arm64/Kconfig                           |  11 ++
->  arch/arm64/configs/defconfig                 |   1 +
->  arch/arm64/include/asm/hardirq.h             |   2 +-
->  arch/arm64/include/asm/kexec.h               |  41 ++++++-
->  arch/arm64/include/asm/smp.h                 |   2 +
->  arch/arm64/kernel/Makefile                   |   1 +
->  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++++
->  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++++-
->  arch/arm64/kernel/setup.c                    |   7 +-
->  arch/arm64/kernel/smp.c                      |  63 ++++++++++
->  arch/arm64/mm/init.c                         | 167 +++++++++++++++++++++++++++
->  13 files changed, 472 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm64/kernel/crash_dump.c
-> 
-> -- 
-> 2.9.0
-> 
 
 _______________________________________________
 kexec mailing list
