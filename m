@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mail-pa0-x233.google.com ([2607:f8b0:400e:c03::233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhRvC-0000ZQ-RG
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 01:45:03 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1472579105-26296-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1472579105-26296-4-git-send-email-bauerman@linux.vnet.ibm.com>
-Date: Tue, 06 Sep 2016 20:30:31 -0500
-In-Reply-To: <1472579105-26296-4-git-send-email-bauerman@linux.vnet.ibm.com>
- (Thiago Jung Bauermann's message of "Tue, 30 Aug 2016 14:45:03 -0300")
-Message-ID: <87eg4wlcnc.fsf@x220.int.ebiederm.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH v4 3/5] kexec_file: Allow skipping checksum calculation
- for some segments.
+ id 1bhUOQ-0000zl-SE
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:23:25 +0000
+Received: by mail-pa0-x233.google.com with SMTP id cm16so1969049pac.0
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:23:01 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v26 0/7] arm64: add kdump support
+Date: Wed,  7 Sep 2016 13:29:02 +0900
+Message-Id: <20160907042908.6232-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,148 +17,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Balbir Singh <bsingharora@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+    v26-specific note: After a comment from Rob[0], an idea of adding
+    "linux,usable-memory-range" was dropped. Instead, an existing
+    "reserved-memory" node will be used to limit usable memory ranges
+    on crash dump kernel.
+    This works not only on UEFI/ACPI systems but also on DT-only systems,
+    but if he really insists on using DT-specific "usable-memory" property,
+    I will post additional patches for kexec-tools. Those would be
+    redundant, though.
+    Even in that case, the kernel will not have to be changed.
 
-2> Add skip_checksum member to struct kexec_buf to specify whether the
-> corresponding segment should be part of the checksum calculation.
->
-> The next patch will add a way to update segments after a kimage is loaded.
-> Segments that will be updated in this way should not be checksummed,
-> otherwise they will cause the purgatory checksum verification to fail
-> when the machine is rebooted.
->
-> As a bonus, we don't need to special-case the purgatory segment anymore
-> to avoid checksumming it.
->
-> Places using struct kexec_buf get false as the default value for
-> skip_checksum since they all use designated initializers.  Therefore,
-> there is no behavior change with this patch and all segments except the
-> purgatory are checksummed.
+This patch series adds kdump support on arm64.
+There are some prerequisite patches [1],[2].
 
-What is the world.  This fundamentally makes kexec unsafe to use.  If
-any updates need to be made they should be made before they are part of
-the entire image checksum.
+To load a crash-dump kernel to the systems, a series of patches to
+kexec-tools, which have not yet been merged upstream, are needed.
+Please always use my latest kdump patches, v3 [3].
 
-No way should this be merged anywhere ever.
+To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+  - crash utility (coming v7.1.6 or later) [4]
+    (Necessary patches have already been queued in the master.)
 
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
->
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-> ---
->  include/linux/kexec.h | 23 ++++++++++++++---------
->  kernel/kexec_file.c   | 15 +++++++--------
->  2 files changed, 21 insertions(+), 17 deletions(-)
->
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 16561e96a6d7..edadff6c86ff 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -100,6 +100,9 @@ struct kexec_segment {
->  	size_t bufsz;
->  	unsigned long mem;
->  	size_t memsz;
-> +
-> +	/* Whether this segment is ignored in the checksum calculation. */
-> +	bool skip_checksum;
->  };
->  
->  #ifdef CONFIG_COMPAT
-> @@ -151,15 +154,16 @@ struct kexec_file_ops {
->  
->  /**
->   * struct kexec_buf - parameters for finding a place for a buffer in memory
-> - * @image:	kexec image in which memory to search.
-> - * @buffer:	Contents which will be copied to the allocated memory.
-> - * @bufsz:	Size of @buffer.
-> - * @mem:	On return will have address of the buffer in memory.
-> - * @memsz:	Size for the buffer in memory.
-> - * @buf_align:	Minimum alignment needed.
-> - * @buf_min:	The buffer can't be placed below this address.
-> - * @buf_max:	The buffer can't be placed above this address.
-> - * @top_down:	Allocate from top of memory.
-> + * @image:		kexec image in which memory to search.
-> + * @buffer:		Contents which will be copied to the allocated memory.
-> + * @bufsz:		Size of @buffer.
-> + * @mem:		On return will have address of the buffer in memory.
-> + * @memsz:		Size for the buffer in memory.
-> + * @buf_align:		Minimum alignment needed.
-> + * @buf_min:		The buffer can't be placed below this address.
-> + * @buf_max:		The buffer can't be placed above this address.
-> + * @top_down:		Allocate from top of memory.
-> + * @skip_checksum:	Don't verify checksum for this buffer in purgatory.
->   */
->  struct kexec_buf {
->  	struct kimage *image;
-> @@ -171,6 +175,7 @@ struct kexec_buf {
->  	unsigned long buf_min;
->  	unsigned long buf_max;
->  	bool top_down;
-> +	bool skip_checksum;
->  };
->  
->  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index f5684adfad07..0e90d1446cb0 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -584,6 +584,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	ksegment->bufsz = kbuf->bufsz;
->  	ksegment->mem = kbuf->mem;
->  	ksegment->memsz = kbuf->memsz;
-> +	ksegment->skip_checksum = kbuf->skip_checksum;
->  	kbuf->image->nr_segments++;
->  	return 0;
->  }
-> @@ -598,7 +599,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  	char *digest;
->  	void *zero_buf;
->  	struct kexec_sha_region *sha_regions;
-> -	struct purgatory_info *pi = &image->purgatory_info;
->  
->  	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
->  	zero_buf_sz = PAGE_SIZE;
-> @@ -638,11 +638,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  		struct kexec_segment *ksegment;
->  
->  		ksegment = &image->segment[i];
-> -		/*
-> -		 * Skip purgatory as it will be modified once we put digest
-> -		 * info in purgatory.
-> -		 */
-> -		if (ksegment->kbuf == pi->purgatory_buf)
-> +		if (ksegment->skip_checksum)
->  			continue;
->  
->  		ret = crypto_shash_update(desc, ksegment->kbuf,
-> @@ -714,7 +710,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
->  	Elf_Shdr *sechdrs = NULL;
->  	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
->  				  .buf_min = min, .buf_max = max,
-> -				  .top_down = top_down };
-> +				  .top_down = top_down, .skip_checksum = true };
->  
->  	/*
->  	 * sechdrs_c points to section headers in purgatory and are read
-> @@ -819,7 +815,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
->  	if (kbuf.buf_align < bss_align)
->  		kbuf.buf_align = bss_align;
->  
-> -	/* Add buffer to segment list */
-> +	/*
-> +	 * Add buffer to segment list. Don't checksum the segment as
-> +	 * it will be modified once we put digest info in purgatory.
-> +	 */
->  	ret = kexec_add_buffer(&kbuf);
->  	if (ret)
->  		goto out;
+[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452582.html
+[1] "arm64: mark reserved memblock regions explicitly in iomem"
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/450433.html
+[2] "efi: arm64: treat regions with WT/WC set but WB cleared as memory"
+    http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/451491.html
+[3] T.B.D.
+[4] https://github.com/crash-utility/crash.git
+
+
+Changes for v26 (Sep 7, 2016):
+  o Use /reserved-memory instead of "linux,usable-memory-range" property
+    (dropping v25's patch#2 and #3, updating ex-patch#9.)
+
+Changes for v25 (Aug 29, 2016):
+  o Rebase to Linux-4.8-rc4
+  o Use memremap() instead of ioremap_cache() [patch#5]
+
+Changes for v24 (Aug 9, 2016):
+  o Rebase to Linux-4.8-rc1
+  o Update descriptions about newly added DT proerties
+
+Changes for v23 (July 26, 2016):
+
+  o Move memblock_reserve() to a single place in reserve_crashkernel()
+  o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+  o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+  o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+    (for ACPI) from usable memory at crash kernel
+
+Changes for v22 (July 12, 2016):
+
+  o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+    and add some descriptions about them in chosen.txt
+  o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+    with powerpc's "usable-memory"
+  o Make cosmetic changes regarding "ifdef" usage
+  o Correct some wordings in kdump.txt
+
+Changes for v21 (July 6, 2016):
+
+  o Remove kexec patches.
+  o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+  o Clarify the description about kvm in kdump.txt.
+
+See the following link [3] for older changes:
+[3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+
+AKASHI Takahiro (8):
+  arm64: kdump: reserve memory for crash dump kernel
+  memblock: add memblock_cap_memory_range()
+  arm64: limit memory regions based on DT property, usable-memory-range
+  arm64: kdump: implement machine_crash_shutdown()
+  arm64: kdump: add kdump support
+  arm64: kdump: add VMCOREINFO's for user-space coredump tools
+  arm64: kdump: enable kdump in the arm64 defconfig
+  arm64: kdump: update a kernel doc
+
+James Morse (1):
+  Documentation: dt: chosen properties for arm64 kdump
+
+ Documentation/devicetree/bindings/chosen.txt |  45 ++++++
+ Documentation/kdump/kdump.txt                |  16 ++-
+ arch/arm64/Kconfig                           |  11 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/hardirq.h             |   2 +-
+ arch/arm64/include/asm/kexec.h               |  41 +++++-
+ arch/arm64/include/asm/smp.h                 |   2 +
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
+ arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
+ arch/arm64/kernel/setup.c                    |   7 +-
+ arch/arm64/kernel/smp.c                      |  63 +++++++++
+ arch/arm64/mm/init.c                         | 202 +++++++++++++++++++++++++++
+ include/linux/memblock.h                     |   1 +
+ mm/memblock.c                                |  28 ++++
+ 15 files changed, 551 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+
+-- 
+2.9.0
+
+
+AKASHI Takahiro (6):
+  arm64: kdump: reserve memory for crash dump kernel
+  arm64: kdump: implement machine_crash_shutdown()
+  arm64: kdump: add kdump support
+  arm64: kdump: add VMCOREINFO's for user-space coredump tools
+  arm64: kdump: enable kdump in the arm64 defconfig
+  arm64: kdump: update a kernel doc
+
+James Morse (1):
+  Documentation: dt: chosen properties for arm64 kdump
+
+ Documentation/devicetree/bindings/chosen.txt |  30 +++++
+ Documentation/kdump/kdump.txt                |  16 ++-
+ arch/arm64/Kconfig                           |  11 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/hardirq.h             |   2 +-
+ arch/arm64/include/asm/kexec.h               |  41 ++++++-
+ arch/arm64/include/asm/smp.h                 |   2 +
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/crash_dump.c               |  71 ++++++++++++
+ arch/arm64/kernel/machine_kexec.c            |  67 ++++++++++-
+ arch/arm64/kernel/setup.c                    |   7 +-
+ arch/arm64/kernel/smp.c                      |  63 ++++++++++
+ arch/arm64/mm/init.c                         | 167 +++++++++++++++++++++++++++
+ 13 files changed, 472 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+
+-- 
+2.9.0
+
 
 _______________________________________________
 kexec mailing list
