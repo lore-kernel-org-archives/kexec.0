@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v24 0/9] arm64: add kdump support
-References: <20160809015248.28414-1-takahiro.akashi@linaro.org>
- <0267060a-d380-2e7a-0c33-0084bfc46d97@caviumnetworks.com>
- <20160831053109.GR20080@linaro.org>
- <cca40a49-3500-ded8-35a7-053adf79d12b@caviumnetworks.com>
- <20160905081501.GA16712@linaro.org>
- <976ca1f8-5efb-b45c-19b8-bde7bd06f5b8@caviumnetworks.com>
- <57CEE1E5.7040206@arm.com>
- <35f81eb9-8bd0-16ae-e04d-5ea4b30c0ad6@caviumnetworks.com>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <57CEF1D8.3000904@arm.com>
-Date: Tue, 6 Sep 2016 17:42:00 +0100
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bhRvC-0000ZQ-RG
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 01:45:03 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1472579105-26296-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <1472579105-26296-4-git-send-email-bauerman@linux.vnet.ibm.com>
+Date: Tue, 06 Sep 2016 20:30:31 -0500
+In-Reply-To: <1472579105-26296-4-git-send-email-bauerman@linux.vnet.ibm.com>
+ (Thiago Jung Bauermann's message of "Tue, 30 Aug 2016 14:45:03 -0300")
+Message-ID: <87eg4wlcnc.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <35f81eb9-8bd0-16ae-e04d-5ea4b30c0ad6@caviumnetworks.com>
+Subject: Re: [PATCH v4 3/5] kexec_file: Allow skipping checksum calculation
+ for some segments.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,27 +25,144 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Manish Jaggi <mjaggi@caviumnetworks.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Balbir Singh <bsingharora@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On 06/09/16 17:15, Manish Jaggi wrote:
-> 
->>> In my setup the GICD_CTRL[RWP] bit is not cleared in the
->>> crashkernels' distributor init function.
->>
->> Which instance is failing? The initial one (just after the initial
->> disable)? Or the one called from gic_dist_config()?
->>
-> In crash kernel, when the GICD_CTRL is set to 0x0, RWP is not getting clear.
-> And is never cleared for any subsequent writes.
+Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
 
-That's weird. It means writes are still pending, and never drained. What
-happens if you put a dsb(sy) in the wait_for_rwp() loop?
+2> Add skip_checksum member to struct kexec_buf to specify whether the
+> corresponding segment should be part of the checksum calculation.
+>
+> The next patch will add a way to update segments after a kimage is loaded.
+> Segments that will be updated in this way should not be checksummed,
+> otherwise they will cause the purgatory checksum verification to fail
+> when the machine is rebooted.
+>
+> As a bonus, we don't need to special-case the purgatory segment anymore
+> to avoid checksumming it.
+>
+> Places using struct kexec_buf get false as the default value for
+> skip_checksum since they all use designated initializers.  Therefore,
+> there is no behavior change with this patch and all segments except the
+> purgatory are checksummed.
 
-Thanks,
+What is the world.  This fundamentally makes kexec unsafe to use.  If
+any updates need to be made they should be made before they are part of
+the entire image checksum.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+No way should this be merged anywhere ever.
+
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+>
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+> ---
+>  include/linux/kexec.h | 23 ++++++++++++++---------
+>  kernel/kexec_file.c   | 15 +++++++--------
+>  2 files changed, 21 insertions(+), 17 deletions(-)
+>
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 16561e96a6d7..edadff6c86ff 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -100,6 +100,9 @@ struct kexec_segment {
+>  	size_t bufsz;
+>  	unsigned long mem;
+>  	size_t memsz;
+> +
+> +	/* Whether this segment is ignored in the checksum calculation. */
+> +	bool skip_checksum;
+>  };
+>  
+>  #ifdef CONFIG_COMPAT
+> @@ -151,15 +154,16 @@ struct kexec_file_ops {
+>  
+>  /**
+>   * struct kexec_buf - parameters for finding a place for a buffer in memory
+> - * @image:	kexec image in which memory to search.
+> - * @buffer:	Contents which will be copied to the allocated memory.
+> - * @bufsz:	Size of @buffer.
+> - * @mem:	On return will have address of the buffer in memory.
+> - * @memsz:	Size for the buffer in memory.
+> - * @buf_align:	Minimum alignment needed.
+> - * @buf_min:	The buffer can't be placed below this address.
+> - * @buf_max:	The buffer can't be placed above this address.
+> - * @top_down:	Allocate from top of memory.
+> + * @image:		kexec image in which memory to search.
+> + * @buffer:		Contents which will be copied to the allocated memory.
+> + * @bufsz:		Size of @buffer.
+> + * @mem:		On return will have address of the buffer in memory.
+> + * @memsz:		Size for the buffer in memory.
+> + * @buf_align:		Minimum alignment needed.
+> + * @buf_min:		The buffer can't be placed below this address.
+> + * @buf_max:		The buffer can't be placed above this address.
+> + * @top_down:		Allocate from top of memory.
+> + * @skip_checksum:	Don't verify checksum for this buffer in purgatory.
+>   */
+>  struct kexec_buf {
+>  	struct kimage *image;
+> @@ -171,6 +175,7 @@ struct kexec_buf {
+>  	unsigned long buf_min;
+>  	unsigned long buf_max;
+>  	bool top_down;
+> +	bool skip_checksum;
+>  };
+>  
+>  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index f5684adfad07..0e90d1446cb0 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -584,6 +584,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>  	ksegment->bufsz = kbuf->bufsz;
+>  	ksegment->mem = kbuf->mem;
+>  	ksegment->memsz = kbuf->memsz;
+> +	ksegment->skip_checksum = kbuf->skip_checksum;
+>  	kbuf->image->nr_segments++;
+>  	return 0;
+>  }
+> @@ -598,7 +599,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  	char *digest;
+>  	void *zero_buf;
+>  	struct kexec_sha_region *sha_regions;
+> -	struct purgatory_info *pi = &image->purgatory_info;
+>  
+>  	zero_buf = __va(page_to_pfn(ZERO_PAGE(0)) << PAGE_SHIFT);
+>  	zero_buf_sz = PAGE_SIZE;
+> @@ -638,11 +638,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  		struct kexec_segment *ksegment;
+>  
+>  		ksegment = &image->segment[i];
+> -		/*
+> -		 * Skip purgatory as it will be modified once we put digest
+> -		 * info in purgatory.
+> -		 */
+> -		if (ksegment->kbuf == pi->purgatory_buf)
+> +		if (ksegment->skip_checksum)
+>  			continue;
+>  
+>  		ret = crypto_shash_update(desc, ksegment->kbuf,
+> @@ -714,7 +710,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	Elf_Shdr *sechdrs = NULL;
+>  	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
+>  				  .buf_min = min, .buf_max = max,
+> -				  .top_down = top_down };
+> +				  .top_down = top_down, .skip_checksum = true };
+>  
+>  	/*
+>  	 * sechdrs_c points to section headers in purgatory and are read
+> @@ -819,7 +815,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	if (kbuf.buf_align < bss_align)
+>  		kbuf.buf_align = bss_align;
+>  
+> -	/* Add buffer to segment list */
+> +	/*
+> +	 * Add buffer to segment list. Don't checksum the segment as
+> +	 * it will be modified once we put digest info in purgatory.
+> +	 */
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out;
 
 _______________________________________________
 kexec mailing list
