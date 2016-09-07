@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x229.google.com ([2607:f8b0:400e:c00::229])
+Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhUSz-00050z-GS
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:13 +0000
-Received: by mail-pf0-x229.google.com with SMTP id 128so2051379pfb.3
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:27:45 -0700 (PDT)
+ id 1bhUTA-00059b-1G
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:22 +0000
+Received: by mail-pf0-x232.google.com with SMTP id p64so2102291pfb.1
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:27:55 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v3 1/8] arm64: identify PHYS_OFFSET correctly
-Date: Wed,  7 Sep 2016 13:33:54 +0900
-Message-Id: <20160907043401.6403-2-takahiro.akashi@linaro.org>
+Subject: [PATCH v3 2/8] kexec: generalize and rename get_kernel_stext_sym()
+Date: Wed,  7 Sep 2016 13:33:55 +0900
+Message-Id: <20160907043401.6403-3-takahiro.akashi@linaro.org>
 In-Reply-To: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,90 +27,201 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Due to the kernel patch[1], the current code will not be able to identify
-the correct value of PHYS_OFFSET if some "reserved" memory region, which
-is likely to be UEFI runtime services code/data, exists at an address below
-the first "System RAM" regions.
+From: Pratyush Anand <panand@redhat.com>
 
-This patch fixes this issue.
+get_kernel_stext_sym() has been defined for both arm and i386. Other
+architecture might need some other kernel symbol address. Therefore rewrite
+this function as generic function to get any kernel symbol address.
 
+More over, kallsyms is not arch specific representation, therefore have
+common function for all arches.
+
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+[created symbols.c]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/arch/arm64/iomem.h       |  7 +++++++
- kexec/arch/arm64/kexec-arm64.c | 22 +++++++++++++++++-----
- 2 files changed, 24 insertions(+), 5 deletions(-)
- create mode 100644 kexec/arch/arm64/iomem.h
+ kexec/Makefile                  |  1 +
+ kexec/arch/arm/crashdump-arm.c  | 40 +---------------------------------------
+ kexec/arch/i386/crashdump-x86.c | 32 +-------------------------------
+ kexec/kexec.h                   |  2 ++
+ kexec/symbols.c                 | 41 +++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 46 insertions(+), 70 deletions(-)
+ create mode 100644 kexec/symbols.c
 
-diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+diff --git a/kexec/Makefile b/kexec/Makefile
+index 39f365f..2b4fb3d 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -26,6 +26,7 @@ KEXEC_SRCS_base += kexec/kernel_version.c
+ KEXEC_SRCS_base += kexec/lzma.c
+ KEXEC_SRCS_base += kexec/zlib.c
+ KEXEC_SRCS_base += kexec/kexec-xen.c
++KEXEC_SRCS_base += kexec/symbols.c
+ 
+ KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
+ 
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 4a89b5e..2bc898b 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -73,48 +73,10 @@ static struct crash_elf_info elf_info = {
+ 
+ extern unsigned long long user_page_offset;
+ 
+-/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+-static unsigned long long get_kernel_stext_sym(void)
+-{
+-	const char *kallsyms = "/proc/kallsyms";
+-	const char *stext = "_stext";
+-	char sym[128];
+-	char line[128];
+-	FILE *fp;
+-	unsigned long long vaddr = 0;
+-	char type;
+-
+-	fp = fopen(kallsyms, "r");
+-	if (!fp) {
+-		fprintf(stderr, "Cannot open %s\n", kallsyms);
+-		return 0;
+-	}
+-
+-	while(fgets(line, sizeof(line), fp) != NULL) {
+-		unsigned long long addr;
+-
+-		if (sscanf(line, "%Lx %c %s", &addr, &type, sym) != 3)
+-			continue;
+-
+-		if (strcmp(sym, stext) == 0) {
+-			dbgprintf("kernel symbol %s vaddr = %#llx\n", stext, addr);
+-			vaddr = addr;
+-			break;
+-		}
+-	}
+-
+-	fclose(fp);
+-
+-	if (vaddr == 0)
+-		fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
+-
+-	return vaddr;
+-}
+-
+ static int get_kernel_page_offset(struct kexec_info *info,
+ 		struct crash_elf_info *elf_info)
+ {
+-	unsigned long long stext_sym_addr = get_kernel_stext_sym();
++	unsigned long long stext_sym_addr = get_kernel_sym("stext");
+ 	if (stext_sym_addr == 0) {
+ 		if (user_page_offset != (-1ULL)) {
+ 			elf_info->page_offset = user_page_offset;
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index bbc0f35..664eb3b 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -102,36 +102,6 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
+ 	return -1;
+ }
+ 
+-/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+-static unsigned long long get_kernel_stext_sym(void)
+-{
+-	const char *kallsyms = "/proc/kallsyms";
+-	const char *stext = "_stext";
+-	char sym[128];
+-	char line[128];
+-	FILE *fp;
+-	unsigned long long vaddr;
+-	char type;
+-
+-	fp = fopen(kallsyms, "r");
+-	if (!fp) {
+-		fprintf(stderr, "Cannot open %s\n", kallsyms);
+-		return 0;
+-	}
+-
+-	while(fgets(line, sizeof(line), fp) != NULL) {
+-		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
+-			continue;
+-		if (strcmp(sym, stext) == 0) {
+-			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
+-			return vaddr;
+-		}
+-	}
+-
+-	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
+-	return 0;
+-}
+-
+ /* Retrieve info regarding virtual address kernel has been compiled for and
+  * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
+  * from kexec-tools fails because of malformed elf notes. A kernel patch has
+@@ -182,7 +152,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 
+ 	/* Traverse through the Elf headers and find the region where
+ 	 * _stext symbol is located in. That's where kernel is mapped */
+-	stext_sym = get_kernel_stext_sym();
++	stext_sym = get_kernel_sym("stext");
+ 	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
+ 		if (phdr->p_type == PT_LOAD) {
+ 			unsigned long long saddr = phdr->p_vaddr;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 9194f1c..b4fafad 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -312,4 +312,6 @@ int xen_kexec_load(struct kexec_info *info);
+ int xen_kexec_unload(uint64_t kexec_flags);
+ void xen_kexec_exec(void);
+ 
++extern unsigned long long get_kernel_sym(const char *text);
++
+ #endif /* KEXEC_H */
+diff --git a/kexec/symbols.c b/kexec/symbols.c
 new file mode 100644
-index 0000000..7fd66eb
+index 0000000..ea6e327
 --- /dev/null
-+++ b/kexec/arch/arm64/iomem.h
-@@ -0,0 +1,7 @@
-+#ifndef IOMEM_H
-+#define IOMEM_H
++++ b/kexec/symbols.c
+@@ -0,0 +1,41 @@
++#include <stdio.h>
++#include <string.h>
++#include "kexec.h"
 +
-+#define SYSTEM_RAM		"System RAM\n"
-+#define IOMEM_RESERVED		"reserved\n"
++/* Retrieve kernel symbol virtual address from /proc/kallsyms */
++unsigned long long get_kernel_sym(const char *text)
++{
++	const char *kallsyms = "/proc/kallsyms";
++	char sym[128];
++	char line[128];
++	FILE *fp;
++	unsigned long long vaddr = 0;
++	char type;
 +
-+#endif
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 7183dac..bc96c76 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -21,6 +21,7 @@
- #include "crashdump-arm64.h"
- #include "dt-ops.h"
- #include "fs2dt.h"
-+#include "iomem.h"
- #include "kexec-syscall.h"
- #include "arch/options.h"
- 
-@@ -465,18 +466,28 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
-  * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
-  */
- 
-+static int count_memory_ranges;
-+
- static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- 	unsigned long long base, unsigned long long length)
- {
- 	struct memory_range *r;
- 
--	if (nr >= KEXEC_SEGMENT_MAX)
-+	if (count_memory_ranges >= KEXEC_SEGMENT_MAX)
- 		return -1;
- 
--	r = (struct memory_range *)data + nr;
--	r->type = RANGE_RAM;
-+	r = (struct memory_range *)data + count_memory_ranges;
-+
-+	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
-+		r->type = RANGE_RAM;
-+	else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
-+		r->type = RANGE_RESERVED;
-+	else
++	fp = fopen(kallsyms, "r");
++	if (!fp) {
++		fprintf(stderr, "Cannot open %s\n", kallsyms);
 +		return 0;
++	}
 +
- 	r->start = base;
- 	r->end = base + length - 1;
-+	count_memory_ranges++;
- 
- 	set_phys_offset(r->start);
- 
-@@ -493,9 +504,10 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- static int get_memory_ranges_iomem(struct memory_range *array,
- 	unsigned int *count)
- {
--	*count = kexec_iomem_for_each_line("System RAM\n",
--		get_memory_ranges_iomem_cb, array);
-+	count_memory_ranges = 0;
-+	kexec_iomem_for_each_line(NULL, get_memory_ranges_iomem_cb, array);
- 
-+	*count = count_memory_ranges;
- 	if (!*count) {
- 		dbgprintf("%s: failed: No RAM found.\n", __func__);
- 		return -EFAILED;
++	while (fgets(line, sizeof(line), fp) != NULL) {
++		unsigned long long addr;
++
++		if (sscanf(line, "%Lx %c %s", &addr, &type, sym) != 3)
++			continue;
++
++		if (strcmp(sym, text) == 0) {
++			dbgprintf("kernel symbol %s vaddr = %#llx\n",
++								text, addr);
++			vaddr = addr;
++			break;
++		}
++	}
++
++	fclose(fp);
++
++	if (vaddr == 0)
++		fprintf(stderr, "Cannot get kernel %s symbol address\n", text);
++
++	return vaddr;
++}
 -- 
 2.9.0
 
