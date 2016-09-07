@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
- by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bhUTY-0005NU-6t
- for kexec@lists.infradead.org; Wed, 07 Sep 2016 04:28:41 +0000
-Received: by mail-pf0-x233.google.com with SMTP id 128so2056575pfb.3
- for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 21:28:18 -0700 (PDT)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bhVxU-0004PI-Ld
+ for kexec@lists.infradead.org; Wed, 07 Sep 2016 06:03:41 +0000
+Received: by mail-pf0-x233.google.com with SMTP id p64so3022315pfb.1
+ for <kexec@lists.infradead.org>; Tue, 06 Sep 2016 23:03:19 -0700 (PDT)
+Date: Wed, 7 Sep 2016 15:09:57 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v3 5/8] arm64: kdump: set up kernel image segment
-Date: Wed,  7 Sep 2016 13:33:58 +0900
-Message-Id: <20160907043401.6403-6-takahiro.akashi@linaro.org>
-In-Reply-To: <20160907043401.6403-1-takahiro.akashi@linaro.org>
-References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v1] kdump, vmcoreinfo: report memory sections virtual
+ addresses
+Message-ID: <20160907060954.GF16712@linaro.org>
+References: <1471531632-23003-1-git-send-email-thgarnie@google.com>
+ <20160829101137.GA29344@x1.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160829101137.GA29344@x1.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,143 +23,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kernel-hardening@lists.openwall.com, surovegin@google.com, kexec@lists.infradead.org, x86@kernel.org, Xunlei Pang <xlpang@redhat.com>, linux-kernel@vger.kernel.org, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Garnier <thgarnie@google.com>, keescook@chromium.org
 
-On arm64, we can use the same kernel image as 1st kernel, but
-we have to modify the entry point as well as segments' addresses
-in the kernel's elf header in order to load them into correct places.
+On Mon, Aug 29, 2016 at 06:11:37PM +0800, Baoquan He wrote:
+> Hi Thomas,
+> 
+> I used below code and it works. Since using VMCOREINFO_NUMBER can reuse
+> the existing struct number_table to import the data. It makes change
+> easier. But the place could be next to KERNEL_IMAGE_SIZE, or as your
+> patch did, both is fine.
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- kexec/arch/arm64/crashdump-arm64.c | 23 +++++++++++++++++++++++
- kexec/arch/arm64/crashdump-arm64.h |  1 +
- kexec/arch/arm64/kexec-arm64.c     | 25 ++++++++++++++++++++-----
- kexec/arch/arm64/kexec-elf-arm64.c | 10 +++++++++-
- 4 files changed, 53 insertions(+), 6 deletions(-)
+I think we'd better avoid adding arch-specific code in generic code
+if possible, especially in this case, since there is a dedicated interface,
+arch_crash_save_vmcoreinfo().
 
-diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-index 8346131..9517329 100644
---- a/kexec/arch/arm64/crashdump-arm64.c
-+++ b/kexec/arch/arm64/crashdump-arm64.c
-@@ -213,3 +213,26 @@ int load_crashdump_segments(struct kexec_info *info)
- 
- 	return 0;
- }
-+
-+/*
-+ * e_entry and p_paddr are actually in virtual address space.
-+ * Those values will be translated to physcal addresses by
-+ * using virt_to_phys().
-+ * So let's get ready for later use so the memory base (phys_offset)
-+ * will be correctly replaced with crash_reserved_mem.start.
-+ */
-+void modify_ehdr_for_crashdump(struct mem_ehdr *ehdr)
-+{
-+	struct mem_phdr *phdr;
-+	int i;
-+
-+	ehdr->e_entry += - arm64_mem.phys_offset + crash_reserved_mem.start;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &ehdr->e_phdr[i];
-+		if (phdr->p_type != PT_LOAD)
-+			continue;
-+		phdr->p_paddr +=
-+			(-arm64_mem.phys_offset + crash_reserved_mem.start);
-+	}
-+}
-diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
-index da75a2d..382f571 100644
---- a/kexec/arch/arm64/crashdump-arm64.h
-+++ b/kexec/arch/arm64/crashdump-arm64.h
-@@ -21,5 +21,6 @@ extern struct memory_range crash_reserved_mem;
- extern struct memory_range elfcorehdr_mem;
- 
- extern int load_crashdump_segments(struct kexec_info *info);
-+extern void modify_ehdr_for_crashdump(struct mem_ehdr *ehdr);
- 
- #endif /* CRASHDUMP_ARM64_H */
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index bc96c76..498b218 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -305,12 +305,27 @@ unsigned long arm64_locate_kernel_segment(struct kexec_info *info)
- {
- 	unsigned long hole;
- 
--	hole = locate_hole(info,
--		arm64_mem.text_offset + arm64_mem.image_size,
--		MiB(2), 0, ULONG_MAX, 1);
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		unsigned long hole_end;
-+
-+		hole = (crash_reserved_mem.start < mem_min ?
-+				mem_min : crash_reserved_mem.start);
-+		hole = _ALIGN_UP(hole, MiB(2));
-+		hole_end = hole + arm64_mem.text_offset + arm64_mem.image_size;
-+
-+		if ((hole_end > mem_max) ||
-+		    (hole_end > crash_reserved_mem.end)) {
-+			dbgprintf("%s: Crash kernel out of range\n", __func__);
-+			hole = ULONG_MAX;
-+		}
-+	} else {
-+		hole = locate_hole(info,
-+			arm64_mem.text_offset + arm64_mem.image_size,
-+			MiB(2), 0, ULONG_MAX, 1);
- 
--	if (hole == ULONG_MAX)
--		dbgprintf("%s: locate_hole failed\n", __func__);
-+		if (hole == ULONG_MAX)
-+			dbgprintf("%s: locate_hole failed\n", __func__);
-+	}
- 
- 	return hole;
- }
-diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
-index c70a37a..842ce21 100644
---- a/kexec/arch/arm64/kexec-elf-arm64.c
-+++ b/kexec/arch/arm64/kexec-elf-arm64.c
-@@ -9,6 +9,7 @@
- #include <stdlib.h>
- #include <linux/elf.h>
- 
-+#include "crashdump-arm64.h"
- #include "kexec-arm64.h"
- #include "kexec-elf.h"
- #include "kexec-syscall.h"
-@@ -105,7 +106,8 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	}
- 
- 	arm64_mem.vp_offset = _ALIGN_DOWN(ehdr.e_entry, MiB(2));
--	arm64_mem.vp_offset -= kernel_segment - get_phys_offset();
-+	if (!(info->kexec_flags & KEXEC_ON_CRASH))
-+		arm64_mem.vp_offset -= kernel_segment - get_phys_offset();
- 
- 	dbgprintf("%s: kernel_segment: %016lx\n", __func__, kernel_segment);
- 	dbgprintf("%s: text_offset:    %016lx\n", __func__,
-@@ -127,6 +129,12 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
- 								__func__);
- 			goto exit;
- 		}
-+
-+		/*
-+		 * offset addresses in order to fit vmlinux
-+		 * (elf_exec) into crash kernel's memory
-+		 */
-+		modify_ehdr_for_crashdump(&ehdr);
- 	}
- 
- 	/* load the kernel */
--- 
-2.9.0
+-Takahiro AKASHI
 
+> ---
+>  kernel/kexec_core.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..81bde86 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1469,6 +1469,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+>  #ifdef CONFIG_X86
+>  	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> +	VMCOREINFO_NUMBER(PAGE_OFFSET);
+> +	VMCOREINFO_NUMBER(VMALLOC_START);
+> +	VMCOREINFO_NUMBER(VMEMMAP_START);
+>  #endif
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+> -- 
+> 2.5.5
+> 
+> On 08/18/16 at 07:47am, Thomas Garnier wrote:
+> > KASLR memory randomization can randomize the base of the physical memory
+> > mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
+> > (VMEMMAP_START). Adding these variables on VMCOREINFO so tools can
+> > easily identify the base of each memory section.
+> > 
+> > Signed-off-by: Thomas Garnier <thgarnie@google.com>
+> > ---
+> > Based on next-20160817
+> > ---
+> >  arch/x86/kernel/machine_kexec_64.c | 3 +++
+> >  include/linux/kexec.h              | 6 ++++++
+> >  2 files changed, 9 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> > index fc3389f..b1f15a2 100644
+> > --- a/arch/x86/kernel/machine_kexec_64.c
+> > +++ b/arch/x86/kernel/machine_kexec_64.c
+> > @@ -338,6 +338,9 @@ void arch_crash_save_vmcoreinfo(void)
+> >  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+> >  			      kaslr_offset());
+> >  	VMCOREINFO_PHYS_BASE(phys_base);
+> > +	VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
+> > +	VMCOREINFO_VMALLOC_START(VMALLOC_START);
+> > +	VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
+> >  }
+> >  
+> >  /* arch-dependent functionality related to kexec file-based syscall */
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index d3ae429..cd3874c 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -261,6 +261,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+> >  	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+> >  #define VMCOREINFO_PHYS_BASE(value) \
+> >  	vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+> > +#define VMCOREINFO_PAGE_OFFSET(value) \
+> > +	vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
+> > +#define VMCOREINFO_VMALLOC_START(value) \
+> > +	vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
+> > +#define VMCOREINFO_VMEMMAP_START(value) \
+> > +	vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
+> >  
+> >  extern struct kimage *kexec_image;
+> >  extern struct kimage *kexec_crash_image;
+> > -- 
+> > 2.8.0.rc3.226.g39d4020
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
