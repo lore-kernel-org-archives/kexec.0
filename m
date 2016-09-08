@@ -1,20 +1,42 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-x22c.google.com ([2607:f8b0:4002:c05::22c])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bi1Jn-0007id-Pu
- for kexec@lists.infradead.org; Thu, 08 Sep 2016 15:32:51 +0000
-Received: by mail-yw0-x22c.google.com with SMTP id u124so17511819ywg.3
- for <kexec@lists.infradead.org>; Thu, 08 Sep 2016 08:32:27 -0700 (PDT)
+ id 1bi4ss-0006W8-KX
+ for kexec@lists.infradead.org; Thu, 08 Sep 2016 19:21:15 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u88JHdlD068275
+ for <kexec@lists.infradead.org>; Thu, 8 Sep 2016 15:20:53 -0400
+Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 25bc346d36-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 08 Sep 2016 15:20:53 -0400
+Received: from localhost
+ by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 8 Sep 2016 16:20:51 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.18.232.225])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id A1E45352006E
+ for <kexec@lists.infradead.org>; Thu,  8 Sep 2016 15:20:25 -0400 (EDT)
+Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u88JKml525362496
+ for <kexec@lists.infradead.org>; Thu, 8 Sep 2016 16:20:48 -0300
+Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
+ by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u88JKloP019386
+ for <kexec@lists.infradead.org>; Thu, 8 Sep 2016 16:20:48 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 0/5] kexec_file: Add buffer hand-over for the next
+ kernel
+Date: Thu, 08 Sep 2016 16:20:45 -0300
+In-Reply-To: <871t0vlrlv.fsf@x220.int.ebiederm.org>
+References: <1472579105-26296-1-git-send-email-bauerman@linux.vnet.ibm.com>
+ <8760q7lswz.fsf@x220.int.ebiederm.org> <871t0vlrlv.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <20160907061710.GA11562@x1.nay.redhat.com>
-References: <1471531632-23003-1-git-send-email-thgarnie@google.com>
- <20160829101137.GA29344@x1.redhat.com> <20160907060954.GF16712@linaro.org>
- <20160907061710.GA11562@x1.nay.redhat.com>
-From: Thomas Garnier <thgarnie@google.com>
-Date: Thu, 8 Sep 2016 08:32:25 -0700
-Message-ID: <CAJcbSZH4tG_aorU55CDdJf=e+Nka9QbBVYFOPmyZk47T-DA7Ng@mail.gmail.com>
-Subject: Re: [PATCH v1] kdump,
- vmcoreinfo: report memory sections virtual addresses
+Message-Id: <3106532.NfQxgDJQ20@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,117 +49,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>, Kernel Hardening <kernel-hardening@lists.openwall.com>, Eugene Surovegin <surovegin@google.com>, kexec@lists.infradead.org, the arch/x86 maintainers <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Balbir Singh <bsingharora@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Richter <erichte@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Sep 6, 2016 at 11:17 PM, Baoquan He <bhe@redhat.com> wrote:
-> On 09/07/16 at 03:09pm, AKASHI Takahiro wrote:
->> On Mon, Aug 29, 2016 at 06:11:37PM +0800, Baoquan He wrote:
->> > Hi Thomas,
->> >
->> > I used below code and it works. Since using VMCOREINFO_NUMBER can reuse
->> > the existing struct number_table to import the data. It makes change
->> > easier. But the place could be next to KERNEL_IMAGE_SIZE, or as your
->> > patch did, both is fine.
->>
->> I think we'd better avoid adding arch-specific code in generic code
->> if possible, especially in this case, since there is a dedicated interface,
->> arch_crash_save_vmcoreinfo().
->
-> Yes, agree. Previously the reason I put KERNEL_IMAGE_SIZE in
-> crash_save_vmcoreinfo_init is kernel text randomization could be a
-> generic method for all ARCHes. Then it can be taken out from the #ifdef
-> scope. Now seeing it again, it's better to be put in
-> arch_crash_save_vmcoreinfo, at least for the time being.
->
-> Hi Thomas,
->
-> By the way, will you repost with the VMCOREINFO_NUMBER format? If not, I
-> can repost after I test all kexec/makedumpfile changes.
+Am Mittwoch, 07 September 2016, 09:19:40 schrieb Eric W. Biederman:
+> ebiederm@xmission.com (Eric W. Biederman) writes:
+> > Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+> >> Hello,
+> >> 
+> >> The purpose of this new version of the series is to fix a small issue
+> >> that I found, which is that the kernel doesn't remove the memory
+> >> reservation for the hand-over buffer it received from the previous
+> >> kernel in the device tree it sets up for the next kernel. The result
+> >> is that for each successive kexec, a stale hand-over buffer is left
+> >> behind, wasting memory.
+> >> 
+> >> This is fixed by changes to kexec_free_handover_buffer and
+> >> setup_handover_buffer in patch 2. The other change is to fix checkpatch
+> >> warnings in the last patch.
+> > 
+> > This is fundamentally broken.  You do not increase the integrity of a
+> > system by dropping integrity checks.
+> > 
+> > No. No. No. No.
+> > 
+> > Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-I think you should repost it.
+The IMA measurement list can be verified without the need of a checksum over 
+its contents by replaying the PCR extend operations and checking that the 
+result matches the registers in the TPM device. So the fact that it is not 
+part of the kexec segments checksum verification doesn't actually reduce the 
+integrity of the system.
 
->
-> Thanks
-> Baoquan
->
->>
->> -Takahiro AKASHI
->>
->> > ---
->> >  kernel/kexec_core.c | 3 +++
->> >  1 file changed, 3 insertions(+)
->> >
->> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> > index 5616755..81bde86 100644
->> > --- a/kernel/kexec_core.c
->> > +++ b/kernel/kexec_core.c
->> > @@ -1469,6 +1469,9 @@ static int __init crash_save_vmcoreinfo_init(void)
->> >     VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
->> >  #ifdef CONFIG_X86
->> >     VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
->> > +   VMCOREINFO_NUMBER(PAGE_OFFSET);
->> > +   VMCOREINFO_NUMBER(VMALLOC_START);
->> > +   VMCOREINFO_NUMBER(VMEMMAP_START);
->> >  #endif
->> >  #ifdef CONFIG_HUGETLB_PAGE
->> >     VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
->> > --
->> > 2.5.5
->> >
->> > On 08/18/16 at 07:47am, Thomas Garnier wrote:
->> > > KASLR memory randomization can randomize the base of the physical memory
->> > > mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
->> > > (VMEMMAP_START). Adding these variables on VMCOREINFO so tools can
->> > > easily identify the base of each memory section.
->> > >
->> > > Signed-off-by: Thomas Garnier <thgarnie@google.com>
->> > > ---
->> > > Based on next-20160817
->> > > ---
->> > >  arch/x86/kernel/machine_kexec_64.c | 3 +++
->> > >  include/linux/kexec.h              | 6 ++++++
->> > >  2 files changed, 9 insertions(+)
->> > >
->> > > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> > > index fc3389f..b1f15a2 100644
->> > > --- a/arch/x86/kernel/machine_kexec_64.c
->> > > +++ b/arch/x86/kernel/machine_kexec_64.c
->> > > @@ -338,6 +338,9 @@ void arch_crash_save_vmcoreinfo(void)
->> > >   vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
->> > >                         kaslr_offset());
->> > >   VMCOREINFO_PHYS_BASE(phys_base);
->> > > + VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
->> > > + VMCOREINFO_VMALLOC_START(VMALLOC_START);
->> > > + VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
->> > >  }
->> > >
->> > >  /* arch-dependent functionality related to kexec file-based syscall */
->> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> > > index d3ae429..cd3874c 100644
->> > > --- a/include/linux/kexec.h
->> > > +++ b/include/linux/kexec.h
->> > > @@ -261,6 +261,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->> > >   vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
->> > >  #define VMCOREINFO_PHYS_BASE(value) \
->> > >   vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
->> > > +#define VMCOREINFO_PAGE_OFFSET(value) \
->> > > + vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
->> > > +#define VMCOREINFO_VMALLOC_START(value) \
->> > > + vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
->> > > +#define VMCOREINFO_VMEMMAP_START(value) \
->> > > + vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
->> > >
->> > >  extern struct kimage *kexec_image;
->> > >  extern struct kimage *kexec_crash_image;
->> > > --
->> > > 2.8.0.rc3.226.g39d4020
->> > >
->> > >
->> > > _______________________________________________
->> > > kexec mailing list
->> > > kexec@lists.infradead.org
->> > > http://lists.infradead.org/mailman/listinfo/kexec
+Currently, IMA doesn't perform that verification when it restores the 
+measurement list from the kexec handover buffer, so if you believe it's 
+necessary to do that check at boot time, we could do one of the following:
+
+1. Have IMA replay the PCR extend operations when it restores the 
+measurement list from the handover buffer and validate it against the TPM 
+PCRs, or
+
+2. Have a buffer hash in the ima_kexec_hdr that IMA includes in the handover 
+buffer, and verify the buffer checksum before restoring the measurement 
+list.
+
+What do you think?
+
+> To be constructive the way we have handled similiar situations in the
+> past (hotplu memory) is to call kexec_load again.
+
+Thanks for your suggestion. Unfortunately it's always possible for new 
+measurements to be added to the measurement list between the kexec_file_load 
+and the reboot. We see that happen in practice with system scripts and 
+configuration files that are only read or executed during the reboot 
+process. They are only measured by IMA as a result of the kexec execute.
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
 
 _______________________________________________
 kexec mailing list
