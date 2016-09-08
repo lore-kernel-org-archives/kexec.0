@@ -1,13 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1473293504.8862.19.camel@infradead.org>
-Subject: Re: [PATCH v5 2/3] arm64: Add arm64 kexec support
-From: Geoff Levand <geoff@infradead.org>
-In-Reply-To: <20160906054359.GC16712@linaro.org>
-References: <cover.1472766405.git.geoff@infradead.org>
- <3a90727656b958ccf3ca303002785920615c495b.1472766405.git.geoff@infradead.org>
- <20160906054359.GC16712@linaro.org>
-Date: Wed, 07 Sep 2016 17:11:44 -0700
-Mime-Version: 1.0
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bi1B3-0001If-3k
+ for kexec@lists.infradead.org; Thu, 08 Sep 2016 15:23:46 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u88FMa8c136948
+ for <kexec@lists.infradead.org>; Thu, 8 Sep 2016 11:23:21 -0400
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 25ataym051-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 08 Sep 2016 11:23:20 -0400
+Received: from localhost
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 8 Sep 2016 12:23:18 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: Kexec regression in next-20160906
+Date: Thu, 08 Sep 2016 12:23:13 -0300
+In-Reply-To: <20160907080807.GD5783@n2100.arm.linux.org.uk>
+References: <20160906220936.4txqzodkgknhjiyh@atomide.com>
+ <2229914.bQjEFCIRgO@hactar> <20160907080807.GD5783@n2100.arm.linux.org.uk>
+MIME-Version: 1.0
+Message-Id: <8729269.3rIvqbaU1r@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,71 +33,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Pratyush Anand <panand@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, linux-omap@vger.kernel.org, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-T24gVHVlLCAyMDE2LTA5LTA2IGF0IDE0OjQ0ICswOTAwLCBBS0FTSEkgVGFrYWhpcm8gd3JvdGU6
-Cj4gCj4gT24gVGh1LCBTZXAgMDEsIDIwMTYgYXQgMDk6NTE6MTBQTSArMDAwMCwgR2VvZmYgTGV2
-YW5kIHdyb3RlOgo+IAo+ID4gCj4gPiAraW50IGFybTY0X2xvYWRfb3RoZXJfc2VnbWVudHMoc3Ry
-dWN0IGtleGVjX2luZm8gKmluZm8sCj4gPiArCXVuc2lnbmVkIGxvbmcgaW1hZ2VfYmFzZSkKPiA+
-ICt7Cj4gPiArCWludCByZXN1bHQ7Cj4gPiArCXVuc2lnbmVkIGxvbmcgZHRiX2Jhc2U7Cj4gPiAr
-CXVuc2lnbmVkIGxvbmcgaG9sZV9taW47Cj4gPiArCXVuc2lnbmVkIGxvbmcgaG9sZV9tYXg7Cj4g
-PiArCWNoYXIgKmluaXRyZF9idWYgPSBOVUxMOwo+ID4gKwlzdHJ1Y3QgZHRiIGR0YjsKPiA+ICsJ
-Y2hhciBjb21tYW5kX2xpbmVbQ09NTUFORF9MSU5FX1NJWkVdID0gIiI7Cj4gPiArCj4gPiArCWlm
-IChhcm02NF9vcHRzLmNvbW1hbmRfbGluZSkgewo+ID4gKwkJc3RybmNweShjb21tYW5kX2xpbmUs
-IGFybTY0X29wdHMuY29tbWFuZF9saW5lLAo+ID4gKwkJCXNpemVvZihjb21tYW5kX2xpbmUpKTsK
-PiA+ICsJCWNvbW1hbmRfbGluZVtzaXplb2YoY29tbWFuZF9saW5lKSAtIDFdID0gMDsKPiA+ICsJ
-fQo+ID4gKwo+ID4gKwlpZiAoYXJtNjRfb3B0cy5kdGIpIHsKPiA+ICsJCWR0Yi5uYW1lID0gImR0
-Yl8yIjsKPiAiZHRiXzEiIGFuZCAiZHRiXzIiIGFyZSBub3QgdmVyeSBtZWFuaW5nZnVsLgoKZHRi
-XzEgbWVhbnMgZnJvbSAxc3Qgc3RhZ2UsIGR0Yl8yIG1lYW5zIGEgbmV3IDJuZCBzdGFnZS4KCj4g
-Cj4gSW5zdGVhZCwgSSdtIGdvaW5nIHRvIHVzZToKPiDCoMKgwqDCoGR0Yl8yID0+ICJkdGJfdXNl
-ciIgKGlmIGEgY29tbWFuZCBsaW5lIG9wdGlvbiBpcyBzcGVjaWZpZWQpCj4gwqDCoMKgwqBkdGJf
-MSA9PiAiZHRiX3N5cyIgKGlmIGZyb20gL3N5cy9maXJtd2FyZS9mZHQpLCBvcgo+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgImR0Yl91bmZsYXR0ZW4iIChpZiBjcmVhdGVkIGZyb20gL3Byb2Mv
-ZGV2aWNlLXRyZWUpCj4gdG8gZGlzdGluZ3Vpc2ggdGhlIG9yaWdpbnMgaW4gbXkga2R1bXAgcGF0
-Y2hlcy4KClN1cmUsIHRoYXQncyBPSy7CoMKgSSBwdXNoZWQgb3QgYSBjaGFuZ2UgdG8gbXkgbWFz
-dGVyIGJyYW5jaC4KCj4gCj4gCj4gPiAKPiA+ICtzdGF0aWMgaW50IGdldF9tZW1vcnlfcmFuZ2Vz
-X2lvbWVtX2NiKHZvaWQgKmRhdGEsIGludCBuciwgY2hhcgo+ID4gKnN0ciwKPiA+ICsJdW5zaWdu
-ZWQgbG9uZyBsb25nIGJhc2UsIHVuc2lnbmVkIGxvbmcgbG9uZyBsZW5ndGgpCj4gPiArewo+ID4g
-KwlzdHJ1Y3QgbWVtb3J5X3JhbmdlICpyOwo+ID4gKwo+ID4gKwlpZiAobnIgPj0gS0VYRUNfU0VH
-TUVOVF9NQVgpCj4gPiArCQlyZXR1cm4gLTE7Cj4gPiArCj4gPiArCXIgPSAoc3RydWN0IG1lbW9y
-eV9yYW5nZSAqKWRhdGEgKyBucjsKPiA+ICsJci0+dHlwZSA9IFJBTkdFX1JBTTsKPiA+ICsJci0+
-c3RhcnQgPSBiYXNlOwo+ID4gKwlyLT5lbmQgPSBiYXNlICsgbGVuZ3RoIC0gMTsKPiA+ICsKPiA+
-ICsJc2V0X3BoeXNfb2Zmc2V0KHItPnN0YXJ0KTsKPiBUaGlzIHdpbGwgbm8gbG9uZ2VyIHdvcmsg
-Y29ycmVjdGx5IGZvciBpZGVudGlmeWluZyBQSFlTX09GRlNFVAo+IG9uY2UgdGhlIGZvbGxvd2lu
-ZyBwYXRjaCBpcyBhcHBsaWVkOgo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFp
-bC9saW51eC1hcm0ta2VybmVsLzIwMTYtQXVndXN0LzQ1MAo+IDQzMy5odG1sCj4gYW5kIGl0IGlz
-IG5vdyBxdWV1ZWQgaW4gYXJtNjQvZm9yLW5leHQuCj4gCj4gSSB3aWxsIGluY2x1ZGUgYSBmaXh1
-cCBpbiBteSBrZHVtcCBwYXRjaGVzIGFzIHRoZSBjdXJyZW50IGNvZGUgb2YKPiBrZXhlYwo+IGRv
-ZXNuJ3QgcmVseSBvbiBhIHJlc3VsdCBvZiB2aXJ0X3RvX3BoeXMoKSBzZXJpb3VzbHkuCk9LLgoK
-PiAKPiAraW50IGdldF9tZW1vcnlfcmFuZ2VzKHN0cnVjdCBtZW1vcnlfcmFuZ2UgKipyYW5nZSwg
-aW50ICpyYW5nZXMsCj4gPiAKPiA+ICsJdW5zaWduZWQgbG9uZyBrZXhlY19mbGFncykKPiA+ICt7
-Cj4gPiArCXN0YXRpYyBzdHJ1Y3QgbWVtb3J5X3JhbmdlIGFycmF5W0tFWEVDX1NFR01FTlRfTUFY
-XTsKPiA+ICsJdW5zaWduZWQgaW50IGNvdW50Owo+ID4gKwlpbnQgcmVzdWx0Owo+ID4gKwo+ID4g
-KwlyZXN1bHQgPSBnZXRfbWVtb3J5X3Jhbmdlc19pb21lbShhcnJheSwgJmNvdW50KTsKPiA+ICsK
-PiA+ICsJaWYgKHJlc3VsdCkKPiA+ICsJCXJlc3VsdCA9IGdldF9tZW1vcnlfcmFuZ2VzX2R0KGFy
-cmF5LCAmY291bnQpOwo+IERvIHdlIHJlYWxseSBuZWVkIHRvIHNjYW4gYSBEVCBibG9iIGhlcmU/
-Cj4gSSB0aGluayB0aGF0IGFsbCB0aGUgKHVzYWJsZSkgbWVtb3J5IHJlZ2lvbnMgYXJlIGFkZGVk
-IHRvCj4gL3Byb2MvaW9tZW0gYW55d2F5LgpJIGd1ZXNzIGl0IGlzIG5vdyBleHBlY3RlZCB0aGF0
-IC9wcm9jL2lvbWVtIGhhcyBtZW1vcnkKaW4gaXQuCgo+IAo+ID4gCj4gPiArdm9pZCBtYWNoaW5l
-X2FwcGx5X2VsZl9yZWwoc3RydWN0IG1lbV9laGRyICplaGRyLCBzdHJ1Y3QgbWVtX3N5bQo+ID4g
-KlVOVVNFRChzeW0pLAo+ID4gKwl1bnNpZ25lZCBsb25nIHJfdHlwZSwgdm9pZCAqcHRyLCB1bnNp
-Z25lZCBsb25nIGFkZHJlc3MsCj4gPiArCXVuc2lnbmVkIGxvbmcgdmFsdWUpCj4gPiArewo+ID4g
-KyNpZiAhZGVmaW5lZChSX0FBUkNINjRfQUJTNjQpCj4gPiArIyBkZWZpbmUgUl9BQVJDSDY0X0FC
-UzY0IDI1Nwo+ID4gKyNlbmRpZgo+ID4gKwo+ID4gKyNpZiAhZGVmaW5lZChSX0FBUkNINjRfTERf
-UFJFTF9MTzE5KQo+ID4gKyMgZGVmaW5lIFJfQUFSQ0g2NF9MRF9QUkVMX0xPMTkgMjczCj4gPiAr
-I2VuZGlmCj4gPiArCj4gPiArI2lmICFkZWZpbmVkKFJfQUFSQ0g2NF9BRFJfUFJFTF9MTzIxKQo+
-ID4gKyMgZGVmaW5lIFJfQUFSQ0g2NF9BRFJfUFJFTF9MTzIxIDI3NAo+ID4gKyNlbmRpZgo+ID4g
-Kwo+ID4gKyNpZiAhZGVmaW5lZChSX0FBUkNINjRfSlVNUDI2KQo+ID4gKyMgZGVmaW5lIFJfQUFS
-Q0g2NF9KVU1QMjYgMjgyCj4gPiArI2VuZGlmCj4gPiArCj4gPiArI2lmICFkZWZpbmVkKFJfQUFS
-Q0g2NF9DQUxMMjYpCj4gPiArIyBkZWZpbmUgUl9BQVJDSDY0X0NBTEwyNiAyODMKPiA+ICsjZW5k
-aWYKPiBEaWQgeW91IHNlZSBteSBjb21tZW50Pwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L3BpcGVybWFpbC9rZXhlYy8yMDE2LUF1Z3VzdC8wMTY5NDcuaHRtbApJJ20gc3RpbGwgZXhwZWN0
-aW5nwqBlbGYuaCB0byBoYXZlIHRoZXNlLgoKLUdlb2ZmCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+Am Mittwoch, 07 September 2016, 09:08:07 schrieb Russell King - ARM Linux:
+> Any change to a UAPI header needs to be carefully considered and
+> questioned as it is always a potential userspace breakage - and in
+> the kernel, we're supposed to be doing our up-most to avoid
+> breaking userspace.
+> 
+> It's not like it was in the old days when we didn't have the UAPI
+> seperate - today, we can find these things by looking at the patch
+> diffstat and seeing whether any file in "uapi" is touched.  That
+> should be the trigger for a really in-depth review of the change.
+
+No UAPI header is touched by this patch series. That is because there are 
+two definitions of struct kexec_segment, one in include/linux/kexec.h and 
+the other one in include/uapi/linux/kexec.h. My patch changed the former.
+I was unaware of the second definition in the latter.
+
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
