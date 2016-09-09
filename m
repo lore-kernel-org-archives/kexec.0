@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1biHW1-0000Fv-Qm
- for kexec@lists.infradead.org; Fri, 09 Sep 2016 08:50:30 +0000
-Date: Fri, 9 Sep 2016 16:50:05 +0800
+ id 1biI7F-0002Pm-21
+ for kexec@lists.infradead.org; Fri, 09 Sep 2016 09:28:57 +0000
+Date: Fri, 9 Sep 2016 17:28:30 +0800
 From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH] bnx2: Reset device during driver initialization
-Message-ID: <20160909085005.GG11356@x1.redhat.com>
+Message-ID: <20160909092830.GH11356@x1.redhat.com>
 References: <1473408667-7107-1-git-send-email-bhe@redhat.com>
  <20160909082225.GE11356@x1.redhat.com>
  <20160909084106.GY1437@8bytes.org>
@@ -27,6 +27,8 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Joerg Roedel <joro@8bytes.org>
 Cc: Dept-HSGLinuxNICDev@qlogic.com, sony.chacko@qlogic.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, dyoung@redhat.com, kexec@lists.infradead.org
+
+Hi Joerg,
 
 On 09/09/16 at 10:41am, Joerg Roedel wrote:
 > 
@@ -52,16 +54,22 @@ On 09/09/16 at 10:41am, Joerg Roedel wrote:
 > Did you make sure that all unity-mappings are in place in the newly
 > assigned domain for the bnx2 device before domains are switched?
 
-About unity-mappings, are you saying it for intel iommu or amd iommu?
-For amd iommu, I just skip call set_dte_entry calling during iommu
-device init stage. Then in device init stage, namely __map_single, judge
-and call set_dte_entry there to install the new pt_root into the related
-dev table entry.
+What I am doing is that in iommu driver init stage anything will keep
+going forware as it does in normal kernel except for set_dte_entry
+calling. If in kdump kernel and in iommu init stage, just return
+directly at the beginning of set_dte_entry.
 
-Thought you mention it, let me look into the unity-mappings of amd iommu
-again.
+For identity mapping, the pass through handling will do everything but
+return from the beginning of set_dte_entry too. Since it need install
+pte_root into dev table entry too though its pte_root is NULL. The unity
+mapping range only does iova reservation. It doesn't do dev table entry
+handling before device driver init.
+
+So unity mappings should be OK.
 
 Thanks a lot!
+
+Baoquan
 
 _______________________________________________
 kexec mailing list
