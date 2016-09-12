@@ -1,12 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1biN1o-0006W0-RE
- for kexec@lists.infradead.org; Fri, 09 Sep 2016 14:43:42 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2] bnx2: Reset device during driver initialization
-Date: Fri,  9 Sep 2016 22:43:12 +0800
-Message-Id: <1473432192-28249-1-git-send-email-bhe@redhat.com>
+ id 1bjMdi-0000kk-CM
+ for kexec@lists.infradead.org; Mon, 12 Sep 2016 08:30:58 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH v2] Cleanup: Use a negative number for uninitialized
+ file descriptors
+Date: Mon, 12 Sep 2016 08:17:14 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E683FB@BPXM01GP.gisp.nec.co.jp>
+References: <20160810125658.23366-1-mwilck@suse.de>
+ <20160810125658.23366-4-mwilck@suse.de>
+ <20160810150846.6a257447@hananiah.suse.cz>
+ <1470836145.3194.31.camel@suse.de>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E5CE94@BPXM01GP.gisp.nec.co.jp>
+ <20160816075911.09a0659d@hananiah.suse.cz>	<1471419459.3229.1.camel@suse.de>
+ <20160906102235.7c186773@hananiah.suse.cz>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E67C13@BPXM01GP.gisp.nec.co.jp>
+ <20160909093125.44a3987e@hananiah.suse.cz>
+ <20160909101129.0ec4d4be@hananiah.suse.cz>
+In-Reply-To: <20160909101129.0ec4d4be@hananiah.suse.cz>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,83 +29,381 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: netdev@vger.kernel.org
-Cc: Baoquan He <bhe@redhat.com>, Dept-HSGLinuxNICDev@qlogic.com, joro@8bytes.org, sony.chacko@qlogic.com, linux-kernel@vger.kernel.org, dyoung@redhat.com, kexec@lists.infradead.org
+To: Petr Tesarik <ptesarik@suse.cz>, Martin Wilck <mwilck@suse.de>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-When system enters into kdump kernel because of kernel panic, it won't
-shutdown devices. On-flight DMA will continue transferring data until
-device driver initializes. All devices are supposed to reset during
-driver initialization. And this property is used to fix the kdump
-failure in system with intel iommu. Other systems with hardware iommu
-should be similar. Please check commit 091d42e ("iommu/vt-d: Copy
-translation tables from old kernel") and those commits around.
+Hello,
 
-But bnx2 driver doesn't reset device during driver initialization. The
-device resetting is deferred to net device up stage. This will cause
-hardware iommu handling failure on bnx2 device. And its resetting relies
-on firmware. So in this patch move the firmware requesting code to earlier
-bnx2_init_one(), then next call bnx2_reset_chip to reset device.
+>Do not use zero to denote an invalid file descriptor.
+>
+>First, zero is a valid value, although quite unlikely to be used for
+>anything except standard input.
+>
+>Second, open(2) returns a negative value on failure, so there are
+>already checks for a negative value in some places.
+>
+>The purpose of this patch is not to allow running in an evil environment
+>(with closed stdin), but to aid in debugging by using a consistent value
+>for uninitialized file descriptors which is also regarded as invalid by
+>the kernel. For example, attempts to close a negative FD will fail
+>(unlike an attempt to close FD 0).
+>
+>Changes from v1:
+>  - Cleanup file descriptor usage in dwarf_info.c and sadump_info.c
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
-v1->v2:
-    Forget removing bnx2_release_firmware which is used for error handling
-    of bnx2_request_firmware.
+Thanks for your quick response.
+This fix isn't necessary but better to do it as you said.
 
- drivers/net/ethernet/broadcom/bnx2.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+Martin, could you rebase your three patches ?
+I've updated the devel branch.
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2.c b/drivers/net/ethernet/broadcom/bnx2.c
-index 8fc3f3c..505ceaf 100644
---- a/drivers/net/ethernet/broadcom/bnx2.c
-+++ b/drivers/net/ethernet/broadcom/bnx2.c
-@@ -6356,10 +6356,6 @@ bnx2_open(struct net_device *dev)
- 	struct bnx2 *bp = netdev_priv(dev);
- 	int rc;
- 
--	rc = bnx2_request_firmware(bp);
--	if (rc < 0)
--		goto out;
--
- 	netif_carrier_off(dev);
- 
- 	bnx2_disable_int(bp);
-@@ -6428,7 +6424,6 @@ open_err:
- 	bnx2_free_irq(bp);
- 	bnx2_free_mem(bp);
- 	bnx2_del_napi(bp);
--	bnx2_release_firmware(bp);
- 	goto out;
- }
- 
-@@ -8575,6 +8570,12 @@ bnx2_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	pci_set_drvdata(pdev, dev);
- 
-+	rc = bnx2_request_firmware(bp);
-+	if (rc < 0)
-+		goto error;
-+
-+
-+	bnx2_reset_chip(bp, BNX2_DRV_MSG_CODE_RESET);
- 	memcpy(dev->dev_addr, bp->mac_addr, ETH_ALEN);
- 
- 	dev->hw_features = NETIF_F_IP_CSUM | NETIF_F_SG |
-@@ -8607,6 +8608,7 @@ bnx2_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return 0;
- 
- error:
-+	bnx2_release_firmware(bp);
- 	pci_iounmap(pdev, bp->regview);
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
--- 
-2.5.5
+
+Thanks,
+Atsushi Kumagai
+
+>Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>
+>---
+> dwarf_info.c   |  6 ++++--
+> makedumpfile.c | 68 +++++++++++++++++++++++++++++++++-------------------------
+> makedumpfile.h |  2 +-
+> sadump_info.c  |  3 ++-
+> 4 files changed, 46 insertions(+), 33 deletions(-)
+>
+>diff --git a/dwarf_info.c b/dwarf_info.c
+>index 8c491d3..4f9ad12 100644
+>--- a/dwarf_info.c
+>+++ b/dwarf_info.c
+>@@ -53,7 +53,9 @@ struct dwarf_info {
+> 	char	src_name[LEN_SRCFILE];	/* OUT */
+> 	Dwarf_Off die_offset;		/* OUT */
+> };
+>-static struct dwarf_info	dwarf_info;
+>+static struct dwarf_info	dwarf_info = {
+>+	.fd_debuginfo = -1,
+>+};
+>
+>
+> /*
+>@@ -1595,7 +1597,7 @@ set_dwarf_debuginfo(char *mod_name, char *os_release,
+> 	if (dwarf_info.module_name
+> 			&& strcmp(dwarf_info.module_name, "vmlinux")
+> 			&& strcmp(dwarf_info.module_name, "xen-syms")) {
+>-		if (dwarf_info.fd_debuginfo > 0)
+>+		if (dwarf_info.fd_debuginfo >= 0)
+> 			close(dwarf_info.fd_debuginfo);
+> 		if (dwarf_info.name_debuginfo)
+> 			free(dwarf_info.name_debuginfo);
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 21784e8..d168dfd 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -3730,10 +3730,10 @@ free_for_parallel()
+> 		return;
+>
+> 	for (i = 0; i < info->num_threads; i++) {
+>-		if (FD_MEMORY_PARALLEL(i) > 0)
+>+		if (FD_MEMORY_PARALLEL(i) >= 0)
+> 			close(FD_MEMORY_PARALLEL(i));
+>
+>-		if (FD_BITMAP_MEMORY_PARALLEL(i) > 0)
+>+		if (FD_BITMAP_MEMORY_PARALLEL(i) >= 0)
+> 			close(FD_BITMAP_MEMORY_PARALLEL(i));
+> 	}
+> }
+>@@ -4038,13 +4038,13 @@ out:
+> void
+> initialize_bitmap(struct dump_bitmap *bitmap)
+> {
+>-	if (info->fd_bitmap) {
+>+	if (info->fd_bitmap >= 0) {
+> 		bitmap->fd        = info->fd_bitmap;
+> 		bitmap->file_name = info->name_bitmap;
+> 		bitmap->no_block  = -1;
+> 		memset(bitmap->buf, 0, BUFSIZE_BITMAP);
+> 	} else {
+>-		bitmap->fd        = 0;
+>+		bitmap->fd        = -1;
+> 		bitmap->file_name = NULL;
+> 		bitmap->no_block  = -1;
+> 		memset(bitmap->buf, 0, info->bufsize_cyclic);
+>@@ -4154,7 +4154,7 @@ set_bitmap_buffer(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val, struct cyc
+> int
+> set_bitmap(struct dump_bitmap *bitmap, mdf_pfn_t pfn, int val, struct cycle *cycle)
+> {
+>-	if (bitmap->fd) {
+>+	if (bitmap->fd >= 0) {
+> 		return set_bitmap_file(bitmap, pfn, val);
+> 	} else {
+> 		return set_bitmap_buffer(bitmap, pfn, val, cycle);
+>@@ -4170,7 +4170,7 @@ sync_bitmap(struct dump_bitmap *bitmap)
+> 	/*
+> 	 * The bitmap doesn't have the fd, it's a on-memory bitmap.
+> 	 */
+>-	if (bitmap->fd == 0)
+>+	if (bitmap->fd < 0)
+> 		return TRUE;
+> 	/*
+> 	 * The bitmap buffer is not dirty, and it is not necessary
+>@@ -5403,7 +5403,7 @@ create_1st_bitmap_buffer(struct cycle *cycle)
+> int
+> create_1st_bitmap(struct cycle *cycle)
+> {
+>-	if (info->bitmap1->fd) {
+>+	if (info->bitmap1->fd >= 0) {
+> 		return create_1st_bitmap_file();
+> 	} else {
+> 		return create_1st_bitmap_buffer(cycle);
+>@@ -5414,7 +5414,7 @@ static inline int
+> is_in_segs(unsigned long long paddr)
+> {
+> 	if (info->flag_refiltering || info->flag_sadump) {
+>-		if (info->bitmap1->fd == 0) {
+>+		if (info->bitmap1->fd < 0) {
+> 			initialize_1st_bitmap(info->bitmap1);
+> 			create_1st_bitmap_file();
+> 		}
+>@@ -5872,7 +5872,7 @@ copy_bitmap_file(void)
+> int
+> copy_bitmap(void)
+> {
+>-	if (info->fd_bitmap) {
+>+	if (info->fd_bitmap >= 0) {
+> 		return copy_bitmap_file();
+> 	} else {
+> 		return copy_bitmap_buffer();
+>@@ -6313,7 +6313,7 @@ prepare_bitmap1_buffer(void)
+> 		return FALSE;
+> 	}
+>
+>-	if (info->fd_bitmap) {
+>+	if (info->fd_bitmap >= 0) {
+> 		if ((info->bitmap1->buf = (char *)malloc(BUFSIZE_BITMAP)) == NULL) {
+> 			ERRMSG("Can't allocate memory for the 1st bitmaps's buffer. %s\n",
+> 			       strerror(errno));
+>@@ -6352,7 +6352,7 @@ prepare_bitmap2_buffer(void)
+> 		       strerror(errno));
+> 		return FALSE;
+> 	}
+>-	if (info->fd_bitmap) {
+>+	if (info->fd_bitmap >= 0) {
+> 		if ((info->bitmap2->buf = (char *)malloc(BUFSIZE_BITMAP)) == NULL) {
+> 			ERRMSG("Can't allocate memory for the 2nd bitmaps's buffer. %s\n",
+> 			       strerror(errno));
+>@@ -7582,7 +7582,7 @@ kdump_thread_function_cyclic(void *arg) {
+>
+> 	fd_memory = FD_MEMORY_PARALLEL(kdump_thread_args->thread_num);
+>
+>-	if (info->fd_bitmap) {
+>+	if (info->fd_bitmap >= 0) {
+> 		bitmap_parallel.buf = malloc(BUFSIZE_BITMAP);
+> 		if (bitmap_parallel.buf == NULL){
+> 			ERRMSG("Can't allocate memory for bitmap_parallel.buf. %s\n",
+>@@ -7628,7 +7628,7 @@ kdump_thread_function_cyclic(void *arg) {
+> 			pthread_mutex_lock(&info->current_pfn_mutex);
+> 			for (pfn = info->current_pfn; pfn < cycle->end_pfn; pfn++) {
+> 				dumpable = is_dumpable(
+>-					info->fd_bitmap ? &bitmap_parallel : info->bitmap2,
+>+					info->fd_bitmap >= 0 ? &bitmap_parallel : info->bitmap2,
+> 					pfn,
+> 					cycle);
+> 				if (dumpable)
+>@@ -7723,7 +7723,7 @@ next:
+> 	retval = NULL;
+>
+> fail:
+>-	if (bitmap_memory_parallel.fd > 0)
+>+	if (bitmap_memory_parallel.fd >= 0)
+> 		close(bitmap_memory_parallel.fd);
+> 	if (bitmap_parallel.buf != NULL)
+> 		free(bitmap_parallel.buf);
+>@@ -8461,7 +8461,7 @@ out:
+>
+> int
+> write_kdump_bitmap1(struct cycle *cycle) {
+>-	if (info->bitmap1->fd) {
+>+	if (info->bitmap1->fd >= 0) {
+> 		return write_kdump_bitmap1_file();
+> 	} else {
+> 		return write_kdump_bitmap1_buffer(cycle);
+>@@ -8470,7 +8470,7 @@ write_kdump_bitmap1(struct cycle *cycle) {
+>
+> int
+> write_kdump_bitmap2(struct cycle *cycle) {
+>-	if (info->bitmap2->fd) {
+>+	if (info->bitmap2->fd >= 0) {
+> 		return write_kdump_bitmap2_file();
+> 	} else {
+> 		return write_kdump_bitmap2_buffer(cycle);
+>@@ -8597,9 +8597,10 @@ close_vmcoreinfo(void)
+> void
+> close_dump_memory(void)
+> {
+>-	if ((info->fd_memory = close(info->fd_memory)) < 0)
+>+	if (close(info->fd_memory) < 0)
+> 		ERRMSG("Can't close the dump memory(%s). %s\n",
+> 		    info->name_memory, strerror(errno));
+>+	info->fd_memory = -1;
+> }
+>
+> void
+>@@ -8608,9 +8609,10 @@ close_dump_file(void)
+> 	if (info->flag_flatten)
+> 		return;
+>
+>-	if ((info->fd_dumpfile = close(info->fd_dumpfile)) < 0)
+>+	if (close(info->fd_dumpfile) < 0)
+> 		ERRMSG("Can't close the dump file(%s). %s\n",
+> 		    info->name_dumpfile, strerror(errno));
+>+	info->fd_dumpfile = -1;
+> }
+>
+> void
+>@@ -8620,9 +8622,10 @@ close_dump_bitmap(void)
+> 	    && !info->flag_sadump && !info->flag_mem_usage)
+> 		return;
+>
+>-	if ((info->fd_bitmap = close(info->fd_bitmap)) < 0)
+>+	if (close(info->fd_bitmap) < 0)
+> 		ERRMSG("Can't close the bitmap file(%s). %s\n",
+> 		    info->name_bitmap, strerror(errno));
+>+	info->fd_bitmap = -1;
+> 	free(info->name_bitmap);
+> 	info->name_bitmap = NULL;
+> }
+>@@ -8631,16 +8634,18 @@ void
+> close_kernel_file(void)
+> {
+> 	if (info->name_vmlinux) {
+>-		if ((info->fd_vmlinux = close(info->fd_vmlinux)) < 0) {
+>+		if (close(info->fd_vmlinux) < 0) {
+> 			ERRMSG("Can't close the kernel file(%s). %s\n",
+> 			    info->name_vmlinux, strerror(errno));
+> 		}
+>+		info->fd_vmlinux = -1;
+> 	}
+> 	if (info->name_xen_syms) {
+>-		if ((info->fd_xen_syms = close(info->fd_xen_syms)) < 0) {
+>+		if (close(info->fd_xen_syms) < 0) {
+> 			ERRMSG("Can't close the kernel file(%s). %s\n",
+> 			    info->name_xen_syms, strerror(errno));
+> 		}
+>+		info->fd_xen_syms = -1;
+> 	}
+> }
+>
+>@@ -10202,7 +10207,7 @@ reassemble_kdump_header(void)
+>
+> 	ret = TRUE;
+> out:
+>-	if (fd > 0)
+>+	if (fd >= 0)
+> 		close(fd);
+> 	free(buf_bitmap);
+>
+>@@ -10212,7 +10217,7 @@ out:
+> int
+> reassemble_kdump_pages(void)
+> {
+>-	int i, fd = 0, ret = FALSE;
+>+	int i, fd = -1, ret = FALSE;
+> 	off_t offset_first_ph, offset_ph_org, offset_eraseinfo;
+> 	off_t offset_data_new, offset_zero_page = 0;
+> 	mdf_pfn_t pfn, start_pfn, end_pfn;
+>@@ -10336,7 +10341,7 @@ reassemble_kdump_pages(void)
+> 			offset_data_new += pd.size;
+> 		}
+> 		close(fd);
+>-		fd = 0;
+>+		fd = -1;
+> 	}
+> 	if (!write_cache_bufsz(&cd_pd))
+> 		goto out;
+>@@ -10379,7 +10384,7 @@ reassemble_kdump_pages(void)
+> 		size_eraseinfo += SPLITTING_SIZE_EI(i);
+>
+> 		close(fd);
+>-		fd = 0;
+>+		fd = -1;
+> 	}
+> 	if (size_eraseinfo) {
+> 		if (!write_cache_bufsz(&cd_data))
+>@@ -10400,7 +10405,7 @@ out:
+>
+> 	if (data)
+> 		free(data);
+>-	if (fd > 0)
+>+	if (fd >= 0)
+> 		close(fd);
+>
+> 	return ret;
+>@@ -10973,6 +10978,11 @@ main(int argc, char *argv[])
+> 		    strerror(errno));
+> 		goto out;
+> 	}
+>+	info->fd_vmlinux = -1;
+>+	info->fd_xen_syms = -1;
+>+	info->fd_memory = -1;
+>+	info->fd_dumpfile = -1;
+>+	info->fd_bitmap = -1;
+> 	initialize_tables();
+>
+> 	/*
+>@@ -11268,11 +11278,11 @@ out:
+> 				free(info->bitmap_memory->buf);
+> 			free(info->bitmap_memory);
+> 		}
+>-		if (info->fd_memory)
+>+		if (info->fd_memory >= 0)
+> 			close(info->fd_memory);
+>-		if (info->fd_dumpfile)
+>+		if (info->fd_dumpfile >= 0)
+> 			close(info->fd_dumpfile);
+>-		if (info->fd_bitmap)
+>+		if (info->fd_bitmap >= 0)
+> 			close(info->fd_bitmap);
+> 		if (vt.node_online_map != NULL)
+> 			free(vt.node_online_map);
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index 533e5b8..1814139 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -1955,7 +1955,7 @@ is_dumpable_file(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
+> static inline int
+> is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn, struct cycle *cycle)
+> {
+>-	if (bitmap->fd == 0) {
+>+	if (bitmap->fd < 0) {
+> 		return is_dumpable_buffer(bitmap, pfn, cycle);
+> 	} else {
+> 		return is_dumpable_file(bitmap, pfn);
+>diff --git a/sadump_info.c b/sadump_info.c
+>index 5ff5595..f77a020 100644
+>--- a/sadump_info.c
+>+++ b/sadump_info.c
+>@@ -1853,6 +1853,7 @@ sadump_add_diskset_info(char *name_memory)
+> 	}
+>
+> 	si->diskset_info[si->num_disks - 1].name_memory = name_memory;
+>+	si->diskset_info[si->num_disks - 1].fd_memory = -1;
+>
+> 	return TRUE;
+> }
+>@@ -1917,7 +1918,7 @@ free_sadump_info(void)
+> 		int i;
+>
+> 		for (i = 1; i < si->num_disks; ++i) {
+>-			if (si->diskset_info[i].fd_memory)
+>+			if (si->diskset_info[i].fd_memory >= 0)
+> 				close(si->diskset_info[i].fd_memory);
+> 			if (si->diskset_info[i].sph_memory)
+> 				free(si->diskset_info[i].sph_memory);
+>--
+>2.6.6
 
 
 _______________________________________________
