@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bjhrT-0003r0-OH
- for kexec@lists.infradead.org; Tue, 13 Sep 2016 07:10:32 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v1] kexec/arch/i386: Add support for KASLR memory randomization
-Date: Tue, 13 Sep 2016 15:10:05 +0800
-Message-Id: <1473750605-5955-1-git-send-email-bhe@redhat.com>
-MIME-Version: 1.0
+Received: from shards.monkeyblade.net ([184.105.139.130])
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bjpaY-0000A0-Rp
+ for kexec@lists.infradead.org; Tue, 13 Sep 2016 15:25:37 +0000
+Date: Tue, 13 Sep 2016 11:25:10 -0400 (EDT)
+Message-Id: <20160913.112510.2054378133306191773.davem@davemloft.net>
+Subject: Re: [PATCH] bnx2: Reset device during driver initialization
+From: David Miller <davem@davemloft.net>
+In-Reply-To: <1473408667-7107-1-git-send-email-bhe@redhat.com>
+References: <1473408667-7107-1-git-send-email-bhe@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,107 +22,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tonli@redhat.com, kexec@lists.infradead.org
-Cc: kernel-hardening@lists.openwall.com, horms@verge.net.au, Thomas Garnier <thgarnie@google.com>, keescook@chromium.org
+To: bhe@redhat.com
+Cc: netdev@vger.kernel.org, sony.chacko@qlogic.com, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Dept-HSGLinuxNICDev@qlogic.com
 
-From: Thomas Garnier <thgarnie@google.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Fri,  9 Sep 2016 16:11:07 +0800
 
-Multiple changes were made on KASLR (right now in linux-next). One of
-them is randomizing the virtual address of the physical mapping, vmalloc
-and vmemmap memory sections. It breaks kdump ability to read physical
-memory.
+> When system enters into kdump kernel because of kernel panic, it won't
+> shutdown devices. On-flight DMA will continue transferring data until
+> device driver initializes. All devices are supposed to reset during
+> driver initialization. And this property is used to fix the kdump
+> failure in system with intel iommu. Other systems with hardware iommu
+> should be similar. Please check commit 091d42e ("iommu/vt-d: Copy
+> translation tables from old kernel") and those commits around it.
+> 
+> But bnx2 driver doesn't reset device during driver initialization. The
+> device resetting is deferred to net device up stage. This will cause
+> hardware iommu handling failure on bnx2 device. And its resetting relies
+> on firmware. So in this patch move the firmware requesting code to earlier
+> bnx2_init_one(), then next call bnx2_reset_chip to reset device.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-This change identifies if KASLR memories randomization is used by
-checking if the page_offset_base variable exists. It search for the
-correct PAGE_OFFSET value by looking at the loaded memory section and
-find the lowest aligned on PUD (the randomization level).
-
-Related commits on linux-next:
- - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
- - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
-
-Signed-off-by: Thomas Garnier <thgarnie@google.com>
----
- kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
-
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index bbc0f35..ab833d4 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
- 	return -1;
- }
- 
--/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
--static unsigned long long get_kernel_stext_sym(void)
-+/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-+static unsigned long long get_kernel_sym(const char *symbol)
- {
- 	const char *kallsyms = "/proc/kallsyms";
--	const char *stext = "_stext";
- 	char sym[128];
- 	char line[128];
- 	FILE *fp;
-@@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
- 	while(fgets(line, sizeof(line), fp) != NULL) {
- 		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
- 			continue;
--		if (strcmp(sym, stext) == 0) {
--			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
-+		if (strcmp(sym, symbol) == 0) {
-+			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
- 			return vaddr;
- 		}
- 	}
- 
--	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
-+	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
- 	return 0;
- }
- 
-@@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 	off_t size;
- 	uint32_t elf_flags = 0;
- 	uint64_t stext_sym;
-+	const unsigned long long pud_mask = ~((1 << 30) - 1);
-+	unsigned long long vaddr, lowest_vaddr = 0;
- 
- 	if (elf_info->machine != EM_X86_64)
- 		return 0;
-@@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 
- 	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
- 
-+	/* Search for the real PAGE_OFFSET when KASLR memory randomization
-+	 * is enabled */
-+	if (get_kernel_sym("page_offset_base") != 0) {
-+		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-+			if (phdr->p_type == PT_LOAD) {
-+				vaddr = phdr->p_vaddr & pud_mask;
-+				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-+					lowest_vaddr = vaddr;
-+			}
-+		}
-+		if (lowest_vaddr != 0)
-+			elf_info->page_offset = lowest_vaddr;
-+	}
-+
- 	/* Traverse through the Elf headers and find the region where
- 	 * _stext symbol is located in. That's where kernel is mapped */
--	stext_sym = get_kernel_stext_sym();
-+	stext_sym = get_kernel_sym("_stext");
- 	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
- 		if (phdr->p_type == PT_LOAD) {
- 			unsigned long long saddr = phdr->p_vaddr;
--- 
-2.8.0.rc3.226.g39d4020
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Applied, thanks.
 
 _______________________________________________
 kexec mailing list
