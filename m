@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bk7GR-0006QO-1k
- for kexec@lists.infradead.org; Wed, 14 Sep 2016 10:17:59 +0000
+ id 1bk8iS-0005tl-I9
+ for kexec@lists.infradead.org; Wed, 14 Sep 2016 11:51:01 +0000
 From: Martin Wilck <mwilck@suse.de>
-Subject: [PATCH v2 2/3] move call to open_dump_bitmap() to after call to
- initial()
-Date: Wed, 14 Sep 2016 12:17:22 +0200
-Message-Id: <20160914101723.19003-2-mwilck@suse.de>
-In-Reply-To: <20160914101723.19003-1-mwilck@suse.de>
-References: <0910DD04CBD6DE4193FCF86B9C00BE9701E683FB@BPXM01GP.gisp.nec.co.jp>
- <20160914101723.19003-1-mwilck@suse.de>
+Subject: [PATCH v3 3/3] close_dump_bitmap: simplify logic
+Date: Wed, 14 Sep 2016 13:50:09 +0200
+Message-Id: <20160914115009.20220-1-mwilck@suse.de>
+In-Reply-To: <20160914101723.19003-3-mwilck@suse.de>
+References: <20160914101723.19003-3-mwilck@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,51 +25,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: mwilck@suse.de, ptesarik@suse.cz, kexec@lists.infradead.org
 
-When open_files_for_creating_dumpfile() is called, we don't have all
-necessary information to determine whether a bitmap file is actually
-needed. In particular, we don't know whether info->flag_cyclic will
-ultimately be set. This patch moves the call to open_dump_bitmap()
-to after initialize() when all flags are known.
+The boolean expression replicates the logic of open_dump_bitmap().
+It's simpler and less error-prone to simply check if fd_bitmap is
+valid.
 
-For the dump_dmesg() path, no bitmap file is needed.
+(I forgot to apply the very change that Petr had asked for in V2 of
+this patch. I'm very sorry. Please apply V3).
+
 ---
- makedumpfile.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ makedumpfile.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 6164468..30e1fa8 100644
+index 30e1fa8..0f5be7f 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -1480,9 +1480,6 @@ open_files_for_creating_dumpfile(void)
- 	if (!open_dump_memory())
- 		return FALSE;
+@@ -8615,8 +8615,7 @@ close_dump_file(void)
+ void
+ close_dump_bitmap(void)
+ {
+-	if (!info->working_dir && !info->flag_reassemble && !info->flag_refiltering
+-	    && !info->flag_sadump && !info->flag_mem_usage)
++	if (info->fd_bitmap < 0)
+ 		return;
  
--	if (!open_dump_bitmap())
--		return FALSE;
--
- 	return TRUE;
- }
- 
-@@ -9747,6 +9744,9 @@ create_dumpfile(void)
- 	if (!initial())
- 		return FALSE;
- 
-+	if (!open_dump_bitmap())
-+		return FALSE;
-+
- 	/* create an array of translations from pfn to vmemmap pages */
- 	if (info->flag_excludevm) {
- 		if (find_vmemmap() == FAILED) {
-@@ -10917,6 +10917,9 @@ int show_mem_usage(void)
- 	if (!initial())
- 		return FALSE;
- 
-+	if (!open_dump_bitmap())
-+		return FALSE;
-+
- 	if (!prepare_bitmap_buffer())
- 		return FALSE;
- 
+ 	if (close(info->fd_bitmap) < 0)
 -- 
 2.9.3
 
