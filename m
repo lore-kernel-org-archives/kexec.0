@@ -1,39 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bkUp5-0001vE-T4
- for kexec@lists.infradead.org; Thu, 15 Sep 2016 11:27:21 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8FBNFvg104193
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 07:27:00 -0400
-Received: from e23smtp08.au.ibm.com (e23smtp08.au.ibm.com [202.81.31.141])
- by mx0b-001b2d01.pphosted.com with ESMTP id 25fnnxfcwx-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 07:26:59 -0400
-Received: from localhost
- by e23smtp08.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Thu, 15 Sep 2016 21:26:55 +1000
-Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 64D6B3578058
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 21:26:52 +1000 (EST)
-Received: from d23av06.au.ibm.com (d23av06.au.ibm.com [9.190.235.151])
- by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8FBQq2s63963146
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 21:26:52 +1000
-Received: from d23av06.au.ibm.com (localhost [127.0.0.1])
- by d23av06.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8FBQp3T008497
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 21:26:52 +1000
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v4 9/9] ima: platform-independent hash value
-Date: Thu, 15 Sep 2016 07:26:11 -0400
-In-Reply-To: <1473938771-2782-1-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1473938771-2782-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1473938771-2782-10-git-send-email-zohar@linux.vnet.ibm.com>
+ id 1bkYCh-0007Ja-H3
+ for kexec@lists.infradead.org; Thu, 15 Sep 2016 15:03:56 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH v5 1/8] iommu/amd: Detect pre enabled translation
+Date: Thu, 15 Sep 2016 23:03:19 +0800
+Message-Id: <1473951806-25511-2-git-send-email-bhe@redhat.com>
+In-Reply-To: <1473951806-25511-1-git-send-email-bhe@redhat.com>
+References: <1473951806-25511-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,46 +22,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, Andreas Steffen <andreas.steffen@strongswan.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+To: joro@8bytes.org
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-From: Andreas Steffen <andreas.steffen@strongswan.org>
+Add functions to check whether translation is already enabled in IOMMU.
 
-For remote attestion it is important for the ima measurement values
-to be platform-independent. Therefore integer fields to be hashed
-must be converted to canonical format.
-
-Changelog:
-- Define canonical format as little endian (Mimi)
-
-Signed-off-by: Andreas Steffen <andreas.steffen@strongswan.org>
-Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- security/integrity/ima/ima_crypto.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/iommu/amd_iommu_init.c  | 25 +++++++++++++++++++++++++
+ drivers/iommu/amd_iommu_proto.h |  1 +
+ drivers/iommu/amd_iommu_types.h |  4 ++++
+ 3 files changed, 30 insertions(+)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 38f2ed8..802d5d2 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -477,11 +477,13 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
- 		u8 buffer[IMA_EVENT_NAME_LEN_MAX + 1] = { 0 };
- 		u8 *data_to_hash = field_data[i].data;
- 		u32 datalen = field_data[i].len;
-+		u32 datalen_to_hash =
-+		    !ima_canonical_fmt ? datalen : cpu_to_le32(datalen);
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 59741ea..9bf1a04 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -247,6 +247,26 @@ static int amd_iommu_enable_interrupts(void);
+ static int __init iommu_go_to_state(enum iommu_init_state state);
+ static void init_device_table_dma(void);
  
- 		if (strcmp(td->name, IMA_TEMPLATE_IMA_NAME) != 0) {
- 			rc = crypto_shash_update(shash,
--						(const u8 *) &field_data[i].len,
--						sizeof(field_data[i].len));
-+						(const u8 *) &datalen_to_hash,
-+						sizeof(datalen_to_hash));
- 			if (rc)
- 				break;
- 		} else if (strcmp(td->fields[i]->field_id, "n") == 0) {
++
++bool translation_pre_enabled(struct amd_iommu *iommu)
++{
++	return (iommu->flags & AMD_IOMMU_FLAG_TRANS_PRE_ENABLED);
++}
++
++static void clear_translation_pre_enabled(struct amd_iommu *iommu)
++{
++        iommu->flags &= ~AMD_IOMMU_FLAG_TRANS_PRE_ENABLED;
++}
++
++static void init_translation_status(struct amd_iommu *iommu)
++{
++	u32 ctrl;
++
++	ctrl = readl(iommu->mmio_base + MMIO_CONTROL_OFFSET);
++	if (ctrl & (1<<CONTROL_IOMMU_EN))
++		iommu->flags |= AMD_IOMMU_FLAG_TRANS_PRE_ENABLED;
++}
++
+ static int iommu_pc_get_set_reg_val(struct amd_iommu *iommu,
+ 				    u8 bank, u8 cntr, u8 fxn,
+ 				    u64 *value, bool is_write);
+@@ -1283,6 +1303,11 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
+ 
+ 	iommu->int_enabled = false;
+ 
++	init_translation_status(iommu);
++
++	if (translation_pre_enabled(iommu))
++		pr_warn("Translation is already enabled - trying to copy translation structures\n");
++
+ 	ret = init_iommu_from_acpi(iommu, h);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/iommu/amd_iommu_proto.h b/drivers/iommu/amd_iommu_proto.h
+index 0bd9eb3..f066e01 100644
+--- a/drivers/iommu/amd_iommu_proto.h
++++ b/drivers/iommu/amd_iommu_proto.h
+@@ -98,4 +98,5 @@ static inline bool iommu_feature(struct amd_iommu *iommu, u64 f)
+ 	return !!(iommu->features & f);
+ }
+ 
++extern bool translation_pre_enabled(struct amd_iommu *iommu);
+ #endif /* _ASM_X86_AMD_IOMMU_PROTO_H  */
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index caf5e38..7781953 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -384,6 +384,7 @@ extern struct kmem_cache *amd_iommu_irq_cache;
+ #define APERTURE_PAGE_INDEX(a)	(((a) >> 21) & 0x3fULL)
+ 
+ 
++
+ /*
+  * This struct is used to pass information about
+  * incoming PPR faults around.
+@@ -401,6 +402,8 @@ struct amd_iommu_fault {
+ struct iommu_domain;
+ struct irq_domain;
+ 
++#define AMD_IOMMU_FLAG_TRANS_PRE_ENABLED      (1 << 0)
++
+ /*
+  * This structure contains generic data for  IOMMU protection domains
+  * independent of their use.
+@@ -524,6 +527,7 @@ struct amd_iommu {
+ 	struct irq_domain *ir_domain;
+ 	struct irq_domain *msi_domain;
+ #endif
++	u32 flags;
+ };
+ 
+ #define ACPIHID_UID_LEN 256
 -- 
-2.1.0
+2.5.5
 
 
 _______________________________________________
