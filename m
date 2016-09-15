@@ -1,43 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bkLqP-0002dI-GB
- for kexec@lists.infradead.org; Thu, 15 Sep 2016 01:52:06 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8F1lcCX061194
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:51:44 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25es0pfahv-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:51:44 -0400
-Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Wed, 14 Sep 2016 22:51:42 -0300
-Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 632181DC006E
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:51:40 -0400 (EDT)
-Received: from d24av01.br.ibm.com (d24av01.br.ibm.com [9.8.31.91])
- by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8F1pesn4997122
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 22:51:40 -0300
-Received: from d24av01.br.ibm.com (localhost [127.0.0.1])
- by d24av01.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8F1pdAl018349
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 22:51:40 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 1/5] kexec_file: Include the purgatory segment in the
- kexec image checksum.
-Date: Wed, 14 Sep 2016 22:51:36 -0300
-In-Reply-To: <20160915114308.19195f71@canb.auug.org.au>
-References: <1473900890-1476-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1473900890-1476-2-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160915114308.19195f71@canb.auug.org.au>
+Subject: Re: [PATCH v26 2/7] arm64: kdump: implement machine_crash_shutdown()
+References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+ <20160907042908.6232-3-takahiro.akashi@linaro.org> <57D9925D.5000508@arm.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Message-ID: <57DA583D.9030900@arm.com>
+Date: Thu, 15 Sep 2016 09:13:49 +0100
 MIME-Version: 1.0
-Message-Id: <4542776.bqQjVnlNjh@hactar>
+In-Reply-To: <57D9925D.5000508@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,39 +19,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+To: James Morse <james.morse@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello Stephen,
+Hi James,
 
-Am Donnerstag, 15 September 2016, 11:43:08 schrieb Stephen Rothwell:
-> Hi Thiago,
+Thanks for cc-ing me.
+
+On 14/09/16 19:09, James Morse wrote:
+> Hi Akashi,
 > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 2a1f0ce7c59a..dcd1679f3005 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -1792,6 +1792,11 @@ config SECCOMP
-> > 
-> >  source kernel/Kconfig.hz
-> > 
-> > +# x86 needs to relocate the purgatory after the checksum is calculated,
-> > +# therefore the purgatory cannot be part of the kexec image checksum.
-> > +config ARCH_MODIFIES_KEXEC_PURGATORY
-> > +	bool
-> > +
+> (CC: Marc who knows how this irqchip wizardry works
+>  Cover letter: https://www.spinics.net/lists/arm-kernel/msg529520.html )
 > 
-> The above should probably be in arch/Kconfig (with an appropriately
-> changed comment) since it is used in generic code.
+> On 07/09/16 05:29, AKASHI Takahiro wrote:
+>> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
+>> and save registers' status in per-cpu ELF notes before starting crash
+>> dump kernel. See kernel_kexec().
+>> Even if not all secondary cpus have shut down, we do kdump anyway.
+>>
+>> As we don't have to make non-boot(crashed) cpus offline (to preserve
+>> correct status of cpus at crash dump) before shutting down, this patch
+>> also adds a variant of smp_send_stop().
+>>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> ---
+>>  arch/arm64/include/asm/hardirq.h  |  2 +-
+>>  arch/arm64/include/asm/kexec.h    | 41 ++++++++++++++++++++++++-
+>>  arch/arm64/include/asm/smp.h      |  2 ++
+>>  arch/arm64/kernel/machine_kexec.c | 56 ++++++++++++++++++++++++++++++++--
+>>  arch/arm64/kernel/smp.c           | 63 +++++++++++++++++++++++++++++++++++++++
+>>  5 files changed, 159 insertions(+), 5 deletions(-)
 
-Thanks for your quick response! I'll make that change tomorrow and send an 
-updated version of just this patch.
+[...]
 
+>> +static void machine_kexec_mask_interrupts(void)
+>> +{
+>> +	unsigned int i;
+>> +	struct irq_desc *desc;
+>> +
+>> +	for_each_irq_desc(i, desc) {
+>> +		struct irq_chip *chip;
+>> +		int ret;
+>> +
+>> +		chip = irq_desc_get_chip(desc);
+>> +		if (!chip)
+>> +			continue;
+>> +
+>> +		/*
+>> +		 * First try to remove the active state. If this
+>> +		 * fails, try to EOI the interrupt.
+>> +		 */
+>> +		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
+>> +
+>> +		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
+>> +		    chip->irq_eoi)
+>> +			chip->irq_eoi(&desc->irq_data);
+>> +
+>> +		if (chip->irq_mask)
+>> +			chip->irq_mask(&desc->irq_data);
+>> +
+>> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+>> +			chip->irq_disable(&desc->irq_data);
+>> +	}
+>> +}
+> 
+> This function is over my head ... I have no idea how this works, I can only
+> comment that its different to the version under arch/arm
+> 
+> /me adds Marc Z to CC.
+
+I wrote the damn code! ;-)
+
+The main idea is that simply EOIing an interrupt is not good enough if
+the interrupt has been offloaded to a VM. It needs to be actively
+deactivated for the state machine to be reset.
+
+But realistically, even that is not enough. What we need is a way to
+completely shut off the GIC, irrespective of the state of the various
+interrupts. A "panic button" of some sort, with no return.
+
+That would probably work for GICv3 (assuming that we don't need to
+involve the secure side of things), but anything GICv2 based would be
+difficult to deal with (you cannot access the other CPU private
+interrupt configuration). Maybe that'd be enough, maybe not. Trying to
+boot a crash kernel is like buying a lottery ticket anyway (and with
+similar odds...).
+
+I'll have a look.
+
+Thanks,
+
+	M.
 -- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
+Jazz is not dead. It just smells funny...
 
 _______________________________________________
 kexec mailing list
