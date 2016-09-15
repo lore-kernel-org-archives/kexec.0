@@ -2,39 +2,38 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bkKxd-0001Js-2v
- for kexec@lists.infradead.org; Thu, 15 Sep 2016 00:55:33 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8F0qhSQ042549
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 20:55:08 -0400
+ id 1bkKxi-0001Yp-2n
+ for kexec@lists.infradead.org; Thu, 15 Sep 2016 00:55:37 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u8F0qenY107943
+ for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 20:55:14 -0400
 Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
- by mx0b-001b2d01.pphosted.com with ESMTP id 25exc0q8hc-1
+ by mx0a-001b2d01.pphosted.com with ESMTP id 25es0pde9u-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 20:55:08 -0400
+ for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 20:55:13 -0400
 Received: from localhost
  by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Wed, 14 Sep 2016 21:55:06 -0300
-Received: from d24relay04.br.ibm.com (d24relay04.br.ibm.com [9.18.232.146])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 9B9121DC0054
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 20:55:04 -0400 (EDT)
+ Wed, 14 Sep 2016 21:55:11 -0300
+Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 55BB11DC0054
+ for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 20:55:09 -0400 (EDT)
 Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
- by d24relay04.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8F0t45S11534486
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:55:04 -0300
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8F0t9NB26870230
+ for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:55:09 -0300
 Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
  by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8F0t30L005397
- for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:55:04 -0300
+ u8F0t81l005601
+ for <kexec@lists.infradead.org>; Wed, 14 Sep 2016 21:55:09 -0300
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v5 3/5] powerpc: kexec_file: Add buffer hand-over support for
- the next kernel
-Date: Wed, 14 Sep 2016 21:54:48 -0300
+Subject: [PATCH v5 5/5] IMA: Demonstration code for kexec buffer passing.
+Date: Wed, 14 Sep 2016 21:54:50 -0300
 In-Reply-To: <1473900890-1476-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1473900890-1476-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1473900890-1476-4-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1473900890-1476-6-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -51,392 +50,251 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Stephen Rothwell <sfr@canb.auug.org.au>, "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
-The buffer hand-over mechanism allows the currently running kernel to pass
-data to kernel that will be kexec'd via a kexec segment. The second kernel
-can check whether the previous kernel sent data and retrieve it.
+This shows how kernel code can use the kexec buffer passing mechanism
+to pass information to the next kernel.
 
-This is the architecture-specific part.
+This patch is not intended to be committed.
+
+[akpm@linux-foundation.org: coding-style fixes]
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 
 Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 ---
- arch/powerpc/include/asm/kexec.h       |  12 +-
- arch/powerpc/kernel/kexec_elf_64.c     |   2 +-
- arch/powerpc/kernel/machine_kexec_64.c | 274 +++++++++++++++++++++++++++------
- 3 files changed, 240 insertions(+), 48 deletions(-)
+ include/linux/ima.h                   | 11 +++++
+ kernel/kexec_file.c                   |  4 ++
+ security/integrity/ima/ima.h          |  5 +++
+ security/integrity/ima/ima_init.c     | 26 +++++++++++
+ security/integrity/ima/ima_template.c | 85 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 131 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 73f88b5f9bd1..b8e32194ce63 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -92,12 +92,20 @@ static inline bool kdump_in_progress(void)
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 0eb7c2e7f0d6..96528d007139 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -11,6 +11,7 @@
+ #define _LINUX_IMA_H
+ 
+ #include <linux/fs.h>
++#include <linux/kexec.h>
+ struct linux_binprm;
+ 
+ #ifdef CONFIG_IMA
+@@ -23,6 +24,10 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 			      enum kernel_read_file_id id);
+ extern void ima_post_path_mknod(struct dentry *dentry);
+ 
++#ifdef CONFIG_KEXEC_FILE
++extern void ima_add_kexec_buffer(struct kimage *image);
++#endif
++
+ #else
+ static inline int ima_bprm_check(struct linux_binprm *bprm)
+ {
+@@ -60,6 +65,12 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+ 	return;
  }
  
- #ifdef CONFIG_KEXEC_FILE
-+#define ARCH_HAS_KIMAGE_ARCH
++#ifdef CONFIG_KEXEC_FILE
++static inline void ima_add_kexec_buffer(struct kimage *image)
++{
++}
++#endif
 +
-+struct kimage_arch {
-+	phys_addr_t handover_buffer_addr;
-+	unsigned long handover_buffer_size;
-+};
-+
- int setup_purgatory(struct kimage *image, const void *slave_code,
- 		    const void *fdt, unsigned long kernel_load_addr,
- 		    unsigned long fdt_load_addr, unsigned long stack_top,
- 		    int debug);
--int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
--		  unsigned long initrd_len, const char *cmdline);
-+int setup_new_fdt(const struct kimage *image, void *fdt,
-+		  unsigned long initrd_load_addr, unsigned long initrd_len,
-+		  const char *cmdline);
- bool find_debug_console(const void *fdt);
- #endif /* CONFIG_KEXEC_FILE */
+ #endif /* CONFIG_IMA */
  
-diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-index 3cc8ebce1a86..0c576e300384 100644
---- a/arch/powerpc/kernel/kexec_elf_64.c
-+++ b/arch/powerpc/kernel/kexec_elf_64.c
-@@ -208,7 +208,7 @@ void *elf64_load(struct kimage *image, char *kernel_buf,
- 		goto out;
+ #ifdef CONFIG_IMA_APPRAISE
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index fbcec07bb3f5..0146619479a6 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -20,6 +20,7 @@
+ #include <linux/list.h>
+ #include <linux/highmem.h>
+ #include <linux/fs.h>
++#include <linux/ima.h>
+ #include <crypto/hash.h>
+ #include <crypto/sha.h>
+ #include <linux/syscalls.h>
+@@ -252,6 +253,9 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 		}
  	}
  
--	ret = setup_new_fdt(fdt, initrd_load_addr, initrd_len, cmdline);
-+	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len, cmdline);
- 	if (ret)
- 		goto out;
++	/* IMA needs to pass the measurement list to the next kernel. */
++	ima_add_kexec_buffer(image);
++
+ 	/* Call arch image load handlers */
+ 	ldata = arch_kexec_kernel_image_load(image);
  
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index 3879b6d91c0b..d6077898200a 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -489,6 +489,77 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return image->fops->cleanup(image->image_loader_data);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index db25f54a04fe..0334001055d7 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -102,6 +102,11 @@ struct ima_queue_entry {
+ };
+ extern struct list_head ima_measurements;	/* list of all measurements */
+ 
++#ifdef CONFIG_KEXEC_FILE
++extern void *kexec_buffer;
++extern size_t kexec_buffer_size;
++#endif
++
+ /* Internal IMA function definitions */
+ int ima_init(void);
+ int ima_fs_init(void);
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 32912bd54ead..a1924d0f3b2b 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -21,6 +21,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
++#include <linux/kexec.h>
+ 
+ #include "ima.h"
+ 
+@@ -104,6 +105,29 @@ void __init ima_load_x509(void)
  }
+ #endif
  
-+bool kexec_can_hand_over_buffer(void)
++#ifdef CONFIG_KEXEC_FILE
++static void ima_load_kexec_buffer(void)
 +{
-+	return true;
++	int rc;
++
++	/* Fetch the buffer from the previous kernel, if any. */
++	rc = kexec_get_handover_buffer(&kexec_buffer, &kexec_buffer_size);
++	if (rc == 0) {
++		/* Demonstrate that buffer handover works. */
++		pr_err("kexec buffer contents: %s\n", (char *) kexec_buffer);
++		pr_err("kexec buffer contents after update: %s\n",
++		       (char *) kexec_buffer + 4 * PAGE_SIZE + 10);
++
++		kexec_free_handover_buffer();
++	} else if (rc == -ENOENT)
++		pr_debug("No kexec buffer from the previous kernel.\n");
++	else
++		pr_debug("Error restoring kexec buffer: %d\n", rc);
 +}
++#else
++static void ima_load_kexec_buffer(void) { }
++#endif
 +
-+int arch_kexec_add_handover_buffer(struct kimage *image,
-+				   unsigned long load_addr, unsigned long size)
-+{
-+	image->arch.handover_buffer_addr = load_addr;
-+	image->arch.handover_buffer_size = size;
+ int __init ima_init(void)
+ {
+ 	u8 pcr_i[TPM_DIGEST_SIZE];
+@@ -134,5 +158,7 @@ int __init ima_init(void)
+ 
+ 	ima_init_policy();
+ 
++	ima_load_kexec_buffer();
 +
-+	return 0;
-+}
-+
-+int kexec_get_handover_buffer(void **addr, unsigned long *size)
-+{
-+	int ret;
-+	u64 start_addr, end_addr;
-+
-+	ret = of_property_read_u64(of_chosen,
-+				   "linux,kexec-handover-buffer-start",
-+				   &start_addr);
-+	if (ret == -EINVAL)
-+		return -ENOENT;
-+	else if (ret)
-+		return -EINVAL;
-+
-+	ret = of_property_read_u64(of_chosen, "linux,kexec-handover-buffer-end",
-+				   &end_addr);
-+	if (ret == -EINVAL)
-+		return -ENOENT;
-+	else if (ret)
-+		return -EINVAL;
-+
-+	*addr =  __va(start_addr);
-+	/* -end is the first address after the buffer. */
-+	*size = end_addr - start_addr;
-+
-+	return 0;
-+}
-+
-+int kexec_free_handover_buffer(void)
-+{
-+	int ret;
-+	void *addr;
-+	unsigned long size;
-+	struct property *prop;
-+
-+	ret = kexec_get_handover_buffer(&addr, &size);
-+	if (ret)
-+		return ret;
-+
-+	ret = memblock_free(__pa(addr), size);
-+	if (ret)
-+		return ret;
-+
-+	prop = of_find_property(of_chosen, "linux,kexec-handover-buffer-start",
-+				NULL);
-+	ret = of_remove_property(of_chosen, prop);
-+	if (ret)
-+		return ret;
-+
-+	prop = of_find_property(of_chosen, "linux,kexec-handover-buffer-end",
-+				NULL);
-+	ret = of_remove_property(of_chosen, prop);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- /**
-  * arch_kexec_walk_mem() - call func(data) for each unreserved memory block
-  * @kbuf:	Context info for the search. Also passed to @func.
-@@ -686,26 +757,16 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+ 	return ima_fs_init();
+ }
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index febd12ed9b55..92ea3afd9a1f 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -15,6 +15,8 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/kexec.h>
++#include <linux/reboot.h>
+ #include "ima.h"
+ #include "ima_template_lib.h"
+ 
+@@ -182,6 +184,89 @@ static int template_desc_init_fields(const char *template_fmt,
  	return 0;
  }
  
--/*
-- * setup_new_fdt() - modify /chosen and memory reservation for the next kernel
-- * @fdt:
-- * @initrd_load_addr:	Address where the next initrd will be loaded.
-- * @initrd_len:		Size of the next initrd, or 0 if there will be none.
-- * @cmdline:		Command line for the next kernel, or NULL if there will
-- *			be none.
-+/**
-+ * delete_fdt_mem_rsv() - delete memory reservation with given address and size
-  *
-  * Return: 0 on success, or negative errno on error.
-  */
--int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
--		  unsigned long initrd_len, const char *cmdline)
-+static int delete_fdt_mem_rsv(void *fdt, uint64_t start, uint64_t size)
- {
--	uint64_t oldfdt_addr;
--	int i, ret, chosen_node;
--	const void *prop;
-+	int i, ret, num_rsvs = fdt_num_mem_rsv(fdt);
- 
--	/* Remove memory reservation for the current device tree. */
--	oldfdt_addr = __pa(initial_boot_params);
--	for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
-+	for (i = 0; i < num_rsvs; i++) {
- 		uint64_t rsv_start, rsv_size;
- 
- 		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
-@@ -714,19 +775,152 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
- 			return -EINVAL;
- 		}
- 
--		if (rsv_start == oldfdt_addr &&
--		    rsv_size == fdt_totalsize(initial_boot_params)) {
-+		if (rsv_start == start && rsv_size == size) {
- 			ret = fdt_del_mem_rsv(fdt, i);
- 			if (ret) {
--				pr_err("Error deleting fdt reservation.\n");
-+				pr_err("Error deleting device tree reservation.\n");
- 				return -EINVAL;
- 			}
- 
--			pr_debug("Removed old device tree reservation.\n");
--			break;
-+			return 0;
- 		}
- 	}
- 
-+	return -ENOENT;
-+}
++#ifdef CONFIG_KEXEC_FILE
++void *kexec_buffer;
++size_t kexec_buffer_size;
 +
-+/**
-+ * setup_handover_buffer() - add handover buffer information to the fdt
-+ * @image:		kexec image being loaded.
-+ * @fdt:		Flattened device tree for the next kernel.
-+ * @chosen_node:	Offset to the chosen node.
-+ *
-+ * Return: 0 on success, or negative errno on error.
++/* Physical address of the measurement buffer in the next kernel. */
++unsigned long kexec_buffer_load_addr;
++
++/*
++ * Called during reboot. IMA can add here new events that were generated after
++ * the kexec image was loaded.
 + */
-+static int setup_handover_buffer(const struct kimage *image, void *fdt,
-+				 int chosen_node)
++static int ima_update_kexec_buffer(struct notifier_block *self,
++				   unsigned long action, void *data)
 +{
 +	int ret;
-+	const void *prop;
 +
-+	/* Did we receive a buffer from the previous kernel? */
-+	prop = fdt_getprop(fdt, chosen_node,
-+			   "linux,kexec-handover-buffer-start", NULL);
-+	if (prop) {
-+		u64 orig_start, orig_end;
-+		unsigned long size;
-+		void *addr;
++	if (!kexec_in_progress)
++		return NOTIFY_OK;
 +
-+		orig_start = fdt64_to_cpu(*((const fdt64_t *) prop));
++	/*
++	 * Add content deep in the buffer to show that we can update
++	 * all of it.
++	 */
++	strcpy(kexec_buffer + 4 * PAGE_SIZE + 10,
++	       "Updated kexec buffer contents.");
 +
-+		prop = fdt_getprop(fdt, chosen_node,
-+				   "linux,kexec-handover-buffer-end", NULL);
-+		if (!prop) {
-+			pr_err("Malformed device tree.\n");
-+			return -EINVAL;
-+		}
-+		orig_end = fdt64_to_cpu(*((const fdt64_t *) prop));
-+
-+		/* Did we free the hand-over buffer from the previous kernel? */
-+		ret = kexec_get_handover_buffer(&addr, &size);
-+		if (ret == -ENOENT)
-+			addr = NULL;
-+		else if (ret)
-+			return ret;
-+
-+		/*
-+		 * If we received a buffer from the previous kernel but deleted
-+		 * it from the live DT, or if we have a new buffer for the next
-+		 * kernel then we should remove the memory reservation from
-+		 * the FDT.
-+		 */
-+		if (addr == NULL || image->arch.handover_buffer_addr != 0) {
-+			ret = delete_fdt_mem_rsv(fdt, orig_start,
-+						 orig_end - orig_start);
-+			if (ret == 0)
-+				pr_debug("Removed old hand-over buffer reservation.\n");
-+			else if (ret != -ENOENT)
-+				return ret;
-+		}
-+
-+		/*
-+		 * If we received a buffer from the previous kernel but deleted
-+		 * it from the live DT and we have no buffer for the next kernel
-+		 * then we should remove the hand-over buffer properties from
-+		 * the FDT.
-+		 */
-+		if (addr == NULL && image->arch.handover_buffer_addr == 0) {
-+			ret = fdt_delprop(fdt, chosen_node,
-+					  "linux,kexec-handover-buffer-start");
-+			if (ret) {
-+				pr_err("Error setting up the new device tree.\n");
-+				return -EINVAL;
-+			}
-+
-+			ret = fdt_delprop(fdt, chosen_node,
-+					  "linux,kexec-handover-buffer-end");
-+			if (ret) {
-+				pr_err("Error setting up the new device tree.\n");
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	if (image->arch.handover_buffer_addr == 0)
-+		return 0;
-+
-+	ret = fdt_setprop_u64(fdt, chosen_node,
-+			      "linux,kexec-handover-buffer-start",
-+			      image->arch.handover_buffer_addr);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	/* -end is the first address after the buffer. */
-+	ret = fdt_setprop_u64(fdt, chosen_node,
-+			      "linux,kexec-handover-buffer-end",
-+			      image->arch.handover_buffer_addr +
-+			      image->arch.handover_buffer_size);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	ret = fdt_add_mem_rsv(fdt, image->arch.handover_buffer_addr,
-+			      image->arch.handover_buffer_size);
++	ret = kexec_update_segment(kexec_buffer, kexec_buffer_size,
++				   kexec_buffer_load_addr, kexec_buffer_size);
 +	if (ret)
-+		return -EINVAL;
++		pr_err("Error updating kexec buffer: %d\n", ret);
 +
-+	pr_debug("kexec handover buffer at 0x%llx, size = 0x%lx\n",
-+		 image->arch.handover_buffer_addr,
-+		 image->arch.handover_buffer_size);
-+
-+	return 0;
++	return NOTIFY_OK;
 +}
 +
-+/**
-+ * setup_new_fdt() - modify /chosen and memory reservations for the next kernel
-+ * @image:		kexec image being loaded.
-+ * @fdt:		Flattened device tree for the next kernel.
-+ * @initrd_load_addr:	Address where the next initrd will be loaded.
-+ * @initrd_len:		Size of the next initrd, or 0 if there will be none.
-+ * @cmdline:		Command line for the next kernel, or NULL if there will
-+ *			be none.
-+ *
-+ * Return: 0 on success, or negative errno on error.
++struct notifier_block update_buffer_nb = {
++	.notifier_call = ima_update_kexec_buffer,
++};
++
++/*
++ * Called during kexec_file_load so that IMA can add a segment to the kexec
++ * image with the measurement event log for the next kernel.
 + */
-+int setup_new_fdt(const struct kimage *image, void *fdt,
-+		  unsigned long initrd_load_addr, unsigned long initrd_len,
-+		  const char *cmdline)
++void ima_add_kexec_buffer(struct kimage *image)
 +{
-+	int ret, chosen_node;
-+	const void *prop;
++	/* Ask not to checksum the segment, we may have to update it later. */
++	struct kexec_buf kbuf = { .image = image, .buf_align = PAGE_SIZE,
++				  .buf_min = 0, .buf_max = ULONG_MAX,
++				  .top_down = true };
++	bool first_kexec_load = kexec_buffer_load_addr == 0;
++	int ret;
 +
-+	/* Remove memory reservation for the current device tree. */
-+	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
-+				 fdt_totalsize(initial_boot_params));
-+	if (ret == 0)
-+		pr_debug("Removed old device tree reservation.\n");
-+	else if (ret != -ENOENT)
-+		return ret;
++	if (!kexec_can_hand_over_buffer())
++		return;
 +
- 	chosen_node = fdt_path_offset(fdt, "/chosen");
- 	if (chosen_node == -FDT_ERR_NOTFOUND) {
- 		chosen_node = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"),
-@@ -743,7 +937,7 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
- 	/* Did we boot using an initrd? */
- 	prop = fdt_getprop(fdt, chosen_node, "linux,initrd-start", NULL);
- 	if (prop) {
--		uint64_t tmp_start, tmp_end, tmp_size, tmp_sizepg;
-+		uint64_t tmp_start, tmp_end, tmp_size;
- 
- 		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
- 
-@@ -759,30 +953,14 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
- 		 * reserve a multiple of PAGE_SIZE, so check for both.
- 		 */
- 		tmp_size = tmp_end - tmp_start;
--		tmp_sizepg = round_up(tmp_size, PAGE_SIZE);
--
--		/* Remove memory reservation for the current initrd. */
--		for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
--			uint64_t rsv_start, rsv_size;
--
--			ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
--			if (ret) {
--				pr_err("Malformed device tree.\n");
--				return -EINVAL;
--			}
--
--			if (rsv_start == tmp_start &&
--			    (rsv_size == tmp_size || rsv_size == tmp_sizepg)) {
--				ret = fdt_del_mem_rsv(fdt, i);
--				if (ret) {
--					pr_err("Error deleting fdt reservation.\n");
--					return -EINVAL;
--				}
--				pr_debug("Removed old initrd reservation.\n");
--
--				break;
--			}
--		}
-+		ret = delete_fdt_mem_rsv(fdt, tmp_start, tmp_size);
-+		if (ret == -ENOENT)
-+			ret = delete_fdt_mem_rsv(fdt, tmp_start,
-+						 round_up(tmp_size, PAGE_SIZE));
-+		if (ret == 0)
-+			pr_debug("Removed old initrd reservation.\n");
-+		else if (ret != -ENOENT)
-+			return ret;
- 
- 		/* If there's no new initrd, delete the old initrd's info. */
- 		if (initrd_len == 0) {
-@@ -840,6 +1018,12 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
- 		}
- 	}
- 
-+	ret = setup_handover_buffer(image, fdt, chosen_node);
-+	if (ret) {
-+		pr_err("Error setting up the new device tree.\n");
-+		return ret;
++	if (!first_kexec_load)
++		kfree(kexec_buffer);
++
++	/* Create a relatively big buffer, for testing. */
++	kexec_buffer_size = kbuf.bufsz = kbuf.memsz = 5 * PAGE_SIZE;
++	kexec_buffer = kbuf.buffer = kzalloc(kexec_buffer_size, GFP_KERNEL);
++	if (!kexec_buffer) {
++		pr_err("Not enough memory for the kexec measurement buffer.\n");
++		return;
 +	}
 +
- 	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
- 	if (ret) {
- 		pr_err("Error setting up the new device tree.\n");
++	/* Add some content for demonstration purposes. */
++	strcpy(kexec_buffer, "Buffer contents at kexec load time.");
++
++	ret = kexec_add_handover_buffer(&kbuf);
++	if (ret) {
++		pr_err("Error passing over kexec measurement buffer.\n");
++		return;
++	}
++	kexec_buffer_load_addr = kbuf.mem;
++
++	if (first_kexec_load)
++		register_reboot_notifier(&update_buffer_nb);
++
++	pr_debug("kexec measurement buffer for the loaded kernel at 0x%lx.\n",
++		 kexec_buffer_load_addr);
++}
++#endif /* CONFIG_KEXEC_FILE */
++
+ struct ima_template_desc *ima_template_desc_current(void)
+ {
+ 	if (!ima_template)
 -- 
 1.9.1
 
