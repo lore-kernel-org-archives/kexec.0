@@ -1,12 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v26 2/7] arm64: kdump: implement machine_crash_shutdown()
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <20160907042908.6232-3-takahiro.akashi@linaro.org> <57D9925D.5000508@arm.com>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <57DA583D.9030900@arm.com>
-Date: Thu, 15 Sep 2016 09:13:49 +0100
-MIME-Version: 1.0
-In-Reply-To: <57D9925D.5000508@arm.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bkUoc-0001jX-8u
+ for kexec@lists.infradead.org; Thu, 15 Sep 2016 11:26:51 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u8FBNLNf041074
+ for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 07:26:28 -0400
+Received: from e23smtp01.au.ibm.com (e23smtp01.au.ibm.com [202.81.31.143])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 25fsbhc7dt-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 07:26:28 -0400
+Received: from localhost
+ by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Thu, 15 Sep 2016 21:26:25 +1000
+Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id DC9B52CE8056
+ for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 21:26:22 +1000 (EST)
+Received: from d23av06.au.ibm.com (d23av06.au.ibm.com [9.190.235.151])
+ by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8FBQMF142336480
+ for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 21:26:22 +1000
+Received: from d23av06.au.ibm.com (localhost [127.0.0.1])
+ by d23av06.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u8FBQMM8007941
+ for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 21:26:22 +1000
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Subject: [PATCH v4 0/9] ima: carry the measurement list across kexec 
+Date: Thu, 15 Sep 2016 07:26:02 -0400
+Message-Id: <1473938771-2782-1-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,104 +40,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: linux-security-module <linux-security-module@vger.kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-Hi James,
+The TPM PCRs are only reset on a hard reboot.  In order to validate a
+TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+of the running kernel must be saved and then restored on the subsequent
+boot, possibly of a different architecture.
 
-Thanks for cc-ing me.
+The existing securityfs binary_runtime_measurements file conveniently
+provides a serialized format of the IMA measurement list. This patch
+set serializes the measurement list in this format and restores it.
 
-On 14/09/16 19:09, James Morse wrote:
-> Hi Akashi,
-> 
-> (CC: Marc who knows how this irqchip wizardry works
->  Cover letter: https://www.spinics.net/lists/arm-kernel/msg529520.html )
-> 
-> On 07/09/16 05:29, AKASHI Takahiro wrote:
->> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
->> and save registers' status in per-cpu ELF notes before starting crash
->> dump kernel. See kernel_kexec().
->> Even if not all secondary cpus have shut down, we do kdump anyway.
->>
->> As we don't have to make non-boot(crashed) cpus offline (to preserve
->> correct status of cpus at crash dump) before shutting down, this patch
->> also adds a variant of smp_send_stop().
->>
->> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->> ---
->>  arch/arm64/include/asm/hardirq.h  |  2 +-
->>  arch/arm64/include/asm/kexec.h    | 41 ++++++++++++++++++++++++-
->>  arch/arm64/include/asm/smp.h      |  2 ++
->>  arch/arm64/kernel/machine_kexec.c | 56 ++++++++++++++++++++++++++++++++--
->>  arch/arm64/kernel/smp.c           | 63 +++++++++++++++++++++++++++++++++++++++
->>  5 files changed, 159 insertions(+), 5 deletions(-)
+Up to now, the binary_runtime_measurements was defined as architecture
+native format.  The assumption being that userspace could and would
+handle any architecture conversions.  With the ability of carrying the
+measurement list across kexec, possibly from one architecture to a
+different one, the per boot architecture information is lost and with it
+the ability of recalculating the template digest hash.  To resolve this
+problem, without breaking the existing ABI, this patch set introduces
+the boot command line option "ima_canonical_fmt", which is arbitrarily
+defined as little endian.
 
-[...]
+The need for this boot command line option will be limited to the
+existing version 1 format of the binary_runtime_measurements.
+Subsequent formats will be defined as canonical format (eg. TPM 2.0
+support for larger digests).
 
->> +static void machine_kexec_mask_interrupts(void)
->> +{
->> +	unsigned int i;
->> +	struct irq_desc *desc;
->> +
->> +	for_each_irq_desc(i, desc) {
->> +		struct irq_chip *chip;
->> +		int ret;
->> +
->> +		chip = irq_desc_get_chip(desc);
->> +		if (!chip)
->> +			continue;
->> +
->> +		/*
->> +		 * First try to remove the active state. If this
->> +		 * fails, try to EOI the interrupt.
->> +		 */
->> +		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
->> +
->> +		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
->> +		    chip->irq_eoi)
->> +			chip->irq_eoi(&desc->irq_data);
->> +
->> +		if (chip->irq_mask)
->> +			chip->irq_mask(&desc->irq_data);
->> +
->> +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
->> +			chip->irq_disable(&desc->irq_data);
->> +	}
->> +}
-> 
-> This function is over my head ... I have no idea how this works, I can only
-> comment that its different to the version under arch/arm
-> 
-> /me adds Marc Z to CC.
+This patch set pre-req's Thiago Bauermann's "kexec_file: Add buffer
+hand-over for the next kernel" patch set. 
 
-I wrote the damn code! ;-)
+These patches can also be found in the next-kexec-restore branch of:
+git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
 
-The main idea is that simply EOIing an interrupt is not good enough if
-the interrupt has been offloaded to a VM. It needs to be actively
-deactivated for the state machine to be reset.
+Changelog v4:
+- Fixed "spinlock bad magic" BUG - reported by Dmitry Vyukov
+- Rebased on Thiago Bauermann's v5 patch set
+- Removed the skip_checksum initialization  
 
-But realistically, even that is not enough. What we need is a way to
-completely shut off the GIC, irrespective of the state of the various
-interrupts. A "panic button" of some sort, with no return.
+Changelog v3:
+- Cleaned up the code for calculating the requested kexec segment size
+needed for the IMA measurement list, limiting the segment size to half
+of the totalram_pages.
+- Fixed kernel test robot reports as enumerated in the respective
+patch changelog.
 
-That would probably work for GICv3 (assuming that we don't need to
-involve the secure side of things), but anything GICv2 based would be
-difficult to deal with (you cannot access the other CPU private
-interrupt configuration). Maybe that'd be enough, maybe not. Trying to
-boot a crash kernel is like buying a lottery ticket anyway (and with
-similar odds...).
+Changelog v2:
+- Canonical measurement list support added
+- Redefined the ima_kexec_hdr struct to use well defined sizes
 
-I'll have a look.
+Mimi
 
-Thanks,
+Andreas Steffen (1):
+  ima: platform-independent hash value
 
-	M.
+Mimi Zohar (7):
+  ima: on soft reboot, restore the measurement list
+  ima: permit duplicate measurement list entries
+  ima: maintain memory size needed for serializing the measurement list
+  ima: serialize the binary_runtime_measurements
+  ima: store the builtin/custom template definitions in a list
+  ima: support restoring multiple template formats
+  ima: define a canonical binary_runtime_measurements list format
+
+Thiago Jung Bauermann (1):
+  ima: on soft reboot, save the measurement list
+
+ Documentation/kernel-parameters.txt       |   4 +
+ include/linux/ima.h                       |  12 ++
+ kernel/kexec_file.c                       |   4 +
+ security/integrity/ima/Kconfig            |  12 ++
+ security/integrity/ima/Makefile           |   1 +
+ security/integrity/ima/ima.h              |  28 +++
+ security/integrity/ima/ima_crypto.c       |   6 +-
+ security/integrity/ima/ima_fs.c           |  30 ++-
+ security/integrity/ima/ima_init.c         |   2 +
+ security/integrity/ima/ima_kexec.c        | 209 +++++++++++++++++++++
+ security/integrity/ima/ima_main.c         |   1 +
+ security/integrity/ima/ima_queue.c        |  76 +++++++-
+ security/integrity/ima/ima_template.c     | 293 ++++++++++++++++++++++++++++--
+ security/integrity/ima/ima_template_lib.c |   7 +-
+ 14 files changed, 653 insertions(+), 32 deletions(-)
+ create mode 100644 security/integrity/ima/ima_kexec.c
+
 -- 
-Jazz is not dead. It just smells funny...
+2.1.0
+
 
 _______________________________________________
 kexec mailing list
