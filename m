@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x22b.google.com ([2607:f8b0:4001:c06::22b])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bkza7-0003Nz-Q6
- for kexec@lists.infradead.org; Fri, 16 Sep 2016 20:17:57 +0000
-Received: by mail-io0-x22b.google.com with SMTP id m186so37393900ioa.2
- for <kexec@lists.infradead.org>; Fri, 16 Sep 2016 13:17:34 -0700 (PDT)
+ id 1bl0WE-0006kO-61
+ for kexec@lists.infradead.org; Fri, 16 Sep 2016 21:17:59 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1472596811-9596-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <20160831135047.4b05a7f912f158ed5f888241@linux-foundation.org>
+ <1472683086.2607.17.camel@linux.vnet.ibm.com>
+ <1473954263.2526.88.camel@linux.vnet.ibm.com>
+ <87lgyrsk3i.fsf@x220.int.ebiederm.org>
+Date: Fri, 16 Sep 2016 16:03:47 -0500
+In-Reply-To: <87lgyrsk3i.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
+ message of "Fri, 16 Sep 2016 14:47:13 -0500")
+Message-ID: <871t0jr1zg.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <57DC1812.6040906@arm.com>
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <57DC1812.6040906@arm.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Fri, 16 Sep 2016 21:17:33 +0100
-Message-ID: <CAKv+Gu_UvFnPtFHggaO6Z_ePuArdchEK1qYWPkkwpcgLus3Epw@mail.gmail.com>
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
+Subject: Re: [PATHC v2 0/9] ima: carry the measurement list across kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,98 +27,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, linux-security-module <linux-security-module@vger.kernel.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
 
-On 16 September 2016 at 17:04, James Morse <james.morse@arm.com> wrote:
-> (Cc: Ard),
->
-> Mark, Ard, how does/will reserved-memory work on an APCI only system?
->
+ebiederm@xmission.com (Eric W. Biederman) writes:
 
-It works by accident, at the moment. We used to ignore both
-/memreserve/s and the /reserved-memory node, but due to some unrelated
-refactoring, we ended up honouring the reserved-memory node when
-booting via UEFI
+> Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
+>
+>> Hi Andrew,
+>>
+>> On Wed, 2016-08-31 at 18:38 -0400, Mimi Zohar wrote:
+>>> On Wed, 2016-08-31 at 13:50 -0700, Andrew Morton wrote:
+>>> > On Tue, 30 Aug 2016 18:40:02 -0400 Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+>>> > 
+>>> > > The TPM PCRs are only reset on a hard reboot.  In order to validate a
+>>> > > TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+>>> > > of the running kernel must be saved and then restored on the subsequent
+>>> > > boot, possibly of a different architecture.
+>>> > > 
+>>> > > The existing securityfs binary_runtime_measurements file conveniently
+>>> > > provides a serialized format of the IMA measurement list. This patch
+>>> > > set serializes the measurement list in this format and restores it.
+>>> > > 
+>>> > > Up to now, the binary_runtime_measurements was defined as architecture
+>>> > > native format.  The assumption being that userspace could and would
+>>> > > handle any architecture conversions.  With the ability of carrying the
+>>> > > measurement list across kexec, possibly from one architecture to a
+>>> > > different one, the per boot architecture information is lost and with it
+>>> > > the ability of recalculating the template digest hash.  To resolve this
+>>> > > problem, without breaking the existing ABI, this patch set introduces
+>>> > > the boot command line option "ima_canonical_fmt", which is arbitrarily
+>>> > > defined as little endian.
+>>> > > 
+>>> > > The need for this boot command line option will be limited to the
+>>> > > existing version 1 format of the binary_runtime_measurements.
+>>> > > Subsequent formats will be defined as canonical format (eg. TPM 2.0
+>>> > > support for larger digests).
+>>> > > 
+>>> > > This patch set pre-req's Thiago Bauermann's "kexec_file: Add buffer
+>>> > > hand-over for the next kernel" patch set. 
+>>> > > 
+>>> > > These patches can also be found in the next-kexec-restore branch of:
+>>> > > git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+>>> > 
+>>> > I'll merge these into -mm to get some linux-next exposure.  I don't
+>>> > know what your upstream merge plans will be?
+>>> 
+>>> Sounds good.  I'm hoping to get some review/comments on this patch set
+>>> as well.  At the moment, I'm chasing down a kernel test robot report
+>>> from this afternoon.
+>>
+>> My concern about changing the canonical format as originally defined in
+>> patch 9/9 from big endian to little endian never materialized.  Andreas
+>> Steffan, the patch author, is happy either way.
+>>
+>> We proposed two methods of addressing Eric Biederman's concerns of not
+>> including the IMA measurement list segment in the kexec hash as
+>> described in  https://lkml.org/lkml/2016/9/9/355.
+>>
+>> - defer calculating and verifying the serialized IMA measurement list
+>> buffer hash to IMA
+>> - calculate the kexec hash on load, verify it on the kexec execute,
+>> before re-calculating and updating it.
+>
+> I need to ask: How this is anticipated to interact with kexec on panic?
+> Because honestly I can't see this ever working in that case.  The
+> assumption is that the original kernel has gone crazy.  So from a
+> practical standpoint any trusted path should have been invalided.
+>
+> This entire idea of updating the kexec image makes me extremely
+> extremely nervious.  It feels like sticking a screw driver through the
+> spokes of your bicicle tires while ridding down the road.
+>
+> I can see tracking to see if the list has changed at some
+> point and causing a reboot(LINUX_REBOOT_CMD_KEXEC) to fail.
+>
+> At least the common bootloader cases that I know of using kexec are very
+> minimal distributions that live in a ramdisk and as such it should be
+> very straight forward to measure what is needed at or before
+> sys_kexec_load.  But that was completely dismissed as unrealistic so I
+> don't have a clue what actual problem you are trying to solve.
+>
+> If there is anyway we can start small and not with this big scary
+> infrastructure change I would very much prefer it.
 
-I proposed some patches a while ago to at least check the
-reservations, given that UEFI itself is unaware of them and may end up
-occupying a region that should have been reserved.
+I have thought about this a little more and the entire reason for
+updating things on the fly really really disturbs me.  To prove you are
+trusted the new kernel is going to have to present that whole trusted
+list of files to someone.  Which means in my naive understanding of the
+situation that any change in that list of files is going to have to be
+tracked and audited.
 
-http://article.gmane.org/gmane.linux.kernel.efi/6464
+So the idea that we have to be super flexible in the kernel (when we are
+inflexible in userspace) does not make a bit of sense to me.
 
->
-> On 07/09/16 05:29, AKASHI Takahiro wrote:
->>     v26-specific note: After a comment from Rob[0], an idea of adding
->>     "linux,usable-memory-range" was dropped. Instead, an existing
->>     "reserved-memory" node will be used to limit usable memory ranges
->>     on crash dump kernel.
->>     This works not only on UEFI/ACPI systems but also on DT-only systems,
->>     but if he really insists on using DT-specific "usable-memory" property,
->>     I will post additional patches for kexec-tools. Those would be
->>     redundant, though.
->>     Even in that case, the kernel will not have to be changed.
->
-> Some narrative on how the old memory ranges get reserved, as there is no longer
-> any code in the series doing this, (which is pretty neat!):
->
-> kexec-tools parses the list of memory ranges in /proc/iomem, and adds a node to
-> the /reserved-memory for System RAM ranges that don't cover the crash kernel.
-> Decompiling the crash-kernel DT from Seattle, it looks roughly like this:
->
->         reserved-memory {
->                 ranges;
->                 #size-cells = <0x2>;
->                 #address-cells = <0x2>;
->
->                 crash_dump@83ffe50000 {
->                         no-map;
->                         reg = <0x83 0xffe50000 0x0 0x1b0000>;
->                 };
->
->                 [ ... ]
->         };
->
->
-> 'no-map' means its doing the same thing to memblock as
-> 'linux,usable-memory-range' did in earlier versions,
-> early_init_dt_reserve_memory_arch() takes no-map to mean memblock_remove().
-> We trigger the removing via early_init_fdt_scan_reserved_mem() in
-> arch/arm64/mm/init.c. This happens later than before, but its before the
-> crashkernel and cma ranges get reserved.
->
-> One difference I can see is that before we avoided memblock_remove()ing ranges
-> that were also in memblock.nomap. This was to avoid the ACPI tables getting
-> mapped as device memory by mistake, this is fixed by [1]. Now these ranges are
-> published in /proc/iomem as 'reserved' and won't get covered by a
-> reserved-memory node, and so we don't need to check memblock.nomap when
-> memblock_remove()ing.
->
->
-> The only odd thing I can see is for a (mythical?) pure-ACPI system. The EFI stub
-> will create a DT with a chosen node containing pointers to the memory map and
-> the efi command line. Now such as system may also grow a /reserved-memory node
-> after kdump. I don't think this is a problem, but it may not match how an
-> acpi-only system reserves memory. (how does that work?)
->
->
->> [1] "arm64: mark reserved memblock regions explicitly in iomem"
->>     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/450433.html
->
-> This is queued in Will's arm64/for-next/core,
->
->> [2] "efi: arm64: treat regions with WT/WC set but WB cleared as memory"
->>     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/451491.html
->
-> This is queued in tip, but I can't see why kdump depends on it. It only has an
-> effect if the uefi memory map has !WB regions that linux needs to use.
->
->
->
-> Thanks,
->
-> James
->
+So no.  I am not in favor of adding a mechanism to kexec that gives me
+the screaming heebie jeebies and that appears to be complete at odds
+with what that mechanism is trying to do.
+
+AKA if you are going to trust any old thing, or any old change on the
+reboot path than it doesn't make sense to track them.  If you are
+tracking them it doesn't make sense to have a mechanism where anything
+goes.
+
+Eric
+
 
 _______________________________________________
 kexec mailing list
