@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <57DC18FC.9000807@arm.com>
-Date: Fri, 16 Sep 2016 17:08:28 +0100
-From: James Morse <james.morse@arm.com>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bkzKF-0002bn-VV
+ for kexec@lists.infradead.org; Fri, 16 Sep 2016 20:01:32 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1472596811-9596-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <20160831135047.4b05a7f912f158ed5f888241@linux-foundation.org>
+ <1472683086.2607.17.camel@linux.vnet.ibm.com>
+ <1473954263.2526.88.camel@linux.vnet.ibm.com>
+Date: Fri, 16 Sep 2016 14:47:13 -0500
+In-Reply-To: <1473954263.2526.88.camel@linux.vnet.ibm.com> (Mimi Zohar's
+ message of "Thu, 15 Sep 2016 11:44:23 -0400")
+Message-ID: <87lgyrsk3i.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v26 6/7] arm64: kdump: update a kernel doc
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <20160907042908.6232-7-takahiro.akashi@linaro.org>
-In-Reply-To: <20160907042908.6232-7-takahiro.akashi@linaro.org>
+Subject: Re: [PATHC v2 0/9] ima: carry the measurement list across kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,54 +26,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module <linux-security-module@vger.kernel.org>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
-Hi Akashi,
+Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
 
-On 07/09/16 05:29, AKASHI Takahiro wrote:
-> This patch adds arch specific descriptions about kdump usage on arm64
-> to kdump.txt.
+> Hi Andrew,
+>
+> On Wed, 2016-08-31 at 18:38 -0400, Mimi Zohar wrote:
+>> On Wed, 2016-08-31 at 13:50 -0700, Andrew Morton wrote:
+>> > On Tue, 30 Aug 2016 18:40:02 -0400 Mimi Zohar <zohar@linux.vnet.ibm.com> wrote:
+>> > 
+>> > > The TPM PCRs are only reset on a hard reboot.  In order to validate a
+>> > > TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+>> > > of the running kernel must be saved and then restored on the subsequent
+>> > > boot, possibly of a different architecture.
+>> > > 
+>> > > The existing securityfs binary_runtime_measurements file conveniently
+>> > > provides a serialized format of the IMA measurement list. This patch
+>> > > set serializes the measurement list in this format and restores it.
+>> > > 
+>> > > Up to now, the binary_runtime_measurements was defined as architecture
+>> > > native format.  The assumption being that userspace could and would
+>> > > handle any architecture conversions.  With the ability of carrying the
+>> > > measurement list across kexec, possibly from one architecture to a
+>> > > different one, the per boot architecture information is lost and with it
+>> > > the ability of recalculating the template digest hash.  To resolve this
+>> > > problem, without breaking the existing ABI, this patch set introduces
+>> > > the boot command line option "ima_canonical_fmt", which is arbitrarily
+>> > > defined as little endian.
+>> > > 
+>> > > The need for this boot command line option will be limited to the
+>> > > existing version 1 format of the binary_runtime_measurements.
+>> > > Subsequent formats will be defined as canonical format (eg. TPM 2.0
+>> > > support for larger digests).
+>> > > 
+>> > > This patch set pre-req's Thiago Bauermann's "kexec_file: Add buffer
+>> > > hand-over for the next kernel" patch set. 
+>> > > 
+>> > > These patches can also be found in the next-kexec-restore branch of:
+>> > > git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+>> > 
+>> > I'll merge these into -mm to get some linux-next exposure.  I don't
+>> > know what your upstream merge plans will be?
+>> 
+>> Sounds good.  I'm hoping to get some review/comments on this patch set
+>> as well.  At the moment, I'm chasing down a kernel test robot report
+>> from this afternoon.
+>
+> My concern about changing the canonical format as originally defined in
+> patch 9/9 from big endian to little endian never materialized.  Andreas
+> Steffan, the patch author, is happy either way.
+>
+> We proposed two methods of addressing Eric Biederman's concerns of not
+> including the IMA measurement list segment in the kexec hash as
+> described in  https://lkml.org/lkml/2016/9/9/355.
+>
+> - defer calculating and verifying the serialized IMA measurement list
+> buffer hash to IMA
+> - calculate the kexec hash on load, verify it on the kexec execute,
+> before re-calculating and updating it.
 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+I need to ask: How this is anticipated to interact with kexec on panic?
+Because honestly I can't see this ever working in that case.  The
+assumption is that the original kernel has gone crazy.  So from a
+practical standpoint any trusted path should have been invalided.
 
-> @@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
->  
->      AUTO_ZRELADDR=y
->  
-> +Dump-capture kernel config options (Arch Dependent, arm64)
-> +----------------------------------------------------------
-> +
-> +- Please note that kvm of the dump-capture kernel will not be enabled
-> +  on non-VHE systems even if it is configured. This is because the CPU
-> +  cannot be reset to EL2 on panic.
+This entire idea of updating the kexec image makes me extremely
+extremely nervious.  It feels like sticking a screw driver through the
+spokes of your bicicle tires while ridding down the road.
 
-Nit:
-cannot be -> will not be
+I can see tracking to see if the list has changed at some
+point and causing a reboot(LINUX_REBOOT_CMD_KEXEC) to fail.
 
-We could try to do this, but its more code that could prevent us reaching the
-kdump kernel, so we choose not to.
+At least the common bootloader cases that I know of using kexec are very
+minimal distributions that live in a ramdisk and as such it should be
+very straight forward to measure what is needed at or before
+sys_kexec_load.  But that was completely dismissed as unrealistic so I
+don't have a clue what actual problem you are trying to solve.
 
+If there is anyway we can start small and not with this big scary
+infrastructure change I would very much prefer it.
 
-> @@ -370,6 +381,9 @@ For s390x:
->  For arm:
->  	"1 maxcpus=1 reset_devices"
->  
-> +For arm64:
-> +	"1 maxcpus=1 reset_devices"
-> +
-
-'maxcpus=1' is a bit fragile. Since 44dbcc93ab67145 ("arm64: Fix behavior of
-maxcpus=N") udev on ubuntu vivid (running on Juno) has taken it upon itself to
-bring the secondary cores online, even when booted with 'maxcpus=1'.
-
-Can we change the recomendation to "1 nosmp reset_devices"?
-
-
-Thanks,
-
-James
-
+Eric
 
 _______________________________________________
 kexec mailing list
