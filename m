@@ -1,12 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <57DC06B0.8030504@arm.com>
-Date: Fri, 16 Sep 2016 15:50:24 +0100
+Message-ID: <57DC1812.6040906@arm.com>
+Date: Fri, 16 Sep 2016 17:04:34 +0100
 From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v26 3/7] arm64: kdump: add kdump support
+Subject: Re: [PATCH v26 0/7] arm64: add kdump support
 References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <20160907042908.6232-4-takahiro.akashi@linaro.org>
-In-Reply-To: <20160907042908.6232-4-takahiro.akashi@linaro.org>
+In-Reply-To: <20160907042908.6232-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,73 +18,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org
+
+(Cc: Ard),
+
+Mark, Ard, how does/will reserved-memory work on an APCI only system?
+
 
 On 07/09/16 05:29, AKASHI Takahiro wrote:
-> On crash dump kernel, all the information about primary kernel's system
-> memory (core image) is available in elf core header.
-> The primary kernel will set aside this header with reserve_elfcorehdr()
-> at boot time and inform crash dump kernel of its location via a new
-> device-tree property, "linux,elfcorehdr".
-> 
-> Please note that all other architectures use traditional "elfcorehdr="
-> kernel parameter for this purpose.
-> 
-> Then crash dump kernel will access the primary kernel's memory with
-> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
-> not reside in linear mapping on crash dump kernel.
-> 
-> We also need our own elfcorehdr_read() here since the header is placed
-> within crash dump kernel's usable memory.
+>     v26-specific note: After a comment from Rob[0], an idea of adding
+>     "linux,usable-memory-range" was dropped. Instead, an existing
+>     "reserved-memory" node will be used to limit usable memory ranges
+>     on crash dump kernel.
+>     This works not only on UEFI/ACPI systems but also on DT-only systems,
+>     but if he really insists on using DT-specific "usable-memory" property,
+>     I will post additional patches for kexec-tools. Those would be
+>     redundant, though.
+>     Even in that case, the kernel will not have to be changed.
 
-One nit below, looks good.
+Some narrative on how the old memory ranges get reserved, as there is no longer
+any code in the series doing this, (which is pretty neat!):
 
-Reviewed-by: James Morse <james.morse@arm.com>
+kexec-tools parses the list of memory ranges in /proc/iomem, and adds a node to
+the /reserved-memory for System RAM ranges that don't cover the crash kernel.
+Decompiling the crash-kernel DT from Seattle, it looks roughly like this:
+
+        reserved-memory {
+                ranges;
+                #size-cells = <0x2>;
+                #address-cells = <0x2>;
+
+                crash_dump@83ffe50000 {
+                        no-map;
+                        reg = <0x83 0xffe50000 0x0 0x1b0000>;
+                };
+
+		[ ... ]
+        };
+
+
+'no-map' means its doing the same thing to memblock as
+'linux,usable-memory-range' did in earlier versions,
+early_init_dt_reserve_memory_arch() takes no-map to mean memblock_remove().
+We trigger the removing via early_init_fdt_scan_reserved_mem() in
+arch/arm64/mm/init.c. This happens later than before, but its before the
+crashkernel and cma ranges get reserved.
+
+One difference I can see is that before we avoided memblock_remove()ing ranges
+that were also in memblock.nomap. This was to avoid the ACPI tables getting
+mapped as device memory by mistake, this is fixed by [1]. Now these ranges are
+published in /proc/iomem as 'reserved' and won't get covered by a
+reserved-memory node, and so we don't need to check memblock.nomap when
+memblock_remove()ing.
+
+
+The only odd thing I can see is for a (mythical?) pure-ACPI system. The EFI stub
+will create a DT with a chosen node containing pointers to the memory map and
+the efi command line. Now such as system may also grow a /reserved-memory node
+after kdump. I don't think this is a problem, but it may not match how an
+acpi-only system reserves memory. (how does that work?)
+
+
+> [1] "arm64: mark reserved memblock regions explicitly in iomem"
+>     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/450433.html
+
+This is queued in Will's arm64/for-next/core,
+
+> [2] "efi: arm64: treat regions with WT/WC set but WB cleared as memory"
+>     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/451491.html
+
+This is queued in tip, but I can't see why kdump depends on it. It only has an
+effect if the uefi memory map has !WB regions that linux needs to use.
+
 
 
 Thanks,
 
 James
-
-
-> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-
-> +/**
-> + * copy_oldmem_page() - copy one page from old kernel memory
-> + * @pfn: page frame number to be copied
-> + * @buf: buffer where the copied page is placed
-> + * @csize: number of bytes to copy
-> + * @offset: offset in bytes into the page
-> + * @userbuf: if set, @buf is in a user address space
-> + *
-> + * This function copies one page from old kernel memory into buffer pointed by
-> + * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
-> + * copied or negative error in case of failure.
-> + */
-> +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-> +			 size_t csize, unsigned long offset,
-> +			 int userbuf)
-> +{
-> +	void *vaddr;
-> +
-> +	if (!csize)
-> +		return 0;
-> +
-> +	vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
-> +	if (!vaddr)
-> +		return -ENOMEM;
-> +
-> +	if (userbuf) {
-
-> +		if (copy_to_user(buf, vaddr + offset, csize)) {
-
-If you re-cast buf with (char __user *), it should stop sparse complaining:
-> ../arch/arm64/kernel/crash_dump.c:45:34: warning: incorrect type in argument 1
-(different address spaces)
-> ../arch/arm64/kernel/crash_dump.c:45:34:    expected void [noderef] <asn:1>*to
-> ../arch/arm64/kernel/crash_dump.c:45:34:    got char *buf
-
 
 
 _______________________________________________
