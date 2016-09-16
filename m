@@ -1,42 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bkZ1A-0003Bu-35
- for kexec@lists.infradead.org; Thu, 15 Sep 2016 15:56:08 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8FFmNW5140417
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 11:55:43 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25f8ud5qpb-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 11:55:43 -0400
-Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 15 Sep 2016 12:55:40 -0300
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id 7A7BB1DC006E
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 11:55:38 -0400 (EDT)
-Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8FFtced9699728
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 12:55:38 -0300
-Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
- by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8FFtbix001089
- for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 12:55:38 -0300
-From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: Re: [PATCH v5 1/5] kexec_file: Include the purgatory segment in the
- kexec image checksum.
-Date: Thu, 15 Sep 2016 12:55:33 -0300
-In-Reply-To: <20160915114308.19195f71@canb.auug.org.au>
-References: <1473900890-1476-1-git-send-email-bauerman@linux.vnet.ibm.com>
- <1473900890-1476-2-git-send-email-bauerman@linux.vnet.ibm.com>
- <20160915114308.19195f71@canb.auug.org.au>
+ id 1bkjbe-0004CG-VS
+ for kexec@lists.infradead.org; Fri, 16 Sep 2016 03:14:29 +0000
+Received: by mail-pf0-x230.google.com with SMTP id q2so2775710pfj.3
+ for <kexec@lists.infradead.org>; Thu, 15 Sep 2016 20:14:06 -0700 (PDT)
+Date: Fri, 16 Sep 2016 12:21:02 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v26 2/7] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20160915114815.GK16712@linaro.org>
+References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+ <20160907042908.6232-3-takahiro.akashi@linaro.org>
+ <57D9925D.5000508@arm.com>
 MIME-Version: 1.0
-Message-Id: <3000835.2VCEnkym2S@hactar>
+Content-Disposition: inline
+In-Reply-To: <57D9925D.5000508@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,318 +27,389 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, Marc Zyngier <Marc.Zyngier@arm.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hello Stephen,
+James,
 
-Am Donnerstag, 15 September 2016, 11:43:08 schrieb Stephen Rothwell:
-> Hi Thiago,
+Thank you for your review.
+
+On Wed, Sep 14, 2016 at 07:09:33PM +0100, James Morse wrote:
+> Hi Akashi,
 > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 2a1f0ce7c59a..dcd1679f3005 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -1792,6 +1792,11 @@ config SECCOMP
+> (CC: Marc who knows how this irqchip wizardry works
+>  Cover letter: https://www.spinics.net/lists/arm-kernel/msg529520.html )
+> 
+> On 07/09/16 05:29, AKASHI Takahiro wrote:
+> > Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
+> > and save registers' status in per-cpu ELF notes before starting crash
+> > dump kernel. See kernel_kexec().
+> > Even if not all secondary cpus have shut down, we do kdump anyway.
 > > 
-> >  source kernel/Kconfig.hz
+> > As we don't have to make non-boot(crashed) cpus offline (to preserve
+> > correct status of cpus at crash dump) before shutting down, this patch
+> > also adds a variant of smp_send_stop().
 > > 
-> > +# x86 needs to relocate the purgatory after the checksum is calculated,
-> > +# therefore the purgatory cannot be part of the kexec image checksum.
-> > +config ARCH_MODIFIES_KEXEC_PURGATORY
-> > +	bool
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > ---
+> >  arch/arm64/include/asm/hardirq.h  |  2 +-
+> >  arch/arm64/include/asm/kexec.h    | 41 ++++++++++++++++++++++++-
+> >  arch/arm64/include/asm/smp.h      |  2 ++
+> >  arch/arm64/kernel/machine_kexec.c | 56 ++++++++++++++++++++++++++++++++--
+> >  arch/arm64/kernel/smp.c           | 63 +++++++++++++++++++++++++++++++++++++++
+> >  5 files changed, 159 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
+> > index 8740297..1473fc2 100644
+> > --- a/arch/arm64/include/asm/hardirq.h
+> > +++ b/arch/arm64/include/asm/hardirq.h
+> > @@ -20,7 +20,7 @@
+> >  #include <linux/threads.h>
+> >  #include <asm/irq.h>
+> >  
+> > -#define NR_IPI	6
+> > +#define NR_IPI	7
+> >  
+> >  typedef struct {
+> >  	unsigned int __softirq_pending;
+> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> > index 04744dc..a908958 100644
+> > --- a/arch/arm64/include/asm/kexec.h
+> > +++ b/arch/arm64/include/asm/kexec.h
+> > @@ -40,7 +40,46 @@
+> >  static inline void crash_setup_regs(struct pt_regs *newregs,
+> >  				    struct pt_regs *oldregs)
+> >  {
+> > -	/* Empty routine needed to avoid build errors. */
+> > +	if (oldregs) {
+> > +		memcpy(newregs, oldregs, sizeof(*newregs));
+> > +	} else {
+> > +		u64 tmp1, tmp2;
+> > +
+> > +		__asm__ __volatile__ (
+> > +			"stp	 x0,   x1, [%2, #16 *  0]\n"
+> > +			"stp	 x2,   x3, [%2, #16 *  1]\n"
+> > +			"stp	 x4,   x5, [%2, #16 *  2]\n"
+> > +			"stp	 x6,   x7, [%2, #16 *  3]\n"
+> > +			"stp	 x8,   x9, [%2, #16 *  4]\n"
+> > +			"stp	x10,  x11, [%2, #16 *  5]\n"
+> > +			"stp	x12,  x13, [%2, #16 *  6]\n"
+> > +			"stp	x14,  x15, [%2, #16 *  7]\n"
+> > +			"stp	x16,  x17, [%2, #16 *  8]\n"
+> > +			"stp	x18,  x19, [%2, #16 *  9]\n"
+> > +			"stp	x20,  x21, [%2, #16 * 10]\n"
+> > +			"stp	x22,  x23, [%2, #16 * 11]\n"
+> > +			"stp	x24,  x25, [%2, #16 * 12]\n"
+> > +			"stp	x26,  x27, [%2, #16 * 13]\n"
+> > +			"stp	x28,  x29, [%2, #16 * 14]\n"
+> > +			"mov	 %0,  sp\n"
+> > +			"stp	x30,  %0,  [%2, #16 * 15]\n"
+> > +
+> > +			"/* faked current PSTATE */\n"
+> > +			"mrs	 %0, CurrentEL\n"
+> > +			"mrs	 %1, DAIF\n"
+> > +			"orr	 %0, %0, %1\n"
+> > +			"mrs	 %1, NZCV\n"
+> > +			"orr	 %0, %0, %1\n"
 > > +
 > 
-> The above should probably be in arch/Kconfig (with an appropriately
-> changed comment) since it is used in generic code.
+> What about SPSEL? While we don't use it, it is correctly preserved for
+> everything except a CPU that calls panic()...
 
-Here is the new version, with that change.
+My comment above might be confusing, but what I want to fake
+here is "spsr" as pt_regs.pstate is normally set based on spsr_el1.
+So there is no corresponding field of SPSEL in spsr.
 
--- 
-[]'s
-Thiago Jung Bauermann
-IBM Linux Technology Center
+> 
+> > +			/* pc */
+> > +			"adr	 %1, 1f\n"
+> > +		"1:\n"
+> > +			"stp	 %1, %0,   [%2, #16 * 16]\n"
+> > +			: "=r" (tmp1), "=r" (tmp2), "+r" (newregs)
+> > +			:
+> > +			: "memory"
+> > +		);
+> > +	}
+> >  }
+> >  
+> >  #endif /* __ASSEMBLY__ */
+> > diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> > index 0226447..6b0f2c7 100644
+> > --- a/arch/arm64/include/asm/smp.h
+> > +++ b/arch/arm64/include/asm/smp.h
+> > @@ -136,6 +136,8 @@ static inline void cpu_panic_kernel(void)
+> >   */
+> >  bool cpus_are_stuck_in_kernel(void);
+> >  
+> > +extern void smp_send_crash_stop(void);
+> > +
+> >  #endif /* ifndef __ASSEMBLY__ */
+> >  
+> >  #endif /* ifndef __ASM_SMP_H */
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index bc96c8a..8ac9dba8 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -9,6 +9,9 @@
+> >   * published by the Free Software Foundation.
+> >   */
+> >  
+> > +#include <linux/interrupt.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/kernel.h>
+> >  #include <linux/kexec.h>
+> >  #include <linux/smp.h>
+> >  
+> > @@ -22,6 +25,7 @@
+> >  extern const unsigned char arm64_relocate_new_kernel[];
+> >  extern const unsigned long arm64_relocate_new_kernel_size;
+> >  
+> > +bool in_crash_kexec;
+> 
+> static?
 
+Yes, it can be.
 
-Subject: [PATCH v5 1/5] kexec_file: Include the purgatory segment in the kexec
- image checksum.
+> >  static unsigned long kimage_start;
+> >  
+> >  /**
+> > @@ -148,7 +152,8 @@ void machine_kexec(struct kimage *kimage)
+> >  	/*
+> >  	 * New cpus may have become stuck_in_kernel after we loaded the image.
+> >  	 */
+> > -	BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
+> > +	BUG_ON((cpus_are_stuck_in_kernel() || (num_online_cpus() > 1)) &&
+> > +			!WARN_ON(in_crash_kexec));
+> 
+> In the kdump case, num_online_cpus() is unchanged as ipi_cpu_crash_stop()
+> doesn't update the online cpu masks, so this WARN_ON always fires. This is
+> confusing as the 'failed to stop secondary CPUs' message doesn't appear, because
+> those CPUs did stop, and waiting_for_crash_ipi has the expected value...
 
-Currently, the purgatory segment is skipped from the kexec image checksum
-because it is modified to include the calculated digest.
+Good catch! I've never noticed that the message was wrong.
+The line should be changed to:
+	BUG_ON((cpus_are_stuck_in_kernel() || (num_online_cpus() > 1)) &&
+			!in_crash_kexec);
 
-By putting the digest in a separate kexec segment, we can include the
-purgatory segment in the kexec image verification since it won't need
-to be modified anymore.
+> >  
+> >  	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+> >  	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+> > @@ -200,13 +205,58 @@ void machine_kexec(struct kimage *kimage)
+> >  	 * relocation is complete.
+> >  	 */
+> >  
+> > -	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
+> > +	cpu_soft_restart(!in_crash_kexec, reboot_code_buffer_phys, kimage->head,
+> >  		kimage_start, 0);
+> >  
+> >  	BUG(); /* Should never get here. */
+> >  }
+> 
+> 
+> 
+> > +static void machine_kexec_mask_interrupts(void)
+> > +{
+> > +	unsigned int i;
+> > +	struct irq_desc *desc;
+> > +
+> > +	for_each_irq_desc(i, desc) {
+> > +		struct irq_chip *chip;
+> > +		int ret;
+> > +
+> > +		chip = irq_desc_get_chip(desc);
+> > +		if (!chip)
+> > +			continue;
+> > +
+> > +		/*
+> > +		 * First try to remove the active state. If this
+> > +		 * fails, try to EOI the interrupt.
+> > +		 */
+> > +		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
+> > +
+> > +		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
+> > +		    chip->irq_eoi)
+> > +			chip->irq_eoi(&desc->irq_data);
+> > +
+> > +		if (chip->irq_mask)
+> > +			chip->irq_mask(&desc->irq_data);
+> > +
+> > +		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
+> > +			chip->irq_disable(&desc->irq_data);
+> > +	}
+> > +}
+> 
+> This function is over my head ... I have no idea how this works, I can only
+> comment that its different to the version under arch/arm
+> 
+> /me adds Marc Z to CC.
 
-With this change, the only part of the kexec image that is not covered
-by the checksum is the digest itself.
+This function was once borrowed from arch/arm, then dropped temporarily
+and revamped based on Marc's comment IIRC.
+So I would like to defer to Marc.
 
-Even with the digest stored separately, x86 needs to leave the purgatory
-segment out of the checksum calculation because it modifies the purgatory
-code in relocate_kernel. We use CONFIG_ARCH_MODIFIES_KEXEC_PURGATORY to
-allow the powerpc purgatory to be protected by the checksum while still
-preserving x86 behavior.
+> 
+> > +/**
+> > + * machine_crash_shutdown - shutdown non-crashing cpus and save registers
+> > + */
+> >  void machine_crash_shutdown(struct pt_regs *regs)
+> >  {
+> > -	/* Empty routine needed to avoid build errors. */
+> > +	local_irq_disable();
+> > +
+> > +	in_crash_kexec = true;
+> > +
+> > +	/* shutdown non-crashing cpus */
+> > +	smp_send_crash_stop();
+> > +
+> > +	/* for crashing cpu */
+> > +	crash_save_cpu(regs, smp_processor_id());
+> > +	machine_kexec_mask_interrupts();
+> > +
+> > +	pr_info("Starting crashdump kernel...\n");
+> >  }
+> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> > index d93d433..b401b25 100644
+> > --- a/arch/arm64/kernel/smp.c
+> > +++ b/arch/arm64/kernel/smp.c
+> > @@ -37,6 +37,7 @@
+> >  #include <linux/completion.h>
+> >  #include <linux/of.h>
+> >  #include <linux/irq_work.h>
+> > +#include <linux/kexec.h>
+> >  
+> >  #include <asm/alternative.h>
+> >  #include <asm/atomic.h>
+> > @@ -71,6 +72,7 @@ enum ipi_msg_type {
+> >  	IPI_RESCHEDULE,
+> >  	IPI_CALL_FUNC,
+> >  	IPI_CPU_STOP,
+> > +	IPI_CPU_CRASH_STOP,
+> >  	IPI_TIMER,
+> >  	IPI_IRQ_WORK,
+> >  	IPI_WAKEUP
+> > @@ -734,6 +736,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
+> >  	S(IPI_RESCHEDULE, "Rescheduling interrupts"),
+> >  	S(IPI_CALL_FUNC, "Function call interrupts"),
+> >  	S(IPI_CPU_STOP, "CPU stop interrupts"),
+> > +	S(IPI_CPU_CRASH_STOP, "CPU stop (for crash dump) interrupts"),
+> >  	S(IPI_TIMER, "Timer broadcast interrupts"),
+> >  	S(IPI_IRQ_WORK, "IRQ work interrupts"),
+> >  	S(IPI_WAKEUP, "CPU wake-up interrupts"),
+> > @@ -808,6 +811,29 @@ static void ipi_cpu_stop(unsigned int cpu)
+> >  		cpu_relax();
+> >  }
+> >  
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +static atomic_t waiting_for_crash_ipi;
+> > +#endif
+> > +
+> > +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
+> > +{
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +	crash_save_cpu(regs, cpu);
+> > +
+> > +	atomic_dec(&waiting_for_crash_ipi);
+> > +
+> > +	local_irq_disable();
+> > +
+> > +#ifdef CONFIG_HOTPLUG_CPU
+> > +	if (cpu_ops[cpu]->cpu_die)
+> > +		cpu_ops[cpu]->cpu_die(cpu);
+> > +#endif
+> > +
+> > +	/* just in case */
+> > +	cpu_park_loop();
+> > +#endif
+> > +}
+> > +
+> >  /*
+> >   * Main handler for inter-processor interrupts
+> >   */
+> > @@ -838,6 +864,15 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+> >  		irq_exit();
+> >  		break;
+> >  
+> > +	case IPI_CPU_CRASH_STOP:
+> > +		if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
+> > +			irq_enter();
+> > +			ipi_cpu_crash_stop(cpu, regs);
+> > +
+> > +			unreachable();
+> > +		}
+> > +		break;
+> > +
+> >  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+> >  	case IPI_TIMER:
+> >  		irq_enter();
+> > @@ -910,6 +945,34 @@ void smp_send_stop(void)
+> >  			   cpumask_pr_args(cpu_online_mask));
+> >  }
+> >  
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +void smp_send_crash_stop(void)
+> > +{
+> > +	cpumask_t mask;
+> > +	unsigned long timeout;
+> > +
+> > +	if (num_online_cpus() == 1)
+> > +		return;
+> > +
+> > +	cpumask_copy(&mask, cpu_online_mask);
+> > +	cpumask_clear_cpu(smp_processor_id(), &mask);
+> > +
+> > +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+> > +
+> > +	pr_crit("SMP: stopping secondary CPUs\n");
+> > +	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
+> > +
+> > +	/* Wait up to one second for other CPUs to stop */
+> > +	timeout = USEC_PER_SEC;
+> > +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
+> > +		udelay(1);
+> > +
+> > +	if (atomic_read(&waiting_for_crash_ipi) > 0)
+> > +		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
+> > +			   cpumask_pr_args(cpu_online_mask));
+> > +}
+> > +#endif
+> 
+> This is very similar to smp_send_stop() which also has the timeout. Is it
+> possible to merge them? You could use in_crash_kexec to choose the IPI type.
 
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
----
- arch/Kconfig                       |   8 +++
- arch/powerpc/purgatory/purgatory.c |   4 +-
- arch/x86/Kconfig                   |   1 +
- arch/x86/purgatory/purgatory.c     |   2 +-
- include/linux/kexec.h              |   6 +++
- kernel/kexec_file.c                | 100 +++++++++++++++++++++++++------------
- 6 files changed, 87 insertions(+), 34 deletions(-)
+Yeah, we could merge them along with ipi_cpu_(crash_)stop().
+But the resulting code would be quite noisy if each line
+is switched by "if (in_crash_kexec)."
+Otherwise, we may have one big "if" like:
+void smp_send_stop(void)
+{
+    if (in_crash_kexec)
+        ...
+    else
+        ...
+}
+It seems to me that it is not much different from the current code.
+What do you think?
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index fd6e9712af81..b386d6c1d463 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -5,6 +5,14 @@
- config KEXEC_CORE
- 	bool
- 
-+#
-+# Architectures that need to modify the purgatory segment after the
-+# checksum is calculated need to select this option so that it won't
-+# be part of the kexec image checksum.
-+#
-+config ARCH_MODIFIES_KEXEC_PURGATORY
-+	bool
-+
- config OPROFILE
- 	tristate "OProfile system profiling"
- 	depends on PROFILING
-diff --git a/arch/powerpc/purgatory/purgatory.c b/arch/powerpc/purgatory/purgatory.c
-index 5b006d685cf2..f19ac3d5a7d5 100644
---- a/arch/powerpc/purgatory/purgatory.c
-+++ b/arch/powerpc/purgatory/purgatory.c
-@@ -17,7 +17,7 @@
- #include "kexec-sha256.h"
- 
- struct kexec_sha_region sha_regions[SHA256_REGIONS] = {};
--u8 sha256_digest[SHA256_DIGEST_SIZE] = { 0 };
-+u8 *sha256_digest = NULL;
- 
- int verify_sha256_digest(void)
- {
-@@ -40,7 +40,7 @@ int verify_sha256_digest(void)
- 		printf("\n");
- 
- 		printf("sha256_digest: ");
--		for (i = 0; i < sizeof(sha256_digest); i++)
-+		for (i = 0; i < SHA256_DIGEST_SIZE; i++)
- 			printf("%hhx ", sha256_digest[i]);
- 
- 		printf("\n");
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 2a1f0ce7c59a..4d34019f7479 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1812,6 +1812,7 @@ config KEXEC
- config KEXEC_FILE
- 	bool "kexec file based system call"
- 	select KEXEC_CORE
-+	select ARCH_MODIFIES_KEXEC_PURGATORY
- 	select BUILD_BIN2C
- 	depends on X86_64
- 	depends on CRYPTO=y
-diff --git a/arch/x86/purgatory/purgatory.c b/arch/x86/purgatory/purgatory.c
-index 25e068ba3382..391c6a66cb03 100644
---- a/arch/x86/purgatory/purgatory.c
-+++ b/arch/x86/purgatory/purgatory.c
-@@ -22,7 +22,7 @@ unsigned long backup_dest = 0;
- unsigned long backup_src = 0;
- unsigned long backup_sz = 0;
- 
--u8 sha256_digest[SHA256_DIGEST_SIZE] = { 0 };
-+u8 *sha256_digest = NULL;
- 
- struct sha_region sha_regions[16] = {};
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index d419d0e51fe5..2a96292ee544 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -124,8 +124,14 @@ struct purgatory_info {
- 	 */
- 	void *purgatory_buf;
- 
-+	/* Digest of the contents of segments. */
-+	void *digest_buf;
-+
- 	/* Address where purgatory is finally loaded and is executed from */
- 	unsigned long purgatory_load_addr;
-+
-+	/* Address where the digest is loaded. */
-+	unsigned long digest_load_addr;
- };
- 
- typedef int (kexec_probe_t)(const char *kernel_buf, unsigned long kernel_size);
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 0c2df7f73792..6f7fa8901171 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -98,6 +98,9 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- 	vfree(pi->purgatory_buf);
- 	pi->purgatory_buf = NULL;
- 
-+	kfree(pi->digest_buf);
-+	pi->digest_buf = NULL;
-+
- 	vfree(pi->sechdrs);
- 	pi->sechdrs = NULL;
- 
-@@ -527,7 +530,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	struct shash_desc *desc;
- 	int ret = 0, i, j, zero_buf_sz, sha_region_sz;
- 	size_t desc_size, nullsz;
--	char *digest;
- 	void *zero_buf;
- 	struct kexec_sha_region *sha_regions;
- 	struct purgatory_info *pi = &image->purgatory_info;
-@@ -553,6 +555,37 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	if (!sha_regions)
- 		goto out_free_desc;
- 
-+	/*
-+	 * Set sha_regions early so that we can write it to the purgatory
-+	 * and include it in the checksum.
-+	 */
-+	for (j = i = 0; i < image->nr_segments; i++) {
-+		struct kexec_segment *ksegment = &image->segment[i];
-+
-+		if (ksegment->kbuf == pi->digest_buf)
-+			continue;
-+
-+		if (IS_ENABLED(CONFIG_ARCH_MODIFIES_KEXEC_PURGATORY) &&
-+		    ksegment->kbuf == pi->purgatory_buf)
-+			continue;
-+
-+		sha_regions[j].start = ksegment->mem;
-+		sha_regions[j].len = ksegment->memsz;
-+		j++;
-+	}
-+
-+	ret = kexec_purgatory_get_set_symbol(image, "sha_regions", sha_regions,
-+					     sha_region_sz, false);
-+	if (ret)
-+		goto out_free_sha_regions;
-+
-+	ret = kexec_purgatory_get_set_symbol(image, "sha256_digest",
-+					     &pi->digest_load_addr,
-+					     sizeof(pi->digest_load_addr),
-+					     false);
-+	if (ret)
-+		goto out_free_sha_regions;
-+
- 	desc->tfm   = tfm;
- 	desc->flags = 0;
- 
-@@ -560,21 +593,24 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	if (ret < 0)
- 		goto out_free_sha_regions;
- 
--	digest = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
--	if (!digest) {
--		ret = -ENOMEM;
--		goto out_free_sha_regions;
--	}
--
--	for (j = i = 0; i < image->nr_segments; i++) {
-+	for (i = 0; i < image->nr_segments; i++) {
- 		struct kexec_segment *ksegment;
- 
- 		ksegment = &image->segment[i];
- 		/*
--		 * Skip purgatory as it will be modified once we put digest
--		 * info in purgatory.
-+		 * Skip the digest segment as it will be modified with the
-+		 * result of the checksum calculation.
- 		 */
--		if (ksegment->kbuf == pi->purgatory_buf)
-+		if (ksegment->kbuf == pi->digest_buf)
-+			continue;
-+
-+		/*
-+		 * Some architectures need to modify the purgatory before
-+		 * jumping into it, so in those cases we need to skip the
-+		 * purgatory from the checksum calculation.
-+		 */
-+		if (IS_ENABLED(CONFIG_ARCH_MODIFIES_KEXEC_PURGATORY) &&
-+		    ksegment->kbuf == pi->purgatory_buf)
- 			continue;
- 
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
-@@ -600,29 +636,11 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 
- 		if (ret)
- 			break;
--
--		sha_regions[j].start = ksegment->mem;
--		sha_regions[j].len = ksegment->memsz;
--		j++;
- 	}
- 
--	if (!ret) {
--		ret = crypto_shash_final(desc, digest);
--		if (ret)
--			goto out_free_digest;
--		ret = kexec_purgatory_get_set_symbol(image, "sha_regions",
--						sha_regions, sha_region_sz, 0);
--		if (ret)
--			goto out_free_digest;
--
--		ret = kexec_purgatory_get_set_symbol(image, "sha256_digest",
--						digest, SHA256_DIGEST_SIZE, 0);
--		if (ret)
--			goto out_free_digest;
--	}
-+	if (!ret)
-+		ret = crypto_shash_final(desc, pi->digest_buf);
- 
--out_free_digest:
--	kfree(digest);
- out_free_sha_regions:
- 	vfree(sha_regions);
- out_free_desc:
-@@ -875,6 +893,10 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
- 			 unsigned long *load_addr)
- {
- 	struct purgatory_info *pi = &image->purgatory_info;
-+	struct kexec_buf kbuf = { .image = image, .bufsz = SHA256_DIGEST_SIZE,
-+				  .memsz = SHA256_DIGEST_SIZE, .buf_align = 1,
-+				  .buf_min = min, .buf_max = max,
-+				  .top_down = top_down };
- 	int ret;
- 
- 	if (kexec_purgatory_size <= 0)
-@@ -900,6 +922,22 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
- 	if (ret)
- 		return ret;
- 
-+	pi->digest_buf = kzalloc(SHA256_DIGEST_SIZE, GFP_KERNEL);
-+	if (!pi->digest_buf) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	/*
-+	 * Add a separate segment for the digest so that we don't have to modify
-+	 * the purgatory segment after we calculate the kexec image checksum.
-+	 */
-+	kbuf.buffer = pi->digest_buf;
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret)
-+		goto out;
-+	pi->digest_load_addr = kbuf.mem;
-+
- 	ret = kexec_apply_relocations(image);
- 	if (ret)
- 		goto out;
--- 
-1.9.1
+-Takahiro AKASHI
 
 
+> 
+> > +
+> >  /*
+> >   * not supported here
+> >   */
+> > 
+> 
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> 
+> 
 
 _______________________________________________
 kexec mailing list
