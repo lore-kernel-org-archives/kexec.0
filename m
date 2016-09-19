@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1blrcv-0002Ys-BD
- for kexec@lists.infradead.org; Mon, 19 Sep 2016 06:00:26 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v10 RESEND 3/3] Documentation: kdump: Add description of
- enable multi-cpus support
-Date: Mon, 19 Sep 2016 13:59:49 +0800
-Message-Id: <1474264789-11705-4-git-send-email-bhe@redhat.com>
-In-Reply-To: <1474264789-11705-1-git-send-email-bhe@redhat.com>
-References: <1474264789-11705-1-git-send-email-bhe@redhat.com>
+Message-ID: <57E00CDC.70403@arm.com>
+Date: Mon, 19 Sep 2016 17:05:48 +0100
+From: James Morse <james.morse@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v26 0/7] arm64: add kdump support
+References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+ <57DC1812.6040906@arm.com>
+ <CAKv+Gu_UvFnPtFHggaO6Z_ePuArdchEK1qYWPkkwpcgLus3Epw@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_UvFnPtFHggaO6Z_ePuArdchEK1qYWPkkwpcgLus3Epw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,48 +16,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: corbet@lwn.net, akpm@linux-foundation.org
-Cc: linux-doc@vger.kernel.org, kexec@lists.infradead.org, Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>, xlpang@redhat.com, linux-kernel@vger.kernel.org, dyoung@redhat.com
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-From: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
+On 16/09/16 21:17, Ard Biesheuvel wrote:
+> On 16 September 2016 at 17:04, James Morse <james.morse@arm.com> wrote:
+>> Mark, Ard, how does/will reserved-memory work on an APCI only system?
+> 
+> It works by accident, at the moment. We used to ignore both
+> /memreserve/s and the /reserved-memory node, but due to some unrelated
+> refactoring, we ended up honouring the reserved-memory node when
+> booting via UEFI
 
-Multi-cpu support is useful to improve the performance of kdump in
-some cases. So add the description of enable multi-cpu support in
-dump-capture kernel.
+Okay, so kdump probably shouldn't rely on this behaviour...
 
-Signed-off-by: Zhou Wenjian <zhouwj-fnst@cn.fujitsu.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Xunlei Pang <xpang@redhat.com>
----
- Documentation/kdump/kdump.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+For an acpi-only system, we could get reserve_crashkernel() to copy the uefi
+memory map into the reserved region, changing the region types for existing
+kernel memory to EfiReservedMemoryType (for example) and fixing up the reserved
+region boundaries.
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index f7ef340..b0eb27b 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -396,6 +396,13 @@ Notes on loading the dump-capture kernel:
-   Note, though maxcpus always works, you had better replace it with
-   nr_cpus to save memory if supported by the current ARCH, such as x86.
- 
-+* You should enable multi-cpu support in dump-capture kernel if you intend
-+  to use multi-thread programs with it, such as parallel dump feature of
-+  makedumpfile. Otherwise, the multi-thread program may have a great
-+  performance degradation. To enable multi-cpu support, you should bring up an
-+  SMP dump-capture kernel and specify maxcpus/nr_cpus, disable_cpu_apicid=[X]
-+  options while loading it.
-+
- * For s390x there are two kdump modes: If a ELF header is specified with
-   the elfcorehdr= kernel parameter, it is used by the kdump kernel as it
-   is done on all other architectures. If no elfcorehdr= kernel parameter is
--- 
-2.5.5
+This second memory map could then be added alongside the real one in the
+DT/chosen, and used in preference the second time we go through uefi_init() in
+the crash kernel.
 
+kexec-tools would still need to keep the '/reserved-memory' node for non-uefi
+systems.
+
+Doing this doesn't depend on userspace, and means the uefi memory map is still
+the one and only true source of memory layout information. If fixing it like
+this is valid I don't think it should block kdump.
+
+... I will think about this some more before trying to put it together.
+
+
+
+Thanks,
+
+James
 
 _______________________________________________
 kexec mailing list
