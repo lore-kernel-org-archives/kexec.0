@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bmILd-0000JP-PO
- for kexec@lists.infradead.org; Tue, 20 Sep 2016 10:32:22 +0000
-Message-ID: <1474367516.19686.1.camel@suse.de>
-Subject: Re: [PATCH v3 3/3] close_dump_bitmap: simplify logic
+ id 1bmINr-0000m0-K3
+ for kexec@lists.infradead.org; Tue, 20 Sep 2016 10:34:40 +0000
 From: Martin Wilck <mwilck@suse.de>
-Date: Tue, 20 Sep 2016 12:31:56 +0200
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E6A4CF@BPXM01GP.gisp.nec.co.jp>
-References: <20160914101723.19003-3-mwilck@suse.de>
- <20160914115009.20220-1-mwilck@suse.de>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E6A4CF@BPXM01GP.gisp.nec.co.jp>
-Mime-Version: 1.0
+Subject: [PATCH v3 3/3] close_dump_bitmap: simplify logic
+Date: Tue, 20 Sep 2016 12:33:29 +0200
+Message-Id: <20160920103329.3023-3-mwilck@suse.de>
+In-Reply-To: <20160920103329.3023-1-mwilck@suse.de>
+References: <0910DD04CBD6DE4193FCF86B9C00BE9701E6A4CF@BPXM01GP.gisp.nec.co.jp>
+ <20160920103329.3023-1-mwilck@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,16 +18,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "ptesarik@suse.cz" <ptesarik@suse.cz>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: ats-kumagai@wm.jp.nec.com
+Cc: Martin Wilck <mwilck@suse.de>, ptesarik@suse.cz, kexec@lists.infradead.org
 
-S3VtYWdhaS1zYW4sCk9uIFR1ZSwgMjAxNi0wOS0yMCBhdCAwOTo0MyArMDAwMCwgQXRzdXNoaSBL
-dW1hZ2FpIHdyb3RlOgo+wqAKPiBUaGlzIHZlcnNpb24gbG9va3MgZ29vZCwgc28gY291bGQgeW91
-IGFkZCB5b3VyIFNpZ25lZC1vZmYtYnkgPwoKT0ssIEknbGwgcmVzZW5kIHRoZSB3aG9sZSB2MyBz
-ZXJpZXMuCgpNYXJ0aW4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+The boolean expression replicates the logic of open_dump_bitmap().
+It's simpler and less error-prone to simply check if fd_bitmap is
+valid.
+
+Signed-off-by: Martin Wilck <mwilck@suse.de>
+---
+ makedumpfile.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 30e1fa8..0f5be7f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -8615,8 +8615,7 @@ close_dump_file(void)
+ void
+ close_dump_bitmap(void)
+ {
+-	if (!info->working_dir && !info->flag_reassemble && !info->flag_refiltering
+-	    && !info->flag_sadump && !info->flag_mem_usage)
++	if (info->fd_bitmap < 0)
+ 		return;
+ 
+ 	if (close(info->fd_bitmap) < 0)
+-- 
+2.9.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
