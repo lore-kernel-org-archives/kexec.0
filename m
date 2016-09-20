@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x234.google.com ([2607:f8b0:4001:c06::234])
+Received: from mail-pa0-x22a.google.com ([2607:f8b0:400e:c03::22a])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bm19c-0006J9-Pn
- for kexec@lists.infradead.org; Mon, 19 Sep 2016 16:10:50 +0000
-Received: by mail-io0-x234.google.com with SMTP id r145so96230292ior.0
- for <kexec@lists.infradead.org>; Mon, 19 Sep 2016 09:10:28 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <57E00CDC.70403@arm.com>
+ id 1bmFV0-0004M1-TU
+ for kexec@lists.infradead.org; Tue, 20 Sep 2016 07:29:52 +0000
+Received: by mail-pa0-x22a.google.com with SMTP id id6so4257513pad.3
+ for <kexec@lists.infradead.org>; Tue, 20 Sep 2016 00:29:30 -0700 (PDT)
+Date: Tue, 20 Sep 2016 16:36:35 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v26 2/7] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20160920073634.GC30248@linaro.org>
 References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <57DC1812.6040906@arm.com>
- <CAKv+Gu_UvFnPtFHggaO6Z_ePuArdchEK1qYWPkkwpcgLus3Epw@mail.gmail.com>
- <57E00CDC.70403@arm.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Mon, 19 Sep 2016 17:10:27 +0100
-Message-ID: <CAKv+Gu-pDS8C9uAkWq3mbuT2TZ9G6h-XTEd75fqaZv74kQ4WuQ@mail.gmail.com>
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
+ <20160907042908.6232-3-takahiro.akashi@linaro.org>
+ <57D9925D.5000508@arm.com> <20160915114815.GK16712@linaro.org>
+ <57DC067B.3050003@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <57DC067B.3050003@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,53 +29,199 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, Marc Zyngier <Marc.Zyngier@arm.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 19 September 2016 at 17:05, James Morse <james.morse@arm.com> wrote:
-> On 16/09/16 21:17, Ard Biesheuvel wrote:
->> On 16 September 2016 at 17:04, James Morse <james.morse@arm.com> wrote:
->>> Mark, Ard, how does/will reserved-memory work on an APCI only system?
->>
->> It works by accident, at the moment. We used to ignore both
->> /memreserve/s and the /reserved-memory node, but due to some unrelated
->> refactoring, we ended up honouring the reserved-memory node when
->> booting via UEFI
->
-> Okay, so kdump probably shouldn't rely on this behaviour...
->
+On Fri, Sep 16, 2016 at 03:49:31PM +0100, James Morse wrote:
+> On 16/09/16 04:21, AKASHI Takahiro wrote:
+> > On Wed, Sep 14, 2016 at 07:09:33PM +0100, James Morse wrote:
+> >> On 07/09/16 05:29, AKASHI Takahiro wrote:
+> >>> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
+> >>> and save registers' status in per-cpu ELF notes before starting crash
+> >>> dump kernel. See kernel_kexec().
+> >>> Even if not all secondary cpus have shut down, we do kdump anyway.
+> >>>
+> >>> As we don't have to make non-boot(crashed) cpus offline (to preserve
+> >>> correct status of cpus at crash dump) before shutting down, this patch
+> >>> also adds a variant of smp_send_stop().
+> 
+> >>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> >>> index 04744dc..a908958 100644
+> >>> --- a/arch/arm64/include/asm/kexec.h
+> >>> +++ b/arch/arm64/include/asm/kexec.h
+> >>> @@ -40,7 +40,46 @@
+> >>>  static inline void crash_setup_regs(struct pt_regs *newregs,
+> >>>  				    struct pt_regs *oldregs)
+> >>>  {
+> >>> -	/* Empty routine needed to avoid build errors. */
+> >>> +	if (oldregs) {
+> >>> +		memcpy(newregs, oldregs, sizeof(*newregs));
+> >>> +	} else {
+> >>> +		u64 tmp1, tmp2;
+> >>> +
+> >>> +		__asm__ __volatile__ (
+> >>> +			"stp	 x0,   x1, [%2, #16 *  0]\n"
+> >>> +			"stp	 x2,   x3, [%2, #16 *  1]\n"
+> >>> +			"stp	 x4,   x5, [%2, #16 *  2]\n"
+> >>> +			"stp	 x6,   x7, [%2, #16 *  3]\n"
+> >>> +			"stp	 x8,   x9, [%2, #16 *  4]\n"
+> >>> +			"stp	x10,  x11, [%2, #16 *  5]\n"
+> >>> +			"stp	x12,  x13, [%2, #16 *  6]\n"
+> >>> +			"stp	x14,  x15, [%2, #16 *  7]\n"
+> >>> +			"stp	x16,  x17, [%2, #16 *  8]\n"
+> >>> +			"stp	x18,  x19, [%2, #16 *  9]\n"
+> >>> +			"stp	x20,  x21, [%2, #16 * 10]\n"
+> >>> +			"stp	x22,  x23, [%2, #16 * 11]\n"
+> >>> +			"stp	x24,  x25, [%2, #16 * 12]\n"
+> >>> +			"stp	x26,  x27, [%2, #16 * 13]\n"
+> >>> +			"stp	x28,  x29, [%2, #16 * 14]\n"
+> >>> +			"mov	 %0,  sp\n"
+> >>> +			"stp	x30,  %0,  [%2, #16 * 15]\n"
+> >>> +
+> >>> +			"/* faked current PSTATE */\n"
+> >>> +			"mrs	 %0, CurrentEL\n"
+> >>> +			"mrs	 %1, DAIF\n"
+> >>> +			"orr	 %0, %0, %1\n"
+> >>> +			"mrs	 %1, NZCV\n"
+> >>> +			"orr	 %0, %0, %1\n"
+> >>> +
+> >>
+> >> What about SPSEL? While we don't use it, it is correctly preserved for
+> >> everything except a CPU that calls panic()...
+> > 
+> > My comment above might be confusing, but what I want to fake
+> > here is "spsr" as pt_regs.pstate is normally set based on spsr_el1.
+> > So there is no corresponding field of SPSEL in spsr.
+> 
+> Here is my logic, I may have missed something obvious, see what you think:
+> 
+> SPSR_EL{1,2} shows the CPU mode 'M' in bits 0-4, From aarch64 bit 4 is always 0.
+> From the register definitions in the ARM-ARM C5.2, likely values in 0-3 are:
+> 0100 EL1t
+> 0101 EL1h
+> 1000 EL2t
+> 1001 EL2h
+> 
+> I'm pretty sure this least significant bit is what SPSEL changes, so it does get
+> implicitly recorded in SPSR.
+> CurrentEL returns a value in bits 0-3, of which 0-1 are RES0, so we lose the
+> difference between EL?t and EL?h.
 
-No, but I would still like to keep /reserved-memory node support for
-dynamic ranges, since they are guaranteed not to contain anything
-'magic' left behind by the firmware. So if we keep /that/, keeping
-static allocation support (with validation, as I proposed in the
-series I quoted) is only a small step.
+OK.
+SPSel will be added assuming that CurrentEL is never 0 here.
 
--- 
-Ard.
+> 
+> > 
+> >>
+> >>> +			/* pc */
+> >>> +			"adr	 %1, 1f\n"
+> >>> +		"1:\n"
+> >>> +			"stp	 %1, %0,   [%2, #16 * 16]\n"
+> >>> +			: "=r" (tmp1), "=r" (tmp2), "+r" (newregs)
+> >>> +			:
+> >>> +			: "memory"
+> 
+> Do you need the memory clobber? This asm only modifies values in newregs.
 
-> For an acpi-only system, we could get reserve_crashkernel() to copy the uefi
-> memory map into the reserved region, changing the region types for existing
-> kernel memory to EfiReservedMemoryType (for example) and fixing up the reserved
-> region boundaries.
->
-> This second memory map could then be added alongside the real one in the
-> DT/chosen, and used in preference the second time we go through uefi_init() in
-> the crash kernel.
->
-> kexec-tools would still need to keep the '/reserved-memory' node for non-uefi
-> systems.
->
-> Doing this doesn't depend on userspace, and means the uefi memory map is still
-> the one and only true source of memory layout information. If fixing it like
-> this is valid I don't think it should block kdump.
->
-> ... I will think about this some more before trying to put it together.
->
->
->
+What about this (including the change above):
+|                       "/* faked current PSTATE */\n"
+|                       "mrs     %0, CurrentEL\n"
+|                       "mrs     %1, SPSEL\n"
+|                       "orr     %0, %0, %1\n"
+|                       "mrs     %1, DAIF\n"
+|                       "orr     %0, %0, %1\n"
+|                       "mrs     %1, NZCV\n"
+|                       "orr     %0, %0, %1\n"
+|                       /* pc */
+|                       "adr     %1, 1f\n"
+|               "1:\n"
+|                       "stp     %1, %0,   [%2, #16 * 16]\n"
+|                       : "+r" (tmp1), "+r" (tmp2)
+|                       : "r" (newregs)
+|                       : "memory"
+
+
+> 
+> >>> +		);
+> >>> +	}
+> >>>  }
+> >>>  
+> >>>  #endif /* __ASSEMBLY__ */
+> 
+> 
+> >>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> 
+> >>> +#ifdef CONFIG_KEXEC_CORE
+> >>> +void smp_send_crash_stop(void)
+> >>> +{
+> >>> +	cpumask_t mask;
+> >>> +	unsigned long timeout;
+> >>> +
+> >>> +	if (num_online_cpus() == 1)
+> >>> +		return;
+> >>> +
+> >>> +	cpumask_copy(&mask, cpu_online_mask);
+> >>> +	cpumask_clear_cpu(smp_processor_id(), &mask);
+> >>> +
+> >>> +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+> >>> +
+> >>> +	pr_crit("SMP: stopping secondary CPUs\n");
+> >>> +	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
+> >>> +
+> >>> +	/* Wait up to one second for other CPUs to stop */
+> >>> +	timeout = USEC_PER_SEC;
+> >>> +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
+> >>> +		udelay(1);
+> >>> +
+> >>> +	if (atomic_read(&waiting_for_crash_ipi) > 0)
+> >>> +		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
+> >>> +			   cpumask_pr_args(cpu_online_mask));
+> >>> +}
+> >>> +#endif
+> >>
+> >> This is very similar to smp_send_stop() which also has the timeout. Is it
+> >> possible to merge them? You could use in_crash_kexec to choose the IPI type.
+> > 
+> > Yeah, we could merge them along with ipi_cpu_(crash_)stop().
+> > But the resulting code would be quite noisy if each line
+> > is switched by "if (in_crash_kexec)."
+> > Otherwise, we may have one big "if" like:
+> > void smp_send_stop(void)
+> > {
+> >     if (in_crash_kexec)
+> >         ...
+> >     else
+> >         ...
+> > }
+> > It seems to me that it is not much different from the current code.
+> > What do you think?
+> 
+> Hmm, yes, its too fiddly to keep the existing behaviour of both.
+> 
+> The problems are ipi_cpu_stop() doesn't call cpu_die(), (I can't see a good
+> reason for this, but more archaeology is needed), and ipi_cpu_crash_stop()
+> doesn't modify the online cpu mask.
+> 
+> I don't suggest we do this yet, but it could be future cleanup if it's proved to
+> be safe:
+> smp_send_stop() is only called from:  machine_halt(), machine_power_off(),
+> machine_restart() and panic(). In all those cases the CPUs are never expected to
+> come back, so we can probably merge the IPIs.  This involves modifying the
+> online cpu mask during kdump, (which I think is fine as it uses the atomic
+> bitops so we won't get blocked on a lock), and promoting in_crash_kexec to some
+> atomic type.
+> 
+> But I think we should leave it as it is for now,
+
+Sure.
+
+Thanks,
+-Takahiro AKASHI
+
+> 
 > Thanks,
->
+> 
 > James
+> 
 
 _______________________________________________
 kexec mailing list
