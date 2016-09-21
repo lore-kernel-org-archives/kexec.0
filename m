@@ -1,20 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bmhT0-0007qp-Qt
- for kexec@lists.infradead.org; Wed, 21 Sep 2016 13:21:39 +0000
-Date: Wed, 21 Sep 2016 21:21:13 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v5 7/8] iommu/amd: Don't update domain info to dte entry
- at iommu init stage
-Message-ID: <20160921132113.GF13350@x1.redhat.com>
-References: <1473951806-25511-1-git-send-email-bhe@redhat.com>
- <1473951806-25511-8-git-send-email-bhe@redhat.com>
- <20160920125004.GF3541@8bytes.org>
- <20160921102613.GD13350@x1.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160921102613.GD13350@x1.redhat.com>
+Message-Id: <a9f1fafd7c248d33768177438742b90bc4338202.1474481332.git.geoff@infradead.org>
+In-Reply-To: <cover.1474481332.git.geoff@infradead.org>
+References: <cover.1474481332.git.geoff@infradead.org>
+From: Geoff Levand <geoff@infradead.org>
+Subject: [PATCH v6 3/3] arm64: Add support for binary image files
+Date: Wed, 21 Sep 2016 18:14:25 +0000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,88 +13,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Mark Rutland <mark.rutland@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 09/21/16 at 06:26pm, Baoquan He wrote:
-> On 09/20/16 at 02:50pm, Joerg Roedel wrote:
-> > On Thu, Sep 15, 2016 at 11:03:25PM +0800, Baoquan He wrote:
-> > > AMD iommu creates protection domain and assign each device to it during
-> > > iommu driver initialization stage. This happened just after system pci
-> > > bus scanning stage, and much earlier than device driver init stage. So
-> > > at this time if in kdump kernel the domain info, especially pte_root,
-> > > can't be updated to dte entry. We should wait until device driver init
-> > > stage.
-> > > 
-> > > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > > ---
-> > >  drivers/iommu/amd_iommu.c | 18 ++++++++++++++++++
-> > >  1 file changed, 18 insertions(+)
-> > > 
-> > > diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-> > > index fcb69ff..6c37300 100644
-> > > --- a/drivers/iommu/amd_iommu.c
-> > > +++ b/drivers/iommu/amd_iommu.c
-> > > @@ -137,6 +137,7 @@ struct iommu_dev_data {
-> > >  	bool pri_tlp;			  /* PASID TLB required for
-> > >  					     PPR completions */
-> > >  	u32 errata;			  /* Bitmap for errata to apply */
-> > > +	bool domain_updated;
-> > >  };
-> > >  
-> > >  /*
-> > > @@ -1708,6 +1709,15 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
-> > >  {
-> > >  	u64 pte_root = 0;
-> > >  	u64 flags = 0;
-> > > +	struct iommu_dev_data *dev_data;
-> > > +	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-> > > +
-> > > +	dev_data = find_dev_data(devid);
-> > > +        if (!dev_data)
-> > > +                return;
-> > > +
-> > > +	if (translation_pre_enabled(iommu) && !dev_data->domain_updated)
-> > > +		return;
-> > >  
-> > >  	if (domain->mode != PAGE_MODE_NONE)
-> > >  		pte_root = virt_to_phys(domain->pt_root);
-> > > @@ -1756,6 +1766,14 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
-> > >  
-> > >  static void clear_dte_entry(u16 devid)
-> > >  {
-> > > +	struct iommu_dev_data *dev_data;
-> > > +	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
-> > > +
-> > > +	dev_data = find_dev_data(devid);
-> > > +        if (!dev_data)
-> > > +                return;
-> > > +	if (translation_pre_enabled(iommu) && !dev_data->domain_updated)
-> > > +		return;
-> > 
-> > This should be moved to do_attach/do_detach. There you also already have
-> > the dev_data you need here.
-> 
-> For amd-vi v1, checking in do_attach/do_detach is enough. But for v2
-> amd_iommu_domain_direct_map and amd_iommu_domain_enable_v2 also call it
-Here I means amd_iommu_domain_direct_map and amd_iommu_domain_enable_v2
-will call set_dte_entry to change pte_root setting.
+From: Pratyush Anand <panand@redhat.com>
 
-> to install pte_root into dev table. So finally, I move them into these
-> two lowest level functions to prevent any pte_root changing during iommu
-> init stage. It involves the least code change.
-> 
-> > 
-> > >  	/* remove entry from the device table seen by the hardware */
-> > >  	amd_iommu_dev_table[devid].data[0]  = DTE_FLAG_V | DTE_FLAG_TV;
-> > >  	amd_iommu_dev_table[devid].data[1] &= DTE_FLAG_MASK;
-> > > -- 
-> > > 2.5.5
-> > > 
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+[Reworked and cleaned up]
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+---
+ kexec/arch/arm64/kexec-image-arm64.c | 49 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
+
+diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
+index 42d2ea7..960ed96 100644
+--- a/kexec/arch/arm64/kexec-image-arm64.c
++++ b/kexec/arch/arm64/kexec-image-arm64.c
+@@ -3,7 +3,9 @@
+  */
+ 
+ #define _GNU_SOURCE
++
+ #include "kexec-arm64.h"
++#include <limits.h>
+ 
+ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ {
+@@ -21,14 +23,53 @@ int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
+ 		return -1;
+ 	}
+ 
+-	fprintf(stderr, "kexec: ARM64 binary image files are currently NOT SUPPORTED.\n");
+-	return -1;
++	return 0;
+ }
+ 
+ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	off_t kernel_size, struct kexec_info *info)
+ {
+-	return -1;
++	const struct arm64_image_header *header;
++	unsigned long kernel_segment;
++	int result;
++
++	header = (const struct arm64_image_header *)(kernel_buf);
++
++	if (arm64_process_image_header(header))
++		return -1;
++
++        kernel_segment = arm64_locate_kernel_segment(info);
++
++        if (kernel_segment == ULONG_MAX) {
++                dbgprintf("%s: Kernel segment is not allocated\n", __func__);
++                result = -EFAILED;
++                goto exit;
++        }
++
++	dbgprintf("%s: kernel_segment: %016lx\n", __func__, kernel_segment);
++	dbgprintf("%s: text_offset:    %016lx\n", __func__,
++		arm64_mem.text_offset);
++	dbgprintf("%s: image_size:     %016lx\n", __func__,
++		arm64_mem.image_size);
++	dbgprintf("%s: phys_offset:    %016lx\n", __func__,
++		arm64_mem.phys_offset);
++	dbgprintf("%s: vp_offset:      %016lx\n", __func__,
++		arm64_mem.vp_offset);
++	dbgprintf("%s: PE format:      %s\n", __func__,
++		(arm64_header_check_pe_sig(header) ? "yes" : "no"));
++
++	/* load the kernel */
++	add_segment_phys_virt(info, kernel_buf, kernel_size,
++			kernel_segment + arm64_mem.text_offset,
++			arm64_mem.image_size, 0);
++
++	result = arm64_load_other_segments(info, kernel_segment
++		+ arm64_mem.text_offset);
++
++exit:
++        if (result)
++                fprintf(stderr, "kexec: load failed.\n");
++        return result;
+ }
+ 
+ void image_arm64_usage(void)
+@@ -36,6 +77,4 @@ void image_arm64_usage(void)
+ 	printf(
+ "     An ARM64 binary image, compressed or not, big or little endian.\n"
+ "     Typically an Image, Image.gz or Image.lzma file.\n\n");
+-	printf(
+-"     ARM64 binary image files are currently NOT SUPPORTED.\n\n");
+ }
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
