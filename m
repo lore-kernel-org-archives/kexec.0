@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pa0-x22f.google.com ([2607:f8b0:400e:c03::22f])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bmc4Z-0007vv-GX
- for kexec@lists.infradead.org; Wed, 21 Sep 2016 07:36:05 +0000
-Received: by mail-pa0-x22f.google.com with SMTP id id6so15712783pad.3
- for <kexec@lists.infradead.org>; Wed, 21 Sep 2016 00:35:42 -0700 (PDT)
-Date: Wed, 21 Sep 2016 16:42:50 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
-Message-ID: <20160921074249.GI30248@linaro.org>
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <57DC1812.6040906@arm.com>
- <CAKv+Gu_UvFnPtFHggaO6Z_ePuArdchEK1qYWPkkwpcgLus3Epw@mail.gmail.com>
- <57E00CDC.70403@arm.com>
+ id 1bmeao-0005AY-Cp
+ for kexec@lists.infradead.org; Wed, 21 Sep 2016 10:17:41 +0000
+Date: Wed, 21 Sep 2016 18:17:09 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v5 4/8] iommu/amd: Add function copy_dev_tables
+Message-ID: <20160921101709.GA13350@x1.redhat.com>
+References: <1473951806-25511-1-git-send-email-bhe@redhat.com>
+ <1473951806-25511-5-git-send-email-bhe@redhat.com>
+ <20160920115804.GC3541@8bytes.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <57E00CDC.70403@arm.com>
+In-Reply-To: <20160920115804.GC3541@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,54 +25,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-On Mon, Sep 19, 2016 at 05:05:48PM +0100, James Morse wrote:
-> On 16/09/16 21:17, Ard Biesheuvel wrote:
-> > On 16 September 2016 at 17:04, James Morse <james.morse@arm.com> wrote:
-> >> Mark, Ard, how does/will reserved-memory work on an APCI only system?
-> > 
-> > It works by accident, at the moment. We used to ignore both
-> > /memreserve/s and the /reserved-memory node, but due to some unrelated
-> > refactoring, we ended up honouring the reserved-memory node when
-> > booting via UEFI
-> 
-> Okay, so kdump probably shouldn't rely on this behaviour...
-> 
-> For an acpi-only system, we could get reserve_crashkernel() to copy the uefi
-> memory map into the reserved region, changing the region types for existing
-> kernel memory to EfiReservedMemoryType (for example) and fixing up the reserved
-> region boundaries.
-> 
-> This second memory map could then be added alongside the real one in the
-> DT/chosen, and used in preference the second time we go through uefi_init() in
-> the crash kernel.
+Hi Joerg,
 
-Do we need add this map as the second one?
-Why not replace "linux,uefi-mmap-start" in a new blob?
+Thanks for your reviewing and great suggestion!
 
-> kexec-tools would still need to keep the '/reserved-memory' node for non-uefi
-> systems.
+On 09/20/16 at 01:58pm, Joerg Roedel wrote:
+> Hi Baoquan,
+> 
+> On Thu, Sep 15, 2016 at 11:03:22PM +0800, Baoquan He wrote:
+> > +static int copy_dev_tables(void)
+> > +{
+> > +	u64 entry;
+> > +	u32 lo, hi, devid;
+> > +	phys_addr_t old_devtb_phys;
+> > +	struct dev_table_entry *old_devtb = NULL;
+> > +	u16 dom_id, dte_v;
+> > +	struct amd_iommu *iommu;
+> > +	static int copied;
+> 
+> Please order this by line-length, longer lines first.
 
-Yeah, but if we go in our own way on UEFI/ACPI systems, we may want to
-go in a DT-specific way, like PPC does, on DT systems.
-(That is, "linux,usable-memory" in memory nodes.)
+Will do.
 
-Thanks,
--Takahiro AKASHI
+> 
+> > +        for_each_iommu(iommu) {
+> > +		if (!translation_pre_enabled(iommu)) {
+> > +			pr_err("IOMMU:%d is not pre-enabled!/n", iommu->index);
+> > +			return -1;
+> > +		}
+> > +
+> > +		if (copied)
+> > +			continue;
+> > +
+> > +                lo = readl(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET);
+> > +                hi = readl(iommu->mmio_base + MMIO_DEV_TABLE_OFFSET + 4);
+> > +                entry = (((u64) hi) << 32) + lo;
+> > +                old_devtb_phys = entry & PAGE_MASK;
+> > +                old_devtb = memremap(old_devtb_phys, dev_table_size, MEMREMAP_WB);
+> > +		if (!old_devtb)
+> > +			return -1;
+> > +                for (devid = 0; devid <= amd_iommu_last_bdf; ++devid) {
+> > +                        amd_iommu_dev_table[devid] = old_devtb[devid];
+> > +                        dom_id = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
+> > +			dte_v = amd_iommu_dev_table[devid].data[0] & DTE_FLAG_V;
+> > +			if (!dte_v || !dom_id)
+> > +				continue;
+> > +                        __set_bit(dom_id, amd_iommu_pd_alloc_bitmap);
+> > +                }
+> > +		memunmap(old_devtb);
+> > +		copied = 1;
+> > +        }
+> 
+> This loop need more refinement and sanity checking code. I suggest using
+> two loops and do the sanity checking in the first one. The sanity checks
+> should do:
+> 
+> 	* Check whether all IOMMUs actually use the same device table
+> 	  with the same size
+> 
+> 	* Verify that the size of the old device table is the expected
+> 	  size.
 
-> Doing this doesn't depend on userspace, and means the uefi memory map is still
-> the one and only true source of memory layout information. If fixing it like
-> this is valid I don't think it should block kdump.
+Will do.
+
 > 
-> ... I will think about this some more before trying to put it together.
+> 	* Also sanity check the irq-remapping information and remapping
+> 	  table sizes.
+
+Will do. Since this need those irq DTE_IRQ_xxxx MACRO which is defined
+in amd_iommu.c , I plan to move them into amd_iommu_types.h, and then do
+irq-remapping. These can be made in another patch.
+
 > 
+> If any of these checks fail, just bail out of copying.
 > 
-> 
-> Thanks,
-> 
-> James
+> What is further needed it some more selection on what is copied from the
+> old kernel. There is no need to copy all the GCR3 root-pointer
+> information. If a device is set up with guest translations (DTE.GV=1),
+> then don't copy that information but move the device over to an empty
+> guest-cr3 table and handle the faults in the PPR log (which should just
+> answer them with INVALID). After all these PPR faults are recoverable
+> for the device and we should not allow the device to change old-kernels
+> data when we don't have to.
+
+The current fix is simplest and cleanest. Because the on-flight DMAs
+continue transferring data since system crash, including guest
+translations, we may not need to care about it and just let it continue
+flying a little more time until device is reset. Since you have suggested,
+I will try to make another patch for this issue, we can see the effect.
+
+Thanks
+Baoquan
 
 _______________________________________________
 kexec mailing list
