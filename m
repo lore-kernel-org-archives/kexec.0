@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bmzZb-0001xE-NK
- for kexec@lists.infradead.org; Thu, 22 Sep 2016 08:41:41 +0000
-Date: Thu, 22 Sep 2016 16:41:11 +0800
+ id 1bmzdI-0002rn-PW
+ for kexec@lists.infradead.org; Thu, 22 Sep 2016 08:45:29 +0000
+Date: Thu, 22 Sep 2016 16:45:02 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
- randomization
-Message-ID: <20160922084111.GA18585@dhcp-128-65.nay.redhat.com>
-References: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+Subject: Re: [PATCH 0/3] makedumpfile: Add support of mm randomization
+Message-ID: <20160922084502.GB18585@dhcp-128-65.nay.redhat.com>
+References: <1472460862-29842-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+In-Reply-To: <1472460862-29842-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,125 +23,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Garnier <thgarnie@google.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, keescook@chromium.org, kernel-hardening@lists.openwall.com
+To: Baoquan He <bhe@redhat.com>
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, thgarnie@google.com
 
-Hi, Thomas
+Hi, Baoquan
 
-On 08/17/16 at 09:47am, Thomas Garnier wrote:
-> Multiple changes were made on KASLR (right now in linux-next). One of
-> them is randomizing the virtual address of the physical mapping, vmalloc
-> and vmemmap memory sections. It breaks kdump ability to read physical
-> memory.
-
-What is the user visible behavior without this patch? Could you add more
-in the patch log?
-
-During my testing seems with or without this patch kdump kernel boot
-both fine.
-
-My kernel config options is like below, is it enough to test this patch?
-CONFIG_RANDOMIZE_BASE=y
-CONFIG_X86_NEED_RELOCS=y
-CONFIG_PHYSICAL_ALIGN=0x1000000
-CONFIG_RANDOMIZE_MEMORY=y
-CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING=0x0
-
+On 08/29/16 at 04:54pm, Baoquan He wrote:
+> Hi Atsushi and Thomas,
 > 
-> This change identifies if KASLR memories randomization is used by
-> checking if the page_offset_base variable exists. It search for the
-> correct PAGE_OFFSET value by looking at the loaded memory section and
-> find the lowest aligned on PUD (the randomization level).
+> This is a draft patchset. I just checked x86_64 implementation according to
+> Thomas's mm randomization related patches. Not sure if this will affect
+> other ARCH or XEN. Especially for patch 1/3 and patch 2/3, just a original
+> idea. I tested on x86_64, passed.
 > 
-> Related commits on linux-next:
->  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
->  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
+> And also kernel patch need be adjusted so that number_table.X of makedumpfile
+> can be used. Will add comment to Thomas's kernel patch.
 > 
-> Signed-off-by: Thomas Garnier <thgarnie@google.com>
-> ---
->  kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
->  1 file changed, 22 insertions(+), 7 deletions(-)
+> Baoquan He (3):
+>   makedumpfile: Get info->kernel_version from SYMBOL(init_uts_ns)
+>     earlier
+>   makedumpfile: Move get_versiondep_info calling earlier
+>   makedumpfile: Add support for MM randomization
 > 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index bbc0f35..ab833d4 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
->  	return -1;
->  }
->  
-> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
-> -static unsigned long long get_kernel_stext_sym(void)
-> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-> +static unsigned long long get_kernel_sym(const char *symbol)
+>  arch/x86_64.c  | 26 +++++++++-----------------
+>  makedumpfile.c | 45 ++++++++++++++++++++++++++++++++++++---------
+>  makedumpfile.h |  3 +++
+>  3 files changed, 48 insertions(+), 26 deletions(-)
+> 
 
-It sounds better to split this to another patch.
+With these patch applied, I still get a makedumpfile failure below in Fedora:
+Kernel applied your patch to export the 3 symbols.
 
->  {
->  	const char *kallsyms = "/proc/kallsyms";
-> -	const char *stext = "_stext";
->  	char sym[128];
->  	char line[128];
->  	FILE *fp;
-> @@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
->  	while(fgets(line, sizeof(line), fp) != NULL) {
->  		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
->  			continue;
-> -		if (strcmp(sym, stext) == 0) {
-> -			dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
-> +		if (strcmp(sym, symbol) == 0) {
-> +			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
->  			return vaddr;
->  		}
->  	}
->  
-> -	fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
-> +	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
->  	return 0;
->  }
->  
-> @@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  	off_t size;
->  	uint32_t elf_flags = 0;
->  	uint64_t stext_sym;
-> +	const unsigned long long pud_mask = ~((1 << 30) - 1);
-> +	unsigned long long vaddr, lowest_vaddr = 0;
->  
->  	if (elf_info->machine != EM_X86_64)
->  		return 0;
-> @@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  
->  	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
->  
-> +	/* Search for the real PAGE_OFFSET when KASLR memory randomization
-> +	 * is enabled */
-> +	if (get_kernel_sym("page_offset_base") != 0) {
-> +		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-> +			if (phdr->p_type == PT_LOAD) {
-> +				vaddr = phdr->p_vaddr & pud_mask;
-> +				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-> +					lowest_vaddr = vaddr;
-> +			}
-> +		}
-> +		if (lowest_vaddr != 0)
-> +			elf_info->page_offset = lowest_vaddr;
-> +	}
-> +
->  	/* Traverse through the Elf headers and find the region where
->  	 * _stext symbol is located in. That's where kernel is mapped */
-> -	stext_sym = get_kernel_stext_sym();
-> +	stext_sym = get_kernel_sym("_stext");
->  	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
->  		if (phdr->p_type == PT_LOAD) {
->  			unsigned long long saddr = phdr->p_vaddr;
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+kdump: saving vmcore-dmesg.txt complete                                        
+kdump: saving vmcore                                                           
+kdump: saving vmcore failed                                                    
+[FAILED] Failed to start Kdump Vmcore Save Service. 
 
 Thanks
 Dave
