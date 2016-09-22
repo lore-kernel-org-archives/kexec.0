@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22b.google.com ([2a00:1450:400c:c09::22b])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bn456-0001tm-6U
- for kexec@lists.infradead.org; Thu, 22 Sep 2016 13:30:29 +0000
-Received: by mail-wm0-x22b.google.com with SMTP id l132so328199667wmf.0
- for <kexec@lists.infradead.org>; Thu, 22 Sep 2016 06:30:06 -0700 (PDT)
-Received: from [192.168.1.2] (191.181.12.109.rev.sfr.net. [109.12.181.191])
- by smtp.gmail.com with ESMTPSA id bw9sm2124700wjc.33.2016.09.22.06.30.03
- for <kexec@lists.infradead.org>
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Thu, 22 Sep 2016 06:30:03 -0700 (PDT)
-From: Louis Bouchard <louis.bouchard@canonical.com>
-Subject: makedumpfile issues many readpage_elf: Attempt to read non-existent
- page
-Message-ID: <57E3DCDB.5020308@canonical.com>
-Date: Thu, 22 Sep 2016 15:30:03 +0200
+Subject: Re: [PATCH v26 3/7] arm64: kdump: add kdump support
+References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+ <20160907042908.6232-4-takahiro.akashi@linaro.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <c7a17afe-a5b4-4cd6-0199-49df68430887@gmail.com>
+Date: Thu, 22 Sep 2016 17:50:57 +0200
 MIME-Version: 1.0
+In-Reply-To: <20160907042908.6232-4-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +15,208 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Hello,
 
-I am investigating an issue with makedumpfile and kernel 4.8 where makedumpfile
-(1.6.0) exits on error with the following message :
 
-  get_mem_map: Can't distinguish the memory type.
+On 09/07/2016 06:29 AM, AKASHI Takahiro wrote:
+> On crash dump kernel, all the information about primary kernel's system
+> memory (core image) is available in elf core header.
+> The primary kernel will set aside this header with reserve_elfcorehdr()
+> at boot time and inform crash dump kernel of its location via a new
+> device-tree property, "linux,elfcorehdr".
+>
+> Please note that all other architectures use traditional "elfcorehdr="
+> kernel parameter for this purpose.
+>
+> Then crash dump kernel will access the primary kernel's memory with
+> copy_oldmem_page(), which reads one page by ioremap'ing it since it does
+> not reside in linear mapping on crash dump kernel.
+>
+> We also need our own elfcorehdr_read() here since the header is placed
+> within crash dump kernel's usable memory.
+>
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  arch/arm64/Kconfig             | 11 +++++++
+>  arch/arm64/kernel/Makefile     |  1 +
+>  arch/arm64/kernel/crash_dump.c | 71 ++++++++++++++++++++++++++++++++++++++++++
+>  arch/arm64/mm/init.c           | 54 ++++++++++++++++++++++++++++++++
+>  4 files changed, 137 insertions(+)
+>  create mode 100644 arch/arm64/kernel/crash_dump.c
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index bc3f00f..9c15c66 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -683,6 +683,17 @@ config KEXEC
+>  	  but it is independent of the system firmware.   And like a reboot
+>  	  you can start any kernel with it, not just Linux.
+>
+> +config CRASH_DUMP
+> +	bool "Build kdump crash kernel"
+> +	help
+> +	  Generate crash dump after being started by kexec. This should
+> +	  be normally only set in special crash dump kernels which are
+> +	  loaded in the main kernel with kexec-tools into a specially
+> +	  reserved region and then later executed after a crash by
+> +	  kdump/kexec.
+> +
+> +	  For more details see Documentation/kdump/kdump.txt
+> +
+>  config XEN_DOM0
+>  	def_bool y
+>  	depends on XEN
+> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+> index 14f7b65..f1cbfc8 100644
+> --- a/arch/arm64/kernel/Makefile
+> +++ b/arch/arm64/kernel/Makefile
+> @@ -48,6 +48,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
+>  arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
+>  arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
+>  					   cpu-reset.o
+> +arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
+>
+>  obj-y					+= $(arm64-obj-y) vdso/ probes/
+>  obj-m					+= $(arm64-obj-m)
+> diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
+> new file mode 100644
+> index 0000000..bc5b932
+> --- /dev/null
+> +++ b/arch/arm64/kernel/crash_dump.c
+> @@ -0,0 +1,71 @@
+> +/*
+> + * Routines for doing kexec-based kdump
+> + *
+> + * Copyright (C) 2014 Linaro Limited
+> + * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/crash_dump.h>
+> +#include <linux/errno.h>
+> +#include <linux/io.h>
+> +#include <linux/memblock.h>
+> +#include <linux/uaccess.h>
+> +#include <asm/memory.h>
+> +
+> +/**
+> + * copy_oldmem_page() - copy one page from old kernel memory
+> + * @pfn: page frame number to be copied
+> + * @buf: buffer where the copied page is placed
+> + * @csize: number of bytes to copy
+> + * @offset: offset in bytes into the page
+> + * @userbuf: if set, @buf is in a user address space
+> + *
+> + * This function copies one page from old kernel memory into buffer pointed by
+> + * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
+> + * copied or negative error in case of failure.
+> + */
+> +ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+> +			 size_t csize, unsigned long offset,
+> +			 int userbuf)
+> +{
+> +	void *vaddr;
+> +
+> +	if (!csize)
+> +		return 0;
+> +
+> +	vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
+> +	if (!vaddr)
+> +		return -ENOMEM;
+> +
+> +	if (userbuf) {
+> +		if (copy_to_user(buf, vaddr + offset, csize)) {
+> +			memunmap(vaddr);
+> +			return -EFAULT;
+> +		}
+> +	} else {
+> +		memcpy(buf, vaddr + offset, csize);
+> +	}
+> +
+> +	memunmap(vaddr);
+> +
+> +	return csize;
+> +}
+> +
+> +/**
+> + * elfcorehdr_read - read from ELF core header
+> + * @buf: buffer where the data is placed
+> + * @csize: number of bytes to read
+> + * @ppos: address in the memory
+> + *
+> + * This function reads @count bytes from elf core header which exists
+> + * on crash dump kernel's memory.
+> + */
+> +ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+> +{
+> +	memcpy(buf, phys_to_virt((phys_addr_t)*ppos), count);
+> +	return count;
+> +}
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index dd273ec..e4d9c38 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -36,6 +36,7 @@
+>  #include <linux/efi.h>
+>  #include <linux/swiotlb.h>
+>  #include <linux/kexec.h>
+> +#include <linux/crash_dump.h>
+>
+>  #include <asm/boot.h>
+>  #include <asm/fixmap.h>
+> @@ -186,6 +187,57 @@ static void __init reserve_crashkernel(void)
+>  }
+>  #endif /* CONFIG_KEXEC_CORE */
+>
+> +#ifdef CONFIG_CRASH_DUMP
+> +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+> +		const char *uname, int depth, void *data)
+> +{
+> +	const __be32 *reg;
+> +	int len;
+> +
+> +	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> +		return 0;
+> +
+> +	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
+> +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> +		return 1;
+> +
+> +	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +	return 1;
+> +}
+> +
+> +/*
+> + * reserve_elfcorehdr() - reserves memory for elf core header
+> + *
+> + * This function reserves elf core header given in "elfcorehdr=" kernel
+> + * command line parameter. This region contains all the information about
+> + * primary kernel's core image and is used by a dump capture kernel to
+> + * access the system memory on primary kernel.
+> + */
+> +static void __init reserve_elfcorehdr(void)
+> +{
+> +	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
+> +
 
-I found commit 2c21d4656e8d3c2af2b1e14809d076941ae69e96 in the upstream
-development branch that is supposed to fix this :
+Do I get that right that we can pass crashkernel address/size through 
+the kernel boot parameter, but elfcorehdr can only be provided via 
+device tree?
+Why? If there is a reason for doing so, we should fix the documentation.
 
-[PATCH v2] Support _count -> _refcount rename in struct page
-
-    _count member was renamed to _refcount in linux commit 0139aa7b7fa12
-    ("mm: rename _count, field of the struct page, to _refcount") and this
-    broke makedumpfile. The reason for making the change was to find all users
-    accessing it directly and not through the recommended API. I tried
-    suggesting to revert the change but failed, I see no other choice than to
-    start supporting both _count and _refcount in makedumpfile.
-
-Though, when I apply the patch and test on either Ubuntu's 4.8.0-11 kernel, or
-kernel.org's mainline 4.8.0-040800rc7 kernel, I get the following repeated
-multiple times :
-
-> makedumpfile -c -d 31 /proc/vmcore /var/crash/201609221517/dump-incomplete
-> [    7.513337] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
-> [    7.524186] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78000, size:16
-> [    7.528440] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78000).
-> [    7.536562] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
-> [    7.544356] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78010, size:16
-> [    7.552422] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78010).
-> [    7.560317] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
-> [    7.568422] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78020, size:16
-> [    7.572296] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78020).
-
-I also tested with all the commits in the upstream/development branch with no
-luck, I still get the same behavior.
-
-Does someone have an idea of where this could come from ?
-
-TIA,
-
-Louis
--- 
-Louis Bouchard
-Software engineer, Cloud & Sustaining eng.
-Canonical Ltd
-Ubuntu developer                       Debian Maintainer
-GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
+Regards,
+Matthias
 
 _______________________________________________
 kexec mailing list
