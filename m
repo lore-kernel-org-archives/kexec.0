@@ -1,19 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb0-f174.google.com ([209.85.213.174])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bnN8R-0003m7-Vx
- for kexec@lists.infradead.org; Fri, 23 Sep 2016 09:51:14 +0000
-Received: by mail-yb0-f174.google.com with SMTP id d69so64337015ybf.2
- for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 02:50:51 -0700 (PDT)
-Date: Fri, 23 Sep 2016 15:20:46 +0530
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH] kexec/fs2dt: Check for NULL pointer in
- dt_copy_old_root_param()
-Message-ID: <20160923095046.GB22928@localhost.localdomain>
-References: <1474615059-9510-1-git-send-email-maddy@linux.vnet.ibm.com>
+ id 1bnPZ0-0002kB-2S
+ for kexec@lists.infradead.org; Fri, 23 Sep 2016 12:26:47 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u8NCQMn2029356
+ for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 21:26:22 +0900 (JST)
+Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
+ mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
+ id u8NCQLg14953 for <kexec@lists.infradead.org>;
+ Fri, 23 Sep 2016 21:26:21 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id u8NCQLAX029154
+ for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 21:26:21 +0900 (JST)
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: makedumpfile issues many readpage_elf: Attempt to read
+ non-existent page
+Date: Fri, 23 Sep 2016 12:04:42 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E6B42E@BPXM01GP.gisp.nec.co.jp>
+References: <57E3DCDB.5020308@canonical.com>
+In-Reply-To: <57E3DCDB.5020308@canonical.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1474615059-9510-1-git-send-email-maddy@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,48 +34,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 23/09/2016:12:47:39 PM, Madhavan Srinivasan wrote:
-> In dt_copy_old_root_param(), FILE * returned
-> from fopen is not checked for NULL pointer
-> before passinig to fclose(). This could trigger
-> a segfault. Patch adds a check.
-> 
-> Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-> ---
->  kexec/fs2dt.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-> index 6ed2399759cf..2c1ebdf525f4 100644
-> --- a/kexec/fs2dt.c
-> +++ b/kexec/fs2dt.c
-> @@ -540,7 +540,8 @@ static void dt_copy_old_root_param(void)
->  	if (last_cmdline)
->  		free(last_cmdline);
->  
-> -	fclose(fp);
-> +	if (fp)
-> +		fclose(fp);
+>Hello,
+>
+>I am investigating an issue with makedumpfile and kernel 4.8 where makedumpfile
+>(1.6.0) exits on error with the following message :
+>
+>  get_mem_map: Can't distinguish the memory type.
+>
+>I found commit 2c21d4656e8d3c2af2b1e14809d076941ae69e96 in the upstream
+>development branch that is supposed to fix this :
+>
+>[PATCH v2] Support _count -> _refcount rename in struct page
+>
+>    _count member was renamed to _refcount in linux commit 0139aa7b7fa12
+>    ("mm: rename _count, field of the struct page, to _refcount") and this
+>    broke makedumpfile. The reason for making the change was to find all users
+>    accessing it directly and not through the recommended API. I tried
+>    suggesting to revert the change but failed, I see no other choice than to
+>    start supporting both _count and _refcount in makedumpfile.
+>
+>Though, when I apply the patch and test on either Ubuntu's 4.8.0-11 kernel, or
+>kernel.org's mainline 4.8.0-040800rc7 kernel, I get the following repeated
+>multiple times :
+>
+>> makedumpfile -c -d 31 /proc/vmcore /var/crash/201609221517/dump-incomplete
+>> [    7.513337] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
+>> [    7.524186] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78000, size:16
+>> [    7.528440] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78000).
+>> [    7.536562] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
+>> [    7.544356] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78010, size:16
+>> [    7.552422] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78010).
+>> [    7.560317] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
+>> [    7.568422] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78020, size:16
+>> [    7.572296] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78020).
+>
+>I also tested with all the commits in the upstream/development branch with no
+>luck, I still get the same behavior.
+>
+>Does someone have an idea of where this could come from ?
 
-Looks fine, however a better practise could be to return just after fopen() if
-fp was null.
+Thanks for your report, but I'm afraid that I'm going on
+vacation till Oct 2.
+I hope someone helps you until I'm back.
 
-~Pratyush
 
->  }
->  
->  /*
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Regards,
+Atsushi Kumagai
+
+>TIA,
+>
+>Louis
+>--
+>Louis Bouchard
+>Software engineer, Cloud & Sustaining eng.
+>Canonical Ltd
+>Ubuntu developer                       Debian Maintainer
+>GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
