@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f177.google.com ([209.85.161.177])
+Received: from mail-yb0-f174.google.com ([209.85.213.174])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bnMK1-000254-Gd
- for kexec@lists.infradead.org; Fri, 23 Sep 2016 08:59:10 +0000
-Received: by mail-yw0-f177.google.com with SMTP id g192so110385497ywh.1
- for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 01:58:44 -0700 (PDT)
-Date: Fri, 23 Sep 2016 14:28:40 +0530
+ id 1bnN8R-0003m7-Vx
+ for kexec@lists.infradead.org; Fri, 23 Sep 2016 09:51:14 +0000
+Received: by mail-yb0-f174.google.com with SMTP id d69so64337015ybf.2
+ for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 02:50:51 -0700 (PDT)
+Date: Fri, 23 Sep 2016 15:20:46 +0530
 From: Pratyush Anand <panand@redhat.com>
-Subject: Re: [PATCH v6 0/3] arm64 kexec-tools patches
-Message-ID: <20160923085840.GA22928@localhost.localdomain>
-References: <cover.1474481332.git.geoff@infradead.org>
+Subject: Re: [PATCH] kexec/fs2dt: Check for NULL pointer in
+ dt_copy_old_root_param()
+Message-ID: <20160923095046.GB22928@localhost.localdomain>
+References: <1474615059-9510-1-git-send-email-maddy@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1474481332.git.geoff@infradead.org>
+In-Reply-To: <1474615059-9510-1-git-send-email-maddy@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,125 +26,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-Hi Geoff,
+On 23/09/2016:12:47:39 PM, Madhavan Srinivasan wrote:
+> In dt_copy_old_root_param(), FILE * returned
+> from fopen is not checked for NULL pointer
+> before passinig to fclose(). This could trigger
+> a segfault. Patch adds a check.
+> 
+> Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> ---
+>  kexec/fs2dt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+> index 6ed2399759cf..2c1ebdf525f4 100644
+> --- a/kexec/fs2dt.c
+> +++ b/kexec/fs2dt.c
+> @@ -540,7 +540,8 @@ static void dt_copy_old_root_param(void)
+>  	if (last_cmdline)
+>  		free(last_cmdline);
+>  
+> -	fclose(fp);
+> +	if (fp)
+> +		fclose(fp);
 
-On 21/09/2016:06:14:25 PM, Geoff Levand wrote:
-> This series adds the core support for kexec re-boot on ARM64.
-
-I tested this series with mustang and seattle and they work.
-
-So you can use my "Tested-By: Pratyush Anand <panand@redhat.com>".
-
-Just one Nitpick: In patch 2/3 arm64_header_check_msb(),
-arm64_header_page_size() and arm64_header_placement() have been defined but they
-have not been used anywhere. So, may be they can be removed.
+Looks fine, however a better practise could be to return just after fopen() if
+fp was null.
 
 ~Pratyush
 
-> 
-> Linux kernel support for ARM64 kexec reboot has been merged in v4.8-rc1 with the
-> expectation that it will be included in the v4.8 stable kernel release.
-> 
-> For ARM64 kdump support see Takahiro's latest kdump patches [1].
-> 
-> [1] http://lists.infradead.org/pipermail/kexec
-> 
-> Changes for v6 (Sep , 2016, 2m):
-> 
->   o Remove the get_memory_ranges_dt() routine.
->   o Rename dtb_[12] to dtb_{proc,sys,user}.
-> 
-> Changes for v5 (Sep 1, 2016, 2m):
-> 
->   o Add common routine arm64_locate_kernel_segment().
-> 
-> Changes for v4 (Aug 18, 2016, 1m):
-> 
->   o Fix some error return values and error messages.
->   o Add enum arm64_header_page_size.
->   o Rename page_offset to vp_offset.
-> 
-> Changes for v3 (Aug 10, 2016, 1m):
-> 
->   o Rebase to 2.0.13.
->   o Add support for flag bits 1-3 to arm64 image-header.h.
->   o Fix OPT_ARCH_MAX value.
->   o Use fdt_pack() in dtb_set_property().
->   o Remove patch ("kexec: (bugfix) calc correct end address of memory ranges in device tree").
-> 
-> Changes for v2 (July 26, 2016, 0m):
-> 
->   o Inline some small routines.
->   o Reformat some dbgprintf messages.
->   o Remove debug_brk from entry.S
->   o Change arm64_image_header.flags to uint64_t.
->   o Look in iomem then dt for mem info.
->   o Remove check_cpu_nodes.
->   o Remove purgatory printing.
-> 
-> First submission v1 (July 20, 2016).
-> 
-> -Geoff
-> 
-> The following changes since commit 67488beb0a6ee8ad2c0b05f721a9e00041fab93a:
-> 
->   kexec-tools 2.0.13 (2016-08-08 12:26:44 +0200)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/geoff/kexec-tools.git for-merge-arm64-v6
-> 
-> for you to fetch changes up to a9f1fafd7c248d33768177438742b90bc4338202:
-> 
->   arm64: Add support for binary image files (2016-09-21 11:04:03 -0700)
-> 
-> ----------------------------------------------------------------
-> Geoff Levand (2):
->       kexec: Add common device tree routines
->       arm64: Add arm64 kexec support
-> 
-> Pratyush Anand (1):
->       arm64: Add support for binary image files
-> 
->  configure.ac                            |   3 +
->  kexec/Makefile                          |   5 +
->  kexec/arch/arm64/Makefile               |  40 +++
->  kexec/arch/arm64/crashdump-arm64.c      |  21 ++
->  kexec/arch/arm64/crashdump-arm64.h      |  12 +
->  kexec/arch/arm64/image-header.h         | 146 ++++++++
->  kexec/arch/arm64/include/arch/options.h |  39 ++
->  kexec/arch/arm64/kexec-arm64.c          | 615 ++++++++++++++++++++++++++++++++
->  kexec/arch/arm64/kexec-arm64.h          |  71 ++++
->  kexec/arch/arm64/kexec-elf-arm64.c      | 146 ++++++++
->  kexec/arch/arm64/kexec-image-arm64.c    |  80 +++++
->  kexec/dt-ops.c                          | 145 ++++++++
->  kexec/dt-ops.h                          |  13 +
->  kexec/kexec-syscall.h                   |   8 +-
->  purgatory/Makefile                      |   1 +
->  purgatory/arch/arm64/Makefile           |  18 +
->  purgatory/arch/arm64/entry.S            |  51 +++
->  purgatory/arch/arm64/purgatory-arm64.c  |  19 +
->  18 files changed, 1431 insertions(+), 2 deletions(-)
->  create mode 100644 kexec/arch/arm64/Makefile
->  create mode 100644 kexec/arch/arm64/crashdump-arm64.c
->  create mode 100644 kexec/arch/arm64/crashdump-arm64.h
->  create mode 100644 kexec/arch/arm64/image-header.h
->  create mode 100644 kexec/arch/arm64/include/arch/options.h
->  create mode 100644 kexec/arch/arm64/kexec-arm64.c
->  create mode 100644 kexec/arch/arm64/kexec-arm64.h
->  create mode 100644 kexec/arch/arm64/kexec-elf-arm64.c
->  create mode 100644 kexec/arch/arm64/kexec-image-arm64.c
->  create mode 100644 kexec/dt-ops.c
->  create mode 100644 kexec/dt-ops.h
->  create mode 100644 purgatory/arch/arm64/Makefile
->  create mode 100644 purgatory/arch/arm64/entry.S
->  create mode 100644 purgatory/arch/arm64/purgatory-arm64.c
-> 
+>  }
+>  
+>  /*
 > -- 
 > 2.7.4
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
