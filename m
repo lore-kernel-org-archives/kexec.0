@@ -1,27 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mail-yw0-x229.google.com ([2607:f8b0:4002:c05::229])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bnPZ0-0002kB-2S
- for kexec@lists.infradead.org; Fri, 23 Sep 2016 12:26:47 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id u8NCQMn2029356
- for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 21:26:22 +0900 (JST)
-Received: from mailsv.nec.co.jp (imss61.nec.co.jp [10.7.69.156]) by
- mailgate3.nec.co.jp (8.11.7/3.7W-MAILGATE-NEC) with ESMTP
- id u8NCQLg14953 for <kexec@lists.infradead.org>;
- Fri, 23 Sep 2016 21:26:21 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id u8NCQLAX029154
- for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 21:26:21 +0900 (JST)
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: makedumpfile issues many readpage_elf: Attempt to read
- non-existent page
-Date: Fri, 23 Sep 2016 12:04:42 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E6B42E@BPXM01GP.gisp.nec.co.jp>
-References: <57E3DCDB.5020308@canonical.com>
-In-Reply-To: <57E3DCDB.5020308@canonical.com>
-Content-Language: ja-JP
+ id 1bnTQT-0005lX-It
+ for kexec@lists.infradead.org; Fri, 23 Sep 2016 16:34:14 +0000
+Received: by mail-yw0-x229.google.com with SMTP id i129so118661335ywb.0
+ for <kexec@lists.infradead.org>; Fri, 23 Sep 2016 09:33:52 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <20160922084111.GA18585@dhcp-128-65.nay.redhat.com>
+References: <1471452462-42560-1-git-send-email-thgarnie@google.com>
+ <20160922084111.GA18585@dhcp-128-65.nay.redhat.com>
+From: Thomas Garnier <thgarnie@google.com>
+Date: Fri, 23 Sep 2016 09:33:51 -0700
+Message-ID: <CAJcbSZFXDXt1uhG-e8BdNyKXaSnsFeB4gsoMsx8_HxcNgjFaMw@mail.gmail.com>
+Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
+ randomization
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,69 +26,138 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Kees Cook <keescook@chromium.org>, Kernel Hardening <kernel-hardening@lists.openwall.com>
 
->Hello,
+On Thu, Sep 22, 2016 at 1:41 AM, Dave Young <dyoung@redhat.com> wrote:
+> Hi, Thomas
 >
->I am investigating an issue with makedumpfile and kernel 4.8 where makedumpfile
->(1.6.0) exits on error with the following message :
+> On 08/17/16 at 09:47am, Thomas Garnier wrote:
+>> Multiple changes were made on KASLR (right now in linux-next). One of
+>> them is randomizing the virtual address of the physical mapping, vmalloc
+>> and vmemmap memory sections. It breaks kdump ability to read physical
+>> memory.
 >
->  get_mem_map: Can't distinguish the memory type.
+> What is the user visible behavior without this patch? Could you add more
+> in the patch log?
 >
->I found commit 2c21d4656e8d3c2af2b1e14809d076941ae69e96 in the upstream
->development branch that is supposed to fix this :
->
->[PATCH v2] Support _count -> _refcount rename in struct page
->
->    _count member was renamed to _refcount in linux commit 0139aa7b7fa12
->    ("mm: rename _count, field of the struct page, to _refcount") and this
->    broke makedumpfile. The reason for making the change was to find all users
->    accessing it directly and not through the recommended API. I tried
->    suggesting to revert the change but failed, I see no other choice than to
->    start supporting both _count and _refcount in makedumpfile.
->
->Though, when I apply the patch and test on either Ubuntu's 4.8.0-11 kernel, or
->kernel.org's mainline 4.8.0-040800rc7 kernel, I get the following repeated
->multiple times :
->
->> makedumpfile -c -d 31 /proc/vmcore /var/crash/201609221517/dump-incomplete
->> [    7.513337] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
->> [    7.524186] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78000, size:16
->> [    7.528440] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78000).
->> [    7.536562] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
->> [    7.544356] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78010, size:16
->> [    7.552422] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78010).
->> [    7.560317] kdump-tools[715]: readpage_elf: Attempt to read non-existent page at 0x134dfff78000.
->> [    7.568422] kdump-tools[715]: readmem: type_addr: 0, addr:ffff9b4dfff78020, size:16
->> [    7.572296] kdump-tools[715]: section_mem_map_addr: Can't get a struct mem_section(ffff9b4dfff78020).
->
->I also tested with all the commits in the upstream/development branch with no
->luck, I still get the same behavior.
->
->Does someone have an idea of where this could come from ?
+> During my testing seems with or without this patch kdump kernel boot
+> both fine.
 
-Thanks for your report, but I'm afraid that I'm going on
-vacation till Oct 2.
-I hope someone helps you until I'm back.
+Without this patch, you can't access memory on the generated crash dumps.
 
-
-Regards,
-Atsushi Kumagai
-
->TIA,
 >
->Louis
->--
->Louis Bouchard
->Software engineer, Cloud & Sustaining eng.
->Canonical Ltd
->Ubuntu developer                       Debian Maintainer
->GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
+> My kernel config options is like below, is it enough to test this patch?
+> CONFIG_RANDOMIZE_BASE=y
+> CONFIG_X86_NEED_RELOCS=y
+> CONFIG_PHYSICAL_ALIGN=0x1000000
+> CONFIG_RANDOMIZE_MEMORY=y
+> CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING=0x0
 >
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+
+Should be good enough.
+
+>>
+>> This change identifies if KASLR memories randomization is used by
+>> checking if the page_offset_base variable exists. It search for the
+>> correct PAGE_OFFSET value by looking at the loaded memory section and
+>> find the lowest aligned on PUD (the randomization level).
+>>
+>> Related commits on linux-next:
+>>  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
+>>  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
+>>
+>> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+>> ---
+>>  kexec/arch/i386/crashdump-x86.c | 29 ++++++++++++++++++++++-------
+>>  1 file changed, 22 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+>> index bbc0f35..ab833d4 100644
+>> --- a/kexec/arch/i386/crashdump-x86.c
+>> +++ b/kexec/arch/i386/crashdump-x86.c
+>> @@ -102,11 +102,10 @@ static int get_kernel_paddr(struct kexec_info *UNUSED(info),
+>>       return -1;
+>>  }
+>>
+>> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+>> -static unsigned long long get_kernel_stext_sym(void)
+>> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
+>> +static unsigned long long get_kernel_sym(const char *symbol)
+>
+> It sounds better to split this to another patch.
+>
+
+Why not, that's a very small change though.
+
+>>  {
+>>       const char *kallsyms = "/proc/kallsyms";
+>> -     const char *stext = "_stext";
+>>       char sym[128];
+>>       char line[128];
+>>       FILE *fp;
+>> @@ -122,13 +121,13 @@ static unsigned long long get_kernel_stext_sym(void)
+>>       while(fgets(line, sizeof(line), fp) != NULL) {
+>>               if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
+>>                       continue;
+>> -             if (strcmp(sym, stext) == 0) {
+>> -                     dbgprintf("kernel symbol %s vaddr = %16llx\n", stext, vaddr);
+>> +             if (strcmp(sym, symbol) == 0) {
+>> +                     dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
+>>                       return vaddr;
+>>               }
+>>       }
+>>
+>> -     fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
+>> +     fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
+>>       return 0;
+>>  }
+>>
+>> @@ -151,6 +150,8 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>>       off_t size;
+>>       uint32_t elf_flags = 0;
+>>       uint64_t stext_sym;
+>> +     const unsigned long long pud_mask = ~((1 << 30) - 1);
+>> +     unsigned long long vaddr, lowest_vaddr = 0;
+>>
+>>       if (elf_info->machine != EM_X86_64)
+>>               return 0;
+>> @@ -180,9 +181,23 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>>
+>>       end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+>>
+>> +     /* Search for the real PAGE_OFFSET when KASLR memory randomization
+>> +      * is enabled */
+>> +     if (get_kernel_sym("page_offset_base") != 0) {
+>> +             for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+>> +                     if (phdr->p_type == PT_LOAD) {
+>> +                             vaddr = phdr->p_vaddr & pud_mask;
+>> +                             if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
+>> +                                     lowest_vaddr = vaddr;
+>> +                     }
+>> +             }
+>> +             if (lowest_vaddr != 0)
+>> +                     elf_info->page_offset = lowest_vaddr;
+>> +     }
+>> +
+>>       /* Traverse through the Elf headers and find the region where
+>>        * _stext symbol is located in. That's where kernel is mapped */
+>> -     stext_sym = get_kernel_stext_sym();
+>> +     stext_sym = get_kernel_sym("_stext");
+>>       for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
+>>               if (phdr->p_type == PT_LOAD) {
+>>                       unsigned long long saddr = phdr->p_vaddr;
+>> --
+>> 2.8.0.rc3.226.g39d4020
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
