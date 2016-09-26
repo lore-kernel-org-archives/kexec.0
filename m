@@ -1,40 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1boZko-0003Vm-CZ
- for kexec@lists.infradead.org; Mon, 26 Sep 2016 17:31:53 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8QHSlA3079961
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:31:25 -0400
-Received: from e28smtp06.in.ibm.com (e28smtp06.in.ibm.com [125.16.236.6])
- by mx0b-001b2d01.pphosted.com with ESMTP id 25q5mqq7jf-1
+ id 1boZks-0003XJ-Pq
+ for kexec@lists.infradead.org; Mon, 26 Sep 2016 17:31:55 +0000
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u8QHSuHw059415
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:31:32 -0400
+Received: from e28smtp02.in.ibm.com (e28smtp02.in.ibm.com [125.16.236.2])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 25q53w90yd-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:31:25 -0400
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:31:32 -0400
 Received: from localhost
- by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp02.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Mon, 26 Sep 2016 23:01:21 +0530
-Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id 473F0125804F
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:38 +0530 (IST)
+ Mon, 26 Sep 2016 23:01:29 +0530
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+ by d28dlp03.in.ibm.com (Postfix) with ESMTP id 03F87125805B
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:47 +0530 (IST)
 Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
- by d28relay02.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8QHVHuD37224496
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:17 +0530
+ by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8QHVQ9j38404302
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:26 +0530
 Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
  by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8QHVEu2009634
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:15 +0530
+ u8QHVPuT009696
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:26 +0530
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v5 06/10] ima: on soft reboot, save the measurement list
-Date: Mon, 26 Sep 2016 13:30:25 -0400
+Subject: [PATCH v5 09/10] ima: define a canonical binary_runtime_measurements
+ list format
+Date: Mon, 26 Sep 2016 13:30:28 -0400
 In-Reply-To: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Message-Id: <1474911029-6372-7-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1474911029-6372-10-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,162 +42,277 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
 Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-VGhlIFRQTSBQQ1JzIGFyZSBvbmx5IHJlc2V0IG9uIGEgaGFyZCByZWJvb3QuICBJbiBvcmRlciB0
-byB2YWxpZGF0ZSBhClRQTSdzIHF1b3RlIGFmdGVyIGEgc29mdCByZWJvb3QgKGVnLiBrZXhlYyAt
-ZSksIHRoZSBJTUEgbWVhc3VyZW1lbnQgbGlzdApvZiB0aGUgcnVubmluZyBrZXJuZWwgbXVzdCBi
-ZSBzYXZlZCBhbmQgcmVzdG9yZWQgb24gYm9vdC4KClRoaXMgcGF0Y2ggdXNlcyB0aGUga2V4ZWMg
-YnVmZmVyIHBhc3NpbmcgbWVjaGFuaXNtIHRvIHBhc3MgdGhlCnNlcmlhbGl6ZWQgSU1BIGJpbmFy
-eV9ydW50aW1lX21lYXN1cmVtZW50cyB0byB0aGUgbmV4dCBrZXJuZWwuCgpDaGFuZ2Vsb2cgdjU6
-Ci0gbW92ZSB3cml0aW5nIHRoZSBJTUEgbWVhc3VyZW1lbnQgbGlzdCB0byBrZXhlYyBsb2FkIGFu
-ZCByZW1vdmUKICBmcm9tIGtleGVjIGV4ZWN1dGUuCi0gcmVtb3ZlIHJlZ2lzdGVyaW5nIG5vdGlm
-aWVyIHRvIGNhbGwgdXBkYXRlIG9uIGtleGVjIGV4ZWN1dGUKLSBhZGQgaW5jbHVkZXMgbmVlZGVk
-IGJ5IGNvZGUgaW4gdGhpcyBwYXRjaCB0byBpbWFfa2V4ZWMuYyAoVGhpYWdvKQotIGZvbGQgcGF0
-Y2ggImltYTogc2VyaWFsaXplIHRoZSBiaW5hcnlfcnVudGltZV9tZWFzdXJlbWVudHMiCmludG8g
-dGhpcyBwYXRjaC4KCkNoYW5nZWxvZyB2NDoKLSBSZXZlcnQgdGhlIHNraXBfY2hlY2tzdW0gY2hh
-bmdlLsKgwqBJbnN0ZWFkIGNhbGN1bGF0ZSB0aGUgY2hlY2tzdW0Kd2l0aCB0aGUgbWVhc3VyZW1l
-bnQgbGlzdCBzZWdtZW50LCBvbiB1cGRhdGUgdmFsaWRhdGUgdGhlIGV4aXN0aW5nCmNoZWNrc3Vt
-IGJlZm9yZSByZS1jYWx1bGF0aW5nIGEgbmV3IGNoZWNrc3VtIHdpdGggdGhlIHVwZGF0ZWQKbWVh
-c3VyZW1lbnQgbGlzdC4KCkNoYW5nZWxvZyB2MzoKLSBSZXF1ZXN0IGEga2V4ZWMgc2VnbWVudCBm
-b3Igc3RvcmluZyB0aGUgbWVhc3VyZW1lbnQgbGlzdCBhIGhhbGYgcGFnZSwKbm90IGEgZnVsbCBw
-YWdlLCBtb3JlIHRoYW4gbmVlZGVkIGZvciBhZGRpdGlvbmFsIG1lYXN1cmVtZW50cy4KLSBBZGRl
-ZCBiaW5hcnlfcnVudGltZV9zaXplIG92ZXJmbG93IHRlc3QKLSBMaW1pdCBtYXhpbXVtIG51bWJl
-ciBvZiBwYWdlcyBuZWVkZWQgZm9yIGtleGVjX3NlZ21lbnRfc2l6ZSB0byBoYWxmCm9mIHRvdGFs
-cmFtX3BhZ2VzLiAoRGF2ZSBZb3VuZykKCkNoYW5nZWxvZyB2MjoKLSBGaXggYnVpbGQgaXNzdWUg
-YnkgZGVmaW5pbmcgYSBzdHViIGltYV9hZGRfa2V4ZWNfYnVmZmVyIGFuZCBzdHViCiAgc3RydWN0
-IGtpbWFnZSB3aGVuIENPTkZJR19JTUE9biBhbmQgQ09ORklHX0lNQV9LRVhFQz1uLiAoRmVuZ3Vh
-bmcgV3UpCi0gcmVtb3ZlZCBrZXhlY19hZGRfaGFuZG92ZXJfYnVmZmVyKCkgY2hlY2tzdW0gYXJn
-dW1lbnQuCi0gYWRkZWQgc2tpcF9jaGVja3N1bSBtZW1iZXIgdG8ga2V4ZWNfYnVmCi0gb25seSBy
-ZWdpc3RlciByZWJvb3Qgbm90aWZpZXIgb25jZQoKQ2hhbmdlbG9nIHYxOgotIHVwZGF0ZWQgdG8g
-Y2FsbCBJTUEgZnVuY3Rpb25zICAoTWltaSkKLSBtb3ZlIGNvZGUgZnJvbSBpbWFfdGVtcGxhdGUu
-YyB0byBpbWFfa2V4ZWMuYyAoTWltaSkKClNpZ25lZC1vZmYtYnk6IFRoaWFnbyBKdW5nIEJhdWVy
-bWFubiA8YmF1ZXJtYW5AbGludXgudm5ldC5pYm0uY29tPgpTaWduZWQtb2ZmLWJ5OiBNaW1pIFpv
-aGFyIDx6b2hhckBsaW51eC52bmV0LmlibS5jb20+Ci0tLQogaW5jbHVkZS9saW51eC9pbWEuaCAg
-ICAgICAgICAgICAgICB8ICAxMiArKysrCiBrZXJuZWwva2V4ZWNfZmlsZS5jICAgICAgICAgICAg
-ICAgIHwgICA0ICsrCiBzZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oICAgICAgIHwgICAxICsK
-IHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMgICAgfCAgIDIgKy0KIHNlY3VyaXR5L2lu
-dGVncml0eS9pbWEvaW1hX2tleGVjLmMgfCAxMTcgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKwogNSBmaWxlcyBjaGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
-bigtKQoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvaW1hLmggYi9pbmNsdWRlL2xpbnV4L2lt
-YS5oCmluZGV4IDBlYjdjMmUuLjdmNjk1MmYgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvbGludXgvaW1h
-LmgKKysrIGIvaW5jbHVkZS9saW51eC9pbWEuaApAQCAtMTEsNiArMTEsNyBAQAogI2RlZmluZSBf
-TElOVVhfSU1BX0gKIAogI2luY2x1ZGUgPGxpbnV4L2ZzLmg+CisjaW5jbHVkZSA8bGludXgva2V4
-ZWMuaD4KIHN0cnVjdCBsaW51eF9iaW5wcm07CiAKICNpZmRlZiBDT05GSUdfSU1BCkBAIC0yMyw2
-ICsyNCwxMCBAQCBleHRlcm4gaW50IGltYV9wb3N0X3JlYWRfZmlsZShzdHJ1Y3QgZmlsZSAqZmls
-ZSwgdm9pZCAqYnVmLCBsb2ZmX3Qgc2l6ZSwKIAkJCSAgICAgIGVudW0ga2VybmVsX3JlYWRfZmls
-ZV9pZCBpZCk7CiBleHRlcm4gdm9pZCBpbWFfcG9zdF9wYXRoX21rbm9kKHN0cnVjdCBkZW50cnkg
-KmRlbnRyeSk7CiAKKyNpZmRlZiBDT05GSUdfSU1BX0tFWEVDCitleHRlcm4gdm9pZCBpbWFfYWRk
-X2tleGVjX2J1ZmZlcihzdHJ1Y3Qga2ltYWdlICppbWFnZSk7CisjZW5kaWYKKwogI2Vsc2UKIHN0
-YXRpYyBpbmxpbmUgaW50IGltYV9icHJtX2NoZWNrKHN0cnVjdCBsaW51eF9iaW5wcm0gKmJwcm0p
-CiB7CkBAIC02Miw2ICs2NywxMyBAQCBzdGF0aWMgaW5saW5lIHZvaWQgaW1hX3Bvc3RfcGF0aF9t
-a25vZChzdHJ1Y3QgZGVudHJ5ICpkZW50cnkpCiAKICNlbmRpZiAvKiBDT05GSUdfSU1BICovCiAK
-KyNpZm5kZWYgQ09ORklHX0lNQV9LRVhFQworc3RydWN0IGtpbWFnZTsKKworc3RhdGljIGlubGlu
-ZSB2b2lkIGltYV9hZGRfa2V4ZWNfYnVmZmVyKHN0cnVjdCBraW1hZ2UgKmltYWdlKQore30KKyNl
-bmRpZgorCiAjaWZkZWYgQ09ORklHX0lNQV9BUFBSQUlTRQogZXh0ZXJuIHZvaWQgaW1hX2lub2Rl
-X3Bvc3Rfc2V0YXR0cihzdHJ1Y3QgZGVudHJ5ICpkZW50cnkpOwogZXh0ZXJuIGludCBpbWFfaW5v
-ZGVfc2V0eGF0dHIoc3RydWN0IGRlbnRyeSAqZGVudHJ5LCBjb25zdCBjaGFyICp4YXR0cl9uYW1l
-LApkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2ZpbGUuYyBiL2tlcm5lbC9rZXhlY19maWxlLmMK
-aW5kZXggMGMyZGY3Zi4uYjU2YTU1OCAxMDA2NDQKLS0tIGEva2VybmVsL2tleGVjX2ZpbGUuYwor
-KysgYi9rZXJuZWwva2V4ZWNfZmlsZS5jCkBAIC0xOSw2ICsxOSw3IEBACiAjaW5jbHVkZSA8bGlu
-dXgvbXV0ZXguaD4KICNpbmNsdWRlIDxsaW51eC9saXN0Lmg+CiAjaW5jbHVkZSA8bGludXgvZnMu
-aD4KKyNpbmNsdWRlIDxsaW51eC9pbWEuaD4KICNpbmNsdWRlIDxjcnlwdG8vaGFzaC5oPgogI2lu
-Y2x1ZGUgPGNyeXB0by9zaGEuaD4KICNpbmNsdWRlIDxsaW51eC9zeXNjYWxscy5oPgpAQCAtMTMy
-LDYgKzEzMyw5IEBAIGtpbWFnZV9maWxlX3ByZXBhcmVfc2VnbWVudHMoc3RydWN0IGtpbWFnZSAq
-aW1hZ2UsIGludCBrZXJuZWxfZmQsIGludCBpbml0cmRfZmQsCiAJCXJldHVybiByZXQ7CiAJaW1h
-Z2UtPmtlcm5lbF9idWZfbGVuID0gc2l6ZTsKIAorCS8qIElNQSBuZWVkcyB0byBwYXNzIHRoZSBt
-ZWFzdXJlbWVudCBsaXN0IHRvIHRoZSBuZXh0IGtlcm5lbC4gKi8KKwlpbWFfYWRkX2tleGVjX2J1
-ZmZlcihpbWFnZSk7CisKIAkvKiBDYWxsIGFyY2ggaW1hZ2UgcHJvYmUgaGFuZGxlcnMgKi8KIAly
-ZXQgPSBhcmNoX2tleGVjX2tlcm5lbF9pbWFnZV9wcm9iZShpbWFnZSwgaW1hZ2UtPmtlcm5lbF9i
-dWYsCiAJCQkJCSAgICBpbWFnZS0+a2VybmVsX2J1Zl9sZW4pOwpkaWZmIC0tZ2l0IGEvc2VjdXJp
-dHkvaW50ZWdyaXR5L2ltYS9pbWEuaCBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hLmgKaW5k
-ZXggZWExZGNjNC4uMTM5ZGVjNiAxMDA2NDQKLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9p
-bWEuaAorKysgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oCkBAIC0xNDMsNiArMTQzLDcg
-QEAgdm9pZCBpbWFfcHJpbnRfZGlnZXN0KHN0cnVjdCBzZXFfZmlsZSAqbSwgdTggKmRpZ2VzdCwg
-dTMyIHNpemUpOwogc3RydWN0IGltYV90ZW1wbGF0ZV9kZXNjICppbWFfdGVtcGxhdGVfZGVzY19j
-dXJyZW50KHZvaWQpOwogaW50IGltYV9yZXN0b3JlX21lYXN1cmVtZW50X2VudHJ5KHN0cnVjdCBp
-bWFfdGVtcGxhdGVfZW50cnkgKmVudHJ5KTsKIGludCBpbWFfcmVzdG9yZV9tZWFzdXJlbWVudF9s
-aXN0KGxvZmZfdCBidWZzaXplLCB2b2lkICpidWYpOworaW50IGltYV9tZWFzdXJlbWVudHNfc2hv
-dyhzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKnYpOwogdW5zaWduZWQgbG9uZyBpbWFfZ2V0X2Jp
-bmFyeV9ydW50aW1lX3NpemUodm9pZCk7CiBpbnQgaW1hX2luaXRfdGVtcGxhdGUodm9pZCk7CiAK
-ZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMgYi9zZWN1cml0eS9p
-bnRlZ3JpdHkvaW1hL2ltYV9mcy5jCmluZGV4IGMwN2EzODQuLjY2ZTVkZDUgMTAwNjQ0Ci0tLSBh
-L3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMKKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5
-L2ltYS9pbWFfZnMuYwpAQCAtMTE2LDcgKzExNiw3IEBAIHZvaWQgaW1hX3B1dGMoc3RydWN0IHNl
-cV9maWxlICptLCB2b2lkICpkYXRhLCBpbnQgZGF0YWxlbikKICAqICAgICAgIFtldmVudGRhdGEg
-bGVuZ3RoXQogICogICAgICAgZXZlbnRkYXRhW25dPXRlbXBsYXRlIHNwZWNpZmljIGRhdGEKICAq
-Lwotc3RhdGljIGludCBpbWFfbWVhc3VyZW1lbnRzX3Nob3coc3RydWN0IHNlcV9maWxlICptLCB2
-b2lkICp2KQoraW50IGltYV9tZWFzdXJlbWVudHNfc2hvdyhzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZv
-aWQgKnYpCiB7CiAJLyogdGhlIGxpc3QgbmV2ZXIgc2hyaW5rcywgc28gd2UgZG9uJ3QgbmVlZCBh
-IGxvY2sgaGVyZSAqLwogCXN0cnVjdCBpbWFfcXVldWVfZW50cnkgKnFlID0gdjsKZGlmZiAtLWdp
-dCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2tleGVjLmMgYi9zZWN1cml0eS9pbnRlZ3Jp
-dHkvaW1hL2ltYV9rZXhlYy5jCmluZGV4IDM2YWZkMGYuLjJjNDgyNGEgMTAwNjQ0Ci0tLSBhL3Nl
-Y3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2tleGVjLmMKKysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5
-L2ltYS9pbWFfa2V4ZWMuYwpAQCAtMTAsOCArMTAsMTI1IEBACiAgKiB0aGUgRnJlZSBTb2Z0d2Fy
-ZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBvcgogICogKGF0
-IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KICAqLworI2luY2x1ZGUgPGxpbnV4L3Nl
-cV9maWxlLmg+CisjaW5jbHVkZSA8bGludXgvdm1hbGxvYy5oPgorI2luY2x1ZGUgPGxpbnV4L2tl
-eGVjLmg+CiAjaW5jbHVkZSAiaW1hLmgiCiAKKyNpZmRlZiBDT05GSUdfSU1BX0tFWEVDCitzdGF0
-aWMgaW50IGltYV9kdW1wX21lYXN1cmVtZW50X2xpc3QodW5zaWduZWQgbG9uZyAqYnVmZmVyX3Np
-emUsIHZvaWQgKipidWZmZXIsCisJCQkJICAgICB1bnNpZ25lZCBsb25nIHNlZ21lbnRfc2l6ZSkK
-K3sKKwlzdHJ1Y3QgaW1hX3F1ZXVlX2VudHJ5ICpxZTsKKwlzdHJ1Y3Qgc2VxX2ZpbGUgZmlsZTsK
-KwlzdHJ1Y3QgaW1hX2tleGVjX2hkciBraGRyID0geworCQkudmVyc2lvbiA9IDEsIC5idWZmZXJf
-c2l6ZSA9IDAsIC5jb3VudCA9IDB9OworCWludCByZXQgPSAwOworCisJLyogc2VnbWVudCBzaXpl
-IGNhbid0IGNoYW5nZSBiZXR3ZWVuIGtleGVjIGxvYWQgYW5kIGV4ZWN1dGUgKi8KKwlmaWxlLmJ1
-ZiA9IHZtYWxsb2Moc2VnbWVudF9zaXplKTsKKwlpZiAoIWZpbGUuYnVmKSB7CisJCXJldCA9IC1F
-Tk9NRU07CisJCWdvdG8gb3V0OworCX0KKworCWZpbGUuc2l6ZSA9IHNlZ21lbnRfc2l6ZTsKKwlm
-aWxlLnJlYWRfcG9zID0gMDsKKwlmaWxlLmNvdW50ID0gc2l6ZW9mKGtoZHIpOwkvKiByZXNlcnZl
-ZCBzcGFjZSAqLworCisJbGlzdF9mb3JfZWFjaF9lbnRyeV9yY3UocWUsICZpbWFfbWVhc3VyZW1l
-bnRzLCBsYXRlcikgeworCQlpZiAoZmlsZS5jb3VudCA8IGZpbGUuc2l6ZSkgeworCQkJa2hkci5j
-b3VudCsrOworCQkJaW1hX21lYXN1cmVtZW50c19zaG93KCZmaWxlLCBxZSk7CisJCX0gZWxzZSB7
-CisJCQlyZXQgPSAtRUlOVkFMOworCQkJYnJlYWs7CisJCX0KKwl9CisKKwlpZiAocmV0IDwgMCkK
-KwkJZ290byBvdXQ7CisKKwkvKgorCSAqIGZpbGwgaW4gcmVzZXJ2ZWQgc3BhY2Ugd2l0aCBzb21l
-IGJ1ZmZlciBkZXRhaWxzCisJICogKGVnLiB2ZXJzaW9uLCBidWZmZXIgc2l6ZSwgbnVtYmVyIG9m
-IG1lYXN1cmVtZW50cykKKwkgKi8KKwlraGRyLmJ1ZmZlcl9zaXplID0gZmlsZS5jb3VudDsKKwlt
-ZW1jcHkoZmlsZS5idWYsICZraGRyLCBzaXplb2Yoa2hkcikpOworCXByaW50X2hleF9kdW1wKEtF
-Uk5fREVCVUcsICJpbWEgZHVtcDogIiwgRFVNUF9QUkVGSVhfTk9ORSwKKwkJCTE2LCAxLCBmaWxl
-LmJ1ZiwKKwkJCWZpbGUuY291bnQgPCAxMDAgPyBmaWxlLmNvdW50IDogMTAwLCB0cnVlKTsKKwor
-CSpidWZmZXJfc2l6ZSA9IGZpbGUuY291bnQ7CisJKmJ1ZmZlciA9IGZpbGUuYnVmOworb3V0Ogor
-CWlmIChyZXQgPT0gLUVJTlZBTCkKKwkJdmZyZWUoZmlsZS5idWYpOworCXJldHVybiByZXQ7Cit9
-CisKKy8qCisgKiBDYWxsZWQgZHVyaW5nIGtleGVjX2ZpbGVfbG9hZCBzbyB0aGF0IElNQSBjYW4g
-YWRkIGEgc2VnbWVudCB0byB0aGUga2V4ZWMKKyAqIGltYWdlIGZvciB0aGUgbWVhc3VyZW1lbnQg
-bGlzdCBmb3IgdGhlIG5leHQga2VybmVsLgorICoKKyAqIFRoaXMgZnVuY3Rpb24gYXNzdW1lcyB0
-aGF0IGtleGVjX211dGV4IGlzIGhlbGQuCisgKi8KK3ZvaWQgaW1hX2FkZF9rZXhlY19idWZmZXIo
-c3RydWN0IGtpbWFnZSAqaW1hZ2UpCit7CisJc3RydWN0IGtleGVjX2J1ZiBrYnVmID0geyAuaW1h
-Z2UgPSBpbWFnZSwgLmJ1Zl9hbGlnbiA9IFBBR0VfU0laRSwKKwkJCQkgIC5idWZfbWluID0gMCwg
-LmJ1Zl9tYXggPSBVTE9OR19NQVgsCisJCQkJICAudG9wX2Rvd24gPSB0cnVlIH07CisJdW5zaWdu
-ZWQgbG9uZyBiaW5hcnlfcnVudGltZV9zaXplOworCisJLyogdXNlIG1vcmUgdW5kZXJzdGFuZGFi
-bGUgdmFyaWFibGUgbmFtZXMgdGhhbiBkZWZpbmVkIGluIGtidWYgKi8KKwl2b2lkICprZXhlY19i
-dWZmZXIgPSBOVUxMOworCXNpemVfdCBrZXhlY19idWZmZXJfc2l6ZTsKKwlzaXplX3Qga2V4ZWNf
-c2VnbWVudF9zaXplOworCWludCByZXQ7CisKKwkvKgorCSAqIFJlc2VydmUgYW4gZXh0cmEgaGFs
-ZiBwYWdlIG9mIG1lbW9yeSBmb3IgYWRkaXRpb25hbCBtZWFzdXJlbWVudHMKKwkgKiBhZGRlZCBk
-dXJpbmcgdGhlIGtleGVjIGxvYWQuCisJICovCisJYmluYXJ5X3J1bnRpbWVfc2l6ZSA9IGltYV9n
-ZXRfYmluYXJ5X3J1bnRpbWVfc2l6ZSgpOworCWlmIChiaW5hcnlfcnVudGltZV9zaXplID49IFVM
-T05HX01BWCAtIFBBR0VfU0laRSkKKwkJa2V4ZWNfc2VnbWVudF9zaXplID0gVUxPTkdfTUFYOwor
-CWVsc2UKKwkJa2V4ZWNfc2VnbWVudF9zaXplID0gQUxJR04oaW1hX2dldF9iaW5hcnlfcnVudGlt
-ZV9zaXplKCkgKworCQkJCQkgICBQQUdFX1NJWkUgLyAyLCBQQUdFX1NJWkUpOworCWlmICgoa2V4
-ZWNfc2VnbWVudF9zaXplID09IFVMT05HX01BWCkgfHwKKwkgICAgKChrZXhlY19zZWdtZW50X3Np
-emUgPj4gUEFHRV9TSElGVCkgPiB0b3RhbHJhbV9wYWdlcyAvIDIpKSB7CisJCXByX2VycigiQmlu
-YXJ5IG1lYXN1cmVtZW50IGxpc3QgdG9vIGxhcmdlLlxuIik7CisJCXJldHVybjsKKwl9CisKKwlp
-bWFfZHVtcF9tZWFzdXJlbWVudF9saXN0KCZrZXhlY19idWZmZXJfc2l6ZSwgJmtleGVjX2J1ZmZl
-ciwKKwkJCQkgIGtleGVjX3NlZ21lbnRfc2l6ZSk7CisJaWYgKCFrZXhlY19idWZmZXIpIHsKKwkJ
-cHJfZXJyKCJOb3QgZW5vdWdoIG1lbW9yeSBmb3IgdGhlIGtleGVjIG1lYXN1cmVtZW50IGJ1ZmZl
-ci5cbiIpOworCQlyZXR1cm47CisJfQorCisJa2J1Zi5idWZmZXIgPSBrZXhlY19idWZmZXI7CisJ
-a2J1Zi5idWZzeiA9IGtleGVjX2J1ZmZlcl9zaXplOworCWtidWYubWVtc3ogPSBrZXhlY19zZWdt
-ZW50X3NpemU7CisJcmV0ID0ga2V4ZWNfYWRkX2J1ZmZlcigma2J1Zik7CisJaWYgKHJldCkgewor
-CQlwcl9lcnIoIkVycm9yIHBhc3Npbmcgb3ZlciBrZXhlYyBtZWFzdXJlbWVudCBidWZmZXIuXG4i
-KTsKKwkJcmV0dXJuOworCX0KKworCXJldCA9IGFyY2hfaW1hX2FkZF9rZXhlY19idWZmZXIoaW1h
-Z2UsIGtidWYubWVtLCBrZXhlY19zZWdtZW50X3NpemUpOworCWlmIChyZXQpIHsKKwkJcHJfZXJy
-KCJFcnJvciBwYXNzaW5nIG92ZXIga2V4ZWMgbWVhc3VyZW1lbnQgYnVmZmVyLlxuIik7CisJCXJl
-dHVybjsKKwl9CisKKwlwcl9kZWJ1Zygia2V4ZWMgbWVhc3VyZW1lbnQgYnVmZmVyIGZvciB0aGUg
-bG9hZGVkIGtlcm5lbCBhdCAweCVseC5cbiIsCisJCSBrYnVmLm1lbSk7Cit9CisjZW5kaWYgLyog
-SU1BX0tFWEVDICovCisKIC8qCiAgKiBSZXN0b3JlIHRoZSBtZWFzdXJlbWVudCBsaXN0IGZyb20g
-dGhlIHByZXZpb3VzIGtlcm5lbC4KICAqLwotLSAKMi4xLjAKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+The IMA binary_runtime_measurements list is currently in platform native
+format.
+
+To allow restoring a measurement list carried across kexec with a
+different endianness than the targeted kernel, this patch defines
+little-endian as the canonical format.  For big endian systems wanting
+to save/restore the measurement list from a system with a different
+endianness, a new boot command line parameter named "ima_canonical_fmt"
+is defined.
+
+Considerations: use of the "ima_canonical_fmt" boot command line
+option will break existing userspace applications on big endian systems
+expecting the binary_runtime_measurements list to be in platform native
+format.
+
+Changelog v3:
+- restore PCR value properly
+
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+---
+ Documentation/kernel-parameters.txt       |  4 ++++
+ security/integrity/ima/ima.h              |  6 ++++++
+ security/integrity/ima/ima_fs.c           | 28 +++++++++++++++++++++-------
+ security/integrity/ima/ima_kexec.c        | 11 +++++++++--
+ security/integrity/ima/ima_template.c     | 24 ++++++++++++++++++++++--
+ security/integrity/ima/ima_template_lib.c |  7 +++++--
+ 6 files changed, 67 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index a4f4d69..8be3ac8 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -1580,6 +1580,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 			The builtin appraise policy appraises all files
+ 			owned by uid=0.
+ 
++	ima_canonical_fmt [IMA]
++			Use the canonical format for the binary runtime
++			measurements, instead of host native format.
++
+ 	ima_hash=	[IMA]
+ 			Format: { md5 | sha1 | rmd160 | sha256 | sha384
+ 				   | sha512 | ... }
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 6b0540a..5e6180a 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -122,6 +122,12 @@ void ima_load_kexec_buffer(void);
+ static inline void ima_load_kexec_buffer(void) {}
+ #endif /* CONFIG_HAVE_IMA_KEXEC */
+ 
++/*
++ * The default binary_runtime_measurements list format is defined as the
++ * platform native format.  The canonical format is defined as little-endian.
++ */
++extern bool ima_canonical_fmt;
++
+ /* Internal IMA function definitions */
+ int ima_init(void);
+ int ima_fs_init(void);
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 66e5dd5..2bcad99 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -28,6 +28,16 @@
+ 
+ static DEFINE_MUTEX(ima_write_mutex);
+ 
++bool ima_canonical_fmt;
++static int __init default_canonical_fmt_setup(char *str)
++{
++#ifdef __BIG_ENDIAN
++	ima_canonical_fmt = 1;
++#endif
++	return 1;
++}
++__setup("ima_canonical_fmt", default_canonical_fmt_setup);
++
+ static int valid_policy = 1;
+ #define TMPBUFLEN 12
+ static ssize_t ima_show_htable_value(char __user *buf, size_t count,
+@@ -122,7 +132,7 @@ int ima_measurements_show(struct seq_file *m, void *v)
+ 	struct ima_queue_entry *qe = v;
+ 	struct ima_template_entry *e;
+ 	char *template_name;
+-	int namelen;
++	u32 pcr, namelen, template_data_len; /* temporary fields */
+ 	bool is_ima_template = false;
+ 	int i;
+ 
+@@ -139,25 +149,29 @@ int ima_measurements_show(struct seq_file *m, void *v)
+ 	 * PCR used defaults to the same (config option) in
+ 	 * little-endian format, unless set in policy
+ 	 */
+-	ima_putc(m, &e->pcr, sizeof(e->pcr));
++	pcr = !ima_canonical_fmt ? e->pcr : cpu_to_le32(e->pcr);
++	ima_putc(m, &pcr, sizeof(e->pcr));
+ 
+ 	/* 2nd: template digest */
+ 	ima_putc(m, e->digest, TPM_DIGEST_SIZE);
+ 
+ 	/* 3rd: template name size */
+-	namelen = strlen(template_name);
++	namelen = !ima_canonical_fmt ? strlen(template_name) :
++		cpu_to_le32(strlen(template_name));
+ 	ima_putc(m, &namelen, sizeof(namelen));
+ 
+ 	/* 4th:  template name */
+-	ima_putc(m, template_name, namelen);
++	ima_putc(m, template_name, strlen(template_name));
+ 
+ 	/* 5th:  template length (except for 'ima' template) */
+ 	if (strcmp(template_name, IMA_TEMPLATE_IMA_NAME) == 0)
+ 		is_ima_template = true;
+ 
+-	if (!is_ima_template)
+-		ima_putc(m, &e->template_data_len,
+-			 sizeof(e->template_data_len));
++	if (!is_ima_template) {
++		template_data_len = !ima_canonical_fmt ? e->template_data_len :
++			cpu_to_le32(e->template_data_len);
++		ima_putc(m, &template_data_len, sizeof(e->template_data_len));
++	}
+ 
+ 	/* 6th:  template specific data */
+ 	for (i = 0; i < e->template_desc->num_fields; i++) {
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 2c4824a..e473eee 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -21,8 +21,7 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+ {
+ 	struct ima_queue_entry *qe;
+ 	struct seq_file file;
+-	struct ima_kexec_hdr khdr = {
+-		.version = 1, .buffer_size = 0, .count = 0};
++	struct ima_kexec_hdr khdr;
+ 	int ret = 0;
+ 
+ 	/* segment size can't change between kexec load and execute */
+@@ -36,6 +35,8 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+ 	file.read_pos = 0;
+ 	file.count = sizeof(khdr);	/* reserved space */
+ 
++	memset(&khdr, 0, sizeof(khdr));
++	khdr.version = 1;
+ 	list_for_each_entry_rcu(qe, &ima_measurements, later) {
+ 		if (file.count < file.size) {
+ 			khdr.count++;
+@@ -54,7 +55,13 @@ static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
+ 	 * (eg. version, buffer size, number of measurements)
+ 	 */
+ 	khdr.buffer_size = file.count;
++	if (ima_canonical_fmt) {
++		khdr.version = cpu_to_le16(khdr.version);
++		khdr.count = cpu_to_le64(khdr.count);
++		khdr.buffer_size = cpu_to_le64(khdr.buffer_size);
++	}
+ 	memcpy(file.buf, &khdr, sizeof(khdr));
++
+ 	print_hex_dump(KERN_DEBUG, "ima dump: ", DUMP_PREFIX_NONE,
+ 			16, 1, file.buf,
+ 			file.count < 100 ? file.count : 100, true);
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index e57b468..004723c 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -304,6 +304,9 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
+ 		}
+ 		offset += sizeof(field_data->len);
+ 
++		if (ima_canonical_fmt)
++			field_data->len = le32_to_cpu(field_data->len);
++
+ 		if (offset > (template_data_size - field_data->len)) {
+ 			pr_err("Restoring the template field data failed\n");
+ 			ret = -EINVAL;
+@@ -354,7 +357,7 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 	struct binary_data_v1 *data_v1;
+ 
+ 	void *bufp = buf + sizeof(*khdr);
+-	void *bufendp = buf + khdr->buffer_size;
++	void *bufendp;
+ 	struct ima_template_entry *entry;
+ 	struct ima_template_desc *template_desc;
+ 	unsigned long count = 0;
+@@ -363,6 +366,12 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 	if (!buf || size < sizeof(*khdr))
+ 		return 0;
+ 
++	if (ima_canonical_fmt) {
++		khdr->version = le16_to_cpu(khdr->version);
++		khdr->count = le64_to_cpu(khdr->count);
++		khdr->buffer_size = le64_to_cpu(khdr->buffer_size);
++	}
++
+ 	if (khdr->version != 1) {
+ 		pr_err("attempting to restore a incompatible measurement list");
+ 		return 0;
+@@ -373,6 +382,7 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 	 * v1 format: pcr, digest, template-name-len, template-name,
+ 	 *	      template-data-size, template-data
+ 	 */
++	bufendp = buf + khdr->buffer_size;
+ 	while ((bufp < bufendp) && (count++ < khdr->count)) {
+ 		if (count > ULONG_MAX - 1) {
+ 			pr_err("attempting to restore too many measurements");
+@@ -380,6 +390,11 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 		}
+ 
+ 		hdr_v1 = bufp;
++
++		if (ima_canonical_fmt)
++			hdr_v1->template_name_len =
++			    le32_to_cpu(hdr_v1->template_name_len);
++
+ 		if ((hdr_v1->template_name_len >= MAX_TEMPLATE_NAME_LEN) ||
+ 		    ((bufp + hdr_v1->template_name_len) > bufendp)) {
+ 			pr_err("attempting to restore a template name \
+@@ -429,6 +444,10 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 		}
+ 		bufp += (u_int8_t) sizeof(data_v1->template_data_size);
+ 
++		if (ima_canonical_fmt)
++			data_v1->template_data_size =
++			    le32_to_cpu(data_v1->template_data_size);
++
+ 		if (bufp > (bufendp - data_v1->template_data_size)) {
+ 			pr_err("restoring the template data failed\n");
+ 			ret = -EINVAL;
+@@ -443,7 +462,8 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 			break;
+ 
+ 		memcpy(entry->digest, hdr_v1->digest, TPM_DIGEST_SIZE);
+-		entry->pcr = hdr_v1->pcr;
++		entry->pcr =
++		    !ima_canonical_fmt ? hdr_v1->pcr : le32_to_cpu(hdr_v1->pcr);
+ 		ret = ima_restore_measurement_entry(entry);
+ 		if (ret < 0)
+ 			break;
+diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+index f9bae04..f9ba37b 100644
+--- a/security/integrity/ima/ima_template_lib.c
++++ b/security/integrity/ima/ima_template_lib.c
+@@ -103,8 +103,11 @@ static void ima_show_template_data_binary(struct seq_file *m,
+ 	u32 len = (show == IMA_SHOW_BINARY_OLD_STRING_FMT) ?
+ 	    strlen(field_data->data) : field_data->len;
+ 
+-	if (show != IMA_SHOW_BINARY_NO_FIELD_LEN)
+-		ima_putc(m, &len, sizeof(len));
++	if (show != IMA_SHOW_BINARY_NO_FIELD_LEN) {
++		u32 field_len = !ima_canonical_fmt ? len : cpu_to_le32(len);
++
++		ima_putc(m, &field_len, sizeof(field_len));
++	}
+ 
+ 	if (!len)
+ 		return;
+-- 
+2.1.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
