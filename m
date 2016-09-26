@@ -1,38 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1boa9T-0005ME-FJ
- for kexec@lists.infradead.org; Mon, 26 Sep 2016 17:57:17 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8QHqjPP114146
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:56:55 -0400
-Received: from e28smtp07.in.ibm.com (e28smtp07.in.ibm.com [125.16.236.7])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25q53wa7wy-1
+ id 1boahE-0002vn-2M
+ for kexec@lists.infradead.org; Mon, 26 Sep 2016 18:32:22 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u8QISIDS070216
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 14:31:46 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 25q5mqt0b9-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:56:54 -0400
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 14:31:46 -0400
 Received: from localhost
- by e28smtp07.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Mon, 26 Sep 2016 23:26:51 +0530
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
- by d28dlp02.in.ibm.com (Postfix) with ESMTP id A2107394004E
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:26:49 +0530 (IST)
-Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
- by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8QHunW939714916
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:26:49 +0530
-Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
- by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8QHul9u002690
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:26:49 +0530
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v5 02/10] ima: on soft reboot, restore the measurement list
-Date: Mon, 26 Sep 2016 13:30:21 -0400
-In-Reply-To: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
-References: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1474911029-6372-3-git-send-email-zohar@linux.vnet.ibm.com>
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Mon, 26 Sep 2016 15:31:44 -0300
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.18.232.225])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id A1979352005F
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 14:31:17 -0400 (EDT)
+Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8QIVfg419267648
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 15:31:41 -0300
+Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
+ by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u8QIVf9E011617
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 15:31:41 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATHC v2 0/9] ima: carry the measurement list across kexec
+Date: Mon, 26 Sep 2016 15:31:38 -0300
+In-Reply-To: <87y42mk11a.fsf@x220.int.ebiederm.org>
+References: <1472596811-9596-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <15061913.JRHEL97DN3@hactar> <87y42mk11a.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Message-Id: <1743059.2ZOQaNILxh@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,368 +44,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-security-module <linux-security-module@vger.kernel.org>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
 
-The TPM PCRs are only reset on a hard reboot.  In order to validate a
-TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
-of the running kernel must be saved and restored on boot.  This patch
-restores the measurement list.
+Hello Eric,
 
-Changelog v5:
-- replace CONFIG_KEXEC_FILE with architecture CONFIG_HAVE_IMA_KEXEC (Thiago)
-- replace kexec_get_handover_buffer() with ima_get_kexec_buffer() (Thiago)
-- replace kexec_free_handover_buffer() with ima_free_kexec_buffer() (Thiago)
-- remove unnecessary includes from ima_kexec.c (Thiago)
-- fix off-by-one error when checking hdr_v1->template_name_len (Colin King)
+Am Dienstag, 20 September 2016, 11:07:29 schrieb Eric W. Biederman:
+> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+> > Am Samstag, 17 September 2016, 00:17:37 schrieb Eric W. Biederman:
+> >> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+> > Is this what you had in mind?
+> 
+> Sort of.
+> 
+> I was just thinking that instead of having the boot path verify your ima
+> list matches what is in the tpm and halting the boot there, we could
+> test that on reboot.  Which would give a clean failure without the nasty
+> poking into a prepared image.  The downside is that we have already run
+> the shutdown scripts so it wouldn't be much cleaner, than triggering a
+> machine reboot from elsewhere.
+> 
+> But I don't think we should spend too much time on that.  It was a
+> passing thought.  We should focus on getting a non-poked ima buffer
+> cleanly into kexec and we can worry about the rest later.
 
-Changelog v2:
-- redefined ima_kexec_hdr to use types with well defined sizes (M. Ellerman)
-- defined missing ima_load_kexec_buffer() stub function
+I was thinking of this as something orthogonal to the ima buffer feature.
+But you're right, it's better not to discuss this now. I'll post a separate 
+patch for this later.
 
-Changelog v1:
-- call ima_load_kexec_buffer() (Thiago)
+> >> So from 10,000 feet I think that is correct.
+> >> 
+> >> I am not quite certain why a new mechanism is being invented.  We have
+> >> other information that is already passed (much of it architecture
+> >> specific) like the flattened device tree.  If you remove the need to
+> >> update the information can you just append this information to the
+> >> flattened device tree without a new special mechanism to pass the data?
+> >> 
+> >> I am just reluctant to invent a new mechanism when there is an existing
+> >> mechanism that looks like it should work without problems.
+> > 
+> > Michael Ellerman suggested putting the buffer contents inside the device
+> > tree itself, but the s390 people are also planning to implement this
+> > feature. That architecture doesn't use device trees, so a solution that
+> > depends on DTs won't help them.
+> > 
+> > With this mechanism each architecture will still need its own way of
+> > communicating to the next kernel where the buffer is, but I think it's
+> > easier to pass a base address and length than to pass a whole buffer.
+> 
+> A base address and length pair is fine.  There are several other pieces
+> of data that we pass that way.
+> 
+> > I suppose we could piggyback the ima measurements buffer at the end of
+> > one of the other segments such as the kernel or, in the case of
+> > powerpc, the dtb but it looks hackish to me. I think it's cleaner to
+> > put it in its own segment.
+> 
+> The boot protocol unfortunately is different on different architectures,
+> and for each one we will have to implement and document the change.
+> Because when you get into boot protocol issues you can't assume the
+> kernel you are booting is the same version as the kernel that is booting
+> it.
+> 
+> Where I run into a problem is you added a semi-generic concept a
+> hand-over buffer.  Not a ima data buffer but a hand-over buffer.
+> 
+> The data falling in it's own dedicated area of memory and being added
+> with kexec_add_buffer is completely fine.  I can see a dedicated pointer
+> in struct kimage if necessary.
+> 
+> A semi-generic concept called a hand-over buffer seems to be a
+> construction of infrustructure for no actual reason that will just
+> result in confusion.  There are lots of things that are handed over, the
+> flattend device tree, ramdisks, bootparams on x86, etc, etc.  ima is not
+> special in this execpt for being perhaps the first addition that we are
+> going to want the option of including on most architectures.
 
-Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
----
- security/integrity/ima/Makefile       |   1 +
- security/integrity/ima/ima.h          |  21 +++++
- security/integrity/ima/ima_init.c     |   2 +
- security/integrity/ima/ima_kexec.c    |  44 +++++++++
- security/integrity/ima/ima_queue.c    |  10 ++
- security/integrity/ima/ima_template.c | 170 ++++++++++++++++++++++++++++++++++
- 6 files changed, 248 insertions(+)
- create mode 100644 security/integrity/ima/ima_kexec.c
+Ok, I understand. I decided to implement a generic concept because I thought 
+that proposing a feature that is more useful than what I need it for would  
+increase its chance of being accepted. It's interesting to see that it had 
+the opposite effect.
 
-diff --git a/security/integrity/ima/Makefile b/security/integrity/ima/Makefile
-index 9aeaeda..29f198b 100644
---- a/security/integrity/ima/Makefile
-+++ b/security/integrity/ima/Makefile
-@@ -8,4 +8,5 @@ obj-$(CONFIG_IMA) += ima.o
- ima-y := ima_fs.o ima_queue.o ima_init.o ima_main.o ima_crypto.o ima_api.o \
- 	 ima_policy.o ima_template.o ima_template_lib.o
- ima-$(CONFIG_IMA_APPRAISE) += ima_appraise.o
-+ima-$(CONFIG_HAVE_IMA_KEXEC) += ima_kexec.o
- obj-$(CONFIG_IMA_BLACKLIST_KEYRING) += ima_mok.o
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index db25f54..51dc8d5 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -28,6 +28,10 @@
- 
- #include "../integrity.h"
- 
-+#ifdef CONFIG_HAVE_IMA_KEXEC
-+#include <asm/ima.h>
-+#endif
-+
- enum ima_show_type { IMA_SHOW_BINARY, IMA_SHOW_BINARY_NO_FIELD_LEN,
- 		     IMA_SHOW_BINARY_OLD_STRING_FMT, IMA_SHOW_ASCII };
- enum tpm_pcrs { TPM_PCR0 = 0, TPM_PCR8 = 8 };
-@@ -102,6 +106,21 @@ struct ima_queue_entry {
- };
- extern struct list_head ima_measurements;	/* list of all measurements */
- 
-+/* Some details preceding the binary serialized measurement list */
-+struct ima_kexec_hdr {
-+	u16 version;
-+	u16 _reserved0;
-+	u32 _reserved1;
-+	u64 buffer_size;
-+	u64 count;
-+};
-+
-+#ifdef CONFIG_HAVE_IMA_KEXEC
-+void ima_load_kexec_buffer(void);
-+#else
-+static inline void ima_load_kexec_buffer(void) {}
-+#endif /* CONFIG_HAVE_IMA_KEXEC */
-+
- /* Internal IMA function definitions */
- int ima_init(void);
- int ima_fs_init(void);
-@@ -122,6 +141,8 @@ int ima_init_crypto(void);
- void ima_putc(struct seq_file *m, void *data, int datalen);
- void ima_print_digest(struct seq_file *m, u8 *digest, u32 size);
- struct ima_template_desc *ima_template_desc_current(void);
-+int ima_restore_measurement_entry(struct ima_template_entry *entry);
-+int ima_restore_measurement_list(loff_t bufsize, void *buf);
- int ima_init_template(void);
- 
- /*
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 32912bd..3ba0ca4 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -128,6 +128,8 @@ int __init ima_init(void)
- 	if (rc != 0)
- 		return rc;
- 
-+	ima_load_kexec_buffer();
-+
- 	rc = ima_add_boot_aggregate();	/* boot aggregate must be first entry */
- 	if (rc != 0)
- 		return rc;
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-new file mode 100644
-index 0000000..36afd0f
---- /dev/null
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -0,0 +1,44 @@
-+/*
-+ * Copyright (C) 2016 IBM Corporation
-+ *
-+ * Authors:
-+ * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-+ * Mimi Zohar <zohar@linux.vnet.ibm.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include "ima.h"
-+
-+/*
-+ * Restore the measurement list from the previous kernel.
-+ */
-+void ima_load_kexec_buffer(void)
-+{
-+	void *kexec_buffer = NULL;
-+	size_t kexec_buffer_size = 0;
-+	int rc;
-+
-+	rc = ima_get_kexec_buffer(&kexec_buffer, &kexec_buffer_size);
-+	switch (rc) {
-+	case 0:
-+		rc = ima_restore_measurement_list(kexec_buffer_size,
-+						  kexec_buffer);
-+		if (rc != 0)
-+			pr_err("Failed to restore the measurement list: %d\n",
-+				rc);
-+
-+		ima_free_kexec_buffer();
-+		break;
-+	case -ENOTSUPP:
-+		pr_debug("Restoring the measurement list not supported\n");
-+		break;
-+	case -ENOENT:
-+		pr_debug("No measurement list to restore\n");
-+		break;
-+	default:
-+		pr_debug("Error restoring the measurement list: %d\n", rc);
-+	}
-+}
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 32f6ac0..4b1bb77 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -149,3 +149,13 @@ out:
- 			    op, audit_cause, result, audit_info);
- 	return result;
- }
-+
-+int ima_restore_measurement_entry(struct ima_template_entry *entry)
-+{
-+	int result = 0;
-+
-+	mutex_lock(&ima_extend_list_mutex);
-+	result = ima_add_digest_entry(entry);
-+	mutex_unlock(&ima_extend_list_mutex);
-+	return result;
-+}
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index febd12e..37f972c 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -37,6 +37,7 @@ static struct ima_template_field supported_fields[] = {
- 	{.field_id = "sig", .field_init = ima_eventsig_init,
- 	 .field_show = ima_show_template_sig},
- };
-+#define MAX_TEMPLATE_NAME_LEN 15
- 
- static struct ima_template_desc *ima_template;
- static struct ima_template_desc *lookup_template_desc(const char *name);
-@@ -205,3 +206,172 @@ int __init ima_init_template(void)
- 
- 	return result;
- }
-+
-+static int ima_restore_template_data(struct ima_template_desc *template_desc,
-+				     void *template_data,
-+				     int template_data_size,
-+				     struct ima_template_entry **entry)
-+{
-+	struct binary_field_data {
-+		u32 len;
-+		u8 data[0];
-+	} __packed;
-+
-+	struct binary_field_data *field_data;
-+	int offset = 0;
-+	int ret = 0;
-+	int i;
-+
-+	*entry = kzalloc(sizeof(**entry) +
-+		    template_desc->num_fields * sizeof(struct ima_field_data),
-+		    GFP_NOFS);
-+	if (!*entry)
-+		return -ENOMEM;
-+
-+	(*entry)->template_desc = template_desc;
-+	for (i = 0; i < template_desc->num_fields; i++) {
-+		field_data = template_data + offset;
-+
-+		/* Each field of the template data is prefixed with a length. */
-+		if (offset > (template_data_size - sizeof(field_data->len))) {
-+			pr_err("Restoring the template field failed\n");
-+			ret = -EINVAL;
-+			break;
-+		}
-+		offset += sizeof(field_data->len);
-+
-+		if (offset > (template_data_size - field_data->len)) {
-+			pr_err("Restoring the template field data failed\n");
-+			ret = -EINVAL;
-+			break;
-+		}
-+		offset += field_data->len;
-+
-+		(*entry)->template_data[i].len = field_data->len;
-+		(*entry)->template_data_len += sizeof(field_data->len);
-+
-+		(*entry)->template_data[i].data =
-+			kzalloc(field_data->len + 1, GFP_KERNEL);
-+		if (!(*entry)->template_data[i].data) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		memcpy((*entry)->template_data[i].data, field_data->data,
-+			field_data->len);
-+		(*entry)->template_data_len += field_data->len;
-+	}
-+
-+	if (ret < 0) {
-+		ima_free_template_entry(*entry);
-+		*entry = NULL;
-+	}
-+
-+	return ret;
-+}
-+
-+/* Restore the serialized binary measurement list without extending PCRs. */
-+int ima_restore_measurement_list(loff_t size, void *buf)
-+{
-+	struct binary_hdr_v1 {
-+		u32 pcr;
-+		u8 digest[TPM_DIGEST_SIZE];
-+		u32 template_name_len;
-+		char template_name[0];
-+	} __packed;
-+	char template_name[MAX_TEMPLATE_NAME_LEN];
-+
-+	struct binary_data_v1 {
-+		u32 template_data_size;
-+		char template_data[0];
-+	} __packed;
-+
-+	struct ima_kexec_hdr *khdr = buf;
-+	struct binary_hdr_v1 *hdr_v1;
-+	struct binary_data_v1 *data_v1;
-+
-+	void *bufp = buf + sizeof(*khdr);
-+	void *bufendp = buf + khdr->buffer_size;
-+	struct ima_template_entry *entry;
-+	struct ima_template_desc *template_desc;
-+	unsigned long count = 0;
-+	int ret = 0;
-+
-+	if (!buf || size < sizeof(*khdr))
-+		return 0;
-+
-+	if (khdr->version != 1) {
-+		pr_err("attempting to restore a incompatible measurement list");
-+		return 0;
-+	}
-+
-+	/*
-+	 * ima kexec buffer prefix: version, buffer size, count
-+	 * v1 format: pcr, digest, template-name-len, template-name,
-+	 *	      template-data-size, template-data
-+	 */
-+	while ((bufp < bufendp) && (count++ < khdr->count)) {
-+		if (count > ULONG_MAX - 1) {
-+			pr_err("attempting to restore too many measurements");
-+			ret = -EINVAL;
-+		}
-+
-+		hdr_v1 = bufp;
-+		if ((hdr_v1->template_name_len >= MAX_TEMPLATE_NAME_LEN) ||
-+		    ((bufp + hdr_v1->template_name_len) > bufendp)) {
-+			pr_err("attempting to restore a template name \
-+				that is too long\n");
-+			ret = -EINVAL;
-+			break;
-+		}
-+		bufp += sizeof(*hdr_v1);
-+
-+		/* template name is not null terminated */
-+		memcpy(template_name, bufp, hdr_v1->template_name_len);
-+		template_name[hdr_v1->template_name_len] = 0;
-+
-+		if (strcmp(template_name, "ima") == 0) {
-+			pr_err("attempting to restore an unsupported \
-+				template \"%s\" failed\n", template_name);
-+			ret = -EINVAL;
-+			break;
-+		}
-+		data_v1 = bufp += (u_int8_t)hdr_v1->template_name_len;
-+
-+		/* get template format */
-+		template_desc = lookup_template_desc(template_name);
-+		if (!template_desc) {
-+			pr_err("template \"%s\" not found\n", template_name);
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		if (bufp > (bufendp - sizeof(data_v1->template_data_size))) {
-+			pr_err("restoring the template data size failed\n");
-+			ret = -EINVAL;
-+			break;
-+		}
-+		bufp += (u_int8_t) sizeof(data_v1->template_data_size);
-+
-+		if (bufp > (bufendp - data_v1->template_data_size)) {
-+			pr_err("restoring the template data failed\n");
-+			ret = -EINVAL;
-+			break;
-+		}
-+
-+		ret = ima_restore_template_data(template_desc,
-+						data_v1->template_data,
-+						data_v1->template_data_size,
-+						&entry);
-+		if (ret < 0)
-+			break;
-+
-+		memcpy(entry->digest, hdr_v1->digest, TPM_DIGEST_SIZE);
-+		entry->pcr = hdr_v1->pcr;
-+		ret = ima_restore_measurement_entry(entry);
-+		if (ret < 0)
-+			break;
-+
-+		bufp += data_v1->template_data_size;
-+	}
-+	return ret;
-+}
+I reworked and simplified the code and folded the hand-over buffer patches 
+into Mimi's patch series to carry the measurement list across kexec. The 
+kexec buffer code is in the following patches now:
+
+[PATCH v5 01/10] powerpc: ima: Get the kexec buffer passed by the previous 
+kernel
+[PATCH v5 05/10] powerpc: ima: Send the kexec buffer to the next kernel
+
+Each patch has a changelog listing what I changed to make it specific to 
+IMA.
+
 -- 
-2.1.0
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
