@@ -1,39 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1boZko-0003Vi-3Y
- for kexec@lists.infradead.org; Mon, 26 Sep 2016 17:31:48 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ id 1boZko-0003Vl-3Z
+ for kexec@lists.infradead.org; Mon, 26 Sep 2016 17:31:50 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8QHSlKN001983
+ u8QHSkOg024647
  for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:31:25 -0400
-Received: from e28smtp06.in.ibm.com (e28smtp06.in.ibm.com [125.16.236.6])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25q5mkfbnd-1
+Received: from e28smtp04.in.ibm.com (e28smtp04.in.ibm.com [125.16.236.4])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 25q5mrqb2h-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
  for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 13:31:25 -0400
 Received: from localhost
- by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Mon, 26 Sep 2016 23:01:22 +0530
-Received: from d28relay10.in.ibm.com (d28relay10.in.ibm.com [9.184.220.161])
- by d28dlp02.in.ibm.com (Postfix) with ESMTP id E2A6A394004E
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:19 +0530 (IST)
+ Mon, 26 Sep 2016 23:01:21 +0530
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+ by d28dlp02.in.ibm.com (Postfix) with ESMTP id C4E08394004E
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:18 +0530 (IST)
 Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
- by d28relay10.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8QHV9DC22675650
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:09 +0530
+ by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8QHUwHG29229154
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:00:58 +0530
 Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
  by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8QHVIhf009648
- for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:01:19 +0530
+ u8QHUuNu009199
+ for <kexec@lists.infradead.org>; Mon, 26 Sep 2016 23:00:58 +0530
 From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Subject: [PATCH v5 07/10] ima: store the builtin/custom template definitions
- in a list
-Date: Mon, 26 Sep 2016 13:30:26 -0400
+Subject: [PATCH v5 01/10] powerpc: ima: Get the kexec buffer passed by the
+ previous kernel
+Date: Mon, 26 Sep 2016 13:30:20 -0400
 In-Reply-To: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
 References: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
-Message-Id: <1474911029-6372-8-git-send-email-zohar@linux.vnet.ibm.com>
+Message-Id: <1474911029-6372-2-git-send-email-zohar@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,177 +48,425 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ima-devel@lists.sourceforge.net, "Eric W. Biederman" <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org
 
-The builtin and single custom templates are currently stored in an
-array.  In preparation for being able to restore a measurement list
-containing multiple builtin/custom templates, this patch stores the
-builtin and custom templates as a linked list.  This will permit
-defining more than one custom template per boot.
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 
-Changelog v4:
-- fix "spinlock bad magic" BUG - reported by Dmitry Vyukov
+The IMA kexec buffer allows the currently running kernel to pass
+the measurement list via a kexec segment to the kernel that will be
+kexec'd. The second kernel can check whether the previous kernel sent
+the buffer and retrieve it.
 
-Changelog v3:
-- initialize template format list in ima_template_desc_current(), as it
-might be called during __setup before normal initialization. (kernel
-test robot)
-- remove __init annotation of ima_init_template_list()
+This is the architecture-specific part which enables IMA to receive the
+measurement list passed by the previous kernel. It will be used in the
+next patch.
 
-Changelog v2:
-- fix lookup_template_desc() preemption imbalance (kernel test robot)
+The change in machine_kexec_64.c is to factor out the logic of removing
+an FDT memory reservation so that it can be used by remove_ima_buffer.
 
-Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Changelog v5:
+- New patch in this version. This code was previously in the kexec buffer
+  handover patch series.
+
+Changelog relative to kexec handover patches v5:
+- Added CONFIG_HAVE_IMA_KEXEC.
+- Added arch/powerpc/include/asm/ima.h.
+- Moved code to arch/powerpc/kernel/ima_kexec.c.
+- Renamed functions to variations of ima_kexec_buffer instead of
+  variations of kexec_handover_buffer.
+- Use a single property /chosen/linux,ima-kexec-buffer containing
+  the buffer address and length, instead of
+  /chosen/linux,kexec-handover-buffer-{start,end}.
+- Use #address-cells and #size-cells to read the DT property.
+- Use size_t instead of unsigned long for size arguments.
+- Always remove linux,ima-kexec-buffer and its memory reservation
+  when preparing a device tree for kexec_file_load.
+
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
 ---
- security/integrity/ima/ima.h          |  2 ++
- security/integrity/ima/ima_main.c     |  1 +
- security/integrity/ima/ima_template.c | 52 +++++++++++++++++++++++++++--------
- 3 files changed, 44 insertions(+), 11 deletions(-)
+ arch/Kconfig                           |   3 +
+ arch/powerpc/Kconfig                   |   1 +
+ arch/powerpc/include/asm/ima.h         |  13 ++++
+ arch/powerpc/include/asm/kexec.h       |   1 +
+ arch/powerpc/kernel/Makefile           |   4 +
+ arch/powerpc/kernel/ima_kexec.c        | 132 +++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/machine_kexec_64.c | 106 +++++++++++++-------------
+ 7 files changed, 208 insertions(+), 52 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/ima.h
+ create mode 100644 arch/powerpc/kernel/ima_kexec.c
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 139dec6..6b0540a 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -85,6 +85,7 @@ struct ima_template_field {
+diff --git a/arch/Kconfig b/arch/Kconfig
+index e9c9334..60283562 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -5,6 +5,9 @@
+ config KEXEC_CORE
+ 	bool
  
- /* IMA template descriptor definition */
- struct ima_template_desc {
-+	struct list_head list;
- 	char *name;
- 	char *fmt;
- 	int num_fields;
-@@ -146,6 +147,7 @@ int ima_restore_measurement_list(loff_t bufsize, void *buf);
- int ima_measurements_show(struct seq_file *m, void *v);
- unsigned long ima_get_binary_runtime_size(void);
- int ima_init_template(void);
-+void ima_init_template_list(void);
- 
- /*
-  * used to protect h_table and sha_table
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 596ef61..592f318 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -418,6 +418,7 @@ static int __init init_ima(void)
- {
- 	int error;
- 
-+	ima_init_template_list();
- 	hash_setup(CONFIG_IMA_DEFAULT_HASH);
- 	error = ima_init();
- 	if (!error) {
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index 37f972c..c0d808c 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -15,16 +15,20 @@
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <linux/rculist.h>
- #include "ima.h"
- #include "ima_template_lib.h"
- 
--static struct ima_template_desc defined_templates[] = {
-+static struct ima_template_desc builtin_templates[] = {
- 	{.name = IMA_TEMPLATE_IMA_NAME, .fmt = IMA_TEMPLATE_IMA_FMT},
- 	{.name = "ima-ng", .fmt = "d-ng|n-ng"},
- 	{.name = "ima-sig", .fmt = "d-ng|n-ng|sig"},
- 	{.name = "", .fmt = ""},	/* placeholder for a custom format */
- };
- 
-+static LIST_HEAD(defined_templates);
-+static DEFINE_SPINLOCK(template_list);
++config HAVE_IMA_KEXEC
++	bool
 +
- static struct ima_template_field supported_fields[] = {
- 	{.field_id = "d", .field_init = ima_eventdigest_init,
- 	 .field_show = ima_show_template_digest},
-@@ -53,6 +57,8 @@ static int __init ima_template_setup(char *str)
- 	if (ima_template)
- 		return 1;
- 
-+	ima_init_template_list();
+ config OPROFILE
+ 	tristate "OProfile system profiling"
+ 	depends on PROFILING
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index d1ba864..17fff29 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -458,6 +458,7 @@ config KEXEC
+ config KEXEC_FILE
+ 	bool "kexec file based system call"
+ 	select KEXEC_CORE
++	select HAVE_IMA_KEXEC
+ 	select BUILD_BIN2C
+ 	depends on PPC64
+ 	depends on CRYPTO=y
+diff --git a/arch/powerpc/include/asm/ima.h b/arch/powerpc/include/asm/ima.h
+new file mode 100644
+index 0000000..d5a72dd
+--- /dev/null
++++ b/arch/powerpc/include/asm/ima.h
+@@ -0,0 +1,13 @@
++#ifndef _ASM_POWERPC_IMA_H
++#define _ASM_POWERPC_IMA_H
 +
- 	/*
- 	 * Verify that a template with the supplied name exists.
- 	 * If not, use CONFIG_IMA_DEFAULT_TEMPLATE.
-@@ -81,7 +87,7 @@ __setup("ima_template=", ima_template_setup);
- 
- static int __init ima_template_fmt_setup(char *str)
- {
--	int num_templates = ARRAY_SIZE(defined_templates);
-+	int num_templates = ARRAY_SIZE(builtin_templates);
- 
- 	if (ima_template)
- 		return 1;
-@@ -92,22 +98,28 @@ static int __init ima_template_fmt_setup(char *str)
- 		return 1;
- 	}
- 
--	defined_templates[num_templates - 1].fmt = str;
--	ima_template = defined_templates + num_templates - 1;
-+	builtin_templates[num_templates - 1].fmt = str;
-+	ima_template = builtin_templates + num_templates - 1;
++int ima_get_kexec_buffer(void **addr, size_t *size);
++int ima_free_kexec_buffer(void);
 +
- 	return 1;
- }
- __setup("ima_template_fmt=", ima_template_fmt_setup);
++#ifdef CONFIG_IMA
++void remove_ima_buffer(void *fdt, int chosen_node);
++#else
++static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
++#endif
++
++#endif /* _ASM_POWERPC_IMA_H */
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 73f88b5..5dda514 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -99,6 +99,7 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
+ 		  unsigned long initrd_len, const char *cmdline);
+ bool find_debug_console(const void *fdt);
++int delete_fdt_mem_rsv(void *fdt, unsigned long start, unsigned long size);
+ #endif /* CONFIG_KEXEC_FILE */
  
- static struct ima_template_desc *lookup_template_desc(const char *name)
- {
--	int i;
-+	struct ima_template_desc *template_desc;
-+	int found = 0;
+ #else /* !CONFIG_KEXEC_CORE */
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index 0ee1b3f..5e0bacc 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -109,6 +109,10 @@ obj-$(CONFIG_PCI_MSI)		+= msi.o
+ obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec.o crash.o \
+ 				   machine_kexec_$(BITS).o
+ obj-$(CONFIG_KEXEC_FILE)	+= kexec_elf_$(BITS).o
++ifeq ($(CONFIG_HAVE_IMA_KEXEC)$(CONFIG_IMA),yy)
++obj-y				+= ima_kexec.o
++endif
++
+ obj-$(CONFIG_AUDIT)		+= audit.o
+ obj64-$(CONFIG_AUDIT)		+= compat_audit.o
  
--	for (i = 0; i < ARRAY_SIZE(defined_templates); i++) {
--		if (strcmp(defined_templates[i].name, name) == 0)
--			return defined_templates + i;
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(template_desc, &defined_templates, list) {
-+		if ((strcmp(template_desc->name, name) == 0) ||
-+		    (strcmp(template_desc->fmt, name) == 0)) {
-+			found = 1;
-+			break;
-+		}
- 	}
--
--	return NULL;
-+	rcu_read_unlock();
-+	return found ? template_desc : NULL;
- }
+diff --git a/arch/powerpc/kernel/ima_kexec.c b/arch/powerpc/kernel/ima_kexec.c
+new file mode 100644
+index 0000000..36e5a5d
+--- /dev/null
++++ b/arch/powerpc/kernel/ima_kexec.c
+@@ -0,0 +1,132 @@
++/*
++ * Copyright (C) 2016 IBM Corporation
++ *
++ * Authors:
++ * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/slab.h>
++#include <linux/kexec.h>
++#include <linux/of.h>
++#include <linux/memblock.h>
++#include <linux/libfdt.h>
++
++static int get_addr_size_cells(int *addr_cells, int *size_cells)
++{
++	struct device_node *root;
++
++	root = of_find_node_by_path("/");
++	if (!root)
++		return -EINVAL;
++
++	*addr_cells = of_n_addr_cells(root);
++	*size_cells = of_n_size_cells(root);
++
++	of_node_put(root);
++
++	return 0;
++}
++
++static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
++			       size_t *size)
++{
++	int ret, addr_cells, size_cells;
++
++	ret = get_addr_size_cells(&addr_cells, &size_cells);
++	if (ret)
++		return ret;
++
++	if (len < 4 * (addr_cells + size_cells))
++		return -ENOENT;
++
++	*addr = of_read_number(prop, addr_cells);
++	*size = of_read_number(prop + 4 * addr_cells, size_cells);
++
++	return 0;
++}
++
++/**
++ * ima_get_kexec_buffer - get IMA buffer from the previous kernel
++ * @addr:	On successful return, set to point to the buffer contents.
++ * @size:	On successful return, set to the buffer size.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int ima_get_kexec_buffer(void **addr, size_t *size)
++{
++	int ret, len;
++	unsigned long tmp_addr;
++	size_t tmp_size;
++	const void *prop;
++
++	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
++	if (!prop)
++		return -ENOENT;
++
++	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
++	if (ret)
++		return ret;
++
++	*addr = __va(tmp_addr);
++	*size = tmp_size;
++
++	return 0;
++}
++
++/**
++ * ima_free_kexec_buffer - free memory used by the IMA buffer
++ */
++int ima_free_kexec_buffer(void)
++{
++	int ret;
++	unsigned long addr;
++	size_t size;
++	struct property *prop;
++
++	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
++	if (!prop)
++		return -ENOENT;
++
++	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
++	if (ret)
++		return ret;
++
++	ret = of_remove_property(of_chosen, prop);
++	if (ret)
++		return ret;
++
++	return memblock_free(addr, size);
++
++}
++
++/**
++ * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
++ *
++ * The IMA measurement buffer is of no use to a subsequent kernel, so we always
++ * remove it from the device tree.
++ */
++void remove_ima_buffer(void *fdt, int chosen_node)
++{
++	int ret, len;
++	unsigned long addr;
++	size_t size;
++	const void *prop;
++
++	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
++	if (!prop)
++		return;
++
++	ret = do_get_kexec_buffer(prop, len, &addr, &size);
++	fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
++	if (ret)
++		return;
++
++	ret = delete_fdt_mem_rsv(fdt, addr, size);
++	if (!ret)
++		pr_debug("Removed old IMA buffer reservation.\n");
++}
+diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+index 9cd8f3b..c2e0b18 100644
+--- a/arch/powerpc/kernel/machine_kexec_64.c
++++ b/arch/powerpc/kernel/machine_kexec_64.c
+@@ -34,6 +34,7 @@
+ #include <asm/hw_breakpoint.h>
+ #include <asm/asm-prototypes.h>
+ #include <asm/kexec_elf_64.h>
++#include <asm/ima.h>
  
- static struct ima_template_field *lookup_template_field(const char *field_id)
-@@ -183,11 +195,29 @@ static int template_desc_init_fields(const char *template_fmt,
+ #define SLAVE_CODE_SIZE		256
+ 
+@@ -657,9 +658,9 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
  	return 0;
  }
  
-+void ima_init_template_list(void)
-+{
-+	int i;
-+
-+	if (!list_empty(&defined_templates))
-+		return;
-+
-+	spin_lock(&template_list);
-+	for (i = 0; i < ARRAY_SIZE(builtin_templates); i++) {
-+		list_add_tail_rcu(&builtin_templates[i].list,
-+				  &defined_templates);
-+	}
-+	spin_unlock(&template_list);
-+	synchronize_rcu();
-+}
-+
- struct ima_template_desc *ima_template_desc_current(void)
+-/*
+- * setup_new_fdt() - modify /chosen and memory reservation for the next kernel
+- * @fdt:
++/**
++ * setup_new_fdt() - modify /chosen and memory reservations for the next kernel
++ * @fdt:		Flattened device tree for the next kernel.
+  * @initrd_load_addr:	Address where the next initrd will be loaded.
+  * @initrd_len:		Size of the next initrd, or 0 if there will be none.
+  * @cmdline:		Command line for the next kernel, or NULL if there will
+@@ -670,33 +671,16 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
+ 		  unsigned long initrd_len, const char *cmdline)
  {
--	if (!ima_template)
-+	if (!ima_template) {
-+		ima_init_template_list();
- 		ima_template =
- 		    lookup_template_desc(CONFIG_IMA_DEFAULT_TEMPLATE);
-+	}
- 	return ima_template;
+-	uint64_t oldfdt_addr;
+-	int i, ret, chosen_node;
++	int ret, chosen_node;
+ 	const void *prop;
+ 
+ 	/* Remove memory reservation for the current device tree. */
+-	oldfdt_addr = __pa(initial_boot_params);
+-	for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
+-		uint64_t rsv_start, rsv_size;
+-
+-		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
+-		if (ret) {
+-			pr_err("Malformed device tree.\n");
+-			return -EINVAL;
+-		}
+-
+-		if (rsv_start == oldfdt_addr &&
+-		    rsv_size == fdt_totalsize(initial_boot_params)) {
+-			ret = fdt_del_mem_rsv(fdt, i);
+-			if (ret) {
+-				pr_err("Error deleting fdt reservation.\n");
+-				return -EINVAL;
+-			}
+-
+-			pr_debug("Removed old device tree reservation.\n");
+-			break;
+-		}
+-	}
++	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
++				 fdt_totalsize(initial_boot_params));
++	if (ret == 0)
++		pr_debug("Removed old device tree reservation.\n");
++	else if (ret != -ENOENT)
++		return ret;
+ 
+ 	chosen_node = fdt_path_offset(fdt, "/chosen");
+ 	if (chosen_node == -FDT_ERR_NOTFOUND) {
+@@ -714,7 +698,7 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
+ 	/* Did we boot using an initrd? */
+ 	prop = fdt_getprop(fdt, chosen_node, "linux,initrd-start", NULL);
+ 	if (prop) {
+-		uint64_t tmp_start, tmp_end, tmp_size, tmp_sizepg;
++		uint64_t tmp_start, tmp_end, tmp_size;
+ 
+ 		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
+ 
+@@ -730,30 +714,14 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
+ 		 * reserve a multiple of PAGE_SIZE, so check for both.
+ 		 */
+ 		tmp_size = tmp_end - tmp_start;
+-		tmp_sizepg = round_up(tmp_size, PAGE_SIZE);
+-
+-		/* Remove memory reservation for the current initrd. */
+-		for (i = 0; i < fdt_num_mem_rsv(fdt); i++) {
+-			uint64_t rsv_start, rsv_size;
+-
+-			ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
+-			if (ret) {
+-				pr_err("Malformed device tree.\n");
+-				return -EINVAL;
+-			}
+-
+-			if (rsv_start == tmp_start &&
+-			    (rsv_size == tmp_size || rsv_size == tmp_sizepg)) {
+-				ret = fdt_del_mem_rsv(fdt, i);
+-				if (ret) {
+-					pr_err("Error deleting fdt reservation.\n");
+-					return -EINVAL;
+-				}
+-				pr_debug("Removed old initrd reservation.\n");
+-
+-				break;
+-			}
+-		}
++		ret = delete_fdt_mem_rsv(fdt, tmp_start, tmp_size);
++		if (ret == -ENOENT)
++			ret = delete_fdt_mem_rsv(fdt, tmp_start,
++						 round_up(tmp_size, PAGE_SIZE));
++		if (ret == 0)
++			pr_debug("Removed old initrd reservation.\n");
++		else if (ret != -ENOENT)
++			return ret;
+ 
+ 		/* If there's no new initrd, delete the old initrd's info. */
+ 		if (initrd_len == 0) {
+@@ -811,6 +779,8 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
+ 		}
+ 	}
+ 
++	remove_ima_buffer(fdt, chosen_node);
++
+ 	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
+ 	if (ret) {
+ 		pr_err("Error setting up the new device tree.\n");
+@@ -821,6 +791,38 @@ int setup_new_fdt(void *fdt, unsigned long initrd_load_addr,
  }
  
+ /**
++ * delete_fdt_mem_rsv - delete memory reservation with given address and size
++ *
++ * Return: 0 on success, or negative errno on error.
++ */
++int delete_fdt_mem_rsv(void *fdt, unsigned long start, unsigned long size)
++{
++	int i, ret, num_rsvs = fdt_num_mem_rsv(fdt);
++
++	for (i = 0; i < num_rsvs; i++) {
++		uint64_t rsv_start, rsv_size;
++
++		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
++		if (ret) {
++			pr_err("Malformed device tree.\n");
++			return -EINVAL;
++		}
++
++		if (rsv_start == start && rsv_size == size) {
++			ret = fdt_del_mem_rsv(fdt, i);
++			if (ret) {
++				pr_err("Error deleting device tree reservation.\n");
++				return -EINVAL;
++			}
++
++			return 0;
++		}
++	}
++
++	return -ENOENT;
++}
++
++/**
+  * find_debug_console() - find out whether there is a console for the purgatory
+  * @fdt:		Flattened device tree to search.
+  */
 -- 
 2.1.0
 
