@@ -1,18 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-f53.google.com ([74.125.82.53])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1boue6-0004JM-4v
- for kexec@lists.infradead.org; Tue, 27 Sep 2016 15:50:15 +0000
-Received: by mail-wm0-f53.google.com with SMTP id b130so20231446wmc.0
- for <kexec@lists.infradead.org>; Tue, 27 Sep 2016 08:49:53 -0700 (PDT)
+ id 1boyvE-0000uI-GB
+ for kexec@lists.infradead.org; Tue, 27 Sep 2016 20:24:12 +0000
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u8RKMTE4043397
+ for <kexec@lists.infradead.org>; Tue, 27 Sep 2016 16:23:51 -0400
+Received: from e28smtp06.in.ibm.com ([125.16.236.6])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 25qsadkm03-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Tue, 27 Sep 2016 16:23:50 -0400
+Received: from localhost
+ by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Wed, 28 Sep 2016 01:53:48 +0530
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+ by d28dlp03.in.ibm.com (Postfix) with ESMTP id 497FA1258026
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:54:06 +0530 (IST)
+Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
+ by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8RKNiTW44695594
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:53:44 +0530
+Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
+ by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u8RKNhID002226
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:53:44 +0530
+Subject: [PATCH 0/8] ppc64: Add support to understand Power ISA 3.0 based
+ kernel
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Wed, 28 Sep 2016 01:53:42 +0530
 MIME-Version: 1.0
-In-Reply-To: <20160907043401.6403-2-takahiro.akashi@linaro.org>
-References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
- <20160907043401.6403-2-takahiro.akashi@linaro.org>
-From: Pratyush Anand <panand@redhat.com>
-Date: Tue, 27 Sep 2016 21:19:51 +0530
-Message-ID: <CAHB_GuqcaGxj48RNW_72Q6tMgoat7oRG0LKg0S7mJs8=_Ft8Lw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/8] arm64: identify PHYS_OFFSET correctly
+Message-Id: <147500776701.31772.17117150096883318333.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,110 +45,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Geoff Levand <geoff@infradead.org>, Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
+To: Kexec-ml <kexec@lists.infradead.org>
+Cc: Ken'ichi <oomichi@mxs.nes.nec.co.jp>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
 
-On Wed, Sep 7, 2016 at 10:03 AM, AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
-> Due to the kernel patch[1], the current code will not be able to identify
+With the introduction of radix MMU in Power ISA 3.0, there are changes
+in kernel page table management accommodating that. This patch series
+makes appropriate changes here to work for such kernels. This series
+enables address translation support for radix MMU and also, fixes a
+few bugs along the way.
 
-[1] is mentioned in cover letter only, not here.
+---
 
-> the correct value of PHYS_OFFSET if some "reserved" memory region, which
-> is likely to be UEFI runtime services code/data, exists at an address below
-> the first "System RAM" regions.
->
-> This patch fixes this issue.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  kexec/arch/arm64/iomem.h       |  7 +++++++
->  kexec/arch/arm64/kexec-arm64.c | 22 +++++++++++++++++-----
->  2 files changed, 24 insertions(+), 5 deletions(-)
->  create mode 100644 kexec/arch/arm64/iomem.h
->
-> diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
-> new file mode 100644
-> index 0000000..7fd66eb
-> --- /dev/null
-> +++ b/kexec/arch/arm64/iomem.h
-> @@ -0,0 +1,7 @@
-> +#ifndef IOMEM_H
-> +#define IOMEM_H
-> +
-> +#define SYSTEM_RAM             "System RAM\n"
-> +#define IOMEM_RESERVED         "reserved\n"
-> +
-> +#endif
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 7183dac..bc96c76 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -21,6 +21,7 @@
->  #include "crashdump-arm64.h"
->  #include "dt-ops.h"
->  #include "fs2dt.h"
-> +#include "iomem.h"
->  #include "kexec-syscall.h"
->  #include "arch/options.h"
->
-> @@ -465,18 +466,28 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
->   * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
->   */
->
-> +static int count_memory_ranges;
+Hari Bathini (8):
+      ppc64: fix vtop page translation for 4K pages
+      ppc64: Use kernel terminology for each level in 4-level page table
+      ppc64: address changes in kernel v4.5
+      ppc64: address change in _PAGE_PRESNT flag for PowerISA v3.0
+      ppc64: use physical addresses and unfold pud for 64K page size
+      ppc64: support big endian Linux page tables
+      ppc64: use the same masked bit values for 4K and 64K pagesizes
+      ppc64: enable address translation support for radix mmu
 
-IMHO improving definition of kexec_iomem_for_each_line() and
-callback() for handling NULL match case would have been a better
-choice than introducing a new static variable. callback() can return
--ve in case of error, 0 in case of no match and 1 in case of (one)
-match.
 
-~Pratyush
+ arch/ppc64.c   |  231 ++++++++++++++++++++++++++++++++++++++++++++++++--------
+ makedumpfile.c |   11 +++
+ makedumpfile.h |  107 +++++++++++++++++---------
+ 3 files changed, 280 insertions(+), 69 deletions(-)
 
-> +
->  static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
->         unsigned long long base, unsigned long long length)
->  {
->         struct memory_range *r;
->
-> -       if (nr >= KEXEC_SEGMENT_MAX)
-> +       if (count_memory_ranges >= KEXEC_SEGMENT_MAX)
->                 return -1;
->
-> -       r = (struct memory_range *)data + nr;
-> -       r->type = RANGE_RAM;
-> +       r = (struct memory_range *)data + count_memory_ranges;
-> +
-> +       if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
-> +               r->type = RANGE_RAM;
-> +       else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
-> +               r->type = RANGE_RESERVED;
-> +       else
-> +               return 0;
-> +
->         r->start = base;
->         r->end = base + length - 1;
-> +       count_memory_ranges++;
->
->         set_phys_offset(r->start);
->
-> @@ -493,9 +504,10 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
->  static int get_memory_ranges_iomem(struct memory_range *array,
->         unsigned int *count)
->  {
-> -       *count = kexec_iomem_for_each_line("System RAM\n",
-> -               get_memory_ranges_iomem_cb, array);
-> +       count_memory_ranges = 0;
-> +       kexec_iomem_for_each_line(NULL, get_memory_ranges_iomem_cb, array);
->
-> +       *count = count_memory_ranges;
->         if (!*count) {
->                 dbgprintf("%s: failed: No RAM found.\n", __func__);
->                 return -EFAILED;
-> --
-> 2.9.0
->
 
 _______________________________________________
 kexec mailing list
