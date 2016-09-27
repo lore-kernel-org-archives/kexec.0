@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-wm0-f53.google.com ([74.125.82.53])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bonJ1-0005L4-R0
- for kexec@lists.infradead.org; Tue, 27 Sep 2016 08:00:01 +0000
-Received: from relay2.suse.de (charybdis-ext.suse.de [195.135.220.254])
- by mx2.suse.de (Postfix) with ESMTP id 4189FAB9F
- for <kexec@lists.infradead.org>; Tue, 27 Sep 2016 07:59:37 +0000 (UTC)
-Date: Tue, 27 Sep 2016 09:59:36 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: Limitations/gotchas of kexec?
-Message-ID: <20160927095936.1a395912@hananiah.suse.cz>
-In-Reply-To: <fb9324e7-61a9-a22f-b6f4-250336f6092c@clifhouck.com>
-References: <fb9324e7-61a9-a22f-b6f4-250336f6092c@clifhouck.com>
+ id 1boue6-0004JM-4v
+ for kexec@lists.infradead.org; Tue, 27 Sep 2016 15:50:15 +0000
+Received: by mail-wm0-f53.google.com with SMTP id b130so20231446wmc.0
+ for <kexec@lists.infradead.org>; Tue, 27 Sep 2016 08:49:53 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <20160907043401.6403-2-takahiro.akashi@linaro.org>
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+ <20160907043401.6403-2-takahiro.akashi@linaro.org>
+From: Pratyush Anand <panand@redhat.com>
+Date: Tue, 27 Sep 2016 21:19:51 +0530
+Message-ID: <CAHB_GuqcaGxj48RNW_72Q6tMgoat7oRG0LKg0S7mJs8=_Ft8Lw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/8] arm64: identify PHYS_OFFSET correctly
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +25,110 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Geoff Levand <geoff@infradead.org>, Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-On Mon, 26 Sep 2016 15:19:50 -0500
-Clif Houck <me@clifhouck.com> wrote:
+On Wed, Sep 7, 2016 at 10:03 AM, AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+> Due to the kernel patch[1], the current code will not be able to identify
 
-> Hi all,
-> 
-> I was wondering if there's a known list of limitations of kexec?
-> 
-> For example, is there anything fundamentally wrong with trying to kexec
-> from kernel version X to kernel version Y where:
-> 1) version Y > version X
-> 2) X < Y
-> 3) X == Y
-> 
-> I wouldn't expect to have an issue in case 1 or 3. But maybe if the
-> distance between two kernel versions is too great then I would have a
-> problem? Is there any concept of explicit incompatibility between
-> different kernels coupled with kexec or is it just 'try-and-see'?
-> 
-> Are there other important things to look out for?
+[1] is mentioned in cover letter only, not here.
 
-On x86, I can think of one problematic point, and that's limitations of
-the boot protocol, which may prevent booting an older kernel from a
-high physical memory location. This can be solved if you load the kexec
-kernel low enough. For real old kernels you may have to go through
-32-bit code, or even 16-bit real-mode code.
+> the correct value of PHYS_OFFSET if some "reserved" memory region, which
+> is likely to be UEFI runtime services code/data, exists at an address below
+> the first "System RAM" regions.
+>
+> This patch fixes this issue.
+>
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> ---
+>  kexec/arch/arm64/iomem.h       |  7 +++++++
+>  kexec/arch/arm64/kexec-arm64.c | 22 +++++++++++++++++-----
+>  2 files changed, 24 insertions(+), 5 deletions(-)
+>  create mode 100644 kexec/arch/arm64/iomem.h
+>
+> diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+> new file mode 100644
+> index 0000000..7fd66eb
+> --- /dev/null
+> +++ b/kexec/arch/arm64/iomem.h
+> @@ -0,0 +1,7 @@
+> +#ifndef IOMEM_H
+> +#define IOMEM_H
+> +
+> +#define SYSTEM_RAM             "System RAM\n"
+> +#define IOMEM_RESERVED         "reserved\n"
+> +
+> +#endif
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 7183dac..bc96c76 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -21,6 +21,7 @@
+>  #include "crashdump-arm64.h"
+>  #include "dt-ops.h"
+>  #include "fs2dt.h"
+> +#include "iomem.h"
+>  #include "kexec-syscall.h"
+>  #include "arch/options.h"
+>
+> @@ -465,18 +466,28 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+>   * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
+>   */
+>
+> +static int count_memory_ranges;
 
-Mostly, it's not a matter of inherent incompatibilities between the
-kernels, but rather finding a combination of options that work for the
-target kernel.
+IMHO improving definition of kexec_iomem_for_each_line() and
+callback() for handling NULL match case would have been a better
+choice than introducing a new static variable. callback() can return
+-ve in case of error, 0 in case of no match and 1 in case of (one)
+match.
 
-I don't have exact kernel versions and their requirements,
-unfortunately.
+~Pratyush
 
-Petr T
+> +
+>  static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+>         unsigned long long base, unsigned long long length)
+>  {
+>         struct memory_range *r;
+>
+> -       if (nr >= KEXEC_SEGMENT_MAX)
+> +       if (count_memory_ranges >= KEXEC_SEGMENT_MAX)
+>                 return -1;
+>
+> -       r = (struct memory_range *)data + nr;
+> -       r->type = RANGE_RAM;
+> +       r = (struct memory_range *)data + count_memory_ranges;
+> +
+> +       if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
+> +               r->type = RANGE_RAM;
+> +       else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
+> +               r->type = RANGE_RESERVED;
+> +       else
+> +               return 0;
+> +
+>         r->start = base;
+>         r->end = base + length - 1;
+> +       count_memory_ranges++;
+>
+>         set_phys_offset(r->start);
+>
+> @@ -493,9 +504,10 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+>  static int get_memory_ranges_iomem(struct memory_range *array,
+>         unsigned int *count)
+>  {
+> -       *count = kexec_iomem_for_each_line("System RAM\n",
+> -               get_memory_ranges_iomem_cb, array);
+> +       count_memory_ranges = 0;
+> +       kexec_iomem_for_each_line(NULL, get_memory_ranges_iomem_cb, array);
+>
+> +       *count = count_memory_ranges;
+>         if (!*count) {
+>                 dbgprintf("%s: failed: No RAM found.\n", __func__);
+>                 return -EFAILED;
+> --
+> 2.9.0
+>
 
 _______________________________________________
 kexec mailing list
