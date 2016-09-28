@@ -1,40 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bp7E9-0002Tc-QZ
- for kexec@lists.infradead.org; Wed, 28 Sep 2016 05:16:18 +0000
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8S5CgGl144027
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:15:57 -0400
-Received: from e28smtp09.in.ibm.com ([125.16.236.9])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25qxu2c8uq-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:15:57 -0400
-Received: from localhost
- by e28smtp09.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Wed, 28 Sep 2016 10:45:54 +0530
-Received: from d28relay08.in.ibm.com (d28relay08.in.ibm.com [9.184.220.159])
- by d28dlp02.in.ibm.com (Postfix) with ESMTP id 47D4D3940033
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 10:45:52 +0530 (IST)
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay08.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8S5FfKk15401076
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 10:45:41 +0530
-Received: from d28av03.in.ibm.com (localhost [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8S5FoDo031927
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 10:45:51 +0530
-Subject: [RESEND PATCH 8/8] makedumpfile/ppc64: enable address translation
- support for radix mmu
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Wed, 28 Sep 2016 10:45:41 +0530
-In-Reply-To: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
-References: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
+ id 1bp9br-00054r-QN
+ for kexec@lists.infradead.org; Wed, 28 Sep 2016 07:48:58 +0000
+Received: by mail-pf0-x231.google.com with SMTP id q2so14796055pfj.3
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 00:48:35 -0700 (PDT)
+Date: Wed, 28 Sep 2016 00:48:08 -0700
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v3 1/8] arm64: identify PHYS_OFFSET correctly
+Message-ID: <20160928074806.GA5232@localhost>
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+ <20160907043401.6403-2-takahiro.akashi@linaro.org>
+ <CAHB_GuqcaGxj48RNW_72Q6tMgoat7oRG0LKg0S7mJs8=_Ft8Lw@mail.gmail.com>
 MIME-Version: 1.0
-Message-Id: <147503971602.1199.10770628286917209271.stgit@hbathini.in.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <CAHB_GuqcaGxj48RNW_72Q6tMgoat7oRG0LKg0S7mJs8=_Ft8Lw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,260 +27,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
+To: Pratyush Anand <panand@redhat.com>
+Cc: Geoff Levand <geoff@infradead.org>, Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-As both radix and hash MMU are supported in a single kernel on
-Power ISA 3.0 based server processors, identify the current MMU
-type and set page table index values accordingly.
+On Tue, Sep 27, 2016 at 09:19:51PM +0530, Pratyush Anand wrote:
+> On Wed, Sep 7, 2016 at 10:03 AM, AKASHI Takahiro
+> <takahiro.akashi@linaro.org> wrote:
+> > Due to the kernel patch[1], the current code will not be able to identify
+> 
+> [1] is mentioned in cover letter only, not here.
 
-Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
----
- arch/ppc64.c   |   47 +++++++++++++++++++++++++++++++++++++++++------
- makedumpfile.c |   11 +++++++++++
- makedumpfile.h |   39 ++++++++++++++++++++++++++++++---------
- 3 files changed, 82 insertions(+), 15 deletions(-)
+Oops, thanks.
 
-diff --git a/arch/ppc64.c b/arch/ppc64.c
-index 40076eb..6aeab7e 100644
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -237,7 +237,13 @@ ppc64_vmalloc_init(void)
- 		/*
- 		 * 64K pagesize
- 		 */
--		if (info->kernel_version >= KERNEL_VERSION(4, 6, 0)) {
-+		if (info->cur_mmu_type & RADIX_MMU) {
-+			info->l1_index_size = PTE_INDEX_SIZE_RADIX_64K;
-+			info->l2_index_size = PMD_INDEX_SIZE_RADIX_64K;
-+			info->l3_index_size = PUD_INDEX_SIZE_RADIX_64K;
-+			info->l4_index_size = PGD_INDEX_SIZE_RADIX_64K;
-+
-+		} else if (info->kernel_version >= KERNEL_VERSION(4, 6, 0)) {
- 			info->l1_index_size = PTE_INDEX_SIZE_L4_64K_3_10;
- 			info->l2_index_size = PMD_INDEX_SIZE_L4_64K_4_6;
- 			info->l3_index_size = PUD_INDEX_SIZE_L4_64K_4_6;
-@@ -272,11 +278,19 @@ ppc64_vmalloc_init(void)
- 		/*
- 		 * 4K pagesize
- 		 */
--		info->l1_index_size = PTE_INDEX_SIZE_L4_4K;
--		info->l2_index_size = PMD_INDEX_SIZE_L4_4K;
--		info->l3_index_size = (info->kernel_version >= KERNEL_VERSION(3, 7, 0) ?
--			PUD_INDEX_SIZE_L4_4K_3_7 : PUD_INDEX_SIZE_L4_4K);
--		info->l4_index_size = PGD_INDEX_SIZE_L4_4K;
-+		if (info->cur_mmu_type & RADIX_MMU) {
-+			info->l1_index_size = PTE_INDEX_SIZE_RADIX_4K;
-+			info->l2_index_size = PMD_INDEX_SIZE_RADIX_4K;
-+			info->l3_index_size = PUD_INDEX_SIZE_RADIX_4K;
-+			info->l4_index_size = PGD_INDEX_SIZE_RADIX_4K;
-+
-+		} else {
-+			info->l1_index_size = PTE_INDEX_SIZE_L4_4K;
-+			info->l2_index_size = PMD_INDEX_SIZE_L4_4K;
-+			info->l3_index_size = (info->kernel_version >= KERNEL_VERSION(3, 7, 0) ?
-+				PUD_INDEX_SIZE_L4_4K_3_7 : PUD_INDEX_SIZE_L4_4K);
-+			info->l4_index_size = PGD_INDEX_SIZE_L4_4K;
-+		}
- 
- 		info->pte_rpn_shift = (info->kernel_version >= KERNEL_VERSION(4, 5, 0) ?
- 			PTE_RPN_SHIFT_L4_4K_4_5 : PTE_RPN_SHIFT_L4_4K);
-@@ -537,6 +551,27 @@ get_machdep_info_ppc64(void)
- int
- get_versiondep_info_ppc64()
- {
-+	unsigned long cur_cpu_spec;
-+	uint mmu_features;
-+
-+	/*
-+	 * On PowerISA 3.0 based server processors, a kernel can run with
-+	 * radix MMU or standard MMU. Get the current MMU type.
-+	 */
-+	info->cur_mmu_type = STD_MMU;
-+	if ((SYMBOL(cur_cpu_spec) != NOT_FOUND_SYMBOL)
-+	    && (OFFSET(cpu_spec.mmu_features) != NOT_FOUND_STRUCTURE)) {
-+		if (readmem(VADDR, SYMBOL(cur_cpu_spec), &cur_cpu_spec,
-+		    sizeof(cur_cpu_spec))) {
-+			if (readmem(VADDR, cur_cpu_spec + OFFSET(cpu_spec.mmu_features),
-+			    &mmu_features, sizeof(mmu_features)))
-+				info->cur_mmu_type = mmu_features & RADIX_MMU;
-+		}
-+	}
-+
-+	/*
-+	 * Initialize Linux page table info
-+	 */
- 	if (ppc64_vmalloc_init() == FALSE) {
- 		ERRMSG("Can't initialize for vmalloc translation\n");
- 		return FALSE;
-diff --git a/makedumpfile.c b/makedumpfile.c
-index d168dfd..c4b3c62 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1567,6 +1567,7 @@ get_symbol_info(void)
- 
- 	SYMBOL_INIT(cpu_pgd, "cpu_pgd");
- 	SYMBOL_INIT(demote_segment_4k, "demote_segment_4k");
-+	SYMBOL_INIT(cur_cpu_spec, "cur_cpu_spec");
- 
- 	return TRUE;
- }
-@@ -1949,6 +1950,12 @@ get_structure_info(void)
- 	SIZE_INIT(mmu_psize_def, "mmu_psize_def");
- 	OFFSET_INIT(mmu_psize_def.shift, "mmu_psize_def", "shift");
- 
-+	/*
-+	 * Get offsets of the cpu_spec's members.
-+	 */
-+	SIZE_INIT(cpu_spec, "cpu_spec");
-+	OFFSET_INIT(cpu_spec.mmu_features, "cpu_spec", "mmu_features");
-+
- 	return TRUE;
- }
- 
-@@ -2151,6 +2158,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
- 	WRITE_SYMBOL("cpu_pgd", cpu_pgd);
- 	WRITE_SYMBOL("demote_segment_4k", demote_segment_4k);
-+	WRITE_SYMBOL("cur_cpu_spec", cur_cpu_spec);
- 	WRITE_SYMBOL("free_huge_page", free_huge_page);
- 
- 	/*
-@@ -2226,6 +2234,7 @@ write_vmcoreinfo_data(void)
- 	    vmemmap_backing.virt_addr);
- 	WRITE_MEMBER_OFFSET("vmemmap_backing.list", vmemmap_backing.list);
- 	WRITE_MEMBER_OFFSET("mmu_psize_def.shift", mmu_psize_def.shift);
-+	WRITE_MEMBER_OFFSET("cpu_spec.mmu_features", cpu_spec.mmu_features);
- 
- 	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
- 		WRITE_ARRAY_LENGTH("node_data", node_data);
-@@ -2503,6 +2512,7 @@ read_vmcoreinfo(void)
- 	READ_SYMBOL("mmu_vmemmap_psize", mmu_vmemmap_psize);
- 	READ_SYMBOL("cpu_pgd", cpu_pgd);
- 	READ_SYMBOL("demote_segment_4k", demote_segment_4k);
-+	READ_SYMBOL("cur_cpu_spec", cur_cpu_spec);
- 	READ_SYMBOL("free_huge_page", free_huge_page);
- 
- 	READ_STRUCTURE_SIZE("page", page);
-@@ -2561,6 +2571,7 @@ read_vmcoreinfo(void)
- 	    vmemmap_backing.virt_addr);
- 	READ_MEMBER_OFFSET("vmemmap_backing.list", vmemmap_backing.list);
- 	READ_MEMBER_OFFSET("mmu_psize_def.shift", mmu_psize_def.shift);
-+	READ_MEMBER_OFFSET("cpu_spec.mmu_features", cpu_spec.mmu_features);
- 
- 	READ_STRUCTURE_SIZE("printk_log", printk_log);
- 	if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 69747c0..a5955ff 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -633,6 +633,10 @@ int get_va_bits_arm64(void);
- #define PUD_INDEX_SIZE_L4_4K  7
- #define PGD_INDEX_SIZE_L4_4K  9
- #define PUD_INDEX_SIZE_L4_4K_3_7  9
-+#define PTE_INDEX_SIZE_RADIX_4K  9
-+#define PMD_INDEX_SIZE_RADIX_4K  9
-+#define PUD_INDEX_SIZE_RADIX_4K  9
-+#define PGD_INDEX_SIZE_RADIX_4K  13
- #define PTE_RPN_SHIFT_L4_4K  17
- #define PTE_RPN_SHIFT_L4_4K_4_5  18
- #define PGD_MASKED_BITS_4K  0
-@@ -649,6 +653,10 @@ int get_va_bits_arm64(void);
- #define PGD_INDEX_SIZE_L4_64K_3_10  12
- #define PMD_INDEX_SIZE_L4_64K_4_6  5
- #define PUD_INDEX_SIZE_L4_64K_4_6  5
-+#define PTE_INDEX_SIZE_RADIX_64K  5
-+#define PMD_INDEX_SIZE_RADIX_64K  9
-+#define PUD_INDEX_SIZE_RADIX_64K  9
-+#define PGD_INDEX_SIZE_RADIX_64K  13
- #define PTE_RPN_SHIFT_L4_64K_V1  32
- #define PTE_RPN_SHIFT_L4_64K_V2  30
- #define PGD_MASKED_BITS_64K  0
-@@ -668,6 +676,17 @@ int get_va_bits_arm64(void);
- #define PUD_MASKED_BITS_4_7  0xc0000000000000ffUL
- #define PMD_MASKED_BITS_4_7  0xc0000000000000ffUL
- 
-+/*
-+ * Supported MMU types
-+ */
-+#define STD_MMU         0x0
-+/*
-+ * The flag bit for radix MMU in cpu_spec.mmu_features
-+ * in the kernel. Use the same flag here.
-+ */
-+#define RADIX_MMU       0x40
-+
-+
- #define PGD_MASK_L4		\
- 	(info->kernel_version >= KERNEL_VERSION(3, 10, 0) ? (info->ptrs_per_pgd - 1) : 0x1ff)
- #define PGD_OFFSET_L4(vaddr)	((vaddr >> (info->l4_shift)) & PGD_MASK_L4)
-@@ -1129,6 +1148,7 @@ struct DumpInfo {
- 	/*
- 	 * page table info for ppc64
- 	 */
-+	int		cur_mmu_type;
- 	int		ptrs_per_pgd;
- 	uint		l4_index_size;
- 	uint		l3_index_size;
-@@ -1438,17 +1458,14 @@ struct symbol_table {
- 	unsigned long long	kexec_crash_image;
- 
- 	/*
--	 * vmemmap symbols on ppc64 arch
-+	 * symbols on ppc64 arch
- 	 */
- 	unsigned long long		vmemmap_list;
- 	unsigned long long		mmu_vmemmap_psize;
- 	unsigned long long		mmu_psize_defs;
--
--	/*
--	 * vm related symbols for ppc64 arch
--	 */
- 	unsigned long long		cpu_pgd;
- 	unsigned long long		demote_segment_4k;
-+	unsigned long long		cur_cpu_spec;
- };
- 
- struct size_table {
-@@ -1485,10 +1502,11 @@ struct size_table {
- 	long	elf64_hdr;
- 
- 	/*
--	 * vmemmap symbols on ppc64 arch
-+	 * symbols on ppc64 arch
- 	 */
- 	long	vmemmap_backing;
- 	long	mmu_psize_def;
-+	long	cpu_spec;
- 
- 	long	pageflags;
- };
-@@ -1637,18 +1655,21 @@ struct offset_table {
- 	} printk_log;
- 
- 	/*
--	 * vmemmap symbols on ppc64 arch
-+	 * symbols on ppc64 arch
- 	 */
--	struct mmu_psize_def {
-+	struct mmu_psize_def_s {
- 		long	shift;
- 	} mmu_psize_def;
- 
--	struct vmemmap_backing {
-+	struct vmemmap_backing_s {
- 		long	phys;
- 		long	virt_addr;
- 		long	list;
- 	} vmemmap_backing;
- 
-+	struct cpu_spec_s {
-+		long	mmu_features;
-+	} cpu_spec;
- };
- 
- /*
+> > the correct value of PHYS_OFFSET if some "reserved" memory region, which
+> > is likely to be UEFI runtime services code/data, exists at an address below
+> > the first "System RAM" regions.
+> >
+> > This patch fixes this issue.
+> >
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > ---
+> >  kexec/arch/arm64/iomem.h       |  7 +++++++
+> >  kexec/arch/arm64/kexec-arm64.c | 22 +++++++++++++++++-----
+> >  2 files changed, 24 insertions(+), 5 deletions(-)
+> >  create mode 100644 kexec/arch/arm64/iomem.h
+> >
+> > diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+> > new file mode 100644
+> > index 0000000..7fd66eb
+> > --- /dev/null
+> > +++ b/kexec/arch/arm64/iomem.h
+> > @@ -0,0 +1,7 @@
+> > +#ifndef IOMEM_H
+> > +#define IOMEM_H
+> > +
+> > +#define SYSTEM_RAM             "System RAM\n"
+> > +#define IOMEM_RESERVED         "reserved\n"
+> > +
+> > +#endif
+> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> > index 7183dac..bc96c76 100644
+> > --- a/kexec/arch/arm64/kexec-arm64.c
+> > +++ b/kexec/arch/arm64/kexec-arm64.c
+> > @@ -21,6 +21,7 @@
+> >  #include "crashdump-arm64.h"
+> >  #include "dt-ops.h"
+> >  #include "fs2dt.h"
+> > +#include "iomem.h"
+> >  #include "kexec-syscall.h"
+> >  #include "arch/options.h"
+> >
+> > @@ -465,18 +466,28 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+> >   * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
+> >   */
+> >
+> > +static int count_memory_ranges;
+> 
+> IMHO improving definition of kexec_iomem_for_each_line() and
+> callback() for handling NULL match case would have been a better
+> choice than introducing a new static variable. callback() can return
+> -ve in case of error, 0 in case of no match and 1 in case of (one)
+> match.
 
+Maybe. But we have to be careful not to change other arch's results.
+Or follow arm's approach.
+
+-Takahiro AKASHI
+
+> ~Pratyush
+> 
+> > +
+> >  static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+> >         unsigned long long base, unsigned long long length)
+> >  {
+> >         struct memory_range *r;
+> >
+> > -       if (nr >= KEXEC_SEGMENT_MAX)
+> > +       if (count_memory_ranges >= KEXEC_SEGMENT_MAX)
+> >                 return -1;
+> >
+> > -       r = (struct memory_range *)data + nr;
+> > -       r->type = RANGE_RAM;
+> > +       r = (struct memory_range *)data + count_memory_ranges;
+> > +
+> > +       if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
+> > +               r->type = RANGE_RAM;
+> > +       else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
+> > +               r->type = RANGE_RESERVED;
+> > +       else
+> > +               return 0;
+> > +
+> >         r->start = base;
+> >         r->end = base + length - 1;
+> > +       count_memory_ranges++;
+> >
+> >         set_phys_offset(r->start);
+> >
+> > @@ -493,9 +504,10 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+> >  static int get_memory_ranges_iomem(struct memory_range *array,
+> >         unsigned int *count)
+> >  {
+> > -       *count = kexec_iomem_for_each_line("System RAM\n",
+> > -               get_memory_ranges_iomem_cb, array);
+> > +       count_memory_ranges = 0;
+> > +       kexec_iomem_for_each_line(NULL, get_memory_ranges_iomem_cb, array);
+> >
+> > +       *count = count_memory_ranges;
+> >         if (!*count) {
+> >                 dbgprintf("%s: failed: No RAM found.\n", __func__);
+> >                 return -EFAILED;
+> > --
+> > 2.9.0
+> >
 
 _______________________________________________
 kexec mailing list
