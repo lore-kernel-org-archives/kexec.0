@@ -1,38 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bp7Au-0000js-OF
- for kexec@lists.infradead.org; Wed, 28 Sep 2016 05:12:57 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8S52p9w122920
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:12:35 -0400
-Received: from e23smtp04.au.ibm.com (e23smtp04.au.ibm.com [202.81.31.146])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25qy5sb70c-1
+ id 1bp7BP-0000lt-2D
+ for kexec@lists.infradead.org; Wed, 28 Sep 2016 05:13:28 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u8S5Cg9K134292
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:13:05 -0400
+Received: from e23smtp05.au.ibm.com (e23smtp05.au.ibm.com [202.81.31.147])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 25r1efedxe-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:12:35 -0400
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 01:13:05 -0400
 Received: from localhost
- by e23smtp04.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Wed, 28 Sep 2016 15:12:33 +1000
-Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 1F1A12CE8056
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 15:12:30 +1000 (EST)
-Received: from d23av06.au.ibm.com (d23av06.au.ibm.com [9.190.235.151])
- by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8S5CT3X7864654
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 15:12:29 +1000
-Received: from d23av06.au.ibm.com (localhost [127.0.0.1])
- by d23av06.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8S5CTVS015889
- for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 15:12:29 +1000
-Subject: [RESEND PATCH 0/8] makedumpfile: Add support to understand Power
- ISA 3.0 based kernel
+ Wed, 28 Sep 2016 15:13:02 +1000
+Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 12E632CE8054
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 15:12:59 +1000 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8S5CxjQ6750642
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 15:12:59 +1000
+Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u8S5Cwtq017069
+ for <kexec@lists.infradead.org>; Wed, 28 Sep 2016 15:12:58 +1000
+Subject: [RESEND PATCH 1/8] makedumpfile/ppc64: fix vtop page translation
+ for 4K pages
 From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Wed, 28 Sep 2016 10:42:25 +0530
+Date: Wed, 28 Sep 2016 10:42:55 +0530
+In-Reply-To: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
+References: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-Message-Id: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
+Message-Id: <147503955504.1199.17131352223747825406.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,33 +51,90 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
 Cc: Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
 
-With the introduction of radix MMU in Power ISA 3.0, there are changes
-in kernel page table management accommodating that. This patch series
-makes appropriate changes here to work for such kernels. This series
-enables address translation support for radix MMU and also, fixes a
-few bugs along the way.
+PUD index size was changed to 9 from 7 since kernel v3.7, but it was
+not updated here. Also, currently L4_MASK is set to 0xfff for kernel
+v3.10 and above irrespective of page size but it should be based on
+l4 index size which is different for 4k & 64K page sizes. This patch
+fixes them.
 
-Resending the patches:
-* by adding makedumpfile in subject to set this in context
-* adding right mail id of Atsushi Kumagai
-
+Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
 ---
+ arch/ppc64.c   |   10 +++++++---
+ makedumpfile.h |    5 ++++-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-Hari Bathini (8):
-      ppc64: fix vtop page translation for 4K pages
-      ppc64: Use kernel terminology for each level in 4-level page table
-      ppc64: address changes in kernel v4.5
-      ppc64: address change in _PAGE_PRESNT flag for PowerISA v3.0
-      ppc64: use physical addresses and unfold pud for 64K page size
-      ppc64: support big endian Linux page tables
-      ppc64: use the same masked bit values for 4K and 64K pagesizes
-      ppc64: enable address translation support for radix mmu
-
-
- arch/ppc64.c   |  231 ++++++++++++++++++++++++++++++++++++++++++++++++--------
- makedumpfile.c |   11 +++
- makedumpfile.h |  107 +++++++++++++++++---------
- 3 files changed, 280 insertions(+), 69 deletions(-)
+diff --git a/arch/ppc64.c b/arch/ppc64.c
+index 89a7f05..2cc3906 100644
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -160,10 +160,12 @@ ppc64_vmalloc_init(void)
+ 			info->l1_index_size = PTE_INDEX_SIZE_L4_64K_3_10;
+ 			info->l2_index_size = PMD_INDEX_SIZE_L4_64K_3_10;
+ 			info->l3_index_size = PUD_INDEX_SIZE_L4_64K;
++			info->l4_index_size = PGD_INDEX_SIZE_L4_64K_3_10;
+ 		} else {
+ 			info->l1_index_size = PTE_INDEX_SIZE_L4_64K;
+ 			info->l2_index_size = PMD_INDEX_SIZE_L4_64K;
+ 			info->l3_index_size = PUD_INDEX_SIZE_L4_64K;
++			info->l4_index_size = PGD_INDEX_SIZE_L4_64K;
+ 		}
+ 
+ 		info->pte_shift = SYMBOL(demote_segment_4k) ?
+@@ -175,7 +177,9 @@ ppc64_vmalloc_init(void)
+ 		 */
+ 		info->l1_index_size = PTE_INDEX_SIZE_L4_4K;
+ 		info->l2_index_size = PMD_INDEX_SIZE_L4_4K;
+-		info->l3_index_size = PUD_INDEX_SIZE_L4_4K;
++		info->l3_index_size = (info->kernel_version >= KERNEL_VERSION(3, 7, 0) ?
++			PUD_INDEX_SIZE_L4_4K_3_7 : PUD_INDEX_SIZE_L4_4K);
++		info->l4_index_size = PGD_INDEX_SIZE_L4_4K;
+ 
+ 		info->pte_shift = PTE_SHIFT_L4_4K;
+ 		info->l2_masked_bits = PMD_MASKED_BITS_4K;
+@@ -188,8 +192,8 @@ ppc64_vmalloc_init(void)
+ 	info->ptrs_per_l1 = (1 << info->l1_index_size);
+ 	info->ptrs_per_l2 = (1 << info->l2_index_size);
+ 	info->ptrs_per_l3 = (1 << info->l3_index_size);
+-
+-	info->ptrs_per_pgd = info->ptrs_per_l3;
++	info->ptrs_per_l4 = (1 << info->l4_index_size);
++	info->ptrs_per_pgd = info->ptrs_per_l4;
+ 
+ 	/*
+ 	 * Compute shifts
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 1814139..46c940c 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -650,6 +650,7 @@ int get_va_bits_arm64(void);
+ #define PMD_INDEX_SIZE_L4_4K  7
+ #define PUD_INDEX_SIZE_L4_4K  7
+ #define PGD_INDEX_SIZE_L4_4K  9
++#define PUD_INDEX_SIZE_L4_4K_3_7  9
+ #define PTE_SHIFT_L4_4K  17
+ #define PMD_MASKED_BITS_4K  0
+ 
+@@ -666,7 +667,7 @@ int get_va_bits_arm64(void);
+ #define PMD_MASKED_BITS_64K  0x1ff
+ 
+ #define L4_MASK		\
+-	(info->kernel_version >= KERNEL_VERSION(3, 10, 0) ? 0xfff : 0x1ff)
++	(info->kernel_version >= KERNEL_VERSION(3, 10, 0) ? (info->ptrs_per_pgd - 1) : 0x1ff)
+ #define L4_OFFSET(vaddr)	((vaddr >> (info->l4_shift)) & L4_MASK)
+ 
+ #define PGD_OFFSET_L4(vaddr)	\
+@@ -1123,9 +1124,11 @@ struct DumpInfo {
+ 	 * page table info for ppc64
+ 	 */
+ 	int		ptrs_per_pgd;
++	uint		l4_index_size;
+ 	uint		l3_index_size;
+ 	uint		l2_index_size;
+ 	uint		l1_index_size;
++	uint		ptrs_per_l4;
+ 	uint		ptrs_per_l3;
+ 	uint		ptrs_per_l2;
+ 	uint		ptrs_per_l1;
 
 
 _______________________________________________
