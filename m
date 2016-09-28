@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 28 Sep 2016 00:39:15 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20160927233915.GB3437@remoulade>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015747.28591-1-takahiro.akashi@linaro.org>
- <20160819132641.GA12709@rob-hp-laptop>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bp3oN-00082o-4t
+ for kexec@lists.infradead.org; Wed, 28 Sep 2016 01:37:27 +0000
+Date: Wed, 28 Sep 2016 09:37:02 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v5 5/8] iommu/amd: copy old trans table from old kernel
+Message-ID: <20160928013702.GH14155@x1.redhat.com>
+References: <1473951806-25511-1-git-send-email-bhe@redhat.com>
+ <1473951806-25511-6-git-send-email-bhe@redhat.com>
+ <20160920124031.GD3541@8bytes.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160819132641.GA12709@rob-hp-laptop>
+In-Reply-To: <20160920124031.GD3541@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,59 +25,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, ard.biesheuvel@linaro.org, geoff@infradead.org, catalin.marinas@arm.com, dyoung@redhat.com, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, frowand.list@gmail.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Joerg Roedel <joro@8bytes.org>
+Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-Hi Rob,
+Hi Joerg,
 
-Reviving an old thread -- "rock" and "hard place" come to mind.
-
-On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
-> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
-> > From: James Morse <james.morse@arm.com>
-
-> > +linux,usable-memory-range
-> > +-------------------------
-> > +
-> > +This property (currently used only on arm64) holds the memory range,
-> > +the base address and the size, which can be used as system ram on
-> > +the *current* kernel. Note that, if this property is present, any memory
-> > +regions under "memory" nodes in DT blob or ones marked as "conventional
-> > +memory" in EFI memory map should be ignored.
-> > +e.g.
-> > +
-> > +/ {
-> > +	chosen {
-> > +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> > +	};
-> > +};
+On 09/20/16 at 02:40pm, Joerg Roedel wrote:
+> > +	if ( !is_pre_enabled) {
+> > +		for_each_iommu(iommu)
+> > +			early_enable_iommu(iommu);
+> > +	} else {
+> > +		if (copy_dev_tables()) {
+> > +			pr_err("Failed to copy DEV table from previous kernel.\n");
+> > +			/*
+> > +			 * If failed to copy dev tables from old kernel, continue to proceed
+> > +			 * as it does in normal kernel.
+> > +			 */
+> > +			for_each_iommu(iommu) {
+> > +				clear_translation_pre_enabled(iommu);
+> > +				early_enable_iommu(iommu);
+> > +			}
+> > +		} else {
+> > +			pr_info("Copied DEV table from previous kernel.\n");
+> > +			for_each_iommu(iommu) {
+> > +				iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
+> > +		                iommu_feature_disable(iommu, CONTROL_EVT_LOG_EN);
 > 
-> I've read the discussion on this. I think you should use the existing 
-> linux,usable-memory property in the memory nodes. If UEFI systems don't 
-> have memory nodes, then you can find an UEFI way to describe this. DT is 
-> not the dumping ground for what doesn't fit in UEFI. How do x86 systems 
-> work?
+> Could you move that into new helpers (iommu_disable_command_buffer...)?
 
-Having looked at the proposals, I'm personally much keener on the approach
-above (modulo naming and wording) than trying to bolt memory nodes onto a UEFI
-system, or using reserved-memory to describe the inverse of the allowable
-range.
+Did you mean wraping iommu_feature_disable(iommu, CONTROL_CMDBUF_EN) into a
+helper function like iommu_disable_command_buffer(), and wraping
+iommu_feature_disable(iommu, CONTROL_EVT_LOG_EN) into
+iommu_disable_event_buffer()?
 
-I completely agree that we want one solution for DT-only and DT+UEFI.
+I retest with not disabling command buffer and event log here, it works
+on amd iommu v1 and v2 systems. So if I understand your comment
+correctly, there's no need to add "iommu_feature_disable(iommu,
+CONTROL_CMDBUF_EN)"  and "iommu_feature_disable(iommu,
+CONTROL_EVT_LOG_EN)" here. I remember I added them here because more
+IO_PAGE_FAULT messages are printed without them. But now it seems not to
+related to them. So I will remove above two lines of code.
 
-While those approaches reuse existing infrastructure, they end up creating more
-work, and I believe that they create more scope for painful problems. As kdump
-is already a constrained case, I think that it's reasonable to have a
-linux-specific property as above.
-
-I also think we need to figure out how we expect this to work for the
-kexec_file_load case, as that has a criticial impact on the above (e.g. what's
-preferable out of cmdline options vs dt properties).
-
-Can we try to sync at connect to discuss this?
-
-Thanks,
-Mark.
+> 
+> > +		                iommu_enable_command_buffer(iommu);
+> > +		                iommu_enable_event_buffer(iommu);
+> > +		                iommu_set_device_table(iommu);
+> > +		                iommu_flush_all_caches(iommu);
+> > +			}
+> > +		}
+> > +	}
+> >  }
+> >  
+> >  static void enable_iommus_v2(void)
+> > -- 
+> > 2.5.5
+> > 
 
 _______________________________________________
 kexec mailing list
