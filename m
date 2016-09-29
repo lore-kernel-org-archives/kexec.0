@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpWYO-0005Pr-Te
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 08:18:54 +0000
-Received: by mail-pf0-x22b.google.com with SMTP id q2so26603925pfj.3
- for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 01:18:31 -0700 (PDT)
-Date: Thu, 29 Sep 2016 01:18:06 -0700
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
-Message-ID: <20160929081805.GA5218@localhost>
-References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
- <20160929075200.GE14497@verge.net.au>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bpWaE-0006jG-9c
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 08:20:46 +0000
+Date: Thu, 29 Sep 2016 10:20:20 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] kexec/fs2dt: Check for NULL pointer in
+ dt_copy_old_root_param()
+Message-ID: <20160929082020.GH14497@verge.net.au>
+References: <1475135953-21729-1-git-send-email-maddy@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160929075200.GE14497@verge.net.au>
+In-Reply-To: <1475135953-21729-1-git-send-email-maddy@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,34 +24,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org
+To: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: panand@redhat.com, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
 
-On Thu, Sep 29, 2016 at 09:52:00AM +0200, Simon Horman wrote:
-> On Wed, Sep 07, 2016 at 01:33:53PM +0900, AKASHI Takahiro wrote:
-> > My kernel patches of kdump suport on arm64 are currently under reviews.
-> > 
-> > This patchset is synced with them (v26 [1]) and provides necessary changes
-> > for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
-> > v5[2] along with a bugfix[3].
-> > 
-> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
-> > [2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
-> > [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
+[CC Dave Young]
+
+On Thu, Sep 29, 2016 at 01:29:13PM +0530, Madhavan Srinivasan wrote:
+> In dt_copy_old_root_param(), FILE * returned
+> from fopen is not checked for NULL pointer
+> before passinig to fclose(). This could trigger
+> a segfault. Patch to fix the same.
 > 
-> Unfortunately patch 2 does not seem to apply cleanly any more.
-> Could you consider rebasing if you think this series is ready to be
-> applied?
+> Reviewed-by: Dave Young <dyoung@redhat.com>
 
-Yes, I will as there will be some changes needed again due to the discussions
-on my kernel patch.
+Probably Dave's tag should be dropped as that was for a somewhat
+different (though equally trivial) approach.
 
-BTW, can you give me your opinion on my question, please?
+> Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> ---
+> Changelog v1:
+>  - Moved the check right after fopen
+> 
+>  kexec/fs2dt.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+> index 6ed2399759cf..5ba3ec0fa65c 100644
+> --- a/kexec/fs2dt.c
+> +++ b/kexec/fs2dt.c
+> @@ -524,6 +524,9 @@ static void dt_copy_old_root_param(void)
+>  	strcpy(filename, pathname);
+>  	strcat(filename, "bootargs");
+>  	fp = fopen(filename, "r");
+> +	if (!fp)
+> +		return;
+> +
 
-http://lists.infradead.org/pipermail/kexec/2016-September/017119.html
+With the (!fp) conditional above the (fp) conditional below can be removed.
 
-Thanks,
--Takahiro AKASHI
+>  	if (fp) {
+>  		if (getline(&last_cmdline, &len, fp) == -1)
+>  			die("unable to read %s\n", filename);
+> -- 
+> 2.7.4
+> 
 
 _______________________________________________
 kexec mailing list
