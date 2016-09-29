@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpW5m-00063l-SU
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 07:49:19 +0000
-Date: Thu, 29 Sep 2016 09:47:43 +0200
+ id 1bpW8n-0007kJ-Ja
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 07:52:27 +0000
+Date: Thu, 29 Sep 2016 09:52:00 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: fix mem_regions_sort()
-Message-ID: <20160929074743.GA19336@verge.net.au>
-References: <7514609d50e28f6632e3a265fdd08020c33353b6.1469641659.git.panand@redhat.com>
- <CAHB_GuoySL5Dwns9a5OD8V1t2Eq3o6ZxXBZ5a35MfV216LaDvw@mail.gmail.com>
- <20160728143845.GR14726@flint.armlinux.org.uk>
- <20160729035219.GD27150@localhost.localdomain>
+Subject: Re: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
+Message-ID: <20160929075200.GE14497@verge.net.au>
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160729035219.GD27150@localhost.localdomain>
+In-Reply-To: <20160907043401.6403-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,39 +23,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Russell King <rmk@armlinux.org.uk>, Kexec Mailing List <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org
 
-On Fri, Jul 29, 2016 at 09:22:19AM +0530, Pratyush Anand wrote:
-> Hi Simon,
+On Wed, Sep 07, 2016 at 01:33:53PM +0900, AKASHI Takahiro wrote:
+> My kernel patches of kdump suport on arm64 are currently under reviews.
 > 
-> Please take this fix for 2.0.13.
+> This patchset is synced with them (v26 [1]) and provides necessary changes
+> for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+> v5[2] along with a bugfix[3].
 > 
-> ~Pratyush
-> On 28/07/2016:03:38:46 PM, Russell King wrote:
-> > On Wed, Jul 27, 2016 at 11:22:24PM +0530, Pratyush Anand wrote:
-> > > Missed CCing Russell because of --suppress-cc :(
-> > > 
-> > > CCing now.
-> > > 
-> > > On Wed, Jul 27, 2016 at 11:19 PM, Pratyush Anand <panand@redhat.com> wrote:
-> > > > ranges->ranges is  "struct memory_range *", however each element which need
-> > > > to be sorted is of type "struct memory_range". So, correct "size" argument
-> > > > of qsort() as sizeof(*ranges->ranges).
-> > 
-> > Oops.  Yes, obviously correct.
-> > 
-> > Acked-by: Russell King <rmk@armlinux.org.uk>
-> > 
-> > > >
-> > > > Signed-off-by: Pratyush Anand <panand@redhat.com>
-> > > > Cc:Russell King <rmk@arm.linux.org.uk>
-> > 
-> > Please remove this Cc while adding my Acked-by.  Thanks.
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
+> [2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
+> [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
 
-Sorry, I completely missed this until now.
-Applied.
-
+Unfortunately patch 2 does not seem to apply cleanly any more.
+Could you consider rebasing if you think this series is ready to be
+applied?
 
 _______________________________________________
 kexec mailing list
