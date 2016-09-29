@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpcIv-0003fX-W7
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 14:27:21 +0000
-Received: by mail-pf0-x22b.google.com with SMTP id q2so29610341pfj.3
- for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 07:26:54 -0700 (PDT)
-Date: Thu, 29 Sep 2016 07:26:48 -0700
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
-Message-ID: <20160929142646.GB5218@localhost>
-References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
- <20160929075200.GE14497@verge.net.au>
- <20160929081805.GA5218@localhost>
- <20160929083909.GI14497@verge.net.au>
+ id 1bpj3z-0008Jj-7w
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 21:40:21 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
+Date: Thu, 29 Sep 2016 16:37:50 -0500
+In-Reply-To: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com> (Mimi
+ Zohar's message of "Mon, 26 Sep 2016 13:30:19 -0400")
+Message-ID: <87y42axu8h.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20160929083909.GI14497@verge.net.au>
+Subject: Re: [PATCH v5 00/10] ima: carry the measurement list across kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,57 +23,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org
+To: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module <linux-security-module@vger.kernel.org>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
 
-Simon,
+Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
 
-On Thu, Sep 29, 2016 at 10:39:09AM +0200, Simon Horman wrote:
-> On Thu, Sep 29, 2016 at 01:18:06AM -0700, AKASHI Takahiro wrote:
-> > On Thu, Sep 29, 2016 at 09:52:00AM +0200, Simon Horman wrote:
-> > > On Wed, Sep 07, 2016 at 01:33:53PM +0900, AKASHI Takahiro wrote:
-> > > > My kernel patches of kdump suport on arm64 are currently under reviews.
-> > > > 
-> > > > This patchset is synced with them (v26 [1]) and provides necessary changes
-> > > > for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
-> > > > v5[2] along with a bugfix[3].
-> > > > 
-> > > > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
-> > > > [2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
-> > > > [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
-> > > 
-> > > Unfortunately patch 2 does not seem to apply cleanly any more.
-> > > Could you consider rebasing if you think this series is ready to be
-> > > applied?
-> > 
-> > Yes, I will as there will be some changes needed again due to the discussions
-> > on my kernel patch.
-> > 
-> > BTW, can you give me your opinion on my question, please?
-> > 
-> > http://lists.infradead.org/pipermail/kexec/2016-September/017119.html
-> 
-> I'm not particularly familiar with UEFI systems but for DT something under
-> chosen seems to make sense.
-> 
-> Regarding Mark's objections to a memmap= command line parameter.
-> Perhaps that could be discussed further in the context that even
-> though it is not particularly attractive it it being used on other
-> architecture(s).
+> The TPM PCRs are only reset on a hard reboot.  In order to validate a
+> TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
+> of the running kernel must be saved and then restored on the subsequent
+> boot, possibly of a different architecture.
+>
+> The existing securityfs binary_runtime_measurements file conveniently
+> provides a serialized format of the IMA measurement list. This patch
+> set serializes the measurement list in this format and restores it.
+>
+> Up to now, the binary_runtime_measurements was defined as architecture
+> native format.  The assumption being that userspace could and would
+> handle any architecture conversions.  With the ability of carrying the
+> measurement list across kexec, possibly from one architecture to a
+> different one, the per boot architecture information is lost and with it
+> the ability of recalculating the template digest hash.  To resolve this
+> problem, without breaking the existing ABI, this patch set introduces
+> the boot command line option "ima_canonical_fmt", which is arbitrarily
+> defined as little endian.
+>
+> The need for this boot command line option will be limited to the
+> existing version 1 format of the binary_runtime_measurements.
+> Subsequent formats will be defined as canonical format (eg. TPM 2.0
+> support for larger digests).
+>
+> A simplified method of Thiago Bauermann's "kexec buffer handover" patch
+> series for carrying the IMA measurement list across kexec is included
+> in this patch set.  The simplified method requires all file measurements
+> be taken prior to executing the kexec load, as subsequent measurements
+> will not be carried across the kexec and restored.
 
+So I just went through the kexec portions of this and I don't see
+anything particularly worrying.
 
-Oops, my question was not accurate here.
-Instead, see the discussions:
-http://lists.infradead.org/pipermail/kexec/2016-July/016686.html
+I have one thing that I think could be improved, but is not wrong.
+Having both receiving and transmitting the ima measurments both under
+HAVE_IMA_KEXEC seems wrong.  There may be people who want to receive the
+measurment list but don't want to support kexec'ing other kernels or the
+other way around.  I can very much see bootloaders that expect they will
+be the first kernel to not want to compile in the extra code for
+receiving the measurment list.
 
-The issue is the end address in a memory range can be handled
-differently across various architectures.
-So we are in a messy situation.
+But again that is a nit, and not a problem.
 
-Thanks,
--Takahiro AKASHI
+So for the series, from the kexec point of view.
 
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
+>
+> These patches can also be found in the next-kexec-restore branch of:
+> git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
+>
+> Changelog v5:
+> - Included patches from Thiago Bauermann's "kexec buffer handover"
+> patch series for carrying the IMA measurement list across kexec.
+> - Added CONFIG_HAVE_IMA_KEXEC
+> - Renamed functions to variations of ima_kexec_buffer instead of
+> variations of kexec_handover_buffer
+>
+> Changelog v4:
+> - Fixed "spinlock bad magic" BUG - reported by Dmitry Vyukov
+> - Rebased on Thiago Bauermann's v5 patch set
+> - Removed the skip_checksum initialization  
+>
+> Changelog v3:
+> - Cleaned up the code for calculating the requested kexec segment size
+> needed for the IMA measurement list, limiting the segment size to half
+> of the totalram_pages.
+> - Fixed kernel test robot reports as enumerated in the respective
+> patch changelog.
+>
+> Changelog v2:
+> - Canonical measurement list support added
+> - Redefined the ima_kexec_hdr struct to use well defined sizes
+>
+> Andreas Steffen (1):
+>   ima: platform-independent hash value
+>
+> Mimi Zohar (7):
+>   ima: on soft reboot, restore the measurement list
+>   ima: permit duplicate measurement list entries
+>   ima: maintain memory size needed for serializing the measurement list
+>   ima: on soft reboot, save the measurement list
+>   ima: store the builtin/custom template definitions in a list
+>   ima: support restoring multiple template formats
+>   ima: define a canonical binary_runtime_measurements list format
+>
+> Thiago Jung Bauermann (2):
+>   powerpc: ima: Get the kexec buffer passed by the previous kernel
+>   powerpc: ima: Send the kexec buffer to the next kernel
+>
+>  Documentation/kernel-parameters.txt       |   4 +
+>  arch/Kconfig                              |   3 +
+>  arch/powerpc/Kconfig                      |   1 +
+>  arch/powerpc/include/asm/ima.h            |  29 +++
+>  arch/powerpc/include/asm/kexec.h          |  16 +-
+>  arch/powerpc/kernel/Makefile              |   4 +
+>  arch/powerpc/kernel/ima_kexec.c           | 223 +++++++++++++++++++++++
+>  arch/powerpc/kernel/kexec_elf_64.c        |   2 +-
+>  arch/powerpc/kernel/machine_kexec_64.c    | 116 ++++++------
+>  include/linux/ima.h                       |  12 ++
+>  kernel/kexec_file.c                       |   4 +
+>  security/integrity/ima/Kconfig            |  12 ++
+>  security/integrity/ima/Makefile           |   1 +
+>  security/integrity/ima/ima.h              |  31 ++++
+>  security/integrity/ima/ima_crypto.c       |   6 +-
+>  security/integrity/ima/ima_fs.c           |  30 ++-
+>  security/integrity/ima/ima_init.c         |   2 +
+>  security/integrity/ima/ima_kexec.c        | 168 +++++++++++++++++
+>  security/integrity/ima/ima_main.c         |   1 +
+>  security/integrity/ima/ima_queue.c        |  76 +++++++-
+>  security/integrity/ima/ima_template.c     | 293 ++++++++++++++++++++++++++++--
+>  security/integrity/ima/ima_template_lib.c |   7 +-
+>  22 files changed, 952 insertions(+), 89 deletions(-)
+>  create mode 100644 arch/powerpc/include/asm/ima.h
+>  create mode 100644 arch/powerpc/kernel/ima_kexec.c
+>  create mode 100644 security/integrity/ima/ima_kexec.c
 
 _______________________________________________
 kexec mailing list
