@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpWHk-0003qy-VC
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 08:01:45 +0000
-Date: Thu, 29 Sep 2016 10:01:16 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [ANNOUNCE] kexec-tools 2.0.13
-Message-ID: <20160929080116.GG14497@verge.net.au>
-References: <20160808103434.GF17838@verge.net.au>
- <20160809075747.GA19066@dhcp-128-65.nay.redhat.com>
+Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bpWYO-0005Pr-Te
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 08:18:54 +0000
+Received: by mail-pf0-x22b.google.com with SMTP id q2so26603925pfj.3
+ for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 01:18:31 -0700 (PDT)
+Date: Thu, 29 Sep 2016 01:18:06 -0700
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
+Message-ID: <20160929081805.GA5218@localhost>
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+ <20160929075200.GE14497@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160809075747.GA19066@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20160929075200.GE14497@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,71 +26,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org
 
-Hi Dave,
-
-On Tue, Aug 09, 2016 at 03:57:47PM +0800, Dave Young wrote:
-> Hi, Simon
-> 
-> On 08/08/16 at 12:34pm, Simon Horman wrote:
-> > Hi all,
+On Thu, Sep 29, 2016 at 09:52:00AM +0200, Simon Horman wrote:
+> On Wed, Sep 07, 2016 at 01:33:53PM +0900, AKASHI Takahiro wrote:
+> > My kernel patches of kdump suport on arm64 are currently under reviews.
 > > 
-> > I am happy to announce the release of kexec-tools 2.0.13.
+> > This patchset is synced with them (v26 [1]) and provides necessary changes
+> > for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+> > v5[2] along with a bugfix[3].
 > > 
-> > This is a feature release coinciding with the release of the v4.7 Linux Kernel[*].
-> > 
-> > This release can be downloaded from kernel.org:
-> > 
-> > 	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.13.tar.xz
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
+> > [2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
+> > [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
 > 
-> The tarball can not build on armv7, below patch should fix it:
-> --
-> kexec-tools armv7 build fix
-> 
-> armv7 build failed as below:
-> 
-> kexec/arch/arm/phys_to_virt.c:3:26: fatal error: phys_to_virt.h: No such file or directory
->  #include "phys_to_virt.h"
->                           ^
-> Ditto for kexec/arch/arm/iomem.h
-> 
-> Add them to dist make target to fix it.
+> Unfortunately patch 2 does not seem to apply cleanly any more.
+> Could you consider rebasing if you think this series is ready to be
+> applied?
 
-Sorry for letting that slip through and double sorry for not responding
-for so long. I have applied the following:
+Yes, I will as there will be some changes needed again due to the discussions
+on my kernel patch.
 
-From: Dave Young <dyoung@redhat.com>
-Date: Tue, 9 Aug 2016 15:57:47 +0800
-Subject: [PATCH] arm: include phys_to_virt.h and iomem.h in distribution
+BTW, can you give me your opinion on my question, please?
 
-These files are required to build kexec-tools on arm.
+http://lists.infradead.org/pipermail/kexec/2016-September/017119.html
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
-[simon: added changelog]
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- kexec/arch/arm/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-index 71db8c32ce13..871979e0ae26 100644
---- a/kexec/arch/arm/Makefile
-+++ b/kexec/arch/arm/Makefile
-@@ -27,6 +27,8 @@ arm_KEXEC_SRCS += $(libfdt_SRCS)
- 
- arm_UIMAGE = kexec/kexec-uImage.c
- arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
-+arm_PHYS_TO_VIRT += kexec/arch/arm/iomem.h
-+arm_PHYS_TO_VIRT += kexec/arch/arm/phys_to_virt.h
- 
- dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
- 	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h	\
--- 
-2.7.0.rc3.207.g0ac5344
-
-
+Thanks,
+-Takahiro AKASHI
 
 _______________________________________________
 kexec mailing list
