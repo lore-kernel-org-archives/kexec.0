@@ -1,40 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpjXD-0003Df-T5
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 22:10:33 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ id 1bpjiH-00088m-2B
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 22:21:57 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u8TM84xq139256
- for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 18:10:08 -0400
-Received: from e28smtp08.in.ibm.com (e28smtp08.in.ibm.com [125.16.236.8])
- by mx0a-001b2d01.pphosted.com with ESMTP id 25s8ste5wy-1
+ u8TMJOfe047072
+ for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 18:21:35 -0400
+Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 25s8sspjh3-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 18:10:08 -0400
+ for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 18:21:35 -0400
 Received: from localhost
- by e28smtp08.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
- Fri, 30 Sep 2016 03:40:05 +0530
-Received: from d28relay10.in.ibm.com (d28relay10.in.ibm.com [9.184.220.161])
- by d28dlp03.in.ibm.com (Postfix) with ESMTP id D6CDA125805C
- for <kexec@lists.infradead.org>; Fri, 30 Sep 2016 03:40:24 +0530 (IST)
-Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
- by d28relay10.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u8TM9oZT16253062
- for <kexec@lists.infradead.org>; Fri, 30 Sep 2016 03:39:50 +0530
-Received: from d28av02.in.ibm.com (localhost [127.0.0.1])
- by d28av02.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u8TMA1Dp028215
- for <kexec@lists.infradead.org>; Fri, 30 Sep 2016 03:40:01 +0530
-Subject: Re: [PATCH v5 00/10] ima: carry the measurement list across kexec
-From: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Date: Thu, 29 Sep 2016 18:09:56 -0400
-In-Reply-To: <87y42axu8h.fsf@x220.int.ebiederm.org>
-References: <1474911029-6372-1-git-send-email-zohar@linux.vnet.ibm.com>
- <87y42axu8h.fsf@x220.int.ebiederm.org>
-Mime-Version: 1.0
-Message-Id: <1475186996.2647.32.camel@linux.vnet.ibm.com>
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 29 Sep 2016 19:21:33 -0300
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp02.br.ibm.com (Postfix) with ESMTP id 7622A1DC006E
+ for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 18:21:31 -0400 (EDT)
+Received: from d24av04.br.ibm.com (d24av04.br.ibm.com [9.8.31.97])
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u8TMLVZ94927660
+ for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 19:21:31 -0300
+Received: from d24av04.br.ibm.com (localhost [127.0.0.1])
+ by d24av04.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u8TMLU6V013780
+ for <kexec@lists.infradead.org>; Thu, 29 Sep 2016 19:21:31 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATHC v2 0/9] ima: carry the measurement list across kexec
+Date: Thu, 29 Sep 2016 19:21:29 -0300
+In-Reply-To: <87eg42xtzn.fsf@x220.int.ebiederm.org>
+References: <1472596811-9596-1-git-send-email-zohar@linux.vnet.ibm.com>
+ <1743059.2ZOQaNILxh@hactar> <87eg42xtzn.fsf@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Message-Id: <2846678.ltpVeSnPm7@hactar>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,141 +49,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-security-module <linux-security-module@vger.kernel.org>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Mimi Zohar <zohar@linux.vnet.ibm.com>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-security-module <linux-security-module@vger.kernel.org>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
 
-On Thu, 2016-09-29 at 16:37 -0500, Eric W. Biederman wrote:
-> Mimi Zohar <zohar@linux.vnet.ibm.com> writes:
+Am Donnerstag, 29 September 2016, 16:43:08 schrieb Eric W. Biederman:
+> Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com> writes:
+> > Hello Eric,
+> > 
+> > Am Dienstag, 20 September 2016, 11:07:29 schrieb Eric W. Biederman:
+> >> A semi-generic concept called a hand-over buffer seems to be a
+> >> construction of infrustructure for no actual reason that will just
+> >> result in confusion.  There are lots of things that are handed over,
+> >> the
+> >> flattend device tree, ramdisks, bootparams on x86, etc, etc.  ima is
+> >> not
+> >> special in this execpt for being perhaps the first addition that we are
+> >> going to want the option of including on most architectures.
+> > 
+> > Ok, I understand. I decided to implement a generic concept because I
+> > thought that proposing a feature that is more useful than what I need
+> > it for would increase its chance of being accepted. It's interesting to
+> > see that it had the opposite effect.
 > 
-> > The TPM PCRs are only reset on a hard reboot.  In order to validate a
-> > TPM's quote after a soft reboot (eg. kexec -e), the IMA measurement list
-> > of the running kernel must be saved and then restored on the subsequent
-> > boot, possibly of a different architecture.
-> >
-> > The existing securityfs binary_runtime_measurements file conveniently
-> > provides a serialized format of the IMA measurement list. This patch
-> > set serializes the measurement list in this format and restores it.
-> >
-> > Up to now, the binary_runtime_measurements was defined as architecture
-> > native format.  The assumption being that userspace could and would
-> > handle any architecture conversions.  With the ability of carrying the
-> > measurement list across kexec, possibly from one architecture to a
-> > different one, the per boot architecture information is lost and with it
-> > the ability of recalculating the template digest hash.  To resolve this
-> > problem, without breaking the existing ABI, this patch set introduces
-> > the boot command line option "ima_canonical_fmt", which is arbitrarily
-> > defined as little endian.
-> >
-> > The need for this boot command line option will be limited to the
-> > existing version 1 format of the binary_runtime_measurements.
-> > Subsequent formats will be defined as canonical format (eg. TPM 2.0
-> > support for larger digests).
-> >
-> > A simplified method of Thiago Bauermann's "kexec buffer handover" patch
-> > series for carrying the IMA measurement list across kexec is included
-> > in this patch set.  The simplified method requires all file measurements
-> > be taken prior to executing the kexec load, as subsequent measurements
-> > will not be carried across the kexec and restored.
+> Yes.  In this case it was not clear that anyone else could use it, and
+> being less generic you can tweak the needs of the code to ima without
+> anyone having to worry about it.
 > 
-> So I just went through the kexec portions of this and I don't see
-> anything particularly worrying.
-> 
-> I have one thing that I think could be improved, but is not wrong.
-> Having both receiving and transmitting the ima measurments both under
-> HAVE_IMA_KEXEC seems wrong.  There may be people who want to receive the
-> measurment list but don't want to support kexec'ing other kernels or the
-> other way around.  I can very much see bootloaders that expect they will
-> be the first kernel to not want to compile in the extra code for
-> receiving the measurment list.
-> 
-> But again that is a nit, and not a problem.
+> So thank you very much for making the code more specific to the
+> circumstances.
 
-Right, some kernels will want to carry the measurement list across kexec
-and have it restored on the kexec'ed kernel, whiles others won't. The
-CONFIG_IMA_KEXEC. enables "dumping" the IMA measurement list to be
-carried across kexec.
+Thank you very much for your feedback and your reviews!
 
-> So for the series, from the kexec point of view.
-> 
-> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-Thanks, Eric! 
-
-> 
-> >
-> > These patches can also be found in the next-kexec-restore branch of:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git
-> >
-> > Changelog v5:
-> > - Included patches from Thiago Bauermann's "kexec buffer handover"
-> > patch series for carrying the IMA measurement list across kexec.
-> > - Added CONFIG_HAVE_IMA_KEXEC
-> > - Renamed functions to variations of ima_kexec_buffer instead of
-> > variations of kexec_handover_buffer
-> >
-> > Changelog v4:
-> > - Fixed "spinlock bad magic" BUG - reported by Dmitry Vyukov
-> > - Rebased on Thiago Bauermann's v5 patch set
-> > - Removed the skip_checksum initialization  
-> >
-> > Changelog v3:
-> > - Cleaned up the code for calculating the requested kexec segment size
-> > needed for the IMA measurement list, limiting the segment size to half
-> > of the totalram_pages.
-> > - Fixed kernel test robot reports as enumerated in the respective
-> > patch changelog.
-> >
-> > Changelog v2:
-> > - Canonical measurement list support added
-> > - Redefined the ima_kexec_hdr struct to use well defined sizes
-> >
-> > Andreas Steffen (1):
-> >   ima: platform-independent hash value
-> >
-> > Mimi Zohar (7):
-> >   ima: on soft reboot, restore the measurement list
-> >   ima: permit duplicate measurement list entries
-> >   ima: maintain memory size needed for serializing the measurement list
-> >   ima: on soft reboot, save the measurement list
-> >   ima: store the builtin/custom template definitions in a list
-> >   ima: support restoring multiple template formats
-> >   ima: define a canonical binary_runtime_measurements list format
-> >
-> > Thiago Jung Bauermann (2):
-> >   powerpc: ima: Get the kexec buffer passed by the previous kernel
-> >   powerpc: ima: Send the kexec buffer to the next kernel
-> >
-> >  Documentation/kernel-parameters.txt       |   4 +
-> >  arch/Kconfig                              |   3 +
-> >  arch/powerpc/Kconfig                      |   1 +
-> >  arch/powerpc/include/asm/ima.h            |  29 +++
-> >  arch/powerpc/include/asm/kexec.h          |  16 +-
-> >  arch/powerpc/kernel/Makefile              |   4 +
-> >  arch/powerpc/kernel/ima_kexec.c           | 223 +++++++++++++++++++++++
-> >  arch/powerpc/kernel/kexec_elf_64.c        |   2 +-
-> >  arch/powerpc/kernel/machine_kexec_64.c    | 116 ++++++------
-> >  include/linux/ima.h                       |  12 ++
-> >  kernel/kexec_file.c                       |   4 +
-> >  security/integrity/ima/Kconfig            |  12 ++
-> >  security/integrity/ima/Makefile           |   1 +
-> >  security/integrity/ima/ima.h              |  31 ++++
-> >  security/integrity/ima/ima_crypto.c       |   6 +-
-> >  security/integrity/ima/ima_fs.c           |  30 ++-
-> >  security/integrity/ima/ima_init.c         |   2 +
-> >  security/integrity/ima/ima_kexec.c        | 168 +++++++++++++++++
-> >  security/integrity/ima/ima_main.c         |   1 +
-> >  security/integrity/ima/ima_queue.c        |  76 +++++++-
-> >  security/integrity/ima/ima_template.c     | 293 ++++++++++++++++++++++++++++--
-> >  security/integrity/ima/ima_template_lib.c |   7 +-
-> >  22 files changed, 952 insertions(+), 89 deletions(-)
-> >  create mode 100644 arch/powerpc/include/asm/ima.h
-> >  create mode 100644 arch/powerpc/kernel/ima_kexec.c
-> >  create mode 100644 security/integrity/ima/ima_kexec.c
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-security-module" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+-- 
+[]'s
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
