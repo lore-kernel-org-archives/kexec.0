@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpWip-0000bn-P9
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 08:29:40 +0000
-Date: Thu, 29 Sep 2016 16:29:11 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2] kexec/fs2dt: Check for NULL pointer in
- dt_copy_old_root_param()
-Message-ID: <20160929082911.GA13033@dhcp-128-65.nay.redhat.com>
-References: <1475135953-21729-1-git-send-email-maddy@linux.vnet.ibm.com>
- <20160929082020.GH14497@verge.net.au>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bpWsQ-0006KL-Ie
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 08:39:36 +0000
+Date: Thu, 29 Sep 2016 10:39:09 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
+Message-ID: <20160929083909.GI14497@verge.net.au>
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+ <20160929075200.GE14497@verge.net.au>
+ <20160929081805.GA5218@localhost>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160929082020.GH14497@verge.net.au>
+In-Reply-To: <20160929081805.GA5218@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,54 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: panand@redhat.com, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org
 
-On 09/29/16 at 10:20am, Simon Horman wrote:
-> [CC Dave Young]
-> 
-> On Thu, Sep 29, 2016 at 01:29:13PM +0530, Madhavan Srinivasan wrote:
-> > In dt_copy_old_root_param(), FILE * returned
-> > from fopen is not checked for NULL pointer
-> > before passinig to fclose(). This could trigger
-> > a segfault. Patch to fix the same.
+On Thu, Sep 29, 2016 at 01:18:06AM -0700, AKASHI Takahiro wrote:
+> On Thu, Sep 29, 2016 at 09:52:00AM +0200, Simon Horman wrote:
+> > On Wed, Sep 07, 2016 at 01:33:53PM +0900, AKASHI Takahiro wrote:
+> > > My kernel patches of kdump suport on arm64 are currently under reviews.
+> > > 
+> > > This patchset is synced with them (v26 [1]) and provides necessary changes
+> > > for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
+> > > v5[2] along with a bugfix[3].
+> > > 
+> > > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
+> > > [2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
+> > > [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
 > > 
-> > Reviewed-by: Dave Young <dyoung@redhat.com>
+> > Unfortunately patch 2 does not seem to apply cleanly any more.
+> > Could you consider rebasing if you think this series is ready to be
+> > applied?
 > 
-> Probably Dave's tag should be dropped as that was for a somewhat
-> different (though equally trivial) approach.
+> Yes, I will as there will be some changes needed again due to the discussions
+> on my kernel patch.
+> 
+> BTW, can you give me your opinion on my question, please?
+> 
+> http://lists.infradead.org/pipermail/kexec/2016-September/017119.html
 
-Simion, I think I'm fine with any of them. 
+I'm not particularly familiar with UEFI systems but for DT something under
+chosen seems to make sense.
 
-> 
-> > Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-> > ---
-> > Changelog v1:
-> >  - Moved the check right after fopen
-> > 
-> >  kexec/fs2dt.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-> > index 6ed2399759cf..5ba3ec0fa65c 100644
-> > --- a/kexec/fs2dt.c
-> > +++ b/kexec/fs2dt.c
-> > @@ -524,6 +524,9 @@ static void dt_copy_old_root_param(void)
-> >  	strcpy(filename, pathname);
-> >  	strcat(filename, "bootargs");
-> >  	fp = fopen(filename, "r");
-> > +	if (!fp)
-> > +		return;
-> > +
-> 
-> With the (!fp) conditional above the (fp) conditional below can be removed.
-> 
-> >  	if (fp) {
-> >  		if (getline(&last_cmdline, &len, fp) == -1)
-> >  			die("unable to read %s\n", filename);
-> > -- 
-> > 2.7.4
-> > 
+Regarding Mark's objections to a memmap= command line parameter.
+Perhaps that could be discussed further in the context that even
+though it is not particularly attractive it it being used on other
+architecture(s).
 
 _______________________________________________
 kexec mailing list
