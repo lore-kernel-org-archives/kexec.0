@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bpW8n-0007kJ-Ja
- for kexec@lists.infradead.org; Thu, 29 Sep 2016 07:52:27 +0000
-Date: Thu, 29 Sep 2016 09:52:00 +0200
+ id 1bpWDW-0001YI-Mn
+ for kexec@lists.infradead.org; Thu, 29 Sep 2016 07:57:19 +0000
+Date: Thu, 29 Sep 2016 09:43:24 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/8] (kexec-tools) arm64: add kdump support
-Message-ID: <20160929075200.GE14497@verge.net.au>
-References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v1] kexec/arch/i386: Add support for KASLR memory
+ randomization
+Message-ID: <20160929074324.GD14497@verge.net.au>
+References: <1473750605-5955-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+In-Reply-To: <1473750605-5955-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,23 +24,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kernel-hardening@lists.openwall.com, kexec@lists.infradead.org, Thomas Garnier <thgarnie@google.com>, keescook@chromium.org, tonli@redhat.com
 
-On Wed, Sep 07, 2016 at 01:33:53PM +0900, AKASHI Takahiro wrote:
-> My kernel patches of kdump suport on arm64 are currently under reviews.
+On Tue, Sep 13, 2016 at 03:10:05PM +0800, Baoquan He wrote:
+> From: Thomas Garnier <thgarnie@google.com>
 > 
-> This patchset is synced with them (v26 [1]) and provides necessary changes
-> for kexec-tools. It should be applied on top of Geoff's kexec-tools patches
-> v5[2] along with a bugfix[3].
+> Multiple changes were made on KASLR (right now in linux-next). One of
+> them is randomizing the virtual address of the physical mapping, vmalloc
+> and vmemmap memory sections. It breaks kdump ability to read physical
+> memory.
 > 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/454588.html
-> [2] http://lists.infradead.org/pipermail/kexec/2016-September/017110.html
-> [3] http://lists.infradead.org/pipermail/kexec/2016-July/016664.html
+> This change identifies if KASLR memories randomization is used by
+> checking if the page_offset_base variable exists. It search for the
+> correct PAGE_OFFSET value by looking at the loaded memory section and
+> find the lowest aligned on PUD (the randomization level).
+> 
+> Related commits on linux-next:
+>  - 0483e1fa6e09d4948272680f691dccb1edb9677f: Base for randomization
+>  - 021182e52fe01c1f7b126f97fd6ba048dc4234fd: Enable for PAGE_OFFSET
+> 
+> Signed-off-by: Thomas Garnier <thgarnie@google.com>
 
-Unfortunately patch 2 does not seem to apply cleanly any more.
-Could you consider rebasing if you think this series is ready to be
-applied?
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
