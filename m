@@ -1,16 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1brBdp-00012n-I6
- for kexec@lists.infradead.org; Mon, 03 Oct 2016 22:23:23 +0000
-Date: Tue, 4 Oct 2016 00:22:54 +0200
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] arch/x86: Fix kdump on x86 with physically hotadded CPUs
-Message-ID: <20161003222254.GA13651@krava>
-References: <1475514432-27682-1-git-send-email-prarit@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1475514432-27682-1-git-send-email-prarit@redhat.com>
+ id 1brEfu-0004zb-0Q
+ for kexec@lists.infradead.org; Tue, 04 Oct 2016 01:37:43 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ u941XEva071463
+ for <kexec@lists.infradead.org>; Mon, 3 Oct 2016 21:37:19 -0400
+Received: from e28smtp06.in.ibm.com (e28smtp06.in.ibm.com [125.16.236.6])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 25uy9jy1rr-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 03 Oct 2016 21:37:19 -0400
+Received: from localhost
+ by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <maddy@linux.vnet.ibm.com>;
+ Tue, 4 Oct 2016 07:07:16 +0530
+Received: from d28relay08.in.ibm.com (d28relay08.in.ibm.com [9.184.220.159])
+ by d28dlp02.in.ibm.com (Postfix) with ESMTP id E6E913940033
+ for <kexec@lists.infradead.org>; Tue,  4 Oct 2016 07:07:13 +0530 (IST)
+Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
+ by d28relay08.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u941b0Nj31064262
+ for <kexec@lists.infradead.org>; Tue, 4 Oct 2016 07:07:00 +0530
+Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
+ by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ u941bDsG029037
+ for <kexec@lists.infradead.org>; Tue, 4 Oct 2016 07:07:13 +0530
+From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Subject: [PATCH v3] kexec/fs2dt: Check for NULL pointer in
+ dt_copy_old_root_param()
+Date: Tue,  4 Oct 2016 07:07:05 +0530
+Message-Id: <1475545025-31977-1-git-send-email-maddy@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,84 +41,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prarit Bhargava <prarit@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com
+To: horms@verge.net.au
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-On Mon, Oct 03, 2016 at 01:07:12PM -0400, Prarit Bhargava wrote:
+In dt_copy_old_root_param(), FILE * returned
+from fopen is not checked for NULL pointer
+before passinig to fclose(). This could trigger
+a segfault. Patch to fix the same.
 
-SNIP
+Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+---
+Changelog v2
+-Removed redundant check fp
 
-> 
-> This patch adds the missing generic_processor_info() to
-> prefill_possible_map() to ensure the initialization of the boot cpu is
-> correct.  This results in smp_init_package_map() having correct data and
-> properly setting the package map for the hotplugged boot cpu, which in
-> turn resolves the kdump kernel panic on physically hotplugged cpus.
-> 
-> [1] This can be simulated in a KVM environment by hot adding a CPU and
-> using taskset to force the dump on the newly added CPU.
-> [2] prefill_possible_map() is called before smp_store_boot_cpu_info().
-> The comment beside the call to smp_store_boot_cpu_info() states that the
-> completed call results in "Final full version of the data".
-> 
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Fixes: 1f12e32f4cd5 ("x86/topology: Create logical package id")
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: dyoung@redhat.com
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: kexec@lists.infradead.org
+Changelog v1:
+- Moved the check right after fopen
+ 
+ kexec/fs2dt.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 6ed2399759cf..79aa0f320a5a 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -524,19 +524,21 @@ static void dt_copy_old_root_param(void)
+ 	strcpy(filename, pathname);
+ 	strcat(filename, "bootargs");
+ 	fp = fopen(filename, "r");
+-	if (fp) {
+-		if (getline(&last_cmdline, &len, fp) == -1)
+-			die("unable to read %s\n", filename);
+-
+-		p = strstr(last_cmdline, "root=");
+-		if (p) {
+-			old_param = strtok(p, " ");
+-			len = strlen(local_cmdline);
+-			if (len != 0)
+-				strcat(local_cmdline, " ");
+-			strcat(local_cmdline, old_param);
+-		}
++	if (!fp)
++		return;
++
++	if (getline(&last_cmdline, &len, fp) == -1)
++		die("unable to read %s\n", filename);
++
++	p = strstr(last_cmdline, "root=");
++	if (p) {
++		old_param = strtok(p, " ");
++		len = strlen(local_cmdline);
++		if (len != 0)
++			strcat(local_cmdline, " ");
++		strcat(local_cmdline, old_param);
+ 	}
++
+ 	if (last_cmdline)
+ 		free(last_cmdline);
+ 
+-- 
+2.7.4
 
-thanks,
-jirka
-
-> ---
->  arch/x86/kernel/smpboot.c |   15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 4296beb8fdd3..d1272febc13b 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -1406,9 +1406,18 @@ __init void prefill_possible_map(void)
->  {
->  	int i, possible;
->  
-> -	/* no processor from mptable or madt */
-> -	if (!num_processors)
-> -		num_processors = 1;
-> +	/* No boot processor was found in mptable or ACPI MADT */
-> +	if (!num_processors) {
-> +		/* Make sure boot cpu is enumerated */
-> +		if (apic->cpu_present_to_apicid(0) == BAD_APICID &&
-> +		    apic->apic_id_valid(boot_cpu_physical_apicid))
-> +			generic_processor_info(boot_cpu_physical_apicid,
-> +					apic_version[boot_cpu_physical_apicid]);
-> +		if (!num_processors) {
-> +			pr_warn("CPU 0 not enumerated in mptable or ACPI MADT\n");
-> +			num_processors = 1;
-> +		}
-> +	}
->  
->  	i = setup_max_cpus ?: 1;
->  	if (setup_possible_cpus == -1) {
-> -- 
-> 1.7.9.3
-> 
 
 _______________________________________________
 kexec mailing list
