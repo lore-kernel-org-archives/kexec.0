@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <57F38A30.2050200@arm.com>
-Date: Tue, 04 Oct 2016 11:53:36 +0100
-From: James Morse <james.morse@arm.com>
+Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1brNTy-0002k1-Qt
+ for kexec@lists.infradead.org; Tue, 04 Oct 2016 11:02:00 +0000
+Date: Tue, 4 Oct 2016 12:58:04 +0200 (CEST)
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] arch/x86: Fix kdump on x86 with physically hotadded CPUs
+In-Reply-To: <1475514432-27682-1-git-send-email-prarit@redhat.com>
+Message-ID: <alpine.DEB.2.20.1610041241160.7712@nanos>
+References: <1475514432-27682-1-git-send-email-prarit@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <8a57223d-000d-536e-6885-d427ee81508c@caviumnetworks.com>
- <20161003110424.GD14025@linaro.org>
- <1ae717d6-b2aa-105b-4f47-d879882ca5d3@caviumnetworks.com>
- <57F37A73.3030105@arm.com>
- <691230c7-051d-afee-9014-d22963a8f045@caviumnetworks.com>
-In-Reply-To: <691230c7-051d-afee-9014-d22963a8f045@caviumnetworks.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,86 +22,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Manish Jaggi <mjaggi@caviumnetworks.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, "Kapoor, Prasun" <Prasun.Kapoor@caviumnetworks.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Prarit Bhargava <prarit@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Jiri Olsa <jolsa@redhat.com>
 
-Hi Manish,
+On Mon, 3 Oct 2016, Prarit Bhargava wrote:
+> BUG: unable to handle kernel paging request at 0000000000841f1f
+> IP: [<ffffffff81014ec4>] uncore_change_context+0xd4/0x180
+...
+>  [<ffffffff81015a60>] ? uncore_cpu_starting+0x130/0x130
+>  [<ffffffff81015acc>] uncore_event_cpu_online+0x6c/0x80
+>  [<ffffffff8108e819>] cpuhp_invoke_callback+0x49/0x100
+>  [<ffffffff8108ead1>] cpuhp_thread_fun+0x41/0x100
+>  [<ffffffff810b054f>] smpboot_thread_fn+0x10f/0x160
+>  [<ffffffff810b0440>] ? sort_range+0x30/0x30
+>  [<ffffffff810accd8>] kthread+0xd8/0xf0
+>  [<ffffffff816ff4bf>] ret_from_fork+0x1f/0x40
+>  [<ffffffff810acc00>] ? kthread_park+0x60/0x60
 
-On 04/10/16 11:05, Manish Jaggi wrote:
-> On 10/04/2016 03:16 PM, James Morse wrote:
->> On 03/10/16 13:41, Manish Jaggi wrote:
->>> On 10/03/2016 04:34 PM, AKASHI Takahiro wrote:
->>>> On Mon, Oct 03, 2016 at 01:24:34PM +0530, Manish Jaggi wrote:
->>>>> First kernel is booted with mem=2G crashkernel=1G command line option.
->>>>> While the system has 64G memory.
->>
->>>> Are you saying that "mem=..." doesn't have any effect?
->>> What I am saying it that If the first kernel is booted using mem= option and crashkernel= option
->>> the memory for second kernel has to be withing the crashkernel size.
->>> As per /proc/iomem System RAM the information is correct, but the /proc/meminfo is showing total memory
->>> much more than the first kernel had in first place.
->>
->> So your second crashkernel has 63G of memory? Unless you provide the same 'mem='
->> to the kdump kernel, this is the expected behaviour. The
->> DT:/reserved-memory/crash_dump describes the memory not to use.
->>
->> On your first boot with 'mem=2G' memblock_mem_limit_remove_map() called from
->> arm64_memblock_init() removed the top 62G of memory. Neither the first kernel
->> nor kexec-tools know about the top 62G.
->> When you run kexec-tools, it describes what it sees in /proc/iomem in the
->> DT:/reserved-memory/crash_dump, which is just the remaining 1G of memory.
->>
->> When we crash and reboot, the crash kernel discovers all 64G of memory from the
->> EFI memory map.
+> arch/x86/events/intel/uncore.c:
+> 1137 static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_     cpu,
+> 1138                                    int new_cpu)
+> 1139 {
+> 1140         struct intel_uncore_pmu *pmu = type->pmus;
+> 1141         struct intel_uncore_box *box;
+> 1142         int i, pkg;
+> 1143
+> 1144         pkg = topology_logical_package_id(old_cpu < 0 ? new_cpu : old_cpu);
+> 1145         for (i = 0; i < type->num_boxes; i++, pmu++) {
+> 1146                 box = pmu->boxes[pkg];
+> 
+> pmu->boxes[pkg] is garbage because pkg was returned as 0xffff.
 
-> So the iomem and meminfo should be same or different for the second kernel?
-> Also i assumed that crashkernel=1G should restrict the second kernels to 1G.
+And that's what needs to be fixed in the first place.
 
-Not with v26 of this series. What should it do with the 62G of memory that was
-removed by booting with 'mem=2G'? It isn't part of the crashkernel reserved
-area, and it isn't part of the vmcore described in elfcorehdr either...
+> This patch adds the missing generic_processor_info() to
+> prefill_possible_map() to ensure the initialization of the boot cpu is
+> correct. 
 
+> This results in smp_init_package_map() having correct data and
+> properly setting the package map for the hotplugged boot cpu, which in
+> turn resolves the kdump kernel panic on physically hotplugged cpus.
 
-> This is my understanding from the description. It should not require a second mem= option
+While it is the right thing to initialize the package map in that case, it
+still papers over a robustness issue in the uncore code, which needs to be
+fixed first.
 
->> kexec-tools described the 1G of memory that the first kernel was using in the
->> DT:/reserved-memory/crash_dump node, so early_init_fdt_scan_reserved_mem()
->> reserves the 1G of memory the first kernel used. This leaves us with 63G of memory.
->>
->> This may change with the next version of kdump if it switches back to using
->> DT:/chosen/linux,usable-memory-range.
->> If you need v26 to avoid the top 62G of memory, you need to provide the same
->> 'mem=' to the first and second kernel.
+> [2] prefill_possible_map() is called before smp_store_boot_cpu_info().
+> The comment beside the call to smp_store_boot_cpu_info() states that the
+> completed call results in "Final full version of the data".
 
-> If I provide for second kernel, I dont see any prints after Bye.
-> Have you tired this anytime?
+I'm not sure what that [2] here means and I cannot figure out the meaning
+of this sentence either.
 
-Yes, on juno-r1 passing 'mem=2G' to both the first and second kernel causes only
-the first 2G of memory to be used with this pattern:
-first kernel:		[1G used for linux]	[1G reserved for Crash kernel] 	[6G memory
-hidden]
-kdump kernel:	[1G vmcore]			[1G used for linux] 			[6G memory hidden]
+This changelog is incomprehensible in general and more a "oh look how I
+decoded this problem" report than something which clearly describes the
+problem at hand, the root cause and the fix. The latter wants a
+understandable explanation why prefill_possible_map() is the right place to
+do this.
 
+> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+> index 4296beb8fdd3..d1272febc13b 100644
+> --- a/arch/x86/kernel/smpboot.c
+> +++ b/arch/x86/kernel/smpboot.c
+> @@ -1406,9 +1406,18 @@ __init void prefill_possible_map(void)
+>  {
+>  	int i, possible;
+>  
+> -	/* no processor from mptable or madt */
+> -	if (!num_processors)
+> -		num_processors = 1;
+> +	/* No boot processor was found in mptable or ACPI MADT */
+> +	if (!num_processors) {
+> +		/* Make sure boot cpu is enumerated */
+> +		if (apic->cpu_present_to_apicid(0) == BAD_APICID &&
+> +		    apic->apic_id_valid(boot_cpu_physical_apicid))
+> +			generic_processor_info(boot_cpu_physical_apicid,
+> +					apic_version[boot_cpu_physical_apicid]);
+> +		if (!num_processors) {
+> +			pr_warn("CPU 0 not enumerated in mptable or ACPI MADT\n");
+> +			num_processors = 1;
 
->>>>> 1.2 Live crash dump fails with error
->>
->> ... do we expect this to work? I don't think it has anything to do with this
->> series...
->>
-> Why it should not?
-> I saved the vmcore file while in second kernel. Since crash without vmcore file didnt run,
-> Tried with vmcore file and it worked. Its just that if you want to boot a second kernel
->  with read only file system without network live crash dump analysis is handy.
-
-Ah, you want to run /usr/bin/crash with the kdump boot of linux. You still need
-to tell it where to find the memory image: "crash /path/to/vmlinux /proc/vmcore"
-should do the trick.
-
+And in this case we end up with the same problem, right?
 
 Thanks,
 
-James
-
+	tglx
 
 _______________________________________________
 kexec mailing list
