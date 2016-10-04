@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <8a57223d-000d-536e-6885-d427ee81508c@caviumnetworks.com>
- <20161003110424.GD14025@linaro.org>
- <1ae717d6-b2aa-105b-4f47-d879882ca5d3@caviumnetworks.com>
- <57F37A73.3030105@arm.com>
- <691230c7-051d-afee-9014-d22963a8f045@caviumnetworks.com>
- <57F38A30.2050200@arm.com>
-From: Manish Jaggi <mjaggi@caviumnetworks.com>
-Message-ID: <70ca1b97-8de4-921f-0cef-e02a88691ccd@caviumnetworks.com>
-Date: Tue, 4 Oct 2016 18:53:28 +0530
+Received: from galois.linutronix.de ([2a01:7a0:2:106d:700::1])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1brQdZ-0000Eq-Ic
+ for kexec@lists.infradead.org; Tue, 04 Oct 2016 14:24:06 +0000
+Date: Tue, 4 Oct 2016 16:19:59 +0200 (CEST)
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] arch/x86: Fix kdump on x86 with physically hotadded CPUs
+In-Reply-To: <20161004122717.GA4998@krava>
+Message-ID: <alpine.DEB.2.20.1610041618390.5049@nanos>
+References: <1475514432-27682-1-git-send-email-prarit@redhat.com>
+ <alpine.DEB.2.20.1610041241160.7712@nanos> <20161004122717.GA4998@krava>
 MIME-Version: 1.0
-In-Reply-To: <57F38A30.2050200@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,93 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, "Kapoor, Prasun" <Prasun.Kapoor@caviumnetworks.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Juergen Gross <jgross@suse.com>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com
 
+On Tue, 4 Oct 2016, Jiri Olsa wrote:
+> On Tue, Oct 04, 2016 at 12:58:04PM +0200, Thomas Gleixner wrote:
+> > > pmu->boxes[pkg] is garbage because pkg was returned as 0xffff.
+> > 
+> > And that's what needs to be fixed in the first place.
+> 
+> right, I'll check on that.. but I think we need this fix as well
 
+That's right.
+ 
+> I was wondering if acpi_boot_init was a better place for that, but then
+> Prarit suggested in our discussion that the prefill_possible_map() call
+> seems to be a hotplug cleanup.. so it seemed to fit
 
-On 10/04/2016 04:23 PM, James Morse wrote:
-> Hi Manish,
-> 
-> On 04/10/16 11:05, Manish Jaggi wrote:
->> On 10/04/2016 03:16 PM, James Morse wrote:
->>> On 03/10/16 13:41, Manish Jaggi wrote:
->>>> On 10/03/2016 04:34 PM, AKASHI Takahiro wrote:
->>>>> On Mon, Oct 03, 2016 at 01:24:34PM +0530, Manish Jaggi wrote:
->>>>>> First kernel is booted with mem=2G crashkernel=1G command line option.
->>>>>> While the system has 64G memory.
->>>
->>>>> Are you saying that "mem=..." doesn't have any effect?
->>>> What I am saying it that If the first kernel is booted using mem= option and crashkernel= option
->>>> the memory for second kernel has to be withing the crashkernel size.
->>>> As per /proc/iomem System RAM the information is correct, but the /proc/meminfo is showing total memory
->>>> much more than the first kernel had in first place.
->>>
->>> So your second crashkernel has 63G of memory? Unless you provide the same 'mem='
->>> to the kdump kernel, this is the expected behaviour. The
->>> DT:/reserved-memory/crash_dump describes the memory not to use.
->>>
->>> On your first boot with 'mem=2G' memblock_mem_limit_remove_map() called from
->>> arm64_memblock_init() removed the top 62G of memory. Neither the first kernel
->>> nor kexec-tools know about the top 62G.
->>> When you run kexec-tools, it describes what it sees in /proc/iomem in the
->>> DT:/reserved-memory/crash_dump, which is just the remaining 1G of memory.
->>>
->>> When we crash and reboot, the crash kernel discovers all 64G of memory from the
->>> EFI memory map.
-> 
->> So the iomem and meminfo should be same or different for the second kernel?
->> Also i assumed that crashkernel=1G should restrict the second kernels to 1G.
-> 
-> Not with v26 of this series. What should it do with the 62G of memory that was
-> removed by booting with 'mem=2G'? It isn't part of the crashkernel reserved
-> area, and it isn't part of the vmcore described in elfcorehdr either...
-> 
-> 
->> This is my understanding from the description. It should not require a second mem= option
-> 
->>> kexec-tools described the 1G of memory that the first kernel was using in the
->>> DT:/reserved-memory/crash_dump node, so early_init_fdt_scan_reserved_mem()
->>> reserves the 1G of memory the first kernel used. This leaves us with 63G of memory.
->>>
->>> This may change with the next version of kdump if it switches back to using
->>> DT:/chosen/linux,usable-memory-range.
->>> If you need v26 to avoid the top 62G of memory, you need to provide the same
->>> 'mem=' to the first and second kernel.
-> 
->> If I provide for second kernel, I dont see any prints after Bye.
->> Have you tired this anytime?
-> 
-> Yes, on juno-r1 passing 'mem=2G' to both the first and second kernel causes only
-> the first 2G of memory to be used with this pattern:
-> first kernel:		[1G used for linux]	[1G reserved for Crash kernel] 	[6G memory
-> hidden]
-> kdump kernel:	[1G vmcore]			[1G used for linux] 			[6G memory hidden]
-> 
-> 
-Oh, ok!
-I was giving mem=1G to crashkernel to test. with mem=2G it works.
->>>>>> 1.2 Live crash dump fails with error
->>>
->>> ... do we expect this to work? I don't think it has anything to do with this
->>> series...
->>>
->> Why it should not?
->> I saved the vmcore file while in second kernel. Since crash without vmcore file didnt run,
->> Tried with vmcore file and it worked. Its just that if you want to boot a second kernel
->>  with read only file system without network live crash dump analysis is handy.
-> 
-> Ah, you want to run /usr/bin/crash with the kdump boot of linux. You still need
-> to tell it where to find the memory image: "crash /path/to/vmlinux /proc/vmcore"
-> should do the trick.
-> 
-We should fix the documentation of kdump them.
-Since it is not supported, it should be removed.
-> 
-> Thanks,
-> 
-> James
-> 
+It's the right place for it.
+
+Thanks,
+
+	tglx
 
 _______________________________________________
 kexec mailing list
