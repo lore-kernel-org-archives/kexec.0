@@ -1,38 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1brEfu-0004zb-0Q
- for kexec@lists.infradead.org; Tue, 04 Oct 2016 01:37:43 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u941XEva071463
- for <kexec@lists.infradead.org>; Mon, 3 Oct 2016 21:37:19 -0400
-Received: from e28smtp06.in.ibm.com (e28smtp06.in.ibm.com [125.16.236.6])
- by mx0b-001b2d01.pphosted.com with ESMTP id 25uy9jy1rr-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 03 Oct 2016 21:37:19 -0400
-Received: from localhost
- by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <maddy@linux.vnet.ibm.com>;
- Tue, 4 Oct 2016 07:07:16 +0530
-Received: from d28relay08.in.ibm.com (d28relay08.in.ibm.com [9.184.220.159])
- by d28dlp02.in.ibm.com (Postfix) with ESMTP id E6E913940033
- for <kexec@lists.infradead.org>; Tue,  4 Oct 2016 07:07:13 +0530 (IST)
-Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
- by d28relay08.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u941b0Nj31064262
- for <kexec@lists.infradead.org>; Tue, 4 Oct 2016 07:07:00 +0530
-Received: from d28av04.in.ibm.com (localhost [127.0.0.1])
- by d28av04.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u941bDsG029037
- for <kexec@lists.infradead.org>; Tue, 4 Oct 2016 07:07:13 +0530
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Subject: [PATCH v3] kexec/fs2dt: Check for NULL pointer in
- dt_copy_old_root_param()
-Date: Tue,  4 Oct 2016 07:07:05 +0530
-Message-Id: <1475545025-31977-1-git-send-email-maddy@linux.vnet.ibm.com>
+ id 1brEnv-0008Mx-Rs
+ for kexec@lists.infradead.org; Tue, 04 Oct 2016 01:46:01 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH 3/3] makedumpfile: Add support for MM randomization
+Date: Tue, 4 Oct 2016 01:40:09 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E6CE53@BPXM01GP.gisp.nec.co.jp>
+References: <1472460862-29842-1-git-send-email-bhe@redhat.com>
+ <1472460862-29842-4-git-send-email-bhe@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E62E28@BPXM01GP.gisp.nec.co.jp>
+ <20160930045620.GB9185@x1.redhat.com>
+In-Reply-To: <20160930045620.GB9185@x1.redhat.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,71 +22,152 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "thgarnie@google.com" <thgarnie@google.com>
 
-In dt_copy_old_root_param(), FILE * returned
-from fopen is not checked for NULL pointer
-before passinig to fclose(). This could trigger
-a segfault. Patch to fix the same.
+>> > 	/*
+>> > 	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+>> >@@ -159,22 +160,13 @@ get_versiondep_info_x86_64(void)
+>> > 	else
+>> > 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+>> >
+>> >-	if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
+>> >-		info->page_offset = __PAGE_OFFSET_ORIG;
+>> >-	else
+>> >-		info->page_offset = __PAGE_OFFSET_2_6_27;
+>> >+	info->page_offset = NUMBER(page_offset);
+>> >
+>> >-	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
+>> >-		info->vmalloc_start = VMALLOC_START_ORIG;
+>> >-		info->vmalloc_end   = VMALLOC_END_ORIG;
+>> >-		info->vmemmap_start = VMEMMAP_START_ORIG;
+>> >-		info->vmemmap_end   = VMEMMAP_END_ORIG;
+>> >-	} else {
+>> >-		info->vmalloc_start = VMALLOC_START_2_6_31;
+>> >-		info->vmalloc_end   = VMALLOC_END_2_6_31;
+>> >-		info->vmemmap_start = VMEMMAP_START_2_6_31;
+>> >-		info->vmemmap_end   = VMEMMAP_END_2_6_31;
+>> >-	}
+>>
+>> These *_END_* are no longer used, it's better to remove the definitions
+>> of them.
+>
+>
+>Seems is_vmalloc_addr_x86_64 still needs VMALLOC_END and VMEMMAP_END to
+>make a judgement.
 
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
----
-Changelog v2
--Removed redundant check fp
+Yes, VMALLOC_END and VMEMMAP_END are necessary, but what I mentioned were
+VMALLOC_END_ORIG, VMEMMAP_END_ORIG , VMALLOC_END_2_6_31 and VMEMMAP_END_2_6_31.
+The symbols were used only to initialize info->vmalloc_end and info->vmemmap_end,
+so they will be unnecessary by this patch.
 
-Changelog v1:
-- Moved the check right after fopen
- 
- kexec/fs2dt.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+>> >+
+>> >+	info->vmalloc_start = NUMBER(vmalloc_start);
+>> >+	info->vmalloc_end   = info->vmalloc_start + VMALLOC_SIZE - 1;
+>> >+	info->vmemmap_start = NUMBER(vmemmap_start);
+>> >+	info->vmemmap_end   = info->vmemmap_start + VMEMMAP_SIZE - 1;
 
-diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-index 6ed2399759cf..79aa0f320a5a 100644
---- a/kexec/fs2dt.c
-+++ b/kexec/fs2dt.c
-@@ -524,19 +524,21 @@ static void dt_copy_old_root_param(void)
- 	strcpy(filename, pathname);
- 	strcat(filename, "bootargs");
- 	fp = fopen(filename, "r");
--	if (fp) {
--		if (getline(&last_cmdline, &len, fp) == -1)
--			die("unable to read %s\n", filename);
--
--		p = strstr(last_cmdline, "root=");
--		if (p) {
--			old_param = strtok(p, " ");
--			len = strlen(local_cmdline);
--			if (len != 0)
--				strcat(local_cmdline, " ");
--			strcat(local_cmdline, old_param);
--		}
-+	if (!fp)
-+		return;
-+
-+	if (getline(&last_cmdline, &len, fp) == -1)
-+		die("unable to read %s\n", filename);
-+
-+	p = strstr(last_cmdline, "root=");
-+	if (p) {
-+		old_param = strtok(p, " ");
-+		len = strlen(local_cmdline);
-+		if (len != 0)
-+			strcat(local_cmdline, " ");
-+		strcat(local_cmdline, old_param);
- 	}
-+
- 	if (last_cmdline)
- 		free(last_cmdline);
- 
--- 
-2.7.4
+Thanks,
+Atsushi Kumagai
 
+>> > 	return TRUE;
+>> > }
+>> >diff --git a/makedumpfile.c b/makedumpfile.c
+>> >index 2713f8a..6b0c6ab 100644
+>> >--- a/makedumpfile.c
+>> >+++ b/makedumpfile.c
+>> >@@ -1985,6 +1985,7 @@ get_value_for_old_linux(void)
+>> > 			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
+>> > 			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
+>> > 	}
+>> >+	ERRMSG("info->kernel_version=%d\n", info->kernel_version);
+>>
+>> Is this just a debug message ?
+>
+>Yes, sorry for this. Will remove it.
+>
+>>
+>> > #ifdef __x86_64__
+>> > 	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
+>> > 		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+>> >@@ -1992,6 +1993,26 @@ get_value_for_old_linux(void)
+>> > 		else
+>> > 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
+>> > 	}
+>> >+	if (NUMBER(page_offset) == NOT_FOUND_NUMBER) {
+>> >+		if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
+>> >+			NUMBER(page_offset) = __PAGE_OFFSET_ORIG;
+>> >+		else
+>> >+			NUMBER(page_offset) = __PAGE_OFFSET_2_6_27;
+>> >+	}
+>> >+	if (NUMBER(vmalloc_start) == NOT_FOUND_NUMBER) {
+>> >+		if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
+>> >+			NUMBER(vmalloc_start) = VMALLOC_START_ORIG;
+>> >+		} else {
+>> >+			NUMBER(vmalloc_start) = VMALLOC_START_2_6_31;
+>> >+		}
+>> >+	}
+>> >+	if (NUMBER(vmemmap_start) == NOT_FOUND_NUMBER) {
+>> >+		if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+>> >+			NUMBER(vmemmap_start) = VMEMMAP_START_ORIG;
+>> >+		else
+>> >+			NUMBER(vmemmap_start) = VMEMMAP_START_2_6_31;
+>> >+	}
+>> >+
+>>
+>> (I should have said this when you post the early kaslr patch.)
+>> This logic is only for x86_64, I don't like to take it out to
+>> here(general pass) with #ifdef. Is there any necessity to write
+>> this code here ?
+>
+>Yes, you are right. I plan to put them into get_versiondep_info_x86_64.
+>>
+>> > #endif
+>> > 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
+>> > 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
+>> >@@ -2249,6 +2270,9 @@ write_vmcoreinfo_data(void)
+>> >
+>> > 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+>> > 	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>> >+	WRITE_NUMBER("PAGE_OFFSET", page_offset);
+>> >+	WRITE_NUMBER("VMALLOC_START", vmalloc_start);
+>> >+	WRITE_NUMBER("VMEMMAP_START", vmemmap_start);
+>> >
+>> > 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+>> >
+>> >@@ -2595,6 +2619,9 @@ read_vmcoreinfo(void)
+>> >
+>> > 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
+>> > 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+>> >+	READ_NUMBER("PAGE_OFFSET", page_offset);
+>> >+	READ_NUMBER("VMALLOC_START", vmalloc_start);
+>> >+	READ_NUMBER("VMEMMAP_START", vmemmap_start);
+>> >
+>> > 	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+>> >
+>> >@@ -3826,7 +3853,7 @@ initial(void)
+>> > 		debug_info = TRUE;
+>> > 	}
+>> >
+>> >-	info->kernel_version = get_kernel_version(info.release);
+>> >+	info->kernel_version = get_kernel_version(info->release);
+>>
+>> Why don't you write "info->release" in [PATCH 1/3] ?
+>Yes, will do.
+>
+>Thanks for your comments and great suggestions!
+>
+>Thanks
+>Baoquan
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
