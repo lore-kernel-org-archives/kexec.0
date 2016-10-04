@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-pa0-x22b.google.com ([2607:f8b0:400e:c03::22b])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1brEnv-0008Mx-Rs
- for kexec@lists.infradead.org; Tue, 04 Oct 2016 01:46:01 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH 3/3] makedumpfile: Add support for MM randomization
-Date: Tue, 4 Oct 2016 01:40:09 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E6CE53@BPXM01GP.gisp.nec.co.jp>
-References: <1472460862-29842-1-git-send-email-bhe@redhat.com>
- <1472460862-29842-4-git-send-email-bhe@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E62E28@BPXM01GP.gisp.nec.co.jp>
- <20160930045620.GB9185@x1.redhat.com>
-In-Reply-To: <20160930045620.GB9185@x1.redhat.com>
-Content-Language: ja-JP
+ id 1brFnn-0001Av-5C
+ for kexec@lists.infradead.org; Tue, 04 Oct 2016 02:49:57 +0000
+Received: by mail-pa0-x22b.google.com with SMTP id ik13so14525847pac.2
+ for <kexec@lists.infradead.org>; Mon, 03 Oct 2016 19:49:34 -0700 (PDT)
+Date: Tue, 4 Oct 2016 11:56:58 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v26 0/7] arm64: add kdump support
+Message-ID: <20161004025657.GF14025@linaro.org>
+References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+ <8a57223d-000d-536e-6885-d427ee81508c@caviumnetworks.com>
+ <20161003110424.GD14025@linaro.org>
+ <1ae717d6-b2aa-105b-4f47-d879882ca5d3@caviumnetworks.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1ae717d6-b2aa-105b-4f47-d879882ca5d3@caviumnetworks.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,148 +28,238 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "thgarnie@google.com" <thgarnie@google.com>
+To: Manish Jaggi <mjaggi@caviumnetworks.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, "Kapoor, Prasun" <Prasun.Kapoor@caviumnetworks.com>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
->> > 	/*
->> > 	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
->> >@@ -159,22 +160,13 @@ get_versiondep_info_x86_64(void)
->> > 	else
->> > 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
->> >
->> >-	if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
->> >-		info->page_offset = __PAGE_OFFSET_ORIG;
->> >-	else
->> >-		info->page_offset = __PAGE_OFFSET_2_6_27;
->> >+	info->page_offset = NUMBER(page_offset);
->> >
->> >-	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
->> >-		info->vmalloc_start = VMALLOC_START_ORIG;
->> >-		info->vmalloc_end   = VMALLOC_END_ORIG;
->> >-		info->vmemmap_start = VMEMMAP_START_ORIG;
->> >-		info->vmemmap_end   = VMEMMAP_END_ORIG;
->> >-	} else {
->> >-		info->vmalloc_start = VMALLOC_START_2_6_31;
->> >-		info->vmalloc_end   = VMALLOC_END_2_6_31;
->> >-		info->vmemmap_start = VMEMMAP_START_2_6_31;
->> >-		info->vmemmap_end   = VMEMMAP_END_2_6_31;
->> >-	}
->>
->> These *_END_* are no longer used, it's better to remove the definitions
->> of them.
->
->
->Seems is_vmalloc_addr_x86_64 still needs VMALLOC_END and VMEMMAP_END to
->make a judgement.
+On Mon, Oct 03, 2016 at 06:11:40PM +0530, Manish Jaggi wrote:
+> 
+> 
+> On 10/03/2016 04:34 PM, AKASHI Takahiro wrote:
+> > Manish,
+> > 
+> > On Mon, Oct 03, 2016 at 01:24:34PM +0530, Manish Jaggi wrote:
+> >> Hi Akashi,
+> >>
+> >> On 09/07/2016 09:59 AM, AKASHI Takahiro wrote:
+> >>>     v26-specific note: After a comment from Rob[0], an idea of adding
+> >>>     "linux,usable-memory-range" was dropped. Instead, an existing
+> >>>     "reserved-memory" node will be used to limit usable memory ranges
+> >>>     on crash dump kernel.
+> >>>     This works not only on UEFI/ACPI systems but also on DT-only systems,
+> >>>     but if he really insists on using DT-specific "usable-memory" property,
+> >>>     I will post additional patches for kexec-tools. Those would be
+> >>>     redundant, though.
+> >>>     Even in that case, the kernel will not have to be changed.
+> >>>
+> >>> This patch series adds kdump support on arm64.
+> >>> There are some prerequisite patches [1],[2].
+> >>>
+> >>> To load a crash-dump kernel to the systems, a series of patches to
+> >>> kexec-tools, which have not yet been merged upstream, are needed.
+> >>> Please always use my latest kdump patches, v3 [3].
+> >>>
+> >>> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+> >>>   - crash utility (coming v7.1.6 or later) [4]
+> >>>     (Necessary patches have already been queued in the master.)
+> >>>
+> >>>
+> >>> [0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452582.html
+> >>> [1] "arm64: mark reserved memblock regions explicitly in iomem"
+> >>>     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/450433.html
+> >>> [2] "efi: arm64: treat regions with WT/WC set but WB cleared as memory"
+> >>>     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/451491.html
+> >>> [3] T.B.D.
+> >>> [4] https://github.com/crash-utility/crash.git
+> >>>
+> >>
+> >> With the v26 kdump and v3 kexec-tools and top of tree crash.git, below are the tests done
+> >> Attached is a patch in crash.git (symbols.c) to make crash utility work on my setup.
+> >> Can you please have a look and provide your comments.
+> >>
+> >> To generate a panic, i have a kernel module which on init calls panic.
+> >>
+> >> Observations:
+> >> 1.1. Dump capture kernel shows different memory map.
+> >> ---------------------------------------------------
+> >> In dump capture kernel /proc/meminfo and /proc/iomem differ
+> >>
+> >> root@arm64:/home/ubuntu/CODE/crash#
+> >> MemTotal:       65882432 kB
+> >> MemFree:        65507136 kB
+> >> MemAvailable:   60373632 kB
+> >> Buffers:           29248 kB
+> >> Cached:            46720 kB
+> >> SwapCached:            0 kB
+> >> Active:            63872 kB
+> >> Inactive:          19776 kB
+> >> Active(anon):       8256 kB
+> >> Inactive(anon):     7616 kB
+> >>
+> >> First kernel is booted with mem=2G crashkernel=1G command line option.
+> >> While the system has 64G memory.
+> >>
+> >> root@arm64:/home/ubuntu/CODE/crash# cat /proc/iomem
+> >> 41400000-fffeffff : System RAM
+> >>   41480000-420cffff : Kernel code
+> >>   42490000-4278ffff : Kernel data
+> >> ffff0000-ffffffff : reserved
+> >> 100000000-ffaa7ffff : System RAM
+> >> ffaa80000-ffaabffff : reserved
+> >> ffaac0000-fffa6ffff : System RAM
+> >> fffa70000-fffacffff : reserved
+> >> fffad0000-fffffffff : System RAM
+> > 
+> > Are you saying that "mem=..." doesn't have any effect?
+> What I am saying it that If the first kernel is booted using mem= option and crashkernel= option
+> the memory for second kernel has to be withing the crashkernel size.
+> As per /proc/iomem System RAM the information is correct, but the /proc/meminfo is showing total memory
+> much more than the first kernel had in first place.
+> > What about if you don't specify "crashkernel=...?"
+> > 
+> In that case the second kernel will not boot as kexec tools will complain that memory not reserved.
+> >> 1.2 Live crash dump fails with error
+> >> --------------------------------------
+> >> $crash vmlinux
+> >>
+> >> crash 7.1.5++
+> >> Copyright (C) 2002-2016  Red Hat, Inc.
+> >> Copyright (C) 2004, 2005, 2006, 2010  IBM Corporation
+> >> Copyright (C) 1999-2006  Hewlett-Packard Co
+> >> Copyright (C) 2005, 2006, 2011, 2012  Fujitsu Limited
+> >> Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+> >> Copyright (C) 2005, 2011  NEC Corporation
+> >> Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+> >> Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+> >> This program is free software, covered by the GNU General Public License,
+> >> and you are welcome to change it and/or distribute copies of it under
+> >> certain conditions.  Enter "help copying" to see the conditions.
+> >> This program has absolutely no warranty.  Enter "help warranty" for details.
+> >>
+> >> GNU gdb (GDB) 7.6
+> >> Copyright (C) 2013 Free Software Foundation, Inc.
+> >> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+> >> This is free software: you are free to change and redistribute it.
+> >> There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+> >> and "show warranty" for details.
+> >> This GDB was configured as "aarch64-unknown-linux-gnu"...
+> >>
+> >> crash: read error: kernel virtual address: ffff800ffffffcc0  type: "pglist node_id"
+> > 
+> > I have no ideas here.
+> If I run with debug logs phys address accessed is > 64G. (10413ffcc0)
+> Could be that somehow 64 + 1G + (addr) = 10413ffcc0 and actually addr was required.
+> addr = 413ffcc0 which seems in line with 424b0c50
+> 
+> 
+> Logs:
+> <read_dev_mem: addr: ffff0000090b3008 paddr: 424b3008 cnt: 8>
+> node_online_map: [1] -> nodes online: 1
+> <readmem: ffff0000090b0c50, KVADDR, ""node_data"", 8, (ROE), ffffc330eb00>
+> <read_dev_mem: addr: ffff0000090b0c50 paddr: 424b0c50 cnt: 8>
+> <readmem: ffff800ffffffcc0, KVADDR, ""pglist node_id"", 4, (FOE), ffffc330f1e4>
+> <read_dev_mem: addr: ffff800ffffffcc0 paddr: 10413ffcc0 cnt: 4>
+> /dev/mem: Bad address
+> crash: read(/dev/mem, 10413ffcc0, 4): 4294967295 (ffffffff)
+> crash: read error: kernel virtual address: ffff800ffffffcc0  type: ""pglist node_id""
+> "
+> > 
+> >> Observation 2
+> >> ------------
+> >> If saved vmcore file is used
+> >>
+> >> $crash vmlinux vmcore_saved
+> >> Got the below error.
+> >>
+> >> please wait... (gathering module symbol data)crash: malloc.c:2846: mremap_chunk: Assertion `((size + offset) & (_rtld_global_ro._dl_pagesize - 1)) == 0' failed.
+> >> Aborted
+> > 
+> > I have no ideas here.
+> > 
+> >> Experiment 3
+> >> ------------
+> >> If crash.git is modified with a hack patch in symbols.c. Crash utility works fine log, bt commands work.
+> > 
+> > In which case, "crash vmlinux" or "crash vmlinux vmcore_saved?"
+> > 
+> vmcore_saved
+> > I was able to reproduce this issue in the latter case
+> > (but with a different error message).
+> > It seems to be a crash util's bug.
+> > Please report it to crash-util mailing list.
+> > I will post a patch.
+> The same patch as below ?
 
-Yes, VMALLOC_END and VMEMMAP_END are necessary, but what I mentioned were
-VMALLOC_END_ORIG, VMEMMAP_END_ORIG , VMALLOC_END_2_6_31 and VMEMMAP_END_2_6_31.
-The symbols were used only to initialize info->vmalloc_end and info->vmemmap_end,
-so they will be unnecessary by this patch.
+No.
 
->> >+
->> >+	info->vmalloc_start = NUMBER(vmalloc_start);
->> >+	info->vmalloc_end   = info->vmalloc_start + VMALLOC_SIZE - 1;
->> >+	info->vmemmap_start = NUMBER(vmemmap_start);
->> >+	info->vmemmap_end   = info->vmemmap_start + VMEMMAP_SIZE - 1;
+> Can you please share your patch
 
-Thanks,
-Atsushi Kumagai
+I submitted a bug fix patch. See:
+https://www.redhat.com/archives/crash-utility/2016-October/msg00000.html
 
->> > 	return TRUE;
->> > }
->> >diff --git a/makedumpfile.c b/makedumpfile.c
->> >index 2713f8a..6b0c6ab 100644
->> >--- a/makedumpfile.c
->> >+++ b/makedumpfile.c
->> >@@ -1985,6 +1985,7 @@ get_value_for_old_linux(void)
->> > 			NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) =
->> > 			PAGE_BUDDY_MAPCOUNT_VALUE_v2_6_39_to_latest_version;
->> > 	}
->> >+	ERRMSG("info->kernel_version=%d\n", info->kernel_version);
->>
->> Is this just a debug message ?
->
->Yes, sorry for this. Will remove it.
->
->>
->> > #ifdef __x86_64__
->> > 	if (NUMBER(KERNEL_IMAGE_SIZE) == NOT_FOUND_NUMBER) {
->> > 		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
->> >@@ -1992,6 +1993,26 @@ get_value_for_old_linux(void)
->> > 		else
->> > 			NUMBER(KERNEL_IMAGE_SIZE) = KERNEL_IMAGE_SIZE_2_6_26;
->> > 	}
->> >+	if (NUMBER(page_offset) == NOT_FOUND_NUMBER) {
->> >+		if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
->> >+			NUMBER(page_offset) = __PAGE_OFFSET_ORIG;
->> >+		else
->> >+			NUMBER(page_offset) = __PAGE_OFFSET_2_6_27;
->> >+	}
->> >+	if (NUMBER(vmalloc_start) == NOT_FOUND_NUMBER) {
->> >+		if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
->> >+			NUMBER(vmalloc_start) = VMALLOC_START_ORIG;
->> >+		} else {
->> >+			NUMBER(vmalloc_start) = VMALLOC_START_2_6_31;
->> >+		}
->> >+	}
->> >+	if (NUMBER(vmemmap_start) == NOT_FOUND_NUMBER) {
->> >+		if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
->> >+			NUMBER(vmemmap_start) = VMEMMAP_START_ORIG;
->> >+		else
->> >+			NUMBER(vmemmap_start) = VMEMMAP_START_2_6_31;
->> >+	}
->> >+
->>
->> (I should have said this when you post the early kaslr patch.)
->> This logic is only for x86_64, I don't like to take it out to
->> here(general pass) with #ifdef. Is there any necessity to write
->> this code here ?
->
->Yes, you are right. I plan to put them into get_versiondep_info_x86_64.
->>
->> > #endif
->> > 	if (SIZE(pageflags) == NOT_FOUND_STRUCTURE) {
->> > 		if (info->kernel_version >= KERNEL_VERSION(2, 6, 27))
->> >@@ -2249,6 +2270,9 @@ write_vmcoreinfo_data(void)
->> >
->> > 	WRITE_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
->> > 	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
->> >+	WRITE_NUMBER("PAGE_OFFSET", page_offset);
->> >+	WRITE_NUMBER("VMALLOC_START", vmalloc_start);
->> >+	WRITE_NUMBER("VMEMMAP_START", vmemmap_start);
->> >
->> > 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
->> >
->> >@@ -2595,6 +2619,9 @@ read_vmcoreinfo(void)
->> >
->> > 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
->> > 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
->> >+	READ_NUMBER("PAGE_OFFSET", page_offset);
->> >+	READ_NUMBER("VMALLOC_START", vmalloc_start);
->> >+	READ_NUMBER("VMEMMAP_START", vmemmap_start);
->> >
->> > 	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
->> >
->> >@@ -3826,7 +3853,7 @@ initial(void)
->> > 		debug_info = TRUE;
->> > 	}
->> >
->> >-	info->kernel_version = get_kernel_version(info.release);
->> >+	info->kernel_version = get_kernel_version(info->release);
->>
->> Why don't you write "info->release" in [PATCH 1/3] ?
->Yes, will do.
->
->Thanks for your comments and great suggestions!
->
->Thanks
->Baoquan
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
+-Takahiro AKASHI
+
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> >> -------------------
+> >> Patch: symbols.c
+> >> git diff symbols.c
+> >> diff --git a/symbols.c b/symbols.c
+> >> index 13282f4..f7c6cac 100644
+> >> --- a/symbols.c
+> >> +++ b/symbols.c
+> >> @@ -2160,6 +2160,7 @@ store_module_kallsyms_v2(struct load_module *lm, int start
+> >>                  FREEBUF(module_buf);
+> >>                  return 0;
+> >>          }
+> >> +       lm->mod_init_size = 0;
+> >>
+> >>         if (lm->mod_init_size > 0) {
+> >>                 module_buf_init = GETBUF(lm->mod_init_size);
+> >> ------------------
+> >>
+> >> $ crash vmlinux vmcore_saved
+> >>     KERNEL: /home/ubuntu/CODE/linux/vmlinux
+> >>     DUMPFILE: vm
+> >>         CPUS: 48 [OFFLINE: 46]
+> >>         DATE: Mon Oct  3 00:11:47 2016
+> >>       UPTIME: 00:02:41
+> >> LOAD AVERAGE: 0.36, 0.14, 0.05
+> >>        TASKS: 171
+> >>     NODENAME: arm64
+> >>      RELEASE: 4.8.0-rc3-00044-g070a615-dirty
+> >>      VERSION: #63 SMP Sat Oct 1 01:39:45 PDT 2016
+> >>      MACHINE: aarch64  (unknown Mhz)
+> >>       MEMORY: 2 GB
+> >>        PANIC: "Kernel panic - not syncing: crash module starting"
+> >>          PID: 958
+> >>      COMMAND: "insmod"
+> >>         TASK: ffff800007859300  [THREAD_INFO: ffff80000c940000]
+> >>          CPU: 0
+> >>        STATE: TASK_RUNNING (PANIC)
+> >>
+> >> crash> bt
+> >> PID: 958    TASK: ffff800007859300  CPU: 0   COMMAND: "insmod"
+> >>  #0 [ffff80000c943980] __crash_kexec at ffff000008144fe8
+> >>  #1 [ffff80000c943ae0] panic at ffff0000081ae704
+> >>  #2 [ffff80000c943ba0] init_module at ffff000000900014 [crash]
+> >>  #3 [ffff80000c943bb0] do_one_initcall at ffff000008083bb4
+> >>  #4 [ffff80000c943c40] do_init_module at ffff0000081af6f0
+> >>  #5 [ffff80000c943c70] load_module at ffff000008140b7c
+> >>  #6 [ffff80000c943e10] sys_finit_module at ffff000008141634
+> >>  #7 [ffff80000c943ed0] el0_svc_naked at ffff0000080833ec
+> >>      PC: 00000003  LR: ffffaca050a0  SP: ffffaca865a0  PSTATE: 00000111
+> >>     X12: ffffac941a5c X11: 00000080 X10: 00000004  X9: 00000030
+> >>      X8: ffffffff  X7: fefefefefefeff40  X6: 00000111  X5: 00000001
+> >>      X4: 00000001  X3: 0002ed61  X2: 00000000  X1: 00000003
+> >>      X0: 00000000
+> >> crash>
+> >>
+> >>
+> >> ---
+> >> Thanks,
+> >> manish
+> >>
 
 _______________________________________________
 kexec mailing list
