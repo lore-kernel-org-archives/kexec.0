@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1brSAB-0001PM-0D
- for kexec@lists.infradead.org; Tue, 04 Oct 2016 16:01:52 +0000
-Message-ID: <57F3D254.20806@redhat.com>
-Date: Tue, 04 Oct 2016 12:01:24 -0400
-From: Prarit Bhargava <prarit@redhat.com>
+ id 1breqV-0008CJ-34
+ for kexec@lists.infradead.org; Wed, 05 Oct 2016 05:34:25 +0000
+Received: by mail-pf0-x22c.google.com with SMTP id s13so83741745pfd.2
+ for <kexec@lists.infradead.org>; Tue, 04 Oct 2016 22:34:02 -0700 (PDT)
+Date: Wed, 5 Oct 2016 14:41:12 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v26 0/7] arm64: add kdump support
+Message-ID: <20161005054111.GA19531@linaro.org>
+References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
+ <8a57223d-000d-536e-6885-d427ee81508c@caviumnetworks.com>
+ <20161003110424.GD14025@linaro.org>
+ <1ae717d6-b2aa-105b-4f47-d879882ca5d3@caviumnetworks.com>
+ <57F37A73.3030105@arm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] arch/x86: Fix kdump on x86 with physically hotadded CPUs
-References: <1475514432-27682-1-git-send-email-prarit@redhat.com>
- <alpine.DEB.2.20.1610041241160.7712@nanos> <57F39C09.10001@redhat.com>
- <alpine.DEB.2.20.1610041628120.5049@nanos>
-In-Reply-To: <alpine.DEB.2.20.1610041628120.5049@nanos>
+Content-Disposition: inline
+In-Reply-To: <57F37A73.3030105@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +29,112 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Juergen Gross <jgross@suse.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, Jiri Olsa <jolsa@redhat.com>
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, Manish Jaggi <mjaggi@caviumnetworks.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, "Kapoor,
+ Prasun" <Prasun.Kapoor@caviumnetworks.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-
-
-On 10/04/2016 10:38 AM, Thomas Gleixner wrote:
-> On Tue, 4 Oct 2016, Prarit Bhargava wrote:
->> On 10/04/2016 06:58 AM, Thomas Gleixner wrote:
->>> While it is the right thing to initialize the package map in that case, it
->>> still papers over a robustness issue in the uncore code, which needs to be
->>> fixed first.
->>
->> I will include a separate patch with an error check for pkg == 0xffff in the
->> uncore code.
+On Tue, Oct 04, 2016 at 10:46:27AM +0100, James Morse wrote:
+> Hi Manish,
 > 
-> 0xffff? That won't help. The id returned is -1 if the entry is not
-> initialized. And aside of that just patching that particular place is not
-> helping as the uncore code and also rapl is relying on the package map
-> being populated.
+> On 03/10/16 13:41, Manish Jaggi wrote:
+> > On 10/03/2016 04:34 PM, AKASHI Takahiro wrote:
+> >> On Mon, Oct 03, 2016 at 01:24:34PM +0530, Manish Jaggi wrote:
+> >>> With the v26 kdump and v3 kexec-tools and top of tree crash.git, below are the tests done
+> >>> Attached is a patch in crash.git (symbols.c) to make crash utility work on my setup.
+> >>> Can you please have a look and provide your comments.
+> >>>
+> >>> To generate a panic, i have a kernel module which on init calls panic.
+> 
+> ... modules ... I haven't tested that. I bet it causes some problems!
+> We probably need to include module_alloc_base as an elf note in the vmcore file...
 
-Yes, I noticed that after I started digging into it this morning.  Not only what
-you pointed out but there's init that occurs in the uncore code that would have
-to be undone.
-
-There is a similar issue in the rapl code, but that code inadvertently protects
-itself with for loops that end up never running (and that's why the rapl code
-doesn't panic).
+No, I don't think so :)
+I created some test module as Manish implied and tested kdump:
+(My kernel here even enables KASLR.)
+===8<===
+$ crash vmlinux vmcore
+...
+please wait... (gathering module symbol data)
+...
+crash> mod -S
+     MODULE       NAME      SIZE  OBJECT FILE
+ffff04d78f4b8000  testmod  16384  /opt/buildroot/15.11_64/root/kexec/testmod.ko 
+crash> bt
+PID: 1102   TASK: ffffb4da8e910000  CPU: 0   COMMAND: "insmod"
+ #0 [ffffb4da8e9afa30] __crash_kexec at ffff0e0045020a54
+ #1 [ffffb4da8e9afb90] panic at ffff0e004505523c
+ #2 [ffffb4da8e9afc50] testmod_init at ffff04d78f4b6014 [testmod]
+ #3 [ffffb4da8e9afb40] do_one_initcall at ffff0e0044f7333c
+--- <Exception in user> ---
+     PC: 0000000a  LR: 00000000  SP: ffff04d78f4b6000  PSTATE: 7669726420656c75
+    X12: ffffb4da8e9ac000 X11: ffff04d78f4b6018 X10: ffffb4da8e9afc50  X9: 20676e6973756143
+     X8: 00000000  X7: ffff0e0045e5ce00  X6: ffff0e0045e5c000  X5: 600001c5
+     X4: ffff0e0045020a58  X3: ffffb4da8e9afa30  X2: ffff0e004502098c  X1: ffffb4da8e9afa30
+     X0: 00000124
+crash> disas testmod_init
+Dump of assembler code for function testmod_init:
+   0xffff04d78f4b6000 <+0>:     stp     x29, x30, [sp,#-16]!
+   0xffff04d78f4b6004 <+4>:     mov     x29, sp
+   0xffff04d78f4b6008 <+8>:     ldr     x0, 0xffff04d78f4b6018
+   0xffff04d78f4b600c <+12>:    bl      0xffff04d78f4b6090
+   0xffff04d78f4b6010 <+16>:    ldr     x0, 0xffff04d78f4b6020
+   0xffff04d78f4b6014 <+20>:    bl      0xffff04d78f4b6080
+End of assembler dump.
+===>8===
+(I see some issue in disassembled code, though.)
 
 > 
-> So we need a sanity check in the initialization code which prevents any of
-> this being executed.
-
-Ok, should this be done only for logical_proc_id or for logical_proc_id,
-phys_proc_id, and cpu_core_id?  What do you think of adding that to the end of
-smp_init_package_map() or smp_store_cpu_info()?
-
->  
->>>> +		if (!num_processors) {
->>>> +			pr_warn("CPU 0 not enumerated in mptable or ACPI MADT\n");
->>>> +			num_processors = 1;
->>>
->>> And in this case we end up with the same problem, right?
->>
->> It occurs to me that I over thought this: I was thinking that there might exist
->> a pre-ACPI (or at least a system without an MADT) x86 system that wold boot such
->> that num_processors = 0.  But in that case, the cpu should be listed in the
->> mptables so the above should not happen.  I'll change that to a BUG().
 > 
-> No. That's the wrong thing to do. Think SMP kernel on UP machines ...
+> >>> First kernel is booted with mem=2G crashkernel=1G command line option.
+> >>> While the system has 64G memory.
 > 
+> >> Are you saying that "mem=..." doesn't have any effect?
+> > What I am saying it that If the first kernel is booted using mem= option and crashkernel= option
+> > the memory for second kernel has to be withing the crashkernel size.
+> > As per /proc/iomem System RAM the information is correct, but the /proc/meminfo is showing total memory
+> > much more than the first kernel had in first place.
+> 
+> So your second crashkernel has 63G of memory? Unless you provide the same 'mem='
+> to the kdump kernel, this is the expected behaviour. The
+> DT:/reserved-memory/crash_dump describes the memory not to use.
+> 
+> On your first boot with 'mem=2G' memblock_mem_limit_remove_map() called from
+> arm64_memblock_init() removed the top 62G of memory. Neither the first kernel
+> nor kexec-tools know about the top 62G.
+> When you run kexec-tools, it describes what it sees in /proc/iomem in the
+> DT:/reserved-memory/crash_dump, which is just the remaining 1G of memory.
+> 
+> When we crash and reboot, the crash kernel discovers all 64G of memory from the
+> EFI memory map.
+> kexec-tools described the 1G of memory that the first kernel was using in the
+> DT:/reserved-memory/crash_dump node, so early_init_fdt_scan_reserved_mem()
+> reserves the 1G of memory the first kernel used. This leaves us with 63G of memory.
 
-Sorry Thomas, but my history with real UP hardware is limited.  I think you
-might be saying I should call generic_processor_info(0, apic_version[0]) to
-populate cpu 0 but I'm not sure.
+Thank you very much for elaborating this on behalf of myself!
 
-P.
+> This may change with the next version of kdump if it switches back to using
+> DT:/chosen/linux,usable-memory-range.
+
+Indeed.
+We need to talk to Rob.
+
+Thanks,
+-Takahiro AKASHI
+
+> If you need v26 to avoid the top 62G of memory, you need to provide the same
+> 'mem=' to the first and second kernel.
+>
+> 
+> >>> 1.2 Live crash dump fails with error
+> 
+> ... do we expect this to work? I don't think it has anything to do with this
+> series...
+> 
+> 
+> Thanks,
+> 
+> James
+> 
 
 _______________________________________________
 kexec mailing list
