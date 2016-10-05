@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x233.google.com ([2a00:1450:400c:c09::233])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1brmq2-0006Q3-9m
- for kexec@lists.infradead.org; Wed, 05 Oct 2016 14:06:30 +0000
-Received: by mail-wm0-x233.google.com with SMTP id k125so269694711wma.1
- for <kexec@lists.infradead.org>; Wed, 05 Oct 2016 07:06:05 -0700 (PDT)
+ id 1broqn-0004df-ME
+ for kexec@lists.infradead.org; Wed, 05 Oct 2016 16:15:22 +0000
+Date: Wed, 5 Oct 2016 18:14:55 +0200
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] arch/x86: Fix kdump on x86 with physically hotadded CPUs
+Message-ID: <20161005161455.GA26029@krava>
+References: <1475514432-27682-1-git-send-email-prarit@redhat.com>
+ <alpine.DEB.2.20.1610041241160.7712@nanos>
+ <57F39C09.10001@redhat.com>
+ <alpine.DEB.2.20.1610041628120.5049@nanos>
 MIME-Version: 1.0
-From: Sylvain Munaut <s.munaut@whatever-company.com>
-Date: Wed, 5 Oct 2016 16:06:01 +0200
-Message-ID: <CAF6-1L6y2uECc94nJGdPr581Eck6kQMkt1u8rk=jX208SVZA0Q@mail.gmail.com>
-Subject: Patch merging process ?
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1610041628120.5049@nanos>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,24 +26,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Prarit Bhargava <prarit@redhat.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Juergen Gross <jgross@suse.com>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com
 
-Hi,
+On Tue, Oct 04, 2016 at 04:38:16PM +0200, Thomas Gleixner wrote:
+> On Tue, 4 Oct 2016, Prarit Bhargava wrote:
+> > On 10/04/2016 06:58 AM, Thomas Gleixner wrote:
+> > > While it is the right thing to initialize the package map in that case, it
+> > > still papers over a robustness issue in the uncore code, which needs to be
+> > > fixed first.
+> > 
+> > I will include a separate patch with an error check for pkg == 0xffff in the
+> > uncore code.
+> 
+> 0xffff? That won't help. The id returned is -1 if the entry is not
+> initialized. And aside of that just patching that particular place is not
+> helping as the uncore code and also rapl is relying on the package map
+> being populated.
+> 
+> So we need a sanity check in the initialization code which prevents any of
+> this being executed.
+
+I still need to test this, but how about something like this?
+
+thanks,
+jirka
 
 
-I sent a series of 3 patch on the mailing list back in August :
-
-http://lists.infradead.org/pipermail/kexec/2016-August/017037.html
-
-They were pretty simple, but I didn't get any feedback (positive or
-negative) and I haven't seen them merged either ...
-
-Is there something more expected of me to get these upstream ?
-
-
-Cheers,
-
-    Sylvain Munaut
+---
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 28865938aadf..61d087a2f25d 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -598,8 +598,13 @@ static int rapl_cpu_online(unsigned int cpu)
+ 
+ static int rapl_cpu_prepare(unsigned int cpu)
+ {
+-	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
++	struct rapl_pmu *pmu;
++	int pkg = topology_logical_package_id(cpu);
++
++	if (WARN_ON(pkg == -1))
++		return -EINVAL;
+ 
++	pmu = cpu_to_rapl_pmu(cpu);
+ 	if (pmu)
+ 		return 0;
+ 
+@@ -613,7 +618,7 @@ static int rapl_cpu_prepare(unsigned int cpu)
+ 	pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+ 	pmu->cpu = -1;
+ 	rapl_hrtimer_init(pmu);
+-	rapl_pmus->pmus[topology_logical_package_id(cpu)] = pmu;
++	rapl_pmus->pmus[pkg] = pmu;
+ 	return 0;
+ }
+ 
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 463dc7a5a6c3..3f657fbbf787 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1352,7 +1352,7 @@ static int __init intel_uncore_init(void)
+ {
+ 	const struct x86_cpu_id *id;
+ 	struct intel_uncore_init_fun *uncore_init;
+-	int pret = 0, cret = 0, ret;
++	int pret = 0, cret = 0, ret, cpu;
+ 
+ 	id = x86_match_cpu(intel_uncore_match);
+ 	if (!id)
+@@ -1363,6 +1363,13 @@ static int __init intel_uncore_init(void)
+ 
+ 	max_packages = topology_max_packages();
+ 
++	for_each_present_cpu(cpu) {
++		int pkg = topology_logical_package_id(cpu);
++
++		if (WARN_ON(pkg == -1))
++			return -EINVAL;
++	}
++
+ 	uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
+ 	if (uncore_init->pci_init) {
+ 		pret = uncore_init->pci_init();
 
 _______________________________________________
 kexec mailing list
