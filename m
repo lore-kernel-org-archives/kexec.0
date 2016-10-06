@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bsAYh-000304-5Y
- for kexec@lists.infradead.org; Thu, 06 Oct 2016 15:26:08 +0000
-Message-ID: <57F66CF7.7040204@redhat.com>
-Date: Thu, 06 Oct 2016 11:25:43 -0400
-From: Prarit Bhargava <prarit@redhat.com>
+ id 1bsEzu-0003ki-2e
+ for kexec@lists.infradead.org; Thu, 06 Oct 2016 20:10:31 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
+Date: Thu, 06 Oct 2016 15:07:53 -0500
+In-Reply-To: <1475743561-23912-1-git-send-email-bhe@redhat.com> (Baoquan He's
+ message of "Thu, 6 Oct 2016 16:46:01 +0800")
+Message-ID: <877f9lckbq.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] arch/x86: Fix kdump on x86 with physically hotadded CPUs
-References: <1475514432-27682-1-git-send-email-prarit@redhat.com>
- <alpine.DEB.2.20.1610041241160.7712@nanos> <57F39C09.10001@redhat.com>
- <alpine.DEB.2.20.1610041628120.5049@nanos> <20161005161455.GA26029@krava>
-In-Reply-To: <20161005161455.GA26029@krava>
+Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
+ vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +24,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jiri Olsa <jolsa@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Juergen Gross <jgross@suse.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, thgarnie@google.com, takahiro.akashi@linaro.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, akpm@linux-foundation.org, tonli@redhat.com
 
+Baoquan He <bhe@redhat.com> writes:
 
+> KASLR memory randomization can randomize the base of the physical memory
+> mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
+> (VMEMMAP_START). These need be exported to VMCOREINFO so that user space
+> utility, mainly makedumpfile can use them to identify the base of each
+> memory section. Here using VMCOREINFO_NUMBER we can reuse the existing
+> struct number_table in makedumpfile to import data easily.
+>
+> Since they are related to x86_64 only, put them into
+> arch_crash_save_vmcoreinfo. And move the exportion of KERNEL_IMAGE_SIZE
+> together since it's also for x86_64 only.
 
-On 10/05/2016 12:14 PM, Jiri Olsa wrote:
-> On Tue, Oct 04, 2016 at 04:38:16PM +0200, Thomas Gleixner wrote:
->> On Tue, 4 Oct 2016, Prarit Bhargava wrote:
->>> On 10/04/2016 06:58 AM, Thomas Gleixner wrote:
->>>> While it is the right thing to initialize the package map in that case, it
->>>> still papers over a robustness issue in the uncore code, which needs to be
->>>> fixed first.
->>>
->>> I will include a separate patch with an error check for pkg == 0xffff in the
->>> uncore code.
->>
->> 0xffff? That won't help. The id returned is -1 if the entry is not
->> initialized. And aside of that just patching that particular place is not
->> helping as the uncore code and also rapl is relying on the package map
->> being populated.
->>
->> So we need a sanity check in the initialization code which prevents any of
->> this being executed.
-> 
-> I still need to test this, but how about something like this?
-> 
-> thanks,
-> jirka
-> 
-> 
+*Scratches my head*  I would have thought this information would have
+better fit in the ELF header.  Where it actually has a field for virtual
+address.  It also has a field for physical address, and a third field
+for offset in the file (which is where the kdump finds these things in
+memory aftewards).
+
+Why do we need need more magic vmcoreinfo to handle this?
+
+Eric
+
+ 
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 > ---
-> diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-> index 28865938aadf..61d087a2f25d 100644
-> --- a/arch/x86/events/intel/rapl.c
-> +++ b/arch/x86/events/intel/rapl.c
-> @@ -598,8 +598,13 @@ static int rapl_cpu_online(unsigned int cpu)
+>  arch/x86/kernel/machine_kexec_64.c | 4 ++++
+>  kernel/kexec_core.c                | 3 ---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 5a294e4..e150dd7 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -337,6 +337,10 @@ void arch_crash_save_vmcoreinfo(void)
+>  #endif
+>  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+>  			      kaslr_offset());
+> +	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> +	VMCOREINFO_NUMBER(PAGE_OFFSET);
+> +	VMCOREINFO_NUMBER(VMALLOC_START);
+> +	VMCOREINFO_NUMBER(VMEMMAP_START);
+>  }
 >  
->  static int rapl_cpu_prepare(unsigned int cpu)
->  {
-> -	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
-> +	struct rapl_pmu *pmu;
-> +	int pkg = topology_logical_package_id(cpu);
-> +
-> +	if (WARN_ON(pkg == -1))
-> +		return -EINVAL;
->  
-> +	pmu = cpu_to_rapl_pmu(cpu);
->  	if (pmu)
->  		return 0;
-
-I thought about doing this but it seems like every time some driver uses
-topology_logical_package_id() the driver would have to replicate the error
-checking code.
-
-P.
+>  /* arch-dependent functionality related to kexec file-based syscall */
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..8ad3a29e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1467,9 +1467,6 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  #endif
+>  	VMCOREINFO_NUMBER(PG_head_mask);
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+> -#ifdef CONFIG_X86
+> -	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> -#endif
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+>  #endif
 
 _______________________________________________
 kexec mailing list
