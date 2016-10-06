@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bs4jH-0008Cd-C1
- for kexec@lists.infradead.org; Thu, 06 Oct 2016 09:12:40 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [RESEND PATCH 0/8] makedumpfile: Add support to understand
- Power ISA 3.0 based kernel
-Date: Thu, 6 Oct 2016 09:08:03 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E6DDC0@BPXM01GP.gisp.nec.co.jp>
-References: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
-In-Reply-To: <147503943620.1199.14586683563637783549.stgit@hbathini.in.ibm.com>
-Content-Language: ja-JP
+ id 1bs5qc-0001PE-8K
+ for kexec@lists.infradead.org; Thu, 06 Oct 2016 10:24:18 +0000
+Date: Thu, 6 Oct 2016 18:23:53 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2 0/3] makedumpfile: Add support of mm randomization
+Message-ID: <20161006102353.GA17662@x1>
+References: <1475747408-25666-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1475747408-25666-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +23,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
+To: ats-kumagai@wm.jp.nec.com
+Cc: dyoung@redhat.com, kexec@lists.infradead.org, thgarnie@google.com, tonli@redhat.com
 
-Hello Hari,
+Oops, I just sent to Atsushi's old mail. Sorry about this!
 
->SA 3.0 based kernel
->
->With the introduction of radix MMU in Power ISA 3.0, there are changes
->in kernel page table management accommodating that. This patch series
->makes appropriate changes here to work for such kernels. This series
->enables address translation support for radix MMU and also, fixes a
->few bugs along the way.
->
->Resending the patches:
->* by adding makedumpfile in subject to set this in context
->* adding right mail id of Atsushi Kumagai
->
->---
->
->Hari Bathini (8):
->      ppc64: fix vtop page translation for 4K pages
->      ppc64: Use kernel terminology for each level in 4-level page table
->      ppc64: address changes in kernel v4.5
->      ppc64: address change in _PAGE_PRESNT flag for PowerISA v3.0
->      ppc64: use physical addresses and unfold pud for 64K page size
->      ppc64: support big endian Linux page tables
->      ppc64: use the same masked bit values for 4K and 64K pagesizes
->      ppc64: enable address translation support for radix mmu
-
-I've reviewed them and they look good to me.
-I'll merge them into v1.6.1, thanks for your work.
-
-Regards,
-Atsushi Kumagai
-
->
-> arch/ppc64.c   |  231 ++++++++++++++++++++++++++++++++++++++++++++++++--------
-> makedumpfile.c |   11 +++
-> makedumpfile.h |  107 +++++++++++++++++---------
-> 3 files changed, 280 insertions(+), 69 deletions(-)
+On 10/06/16 at 05:50pm, Baoquan He wrote:
+> This is v2 post.
+> 
+> Because of Thomas's kernel patchset, direct mapping, vmalloc and vmemmap
+> could have random starting address. They need be exported to VMCOREINFO
+> and let makedumpfile know this so that makedumpfile can identify these
+> memory areas correctly.
+> 
+> Below is the kernel patchset from Thomas:
+> x86/mm: memory area address KASLR 
+> https://lwn.net/Articles/692289/
+> 
+> I have posted a new kernel patchset to export the base of direct mapping,
+> vmalloc and vmemmap. The subject is:
+> kexec: Export memory sections virtual addresses to vmcoreinfo
+> 
+> v1->v2:
+>     According to Atsushi's comment, mainly change patch 3/3.
+>     - Remove VMALLOC_END_ORIG, VMEMMAP_END_ORIG , VMALLOC_END_2_6_31
+>       and VMEMMAP_END_2_6_31 since they are not needed anymore.
+>     - Put those number table member value assignment into
+>       get_versiondep_info_x86_64.
+> 
+> Baoquan He (3):
+>   makedumpfile: Get info->kernel_version from SYMBOL(init_uts_ns)
+>     earlier
+>   makedumpfile: Move get_versiondep_info calling earlier
+>   makedumpfile: Add support for MM randomization
+> 
+>  arch/x86_64.c  | 51 ++++++++++++++++++++++++++++++++++-----------------
+>  makedumpfile.c | 33 ++++++++++++++++-----------------
+>  makedumpfile.h |  7 +++----
+>  3 files changed, 53 insertions(+), 38 deletions(-)
+> 
+> -- 
+> 2.5.5
+> 
 
 _______________________________________________
 kexec mailing list
