@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bs5K1-0002uK-Bg
- for kexec@lists.infradead.org; Thu, 06 Oct 2016 09:50:39 +0000
+ id 1bs5K1-00031p-Bi
+ for kexec@lists.infradead.org; Thu, 06 Oct 2016 09:50:38 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 0/3] makedumpfile: Add support of mm randomization
-Date: Thu,  6 Oct 2016 17:50:05 +0800
-Message-Id: <1475747408-25666-1-git-send-email-bhe@redhat.com>
+Subject: [PATCH v2 1/3] makedumpfile: Get info->kernel_version from
+ SYMBOL(init_uts_ns) earlier
+Date: Thu,  6 Oct 2016 17:50:06 +0800
+Message-Id: <1475747408-25666-2-git-send-email-bhe@redhat.com>
+In-Reply-To: <1475747408-25666-1-git-send-email-bhe@redhat.com>
+References: <1475747408-25666-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,39 +26,51 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: dyoung@redhat.com, kexec@lists.infradead.org, thgarnie@google.com, Baoquan He <bhe@redhat.com>, tonli@redhat.com
 
-This is v2 post.
+The current code assign value to info->kernel_version in check_release,
+this is too late and buggy. Because in check_release(), it needs calling
+readmem, however earlier get_value_for_old_linux depends on
+info->kernel_version to get correct KERNEL_IMAGE_SIZE for MODULES_VADDR
+which is used in is_vmalloc_addr_x86_64(). This looks a weird circle.
 
-Because of Thomas's kernel patchset, direct mapping, vmalloc and vmemmap
-could have random starting address. They need be exported to VMCOREINFO
-and let makedumpfile know this so that makedumpfile can identify these
-memory areas correctly.
+Since we have exported "OSRELEASE=%s\n" explicitly in kernel, we should
+always use it to get kernel version. And this breaks above weird circle.
+Otherwise MM randomization will come and make it worse.
 
-Below is the kernel patchset from Thomas:
-x86/mm: memory area address KASLR 
-https://lwn.net/Articles/692289/
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ makedumpfile.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-I have posted a new kernel patchset to export the base of direct mapping,
-vmalloc and vmemmap. The subject is:
-kexec: Export memory sections virtual addresses to vmcoreinfo
-
-v1->v2:
-    According to Atsushi's comment, mainly change patch 3/3.
-    - Remove VMALLOC_END_ORIG, VMEMMAP_END_ORIG , VMALLOC_END_2_6_31
-      and VMEMMAP_END_2_6_31 since they are not needed anymore.
-    - Put those number table member value assignment into
-      get_versiondep_info_x86_64.
-
-Baoquan He (3):
-  makedumpfile: Get info->kernel_version from SYMBOL(init_uts_ns)
-    earlier
-  makedumpfile: Move get_versiondep_info calling earlier
-  makedumpfile: Add support for MM randomization
-
- arch/x86_64.c  | 51 ++++++++++++++++++++++++++++++++++-----------------
- makedumpfile.c | 33 ++++++++++++++++-----------------
- makedumpfile.h |  7 +++----
- 3 files changed, 53 insertions(+), 38 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d168dfd..89e1089 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1139,12 +1139,6 @@ check_release(void)
+ 		}
+ 	}
+ 
+-	info->kernel_version = get_kernel_version(info->system_utsname.release);
+-	if (info->kernel_version == FALSE) {
+-		ERRMSG("Can't get the kernel version.\n");
+-		return FALSE;
+-	}
+-
+ 	return TRUE;
+ }
+ 
+@@ -3832,6 +3826,12 @@ initial(void)
+ 		debug_info = TRUE;
+ 	}
+ 
++	info->kernel_version = get_kernel_version(info->release);
++	if (info->kernel_version == FALSE) {
++		ERRMSG("Can't get the kernel version.\n");
++		return FALSE;
++	}
++
+ 	if (!get_value_for_old_linux())
+ 		return FALSE;
+ 
 -- 
 2.5.5
 
