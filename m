@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f42.google.com ([209.85.218.42])
+Received: from mail-oi0-f54.google.com ([209.85.218.54])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bsOr5-0008Vu-TB
- for kexec@lists.infradead.org; Fri, 07 Oct 2016 06:42:05 +0000
-Received: by mail-oi0-f42.google.com with SMTP id r126so47555962oib.0
- for <kexec@lists.infradead.org>; Thu, 06 Oct 2016 23:41:41 -0700 (PDT)
+ id 1bsOtx-0000sO-BB
+ for kexec@lists.infradead.org; Fri, 07 Oct 2016 06:45:02 +0000
+Received: by mail-oi0-f54.google.com with SMTP id m72so47350410oik.3
+ for <kexec@lists.infradead.org>; Thu, 06 Oct 2016 23:44:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20161007041837.GC16400@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <b88cbd6b-923d-d0c9-ce23-b9ef99aca256@gmail.com>
 References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
  <20160907043401.6403-3-takahiro.akashi@linaro.org>
  <b88cbd6b-923d-d0c9-ce23-b9ef99aca256@gmail.com>
- <20161007041837.GC16400@dhcp-128-65.nay.redhat.com>
 From: Pratyush Anand <panand@redhat.com>
-Date: Fri, 7 Oct 2016 12:11:40 +0530
-Message-ID: <CAHB_GuqmVetgyznpU_9ARDDbzCrmcKAn7b1_F8Z7XKdvq-b=qQ@mail.gmail.com>
+Date: Fri, 7 Oct 2016 12:14:39 +0530
+Message-ID: <CAHB_Guoa+7Gnas59TRwKbqXT2b40hj30PzkEVYMse6oT3nu1Gg@mail.gmail.com>
 Subject: Re: [PATCH v3 2/8] kexec: generalize and rename get_kernel_stext_sym()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,292 +26,174 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, public-panand-H+wXaHxf7aLQT0dZR+AlfA@plane.gmane.org, public-kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@plane.gmane.org, Kexec Mailing List <kexec@lists.infradead.org>, public-geoff-wEGCiKHe2LqWVfeAwA7xHQ@plane.gmane.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-Hi Dave,
-
-On Fri, Oct 7, 2016 at 9:48 AM, Dave Young <dyoung@redhat.com> wrote:
->> >     /* Traverse through the Elf headers and find the region where
->> >      * _stext symbol is located in. That's where kernel is mapped */
->> > -   stext_sym = get_kernel_stext_sym();
->> > +   stext_sym = get_kernel_sym("stext");
+On Thu, Oct 6, 2016 at 6:58 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> On 09/07/2016 06:33 AM, AKASHI Takahiro wrote:
 >>
+>> From: Pratyush Anand <panand@redhat.com>
 >>
->> I think this should be get_kernel_sym("_stext");
+>> get_kernel_stext_sym() has been defined for both arm and i386. Other
+>> architecture might need some other kernel symbol address. Therefore
+>> rewrite
+>> this function as generic function to get any kernel symbol address.
 >>
->> Apart from that as Simon already mentioned, due to commit
->> 9f62cbd ("kexec/arch/i386: Add support for KASLR memory randomization")
->> this patch does not apply cleanly.
+>> More over, kallsyms is not arch specific representation, therefore have
+>> common function for all arches.
+>>
+>> Signed-off-by: Pratyush Anand <panand@redhat.com>
+>> [created symbols.c]
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> ---
+>>  kexec/Makefile                  |  1 +
+>>  kexec/arch/arm/crashdump-arm.c  | 40
+>> +---------------------------------------
+>>  kexec/arch/i386/crashdump-x86.c | 32 +-------------------------------
+>>  kexec/kexec.h                   |  2 ++
+>>  kexec/symbols.c                 | 41
+>> +++++++++++++++++++++++++++++++++++++++++
+>>  5 files changed, 46 insertions(+), 70 deletions(-)
+>>  create mode 100644 kexec/symbols.c
+>>
+>> diff --git a/kexec/Makefile b/kexec/Makefile
+>> index 39f365f..2b4fb3d 100644
+>> --- a/kexec/Makefile
+>> +++ b/kexec/Makefile
+>> @@ -26,6 +26,7 @@ KEXEC_SRCS_base += kexec/kernel_version.c
+>>  KEXEC_SRCS_base += kexec/lzma.c
+>>  KEXEC_SRCS_base += kexec/zlib.c
+>>  KEXEC_SRCS_base += kexec/kexec-xen.c
+>> +KEXEC_SRCS_base += kexec/symbols.c
+>>
+>>  KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
+>>
+>> diff --git a/kexec/arch/arm/crashdump-arm.c
+>> b/kexec/arch/arm/crashdump-arm.c
+>> index 4a89b5e..2bc898b 100644
+>> --- a/kexec/arch/arm/crashdump-arm.c
+>> +++ b/kexec/arch/arm/crashdump-arm.c
+>> @@ -73,48 +73,10 @@ static struct crash_elf_info elf_info = {
+>>
+>>  extern unsigned long long user_page_offset;
+>>
+>> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+>> -static unsigned long long get_kernel_stext_sym(void)
+>> -{
+>> -       const char *kallsyms = "/proc/kallsyms";
+>> -       const char *stext = "_stext";
+>> -       char sym[128];
+>> -       char line[128];
+>> -       FILE *fp;
+>> -       unsigned long long vaddr = 0;
+>> -       char type;
+>> -
+>> -       fp = fopen(kallsyms, "r");
+>> -       if (!fp) {
+>> -               fprintf(stderr, "Cannot open %s\n", kallsyms);
+>> -               return 0;
+>> -       }
+>> -
+>> -       while(fgets(line, sizeof(line), fp) != NULL) {
+>> -               unsigned long long addr;
+>> -
+>> -               if (sscanf(line, "%Lx %c %s", &addr, &type, sym) != 3)
+>> -                       continue;
+>> -
+>> -               if (strcmp(sym, stext) == 0) {
+>> -                       dbgprintf("kernel symbol %s vaddr = %#llx\n",
+>> stext, addr);
+>> -                       vaddr = addr;
+>> -                       break;
+>> -               }
+>> -       }
+>> -
+>> -       fclose(fp);
+>> -
+>> -       if (vaddr == 0)
+>> -               fprintf(stderr, "Cannot get kernel %s symbol address\n",
+>> stext);
+>> -
+>> -       return vaddr;
+>> -}
+>> -
+>>  static int get_kernel_page_offset(struct kexec_info *info,
+>>                 struct crash_elf_info *elf_info)
+>>  {
+>> -       unsigned long long stext_sym_addr = get_kernel_stext_sym();
+>> +       unsigned long long stext_sym_addr = get_kernel_sym("stext");
+>>         if (stext_sym_addr == 0) {
+>>                 if (user_page_offset != (-1ULL)) {
+>>                         elf_info->page_offset = user_page_offset;
+>> diff --git a/kexec/arch/i386/crashdump-x86.c
+>> b/kexec/arch/i386/crashdump-x86.c
+>> index bbc0f35..664eb3b 100644
+>> --- a/kexec/arch/i386/crashdump-x86.c
+>> +++ b/kexec/arch/i386/crashdump-x86.c
+>> @@ -102,36 +102,6 @@ static int get_kernel_paddr(struct kexec_info
+>> *UNUSED(info),
+>>         return -1;
+>>  }
+>>
+>> -/* Retrieve kernel _stext symbol virtual address from /proc/kallsyms */
+>> -static unsigned long long get_kernel_stext_sym(void)
+>> -{
+>> -       const char *kallsyms = "/proc/kallsyms";
+>> -       const char *stext = "_stext";
+>> -       char sym[128];
+>> -       char line[128];
+>> -       FILE *fp;
+>> -       unsigned long long vaddr;
+>> -       char type;
+>> -
+>> -       fp = fopen(kallsyms, "r");
+>> -       if (!fp) {
+>> -               fprintf(stderr, "Cannot open %s\n", kallsyms);
+>> -               return 0;
+>> -       }
+>> -
+>> -       while(fgets(line, sizeof(line), fp) != NULL) {
+>> -               if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
+>> -                       continue;
+>> -               if (strcmp(sym, stext) == 0) {
+>> -                       dbgprintf("kernel symbol %s vaddr = %16llx\n",
+>> stext, vaddr);
+>> -                       return vaddr;
+>> -               }
+>> -       }
+>> -
+>> -       fprintf(stderr, "Cannot get kernel %s symbol address\n", stext);
+>> -       return 0;
+>> -}
+>> -
+>>  /* Retrieve info regarding virtual address kernel has been compiled for
+>> and
+>>   * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
+>>   * from kexec-tools fails because of malformed elf notes. A kernel patch
+>> has
+>> @@ -182,7 +152,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info
+>> *UNUSED(info),
+>>
+>>         /* Traverse through the Elf headers and find the region where
+>>          * _stext symbol is located in. That's where kernel is mapped */
+>> -       stext_sym = get_kernel_stext_sym();
+>> +       stext_sym = get_kernel_sym("stext");
 >
-> Pratyush, I had a cleanup patch below, but I did not get time to test it
-> so it is not ready to send out.
 >
-> The basic thought is to move the page_offset_base code to
-> get_kernel_page_offset(), there is also another issue is for old kernel
-> or kernel without kaslr built-in there will be an unnecessary error
-> message but I have not get any idea how to fix it.
 >
-
-Are you talking about following error message:
-
-"Cannot get kernel %s symbol address\n"
-
-May be it can be changes as dbgprintf() rather than fprintf(stderr)
-
-> Would you like to take below cleanup patch along with your next version?
-
-I think, this patch series is for ARM64 support along with any generic
-modifications needed by arm64 patches. Below modification is specific
-to x86. So, better to send them separately.
-
-> It is also fine to leave it as a future improvement to me.
+> I think this should be get_kernel_sym("_stext");
 
 OK.
 
 >
-> Thanks
-> Dave
+> Apart from that as Simon already mentioned, due to commit
+> 9f62cbd ("kexec/arch/i386: Add support for KASLR memory randomization")
+> this patch does not apply cleanly.
 >
-> ---
->  kexec/arch/i386/crashdump-x86.c |  158 ++++++++++++++++++++--------------------
->  1 file changed, 82 insertions(+), 76 deletions(-)
->
-> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
-> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
-> @@ -54,10 +54,59 @@
->
->  extern struct arch_options_t arch_options;
->
-> +/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-> +static unsigned long long get_kernel_sym(const char *symbol)
-> +{
-> +       const char *kallsyms = "/proc/kallsyms";
-> +       char sym[128];
-> +       char line[128];
-> +       FILE *fp;
-> +       unsigned long long vaddr;
-> +       char type;
-> +
-> +       fp = fopen(kallsyms, "r");
-> +       if (!fp) {
-> +               fprintf(stderr, "Cannot open %s\n", kallsyms);
-> +               return 0;
-> +       }
-> +
-> +       while(fgets(line, sizeof(line), fp) != NULL) {
-> +               if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
-> +                       continue;
-> +               if (strcmp(sym, symbol) == 0) {
-> +                       dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
-> +                       return vaddr;
-> +               }
-> +       }
-> +
-> +       fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
-> +
-> +       return 0;
-> +}
-> +
->  static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
-> -                                 struct crash_elf_info *elf_info)
-> +                                 struct crash_elf_info *elf_info,
-> +                                 struct mem_ehdr *ehdr)
->  {
->         int kv;
-> +       struct mem_phdr *phdr, *end_phdr;
-> +       const unsigned long long pud_mask = ~((1 << 30) - 1);
-> +       unsigned long long vaddr, lowest_vaddr = 0;
-> +
-> +       end_phdr = &ehdr->e_phdr[ehdr->e_phnum];
-> +       /* Search for the real PAGE_OFFSET when KASLR memory randomization
-> +        * is enabled */
-> +       if (get_kernel_sym("page_offset_base") != 0) {
-> +               for(phdr = ehdr->e_phdr; phdr != end_phdr; phdr++) {
-> +                       if (phdr->p_type == PT_LOAD) {
-> +                               vaddr = phdr->p_vaddr & pud_mask;
-> +                               if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
 
-Although, it is just the copy of original code from one function to
-another, but I think logic can be improved a bit here. Initialize
-lowest_vaddr with ULONG_MAX and we can get rid of one check of
-(lowest_vaddr == 0).
+Will rebase with latest.
 
-> +                                       lowest_vaddr = vaddr;
-> +                       }
-> +               }
-> +               if (lowest_vaddr != 0)
-
-And then here it should be (lowest_vaddr != ULONG_MAX)
-
-> +                       elf_info->page_offset = lowest_vaddr;
-> +       }
->
->         if (elf_info->machine == EM_X86_64) {
->                 kv = kernel_version();
-> @@ -102,35 +151,6 @@ static int get_kernel_paddr(struct kexec
->         return -1;
->  }
->
-> -/* Retrieve kernel symbol virtual address from /proc/kallsyms */
-> -static unsigned long long get_kernel_sym(const char *symbol)
-> -{
-> -       const char *kallsyms = "/proc/kallsyms";
-> -       char sym[128];
-> -       char line[128];
-> -       FILE *fp;
-> -       unsigned long long vaddr;
-> -       char type;
-> -
-> -       fp = fopen(kallsyms, "r");
-> -       if (!fp) {
-> -               fprintf(stderr, "Cannot open %s\n", kallsyms);
-> -               return 0;
-> -       }
-> -
-> -       while(fgets(line, sizeof(line), fp) != NULL) {
-> -               if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
-> -                       continue;
-> -               if (strcmp(sym, symbol) == 0) {
-> -                       dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
-> -                       return vaddr;
-> -               }
-> -       }
-> -
-> -       fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
-> -       return 0;
-> -}
-> -
->  /* Retrieve info regarding virtual address kernel has been compiled for and
->   * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
->   * from kexec-tools fails because of malformed elf notes. A kernel patch has
-> @@ -139,19 +159,12 @@ static unsigned long long get_kernel_sym
->   * we should get rid of backward compatible code. */
->
->  static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
-> -                                    struct crash_elf_info *elf_info)
-> +                                    struct crash_elf_info *elf_info,
-> +                                    struct mem_ehdr *ehdr)
->  {
-> -       int result;
-> -       const char kcore[] = "/proc/kcore";
-> -       char *buf;
-> -       struct mem_ehdr ehdr;
->         struct mem_phdr *phdr, *end_phdr;
->         int align;
-> -       off_t size;
-> -       uint32_t elf_flags = 0;
->         uint64_t stext_sym;
-> -       const unsigned long long pud_mask = ~((1 << 30) - 1);
-> -       unsigned long long vaddr, lowest_vaddr = 0;
->
->         if (elf_info->machine != EM_X86_64)
->                 return 0;
-> @@ -160,45 +173,13 @@ static int get_kernel_vaddr_and_size(str
->                 return 0;
->
->         align = getpagesize();
-> -       buf = slurp_file_len(kcore, KCORE_ELF_HEADERS_SIZE, &size);
-> -       if (!buf) {
-> -               fprintf(stderr, "Cannot read %s: %s\n", kcore, strerror(errno));
-> -               return -1;
-> -       }
->
-> -       /* Don't perform checks to make sure stated phdrs and shdrs are
-> -        * actually present in the core file. It is not practical
-> -        * to read the GB size file into a user space buffer, Given the
-> -        * fact that we don't use any info from that.
-> -        */
-> -       elf_flags |= ELF_SKIP_FILESZ_CHECK;
-> -       result = build_elf_core_info(buf, size, &ehdr, elf_flags);
-> -       if (result < 0) {
-> -               /* Perhaps KCORE_ELF_HEADERS_SIZE is too small? */
-> -               fprintf(stderr, "ELF core (kcore) parse failed\n");
-> -               return -1;
-> -       }
-> -
-> -       end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
-> -
-> -       /* Search for the real PAGE_OFFSET when KASLR memory randomization
-> -        * is enabled */
-> -       if (get_kernel_sym("page_offset_base") != 0) {
-> -               for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-> -                       if (phdr->p_type == PT_LOAD) {
-> -                               vaddr = phdr->p_vaddr & pud_mask;
-> -                               if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-> -                                       lowest_vaddr = vaddr;
-> -                       }
-> -               }
-> -               if (lowest_vaddr != 0)
-> -                       elf_info->page_offset = lowest_vaddr;
-> -       }
-> +       end_phdr = &ehdr->e_phdr[ehdr->e_phnum];
->
->         /* Traverse through the Elf headers and find the region where
->          * _stext symbol is located in. That's where kernel is mapped */
->         stext_sym = get_kernel_sym("_stext");
-> -       for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
-> +       for(phdr = ehdr->e_phdr; stext_sym && phdr != end_phdr; phdr++) {
->                 if (phdr->p_type == PT_LOAD) {
->                         unsigned long long saddr = phdr->p_vaddr;
->                         unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
-> @@ -223,7 +204,7 @@ static int get_kernel_vaddr_and_size(str
->          * /proc/kallsyms, Traverse through the Elf headers again and
->          * find the region where kernel is mapped using hard-coded
->          * kernel mapping boundries */
-> -       for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-> +       for(phdr = ehdr->e_phdr; phdr != end_phdr; phdr++) {
->                 if (phdr->p_type == PT_LOAD) {
->                         unsigned long long saddr = phdr->p_vaddr;
->                         unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
-> @@ -887,6 +868,12 @@ int load_crashdump_segments(struct kexec
->         struct memory_range *mem_range, *memmap_p;
->         struct crash_elf_info elf_info;
->         unsigned kexec_arch;
-> +       char *buf;
-> +       off_t size;
-> +       struct mem_ehdr ehdr;
-> +       uint32_t elf_flags = 0;
-> +       const char kcore[] = "/proc/kcore";
-> +       int result;
->
->         memset(&elf_info, 0x0, sizeof(elf_info));
->
-> @@ -943,13 +930,32 @@ int load_crashdump_segments(struct kexec
->                 elf_info.class = ELFCLASS64;
->         }
->
-> -       if (get_kernel_page_offset(info, &elf_info))
-> +       buf = slurp_file_len(kcore, KCORE_ELF_HEADERS_SIZE, &size);
-> +       if (!buf) {
-> +               fprintf(stderr, "Cannot read %s: %s\n", kcore, strerror(errno));
-> +               return -1;
-> +       }
-> +
-> +       /* Don't perform checks to make sure stated phdrs and shdrs are
-> +        * actually present in the core file. It is not practical
-> +        * to read the GB size file into a user space buffer, Given the
-> +        * fact that we don't use any info from that.
-> +        */
-> +       elf_flags |= ELF_SKIP_FILESZ_CHECK;
-> +       result = build_elf_core_info(buf, size, &ehdr, elf_flags);
-> +       if (result < 0) {
-> +               /* Perhaps KCORE_ELF_HEADERS_SIZE is too small? */
-> +               fprintf(stderr, "ELF core (kcore) parse failed\n");
-> +               return -1;
-> +       }
-> +
-> +       if (get_kernel_page_offset(info, &elf_info, &ehdr))
->                 return -1;
->
->         if (get_kernel_paddr(info, &elf_info))
->                 return -1;
->
-> -       if (get_kernel_vaddr_and_size(info, &elf_info))
-> +       if (get_kernel_vaddr_and_size(info, &elf_info, &ehdr))
->                 return -1;
->
->         /* Memory regions which panic kernel can safely use to boot into */
+Thanks for your review.
 
 ~Pratyush
 
