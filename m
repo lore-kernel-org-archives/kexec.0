@@ -1,19 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1btsfF-0004P2-0R
- for kexec@lists.infradead.org; Tue, 11 Oct 2016 08:43:57 +0000
-Date: Tue, 11 Oct 2016 16:43:24 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
- vmcoreinfo
-Message-ID: <20161011084324.GA14404@dhcp-128-65.nay.redhat.com>
-References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
- <877f9lckbq.fsf@x220.int.ebiederm.org> <20161011074111.GD11185@x1>
- <20161011081921.GA21765@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH 0/2] arm64 kexec-tools fixups
+References: <cover.1476134309.git.geoff@infradead.org>
+From: Matthias Brugger <mbrugger@suse.com>
+Message-ID: <ebe32436-6069-06c5-702f-d435d0dacd48@suse.com>
+Date: Tue, 11 Oct 2016 12:20:41 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161011081921.GA21765@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <cover.1476134309.git.geoff@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,68 +14,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, takahiro.akashi@linaro.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, thgarnie@google.com, tonli@redhat.com
+To: Geoff Levand <geoff@infradead.org>, Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 10/11/16 at 04:19pm, Dave Young wrote:
-> On 10/11/16 at 03:41pm, Baoquan He wrote:
-> > Hi Eric,
-> > 
-> > Thanks a lot for your reviewing! Sorry for late reply.
-> > 
-> > On 10/06/16 at 03:07pm, Eric W. Biederman wrote:
-> > > Baoquan He <bhe@redhat.com> writes:
-> > > 
-> > > > KASLR memory randomization can randomize the base of the physical memory
-> > > > mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
-> > > > (VMEMMAP_START). These need be exported to VMCOREINFO so that user space
-> > > > utility, mainly makedumpfile can use them to identify the base of each
-> > > > memory section. Here using VMCOREINFO_NUMBER we can reuse the existing
-> > > > struct number_table in makedumpfile to import data easily.
-> > > >
-> > > > Since they are related to x86_64 only, put them into
-> > > > arch_crash_save_vmcoreinfo. And move the exportion of KERNEL_IMAGE_SIZE
-> > > > together since it's also for x86_64 only.
-> > > 
-> > > *Scratches my head*  I would have thought this information would have
-> > > better fit in the ELF header.  Where it actually has a field for virtual
-> > > address.  It also has a field for physical address, and a third field
-> > > for offset in the file (which is where the kdump finds these things in
-> > > memory aftewards).
-> > > 
-> > > Why do we need need more magic vmcoreinfo to handle this?
-> > 
-> > Previously in x86_64, values of PAGE_OFFSET, VMALLOC and VMEMMAP are
-> > fixed, makedumpfile also hard codes them.
-> > 
-> > In kexec-tools, we try to get page_offset_base from /proc/kallsyms or
-> > search it from /proc/kcore elf header with the help of virtual address
-> > of symbol _stext. Then we save it into p_vaddr of kernel text program
-> > segment. In kdump kernel, we may assume kernel text has the biggest
-> > starting virtual address and search it from vmcore elf header. But I
-> > can't think of a way to get the starting virtual address of vmalloc and
-> > vmemmap which are necessary for makedumpfile analysis.
-> > 
-> > So it's necessary to add them into VMCOREINFO to let makedumpfile know.
-> 
-> PAGE_OFFSET can be get via vaddr - paddr from elf pt_loads so only
-> VMALLOC_BASE and VMEMMAP_BASE is necessary..
 
-Besides of these, since kernel module is randomized as well I wonder if
-it need special handling, does it work?
 
-> 
-> Thanks
-> Dave
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+On 10/10/2016 11:22 PM, Geoff Levand wrote:
+> Hi Simon,
+>
+> Fixes for 'make tarball'.  Please apply.
+>
+> -Geoff
+>
+> The following changes since commit 6e8804f9ca67bee65aedd5e1cdf504737ab5c7ed:
+>
+>   multiboot: Use the "reserved" type for non-ram zones (2016-10-07 11:54:44 +0900)
+>
+> are available in the git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geoff/kexec-tools.git for-merge-arm64-dist
+>
+> for you to fetch changes up to 3552a3e85a910688d932535549b35354a54927ad:
+>
+>   arm64: Add missing kexec dist files (2016-10-10 14:15:21 -0700)
+>
+> ----------------------------------------------------------------
+> Geoff Levand (2):
+>       arm64: Cleanup kexec Makefile
+>       arm64: Add missing kexec dist files
+>
+>  kexec/arch/arm64/Makefile | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>
+
+Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
 _______________________________________________
 kexec mailing list
