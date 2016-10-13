@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bubln-0003rU-Pn
- for kexec@lists.infradead.org; Thu, 13 Oct 2016 08:53:45 +0000
-Date: Thu, 13 Oct 2016 16:53:14 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
- vmcoreinfo
-Message-ID: <20161013085314.GF11185@x1>
-References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
- <877f9lckbq.fsf@x220.int.ebiederm.org> <20161011074111.GD11185@x1>
- <20161011081921.GA21765@dhcp-128-65.nay.redhat.com>
- <20161012002613.GB21477@x1>
- <256e8ba2-4f92-36cf-ec5c-2502113922c6@redhat.com>
+Date: Thu, 13 Oct 2016 11:25:14 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] arm64 kexec-tools fixups
+Message-ID: <20161013092514.GP18804@verge.net.au>
+References: <cover.1476134309.git.geoff@infradead.org>
+ <ebe32436-6069-06c5-702f-d435d0dacd48@suse.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <256e8ba2-4f92-36cf-ec5c-2502113922c6@redhat.com>
+In-Reply-To: <ebe32436-6069-06c5-702f-d435d0dacd48@suse.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,58 +20,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, thgarnie@google.com, takahiro.akashi@linaro.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, tonli@redhat.com
+To: Matthias Brugger <mbrugger@suse.com>
+Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi Pratyush,
+On Tue, Oct 11, 2016 at 12:20:41PM +0200, Matthias Brugger wrote:
+> 
+> 
+> On 10/10/2016 11:22 PM, Geoff Levand wrote:
+> >Hi Simon,
+> >
+> >Fixes for 'make tarball'.  Please apply.
+> >
+> >-Geoff
+> >
+> >The following changes since commit 6e8804f9ca67bee65aedd5e1cdf504737ab5c7ed:
+> >
+> >  multiboot: Use the "reserved" type for non-ram zones (2016-10-07 11:54:44 +0900)
+> >
+> >are available in the git repository at:
+> >
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/geoff/kexec-tools.git for-merge-arm64-dist
+> >
+> >for you to fetch changes up to 3552a3e85a910688d932535549b35354a54927ad:
+> >
+> >  arm64: Add missing kexec dist files (2016-10-10 14:15:21 -0700)
+> >
+> >----------------------------------------------------------------
+> >Geoff Levand (2):
+> >      arm64: Cleanup kexec Makefile
+> >      arm64: Add missing kexec dist files
+> >
+> > kexec/arch/arm64/Makefile | 15 +++++++++------
+> > 1 file changed, 9 insertions(+), 6 deletions(-)
+> >
+> 
+> Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 
-On 10/12/16 at 02:39pm, Pratyush Anand wrote:
-> 
-> 
-> On Wednesday 12 October 2016 05:56 AM, Baoquan He wrote:
-> > > PAGE_OFFSET can be get via vaddr - paddr from elf pt_loads so only
-> > > > VMALLOC_BASE and VMEMMAP_BASE is necessary..
-> > Well, yes, I was wrong. I wrongly thought of kernel text virtual address
-> > when I wrote the reply
-> 
-> So, if you can get PAGE_OFFSET then, probably you do not need to know
-> anything else.
-> 
-> I think, we can simplify makedumpfile code, where we do not need to depend
-> on VMALLOC_START or VMEMMAP_START etc.
-> 
-> "If we know PAGE_OFFSET, we can read from swapper space. If we can read from
-> swapper space, then we can know PA of any kernel VA, whether it is VMALLOC,
-> or vmemmap or module or kernel text area."
-
-Check makedumpfile code and re-think about this, it's really like you
-said, we can convert VA to PA by swapper_pg_dir or init_level4_pgt. But the
-reason why we have to involve VMALLOC_START and VMEMMAP_START is that in
-x86_64 direct mapping and kernel text mapping are all linear mapping.
-Linear mapping can let us do a very efficient translation from VA to
-PA. Especially for page filtering, we need get PA of mm related data.
-All of them need convert by swapper_pg_dir or init_level4_pgt, that's
-inefficient, imagine the current system usually own many Tera bytes of
-physical memory.
-
-So here though we can pick up crash memory regions from elf program
-header of vmcore and calculate the PAGE_OFFSET, we still need
-VMALLOC_START and VMEMMAP_START.
-
-Thanks
-Baoquan
-> 
-> 
-> In fact, I have cleanup patches for ARM64 [1], which take above approach and
-> get rid of need of VMALLOC_START or VMEMMAP_START etc. I will be sending
-> them upstream soon.
-> 
-> Probably, x86 can take the similar approach.
-> 
-> ~Pratyush
-> 
-> [1] https://github.com/pratyushanand/makedumpfile/blob/arm64_devel/arch/arm64.c#L228
-> 
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
