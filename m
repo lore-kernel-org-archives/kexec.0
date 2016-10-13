@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bmtDZ-0000kI-0w
- for kexec@lists.infradead.org; Thu, 22 Sep 2016 01:54:30 +0000
-Date: Thu, 22 Sep 2016 09:53:54 +0800
-From: "'Dave Young'" <dyoung@redhat.com>
-Subject: Re: [V4 PATCH 1/2] x86/panic: Replace smp_send_stop() with kdump
- friendly version in panic path
-Message-ID: <20160922015354.GA12860@dhcp-128-65.nay.redhat.com>
-References: <20160810080946.11028.97686.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160810080948.11028.15344.stgit@sysi4-13.yrl.intra.hitachi.co.jp>
- <20160812031633.GA2983@dhcp-128-65.nay.redhat.com>
- <04EAB7311EE43145B2D3536183D1A84454CBBABC@GSjpTKYDCembx31.service.hitachi.net>
- <57E0E7EC.2010704@redhat.com>
- <04EAB7311EE43145B2D3536183D1A84454D0FECC@GSjpTKYDCembx31.service.hitachi.net>
- <04EAB7311EE43145B2D3536183D1A84454D101A4@GSjpTKYDCembx31.service.hitachi.net>
+ id 1bubln-0003rU-Pn
+ for kexec@lists.infradead.org; Thu, 13 Oct 2016 08:53:45 +0000
+Date: Thu, 13 Oct 2016 16:53:14 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
+ vmcoreinfo
+Message-ID: <20161013085314.GF11185@x1>
+References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
+ <877f9lckbq.fsf@x220.int.ebiederm.org> <20161011074111.GD11185@x1>
+ <20161011081921.GA21765@dhcp-128-65.nay.redhat.com>
+ <20161012002613.GB21477@x1>
+ <256e8ba2-4f92-36cf-ec5c-2502113922c6@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <04EAB7311EE43145B2D3536183D1A84454D101A4@GSjpTKYDCembx31.service.hitachi.net>
+In-Reply-To: <256e8ba2-4f92-36cf-ec5c-2502113922c6@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,76 +24,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?B?5rKz5ZCI6Iux5a6PIC8gS0FXQUnvvIxISURFSElSTw==?= <hidehiro.kawai.ez@hitachi.com>
-Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, David Vrabel <david.vrabel@citrix.com>, Baoquan He <bhe@redhat.com>, Toshi Kani <toshi.kani@hpe.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>, "xlpang@redhat.com" <xlpang@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Daniel Walker <dwalker@fifo99.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, thgarnie@google.com, takahiro.akashi@linaro.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, tonli@redhat.com
 
-SGksIOays+WQiOiLseWujwoKVGhhbmtzIGZvciB0aGUgcGF0Y2ggbG9nIHVwZGF0ZSwgaXQgbG9v
-a3MgZ29vZCB0byBtZS4KCkFja2VkLWJ5OiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4K
-Ck9uIDA5LzIwLzE2IGF0IDExOjIyYW0sIOays+WQiOiLseWujyAvIEtBV0FJ77yMSElERUhJUk8g
-d3JvdGU6Cj4gSGVyZSBpcyB0aGUgcmV2aXNlZCBjb21taXQgZGVzY3JpcHRpb24gcmVmbGVjdGlu
-ZyBEYXZlJ3MKPiBjb21tZW50LiAgQ2MgbGlzdCB3YXMgY29waWVkIGZyb20gLW1tIHZlcnNpb24u
-Cj4gCj4gRnJvbTogSGlkZWhpcm8gS2F3YWkgPGhpZGVoaXJvLmthd2FpLmV6QGhpdGFjaGkuY29t
-Pgo+IFN1YmplY3Q6IHg4Ni9wYW5pYzogcmVwbGFjZSBzbXBfc2VuZF9zdG9wKCkgd2l0aCBrZHVt
-cCBmcmllbmRseSB2ZXJzaW9uIGluIHBhbmljIHBhdGgKPiAKPiBUaGlzIHBhdGNoIGZpeGVzIGEg
-cHJvYmxlbSByZXBvcnRlZCBieSBEYW5pZWwgV2Fsa2VyCj4gKGh0dHBzOi8vbGttbC5vcmcvbGtt
-bC8yMDE1LzYvMjQvNDQpLgo+IAo+IFdoZW4ga2VybmVsIHBhbmljcyB3aXRoIGNyYXNoX2tleGVj
-X3Bvc3Rfbm90aWZpZXJzIGtlcm5lbCBwYXJhbWV0ZXIKPiBlbmFibGVkLCBvdGhlciBDUFVzIGFy
-ZSBzdG9wcGVkIGJ5IHNtcF9zZW5kX3N0b3AoKSBpbnN0ZWFkIG9mCj4gbWFjaGluZV9jcmFzaF9z
-aHV0ZG93bigpIGluIF9fY3Jhc2hfa2V4ZWMoKSBwYXRoLgo+IAo+ICAgcGFuaWMoKQo+ICAgICBp
-ZiBjcmFzaF9rZXhlY19wb3N0X25vdGlmaWVycyA9PSAxCj4gICAgICAgc21wX3NlbmRfc3RvcCgp
-Cj4gICAgICAgYXRvbWljX25vdGlmaWVyX2NhbGxfY2hhaW4oKQo+ICAgICAgIGttc2dfZHVtcCgp
-Cj4gICAgIF9fY3Jhc2hfa2V4ZWMoKQo+ICAgICAgIG1hY2hpbmVfY3Jhc2hfc2h1dGRvd24oKQo+
-IAo+IERpZmZlcmVudCBmcm9tIHNtcF9zZW5kX3N0b3AoKSwgbWFjaGluZV9jcmFzaF9zaHV0ZG93
-bigpIHN0b3BzIG90aGVyCj4gQ1BVcyB3aXRoIGV4dHJhIHdvcmtzIGZvciBrZHVtcC4gIFNvLCBp
-ZiBzbXBfc2VuZF9zdG9wKCkgc3RvcHMgb3RoZXIKPiBDUFVzIGluIGFkdmFuY2UsIHRoZXNlIGV4
-dHJhIHdvcmtzIHdvbid0IGJlIGRvbmUuICBGb3IgeDg2LCBrZHVtcAo+IHJvdXRpbmVzIG1pc3Mg
-dG8gc2F2ZSBvdGhlciBDUFVzJyByZWdpc3RlcnMgYW5kIGRpc2FibGUgdmlydHVhbGl6YXRpb24K
-PiBleHRlbnNpb25zLgo+IAo+IFRvIGZpeCB0aGlzIHByb2JsZW0sIGNhbGwgYSBuZXcga2R1bXAg
-ZnJpZW5kbHkgZnVuY3Rpb24sCj4gY3Jhc2hfc21wX3NlbmRfc3RvcCgpLCBpbnN0ZWFkIG9mIHRo
-ZSBzbXBfc2VuZF9zdG9wKCkgd2hlbgo+IGNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzIGlzIGVu
-YWJsZWQuICBjcmFzaF9zbXBfc2VuZF9zdG9wKCkgaXMgYQo+IHdlYWsgZnVuY3Rpb24sIGFuZCBp
-dCBqdXN0IGNhbGwgc21wX3NlbmRfc3RvcCgpLiAgQXJjaGl0ZWN0dXJlCj4gY29kZXMgc2hvdWxk
-IG92ZXJyaWRlIGl0IHNvIHRoYXQga2R1bXAgY2FuIHdvcmsgYXBwcm9wcmlhdGVseS4KPiBUaGlz
-IHBhdGNoIG9ubHkgcHJvdmlkZXMgeDg2LXNwZWNpZmljIHZlcnNpb24uCj4gCj4gRm9yIFhlbidz
-IFBWIGtlcm5lbCwganVzdCBrZWVwIHRoZSBjdXJyZW50IGJlaGF2aW9yLgo+IEFzIGZvciBEb20w
-LCBpdCBkb2Vzbid0IHVzZSBjcmFzaF9rZXhlYyByb3V0aW5lcywgYW5kIGl0IHJlbGllcyBvbgo+
-IHBhbmljIG5vdGlmaWVyIGNoYWluLiAgQXQgdGhlIGVuZCBvZiB0aGUgY2hhaW4sIGEgaHlwZXJj
-YWxsIGlzCj4gaXNzdWVkIHdoaWNoIHJlcXVlc3RzIHRoZSBoeXBlcnZpc29yIHRvIGV4ZWN1dGUg
-a2R1bXAuICBUaGlzIG1lYW5zCj4gcmVnYXJkbGVzcyBvZiBjcmFzaF9rZXhlY19wb3N0X25vdGlm
-aWVycyBzZXR0aW5nLCBzbXBfc2VuZF9zdG9wKCkuCj4gRm9yIFBWIEhWTSwgaXQgd291bGQgd29y
-ayBzaW1pbGFybHkgdG8gYmFyZW1ldGFsIGtlcm5lbHMgd2l0aCBleHRyYQo+IGNsZWFudXBzIGZv
-ciBoeXBlcnZpc29yLiAgSXQgZG9lc24ndCBuZWVkIGFkZGl0aW9uYWwgY2FyZS4KPiAKPiBDaGFu
-Z2VzIGluIFY0Ogo+IC0gS2VlcCB0byB1c2Ugc21wX3NlbmRfc3RvcCBpZiBjcmFzaF9rZXhlY19w
-b3N0X25vdGlmaWVycyBpcyBub3Qgc2V0Cj4gLSBSZW5hbWUgcGFuaWNfc21wX3NlbmRfc3RvcCB0
-byBjcmFzaF9zbXBfc2VuZF9zdG9wCj4gLSBEb24ndCBjaGFuZ2UgdGhlIGJlaGF2aW9yIGZvciBY
-ZW4ncyBQViBrZXJuZWwKPiAKPiBDaGFuZ2VzIGluIFYzOgo+IC0gUmV2aXNlIGNvbW1lbnRzLCBk
-ZXNjcmlwdGlvbiwgYW5kIHN5bWJvbCBuYW1lcwo+IAo+IENoYW5nZXMgaW4gVjI6Cj4gLSBSZXBs
-YWNlIHNtcF9zZW5kX3N0b3AoKSBjYWxsIHdpdGggY3Jhc2hfa2V4ZWMgdmVyc2lvbiB3aGljaAo+
-ICAgc2F2ZXMgY3B1IHN0YXRlcyBhbmQgY2xlYW5zIHVwIFZNWC9TVk0KPiAtIERyb3AgYSBmaXgg
-Zm9yIFByb2JsZW0gMSBhdCB0aGlzIG1vbWVudAo+IAo+IEZpeGVzOiBmMDZlNTE1M2Y0YWUgKGtl
-cm5lbC9wYW5pYy5jOiBhZGQgImNyYXNoX2tleGVjX3Bvc3Rfbm90aWZpZXJzIiBvcHRpb24pCj4g
-TGluazogaHR0cDovL2xrbWwua2VybmVsLm9yZy9yLzIwMTYwODEwMDgwOTQ4LjExMDI4LjE1MzQ0
-LnN0Z2l0QHN5c2k0LTEzLnlybC5pbnRyYS5oaXRhY2hpLmNvLmpwCj4gU2lnbmVkLW9mZi1ieTog
-SGlkZWhpcm8gS2F3YWkgPGhpZGVoaXJvLmthd2FpLmV6QGhpdGFjaGkuY29tPgo+IFJlcG9ydGVk
-LWJ5OiBEYW5pZWwgV2Fsa2VyIDxkd2Fsa2VyQGZpZm85OS5jb20+Cj4gQ2M6IERhdmUgWW91bmcg
-PGR5b3VuZ0ByZWRoYXQuY29tPgo+IENjOiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4KPiBD
-YzogVml2ZWsgR295YWwgPHZnb3lhbEByZWRoYXQuY29tPgo+IENjOiBFcmljIEJpZWRlcm1hbiA8
-ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IENjOiBNYXNhbWkgSGlyYW1hdHN1IDxtaGlyYW1hdEBr
-ZXJuZWwub3JnPgo+IENjOiBEYW5pZWwgV2Fsa2VyIDxkd2Fsa2VyQGZpZm85OS5jb20+Cj4gQ2M6
-IFh1bmxlaSBQYW5nIDx4cGFuZ0ByZWRoYXQuY29tPgo+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRn
-bHhAbGludXRyb25peC5kZT4KPiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+Cj4g
-Q2M6ICJILiBQZXRlciBBbnZpbiIgPGhwYUB6eXRvci5jb20+Cj4gQ2M6IEJvcmlzbGF2IFBldGtv
-diA8YnBAc3VzZS5kZT4KPiBDYzogRGF2aWQgVnJhYmVsIDxkYXZpZC52cmFiZWxAY2l0cml4LmNv
-bT4KPiBDYzogVG9zaGkgS2FuaSA8dG9zaGkua2FuaUBocGUuY29tPgo+IENjOiBSYWxmIEJhZWNo
-bGUgPHJhbGZAbGludXgtbWlwcy5vcmc+Cj4gQ2M6IERhdmlkIERhbmV5IDxkYXZpZC5kYW5leUBj
-YXZpdW0uY29tPgo+IENjOiBBYXJvIEtvc2tpbmVuIDxhYXJvLmtvc2tpbmVuQGlraS5maT4KPiBD
-YzogIlN0ZXZlbiBKLiBIaWxsIiA8c3RldmVuLmhpbGxAY2F2aXVtLmNvbT4KPiBDYzogQ29yZXkg
-TWlueWFyZCA8Y21pbnlhcmRAbXZpc3RhLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBBbmRyZXcgTW9y
-dG9uIDxha3BtQGxpbnV4LWZvdW5kYXRpb24ub3JnPgo+IAoKW3NuaXBdCgpUaGFua3MKRGF2ZQoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Pratyush,
+
+On 10/12/16 at 02:39pm, Pratyush Anand wrote:
+> 
+> 
+> On Wednesday 12 October 2016 05:56 AM, Baoquan He wrote:
+> > > PAGE_OFFSET can be get via vaddr - paddr from elf pt_loads so only
+> > > > VMALLOC_BASE and VMEMMAP_BASE is necessary..
+> > Well, yes, I was wrong. I wrongly thought of kernel text virtual address
+> > when I wrote the reply
+> 
+> So, if you can get PAGE_OFFSET then, probably you do not need to know
+> anything else.
+> 
+> I think, we can simplify makedumpfile code, where we do not need to depend
+> on VMALLOC_START or VMEMMAP_START etc.
+> 
+> "If we know PAGE_OFFSET, we can read from swapper space. If we can read from
+> swapper space, then we can know PA of any kernel VA, whether it is VMALLOC,
+> or vmemmap or module or kernel text area."
+
+Check makedumpfile code and re-think about this, it's really like you
+said, we can convert VA to PA by swapper_pg_dir or init_level4_pgt. But the
+reason why we have to involve VMALLOC_START and VMEMMAP_START is that in
+x86_64 direct mapping and kernel text mapping are all linear mapping.
+Linear mapping can let us do a very efficient translation from VA to
+PA. Especially for page filtering, we need get PA of mm related data.
+All of them need convert by swapper_pg_dir or init_level4_pgt, that's
+inefficient, imagine the current system usually own many Tera bytes of
+physical memory.
+
+So here though we can pick up crash memory regions from elf program
+header of vmcore and calculate the PAGE_OFFSET, we still need
+VMALLOC_START and VMEMMAP_START.
+
+Thanks
+Baoquan
+> 
+> 
+> In fact, I have cleanup patches for ARM64 [1], which take above approach and
+> get rid of need of VMALLOC_START or VMEMMAP_START etc. I will be sending
+> them upstream soon.
+> 
+> Probably, x86 can take the similar approach.
+> 
+> ~Pratyush
+> 
+> [1] https://github.com/pratyushanand/makedumpfile/blob/arm64_devel/arch/arm64.c#L228
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
