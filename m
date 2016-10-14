@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bv1bO-0006AY-VW
- for kexec@lists.infradead.org; Fri, 14 Oct 2016 12:28:44 +0000
+ id 1bv22c-0002nH-Sm
+ for kexec@lists.infradead.org; Fri, 14 Oct 2016 12:56:52 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.8 26/37] arch/x86: Handle non enumerated CPU after physical
+Subject: [PATCH 4.7 23/31] arch/x86: Handle non enumerated CPU after physical
  hotplug
-Date: Fri, 14 Oct 2016 14:27:12 +0200
-Message-Id: <20161014122553.581193322@linuxfoundation.org>
-In-Reply-To: <20161014122549.411962735@linuxfoundation.org>
-References: <20161014122549.411962735@linuxfoundation.org>
+Date: Fri, 14 Oct 2016 14:55:07 +0200
+Message-Id: <20161014122716.194690765@linuxfoundation.org>
+In-Reply-To: <20161014122715.235592611@linuxfoundation.org>
+References: <20161014122715.235592611@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,7 +26,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Prarit Bhargava <prarit@redhat.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Juergen Gross <jgross@suse.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dyoung@redhat.com, kexec@lists.infradead.org, stable@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Jiri Olsa <jolsa@redhat.com>
 
-4.8-stable review patch.  If anyone has any objections, please let me know.
+4.7-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -82,7 +82,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/kernel/smpboot.c
 +++ b/arch/x86/kernel/smpboot.c
-@@ -1406,9 +1406,21 @@ __init void prefill_possible_map(void)
+@@ -1393,9 +1393,21 @@ __init void prefill_possible_map(void)
  {
  	int i, possible;
  
