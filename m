@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1buswA-0001qE-Eu
- for kexec@lists.infradead.org; Fri, 14 Oct 2016 03:13:35 +0000
-Date: Fri, 14 Oct 2016 11:13:04 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
- vmcoreinfo
-Message-ID: <20161014031304.GA3483@dhcp-128-65.nay.redhat.com>
-References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
- <877f9lckbq.fsf@x220.int.ebiederm.org> <20161011074111.GD11185@x1>
- <20161011081921.GA21765@dhcp-128-65.nay.redhat.com>
- <20161012002613.GB21477@x1>
- <256e8ba2-4f92-36cf-ec5c-2502113922c6@redhat.com>
- <20161013085314.GF11185@x1>
+ id 1bv1bO-0006AY-VW
+ for kexec@lists.infradead.org; Fri, 14 Oct 2016 12:28:44 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.8 26/37] arch/x86: Handle non enumerated CPU after physical
+ hotplug
+Date: Fri, 14 Oct 2016 14:27:12 +0200
+Message-Id: <20161014122553.581193322@linuxfoundation.org>
+In-Reply-To: <20161014122549.411962735@linuxfoundation.org>
+References: <20161014122549.411962735@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161013085314.GF11185@x1>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,72 +23,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, keescook@chromium.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, takahiro.akashi@linaro.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, thgarnie@google.com, tonli@redhat.com
+To: linux-kernel@vger.kernel.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Juergen Gross <jgross@suse.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dyoung@redhat.com, kexec@lists.infradead.org, stable@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Jiri Olsa <jolsa@redhat.com>
 
-On 10/13/16 at 04:53pm, Baoquan He wrote:
-> Hi Pratyush,
-> 
-> On 10/12/16 at 02:39pm, Pratyush Anand wrote:
-> > 
-> > 
-> > On Wednesday 12 October 2016 05:56 AM, Baoquan He wrote:
-> > > > PAGE_OFFSET can be get via vaddr - paddr from elf pt_loads so only
-> > > > > VMALLOC_BASE and VMEMMAP_BASE is necessary..
-> > > Well, yes, I was wrong. I wrongly thought of kernel text virtual address
-> > > when I wrote the reply
-> > 
-> > So, if you can get PAGE_OFFSET then, probably you do not need to know
-> > anything else.
-> > 
-> > I think, we can simplify makedumpfile code, where we do not need to depend
-> > on VMALLOC_START or VMEMMAP_START etc.
-> > 
-> > "If we know PAGE_OFFSET, we can read from swapper space. If we can read from
-> > swapper space, then we can know PA of any kernel VA, whether it is VMALLOC,
-> > or vmemmap or module or kernel text area."
-> 
-> Check makedumpfile code and re-think about this, it's really like you
-> said, we can convert VA to PA by swapper_pg_dir or init_level4_pgt. But the
-> reason why we have to involve VMALLOC_START and VMEMMAP_START is that in
-> x86_64 direct mapping and kernel text mapping are all linear mapping.
-> Linear mapping can let us do a very efficient translation from VA to
-> PA. Especially for page filtering, we need get PA of mm related data.
-> All of them need convert by swapper_pg_dir or init_level4_pgt, that's
-> inefficient, imagine the current system usually own many Tera bytes of
-> physical memory.
-> 
+4.8-stable review patch.  If anyone has any objections, please let me know.
 
-Atsushi, what do you think about above concern?  Ideally we should do it
-in userspace instead of add more symbols. Maybe do a test on large
-memory machine is necessary.
+------------------
 
-> So here though we can pick up crash memory regions from elf program
-> header of vmcore and calculate the PAGE_OFFSET, we still need
-> VMALLOC_START and VMEMMAP_START.
-> 
-> Thanks
-> Baoquan
-> > 
-> > 
-> > In fact, I have cleanup patches for ARM64 [1], which take above approach and
-> > get rid of need of VMALLOC_START or VMEMMAP_START etc. I will be sending
-> > them upstream soon.
-> > 
-> > Probably, x86 can take the similar approach.
-> > 
-> > ~Pratyush
-> > 
-> > [1] https://github.com/pratyushanand/makedumpfile/blob/arm64_devel/arch/arm64.c#L228
-> > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+From: Prarit Bhargava <prarit@redhat.com>
 
-Thanks
-Dave
+commit 2a51fe083eba7f99cbda72f5ef90cdf2f4df882c upstream.
+
+When a CPU is physically added to a system then the MADT table is not
+updated.
+
+If subsequently a kdump kernel is started on that physically added CPU then
+the ACPI enumeration fails to provide the information for this CPU which is
+now the boot CPU of the kdump kernel.
+
+As a consequence, generic_processor_info() is not invoked for that CPU so
+the number of enumerated processors is 0 and none of the initializations,
+including the logical package id management, are performed.
+
+We have code which relies on the correctness of the logical package map and
+other information which is initialized via generic_processor_info().
+Executing such code will result in undefined behaviour or kernel crashes.
+
+This problem applies only to the kdump kernel because a normal kexec will
+switch to the original boot CPU, which is enumerated in MADT, before
+jumping into the kexec kernel.
+
+The boot code already has a check for num_processors equal 0 in
+prefill_possible_map(). We can use that check as an indicator that the
+enumeration of the boot CPU did not happen and invoke generic_processor_info()
+for it. That initializes the relevant data for the boot CPU and therefore
+prevents subsequent failure.
+
+[ tglx: Refined the code and rewrote the changelog ]
+
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Fixes: 1f12e32f4cd5 ("x86/topology: Create logical package id")
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: dyoung@redhat.com
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org
+Link: http://lkml.kernel.org/r/1475514432-27682-1-git-send-email-prarit@redhat.com
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kernel/smpboot.c |   18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1406,9 +1406,21 @@ __init void prefill_possible_map(void)
+ {
+ 	int i, possible;
+ 
+-	/* no processor from mptable or madt */
+-	if (!num_processors)
+-		num_processors = 1;
++	/* No boot processor was found in mptable or ACPI MADT */
++	if (!num_processors) {
++		int apicid = boot_cpu_physical_apicid;
++		int cpu = hard_smp_processor_id();
++
++		pr_warn("Boot CPU (id %d) not listed by BIOS\n", cpu);
++
++		/* Make sure boot cpu is enumerated */
++		if (apic->cpu_present_to_apicid(0) == BAD_APICID &&
++		    apic->apic_id_valid(apicid))
++			generic_processor_info(apicid, boot_cpu_apic_version);
++
++		if (!num_processors)
++			num_processors = 1;
++	}
+ 
+ 	i = setup_max_cpus ?: 1;
+ 	if (setup_possible_cpus == -1) {
+
+
 
 _______________________________________________
 kexec mailing list
