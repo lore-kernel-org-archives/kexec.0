@@ -1,19 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x235.google.com ([2607:f8b0:400e:c00::235])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bwNjb-0000er-91
- for kexec@lists.infradead.org; Tue, 18 Oct 2016 06:18:49 +0000
-Received: by mail-pf0-x235.google.com with SMTP id e6so88521150pfk.3
- for <kexec@lists.infradead.org>; Mon, 17 Oct 2016 23:18:24 -0700 (PDT)
-Date: Tue, 18 Oct 2016 15:26:19 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v26 0/7] arm64: add kdump support
-Message-ID: <20161018062617.GN19531@linaro.org>
-References: <20160907042908.6232-1-takahiro.akashi@linaro.org>
- <3400bddc-9c6e-b69a-b57d-62921197bef9@cisco.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3400bddc-9c6e-b69a-b57d-62921197bef9@cisco.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH] arm64: Add support for additional relocations in the kexec
+ purgatory code
+Date: Wed, 19 Oct 2016 16:58:34 +0100
+Message-Id: <1476892714-27304-1-git-send-email-catalin.marinas@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,75 +12,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ruslan Bilovol <rbilovol@cisco.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Ruslan,
+When compiling the kexec-tools with gcc6, the following additional
+reolcations are generated in the purgatory.ro file:
 
-On Mon, Oct 17, 2016 at 06:41:01PM +0300, Ruslan Bilovol wrote:
-> Hi,
-> 
-> On 09/07/2016 07:29 AM, AKASHI Takahiro wrote:
-> >     v26-specific note: After a comment from Rob[0], an idea of adding
-> >     "linux,usable-memory-range" was dropped. Instead, an existing
-> >     "reserved-memory" node will be used to limit usable memory ranges
-> >     on crash dump kernel.
-> >     This works not only on UEFI/ACPI systems but also on DT-only systems,
-> >     but if he really insists on using DT-specific "usable-memory" property,
-> >     I will post additional patches for kexec-tools. Those would be
-> >     redundant, though.
-> >     Even in that case, the kernel will not have to be changed.
-> >
-> >This patch series adds kdump support on arm64.
-> >There are some prerequisite patches [1],[2].
-> >
-> >To load a crash-dump kernel to the systems, a series of patches to
-> >kexec-tools, which have not yet been merged upstream, are needed.
-> >Please always use my latest kdump patches, v3 [3].
-> >
-> >To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
-> >   - crash utility (coming v7.1.6 or later) [4]
-> >     (Necessary patches have already been queued in the master.)
-> >
-> >
-> >[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452582.html
-> >[1] "arm64: mark reserved memblock regions explicitly in iomem"
-> >     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/450433.html
-> >[2] "efi: arm64: treat regions with WT/WC set but WB cleared as memory"
-> >     http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/451491.html
-> >[3] T.B.D.
-> >[4] https://github.com/crash-utility/crash.git
-> 
-> Are you going to rebase your patch series onto v4.9-rc1 tag soon? I see
+R_AARCH64_ADR_PREL_PG_HI21
+R_AARCH64_ADD_ABS_LO12_NC
+R_AARCH64_LDST64_ABS_LO12_NC
 
-Yes, definitely as soon as possible! (actually I've done it.)
-But before submitting a new version, I need to convince Rob (Herring)
-that he would accept my old approach (v25) regarding specifying usable
-memory for crash dump kernel:
-   http://lists.infradead.org/pipermail/linux-arm-kernel/2016-September/459379.html 
+This patch modifies the arm64 machine_apply_elf_rel() function to handle
+these relocations.
 
-> that patches [1] and [2] are already in v4.9-rc1, but when tried to apply
-> this series, I've got conflict on first patch of the series ("arm64: kdump:
-> reserve memory for crash dump kernel"). I want to try arm64 kdump
-> patches again on my board, so I'm interested in this. The question is
-> whether I need to rebase it myself or you will do the same (and address
-> comments) soon.
+Cc: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+---
+ kexec/arch/arm64/kexec-arm64.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-Thank you for your interests and sorry for any inconvenience.
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 2e8839a..e067a23 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -550,6 +550,14 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ # define R_AARCH64_ADR_PREL_LO21 274
+ #endif
+ 
++#if !defined(R_AARCH64_ADR_PREL_PG_HI21)
++# define R_AARCH64_ADR_PREL_PG_HI21 275
++#endif
++
++#if !defined(R_AARCH64_ADD_ABS_LO12_NC)
++# define R_AARCH64_ADD_ABS_LO12_NC 277
++#endif
++
+ #if !defined(R_AARCH64_JUMP26)
+ # define R_AARCH64_JUMP26 282
+ #endif
+@@ -558,10 +566,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ # define R_AARCH64_CALL26 283
+ #endif
+ 
++#if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
++# define R_AARCH64_LDST64_ABS_LO12_NC 286
++#endif
++
+ 	uint64_t *loc64;
+ 	uint32_t *loc32;
+ 	uint64_t *location = (uint64_t *)ptr;
+ 	uint64_t data = *location;
++	uint64_t imm;
+ 	const char *type = NULL;
+ 
+ 	switch(r_type) {
+@@ -585,6 +598,19 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ 		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+ 			+ (((value - address) << 3) & 0xffffe0));
+ 		break;
++	case R_AARCH64_ADR_PREL_PG_HI21:
++		type = "ADR_PREL_PG_HI21";
++		imm = ((value & ~0xfff) - (address & ~0xfff)) >> 12;
++		loc32 = ptr;
++		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
++			+ ((imm & 3) << 29) + ((imm & 0x1ffffc) << (5 - 2)));
++		break;
++	case R_AARCH64_ADD_ABS_LO12_NC:
++		type = "R_AARCH64_ADD_ABS_LO12_NC";
++		loc32 = ptr;
++		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
++			+ ((value & 0xfff) << 10));
++		break;
+ 	case R_AARCH64_JUMP26:
+ 		type = "JUMP26";
+ 		loc32 = ptr;
+@@ -597,6 +623,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ 		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+ 			+ (((value - address) >> 2) & 0x3ffffff));
+ 		break;
++	case R_AARCH64_LDST64_ABS_LO12_NC:
++		if (value & 7)
++			die("%s: ERROR Unaligned value: %lx\n", __func__,
++				value);
++		type = "R_AARCH64_LDST64_ABS_LO12_NC";
++		loc32 = ptr;
++		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
++			+ ((value & 0xff8) << (10 - 3)));
++		break;
+ 	default:
+ 		die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
+ 		break;
+-- 
+2.10.0
 
--Takahiro AKASHI
-
-> Also I see Geoff published v6 of arm64 kexec-tools patches, so same
-> question is applicable to "(kexec-tools) arm64: add kdump support"
-> patch series.
-> 
-> Thanks,
-> Ruslan
-> 
 
 _______________________________________________
 kexec mailing list
