@@ -1,9 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v2] arm64: Add support for additional relocations in the kexec
- purgatory code
-Date: Thu, 20 Oct 2016 11:43:31 +0100
-Message-Id: <1476960211-25594-1-git-send-email-catalin.marinas@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bxBfQ-0000t3-B7
+ for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:37:49 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH v6 0/9] Fix kdump faults on system with amd iommu
+Date: Thu, 20 Oct 2016 19:37:11 +0800
+Message-Id: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,102 +20,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: joro@8bytes.org
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-When compiling the kexec-tools with gcc6, the following additional
-reolcations are generated in the purgatory.ro file:
+This is v6 post. 
 
-R_AARCH64_ADR_PREL_PG_HI21
-R_AARCH64_ADD_ABS_LO12_NC
-R_AARCH64_LDST64_ABS_LO12_NC
+The principle of the fix is similar to intel iommu. Just defer the assignment
+of device to domain to device driver init. But there's difference than
+intel iommu. AMD iommu create protection domain and assign device to
+domain in iommu driver init stage. So in this patchset I just allow the
+assignment of device to domain in software level, but defer updating the
+domain info, especially the pte_root to dev table entry to device driver
+init stage.
 
-This patch modifies the arm64 machine_apply_elf_rel() function to handle
-these relocations.
+v5: 
+    bnx2 NIC can't reset itself during driver init. Post patch to reset
+    it during driver init. IO_PAGE_FAULT can't be seen anymore.
+    
+    Below is link of v5 post.
+    https://lists.linuxfoundation.org/pipermail/iommu/2016-September/018527.html
 
-Cc: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
----
+v5->v6:
+    According to Joerg's comments made several below main changes:
+    - Add sanity check when copy old dev tables. 
 
-Changes for v2:
-- Fixed the type string to drop the "R_AARCH64_" prefix
+    - Discard the old patch 6/8.
 
- kexec/arch/arm64/kexec-arm64.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+    - If a device is set up with guest translations (DTE.GV=1), then don't
+      copy that information but move the device over to an empty guest-cr3
+      table and handle the faults in the PPR log (which just answer them
+      with INVALID).
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 2e8839a..e067a23 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -550,6 +550,14 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- # define R_AARCH64_ADR_PREL_LO21 274
- #endif
+Issues need be discussed:
+    - Joerg suggested hooking the behaviour that updates domain info into
+      dte entry into the set_dma_mask call-back. I tried, but on my local
+      machine with amd iommu v2, an ohci pci device doesn't call set_dma_mask.
+      Then IO_PAGE_FAULT printing flooded.
+
+      00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB OHCI Controller (rev 11)
+
+    - About GCR3 root pointer copying issue, I don't know how to setup the
+      test environment and haven't tested yet. Hope Joerg or Zongshun can
+      tell what steps should be taken to test it, or help take a test in your
+      test environemnt.
  
-+#if !defined(R_AARCH64_ADR_PREL_PG_HI21)
-+# define R_AARCH64_ADR_PREL_PG_HI21 275
-+#endif
-+
-+#if !defined(R_AARCH64_ADD_ABS_LO12_NC)
-+# define R_AARCH64_ADD_ABS_LO12_NC 277
-+#endif
-+
- #if !defined(R_AARCH64_JUMP26)
- # define R_AARCH64_JUMP26 282
- #endif
-@@ -558,10 +566,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- # define R_AARCH64_CALL26 283
- #endif
- 
-+#if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
-+# define R_AARCH64_LDST64_ABS_LO12_NC 286
-+#endif
-+
- 	uint64_t *loc64;
- 	uint32_t *loc32;
- 	uint64_t *location = (uint64_t *)ptr;
- 	uint64_t data = *location;
-+	uint64_t imm;
- 	const char *type = NULL;
- 
- 	switch(r_type) {
-@@ -585,6 +598,19 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- 		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
- 			+ (((value - address) << 3) & 0xffffe0));
- 		break;
-+	case R_AARCH64_ADR_PREL_PG_HI21:
-+		type = "ADR_PREL_PG_HI21";
-+		imm = ((value & ~0xfff) - (address & ~0xfff)) >> 12;
-+		loc32 = ptr;
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
-+			+ ((imm & 3) << 29) + ((imm & 0x1ffffc) << (5 - 2)));
-+		break;
-+	case R_AARCH64_ADD_ABS_LO12_NC:
-+		type = "ADD_ABS_LO12_NC";
-+		loc32 = ptr;
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
-+			+ ((value & 0xfff) << 10));
-+		break;
- 	case R_AARCH64_JUMP26:
- 		type = "JUMP26";
- 		loc32 = ptr;
-@@ -597,6 +623,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- 		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
- 			+ (((value - address) >> 2) & 0x3ffffff));
- 		break;
-+	case R_AARCH64_LDST64_ABS_LO12_NC:
-+		if (value & 7)
-+			die("%s: ERROR Unaligned value: %lx\n", __func__,
-+				value);
-+		type = "LDST64_ABS_LO12_NC";
-+		loc32 = ptr;
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
-+			+ ((value & 0xff8) << (10 - 3)));
-+		break;
- 	default:
- 		die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
- 		break;
+Baoquan He (9):
+  iommu/amd: Detect pre enabled translation
+  iommu/amd: add several helper function
+  iommu/amd: Define bit fields for DTE particularly
+  iommu/amd: Add function copy_dev_tables
+  iommu/amd: copy old trans table from old kernel
+  iommu/amd: Don't update domain info to dte entry at iommu init stage
+  iommu/amd: Update domain into to dte entry during device driver init
+  iommu/amd: Add sanity check of irq remap information of old dev table
+    entry
+  iommu/amd: Don't copy GCR3 table root pointer
+
+ drivers/iommu/amd_iommu.c       |  93 +++++++++++++-------
+ drivers/iommu/amd_iommu_init.c  | 189 +++++++++++++++++++++++++++++++++++++---
+ drivers/iommu/amd_iommu_proto.h |   2 +
+ drivers/iommu/amd_iommu_types.h |  53 ++++++++++-
+ drivers/iommu/amd_iommu_v2.c    |  18 +++-
+ 5 files changed, 307 insertions(+), 48 deletions(-)
+
 -- 
-2.10.0
+2.5.5
 
 
 _______________________________________________
