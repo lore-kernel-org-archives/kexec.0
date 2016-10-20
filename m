@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxBfj-000177-P0
- for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:38:09 +0000
+ id 1bxBfo-00018O-P1
+ for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:38:14 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 7/9] iommu/amd: Update domain into to dte entry during
- device driver init
-Date: Thu, 20 Oct 2016 19:37:18 +0800
-Message-Id: <1476963440-23039-8-git-send-email-bhe@redhat.com>
+Subject: [PATCH v6 8/9] iommu/amd: Add sanity check of irq remap information
+ of old dev table entry
+Date: Thu, 20 Oct 2016 19:37:19 +0800
+Message-Id: <1476963440-23039-9-git-send-email-bhe@redhat.com>
 In-Reply-To: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 References: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,69 +26,103 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: joro@8bytes.org
 Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-All devices are supposed to reset themselves at device driver initialization
-stage. At this time if in kdump kernel those on-flight DMA will be stopped
-because of device reset. It's best time to update the protection domain info,
-especially pte_root, to dte entry which the device relates to.
+Firstly split the dev table entry copy into address translation part and
+irq remapping part. Because these two parts could be configured to
+be available indepentently.
+
+Secondly check if IntCtl and IntTabLen are 10b and 1000b if they are
+set.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/iommu/amd_iommu.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/iommu/amd_iommu.c       |  5 -----
+ drivers/iommu/amd_iommu_init.c  | 25 ++++++++++++++++++++++---
+ drivers/iommu/amd_iommu_types.h |  8 ++++++++
+ 3 files changed, 30 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index aa78506..3b95904 100644
+index 3b95904..46f438f 100644
 --- a/drivers/iommu/amd_iommu.c
 +++ b/drivers/iommu/amd_iommu.c
-@@ -2396,6 +2396,10 @@ static dma_addr_t __map_single(struct device *dev,
- 			       enum dma_data_direction direction,
- 			       u64 dma_mask)
+@@ -3658,11 +3658,6 @@ EXPORT_SYMBOL(amd_iommu_device_info);
+ 
+ static struct irq_chip amd_ir_chip;
+ 
+-#define DTE_IRQ_PHYS_ADDR_MASK	(((1ULL << 45)-1) << 6)
+-#define DTE_IRQ_REMAP_INTCTL    (2ULL << 60)
+-#define DTE_IRQ_TABLE_LEN       (8ULL << 1)
+-#define DTE_IRQ_REMAP_ENABLE    1ULL
+-
+ static void set_dte_irq_entry(u16 devid, struct irq_remap_table *table)
  {
-+	struct iommu_dev_data *dev_data = get_dev_data(dev);
-+	struct amd_iommu *iommu = amd_iommu_rlookup_table[dev_data->devid];
-+	struct protection_domain *domain = get_domain(dev);
-+	u16 alias = amd_iommu_alias_table[dev_data->devid];
- 	dma_addr_t offset = paddr & ~PAGE_MASK;
- 	dma_addr_t address, start, ret;
- 	unsigned int pages;
-@@ -2410,6 +2414,13 @@ static dma_addr_t __map_single(struct device *dev,
- 		goto out;
+ 	u64 dte;
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index bc214fa..d936c40 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -837,12 +837,12 @@ static int get_dev_entry_bit(u16 devid, u8 bit)
  
- 	prot = dir2prot(direction);
-+	if (translation_pre_enabled(iommu) && !dev_data->domain_updated) {
-+		dev_data->domain_updated = true;
-+		set_dte_entry(dev_data->devid, domain, dev_data->ats.enabled);
-+		if (alias != dev_data->devid)
-+			set_dte_entry(alias, domain, dev_data->ats.enabled);
-+		device_flush_dte(dev_data);
-+	}
- 
- 	start = address;
- 	for (i = 0; i < pages; ++i) {
-@@ -2555,6 +2566,9 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 		  int nelems, enum dma_data_direction direction,
- 		  unsigned long attrs)
+ static int copy_dev_tables(void)
  {
-+	struct iommu_dev_data *dev_data = get_dev_data(dev);
-+	struct amd_iommu *iommu = amd_iommu_rlookup_table[dev_data->devid];
-+	u16 alias = amd_iommu_alias_table[dev_data->devid];
- 	int mapped_pages = 0, npages = 0, prot = 0, i;
- 	struct protection_domain *domain;
- 	struct dma_ops_domain *dma_dom;
-@@ -2576,6 +2590,13 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 		goto out_err;
++	u64 int_ctl, int_tab_len, entry, last_entry = 0;
+ 	struct dev_table_entry *old_devtb = NULL;
+ 	u32 lo, hi, devid, old_devtb_size;
+ 	phys_addr_t old_devtb_phys;
+-	u64 entry, last_entry = 0;
+ 	struct amd_iommu *iommu;
+-	u16 dom_id, dte_v;
++	u16 dom_id, dte_v, irq_v;
+ 	static int copied;
  
- 	prot = dir2prot(direction);
-+	if (translation_pre_enabled(iommu) && !dev_data->domain_updated) {
-+		dev_data->domain_updated = true;
-+		set_dte_entry(dev_data->devid, domain, dev_data->ats.enabled);
-+		if (alias != dev_data->devid)
-+			set_dte_entry(alias, domain, dev_data->ats.enabled);
-+		device_flush_dte(dev_data);
-+	}
+ 	for_each_iommu(iommu) {
+@@ -881,8 +881,27 @@ static int copy_dev_tables(void)
+ 			amd_iommu_dev_table[devid] = old_devtb[devid];
+ 			dom_id = old_devtb[devid].data[1] & DEV_DOMID_MASK;
+ 			dte_v = old_devtb[devid].data[0] & DTE_FLAG_V;
+-			if (dte_v && dom_id)
++			if (dte_v && dom_id) {
++				amd_iommu_dev_table[devid].data[0]
++					= old_devtb[devid].data[0];
++				amd_iommu_dev_table[devid].data[1]
++					= old_devtb[devid].data[1];
+ 				__set_bit(dom_id, amd_iommu_pd_alloc_bitmap);
++			}
++
++			irq_v = old_devtb[devid].data[2] & DTE_IRQ_REMAP_ENABLE;
++			int_ctl = old_devtb[devid].data[2] & DTE_IRQ_REMAP_INTCTL_MASK;
++			int_tab_len = old_devtb[devid].data[2] & DTE_IRQ_TABLE_LEN_MASK;
++			if (irq_v && (int_ctl || int_tab_len)) {
++				if ((int_ctl != DTE_IRQ_REMAP_INTCTL) ||
++					 (int_tab_len != DTE_IRQ_TABLE_LEN)) {
++					pr_err("Wrong old irq remapping flag: %#x\n", devid);
++					return -1;
++				}
++
++				amd_iommu_dev_table[devid].data[2]
++					= old_devtb[devid].data[2];
++			}
+ 		}
+ 		memunmap(old_devtb);
+ 		copied = 1;
+diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
+index 454f3bf..e385d50 100644
+--- a/drivers/iommu/amd_iommu_types.h
++++ b/drivers/iommu/amd_iommu_types.h
+@@ -250,6 +250,14 @@
  
- 	/* Map all sg entries */
- 	for_each_sg(sglist, s, nelems, i) {
+ #define GA_GUEST_NR		0x1
+ 
++/* Bit value definition for dte irq remapping fields*/
++#define DTE_IRQ_PHYS_ADDR_MASK	(((1ULL << 45)-1) << 6)
++#define DTE_IRQ_REMAP_INTCTL_MASK	(0x3ULL << 60)
++#define DTE_IRQ_TABLE_LEN_MASK	(0xfULL << 1)
++#define DTE_IRQ_REMAP_INTCTL    (2ULL << 60)
++#define DTE_IRQ_TABLE_LEN       (8ULL << 1)
++#define DTE_IRQ_REMAP_ENABLE    1ULL
++
+ #define PAGE_MODE_NONE    0x00
+ #define PAGE_MODE_1_LEVEL 0x01
+ #define PAGE_MODE_2_LEVEL 0x02
 -- 
 2.5.5
 
