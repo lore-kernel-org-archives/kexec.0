@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxBfe-00015n-P0
- for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:38:03 +0000
+ id 1bxBfj-000163-Op
+ for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:38:09 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 5/9] iommu/amd: copy old trans table from old kernel
-Date: Thu, 20 Oct 2016 19:37:16 +0800
-Message-Id: <1476963440-23039-6-git-send-email-bhe@redhat.com>
+Subject: [PATCH v6 6/9] iommu/amd: Don't update domain info to dte entry at
+ iommu init stage
+Date: Thu, 20 Oct 2016 19:37:17 +0800
+Message-Id: <1476963440-23039-7-git-send-email-bhe@redhat.com>
 In-Reply-To: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 References: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,107 +26,61 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: joro@8bytes.org
 Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-Here several things need be done:
-- If iommu is pre-enabled in a normal kernel, just disable it and print
-  warning.
-
-- If failed to copy dev table of old kernel, continue to proceed as
-  it does in normal kernel.
-
-- Disable and Re-enable event/cmd buffer,  and install the copied DTE table
-  to reg.
-
-- Flush all caches
+AMD iommu creates protection domain and assign each device to it during
+iommu driver initialization stage. This happened just after system pci
+bus scanning stage, and much earlier than device driver init stage. So
+at this time if in kdump kernel the domain info, especially pte_root,
+can't be updated to dte entry. We should wait until device driver init
+stage.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/iommu/amd_iommu_init.c | 51 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 44 insertions(+), 7 deletions(-)
+ drivers/iommu/amd_iommu.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index d4200e8..bc214fa 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -36,6 +36,7 @@
- #include <asm/io_apic.h>
- #include <asm/irq_remapping.h>
- 
-+#include <linux/crash_dump.h>
- #include "amd_iommu_proto.h"
- #include "amd_iommu_types.h"
- #include "irq_remapping.h"
-@@ -1481,9 +1482,12 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
- 	iommu->int_enabled = false;
- 
- 	init_translation_status(iommu);
--
--	if (translation_pre_enabled(iommu))
--		pr_warn("Translation is already enabled - trying to copy translation structures\n");
-+	if (translation_pre_enabled(iommu) && !is_kdump_kernel()) {
-+		iommu_disable(iommu);
-+		clear_translation_pre_enabled(iommu);
-+		pr_warn("Translation was enabled for IOMMU:%d but we are not in kdump mode\n",
-+			iommu->index);
-+	}
- 
- 	ret = init_iommu_from_acpi(iommu, h);
- 	if (ret)
-@@ -1975,8 +1979,7 @@ static int __init init_memory_definitions(struct acpi_table_header *table)
- }
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index d5aef72..aa78506 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -138,6 +138,7 @@ struct iommu_dev_data {
+ 					     PPR completions */
+ 	u32 errata;			  /* Bitmap for errata to apply */
+ 	bool use_vapic;			  /* Enable device to use vapic mode */
++	bool domain_updated;
+ };
  
  /*
-- * Init the device table to not allow DMA access for devices and
-- * suppress all page faults
-+ * Init the device table to not allow DMA access for devices
-  */
- static void init_device_table_dma(void)
+@@ -1799,6 +1800,15 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
  {
-@@ -2117,9 +2120,43 @@ static void early_enable_iommu(struct amd_iommu *iommu)
- static void early_enable_iommus(void)
- {
- 	struct amd_iommu *iommu;
-+	bool is_pre_enabled = false;
- 
--	for_each_iommu(iommu)
--		early_enable_iommu(iommu);
-+	for_each_iommu(iommu) {
-+		if (translation_pre_enabled(iommu)) {
-+			is_pre_enabled = true;
-+			break;
-+		}
-+	}
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
++	struct iommu_dev_data *dev_data;
++	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
 +
-+	if (!is_pre_enabled) {
-+		for_each_iommu(iommu)
-+			early_enable_iommu(iommu);
-+	} else {
-+		pr_warn("Translation is already enabled - trying to copy translation structures\n");
-+		if (copy_dev_tables()) {
-+			pr_err("Failed to copy DEV table from previous kernel.\n");
-+			/*
-+			 * If failed to copy dev tables from old kernel, continue to proceed
-+			 * as it does in normal kernel.
-+			 */
-+			for_each_iommu(iommu) {
-+				clear_translation_pre_enabled(iommu);
-+				early_enable_iommu(iommu);
-+			}
-+		} else {
-+			pr_info("Copied DEV table from previous kernel.\n");
-+			for_each_iommu(iommu) {
-+				iommu_disable_command_buffer(iommu);
-+				iommu_disable_event_buffer(iommu);
-+				iommu_enable_command_buffer(iommu);
-+				iommu_enable_event_buffer(iommu);
-+				iommu_enable_ga(iommu);
-+				iommu_set_device_table(iommu);
-+				iommu_flush_all_caches(iommu);
-+			}
-+		}
-+	}
++	dev_data = find_dev_data(devid);
++	if (!dev_data)
++		return;
++
++	if (translation_pre_enabled(iommu) && !dev_data->domain_updated)
++		return;
  
- #ifdef CONFIG_IRQ_REMAP
- 	if (AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir))
+ 	if (domain->mode != PAGE_MODE_NONE)
+ 		pte_root = virt_to_phys(domain->pt_root);
+@@ -1847,6 +1857,14 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain, bool ats)
+ 
+ static void clear_dte_entry(u16 devid)
+ {
++	struct iommu_dev_data *dev_data;
++	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
++
++	dev_data = find_dev_data(devid);
++	if (!dev_data)
++		return;
++	if (translation_pre_enabled(iommu) && !dev_data->domain_updated)
++		return;
+ 	/* remove entry from the device table seen by the hardware */
+ 	amd_iommu_dev_table[devid].data[0]  = DTE_FLAG_V | DTE_FLAG_TV;
+ 	amd_iommu_dev_table[devid].data[1] &= DTE_FLAG_MASK;
 -- 
 2.5.5
 
