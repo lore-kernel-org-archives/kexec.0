@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxBfQ-0000tf-BN
- for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:37:49 +0000
+ id 1bxBfU-0000uH-Ow
+ for kexec@lists.infradead.org; Thu, 20 Oct 2016 11:37:53 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v6 1/9] iommu/amd: Detect pre enabled translation
-Date: Thu, 20 Oct 2016 19:37:12 +0800
-Message-Id: <1476963440-23039-2-git-send-email-bhe@redhat.com>
+Subject: [PATCH v6 2/9] iommu/amd: add several helper function
+Date: Thu, 20 Oct 2016 19:37:13 +0800
+Message-Id: <1476963440-23039-3-git-send-email-bhe@redhat.com>
 In-Reply-To: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 References: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,97 +25,91 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: joro@8bytes.org
 Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-Add functions to check whether translation is already enabled in IOMMU.
+Move per iommu enabling code into a wrapper function early_enable_iommu().
+This can make later kdump change easier.
+
+And also add iommu_disable_command_buffer and iommu_disable_event_buffer
+for later usage.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/iommu/amd_iommu_init.c  | 25 +++++++++++++++++++++++++
- drivers/iommu/amd_iommu_proto.h |  1 +
- drivers/iommu/amd_iommu_types.h |  4 ++++
- 3 files changed, 30 insertions(+)
+ drivers/iommu/amd_iommu_init.c | 42 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 157e934..1628d7e 100644
+index 1628d7e..67f1457 100644
 --- a/drivers/iommu/amd_iommu_init.c
 +++ b/drivers/iommu/amd_iommu_init.c
-@@ -251,6 +251,26 @@ static int amd_iommu_enable_interrupts(void);
- static int __init iommu_go_to_state(enum iommu_init_state state);
- static void init_device_table_dma(void);
- 
-+
-+bool translation_pre_enabled(struct amd_iommu *iommu)
-+{
-+	return (iommu->flags & AMD_IOMMU_FLAG_TRANS_PRE_ENABLED);
-+}
-+
-+static void clear_translation_pre_enabled(struct amd_iommu *iommu)
-+{
-+	iommu->flags &= ~AMD_IOMMU_FLAG_TRANS_PRE_ENABLED;
-+}
-+
-+static void init_translation_status(struct amd_iommu *iommu)
-+{
-+	u32 ctrl;
-+
-+	ctrl = readl(iommu->mmio_base + MMIO_CONTROL_OFFSET);
-+	if (ctrl & (1<<CONTROL_IOMMU_EN))
-+		iommu->flags |= AMD_IOMMU_FLAG_TRANS_PRE_ENABLED;
-+}
-+
- static int iommu_pc_get_set_reg_val(struct amd_iommu *iommu,
- 				    u8 bank, u8 cntr, u8 fxn,
- 				    u64 *value, bool is_write);
-@@ -1389,6 +1409,11 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
- 
- 	iommu->int_enabled = false;
- 
-+	init_translation_status(iommu);
-+
-+	if (translation_pre_enabled(iommu))
-+		pr_warn("Translation is already enabled - trying to copy translation structures\n");
-+
- 	ret = init_iommu_from_acpi(iommu, h);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/iommu/amd_iommu_proto.h b/drivers/iommu/amd_iommu_proto.h
-index 7eb60c1..9560183 100644
---- a/drivers/iommu/amd_iommu_proto.h
-+++ b/drivers/iommu/amd_iommu_proto.h
-@@ -93,4 +93,5 @@ static inline bool iommu_feature(struct amd_iommu *iommu, u64 f)
- 	return !!(iommu->features & f);
+@@ -625,6 +625,14 @@ static void iommu_enable_command_buffer(struct amd_iommu *iommu)
+ 	amd_iommu_reset_cmd_buffer(iommu);
  }
  
-+extern bool translation_pre_enabled(struct amd_iommu *iommu);
- #endif /* _ASM_X86_AMD_IOMMU_PROTO_H  */
-diff --git a/drivers/iommu/amd_iommu_types.h b/drivers/iommu/amd_iommu_types.h
-index 0d91785..2bbc19d 100644
---- a/drivers/iommu/amd_iommu_types.h
-+++ b/drivers/iommu/amd_iommu_types.h
-@@ -416,6 +416,7 @@ extern struct kmem_cache *amd_iommu_irq_cache;
- #define APERTURE_PAGE_INDEX(a)	(((a) >> 21) & 0x3fULL)
- 
- 
++/*
++ * This function disables the command buffer
++ */
++static void iommu_disable_command_buffer(struct amd_iommu *iommu)
++{
++	iommu_feature_disable(iommu, CONTROL_CMDBUF_EN);
++}
 +
- /*
-  * This struct is used to pass information about
-  * incoming PPR faults around.
-@@ -434,6 +435,8 @@ struct iommu_domain;
- struct irq_domain;
- struct amd_irte_ops;
+ static void __init free_command_buffer(struct amd_iommu *iommu)
+ {
+ 	free_pages((unsigned long)iommu->cmd_buf, get_order(CMD_BUFFER_SIZE));
+@@ -657,6 +665,14 @@ static void iommu_enable_event_buffer(struct amd_iommu *iommu)
+ 	iommu_feature_enable(iommu, CONTROL_EVT_LOG_EN);
+ }
  
-+#define AMD_IOMMU_FLAG_TRANS_PRE_ENABLED      (1 << 0)
++/*
++ * This function disables the command buffer
++ */
++static void iommu_disable_event_buffer(struct amd_iommu *iommu)
++{
++	iommu_feature_disable(iommu, CONTROL_EVT_LOG_EN);
++}
 +
- /*
-  * This structure contains generic data for  IOMMU protection domains
-  * independent of their use.
-@@ -566,6 +569,7 @@ struct amd_iommu {
- 	struct amd_irte_ops *irte_ops;
+ static void __init free_event_buffer(struct amd_iommu *iommu)
+ {
+ 	free_pages((unsigned long)iommu->evt_buf, get_order(EVT_BUFFER_SIZE));
+@@ -2026,6 +2042,19 @@ static void iommu_enable_ga(struct amd_iommu *iommu)
  #endif
+ }
  
-+	u32 flags;
- 	volatile u64 __aligned(8) cmd_sem;
- };
++static void early_enable_iommu(struct amd_iommu *iommu)
++{
++	iommu_disable(iommu);
++	iommu_init_flags(iommu);
++	iommu_set_device_table(iommu);
++	iommu_enable_command_buffer(iommu);
++	iommu_enable_event_buffer(iommu);
++	iommu_set_exclusion_range(iommu);
++	iommu_enable_ga(iommu);
++	iommu_enable(iommu);
++	iommu_flush_all_caches(iommu);
++}
++
+ /*
+  * This function finally enables all IOMMUs found in the system after
+  * they have been initialized
+@@ -2034,17 +2063,8 @@ static void early_enable_iommus(void)
+ {
+ 	struct amd_iommu *iommu;
  
+-	for_each_iommu(iommu) {
+-		iommu_disable(iommu);
+-		iommu_init_flags(iommu);
+-		iommu_set_device_table(iommu);
+-		iommu_enable_command_buffer(iommu);
+-		iommu_enable_event_buffer(iommu);
+-		iommu_set_exclusion_range(iommu);
+-		iommu_enable_ga(iommu);
+-		iommu_enable(iommu);
+-		iommu_flush_all_caches(iommu);
+-	}
++	for_each_iommu(iommu)
++		early_enable_iommu(iommu);
+ 
+ #ifdef CONFIG_IRQ_REMAP
+ 	if (AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir))
 -- 
 2.5.5
 
