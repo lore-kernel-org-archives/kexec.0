@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x241.google.com ([2607:f8b0:400e:c00::241])
+Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxhGi-0005Bz-2L
- for kexec@lists.infradead.org; Fri, 21 Oct 2016 21:22:24 +0000
-Received: by mail-pf0-x241.google.com with SMTP id 128so9598699pfz.1
- for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 14:22:03 -0700 (PDT)
+ id 1bxhGj-0005CP-Gq
+ for kexec@lists.infradead.org; Fri, 21 Oct 2016 21:22:26 +0000
+Received: by mail-pf0-x244.google.com with SMTP id r16so9574409pfg.3
+ for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 14:22:06 -0700 (PDT)
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net 0/2] net: dsa: bcm_sf2: Do not rely on kexec_in_progress
-Date: Fri, 21 Oct 2016 14:21:54 -0700
-Message-Id: <1477084916-26327-1-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH net 2/2] net: dsa: bcm_sf2: Do not rely on kexec_in_progress
+Date: Fri, 21 Oct 2016 14:21:56 -0700
+Message-Id: <1477084916-26327-3-git-send-email-f.fainelli@gmail.com>
+In-Reply-To: <1477084916-26327-1-git-send-email-f.fainelli@gmail.com>
+References: <1477084916-26327-1-git-send-email-f.fainelli@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,20 +27,45 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: netdev@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, ebiederm@xmission.com, kexec@lists.infradead.org, davem@davemloft.net, linux-kernel@vger.kernel.org
 
-David, Eric,
+After discussing with Eric, it turns out that, while using
+kexec_in_progress is a nice optimization, which prevents us from always
+powering on the integrated PHY, let's just turn it on in the shutdown
+path.
 
-These are the two patches following the discussing we had on kexec_in_progress.
+This removes a dependency on kexec_in_progress which, according to Eric
+should not be used by modules
 
-Feel free to apply or discard them, thanks!
-
-Florian Fainelli (2):
-  Revert "kexec: Export kexec_in_progress to modules"
-  net: dsa: bcm_sf2: Do not rely on kexec_in_progress
-
+Fixes: 2399d6143f85 ("net: dsa: bcm_sf2: Prevent GPHY shutdown for kexec'd kernels")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
  drivers/net/dsa/bcm_sf2.c | 5 +++--
- kernel/kexec_core.c       | 1 -
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index 077a24541584..e3ee27ce13dd 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -30,7 +30,6 @@
+ #include <linux/etherdevice.h>
+ #include <net/switchdev.h>
+ #include <linux/platform_data/b53.h>
+-#include <linux/kexec.h>
+ 
+ #include "bcm_sf2.h"
+ #include "bcm_sf2_regs.h"
+@@ -1141,9 +1140,11 @@ static void bcm_sf2_sw_shutdown(struct platform_device *pdev)
+ 	/* For a kernel about to be kexec'd we want to keep the GPHY on for a
+ 	 * successful MDIO bus scan to occur. If we did turn off the GPHY
+ 	 * before (e.g: port_disable), this will also power it back on.
++	 *
++	 * Do not rely on kexec_in_progress, just power the PHY on.
+ 	 */
+ 	if (priv->hw_params.num_gphy == 1)
+-		bcm_sf2_gphy_enable_set(priv->dev->ds, kexec_in_progress);
++		bcm_sf2_gphy_enable_set(priv->dev->ds, true);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
 -- 
 2.7.4
 
