@@ -1,17 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from shards.monkeyblade.net ([184.105.139.130])
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxaaE-0000jP-0Q
- for kexec@lists.infradead.org; Fri, 21 Oct 2016 14:14:09 +0000
-Date: Fri, 21 Oct 2016 10:13:43 -0400 (EDT)
-Message-Id: <20161021.101343.1389577512803674816.davem@davemloft.net>
-Subject: Re: [PATCH] kexec: Export kexec_in_progress to modules
-From: David Miller <davem@davemloft.net>
-In-Reply-To: <871szagtls.fsf@xmission.com>
-References: <1477012516-20470-1-git-send-email-f.fainelli@gmail.com>
- <20161020.215410.650162338407203719.davem@davemloft.net>
- <871szagtls.fsf@xmission.com>
-Mime-Version: 1.0
+Subject: Re: [PATCH] kexec: Increase the upper limit for RAM segments
+References: <1477005268-26943-1-git-send-email-sgoel@codeaurora.org>
+From: Geoff Levand <geoff@infradead.org>
+Message-ID: <cad5f084-b914-f522-eb43-71ed8a45b2a0@infradead.org>
+Date: Fri, 21 Oct 2016 10:05:26 -0700
+MIME-Version: 1.0
+In-Reply-To: <1477005268-26943-1-git-send-email-sgoel@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,19 +18,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: netdev@vger.kernel.org, f.fainelli@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, sfr@canb.auug.org.au
+To: Sameer Goel <sgoel@codeaurora.org>
+Cc: kexec@lists.infradead.org
 
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Fri, 21 Oct 2016 00:26:55 -0500
+Hi Sameer.
 
-> So as far as I can tell you are advocating for a change to support a
-> driver doing something that is completely pointless.  So no let's not
-> export this symbol.  Please fix the driver to do something less
-> pointless instead.
+On 10/20/2016 04:14 PM, Sameer Goel wrote:
+> Change the current hardcoded values to 64 from 16.
 
-FLorian explained his reasoning for doing what he is doing in this
-specific driver and it made sense to me.
+Please add an explanation of why this change is needed.
+
+-Geoff
 
 _______________________________________________
 kexec mailing list
