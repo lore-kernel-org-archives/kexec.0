@@ -1,39 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxPqe-0002Ty-PA
- for kexec@lists.infradead.org; Fri, 21 Oct 2016 02:46:24 +0000
+ id 1bxPqe-0002Uc-PB
+ for kexec@lists.infradead.org; Fri, 21 Oct 2016 02:46:22 +0000
 Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u9L2hobs080164
- for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:45:58 -0400
-Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2675yh983v-1
+ u9L2hofk080177
+ for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:03 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2675yh986h-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:45:58 -0400
+ for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:03 -0400
 Received: from localhost
- by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 21 Oct 2016 00:45:55 -0200
-Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.18.232.225])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id B5789352005C
- for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:45:26 -0400 (EDT)
+ Fri, 21 Oct 2016 00:46:01 -0200
+Received: from d24relay01.br.ibm.com (d24relay01.br.ibm.com [9.8.31.16])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id 70573352005C
+ for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:45:32 -0400 (EDT)
 Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u9L2jr9T33882198
- for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:45:53 -0200
+ by d24relay01.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u9L2jwHv4661384
+ for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:45:58 -0200
 Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
  by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u9L2jq50004993
- for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:45:52 -0200
+ u9L2jwpQ005059
+ for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:45:58 -0200
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v6 06/10] ima: on soft reboot, save the measurement list
-Date: Fri, 21 Oct 2016 00:44:54 -0200
+Subject: [PATCH v6 07/10] ima: store the builtin/custom template definitions
+ in a list
+Date: Fri, 21 Oct 2016 00:44:55 -0200
 In-Reply-To: <1477017898-10375-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1477017898-10375-1-git-send-email-bauerman@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Message-Id: <1477017898-10375-7-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1477017898-10375-8-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -42,164 +42,190 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-RnJvbTogTWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5pYm0uY29tPgoKVGhlIFRQTSBQQ1Jz
-IGFyZSBvbmx5IHJlc2V0IG9uIGEgaGFyZCByZWJvb3QuICBJbiBvcmRlciB0byB2YWxpZGF0ZSBh
-ClRQTSdzIHF1b3RlIGFmdGVyIGEgc29mdCByZWJvb3QgKGVnLiBrZXhlYyAtZSksIHRoZSBJTUEg
-bWVhc3VyZW1lbnQgbGlzdApvZiB0aGUgcnVubmluZyBrZXJuZWwgbXVzdCBiZSBzYXZlZCBhbmQg
-cmVzdG9yZWQgb24gYm9vdC4KClRoaXMgcGF0Y2ggdXNlcyB0aGUga2V4ZWMgYnVmZmVyIHBhc3Np
-bmcgbWVjaGFuaXNtIHRvIHBhc3MgdGhlCnNlcmlhbGl6ZWQgSU1BIGJpbmFyeV9ydW50aW1lX21l
-YXN1cmVtZW50cyB0byB0aGUgbmV4dCBrZXJuZWwuCgpDaGFuZ2Vsb2cgdjU6Ci0gbW92ZSB3cml0
-aW5nIHRoZSBJTUEgbWVhc3VyZW1lbnQgbGlzdCB0byBrZXhlYyBsb2FkIGFuZCByZW1vdmUKICBm
-cm9tIGtleGVjIGV4ZWN1dGUuCi0gcmVtb3ZlIHJlZ2lzdGVyaW5nIG5vdGlmaWVyIHRvIGNhbGwg
-dXBkYXRlIG9uIGtleGVjIGV4ZWN1dGUKLSBhZGQgaW5jbHVkZXMgbmVlZGVkIGJ5IGNvZGUgaW4g
-dGhpcyBwYXRjaCB0byBpbWFfa2V4ZWMuYyAoVGhpYWdvKQotIGZvbGQgcGF0Y2ggImltYTogc2Vy
-aWFsaXplIHRoZSBiaW5hcnlfcnVudGltZV9tZWFzdXJlbWVudHMiCmludG8gdGhpcyBwYXRjaC4K
-CkNoYW5nZWxvZyB2NDoKLSBSZXZlcnQgdGhlIHNraXBfY2hlY2tzdW0gY2hhbmdlLsKgwqBJbnN0
-ZWFkIGNhbGN1bGF0ZSB0aGUgY2hlY2tzdW0Kd2l0aCB0aGUgbWVhc3VyZW1lbnQgbGlzdCBzZWdt
-ZW50LCBvbiB1cGRhdGUgdmFsaWRhdGUgdGhlIGV4aXN0aW5nCmNoZWNrc3VtIGJlZm9yZSByZS1j
-YWx1bGF0aW5nIGEgbmV3IGNoZWNrc3VtIHdpdGggdGhlIHVwZGF0ZWQKbWVhc3VyZW1lbnQgbGlz
-dC4KCkNoYW5nZWxvZyB2MzoKLSBSZXF1ZXN0IGEga2V4ZWMgc2VnbWVudCBmb3Igc3RvcmluZyB0
-aGUgbWVhc3VyZW1lbnQgbGlzdCBhIGhhbGYgcGFnZSwKbm90IGEgZnVsbCBwYWdlLCBtb3JlIHRo
-YW4gbmVlZGVkIGZvciBhZGRpdGlvbmFsIG1lYXN1cmVtZW50cy4KLSBBZGRlZCBiaW5hcnlfcnVu
-dGltZV9zaXplIG92ZXJmbG93IHRlc3QKLSBMaW1pdCBtYXhpbXVtIG51bWJlciBvZiBwYWdlcyBu
-ZWVkZWQgZm9yIGtleGVjX3NlZ21lbnRfc2l6ZSB0byBoYWxmCm9mIHRvdGFscmFtX3BhZ2VzLiAo
-RGF2ZSBZb3VuZykKCkNoYW5nZWxvZyB2MjoKLSBGaXggYnVpbGQgaXNzdWUgYnkgZGVmaW5pbmcg
-YSBzdHViIGltYV9hZGRfa2V4ZWNfYnVmZmVyIGFuZCBzdHViCiAgc3RydWN0IGtpbWFnZSB3aGVu
-IENPTkZJR19JTUE9biBhbmQgQ09ORklHX0lNQV9LRVhFQz1uLiAoRmVuZ3VhbmcgV3UpCi0gcmVt
-b3ZlZCBrZXhlY19hZGRfaGFuZG92ZXJfYnVmZmVyKCkgY2hlY2tzdW0gYXJndW1lbnQuCi0gYWRk
-ZWQgc2tpcF9jaGVja3N1bSBtZW1iZXIgdG8ga2V4ZWNfYnVmCi0gb25seSByZWdpc3RlciByZWJv
-b3Qgbm90aWZpZXIgb25jZQoKQ2hhbmdlbG9nIHYxOgotIHVwZGF0ZWQgdG8gY2FsbCBJTUEgZnVu
-Y3Rpb25zICAoTWltaSkKLSBtb3ZlIGNvZGUgZnJvbSBpbWFfdGVtcGxhdGUuYyB0byBpbWFfa2V4
-ZWMuYyAoTWltaSkKClNpZ25lZC1vZmYtYnk6IFRoaWFnbyBKdW5nIEJhdWVybWFubiA8YmF1ZXJt
-YW5AbGludXgudm5ldC5pYm0uY29tPgpTaWduZWQtb2ZmLWJ5OiBNaW1pIFpvaGFyIDx6b2hhckBs
-aW51eC52bmV0LmlibS5jb20+CkFja2VkLWJ5OiAiRXJpYyBXLiBCaWVkZXJtYW4iIDxlYmllZGVy
-bUB4bWlzc2lvbi5jb20+Ci0tLQogaW5jbHVkZS9saW51eC9pbWEuaCAgICAgICAgICAgICAgICB8
-ICAxMiArKysrCiBrZXJuZWwva2V4ZWNfZmlsZS5jICAgICAgICAgICAgICAgIHwgICA0ICsrCiBz
-ZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oICAgICAgIHwgICAxICsKIHNlY3VyaXR5L2ludGVn
-cml0eS9pbWEvaW1hX2ZzLmMgICAgfCAgIDIgKy0KIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1h
-X2tleGVjLmMgfCAxMTcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogNSBm
-aWxlcyBjaGFuZ2VkLCAxMzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdp
-dCBhL2luY2x1ZGUvbGludXgvaW1hLmggYi9pbmNsdWRlL2xpbnV4L2ltYS5oCmluZGV4IDBlYjdj
-MmU3ZjBkNi4uN2Y2OTUyZjhkNmFhIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2ltYS5oCisr
-KyBiL2luY2x1ZGUvbGludXgvaW1hLmgKQEAgLTExLDYgKzExLDcgQEAKICNkZWZpbmUgX0xJTlVY
-X0lNQV9ICiAKICNpbmNsdWRlIDxsaW51eC9mcy5oPgorI2luY2x1ZGUgPGxpbnV4L2tleGVjLmg+
-CiBzdHJ1Y3QgbGludXhfYmlucHJtOwogCiAjaWZkZWYgQ09ORklHX0lNQQpAQCAtMjMsNiArMjQs
-MTAgQEAgZXh0ZXJuIGludCBpbWFfcG9zdF9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUsIHZv
-aWQgKmJ1ZiwgbG9mZl90IHNpemUsCiAJCQkgICAgICBlbnVtIGtlcm5lbF9yZWFkX2ZpbGVfaWQg
-aWQpOwogZXh0ZXJuIHZvaWQgaW1hX3Bvc3RfcGF0aF9ta25vZChzdHJ1Y3QgZGVudHJ5ICpkZW50
-cnkpOwogCisjaWZkZWYgQ09ORklHX0lNQV9LRVhFQworZXh0ZXJuIHZvaWQgaW1hX2FkZF9rZXhl
-Y19idWZmZXIoc3RydWN0IGtpbWFnZSAqaW1hZ2UpOworI2VuZGlmCisKICNlbHNlCiBzdGF0aWMg
-aW5saW5lIGludCBpbWFfYnBybV9jaGVjayhzdHJ1Y3QgbGludXhfYmlucHJtICpicHJtKQogewpA
-QCAtNjIsNiArNjcsMTMgQEAgc3RhdGljIGlubGluZSB2b2lkIGltYV9wb3N0X3BhdGhfbWtub2Qo
-c3RydWN0IGRlbnRyeSAqZGVudHJ5KQogCiAjZW5kaWYgLyogQ09ORklHX0lNQSAqLwogCisjaWZu
-ZGVmIENPTkZJR19JTUFfS0VYRUMKK3N0cnVjdCBraW1hZ2U7CisKK3N0YXRpYyBpbmxpbmUgdm9p
-ZCBpbWFfYWRkX2tleGVjX2J1ZmZlcihzdHJ1Y3Qga2ltYWdlICppbWFnZSkKK3t9CisjZW5kaWYK
-KwogI2lmZGVmIENPTkZJR19JTUFfQVBQUkFJU0UKIGV4dGVybiB2b2lkIGltYV9pbm9kZV9wb3N0
-X3NldGF0dHIoc3RydWN0IGRlbnRyeSAqZGVudHJ5KTsKIGV4dGVybiBpbnQgaW1hX2lub2RlX3Nl
-dHhhdHRyKHN0cnVjdCBkZW50cnkgKmRlbnRyeSwgY29uc3QgY2hhciAqeGF0dHJfbmFtZSwKZGlm
-ZiAtLWdpdCBhL2tlcm5lbC9rZXhlY19maWxlLmMgYi9rZXJuZWwva2V4ZWNfZmlsZS5jCmluZGV4
-IDBjMmRmN2Y3Mzc5Mi4uYjU2YTU1OGU0MDZkIDEwMDY0NAotLS0gYS9rZXJuZWwva2V4ZWNfZmls
-ZS5jCisrKyBiL2tlcm5lbC9rZXhlY19maWxlLmMKQEAgLTE5LDYgKzE5LDcgQEAKICNpbmNsdWRl
-IDxsaW51eC9tdXRleC5oPgogI2luY2x1ZGUgPGxpbnV4L2xpc3QuaD4KICNpbmNsdWRlIDxsaW51
-eC9mcy5oPgorI2luY2x1ZGUgPGxpbnV4L2ltYS5oPgogI2luY2x1ZGUgPGNyeXB0by9oYXNoLmg+
-CiAjaW5jbHVkZSA8Y3J5cHRvL3NoYS5oPgogI2luY2x1ZGUgPGxpbnV4L3N5c2NhbGxzLmg+CkBA
-IC0xMzIsNiArMTMzLDkgQEAga2ltYWdlX2ZpbGVfcHJlcGFyZV9zZWdtZW50cyhzdHJ1Y3Qga2lt
-YWdlICppbWFnZSwgaW50IGtlcm5lbF9mZCwgaW50IGluaXRyZF9mZCwKIAkJcmV0dXJuIHJldDsK
-IAlpbWFnZS0+a2VybmVsX2J1Zl9sZW4gPSBzaXplOwogCisJLyogSU1BIG5lZWRzIHRvIHBhc3Mg
-dGhlIG1lYXN1cmVtZW50IGxpc3QgdG8gdGhlIG5leHQga2VybmVsLiAqLworCWltYV9hZGRfa2V4
-ZWNfYnVmZmVyKGltYWdlKTsKKwogCS8qIENhbGwgYXJjaCBpbWFnZSBwcm9iZSBoYW5kbGVycyAq
-LwogCXJldCA9IGFyY2hfa2V4ZWNfa2VybmVsX2ltYWdlX3Byb2JlKGltYWdlLCBpbWFnZS0+a2Vy
-bmVsX2J1ZiwKIAkJCQkJICAgIGltYWdlLT5rZXJuZWxfYnVmX2xlbik7CmRpZmYgLS1naXQgYS9z
-ZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWEu
-aAppbmRleCBlYTFkY2M0NTI5MTEuLjEzOWRlYzY3ZGNiZiAxMDA2NDQKLS0tIGEvc2VjdXJpdHkv
-aW50ZWdyaXR5L2ltYS9pbWEuaAorKysgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYS5oCkBA
-IC0xNDMsNiArMTQzLDcgQEAgdm9pZCBpbWFfcHJpbnRfZGlnZXN0KHN0cnVjdCBzZXFfZmlsZSAq
-bSwgdTggKmRpZ2VzdCwgdTMyIHNpemUpOwogc3RydWN0IGltYV90ZW1wbGF0ZV9kZXNjICppbWFf
-dGVtcGxhdGVfZGVzY19jdXJyZW50KHZvaWQpOwogaW50IGltYV9yZXN0b3JlX21lYXN1cmVtZW50
-X2VudHJ5KHN0cnVjdCBpbWFfdGVtcGxhdGVfZW50cnkgKmVudHJ5KTsKIGludCBpbWFfcmVzdG9y
-ZV9tZWFzdXJlbWVudF9saXN0KGxvZmZfdCBidWZzaXplLCB2b2lkICpidWYpOworaW50IGltYV9t
-ZWFzdXJlbWVudHNfc2hvdyhzdHJ1Y3Qgc2VxX2ZpbGUgKm0sIHZvaWQgKnYpOwogdW5zaWduZWQg
-bG9uZyBpbWFfZ2V0X2JpbmFyeV9ydW50aW1lX3NpemUodm9pZCk7CiBpbnQgaW1hX2luaXRfdGVt
-cGxhdGUodm9pZCk7CiAKZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2Zz
-LmMgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5jCmluZGV4IGMwN2EzODQ0ZWEwYS4u
-NjZlNWRkNWUyMjZmIDEwMDY0NAotLS0gYS9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5j
-CisrKyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMKQEAgLTExNiw3ICsxMTYsNyBA
-QCB2b2lkIGltYV9wdXRjKHN0cnVjdCBzZXFfZmlsZSAqbSwgdm9pZCAqZGF0YSwgaW50IGRhdGFs
-ZW4pCiAgKiAgICAgICBbZXZlbnRkYXRhIGxlbmd0aF0KICAqICAgICAgIGV2ZW50ZGF0YVtuXT10
-ZW1wbGF0ZSBzcGVjaWZpYyBkYXRhCiAgKi8KLXN0YXRpYyBpbnQgaW1hX21lYXN1cmVtZW50c19z
-aG93KHN0cnVjdCBzZXFfZmlsZSAqbSwgdm9pZCAqdikKK2ludCBpbWFfbWVhc3VyZW1lbnRzX3No
-b3coc3RydWN0IHNlcV9maWxlICptLCB2b2lkICp2KQogewogCS8qIHRoZSBsaXN0IG5ldmVyIHNo
-cmlua3MsIHNvIHdlIGRvbid0IG5lZWQgYSBsb2NrIGhlcmUgKi8KIAlzdHJ1Y3QgaW1hX3F1ZXVl
-X2VudHJ5ICpxZSA9IHY7CmRpZmYgLS1naXQgYS9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9r
-ZXhlYy5jIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfa2V4ZWMuYwppbmRleCAzNmFmZDBm
-ZTk3NDcuLjJjNDgyNGFjMWNlMSAxMDA2NDQKLS0tIGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9p
-bWFfa2V4ZWMuYworKysgYi9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9rZXhlYy5jCkBAIC0x
-MCw4ICsxMCwxMjUgQEAKICAqIHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2
-ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2UsIG9yCiAgKiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRl
-ciB2ZXJzaW9uLgogICovCisjaW5jbHVkZSA8bGludXgvc2VxX2ZpbGUuaD4KKyNpbmNsdWRlIDxs
-aW51eC92bWFsbG9jLmg+CisjaW5jbHVkZSA8bGludXgva2V4ZWMuaD4KICNpbmNsdWRlICJpbWEu
-aCIKIAorI2lmZGVmIENPTkZJR19JTUFfS0VYRUMKK3N0YXRpYyBpbnQgaW1hX2R1bXBfbWVhc3Vy
-ZW1lbnRfbGlzdCh1bnNpZ25lZCBsb25nICpidWZmZXJfc2l6ZSwgdm9pZCAqKmJ1ZmZlciwKKwkJ
-CQkgICAgIHVuc2lnbmVkIGxvbmcgc2VnbWVudF9zaXplKQoreworCXN0cnVjdCBpbWFfcXVldWVf
-ZW50cnkgKnFlOworCXN0cnVjdCBzZXFfZmlsZSBmaWxlOworCXN0cnVjdCBpbWFfa2V4ZWNfaGRy
-IGtoZHIgPSB7CisJCS52ZXJzaW9uID0gMSwgLmJ1ZmZlcl9zaXplID0gMCwgLmNvdW50ID0gMH07
-CisJaW50IHJldCA9IDA7CisKKwkvKiBzZWdtZW50IHNpemUgY2FuJ3QgY2hhbmdlIGJldHdlZW4g
-a2V4ZWMgbG9hZCBhbmQgZXhlY3V0ZSAqLworCWZpbGUuYnVmID0gdm1hbGxvYyhzZWdtZW50X3Np
-emUpOworCWlmICghZmlsZS5idWYpIHsKKwkJcmV0ID0gLUVOT01FTTsKKwkJZ290byBvdXQ7CisJ
-fQorCisJZmlsZS5zaXplID0gc2VnbWVudF9zaXplOworCWZpbGUucmVhZF9wb3MgPSAwOworCWZp
-bGUuY291bnQgPSBzaXplb2Yoa2hkcik7CS8qIHJlc2VydmVkIHNwYWNlICovCisKKwlsaXN0X2Zv
-cl9lYWNoX2VudHJ5X3JjdShxZSwgJmltYV9tZWFzdXJlbWVudHMsIGxhdGVyKSB7CisJCWlmIChm
-aWxlLmNvdW50IDwgZmlsZS5zaXplKSB7CisJCQlraGRyLmNvdW50Kys7CisJCQlpbWFfbWVhc3Vy
-ZW1lbnRzX3Nob3coJmZpbGUsIHFlKTsKKwkJfSBlbHNlIHsKKwkJCXJldCA9IC1FSU5WQUw7CisJ
-CQlicmVhazsKKwkJfQorCX0KKworCWlmIChyZXQgPCAwKQorCQlnb3RvIG91dDsKKworCS8qCisJ
-ICogZmlsbCBpbiByZXNlcnZlZCBzcGFjZSB3aXRoIHNvbWUgYnVmZmVyIGRldGFpbHMKKwkgKiAo
-ZWcuIHZlcnNpb24sIGJ1ZmZlciBzaXplLCBudW1iZXIgb2YgbWVhc3VyZW1lbnRzKQorCSAqLwor
-CWtoZHIuYnVmZmVyX3NpemUgPSBmaWxlLmNvdW50OworCW1lbWNweShmaWxlLmJ1ZiwgJmtoZHIs
-IHNpemVvZihraGRyKSk7CisJcHJpbnRfaGV4X2R1bXAoS0VSTl9ERUJVRywgImltYSBkdW1wOiAi
-LCBEVU1QX1BSRUZJWF9OT05FLAorCQkJMTYsIDEsIGZpbGUuYnVmLAorCQkJZmlsZS5jb3VudCA8
-IDEwMCA/IGZpbGUuY291bnQgOiAxMDAsIHRydWUpOworCisJKmJ1ZmZlcl9zaXplID0gZmlsZS5j
-b3VudDsKKwkqYnVmZmVyID0gZmlsZS5idWY7CitvdXQ6CisJaWYgKHJldCA9PSAtRUlOVkFMKQor
-CQl2ZnJlZShmaWxlLmJ1Zik7CisJcmV0dXJuIHJldDsKK30KKworLyoKKyAqIENhbGxlZCBkdXJp
-bmcga2V4ZWNfZmlsZV9sb2FkIHNvIHRoYXQgSU1BIGNhbiBhZGQgYSBzZWdtZW50IHRvIHRoZSBr
-ZXhlYworICogaW1hZ2UgZm9yIHRoZSBtZWFzdXJlbWVudCBsaXN0IGZvciB0aGUgbmV4dCBrZXJu
-ZWwuCisgKgorICogVGhpcyBmdW5jdGlvbiBhc3N1bWVzIHRoYXQga2V4ZWNfbXV0ZXggaXMgaGVs
-ZC4KKyAqLwordm9pZCBpbWFfYWRkX2tleGVjX2J1ZmZlcihzdHJ1Y3Qga2ltYWdlICppbWFnZSkK
-K3sKKwlzdHJ1Y3Qga2V4ZWNfYnVmIGtidWYgPSB7IC5pbWFnZSA9IGltYWdlLCAuYnVmX2FsaWdu
-ID0gUEFHRV9TSVpFLAorCQkJCSAgLmJ1Zl9taW4gPSAwLCAuYnVmX21heCA9IFVMT05HX01BWCwK
-KwkJCQkgIC50b3BfZG93biA9IHRydWUgfTsKKwl1bnNpZ25lZCBsb25nIGJpbmFyeV9ydW50aW1l
-X3NpemU7CisKKwkvKiB1c2UgbW9yZSB1bmRlcnN0YW5kYWJsZSB2YXJpYWJsZSBuYW1lcyB0aGFu
-IGRlZmluZWQgaW4ga2J1ZiAqLworCXZvaWQgKmtleGVjX2J1ZmZlciA9IE5VTEw7CisJc2l6ZV90
-IGtleGVjX2J1ZmZlcl9zaXplOworCXNpemVfdCBrZXhlY19zZWdtZW50X3NpemU7CisJaW50IHJl
-dDsKKworCS8qCisJICogUmVzZXJ2ZSBhbiBleHRyYSBoYWxmIHBhZ2Ugb2YgbWVtb3J5IGZvciBh
-ZGRpdGlvbmFsIG1lYXN1cmVtZW50cworCSAqIGFkZGVkIGR1cmluZyB0aGUga2V4ZWMgbG9hZC4K
-KwkgKi8KKwliaW5hcnlfcnVudGltZV9zaXplID0gaW1hX2dldF9iaW5hcnlfcnVudGltZV9zaXpl
-KCk7CisJaWYgKGJpbmFyeV9ydW50aW1lX3NpemUgPj0gVUxPTkdfTUFYIC0gUEFHRV9TSVpFKQor
-CQlrZXhlY19zZWdtZW50X3NpemUgPSBVTE9OR19NQVg7CisJZWxzZQorCQlrZXhlY19zZWdtZW50
-X3NpemUgPSBBTElHTihpbWFfZ2V0X2JpbmFyeV9ydW50aW1lX3NpemUoKSArCisJCQkJCSAgIFBB
-R0VfU0laRSAvIDIsIFBBR0VfU0laRSk7CisJaWYgKChrZXhlY19zZWdtZW50X3NpemUgPT0gVUxP
-TkdfTUFYKSB8fAorCSAgICAoKGtleGVjX3NlZ21lbnRfc2l6ZSA+PiBQQUdFX1NISUZUKSA+IHRv
-dGFscmFtX3BhZ2VzIC8gMikpIHsKKwkJcHJfZXJyKCJCaW5hcnkgbWVhc3VyZW1lbnQgbGlzdCB0
-b28gbGFyZ2UuXG4iKTsKKwkJcmV0dXJuOworCX0KKworCWltYV9kdW1wX21lYXN1cmVtZW50X2xp
-c3QoJmtleGVjX2J1ZmZlcl9zaXplLCAma2V4ZWNfYnVmZmVyLAorCQkJCSAga2V4ZWNfc2VnbWVu
-dF9zaXplKTsKKwlpZiAoIWtleGVjX2J1ZmZlcikgeworCQlwcl9lcnIoIk5vdCBlbm91Z2ggbWVt
-b3J5IGZvciB0aGUga2V4ZWMgbWVhc3VyZW1lbnQgYnVmZmVyLlxuIik7CisJCXJldHVybjsKKwl9
-CisKKwlrYnVmLmJ1ZmZlciA9IGtleGVjX2J1ZmZlcjsKKwlrYnVmLmJ1ZnN6ID0ga2V4ZWNfYnVm
-ZmVyX3NpemU7CisJa2J1Zi5tZW1zeiA9IGtleGVjX3NlZ21lbnRfc2l6ZTsKKwlyZXQgPSBrZXhl
-Y19hZGRfYnVmZmVyKCZrYnVmKTsKKwlpZiAocmV0KSB7CisJCXByX2VycigiRXJyb3IgcGFzc2lu
-ZyBvdmVyIGtleGVjIG1lYXN1cmVtZW50IGJ1ZmZlci5cbiIpOworCQlyZXR1cm47CisJfQorCisJ
-cmV0ID0gYXJjaF9pbWFfYWRkX2tleGVjX2J1ZmZlcihpbWFnZSwga2J1Zi5tZW0sIGtleGVjX3Nl
-Z21lbnRfc2l6ZSk7CisJaWYgKHJldCkgeworCQlwcl9lcnIoIkVycm9yIHBhc3Npbmcgb3ZlciBr
-ZXhlYyBtZWFzdXJlbWVudCBidWZmZXIuXG4iKTsKKwkJcmV0dXJuOworCX0KKworCXByX2RlYnVn
-KCJrZXhlYyBtZWFzdXJlbWVudCBidWZmZXIgZm9yIHRoZSBsb2FkZWQga2VybmVsIGF0IDB4JWx4
-LlxuIiwKKwkJIGtidWYubWVtKTsKK30KKyNlbmRpZiAvKiBJTUFfS0VYRUMgKi8KKwogLyoKICAq
-IFJlc3RvcmUgdGhlIG1lYXN1cmVtZW50IGxpc3QgZnJvbSB0aGUgcHJldmlvdXMga2VybmVsLgog
-ICovCi0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+
+The builtin and single custom templates are currently stored in an
+array.  In preparation for being able to restore a measurement list
+containing multiple builtin/custom templates, this patch stores the
+builtin and custom templates as a linked list.  This will permit
+defining more than one custom template per boot.
+
+Changelog v4:
+- fix "spinlock bad magic" BUG - reported by Dmitry Vyukov
+
+Changelog v3:
+- initialize template format list in ima_template_desc_current(), as it
+might be called during __setup before normal initialization. (kernel
+test robot)
+- remove __init annotation of ima_init_template_list()
+
+Changelog v2:
+- fix lookup_template_desc() preemption imbalance (kernel test robot)
+
+Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
+---
+ security/integrity/ima/ima.h          |  2 ++
+ security/integrity/ima/ima_main.c     |  1 +
+ security/integrity/ima/ima_template.c | 52 +++++++++++++++++++++++++++--------
+ 3 files changed, 44 insertions(+), 11 deletions(-)
+
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 139dec67dcbf..6b0540ad189f 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -85,6 +85,7 @@ struct ima_template_field {
+ 
+ /* IMA template descriptor definition */
+ struct ima_template_desc {
++	struct list_head list;
+ 	char *name;
+ 	char *fmt;
+ 	int num_fields;
+@@ -146,6 +147,7 @@ int ima_restore_measurement_list(loff_t bufsize, void *buf);
+ int ima_measurements_show(struct seq_file *m, void *v);
+ unsigned long ima_get_binary_runtime_size(void);
+ int ima_init_template(void);
++void ima_init_template_list(void);
+ 
+ /*
+  * used to protect h_table and sha_table
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 423d111b3b94..50818c60538b 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -418,6 +418,7 @@ static int __init init_ima(void)
+ {
+ 	int error;
+ 
++	ima_init_template_list();
+ 	hash_setup(CONFIG_IMA_DEFAULT_HASH);
+ 	error = ima_init();
+ 	if (!error) {
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index 37f972cb05fe..c0d808c20c40 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -15,16 +15,20 @@
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+ 
++#include <linux/rculist.h>
+ #include "ima.h"
+ #include "ima_template_lib.h"
+ 
+-static struct ima_template_desc defined_templates[] = {
++static struct ima_template_desc builtin_templates[] = {
+ 	{.name = IMA_TEMPLATE_IMA_NAME, .fmt = IMA_TEMPLATE_IMA_FMT},
+ 	{.name = "ima-ng", .fmt = "d-ng|n-ng"},
+ 	{.name = "ima-sig", .fmt = "d-ng|n-ng|sig"},
+ 	{.name = "", .fmt = ""},	/* placeholder for a custom format */
+ };
+ 
++static LIST_HEAD(defined_templates);
++static DEFINE_SPINLOCK(template_list);
++
+ static struct ima_template_field supported_fields[] = {
+ 	{.field_id = "d", .field_init = ima_eventdigest_init,
+ 	 .field_show = ima_show_template_digest},
+@@ -53,6 +57,8 @@ static int __init ima_template_setup(char *str)
+ 	if (ima_template)
+ 		return 1;
+ 
++	ima_init_template_list();
++
+ 	/*
+ 	 * Verify that a template with the supplied name exists.
+ 	 * If not, use CONFIG_IMA_DEFAULT_TEMPLATE.
+@@ -81,7 +87,7 @@ __setup("ima_template=", ima_template_setup);
+ 
+ static int __init ima_template_fmt_setup(char *str)
+ {
+-	int num_templates = ARRAY_SIZE(defined_templates);
++	int num_templates = ARRAY_SIZE(builtin_templates);
+ 
+ 	if (ima_template)
+ 		return 1;
+@@ -92,22 +98,28 @@ static int __init ima_template_fmt_setup(char *str)
+ 		return 1;
+ 	}
+ 
+-	defined_templates[num_templates - 1].fmt = str;
+-	ima_template = defined_templates + num_templates - 1;
++	builtin_templates[num_templates - 1].fmt = str;
++	ima_template = builtin_templates + num_templates - 1;
++
+ 	return 1;
+ }
+ __setup("ima_template_fmt=", ima_template_fmt_setup);
+ 
+ static struct ima_template_desc *lookup_template_desc(const char *name)
+ {
+-	int i;
++	struct ima_template_desc *template_desc;
++	int found = 0;
+ 
+-	for (i = 0; i < ARRAY_SIZE(defined_templates); i++) {
+-		if (strcmp(defined_templates[i].name, name) == 0)
+-			return defined_templates + i;
++	rcu_read_lock();
++	list_for_each_entry_rcu(template_desc, &defined_templates, list) {
++		if ((strcmp(template_desc->name, name) == 0) ||
++		    (strcmp(template_desc->fmt, name) == 0)) {
++			found = 1;
++			break;
++		}
+ 	}
+-
+-	return NULL;
++	rcu_read_unlock();
++	return found ? template_desc : NULL;
+ }
+ 
+ static struct ima_template_field *lookup_template_field(const char *field_id)
+@@ -183,11 +195,29 @@ static int template_desc_init_fields(const char *template_fmt,
+ 	return 0;
+ }
+ 
++void ima_init_template_list(void)
++{
++	int i;
++
++	if (!list_empty(&defined_templates))
++		return;
++
++	spin_lock(&template_list);
++	for (i = 0; i < ARRAY_SIZE(builtin_templates); i++) {
++		list_add_tail_rcu(&builtin_templates[i].list,
++				  &defined_templates);
++	}
++	spin_unlock(&template_list);
++	synchronize_rcu();
++}
++
+ struct ima_template_desc *ima_template_desc_current(void)
+ {
+-	if (!ima_template)
++	if (!ima_template) {
++		ima_init_template_list();
+ 		ima_template =
+ 		    lookup_template_desc(CONFIG_IMA_DEFAULT_TEMPLATE);
++	}
+ 	return ima_template;
+ }
+ 
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
