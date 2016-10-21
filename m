@@ -1,39 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxPqv-0000YK-4n
- for kexec@lists.infradead.org; Fri, 21 Oct 2016 02:46:38 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by casper.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1bxPqj-0002Ut-Mq
+ for kexec@lists.infradead.org; Fri, 21 Oct 2016 02:46:26 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- u9L2hrBb063770
- for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:19 -0400
-Received: from e24smtp02.br.ibm.com (e24smtp02.br.ibm.com [32.104.18.86])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2675yx8yvn-1
+ u9L2hoO1080174
+ for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:08 -0400
+Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2675yh988s-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:19 -0400
+ for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:08 -0400
 Received: from localhost
- by e24smtp02.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Fri, 21 Oct 2016 00:46:17 -0200
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp02.br.ibm.com (Postfix) with ESMTP id A07431DC0054
- for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:46:15 -0400 (EDT)
+ Fri, 21 Oct 2016 00:46:05 -0200
+Received: from d24relay03.br.ibm.com (d24relay03.br.ibm.com [9.18.232.225])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id A56C7352005C
+ for <kexec@lists.infradead.org>; Thu, 20 Oct 2016 22:45:36 -0400 (EDT)
 Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- u9L2kFK630278070
- for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:46:15 -0200
+ by d24relay03.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ u9L2k3d028704834
+ for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:46:03 -0200
 Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
  by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- u9L2kFEL005252
- for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:46:15 -0200
+ u9L2k2wP005091
+ for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 00:46:02 -0200
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v6 10/10] ima: platform-independent hash value
-Date: Fri, 21 Oct 2016 00:44:58 -0200
+Subject: [PATCH v6 08/10] ima: support restoring multiple template formats
+Date: Fri, 21 Oct 2016 00:44:56 -0200
 In-Reply-To: <1477017898-10375-1-git-send-email-bauerman@linux.vnet.ibm.com>
 References: <1477017898-10375-1-git-send-email-bauerman@linux.vnet.ibm.com>
-Message-Id: <1477017898-10375-11-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1477017898-10375-9-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,43 +47,102 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-security-module <linux-security-module@vger.kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, Andreas Steffen <andreas.steffen@strongswan.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
+Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-ima-devel@lists.sourceforge.net, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
 
-From: Andreas Steffen <andreas.steffen@strongswan.org>
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-For remote attestion it is important for the ima measurement values
-to be platform-independent. Therefore integer fields to be hashed
-must be converted to canonical format.
+The configured IMA measurement list template format can be replaced at
+runtime on the boot command line, including a custom template format.
+This patch adds support for restoring a measuremement list containing
+multiple builtin/custom template formats.
 
-Changelog:
-- Define canonical format as little endian (Mimi)
-
-Signed-off-by: Andreas Steffen <andreas.steffen@strongswan.org>
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 ---
- security/integrity/ima/ima_crypto.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ security/integrity/ima/ima_template.c | 53 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 50 insertions(+), 3 deletions(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 38f2ed830dd6..802d5d20f36f 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -477,11 +477,13 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
- 		u8 buffer[IMA_EVENT_NAME_LEN_MAX + 1] = { 0 };
- 		u8 *data_to_hash = field_data[i].data;
- 		u32 datalen = field_data[i].len;
-+		u32 datalen_to_hash =
-+		    !ima_canonical_fmt ? datalen : cpu_to_le32(datalen);
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index c0d808c20c40..e57b4682ff93 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -155,9 +155,14 @@ static int template_desc_init_fields(const char *template_fmt,
+ {
+ 	const char *template_fmt_ptr;
+ 	struct ima_template_field *found_fields[IMA_TEMPLATE_NUM_FIELDS_MAX];
+-	int template_num_fields = template_fmt_size(template_fmt);
++	int template_num_fields;
+ 	int i, len;
  
- 		if (strcmp(td->name, IMA_TEMPLATE_IMA_NAME) != 0) {
- 			rc = crypto_shash_update(shash,
--						(const u8 *) &field_data[i].len,
--						sizeof(field_data[i].len));
-+						(const u8 *) &datalen_to_hash,
-+						sizeof(datalen_to_hash));
- 			if (rc)
- 				break;
- 		} else if (strcmp(td->fields[i]->field_id, "n") == 0) {
++	if (num_fields && *num_fields > 0) /* already initialized? */
++		return 0;
++
++	template_num_fields = template_fmt_size(template_fmt);
++
+ 	if (template_num_fields > IMA_TEMPLATE_NUM_FIELDS_MAX) {
+ 		pr_err("format string '%s' contains too many fields\n",
+ 		       template_fmt);
+@@ -237,6 +242,35 @@ int __init ima_init_template(void)
+ 	return result;
+ }
+ 
++static struct ima_template_desc *restore_template_fmt(char *template_name)
++{
++	struct ima_template_desc *template_desc = NULL;
++	int ret;
++
++	ret = template_desc_init_fields(template_name, NULL, NULL);
++	if (ret < 0) {
++		pr_err("attempting to initialize the template \"%s\" failed\n",
++			template_name);
++		goto out;
++	}
++
++	template_desc = kzalloc(sizeof(*template_desc), GFP_KERNEL);
++	if (!template_desc)
++		goto out;
++
++	template_desc->name = "";
++	template_desc->fmt = kstrdup(template_name, GFP_KERNEL);
++	if (!template_desc->fmt)
++		goto out;
++
++	spin_lock(&template_list);
++	list_add_tail_rcu(&template_desc->list, &defined_templates);
++	spin_unlock(&template_list);
++	synchronize_rcu();
++out:
++	return template_desc;
++}
++
+ static int ima_restore_template_data(struct ima_template_desc *template_desc,
+ 				     void *template_data,
+ 				     int template_data_size,
+@@ -367,10 +401,23 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 		}
+ 		data_v1 = bufp += (u_int8_t)hdr_v1->template_name_len;
+ 
+-		/* get template format */
+ 		template_desc = lookup_template_desc(template_name);
+ 		if (!template_desc) {
+-			pr_err("template \"%s\" not found\n", template_name);
++			template_desc = restore_template_fmt(template_name);
++			if (!template_desc)
++				break;
++		}
++
++		/*
++		 * Only the running system's template format is initialized
++		 * on boot.  As needed, initialize the other template formats.
++		 */
++		ret = template_desc_init_fields(template_desc->fmt,
++						&(template_desc->fields),
++						&(template_desc->num_fields));
++		if (ret < 0) {
++			pr_err("attempting to restore the template fmt \"%s\" \
++				failed\n", template_desc->fmt);
+ 			ret = -EINVAL;
+ 			break;
+ 		}
 -- 
 2.7.4
 
