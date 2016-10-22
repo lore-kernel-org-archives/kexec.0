@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x244.google.com ([2607:f8b0:400e:c00::244])
+Received: from mga04.intel.com ([192.55.52.120])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bxhGj-0005CP-Gq
- for kexec@lists.infradead.org; Fri, 21 Oct 2016 21:22:26 +0000
-Received: by mail-pf0-x244.google.com with SMTP id r16so9574409pfg.3
- for <kexec@lists.infradead.org>; Fri, 21 Oct 2016 14:22:06 -0700 (PDT)
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net 2/2] net: dsa: bcm_sf2: Do not rely on kexec_in_progress
-Date: Fri, 21 Oct 2016 14:21:56 -0700
-Message-Id: <1477084916-26327-3-git-send-email-f.fainelli@gmail.com>
-In-Reply-To: <1477084916-26327-1-git-send-email-f.fainelli@gmail.com>
-References: <1477084916-26327-1-git-send-email-f.fainelli@gmail.com>
+ id 1bxltM-0001x1-OS
+ for kexec@lists.infradead.org; Sat, 22 Oct 2016 02:18:37 +0000
+From: ville.syrjala@linux.intel.com
+Subject: [PATCH] arch/x86: Don't try to poke disabled/non-existent APIC
+Date: Sat, 22 Oct 2016 05:18:04 +0300
+Message-Id: <1477102684-5092-1-git-send-email-ville.syrjala@linux.intel.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,58 +16,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: netdev@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, ebiederm@xmission.com, kexec@lists.infradead.org, davem@davemloft.net, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Juergen Gross <jgross@suse.com>, Peter Zijlstra <peterz@infradead.org>, dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Jiri Olsa <jolsa@redhat.com>, =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
 
-After discussing with Eric, it turns out that, while using
-kexec_in_progress is a nice optimization, which prevents us from always
-powering on the integrated PHY, let's just turn it on in the shutdown
-path.
-
-This removes a dependency on kexec_in_progress which, according to Eric
-should not be used by modules
-
-Fixes: 2399d6143f85 ("net: dsa: bcm_sf2: Prevent GPHY shutdown for kexec'd kernels")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/bcm_sf2.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 077a24541584..e3ee27ce13dd 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -30,7 +30,6 @@
- #include <linux/etherdevice.h>
- #include <net/switchdev.h>
- #include <linux/platform_data/b53.h>
--#include <linux/kexec.h>
- 
- #include "bcm_sf2.h"
- #include "bcm_sf2_regs.h"
-@@ -1141,9 +1140,11 @@ static void bcm_sf2_sw_shutdown(struct platform_device *pdev)
- 	/* For a kernel about to be kexec'd we want to keep the GPHY on for a
- 	 * successful MDIO bus scan to occur. If we did turn off the GPHY
- 	 * before (e.g: port_disable), this will also power it back on.
-+	 *
-+	 * Do not rely on kexec_in_progress, just power the PHY on.
- 	 */
- 	if (priv->hw_params.num_gphy == 1)
--		bcm_sf2_gphy_enable_set(priv->dev->ds, kexec_in_progress);
-+		bcm_sf2_gphy_enable_set(priv->dev->ds, true);
- }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-2.7.4
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RnJvbTogVmlsbGUgU3lyasOkbMOkIDx2aWxsZS5zeXJqYWxhQGxpbnV4LmludGVsLmNvbT4KCkFw
+cGFyZW50bHkgdHJ5aW5nIHRvIHBva2UgYSBkaXNhYmxlZCBvciBub24tZXhpc3RlbnQgQVBJQwps
+ZWFkcyB0byBhIGJveCB0aGF0IGRvZXNuJ3QgZXZlbiBib290LiBMZXQncyBub3QgZG8gdGhhdC4K
+Ck5vIHJlYWwgY2x1ZSBpZiB0aGlzIGlzIHRoZSByaWdodCBmaXgsIGJ1dCBhdCBsZWFzdCBteQpQ
+MyBtYWNoaW5lIGJvb3RzIGFnYWluLgoKQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IElu
+Z28gTW9sbmFyIDxtaW5nb0ByZWRoYXQuY29tPgpDYzogIkguIFBldGVyIEFudmluIiA8aHBhQHp5
+dG9yLmNvbT4KQ2M6IHg4NkBrZXJuZWwub3JnCkNjOiBQcmFyaXQgQmhhcmdhdmEgPHByYXJpdEBy
+ZWRoYXQuY29tPgpDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPgpDYzog
+TGVuIEJyb3duIDxsZW4uYnJvd25AaW50ZWwuY29tPgpDYzogQm9yaXNsYXYgUGV0a292IDxicEBz
+dXNlLmRlPgpDYzogQW5kaSBLbGVlbiA8YWtAbGludXguaW50ZWwuY29tPgpDYzogSmlyaSBPbHNh
+IDxqb2xzYUByZWRoYXQuY29tPgpDYzogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPgpD
+YzogZHlvdW5nQHJlZGhhdC5jb20KQ2M6IEVyaWMgQmllZGVybWFuIDxlYmllZGVybUB4bWlzc2lv
+bi5jb20+CkNjOiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCkNjOiBUaG9tYXMgR2xlaXhuZXIg
+PHRnbHhAbGludXRyb25peC5kZT4KRml4ZXM6IDJhNTFmZTA4M2ViYSAoImFyY2gveDg2OiBIYW5k
+bGUgbm9uIGVudW1lcmF0ZWQgQ1BVIGFmdGVyIHBoeXNpY2FsIGhvdHBsdWciKQpTaWduZWQtb2Zm
+LWJ5OiBWaWxsZSBTeXJqw6Rsw6QgPHZpbGxlLnN5cmphbGFAbGludXguaW50ZWwuY29tPgotLS0K
+IGFyY2gveDg2L2tlcm5lbC9zbXBib290LmMgfCAxNiArKysrKysrKystLS0tLS0tCiAxIGZpbGUg
+Y2hhbmdlZCwgOSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2Fy
+Y2gveDg2L2tlcm5lbC9zbXBib290LmMgYi9hcmNoL3g4Ni9rZXJuZWwvc21wYm9vdC5jCmluZGV4
+IDk1MWYwOTNhOTZmZS4uNDJmNWViN2I0ZjZjIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9rZXJuZWwv
+c21wYm9vdC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMKQEAgLTE0MDksMTUgKzE0
+MDksMTcgQEAgX19pbml0IHZvaWQgcHJlZmlsbF9wb3NzaWJsZV9tYXAodm9pZCkKIAogCS8qIE5v
+IGJvb3QgcHJvY2Vzc29yIHdhcyBmb3VuZCBpbiBtcHRhYmxlIG9yIEFDUEkgTUFEVCAqLwogCWlm
+ICghbnVtX3Byb2Nlc3NvcnMpIHsKLQkJaW50IGFwaWNpZCA9IGJvb3RfY3B1X3BoeXNpY2FsX2Fw
+aWNpZDsKLQkJaW50IGNwdSA9IGhhcmRfc21wX3Byb2Nlc3Nvcl9pZCgpOworCQlpZiAoYm9vdF9j
+cHVfaGFzKFg4Nl9GRUFUVVJFX0FQSUMpKSB7CisJCQlpbnQgYXBpY2lkID0gYm9vdF9jcHVfcGh5
+c2ljYWxfYXBpY2lkOworCQkJaW50IGNwdSA9IGhhcmRfc21wX3Byb2Nlc3Nvcl9pZCgpOwogCi0J
+CXByX3dhcm4oIkJvb3QgQ1BVIChpZCAlZCkgbm90IGxpc3RlZCBieSBCSU9TXG4iLCBjcHUpOwor
+CQkJcHJfd2FybigiQm9vdCBDUFUgKGlkICVkKSBub3QgbGlzdGVkIGJ5IEJJT1NcbiIsIGNwdSk7
+CiAKLQkJLyogTWFrZSBzdXJlIGJvb3QgY3B1IGlzIGVudW1lcmF0ZWQgKi8KLQkJaWYgKGFwaWMt
+PmNwdV9wcmVzZW50X3RvX2FwaWNpZCgwKSA9PSBCQURfQVBJQ0lEICYmCi0JCSAgICBhcGljLT5h
+cGljX2lkX3ZhbGlkKGFwaWNpZCkpCi0JCQlnZW5lcmljX3Byb2Nlc3Nvcl9pbmZvKGFwaWNpZCwg
+Ym9vdF9jcHVfYXBpY192ZXJzaW9uKTsKKwkJCS8qIE1ha2Ugc3VyZSBib290IGNwdSBpcyBlbnVt
+ZXJhdGVkICovCisJCQlpZiAoYXBpYy0+Y3B1X3ByZXNlbnRfdG9fYXBpY2lkKDApID09IEJBRF9B
+UElDSUQgJiYKKwkJCSAgICBhcGljLT5hcGljX2lkX3ZhbGlkKGFwaWNpZCkpCisJCQkJZ2VuZXJp
+Y19wcm9jZXNzb3JfaW5mbyhhcGljaWQsIGJvb3RfY3B1X2FwaWNfdmVyc2lvbik7CisJCX0KIAog
+CQlpZiAoIW51bV9wcm9jZXNzb3JzKQogCQkJbnVtX3Byb2Nlc3NvcnMgPSAxOwotLSAKMi43LjQK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
+YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
