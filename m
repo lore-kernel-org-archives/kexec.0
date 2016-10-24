@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f180.google.com ([209.85.216.180])
- by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byiRf-0006MY-1y
- for kexec@lists.infradead.org; Mon, 24 Oct 2016 16:49:55 +0000
-Received: by mail-qt0-f180.google.com with SMTP id s49so131580941qta.0
- for <kexec@lists.infradead.org>; Mon, 24 Oct 2016 09:49:34 -0700 (PDT)
+Received: from mail-qt0-f169.google.com ([209.85.216.169])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1byiRX-0003XK-Oq
+ for kexec@lists.infradead.org; Mon, 24 Oct 2016 16:50:03 +0000
+Received: by mail-qt0-f169.google.com with SMTP id s49so131579790qta.0
+ for <kexec@lists.infradead.org>; Mon, 24 Oct 2016 09:49:27 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH Makedumpfile 4/4] x86_64: kill some unused initialization
-Date: Mon, 24 Oct 2016 22:18:46 +0530
-Message-Id: <852afb9126c5e52deff47ffb195e2a151a7339ed.1477327674.git.panand@redhat.com>
+Subject: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using page
+ table values
+Date: Mon, 24 Oct 2016 22:18:44 +0530
+Message-Id: <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
 In-Reply-To: <cover.1477327674.git.panand@redhat.com>
 References: <cover.1477327674.git.panand@redhat.com>
 In-Reply-To: <cover.1477327674.git.panand@redhat.com>
@@ -29,46 +30,135 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-VMALLOC_START, VMALLOC_END, MODULES_VADDR and MODULES_END are mo more
-needed for x86_64 now. So, kill their initialization.
+Currently we translate some of the VA areas using linear mapping while some
+other(which can not be linearly mapped) using page table.
+
+However, we will have entry of a page in the page table irrespective of its
+virtual region. So, we can always look into page table for any VA to PA
+translation. This approach will solve lot of complexity in makedumpfile. It
+will in turn remove dependency over variables like VMALLOC_START,
+MODULES_VADDR etc whose definition keeps changing in newer kernel version.
+
+Moreover, I do not see any side effect of this approach in terms of
+execution timing. I tested with IBM x3950 X6 machine having 4136359 MB of
+memory. These are the results of makedumpfile execution time:
+
+Without this patch:
+===================
+With -d 31:
+Trial 1: 237.59526248 S
+Trial 2: 235.236914962 S
+Trail 3: 237.678712045 S
+
+With -d 1:
+Trial 1: 2548.905296877 S
+Trial 2: 2549.759881756 S
+
+With this patch:
+===================
+With -d 31:
+Trial 1: 232.713841516 S
+Trial 2: 228.45697177 S
+Trail 3: 232.942262441 S
+
+With -d 1:
+Trial 1: 2768.424565806 S
+Trial 2: 2749.622115455 S
+Trail 3: 2537.770359073 S
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- arch/x86_64.c  | 4 ----
- makedumpfile.h | 2 --
- 2 files changed, 6 deletions(-)
+ arch/x86_64.c  | 42 ++++++++----------------------------------
+ makedumpfile.h |  4 ++--
+ 2 files changed, 10 insertions(+), 36 deletions(-)
 
 diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 597cdac36dfc..13990cef839b 100644
+index a96fd8ae00a1..fe2764a8bec2 100644
 --- a/arch/x86_64.c
 +++ b/arch/x86_64.c
-@@ -169,13 +169,9 @@ get_versiondep_info_x86_64(void)
- 		return FALSE;
+@@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
+ {
+ 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+ 	unsigned long pte_paddr, pte;
++	unsigned long phys_base;
++
++	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
++		phys_base = info->phys_base;
++	else
++		phys_base = 0;
  
- 	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
--		info->vmalloc_start = VMALLOC_START_ORIG;
--		info->vmalloc_end   = VMALLOC_END_ORIG;
- 		info->vmemmap_start = VMEMMAP_START_ORIG;
- 		info->vmemmap_end   = VMEMMAP_END_ORIG;
- 	} else {
--		info->vmalloc_start = VMALLOC_START_2_6_31;
--		info->vmalloc_end   = VMALLOC_END_2_6_31;
- 		info->vmemmap_start = VMEMMAP_START_2_6_31;
- 		info->vmemmap_end   = VMEMMAP_END_2_6_31;
+ 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+@@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
+ 	/*
+ 	 * Get PGD.
+ 	 */
+-	page_dir  = SYMBOL(init_level4_pgt);
++	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
+ 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
+-	if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
++	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
+ 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
+ 		return NOT_PADDR;
  	}
+@@ -285,38 +291,6 @@ vtop4_x86_64(unsigned long vaddr)
+ 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
+ }
+ 
+-unsigned long long
+-vaddr_to_paddr_x86_64(unsigned long vaddr)
+-{
+-	unsigned long phys_base;
+-	unsigned long long paddr;
+-
+-	/*
+-	 * Check the relocatable kernel.
+-	 */
+-	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+-		phys_base = info->phys_base;
+-	else
+-		phys_base = 0;
+-
+-	if (is_vmalloc_addr_x86_64(vaddr)) {
+-		if ((paddr = vtop4_x86_64(vaddr)) == NOT_PADDR) {
+-			ERRMSG("Can't convert a virtual address(%lx) to " \
+-			    "physical address.\n", vaddr);
+-			return NOT_PADDR;
+-		}
+-	} else if (vaddr >= __START_KERNEL_map) {
+-		paddr = vaddr - __START_KERNEL_map + phys_base;
+-
+-	} else {
+-		if (is_xen_memory())
+-			paddr = vaddr - PAGE_OFFSET_XEN_DOM0;
+-		else
+-			paddr = vaddr - PAGE_OFFSET;
+-	}
+-	return paddr;
+-}
+-
+ /*
+  * for Xen extraction
+  */
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 8a96da1f61bd..338c651388f0 100644
+index a5955ff750e5..13559651feb6 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -575,8 +575,6 @@ int get_va_bits_arm64(void);
- #define __START_KERNEL_map	(0xffffffff80000000)
- #define KERNEL_IMAGE_SIZE_ORIG		(0x0000000008000000) /* 2.6.25, or former */
- #define KERNEL_IMAGE_SIZE_2_6_26	(0x0000000020000000) /* 2.6.26, or later  */
--#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
--#define MODULES_END		(0xfffffffffff00000)
- #define KVBASE			PAGE_OFFSET
- #define _SECTION_SIZE_BITS	(27)
- #define _MAX_PHYSMEM_BITS_ORIG		(40)
+@@ -863,12 +863,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
+ int get_phys_base_x86_64(void);
+ int get_machdep_info_x86_64(void);
+ int get_versiondep_info_x86_64(void);
+-unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
++unsigned long long vtop4_x86_64(unsigned long vaddr);
+ #define find_vmemmap()		find_vmemmap_x86_64()
+ #define get_phys_base()		get_phys_base_x86_64()
+ #define get_machdep_info()	get_machdep_info_x86_64()
+ #define get_versiondep_info()	get_versiondep_info_x86_64()
+-#define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
++#define vaddr_to_paddr(X)	vtop4_x86_64(X)
+ #define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
+ #endif /* x86_64 */
+ 
 -- 
 2.7.4
 
