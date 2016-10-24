@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f177.google.com ([209.85.216.177])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byiRP-0003QP-PM
- for kexec@lists.infradead.org; Mon, 24 Oct 2016 16:49:46 +0000
-Received: by mail-qt0-f177.google.com with SMTP id f6so134384316qtd.2
- for <kexec@lists.infradead.org>; Mon, 24 Oct 2016 09:49:19 -0700 (PDT)
+Received: from mail-qk0-f173.google.com ([209.85.220.173])
+ by merlin.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1byiRc-0006MW-5G
+ for kexec@lists.infradead.org; Mon, 24 Oct 2016 16:49:53 +0000
+Received: by mail-qk0-f173.google.com with SMTP id x11so34945290qka.1
+ for <kexec@lists.infradead.org>; Mon, 24 Oct 2016 09:49:30 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH] temp
-Date: Mon, 24 Oct 2016 22:18:42 +0530
-Message-Id: <49c4e7da099ef77d419d540d0e56618c67926928.1476955959.git.panand@redhat.com>
+Subject: [PATCH Makedumpfile 3/4] x86_64: kill is_vmalloc_addr_x86_64()
+Date: Mon, 24 Oct 2016 22:18:45 +0530
+Message-Id: <81ec62b304f3a1e28e128e19d2744ffed2e4cf65.1477327674.git.panand@redhat.com>
+In-Reply-To: <cover.1477327674.git.panand@redhat.com>
+References: <cover.1477327674.git.panand@redhat.com>
 In-Reply-To: <cover.1477327674.git.panand@redhat.com>
 References: <cover.1477327674.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,60 +29,77 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
+From kernel documentation:
+ffffffff80000000 - ffffffff9fffffff (=512 MB)  kernel text mapping, from phys 0
+ffffffffa0000000 - ffffffffff5fffff (=1526 MB) module mapping space
+
+So, it is only the module area which is lying above __START_KERNEL_map.
+However, kexec-tools only creates PT_LOAD segments for kernel text region
+and crash memory region. So, we can safely remove the check for
+!is_vmalloc_addr_x86_64() from get_phys_base_x86_64().
+
+Since, this was the last usage of is_vmalloc_addr_x86_64(), so kill it as
+well.
+
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- arch/x86_64.c  | 10 ++++++++--
- makedumpfile.h |  4 ++--
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ arch/x86_64.c  | 14 +-------------
+ makedumpfile.h |  3 +--
+ 2 files changed, 2 insertions(+), 15 deletions(-)
 
 diff --git a/arch/x86_64.c b/arch/x86_64.c
-index ddf7be6bc57b..3a53b4fa03ed 100644
+index fe2764a8bec2..597cdac36dfc 100644
 --- a/arch/x86_64.c
 +++ b/arch/x86_64.c
-@@ -187,6 +187,12 @@ vtop4_x86_64(unsigned long vaddr)
- {
- 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
- 	unsigned long pte_paddr, pte;
-+	unsigned long phys_base;
-+
-+	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
-+		phys_base = info->phys_base;
-+	else
-+		phys_base = 0;
+@@ -21,17 +21,6 @@
+ extern struct vmap_pfns *gvmem_pfns;
+ extern int nr_gvmem_pfns;
  
- 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
- 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
-@@ -196,9 +202,9 @@ vtop4_x86_64(unsigned long vaddr)
- 	/*
- 	 * Get PGD.
- 	 */
--	page_dir  = SYMBOL(init_level4_pgt);
-+	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
- 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
--	if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
-+	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
- 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
- 		return NOT_PADDR;
- 	}
+-int
+-is_vmalloc_addr_x86_64(ulong vaddr)
+-{
+-	/*
+-	 *  vmalloc, virtual memmap, and module space as VMALLOC space.
+-	 */
+-	return ((vaddr >= VMALLOC_START && vaddr <= VMALLOC_END)
+-	    || (vaddr >= VMEMMAP_START && vaddr <= VMEMMAP_END)
+-	    || (vaddr >= MODULES_VADDR && vaddr <= MODULES_END));
+-}
+-
+ static unsigned long
+ get_xen_p2m_mfn(void)
+ {
+@@ -75,8 +64,7 @@ get_phys_base_x86_64(void)
+ 	info->phys_base = 0; /* default/traditional */
+ 
+ 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
+-		if ((virt_start >= __START_KERNEL_map) &&
+-		    !(is_vmalloc_addr_x86_64(virt_start))) {
++		if (virt_start >= __START_KERNEL_map) {
+ 
+ 			info->phys_base = phys_start -
+ 			    (virt_start & ~(__START_KERNEL_map));
 diff --git a/makedumpfile.h b/makedumpfile.h
-index f0154226bcb8..f64652e34901 100644
+index 13559651feb6..8a96da1f61bd 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -876,12 +876,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
+@@ -859,7 +859,6 @@ unsigned long long vaddr_to_paddr_x86(unsigned long vaddr);
+ #endif /* x86 */
+ 
+ #ifdef __x86_64__
+-int is_vmalloc_addr_x86_64(ulong vaddr);
  int get_phys_base_x86_64(void);
  int get_machdep_info_x86_64(void);
  int get_versiondep_info_x86_64(void);
--unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
-+unsigned long long vtop4_x86_64(unsigned long vaddr);
- #define find_vmemmap()		find_vmemmap_x86_64()
- #define get_phys_base()		get_phys_base_x86_64()
+@@ -869,7 +868,7 @@ unsigned long long vtop4_x86_64(unsigned long vaddr);
  #define get_machdep_info()	get_machdep_info_x86_64()
  #define get_versiondep_info()	get_versiondep_info_x86_64()
--#define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
-+#define vaddr_to_paddr(X)	vtop4_x86_64(X)
- #define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
+ #define vaddr_to_paddr(X)	vtop4_x86_64(X)
+-#define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
++#define is_phys_addr(X)		stub_true_ul(X)
  #endif /* x86_64 */
  
+ #ifdef __powerpc64__ /* powerpc64 */
 -- 
 2.7.4
 
