@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byo8A-00027E-7A
- for kexec@lists.infradead.org; Mon, 24 Oct 2016 22:54:11 +0000
-Subject: Re: kexec and arm64 advice
-References: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
+ id 1byoGI-0005Wr-CT
+ for kexec@lists.infradead.org; Mon, 24 Oct 2016 23:02:35 +0000
+Subject: Re: [PATCH v3 1/8] arm64: identify PHYS_OFFSET correctly
+References: <20160907043401.6403-1-takahiro.akashi@linaro.org>
+ <20160907043401.6403-2-takahiro.akashi@linaro.org>
+ <CAHB_GuqcaGxj48RNW_72Q6tMgoat7oRG0LKg0S7mJs8=_Ft8Lw@mail.gmail.com>
+ <20160928074806.GA5232@localhost>
 From: "Goel, Sameer" <sgoel@codeaurora.org>
-Message-ID: <16c384ed-0875-daa8-b52a-f03af764460b@codeaurora.org>
-Date: Mon, 24 Oct 2016 16:53:47 -0600
+Message-ID: <bae581c9-9a2b-6cca-75c4-3a5f8c215898@codeaurora.org>
+Date: Mon, 24 Oct 2016 17:02:11 -0600
 MIME-Version: 1.0
-In-Reply-To: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
+In-Reply-To: <20160928074806.GA5232@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,81 +25,130 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon T <smith.not.western@gmail.com>, kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Geoff Levand <geoff@infradead.org>, Kexec Mailing List <kexec@lists.infradead.org>
 
-It seems that the kexec_load syscall is not defined. Can you please 
-check the configs of your running kernel once again?
+We should look for the kernel code and get the physical offset by 
+rounding the address down to 2M. For ARM systems if memory is not 
+considered system ram then it is considered device memory. Even if a 
+region is not reserved the memory blocks would be sorted.
+
+In cases where the kernel code is not starting at offset 0, the kexec 
+command will not load the kernel at the same start address as the 
+running kernel. This brakes an implicit kexec assumption.
 
 Thanks,
 Sameer
 
-On 10/24/2016 8:42 AM, Simon T wrote:
-> Hi,
+On 9/28/2016 1:48 AM, AKASHI Takahiro wrote:
+> On Tue, Sep 27, 2016 at 09:19:51PM +0530, Pratyush Anand wrote:
+>> On Wed, Sep 7, 2016 at 10:03 AM, AKASHI Takahiro
+>> <takahiro.akashi@linaro.org> wrote:
+>>> Due to the kernel patch[1], the current code will not be able to identify
+>>
+>> [1] is mentioned in cover letter only, not here.
 >
-> I'm trying to get kexec working on a cross-compiled arm64/aarch64
-> system, using Linux kernel 4.4.23. I'm using kexec-tool's master
-> branch (commit e345e27417db00a9e754ca0ca14b2ec87d0552f7 from
-> https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git). I
-> initially tried using the patches for linux-kexec's kexec-13 branch
-> with manual massaging in some spots because kexec-13 is for 4.4.0 not
-> 4.4.23. Both tools and kernel appear to build fine, however when it
-> comes time to kexec, I encounter this message: "kexec_load failed:
-> Function not implemented"
+> Oops, thanks.
 >
-> Searching through the patches, I don't find any reference to kexec_load itself.
+>>> the correct value of PHYS_OFFSET if some "reserved" memory region, which
+>>> is likely to be UEFI runtime services code/data, exists at an address below
+>>> the first "System RAM" regions.
+>>>
+>>> This patch fixes this issue.
+>>>
+>>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>>> ---
+>>>  kexec/arch/arm64/iomem.h       |  7 +++++++
+>>>  kexec/arch/arm64/kexec-arm64.c | 22 +++++++++++++++++-----
+>>>  2 files changed, 24 insertions(+), 5 deletions(-)
+>>>  create mode 100644 kexec/arch/arm64/iomem.h
+>>>
+>>> diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+>>> new file mode 100644
+>>> index 0000000..7fd66eb
+>>> --- /dev/null
+>>> +++ b/kexec/arch/arm64/iomem.h
+>>> @@ -0,0 +1,7 @@
+>>> +#ifndef IOMEM_H
+>>> +#define IOMEM_H
+>>> +
+>>> +#define SYSTEM_RAM             "System RAM\n"
+>>> +#define IOMEM_RESERVED         "reserved\n"
+>>> +
+>>> +#endif
+>>> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+>>> index 7183dac..bc96c76 100644
+>>> --- a/kexec/arch/arm64/kexec-arm64.c
+>>> +++ b/kexec/arch/arm64/kexec-arm64.c
+>>> @@ -21,6 +21,7 @@
+>>>  #include "crashdump-arm64.h"
+>>>  #include "dt-ops.h"
+>>>  #include "fs2dt.h"
+>>> +#include "iomem.h"
+>>>  #include "kexec-syscall.h"
+>>>  #include "arch/options.h"
+>>>
+>>> @@ -465,18 +466,28 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+>>>   * get_memory_ranges_iomem_cb - Helper for get_memory_ranges_iomem.
+>>>   */
+>>>
+>>> +static int count_memory_ranges;
+>>
+>> IMHO improving definition of kexec_iomem_for_each_line() and
+>> callback() for handling NULL match case would have been a better
+>> choice than introducing a new static variable. callback() can return
+>> -ve in case of error, 0 in case of no match and 1 in case of (one)
+>> match.
 >
-> Should I be applying a different version of kexec-tools, or
-> linux-kexec patches, to my build? (I'm restricted to 4.4.23 as the
-> base kernel)
+> Maybe. But we have to be careful not to change other arch's results.
+> Or follow arm's approach.
 >
-> Is there a way post compile to check if the kexec_load function is
-> implemented, aside from actually deploying the image and calling
-> kexec? I've run strings against the Image but it doesn't give an exact
-> match for kexec_load (see below).
+> -Takahiro AKASHI
 >
-> Anything else I should be looking at?
->
-> # kexec -l /mnt/target/boot/vmlinux --initrd=/tmp/root.sfs
-> Modified cmdline:root=/dev/mmcblk0p2
-> Unable to find /proc/device-tree/chosen/[linux,]stdout-path, printing
-> from purgatory is disabled
-> kexec_load failed: Function not implemented
-> entry       = 0x8095f000 flags = 0xb70000
-> nr_segments = 4
-> segment[0].buf   = 0x7fa0f64010
-> segment[0].bufsz = 0x7fbc00
-> segment[0].mem   = 0x80080000
-> segment[0].memsz = 0x8d0000
-> segment[1].buf   = 0x20cc0830
-> segment[1].bufsz = 0xe515
-> segment[1].mem   = 0x80950000
-> segment[1].memsz = 0xf000
-> segment[2].buf   = 0x20ccf840
-> segment[2].bufsz = 0x6080
-> segment[2].mem   = 0x8095f000
-> segment[2].memsz = 0x7000
-> segment[3].buf   = 0x7f9e843010
-> segment[3].bufsz = 0x2720000
-> segment[3].mem   = 0xc0000000
-> segment[3].memsz = 0x2720000
->
-> (I've also tried kexec -l with boot/Image instead of boot/vmlinux)
->
-> $ grep -i kexec .config
-> CONFIG_KERNEL_KEXEC=y
-> CONFIG_PACKAGE_kexec-tools=y
-> CONFIG_KEXEC_TOOLS_TARGET_NAME="aarch64"
-> # CONFIG_KEXEC_TOOLS_kdump is not set
-> CONFIG_KEXEC_ZLIB=y
-> # CONFIG_KEXEC_LZMA is not set
->
-> $ strings <build_dir>/arch/arm64/boot/Image  | grep kexec_load
-> Wcompat_sys_kexec_load
-> Wsys_kexec_load
->
-> Thanks!
->
-> Simon
+>> ~Pratyush
+>>
+>>> +
+>>>  static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+>>>         unsigned long long base, unsigned long long length)
+>>>  {
+>>>         struct memory_range *r;
+>>>
+>>> -       if (nr >= KEXEC_SEGMENT_MAX)
+>>> +       if (count_memory_ranges >= KEXEC_SEGMENT_MAX)
+>>>                 return -1;
+>>>
+>>> -       r = (struct memory_range *)data + nr;
+>>> -       r->type = RANGE_RAM;
+>>> +       r = (struct memory_range *)data + count_memory_ranges;
+>>> +
+>>> +       if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
+>>> +               r->type = RANGE_RAM;
+>>> +       else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
+>>> +               r->type = RANGE_RESERVED;
+>>> +       else
+>>> +               return 0;
+>>> +
+>>>         r->start = base;
+>>>         r->end = base + length - 1;
+>>> +       count_memory_ranges++;
+>>>
+>>>         set_phys_offset(r->start);
+>>>
+>>> @@ -493,9 +504,10 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+>>>  static int get_memory_ranges_iomem(struct memory_range *array,
+>>>         unsigned int *count)
+>>>  {
+>>> -       *count = kexec_iomem_for_each_line("System RAM\n",
+>>> -               get_memory_ranges_iomem_cb, array);
+>>> +       count_memory_ranges = 0;
+>>> +       kexec_iomem_for_each_line(NULL, get_memory_ranges_iomem_cb, array);
+>>>
+>>> +       *count = count_memory_ranges;
+>>>         if (!*count) {
+>>>                 dbgprintf("%s: failed: No RAM found.\n", __func__);
+>>>                 return -EFAILED;
+>>> --
+>>> 2.9.0
+>>>
 >
 > _______________________________________________
 > kexec mailing list
