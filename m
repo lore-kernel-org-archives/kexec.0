@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f44.google.com ([209.85.218.44])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byiTC-0006EN-S5
- for kexec@lists.infradead.org; Mon, 24 Oct 2016 16:51:44 +0000
-Received: by mail-oi0-f44.google.com with SMTP id d132so48020065oib.2
- for <kexec@lists.infradead.org>; Mon, 24 Oct 2016 09:51:09 -0700 (PDT)
+ id 1byo8A-00027E-7A
+ for kexec@lists.infradead.org; Mon, 24 Oct 2016 22:54:11 +0000
+Subject: Re: kexec and arm64 advice
+References: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <16c384ed-0875-daa8-b52a-f03af764460b@codeaurora.org>
+Date: Mon, 24 Oct 2016 16:53:47 -0600
 MIME-Version: 1.0
-In-Reply-To: <49c4e7da099ef77d419d540d0e56618c67926928.1476955959.git.panand@redhat.com>
-References: <cover.1477327674.git.panand@redhat.com>
- <49c4e7da099ef77d419d540d0e56618c67926928.1476955959.git.panand@redhat.com>
-From: Pratyush Anand <panand@redhat.com>
-Date: Mon, 24 Oct 2016 22:21:07 +0530
-Message-ID: <CAHB_GuofYgSLpTJap38xn3eACrb9SfLL_Z9k6OgYnrq+c7tanA@mail.gmail.com>
-Subject: Re: [PATCH] temp
+In-Reply-To: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,78 +18,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Pratyush Anand <panand@redhat.com>, Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Baoquan He <bhe@redhat.com>
+To: Simon T <smith.not.western@gmail.com>, kexec@lists.infradead.org
 
-Ohhh..Please ignore this patch. This temporary changes were lying in
-my directory and went away.
+It seems that the kexec_load syscall is not defined. Can you please 
+check the configs of your running kernel once again?
 
-Sorry for this noise.
+Thanks,
+Sameer
 
-~Pratyush
+On 10/24/2016 8:42 AM, Simon T wrote:
+> Hi,
+>
+> I'm trying to get kexec working on a cross-compiled arm64/aarch64
+> system, using Linux kernel 4.4.23. I'm using kexec-tool's master
+> branch (commit e345e27417db00a9e754ca0ca14b2ec87d0552f7 from
+> https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git). I
+> initially tried using the patches for linux-kexec's kexec-13 branch
+> with manual massaging in some spots because kexec-13 is for 4.4.0 not
+> 4.4.23. Both tools and kernel appear to build fine, however when it
+> comes time to kexec, I encounter this message: "kexec_load failed:
+> Function not implemented"
+>
+> Searching through the patches, I don't find any reference to kexec_load itself.
+>
+> Should I be applying a different version of kexec-tools, or
+> linux-kexec patches, to my build? (I'm restricted to 4.4.23 as the
+> base kernel)
+>
+> Is there a way post compile to check if the kexec_load function is
+> implemented, aside from actually deploying the image and calling
+> kexec? I've run strings against the Image but it doesn't give an exact
+> match for kexec_load (see below).
+>
+> Anything else I should be looking at?
+>
+> # kexec -l /mnt/target/boot/vmlinux --initrd=/tmp/root.sfs
+> Modified cmdline:root=/dev/mmcblk0p2
+> Unable to find /proc/device-tree/chosen/[linux,]stdout-path, printing
+> from purgatory is disabled
+> kexec_load failed: Function not implemented
+> entry       = 0x8095f000 flags = 0xb70000
+> nr_segments = 4
+> segment[0].buf   = 0x7fa0f64010
+> segment[0].bufsz = 0x7fbc00
+> segment[0].mem   = 0x80080000
+> segment[0].memsz = 0x8d0000
+> segment[1].buf   = 0x20cc0830
+> segment[1].bufsz = 0xe515
+> segment[1].mem   = 0x80950000
+> segment[1].memsz = 0xf000
+> segment[2].buf   = 0x20ccf840
+> segment[2].bufsz = 0x6080
+> segment[2].mem   = 0x8095f000
+> segment[2].memsz = 0x7000
+> segment[3].buf   = 0x7f9e843010
+> segment[3].bufsz = 0x2720000
+> segment[3].mem   = 0xc0000000
+> segment[3].memsz = 0x2720000
+>
+> (I've also tried kexec -l with boot/Image instead of boot/vmlinux)
+>
+> $ grep -i kexec .config
+> CONFIG_KERNEL_KEXEC=y
+> CONFIG_PACKAGE_kexec-tools=y
+> CONFIG_KEXEC_TOOLS_TARGET_NAME="aarch64"
+> # CONFIG_KEXEC_TOOLS_kdump is not set
+> CONFIG_KEXEC_ZLIB=y
+> # CONFIG_KEXEC_LZMA is not set
+>
+> $ strings <build_dir>/arch/arm64/boot/Image  | grep kexec_load
+> Wcompat_sys_kexec_load
+> Wsys_kexec_load
+>
+> Thanks!
+>
+> Simon
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-On Mon, Oct 24, 2016 at 10:18 PM, Pratyush Anand <panand@redhat.com> wrote:
-> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> ---
->  arch/x86_64.c  | 10 ++++++++--
->  makedumpfile.h |  4 ++--
->  2 files changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86_64.c b/arch/x86_64.c
-> index ddf7be6bc57b..3a53b4fa03ed 100644
-> --- a/arch/x86_64.c
-> +++ b/arch/x86_64.c
-> @@ -187,6 +187,12 @@ vtop4_x86_64(unsigned long vaddr)
->  {
->         unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
->         unsigned long pte_paddr, pte;
-> +       unsigned long phys_base;
-> +
-> +       if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
-> +               phys_base = info->phys_base;
-> +       else
-> +               phys_base = 0;
->
->         if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
->                 ERRMSG("Can't get the symbol of init_level4_pgt.\n");
-> @@ -196,9 +202,9 @@ vtop4_x86_64(unsigned long vaddr)
->         /*
->          * Get PGD.
->          */
-> -       page_dir  = SYMBOL(init_level4_pgt);
-> +       page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
->         page_dir += pml4_index(vaddr) * sizeof(unsigned long);
-> -       if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
-> +       if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
->                 ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
->                 return NOT_PADDR;
->         }
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index f0154226bcb8..f64652e34901 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -876,12 +876,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
->  int get_phys_base_x86_64(void);
->  int get_machdep_info_x86_64(void);
->  int get_versiondep_info_x86_64(void);
-> -unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
-> +unsigned long long vtop4_x86_64(unsigned long vaddr);
->  #define find_vmemmap()         find_vmemmap_x86_64()
->  #define get_phys_base()                get_phys_base_x86_64()
->  #define get_machdep_info()     get_machdep_info_x86_64()
->  #define get_versiondep_info()  get_versiondep_info_x86_64()
-> -#define vaddr_to_paddr(X)      vaddr_to_paddr_x86_64(X)
-> +#define vaddr_to_paddr(X)      vtop4_x86_64(X)
->  #define is_phys_addr(X)                (!is_vmalloc_addr_x86_64(X))
->  #endif /* x86_64 */
->
-> --
-> 2.7.4
->
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
