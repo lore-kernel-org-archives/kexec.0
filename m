@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm0-x22e.google.com ([2a00:1450:400c:c09::22e])
+Received: from mail-oi0-f51.google.com ([209.85.218.51])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byxrI-0007Y3-HE
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 09:17:27 +0000
-Received: by mail-wm0-x22e.google.com with SMTP id c78so151130435wme.0
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 02:17:03 -0700 (PDT)
+ id 1byxum-0001Ld-9z
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 09:21:04 +0000
+Received: by mail-oi0-f51.google.com with SMTP id t73so87589872oie.1
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 02:20:40 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <0a183cab-17a4-614c-122e-462a4fc08bd5@canonical.com>
+References: <cover.1477327674.git.panand@redhat.com>
+ <0a183cab-17a4-614c-122e-462a4fc08bd5@canonical.com>
+From: Pratyush Anand <panand@redhat.com>
+Date: Tue, 25 Oct 2016 14:50:38 +0530
+Message-ID: <CAHB_GupmKc-JyG2XBFHqeRBy1HbdCzbY3U2GD76Fyh_fREhpyA@mail.gmail.com>
 Subject: Re: [PATCH Makedumpfile 0/4] x86_64: Fix page_offset for randomized
  base enabled
-References: <cover.1477327674.git.panand@redhat.com>
-From: Louis Bouchard <louis.bouchard@canonical.com>
-Message-ID: <0a183cab-17a4-614c-122e-462a4fc08bd5@canonical.com>
-Date: Tue, 25 Oct 2016 11:17:00 +0200
-MIME-Version: 1.0
-In-Reply-To: <cover.1477327674.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,36 +26,34 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>, ats-kumagai@wm.jp.nec.com
-Cc: kexec@lists.infradead.org, dyoung@redhat.com, bhe@redhat.com
+To: Louis Bouchard <louis.bouchard@canonical.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
 
-SGVsbG8sCgpMZSAyNC8xMC8yMDE2IMOgIDE4OjQ4LCBQcmF0eXVzaCBBbmFuZCBhIMOpY3JpdCA6
-Cj4gUGF0Y2ggMS80IGZpeGVzIHBhZ2Vfb2Zmc2V0IGNhbGN1bGF0aW9uLCBzbyB0aGF0IGl0IGlz
-IGNvcnJlY3RseSBjYWxjdWxhdGVkCj4gb24gS0FTTFIgZW5hYmxlZCBrZXJuZWwgYXMgd2VsbC4K
-PiBQYXRjaCAyLzQgc2ltcGxpZmllcyBWQSB0byBQQSB0cmFuc2xhdGlvbi4gTmV3IGNvZGUgaGFz
-IGJlZW4gYmVuY2htYXJrZWQKPiBhZ2FpbnN0IG9sZCBjb2RlIG9uIGEgNFQgc3lzdGVtLgo+IFBh
-dGNoIDMvNCBhbmQgNC80IGlzIHJlbW92YWwgb2YgKG5vdykgdW5uZWNlc3NhcnkgY29kZS4KPiAK
-PiBJIHRoaW5rLCB3ZSBzaG91bGQgZmluZCBhIHdheSB0byBraWxsIGZpbmRfdmVtZW1tYXAoKSBh
-cyB3ZWxsLCBzbyB0aGF0Cj4gVk1FTU1BUF9TVEFSVCBjYW4gYmUgcmVtb3ZlZC4gSSBoYXZlIHZl
-cnkgbGltaXRlZCBpZGVhIGFib3V0IHg4Niwgc28gdW5hYmxlCj4gdG8gZG8gdGhhdCBhcyBvZiBu
-b3cuCj4gCj4gUHJhdHl1c2ggQW5hbmQgKDQpOgo+ICAgeDg2XzY0OiBDYWxjdWxhdGUgcGFnZV9v
-ZmZzZXQgZnJvbSBwdF9sb2FkCj4gICB4ODZfNjQ6IHRyYW5zbGF0ZSBhbGwgVkEgdG8gUEEgdXNp
-bmcgcGFnZSB0YWJsZSB2YWx1ZXMKPiAgIHg4Nl82NDoga2lsbCBpc192bWFsbG9jX2FkZHJfeDg2
-XzY0KCkKPiAgIHg4Nl82NDoga2lsbCBzb21lIHVudXNlZCBpbml0aWFsaXphdGlvbgo+IAo+ICBh
-cmNoL3g4Nl82NC5jICB8IDg0ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgbWFrZWR1bXBmaWxlLmggfCAgOSArKystLS0tCj4gIDIg
-ZmlsZXMgY2hhbmdlZCwgMzIgaW5zZXJ0aW9ucygrKSwgNjEgZGVsZXRpb25zKC0pCj4gCgpDcm9z
-cy1wb3N0aW5nIGJ1dCBGWUksIHRoaXMgcGF0Y2ggZml4ZXMgdGhlIGlzc3VlIHJlcG9ydGVkIGlu
-IHRoZSBmb2xsb3dpbmcKdGhyZWFkIDogbWFrZWR1bXBmaWxlIGlzc3VlcyBtYW55IHJlYWRwYWdl
-X2VsZjogQXR0ZW1wdCB0byByZWFkIG5vbi1leGlzdGVudCBwYWdlWzFdCgpJdCBjb3JyZXNwb25k
-cyB0byB0aGUgY29tbWl0IGlkZW50aWZpZWQgYnkgbXkga2VybmVsIGJpc2VjdGlvbi4KCkkgd2ls
-bCB3YWl0IHVudGlsIGl0IGlzIGFjY2VwdGVkIGluIEt1bWFnYWktc2FuJ3MgdHJlZSB0byBpbmNs
-dWRlIGl0IGluCkRlYmlhbi9VYnVudHUuCgpLaW5kIHJlZ2FyZHMsCgouLi5Mb3VpcwoKWzFdIGh0
-dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20va2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZy9tc2cx
-NjQzNC5odG1sCi0tIApMb3VpcyBCb3VjaGFyZApTb2Z0d2FyZSBlbmdpbmVlciwgQ2xvdWQgJiBT
-dXN0YWluaW5nIGVuZy4KQ2Fub25pY2FsIEx0ZApVYnVudHUgZGV2ZWxvcGVyICAgICAgICAgICAg
-ICAgICAgICAgICBEZWJpYW4gTWFpbnRhaW5lcgpHUEcgOiA0MjlEIDdBM0IgREQwNSBCNkY4IEFG
-NjMgIEI5QzQgOEIzRCA4NjdDIDgyM0UgN0E2MQoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+SGkgTG91aXMsCgpPbiBUdWUsIE9jdCAyNSwgMjAxNiBhdCAyOjQ3IFBNLCBMb3VpcyBCb3VjaGFy
+ZAo8bG91aXMuYm91Y2hhcmRAY2Fub25pY2FsLmNvbT4gd3JvdGU6Cj4gSGVsbG8sCj4KPiBMZSAy
+NC8xMC8yMDE2IMOgIDE4OjQ4LCBQcmF0eXVzaCBBbmFuZCBhIMOpY3JpdCA6Cj4+IFBhdGNoIDEv
+NCBmaXhlcyBwYWdlX29mZnNldCBjYWxjdWxhdGlvbiwgc28gdGhhdCBpdCBpcyBjb3JyZWN0bHkg
+Y2FsY3VsYXRlZAo+PiBvbiBLQVNMUiBlbmFibGVkIGtlcm5lbCBhcyB3ZWxsLgo+PiBQYXRjaCAy
+LzQgc2ltcGxpZmllcyBWQSB0byBQQSB0cmFuc2xhdGlvbi4gTmV3IGNvZGUgaGFzIGJlZW4gYmVu
+Y2htYXJrZWQKPj4gYWdhaW5zdCBvbGQgY29kZSBvbiBhIDRUIHN5c3RlbS4KPj4gUGF0Y2ggMy80
+IGFuZCA0LzQgaXMgcmVtb3ZhbCBvZiAobm93KSB1bm5lY2Vzc2FyeSBjb2RlLgo+Pgo+PiBJIHRo
+aW5rLCB3ZSBzaG91bGQgZmluZCBhIHdheSB0byBraWxsIGZpbmRfdmVtZW1tYXAoKSBhcyB3ZWxs
+LCBzbyB0aGF0Cj4+IFZNRU1NQVBfU1RBUlQgY2FuIGJlIHJlbW92ZWQuIEkgaGF2ZSB2ZXJ5IGxp
+bWl0ZWQgaWRlYSBhYm91dCB4ODYsIHNvIHVuYWJsZQo+PiB0byBkbyB0aGF0IGFzIG9mIG5vdy4K
+Pj4KPj4gUHJhdHl1c2ggQW5hbmQgKDQpOgo+PiAgIHg4Nl82NDogQ2FsY3VsYXRlIHBhZ2Vfb2Zm
+c2V0IGZyb20gcHRfbG9hZAo+PiAgIHg4Nl82NDogdHJhbnNsYXRlIGFsbCBWQSB0byBQQSB1c2lu
+ZyBwYWdlIHRhYmxlIHZhbHVlcwo+PiAgIHg4Nl82NDoga2lsbCBpc192bWFsbG9jX2FkZHJfeDg2
+XzY0KCkKPj4gICB4ODZfNjQ6IGtpbGwgc29tZSB1bnVzZWQgaW5pdGlhbGl6YXRpb24KPj4KPj4g
+IGFyY2gveDg2XzY0LmMgIHwgODQgKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgbWFrZWR1bXBmaWxlLmggfCAgOSArKystLS0tCj4+
+ICAyIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDYxIGRlbGV0aW9ucygtKQo+Pgo+
+Cj4gQ3Jvc3MtcG9zdGluZyBidXQgRllJLCB0aGlzIHBhdGNoIGZpeGVzIHRoZSBpc3N1ZSByZXBv
+cnRlZCBpbiB0aGUgZm9sbG93aW5nCj4gdGhyZWFkIDogbWFrZWR1bXBmaWxlIGlzc3VlcyBtYW55
+IHJlYWRwYWdlX2VsZjogQXR0ZW1wdCB0byByZWFkIG5vbi1leGlzdGVudCBwYWdlWzFdCj4KPiBJ
+dCBjb3JyZXNwb25kcyB0byB0aGUgY29tbWl0IGlkZW50aWZpZWQgYnkgbXkga2VybmVsIGJpc2Vj
+dGlvbi4KPgo+IEkgd2lsbCB3YWl0IHVudGlsIGl0IGlzIGFjY2VwdGVkIGluIEt1bWFnYWktc2Fu
+J3MgdHJlZSB0byBpbmNsdWRlIGl0IGluCj4gRGViaWFuL1VidW50dS4KClRoYW5rcyBhIGxvdCBm
+b3IgeW91ciB0ZXN0aW5nLgoKflByYXR5dXNoCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
