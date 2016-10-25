@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f180.google.com ([209.85.220.180])
+Received: from mail-oi0-x236.google.com ([2607:f8b0:4003:c06::236])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byz4e-00084t-Eg
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 10:35:17 +0000
-Received: by mail-qk0-f180.google.com with SMTP id d23so5401012qke.7
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 03:34:56 -0700 (PDT)
-Subject: Re: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
-References: <cover.1477378297.git.panand@redhat.com>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <ebbc4d83-2b62-80a0-b729-20e04b230d47@redhat.com>
-Date: Tue, 25 Oct 2016 16:04:50 +0530
+ id 1bz0Oq-0004o3-1y
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 12:00:16 +0000
+Received: by mail-oi0-x236.google.com with SMTP id m72so93363674oik.3
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 04:59:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <cover.1477378297.git.panand@redhat.com>
+In-Reply-To: <16c384ed-0875-daa8-b52a-f03af764460b@codeaurora.org>
+References: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
+ <16c384ed-0875-daa8-b52a-f03af764460b@codeaurora.org>
+From: Simon T <smith.not.western@gmail.com>
+Date: Tue, 25 Oct 2016 12:59:49 +0100
+Message-ID: <CAKYm0coPOhCWQ=yKs6WCzMs=nZ3eTq3V_8Y52CLRc3OmUbHLeQ@mail.gmail.com>
+Subject: Re: kexec and arm64 advice
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,50 +21,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: sgoel@codeaurora.org
-Cc: ats-kumagai@wm.jp.nec.com, asamson@codeaurora.org, kexec@lists.infradead.org, mansip@codeaurora.org
+To: "Goel, Sameer" <sgoel@codeaurora.org>
+Cc: kexec@lists.infradead.org
 
 Hi Sameer,
 
-Although you had already tested my tree on your platform in past. 
-However, it would be nice if you can test these posted versions of 
-patches just for sanity and provide your tested-by.
+The running kernel and the kernel I am trying to kexec into are the
+same -- for testing purposes I'm just trying to kexec into a second
+copy of the same kernel I'm running. The .config file has kexec
+defined:
 
-~Pratyush
+$ grep -i kexec .config
+CONFIG_KERNEL_KEXEC=y
+CONFIG_PACKAGE_kexec-tools=y
+CONFIG_KEXEC_TOOLS_TARGET_NAME="aarch64"
+# CONFIG_KEXEC_TOOLS_kdump is not set
+CONFIG_KEXEC_ZLIB=y
+# CONFIG_KEXEC_LZMA is not set
 
-On Tuesday 25 October 2016 12:52 PM, Pratyush Anand wrote:
-> These patches were lying in my tree for quite some time now. VMCOREINFO
-> numbers/symbols used in these patches have been made part of kdump kernel
-> patches for last few versions including v26. So, there seems no contention
-> on embedding VA_BITS, kimage_voffset and PHYS_OFFSET into vmcore.
+Is there another way to verify if the kernel actually built with the
+kexec_load syscall or not?
+
+Thanks,
+
+Simon
+
+On Mon, Oct 24, 2016 at 11:53 PM, Goel, Sameer <sgoel@codeaurora.org> wrote:
+> It seems that the kexec_load syscall is not defined. Can you please check
+> the configs of your running kernel once again?
 >
-> These patches cleans up a lot arm64 code and also immunize it with many
-> kernel changes. Additionally,it adds 4 level 4K page support and support for
-> KASLR enabled kernel.
+> Thanks,
+> Sameer
 >
-> Azriel Samson (1):
->   arm64: Add support for 4level 4K page translations table
 >
-> Pratyush Anand (9):
->   arm64: cleanup code, comment, blank space, blank lines etc
->   read_vmcoreinfo_long: Allow to read hex values as well
->   Introduce read_vmcoreinfo_ulong()
->   arm64: use already available PAGESIZE() and PAGESHIFT() macros
->   arm64: fix page_offset definition
->   arm64: fix re-filtering
->   arm64: use value of VA_BITS and PHYS_OFFSET embedded into vmcore
->   arm64: immunize identity mapped address finding w.r.t. kernel changes
->   arm64: fix memory layout as per changes in v4.6 kernel
+> On 10/24/2016 8:42 AM, Simon T wrote:
+>>
+>> Hi,
+>>
+>> I'm trying to get kexec working on a cross-compiled arm64/aarch64
+>> system, using Linux kernel 4.4.23. I'm using kexec-tool's master
+>> branch (commit e345e27417db00a9e754ca0ca14b2ec87d0552f7 from
+>> https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git). I
+>> initially tried using the patches for linux-kexec's kexec-13 branch
+>> with manual massaging in some spots because kexec-13 is for 4.4.0 not
+>> 4.4.23. Both tools and kernel appear to build fine, however when it
+>> comes time to kexec, I encounter this message: "kexec_load failed:
+>> Function not implemented"
+>>
+>> Searching through the patches, I don't find any reference to kexec_load
+>> itself.
+>>
+>> Should I be applying a different version of kexec-tools, or
+>> linux-kexec patches, to my build? (I'm restricted to 4.4.23 as the
+>> base kernel)
+>>
+>> Is there a way post compile to check if the kexec_load function is
+>> implemented, aside from actually deploying the image and calling
+>> kexec? I've run strings against the Image but it doesn't give an exact
+>> match for kexec_load (see below).
+>>
+>> Anything else I should be looking at?
+>>
+>> # kexec -l /mnt/target/boot/vmlinux --initrd=/tmp/root.sfs
+>> Modified cmdline:root=/dev/mmcblk0p2
+>> Unable to find /proc/device-tree/chosen/[linux,]stdout-path, printing
+>> from purgatory is disabled
+>> kexec_load failed: Function not implemented
+>> entry       = 0x8095f000 flags = 0xb70000
+>> nr_segments = 4
+>> segment[0].buf   = 0x7fa0f64010
+>> segment[0].bufsz = 0x7fbc00
+>> segment[0].mem   = 0x80080000
+>> segment[0].memsz = 0x8d0000
+>> segment[1].buf   = 0x20cc0830
+>> segment[1].bufsz = 0xe515
+>> segment[1].mem   = 0x80950000
+>> segment[1].memsz = 0xf000
+>> segment[2].buf   = 0x20ccf840
+>> segment[2].bufsz = 0x6080
+>> segment[2].mem   = 0x8095f000
+>> segment[2].memsz = 0x7000
+>> segment[3].buf   = 0x7f9e843010
+>> segment[3].bufsz = 0x2720000
+>> segment[3].mem   = 0xc0000000
+>> segment[3].memsz = 0x2720000
+>>
+>> (I've also tried kexec -l with boot/Image instead of boot/vmlinux)
+>>
+>> $ grep -i kexec .config
+>> CONFIG_KERNEL_KEXEC=y
+>> CONFIG_PACKAGE_kexec-tools=y
+>> CONFIG_KEXEC_TOOLS_TARGET_NAME="aarch64"
+>> # CONFIG_KEXEC_TOOLS_kdump is not set
+>> CONFIG_KEXEC_ZLIB=y
+>> # CONFIG_KEXEC_LZMA is not set
+>>
+>> $ strings <build_dir>/arch/arm64/boot/Image  | grep kexec_load
+>> Wcompat_sys_kexec_load
+>> Wsys_kexec_load
+>>
+>> Thanks!
+>>
+>> Simon
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
 >
->  arch/arm64.c   | 245 ++++++++++++++++++++++-----------------------------------
->  makedumpfile.c |  46 +++++++++++
->  makedumpfile.h |  28 +++++--
->  3 files changed, 162 insertions(+), 157 deletions(-)
->
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
