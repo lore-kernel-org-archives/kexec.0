@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+Received: from mail-qk0-f180.google.com ([209.85.220.180])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byyGE-00056b-0W
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 09:43:14 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: makedumpfile issues many readpage_elf: Attempt to read
- non-existent page
-Date: Tue, 25 Oct 2016 09:19:40 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E7A2F3@BPXM01GP.gisp.nec.co.jp>
-References: <57E3DCDB.5020308@canonical.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E6B42E@BPXM01GP.gisp.nec.co.jp>
- <57ED187D.3040007@canonical.com>
- <CAL0thcP2Pp43nWLJ_jfwDQnW4RNRpP27fpymQ8pPtORPaeX8nQ@mail.gmail.com>
- <161d0e6f-5b1c-dfa9-aa28-5393e2a86d1d@canonical.com>
-In-Reply-To: <161d0e6f-5b1c-dfa9-aa28-5393e2a86d1d@canonical.com>
-Content-Language: ja-JP
+ id 1byz4e-00084t-Eg
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 10:35:17 +0000
+Received: by mail-qk0-f180.google.com with SMTP id d23so5401012qke.7
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 03:34:56 -0700 (PDT)
+Subject: Re: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
+References: <cover.1477378297.git.panand@redhat.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <ebbc4d83-2b62-80a0-b729-20e04b230d47@redhat.com>
+Date: Tue, 25 Oct 2016 16:04:50 +0530
 MIME-Version: 1.0
+In-Reply-To: <cover.1477378297.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,105 +20,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Louis Bouchard <louis.bouchard@canonical.com>
-Cc: "panand@redhat.com" <panand@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: sgoel@codeaurora.org
+Cc: ats-kumagai@wm.jp.nec.com, asamson@codeaurora.org, kexec@lists.infradead.org, mansip@codeaurora.org
 
-Hello,
+Hi Sameer,
 
->> I have now completed the kernel bisection between 4.7.8 and 4.8-rc1 and
->> identified the kernel modification that triggers the errors cited above :
->>
->>> commit 021182e52fe01c1f7b126f97fd6ba048dc4234fd
->>> Author: Thomas Garnier <thgarnie@google.com>
->>> Date:   Tue Jun 21 17:47:03 2016 -0700
->>>
->>>     x86/mm: Enable KASLR for physical mapping memory regions
->>>
->>>     Add the physical mapping in the list of randomized memory regions.
->>>
->>>     The physical memory mapping holds most allocations from boot and heap
->>>     allocators. Knowing the base address and physical memory size, an attacker
->>>     can deduce the PDE virtual address for the vDSO memory page. This attack
->>>     was demonstrated at CanSecWest 2016, in the following presentation:
->>>
->>>       "Getting Physical: Extreme Abuse of Intel Based Paged Systems":
->>>
->https://github.com/n3k/CansecWest2016_Getting_Physical_Extreme_Abuse_of_Intel_Based_Paging_Systems/blob/master/Prese
->ntation/CanSec2016_Presentation.pdf
->>>
->>>     (See second part of the presentation).
->>>
->>>     The exploits used against Linux worked successfully against 4.6+ but
->>>     fail with KASLR memory enabled:
->>>
->>>
->https://github.com/n3k/CansecWest2016_Getting_Physical_Extreme_Abuse_of_Intel_Based_Paging_Systems/tree/master/Demos
->/Linux/exploits
->>>
->>>     Similar research was done at Google leading to this patch proposal.
->>>
->>>     Variants exists to overwrite /proc or /sys objects ACLs leading to
->>>     elevation of privileges. These variants were tested against 4.6+.
->>>
->>>     The page offset used by the compressed kernel retains the static value
->>>     since it is not yet randomized during this boot stage.
->>>
->>>     Signed-off-by: Thomas Garnier <thgarnie@google.com>
->>>     Signed-off-by: Kees Cook <keescook@chromium.org>
->>>     Cc: Alexander Kuleshov <kuleshovmail@gmail.com>
->> <truncated>
->>
->> The interesting change seems to be :
->>
->>> -#define __PAGE_OFFSET           _AC(0xffff880000000000, UL)
->>> +#define __PAGE_OFFSET_BASE      _AC(0xffff880000000000, UL)
->>> +#ifdef CONFIG_RANDOMIZE_MEMORY
->>> +#define __PAGE_OFFSET           page_offset_base
->>> +#else
->>> +#define __PAGE_OFFSET           __PAGE_OFFSET_BASE
->>> +#endif /* CONFIG_RANDOMIZE_MEMORY */
->>
->> I'll try to see if I can fix that.
->>
->> Kind regards,
->>
->> ...Louis
->>
->>
->>
->>
+Although you had already tested my tree on your platform in past. 
+However, it would be nice if you can test these posted versions of 
+patches just for sanity and provide your tested-by.
+
+~Pratyush
+
+On Tuesday 25 October 2016 12:52 PM, Pratyush Anand wrote:
+> These patches were lying in my tree for quite some time now. VMCOREINFO
+> numbers/symbols used in these patches have been made part of kdump kernel
+> patches for last few versions including v26. So, there seems no contention
+> on embedding VA_BITS, kimage_voffset and PHYS_OFFSET into vmcore.
 >
->Some more *important* information in this mostly monologue thread : Pratyush
->Anand has pushed a patch to the list earlier today that apparently fixes this
->issue :
+> These patches cleans up a lot arm64 code and also immunize it with many
+> kernel changes. Additionally,it adds 4 level 4K page support and support for
+> KASLR enabled kernel.
 >
->[PATCH Makedumpfile 1/4] x86_64: Calculate page_offset from pt_load[1]
+> Azriel Samson (1):
+>   arm64: Add support for 4level 4K page translations table
 >
->HTH,
+> Pratyush Anand (9):
+>   arm64: cleanup code, comment, blank space, blank lines etc
+>   read_vmcoreinfo_long: Allow to read hex values as well
+>   Introduce read_vmcoreinfo_ulong()
+>   arm64: use already available PAGESIZE() and PAGESHIFT() macros
+>   arm64: fix page_offset definition
+>   arm64: fix re-filtering
+>   arm64: use value of VA_BITS and PHYS_OFFSET embedded into vmcore
+>   arm64: immunize identity mapped address finding w.r.t. kernel changes
+>   arm64: fix memory layout as per changes in v4.6 kernel
 >
->Kind regards,
-
-Yeah, It appears so. I'm reviewing the patches,
-please wait for that.
-I appreciate your investigation for this issue.
-
-
-Thanks,
-Atsushi Kumagai
-
->...Louis
+>  arch/arm64.c   | 245 ++++++++++++++++++++++-----------------------------------
+>  makedumpfile.c |  46 +++++++++++
+>  makedumpfile.h |  28 +++++--
+>  3 files changed, 162 insertions(+), 157 deletions(-)
 >
->[1] https://www.mail-archive.com/kexec@lists.infradead.org/msg16628.html
->--
->Louis Bouchard
->Software engineer, Cloud & Sustaining eng.
->Canonical Ltd
->Ubuntu developer                       Debian Maintainer
->GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
