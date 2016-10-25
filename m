@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byyGC-00055F-En
+ id 1byyGE-00056b-0W
  for kexec@lists.infradead.org; Tue, 25 Oct 2016 09:43:14 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using
- page table values
-Date: Tue, 25 Oct 2016 09:20:28 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1477327674.git.panand@redhat.com>
- <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
-In-Reply-To: <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
+Subject: RE: makedumpfile issues many readpage_elf: Attempt to read
+ non-existent page
+Date: Tue, 25 Oct 2016 09:19:40 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E7A2F3@BPXM01GP.gisp.nec.co.jp>
+References: <57E3DCDB.5020308@canonical.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E6B42E@BPXM01GP.gisp.nec.co.jp>
+ <57ED187D.3040007@canonical.com>
+ <CAL0thcP2Pp43nWLJ_jfwDQnW4RNRpP27fpymQ8pPtORPaeX8nQ@mail.gmail.com>
+ <161d0e6f-5b1c-dfa9-aa28-5393e2a86d1d@canonical.com>
+In-Reply-To: <161d0e6f-5b1c-dfa9-aa28-5393e2a86d1d@canonical.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -25,163 +28,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
+To: Louis Bouchard <louis.bouchard@canonical.com>
+Cc: "panand@redhat.com" <panand@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hello Pratysh,
+Hello,
 
->Currently we translate some of the VA areas using linear mapping while some
->other(which can not be linearly mapped) using page table.
+>> I have now completed the kernel bisection between 4.7.8 and 4.8-rc1 and
+>> identified the kernel modification that triggers the errors cited above :
+>>
+>>> commit 021182e52fe01c1f7b126f97fd6ba048dc4234fd
+>>> Author: Thomas Garnier <thgarnie@google.com>
+>>> Date:   Tue Jun 21 17:47:03 2016 -0700
+>>>
+>>>     x86/mm: Enable KASLR for physical mapping memory regions
+>>>
+>>>     Add the physical mapping in the list of randomized memory regions.
+>>>
+>>>     The physical memory mapping holds most allocations from boot and heap
+>>>     allocators. Knowing the base address and physical memory size, an attacker
+>>>     can deduce the PDE virtual address for the vDSO memory page. This attack
+>>>     was demonstrated at CanSecWest 2016, in the following presentation:
+>>>
+>>>       "Getting Physical: Extreme Abuse of Intel Based Paged Systems":
+>>>
+>https://github.com/n3k/CansecWest2016_Getting_Physical_Extreme_Abuse_of_Intel_Based_Paging_Systems/blob/master/Prese
+>ntation/CanSec2016_Presentation.pdf
+>>>
+>>>     (See second part of the presentation).
+>>>
+>>>     The exploits used against Linux worked successfully against 4.6+ but
+>>>     fail with KASLR memory enabled:
+>>>
+>>>
+>https://github.com/n3k/CansecWest2016_Getting_Physical_Extreme_Abuse_of_Intel_Based_Paging_Systems/tree/master/Demos
+>/Linux/exploits
+>>>
+>>>     Similar research was done at Google leading to this patch proposal.
+>>>
+>>>     Variants exists to overwrite /proc or /sys objects ACLs leading to
+>>>     elevation of privileges. These variants were tested against 4.6+.
+>>>
+>>>     The page offset used by the compressed kernel retains the static value
+>>>     since it is not yet randomized during this boot stage.
+>>>
+>>>     Signed-off-by: Thomas Garnier <thgarnie@google.com>
+>>>     Signed-off-by: Kees Cook <keescook@chromium.org>
+>>>     Cc: Alexander Kuleshov <kuleshovmail@gmail.com>
+>> <truncated>
+>>
+>> The interesting change seems to be :
+>>
+>>> -#define __PAGE_OFFSET           _AC(0xffff880000000000, UL)
+>>> +#define __PAGE_OFFSET_BASE      _AC(0xffff880000000000, UL)
+>>> +#ifdef CONFIG_RANDOMIZE_MEMORY
+>>> +#define __PAGE_OFFSET           page_offset_base
+>>> +#else
+>>> +#define __PAGE_OFFSET           __PAGE_OFFSET_BASE
+>>> +#endif /* CONFIG_RANDOMIZE_MEMORY */
+>>
+>> I'll try to see if I can fix that.
+>>
+>> Kind regards,
+>>
+>> ...Louis
+>>
+>>
+>>
+>>
 >
->However, we will have entry of a page in the page table irrespective of its
->virtual region. So, we can always look into page table for any VA to PA
->translation. This approach will solve lot of complexity in makedumpfile. It
->will in turn remove dependency over variables like VMALLOC_START,
->MODULES_VADDR etc whose definition keeps changing in newer kernel version.
+>Some more *important* information in this mostly monologue thread : Pratyush
+>Anand has pushed a patch to the list earlier today that apparently fixes this
+>issue :
 >
->Moreover, I do not see any side effect of this approach in terms of
->execution timing. I tested with IBM x3950 X6 machine having 4136359 MB of
->memory. These are the results of makedumpfile execution time:
+>[PATCH Makedumpfile 1/4] x86_64: Calculate page_offset from pt_load[1]
 >
->Without this patch:
->===================
->With -d 31:
->Trial 1: 237.59526248 S
->Trial 2: 235.236914962 S
->Trail 3: 237.678712045 S
+>HTH,
 >
->With -d 1:
->Trial 1: 2548.905296877 S
->Trial 2: 2549.759881756 S
->
->With this patch:
->===================
->With -d 31:
->Trial 1: 232.713841516 S
->Trial 2: 228.45697177 S
->Trail 3: 232.942262441 S
->
->With -d 1:
->Trial 1: 2768.424565806 S
->Trial 2: 2749.622115455 S
->Trail 3: 2537.770359073 S
+>Kind regards,
 
-Could you increase the number of trials ?
-If the average time is close to the results of Trial 1 (2768s) and 2 (2749s),
-the regression rate is 8% and it sounds neither large nor small.
-If the average is a level of 2500s like Trial 3, it's ideal.
-
->Signed-off-by: Pratyush Anand <panand@redhat.com>
->---
-> arch/x86_64.c  | 42 ++++++++----------------------------------
-> makedumpfile.h |  4 ++--
-> 2 files changed, 10 insertions(+), 36 deletions(-)
->
->diff --git a/arch/x86_64.c b/arch/x86_64.c
->index a96fd8ae00a1..fe2764a8bec2 100644
->--- a/arch/x86_64.c
->+++ b/arch/x86_64.c
->@@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
-> {
-> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
-> 	unsigned long pte_paddr, pte;
->+	unsigned long phys_base;
->+
->+	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
->+		phys_base = info->phys_base;
->+	else
->+		phys_base = 0;
->
-> 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
-> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
->@@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
-> 	/*
-> 	 * Get PGD.
-> 	 */
->-	page_dir  = SYMBOL(init_level4_pgt);
->+	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
-
-I want to confirm that this VA to PA translation is always safe,
-otherwise we should do the condition check which was done in
-vaddr_to_paddr_x86_64(), isn't it ?
+Yeah, It appears so. I'm reviewing the patches,
+please wait for that.
+I appreciate your investigation for this issue.
 
 
 Thanks,
 Atsushi Kumagai
 
-> 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
->-	if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
->+	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
-> 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
-> 		return NOT_PADDR;
-> 	}
->@@ -285,38 +291,6 @@ vtop4_x86_64(unsigned long vaddr)
-> 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
-> }
+>...Louis
 >
->-unsigned long long
->-vaddr_to_paddr_x86_64(unsigned long vaddr)
->-{
->-	unsigned long phys_base;
->-	unsigned long long paddr;
->-
->-	/*
->-	 * Check the relocatable kernel.
->-	 */
->-	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
->-		phys_base = info->phys_base;
->-	else
->-		phys_base = 0;
->-
->-	if (is_vmalloc_addr_x86_64(vaddr)) {
->-		if ((paddr = vtop4_x86_64(vaddr)) == NOT_PADDR) {
->-			ERRMSG("Can't convert a virtual address(%lx) to " \
->-			    "physical address.\n", vaddr);
->-			return NOT_PADDR;
->-		}
->-	} else if (vaddr >= __START_KERNEL_map) {
->-		paddr = vaddr - __START_KERNEL_map + phys_base;
->-
->-	} else {
->-		if (is_xen_memory())
->-			paddr = vaddr - PAGE_OFFSET_XEN_DOM0;
->-		else
->-			paddr = vaddr - PAGE_OFFSET;
->-	}
->-	return paddr;
->-}
->-
-> /*
->  * for Xen extraction
->  */
->diff --git a/makedumpfile.h b/makedumpfile.h
->index a5955ff750e5..13559651feb6 100644
->--- a/makedumpfile.h
->+++ b/makedumpfile.h
->@@ -863,12 +863,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
-> int get_phys_base_x86_64(void);
-> int get_machdep_info_x86_64(void);
-> int get_versiondep_info_x86_64(void);
->-unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
->+unsigned long long vtop4_x86_64(unsigned long vaddr);
-> #define find_vmemmap()		find_vmemmap_x86_64()
-> #define get_phys_base()		get_phys_base_x86_64()
-> #define get_machdep_info()	get_machdep_info_x86_64()
-> #define get_versiondep_info()	get_versiondep_info_x86_64()
->-#define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
->+#define vaddr_to_paddr(X)	vtop4_x86_64(X)
-> #define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
-> #endif /* x86_64 */
->
+>[1] https://www.mail-archive.com/kexec@lists.infradead.org/msg16628.html
 >--
->2.7.4
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
-
+>Louis Bouchard
+>Software engineer, Cloud & Sustaining eng.
+>Canonical Ltd
+>Ubuntu developer                       Debian Maintainer
+>GPG : 429D 7A3B DD05 B6F8 AF63  B9C4 8B3D 867C 823E 7A61
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
