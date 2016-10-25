@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f51.google.com ([209.85.218.51])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byxum-0001Ld-9z
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 09:21:04 +0000
-Received: by mail-oi0-f51.google.com with SMTP id t73so87589872oie.1
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 02:20:40 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <0a183cab-17a4-614c-122e-462a4fc08bd5@canonical.com>
+ id 1byyGC-00055F-En
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 09:43:14 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using
+ page table values
+Date: Tue, 25 Oct 2016 09:20:28 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
 References: <cover.1477327674.git.panand@redhat.com>
- <0a183cab-17a4-614c-122e-462a4fc08bd5@canonical.com>
-From: Pratyush Anand <panand@redhat.com>
-Date: Tue, 25 Oct 2016 14:50:38 +0530
-Message-ID: <CAHB_GupmKc-JyG2XBFHqeRBy1HbdCzbY3U2GD76Fyh_fREhpyA@mail.gmail.com>
-Subject: Re: [PATCH Makedumpfile 0/4] x86_64: Fix page_offset for randomized
- base enabled
+ <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
+In-Reply-To: <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,38 +21,168 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Louis Bouchard <louis.bouchard@canonical.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
 
-SGkgTG91aXMsCgpPbiBUdWUsIE9jdCAyNSwgMjAxNiBhdCAyOjQ3IFBNLCBMb3VpcyBCb3VjaGFy
-ZAo8bG91aXMuYm91Y2hhcmRAY2Fub25pY2FsLmNvbT4gd3JvdGU6Cj4gSGVsbG8sCj4KPiBMZSAy
-NC8xMC8yMDE2IMOgIDE4OjQ4LCBQcmF0eXVzaCBBbmFuZCBhIMOpY3JpdCA6Cj4+IFBhdGNoIDEv
-NCBmaXhlcyBwYWdlX29mZnNldCBjYWxjdWxhdGlvbiwgc28gdGhhdCBpdCBpcyBjb3JyZWN0bHkg
-Y2FsY3VsYXRlZAo+PiBvbiBLQVNMUiBlbmFibGVkIGtlcm5lbCBhcyB3ZWxsLgo+PiBQYXRjaCAy
-LzQgc2ltcGxpZmllcyBWQSB0byBQQSB0cmFuc2xhdGlvbi4gTmV3IGNvZGUgaGFzIGJlZW4gYmVu
-Y2htYXJrZWQKPj4gYWdhaW5zdCBvbGQgY29kZSBvbiBhIDRUIHN5c3RlbS4KPj4gUGF0Y2ggMy80
-IGFuZCA0LzQgaXMgcmVtb3ZhbCBvZiAobm93KSB1bm5lY2Vzc2FyeSBjb2RlLgo+Pgo+PiBJIHRo
-aW5rLCB3ZSBzaG91bGQgZmluZCBhIHdheSB0byBraWxsIGZpbmRfdmVtZW1tYXAoKSBhcyB3ZWxs
-LCBzbyB0aGF0Cj4+IFZNRU1NQVBfU1RBUlQgY2FuIGJlIHJlbW92ZWQuIEkgaGF2ZSB2ZXJ5IGxp
-bWl0ZWQgaWRlYSBhYm91dCB4ODYsIHNvIHVuYWJsZQo+PiB0byBkbyB0aGF0IGFzIG9mIG5vdy4K
-Pj4KPj4gUHJhdHl1c2ggQW5hbmQgKDQpOgo+PiAgIHg4Nl82NDogQ2FsY3VsYXRlIHBhZ2Vfb2Zm
-c2V0IGZyb20gcHRfbG9hZAo+PiAgIHg4Nl82NDogdHJhbnNsYXRlIGFsbCBWQSB0byBQQSB1c2lu
-ZyBwYWdlIHRhYmxlIHZhbHVlcwo+PiAgIHg4Nl82NDoga2lsbCBpc192bWFsbG9jX2FkZHJfeDg2
-XzY0KCkKPj4gICB4ODZfNjQ6IGtpbGwgc29tZSB1bnVzZWQgaW5pdGlhbGl6YXRpb24KPj4KPj4g
-IGFyY2gveDg2XzY0LmMgIHwgODQgKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgbWFrZWR1bXBmaWxlLmggfCAgOSArKystLS0tCj4+
-ICAyIGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDYxIGRlbGV0aW9ucygtKQo+Pgo+
-Cj4gQ3Jvc3MtcG9zdGluZyBidXQgRllJLCB0aGlzIHBhdGNoIGZpeGVzIHRoZSBpc3N1ZSByZXBv
-cnRlZCBpbiB0aGUgZm9sbG93aW5nCj4gdGhyZWFkIDogbWFrZWR1bXBmaWxlIGlzc3VlcyBtYW55
-IHJlYWRwYWdlX2VsZjogQXR0ZW1wdCB0byByZWFkIG5vbi1leGlzdGVudCBwYWdlWzFdCj4KPiBJ
-dCBjb3JyZXNwb25kcyB0byB0aGUgY29tbWl0IGlkZW50aWZpZWQgYnkgbXkga2VybmVsIGJpc2Vj
-dGlvbi4KPgo+IEkgd2lsbCB3YWl0IHVudGlsIGl0IGlzIGFjY2VwdGVkIGluIEt1bWFnYWktc2Fu
-J3MgdHJlZSB0byBpbmNsdWRlIGl0IGluCj4gRGViaWFuL1VidW50dS4KClRoYW5rcyBhIGxvdCBm
-b3IgeW91ciB0ZXN0aW5nLgoKflByYXR5dXNoCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+Hello Pratysh,
+
+>Currently we translate some of the VA areas using linear mapping while some
+>other(which can not be linearly mapped) using page table.
+>
+>However, we will have entry of a page in the page table irrespective of its
+>virtual region. So, we can always look into page table for any VA to PA
+>translation. This approach will solve lot of complexity in makedumpfile. It
+>will in turn remove dependency over variables like VMALLOC_START,
+>MODULES_VADDR etc whose definition keeps changing in newer kernel version.
+>
+>Moreover, I do not see any side effect of this approach in terms of
+>execution timing. I tested with IBM x3950 X6 machine having 4136359 MB of
+>memory. These are the results of makedumpfile execution time:
+>
+>Without this patch:
+>===================
+>With -d 31:
+>Trial 1: 237.59526248 S
+>Trial 2: 235.236914962 S
+>Trail 3: 237.678712045 S
+>
+>With -d 1:
+>Trial 1: 2548.905296877 S
+>Trial 2: 2549.759881756 S
+>
+>With this patch:
+>===================
+>With -d 31:
+>Trial 1: 232.713841516 S
+>Trial 2: 228.45697177 S
+>Trail 3: 232.942262441 S
+>
+>With -d 1:
+>Trial 1: 2768.424565806 S
+>Trial 2: 2749.622115455 S
+>Trail 3: 2537.770359073 S
+
+Could you increase the number of trials ?
+If the average time is close to the results of Trial 1 (2768s) and 2 (2749s),
+the regression rate is 8% and it sounds neither large nor small.
+If the average is a level of 2500s like Trial 3, it's ideal.
+
+>Signed-off-by: Pratyush Anand <panand@redhat.com>
+>---
+> arch/x86_64.c  | 42 ++++++++----------------------------------
+> makedumpfile.h |  4 ++--
+> 2 files changed, 10 insertions(+), 36 deletions(-)
+>
+>diff --git a/arch/x86_64.c b/arch/x86_64.c
+>index a96fd8ae00a1..fe2764a8bec2 100644
+>--- a/arch/x86_64.c
+>+++ b/arch/x86_64.c
+>@@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
+> {
+> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+> 	unsigned long pte_paddr, pte;
+>+	unsigned long phys_base;
+>+
+>+	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>+		phys_base = info->phys_base;
+>+	else
+>+		phys_base = 0;
+>
+> 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+>@@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
+> 	/*
+> 	 * Get PGD.
+> 	 */
+>-	page_dir  = SYMBOL(init_level4_pgt);
+>+	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
+
+I want to confirm that this VA to PA translation is always safe,
+otherwise we should do the condition check which was done in
+vaddr_to_paddr_x86_64(), isn't it ?
+
+
+Thanks,
+Atsushi Kumagai
+
+> 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
+>-	if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
+>+	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
+> 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
+> 		return NOT_PADDR;
+> 	}
+>@@ -285,38 +291,6 @@ vtop4_x86_64(unsigned long vaddr)
+> 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
+> }
+>
+>-unsigned long long
+>-vaddr_to_paddr_x86_64(unsigned long vaddr)
+>-{
+>-	unsigned long phys_base;
+>-	unsigned long long paddr;
+>-
+>-	/*
+>-	 * Check the relocatable kernel.
+>-	 */
+>-	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>-		phys_base = info->phys_base;
+>-	else
+>-		phys_base = 0;
+>-
+>-	if (is_vmalloc_addr_x86_64(vaddr)) {
+>-		if ((paddr = vtop4_x86_64(vaddr)) == NOT_PADDR) {
+>-			ERRMSG("Can't convert a virtual address(%lx) to " \
+>-			    "physical address.\n", vaddr);
+>-			return NOT_PADDR;
+>-		}
+>-	} else if (vaddr >= __START_KERNEL_map) {
+>-		paddr = vaddr - __START_KERNEL_map + phys_base;
+>-
+>-	} else {
+>-		if (is_xen_memory())
+>-			paddr = vaddr - PAGE_OFFSET_XEN_DOM0;
+>-		else
+>-			paddr = vaddr - PAGE_OFFSET;
+>-	}
+>-	return paddr;
+>-}
+>-
+> /*
+>  * for Xen extraction
+>  */
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index a5955ff750e5..13559651feb6 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -863,12 +863,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
+> int get_phys_base_x86_64(void);
+> int get_machdep_info_x86_64(void);
+> int get_versiondep_info_x86_64(void);
+>-unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
+>+unsigned long long vtop4_x86_64(unsigned long vaddr);
+> #define find_vmemmap()		find_vmemmap_x86_64()
+> #define get_phys_base()		get_phys_base_x86_64()
+> #define get_machdep_info()	get_machdep_info_x86_64()
+> #define get_versiondep_info()	get_versiondep_info_x86_64()
+>-#define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
+>+#define vaddr_to_paddr(X)	vtop4_x86_64(X)
+> #define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
+> #endif /* x86_64 */
+>
+>--
+>2.7.4
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
