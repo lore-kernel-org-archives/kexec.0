@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f171.google.com ([209.85.220.171])
+Received: from mail-qk0-f178.google.com ([209.85.220.178])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byw5l-0000is-Gm
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 07:24:17 +0000
-Received: by mail-qk0-f171.google.com with SMTP id n189so254689412qke.0
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 00:23:52 -0700 (PDT)
+ id 1byw5p-0000m9-Ba
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 07:24:21 +0000
+Received: by mail-qk0-f178.google.com with SMTP id n189so254690088qke.0
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 00:23:56 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH Makedumpfile 09/10] arm64: Add support for 4level 4K page
- translations table
-Date: Tue, 25 Oct 2016 12:53:01 +0530
-Message-Id: <4f49772bb95a91fb42f962769fd96d07e1eb57ef.1477378297.git.panand@redhat.com>
+Subject: [PATCH Makedumpfile 10/10] arm64: fix memory layout as per changes in
+ v4.6 kernel
+Date: Tue, 25 Oct 2016 12:53:02 +0530
+Message-Id: <ea2b61be816105c177f31f60c473cf0be4720bfb.1477378297.git.panand@redhat.com>
 In-Reply-To: <cover.1477378297.git.panand@redhat.com>
 References: <cover.1477378297.git.panand@redhat.com>
 In-Reply-To: <cover.1477378297.git.panand@redhat.com>
@@ -30,81 +30,106 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, sgoel@codeaurora.org, mansip@codeaurora.org, asamson@codeaurora.org, kexec@lists.infradead.org
 
-From: Azriel Samson <asamson@codeaurora.org>
+arm64 memory layout has been changed since 4.6 kernel because of KASLR
+support patches.
 
-Add PUD translation for 4 level page tables.
+kimage_voffset is needed to calculate "virtual to physical".
 
-Signed-off-by: Mansi Patel <mansip@codeaurora.org>
-Signed-off-by: Azriel Samson <asamson@codeaurora.org>
-Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- arch/arm64.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ arch/arm64.c   | 16 ++++++++++++++--
+ makedumpfile.c |  2 ++
+ makedumpfile.h |  1 +
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64.c b/arch/arm64.c
-index da8f43c62380..df58e92536e2 100644
+index df58e92536e2..958f57f8e203 100644
 --- a/arch/arm64.c
 +++ b/arch/arm64.c
-@@ -54,7 +54,9 @@ static int va_bits;
- #define PAGE_MASK		(~(PAGESIZE() - 1))
- #define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
- #define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
-+#define PUD_SHIFT		get_pud_shift_arm64()
- #define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
-+#define PTRS_PER_PUD		PTRS_PER_PTE
- #define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
- #define PMD_SIZE		(1UL << PMD_SHIFT)
- #define PMD_MASK		(~(PMD_SIZE - 1))
-@@ -89,6 +91,18 @@ static int va_bits;
- #define pmd_offset_pgtbl_lvl_2(pud, vaddr) ((pmd_t *)pud)
- #define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_paddr((*pud)) + pmd_index(vaddr))
+@@ -41,10 +41,12 @@ typedef struct {
  
-+#define pud_index(vaddr)		(((vaddr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-+#define pgd_page_paddr(pgd)		(pgd_val(pgd) & PHYS_MASK & (int32_t)PAGE_MASK)
-+
-+static int
-+get_pud_shift_arm64(void)
+ static int pgtable_level;
+ static int va_bits;
++static unsigned long kimage_voffset;
+ 
+ #define SZ_4K			(4 * 1024)
+ #define SZ_16K			(16 * 1024)
+ #define SZ_64K			(64 * 1024)
++#define SZ_128M			(128 * 1024 * 1024)
+ 
+ #define pgd_val(x)		((x).pgd)
+ #define pud_val(x)		(pgd_val((x).pgd))
+@@ -77,8 +79,6 @@ static int va_bits;
+ #define PMD_TYPE_SECT		1
+ #define PMD_TYPE_TABLE		3
+ 
+-#define __pa(vaddr) 			((vaddr) - PAGE_OFFSET + info->phys_base)
+-
+ #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+ #define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
+ 
+@@ -94,6 +94,16 @@ static int va_bits;
+ #define pud_index(vaddr)		(((vaddr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+ #define pgd_page_paddr(pgd)		(pgd_val(pgd) & PHYS_MASK & (int32_t)PAGE_MASK)
+ 
++static unsigned long long
++__pa(unsigned long vaddr)
 +{
-+	if (pgtable_level == 4)
-+		return ((PAGESHIFT() - 3) * 3 + 3);
++	if (kimage_voffset == NOT_FOUND_NUMBER ||
++			(vaddr >= PAGE_OFFSET))
++		return (vaddr - PAGE_OFFSET + info->phys_base);
 +	else
-+		return PGDIR_SHIFT;
++		return (vaddr - kimage_voffset);
 +}
 +
- static pmd_t *
- pmd_offset(pud_t *puda, pud_t *pudv, unsigned long vaddr)
+ static int
+ get_pud_shift_arm64(void)
  {
-@@ -99,6 +113,15 @@ pmd_offset(pud_t *puda, pud_t *pudv, unsigned long vaddr)
- 	}
- }
- 
-+static pud_t *
-+pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
-+{
-+	if (pgtable_level == 4)
-+		return ((pud_t *)pgd_page_paddr((*pgdv)) + pud_index(vaddr));
-+	else
-+		return (pud_t *)(pgda);
-+}
-+
- static int calculate_plat_config(void)
- {
- 	va_bits = NUMBER(VA_BITS);
-@@ -212,8 +235,11 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
- 		return NOT_PADDR;
+@@ -169,10 +179,12 @@ get_machdep_info_arm64(void)
+ 		return FALSE;
  	}
  
--	pudv.pgd = pgdv;
--	puda = (pud_t *)pgda;
-+	puda = pud_offset(pgda, &pgdv, vaddr);
-+	if (!readmem(PADDR, (unsigned long long)puda, &pudv, sizeof(pudv))) {
-+		ERRMSG("Can't read pud\n");
-+		return NOT_PADDR;
-+	}
++	kimage_voffset = NUMBER(kimage_voffset);
+ 	info->max_physmem_bits = PHYS_MASK_SHIFT;
+ 	info->section_size_bits = SECTIONS_SIZE_BITS;
+ 	info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
  
- 	pmda = pmd_offset(puda, &pudv, vaddr);
- 	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
++	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
+ 	DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
+ 	DEBUG_MSG("section_size_bits: %lx\n", info->section_size_bits);
+ 	DEBUG_MSG("page_offset      : %lx\n", info->page_offset);
+diff --git a/makedumpfile.c b/makedumpfile.c
+index df413f066348..1fa9a63359c4 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2266,6 +2266,7 @@ write_vmcoreinfo_data(void)
+ #ifdef __aarch64__
+ 	WRITE_NUMBER("VA_BITS", VA_BITS);
+ 	WRITE_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
++	WRITE_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
+ #endif
+ 
+ 	/*
+@@ -2652,6 +2653,7 @@ read_vmcoreinfo(void)
+ #ifdef __aarch64__
+ 	READ_NUMBER("VA_BITS", VA_BITS);
+ 	READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
++	READ_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
+ #endif
+ 
+ 	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 8ddc2c43cc29..f0154226bcb8 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1737,6 +1737,7 @@ struct number_table {
+ #ifdef __aarch64__
+ 	long 	VA_BITS;
+ 	unsigned long	PHYS_OFFSET;
++	unsigned long	kimage_voffset;
+ #endif
+ };
+ 
 -- 
 2.7.4
 
