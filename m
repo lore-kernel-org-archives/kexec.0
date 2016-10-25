@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bz6Wd-0007OX-UM
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 18:32:41 +0000
-Message-ID: <580FA530.6040905@redhat.com>
-Date: Tue, 25 Oct 2016 14:32:16 -0400
-From: Prarit Bhargava <prarit@redhat.com>
+ id 1bzB8v-000794-5H
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 23:28:29 +0000
+Date: Wed, 26 Oct 2016 07:28:04 +0800
+From: "bhe@redhat.com" <bhe@redhat.com>
+Subject: Re: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using
+ page table values
+Message-ID: <20161025232804.GB2975@x1>
+References: <cover.1477327674.git.panand@redhat.com>
+ <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
+ <f29a272d-8b82-d0d7-a2f2-c4af6474fff6@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] arch/x86: Don't try to poke disabled/non-existent APIC
-References: <1477102684-5092-1-git-send-email-ville.syrjala@linux.intel.com>
-In-Reply-To: <1477102684-5092-1-git-send-email-ville.syrjala@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <f29a272d-8b82-d0d7-a2f2-c4af6474fff6@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,56 +23,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ville.syrjala@linux.intel.com, linux-kernel@vger.kernel.org
-Cc: Juergen Gross <jgross@suse.com>, Len Brown <len.brown@intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, dyoung@redhat.com, x86@kernel.org, kexec@lists.infradead.org, stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Jiri Olsa <jolsa@redhat.com>
+To: Pratyush Anand <panand@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "dyoung@redhat.com" <dyoung@redhat.com>
 
-CgpPbiAxMC8yMS8yMDE2IDEwOjE4IFBNLCB2aWxsZS5zeXJqYWxhQGxpbnV4LmludGVsLmNvbSB3
-cm90ZToKPiBGcm9tOiBWaWxsZSBTeXJqw6Rsw6QgPHZpbGxlLnN5cmphbGFAbGludXguaW50ZWwu
-Y29tPgo+IAo+IEFwcGFyZW50bHkgdHJ5aW5nIHRvIHBva2UgYSBkaXNhYmxlZCBvciBub24tZXhp
-c3RlbnQgQVBJQwo+IGxlYWRzIHRvIGEgYm94IHRoYXQgZG9lc24ndCBldmVuIGJvb3QuIExldCdz
-IG5vdCBkbyB0aGF0Lgo+IAo+IE5vIHJlYWwgY2x1ZSBpZiB0aGlzIGlzIHRoZSByaWdodCBmaXgs
-IGJ1dCBhdCBsZWFzdCBteQo+IFAzIG1hY2hpbmUgYm9vdHMgYWdhaW4uCj4gCj4gQ2M6IHN0YWJs
-ZUB2Z2VyLmtlcm5lbC5vcmcKPiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+Cj4g
-Q2M6ICJILiBQZXRlciBBbnZpbiIgPGhwYUB6eXRvci5jb20+Cj4gQ2M6IHg4NkBrZXJuZWwub3Jn
-Cj4gQ2M6IFByYXJpdCBCaGFyZ2F2YSA8cHJhcml0QHJlZGhhdC5jb20+Cj4gQ2M6IFBldGVyIFpp
-amxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4KPiBDYzogTGVuIEJyb3duIDxsZW4uYnJvd25A
-aW50ZWwuY29tPgo+IENjOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQHN1c2UuZGU+Cj4gQ2M6IEFuZGkg
-S2xlZW4gPGFrQGxpbnV4LmludGVsLmNvbT4KPiBDYzogSmlyaSBPbHNhIDxqb2xzYUByZWRoYXQu
-Y29tPgo+IENjOiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+Cj4gQ2M6IGR5b3VuZ0By
-ZWRoYXQuY29tCj4gQ2M6IEVyaWMgQmllZGVybWFuIDxlYmllZGVybUB4bWlzc2lvbi5jb20+Cj4g
-Q2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBDYzogVGhvbWFzIEdsZWl4bmVyIDx0Z2x4
-QGxpbnV0cm9uaXguZGU+Cj4gRml4ZXM6IDJhNTFmZTA4M2ViYSAoImFyY2gveDg2OiBIYW5kbGUg
-bm9uIGVudW1lcmF0ZWQgQ1BVIGFmdGVyIHBoeXNpY2FsIGhvdHBsdWciKQo+IFNpZ25lZC1vZmYt
-Ynk6IFZpbGxlIFN5cmrDpGzDpCA8dmlsbGUuc3lyamFsYUBsaW51eC5pbnRlbC5jb20+Cj4gLS0t
-Cj4gIGFyY2gveDg2L2tlcm5lbC9zbXBib290LmMgfCAxNiArKysrKysrKystLS0tLS0tCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
-LWdpdCBhL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMgYi9hcmNoL3g4Ni9rZXJuZWwvc21wYm9v
-dC5jCj4gaW5kZXggOTUxZjA5M2E5NmZlLi40MmY1ZWI3YjRmNmMgMTAwNjQ0Cj4gLS0tIGEvYXJj
-aC94ODYva2VybmVsL3NtcGJvb3QuYwo+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMK
-PiBAQCAtMTQwOSwxNSArMTQwOSwxNyBAQCBfX2luaXQgdm9pZCBwcmVmaWxsX3Bvc3NpYmxlX21h
-cCh2b2lkKQo+ICAKPiAgCS8qIE5vIGJvb3QgcHJvY2Vzc29yIHdhcyBmb3VuZCBpbiBtcHRhYmxl
-IG9yIEFDUEkgTUFEVCAqLwo+ICAJaWYgKCFudW1fcHJvY2Vzc29ycykgewo+IC0JCWludCBhcGlj
-aWQgPSBib290X2NwdV9waHlzaWNhbF9hcGljaWQ7Cj4gLQkJaW50IGNwdSA9IGhhcmRfc21wX3By
-b2Nlc3Nvcl9pZCgpOwo+ICsJCWlmIChib290X2NwdV9oYXMoWDg2X0ZFQVRVUkVfQVBJQykpIHsK
-CgpJdCBsb29rcyBva2F5IHRvIGdhdGUgb24gWDg2X0ZFQVRVUkVfQVBJQywgYnV0IG5vdCBzdXJl
-IGlmIGl0IHNob3VsZCBiZQoKICAgICBjcHVfaGFzKCZjcHVfZGF0YSgwKSwgWDg2X0ZFQVRVUkVf
-QVBJQykKCnNpbmNlIHNtcF9zdG9yZV9ib290X2NwdV9pbmZvKCkgd2FzIGFscmVhZHkgY2FsbGVk
-LgoKdGdseD8KClAuCgoKCgo+ICsJCQlpbnQgYXBpY2lkID0gYm9vdF9jcHVfcGh5c2ljYWxfYXBp
-Y2lkOwo+ICsJCQlpbnQgY3B1ID0gaGFyZF9zbXBfcHJvY2Vzc29yX2lkKCk7Cj4gIAo+IC0JCXBy
-X3dhcm4oIkJvb3QgQ1BVIChpZCAlZCkgbm90IGxpc3RlZCBieSBCSU9TXG4iLCBjcHUpOwo+ICsJ
-CQlwcl93YXJuKCJCb290IENQVSAoaWQgJWQpIG5vdCBsaXN0ZWQgYnkgQklPU1xuIiwgY3B1KTsK
-PiAgCj4gLQkJLyogTWFrZSBzdXJlIGJvb3QgY3B1IGlzIGVudW1lcmF0ZWQgKi8KPiAtCQlpZiAo
-YXBpYy0+Y3B1X3ByZXNlbnRfdG9fYXBpY2lkKDApID09IEJBRF9BUElDSUQgJiYKPiAtCQkgICAg
-YXBpYy0+YXBpY19pZF92YWxpZChhcGljaWQpKQo+IC0JCQlnZW5lcmljX3Byb2Nlc3Nvcl9pbmZv
-KGFwaWNpZCwgYm9vdF9jcHVfYXBpY192ZXJzaW9uKTsKPiArCQkJLyogTWFrZSBzdXJlIGJvb3Qg
-Y3B1IGlzIGVudW1lcmF0ZWQgKi8KPiArCQkJaWYgKGFwaWMtPmNwdV9wcmVzZW50X3RvX2FwaWNp
-ZCgwKSA9PSBCQURfQVBJQ0lEICYmCj4gKwkJCSAgICBhcGljLT5hcGljX2lkX3ZhbGlkKGFwaWNp
-ZCkpCj4gKwkJCQlnZW5lcmljX3Byb2Nlc3Nvcl9pbmZvKGFwaWNpZCwgYm9vdF9jcHVfYXBpY192
-ZXJzaW9uKTsKPiArCQl9Cj4gIAo+ICAJCWlmICghbnVtX3Byb2Nlc3NvcnMpCj4gIAkJCW51bV9w
-cm9jZXNzb3JzID0gMTsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 10/25/16 at 08:42pm, Pratyush Anand wrote:
+> > > With -d 1:
+> > > Trial 1: 2768.424565806 S
+> > > Trial 2: 2749.622115455 S
+> > > Trail 3: 2537.770359073 S
+> > 
+> > Could you increase the number of trials ?
+> 
+> OK, I can do that. Might take some time, as I will have to arrange that high
+> memory machine again.
+> 
+> > If the average time is close to the results of Trial 1 (2768s) and 2 (2749s),
+> > the regression rate is 8% and it sounds neither large nor small.
+> > If the average is a level of 2500s like Trial 3, it's ideal.
+> > 
+> > > Signed-off-by: Pratyush Anand <panand@redhat.com>
+> > > ---
+> > > arch/x86_64.c  | 42 ++++++++----------------------------------
+> > > makedumpfile.h |  4 ++--
+> > > 2 files changed, 10 insertions(+), 36 deletions(-)
+> > > 
+> > > diff --git a/arch/x86_64.c b/arch/x86_64.c
+> > > index a96fd8ae00a1..fe2764a8bec2 100644
+> > > --- a/arch/x86_64.c
+> > > +++ b/arch/x86_64.c
+> > > @@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
+> > > {
+> > > 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+> > > 	unsigned long pte_paddr, pte;
+> > > +	unsigned long phys_base;
+> > > +
+> > > +	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+> > > +		phys_base = info->phys_base;
+> > > +	else
+> > > +		phys_base = 0;
+> > > 
+> > > 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+> > > 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+> > > @@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
+> > > 	/*
+> > > 	 * Get PGD.
+> > > 	 */
+> > > -	page_dir  = SYMBOL(init_level4_pgt);
+> > > +	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
+> > 
+> > I want to confirm that this VA to PA translation is always safe,
+> > otherwise we should do the condition check which was done in
+> > vaddr_to_paddr_x86_64(), isn't it ?
+> > 
+> 
+> I think this should be safe, however x86 expert can comment better. Baoquan
+> any comment here?
+
+Yes, I think this is safe. Below is the physical to virtual address
+translation function in x86 64. And init_level4_pgt is a global variable
+located in kernel text region. 
+
+arch/x86/include/asm/page_64.h
+
+static inline unsigned long __phys_addr_nodebug(unsigned long x)
+{
+        unsigned long y = x - __START_KERNEL_map;
+ 
+        /* use the carry flag to determine if x was < __START_KERNEL_map */
+        x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
+ 
+        return x;
+}
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
