@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f178.google.com ([209.85.216.178])
+Received: from mail-qk0-f182.google.com ([209.85.220.182])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1byw5d-0000ez-Ku
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 07:24:12 +0000
-Received: by mail-qt0-f178.google.com with SMTP id 23so7255856qtp.5
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 00:23:45 -0700 (PDT)
+ id 1byw5h-0000gq-HN
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 07:24:15 +0000
+Received: by mail-qk0-f182.google.com with SMTP id z190so253968384qkc.2
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 00:23:48 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [PATCH Makedumpfile 07/10] arm64: use value of VA_BITS and
- PHYS_OFFSET embedded into vmcore
-Date: Tue, 25 Oct 2016 12:52:59 +0530
-Message-Id: <a1ec87ec550cffcc7b364abc83254f27dde369d0.1477378297.git.panand@redhat.com>
+Subject: [PATCH Makedumpfile 08/10] arm64: immunize identity mapped address
+ finding w.r.t. kernel changes
+Date: Tue, 25 Oct 2016 12:53:00 +0530
+Message-Id: <077c409cd377c4ca59b92aa71611d97016a92639.1477378297.git.panand@redhat.com>
 In-Reply-To: <cover.1477378297.git.panand@redhat.com>
 References: <cover.1477378297.git.panand@redhat.com>
 In-Reply-To: <cover.1477378297.git.panand@redhat.com>
@@ -30,223 +30,198 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, sgoel@codeaurora.org, mansip@codeaurora.org, asamson@codeaurora.org, kexec@lists.infradead.org
 
-ARM64 kdump-v26 patch (4/7) [1] has embedded VA_BITS and PHYS_OFFSET into
-vmcore. Therefore this patch does following improvements:
+Kernel mappings may change for vmalloc, vmemmap and module addresses. More
+over, proposed kexec arm64 kernel patches do not provide sufficient
+information in vmcore to separate out these areas.
 
-1) Read value of VA_BITS from vmcore, instead of hard coding.
-2) Remove calculation of PHYS_OFFSET from PT_LOAD and read it from vmcore
-as well.
-3) arch/arm64/Kconfig defines page table levels on the basic of page size and
-VA bits. Use same definition in makedumpfile as well.
-4) Since pgtable_level and va_bits are used only in arm64.c, therefore get rid
-of get_pgtable_level_arm64() and get_va_bits_arm64() function.
-5) Since va_bits and pgtable_levels are local to arch/arm64.c, therefore
-remove #define of ARM64_PGTABLE_LEVELS and VA_BITS from makedumpfile.h
-
-[1] https://www.mail-archive.com/kexec@lists.infradead.org/msg16298.html
+Makedumpfile should be able to read entries from swapper page tables
+minimally. Virtual address of swapper_pg_dir symbol will always be linearly
+translatable. So, using __pa() macro we get physical address of
+swapper_pg_dir and then we find physical address of any kernel virtual
+address by reading corresponding entries in page table.
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- arch/arm64.c   | 88 +++++++++++++++++-----------------------------------------
- makedumpfile.c |  8 ++++++
- makedumpfile.h |  7 +++--
- 3 files changed, 38 insertions(+), 65 deletions(-)
+ arch/arm64.c   | 75 +++++++++++++---------------------------------------------
+ makedumpfile.h |  3 ++-
+ 2 files changed, 19 insertions(+), 59 deletions(-)
 
 diff --git a/arch/arm64.c b/arch/arm64.c
-index a5b1bca43e64..6f61b4c5497f 100644
+index 6f61b4c5497f..da8f43c62380 100644
 --- a/arch/arm64.c
 +++ b/arch/arm64.c
-@@ -39,16 +39,23 @@ typedef struct {
- 	unsigned long pte;
- } pte_t;
- 
-+static int pgtable_level;
-+static int va_bits;
-+
-+#define SZ_4K			(4 * 1024)
-+#define SZ_16K			(16 * 1024)
-+#define SZ_64K			(64 * 1024)
-+
- #define pgd_val(x)		((x).pgd)
- #define pud_val(x)		(pgd_val((x).pgd))
- #define pmd_val(x)		(pud_val((x).pud))
- #define pte_val(x)		((x).pte)
+@@ -53,8 +53,6 @@ static int va_bits;
  
  #define PAGE_MASK		(~(PAGESIZE() - 1))
--#define PGDIR_SHIFT		((PAGESHIFT() - 3) * ARM64_PGTABLE_LEVELS + 3)
-+#define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
- #define PUD_SHIFT		PGDIR_SHIFT
- #define PUD_SIZE		(1UL << PUD_SHIFT)
--#define PTRS_PER_PGD		(1 << (VA_BITS - PGDIR_SHIFT))
-+#define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
+ #define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
+-#define PUD_SHIFT		PGDIR_SHIFT
+-#define PUD_SIZE		(1UL << PUD_SHIFT)
+ #define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
  #define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
  #define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
- #define PMD_SIZE		(1UL << PMD_SHIFT)
-@@ -92,25 +99,10 @@ typedef struct {
+@@ -77,31 +75,19 @@ static int va_bits;
+ #define PMD_TYPE_SECT		1
+ #define PMD_TYPE_TABLE		3
  
- #define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
- #define PFN_DOWN(x)			((x) >> PAGESHIFT())
--#define VMEMMAP_SIZE			ALIGN((1UL << (VA_BITS - PAGESHIFT())) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
-+#define VMEMMAP_SIZE			ALIGN((1UL << (va_bits - PAGESHIFT())) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
- #define MODULES_END			PAGE_OFFSET
- #define MODULES_VADDR			(MODULES_END - 0x4000000)
+-#define __va(paddr) 			((paddr) - info->phys_base + PAGE_OFFSET)
+ #define __pa(vaddr) 			((vaddr) - PAGE_OFFSET + info->phys_base)
  
--static int pgtable_level;
--static int va_bits;
+ #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+ #define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
+ 
+ #define pte_index(vaddr) 		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
+-#define pmd_page_vaddr(pmd)		(__va(pmd_val(pmd) & PHYS_MASK & (int32_t)PAGE_MASK))
+-#define pte_offset(dir, vaddr) 		((pte_t*)pmd_page_vaddr((*dir)) + pte_index(vaddr))
++#define pmd_page_paddr(pmd)		(pmd_val(pmd) & PHYS_MASK & (int32_t)PAGE_MASK)
++#define pte_offset(dir, vaddr) 		((pte_t*)pmd_page_paddr((*dir)) + pte_index(vaddr))
+ 
+ #define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+-#define pud_page_vaddr(pud)		(__va(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK))
++#define pud_page_paddr(pud)		(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK)
+ #define pmd_offset_pgtbl_lvl_2(pud, vaddr) ((pmd_t *)pud)
+-#define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_vaddr((*pud)) + pmd_index(vaddr))
 -
--int
--get_pgtable_level_arm64(void)
--{
--	return pgtable_level;
--}
+-/* kernel struct page size can be kernel version dependent, currently
+- * keep it constant.
+- */
+-#define KERN_STRUCT_PAGE_SIZE		get_structure_size("page", DWARF_INFO_GET_STRUCT_SIZE)
 -
--int
--get_va_bits_arm64(void)
--{
--	return va_bits;
--}
--
+-#define ALIGN(x, a) 			(((x) + (a) - 1) & ~((a) - 1))
+-#define PFN_DOWN(x)			((x) >> PAGESHIFT())
+-#define VMEMMAP_SIZE			ALIGN((1UL << (va_bits - PAGESHIFT())) * KERN_STRUCT_PAGE_SIZE, PUD_SIZE)
+-#define MODULES_END			PAGE_OFFSET
+-#define MODULES_VADDR			(MODULES_END - 0x4000000)
++#define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_paddr((*pud)) + pmd_index(vaddr))
+ 
  static pmd_t *
  pmd_offset(pud_t *puda, pud_t *pudv, unsigned long vaddr)
- {
-@@ -121,32 +113,23 @@ pmd_offset(pud_t *puda, pud_t *pudv, unsigned long vaddr)
- 	}
+@@ -136,15 +122,10 @@ static int calculate_plat_config(void)
+ 	return TRUE;
  }
  
--#define PAGE_OFFSET_39 (0xffffffffffffffffUL << 39)
--#define PAGE_OFFSET_42 (0xffffffffffffffffUL << 42)
- static int calculate_plat_config(void)
+-static int
+-is_vtop_from_page_table_arm64(unsigned long vaddr)
++unsigned long
++get_kvbase_arm64(void)
  {
--	unsigned long long stext;
--
--	/* Currently we assume that there are only two possible
--	 * configuration supported by kernel.
--	 * 1) Page Table Level:2, Page Size 64K and VA Bits 42
--	 * 1) Page Table Level:3, Page Size 4K and VA Bits 39
--	 * Ideally, we should have some mechanism to decide these values
--	 * from kernel symbols, but we have limited symbols in vmcore,
--	 * and we can not do much. So until some one comes with a better
--	 * way, we use following.
+-	/* If virtual address lies in vmalloc, vmemmap or module space
+-	 * region then, get the physical address from page table.
 -	 */
--	stext = SYMBOL(_stext);
-+	va_bits = NUMBER(VA_BITS);
+-	return ((vaddr >= VMALLOC_START && vaddr <= VMALLOC_END)
+-		|| (vaddr >= VMEMMAP_START && vaddr <= VMEMMAP_END)
+-		|| (vaddr >= MODULES_VADDR && vaddr <= MODULES_END));
++	return (0xffffffffffffffffUL << va_bits);
+ }
  
--	/* condition for minimum VA bits must be checked first and so on */
--	if ((stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
--		pgtable_level = 3;
--		va_bits = 39;
--	} else if ((stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
-+	/* derive pgtable_level as per arch/arm64/Kconfig */
-+	if ((PAGESIZE() == SZ_16K && va_bits == 36) ||
-+			(PAGESIZE() == SZ_64K && va_bits == 42)) {
- 		pgtable_level = 2;
--		va_bits = 42;
-+	} else if ((PAGESIZE() == SZ_64K && va_bits == 48) ||
-+			(PAGESIZE() == SZ_4K && va_bits == 39) ||
-+			(PAGESIZE() == SZ_16K && va_bits == 47)) {
-+		pgtable_level = 3;
-+	} else if ((PAGESIZE() != SZ_64K && va_bits == 48)) {
-+		pgtable_level = 4;
- 	} else {
--		ERRMSG("Kernel Configuration not supported\n");
-+		ERRMSG("PAGE SIZE %#lx and VA Bits %d not supported\n",
-+				PAGESIZE(), va_bits);
- 		return FALSE;
- 	}
- 
-@@ -167,28 +150,9 @@ is_vtop_from_page_table_arm64(unsigned long vaddr)
  int
- get_phys_base_arm64(void)
- {
--	unsigned long phys_base = ULONG_MAX;
--	unsigned long long phys_start;
--	int i;
--
--	/*
--	 * We resolve phys_base from PT_LOAD segments. LMA contains physical
--	 * address of the segment, and we use the lowest start as
--	 * phys_base.
--	 */
--	for (i = 0; get_pt_load(i, &phys_start, NULL, NULL, NULL); i++) {
--		if (phys_start < phys_base)
--			phys_base = phys_start;
--	}
--
--	if (phys_base == ULONG_MAX) {
--		ERRMSG("Can't determine phys_base\n");
--		return FALSE;
--	}
--
--	info->phys_base = phys_base;
-+	info->phys_base = NUMBER(PHYS_OFFSET);
+@@ -168,20 +149,10 @@ get_machdep_info_arm64(void)
+ 	info->max_physmem_bits = PHYS_MASK_SHIFT;
+ 	info->section_size_bits = SECTIONS_SIZE_BITS;
+ 	info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
+-	info->vmalloc_start = 0xffffffffffffffffUL << va_bits;
+-	info->vmalloc_end = PAGE_OFFSET - PUD_SIZE - VMEMMAP_SIZE - 0x10000;
+-	info->vmemmap_start = VMALLOC_END + 0x10000;
+-	info->vmemmap_end = VMEMMAP_START + VMEMMAP_SIZE;
  
--	DEBUG_MSG("phys_base    : %lx\n", phys_base);
-+	DEBUG_MSG("phys_base    : %lx\n", info->phys_base);
+ 	DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
+ 	DEBUG_MSG("section_size_bits: %lx\n", info->section_size_bits);
+ 	DEBUG_MSG("page_offset      : %lx\n", info->page_offset);
+-	DEBUG_MSG("vmalloc_start    : %lx\n", info->vmalloc_start);
+-	DEBUG_MSG("vmalloc_end      : %lx\n", info->vmalloc_end);
+-	DEBUG_MSG("vmemmap_start    : %lx\n", info->vmemmap_start);
+-	DEBUG_MSG("vmemmap_end      : %lx\n", info->vmemmap_end);
+-	DEBUG_MSG("modules_start    : %lx\n", MODULES_VADDR);
+-	DEBUG_MSG("modules_end      : %lx\n", MODULES_END);
  
  	return TRUE;
  }
-@@ -203,8 +167,8 @@ get_machdep_info_arm64(void)
+@@ -211,17 +182,18 @@ get_versiondep_info_arm64(void)
+ }
  
- 	info->max_physmem_bits = PHYS_MASK_SHIFT;
- 	info->section_size_bits = SECTIONS_SIZE_BITS;
--	info->page_offset = 0xffffffffffffffffUL << (VA_BITS - 1);
--	info->vmalloc_start = 0xffffffffffffffffUL << VA_BITS;
-+	info->page_offset = 0xffffffffffffffffUL << (va_bits - 1);
-+	info->vmalloc_start = 0xffffffffffffffffUL << va_bits;
- 	info->vmalloc_end = PAGE_OFFSET - PUD_SIZE - VMEMMAP_SIZE - 0x10000;
- 	info->vmemmap_start = VMALLOC_END + 0x10000;
- 	info->vmemmap_end = VMEMMAP_START + VMEMMAP_SIZE;
-diff --git a/makedumpfile.c b/makedumpfile.c
-index e248db876858..df413f066348 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2263,6 +2263,10 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ /*
+- * vtop_arm64() - translate arbitrary virtual address to physical
++ * vaddr_to_paddr_arm64() - translate arbitrary virtual address to physical
+  * @vaddr: virtual address to translate
+  *
+  * Function translates @vaddr into physical address using page tables. This
+  * address can be any virtual address. Returns physical address of the
+  * corresponding virtual address or %NOT_PADDR when there is no translation.
+  */
+-static unsigned long long
+-vtop_arm64(unsigned long vaddr)
++unsigned long long
++vaddr_to_paddr_arm64(unsigned long vaddr)
+ {
+ 	unsigned long long paddr = NOT_PADDR;
++	unsigned long long swapper_phys;
+ 	pgd_t	*pgda, pgdv;
+ 	pud_t	*puda, pudv;
+ 	pmd_t	*pmda, pmdv;
+@@ -232,8 +204,10 @@ vtop_arm64(unsigned long vaddr)
+ 		return NOT_PADDR;
+ 	}
  
- 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-+#ifdef __aarch64__
-+	WRITE_NUMBER("VA_BITS", VA_BITS);
-+	WRITE_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
-+#endif
+-	pgda = pgd_offset(SYMBOL(swapper_pg_dir), vaddr);
+-	if (!readmem(VADDR, (unsigned long long)pgda, &pgdv, sizeof(pgdv))) {
++	swapper_phys = __pa(SYMBOL(swapper_pg_dir));
++
++	pgda = pgd_offset(swapper_phys, vaddr);
++	if (!readmem(PADDR, (unsigned long long)pgda, &pgdv, sizeof(pgdv))) {
+ 		ERRMSG("Can't read pgd\n");
+ 		return NOT_PADDR;
+ 	}
+@@ -242,7 +216,7 @@ vtop_arm64(unsigned long vaddr)
+ 	puda = (pud_t *)pgda;
  
- 	/*
- 	 * write the source file of 1st kernel
-@@ -2645,6 +2649,10 @@ read_vmcoreinfo(void)
+ 	pmda = pmd_offset(puda, &pudv, vaddr);
+-	if (!readmem(VADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
++	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+ 		ERRMSG("Can't read pmd\n");
+ 		return NOT_PADDR;
+ 	}
+@@ -251,7 +225,7 @@ vtop_arm64(unsigned long vaddr)
+ 	case PMD_TYPE_TABLE:
+ 		ptea = pte_offset(&pmdv, vaddr);
+ 		/* 64k page */
+-		if (!readmem(VADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
++		if (!readmem(PADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
+ 			ERRMSG("Can't read pte\n");
+ 			return NOT_PADDR;
+ 		}
+@@ -275,19 +249,4 @@ vtop_arm64(unsigned long vaddr)
+ 	return paddr;
+ }
  
- 	READ_NUMBER("PAGE_BUDDY_MAPCOUNT_VALUE", PAGE_BUDDY_MAPCOUNT_VALUE);
- 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
-+#ifdef __aarch64__
-+	READ_NUMBER("VA_BITS", VA_BITS);
-+	READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
-+#endif
- 
- 	READ_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
- 
+-unsigned long long
+-vaddr_to_paddr_arm64(unsigned long vaddr)
+-{
+-	/*
+-	 * use translation tables when a) user has explicitly requested us to
+-	 * perform translation for a given address. b) virtual address lies in
+-	 * vmalloc, vmemmap or modules memory region. Otherwise we assume that
+-	 * the translation is done within the kernel direct mapped region.
+-	 */
+-	if ((info->vaddr_for_vtop == vaddr) ||
+-			is_vtop_from_page_table_arm64(vaddr))
+-		return vtop_arm64(vaddr);
+-
+-	return __pa(vaddr);
+-}
+ #endif /* __aarch64__ */
 diff --git a/makedumpfile.h b/makedumpfile.h
-index c363c547b448..1a119ac949b6 100644
+index 1a119ac949b6..8ddc2c43cc29 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -516,9 +516,6 @@ do { \
+@@ -516,7 +516,8 @@ do { \
  #define PMASK			(0x7ffffffffffff000UL)
  
  #ifdef __aarch64__
--int get_va_bits_arm64(void);
--#define ARM64_PGTABLE_LEVELS	get_pgtable_level_arm64()
--#define VA_BITS			get_va_bits_arm64()
- #define KVBASE			VMALLOC_START
+-#define KVBASE			VMALLOC_START
++unsigned long get_kvbase_arm64(void);
++#define KVBASE			get_kvbase_arm64()
  #endif /* aarch64 */
  
-@@ -1736,6 +1733,10 @@ struct number_table {
- 	long	SECTION_SIZE_BITS;
- 	long	MAX_PHYSMEM_BITS;
- 	long    HUGETLB_PAGE_DTOR;
-+#ifdef __aarch64__
-+	long 	VA_BITS;
-+	unsigned long	PHYS_OFFSET;
-+#endif
- };
- 
- struct srcfile_table {
+ #ifdef __arm__
 -- 
 2.7.4
 
