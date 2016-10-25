@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-x236.google.com ([2607:f8b0:4003:c06::236])
+Received: from mail-qt0-f180.google.com ([209.85.216.180])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bz0Oq-0004o3-1y
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 12:00:16 +0000
-Received: by mail-oi0-x236.google.com with SMTP id m72so93363674oik.3
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 04:59:50 -0700 (PDT)
+ id 1bz3Ou-0004Cr-Ja
+ for kexec@lists.infradead.org; Tue, 25 Oct 2016 15:12:32 +0000
+Received: by mail-qt0-f180.google.com with SMTP id g49so10861252qtc.6
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 08:12:08 -0700 (PDT)
+Subject: Re: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using
+ page table values
+References: <cover.1477327674.git.panand@redhat.com>
+ <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <f29a272d-8b82-d0d7-a2f2-c4af6474fff6@redhat.com>
+Date: Tue, 25 Oct 2016 20:42:02 +0530
 MIME-Version: 1.0
-In-Reply-To: <16c384ed-0875-daa8-b52a-f03af764460b@codeaurora.org>
-References: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
- <16c384ed-0875-daa8-b52a-f03af764460b@codeaurora.org>
-From: Simon T <smith.not.western@gmail.com>
-Date: Tue, 25 Oct 2016 12:59:49 +0100
-Message-ID: <CAKYm0coPOhCWQ=yKs6WCzMs=nZ3eTq3V_8Y52CLRc3OmUbHLeQ@mail.gmail.com>
-Subject: Re: kexec and arm64 advice
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,123 +23,180 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Goel, Sameer" <sgoel@codeaurora.org>
-Cc: kexec@lists.infradead.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "bhe@redhat.com" <bhe@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>
 
-Hi Sameer,
+Hi Atsushi,
 
-The running kernel and the kernel I am trying to kexec into are the
-same -- for testing purposes I'm just trying to kexec into a second
-copy of the same kernel I'm running. The .config file has kexec
-defined:
+Thanks for the review.
 
-$ grep -i kexec .config
-CONFIG_KERNEL_KEXEC=y
-CONFIG_PACKAGE_kexec-tools=y
-CONFIG_KEXEC_TOOLS_TARGET_NAME="aarch64"
-# CONFIG_KEXEC_TOOLS_kdump is not set
-CONFIG_KEXEC_ZLIB=y
-# CONFIG_KEXEC_LZMA is not set
+On Tuesday 25 October 2016 02:50 PM, Atsushi Kumagai wrote:
+> Hello Pratysh,
+>
+>> Currently we translate some of the VA areas using linear mapping while some
+>> other(which can not be linearly mapped) using page table.
+>>
+>> However, we will have entry of a page in the page table irrespective of its
+>> virtual region. So, we can always look into page table for any VA to PA
+>> translation. This approach will solve lot of complexity in makedumpfile. It
+>> will in turn remove dependency over variables like VMALLOC_START,
+>> MODULES_VADDR etc whose definition keeps changing in newer kernel version.
+>>
+>> Moreover, I do not see any side effect of this approach in terms of
+>> execution timing. I tested with IBM x3950 X6 machine having 4136359 MB of
+>> memory. These are the results of makedumpfile execution time:
+>>
+>> Without this patch:
+>> ===================
+>> With -d 31:
+>> Trial 1: 237.59526248 S
+>> Trial 2: 235.236914962 S
+>> Trail 3: 237.678712045 S
+>>
+>> With -d 1:
+>> Trial 1: 2548.905296877 S
+>> Trial 2: 2549.759881756 S
+>>
+>> With this patch:
+>> ===================
+>> With -d 31:
+>> Trial 1: 232.713841516 S
+>> Trial 2: 228.45697177 S
+>> Trail 3: 232.942262441 S
+>>
+>> With -d 1:
+>> Trial 1: 2768.424565806 S
+>> Trial 2: 2749.622115455 S
+>> Trail 3: 2537.770359073 S
+>
+> Could you increase the number of trials ?
 
-Is there another way to verify if the kernel actually built with the
-kexec_load syscall or not?
+OK, I can do that. Might take some time, as I will have to arrange that  
+high memory machine again.
 
-Thanks,
+> If the average time is close to the results of Trial 1 (2768s) and 2 (2749s),
+> the regression rate is 8% and it sounds neither large nor small.
+> If the average is a level of 2500s like Trial 3, it's ideal.
+>
+>> Signed-off-by: Pratyush Anand <panand@redhat.com>
+>> ---
+>> arch/x86_64.c  | 42 ++++++++----------------------------------
+>> makedumpfile.h |  4 ++--
+>> 2 files changed, 10 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/arch/x86_64.c b/arch/x86_64.c
+>> index a96fd8ae00a1..fe2764a8bec2 100644
+>> --- a/arch/x86_64.c
+>> +++ b/arch/x86_64.c
+>> @@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
+>> {
+>> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+>> 	unsigned long pte_paddr, pte;
+>> +	unsigned long phys_base;
+>> +
+>> +	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>> +		phys_base = info->phys_base;
+>> +	else
+>> +		phys_base = 0;
+>>
+>> 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+>> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+>> @@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
+>> 	/*
+>> 	 * Get PGD.
+>> 	 */
+>> -	page_dir  = SYMBOL(init_level4_pgt);
+>> +	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
+>
+> I want to confirm that this VA to PA translation is always safe,
+> otherwise we should do the condition check which was done in
+> vaddr_to_paddr_x86_64(), isn't it ?
+>
 
-Simon
+I think this should be safe, however x86 expert can comment better.  
+Baoquan any comment here?
 
-On Mon, Oct 24, 2016 at 11:53 PM, Goel, Sameer <sgoel@codeaurora.org> wrote:
-> It seems that the kexec_load syscall is not defined. Can you please check
-> the configs of your running kernel once again?
+~Pratyush
 >
 > Thanks,
-> Sameer
+> Atsushi Kumagai
 >
->
-> On 10/24/2016 8:42 AM, Simon T wrote:
+>> 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
+>> -	if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
+>> +	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
+>> 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
+>> 		return NOT_PADDR;
+>> 	}
+>> @@ -285,38 +291,6 @@ vtop4_x86_64(unsigned long vaddr)
+>> 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
+>> }
 >>
->> Hi,
+>> -unsigned long long
+>> -vaddr_to_paddr_x86_64(unsigned long vaddr)
+>> -{
+>> -	unsigned long phys_base;
+>> -	unsigned long long paddr;
+>> -
+>> -	/*
+>> -	 * Check the relocatable kernel.
+>> -	 */
+>> -	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>> -		phys_base = info->phys_base;
+>> -	else
+>> -		phys_base = 0;
+>> -
+>> -	if (is_vmalloc_addr_x86_64(vaddr)) {
+>> -		if ((paddr = vtop4_x86_64(vaddr)) == NOT_PADDR) {
+>> -			ERRMSG("Can't convert a virtual address(%lx) to " \
+>> -			    "physical address.\n", vaddr);
+>> -			return NOT_PADDR;
+>> -		}
+>> -	} else if (vaddr >= __START_KERNEL_map) {
+>> -		paddr = vaddr - __START_KERNEL_map + phys_base;
+>> -
+>> -	} else {
+>> -		if (is_xen_memory())
+>> -			paddr = vaddr - PAGE_OFFSET_XEN_DOM0;
+>> -		else
+>> -			paddr = vaddr - PAGE_OFFSET;
+>> -	}
+>> -	return paddr;
+>> -}
+>> -
+>> /*
+>>  * for Xen extraction
+>>  */
+>> diff --git a/makedumpfile.h b/makedumpfile.h
+>> index a5955ff750e5..13559651feb6 100644
+>> --- a/makedumpfile.h
+>> +++ b/makedumpfile.h
+>> @@ -863,12 +863,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
+>> int get_phys_base_x86_64(void);
+>> int get_machdep_info_x86_64(void);
+>> int get_versiondep_info_x86_64(void);
+>> -unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
+>> +unsigned long long vtop4_x86_64(unsigned long vaddr);
+>> #define find_vmemmap()		find_vmemmap_x86_64()
+>> #define get_phys_base()		get_phys_base_x86_64()
+>> #define get_machdep_info()	get_machdep_info_x86_64()
+>> #define get_versiondep_info()	get_versiondep_info_x86_64()
+>> -#define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
+>> +#define vaddr_to_paddr(X)	vtop4_x86_64(X)
+>> #define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
+>> #endif /* x86_64 */
 >>
->> I'm trying to get kexec working on a cross-compiled arm64/aarch64
->> system, using Linux kernel 4.4.23. I'm using kexec-tool's master
->> branch (commit e345e27417db00a9e754ca0ca14b2ec87d0552f7 from
->> https://git.kernel.org/cgit/linux/kernel/git/geoff/kexec-tools.git). I
->> initially tried using the patches for linux-kexec's kexec-13 branch
->> with manual massaging in some spots because kexec-13 is for 4.4.0 not
->> 4.4.23. Both tools and kernel appear to build fine, however when it
->> comes time to kexec, I encounter this message: "kexec_load failed:
->> Function not implemented"
+>> --
+>> 2.7.4
 >>
->> Searching through the patches, I don't find any reference to kexec_load
->> itself.
->>
->> Should I be applying a different version of kexec-tools, or
->> linux-kexec patches, to my build? (I'm restricted to 4.4.23 as the
->> base kernel)
->>
->> Is there a way post compile to check if the kexec_load function is
->> implemented, aside from actually deploying the image and calling
->> kexec? I've run strings against the Image but it doesn't give an exact
->> match for kexec_load (see below).
->>
->> Anything else I should be looking at?
->>
->> # kexec -l /mnt/target/boot/vmlinux --initrd=/tmp/root.sfs
->> Modified cmdline:root=/dev/mmcblk0p2
->> Unable to find /proc/device-tree/chosen/[linux,]stdout-path, printing
->> from purgatory is disabled
->> kexec_load failed: Function not implemented
->> entry       = 0x8095f000 flags = 0xb70000
->> nr_segments = 4
->> segment[0].buf   = 0x7fa0f64010
->> segment[0].bufsz = 0x7fbc00
->> segment[0].mem   = 0x80080000
->> segment[0].memsz = 0x8d0000
->> segment[1].buf   = 0x20cc0830
->> segment[1].bufsz = 0xe515
->> segment[1].mem   = 0x80950000
->> segment[1].memsz = 0xf000
->> segment[2].buf   = 0x20ccf840
->> segment[2].bufsz = 0x6080
->> segment[2].mem   = 0x8095f000
->> segment[2].memsz = 0x7000
->> segment[3].buf   = 0x7f9e843010
->> segment[3].bufsz = 0x2720000
->> segment[3].mem   = 0xc0000000
->> segment[3].memsz = 0x2720000
->>
->> (I've also tried kexec -l with boot/Image instead of boot/vmlinux)
->>
->> $ grep -i kexec .config
->> CONFIG_KERNEL_KEXEC=y
->> CONFIG_PACKAGE_kexec-tools=y
->> CONFIG_KEXEC_TOOLS_TARGET_NAME="aarch64"
->> # CONFIG_KEXEC_TOOLS_kdump is not set
->> CONFIG_KEXEC_ZLIB=y
->> # CONFIG_KEXEC_LZMA is not set
->>
->> $ strings <build_dir>/arch/arm64/boot/Image  | grep kexec_load
->> Wcompat_sys_kexec_load
->> Wsys_kexec_load
->>
->> Thanks!
->>
->> Simon
 >>
 >> _______________________________________________
 >> kexec mailing list
 >> kexec@lists.infradead.org
 >> http://lists.infradead.org/mailman/listinfo/kexec
->>
->
-> --
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
