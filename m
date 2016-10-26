@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-x22c.google.com ([2607:f8b0:4003:c06::22c])
+Received: from mail.linuxfoundation.org ([140.211.169.12])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzOdk-0007J6-Hb
- for kexec@lists.infradead.org; Wed, 26 Oct 2016 13:53:13 +0000
-Received: by mail-oi0-x22c.google.com with SMTP id n202so17654119oig.3
- for <kexec@lists.infradead.org>; Wed, 26 Oct 2016 06:52:51 -0700 (PDT)
+ id 1bzNK9-00072B-Iw
+ for kexec@lists.infradead.org; Wed, 26 Oct 2016 12:28:57 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.8 105/140] x86/boot/smp: Dont try to poke
+ disabled/non-existent APIC
+Date: Wed, 26 Oct 2016 14:22:45 +0200
+Message-Id: <20161026122224.880728927@linuxfoundation.org>
+In-Reply-To: <20161026122220.384323763@linuxfoundation.org>
+References: <20161026122220.384323763@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <3118d747-8f11-fae5-9541-0fb0917eaa14@infradead.org>
-References: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
- <3118d747-8f11-fae5-9541-0fb0917eaa14@infradead.org>
-From: Simon T <smith.not.western@gmail.com>
-Date: Wed, 26 Oct 2016 14:52:50 +0100
-Message-ID: <CAKYm0crtFkPh5iu3LNBZniFGNT2Xc0=WKO+=5_H_t+2+jNCBcw@mail.gmail.com>
-Subject: Re: kexec and arm64 advice
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,32 +19,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>
-Cc: kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>, =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, Prarit Bhargava <prarit@redhat.com>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com, Len Brown <len.brown@intel.com>, Denys Vlasenko <dvlasenk@redhat.com>, Brian Gerst <brgerst@gmail.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Yinghai Lu <yinghai@kernel.org>, Juergen Gross <jgross@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, stable@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Tue, Oct 25, 2016 at 5:57 PM, Geoff Levand <geoff@infradead.org> wrote:
-> On 10/24/2016 07:42 AM, Simon T wrote:
->> Both tools and kernel appear to build fine, however when it
->> comes time to kexec, I encounter this message: "kexec_load failed:
->> Function not implemented"
->
-> It seems your kernel needs kexec support. Try something like:
->
->   cat /proc/config.gz | gunzip | egrep 'KEXEC'
-
-Aha, yes you are correct it is not compiled in, even though it was in
-my .config. I will investigate my config files and build scripts
-further,
-
-Thanks,
-
-Simon
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+NC44LXN0YWJsZSByZXZpZXcgcGF0Y2guICBJZiBhbnlvbmUgaGFzIGFueSBvYmplY3Rpb25zLCBw
+bGVhc2UgbGV0IG1lIGtub3cuCgotLS0tLS0tLS0tLS0tLS0tLS0KCkZyb206IFZpbGxlIFN5cmrD
+pGzDpCA8dmlsbGUuc3lyamFsYUBsaW51eC5pbnRlbC5jb20+Cgpjb21taXQgZmY4NTYwNTEyYjhk
+NGI3Y2EzZWY0ZmQ2OTE2NjYzNGFjMzBiMjUyNSB1cHN0cmVhbS4KCkFwcGFyZW50bHkgdHJ5aW5n
+IHRvIHBva2UgYSBkaXNhYmxlZCBvciBub24tZXhpc3RlbnQgQVBJQwpsZWFkcyB0byBhIGJveCB0
+aGF0IGRvZXNuJ3QgZXZlbiBib290LiBMZXQncyBub3QgZG8gdGhhdC4KCk5vIHJlYWwgY2x1ZSBp
+ZiB0aGlzIGlzIHRoZSByaWdodCBmaXgsIGJ1dCBhdCBsZWFzdCBteQpQMyBtYWNoaW5lIGJvb3Rz
+IGFnYWluLgoKU2lnbmVkLW9mZi1ieTogVmlsbGUgU3lyasOkbMOkIDx2aWxsZS5zeXJqYWxhQGxp
+bnV4LmludGVsLmNvbT4KQ2M6IEFuZHkgTHV0b21pcnNraSA8bHV0b0BrZXJuZWwub3JnPgpDYzog
+Qm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+CkNjOiBCb3Jpc2xhdiBQZXRrb3YgPGJwQHN1
+c2UuZGU+CkNjOiBCcmlhbiBHZXJzdCA8YnJnZXJzdEBnbWFpbC5jb20+CkNjOiBEZW55cyBWbGFz
+ZW5rbyA8ZHZsYXNlbmtAcmVkaGF0LmNvbT4KQ2M6IEVyaWMgQmllZGVybWFuIDxlYmllZGVybUB4
+bWlzc2lvbi5jb20+CkNjOiBILiBQZXRlciBBbnZpbiA8aHBhQHp5dG9yLmNvbT4KQ2M6IEppcmkg
+T2xzYSA8am9sc2FAcmVkaGF0LmNvbT4KQ2M6IEpvc2ggUG9pbWJvZXVmIDxqcG9pbWJvZUByZWRo
+YXQuY29tPgpDYzogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPgpDYzogTGVuIEJyb3du
+IDxsZW4uYnJvd25AaW50ZWwuY29tPgpDYzogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxpbnV4
+LWZvdW5kYXRpb24ub3JnPgpDYzogUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3Jn
+PgpDYzogUHJhcml0IEJoYXJnYXZhIDxwcmFyaXRAcmVkaGF0LmNvbT4KQ2M6IFRob21hcyBHbGVp
+eG5lciA8dGdseEBsaW51dHJvbml4LmRlPgpDYzogWWluZ2hhaSBMdSA8eWluZ2hhaUBrZXJuZWwu
+b3JnPgpDYzogZHlvdW5nQHJlZGhhdC5jb20KQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+Rml4ZXM6IDJhNTFmZTA4M2ViYSAoImFyY2gveDg2OiBIYW5kbGUgbm9uIGVudW1lcmF0ZWQgQ1BV
+IGFmdGVyIHBoeXNpY2FsIGhvdHBsdWciKQpMaW5rOiBodHRwOi8vbGttbC5rZXJuZWwub3JnL3Iv
+MTQ3NzEwMjY4NC01MDkyLTEtZ2l0LXNlbmQtZW1haWwtdmlsbGUuc3lyamFsYUBsaW51eC5pbnRl
+bC5jb20KU2lnbmVkLW9mZi1ieTogSW5nbyBNb2xuYXIgPG1pbmdvQGtlcm5lbC5vcmc+ClNpZ25l
+ZC1vZmYtYnk6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+
+CgotLS0KIGFyY2gveDg2L2tlcm5lbC9zbXBib290LmMgfCAgIDE2ICsrKysrKysrKy0tLS0tLS0K
+IDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgotLS0gYS9h
+cmNoL3g4Ni9rZXJuZWwvc21wYm9vdC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9zbXBib290LmMK
+QEAgLTE0MDgsMTUgKzE0MDgsMTcgQEAgX19pbml0IHZvaWQgcHJlZmlsbF9wb3NzaWJsZV9tYXAo
+dm9pZCkKIAogCS8qIE5vIGJvb3QgcHJvY2Vzc29yIHdhcyBmb3VuZCBpbiBtcHRhYmxlIG9yIEFD
+UEkgTUFEVCAqLwogCWlmICghbnVtX3Byb2Nlc3NvcnMpIHsKLQkJaW50IGFwaWNpZCA9IGJvb3Rf
+Y3B1X3BoeXNpY2FsX2FwaWNpZDsKLQkJaW50IGNwdSA9IGhhcmRfc21wX3Byb2Nlc3Nvcl9pZCgp
+OworCQlpZiAoYm9vdF9jcHVfaGFzKFg4Nl9GRUFUVVJFX0FQSUMpKSB7CisJCQlpbnQgYXBpY2lk
+ID0gYm9vdF9jcHVfcGh5c2ljYWxfYXBpY2lkOworCQkJaW50IGNwdSA9IGhhcmRfc21wX3Byb2Nl
+c3Nvcl9pZCgpOwogCi0JCXByX3dhcm4oIkJvb3QgQ1BVIChpZCAlZCkgbm90IGxpc3RlZCBieSBC
+SU9TXG4iLCBjcHUpOworCQkJcHJfd2FybigiQm9vdCBDUFUgKGlkICVkKSBub3QgbGlzdGVkIGJ5
+IEJJT1NcbiIsIGNwdSk7CiAKLQkJLyogTWFrZSBzdXJlIGJvb3QgY3B1IGlzIGVudW1lcmF0ZWQg
+Ki8KLQkJaWYgKGFwaWMtPmNwdV9wcmVzZW50X3RvX2FwaWNpZCgwKSA9PSBCQURfQVBJQ0lEICYm
+Ci0JCSAgICBhcGljLT5hcGljX2lkX3ZhbGlkKGFwaWNpZCkpCi0JCQlnZW5lcmljX3Byb2Nlc3Nv
+cl9pbmZvKGFwaWNpZCwgYm9vdF9jcHVfYXBpY192ZXJzaW9uKTsKKwkJCS8qIE1ha2Ugc3VyZSBi
+b290IGNwdSBpcyBlbnVtZXJhdGVkICovCisJCQlpZiAoYXBpYy0+Y3B1X3ByZXNlbnRfdG9fYXBp
+Y2lkKDApID09IEJBRF9BUElDSUQgJiYKKwkJCSAgICBhcGljLT5hcGljX2lkX3ZhbGlkKGFwaWNp
+ZCkpCisJCQkJZ2VuZXJpY19wcm9jZXNzb3JfaW5mbyhhcGljaWQsIGJvb3RfY3B1X2FwaWNfdmVy
+c2lvbik7CisJCX0KIAogCQlpZiAoIW51bV9wcm9jZXNzb3JzKQogCQkJbnVtX3Byb2Nlc3NvcnMg
+PSAxOwoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
