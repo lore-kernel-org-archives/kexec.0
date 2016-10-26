@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mail-oi0-x22c.google.com ([2607:f8b0:4003:c06::22c])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzKYK-00013o-4u
- for kexec@lists.infradead.org; Wed, 26 Oct 2016 09:31:21 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using
- page table values
-Date: Wed, 26 Oct 2016 06:24:43 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E7A7B6@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1477327674.git.panand@redhat.com>
- <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
- <f29a272d-8b82-d0d7-a2f2-c4af6474fff6@redhat.com> <20161025232804.GB2975@x1>
-In-Reply-To: <20161025232804.GB2975@x1>
-Content-Language: ja-JP
+ id 1bzOdk-0007J6-Hb
+ for kexec@lists.infradead.org; Wed, 26 Oct 2016 13:53:13 +0000
+Received: by mail-oi0-x22c.google.com with SMTP id n202so17654119oig.3
+ for <kexec@lists.infradead.org>; Wed, 26 Oct 2016 06:52:51 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <3118d747-8f11-fae5-9541-0fb0917eaa14@infradead.org>
+References: <CAKYm0coteEEapCNwmj+KmGd57C_C3--nXQfjyD_FLoGXSkqMkQ@mail.gmail.com>
+ <3118d747-8f11-fae5-9541-0fb0917eaa14@infradead.org>
+From: Simon T <smith.not.western@gmail.com>
+Date: Wed, 26 Oct 2016 14:52:50 +0100
+Message-ID: <CAKYm0crtFkPh5iu3LNBZniFGNT2Xc0=WKO+=5_H_t+2+jNCBcw@mail.gmail.com>
+Subject: Re: kexec and arm64 advice
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,83 +25,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>, Pratyush Anand <panand@redhat.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geoff Levand <geoff@infradead.org>
+Cc: kexec@lists.infradead.org
 
->On 10/25/16 at 08:42pm, Pratyush Anand wrote:
->> > > With -d 1:
->> > > Trial 1: 2768.424565806 S
->> > > Trial 2: 2749.622115455 S
->> > > Trail 3: 2537.770359073 S
->> >
->> > Could you increase the number of trials ?
->>
->> OK, I can do that. Might take some time, as I will have to arrange that high
->> memory machine again.
->>
->> > If the average time is close to the results of Trial 1 (2768s) and 2 (2749s),
->> > the regression rate is 8% and it sounds neither large nor small.
->> > If the average is a level of 2500s like Trial 3, it's ideal.
->> >
->> > > Signed-off-by: Pratyush Anand <panand@redhat.com>
->> > > ---
->> > > arch/x86_64.c  | 42 ++++++++----------------------------------
->> > > makedumpfile.h |  4 ++--
->> > > 2 files changed, 10 insertions(+), 36 deletions(-)
->> > >
->> > > diff --git a/arch/x86_64.c b/arch/x86_64.c
->> > > index a96fd8ae00a1..fe2764a8bec2 100644
->> > > --- a/arch/x86_64.c
->> > > +++ b/arch/x86_64.c
->> > > @@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
->> > > {
->> > > 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
->> > > 	unsigned long pte_paddr, pte;
->> > > +	unsigned long phys_base;
->> > > +
->> > > +	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
->> > > +		phys_base = info->phys_base;
->> > > +	else
->> > > +		phys_base = 0;
->> > >
->> > > 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
->> > > 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
->> > > @@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
->> > > 	/*
->> > > 	 * Get PGD.
->> > > 	 */
->> > > -	page_dir  = SYMBOL(init_level4_pgt);
->> > > +	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
->> >
->> > I want to confirm that this VA to PA translation is always safe,
->> > otherwise we should do the condition check which was done in
->> > vaddr_to_paddr_x86_64(), isn't it ?
->> >
->>
->> I think this should be safe, however x86 expert can comment better. Baoquan
->> any comment here?
+On Tue, Oct 25, 2016 at 5:57 PM, Geoff Levand <geoff@infradead.org> wrote:
+> On 10/24/2016 07:42 AM, Simon T wrote:
+>> Both tools and kernel appear to build fine, however when it
+>> comes time to kexec, I encounter this message: "kexec_load failed:
+>> Function not implemented"
 >
->Yes, I think this is safe. Below is the physical to virtual address
->translation function in x86 64. And init_level4_pgt is a global variable
->located in kernel text region.
+> It seems your kernel needs kexec support. Try something like:
 >
->arch/x86/include/asm/page_64.h
->
->static inline unsigned long __phys_addr_nodebug(unsigned long x)
->{
->        unsigned long y = x - __START_KERNEL_map;
->
->        /* use the carry flag to determine if x was < __START_KERNEL_map */
->        x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
->
->        return x;
->}
+>   cat /proc/config.gz | gunzip | egrep 'KEXEC'
 
-Good, thanks for your comment.
-I'll wait for the result of the benchmark.
+Aha, yes you are correct it is not compiled in, even though it was in
+my .config. I will investigate my config files and build scripts
+further,
 
-Regards,
-Atsushi Kumagai
+Thanks,
+
+Simon
 
 _______________________________________________
 kexec mailing list
