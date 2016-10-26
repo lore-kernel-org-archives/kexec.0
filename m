@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qk0-f169.google.com ([209.85.220.169])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzB8v-000794-5H
- for kexec@lists.infradead.org; Tue, 25 Oct 2016 23:28:29 +0000
-Date: Wed, 26 Oct 2016 07:28:04 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH Makedumpfile 2/4] x86_64: translate all VA to PA using
- page table values
-Message-ID: <20161025232804.GB2975@x1>
-References: <cover.1477327674.git.panand@redhat.com>
- <b54b1e73bc4302fa7222c44a9cf46d57aa93b8ba.1477327674.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E7A30E@BPXM01GP.gisp.nec.co.jp>
- <f29a272d-8b82-d0d7-a2f2-c4af6474fff6@redhat.com>
+ id 1bzFyI-0000Mf-6w
+ for kexec@lists.infradead.org; Wed, 26 Oct 2016 04:37:52 +0000
+Received: by mail-qk0-f169.google.com with SMTP id d23so22613551qke.7
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 21:37:29 -0700 (PDT)
+Subject: Re: [PATCH v2] arm64: Add support for additional relocations in the
+ kexec purgatory code
+References: <1476960211-25594-1-git-send-email-catalin.marinas@arm.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <6eb25c47-6fbd-4b7a-e450-6de6388a9d55@redhat.com>
+Date: Wed, 26 Oct 2016 10:07:23 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f29a272d-8b82-d0d7-a2f2-c4af6474fff6@redhat.com>
+In-Reply-To: <1476960211-25594-1-git-send-email-catalin.marinas@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,82 +21,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Simon Horman <horms@verge.net.au>
+Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 10/25/16 at 08:42pm, Pratyush Anand wrote:
-> > > With -d 1:
-> > > Trial 1: 2768.424565806 S
-> > > Trial 2: 2749.622115455 S
-> > > Trail 3: 2537.770359073 S
-> > 
-> > Could you increase the number of trials ?
-> 
-> OK, I can do that. Might take some time, as I will have to arrange that high
-> memory machine again.
-> 
-> > If the average time is close to the results of Trial 1 (2768s) and 2 (2749s),
-> > the regression rate is 8% and it sounds neither large nor small.
-> > If the average is a level of 2500s like Trial 3, it's ideal.
-> > 
-> > > Signed-off-by: Pratyush Anand <panand@redhat.com>
-> > > ---
-> > > arch/x86_64.c  | 42 ++++++++----------------------------------
-> > > makedumpfile.h |  4 ++--
-> > > 2 files changed, 10 insertions(+), 36 deletions(-)
-> > > 
-> > > diff --git a/arch/x86_64.c b/arch/x86_64.c
-> > > index a96fd8ae00a1..fe2764a8bec2 100644
-> > > --- a/arch/x86_64.c
-> > > +++ b/arch/x86_64.c
-> > > @@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
-> > > {
-> > > 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
-> > > 	unsigned long pte_paddr, pte;
-> > > +	unsigned long phys_base;
-> > > +
-> > > +	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
-> > > +		phys_base = info->phys_base;
-> > > +	else
-> > > +		phys_base = 0;
-> > > 
-> > > 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
-> > > 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
-> > > @@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
-> > > 	/*
-> > > 	 * Get PGD.
-> > > 	 */
-> > > -	page_dir  = SYMBOL(init_level4_pgt);
-> > > +	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
-> > 
-> > I want to confirm that this VA to PA translation is always safe,
-> > otherwise we should do the condition check which was done in
-> > vaddr_to_paddr_x86_64(), isn't it ?
-> > 
-> 
-> I think this should be safe, however x86 expert can comment better. Baoquan
-> any comment here?
 
-Yes, I think this is safe. Below is the physical to virtual address
-translation function in x86 64. And init_level4_pgt is a global variable
-located in kernel text region. 
 
-arch/x86/include/asm/page_64.h
+On Thursday 20 October 2016 04:13 PM, Catalin Marinas wrote:
+> When compiling the kexec-tools with gcc6, the following additional
+> reolcations are generated in the purgatory.ro file:
+>
+> R_AARCH64_ADR_PREL_PG_HI21
+> R_AARCH64_ADD_ABS_LO12_NC
+> R_AARCH64_LDST64_ABS_LO12_NC
+>
+> This patch modifies the arm64 machine_apply_elf_rel() function to handle
+> these relocations.
 
-static inline unsigned long __phys_addr_nodebug(unsigned long x)
-{
-        unsigned long y = x - __START_KERNEL_map;
- 
-        /* use the carry flag to determine if x was < __START_KERNEL_map */
-        x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
- 
-        return x;
-}
+Noticed that, gcc version of fedora koji(6.2.1-2.fc25) inserts another 
+relocation and kexec-tools generates following error.
 
+machine_apply_elf_rel: ERROR Unknown type: 261
+
+I have a fixup here:
+https://github.com/pratyushanand/kexec-tools/commit/0eb8a908f617e0f957df7fb3ef293596f47e6832
+
+May be I will send them separately.
+
+~Pratyush
+>
+> Cc: Geoff Levand <geoff@infradead.org>
+> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>
+> Changes for v2:
+> - Fixed the type string to drop the "R_AARCH64_" prefix
+>
+>  kexec/arch/arm64/kexec-arm64.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 2e8839a..e067a23 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -550,6 +550,14 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+>  # define R_AARCH64_ADR_PREL_LO21 274
+>  #endif
+>
+> +#if !defined(R_AARCH64_ADR_PREL_PG_HI21)
+> +# define R_AARCH64_ADR_PREL_PG_HI21 275
+> +#endif
+> +
+> +#if !defined(R_AARCH64_ADD_ABS_LO12_NC)
+> +# define R_AARCH64_ADD_ABS_LO12_NC 277
+> +#endif
+> +
+>  #if !defined(R_AARCH64_JUMP26)
+>  # define R_AARCH64_JUMP26 282
+>  #endif
+> @@ -558,10 +566,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+>  # define R_AARCH64_CALL26 283
+>  #endif
+>
+> +#if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
+> +# define R_AARCH64_LDST64_ABS_LO12_NC 286
+> +#endif
+> +
+>  	uint64_t *loc64;
+>  	uint32_t *loc32;
+>  	uint64_t *location = (uint64_t *)ptr;
+>  	uint64_t data = *location;
+> +	uint64_t imm;
+>  	const char *type = NULL;
+>
+>  	switch(r_type) {
+> @@ -585,6 +598,19 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+>  		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+>  			+ (((value - address) << 3) & 0xffffe0));
+>  		break;
+> +	case R_AARCH64_ADR_PREL_PG_HI21:
+> +		type = "ADR_PREL_PG_HI21";
+> +		imm = ((value & ~0xfff) - (address & ~0xfff)) >> 12;
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ ((imm & 3) << 29) + ((imm & 0x1ffffc) << (5 - 2)));
+> +		break;
+> +	case R_AARCH64_ADD_ABS_LO12_NC:
+> +		type = "ADD_ABS_LO12_NC";
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ ((value & 0xfff) << 10));
+> +		break;
+>  	case R_AARCH64_JUMP26:
+>  		type = "JUMP26";
+>  		loc32 = ptr;
+> @@ -597,6 +623,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+>  		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+>  			+ (((value - address) >> 2) & 0x3ffffff));
+>  		break;
+> +	case R_AARCH64_LDST64_ABS_LO12_NC:
+> +		if (value & 7)
+> +			die("%s: ERROR Unaligned value: %lx\n", __func__,
+> +				value);
+> +		type = "LDST64_ABS_LO12_NC";
+> +		loc32 = ptr;
+> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> +			+ ((value & 0xff8) << (10 - 3)));
+> +		break;
+>  	default:
+>  		die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
+>  		break;
+>
 
 _______________________________________________
 kexec mailing list
