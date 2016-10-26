@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f169.google.com ([209.85.220.169])
+Received: from mail-qk0-f181.google.com ([209.85.220.181])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzFyI-0000Mf-6w
- for kexec@lists.infradead.org; Wed, 26 Oct 2016 04:37:52 +0000
-Received: by mail-qk0-f169.google.com with SMTP id d23so22613551qke.7
- for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 21:37:29 -0700 (PDT)
-Subject: Re: [PATCH v2] arm64: Add support for additional relocations in the
- kexec purgatory code
-References: <1476960211-25594-1-git-send-email-catalin.marinas@arm.com>
+ id 1bzG1C-0002Fd-GW
+ for kexec@lists.infradead.org; Wed, 26 Oct 2016 04:40:51 +0000
+Received: by mail-qk0-f181.google.com with SMTP id z190so273378368qkc.2
+ for <kexec@lists.infradead.org>; Tue, 25 Oct 2016 21:40:30 -0700 (PDT)
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <6eb25c47-6fbd-4b7a-e450-6de6388a9d55@redhat.com>
-Date: Wed, 26 Oct 2016 10:07:23 +0530
-MIME-Version: 1.0
-In-Reply-To: <1476960211-25594-1-git-send-email-catalin.marinas@arm.com>
+Subject: [PATCH] arm64: Add support of R_AARCH64_PREL32 relocation in purgatory
+Date: Wed, 26 Oct 2016 10:10:23 +0530
+Message-Id: <0eb8a908f617e0f957df7fb3ef293596f47e6832.1477456661.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,120 +17,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Simon Horman <horms@verge.net.au>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: geoff@infradead.org, horms@verge.net.au
+Cc: Pratyush Anand <panand@redhat.com>, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-
-
-On Thursday 20 October 2016 04:13 PM, Catalin Marinas wrote:
-> When compiling the kexec-tools with gcc6, the following additional
-> reolcations are generated in the purgatory.ro file:
->
-> R_AARCH64_ADR_PREL_PG_HI21
-> R_AARCH64_ADD_ABS_LO12_NC
-> R_AARCH64_LDST64_ABS_LO12_NC
->
-> This patch modifies the arm64 machine_apply_elf_rel() function to handle
-> these relocations.
-
-Noticed that, gcc version of fedora koji(6.2.1-2.fc25) inserts another 
-relocation and kexec-tools generates following error.
+gcc version in fedora koji is  6.2.1-2.fc25. kexec-tools compiled with this
+gcc produced another relocation error:
 
 machine_apply_elf_rel: ERROR Unknown type: 261
 
-I have a fixup here:
-https://github.com/pratyushanand/kexec-tools/commit/0eb8a908f617e0f957df7fb3ef293596f47e6832
+This patch fixes the above error.
 
-May be I will send them separately.
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ kexec/arch/arm64/kexec-arm64.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-~Pratyush
->
-> Cc: Geoff Levand <geoff@infradead.org>
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->
-> Changes for v2:
-> - Fixed the type string to drop the "R_AARCH64_" prefix
->
->  kexec/arch/arm64/kexec-arm64.c | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 2e8839a..e067a23 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -550,6 +550,14 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
->  # define R_AARCH64_ADR_PREL_LO21 274
->  #endif
->
-> +#if !defined(R_AARCH64_ADR_PREL_PG_HI21)
-> +# define R_AARCH64_ADR_PREL_PG_HI21 275
-> +#endif
-> +
-> +#if !defined(R_AARCH64_ADD_ABS_LO12_NC)
-> +# define R_AARCH64_ADD_ABS_LO12_NC 277
-> +#endif
-> +
->  #if !defined(R_AARCH64_JUMP26)
->  # define R_AARCH64_JUMP26 282
->  #endif
-> @@ -558,10 +566,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
->  # define R_AARCH64_CALL26 283
->  #endif
->
-> +#if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
-> +# define R_AARCH64_LDST64_ABS_LO12_NC 286
-> +#endif
-> +
->  	uint64_t *loc64;
->  	uint32_t *loc32;
->  	uint64_t *location = (uint64_t *)ptr;
->  	uint64_t data = *location;
-> +	uint64_t imm;
->  	const char *type = NULL;
->
->  	switch(r_type) {
-> @@ -585,6 +598,19 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
->  		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
->  			+ (((value - address) << 3) & 0xffffe0));
->  		break;
-> +	case R_AARCH64_ADR_PREL_PG_HI21:
-> +		type = "ADR_PREL_PG_HI21";
-> +		imm = ((value & ~0xfff) - (address & ~0xfff)) >> 12;
-> +		loc32 = ptr;
-> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
-> +			+ ((imm & 3) << 29) + ((imm & 0x1ffffc) << (5 - 2)));
-> +		break;
-> +	case R_AARCH64_ADD_ABS_LO12_NC:
-> +		type = "ADD_ABS_LO12_NC";
-> +		loc32 = ptr;
-> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
-> +			+ ((value & 0xfff) << 10));
-> +		break;
->  	case R_AARCH64_JUMP26:
->  		type = "JUMP26";
->  		loc32 = ptr;
-> @@ -597,6 +623,15 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
->  		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
->  			+ (((value - address) >> 2) & 0x3ffffff));
->  		break;
-> +	case R_AARCH64_LDST64_ABS_LO12_NC:
-> +		if (value & 7)
-> +			die("%s: ERROR Unaligned value: %lx\n", __func__,
-> +				value);
-> +		type = "LDST64_ABS_LO12_NC";
-> +		loc32 = ptr;
-> +		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
-> +			+ ((value & 0xff8) << (10 - 3)));
-> +		break;
->  	default:
->  		die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
->  		break;
->
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 218f0bc832cd..b12de4772412 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -720,6 +720,10 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ # define R_AARCH64_ABS64 257
+ #endif
+ 
++#if !defined(R_AARCH64_PREL32)
++# define R_AARCH64_PREL32 261
++#endif
++
+ #if !defined(R_AARCH64_LD_PREL_LO19)
+ # define R_AARCH64_LD_PREL_LO19 273
+ #endif
+@@ -761,6 +765,11 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ 		loc64 = ptr;
+ 		*loc64 = cpu_to_elf64(ehdr, elf64_to_cpu(ehdr, *loc64) + value);
+ 		break;
++	case R_AARCH64_PREL32:
++		type = "PREL32";
++		loc32 = ptr;
++		*loc32 = cpu_to_elf32(ehdr, elf32_to_cpu(ehdr, *loc32) + value - address);
++		break;
+ 	case R_AARCH64_LD_PREL_LO19:
+ 		type = "LD_PREL_LO19";
+ 		loc32 = ptr;
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
