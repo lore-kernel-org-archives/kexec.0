@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzaqN-00050N-MO
- for kexec@lists.infradead.org; Thu, 27 Oct 2016 02:55:05 +0000
-Date: Thu, 27 Oct 2016 10:54:37 +0800
-From: Dave Young <dyoung@redhat.com>
+ id 1bzbKY-0000PO-FB
+ for kexec@lists.infradead.org; Thu, 27 Oct 2016 03:26:15 +0000
+Date: Thu, 27 Oct 2016 11:25:48 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH Makedumpfile 0/4] x86_64: Fix page_offset for randomized
  base enabled
-Message-ID: <20161027025437.GA20670@dhcp-128-65.nay.redhat.com>
+Message-ID: <20161027032548.GA5614@x1>
 References: <cover.1477327674.git.panand@redhat.com>
  <20161027023743.GA20446@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
@@ -25,14 +25,8 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: anderson@redhat.com, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, bhe@redhat.com
-
-I put the cped-vmcore/vmlinux here:
-https://people.redhat.com/~ruyang/test/
-
-Adding Dave Anderson for any comments about the vmcore correctness from
-crash point of view..
+To: Dave Young <dyoung@redhat.com>
+Cc: Pratyush Anand <panand@redhat.com>, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org
 
 On 10/27/16 at 10:37am, Dave Young wrote:
 > Hi Pratyush,
@@ -67,6 +61,10 @@ On 10/27/16 at 10:37am, Dave Young wrote:
 > kernel kaslr was disabled during my test so that we can focus on the
 > vmcore size issue, it looks like mem_map address was not collected
 > correctly.
+
+From printing log, this is not correct. Without memmap, filtering can't
+be done correctly. 
+
 > 
 > [please ignore the patched log extra debug message I added] 
 > 
