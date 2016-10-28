@@ -1,23 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qk0-f173.google.com ([209.85.220.173])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzwXJ-0005pv-5I
- for kexec@lists.infradead.org; Fri, 28 Oct 2016 02:04:50 +0000
-Date: Fri, 28 Oct 2016 10:04:19 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH Makedumpfile 0/4] x86_64: Fix page_offset for randomized
- base enabled
-Message-ID: <20161028020419.GA3901@dhcp-128-65.nay.redhat.com>
-References: <cover.1477327674.git.panand@redhat.com>
- <20161027023743.GA20446@dhcp-128-65.nay.redhat.com>
- <20161027025437.GA20670@dhcp-128-65.nay.redhat.com>
- <20161027061945.GA23354@dhcp-128-65.nay.redhat.com>
- <926225735.8567580.1477574985798.JavaMail.zimbra@redhat.com>
- <595835228.8595706.1477581920601.JavaMail.zimbra@redhat.com>
- <1344182812.8599658.1477582911159.JavaMail.zimbra@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1344182812.8599658.1477582911159.JavaMail.zimbra@redhat.com>
+ id 1bzyaz-0006KK-SK
+ for kexec@lists.infradead.org; Fri, 28 Oct 2016 04:16:47 +0000
+Received: by mail-qk0-f173.google.com with SMTP id v138so17949930qka.0
+ for <kexec@lists.infradead.org>; Thu, 27 Oct 2016 21:16:24 -0700 (PDT)
+From: Pratyush Anand <panand@redhat.com>
+Subject: [PATCH V2] arm64: Add support of R_AARCH64_PREL32 relocation in
+ purgatory
+Date: Fri, 28 Oct 2016 09:46:09 +0530
+Message-Id: <f970f7938109c40833fc45e3d6d72b1dcdf14595.1477627895.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,101 +18,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: Pratyush Anand <panand@redhat.com>, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, bhe@redhat.com
+To: geoff@infradead.org, horms@verge.net.au
+Cc: Pratyush Anand <panand@redhat.com>, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 10/27/16 at 11:41am, Dave Anderson wrote:
-> 
-> 
-> ----- Original Message -----
-> > 
-> > 
-> > ----- Original Message -----
-> > 
-> > >   
-> > > That being said, my recent 4.8 and 4.9 KASLR testing has been on live
-> > > systems and compressed kdumps, so the old tried-and-true manner of
-> > > calculating the phys_base from the ELF PT_LOAD segments apparently
-> > > no longer works with KASLR.
-> > > 
-> > > It would be so much more helpful if the VMCOREINFO data in the ELF
-> > > header stored the actual phys_base value instead of its symbol value:
-> > > 
-> > >   crash> help -D
-> > >   ...
-> > >   SYMBOL(phys_base)=ffffffffa740b010
-> > >   ...
-> > > 
-> > > which is completely useless unless the phys_base value is known.
-> > > 
-> > > Anyway, can you send me the makedumpfile code that calculates the
-> > > phys_base value?
-> > > 
-> > > Dave
-> > 
-> > As it turns out, the problem with the crash utility is that it has to
-> > calculate phys_base well before it even knows the kernel has been relocated
-> > by KASLR.  So when it sees the __START_KERNEL_map PT_LOAD segment, it
-> > mistakes
-> > it for the kernel modules' virtual address region and skips it.
-> > 
-> > The kernel has this:
-> > 
-> >   #if defined(CONFIG_RANDOMIZE_BASE)
-> >   #define KERNEL_IMAGE_SIZE       (1024 * 1024 * 1024)
-> >   #else
-> >   #define KERNEL_IMAGE_SIZE       (512 * 1024 * 1024)
-> >   #endif
-> > 
-> > and then this:
-> > 
-> >   #define MODULES_VADDR    (__START_KERNEL_map + KERNEL_IMAGE_SIZE)
-> > 
-> > So with KASLR, MODULES_VADDR gets pushed up from the traditional ffffffffa0000000
-> > up to ffffffffc0000000.
-> > 
-> > So I'm curious as to what you use in makedumpfile to determine whether
-> > CONFIG_RANDOMIZE_BASE has been configured?
-> > 
-> > Thanks,
-> >   Dave
-> 
-> Hey, sorry, I didn't notice that this was added upstream:
-> 
->   commit 1303a27c9c32020a3b6ac89be270d2ab1f28be24
->   Author: Baoquan He <bhe@redhat.com>
->   Date:   Wed Sep 9 15:39:03 2015 -0700
-> 
->     kexec: export KERNEL_IMAGE_SIZE to vmcoreinfo
->     
-> With that in place, it will be an easy fix for the crash utility.
+gcc version in fedora koji is  6.2.1-2.fc25. kexec-tools compiled with this
+gcc produced another relocation error:
 
-Dave, I confirmed your fix in crash git tree works, it also works for
-the elf format vmcore, /proc/vmcore and makedumpfile -E created vmcore.
+machine_apply_elf_rel: ERROR Unknown type: 261
 
-Thanks for the quick fix..
+This patch fixes the above error.
 
-> 
-> Thanks,
->   Dave
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+v1 -> v2: fixed line width to less than 80 chars
+
+ kexec/arch/arm64/kexec-arm64.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 218f0bc832cd..eb0c3b87354e 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -720,6 +720,10 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ # define R_AARCH64_ABS64 257
+ #endif
+ 
++#if !defined(R_AARCH64_PREL32)
++# define R_AARCH64_PREL32 261
++#endif
++
+ #if !defined(R_AARCH64_LD_PREL_LO19)
+ # define R_AARCH64_LD_PREL_LO19 273
+ #endif
+@@ -761,6 +765,12 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ 		loc64 = ptr;
+ 		*loc64 = cpu_to_elf64(ehdr, elf64_to_cpu(ehdr, *loc64) + value);
+ 		break;
++	case R_AARCH64_PREL32:
++		type = "PREL32";
++		loc32 = ptr;
++		*loc32 = cpu_to_elf32(ehdr,
++			elf32_to_cpu(ehdr, *loc32) + value - address);
++		break;
+ 	case R_AARCH64_LD_PREL_LO19:
+ 		type = "LD_PREL_LO19";
+ 		loc32 = ptr;
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
