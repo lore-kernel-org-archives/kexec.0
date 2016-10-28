@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f182.google.com ([209.85.216.182])
+Received: from mail-qk0-f171.google.com ([209.85.220.171])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c00Uf-0004ND-Un
- for kexec@lists.infradead.org; Fri, 28 Oct 2016 06:18:24 +0000
-Received: by mail-qt0-f182.google.com with SMTP id p16so30479493qta.0
- for <kexec@lists.infradead.org>; Thu, 27 Oct 2016 23:18:01 -0700 (PDT)
+ id 1c00Uu-0004PO-EA
+ for kexec@lists.infradead.org; Fri, 28 Oct 2016 06:18:37 +0000
+Received: by mail-qk0-f171.google.com with SMTP id v138so20121578qka.0
+ for <kexec@lists.infradead.org>; Thu, 27 Oct 2016 23:18:16 -0700 (PDT)
 Subject: Re: [PATCH] Fix module module_init/init_size offsets for v4.5 kernel
 References: <1477631234-15500-1-git-send-email-kamalesh@linux.vnet.ibm.com>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <07a394ec-5a25-9e0a-b0ac-3e931a589905@redhat.com>
-Date: Fri, 28 Oct 2016 11:47:55 +0530
+Message-ID: <14d7f3de-37f1-786c-e7e3-96d7f9c89bed@redhat.com>
+Date: Fri, 28 Oct 2016 11:48:10 +0530
 MIME-Version: 1.0
 In-Reply-To: <1477631234-15500-1-git-send-email-kamalesh@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
