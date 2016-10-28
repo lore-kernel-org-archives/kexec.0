@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f174.google.com ([209.85.216.174])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1bzn5t-0004Nw-Rw
- for kexec@lists.infradead.org; Thu, 27 Oct 2016 15:59:55 +0000
-Received: by mail-qt0-f174.google.com with SMTP id q7so26938501qtq.1
- for <kexec@lists.infradead.org>; Thu, 27 Oct 2016 08:59:33 -0700 (PDT)
+ id 1bzwXJ-0005pv-5I
+ for kexec@lists.infradead.org; Fri, 28 Oct 2016 02:04:50 +0000
+Date: Fri, 28 Oct 2016 10:04:19 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH Makedumpfile 0/4] x86_64: Fix page_offset for randomized
  base enabled
+Message-ID: <20161028020419.GA3901@dhcp-128-65.nay.redhat.com>
 References: <cover.1477327674.git.panand@redhat.com>
  <20161027023743.GA20446@dhcp-128-65.nay.redhat.com>
  <20161027025437.GA20670@dhcp-128-65.nay.redhat.com>
  <20161027061945.GA23354@dhcp-128-65.nay.redhat.com>
  <926225735.8567580.1477574985798.JavaMail.zimbra@redhat.com>
  <595835228.8595706.1477581920601.JavaMail.zimbra@redhat.com>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <56d182b4-73b6-4d16-4d5a-bd527cff944d@redhat.com>
-Date: Thu, 27 Oct 2016 21:29:27 +0530
+ <1344182812.8599658.1477582911159.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <595835228.8595706.1477581920601.JavaMail.zimbra@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1344182812.8599658.1477582911159.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,49 +26,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: ats-kumagai@wm.jp.nec.com, bhe@redhat.com
+To: Dave Anderson <anderson@redhat.com>
+Cc: Pratyush Anand <panand@redhat.com>, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, bhe@redhat.com
 
+On 10/27/16 at 11:41am, Dave Anderson wrote:
+> 
+> 
+> ----- Original Message -----
+> > 
+> > 
+> > ----- Original Message -----
+> > 
+> > >   
+> > > That being said, my recent 4.8 and 4.9 KASLR testing has been on live
+> > > systems and compressed kdumps, so the old tried-and-true manner of
+> > > calculating the phys_base from the ELF PT_LOAD segments apparently
+> > > no longer works with KASLR.
+> > > 
+> > > It would be so much more helpful if the VMCOREINFO data in the ELF
+> > > header stored the actual phys_base value instead of its symbol value:
+> > > 
+> > >   crash> help -D
+> > >   ...
+> > >   SYMBOL(phys_base)=ffffffffa740b010
+> > >   ...
+> > > 
+> > > which is completely useless unless the phys_base value is known.
+> > > 
+> > > Anyway, can you send me the makedumpfile code that calculates the
+> > > phys_base value?
+> > > 
+> > > Dave
+> > 
+> > As it turns out, the problem with the crash utility is that it has to
+> > calculate phys_base well before it even knows the kernel has been relocated
+> > by KASLR.  So when it sees the __START_KERNEL_map PT_LOAD segment, it
+> > mistakes
+> > it for the kernel modules' virtual address region and skips it.
+> > 
+> > The kernel has this:
+> > 
+> >   #if defined(CONFIG_RANDOMIZE_BASE)
+> >   #define KERNEL_IMAGE_SIZE       (1024 * 1024 * 1024)
+> >   #else
+> >   #define KERNEL_IMAGE_SIZE       (512 * 1024 * 1024)
+> >   #endif
+> > 
+> > and then this:
+> > 
+> >   #define MODULES_VADDR    (__START_KERNEL_map + KERNEL_IMAGE_SIZE)
+> > 
+> > So with KASLR, MODULES_VADDR gets pushed up from the traditional ffffffffa0000000
+> > up to ffffffffc0000000.
+> > 
+> > So I'm curious as to what you use in makedumpfile to determine whether
+> > CONFIG_RANDOMIZE_BASE has been configured?
+> > 
+> > Thanks,
+> >   Dave
+> 
+> Hey, sorry, I didn't notice that this was added upstream:
+> 
+>   commit 1303a27c9c32020a3b6ac89be270d2ab1f28be24
+>   Author: Baoquan He <bhe@redhat.com>
+>   Date:   Wed Sep 9 15:39:03 2015 -0700
+> 
+>     kexec: export KERNEL_IMAGE_SIZE to vmcoreinfo
+>     
+> With that in place, it will be an easy fix for the crash utility.
 
+Dave, I confirmed your fix in crash git tree works, it also works for
+the elf format vmcore, /proc/vmcore and makedumpfile -E created vmcore.
 
-On Thursday 27 October 2016 08:55 PM, Dave Anderson wrote:
-> As it turns out, the problem with the crash utility is that it has to
-> calculate phys_base well before it even knows the kernel has been relocated
-> by KASLR.  So when it sees the __START_KERNEL_map PT_LOAD segment, it mistakes
-> it for the kernel modules' virtual address region and skips it.
->
-> The kernel has this:
->
->   #if defined(CONFIG_RANDOMIZE_BASE)
->   #define KERNEL_IMAGE_SIZE       (1024 * 1024 * 1024)
->   #else
->   #define KERNEL_IMAGE_SIZE       (512 * 1024 * 1024)
->   #endif
->
-> and then this:
->
->   #define MODULES_VADDR    (__START_KERNEL_map + KERNEL_IMAGE_SIZE)
->
-> So with KASLR, MODULES_VADDR gets pushed up from the traditional ffffffffa0000000
-> up to ffffffffc0000000.
->
-> So I'm curious as to what you use in makedumpfile to determine whether
-> CONFIG_RANDOMIZE_BASE has been configured?
+Thanks for the quick fix..
 
-So far we are trying to avoid to know that in makedumpfile. makedumpfile 
-needed to know MODULES_VADDR, VMALLOC_START etc only to know that 
-whether a VA to PA translation can be done using direct mapping or to be 
-done by reading corresponding page table entry.
-
-Now, we do VA to PA for all VAs using page table entry only.
-
-https://github.com/pratyushanand/makedumpfile/blob/x86_devel/arch/x86_64.c#L186
-
-~Pratyush
+> 
+> Thanks,
+>   Dave
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
