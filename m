@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f173.google.com ([209.85.216.173])
+Received: from mail-pf0-x236.google.com ([2607:f8b0:400e:c00::236])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c17ne-0003AF-1H
- for kexec@lists.infradead.org; Mon, 31 Oct 2016 08:18:35 +0000
-Received: by mail-qt0-f173.google.com with SMTP id c47so22542252qtc.2
- for <kexec@lists.infradead.org>; Mon, 31 Oct 2016 01:18:13 -0700 (PDT)
-From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile PATCH V2 4/4] x86_64: kill some unused initialization
-Date: Mon, 31 Oct 2016 13:47:37 +0530
-Message-Id: <98d8c98aeacec06f2276149da989a631cd5935d8.1477901442.git.panand@redhat.com>
-In-Reply-To: <cover.1477901442.git.panand@redhat.com>
-References: <cover.1477901442.git.panand@redhat.com>
-In-Reply-To: <cover.1477901442.git.panand@redhat.com>
-References: <cover.1477901442.git.panand@redhat.com>
+ id 1c18AT-00089d-T9
+ for kexec@lists.infradead.org; Mon, 31 Oct 2016 08:42:11 +0000
+Received: by mail-pf0-x236.google.com with SMTP id n85so73754122pfi.1
+ for <kexec@lists.infradead.org>; Mon, 31 Oct 2016 01:41:48 -0700 (PDT)
+Date: Mon, 31 Oct 2016 17:50:09 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: Memory range end be inclusive or exclusive? Re: [PATCH v1 1/4]
+ kexec: (bugfix) calc correct end address of memory ranges in device tree
+Message-ID: <20161031085008.GF19531@linaro.org>
+References: <cover.1468970114.git.geoff@infradead.org>
+ <3562841.ROYbCgkeeq@hactar>
+ <20160727232331.GY1041@n2100.armlinux.org.uk>
+ <1860371.lT9GInp2C3@hactar>
+ <20160729082714.GA1041@n2100.armlinux.org.uk>
+ <1469812346.16559.40.camel@infradead.org>
+ <20160729172356.GD1041@n2100.armlinux.org.uk>
+ <20160801045240.GD7995@linaro.org>
+ <20160906002958.GB16712@linaro.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20160906002958.GB16712@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +30,100 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, louis.bouchard@canonical.com, kexec@lists.infradead.org, bhe@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, linux-arm-kernel@lists.infradead.org
 
-VMALLOC_START, VMALLOC_END, MODULES_VADDR and MODULES_END are mo more
-needed for x86_64 now. So, kill their initialization.
+Simon,
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
+On Tue, Sep 06, 2016 at 09:29:59AM +0900, AKASHI Takahiro wrote:
+> Simon,
+> 
+> What is your opinion on this issue?
+
+Pinged you several times so far.
+
+Can you please give me your comment?
+(attached below is the original patch.)
+
+-Takahiro AKASHI
+
+> 
+> On Mon, Aug 01, 2016 at 01:52:40PM +0900, AKASHI Takahiro wrote:
+> > On Fri, Jul 29, 2016 at 06:23:56PM +0100, Russell King - ARM Linux wrote:
+> > > On Fri, Jul 29, 2016 at 10:12:26AM -0700, Geoff Levand wrote:
+> > > > On Fri, 2016-07-29 at 09:27 +0100, Russell King - ARM Linux wrote:
+> > > > 
+> > > > > So, these functions are a mess and need fixing.
+> > > > 
+> > > > Since this change isn't really related to arm64 support, I'll
+> > > > drop this patch from my series.
+> > > 
+> > > Do you have a case which triggers bugs in this code?
+> > 
+> > Actually, this patch was necessary when my kdump used "usable-memory"
+> > properties in "memory" nodes, as on ppc64, to limit the usable memory
+> > regions that can be used by crash dump kernel.
+> > Since then, I've moved to the approach of using "mem=" kernel parameter,
+> > then introducing a new property, "linux,usable-memory-range," under /chosen
+> > and now we don't need this patch any more.
+> > 
+> > So, we can drop it but I still believe that it is buggy.
+> 
+> Due to the discussions[1], I may want to re-enable "usable-memory"
+> property on arm64. In addition, I would like to add a function,
+> dtb_add_usable_memory_properties(), a variant of
+> add_usable_memory_properties(), to kexec/dt-ops.c.
+> So this issue is quite crucial now.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452685.html
+> 
+> -Takahiro AKASHI
+> 
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > -- 
+> > > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> > > FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> > > according to speedtest.net.
+===8<===
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+
+The end address of "reg" attribute in device tree's memory should be
+inclusive.
 ---
- arch/x86_64.c  | 4 ----
- makedumpfile.h | 2 --
- 2 files changed, 6 deletions(-)
+ kexec/fs2dt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 9e2940ca75d9..3ef33ae4ef2d 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -169,13 +169,9 @@ get_versiondep_info_x86_64(void)
- 		return FALSE;
- 
- 	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
--		info->vmalloc_start = VMALLOC_START_ORIG;
--		info->vmalloc_end   = VMALLOC_END_ORIG;
- 		info->vmemmap_start = VMEMMAP_START_ORIG;
- 		info->vmemmap_end   = VMEMMAP_END_ORIG;
- 	} else {
--		info->vmalloc_start = VMALLOC_START_2_6_31;
--		info->vmalloc_end   = VMALLOC_END_2_6_31;
- 		info->vmemmap_start = VMEMMAP_START_2_6_31;
- 		info->vmemmap_end   = VMEMMAP_END_2_6_31;
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 79aa0f3..953f78a 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -236,7 +236,8 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+ 						    ranges_size*8);
+ 				}
+ 				ranges[rlen++] = cpu_to_be64(loc_base);
+-				ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
++				ranges[rlen++] = cpu_to_be64(loc_end
++								- loc_base + 1);
+ 				rngs_cnt++;
+ 			}
+ 		}
+@@ -350,7 +351,7 @@ static void add_usable_mem_property(int fd, size_t len)
+ 					    ranges_size*sizeof(*ranges));
+ 			}
+ 			ranges[rlen++] = cpu_to_be64(loc_base);
+-			ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
++			ranges[rlen++] = cpu_to_be64(loc_end - loc_base + 1);
+ 		}
  	}
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 8a96da1f61bd..338c651388f0 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -575,8 +575,6 @@ int get_va_bits_arm64(void);
- #define __START_KERNEL_map	(0xffffffff80000000)
- #define KERNEL_IMAGE_SIZE_ORIG		(0x0000000008000000) /* 2.6.25, or former */
- #define KERNEL_IMAGE_SIZE_2_6_26	(0x0000000020000000) /* 2.6.26, or later  */
--#define MODULES_VADDR          (__START_KERNEL_map + NUMBER(KERNEL_IMAGE_SIZE))
--#define MODULES_END		(0xfffffffffff00000)
- #define KVBASE			PAGE_OFFSET
- #define _SECTION_SIZE_BITS	(27)
- #define _MAX_PHYSMEM_BITS_ORIG		(40)
+ 
 -- 
-2.7.4
+2.10.0
 
 
 _______________________________________________
