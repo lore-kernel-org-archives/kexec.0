@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c1O1E-0006kO-AY
- for kexec@lists.infradead.org; Tue, 01 Nov 2016 01:37:41 +0000
-Date: Tue, 1 Nov 2016 09:37:14 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec: Increase the upper limit for RAM segments
-Message-ID: <20161101013714.GA20838@x1>
-References: <1477005268-26943-1-git-send-email-sgoel@codeaurora.org>
- <cad5f084-b914-f522-eb43-71ed8a45b2a0@infradead.org>
- <43d2add1-15f5-7e62-b8ce-9a8afeff71f3@codeaurora.org>
+ id 1c1RLZ-0002jH-R4
+ for kexec@lists.infradead.org; Tue, 01 Nov 2016 05:10:54 +0000
+Date: Tue, 1 Nov 2016 13:10:19 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
+ vmcoreinfo
+Message-ID: <20161101051019.GB4625@dhcp-128-65.nay.redhat.com>
+References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <43d2add1-15f5-7e62-b8ce-9a8afeff71f3@codeaurora.org>
+In-Reply-To: <1475743561-23912-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +24,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Goel, Sameer" <sgoel@codeaurora.org>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: panand@redhat.com, keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, takahiro.akashi@linaro.org, mingo@redhat.com, anderson@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, thgarnie@google.com, tonli@redhat.com
 
-On 10/31/16 at 01:11pm, Goel, Sameer wrote:
-> This change is needed in case when the System Ram listings are retrieved
-> from /proc/iomem. On a newer UEFI based Qualcomm system, the number of
-> regions listed were close to 34. So, the actual system ram region was not
-> covered and the kexec tool failed to load the kernel image.
+On 10/06/16 at 04:46pm, Baoquan He wrote:
+> KASLR memory randomization can randomize the base of the physical memory
+> mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
+> (VMEMMAP_START). These need be exported to VMCOREINFO so that user space
+> utility, mainly makedumpfile can use them to identify the base of each
+> memory section. Here using VMCOREINFO_NUMBER we can reuse the existing
+> struct number_table in makedumpfile to import data easily.
 > 
-> So, I have requested an increase in the number of memory regions.
-> Thanks,
+> Since they are related to x86_64 only, put them into
+> arch_crash_save_vmcoreinfo. And move the exportion of KERNEL_IMAGE_SIZE
+> together since it's also for x86_64 only.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/x86/kernel/machine_kexec_64.c | 4 ++++
+>  kernel/kexec_core.c                | 3 ---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index 5a294e4..e150dd7 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -337,6 +337,10 @@ void arch_crash_save_vmcoreinfo(void)
+>  #endif
+>  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+>  			      kaslr_offset());
+> +	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> +	VMCOREINFO_NUMBER(PAGE_OFFSET);
+> +	VMCOREINFO_NUMBER(VMALLOC_START);
+> +	VMCOREINFO_NUMBER(VMEMMAP_START);
 
-It would be great to add this to your patch log so that reviewers can
-understand it better. Better repost with an updated patch log, copying
-these as patch log is good enough.
+Pratyush has posted makedumpfile patches below to avoid the VMCOREINFO:
+http://lists.infradead.org/pipermail/kexec/2016-October/017540.html
 
-> Sameer
-> 
-> On 10/21/2016 11:05 AM, Geoff Levand wrote:
-> > Hi Sameer.
-> > 
-> > On 10/20/2016 04:14 PM, Sameer Goel wrote:
-> > > Change the current hardcoded values to 64 from 16.
-> > 
-> > Please add an explanation of why this change is needed.
-> > 
-> > -Geoff
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> 
+But we have this in mainline which also introduced the VMCOREINFO
+numbers, can you send a patch to revert them?
+commit 0549a3c02efb350776bc869685a361045efd3a29
+Author: Thomas Garnier <thgarnie@google.com>
+Date:   Tue Oct 11 13:55:08 2016 -0700
+
+    kdump, vmcoreinfo: report memory sections virtual addresses
+[snip]]
+
+>  }
+>  
+>  /* arch-dependent functionality related to kexec file-based syscall */
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..8ad3a29e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1467,9 +1467,6 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  #endif
+>  	VMCOREINFO_NUMBER(PG_head_mask);
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+> -#ifdef CONFIG_X86
+> -	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> -#endif
+
+Moving KERNEL_IMAGE_SIZE to x86 should be a standalone patch.
+I remember Dave Anderson said he use it in crash utility, cced him.
+
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+>  #endif
 > -- 
-> Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project.
+> 2.5.5
+> 
 > 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
