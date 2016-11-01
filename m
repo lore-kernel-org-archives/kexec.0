@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c1RiC-00025K-Vd
- for kexec@lists.infradead.org; Tue, 01 Nov 2016 05:34:17 +0000
-Date: Tue, 1 Nov 2016 13:33:53 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
- vmcoreinfo
-Message-ID: <20161101053353.GC20838@x1>
-References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
- <20161101051019.GB4625@dhcp-128-65.nay.redhat.com>
+ id 1c1RiZ-00026g-0C
+ for kexec@lists.infradead.org; Tue, 01 Nov 2016 05:34:39 +0000
+Date: Tue, 1 Nov 2016 13:34:11 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [Makedumpfile PATCH V2 0/4] x86_64: Fix page_offset for
+ randomized base enabled
+Message-ID: <20161101053411.GA4952@dhcp-128-65.nay.redhat.com>
+References: <cover.1477901442.git.panand@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20161101051019.GB4625@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <cover.1477901442.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,95 +24,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: panand@redhat.com, keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, takahiro.akashi@linaro.org, mingo@redhat.com, anderson@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, thgarnie@google.com, tonli@redhat.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: ats-kumagai@wm.jp.nec.com, louis.bouchard@canonical.com, kexec@lists.infradead.org, cpw@sgi.com, bhe@redhat.com
 
-On 11/01/16 at 01:10pm, Dave Young wrote:
-> On 10/06/16 at 04:46pm, Baoquan He wrote:
-> > KASLR memory randomization can randomize the base of the physical memory
-> > mapping (PAGE_OFFSET), vmalloc (VMALLOC_START) and vmemmap
-> > (VMEMMAP_START). These need be exported to VMCOREINFO so that user space
-> > utility, mainly makedumpfile can use them to identify the base of each
-> > memory section. Here using VMCOREINFO_NUMBER we can reuse the existing
-> > struct number_table in makedumpfile to import data easily.
-> > 
-> > Since they are related to x86_64 only, put them into
-> > arch_crash_save_vmcoreinfo. And move the exportion of KERNEL_IMAGE_SIZE
-> > together since it's also for x86_64 only.
-> > 
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > ---
-> >  arch/x86/kernel/machine_kexec_64.c | 4 ++++
-> >  kernel/kexec_core.c                | 3 ---
-> >  2 files changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> > index 5a294e4..e150dd7 100644
-> > --- a/arch/x86/kernel/machine_kexec_64.c
-> > +++ b/arch/x86/kernel/machine_kexec_64.c
-> > @@ -337,6 +337,10 @@ void arch_crash_save_vmcoreinfo(void)
-> >  #endif
-> >  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
-> >  			      kaslr_offset());
-> > +	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
-> > +	VMCOREINFO_NUMBER(PAGE_OFFSET);
-> > +	VMCOREINFO_NUMBER(VMALLOC_START);
-> > +	VMCOREINFO_NUMBER(VMEMMAP_START);
-> 
-> Pratyush has posted makedumpfile patches below to avoid the VMCOREINFO:
-> http://lists.infradead.org/pipermail/kexec/2016-October/017540.html
-> 
-> But we have this in mainline which also introduced the VMCOREINFO
-> numbers, can you send a patch to revert them?
+Pratyush, the patches works for me, thanks~
 
-OK, will do.
+On 10/31/16 at 01:47pm, Pratyush Anand wrote:
+> Patch 1/4 fixes page_offset calculation, so that it is correctly calculated
+> on KASLR enabled kernel as well.
+> Patch 2/4 simplifies VA to PA translation. New code has been benchmarked
+> against old code on a 4T system.
+> Patch 3/4 and 4/4 is removal of (now) unnecessary code.
+> 
+> I think, we should find a way to kill find_vememmap() as well, so that
+> VMEMMAP_START can be removed. I have very limited idea about x86, so unable
+> to do that as of now.
 
-However for find_vmemmap_x86_64() in makedumpfile, vmemmap_start is
-still needed. I checked code, seems no better way to avoid. I am not
-sure how many people are really using "-e" option to exclude unused
-vmemmap pages.
+It was introduced in below commit, ccing Cliff Wickman, see if he has
+thoughts.
 
-Maybe just leave it as is, and fix it when people complain?
+commit 46176a97f329904c10d4efe5582594d55a04339c
+Author: Cliff Wickman <cpw@sgi.com>
+Date:   Mon Oct 26 23:20:18 2015 +0900
 
-> commit 0549a3c02efb350776bc869685a361045efd3a29
-> Author: Thomas Garnier <thgarnie@google.com>
-> Date:   Tue Oct 11 13:55:08 2016 -0700
 > 
->     kdump, vmcoreinfo: report memory sections virtual addresses
-> [snip]]
+> Changes since V1:
+> * A bug in patch 1/4 fixed
+> * Patch log of 2/4 improved to include more number of trials
 > 
-> >  }
-> >  
-> >  /* arch-dependent functionality related to kexec file-based syscall */
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index 5616755..8ad3a29e 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -1467,9 +1467,6 @@ static int __init crash_save_vmcoreinfo_init(void)
-> >  #endif
-> >  	VMCOREINFO_NUMBER(PG_head_mask);
-> >  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
-> > -#ifdef CONFIG_X86
-> > -	VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
-> > -#endif
+> Pratyush Anand (4):
+>   x86_64: Calculate page_offset from pt_load
+>   x86_64: translate all VA to PA using page table values
+>   x86_64: kill is_vmalloc_addr_x86_64()
+>   x86_64: kill some unused initialization
 > 
-> Moving KERNEL_IMAGE_SIZE to x86 should be a standalone patch.
-> I remember Dave Anderson said he use it in crash utility, cced him.
+>  arch/x86_64.c  | 84 ++++++++++++++++++++--------------------------------------
+>  makedumpfile.h |  9 +++----
+>  2 files changed, 32 insertions(+), 61 deletions(-)
 > 
-> >  #ifdef CONFIG_HUGETLB_PAGE
-> >  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
-> >  #endif
-> > -- 
-> > 2.5.5
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
+> -- 
+> 2.7.4
 > 
-> Thanks
-> Dave
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
