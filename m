@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x232.google.com ([2607:f8b0:400e:c00::232])
+Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c1nGm-0006xK-EM
- for kexec@lists.infradead.org; Wed, 02 Nov 2016 04:35:25 +0000
-Received: by mail-pf0-x232.google.com with SMTP id d2so4124705pfd.0
- for <kexec@lists.infradead.org>; Tue, 01 Nov 2016 21:35:04 -0700 (PDT)
+ id 1c1nNW-0001jO-CX
+ for kexec@lists.infradead.org; Wed, 02 Nov 2016 04:42:24 +0000
+Received: by mail-pf0-x22c.google.com with SMTP id n85so4220222pfi.1
+ for <kexec@lists.infradead.org>; Tue, 01 Nov 2016 21:42:01 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v4 9/9] arm64: kdump: Add support for binary image files
-Date: Wed,  2 Nov 2016 13:41:11 +0900
-Message-Id: <20161102044111.11779-10-takahiro.akashi@linaro.org>
-In-Reply-To: <20161102044111.11779-1-takahiro.akashi@linaro.org>
-References: <20161102044111.11779-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v27 0/9] arm64: add kdump support
+Date: Wed,  2 Nov 2016 13:49:59 +0900
+Message-Id: <20161102044959.11954-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +22,105 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-From: Pratyush Anand <panand@redhat.com>
+    v27-specific note: In this version, the change made in v26 was reverted
+    because I've got a comment that /reserved-memory DT property should
+    not be used on UEFI/ACPI systems, even though it is workable under
+    the current implementation. I've also confirmed that Rob doesn't argue
+    any more against using "linux,usable-memory-range".
+    So v27 is essentially the same as v25.
 
-This patch adds support to use binary image ie arch/arm64/boot/Image with
-kdump.
+This patch series adds kdump support on arm64.
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
-[takahiro.akashi@linaro.org: a bit reworked]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
----
- kexec/arch/arm64/kexec-image-arm64.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+To load a crash-dump kernel to the systems, a series of patches to
+kexec-tools[1] are also needed. Please use the latest one, v4 [2].
 
-diff --git a/kexec/arch/arm64/kexec-image-arm64.c b/kexec/arch/arm64/kexec-image-arm64.c
-index 960ed96..982e431 100644
---- a/kexec/arch/arm64/kexec-image-arm64.c
-+++ b/kexec/arch/arm64/kexec-image-arm64.c
-@@ -4,7 +4,9 @@
- 
- #define _GNU_SOURCE
- 
-+#include "crashdump-arm64.h"
- #include "kexec-arm64.h"
-+#include "kexec-syscall.h"
- #include <limits.h>
- 
- int image_arm64_probe(const char *kernel_buf, off_t kernel_size)
-@@ -58,6 +60,16 @@ int image_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	dbgprintf("%s: PE format:      %s\n", __func__,
- 		(arm64_header_check_pe_sig(header) ? "yes" : "no"));
- 
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		/* create and initialize elf core header segment */
-+		result = load_crashdump_segments(info);
-+		if (result) {
-+			dbgprintf("%s: Creating eflcorehdr failed.\n",
-+								__func__);
-+			goto exit;
-+		}
-+	}
-+
- 	/* load the kernel */
- 	add_segment_phys_virt(info, kernel_buf, kernel_size,
- 			kernel_segment + arm64_mem.text_offset,
+To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+  - crash utility (v7.1.6 or later) [3]
+
+
+[1] https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+[1] http://lists.infradead.org/pipermail/kexec/2016-November/017555.html
+[2] https://github.com/crash-utility/crash.git
+
+Changes for v27 (Nov 2, 2016)
+  o rebased to Linux-v4.9-rc3
+  o revert v26 change, i.e. revive "linux,usable-memory-range" property
+    (patch #2/#3, updating patch #9)
+  o minor fixes per review comments (patch #3/#4/#6/#8)
+  o re-order patches and improve commit messages for readability
+
+Changes for v26 (Sep 7, 2016):
+  o Use /reserved-memory instead of "linux,usable-memory-range" property
+    (dropping v25's patch#2 and #3, updating ex-patch#9.)
+
+Changes for v25 (Aug 29, 2016):
+  o Rebase to Linux-4.8-rc4
+  o Use memremap() instead of ioremap_cache() [patch#5]
+
+Changes for v24 (Aug 9, 2016):
+  o Rebase to Linux-4.8-rc1
+  o Update descriptions about newly added DT proerties
+
+Changes for v23 (July 26, 2016):
+
+  o Move memblock_reserve() to a single place in reserve_crashkernel()
+  o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+  o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+  o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+    (for ACPI) from usable memory at crash kernel
+
+Changes for v22 (July 12, 2016):
+
+  o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+    and add some descriptions about them in chosen.txt
+  o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+    with powerpc's "usable-memory"
+  o Make cosmetic changes regarding "ifdef" usage
+  o Correct some wordings in kdump.txt
+
+Changes for v21 (July 6, 2016):
+
+  o Remove kexec patches.
+  o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+  o Clarify the description about kvm in kdump.txt.
+
+See the following link [3] for older changes:
+[3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+
+AKASHI Takahiro (8):
+  memblock: add memblock_cap_memory_range()
+  arm64: limit memory regions based on DT property, usable-memory-range
+  arm64: kdump: reserve memory for crash dump kernel
+  arm64: kdump: implement machine_crash_shutdown()
+  arm64: kdump: add VMCOREINFO's for user-space tools
+  arm64: kdump: provide /proc/vmcore file
+  arm64: kdump: enable kdump in defconfig
+  Documentation: kdump: describe arm64 port
+
+James Morse (1):
+  Documentation: dt: chosen properties for arm64 kdump
+
+ Documentation/devicetree/bindings/chosen.txt |  50 +++++++
+ Documentation/kdump/kdump.txt                |  16 ++-
+ arch/arm64/Kconfig                           |  11 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/hardirq.h             |   2 +-
+ arch/arm64/include/asm/kexec.h               |  42 +++++-
+ arch/arm64/include/asm/smp.h                 |   2 +
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
+ arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
+ arch/arm64/kernel/setup.c                    |   7 +-
+ arch/arm64/kernel/smp.c                      |  63 +++++++++
+ arch/arm64/mm/init.c                         | 199 +++++++++++++++++++++++++++
+ include/linux/memblock.h                     |   1 +
+ mm/memblock.c                                |  28 ++++
+ 15 files changed, 554 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+
 -- 
 2.10.0
 
