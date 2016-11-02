@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] kexec: Increase the upper limit for RAM segments
-References: <1477005268-26943-1-git-send-email-sgoel@codeaurora.org>
- <cad5f084-b914-f522-eb43-71ed8a45b2a0@infradead.org>
- <43d2add1-15f5-7e62-b8ce-9a8afeff71f3@codeaurora.org>
-From: Geoff Levand <geoff@infradead.org>
-Message-ID: <90cd409d-6f5e-7b3b-dad4-fd13d08fffd5@infradead.org>
-Date: Tue, 1 Nov 2016 12:24:46 -0700
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1c1kSA-0000V1-Fv
+ for kexec@lists.infradead.org; Wed, 02 Nov 2016 01:34:59 +0000
+Date: Wed, 2 Nov 2016 09:34:33 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
+ vmcoreinfo
+Message-ID: <20161102013433.GA3928@x1>
+References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
+ <20161101051019.GB4625@dhcp-128-65.nay.redhat.com>
+ <20161101053353.GC20838@x1>
+ <115590076.11735656.1478009614692.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <43d2add1-15f5-7e62-b8ce-9a8afeff71f3@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <115590076.11735656.1478009614692.JavaMail.zimbra@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +27,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Goel, Sameer" <sgoel@codeaurora.org>
-Cc: kexec@lists.infradead.org
+To: Dave Anderson <anderson@redhat.com>
+Cc: panand@redhat.com, keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, takahiro akashi <takahiro.akashi@linaro.org>, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, thgarnie@google.com, tonli@redhat.com
 
-Hi Sameer,
+Hi Dave,
 
-On 10/31/2016 12:11 PM, Goel, Sameer wrote:
-> This change is needed in case when the System Ram listings are retrieved from /proc/iomem. On a newer UEFI based Qualcomm system, the number of regions listed were close to 34. So, the actual system ram region was not covered and the kexec tool failed to load the kernel image.
+On 11/01/16 at 10:13am, Dave Anderson wrote:
 > 
-> So, I have requested an increase in the number of memory regions.
-> Thanks,
-> Sameer
 > 
-> On 10/21/2016 11:05 AM, Geoff Levand wrote:
->> Hi Sameer.
->>
->> On 10/20/2016 04:14 PM, Sameer Goel wrote:
->>> Change the current hardcoded values to 64 from 16.
->>
->> Please add an explanation of why this change is needed.
+> > > But we have this in mainline which also introduced the VMCOREINFO
+> > > numbers, can you send a patch to revert them?
+> > 
+> > OK, will do.
+> > 
+> > However for find_vmemmap_x86_64() in makedumpfile, vmemmap_start is
+> > still needed. I checked code, seems no better way to avoid. I am not
+> > sure how many people are really using "-e" option to exclude unused
+> > vmemmap pages.
+> > 
+> > Maybe just leave it as is, and fix it when people complain?
+> 
+> Speaking of complaints, is there any chance you can make the
+> x86_64 "phys_base" value available?  The VMCOREINFO_SYMBOL(phys_base)
+> is useless since its contents are needed in order to access the
+> symbol address.
 
-Sorry I wasn't clear.  Please post a new patch, and
-in the commit log include an explanation of why this
-change is needed.
+Yeah, the current exporting of virt addr of phys_base is really useless
+for x86_64. While I saw you have got phys_base from kdump-ed vmcore elf
+program header since kexec-tools has created that pt_load for kernel text
+region.
 
--Geoff
+machdep->machspec->phys_base = phdr->p_paddr - (phdr->p_vaddr & ~(__START_KERNEL_map));
+
+Do you still want the value of phys_base? If yes, I can change it to
+export the real value of phys_base, not &phys_base.
+
+In fact, exporting &phys_base was done in 2008, makedumpfile has taken
+the similar way you use in crash to get value of phys_base. Means it has
+been ignored very earlier. You could be the first person to complain
+about it.
+
+Thanks
+Baoquan
+
 
 _______________________________________________
 kexec mailing list
