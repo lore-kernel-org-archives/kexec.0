@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-qk0-f174.google.com ([209.85.220.174])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c1qVD-0006bV-Hn
- for kexec@lists.infradead.org; Wed, 02 Nov 2016 08:02:32 +0000
-Date: Wed, 2 Nov 2016 16:02:05 +0800
-From: "bhe@redhat.com" <bhe@redhat.com>
-Subject: Re: [PATCH Makedumpfile 1/4] x86_64: Calculate page_offset from
- pt_load
-Message-ID: <20161102080205.GA6084@x1>
-References: <cover.1477327674.git.panand@redhat.com>
- <4b2497eff40bd47eef59cdd6af165e700cfd4408.1477327674.git.panand@redhat.com>
- <c873178b-4d1b-03a2-f419-f2dc6602a5cc@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E7C84F@BPXM01GP.gisp.nec.co.jp>
+ id 1c1rvH-0002WE-CZ
+ for kexec@lists.infradead.org; Wed, 02 Nov 2016 09:33:32 +0000
+Received: by mail-qk0-f174.google.com with SMTP id q130so11056029qke.1
+ for <kexec@lists.infradead.org>; Wed, 02 Nov 2016 02:33:11 -0700 (PDT)
+Subject: Re: [PATCH v4 0/9] (kexec-tools) arm64: add kdump support
+References: <20161102044111.11779-1-takahiro.akashi@linaro.org>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <3a50383c-bf6d-9587-6580-35c44f50c61a@redhat.com>
+Date: Wed, 2 Nov 2016 15:03:05 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E7C84F@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <20161102044111.11779-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,108 +20,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: Pratyush Anand <panand@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
+Cc: geoff@infradead.org, kexec@lists.infradead.org
 
-On 11/02/16 at 07:40am, Atsushi Kumagai wrote:
-> Hello Pratyush,
-> 
-> >On Monday 24 October 2016 10:18 PM, Pratyush Anand wrote:
-> >> page_offset can always be calculated as 'virtual - physical' for a direct
-> >> mapping area on x86. Therefore, remove the version dependent calculation
-> >> and use this method.
-> >>
-> >> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> >> ---
-> >>  arch/x86_64.c | 24 ++++++++++++++++++++----
-> >>  1 file changed, 20 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/arch/x86_64.c b/arch/x86_64.c
-> >> index ddf7be6bc57b..a96fd8ae00a1 100644
-> >> --- a/arch/x86_64.c
-> >> +++ b/arch/x86_64.c
-> >> @@ -44,6 +44,24 @@ get_xen_p2m_mfn(void)
-> >>  	return NOT_FOUND_LONG_VALUE;
-> >>  }
-> >>
-> >> +static int
-> >> +get_page_offset_x86_64(void)
-> >> +{
-> >> +	int i;
-> >> +	unsigned long long phys_start;
-> >> +	unsigned long long virt_start;
-> >> +
-> >> +	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
-> >> +		if (virt_start >= __START_KERNEL_map) {
-> >
-> >OK..So, this is the problem. We should have
-> >
-> >if (virt_start < __START_KERNEL_map) {
-> >
-> >Kernel text region lies above __START_KERNEL_map, which is linearly
-> >mapped however not a direct mapping. Direct mapping region lies below it
-> >instead. So, page_offset can only be calculated with a region which is
-> >below __START_KERNEL_map.
-> >
-> >Thanks Baoquan for finding it. 
-> 
-> Could you explain the issue in more detail, what is the difference 
-> between "linear map" and "direct map" ?
+Hi Simon/Akashi,
 
-Well, these could be easily misunderstood. Virtual address in kernel text
-region or within direct mapping which is from PAGE_OFFSET are all linear
-mapping. Because the related PA can be calculated by:
-PA= VA - PAGE_OFFSET; //y=x - a;
-PA= VA - __START_KERNEL_map + phys_base; //y=x-a+b
+I tested this patch set with mustang and seattle platform. They work fine.
 
-In user-space kexec-tools we created pt_load program segments for kernel
-text region and crash memory regions. The first program header is kernel
-text region. So here if we want to get page_offset, just need to ignore
-the 1st one, kernel text region.
+So for the series:
+Tested-by: Pratyush Anand <panand@redhat.com>
 
-> 
-> BTW, I confirmed that the difference of v2 patch is only this and
-> the result of benchmark looks great, thank you very much.
-> 
-> 
-> Regards,
-> Atsushi Kumagai
-> 
-> >> +			info->page_offset = virt_start - phys_start;
-> >> +			return TRUE;
-> >> +		}
-> >> +	}
-> >> +
-> >> +	ERRMSG("Can't get any pt_load to calculate page offset.\n");
-> >> +	return FALSE;
-> >> +}
-> >> +
-> >>  int
-> >>  get_phys_base_x86_64(void)
-> >>  {
-> >> @@ -159,10 +177,8 @@ get_versiondep_info_x86_64(void)
-> >>  	else
-> >>  		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
-> >>
-> >> -	if (info->kernel_version < KERNEL_VERSION(2, 6, 27))
-> >> -		info->page_offset = __PAGE_OFFSET_ORIG;
-> >> -	else
-> >> -		info->page_offset = __PAGE_OFFSET_2_6_27;
-> >> +	if (!get_page_offset_x86_64())
-> >> +		return FALSE;
-> >>
-> >>  	if (info->kernel_version < KERNEL_VERSION(2, 6, 31)) {
-> >>  		info->vmalloc_start = VMALLOC_START_ORIG;
-> >>
-> >
-> >_______________________________________________
-> >kexec mailing list
-> >kexec@lists.infradead.org
-> >http://lists.infradead.org/mailman/listinfo/kexec
+Just a comment for 2/9
+
+> -    unsigned long long stext_sym_addr = get_kernel_stext_sym();
+> +    unsigned long long stext_sym_addr = get_kernel_sym("stext");
+
+Sorry, This had to be get_kernel_sym("_stext").
+
+May be I can resend only  patch 2/9 by keeping intact the message-id.
+
+~Pratyush
+
+On Wednesday 02 November 2016 10:11 AM, AKASHI Takahiro wrote:
+> My kernel patches of kdump suport on arm64 are currently under reviews.
+>
+> This patchset is synced with them (v27 [1]) and provides necessary changes
+> for kexec-tools. It can be applied on top of kexec-tools master branch.
+>
+> [1] T.B.D.
+>
+> Changes for v4:
+>  - rebased on the master branch (including Geoff's v6)
+>  - revive "linux,usable-memory-range" DT property (from v2), dropping
+>    use of "reserved-memory" nodes introduced in v3 (patch #8)
+>  - extend the semantics of kexec_iomem_for_each_line() per Pratyush
+>    (patch #1)
+>
+> Changes for v3:
+>  - rebased on Geoff's v5
+>  - fix a value of estimated PHYS_OFFSET
+>  - add a kernel code/data segment because they now reside out of linear
+>    mapping due to KASLR introduction
+>  - remove "linux,usable-memory-range" dependency, instead using
+>    "reserved-memory" node
+>  - add -mem-min/-mem-max support
+>
+> Changes for v2:
+>  - trim a temoprary buffer in setup_2nd_dtb()
+>  - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+>  - update patch#7 from Pratyush
+>    (re-worked by akashi)
+>
+> AKASHI Takahiro (7):
+>   kexec: exntend the semantics of kexec_iomem_for_each_line
+>   arm64: identify PHYS_OFFSET correctly
+>   arm64: kdump: identify memory regions
+>   arm64: kdump: add elf core header segment
+>   arm64: kdump: set up kernel image segment
+>   arm64: kdump: set up other segments
+>   arm64: kdump: add DT properties to crash dump kernel's dtb
+>
+> Pratyush Anand (2):
+>   kexec: generalize and rename get_kernel_stext_sym()
+>   arm64: kdump: Add support for binary image files
+>
+>  kexec/Makefile                       |   1 +
+>  kexec/arch/arm/crashdump-arm.c       |  40 +------
+>  kexec/arch/arm64/Makefile            |   2 +
+>  kexec/arch/arm64/crashdump-arm64.c   | 219 ++++++++++++++++++++++++++++++++++-
+>  kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
+>  kexec/arch/arm64/iomem.h             |  10 ++
+>  kexec/arch/arm64/kexec-arm64.c       | 118 ++++++++++++++++---
+>  kexec/arch/arm64/kexec-elf-arm64.c   |  25 +++-
+>  kexec/arch/arm64/kexec-image-arm64.c |  12 ++
+>  kexec/arch/i386/crashdump-x86.c      |  29 -----
+>  kexec/kexec-iomem.c                  |  15 ++-
+>  kexec/kexec.h                        |   2 +
+>  kexec/symbols.c                      |  41 +++++++
+>  13 files changed, 437 insertions(+), 95 deletions(-)
+>  create mode 100644 kexec/arch/arm64/iomem.h
+>  create mode 100644 kexec/symbols.c
+>
 
 _______________________________________________
 kexec mailing list
