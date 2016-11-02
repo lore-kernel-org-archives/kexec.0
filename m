@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22e.google.com ([2607:f8b0:400e:c00::22e])
+Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c1nF2-0006Th-Qc
- for kexec@lists.infradead.org; Wed, 02 Nov 2016 04:33:38 +0000
-Received: by mail-pf0-x22e.google.com with SMTP id i88so4034850pfk.2
- for <kexec@lists.infradead.org>; Tue, 01 Nov 2016 21:33:15 -0700 (PDT)
+ id 1c1nFK-0006VD-HO
+ for kexec@lists.infradead.org; Wed, 02 Nov 2016 04:33:55 +0000
+Received: by mail-pf0-x234.google.com with SMTP id n85so4079447pfi.1
+ for <kexec@lists.infradead.org>; Tue, 01 Nov 2016 21:33:33 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v4 0/9] (kexec-tools) arm64: add kdump support
-Date: Wed,  2 Nov 2016 13:41:02 +0900
-Message-Id: <20161102044111.11779-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v4 1/9] kexec: exntend the semantics of
+ kexec_iomem_for_each_line
+Date: Wed,  2 Nov 2016 13:41:03 +0900
+Message-Id: <20161102044111.11779-2-takahiro.akashi@linaro.org>
+In-Reply-To: <20161102044111.11779-1-takahiro.akashi@linaro.org>
+References: <20161102044111.11779-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +28,73 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-My kernel patches of kdump suport on arm64 are currently under reviews.
+The current kexec_iomem_for_each_line() counts up all the lines for which
+a callback function returns zero(0) or positive, and otherwise it stops
+further scanning.
+This behavior is incovenient in some cases. For instance, on arm64, we want
+to count up "System RAM" entries, but need to skip "reserved" entries.
 
-This patchset is synced with them (v27 [1]) and provides necessary changes
-for kexec-tools. It can be applied on top of kexec-tools master branch.
+So this patch extends the semantics so that we will continue to scan
+succeeding entries but not count lines for which a callback function
+returns positive.
 
-[1] T.B.D.
+The current users of kexec_iomem_for_each_line(), arm, sh and x86, will not
+be affected by this change because
+* arm
+  The callback function only returns -1 or 0, and the return value of
+  kexec_iomem_for_each_line() will never be used.
+* sh, x86
+  The callback function may return (-1 for sh,) 0 or 1, but always returns
+  1 once we have reached the maximum number of entries allowed.
+  Even so the current kexec_iomem_for_each_line() counts them up.
+  This change actually fixes this bug.
 
-Changes for v4:
- - rebased on the master branch (including Geoff's v6)
- - revive "linux,usable-memory-range" DT property (from v2), dropping
-   use of "reserved-memory" nodes introduced in v3 (patch #8)
- - extend the semantics of kexec_iomem_for_each_line() per Pratyush
-   (patch #1)
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+---
+ kexec/kexec-iomem.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-Changes for v3:
- - rebased on Geoff's v5
- - fix a value of estimated PHYS_OFFSET
- - add a kernel code/data segment because they now reside out of linear
-   mapping due to KASLR introduction
- - remove "linux,usable-memory-range" dependency, instead using
-   "reserved-memory" node
- - add -mem-min/-mem-max support
-
-Changes for v2:
- - trim a temoprary buffer in setup_2nd_dtb()
- - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
- - update patch#7 from Pratyush
-   (re-worked by akashi)
-
-AKASHI Takahiro (7):
-  kexec: exntend the semantics of kexec_iomem_for_each_line
-  arm64: identify PHYS_OFFSET correctly
-  arm64: kdump: identify memory regions
-  arm64: kdump: add elf core header segment
-  arm64: kdump: set up kernel image segment
-  arm64: kdump: set up other segments
-  arm64: kdump: add DT properties to crash dump kernel's dtb
-
-Pratyush Anand (2):
-  kexec: generalize and rename get_kernel_stext_sym()
-  arm64: kdump: Add support for binary image files
-
- kexec/Makefile                       |   1 +
- kexec/arch/arm/crashdump-arm.c       |  40 +------
- kexec/arch/arm64/Makefile            |   2 +
- kexec/arch/arm64/crashdump-arm64.c   | 219 ++++++++++++++++++++++++++++++++++-
- kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
- kexec/arch/arm64/iomem.h             |  10 ++
- kexec/arch/arm64/kexec-arm64.c       | 118 ++++++++++++++++---
- kexec/arch/arm64/kexec-elf-arm64.c   |  25 +++-
- kexec/arch/arm64/kexec-image-arm64.c |  12 ++
- kexec/arch/i386/crashdump-x86.c      |  29 -----
- kexec/kexec-iomem.c                  |  15 ++-
- kexec/kexec.h                        |   2 +
- kexec/symbols.c                      |  41 +++++++
- 13 files changed, 437 insertions(+), 95 deletions(-)
- create mode 100644 kexec/arch/arm64/iomem.h
- create mode 100644 kexec/symbols.c
-
+diff --git a/kexec/kexec-iomem.c b/kexec/kexec-iomem.c
+index 485a2e8..0a0277a 100644
+--- a/kexec/kexec-iomem.c
++++ b/kexec/kexec-iomem.c
+@@ -18,6 +18,9 @@
+  * Iterate over each line in the file returned by proc_iomem(). If match is
+  * NULL or if the line matches with our match-pattern then call the
+  * callback if non-NULL.
++ * If match is NULL, callback should return a negative if error.
++ * Otherwise the interation goes on, incrementing nr but only if callback
++ * returns 0 (matched).
+  *
+  * Return the number of lines matched.
+  */
+@@ -37,7 +40,7 @@ int kexec_iomem_for_each_line(char *match,
+ 	char *str;
+ 	int consumed;
+ 	int count;
+-	int nr = 0;
++	int nr = 0, ret;
+ 
+ 	fp = fopen(iomem, "r");
+ 	if (!fp)
+@@ -50,11 +53,13 @@ int kexec_iomem_for_each_line(char *match,
+ 		str = line + consumed;
+ 		size = end - start + 1;
+ 		if (!match || memcmp(str, match, strlen(match)) == 0) {
+-			if (callback
+-			    && callback(data, nr, str, start, size) < 0) {
+-				break;
++			if (callback) {
++				ret = callback(data, nr, str, start, size);
++				if (ret < 0)
++					break;
++				else if (ret == 0)
++					nr++;
+ 			}
+-			nr++;
+ 		}
+ 	}
+ 
 -- 
 2.10.0
 
