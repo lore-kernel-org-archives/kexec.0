@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c2UcN-0000YL-Pf
- for kexec@lists.infradead.org; Fri, 04 Nov 2016 02:52:37 +0000
-Received: by mail-pf0-x22b.google.com with SMTP id 189so42451777pfz.3
- for <kexec@lists.infradead.org>; Thu, 03 Nov 2016 19:52:12 -0700 (PDT)
-Date: Fri, 4 Nov 2016 12:00:26 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v27 0/9] arm64: add kdump support
-Message-ID: <20161104030025.GC381@linaro.org>
-References: <20161102044959.11954-1-takahiro.akashi@linaro.org>
+ id 1c2Wqa-0000F1-9u
+ for kexec@lists.infradead.org; Fri, 04 Nov 2016 05:15:30 +0000
+Date: Fri, 4 Nov 2016 13:14:59 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v6 0/9] Fix kdump faults on system with amd iommu
+Message-ID: <20161104051459.GB4314@x1>
+References: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20161102044959.11954-1-takahiro.akashi@linaro.org>
+In-Reply-To: <1476963440-23039-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,118 +23,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, Ruslan Bilovol <rbilovol@cisco.com>, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: joro@8bytes.org
+Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
 
-For easier testing, I pushed my patches to:
-https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
-https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
+Hi Joerg,
 
-If anybody tries my patches, please let me know the result.
-(Pratyush, thank you for your test.)
+Ping!
 
-Thanks,
--Takahiro AKASHI
+About the v6 post, do you have any suggestions?
 
-On Wed, Nov 02, 2016 at 01:49:59PM +0900, AKASHI Takahiro wrote:
->     v27-specific note: In this version, the change made in v26 was reverted
->     because I've got a comment that /reserved-memory DT property should
->     not be used on UEFI/ACPI systems, even though it is workable under
->     the current implementation. I've also confirmed that Rob doesn't argue
->     any more against using "linux,usable-memory-range".
->     So v27 is essentially the same as v25.
+Because of GCR3 special handling in patch 9/9, I spent several days to
+study the knowledge and change code. Then when I tried to post, the
+virtual interrupt remapping feature caused kernel hang with this pachset
+applied. So it took me days to study spec and find it out. Finally it's
+very late to post.
+
+Coule it be possibe that we review and merge patch 9/1~8, and leave the
+patch 9/9 which includes GCR3 special handling as 2nd step issue? Then
+I can back port patch 9/1~8 to our distro. Since this bug has been
+discussed so long time, and currently almost all system are deployed
+with amd iommu v1 hardware. It would be great if they can be accepted
+into 4.9 or 4.10-rc phase.
+
+About patch 9/9, its code is a little complicated and not being
+reviewed, I am not sure if I understand your suggestion and GCR3 code
+well. What's your opinion?
+
+Thanks
+Baoquan
+
+
+On 10/20/16 at 07:37pm, Baoquan He wrote:
+> This is v6 post. 
 > 
-> This patch series adds kdump support on arm64.
+> The principle of the fix is similar to intel iommu. Just defer the assignment
+> of device to domain to device driver init. But there's difference than
+> intel iommu. AMD iommu create protection domain and assign device to
+> domain in iommu driver init stage. So in this patchset I just allow the
+> assignment of device to domain in software level, but defer updating the
+> domain info, especially the pte_root to dev table entry to device driver
+> init stage.
 > 
-> To load a crash-dump kernel to the systems, a series of patches to
-> kexec-tools[1] are also needed. Please use the latest one, v4 [2].
+> v5: 
+>     bnx2 NIC can't reset itself during driver init. Post patch to reset
+>     it during driver init. IO_PAGE_FAULT can't be seen anymore.
+>     
+>     Below is link of v5 post.
+>     https://lists.linuxfoundation.org/pipermail/iommu/2016-September/018527.html
 > 
-> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
->   - crash utility (v7.1.6 or later) [3]
+> v5->v6:
+>     According to Joerg's comments made several below main changes:
+>     - Add sanity check when copy old dev tables. 
 > 
+>     - Discard the old patch 6/8.
 > 
-> [1] https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> [1] http://lists.infradead.org/pipermail/kexec/2016-November/017555.html
-> [2] https://github.com/crash-utility/crash.git
+>     - If a device is set up with guest translations (DTE.GV=1), then don't
+>       copy that information but move the device over to an empty guest-cr3
+>       table and handle the faults in the PPR log (which just answer them
+>       with INVALID).
 > 
-> Changes for v27 (Nov 2, 2016)
->   o rebased to Linux-v4.9-rc3
->   o revert v26 change, i.e. revive "linux,usable-memory-range" property
->     (patch #2/#3, updating patch #9)
->   o minor fixes per review comments (patch #3/#4/#6/#8)
->   o re-order patches and improve commit messages for readability
+> Issues need be discussed:
+>     - Joerg suggested hooking the behaviour that updates domain info into
+>       dte entry into the set_dma_mask call-back. I tried, but on my local
+>       machine with amd iommu v2, an ohci pci device doesn't call set_dma_mask.
+>       Then IO_PAGE_FAULT printing flooded.
 > 
-> Changes for v26 (Sep 7, 2016):
->   o Use /reserved-memory instead of "linux,usable-memory-range" property
->     (dropping v25's patch#2 and #3, updating ex-patch#9.)
+>       00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB OHCI Controller (rev 11)
 > 
-> Changes for v25 (Aug 29, 2016):
->   o Rebase to Linux-4.8-rc4
->   o Use memremap() instead of ioremap_cache() [patch#5]
+>     - About GCR3 root pointer copying issue, I don't know how to setup the
+>       test environment and haven't tested yet. Hope Joerg or Zongshun can
+>       tell what steps should be taken to test it, or help take a test in your
+>       test environemnt.
+>  
+> Baoquan He (9):
+>   iommu/amd: Detect pre enabled translation
+>   iommu/amd: add several helper function
+>   iommu/amd: Define bit fields for DTE particularly
+>   iommu/amd: Add function copy_dev_tables
+>   iommu/amd: copy old trans table from old kernel
+>   iommu/amd: Don't update domain info to dte entry at iommu init stage
+>   iommu/amd: Update domain into to dte entry during device driver init
+>   iommu/amd: Add sanity check of irq remap information of old dev table
+>     entry
+>   iommu/amd: Don't copy GCR3 table root pointer
 > 
-> Changes for v24 (Aug 9, 2016):
->   o Rebase to Linux-4.8-rc1
->   o Update descriptions about newly added DT proerties
-> 
-> Changes for v23 (July 26, 2016):
-> 
->   o Move memblock_reserve() to a single place in reserve_crashkernel()
->   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
->   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
->   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
->     (for ACPI) from usable memory at crash kernel
-> 
-> Changes for v22 (July 12, 2016):
-> 
->   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
->     and add some descriptions about them in chosen.txt
->   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
->     with powerpc's "usable-memory"
->   o Make cosmetic changes regarding "ifdef" usage
->   o Correct some wordings in kdump.txt
-> 
-> Changes for v21 (July 6, 2016):
-> 
->   o Remove kexec patches.
->   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
->   o Clarify the description about kvm in kdump.txt.
-> 
-> See the following link [3] for older changes:
-> [3]  http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
-> 
-> AKASHI Takahiro (8):
->   memblock: add memblock_cap_memory_range()
->   arm64: limit memory regions based on DT property, usable-memory-range
->   arm64: kdump: reserve memory for crash dump kernel
->   arm64: kdump: implement machine_crash_shutdown()
->   arm64: kdump: add VMCOREINFO's for user-space tools
->   arm64: kdump: provide /proc/vmcore file
->   arm64: kdump: enable kdump in defconfig
->   Documentation: kdump: describe arm64 port
-> 
-> James Morse (1):
->   Documentation: dt: chosen properties for arm64 kdump
-> 
->  Documentation/devicetree/bindings/chosen.txt |  50 +++++++
->  Documentation/kdump/kdump.txt                |  16 ++-
->  arch/arm64/Kconfig                           |  11 ++
->  arch/arm64/configs/defconfig                 |   1 +
->  arch/arm64/include/asm/hardirq.h             |   2 +-
->  arch/arm64/include/asm/kexec.h               |  42 +++++-
->  arch/arm64/include/asm/smp.h                 |   2 +
->  arch/arm64/kernel/Makefile                   |   1 +
->  arch/arm64/kernel/crash_dump.c               |  71 ++++++++++
->  arch/arm64/kernel/machine_kexec.c            |  67 ++++++++-
->  arch/arm64/kernel/setup.c                    |   7 +-
->  arch/arm64/kernel/smp.c                      |  63 +++++++++
->  arch/arm64/mm/init.c                         | 199 +++++++++++++++++++++++++++
->  include/linux/memblock.h                     |   1 +
->  mm/memblock.c                                |  28 ++++
->  15 files changed, 554 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm64/kernel/crash_dump.c
+>  drivers/iommu/amd_iommu.c       |  93 +++++++++++++-------
+>  drivers/iommu/amd_iommu_init.c  | 189 +++++++++++++++++++++++++++++++++++++---
+>  drivers/iommu/amd_iommu_proto.h |   2 +
+>  drivers/iommu/amd_iommu_types.h |  53 ++++++++++-
+>  drivers/iommu/amd_iommu_v2.c    |  18 +++-
+>  5 files changed, 307 insertions(+), 48 deletions(-)
 > 
 > -- 
-> 2.10.0
+> 2.5.5
 > 
 
 _______________________________________________
