@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c2X4M-0007rr-DO
- for kexec@lists.infradead.org; Fri, 04 Nov 2016 05:29:39 +0000
-Date: Fri, 4 Nov 2016 13:29:13 +0800
+ id 1c2Z5d-000308-5y
+ for kexec@lists.infradead.org; Fri, 04 Nov 2016 07:39:07 +0000
+Date: Fri, 4 Nov 2016 15:38:40 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 0/9] Fix kdump faults on system with amd iommu
-Message-ID: <20161104052913.GC4314@x1>
-References: <1476963440-23039-1-git-send-email-bhe@redhat.com>
- <20161104051459.GB4314@x1>
+Subject: Re: [RFC]  kexec_file: Add support for purgatory built as PIE
+Message-ID: <20161104073840.GD4314@x1>
+References: <3476672.cGrsQmUQKg@morokweng>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20161104051459.GB4314@x1>
+In-Reply-To: <3476672.cGrsQmUQKg@morokweng>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,104 +23,327 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: joro@8bytes.org
-Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
+To: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Vivek Goyal <vgoyal@redhat.com>
 
-On 11/04/16 at 01:14pm, Baoquan He wrote:
-> Hi Joerg,
+On 11/02/16 at 04:00am, Thiago Jung Bauermann wrote:
+> Hello,
 > 
-> Ping!
-> 
-> About the v6 post, do you have any suggestions?
-> 
-> Because of GCR3 special handling in patch 9/9, I spent several days to
-> study the knowledge and change code. Then when I tried to post, the
-> virtual interrupt remapping feature caused kernel hang with this pachset
-> applied. So it took me days to study spec and find it out. Finally it's
-> very late to post.
-> 
-> Coule it be possibe that we review and merge patch 9/1~8, and leave the
-> patch 9/9 which includes GCR3 special handling as 2nd step issue? Then
-> I can back port patch 9/1~8 to our distro. Since this bug has been
-> discussed so long time, and currently almost all system are deployed
-> with amd iommu v1 hardware. It would be great if they can be accepted
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Here I meant in our Redhat lab almost all
-system are only deployed with amd iommu v1 support. 
+> The kexec_file code currently builds the purgatory as a partially linked object 
+> (using ld -r). Is there a particular reason to use that instead of a position 
+> independent executable (PIE)?
 
-> into 4.9 or 4.10-rc phase.
+It's taken as "-r", relocatable in user space kexec-tools too originally.
+I think Vivek just keeps it the same when moving into kernel.
+
 > 
-> About patch 9/9, its code is a little complicated and not being
-> reviewed, I am not sure if I understand your suggestion and GCR3 code
-> well. What's your opinion?
+> I found a discussion from 2013 in the archives but from what I understood it 
+> was about the purgatory as a separate object vs having it linked into the 
+> kernel, which is different from what I'm asking:
 > 
-> Thanks
-> Baoquan
+> http://lists.infradead.org/pipermail/kexec/2013-December/010535.html
+> 
+> Here is my motivation for this question:
+> 
+>  On ppc64 purgatory.ro has 12 relocation types when built as a partially 
+> linked object. This makes arch_kexec_apply_relocations_add duplicate a lot of 
+> code with module_64.c:apply_relocate_add to implement these relocations. The 
+> alternative is to do some refactoring so that both functions can share the 
+> implementation of the relocations. This is done in patches 5 and 6 of the 
+> kexec_file_load implementation for powerpc:
+
+In user space kexec-tools utility, you also got this problem?
+
+> 
+> https://lists.ozlabs.org/pipermail/linuxppc-dev/2016-October/149984.html
+> 
+> Michael Ellerman would prefer if module_64.c didn't need to be changed, and 
+> suggested that the purgatory could be a position independent executable. 
+> Indeed, in that case there are only 4 relocation types in purgatory.ro (which 
+> aren't even implemented in module_64.c:apply_relocate_add), so the relocation 
+> code for the purgatory can leave that file alone and have its own relocation 
+> implementation.
+> 
+> Also, the purgatory is an executable and not an intermediary output from the 
+> compiler, so in my mind it makes sense conceptually that it is easier to build 
+> it as a PIE than as a partially linked object.
+> 
+> The patch below adds the support needed in kexec_file.c to allow powerpc-
+> specific code to load and relocate a purgatory binary built as PIE. This is WIP 
+> and can probably be refined a bit. Would you accept a change along these lines?
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+> ---
+>  arch/Kconfig            |   3 +
+>  kernel/kexec_file.c     | 159 ++++++++++++++++++++++++++++++++++++++++++++++--
+>  kernel/kexec_internal.h |  26 ++++++++
+>  3 files changed, 183 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 659bdd079277..7fd6879be222 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -5,6 +5,9 @@
+>  config KEXEC_CORE
+>  	bool
+>  
+> +config HAVE_KEXEC_FILE_PIE_PURGATORY
+> +	bool
+> +
+>  config OPROFILE
+>  	tristate "OProfile system profiling"
+>  	depends on PROFILING
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 0c2df7f73792..dfc3e015160d 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -633,7 +633,149 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  	return ret;
+>  }
+>  
+> -/* Actually load purgatory. Lot of code taken from kexec-tools */
+> +#ifdef CONFIG_HAVE_KEXEC_FILE_PIE_PURGATORY
+> +/* Load PIE purgatory using the program header information. */
+> +static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+> +				  unsigned long max, int top_down)
+> +{
+> +	struct purgatory_info *pi = &image->purgatory_info;
+> +	unsigned long first_offset;
+> +	unsigned long orig_load_addr = 0;
+> +	const void *src;
+> +	int i, ret;
+> +	const Elf_Phdr *phdrs = (const void *) pi->ehdr + pi->ehdr->e_phoff;
+> +	const Elf_Phdr *phdr;
+> +	const Elf_Shdr *sechdrs_c;
+> +	Elf_Shdr *sechdr;
+> +	Elf_Shdr *sechdrs = NULL;
+> +	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
+> +				  .buf_min = min, .buf_max = max,
+> +				  .top_down = top_down };
+> +
+> +	/*
+> +	 * sechdrs_c points to section headers in purgatory and are read
+> +	 * only. No modifications allowed.
+> +	 */
+> +	sechdrs_c = (void *) pi->ehdr + pi->ehdr->e_shoff;
+> +
+> +	/*
+> +	 * We can not modify sechdrs_c[] and its fields. It is read only.
+> +	 * Copy it over to a local copy where one can store some temporary
+> +	 * data and free it at the end. We need to modify ->sh_addr and
+> +	 * ->sh_offset fields to keep track of permanent and temporary
+> +	 * locations of sections.
+> +	 */
+> +	sechdrs = vzalloc(pi->ehdr->e_shnum * sizeof(Elf_Shdr));
+> +	if (!sechdrs)
+> +		return -ENOMEM;
+> +
+> +	memcpy(sechdrs, sechdrs_c, pi->ehdr->e_shnum * sizeof(Elf_Shdr));
+> +
+> +	/*
+> +	 * We seem to have multiple copies of sections. First copy is which
+> +	 * is embedded in kernel in read only section. Some of these sections
+> +	 * will be copied to a temporary buffer and relocated. And these
+> +	 * sections will finally be copied to their final destination at
+> +	 * segment load time.
+> +	 *
+> +	 * Use ->sh_offset to reflect section address in memory. It will
+> +	 * point to original read only copy if section is not allocatable.
+> +	 * Otherwise it will point to temporary copy which will be relocated.
+> +	 *
+> +	 * Use ->sh_addr to contain final address of the section where it
+> +	 * will go during execution time.
+> +	 */
+> +	for (sechdr = sechdrs; sechdr < sechdrs + pi->ehdr->e_shnum; sechdr++) {
+> +		if (sechdr->sh_type == SHT_NOBITS)
+> +			continue;
+> +
+> +		sechdr->sh_offset = (unsigned long) pi->ehdr + sechdr->sh_offset;
+> +	}
+> +
+> +	/* Determine how much memory is needed to load the executable. */
+> +	for (phdr = phdrs; phdr < phdrs + pi->ehdr->e_phnum; phdr++) {
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		if (!orig_load_addr) {
+> +			orig_load_addr = phdr->p_vaddr - phdr->p_offset;
+> +			kbuf.bufsz = first_offset = phdr->p_offset;
+> +		}
+> +
+> +		if (kbuf.buf_align < phdr->p_align) {
+> +			pr_debug("buf_align was %lx, now is %llx\n",
+> +				 kbuf.buf_align, phdr->p_align);
+> +			kbuf.buf_align = phdr->p_align;
+> +		}
+> +
+> +		kbuf.bufsz += phdr->p_memsz;
+> +	}
+> +
+> +	/* Allocate buffer for purgatory. */
+> +	kbuf.buffer = vzalloc(kbuf.bufsz);
+> +	if (!kbuf.buffer) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	/* Add buffer to segment list. */
+> +	kbuf.memsz = kbuf.bufsz;
+> +	ret = kexec_add_buffer(&kbuf);
+> +	if (ret)
+> +		goto out;
+> +
+> +	pi->purgatory_load_addr = kbuf.mem;
+> +
+> +	/* Load executable. */
+> +	for (phdr = phdrs; phdr < phdrs + pi->ehdr->e_phnum; phdr++) {
+> +		if (phdr->p_type != PT_LOAD)
+> +			continue;
+> +
+> +		src = (const void *) pi->ehdr + phdr->p_offset;
+> +		memcpy(kbuf.buffer + phdr->p_offset, src, phdr->p_filesz);
+> +
+> +		pr_debug("loaded segment of size %llx at %llx (base = %lx, offset = %llx)\n",
+> +			 phdr->p_memsz, pi->purgatory_load_addr + phdr->p_offset, pi->purgatory_load_addr, phdr->p_offset);
+> +
+> +		/*
+> +		 * Find sections within this segment and update their
+> +		 * ->sh_offset to point to within the buffer.
+> +		 */
+> +		for (i = 0; i < pi->ehdr->e_shnum; i++) {
+> +			if (sechdrs[i].sh_addr >= phdr->p_vaddr &&
+> +			    sechdrs[i].sh_addr + sechdrs[i].sh_size <= phdr->p_vaddr + phdr->p_memsz) {
+> +				sechdrs[i].sh_addr = sechdrs[i].sh_addr - orig_load_addr + pi->purgatory_load_addr;
+> +				sechdrs[i].sh_offset = (unsigned long long) kbuf.buffer + sechdrs_c[i].sh_offset;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* Make kernel jump to purgatory after shutdown */
+> +	image->start = pi->ehdr->e_entry - orig_load_addr + pi->purgatory_load_addr;
+> +
+> +	/* Used later to get/set symbol values */
+> +	pi->sechdrs = sechdrs;
+> +
+> +	/*
+> +	 * Used later to identify which section is purgatory and skip it
+> +	 * from checksumming.
+> +	 */
+> +	pi->purgatory_buf = kbuf.buffer;
+> +
+> +	pr_debug("purgatory entry point at %lx\n", image->start);
+> +
+> +	return 0;
+> +out:
+> +	vfree(sechdrs);
+> +	vfree(kbuf.buffer);
+> +
+> +	return ret;
+> +}
+> +#else /* CONFIG_HAVE_KEXEC_FILE_PIE_PURGATORY */
+> +/*
+> + * Load relocatable object purgatory using the section header information.
+> + * A lot of code taken from kexec-tools.
+> + */
+>  static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  				  unsigned long max, int top_down)
+>  {
+> @@ -813,6 +955,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	vfree(kbuf.buffer);
+>  	return ret;
+>  }
+> +#endif /* CONFIG_HAVE_KEXEC_FILE_PIE_PURGATORY */
+>  
+>  static int kexec_apply_relocations(struct kimage *image)
+>  {
+> @@ -886,7 +1029,7 @@ int kexec_load_purgatory(struct kimage *image, unsigned long min,
+>  	pi->ehdr = (Elf_Ehdr *)kexec_purgatory;
+>  
+>  	if (memcmp(pi->ehdr->e_ident, ELFMAG, SELFMAG) != 0
+> -	    || pi->ehdr->e_type != ET_REL
+> +	    || pi->ehdr->e_type != PURGATORY_ELF_TYPE
+>  	    || !elf_check_arch(pi->ehdr)
+>  	    || pi->ehdr->e_shentsize != sizeof(Elf_Shdr))
+>  		return -ENOEXEC;
+> @@ -942,7 +1085,13 @@ static Elf_Sym *kexec_purgatory_find_symbol(struct purgatory_info *pi,
+>  
+>  		/* Go through symbols for a match */
+>  		for (k = 0; k < sechdrs[i].sh_size/sizeof(Elf_Sym); k++) {
+> -			if (ELF_ST_BIND(syms[k].st_info) != STB_GLOBAL)
+> +			/*
+> +			 * FIXME: See if we can or should export the .TOC.
+> +			 * symbol as global instead of searching local symbols
+> +			 * here.
+> +			 */
+> +			if (ELF_ST_BIND(syms[k].st_info) != STB_GLOBAL &&
+> +			    ELF_ST_BIND(syms[k].st_info) != STB_LOCAL)
+>  				continue;
+>  
+>  			if (strcmp(strtab + syms[k].st_name, name) != 0)
+> @@ -979,7 +1128,7 @@ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name)
+>  	 * Returns the address where symbol will finally be loaded after
+>  	 * kexec_load_segment()
+>  	 */
+> -	return (void *)(sechdr->sh_addr + sym->st_value);
+> +	return (void *)(sechdr->sh_addr + sym_value_offset(pi, sym));
+>  }
+>  
+>  /*
+> @@ -1013,7 +1162,7 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+>  	}
+>  
+>  	sym_buf = (unsigned char *)sechdrs[sym->st_shndx].sh_offset +
+> -					sym->st_value;
+> +					sym_value_offset(pi, sym);
+>  
+>  	if (get_value)
+>  		memcpy((void *)buf, sym_buf, size);
+> diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+> index 4cef7e4706b0..c253b00f88d0 100644
+> --- a/kernel/kexec_internal.h
+> +++ b/kernel/kexec_internal.h
+> @@ -20,6 +20,32 @@ struct kexec_sha_region {
+>  	unsigned long len;
+>  };
+>  
+> +#ifdef CONFIG_HAVE_KEXEC_FILE_PIE_PURGATORY
+> +#define PURGATORY_ELF_TYPE ET_EXEC
+> +
+> +/*
+> + * In position-independent executables, the symbol value is an absolute address,
+> + * so convert it to a section-relative offset.
+> + */
+> +static inline Elf_Addr sym_value_offset(struct purgatory_info *pi, Elf_Sym *sym)
+> +{
+> +	const Elf_Shdr *sechdrs_c = (const void *) pi->ehdr + pi->ehdr->e_shoff;
+> +
+> +	return sym->st_value - sechdrs_c[sym->st_shndx].sh_addr;
+> +}
+> +#else
+> +#define PURGATORY_ELF_TYPE ET_REL
+> +
+> +/*
+> + * In a relocatable object, the symbol value already is a section-relative
+> + * offset.
+> + */
+> +static inline Elf_Addr sym_value_offset(struct purgatory_info *pi, Elf_Sym *sym)
+> +{
+> +	return sym->st_value;
+> +}
+> +#endif
+> +
+>  void kimage_file_post_load_cleanup(struct kimage *image);
+>  #else /* CONFIG_KEXEC_FILE */
+>  static inline void kimage_file_post_load_cleanup(struct kimage *image) { }
+> -- 
+> 2.7.4
 > 
 > 
-> On 10/20/16 at 07:37pm, Baoquan He wrote:
-> > This is v6 post. 
-> > 
-> > The principle of the fix is similar to intel iommu. Just defer the assignment
-> > of device to domain to device driver init. But there's difference than
-> > intel iommu. AMD iommu create protection domain and assign device to
-> > domain in iommu driver init stage. So in this patchset I just allow the
-> > assignment of device to domain in software level, but defer updating the
-> > domain info, especially the pte_root to dev table entry to device driver
-> > init stage.
-> > 
-> > v5: 
-> >     bnx2 NIC can't reset itself during driver init. Post patch to reset
-> >     it during driver init. IO_PAGE_FAULT can't be seen anymore.
-> >     
-> >     Below is link of v5 post.
-> >     https://lists.linuxfoundation.org/pipermail/iommu/2016-September/018527.html
-> > 
-> > v5->v6:
-> >     According to Joerg's comments made several below main changes:
-> >     - Add sanity check when copy old dev tables. 
-> > 
-> >     - Discard the old patch 6/8.
-> > 
-> >     - If a device is set up with guest translations (DTE.GV=1), then don't
-> >       copy that information but move the device over to an empty guest-cr3
-> >       table and handle the faults in the PPR log (which just answer them
-> >       with INVALID).
-> > 
-> > Issues need be discussed:
-> >     - Joerg suggested hooking the behaviour that updates domain info into
-> >       dte entry into the set_dma_mask call-back. I tried, but on my local
-> >       machine with amd iommu v2, an ohci pci device doesn't call set_dma_mask.
-> >       Then IO_PAGE_FAULT printing flooded.
-> > 
-> >       00:12.0 USB controller: Advanced Micro Devices, Inc. [AMD] FCH USB OHCI Controller (rev 11)
-> > 
-> >     - About GCR3 root pointer copying issue, I don't know how to setup the
-> >       test environment and haven't tested yet. Hope Joerg or Zongshun can
-> >       tell what steps should be taken to test it, or help take a test in your
-> >       test environemnt.
-> >  
-> > Baoquan He (9):
-> >   iommu/amd: Detect pre enabled translation
-> >   iommu/amd: add several helper function
-> >   iommu/amd: Define bit fields for DTE particularly
-> >   iommu/amd: Add function copy_dev_tables
-> >   iommu/amd: copy old trans table from old kernel
-> >   iommu/amd: Don't update domain info to dte entry at iommu init stage
-> >   iommu/amd: Update domain into to dte entry during device driver init
-> >   iommu/amd: Add sanity check of irq remap information of old dev table
-> >     entry
-> >   iommu/amd: Don't copy GCR3 table root pointer
-> > 
-> >  drivers/iommu/amd_iommu.c       |  93 +++++++++++++-------
-> >  drivers/iommu/amd_iommu_init.c  | 189 +++++++++++++++++++++++++++++++++++++---
-> >  drivers/iommu/amd_iommu_proto.h |   2 +
-> >  drivers/iommu/amd_iommu_types.h |  53 ++++++++++-
-> >  drivers/iommu/amd_iommu_v2.c    |  18 +++-
-> >  5 files changed, 307 insertions(+), 48 deletions(-)
-> > 
-> > -- 
-> > 2.5.5
-> > 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
