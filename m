@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c1vuN-0002Sd-TP
- for kexec@lists.infradead.org; Wed, 02 Nov 2016 13:48:52 +0000
-Date: Wed, 2 Nov 2016 21:48:25 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] kexec: Export memory sections virtual addresses to
- vmcoreinfo
-Message-ID: <20161102134825.GA19363@x1>
-References: <1475743561-23912-1-git-send-email-bhe@redhat.com>
- <20161101051019.GB4625@dhcp-128-65.nay.redhat.com>
- <20161101053353.GC20838@x1>
- <115590076.11735656.1478009614692.JavaMail.zimbra@redhat.com>
- <20161102013433.GA3928@x1>
- <1793684967.12087893.1478093388826.JavaMail.zimbra@redhat.com>
+ id 1c2UAc-00056r-SZ
+ for kexec@lists.infradead.org; Fri, 04 Nov 2016 02:23:56 +0000
+Received: by mail-pf0-x234.google.com with SMTP id d2so42049321pfd.0
+ for <kexec@lists.infradead.org>; Thu, 03 Nov 2016 19:23:33 -0700 (PDT)
+Date: Fri, 4 Nov 2016 11:31:46 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v4 0/9] (kexec-tools) arm64: add kdump support
+Message-ID: <20161104023145.GB381@linaro.org>
+References: <20161102044111.11779-1-takahiro.akashi@linaro.org>
+ <CAMNZz5CbOo6jE5q=7VhKR5y=BfQim4vdjtZwjk--D=QZCgGEpQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1793684967.12087893.1478093388826.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAMNZz5CbOo6jE5q=7VhKR5y=BfQim4vdjtZwjk--D=QZCgGEpQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,61 +26,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: panand@redhat.com, keescook@chromium.org, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, takahiro akashi <takahiro.akashi@linaro.org>, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, Dave Young <dyoung@redhat.com>, thgarnie@google.com, tonli@redhat.com
+To: Sandeepa Prabhu <sandeepa.prabhu@broadcom.com>
+Cc: geoff@infradead.org, Pratyush Anand <panand@redhat.com>, horms@verge.net.au, kexec@lists.infradead.org
 
-On 11/02/16 at 09:29am, Dave Anderson wrote:
+Hello, Sandeepa!
+
+I pushed the patches into:
+https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
+https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
+
+# Those repos are not well maintained, but I will try to keep them
+  updated.
+
+Thanks,
+-Takahiro AKASHI
+
+On Wed, Nov 02, 2016 at 06:51:51PM +0530, Sandeepa Prabhu wrote:
+> Akashi/Pratyush,
 > 
+> Is there a public git repo I can pull to test this patchset?
 > 
-> ----- Original Message -----
-> > Hi Dave,
-> > 
-> > On 11/01/16 at 10:13am, Dave Anderson wrote:
-> > > 
-> > > 
-> > > > > But we have this in mainline which also introduced the VMCOREINFO
-> > > > > numbers, can you send a patch to revert them?
-> > > > 
-> > > > OK, will do.
-> > > > 
-> > > > However for find_vmemmap_x86_64() in makedumpfile, vmemmap_start is
-> > > > still needed. I checked code, seems no better way to avoid. I am not
-> > > > sure how many people are really using "-e" option to exclude unused
-> > > > vmemmap pages.
-> > > > 
-> > > > Maybe just leave it as is, and fix it when people complain?
-> > > 
-> > > Speaking of complaints, is there any chance you can make the
-> > > x86_64 "phys_base" value available?  The VMCOREINFO_SYMBOL(phys_base)
-> > > is useless since its contents are needed in order to access the
-> > > symbol address.
-> > 
-> > Yeah, the current exporting of virt addr of phys_base is really useless
-> > for x86_64. While I saw you have got phys_base from kdump-ed vmcore elf
-> > program header since kexec-tools has created that pt_load for kernel text
-> > region.
-> > 
-> > machdep->machspec->phys_base = phdr->p_paddr - (phdr->p_vaddr &
-> > ~(__START_KERNEL_map));
-> > 
-> > Do you still want the value of phys_base? If yes, I can change it to
-> > export the real value of phys_base, not &phys_base.
-> > 
-> > In fact, exporting &phys_base was done in 2008, makedumpfile has taken
-> > the similar way you use in crash to get value of phys_base. Means it has
-> > been ignored very earlier. You could be the first person to complain
-> > about it.
+> ~Sandeepa
 > 
-> No, this is not the first time it's been brought up.  Anyway, yes,
-> it would be preferable if it were readily available in vmcoreinfo
-> rather than depending upon the PT_LOAD semantics. 
-
-All right, I need move KERNEL_IMAGE_SIZE to x86 64. Can change it in the
-same patch. Will CC you when post.
-
-Thanks
-Baoquan
-
+> On Wed, Nov 2, 2016 at 10:11 AM, AKASHI Takahiro <takahiro.akashi@linaro.org
+> > wrote:
+> 
+> > My kernel patches of kdump suport on arm64 are currently under reviews.
+> >
+> > This patchset is synced with them (v27 [1]) and provides necessary changes
+> > for kexec-tools. It can be applied on top of kexec-tools master branch.
+> >
+> > [1] T.B.D.
+> >
+> > Changes for v4:
+> >  - rebased on the master branch (including Geoff's v6)
+> >  - revive "linux,usable-memory-range" DT property (from v2), dropping
+> >    use of "reserved-memory" nodes introduced in v3 (patch #8)
+> >  - extend the semantics of kexec_iomem_for_each_line() per Pratyush
+> >    (patch #1)
+> >
+> > Changes for v3:
+> >  - rebased on Geoff's v5
+> >  - fix a value of estimated PHYS_OFFSET
+> >  - add a kernel code/data segment because they now reside out of linear
+> >    mapping due to KASLR introduction
+> >  - remove "linux,usable-memory-range" dependency, instead using
+> >    "reserved-memory" node
+> >  - add -mem-min/-mem-max support
+> >
+> > Changes for v2:
+> >  - trim a temoprary buffer in setup_2nd_dtb()
+> >  - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+> >  - update patch#7 from Pratyush
+> >    (re-worked by akashi)
+> >
+> > AKASHI Takahiro (7):
+> >   kexec: exntend the semantics of kexec_iomem_for_each_line
+> >   arm64: identify PHYS_OFFSET correctly
+> >   arm64: kdump: identify memory regions
+> >   arm64: kdump: add elf core header segment
+> >   arm64: kdump: set up kernel image segment
+> >   arm64: kdump: set up other segments
+> >   arm64: kdump: add DT properties to crash dump kernel's dtb
+> >
+> > Pratyush Anand (2):
+> >   kexec: generalize and rename get_kernel_stext_sym()
+> >   arm64: kdump: Add support for binary image files
+> >
+> >  kexec/Makefile                       |   1 +
+> >  kexec/arch/arm/crashdump-arm.c       |  40 +------
+> >  kexec/arch/arm64/Makefile            |   2 +
+> >  kexec/arch/arm64/crashdump-arm64.c   | 219 ++++++++++++++++++++++++++++++
+> > ++++-
+> >  kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
+> >  kexec/arch/arm64/iomem.h             |  10 ++
+> >  kexec/arch/arm64/kexec-arm64.c       | 118 ++++++++++++++++---
+> >  kexec/arch/arm64/kexec-elf-arm64.c   |  25 +++-
+> >  kexec/arch/arm64/kexec-image-arm64.c |  12 ++
+> >  kexec/arch/i386/crashdump-x86.c      |  29 -----
+> >  kexec/kexec-iomem.c                  |  15 ++-
+> >  kexec/kexec.h                        |   2 +
+> >  kexec/symbols.c                      |  41 +++++++
+> >  13 files changed, 437 insertions(+), 95 deletions(-)
+> >  create mode 100644 kexec/arch/arm64/iomem.h
+> >  create mode 100644 kexec/symbols.c
+> >
+> > --
+> > 2.10.0
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >
 
 _______________________________________________
 kexec mailing list
