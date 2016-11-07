@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 7 Nov 2016 09:12:29 +0100
+Date: Mon, 7 Nov 2016 09:14:33 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: Add support for additional relocations in the
- kexec purgatory code
-Message-ID: <20161107081229.GA13099@verge.net.au>
-References: <1476960211-25594-1-git-send-email-catalin.marinas@arm.com>
- <2792b205-dfdd-1362-9cf4-d886472a9357@infradead.org>
+Subject: Re: [PATCH V2] arm64: Add support of R_AARCH64_PREL32 relocation in
+ purgatory
+Message-ID: <20161107081433.GB13099@verge.net.au>
+References: <f970f7938109c40833fc45e3d6d72b1dcdf14595.1477627895.git.panand@redhat.com>
+ <3175f823-dd03-07f6-fffe-6ec5487cbf93@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2792b205-dfdd-1362-9cf4-d886472a9357@infradead.org>
+In-Reply-To: <3175f823-dd03-07f6-fffe-6ec5487cbf93@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,16 +22,16 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Geoff Levand <geoff@infradead.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Pratyush Anand <panand@redhat.com>, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Thu, Oct 20, 2016 at 09:37:03AM -0700, Geoff Levand wrote:
-> On 10/20/2016 03:43 AM, Catalin Marinas wrote:
-> > When compiling the kexec-tools with gcc6, the following additional
-> > reolcations are generated in the purgatory.ro file:
+On Fri, Oct 28, 2016 at 11:43:48AM -0700, Geoff Levand wrote:
+> On 10/27/2016 09:16 PM, Pratyush Anand wrote:
+> > gcc version in fedora koji is  6.2.1-2.fc25. kexec-tools compiled with this
+> > gcc produced another relocation error:
 > > 
-> > R_AARCH64_ADR_PREL_PG_HI21
-> > R_AARCH64_ADD_ABS_LO12_NC
-> > R_AARCH64_LDST64_ABS_LO12_NC
+> > machine_apply_elf_rel: ERROR Unknown type: 261
+> > 
+> > This patch fixes the above error.
 > 
 > Looks good.  Simon, please apply.
 > 
