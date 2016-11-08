@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 7 Nov 2016 09:17:55 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Memory range end be inclusive or exclusive? Re: [PATCH v1 1/4]
- kexec: (bugfix) calc correct end address of memory ranges in device tree
-Message-ID: <20161107081755.GC13099@verge.net.au>
-References: <cover.1468970114.git.geoff@infradead.org>
- <3562841.ROYbCgkeeq@hactar>
- <20160727232331.GY1041@n2100.armlinux.org.uk>
- <1860371.lT9GInp2C3@hactar>
- <20160729082714.GA1041@n2100.armlinux.org.uk>
- <1469812346.16559.40.camel@infradead.org>
- <20160729172356.GD1041@n2100.armlinux.org.uk>
- <20160801045240.GD7995@linaro.org>
- <20160906002958.GB16712@linaro.org>
- <20161031085008.GF19531@linaro.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161031085008.GF19531@linaro.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1c3vF4-0007yj-83
+ for kexec@lists.infradead.org; Tue, 08 Nov 2016 01:30:27 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH 1/2] Revert "kdump,
+ vmcoreinfo: report memory sections virtual addresses"
+Date: Tue,  8 Nov 2016 09:29:55 +0800
+Message-Id: <1478568596-30060-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,107 +16,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, Geoff Levand <geoff@infradead.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, kexec@lists.infradead.org, Pratyush Anand <panand@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: panand@redhat.com, akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>, ats-kumagai@wm.jp.nec.com, takahiro.akashi@linaro.org, mingo@redhat.com, anderson@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, thgarnie@google.com
 
-Hi Akashi-san,
+This reverts commit 0549a3c02efb350776bc869685a361045efd3a29.
 
-sorry for the long delay(s).
+Commit 0549a3c tells user space utility - makedumpfile the randomized
+base address of these memmory sections when mm kaslr enabled. However
+below patchset makes makedumpfile not need them any more. Besides we
+should use VMCOREINFO_NUMBER to export value of variable so that we
+can use the existing number_table mechanism of Makedumpfile to fetch
+it. So revert it now. If needed, can add it later.
 
-The patch below seems reasonable to me and I'm happy to apply it.
+http://lists.infradead.org/pipermail/kexec/2016-October/017540.html
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/x86/kernel/machine_kexec_64.c | 3 ---
+ include/linux/kexec.h              | 6 ------
+ 2 files changed, 9 deletions(-)
 
-On Mon, Oct 31, 2016 at 05:50:09PM +0900, AKASHI Takahiro wrote:
-> Simon,
-> 
-> On Tue, Sep 06, 2016 at 09:29:59AM +0900, AKASHI Takahiro wrote:
-> > Simon,
-> > 
-> > What is your opinion on this issue?
-> 
-> Pinged you several times so far.
-> 
-> Can you please give me your comment?
-> (attached below is the original patch.)
-> 
-> -Takahiro AKASHI
-> 
-> > 
-> > On Mon, Aug 01, 2016 at 01:52:40PM +0900, AKASHI Takahiro wrote:
-> > > On Fri, Jul 29, 2016 at 06:23:56PM +0100, Russell King - ARM Linux wrote:
-> > > > On Fri, Jul 29, 2016 at 10:12:26AM -0700, Geoff Levand wrote:
-> > > > > On Fri, 2016-07-29 at 09:27 +0100, Russell King - ARM Linux wrote:
-> > > > > 
-> > > > > > So, these functions are a mess and need fixing.
-> > > > > 
-> > > > > Since this change isn't really related to arm64 support, I'll
-> > > > > drop this patch from my series.
-> > > > 
-> > > > Do you have a case which triggers bugs in this code?
-> > > 
-> > > Actually, this patch was necessary when my kdump used "usable-memory"
-> > > properties in "memory" nodes, as on ppc64, to limit the usable memory
-> > > regions that can be used by crash dump kernel.
-> > > Since then, I've moved to the approach of using "mem=" kernel parameter,
-> > > then introducing a new property, "linux,usable-memory-range," under /chosen
-> > > and now we don't need this patch any more.
-> > > 
-> > > So, we can drop it but I still believe that it is buggy.
-> > 
-> > Due to the discussions[1], I may want to re-enable "usable-memory"
-> > property on arm64. In addition, I would like to add a function,
-> > dtb_add_usable_memory_properties(), a variant of
-> > add_usable_memory_properties(), to kexec/dt-ops.c.
-> > So this issue is quite crucial now.
-> > 
-> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/452685.html
-> > 
-> > -Takahiro AKASHI
-> > 
-> > > Thanks,
-> > > -Takahiro AKASHI
-> > > 
-> > > > -- 
-> > > > RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> > > > FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> > > > according to speedtest.net.
-> ===8<===
-> From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> 
-> The end address of "reg" attribute in device tree's memory should be
-> inclusive.
-> ---
->  kexec/fs2dt.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
-> index 79aa0f3..953f78a 100644
-> --- a/kexec/fs2dt.c
-> +++ b/kexec/fs2dt.c
-> @@ -236,7 +236,8 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
->  						    ranges_size*8);
->  				}
->  				ranges[rlen++] = cpu_to_be64(loc_base);
-> -				ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
-> +				ranges[rlen++] = cpu_to_be64(loc_end
-> +								- loc_base + 1);
->  				rngs_cnt++;
->  			}
->  		}
-> @@ -350,7 +351,7 @@ static void add_usable_mem_property(int fd, size_t len)
->  					    ranges_size*sizeof(*ranges));
->  			}
->  			ranges[rlen++] = cpu_to_be64(loc_base);
-> -			ranges[rlen++] = cpu_to_be64(loc_end - loc_base);
-> +			ranges[rlen++] = cpu_to_be64(loc_end - loc_base + 1);
->  		}
->  	}
->  
-> -- 
-> 2.10.0
-> 
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 8c1f218..5a294e4 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -337,9 +337,6 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n",
+ 			      kaslr_offset());
+-	VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
+-	VMCOREINFO_VMALLOC_START(VMALLOC_START);
+-	VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
+ }
+ 
+ /* arch-dependent functionality related to kexec file-based syscall */
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 406c33d..d743777 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -259,12 +259,6 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ 	vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
+ #define VMCOREINFO_CONFIG(name) \
+ 	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+-#define VMCOREINFO_PAGE_OFFSET(value) \
+-	vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
+-#define VMCOREINFO_VMALLOC_START(value) \
+-	vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
+-#define VMCOREINFO_VMEMMAP_START(value) \
+-	vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
+ 
+ extern struct kimage *kexec_image;
+ extern struct kimage *kexec_crash_image;
+-- 
+2.5.5
+
 
 _______________________________________________
 kexec mailing list
