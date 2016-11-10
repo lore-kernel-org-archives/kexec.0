@@ -2,36 +2,39 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c4g2H-0002Yq-Uo
- for kexec@lists.infradead.org; Thu, 10 Nov 2016 03:28:25 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ id 1c4g2r-0002g0-5e
+ for kexec@lists.infradead.org; Thu, 10 Nov 2016 03:29:03 +0000
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
  by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- uAA3Nevn101973
- for <kexec@lists.infradead.org>; Wed, 9 Nov 2016 22:28:00 -0500
-Received: from e24smtp01.br.ibm.com (e24smtp01.br.ibm.com [32.104.18.85])
- by mx0b-001b2d01.pphosted.com with ESMTP id 26md6fbab9-1
+ uAA3SYp0121927
+ for <kexec@lists.infradead.org>; Wed, 9 Nov 2016 22:28:36 -0500
+Received: from e24smtp04.br.ibm.com (e24smtp04.br.ibm.com [32.104.18.25])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 26mefb08a4-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 09 Nov 2016 22:28:00 -0500
+ for <kexec@lists.infradead.org>; Wed, 09 Nov 2016 22:28:36 -0500
 Received: from localhost
- by e24smtp01.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e24smtp04.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
- Thu, 10 Nov 2016 01:27:57 -0200
-Received: from d24relay02.br.ibm.com (d24relay02.br.ibm.com [9.13.184.26])
- by d24dlp01.br.ibm.com (Postfix) with ESMTP id 10B2F352005C
- for <kexec@lists.infradead.org>; Wed,  9 Nov 2016 22:27:28 -0500 (EST)
+ Thu, 10 Nov 2016 01:28:25 -0200
+Received: from d24relay04.br.ibm.com (d24relay04.br.ibm.com [9.18.232.146])
+ by d24dlp01.br.ibm.com (Postfix) with ESMTP id 2674F352005C
+ for <kexec@lists.infradead.org>; Wed,  9 Nov 2016 22:27:54 -0500 (EST)
 Received: from d24av02.br.ibm.com (d24av02.br.ibm.com [9.8.31.93])
- by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- uAA3RuDj19923358
- for <kexec@lists.infradead.org>; Thu, 10 Nov 2016 01:27:56 -0200
+ by d24relay04.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ uAA3SMLY39256286
+ for <kexec@lists.infradead.org>; Thu, 10 Nov 2016 01:28:22 -0200
 Received: from d24av02.br.ibm.com (localhost [127.0.0.1])
  by d24av02.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- uAA3RsS2019597
- for <kexec@lists.infradead.org>; Thu, 10 Nov 2016 01:27:55 -0200
+ uAA3SLJv020041
+ for <kexec@lists.infradead.org>; Thu, 10 Nov 2016 01:28:22 -0200
 From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-Subject: [PATCH v10 00/10] kexec_file_load implementation for PowerPC
-Date: Thu, 10 Nov 2016 01:27:19 -0200
-Message-Id: <1478748449-3894-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Subject: [PATCH v10 02/10] kexec_file: Change kexec_add_buffer to take
+ kexec_buf as argument.
+Date: Thu, 10 Nov 2016 01:27:21 -0200
+In-Reply-To: <1478748449-3894-1-git-send-email-bauerman@linux.vnet.ibm.com>
+References: <1478748449-3894-1-git-send-email-bauerman@linux.vnet.ibm.com>
+Message-Id: <1478748449-3894-3-git-send-email-bauerman@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,308 +51,418 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Stewart Smith <stewart@linux.vnet.ibm.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Baoquan He <bhe@redhat.com>, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Michael Ellerman <mpe@ellerman.id.au>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Mimi Zohar <zohar@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hello,
+This is done to simplify the kexec_add_buffer argument list.
+Adapt all callers to set up a kexec_buf to pass to kexec_add_buffer.
 
-[ Andrew, you might want to wait until the kexec maintainers say whether
-  they agree with patch 4 before picking up this version. ]
+In addition, change the type of kexec_buf.buffer from char * to void *.
+There is no particular reason for it to be a char *, and the change
+allows us to get rid of 3 existing casts to char * in the code.
 
-v10 addresses two requests from Michael Ellerman: build the
-purgatory as a Position Independent Executable binary to reduce the
-number of relocation types that we have to deal with, and remove code
-that is not strictly necessary from the purgatory. 
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+---
+ arch/x86/kernel/crash.c           | 37 ++++++++--------
+ arch/x86/kernel/kexec-bzimage64.c | 48 +++++++++++----------
+ include/linux/kexec.h             |  8 +---
+ kernel/kexec_file.c               | 88 ++++++++++++++++++---------------------
+ 4 files changed, 87 insertions(+), 94 deletions(-)
 
-The first objective is made possible by patch 4, which is new in this
-version and adds the support in generic code that arch-specific code
-needs if it wants to use a PIE purgatory. Now it's not necessary
-anymore to refactor code in module_64.c to reuse its implementation
-of the relocations.
-
-I also added a script which checks purgatory.ro and warns if it has
-a relocation type that is not supported.
-
-The second objective is met by removing code for printing messages
-to the console. Everything else that is in the purgatory is to implement
-the checksum verification of the kexec image.
-
-The gory details are in the detailed changelog at the end of this email.
-
-Original cover letter:
-
-This patch series implements the kexec_file_load system call on PowerPC.
-
-This system call moves the reading of the kernel, initrd and the device tree
-from the userspace kexec tool to the kernel. This is needed if you want to
-do one or both of the following:
-
-1. only allow loading of signed kernels.
-2. "measure" (i.e., record the hashes of) the kernel, initrd, kernel
-   command line and other boot inputs for the Integrity Measurement
-   Architecture subsystem.
-
-The above are the functions kexec already has built into kexec_file_load.
-Yesterday I posted a set of patches which allows a third feature:
-
-3. have IMA pass-on its event log (where integrity measurements are
-   registered) accross kexec to the second kernel, so that the event
-   history is preserved.
-
-Because OpenPower uses an intermediary Linux instance as a boot loader
-(skiroot), feature 1 is needed to implement secure boot for the platform,
-while features 2 and 3 are needed to implement trusted boot.
-
-This patch series starts by removing an x86 assumption from kexec_file:
-kexec_add_buffer uses iomem to find reserved memory ranges, but PowerPC
-uses the memblock subsystem.  A hook is added so that each arch can
-specify how memory ranges can be found.
-
-Also, the memory-walking logic in kexec_add_buffer is useful in this
-implementation to find a free area for the purgatory's stack, so the
-next patch moves that logic to kexec_locate_mem_hole.
-
-The kexec_file_load system call needs to apply relocations to the
-purgatory but adding code for that would duplicate functionality with
-the module loading mechanism, which also needs to apply relocations to
-the kernel modules.  Therefore, this patch series factors out the module
-relocation code so that it can be shared.
-
-One thing that is still missing is crashkernel support, which I intend
-to submit shortly. For now, arch_kexec_kernel_image_probe rejects crash
-kernels.
-
-This code is based on kexec-tools, but with many modifications to adapt
-it to the kernel environment and facilities. Except the purgatory,
-which only has minimal changes.
-
-Changes for v10:
-- Patch "kexec_file: Add support for purgatory built as PIE."
-  - New patch.
-- Patch "powerpc: Factor out relocation code in module_64.c"
-  - Dropped patch from series.
-- Patch "powerpc: Implement kexec_file_load."
-  - Made CONFIG_KEXEC_FILE select HAVE_KEXEC_FILE_PIE_PURGATORY.
-  - Removed elf_my_r2 and elf_toc_section functions, they aren't necessary
-    anymore.
-  - Adapted arch_kexec_apply_relocations_add to the absolute addresses found
-    in PIE binaries. Apply the relocations in this function instead of
-    calling elf64_apply_relocate_add_item (which doesn't exist anymore).
-  - No need to change module_64.c anymore.
-  - Implemented R_PPC64_RELATIVE relocation.
-- Patch "powerpc: Add functions to read ELF files of any endianness."
-  - Introduce <asm/elf_util.h> and elf_util.c in this patch.
-- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
-  - Define PURGATORY_ELF_TYPE macro in <asm/kexec.h>.
-  - Removed debug argument from the setup_purgatory function.
-  - Don't call find_debug_console in elf64_load anymore.
-  - Removed function find_debug_console.
-  - Find the TOC address by looking for the .got section in setup_purgatory.
-  - Don't set the "debug" purgatory symbol (which doesn't exist anymore) in
-    setup_purgatory.
-- Patch "powerpc: Add purgatory for kexec_file_load implementation."
-  - Don't change boot/string.S.
-  - Build purgatory as a PIE binary and suppress generation of the INTERP
-    segment, which is not meaningful in this case.
-  - Add check-purgatory-relocs.sh and call it after building purgatory.ro.
-  - Removed console-ppc64.c, hvCall.S, ppc64_asm.h and printf.c.
-  - Moved inclusion of <linux/compiler.h> from purgatory.h to
-    purgatory-ppc64.c.
-  - Removed "debug" global variable from purgatory-ppc64.c.
-  - Removed inclusion of "../boot/string.h" from purgatory.c.
-  - Removed printf calls from purgatory.c.
-  - Included <linux/types.h>, added prototype for memcmp and removed
-    prototypes for putchar, sprintf and printf in purgatory.h.
-  - Added string.c with code copied from lib/string.c.
-  - Removed inclusion of "ppc64_asm.h" and use of DOTSYM macro from v2wrap.S.
-  
-Changes for v9:
-- Rebased on top of v4.9-rc1
-- Patch "powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE instead."
-  - Fixed conflict with patch renaming CONFIG_WORD_SIZE to BITS.
-- Patch "powerpc: Factor out relocation code from module_64.c to elf_util_64.c."
-  - Retitled to "powerpc: Factor out relocation code in module_64.c"
-  - Fixed conflict with patch renaming CONFIG_WORD_SIZE to BITS.
-  - Put relocation code in function elf64_apply_relocate_add_item in
-    module_64.c itself instead of moving it to elf_util_64.c.
-  - Only factored out the switch statement to apply the relocations
-    instead of the whole logic to iterate through all of the relocations.
-  - There's no elf_util_64.c anymore.
-  - Doesn't change <asm/module.h> anymore.
-  - Doesn't change arch/powerpc/kernel/Makefile anymore.
-  - Moved creation of <asm/elf_util.h> to patch "Implement kexec_file_load."
-- Patch "powerpc: Generalize elf64_apply_relocate_add."
-  - Dropped patch from series.
-  - Moved changes adding address variable to patch "powerpc: Implement
-    kexec_file_load."
-- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
-  - Dropped patch from series.
-  - Moved new relocs needed by the purgatory to patch "powerpc: Implement
-    kexec_file_load."
-- Patch "powerpc: Implement kexec_file_load."
-  - Fixed conflict with patch renaming CONFIG_WORD_SIZE to BITS.
-  - Put code in a new file machine_kexec_file_64.c instead of adding it to
-    machine_kexec_64.c.
-  - arch_kexec_apply_relocations_add now has the for loop which was
-    previously factored out in elf64_apply_relocate_add.
-  - Moved definition of setup_purgatory to "powerpc: Add support for
-    loading ELF kernels with kexec_file_load.".
-  - Introduce <asm/elf_util.h> and elf_util.c in this patch.
-  - Only build elf_util.c if CONFIG_KEXEC_FILE=y.
-  - Renamed my_r2 to elf_my_r2 and changed it to receive a pointer to
-    struct elf_shdr instead of struct elf_info.
-  - Added toc_section function.
-  - Removed elf_init_elf_info function.
-- Patch "powerpc: Add functions to read ELF files of any endianness."
-  - Fixed conflict with patch renaming CONFIG_WORD_SIZE to BITS.
-  - Introduce struct elf_info in this patch.
-  - Removed stubs_section and toc_section from struct elf_info.
-  - Doesn't change arch/powerpc/kernel/Makefile anymore.
-- Patch "powerpc: Add code to work with device trees in kexec_file_load."
-  - Squashed into "powerpc: Add support for loading ELF kernels with
-    kexec_file_load.". The code is unchanged.
-- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
-  - Fixed conflict with patch renaming CONFIG_WORD_SIZE to BITS.
-  - Fixed uninitialized variable warning when building with GCC 4.6.3.
-  - Don't create <asm/kexec_elf_64.h> anymore, put declaration of
-    kexec_el_64_ops in <asm/kexec.h> instead.
-  - Removed unused extern declaration of kexec_purgatory_size.
-  - Made elf64_load static.
-  - Factor out delete_fdt_mem_rsv from setup_new_fdt. This change was in
-    the patch series for preserving IMA measurements accross kexec.
-- Patch "powerpc: Add purgatory for kexec_file_load implementation."
-  - Fixed conflict with patch renaming CONFIG_WORD_SIZE to BITS.
-  - Changed purgatory Makefile to use the kernel KBUILD_CFLAGS, filtering
-    out the flags for ftrace. (Michael Ellerman)
-  - Added extern declaration of the debug global variable to purgatory.h and
-    included it in console-ppc64.c to fix checkpatch.pl warning.
-  - Added __section attribute to global variables in purgatory-ppc64.c and
-    don't initialize them to zero, to fix checkpatch.pl warning.
-  - Fixed type of debug global variable to int instead of unsigned int.
-  - Included <linux/compiler.h> in purgatory.h and use __printf macro to
-    fix checkpatch.pl warning.
-  - Removed crashdump-ppc64.h, crashdump_backup.c and purgatory-ppc64.h.
-
-Changes for v8:
-- Rebased on top of v4.8-rc5.
-- Patch "powerpc: Add purgatory for kexec_file_load implementation."
-  - Fix cross build from ppc64 LE to BE and vice-versa.
-  - Don't build the purgatory during archprepare.
-
-Changes for v7:
-- Rebased on top of v4.8-rc4.
-- Patch "powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE
-  instead."
-  - New patch. Fixes build when CONFIG_KEXEC=n and CONFIG_KEXEC_FILE=y.
-- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
-  - Fixed checkpatch warning "else is not generally useful after a break
-    or return".
-  - Fixed checkpatch warnings about line length. (Andrew Morton)
-- Patch "powerpc: Add code to work with device trees in kexec_file_load."
-  - Remove space before tabs in doc comment for setup_new_fdt. (Andrew Morton)
-  - Fixed checkpatch warnings about line length.
-- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
-  - Removed duplicate #include <linux/kexec.h>.
-
-Changes for v6:
-- Based directly on top of v4.8-rc1.
-- Patch "powerpc: Adapt elf64_apply_relocate_add for kexec_file_load."
-  - Allow undefined symbols if they are relocations for the TOC in the
-    big endian ABI.
-  - Fixed build error in this patch by adding the ehdr member to elf_info
-    here instead of in the next patch.
-  - Initialize elf_info.ehdr in module_64.c:module_frob_arch_sections.
-- Patch "powerpc: Add code to work with device trees in kexec_file_load."
-  - Changed find_debug_console to look for /chosen instead of receiving
-    its offset as an argument.
-  - setup_new_fdt: no need to find /chosen again after deleting the memory
-    reservation for initrd.
-- Patch "powerpc: Add support for loading ELF kernels with kexec_file_load."
-  - Don't pass the offset to /chosen to find_debug_console.
-- Patch "powerpc: Allow userspace to set device tree properties in kexec_file_load"
-  - Dropped patch.
-- Patch "powerpc: Add purgatory for kexec_file_load implementation."
-  - Make boot/string.S use the DOTSYM macro so that it can be
-    used by the ppc64 big endian purgatory.
-  - Use -mcall-aixdesc to compile the purgatory on big endian ppc64.
-
-Thiago Jung Bauermann (10):
-  kexec_file: Allow arch-specific memory walking for kexec_add_buffer
-  kexec_file: Change kexec_add_buffer to take kexec_buf as argument.
-  kexec_file: Factor out kexec_locate_mem_hole from kexec_add_buffer.
-  kexec_file: Add support for purgatory built as PIE.
-  powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE
-    instead.
-  powerpc: Implement kexec_file_load.
-  powerpc: Add functions to read ELF files of any endianness.
-  powerpc: Add support for loading ELF kernels with kexec_file_load.
-  powerpc: Add purgatory for kexec_file_load implementation.
-  powerpc: Enable CONFIG_KEXEC_FILE in powerpc server defconfigs.
-
- arch/Kconfig                                   |  11 +
- arch/powerpc/Kconfig                           |  16 +-
- arch/powerpc/Makefile                          |   1 +
- arch/powerpc/configs/powernv_defconfig         |   2 +
- arch/powerpc/configs/ppc64_defconfig           |   2 +
- arch/powerpc/configs/pseries_defconfig         |   2 +
- arch/powerpc/include/asm/debug.h               |   2 +-
- arch/powerpc/include/asm/elf_util.h            |  43 ++
- arch/powerpc/include/asm/kexec.h               |  18 +-
- arch/powerpc/include/asm/machdep.h             |   4 +-
- arch/powerpc/include/asm/smp.h                 |   2 +-
- arch/powerpc/include/asm/systbl.h              |   1 +
- arch/powerpc/include/asm/unistd.h              |   2 +-
- arch/powerpc/include/uapi/asm/unistd.h         |   1 +
- arch/powerpc/kernel/Makefile                   |   6 +-
- arch/powerpc/kernel/elf_util.c                 | 437 +++++++++++++++++++
- arch/powerpc/kernel/head_64.S                  |   2 +-
- arch/powerpc/kernel/kexec_elf_64.c             | 279 ++++++++++++
- arch/powerpc/kernel/machine_kexec_file_64.c    | 578 +++++++++++++++++++++++++
- arch/powerpc/kernel/misc_32.S                  |   2 +-
- arch/powerpc/kernel/misc_64.S                  |   6 +-
- arch/powerpc/kernel/prom.c                     |   2 +-
- arch/powerpc/kernel/setup_64.c                 |   4 +-
- arch/powerpc/kernel/smp.c                      |   6 +-
- arch/powerpc/kernel/traps.c                    |   2 +-
- arch/powerpc/platforms/85xx/corenet_generic.c  |   2 +-
- arch/powerpc/platforms/85xx/smp.c              |   8 +-
- arch/powerpc/platforms/cell/spu_base.c         |   2 +-
- arch/powerpc/platforms/powernv/setup.c         |   6 +-
- arch/powerpc/platforms/ps3/setup.c             |   4 +-
- arch/powerpc/platforms/pseries/Makefile        |   2 +-
- arch/powerpc/platforms/pseries/setup.c         |   4 +-
- arch/powerpc/purgatory/.gitignore              |   2 +
- arch/powerpc/purgatory/Makefile                |  40 ++
- arch/powerpc/purgatory/crtsavres.S             |   5 +
- arch/powerpc/purgatory/kexec-sha256.h          |  11 +
- arch/powerpc/purgatory/purgatory-ppc64.c       |  36 ++
- arch/powerpc/purgatory/purgatory.c             |  48 ++
- arch/powerpc/purgatory/purgatory.h             |  10 +
- arch/powerpc/purgatory/sha256.c                |   6 +
- arch/powerpc/purgatory/sha256.h                |   1 +
- arch/powerpc/purgatory/string.c                |  60 +++
- arch/powerpc/purgatory/v2wrap.S                | 132 ++++++
- arch/powerpc/scripts/check-purgatory-relocs.sh |  47 ++
- arch/x86/kernel/crash.c                        |  37 +-
- arch/x86/kernel/kexec-bzimage64.c              |  48 +-
- include/linux/kexec.h                          |  40 +-
- kernel/kexec_file.c                            | 413 +++++++++++++-----
- kernel/kexec_internal.h                        |  16 -
- 49 files changed, 2197 insertions(+), 214 deletions(-)
- create mode 100644 arch/powerpc/include/asm/elf_util.h
- create mode 100644 arch/powerpc/kernel/elf_util.c
- create mode 100644 arch/powerpc/kernel/kexec_elf_64.c
- create mode 100644 arch/powerpc/kernel/machine_kexec_file_64.c
- create mode 100644 arch/powerpc/purgatory/.gitignore
- create mode 100644 arch/powerpc/purgatory/Makefile
- create mode 100644 arch/powerpc/purgatory/crtsavres.S
- create mode 100644 arch/powerpc/purgatory/kexec-sha256.h
- create mode 100644 arch/powerpc/purgatory/purgatory-ppc64.c
- create mode 100644 arch/powerpc/purgatory/purgatory.c
- create mode 100644 arch/powerpc/purgatory/purgatory.h
- create mode 100644 arch/powerpc/purgatory/sha256.c
- create mode 100644 arch/powerpc/purgatory/sha256.h
- create mode 100644 arch/powerpc/purgatory/string.c
- create mode 100644 arch/powerpc/purgatory/v2wrap.S
- create mode 100755 arch/powerpc/scripts/check-purgatory-relocs.sh
-
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 650830e39e3a..3741461c63a0 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -631,9 +631,9 @@ static int determine_backup_region(u64 start, u64 end, void *arg)
+ 
+ int crash_load_segments(struct kimage *image)
+ {
+-	unsigned long src_start, src_sz, elf_sz;
+-	void *elf_addr;
+ 	int ret;
++	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
++				  .buf_max = ULONG_MAX, .top_down = false };
+ 
+ 	/*
+ 	 * Determine and load a segment for backup area. First 640K RAM
+@@ -647,43 +647,44 @@ int crash_load_segments(struct kimage *image)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	src_start = image->arch.backup_src_start;
+-	src_sz = image->arch.backup_src_sz;
+-
+ 	/* Add backup segment. */
+-	if (src_sz) {
++	if (image->arch.backup_src_sz) {
++		kbuf.buffer = &crash_zero_bytes;
++		kbuf.bufsz = sizeof(crash_zero_bytes);
++		kbuf.memsz = image->arch.backup_src_sz;
++		kbuf.buf_align = PAGE_SIZE;
+ 		/*
+ 		 * Ideally there is no source for backup segment. This is
+ 		 * copied in purgatory after crash. Just add a zero filled
+ 		 * segment for now to make sure checksum logic works fine.
+ 		 */
+-		ret = kexec_add_buffer(image, (char *)&crash_zero_bytes,
+-				       sizeof(crash_zero_bytes), src_sz,
+-				       PAGE_SIZE, 0, -1, 0,
+-				       &image->arch.backup_load_addr);
++		ret = kexec_add_buffer(&kbuf);
+ 		if (ret)
+ 			return ret;
++		image->arch.backup_load_addr = kbuf.mem;
+ 		pr_debug("Loaded backup region at 0x%lx backup_start=0x%lx memsz=0x%lx\n",
+-			 image->arch.backup_load_addr, src_start, src_sz);
++			 image->arch.backup_load_addr,
++			 image->arch.backup_src_start, kbuf.memsz);
+ 	}
+ 
+ 	/* Prepare elf headers and add a segment */
+-	ret = prepare_elf_headers(image, &elf_addr, &elf_sz);
++	ret = prepare_elf_headers(image, &kbuf.buffer, &kbuf.bufsz);
+ 	if (ret)
+ 		return ret;
+ 
+-	image->arch.elf_headers = elf_addr;
+-	image->arch.elf_headers_sz = elf_sz;
++	image->arch.elf_headers = kbuf.buffer;
++	image->arch.elf_headers_sz = kbuf.bufsz;
+ 
+-	ret = kexec_add_buffer(image, (char *)elf_addr, elf_sz, elf_sz,
+-			ELF_CORE_HEADER_ALIGN, 0, -1, 0,
+-			&image->arch.elf_load_addr);
++	kbuf.memsz = kbuf.bufsz;
++	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
++	ret = kexec_add_buffer(&kbuf);
+ 	if (ret) {
+ 		vfree((void *)image->arch.elf_headers);
+ 		return ret;
+ 	}
++	image->arch.elf_load_addr = kbuf.mem;
+ 	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-		 image->arch.elf_load_addr, elf_sz, elf_sz);
++		 image->arch.elf_load_addr, kbuf.bufsz, kbuf.bufsz);
+ 
+ 	return ret;
+ }
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 3407b148c240..d0a814a9d96a 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -331,17 +331,17 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 
+ 	struct setup_header *header;
+ 	int setup_sects, kern16_size, ret = 0;
+-	unsigned long setup_header_size, params_cmdline_sz, params_misc_sz;
++	unsigned long setup_header_size, params_cmdline_sz;
+ 	struct boot_params *params;
+ 	unsigned long bootparam_load_addr, kernel_load_addr, initrd_load_addr;
+ 	unsigned long purgatory_load_addr;
+-	unsigned long kernel_bufsz, kernel_memsz, kernel_align;
+-	char *kernel_buf;
+ 	struct bzimage64_data *ldata;
+ 	struct kexec_entry64_regs regs64;
+ 	void *stack;
+ 	unsigned int setup_hdr_offset = offsetof(struct boot_params, hdr);
+ 	unsigned int efi_map_offset, efi_map_sz, efi_setup_data_offset;
++	struct kexec_buf kbuf = { .image = image, .buf_max = ULONG_MAX,
++				  .top_down = true };
+ 
+ 	header = (struct setup_header *)(kernel + setup_hdr_offset);
+ 	setup_sects = header->setup_sects;
+@@ -402,11 +402,11 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+ 				MAX_ELFCOREHDR_STR_LEN;
+ 	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+-	params_misc_sz = params_cmdline_sz + efi_map_sz +
++	kbuf.bufsz = params_cmdline_sz + efi_map_sz +
+ 				sizeof(struct setup_data) +
+ 				sizeof(struct efi_setup_data);
+ 
+-	params = kzalloc(params_misc_sz, GFP_KERNEL);
++	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+ 	efi_map_offset = params_cmdline_sz;
+@@ -418,37 +418,41 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 	/* Is there a limit on setup header size? */
+ 	memcpy(&params->hdr, (kernel + setup_hdr_offset), setup_header_size);
+ 
+-	ret = kexec_add_buffer(image, (char *)params, params_misc_sz,
+-			       params_misc_sz, 16, MIN_BOOTPARAM_ADDR,
+-			       ULONG_MAX, 1, &bootparam_load_addr);
++	kbuf.buffer = params;
++	kbuf.memsz = kbuf.bufsz;
++	kbuf.buf_align = 16;
++	kbuf.buf_min = MIN_BOOTPARAM_ADDR;
++	ret = kexec_add_buffer(&kbuf);
+ 	if (ret)
+ 		goto out_free_params;
++	bootparam_load_addr = kbuf.mem;
+ 	pr_debug("Loaded boot_param, command line and misc at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-		 bootparam_load_addr, params_misc_sz, params_misc_sz);
++		 bootparam_load_addr, kbuf.bufsz, kbuf.bufsz);
+ 
+ 	/* Load kernel */
+-	kernel_buf = kernel + kern16_size;
+-	kernel_bufsz =  kernel_len - kern16_size;
+-	kernel_memsz = PAGE_ALIGN(header->init_size);
+-	kernel_align = header->kernel_alignment;
+-
+-	ret = kexec_add_buffer(image, kernel_buf,
+-			       kernel_bufsz, kernel_memsz, kernel_align,
+-			       MIN_KERNEL_LOAD_ADDR, ULONG_MAX, 1,
+-			       &kernel_load_addr);
++	kbuf.buffer = kernel + kern16_size;
++	kbuf.bufsz =  kernel_len - kern16_size;
++	kbuf.memsz = PAGE_ALIGN(header->init_size);
++	kbuf.buf_align = header->kernel_alignment;
++	kbuf.buf_min = MIN_KERNEL_LOAD_ADDR;
++	ret = kexec_add_buffer(&kbuf);
+ 	if (ret)
+ 		goto out_free_params;
++	kernel_load_addr = kbuf.mem;
+ 
+ 	pr_debug("Loaded 64bit kernel at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+-		 kernel_load_addr, kernel_memsz, kernel_memsz);
++		 kernel_load_addr, kbuf.bufsz, kbuf.memsz);
+ 
+ 	/* Load initrd high */
+ 	if (initrd) {
+-		ret = kexec_add_buffer(image, initrd, initrd_len, initrd_len,
+-				       PAGE_SIZE, MIN_INITRD_LOAD_ADDR,
+-				       ULONG_MAX, 1, &initrd_load_addr);
++		kbuf.buffer = initrd;
++		kbuf.bufsz = kbuf.memsz = initrd_len;
++		kbuf.buf_align = PAGE_SIZE;
++		kbuf.buf_min = MIN_INITRD_LOAD_ADDR;
++		ret = kexec_add_buffer(&kbuf);
+ 		if (ret)
+ 			goto out_free_params;
++		initrd_load_addr = kbuf.mem;
+ 
+ 		pr_debug("Loaded initrd at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+ 				initrd_load_addr, initrd_len, initrd_len);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 5e320ddaaa82..437ef1b47428 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -163,7 +163,7 @@ struct kexec_file_ops {
+  */
+ struct kexec_buf {
+ 	struct kimage *image;
+-	char *buffer;
++	void *buffer;
+ 	unsigned long bufsz;
+ 	unsigned long mem;
+ 	unsigned long memsz;
+@@ -175,6 +175,7 @@ struct kexec_buf {
+ 
+ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 			       int (*func)(u64, u64, void *));
++extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ struct kimage {
+@@ -239,11 +240,6 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
+ 					struct kexec_segment __user *segments,
+ 					unsigned long flags);
+ extern int kernel_kexec(void);
+-extern int kexec_add_buffer(struct kimage *image, char *buffer,
+-			    unsigned long bufsz, unsigned long memsz,
+-			    unsigned long buf_align, unsigned long buf_min,
+-			    unsigned long buf_max, bool top_down,
+-			    unsigned long *load_addr);
+ extern struct page *kimage_alloc_control_pages(struct kimage *image,
+ 						unsigned int order);
+ extern int kexec_load_purgatory(struct kimage *image, unsigned long min,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index f865674bff51..efd2c094af7e 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -449,25 +449,27 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
+ }
+ 
+-/*
+- * Helper function for placing a buffer in a kexec segment. This assumes
+- * that kexec_mutex is held.
++/**
++ * kexec_add_buffer - place a buffer in a kexec segment
++ * @kbuf:	Buffer contents and memory parameters.
++ *
++ * This function assumes that kexec_mutex is held.
++ * On successful return, @kbuf->mem will have the physical address of
++ * the buffer in memory.
++ *
++ * Return: 0 on success, negative errno on error.
+  */
+-int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+-		     unsigned long memsz, unsigned long buf_align,
+-		     unsigned long buf_min, unsigned long buf_max,
+-		     bool top_down, unsigned long *load_addr)
++int kexec_add_buffer(struct kexec_buf *kbuf)
+ {
+ 
+ 	struct kexec_segment *ksegment;
+-	struct kexec_buf buf, *kbuf;
+ 	int ret;
+ 
+ 	/* Currently adding segment this way is allowed only in file mode */
+-	if (!image->file_mode)
++	if (!kbuf->image->file_mode)
+ 		return -EINVAL;
+ 
+-	if (image->nr_segments >= KEXEC_SEGMENT_MAX)
++	if (kbuf->image->nr_segments >= KEXEC_SEGMENT_MAX)
+ 		return -EINVAL;
+ 
+ 	/*
+@@ -477,22 +479,14 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 	 * logic goes through list of segments to make sure there are
+ 	 * no destination overlaps.
+ 	 */
+-	if (!list_empty(&image->control_pages)) {
++	if (!list_empty(&kbuf->image->control_pages)) {
+ 		WARN_ON(1);
+ 		return -EINVAL;
+ 	}
+ 
+-	memset(&buf, 0, sizeof(struct kexec_buf));
+-	kbuf = &buf;
+-	kbuf->image = image;
+-	kbuf->buffer = buffer;
+-	kbuf->bufsz = bufsz;
+-
+-	kbuf->memsz = ALIGN(memsz, PAGE_SIZE);
+-	kbuf->buf_align = max(buf_align, PAGE_SIZE);
+-	kbuf->buf_min = buf_min;
+-	kbuf->buf_max = buf_max;
+-	kbuf->top_down = top_down;
++	/* Ensure minimum alignment needed for segments. */
++	kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
++	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+ 	ret = arch_kexec_walk_mem(kbuf, locate_mem_hole_callback);
+@@ -502,13 +496,12 @@ int kexec_add_buffer(struct kimage *image, char *buffer, unsigned long bufsz,
+ 	}
+ 
+ 	/* Found a suitable memory range */
+-	ksegment = &image->segment[image->nr_segments];
++	ksegment = &kbuf->image->segment[kbuf->image->nr_segments];
+ 	ksegment->kbuf = kbuf->buffer;
+ 	ksegment->bufsz = kbuf->bufsz;
+ 	ksegment->mem = kbuf->mem;
+ 	ksegment->memsz = kbuf->memsz;
+-	image->nr_segments++;
+-	*load_addr = ksegment->mem;
++	kbuf->image->nr_segments++;
+ 	return 0;
+ }
+ 
+@@ -630,13 +623,15 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 				  unsigned long max, int top_down)
+ {
+ 	struct purgatory_info *pi = &image->purgatory_info;
+-	unsigned long align, buf_align, bss_align, buf_sz, bss_sz, bss_pad;
+-	unsigned long memsz, entry, load_addr, curr_load_addr, bss_addr, offset;
++	unsigned long align, bss_align, bss_sz, bss_pad;
++	unsigned long entry, load_addr, curr_load_addr, bss_addr, offset;
+ 	unsigned char *buf_addr, *src;
+ 	int i, ret = 0, entry_sidx = -1;
+ 	const Elf_Shdr *sechdrs_c;
+ 	Elf_Shdr *sechdrs = NULL;
+-	void *purgatory_buf = NULL;
++	struct kexec_buf kbuf = { .image = image, .bufsz = 0, .buf_align = 1,
++				  .buf_min = min, .buf_max = max,
++				  .top_down = top_down };
+ 
+ 	/*
+ 	 * sechdrs_c points to section headers in purgatory and are read
+@@ -702,9 +697,7 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	}
+ 
+ 	/* Determine how much memory is needed to load relocatable object. */
+-	buf_align = 1;
+ 	bss_align = 1;
+-	buf_sz = 0;
+ 	bss_sz = 0;
+ 
+ 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+@@ -713,10 +706,10 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 
+ 		align = sechdrs[i].sh_addralign;
+ 		if (sechdrs[i].sh_type != SHT_NOBITS) {
+-			if (buf_align < align)
+-				buf_align = align;
+-			buf_sz = ALIGN(buf_sz, align);
+-			buf_sz += sechdrs[i].sh_size;
++			if (kbuf.buf_align < align)
++				kbuf.buf_align = align;
++			kbuf.bufsz = ALIGN(kbuf.bufsz, align);
++			kbuf.bufsz += sechdrs[i].sh_size;
+ 		} else {
+ 			/* bss section */
+ 			if (bss_align < align)
+@@ -728,32 +721,31 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 
+ 	/* Determine the bss padding required to align bss properly */
+ 	bss_pad = 0;
+-	if (buf_sz & (bss_align - 1))
+-		bss_pad = bss_align - (buf_sz & (bss_align - 1));
++	if (kbuf.bufsz & (bss_align - 1))
++		bss_pad = bss_align - (kbuf.bufsz & (bss_align - 1));
+ 
+-	memsz = buf_sz + bss_pad + bss_sz;
++	kbuf.memsz = kbuf.bufsz + bss_pad + bss_sz;
+ 
+ 	/* Allocate buffer for purgatory */
+-	purgatory_buf = vzalloc(buf_sz);
+-	if (!purgatory_buf) {
++	kbuf.buffer = vzalloc(kbuf.bufsz);
++	if (!kbuf.buffer) {
+ 		ret = -ENOMEM;
+ 		goto out;
+ 	}
+ 
+-	if (buf_align < bss_align)
+-		buf_align = bss_align;
++	if (kbuf.buf_align < bss_align)
++		kbuf.buf_align = bss_align;
+ 
+ 	/* Add buffer to segment list */
+-	ret = kexec_add_buffer(image, purgatory_buf, buf_sz, memsz,
+-				buf_align, min, max, top_down,
+-				&pi->purgatory_load_addr);
++	ret = kexec_add_buffer(&kbuf);
+ 	if (ret)
+ 		goto out;
++	pi->purgatory_load_addr = kbuf.mem;
+ 
+ 	/* Load SHF_ALLOC sections */
+-	buf_addr = purgatory_buf;
++	buf_addr = kbuf.buffer;
+ 	load_addr = curr_load_addr = pi->purgatory_load_addr;
+-	bss_addr = load_addr + buf_sz + bss_pad;
++	bss_addr = load_addr + kbuf.bufsz + bss_pad;
+ 
+ 	for (i = 0; i < pi->ehdr->e_shnum; i++) {
+ 		if (!(sechdrs[i].sh_flags & SHF_ALLOC))
+@@ -799,11 +791,11 @@ static int __kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 	 * Used later to identify which section is purgatory and skip it
+ 	 * from checksumming.
+ 	 */
+-	pi->purgatory_buf = purgatory_buf;
++	pi->purgatory_buf = kbuf.buffer;
+ 	return ret;
+ out:
+ 	vfree(sechdrs);
+-	vfree(purgatory_buf);
++	vfree(kbuf.buffer);
+ 	return ret;
+ }
+ 
 -- 
 2.7.4
 
