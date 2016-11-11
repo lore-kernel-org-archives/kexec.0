@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c58TX-0002vA-2R
- for kexec@lists.infradead.org; Fri, 11 Nov 2016 09:50:24 +0000
-Date: Fri, 11 Nov 2016 17:49:55 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 1/2] makedumpfile: Adapt code to get value of phys_base
-Message-ID: <20161111094955.GB15325@x1>
-References: <1478595319-9299-1-git-send-email-bhe@redhat.com>
- <1478595319-9299-2-git-send-email-bhe@redhat.com>
- <20161110063050.GE22737@x1>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E7EACD@BPXM01GP.gisp.nec.co.jp>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E7EACD@BPXM01GP.gisp.nec.co.jp>
+ id 1c5KCU-00017h-OE
+ for kexec@lists.infradead.org; Fri, 11 Nov 2016 22:21:35 +0000
+From: Sameer Goel <sgoel@codeaurora.org>
+Subject: [PATCH v2] kexec: Increase the upper limit for RAM segments
+Date: Fri, 11 Nov 2016 15:21:11 -0700
+Message-Id: <1478902871-13800-1-git-send-email-sgoel@codeaurora.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,32 +15,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "panand@redhat.com" <panand@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "anderson@redhat.com" <anderson@redhat.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: geoff@infradead.org
+Cc: Sameer Goel <sgoel@codeaurora.org>, kexec@lists.infradead.org, bhe@redhat.com
 
-On 11/11/16 at 08:12am, Atsushi Kumagai wrote:
-> >Kernel code only exports virtual address of phys_base now and it's helpless
-> >for Crash and Makedumpfile. Below patch which changes code to export value
-> >of phys_base has been posted to upstream. So adapt code to get it.
-> >
-> >kexec: Change to export the value of phys_base instead of symbol address
-> >marc.info/?l=linux-kernel&m=147856863629624&w=2
-> >
-> >Signed-off-by: Baoquan He <bhe@redhat.com>
-> >---
-> >v1->v2:
-> >    Patch v1 is not compatible with the old kernel. Change code in
-> >    get_phys_base_x86_64 and vtop4_x86_64 to avoid that according to
-> >    Atsushi's suggestion.
-> 
-> Looks good to me, I'll merge this patch into v1.6.1.
-> For 2/2, I'll revert 56649f7b6bfe7 with your patch's comment.
+On a newer UEFI based Qualcomm target the number of system ram regions
+retrieved from /proc/iomem are ~40. So increasing the current hardcoded
+values to 64 from 16.
 
-Thanks!
+Signed-off-by: Sameer Goel <sgoel@codeaurora.org>
+---
+ kexec/arch/arm64/kexec-arm64.h | 2 +-
+ kexec/kexec-syscall.h          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+index bac62f8..bd4c20e 100644
+--- a/kexec/arch/arm64/kexec-arm64.h
++++ b/kexec/arch/arm64/kexec-arm64.h
+@@ -11,7 +11,7 @@
+ #include "image-header.h"
+ #include "kexec.h"
+ 
+-#define KEXEC_SEGMENT_MAX 16
++#define KEXEC_SEGMENT_MAX 64
+ 
+ #define BOOT_BLOCK_VERSION 17
+ #define BOOT_BLOCK_LAST_COMP_VERSION 16
+diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+index c0d0bea..f84c937 100644
+--- a/kexec/kexec-syscall.h
++++ b/kexec/kexec-syscall.h
+@@ -115,7 +115,7 @@ static inline long kexec_file_load(int kernel_fd, int initrd_fd,
+ #define KEXEC_ARCH_MIPS    ( 8 << 16)
+ #define KEXEC_ARCH_CRIS    (76 << 16)
+ 
+-#define KEXEC_MAX_SEGMENTS 16
++#define KEXEC_MAX_SEGMENTS 64
+ 
+ #ifdef __i386__
+ #define KEXEC_ARCH_NATIVE	KEXEC_ARCH_386
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc. Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+
 
 _______________________________________________
 kexec mailing list
