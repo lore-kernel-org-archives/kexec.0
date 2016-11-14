@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c5nAj-0005B3-OJ
- for kexec@lists.infradead.org; Sun, 13 Nov 2016 05:17:42 +0000
-Date: Sun, 13 Nov 2016 13:17:17 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v6 7/9] iommu/amd: Update domain into to dte entry during
- device driver init
-Message-ID: <20161113051717.GB19995@x1>
-References: <1476963440-23039-1-git-send-email-bhe@redhat.com>
- <1476963440-23039-8-git-send-email-bhe@redhat.com>
- <20161110114816.GE9996@8bytes.org>
+ id 1c690J-00047B-1s
+ for kexec@lists.infradead.org; Mon, 14 Nov 2016 04:36:24 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: vmcore cant be generated under kernel 4.7.9
+Date: Mon, 14 Nov 2016 04:29:05 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E7EE5F@BPXM01GP.gisp.nec.co.jp>
+References: <CAN3hGLe_ga1vE=6HhTaKcgDBqUApj9w4rtzX2EB3BoDo5iOKdw@mail.gmail.com>
+In-Reply-To: <CAN3hGLe_ga1vE=6HhTaKcgDBqUApj9w4rtzX2EB3BoDo5iOKdw@mail.gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161110114816.GE9996@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,49 +23,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Vincent.Wan@amd.com, iommu@lists.linux-foundation.org, dyoung@redhat.com
+To: R Sun <ulxwork@gmail.com>
+Cc: Masaki Tachibana <mas-tachibana@vf.jp.nec.com>, Daisuke Nishimura <dai-nishimura@rc.jp.nec.com>, Minoru Usui <min-usui@ti.jp.nec.com>, kexec-ml <kexec@lists.infradead.org>
 
-Hi Joerg,
+Hello,
 
-Thanks for your reviewing and great comments!
+>Hello,
+>
+>I updated my fedora23 from 4.5.7-202 to 4.7.9-100 recently, and found out kdump
+>could not generate vmcore when crashed, but its ok with
+>vmcore-dmesg.txt. i traced
+>it for a while and find out its because of a change in the page struct
+>which _count renamed to _refcount committed as 0139aa7b7f in kernel.
+>
+>Below is my patch to fix this problem
 
-On 11/10/16 at 12:48pm, Joerg Roedel wrote:
-> On Thu, Oct 20, 2016 at 07:37:18PM +0800, Baoquan He wrote:
-> >  	prot = dir2prot(direction);
-> > +	if (translation_pre_enabled(iommu) && !dev_data->domain_updated) {
-> > +		dev_data->domain_updated = true;
-> > +		set_dte_entry(dev_data->devid, domain, dev_data->ats.enabled);
-> > +		if (alias != dev_data->devid)
-> > +			set_dte_entry(alias, domain, dev_data->ats.enabled);
-> > +		device_flush_dte(dev_data);
-> > +	}
-> 
-> Hmm, I really don't like to have these checks in the fast-path. But to
-> get rid of it I think we need to re-work the way domains are assigned to
-> devices.
-> 
-> One way to do this would be to add a 'defered-domain-attach' feature to
-> the iommu-core code. What do you think about this?
+Thanks for your report, this problem is going to be fixed in v1.6.1
+by the patch below, it can be found in the devel branch.
 
-Yes, I have to admit code in this patch is really urly. Could you say a
-little more about the "defered-domain-attach"? I would love to do any
-improvement as long as it's make things correct and better. I could read
-code flow several times from init to the end of driver probe, then may
-get what you say because of my limited knowledge. If you can give a little
-details about it, I can try to change and post for reviewing.
+https://sourceforge.net/p/makedumpfile/code/ci/devel/tree/
 
-What I get now is you want to see a function  is added so that we can invoke
-when attach domain to device. And the calling can be decided by checking
-if it's in kdump. This makes it like intel iommu does, defer the
-attaching to probe stage. That's why you don't need to do what I am
-doing in this patch when you fix intel iommu failure in kdump kernel. Am
-I right?
+commit ed46b6ad90d71ca98aced9e82b67333ce1962ebf
+Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+Date:   Fri Jun 17 18:41:26 2016 +0900
 
-Thanks
-Baoquan
+    [PATCH v2] Support _count -> _refcount rename in struct page
+
+    * Required for kernel 4.7
+
+    _count member was renamed to _refcount in linux commit 0139aa7b7fa12
+    ("mm: rename _count, field of the struct page, to _refcount") and this
+    broke makedumpfile. The reason for making the change was to find all users
+    accessing it directly and not through the recommended API. I tried
+    suggesting to revert the change but failed, I see no other choice than to
+    start supporting both _count and _refcount in makedumpfile.
+
+    Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 
+I'll try to release the next version in this month, please wait for a while.
+
+
+Thanks,
+Atsushi Kumagai
+
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 853b999..1bfafb7 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -2492,6 +2492,13 @@ read_vmcoreinfo(void)
+>
+>        READ_MEMBER_OFFSET("page.flags", page.flags);
+>        READ_MEMBER_OFFSET("page._count", page._count);
+>+       /*
+>+        * _count, field of struct page, renamed to _refcount according to
+>+        * commit 0139aa7b7f in kernel. so just try page._refcount if
+>+        * page._count does not work
+>+        */
+>+       if (OFFSET(page._count) == NOT_FOUND_STRUCTURE)
+>+               READ_MEMBER_OFFSET("page._refcount", page._count);
+>        READ_MEMBER_OFFSET("page.mapping", page.mapping);
+>        READ_MEMBER_OFFSET("page.lru", page.lru);
+>        READ_MEMBER_OFFSET("page._mapcount", page._mapcount);
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
