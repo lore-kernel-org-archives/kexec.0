@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from mail-yw0-f180.google.com ([209.85.161.180])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c6bL2-0001C7-Jc
- for kexec@lists.infradead.org; Tue, 15 Nov 2016 10:51:42 +0000
-Subject: Re: [PATCH v1 1/2] xen/kexec: Find out whether an kexec type is
- loaded.
-References: <1479161573-12671-1-git-send-email-konrad.wilk@oracle.com>
- <1479161573-12671-2-git-send-email-konrad.wilk@oracle.com>
-From: David Vrabel <david.vrabel@citrix.com>
-Message-ID: <ad36a8c0-dc60-2a56-e6ea-37f3a1b0492f@citrix.com>
-Date: Tue, 15 Nov 2016 10:51:11 +0000
+ id 1c6blE-0007ut-74
+ for kexec@lists.infradead.org; Tue, 15 Nov 2016 11:18:46 +0000
+Received: by mail-yw0-f180.google.com with SMTP id t125so90406624ywc.1
+ for <kexec@lists.infradead.org>; Tue, 15 Nov 2016 03:18:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1479161573-12671-2-git-send-email-konrad.wilk@oracle.com>
+In-Reply-To: <CAHB_GuobH3=4_84D-DxcDRyXiV6WNWqQtMKTkKq+nn7vmGXyyA@mail.gmail.com>
+References: <cover.1477378297.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E7BD77@BPXM01GP.gisp.nec.co.jp>
+ <CAHB_GuobH3=4_84D-DxcDRyXiV6WNWqQtMKTkKq+nn7vmGXyyA@mail.gmail.com>
+From: Pratyush Anand <panand@redhat.com>
+Date: Tue, 15 Nov 2016 16:48:22 +0530
+Message-ID: <CAHB_GupdvVhhajGAXKk37F9aDDOrX2W-5EY1SQ1VTqkmG3B8Ag@mail.gmail.com>
+Subject: Re: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,94 +26,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, xen-devel@lists.xenproject.org, kexec@lists.infradead.org
-Cc: elena.ufimtseva@oracle.com, daniel.kiper@oracle.com
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "sgoel@codeaurora.org" <sgoel@codeaurora.org>, "mansip@codeaurora.org" <mansip@codeaurora.org>, "asamson@codeaurora.org" <asamson@codeaurora.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 14/11/16 22:12, Konrad Rzeszutek Wilk wrote:
-> The tools that use kexec are asynchronous in nature and do
-> not keep state changes. As such provide an hypercall to find
-> out whether an image has been loaded for either type.
-> 
-> Note: No need to modify XSM as it has one size fits all
-> check and does not check for subcommands.
-[...]
-> --- a/tools/libxc/include/xenctrl.h
-> +++ b/tools/libxc/include/xenctrl.h
-> @@ -2574,6 +2574,14 @@ int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
->   */
->  int xc_kexec_unload(xc_interface *xch, int type);
->  
-> +/*
-> + * Find out whether the image has been succesfully loaded.
-> + *
-> + * The can be either KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
-> + * If zero is returned that means the image is loaded for the type.
+On Tue, Nov 15, 2016 at 12:04 PM, Pratyush Anand <panand@redhat.com> wrote:
+> Hi Atsushi,
+>
+> There would be a conflict because of following patch while applying
+> these patches. Other than that I also see a an issue with --config
+> option. So I will fix that as well and repost the series soon.
 
-Suggest return 0 if an image is not loaded, 1 if an image is loaded, but
-I'll leave this for the toolstack maintainers to decide.
+Sorry, for the noise.That was a bad compilation of the code.
 
-> --- a/xen/common/kexec.c
-> +++ b/xen/common/kexec.c
-> @@ -1169,6 +1169,28 @@ static int kexec_unload(XEN_GUEST_HANDLE_PARAM(void) uarg)
->      return kexec_do_unload(&unload);
->  }
->  
-> +static int kexec_status(XEN_GUEST_HANDLE_PARAM(void) uarg)
-> +{
-> +    xen_kexec_status_t status;
-> +    int base, bit, pos;
-> +
-> +    if ( unlikely(copy_from_guest(&status, uarg, 1)) )
-> +        return -EFAULT;
-> +
-> +    if ( test_bit(KEXEC_FLAG_IN_PROGRESS, &kexec_flags) )
-> +        return -EBUSY;
+Anyway, I resolved the conflict because of below patch in upstream
+devel branch and pushed the patches in my git tree:
+https://github.com/pratyushanand/makedumpfile.git : arm64_devel
 
-No need to check in progress here.
+There is no changes other than conflict resolution w.r.t. this patch series.
 
-> +
-> +    if ( kexec_load_get_bits(status.type, &base, &bit) )
-> +        return -EINVAL;
-> +
-> +    pos = (test_bit(bit, &kexec_flags) != 0);
-> +
-> +    if ( !test_bit(base + pos, &kexec_flags) )
-> +        return -ENOENT;
+~Pratyush
 
-return !!test_bit(...);
-
-It also occurs to be that this testing of bits races with
-kexec_swap_image().  This race also affects kexec_exec().
-
->  static int do_kexec_op_internal(unsigned long op,
->                                  XEN_GUEST_HANDLE_PARAM(void) uarg,
->                                  bool_t compat)
-> @@ -1208,6 +1230,9 @@ static int do_kexec_op_internal(unsigned long op,
->      case KEXEC_CMD_kexec_unload:
->          ret = kexec_unload(uarg);
->          break;
-> +    case KEXEC_CMD_kexec_status:
-> +	ret = kexec_status(uarg);
-> +	break;
-
-Tabs!
-
-> --- a/xen/include/public/kexec.h
-> +++ b/xen/include/public/kexec.h
-> @@ -227,6 +227,17 @@ typedef struct xen_kexec_unload {
->  } xen_kexec_unload_t;
->  DEFINE_XEN_GUEST_HANDLE(xen_kexec_unload_t);
->  
-> +/*
-> + * Figure out whether we have an image loaded. An return value of
-> + * zero indicates success while XEN_ENODEV implies no image loaded.
-> + *
-> + * Type must be one of KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
-
-Return 0 if no image is loaded. 1 if an image is loaded and -ve on an error.
-
-David
-
+>
+> 0068010b9b83 [PATCH v2 2/2] Clean up unused KERNEL_IMAGE_SIZE
 
 _______________________________________________
 kexec mailing list
