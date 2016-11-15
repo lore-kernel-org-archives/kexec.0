@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-f48.google.com ([209.85.214.48])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c6XKJ-0006NF-6x
- for kexec@lists.infradead.org; Tue, 15 Nov 2016 06:34:41 +0000
-Received: by mail-it0-f48.google.com with SMTP id q124so173333801itd.1
- for <kexec@lists.infradead.org>; Mon, 14 Nov 2016 22:34:15 -0800 (PST)
+ id 1c6aAq-000636-HU
+ for kexec@lists.infradead.org; Tue, 15 Nov 2016 09:37:05 +0000
+Date: Tue, 15 Nov 2016 10:36:12 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v1 1/2] xen/kexec: Find out whether an kexec type is
+ loaded.
+Message-ID: <20161115093612.GA17718@olila.local.net-space.pl>
+References: <1479161573-12671-1-git-send-email-konrad.wilk@oracle.com>
+ <1479161573-12671-2-git-send-email-konrad.wilk@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E7BD77@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1477378297.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E7BD77@BPXM01GP.gisp.nec.co.jp>
-From: Pratyush Anand <panand@redhat.com>
-Date: Tue, 15 Nov 2016 12:04:14 +0530
-Message-ID: <CAHB_GuobH3=4_84D-DxcDRyXiV6WNWqQtMKTkKq+nn7vmGXyyA@mail.gmail.com>
-Subject: Re: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
+Content-Disposition: inline
+In-Reply-To: <1479161573-12671-2-git-send-email-konrad.wilk@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +25,149 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "sgoel@codeaurora.org" <sgoel@codeaurora.org>, "mansip@codeaurora.org" <mansip@codeaurora.org>, "asamson@codeaurora.org" <asamson@codeaurora.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: elena.ufimtseva@oracle.com, xen-devel@lists.xenproject.org, kexec@lists.infradead.org, david.vrabel@citrix.com
 
-Hi Atsushi,
-
-There would be a conflict because of following patch while applying
-these patches. Other than that I also see a an issue with --config
-option. So I will fix that as well and repost the series soon.
-
-0068010b9b83 [PATCH v2 2/2] Clean up unused KERNEL_IMAGE_SIZE
-
-~Pratyush
-
-On Tue, Nov 1, 2016 at 2:41 PM, Atsushi Kumagai
-<ats-kumagai@wm.jp.nec.com> wrote:
-> Hello Pratyush,
+On Mon, Nov 14, 2016 at 05:12:52PM -0500, Konrad Rzeszutek Wilk wrote:
+> The tools that use kexec are asynchronous in nature and do
+> not keep state changes. As such provide an hypercall to find
+> out whether an image has been loaded for either type.
 >
->>These patches were lying in my tree for quite some time now. VMCOREINFO
->>numbers/symbols used in these patches have been made part of kdump kernel
->>patches for last few versions including v26. So, there seems no contention
->>on embedding VA_BITS, kimage_voffset and PHYS_OFFSET into vmcore.
->>
->>These patches cleans up a lot arm64 code and also immunize it with many
->>kernel changes. Additionally,it adds 4 level 4K page support and support for
->>KASLR enabled kernel.
->>
->>Azriel Samson (1):
->>  arm64: Add support for 4level 4K page translations table
->>
->>Pratyush Anand (9):
->>  arm64: cleanup code, comment, blank space, blank lines etc
->>  read_vmcoreinfo_long: Allow to read hex values as well
->>  Introduce read_vmcoreinfo_ulong()
->>  arm64: use already available PAGESIZE() and PAGESHIFT() macros
->>  arm64: fix page_offset definition
->>  arm64: fix re-filtering
->>  arm64: use value of VA_BITS and PHYS_OFFSET embedded into vmcore
->>  arm64: immunize identity mapped address finding w.r.t. kernel changes
->>  arm64: fix memory layout as per changes in v4.6 kernel
->>
->> arch/arm64.c   | 245 ++++++++++++++++++++++-----------------------------------
->> makedumpfile.c |  46 +++++++++++
->> makedumpfile.h |  28 +++++--
->> 3 files changed, 162 insertions(+), 157 deletions(-)
+> Note: No need to modify XSM as it has one size fits all
+> check and does not check for subcommands.
 >
-> Thanks always for your work for arm64, I've reviewed this patch set.
-> I'll merge them into v1.6.1.
+> Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> ---
+> v0: Internal version.
+> v1: Dropped Reviewed-by, posting on xen-devel.
 >
-> Regards,
-> Atsushi Kumagai
+> CC: Elena Ufimtseva <elena.ufimtseva@oracle.com>
+> CC: Daniel Kiper <daniel.kiper@oracle.com>
+> ---
+>  tools/libxc/include/xenctrl.h |  8 ++++++++
+>  tools/libxc/xc_kexec.c        | 27 +++++++++++++++++++++++++++
+>  xen/common/kexec.c            | 25 +++++++++++++++++++++++++
+>  xen/include/public/kexec.h    | 11 +++++++++++
+>  4 files changed, 71 insertions(+)
+>
+> diff --git a/tools/libxc/include/xenctrl.h b/tools/libxc/include/xenctrl.h
+> index 2c83544..aa5d798 100644
+> --- a/tools/libxc/include/xenctrl.h
+> +++ b/tools/libxc/include/xenctrl.h
+> @@ -2574,6 +2574,14 @@ int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
+>   */
+>  int xc_kexec_unload(xc_interface *xch, int type);
+>
+> +/*
+> + * Find out whether the image has been succesfully loaded.
+> + *
+> + * The can be either KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
+> + * If zero is returned that means the image is loaded for the type.
+> + */
+> +int xc_kexec_status(xc_interface *xch, int type);
+> +
+>  typedef xenpf_resource_entry_t xc_resource_entry_t;
+>
+>  /*
+> diff --git a/tools/libxc/xc_kexec.c b/tools/libxc/xc_kexec.c
+> index 1cceb5d..95d36ff 100644
+> --- a/tools/libxc/xc_kexec.c
+> +++ b/tools/libxc/xc_kexec.c
+> @@ -126,3 +126,30 @@ out:
+>
+>      return ret;
+>  }
+> +
+> +int xc_kexec_status(xc_interface *xch, int type)
+> +{
+> +    DECLARE_HYPERCALL;
+> +    DECLARE_HYPERCALL_BUFFER(xen_kexec_status_t, status);
+> +    int ret = -1;
+> +
+> +    status = xc_hypercall_buffer_alloc(xch, status, sizeof(*status));
+> +    if ( status == NULL )
+> +    {
+> +        PERROR("Count not alloc buffer for kexec status hypercall");
+
+Could not? It looks that you copied this from existing code. Could you
+send separate patch fixing this issue in two other places too?
+
+> +        goto out;
+> +    }
+> +
+> +    status->type = type;
+> +
+> +    hypercall.op = __HYPERVISOR_kexec_op;
+> +    hypercall.arg[0] = KEXEC_CMD_kexec_status;
+> +    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(status);
+> +
+> +    ret = do_xen_hypercall(xch, &hypercall);
+> +
+> +out:
+> +    xc_hypercall_buffer_free(xch, status);
+> +
+> +    return ret;
+> +}
+> diff --git a/xen/common/kexec.c b/xen/common/kexec.c
+> index c83d48f..1148f85 100644
+> --- a/xen/common/kexec.c
+> +++ b/xen/common/kexec.c
+> @@ -1169,6 +1169,28 @@ static int kexec_unload(XEN_GUEST_HANDLE_PARAM(void) uarg)
+>      return kexec_do_unload(&unload);
+>  }
+>
+> +static int kexec_status(XEN_GUEST_HANDLE_PARAM(void) uarg)
+> +{
+> +    xen_kexec_status_t status;
+> +    int base, bit, pos;
+> +
+> +    if ( unlikely(copy_from_guest(&status, uarg, 1)) )
+> +        return -EFAULT;
+> +
+> +    if ( test_bit(KEXEC_FLAG_IN_PROGRESS, &kexec_flags) )
+> +        return -EBUSY;
+> +
+> +    if ( kexec_load_get_bits(status.type, &base, &bit) )
+> +        return -EINVAL;
+> +
+> +    pos = (test_bit(bit, &kexec_flags) != 0);
+> +
+> +    if ( !test_bit(base + pos, &kexec_flags) )
+> +        return -ENOENT;
+> +
+> +    return 0;
+> +}
+> +
+>  static int do_kexec_op_internal(unsigned long op,
+>                                  XEN_GUEST_HANDLE_PARAM(void) uarg,
+>                                  bool_t compat)
+> @@ -1208,6 +1230,9 @@ static int do_kexec_op_internal(unsigned long op,
+>      case KEXEC_CMD_kexec_unload:
+>          ret = kexec_unload(uarg);
+>          break;
+> +    case KEXEC_CMD_kexec_status:
+> +	ret = kexec_status(uarg);
+> +	break;
+>      }
+>
+>      return ret;
+> diff --git a/xen/include/public/kexec.h b/xen/include/public/kexec.h
+> index a6a0a88..29dcb5d 100644
+> --- a/xen/include/public/kexec.h
+> +++ b/xen/include/public/kexec.h
+> @@ -227,6 +227,17 @@ typedef struct xen_kexec_unload {
+>  } xen_kexec_unload_t;
+>  DEFINE_XEN_GUEST_HANDLE(xen_kexec_unload_t);
+>
+> +/*
+> + * Figure out whether we have an image loaded. An return value of
+> + * zero indicates success while XEN_ENODEV implies no image loaded.
+
+It seems to me that you thought about -ENOENT instead of XEN_ENODEV.
+
+If you fix both things then Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+
+Daniel
 
 _______________________________________________
 kexec mailing list
