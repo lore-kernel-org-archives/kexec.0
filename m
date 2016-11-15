@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from smtp02.citrix.com ([66.165.176.63])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c6aAq-000636-HU
- for kexec@lists.infradead.org; Tue, 15 Nov 2016 09:37:05 +0000
-Date: Tue, 15 Nov 2016 10:36:12 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
+ id 1c6bL2-0001C7-Jc
+ for kexec@lists.infradead.org; Tue, 15 Nov 2016 10:51:42 +0000
 Subject: Re: [PATCH v1 1/2] xen/kexec: Find out whether an kexec type is
  loaded.
-Message-ID: <20161115093612.GA17718@olila.local.net-space.pl>
 References: <1479161573-12671-1-git-send-email-konrad.wilk@oracle.com>
  <1479161573-12671-2-git-send-email-konrad.wilk@oracle.com>
+From: David Vrabel <david.vrabel@citrix.com>
+Message-ID: <ad36a8c0-dc60-2a56-e6ea-37f3a1b0492f@citrix.com>
+Date: Tue, 15 Nov 2016 10:51:11 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <1479161573-12671-2-git-send-email-konrad.wilk@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,97 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: elena.ufimtseva@oracle.com, xen-devel@lists.xenproject.org, kexec@lists.infradead.org, david.vrabel@citrix.com
+To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, xen-devel@lists.xenproject.org, kexec@lists.infradead.org
+Cc: elena.ufimtseva@oracle.com, daniel.kiper@oracle.com
 
-On Mon, Nov 14, 2016 at 05:12:52PM -0500, Konrad Rzeszutek Wilk wrote:
+On 14/11/16 22:12, Konrad Rzeszutek Wilk wrote:
 > The tools that use kexec are asynchronous in nature and do
 > not keep state changes. As such provide an hypercall to find
 > out whether an image has been loaded for either type.
->
+> 
 > Note: No need to modify XSM as it has one size fits all
 > check and does not check for subcommands.
->
-> Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> ---
-> v0: Internal version.
-> v1: Dropped Reviewed-by, posting on xen-devel.
->
-> CC: Elena Ufimtseva <elena.ufimtseva@oracle.com>
-> CC: Daniel Kiper <daniel.kiper@oracle.com>
-> ---
->  tools/libxc/include/xenctrl.h |  8 ++++++++
->  tools/libxc/xc_kexec.c        | 27 +++++++++++++++++++++++++++
->  xen/common/kexec.c            | 25 +++++++++++++++++++++++++
->  xen/include/public/kexec.h    | 11 +++++++++++
->  4 files changed, 71 insertions(+)
->
-> diff --git a/tools/libxc/include/xenctrl.h b/tools/libxc/include/xenctrl.h
-> index 2c83544..aa5d798 100644
+[...]
 > --- a/tools/libxc/include/xenctrl.h
 > +++ b/tools/libxc/include/xenctrl.h
 > @@ -2574,6 +2574,14 @@ int xc_kexec_load(xc_interface *xch, uint8_t type, uint16_t arch,
 >   */
 >  int xc_kexec_unload(xc_interface *xch, int type);
->
+>  
 > +/*
 > + * Find out whether the image has been succesfully loaded.
 > + *
 > + * The can be either KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
 > + * If zero is returned that means the image is loaded for the type.
-> + */
-> +int xc_kexec_status(xc_interface *xch, int type);
-> +
->  typedef xenpf_resource_entry_t xc_resource_entry_t;
->
->  /*
-> diff --git a/tools/libxc/xc_kexec.c b/tools/libxc/xc_kexec.c
-> index 1cceb5d..95d36ff 100644
-> --- a/tools/libxc/xc_kexec.c
-> +++ b/tools/libxc/xc_kexec.c
-> @@ -126,3 +126,30 @@ out:
->
->      return ret;
->  }
-> +
-> +int xc_kexec_status(xc_interface *xch, int type)
-> +{
-> +    DECLARE_HYPERCALL;
-> +    DECLARE_HYPERCALL_BUFFER(xen_kexec_status_t, status);
-> +    int ret = -1;
-> +
-> +    status = xc_hypercall_buffer_alloc(xch, status, sizeof(*status));
-> +    if ( status == NULL )
-> +    {
-> +        PERROR("Count not alloc buffer for kexec status hypercall");
 
-Could not? It looks that you copied this from existing code. Could you
-send separate patch fixing this issue in two other places too?
+Suggest return 0 if an image is not loaded, 1 if an image is loaded, but
+I'll leave this for the toolstack maintainers to decide.
 
-> +        goto out;
-> +    }
-> +
-> +    status->type = type;
-> +
-> +    hypercall.op = __HYPERVISOR_kexec_op;
-> +    hypercall.arg[0] = KEXEC_CMD_kexec_status;
-> +    hypercall.arg[1] = HYPERCALL_BUFFER_AS_ARG(status);
-> +
-> +    ret = do_xen_hypercall(xch, &hypercall);
-> +
-> +out:
-> +    xc_hypercall_buffer_free(xch, status);
-> +
-> +    return ret;
-> +}
-> diff --git a/xen/common/kexec.c b/xen/common/kexec.c
-> index c83d48f..1148f85 100644
 > --- a/xen/common/kexec.c
 > +++ b/xen/common/kexec.c
 > @@ -1169,6 +1169,28 @@ static int kexec_unload(XEN_GUEST_HANDLE_PARAM(void) uarg)
 >      return kexec_do_unload(&unload);
 >  }
->
+>  
 > +static int kexec_status(XEN_GUEST_HANDLE_PARAM(void) uarg)
 > +{
 > +    xen_kexec_status_t status;
@@ -126,6 +66,9 @@ send separate patch fixing this issue in two other places too?
 > +
 > +    if ( test_bit(KEXEC_FLAG_IN_PROGRESS, &kexec_flags) )
 > +        return -EBUSY;
+
+No need to check in progress here.
+
 > +
 > +    if ( kexec_load_get_bits(status.type, &base, &bit) )
 > +        return -EINVAL;
@@ -134,10 +77,12 @@ send separate patch fixing this issue in two other places too?
 > +
 > +    if ( !test_bit(base + pos, &kexec_flags) )
 > +        return -ENOENT;
-> +
-> +    return 0;
-> +}
-> +
+
+return !!test_bit(...);
+
+It also occurs to be that this testing of bits races with
+kexec_swap_image().  This race also affects kexec_exec().
+
 >  static int do_kexec_op_internal(unsigned long op,
 >                                  XEN_GUEST_HANDLE_PARAM(void) uarg,
 >                                  bool_t compat)
@@ -148,26 +93,25 @@ send separate patch fixing this issue in two other places too?
 > +    case KEXEC_CMD_kexec_status:
 > +	ret = kexec_status(uarg);
 > +	break;
->      }
->
->      return ret;
-> diff --git a/xen/include/public/kexec.h b/xen/include/public/kexec.h
-> index a6a0a88..29dcb5d 100644
+
+Tabs!
+
 > --- a/xen/include/public/kexec.h
 > +++ b/xen/include/public/kexec.h
 > @@ -227,6 +227,17 @@ typedef struct xen_kexec_unload {
 >  } xen_kexec_unload_t;
 >  DEFINE_XEN_GUEST_HANDLE(xen_kexec_unload_t);
->
+>  
 > +/*
 > + * Figure out whether we have an image loaded. An return value of
 > + * zero indicates success while XEN_ENODEV implies no image loaded.
+> + *
+> + * Type must be one of KEXEC_TYPE_DEFAULT or KEXEC_TYPE_CRASH.
 
-It seems to me that you thought about -ENOENT instead of XEN_ENODEV.
+Return 0 if no image is loaded. 1 if an image is loaded and -ve on an error.
 
-If you fix both things then Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+David
 
-Daniel
 
 _______________________________________________
 kexec mailing list
