@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 16 Nov 2016 16:30:15 +0000
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v27 1/9] memblock: add memblock_cap_memory_range()
-Message-ID: <20161116163015.GM7928@arm.com>
-References: <20161102044959.11954-1-takahiro.akashi@linaro.org>
- <20161102045153.12008-1-takahiro.akashi@linaro.org>
- <20161110172720.GB17134@arm.com> <20161111025049.GG381@linaro.org>
- <20161111031903.GB15997@arm.com> <20161114055515.GH381@linaro.org>
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1c79R2-000484-0d
+ for kexec@lists.infradead.org; Wed, 16 Nov 2016 23:16:08 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
+Date: Wed, 16 Nov 2016 08:40:03 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E802D1@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1477378297.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E7BD77@BPXM01GP.gisp.nec.co.jp>
+ <CAHB_GuobH3=4_84D-DxcDRyXiV6WNWqQtMKTkKq+nn7vmGXyyA@mail.gmail.com>
+ <CAHB_GupdvVhhajGAXKk37F9aDDOrX2W-5EY1SQ1VTqkmG3B8Ag@mail.gmail.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E801D7@BPXM01GP.gisp.nec.co.jp>
+ <CAHB_Guow3Z-HEG3+Uwji-KWZ_ZGRLemnu2j4yjw6mn79mhV3mg@mail.gmail.com>
+In-Reply-To: <CAHB_Guow3Z-HEG3+Uwji-KWZ_ZGRLemnu2j4yjw6mn79mhV3mg@mail.gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161114055515.GH381@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,93 +28,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dennis Chen <dennis.chen@arm.com>, catalin.marinas@arm.com, akpm@linux-foundation.org, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, nd@arm.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: "sgoel@codeaurora.org" <sgoel@codeaurora.org>, "mansip@codeaurora.org" <mansip@codeaurora.org>, "asamson@codeaurora.org" <asamson@codeaurora.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Akashi,
+>>>On Tue, Nov 15, 2016 at 12:04 PM, Pratyush Anand <panand@redhat.com> wrote:
+>>>> Hi Atsushi,
+>>>>
+>>>> There would be a conflict because of following patch while applying
+>>>> these patches. Other than that I also see a an issue with --config
+>>>> option. So I will fix that as well and repost the series soon.
+>>>
+>>>Sorry, for the noise.That was a bad compilation of the code.
+>>>
+>>>Anyway, I resolved the conflict because of below patch in upstream
+>>>devel branch and r5pushed the patches in my git tree:
+>>>https://github.com/pratyushanand/makedumpfile.git : arm64_devel
+>>>
+>>>There is no changes other than conflict resolution w.r.t. this patch series.
+>>>
+>>>~Pratyush
+>>>
+>>>>
+>>>> 0068010b9b83 [PATCH v2 2/2] Clean up unused KERNEL_IMAGE_SIZE
+>>
+>> I'm sorry ! I misunderstood that I already pushed this series
+>> in the devel branch. Should I wait for v2 series where the
+>> conflict is resolved ?
+>
+>As you wish. I can send v2 (there is no difference other than conflict
+>resolution for rebasing on top of current devel, conflict is minor),
+>or you can pick them from
+>https://github.com/pratyushanand/makedumpfile.git : arm64_devel.
 
-On Mon, Nov 14, 2016 at 02:55:16PM +0900, AKASHI Takahiro wrote:
-> On Fri, Nov 11, 2016 at 11:19:04AM +0800, Dennis Chen wrote:
-> > On Fri, Nov 11, 2016 at 11:50:50AM +0900, AKASHI Takahiro wrote:
-> > > On Thu, Nov 10, 2016 at 05:27:20PM +0000, Will Deacon wrote:
-> > > > On Wed, Nov 02, 2016 at 01:51:53PM +0900, AKASHI Takahiro wrote:
-> > > > > +void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
-> > > > > +{
-> > > > > +	int start_rgn, end_rgn;
-> > > > > +	int i, ret;
-> > > > > +
-> > > > > +	if (!size)
-> > > > > +		return;
-> > > > > +
-> > > > > +	ret = memblock_isolate_range(&memblock.memory, base, size,
-> > > > > +						&start_rgn, &end_rgn);
-> > > > > +	if (ret)
-> > > > > +		return;
-> > > > > +
-> > > > > +	/* remove all the MAP regions */
-> > > > > +	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
-> > > > > +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-> > > > > +			memblock_remove_region(&memblock.memory, i);
-> > > > > +
-> > > > > +	for (i = start_rgn - 1; i >= 0; i--)
-> > > > > +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-> > > > > +			memblock_remove_region(&memblock.memory, i);
-> > > > > +
-> > > > > +	/* truncate the reserved regions */
-> > > > > +	memblock_remove_range(&memblock.reserved, 0, base);
-> > > > > +	memblock_remove_range(&memblock.reserved,
-> > > > > +			base + size, (phys_addr_t)ULLONG_MAX);
-> > > > > +}
-> > > > 
-> > > > This duplicates a bunch of the logic in memblock_mem_limit_remove_map. Can
-> > > > you not implement that in terms of your new, more general, function? e.g.
-> > > > by passing base == 0, and size == limit?
-> > > 
-> > > Obviously it's possible.
-> > > I actually talked to Dennis before about merging them,
-> > > but he was against my idea.
-> > >
-> > Oops! I thought we have reached agreement in the thread:http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/442817.html
-> > So feel free to do that as Will'll do
-> 
-> OK, but I found that the two functions have a bit different semantics
-> in clipping memory range, in particular, when the range [base,base+size)
-> goes across several regions with a gap.
-> (This does not happen in my arm64 kdump, though.)
-> That is, 'limit' in memblock_mem_limit_remove_map() means total size of
-> available memory, while 'size' in memblock_cap_memory_range() indicates
-> the size of _continuous_ memory range.
+Sure, I'll pick them (from 60352bd to 3b5faac, right?) up from
+your devel branch, thanks.
 
-I thought limit was just a physical address, and then
-memblock_mem_limit_remove_map operated on the end of the nearest memblock?
-You could leave the __find_max_addr call in memblock_mem_limit_remove_map,
-given that I don't think you need/want it for memblock_cap_memory_range.
-
-> So I added an extra argument, exact, to a common function to specify
-> distinct behaviors. Confusing? Please see the patch below.
-
-Oh yikes, this certainly wasn't what I had in mind! My observation was
-just that memblock_mem_limit_remove_map(limit) does:
-
-
-  1. memblock_isolate_range(limit - limit+ULLONG_MAX)
-  2. memblock_remove_region(all non-nomap regions in the isolated region)
-  3. truncate reserved regions to limit
-
-and your memblock_cap_memory_range(base, size) does:
-
-  1. memblock_isolate_range(base - base+size)
-  2, memblock_remove_region(all non-nomap regions above and below the
-     isolated region)
-  3. truncate reserved regions around the isolated region
-
-so, assuming we can invert the isolation in one of the cases, then they
-could share the same underlying implementation.
-
-I'm probably just missing something here, because the patch you've ended
-up with is far more involved than I anticipated...
-
-Will
-
+Regards,
+Atsushi Kumagai
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
