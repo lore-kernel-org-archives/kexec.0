@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x241.google.com ([2607:f8b0:400d:c09::241])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c71fe-0004FW-CT
- for kexec@lists.infradead.org; Wed, 16 Nov 2016 14:58:43 +0000
-Received: by mail-qk0-x241.google.com with SMTP id x190so21576119qkb.0
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2016 06:58:21 -0800 (PST)
+Date: Wed, 16 Nov 2016 16:30:15 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v27 1/9] memblock: add memblock_cap_memory_range()
+Message-ID: <20161116163015.GM7928@arm.com>
+References: <20161102044959.11954-1-takahiro.akashi@linaro.org>
+ <20161102045153.12008-1-takahiro.akashi@linaro.org>
+ <20161110172720.GB17134@arm.com> <20161111025049.GG381@linaro.org>
+ <20161111031903.GB15997@arm.com> <20161114055515.GH381@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <582C232F.6080205@redhat.com>
-References: <1479286950-21885-1-git-send-email-xlpang@redhat.com>
- <582C232F.6080205@redhat.com>
-From: Myron Stowe <myron.stowe@gmail.com>
-Date: Wed, 16 Nov 2016 07:58:20 -0700
-Message-ID: <CAL-B5D1kkWE4e6P1xY1Cgkf-7+nBXH=C7g21=phEzmM4FPZRRQ@mail.gmail.com>
-Subject: Re: [PATCH] iommu/vt-d: Flush old iotlb for kdump when the device
- gets context mapped
+Content-Disposition: inline
+In-Reply-To: <20161114055515.GH381@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,82 +22,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com
-Cc: Don Brace <don.brace@microsemi.com>, Myron Stowe <myron.stowe@redhat.com>, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Dave Young <dyoung@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Dennis Chen <dennis.chen@arm.com>, catalin.marinas@arm.com, akpm@linux-foundation.org, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, mark.rutland@arm.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, nd@arm.com
 
-On Wed, Nov 16, 2016 at 2:13 AM, Xunlei Pang <xpang@redhat.com> wrote:
-> Ccing David
-> On 2016/11/16 at 17:02, Xunlei Pang wrote:
->> We met the DMAR fault both on hpsa P420i and P421 SmartArray controllers
->> under kdump, it can be steadily reproduced on several different machines,
->> the dmesg log is like:
->> HP HPSA Driver (v 3.4.16-0)
->> hpsa 0000:02:00.0: using doorbell to reset controller
->> hpsa 0000:02:00.0: board ready after hard reset.
->> hpsa 0000:02:00.0: Waiting for controller to respond to no-op
->> DMAR: Setting identity map for device 0000:02:00.0 [0xe8000 - 0xe8fff]
->> DMAR: Setting identity map for device 0000:02:00.0 [0xf4000 - 0xf4fff]
->> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf6e000 - 0xbdf6efff]
->> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf6f000 - 0xbdf7efff]
->> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf7f000 - 0xbdf82fff]
->> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf83000 - 0xbdf84fff]
->> DMAR: DRHD: handling fault status reg 2
->> DMAR: [DMA Read] Request device [02:00.0] fault addr fffff000 [fault reason 06] PTE Read access is not set
->> hpsa 0000:02:00.0: controller message 03:00 timed out
->> hpsa 0000:02:00.0: no-op failed; re-trying
->>
->> After some debugging, we found that the corresponding pte entry value
->> is correct, and the value of the iommu caching mode is 0, the fault is
->> probably due to the old iotlb cache of the in-flight DMA.
->>
->> Thus need to flush the old iotlb after context mapping is setup for the
->> device, where the device is supposed to finish reset at its driver probe
->> stage and no in-flight DMA exists hereafter.
->>
->> With this patch, all our problematic machines can survive the kdump tests.
->>
->> CC: Myron Stowe <myron.stowe@redhat.com>
->> CC: Don Brace <don.brace@microsemi.com>
->> CC: Baoquan He <bhe@redhat.com>
->> CC: Dave Young <dyoung@redhat.com>
->> Tested-by: Joseph Szczypek <jszczype@redhat.com>
->> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
->> ---
->>  drivers/iommu/intel-iommu.c | 11 +++++++++--
->>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 3965e73..eb79288 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -2067,9 +2067,16 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
->>        * It's a non-present to present mapping. If hardware doesn't cache
->>        * non-present entry we only need to flush the write-buffer. If the
->>        * _does_ cache non-present entries, then it does so in the special
+Hi Akashi,
 
-If this does get accepted then we should fix the above grammar also -
-  "If the _does_ cache ..." -> "If the hardware _does_ cache ..."
+On Mon, Nov 14, 2016 at 02:55:16PM +0900, AKASHI Takahiro wrote:
+> On Fri, Nov 11, 2016 at 11:19:04AM +0800, Dennis Chen wrote:
+> > On Fri, Nov 11, 2016 at 11:50:50AM +0900, AKASHI Takahiro wrote:
+> > > On Thu, Nov 10, 2016 at 05:27:20PM +0000, Will Deacon wrote:
+> > > > On Wed, Nov 02, 2016 at 01:51:53PM +0900, AKASHI Takahiro wrote:
+> > > > > +void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+> > > > > +{
+> > > > > +	int start_rgn, end_rgn;
+> > > > > +	int i, ret;
+> > > > > +
+> > > > > +	if (!size)
+> > > > > +		return;
+> > > > > +
+> > > > > +	ret = memblock_isolate_range(&memblock.memory, base, size,
+> > > > > +						&start_rgn, &end_rgn);
+> > > > > +	if (ret)
+> > > > > +		return;
+> > > > > +
+> > > > > +	/* remove all the MAP regions */
+> > > > > +	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
+> > > > > +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+> > > > > +			memblock_remove_region(&memblock.memory, i);
+> > > > > +
+> > > > > +	for (i = start_rgn - 1; i >= 0; i--)
+> > > > > +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+> > > > > +			memblock_remove_region(&memblock.memory, i);
+> > > > > +
+> > > > > +	/* truncate the reserved regions */
+> > > > > +	memblock_remove_range(&memblock.reserved, 0, base);
+> > > > > +	memblock_remove_range(&memblock.reserved,
+> > > > > +			base + size, (phys_addr_t)ULLONG_MAX);
+> > > > > +}
+> > > > 
+> > > > This duplicates a bunch of the logic in memblock_mem_limit_remove_map. Can
+> > > > you not implement that in terms of your new, more general, function? e.g.
+> > > > by passing base == 0, and size == limit?
+> > > 
+> > > Obviously it's possible.
+> > > I actually talked to Dennis before about merging them,
+> > > but he was against my idea.
+> > >
+> > Oops! I thought we have reached agreement in the thread:http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/442817.html
+> > So feel free to do that as Will'll do
+> 
+> OK, but I found that the two functions have a bit different semantics
+> in clipping memory range, in particular, when the range [base,base+size)
+> goes across several regions with a gap.
+> (This does not happen in my arm64 kdump, though.)
+> That is, 'limit' in memblock_mem_limit_remove_map() means total size of
+> available memory, while 'size' in memblock_cap_memory_range() indicates
+> the size of _continuous_ memory range.
 
->> -      * domain #0, which we have to flush:
->> +      * domain #0, which we have to flush.
->> +      *
->> +      * For kdump cases, present entries may be cached due to the in-flight
->> +      * DMA and copied old pgtable, but there is no unmapping behaviour for
->> +      * them, so we need an explicit iotlb flush for the newly-mapped device.
->> +      * For kdump, at this point, the device is supposed to finish reset at
->> +      * the driver probe stage, no in-flight DMA will exist, thus we do not
->> +      * need to worry about that anymore hereafter.
->>        */
->> -     if (cap_caching_mode(iommu->cap)) {
->> +     if (is_kdump_kernel() || cap_caching_mode(iommu->cap)) {
->>               iommu->flush.flush_context(iommu, 0,
->>                                          (((u16)bus) << 8) | devfn,
->>                                          DMA_CCMD_MASK_NOBIT,
->
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+I thought limit was just a physical address, and then
+memblock_mem_limit_remove_map operated on the end of the nearest memblock?
+You could leave the __find_max_addr call in memblock_mem_limit_remove_map,
+given that I don't think you need/want it for memblock_cap_memory_range.
+
+> So I added an extra argument, exact, to a common function to specify
+> distinct behaviors. Confusing? Please see the patch below.
+
+Oh yikes, this certainly wasn't what I had in mind! My observation was
+just that memblock_mem_limit_remove_map(limit) does:
+
+
+  1. memblock_isolate_range(limit - limit+ULLONG_MAX)
+  2. memblock_remove_region(all non-nomap regions in the isolated region)
+  3. truncate reserved regions to limit
+
+and your memblock_cap_memory_range(base, size) does:
+
+  1. memblock_isolate_range(base - base+size)
+  2, memblock_remove_region(all non-nomap regions above and below the
+     isolated region)
+  3. truncate reserved regions around the isolated region
+
+so, assuming we can invert the isolation in one of the cases, then they
+could share the same underlying implementation.
+
+I'm probably just missing something here, because the patch you've ended
+up with is far more involved than I anticipated...
+
+Will
 
 _______________________________________________
 kexec mailing list
