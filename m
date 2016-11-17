@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f180.google.com ([209.85.216.180])
+Received: from mail-pg0-x22d.google.com ([2607:f8b0:400e:c05::22d])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c7ERc-00054d-RH
- for kexec@lists.infradead.org; Thu, 17 Nov 2016 04:37:06 +0000
-Received: by mail-qt0-f180.google.com with SMTP id c47so122420726qtc.2
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2016 20:36:44 -0800 (PST)
-Subject: Re: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
-References: <cover.1477378297.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E7BD77@BPXM01GP.gisp.nec.co.jp>
- <CAHB_GuobH3=4_84D-DxcDRyXiV6WNWqQtMKTkKq+nn7vmGXyyA@mail.gmail.com>
- <CAHB_GupdvVhhajGAXKk37F9aDDOrX2W-5EY1SQ1VTqkmG3B8Ag@mail.gmail.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E801D7@BPXM01GP.gisp.nec.co.jp>
- <CAHB_Guow3Z-HEG3+Uwji-KWZ_ZGRLemnu2j4yjw6mn79mhV3mg@mail.gmail.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E802D1@BPXM01GP.gisp.nec.co.jp>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <ea6b05e0-7212-c44f-a95c-21802e44d9fb@redhat.com>
-Date: Thu, 17 Nov 2016 10:06:38 +0530
+ id 1c7FM1-0002xI-Ni
+ for kexec@lists.infradead.org; Thu, 17 Nov 2016 05:35:24 +0000
+Received: by mail-pg0-x22d.google.com with SMTP id f188so87389145pgc.3
+ for <kexec@lists.infradead.org>; Wed, 16 Nov 2016 21:35:00 -0800 (PST)
+Date: Thu, 17 Nov 2016 14:34:24 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v27 1/9] memblock: add memblock_cap_memory_range()
+Message-ID: <20161117022023.GA5704@linaro.org>
+References: <20161102044959.11954-1-takahiro.akashi@linaro.org>
+ <20161102045153.12008-1-takahiro.akashi@linaro.org>
+ <20161110172720.GB17134@arm.com> <20161111025049.GG381@linaro.org>
+ <20161111031903.GB15997@arm.com> <20161114055515.GH381@linaro.org>
+ <20161116163015.GM7928@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E802D1@BPXM01GP.gisp.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <20161116163015.GM7928@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,28 +25,182 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "sgoel@codeaurora.org" <sgoel@codeaurora.org>, "mansip@codeaurora.org" <mansip@codeaurora.org>, "asamson@codeaurora.org" <asamson@codeaurora.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Will Deacon <will.deacon@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-mm@kvack.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, Dennis Chen <dennis.chen@arm.com>, akpm@linux-foundation.org, nd@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
+Will,
 
+On Wed, Nov 16, 2016 at 04:30:15PM +0000, Will Deacon wrote:
+> Hi Akashi,
+> 
+> On Mon, Nov 14, 2016 at 02:55:16PM +0900, AKASHI Takahiro wrote:
+> > On Fri, Nov 11, 2016 at 11:19:04AM +0800, Dennis Chen wrote:
+> > > On Fri, Nov 11, 2016 at 11:50:50AM +0900, AKASHI Takahiro wrote:
+> > > > On Thu, Nov 10, 2016 at 05:27:20PM +0000, Will Deacon wrote:
+> > > > > On Wed, Nov 02, 2016 at 01:51:53PM +0900, AKASHI Takahiro wrote:
+> > > > > > +void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+> > > > > > +{
+> > > > > > +	int start_rgn, end_rgn;
+> > > > > > +	int i, ret;
+> > > > > > +
+> > > > > > +	if (!size)
+> > > > > > +		return;
+> > > > > > +
+> > > > > > +	ret = memblock_isolate_range(&memblock.memory, base, size,
+> > > > > > +						&start_rgn, &end_rgn);
+> > > > > > +	if (ret)
+> > > > > > +		return;
+> > > > > > +
+> > > > > > +	/* remove all the MAP regions */
+> > > > > > +	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
+> > > > > > +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+> > > > > > +			memblock_remove_region(&memblock.memory, i);
+> > > > > > +
+> > > > > > +	for (i = start_rgn - 1; i >= 0; i--)
+> > > > > > +		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+> > > > > > +			memblock_remove_region(&memblock.memory, i);
+> > > > > > +
+> > > > > > +	/* truncate the reserved regions */
+> > > > > > +	memblock_remove_range(&memblock.reserved, 0, base);
+> > > > > > +	memblock_remove_range(&memblock.reserved,
+> > > > > > +			base + size, (phys_addr_t)ULLONG_MAX);
+> > > > > > +}
+> > > > > 
+> > > > > This duplicates a bunch of the logic in memblock_mem_limit_remove_map. Can
+> > > > > you not implement that in terms of your new, more general, function? e.g.
+> > > > > by passing base == 0, and size == limit?
+> > > > 
+> > > > Obviously it's possible.
+> > > > I actually talked to Dennis before about merging them,
+> > > > but he was against my idea.
+> > > >
+> > > Oops! I thought we have reached agreement in the thread:http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/442817.html
+> > > So feel free to do that as Will'll do
+> > 
+> > OK, but I found that the two functions have a bit different semantics
+> > in clipping memory range, in particular, when the range [base,base+size)
+> > goes across several regions with a gap.
+> > (This does not happen in my arm64 kdump, though.)
+> > That is, 'limit' in memblock_mem_limit_remove_map() means total size of
+> > available memory, while 'size' in memblock_cap_memory_range() indicates
+> > the size of _continuous_ memory range.
+> 
+> I thought limit was just a physical address, and then
 
-On Wednesday 16 November 2016 02:10 PM, Atsushi Kumagai wrote:
->> As you wish. I can send v2 (there is no difference other than conflict
->> >resolution for rebasing on top of current devel, conflict is minor),
->> >or you can pick them from
->> >https://github.com/pratyushanand/makedumpfile.git : arm64_devel.
-> Sure, I'll pick them (from 60352bd to 3b5faac, right?) up from
-> your devel branch, thanks.
+No, it's not.
 
-Yes, Correct.
+> memblock_mem_limit_remove_map operated on the end of the nearest memblock?
 
-Thanks
+No, but "max_addr" returned by __find_max_addr() is a physical address
+and the end address of memory of "limit" size in total.
 
-~Pratyush
+> You could leave the __find_max_addr call in memblock_mem_limit_remove_map,
+> given that I don't think you need/want it for memblock_cap_memory_range.
+> 
+> > So I added an extra argument, exact, to a common function to specify
+> > distinct behaviors. Confusing? Please see the patch below.
+> 
+> Oh yikes, this certainly wasn't what I had in mind! My observation was
+> just that memblock_mem_limit_remove_map(limit) does:
+> 
+> 
+>   1. memblock_isolate_range(limit - limit+ULLONG_MAX)
+>   2. memblock_remove_region(all non-nomap regions in the isolated region)
+>   3. truncate reserved regions to limit
+> 
+> and your memblock_cap_memory_range(base, size) does:
+> 
+>   1. memblock_isolate_range(base - base+size)
+>   2, memblock_remove_region(all non-nomap regions above and below the
+>      isolated region)
+>   3. truncate reserved regions around the isolated region
+> 
+> so, assuming we can invert the isolation in one of the cases, then they
+> could share the same underlying implementation.
+
+Please see my simplified patch below which would explain what I meant.
+(Note that the size is calculated by 'max_addr - 0'.)
+
+> I'm probably just missing something here, because the patch you've ended
+> up with is far more involved than I anticipated...
+
+I hope that it will meet almost your anticipation.
+
+Thanks,
+-Takahiro AKASHI
+
+> 
+> Will
+===8<===
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 7608bc3..fea1688 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1514,11 +1514,37 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
+ 			      (phys_addr_t)ULLONG_MAX);
+ }
+ 
++void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
++{
++	int start_rgn, end_rgn;
++	int i, ret;
++
++	if (!size)
++		return;
++
++	ret = memblock_isolate_range(&memblock.memory, base, size,
++						&start_rgn, &end_rgn);
++	if (ret)
++		return;
++
++	/* remove all the MAP regions */
++	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
++
++	for (i = start_rgn - 1; i >= 0; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
++
++	/* truncate the reserved regions */
++	memblock_remove_range(&memblock.reserved, 0, base);
++	memblock_remove_range(&memblock.reserved,
++			base + size, (phys_addr_t)ULLONG_MAX);
++}
++
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
+-	struct memblock_type *type = &memblock.memory;
+ 	phys_addr_t max_addr;
+-	int i, ret, start_rgn, end_rgn;
+ 
+ 	if (!limit)
+ 		return;
+@@ -1529,19 +1555,7 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ 	if (max_addr == (phys_addr_t)ULLONG_MAX)
+ 		return;
+ 
+-	ret = memblock_isolate_range(type, max_addr, (phys_addr_t)ULLONG_MAX,
+-				&start_rgn, &end_rgn);
+-	if (ret)
+-		return;
+-
+-	/* remove all the MAP regions above the limit */
+-	for (i = end_rgn - 1; i >= start_rgn; i--) {
+-		if (!memblock_is_nomap(&type->regions[i]))
+-			memblock_remove_region(type, i);
+-	}
+-	/* truncate the reserved regions */
+-	memblock_remove_range(&memblock.reserved, max_addr,
+-			      (phys_addr_t)ULLONG_MAX);
++	memblock_cap_memory_range(0, max_addr);
+ }
+ 
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
 
 _______________________________________________
 kexec mailing list
