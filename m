@@ -1,14 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x234.google.com ([2607:f8b0:400e:c05::234])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c7Xbi-0000BW-4O
- for kexec@lists.infradead.org; Fri, 18 Nov 2016 01:04:47 +0000
-Received: by mail-pg0-x234.google.com with SMTP id f188so96599526pgc.3
- for <kexec@lists.infradead.org>; Thu, 17 Nov 2016 17:04:24 -0800 (PST)
-Date: Fri, 18 Nov 2016 10:03:55 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Fri, 18 Nov 2016 12:10:36 +0000
+From: Will Deacon <will.deacon@arm.com>
 Subject: Re: [PATCH v27 1/9] memblock: add memblock_cap_memory_range()
-Message-ID: <20161118010354.GB5704@linaro.org>
+Message-ID: <20161118121036.GK13470@arm.com>
 References: <20161102044959.11954-1-takahiro.akashi@linaro.org>
  <20161102045153.12008-1-takahiro.akashi@linaro.org>
  <20161110172720.GB17134@arm.com> <20161111025049.GG381@linaro.org>
@@ -31,13 +25,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, linux-mm@kvack.org, bauerman@linux.vnet.ibm.com, Dennis Chen <dennis.chen@arm.com>, akpm@linux-foundation.org, nd@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-
-James,
+Cc: mark.rutland@arm.com, linux-mm@kvack.org, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, bauerman@linux.vnet.ibm.com, Dennis Chen <dennis.chen@arm.com>, akpm@linux-foundation.org, nd@arm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
 On Thu, Nov 17, 2016 at 06:00:58PM +0000, James Morse wrote:
-> Hi Will, Akashi,
-> 
 > On 17/11/16 11:19, Will Deacon wrote:
 > > It looks much better, thanks! Just one question below.
 > > 
@@ -82,9 +72,7 @@ On Thu, Nov 17, 2016 at 06:00:58PM +0000, James Morse wrote:
 > from above' code decreases the loop counter so we process the same entry twice,
 > hitting '@rgn is fully contained, record it' the second time round... so we go
 > round the loop four times.
-
-Thank you for your observation.
-
+> 
 > I can't see how we hit the:
 > > 	if (rbase >= end)
 > > 		break;
@@ -93,29 +81,14 @@ Thank you for your observation.
 > 
 > code in either case...
 
-Right. So 'end_rgn' will never be expected to be 0 as far as some
-intersection exists.
+I consistently misread that as rend >= end and rbase <= base! In which case,
+I agree with your analysis:
 
--Takahiro AKASHI
+Reviewed-by: Will Deacon <will.deacon@arm.com>
 
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-> 
-> > case, we'd end up accidentally removing the map regions here.
-> > 
-> > The existing code:
-> > 
-> >> -	/* remove all the MAP regions above the limit */
-> >> -	for (i = end_rgn - 1; i >= start_rgn; i--) {
-> >> -		if (!memblock_is_nomap(&type->regions[i]))
-> >> -			memblock_remove_region(type, i);
-> >> -	}
-> > 
-> > seems to handle this.
+The patch could probably still use an ack from an mm person.
+
+Will
 
 _______________________________________________
 kexec mailing list
