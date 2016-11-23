@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f173.google.com ([209.85.220.173])
+Received: from mail-qk0-f180.google.com ([209.85.220.180])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1c9MXs-0005Xp-1L
- for kexec@lists.infradead.org; Wed, 23 Nov 2016 01:40:23 +0000
-Received: by mail-qk0-f173.google.com with SMTP id n21so49551577qka.3
- for <kexec@lists.infradead.org>; Tue, 22 Nov 2016 17:39:59 -0800 (PST)
-Subject: Re: [PATCH 0/2] kexec-tools: arm64: Add dcache enabling facility
+ id 1c9MeC-0001jS-Pl
+ for kexec@lists.infradead.org; Wed, 23 Nov 2016 01:46:53 +0000
+Received: by mail-qk0-f180.google.com with SMTP id x190so49853358qkb.0
+ for <kexec@lists.infradead.org>; Tue, 22 Nov 2016 17:46:32 -0800 (PST)
+Subject: Re: [PATCH 2/2] arm64: Pass RAM boundary and enable-dcache flag to
+ purgatory
 References: <cover.1479788404.git.panand@redhat.com>
- <8415f028-f42e-2980-9b60-e85aae046d02@infradead.org>
+ <b1b9e70db9d08364040436154cf0cf2f4600da49.1479788404.git.panand@redhat.com>
+ <53ee2a62-7822-5457-e59f-e65e64a57019@infradead.org>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <3b5b6613-acb2-0888-a78c-6da69c1b55e0@redhat.com>
-Date: Wed, 23 Nov 2016 07:09:53 +0530
+Message-ID: <54cad725-90f0-8dfe-bee6-fe1d3e02175d@redhat.com>
+Date: Wed, 23 Nov 2016 07:16:26 +0530
 MIME-Version: 1.0
-In-Reply-To: <8415f028-f42e-2980-9b60-e85aae046d02@infradead.org>
+In-Reply-To: <53ee2a62-7822-5457-e59f-e65e64a57019@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,38 +32,28 @@ Cc: james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
 Hi Geoff,
 
-On Wednesday 23 November 2016 12:26 AM, Geoff Levand wrote:
+On Wednesday 23 November 2016 12:27 AM, Geoff Levand wrote:
 > Hi Pratyush,
 >
 > On 11/21/2016 08:32 PM, Pratyush Anand wrote:
->> It takes more that 2 minutes to verify SHA in purgatory when vmlinuz
->> image
->> is around 13MB and initramfs is around 30MB. It takes more than 20 second
->> even when we have -O2 optimization enabled. However, if dcache is enabled
->> during purgatory execution then, it takes just a second in SHA
->> verification.
+>> When "enable-dcache" is passed to the kexec() command line, kexec-tools
+>> passes this information to purgatory, which in turn enables cache during
+>> sha-256 verification.
 >
-> As I had mentioned in another thread, I think -O2 optimization is
-> sufficient considering the complexity of the code needed to enable
-> the dcache.  Integrity checking is only needed for crash dump
-> support.  If the crash reboot takes an extra 20 seconds does it
-> matter?
->
+> What's the point of this enable-dcache option?  Why not just
+> always enable the cache if we can?
 
-Even this 20 second for kdump case is also annoying and this could 
-increase if the size of initramfs increases.
+As I have written in changelog of patch 1/2
 
-Moreover, by default d-cache is still disabled, so even if it is complex 
-and you might see some instability, it will not affect the existing 
-systems. So, IMHO we should have this in the upstream.
+"We are supporting only 4K and 64K page sizes. This code will not work if a
+hardware is not supporting at least one of these page sizes.  Therefore,
+D-cache is disabled by default and enabled only when "enable-dcache" is
+passed to the kexec()."
 
 
-> For the re-boot of a stable system where the new kernel is loaded
-> then immediately kexec'ed into integrity checking is not needed.
-> For that arm64 support needs to be added to kexec-lite.
-
-I think kexec-lite is a separate project and --lite in kexec-tools was 
-never acked. So, even for `kexec -l` it will be helpful.
+Although this is very unlikely that a hardware will support only 16K 
+page sizes, however it is possible. Therefore, its better to keep it 
+disabled by default.
 
 ~Pratyush
 
