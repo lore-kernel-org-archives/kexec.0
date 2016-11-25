@@ -1,40 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cAF5b-000461-SN
- for kexec@lists.infradead.org; Fri, 25 Nov 2016 11:54:48 +0000
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+ id 1cAF5l-00048u-Rv
+ for kexec@lists.infradead.org; Fri, 25 Nov 2016 11:54:58 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- uAPBs4Wn088271
- for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 06:54:30 -0500
-Received: from e23smtp01.au.ibm.com (e23smtp01.au.ibm.com [202.81.31.143])
- by mx0a-001b2d01.pphosted.com with ESMTP id 26xk3rq79s-1
+ uAPBsCs1048624
+ for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 06:54:38 -0500
+Received: from e23smtp02.au.ibm.com (e23smtp02.au.ibm.com [202.81.31.144])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 26xjj8rury-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 06:54:29 -0500
+ for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 06:54:38 -0500
 Received: from localhost
- by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 25 Nov 2016 21:54:27 +1000
-Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 739832CE8054
- for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 22:54:24 +1100 (EST)
+ Fri, 25 Nov 2016 21:54:36 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id DCDF32BB0045
+ for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 22:54:32 +1100 (EST)
 Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
- by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- uAPBsOME27394234
- for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 22:54:24 +1100
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ uAPBsWg946399724
+ for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 22:54:32 +1100
 Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
  by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- uAPBsNq8002350
- for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 22:54:24 +1100
-Subject: [PATCH v2 4/5] powerpc/fadump: reuse crashkernel parameter for
- fadump memory reservation
+ uAPBsWvr002412
+ for <kexec@lists.infradead.org>; Fri, 25 Nov 2016 22:54:32 +1100
+Subject: [PATCH v2 5/5] powerpc/fadump: update documentation about
+ crashkernel parameter reuse
 From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Fri, 25 Nov 2016 17:24:20 +0530
+Date: Fri, 25 Nov 2016 17:24:29 +0530
 In-Reply-To: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
 References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-Message-Id: <148007486080.1053.11783156922775159504.stgit@hbathini.in.ibm.com>
+Message-Id: <148007486919.1053.8100577812900357028.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -50,76 +50,59 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, Michael Ellerman <mpe@ellerman.id.au>, dyoung@redhat.com, vgoyal@redhat.com
 
-fadump supports specifying memory to reserve for fadump's crash kernel
-with fadump_reserve_mem kernel parameter. This parameter currently
-supports passing a fixed memory size, like fadump_reserve_mem=<size>
-only. This patch aims to add support for other syntaxes like range-based
-memory size <range1>:<size1>[,<range2>:<size2>,<range3>:<size3>,...]
-which allows using the same parameter to boot the kernel with different
-system RAM sizes.
+As we are reusing crashkernel parameter instead of fadump_reserve_mem
+parameter to specify the memory to reserve for fadump's crash kernel,
+update the documentation accordingly.
 
-As crashkernel parameter already supports the above mentioned syntaxes,
-this patch deprecates fadump_reserve_mem parameter and reuses crashkernel
-parameter instead, to specify memory for fadump's crash kernel memory
-reservation as well. If any offset is provided in crashkernel parameter,
-it will be ignored in case of fadump, as fadump reserves memory at end
-of RAM.
-
-Advantages using crashkernel parameter instead of fadump_reserve_mem
-parameter are one less kernel parameter overall, code reuse and support
-for multiple syntaxes to specify memory.
-
-Suggested-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
 ---
- arch/powerpc/kernel/fadump.c |   23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
+ Documentation/powerpc/firmware-assisted-dump.txt |   23 ++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index db0b339..de7d39a 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -210,14 +210,20 @@ static unsigned long init_fadump_mem_struct(struct fadump_mem_struct *fdm,
-  */
- static inline unsigned long fadump_calculate_reserve_size(void)
- {
--	unsigned long size;
-+	int ret;
-+	unsigned long long base, size;
+diff --git a/Documentation/powerpc/firmware-assisted-dump.txt b/Documentation/powerpc/firmware-assisted-dump.txt
+index 3007bc9..8394bc8 100644
+--- a/Documentation/powerpc/firmware-assisted-dump.txt
++++ b/Documentation/powerpc/firmware-assisted-dump.txt
+@@ -55,10 +55,14 @@ as follows:
+          booted with restricted memory. By default, the boot memory
+          size will be the larger of 5% of system RAM or 256MB.
+          Alternatively, user can also specify boot memory size
+-         through boot parameter 'fadump_reserve_mem=' which will
+-         override the default calculated size. Use this option
+-         if default boot memory size is not sufficient for second
+-         kernel to boot successfully.
++         through boot parameter 'crashkernel=' which will override
++         the default calculated size. Use this option if default
++         boot memory size is not sufficient for second kernel to
++         boot successfully. For syntax of crashkernel= parameter,
++         refer to Documentation/kdump/kdump.txt. If any offset is
++         provided in crashkernel= parameter, it will be ignored
++         as fadump reserves memory at end of RAM for boot memory
++         dump preservation in case of a crash.
  
- 	/*
--	 * Check if the size is specified through fadump_reserve_mem= cmdline
--	 * option. If yes, then use that.
-+	 * Check if the size is specified through crashkernel= cmdline
-+	 * option. If yes, then use that but ignore base as fadump
-+	 * reserves memory at end of RAM.
- 	 */
--	if (fw_dump.reserve_bootvar)
-+	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+				&size, &base);
-+	if (ret == 0 && size > 0) {
-+		fw_dump.reserve_bootvar = (unsigned long)size;
- 		return fw_dump.reserve_bootvar;
-+	}
+ -- After the low memory (boot memory) area has been saved, the
+    firmware will reset PCI and other hardware state.  It will
+@@ -158,13 +162,16 @@ How to enable firmware-assisted dump (fadump):
  
- 	/* divide by 20 to get 5% of value */
- 	size = memblock_end_of_DRAM() / 20;
-@@ -353,15 +359,6 @@ static int __init early_fadump_param(char *p)
- }
- early_param("fadump", early_fadump_param);
+ 1. Set config option CONFIG_FA_DUMP=y and build kernel.
+ 2. Boot into linux kernel with 'fadump=on' kernel cmdline option.
+-3. Optionally, user can also set 'fadump_reserve_mem=' kernel cmdline
++3. Optionally, user can also set 'crashkernel=' kernel cmdline
+    to specify size of the memory to reserve for boot memory dump
+    preservation.
  
--/* Look for fadump_reserve_mem= cmdline option */
--static int __init early_fadump_reserve_mem(char *p)
--{
--	if (p)
--		fw_dump.reserve_bootvar = memparse(p, &p);
--	return 0;
--}
--early_param("fadump_reserve_mem", early_fadump_reserve_mem);
--
- static void register_fw_dump(struct fadump_mem_struct *fdm)
- {
- 	int rc;
+-NOTE: If firmware-assisted dump fails to reserve memory then it will
+-   fallback to existing kdump mechanism if 'crashkernel=' option
+-   is set at kernel cmdline.
++NOTE: 1. 'fadump_reserve_mem=' parameter has been deprecated. Instead
++         use 'crashkernel=' to specify size of the memory to reserve
++         for boot memory dump preservation.
++      2. If firmware-assisted dump fails to reserve memory then it
++         will fallback to existing kdump mechanism if 'crashkernel='
++         option is set at kernel cmdline.
+ 
+ Sysfs/debugfs files:
+ ------------
 
 
 _______________________________________________
