@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <58388359.4090002@arm.com>
-Date: Fri, 25 Nov 2016 18:30:49 +0000
-From: James Morse <james.morse@arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cBBpa-0006XR-S2
+ for kexec@lists.infradead.org; Mon, 28 Nov 2016 02:38:12 +0000
+Subject: Re: [PATCH v2] iommu/vt-d: Flush old iommu caches for kdump when the
+ device gets context mapped
+References: <1479486225-9286-1-git-send-email-xlpang@redhat.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <583B98D0.90300@redhat.com>
+Date: Mon, 28 Nov 2016 10:39:12 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kexec-tools: arm64: Add dcache enabling facility
-References: <cover.1479788404.git.panand@redhat.com>
- <8415f028-f42e-2980-9b60-e85aae046d02@infradead.org>
-In-Reply-To: <8415f028-f42e-2980-9b60-e85aae046d02@infradead.org>
+In-Reply-To: <1479486225-9286-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,47 +19,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Xunlei Pang <xlpang@redhat.com>, iommu@lists.linux-foundation.org, David Woodhouse <dwmw2@infradead.org>, Joerg Roedel <joro@8bytes.org>
+Cc: Don Brace <don.brace@microsemi.com>, Baoquan He <bhe@redhat.com>, Joseph Szczypek <jszczype@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Myron Stowe <myron.stowe@redhat.com>
 
-Hi guys,
+Ping Joerg/David, do you have any comment on it?
+On 2016/11/19 at 00:23, Xunlei Pang wrote:
+> We met the DMAR fault both on hpsa P420i and P421 SmartArray controllers
+> under kdump, it can be steadily reproduced on several different machines,
+> the dmesg log is like(running on 4.9.0-rc5+):
+> HP HPSA Driver (v 3.4.16-0)
+> hpsa 0000:02:00.0: using doorbell to reset controller
+> hpsa 0000:02:00.0: board ready after hard reset.
+> hpsa 0000:02:00.0: Waiting for controller to respond to no-op
+> DMAR: Setting identity map for device 0000:02:00.0 [0xe8000 - 0xe8fff]
+> DMAR: Setting identity map for device 0000:02:00.0 [0xf4000 - 0xf4fff]
+> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf6e000 - 0xbdf6efff]
+> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf6f000 - 0xbdf7efff]
+> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf7f000 - 0xbdf82fff]
+> DMAR: Setting identity map for device 0000:02:00.0 [0xbdf83000 - 0xbdf84fff]
+> DMAR: DRHD: handling fault status reg 2
+> DMAR: [DMA Read] Request device [02:00.0] fault addr fffff000 [fault reason 06] PTE Read access is not set
+> hpsa 0000:02:00.0: controller message 03:00 timed out
+> hpsa 0000:02:00.0: no-op failed; re-trying
+>
+> After some debugging, we found that the fault addr is from DMA initiated at
+> the driver probe stage after reset(not in-flight DMA), and the corresponding
+> pte entry value is correct, the fault is likely due to the old iommu caches
+> of the in-flight DMA before it.
+>
+> Thus we need to flush the old cache after context mapping is setup for the
+> device, where the device is supposed to finish reset at its driver probe
+> stage and no in-flight DMA exists hereafter.
+>
+> I'm not sure if the hardware is responsible for invalidating all the related
+> caches allocated in iommu hardware during reset, but seems not the case for hpsa,
+> actually many device drivers even have problems properly resetting the hardware.
+> Anyway flushing (again) by software in kdump mode when the device gets context
+> mapped which is a quite infrequent operation does little harm.
+>
+> With this patch, the problematic machine can survive the kdump tests.
+>
+> CC: Myron Stowe <myron.stowe@redhat.com>
+> CC: Joseph Szczypek <jszczype@redhat.com>
+> CC: Don Brace <don.brace@microsemi.com>
+> CC: Baoquan He <bhe@redhat.com>
+> CC: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+> ---
+> v1 -> v2:
+> Flush caches using old domain id.
+>
+>  drivers/iommu/intel-iommu.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 3965e73..653304d 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -2024,6 +2024,28 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
+>  	if (context_present(context))
+>  		goto out_unlock;
+>  
+> +	/*
+> +	 * For kdump cases, old valid entries may be cached due to the
+> +	 * in-flight DMA and copied pgtable, but there is no unmapping
+> +	 * behaviour for them, thus we need an explicit cache flush for
+> +	 * the newly-mapped device. For kdump, at this point, the device
+> +	 * is supposed to finish reset at its driver probe stage, so no
+> +	 * in-flight DMA will exist, and we don't need to worry anymore
+> +	 * hereafter.
+> +	 */
+> +	if (context_copied(context)) {
+> +		u16 did_old = context_domain_id(context);
+> +
+> +		if (did_old >= 0 && did_old < cap_ndoms(iommu->cap)) {
+> +			iommu->flush.flush_context(iommu, did_old,
+> +						   (((u16)bus) << 8) | devfn,
+> +						   DMA_CCMD_MASK_NOBIT,
+> +						   DMA_CCMD_DEVICE_INVL);
+> +			iommu->flush.flush_iotlb(iommu, did_old, 0, 0,
+> +						   DMA_TLB_DSI_FLUSH);
+> +		}
+> +	}
+> +
+>  	pgd = domain->pgd;
+>  
+>  	context_clear_entry(context);
 
-On 22/11/16 18:56, Geoff Levand wrote:
-> On 11/21/2016 08:32 PM, Pratyush Anand wrote:
->> It takes more that 2 minutes to verify SHA in purgatory when vmlinuz image
->> is around 13MB and initramfs is around 30MB. It takes more than 20 second
->> even when we have -O2 optimization enabled. However, if dcache is enabled
->> during purgatory execution then, it takes just a second in SHA verification.
-> 
-> As I had mentioned in another thread, I think -O2 optimization is
-> sufficient considering the complexity of the code needed to enable
-> the dcache.  Integrity checking is only needed for crash dump
-> support.  If the crash reboot takes an extra 20 seconds does it
-> matter?
-> 
-> For the re-boot of a stable system where the new kernel is loaded
-> then immediately kexec'ed into integrity checking is not needed.
-
-I agree.
-If purgatory detects corruption in the new-kernel or initramfs all it can do is
-spin in a loop. If we are very lucky in could print a debug message to the
-serial console. If the planets line up, someone might see this message.
-
-If we validate the checksum in the kernel kexec core code we can possibly fail
-the syscall and return to a running system. We can use EFI runtime services to
-try and reboot, or print a message to somewhere that might get seen such as
-syslog or netconsole.
-
-I agree kdump is different but I don't think 'we crashed' is performance critical.
-
-
-Thanks,
-
-James
 
 _______________________________________________
 kexec mailing list
