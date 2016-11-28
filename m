@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi0-f49.google.com ([209.85.218.49])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cBEkP-0008Ta-DC
- for kexec@lists.infradead.org; Mon, 28 Nov 2016 05:45:03 +0000
-Received: by mail-oi0-f49.google.com with SMTP id y198so138847007oia.1
- for <kexec@lists.infradead.org>; Sun, 27 Nov 2016 21:44:39 -0800 (PST)
+Date: Mon, 28 Nov 2016 15:04:33 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v28 4/9] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20161128150433.GC17125@e104818-lin.cambridge.arm.com>
+References: <20161124095523.6972-1-takahiro.akashi@linaro.org>
+ <20161124095809.7092-3-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20161124075355.GC13096@verge.net.au>
-References: <32a52ca4-8741-e0e6-92c1-6b9583fa479b@infradead.org>
- <20161124075355.GC13096@verge.net.au>
-From: Pratyush Anand <panand@redhat.com>
-Date: Mon, 28 Nov 2016 11:14:38 +0530
-Message-ID: <CAHB_GupOJfW+1p9F9Ybuvz_VZ0Shs4OZyxLHm1cX-5svQk-oOQ@mail.gmail.com>
-Subject: Re: [PATCH] purgatory: Change default sha256 optimization to -O2
+Content-Disposition: inline
+In-Reply-To: <20161124095809.7092-3-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +20,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geoff Levand <geoff@infradead.org>, Kexec Mailing List <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On Thu, Nov 24, 2016 at 1:23 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Nov 23, 2016 at 09:57:09AM -0800, Geoff Levand wrote:
->> Change the default purgatory sha256 code optimization from -O0 to -O2, and add a
->> new arch specific makefile variable $(ARCH)_PURGATORY_SHA256_CFLAGS which can
->> over ride this default.  Set ia64_PURGATORY_SHA256_CFLAGS to -O0 to retain the
->> previous optimization level for ia64.
->>
->> The purgatory sha256 code needs the be built with -O0 for the  ia64
->> architecture.  Currently this code is built with -O0 for all architectures,
->> which slows down the calculations for architectures which could otherwise
->> use -O2.
->
-> Could you give an indication of the performance improvement you expect,
-> e.g. on arm64?
->
+On Thu, Nov 24, 2016 at 06:58:05PM +0900, AKASHI Takahiro wrote:
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 04744dc..b5168e8 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -40,7 +40,47 @@
+>  static inline void crash_setup_regs(struct pt_regs *newregs,
+>  				    struct pt_regs *oldregs)
+>  {
+> -	/* Empty routine needed to avoid build errors. */
+> +	if (oldregs) {
+> +		memcpy(newregs, oldregs, sizeof(*newregs));
+> +	} else {
+> +		u64 tmp1, tmp2;
+> +
+> +		__asm__ __volatile__ (
+> +			"stp	 x0,   x1, [%2, #16 *  0]\n"
+> +			"stp	 x2,   x3, [%2, #16 *  1]\n"
+> +			"stp	 x4,   x5, [%2, #16 *  2]\n"
+> +			"stp	 x6,   x7, [%2, #16 *  3]\n"
+> +			"stp	 x8,   x9, [%2, #16 *  4]\n"
+> +			"stp	x10,  x11, [%2, #16 *  5]\n"
+> +			"stp	x12,  x13, [%2, #16 *  6]\n"
+> +			"stp	x14,  x15, [%2, #16 *  7]\n"
+> +			"stp	x16,  x17, [%2, #16 *  8]\n"
+> +			"stp	x18,  x19, [%2, #16 *  9]\n"
+> +			"stp	x20,  x21, [%2, #16 * 10]\n"
+> +			"stp	x22,  x23, [%2, #16 * 11]\n"
+> +			"stp	x24,  x25, [%2, #16 * 12]\n"
+> +			"stp	x26,  x27, [%2, #16 * 13]\n"
+> +			"stp	x28,  x29, [%2, #16 * 14]\n"
+> +			"mov	 %0,  sp\n"
+> +			"stp	x30,  %0,  [%2, #16 * 15]\n"
+> +
+> +			"/* faked current PSTATE */\n"
+> +			"mrs	 %0, CurrentEL\n"
+> +			"mrs	 %1, SPSEL\n"
+> +			"orr	 %0, %0, %1\n"
+> +			"mrs	 %1, DAIF\n"
+> +			"orr	 %0, %0, %1\n"
+> +			"mrs	 %1, NZCV\n"
+> +			"orr	 %0, %0, %1\n"
+> +			/* pc */
+> +			"adr	 %1, 1f\n"
+> +		"1:\n"
+> +			"stp	 %1, %0,   [%2, #16 * 16]\n"
+> +			: "+r" (tmp1), "+r" (tmp2)
+> +			: "r" (newregs)
+> +			: "memory"
 
-It takes around 20 second to verify SHA in purgatory when vmlinuz
-image is around 13MB and initramfs is around 30M with -O2 enables.
-Otherwise, it takes more than 2 minutes.
+tmp1 and tmp2 are not input arguments here, so you should use the "=&"
+modifier. With my compiler, I get warnings of these variables being used
+uninitialised.
 
-~Pratyush
-
-
->> Signed-off-by: Geoff Levand <geoff@infradead.org>
->> ---
->>  purgatory/Makefile           | 4 +---
->>  purgatory/arch/ia64/Makefile | 4 ++++
->>  2 files changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/purgatory/Makefile b/purgatory/Makefile
->> index ca0443c..328904e 100644
->> --- a/purgatory/Makefile
->> +++ b/purgatory/Makefile
->> @@ -38,9 +38,7 @@ clean += $(PURGATORY_OBJS) $(PURGATORY_DEPS) $(PURGATORY)
->>  -include $(PURGATORY_DEPS)
->> -# sha256.c needs to be compiled without optimization, else
->> -# purgatory fails to execute on ia64.
->> -purgatory/sha256.o: CFLAGS += -O0
->> +purgatory/sha256.o: CFLAGS += -O2 $($(ARCH)_PURGATORY_SHA256_CFLAGS)
->>  purgatory/sha256.o: $(srcdir)/util_lib/sha256.c
->>       mkdir -p $(@D)
->> diff --git a/purgatory/arch/ia64/Makefile b/purgatory/arch/ia64/Makefile
->> index 32c3d97..4a2564c 100644
->> --- a/purgatory/arch/ia64/Makefile
->> +++ b/purgatory/arch/ia64/Makefile
->> @@ -8,6 +8,10 @@ ia64_PURGATORY_SRCS += purgatory/arch/ia64/vga.c
->>  ia64_PURGATORY_EXTRA_CFLAGS = -ffixed-r28
->> +# sha256.c needs to be compiled without optimization, else
->> +# purgatory fails to execute on ia64.
->> +ia64_PURGATORY_SHA256_CFLAGS = -O0
->> +
->>  dist += purgatory/arch/ia64/Makefile $(ia64_PURGATORY_SRCS)  \
->>       purgatory/arch/ia64/io.h purgatory/arch/ia64/purgatory-ia64.h
->> --
->> 2.7.4
->>
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
