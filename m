@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 29 Nov 2016 11:05:02 +0000
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v28 0/9] arm64: add kdump support
-Message-ID: <20161129110502.GE30283@arm.com>
-References: <20161124095523.6972-1-takahiro.akashi@linaro.org>
- <20161125162039.GB22099@e104818-lin.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161125162039.GB22099@e104818-lin.cambridge.arm.com>
+Received: from mail-qk0-f171.google.com ([209.85.220.171])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cBnZi-0004jR-5Z
+ for kexec@lists.infradead.org; Tue, 29 Nov 2016 18:56:22 +0000
+Received: by mail-qk0-f171.google.com with SMTP id x190so184728396qkb.0
+ for <kexec@lists.infradead.org>; Tue, 29 Nov 2016 10:55:58 -0800 (PST)
+From: Laura Abbott <labbott@redhat.com>
+Subject: [PATCHv4 07/10] kexec: Switch to __pa_symbol
+Date: Tue, 29 Nov 2016 10:55:26 -0800
+Message-Id: <1480445729-27130-8-git-send-email-labbott@redhat.com>
+In-Reply-To: <1480445729-27130-1-git-send-email-labbott@redhat.com>
+References: <1480445729-27130-1-git-send-email-labbott@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,34 +19,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Eric Biederman <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Thomas Gleixner <tglx@linutronix.de>, Laura Abbott <labbott@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 
-On Fri, Nov 25, 2016 at 04:20:40PM +0000, Catalin Marinas wrote:
-> On Thu, Nov 24, 2016 at 06:55:23PM +0900, AKASHI Takahiro wrote:
-> > AKASHI Takahiro (8):
-> >   arm64: kdump: reserve memory for crash dump kernel
-> >   memblock: add memblock_cap_memory_range()
-> >   arm64: limit memory regions based on DT property, usable-memory-range
-> >   arm64: kdump: implement machine_crash_shutdown()
-> >   arm64: kdump: add kdump support
-> >   arm64: kdump: add VMCOREINFO's for user-space coredump tools
-> >   arm64: kdump: enable kdump in the arm64 defconfig
-> >   arm64: kdump: update a kernel doc
-> 
-> Given that it's nearly -rc7, holiday in the US and more acks needed, we
-> should defer merging this series to 4.11. In the meantime, since Will is
-> going to handle the 4.11 merging window, I'm acking the whole series:
-> 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
-Okey doke. I'll keep my eyes peeled for a new version in the new year.
+__pa_symbol is the correct api to get the physical address of kernel
+symbols. Switch to it to allow for better debug checking.
 
-Will
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+Found during review of the kernel. Untested.
+---
+ kernel/kexec_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 5616755..e1b625e 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1397,7 +1397,7 @@ void __weak arch_crash_save_vmcoreinfo(void)
+ 
+ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ {
+-	return __pa((unsigned long)(char *)&vmcoreinfo_note);
++	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
+ }
+ 
+ static int __init crash_save_vmcoreinfo_init(void)
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
