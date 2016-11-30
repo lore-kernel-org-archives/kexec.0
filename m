@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cC23V-0000rE-1X
- for kexec@lists.infradead.org; Wed, 30 Nov 2016 10:24:02 +0000
-Date: Wed, 30 Nov 2016 18:23:34 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] iommu/vt-d: Flush old iotlb for kdump when the device
- gets context mapped
-Message-ID: <20161130102334.GC4192@x1>
-References: <1479286950-21885-1-git-send-email-xlpang@redhat.com>
- <582C232F.6080205@redhat.com>
- <CAL-B5D1kkWE4e6P1xY1Cgkf-7+nBXH=C7g21=phEzmM4FPZRRQ@mail.gmail.com>
- <582D1A40.409@redhat.com> <20161129143547.GG2078@8bytes.org>
- <583E8A9B.7070906@redhat.com> <20161130090327.GA4192@x1>
- <20161130095334.GB4192@x1>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cC2fF-0008Ve-L2
+ for kexec@lists.infradead.org; Wed, 30 Nov 2016 11:03:02 +0000
+Date: Wed, 30 Nov 2016 12:02:33 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] purgatory: Change default sha256 optimization to -O2
+Message-ID: <20161130110233.GA31616@verge.net.au>
+References: <32a52ca4-8741-e0e6-92c1-6b9583fa479b@infradead.org>
+ <20161124075355.GC13096@verge.net.au>
+ <CAHB_GupOJfW+1p9F9Ybuvz_VZ0Shs4OZyxLHm1cX-5svQk-oOQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20161130095334.GB4192@x1>
+In-Reply-To: <CAHB_GupOJfW+1p9F9Ybuvz_VZ0Shs4OZyxLHm1cX-5svQk-oOQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,98 +25,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com
-Cc: Don Brace <don.brace@microsemi.com>, Dave Young <dyoung@redhat.com>, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Myron Stowe <myron.stowe@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: Geoff Levand <geoff@infradead.org>, Kexec Mailing List <kexec@lists.infradead.org>
 
-On 11/30/16 at 05:53pm, Baoquan He wrote:
-> On 11/30/16 at 05:03pm, Baoquan He wrote:
-> > On 11/30/16 at 04:15pm, Xunlei Pang wrote:
-> > > On 11/29/2016 at 10:35 PM, Joerg Roedel wrote:
-> > > > On Thu, Nov 17, 2016 at 10:47:28AM +0800, Xunlei Pang wrote:
-> > > >> As per the comment, the code here only needs to flush context caches
-> > > >> for the special domain 0 which is used to tag the
-> > > >> non-present/erroneous caches, seems we should flush the old domain id
-> > > >> of present entries for kdump according to the analysis, other than the
-> > > >> new-allocated domain id. Let me ponder more on this.
-> > > > Flushing the context entry only is fine. The old domain-id will not be
-> > > > re-used anyway, so there is no point in reading it out of the context
-> > > > table and flush it.
-> > > 
-> > > Do you mean to flush the context entry using the new-allocated domain id?
-> > > 
-> > > Yes, old domain-id will not be re-used as they were reserved when copy, but
-> > > may still be cached by in-flight DMA access.
-> > 
-> > Joerg is saying you have flushed context entry which is the ingress,
-> > new DMA can't get an entrance to hit the iotlb accordingly. Since you
-> > have bolted the ingress gate. I guess
+On Mon, Nov 28, 2016 at 11:14:38AM +0530, Pratyush Anand wrote:
+> On Thu, Nov 24, 2016 at 1:23 PM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Nov 23, 2016 at 09:57:09AM -0800, Geoff Levand wrote:
+> >> Change the default purgatory sha256 code optimization from -O0 to -O2, and add a
+> >> new arch specific makefile variable $(ARCH)_PURGATORY_SHA256_CFLAGS which can
+> >> over ride this default.  Set ia64_PURGATORY_SHA256_CFLAGS to -O0 to retain the
+> >> previous optimization level for ia64.
+> >>
+> >> The purgatory sha256 code needs the be built with -O0 for the  ia64
+> >> architecture.  Currently this code is built with -O0 for all architectures,
+> >> which slows down the calculations for architectures which could otherwise
+> >> use -O2.
+> >
+> > Could you give an indication of the performance improvement you expect,
+> > e.g. on arm64?
+> >
 > 
+> It takes around 20 second to verify SHA in purgatory when vmlinuz
+> image is around 13MB and initramfs is around 30M with -O2 enables.
+> Otherwise, it takes more than 2 minutes.
 
-OK, talked with Xunlei. The old cache could be entry with present bit
-set.
+Thanks.
 
-> And please code comment at the bottom of iommu_init_domains(), you can
-> see domain 0 is a special domain id.
-> 
-> 
-> ~~~~~~~~~~~~~~~~~~~~~~~~~
->         /*
->          * If Caching mode is set, then invalid translations are tagged
->          * with domain-id 0, hence we need to pre-allocate it. We also
->          * use domain-id 0 as a marker for non-allocated domain-id, so
->          * make sure it is not used for a real domain.
->          */
->         set_bit(0, iommu->domain_ids);
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> And in vt-d spec, at the end of section 6.2.2 and the following
-> sections, you can see domain 0 is used to tag the cached entry.
-> 
-> I guess that's why it works with only domain 0 specified. The simple
-> thing to verify that is you specify another did, E.g 100 for your
-> flushing, see if it still works.
-> 
-> 
-> So, if it's just as above, v1 should be good enough.
-> 
-> Besides, you should use translation_pre_enabled(). If 1st kernel add
-> intel_iommu=off, no need to do this.
-> 
-> Thanks
-> Baoquan
-> > 
-> > > 
-> > > Here is what the things seem to be from my understanding, and why I want to
-> > > flush using the old domain id:
-> > > 1) In kdump mode, old tables are copied, and all the iommu caches are flushed.
-> > > 2) There comes some in-flight DMA before the device's new context is mapped,
-> > >     so translation caches(context, iotlb, etc) are created tagging old domain-id
-> > >     in the iommu hardware.
-> > > 3) At the driver probe stage, the device is reset , and no in-flight DMA will exist.
-> > >     Here I assumed that the device reset won't flush the old caches in the iommu
-> > >     hardware related to this device. I haven't found any relevant specification, please
-> > >     correct me if I am wrong.
-> > > 4) Then new context is setup, and new DMA is initiated, hit old cache that was
-> > >     created in 2) as currently there's no such flush action, so DMAR fault happens.
-> > > 
-> > > I already posted v2 to flush context/iotlb using the old domain-id:
-> > > https://lkml.org/lkml/2016/11/18/514
-> > > 
-> > > Regards,
-> > > Xunlei
-> > > 
-> > > >
-> > > > Also, please add a Fixes-tag when you re-post this patch.
-> > > >
-> > > >
-> > > > 	Joerg
-> > > >
-> > > 
-> > > 
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
+This patch doesn't seem to apply against the master branch.
+I'm wondering if you or Geoff could:
+
+1. Rebase the patch
+2. Include some text about the performance improvement.
+   Something like what is above would be fine from my pov.
 
 _______________________________________________
 kexec mailing list
