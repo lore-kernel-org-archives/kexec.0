@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f175.google.com ([209.85.220.175])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cBnZN-0004dJ-Gy
- for kexec@lists.infradead.org; Tue, 29 Nov 2016 18:56:00 +0000
-Received: by mail-qk0-f175.google.com with SMTP id x190so184716779qkb.0
- for <kexec@lists.infradead.org>; Tue, 29 Nov 2016 10:55:36 -0800 (PST)
-From: Laura Abbott <labbott@redhat.com>
-Subject: [PATCHv4 00/10] CONFIG_DEBUG_VIRTUAL for arm64
-Date: Tue, 29 Nov 2016 10:55:19 -0800
-Message-Id: <1480445729-27130-1-git-send-email-labbott@redhat.com>
+ id 1cC02H-0002gC-Lr
+ for kexec@lists.infradead.org; Wed, 30 Nov 2016 08:14:38 +0000
+Subject: Re: [PATCH] iommu/vt-d: Flush old iotlb for kdump when the device
+ gets context mapped
+References: <1479286950-21885-1-git-send-email-xlpang@redhat.com>
+ <582C232F.6080205@redhat.com>
+ <CAL-B5D1kkWE4e6P1xY1Cgkf-7+nBXH=C7g21=phEzmM4FPZRRQ@mail.gmail.com>
+ <582D1A40.409@redhat.com> <20161129143547.GG2078@8bytes.org>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <583E8A9B.7070906@redhat.com>
+Date: Wed, 30 Nov 2016 16:15:23 +0800
+MIME-Version: 1.0
+In-Reply-To: <20161129143547.GG2078@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,76 +22,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org, Laura Abbott <labbott@redhat.com>, David Vrabel <david.vrabel@citrix.com>, Kees Cook <keescook@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Christoffer Dall <christoffer.dall@linaro.org>
+To: Joerg Roedel <joro@8bytes.org>, xlpang@redhat.com
+Cc: Don Brace <don.brace@microsemi.com>, Myron Stowe <myron.stowe@redhat.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Myron Stowe <myron.stowe@gmail.com>, Dave Young <dyoung@redhat.com>, David Woodhouse <dwmw2@infradead.org>
 
+On 11/29/2016 at 10:35 PM, Joerg Roedel wrote:
+> On Thu, Nov 17, 2016 at 10:47:28AM +0800, Xunlei Pang wrote:
+>> As per the comment, the code here only needs to flush context caches
+>> for the special domain 0 which is used to tag the
+>> non-present/erroneous caches, seems we should flush the old domain id
+>> of present entries for kdump according to the analysis, other than the
+>> new-allocated domain id. Let me ponder more on this.
+> Flushing the context entry only is fine. The old domain-id will not be
+> re-used anyway, so there is no point in reading it out of the context
+> table and flush it.
 
-Hi,
+Do you mean to flush the context entry using the new-allocated domain id?
 
-This is v4 of the series to add CONFIG_DEBUG_VIRTUAL for arm64. This mostly
-expanded on __pa_symbol conversion with a few new sites found. There's also
-some reworking done to avoid calling __va too early. __va relies on having
-memstart_addr set so very early code in early_fixmap_init and early KASAN
-initialization can't just call __va(__Ipa_symbol(...)) to get the linear map
-alias. I found this while testing with DEBUG_VM.
+Yes, old domain-id will not be re-used as they were reserved when copy, but
+may still be cached by in-flight DMA access.
 
-All of this could use probably use more testing under more configurations.
-KVM, Xen, kexec, hibernate should all be tested.
+Here is what the things seem to be from my understanding, and why I want to
+flush using the old domain id:
+1) In kdump mode, old tables are copied, and all the iommu caches are flushed.
+2) There comes some in-flight DMA before the device's new context is mapped,
+    so translation caches(context, iotlb, etc) are created tagging old domain-id
+    in the iommu hardware.
+3) At the driver probe stage, the device is reset , and no in-flight DMA will exist.
+    Here I assumed that the device reset won't flush the old caches in the iommu
+    hardware related to this device. I haven't found any relevant specification, please
+    correct me if I am wrong.
+4) Then new context is setup, and new DMA is initiated, hit old cache that was
+    created in 2) as currently there's no such flush action, so DMAR fault happens.
 
-Thanks,
-Laura
+I already posted v2 to flush context/iotlb using the old domain-id:
+https://lkml.org/lkml/2016/11/18/514
 
-Laura Abbott (10):
-  lib/Kconfig.debug: Add ARCH_HAS_DEBUG_VIRTUAL
-  mm/cma: Cleanup highmem check
-  arm64: Move some macros under #ifndef __ASSEMBLY__
-  arm64: Add cast for virt_to_pfn
-  arm64: Use __pa_symbol for kernel symbols
-  xen: Switch to using __pa_symbol
-  kexec: Switch to __pa_symbol
-  mm/kasan: Switch to using __pa_symbol and lm_alias
-  mm/usercopy: Switch to using lm_alias
-  arm64: Add support for CONFIG_DEBUG_VIRTUAL
+Regards,
+Xunlei
 
- arch/arm64/Kconfig                        |  1 +
- arch/arm64/include/asm/kvm_mmu.h          |  4 +-
- arch/arm64/include/asm/memory.h           | 67 ++++++++++++++++++++++---------
- arch/arm64/include/asm/mmu_context.h      |  6 +--
- arch/arm64/include/asm/pgtable.h          |  2 +-
- arch/arm64/kernel/acpi_parking_protocol.c |  2 +-
- arch/arm64/kernel/cpu-reset.h             |  2 +-
- arch/arm64/kernel/cpufeature.c            |  2 +-
- arch/arm64/kernel/hibernate.c             | 13 +++---
- arch/arm64/kernel/insn.c                  |  2 +-
- arch/arm64/kernel/psci.c                  |  2 +-
- arch/arm64/kernel/setup.c                 |  8 ++--
- arch/arm64/kernel/smp_spin_table.c        |  2 +-
- arch/arm64/kernel/vdso.c                  |  4 +-
- arch/arm64/mm/Makefile                    |  2 +
- arch/arm64/mm/init.c                      | 11 ++---
- arch/arm64/mm/kasan_init.c                | 21 ++++++----
- arch/arm64/mm/mmu.c                       | 32 +++++++++------
- arch/arm64/mm/physaddr.c                  | 28 +++++++++++++
- arch/x86/Kconfig                          |  1 +
- drivers/firmware/psci.c                   |  2 +-
- drivers/xen/xenbus/xenbus_dev_backend.c   |  2 +-
- drivers/xen/xenfs/xenstored.c             |  2 +-
- include/linux/mm.h                        |  4 ++
- kernel/kexec_core.c                       |  2 +-
- lib/Kconfig.debug                         |  5 ++-
- mm/cma.c                                  | 15 +++----
- mm/kasan/kasan_init.c                     | 12 +++---
- mm/usercopy.c                             |  4 +-
- 29 files changed, 167 insertions(+), 93 deletions(-)
- create mode 100644 arch/arm64/mm/physaddr.c
-
--- 
-2.7.4
+>
+> Also, please add a Fixes-tag when you re-post this patch.
+>
+>
+> 	Joerg
+>
 
 
 _______________________________________________
