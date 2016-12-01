@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 30 Nov 2016 14:44:05 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v28 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20161130204405.a4k54zrhe36dpdlp@rob-hp-laptop>
-References: <20161124095523.6972-1-takahiro.akashi@linaro.org>
- <20161124095944.7167-1-takahiro.akashi@linaro.org>
- <20161124171413.GE7452@e104818-lin.cambridge.arm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cCGtk-0001SI-5O
+ for kexec@lists.infradead.org; Thu, 01 Dec 2016 02:14:57 +0000
+Subject: Re: [PATCH] iommu/vt-d: Flush old iotlb for kdump when the device
+ gets context mapped
+References: <1479286950-21885-1-git-send-email-xlpang@redhat.com>
+ <582C232F.6080205@redhat.com>
+ <CAL-B5D1kkWE4e6P1xY1Cgkf-7+nBXH=C7g21=phEzmM4FPZRRQ@mail.gmail.com>
+ <582D1A40.409@redhat.com> <20161129143547.GG2078@8bytes.org>
+ <583E8A9B.7070906@redhat.com> <20161130090327.GA4192@x1>
+ <20161130095334.GB4192@x1> <20161130102334.GC4192@x1>
+ <20161130142642.GJ2078@8bytes.org>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <583F87D1.6030402@redhat.com>
+Date: Thu, 1 Dec 2016 10:15:45 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161124171413.GE7452@e104818-lin.cambridge.arm.com>
+In-Reply-To: <20161130142642.GJ2078@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,36 +25,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Joerg Roedel <joro@8bytes.org>, Baoquan He <bhe@redhat.com>
+Cc: Don Brace <don.brace@microsemi.com>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, xlpang@redhat.com, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Myron Stowe <myron.stowe@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, David Woodhouse <dwmw2@infradead.org>
 
-On Thu, Nov 24, 2016 at 05:14:13PM +0000, Catalin Marinas wrote:
-> On Thu, Nov 24, 2016 at 06:59:44PM +0900, AKASHI Takahiro wrote:
-> > From: James Morse <james.morse@arm.com>
-> > 
-> > Add documentation for
-> > 	linux,crashkernel-base and crashkernel-size,
-> > 	linux,usable-memory-range
-> > 	linux,elfcorehdr
-> > used by arm64 kdump to decribe the kdump reserved area, and
-> > the elfcorehdr's location within it.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > [takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> 
-> Rob, Mark, are you ok with this patch?
+On 11/30/2016 at 10:26 PM, Joerg Roedel wrote:
+> On Wed, Nov 30, 2016 at 06:23:34PM +0800, Baoquan He wrote:
+>> OK, talked with Xunlei. The old cache could be entry with present bit
+>> set.
+> -EPARSE
+>
+> Anyway, what I was trying to say is, that the IOMMU TLB is tagged with
+> domain-ids, and that there is also a context-cache which maps device-ids
+> to domain-ids.
+>
+> If we update the context entry then we need to flush only the context
+> entry, as it will point to a new domain-id then and future IOTLB lookups
+> in the IOMMU will be using the new domain-id and do not match the old
+> entries.
 
-I'm leaving this one to Mark.
+Hi Joerg,
 
-Rob
+Thanks for the explanation, and we still need to flush context cache using old domain-id, right?
+How about the following update?
+
+index 3965e73..624eac9 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -2024,6 +2024,25 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
+        if (context_present(context))
+                goto out_unlock;
+ 
++       /*
++        * For kdump cases, old valid entries may be cached due to the
++        * in-flight DMA and copied pgtable, but there is no unmapping
++        * behaviour for them, thus we need an explicit cache flush for
++        * the newly-mapped device. For kdump, at this point, the device
++        * is supposed to finish reset at its driver probe stage, so no
++        * in-flight DMA will exist, and we don't need to worry anymore
++        * hereafter.
++        */
++       if (context_copied(context)) {
++               u16 did_old = context_domain_id(context);
++
++               if (did_old >= 0 && did_old < cap_ndoms(iommu->cap))
++                       iommu->flush.flush_context(iommu, did_old,
++                                                  (((u16)bus) << 8) | devfn,
++                                                  DMA_CCMD_MASK_NOBIT,
++                                                  DMA_CCMD_DEVICE_INVL);
++       }
++
+        pgd = domain->pgd;
+
 
 _______________________________________________
 kexec mailing list
