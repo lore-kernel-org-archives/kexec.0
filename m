@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cCJQy-0003wM-5m
- for kexec@lists.infradead.org; Thu, 01 Dec 2016 04:57:25 +0000
-Date: Thu, 1 Dec 2016 12:56:53 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
- functions
-Message-ID: <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
-References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
- <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
+ id 1cCPlc-0002tq-K1
+ for kexec@lists.infradead.org; Thu, 01 Dec 2016 11:43:10 +0000
+Subject: Re: [PATCH] iommu/vt-d: Flush old iotlb for kdump when the device
+ gets context mapped
+References: <582C232F.6080205@redhat.com>
+ <CAL-B5D1kkWE4e6P1xY1Cgkf-7+nBXH=C7g21=phEzmM4FPZRRQ@mail.gmail.com>
+ <582D1A40.409@redhat.com> <20161129143547.GG2078@8bytes.org>
+ <583E8A9B.7070906@redhat.com> <20161130090327.GA4192@x1>
+ <20161130095334.GB4192@x1> <20161130102334.GC4192@x1>
+ <20161130142642.GJ2078@8bytes.org> <583F87D1.6030402@redhat.com>
+ <20161201103307.GL2078@8bytes.org>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <58400D00.6070708@redhat.com>
+Date: Thu, 1 Dec 2016 19:44:00 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
+In-Reply-To: <20161201103307.GL2078@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,158 +25,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
+To: Joerg Roedel <joro@8bytes.org>, xlpang@redhat.com
+Cc: Don Brace <don.brace@microsemi.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Myron Stowe <myron.stowe@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, David Woodhouse <dwmw2@infradead.org>
 
-Hi Hari
+On 12/01/2016 at 06:33 PM, Joerg Roedel wrote:
+> On Thu, Dec 01, 2016 at 10:15:45AM +0800, Xunlei Pang wrote:
+>> index 3965e73..624eac9 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -2024,6 +2024,25 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
+>>         if (context_present(context))
+>>                 goto out_unlock;
+>>  
+>> +       /*
+>> +        * For kdump cases, old valid entries may be cached due to the
+>> +        * in-flight DMA and copied pgtable, but there is no unmapping
+>> +        * behaviour for them, thus we need an explicit cache flush for
+>> +        * the newly-mapped device. For kdump, at this point, the device
+>> +        * is supposed to finish reset at its driver probe stage, so no
+>> +        * in-flight DMA will exist, and we don't need to worry anymore
+>> +        * hereafter.
+>> +        */
+>> +       if (context_copied(context)) {
+>> +               u16 did_old = context_domain_id(context);
+>> +
+>> +               if (did_old >= 0 && did_old < cap_ndoms(iommu->cap))
+>> +                       iommu->flush.flush_context(iommu, did_old,
+>> +                                                  (((u16)bus) << 8) | devfn,
+>> +                                                  DMA_CCMD_MASK_NOBIT,
+>> +                                                  DMA_CCMD_DEVICE_INVL);
+>> +       }
+>> +
+>>         pgd = domain->pgd;
+> Yes, this looks better. Have you tested it the same way as the old
+> patch?
 
-Personally I like V1 more, but split the patch 2 is easier for ia64
-people to reivew.  I did basic x86 testing, it runs ok.
+Yes, I have tested and it works, will send v3 later.
 
-On 11/25/16 at 05:24pm, Hari Bathini wrote:
-> Get rid of multiple definitions of append_elf_note() & final_note()
-> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> ---
->  arch/ia64/kernel/crash.c   |   22 ----------------------
->  include/linux/crash_core.h |    4 ++++
->  kernel/crash_core.c        |    6 +++---
->  kernel/kexec_core.c        |   28 ----------------------------
->  4 files changed, 7 insertions(+), 53 deletions(-)
-> 
-> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
-> index 2955f35..75859a0 100644
-> --- a/arch/ia64/kernel/crash.c
-> +++ b/arch/ia64/kernel/crash.c
-> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
->  static int kdump_on_init = 1;
->  static int kdump_on_fatal_mca = 1;
->  
-> -static inline Elf64_Word
-> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
-> -		size_t data_len)
-> -{
-> -	struct elf_note *note = (struct elf_note *)buf;
-> -	note->n_namesz = strlen(name) + 1;
-> -	note->n_descsz = data_len;
-> -	note->n_type   = type;
-> -	buf += (sizeof(*note) + 3)/4;
-> -	memcpy(buf, name, note->n_namesz);
-> -	buf += (note->n_namesz + 3)/4;
-> -	memcpy(buf, data, data_len);
-> -	buf += (data_len + 3)/4;
-> -	return buf;
-> -}
-> -
-> -static void
-> -final_note(void *buf)
-> -{
-> -	memset(buf, 0, sizeof(struct elf_note));
-> -}
-> -
-
-The above IA64 version looks better than the functions in kexec_core.c
-about the Elf64_Word type usage and the simpler final_note function.
-
-Care to update crash_core.c to use this instead?
-
-Otherwise I'm fine with the changes.
-
->  extern void ia64_dump_cpu_regs(void *);
->  
->  static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 9a4f4b0..2ae20b1 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -61,6 +61,10 @@ extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
->  extern size_t vmcoreinfo_size;
->  extern size_t vmcoreinfo_max_size;
->  
-> +u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
-> +		     void *data, size_t data_len);
-> +void final_note(u32 *buf);
-> +
->  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base);
->  int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 60a98fc..9223976 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -291,8 +291,8 @@ int __init parse_crashkernel_low(char *cmdline,
->  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
->  }
->  
-> -static u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
-> -			    void *data, size_t data_len)
-> +u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
-> +		     void *data, size_t data_len)
->  {
->  	struct elf_note note;
->  
-> @@ -309,7 +309,7 @@ static u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
->  	return buf;
->  }
->  
-> -static void final_note(u32 *buf)
-> +void final_note(u32 *buf)
->  {
->  	struct elf_note note;
->  
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 3aa21f3..596cb32 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -988,34 +988,6 @@ int crash_shrink_memory(unsigned long new_size)
->  	return ret;
->  }
->  
-> -static u32 *append_elf_note(u32 *buf, char *name, unsigned type, void *data,
-> -			    size_t data_len)
-> -{
-> -	struct elf_note note;
-> -
-> -	note.n_namesz = strlen(name) + 1;
-> -	note.n_descsz = data_len;
-> -	note.n_type   = type;
-> -	memcpy(buf, &note, sizeof(note));
-> -	buf += (sizeof(note) + 3)/4;
-> -	memcpy(buf, name, note.n_namesz);
-> -	buf += (note.n_namesz + 3)/4;
-> -	memcpy(buf, data, note.n_descsz);
-> -	buf += (note.n_descsz + 3)/4;
-> -
-> -	return buf;
-> -}
-> -
-> -static void final_note(u32 *buf)
-> -{
-> -	struct elf_note note;
-> -
-> -	note.n_namesz = 0;
-> -	note.n_descsz = 0;
-> -	note.n_type   = 0;
-> -	memcpy(buf, &note, sizeof(note));
-> -}
-> -
->  void crash_save_cpu(struct pt_regs *regs, int cpu)
->  {
->  	struct elf_prstatus prstatus;
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
+Regards,
+Xunlei
 
 _______________________________________________
 kexec mailing list
