@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cCGtk-0001SI-5O
- for kexec@lists.infradead.org; Thu, 01 Dec 2016 02:14:57 +0000
-Subject: Re: [PATCH] iommu/vt-d: Flush old iotlb for kdump when the device
- gets context mapped
-References: <1479286950-21885-1-git-send-email-xlpang@redhat.com>
- <582C232F.6080205@redhat.com>
- <CAL-B5D1kkWE4e6P1xY1Cgkf-7+nBXH=C7g21=phEzmM4FPZRRQ@mail.gmail.com>
- <582D1A40.409@redhat.com> <20161129143547.GG2078@8bytes.org>
- <583E8A9B.7070906@redhat.com> <20161130090327.GA4192@x1>
- <20161130095334.GB4192@x1> <20161130102334.GC4192@x1>
- <20161130142642.GJ2078@8bytes.org>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <583F87D1.6030402@redhat.com>
-Date: Thu, 1 Dec 2016 10:15:45 +0800
+Date: Thu, 1 Dec 2016 10:41:03 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCHv4 07/10] kexec: Switch to __pa_symbol
+Message-ID: <20161201024103.GA32438@dhcp-128-65.nay.redhat.com>
+References: <1480445729-27130-1-git-send-email-labbott@redhat.com>
+ <1480445729-27130-8-git-send-email-labbott@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20161130142642.GJ2078@8bytes.org>
+Content-Disposition: inline
+In-Reply-To: <1480445729-27130-8-git-send-email-labbott@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +16,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>, Baoquan He <bhe@redhat.com>
-Cc: Don Brace <don.brace@microsemi.com>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, xlpang@redhat.com, LKML <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, Myron Stowe <myron.stowe@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+To: Laura Abbott <labbott@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 
-On 11/30/2016 at 10:26 PM, Joerg Roedel wrote:
-> On Wed, Nov 30, 2016 at 06:23:34PM +0800, Baoquan He wrote:
->> OK, talked with Xunlei. The old cache could be entry with present bit
->> set.
-> -EPARSE
->
-> Anyway, what I was trying to say is, that the IOMMU TLB is tagged with
-> domain-ids, and that there is also a context-cache which maps device-ids
-> to domain-ids.
->
-> If we update the context entry then we need to flush only the context
-> entry, as it will point to a new domain-id then and future IOTLB lookups
-> in the IOMMU will be using the new domain-id and do not match the old
-> entries.
+Hi, Laura
+On 11/29/16 at 10:55am, Laura Abbott wrote:
+> 
+> __pa_symbol is the correct api to get the physical address of kernel
+> symbols. Switch to it to allow for better debug checking.
+> 
 
-Hi Joerg,
+I assume __pa_symbol is faster than __pa, but it still need some testing
+on all arches which support kexec.
 
-Thanks for the explanation, and we still need to flush context cache using old domain-id, right?
-How about the following update?
+But seems long long ago there is a commit e3ebadd95cb in the commit log
+I see below from:
+"we should deprecate __pa_symbol(), and preferably __pa() too - and
+ just use "virt_to_phys()" instead, which is is more readable and has
+ nicer semantics."
 
-index 3965e73..624eac9 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2024,6 +2024,25 @@ static int domain_context_mapping_one(struct dmar_domain *domain,
-        if (context_present(context))
-                goto out_unlock;
- 
-+       /*
-+        * For kdump cases, old valid entries may be cached due to the
-+        * in-flight DMA and copied pgtable, but there is no unmapping
-+        * behaviour for them, thus we need an explicit cache flush for
-+        * the newly-mapped device. For kdump, at this point, the device
-+        * is supposed to finish reset at its driver probe stage, so no
-+        * in-flight DMA will exist, and we don't need to worry anymore
-+        * hereafter.
-+        */
-+       if (context_copied(context)) {
-+               u16 did_old = context_domain_id(context);
-+
-+               if (did_old >= 0 && did_old < cap_ndoms(iommu->cap))
-+                       iommu->flush.flush_context(iommu, did_old,
-+                                                  (((u16)bus) << 8) | devfn,
-+                                                  DMA_CCMD_MASK_NOBIT,
-+                                                  DMA_CCMD_DEVICE_INVL);
-+       }
-+
-        pgd = domain->pgd;
+But maybe in modern code __pa_symbol is prefered I may miss background.
+virt_to_phys still sounds more readable now for me though.
 
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> ---
+> Found during review of the kernel. Untested.
+> ---
+>  kernel/kexec_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..e1b625e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1397,7 +1397,7 @@ void __weak arch_crash_save_vmcoreinfo(void)
+>  
+>  phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>  {
+> -	return __pa((unsigned long)(char *)&vmcoreinfo_note);
+> +	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
+>  }
+>  
+>  static int __init crash_save_vmcoreinfo_init(void)
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
