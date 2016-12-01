@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 1 Dec 2016 12:27:03 +0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cCJQy-0003wM-5m
+ for kexec@lists.infradead.org; Thu, 01 Dec 2016 04:57:25 +0000
+Date: Thu, 1 Dec 2016 12:56:53 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCHv4 07/10] kexec: Switch to __pa_symbol
-Message-ID: <20161201042703.GA13113@dhcp-128-65.nay.redhat.com>
-References: <1480445729-27130-1-git-send-email-labbott@redhat.com>
- <1480445729-27130-8-git-send-email-labbott@redhat.com>
- <20161201024103.GA32438@dhcp-128-65.nay.redhat.com>
- <87polc7357.fsf@xmission.com>
+Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
+ functions
+Message-ID: <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
+References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
+ <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87polc7357.fsf@xmission.com>
+In-Reply-To: <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,81 +25,154 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Laura Abbott <labbott@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
 
-On 11/30/16 at 09:13pm, Eric W. Biederman wrote:
-> Dave Young <dyoung@redhat.com> writes:
-> 
-> > Hi, Laura
-> > On 11/29/16 at 10:55am, Laura Abbott wrote:
-> >> 
-> >> __pa_symbol is the correct api to get the physical address of kernel
-> >> symbols. Switch to it to allow for better debug checking.
-> >> 
-> >
-> > I assume __pa_symbol is faster than __pa, but it still need some testing
-> > on all arches which support kexec.
-> >
-> > But seems long long ago there is a commit e3ebadd95cb in the commit log
-> > I see below from:
-> > "we should deprecate __pa_symbol(), and preferably __pa() too - and
-> >  just use "virt_to_phys()" instead, which is is more readable and has
-> >  nicer semantics."
-> >
-> > But maybe in modern code __pa_symbol is prefered I may miss background.
-> > virt_to_phys still sounds more readable now for me though.
-> 
-> There has been a lot of history with the various definitions.
-> __pa_symbol used to be x86 specific.
-> 
-> Now what we have is that __pa_symbol is just __pa(RELOC_HIDE(x));
-> 
-> Now arguably that whole reloc hide thing should happen by architectures
-> having a non-inline version of __pa as was done in the commit you
-> mention.  But at this point there appears to be nothing wrong with
-> changing a __pa to a __pa_symbol it might make things a tad more
-> reliable depending on the implementation of __pa.
+Hi Hari
 
-Then it is safe and reasonable, thanks for the clarification. 
+Personally I like V1 more, but split the patch 2 is easier for ia64
+people to reivew.  I did basic x86 testing, it runs ok.
 
+On 11/25/16 at 05:24pm, Hari Bathini wrote:
+> Get rid of multiple definitions of append_elf_note() & final_note()
+> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
 > 
-> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> ---
+>  arch/ia64/kernel/crash.c   |   22 ----------------------
+>  include/linux/crash_core.h |    4 ++++
+>  kernel/crash_core.c        |    6 +++---
+>  kernel/kexec_core.c        |   28 ----------------------------
+>  4 files changed, 7 insertions(+), 53 deletions(-)
+> 
+> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
+> index 2955f35..75859a0 100644
+> --- a/arch/ia64/kernel/crash.c
+> +++ b/arch/ia64/kernel/crash.c
+> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
+>  static int kdump_on_init = 1;
+>  static int kdump_on_fatal_mca = 1;
+>  
+> -static inline Elf64_Word
+> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
+> -		size_t data_len)
+> -{
+> -	struct elf_note *note = (struct elf_note *)buf;
+> -	note->n_namesz = strlen(name) + 1;
+> -	note->n_descsz = data_len;
+> -	note->n_type   = type;
+> -	buf += (sizeof(*note) + 3)/4;
+> -	memcpy(buf, name, note->n_namesz);
+> -	buf += (note->n_namesz + 3)/4;
+> -	memcpy(buf, data, data_len);
+> -	buf += (data_len + 3)/4;
+> -	return buf;
+> -}
+> -
+> -static void
+> -final_note(void *buf)
+> -{
+> -	memset(buf, 0, sizeof(struct elf_note));
+> -}
+> -
+
+The above IA64 version looks better than the functions in kexec_core.c
+about the Elf64_Word type usage and the simpler final_note function.
+
+Care to update crash_core.c to use this instead?
+
+Otherwise I'm fine with the changes.
+
+>  extern void ia64_dump_cpu_regs(void *);
+>  
+>  static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 9a4f4b0..2ae20b1 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -61,6 +61,10 @@ extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+>  extern size_t vmcoreinfo_size;
+>  extern size_t vmcoreinfo_max_size;
+>  
+> +u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
+> +		     void *data, size_t data_len);
+> +void final_note(u32 *buf);
+> +
+>  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 60a98fc..9223976 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -291,8 +291,8 @@ int __init parse_crashkernel_low(char *cmdline,
+>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+>  }
+>  
+> -static u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
+> -			    void *data, size_t data_len)
+> +u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
+> +		     void *data, size_t data_len)
+>  {
+>  	struct elf_note note;
+>  
+> @@ -309,7 +309,7 @@ static u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
+>  	return buf;
+>  }
+>  
+> -static void final_note(u32 *buf)
+> +void final_note(u32 *buf)
+>  {
+>  	struct elf_note note;
+>  
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 3aa21f3..596cb32 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -988,34 +988,6 @@ int crash_shrink_memory(unsigned long new_size)
+>  	return ret;
+>  }
+>  
+> -static u32 *append_elf_note(u32 *buf, char *name, unsigned type, void *data,
+> -			    size_t data_len)
+> -{
+> -	struct elf_note note;
+> -
+> -	note.n_namesz = strlen(name) + 1;
+> -	note.n_descsz = data_len;
+> -	note.n_type   = type;
+> -	memcpy(buf, &note, sizeof(note));
+> -	buf += (sizeof(note) + 3)/4;
+> -	memcpy(buf, name, note.n_namesz);
+> -	buf += (note.n_namesz + 3)/4;
+> -	memcpy(buf, data, note.n_descsz);
+> -	buf += (note.n_descsz + 3)/4;
+> -
+> -	return buf;
+> -}
+> -
+> -static void final_note(u32 *buf)
+> -{
+> -	struct elf_note note;
+> -
+> -	note.n_namesz = 0;
+> -	note.n_descsz = 0;
+> -	note.n_type   = 0;
+> -	memcpy(buf, &note, sizeof(note));
+> -}
+> -
+>  void crash_save_cpu(struct pt_regs *regs, int cpu)
+>  {
+>  	struct elf_prstatus prstatus;
 > 
 > 
-> Eric
-> 
-> >> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> >> ---
-> >> Found during review of the kernel. Untested.
-> >> ---
-> >>  kernel/kexec_core.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> 
-> >> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> >> index 5616755..e1b625e 100644
-> >> --- a/kernel/kexec_core.c
-> >> +++ b/kernel/kexec_core.c
-> >> @@ -1397,7 +1397,7 @@ void __weak arch_crash_save_vmcoreinfo(void)
-> >>  
-> >>  phys_addr_t __weak paddr_vmcoreinfo_note(void)
-> >>  {
-> >> -	return __pa((unsigned long)(char *)&vmcoreinfo_note);
-> >> +	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
-> >>  }
-> >>  
-> >>  static int __init crash_save_vmcoreinfo_init(void)
-> >> -- 
-> >> 2.7.4
-> >> 
-> >> 
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
-> >
-> > Thanks
-> > Dave
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
