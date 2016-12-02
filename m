@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mailapp01.imgtec.com ([195.59.15.196])
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cCkTa-0000w3-Ur
- for kexec@lists.infradead.org; Fri, 02 Dec 2016 09:50:00 +0000
-Received: from HHMAIL01.hh.imgtec.org (unknown [10.100.10.19])
- by Forcepoint Email with ESMTPS id 74D47F59B146C
- for <kexec@lists.infradead.org>; Fri,  2 Dec 2016 09:49:28 +0000 (GMT)
+ id 1cCkTy-00017V-7u
+ for kexec@lists.infradead.org; Fri, 02 Dec 2016 09:50:19 +0000
 From: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
-Subject: [PATCH 3/6] mips: move arch option parsing from elf loader to common
- arch code
-Date: Fri, 2 Dec 2016 10:49:08 +0100
-Message-ID: <1480672151-18503-4-git-send-email-marcin.nowakowski@imgtec.com>
+Subject: [PATCH 6/6] mips: add option to load initrd from a specified file
+Date: Fri, 2 Dec 2016 10:49:11 +0100
+Message-ID: <1480672151-18503-7-git-send-email-marcin.nowakowski@imgtec.com>
 In-Reply-To: <1480672151-18503-1-git-send-email-marcin.nowakowski@imgtec.com>
 References: <1480672151-18503-1-git-send-email-marcin.nowakowski@imgtec.com>
 MIME-Version: 1.0
@@ -27,178 +23,116 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
 
-At the moment only commandline handling is implemented and there is
-nothing elf-specific about it, so all of the commandline parsing logic
-can be moved to common arch code.
-getopt() options are moved to KEXEC_ARCH_OPTIONS macro (as many
-platforms currently do) to avoid unnecessary duplication.
+Use kexec's existing infrastrucutre for supporting initrd loading.
+The initrd image is loaded into a buffer after the dtb and its details
+passed through the device tree, so it's supported on newer platforms
+that make use of the device tree passed from kexec.
 
 Signed-off-by: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
 ---
- kexec/arch/mips/include/arch/options.h |  6 ++---
- kexec/arch/mips/kexec-elf-mips.c       | 43 ++++------------------------------
- kexec/arch/mips/kexec-mips.c           | 22 +++++++++++++++++
- kexec/arch/mips/kexec-mips.h           |  3 ++-
- 4 files changed, 32 insertions(+), 42 deletions(-)
+ kexec/arch/mips/include/arch/options.h |  4 +++-
+ kexec/arch/mips/kexec-elf-mips.c       | 19 +++++++++++++++++++
+ kexec/arch/mips/kexec-mips.c           |  4 ++++
+ kexec/arch/mips/kexec-mips.h           |  1 +
+ 4 files changed, 27 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/arch/mips/include/arch/options.h b/kexec/arch/mips/include/arch/options.h
-index 07b4f63..a18251b 100644
+index 86b620f..416e224 100644
 --- a/kexec/arch/mips/include/arch/options.h
 +++ b/kexec/arch/mips/include/arch/options.h
-@@ -9,6 +9,8 @@
-  */
- #define KEXEC_ARCH_OPTIONS \
+@@ -4,6 +4,7 @@
+ #define OPT_ARCH_MAX	(OPT_MAX+0)
+ #define OPT_APPEND	(OPT_ARCH_MAX+0)
+ #define OPT_DTB		(OPT_ARCH_MAX+1)
++#define OPT_RAMDISK	(OPT_ARCH_MAX+2)
+ 
+ /* Options relevant to the architecture (excluding loader-specific ones),
+  * in this case none:
+@@ -12,7 +13,8 @@
  	KEXEC_OPTIONS \
-+	{"command-line", 1, 0, OPT_APPEND}, \
-+	{"append",	 1, 0, OPT_APPEND},
+ 	{"command-line", 1, 0, OPT_APPEND}, \
+ 	{"append",	 1, 0, OPT_APPEND}, \
+-	{"dtb",		1, 0, OPT_DTB },
++	{"dtb",		1, 0, OPT_DTB }, \
++	{"initrd",	1, 0, OPT_RAMDISK },
+ 
  
  #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
- 
-@@ -27,9 +29,7 @@
-  * recognise -- as they now recognise (if not act upon) all possible options.
-  */
- #define KEXEC_ALL_OPTIONS			\
--	KEXEC_ARCH_OPTIONS		       	\
--	{"command-line", 1, 0, OPT_APPEND},	\
--	{"append",	 1, 0, OPT_APPEND},
-+	KEXEC_ARCH_OPTIONS
- 
- #define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
- 
 diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
-index 8a6419a..7cb06f1 100644
+index 6ca7ca0..849a7ba 100644
 --- a/kexec/arch/mips/kexec-elf-mips.c
 +++ b/kexec/arch/mips/kexec-elf-mips.c
-@@ -63,51 +63,18 @@ int elf_mips_probe(const char *buf, off_t len)
- 
- void elf_mips_usage(void)
- {
--	printf("    --command-line=STRING Set the kernel command line to "
--			"STRING.\n"
--	       "    --append=STRING       Set the kernel command line to "
--			"STRING.\n");
- }
- 
- int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info)
- {
- 	struct mem_ehdr ehdr;
--	const char *command_line;
--	int command_line_len;
-+	int command_line_len = 0;
- 	char *crash_cmdline;
--	int opt;
- 	int result;
- 	unsigned long cmdline_addr;
+@@ -79,6 +79,7 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
  	size_t i;
+ 	off_t dtb_length;
+ 	char *dtb_buf;
++	char *initrd_buf = NULL;
+ 	unsigned long long kernel_addr = 0, kernel_size = 0;
+ 	unsigned long pagesize = getpagesize();
  
--	/* See options.h if adding any more options. */
--	static const struct option options[] = {
--		KEXEC_ARCH_OPTIONS
--		{"command-line", 1, 0, OPT_APPEND},
--		{"append",       1, 0, OPT_APPEND},
--		{0, 0, 0, 0},
--	};
--
--	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
--
--	command_line = 0;
--	while ((opt = getopt_long(argc, argv, short_options,
--				  options, 0)) != -1) {
--		switch (opt) {
--		default:
--			/* Ignore core options */
--			if (opt < OPT_ARCH_MAX) {
--				break;
--			}
--		case OPT_APPEND:
--			command_line = optarg;
--			break;
--		}
--	}
--
--	command_line_len = 0;
--
- 	/* Need to append some command line parameters internally in case of
- 	 * taking crash dumps.
- 	 */
-@@ -136,8 +103,8 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
- 
- 	info->entry = (void *)virt_to_phys(ehdr.e_entry);
- 
--	if (command_line)
--		command_line_len = strlen(command_line) + 1;
-+	if (arch_options.command_line)
-+		command_line_len = strlen(arch_options.command_line) + 1;
- 
- 	if (info->kexec_flags & KEXEC_ON_CRASH) {
- 		result = load_crashdump_segments(info, crash_cmdline,
-@@ -148,8 +115,8 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
- 		}
+@@ -152,6 +153,24 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
+ 		create_flatten_tree(&dtb_buf, &dtb_length, cmdline_buf + strlen(CMDLINE_PREFIX));
  	}
  
--	if (command_line)
--		strncat(cmdline_buf, command_line, command_line_len);
-+	if (arch_options.command_line)
-+		strncat(cmdline_buf, arch_options.command_line, command_line_len);
- 	if (crash_cmdline)
- 		strncat(cmdline_buf, crash_cmdline,
- 				sizeof(crash_cmdline) -
-diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
-index de9019a..867e9c3 100644
---- a/kexec/arch/mips/kexec-mips.c
-+++ b/kexec/arch/mips/kexec-mips.c
-@@ -74,6 +74,10 @@ int file_types = sizeof(file_type) / sizeof(file_type[0]);
- 
- void arch_usage(void)
- {
-+	printf(
-+	"    --command-line=STRING Set the kernel command line to STRING.\n"
-+	"    --append=STRING       Set the kernel command line to STRING.\n"
-+	);
- }
- 
- struct arch_options_t arch_options = {
-@@ -86,6 +90,24 @@ struct arch_options_t arch_options = {
- 
- int arch_process_options(int argc, char **argv)
- {
-+	static const struct option options[] = {
-+		KEXEC_ARCH_OPTIONS
-+		{ 0 },
-+	};
-+	static const char short_options[] = KEXEC_ARCH_OPT_STR;
-+	int opt;
++	if (arch_options.initrd_file) {
++		initrd_buf = slurp_file(arch_options.initrd_file, &initrd_size);
 +
-+	while ((opt = getopt_long(argc, argv, short_options,
-+				  options, 0)) != -1) {
-+		switch (opt) {
-+		case OPT_APPEND:
-+			arch_options.command_line = optarg;
-+			break;
-+		default:
-+			break;
-+		}
++		/* Create initrd entries in dtb - although at this time
++		 * they would not point to the correct location */
++		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_buf, initrd_buf + initrd_size);
++
++		initrd_base = add_buffer(info, initrd_buf, initrd_size,
++					initrd_size, sizeof(void *),
++					_ALIGN_UP(kernel_addr + kernel_size + dtb_length,
++						pagesize), 0x0fffffff, 1);
++
++		/* Now that the buffer for initrd is prepared, update the dtb
++		 * with an appropriate location */
++		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_base, initrd_base + initrd_size);
 +	}
 +
- 	return 0;
++
+ 	/* This is a legacy method for commandline passing used
+ 	 * currently by Octeon CPUs only */
+ 	add_buffer(info, cmdline_buf, sizeof(cmdline_buf),
+diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+index 2605c17..ee3cd3a 100644
+--- a/kexec/arch/mips/kexec-mips.c
++++ b/kexec/arch/mips/kexec-mips.c
+@@ -82,6 +82,7 @@ void arch_usage(void)
+ 	"    --command-line=STRING Set the kernel command line to STRING.\n"
+ 	"    --append=STRING       Set the kernel command line to STRING.\n"
+ 	"    --dtb=FILE            Use FILE as the device tree blob.\n"
++	"    --initrd=FILE         Use FILE as initial ramdisk.\n"
+ 	);
  }
  
+@@ -111,6 +112,9 @@ int arch_process_options(int argc, char **argv)
+ 		case OPT_DTB:
+ 			arch_options.dtb_file = optarg;
+ 			break;
++		case OPT_RAMDISK:
++			arch_options.initrd_file = optarg;
++			break;
+ 		default:
+ 			break;
+ 		}
 diff --git a/kexec/arch/mips/kexec-mips.h b/kexec/arch/mips/kexec-mips.h
-index e67960b..2991b2d 100644
+index a609fb5..222c815 100644
 --- a/kexec/arch/mips/kexec-mips.h
 +++ b/kexec/arch/mips/kexec-mips.h
-@@ -13,7 +13,8 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
- void elf_mips_usage(void);
- 
+@@ -20,6 +20,7 @@ void elf_mips_usage(void);
  struct arch_options_t {
--	int      core_header_type;
-+	char *command_line;
-+	int core_header_type;
+ 	char *command_line;
+ 	char *dtb_file;
++	char *initrd_file;
+ 	int core_header_type;
  };
  
- #endif /* KEXEC_MIPS_H */
 -- 
 2.7.4
 
