@@ -1,43 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cClzo-0003m6-73
- for kexec@lists.infradead.org; Fri, 02 Dec 2016 11:27:17 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- uB2BQUWX068441
- for <kexec@lists.infradead.org>; Fri, 2 Dec 2016 06:26:54 -0500
-Received: from e28smtp04.in.ibm.com (e28smtp04.in.ibm.com [125.16.236.4])
- by mx0a-001b2d01.pphosted.com with ESMTP id 2737vt8gty-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 02 Dec 2016 06:26:54 -0500
-Received: from localhost
- by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 2 Dec 2016 16:56:50 +0530
-Received: from d28relay06.in.ibm.com (d28relay06.in.ibm.com [9.184.220.150])
- by d28dlp02.in.ibm.com (Postfix) with ESMTP id 5D3C83940061
- for <kexec@lists.infradead.org>; Fri,  2 Dec 2016 16:56:49 +0530 (IST)
-Received: from d28av06.in.ibm.com (d28av06.in.ibm.com [9.184.220.48])
- by d28relay06.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- uB2BQnX127263110
- for <kexec@lists.infradead.org>; Fri, 2 Dec 2016 16:56:49 +0530
-Received: from d28av06.in.ibm.com (localhost [127.0.0.1])
- by d28av06.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- uB2BQmfR008965
- for <kexec@lists.infradead.org>; Fri, 2 Dec 2016 16:56:49 +0530
-Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
- functions
+ id 1cCtTF-00007H-2Q
+ for kexec@lists.infradead.org; Fri, 02 Dec 2016 19:26:10 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
  <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
  <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Fri, 2 Dec 2016 16:56:48 +0530
+ <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com>
+Date: Fri, 02 Dec 2016 13:22:39 -0600
+In-Reply-To: <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com> (Hari
+ Bathini's message of "Fri, 2 Dec 2016 16:56:48 +0530")
+Message-ID: <87mvge16gw.fsf@xmission.com>
 MIME-Version: 1.0
-In-Reply-To: <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
-Message-Id: <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
+ functions
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -46,81 +23,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
 
-Hi Dave,
+Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
 
-
-Thanks for the review.
-
-
-On Thursday 01 December 2016 10:26 AM, Dave Young wrote:
-> Hi Hari
+> Hi Dave,
 >
-> Personally I like V1 more, but split the patch 2 is easier for ia64
-> people to reivew.  I did basic x86 testing, it runs ok.
 >
-> On 11/25/16 at 05:24pm, Hari Bathini wrote:
->> Get rid of multiple definitions of append_elf_note() & final_note()
->> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
+> Thanks for the review.
+>
+>
+> On Thursday 01 December 2016 10:26 AM, Dave Young wrote:
+>> Hi Hari
 >>
->> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
->> ---
->>   arch/ia64/kernel/crash.c   |   22 ----------------------
->>   include/linux/crash_core.h |    4 ++++
->>   kernel/crash_core.c        |    6 +++---
->>   kernel/kexec_core.c        |   28 ----------------------------
->>   4 files changed, 7 insertions(+), 53 deletions(-)
+>> Personally I like V1 more, but split the patch 2 is easier for ia64
+>> people to reivew.  I did basic x86 testing, it runs ok.
 >>
->> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
->> index 2955f35..75859a0 100644
->> --- a/arch/ia64/kernel/crash.c
->> +++ b/arch/ia64/kernel/crash.c
->> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
->>   static int kdump_on_init = 1;
->>   static int kdump_on_fatal_mca = 1;
->>   
->> -static inline Elf64_Word
->> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
->> -		size_t data_len)
->> -{
->> -	struct elf_note *note = (struct elf_note *)buf;
->> -	note->n_namesz = strlen(name) + 1;
->> -	note->n_descsz = data_len;
->> -	note->n_type   = type;
->> -	buf += (sizeof(*note) + 3)/4;
->> -	memcpy(buf, name, note->n_namesz);
->> -	buf += (note->n_namesz + 3)/4;
->> -	memcpy(buf, data, data_len);
->> -	buf += (data_len + 3)/4;
->> -	return buf;
->> -}
->> -
->> -static void
->> -final_note(void *buf)
->> -{
->> -	memset(buf, 0, sizeof(struct elf_note));
->> -}
->> -
-> The above IA64 version looks better than the functions in kexec_core.c
-> about the Elf64_Word type usage and the simpler final_note function.
+>> On 11/25/16 at 05:24pm, Hari Bathini wrote:
+>>> Get rid of multiple definitions of append_elf_note() & final_note()
+>>> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
+>>>
+>>> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+>>> ---
+>>>   arch/ia64/kernel/crash.c   |   22 ----------------------
+>>>   include/linux/crash_core.h |    4 ++++
+>>>   kernel/crash_core.c        |    6 +++---
+>>>   kernel/kexec_core.c        |   28 ----------------------------
+>>>   4 files changed, 7 insertions(+), 53 deletions(-)
+>>>
+>>> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
+>>> index 2955f35..75859a0 100644
+>>> --- a/arch/ia64/kernel/crash.c
+>>> +++ b/arch/ia64/kernel/crash.c
+>>> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
+>>>   static int kdump_on_init = 1;
+>>>   static int kdump_on_fatal_mca = 1;
+>>>   -static inline Elf64_Word
+>>> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
+>>> -		size_t data_len)
+>>> -{
+>>> -	struct elf_note *note = (struct elf_note *)buf;
+>>> -	note->n_namesz = strlen(name) + 1;
+>>> -	note->n_descsz = data_len;
+>>> -	note->n_type   = type;
+>>> -	buf += (sizeof(*note) + 3)/4;
+>>> -	memcpy(buf, name, note->n_namesz);
+>>> -	buf += (note->n_namesz + 3)/4;
+>>> -	memcpy(buf, data, data_len);
+>>> -	buf += (data_len + 3)/4;
+>>> -	return buf;
+>>> -}
+>>> -
+>>> -static void
+>>> -final_note(void *buf)
+>>> -{
+>>> -	memset(buf, 0, sizeof(struct elf_note));
+>>> -}
+>>> -
+>> The above IA64 version looks better than the functions in kexec_core.c
+>> about the Elf64_Word type usage and the simpler final_note function.
+>
+> Hmmm.. Is void* better over Elf64_Word* to be agnostic of Elf32 or
+> Elf64 type?
 
-Hmmm.. Is void* better over Elf64_Word* to be agnostic of Elf32 or Elf64 
-type?
+Both Elf64_Word and Elf32_Word result in a u32.  So I expect the right
+solution is to add a definition of Elf_Word to include/linux/elf.h
+and to make the buffer "Elf_Word *buf".
 
+That way we preserve the alignment knowledge, while making the code
+depend on 32bit or 64bit.
 
-> Care to update crash_core.c to use this instead?
-
-Sure. Will resend.
-
-Thanks
-Hari
-
+Eric
 
 _______________________________________________
 kexec mailing list
