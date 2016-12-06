@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-qt0-f174.google.com ([209.85.216.174])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cCtTF-00007H-2Q
- for kexec@lists.infradead.org; Fri, 02 Dec 2016 19:26:10 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
- <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
- <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
- <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com>
-Date: Fri, 02 Dec 2016 13:22:39 -0600
-In-Reply-To: <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com> (Hari
- Bathini's message of "Fri, 2 Dec 2016 16:56:48 +0530")
-Message-ID: <87mvge16gw.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
- functions
+ id 1cEPWY-0003zo-PR
+ for kexec@lists.infradead.org; Tue, 06 Dec 2016 23:51:55 +0000
+Received: by mail-qt0-f174.google.com with SMTP id n6so363253770qtd.1
+ for <kexec@lists.infradead.org>; Tue, 06 Dec 2016 15:51:30 -0800 (PST)
+From: Laura Abbott <labbott@redhat.com>
+Subject: [PATCHv5 08/11] kexec: Switch to __pa_symbol
+Date: Tue,  6 Dec 2016 15:50:54 -0800
+Message-Id: <1481068257-6367-9-git-send-email-labbott@redhat.com>
+In-Reply-To: <1481068257-6367-1-git-send-email-labbott@redhat.com>
+References: <1481068257-6367-1-git-send-email-labbott@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,82 +19,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>, vgoyal@redhat.com
+To: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Eric Biederman <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Thomas Gleixner <tglx@linutronix.de>, Laura Abbott <labbott@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 
-Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
 
-> Hi Dave,
->
->
-> Thanks for the review.
->
->
-> On Thursday 01 December 2016 10:26 AM, Dave Young wrote:
->> Hi Hari
->>
->> Personally I like V1 more, but split the patch 2 is easier for ia64
->> people to reivew.  I did basic x86 testing, it runs ok.
->>
->> On 11/25/16 at 05:24pm, Hari Bathini wrote:
->>> Get rid of multiple definitions of append_elf_note() & final_note()
->>> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
->>>
->>> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
->>> ---
->>>   arch/ia64/kernel/crash.c   |   22 ----------------------
->>>   include/linux/crash_core.h |    4 ++++
->>>   kernel/crash_core.c        |    6 +++---
->>>   kernel/kexec_core.c        |   28 ----------------------------
->>>   4 files changed, 7 insertions(+), 53 deletions(-)
->>>
->>> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
->>> index 2955f35..75859a0 100644
->>> --- a/arch/ia64/kernel/crash.c
->>> +++ b/arch/ia64/kernel/crash.c
->>> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
->>>   static int kdump_on_init = 1;
->>>   static int kdump_on_fatal_mca = 1;
->>>   -static inline Elf64_Word
->>> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
->>> -		size_t data_len)
->>> -{
->>> -	struct elf_note *note = (struct elf_note *)buf;
->>> -	note->n_namesz = strlen(name) + 1;
->>> -	note->n_descsz = data_len;
->>> -	note->n_type   = type;
->>> -	buf += (sizeof(*note) + 3)/4;
->>> -	memcpy(buf, name, note->n_namesz);
->>> -	buf += (note->n_namesz + 3)/4;
->>> -	memcpy(buf, data, data_len);
->>> -	buf += (data_len + 3)/4;
->>> -	return buf;
->>> -}
->>> -
->>> -static void
->>> -final_note(void *buf)
->>> -{
->>> -	memset(buf, 0, sizeof(struct elf_note));
->>> -}
->>> -
->> The above IA64 version looks better than the functions in kexec_core.c
->> about the Elf64_Word type usage and the simpler final_note function.
->
-> Hmmm.. Is void* better over Elf64_Word* to be agnostic of Elf32 or
-> Elf64 type?
+__pa_symbol is the correct api to get the physical address of kernel
+symbols. Switch to it to allow for better debug checking.
 
-Both Elf64_Word and Elf32_Word result in a u32.  So I expect the right
-solution is to add a definition of Elf_Word to include/linux/elf.h
-and to make the buffer "Elf_Word *buf".
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+v5: No changes, just acks
+---
+ kernel/kexec_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That way we preserve the alignment knowledge, while making the code
-depend on 32bit or 64bit.
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 5616755..e1b625e 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1397,7 +1397,7 @@ void __weak arch_crash_save_vmcoreinfo(void)
+ 
+ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ {
+-	return __pa((unsigned long)(char *)&vmcoreinfo_note);
++	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
+ }
+ 
+ static int __init crash_save_vmcoreinfo_init(void)
+-- 
+2.7.4
 
-Eric
 
 _______________________________________________
 kexec mailing list
