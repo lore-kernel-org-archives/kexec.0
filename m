@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cEZwl-0005Kh-Uk
- for kexec@lists.infradead.org; Wed, 07 Dec 2016 10:59:37 +0000
-Date: Wed, 7 Dec 2016 11:59:11 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [ANNOUNCE] kexec-tools v2.0.14 preparation
-Message-ID: <20161207105911.GD29752@verge.net.au>
-References: <20161202082424.GD32351@verge.net.au>
- <20161207094717.GA8047@dhcp-128-65.nay.redhat.com>
+Received: from szxga02-in.huawei.com ([119.145.14.65])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cEcBl-0005Xy-Kp
+ for kexec@lists.infradead.org; Wed, 07 Dec 2016 13:23:19 +0000
+From: zhongjiang <zhongjiang@huawei.com>
+Subject: [PATCH] kexec: add cond_resched into kimage_alloc_crash_control_pages
+Date: Wed, 7 Dec 2016 21:17:11 +0800
+Message-ID: <1481116631-33527-1-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161207094717.GA8047@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,79 +20,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
+To: ebiederm@xmission.com, akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Wed, Dec 07, 2016 at 05:47:17PM +0800, Dave Young wrote:
-> On 12/02/16 at 09:24am, Simon Horman wrote:
-> > Hi all,
-> > 
-> > I am planning to release kexec-tools v2.0.14 around the time that
-> > the v4.9 kernel is released.
-> > 
-> > I would like to ask interested parties to send any patches they would like
-> > included in v2.0.14 within one week so that I can make an rc release.
-> 
-> Hi, Simon
-> 
-> I saw a kexec -p load error, below patch fixes it, I have no time
-> today, will check the details, do more test and send it out tomorrow.
+From: zhong jiang <zhongjiang@huawei.com>
 
-Hi Dave,
+A soft lookup will occur when I run trinity in syscall kexec_load.
+the corresponding stack information is as follows.
 
-lets hold the rc lease for a day or so to give you a little
-time to get to the bottom of this.
+[  237.235937] BUG: soft lockup - CPU#6 stuck for 22s! [trinity-c6:13859]
+[  237.242699] Kernel panic - not syncing: softlockup: hung tasks
+[  237.248573] CPU: 6 PID: 13859 Comm: trinity-c6 Tainted: G           O L ----V-------   3.10.0-327.28.3.35.zhongjiang.x86_64 #1
+[  237.259984] Hardware name: Huawei Technologies Co., Ltd. Tecal BH622 V2/BC01SRSA0, BIOS RMIBV386 06/30/2014
+[  237.269752]  ffffffff8187626b 0000000018cfde31 ffff88184c803e18 ffffffff81638f16
+[  237.277471]  ffff88184c803e98 ffffffff8163278f 0000000000000008 ffff88184c803ea8
+[  237.285190]  ffff88184c803e48 0000000018cfde31 ffff88184c803e67 0000000000000000
+[  237.292909] Call Trace:
+[  237.295404]  <IRQ>  [<ffffffff81638f16>] dump_stack+0x19/0x1b
+[  237.301352]  [<ffffffff8163278f>] panic+0xd8/0x214
+[  237.306196]  [<ffffffff8111d6fc>] watchdog_timer_fn+0x1cc/0x1e0
+[  237.312157]  [<ffffffff8111d530>] ? watchdog_enable+0xc0/0xc0
+[  237.317955]  [<ffffffff810aa182>] __hrtimer_run_queues+0xd2/0x260
+[  237.324087]  [<ffffffff810aa720>] hrtimer_interrupt+0xb0/0x1e0
+[  237.329963]  [<ffffffff8164ae5c>] ? call_softirq+0x1c/0x30
+[  237.335500]  [<ffffffff81049a77>] local_apic_timer_interrupt+0x37/0x60
+[  237.342228]  [<ffffffff8164bacf>] smp_apic_timer_interrupt+0x3f/0x60
+[  237.348771]  [<ffffffff8164a11d>] apic_timer_interrupt+0x6d/0x80
+[  237.354967]  <EOI>  [<ffffffff810f3a00>] ? kimage_alloc_control_pages+0x80/0x270
+[  237.362875]  [<ffffffff811c3ebe>] ? kmem_cache_alloc_trace+0x1ce/0x1f0
+[  237.369592]  [<ffffffff810f362f>] ? do_kimage_alloc_init+0x1f/0x90
+[  237.375992]  [<ffffffff810f3d1a>] kimage_alloc_init+0x12a/0x180
+[  237.382103]  [<ffffffff810f3f9a>] SyS_kexec_load+0x20a/0x260
+[  237.387957]  [<ffffffff816494c9>] system_call_fastpath+0x16/0x1b
 
-> Thanks
-> Dave
-> 
-> ---
->  kexec/arch/i386/crashdump-x86.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
-> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
-> @@ -205,7 +205,7 @@ static int get_kernel_vaddr_and_size(str
->  			unsigned long long size;
->  
->  			/* Look for kernel text mapping header. */
-> -			if (saddr < stext_sym && eaddr > stext_sym) {
-> +			if (saddr <= stext_sym && eaddr > stext_sym) {
->  				saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
->  				elf_info->kern_vaddr_start = saddr;
->  				size = eaddr - saddr;
-> 
-> > 
-> > For reference the patches queued up since v2.0.13 are as follows:
-> > 
-> > 0a7fba8b1453 purgatory: Change default sha256 optimization to -O2
-> > ec271d6c2988 arm64: Add support of R_AARCH64_PREL32 relocation in purgatory
-> > c743758d77b8 arm64: Add support for additional relocations in the kexec purgatory code
-> > e345e27417db arm64: Add missing kexec dist files
-> > 402cf1427293 arm64: Cleanup kexec Makefile
-> > 16fd64af363b kexec/fs2dt: Check for NULL pointer in dt_copy_old_root_param()
-> > 6e8804f9ca67 multiboot: Use the "reserved" type for non-ram zones
-> > 53634c3e9a0c multiboot: Fix length computation for the memory zones
-> > 97b6f5f78d95 kexec elf: Sanity check on the note header before accessing it
-> > 1574ff1aae4f arm: include phys_to_virt.h and iomem.h in distribution
-> > 29086f45a45f kexec: socket not released when error situation occur.
-> > 9fd57cad8a0f kexec: fix mem_regions_sort()
-> > 9f62cbddddfc kexec/arch/i386: Add support for KASLR memory randomization
-> > abdfe97736f8 arm64: Add support for binary image files
-> > 522df5f7217f arm64: Add arm64 kexec support
-> > 217bcc00c930 kexec: Add common device tree routines
-> > f7a0ff52e04d kexec-tools 2.0.13.git
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+the first time allocate control pages may take too much time because
+crash_res.end can be set to a higher value. we need to add cond_resched
+to avoid the issue.
+
+The patch have been tested and above issue is not appear.
+
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ kernel/kexec_core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 5616755..2b43cc5 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -433,6 +433,7 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 	 */
+ 	unsigned long hole_start, hole_end, size;
+ 	struct page *pages;
++	unsigned long count = 0;
+ 
+ 	pages = NULL;
+ 	size = (1 << order) << PAGE_SHIFT;
+@@ -441,6 +442,9 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 	while (hole_end <= crashk_res.end) {
+ 		unsigned long i;
+ 
++		if (++count % 256 == 0)
++			cond_resched();
++
+ 		if (hole_end > KEXEC_CRASH_CONTROL_MEMORY_LIMIT)
+ 			break;
+ 		/* See if I overlap any of the segments */
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
