@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nue.novell.com ([195.135.221.5])
+Received: from smtp.codeaurora.org ([198.145.29.96])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cEf45-0000bx-7M
- for kexec@lists.infradead.org; Wed, 07 Dec 2016 16:27:30 +0000
-From: Matthias Brugger <mbrugger@suse.com>
-Subject: [PATCH] arm64: Fix initrd requierements
-Date: Wed,  7 Dec 2016 17:26:15 +0100
-Message-Id: <1481127975-9156-1-git-send-email-mbrugger@suse.com>
+ id 1cEmQD-0008HO-SB
+ for kexec@lists.infradead.org; Thu, 08 Dec 2016 00:18:53 +0000
+Subject: Re: [PATCH Makedumpfile 00/10] arm64 cleanup and kaslr support
+References: <cover.1477378297.git.panand@redhat.com>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <e1e63aac-8aa0-9042-5594-290ada9b0ded@codeaurora.org>
+Date: Wed, 7 Dec 2016 17:18:27 -0700
+MIME-Version: 1.0
+In-Reply-To: <cover.1477378297.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,77 +18,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, geoff@infradead.org
-Cc: panand@redhat.com, catalin.marinas@arm.com, Matthias Brugger <mbrugger@suse.com>, ard.biesheuvel@linaro.org
+To: Pratyush Anand <panand@redhat.com>, ats-kumagai@wm.jp.nec.com
+Cc: mansip@codeaurora.org, asamson@codeaurora.org, kexec@lists.infradead.org
 
-The initrd doesn't need to be aligend to 1 GB, which breaks kexec for system with
-RAM <= 1 GB. Instead the memory size between the kernel start rounded down to 1 GB
-and the end of the initrd rounded up to 1 GB can't be bigger then 32 GB.
+Works great for 4l 4k pages.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
----
- kexec/arch/arm64/kexec-arm64.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+Tested-by: Sameer Goel <sgoel@codeaurora.org>
 
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 288548f..04fd396 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -327,6 +327,7 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	unsigned long dtb_base;
- 	unsigned long hole_min;
- 	unsigned long hole_max;
-+	unsigned long initrd_end;
- 	char *initrd_buf = NULL;
- 	struct dtb dtb;
- 	char command_line[COMMAND_LINE_SIZE] = "";
-@@ -366,27 +367,27 @@ int arm64_load_other_segments(struct kexec_info *info,
- 		if (!initrd_buf)
- 			fprintf(stderr, "kexec: Empty ramdisk file.\n");
- 		else {
--			/*
--			 * Put the initrd after the kernel.  As specified in
--			 * booting.txt, align to 1 GiB.
--			 */
-+			/* Put the initrd after the kernel. */
- 
- 			initrd_base = add_buffer_phys_virt(info, initrd_buf,
--				initrd_size, initrd_size, GiB(1),
-+				initrd_size, initrd_size, 0,
- 				hole_min, hole_max, 1, 0);
- 
--			/* initrd_base is valid if we got here. */
--
--			dbgprintf("initrd: base %lx, size %lxh (%ld)\n",
--				initrd_base, initrd_size, initrd_size);
-+			initrd_end = initrd_base + initrd_size;
- 
--			/* Check size limit as specified in booting.txt. */
-+			/* Check limits as specified in booting.txt.
-+			 * The kernel may have as little as 32 GB of address space to map
-+			 * system memory and both kernel and initrd must be 1GB aligend.
-+			 */
- 
--			if (initrd_base - image_base + initrd_size > GiB(32)) {
-+			if (_ALIGN_UP(initrd_end, GiB(1)) - _ALIGN_DOWN(image_base, GiB(1)) > GiB(32)) {
- 				fprintf(stderr, "kexec: Error: image + initrd too big.\n");
- 				return -EFAILED;
- 			}
- 
-+			dbgprintf("initrd: base %lx, size %lxh (%ld)\n",
-+				initrd_base, initrd_size, initrd_size);
-+
- 			result = dtb_set_initrd((char **)&dtb.buf,
- 				&dtb.size, initrd_base,
- 				initrd_base + initrd_size);
+On 10/25/2016 1:22 AM, Pratyush Anand wrote:
+> These patches were lying in my tree for quite some time now. VMCOREINFO
+> numbers/symbols used in these patches have been made part of kdump kernel
+> patches for last few versions including v26. So, there seems no contention
+> on embedding VA_BITS, kimage_voffset and PHYS_OFFSET into vmcore.
+>
+> These patches cleans up a lot arm64 code and also immunize it with many
+> kernel changes. Additionally,it adds 4 level 4K page support and support for
+> KASLR enabled kernel.
+>
+> Azriel Samson (1):
+>   arm64: Add support for 4level 4K page translations table
+>
+> Pratyush Anand (9):
+>   arm64: cleanup code, comment, blank space, blank lines etc
+>   read_vmcoreinfo_long: Allow to read hex values as well
+>   Introduce read_vmcoreinfo_ulong()
+>   arm64: use already available PAGESIZE() and PAGESHIFT() macros
+>   arm64: fix page_offset definition
+>   arm64: fix re-filtering
+>   arm64: use value of VA_BITS and PHYS_OFFSET embedded into vmcore
+>   arm64: immunize identity mapped address finding w.r.t. kernel changes
+>   arm64: fix memory layout as per changes in v4.6 kernel
+>
+>  arch/arm64.c   | 245 ++++++++++++++++++++++-----------------------------------
+>  makedumpfile.c |  46 +++++++++++
+>  makedumpfile.h |  28 +++++--
+>  3 files changed, 162 insertions(+), 157 deletions(-)
+>
+
 -- 
-2.6.6
-
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
