@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cEpLa-0006rv-5S
- for kexec@lists.infradead.org; Thu, 08 Dec 2016 03:26:15 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1481164674-42775-1-git-send-email-zhongjiang@huawei.com>
-Date: Thu, 08 Dec 2016 16:22:32 +1300
-In-Reply-To: <1481164674-42775-1-git-send-email-zhongjiang@huawei.com>
- (zhongjiang@huawei.com's message of "Thu, 8 Dec 2016 10:37:54 +0800")
-Message-ID: <878trrxfyf.fsf@xmission.com>
-MIME-Version: 1.0
+ id 1cEvC3-0004mE-SK
+ for kexec@lists.infradead.org; Thu, 08 Dec 2016 09:40:51 +0000
 Subject: Re: [PATCH v2] kexec: add cond_resched into
  kimage_alloc_crash_control_pages
+References: <1481164674-42775-1-git-send-email-zhongjiang@huawei.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <58492ADC.4070305@redhat.com>
+Date: Thu, 8 Dec 2016 17:41:48 +0800
+MIME-Version: 1.0
+In-Reply-To: <1481164674-42775-1-git-send-email-zhongjiang@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,22 +19,19 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhongjiang <zhongjiang@huawei.com>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: zhongjiang <zhongjiang@huawei.com>, ebiederm@xmission.com, akpm@linux-foundation.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-zhongjiang <zhongjiang@huawei.com> writes:
-
+On 12/08/2016 at 10:37 AM, zhongjiang wrote:
 > From: zhong jiang <zhongjiang@huawei.com>
 >
 > A soft lookup will occur when I run trinity in syscall kexec_load.
 > the corresponding stack information is as follows.
-
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
 >
 > [  237.235937] BUG: soft lockup - CPU#6 stuck for 22s! [trinity-c6:13859]
 > [  237.242699] Kernel panic - not syncing: softlockup: hung tasks
@@ -83,9 +79,21 @@ Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 >  
 > +		cond_resched();
 > +
+
+I can't see why it would take a long time to loop inside, the job it does is simply to find a control area
+not overlapped with image->segment[], you can see the loop "for (i = 0; i < image->nr_segments; i++)",
+@hole_end will be advanced to the end of its next nearby segment once overlap was detected each loop,
+also there are limited (<=16) segments, so it won't take long to locate the right area.
+
+Am I missing something?
+
+Regards,
+Xunlei
+
 >  		if (hole_end > KEXEC_CRASH_CONTROL_MEMORY_LIMIT)
 >  			break;
 >  		/* See if I overlap any of the segments */
+
 
 _______________________________________________
 kexec mailing list
