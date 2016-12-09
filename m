@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cFFOv-0005LZ-8s
- for kexec@lists.infradead.org; Fri, 09 Dec 2016 07:15:27 +0000
-Subject: Re: [PATCH v2] kexec: add cond_resched into
- kimage_alloc_crash_control_pages
-References: <1481164674-42775-1-git-send-email-zhongjiang@huawei.com>
- <58492ADC.4070305@redhat.com> <584A3D84.6040004@huawei.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <584A5A47.6040602@redhat.com>
-Date: Fri, 9 Dec 2016 15:16:23 +0800
+ id 1cFFoq-0003yG-JS
+ for kexec@lists.infradead.org; Fri, 09 Dec 2016 07:42:14 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [Makedumpfile PATCH V2 2/4] x86_64: translate all VA to PA
+ using page table values
+Date: Fri, 9 Dec 2016 07:35:55 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E87E88@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1477901442.git.panand@redhat.com>
+ <c72c3722595f7b86754c6d9835ffdc3c68361bb4.1477901442.git.panand@redhat.com>
+In-Reply-To: <c72c3722595f7b86754c6d9835ffdc3c68361bb4.1477901442.git.panand@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <584A3D84.6040004@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,113 +21,178 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhong jiang <zhongjiang@huawei.com>, xlpang@redhat.com
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "louis.bouchard@canonical.com" <louis.bouchard@canonical.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 12/09/2016 at 01:13 PM, zhong jiang wrote:
-> On 2016/12/8 17:41, Xunlei Pang wrote:
->> On 12/08/2016 at 10:37 AM, zhongjiang wrote:
->>> From: zhong jiang <zhongjiang@huawei.com>
->>>
->>> A soft lookup will occur when I run trinity in syscall kexec_load.
->>> the corresponding stack information is as follows.
->>>
->>> [  237.235937] BUG: soft lockup - CPU#6 stuck for 22s! [trinity-c6:13859]
->>> [  237.242699] Kernel panic - not syncing: softlockup: hung tasks
->>> [  237.248573] CPU: 6 PID: 13859 Comm: trinity-c6 Tainted: G           O L ----V-------   3.10.0-327.28.3.35.zhongjiang.x86_64 #1
->>> [  237.259984] Hardware name: Huawei Technologies Co., Ltd. Tecal BH622 V2/BC01SRSA0, BIOS RMIBV386 06/30/2014
->>> [  237.269752]  ffffffff8187626b 0000000018cfde31 ffff88184c803e18 ffffffff81638f16
->>> [  237.277471]  ffff88184c803e98 ffffffff8163278f 0000000000000008 ffff88184c803ea8
->>> [  237.285190]  ffff88184c803e48 0000000018cfde31 ffff88184c803e67 0000000000000000
->>> [  237.292909] Call Trace:
->>> [  237.295404]  <IRQ>  [<ffffffff81638f16>] dump_stack+0x19/0x1b
->>> [  237.301352]  [<ffffffff8163278f>] panic+0xd8/0x214
->>> [  237.306196]  [<ffffffff8111d6fc>] watchdog_timer_fn+0x1cc/0x1e0
->>> [  237.312157]  [<ffffffff8111d530>] ? watchdog_enable+0xc0/0xc0
->>> [  237.317955]  [<ffffffff810aa182>] __hrtimer_run_queues+0xd2/0x260
->>> [  237.324087]  [<ffffffff810aa720>] hrtimer_interrupt+0xb0/0x1e0
->>> [  237.329963]  [<ffffffff8164ae5c>] ? call_softirq+0x1c/0x30
->>> [  237.335500]  [<ffffffff81049a77>] local_apic_timer_interrupt+0x37/0x60
->>> [  237.342228]  [<ffffffff8164bacf>] smp_apic_timer_interrupt+0x3f/0x60
->>> [  237.348771]  [<ffffffff8164a11d>] apic_timer_interrupt+0x6d/0x80
->>> [  237.354967]  <EOI>  [<ffffffff810f3a00>] ? kimage_alloc_control_pages+0x80/0x270
->>> [  237.362875]  [<ffffffff811c3ebe>] ? kmem_cache_alloc_trace+0x1ce/0x1f0
->>> [  237.369592]  [<ffffffff810f362f>] ? do_kimage_alloc_init+0x1f/0x90
->>> [  237.375992]  [<ffffffff810f3d1a>] kimage_alloc_init+0x12a/0x180
->>> [  237.382103]  [<ffffffff810f3f9a>] SyS_kexec_load+0x20a/0x260
->>> [  237.387957]  [<ffffffff816494c9>] system_call_fastpath+0x16/0x1b
->>>
->>> the first time allocate control pages may take too much time because
->>> crash_res.end can be set to a higher value. we need to add cond_resched
->>> to avoid the issue.
->>>
->>> The patch have been tested and above issue is not appear.
->>>
->>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
->>> ---
->>>  kernel/kexec_core.c | 2 ++
->>>  1 file changed, 2 insertions(+)
->>>
->>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->>> index 5616755..bfc9621 100644
->>> --- a/kernel/kexec_core.c
->>> +++ b/kernel/kexec_core.c
->>> @@ -441,6 +441,8 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
->>>  	while (hole_end <= crashk_res.end) {
->>>  		unsigned long i;
->>>  
->>> +		cond_resched();
->>> +
->> I can't see why it would take a long time to loop inside, the job it does is simply to find a control area
->> not overlapped with image->segment[], you can see the loop "for (i = 0; i < image->nr_segments; i++)",
->> @hole_end will be advanced to the end of its next nearby segment once overlap was detected each loop,
->> also there are limited (<=16) segments, so it won't take long to locate the right area.
->>
->> Am I missing something?
->>
->> Regards,
->> Xunlei
->   if the crashkernel = auto is set in cmdline.  it represent crashk_res.end will exceed to 4G, the first allocate control pages will
->   loop  million times. if we set crashk_res.end to the higher value manually,  you can image....
+Hello Pratyush,
 
-How does "loop million times" happen? See my inlined comments prefixed with "pxl".
+>---
+> arch/x86_64.c  | 42 ++++++++----------------------------------
+> makedumpfile.h |  4 ++--
+> 2 files changed, 10 insertions(+), 36 deletions(-)
+>
+>diff --git a/arch/x86_64.c b/arch/x86_64.c
+>index eba725e41aac..9afa38fd141a 100644
+>--- a/arch/x86_64.c
+>+++ b/arch/x86_64.c
+>@@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
+> {
+> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+> 	unsigned long pte_paddr, pte;
+>+	unsigned long phys_base;
+>+
+>+	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>+		phys_base = info->phys_base;
+>+	else
+>+		phys_base = 0;
+>
+> 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+>@@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
+> 	/*
+> 	 * Get PGD.
+> 	 */
+>-	page_dir  = SYMBOL(init_level4_pgt);
+>+	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
 
-kimage_alloc_crash_control_pages():
-    while (hole_end <= crashk_res.end) {
-        unsigned long i;
+I found that this change breaks the backward compatibility for
+kernel 2.6.21 or older since phys_base was introduced in kernel 2.6.22
+by the commit below:
 
-        if (hole_end > KEXEC_CRASH_CONTROL_MEMORY_LIMIT)
-            break;
-        /* See if I overlap any of the segments */
-        for (i = 0; i < image->nr_segments; i++) {  // pxl: max 16 loops, all existent segments are not overlapped, though may not sorted.
-            unsigned long mstart, mend;
+  commit 1ab60e0f72f71ec54831e525a3e1154f1c092408
+  Author: Vivek Goyal <vgoyal@in.ibm.com>
+  Date:   Wed May 2 19:27:07 2007 +0200
 
-            mstart = image->segment[i].mem;
-            mend   = mstart + image->segment[i].memsz - 1;
-            if ((hole_end >= mstart) && (hole_start <= mend)) {
-                /* Advance the hole to the end of the segment */
-                hole_start = (mend + (size - 1)) & ~(size - 1);
-                hole_end   = hole_start + size - 1;
-                break;  // pxl: If overlap was found, break for loop, @hole_end starts after the overlapped segment area, and will while loop again
-            }
-        }
-        /* If I don't overlap any segments I have found my hole! */
-        if (i == image->nr_segments) {
-            pages = pfn_to_page(hole_start >> PAGE_SHIFT);
-            image->control_page = hole_end;
-            break;   // pxl: no overlap with all the segments, get the result and break the while loop. END.
-        }   
-    }
+      [PATCH] x86-64: Relocatable Kernel Support
 
-So, the worst "while" loops in theory would be (image->nr_segments + 1), no?
+There is no problem if phys_base is always 0 in older kernel, but
+get_phys_base_x86_64() calculates "phys_base = 0x100000" from my vmcore:
 
-Regards,
-Xunlei
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+  NOTE           0x0000000000000190 0x0000000000000000 0x0000000000000000
+                 0x0000000000000590 0x0000000000000590         0
+  LOAD           0x0000000000000720 0xffffffff80000000 0x0000000000100000    // CONFIG_PHYSICAL_START = 0x100000
+                 0x00000000008b2000 0x00000000008b2000  RWE    0
+  LOAD           0x00000000008b2720 0xffff810000000000 0x0000000000000000
+                 0x00000000000a0000 0x00000000000a0000  RWE    0
+  LOAD           0x0000000000952720 0xffff810000100000 0x0000000000100000
+                 0x0000000000f00000 0x0000000000f00000  RWE    0
+  LOAD           0x0000000001852720 0xffff810005000000 0x0000000005000000
+                 0x00000000caf70000 0x00000000caf70000  RWE    0
+  LOAD           0x00000000cc7c2720 0xffff810100000000 0x0000000100000000
+                 0x0000000070000000 0x0000000070000000  RWE    0
+
+Of course we shouldn't use that invalid phys_base:
+
+  crash> sym init_level4_pgt
+  ffffffff80101000 (T) init_level4_pgt
+  crash> vtop ffffffff80101000
+  VIRTUAL           PHYSICAL
+  ffffffff80101000  101000               // just "VIRTUAL - __START_KERNEL_map"
+
+  PML4 DIRECTORY: ffffffff80101000
+  PAGE DIRECTORY: 103027
+     PUD: 103ff0 => 105027
+     PMD: 105000 => 1e3
+    PAGE: 0  (2MB)
+
+  PTE  PHYSICAL  FLAGS
+  1e3      0     (PRESENT|RW|ACCESSED|DIRTY|PSE|GLOBAL)
+
+        PAGE        PHYSICAL      MAPPING       INDEX CNT FLAGS
+  ffff810005004838    101000                0        0  1 400
+  crash>
+
+At first I thought about setting 0 to phys_base if the kernel is
+older than 2.6.22, but unfortunately we can't get the kernel version
+before getting correct phys_base since VtoP is necessary to read
+system_utsname. 
+(and 2.6.21 doesn't have VMCOREINFO, OSRELEASE can't be used too.)
+
+Do you have any ideas for this issue ?
+
+
+Thanks,
+Atsushi Kumagai
+
+
+> 	page_dir += pml4_index(vaddr) * sizeof(unsigned long);
+>-	if (!readmem(VADDR, page_dir, &pml4, sizeof pml4)) {
+>+	if (!readmem(PADDR, page_dir, &pml4, sizeof pml4)) {
+> 		ERRMSG("Can't get pml4 (page_dir:%lx).\n", page_dir);
+> 		return NOT_PADDR;
+> 	}
+>@@ -285,38 +291,6 @@ vtop4_x86_64(unsigned long vaddr)
+> 	return (pte & ENTRY_MASK) + PAGEOFFSET(vaddr);
+> }
+>
+>-unsigned long long
+>-vaddr_to_paddr_x86_64(unsigned long vaddr)
+>-{
+>-	unsigned long phys_base;
+>-	unsigned long long paddr;
+>-
+>-	/*
+>-	 * Check the relocatable kernel.
+>-	 */
+>-	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>-		phys_base = info->phys_base;
+>-	else
+>-		phys_base = 0;
+>-
+>-	if (is_vmalloc_addr_x86_64(vaddr)) {
+>-		if ((paddr = vtop4_x86_64(vaddr)) == NOT_PADDR) {
+>-			ERRMSG("Can't convert a virtual address(%lx) to " \
+>-			    "physical address.\n", vaddr);
+>-			return NOT_PADDR;
+>-		}
+>-	} else if (vaddr >= __START_KERNEL_map) {
+>-		paddr = vaddr - __START_KERNEL_map + phys_base;
+>-
+>-	} else {
+>-		if (is_xen_memory())
+>-			paddr = vaddr - PAGE_OFFSET_XEN_DOM0;
+>-		else
+>-			paddr = vaddr - PAGE_OFFSET;
+>-	}
+>-	return paddr;
+>-}
+>-
+> /*
+>  * for Xen extraction
+>  */
+>diff --git a/makedumpfile.h b/makedumpfile.h
+>index a5955ff750e5..13559651feb6 100644
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -863,12 +863,12 @@ int is_vmalloc_addr_x86_64(ulong vaddr);
+> int get_phys_base_x86_64(void);
+> int get_machdep_info_x86_64(void);
+> int get_versiondep_info_x86_64(void);
+>-unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
+>+unsigned long long vtop4_x86_64(unsigned long vaddr);
+> #define find_vmemmap()		find_vmemmap_x86_64()
+> #define get_phys_base()		get_phys_base_x86_64()
+> #define get_machdep_info()	get_machdep_info_x86_64()
+> #define get_versiondep_info()	get_versiondep_info_x86_64()
+>-#define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
+>+#define vaddr_to_paddr(X)	vtop4_x86_64(X)
+> #define is_phys_addr(X)		(!is_vmalloc_addr_x86_64(X))
+> #endif /* x86_64 */
+>
+>--
+>2.7.4
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
