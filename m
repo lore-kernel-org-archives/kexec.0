@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cFHF1-0005iw-GG
- for kexec@lists.infradead.org; Fri, 09 Dec 2016 09:13:20 +0000
-From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH kexec-tools] arm: do not build iomem.o target with no soruce
-Date: Fri,  9 Dec 2016 10:12:55 +0100
-Message-Id: <1481274775-32373-1-git-send-email-horms@verge.net.au>
+Received: from mail-pg0-f43.google.com ([74.125.83.43])
+ by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
+ id 1cFI8e-0002uB-7h
+ for kexec@lists.infradead.org; Fri, 09 Dec 2016 10:10:52 +0000
+Received: by mail-pg0-f43.google.com with SMTP id x23so6474291pgx.1
+ for <kexec@lists.infradead.org>; Fri, 09 Dec 2016 02:10:27 -0800 (PST)
+Subject: Re: [Makedumpfile PATCH V2 2/4] x86_64: translate all VA to PA using
+ page table values
+References: <cover.1477901442.git.panand@redhat.com>
+ <c72c3722595f7b86754c6d9835ffdc3c68361bb4.1477901442.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701E87E88@BPXM01GP.gisp.nec.co.jp>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <3d3fcf63-eb95-9adb-b645-9f906d5f900f@redhat.com>
+Date: Fri, 9 Dec 2016 15:40:21 +0530
+MIME-Version: 1.0
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701E87E88@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,46 +23,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "bhe@redhat.com" <bhe@redhat.com>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "louis.bouchard@canonical.com" <louis.bouchard@canonical.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Header files should be added to the distribution but not
-used to derive targets for compilation. In this an attempt was
-made to build iomem.o, but iomem.c does not exist so this fails.
 
-Fixes: 1574ff1aae4f ("arm: include phys_to_virt.h and iomem.h in distribution")
-Cc: Dave Young <dyoung@redhat.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- kexec/arch/arm/Makefile | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-index 871979e0ae26..a1b730034de8 100644
---- a/kexec/arch/arm/Makefile
-+++ b/kexec/arch/arm/Makefile
-@@ -27,9 +27,9 @@ arm_KEXEC_SRCS += $(libfdt_SRCS)
- 
- arm_UIMAGE = kexec/kexec-uImage.c
- arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
--arm_PHYS_TO_VIRT += kexec/arch/arm/iomem.h
--arm_PHYS_TO_VIRT += kexec/arch/arm/phys_to_virt.h
-+arm_PHYS_TO_VIRT_INCLUDE = kexec/arch/arm/iomem.h
-+arm_PHYS_TO_VIRT_INCLUDE += kexec/arch/arm/phys_to_virt.h
- 
- dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
--	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h	\
--	kexec/arch/arm/include/arch/options.h
-+	$(arm_PHYS_TO_VIRT_INCLUDE) kexec/arch/arm/crashdump-arm.h \
-+	kexec/arch/arm/kexec-arm.h kexec/arch/arm/include/arch/options.h
--- 
-2.7.0.rc3.207.g0ac5344
+On Friday 09 December 2016 01:05 PM, Atsushi Kumagai wrote:
+> Hello Pratyush,
+>
+>> ---
+>> arch/x86_64.c  | 42 ++++++++----------------------------------
+>> makedumpfile.h |  4 ++--
+>> 2 files changed, 10 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/arch/x86_64.c b/arch/x86_64.c
+>> index eba725e41aac..9afa38fd141a 100644
+>> --- a/arch/x86_64.c
+>> +++ b/arch/x86_64.c
+>> @@ -203,6 +203,12 @@ vtop4_x86_64(unsigned long vaddr)
+>> {
+>> 	unsigned long page_dir, pml4, pgd_paddr, pgd_pte, pmd_paddr, pmd_pte;
+>> 	unsigned long pte_paddr, pte;
+>> +	unsigned long phys_base;
+>> +
+>> +	if (SYMBOL(phys_base) != NOT_FOUND_SYMBOL)
+>> +		phys_base = info->phys_base;
+>> +	else
+>> +		phys_base = 0;
+>>
+>> 	if (SYMBOL(init_level4_pgt) == NOT_FOUND_SYMBOL) {
+>> 		ERRMSG("Can't get the symbol of init_level4_pgt.\n");
+>> @@ -212,9 +218,9 @@ vtop4_x86_64(unsigned long vaddr)
+>> 	/*
+>> 	 * Get PGD.
+>> 	 */
+>> -	page_dir  = SYMBOL(init_level4_pgt);
+>> +	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
+>
+> I found that this change breaks the backward compatibility for
+> kernel 2.6.21 or older since phys_base was introduced in kernel 2.6.22
+> by the commit below:
+>
+>   commit 1ab60e0f72f71ec54831e525a3e1154f1c092408
+>   Author: Vivek Goyal <vgoyal@in.ibm.com>
+>   Date:   Wed May 2 19:27:07 2007 +0200
+>
+>       [PATCH] x86-64: Relocatable Kernel Support
+>
+> There is no problem if phys_base is always 0 in older kernel, but
+> get_phys_base_x86_64() calculates "phys_base = 0x100000" from my vmcore:
+>
+>   Type           Offset             VirtAddr           PhysAddr
+>                  FileSiz            MemSiz              Flags  Align
+>   NOTE           0x0000000000000190 0x0000000000000000 0x0000000000000000
+>                  0x0000000000000590 0x0000000000000590         0
+>   LOAD           0x0000000000000720 0xffffffff80000000 0x0000000000100000    // CONFIG_PHYSICAL_START = 0x100000
+>                  0x00000000008b2000 0x00000000008b2000  RWE    0
+>   LOAD           0x00000000008b2720 0xffff810000000000 0x0000000000000000
+>                  0x00000000000a0000 0x00000000000a0000  RWE    0
+>   LOAD           0x0000000000952720 0xffff810000100000 0x0000000000100000
+>                  0x0000000000f00000 0x0000000000f00000  RWE    0
+>   LOAD           0x0000000001852720 0xffff810005000000 0x0000000005000000
+>                  0x00000000caf70000 0x00000000caf70000  RWE    0
+>   LOAD           0x00000000cc7c2720 0xffff810100000000 0x0000000100000000
+>                  0x0000000070000000 0x0000000070000000  RWE    0
+>
+> Of course we shouldn't use that invalid phys_base:
+>
+>   crash> sym init_level4_pgt
+>   ffffffff80101000 (T) init_level4_pgt
+>   crash> vtop ffffffff80101000
+>   VIRTUAL           PHYSICAL
+>   ffffffff80101000  101000               // just "VIRTUAL - __START_KERNEL_map"
+>
+>   PML4 DIRECTORY: ffffffff80101000
+>   PAGE DIRECTORY: 103027
+>      PUD: 103ff0 => 105027
+>      PMD: 105000 => 1e3
+>     PAGE: 0  (2MB)
+>
+>   PTE  PHYSICAL  FLAGS
+>   1e3      0     (PRESENT|RW|ACCESSED|DIRTY|PSE|GLOBAL)
+>
+>         PAGE        PHYSICAL      MAPPING       INDEX CNT FLAGS
+>   ffff810005004838    101000                0        0  1 400
+>   crash>
+>
+> At first I thought about setting 0 to phys_base if the kernel is
+> older than 2.6.22, but unfortunately we can't get the kernel version
+> before getting correct phys_base since VtoP is necessary to read
+> system_utsname.
+> (and 2.6.21 doesn't have VMCOREINFO, OSRELEASE can't be used too.)
 
+We can use this fact may be. So, when has_vmcoreinfo() is false we can 
+consider it as old kernel and can set phys_start as 0.
+
+
+Bao, any opnion?
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
