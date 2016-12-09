@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cFIpK-00056v-RV
- for kexec@lists.infradead.org; Fri, 09 Dec 2016 10:54:55 +0000
-Date: Fri, 9 Dec 2016 11:54:28 +0100
+ id 1cFItJ-0000Zq-8s
+ for kexec@lists.infradead.org; Fri, 09 Dec 2016 10:59:02 +0000
+Date: Fri, 9 Dec 2016 11:58:36 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools] ia64: ehdr is not UNUSED in
- machine_apply_elf_rel
-Message-ID: <20161209105428.GA9789@verge.net.au>
-References: <1481273359-1600-1-git-send-email-horms@verge.net.au>
- <76c2d3ff-99f9-5352-e477-343a22030a6a@redhat.com>
+Subject: Re: [PATCH kexec-tools] arm: do not build iomem.o target with no
+ soruce
+Message-ID: <20161209105836.GB9789@verge.net.au>
+References: <1481274775-32373-1-git-send-email-horms@verge.net.au>
+ <ad1d1741-7619-9e73-fbdc-0b18e6839274@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <76c2d3ff-99f9-5352-e477-343a22030a6a@redhat.com>
+In-Reply-To: <ad1d1741-7619-9e73-fbdc-0b18e6839274@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +26,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pratyush Anand <panand@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Anton Blanchard <anton@samba.org>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
 
-On Fri, Dec 09, 2016 at 04:02:22PM +0530, Pratyush Anand wrote:
+On Fri, Dec 09, 2016 at 03:58:21PM +0530, Pratyush Anand wrote:
 > 
 > 
-> On Friday 09 December 2016 02:19 PM, Simon Horman wrote:
-> >The ehdr parameter of machine_apply_elf_rel() is used.
-> >This resolves a build regression.
+> On Friday 09 December 2016 02:42 PM, Simon Horman wrote:
+> >Header files should be added to the distribution but not
+> >used to derive targets for compilation. In this an attempt was
+> >made to build iomem.o, but iomem.c does not exist so this fails.
 > >
-> >Cc: Anton Blanchard <anton@samba.org>
+> >Fixes: 1574ff1aae4f ("arm: include phys_to_virt.h and iomem.h in distribution")
 > >Cc: Dave Young <dyoung@redhat.com>
-> >Fixes: 4a2ae3a39c64 ("Pass struct mem_sym into machine_apply_elf_rel()")
 > >Signed-off-by: Simon Horman <horms@verge.net.au>
 > >---
-> > kexec/arch/ia64/kexec-elf-rel-ia64.c | 2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > kexec/arch/arm/Makefile | 8 ++++----
+> > 1 file changed, 4 insertions(+), 4 deletions(-)
 > >
-> >diff --git a/kexec/arch/ia64/kexec-elf-rel-ia64.c b/kexec/arch/ia64/kexec-elf-rel-ia64.c
-> >index f847626b2508..7f7c08cba4b1 100644
-> >--- a/kexec/arch/ia64/kexec-elf-rel-ia64.c
-> >+++ b/kexec/arch/ia64/kexec-elf-rel-ia64.c
-> >@@ -72,7 +72,7 @@ bundle (const uint64_t insn)
-> >         return insn & ~0xfUL;
-> > }
+> >diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
+> >index 871979e0ae26..a1b730034de8 100644
+> >--- a/kexec/arch/arm/Makefile
+> >+++ b/kexec/arch/arm/Makefile
+> >@@ -27,9 +27,9 @@ arm_KEXEC_SRCS += $(libfdt_SRCS)
 > >
-> >-void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
-> >+void machine_apply_elf_rel(struct mem_ehdr *ehdr,
-> > 	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
-> > 	unsigned long address, unsigned long value)
-> > {
+> > arm_UIMAGE = kexec/kexec-uImage.c
+> > arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
+> >-arm_PHYS_TO_VIRT += kexec/arch/arm/iomem.h
+> >-arm_PHYS_TO_VIRT += kexec/arch/arm/phys_to_virt.h
+> >+arm_PHYS_TO_VIRT_INCLUDE = kexec/arch/arm/iomem.h
+> >+arm_PHYS_TO_VIRT_INCLUDE += kexec/arch/arm/phys_to_virt.h
+> 
+> Since they are needed only in dist definition, so probably we could have
+> avoided to define arm_PHYS_TO_VIRT_INCLUDE  and could have added these files
+> directly to dist. It will keep it similar like other makefiles
+> (kexec/arch/x86_64/Makefile)
+> 
+> >
+> > dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
+> >-	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h	\
+> >-	kexec/arch/arm/include/arch/options.h
+> >+	$(arm_PHYS_TO_VIRT_INCLUDE) kexec/arch/arm/crashdump-arm.h \
+> >+	kexec/arch/arm/kexec-arm.h kexec/arch/arm/include/arch/options.h
 > >
 > 
-> Reviewed-by: Pratyush Anand <panand@redhat.com>
+> Otherwise, changes looks fine to me.
 
-Thanks, applied.
+Thanks, I will post a v2.
 
 _______________________________________________
 kexec mailing list
