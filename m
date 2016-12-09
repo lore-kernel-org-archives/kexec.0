@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cFItJ-0000Zq-8s
- for kexec@lists.infradead.org; Fri, 09 Dec 2016 10:59:02 +0000
-Date: Fri, 9 Dec 2016 11:58:36 +0100
+ id 1cFIuv-0001tr-8S
+ for kexec@lists.infradead.org; Fri, 09 Dec 2016 11:00:41 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools] arm: do not build iomem.o target with no
- soruce
-Message-ID: <20161209105836.GB9789@verge.net.au>
-References: <1481274775-32373-1-git-send-email-horms@verge.net.au>
- <ad1d1741-7619-9e73-fbdc-0b18e6839274@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ad1d1741-7619-9e73-fbdc-0b18e6839274@redhat.com>
+Subject: [PATCH v2 kexec-tools] arm: do not build iomem.o target with no soruce
+Date: Fri,  9 Dec 2016 12:00:12 +0100
+Message-Id: <1481281212-16929-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,57 +15,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Pratyush Anand <panand@redhat.com>, Simon Horman <horms@verge.net.au>, Dave Young <dyoung@redhat.com>
 
-On Fri, Dec 09, 2016 at 03:58:21PM +0530, Pratyush Anand wrote:
-> 
-> 
-> On Friday 09 December 2016 02:42 PM, Simon Horman wrote:
-> >Header files should be added to the distribution but not
-> >used to derive targets for compilation. In this an attempt was
-> >made to build iomem.o, but iomem.c does not exist so this fails.
-> >
-> >Fixes: 1574ff1aae4f ("arm: include phys_to_virt.h and iomem.h in distribution")
-> >Cc: Dave Young <dyoung@redhat.com>
-> >Signed-off-by: Simon Horman <horms@verge.net.au>
-> >---
-> > kexec/arch/arm/Makefile | 8 ++++----
-> > 1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-> >index 871979e0ae26..a1b730034de8 100644
-> >--- a/kexec/arch/arm/Makefile
-> >+++ b/kexec/arch/arm/Makefile
-> >@@ -27,9 +27,9 @@ arm_KEXEC_SRCS += $(libfdt_SRCS)
-> >
-> > arm_UIMAGE = kexec/kexec-uImage.c
-> > arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
-> >-arm_PHYS_TO_VIRT += kexec/arch/arm/iomem.h
-> >-arm_PHYS_TO_VIRT += kexec/arch/arm/phys_to_virt.h
-> >+arm_PHYS_TO_VIRT_INCLUDE = kexec/arch/arm/iomem.h
-> >+arm_PHYS_TO_VIRT_INCLUDE += kexec/arch/arm/phys_to_virt.h
-> 
-> Since they are needed only in dist definition, so probably we could have
-> avoided to define arm_PHYS_TO_VIRT_INCLUDE  and could have added these files
-> directly to dist. It will keep it similar like other makefiles
-> (kexec/arch/x86_64/Makefile)
-> 
-> >
-> > dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
-> >-	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h	\
-> >-	kexec/arch/arm/include/arch/options.h
-> >+	$(arm_PHYS_TO_VIRT_INCLUDE) kexec/arch/arm/crashdump-arm.h \
-> >+	kexec/arch/arm/kexec-arm.h kexec/arch/arm/include/arch/options.h
-> >
-> 
-> Otherwise, changes looks fine to me.
+Header files should be added to the distribution but not
+used to derive targets for compilation. In this an attempt was
+made to build iomem.o, but iomem.c does not exist so this fails.
 
-Thanks, I will post a v2.
+Fixes: 1574ff1aae4f ("arm: include phys_to_virt.h and iomem.h in distribution")
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Pratyush Anand <panand@redhat.com>
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+v2
+* add headers directly to dist
+---
+ kexec/arch/arm/Makefile | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
+index 871979e0ae26..4454f47a48df 100644
+--- a/kexec/arch/arm/Makefile
++++ b/kexec/arch/arm/Makefile
+@@ -27,9 +27,8 @@ arm_KEXEC_SRCS += $(libfdt_SRCS)
+ 
+ arm_UIMAGE = kexec/kexec-uImage.c
+ arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
+-arm_PHYS_TO_VIRT += kexec/arch/arm/iomem.h
+-arm_PHYS_TO_VIRT += kexec/arch/arm/phys_to_virt.h
+ 
+ dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
+-	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h	\
++	kexec/arch/arm/iomem.h kexec/arch/arm/phys_to_virt.h \
++	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h \
+ 	kexec/arch/arm/include/arch/options.h
+-- 
+2.7.0.rc3.207.g0ac5344
+
 
 _______________________________________________
 kexec mailing list
