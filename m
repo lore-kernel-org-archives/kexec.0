@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f50.google.com ([74.125.83.50])
+Received: from mail-pg0-f41.google.com ([74.125.83.41])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cFIQ4-0000UM-49
- for kexec@lists.infradead.org; Fri, 09 Dec 2016 10:28:49 +0000
-Received: by mail-pg0-f50.google.com with SMTP id 3so6647560pgd.0
- for <kexec@lists.infradead.org>; Fri, 09 Dec 2016 02:28:27 -0800 (PST)
-Subject: Re: [PATCH kexec-tools] arm: do not build iomem.o target with no
- soruce
-References: <1481274775-32373-1-git-send-email-horms@verge.net.au>
+ id 1cFIUu-0004Ps-OB
+ for kexec@lists.infradead.org; Fri, 09 Dec 2016 10:33:55 +0000
+Received: by mail-pg0-f41.google.com with SMTP id 3so6689704pgd.0
+ for <kexec@lists.infradead.org>; Fri, 09 Dec 2016 02:33:27 -0800 (PST)
+Subject: Re: [PATCH kexec-tools] ia64: ehdr is not UNUSED in
+ machine_apply_elf_rel
+References: <1481273359-1600-1-git-send-email-horms@verge.net.au>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <ad1d1741-7619-9e73-fbdc-0b18e6839274@redhat.com>
-Date: Fri, 9 Dec 2016 15:58:21 +0530
+Message-ID: <76c2d3ff-99f9-5352-e477-343a22030a6a@redhat.com>
+Date: Fri, 9 Dec 2016 16:02:22 +0530
 MIME-Version: 1.0
-In-Reply-To: <1481274775-32373-1-git-send-email-horms@verge.net.au>
+In-Reply-To: <1481273359-1600-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,52 +26,38 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
-Cc: Dave Young <dyoung@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, Anton Blanchard <anton@samba.org>
 
 
 
-On Friday 09 December 2016 02:42 PM, Simon Horman wrote:
-> Header files should be added to the distribution but not
-> used to derive targets for compilation. In this an attempt was
-> made to build iomem.o, but iomem.c does not exist so this fails.
+On Friday 09 December 2016 02:19 PM, Simon Horman wrote:
+> The ehdr parameter of machine_apply_elf_rel() is used.
+> This resolves a build regression.
 >
-> Fixes: 1574ff1aae4f ("arm: include phys_to_virt.h and iomem.h in distribution")
+> Cc: Anton Blanchard <anton@samba.org>
 > Cc: Dave Young <dyoung@redhat.com>
+> Fixes: 4a2ae3a39c64 ("Pass struct mem_sym into machine_apply_elf_rel()")
 > Signed-off-by: Simon Horman <horms@verge.net.au>
 > ---
->  kexec/arch/arm/Makefile | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+>  kexec/arch/ia64/kexec-elf-rel-ia64.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-> index 871979e0ae26..a1b730034de8 100644
-> --- a/kexec/arch/arm/Makefile
-> +++ b/kexec/arch/arm/Makefile
-> @@ -27,9 +27,9 @@ arm_KEXEC_SRCS += $(libfdt_SRCS)
+> diff --git a/kexec/arch/ia64/kexec-elf-rel-ia64.c b/kexec/arch/ia64/kexec-elf-rel-ia64.c
+> index f847626b2508..7f7c08cba4b1 100644
+> --- a/kexec/arch/ia64/kexec-elf-rel-ia64.c
+> +++ b/kexec/arch/ia64/kexec-elf-rel-ia64.c
+> @@ -72,7 +72,7 @@ bundle (const uint64_t insn)
+>          return insn & ~0xfUL;
+>  }
 >
->  arm_UIMAGE = kexec/kexec-uImage.c
->  arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
-> -arm_PHYS_TO_VIRT += kexec/arch/arm/iomem.h
-> -arm_PHYS_TO_VIRT += kexec/arch/arm/phys_to_virt.h
-> +arm_PHYS_TO_VIRT_INCLUDE = kexec/arch/arm/iomem.h
-> +arm_PHYS_TO_VIRT_INCLUDE += kexec/arch/arm/phys_to_virt.h
-
-Since they are needed only in dist definition, so probably we could have 
-avoided to define arm_PHYS_TO_VIRT_INCLUDE  and could have added these 
-files directly to dist. It will keep it similar like other makefiles 
-(kexec/arch/x86_64/Makefile)
-
->
->  dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
-> -	kexec/arch/arm/crashdump-arm.h kexec/arch/arm/kexec-arm.h	\
-> -	kexec/arch/arm/include/arch/options.h
-> +	$(arm_PHYS_TO_VIRT_INCLUDE) kexec/arch/arm/crashdump-arm.h \
-> +	kexec/arch/arm/kexec-arm.h kexec/arch/arm/include/arch/options.h
+> -void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+> +void machine_apply_elf_rel(struct mem_ehdr *ehdr,
+>  	struct mem_sym *UNUSED(sym), unsigned long r_type, void *location,
+>  	unsigned long address, unsigned long value)
+>  {
 >
 
-Otherwise, changes looks fine to me.
-
-
-~Pratyush
+Reviewed-by: Pratyush Anand <panand@redhat.com>
 
 _______________________________________________
 kexec mailing list
