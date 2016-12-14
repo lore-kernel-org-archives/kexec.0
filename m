@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io0-x244.google.com ([2607:f8b0:4001:c06::244])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cH4jA-0003Nn-Cl
- for kexec@lists.infradead.org; Wed, 14 Dec 2016 08:15:53 +0000
-Received: by mail-io0-x244.google.com with SMTP id y124so3356922iof.1
- for <kexec@lists.infradead.org>; Wed, 14 Dec 2016 00:15:30 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20161214074046.GP1034@x1>
+ id 1cH4sR-0006RD-S5
+ for kexec@lists.infradead.org; Wed, 14 Dec 2016 08:25:28 +0000
+Date: Wed, 14 Dec 2016 16:25:01 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 1/2] kexec: add a dummy note for each offline cpu
+Message-ID: <20161214082501.GA9239@x1>
 References: <1481695887-21090-1-git-send-email-piliu@redhat.com>
  <20161214074046.GP1034@x1>
-From: Liu ping fan <kernelfans@gmail.com>
-Date: Wed, 14 Dec 2016 16:15:29 +0800
-Message-ID: <CAFgQCTvOiWzKbYOBF-L0A2cmw4OR76Hz33ChHB6VTh0REQEmEA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kexec: add a dummy note for each offline cpu
+ <CAFgQCTvOiWzKbYOBF-L0A2cmw4OR76Hz33ChHB6VTh0REQEmEA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAFgQCTvOiWzKbYOBF-L0A2cmw4OR76Hz33ChHB6VTh0REQEmEA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,21 +25,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: Liu ping fan <kernelfans@gmail.com>
 Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Pingfan Liu <piliu@redhat.com>
 
-On Wed, Dec 14, 2016 at 3:40 PM, Baoquan He <bhe@redhat.com> wrote:
-> On 12/14/16 at 02:11pm, Pingfan Liu wrote:
->> kexec-tools always allocates program headers for each possible cpu. This
->> incurs zero PT_NOTE for offline cpu. We mark this case so that later,
->> the capture kernel can distinguish it from the mistake of allocated
->> program header.
->> The counterpart of the capture kernel comes in next patch.
->
-> When you execute dmesg on your testing machine and grep nr_cpu_ids,
-> what's the value of nr_cpu_ids?
->
-nr_cpu_ids=128
+On 12/14/16 at 04:15pm, Liu ping fan wrote:
+> On Wed, Dec 14, 2016 at 3:40 PM, Baoquan He <bhe@redhat.com> wrote:
+> > On 12/14/16 at 02:11pm, Pingfan Liu wrote:
+> >> kexec-tools always allocates program headers for each possible cpu. This
+> >> incurs zero PT_NOTE for offline cpu. We mark this case so that later,
+> >> the capture kernel can distinguish it from the mistake of allocated
+> >> program header.
+> >> The counterpart of the capture kernel comes in next patch.
+> >
+> > When you execute dmesg on your testing machine and grep nr_cpu_ids,
+> > what's the value of nr_cpu_ids?
+> >
+> nr_cpu_ids=128
+
+And what's the cpu number of in "lscpu" command?
 
 _______________________________________________
 kexec mailing list
