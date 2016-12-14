@@ -1,24 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f54.google.com ([74.125.83.54])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cHAK2-0005Ii-Eo
- for kexec@lists.infradead.org; Wed, 14 Dec 2016 14:14:19 +0000
-Received: by mail-pg0-f54.google.com with SMTP id f188so8618952pgc.3
- for <kexec@lists.infradead.org>; Wed, 14 Dec 2016 06:13:57 -0800 (PST)
-Subject: Re: [PATCH 1/2] arm64: Add enable/disable d-cache support for
- purgatory
-References: <cover.1479788404.git.panand@redhat.com>
- <7a4866b928c0905ec1074dce1bfc7984c968a58a.1479788404.git.panand@redhat.com>
- <5838834D.90205@arm.com> <d8f354da-1e61-feaf-f76a-18e90361e98b@redhat.com>
- <9a79b666-7990-2a23-2d74-52b3317ce272@redhat.com> <58512A01.70101@arm.com>
- <20161214113701.GE17982@leverpostej>
- <3a6ac655-bfa6-0d90-6351-731ce36e99eb@redhat.com>
- <20161214134457.GJ17982@leverpostej>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <8a22f7bb-d0c4-8bda-4c2a-7a5c0b441a9b@redhat.com>
-Date: Wed, 14 Dec 2016 19:43:50 +0530
+Subject: Re: Need help for arm64
+References: <800dfe9c-02cf-def8-0cb6-8469553d6d00@windriver.com>
+From: Geoff Levand <geoff@infradead.org>
+Message-ID: <126a7455-8899-7601-191f-00d957668dbe@infradead.org>
+Date: Wed, 14 Dec 2016 09:20:40 -0800
 MIME-Version: 1.0
-In-Reply-To: <20161214134457.GJ17982@leverpostej>
+In-Reply-To: <800dfe9c-02cf-def8-0cb6-8469553d6d00@windriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,23 +18,24 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: geoff@infradead.org, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
+To: He Zhe <zhe.he@windriver.com>, kexec@lists.infradead.org
+Cc: Yang Shi <yang.shi@windriver.com>
 
+Hi,
 
-
-On Wednesday 14 December 2016 07:14 PM, Mark Rutland wrote:
->> Even for the non-kdump ie `kexec -l` case we do not have a
->> > functionality to bypass sha verification in kexec-tools. --lite
->> > option with the kexec-tools was discouraged and not accepted.
-> Ok. Do you have a pointer to the thread regarding that, for context?
+On 12/14/2016 01:42 AM, He Zhe wrote:
+> Hi,
 >
+> I notice the function below in kexec/arch/arm64/crashdump-arm64.c. It looks it always causes "kexec -p" to return:
+> "Memory for crashkernel is not reserved
+>
+> Do we have plan to implement this?
+> Do we have workaround for arm64?
 
-https://lists.ozlabs.org/pipermail/petitboot/2015-October/000141.html
-https://lists.ozlabs.org/pipermail/petitboot/2015-October/000136.html
+kexec does not yet support kdump.  Patches for it are in
+review.  Check the kexec ML.
 
-~Pratyush
-
+-Geoff
 
 _______________________________________________
 kexec mailing list
