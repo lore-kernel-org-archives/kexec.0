@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cGhBw-0005dD-L2
- for kexec@lists.infradead.org; Tue, 13 Dec 2016 07:08:01 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [Makedumpfile PATCH V2 2/4] x86_64: translate all VA to PA
- using page table values
-Date: Tue, 13 Dec 2016 07:03:12 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E8AB1F@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1477901442.git.panand@redhat.com>
- <c72c3722595f7b86754c6d9835ffdc3c68361bb4.1477901442.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E87E88@BPXM01GP.gisp.nec.co.jp>
- <3d3fcf63-eb95-9adb-b645-9f906d5f900f@redhat.com> <20161209142515.GB6875@x1>
- <20161210012915.GA1034@x1> <20161210013330.GC1034@x1>
- <e6c2f494-e399-dcaf-5463-42995341e966@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701E8867A@BPXM01GP.gisp.nec.co.jp>
- <20161212095020.GI1034@x1>
-In-Reply-To: <20161212095020.GI1034@x1>
-Content-Language: ja-JP
+ id 1cGzuE-0002Ur-9s
+ for kexec@lists.infradead.org; Wed, 14 Dec 2016 03:06:59 +0000
+Subject: Re: [PATCH] Add +~800M crashkernel explaination
+References: <20161210002202.19829-1-robert@leblancnet.us>
+ <20161210024927.GD1034@x1>
+ <CAANLjFq92OLqsPmoz0FMHw9ZEyAm60s3M1UgkqTLtHabuQL6DA@mail.gmail.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <5850B791.4040209@redhat.com>
+Date: Wed, 14 Dec 2016 11:08:01 +0800
 MIME-Version: 1.0
+In-Reply-To: <CAANLjFq92OLqsPmoz0FMHw9ZEyAm60s3M1UgkqTLtHabuQL6DA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,104 +20,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "bhe@redhat.com" <bhe@redhat.com>
-Cc: Pratyush Anand <panand@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "louis.bouchard@canonical.com" <louis.bouchard@canonical.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Robert LeBlanc <robert@leblancnet.us>, Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org
 
->On 12/12/16 at 08:40am, Atsushi Kumagai wrote:
->> >On Saturday 10 December 2016 07:03 AM, bhe@redhat.com wrote:
->> >> On 12/10/16 at 09:29am, Baoquan He wrote:
->> >>> On 12/09/16 at 10:25pm, Baoquan He wrote:
->> >>>> On 12/09/16 at 03:40pm, Pratyush Anand wrote:
->> >>>>>>> -	page_dir  = SYMBOL(init_level4_pgt);
->> >>>>>>> +	page_dir = SYMBOL(init_level4_pgt) - __START_KERNEL_map + phys_base;
->> >>>>>>
->> >>>>>> I found that this change breaks the backward compatibility for
->> >>>>>> kernel 2.6.21 or older since phys_base was introduced in kernel 2.6.22
->> >>>>>> by the commit below:
->> >>>>>>
->> >>>>>>   commit 1ab60e0f72f71ec54831e525a3e1154f1c092408
->> >>>>>>   Author: Vivek Goyal <vgoyal@in.ibm.com>
->> >>>>>>   Date:   Wed May 2 19:27:07 2007 +0200
->> >>>>>>
->> >>>>>>       [PATCH] x86-64: Relocatable Kernel Support
->> >>>>>>
->> >>>>>> There is no problem if phys_base is always 0 in older kernel, but
->> >>>>>> get_phys_base_x86_64() calculates "phys_base = 0x100000" from my vmcore:
->> >>>>
->> >>>> This is really awkward. Checked code, found PAGE_OFFSET is
->> >>>> 0xffff810000000000 before 2.6.26, then changed to 0xffff880000000000
->> >>>> after that. Can we check the page_offset calculated from pt_load
->> >>>> segments, meanwhile check if has VMCOREINFO and osrelease after 2.6.21.
->> >>>>
->> >>>> With both of above condition, we could set phys_vase to 0. Not sure if
->> >>>> this can solve the existing problem.
->> >>>
->> >>> I meant making a judgement:
->> >>>
->> >>
->> >> Sorry, should be:
->> >> if (page_offset == 0xffff810000000000 && !info->kernel_version > KERNEL_VERSION(2, 6, 21))
->> >> 	info->phys_base = 0;
->> >>
->> >
->> >
->> >But you can not read kernel_version because those version does not have
->> >VMCOREINFO. So, has_vmcoreinfo() still need to be used.
->>
->> Thanks for your comments, using has_vmcoreinfo() sounds like a good approach,
->> but not perfect way. VMCOREINFO has been introduced since 2.6.24,
->> 2.6.22 and 2.6.23 don't have VMCOREINFO but have phys_base.
->>
->> Conversely, 2.6.22 and 2.6.23 require vmlinux, so we can confirm the existence of
->> phys_base with that. My idea is:
->>
->> diff --git a/arch/x86_64.c b/arch/x86_64.c
->> index 010ea10..893cd51 100644
->> --- a/arch/x86_64.c
->> +++ b/arch/x86_64.c
->> @@ -67,6 +67,14 @@ get_phys_base_x86_64(void)
->>                 return TRUE;
->>         }
->>
->> +       /* linux-2.6.21 or older don't have phys_base, should be set to 0. */
->> +       if (!has_vmcoreinfo()) {
->> +               SYMBOL_INIT(phys_base, "phys_base");
->> +               if (SYMBOL(phys_base) == NOT_FOUND_SYMBOL) {
->> +                       return TRUE;
->> +               }
->> +       }
->> +
->>         for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
->>                 if (virt_start >= __START_KERNEL_map) {
->>
->>
->> This fix may resolve my issue, but now I have another question that
->> "Is the logic of get_phys_base_x86_64() correct in any kernel configuration ?"
->> I mean I'm worried about the possibility that another offset gets mixed with
->> the result of get_phys_base_x86_64() like my 2.6.21 case.
->> After phys_base was introduced, does it always equal to the offset which can be
->> calculated from PT_LOAD headers ?
->
->Don't worry. phys_base was introduced just after 2.6.21.
->
->commit 1ab60e0f72f71ec54831e525a3e1154f1c092408
->Author: Vivek Goyal <vgoyal@in.ibm.com>
->Date:   Wed May 2 19:27:07 2007 +0200
->
->    [PATCH] x86-64: Relocatable Kernel Support
->
->[bhe@x1 linux]$ git describe 1ab60e0f72f71ec54831e525a3e1154f1c092408
->v2.6.21-1836-g1ab60e0
+On 12/10/2016 at 01:20 PM, Robert LeBlanc wrote:
+> On Fri, Dec 9, 2016 at 7:49 PM, Baoquan He <bhe@redhat.com> wrote:
+>> On 12/09/16 at 05:22pm, Robert LeBlanc wrote:
+>>> When trying to configure crashkernel greater than about 800 MB, the
+>>> kernel fails to allocate memory on x86 and x86_64. This is due to an
+>>> undocumented limit that the crashkernel and other low memory items must
+>>> be allocated below 896 MB unless the ",high" option is given. This
+>>> updates the documentation to explain this and what I understand the
+>>> limitations to be on the option.
+>> This is true, but not very accurate. You found it's about 800M, it's
+>> becasue usually the current kernel need about 40M space to run, and some
+>> extra reservation before reserve_crashkernel invocation, another ~10M.
+>> However it's normal case, people may build modules into or have some
+>> special code to bloat kernel. This patch makes sense to address the
+>> low|high issue, it might be not good so determined to say ~800M.
+> My testing showed that I could go anywhere from about 830M to 880M,
+> depending on distro, kernel version, and stuff that you mentioned. I
+> just thought some rule of thumb of when to consider using high would
+> be good. People may not think that 800 MB is 'large' when you have 512
+> GB of RAM for instance. I thought about making 512 MB be the rule of
+> thumb, but you can do a lot with ~300 MB.
 
-All right, thanks.
-I'll release v1.6.1 soon if there is nothing wrong with the retest.
+Hi Robert,
+
+I think you are correct.
+
+For x86, the kernel uses memblock to locate the proper range starts from 16MB to some "end",
+without "high" prefix, "end" is CRASH_ADDR_LOW_MAX, otherwise CRASH_ADDR_HIGH_MAX.
+
+You can find the definition for both 32-bit and 64-bit:
+#ifdef CONFIG_X86_32
+# define CRASH_ADDR_LOW_MAX (512 << 20)
+# define CRASH_ADDR_HIGH_MAX    (512 << 20)
+#else
+# define CRASH_ADDR_LOW_MAX (896UL << 20)
+# define CRASH_ADDR_HIGH_MAX    MAXMEM
+#endif
+
+as some memory was already allocated by the kernel, which means it's highly likely to get a reservation
+failure after specifying a crashkernel value near 800MB(for x86_64) which was what you met. But we can't
+get the exact threshold, but it would be better if there is some explanation accordingly in the document.
+
+>
+> I'm happy to adjust the wording, what would you recommend? Also, I'm
+> not 100% sure that I got the cases covered correctly. I was surprised
+> that I could not get it to work with the "new" format with the
+> multiple ranges, and that specifying an offset would't work either,
+> although the offset kind of makes sense. Do you know for sure that it
+> doesn't work with ranges?
+>
+> I tried,
+>
+> crashkernel=256M-1G:128M,high,1G-4G:256M,high,4G-:512M,high
+>
+> and
+>
+> crashkernel=256M-1G:128M,1G-4G:256M,4G-:512M,high
+>
+> and neither worked. It seems that a better separator would be ';'
+> instead of ',' for ranges, then you could specify options better. Kind
+> of hard to change now.
+
+For "crashkernel=range1:size1[,range2:size2,...][@offset]"
+I'm afraid it doesn't support "high" prefix in the current implementation, so there is no guarantee.
+I guess we can drop a note to eliminate the confusion.
 
 Regards,
-Atsushi Kumagai
+Xunlei
+
+>>> Signed-off-by: Robert LeBlanc <robert@leblancnet.us>
+>>> ---
+>>>  Documentation/kdump/kdump.txt | 22 +++++++++++++++++-----
+>>>  1 file changed, 17 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+>>> index b0eb27b..aa3efa8 100644
+>>> --- a/Documentation/kdump/kdump.txt
+>>> +++ b/Documentation/kdump/kdump.txt
+>>> @@ -256,7 +256,9 @@ While the "crashkernel=size[@offset]" syntax is sufficient for most
+>>>  configurations, sometimes it's handy to have the reserved memory dependent
+>>>  on the value of System RAM -- that's mostly for distributors that pre-setup
+>>>  the kernel command line to avoid a unbootable system after some memory has
+>>> -been removed from the machine.
+>>> +been removed from the machine. If you need to allocate more than ~800M
+>>> +for x86 or x86_64 then you must use the simple format as the format
+>>> +',high' conflicts with the separators of ranges.
+>>>
+>>>  The syntax is:
+>>>
+>>> @@ -282,11 +284,21 @@ Boot into System Kernel
+>>>  1) Update the boot loader (such as grub, yaboot, or lilo) configuration
+>>>     files as necessary.
+>>>
+>>> -2) Boot the system kernel with the boot parameter "crashkernel=Y@X",
+>>> +2) Boot the system kernel with the boot parameter "crashkernel=Y[@X | ,high]",
+>>>     where Y specifies how much memory to reserve for the dump-capture kernel
+>>> -   and X specifies the beginning of this reserved memory. For example,
+>>> -   "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+>>> -   starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+>>> +   and X specifies the beginning of this reserved memory or ',high' to load in
+>>> +   high memory. For example, "crashkernel=64M@16M" tells the system
+>>> +   kernel to reserve 64 MB of memory starting at physical address
+>>> +   0x01000000 (16MB) for the dump-capture kernel.
+>>> +
+>>> +   Specifying "crashkernel=1G,high" tells the system kernel to reserve 1 GB
+>>> +   of memory using high memory for the dump-capture kernel, there may also
+>>> +   be some low memory allocated as well. If you need more than ~800M for
+>>> +   the crash kernel to operate (volumes on FC/iSCSI, large volumes, systemd
+>>> +   added to the previous, etc), you need to specify ',high' since without
+>>> +   it crashkerenel has to try and fit under 896M along with some other
+>>> +   items and will fail to allocate memory. High memory may only be relevant
+>>> +   on x86 and x86_64.
+>>>
+>>>     On x86 and x86_64, use "crashkernel=64M@16M".
+>>>
+>>> --
+>>> 2.10.2
+>>>
+>>>
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+> ----------------
+> Robert LeBlanc
+> PGP Fingerprint 79A2 9CA4 6CC4 45DD A904  C70E E654 3BB2 FA62 B9F1
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
 
 _______________________________________________
 kexec mailing list
