@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb0-x242.google.com ([2607:f8b0:4002:c09::242])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cH9l9-0007BK-Io
- for kexec@lists.infradead.org; Wed, 14 Dec 2016 13:38:16 +0000
-Received: by mail-yb0-x242.google.com with SMTP id h184so1866550ybb.1
- for <kexec@lists.infradead.org>; Wed, 14 Dec 2016 05:37:54 -0800 (PST)
+Date: Wed, 14 Dec 2016 13:44:57 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] arm64: Add enable/disable d-cache support for
+ purgatory
+Message-ID: <20161214134457.GJ17982@leverpostej>
+References: <cover.1479788404.git.panand@redhat.com>
+ <7a4866b928c0905ec1074dce1bfc7984c968a58a.1479788404.git.panand@redhat.com>
+ <5838834D.90205@arm.com>
+ <d8f354da-1e61-feaf-f76a-18e90361e98b@redhat.com>
+ <9a79b666-7990-2a23-2d74-52b3317ce272@redhat.com>
+ <58512A01.70101@arm.com> <20161214113701.GE17982@leverpostej>
+ <3a6ac655-bfa6-0d90-6351-731ce36e99eb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <800dfe9c-02cf-def8-0cb6-8469553d6d00@windriver.com>
-References: <800dfe9c-02cf-def8-0cb6-8469553d6d00@windriver.com>
-From: Maxim Uvarov <muvarov@gmail.com>
-Date: Wed, 14 Dec 2016 16:37:53 +0300
-Message-ID: <CAJGZr0KQusKA_O_E410m4xEE1as=7=P7yqgFioiUTsjrZyf-xg@mail.gmail.com>
-Subject: Re: Need help for arm64
+Content-Disposition: inline
+In-Reply-To: <3a6ac655-bfa6-0d90-6351-731ce36e99eb@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +26,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: He Zhe <zhe.he@windriver.com>
-Cc: geoff@infradead.org, Yang Shi <yang.shi@windriver.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: geoff@infradead.org, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org
 
-which kexec-tools and which kernel are you using?
+Hi,
 
-Maxim.
+On Wed, Dec 14, 2016 at 05:51:05PM +0530, Pratyush Anand wrote:
+> 
+> On Wednesday 14 December 2016 05:07 PM, Mark Rutland wrote:
+> >I see in an earlier message that the need for sha256 was being discussed
+> >in another thread. Do either of you happen to have a pointer to that.
+> 
+> patch 0/2 of this series.
 
-2016-12-14 12:42 GMT+03:00 He Zhe <zhe.he@windriver.com>:
-> Hi,
->
-> I notice the function below in kexec/arch/arm64/crashdump-arm64.c. It looks it always causes "kexec -p" to return:
-> "Memory for crashkernel is not reserved
-> Please reserve memory by passing"crashkernel=X@Y" parameter to kernel
-> Then try to loading kdump kernel"
->
-> int is_crashkernel_mem_reserved(void)
-> {
->         return 0;
-> }
->
-> Do we have plan to implement this?
-> Do we have workaround for arm64?
->
-> Thanks,
-> Zhe
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+AFAICT, that just says the the existing sha256 check is slow, not *why*
+a sha256 check of some description is necessary. I'm still at a loss as
+to why it is considered necessary, rather than being a debugging aid or
+sanity check.
 
+> >To me, it seems like it doesn't come with much benefit for the kdump
+> >case given that's best-effort anyway, and as above the verification code
+> >could have been be corrupted. In the non-kdump case it's not strictly
+> >necessary and seems like a debugging aid rather than a necessary piece
+> >of functionality -- if that's the case, a 20 second delay isn't the end
+> >of the world...
+> 
+> Even for the non-kdump ie `kexec -l` case we do not have a
+> functionality to bypass sha verification in kexec-tools. --lite
+> option with the kexec-tools was discouraged and not accepted.
 
+Ok. Do you have a pointer to the thread regarding that, for context?
 
--- 
-Best regards,
-Maxim Uvarov
+> So,it is 20s for both `kexec -l` and `kexec -p`.
+
+Well, unless we can have a --{no-,}sha-check, and make the default NO
+for arm64.
+
+> Also other arch like x86_64 takes negligible time in sha verification.
+
+That's certainly an argument for not changing the other architectures,
+but given it's slow for arm64, we could have a different default...
+
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
