@@ -1,22 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f177.google.com ([209.85.192.177])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cH8Yt-0005Pw-3V
- for kexec@lists.infradead.org; Wed, 14 Dec 2016 12:21:32 +0000
-Received: by mail-pf0-f177.google.com with SMTP id i88so3888724pfk.2
- for <kexec@lists.infradead.org>; Wed, 14 Dec 2016 04:21:10 -0800 (PST)
-Subject: Re: [PATCH 1/2] arm64: Add enable/disable d-cache support for
- purgatory
-References: <cover.1479788404.git.panand@redhat.com>
- <7a4866b928c0905ec1074dce1bfc7984c968a58a.1479788404.git.panand@redhat.com>
- <5838834D.90205@arm.com> <d8f354da-1e61-feaf-f76a-18e90361e98b@redhat.com>
- <9a79b666-7990-2a23-2d74-52b3317ce272@redhat.com> <58512A01.70101@arm.com>
- <20161214113701.GE17982@leverpostej>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <3a6ac655-bfa6-0d90-6351-731ce36e99eb@redhat.com>
-Date: Wed, 14 Dec 2016 17:51:05 +0530
-MIME-Version: 1.0
-In-Reply-To: <20161214113701.GE17982@leverpostej>
+ id 1cH9Ta-000056-9G
+ for kexec@lists.infradead.org; Wed, 14 Dec 2016 13:20:07 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ uBEDEiAs136435
+ for <kexec@lists.infradead.org>; Wed, 14 Dec 2016 08:19:45 -0500
+Received: from e23smtp06.au.ibm.com (e23smtp06.au.ibm.com [202.81.31.148])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 27b2y1xbya-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 14 Dec 2016 08:19:45 -0500
+Received: from localhost
+ by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <kamalesh@linux.vnet.ibm.com>;
+ Wed, 14 Dec 2016 23:19:43 +1000
+Received: from d23relay10.au.ibm.com (d23relay10.au.ibm.com [9.190.26.77])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id DE16D2CE8056
+ for <kexec@lists.infradead.org>; Thu, 15 Dec 2016 00:19:41 +1100 (EST)
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+ by d23relay10.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ uBEDJfOX1311048
+ for <kexec@lists.infradead.org>; Thu, 15 Dec 2016 00:19:41 +1100
+Received: from d23av03.au.ibm.com (localhost [127.0.0.1])
+ by d23av03.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ uBEDJfK5016667
+ for <kexec@lists.infradead.org>; Thu, 15 Dec 2016 00:19:41 +1100
+From: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: [PATCH 1/2] eppic: vhost_net_buffers - Adopt to struct sk_buff changes
+Date: Wed, 14 Dec 2016 18:49:24 +0530
+Message-Id: <a2161c027dba53f21476f3bc283fae8700778a74.1481721378.git.kamalesh@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +39,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>
-Cc: geoff@infradead.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
+Linux kernel commit 56b174256b69 ("net: add rbnode to struct sk_buff"),
+moves sk_buff->next into an union of sk_buff->{next/prev/tstamp/rb_node}.
+Introduce this structure member change, while traversing the socket
+buffer list.
 
+Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+---
+ eppic_scripts/vhost_net_buffers.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-On Wednesday 14 December 2016 05:07 PM, Mark Rutland wrote:
-> On Wed, Dec 14, 2016 at 11:16:17AM +0000, James Morse wrote:
->> Hi Pratyush,
->>
->> On 14/12/16 10:12, Pratyush Anand wrote:
->>> On Wednesday 14 December 2016 03:08 PM, Pratyush Anand wrote:
->>>>> I would go as far as to generate the page tables at 'kexec -l' time,
->>>>> and only if
->>>>
->>>> Ok..So you mean that I create a new section which will have page table
->>>> entries mapping physicalmemory represented by remaining section, and
->>>> then purgatory can just enable mmu with page table from that section,
->>>> right? Seems doable. can do that.
->>>
->>> I see a problem here. If we create  page table as a new segment then, how can we
->>> verify in purgatory that sha for page table is correct? We need page table
->>> before sha verification start,and we can not rely the page table created by
->>> first kernel until it's sha is verified. So a chicken-egg problem.
->>
->> There is more than one of those! What happens if your sha256 calculation code is
->> corrupted? You have to run it before you know. The same goes for all the
->> purgatory code.
->>
->> This is why I think its better to do this in the kernel before we exit to
->> purgatory, but obviously that doesn't work for kdump.
->
-> I see in an earlier message that the need for sha256 was being discussed
-> in another thread. Do either of you happen to have a pointer to that.
->
+diff --git a/eppic_scripts/vhost_net_buffers.c b/eppic_scripts/vhost_net_buffers.c
+index 39ae595..1260acb 100644
+--- a/eppic_scripts/vhost_net_buffers.c
++++ b/eppic_scripts/vhost_net_buffers.c
+@@ -45,7 +45,10 @@ vhost_net(struct vhost_net *net)
+ 				memset((char *)&(buff->data_len), 'L', 0x4);
+ 			}
+ 
+-			next = buff->next;
++			/*
++			 * .next is the first entry.
++			 */
++			next = (struct sk_buff *)(unsigned long)*buff;
+ 		}
+ 
+ 		head = (struct sk_buff_head *)&(sk->sk_write_queue);
+@@ -60,8 +63,10 @@ vhost_net(struct vhost_net *net)
+ 				memset((char *)&(buff->data_len), 'L', 0x4);
+ 			}
+ 
+-			next = buff->next;
+-
++			/*
++			 * .next is the first entry.
++			 */
++			next = (struct sk_buff *)(unsigned long)*buff;
+ 		}
+ 	}
+ }
+-- 
+2.7.4
 
-patch 0/2 of this series.
-
-> To me, it seems like it doesn't come with much benefit for the kdump
-> case given that's best-effort anyway, and as above the verification code
-> could have been be corrupted. In the non-kdump case it's not strictly
-> necessary and seems like a debugging aid rather than a necessary piece
-> of functionality -- if that's the case, a 20 second delay isn't the end
-> of the world...
-
-
-Even for the non-kdump ie `kexec -l` case we do not have a functionality 
-to bypass sha verification in kexec-tools. --lite option with the 
-kexec-tools was discouraged and not accepted. So,it is 20s for both 
-`kexec -l` and `kexec -p`.
-Also other arch like x86_64 takes negligible time in sha verification.
-
-~Pratyush
 
 _______________________________________________
 kexec mailing list
