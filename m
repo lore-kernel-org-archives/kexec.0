@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x229.google.com ([2607:f8b0:4001:c0b::229])
+Received: from mail-it0-x22a.google.com ([2607:f8b0:4001:c0b::22a])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cHaaS-0006al-5t
- for kexec@lists.infradead.org; Thu, 15 Dec 2016 18:17:01 +0000
-Received: by mail-it0-x229.google.com with SMTP id l8so4523115iti.1
- for <kexec@lists.infradead.org>; Thu, 15 Dec 2016 10:16:39 -0800 (PST)
+ id 1cHby8-0000VJ-7r
+ for kexec@lists.infradead.org; Thu, 15 Dec 2016 19:45:33 +0000
+Received: by mail-it0-x22a.google.com with SMTP id y23so616995itc.0
+ for <kexec@lists.infradead.org>; Thu, 15 Dec 2016 11:45:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87bmwdytco.fsf@xmission.com>
+In-Reply-To: <CAJcbSZGvezhK3d4Gp+-j0iDFi3d2nBwR0hxxt9_0cYz-CvAcwA@mail.gmail.com>
 References: <1481818648-36201-1-git-send-email-thgarnie@google.com>
  <87bmwdytco.fsf@xmission.com>
+ <CAJcbSZGvezhK3d4Gp+-j0iDFi3d2nBwR0hxxt9_0cYz-CvAcwA@mail.gmail.com>
 From: Thomas Garnier <thgarnie@google.com>
-Date: Thu, 15 Dec 2016 10:16:38 -0800
-Message-ID: <CAJcbSZGvezhK3d4Gp+-j0iDFi3d2nBwR0hxxt9_0cYz-CvAcwA@mail.gmail.com>
+Date: Thu, 15 Dec 2016 11:45:10 -0800
+Message-ID: <CAJcbSZEK8KFCRjDiuudPPNn1ULtsmEm2ituabZdYqA4WchxkjA@mail.gmail.com>
 Subject: Re: [PATCH] Revert "Revert "kdump, vmcoreinfo: report memory sections
  virtual addresses""
 List-Id: <kexec.lists.infradead.org>
@@ -29,80 +30,96 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Baoquan He <bhe@redhat.com>, Kernel Hardening <kernel-hardening@lists.openwall.com>, kexec@lists.infradead.org, the arch/x86 maintainers <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
 
-On Thu, Dec 15, 2016 at 9:50 AM, Eric W. Biederman
-<ebiederm@xmission.com> wrote:
-> Thomas Garnier <thgarnie@google.com> writes:
->
->> This reverts commit 49fd897573c97b0eaf10f47d850027d78c456cd7.
+On Thu, Dec 15, 2016 at 10:16 AM, Thomas Garnier <thgarnie@google.com> wrote:
+> On Thu, Dec 15, 2016 at 9:50 AM, Eric W. Biederman
+> <ebiederm@xmission.com> wrote:
+>> Thomas Garnier <thgarnie@google.com> writes:
 >>
->> Reverting back to commit 0549a3c because the values are used by crash
->> and other tools already. I expected this commit would not go through given
->> the unresolved comments. I want it to be easy to resolve major memory
->> section positions when KASLR memory randomization is enabled.
->
-> This patch is broken.  The commit referenced is wrong,
-
-Yes, I based them on linux-next. I can update them to linux main tree.
-Sorry about that.
-
-> as is the justification.
->
-> These values are not in fact widely used by userspace (they are brand new).
->
-
-They were new and got through to the master tree before and on 4.9. I
-didn't get any feedback on that when it went through.
-
-> This is a very fragile approach relying on kernel implementation
-> details, so if we can do anything else that is more robust it
-> is much more likely to pass the test of time.
->
-> And yes a more robust implementation has been already discussed.
->
-
-There were discussed for the PAGE_OFFSET but not VMALLOC_START. What's
-your approach for it?
-
-> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
->
+>>> This reverts commit 49fd897573c97b0eaf10f47d850027d78c456cd7.
+>>>
+>>> Reverting back to commit 0549a3c because the values are used by crash
+>>> and other tools already. I expected this commit would not go through given
+>>> the unresolved comments. I want it to be easy to resolve major memory
+>>> section positions when KASLR memory randomization is enabled.
 >>
->> Signed-off-by: Thomas Garnier <thgarnie@google.com>
->> ---
->>  arch/x86/kernel/machine_kexec_64.c | 3 +++
->>  include/linux/kexec.h              | 6 ++++++
->>  2 files changed, 9 insertions(+)
+>> This patch is broken.  The commit referenced is wrong,
+>
+> Yes, I based them on linux-next. I can update them to linux main tree.
+> Sorry about that.
+>
+>> as is the justification.
 >>
->> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->> index 2e3c34b..05f3367 100644
->> --- a/arch/x86/kernel/machine_kexec_64.c
->> +++ b/arch/x86/kernel/machine_kexec_64.c
->> @@ -339,6 +339,9 @@ void arch_crash_save_vmcoreinfo(void)
->>                             kaslr_offset());
->>       VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
->>       VMCOREINFO_PHYS_BASE(phys_base);
->> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
->> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
->> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
->>  }
+>> These values are not in fact widely used by userspace (they are brand new).
 >>
->>  /* arch-dependent functionality related to kexec file-based syscall */
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index e98e546..ff9c876 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -285,6 +285,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
->>  #define VMCOREINFO_PHYS_BASE(value) \
->>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_PAGE_OFFSET(value) \
->> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_VMALLOC_START(value) \
->> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
->> +#define VMCOREINFO_VMEMMAP_START(value) \
->> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
+>
+> They were new and got through to the master tree before and on 4.9. I
+> didn't get any feedback on that when it went through.
+>
+>> This is a very fragile approach relying on kernel implementation
+>> details, so if we can do anything else that is more robust it
+>> is much more likely to pass the test of time.
 >>
->>  extern struct kimage *kexec_image;
->>  extern struct kimage *kexec_crash_image;
+>> And yes a more robust implementation has been already discussed.
+>>
+>
+> There were discussed for the PAGE_OFFSET but not VMALLOC_START. What's
+> your approach for it?
+>
+
+Also with improvement on KASLR memory randomization, I don't think we
+should assume memory sections by looking at PT_LOAD first entries. We
+will certainly try to randomize the order. That's why I thought
+clearly indicating which VA define which memory section was a good
+idea.
+
+I also want to find a time proof approach where we can use it no
+matter the changes to KASLR.
+
+>> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>>
+>>>
+>>> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+>>> ---
+>>>  arch/x86/kernel/machine_kexec_64.c | 3 +++
+>>>  include/linux/kexec.h              | 6 ++++++
+>>>  2 files changed, 9 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+>>> index 2e3c34b..05f3367 100644
+>>> --- a/arch/x86/kernel/machine_kexec_64.c
+>>> +++ b/arch/x86/kernel/machine_kexec_64.c
+>>> @@ -339,6 +339,9 @@ void arch_crash_save_vmcoreinfo(void)
+>>>                             kaslr_offset());
+>>>       VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+>>>       VMCOREINFO_PHYS_BASE(phys_base);
+>>> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
+>>> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
+>>> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
+>>>  }
+>>>
+>>>  /* arch-dependent functionality related to kexec file-based syscall */
+>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>> index e98e546..ff9c876 100644
+>>> --- a/include/linux/kexec.h
+>>> +++ b/include/linux/kexec.h
+>>> @@ -285,6 +285,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>>>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+>>>  #define VMCOREINFO_PHYS_BASE(value) \
+>>>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+>>> +#define VMCOREINFO_PAGE_OFFSET(value) \
+>>> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
+>>> +#define VMCOREINFO_VMALLOC_START(value) \
+>>> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
+>>> +#define VMCOREINFO_VMEMMAP_START(value) \
+>>> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
+>>>
+>>>  extern struct kimage *kexec_image;
+>>>  extern struct kimage *kexec_crash_image;
+>
+>
+>
+> --
+> Thomas
 
 
 
