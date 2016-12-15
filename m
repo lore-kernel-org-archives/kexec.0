@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cHMl1-0007P9-Vy
- for kexec@lists.infradead.org; Thu, 15 Dec 2016 03:31:01 +0000
-From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH] x86/crash: Update the stale comment in reserve_crashkernel()
-Date: Thu, 15 Dec 2016 11:30:21 +0800
-Message-Id: <1481772621-17923-1-git-send-email-xlpang@redhat.com>
+ id 1cHQHx-0002BQ-Ms
+ for kexec@lists.infradead.org; Thu, 15 Dec 2016 07:17:15 +0000
+Date: Thu, 15 Dec 2016 15:16:46 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/2] kexec: add a dummy note for each offline cpu
+Message-ID: <20161215071646.GA10673@dhcp-128-65.nay.redhat.com>
+References: <1481695887-21090-1-git-send-email-piliu@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1481695887-21090-1-git-send-email-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,43 +19,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Robert LeBlanc <robert@leblancnet.us>, Xunlei Pang <xlpang@redhat.com>, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+To: Pingfan Liu <piliu@redhat.com>
+Cc: kexec@lists.infradead.org, kernelfans@gmail.com, Baoquan He <bhe@redhat.com>
 
-CRASH_KERNEL_ADDR_MAX was missing for a long time, update it
-with more detailed explanation.
+Hi, Pingfan
+On 12/14/16 at 02:11pm, Pingfan Liu wrote:
+> kexec-tools always allocates program headers for each possible cpu. This
+> incurs zero PT_NOTE for offline cpu. We mark this case so that later,
+> the capture kernel can distinguish it from the mistake of allocated
+> program header.
+> The counterpart of the capture kernel comes in next patch.
 
-Cc: Robert LeBlanc <robert@leblancnet.us>
-Cc: Baoquan He <bhe@redhat.com>
-Signed-off-by: Xunlei Pang <xlpang@redhat.com>
----
- arch/x86/kernel/setup.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I thought you saw the warnings on ppc64 and it might be a ppc64 issue.
+But if this is instead a general issue, can we think about if this is
+really necessary?
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 9c337b0..79ee507 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -575,7 +575,10 @@ static void __init reserve_crashkernel(void)
- 	/* 0 means: find the address automatically */
- 	if (crash_base <= 0) {
- 		/*
--		 *  kexec want bzImage is below CRASH_KERNEL_ADDR_MAX
-+		 * Set CRASH_ADDR_LOW_MAX upper bound for crash range
-+		 * as old kexec-tools loads bzImage below that, unless
-+		 * "size,high" or "size@offset"(nonzero offset, see the
-+		 * else leg below) is specified.
- 		 */
- 		crash_base = memblock_find_in_range(CRASH_ALIGN,
- 						    high ? CRASH_ADDR_HIGH_MAX
--- 
-1.8.3.1
+Does it have any side effect other than the warning messages? If there
+is nothing bad other than the warnings maybe leave it as is will be
+a better way.
 
+> 
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> ---
+> This unnecessary warning buzz on all archs when there is offline cpu
+> 
+>  include/uapi/linux/elf.h | 1 +
+>  kernel/kexec_core.c      | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+> index b59ee07..9744f1e 100644
+> --- a/include/uapi/linux/elf.h
+> +++ b/include/uapi/linux/elf.h
+> @@ -367,6 +367,7 @@ typedef struct elf64_shdr {
+>   * using the corresponding note types via the PTRACE_GETREGSET and
+>   * PTRACE_SETREGSET requests.
+>   */
+> +#define NT_DUMMY	0
+>  #define NT_PRSTATUS	1
+>  #define NT_PRFPREG	2
+>  #define NT_PRPSINFO	3
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 5616755..aeac16e 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -891,9 +891,12 @@ void __crash_kexec(struct pt_regs *regs)
+>  	if (mutex_trylock(&kexec_mutex)) {
+>  		if (kexec_crash_image) {
+>  			struct pt_regs fixed_regs;
+> +			unsigned int cpu;
+>  
+>  			crash_setup_regs(&fixed_regs, regs);
+>  			crash_save_vmcoreinfo();
+> +			for_each_cpu_not(cpu, cpu_online_mask)
+> +				crash_save_cpu(NULL, cpu);
+>  			machine_crash_shutdown(&fixed_regs);
+>  			machine_kexec(kexec_crash_image);
+>  		}
+> @@ -1040,6 +1043,12 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+>  	buf = (u32 *)per_cpu_ptr(crash_notes, cpu);
+>  	if (!buf)
+>  		return;
+> +	if (regs == NULL) {
+> +		buf = append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_DUMMY,
+> +				NULL, 0);
+> +		final_note(buf);
+> +		return;
+> +	}
+>  	memset(&prstatus, 0, sizeof(prstatus));
+>  	prstatus.pr_pid = current->pid;
+>  	elf_core_copy_kernel_regs(&prstatus.pr_reg, regs);
+> -- 
+> 2.7.4
+> 
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
