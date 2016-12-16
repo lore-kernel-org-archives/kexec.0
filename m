@@ -1,19 +1,45 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cHiKA-0004gV-Iq
- for kexec@lists.infradead.org; Fri, 16 Dec 2016 02:32:43 +0000
-Date: Fri, 16 Dec 2016 10:32:13 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
-References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
- <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
- <20161215122856.7d24b7a8@endymion>
+ id 1cHm9T-0008Gi-DT
+ for kexec@lists.infradead.org; Fri, 16 Dec 2016 06:37:56 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ uBG6YKxk056996
+ for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 01:37:34 -0500
+Received: from e23smtp04.au.ibm.com (e23smtp04.au.ibm.com [202.81.31.146])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 27cax6gwyx-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 01:37:33 -0500
+Received: from localhost
+ by e23smtp04.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Fri, 16 Dec 2016 16:37:30 +1000
+Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 31C9C3578056
+ for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 17:37:28 +1100 (EST)
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ uBG6bSRl30343418
+ for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 17:37:28 +1100
+Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ uBG6bR5D031181
+ for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 17:37:28 +1100
+Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
+ functions
+References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
+ <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
+ <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
+ <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com>
+ <87mvge16gw.fsf@xmission.com>
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Fri, 16 Dec 2016 12:07:23 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161215122856.7d24b7a8@endymion>
+In-Reply-To: <87mvge16gw.fsf@xmission.com>
+Message-Id: <34293693-5424-9bdc-c693-dc385a5935e3@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,96 +48,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jean Delvare <jdelvare@suse.de>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
 
-On 12/15/16 at 12:28pm, Jean Delvare wrote:
-> Hi Andy,
-> 
-> On Fri,  2 Dec 2016 21:54:16 +0200, Andy Shevchenko wrote:
-> > Until now kexec'ed kernel has no clue where to look for DMI entry point.
-> > 
-> > Pass it via kernel command line parameter in the same way as it's done for ACPI
-> > RSDP.
-> 
-> I am no kexec expert but this confuses me. Shouldn't the second kernel
-> have access to the EFI systab as the first kernel does? It includes
-> many more pointers than just ACPI and DMI tables, and it would seem
-> inconvenient to have to pass all these addresses individually
-> explicitly.
 
-Yes, in modern linux kernel, kexec has the support for EFI, I think it
-should work naturally at least in x86_64.
 
-Is there any test log with latest mainline kernel about this?
+On Saturday 03 December 2016 12:52 AM, Eric W. Biederman wrote:
+> Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
+>
+>> Hi Dave,
+>>
+>>
+>> Thanks for the review.
+>>
+>>
+>> On Thursday 01 December 2016 10:26 AM, Dave Young wrote:
+>>> Hi Hari
+>>>
+>>> Personally I like V1 more, but split the patch 2 is easier for ia64
+>>> people to reivew.  I did basic x86 testing, it runs ok.
+>>>
+>>> On 11/25/16 at 05:24pm, Hari Bathini wrote:
+>>>> Get rid of multiple definitions of append_elf_note() & final_note()
+>>>> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
+>>>>
+>>>> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+>>>> ---
+>>>>    arch/ia64/kernel/crash.c   |   22 ----------------------
+>>>>    include/linux/crash_core.h |    4 ++++
+>>>>    kernel/crash_core.c        |    6 +++---
+>>>>    kernel/kexec_core.c        |   28 ----------------------------
+>>>>    4 files changed, 7 insertions(+), 53 deletions(-)
+>>>>
+>>>> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
+>>>> index 2955f35..75859a0 100644
+>>>> --- a/arch/ia64/kernel/crash.c
+>>>> +++ b/arch/ia64/kernel/crash.c
+>>>> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
+>>>>    static int kdump_on_init = 1;
+>>>>    static int kdump_on_fatal_mca = 1;
+>>>>    -static inline Elf64_Word
+>>>> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
+>>>> -		size_t data_len)
+>>>> -{
+>>>> -	struct elf_note *note = (struct elf_note *)buf;
+>>>> -	note->n_namesz = strlen(name) + 1;
+>>>> -	note->n_descsz = data_len;
+>>>> -	note->n_type   = type;
+>>>> -	buf += (sizeof(*note) + 3)/4;
+>>>> -	memcpy(buf, name, note->n_namesz);
+>>>> -	buf += (note->n_namesz + 3)/4;
+>>>> -	memcpy(buf, data, data_len);
+>>>> -	buf += (data_len + 3)/4;
+>>>> -	return buf;
+>>>> -}
+>>>> -
+>>>> -static void
+>>>> -final_note(void *buf)
+>>>> -{
+>>>> -	memset(buf, 0, sizeof(struct elf_note));
+>>>> -}
+>>>> -
+>>> The above IA64 version looks better than the functions in kexec_core.c
+>>> about the Elf64_Word type usage and the simpler final_note function.
+>> Hmmm.. Is void* better over Elf64_Word* to be agnostic of Elf32 or
+>> Elf64 type?
+> Both Elf64_Word and Elf32_Word result in a u32.  So I expect the right
+> solution is to add a definition of Elf_Word to include/linux/elf.h
+> and to make the buffer "Elf_Word *buf".
+>
+> That way we preserve the alignment knowledge, while making the code
+> depend on 32bit or 64bit.
+>
+> Eric
+>
 
-> 
-> Adding Eric to Cc for his opinion.
-> 
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
-> >  drivers/firmware/dmi_scan.c                     | 14 ++++++++++++++
-> >  2 files changed, 19 insertions(+)
-> > 
-> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > index be2d6d0..94f219f 100644
-> > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > @@ -843,6 +843,11 @@
-> >  			The filter can be disabled or changed to another
-> >  			driver later using sysfs.
-> >  
-> > +	dmi_entry_point=	[DMI,EFI,KEXEC]
-> > +			Pass the DMI entry point to the kernel, mostly used
-> > +			on machines running EFI runtime service to boot the
-> > +			second kernel for kdump.
-> > +
-> >  	drm_kms_helper.edid_firmware=[<connector>:]<file>[,[<connector>:]<file>]
-> >  			Broken monitors, graphic adapters, KVMs and EDIDless
-> >  			panels may send no or incorrect EDID data sets.
-> > diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-> > index b88def6..215843f 100644
-> > --- a/drivers/firmware/dmi_scan.c
-> > +++ b/drivers/firmware/dmi_scan.c
-> > @@ -595,8 +595,22 @@ static int __init dmi_smbios3_present(const u8 *buf)
-> >  	return 1;
-> >  }
-> >  
-> > +#ifdef CONFIG_KEXEC
-> > +static unsigned long dmi_entry_point;
-> > +static int __init setup_dmi_entry_point(char *arg)
-> > +{
-> > +	return kstrtoul(arg, 16, &dmi_entry_point);
-> > +}
-> > +early_param("dmi_entry_point", setup_dmi_entry_point);
-> > +#endif
-> > +
-> >  static resource_size_t __init dmi_get_entry_point(void)
-> >  {
-> > +#ifdef CONFIG_KEXEC
-> > +	if (dmi_entry_point)
-> > +		return dmi_entry_point;
-> > +#endif
-> > +
-> >  	if (efi_enabled(EFI_CONFIG_TABLES)) {
-> >  		/*
-> >  		 * According to the DMTF SMBIOS reference spec v3.0.0, it is
-> 
-> 
-> -- 
-> Jean Delvare
-> SUSE L3 Support
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Thanks for the review, Eric. Will address this in the next version.
+
+As some recent changes in powerpc tree may cause merger conflicts,
+I will wait for those changes to get into linus's tree and rebase the
+next version on top of that..
+
+Thanks
+Hari
+
 
 _______________________________________________
 kexec mailing list
