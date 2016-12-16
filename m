@@ -1,45 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cHm9T-0008Gi-DT
- for kexec@lists.infradead.org; Fri, 16 Dec 2016 06:37:56 +0000
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- uBG6YKxk056996
- for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 01:37:34 -0500
-Received: from e23smtp04.au.ibm.com (e23smtp04.au.ibm.com [202.81.31.146])
- by mx0a-001b2d01.pphosted.com with ESMTP id 27cax6gwyx-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 01:37:33 -0500
-Received: from localhost
- by e23smtp04.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 16 Dec 2016 16:37:30 +1000
-Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 31C9C3578056
- for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 17:37:28 +1100 (EST)
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
- by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- uBG6bSRl30343418
- for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 17:37:28 +1100
-Received: from d23av02.au.ibm.com (localhost [127.0.0.1])
- by d23av02.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- uBG6bR5D031181
- for <kexec@lists.infradead.org>; Fri, 16 Dec 2016 17:37:28 +1100
-Subject: Re: [PATCH v2 2/5] ia64: reuse append_elf_note() and final_note()
- functions
-References: <148007477669.1053.4107773905913128028.stgit@hbathini.in.ibm.com>
- <148007484315.1053.12317233313990302812.stgit@hbathini.in.ibm.com>
- <20161201045653.GA13670@dhcp-128-65.nay.redhat.com>
- <fe3784de-a68b-5d6e-a9ab-f77a7da781a8@linux.vnet.ibm.com>
- <87mvge16gw.fsf@xmission.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Fri, 16 Dec 2016 12:07:23 +0530
+ id 1cHnK0-0004JC-PG
+ for kexec@lists.infradead.org; Fri, 16 Dec 2016 07:52:53 +0000
+Date: Fri, 16 Dec 2016 15:52:24 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] Revert "Revert "kdump, vmcoreinfo: report memory
+ sections virtual addresses""
+Message-ID: <20161216075224.GE9239@x1>
+References: <1481818648-36201-1-git-send-email-thgarnie@google.com>
+ <87bmwdytco.fsf@xmission.com>
+ <CAJcbSZGvezhK3d4Gp+-j0iDFi3d2nBwR0hxxt9_0cYz-CvAcwA@mail.gmail.com>
+ <CAJcbSZEK8KFCRjDiuudPPNn1ULtsmEm2ituabZdYqA4WchxkjA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <87mvge16gw.fsf@xmission.com>
-Message-Id: <34293693-5424-9bdc-c693-dc385a5935e3@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <CAJcbSZEK8KFCRjDiuudPPNn1ULtsmEm2ituabZdYqA4WchxkjA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,94 +23,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
+To: Thomas Garnier <thgarnie@google.com>
+Cc: Kernel Hardening <kernel-hardening@lists.openwall.com>, kexec@lists.infradead.org, the arch/x86 maintainers <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
 
+On 12/15/16 at 11:45am, Thomas Garnier wrote:
+> >> as is the justification.
+> >>
+> >> These values are not in fact widely used by userspace (they are brand new).
+> >>
+> >
+> > They were new and got through to the master tree before and on 4.9. I
+> > didn't get any feedback on that when it went through.
+> >
+> >> This is a very fragile approach relying on kernel implementation
+> >> details, so if we can do anything else that is more robust it
+> >> is much more likely to pass the test of time.
+> >>
+> >> And yes a more robust implementation has been already discussed.
+> >>
+> >
+> > There were discussed for the PAGE_OFFSET but not VMALLOC_START. What's
+> > your approach for it?
 
+Sorry, Thomas. I didn't realize these are also required other than
+Makedumpfile. So just revert it after we use a new way to get
+page_offset and translate VA to PA by page table in makedumpfile. For
+the time being they are not needed any more by makedumpfile.
 
-On Saturday 03 December 2016 12:52 AM, Eric W. Biederman wrote:
-> Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
->
->> Hi Dave,
->>
->>
->> Thanks for the review.
->>
->>
->> On Thursday 01 December 2016 10:26 AM, Dave Young wrote:
->>> Hi Hari
->>>
->>> Personally I like V1 more, but split the patch 2 is easier for ia64
->>> people to reivew.  I did basic x86 testing, it runs ok.
->>>
->>> On 11/25/16 at 05:24pm, Hari Bathini wrote:
->>>> Get rid of multiple definitions of append_elf_note() & final_note()
->>>> functions. Reuse these functions compiled under CONFIG_CRASH_CORE.
->>>>
->>>> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
->>>> ---
->>>>    arch/ia64/kernel/crash.c   |   22 ----------------------
->>>>    include/linux/crash_core.h |    4 ++++
->>>>    kernel/crash_core.c        |    6 +++---
->>>>    kernel/kexec_core.c        |   28 ----------------------------
->>>>    4 files changed, 7 insertions(+), 53 deletions(-)
->>>>
->>>> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
->>>> index 2955f35..75859a0 100644
->>>> --- a/arch/ia64/kernel/crash.c
->>>> +++ b/arch/ia64/kernel/crash.c
->>>> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
->>>>    static int kdump_on_init = 1;
->>>>    static int kdump_on_fatal_mca = 1;
->>>>    -static inline Elf64_Word
->>>> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
->>>> -		size_t data_len)
->>>> -{
->>>> -	struct elf_note *note = (struct elf_note *)buf;
->>>> -	note->n_namesz = strlen(name) + 1;
->>>> -	note->n_descsz = data_len;
->>>> -	note->n_type   = type;
->>>> -	buf += (sizeof(*note) + 3)/4;
->>>> -	memcpy(buf, name, note->n_namesz);
->>>> -	buf += (note->n_namesz + 3)/4;
->>>> -	memcpy(buf, data, data_len);
->>>> -	buf += (data_len + 3)/4;
->>>> -	return buf;
->>>> -}
->>>> -
->>>> -static void
->>>> -final_note(void *buf)
->>>> -{
->>>> -	memset(buf, 0, sizeof(struct elf_note));
->>>> -}
->>>> -
->>> The above IA64 version looks better than the functions in kexec_core.c
->>> about the Elf64_Word type usage and the simpler final_note function.
->> Hmmm.. Is void* better over Elf64_Word* to be agnostic of Elf32 or
->> Elf64 type?
-> Both Elf64_Word and Elf32_Word result in a u32.  So I expect the right
-> solution is to add a definition of Elf_Word to include/linux/elf.h
-> and to make the buffer "Elf_Word *buf".
->
-> That way we preserve the alignment knowledge, while making the code
-> depend on 32bit or 64bit.
->
-> Eric
->
+While from below discussion we can see Atsushi, maintainer of
+Makedumpfile, still worry about the parsing PT_LOAD segment header way.
+I personally think exporting them is easier and more understandable for
+user space utility.
 
-Thanks for the review, Eric. Will address this in the next version.
+http://lists.infradead.org/pipermail/kexec/2016-December/017815.html
 
-As some recent changes in powerpc tree may cause merger conflicts,
-I will wait for those changes to get into linus's tree and rebase the
-next version on top of that..
+I can't think of other way for your tool, maybe page_offset you can
+use the similar way makedumpfile is taking. As for VMALLOC_START and
+VMEMMAP_START, it could be necessary. And if you are planning to
+randomize the memory section order, thinking about them carefully
+now is a good chance lest they need be adjusted again later. 
 
-Thanks
-Hari
+Sorry again for this.
 
+> >
+> 
+> Also with improvement on KASLR memory randomization, I don't think we
+> should assume memory sections by looking at PT_LOAD first entries. We
+> will certainly try to randomize the order. That's why I thought
+> clearly indicating which VA define which memory section was a good
+> idea.
+> 
+> I also want to find a time proof approach where we can use it no
+> matter the changes to KASLR.
+> 
+> >> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> >>
+> >>>
+> >>> Signed-off-by: Thomas Garnier <thgarnie@google.com>
+> >>> ---
+> >>>  arch/x86/kernel/machine_kexec_64.c | 3 +++
+> >>>  include/linux/kexec.h              | 6 ++++++
+> >>>  2 files changed, 9 insertions(+)
+> >>>
+> >>> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> >>> index 2e3c34b..05f3367 100644
+> >>> --- a/arch/x86/kernel/machine_kexec_64.c
+> >>> +++ b/arch/x86/kernel/machine_kexec_64.c
+> >>> @@ -339,6 +339,9 @@ void arch_crash_save_vmcoreinfo(void)
+> >>>                             kaslr_offset());
+> >>>       VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
+> >>>       VMCOREINFO_PHYS_BASE(phys_base);
+> >>> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
+> >>> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
+> >>> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
+> >>>  }
+> >>>
+> >>>  /* arch-dependent functionality related to kexec file-based syscall */
+> >>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> >>> index e98e546..ff9c876 100644
+> >>> --- a/include/linux/kexec.h
+> >>> +++ b/include/linux/kexec.h
+> >>> @@ -285,6 +285,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+> >>>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+> >>>  #define VMCOREINFO_PHYS_BASE(value) \
+> >>>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
+> >>> +#define VMCOREINFO_PAGE_OFFSET(value) \
+> >>> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
+> >>> +#define VMCOREINFO_VMALLOC_START(value) \
+> >>> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
+> >>> +#define VMCOREINFO_VMEMMAP_START(value) \
+> >>> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
+> >>>
+> >>>  extern struct kimage *kexec_image;
+> >>>  extern struct kimage *kexec_crash_image;
+> >
+> >
+> >
+> > --
+> > Thomas
+> 
+> 
+> 
+> -- 
+> Thomas
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
