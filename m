@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x22a.google.com ([2607:f8b0:4001:c0b::22a])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cHby8-0000VJ-7r
- for kexec@lists.infradead.org; Thu, 15 Dec 2016 19:45:33 +0000
-Received: by mail-it0-x22a.google.com with SMTP id y23so616995itc.0
- for <kexec@lists.infradead.org>; Thu, 15 Dec 2016 11:45:11 -0800 (PST)
+ id 1cHiKA-0004gV-Iq
+ for kexec@lists.infradead.org; Fri, 16 Dec 2016 02:32:43 +0000
+Date: Fri, 16 Dec 2016 10:32:13 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
+ kexec'ed kernel
+Message-ID: <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <20161202195416.58953-3-andriy.shevchenko@linux.intel.com>
+ <20161215122856.7d24b7a8@endymion>
 MIME-Version: 1.0
-In-Reply-To: <CAJcbSZGvezhK3d4Gp+-j0iDFi3d2nBwR0hxxt9_0cYz-CvAcwA@mail.gmail.com>
-References: <1481818648-36201-1-git-send-email-thgarnie@google.com>
- <87bmwdytco.fsf@xmission.com>
- <CAJcbSZGvezhK3d4Gp+-j0iDFi3d2nBwR0hxxt9_0cYz-CvAcwA@mail.gmail.com>
-From: Thomas Garnier <thgarnie@google.com>
-Date: Thu, 15 Dec 2016 11:45:10 -0800
-Message-ID: <CAJcbSZEK8KFCRjDiuudPPNn1ULtsmEm2ituabZdYqA4WchxkjA@mail.gmail.com>
-Subject: Re: [PATCH] Revert "Revert "kdump, vmcoreinfo: report memory sections
- virtual addresses""
+Content-Disposition: inline
+In-Reply-To: <20161215122856.7d24b7a8@endymion>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,104 +26,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com>, Kernel Hardening <kernel-hardening@lists.openwall.com>, kexec@lists.infradead.org, the arch/x86 maintainers <x86@kernel.org>, Xunlei Pang <xlpang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Ingo Molnar <mingo@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+To: Jean Delvare <jdelvare@suse.de>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-On Thu, Dec 15, 2016 at 10:16 AM, Thomas Garnier <thgarnie@google.com> wrote:
-> On Thu, Dec 15, 2016 at 9:50 AM, Eric W. Biederman
-> <ebiederm@xmission.com> wrote:
->> Thomas Garnier <thgarnie@google.com> writes:
->>
->>> This reverts commit 49fd897573c97b0eaf10f47d850027d78c456cd7.
->>>
->>> Reverting back to commit 0549a3c because the values are used by crash
->>> and other tools already. I expected this commit would not go through given
->>> the unresolved comments. I want it to be easy to resolve major memory
->>> section positions when KASLR memory randomization is enabled.
->>
->> This patch is broken.  The commit referenced is wrong,
->
-> Yes, I based them on linux-next. I can update them to linux main tree.
-> Sorry about that.
->
->> as is the justification.
->>
->> These values are not in fact widely used by userspace (they are brand new).
->>
->
-> They were new and got through to the master tree before and on 4.9. I
-> didn't get any feedback on that when it went through.
->
->> This is a very fragile approach relying on kernel implementation
->> details, so if we can do anything else that is more robust it
->> is much more likely to pass the test of time.
->>
->> And yes a more robust implementation has been already discussed.
->>
->
-> There were discussed for the PAGE_OFFSET but not VMALLOC_START. What's
-> your approach for it?
->
+On 12/15/16 at 12:28pm, Jean Delvare wrote:
+> Hi Andy,
+> 
+> On Fri,  2 Dec 2016 21:54:16 +0200, Andy Shevchenko wrote:
+> > Until now kexec'ed kernel has no clue where to look for DMI entry point.
+> > 
+> > Pass it via kernel command line parameter in the same way as it's done for ACPI
+> > RSDP.
+> 
+> I am no kexec expert but this confuses me. Shouldn't the second kernel
+> have access to the EFI systab as the first kernel does? It includes
+> many more pointers than just ACPI and DMI tables, and it would seem
+> inconvenient to have to pass all these addresses individually
+> explicitly.
 
-Also with improvement on KASLR memory randomization, I don't think we
-should assume memory sections by looking at PT_LOAD first entries. We
-will certainly try to randomize the order. That's why I thought
-clearly indicating which VA define which memory section was a good
-idea.
+Yes, in modern linux kernel, kexec has the support for EFI, I think it
+should work naturally at least in x86_64.
 
-I also want to find a time proof approach where we can use it no
-matter the changes to KASLR.
+Is there any test log with latest mainline kernel about this?
 
->> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
->>
->>>
->>> Signed-off-by: Thomas Garnier <thgarnie@google.com>
->>> ---
->>>  arch/x86/kernel/machine_kexec_64.c | 3 +++
->>>  include/linux/kexec.h              | 6 ++++++
->>>  2 files changed, 9 insertions(+)
->>>
->>> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
->>> index 2e3c34b..05f3367 100644
->>> --- a/arch/x86/kernel/machine_kexec_64.c
->>> +++ b/arch/x86/kernel/machine_kexec_64.c
->>> @@ -339,6 +339,9 @@ void arch_crash_save_vmcoreinfo(void)
->>>                             kaslr_offset());
->>>       VMCOREINFO_NUMBER(KERNEL_IMAGE_SIZE);
->>>       VMCOREINFO_PHYS_BASE(phys_base);
->>> +     VMCOREINFO_PAGE_OFFSET(PAGE_OFFSET);
->>> +     VMCOREINFO_VMALLOC_START(VMALLOC_START);
->>> +     VMCOREINFO_VMEMMAP_START(VMEMMAP_START);
->>>  }
->>>
->>>  /* arch-dependent functionality related to kexec file-based syscall */
->>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->>> index e98e546..ff9c876 100644
->>> --- a/include/linux/kexec.h
->>> +++ b/include/linux/kexec.h
->>> @@ -285,6 +285,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->>>       vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
->>>  #define VMCOREINFO_PHYS_BASE(value) \
->>>       vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
->>> +#define VMCOREINFO_PAGE_OFFSET(value) \
->>> +     vmcoreinfo_append_str("PAGE_OFFSET=%lx\n", (unsigned long)value)
->>> +#define VMCOREINFO_VMALLOC_START(value) \
->>> +     vmcoreinfo_append_str("VMALLOC_START=%lx\n", (unsigned long)value)
->>> +#define VMCOREINFO_VMEMMAP_START(value) \
->>> +     vmcoreinfo_append_str("VMEMMAP_START=%lx\n", (unsigned long)value)
->>>
->>>  extern struct kimage *kexec_image;
->>>  extern struct kimage *kexec_crash_image;
->
->
->
-> --
-> Thomas
-
-
-
--- 
-Thomas
+> 
+> Adding Eric to Cc for his opinion.
+> 
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
+> >  drivers/firmware/dmi_scan.c                     | 14 ++++++++++++++
+> >  2 files changed, 19 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index be2d6d0..94f219f 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -843,6 +843,11 @@
+> >  			The filter can be disabled or changed to another
+> >  			driver later using sysfs.
+> >  
+> > +	dmi_entry_point=	[DMI,EFI,KEXEC]
+> > +			Pass the DMI entry point to the kernel, mostly used
+> > +			on machines running EFI runtime service to boot the
+> > +			second kernel for kdump.
+> > +
+> >  	drm_kms_helper.edid_firmware=[<connector>:]<file>[,[<connector>:]<file>]
+> >  			Broken monitors, graphic adapters, KVMs and EDIDless
+> >  			panels may send no or incorrect EDID data sets.
+> > diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+> > index b88def6..215843f 100644
+> > --- a/drivers/firmware/dmi_scan.c
+> > +++ b/drivers/firmware/dmi_scan.c
+> > @@ -595,8 +595,22 @@ static int __init dmi_smbios3_present(const u8 *buf)
+> >  	return 1;
+> >  }
+> >  
+> > +#ifdef CONFIG_KEXEC
+> > +static unsigned long dmi_entry_point;
+> > +static int __init setup_dmi_entry_point(char *arg)
+> > +{
+> > +	return kstrtoul(arg, 16, &dmi_entry_point);
+> > +}
+> > +early_param("dmi_entry_point", setup_dmi_entry_point);
+> > +#endif
+> > +
+> >  static resource_size_t __init dmi_get_entry_point(void)
+> >  {
+> > +#ifdef CONFIG_KEXEC
+> > +	if (dmi_entry_point)
+> > +		return dmi_entry_point;
+> > +#endif
+> > +
+> >  	if (efi_enabled(EFI_CONFIG_TABLES)) {
+> >  		/*
+> >  		 * According to the DMTF SMBIOS reference spec v3.0.0, it is
+> 
+> 
+> -- 
+> Jean Delvare
+> SUSE L3 Support
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
