@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm0-f45.google.com ([74.125.82.45])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cJHgx-00084T-VH
- for kexec@lists.infradead.org; Tue, 20 Dec 2016 10:30:48 +0000
-Date: Tue, 20 Dec 2016 18:30:16 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [ANNOUNCE] kexec-tools 2.0.14
-Message-ID: <20161220103016.GA7293@dhcp-128-65.nay.redhat.com>
-References: <20161220082645.GA19532@verge.net.au>
+ id 1cJMVH-0008Nb-9T
+ for kexec@lists.infradead.org; Tue, 20 Dec 2016 15:39:02 +0000
+Received: by mail-wm0-f45.google.com with SMTP id c184so35185231wmd.0
+ for <kexec@lists.infradead.org>; Tue, 20 Dec 2016 07:38:38 -0800 (PST)
+Subject: Re: [PATCHv2 2/2] [fs] proc/vmcore: check the dummy place holder for
+ offline cpu to avoid warning
+References: <1482113327-19103-1-git-send-email-piliu@redhat.com>
+ <1482113327-19103-2-git-send-email-piliu@redhat.com>
+ <20161219024018.GB29921@dhcp-128-65.nay.redhat.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <6691e874-e47a-0028-a2f8-59e431613d6f@redhat.com>
+Date: Tue, 20 Dec 2016 21:08:29 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161220082645.GA19532@verge.net.au>
+In-Reply-To: <20161219024018.GB29921@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,38 +23,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>, Pingfan Liu <piliu@redhat.com>
+Cc: Xunlei Pang <xpang@redhat.com>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, kernelfans@gmail.com
 
-Hi, Simon
 
-On 12/20/16 at 09:26am, Simon Horman wrote:
-> Hi all,
-> 
-> I am happy to announce the release of kexec-tools 2.0.14.
-> 
-> This is a feature release coinciding with the release of the v4.9 Linux Kernel.
-> 
-> This release can be downloaded from kernel.org:
-> 
-> 	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.14.tar.xz
-> 	http://kernel.org/pub/linux/utils/kernel/kexec/
-> 
-> It is also tagged it in git:
-> 
-> 	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> 
-> Thanks to everyone who has contributed to kexec.
 
-Thanks for the new version~, I have rebased Fedora rawhide kexec-tools
-to 2.0.14. It works well during previous test of -rc version.
+On Monday 19 December 2016 08:10 AM, Dave Young wrote:
+> Hi, Pingfan
+>
+> On 12/19/16 at 10:08am, Pingfan Liu wrote:
+>> > kexec-tools always allocates program headers for present cpus. But
+>> > when crashing, offline cpus have dummy headers. We do not copy these
+>> > dummy notes into ELF file, also have no need of warning on them.
+> I still think it is not worth such a fix, if you feel a lot of warnings
+> in case large cpu numbers, I think you can change the pr_warn to
+> pr_warn_once, we do not care the null cpu notes if it has nothing bad
+> to the vmcore.
+>
 
-Thanks
-Dave
+I agree. Warning is more like information here. May be, we can count the 
+number of times real_sz was 0, and then can print an info at the end in 
+stead of warning, like..."N number of CPUs would have been offline, 
+PT_NOTE entries was absent for them."
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
