@@ -2,36 +2,39 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cJdn2-0002ky-K0
- for kexec@lists.infradead.org; Wed, 21 Dec 2016 10:06:30 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- uBLA3ikw102041
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 05:06:06 -0500
-Received: from e23smtp02.au.ibm.com (e23smtp02.au.ibm.com [202.81.31.144])
- by mx0b-001b2d01.pphosted.com with ESMTP id 27fnb2ffkf-1
+ id 1cJdn6-0002lb-NB
+ for kexec@lists.infradead.org; Wed, 21 Dec 2016 10:06:33 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ uBLA3lGP060761
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 05:06:14 -0500
+Received: from e23smtp09.au.ibm.com (e23smtp09.au.ibm.com [202.81.31.142])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 27fm6mbn9a-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 05:06:06 -0500
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 05:06:14 -0500
 Received: from localhost
- by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e23smtp09.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <kamalesh@linux.vnet.ibm.com>;
- Wed, 21 Dec 2016 20:06:03 +1000
-Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id DE3C82BB0045
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:05:57 +1100 (EST)
+ Wed, 21 Dec 2016 20:06:11 +1000
+Received: from d23relay07.au.ibm.com (d23relay07.au.ibm.com [9.190.26.37])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id 1C7B33578058
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:06:09 +1100 (EST)
 Received: from d23av06.au.ibm.com (d23av06.au.ibm.com [9.190.235.151])
- by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- uBLA5vpA51577082
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:05:57 +1100
+ by d23relay07.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ uBLA69oA34013206
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:06:09 +1100
 Received: from d23av06.au.ibm.com (localhost [127.0.0.1])
  by d23av06.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- uBLA5vHr013511
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:05:57 +1100
+ uBLA68AI014060
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:06:08 +1100
 From: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Subject: [RFC PATCH 0/4] eppic: Create kernel version compatible scripts
-Date: Wed, 21 Dec 2016 15:35:41 +0530
-Message-Id: <1482314745-5827-1-git-send-email-kamalesh@linux.vnet.ibm.com>
+Subject: [RFC PATCH 2/4] eppic/vhost_net_buffers: Introduce changes for kernel
+ 3.19
+Date: Wed, 21 Dec 2016 15:35:43 +0530
+In-Reply-To: <1482314745-5827-1-git-send-email-kamalesh@linux.vnet.ibm.com>
+References: <1482314745-5827-1-git-send-email-kamalesh@linux.vnet.ibm.com>
+Message-Id: <1482314745-5827-3-git-send-email-kamalesh@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,78 +51,132 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
-This patch series creates eppic scripts a for range kernel versions
-they are compatible with. Eppic scripts directory host sample
-scripts to scrub sensitive information from the dump file generated
-using makedumpfile.
+Linux kernel commit 56b174256b69 ("net: add rbnode to struct sk_buff"),
+moves sk_buff->next into an union of sk_buff->{next/prev/tstamp/rb_node}.
+Introduce this structure member change, while traversing the socket
+buffer list.
 
-The initial version of these scripts was based on Fedora 19 kernel.
-In brief, these scripts rely on hard coded kernel data structure
-member offsets. Kernel data structures are bound to change in due course
-and leading to failure when assumptions about the offsets differ.
+These changes are not compatible with previous kernel versions,
+so add vhost_net_buffers script file for kernel version >= 3.19 to
+kernel version <= 4.8.
 
-Atsushi-San suggested that, it's better to have different version of
-eppic scripts, those will be valid for the range of kernel release and
-their naming convention hinting, of the release they are valid across.
-
-The first patch renames the existing eppic script to reflect the kernel
-release they are compatible with. Following the format:
-<eppic_script>-<valid from kernel version>_to_<valid until kernel version>.c
-
-Rest of three patches creates new eppic scripts to match with the kernel
-data structures they work with.
-
-Kamalesh Babulal (4):
-  eppic: Rename scripts to reflect validity of kernel version
-  eppic/vhost_net_buffers: Introduce changes for kernel 3.19
-  eppic/dir_names: Introduce changes for kernel 3.14
-  eppic/keyring: Introduce changes for kernel 4.4
-
- eppic_scripts/README                           |  26 +-
- eppic_scripts/ap_messages.c                    |  82 ------
- eppic_scripts/ap_messages_3_10_to_4_8.c        |  82 ++++++
- eppic_scripts/dir_names.c                      |  78 -----
- eppic_scripts/dir_names_3_10_to_3_13.c         |  78 +++++
- eppic_scripts/dir_names_3_14_to_4_8.c          |  82 ++++++
- eppic_scripts/keyring.c                        |  57 ----
- eppic_scripts/keyring_3_10_to_4_3.c            |  57 ++++
- eppic_scripts/keyring_4_4_to_4_8.c             | 378 +++++++++++++++++++++++++
- eppic_scripts/proc_names.c                     |  49 ----
- eppic_scripts/proc_names_3_10_to_4_8.c         |  49 ++++
- eppic_scripts/tcp_sk_buf.c                     |  82 ------
- eppic_scripts/tcp_sk_buf_3_10_to_4_8.c         |  82 ++++++
- eppic_scripts/udp_sk_buf.c                     |  83 ------
- eppic_scripts/udp_sk_buf_3_10_to_4_8.c         |  83 ++++++
- eppic_scripts/unix_sk_buff.c                   |  85 ------
- eppic_scripts/unix_sk_buff_3_10_to_4_8.c       |  85 ++++++
- eppic_scripts/vhost_net_buffers.c              |  99 -------
- eppic_scripts/vhost_net_buffers_3_10_to_3_18.c |  99 +++++++
- eppic_scripts/vhost_net_buffers_3_19_to_4_8.c  | 104 +++++++
- eppic_scripts/vhost_scsi_buffers.c             |  75 -----
- eppic_scripts/vhost_scsi_buffers_3_10_to_4_8.c |  75 +++++
- 22 files changed, 1270 insertions(+), 700 deletions(-)
- delete mode 100644 eppic_scripts/ap_messages.c
- create mode 100644 eppic_scripts/ap_messages_3_10_to_4_8.c
- delete mode 100644 eppic_scripts/dir_names.c
- create mode 100644 eppic_scripts/dir_names_3_10_to_3_13.c
- create mode 100644 eppic_scripts/dir_names_3_14_to_4_8.c
- delete mode 100644 eppic_scripts/keyring.c
- create mode 100644 eppic_scripts/keyring_3_10_to_4_3.c
- create mode 100644 eppic_scripts/keyring_4_4_to_4_8.c
- delete mode 100644 eppic_scripts/proc_names.c
- create mode 100644 eppic_scripts/proc_names_3_10_to_4_8.c
- delete mode 100644 eppic_scripts/tcp_sk_buf.c
- create mode 100644 eppic_scripts/tcp_sk_buf_3_10_to_4_8.c
- delete mode 100644 eppic_scripts/udp_sk_buf.c
- create mode 100644 eppic_scripts/udp_sk_buf_3_10_to_4_8.c
- delete mode 100644 eppic_scripts/unix_sk_buff.c
- create mode 100644 eppic_scripts/unix_sk_buff_3_10_to_4_8.c
- delete mode 100644 eppic_scripts/vhost_net_buffers.c
- create mode 100644 eppic_scripts/vhost_net_buffers_3_10_to_3_18.c
+Signed-off-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+---
+ eppic_scripts/vhost_net_buffers_3_19_to_4_8.c | 104 ++++++++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
  create mode 100644 eppic_scripts/vhost_net_buffers_3_19_to_4_8.c
- delete mode 100644 eppic_scripts/vhost_scsi_buffers.c
- create mode 100644 eppic_scripts/vhost_scsi_buffers_3_10_to_4_8.c
 
+diff --git a/eppic_scripts/vhost_net_buffers_3_19_to_4_8.c b/eppic_scripts/vhost_net_buffers_3_19_to_4_8.c
+new file mode 100644
+index 0000000..1260acb
+--- /dev/null
++++ b/eppic_scripts/vhost_net_buffers_3_19_to_4_8.c
+@@ -0,0 +1,104 @@
++string
++vhost_opt()
++{
++	    return "l";
++}
++
++string
++vhost_usage()
++{
++	    return "\n";
++}
++
++static void
++vhost_showusage()
++{
++	    printf("usage : net_ %s", vhost_usage());
++}
++
++string
++vhost_help()
++{
++	    return "Help";
++}
++
++void
++vhost_net(struct vhost_net *net)
++{
++	int i;
++
++	for (i = 0; i < 2; i++) {
++		struct vhost_net_virtqueue *nvq = &net->vqs[i];
++		struct vhost_virtqueue *vq = &nvq->vq;
++		struct socket *sock = (struct socket *)vq->private_data;
++		struct sock *sk = sock->sk;
++
++		struct sk_buff_head *head = &(sk->sk_receive_queue);
++		struct sk_buff *next = sk->sk_receive_queue.next;
++
++		while (next != head)
++		{
++			struct sk_buff *buff = (struct sk_buff *) next;
++
++			if (buff->data_len) {
++				memset((char *)buff->data, 'L', buff->data_len);
++				memset((char *)&(buff->data_len), 'L', 0x4);
++			}
++
++			/*
++			 * .next is the first entry.
++			 */
++			next = (struct sk_buff *)(unsigned long)*buff;
++		}
++
++		head = (struct sk_buff_head *)&(sk->sk_write_queue);
++		next = (struct sk_buff *)sk->sk_write_queue.next;
++
++		while (next != head)
++		{
++			struct sk_buff *buff = (struct sk_buff *) next;
++
++			if (buff->data_len) {
++				memset((char *)buff->data, 'L', buff->data_len);
++				memset((char *)&(buff->data_len), 'L', 0x4);
++			}
++
++			/*
++			 * .next is the first entry.
++			 */
++			next = (struct sk_buff *)(unsigned long)*buff;
++		}
++	}
++}
++
++int
++vhost()
++{
++	struct list_head *head, *next;
++	struct task_struct *tsk;
++
++	tsk = &init_task;
++
++	head = (struct list_head *) &(tsk->tasks);
++	next = (struct list_head *) tsk->tasks.next;
++
++	while (next != head)
++	{
++		int i;
++		struct task_struct *task, *off = 0;
++
++		task = (struct task_struct *)((unsigned long)next - ((unsigned long)&(off->tasks)));
++
++		if (task->files && task->files->fdt) {
++			for (i = 0; i < task->files->fdt->max_fds; i++) {
++				if (task->files->fdt->fd[i] && task->files->fdt->fd[i]->f_op
++					&& task->files->fdt->fd[i]->f_op->open == &vhost_net_open)
++					vhost_net((struct vhost_net *)task->files->fdt->fd[i]->private_data);
++			}
++		}
++
++		next = (struct list_head *)task->tasks.next;
++	}
++
++	return 1;
++}
 -- 
 2.7.4
 
