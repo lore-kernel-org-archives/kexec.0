@@ -1,23 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x244.google.com ([2607:f8b0:4001:c0b::244])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cJb7q-0007SO-FH
- for kexec@lists.infradead.org; Wed, 21 Dec 2016 07:15:47 +0000
-Received: by mail-it0-x244.google.com with SMTP id b123so16537296itb.2
- for <kexec@lists.infradead.org>; Tue, 20 Dec 2016 23:15:25 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <569964b8-aa13-11cf-5825-bb830a940277@redhat.com>
-References: <1482113327-19103-1-git-send-email-piliu@redhat.com>
- <1482113327-19103-2-git-send-email-piliu@redhat.com>
- <20161219024018.GB29921@dhcp-128-65.nay.redhat.com>
- <6691e874-e47a-0028-a2f8-59e431613d6f@redhat.com>
- <5859F65D.1060506@redhat.com>
- <569964b8-aa13-11cf-5825-bb830a940277@redhat.com>
-From: Liu ping fan <kernelfans@gmail.com>
-Date: Wed, 21 Dec 2016 15:15:24 +0800
-Message-ID: <CAFgQCTuyz545oiLbmKAja96JMkP+UvH+Lr9wVLzizw5z9icPKg@mail.gmail.com>
-Subject: Re: [PATCHv2 2/2] [fs] proc/vmcore: check the dummy place holder for
- offline cpu to avoid warning
+ id 1cJdn2-0002ky-K0
+ for kexec@lists.infradead.org; Wed, 21 Dec 2016 10:06:30 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ uBLA3ikw102041
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 05:06:06 -0500
+Received: from e23smtp02.au.ibm.com (e23smtp02.au.ibm.com [202.81.31.144])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 27fnb2ffkf-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 05:06:06 -0500
+Received: from localhost
+ by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <kamalesh@linux.vnet.ibm.com>;
+ Wed, 21 Dec 2016 20:06:03 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id DE3C82BB0045
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:05:57 +1100 (EST)
+Received: from d23av06.au.ibm.com (d23av06.au.ibm.com [9.190.235.151])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ uBLA5vpA51577082
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:05:57 +1100
+Received: from d23av06.au.ibm.com (localhost [127.0.0.1])
+ by d23av06.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ uBLA5vHr013511
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2016 21:05:57 +1100
+From: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Subject: [RFC PATCH 0/4] eppic: Create kernel version compatible scripts
+Date: Wed, 21 Dec 2016 15:35:41 +0530
+Message-Id: <1482314745-5827-1-git-send-email-kamalesh@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,76 +40,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, xlpang@redhat.com, kexec@lists.infradead.org, Pingfan Liu <piliu@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
-On Wed, Dec 21, 2016 at 11:57 AM, Pratyush Anand <panand@redhat.com> wrote:
->
->
-> On Wednesday 21 December 2016 08:56 AM, Xunlei Pang wrote:
->>
->> On 12/20/2016 at 11:38 PM, Pratyush Anand wrote:
->>>
->>>
->>>
->>> On Monday 19 December 2016 08:10 AM, Dave Young wrote:
->>>>
->>>> Hi, Pingfan
->>>>
->>>> On 12/19/16 at 10:08am, Pingfan Liu wrote:
->>>>>>
->>>>>> kexec-tools always allocates program headers for present cpus. But
->>>>>> when crashing, offline cpus have dummy headers. We do not copy these
->>>>>> dummy notes into ELF file, also have no need of warning on them.
->>>>
->>>> I still think it is not worth such a fix, if you feel a lot of warnings
->>>> in case large cpu numbers, I think you can change the pr_warn to
->>>> pr_warn_once, we do not care the null cpu notes if it has nothing bad
->>>> to the vmcore.
->>>>
->>>
->>> I agree. Warning is more like information here. May be, we can count the
->>> number of times real_sz was 0, and then can print an info at the end in
->>> stead of warning, like..."N number of CPUs would have been offline, PT_NOTE
->>> entries was absent for them."
->>
->>
->> Well, OTOH the warning may also be due to some user-space misuse, we can't
->> distinguish that without extra information added.
->
->
-> Yes, yes..I agree, I meant that the above info is just indicative. May be
-> "might have been" could be better word than "would have been" in the above
-> info print message.
->
->
->>
->> Another possible user-space fix would be: Firstly fix kexec-tools to add
->> notes only for online cpus,
->> then utilize udev rules(cpu online/offline events) to automatically
->> trigger kdump kernel reload.
->
->
-> Hummm..this is certainly possible. But can we do much even when we get the
-> info that the PT_NOTE was compromised by user space?
->
-If doing this, kexec should be re-forked each time when
-online/offline. I think it is not worth to do so just for suppressing
-some warning.
+This patch series creates eppic scripts a for range kernel versions
+they are compatible with. Eppic scripts directory host sample
+scripts to scrub sensitive information from the dump file generated
+using makedumpfile.
 
-> Therefore, I am of the view that if at all we are concerned about number of
-> warning messages in case of multiple offline cpu, then we can just print the
-> total number of NULL PT_NOTE at the end of loop.
->
-Yes, I think it is a good idea. NULL PT_NOTES are only caused by
-offlne cpu, it is better to change the waring to info
+The initial version of these scripts was based on Fedora 19 kernel.
+In brief, these scripts rely on hard coded kernel data structure
+member offsets. Kernel data structures are bound to change in due course
+and leading to failure when assumptions about the offsets differ.
 
-Thx,
-Pingfan
+Atsushi-San suggested that, it's better to have different version of
+eppic scripts, those will be valid for the range of kernel release and
+their naming convention hinting, of the release they are valid across.
+
+The first patch renames the existing eppic script to reflect the kernel
+release they are compatible with. Following the format:
+<eppic_script>-<valid from kernel version>_to_<valid until kernel version>.c
+
+Rest of three patches creates new eppic scripts to match with the kernel
+data structures they work with.
+
+Kamalesh Babulal (4):
+  eppic: Rename scripts to reflect validity of kernel version
+  eppic/vhost_net_buffers: Introduce changes for kernel 3.19
+  eppic/dir_names: Introduce changes for kernel 3.14
+  eppic/keyring: Introduce changes for kernel 4.4
+
+ eppic_scripts/README                           |  26 +-
+ eppic_scripts/ap_messages.c                    |  82 ------
+ eppic_scripts/ap_messages_3_10_to_4_8.c        |  82 ++++++
+ eppic_scripts/dir_names.c                      |  78 -----
+ eppic_scripts/dir_names_3_10_to_3_13.c         |  78 +++++
+ eppic_scripts/dir_names_3_14_to_4_8.c          |  82 ++++++
+ eppic_scripts/keyring.c                        |  57 ----
+ eppic_scripts/keyring_3_10_to_4_3.c            |  57 ++++
+ eppic_scripts/keyring_4_4_to_4_8.c             | 378 +++++++++++++++++++++++++
+ eppic_scripts/proc_names.c                     |  49 ----
+ eppic_scripts/proc_names_3_10_to_4_8.c         |  49 ++++
+ eppic_scripts/tcp_sk_buf.c                     |  82 ------
+ eppic_scripts/tcp_sk_buf_3_10_to_4_8.c         |  82 ++++++
+ eppic_scripts/udp_sk_buf.c                     |  83 ------
+ eppic_scripts/udp_sk_buf_3_10_to_4_8.c         |  83 ++++++
+ eppic_scripts/unix_sk_buff.c                   |  85 ------
+ eppic_scripts/unix_sk_buff_3_10_to_4_8.c       |  85 ++++++
+ eppic_scripts/vhost_net_buffers.c              |  99 -------
+ eppic_scripts/vhost_net_buffers_3_10_to_3_18.c |  99 +++++++
+ eppic_scripts/vhost_net_buffers_3_19_to_4_8.c  | 104 +++++++
+ eppic_scripts/vhost_scsi_buffers.c             |  75 -----
+ eppic_scripts/vhost_scsi_buffers_3_10_to_4_8.c |  75 +++++
+ 22 files changed, 1270 insertions(+), 700 deletions(-)
+ delete mode 100644 eppic_scripts/ap_messages.c
+ create mode 100644 eppic_scripts/ap_messages_3_10_to_4_8.c
+ delete mode 100644 eppic_scripts/dir_names.c
+ create mode 100644 eppic_scripts/dir_names_3_10_to_3_13.c
+ create mode 100644 eppic_scripts/dir_names_3_14_to_4_8.c
+ delete mode 100644 eppic_scripts/keyring.c
+ create mode 100644 eppic_scripts/keyring_3_10_to_4_3.c
+ create mode 100644 eppic_scripts/keyring_4_4_to_4_8.c
+ delete mode 100644 eppic_scripts/proc_names.c
+ create mode 100644 eppic_scripts/proc_names_3_10_to_4_8.c
+ delete mode 100644 eppic_scripts/tcp_sk_buf.c
+ create mode 100644 eppic_scripts/tcp_sk_buf_3_10_to_4_8.c
+ delete mode 100644 eppic_scripts/udp_sk_buf.c
+ create mode 100644 eppic_scripts/udp_sk_buf_3_10_to_4_8.c
+ delete mode 100644 eppic_scripts/unix_sk_buff.c
+ create mode 100644 eppic_scripts/unix_sk_buff_3_10_to_4_8.c
+ delete mode 100644 eppic_scripts/vhost_net_buffers.c
+ create mode 100644 eppic_scripts/vhost_net_buffers_3_10_to_3_18.c
+ create mode 100644 eppic_scripts/vhost_net_buffers_3_19_to_4_8.c
+ delete mode 100644 eppic_scripts/vhost_scsi_buffers.c
+ create mode 100644 eppic_scripts/vhost_scsi_buffers_3_10_to_4_8.c
+
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
