@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cKLKw-0005LQ-9I
- for kexec@lists.infradead.org; Fri, 23 Dec 2016 08:36:23 +0000
-Subject: Re: [PATCH] x86/crash: Update the stale comment in
- reserve_crashkernel()
-References: <1481772621-17923-1-git-send-email-xlpang@redhat.com>
- <20161222032234.GB25035@x1>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <585CE24D.80208@redhat.com>
-Date: Fri, 23 Dec 2016 16:37:33 +0800
+ id 1cKdJ1-0003q7-BD
+ for kexec@lists.infradead.org; Sat, 24 Dec 2016 03:47:36 +0000
+Date: Sat, 24 Dec 2016 11:47:05 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v7 00/12] Fix kdump faults on system with amd iommu
+Message-ID: <20161224034705.GE25035@x1>
+References: <1480050799-1237-1-git-send-email-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20161222032234.GB25035@x1>
+Content-Disposition: inline
+In-Reply-To: <1480050799-1237-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,60 +19,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Xunlei Pang <xlpang@redhat.com>
-Cc: Robert LeBlanc <robert@leblancnet.us>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: joro@8bytes.org
+Cc: xlpang@redhat.com, dyoung@redhat.com, iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 12/22/2016 at 11:22 AM, Baoquan He wrote:
-> On 12/15/16 at 11:30am, Xunlei Pang wrote:
->> CRASH_KERNEL_ADDR_MAX was missing for a long time, update it
->> with more detailed explanation.
->>
->> Cc: Robert LeBlanc <robert@leblancnet.us>
->> Cc: Baoquan He <bhe@redhat.com>
->> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
->> ---
->>  arch/x86/kernel/setup.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 9c337b0..79ee507 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -575,7 +575,10 @@ static void __init reserve_crashkernel(void)
->>  	/* 0 means: find the address automatically */
->>  	if (crash_base <= 0) {
->>  		/*
->> -		 *  kexec want bzImage is below CRASH_KERNEL_ADDR_MAX
->> +		 * Set CRASH_ADDR_LOW_MAX upper bound for crash range
->> +		 * as old kexec-tools loads bzImage below that, unless
->> +		 * "size,high" or "size@offset"(nonzero offset, see the
->> +		 * else leg below) is specified.
-> Yes, this is a good catch. It might be better to add comment only about
-> this if branch. If you want to say more about the upper bounds, better
+Hi Joerg,
 
-OK, how about the following change?
-        /*
-         * Set CRASH_ADDR_LOW_MAX upper bound for crash memory.
-         * as old kexec-tools loads bzImage below that, unless
-         * "crashkernel=size[KMG],high" is specified.
-         */
+Ping!
 
-> discuss with Robert LeBlanc to see if it can be detailed in kdump.txt.
+Could you help review this version? Not sure this could catch up to
+v4.10 merging.
 
-Yes, this is independent of Robert's documentation patch.
+Thanks
+Baoqaun
 
->
-> Also please CC to x86 maintainers, or akpm. They can help merge this.
-
-OK, thanks!
-
-Regards,
-Xunlei
+On 11/25/16 at 01:13pm, Baoquan He wrote:
+> This is v7 post.
+> 
+> The principle of the fix is similar to intel iommu. Just defer the assignment
+> of device to domain to device driver init. In this version of post, a new
+> call-back is_attach_deferred is added to iommu-ops, it's used to check whether
+> we need defer the domain attach/detach in iommu-core code.
+> 
+> v5:
+>     bnx2 NIC can't reset itself during driver init. Post patch to reset
+>     it during driver init. IO_PAGE_FAULT can't be seen anymore.
+> 
+>     Below is link of v5 post.
+>     https://lists.linuxfoundation.org/pipermail/iommu/2016-September/018527.html
+> 
+> v5->v6:
+>     According to Joerg's comments made several below main changes:
+>     - Add sanity check when copy old dev tables.
+> 
+>     - If a device is set up with guest translations (DTE.GV=1), then don't
+>       copy that information but move the device over to an empty guest-cr3
+>       table and handle the faults in the PPR log (which just answer them
+>       with INVALID).
+> 
+> v6->v7:
+>     Two main changes are made according to Joerg's suggestion:
+>     - Add is_attach_deferred call-back to iommu-ops. With this domain
+>       can be deferred to device driver init cleanly.
+> 
+>     - Allocate memory below 4G for dev table if translation pre-enabled.
+>       AMD engineer pointed out that it's unsafe to update the device-table
+>       while iommu is enabled. device-table pointer update is split up into
+>       two 32bit writes in the IOMMU hardware. So updating it while the IOMMU
+>       is enabled could have some nasty side effects.
+> 
+> Baoquan He (12):
+>   iommu/amd: Detect pre enabled translation
+>   iommu/amd: add several helper function
+>   iommu/amd: Define bit fields for DTE particularly
+>   iommu/amd: Add function copy_dev_tables
+>   iommu/amd: copy old trans table from old kernel
+>   iommu: Add is_attach_deferred call-back to iommu-ops
+>   iommu/amd: Use is_attach_deferred call-back
+>   iommu/amd: Add sanity check of irq remap information of old dev table
+>     entry
+>   iommu/amd: Don't copy GCR3 table root pointer
+>   iommu/amd: Clear out the GV flag when handle deferred domain attach
+>   iommu: Assign the direct mapped domain to group->domain
+>   iommu/amd: Allocate memory below 4G for dev table if translation
+>     pre-enabled
+> 
+>  drivers/iommu/amd_iommu.c       |  78 +++++++++-------
+>  drivers/iommu/amd_iommu_init.c  | 201 +++++++++++++++++++++++++++++++++++++---
+>  drivers/iommu/amd_iommu_proto.h |   2 +
+>  drivers/iommu/amd_iommu_types.h |  53 ++++++++++-
+>  drivers/iommu/amd_iommu_v2.c    |  18 +++-
+>  drivers/iommu/iommu.c           |   9 ++
+>  include/linux/iommu.h           |   1 +
+>  7 files changed, 313 insertions(+), 49 deletions(-)
+> 
+> -- 
+> 2.5.5
+> 
 
 _______________________________________________
 kexec mailing list
