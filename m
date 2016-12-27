@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo201.gate.nec.co.jp ([210.143.35.51])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cKdJ1-0003q7-BD
- for kexec@lists.infradead.org; Sat, 24 Dec 2016 03:47:36 +0000
-Date: Sat, 24 Dec 2016 11:47:05 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v7 00/12] Fix kdump faults on system with amd iommu
-Message-ID: <20161224034705.GE25035@x1>
-References: <1480050799-1237-1-git-send-email-bhe@redhat.com>
+ id 1cLkMI-0007UH-Op
+ for kexec@lists.infradead.org; Tue, 27 Dec 2016 05:31:36 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [RFC PATCH 0/4] eppic: Create kernel version compatible scripts
+Date: Tue, 27 Dec 2016 05:22:19 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701E8EBE7@BPXM01GP.gisp.nec.co.jp>
+References: <1482314745-5827-1-git-send-email-kamalesh@linux.vnet.ibm.com>
+In-Reply-To: <1482314745-5827-1-git-send-email-kamalesh@linux.vnet.ibm.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1480050799-1237-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,82 +23,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: joro@8bytes.org
-Cc: xlpang@redhat.com, dyoung@redhat.com, iommu@lists.linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Joerg,
+Hello Kamalesh,
 
-Ping!
+>This patch series creates eppic scripts a for range kernel versions
+>they are compatible with. Eppic scripts directory host sample
+>scripts to scrub sensitive information from the dump file generated
+>using makedumpfile.
+>
+>The initial version of these scripts was based on Fedora 19 kernel.
+>In brief, these scripts rely on hard coded kernel data structure
+>member offsets. Kernel data structures are bound to change in due course
+>and leading to failure when assumptions about the offsets differ.
+>
+>Atsushi-San suggested that, it's better to have different version of
+>eppic scripts, those will be valid for the range of kernel release and
+>their naming convention hinting, of the release they are valid across.
+>
+>The first patch renames the existing eppic script to reflect the kernel
+>release they are compatible with. Following the format:
+><eppic_script>-<valid from kernel version>_to_<valid until kernel version>.c
+>
+>Rest of three patches creates new eppic scripts to match with the kernel
+>data structures they work with.
 
-Could you help review this version? Not sure this could catch up to
-v4.10 merging.
+Thank you for reflecting my comments, looks good to me.
+v1.6.1 is ready now, these patches will be merged into v1.6.2.
 
-Thanks
-Baoqaun
+Thanks,
+Atsushi Kumagai
 
-On 11/25/16 at 01:13pm, Baoquan He wrote:
-> This is v7 post.
-> 
-> The principle of the fix is similar to intel iommu. Just defer the assignment
-> of device to domain to device driver init. In this version of post, a new
-> call-back is_attach_deferred is added to iommu-ops, it's used to check whether
-> we need defer the domain attach/detach in iommu-core code.
-> 
-> v5:
->     bnx2 NIC can't reset itself during driver init. Post patch to reset
->     it during driver init. IO_PAGE_FAULT can't be seen anymore.
-> 
->     Below is link of v5 post.
->     https://lists.linuxfoundation.org/pipermail/iommu/2016-September/018527.html
-> 
-> v5->v6:
->     According to Joerg's comments made several below main changes:
->     - Add sanity check when copy old dev tables.
-> 
->     - If a device is set up with guest translations (DTE.GV=1), then don't
->       copy that information but move the device over to an empty guest-cr3
->       table and handle the faults in the PPR log (which just answer them
->       with INVALID).
-> 
-> v6->v7:
->     Two main changes are made according to Joerg's suggestion:
->     - Add is_attach_deferred call-back to iommu-ops. With this domain
->       can be deferred to device driver init cleanly.
-> 
->     - Allocate memory below 4G for dev table if translation pre-enabled.
->       AMD engineer pointed out that it's unsafe to update the device-table
->       while iommu is enabled. device-table pointer update is split up into
->       two 32bit writes in the IOMMU hardware. So updating it while the IOMMU
->       is enabled could have some nasty side effects.
-> 
-> Baoquan He (12):
->   iommu/amd: Detect pre enabled translation
->   iommu/amd: add several helper function
->   iommu/amd: Define bit fields for DTE particularly
->   iommu/amd: Add function copy_dev_tables
->   iommu/amd: copy old trans table from old kernel
->   iommu: Add is_attach_deferred call-back to iommu-ops
->   iommu/amd: Use is_attach_deferred call-back
->   iommu/amd: Add sanity check of irq remap information of old dev table
->     entry
->   iommu/amd: Don't copy GCR3 table root pointer
->   iommu/amd: Clear out the GV flag when handle deferred domain attach
->   iommu: Assign the direct mapped domain to group->domain
->   iommu/amd: Allocate memory below 4G for dev table if translation
->     pre-enabled
-> 
->  drivers/iommu/amd_iommu.c       |  78 +++++++++-------
->  drivers/iommu/amd_iommu_init.c  | 201 +++++++++++++++++++++++++++++++++++++---
->  drivers/iommu/amd_iommu_proto.h |   2 +
->  drivers/iommu/amd_iommu_types.h |  53 ++++++++++-
->  drivers/iommu/amd_iommu_v2.c    |  18 +++-
->  drivers/iommu/iommu.c           |   9 ++
->  include/linux/iommu.h           |   1 +
->  7 files changed, 313 insertions(+), 49 deletions(-)
-> 
-> -- 
-> 2.5.5
-> 
+>Kamalesh Babulal (4):
+>  eppic: Rename scripts to reflect validity of kernel version
+>  eppic/vhost_net_buffers: Introduce changes for kernel 3.19
+>  eppic/dir_names: Introduce changes for kernel 3.14
+>  eppic/keyring: Introduce changes for kernel 4.4
+>
+> eppic_scripts/README                           |  26 +-
+> eppic_scripts/ap_messages.c                    |  82 ------
+> eppic_scripts/ap_messages_3_10_to_4_8.c        |  82 ++++++
+> eppic_scripts/dir_names.c                      |  78 -----
+> eppic_scripts/dir_names_3_10_to_3_13.c         |  78 +++++
+> eppic_scripts/dir_names_3_14_to_4_8.c          |  82 ++++++
+> eppic_scripts/keyring.c                        |  57 ----
+> eppic_scripts/keyring_3_10_to_4_3.c            |  57 ++++
+> eppic_scripts/keyring_4_4_to_4_8.c             | 378 +++++++++++++++++++++++++
+> eppic_scripts/proc_names.c                     |  49 ----
+> eppic_scripts/proc_names_3_10_to_4_8.c         |  49 ++++
+> eppic_scripts/tcp_sk_buf.c                     |  82 ------
+> eppic_scripts/tcp_sk_buf_3_10_to_4_8.c         |  82 ++++++
+> eppic_scripts/udp_sk_buf.c                     |  83 ------
+> eppic_scripts/udp_sk_buf_3_10_to_4_8.c         |  83 ++++++
+> eppic_scripts/unix_sk_buff.c                   |  85 ------
+> eppic_scripts/unix_sk_buff_3_10_to_4_8.c       |  85 ++++++
+> eppic_scripts/vhost_net_buffers.c              |  99 -------
+> eppic_scripts/vhost_net_buffers_3_10_to_3_18.c |  99 +++++++
+> eppic_scripts/vhost_net_buffers_3_19_to_4_8.c  | 104 +++++++
+> eppic_scripts/vhost_scsi_buffers.c             |  75 -----
+> eppic_scripts/vhost_scsi_buffers_3_10_to_4_8.c |  75 +++++
+> 22 files changed, 1270 insertions(+), 700 deletions(-)
+> delete mode 100644 eppic_scripts/ap_messages.c
+> create mode 100644 eppic_scripts/ap_messages_3_10_to_4_8.c
+> delete mode 100644 eppic_scripts/dir_names.c
+> create mode 100644 eppic_scripts/dir_names_3_10_to_3_13.c
+> create mode 100644 eppic_scripts/dir_names_3_14_to_4_8.c
+> delete mode 100644 eppic_scripts/keyring.c
+> create mode 100644 eppic_scripts/keyring_3_10_to_4_3.c
+> create mode 100644 eppic_scripts/keyring_4_4_to_4_8.c
+> delete mode 100644 eppic_scripts/proc_names.c
+> create mode 100644 eppic_scripts/proc_names_3_10_to_4_8.c
+> delete mode 100644 eppic_scripts/tcp_sk_buf.c
+> create mode 100644 eppic_scripts/tcp_sk_buf_3_10_to_4_8.c
+> delete mode 100644 eppic_scripts/udp_sk_buf.c
+> create mode 100644 eppic_scripts/udp_sk_buf_3_10_to_4_8.c
+> delete mode 100644 eppic_scripts/unix_sk_buff.c
+> create mode 100644 eppic_scripts/unix_sk_buff_3_10_to_4_8.c
+> delete mode 100644 eppic_scripts/vhost_net_buffers.c
+> create mode 100644 eppic_scripts/vhost_net_buffers_3_10_to_3_18.c
+> create mode 100644 eppic_scripts/vhost_net_buffers_3_19_to_4_8.c
+> delete mode 100644 eppic_scripts/vhost_scsi_buffers.c
+> create mode 100644 eppic_scripts/vhost_scsi_buffers_3_10_to_4_8.c
+>
+>--
+>2.7.4
+>
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
