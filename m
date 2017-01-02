@@ -1,16 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22c.google.com ([2607:f8b0:400e:c00::22c])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cM5zd-0006S6-Bz
- for kexec@lists.infradead.org; Wed, 28 Dec 2016 04:37:41 +0000
-Received: by mail-pf0-x22c.google.com with SMTP id d2so57166902pfd.0
- for <kexec@lists.infradead.org>; Tue, 27 Dec 2016 20:37:16 -0800 (PST)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64 kdump
-Date: Wed, 28 Dec 2016 13:37:34 +0900
-Message-Id: <20161228043734.27535-1-takahiro.akashi@linaro.org>
-In-Reply-To: <20161228043347.27358-1-takahiro.akashi@linaro.org>
-References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ id 1cO3ND-0000BF-PT
+ for kexec@lists.infradead.org; Mon, 02 Jan 2017 14:14:04 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ v02EDfnl046171
+ for <kexec@lists.infradead.org>; Mon, 2 Jan 2017 09:13:42 -0500
+Received: from e23smtp07.au.ibm.com (e23smtp07.au.ibm.com [202.81.31.140])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 27qqfm1ymj-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 02 Jan 2017 09:13:41 -0500
+Received: from localhost
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Tue, 3 Jan 2017 00:13:32 +1000
+Received: from d23relay09.au.ibm.com (d23relay09.au.ibm.com [9.185.63.181])
+ by d23dlp03.au.ibm.com (Postfix) with ESMTP id E2EF53578052
+ for <kexec@lists.infradead.org>; Tue,  3 Jan 2017 01:13:29 +1100 (EST)
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+ by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v02EDTgM61800558
+ for <kexec@lists.infradead.org>; Tue, 3 Jan 2017 01:13:29 +1100
+Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
+ by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v02EDTsa026825
+ for <kexec@lists.infradead.org>; Tue, 3 Jan 2017 01:13:29 +1100
+Subject: [PATCH v3 0/5] kexec/fadump: remove dependency with CONFIG_KEXEC
+ and reuse crashkernel parameter for fadump
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Mon, 02 Jan 2017 19:43:19 +0530
+MIME-Version: 1.0
+Message-Id: <148336637462.25358.5151364413645288219.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,93 +41,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, Michael Ellerman <mpe@ellerman.id.au>, dyoung@redhat.com, vgoyal@redhat.com
 
-From: James Morse <james.morse@arm.com>
+Traditionally, kdump is used to save vmcore in case of a crash. Some
+architectures like powerpc can save vmcore using architecture specific
+support instead of kexec/kdump mechanism. Such architecture specific
+support also needs to reserve memory, to be used by dump capture kernel.
+crashkernel parameter can be a reused, for memory reservation, by such
+architecture specific infrastructure.
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,usable-memory-range
-	linux,elfcorehdr
-used by arm64 kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
+This patchset removes dependency with CONFIG_KEXEC for crashkernel parameter
+and vmcoreinfo related code as it can be reused without kexec support. Also,
+crashkernel parameter is reused instead of fadump_reserve_mem to reserve
+memory for fadump.
 
-Signed-off-by: James Morse <james.morse@arm.com>
-[takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+The first patch moves crashkernel parameter parsing and vmcoreinfo related
+code under CONFIG_CRASH_CORE instead of CONFIG_KEXEC_CORE. The second patch
+reuses the definitions of append_elf_note() & final_note() functions under
+CONFIG_CRASH_CORE in IA64 arch code. The third patch removes dependency on
+CONFIG_KEXEC for firmware-assisted dump (fadump) in powerpc. The next patch
+reuses crashkernel parameter for reserving memory for fadump, instead of the
+fadump_reserve_mem parameter. This has the advantage of using all syntaxes
+crashkernel parameter supports, for fadump as well. The last patch updates
+fadump kernel documentation about use of crashkernel parameter.
+
 ---
- Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82d4c37..7b115165e9ec 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+
-+These properties (currently used on PowerPC and arm64) indicates
-+the base address and the size, respectively, of the reserved memory
-+range for crash dump kernel.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the base address and the size, which can be used as system ram on
-+the *current* kernel. Note that, if this property is present, any memory
-+regions under "memory" nodes in DT blob or ones marked as "conventional
-+memory" in EFI memory map should be ignored.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout as PT_LOAD segments of elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
--- 
-2.11.0
+Hari Bathini (5):
+      crash: move crashkernel parsing and vmcore related code under CONFIG_CRASH_CORE
+      ia64: reuse append_elf_note() and final_note() functions
+      powerpc/fadump: remove dependency with CONFIG_KEXEC
+      powerpc/fadump: reuse crashkernel parameter for fadump memory reservation
+      powerpc/fadump: update documentation about crashkernel parameter reuse
+
+
+ Documentation/powerpc/firmware-assisted-dump.txt |   23 +
+ arch/Kconfig                                     |    4 
+ arch/ia64/kernel/crash.c                         |   22 -
+ arch/powerpc/Kconfig                             |   10 -
+ arch/powerpc/include/asm/fadump.h                |    2 
+ arch/powerpc/kernel/crash.c                      |    2 
+ arch/powerpc/kernel/fadump.c                     |   57 +--
+ arch/powerpc/kernel/setup-common.c               |    5 
+ include/linux/crash_core.h                       |   69 +++
+ include/linux/elf.h                              |    2 
+ include/linux/kexec.h                            |   57 ---
+ include/linux/printk.h                           |    4 
+ kernel/Makefile                                  |    1 
+ kernel/crash_core.c                              |  439 ++++++++++++++++++++++
+ kernel/kexec_core.c                              |  432 ----------------------
+ kernel/ksysfs.c                                  |    8 
+ kernel/printk/printk.c                           |    6 
+ 17 files changed, 572 insertions(+), 571 deletions(-)
+ create mode 100644 include/linux/crash_core.h
+ create mode 100644 kernel/crash_core.c
 
 
 _______________________________________________
