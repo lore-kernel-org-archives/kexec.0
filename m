@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-f175.google.com ([209.85.216.175])
+Received: from mail-qk0-f182.google.com ([209.85.220.182])
  by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cOSnS-0004Ha-Io
- for kexec@lists.infradead.org; Tue, 03 Jan 2017 17:22:52 +0000
-Received: by mail-qt0-f175.google.com with SMTP id k15so229566210qtg.3
- for <kexec@lists.infradead.org>; Tue, 03 Jan 2017 09:22:30 -0800 (PST)
+ id 1cOSn3-0004ED-U9
+ for kexec@lists.infradead.org; Tue, 03 Jan 2017 17:22:27 +0000
+Received: by mail-qk0-f182.google.com with SMTP id t184so381963250qkd.0
+ for <kexec@lists.infradead.org>; Tue, 03 Jan 2017 09:22:04 -0800 (PST)
 From: Laura Abbott <labbott@redhat.com>
-Subject: [PATCHv6 08/11] kexec: Switch to __pa_symbol
-Date: Tue,  3 Jan 2017 09:21:50 -0800
-Message-Id: <1483464113-1587-9-git-send-email-labbott@redhat.com>
-In-Reply-To: <1483464113-1587-1-git-send-email-labbott@redhat.com>
-References: <1483464113-1587-1-git-send-email-labbott@redhat.com>
+Subject: [PATCHv6 00/11] CONFIG_DEBUG_VIRTUAL for arm64
+Date: Tue,  3 Jan 2017 09:21:42 -0800
+Message-Id: <1483464113-1587-1-git-send-email-labbott@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,33 +22,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Eric Biederman <ebiederm@xmission.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Thomas Gleixner <tglx@linutronix.de>, Laura Abbott <labbott@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, linux-arm-kernel@lists.infradead.org, xen-devel@lists.xenproject.org, Laura Abbott <labbott@redhat.com>, David Vrabel <david.vrabel@citrix.com>, Kees Cook <keescook@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Christoffer Dall <christoffer.dall@linaro.org>
 
-__pa_symbol is the correct api to get the physical address of kernel
-symbols. Switch to it to allow for better debug checking.
+Happy New Year!
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
- kernel/kexec_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is a very minor rebase from v5. It only moves a few headers around.
+I think this series should be ready to be queued up for 4.11.
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 5617cc4..a01974e 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1399,7 +1399,7 @@ void __weak arch_crash_save_vmcoreinfo(void)
- 
- phys_addr_t __weak paddr_vmcoreinfo_note(void)
- {
--	return __pa((unsigned long)(char *)&vmcoreinfo_note);
-+	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
- }
- 
- static int __init crash_save_vmcoreinfo_init(void)
+Thanks,
+Laura
+
+Laura Abbott (11):
+  lib/Kconfig.debug: Add ARCH_HAS_DEBUG_VIRTUAL
+  mm/cma: Cleanup highmem check
+  arm64: Move some macros under #ifndef __ASSEMBLY__
+  arm64: Add cast for virt_to_pfn
+  mm: Introduce lm_alias
+  arm64: Use __pa_symbol for kernel symbols
+  drivers: firmware: psci: Use __pa_symbol for kernel symbol
+  kexec: Switch to __pa_symbol
+  mm/kasan: Switch to using __pa_symbol and lm_alias
+  mm/usercopy: Switch to using lm_alias
+  arm64: Add support for CONFIG_DEBUG_VIRTUAL
+
+ arch/arm64/Kconfig                        |  1 +
+ arch/arm64/include/asm/kvm_mmu.h          |  4 +-
+ arch/arm64/include/asm/memory.h           | 66 +++++++++++++++++++++----------
+ arch/arm64/include/asm/mmu_context.h      |  6 +--
+ arch/arm64/include/asm/pgtable.h          |  2 +-
+ arch/arm64/kernel/acpi_parking_protocol.c |  3 +-
+ arch/arm64/kernel/cpu-reset.h             |  2 +-
+ arch/arm64/kernel/cpufeature.c            |  3 +-
+ arch/arm64/kernel/hibernate.c             | 20 +++-------
+ arch/arm64/kernel/insn.c                  |  2 +-
+ arch/arm64/kernel/psci.c                  |  3 +-
+ arch/arm64/kernel/setup.c                 |  9 +++--
+ arch/arm64/kernel/smp_spin_table.c        |  3 +-
+ arch/arm64/kernel/vdso.c                  |  8 +++-
+ arch/arm64/mm/Makefile                    |  2 +
+ arch/arm64/mm/init.c                      | 12 +++---
+ arch/arm64/mm/kasan_init.c                | 22 +++++++----
+ arch/arm64/mm/mmu.c                       | 33 ++++++++++------
+ arch/arm64/mm/physaddr.c                  | 30 ++++++++++++++
+ arch/x86/Kconfig                          |  1 +
+ drivers/firmware/psci.c                   |  2 +-
+ include/linux/mm.h                        |  4 ++
+ kernel/kexec_core.c                       |  2 +-
+ lib/Kconfig.debug                         |  5 ++-
+ mm/cma.c                                  | 15 +++----
+ mm/kasan/kasan_init.c                     | 15 +++----
+ mm/usercopy.c                             |  4 +-
+ 27 files changed, 180 insertions(+), 99 deletions(-)
+ create mode 100644 arch/arm64/mm/physaddr.c
+
 -- 
 2.7.4
 
