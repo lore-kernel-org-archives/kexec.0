@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-f171.google.com ([209.85.220.171])
- by bombadil.infradead.org with esmtps (Exim 4.85_2 #1 (Red Hat Linux))
- id 1cOYTI-0000Zh-AN
- for kexec@lists.infradead.org; Tue, 03 Jan 2017 23:26:27 +0000
-Received: by mail-qk0-f171.google.com with SMTP id t184so391425516qkd.0
- for <kexec@lists.infradead.org>; Tue, 03 Jan 2017 15:26:04 -0800 (PST)
-Subject: Re: [PATCHv6 00/11] CONFIG_DEBUG_VIRTUAL for arm64
-References: <1483464113-1587-1-git-send-email-labbott@redhat.com>
- <edc8eaa2-5414-506c-1dad-f2404ef19c81@gmail.com>
-From: Laura Abbott <labbott@redhat.com>
-Message-ID: <b3de65da-8a74-2510-268e-34516cc2de77@redhat.com>
-Date: Tue, 3 Jan 2017 15:25:53 -0800
+Received: from mx1.redhat.com ([209.132.183.28])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cP1NP-0003ol-HX
+ for kexec@lists.infradead.org; Thu, 05 Jan 2017 06:18:16 +0000
+Date: Thu, 5 Jan 2017 14:17:45 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v3 1/5] crash: move crashkernel parsing and vmcore
+ related code under CONFIG_CRASH_CORE
+Message-ID: <20170105061745.GA9679@dhcp-128-65.nay.redhat.com>
+References: <148336637462.25358.5151364413645288219.stgit@hbathini.in.ibm.com>
+ <148336641471.25358.1234744226675502511.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <edc8eaa2-5414-506c-1dad-f2404ef19c81@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <148336641471.25358.1234744226675502511.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,83 +25,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, linux-arm-kernel@lists.infradead.org, Andrey Ryabinin <aryabinin@virtuozzo.com>, David Vrabel <david.vrabel@citrix.com>, Kees Cook <keescook@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, xen-devel@lists.xenproject.org, Thomas Gleixner <tglx@linutronix.de>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Christoffer Dall <christoffer.dall@linaro.org>
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
 
-On 01/03/2017 02:56 PM, Florian Fainelli wrote:
-> On 01/03/2017 09:21 AM, Laura Abbott wrote:
->> Happy New Year!
->>
->> This is a very minor rebase from v5. It only moves a few headers around.
->> I think this series should be ready to be queued up for 4.11.
-> 
-> FWIW:
-> 
-> Tested-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
+Hi, Hari
 
-Thanks!
-
-> How do we get this series included? I would like to get the ARM 32-bit
-> counterpart included as well (will resubmit rebased shortly), but I have
-> no clue which tree this should be going through.
+On 01/02/17 at 07:43pm, Hari Bathini wrote:
+> Traditionally, kdump is used to save vmcore in case of a crash. Some
+> architectures like powerpc can save vmcore using architecture specific
+> support instead of kexec/kdump mechanism. Such architecture specific
+> support also needs to reserve memory, to be used by dump capture kernel.
+> crashkernel parameter can be a reused, for memory reservation, by such
+> architecture specific infrastructure.
 > 
-
-I was assuming this would go through the arm64 tree unless Catalin/Will
-have an objection to that.
-
-> Thanks!
+> But currently, code related to vmcoreinfo and parsing of crashkernel
+> parameter is built under CONFIG_KEXEC_CORE. This patch introduces
+> CONFIG_CRASH_CORE and moves the above mentioned code under this config,
+> allowing code reuse without dependency on CONFIG_KEXEC. There is no
+> functional change with this patch.
 > 
->>
->> Thanks,
->> Laura
->>
->> Laura Abbott (11):
->>   lib/Kconfig.debug: Add ARCH_HAS_DEBUG_VIRTUAL
->>   mm/cma: Cleanup highmem check
->>   arm64: Move some macros under #ifndef __ASSEMBLY__
->>   arm64: Add cast for virt_to_pfn
->>   mm: Introduce lm_alias
->>   arm64: Use __pa_symbol for kernel symbols
->>   drivers: firmware: psci: Use __pa_symbol for kernel symbol
->>   kexec: Switch to __pa_symbol
->>   mm/kasan: Switch to using __pa_symbol and lm_alias
->>   mm/usercopy: Switch to using lm_alias
->>   arm64: Add support for CONFIG_DEBUG_VIRTUAL
->>
->>  arch/arm64/Kconfig                        |  1 +
->>  arch/arm64/include/asm/kvm_mmu.h          |  4 +-
->>  arch/arm64/include/asm/memory.h           | 66 +++++++++++++++++++++----------
->>  arch/arm64/include/asm/mmu_context.h      |  6 +--
->>  arch/arm64/include/asm/pgtable.h          |  2 +-
->>  arch/arm64/kernel/acpi_parking_protocol.c |  3 +-
->>  arch/arm64/kernel/cpu-reset.h             |  2 +-
->>  arch/arm64/kernel/cpufeature.c            |  3 +-
->>  arch/arm64/kernel/hibernate.c             | 20 +++-------
->>  arch/arm64/kernel/insn.c                  |  2 +-
->>  arch/arm64/kernel/psci.c                  |  3 +-
->>  arch/arm64/kernel/setup.c                 |  9 +++--
->>  arch/arm64/kernel/smp_spin_table.c        |  3 +-
->>  arch/arm64/kernel/vdso.c                  |  8 +++-
->>  arch/arm64/mm/Makefile                    |  2 +
->>  arch/arm64/mm/init.c                      | 12 +++---
->>  arch/arm64/mm/kasan_init.c                | 22 +++++++----
->>  arch/arm64/mm/mmu.c                       | 33 ++++++++++------
->>  arch/arm64/mm/physaddr.c                  | 30 ++++++++++++++
->>  arch/x86/Kconfig                          |  1 +
->>  drivers/firmware/psci.c                   |  2 +-
->>  include/linux/mm.h                        |  4 ++
->>  kernel/kexec_core.c                       |  2 +-
->>  lib/Kconfig.debug                         |  5 ++-
->>  mm/cma.c                                  | 15 +++----
->>  mm/kasan/kasan_init.c                     | 15 +++----
->>  mm/usercopy.c                             |  4 +-
->>  27 files changed, 180 insertions(+), 99 deletions(-)
->>  create mode 100644 arch/arm64/mm/physaddr.c
->>
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> ---
 > 
+> Changes from v2:
+> * Used CONFIG_CRASH_CORE instead of CONFIG_KEXEC_CORE at
+>   appropriate places in printk and ksysfs.
+> 
+> 
+>  arch/Kconfig               |    4 
+>  include/linux/crash_core.h |   65 ++++++
+>  include/linux/kexec.h      |   57 ------
+>  include/linux/printk.h     |    4 
+>  kernel/Makefile            |    1 
+>  kernel/crash_core.c        |  445 ++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/kexec_core.c        |  404 ----------------------------------------
+>  kernel/ksysfs.c            |    8 +
+>  kernel/printk/printk.c     |    6 -
+>  9 files changed, 531 insertions(+), 463 deletions(-)
+>  create mode 100644 include/linux/crash_core.h
+>  create mode 100644 kernel/crash_core.c
 > 
 
+[snip]
+
+>  #ifndef CONFIG_TINY_RCU
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 8b26964..d0dfebd 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -32,7 +32,7 @@
+>  #include <linux/bootmem.h>
+>  #include <linux/memblock.h>
+>  #include <linux/syscalls.h>
+> -#include <linux/kexec.h>
+> +#include <linux/crash_core.h>
+>  #include <linux/kdb.h>
+>  #include <linux/ratelimit.h>
+>  #include <linux/kmsg_dump.h>
+> @@ -951,7 +951,7 @@ const struct file_operations kmsg_fops = {
+>  	.release = devkmsg_release,
+>  };
+>  
+> -#ifdef CONFIG_KEXEC_CORE
+> +#ifdef CONFIG_CRASH_CORE
+>  /*
+>   * This appends the listed symbols to /proc/vmcore
+>   *
+> @@ -960,7 +960,7 @@ const struct file_operations kmsg_fops = {
+>   * symbols are specifically used so that utilities can access and extract the
+>   * dmesg log from a vmcore file after a crash.
+>   */
+> -void log_buf_kexec_setup(void)
+> +void log_buf_crash_setup(void)
+
+I can not think of any better name about the CONFIG_CRASH_CORE though I
+feel it is not excellent so personally I can live with it.
+
+But for this function name log_buf_crash_setup is too general, I can not get
+what it is doing from the name, how about change it to log_buf_vmcoreinfo_setup
+
+>  {
+>  	VMCOREINFO_SYMBOL(log_buf);
+>  	VMCOREINFO_SYMBOL(log_buf_len);
+> 
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
