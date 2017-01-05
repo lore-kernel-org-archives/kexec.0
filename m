@@ -1,38 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cPBsr-0007Ny-TH
- for kexec@lists.infradead.org; Thu, 05 Jan 2017 17:31:28 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+ id 1cPBtc-0000v1-4v
+ for kexec@lists.infradead.org; Thu, 05 Jan 2017 17:32:13 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
  by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- v05HSof5018818
- for <kexec@lists.infradead.org>; Thu, 5 Jan 2017 12:29:00 -0500
+ v05HSou3113731
+ for <kexec@lists.infradead.org>; Thu, 5 Jan 2017 12:31:52 -0500
 Received: from e23smtp01.au.ibm.com (e23smtp01.au.ibm.com [202.81.31.143])
- by mx0a-001b2d01.pphosted.com with ESMTP id 27st3vhf0x-1
+ by mx0a-001b2d01.pphosted.com with ESMTP id 27srbgxh2v-1
  (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 05 Jan 2017 12:29:00 -0500
+ for <kexec@lists.infradead.org>; Thu, 05 Jan 2017 12:31:51 -0500
 Received: from localhost
  by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Fri, 6 Jan 2017 03:28:57 +1000
-Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
- by d23dlp03.au.ibm.com (Postfix) with ESMTP id 8FB473578052
- for <kexec@lists.infradead.org>; Fri,  6 Jan 2017 04:28:55 +1100 (EST)
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
- by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v05HSuth54788232
- for <kexec@lists.infradead.org>; Fri, 6 Jan 2017 04:28:56 +1100
-Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
- by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v05HStVI010825
- for <kexec@lists.infradead.org>; Fri, 6 Jan 2017 04:28:55 +1100
-Subject: [PATCH v4 0/5] kexec/fadump: remove dependency with CONFIG_KEXEC
- and reuse crashkernel parameter for fadump
+ Fri, 6 Jan 2017 03:31:49 +1000
+Received: from d23relay08.au.ibm.com (d23relay08.au.ibm.com [9.185.71.33])
+ by d23dlp02.au.ibm.com (Postfix) with ESMTP id 3DCD02BB0045
+ for <kexec@lists.infradead.org>; Fri,  6 Jan 2017 04:31:46 +1100 (EST)
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+ by d23relay08.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v05HVmuU49741878
+ for <kexec@lists.infradead.org>; Fri, 6 Jan 2017 04:31:48 +1100
+Received: from d23av03.au.ibm.com (localhost [127.0.0.1])
+ by d23av03.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v05HVjBv031994
+ for <kexec@lists.infradead.org>; Fri, 6 Jan 2017 04:31:46 +1100
+Subject: [PATCH v4 2/5] ia64: reuse append_elf_note() and final_note()
+ functions
 From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Thu, 05 Jan 2017 22:58:42 +0530
+Date: Thu, 05 Jan 2017 23:01:39 +0530
+In-Reply-To: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
+References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-Message-Id: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
+Message-Id: <148363740554.11570.4870634597647436827.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,58 +50,187 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, Michael Ellerman <mpe@ellerman.id.au>, dyoung@redhat.com, vgoyal@redhat.com
 
-Traditionally, kdump is used to save vmcore in case of a crash. Some
-architectures like powerpc can save vmcore using architecture specific
-support instead of kexec/kdump mechanism. Such architecture specific
-support also needs to reserve memory, to be used by dump capture kernel.
-crashkernel parameter can be a reused, for memory reservation, by such
-architecture specific infrastructure.
+Get rid of multiple definitions of append_elf_note() & final_note()
+functions. Reuse these functions compiled under CONFIG_CRASH_CORE
+Also, define Elf_Word and use it instead of generic u32 or the more
+specific Elf64_Word.
 
-This patchset removes dependency with CONFIG_KEXEC for crashkernel parameter
-and vmcoreinfo related code as it can be reused without kexec support. Also,
-crashkernel parameter is reused instead of fadump_reserve_mem to reserve
-memory for fadump.
-
-The first patch moves crashkernel parameter parsing and vmcoreinfo related
-code under CONFIG_CRASH_CORE instead of CONFIG_KEXEC_CORE. The second patch
-reuses the definitions of append_elf_note() & final_note() functions under
-CONFIG_CRASH_CORE in IA64 arch code. The third patch removes dependency on
-CONFIG_KEXEC for firmware-assisted dump (fadump) in powerpc. The next patch
-reuses crashkernel parameter for reserving memory for fadump, instead of the
-fadump_reserve_mem parameter. This has the advantage of using all syntaxes
-crashkernel parameter supports, for fadump as well. The last patch updates
-fadump kernel documentation about use of crashkernel parameter.
-
+Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
 ---
 
-Hari Bathini (5):
-      crash: move crashkernel parsing and vmcore related code under CONFIG_CRASH_CORE
-      ia64: reuse append_elf_note() and final_note() functions
-      powerpc/fadump: remove dependency with CONFIG_KEXEC
-      powerpc/fadump: reuse crashkernel parameter for fadump memory reservation
-      powerpc/fadump: update documentation about crashkernel parameter reuse
+Changes from v3:
+* Dropped hard-coded values and used DIV_ROUND_UP().
+
+Changes from v2:
+* Added a definition for Elf_Word.
+* Used IA64 version of append_elf_note() and final_note() functions.
 
 
- Documentation/powerpc/firmware-assisted-dump.txt |   23 +
- arch/Kconfig                                     |    4 
- arch/ia64/kernel/crash.c                         |   22 -
- arch/powerpc/Kconfig                             |   10 -
- arch/powerpc/include/asm/fadump.h                |    2 
- arch/powerpc/kernel/crash.c                      |    2 
- arch/powerpc/kernel/fadump.c                     |   57 +--
- arch/powerpc/kernel/setup-common.c               |    5 
- include/linux/crash_core.h                       |   69 +++
- include/linux/elf.h                              |    2 
- include/linux/kexec.h                            |   57 ---
- include/linux/printk.h                           |    4 
- kernel/Makefile                                  |    1 
- kernel/crash_core.c                              |  439 ++++++++++++++++++++++
- kernel/kexec_core.c                              |  432 ----------------------
- kernel/ksysfs.c                                  |    8 
- kernel/printk/printk.c                           |    6 
- 17 files changed, 572 insertions(+), 571 deletions(-)
- create mode 100644 include/linux/crash_core.h
- create mode 100644 kernel/crash_core.c
+ arch/ia64/kernel/crash.c   |   22 ----------------------
+ include/linux/crash_core.h |    4 ++++
+ include/linux/elf.h        |    2 ++
+ kernel/crash_core.c        |   34 ++++++++++++++--------------------
+ kernel/kexec_core.c        |   28 ----------------------------
+ 5 files changed, 20 insertions(+), 70 deletions(-)
+
+diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
+index 2955f35..75859a0 100644
+--- a/arch/ia64/kernel/crash.c
++++ b/arch/ia64/kernel/crash.c
+@@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
+ static int kdump_on_init = 1;
+ static int kdump_on_fatal_mca = 1;
+ 
+-static inline Elf64_Word
+-*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
+-		size_t data_len)
+-{
+-	struct elf_note *note = (struct elf_note *)buf;
+-	note->n_namesz = strlen(name) + 1;
+-	note->n_descsz = data_len;
+-	note->n_type   = type;
+-	buf += (sizeof(*note) + 3)/4;
+-	memcpy(buf, name, note->n_namesz);
+-	buf += (note->n_namesz + 3)/4;
+-	memcpy(buf, data, data_len);
+-	buf += (data_len + 3)/4;
+-	return buf;
+-}
+-
+-static void
+-final_note(void *buf)
+-{
+-	memset(buf, 0, sizeof(struct elf_note));
+-}
+-
+ extern void ia64_dump_cpu_regs(void *);
+ 
+ static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 18d0f94..541a197 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -55,6 +55,10 @@ extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+ extern size_t vmcoreinfo_size;
+ extern size_t vmcoreinfo_max_size;
+ 
++Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
++			  void *data, size_t data_len);
++void final_note(Elf_Word *buf);
++
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+diff --git a/include/linux/elf.h b/include/linux/elf.h
+index 20fa8d8..ba069e8 100644
+--- a/include/linux/elf.h
++++ b/include/linux/elf.h
+@@ -29,6 +29,7 @@ extern Elf32_Dyn _DYNAMIC [];
+ #define elf_note	elf32_note
+ #define elf_addr_t	Elf32_Off
+ #define Elf_Half	Elf32_Half
++#define Elf_Word	Elf32_Word
+ 
+ #else
+ 
+@@ -39,6 +40,7 @@ extern Elf64_Dyn _DYNAMIC [];
+ #define elf_note	elf64_note
+ #define elf_addr_t	Elf64_Off
+ #define Elf_Half	Elf64_Half
++#define Elf_Word	Elf64_Word
+ 
+ #endif
+ 
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 80b441d..362dace 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -291,32 +291,26 @@ int __init parse_crashkernel_low(char *cmdline,
+ 				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+ }
+ 
+-static u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
+-			    void *data, size_t data_len)
++Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
++			  void *data, size_t data_len)
+ {
+-	struct elf_note note;
+-
+-	note.n_namesz = strlen(name) + 1;
+-	note.n_descsz = data_len;
+-	note.n_type   = type;
+-	memcpy(buf, &note, sizeof(note));
+-	buf += (sizeof(note) + 3)/4;
+-	memcpy(buf, name, note.n_namesz);
+-	buf += (note.n_namesz + 3)/4;
+-	memcpy(buf, data, note.n_descsz);
+-	buf += (note.n_descsz + 3)/4;
++	struct elf_note *note = (struct elf_note *)buf;
++
++	note->n_namesz = strlen(name) + 1;
++	note->n_descsz = data_len;
++	note->n_type   = type;
++	buf += DIV_ROUND_UP(sizeof(*note), sizeof(Elf_Word));
++	memcpy(buf, name, note->n_namesz);
++	buf += DIV_ROUND_UP(note->n_namesz, sizeof(Elf_Word));
++	memcpy(buf, data, data_len);
++	buf += DIV_ROUND_UP(data_len, sizeof(Elf_Word));
+ 
+ 	return buf;
+ }
+ 
+-static void final_note(u32 *buf)
++void final_note(Elf_Word *buf)
+ {
+-	struct elf_note note;
+-
+-	note.n_namesz = 0;
+-	note.n_descsz = 0;
+-	note.n_type   = 0;
+-	memcpy(buf, &note, sizeof(note));
++	memset(buf, 0, sizeof(struct elf_note));
+ }
+ 
+ static void update_vmcoreinfo_note(void)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 2179a16..263d764 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -990,34 +990,6 @@ int crash_shrink_memory(unsigned long new_size)
+ 	return ret;
+ }
+ 
+-static u32 *append_elf_note(u32 *buf, char *name, unsigned type, void *data,
+-			    size_t data_len)
+-{
+-	struct elf_note note;
+-
+-	note.n_namesz = strlen(name) + 1;
+-	note.n_descsz = data_len;
+-	note.n_type   = type;
+-	memcpy(buf, &note, sizeof(note));
+-	buf += (sizeof(note) + 3)/4;
+-	memcpy(buf, name, note.n_namesz);
+-	buf += (note.n_namesz + 3)/4;
+-	memcpy(buf, data, note.n_descsz);
+-	buf += (note.n_descsz + 3)/4;
+-
+-	return buf;
+-}
+-
+-static void final_note(u32 *buf)
+-{
+-	struct elf_note note;
+-
+-	note.n_namesz = 0;
+-	note.n_descsz = 0;
+-	note.n_type   = 0;
+-	memcpy(buf, &note, sizeof(note));
+-}
+-
+ void crash_save_cpu(struct pt_regs *regs, int cpu)
+ {
+ 	struct elf_prstatus prstatus;
 
 
 _______________________________________________
