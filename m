@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x233.google.com ([2607:f8b0:400e:c05::233])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cRCVi-0003lp-Ej
- for kexec@lists.infradead.org; Wed, 11 Jan 2017 06:35:52 +0000
-Received: by mail-pg0-x233.google.com with SMTP id 14so33956982pgg.1
- for <kexec@lists.infradead.org>; Tue, 10 Jan 2017 22:35:29 -0800 (PST)
-Date: Wed, 11 Jan 2017 15:36:28 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v29 4/9] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20170111063626.GE20972@linaro.org>
-References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
- <20161228043605.27470-3-takahiro.akashi@linaro.org>
- <20170110113248.GC21598@arm.com>
+Date: Tue, 10 Jan 2017 12:41:05 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCHv6 00/11] CONFIG_DEBUG_VIRTUAL for arm64
+Message-ID: <20170110124105.GH21598@arm.com>
+References: <1483464113-1587-1-git-send-email-labbott@redhat.com>
+ <edc8eaa2-5414-506c-1dad-f2404ef19c81@gmail.com>
+ <b3de65da-8a74-2510-268e-34516cc2de77@redhat.com>
+ <20170104114449.GA18193@arm.com>
+ <e13dc77e-6709-8122-9856-35aee876b836@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170110113248.GC21598@arm.com>
+In-Reply-To: <e13dc77e-6709-8122-9856-35aee876b836@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,82 +23,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, linux-arm-kernel@lists.infradead.org, Andrey Ryabinin <aryabinin@virtuozzo.com>, Laura Abbott <labbott@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, xen-devel@lists.xenproject.org, Thomas Gleixner <tglx@linutronix.de>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Dmitry Vyukov <dvyukov@google.com>, Juergen Gross <jgross@suse.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Vrabel <david.vrabel@citrix.com>, Andrew Morton <akpm@linux-foundation.org>, Christoffer Dall <christoffer.dall@linaro.org>
 
-Hi Will,
-
-On Tue, Jan 10, 2017 at 11:32:48AM +0000, Will Deacon wrote:
-> On Wed, Dec 28, 2016 at 01:36:01PM +0900, AKASHI Takahiro wrote:
-> > Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
-> > and save registers' status in per-cpu ELF notes before starting crash
-> > dump kernel. See kernel_kexec().
-> > Even if not all secondary cpus have shut down, we do kdump anyway.
+On Wed, Jan 04, 2017 at 02:30:50PM -0800, Florian Fainelli wrote:
+> On 01/04/2017 03:44 AM, Will Deacon wrote:
+> > On Tue, Jan 03, 2017 at 03:25:53PM -0800, Laura Abbott wrote:
+> >> On 01/03/2017 02:56 PM, Florian Fainelli wrote:
+> >>> On 01/03/2017 09:21 AM, Laura Abbott wrote:
+> >>>> Happy New Year!
+> >>>>
+> >>>> This is a very minor rebase from v5. It only moves a few headers around.
+> >>>> I think this series should be ready to be queued up for 4.11.
+> >>>
+> >>> FWIW:
+> >>>
+> >>> Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>
+> >>
+> >> Thanks!
+> >>
+> >>> How do we get this series included? I would like to get the ARM 32-bit
+> >>> counterpart included as well (will resubmit rebased shortly), but I have
+> >>> no clue which tree this should be going through.
+> >>>
+> >>
+> >> I was assuming this would go through the arm64 tree unless Catalin/Will
+> >> have an objection to that.
 > > 
-> > As we don't have to make non-boot(crashed) cpus offline (to preserve
-> > correct status of cpus at crash dump) before shutting down, this patch
-> > also adds a variant of smp_send_stop().
+> > Yup, I was planning to pick it up for 4.11.
 > > 
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > Reviewed-by: James Morse <james.morse@arm.com>
-> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> > ---
-> >  arch/arm64/include/asm/hardirq.h  |  2 +-
-> >  arch/arm64/include/asm/kexec.h    | 42 +++++++++++++++++++++++++-
-> >  arch/arm64/include/asm/smp.h      |  2 ++
-> >  arch/arm64/kernel/machine_kexec.c | 56 ++++++++++++++++++++++++++++++++--
-> >  arch/arm64/kernel/smp.c           | 63 +++++++++++++++++++++++++++++++++++++++
-> >  5 files changed, 160 insertions(+), 5 deletions(-)
+> > Florian -- does your series depend on this? If so, then I'll need to
+> > co-ordinate with Russell (probably via a shared branch that we both pull)
+> > if you're aiming for 4.11 too.
 > 
-> [...]
-> 
-> > diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> > index d050d720a1b4..cea009f2657d 100644
-> > --- a/arch/arm64/include/asm/smp.h
-> > +++ b/arch/arm64/include/asm/smp.h
-> > @@ -148,6 +148,8 @@ static inline void cpu_panic_kernel(void)
-> >   */
-> >  bool cpus_are_stuck_in_kernel(void);
-> >  
-> > +extern void smp_send_crash_stop(void);
-> > +
-> >  #endif /* ifndef __ASSEMBLY__ */
-> >  
-> >  #endif /* ifndef __ASM_SMP_H */
-> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> > index bc96c8a7fc79..c60346d33bb1 100644
-> > --- a/arch/arm64/kernel/machine_kexec.c
-> > +++ b/arch/arm64/kernel/machine_kexec.c
-> > @@ -9,6 +9,9 @@
-> >   * published by the Free Software Foundation.
-> >   */
-> >  
-> > +#include <linux/interrupt.h>
-> > +#include <linux/irq.h>
-> > +#include <linux/kernel.h>
-> >  #include <linux/kexec.h>
-> >  #include <linux/smp.h>
-> >  
-> > @@ -22,6 +25,7 @@
-> >  extern const unsigned char arm64_relocate_new_kernel[];
-> >  extern const unsigned long arm64_relocate_new_kernel_size;
-> >  
-> > +static bool in_crash_kexec;
-> 
-> Do you actually need this bool? Why not call kexec_crash_loaded() instead?
+> Yes, pretty much everything in Laura's patch series is relevant, except
+> the arm64 bits.
 
-The two have different meanings:
-"in_crash_kexec" indicates that kdump is taking place, while
-kexec_crash_loaded() tells us only whether crash dump kernel has been
-loaded or not.
-
-It is crucial to distinguish them especially for machine_kexec()
-which can be called on normal kexec even if kdump has been set up.
+Ok, then. Laura -- could you please reorder your patches so that the
+non-arm64 bits come first? That way, I can put those on a separate branch
+and have it pulled by both arm64 and rmk, so that the prequisities are
+shared between the architectures.
 
 Thanks,
--Takahiro AKASHI
 
-> Will
+Will
 
 _______________________________________________
 kexec mailing list
