@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 10 Jan 2017 11:32:48 +0000
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v29 4/9] arm64: kdump: implement machine_crash_shutdown()
-Message-ID: <20170110113248.GC21598@arm.com>
-References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
- <20161228043605.27470-3-takahiro.akashi@linaro.org>
+Message-ID: <5874EBAA.2040202@arm.com>
+Date: Tue, 10 Jan 2017 14:11:54 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20161228043605.27470-3-takahiro.akashi@linaro.org>
+Subject: Re: [PATCH V2 0/2] kexec-tools: arm64: Enable D-cache in purgatory
+References: <cover.1482129830.git.panand@redhat.com>
+ <e44d0ede-a116-f0cf-15db-07bf75856f07@redhat.com>
+In-Reply-To: <e44d0ede-a116-f0cf-15db-07bf75856f07@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,68 +19,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: geoff@infradead.org, mark.rutland@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Dec 28, 2016 at 01:36:01PM +0900, AKASHI Takahiro wrote:
-> Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
-> and save registers' status in per-cpu ELF notes before starting crash
-> dump kernel. See kernel_kexec().
-> Even if not all secondary cpus have shut down, we do kdump anyway.
-> 
-> As we don't have to make non-boot(crashed) cpus offline (to preserve
-> correct status of cpus at crash dump) before shutting down, this patch
-> also adds a variant of smp_send_stop().
-> 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Reviewed-by: James Morse <james.morse@arm.com>
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  arch/arm64/include/asm/hardirq.h  |  2 +-
->  arch/arm64/include/asm/kexec.h    | 42 +++++++++++++++++++++++++-
->  arch/arm64/include/asm/smp.h      |  2 ++
->  arch/arm64/kernel/machine_kexec.c | 56 ++++++++++++++++++++++++++++++++--
->  arch/arm64/kernel/smp.c           | 63 +++++++++++++++++++++++++++++++++++++++
->  5 files changed, 160 insertions(+), 5 deletions(-)
+Hi Pratyush,
 
-[...]
+On 06/01/17 03:31, Pratyush Anand wrote:
+> Any feedback/review comment on it?
 
-> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> index d050d720a1b4..cea009f2657d 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -148,6 +148,8 @@ static inline void cpu_panic_kernel(void)
->   */
->  bool cpus_are_stuck_in_kernel(void);
->  
-> +extern void smp_send_crash_stop(void);
-> +
->  #endif /* ifndef __ASSEMBLY__ */
->  
->  #endif /* ifndef __ASM_SMP_H */
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index bc96c8a7fc79..c60346d33bb1 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -9,6 +9,9 @@
->   * published by the Free Software Foundation.
->   */
->  
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
->  #include <linux/kexec.h>
->  #include <linux/smp.h>
->  
-> @@ -22,6 +25,7 @@
->  extern const unsigned char arm64_relocate_new_kernel[];
->  extern const unsigned long arm64_relocate_new_kernel_size;
->  
-> +static bool in_crash_kexec;
+I started going through this last week, I hope to get back to it later this
+week. (I also need to learn/remember how some of the kexec-tools stuff works).
 
-Do you actually need this bool? Why not call kexec_crash_loaded() instead?
 
-Will
+Thanks,
+
+James
+
+
 
 _______________________________________________
 kexec mailing list
