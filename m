@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 12 Jan 2017 15:09:26 +0000
+Date: Thu, 12 Jan 2017 15:39:45 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v29 3/9] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20170112150926.GA12249@leverpostej>
+Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Message-ID: <20170112153944.GB12249@leverpostej>
 References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
- <20161228043605.27470-2-takahiro.akashi@linaro.org>
+ <20161228043734.27535-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20161228043605.27470-2-takahiro.akashi@linaro.org>
+In-Reply-To: <20161228043734.27535-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,177 +22,132 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
 Hi,
 
-As a general note, I must apologise for my minimial review of the series
-until this point. Judging by the way the DT parts are organised. I'm
-very concerned with the way the DT parts are organised, and clearly I
-did not communicate my concerns and suggestions effectively in prior
-rounds of review.
-
-On Wed, Dec 28, 2016 at 01:36:00PM +0900, AKASHI Takahiro wrote:
-> "crashkernel=" kernel parameter specifies the size (and optionally
-> the start address) of the system ram used by crash dump kernel.
-> reserve_crashkernel() will allocate and reserve the memory at the startup
-> of primary kernel.
+On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
+> From: James Morse <james.morse@arm.com>
 > 
-> This memory range will be exported to userspace via:
-> 	- an entry named "Crash kernel" in /proc/iomem, and
-> 	- "linux,crashkernel-base" and "linux,crashkernel-size" under
-> 	  /sys/firmware/devicetree/base/chosen
+> Add documentation for
+> 	linux,crashkernel-base and crashkernel-size,
+> 	linux,usable-memory-range
+> 	linux,elfcorehdr
+> used by arm64 kdump to decribe the kdump reserved area, and
+> the elfcorehdr's location within it.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> [takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 6ae9d82d4c37..7b115165e9ec 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+>  book3e) by some versions of kexec-tools to tell the new kernel that it
+>  is being booted by kexec, as the booting environment may differ (e.g.
+>  a different secondary CPU release mechanism)
+> +
+> +linux,crashkernel-base
+> +linux,crashkernel-size
+> +----------------------
+> +
+> +These properties (currently used on PowerPC and arm64) indicates
+> +the base address and the size, respectively, of the reserved memory
+> +range for crash dump kernel.
 
-> +#ifdef CONFIG_KEXEC_CORE
-> +static unsigned long long crash_size, crash_base;
-> +static struct property crash_base_prop = {
-> +	.name = "linux,crashkernel-base",
-> +	.length = sizeof(u64),
-> +	.value = &crash_base
+From this description, it's not clear to me what the (expected)
+consumers of this property are, nor what is expected to provide it.
+
+In previous rounds of review, I had assumed that this was used to
+describe a preference to the first kernel as to what region of memory
+should be used for a subsequent kdump kernel. Looking around, I'm not
+sure if I was correct in that assessment.
+
+I see that arch/powerpc seems to consume this property to configure
+crashk_res, but it also rewrites it based on crashk_res, presumably for
+the benefit of userspace. It's not clear to me how on powerpc the kdump
+kernel knows its memory range -- is more DT modification done in the
+kernel and/or userspace?
+
+I disagree with modifying this property to expose it to userspace. For
+arm64 we should either ensure that /proc/iomem is consistently usable
+(and have userspace consistently use it), or we should expose a new file
+specifically to expose this information.
+
+Further, I do not think we need this property. It makes more sense to me
+for the preference of a a region to be described to the *first* kernel
+using the command line consistently.
+
+So I think we should drop this property, and not use it on arm64. Please
+document this as powerpc only.
+
+> +e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,crashkernel-base = <0x9 0xf0000000>;
+> +		linux,crashkernel-size = <0x0 0x10000000>;
+> +	};
 > +};
-> +static struct property crash_size_prop = {
-> +	.name = "linux,crashkernel-size",
-> +	.length = sizeof(u64),
-> +	.value = &crash_size,
+
+> +
+> +linux,usable-memory-range
+> +-------------------------
+> +
+> +This property (currently used only on arm64) holds the memory range,
+> +the base address and the size, which can be used as system ram on
+> +the *current* kernel. Note that, if this property is present, any memory
+> +regions under "memory" nodes in DT blob or ones marked as "conventional
+> +memory" in EFI memory map should be ignored.
+
+Could you please replace this with:
+
+  This property (arm64 only) holds a base address and size, describing a
+  limited region in which memory may be considered available for use by
+  the kernel. Memory outside of this range is not available for use.
+  
+  This property describes a limitation: memory within this range is only
+  valid when also described through another mechanism that the kernel
+  would otherwise use to determine available memory (e.g. memory nodes
+  or the EFI memory map). Valid memory may be sparse within the range.
+
+To clarify why we need this, given by above comments w.r.r. the
+linux,crashkernel-* properties:
+
+* It preserves all the original memory map information (e.g. memory
+  nodes and/or EFI memory map)
+
+* It works consistently, regardless of how the kdump kernel would
+  otherwise determine which memory to use (memory nodes, EFI, etc).
+
+* It will be simply and reliable for an in-kernel purgatory to insert,
+  if we need a kexec_file_load()-based kdump (e.g. without requiring
+  memory map rewrites, and avoiding clashes with command line
+  parameters). For a first kernel, this is not as big a concern.
+
+> +linux,elfcorehdr
+> +----------------
+> +
+> +This property (currently used only on arm64) holds the memory range,
+> +the address and the size, of the elf core header which mainly describes
+> +the panicked kernel's memory layout as PT_LOAD segments of elf format.
+> +e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
+> +	};
 > +};
-> +
-> +static int __init export_crashkernel(void)
-> +{
-> +	struct device_node *node;
-> +	int ret;
-> +
-> +	if (!crash_size)
-> +		return 0;
-> +
-> +	/* Add /chosen/linux,crashkernel-* properties */
-> +	node = of_find_node_by_path("/chosen");
-> +	if (!node)
-> +		return -ENOENT;
-> +
-> +	/*
-> +	 * There might be existing crash kernel properties, but we can't
-> +	 * be sure what's in them, so remove them.
-> +	 */
-> +	of_remove_property(node, of_find_property(node,
-> +				"linux,crashkernel-base", NULL));
-> +	of_remove_property(node, of_find_property(node,
-> +				"linux,crashkernel-size", NULL));
-> +
-> +	ret = of_add_property(node, &crash_base_prop);
-> +	if (ret)
-> +		goto ret_err;
-> +
-> +	ret = of_add_property(node, &crash_size_prop);
-> +	if (ret)
-> +		goto ret_err;
-> +
-> +	return 0;
-> +
-> +ret_err:
-> +	pr_warn("Exporting crashkernel region to device tree failed\n");
-> +	return ret;
-> +}
-> +late_initcall(export_crashkernel);
 
-I very much do not like this.
-
-I don't think we should be modifying the DT exposed to userspace in this
-manner, in the usual boot path, especially given that the kernel itself
-does not appear to be a consumer of this property. I do not think that
-it is right to use the DT exposed to userspace as a communication
-channel solely between the kernel and userspace.
-
-So I think we should drop the above, and for arm64 have userspace
-consistently use /proc/iomem (or perhaps a new kexec-specific file) to
-determine the region reserved for the crash kernel, if it needs to know
-this.
-
-I'll have further comments on this front in the binding patch.
-
-> +/*
-> + * reserve_crashkernel() - reserves memory for crash kernel
-> + *
-> + * This function reserves memory area given in "crashkernel=" kernel command
-> + * line parameter. The memory reserved is used by dump capture kernel when
-> + * primary kernel is crashing.
-> + */
-> +static void __init reserve_crashkernel(void)
-> +{
-> +	int ret;
-> +
-> +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> +				&crash_size, &crash_base);
-> +	/* no crashkernel= or invalid value specified */
-> +	if (ret || !crash_size)
-> +		return;
-> +
-> +	if (crash_base == 0) {
-> +		/* Current arm64 boot protocol requires 2MB alignment */
-> +		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-> +				crash_size, SZ_2M);
-> +		if (crash_base == 0) {
-> +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> +				crash_size);
-> +			return;
-> +		}
-> +	} else {
-> +		/* User specifies base address explicitly. */
-> +		if (!memblock_is_region_memory(crash_base, crash_size) ||
-> +			memblock_is_region_reserved(crash_base, crash_size)) {
-> +			pr_warn("crashkernel has wrong address or size\n");
-> +			return;
-> +		}
-> +
-> +		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-> +			pr_warn("crashkernel base address is not 2MB aligned\n");
-> +			return;
-> +		}
-> +	}
-> +	memblock_reserve(crash_base, crash_size);
-
-This will mean that the crash kernel will have a permanent alias in the linear
-map which is vulnerable to being clobbered. There could also be issues
-with mismatched attributes in future.
-
-We're probably ok for now, but in future we'll likely want to fix this
-up to remove the region (or mark it nomap), and only map it temporarily
-when loading things into the region.
-
-> +
-> +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-> +		crash_size >> 20, crash_base >> 20);
-> +
-> +	crashk_res.start = crash_base;
-> +	crashk_res.end = crash_base + crash_size - 1;
-> +}
-> +#else
-> +static void __init reserve_crashkernel(void)
-> +{
-> +	;
-
-Nit: the ';' line can go.
-
-> +}
-> +#endif /* CONFIG_KEXEC_CORE */
-> +
->  /*
->   * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
->   * currently assumes that for memory starting above 4G, 32-bit devices will
-> @@ -331,6 +438,9 @@ void __init arm64_memblock_init(void)
->  		arm64_dma_phys_limit = max_zone_dma_phys();
->  	else
->  		arm64_dma_phys_limit = PHYS_MASK + 1;
-> +
-> +	reserve_crashkernel();
-> +
->  	dma_contiguous_reserve(arm64_dma_phys_limit);
->  
->  	memblock_allow_resize();
-> -- 
-> 2.11.0
-
-Other than my comments regarding the DT usage above, this looks fine to
-me.
+This property looks fine to me.
 
 Thanks,
 Mark.
