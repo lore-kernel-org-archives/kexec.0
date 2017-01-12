@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x235.google.com ([2607:f8b0:400e:c00::235])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cRVyU-000836-4i
- for kexec@lists.infradead.org; Thu, 12 Jan 2017 03:22:52 +0000
-Subject: Re: [PATCH] Add +~800M crashkernel explaination
-References: <20161210002202.19829-1-robert@leblancnet.us>
- <20161210024927.GD1034@x1>
- <CAANLjFq92OLqsPmoz0FMHw9ZEyAm60s3M1UgkqTLtHabuQL6DA@mail.gmail.com>
- <5850B791.4040209@redhat.com>
- <CAANLjFokKcoDZR2YW2NR4ymRwwkJYLa66xWQUWsVoAg515jg=Q@mail.gmail.com>
- <5851D2F6.4020009@redhat.com>
- <CAANLjFpbk=jNi4xxqo+YGWwGic3OAAWbcmb_rCTNZ7VsZML2SQ@mail.gmail.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <5876F6E1.4050001@redhat.com>
-Date: Thu, 12 Jan 2017 11:24:17 +0800
+ id 1cRWsv-0001Np-H4
+ for kexec@lists.infradead.org; Thu, 12 Jan 2017 04:21:11 +0000
+Received: by mail-pf0-x235.google.com with SMTP id f144so5661389pfa.2
+ for <kexec@lists.infradead.org>; Wed, 11 Jan 2017 20:20:48 -0800 (PST)
+Date: Thu, 12 Jan 2017 13:21:44 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v29 4/9] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20170112042143.GF20972@linaro.org>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043605.27470-3-takahiro.akashi@linaro.org>
+ <20170110113248.GC21598@arm.com>
+ <20170111063626.GE20972@linaro.org>
+ <20170111105405.GF12388@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAANLjFpbk=jNi4xxqo+YGWwGic3OAAWbcmb_rCTNZ7VsZML2SQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170111105405.GF12388@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +25,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Robert LeBlanc <robert@leblancnet.us>, xlpang@redhat.com
-Cc: kexec@lists.infradead.org, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On 01/12/2017 at 03:35 AM, Robert LeBlanc wrote:
-> On Wed, Dec 14, 2016 at 4:17 PM, Xunlei Pang <xpang@redhat.com> wrote:
->> As I replied in another post, if you really want to detail the behaviour, should mention
->> "crashkernel=size[KMG][@offset[KMG]]" with @offset[KMG] specified explicitly, after
->> all, it's handled differently with no upper bound limitation, but doing this may put
->> the first kernel at the risk of lacking low memory(some devices require 32bit DMA),
->> must use it with care because the kernel will assume users are aware of what they
->> are doing and make a successful reservation as long as the given range is available.
-> crashkernel=1024M@0x10000000
->
-> I can't get the offset to work. It seems that it allocates the space
-> and loads the crash kernel, but I couldn't get it to actually boot
-> into the crash kernel. Does it work for you? I'm using the 4.9 kernel.
+On Wed, Jan 11, 2017 at 10:54:05AM +0000, Will Deacon wrote:
+> On Wed, Jan 11, 2017 at 03:36:28PM +0900, AKASHI Takahiro wrote:
+> > On Tue, Jan 10, 2017 at 11:32:48AM +0000, Will Deacon wrote:
+> > > On Wed, Dec 28, 2016 at 01:36:01PM +0900, AKASHI Takahiro wrote:
+> > > > @@ -22,6 +25,7 @@
+> > > >  extern const unsigned char arm64_relocate_new_kernel[];
+> > > >  extern const unsigned long arm64_relocate_new_kernel_size;
+> > > >  
+> > > > +static bool in_crash_kexec;
+> > > 
+> > > Do you actually need this bool? Why not call kexec_crash_loaded() instead?
+> > 
+> > The two have different meanings:
+> > "in_crash_kexec" indicates that kdump is taking place, while
+> > kexec_crash_loaded() tells us only whether crash dump kernel has been
+> > loaded or not.
+> > 
+> > It is crucial to distinguish them especially for machine_kexec()
+> > which can be called on normal kexec even if kdump has been set up.
+> 
+> Ah, I see. So how about just doing:
+> 
+>   if (kimage == kexec_crash_image)
+> 
+> in machine_kexec?
 
-Not sure what is the problem you met, but kdump kernel boots well using 4.9 on my x86_64 machine.
+Yeah, it should work.
+Do you want to merge the following hunk,
+or expect that I will re-send the whole patch series
+(with other changes if any)?
 
-Regards,
-Xunlei
+-Takahiro AkASHI
+
+> Will
+===8<==
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 994fe0bc5cc0..c0fc3d458195 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -26,7 +26,6 @@
+ extern const unsigned char arm64_relocate_new_kernel[];
+ extern const unsigned long arm64_relocate_new_kernel_size;
+ 
+-static bool in_crash_kexec;
+ static unsigned long kimage_start;
+ 
+ /**
+@@ -154,7 +153,7 @@ void machine_kexec(struct kimage *kimage)
+ 	 * New cpus may have become stuck_in_kernel after we loaded the image.
+ 	 */
+ 	BUG_ON((cpus_are_stuck_in_kernel() || (num_online_cpus() > 1)) &&
+-			!WARN_ON(in_crash_kexec));
++			!WARN_ON(kimage == kexec_crash_image));
+ 
+ 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+ 	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+@@ -206,8 +205,8 @@ void machine_kexec(struct kimage *kimage)
+ 	 * relocation is complete.
+ 	 */
+ 
+-	cpu_soft_restart(!in_crash_kexec, reboot_code_buffer_phys, kimage->head,
+-		kimage_start, 0);
++	cpu_soft_restart(kimage != kexec_crash_image,
++		reboot_code_buffer_phys, kimage->head, kimage_start, 0);
+ 
+ 	BUG(); /* Should never get here. */
+ }
+@@ -250,8 +249,6 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ {
+ 	local_irq_disable();
+ 
+-	in_crash_kexec = true;
+-
+ 	/* shutdown non-crashing cpus */
+ 	smp_send_crash_stop();
+ 
 
 _______________________________________________
 kexec mailing list
