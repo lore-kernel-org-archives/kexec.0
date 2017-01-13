@@ -1,40 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cS01f-0003Pt-Vy
- for kexec@lists.infradead.org; Fri, 13 Jan 2017 11:28:10 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- v0DBPV4T020254
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 06:27:46 -0500
-Received: from e28smtp04.in.ibm.com (e28smtp04.in.ibm.com [125.16.236.4])
- by mx0a-001b2d01.pphosted.com with ESMTP id 27xwd0hhgq-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 06:27:46 -0500
-Received: from localhost
- by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Fri, 13 Jan 2017 16:57:42 +0530
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
- by d28dlp01.in.ibm.com (Postfix) with ESMTP id D7B3AE0045
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 16:58:42 +0530 (IST)
-Received: from d28av06.in.ibm.com (d28av06.in.ibm.com [9.184.220.48])
- by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v0DBRcVP37552140
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 16:57:39 +0530
-Received: from d28av06.in.ibm.com (localhost [127.0.0.1])
- by d28av06.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v0DBRccm010285
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 16:57:38 +0530
-Subject: Re: [PATCH v4 3/5] powerpc/fadump: remove dependency with CONFIG_KEXEC
-References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
- <148363751120.11570.5394055766937537863.stgit@hbathini.in.ibm.com>
-From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Fri, 13 Jan 2017 16:57:37 +0530
+Date: Fri, 13 Jan 2017 11:39:15 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v29 3/9] arm64: kdump: reserve memory for crash dump kernel
+Message-ID: <20170113113914.GB26804@leverpostej>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043605.27470-2-takahiro.akashi@linaro.org>
+ <20170112150926.GA12249@leverpostej>
+ <20170113081617.GI20972@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <148363751120.11570.5394055766937537863.stgit@hbathini.in.ibm.com>
-Message-Id: <532609e1-115c-c15e-08dd-5d1e42053426@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20170113081617.GI20972@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -47,163 +22,209 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
-Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
+To: takahiro.akashi@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Mark Salter <msalter@redhat.com>, Pratyush Anand <panand@redhat.com>
 
-On 01/05/2017 11:02 PM, Hari Bathini wrote:
-> Now that crashkernel parameter parsing and vmcoreinfo related code is
-> moved under CONFIG_CRASH_CORE instead of CONFIG_KEXEC_CORE, remove
-> dependency with CONFIG_KEXEC for CONFIG_FA_DUMP. While here, get rid
-> of definitions of fadump_append_elf_note() & fadump_final_note()
-> functions to reuse similar functions compiled under CONFIG_CRASH_CORE.
-> 
-> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+On Fri, Jan 13, 2017 at 05:16:18PM +0900, AKASHI Takahiro wrote:
+> On Thu, Jan 12, 2017 at 03:09:26PM +0000, Mark Rutland wrote:
+> > > +static int __init export_crashkernel(void)
 
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> > > +	/* Add /chosen/linux,crashkernel-* properties */
 
-> ---
->  arch/powerpc/Kconfig               |   10 ++++++----
->  arch/powerpc/include/asm/fadump.h  |    2 ++
->  arch/powerpc/kernel/crash.c        |    2 --
->  arch/powerpc/kernel/fadump.c       |   34 +++-------------------------------
->  arch/powerpc/kernel/setup-common.c |    5 +++++
->  5 files changed, 16 insertions(+), 37 deletions(-)
+> > > +	of_remove_property(node, of_find_property(node,
+> > > +				"linux,crashkernel-base", NULL));
+> > > +	of_remove_property(node, of_find_property(node,
+> > > +				"linux,crashkernel-size", NULL));
+> > > +
+> > > +	ret = of_add_property(node, &crash_base_prop);
+> > > +	if (ret)
+> > > +		goto ret_err;
+> > > +
+> > > +	ret = of_add_property(node, &crash_size_prop);
+> > > +	if (ret)
+> > > +		goto ret_err;
+
+> > I very much do not like this.
+> > 
+> > I don't think we should be modifying the DT exposed to userspace in this
+> > manner, in the usual boot path, especially given that the kernel itself
+> > does not appear to be a consumer of this property. I do not think that
+> > it is right to use the DT exposed to userspace as a communication
+> > channel solely between the kernel and userspace.
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index a8ee573..b9726be 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -513,21 +513,23 @@ config RELOCATABLE_TEST
->  	  relocation code.
+> As you mentioned in your comments against my patch#9, this property
+> originates from PPC implementation.
+> I added it solely from the sympathy for dt-based architectures.
+>
+> > So I think we should drop the above, and for arm64 have userspace
+> > consistently use /proc/iomem (or perhaps a new kexec-specific file) to
+> > determine the region reserved for the crash kernel, if it needs to know
+> > this.
 > 
->  config CRASH_DUMP
-> -	bool "Build a kdump crash kernel"
-> +	bool "Build a dump capture kernel"
->  	depends on PPC64 || 6xx || FSL_BOOKE || (44x && !SMP)
->  	select RELOCATABLE if (PPC64 && !COMPILE_TEST) || 44x || FSL_BOOKE
->  	help
-> -	  Build a kernel suitable for use as a kdump capture kernel.
-> +	  Build a kernel suitable for use as a dump capture kernel.
->  	  The same kernel binary can be used as production kernel and dump
->  	  capture kernel.
+> As a matter of fact, my port of kexec-tools doesn't check this property
+> and dropping it won't cause any problem.
+
+Ok. It sounds like we're both happy for this to go, then.
+
+While it's unfortunate that architectures differ, I think we have
+legitimate reasons to differ, and it's preferable to do so. We have a
+different set of constraints (e.g. supporting EFI memory maps), and
+following the PPC approach creates longer term issues for us, making it
+harder to do the right thing consistently.
+
+> > > +/*
+> > > + * reserve_crashkernel() - reserves memory for crash kernel
+> > > + *
+> > > + * This function reserves memory area given in "crashkernel=" kernel command
+> > > + * line parameter. The memory reserved is used by dump capture kernel when
+> > > + * primary kernel is crashing.
+> > > + */
+> > > +static void __init reserve_crashkernel(void)
+
+> > > +	memblock_reserve(crash_base, crash_size);
+> > 
+> > This will mean that the crash kernel will have a permanent alias in the linear
+> > map which is vulnerable to being clobbered. There could also be issues
+> > with mismatched attributes in future.
 > 
->  config FA_DUMP
->  	bool "Firmware-assisted dump"
-> -	depends on PPC64 && PPC_RTAS && CRASH_DUMP && KEXEC_CORE
-> +	depends on PPC64 && PPC_RTAS
-> +	select CRASH_CORE
-> +	select CRASH_DUMP
->  	help
->  	  A robust mechanism to get reliable kernel crash dump with
->  	  assistance from firmware. This approach does not use kexec,
-> -	  instead firmware assists in booting the kdump kernel
-> +	  instead firmware assists in booting the capture kernel
->  	  while preserving memory contents. Firmware-assisted dump
->  	  is meant to be a kdump replacement offering robustness and
->  	  speed not possible without system firmware assistance.
-> diff --git a/arch/powerpc/include/asm/fadump.h b/arch/powerpc/include/asm/fadump.h
-> index 0031806..60b9108 100644
-> --- a/arch/powerpc/include/asm/fadump.h
-> +++ b/arch/powerpc/include/asm/fadump.h
-> @@ -73,6 +73,8 @@
->  	reg_entry++;							\
->  })
+> Good point, I've never thought of that except making the memblock
+> region "reserved."
 > 
-> +extern int crashing_cpu;
+> > We're probably ok for now, but in future we'll likely want to fix this
+> > up to remove the region (or mark it nomap), and only map it temporarily
+> > when loading things into the region.
+> 
+> Well, I found that the following commit is already in:
+>         commit 9b492cf58077
+>         Author: Xunlei Pang <xlpang@redhat.com>
+>         Date:   Mon May 23 16:24:10 2016 -0700
+> 
+>             kexec: introduce a protection mechanism for the crashkernel
+>             reserved memory
+> 
+> To make best use of this framework, I'd like to re-use set_memory_ro/rx()
+> instead of removing the region from linear mapping. But to do so,
+> we need to
+> * make memblock_isolate_range() global,
+> * allow set_memory_ro/rx() to be applied to regions in linear mapping
+> since set_memory_ro/rx() works only on page-level mappings.
+> 
+> What do you think?
+> (See my tentative solution below.)
+
+Great! I think it would be better to follow the approach of
+mark_rodata_ro(), rather than opening up set_memory_*(), but otherwise,
+it looks like it should work.
+
+Either way, this still leaves us with an RO alias on crashed cores (and
+potential cache attribute mismatches in future). Do we need to read from
+the region later, or could we unmap it entirely?
+
+Thanks,
+Mark.
+
+> ===8<===
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index c0fc3d458195..bb21c0473b8e 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -211,6 +211,44 @@ void machine_kexec(struct kimage *kimage)
+>  	BUG(); /* Should never get here. */
+>  }
+>  
+> +static int kexec_mark_range(unsigned long start, unsigned long end,
+> +							bool protect)
+> +{
+> +	unsigned int nr_pages;
 > +
->  /* Kernel Dump section info */
->  struct fadump_section {
->  	__be32	request_flag;
-> diff --git a/arch/powerpc/kernel/crash.c b/arch/powerpc/kernel/crash.c
-> index 47b63de..cbabb5a 100644
-> --- a/arch/powerpc/kernel/crash.c
-> +++ b/arch/powerpc/kernel/crash.c
-> @@ -43,8 +43,6 @@
->  #define IPI_TIMEOUT		10000
->  #define REAL_MODE_TIMEOUT	10000
-> 
-> -/* This keeps a track of which one is the crashing cpu. */
-> -int crashing_cpu = -1;
->  static int time_to_dump;
-> 
->  #define CRASH_HANDLER_MAX 3
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index 8f0c7c5..db0b339 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -486,34 +486,6 @@ fadump_read_registers(struct fadump_reg_entry *reg_entry, struct pt_regs *regs)
->  	return reg_entry;
->  }
-> 
-> -static u32 *fadump_append_elf_note(u32 *buf, char *name, unsigned type,
-> -						void *data, size_t data_len)
-> -{
-> -	struct elf_note note;
-> -
-> -	note.n_namesz = strlen(name) + 1;
-> -	note.n_descsz = data_len;
-> -	note.n_type   = type;
-> -	memcpy(buf, &note, sizeof(note));
-> -	buf += (sizeof(note) + 3)/4;
-> -	memcpy(buf, name, note.n_namesz);
-> -	buf += (note.n_namesz + 3)/4;
-> -	memcpy(buf, data, note.n_descsz);
-> -	buf += (note.n_descsz + 3)/4;
-> -
-> -	return buf;
-> -}
-> -
-> -static void fadump_final_note(u32 *buf)
-> -{
-> -	struct elf_note note;
-> -
-> -	note.n_namesz = 0;
-> -	note.n_descsz = 0;
-> -	note.n_type   = 0;
-> -	memcpy(buf, &note, sizeof(note));
-> -}
-> -
->  static u32 *fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
+> +	if (!end || start >= end)
+> +		return 0;
+> +
+> +	nr_pages = (end >> PAGE_SHIFT) - (start >> PAGE_SHIFT) + 1;
+> +
+> +	if (protect)
+> +		return set_memory_ro(__phys_to_virt(start), nr_pages);
+> +	else
+> +		return set_memory_rw(__phys_to_virt(start), nr_pages);
+> +}
+> +
+> +static void kexec_mark_crashkres(bool protect)
+> +{
+> +	unsigned long control;
+> +
+> +	/* Don't touch the control code page used in crash_kexec().*/
+> +	control = page_to_phys(kexec_crash_image->control_code_page);
+> +	kexec_mark_range(crashk_res.start, control - 1, protect);
+> +
+> +	control += KEXEC_CONTROL_PAGE_SIZE;
+> +	kexec_mark_range(control, crashk_res.end, protect);
+> +}
+> +
+> +void arch_kexec_protect_crashkres(void)
+> +{
+> +	kexec_mark_crashkres(true);
+> +}
+> +
+> +void arch_kexec_unprotect_crashkres(void)
+> +{
+> +	kexec_mark_crashkres(false);
+> +}
+> +
+>  static void machine_kexec_mask_interrupts(void)
 >  {
->  	struct elf_prstatus prstatus;
-> @@ -524,8 +496,8 @@ static u32 *fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
->  	 * prstatus.pr_pid = ????
->  	 */
->  	elf_core_copy_kernel_regs(&prstatus.pr_reg, regs);
-> -	buf = fadump_append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
-> -				&prstatus, sizeof(prstatus));
-> +	buf = append_elf_note(buf, CRASH_CORE_NOTE_NAME, NT_PRSTATUS,
-> +			      &prstatus, sizeof(prstatus));
->  	return buf;
->  }
-> 
-> @@ -666,7 +638,7 @@ static int __init fadump_build_cpu_notes(const struct fadump_mem_struct *fdm)
->  			note_buf = fadump_regs_to_elf_notes(note_buf, &regs);
+>  	unsigned int i;
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 569ec3325bc8..764ec89c4f76 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -90,6 +90,7 @@ early_param("initrd", early_initrd);
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_size, crash_base;
+> +	int start_rgn, end_rgn;
+>  	int ret;
+>  
+>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> @@ -121,6 +122,9 @@ static void __init reserve_crashkernel(void)
 >  		}
 >  	}
-> -	fadump_final_note(note_buf);
-> +	final_note(note_buf);
-> 
->  	if (fdh) {
->  		pr_debug("Updating elfcore header (%llx) with cpu notes\n",
-> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-> index f516ac5..60badb1 100644
-> --- a/arch/powerpc/kernel/setup-common.c
-> +++ b/arch/powerpc/kernel/setup-common.c
-> @@ -116,6 +116,11 @@ int ppc_do_canonicalize_irqs;
->  EXPORT_SYMBOL(ppc_do_canonicalize_irqs);
->  #endif
-> 
-> +#ifdef CONFIG_CRASH_CORE
-> +/* This keeps a track of which one is the crashing cpu. */
-> +int crashing_cpu = -1;
+>  	memblock_reserve(crash_base, crash_size);
+> +	memblock_isolate_range(&memblock.memory, crash_base, crash_size,
+> +			&start_rgn, &end_rgn);
+> +
+>  
+>  	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
+>  		crash_size >> 20, crash_base >> 20);
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 17243e43184e..0f60f19c287b 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/errno.h>
+>  #include <linux/init.h>
+> +#include <linux/kexec.h>
+>  #include <linux/libfdt.h>
+>  #include <linux/mman.h>
+>  #include <linux/nodemask.h>
+> @@ -362,6 +363,17 @@ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end
+>  	unsigned long kernel_start = __pa(_text);
+>  	unsigned long kernel_end = __pa(__init_begin);
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +	if (crashk_res.end && start >= crashk_res.start &&
+> +			end <= (crashk_res.end + 1)) {
+> +		__create_pgd_mapping(pgd, start, __phys_to_virt(start),
+> +				     end - start, PAGE_KERNEL,
+> +				     early_pgtable_alloc,
+> +				     true);
+> +		return;
+> +	}
 > +#endif
 > +
->  /* also used by kexec */
->  void machine_shutdown(void)
->  {
-> 
-
+>  	/*
+>  	 * Take care not to create a writable alias for the
+>  	 * read-only text and rodata sections of the kernel image.
+> ===>8===
 
 _______________________________________________
 kexec mailing list
