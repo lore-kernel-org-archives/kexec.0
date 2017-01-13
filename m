@@ -1,16 +1,40 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 13 Jan 2017 11:17:56 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Message-ID: <20170113111756.GC26120@leverpostej>
-References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
- <20161228043734.27535-1-takahiro.akashi@linaro.org>
- <20170112153944.GB12249@leverpostej>
- <20170113091339.GK20972@linaro.org>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cS01f-0003Pt-Vy
+ for kexec@lists.infradead.org; Fri, 13 Jan 2017 11:28:10 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
+ v0DBPV4T020254
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 06:27:46 -0500
+Received: from e28smtp04.in.ibm.com (e28smtp04.in.ibm.com [125.16.236.4])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 27xwd0hhgq-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 06:27:46 -0500
+Received: from localhost
+ by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Fri, 13 Jan 2017 16:57:42 +0530
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+ by d28dlp01.in.ibm.com (Postfix) with ESMTP id D7B3AE0045
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 16:58:42 +0530 (IST)
+Received: from d28av06.in.ibm.com (d28av06.in.ibm.com [9.184.220.48])
+ by d28relay04.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v0DBRcVP37552140
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 16:57:39 +0530
+Received: from d28av06.in.ibm.com (localhost [127.0.0.1])
+ by d28av06.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v0DBRccm010285
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 16:57:38 +0530
+Subject: Re: [PATCH v4 3/5] powerpc/fadump: remove dependency with CONFIG_KEXEC
+References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
+ <148363751120.11570.5394055766937537863.stgit@hbathini.in.ibm.com>
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Fri, 13 Jan 2017 16:57:37 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170113091339.GK20972@linaro.org>
+In-Reply-To: <148363751120.11570.5394055766937537863.stgit@hbathini.in.ibm.com>
+Message-Id: <532609e1-115c-c15e-08dd-5d1e42053426@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,103 +47,163 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Hari Bathini <hbathini@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
 
-On Fri, Jan 13, 2017 at 06:13:49PM +0900, AKASHI Takahiro wrote:
-> On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
-> > On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
-> > > +linux,crashkernel-base
-> > > +linux,crashkernel-size
-> > > +----------------------
-> > > +
-> > > +These properties (currently used on PowerPC and arm64) indicates
-> > > +the base address and the size, respectively, of the reserved memory
-> > > +range for crash dump kernel.
-> > 
-> > From this description, it's not clear to me what the (expected)
-> > consumers of this property are, nor what is expected to provide it.
-> > 
-> > In previous rounds of review, I had assumed that this was used to
-> > describe a preference to the first kernel as to what region of memory
-> > should be used for a subsequent kdump kernel. Looking around, I'm not
-> > sure if I was correct in that assessment.
-> > 
-> > I see that arch/powerpc seems to consume this property to configure
-> > crashk_res, but it also rewrites it based on crashk_res, presumably for
-> > the benefit of userspace. It's not clear to me how on powerpc the kdump
-> > kernel knows its memory range -- is more DT modification done in the
-> > kernel and/or userspace?
+On 01/05/2017 11:02 PM, Hari Bathini wrote:
+> Now that crashkernel parameter parsing and vmcoreinfo related code is
+> moved under CONFIG_CRASH_CORE instead of CONFIG_KEXEC_CORE, remove
+> dependency with CONFIG_KEXEC for CONFIG_FA_DUMP. While here, get rid
+> of definitions of fadump_append_elf_note() & fadump_final_note()
+> functions to reuse similar functions compiled under CONFIG_CRASH_CORE.
 > 
-> I don't believe that powerpc will rewrite the property any way.
-> As far as I know from *the source code*, powerpc kernel retrieves
-> the memory range for crash dump kernel from a kernel command line, i.e.
-> crashkernel=, and then exposes it through DT to userspace (assuming
-> kexec-tools).
+> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
 
-The rewriting I describe is in export_crashk_values() in
-arch/powerpc/kernel/machine_kexec.c, where the code deletes existing the
-properties, and adds new ones, to the DT exposed to userspace.
+Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-So I think we're just quibbling over the definition of "rewrite".
-
-> > arm64 we should either ensure that /proc/iomem is consistently usable
-> > (and have userspace consistently use it), or we should expose a new file
-> > specifically to expose this information.
+> ---
+>  arch/powerpc/Kconfig               |   10 ++++++----
+>  arch/powerpc/include/asm/fadump.h  |    2 ++
+>  arch/powerpc/kernel/crash.c        |    2 --
+>  arch/powerpc/kernel/fadump.c       |   34 +++-------------------------------
+>  arch/powerpc/kernel/setup-common.c |    5 +++++
+>  5 files changed, 16 insertions(+), 37 deletions(-)
 > 
-> The thing that I had in my mind when adding this property is that
-> /proc/iomem would be obsolete in the future, then we should have
-> an alternative in hand.
-
-Ok.
-
-My disagreement is with using the DT as a channel to convey information
-from the kernel to userspace.
-
-I'm more than happy for a new file or other mechanism to express this
-information. For example, we could add
-/sys/kernel/kexec_crash_{base,size} or similar.
-
-
-> > Further, I do not think we need this property. It makes more sense to me
-> > for the preference of a a region to be described to the *first* kernel
-> > using the command line consistently.
-> > 
-> > So I think we should drop this property, and not use it on arm64. Please
-> > document this as powerpc only.
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index a8ee573..b9726be 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -513,21 +513,23 @@ config RELOCATABLE_TEST
+>  	  relocation code.
 > 
-> OK, but if we drop the property from arm64 code, we have no reason
-> to leave its description in this patch.
-> (In fact, there are a few more (undocumented) properties that only ppc
-> uses for kdump.)
-
-I'm happy to drop it, then.
-
-> > > +linux,usable-memory-range
-> > > +-------------------------
-> > > +
-> > > +This property (currently used only on arm64) holds the memory range,
-> > > +the base address and the size, which can be used as system ram on
-> > > +the *current* kernel. Note that, if this property is present, any memory
-> > > +regions under "memory" nodes in DT blob or ones marked as "conventional
-> > > +memory" in EFI memory map should be ignored.
-> > 
-> > Could you please replace this with:
-> > 
-> >   This property (arm64 only) holds a base address and size, describing a
-> >   limited region in which memory may be considered available for use by
-> >   the kernel. Memory outside of this range is not available for use.
-> >   
-> >   This property describes a limitation: memory within this range is only
-> >   valid when also described through another mechanism that the kernel
-> >   would otherwise use to determine available memory (e.g. memory nodes
-> >   or the EFI memory map). Valid memory may be sparse within the range.
+>  config CRASH_DUMP
+> -	bool "Build a kdump crash kernel"
+> +	bool "Build a dump capture kernel"
+>  	depends on PPC64 || 6xx || FSL_BOOKE || (44x && !SMP)
+>  	select RELOCATABLE if (PPC64 && !COMPILE_TEST) || 44x || FSL_BOOKE
+>  	help
+> -	  Build a kernel suitable for use as a kdump capture kernel.
+> +	  Build a kernel suitable for use as a dump capture kernel.
+>  	  The same kernel binary can be used as production kernel and dump
+>  	  capture kernel.
 > 
-> Sure.
+>  config FA_DUMP
+>  	bool "Firmware-assisted dump"
+> -	depends on PPC64 && PPC_RTAS && CRASH_DUMP && KEXEC_CORE
+> +	depends on PPC64 && PPC_RTAS
+> +	select CRASH_CORE
+> +	select CRASH_DUMP
+>  	help
+>  	  A robust mechanism to get reliable kernel crash dump with
+>  	  assistance from firmware. This approach does not use kexec,
+> -	  instead firmware assists in booting the kdump kernel
+> +	  instead firmware assists in booting the capture kernel
+>  	  while preserving memory contents. Firmware-assisted dump
+>  	  is meant to be a kdump replacement offering robustness and
+>  	  speed not possible without system firmware assistance.
+> diff --git a/arch/powerpc/include/asm/fadump.h b/arch/powerpc/include/asm/fadump.h
+> index 0031806..60b9108 100644
+> --- a/arch/powerpc/include/asm/fadump.h
+> +++ b/arch/powerpc/include/asm/fadump.h
+> @@ -73,6 +73,8 @@
+>  	reg_entry++;							\
+>  })
+> 
+> +extern int crashing_cpu;
+> +
+>  /* Kernel Dump section info */
+>  struct fadump_section {
+>  	__be32	request_flag;
+> diff --git a/arch/powerpc/kernel/crash.c b/arch/powerpc/kernel/crash.c
+> index 47b63de..cbabb5a 100644
+> --- a/arch/powerpc/kernel/crash.c
+> +++ b/arch/powerpc/kernel/crash.c
+> @@ -43,8 +43,6 @@
+>  #define IPI_TIMEOUT		10000
+>  #define REAL_MODE_TIMEOUT	10000
+> 
+> -/* This keeps a track of which one is the crashing cpu. */
+> -int crashing_cpu = -1;
+>  static int time_to_dump;
+> 
+>  #define CRASH_HANDLER_MAX 3
+> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+> index 8f0c7c5..db0b339 100644
+> --- a/arch/powerpc/kernel/fadump.c
+> +++ b/arch/powerpc/kernel/fadump.c
+> @@ -486,34 +486,6 @@ fadump_read_registers(struct fadump_reg_entry *reg_entry, struct pt_regs *regs)
+>  	return reg_entry;
+>  }
+> 
+> -static u32 *fadump_append_elf_note(u32 *buf, char *name, unsigned type,
+> -						void *data, size_t data_len)
+> -{
+> -	struct elf_note note;
+> -
+> -	note.n_namesz = strlen(name) + 1;
+> -	note.n_descsz = data_len;
+> -	note.n_type   = type;
+> -	memcpy(buf, &note, sizeof(note));
+> -	buf += (sizeof(note) + 3)/4;
+> -	memcpy(buf, name, note.n_namesz);
+> -	buf += (note.n_namesz + 3)/4;
+> -	memcpy(buf, data, note.n_descsz);
+> -	buf += (note.n_descsz + 3)/4;
+> -
+> -	return buf;
+> -}
+> -
+> -static void fadump_final_note(u32 *buf)
+> -{
+> -	struct elf_note note;
+> -
+> -	note.n_namesz = 0;
+> -	note.n_descsz = 0;
+> -	note.n_type   = 0;
+> -	memcpy(buf, &note, sizeof(note));
+> -}
+> -
+>  static u32 *fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
+>  {
+>  	struct elf_prstatus prstatus;
+> @@ -524,8 +496,8 @@ static u32 *fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
+>  	 * prstatus.pr_pid = ????
+>  	 */
+>  	elf_core_copy_kernel_regs(&prstatus.pr_reg, regs);
+> -	buf = fadump_append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
+> -				&prstatus, sizeof(prstatus));
+> +	buf = append_elf_note(buf, CRASH_CORE_NOTE_NAME, NT_PRSTATUS,
+> +			      &prstatus, sizeof(prstatus));
+>  	return buf;
+>  }
+> 
+> @@ -666,7 +638,7 @@ static int __init fadump_build_cpu_notes(const struct fadump_mem_struct *fdm)
+>  			note_buf = fadump_regs_to_elf_notes(note_buf, &regs);
+>  		}
+>  	}
+> -	fadump_final_note(note_buf);
+> +	final_note(note_buf);
+> 
+>  	if (fdh) {
+>  		pr_debug("Updating elfcore header (%llx) with cpu notes\n",
+> diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+> index f516ac5..60badb1 100644
+> --- a/arch/powerpc/kernel/setup-common.c
+> +++ b/arch/powerpc/kernel/setup-common.c
+> @@ -116,6 +116,11 @@ int ppc_do_canonicalize_irqs;
+>  EXPORT_SYMBOL(ppc_do_canonicalize_irqs);
+>  #endif
+> 
+> +#ifdef CONFIG_CRASH_CORE
+> +/* This keeps a track of which one is the crashing cpu. */
+> +int crashing_cpu = -1;
+> +#endif
+> +
+>  /* also used by kexec */
+>  void machine_shutdown(void)
+>  {
+> 
 
-Cheers!
-
-Thanks,
-Mark.
 
 _______________________________________________
 kexec mailing list
