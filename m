@@ -1,41 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pg0-x22b.google.com ([2607:f8b0:400e:c05::22b])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cS0OW-0002cC-Kj
- for kexec@lists.infradead.org; Fri, 13 Jan 2017 11:51:46 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.17/8.16.0.17) with SMTP id
- v0DBnbYS049232
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 06:51:24 -0500
-Received: from e23smtp01.au.ibm.com (e23smtp01.au.ibm.com [202.81.31.143])
- by mx0a-001b2d01.pphosted.com with ESMTP id 27xqejp757-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 06:51:23 -0500
-Received: from localhost
- by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Fri, 13 Jan 2017 21:51:21 +1000
-Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
- by d23dlp01.au.ibm.com (Postfix) with ESMTP id 64DC92CE8046
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 22:51:19 +1100 (EST)
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
- by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v0DBpJUw56295652
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 22:51:19 +1100
-Received: from d23av03.au.ibm.com (localhost [127.0.0.1])
- by d23av03.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v0DBpI6V028805
- for <kexec@lists.infradead.org>; Fri, 13 Jan 2017 22:51:19 +1100
-Subject: Re: [PATCH v4 4/5] powerpc/fadump: reuse crashkernel parameter for
- fadump memory reservation
-References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
- <148363754236.11570.1527409032997316662.stgit@hbathini.in.ibm.com>
-From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Fri, 13 Jan 2017 17:21:13 +0530
+ id 1cT2aQ-0002jY-BF
+ for kexec@lists.infradead.org; Mon, 16 Jan 2017 08:24:19 +0000
+Received: by mail-pg0-x22b.google.com with SMTP id t6so8583800pgt.3
+ for <kexec@lists.infradead.org>; Mon, 16 Jan 2017 00:23:57 -0800 (PST)
+Date: Mon, 16 Jan 2017 17:25:07 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Message-ID: <20170116082505.GL20972@linaro.org>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043734.27535-1-takahiro.akashi@linaro.org>
+ <20170112153944.GB12249@leverpostej>
+ <20170113091339.GK20972@linaro.org>
+ <20170113111756.GC26120@leverpostej>
 MIME-Version: 1.0
-In-Reply-To: <148363754236.11570.1527409032997316662.stgit@hbathini.in.ibm.com>
-Message-Id: <ca056a82-65c0-c2e0-bc30-8dc8644452de@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20170113111756.GC26120@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -48,85 +30,116 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
-Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On 01/05/2017 11:02 PM, Hari Bathini wrote:
-> fadump supports specifying memory to reserve for fadump's crash kernel
-> with fadump_reserve_mem kernel parameter. This parameter currently
-> supports passing a fixed memory size, like fadump_reserve_mem=<size>
-> only. This patch aims to add support for other syntaxes like range-based
-> memory size <range1>:<size1>[,<range2>:<size2>,<range3>:<size3>,...]
-> which allows using the same parameter to boot the kernel with different
-> system RAM sizes.
+On Fri, Jan 13, 2017 at 11:17:56AM +0000, Mark Rutland wrote:
+> On Fri, Jan 13, 2017 at 06:13:49PM +0900, AKASHI Takahiro wrote:
+> > On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
+> > > On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
+> > > > +linux,crashkernel-base
+> > > > +linux,crashkernel-size
+> > > > +----------------------
+> > > > +
+> > > > +These properties (currently used on PowerPC and arm64) indicates
+> > > > +the base address and the size, respectively, of the reserved memory
+> > > > +range for crash dump kernel.
+> > > 
+> > > From this description, it's not clear to me what the (expected)
+> > > consumers of this property are, nor what is expected to provide it.
+> > > 
+> > > In previous rounds of review, I had assumed that this was used to
+> > > describe a preference to the first kernel as to what region of memory
+> > > should be used for a subsequent kdump kernel. Looking around, I'm not
+> > > sure if I was correct in that assessment.
+> > > 
+> > > I see that arch/powerpc seems to consume this property to configure
+> > > crashk_res, but it also rewrites it based on crashk_res, presumably for
+> > > the benefit of userspace. It's not clear to me how on powerpc the kdump
+> > > kernel knows its memory range -- is more DT modification done in the
+> > > kernel and/or userspace?
+> > 
+> > I don't believe that powerpc will rewrite the property any way.
+> > As far as I know from *the source code*, powerpc kernel retrieves
+> > the memory range for crash dump kernel from a kernel command line, i.e.
+> > crashkernel=, and then exposes it through DT to userspace (assuming
+> > kexec-tools).
 > 
-> As crashkernel parameter already supports the above mentioned syntaxes,
-> this patch deprecates fadump_reserve_mem parameter and reuses crashkernel
-> parameter instead, to specify memory for fadump's crash kernel memory
-> reservation as well. If any offset is provided in crashkernel parameter,
-> it will be ignored in case of fadump, as fadump reserves memory at end
-> of RAM.
+> The rewriting I describe is in export_crashk_values() in
+> arch/powerpc/kernel/machine_kexec.c, where the code deletes existing the
+> properties, and adds new ones, to the DT exposed to userspace.
 > 
-> Advantages using crashkernel parameter instead of fadump_reserve_mem
-> parameter are one less kernel parameter overall, code reuse and support
-> for multiple syntaxes to specify memory.
-> 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> So I think we're just quibbling over the definition of "rewrite".
 
-Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Gotcha
 
-> ---
->  arch/powerpc/kernel/fadump.c |   23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
+> > > arm64 we should either ensure that /proc/iomem is consistently usable
+> > > (and have userspace consistently use it), or we should expose a new file
+> > > specifically to expose this information.
+> > 
+> > The thing that I had in my mind when adding this property is that
+> > /proc/iomem would be obsolete in the future, then we should have
+> > an alternative in hand.
 > 
-> diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-> index db0b339..de7d39a 100644
-> --- a/arch/powerpc/kernel/fadump.c
-> +++ b/arch/powerpc/kernel/fadump.c
-> @@ -210,14 +210,20 @@ static unsigned long init_fadump_mem_struct(struct fadump_mem_struct *fdm,
->   */
->  static inline unsigned long fadump_calculate_reserve_size(void)
->  {
-> -	unsigned long size;
-> +	int ret;
-> +	unsigned long long base, size;
+> Ok.
 > 
->  	/*
-> -	 * Check if the size is specified through fadump_reserve_mem= cmdline
-> -	 * option. If yes, then use that.
-> +	 * Check if the size is specified through crashkernel= cmdline
-> +	 * option. If yes, then use that but ignore base as fadump
-> +	 * reserves memory at end of RAM.
->  	 */
-> -	if (fw_dump.reserve_bootvar)
-> +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> +				&size, &base);
-> +	if (ret == 0 && size > 0) {
-> +		fw_dump.reserve_bootvar = (unsigned long)size;
->  		return fw_dump.reserve_bootvar;
-> +	}
+> My disagreement is with using the DT as a channel to convey information
+> from the kernel to userspace.
 > 
->  	/* divide by 20 to get 5% of value */
->  	size = memblock_end_of_DRAM() / 20;
-> @@ -353,15 +359,6 @@ static int __init early_fadump_param(char *p)
->  }
->  early_param("fadump", early_fadump_param);
-> 
-> -/* Look for fadump_reserve_mem= cmdline option */
-> -static int __init early_fadump_reserve_mem(char *p)
-> -{
-> -	if (p)
-> -		fw_dump.reserve_bootvar = memparse(p, &p);
-> -	return 0;
-> -}
-> -early_param("fadump_reserve_mem", early_fadump_reserve_mem);
-> -
->  static void register_fw_dump(struct fadump_mem_struct *fdm)
->  {
->  	int rc;
-> 
+> I'm more than happy for a new file or other mechanism to express this
+> information. For example, we could add
+> /sys/kernel/kexec_crash_{base,size} or similar.
 
+It may make sense because /sys/kernel/kexec_crash_size already exists,
+so why not kexec_crash_base?
+My concern, however, is that this kind of interface might prevent us from
+allowing multiple regions to be reserved for crash dump kernel in the future.
+(There is an assumption that we have only one region at least on arm64 though.)
+
+Thanks,
+-Takahiro AKASHI
+
+> 
+> > > Further, I do not think we need this property. It makes more sense to me
+> > > for the preference of a a region to be described to the *first* kernel
+> > > using the command line consistently.
+> > > 
+> > > So I think we should drop this property, and not use it on arm64. Please
+> > > document this as powerpc only.
+> > 
+> > OK, but if we drop the property from arm64 code, we have no reason
+> > to leave its description in this patch.
+> > (In fact, there are a few more (undocumented) properties that only ppc
+> > uses for kdump.)
+> 
+> I'm happy to drop it, then.
+> 
+> > > > +linux,usable-memory-range
+> > > > +-------------------------
+> > > > +
+> > > > +This property (currently used only on arm64) holds the memory range,
+> > > > +the base address and the size, which can be used as system ram on
+> > > > +the *current* kernel. Note that, if this property is present, any memory
+> > > > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > > > +memory" in EFI memory map should be ignored.
+> > > 
+> > > Could you please replace this with:
+> > > 
+> > >   This property (arm64 only) holds a base address and size, describing a
+> > >   limited region in which memory may be considered available for use by
+> > >   the kernel. Memory outside of this range is not available for use.
+> > >   
+> > >   This property describes a limitation: memory within this range is only
+> > >   valid when also described through another mechanism that the kernel
+> > >   would otherwise use to determine available memory (e.g. memory nodes
+> > >   or the EFI memory map). Valid memory may be sparse within the range.
+> > 
+> > Sure.
+> 
+> Cheers!
+> 
+> Thanks,
+> Mark.
 
 _______________________________________________
 kexec mailing list
