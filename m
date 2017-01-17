@@ -1,43 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cTXDT-0005BD-BP
- for kexec@lists.infradead.org; Tue, 17 Jan 2017 17:06:41 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v0HH5Ct8040746
- for <kexec@lists.infradead.org>; Tue, 17 Jan 2017 12:06:17 -0500
-Received: from e23smtp06.au.ibm.com (e23smtp06.au.ibm.com [202.81.31.148])
- by mx0b-001b2d01.pphosted.com with ESMTP id 281mf599bu-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 17 Jan 2017 12:06:17 -0500
-Received: from localhost
- by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Wed, 18 Jan 2017 03:06:14 +1000
-Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
- by d23dlp02.au.ibm.com (Postfix) with ESMTP id 2E1CB2BB0055
- for <kexec@lists.infradead.org>; Wed, 18 Jan 2017 04:06:12 +1100 (EST)
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
- by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v0HH6CXc14286854
- for <kexec@lists.infradead.org>; Wed, 18 Jan 2017 04:06:12 +1100
-Received: from d23av04.au.ibm.com (localhost [127.0.0.1])
- by d23av04.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v0HH6BDV003125
- for <kexec@lists.infradead.org>; Wed, 18 Jan 2017 04:06:12 +1100
-Subject: Re: [PATCH v4 2/5] ia64: reuse append_elf_note() and final_note()
- functions
-References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
- <148363740554.11570.4870634597647436827.stgit@hbathini.in.ibm.com>
- <20170106020324.GB2863@dhcp-128-65.nay.redhat.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Tue, 17 Jan 2017 22:36:08 +0530
+Message-ID: <587E53A6.6020709@arm.com>
+Date: Tue, 17 Jan 2017 17:25:58 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20170106020324.GB2863@dhcp-128-65.nay.redhat.com>
-Message-Id: <38a7807c-cd95-670d-30d3-c45e7921ea11@linux.vnet.ibm.com>
+Subject: Re: [PATCH V2 1/2] kexec: arm64: create identity page table to be
+ used in purgatory
+References: <cover.1482129830.git.panand@redhat.com>
+ <ea98a0045c8d466456f53150f341546810dd47e1.1482129830.git.panand@redhat.com>
+In-Reply-To: <ea98a0045c8d466456f53150f341546810dd47e1.1482129830.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -46,207 +16,241 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, linuxppc-dev@lists.ozlabs.org, vgoyal@redhat.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: geoff@infradead.org, mark.rutland@arm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+
+Hi Pratyush,
+
+On 19/12/16 07:13, Pratyush Anand wrote:
+> Purgatory sha verification is very slow when D-cache is not enabled there.
+> We need to enable MMU as well to enable D-Cache.Therefore,we need to an
+> identity mapped page table in purgatory.
+> 
+> Since debugging is very difficult in purgatory therefore we prefer to do as
+> much work as possible in kexec.
+> 
+> This patch prepares page table for purgatory in advance. We support only 4K
+> page table,because it will be available on most of the platform. This page
+> table is passed to the purgatory as a new segment.
+> 
+> VA bit is fixed as 48, page table level is 3 where 3rd level page table
+> contains 2M block entries.
+
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 04fd3968bb52..c2c8ff1b6940 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -24,6 +24,45 @@
+>  #include "kexec-syscall.h"
+>  #include "arch/options.h"
+>  
+> +/*
+> + * kexec creates identity page table to be used in purgatory so that
+> + * dcache verification becomes faster.
+> + *
+> + * These are the definitions to be used by page table creation routine.
+> + *
+> + * Only 4K page table, 3 level, 2M block mapping, 48bit VA is supported
+> + */
+> +#define PGDIR_SHIFT		39
+> +#define PUD_SHIFT		30
+> +#define PMD_SHIFT		21
+> +#define PTRS_PER_PGD		0x1FF
+> +#define PTRS_PER_PUD		0x1FF
+> +#define PTRS_PER_PMD		0x1FF
+
+Aren't these 0x200 for 4K pages in the kernel? It looks like you use them as a
+mask instead.
 
 
+> +#define PMD_TYPE_TABLE		(3UL << 0)
+> +#define PMD_TYPE_SECT		(1UL << 0)
+> +#define PMD_SECT_AF		(1UL << 10)
+> +#define PMD_ATTRINDX(t)		((unsigned long)(t) << 2)
 
-On Friday 06 January 2017 07:33 AM, Dave Young wrote:
-> On 01/05/17 at 11:01pm, Hari Bathini wrote:
->> Get rid of multiple definitions of append_elf_note() & final_note()
->> functions. Reuse these functions compiled under CONFIG_CRASH_CORE
->> Also, define Elf_Word and use it instead of generic u32 or the more
->> specific Elf64_Word.
->>
->> Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
->> ---
->>
->> Changes from v3:
->> * Dropped hard-coded values and used DIV_ROUND_UP().
->>
->> Changes from v2:
->> * Added a definition for Elf_Word.
->> * Used IA64 version of append_elf_note() and final_note() functions.
->>
->>
->>   arch/ia64/kernel/crash.c   |   22 ----------------------
->>   include/linux/crash_core.h |    4 ++++
->>   include/linux/elf.h        |    2 ++
->>   kernel/crash_core.c        |   34 ++++++++++++++--------------------
->>   kernel/kexec_core.c        |   28 ----------------------------
->>   5 files changed, 20 insertions(+), 70 deletions(-)
->>
->> diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
->> index 2955f35..75859a0 100644
->> --- a/arch/ia64/kernel/crash.c
->> +++ b/arch/ia64/kernel/crash.c
->> @@ -27,28 +27,6 @@ static int kdump_freeze_monarch;
->>   static int kdump_on_init = 1;
->>   static int kdump_on_fatal_mca = 1;
->>   
->> -static inline Elf64_Word
->> -*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
->> -		size_t data_len)
->> -{
->> -	struct elf_note *note = (struct elf_note *)buf;
->> -	note->n_namesz = strlen(name) + 1;
->> -	note->n_descsz = data_len;
->> -	note->n_type   = type;
->> -	buf += (sizeof(*note) + 3)/4;
->> -	memcpy(buf, name, note->n_namesz);
->> -	buf += (note->n_namesz + 3)/4;
->> -	memcpy(buf, data, data_len);
->> -	buf += (data_len + 3)/4;
->> -	return buf;
->> -}
->> -
->> -static void
->> -final_note(void *buf)
->> -{
->> -	memset(buf, 0, sizeof(struct elf_note));
->> -}
->> -
->>   extern void ia64_dump_cpu_regs(void *);
->>   
->>   static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
->> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
->> index 18d0f94..541a197 100644
->> --- a/include/linux/crash_core.h
->> +++ b/include/linux/crash_core.h
->> @@ -55,6 +55,10 @@ extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
->>   extern size_t vmcoreinfo_size;
->>   extern size_t vmcoreinfo_max_size;
->>   
->> +Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->> +			  void *data, size_t data_len);
->> +void final_note(Elf_Word *buf);
->> +
->>   int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
->>   		unsigned long long *crash_size, unsigned long long *crash_base);
->>   int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
->> diff --git a/include/linux/elf.h b/include/linux/elf.h
->> index 20fa8d8..ba069e8 100644
->> --- a/include/linux/elf.h
->> +++ b/include/linux/elf.h
->> @@ -29,6 +29,7 @@ extern Elf32_Dyn _DYNAMIC [];
->>   #define elf_note	elf32_note
->>   #define elf_addr_t	Elf32_Off
->>   #define Elf_Half	Elf32_Half
->> +#define Elf_Word	Elf32_Word
->>   
->>   #else
->>   
->> @@ -39,6 +40,7 @@ extern Elf64_Dyn _DYNAMIC [];
->>   #define elf_note	elf64_note
->>   #define elf_addr_t	Elf64_Off
->>   #define Elf_Half	Elf64_Half
->> +#define Elf_Word	Elf64_Word
->>   
->>   #endif
->>   
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index 80b441d..362dace 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -291,32 +291,26 @@ int __init parse_crashkernel_low(char *cmdline,
->>   				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
->>   }
->>   
->> -static u32 *append_elf_note(u32 *buf, char *name, unsigned int type,
->> -			    void *data, size_t data_len)
->> +Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->> +			  void *data, size_t data_len)
->>   {
->> -	struct elf_note note;
->> -
->> -	note.n_namesz = strlen(name) + 1;
->> -	note.n_descsz = data_len;
->> -	note.n_type   = type;
->> -	memcpy(buf, &note, sizeof(note));
->> -	buf += (sizeof(note) + 3)/4;
->> -	memcpy(buf, name, note.n_namesz);
->> -	buf += (note.n_namesz + 3)/4;
->> -	memcpy(buf, data, note.n_descsz);
->> -	buf += (note.n_descsz + 3)/4;
->> +	struct elf_note *note = (struct elf_note *)buf;
->> +
->> +	note->n_namesz = strlen(name) + 1;
->> +	note->n_descsz = data_len;
->> +	note->n_type   = type;
->> +	buf += DIV_ROUND_UP(sizeof(*note), sizeof(Elf_Word));
->> +	memcpy(buf, name, note->n_namesz);
->> +	buf += DIV_ROUND_UP(note->n_namesz, sizeof(Elf_Word));
->> +	memcpy(buf, data, data_len);
->> +	buf += DIV_ROUND_UP(data_len, sizeof(Elf_Word));
->>   
->>   	return buf;
->>   }
->>   
->> -static void final_note(u32 *buf)
->> +void final_note(Elf_Word *buf)
->>   {
->> -	struct elf_note note;
->> -
->> -	note.n_namesz = 0;
->> -	note.n_descsz = 0;
->> -	note.n_type   = 0;
->> -	memcpy(buf, &note, sizeof(note));
->> +	memset(buf, 0, sizeof(struct elf_note));
->>   }
->>   
->>   static void update_vmcoreinfo_note(void)
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index 2179a16..263d764 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -990,34 +990,6 @@ int crash_shrink_memory(unsigned long new_size)
->>   	return ret;
->>   }
->>   
->> -static u32 *append_elf_note(u32 *buf, char *name, unsigned type, void *data,
->> -			    size_t data_len)
->> -{
->> -	struct elf_note note;
->> -
->> -	note.n_namesz = strlen(name) + 1;
->> -	note.n_descsz = data_len;
->> -	note.n_type   = type;
->> -	memcpy(buf, &note, sizeof(note));
->> -	buf += (sizeof(note) + 3)/4;
->> -	memcpy(buf, name, note.n_namesz);
->> -	buf += (note.n_namesz + 3)/4;
->> -	memcpy(buf, data, note.n_descsz);
->> -	buf += (note.n_descsz + 3)/4;
->> -
->> -	return buf;
->> -}
->> -
->> -static void final_note(u32 *buf)
->> -{
->> -	struct elf_note note;
->> -
->> -	note.n_namesz = 0;
->> -	note.n_descsz = 0;
->> -	note.n_type   = 0;
->> -	memcpy(buf, &note, sizeof(note));
->> -}
->> -
->>   void crash_save_cpu(struct pt_regs *regs, int cpu)
->>   {
->>   	struct elf_prstatus prstatus;
->>
-> It looks good to me. But better to have words from IA64 people as well.
->
->
+> +#define MT_NORMAL		4
 
-Can someone from IA64 arch review this please?
+This needs to correspond to the part of MAIR that describes the memory type for
+'normal'. You define MT_NORMAL again in the next patch, it would be better to
+share the definition so they can't be different. (I don't see why you can't use 0!)
 
-Thanks
-Hari
+
+> +#define PMD_FLAGS_NORMAL	(PMD_TYPE_SECT | PMD_SECT_AF)
+> +#define MMU_FLAGS_NORMAL	(PMD_ATTRINDX(MT_NORMAL) | PMD_FLAGS_NORMAL)
+
+The SH and AP bits are left as zero, which means non-shareable, read/writeable,
+(which I think is fine).
+
+
+> +#define SECTION_SIZE		(2 * 1024 * 1024)
+> +#define PAGE_SIZE		(4 * 1024)
+> +/* Since we are using 3 level of page tables, therefore minimum number of
+> + * table will be 3. Most likely we will never need more than 3. Each entry
+> + * in level 3 page table can map 2MB memory area. Thus a level 3 page table
+> + * indexed by bit 29:21 can map a total of 1G memory area. Therefore, if
+> + * any segment crosses 1G boundary, then we will need one more level 3
+> + * table. Similarly, level 2 page table indexed by bit 38:30 can map a
+> + * total of 512G memory area. If segment addresses are more than 512G apart
+> + * then we will need two more table for each such block. We do not expect
+> + * any memory segment to cross 512G boundary, however if we will ever wish
+> + * to support uart debugging in purgatory then that might cross the
+> + * boundary and therefore additional 2 more table space. Thus we will need
+> + * maximum of 6 table space.
+
+Surely we only need 6 page_size table entries if we support uart debugging,
+which your 'if we ever' suggests we don't. So surely we only need 3, and a
+comment that this needs expanding to 6 if we need to map two distinct areas.
+
+
+> + */
+> +#define MAX_PGTBLE_SZ	(6 * 4096)
+> +static int next_tbl_cnt = 1;
+> +
+>  /* Global varables the core kexec routines expect. */
+>  
+>  unsigned char reuse_initrd;
+> @@ -316,6 +355,117 @@ unsigned long arm64_locate_kernel_segment(struct kexec_info *info)
+>  	return hole;
+>  }
+>  
+> +static unsigned long *create_table_entry(unsigned long *pgtbl_buf,
+> +		unsigned long pgtbl_mem, unsigned long *tbl,
+> +		unsigned long virt, int shift,
+> +		unsigned long ptrs)
+> +{
+> +	unsigned long index, desc, offset;
+> +
+> +	index = (virt >> shift) & ptrs;
+> +	/* check if we have allocated a table already for this index */
+> +	if (tbl[index]) {
+> +		/*
+> +		 * table index will have entry as per purgatory page table
+> +		 * memory. Find out corresponding buffer address of table.
+> +		 */
+> +		desc = tbl[index] & ~3UL;
+> +		offset = desc - pgtbl_mem;
+
+wait .. no .. pgtbl_mem is also a guest physical address, so this is fine... its
+not obvious at first glance!  You could do with a typedef to make it clear which
+addresses are the guests (pgtable_mem) and which are the hosts (pgtable_buf).
+Something like phys_addr_t?
+
+
+> +		return &pgtbl_buf[offset >> 3];
+> +	}
+> +
+> +	/*
+> +	 * Always write page table content as per page table memory allocated
+> +	 * for purgaory area, but return corresponding buffer area alloced
+
+Nit: purgatory, allocated,
+
+> +	 * in kexec
+> +	 */
+> +	if (next_tbl_cnt > 5)
+> +		die("%s: No more memory for page table\n", __func__);
+
+die()? With a bit of juggling can't we return an error so we never try to enable
+the MMU+dcache instead?
+
+
+> +
+> +	tbl[index] = (pgtbl_mem + PAGE_SIZE * next_tbl_cnt) | PMD_TYPE_TABLE;
+> +
+> +	return &pgtbl_buf[(next_tbl_cnt++ * PAGE_SIZE) >> 3];
+> +}
+> +
+> +static void craete_block_entry(unsigned long *tbl, unsigned long flags,
+> +		unsigned long phys, unsigned long virt)
+
+Why have separate phys and virt parameters if all this ever does is idmap?
+
+
+> +{
+> +	unsigned long index;
+> +	unsigned long desc;
+> +
+> +	index = (virt >> PMD_SHIFT) & PTRS_PER_PMD;
+
+Copying the pmd_index() macro would make this clearer.
+
+
+> +	desc = (phys >> PMD_SHIFT) << PMD_SHIFT;
+
+Looks like you wanted a PMD_MASK.
+
+
+> +	desc |= flags;
+> +	tbl[index] = desc;
+> +}
+> +
+> +static void create_identity_entry(unsigned long *pgtbl_buf,
+> +		unsigned long pgtbl_mem, unsigned long virt,
+> +		unsigned long flags)
+> +{
+> +	unsigned long *tbl = pgtbl_buf;
+> +
+> +	tbl = create_table_entry(pgtbl_buf, pgtbl_mem, tbl, virt,
+> +			PGDIR_SHIFT, PTRS_PER_PGD);
+> +	tbl = create_table_entry(pgtbl_buf, pgtbl_mem, tbl, virt,
+> +			PUD_SHIFT, PTRS_PER_PUD);
+> +	craete_block_entry(tbl, flags, virt, virt);
+
+Nit: create
+
+> +}
+> +
+> +/**
+> + * arm64_create_pgtbl_segment - Create page table segments to be used by
+> + * purgatory. Page table will have entries to access memory area of all
+> + * those segments which becomes part of sha verification in purgatory.
+> + * Additionaly, we also create page table for purgatory segment as well.
+
+Nit: additionally,
+
+> + */
+> +
+> +static int arm64_create_pgtbl_segment(struct kexec_info *info,
+> +		unsigned long hole_min, unsigned long hole_max)
+> +{
+> +	unsigned long *pgtbl_buf;
+> +	int i;
+> +	unsigned long mstart, mend, pgtbl_mem;
+> +	unsigned long purgatory_base, purgatory_len;
+> +
+> +	pgtbl_buf = xmalloc(MAX_PGTBLE_SZ);
+> +	memset(pgtbl_buf, 0, MAX_PGTBLE_SZ);
+
+> +	pgtbl_mem = add_buffer_phys_virt(info, pgtbl_buf, MAX_PGTBLE_SZ,
+> +			MAX_PGTBLE_SZ, PAGE_SIZE, hole_min, hole_max, 1, 0);
+
+I want to check what this does, but this all looks like it is doing the right thing.
+
+
+> +	for (i = 0; i < info->nr_segments; i++) {
+> +		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
+> +			purgatory_base = (unsigned long)info->segment[i].mem;
+> +			purgatory_len = info->segment[i].memsz;
+> +		}
+> +		mstart = (unsigned long)info->segment[i].mem;
+> +		mend = mstart + info->segment[i].memsz;
+> +		mstart &= ~(SECTION_SIZE - 1);
+> +		while (mstart < mend) {
+> +			create_identity_entry(pgtbl_buf, pgtbl_mem,
+> +					mstart, MMU_FLAGS_NORMAL);
+> +			mstart += SECTION_SIZE;
+> +		}
+> +	}
+
+
+Thanks,
+
+James
+
 
 
 _______________________________________________
