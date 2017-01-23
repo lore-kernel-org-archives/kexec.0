@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVZYQ-0000tc-B3
- for kexec@lists.infradead.org; Mon, 23 Jan 2017 08:00:44 +0000
-From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH] x86/mce: Keep quiet in case of broadcasted mce after system
- panic
-Date: Mon, 23 Jan 2017 16:01:51 +0800
-Message-Id: <1485158511-22374-1-git-send-email-xlpang@redhat.com>
+ id 1cVa5M-0008Th-2V
+ for kexec@lists.infradead.org; Mon, 23 Jan 2017 08:34:47 +0000
+Date: Mon, 23 Jan 2017 09:34:02 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v2] kexec: implemented XEN KEXEC STATUS to determine if
+ an image is loaded
+Message-ID: <20170123083402.GF23864@olila.local.net-space.pl>
+References: <1484931834-21060-1-git-send-email-eric.devolder@oracle.com>
+ <20170121014319.GA18962@x1>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170121014319.GA18962@x1>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,81 +21,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Tony Luck <tony.luck@intel.com>, Xunlei Pang <xlpang@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, simon@horms.net, xen-devel@lists.xenproject.org, Eric DeVolder <eric.devolder@oracle.com>
 
-We met an issue for kdump: after kdump kernel boots up,
-and there comes a broadcasted mce in first kernel, the
-other cpus remaining in first kernel will enter the old
-mce handler of first kernel, then timeout and panic due
-to MCE synchronization, finally reset the kdump cpus.
+On Sat, Jan 21, 2017 at 09:43:19AM +0800, Baoquan He wrote:
+> Hi,
+>
+> I don't strongly oppose against this, but could you tell what you have
+> met makes the kexec_loaded/kexec_crash_loaded checking not convenient to
+> you?
 
-This patch lets cpus stay quiet when panic happens, so
-before crash cpu shots them down or after kdump boots,
-they should not do anything except clearing MCG_STATUS
-in case of broadcasted mce. This is useful for kdump
-to let the vmcore dumping perform as hard as it can.
+kexec_loaded/kexec_crash_loaded exposes Linux kernel kexec/crash state.
+It does not say anything about Xen kexec/crash state. So, we need a special
+approach to get the latter. Though for compatibility we provide similar
+functionality in kexec-tools for the former.
 
-Previous efforts:
-https://patchwork.kernel.org/patch/6167631/
-https://lists.gt.net/linux/kernel/2146557
+I hope that helps.
 
-Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Signed-off-by: Xunlei Pang <xlpang@redhat.com>
----
- arch/x86/kernel/cpu/mcheck/mce.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+> On 01/20/17 at 11:03am, Eric DeVolder wrote:
+> > Instead of the scripts having to poke at various fields we can
+> > provide that functionality via the -S parameter.
+> >
+> > Returns 0 if the payload is loaded. Can be used in combination
+> > with -l or -p to get the state of the proper kexec image.
+> >
+> > Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> > ---
+> > Note: The corresponding Xen changes have been committed
+> > to the Xen staging branch. Follow this thread:
+> > https://lists.xenproject.org/archives/html/xen-devel/2017-01/msg01570.html
+> >
+> > CC: Andrew Cooper <andrew.cooper3@citrix.com>
+> > CC: kexec@lists.infradead.org
+> > CC: xen-devel@lists.xenproject.org
+> > CC: Daniel Kiper <daniel.kiper@oracle.com>
+> >
+> > v0: First version (internal product).
+> > v1: Posted on kexec mailing list. Changed -s to -S
+> > v2: Incorporated feedback from kexec mailing list
+> > ---
+> >  configure.ac      |  8 ++++++-
+> >  kexec/kexec-xen.c | 26 +++++++++++++++++++++++
+> >  kexec/kexec.8     |  6 ++++++
+> >  kexec/kexec.c     | 62 ++++++++++++++++++++++++++++++++++++++++++++++++-------
+> >  kexec/kexec.h     |  5 ++++-
+> >  5 files changed, 98 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/configure.ac b/configure.ac
+> > index 3044185..c6e864b 100644
+> > --- a/configure.ac
+> > +++ b/configure.ac
+> > @@ -165,8 +165,14 @@ fi
+> >  dnl find Xen control stack libraries
+> >  if test "$with_xen" = yes ; then
+> >  	AC_CHECK_HEADER(xenctrl.h,
+> > -		[AC_CHECK_LIB(xenctrl, xc_kexec_load, ,
+> > +		[AC_CHECK_LIB(xenctrl, xc_kexec_load, [ have_xenctrl_h=yes ],
+> >  		AC_MSG_NOTICE([Xen support disabled]))])
+> > +if test "$have_xenctrl_h" = yes ; then
+> > +	AC_CHECK_LIB(xenctrl, xc_kexec_status,
+> > +		AC_DEFINE(HAVE_KEXEC_CMD_STATUS, 1,
+> > +			[The kexec_status call is available]),
+> > +		AC_MSG_NOTICE([The kexec_status call is not available]))
+> > +fi
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-index 00ef432..0c2bf77 100644
---- a/arch/x86/kernel/cpu/mcheck/mce.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce.c
-@@ -1157,6 +1157,23 @@ void do_machine_check(struct pt_regs *regs, long error_code)
- 
- 	mce_gather_info(&m, regs);
- 
-+	/*
-+	 * Check if this MCE is signaled to only this logical processor,
-+	 * on Intel only.
-+	 */
-+	if (m.cpuvendor == X86_VENDOR_INTEL)
-+		lmce = m.mcgstatus & MCG_STATUS_LMCES;
-+
-+	/*
-+	 * Special treatment for Intel broadcasted machine check:
-+	 * To avoid panic due to MCE synchronization in case of kdump,
-+	 * after system panic, clear global status and bail out.
-+	 */
-+	if (!lmce && atomic_read(&panic_cpu) != PANIC_CPU_INVALID) {
-+		wrmsrl(MSR_IA32_MCG_STATUS, 0);
-+		goto out;
-+	}
-+
- 	final = this_cpu_ptr(&mces_seen);
- 	*final = m;
- 
-@@ -1174,13 +1191,6 @@ void do_machine_check(struct pt_regs *regs, long error_code)
- 		kill_it = 1;
- 
- 	/*
--	 * Check if this MCE is signaled to only this logical processor,
--	 * on Intel only.
--	 */
--	if (m.cpuvendor == X86_VENDOR_INTEL)
--		lmce = m.mcgstatus & MCG_STATUS_LMCES;
--
--	/*
- 	 * Go through all banks in exclusion of the other CPUs. This way we
- 	 * don't report duplicated events on shared banks because the first one
- 	 * to see it will clear it. If this is a Local MCE, then no need to
--- 
-1.8.3.1
+Eric, I have a feeling that you should add en extra indentation
+for lines starting from "+if test "$have_xenctrl_h"..." and
+ending at "+fi".
 
+Daniel
 
 _______________________________________________
 kexec mailing list
