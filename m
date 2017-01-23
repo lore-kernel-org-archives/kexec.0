@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVYPW-0002B7-1X
- for kexec@lists.infradead.org; Mon, 23 Jan 2017 06:47:26 +0000
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cVZYQ-0000tc-B3
+ for kexec@lists.infradead.org; Mon, 23 Jan 2017 08:00:44 +0000
 From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH v2] x86/crash: Update the stale comment in
- reserve_crashkernel()
-Date: Mon, 23 Jan 2017 14:48:23 +0800
-Message-Id: <1485154103-18426-1-git-send-email-xlpang@redhat.com>
+Subject: [PATCH] x86/mce: Keep quiet in case of broadcasted mce after system
+ panic
+Date: Mon, 23 Jan 2017 16:01:51 +0800
+Message-Id: <1485158511-22374-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,34 +21,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: Baoquan He <bhe@redhat.com>, x86@kernel.org, Xunlei Pang <xlpang@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Robert LeBlanc <robert@leblancnet.us>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+To: x86@kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Tony Luck <tony.luck@intel.com>, Xunlei Pang <xlpang@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
 
-CRASH_KERNEL_ADDR_MAX has been missing for a long time,
-update it with more detailed explanation.
+We met an issue for kdump: after kdump kernel boots up,
+and there comes a broadcasted mce in first kernel, the
+other cpus remaining in first kernel will enter the old
+mce handler of first kernel, then timeout and panic due
+to MCE synchronization, finally reset the kdump cpus.
 
-Cc: Robert LeBlanc <robert@leblancnet.us>
-Cc: Baoquan He <bhe@redhat.com>
+This patch lets cpus stay quiet when panic happens, so
+before crash cpu shots them down or after kdump boots,
+they should not do anything except clearing MCG_STATUS
+in case of broadcasted mce. This is useful for kdump
+to let the vmcore dumping perform as hard as it can.
+
+Previous efforts:
+https://patchwork.kernel.org/patch/6167631/
+https://lists.gt.net/linux/kernel/2146557
+
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 Signed-off-by: Xunlei Pang <xlpang@redhat.com>
 ---
- arch/x86/kernel/setup.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kernel/cpu/mcheck/mce.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 4cfba94..c32a167 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -575,7 +575,9 @@ static void __init reserve_crashkernel(void)
- 	/* 0 means: find the address automatically */
- 	if (crash_base <= 0) {
- 		/*
--		 *  kexec want bzImage is below CRASH_KERNEL_ADDR_MAX
-+		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory
-+		 * as old kexec-tools loads bzImage below that, unless
-+		 * "crashkernel=size[KMG],high" is specified.
- 		 */
- 		crash_base = memblock_find_in_range(CRASH_ALIGN,
- 						    high ? CRASH_ADDR_HIGH_MAX
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 00ef432..0c2bf77 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -1157,6 +1157,23 @@ void do_machine_check(struct pt_regs *regs, long error_code)
+ 
+ 	mce_gather_info(&m, regs);
+ 
++	/*
++	 * Check if this MCE is signaled to only this logical processor,
++	 * on Intel only.
++	 */
++	if (m.cpuvendor == X86_VENDOR_INTEL)
++		lmce = m.mcgstatus & MCG_STATUS_LMCES;
++
++	/*
++	 * Special treatment for Intel broadcasted machine check:
++	 * To avoid panic due to MCE synchronization in case of kdump,
++	 * after system panic, clear global status and bail out.
++	 */
++	if (!lmce && atomic_read(&panic_cpu) != PANIC_CPU_INVALID) {
++		wrmsrl(MSR_IA32_MCG_STATUS, 0);
++		goto out;
++	}
++
+ 	final = this_cpu_ptr(&mces_seen);
+ 	*final = m;
+ 
+@@ -1174,13 +1191,6 @@ void do_machine_check(struct pt_regs *regs, long error_code)
+ 		kill_it = 1;
+ 
+ 	/*
+-	 * Check if this MCE is signaled to only this logical processor,
+-	 * on Intel only.
+-	 */
+-	if (m.cpuvendor == X86_VENDOR_INTEL)
+-		lmce = m.mcgstatus & MCG_STATUS_LMCES;
+-
+-	/*
+ 	 * Go through all banks in exclusion of the other CPUs. This way we
+ 	 * don't report duplicated events on shared banks because the first one
+ 	 * to see it will clear it. If this is a Local MCE, then no need to
 -- 
 1.8.3.1
 
