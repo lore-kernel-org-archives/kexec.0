@@ -1,14 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f179.google.com ([209.85.192.179])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVbIM-0000K0-Gl
- for kexec@lists.infradead.org; Mon, 23 Jan 2017 09:52:16 +0000
-Received: by mail-pf0-f179.google.com with SMTP id e4so40121836pfg.1
- for <kexec@lists.infradead.org>; Mon, 23 Jan 2017 01:51:52 -0800 (PST)
-Date: Mon, 23 Jan 2017 18:51:46 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Mon, 23 Jan 2017 10:23:15 +0000
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v29 3/9] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20170123095145.GA23406@linaro.org>
+Message-ID: <20170123102314.GA16286@leverpostej>
 References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
  <20161228043605.27470-2-takahiro.akashi@linaro.org>
  <20170112150926.GA12249@leverpostej>
@@ -18,9 +12,10 @@ References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
  <20170117115441.GC11939@leverpostej>
  <20170119094941.GP20972@linaro.org>
  <20170119112850.GD11176@leverpostej>
+ <20170123095145.GA23406@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170119112850.GD11176@leverpostej>
+In-Reply-To: <20170123095145.GA23406@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,106 +28,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Mark Salter <msalter@redhat.com>, Pratyush Anand <panand@redhat.com>
 
-Mark,
+On Mon, Jan 23, 2017 at 06:51:46PM +0900, AKASHI Takahiro wrote:
+> Mark,
+> 
+> On Thu, Jan 19, 2017 at 11:28:50AM +0000, Mark Rutland wrote:
+> > On Thu, Jan 19, 2017 at 06:49:42PM +0900, AKASHI Takahiro wrote:
+> > > On Tue, Jan 17, 2017 at 11:54:42AM +0000, Mark Rutland wrote:
+> > > > On Tue, Jan 17, 2017 at 05:20:44PM +0900, AKASHI Takahiro wrote:
+> > > > > On Fri, Jan 13, 2017 at 11:39:15AM +0000, Mark Rutland wrote:
 
-On Thu, Jan 19, 2017 at 11:28:50AM +0000, Mark Rutland wrote:
-> On Thu, Jan 19, 2017 at 06:49:42PM +0900, AKASHI Takahiro wrote:
-> > On Tue, Jan 17, 2017 at 11:54:42AM +0000, Mark Rutland wrote:
-> > > On Tue, Jan 17, 2017 at 05:20:44PM +0900, AKASHI Takahiro wrote:
-> > > > On Fri, Jan 13, 2017 at 11:39:15AM +0000, Mark Rutland wrote:
-> > > > > Great! I think it would be better to follow the approach of
-> > > > > mark_rodata_ro(), rather than opening up set_memory_*(), but otherwise,
-> > > > > it looks like it should work.
-> > > > 
-> > > > I'm not quite sure what the approach of mark_rodata_ro() means, but
-> > > > I found that using create_mapping_late() may cause two problems:
-> > > > 
-> > > > 1) it fails when PTE_CONT bits mismatch between an old and new mmu entry.
-> > > >    This can happen, say, if the memory range for crash dump kernel
-> > > >    starts in the mid of _continuous_ pages.
+> > > > I don't think we have much code useful for unmapping. We could re-use 
+> > > > create_mapping_late for this, passing a set of prot bits that means the
+> > > > entries are invalid (e.g. have a PAGE_KERNEL_INVALID).
 > > > 
-> > > That should only happen if we try to remap a segment different to what
-> > > we originally mapped.
-> > > 
-> > > I was intending that we'd explicitly map the reserved region separately
-> > > in the boot path, like we do for kernel segments in map_kernel(). We
-> > > would allow sections and/or CONT entires. 
-> > > 
-> > > Then, in __map_memblock() we'd then skip that range as we do for the
-> > > linear map alias of the kernel image.
-> > > 
-> > > That way, we can later use create_mapping_late for that same region, and
-> > > it should handle sections and/or CONT entries in the exact same way as
-> > > it does for the kernel image segments in mark_rodata_ro().
+> > > Do you really think that we should totally invalidate mmu entries?
+> > > I guess that, given proper cache & TLB flush operations, RO attribute is
+> > > good enough for memory consistency, no?
+> > > (None accesses the region, as I said, except in the case of re-loading
+> > > crash dump kernel though.)
 > > 
-> > I see.
-> > Which one do you prefer, yours above or my (second) solution?
-> > Either way, they do almost the same thing in terms of mapping.
+> > My worry is that the first kernel and kdump kernel may map (portions of)
+> > the region with potentially confliciting memory attributes. So it would
+> > be necessary to completely unmap the region.
 > 
-> While both should work, I'd prefer to match the existing map_kernel()
-> logic, (i.e. my suggestion above), for consistency.
+> I think that this can happen only if the second kernel boots up,
+> leaving non-crashed cpus still running for some reason.
 
-OK
+Yes. I was considering a kdump case where a secondary was stuck in the
+first kernel.
 
-> > > I don't think we have much code useful for unmapping. We could re-use 
-> > > create_mapping_late for this, passing a set of prot bits that means the
-> > > entries are invalid (e.g. have a PAGE_KERNEL_INVALID).
+> > You raise a good point that this would also mean we need to perform some
+> > cache maintenance, which makes that a little more painful. We'd need a
+> > sequence like:
 > > 
-> > Do you really think that we should totally invalidate mmu entries?
-> > I guess that, given proper cache & TLB flush operations, RO attribute is
-> > good enough for memory consistency, no?
-> > (None accesses the region, as I said, except in the case of re-loading
-> > crash dump kernel though.)
+> > * Unmap the region
+> > * TLB invalidation
+> > * Remap the region with non-cacheable attributes
+> > * Cache maintenance
+> > * Unmap the region
+> > * TLB invalidation
 > 
-> My worry is that the first kernel and kdump kernel may map (portions of)
-> the region with potentially confliciting memory attributes. So it would
-> be necessary to completely unmap the region.
+> I don't get why we need to remap the region and do cache
+> maintenance here. Please elaborate a bit more?
 
-I think that this can happen only if the second kernel boots up,
-leaving non-crashed cpus still running for some reason.
+I think I was wrong, and we don't need to. Sorry about that.
 
-> You raise a good point that this would also mean we need to perform some
-> cache maintenance, which makes that a little more painful. We'd need a
-> sequence like:
+My thought was that to ensure that there aren't stale lines with
+differing attributes, we'd need to do a clean+invalidate while the
+caches are guaranteed to not allocate anything furthe. Hence, we'd need
+to use a non-cacheable mapping to perform the clean+invalidate.
+
+However, I now think that so long as we unmap the range, this shouldn't
+matter. The new kernel can perform the maintenance if it wishes to use
+different attributes, similarly to what the first kernel must do per the
+boot protocol.
+
+> My current implementation of arch_kexec_protect_crashkres() is:
 > 
-> * Unmap the region
-> * TLB invalidation
-> * Remap the region with non-cacheable attributes
-> * Cache maintenance
-> * Unmap the region
-> * TLB invalidation
-
-I don't get why we need to remap the region and do cache
-maintenance here. Please elaborate a bit more?
-My current implementation of arch_kexec_protect_crashkres() is:
-
-        kexec_segment_flush(kexec_crash_image);
-        create_mapping_late(crashk_res.start, ..., __pgprot(0));
-                                                or PAGE_KERNEL_INVALID
-        flush_tlb_all();
-
-kexec_segment_flush() will eventually do dcache-flush for all the modified
-data in crash dump kernel memory.
-
-> > > We'd have to perform the TLB invalidation ourselves, but that shouldn't
-> > > be too painful.
-> > 
-> > Do we need to invalidate TLBs not only before but also after changing
-> > permission attributes as make_rodata_ro() does?
+>         kexec_segment_flush(kexec_crash_image);
+>         create_mapping_late(crashk_res.start, ..., __pgprot(0));
+>                                                 or PAGE_KERNEL_INVALID
+>         flush_tlb_all();
 > 
-> I believe we'd only have to perform the TLB invalidation after the
-> change of attributes.
+> kexec_segment_flush() will eventually do dcache-flush for all the modified
+> data in crash dump kernel memory.
 
-OK
+I now think this should be fine, per the above.
 
 Thanks,
--Takahiro AKASHI
-
-> Thanks,
-> Mark.
+Mark.
 
 _______________________________________________
 kexec mailing list
