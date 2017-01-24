@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cW1Ak-0002Ky-OY
- for kexec@lists.infradead.org; Tue, 24 Jan 2017 13:30:12 +0000
-Date: Tue, 24 Jan 2017 14:29:38 +0100
+ id 1cW1GC-00064x-2Q
+ for kexec@lists.infradead.org; Tue, 24 Jan 2017 13:35:45 +0000
+Date: Tue, 24 Jan 2017 14:35:17 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ppc64: Reduce number of ELF LOAD segments
-Message-ID: <20170124132938.GC28325@verge.net.au>
-References: <20170119183709.67327e67@hananiah.suse.cz>
+Subject: Re: [PATCH v2] kexec: implemented XEN KEXEC STATUS to determine if
+ an image is loaded
+Message-ID: <20170124133517.GD28325@verge.net.au>
+References: <1484931834-21060-1-git-send-email-eric.devolder@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170119183709.67327e67@hananiah.suse.cz>
+In-Reply-To: <1484931834-21060-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +24,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: kexec@lists.infradead.org
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: andrew.cooper3@citrix.com, daniel.kiper@oracle.com, konrad.wilk@oracle.com, kexec@lists.infradead.org, xen-devel@lists.xenproject.org
 
-On Thu, Jan 19, 2017 at 06:37:09PM +0100, Petr Tesarik wrote:
-> The number of program header table entries (e_phnum) is an Elf64_Half,
-> which is a 16-bit entity, i.e. the limit is 65534 entries (one entry is
-> reserved for NOTE). This is a hard limit, defined by the ELF standard.
-> It is possible that more LMBs (Logical Memory Blocks) are needed to
-> represent all RAM on some machines, and this field overflows, causing
-> an incomplete /proc/vmcore file.
+On Fri, Jan 20, 2017 at 11:03:54AM -0600, Eric DeVolder wrote:
+> Instead of the scripts having to poke at various fields we can
+> provide that functionality via the -S parameter.
 > 
-> This has actually happened on a machine with 31TB of RAM and an LMB size
-> of 256MB.
+> Returns 0 if the payload is loaded. Can be used in combination
+> with -l or -p to get the state of the proper kexec image.
 > 
-> However, since there is usually no memory hole between adjacent LMBs, the
-> map can be "compressed", combining multiple adjacent into a single LOAD
-> segment.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+> Note: The corresponding Xen changes have been committed
+> to the Xen staging branch. Follow this thread:
+> https://lists.xenproject.org/archives/html/xen-devel/2017-01/msg01570.html
 
-Thanks, applied.
+Hi,
+
+this change seems worthwhile to me but am I correct in thinking that
+it adds a new -S option that works both with and without Xen?
+If so I'd like that reflected in the changelog.
 
 _______________________________________________
 kexec mailing list
