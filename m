@@ -1,27 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f47.google.com ([74.125.83.47])
+Received: from mail-pg0-f46.google.com ([74.125.83.46])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVvwc-0003eZ-5K
- for kexec@lists.infradead.org; Tue, 24 Jan 2017 07:55:11 +0000
-Received: by mail-pg0-f47.google.com with SMTP id 194so52874972pgd.2
- for <kexec@lists.infradead.org>; Mon, 23 Jan 2017 23:54:49 -0800 (PST)
-Date: Tue, 24 Jan 2017 16:55:00 +0900
+ id 1cVwYo-000856-MH
+ for kexec@lists.infradead.org; Tue, 24 Jan 2017 08:34:41 +0000
+Received: by mail-pg0-f46.google.com with SMTP id 14so53178653pgg.1
+ for <kexec@lists.infradead.org>; Tue, 24 Jan 2017 00:34:15 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v29 3/9] arm64: kdump: reserve memory for crash dump kernel
-Message-ID: <20170124075458.GC23406@linaro.org>
-References: <20161228043605.27470-2-takahiro.akashi@linaro.org>
- <20170112150926.GA12249@leverpostej>
- <20170113081617.GI20972@linaro.org>
- <20170113113914.GB26804@leverpostej>
- <20170117082043.GM20972@linaro.org>
- <20170117115441.GC11939@leverpostej>
- <20170119094941.GP20972@linaro.org>
- <20170119112850.GD11176@leverpostej>
- <20170123095145.GA23406@linaro.org>
- <20170123102314.GA16286@leverpostej>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170123102314.GA16286@leverpostej>
+Subject: [PATCH v5 0/9] (kexec-tools) arm64: add kdump support
+Date: Tue, 24 Jan 2017 17:33:22 +0900
+Message-Id: <20170124083331.3468-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,88 +17,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On Mon, Jan 23, 2017 at 10:23:15AM +0000, Mark Rutland wrote:
-> On Mon, Jan 23, 2017 at 06:51:46PM +0900, AKASHI Takahiro wrote:
-> > Mark,
-> > 
-> > On Thu, Jan 19, 2017 at 11:28:50AM +0000, Mark Rutland wrote:
-> > > On Thu, Jan 19, 2017 at 06:49:42PM +0900, AKASHI Takahiro wrote:
-> > > > On Tue, Jan 17, 2017 at 11:54:42AM +0000, Mark Rutland wrote:
-> > > > > On Tue, Jan 17, 2017 at 05:20:44PM +0900, AKASHI Takahiro wrote:
-> > > > > > On Fri, Jan 13, 2017 at 11:39:15AM +0000, Mark Rutland wrote:
-> 
-> > > > > I don't think we have much code useful for unmapping. We could re-use 
-> > > > > create_mapping_late for this, passing a set of prot bits that means the
-> > > > > entries are invalid (e.g. have a PAGE_KERNEL_INVALID).
-> > > > 
-> > > > Do you really think that we should totally invalidate mmu entries?
-> > > > I guess that, given proper cache & TLB flush operations, RO attribute is
-> > > > good enough for memory consistency, no?
-> > > > (None accesses the region, as I said, except in the case of re-loading
-> > > > crash dump kernel though.)
-> > > 
-> > > My worry is that the first kernel and kdump kernel may map (portions of)
-> > > the region with potentially confliciting memory attributes. So it would
-> > > be necessary to completely unmap the region.
-> > 
-> > I think that this can happen only if the second kernel boots up,
-> > leaving non-crashed cpus still running for some reason.
-> 
-> Yes. I was considering a kdump case where a secondary was stuck in the
-> first kernel.
-> 
-> > > You raise a good point that this would also mean we need to perform some
-> > > cache maintenance, which makes that a little more painful. We'd need a
-> > > sequence like:
-> > > 
-> > > * Unmap the region
-> > > * TLB invalidation
-> > > * Remap the region with non-cacheable attributes
-> > > * Cache maintenance
-> > > * Unmap the region
-> > > * TLB invalidation
-> > 
-> > I don't get why we need to remap the region and do cache
-> > maintenance here. Please elaborate a bit more?
-> 
-> I think I was wrong, and we don't need to. Sorry about that.
-> 
-> My thought was that to ensure that there aren't stale lines with
-> differing attributes, we'd need to do a clean+invalidate while the
-> caches are guaranteed to not allocate anything furthe. Hence, we'd need
-> to use a non-cacheable mapping to perform the clean+invalidate.
-> 
-> However, I now think that so long as we unmap the range, this shouldn't
-> matter. The new kernel can perform the maintenance if it wishes to use
-> different attributes, similarly to what the first kernel must do per the
-> boot protocol.
-> 
-> > My current implementation of arch_kexec_protect_crashkres() is:
-> > 
-> >         kexec_segment_flush(kexec_crash_image);
-> >         create_mapping_late(crashk_res.start, ..., __pgprot(0));
-> >                                                 or PAGE_KERNEL_INVALID
-> >         flush_tlb_all();
-> > 
-> > kexec_segment_flush() will eventually do dcache-flush for all the modified
-> > data in crash dump kernel memory.
-> 
-> I now think this should be fine, per the above.
+My kernel patches of kdump support on arm64 are currently under review.
 
-OK.
-I think that now I can see a light of the goal :)
+This patchset is synced with them (v30 [1]) and provides necessary changes
+for kexec-tools. It can be applied on top of kexec-tools master branch.
 
--Takahiro AKASHI
+[1] T.B.D.
 
-> Thanks,
-> Mark.
+Changes for v5:
+ - remove "linux,crashkernel-base/size" handling aligned with a change
+   on the kernel side
+
+Changes for v4:
+ - rebased on the master branch (including Geoff's v6)
+ - revive "linux,usable-memory-range" DT property (from v2), dropping
+   use of "reserved-memory" nodes introduced in v3 (patch #8)
+ - extend the semantics of kexec_iomem_for_each_line() per Pratyush
+   (patch #1)
+
+Changes for v3:
+ - rebased on Geoff's v5
+ - fix a value of estimated PHYS_OFFSET
+ - add a kernel code/data segment because they now reside out of linear
+   mapping due to KASLR introduction
+ - remove "linux,usable-memory-range" dependency, instead using
+   "reserved-memory" node
+ - add -mem-min/-mem-max support
+
+Changes for v2:
+ - trim a temoprary buffer in setup_2nd_dtb()
+ - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+ - update patch#7 from Pratyush
+   (re-worked by akashi)
+
+AKASHI Takahiro (7):
+  kexec: exntend the semantics of kexec_iomem_for_each_line
+  arm64: identify PHYS_OFFSET correctly
+  arm64: kdump: identify memory regions
+  arm64: kdump: add elf core header segment
+  arm64: kdump: set up kernel image segment
+  arm64: kdump: set up other segments
+  arm64: kdump: add DT properties to crash dump kernel's dtb
+
+Pratyush Anand (2):
+  kexec: generalize and rename get_kernel_stext_sym()
+  arm64: kdump: Add support for binary image files
+
+ kexec/Makefile                       |   1 +
+ kexec/arch/arm/crashdump-arm.c       |  40 +------
+ kexec/arch/arm64/Makefile            |   2 +
+ kexec/arch/arm64/crashdump-arm64.c   | 219 ++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
+ kexec/arch/arm64/iomem.h             |  10 ++
+ kexec/arch/arm64/kexec-arm64.c       | 113 +++++++++++++++---
+ kexec/arch/arm64/kexec-elf-arm64.c   |  25 +++-
+ kexec/arch/arm64/kexec-image-arm64.c |  12 ++
+ kexec/arch/i386/crashdump-x86.c      |  29 -----
+ kexec/kexec-iomem.c                  |  15 ++-
+ kexec/kexec.h                        |   2 +
+ kexec/symbols.c                      |  41 +++++++
+ 13 files changed, 432 insertions(+), 95 deletions(-)
+ create mode 100644 kexec/arch/arm64/iomem.h
+ create mode 100644 kexec/symbols.c
+
+-- 
+2.11.0
+
 
 _______________________________________________
 kexec mailing list
