@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cW9ja-0007m0-Rd
- for kexec@lists.infradead.org; Tue, 24 Jan 2017 22:38:42 +0000
+ id 1cW9sr-0003E4-Bj
+ for kexec@lists.infradead.org; Tue, 24 Jan 2017 22:48:15 +0000
 Subject: Re: [PATCH v3] kexec: implemented XEN KEXEC STATUS to determine if an
  image is loaded
 References: <1485284135-3058-1-git-send-email-eric.devolder@oracle.com>
  <20170124191640.GC16671@olila.local.net-space.pl>
 From: Eric DeVolder <eric.devolder@oracle.com>
-Message-ID: <e82a352d-3d26-7361-4538-33749d687b02@oracle.com>
-Date: Tue, 24 Jan 2017 16:37:27 -0600
+Message-ID: <87de0f8a-21b9-8aa4-f07b-78083f2610c2@oracle.com>
+Date: Tue, 24 Jan 2017 16:47:09 -0600
 MIME-Version: 1.0
 In-Reply-To: <20170124191640.GC16671@olila.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
@@ -96,14 +96,6 @@ On 01/24/2017 01:16 PM, Daniel Kiper wrote:
 > ...
 >
 > If it is not needed or something like that please drop me a line.
-
-The tabs are not needed for the configure to work properly.
-
-If tabs are needed for readability/style purposes, I will
-add them in. There is not any precedent of nesting in
-the configure.ac file, so I am unsure what convention is
-for this package.
-
 >
 >>  fi
 >>
@@ -169,10 +161,6 @@ for this package.
 > Same as above. I think that you have missed my earlier comments.
 > I suppose that you can join "+and it will" and "+.BR not\ load\ or\
 > unload\ the\ kernel." into one line.
-
-In that file, all dot directives start with the dot in the
-first column. I did the same for the .BR in this statement.
-
 >
 >> +.TP
 >>  .B \-e\ (\-\-exec)
@@ -213,9 +201,11 @@ first column. I did the same for the .BR in this statement.
 >
 > ...and this. Could not you leave this forward declaration here (of
 > course with arg change)? Or is it possible to drop it at all?
->
-> Daniel
->
+
+It is possible to relocate kexec_loaded() so that the forward 
+declaration is not needed. I will do so.
+
+eric
 
 
 _______________________________________________
