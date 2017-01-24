@@ -1,20 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-f172.google.com ([209.85.192.172])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVqtf-0003dE-Ha
- for kexec@lists.infradead.org; Tue, 24 Jan 2017 02:31:49 +0000
-Subject: Re: [PATCH] x86/mce: Keep quiet in case of broadcasted mce after
- system panic
-References: <1485158511-22374-1-git-send-email-xlpang@redhat.com>
- <20170123125157.u2kefedwpvgcdyfo@pd.tnic> <588606B9.3070604@redhat.com>
- <20170123145056.fyraeehjfnwmmfb6@pd.tnic> <20170123174008.GA4945@intel.com>
- <20170123175130.l7c7mnmu74ln5v6h@pd.tnic> <20170123180153.GA5646@intel.com>
- <20170123181437.xbjbsdjfcn7b67dh@pd.tnic>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <5886BCF6.9070006@redhat.com>
-Date: Tue, 24 Jan 2017 10:33:26 +0800
+ id 1cVvtw-0002pG-Fn
+ for kexec@lists.infradead.org; Tue, 24 Jan 2017 07:52:26 +0000
+Received: by mail-pf0-f172.google.com with SMTP id 189so48433347pfu.3
+ for <kexec@lists.infradead.org>; Mon, 23 Jan 2017 23:52:03 -0800 (PST)
+Date: Tue, 24 Jan 2017 16:52:16 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v29 4/9] arm64: kdump: implement machine_crash_shutdown()
+Message-ID: <20170124075214.GB23406@linaro.org>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043605.27470-3-takahiro.akashi@linaro.org>
+ <20170110113248.GC21598@arm.com>
+ <20170111063626.GE20972@linaro.org>
+ <20170111105405.GF12388@arm.com>
+ <20170112042143.GF20972@linaro.org> <20170112120111.GE1771@arm.com>
+ <20170123174633.GF28914@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20170123181437.xbjbsdjfcn7b67dh@pd.tnic>
+Content-Disposition: inline
+In-Reply-To: <20170123174633.GF28914@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,33 +27,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
-Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, kexec@lists.infradead.org, x86@kernel.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: Will Deacon <will.deacon@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On 01/24/2017 at 02:14 AM, Borislav Petkov wrote:
-> On Mon, Jan 23, 2017 at 10:01:53AM -0800, Luck, Tony wrote:
->> will ignore the machine check on the other cpus ... assuming
->> that "cpu_is_offline(smp_processor_id())" does the right thing
->> in the kexec case where this is an "old" cpu that isn't online
->> in the new kernel.
-> Nice. And kdump did do the dumping on one CPU, AFAIR. So we should be
-> good there.
->
+Will,
 
-"nr_cpus=N" will consume more memory, using very large N is almost
-impossible for kdump to boot with considering the limited crash memory
-reserved.
+On Mon, Jan 23, 2017 at 05:46:34PM +0000, Will Deacon wrote:
+> On Thu, Jan 12, 2017 at 12:01:11PM +0000, Will Deacon wrote:
+> > On Thu, Jan 12, 2017 at 01:21:44PM +0900, AKASHI Takahiro wrote:
+> > > On Wed, Jan 11, 2017 at 10:54:05AM +0000, Will Deacon wrote:
+> > > > On Wed, Jan 11, 2017 at 03:36:28PM +0900, AKASHI Takahiro wrote:
+> > > > > On Tue, Jan 10, 2017 at 11:32:48AM +0000, Will Deacon wrote:
+> > > > > > On Wed, Dec 28, 2016 at 01:36:01PM +0900, AKASHI Takahiro wrote:
+> > > > > > > @@ -22,6 +25,7 @@
+> > > > > > >  extern const unsigned char arm64_relocate_new_kernel[];
+> > > > > > >  extern const unsigned long arm64_relocate_new_kernel_size;
+> > > > > > >  
+> > > > > > > +static bool in_crash_kexec;
+> > > > > > 
+> > > > > > Do you actually need this bool? Why not call kexec_crash_loaded() instead?
+> > > > > 
+> > > > > The two have different meanings:
+> > > > > "in_crash_kexec" indicates that kdump is taking place, while
+> > > > > kexec_crash_loaded() tells us only whether crash dump kernel has been
+> > > > > loaded or not.
+> > > > > 
+> > > > > It is crucial to distinguish them especially for machine_kexec()
+> > > > > which can be called on normal kexec even if kdump has been set up.
+> > > > 
+> > > > Ah, I see. So how about just doing:
+> > > > 
+> > > >   if (kimage == kexec_crash_image)
+> > > > 
+> > > > in machine_kexec?
+> > > 
+> > > Yeah, it should work.
+> > > Do you want to merge the following hunk,
+> > > or expect that I will re-send the whole patch series
+> > > (with other changes if any)?
+> > 
+> > Thanks, I'll fold it in and shout if I run into any problems. My plan is
+> > to queue this for 4.11.
+> 
+> Given the DT discussion with Mark, I assume you'll post a new version with
+> this rolled in.
 
-For some large machine, nr_cpus=1 might not be enough, we have to use
-nr_cpus=4 or more, it is also helpful for the vmcore parallel dumping :-)
+Yes, I will!
 
-Regards,
-Xunlei
+-Takahiro AKASHI
+
+> Will
 
 _______________________________________________
 kexec mailing list
