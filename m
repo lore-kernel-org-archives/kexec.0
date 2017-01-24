@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVqAb-00019F-Us
- for kexec@lists.infradead.org; Tue, 24 Jan 2017 01:45:15 +0000
+ id 1cVqFY-0003Vv-H3
+ for kexec@lists.infradead.org; Tue, 24 Jan 2017 01:50:22 +0000
 Subject: Re: [PATCH] x86/mce: Keep quiet in case of broadcasted mce after
  system panic
 References: <1485158511-22374-1-git-send-email-xlpang@redhat.com>
  <20170123125157.u2kefedwpvgcdyfo@pd.tnic> <588606B9.3070604@redhat.com>
  <20170123145056.fyraeehjfnwmmfb6@pd.tnic> <20170123174008.GA4945@intel.com>
- <20170123175130.l7c7mnmu74ln5v6h@pd.tnic>
+ <20170123175130.l7c7mnmu74ln5v6h@pd.tnic> <5886B208.90804@redhat.com>
 From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <5886B208.90804@redhat.com>
-Date: Tue, 24 Jan 2017 09:46:48 +0800
+Message-ID: <5886B33B.7080601@redhat.com>
+Date: Tue, 24 Jan 2017 09:51:55 +0800
 MIME-Version: 1.0
-In-Reply-To: <20170123175130.l7c7mnmu74ln5v6h@pd.tnic>
+In-Reply-To: <5886B208.90804@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,72 +30,75 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
 Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, xlpang@redhat.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
 
-On 01/24/2017 at 01:51 AM, Borislav Petkov wrote:
-> Hey Tony,
->
-> a "welcome back" is in order? :-)
->
-> On Mon, Jan 23, 2017 at 09:40:09AM -0800, Luck, Tony wrote:
->> If the system had experienced some memory corruption, but
->> recovered ... then there would be some pages sitting around
->> that the old kernel had marked as POISON and stopped using.
->> The kexec'd kernel doesn't know about these, so may touch that
->> memory while taking a crash dump ...
-> Hmm, pass a list of poisoned pages to the kdump kernel so as not to
-> touch. Looks like there's already functionality for that:
->
-> "makedumpfile can exclude the following types of pages while copying
-> VMCORE to DUMPFILE, and a user can choose which type of pages will be
-> excluded.
->
-> - Pages filled with zero
-> - Cache pages
-> - User process data pages
-> - Free pages"
->
->  (there is a makedumpfile manpage somewhere)
->
-> And apparently crash knows about poisoned pages and handles them:
->
-> static int __init crash_save_vmcoreinfo_init(void)
-> {
-> 	...
-> #ifdef CONFIG_MEMORY_FAILURE
->         VMCOREINFO_NUMBER(PG_hwpoison);
-> #endif
->
-> so if that works, the kexeced kernel should know about that list.
+On 01/24/2017 at 09:46 AM, Xunlei Pang wrote:
+> On 01/24/2017 at 01:51 AM, Borislav Petkov wrote:
+>> Hey Tony,
+>>
+>> a "welcome back" is in order? :-)
+>>
+>> On Mon, Jan 23, 2017 at 09:40:09AM -0800, Luck, Tony wrote:
+>>> If the system had experienced some memory corruption, but
+>>> recovered ... then there would be some pages sitting around
+>>> that the old kernel had marked as POISON and stopped using.
+>>> The kexec'd kernel doesn't know about these, so may touch that
+>>> memory while taking a crash dump ...
+>> Hmm, pass a list of poisoned pages to the kdump kernel so as not to
+>> touch. Looks like there's already functionality for that:
+>>
+>> "makedumpfile can exclude the following types of pages while copying
+>> VMCORE to DUMPFILE, and a user can choose which type of pages will be
+>> excluded.
+>>
+>> - Pages filled with zero
+>> - Cache pages
+>> - User process data pages
+>> - Free pages"
+>>
+>>  (there is a makedumpfile manpage somewhere)
+>>
+>> And apparently crash knows about poisoned pages and handles them:
+>>
+>> static int __init crash_save_vmcoreinfo_init(void)
+>> {
+>> 	...
+>> #ifdef CONFIG_MEMORY_FAILURE
+>>         VMCOREINFO_NUMBER(PG_hwpoison);
+>> #endif
+>>
+>> so if that works, the kexeced kernel should know about that list.
+> From the log in my previous reply, MCE occurred before makedumpfile dumping,
+> so I guess if the poisoned ones belong to the crash reserved memory or other
+> type of events?
 
-From the log in my previous reply, MCE occurred before makedumpfile dumping,
-so I guess if the poisoned ones belong to the crash reserved memory or other
-type of events?
-
-Besides, some kdump kernel may not use makedumpfile, for example a simple "cp"
-is also allowed to process "/proc/vmcore".
+Another possibility may be from any system.reserved/pcie memory
+which are shared between 1st and 2nd kernel.
 
 >
->> and then you have a broadcast machine check (on older[1] Intel CPUs
->> that don't support local machine check).
-> Right.
+> Besides, some kdump kernel may not use makedumpfile, for example a simple "cp"
+> is also allowed to process "/proc/vmcore".
 >
->> This is hard to work around. You really need all the CPUs to have set
->> CR4.MCE=1 (if any didn't, then they will force a reset when they see
->> the machine check). Also you need to make sure that they jump to the
->> copy of do_machine_check() in the new kernel, not the old kernel.
-> Doesn't matter, right? The new copy is as clueless as the old one about
-> those MCEs.
+>>> and then you have a broadcast machine check (on older[1] Intel CPUs
+>>> that don't support local machine check).
+>> Right.
+>>
+>>> This is hard to work around. You really need all the CPUs to have set
+>>> CR4.MCE=1 (if any didn't, then they will force a reset when they see
+>>> the machine check). Also you need to make sure that they jump to the
+>>> copy of do_machine_check() in the new kernel, not the old kernel.
+>> Doesn't matter, right? The new copy is as clueless as the old one about
+>> those MCEs.
+>>
+> It's the code in mce_start(), it waits for all the online cpus including the cpus
+> that kdump boots on to synchronize.
 >
+> So for new mce handler of kdump kernel, it is fine as the number of online cpus
+> is correct; as for old mce handler of 1st kernel, it's not true because some cpus
+> which are regarded online from 1st kernel's view are running the 2nd kernel now,
+> they can't respond to the old mce handler which will timeout the old mce handler.
+>
+> Regards,
+> Xunlei
 
-It's the code in mce_start(), it waits for all the online cpus including the cpus
-that kdump boots on to synchronize.
-
-So for new mce handler of kdump kernel, it is fine as the number of online cpus
-is correct; as for old mce handler of 1st kernel, it's not true because some cpus
-which are regarded online from 1st kernel's view are running the 2nd kernel now,
-they can't respond to the old mce handler which will timeout the old mce handler.
-
-Regards,
-Xunlei
 
 _______________________________________________
 kexec mailing list
