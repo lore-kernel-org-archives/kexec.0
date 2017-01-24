@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f174.google.com ([209.85.192.174])
+Received: from mail-pg0-f52.google.com ([74.125.83.52])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cVwZL-0008Dt-NW
- for kexec@lists.infradead.org; Tue, 24 Jan 2017 08:35:13 +0000
-Received: by mail-pf0-f174.google.com with SMTP id 189so48730170pfu.3
- for <kexec@lists.infradead.org>; Tue, 24 Jan 2017 00:34:50 -0800 (PST)
+ id 1cVwZR-0008ET-Jk
+ for kexec@lists.infradead.org; Tue, 24 Jan 2017 08:35:19 +0000
+Received: by mail-pg0-f52.google.com with SMTP id t6so53215630pgt.3
+ for <kexec@lists.infradead.org>; Tue, 24 Jan 2017 00:34:57 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v5 3/9] arm64: identify PHYS_OFFSET correctly
-Date: Tue, 24 Jan 2017 17:33:25 +0900
-Message-Id: <20170124083331.3468-4-takahiro.akashi@linaro.org>
+Subject: [PATCH v5 4/9] arm64: kdump: identify memory regions
+Date: Tue, 24 Jan 2017 17:33:26 +0900
+Message-Id: <20170124083331.3468-5-takahiro.akashi@linaro.org>
 In-Reply-To: <20170124083331.3468-1-takahiro.akashi@linaro.org>
 References: <20170124083331.3468-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,71 +27,197 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Due to the kernel patch, commit e7cd190385d1 ("arm64: mark reserved
-memblock regions explicitly in iomem"), the current code will not be able
-to identify the correct value of PHYS_OFFSET if some "reserved" memory
-region, which is likely to be UEFI runtime services code/data, exists at
-an address below the first "System RAM" regions.
+The following regions need to be identified for later use:
+ a) memory regions which belong to the 1st kernel
+ b) usable memory reserved for crash dump kernel
 
-This patch fixes this issue.
+We go through /proc/iomem to find out a) and b) which are marked
+as "System RAM" and "Crash kernel", respectively.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/arch/arm64/iomem.h       |  7 +++++++
- kexec/arch/arm64/kexec-arm64.c | 12 ++++++++++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
- create mode 100644 kexec/arch/arm64/iomem.h
+ kexec/arch/arm64/Makefile          |   2 +
+ kexec/arch/arm64/crashdump-arm64.c | 100 ++++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h |  14 +++++-
+ kexec/arch/arm64/iomem.h           |   1 +
+ 4 files changed, 114 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
-new file mode 100644
-index 0000000..7fd66eb
---- /dev/null
-+++ b/kexec/arch/arm64/iomem.h
-@@ -0,0 +1,7 @@
-+#ifndef IOMEM_H
-+#define IOMEM_H
+diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
+index 74b677f..2d4ae0e 100644
+--- a/kexec/arch/arm64/Makefile
++++ b/kexec/arch/arm64/Makefile
+@@ -6,6 +6,8 @@ arm64_FS2DT_INCLUDE += \
+ 
+ arm64_DT_OPS += kexec/dt-ops.c
+ 
++arm64_MEM_REGIONS = kexec/mem_regions.c
 +
-+#define SYSTEM_RAM		"System RAM\n"
-+#define IOMEM_RESERVED		"reserved\n"
-+
-+#endif
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 04fd396..d02b9da 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -21,6 +21,7 @@
+ arm64_CPPFLAGS += -I $(srcdir)/kexec/
+ 
+ arm64_KEXEC_SRCS += \
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index d2272c8..dcaca43 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -1,5 +1,13 @@
+ /*
+  * ARM64 crashdump.
++ *     partly derived from arm implementation
++ *
++ * Copyright (c) 2014-2016 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
+  */
+ 
+ #define _GNU_SOURCE
+@@ -10,12 +18,102 @@
+ #include "kexec.h"
+ #include "crashdump.h"
  #include "crashdump-arm64.h"
- #include "dt-ops.h"
- #include "fs2dt.h"
 +#include "iomem.h"
- #include "kexec-syscall.h"
- #include "arch/options.h"
+ #include "kexec-arm64.h"
+ #include "kexec-elf.h"
++#include "mem_regions.h"
  
-@@ -476,7 +477,14 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- 		return -1;
- 
- 	r = (struct memory_range *)data + nr;
--	r->type = RANGE_RAM;
+-struct memory_ranges usablemem_rgns = {};
++/* memory ranges on crashed kernel */
++static struct memory_range crash_memory_ranges[CRASH_MAX_MEMORY_RANGES];
++static struct memory_ranges crash_memory_rgns = {
++	.size = 0,
++	.max_size = CRASH_MAX_MEMORY_RANGES,
++	.ranges = crash_memory_ranges,
++};
 +
-+	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)))
-+		r->type = RANGE_RAM;
-+	else if (!strncmp(str, IOMEM_RESERVED, strlen(IOMEM_RESERVED)))
-+		r->type = RANGE_RESERVED;
-+	else
-+		return 1;
++/* memory range reserved for crashkernel */
++struct memory_range crash_reserved_mem;
++struct memory_ranges usablemem_rgns = {
++	.size = 0,
++	.max_size = 1,
++	.ranges = &crash_reserved_mem,
++};
 +
- 	r->start = base;
- 	r->end = base + length - 1;
++/*
++ * iomem_range_callback() - callback called for each iomem region
++ * @data: not used
++ * @nr: not used
++ * @str: name of the memory region
++ * @base: start address of the memory region
++ * @length: size of the memory region
++ *
++ * This function is called once for each memory region found in /proc/iomem.
++ * It locates system RAM and crashkernel reserved memory and places these to
++ * variables, respectively, crash_memory_ranges and crash_reserved_mem.
++ */
++
++static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
++				char *str, unsigned long long base,
++				unsigned long long length)
++{
++	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0)
++		return mem_regions_add(&usablemem_rgns,
++				       base, length, RANGE_RAM);
++	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
++		return mem_regions_add(&crash_memory_rgns,
++				       base, length, RANGE_RAM);
++
++	return 0;
++}
  
-@@ -495,7 +503,7 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
- static int get_memory_ranges_iomem(struct memory_range *array,
- 	unsigned int *count)
+ int is_crashkernel_mem_reserved(void)
  {
--	*count = kexec_iomem_for_each_line("System RAM\n",
-+	*count = kexec_iomem_for_each_line(NULL,
- 		get_memory_ranges_iomem_cb, array);
++	if (!crash_reserved_mem.end)
++		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++
++	return crash_reserved_mem.start != crash_reserved_mem.end;
++}
++
++/*
++ * crash_get_memory_ranges() - read system physical memory
++ *
++ * Function reads through system physical memory and stores found memory
++ * regions in crash_memory_ranges.
++ * Regions are sorted in ascending order.
++ *
++ * Returns 0 in case of success and -1 otherwise (errno is set).
++ */
++static int crash_get_memory_ranges(void)
++{
++	/*
++	 * First read all memory regions that can be considered as
++	 * system memory including the crash area.
++	 */
++	if (!usablemem_rgns.size)
++		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++
++	/* allow only a single region for crash dump kernel */
++	if (usablemem_rgns.size != 1) {
++		errno = EINVAL;
++		return -1;
++	}
++
++	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
++
++	if (mem_regions_exclude(&crash_memory_rgns, &crash_reserved_mem)) {
++		fprintf(stderr,
++			"Error: Number of crash memory ranges excedeed the max limit\n");
++		errno = ENOMEM;
++		return -1;
++	}
++
++	/*
++	 * Make sure that the memory regions are sorted.
++	 */
++	mem_regions_sort(&crash_memory_rgns);
++
++	dbgprint_mem_range("Coredump memory ranges",
++			   crash_memory_rgns.ranges, crash_memory_rgns.size);
++
+ 	return 0;
+ }
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index f33c7a2..07a0ed0 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -1,12 +1,22 @@
+ /*
+  * ARM64 crashdump.
++ *
++ * Copyright (c) 2014-2016 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
+  */
  
- 	if (!*count) {
+-#if !defined(CRASHDUMP_ARM64_H)
++#ifndef CRASHDUMP_ARM64_H
+ #define CRASHDUMP_ARM64_H
+ 
+ #include "kexec.h"
+ 
++#define CRASH_MAX_MEMORY_RANGES	32
++
+ extern struct memory_ranges usablemem_rgns;
++extern struct memory_range crash_reserved_mem;
+ 
+-#endif
++#endif /* CRASHDUMP_ARM64_H */
+diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+index 7fd66eb..20cda87 100644
+--- a/kexec/arch/arm64/iomem.h
++++ b/kexec/arch/arm64/iomem.h
+@@ -2,6 +2,7 @@
+ #define IOMEM_H
+ 
+ #define SYSTEM_RAM		"System RAM\n"
++#define CRASH_KERNEL		"Crash kernel\n"
+ #define IOMEM_RESERVED		"reserved\n"
+ 
+ #endif
 -- 
 2.11.0
 
