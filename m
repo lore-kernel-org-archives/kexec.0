@@ -1,12 +1,46 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5888E262.4050208@arm.com>
-Date: Wed, 25 Jan 2017 17:37:38 +0000
-From: James Morse <james.morse@arm.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cWT4B-0002KS-Ai
+ for kexec@lists.infradead.org; Wed, 25 Jan 2017 19:17:13 +0000
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
+ v0PJ9RMb107900
+ for <kexec@lists.infradead.org>; Wed, 25 Jan 2017 14:16:50 -0500
+Received: from e23smtp03.au.ibm.com (e23smtp03.au.ibm.com [202.81.31.145])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 287053cf9f-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 25 Jan 2017 14:16:49 -0500
+Received: from localhost
+ by e23smtp03.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
+ Thu, 26 Jan 2017 05:16:46 +1000
+Received: from d23relay06.au.ibm.com (d23relay06.au.ibm.com [9.185.63.219])
+ by d23dlp01.au.ibm.com (Postfix) with ESMTP id 16D7E2CE8056
+ for <kexec@lists.infradead.org>; Thu, 26 Jan 2017 06:16:45 +1100 (EST)
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay06.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v0PJGaJd26804240
+ for <kexec@lists.infradead.org>; Thu, 26 Jan 2017 06:16:44 +1100
+Received: from d23av01.au.ibm.com (localhost [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v0PJGCDl022522
+ for <kexec@lists.infradead.org>; Thu, 26 Jan 2017 06:16:12 +1100
+Subject: Re: [PATCH v4 2/5] ia64: reuse append_elf_note() and final_note()
+ functions
+References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
+ <148363740554.11570.4870634597647436827.stgit@hbathini.in.ibm.com>
+ <20170106020324.GB2863@dhcp-128-65.nay.redhat.com>
+ <38a7807c-cd95-670d-30d3-c45e7921ea11@linux.vnet.ibm.com>
+ <0748026f-a459-9022-3658-a75cb0633f40@linux.vnet.ibm.com>
+ <CA+8MBb+g604VGLLibB+eOAtF_h1r5mYJRdjaGE8UgWQ+JPGDdg@mail.gmail.com>
+From: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Date: Thu, 26 Jan 2017 00:45:52 +0530
 MIME-Version: 1.0
-Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
-References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
- <20170124085004.3892-4-takahiro.akashi@linaro.org>
-In-Reply-To: <20170124085004.3892-4-takahiro.akashi@linaro.org>
+In-Reply-To: <CA+8MBb+g604VGLLibB+eOAtF_h1r5mYJRdjaGE8UgWQ+JPGDdg@mail.gmail.com>
+Message-Id: <04b96f50-f77d-9446-975f-7d44accfe583@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,115 +49,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-
-Hi Akashi,
-
-On 24/01/17 08:49, AKASHI Takahiro wrote:
-> To protect the memory reserved for crash dump kernel once after loaded,
-> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
-> permissions of the corresponding kernel mappings.
-> 
-> We also have to
-> - put the region in an isolated mapping, and
-> - move copying kexec's control_code_page to machine_kexec_prepare()
-> so that the region will be completely read-only after loading.
-
-
-> Note that the region must reside in linear mapping and have corresponding
-> page structures in order to be potentially freed by shrinking it through
-> /sys/kernel/kexec_crash_size.
-
-Nasty! Presumably you have to build the crash region out of individual page
-mappings so that they can be returned to the slab-allocator one page at a time,
-and still be able to set/clear the valid bits on the remaining chunk.
-(I don't see how that happens in this patch)
-
-debug_pagealloc has to do this too so it can flip the valid bits one page at a
-time. You could change the debug_pagealloc_enabled() value passed in at the top
-__create_pgd_mapping() level to be a needs_per_page_mapping(addr, size) test
-that happens as we build the linear map. (This would save the 3 extra calls to
-__create_pgd_mapping() in __map_memblock())
-
-I'm glad to see you can't resize the region if a crash kernel is loaded!
-
-This secretly-unmapped is the sort of thing that breaks hibernate, it blindly
-assumes pfn_valid() means it can access the page if it wants to. Setting
-PG_Reserved is a quick way to trick it out of doing this, but that would leave
-the crash kernel region un-initialised after resume, while kexec_crash_image
-still has a value.
-I think the best fix for this is to forbid hibernate if kexec_crash_loaded()
-arguing these are mutually-exclusive features, and the protect crash-dump
-feature exists to prevent things like hibernate corrupting the crash region.
-
-
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index bc96c8a7fc79..f7938fecf3ff 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -159,32 +171,20 @@ void machine_kexec(struct kimage *kimage)
->  		kimage->control_code_page);
->  	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
->  		&reboot_code_buffer_phys);
-> -	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
-> -		reboot_code_buffer);
->  	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
->  		arm64_relocate_new_kernel);
->  	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
->  		__func__, __LINE__, arm64_relocate_new_kernel_size,
->  		arm64_relocate_new_kernel_size);
->  
-> -	/*
-> -	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
-> -	 * after the kernel is shut down.
-> -	 */
-> -	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
-> -		arm64_relocate_new_kernel_size);
-> -
-> -	/* Flush the reboot_code_buffer in preparation for its execution. */
-> -	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
-> -	flush_icache_range((uintptr_t)reboot_code_buffer,
-> -		arm64_relocate_new_kernel_size);
+To: Tony Luck <tony.luck@gmail.com>
+Cc: "Yu, Fenghua" <fenghua.yu@intel.com>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, kexec-ml <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
 
 
-> -	/* Flush the kimage list and its buffers. */
-> -	kexec_list_flush(kimage);
-> +	if (kimage != kexec_crash_image) {
-> +		/* Flush the kimage list and its buffers. */
-> +		kexec_list_flush(kimage);
->  
-> -	/* Flush the new image if already in place. */
-> -	if (kimage->head & IND_DONE)
-> -		kexec_segment_flush(kimage);
-> +		/* Flush the new image if already in place. */
-> +		if (kimage->head & IND_DONE)
-> +			kexec_segment_flush(kimage);
-> +	}
+On Tuesday 24 January 2017 11:53 PM, Tony Luck wrote:
+> On Tue, Jan 24, 2017 at 10:11 AM, Hari Bathini
+> <hbathini@linux.vnet.ibm.com> wrote:
+>
+>> Hello IA64 folks,
+>>
+>> Could you please review this patch..?
+> It looks OK in principal.  My lab is in partial disarray at the
+> moment (just got back from a sabbatical) so I can't test
+> build and boot. Have you cross-compiled it (or gotten a success
+> build report from zero-day)?
 
-So for kdump we cleaned the kimage->segment[i].mem regions in
-arch_kexec_protect_crashkres(), so don't need to do it here.
+I haven't gotten a success/failure build report from zero-day. Not sure 
+what to make of it.
+But I did try cross-compiling and it was successful. Should that do?
 
-What about the kimage->head[i] array of list entries that were cleaned by
-kexec_list_flush()? Now we don't clean that for kdump either, but we do pass it
-arm64_relocate_new_kernel() at the end of this function:
-> cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head, kimage_start, 0);
-
-Can we test the IND_DONE_BIT of kimage->head, so that we know that
-arm64_relocate_new_kernel() won't try to walk the unclean list?
-Alternatively we could call kexec_list_flush() in arch_kexec_protect_crashkres()
-too.
+Thanks
+Hari
 
 
-
-Thanks,
-
-James
+> If you have ... then add an Acked-by: Tony Luck <tony.luck@intel.com>
+>
+> -Tony
+>
 
 
 _______________________________________________
