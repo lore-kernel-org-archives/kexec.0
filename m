@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f175.google.com ([209.85.192.175])
+Received: from mail-pf0-f177.google.com ([209.85.192.177])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cWHCg-0006rC-3W
- for kexec@lists.infradead.org; Wed, 25 Jan 2017 06:37:12 +0000
-Received: by mail-pf0-f175.google.com with SMTP id e4so55903709pfg.1
- for <kexec@lists.infradead.org>; Tue, 24 Jan 2017 22:36:49 -0800 (PST)
-Date: Wed, 25 Jan 2017 15:37:00 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v30 04/11] arm64: mm: allow for unmapping memory region
- from kernel mapping
-Message-ID: <20170125063659.GD23406@linaro.org>
-References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
- <20170124085004.3892-3-takahiro.akashi@linaro.org>
- <d83e9567-8d4b-a714-071c-bc134c1f681f@redhat.com>
+ id 1cWHRQ-00045p-Kk
+ for kexec@lists.infradead.org; Wed, 25 Jan 2017 06:52:26 +0000
+Received: by mail-pf0-f177.google.com with SMTP id f144so56218815pfa.2
+ for <kexec@lists.infradead.org>; Tue, 24 Jan 2017 22:52:02 -0800 (PST)
+Subject: Re: [PATCH] /proc/kcore: Update physical address for kcore ram and
+ text
+References: <f951340d2917cdd2a329fae9837a83f2059dc3b2.1485318868.git.panand@redhat.com>
+ <20170125062949.GA3423@dhcp-128-65.nay.redhat.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <c99e8165-1aa7-4bb3-ef6f-7d66020c57dd@redhat.com>
+Date: Wed, 25 Jan 2017 12:21:47 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <d83e9567-8d4b-a714-071c-bc134c1f681f@redhat.com>
+In-Reply-To: <20170125062949.GA3423@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,249 +22,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, anderson@redhat.com, linux-kernel@vger.kernel.org, bhe@redhat.com
 
-On Tue, Jan 24, 2017 at 05:02:20PM +0530, Pratyush Anand wrote:
-> 
-> 
-> On Tuesday 24 January 2017 02:19 PM, AKASHI Takahiro wrote:
-> >The current implementation of create_mapping_late() is only allowed
-> >to modify permission attributes (read-only or read-write) against
-> >the existing kernel mapping.
-> >
-> >In this patch, PAGE_KERNEL_INVALID protection attribute is introduced.
-> >We will now be able to invalidate (or unmap) some part of the existing
-> >kernel mapping by specifying PAGE_KERNEL_INVALID to create_mapping_late().
-> >
-> >This feature will be used in a suceeding kdump patch to protect
-> >the memory reserved for crash dump kernel once after loaded.
-> >
-> >Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >---
-> > arch/arm64/include/asm/mmu.h           |  2 ++
-> > arch/arm64/include/asm/pgtable-hwdef.h |  2 ++
-> > arch/arm64/include/asm/pgtable-prot.h  |  1 +
-> > arch/arm64/include/asm/pgtable.h       |  4 ++++
-> > arch/arm64/mm/mmu.c                    | 29 ++++++++++++++++++++---------
-> > 5 files changed, 29 insertions(+), 9 deletions(-)
-> >
-> >diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-> >index 47619411f0ff..a6c1367527bc 100644
-> >--- a/arch/arm64/include/asm/mmu.h
-> >+++ b/arch/arm64/include/asm/mmu.h
-> >@@ -36,6 +36,8 @@ extern void init_mem_pgprot(void);
-> > extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
-> > 			       unsigned long virt, phys_addr_t size,
-> > 			       pgprot_t prot, bool page_mappings_only);
-> >+extern void create_mapping_late(phys_addr_t phys, unsigned long virt,
-> >+				phys_addr_t size, pgprot_t prot);
-> > extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
-> >
-> > #endif
-> >diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> >index eb0c2bd90de9..e66efec31ca9 100644
-> >--- a/arch/arm64/include/asm/pgtable-hwdef.h
-> >+++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> >@@ -119,6 +119,7 @@
-> > #define PUD_TABLE_BIT		(_AT(pgdval_t, 1) << 1)
-> > #define PUD_TYPE_MASK		(_AT(pgdval_t, 3) << 0)
-> > #define PUD_TYPE_SECT		(_AT(pgdval_t, 1) << 0)
-> >+#define PUD_VALID		PUD_TYPE_SECT
-> >
-> > /*
-> >  * Level 2 descriptor (PMD).
-> >@@ -128,6 +129,7 @@
-> > #define PMD_TYPE_TABLE		(_AT(pmdval_t, 3) << 0)
-> > #define PMD_TYPE_SECT		(_AT(pmdval_t, 1) << 0)
-> > #define PMD_TABLE_BIT		(_AT(pmdval_t, 1) << 1)
-> >+#define PMD_VALID		PMD_TYPE_SECT
-> >
-> > /*
-> >  * Section
-> >diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-> >index 2142c7726e76..945d84cd5df7 100644
-> >--- a/arch/arm64/include/asm/pgtable-prot.h
-> >+++ b/arch/arm64/include/asm/pgtable-prot.h
-> >@@ -54,6 +54,7 @@
-> > #define PAGE_KERNEL_ROX		__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_RDONLY)
-> > #define PAGE_KERNEL_EXEC	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE)
-> > #define PAGE_KERNEL_EXEC_CONT	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_CONT)
-> >+#define PAGE_KERNEL_INVALID	__pgprot(0)
-> >
-> > #define PAGE_HYP		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
-> > #define PAGE_HYP_EXEC		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
-> >diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> >index ffbb9a520563..1904a7c07018 100644
-> >--- a/arch/arm64/include/asm/pgtable.h
-> >+++ b/arch/arm64/include/asm/pgtable.h
-> >@@ -364,6 +364,8 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
-> >
-> > #define pmd_bad(pmd)		(!(pmd_val(pmd) & PMD_TABLE_BIT))
-> >
-> >+#define pmd_valid(pmd)		(!!(pmd_val(pmd) & PMD_VALID))
-> >+
-> > #define pmd_table(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
-> > 				 PMD_TYPE_TABLE)
-> > #define pmd_sect(pmd)		((pmd_val(pmd) & PMD_TYPE_MASK) == \
-> >@@ -428,6 +430,7 @@ static inline phys_addr_t pmd_page_paddr(pmd_t pmd)
-> >
-> > #define pud_none(pud)		(!pud_val(pud))
-> > #define pud_bad(pud)		(!(pud_val(pud) & PUD_TABLE_BIT))
-> >+#define pud_valid(pud)		(!!(pud_val(pud) & PUD_VALID))
-> 
-> This will break compilation for CONFIG_PGTABLE_LEVELS <= 2
+Hi Dave,
 
-Ah, yes. A quick fix is as follows:
+On Wednesday 25 January 2017 11:59 AM, Dave Young wrote:
+> Hi Pratyush
+> On 01/25/17 at 10:14am, Pratyush Anand wrote:
+>> Currently all the p_paddr of PT_LOAD headers are assigned to 0, which is
+>> not true and could be misleading, since 0 is a valid physical address.
+> I do not know the history of /proc/kcore, so a question is why the
+> p_addr was set as 0, if there were some reasons and if this could cause
+> some risk or breakage.
+>
 
-===8<===
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 1904a7c07018..dc11d4bf332c 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -467,6 +467,8 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
- 
- #else
- 
-+#define pud_valid(pud)		(1)
-+
- #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
- 
- /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
-@@ -520,6 +522,8 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
- 
- #else
- 
-+#define pgd_valid(pgd)		(1)
-+
- #define pgd_page_paddr(pgd)	({ BUILD_BUG(); 0;})
- 
- /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
-===>8===
+I do not know why it was 0, which is a valid physical address. But 
+certainly, it might break some user space tools, and those need to be 
+fixed. For example, see following code from kexec-tools
 
-Now I've confirmed that it compiles under the configuration with
-    * 4KB page x 39, 48-bit address space
-    * 64KB page x 42, 48-bit address space
-and also verified a crash dump image for 64KB x 42/48b cases.
+kexec/kexec-elf.c:build_mem_phdrs()
 
-> > #define pud_present(pud)	(pud_val(pud))
-> >
-> > static inline void set_pud(pud_t *pudp, pud_t pud)
-> >@@ -481,6 +484,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
-> >
-> > #define pgd_none(pgd)		(!pgd_val(pgd))
-> > #define pgd_bad(pgd)		(!(pgd_val(pgd) & 2))
-> >+#define pgd_valid(pgd)		(!!(pgd_val(pgd) & 1))
-> 
-> This has not been used anywhere.
+435                 if ((phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
+436                         /* The memory address wraps */
+437                         if (probe_debug) {
+438                                 fprintf(stderr, "ELF address wrap 
+around\n");
+439                         }
+440                         return -1;
+441                 }
 
-Well, this patch actually also breaks ptdump (debugfs/kernel_page_tables)
-as a descriptor can be non-zero yet invalid after applying this patch.
-Once it is accepted, I will post another patch which will fix the issue.
-pgd_valid() is used in that patch.
+We do not need to perform above check for an invalid physical address.
 
-Thanks,
--Takahiro AKASHI
+I think, kexec-tools and makedumpfile will need fixup. I already have 
+those fixup which will be sent upstream once this patch makes through.
+Pro with this approach is that, it will help to calculate variable like 
+page_offset, phys_base from PT_LOAD even when they are randomized and 
+therefore will reduce many variable and version specific values in user 
+space tools.
 
-> > #define pgd_present(pgd)	(pgd_val(pgd))
-> >
-> > static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
-> >diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> >index 17243e43184e..9c7adcce8e4e 100644
-> >--- a/arch/arm64/mm/mmu.c
-> >+++ b/arch/arm64/mm/mmu.c
-> >@@ -133,7 +133,8 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
-> > 		 * Set the contiguous bit for the subsequent group of PTEs if
-> > 		 * its size and alignment are appropriate.
-> > 		 */
-> >-		if (((addr | PFN_PHYS(pfn)) & ~CONT_PTE_MASK) == 0) {
-> >+		if ((pgprot_val(prot) & PTE_VALID) &&
-> >+		    (((addr | PFN_PHYS(pfn)) & ~CONT_PTE_MASK) == 0)) {
-> > 			if (end - addr >= CONT_PTE_SIZE && !page_mappings_only)
-> > 				__prot = __pgprot(pgprot_val(prot) | PTE_CONT);
-> > 			else
-> >@@ -147,7 +148,8 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
-> > 		 * After the PTE entry has been populated once, we
-> > 		 * only allow updates to the permission attributes.
-> > 		 */
-> >-		BUG_ON(!pgattr_change_is_safe(pte_val(old_pte), pte_val(*pte)));
-> >+		BUG_ON(pte_valid(old_pte) && pte_valid(*pte) &&
-> >+		       !pgattr_change_is_safe(pte_val(old_pte), pte_val(*pte)));
-> >
-> > 	} while (pte++, addr += PAGE_SIZE, addr != end);
-> >
-> >@@ -190,7 +192,8 @@ static void alloc_init_pmd(pud_t *pud, unsigned long addr, unsigned long end,
-> > 			 * Set the contiguous bit for the subsequent group of
-> > 			 * PMDs if its size and alignment are appropriate.
-> > 			 */
-> >-			if (((addr | phys) & ~CONT_PMD_MASK) == 0) {
-> >+			if ((pgprot_val(prot) | PMD_VALID) &&
-> >+			    ((addr | phys) & ~CONT_PMD_MASK) == 0) {
-> > 				if (end - addr >= CONT_PMD_SIZE)
-> > 					__prot = __pgprot(pgprot_val(prot) |
-> > 							  PTE_CONT);
-> >@@ -203,7 +206,8 @@ static void alloc_init_pmd(pud_t *pud, unsigned long addr, unsigned long end,
-> > 			 * After the PMD entry has been populated once, we
-> > 			 * only allow updates to the permission attributes.
-> > 			 */
-> >-			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
-> >+			BUG_ON(pmd_valid(old_pmd) && pmd_valid(*pmd) &&
-> >+			       !pgattr_change_is_safe(pmd_val(old_pmd),
-> > 						      pmd_val(*pmd)));
-> > 		} else {
-> > 			alloc_init_pte(pmd, addr, next, __phys_to_pfn(phys),
-> >@@ -263,7 +267,8 @@ static void alloc_init_pud(pgd_t *pgd, unsigned long addr, unsigned long end,
-> > 			 * After the PUD entry has been populated once, we
-> > 			 * only allow updates to the permission attributes.
-> > 			 */
-> >-			BUG_ON(!pgattr_change_is_safe(pud_val(old_pud),
-> >+			BUG_ON(pud_valid(old_pud) && pud_valid(*pud) &&
-> >+			       !pgattr_change_is_safe(pud_val(old_pud),
-> > 						      pud_val(*pud)));
-> > 		} else {
-> > 			alloc_init_pmd(pud, addr, next, phys, prot,
-> >@@ -344,8 +349,8 @@ void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
-> > 			     pgd_pgtable_alloc, page_mappings_only);
-> > }
-> >
-> >-static void create_mapping_late(phys_addr_t phys, unsigned long virt,
-> >-				  phys_addr_t size, pgprot_t prot)
-> >+void create_mapping_late(phys_addr_t phys, unsigned long virt,
-> >+			 phys_addr_t size, pgprot_t prot)
-> > {
-> > 	if (virt < VMALLOC_START) {
-> > 		pr_warn("BUG: not creating mapping for %pa at 0x%016lx - outside kernel range\n",
-> >@@ -791,14 +796,20 @@ int __init arch_ioremap_pmd_supported(void)
-> > int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
-> > {
-> > 	BUG_ON(phys & ~PUD_MASK);
-> >-	set_pud(pud, __pud(phys | PUD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
-> >+	set_pud(pud, __pud(phys |
-> >+			   ((pgprot_val(prot) & PUD_VALID) ?
-> >+					PUD_TYPE_SECT : 0) |
-> >+			   pgprot_val(mk_sect_prot(prot))));
-> > 	return 1;
-> > }
-> >
-> > int pmd_set_huge(pmd_t *pmd, phys_addr_t phys, pgprot_t prot)
-> > {
-> > 	BUG_ON(phys & ~PMD_MASK);
-> >-	set_pmd(pmd, __pmd(phys | PMD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
-> >+	set_pmd(pmd, __pmd(phys |
-> >+			   ((pgprot_val(prot) & PMD_VALID) ?
-> >+					PMD_TYPE_SECT : 0) |
-> >+			   pgprot_val(mk_sect_prot(prot))));
-> > 	return 1;
-> > }
-> >
-> >
-> 
-> 
-> ~Pratyush
+~Pratyush
 
 _______________________________________________
 kexec mailing list
