@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5888C924.9080100@arm.com>
-Date: Wed, 25 Jan 2017 15:49:56 +0000
+Message-ID: <5888E262.4050208@arm.com>
+Date: Wed, 25 Jan 2017 17:37:38 +0000
 From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v30 04/11] arm64: mm: allow for unmapping memory region
- from kernel mapping
+Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
 References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
- <20170124085004.3892-3-takahiro.akashi@linaro.org>
-In-Reply-To: <20170124085004.3892-3-takahiro.akashi@linaro.org>
+ <20170124085004.3892-4-takahiro.akashi@linaro.org>
+In-Reply-To: <20170124085004.3892-4-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,82 +25,100 @@ Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.dea
 Hi Akashi,
 
 On 24/01/17 08:49, AKASHI Takahiro wrote:
-> The current implementation of create_mapping_late() is only allowed
-> to modify permission attributes (read-only or read-write) against
-> the existing kernel mapping.
+> To protect the memory reserved for crash dump kernel once after loaded,
+> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
+> permissions of the corresponding kernel mappings.
 > 
-> In this patch, PAGE_KERNEL_INVALID protection attribute is introduced.
-> We will now be able to invalidate (or unmap) some part of the existing
-
-Can we stick to calling this 'unmap', otherwise 'invalidate this page range'
-becomes ambiguous, cache maintenance or page-table manipulation?!
-
-
-> kernel mapping by specifying PAGE_KERNEL_INVALID to create_mapping_late().
-> 
-> This feature will be used in a suceeding kdump patch to protect
-> the memory reserved for crash dump kernel once after loaded.
-
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 17243e43184e..9c7adcce8e4e 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -190,7 +192,8 @@ static void alloc_init_pmd(pud_t *pud, unsigned long addr, unsigned long end,
->  			 * Set the contiguous bit for the subsequent group of
->  			 * PMDs if its size and alignment are appropriate.
->  			 */
-> -			if (((addr | phys) & ~CONT_PMD_MASK) == 0) {
-
-> +			if ((pgprot_val(prot) | PMD_VALID) &&
-
-& PMD_VALID?
+> We also have to
+> - put the region in an isolated mapping, and
+> - move copying kexec's control_code_page to machine_kexec_prepare()
+> so that the region will be completely read-only after loading.
 
 
-> +			    ((addr | phys) & ~CONT_PMD_MASK) == 0) {
->  				if (end - addr >= CONT_PMD_SIZE)
->  					__prot = __pgprot(pgprot_val(prot) |
->  							  PTE_CONT);
-> @@ -203,7 +206,8 @@ static void alloc_init_pmd(pud_t *pud, unsigned long addr, unsigned long end,
->  			 * After the PMD entry has been populated once, we
->  			 * only allow updates to the permission attributes.
->  			 */
-> -			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
-> +			BUG_ON(pmd_valid(old_pmd) && pmd_valid(*pmd) &&
-> +			       !pgattr_change_is_safe(pmd_val(old_pmd),
->  						      pmd_val(*pmd)));
+> Note that the region must reside in linear mapping and have corresponding
+> page structures in order to be potentially freed by shrinking it through
+> /sys/kernel/kexec_crash_size.
 
-Could you add PTE_VALID checks to pgattr_change_is_safe() instead of at every
-call? I think (old == 0 || new == 0) is probably doing something similar.
+Nasty! Presumably you have to build the crash region out of individual page
+mappings so that they can be returned to the slab-allocator one page at a time,
+and still be able to set/clear the valid bits on the remaining chunk.
+(I don't see how that happens in this patch)
 
+debug_pagealloc has to do this too so it can flip the valid bits one page at a
+time. You could change the debug_pagealloc_enabled() value passed in at the top
+__create_pgd_mapping() level to be a needs_per_page_mapping(addr, size) test
+that happens as we build the linear map. (This would save the 3 extra calls to
+__create_pgd_mapping() in __map_memblock())
 
->  		} else {
->  			alloc_init_pte(pmd, addr, next, __phys_to_pfn(phys),
-> @@ -791,14 +796,20 @@ int __init arch_ioremap_pmd_supported(void)
->  int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
->  {
->  	BUG_ON(phys & ~PUD_MASK);
-> -	set_pud(pud, __pud(phys | PUD_TYPE_SECT | pgprot_val(mk_sect_prot(prot))));
-> +	set_pud(pud, __pud(phys |
-> +			   ((pgprot_val(prot) & PUD_VALID) ?
-> +					PUD_TYPE_SECT : 0) |
-> +			   pgprot_val(mk_sect_prot(prot))));
+I'm glad to see you can't resize the region if a crash kernel is loaded!
 
-This looks complicated. Is this equivalent?:
-
->    prot = mk_sect_prot(prot);
->    if (pgprot_val(prot) & PUD_VALID)
->        prot |= PUD_TYPE_SECT;
->
->    set_pud(pud, __pud(phys | pgprot_val(prot)));
+This secretly-unmapped is the sort of thing that breaks hibernate, it blindly
+assumes pfn_valid() means it can access the page if it wants to. Setting
+PG_Reserved is a quick way to trick it out of doing this, but that would leave
+the crash kernel region un-initialised after resume, while kexec_crash_image
+still has a value.
+I think the best fix for this is to forbid hibernate if kexec_crash_loaded()
+arguing these are mutually-exclusive features, and the protect crash-dump
+feature exists to prevent things like hibernate corrupting the crash region.
 
 
-Given you defined PUD_VALID as being PUD_TYPE_SECT, I think you can then reduce
-it to:
->    set_pud(pud, __pud(phys | pgprot_val(mk_sect_prot(prot))));
+> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> index bc96c8a7fc79..f7938fecf3ff 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -159,32 +171,20 @@ void machine_kexec(struct kimage *kimage)
+>  		kimage->control_code_page);
+>  	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
+>  		&reboot_code_buffer_phys);
+> -	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
+> -		reboot_code_buffer);
+>  	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
+>  		arm64_relocate_new_kernel);
+>  	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
+>  		__func__, __LINE__, arm64_relocate_new_kernel_size,
+>  		arm64_relocate_new_kernel_size);
+>  
+> -	/*
+> -	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
+> -	 * after the kernel is shut down.
+> -	 */
+> -	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
+> -		arm64_relocate_new_kernel_size);
+> -
+> -	/* Flush the reboot_code_buffer in preparation for its execution. */
+> -	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
+> -	flush_icache_range((uintptr_t)reboot_code_buffer,
+> -		arm64_relocate_new_kernel_size);
 
-It looks like mk_sect_prot() doesn't touch the valid bit so all this is doing is
-clearing the table bit making it a section and keeping the valid bit from the
-caller.
+
+
+> -	/* Flush the kimage list and its buffers. */
+> -	kexec_list_flush(kimage);
+> +	if (kimage != kexec_crash_image) {
+> +		/* Flush the kimage list and its buffers. */
+> +		kexec_list_flush(kimage);
+>  
+> -	/* Flush the new image if already in place. */
+> -	if (kimage->head & IND_DONE)
+> -		kexec_segment_flush(kimage);
+> +		/* Flush the new image if already in place. */
+> +		if (kimage->head & IND_DONE)
+> +			kexec_segment_flush(kimage);
+> +	}
+
+So for kdump we cleaned the kimage->segment[i].mem regions in
+arch_kexec_protect_crashkres(), so don't need to do it here.
+
+What about the kimage->head[i] array of list entries that were cleaned by
+kexec_list_flush()? Now we don't clean that for kdump either, but we do pass it
+arm64_relocate_new_kernel() at the end of this function:
+> cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head, kimage_start, 0);
+
+Can we test the IND_DONE_BIT of kimage->head, so that we know that
+arm64_relocate_new_kernel() won't try to walk the unclean list?
+Alternatively we could call kexec_list_flush() in arch_kexec_protect_crashkres()
+too.
+
 
 
 Thanks,
