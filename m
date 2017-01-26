@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cWhCb-0007Hh-51
- for kexec@lists.infradead.org; Thu, 26 Jan 2017 10:22:51 +0000
-Date: Thu, 26 Jan 2017 11:22:19 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4] kexec: implemented XEN KEXEC STATUS to determine if
- an image is loaded
-Message-ID: <20170126102219.GA25761@verge.net.au>
-References: <1485358275-11304-1-git-send-email-eric.devolder@oracle.com>
- <20170125230248.GM16671@olila.local.net-space.pl>
+Received: from mail-pf0-f173.google.com ([209.85.192.173])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cWiDw-0002Nx-El
+ for kexec@lists.infradead.org; Thu, 26 Jan 2017 11:28:18 +0000
+Received: by mail-pf0-f173.google.com with SMTP id e4so64987412pfg.1
+ for <kexec@lists.infradead.org>; Thu, 26 Jan 2017 03:27:55 -0800 (PST)
+Date: Thu, 26 Jan 2017 20:28:12 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
+Message-ID: <20170126112811.GG23406@linaro.org>
+References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
+ <20170124085004.3892-4-takahiro.akashi@linaro.org>
+ <5888E262.4050208@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170125230248.GM16671@olila.local.net-space.pl>
+In-Reply-To: <5888E262.4050208@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,161 +27,154 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: andrew.cooper3@citrix.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, xen-devel@lists.xenproject.org, konrad.wilk@oracle.com
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Thu, Jan 26, 2017 at 12:02:48AM +0100, Daniel Kiper wrote:
-> On Wed, Jan 25, 2017 at 09:31:15AM -0600, Eric DeVolder wrote:
+James,
+
+I will try to revisit your comments later, but quick replies now
+
+On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
+> Hi Akashi,
 > 
-> [...]
+> On 24/01/17 08:49, AKASHI Takahiro wrote:
+> > To protect the memory reserved for crash dump kernel once after loaded,
+> > arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
+> > permissions of the corresponding kernel mappings.
+> > 
+> > We also have to
+> > - put the region in an isolated mapping, and
+> > - move copying kexec's control_code_page to machine_kexec_prepare()
+> > so that the region will be completely read-only after loading.
 > 
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index 500e5a9..ec16247 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -51,6 +51,9 @@
-> >  #include "kexec-lzma.h"
-> >  #include <arch/options.h>
-> >
-> > +#define KEXEC_LOADED_PATH "/sys/kernel/kexec_loaded"
-> > +#define KEXEC_CRASH_LOADED_PATH "/sys/kernel/kexec_crash_loaded"
-> > +
-> >  unsigned long long mem_min = 0;
-> >  unsigned long long mem_max = ULONG_MAX;
-> >  static unsigned long kexec_flags = 0;
-> > @@ -890,8 +893,6 @@ static int my_exec(void)
-> >  	return -1;
-> >  }
-> >
-> > -static int kexec_loaded(void);
+> 
+> > Note that the region must reside in linear mapping and have corresponding
+> > page structures in order to be potentially freed by shrinking it through
+> > /sys/kernel/kexec_crash_size.
+> 
+> Nasty! Presumably you have to build the crash region out of individual page
+> mappings,
+
+This might be an alternative, but
+
+> so that they can be returned to the slab-allocator one page at a time,
+> and still be able to set/clear the valid bits on the remaining chunk.
+> (I don't see how that happens in this patch)
+
+As far as shrinking feature is concerned, I believe, crash_shrink_memory(),
+which eventually calls free_reserved_page(), will take care of all the things
+to do. I can see increased number of "MemFree" in /proc/meminfo.
+(Please note that the region is memblock_reserve()'d at boot time.)
+
+> debug_pagealloc has to do this too so it can flip the valid bits one page at a
+> time. You could change the debug_pagealloc_enabled() value passed in at the top
+> __create_pgd_mapping() level to be a needs_per_page_mapping(addr, size) test
+> that happens as we build the linear map. (This would save the 3 extra calls to
+> __create_pgd_mapping() in __map_memblock())
+> 
+> I'm glad to see you can't resize the region if a crash kernel is loaded!
+> 
+> This secretly-unmapped is the sort of thing that breaks hibernate, it blindly
+> assumes pfn_valid() means it can access the page if it wants to. Setting
+> PG_Reserved is a quick way to trick it out of doing this, but that would leave
+> the crash kernel region un-initialised after resume, while kexec_crash_image
+> still has a value.
+
+Ouch, I didn't notice this issue.
+
+> I think the best fix for this is to forbid hibernate if kexec_crash_loaded()
+> arguing these are mutually-exclusive features, and the protect crash-dump
+> feature exists to prevent things like hibernate corrupting the crash region.
+
+This restriction is really painful.
+Is there any hibernation hook that will be invoked before suspending and
+after resuming? If so, arch_kexec_unprotect_crashkres()/protect_crashkres()
+will be able to be called.
+
+Or if "read-only (without unmapping)" approach would be acceptable, 
+those two features might be no longer mutually-exclusive.
+
+> 
+> 
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index bc96c8a7fc79..f7938fecf3ff 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -159,32 +171,20 @@ void machine_kexec(struct kimage *kimage)
+> >  		kimage->control_code_page);
+> >  	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
+> >  		&reboot_code_buffer_phys);
+> > -	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
+> > -		reboot_code_buffer);
+> >  	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
+> >  		arm64_relocate_new_kernel);
+> >  	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
+> >  		__func__, __LINE__, arm64_relocate_new_kernel_size,
+> >  		arm64_relocate_new_kernel_size);
+> >  
+> > -	/*
+> > -	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
+> > -	 * after the kernel is shut down.
+> > -	 */
+> > -	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
+> > -		arm64_relocate_new_kernel_size);
 > > -
-> >  static int load_jump_back_helper_image(unsigned long kexec_flags, void *entry)
-> >  {
-> >  	int result;
-> > @@ -902,6 +903,40 @@ static int load_jump_back_helper_image(unsigned long kexec_flags, void *entry)
-> >  	return result;
-> >  }
-> >
-> > +static int kexec_loaded(const char *file)
-> > +{
-> > +	long ret = -1;
-> > +	FILE *fp;
-> > +	char *p;
-> > +	char line[3];
-> > +
-> > +	/* No way to tell if an image is loaded under Xen, assume it is. */
-> > +	if (xen_present())
-> > +		return 1;
-> > +
-> > +	fp = fopen(file, "r");
-> > +	if (fp == NULL)
-> > +		return -1;
-> > +
-> > +	p = fgets(line, sizeof(line), fp);
-> > +	fclose(fp);
-> > +
-> > +	if (p == NULL)
-> > +		return -1;
-> > +
-> > +	ret = strtol(line, &p, 10);
-> > +
-> > +	/* Too long */
-> > +	if (ret > INT_MAX)
-> > +		return -1;
-> > +
-> > +	/* No digits were found */
-> > +	if (p == line)
-> > +		return -1;
-> > +
-> > +	return (int)ret;
-> > +}
-> > +
-> >  /*
-> >   *	Jump back to the original kernel
-> >   */
-> > @@ -909,7 +944,7 @@ static int my_load_jump_back_helper(unsigned long kexec_flags, void *entry)
-> >  {
-> >  	int result;
-> >
-> > -	if (kexec_loaded()) {
-> > +	if (kexec_loaded(KEXEC_LOADED_PATH)) {
-> >  		fprintf(stderr, "There is kexec kernel loaded, make sure "
-> >  			"you are in kexeced kernel.\n");
-> >  		return -1;
-> > @@ -970,6 +1005,7 @@ void usage(void)
-> >  	       "                      to original kernel.\n"
-> >  	       " -s, --kexec-file-syscall Use file based syscall for kexec operation\n"
-> >  	       " -d, --debug           Enable debugging to help spot a failure.\n"
-> > +	       " -S, --status         Return 0 if the type (by default crash) is loaded.\n"
-> >  	       "\n"
-> >  	       "Supported kernel file types and options: \n");
-> >  	for (i = 0; i < file_types; i++) {
-> > @@ -981,40 +1017,30 @@ void usage(void)
-> >  	printf("\n");
-> >  }
-> >
-> > -static int kexec_loaded(void)
-> > +static int k_status(unsigned long kexec_flags)
-> >  {
-> > -	long ret = -1;
-> > -	FILE *fp;
-> > -	char *p;
-> > -	char line[3];
-> > +	int result;
-> > +	long native_arch;
-> > +
-> > +	/* set the arch */
-> > +	native_arch = physical_arch();
-> > +	if (native_arch < 0) {
-> > +		return -1;
+> > -	/* Flush the reboot_code_buffer in preparation for its execution. */
+> > -	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
+> > -	flush_icache_range((uintptr_t)reboot_code_buffer,
+> > -		arm64_relocate_new_kernel_size);
+> 
+> 
+> 
+> > -	/* Flush the kimage list and its buffers. */
+> > -	kexec_list_flush(kimage);
+> > +	if (kimage != kexec_crash_image) {
+> > +		/* Flush the kimage list and its buffers. */
+> > +		kexec_list_flush(kimage);
+> >  
+> > -	/* Flush the new image if already in place. */
+> > -	if (kimage->head & IND_DONE)
+> > -		kexec_segment_flush(kimage);
+> > +		/* Flush the new image if already in place. */
+> > +		if (kimage->head & IND_DONE)
+> > +			kexec_segment_flush(kimage);
 > > +	}
-> > +	kexec_flags |= native_arch;
-> >
-> > -	/* No way to tell if an image is loaded under Xen, assume it is. */
-> >  	if (xen_present())
-> > -		return 1;
-> > -
-> > -	fp = fopen("/sys/kernel/kexec_loaded", "r");
-> > -	if (fp == NULL)
-> > -		return -1;
-> > -
-> > -	p = fgets(line, sizeof(line), fp);
-> > -	fclose(fp);
-> > -
-> > -	if (p == NULL)
-> > -		return -1;
-> > -
-> > -	ret = strtol(line, &p, 10);
-> > -
-> > -	/* Too long */
-> > -	if (ret > INT_MAX)
-> > -		return -1;
-> > -
-> > -	/* No digits were found */
-> > -	if (p == line)
-> > -		return -1;
-> > -
-> > -	return (int)ret;
-> > +		result = xen_kexec_status(kexec_flags);
-> > +	else {
-> > +		if (kexec_flags & KEXEC_ON_CRASH)
-> > +			result = kexec_loaded(KEXEC_CRASH_LOADED_PATH);
-> > +		else
-> > +			result = kexec_loaded(KEXEC_LOADED_PATH);
-> > +	}
-> > +	return result;
-> >  }
 > 
-> Ohhh... This is awful. Have you tried --patience option for "git format-patch"?
-> Does it help? If yes please repost. If it does not let's wait for maintainers
-> opinion about that. Maybe we should leave forward declaration in first patch
-> as is and then move kexec_loaded() in second (as a cleanup).
+> So for kdump we cleaned the kimage->segment[i].mem regions in
+> arch_kexec_protect_crashkres(), so don't need to do it here.
+
+Correct.
+
+> What about the kimage->head[i] array of list entries that were cleaned by
+> kexec_list_flush()? Now we don't clean that for kdump either, but we do pass it
+> arm64_relocate_new_kernel() at the end of this function:
+> > cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head, kimage_start, 0);
+
+Kimage->head holds a list of memory regions that are overlapped
+between the primary kernel and the secondary kernel, but in kedump case,
+the whole memory is isolated and the list should be empty.
+
+That is why kexec_list_flush() is skipped here, but yes,
+"kimage->head" might better be cleaned anyway.
+(I believe, from the past discussions, that cache coherency is still
+maintained in kdump case though.)
+
+> Can we test the IND_DONE_BIT of kimage->head, so that we know that
+> arm64_relocate_new_kernel() won't try to walk the unclean list?
+> Alternatively we could call kexec_list_flush() in arch_kexec_protect_crashkres()
+> too.
+
+So call kexec_list_flush() in machine_kexec() either in kexec or kdump.
+
+Thanks,
+-Takahiro AKASHI
+
 > 
-> Though otherwise LGTM.
-
-It did not seem to help when I tried.
-
-I'm happy with things the way they are and I will apply this patch.
+> 
+> Thanks,
+> 
+> James
+> 
 
 _______________________________________________
 kexec mailing list
