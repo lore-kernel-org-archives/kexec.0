@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f181.google.com ([209.85.192.181])
+Received: from mail-pf0-f178.google.com ([209.85.192.178])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cX8h7-0002IN-Ew
- for kexec@lists.infradead.org; Fri, 27 Jan 2017 15:44:12 +0000
-Received: by mail-pf0-f181.google.com with SMTP id 189so74228489pfu.3
- for <kexec@lists.infradead.org>; Fri, 27 Jan 2017 07:43:48 -0800 (PST)
-Date: Sat, 28 Jan 2017 00:42:20 +0900
+ id 1cXA8x-0003nt-RI
+ for kexec@lists.infradead.org; Fri, 27 Jan 2017 17:17:03 +0000
+Received: by mail-pf0-f178.google.com with SMTP id 189so74699106pfu.3
+ for <kexec@lists.infradead.org>; Fri, 27 Jan 2017 09:16:39 -0800 (PST)
+Date: Sat, 28 Jan 2017 02:15:16 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
-Message-ID: <20170127154217.GA4113@fireball>
+Message-ID: <20170127171513.GA3119@fireball>
 References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
  <20170124085004.3892-4-takahiro.akashi@linaro.org>
- <588B5229.60509@arm.com>
+ <5888E262.4050208@arm.com> <20170126112811.GG23406@linaro.org>
+ <588B2CC4.70904@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <588B5229.60509@arm.com>
+In-Reply-To: <588B2CC4.70904@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,169 +33,184 @@ Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.dea
 
 James,
 
-On Fri, Jan 27, 2017 at 01:59:05PM +0000, James Morse wrote:
+On Fri, Jan 27, 2017 at 11:19:32AM +0000, James Morse wrote:
 > Hi Akashi,
 > 
-> On 24/01/17 08:49, AKASHI Takahiro wrote:
-> > To protect the memory reserved for crash dump kernel once after loaded,
-> > arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
-> > permissions of the corresponding kernel mappings.
+> On 26/01/17 11:28, AKASHI Takahiro wrote:
+> > On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
+> >> On 24/01/17 08:49, AKASHI Takahiro wrote:
+> >>> To protect the memory reserved for crash dump kernel once after loaded,
+> >>> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
+> >>> permissions of the corresponding kernel mappings.
+> >>>
+> >>> We also have to
+> >>> - put the region in an isolated mapping, and
+> >>> - move copying kexec's control_code_page to machine_kexec_prepare()
+> >>> so that the region will be completely read-only after loading.
+> >>
+> >>
+> >>> Note that the region must reside in linear mapping and have corresponding
+> >>> page structures in order to be potentially freed by shrinking it through
+> >>> /sys/kernel/kexec_crash_size.
+> >>
+> >> Nasty! Presumably you have to build the crash region out of individual page
+> >> mappings,
 > > 
-> > We also have to
-> > - put the region in an isolated mapping, and
+> > This might be an alternative, but
+> > 
+> >> so that they can be returned to the slab-allocator one page at a time,
+> >> and still be able to set/clear the valid bits on the remaining chunk.
+> >> (I don't see how that happens in this patch)
+> > 
+> > As far as shrinking feature is concerned, I believe, crash_shrink_memory(),
+> > which eventually calls free_reserved_page(), will take care of all the things
+> > to do. I can see increased number of "MemFree" in /proc/meminfo.
 > 
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index 9c7adcce8e4e..2d4a0b68a852 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/errno.h>
-> >  #include <linux/init.h>
-> > +#include <linux/kexec.h>
-> >  #include <linux/libfdt.h>
-> >  #include <linux/mman.h>
-> >  #include <linux/nodemask.h>
-> > @@ -367,6 +368,39 @@ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end
-> >  	unsigned long kernel_start = __pa(_text);
-> >  	unsigned long kernel_end = __pa(__init_begin);
-> >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +	/*
-> > +	 * While crash dump kernel memory is contained in a single memblock
-> > +	 * for now, it should appear in an isolated mapping so that we can
-> > +	 * independently unmap the region later.
-> > +	 */
-> > +	if (crashk_res.end && crashk_res.start >= start &&
-> > +	    crashk_res.end <= end) {
-> > +		if (crashk_res.start != start)
-> > +			__create_pgd_mapping(pgd, start, __phys_to_virt(start),
-> > +					     crashk_res.start - start,
-> > +					     PAGE_KERNEL,
-> > +					     early_pgtable_alloc,
-> > +					     debug_pagealloc_enabled());
-> > +
-> > +		/* before kexec_load(), the region can be read-writable. */
-> > +		__create_pgd_mapping(pgd, crashk_res.start,
-> > +				     __phys_to_virt(crashk_res.start),
-> > +				     crashk_res.end - crashk_res.start + 1,
-> > +				     PAGE_KERNEL, early_pgtable_alloc,
-> > +				     debug_pagealloc_enabled());
-> > +
-> > +		if (crashk_res.end != end)
-> > +			__create_pgd_mapping(pgd, crashk_res.end + 1,
-> > +					     __phys_to_virt(crashk_res.end + 1),
-> > +					     end - crashk_res.end - 1,
-> > +					     PAGE_KERNEL,
-> > +					     early_pgtable_alloc,
-> > +					     debug_pagealloc_enabled());
+> Except for arch specific stuff like reformatting the page tables. Maybe I've
+> overlooked the way out this. What happens with this scenario:
 > 
-> > +		return;
+> We boot with crashkernel=1G on the commandline.
+> Memblock_reserve allocates a naturally aligned 1GB block of memory for the crash
+> region.
+> Your code in __map_memblock() calls __create_pgd_mapping() ->
+> alloc_init_pud() which decides use_1G_block() looks like a good idea.
 > 
-> Doesn't this mean we skip all the 'does this overlap with the kernel text' tests
-> that happen further down in this file?
+> Some time later, the user decides to free half of this region,
+> free_reserved_page() does its thing and half of those struct page's now belong
+> to the memory allocator.
+> 
+> Now we load a kdump kernel, which causes arch_kexec_protect_crashkres() to be
+> called for the 512MB region that was left.
+> 
+> create_mapping_late() needs to split the 1GB mapping it originally made into a
+> smaller table, with the first half using PAGE_KERNEL_INVALID, and the second
+> half using PAGE_KERNEL. It can't do break-before-make because these pages may be
+> in-use by another CPU because we gave them back to the memory allocator. (in the
+> worst-possible world, that second half contains our stack!)
 
-You're right. We should still ckeck the overlap against
-[start..crashk_res.start] and [crashk_res.end+1..end].
+Yeah, this is a horrible case.
+Now I understand why we should stick with page_mapping_only option.
 
-(Using memblock_isolate_range() could simplify the code.)
+> 
+> Making this behave more like debug_pagealloc where the region is only built of
+> page-size mappings should avoid this. The smallest change to what you have is to
+> always pass page_mappings_only for the kdump region.
+> 
+> Ideally we just disable this resize feature for ARM64 and support it with some
+> later kernel version, but I can't see a way of doing this without adding Kconfig
+> symbols to other architectures.
+> 
+> 
+> > (Please note that the region is memblock_reserve()'d at boot time.)
+> 
+> And free_reserved_page() does nothing to update memblock, so
+> memblock_is_reserved() says these pages are reserved, but in reality they
+> are in use by the memory allocator. This doesn't feel right.
 
-> (I think this can be fixed by replacing page_mappings_only with something
->  like needs_per_page_mapping(addr, size) called when we try to place a block
->  mapping. needs_per_page_mapping() can then take kdump and debug_pagealloc into
->  account.)
->
-> 
-> I see boot failures on v4.10-rc5, with this series (and your fixup diff for
-> patch 4). I'm using defconfig with 64K pages and 42bit VA on Juno. I pass
-> 'crashkernel=1G':
-> [    0.000000] efi: Getting EFI parameters from FDT:
-> [    0.000000] efi: EFI v2.50 by ARM Juno EFI Nov 24 2015 12:36:35
-> [    0.000000] efi:  ACPI=0xf95b0000  ACPI 2.0=0xf95b0014  PROP=0xfe8db4d8
-> [    0.000000] Reserving 1024MB of memory at 2560MB for crashkernel
-> [    0.000000] cma: Failed to reserve 512 MiB
-> [    0.000000] ------------[ cut here ]------------
-> [    0.000000] kernel BUG at ../arch/arm64/mm/mmu.c:118!
-> [    0.000000] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> [    0.000000] Modules linked in:
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.10.0-rc5-00012-gdd6fe39
-> 0c85d #6873
-> [    0.000000] Hardware name: ARM Juno development board (r1) (DT)
-> [    0.000000] task: fffffc0008e2c900 task.stack: fffffc0008df0000
-> [    0.000000] PC is at __create_pgd_mapping+0x2c8/0x2e8
-> [    0.000000] LR is at paging_init+0x2b0/0x6fc
-> [    0.000000] pc : [<fffffc0008096b20>] lr : [<fffffc0008ce5a60>] pstate: 60000
-> 0c5
-> [    0.000000] sp : fffffc0008df3e20
-> [    0.000000] x29: fffffc0008df3e20 x28: 00e8000000000713
-> [    0.000000] x27: 0000000000000001 x26: 00000000e00f0000
-> [    0.000000] x25: fffffe00794a0000 x24: fffffe00794a0000
-> [    0.000000] x23: fffffe00600f0000 x22: 00e80000e0000711
-> [    0.000000] x21: 0000000000000000 x20: fffffdff7e5e8018
-> [    0.000000] x19: 000000000000e00f x18: 0000000000000000
-> [    0.000000] x17: fffffc0008f61cd0 x16: 0000000000000005
-> [    0.000000] x15: 0000000880000000 x14: 00000000001fffff
-> [    0.000000] x13: 00f8000000000713 x12: fffffc0008e3d000
-> [    0.000000] x11: 0000000000000801 x10: 00e8000000000713
-> [    0.000000] x9 : 0000000000000000 x8 : 0000000000001003
-> [    0.000000] x7 : 0000000000000000 x6 : 0000000000000000
-> [    0.000000] x5 : fffffc0008ce5744 x4 : 00e8000000000713
-> [    0.000000] x3 : fffffe007949ffff x2 : fffffe00e00f0000
-> [    0.000000] x1 : 00e8000000000713 x0 : 0000000000000001
-> [    0.000000]
-> [    0.000000] Process swapper (pid: 0, stack limit = 0xfffffc0008df0000)
-> [    0.000000] Stack: (0xfffffc0008df3e20 to 0xfffffc0008df4000)
-> 
-> [    0.000000] Call trace:
-> 
-> [    0.000000] [<fffffc0008096b20>] __create_pgd_mapping+0x2c8/0x2e8
-> [    0.000000] [<fffffc0008ce5a60>] paging_init+0x2b0/0x6fc
-> [    0.000000] [<fffffc0008ce27d0>] setup_arch+0x1c0/0x5ac
-> [    0.000000] [<fffffc0008ce0838>] start_kernel+0x70/0x394
-> [    0.000000] [<fffffc0008ce01e8>] __primary_switched+0x64/0x6c
-> [    0.000000] Code: f29fefe1 ea01001f 54ffff00 d4210000 (d4210000)
-> [    0.000000] ---[ end trace 0000000000000000 ]---
-> [    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
-> [    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill the idle task!
-> 
-> 
-> Adding some debug shows the crash region was allocated as 0xa0000000:0xdfffffff,
-> and the first memblock to hit __map_memblock() was 0x80000000:0xe0000000.
-> 
-> This causes the end of the crash region to be padded, as 0xdfffffff!=0xe0000000,
-> but your 'crashk_res.end + 1' actually mapped 0xe0000000 to 0xe0000000 with 0
-> size. This causes __create_pgd_mapping() to choke when it next uses 0xe0000000
-> as a start address, as it evidently mapped something when given a 0 size.
-> 
-> You need to round-up crashk_res.end to a a page boundary if it isn't already
-> aligned.
+Just FYI, no other architectures take care of this issue.
 
-The start address is already enforced to be 2MB aligned and the size of
-region (hence start + size) is also page-size aligned. (See patch#3)
-Since crashk_res.end is 'inclusive,' the fix would be
+(and I don't know whether the memblock is reserved or not may have
+any impact after booting.)
 
-> > +		if (crashk_res.end != end)
-> > +			__create_pgd_mapping(pgd, crashk_res.end + 1,
+> (Fortunately we can override crash_free_reserved_phys_range() so this can
+>  probably be fixed)
+> 
+> >> This secretly-unmapped is the sort of thing that breaks hibernate, it blindly
+> >> assumes pfn_valid() means it can access the page if it wants to. Setting
+> >> PG_Reserved is a quick way to trick it out of doing this, but that would leave
+> >> the crash kernel region un-initialised after resume, while kexec_crash_image
+> >> still has a value.
+> > 
+> > Ouch, I didn't notice this issue.
+> > 
+> >> I think the best fix for this is to forbid hibernate if kexec_crash_loaded()
+> >> arguing these are mutually-exclusive features, and the protect crash-dump
+> >> feature exists to prevent things like hibernate corrupting the crash region.
+> > 
+> > This restriction is really painful.
+> > Is there any hibernation hook that will be invoked before suspending and
+> > after resuming? If so, arch_kexec_unprotect_crashkres()/protect_crashkres()
+> > will be able to be called.
+> 
+> Those calls could go in swsusp_arch_suspend() in /arch/arm64/kernel/hibernate.c,
 
-To
-		if ((crashk_res.end + 1) < end)
+I will give it a try next week.
 
-Thanks,
+> but isn't this protect feature supposed to stop things like hibernate from
+> meddling with the region?
+
+It seems that kexec code never expect that the crash kernel memory
+is actually unmapped (as my current patch does).
+Moreover, whether kdump or not, it is quit fragile to unmap some part of
+linear mapping dynamically. I think we probably need to implement kinda
+"memory hotplug" in order to perform such an unmapping without affecting
+other kernel components. 
+
+> (I haven't tested what hibernate does with the crash region as its only just
+> occurred to me)
+> 
+> I think to avoid holding kdump up we should disable any possible interaction,
+> (forbid hibernate if a kdump kernel is loaded), and sort it out later!
+
+There are several options
+- hibernate and kdump need be exclusively configured, or
+- once kdump is loaded, hibernate will fail, or
+- after resuming from hibernate, kdump won't work
+
+The simplest way is to force users to re-load kdump after resuming,
+but it sounds somewhat weird.
+
+> 
+> >>> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> >>> index bc96c8a7fc79..f7938fecf3ff 100644
+> >>> --- a/arch/arm64/kernel/machine_kexec.c
+> >>> +++ b/arch/arm64/kernel/machine_kexec.c
+> >>> @@ -159,32 +171,20 @@ void machine_kexec(struct kimage *kimage)
+> 
+> >>> -	/* Flush the kimage list and its buffers. */
+> >>> -	kexec_list_flush(kimage);
+> >>> +	if (kimage != kexec_crash_image) {
+> >>> +		/* Flush the kimage list and its buffers. */
+> >>> +		kexec_list_flush(kimage);
+> >>>  
+> >>> -	/* Flush the new image if already in place. */
+> >>> -	if (kimage->head & IND_DONE)
+> >>> -		kexec_segment_flush(kimage);
+> >>> +		/* Flush the new image if already in place. */
+> >>> +		if (kimage->head & IND_DONE)
+> >>> +			kexec_segment_flush(kimage);
+> >>> +	}
+> >>
+> >> So for kdump we cleaned the kimage->segment[i].mem regions in
+> >> arch_kexec_protect_crashkres(), so don't need to do it here.
+> > 
+> > Correct.
+> > 
+> >> What about the kimage->head[i] array of list entries that were cleaned by
+> >> kexec_list_flush()? Now we don't clean that for kdump either, but we do pass it
+> >> arm64_relocate_new_kernel() at the end of this function:
+> >>> cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head, kimage_start, 0);
+> > 
+> > Kimage->head holds a list of memory regions that are overlapped
+> > between the primary kernel and the secondary kernel, but in kedump case,
+> > the whole memory is isolated and the list should be empty.
+> 
+> The asm code will still try to walk the list with MMU and caches turned off, so
+> even its "I'm empty" values need cleaning to the PoC.
+> 
+> (it looks like the first value is passed by value, so we could try and be clever
+> by testing for that DONE flag in the first value, but I don't think its worth
+> the effort)
+
+Surely not.
+
 -Takahiro AKASHI
 
-> 
-> 
-> > +	}
-> > +#endif
-> > +
-> >  	/*
-> >  	 * Take care not to create a writable alias for the
-> >  	 * read-only text and rodata sections of the kernel image.
-> > 
 > 
 > Thanks,
 > 
 > James
+> 
 
 _______________________________________________
 kexec mailing list
