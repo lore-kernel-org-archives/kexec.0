@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f178.google.com ([209.85.192.178])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cXA8x-0003nt-RI
- for kexec@lists.infradead.org; Fri, 27 Jan 2017 17:17:03 +0000
-Received: by mail-pf0-f178.google.com with SMTP id 189so74699106pfu.3
- for <kexec@lists.infradead.org>; Fri, 27 Jan 2017 09:16:39 -0800 (PST)
-Date: Sat, 28 Jan 2017 02:15:16 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Date: Fri, 27 Jan 2017 18:56:13 +0000
+From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
-Message-ID: <20170127171513.GA3119@fireball>
+Message-ID: <20170127185612.GA31485@leverpostej>
 References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
  <20170124085004.3892-4-takahiro.akashi@linaro.org>
  <5888E262.4050208@arm.com> <20170126112811.GG23406@linaro.org>
- <588B2CC4.70904@arm.com>
+ <588B2CC4.70904@arm.com> <20170127171513.GA3119@fireball>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <588B2CC4.70904@arm.com>
+In-Reply-To: <20170127171513.GA3119@fireball>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,189 +22,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-James,
+On Sat, Jan 28, 2017 at 02:15:16AM +0900, AKASHI Takahiro wrote:
+> On Fri, Jan 27, 2017 at 11:19:32AM +0000, James Morse wrote:
+> > Hi Akashi,
+> >
+> > On 26/01/17 11:28, AKASHI Takahiro wrote:
+> > > On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
+> > >> On 24/01/17 08:49, AKASHI Takahiro wrote:
+> > >>> To protect the memory reserved for crash dump kernel once after loaded,
+> > >>> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
+> > >>> permissions of the corresponding kernel mappings.
+> > >>>
+> > >>> We also have to
+> > >>> - put the region in an isolated mapping, and
+> > >>> - move copying kexec's control_code_page to machine_kexec_prepare()
+> > >>> so that the region will be completely read-only after loading.
+> > >>
+> > >>
+> > >>> Note that the region must reside in linear mapping and have corresponding
+> > >>> page structures in order to be potentially freed by shrinking it through
+> > >>> /sys/kernel/kexec_crash_size.
 
-On Fri, Jan 27, 2017 at 11:19:32AM +0000, James Morse wrote:
-> Hi Akashi,
-> 
-> On 26/01/17 11:28, AKASHI Takahiro wrote:
-> > On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
-> >> On 24/01/17 08:49, AKASHI Takahiro wrote:
-> >>> To protect the memory reserved for crash dump kernel once after loaded,
-> >>> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
-> >>> permissions of the corresponding kernel mappings.
-> >>>
-> >>> We also have to
-> >>> - put the region in an isolated mapping, and
-> >>> - move copying kexec's control_code_page to machine_kexec_prepare()
-> >>> so that the region will be completely read-only after loading.
-> >>
-> >>
-> >>> Note that the region must reside in linear mapping and have corresponding
-> >>> page structures in order to be potentially freed by shrinking it through
-> >>> /sys/kernel/kexec_crash_size.
-> >>
-> >> Nasty! Presumably you have to build the crash region out of individual page
-> >> mappings,
-> > 
-> > This might be an alternative, but
-> > 
-> >> so that they can be returned to the slab-allocator one page at a time,
-> >> and still be able to set/clear the valid bits on the remaining chunk.
-> >> (I don't see how that happens in this patch)
-> > 
-> > As far as shrinking feature is concerned, I believe, crash_shrink_memory(),
-> > which eventually calls free_reserved_page(), will take care of all the things
-> > to do. I can see increased number of "MemFree" in /proc/meminfo.
-> 
-> Except for arch specific stuff like reformatting the page tables. Maybe I've
-> overlooked the way out this. What happens with this scenario:
-> 
-> We boot with crashkernel=1G on the commandline.
-> Memblock_reserve allocates a naturally aligned 1GB block of memory for the crash
-> region.
-> Your code in __map_memblock() calls __create_pgd_mapping() ->
-> alloc_init_pud() which decides use_1G_block() looks like a good idea.
-> 
-> Some time later, the user decides to free half of this region,
-> free_reserved_page() does its thing and half of those struct page's now belong
-> to the memory allocator.
-> 
-> Now we load a kdump kernel, which causes arch_kexec_protect_crashkres() to be
-> called for the 512MB region that was left.
-> 
-> create_mapping_late() needs to split the 1GB mapping it originally made into a
-> smaller table, with the first half using PAGE_KERNEL_INVALID, and the second
-> half using PAGE_KERNEL. It can't do break-before-make because these pages may be
-> in-use by another CPU because we gave them back to the memory allocator. (in the
-> worst-possible world, that second half contains our stack!)
+Ah; I did not realise that this was a possibility.
 
-Yeah, this is a horrible case.
-Now I understand why we should stick with page_mapping_only option.
+> Now I understand why we should stick with page_mapping_only option.
 
-> 
-> Making this behave more like debug_pagealloc where the region is only built of
-> page-size mappings should avoid this. The smallest change to what you have is to
-> always pass page_mappings_only for the kdump region.
-> 
-> Ideally we just disable this resize feature for ARM64 and support it with some
-> later kernel version, but I can't see a way of doing this without adding Kconfig
-> symbols to other architectures.
-> 
-> 
-> > (Please note that the region is memblock_reserve()'d at boot time.)
-> 
-> And free_reserved_page() does nothing to update memblock, so
-> memblock_is_reserved() says these pages are reserved, but in reality they
-> are in use by the memory allocator. This doesn't feel right.
+Likewise, I now agree.
 
-Just FYI, no other architectures take care of this issue.
+Apologies for guiding you down the wrong path here.
 
-(and I don't know whether the memblock is reserved or not may have
-any impact after booting.)
-
-> (Fortunately we can override crash_free_reserved_phys_range() so this can
->  probably be fixed)
-> 
-> >> This secretly-unmapped is the sort of thing that breaks hibernate, it blindly
-> >> assumes pfn_valid() means it can access the page if it wants to. Setting
-> >> PG_Reserved is a quick way to trick it out of doing this, but that would leave
-> >> the crash kernel region un-initialised after resume, while kexec_crash_image
-> >> still has a value.
-> > 
-> > Ouch, I didn't notice this issue.
-> > 
-> >> I think the best fix for this is to forbid hibernate if kexec_crash_loaded()
-> >> arguing these are mutually-exclusive features, and the protect crash-dump
-> >> feature exists to prevent things like hibernate corrupting the crash region.
-> > 
-> > This restriction is really painful.
-> > Is there any hibernation hook that will be invoked before suspending and
-> > after resuming? If so, arch_kexec_unprotect_crashkres()/protect_crashkres()
-> > will be able to be called.
-> 
-> Those calls could go in swsusp_arch_suspend() in /arch/arm64/kernel/hibernate.c,
-
-I will give it a try next week.
-
-> but isn't this protect feature supposed to stop things like hibernate from
-> meddling with the region?
-
-It seems that kexec code never expect that the crash kernel memory
-is actually unmapped (as my current patch does).
-Moreover, whether kdump or not, it is quit fragile to unmap some part of
-linear mapping dynamically. I think we probably need to implement kinda
-"memory hotplug" in order to perform such an unmapping without affecting
-other kernel components. 
-
-> (I haven't tested what hibernate does with the crash region as its only just
-> occurred to me)
-> 
-> I think to avoid holding kdump up we should disable any possible interaction,
-> (forbid hibernate if a kdump kernel is loaded), and sort it out later!
-
-There are several options
-- hibernate and kdump need be exclusively configured, or
-- once kdump is loaded, hibernate will fail, or
-- after resuming from hibernate, kdump won't work
-
-The simplest way is to force users to re-load kdump after resuming,
-but it sounds somewhat weird.
-
-> 
-> >>> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> >>> index bc96c8a7fc79..f7938fecf3ff 100644
-> >>> --- a/arch/arm64/kernel/machine_kexec.c
-> >>> +++ b/arch/arm64/kernel/machine_kexec.c
-> >>> @@ -159,32 +171,20 @@ void machine_kexec(struct kimage *kimage)
-> 
-> >>> -	/* Flush the kimage list and its buffers. */
-> >>> -	kexec_list_flush(kimage);
-> >>> +	if (kimage != kexec_crash_image) {
-> >>> +		/* Flush the kimage list and its buffers. */
-> >>> +		kexec_list_flush(kimage);
-> >>>  
-> >>> -	/* Flush the new image if already in place. */
-> >>> -	if (kimage->head & IND_DONE)
-> >>> -		kexec_segment_flush(kimage);
-> >>> +		/* Flush the new image if already in place. */
-> >>> +		if (kimage->head & IND_DONE)
-> >>> +			kexec_segment_flush(kimage);
-> >>> +	}
-> >>
-> >> So for kdump we cleaned the kimage->segment[i].mem regions in
-> >> arch_kexec_protect_crashkres(), so don't need to do it here.
-> > 
-> > Correct.
-> > 
-> >> What about the kimage->head[i] array of list entries that were cleaned by
-> >> kexec_list_flush()? Now we don't clean that for kdump either, but we do pass it
-> >> arm64_relocate_new_kernel() at the end of this function:
-> >>> cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head, kimage_start, 0);
-> > 
-> > Kimage->head holds a list of memory regions that are overlapped
-> > between the primary kernel and the secondary kernel, but in kedump case,
-> > the whole memory is isolated and the list should be empty.
-> 
-> The asm code will still try to walk the list with MMU and caches turned off, so
-> even its "I'm empty" values need cleaning to the PoC.
-> 
-> (it looks like the first value is passed by value, so we could try and be clever
-> by testing for that DONE flag in the first value, but I don't think its worth
-> the effort)
-
-Surely not.
-
--Takahiro AKASHI
-
-> 
-> Thanks,
-> 
-> James
-> 
+Thanks,
+Mark.
+IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
 
 _______________________________________________
 kexec mailing list
