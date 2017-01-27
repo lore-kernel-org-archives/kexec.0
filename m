@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 27 Jan 2017 18:56:13 +0000
+Date: Fri, 27 Jan 2017 19:41:14 +0000
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
-Message-ID: <20170127185612.GA31485@leverpostej>
+Message-ID: <20170127194114.GA31865@leverpostej>
 References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
  <20170124085004.3892-4-takahiro.akashi@linaro.org>
- <5888E262.4050208@arm.com> <20170126112811.GG23406@linaro.org>
- <588B2CC4.70904@arm.com> <20170127171513.GA3119@fireball>
+ <588B5229.60509@arm.com> <20170127154217.GA4113@fireball>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170127171513.GA3119@fireball>
+In-Reply-To: <20170127154217.GA4113@fireball>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +23,62 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Sat, Jan 28, 2017 at 02:15:16AM +0900, AKASHI Takahiro wrote:
-> On Fri, Jan 27, 2017 at 11:19:32AM +0000, James Morse wrote:
-> > Hi Akashi,
-> >
-> > On 26/01/17 11:28, AKASHI Takahiro wrote:
-> > > On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
-> > >> On 24/01/17 08:49, AKASHI Takahiro wrote:
-> > >>> To protect the memory reserved for crash dump kernel once after loaded,
-> > >>> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
-> > >>> permissions of the corresponding kernel mappings.
-> > >>>
-> > >>> We also have to
-> > >>> - put the region in an isolated mapping, and
-> > >>> - move copying kexec's control_code_page to machine_kexec_prepare()
-> > >>> so that the region will be completely read-only after loading.
-> > >>
-> > >>
-> > >>> Note that the region must reside in linear mapping and have corresponding
-> > >>> page structures in order to be potentially freed by shrinking it through
-> > >>> /sys/kernel/kexec_crash_size.
+On Sat, Jan 28, 2017 at 12:42:20AM +0900, AKASHI Takahiro wrote:
+> On Fri, Jan 27, 2017 at 01:59:05PM +0000, James Morse wrote:
+> > On 24/01/17 08:49, AKASHI Takahiro wrote:
+> > > +	/*
+> > > +	 * While crash dump kernel memory is contained in a single memblock
+> > > +	 * for now, it should appear in an isolated mapping so that we can
+> > > +	 * independently unmap the region later.
+> > > +	 */
+> > > +	if (crashk_res.end && crashk_res.start >= start &&
+> > > +	    crashk_res.end <= end) {
+> > > +		if (crashk_res.start != start)
+> > > +			__create_pgd_mapping(pgd, start, __phys_to_virt(start),
+> > > +					     crashk_res.start - start,
+> > > +					     PAGE_KERNEL,
+> > > +					     early_pgtable_alloc,
+> > > +					     debug_pagealloc_enabled());
+> > > +
+> > > +		/* before kexec_load(), the region can be read-writable. */
+> > > +		__create_pgd_mapping(pgd, crashk_res.start,
+> > > +				     __phys_to_virt(crashk_res.start),
+> > > +				     crashk_res.end - crashk_res.start + 1,
+> > > +				     PAGE_KERNEL, early_pgtable_alloc,
+> > > +				     debug_pagealloc_enabled());
+> > > +
+> > > +		if (crashk_res.end != end)
+> > > +			__create_pgd_mapping(pgd, crashk_res.end + 1,
+> > > +					     __phys_to_virt(crashk_res.end + 1),
+> > > +					     end - crashk_res.end - 1,
+> > > +					     PAGE_KERNEL,
+> > > +					     early_pgtable_alloc,
+> > > +					     debug_pagealloc_enabled());
+> > 
+> > > +		return;
+> > 
+> > Doesn't this mean we skip all the 'does this overlap with the kernel text' tests
+> > that happen further down in this file?
+> 
+> You're right. We should still ckeck the overlap against
+> [start..crashk_res.start] and [crashk_res.end+1..end].
+> 
+> (Using memblock_isolate_range() could simplify the code.)
 
-Ah; I did not realise that this was a possibility.
+My key concern here was that we handle both of these in the same way, so
+using memblock_isolate_range() for both generally sounds fine to me.
 
-> Now I understand why we should stick with page_mapping_only option.
+One concern I had with using memblock_isolate_range() is that it does
+not guarantee that the region remains isolated. So if there was a
+subsequent memblock_add() call, memblock_merge_regions() might end up
+merging the region with an adjacent region.
 
-Likewise, I now agree.
-
-Apologies for guiding you down the wrong path here.
+If we isolate the regions at the start of map_mem(), and have a comment
+explaining that we must avoid subsequent memblock merging, then I think
+this would be ok.
 
 Thanks,
 Mark.
-IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
 
 _______________________________________________
 kexec mailing list
