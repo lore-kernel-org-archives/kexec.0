@@ -1,21 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f173.google.com ([209.85.192.173])
+Received: from mail-pf0-f174.google.com ([209.85.192.174])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cY7JS-0008BN-NG
- for kexec@lists.infradead.org; Mon, 30 Jan 2017 08:27:48 +0000
-Received: by mail-pf0-f173.google.com with SMTP id f144so88868963pfa.2
- for <kexec@lists.infradead.org>; Mon, 30 Jan 2017 00:27:26 -0800 (PST)
-Date: Mon, 30 Jan 2017 17:27:51 +0900
+ id 1cY7Xg-00052v-Q0
+ for kexec@lists.infradead.org; Mon, 30 Jan 2017 08:42:30 +0000
+Received: by mail-pf0-f174.google.com with SMTP id e4so88665988pfg.1
+ for <kexec@lists.infradead.org>; Mon, 30 Jan 2017 00:42:08 -0800 (PST)
+Date: Mon, 30 Jan 2017 17:42:33 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Subject: Re: [PATCH v30 05/11] arm64: kdump: protect crash dump kernel memory
-Message-ID: <20170130082749.GH23406@linaro.org>
+Message-ID: <20170130084232.GI23406@linaro.org>
 References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
  <20170124085004.3892-4-takahiro.akashi@linaro.org>
  <5888E262.4050208@arm.com> <20170126112811.GG23406@linaro.org>
  <588B2CC4.70904@arm.com> <20170127171513.GA3119@fireball>
+ <20170127185612.GA31485@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170127171513.GA3119@fireball>
+In-Reply-To: <20170127185612.GA31485@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,171 +29,200 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, James Morse <james.morse@arm.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-James,
+Mark,
 
-On Sat, Jan 28, 2017 at 02:15:16AM +0900, AKASHI Takahiro wrote:
-> James,
+On Fri, Jan 27, 2017 at 06:56:13PM +0000, Mark Rutland wrote:
+> On Sat, Jan 28, 2017 at 02:15:16AM +0900, AKASHI Takahiro wrote:
+> > On Fri, Jan 27, 2017 at 11:19:32AM +0000, James Morse wrote:
+> > > Hi Akashi,
+> > >
+> > > On 26/01/17 11:28, AKASHI Takahiro wrote:
+> > > > On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
+> > > >> On 24/01/17 08:49, AKASHI Takahiro wrote:
+> > > >>> To protect the memory reserved for crash dump kernel once after loaded,
+> > > >>> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
+> > > >>> permissions of the corresponding kernel mappings.
+> > > >>>
+> > > >>> We also have to
+> > > >>> - put the region in an isolated mapping, and
+> > > >>> - move copying kexec's control_code_page to machine_kexec_prepare()
+> > > >>> so that the region will be completely read-only after loading.
+> > > >>
+> > > >>
+> > > >>> Note that the region must reside in linear mapping and have corresponding
+> > > >>> page structures in order to be potentially freed by shrinking it through
+> > > >>> /sys/kernel/kexec_crash_size.
 > 
-> On Fri, Jan 27, 2017 at 11:19:32AM +0000, James Morse wrote:
-> > Hi Akashi,
-> > 
-> > On 26/01/17 11:28, AKASHI Takahiro wrote:
-> > > On Wed, Jan 25, 2017 at 05:37:38PM +0000, James Morse wrote:
-> > >> On 24/01/17 08:49, AKASHI Takahiro wrote:
-> > >>> To protect the memory reserved for crash dump kernel once after loaded,
-> > >>> arch_kexec_protect_crashres/unprotect_crashres() are meant to deal with
-> > >>> permissions of the corresponding kernel mappings.
-> > >>>
-> > >>> We also have to
-> > >>> - put the region in an isolated mapping, and
-> > >>> - move copying kexec's control_code_page to machine_kexec_prepare()
-> > >>> so that the region will be completely read-only after loading.
-> > >>
-> > >>
-> > >>> Note that the region must reside in linear mapping and have corresponding
-> > >>> page structures in order to be potentially freed by shrinking it through
-> > >>> /sys/kernel/kexec_crash_size.
-> > >>
-> > >> Nasty! Presumably you have to build the crash region out of individual page
-> > >> mappings,
-> > > 
-> > > This might be an alternative, but
-> > > 
-> > >> so that they can be returned to the slab-allocator one page at a time,
-> > >> and still be able to set/clear the valid bits on the remaining chunk.
-> > >> (I don't see how that happens in this patch)
-> > > 
-> > > As far as shrinking feature is concerned, I believe, crash_shrink_memory(),
-> > > which eventually calls free_reserved_page(), will take care of all the things
-> > > to do. I can see increased number of "MemFree" in /proc/meminfo.
-> > 
-> > Except for arch specific stuff like reformatting the page tables. Maybe I've
-> > overlooked the way out this. What happens with this scenario:
-> > 
-> > We boot with crashkernel=1G on the commandline.
-> > Memblock_reserve allocates a naturally aligned 1GB block of memory for the crash
-> > region.
-> > Your code in __map_memblock() calls __create_pgd_mapping() ->
-> > alloc_init_pud() which decides use_1G_block() looks like a good idea.
-> > 
-> > Some time later, the user decides to free half of this region,
-> > free_reserved_page() does its thing and half of those struct page's now belong
-> > to the memory allocator.
-> > 
-> > Now we load a kdump kernel, which causes arch_kexec_protect_crashkres() to be
-> > called for the 512MB region that was left.
-> > 
-> > create_mapping_late() needs to split the 1GB mapping it originally made into a
-> > smaller table, with the first half using PAGE_KERNEL_INVALID, and the second
-> > half using PAGE_KERNEL. It can't do break-before-make because these pages may be
-> > in-use by another CPU because we gave them back to the memory allocator. (in the
-> > worst-possible world, that second half contains our stack!)
+> Ah; I did not realise that this was a possibility.
 > 
-> Yeah, this is a horrible case.
-> Now I understand why we should stick with page_mapping_only option.
+> > Now I understand why we should stick with page_mapping_only option.
 > 
-> > 
-> > Making this behave more like debug_pagealloc where the region is only built of
-> > page-size mappings should avoid this. The smallest change to what you have is to
-> > always pass page_mappings_only for the kdump region.
-> > 
-> > Ideally we just disable this resize feature for ARM64 and support it with some
-> > later kernel version, but I can't see a way of doing this without adding Kconfig
-> > symbols to other architectures.
-> > 
-> > 
-> > > (Please note that the region is memblock_reserve()'d at boot time.)
-> > 
-> > And free_reserved_page() does nothing to update memblock, so
-> > memblock_is_reserved() says these pages are reserved, but in reality they
-> > are in use by the memory allocator. This doesn't feel right.
+> Likewise, I now agree.
 > 
-> Just FYI, no other architectures take care of this issue.
-> 
-> (and I don't know whether the memblock is reserved or not may have
-> any impact after booting.)
-> 
-> > (Fortunately we can override crash_free_reserved_phys_range() so this can
-> >  probably be fixed)
-> > 
-> > >> This secretly-unmapped is the sort of thing that breaks hibernate, it blindly
-> > >> assumes pfn_valid() means it can access the page if it wants to. Setting
-> > >> PG_Reserved is a quick way to trick it out of doing this, but that would leave
-> > >> the crash kernel region un-initialised after resume, while kexec_crash_image
-> > >> still has a value.
-> > > 
-> > > Ouch, I didn't notice this issue.
-> > > 
-> > >> I think the best fix for this is to forbid hibernate if kexec_crash_loaded()
-> > >> arguing these are mutually-exclusive features, and the protect crash-dump
-> > >> feature exists to prevent things like hibernate corrupting the crash region.
-> > > 
-> > > This restriction is really painful.
-> > > Is there any hibernation hook that will be invoked before suspending and
-> > > after resuming? If so, arch_kexec_unprotect_crashkres()/protect_crashkres()
-> > > will be able to be called.
-> > 
-> > Those calls could go in swsusp_arch_suspend() in /arch/arm64/kernel/hibernate.c,
-> 
-> I will give it a try next week.
+> Apologies for guiding you down the wrong path here.
 
-I took the following test scenario:
- - load the crash dump kernel
- - echo shutdown > /sys/power/disk
- - echo disk > /sys/power/state
- - power off and on the board
- - reboot with resume=...
- - after hibernate done, echo c > /proc/sysrq-trigger
- - after reboot, check /proc/vmcore
+Your comments are always welcome.
 
-and everything looks to work fine.
+Anyhow, I think we'd better have a dedicated function of unmapping.
+Can you please take a look at the following hack?
 
-If you think I'd better try more test cases, please let me know.
+(We need to carefully use this function except for kdump usage since
+it doesn't care whether the region to be unmapped is used somewhere else.)
 
 Thanks,
 -Takahiro AKASHI
+
 ===8<===
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index fe301cbcb442..111a849333ee 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -16,6 +16,7 @@
-  */
- #define pr_fmt(x) "hibernate: " x
- #include <linux/cpu.h>
-+#include <linux/kexec.h>
- #include <linux/kvm_host.h>
- #include <linux/mm.h>
- #include <linux/pm.h>
-@@ -289,6 +290,12 @@ int swsusp_arch_suspend(void)
- 	local_dbg_save(flags);
+diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+index 2142c7726e76..945d84cd5df7 100644
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -54,6 +54,7 @@
+ #define PAGE_KERNEL_ROX		__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_RDONLY)
+ #define PAGE_KERNEL_EXEC	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE)
+ #define PAGE_KERNEL_EXEC_CONT	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_CONT)
++#define PAGE_KERNEL_INVALID	__pgprot(0)
  
- 	if (__cpu_suspend_enter(&state)) {
-+#ifdef CONFIG_KEXEC_CORE
-+		/* make the crash dump kernel region mapped */
-+		if (kexec_crash_image)
-+			arch_kexec_unprotect_crashkres();
-+#endif
-+
- 		sleep_cpu = smp_processor_id();
- 		ret = swsusp_save();
- 	} else {
-@@ -300,6 +307,12 @@ int swsusp_arch_suspend(void)
- 		if (el2_reset_needed())
- 			dcache_clean_range(__hyp_idmap_text_start, __hyp_idmap_text_end);
+ #define PAGE_HYP		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 17243e43184e..81173b594195 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -307,6 +307,101 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+ 	} while (pgd++, addr = next, addr != end);
+ }
  
-+#ifdef CONFIG_KEXEC_CORE
-+		/* make the crash dump kernel region unmapped */
-+		if (kexec_crash_image)
-+			arch_kexec_protect_crashkres();
-+#endif
++static void free_pte(pmd_t *pmd, unsigned long addr, unsigned long end,
++			bool dealloc_table)
++{
++	pte_t *pte;
++	bool do_free = (dealloc_table && ((end - addr) == PMD_SIZE));
 +
- 		/*
- 		 * Tell the hibernation core that we've just restored
- 		 * the memory
++	BUG_ON(pmd_none(*pmd) || pmd_bad(*pmd));
++
++	pte = pte_set_fixmap_offset(pmd, addr);
++	do {
++		pte_clear(NULL, NULL, pte);
++	} while (pte++, addr += PAGE_SIZE, addr != end);
++
++	pte_clear_fixmap();
++
++	if (do_free) {
++		__free_page(pmd_page(*pmd));
++		pmd_clear(pmd);
++	}
++}
++
++static void free_pmd(pud_t *pud, unsigned long addr, unsigned long end,
++			bool dealloc_table)
++{
++	pmd_t *pmd;
++	unsigned long next;
++	bool do_free = (dealloc_table && ((end - addr) == PUD_SIZE));
++
++	BUG_ON(pud_none(*pud) || pud_bad(*pud));
++
++	pmd = pmd_set_fixmap_offset(pud, addr);
++
++	do {
++		next = pmd_addr_end(addr, end);
++
++		if (pmd_table(*pmd)) {
++			free_pte(pmd, addr, next, dealloc_table);
++		} else {
++			pmd_clear(pmd);
++		}
++	} while (pmd++, addr = next, addr != end);
++
++	pmd_clear_fixmap();
++
++	if (do_free) {
++		__free_page(pud_page(*pud));
++		pud_clear(pud);
++	}
++}
++
++static void free_pud(pgd_t *pgd, unsigned long addr, unsigned long end,
++			bool dealloc_table)
++{
++	pud_t *pud;
++	unsigned long next;
++	bool do_free = (dealloc_table && ((end - addr) == PGDIR_SIZE));
++
++	BUG_ON(pgd_none(*pgd) || pgd_bad(*pgd));
++
++	pud = pud_set_fixmap_offset(pgd, addr);
++
++	do {
++		next = pud_addr_end(addr, end);
++
++		if (pud_table(*pud)) {
++			free_pmd(pud, addr, next, dealloc_table);
++		} else {
++			pud_clear(pud);
++		}
++	} while (pud++, addr = next, addr != end);
++
++	pud_clear_fixmap();
++
++	if (do_free) {
++		__free_page(pgd_page(*pgd));
++		pgd_clear(pgd);
++	}
++}
++
++static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long virt,
++				 phys_addr_t size, bool dealloc_table)
++{
++	unsigned long addr, length, end, next;
++	pgd_t *pgd = pgd_offset_raw(pgdir, virt);
++
++	addr = virt & PAGE_MASK;
++	length = PAGE_ALIGN(size + (virt & ~PAGE_MASK));
++
++	end = addr + length;
++	do {
++		next = pgd_addr_end(addr, end);
++		free_pud(pgd, addr, next, dealloc_table);
++	} while (pgd++, addr = next, addr != end);
++}
++
+ static phys_addr_t pgd_pgtable_alloc(void)
+ {
+ 	void *ptr = (void *)__get_free_page(PGALLOC_GFP);
+@@ -334,14 +429,15 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+ 	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, false);
+ }
+ 
+-void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+-			       unsigned long virt, phys_addr_t size,
+-			       pgprot_t prot, bool page_mappings_only)
++void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
++			unsigned long virt, phys_addr_t size,
++			pgprot_t prot, bool page_mappings_only)
+ {
+-	BUG_ON(mm == &init_mm);
+-
+-	__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+-			     pgd_pgtable_alloc, page_mappings_only);
++	if (pgprot_val(prot))
++		__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
++				     pgd_pgtable_alloc, page_mappings_only);
++	else
++		__remove_pgd_mapping(mm->pgd, virt, size, true);
+ }
+ 
+ static void create_mapping_late(phys_addr_t phys, unsigned long virt,
+===>8===
+
+
+> Thanks,
+> Mark.
+> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
 
 _______________________________________________
 kexec mailing list
