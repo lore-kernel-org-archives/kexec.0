@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x231.google.com ([2607:f8b0:400e:c05::231])
+Received: from mail-pg0-x229.google.com ([2607:f8b0:400e:c05::229])
  by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYuIt-0005pd-VZ
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:46:30 +0000
-Received: by mail-pg0-x231.google.com with SMTP id 14so109098955pgg.1
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:46:07 -0800 (PST)
+ id 1cYuJi-0005sd-K7
+ for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:47:19 +0000
+Received: by mail-pg0-x229.google.com with SMTP id 3so50483833pgj.3
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:46:58 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v31 09/12] arm64: kdump: provide /proc/vmcore file
-Date: Wed,  1 Feb 2017 21:46:28 +0900
-Message-Id: <20170201124630.6016-8-takahiro.akashi@linaro.org>
+Subject: [PATCH v31 12/12] Documentation: dt: chosen properties for arm64 kdump
+Date: Wed,  1 Feb 2017 21:48:20 +0900
+Message-Id: <20170201124820.6094-1-takahiro.akashi@linaro.org>
 In-Reply-To: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -24,224 +24,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Add arch-specific functions to provide a dump file, /proc/vmcore.
+From: James Morse <james.morse@arm.com>
 
-This file is in ELF format and its ELF header needs to be prepared by
-userspace tools, like kexec-tools, in adance. The primary kernel is
-responsible to allocate the region with reserve_elfcorehdr() at boot time
-and advertize its location to crash dump kernel via a new device-tree
-property, "linux,elfcorehdr".
+Add documentation for DT properties:
+	linux,usable-memory-range
+	linux,elfcorehdr
+used by arm64 kdump. Those decribe the usable memory range for crash dump
+kernel and the elfcorehdr's location within it, respectively.
 
-Then crash dump kernel will access the primary kernel's memory with
-copy_oldmem_page(), which feeds the data page-by-page by ioremap'ing it
-since it does not reside in linear mapping on crash dump kernel.
-
-We also need our own elfcorehdr_read() here since the header is placed
-within crash dump kernel's usable memory.
-
+Signed-off-by: James Morse <james.morse@arm.com>
+[takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: James Morse <james.morse@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
 ---
- arch/arm64/Kconfig             | 11 +++++++
- arch/arm64/kernel/Makefile     |  1 +
- arch/arm64/kernel/crash_dump.c | 71 ++++++++++++++++++++++++++++++++++++++++++
- arch/arm64/mm/init.c           | 53 +++++++++++++++++++++++++++++++
- 4 files changed, 136 insertions(+)
- create mode 100644 arch/arm64/kernel/crash_dump.c
+ Documentation/devicetree/bindings/chosen.txt | 37 ++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 111742126897..2bd6a1a062b9 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -693,6 +693,17 @@ config KEXEC
- 	  but it is independent of the system firmware.   And like a reboot
- 	  you can start any kernel with it, not just Linux.
- 
-+config CRASH_DUMP
-+	bool "Build kdump crash kernel"
-+	help
-+	  Generate crash dump after being started by kexec. This should
-+	  be normally only set in special crash dump kernels which are
-+	  loaded in the main kernel with kexec-tools into a specially
-+	  reserved region and then later executed after a crash by
-+	  kdump/kexec.
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82d4c37..8dc82431acc1 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,40 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
 +
-+	  For more details see Documentation/kdump/kdump.txt
++linux,usable-memory-range
++-------------------------
 +
- config XEN_DOM0
- 	def_bool y
- 	depends on XEN
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 7d66bbaafc0c..6a7384eee08d 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -50,6 +50,7 @@ arm64-obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
- arm64-obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
- arm64-obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o	\
- 					   cpu-reset.o
-+arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
- 
- obj-y					+= $(arm64-obj-y) vdso/ probes/
- obj-m					+= $(arm64-obj-m)
-diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-new file mode 100644
-index 000000000000..c3d5a21c081e
---- /dev/null
-+++ b/arch/arm64/kernel/crash_dump.c
-@@ -0,0 +1,71 @@
-+/*
-+ * Routines for doing kexec-based kdump
-+ *
-+ * Copyright (C) 2014 Linaro Limited
-+ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++This property (arm64 only) holds a base address and size, describing a
++limited region in which memory may be considered available for use by
++the kernel. Memory outside of this range is not available for use.
 +
-+#include <linux/crash_dump.h>
-+#include <linux/errno.h>
-+#include <linux/io.h>
-+#include <linux/memblock.h>
-+#include <linux/uaccess.h>
-+#include <asm/memory.h>
++This property describes a limitation: memory within this range is only
++valid when also described through another mechanism that the kernel
++would otherwise use to determine available memory (e.g. memory nodes
++or the EFI memory map). Valid memory may be sparse within the range.
++e.g.
 +
-+/**
-+ * copy_oldmem_page() - copy one page from old kernel memory
-+ * @pfn: page frame number to be copied
-+ * @buf: buffer where the copied page is placed
-+ * @csize: number of bytes to copy
-+ * @offset: offset in bytes into the page
-+ * @userbuf: if set, @buf is in a user address space
-+ *
-+ * This function copies one page from old kernel memory into buffer pointed by
-+ * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
-+ * copied or negative error in case of failure.
-+ */
-+ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-+			 size_t csize, unsigned long offset,
-+			 int userbuf)
-+{
-+	void *vaddr;
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
 +
-+	if (!csize)
-+		return 0;
++The main usage is for crash dump kernel to identify its own usable
++memory and exclude, at its boot time, any other memory areas that are
++part of the panicked kernel's memory.
 +
-+	vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
-+	if (!vaddr)
-+		return -ENOMEM;
++linux,elfcorehdr
++----------------
 +
-+	if (userbuf) {
-+		if (copy_to_user((char __user *)buf, vaddr + offset, csize)) {
-+			memunmap(vaddr);
-+			return -EFAULT;
-+		}
-+	} else {
-+		memcpy(buf, vaddr + offset, csize);
-+	}
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout as PT_LOAD segments of elf format.
++e.g.
 +
-+	memunmap(vaddr);
-+
-+	return csize;
-+}
-+
-+/**
-+ * elfcorehdr_read - read from ELF core header
-+ * @buf: buffer where the data is placed
-+ * @csize: number of bytes to read
-+ * @ppos: address in the memory
-+ *
-+ * This function reads @count bytes from elf core header which exists
-+ * on crash dump kernel's memory.
-+ */
-+ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-+{
-+	memcpy(buf, phys_to_virt((phys_addr_t)*ppos), count);
-+	return count;
-+}
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 2aba75dc7720..323b87197e18 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -38,6 +38,7 @@
- #include <linux/swiotlb.h>
- #include <linux/vmalloc.h>
- #include <linux/kexec.h>
-+#include <linux/crash_dump.h>
- 
- #include <asm/boot.h>
- #include <asm/fixmap.h>
-@@ -135,6 +136,56 @@ static void __init reserve_crashkernel(void)
- }
- #endif /* CONFIG_KEXEC_CORE */
- 
-+#ifdef CONFIG_CRASH_DUMP
-+static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-+		const char *uname, int depth, void *data)
-+{
-+	const __be32 *reg;
-+	int len;
-+
-+	if (depth != 1 || strcmp(uname, "chosen") != 0)
-+		return 0;
-+
-+	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
-+	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+		return 1;
-+
-+	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+	return 1;
-+}
-+
-+/*
-+ * reserve_elfcorehdr() - reserves memory for elf core header
-+ *
-+ * This function reserves elf core header given in "elfcorehdr=" kernel
-+ * command line parameter. This region contains all the information about
-+ * primary kernel's core image and is used by a dump capture kernel to
-+ * access the system memory on primary kernel.
-+ */
-+static void __init reserve_elfcorehdr(void)
-+{
-+	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
-+
-+	if (!elfcorehdr_size)
-+		return;
-+
-+	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-+		pr_warn("elfcorehdr is overlapped\n");
-+		return;
-+	}
-+
-+	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-+
-+	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
-+		elfcorehdr_size >> 10, elfcorehdr_addr);
-+}
-+#else
-+static void __init reserve_elfcorehdr(void)
-+{
-+}
-+#endif /* CONFIG_CRASH_DUMP */
- /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -393,6 +444,8 @@ void __init arm64_memblock_init(void)
- 
- 	reserve_crashkernel();
- 
-+	reserve_elfcorehdr();
-+
- 	dma_contiguous_reserve(arm64_dma_phys_limit);
- 
- 	memblock_allow_resize();
++/ {
++	chosen {
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
 -- 
 2.11.0
 
