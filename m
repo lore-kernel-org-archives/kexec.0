@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYuJA-00026K-Vt
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:46:46 +0000
-Received: by mail-pf0-x230.google.com with SMTP id 189so118660416pfu.3
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:46:24 -0800 (PST)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v31 11/12] Documentation: kdump: describe arm64 port
-Date: Wed,  1 Feb 2017 21:46:30 +0900
-Message-Id: <20170201124630.6016-10-takahiro.akashi@linaro.org>
-In-Reply-To: <20170201124218.5823-1-takahiro.akashi@linaro.org>
+Date: Wed, 1 Feb 2017 15:07:00 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v31 02/12] arm64: limit memory regions based on DT
+ property, usable-memory-range
+Message-ID: <20170201150700.GD4756@leverpostej>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
+ <20170201124630.6016-1-takahiro.akashi@linaro.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170201124630.6016-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,82 +17,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Add arch specific descriptions about kdump usage on arm64 to kdump.txt.
+Hi,
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
----
- Documentation/kdump/kdump.txt | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+On Wed, Feb 01, 2017 at 09:46:21PM +0900, AKASHI Takahiro wrote:
+> +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> +		const char *uname, int depth, void *data)
+> +{
+> +	struct memblock_region *usablemem = (struct memblock_region *)data;
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index b0eb27b956d9..615434d81108 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
- 
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--s390x and arm architectures.
-+s390x, arm and arm64 architectures.
- 
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
- 
-     AUTO_ZRELADDR=y
- 
-+Dump-capture kernel config options (Arch Dependent, arm64)
-+----------------------------------------------------------
-+
-+- Please note that kvm of the dump-capture kernel will not be enabled
-+  on non-VHE systems even if it is configured. This is because the CPU
-+  will not be reset to EL2 on panic.
-+
- Extended crashkernel syntax
- ===========================
- 
-@@ -305,6 +312,8 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
-+   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-@@ -327,6 +336,8 @@ For s390x:
- 	- Use image or bzImage
- For arm:
- 	- Use zImage
-+For arm64:
-+	- Use vmlinux or Image
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -370,6 +381,9 @@ For s390x:
- For arm:
- 	"1 maxcpus=1 reset_devices"
- 
-+For arm64:
-+	"1 maxcpus=1 reset_devices"
-+
- Notes on loading the dump-capture kernel:
- 
- * By default, the ELF headers are stored in ELF64 format to support
--- 
-2.11.0
+Nit: unnecessary cast.
 
+> +	const __be32 *reg;
+> +	int len;
+> +
+> +	usablemem->size = 0;
+
+Could we please lift this assignment/initialisation into the caller...
+
+> +
+> +	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> +		return 0;
+> +
+> +	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> +		return 1;
+> +
+> +	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +	return 1;
+> +}
+> +
+> +static void __init fdt_enforce_memory_region(void)
+> +{
+> +	struct memblock_region reg;
+
+... e.g. have:
+
+	struct memblock_region reg = {
+		.size = 0,
+	};
+
+That saves us from making unnecessary assignments to the size field, and
+makes it clear that reg.size has definitely been initialised, regardless
+of what of_scan_flat_dt() happens to do.
+
+With that:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+Mark.
+
+> +
+> +	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> +
+> +	if (reg.size)
+> +		memblock_cap_memory_range(reg.base, reg.size);
+> +}
+> +
+>  void __init arm64_memblock_init(void)
+>  {
+>  	const s64 linear_region_size = -(s64)PAGE_OFFSET;
+>  
+> +	/* Handle linux,usable-memory-range property */
+> +	fdt_enforce_memory_region();
+> +
+>  	/*
+>  	 * Ensure that the linear region takes up exactly half of the kernel
+>  	 * virtual address space. This way, we can distinguish a linear address
+> -- 
+> 2.11.0
+> 
 
 _______________________________________________
 kexec mailing list
