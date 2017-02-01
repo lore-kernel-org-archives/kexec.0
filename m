@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 1 Feb 2017 18:25:06 +0000
+Date: Wed, 1 Feb 2017 19:21:22 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v31 05/12] arm64: kdump: protect crash dump kernel memory
-Message-ID: <20170201182506.GA30584@leverpostej>
+Subject: Re: [PATCH v31 09/12] arm64: kdump: provide /proc/vmcore file
+Message-ID: <20170201192121.GB30584@leverpostej>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
- <20170201124630.6016-4-takahiro.akashi@linaro.org>
- <20170201180008.GG4756@leverpostej>
+ <20170201124630.6016-8-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170201180008.GG4756@leverpostej>
+In-Reply-To: <20170201124630.6016-8-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,44 +23,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Feb 01, 2017 at 06:00:08PM +0000, Mark Rutland wrote:
-> On Wed, Feb 01, 2017 at 09:46:24PM +0900, AKASHI Takahiro wrote:
-> > arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
-> > are meant to be called around kexec_load() in order to protect
-> > the memory allocated for crash dump kernel once after it's loaded.
-> > 
-> > The protection is implemented here by unmapping the region rather than
-> > making it read-only.
-> > To make the things work correctly, we also have to
-> > - put the region in an isolated, page-level mapping initially, and
-> > - move copying kexec's control_code_page to machine_kexec_prepare()
-> > 
-> > Note that page-level mapping is also required to allow for shrinking
-> > the size of memory, through /sys/kernel/kexec_crash_size, by any number
-> > of multiple pages.
+On Wed, Feb 01, 2017 at 09:46:28PM +0900, AKASHI Takahiro wrote:
+> Add arch-specific functions to provide a dump file, /proc/vmcore.
 > 
-> Looking at kexec_crash_size_store(), I don't see where memory returned
-> to the OS is mapped. AFAICT, if the region is protected when the user
-> shrinks the region, the memory will not be mapped, yet handed over to
-> the kernel for general allocation.
-> 
-> Surely we need an arch-specific callback to handle that? e.g.
-> 
-> arch_crash_release_region(unsigned long base, unsigned long size)
-> {
-> 	/*
-> 	 * Ensure the region is part of the linear map before we return
-> 	 * it to the OS. We won't unmap this again, so we can use block
-> 	 * mappings.
-> 	 */
-> 	create_pgd_mapping(&init_mm, start, __phys_to_virt(start),
-> 			   size, PAGE_KERNEL, false);
-> }
-> 
-> ... which we'd call from crash_shrink_memory() before we freed the
-> reserved pages.
+> This file is in ELF format and its ELF header needs to be prepared by
+> userspace tools, like kexec-tools, in adance. The primary kernel is
+> responsible to allocate the region with reserve_elfcorehdr() at boot time
+> and advertize its location to crash dump kernel via a new device-tree
+> property, "linux,elfcorehdr".
 
-Another question is (how) does hyp map this region?
+> +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+> +		const char *uname, int depth, void *data)
+> +{
+> +	const __be32 *reg;
+> +	int len;
+> +
+> +	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> +		return 0;
+> +
+> +	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
+> +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> +		return 1;
+> +
+> +	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +	return 1;
+> +}
+> +
+> +/*
+> + * reserve_elfcorehdr() - reserves memory for elf core header
+> + *
+> + * This function reserves elf core header given in "elfcorehdr=" kernel
+> + * command line parameter. This region contains all the information about
+> + * primary kernel's core image and is used by a dump capture kernel to
+> + * access the system memory on primary kernel.
+> + */
+> +static void __init reserve_elfcorehdr(void)
+> +{
+> +	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
+> +
+> +	if (!elfcorehdr_size)
+> +		return;
+> +
+> +	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+> +		pr_warn("elfcorehdr is overlapped\n");
+> +		return;
+> +	}
+> +
+> +	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> +
+> +	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
+> +		elfcorehdr_size >> 10, elfcorehdr_addr);
+> +}
+
+This doesn't seem right to me.  The logic here doesn't match the commit
+message, the comment above reserve_elfcorehdr() doesn't match the
+implementation, and this doesn't match my understanding of how this was
+intended to be used from the DT binding.
+
+I had assumed that we'd treat this in much the same way as the
+linux,reserved-memory-region property, with the primary kernel either
+dynamically allocating the region or using a command line option, and
+the base being exposed to userspace via /sys/ or /proc/ somehow.
+
+Why is that not the case?
 
 Thanks,
 Mark.
