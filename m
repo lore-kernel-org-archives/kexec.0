@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 1 Feb 2017 15:07:00 +0000
+Date: Wed, 1 Feb 2017 15:26:09 +0000
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v31 02/12] arm64: limit memory regions based on DT
- property, usable-memory-range
-Message-ID: <20170201150700.GD4756@leverpostej>
+Subject: Re: [PATCH v31 03/12] arm64: kdump: reserve memory for crash dump
+ kernel
+Message-ID: <20170201152609.GE4756@leverpostej>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
- <20170201124630.6016-1-takahiro.akashi@linaro.org>
+ <20170201124630.6016-2-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170201124630.6016-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20170201124630.6016-2-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,80 +22,93 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
 Hi,
 
-On Wed, Feb 01, 2017 at 09:46:21PM +0900, AKASHI Takahiro wrote:
-> +static int __init early_init_dt_scan_usablemem(unsigned long node,
-> +		const char *uname, int depth, void *data)
+On Wed, Feb 01, 2017 at 09:46:22PM +0900, AKASHI Takahiro wrote:
+> +#ifdef CONFIG_KEXEC_CORE
+> +/*
+> + * reserve_crashkernel() - reserves memory for crash kernel
+> + *
+> + * This function reserves memory area given in "crashkernel=" kernel command
+> + * line parameter. The memory reserved is used by dump capture kernel when
+> + * primary kernel is crashing.
+> + */
+> +static void __init reserve_crashkernel(void)
 > +{
-> +	struct memblock_region *usablemem = (struct memblock_region *)data;
-
-Nit: unnecessary cast.
-
-> +	const __be32 *reg;
-> +	int len;
+> +	unsigned long long crash_base, crash_size;
+> +	int ret;
 > +
-> +	usablemem->size = 0;
-
-Could we please lift this assignment/initialisation into the caller...
-
+> +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> +				&crash_size, &crash_base);
+> +	/* no crashkernel= or invalid value specified */
+> +	if (ret || !crash_size)
+> +		return;
 > +
-> +	if (depth != 1 || strcmp(uname, "chosen") != 0)
-> +		return 0;
+> +	crash_size = PAGE_ALIGN(crash_size);
 > +
-> +	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
-> +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-> +		return 1;
+> +	if (crash_base == 0) {
+> +		/* Current arm64 boot protocol requires 2MB alignment */
+> +		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
+> +				crash_size, SZ_2M);
+> +		if (crash_base == 0) {
+> +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
+> +				crash_size);
+
+Nit: can we please make that "size: 0x%llx", so that it's always clearly
+a hex number? e.g.
+
+	pr_warn("cannot allocate 0x%llx bytes for crashkernel\n",
+		crash_size);
+
+> +			return;
+> +		}
+> +	} else {
+> +		/* User specifies base address explicitly. */
+> +		if (!memblock_is_region_memory(crash_base, crash_size) ||
+> +			memblock_is_region_reserved(crash_base, crash_size)) {
+> +			pr_warn("crashkernel has wrong address or size\n");
+> +			return;
+> +		}
+
+To better report the error, can we please split these up:
+
+		if (!memblock_is_region_memory(crash_base, crash_size)) {
+			pr_warn("cannot reserve crashkernel: region is not memory\n");
+			return;
+		}
+
+		if (!memblock_is_region_memory(crash_base, crash_size)) {
+			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
+			return;
+		}
+
+> +		if (!IS_ALIGNED(crash_base, SZ_2M)) {
+> +			pr_warn("crashkernel base address is not 2MB aligned\n");
+> +			return;
+> +		}
+> +	}
+> +	memblock_reserve(crash_base, crash_size);
 > +
-> +	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> +	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> +
-> +	return 1;
-> +}
-> +
-> +static void __init fdt_enforce_memory_region(void)
-> +{
-> +	struct memblock_region reg;
+> +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
+> +		crash_size >> 20, crash_base >> 20);
 
-... e.g. have:
+We only page-align the size, so the MB will be a little off, but that's
+probably OK. However, it would also be nicer to log the base as an
+address.
 
-	struct memblock_region reg = {
-		.size = 0,
-	};
+Could we dump this as we do for the kernel memory layout? e.g.
 
-That saves us from making unnecessary assignments to the size field, and
-makes it clear that reg.size has definitely been initialised, regardless
-of what of_scan_flat_dt() happens to do.
+	pr_info("crashkernel reserved: 0x%016lx - 0x%016lx (%lld MB)\n",
+		crash_base, crash_base + crash_size, crash_size >> 20);
 
-With that:
+With those:
 
 Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
 Mark.
-
-> +
-> +	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-> +
-> +	if (reg.size)
-> +		memblock_cap_memory_range(reg.base, reg.size);
-> +}
-> +
->  void __init arm64_memblock_init(void)
->  {
->  	const s64 linear_region_size = -(s64)PAGE_OFFSET;
->  
-> +	/* Handle linux,usable-memory-range property */
-> +	fdt_enforce_memory_region();
-> +
->  	/*
->  	 * Ensure that the linear region takes up exactly half of the kernel
->  	 * virtual address space. This way, we can distinguish a linear address
-> -- 
-> 2.11.0
-> 
 
 _______________________________________________
 kexec mailing list
