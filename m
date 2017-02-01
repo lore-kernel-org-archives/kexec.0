@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2401:3900:2:1::2])
+Received: from mail-pg0-x22e.google.com ([2607:f8b0:400e:c05::22e])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYjSq-0005m5-1r
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 01:12:01 +0000
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 2/5] ia64: reuse append_elf_note() and final_note()
- functions
-In-Reply-To: <CA+8MBbLP5TvmbDgbg6cvUCV+0hhXdYi546Rs-fEAoQjcotNXvw@mail.gmail.com>
-References: <148363729327.11570.6244765717789390817.stgit@hbathini.in.ibm.com>
- <148363740554.11570.4870634597647436827.stgit@hbathini.in.ibm.com>
- <20170106020324.GB2863@dhcp-128-65.nay.redhat.com>
- <38a7807c-cd95-670d-30d3-c45e7921ea11@linux.vnet.ibm.com>
- <0748026f-a459-9022-3658-a75cb0633f40@linux.vnet.ibm.com>
- <CA+8MBb+g604VGLLibB+eOAtF_h1r5mYJRdjaGE8UgWQ+JPGDdg@mail.gmail.com>
- <04b96f50-f77d-9446-975f-7d44accfe583@linux.vnet.ibm.com>
- <CA+8MBbLP5TvmbDgbg6cvUCV+0hhXdYi546Rs-fEAoQjcotNXvw@mail.gmail.com>
-Date: Wed, 01 Feb 2017 12:11:28 +1100
-Message-ID: <874m0evhof.fsf@concordia.ellerman.id.au>
-MIME-Version: 1.0
+ id 1cYuFh-00006B-67
+ for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:43:11 +0000
+Received: by mail-pg0-x22e.google.com with SMTP id 204so109241059pge.0
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:42:48 -0800 (PST)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v31 00/12] add kdump support
+Date: Wed,  1 Feb 2017 21:42:18 +0900
+Message-Id: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,31 +17,147 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tony Luck <tony.luck@gmail.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>
-Cc: "Yu, Fenghua" <fenghua.yu@intel.com>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec-ml <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Tony Luck <tony.luck@gmail.com> writes:
+This patch series adds kdump support on arm64.
 
-> On Wed, Jan 25, 2017 at 11:15 AM, Hari Bathini
-> <hbathini@linux.vnet.ibm.com> wrote:
->> I haven't gotten a success/failure build report from zero-day. Not sure what
->> to make of it.
->
-> zero-day is generally silent unless it sees a problem. So no news is good news.
->
->> But I did try cross-compiling and it was successful. Should that do?
->
-> I guess so. What tree do these apply to?  I tried 4.10-rc5 and "git am"
-> protested ... but I didn't look closely as at why.
+To load a crash-dump kernel to the systems, a series of patches to
+kexec-tools[1] are also needed. Please use the latest one, v5 [2].
+For your convinience, you can pick them up from:
+   https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
+   https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
 
-Don't worry about it, I do an ia64_defconfig build as part of my usual
-tests before pushing.
+To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+  - crash utility (v7.1.8 or later, i.e. master for now) [3]
 
-cheers
+I tested this patchset on fast model and hikey.
+(under various configurations, including 4KB-page/39,48-bits, 64KB-page/
+42-bits with hibernate)
+
+The previous versions were also:
+Tested-by: Pratyush Anand <panand@redhat.com> (v29, mustang and seattle)
+Tested-by: James Morse <james.morse@arm.com> (v27, Juno)
+
+Changes for v31 (Feb 1, 2017)
+  o add/use remove_pgd_mapping() instead of modifying (__)create_pgd_mapping()
+    to protect crash dump kernel memory (patch #4,5)
+  o fix an issue at the isolation of crash dump kernel memory in
+    map_mem()/__map_memblock(), adding map_crashkernel() (patch#5)
+  o preserve the contents of crash dump kernel memory around hibernation
+    (patch#6)
+
+Changes for v30 (Jan 24, 2017)
+  o rebased to Linux-v4.10-rc5
+  o remove "linux,crashkernel-base/size" from exported device tree
+  o protect memory region for crash-dump kernel (adding patch#4,5)
+  o remove "in_crash_kexec" variable
+  o and other trivial changes
+
+Changes for v29 (Dec 28, 2016)
+  o rebased to Linux-v4.10-rc1
+  o change asm constraints in crash_setup_regs() per Catalin
+
+Changes for v28 (Nov 22, 2016)
+  o rebased to Linux-v4.9-rc6
+  o revamp patch #1 and merge memblock_cap_memory_range() with
+    memblock_mem_limit_remove_map()
+
+Changes for v27 (Nov 1, 2016)
+  o rebased to Linux-v4.9-rc3
+  o revert v26 change, i.e. revive "linux,usable-memory-range" property
+    (patch #2/#3, updating patch #9)
+  o minor fixes per review comments (patch #3/#4/#6/#8)
+  o re-order patches and improve commit messages for readability
+
+Changes for v26 (Sep 7, 2016):
+  o Use /reserved-memory instead of "linux,usable-memory-range" property
+    (dropping v25's patch#2 and #3, updating ex-patch#9.)
+
+Changes for v25 (Aug 29, 2016):
+  o Rebase to Linux-4.8-rc4
+  o Use memremap() instead of ioremap_cache() [patch#5]
+
+Changes for v24 (Aug 9, 2016):
+  o Rebase to Linux-4.8-rc1
+  o Update descriptions about newly added DT proerties
+
+Changes for v23 (July 26, 2016):
+
+  o Move memblock_reserve() to a single place in reserve_crashkernel()
+  o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+  o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+  o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+    (for ACPI) from usable memory at crash kernel
+
+Changes for v22 (July 12, 2016):
+
+  o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+    and add some descriptions about them in chosen.txt
+  o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+    with powerpc's "usable-memory"
+  o Make cosmetic changes regarding "ifdef" usage
+  o Correct some wordings in kdump.txt
+
+Changes for v21 (July 6, 2016):
+
+  o Remove kexec patches.
+  o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+  o Clarify the description about kvm in kdump.txt.
+
+See the link [4] for older changes.
+
+
+[1] https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+[2] http://lists.infradead.org/pipermail/kexec/2017-January/018002.html
+[3] https://github.com/crash-utility/crash.git
+[4] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+
+AKASHI Takahiro (11):
+  memblock: add memblock_cap_memory_range()
+  arm64: limit memory regions based on DT property, usable-memory-range
+  arm64: kdump: reserve memory for crash dump kernel
+  arm64: mm: allow for unmapping part of kernel mapping
+  arm64: kdump: protect crash dump kernel memory
+  arm64: hibernate: preserve kdump image around hibernation
+  arm64: kdump: implement machine_crash_shutdown()
+  arm64: kdump: add VMCOREINFO's for user-space tools
+  arm64: kdump: provide /proc/vmcore file
+  arm64: kdump: enable kdump in defconfig
+  Documentation: kdump: describe arm64 port
+
+James Morse (1):
+  Documentation: dt: chosen properties for arm64 kdump
+
+ Documentation/devicetree/bindings/chosen.txt |  37 ++++++
+ Documentation/kdump/kdump.txt                |  16 ++-
+ arch/arm64/Kconfig                           |  11 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/hardirq.h             |   2 +-
+ arch/arm64/include/asm/kexec.h               |  42 ++++++-
+ arch/arm64/include/asm/mmu.h                 |   2 +
+ arch/arm64/include/asm/smp.h                 |   2 +
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/crash_dump.c               |  71 ++++++++++++
+ arch/arm64/kernel/hibernate.c                |  13 +++
+ arch/arm64/kernel/machine_kexec.c            | 129 +++++++++++++++++----
+ arch/arm64/kernel/setup.c                    |   7 +-
+ arch/arm64/kernel/smp.c                      |  63 ++++++++++
+ arch/arm64/mm/init.c                         | 150 ++++++++++++++++++++++++
+ arch/arm64/mm/mmu.c                          | 165 ++++++++++++++++++++++++++-
+ include/linux/memblock.h                     |   1 +
+ mm/memblock.c                                |  44 ++++---
+ 18 files changed, 709 insertions(+), 48 deletions(-)
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+
+-- 
+2.11.0
+
 
 _______________________________________________
 kexec mailing list
