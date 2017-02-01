@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x232.google.com ([2607:f8b0:400e:c05::232])
+Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYuIQ-0002M2-4M
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:46:00 +0000
-Received: by mail-pg0-x232.google.com with SMTP id 204so109257305pge.0
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:45:37 -0800 (PST)
+ id 1cYuIm-0002eo-Cj
+ for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:46:31 +0000
+Received: by mail-pf0-x233.google.com with SMTP id f144so118470237pfa.2
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:46:00 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v31 05/12] arm64: kdump: protect crash dump kernel memory
-Date: Wed,  1 Feb 2017 21:46:24 +0900
-Message-Id: <20170201124630.6016-4-takahiro.akashi@linaro.org>
+Subject: [PATCH v31 08/12] arm64: kdump: add VMCOREINFO's for user-space tools
+Date: Wed,  1 Feb 2017 21:46:27 +0900
+Message-Id: <20170201124630.6016-7-takahiro.akashi@linaro.org>
 In-Reply-To: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,225 +27,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
 Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
-are meant to be called around kexec_load() in order to protect
-the memory allocated for crash dump kernel once after it's loaded.
+In addition to common VMCOREINFO's defined in
+crash_save_vmcoreinfo_init(), we need to know, for crash utility,
+  - kimage_voffset
+  - PHYS_OFFSET
+to examine the contents of a dump file (/proc/vmcore) correctly
+due to the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
 
-The protection is implemented here by unmapping the region rather than
-making it read-only.
-To make the things work correctly, we also have to
-- put the region in an isolated, page-level mapping initially, and
-- move copying kexec's control_code_page to machine_kexec_prepare()
+  - VA_BITS
+is also required for makedumpfile command.
 
-Note that page-level mapping is also required to allow for shrinking
-the size of memory, through /sys/kernel/kexec_crash_size, by any number
-of multiple pages.
+arch_crash_save_vmcoreinfo() appends them to the dump file.
+More VMCOREINFO's may be added later.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Reviewed-by: James Morse <james.morse@arm.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/kernel/machine_kexec.c | 65 ++++++++++++++++++++++++++-------------
- arch/arm64/mm/mmu.c               | 35 +++++++++++++++++++++
- 2 files changed, 79 insertions(+), 21 deletions(-)
+ arch/arm64/kernel/machine_kexec.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index bc96c8a7fc79..016f2dd693aa 100644
+index c61dd7b7dca0..1fcd5483c1bb 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -14,6 +14,7 @@
+@@ -17,6 +17,7 @@
  
  #include <asm/cacheflush.h>
  #include <asm/cpu_ops.h>
-+#include <asm/mmu.h>
++#include <asm/memory.h>
+ #include <asm/mmu.h>
  #include <asm/mmu_context.h>
  
- #include "cpu-reset.h"
-@@ -22,8 +23,6 @@
- extern const unsigned char arm64_relocate_new_kernel[];
- extern const unsigned long arm64_relocate_new_kernel_size;
+@@ -280,3 +281,13 @@ void arch_kexec_unprotect_crashkres(void)
  
--static unsigned long kimage_start;
--
- /**
-  * kexec_image_info - For debugging output.
-  */
-@@ -64,7 +63,7 @@ void machine_kexec_cleanup(struct kimage *kimage)
-  */
- int machine_kexec_prepare(struct kimage *kimage)
- {
--	kimage_start = kimage->start;
-+	void *reboot_code_buffer;
- 
- 	kexec_image_info(kimage);
- 
-@@ -73,6 +72,21 @@ int machine_kexec_prepare(struct kimage *kimage)
- 		return -EBUSY;
- 	}
- 
-+	reboot_code_buffer =
-+			phys_to_virt(page_to_phys(kimage->control_code_page));
-+
-+	/*
-+	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
-+	 * after the kernel is shut down.
-+	 */
-+	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
-+		arm64_relocate_new_kernel_size);
-+
-+	/* Flush the reboot_code_buffer in preparation for its execution. */
-+	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
-+	flush_icache_range((uintptr_t)reboot_code_buffer,
-+		arm64_relocate_new_kernel_size);
-+
- 	return 0;
- }
- 
-@@ -143,7 +157,6 @@ static void kexec_segment_flush(const struct kimage *kimage)
- void machine_kexec(struct kimage *kimage)
- {
- 	phys_addr_t reboot_code_buffer_phys;
--	void *reboot_code_buffer;
- 
- 	/*
- 	 * New cpus may have become stuck_in_kernel after we loaded the image.
-@@ -151,7 +164,6 @@ void machine_kexec(struct kimage *kimage)
- 	BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
- 
- 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
--	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
- 
- 	kexec_image_info(kimage);
- 
-@@ -159,31 +171,17 @@ void machine_kexec(struct kimage *kimage)
- 		kimage->control_code_page);
- 	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
- 		&reboot_code_buffer_phys);
--	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
--		reboot_code_buffer);
- 	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
- 		arm64_relocate_new_kernel);
- 	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
- 		__func__, __LINE__, arm64_relocate_new_kernel_size,
- 		arm64_relocate_new_kernel_size);
- 
--	/*
--	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
--	 * after the kernel is shut down.
--	 */
--	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
--		arm64_relocate_new_kernel_size);
--
--	/* Flush the reboot_code_buffer in preparation for its execution. */
--	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
--	flush_icache_range((uintptr_t)reboot_code_buffer,
--		arm64_relocate_new_kernel_size);
--
- 	/* Flush the kimage list and its buffers. */
- 	kexec_list_flush(kimage);
- 
- 	/* Flush the new image if already in place. */
--	if (kimage->head & IND_DONE)
-+	if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
- 		kexec_segment_flush(kimage);
- 
- 	pr_info("Bye!\n");
-@@ -201,7 +199,7 @@ void machine_kexec(struct kimage *kimage)
- 	 */
- 
- 	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
--		kimage_start, 0);
-+		kimage->start, 0);
- 
- 	BUG(); /* Should never get here. */
- }
-@@ -210,3 +208,28 @@ void machine_crash_shutdown(struct pt_regs *regs)
- {
- 	/* Empty routine needed to avoid build errors. */
+ 	flush_tlb_all();
  }
 +
-+void arch_kexec_protect_crashkres(void)
++void arch_crash_save_vmcoreinfo(void)
 +{
-+	kexec_segment_flush(kexec_crash_image);
-+
-+	remove_pgd_mapping(&init_mm, __phys_to_virt(crashk_res.start),
-+			resource_size(&crashk_res));
-+
-+	flush_tlb_all();
++	VMCOREINFO_NUMBER(VA_BITS);
++	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
++	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
++						kimage_voffset);
++	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
++						PHYS_OFFSET);
 +}
-+
-+void arch_kexec_unprotect_crashkres(void)
-+{
-+	/*
-+	 * We don't have to make page-level mappings here because
-+	 * the crash dump kernel memory is not allowed to be shrunk
-+	 * once the kernel is loaded.
-+	 */
-+	create_pgd_mapping(&init_mm, crashk_res.start,
-+			__phys_to_virt(crashk_res.start),
-+			resource_size(&crashk_res), PAGE_KERNEL,
-+			debug_pagealloc_enabled());
-+
-+	flush_tlb_all();
-+}
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 9d3cea1db3b4..87861e62316a 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -22,6 +22,8 @@
- #include <linux/kernel.h>
- #include <linux/errno.h>
- #include <linux/init.h>
-+#include <linux/ioport.h>
-+#include <linux/kexec.h>
- #include <linux/libfdt.h>
- #include <linux/mman.h>
- #include <linux/nodemask.h>
-@@ -538,6 +540,24 @@ static void __init map_mem(pgd_t *pgd)
- 		if (memblock_is_nomap(reg))
- 			continue;
- 
-+#ifdef CONFIG_KEXEC_CORE
-+		/*
-+		 * While crash dump kernel memory is contained in a single
-+		 * memblock for now, it should appear in an isolated mapping
-+		 * so that we can independently unmap the region later.
-+		 */
-+		if (crashk_res.end &&
-+		    (start <= crashk_res.start) &&
-+		    ((crashk_res.end + 1) < end)) {
-+			if (crashk_res.start != start)
-+				__map_memblock(pgd, start, crashk_res.start);
-+
-+			if ((crashk_res.end + 1) < end)
-+				__map_memblock(pgd, crashk_res.end + 1, end);
-+
-+			continue;
-+		}
-+#endif
- 		__map_memblock(pgd, start, end);
- 	}
- }
-@@ -623,6 +643,21 @@ static void __init map_kernel(pgd_t *pgd)
- 	kasan_copy_shadow(pgd);
- }
- 
-+#ifdef CONFIG_KEXEC_CORE
-+static int __init map_crashkernel(void)
-+{
-+	/* page-level mapping only to allow for shrinking */
-+	if (crashk_res.end)
-+		create_pgd_mapping(&init_mm, crashk_res.start,
-+				   __phys_to_virt(crashk_res.start),
-+				   resource_size(&crashk_res), PAGE_KERNEL,
-+				   true);
-+
-+	return 0;
-+}
-+subsys_initcall(map_crashkernel);
-+#endif
-+
- /*
-  * paging_init() sets up the page tables, initialises the zone memory
-  * maps and sets up the zero page.
 -- 
 2.11.0
 
