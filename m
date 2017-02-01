@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x230.google.com ([2607:f8b0:400e:c05::230])
+Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYuHz-0001td-8i
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:45:34 +0000
-Received: by mail-pg0-x230.google.com with SMTP id 194so109101846pgd.2
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:45:10 -0800 (PST)
+ id 1cYuIH-0002Du-8f
+ for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:45:54 +0000
+Received: by mail-pf0-x233.google.com with SMTP id e4so117964463pfg.1
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:45:28 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v31 02/12] arm64: limit memory regions based on DT property,
- usable-memory-range
-Date: Wed,  1 Feb 2017 21:46:21 +0900
-Message-Id: <20170201124630.6016-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v31 04/12] arm64: mm: allow for unmapping part of kernel
+ mapping
+Date: Wed,  1 Feb 2017 21:46:23 +0900
+Message-Id: <20170201124630.6016-3-takahiro.akashi@linaro.org>
 In-Reply-To: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,73 +28,183 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
 Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Crash dump kernel utilizes only a subset of available memory as System RAM.
-On arm64 kdump, This memory range is advertized to crash dump kernel via
-a device-tree property under /chosen,
-   linux,usable-memory-range = <BASE SIZE>
+A new function, remove_pgd_mapping(), is added.
+It allows us to unmap a specific portion of kernel mapping later as far as
+the mapping is made using create_pgd_mapping() and unless we try to free
+a sub-set of memory range within a section mapping.
 
-Crash dump kernel reads this property at boot time and calls
-memblock_cap_memory_range() to limit usable memory ranges which are
-described as entries in UEFI memory map table or "memory" nodes in
-a device tree blob.
+This function will be used in a later kdump patch to implement
+the protection against corrupting crash dump kernel memory which is to be
+set aside.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Geoff Levand <geoff@infradead.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/mm/init.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm64/include/asm/mmu.h |   2 +
+ arch/arm64/mm/mmu.c          | 130 +++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 127 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 380ebe705093..6cddb566eb21 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -187,10 +187,45 @@ static int __init early_mem(char *p)
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index 47619411f0ff..04eb240736d8 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -36,6 +36,8 @@ extern void init_mem_pgprot(void);
+ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+ 			       unsigned long virt, phys_addr_t size,
+ 			       pgprot_t prot, bool page_mappings_only);
++extern void remove_pgd_mapping(struct mm_struct *mm, unsigned long virt,
++			       phys_addr_t size);
+ extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
+ 
+ #endif
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 17243e43184e..9d3cea1db3b4 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -334,12 +334,10 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+ 	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, false);
  }
- early_param("mem", early_mem);
  
-+static int __init early_init_dt_scan_usablemem(unsigned long node,
-+		const char *uname, int depth, void *data)
-+{
-+	struct memblock_region *usablemem = (struct memblock_region *)data;
-+	const __be32 *reg;
-+	int len;
-+
-+	usablemem->size = 0;
-+
-+	if (depth != 1 || strcmp(uname, "chosen") != 0)
-+		return 0;
-+
-+	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
-+	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+		return 1;
-+
-+	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+	return 1;
-+}
-+
-+static void __init fdt_enforce_memory_region(void)
-+{
-+	struct memblock_region reg;
-+
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+
-+	if (reg.size)
-+		memblock_cap_memory_range(reg.base, reg.size);
-+}
-+
- void __init arm64_memblock_init(void)
+-void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+-			       unsigned long virt, phys_addr_t size,
+-			       pgprot_t prot, bool page_mappings_only)
++void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
++			unsigned long virt, phys_addr_t size,
++			pgprot_t prot, bool page_mappings_only)
  {
- 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
+-	BUG_ON(mm == &init_mm);
+-
+ 	__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+ 			     pgd_pgtable_alloc, page_mappings_only);
+ }
+@@ -357,6 +355,128 @@ static void create_mapping_late(phys_addr_t phys, unsigned long virt,
+ 			     NULL, debug_pagealloc_enabled());
+ }
  
-+	/* Handle linux,usable-memory-range property */
-+	fdt_enforce_memory_region();
++static bool pgtable_is_cleared(void *pgtable)
++{
++	unsigned long *desc, *end;
 +
- 	/*
- 	 * Ensure that the linear region takes up exactly half of the kernel
- 	 * virtual address space. This way, we can distinguish a linear address
++	for (desc = pgtable, end = (unsigned long *)(pgtable + PAGE_SIZE);
++	     desc < end; desc++)
++		if (*desc)
++			return false;
++
++	return true;
++}
++
++static void clear_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end)
++{
++	pte_t *pte;
++
++	if (WARN_ON(pmd_bad(*pmd)))
++		return;
++
++	pte = pte_set_fixmap_offset(pmd, addr);
++
++	do {
++		pte_clear(NULL, NULL, pte);
++	} while (pte++, addr += PAGE_SIZE, addr != end);
++
++	pte_clear_fixmap();
++}
++
++static void clear_pmd_range(pud_t *pud, unsigned long addr, unsigned long end)
++{
++	pmd_t *pmd;
++	unsigned long next;
++
++	if (WARN_ON(pud_bad(*pud)))
++		return;
++
++	pmd = pmd_set_fixmap_offset(pud, addr);
++
++	do {
++		next = pmd_addr_end(addr, end);
++
++		if (pmd_table(*pmd)) {
++			clear_pte_range(pmd, addr, next);
++			if (((next - addr) == PMD_SIZE) ||
++			    pgtable_is_cleared(__va(pmd_page_paddr(*pmd)))) {
++				__free_page(pmd_page(*pmd));
++				pmd_clear(pmd);
++			}
++		} else {
++			if (WARN_ON((next - addr) != PMD_SIZE))
++				return;
++			pmd_clear(pmd);
++		}
++	} while (pmd++, addr = next, addr != end);
++
++	pmd_clear_fixmap();
++}
++
++static void clear_pud_range(pgd_t *pgd, unsigned long addr, unsigned long end)
++{
++	pud_t *pud;
++	unsigned long next;
++
++	if (WARN_ON(pgd_bad(*pgd)))
++		return;
++
++	pud = pud_set_fixmap_offset(pgd, addr);
++
++	do {
++		next = pud_addr_end(addr, end);
++
++		if (pud_table(*pud)) {
++			clear_pmd_range(pud, addr, next);
++#if CONFIG_PGTABLE_LEVELS > 2
++			if (((next - addr) == PUD_SIZE) ||
++			    pgtable_is_cleared(__va(pud_page_paddr(*pud)))) {
++				__free_page(pud_page(*pud));
++				pud_clear(pud);
++			}
++#endif
++		} else {
++#if CONFIG_PGTABLE_LEVELS > 2
++			if (WARN_ON((next - addr) != PUD_SIZE))
++				return;
++			pud_clear(pud);
++#endif
++		}
++	} while (pud++, addr = next, addr != end);
++
++	pud_clear_fixmap();
++}
++
++static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long virt,
++				 phys_addr_t size)
++{
++	unsigned long addr, length, end, next;
++	pgd_t *pgd = pgd_offset_raw(pgdir, virt);
++
++	addr = virt & PAGE_MASK;
++	length = PAGE_ALIGN(size + (virt & ~PAGE_MASK));
++
++	end = addr + length;
++	do {
++		next = pgd_addr_end(addr, end);
++		clear_pud_range(pgd, addr, next);
++
++#if CONFIG_PGTABLE_LEVELS > 3
++		if (((next - addr) == PGD_SIZE) ||
++		    pgtable_is_cleared(__va(pgd_page_paddr(*pgd)))) {
++			__free_page(pgd_page(*pgd));
++			pgd_clear(pgd);
++		}
++#endif
++	} while (pgd++, addr = next, addr != end);
++}
++
++void remove_pgd_mapping(struct mm_struct *mm, unsigned long virt,
++			phys_addr_t size)
++{
++	__remove_pgd_mapping(mm->pgd, virt, size);
++}
++
+ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end)
+ {
+ 	unsigned long kernel_start = __pa(_text);
 -- 
 2.11.0
 
