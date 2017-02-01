@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f173.google.com ([209.85.192.173])
+Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYuIe-0002Xn-Tk
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:46:31 +0000
-Received: by mail-pf0-f173.google.com with SMTP id 189so118657945pfu.3
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:45:52 -0800 (PST)
+ id 1cYuHK-0000dI-3V
+ for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:44:52 +0000
+Received: by mail-pf0-x234.google.com with SMTP id 189so118651283pfu.3
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:44:29 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v31 07/12] arm64: kdump: implement machine_crash_shutdown()
-Date: Wed,  1 Feb 2017 21:46:26 +0900
-Message-Id: <20170201124630.6016-6-takahiro.akashi@linaro.org>
+Subject: [PATCH v31 01/12] memblock: add memblock_cap_memory_range()
+Date: Wed,  1 Feb 2017 21:45:39 +0900
+Message-Id: <20170201124539.5963-1-takahiro.akashi@linaro.org>
 In-Reply-To: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -24,303 +24,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org
+Cc: mark.rutland@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Primary kernel calls machine_crash_shutdown() to shut down non-boot cpus
-and save registers' status in per-cpu ELF notes before starting crash
-dump kernel. See kernel_kexec().
-Even if not all secondary cpus have shut down, we do kdump anyway.
+Add memblock_cap_memory_range() which will remove all the memblock regions
+except the memory range specified in the arguments. In addition, rework is
+done on memblock_mem_limit_remove_map() to re-implement it using
+memblock_cap_memory_range().
 
-As we don't have to make non-boot(crashed) cpus offline (to preserve
-correct status of cpus at crash dump) before shutting down, this patch
-also adds a variant of smp_send_stop().
+This function, like memblock_mem_limit_remove_map(), will not remove
+memblocks with MEMMAP_NOMAP attribute as they may be mapped and accessed
+later as "device memory."
+See the commit a571d4eb55d8 ("mm/memblock.c: add new infrastructure to
+address the mem limit issue").
+
+This function is used, in a succeeding patch in the series of arm64 kdump
+suuport, to limit the range of usable memory, or System RAM, on crash dump
+kernel.
+(Please note that "mem=" parameter is of little use for this purpose.)
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Will Deacon <will.deacon@arm.com>
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Dennis Chen <dennis.chen@arm.com>
+Cc: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- arch/arm64/include/asm/hardirq.h  |  2 +-
- arch/arm64/include/asm/kexec.h    | 42 +++++++++++++++++++++++++-
- arch/arm64/include/asm/smp.h      |  2 ++
- arch/arm64/kernel/machine_kexec.c | 55 +++++++++++++++++++++++++++++++---
- arch/arm64/kernel/smp.c           | 63 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 158 insertions(+), 6 deletions(-)
+ include/linux/memblock.h |  1 +
+ mm/memblock.c            | 44 +++++++++++++++++++++++++++++---------------
+ 2 files changed, 30 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
-index 8740297dac77..1473fc2f7ab7 100644
---- a/arch/arm64/include/asm/hardirq.h
-+++ b/arch/arm64/include/asm/hardirq.h
-@@ -20,7 +20,7 @@
- #include <linux/threads.h>
- #include <asm/irq.h>
- 
--#define NR_IPI	6
-+#define NR_IPI	7
- 
- typedef struct {
- 	unsigned int __softirq_pending;
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 04744dc5fb61..f40ace1fa21a 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -40,7 +40,47 @@
- static inline void crash_setup_regs(struct pt_regs *newregs,
- 				    struct pt_regs *oldregs)
- {
--	/* Empty routine needed to avoid build errors. */
-+	if (oldregs) {
-+		memcpy(newregs, oldregs, sizeof(*newregs));
-+	} else {
-+		u64 tmp1, tmp2;
-+
-+		__asm__ __volatile__ (
-+			"stp	 x0,   x1, [%2, #16 *  0]\n"
-+			"stp	 x2,   x3, [%2, #16 *  1]\n"
-+			"stp	 x4,   x5, [%2, #16 *  2]\n"
-+			"stp	 x6,   x7, [%2, #16 *  3]\n"
-+			"stp	 x8,   x9, [%2, #16 *  4]\n"
-+			"stp	x10,  x11, [%2, #16 *  5]\n"
-+			"stp	x12,  x13, [%2, #16 *  6]\n"
-+			"stp	x14,  x15, [%2, #16 *  7]\n"
-+			"stp	x16,  x17, [%2, #16 *  8]\n"
-+			"stp	x18,  x19, [%2, #16 *  9]\n"
-+			"stp	x20,  x21, [%2, #16 * 10]\n"
-+			"stp	x22,  x23, [%2, #16 * 11]\n"
-+			"stp	x24,  x25, [%2, #16 * 12]\n"
-+			"stp	x26,  x27, [%2, #16 * 13]\n"
-+			"stp	x28,  x29, [%2, #16 * 14]\n"
-+			"mov	 %0,  sp\n"
-+			"stp	x30,  %0,  [%2, #16 * 15]\n"
-+
-+			"/* faked current PSTATE */\n"
-+			"mrs	 %0, CurrentEL\n"
-+			"mrs	 %1, SPSEL\n"
-+			"orr	 %0, %0, %1\n"
-+			"mrs	 %1, DAIF\n"
-+			"orr	 %0, %0, %1\n"
-+			"mrs	 %1, NZCV\n"
-+			"orr	 %0, %0, %1\n"
-+			/* pc */
-+			"adr	 %1, 1f\n"
-+		"1:\n"
-+			"stp	 %1, %0,   [%2, #16 * 16]\n"
-+			: "=&r" (tmp1), "=&r" (tmp2)
-+			: "r" (newregs)
-+			: "memory"
-+		);
-+	}
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 5b759c9acf97..fbfcacc50c29 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -333,6 +333,7 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
++void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+ int memblock_is_map_memory(phys_addr_t addr);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 7608bc305936..fea1688fef60 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1514,11 +1514,37 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
+ 			      (phys_addr_t)ULLONG_MAX);
  }
  
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index d050d720a1b4..cea009f2657d 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -148,6 +148,8 @@ static inline void cpu_panic_kernel(void)
-  */
- bool cpus_are_stuck_in_kernel(void);
- 
-+extern void smp_send_crash_stop(void);
-+
- #endif /* ifndef __ASSEMBLY__ */
- 
- #endif /* ifndef __ASM_SMP_H */
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 016f2dd693aa..c61dd7b7dca0 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -9,6 +9,9 @@
-  * published by the Free Software Foundation.
-  */
- 
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
- #include <linux/kexec.h>
- #include <linux/smp.h>
- 
-@@ -161,7 +164,8 @@ void machine_kexec(struct kimage *kimage)
- 	/*
- 	 * New cpus may have become stuck_in_kernel after we loaded the image.
- 	 */
--	BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
-+	BUG_ON((cpus_are_stuck_in_kernel() || (num_online_cpus() > 1)) &&
-+			!WARN_ON(kimage == kexec_crash_image));
- 
- 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
- 
-@@ -198,15 +202,58 @@ void machine_kexec(struct kimage *kimage)
- 	 * relocation is complete.
- 	 */
- 
--	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
--		kimage->start, 0);
-+	cpu_soft_restart(kimage != kexec_crash_image,
-+		reboot_code_buffer_phys, kimage->head, kimage->start, 0);
- 
- 	BUG(); /* Should never get here. */
- }
- 
-+static void machine_kexec_mask_interrupts(void)
++void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
 +{
-+	unsigned int i;
-+	struct irq_desc *desc;
++	int start_rgn, end_rgn;
++	int i, ret;
 +
-+	for_each_irq_desc(i, desc) {
-+		struct irq_chip *chip;
-+		int ret;
-+
-+		chip = irq_desc_get_chip(desc);
-+		if (!chip)
-+			continue;
-+
-+		/*
-+		 * First try to remove the active state. If this
-+		 * fails, try to EOI the interrupt.
-+		 */
-+		ret = irq_set_irqchip_state(i, IRQCHIP_STATE_ACTIVE, false);
-+
-+		if (ret && irqd_irq_inprogress(&desc->irq_data) &&
-+		    chip->irq_eoi)
-+			chip->irq_eoi(&desc->irq_data);
-+
-+		if (chip->irq_mask)
-+			chip->irq_mask(&desc->irq_data);
-+
-+		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
-+			chip->irq_disable(&desc->irq_data);
-+	}
-+}
-+
-+/**
-+ * machine_crash_shutdown - shutdown non-crashing cpus and save registers
-+ */
- void machine_crash_shutdown(struct pt_regs *regs)
- {
--	/* Empty routine needed to avoid build errors. */
-+	local_irq_disable();
-+
-+	/* shutdown non-crashing cpus */
-+	smp_send_crash_stop();
-+
-+	/* for crashing cpu */
-+	crash_save_cpu(regs, smp_processor_id());
-+	machine_kexec_mask_interrupts();
-+
-+	pr_info("Starting crashdump kernel...\n");
- }
- 
- void arch_kexec_protect_crashkres(void)
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index cb87234cfcf2..446c6d48f8ec 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -37,6 +37,7 @@
- #include <linux/completion.h>
- #include <linux/of.h>
- #include <linux/irq_work.h>
-+#include <linux/kexec.h>
- 
- #include <asm/alternative.h>
- #include <asm/atomic.h>
-@@ -74,6 +75,7 @@ enum ipi_msg_type {
- 	IPI_RESCHEDULE,
- 	IPI_CALL_FUNC,
- 	IPI_CPU_STOP,
-+	IPI_CPU_CRASH_STOP,
- 	IPI_TIMER,
- 	IPI_IRQ_WORK,
- 	IPI_WAKEUP
-@@ -753,6 +755,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
- 	S(IPI_RESCHEDULE, "Rescheduling interrupts"),
- 	S(IPI_CALL_FUNC, "Function call interrupts"),
- 	S(IPI_CPU_STOP, "CPU stop interrupts"),
-+	S(IPI_CPU_CRASH_STOP, "CPU stop (for crash dump) interrupts"),
- 	S(IPI_TIMER, "Timer broadcast interrupts"),
- 	S(IPI_IRQ_WORK, "IRQ work interrupts"),
- 	S(IPI_WAKEUP, "CPU wake-up interrupts"),
-@@ -827,6 +830,29 @@ static void ipi_cpu_stop(unsigned int cpu)
- 		cpu_relax();
- }
- 
-+#ifdef CONFIG_KEXEC_CORE
-+static atomic_t waiting_for_crash_ipi;
-+#endif
-+
-+static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs)
-+{
-+#ifdef CONFIG_KEXEC_CORE
-+	crash_save_cpu(regs, cpu);
-+
-+	atomic_dec(&waiting_for_crash_ipi);
-+
-+	local_irq_disable();
-+
-+#ifdef CONFIG_HOTPLUG_CPU
-+	if (cpu_ops[cpu]->cpu_die)
-+		cpu_ops[cpu]->cpu_die(cpu);
-+#endif
-+
-+	/* just in case */
-+	cpu_park_loop();
-+#endif
-+}
-+
- /*
-  * Main handler for inter-processor interrupts
-  */
-@@ -857,6 +883,15 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
- 		irq_exit();
- 		break;
- 
-+	case IPI_CPU_CRASH_STOP:
-+		if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
-+			irq_enter();
-+			ipi_cpu_crash_stop(cpu, regs);
-+
-+			unreachable();
-+		}
-+		break;
-+
- #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
- 	case IPI_TIMER:
- 		irq_enter();
-@@ -929,6 +964,34 @@ void smp_send_stop(void)
- 			   cpumask_pr_args(cpu_online_mask));
- }
- 
-+#ifdef CONFIG_KEXEC_CORE
-+void smp_send_crash_stop(void)
-+{
-+	cpumask_t mask;
-+	unsigned long timeout;
-+
-+	if (num_online_cpus() == 1)
++	if (!size)
 +		return;
 +
-+	cpumask_copy(&mask, cpu_online_mask);
-+	cpumask_clear_cpu(smp_processor_id(), &mask);
++	ret = memblock_isolate_range(&memblock.memory, base, size,
++						&start_rgn, &end_rgn);
++	if (ret)
++		return;
 +
-+	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
++	/* remove all the MAP regions */
++	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
 +
-+	pr_crit("SMP: stopping secondary CPUs\n");
-+	smp_cross_call(&mask, IPI_CPU_CRASH_STOP);
++	for (i = start_rgn - 1; i >= 0; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
 +
-+	/* Wait up to one second for other CPUs to stop */
-+	timeout = USEC_PER_SEC;
-+	while ((atomic_read(&waiting_for_crash_ipi) > 0) && timeout--)
-+		udelay(1);
-+
-+	if (atomic_read(&waiting_for_crash_ipi) > 0)
-+		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
-+			   cpumask_pr_args(cpu_online_mask));
++	/* truncate the reserved regions */
++	memblock_remove_range(&memblock.reserved, 0, base);
++	memblock_remove_range(&memblock.reserved,
++			base + size, (phys_addr_t)ULLONG_MAX);
 +}
-+#endif
 +
- /*
-  * not supported here
-  */
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
+-	struct memblock_type *type = &memblock.memory;
+ 	phys_addr_t max_addr;
+-	int i, ret, start_rgn, end_rgn;
+ 
+ 	if (!limit)
+ 		return;
+@@ -1529,19 +1555,7 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ 	if (max_addr == (phys_addr_t)ULLONG_MAX)
+ 		return;
+ 
+-	ret = memblock_isolate_range(type, max_addr, (phys_addr_t)ULLONG_MAX,
+-				&start_rgn, &end_rgn);
+-	if (ret)
+-		return;
+-
+-	/* remove all the MAP regions above the limit */
+-	for (i = end_rgn - 1; i >= start_rgn; i--) {
+-		if (!memblock_is_nomap(&type->regions[i]))
+-			memblock_remove_region(type, i);
+-	}
+-	/* truncate the reserved regions */
+-	memblock_remove_range(&memblock.reserved, max_addr,
+-			      (phys_addr_t)ULLONG_MAX);
++	memblock_cap_memory_range(0, max_addr);
+ }
+ 
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
 -- 
 2.11.0
 
