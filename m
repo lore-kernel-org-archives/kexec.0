@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x229.google.com ([2607:f8b0:400e:c05::229])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cYuJi-0005sd-K7
- for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:47:19 +0000
-Received: by mail-pg0-x229.google.com with SMTP id 3so50483833pgj.3
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:46:58 -0800 (PST)
+Received: from mail-pf0-x230.google.com ([2607:f8b0:400e:c00::230])
+ by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cYuJA-00026K-Vt
+ for kexec@lists.infradead.org; Wed, 01 Feb 2017 12:46:46 +0000
+Received: by mail-pf0-x230.google.com with SMTP id 189so118660416pfu.3
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 04:46:24 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v31 12/12] Documentation: dt: chosen properties for arm64 kdump
-Date: Wed,  1 Feb 2017 21:48:20 +0900
-Message-Id: <20170201124820.6094-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v31 11/12] Documentation: kdump: describe arm64 port
+Date: Wed,  1 Feb 2017 21:46:30 +0900
+Message-Id: <20170201124630.6016-10-takahiro.akashi@linaro.org>
 In-Reply-To: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -24,72 +24,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-From: James Morse <james.morse@arm.com>
+Add arch specific descriptions about kdump usage on arm64 to kdump.txt.
 
-Add documentation for DT properties:
-	linux,usable-memory-range
-	linux,elfcorehdr
-used by arm64 kdump. Those decribe the usable memory range for crash dump
-kernel and the elfcorehdr's location within it, respectively.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-[takahiro.akashi@linaro.org: added "linux,crashkernel-base" and "-size" ]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- Documentation/devicetree/bindings/chosen.txt | 37 ++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ Documentation/kdump/kdump.txt | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82d4c37..8dc82431acc1 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,40 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index b0eb27b956d9..615434d81108 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+ a remote system.
+ 
+ Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+-s390x and arm architectures.
++s390x, arm and arm64 architectures.
+ 
+ When the system kernel boots, it reserves a small section of memory for
+ the dump-capture kernel. This ensures that ongoing Direct Memory Access
+@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
+ 
+     AUTO_ZRELADDR=y
+ 
++Dump-capture kernel config options (Arch Dependent, arm64)
++----------------------------------------------------------
 +
-+linux,usable-memory-range
-+-------------------------
++- Please note that kvm of the dump-capture kernel will not be enabled
++  on non-VHE systems even if it is configured. This is because the CPU
++  will not be reset to EL2 on panic.
 +
-+This property (arm64 only) holds a base address and size, describing a
-+limited region in which memory may be considered available for use by
-+the kernel. Memory outside of this range is not available for use.
+ Extended crashkernel syntax
+ ===========================
+ 
+@@ -305,6 +312,8 @@ Boot into System Kernel
+    kernel will automatically locate the crash kernel image within the
+    first 512MB of RAM if X is not given.
+ 
++   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
++   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+ 
+ Load the Dump-capture Kernel
+ ============================
+@@ -327,6 +336,8 @@ For s390x:
+ 	- Use image or bzImage
+ For arm:
+ 	- Use zImage
++For arm64:
++	- Use vmlinux or Image
+ 
+ If you are using a uncompressed vmlinux image then use following command
+ to load dump-capture kernel.
+@@ -370,6 +381,9 @@ For s390x:
+ For arm:
+ 	"1 maxcpus=1 reset_devices"
+ 
++For arm64:
++	"1 maxcpus=1 reset_devices"
 +
-+This property describes a limitation: memory within this range is only
-+valid when also described through another mechanism that the kernel
-+would otherwise use to determine available memory (e.g. memory nodes
-+or the EFI memory map). Valid memory may be sparse within the range.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout as PT_LOAD segments of elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
+ Notes on loading the dump-capture kernel:
+ 
+ * By default, the ELF headers are stored in ELF64 format to support
 -- 
 2.11.0
 
