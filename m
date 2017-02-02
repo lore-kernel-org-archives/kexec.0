@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 1 Feb 2017 19:21:22 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v31 09/12] arm64: kdump: provide /proc/vmcore file
-Message-ID: <20170201192121.GB30584@leverpostej>
+Received: from mail-pg0-f49.google.com ([74.125.83.49])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cZ8tl-0002iR-Oq
+ for kexec@lists.infradead.org; Thu, 02 Feb 2017 04:21:32 +0000
+Received: by mail-pg0-f49.google.com with SMTP id 204so1980707pge.0
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 20:21:08 -0800 (PST)
+Date: Thu, 2 Feb 2017 13:21:36 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v31 02/12] arm64: limit memory regions based on DT
+ property, usable-memory-range
+Message-ID: <20170202042135.GA13549@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
- <20170201124630.6016-8-takahiro.akashi@linaro.org>
+ <20170201124630.6016-1-takahiro.akashi@linaro.org>
+ <20170201150700.GD4756@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170201124630.6016-8-takahiro.akashi@linaro.org>
+In-Reply-To: <20170201150700.GD4756@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,77 +28,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Mark Rutland <mark.rutland@arm.com>
 Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Feb 01, 2017 at 09:46:28PM +0900, AKASHI Takahiro wrote:
-> Add arch-specific functions to provide a dump file, /proc/vmcore.
+On Wed, Feb 01, 2017 at 03:07:00PM +0000, Mark Rutland wrote:
+> Hi,
 > 
-> This file is in ELF format and its ELF header needs to be prepared by
-> userspace tools, like kexec-tools, in adance. The primary kernel is
-> responsible to allocate the region with reserve_elfcorehdr() at boot time
-> and advertize its location to crash dump kernel via a new device-tree
-> property, "linux,elfcorehdr".
+> On Wed, Feb 01, 2017 at 09:46:21PM +0900, AKASHI Takahiro wrote:
+> > +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> > +		const char *uname, int depth, void *data)
+> > +{
+> > +	struct memblock_region *usablemem = (struct memblock_region *)data;
+> 
+> Nit: unnecessary cast.
 
-> +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-> +		const char *uname, int depth, void *data)
-> +{
-> +	const __be32 *reg;
-> +	int len;
-> +
-> +	if (depth != 1 || strcmp(uname, "chosen") != 0)
-> +		return 0;
-> +
-> +	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
-> +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-> +		return 1;
-> +
-> +	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> +	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> +
-> +	return 1;
-> +}
-> +
-> +/*
-> + * reserve_elfcorehdr() - reserves memory for elf core header
-> + *
-> + * This function reserves elf core header given in "elfcorehdr=" kernel
-> + * command line parameter. This region contains all the information about
-> + * primary kernel's core image and is used by a dump capture kernel to
-> + * access the system memory on primary kernel.
-> + */
-> +static void __init reserve_elfcorehdr(void)
-> +{
-> +	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
-> +
-> +	if (!elfcorehdr_size)
-> +		return;
-> +
-> +	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-> +		pr_warn("elfcorehdr is overlapped\n");
-> +		return;
-> +	}
-> +
-> +	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-> +
-> +	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
-> +		elfcorehdr_size >> 10, elfcorehdr_addr);
-> +}
+OK
 
-This doesn't seem right to me.  The logic here doesn't match the commit
-message, the comment above reserve_elfcorehdr() doesn't match the
-implementation, and this doesn't match my understanding of how this was
-intended to be used from the DT binding.
+> > +	const __be32 *reg;
+> > +	int len;
+> > +
+> > +	usablemem->size = 0;
+> 
+> Could we please lift this assignment/initialisation into the caller...
+> 
+> > +
+> > +	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > +		return 0;
+> > +
+> > +	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> > +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > +		return 1;
+> > +
+> > +	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> > +	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +static void __init fdt_enforce_memory_region(void)
+> > +{
+> > +	struct memblock_region reg;
+> 
+> ... e.g. have:
+> 
+> 	struct memblock_region reg = {
+> 		.size = 0,
+> 	};
 
-I had assumed that we'd treat this in much the same way as the
-linux,reserved-memory-region property, with the primary kernel either
-dynamically allocating the region or using a command line option, and
-the base being exposed to userspace via /sys/ or /proc/ somehow.
+Sure
 
-Why is that not the case?
+> That saves us from making unnecessary assignments to the size field, and
+> makes it clear that reg.size has definitely been initialised, regardless
+> of what of_scan_flat_dt() happens to do.
+>
+> With that:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
-Mark.
+-Takahiro AKASHI
+
+> Thanks,
+> Mark.
+> 
+> > +
+> > +	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> > +
+> > +	if (reg.size)
+> > +		memblock_cap_memory_range(reg.base, reg.size);
+> > +}
+> > +
+> >  void __init arm64_memblock_init(void)
+> >  {
+> >  	const s64 linear_region_size = -(s64)PAGE_OFFSET;
+> >  
+> > +	/* Handle linux,usable-memory-range property */
+> > +	fdt_enforce_memory_region();
+> > +
+> >  	/*
+> >  	 * Ensure that the linear region takes up exactly half of the kernel
+> >  	 * virtual address space. This way, we can distinguish a linear address
+> > -- 
+> > 2.11.0
+> > 
 
 _______________________________________________
 kexec mailing list
