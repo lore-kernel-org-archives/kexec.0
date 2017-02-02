@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f174.google.com ([209.85.192.174])
+Received: from mail-pf0-f180.google.com ([209.85.192.180])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cZAoR-0003X0-Rm
- for kexec@lists.infradead.org; Thu, 02 Feb 2017 06:24:10 +0000
-Received: by mail-pf0-f174.google.com with SMTP id y143so2778572pfb.0
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 22:23:40 -0800 (PST)
-Date: Thu, 2 Feb 2017 15:24:09 +0900
+ id 1cZEW1-0001mk-0I
+ for kexec@lists.infradead.org; Thu, 02 Feb 2017 10:21:22 +0000
+Received: by mail-pf0-f180.google.com with SMTP id 189so4419163pfu.3
+ for <kexec@lists.infradead.org>; Thu, 02 Feb 2017 02:21:00 -0800 (PST)
+Date: Thu, 2 Feb 2017 19:21:32 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v31 09/12] arm64: kdump: provide /proc/vmcore file
-Message-ID: <20170202062408.GC13549@linaro.org>
+Subject: Re: [PATCH v31 04/12] arm64: mm: allow for unmapping part of kernel
+ mapping
+Message-ID: <20170202102131.GD13549@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
- <20170201124630.6016-8-takahiro.akashi@linaro.org>
- <20170201192121.GB30584@leverpostej>
+ <20170201124630.6016-3-takahiro.akashi@linaro.org>
+ <20170201160354.GF4756@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170201192121.GB30584@leverpostej>
+In-Reply-To: <20170201160354.GF4756@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,102 +31,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>
 Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Feb 01, 2017 at 07:21:22PM +0000, Mark Rutland wrote:
-> On Wed, Feb 01, 2017 at 09:46:28PM +0900, AKASHI Takahiro wrote:
-> > Add arch-specific functions to provide a dump file, /proc/vmcore.
-> > 
-> > This file is in ELF format and its ELF header needs to be prepared by
-> > userspace tools, like kexec-tools, in adance. The primary kernel is
-> > responsible to allocate the region with reserve_elfcorehdr() at boot time
-> > and advertize its location to crash dump kernel via a new device-tree
-> > property, "linux,elfcorehdr".
+On Wed, Feb 01, 2017 at 04:03:54PM +0000, Mark Rutland wrote:
+> Hi,
 > 
-> > +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-> > +		const char *uname, int depth, void *data)
-> > +{
-> > +	const __be32 *reg;
-> > +	int len;
-> > +
-> > +	if (depth != 1 || strcmp(uname, "chosen") != 0)
-> > +		return 0;
-> > +
-> > +	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
-> > +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-> > +		return 1;
-> > +
-> > +	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> > +	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> > +
-> > +	return 1;
-> > +}
-> > +
-> > +/*
-> > + * reserve_elfcorehdr() - reserves memory for elf core header
-> > + *
-> > + * This function reserves elf core header given in "elfcorehdr=" kernel
-> > + * command line parameter. This region contains all the information about
-> > + * primary kernel's core image and is used by a dump capture kernel to
-> > + * access the system memory on primary kernel.
-> > + */
-> > +static void __init reserve_elfcorehdr(void)
-> > +{
-> > +	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
-> > +
-> > +	if (!elfcorehdr_size)
-> > +		return;
-> > +
-> > +	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-> > +		pr_warn("elfcorehdr is overlapped\n");
-> > +		return;
-> > +	}
-> > +
-> > +	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-> > +
-> > +	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
-> > +		elfcorehdr_size >> 10, elfcorehdr_addr);
-> > +}
+> On Wed, Feb 01, 2017 at 09:46:23PM +0900, AKASHI Takahiro wrote:
+> > A new function, remove_pgd_mapping(), is added.
+> > It allows us to unmap a specific portion of kernel mapping later as far as
+> > the mapping is made using create_pgd_mapping() and unless we try to free
+> > a sub-set of memory range within a section mapping.
 > 
-> This doesn't seem right to me.  The logic here doesn't match the commit
-> message, the comment above reserve_elfcorehdr() doesn't match the
-> implementation, and this doesn't match my understanding of how this was
-> intended to be used from the DT binding.
+> I'm not keen on adding more page table modification code. It was painful
+> enough to ensure that those worked in all configurations.
+> 
+> Why can't we reuse create_pgd_mapping()? If we pass page_mappings_only,
+> and use an invalid prot (i.e. 0), what is the problem?
 
-Surely the commit message was wrong/misleading; It should say
+As I did in v30?
+(though my implementation in v30 should be improved.)
 
-===8<===
-Arch-specific functions are added to allow for implementing a crash dump
-file interface, /proc/vmcore, which can be viewed as a ELF file.
+> I can see that we wouldn't free/reallocate the pud or pmd entries, but
+> the "wasted" memory should be small. If anything, I'd argue that it's
+> preferable to keep that around so that we don't have to allocate memory
+> when we need to map the crashkernel region.
+> 
+> Is there another problem I'm missing?
 
-A user space tool, like kexec-tools, is responsible for allocating
-a separate region for the core's ELF header within crash kdump kernel 
-memory and filling it in when executing kexec_load().
-
-Then, its location will be advertised to crash dump kernel via a new
-device-tree property, "linux,elfcorehdr", and crash dump kernel preserves
-the region for later use with reserve_elfcorehdr() at boot time.
-
-On crash dump kernel, /proc/vmcore will access the primary kernel's memory
-with copy_oldmem_page(), which feeds the data page-by-page by ioremap'ing
-it since it does not reside in linear mapping on crash dump kernel.
-
-Meanwhile, elfcorehdr_read() is simple as the region is always mapped.
-===>8===
-
-Does this make things clear?
-
-> I had assumed that we'd treat this in much the same way as the
-> linux,reserved-memory-region property, with the primary kernel either
-> dynamically allocating the region or using a command line option, and
-> the base being exposed to userspace via /sys/ or /proc/ somehow.
-
-I didn't get the point here, but please note that the data in ELF core header
-is produced by kexec-tools (who knows its location, too), and consumed solely
-by the crash dump kernel.
+If we don't need to free unused page tables, that would make things
+much simple. There are still some minor problems on the merge, but
+we can sort it out.
 
 Thanks,
 -Takahiro AKASHI
 
-> Why is that not the case?
+> > +static bool pgtable_is_cleared(void *pgtable)
+> > +{
+> > +	unsigned long *desc, *end;
+> > +
+> > +	for (desc = pgtable, end = (unsigned long *)(pgtable + PAGE_SIZE);
+> > +	     desc < end; desc++)
+> > +		if (*desc)
+> > +			return false;
+> > +
+> > +	return true;
+> > +}
+> 
+> If nothing else, we should be using the normal accessors for this, e.g.
+> {pte,pmd,pud}_none().
+> 
+> As above, I'd very much like to reuse our existing page table routines
+> if we can.
 > 
 > Thanks,
 > Mark.
