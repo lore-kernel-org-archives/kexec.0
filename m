@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f54.google.com ([74.125.83.54])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cZIp7-00081a-Iy
- for kexec@lists.infradead.org; Thu, 02 Feb 2017 14:57:23 +0000
-Received: by mail-pg0-f54.google.com with SMTP id 204so6429831pge.0
- for <kexec@lists.infradead.org>; Thu, 02 Feb 2017 06:56:59 -0800 (PST)
-Date: Thu, 2 Feb 2017 23:55:54 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v31 04/12] arm64: mm: allow for unmapping part of kernel
- mapping
-Message-ID: <20170202145553.GA3238@fireball>
+Date: Thu, 2 Feb 2017 15:36:13 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v31 05/12] arm64: kdump: protect crash dump kernel memory
+Message-ID: <20170202153612.GN31394@leverpostej>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
- <20170201124630.6016-3-takahiro.akashi@linaro.org>
- <20170201160354.GF4756@leverpostej>
- <20170202102131.GD13549@linaro.org>
- <20170202114437.GH31394@leverpostej>
- <20170202140102.GA22666@fireball>
- <20170202143535.GM31394@leverpostej>
+ <20170201124630.6016-4-takahiro.akashi@linaro.org>
+ <20170201180008.GG4756@leverpostej>
+ <20170202103129.GE13549@linaro.org>
+ <20170202111637.GA31394@leverpostej>
+ <20170202143602.GA3078@fireball>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170202143535.GM31394@leverpostej>
+In-Reply-To: <20170202143602.GA3078@fireball>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,110 +24,150 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Thu, Feb 02, 2017 at 02:35:35PM +0000, Mark Rutland wrote:
-> On Thu, Feb 02, 2017 at 11:01:03PM +0900, AKASHI Takahiro wrote:
-> > On Thu, Feb 02, 2017 at 11:44:38AM +0000, Mark Rutland wrote:
-> > > On Thu, Feb 02, 2017 at 07:21:32PM +0900, AKASHI Takahiro wrote:
-> > > > On Wed, Feb 01, 2017 at 04:03:54PM +0000, Mark Rutland wrote:
-> > > > > Hi,
-> > > > > 
-> > > > > On Wed, Feb 01, 2017 at 09:46:23PM +0900, AKASHI Takahiro wrote:
-> > > > > > A new function, remove_pgd_mapping(), is added.
-> > > > > > It allows us to unmap a specific portion of kernel mapping later as far as
-> > > > > > the mapping is made using create_pgd_mapping() and unless we try to free
-> > > > > > a sub-set of memory range within a section mapping.
-> > > > > 
-> > > > > I'm not keen on adding more page table modification code. It was painful
-> > > > > enough to ensure that those worked in all configurations.
-> > > > > 
-> > > > > Why can't we reuse create_pgd_mapping()? If we pass page_mappings_only,
-> > > > > and use an invalid prot (i.e. 0), what is the problem?
-> > > > 
-> > > > As I did in v30?
-> > > > (though my implementation in v30 should be improved.)
-> > > 
-> > > Something like that. I wasn't entirely sure why we needed to change
-> > > those functions so much, so I'm clearly missing something there. I'll go
-> > > have another look.
+On Thu, Feb 02, 2017 at 11:36:04PM +0900, AKASHI Takahiro wrote:
+> On Thu, Feb 02, 2017 at 11:16:37AM +0000, Mark Rutland wrote:
+> > On Thu, Feb 02, 2017 at 07:31:30PM +0900, AKASHI Takahiro wrote:
+> > > On Wed, Feb 01, 2017 at 06:00:08PM +0000, Mark Rutland wrote:
+> > > > On Wed, Feb 01, 2017 at 09:46:24PM +0900, AKASHI Takahiro wrote:
+
+> > Imagine we have phyiscal memory:
 > > 
-> > I would be much easier if you see my new code.
-> 
-> Sure. FWIW, I took a look, and I understand why those changes were
-> necessary.
-> 
-> > > > If we don't need to free unused page tables, that would make things
-> > > > much simple. There are still some minor problems on the merge, but
-> > > > we can sort it out.
-> > > 
-> > > I'm not sure I follow what you mean by 'on merge' here. Could you
-> > > elaborate?
+> > singe RAM bank:    |---------------------------------------------------|
+> > kernel image:              |---|
+> > crashkernel:                                      |------|
 > > 
-> > What I had in mind is some changes needed to handle "__prot(0)" properly
-> > in alloc_init_pxx(). For example, p[mu]d_set_huge() doesn't make
-> > a "zeroed" entry.
+> > ... we reserve the image and crashkernel region, but these would still
+> > remain part of the memory memblock, and we'd have a memblock layout
+> > like:
+> > 
+> > memblock.memory:   |---------------------------------------------------|
+> > memblock.reserved:         |---|                  |------|
+> > 
+> > ... in map_mem() we iterate over memblock.memory, so we only have a
+> > single entry to handle in this case. With the code above, we'd find that
+> > it overlaps the crashk_res, and we'd map the parts which don't overlap,
+> > e.g.
+> > 
+> > memblock.memory:   |---------------------------------------------------|
+> > crashkernel:                                      |------|
+> > mapped regions:    |-----------------------------|        |------------|
 > 
-> I think that if we only allow ourselves to make PTEs invalid, we don't
-> have to handle that case. If we use page_mappings_only, we should only
-> check pgattr_change_is_safe() for the pte level, and the {pmd,pud,pgd}
-> entries shouldn't change.
+> I'm afraid that you might be talking about my v30.
+> The code in v31 was a bit modified, and now
 > 
-> Is the below sufficient to allow that, or have I missed something?
+> > ... hwoever, this means we've mapped the portion which overlaps with the
+> > kernel's linear alias (i.e. the case that we try to handle in
+> > __map_memblock()). What we actually wanted was:
+> > 
+> > memblock.memory:   |---------------------------------------------------|
+> > kernel image:              |---|
+> > crashkernel:                                      |------|
+> 
+>                      |-----------(A)---------------|        |----(B)-----|
+> 
+> __map_memblock() is called against each of (A) and (B),
+> so I think we will get
+> 
+> > mapped regions:    |------|     |----------------|        |------------|
+> 
+> this mapping.
 
-I think it will be OK, but will double-check tomorrow.
-However, is is acceptable that create_pgd_mapping( __prot(0) ) can
-only handle the cases of page-mapping-only?
-That would be fine to kdump, but in general?
+Ah, I see. You are correct; this will work.
 
--Takahiro AKASHI
+Clearly I needed more coffee before considering this. :/
 
-> Thanks,
-> Mark.
+> > To handle all cases I think we have to isolate *both* the image and
+> > crashkernel in map_mem(). That would leave use with:
+> > 
+> > memblock.memory:   |------||---||----------------||------||------------|
+> > memblock.reserved:         |---|                  |------|
+> > 
+> > ... so then we can check for overlap with either the kernel or
+> > crashkernel in __map_memblock(), and return early, e.g.
+> > 
+> > __map_memblock(...)
+> > 	if (overlaps_with_kernel(...))
+> > 		return;
+> > 	if (overlaps_with_crashekrenl(...))
+> > 		return;
+> > 	
+> > 	__create_pgd_mapping(...);
+> > }
+> > 
+> > We can pull the kernel alias mapping out of __map_memblock() and put it
+> > at the end of map_mem().
+> > 
+> > Does that make sense?
 > 
-> ---->8----
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 17243e4..05bf7bf 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -105,6 +105,22 @@ static bool pgattr_change_is_safe(u64 old, u64 new)
->         return old  == 0 || new  == 0 || ((old ^ new) & ~mask) == 0;
->  }
-> 
-> +static bool pte_change_is_valid(pte old, pte new)
-> +{
-> +       /*
-> +        * So long as we subsequently perform TLB invalidation, it is safe to
-> +        * change a PTE to an invalid, but non-zero value. We only allow this
-> +        * for PTEs since there's no complicated allocation/free issues to deal
-> +        * with.
-> +        *
-> +        * Otherwise, the usual attribute change rules apply.
-> +        */
-> +       if (!pte_valid(old) || !pte_valid(new))
-> +               return true;
-> +
-> +       return pgattr_change_is_safe(pte_val(old), pte_val(new));
-> +}
-> +
->  static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
->                                   unsigned long end, unsigned long pfn,
->                                   pgprot_t prot,
-> @@ -143,11 +159,7 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
->                 set_pte(pte, pfn_pte(pfn, __prot));
->                 pfn++;
-> 
-> -               /*
-> -                * After the PTE entry has been populated once, we
-> -                * only allow updates to the permission attributes.
-> -                */
-> -               BUG_ON(!pgattr_change_is_safe(pte_val(old_pte), pte_val(*pte)));
-> +               BUG_ON(!pte_change_is_valid(old_pte, pte));
-> 
->         } while (pte++, addr += PAGE_SIZE, addr != end);
-> 
-> 
+> OK, I now understand your anticipation.
+
+Thinking about it, we can do this consistently in one place if we use nomap
+(temporarily), which would allow us to simplify the existing code. We'd have to
+introduce memblock_clear_nomap(), but that's less of an internal detail than
+memblock_isolate_range(), so that seems reasonable.
+
+I think we can handle this like:
+
+/*
+ * Create a linear mapping for all memblock memory regions which are mappable.
+ */
+static void __init __map_mem(pgd_t *pgd)
+{
+        struct memblock_region *reg;
+
+        /* map all the memory banks */
+        for_each_memblock(memory, reg) {
+                phys_addr_t start = reg->base;
+                phys_addr_t end = start + reg->size;
+
+                if (start >= end)
+                        break;
+                if (memblock_is_nomap(reg))
+                        continue;
+
+                __create_pgd_mapping(pgd, start, __phys_to_virt(start),
+                                     end - start, PAGE_KERNEL,
+                                     early_pgtable_alloc,
+                                     debug_pagealloc_enabled());
+        }   
+}
+
+/*
+ * Create a linear mapping for mappable memory, handling regions which have
+ * special mapping requirements.
+ */
+static void __init map_mem(pgd_t *pgd)
+{
+        unsigned long kernel_start = __pa(_text);
+        unsigned long kernel_end = __pa(__init_begin);
+
+        memblock_mark_nomap(kernel_start, kernel_end);
+
+        // mark crashkernel nomap here
+
+        __map_mem(pgd);
+
+        /*  
+         * Map the linear alias of the [_text, __init_begin) interval as
+         * read-only/non-executable. This makes the contents of the
+         * region accessible to subsystems such as hibernate, but
+         * protects it from inadvertent modification or execution.
+         */
+        __create_pgd_mapping(pgd, kernel_start, __phys_to_virt(kernel_start),
+                             kernel_end - kernel_start, PAGE_KERNEL_RO,
+                             early_pgtable_alloc, debug_pagealloc_enabled());
+        memblock_clear_nomap(kernel_start, kernel_end);
+
+        // map crashkernel here
+        // clear nomap for crashkernel
+}
+
+Thoughts?
+
+Thanks,
+Mark.
 
 _______________________________________________
 kexec mailing list
