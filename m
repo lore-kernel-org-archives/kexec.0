@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f176.google.com ([209.85.192.176])
+Received: from mail-pf0-f174.google.com ([209.85.192.174])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cZ9Nj-00084z-2u
- for kexec@lists.infradead.org; Thu, 02 Feb 2017 04:52:29 +0000
-Received: by mail-pf0-f176.google.com with SMTP id y143so2078075pfb.0
- for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 20:52:06 -0800 (PST)
-Date: Thu, 2 Feb 2017 13:52:36 +0900
+ id 1cZAoR-0003X0-Rm
+ for kexec@lists.infradead.org; Thu, 02 Feb 2017 06:24:10 +0000
+Received: by mail-pf0-f174.google.com with SMTP id y143so2778572pfb.0
+ for <kexec@lists.infradead.org>; Wed, 01 Feb 2017 22:23:40 -0800 (PST)
+Date: Thu, 2 Feb 2017 15:24:09 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v31 03/12] arm64: kdump: reserve memory for crash dump
- kernel
-Message-ID: <20170202045235.GB13549@linaro.org>
+Subject: Re: [PATCH v31 09/12] arm64: kdump: provide /proc/vmcore file
+Message-ID: <20170202062408.GC13549@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
- <20170201124630.6016-2-takahiro.akashi@linaro.org>
- <20170201152609.GE4756@leverpostej>
+ <20170201124630.6016-8-takahiro.akashi@linaro.org>
+ <20170201192121.GB30584@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170201152609.GE4756@leverpostej>
+In-Reply-To: <20170201192121.GB30584@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,108 +28,105 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>
-Cc: Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Feb 01, 2017 at 03:26:09PM +0000, Mark Rutland wrote:
-> Hi,
+On Wed, Feb 01, 2017 at 07:21:22PM +0000, Mark Rutland wrote:
+> On Wed, Feb 01, 2017 at 09:46:28PM +0900, AKASHI Takahiro wrote:
+> > Add arch-specific functions to provide a dump file, /proc/vmcore.
+> > 
+> > This file is in ELF format and its ELF header needs to be prepared by
+> > userspace tools, like kexec-tools, in adance. The primary kernel is
+> > responsible to allocate the region with reserve_elfcorehdr() at boot time
+> > and advertize its location to crash dump kernel via a new device-tree
+> > property, "linux,elfcorehdr".
 > 
-> On Wed, Feb 01, 2017 at 09:46:22PM +0900, AKASHI Takahiro wrote:
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +/*
-> > + * reserve_crashkernel() - reserves memory for crash kernel
-> > + *
-> > + * This function reserves memory area given in "crashkernel=" kernel command
-> > + * line parameter. The memory reserved is used by dump capture kernel when
-> > + * primary kernel is crashing.
-> > + */
-> > +static void __init reserve_crashkernel(void)
+> > +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+> > +		const char *uname, int depth, void *data)
 > > +{
-> > +	unsigned long long crash_base, crash_size;
-> > +	int ret;
+> > +	const __be32 *reg;
+> > +	int len;
 > > +
-> > +	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> > +				&crash_size, &crash_base);
-> > +	/* no crashkernel= or invalid value specified */
-> > +	if (ret || !crash_size)
+> > +	if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > +		return 0;
+> > +
+> > +	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
+> > +	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > +		return 1;
+> > +
+> > +	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> > +	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +/*
+> > + * reserve_elfcorehdr() - reserves memory for elf core header
+> > + *
+> > + * This function reserves elf core header given in "elfcorehdr=" kernel
+> > + * command line parameter. This region contains all the information about
+> > + * primary kernel's core image and is used by a dump capture kernel to
+> > + * access the system memory on primary kernel.
+> > + */
+> > +static void __init reserve_elfcorehdr(void)
+> > +{
+> > +	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
+> > +
+> > +	if (!elfcorehdr_size)
 > > +		return;
 > > +
-> > +	crash_size = PAGE_ALIGN(crash_size);
-> > +
-> > +	if (crash_base == 0) {
-> > +		/* Current arm64 boot protocol requires 2MB alignment */
-> > +		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-> > +				crash_size, SZ_2M);
-> > +		if (crash_base == 0) {
-> > +			pr_warn("Unable to allocate crashkernel (size:%llx)\n",
-> > +				crash_size);
-> 
-> Nit: can we please make that "size: 0x%llx", so that it's always clearly
-> a hex number? e.g.
-> 
-> 	pr_warn("cannot allocate 0x%llx bytes for crashkernel\n",
-> 		crash_size);
-
-OK
-
-> > +			return;
-> > +		}
-> > +	} else {
-> > +		/* User specifies base address explicitly. */
-> > +		if (!memblock_is_region_memory(crash_base, crash_size) ||
-> > +			memblock_is_region_reserved(crash_base, crash_size)) {
-> > +			pr_warn("crashkernel has wrong address or size\n");
-> > +			return;
-> > +		}
-> 
-> To better report the error, can we please split these up:
-> 
-> 		if (!memblock_is_region_memory(crash_base, crash_size)) {
-> 			pr_warn("cannot reserve crashkernel: region is not memory\n");
-> 			return;
-> 		}
-> 
-> 		if (!memblock_is_region_memory(crash_base, crash_size)) {
-> 			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
-> 			return;
-> 		}
-
-OK, and
-
-> > +		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-> > +			pr_warn("crashkernel base address is not 2MB aligned\n");
-
-
-			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
-
-> > +			return;
-> > +		}
+> > +	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+> > +		pr_warn("elfcorehdr is overlapped\n");
+> > +		return;
 > > +	}
-> > +	memblock_reserve(crash_base, crash_size);
 > > +
-> > +	pr_info("Reserving %lldMB of memory at %lldMB for crashkernel\n",
-> > +		crash_size >> 20, crash_base >> 20);
+> > +	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> > +
+> > +	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
+> > +		elfcorehdr_size >> 10, elfcorehdr_addr);
+> > +}
 > 
-> We only page-align the size, so the MB will be a little off, but that's
-> probably OK. However, it would also be nicer to log the base as an
-> address.
+> This doesn't seem right to me.  The logic here doesn't match the commit
+> message, the comment above reserve_elfcorehdr() doesn't match the
+> implementation, and this doesn't match my understanding of how this was
+> intended to be used from the DT binding.
 
-You might notice that the exact same message is used by all the other
-architectures, but
+Surely the commit message was wrong/misleading; It should say
 
-> Could we dump this as we do for the kernel memory layout? e.g.
-> 
-> 	pr_info("crashkernel reserved: 0x%016lx - 0x%016lx (%lld MB)\n",
-> 		crash_base, crash_base + crash_size, crash_size >> 20);
+===8<===
+Arch-specific functions are added to allow for implementing a crash dump
+file interface, /proc/vmcore, which can be viewed as a ELF file.
 
-We can go either way.
+A user space tool, like kexec-tools, is responsible for allocating
+a separate region for the core's ELF header within crash kdump kernel 
+memory and filling it in when executing kexec_load().
 
-> With those:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+Then, its location will be advertised to crash dump kernel via a new
+device-tree property, "linux,elfcorehdr", and crash dump kernel preserves
+the region for later use with reserve_elfcorehdr() at boot time.
+
+On crash dump kernel, /proc/vmcore will access the primary kernel's memory
+with copy_oldmem_page(), which feeds the data page-by-page by ioremap'ing
+it since it does not reside in linear mapping on crash dump kernel.
+
+Meanwhile, elfcorehdr_read() is simple as the region is always mapped.
+===>8===
+
+Does this make things clear?
+
+> I had assumed that we'd treat this in much the same way as the
+> linux,reserved-memory-region property, with the primary kernel either
+> dynamically allocating the region or using a command line option, and
+> the base being exposed to userspace via /sys/ or /proc/ somehow.
+
+I didn't get the point here, but please note that the data in ELF core header
+is produced by kexec-tools (who knows its location, too), and consumed solely
+by the crash dump kernel.
 
 Thanks,
 -Takahiro AKASHI
 
+> Why is that not the case?
+> 
 > Thanks,
 > Mark.
 
