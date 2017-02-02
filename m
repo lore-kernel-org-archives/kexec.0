@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f175.google.com ([209.85.192.175])
+Received: from mail-pf0-f176.google.com ([209.85.192.176])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cZEfj-0006GQ-Ps
- for kexec@lists.infradead.org; Thu, 02 Feb 2017 10:31:29 +0000
-Received: by mail-pf0-f175.google.com with SMTP id f144so4476003pfa.2
- for <kexec@lists.infradead.org>; Thu, 02 Feb 2017 02:30:59 -0800 (PST)
-Date: Thu, 2 Feb 2017 19:31:30 +0900
+ id 1cZEn2-0001UY-KT
+ for kexec@lists.infradead.org; Thu, 02 Feb 2017 10:38:58 +0000
+Received: by mail-pf0-f176.google.com with SMTP id 189so4530712pfu.3
+ for <kexec@lists.infradead.org>; Thu, 02 Feb 2017 02:38:36 -0800 (PST)
+Date: Thu, 2 Feb 2017 19:39:06 +0900
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
 Subject: Re: [PATCH v31 05/12] arm64: kdump: protect crash dump kernel memory
-Message-ID: <20170202103129.GE13549@linaro.org>
+Message-ID: <20170202103905.GF13549@linaro.org>
 References: <20170201124218.5823-1-takahiro.akashi@linaro.org>
  <20170201124630.6016-4-takahiro.akashi@linaro.org>
  <20170201180008.GG4756@leverpostej>
+ <20170201182506.GA30584@leverpostej>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170201180008.GG4756@leverpostej>
+In-Reply-To: <20170201182506.GA30584@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,111 +31,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mark Rutland <mark.rutland@arm.com>
 Cc: geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Wed, Feb 01, 2017 at 06:00:08PM +0000, Mark Rutland wrote:
-> On Wed, Feb 01, 2017 at 09:46:24PM +0900, AKASHI Takahiro wrote:
-> > arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
-> > are meant to be called around kexec_load() in order to protect
-> > the memory allocated for crash dump kernel once after it's loaded.
+Mark,
+
+On Wed, Feb 01, 2017 at 06:25:06PM +0000, Mark Rutland wrote:
+> On Wed, Feb 01, 2017 at 06:00:08PM +0000, Mark Rutland wrote:
+> > On Wed, Feb 01, 2017 at 09:46:24PM +0900, AKASHI Takahiro wrote:
+> > > arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
+> > > are meant to be called around kexec_load() in order to protect
+> > > the memory allocated for crash dump kernel once after it's loaded.
+> > > 
+> > > The protection is implemented here by unmapping the region rather than
+> > > making it read-only.
+> > > To make the things work correctly, we also have to
+> > > - put the region in an isolated, page-level mapping initially, and
+> > > - move copying kexec's control_code_page to machine_kexec_prepare()
+> > > 
+> > > Note that page-level mapping is also required to allow for shrinking
+> > > the size of memory, through /sys/kernel/kexec_crash_size, by any number
+> > > of multiple pages.
 > > 
-> > The protection is implemented here by unmapping the region rather than
-> > making it read-only.
-> > To make the things work correctly, we also have to
-> > - put the region in an isolated, page-level mapping initially, and
-> > - move copying kexec's control_code_page to machine_kexec_prepare()
+> > Looking at kexec_crash_size_store(), I don't see where memory returned
+> > to the OS is mapped. AFAICT, if the region is protected when the user
+> > shrinks the region, the memory will not be mapped, yet handed over to
+> > the kernel for general allocation.
 > > 
-> > Note that page-level mapping is also required to allow for shrinking
-> > the size of memory, through /sys/kernel/kexec_crash_size, by any number
-> > of multiple pages.
+> > Surely we need an arch-specific callback to handle that? e.g.
+> > 
+> > arch_crash_release_region(unsigned long base, unsigned long size)
+> > {
+> > 	/*
+> > 	 * Ensure the region is part of the linear map before we return
+> > 	 * it to the OS. We won't unmap this again, so we can use block
+> > 	 * mappings.
+> > 	 */
+> > 	create_pgd_mapping(&init_mm, start, __phys_to_virt(start),
+> > 			   size, PAGE_KERNEL, false);
+> > }
+> > 
+> > ... which we'd call from crash_shrink_memory() before we freed the
+> > reserved pages.
 > 
-> Looking at kexec_crash_size_store(), I don't see where memory returned
-> to the OS is mapped. AFAICT, if the region is protected when the user
-> shrinks the region, the memory will not be mapped, yet handed over to
-> the kernel for general allocation.
+> Another question is (how) does hyp map this region?
 
-The region is protected only when the crash dump kernel is loaded,
-and after that, we are no longer able to shrink the region.
+I don't get your point here.
+Hyp mode does care only physical memory in intermediate address, doesn't it?
 
-> Surely we need an arch-specific callback to handle that? e.g.
-> 
-> arch_crash_release_region(unsigned long base, unsigned long size)
-> {
-> 	/*
-> 	 * Ensure the region is part of the linear map before we return
-> 	 * it to the OS. We won't unmap this again, so we can use block
-> 	 * mappings.
-> 	 */
-> 	create_pgd_mapping(&init_mm, start, __phys_to_virt(start),
-> 			   size, PAGE_KERNEL, false);
-> }
-> 
-> ... which we'd call from crash_shrink_memory() before we freed the
-> reserved pages.
+If this is not a matter now, I will post v32 tomorrow :)
 
-All the memory is mapped by my map_crashkernel() at boot time.
-
-> [...]
-> 
-> > +void arch_kexec_unprotect_crashkres(void)
-> > +{
-> > +	/*
-> > +	 * We don't have to make page-level mappings here because
-> > +	 * the crash dump kernel memory is not allowed to be shrunk
-> > +	 * once the kernel is loaded.
-> > +	 */
-> > +	create_pgd_mapping(&init_mm, crashk_res.start,
-> > +			__phys_to_virt(crashk_res.start),
-> > +			resource_size(&crashk_res), PAGE_KERNEL,
-> > +			debug_pagealloc_enabled());
-> > +
-> > +	flush_tlb_all();
-> > +}
-> 
-> We can lose the flush_tlb_all() here; TLBs aren't allowed to cache an
-> invalid entry, so there's nothing to remove from the TLBs.
-
-Ah, yes!
-
-> [...]
-> 
-> > @@ -538,6 +540,24 @@ static void __init map_mem(pgd_t *pgd)
-> >  		if (memblock_is_nomap(reg))
-> >  			continue;
-> >  
-> > +#ifdef CONFIG_KEXEC_CORE
-> > +		/*
-> > +		 * While crash dump kernel memory is contained in a single
-> > +		 * memblock for now, it should appear in an isolated mapping
-> > +		 * so that we can independently unmap the region later.
-> > +		 */
-> > +		if (crashk_res.end &&
-> > +		    (start <= crashk_res.start) &&
-> > +		    ((crashk_res.end + 1) < end)) {
-> > +			if (crashk_res.start != start)
-> > +				__map_memblock(pgd, start, crashk_res.start);
-> > +
-> > +			if ((crashk_res.end + 1) < end)
-> > +				__map_memblock(pgd, crashk_res.end + 1, end);
-> > +
-> > +			continue;
-> > +		}
-> > +#endif
-> 
-> This wasn't quite what I had in mind. I had expected that here we would
-> isolate the ranges we wanted to avoid mapping (with a comment as to why
-> we couldn't move the memblock_isolate_range() calls earlier). In
-> map_memblock(), we'd skip those ranges entirely.
-> 
-> I believe the above isn't correct if we have a single memblock.memory
-> region covering both the crashkernel and kernel regions. In that case,
-> we'd erroneously map the portion which overlaps the kernel.
-> 
-> It seems there are a number of subtle problems here. :/
-
-I didn't see any problems, but I will go back with memblock_isolate_range()
-here in map_mem().
-
-Thanks,
 -Takahiro AKASHI
+
 
 > Thanks,
 > Mark.
