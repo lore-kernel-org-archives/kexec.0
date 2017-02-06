@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f176.google.com ([209.85.192.176])
+Received: from mail-pf0-f171.google.com ([209.85.192.171])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cai5M-000135-Hq
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 12:08:02 +0000
-Received: by mail-pf0-f176.google.com with SMTP id y143so23888628pfb.0
- for <kexec@lists.infradead.org>; Mon, 06 Feb 2017 04:07:35 -0800 (PST)
+ id 1cai5t-0001Gf-3u
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 12:08:31 +0000
+Received: by mail-pf0-f171.google.com with SMTP id y143so23891715pfb.0
+ for <kexec@lists.infradead.org>; Mon, 06 Feb 2017 04:08:08 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch 1/6] show_mem_usage(): calculate page offset
- after elf load
-Date: Mon,  6 Feb 2017 17:31:46 +0530
-Message-Id: <335a7278001dbf8dd36cce6446be594050354e43.1486381805.git.panand@redhat.com>
+Subject: [Makedumpfile Patch 2/6] initial(): call cach_init() a bit early
+Date: Mon,  6 Feb 2017 17:31:47 +0530
+Message-Id: <17681897e6f793895e0dcfd3b83eb07f25ae6ed5.1486381806.git.panand@redhat.com>
 In-Reply-To: <cover.1486381805.git.panand@redhat.com>
 References: <cover.1486381805.git.panand@redhat.com>
 In-Reply-To: <cover.1486381805.git.panand@redhat.com>
@@ -30,8 +29,12 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-x86_64 calculated page offset from PT_LOAD headers. Therefore call
-get_page_offset() after get_elf_loads()
+Call cach_init() before get_kcore_dump_loads(), because latter uses
+cache_search().
+
+Call path is like this :
+get_kcore_dump_loads() -> process_dump_load() -> vaddr_to_paddr() ->
+vtop4_x86_64() -> readmem() -> cache_search()
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
@@ -39,26 +42,27 @@ Signed-off-by: Pratyush Anand <panand@redhat.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index e69b6df9a9ee..6942047199de 100644
+index 6942047199de..3b8e9810468d 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -10944,15 +10944,15 @@ int show_mem_usage(void)
- 
- 	info->dump_level = MAX_DUMP_LEVEL;
- 
--	if (!get_page_offset())
--		return FALSE;
--
- 	if (!open_files_for_creating_dumpfile())
+@@ -3878,6 +3878,9 @@ initial(void)
+ 	if (!get_value_for_old_linux())
  		return FALSE;
  
- 	if (!get_elf_loads(info->fd_memory, info->name_memory))
- 		return FALSE;
- 
-+	if (!get_page_offset())
++	if (!is_xen_memory() && !cache_init())
 +		return FALSE;
 +
- 	if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
+ 	if (info->flag_mem_usage && !get_kcore_dump_loads())
+ 		return FALSE;
+ 
+@@ -4000,9 +4003,6 @@ out:
+ 		}
+ 	}
+ 
+-	if (!is_xen_memory() && !cache_init())
+-		return FALSE;
+-
+ 	if (debug_info && !get_machdep_info())
  		return FALSE;
  
 -- 
