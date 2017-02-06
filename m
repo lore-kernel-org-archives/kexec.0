@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cap8x-0000Ie-If
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:12 +0000
+ id 1cap8x-0000Ht-Ln
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:16 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v2 09/12] crashdump/s390: Add print_crashkernel_region_size()
+Subject: [PATCH v2 06/12] crashdump/mips: Add print_crashkernel_region_size()
  function
-Date: Mon,  6 Feb 2017 13:42:21 -0600
-Message-Id: <1486410144-28595-10-git-send-email-eric.devolder@oracle.com>
+Date: Mon,  6 Feb 2017 13:42:18 -0600
+Message-Id: <1486410144-28595-7-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -33,18 +33,17 @@ Follow similar x86 patch.
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kexec/arch/s390/kexec-s390.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kexec/arch/mips/crashdump-mips.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
-index 074575e..212a64f 100644
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -262,3 +262,13 @@ int is_crashkernel_mem_reserved(void)
- 	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index d6cff5a..594e1b9 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -385,3 +385,12 @@ int is_crashkernel_mem_reserved(void)
  		(start != end) : 0;
  }
-+
+ 
 +void print_crashkernel_region_size(void)
 +{
 +	uint64_t start, end;
