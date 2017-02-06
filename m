@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cap8x-0000I2-M8
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:14 +0000
+ id 1cap8x-0000Ho-QR
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:19 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v2 11/12] kexec: Add option to get crash kernel region size
-Date: Mon,  6 Feb 2017 13:42:23 -0600
-Message-Id: <1486410144-28595-12-git-send-email-eric.devolder@oracle.com>
+Subject: [PATCH v2 03/12] crashdump/cris: Add print_crashkernel_region_size()
+ function
+Date: Mon,  6 Feb 2017 13:42:15 -0600
+Message-Id: <1486410144-28595-4-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,46 +28,32 @@ Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
 From: Daniel Kiper <daniel.kiper@oracle.com>
 
-Here print_crashkernel_region_size() function is available on all archs (even
-if the functionality is not implemented on some). So, we can safely use it in
-arch independent code and export the functionality to the user space.
+Provide just print_crashkernel_region_size() stub. This way
+we can properly build kexec utility on cris arch even
+if the functionality is not available on it.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kexec/kexec.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kexec/arch/cris/kexec-cris.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 2b06f59..3ac81f5 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -226,7 +226,8 @@ extern int file_types;
- #define OPT_LOAD_PRESERVE_CONTEXT 259
- #define OPT_LOAD_JUMP_BACK_HELPER 260
- #define OPT_ENTRY		261
--#define OPT_MAX			262
-+#define OPT_PRINT_CKR_SIZE	262
-+#define OPT_MAX			263
- #define KEXEC_OPTIONS \
- 	{ "help",		0, 0, OPT_HELP }, \
- 	{ "version",		0, 0, OPT_VERSION }, \
-@@ -247,6 +248,7 @@ extern int file_types;
- 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
- 	{ "status",		0, 0, OPT_STATUS }, \
-+	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
+index 4ac2f89..5601d8e 100644
+--- a/kexec/arch/cris/kexec-cris.c
++++ b/kexec/arch/cris/kexec-cris.c
+@@ -77,6 +77,11 @@ int is_crashkernel_mem_reserved(void)
+ 	return 0;
+ }
  
- #define KEXEC_OPT_STR "h?vdfxyluet:psS"
- 
-@@ -293,6 +295,7 @@ int arch_compat_trampoline(struct kexec_info *info);
- void arch_update_purgatory(struct kexec_info *info);
- int is_crashkernel_mem_reserved(void);
- int get_crash_kernel_load_range(uint64_t *start, uint64_t *end);
-+void print_crashkernel_region_size(void);
- char *get_command_line(void);
- 
- int kexec_iomem_for_each_line(char *match,
++void print_crashkernel_region_size(void)
++{
++	printf("Crashkernel functionality is not available.\n");
++}
++
+ unsigned long virt_to_phys(unsigned long addr)
+ {
+ 	return (addr) & 0x7fffffff;
 -- 
 2.7.4
 
