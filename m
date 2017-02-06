@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cap8x-0000Ho-QR
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:19 +0000
+ id 1cap8x-0000IU-KY
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:12 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v2 03/12] crashdump/cris: Add print_crashkernel_region_size()
+Subject: [PATCH v2 10/12] crashdump/sh: Add print_crashkernel_region_size()
  function
-Date: Mon,  6 Feb 2017 13:42:15 -0600
-Message-Id: <1486410144-28595-4-git-send-email-eric.devolder@oracle.com>
+Date: Mon,  6 Feb 2017 13:42:22 -0600
+Message-Id: <1486410144-28595-11-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,32 +28,32 @@ Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
 From: Daniel Kiper <daniel.kiper@oracle.com>
 
-Provide just print_crashkernel_region_size() stub. This way
-we can properly build kexec utility on cris arch even
-if the functionality is not available on it.
+Follow similar x86 patch.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kexec/arch/cris/kexec-cris.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kexec/arch/sh/crashdump-sh.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
-index 4ac2f89..5601d8e 100644
---- a/kexec/arch/cris/kexec-cris.c
-+++ b/kexec/arch/cris/kexec-cris.c
-@@ -77,6 +77,11 @@ int is_crashkernel_mem_reserved(void)
- 	return 0;
+diff --git a/kexec/arch/sh/crashdump-sh.c b/kexec/arch/sh/crashdump-sh.c
+index 9e6af6b..6556eb1 100644
+--- a/kexec/arch/sh/crashdump-sh.c
++++ b/kexec/arch/sh/crashdump-sh.c
+@@ -178,3 +178,13 @@ int is_crashkernel_mem_reserved(void)
+ 	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
+ 	  (start != end) : 0;
  }
- 
++
 +void print_crashkernel_region_size(void)
 +{
-+	printf("Crashkernel functionality is not available.\n");
-+}
++	uint64_t start, end;
 +
- unsigned long virt_to_phys(unsigned long addr)
- {
- 	return (addr) & 0x7fffffff;
++	if (!parse_iomem_single("Crash kernel\n", &start, &end) && start != end)
++		printf("%lu\n", end - start + 1);
++	else
++		printf("0\n");
++}
 -- 
 2.7.4
 
