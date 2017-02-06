@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f48.google.com ([74.125.83.48])
+Received: from mail-pf0-f176.google.com ([209.85.192.176])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cai5d-0001Ec-ET
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 12:08:19 +0000
-Received: by mail-pg0-f48.google.com with SMTP id 14so28304076pgg.1
- for <kexec@lists.infradead.org>; Mon, 06 Feb 2017 04:07:53 -0800 (PST)
+ id 1cai5M-000135-Hq
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 12:08:02 +0000
+Received: by mail-pf0-f176.google.com with SMTP id y143so23888628pfb.0
+ for <kexec@lists.infradead.org>; Mon, 06 Feb 2017 04:07:35 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch 5/6] makedumpfile: Correct the calculation of
- kvaddr in set_kcore_vmcoreinfo
-Date: Mon,  6 Feb 2017 17:31:50 +0530
-Message-Id: <908b22c0458c7c9b4fb945e53d66dc12e5c44e83.1486381806.git.panand@redhat.com>
+Subject: [Makedumpfile Patch 1/6] show_mem_usage(): calculate page offset
+ after elf load
+Date: Mon,  6 Feb 2017 17:31:46 +0530
+Message-Id: <335a7278001dbf8dd36cce6446be594050354e43.1486381805.git.panand@redhat.com>
 In-Reply-To: <cover.1486381805.git.panand@redhat.com>
 References: <cover.1486381805.git.panand@redhat.com>
 In-Reply-To: <cover.1486381805.git.panand@redhat.com>
@@ -28,43 +28,39 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-From: Baoquan He <bhe@redhat.com>
+x86_64 calculated page offset from PT_LOAD headers. Therefore call
+get_page_offset() after get_elf_loads()
 
-In set_kcore_vmcoreinfo, we calculate the virtual address of vmcoreinfo
-by OR operation as below:
-
-	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
-
-When mm sections kaslr is not enabled, this is correct since the starting
-address of direct mapping section is 0xffff880000000000 which 1T aligned.
-Usually system with memory below 1T won't cause problem.
-
-However with mm section kaslr enabled, the starting address of direct
-mapping is 1G aligned. The above code makes kvaddr unsure.
-
-So change it to adding operation:
-	kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- elf_info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ makedumpfile.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index c5743b3cab28..100272f83c48 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -372,7 +372,7 @@ int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
- 	off_t offset_desc;
+diff --git a/makedumpfile.c b/makedumpfile.c
+index e69b6df9a9ee..6942047199de 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -10944,15 +10944,15 @@ int show_mem_usage(void)
  
- 	offset = UNINITIALIZED;
--	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
-+	kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
+ 	info->dump_level = MAX_DUMP_LEVEL;
  
- 	for (i = 0; i < num_pt_loads; ++i) {
- 		struct pt_load_segment *p = &pt_loads[i];
+-	if (!get_page_offset())
+-		return FALSE;
+-
+ 	if (!open_files_for_creating_dumpfile())
+ 		return FALSE;
+ 
+ 	if (!get_elf_loads(info->fd_memory, info->name_memory))
+ 		return FALSE;
+ 
++	if (!get_page_offset())
++		return FALSE;
++
+ 	if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
+ 		return FALSE;
+ 
 -- 
 2.9.3
 
