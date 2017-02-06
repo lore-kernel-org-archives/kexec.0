@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cap8x-0000IA-T5
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:18 +0000
+ id 1cap8x-0000Hq-Oj
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:16 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v2 04/12] crashdump/ia64: Add print_crashkernel_region_size()
+Subject: [PATCH v2 02/12] crashdump/arm: Add print_crashkernel_region_size()
  function
-Date: Mon,  6 Feb 2017 13:42:16 -0600
-Message-Id: <1486410144-28595-5-git-send-email-eric.devolder@oracle.com>
+Date: Mon,  6 Feb 2017 13:42:14 -0600
+Message-Id: <1486410144-28595-3-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -33,16 +33,16 @@ Follow similar x86 patch.
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kexec/arch/ia64/crashdump-ia64.c | 10 ++++++++++
+ kexec/arch/arm/crashdump-arm.c | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/kexec/arch/ia64/crashdump-ia64.c b/kexec/arch/ia64/crashdump-ia64.c
-index 726c9f4..07de42a 100644
---- a/kexec/arch/ia64/crashdump-ia64.c
-+++ b/kexec/arch/ia64/crashdump-ia64.c
-@@ -286,3 +286,13 @@ int is_crashkernel_mem_reserved(void)
- 	return parse_iomem_single("Crash kernel\n", &start,
- 				  &end) == 0 ?  (start != end) : 0;
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 4a89b5e..cd66520 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -413,3 +413,13 @@ int is_crashkernel_mem_reserved(void)
+ 
+ 	return crash_kernel_mem.start != crash_kernel_mem.end;
  }
 +
 +void print_crashkernel_region_size(void)
