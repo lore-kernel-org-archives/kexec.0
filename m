@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f172.google.com ([209.85.192.172])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cai8C-0002zj-0y
- for kexec@lists.infradead.org; Mon, 06 Feb 2017 12:10:54 +0000
-Received: by mail-pf0-f172.google.com with SMTP id f144so23881388pfa.2
- for <kexec@lists.infradead.org>; Mon, 06 Feb 2017 04:10:31 -0800 (PST)
-From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch 3/6] x86_64: check physical address in PT_LOAD
- for none direct mapped regions
-Date: Mon,  6 Feb 2017 17:31:48 +0530
-Message-Id: <05fd1418881a8dea155df31adc59ccad0fd30ee1.1486381806.git.panand@redhat.com>
-In-Reply-To: <cover.1486381805.git.panand@redhat.com>
-References: <cover.1486381805.git.panand@redhat.com>
-In-Reply-To: <cover.1486381805.git.panand@redhat.com>
-References: <cover.1486381805.git.panand@redhat.com>
+ id 1cap8x-0000Ie-If
+ for kexec@lists.infradead.org; Mon, 06 Feb 2017 19:40:12 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+Subject: [PATCH v2 09/12] crashdump/s390: Add print_crashkernel_region_size()
+ function
+Date: Mon,  6 Feb 2017 13:42:21 -0600
+Message-Id: <1486410144-28595-10-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
+References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,47 +23,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: horms@verge.net.au, kexec@lists.infradead.org, andrew.cooper3@citrix.com, dyoung@redhat.com
+Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
-A kcore PT_LOAD can have a section from vmalloc region. However,
-physical address in that header would be invalid (-1) after a recent
-kernel changes [0]. Therefore, check for valid physical address while
-calculating page_offset or phys_offset.
+From: Daniel Kiper <daniel.kiper@oracle.com>
 
-[0] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?h=next-20170206&id=c9d4e5d7b7fd6c74e134ca44df8a5386efbc561c
+Follow similar x86 patch.
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- arch/x86_64.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kexec/arch/s390/kexec-s390.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 893cd516fc8b..e978a36f8878 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -41,7 +41,8 @@ get_page_offset_x86_64(void)
- 	unsigned long long virt_start;
- 
- 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
--		if (virt_start < __START_KERNEL_map) {
-+		if (virt_start < __START_KERNEL_map
-+				&& phys_start != NOT_PADDR) {
- 			info->page_offset = virt_start - phys_start;
- 			return TRUE;
- 		}
-@@ -76,7 +77,8 @@ get_phys_base_x86_64(void)
- 	}
- 
- 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
--		if (virt_start >= __START_KERNEL_map) {
-+		if (virt_start >= __START_KERNEL_map
-+				&& phys_start != NOT_PADDR) {
- 
- 			info->phys_base = phys_start -
- 			    (virt_start & ~(__START_KERNEL_map));
+diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
+index 074575e..212a64f 100644
+--- a/kexec/arch/s390/kexec-s390.c
++++ b/kexec/arch/s390/kexec-s390.c
+@@ -262,3 +262,13 @@ int is_crashkernel_mem_reserved(void)
+ 	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
+ 		(start != end) : 0;
+ }
++
++void print_crashkernel_region_size(void)
++{
++	uint64_t start, end;
++
++	if (!parse_iomem_single("Crash kernel\n", &start, &end) && start != end)
++		printf("%lu\n", end - start + 1);
++	else
++		printf("0\n");
++}
 -- 
-2.9.3
+2.7.4
 
 
 _______________________________________________
