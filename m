@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x234.google.com ([2607:f8b0:400e:c05::234])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cb0qI-0000A4-0I
- for kexec@lists.infradead.org; Tue, 07 Feb 2017 08:09:42 +0000
-Received: by mail-pg0-x234.google.com with SMTP id v184so36680194pgv.3
- for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 00:09:17 -0800 (PST)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v32 12/13] Documentation: kdump: describe arm64 port
-Date: Tue,  7 Feb 2017 17:09:04 +0900
-Message-Id: <20170207080904.5974-10-takahiro.akashi@linaro.org>
-In-Reply-To: <20170207080601.5816-1-takahiro.akashi@linaro.org>
-References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+Received: from aserp1040.oracle.com ([141.146.126.69])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cb6yb-0001kt-OP
+ for kexec@lists.infradead.org; Tue, 07 Feb 2017 14:42:43 +0000
+Date: Tue, 7 Feb 2017 15:42:06 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v2 00/12] crashdump: Add print_crashkernel_region_size()
+ function
+Message-ID: <20170207144206.GB13477@olila.local.net-space.pl>
+References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,82 +20,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: andrew.cooper3@citrix.com, dyoung@redhat.com, horms@verge.net.au, kexec@lists.infradead.org, konrad.wilk@oracle.com
 
-Add arch specific descriptions about kdump usage on arm64 to kdump.txt.
+On Mon, Feb 06, 2017 at 01:42:12PM -0600, Eric DeVolder wrote:
+> Crash kernel region size is available via sysfs on Linux running on
+> bare metal. However, this does not work when Linux runs as Xen dom0.
+> In this case Xen crash kernel region size should be established using
+> __HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+> not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+> accessible using shell scripts or something like that. Potentially we
+> can check "xl dmesg" output for crashkernel option but this is not nice.
+> So, let's add this functionality, for Linux running on bare metal and
+> as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+> kernel region size in one way regardless of platform. All burden of
+> platform detection lies on kexec-tools.
+>
+> Figure (and unit) displayed by this new kexec-tools functionality is
+> the same as one taken from /sys/kernel/kexec_crash_size.
+>
+> This patch just adds print_crashkernel_region_size() function, which
+> prints crash kernel region size, for x86 arch. Next patches will add
+> same named function for other archs supported by kexec-tools. Last patch
+> of this series will export this functionality to the userspace via
+> separate kexec utility option.
+>
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
----
- Documentation/kdump/kdump.txt | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+This does not need to have SOB.
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index b0eb27b956d9..615434d81108 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
- 
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--s390x and arm architectures.
-+s390x, arm and arm64 architectures.
- 
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
- 
-     AUTO_ZRELADDR=y
- 
-+Dump-capture kernel config options (Arch Dependent, arm64)
-+----------------------------------------------------------
-+
-+- Please note that kvm of the dump-capture kernel will not be enabled
-+  on non-VHE systems even if it is configured. This is because the CPU
-+  will not be reset to EL2 on panic.
-+
- Extended crashkernel syntax
- ===========================
- 
-@@ -305,6 +312,8 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
-+   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-@@ -327,6 +336,8 @@ For s390x:
- 	- Use image or bzImage
- For arm:
- 	- Use zImage
-+For arm64:
-+	- Use vmlinux or Image
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -370,6 +381,9 @@ For s390x:
- For arm:
- 	"1 maxcpus=1 reset_devices"
- 
-+For arm64:
-+	"1 maxcpus=1 reset_devices"
-+
- Notes on loading the dump-capture kernel:
- 
- * By default, the ELF headers are stored in ELF64 format to support
--- 
-2.11.1
+> ---
+> v0: Interal version.
+> v1: Posted to kexec-tools mailing list
+> v2: Incorporated feedback:
+>     - utilize the is_crashkernel_mem_reserved() function common in all archs
+>     - for ppc and ppc64, utilize device-tree values to print size
+>     - for unsupported architectures, print appropriate message
 
+Next time please provide a list of patches (numbers are OK) changed in
+comparison to earlier version. Results of "git diff --stat master.." and
+"git shortlog master.." (I assume that you based patches on master) are
+also nice to have at the bottom of patch #00.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
