@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f44.google.com ([74.125.83.44])
+Received: from mail-pf0-f174.google.com ([209.85.192.174])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cb0pe-0004PS-5A
- for kexec@lists.infradead.org; Tue, 07 Feb 2017 08:09:00 +0000
-Received: by mail-pg0-f44.google.com with SMTP id 14so36727260pgg.1
- for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 00:08:37 -0800 (PST)
+ id 1cb0pj-0004Yn-C4
+ for kexec@lists.infradead.org; Tue, 07 Feb 2017 08:09:14 +0000
+Received: by mail-pf0-f174.google.com with SMTP id 189so31315808pfu.3
+ for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 00:08:47 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v32 04/13] arm64: kdump: reserve memory for crash dump kernel
-Date: Tue,  7 Feb 2017 17:08:56 +0900
-Message-Id: <20170207080904.5974-2-takahiro.akashi@linaro.org>
+Subject: [PATCH v32 06/13] arm64: kdump: protect crash dump kernel memory
+Date: Tue,  7 Feb 2017 17:08:58 +0900
+Message-Id: <20170207080904.5974-4-takahiro.akashi@linaro.org>
 In-Reply-To: <20170207080601.5816-1-takahiro.akashi@linaro.org>
 References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,148 +25,296 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, Pratyush Anand <panand@redhat.com>, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-"crashkernel=" kernel parameter specifies the size (and optionally
-the start address) of the system ram to be used by crash dump kernel.
-reserve_crashkernel() will allocate and reserve that memory at boot time
-of primary kernel.
+arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
+are meant to be called by kexec_load() in order to protect the memory
+allocated for crash dump kernel once it's loaded.
 
-The memory range will be exposed to userspace as a resource named
-"Crash kernel" in /proc/iomem.
+Here, the protection is implemented by unmapping the relevant range
+of memory, rather than making it read-only, to prevent any corruption
+due to potential cache alias (with different attributes) problem.
+
+To make the things work correctly, we have to
+- use page-level mappings entirely
+- have the mappings isolated from the other normal memory
+- move copying kexec's control_code_page to machine_kexec_prepare()
+
+Note that page-level mappings are required to allow shrinking the region,
+through /sys/kernel/kexec_crash_size, to the size of any number of pages
+and putting the freed memory back to buddy system.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Signed-off-by: Mark Salter <msalter@redhat.com>
-Signed-off-by: Pratyush Anand <panand@redhat.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/kernel/setup.c |  7 ++++-
- arch/arm64/mm/init.c      | 66 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/machine_kexec.c | 69 +++++++++++++++++++++---------
+ arch/arm64/mm/mmu.c               | 89 ++++++++++++++++++++-------------------
+ 2 files changed, 93 insertions(+), 65 deletions(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index b051367e2149..515e9c6696df 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -31,7 +31,6 @@
- #include <linux/screen_info.h>
- #include <linux/init.h>
- #include <linux/kexec.h>
--#include <linux/crash_dump.h>
- #include <linux/root_dev.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
-@@ -224,6 +223,12 @@ static void __init request_standard_resources(void)
- 		if (kernel_data.start >= res->start &&
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
-+#ifdef CONFIG_KEXEC_CORE
-+		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		if (crashk_res.end && crashk_res.start >= res->start &&
-+		    crashk_res.end <= res->end)
-+			request_resource(res, &crashk_res);
-+#endif
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index bc96c8a7fc79..36b569d7fb62 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -14,6 +14,7 @@
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/cpu_ops.h>
++#include <asm/mmu.h>
+ #include <asm/mmu_context.h>
+ 
+ #include "cpu-reset.h"
+@@ -22,8 +23,6 @@
+ extern const unsigned char arm64_relocate_new_kernel[];
+ extern const unsigned long arm64_relocate_new_kernel_size;
+ 
+-static unsigned long kimage_start;
+-
+ /**
+  * kexec_image_info - For debugging output.
+  */
+@@ -64,7 +63,7 @@ void machine_kexec_cleanup(struct kimage *kimage)
+  */
+ int machine_kexec_prepare(struct kimage *kimage)
+ {
+-	kimage_start = kimage->start;
++	void *reboot_code_buffer;
+ 
+ 	kexec_image_info(kimage);
+ 
+@@ -73,6 +72,21 @@ int machine_kexec_prepare(struct kimage *kimage)
+ 		return -EBUSY;
  	}
+ 
++	reboot_code_buffer =
++			phys_to_virt(page_to_phys(kimage->control_code_page));
++
++	/*
++	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
++	 * after the kernel is shut down.
++	 */
++	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
++		arm64_relocate_new_kernel_size);
++
++	/* Flush the reboot_code_buffer in preparation for its execution. */
++	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
++	flush_icache_range((uintptr_t)reboot_code_buffer,
++		arm64_relocate_new_kernel_size);
++
+ 	return 0;
  }
  
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 3c41fd0bbce6..083e8fc9b771 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -30,12 +30,14 @@
- #include <linux/gfp.h>
- #include <linux/memblock.h>
- #include <linux/sort.h>
-+#include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/dma-mapping.h>
- #include <linux/dma-contiguous.h>
- #include <linux/efi.h>
- #include <linux/swiotlb.h>
- #include <linux/vmalloc.h>
+@@ -143,7 +157,6 @@ static void kexec_segment_flush(const struct kimage *kimage)
+ void machine_kexec(struct kimage *kimage)
+ {
+ 	phys_addr_t reboot_code_buffer_phys;
+-	void *reboot_code_buffer;
+ 
+ 	/*
+ 	 * New cpus may have become stuck_in_kernel after we loaded the image.
+@@ -151,7 +164,6 @@ void machine_kexec(struct kimage *kimage)
+ 	BUG_ON(cpus_are_stuck_in_kernel() || (num_online_cpus() > 1));
+ 
+ 	reboot_code_buffer_phys = page_to_phys(kimage->control_code_page);
+-	reboot_code_buffer = phys_to_virt(reboot_code_buffer_phys);
+ 
+ 	kexec_image_info(kimage);
+ 
+@@ -159,31 +171,17 @@ void machine_kexec(struct kimage *kimage)
+ 		kimage->control_code_page);
+ 	pr_debug("%s:%d: reboot_code_buffer_phys:  %pa\n", __func__, __LINE__,
+ 		&reboot_code_buffer_phys);
+-	pr_debug("%s:%d: reboot_code_buffer:       %p\n", __func__, __LINE__,
+-		reboot_code_buffer);
+ 	pr_debug("%s:%d: relocate_new_kernel:      %p\n", __func__, __LINE__,
+ 		arm64_relocate_new_kernel);
+ 	pr_debug("%s:%d: relocate_new_kernel_size: 0x%lx(%lu) bytes\n",
+ 		__func__, __LINE__, arm64_relocate_new_kernel_size,
+ 		arm64_relocate_new_kernel_size);
+ 
+-	/*
+-	 * Copy arm64_relocate_new_kernel to the reboot_code_buffer for use
+-	 * after the kernel is shut down.
+-	 */
+-	memcpy(reboot_code_buffer, arm64_relocate_new_kernel,
+-		arm64_relocate_new_kernel_size);
+-
+-	/* Flush the reboot_code_buffer in preparation for its execution. */
+-	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
+-	flush_icache_range((uintptr_t)reboot_code_buffer,
+-		arm64_relocate_new_kernel_size);
+-
+ 	/* Flush the kimage list and its buffers. */
+ 	kexec_list_flush(kimage);
+ 
+ 	/* Flush the new image if already in place. */
+-	if (kimage->head & IND_DONE)
++	if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
+ 		kexec_segment_flush(kimage);
+ 
+ 	pr_info("Bye!\n");
+@@ -201,7 +199,7 @@ void machine_kexec(struct kimage *kimage)
+ 	 */
+ 
+ 	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
+-		kimage_start, 0);
++		kimage->start, 0);
+ 
+ 	BUG(); /* Should never get here. */
+ }
+@@ -210,3 +208,32 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ {
+ 	/* Empty routine needed to avoid build errors. */
+ }
++
++void arch_kexec_protect_crashkres(void)
++{
++	kexec_segment_flush(kexec_crash_image);
++
++	/*
++	 * Page_mappings_only is true as it is required to ensure that
++	 * a section mapping will not be created over an existing
++	 * directory entry.
++	 */
++	create_pgd_mapping(&init_mm, crashk_res.start,
++			__phys_to_virt(crashk_res.start),
++			resource_size(&crashk_res), PAGE_KERNEL_INVALID, true);
++
++	flush_tlb_all();
++}
++
++void arch_kexec_unprotect_crashkres(void)
++{
++	/*
++	 * Since /sys/kernel/kexec_crash_size interface enables us to
++	 * shrink the region or entirely free it later, we consistently
++	 * use page-level mappings here so unused memory can be reclaimed
++	 * and put back to buddy system.
++	 */
++	create_pgd_mapping(&init_mm, crashk_res.start,
++			__phys_to_virt(crashk_res.start),
++			resource_size(&crashk_res), PAGE_KERNEL, true);
++}
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 3c674831f856..7ade55fa96b6 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -22,6 +22,8 @@
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
++#include <linux/ioport.h>
 +#include <linux/kexec.h>
+ #include <linux/libfdt.h>
+ #include <linux/mman.h>
+ #include <linux/nodemask.h>
+@@ -363,56 +365,31 @@ static void create_mapping_late(phys_addr_t phys, unsigned long virt,
+ 			     NULL, debug_pagealloc_enabled());
+ }
  
- #include <asm/boot.h>
- #include <asm/fixmap.h>
-@@ -76,6 +78,67 @@ static int __init early_initrd(char *p)
- early_param("initrd", early_initrd);
- #endif
+-static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end)
++static void __init __map_memblock(pgd_t *pgd, phys_addr_t start,
++				  phys_addr_t end, pgprot_t prot,
++				  bool page_mappings_only)
++{
++	__create_pgd_mapping(pgd, start, __phys_to_virt(start), end - start,
++			     prot, early_pgtable_alloc,
++			     page_mappings_only);
++}
++
++static void __init map_mem(pgd_t *pgd)
+ {
+ 	unsigned long kernel_start = __pa(_text);
+ 	unsigned long kernel_end = __pa(__init_begin);
++	struct memblock_region *reg;
  
+ 	/*
+-	 * Take care not to create a writable alias for the
+-	 * read-only text and rodata sections of the kernel image.
++	 * Temporarily marked as NOMAP to skip mapping in the next for-loop
+ 	 */
++	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+ 
+-	/* No overlap with the kernel text/rodata */
+-	if (end < kernel_start || start >= kernel_end) {
+-		__create_pgd_mapping(pgd, start, __phys_to_virt(start),
+-				     end - start, PAGE_KERNEL,
+-				     early_pgtable_alloc,
+-				     debug_pagealloc_enabled());
+-		return;
+-	}
+-
+-	/*
+-	 * This block overlaps the kernel text/rodata mappings.
+-	 * Map the portion(s) which don't overlap.
+-	 */
+-	if (start < kernel_start)
+-		__create_pgd_mapping(pgd, start,
+-				     __phys_to_virt(start),
+-				     kernel_start - start, PAGE_KERNEL,
+-				     early_pgtable_alloc,
+-				     debug_pagealloc_enabled());
+-	if (kernel_end < end)
+-		__create_pgd_mapping(pgd, kernel_end,
+-				     __phys_to_virt(kernel_end),
+-				     end - kernel_end, PAGE_KERNEL,
+-				     early_pgtable_alloc,
+-				     debug_pagealloc_enabled());
+-
+-	/*
+-	 * Map the linear alias of the [_text, __init_begin) interval as
+-	 * read-only/non-executable. This makes the contents of the
+-	 * region accessible to subsystems such as hibernate, but
+-	 * protects it from inadvertent modification or execution.
+-	 */
+-	__create_pgd_mapping(pgd, kernel_start, __phys_to_virt(kernel_start),
+-			     kernel_end - kernel_start, PAGE_KERNEL_RO,
+-			     early_pgtable_alloc, debug_pagealloc_enabled());
+-}
+-
+-static void __init map_mem(pgd_t *pgd)
+-{
+-	struct memblock_region *reg;
 +#ifdef CONFIG_KEXEC_CORE
-+/*
-+ * reserve_crashkernel() - reserves memory for crash kernel
-+ *
-+ * This function reserves memory area given in "crashkernel=" kernel command
-+ * line parameter. The memory reserved is used by dump capture kernel when
-+ * primary kernel is crashing.
-+ */
-+static void __init reserve_crashkernel(void)
-+{
-+	unsigned long long crash_base, crash_size;
-+	int ret;
-+
-+	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+				&crash_size, &crash_base);
-+	/* no crashkernel= or invalid value specified */
-+	if (ret || !crash_size)
-+		return;
-+
-+	crash_size = PAGE_ALIGN(crash_size);
-+
-+	if (crash_base == 0) {
-+		/* Current arm64 boot protocol requires 2MB alignment */
-+		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-+				crash_size, SZ_2M);
-+		if (crash_base == 0) {
-+			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-+				crash_size);
-+			return;
-+		}
-+	} else {
-+		/* User specifies base address explicitly. */
-+		if (!memblock_is_region_memory(crash_base, crash_size)) {
-+			pr_warn("cannot reserve crashkernel: region is not memory\n");
-+			return;
-+		}
-+
-+		if (memblock_is_region_reserved(crash_base, crash_size)) {
-+			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
-+			return;
-+		}
-+
-+		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-+			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
-+			return;
-+		}
-+	}
-+	memblock_reserve(crash_base, crash_size);
-+
-+	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-+		crash_base, crash_base + crash_size, crash_size >> 20);
-+
-+	crashk_res.start = crash_base;
-+	crashk_res.end = crash_base + crash_size - 1;
-+}
-+#else
-+static void __init reserve_crashkernel(void)
-+{
-+}
-+#endif /* CONFIG_KEXEC_CORE */
-+
- /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -331,6 +394,9 @@ void __init arm64_memblock_init(void)
- 		arm64_dma_phys_limit = max_zone_dma_phys();
- 	else
- 		arm64_dma_phys_limit = PHYS_MASK + 1;
-+
-+	reserve_crashkernel();
-+
- 	dma_contiguous_reserve(arm64_dma_phys_limit);
++	if (crashk_res.end)
++		memblock_mark_nomap(crashk_res.start,
++				    resource_size(&crashk_res));
++#endif
  
- 	memblock_allow_resize();
+ 	/* map all the memory banks */
+ 	for_each_memblock(memory, reg) {
+@@ -424,8 +401,32 @@ static void __init map_mem(pgd_t *pgd)
+ 		if (memblock_is_nomap(reg))
+ 			continue;
+ 
+-		__map_memblock(pgd, start, end);
++		__map_memblock(pgd, start, end,
++			       PAGE_KERNEL, debug_pagealloc_enabled());
++	}
++
++	/*
++	 * Map the linear alias of the [_text, __init_begin) interval as
++	 * read-only/non-executable. This makes the contents of the
++	 * region accessible to subsystems such as hibernate, but
++	 * protects it from inadvertent modification or execution.
++	 */
++	__map_memblock(pgd, kernel_start, kernel_end,
++		       PAGE_KERNEL_RO, debug_pagealloc_enabled());
++	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
++
++#ifdef CONFIG_KEXEC_CORE
++	/*
++	 * 'Page mappings only' allows freeing a portion of the region
++	 * and putting it back to buddy system when it gets shrunk later.
++	 */
++	if (crashk_res.end) {
++		__map_memblock(pgd, crashk_res.start, crashk_res.end + 1,
++			       PAGE_KERNEL, true);
++		memblock_clear_nomap(crashk_res.start,
++				     resource_size(&crashk_res));
+ 	}
++#endif
+ }
+ 
+ void mark_rodata_ro(void)
 -- 
 2.11.1
 
