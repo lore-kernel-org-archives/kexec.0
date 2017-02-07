@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f177.google.com ([209.85.192.177])
+Received: from mail-pf0-f176.google.com ([209.85.192.176])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cb0pZ-0004Fe-9O
- for kexec@lists.infradead.org; Tue, 07 Feb 2017 08:08:55 +0000
-Received: by mail-pf0-f177.google.com with SMTP id e4so31250204pfg.1
- for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 00:08:33 -0800 (PST)
+ id 1cb0pi-0004V5-Hk
+ for kexec@lists.infradead.org; Tue, 07 Feb 2017 08:09:06 +0000
+Received: by mail-pf0-f176.google.com with SMTP id 189so31315200pfu.3
+ for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 00:08:42 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v32 03/13] arm64: limit memory regions based on DT property,
- usable-memory-range
-Date: Tue,  7 Feb 2017 17:08:55 +0900
-Message-Id: <20170207080904.5974-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v32 05/13] arm64: mm: allow for unmapping part of kernel
+ mapping
+Date: Tue,  7 Feb 2017 17:08:57 +0900
+Message-Id: <20170207080904.5974-3-takahiro.akashi@linaro.org>
 In-Reply-To: <20170207080601.5816-1-takahiro.akashi@linaro.org>
 References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,73 +28,72 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
 Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Crash dump kernel uses only a limited range of available memory as System
-RAM. On arm64 kdump, This memory range is advertised to crash dump kernel
-via a device-tree property under /chosen,
-   linux,usable-memory-range = <BASE SIZE>
+create_pgd_mapping() is enhanced here so that it will accept
+PAGE_KERNEL_INVALID protection attribute and unmap a given range of memory.
 
-Crash dump kernel reads this property at boot time and calls
-memblock_cap_memory_range() to limit usable memory which are listed either
-in UEFI memory map table or "memory" nodes of a device tree blob.
+The feature will be used in a later kdump patch to implement the protection
+against possible corruption of crash dump kernel memory which is to be set
+aside from ther other memory on primary kernel.
+
+Note that, in this implementation, it assumes that all the range of memory
+to be processed is mapped in page-level since the only current user is
+kdump where page mappings are also required.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Geoff Levand <geoff@infradead.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 ---
- arch/arm64/mm/init.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm64/include/asm/pgtable-prot.h |  1 +
+ arch/arm64/mm/mmu.c                   | 18 ++++++++++++------
+ 2 files changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 380ebe705093..3c41fd0bbce6 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -187,10 +187,45 @@ static int __init early_mem(char *p)
+diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+index 2142c7726e76..945d84cd5df7 100644
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -54,6 +54,7 @@
+ #define PAGE_KERNEL_ROX		__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_RDONLY)
+ #define PAGE_KERNEL_EXEC	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE)
+ #define PAGE_KERNEL_EXEC_CONT	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_CONT)
++#define PAGE_KERNEL_INVALID	__pgprot(0)
+ 
+ #define PAGE_HYP		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 17243e43184e..3c674831f856 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -140,7 +140,11 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
+ 				__prot = prot;
+ 		}
+ 
+-		set_pte(pte, pfn_pte(pfn, __prot));
++		if (pgprot_val(prot) & PTE_VALID)
++			set_pte(pte, pfn_pte(pfn, __prot));
++		else
++			pte_clear(null, null, pte);
++
+ 		pfn++;
+ 
+ 		/*
+@@ -334,12 +338,14 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+ 	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, false);
  }
- early_param("mem", early_mem);
  
-+static int __init early_init_dt_scan_usablemem(unsigned long node,
-+		const char *uname, int depth, void *data)
-+{
-+	struct memblock_region *usablemem = data;
-+	const __be32 *reg;
-+	int len;
-+
-+	if (depth != 1 || strcmp(uname, "chosen") != 0)
-+		return 0;
-+
-+	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
-+	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+		return 1;
-+
-+	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+	return 1;
-+}
-+
-+static void __init fdt_enforce_memory_region(void)
-+{
-+	struct memblock_region reg = {
-+		.size = 0,
-+	};
-+
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+
-+	if (reg.size)
-+		memblock_cap_memory_range(reg.base, reg.size);
-+}
-+
- void __init arm64_memblock_init(void)
+-void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+-			       unsigned long virt, phys_addr_t size,
+-			       pgprot_t prot, bool page_mappings_only)
++/*
++ * Note that PAGE_KERNEL_INVALID should be used with page_mappings_only
++ * true for now.
++ */
++void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
++			unsigned long virt, phys_addr_t size,
++			pgprot_t prot, bool page_mappings_only)
  {
- 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
- 
-+	/* Handle linux,usable-memory-range property */
-+	fdt_enforce_memory_region();
-+
- 	/*
- 	 * Ensure that the linear region takes up exactly half of the kernel
- 	 * virtual address space. This way, we can distinguish a linear address
+-	BUG_ON(mm == &init_mm);
+-
+ 	__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+ 			     pgd_pgtable_alloc, page_mappings_only);
+ }
 -- 
 2.11.1
 
