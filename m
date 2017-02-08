@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f172.google.com ([209.85.192.172])
+Received: from mail-pg0-f49.google.com ([74.125.83.49])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cbKys-0008Ki-LH
- for kexec@lists.infradead.org; Wed, 08 Feb 2017 05:39:52 +0000
-Received: by mail-pf0-f172.google.com with SMTP id y143so39325266pfb.0
- for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 21:39:29 -0800 (PST)
-Subject: Re: [PATCH v32 00/13] arm64: add kdump support
-References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+ id 1cbNle-0006kE-49
+ for kexec@lists.infradead.org; Wed, 08 Feb 2017 08:38:25 +0000
+Received: by mail-pg0-f49.google.com with SMTP id 204so47176055pge.0
+ for <kexec@lists.infradead.org>; Wed, 08 Feb 2017 00:38:01 -0800 (PST)
+Subject: Re: [PATCH v2 00/12] crashdump: Add print_crashkernel_region_size()
+ function
+References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <d3759cc9-01d8-814c-e76e-e035eac6bb8b@redhat.com>
-Date: Wed, 8 Feb 2017 11:09:23 +0530
+Message-ID: <83229108-955c-88f4-89bd-61980f510f97@redhat.com>
+Date: Wed, 8 Feb 2017 14:07:57 +0530
 MIME-Version: 1.0
-In-Reply-To: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+In-Reply-To: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,37 +25,36 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Eric DeVolder <eric.devolder@oracle.com>, horms@verge.net.au, kexec@lists.infradead.org, andrew.cooper3@citrix.com, dyoung@redhat.com
+Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
 
 
-On Tuesday 07 February 2017 01:36 PM, AKASHI Takahiro wrote:
-> This patch series adds kdump support on arm64.
+On Tuesday 07 February 2017 01:12 AM, Eric DeVolder wrote:
+> Crash kernel region size is available via sysfs on Linux running on
+> bare metal. However, this does not work when Linux runs as Xen dom0.
+> In this case Xen crash kernel region size should be established using
+> __HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+> not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+> accessible using shell scripts or something like that. Potentially we
+> can check "xl dmesg" output for crashkernel option but this is not nice.
+> So, let's add this functionality, for Linux running on bare metal and
+> as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+> kernel region size in one way regardless of platform. All burden of
+> platform detection lies on kexec-tools.
 >
-> To load a crash-dump kernel to the systems, a series of patches to
-> kexec-tools[1] are also needed. Please use the latest one, v5 [2].
-> For your convinience, you can pick them up from:
->    https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
->    https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
+> Figure (and unit) displayed by this new kexec-tools functionality is
+> the same as one taken from /sys/kernel/kexec_crash_size.
 >
-> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
->   - crash utility (v7.1.8 or later, i.e. master for now) [3]
->
-> I tested this patchset on fast model and hikey.
-> (under various configurations, in particular 4KB-page/39,48-bits, 64KB-page/42
-> -bits with hibernate)
->
-> The previous versions were also:
-> Tested-by: Pratyush Anand <panand@redhat.com> (v29, mustang and seattle)
+> This patch just adds print_crashkernel_region_size() function, which
+> prints crash kernel region size, for x86 arch. Next patches will add
+> same named function for other archs supported by kexec-tools. Last patch
+> of this series will export this functionality to the userspace via
+> separate kexec utility option.
 
-..and you have my Tested-by for this series as well. They work fine with 
-both the above platform.
-
-Although we are very close, still it could be great if these patches can 
-make into v4.11.
-
-Thanks a lot Akashi for the quick v32.
+IMHO, overall code would have been more cleaner if we introduce 
+get_crash_kernel_load_range() for each arch. Then a single function to 
+get_crash_kernel_size() in kexec/kexec.c.
 
 ~Pratyush
 
