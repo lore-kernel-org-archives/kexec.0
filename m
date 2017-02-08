@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from mail-pf0-f172.google.com ([209.85.192.172])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cb8Pd-0005Ke-BD
- for kexec@lists.infradead.org; Tue, 07 Feb 2017 16:14:39 +0000
-Date: Tue, 7 Feb 2017 17:14:08 +0100
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 12/12] kexec: Add option to get crash kernel region size
-Message-ID: <20170207161408.GH13477@olila.local.net-space.pl>
-References: <1486410144-28595-1-git-send-email-eric.devolder@oracle.com>
- <1486410144-28595-13-git-send-email-eric.devolder@oracle.com>
+ id 1cbKys-0008Ki-LH
+ for kexec@lists.infradead.org; Wed, 08 Feb 2017 05:39:52 +0000
+Received: by mail-pf0-f172.google.com with SMTP id y143so39325266pfb.0
+ for <kexec@lists.infradead.org>; Tue, 07 Feb 2017 21:39:29 -0800 (PST)
+Subject: Re: [PATCH v32 00/13] arm64: add kdump support
+References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <d3759cc9-01d8-814c-e76e-e035eac6bb8b@redhat.com>
+Date: Wed, 8 Feb 2017 11:09:23 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1486410144-28595-13-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <20170207080601.5816-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,25 +20,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric DeVolder <eric.devolder@oracle.com>
-Cc: andrew.cooper3@citrix.com, dyoung@redhat.com, horms@verge.net.au, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On Mon, Feb 06, 2017 at 01:42:24PM -0600, Eric DeVolder wrote:
-> Here print_crashkernel_region_size() function is available on all archs (even
-> if the functionality is not implemented on some). So, we can safely use it in
-> arch independent code and export the functionality to the user space.
+
+
+On Tuesday 07 February 2017 01:36 PM, AKASHI Takahiro wrote:
+> This patch series adds kdump support on arm64.
 >
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> To load a crash-dump kernel to the systems, a series of patches to
+> kexec-tools[1] are also needed. Please use the latest one, v5 [2].
+> For your convinience, you can pick them up from:
+>    https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
+>    https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
+>
+> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+>   - crash utility (v7.1.8 or later, i.e. master for now) [3]
+>
+> I tested this patchset on fast model and hikey.
+> (under various configurations, in particular 4KB-page/39,48-bits, 64KB-page/42
+> -bits with hibernate)
+>
+> The previous versions were also:
+> Tested-by: Pratyush Anand <panand@redhat.com> (v29, mustang and seattle)
 
-I think that patch #11 and #12 should be merged into one thing
-like it was in my original series.
+..and you have my Tested-by for this series as well. They work fine with 
+both the above platform.
 
-Daniel
+Although we are very close, still it could be great if these patches can 
+make into v4.11.
+
+Thanks a lot Akashi for the quick v32.
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
