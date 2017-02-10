@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ccJMc-0004hp-7I
- for kexec@lists.infradead.org; Fri, 10 Feb 2017 22:08:31 +0000
+ id 1ccJMb-0004ho-QX
+ for kexec@lists.infradead.org; Fri, 10 Feb 2017 22:08:33 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v3 05/11] crashdump/m68k: Add get_crash_kernel_load_range()
- function
-Date: Fri, 10 Feb 2017 16:07:36 -0600
-Message-Id: <1486764462-14176-6-git-send-email-eric.devolder@oracle.com>
+Subject: [PATCH v3 11/11] kexec: Add option to get crash kernel region size
+Date: Fri, 10 Feb 2017 16:07:42 -0600
+Message-Id: <1486764462-14176-12-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1486764462-14176-1-git-send-email-eric.devolder@oracle.com>
 References: <1486764462-14176-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,32 +27,112 @@ Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
 From: Daniel Kiper <daniel.kiper@oracle.com>
 
-Implement get_crash_kernel_load_range() in support of
-print crash kernel region size option.
+From: Daniel Kiper <daniel.kiper@oracle.com>
+
+Crash kernel region size is available via sysfs on Linux running on
+bare metal. However, this does not work when Linux runs as Xen dom0.
+In this case Xen crash kernel region size should be established using
+__HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
+not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
+accessible using shell scripts or something like that. Potentially we
+can check "xl dmesg" output for crashkernel option but this is not nice.
+So, let's add this functionality, for Linux running on bare metal and
+as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
+kernel region size in one way regardless of platform. All burden of
+platform detection lies on kexec-tools.
+
+Figure (and unit) displayed by this new kexec-tools functionality is
+the same as one taken from /sys/kernel/kexec_crash_size.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kexec/arch/m68k/kexec-m68k.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ kexec/kexec.8 |  3 +++
+ kexec/kexec.c | 20 ++++++++++++++++++++
+ kexec/kexec.h |  4 +++-
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/arch/m68k/kexec-m68k.c b/kexec/arch/m68k/kexec-m68k.c
-index 372aa37..cb54927 100644
---- a/kexec/arch/m68k/kexec-m68k.c
-+++ b/kexec/arch/m68k/kexec-m68k.c
-@@ -89,6 +89,12 @@ int is_crashkernel_mem_reserved(void)
- 	return 0;
+diff --git a/kexec/kexec.8 b/kexec/kexec.8
+index f4b39a6..e0131b4 100644
+--- a/kexec/kexec.8
++++ b/kexec/kexec.8
+@@ -179,6 +179,9 @@ Load a helper image to jump back to original kernel.
+ .TP
+ .BI \-\-reuseinitrd
+ Reuse initrd from first boot.
++.TP
++.BI \-\-print-ckr-size
++Print crash kernel region size, if available.
+ 
+ 
+ .SH SUPPORTED KERNEL FILE TYPES AND OPTIONS
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index a2ba79d..0be1be4 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -995,6 +995,7 @@ void usage(void)
+ 	       "     --mem-max=<addr> Specify the highest memory address to\n"
+ 	       "                      load code into.\n"
+ 	       "     --reuseinitrd    Reuse initrd from first boot.\n"
++	       "     --print-ckr-size Print crash kernel region size.\n"
+ 	       "     --load-preserve-context Load the new kernel and preserve\n"
+ 	       "                      context of current kernel during kexec.\n"
+ 	       "     --load-jump-back-helper Load a helper image to jump back\n"
+@@ -1218,6 +1219,22 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 	return ret;
  }
  
-+int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
++static void print_crashkernel_region_size(void)
 +{
-+	/* Crash kernel region size is not exposed by the system */
-+	return -1;
-+}
++	uint64_t start = 0, end = 0;
 +
- unsigned long virt_to_phys(unsigned long addr)
++	if (is_crashkernel_mem_reserved()) {
++		int ret = get_crash_kernel_load_range(&start, &end);
++		if (ret != 0) {
++			fprintf(stderr, "get_crash_kernel_load_range failed.\n");
++			return;
++		}
++	}
++	if (start != end)
++		printf("%lu\n", end - start + 1);
++	else
++		printf("0\n");
++}
+ 
+ int main(int argc, char *argv[])
  {
- 	return addr + m68k_memoffset;
+@@ -1375,6 +1392,9 @@ int main(int argc, char *argv[])
+ 		case OPT_STATUS:
+ 			do_status = 1;
+ 			break;
++		case OPT_PRINT_CKR_SIZE:
++			print_crashkernel_region_size();
++			return 0;
+ 		default:
+ 			break;
+ 		}
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 2b06f59..52bef9b 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -226,7 +226,8 @@ extern int file_types;
+ #define OPT_LOAD_PRESERVE_CONTEXT 259
+ #define OPT_LOAD_JUMP_BACK_HELPER 260
+ #define OPT_ENTRY		261
+-#define OPT_MAX			262
++#define OPT_PRINT_CKR_SIZE	262
++#define OPT_MAX			263
+ #define KEXEC_OPTIONS \
+ 	{ "help",		0, 0, OPT_HELP }, \
+ 	{ "version",		0, 0, OPT_VERSION }, \
+@@ -247,6 +248,7 @@ extern int file_types;
+ 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
+ 	{ "debug",		0, 0, OPT_DEBUG }, \
+ 	{ "status",		0, 0, OPT_STATUS }, \
++	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+ 
+ #define KEXEC_OPT_STR "h?vdfxyluet:psS"
+ 
 -- 
 2.7.4
 
