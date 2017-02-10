@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ccJMa-0004hh-Oz
+ id 1ccJMa-0004hn-Mr
  for kexec@lists.infradead.org; Fri, 10 Feb 2017 22:08:23 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v3 09/11] crashdump/s390: Add get_crash_kernel_load_range()
- function
-Date: Fri, 10 Feb 2017 16:07:40 -0600
-Message-Id: <1486764462-14176-10-git-send-email-eric.devolder@oracle.com>
-In-Reply-To: <1486764462-14176-1-git-send-email-eric.devolder@oracle.com>
-References: <1486764462-14176-1-git-send-email-eric.devolder@oracle.com>
+Subject: [PATCH v3 0/10] kexec: Add option to get crash kernel region size
+Date: Fri, 10 Feb 2017 16:07:31 -0600
+Message-Id: <1486764462-14176-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,32 +23,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au, kexec@lists.infradead.org, andrew.cooper3@citrix.com, dyoung@redhat.com, panand@redhat.com
 Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
-From: Daniel Kiper <daniel.kiper@oracle.com>
+This is the third version of a patch series originally posted by
+Daniel Kiper on December 5.
 
-Implement get_crash_kernel_load_range() in support of
-print crash kernel region size option.
+This version differs from the previous version based on feedback
+received from the mailing list, as such:
+- changes for coding convention and formatting
+- restructured to introduce get_crash_kernel_load_range() for each
+  architecture, and then a single function in kexec/kexec.c to call
+  the per-architecture get_crash_kernel_load_range() and print the
+  result.
 
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
----
- kexec/arch/s390/kexec-s390.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Eric
 
-diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
-index 074575e..f863483 100644
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -262,3 +262,8 @@ int is_crashkernel_mem_reserved(void)
- 	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
- 		(start != end) : 0;
- }
-+
-+int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
-+{
-+	return parse_iomem_single("Crash kernel\n", start, end);
-+}
--- 
-2.7.4
+ kexec/arch/arm/crashdump-arm.c     |  5 +++++
+ kexec/arch/arm64/crashdump-arm64.c |  6 ++++++
+ kexec/arch/cris/kexec-cris.c       |  6 ++++++
+ kexec/arch/ia64/crashdump-ia64.c   |  5 +++++
+ kexec/arch/m68k/kexec-m68k.c       |  6 ++++++
+ kexec/arch/mips/crashdump-mips.c   |  4 ++++
+ kexec/arch/ppc/crashdump-powerpc.c | 22 +++++++++++++++++++++-
+ kexec/arch/ppc/kexec-ppc.c         | 27 +++++++++++++++++++++++++++
+ kexec/arch/ppc/kexec-ppc.h         |  1 +
+ kexec/arch/ppc64/crashdump-ppc64.c | 21 +++++++++++++++++++++
+ kexec/arch/ppc64/kexec-ppc64.c     | 27 +++++++++++++++++++++++++++
+ kexec/arch/ppc64/kexec-ppc64.h     |  2 ++
+ kexec/arch/s390/kexec-s390.c       |  5 +++++
+ kexec/arch/sh/crashdump-sh.c       |  5 +++++
+ kexec/kexec.8                      |  3 +++
+ kexec/kexec.c                      | 20 ++++++++++++++++++++
+ kexec/kexec.h                      |  4 +++-
+ 17 files changed, 167 insertions(+), 2 deletions(-)
+
+Daniel Kiper (10):
+      crashdump/arm: Add get_crash_kernel_load_range() function
+      crashdump/cris: Add get_crash_kernel_load_range() function
+      crashdump/ia64: Add get_crash_kernel_load_range() function
+      crashdump/m68k: Add get_crash_kernel_load_range() function
+      crashdump/mips: Add get_crash_kernel_load_range() function
+      crashdump/ppc: Add get_crash_kernel_load_range() function
+      crashdump/ppc64: Add get_crash_kernel_load_range() function
+      crashdump/s390: Add get_crash_kernel_load_range() function
+      crashdump/sh: Add get_crash_kernel_load_range() function
+      kexec: Add option to get crash kernel region size
+
+Eric DeVolder (1):
+      crashdump/arm64: Add get_crash_kernel_load_range() function
 
 
 _______________________________________________
