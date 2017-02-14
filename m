@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-f52.google.com ([209.85.214.52])
+Received: from mail-it0-f53.google.com ([209.85.214.53])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cdSCf-0005Dv-67
- for kexec@lists.infradead.org; Tue, 14 Feb 2017 01:46:51 +0000
-Received: by mail-it0-f52.google.com with SMTP id 203so13387293ith.0
- for <kexec@lists.infradead.org>; Mon, 13 Feb 2017 17:46:28 -0800 (PST)
-Subject: Re: [PATCH] /proc/kcore: Update physical address for kcore ram and
- text
-References: <f951340d2917cdd2a329fae9837a83f2059dc3b2.1485318868.git.panand@redhat.com>
- <CAHB_GupwpXiZjmy+4SQLvoJaJkAo9VvNVxQgxqvXeACRR--exg@mail.gmail.com>
- <CAGXu5jL89e33t0g+iVm8o7sstn3B9QCiFP_AhxZj8QiyaTjNZw@mail.gmail.com>
+ id 1cdUyB-00080A-4d
+ for kexec@lists.infradead.org; Tue, 14 Feb 2017 04:44:05 +0000
+Received: by mail-it0-f53.google.com with SMTP id c7so18751116itd.1
+ for <kexec@lists.infradead.org>; Mon, 13 Feb 2017 20:43:41 -0800 (PST)
+Subject: Re: [Makedumpfile Patch 0/6] Fix --mem-usage /proc/kcore
+References: <cover.1486381805.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EA4B89@BPXM01GP.gisp.nec.co.jp>
+ <db956357-414f-0efc-10b8-7864b88f5e00@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EA4D21@BPXM01GP.gisp.nec.co.jp>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <5b28ea05-24ab-b8db-e3d1-216399734297@redhat.com>
-Date: Tue, 14 Feb 2017 07:16:22 +0530
+Message-ID: <a71bda70-586e-ae26-c6ed-37427d4d71dd@redhat.com>
+Date: Tue, 14 Feb 2017 10:13:34 +0530
 MIME-Version: 1.0
-In-Reply-To: <CAGXu5jL89e33t0g+iVm8o7sstn3B9QCiFP_AhxZj8QiyaTjNZw@mail.gmail.com>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EA4D21@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,68 +24,66 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: Baoquan He <bhe@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, "bhe@redhat.com" <bhe@redhat.com>
 
 
 
-On Tuesday 14 February 2017 03:55 AM, Kees Cook wrote:
-> On Mon, Jan 30, 2017 at 11:00 AM, Pratyush Anand <panand@redhat.com> wrote:
->> CCing Andrew and Kees for their review comments.
+On Monday 13 February 2017 01:58 PM, Atsushi Kumagai wrote:
+>> On Monday 13 February 2017 11:56 AM, Atsushi Kumagai wrote:
+>>> Hello Pratyush,
+>>>
+>>>> `makedumpfile --mem-usage /proc/kcore` has been broken after kaslr specific
+>>>> modifications. I have proposed a kernel patch [0] which has been ACKed by
+>>>> Andrew Morton and is available in next-2017020 now. Hopefully, it should be
+>>>> part of upstream in v4.10 release. This kernel patch helps to fix this
+>>>> issue for both the case of kaslr enabled and disabled.
+>>>>
+>>>> To seek other's feedback, I am sending makedumpfile patches before kernel
+>>>> patch hits upstream.
+>>>
+>>> Thanks for taking care of this feature.
+>>> I understand that the problem is:
+>>>
+>>>  - phys_base is necessary for VtoP, but:
+>>>    - SYMBOL(phys_base) is unavailable since /proc/kcore doesn't export VMCOREINFO.
+>>>    - get_phys_base() doesn't work well since current PT_LOAD doesn't have valid p_paddr.
 >>
+>> Yes, this is what the problem is.
 >>
->> On Wednesday 25 January 2017 10:14 AM, Pratyush Anand wrote:
->>> Currently all the p_paddr of PT_LOAD headers are assigned to 0, which is
->>> not true and could be misleading, since 0 is a valid physical address.
 >>>
->>> User space tools like makedumpfile needs to know physical address for
->>> PT_LOAD segments of direct mapped regions. Therefore this patch updates
->>> paddr for such regions. It also sets an invalid paddr (-1) for other
->>> regions, so that user space tool can know whether a physical address
->>> provided in PT_LOAD is correct or not.
+>>> The new makedumpfile with this patches can show unexpected behavior since it
+>>> will refer to invalid p_paddr(always 0). Of course, also current makedumpfile cannot
+>>> work if phys_base isn't 0.
 >>>
->>> Signed-off-by: Pratyush Anand <panand@redhat.com>
->>> ---
->>> fs/proc/kcore.c | 5 ++++-
->>> 1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
->>> index 0b80ad87b4d6..ea9f3d1ae830 100644
->>> --- a/fs/proc/kcore.c
->>> +++ b/fs/proc/kcore.c
->>> @@ -373,7 +373,10 @@ static void elf_kcore_store_hdr(char *bufp, int
->>> nphdr, int dataoff)
->>> phdr->p_flags = PF_R|PF_W|PF_X;
->>> phdr->p_offset = kc_vaddr_to_offset(m->addr) + dataoff;
->>> phdr->p_vaddr = (size_t)m->addr;
->>> - phdr->p_paddr = 0;
->>> + if (m->type == KCORE_RAM || m->type == KCORE_TEXT)
->>> + phdr->p_paddr = __pa(m->addr);
->>> + else
->>> + phdr->p_paddr = (elf_addr_t)-1;
->>> phdr->p_filesz = phdr->p_memsz = m->size;
->>> phdr->p_align = PAGE_SIZE;
->>> }
->>>
+>>> If we don't have any way to get phys_base in 1st kernel environment,
+>>> I think we should disable this feature in older kernel (e.g. by checking kernel version).
+>>
+>> Hummm..I had thought that distros with old kernel will backport kernel
+>> patch and then can use this feature. If we disable it for older kernel,
+>> then they will not be able to do it.
+>>
+>> would it be fine if I cc kernel patch to stable mailing list? It seems
+>> that patch can be easily applied all older kernel.
 >
-> Well, CONFIG_PROC_KCORE is a generalized root KASLR exposure (though
-> there are lots of such exposures). Why is the actual physical address
-> needed? Can this just report the virtual address instead? Then the
-> tool can build a map, but it looks like an identity map, rather than
-> creating a new physical/virtual memory ASLR offset exposure?
+> Even if there are some "supported" older kernels, there is no guarantee
+> that all of the kernels provide valid p_paddr. So makedumpfile have to
+> know whether the target kernel supports --mem-usage or not in older kernel.
+>
+> Is it possible to add a new stuff into PT_NOTE of /proc/kcore to signify the
+> kernel supports --mem-usage ? Otherwise, my only idea is --force option for
+> older kernel, expert user can use it if he is sure that the kernel has valid
+> p_paddr.
+>
 
-Well, having an ASLR offset information can help to translate an 
-identity mapped virtual address to a physical address. But that would be 
-an additional field in PT_LOAD header structure and an arch dependent value.
+I think, we can go with --force. I will send next revision after kernel  
+patch hits Linus's tree.
 
-Moreover, sending a valid physical address like 0 does not seem right. 
-So, IMHO it is better to fix that and send valid physical address when 
-available (identity mapped).
 
-Thanks for the review.
+Thanks for your review.
 
 ~Pratyush
 
