@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cdkMc-0002v6-7P
- for kexec@lists.infradead.org; Tue, 14 Feb 2017 21:10:30 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v4 11/11] kexec: Add option to get crash kernel region size
-Date: Tue, 14 Feb 2017 15:09:23 -0600
-Message-Id: <1487106563-722-12-git-send-email-eric.devolder@oracle.com>
-In-Reply-To: <1487106563-722-1-git-send-email-eric.devolder@oracle.com>
+ id 1cdlbn-00049v-0G
+ for kexec@lists.infradead.org; Tue, 14 Feb 2017 22:30:06 +0000
+Date: Tue, 14 Feb 2017 23:29:29 +0100
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v4 07/11] crashdump/ppc: Add
+ get_crash_kernel_load_range() function
+Message-ID: <20170214222929.GK10876@olila.local.net-space.pl>
 References: <1487106563-722-1-git-send-email-eric.devolder@oracle.com>
+ <1487106563-722-8-git-send-email-eric.devolder@oracle.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1487106563-722-8-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,139 +21,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org, andrew.cooper3@citrix.com, dyoung@redhat.com, panand@redhat.com
-Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: panand@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, horms@verge.net.au, dyoung@redhat.com
 
-From: Daniel Kiper <daniel.kiper@oracle.com>
+On Tue, Feb 14, 2017 at 03:09:19PM -0600, Eric DeVolder wrote:
+> From: Daniel Kiper <daniel.kiper@oracle.com>
+>
+> Implement get_crash_kernel_load_range() in support of
+> print crash kernel region size option.
+>
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+> ---
+> v4: Incorporated feedback:
+>     - changes for coding convention and formatting
+> v3: Incorporated feedback:
+>     - changes for coding convention and formatting
+>     - restructured to introduce get_crash_kernel_load_range() for each
+>       architecture, and then a single function in kexec/kexec.c to call
+>       the per-architecture get_crash_kernel_load_range() and print the
+>       result.
+>     - changed print_crashkernel_region_size() to get_crash_kernel_load_range()
+>     - introduced get_devtree_value()
+> v2: Incorporated feedback:
+>     - utilize the is_crashkernel_mem_reserved() function common in all archs
+>     - utilize device-tree values to print size
+> v1: Posted to kexec-tools mailing list
+> ---
+>  kexec/arch/ppc/crashdump-powerpc.c | 27 ++++++++++++++++++++++++++-
+>  kexec/arch/ppc/kexec-ppc.c         | 28 ++++++++++++++++++++++++++++
+>  kexec/arch/ppc/kexec-ppc.h         |  1 +
+>  3 files changed, 55 insertions(+), 1 deletion(-)
+>
+> diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
+> index 3dc35eb..186005c 100644
+> --- a/kexec/arch/ppc/crashdump-powerpc.c
+> +++ b/kexec/arch/ppc/crashdump-powerpc.c
+> @@ -16,6 +16,9 @@
+>  #include "kexec-ppc.h"
+>  #include "crashdump-powerpc.h"
+>
+> +#define DEVTREE_CRASHKERNEL_BASE "/proc/device-tree/chosen/linux,crashkernel-base"
+> +#define DEVTREE_CRASHKERNEL_SIZE "/proc/device-tree/chosen/linux,crashkernel-size"
+> +
+>  #ifdef CONFIG_PPC64
+>  static struct crash_elf_info elf_info64 = {
+>  class: ELFCLASS64,
+> @@ -397,11 +400,33 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size)
+>  		usablemem_rgns.size, base, size);
+>  }
+>
+> +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+> +{
+> +	unsigned long long value;
+> +	int ret = 0;
+> +
+> +	if (!get_devtree_value(DEVTREE_CRASHKERNEL_BASE, &value))
+> +		*start = value;
+> +	else {
+> +		*start = 0;
 
-Crash kernel region size is available via sysfs on Linux running on
-bare metal. However, this does not work when Linux runs as Xen dom0.
-In this case Xen crash kernel region size should be established using
-__HYPERVISOR_kexec_op hypercall (Linux kernel kexec functionality does
-not make a lot of sense in Xen dom0). Sadly hypercalls are not easily
-accessible using shell scripts or something like that. Potentially we
-can check "xl dmesg" output for crashkernel option but this is not nice.
-So, let's add this functionality, for Linux running on bare metal and
-as Xen dom0, to kexec-tools. This way kdump scripts may establish crash
-kernel region size in one way regardless of platform. All burden of
-platform detection lies on kexec-tools.
+I have a feeling that this is not needed. If it is true then we can also
+drop curly brackets and leave just ret assignment only.
 
-Figure (and unit) displayed by this new kexec-tools functionality is
-the same as one taken from /sys/kernel/kexec_crash_size.
+> +		ret = -1;
+> +	}
+> +
+> +	if (!get_devtree_value(DEVTREE_CRASHKERNEL_SIZE, &value))
+> +		*end = *start + value - 1;
+> +	else {
+> +		*end = 0;
 
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
----
-v4: Incorporated feedback:
-    - changes for coding convention and formatting
-    - Changed commit description to make it clear that
-      get_crash_kernel_load_range() is a stub on some archs
-v3: Incorporated feedback:
-    - changes for coding convention and formatting
-    - restructured to introduce get_crash_kernel_load_range() for each
-      architecture, and then a single function in kexec/kexec.c to call
-      the per-architecture get_crash_kernel_load_range() and print the
-      result.
-v2: Incorporated feedback:
-    - utilize the is_crashkernel_mem_reserved() function common in all archs
-    - for ppc and ppc64, utilize device-tree values to print size
-    - for unsupported architectures, print appropriate message
-v1: Posted to kexec-tools mailing list
----
- kexec/kexec.8 |  3 +++
- kexec/kexec.c | 19 +++++++++++++++++++
- kexec/kexec.h |  4 +++-
- 3 files changed, 25 insertions(+), 1 deletion(-)
+Ditto.
 
-diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index f4b39a6..e0131b4 100644
---- a/kexec/kexec.8
-+++ b/kexec/kexec.8
-@@ -179,6 +179,9 @@ Load a helper image to jump back to original kernel.
- .TP
- .BI \-\-reuseinitrd
- Reuse initrd from first boot.
-+.TP
-+.BI \-\-print-ckr-size
-+Print crash kernel region size, if available.
- 
- 
- .SH SUPPORTED KERNEL FILE TYPES AND OPTIONS
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index a2ba79d..eccd988 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -995,6 +995,7 @@ void usage(void)
- 	       "     --mem-max=<addr> Specify the highest memory address to\n"
- 	       "                      load code into.\n"
- 	       "     --reuseinitrd    Reuse initrd from first boot.\n"
-+	       "     --print-ckr-size Print crash kernel region size.\n"
- 	       "     --load-preserve-context Load the new kernel and preserve\n"
- 	       "                      context of current kernel during kexec.\n"
- 	       "     --load-jump-back-helper Load a helper image to jump back\n"
-@@ -1218,6 +1219,21 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
- 	return ret;
- }
- 
-+static void print_crashkernel_region_size(void)
-+{
-+	uint64_t start = 0, end = 0;
-+
-+	if (is_crashkernel_mem_reserved() &&
-+		get_crash_kernel_load_range(&start, &end)) {
-+			fprintf(stderr, "get_crash_kernel_load_range() failed.\n");
-+			return;
-+	}
-+
-+	if (start != end)
-+		printf("%lu\n", end - start + 1);
-+	else
-+		printf("0\n");
-+}
- 
- int main(int argc, char *argv[])
- {
-@@ -1375,6 +1391,9 @@ int main(int argc, char *argv[])
- 		case OPT_STATUS:
- 			do_status = 1;
- 			break;
-+		case OPT_PRINT_CKR_SIZE:
-+			print_crashkernel_region_size();
-+			return 0;
- 		default:
- 			break;
- 		}
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 2b06f59..52bef9b 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -226,7 +226,8 @@ extern int file_types;
- #define OPT_LOAD_PRESERVE_CONTEXT 259
- #define OPT_LOAD_JUMP_BACK_HELPER 260
- #define OPT_ENTRY		261
--#define OPT_MAX			262
-+#define OPT_PRINT_CKR_SIZE	262
-+#define OPT_MAX			263
- #define KEXEC_OPTIONS \
- 	{ "help",		0, 0, OPT_HELP }, \
- 	{ "version",		0, 0, OPT_VERSION }, \
-@@ -247,6 +248,7 @@ extern int file_types;
- 	{ "kexec-file-syscall",	0, 0, OPT_KEXEC_FILE_SYSCALL }, \
- 	{ "debug",		0, 0, OPT_DEBUG }, \
- 	{ "status",		0, 0, OPT_STATUS }, \
-+	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
- 
- #define KEXEC_OPT_STR "h?vdfxyluet:psS"
- 
--- 
-2.7.4
+IIRC, same thing applies to ppc64.
 
+Daniel
 
 _______________________________________________
 kexec mailing list
