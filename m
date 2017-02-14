@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp1040.oracle.com ([141.146.126.69])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cdkMb-0002v2-QT
- for kexec@lists.infradead.org; Tue, 14 Feb 2017 21:10:24 +0000
+ id 1cdkMb-0002v7-Po
+ for kexec@lists.infradead.org; Tue, 14 Feb 2017 21:10:20 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v4 06/11] crashdump/mips: Add get_crash_kernel_load_range()
+Subject: [PATCH v4 01/11] crashdump/arm: Add get_crash_kernel_load_range()
  function
-Date: Tue, 14 Feb 2017 15:09:18 -0600
-Message-Id: <1487106563-722-7-git-send-email-eric.devolder@oracle.com>
+Date: Tue, 14 Feb 2017 15:09:13 -0600
+Message-Id: <1487106563-722-2-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1487106563-722-1-git-send-email-eric.devolder@oracle.com>
 References: <1487106563-722-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -48,17 +48,18 @@ v2: Incorporated feedback:
     - no changes for this arch
 v1: Posted to kexec-tools mailing list
 ---
- kexec/arch/mips/crashdump-mips.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kexec/arch/arm/crashdump-arm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
-index d6cff5a..9c33599 100644
---- a/kexec/arch/mips/crashdump-mips.c
-+++ b/kexec/arch/mips/crashdump-mips.c
-@@ -385,3 +385,7 @@ int is_crashkernel_mem_reserved(void)
- 		(start != end) : 0;
- }
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 4a89b5e..ac76e0a 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -413,3 +413,8 @@ int is_crashkernel_mem_reserved(void)
  
+ 	return crash_kernel_mem.start != crash_kernel_mem.end;
+ }
++
 +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
 +{
 +	return parse_iomem_single("Crash kernel\n", start, end);
