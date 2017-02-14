@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cdkMc-0002v1-0a
- for kexec@lists.infradead.org; Tue, 14 Feb 2017 21:10:28 +0000
+ id 1cdkMc-0002vC-75
+ for kexec@lists.infradead.org; Tue, 14 Feb 2017 21:10:30 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v4 04/11] crashdump/ia64: Add get_crash_kernel_load_range()
+Subject: [PATCH v4 05/11] crashdump/m68k: Add get_crash_kernel_load_range()
  function
-Date: Tue, 14 Feb 2017 15:09:16 -0600
-Message-Id: <1487106563-722-5-git-send-email-eric.devolder@oracle.com>
+Date: Tue, 14 Feb 2017 15:09:17 -0600
+Message-Id: <1487106563-722-6-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1487106563-722-1-git-send-email-eric.devolder@oracle.com>
 References: <1487106563-722-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,7 +28,7 @@ Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
 From: Daniel Kiper <daniel.kiper@oracle.com>
 
-Implement get_crash_kernel_load_range() in support of
+Provide stub get_crash_kernel_load_range() in support of
 print crash kernel region size option.
 
 Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
@@ -36,34 +36,38 @@ Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
 v4: Incorporated feedback:
-    - no changes for this arch
+    - Changed commit description to make it clear that
+      get_crash_kernel_load_range() is a stub
 v3: Incorporated feedback:
     - changes for coding convention and formatting
     - restructured to introduce get_crash_kernel_load_range() for each
       architecture, and then a single function in kexec/kexec.c to call
       the per-architecture get_crash_kernel_load_range() and print the
       result.
-    - print_crashkernel_region_size() changed to get_crash_kernel_load_range()
 v2: Incorporated feedback:
-    - no changes for this arch
+    - unsupported architectures, print appropriate message
 v1: Posted to kexec-tools mailing list
 ---
- kexec/arch/ia64/crashdump-ia64.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kexec/arch/m68k/kexec-m68k.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/kexec/arch/ia64/crashdump-ia64.c b/kexec/arch/ia64/crashdump-ia64.c
-index 726c9f4..755ee5e 100644
---- a/kexec/arch/ia64/crashdump-ia64.c
-+++ b/kexec/arch/ia64/crashdump-ia64.c
-@@ -286,3 +286,8 @@ int is_crashkernel_mem_reserved(void)
- 	return parse_iomem_single("Crash kernel\n", &start,
- 				  &end) == 0 ?  (start != end) : 0;
+diff --git a/kexec/arch/m68k/kexec-m68k.c b/kexec/arch/m68k/kexec-m68k.c
+index 372aa37..cb54927 100644
+--- a/kexec/arch/m68k/kexec-m68k.c
++++ b/kexec/arch/m68k/kexec-m68k.c
+@@ -89,6 +89,12 @@ int is_crashkernel_mem_reserved(void)
+ 	return 0;
  }
-+
+ 
 +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
 +{
-+	return parse_iomem_single("Crash kernel\n", start, end);
++	/* Crash kernel region size is not exposed by the system */
++	return -1;
 +}
++
+ unsigned long virt_to_phys(unsigned long addr)
+ {
+ 	return addr + m68k_memoffset;
 -- 
 2.7.4
 
