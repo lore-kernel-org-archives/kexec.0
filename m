@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <58A445B3.4080608@arm.com>
-Date: Wed, 15 Feb 2017 12:12:35 +0000
-From: James Morse <james.morse@arm.com>
+Received: from [162.243.103.125] (helo=houck.info)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1ce3Ol-00024l-Bj
+ for kexec@lists.infradead.org; Wed, 15 Feb 2017 17:29:50 +0000
+Subject: Re: kexec on panic
+References: <52a88de81ea3c62bb2be9e222eb85805@nuclearcat.com>
+ <20170210164313.5fe98b75@hananiah.suse.cz>
+From: Clif Houck <me@clifhouck.com>
+Message-ID: <864d8c8b-4573-9915-e164-aee5f1dd014b@clifhouck.com>
+Date: Wed, 15 Feb 2017 11:29:32 -0600
 MIME-Version: 1.0
-Subject: Re: [PATCH v32 07/13] arm64: hibernate: preserve kdump image around
- hibernation
-References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
- <20170207080904.5974-5-takahiro.akashi@linaro.org>
-In-Reply-To: <20170207080904.5974-5-takahiro.akashi@linaro.org>
+In-Reply-To: <20170210164313.5fe98b75@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,30 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org
 
-Hi Akashi,
+Is it possible to kexec on demand (not panic!) into another kernel with
+the idea being to avoid a reboot?
 
-On 07/02/17 08:08, AKASHI Takahiro wrote:
-> Since arch_kexec_protect_crashkres() removes a mapping for crash dump
-> kernel memory, the loaded contents won't be preserved around hibernation.
-> 
-> In this patch, arch_kexec_(un)protect_crashkres() are additionally called
-> before/after hibernation so that the relevant region will be mapped again
-> and restored just as the other memory regions are.
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-A quick test of this took longer than expected (writing to a slow usb device), I
-suspect it is save/restoring the whole crash region (which I don't think is a
-problem). If someone turns out to use this combination of features I will look
-at improving this, (almost certainly requires core-code changes).
-
+For instance, say you had Linux running in a ramdisk, and all that
+ramdisk Linux did was lay down a bootable Linux image onto the main
+disk, and then awaited a command to kexec to the Linux image on disk? Is
+something like that possible? Would I still need to specially craft the
+initrd? If so, is there any literature available on how to do that?
 
 Thanks,
+Clif Houck
 
-James
+On 2/10/2017 9:43 AM, Petr Tesarik wrote:
+> On Fri, 10 Feb 2017 10:14:02 +0200
+> Denys Fedoryshchenko <nuclearcat@nuclearcat.com> wrote:
+> 
+>> Hello,
+>>
+>> After years of using kexec and recent unpleasant experience with modern 
+>> (supposed to be blazing fast to boot) hardware that need 5-10 minutes 
+>> just to pass POST tests,
+>> one question came up to me:
+>> Is it possible anyhow to execute regular (not special "panic" one to 
+>> capture crash data) kexec on panic to reduce reboot time?
+> 
+> No. But you can load a specially crafted panic initrd which kexec's
+> back to the production kernel.
+> 
+> HTH,
+> Petr T
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
