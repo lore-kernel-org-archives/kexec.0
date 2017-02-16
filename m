@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x229.google.com ([2607:f8b0:400e:c00::229])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ceH4K-0006kj-Np
- for kexec@lists.infradead.org; Thu, 16 Feb 2017 08:05:39 +0000
-Date: Thu, 16 Feb 2017 16:05:09 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: EFI stub kexec probelm
-Message-ID: <20170216080509.GA2841@dhcp-128-65.nay.redhat.com>
-References: <7b5d8a74-2b5d-92f9-5265-b892b3bea2aa@camlintechnologies.com>
- <87bmu21w4k.fsf@xmission.com>
- <20170216072005.GD3942@dhcp-128-65.nay.redhat.com>
+ id 1ceIi8-000811-Pg
+ for kexec@lists.infradead.org; Thu, 16 Feb 2017 09:50:50 +0000
+Received: by mail-pf0-x229.google.com with SMTP id e4so4654655pfg.1
+ for <kexec@lists.infradead.org>; Thu, 16 Feb 2017 01:50:27 -0800 (PST)
+Date: Thu, 16 Feb 2017 18:52:15 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v32 07/13] arm64: hibernate: preserve kdump image around
+ hibernation
+Message-ID: <20170216095214.GF18445@linaro.org>
+References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+ <20170207080904.5974-5-takahiro.akashi@linaro.org>
+ <58A445B3.4080608@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170216072005.GD3942@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <58A445B3.4080608@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +24,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, =?utf-8?B?UGF3ZcWC?= Lenkow <p.lenkow@camlintechnologies.com>
-Cc: matt@codeblueprint.co.uk, linux-efi@vger.kernel.org, Kexec Mailing List <kexec@lists.infradead.org>, ard.biesheuvel@linaro.org
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-T24gMDIvMTYvMTcgYXQgMDM6MjBwbSwgRGF2ZSBZb3VuZyB3cm90ZToKPiBPbiAwMi8xNi8xNyBh
-dCAwNzozNXBtLCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPiA+IFBhd2XFgiBMZW5rb3cgPHAu
-bGVua293QGNhbWxpbnRlY2hub2xvZ2llcy5jb20+IHdyaXRlczoKPiA+IAo+ID4gPiBIaSEKPiA+
-ID4KPiA+ID4gSSBhbSB0cnlpbmcgdG8gcnVuIEVGSSBzdHViIGtlcm5lbCB1c2luZyBrZXhlYyBh
-bmQgdW5mb3J0dW5hdGVseSAybmQga2VybmVsCj4gPiA+IGNyYXNoZXMuCj4gPiAKPiA+IEFkZGlu
-ZyB0aGUga2V4ZWMgbGlzdCBhcyB0aGVyZSBtYXkgYmUgc29tZW9uZSB0aGVyZSB3aG8gbWF5IGJl
-IG1vcmUKPiA+IGtub3dsZWRnZWFibGUgYWJvdXQgb3VyIHByb2JsZW0uCj4gPiAKPiA+ID4gRmly
-c3Qga2VybmVsIGlzIGxvYWRlZCBieSBVRUZJLCBzdGFydHMgc2ltcGxlIGluaXQgd2l0aCBzaGVs
-bCBhbmQgdGhlbgo+ID4gPiBJIGFtIGxvYWRpbmcgdGhlIHNhbWUgaW1hZ2UgdXNpbmcga2V4ZWMu
-Cj4gPiA+Cj4gPiA+IEl0IGxvb2tzIGxpa2UgYSBsYWNrIG9mIGNvcnJlY3QgbWFwcGluZ3MgZm9y
-IEVGSSB0YWJsZXMgYmVjYXVzZSBpdAo+ID4gPiBjYWxscyBhZGRyZXNzIHplcm8gKFJESSByZWdp
-c3RlcikgaW4gZWZpX2NhbGwuCj4gPiA+Cj4gPiA+IERvZXMga2VybmVsIHN1cHBvcnQgc3VjaCBj
-b25maWd1cmF0aW9uPwoKWWVzLCBpdCAqc2hvdWxkKiB3b3JrcywgYXQgbGVhc3Qgd29ya3MgZm9y
-IG1lIHByZXZpb3VzbHkgb24gTGVub3ZvCmxhcHRvcHMuIFdoYXQgaXMgdGhlIGhhcmR3YXJlIGlu
-IHRoaXMgY2FzZT8KCj4gPiA+Cj4gPiA+IElmIHllcyB3aGF0IGNvdWxkIGJlIHdyb25nPwo+ID4g
-Cj4gPiBJIGRvbid0IGtub3cgZXhhY3RseSB3aGVyZSB0aGUgc3VwcG9ydCBpcywgSSBoYXZlbid0
-IGxvb2tlZCByZWNlbnRseS4KPiA+IAo+ID4gVGhlcmUgaXMgYSBtYWpvciBjaGFsbGVuZ2Ugd2l0
-aCBlZmkuICBUaGUgY2FsbCB0byBwbGFjZSBlZmkgaW4gdmlydHVhbAo+ID4gbW9kZSBtYXkgYmUg
-Y2FsbGVkIGV4YWN0bHkgb25jZS4gIFRoZXJlIGhhcyBiZWVuIHdvcmsgb24gYXQgbGVhc3QgaWE2
-NAo+ID4gdG8gbWFrZSBpdCBwb3NzaWJsZSB0byBjYXB0dXJlIHRoZSBlZmkgdmlydHVhbCBhZGRy
-ZXNzIGJhc3MgYW5kIHBhc3MgaXQKPiA+IHRocm91Z2ggdG8gdGhlIGtlcm5lbCBjYWxsaW5nIGtl
-eGVjLiAgSSBkb24ndCByZW1lbWJlciBzZWVpbmcgdGhlIHdvcmsKPiA+IHRvIGRvIHRoYXQgaGFw
-cGVuIG9uIG90aGVyIHBsYXRmb3Jtcy4KPiA+IAo+ID4gSSBwZXJzb25hbGx5IHRoaW5rIHdlIHNo
-b3VsZCBqdXN0IGFiYW5kb24gcnVubmluZyBlZmkgaW4gdmlydHVhbCBtb2RlCj4gPiBhbmQgYWx3
-YXlzIHJ1biBlZmkgaW4gcGh5c2ljYWxsIG1vZGUsIGJ1dCB0aGUgZmVlZGJhY2sgd2hlbiBJIHN1
-Z2dlc3RlZAo+ID4gdGhhdCB3YXMgdGhhdCBlZmkgZGlkbid0IGFjdHVhbGx5IHdvcmsgaWYgeW91
-IGRpZCB0aGF0LiAgKlNocnVnKgo+ID4gCj4gPiBHaXZlbiB0aGF0IGVmaV9lbnRlcl92aXJ0dWFs
-X21vZGUgaXMgaW4geW91ciBjYWxsIHRyYWNlIEkgYW0gZ3Vlc3NpbmcKPiA+IHRoYXQgdGhlIHBy
-b2JsZW0gaXMgdGhlIGhpc3RvcmljYWwgcHJvYmxlbSBJIGhhdmUgbWVudGlvbmVkIGFib3ZlLgoK
-SW4gbGF0ZXN0IGtlcm5lbCB3ZSBoYXZlIGEgc3RhYmxlIHZhIGFkZHJlc3Mgc3BhY2UgZm9yIGVm
-aSBydW50aW1lLAprZXhlYy10b29scyB3aWxsIGNvcHkgdGhlIHJ1bnRpbWUgbWFwcyBpbiAxc3Qg
-a2VybmVsIHNvIHRoYXQgZWZpIHJ1bnRpbWUKc3RpbGwgY2FuIGJlIHN0aWxsIHVzYWJsZSBhZnRl
-ciBrZXhlYyBrZXJuZWwgYm9vdCB1cCBidXQgZG8gbm90IGVudGVyaW5nCnZpcnR1YWwgbW9kZSBh
-Z2Fpbi4KClRoZXJlIG1pZ2h0IGJlIHNvbWUgYnVnIGVpdGhlciBpbiBrZXJuZWwgb3Igc29tZSBz
-cGVjaWFsIGZpcm13YXJlCnByb2JsZW0uLgoKPiA+IAo+ID4gRXJpYwo+ID4gCj4gPiAKPiA+IAo+
-ID4gPiBVc2luZyBncnViLWVmaSBhbGwgd29ya3MgZmluZSwgYnV0IGl0IGlzIG5vdCBlbm91Z2gg
-Zm9yIG1lLgo+ID4gPgo+ID4gPiBTZWUgbG9nIGJlbG93Ogo+ID4gPgo+ID4gPgo+ID4gPiAvICMg
-a2V4ZWMgLWwgL21udC9JTlNUQUxML3ZtbGludXogLXMKPiAKPiBXaGF0IGlzIHRoZSBrZXhlYy10
-b29scyB2ZXJzaW9uPyBBbmQgZG9lcyBrZXhlYyAtbCB3b3JrcyAod2l0aG91dCAtcyk/Cj4gCj4g
-QSB0ZXN0IHdpdGggZWZpPWRlYnVnIHBhcmFtZXRlcnMgbWF5IGhlbHAsIGFsc28gZnVsbCBsb2dz
-IG9mIGJvdGgKPiBwcmUta2V4ZWMgYm9vdCBhbmQgcG9zdC1rZXhlYyBib290IGNvdWxkIGFsc28g
-aGVscCB0byBmaW5kIHNvbWV0aGluZy4uCgpUaGlzIHF1ZXN0aW9ucyBvYnZpb3VzbHkgYXJlIGZv
-ciBQYXdlxYIgTGVua293LCBhZGQgaGltIHRvICJUbyIgbGlzdC4uCgo+IAo+IFRoYW5rcwo+IERh
-dmUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Wed, Feb 15, 2017 at 12:12:35PM +0000, James Morse wrote:
+> Hi Akashi,
+> 
+> On 07/02/17 08:08, AKASHI Takahiro wrote:
+> > Since arch_kexec_protect_crashkres() removes a mapping for crash dump
+> > kernel memory, the loaded contents won't be preserved around hibernation.
+> > 
+> > In this patch, arch_kexec_(un)protect_crashkres() are additionally called
+> > before/after hibernation so that the relevant region will be mapped again
+> > and restored just as the other memory regions are.
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thank you very much.
+
+> A quick test of this took longer than expected (writing to a slow usb device),
+
+Really? I use a uSD card on hikey as a swap device, and it takes just
+a few moments to save a hibernate image although I do the test right after
+the system comes up.
+
+> I
+> suspect it is save/restoring the whole crash region (which I don't think is a
+> problem).
+
+Now that we have only page-level mappings for the crash region,
+it might be possible to mark all the unused pages "reserved"
+in arch_kexec_unprotect_crashkres() if called in hibernate.
+
+-Takahiro AKASHI
+
+> If someone turns out to use this combination of features I will look
+> at improving this, (almost certainly requires core-code changes).
+> 
+> 
+> Thanks,
+> 
+> James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
