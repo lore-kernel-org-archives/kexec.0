@@ -1,26 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:120:8448::d00d])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1ceeWa-0002mg-6r
- for kexec@lists.infradead.org; Fri, 17 Feb 2017 09:08:23 +0000
-Date: Fri, 17 Feb 2017 10:07:35 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] x86/mce: Keep quiet in case of broadcasted mce after
- system panic
-Message-ID: <20170217090735.ls5pmtsfwkf3q5h6@pd.tnic>
-References: <20170123145056.fyraeehjfnwmmfb6@pd.tnic>
- <5886AD91.10803@redhat.com>
- <20170124122212.3dpdex5wjallypis@pd.tnic>
- <5889976A.9020802@redhat.com>
- <20170126064400.wfsn5pzxnpi6gcuk@pd.tnic>
- <58A53A65.3000405@redhat.com>
- <20170216101845.vkmnde4v6v72dgzx@pd.tnic>
- <58A59269.3050706@redhat.com>
- <20170216122215.uvrckt25g2msfxhe@pd.tnic>
- <58A65791.4090600@redhat.com>
+Message-ID: <58A7200C.8010707@arm.com>
+Date: Fri, 17 Feb 2017 16:08:44 +0000
+From: James Morse <james.morse@arm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <58A65791.4090600@redhat.com>
+Subject: Re: [PATCH v32 06/13] arm64: kdump: protect crash dump kernel memory
+References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+ <20170207080904.5974-4-takahiro.akashi@linaro.org>
+In-Reply-To: <20170207080904.5974-4-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,50 +19,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com
-Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Tony Luck <tony.luck@intel.com>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Fri, Feb 17, 2017 at 09:53:21AM +0800, Xunlei Pang wrote:
-> It changes the value of cpu_online_mask/etc which will cause confusion to vmcore analysis.
+Hi Akashi,
 
-Then export the crashing_cpu variable, initialize it to something
-invalid in the first kernel, -1 for example, and test it in the #MC
-handlier like this:
-
-	int cpu;
-
-	...
-
-	cpu = smp_processor_id();
-
-	if (cpu_is_offline(cpu) ||
-	    ((crashing_cpu != -1) && (crashing_cpu != cpu)) {
-                u64 mcgstatus;
-
-                mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
-                if (mcgstatus & MCG_STATUS_RIPV) {
-                        mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
-			return;
-		}
-	}
-
-> Moreover, for the code(see comment inlined)
+On 07/02/17 08:08, AKASHI Takahiro wrote:
+> arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
+> are meant to be called by kexec_load() in order to protect the memory
+> allocated for crash dump kernel once it's loaded.
 > 
->         if (cpu_is_offline(smp_processor_id())) {
->                 u64 mcgstatus;
+> Here, the protection is implemented by unmapping the relevant range
+> of memory, rather than making it read-only, to prevent any corruption
+> due to potential cache alias (with different attributes) problem.
 > 
->                 mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
->                 if (mcgstatus & MCG_STATUS_RIPV) { // This condition may be not true, the mce triggered on kdump cpu 
->                                                                      // doesn't need to have this bit set for the other cpus remain in 1st kernel. 
+> To make the things work correctly, we have to
+> - use page-level mappings entirely
+> - have the mappings isolated from the other normal memory
+> - move copying kexec's control_code_page to machine_kexec_prepare()
+> 
+> Note that page-level mappings are required to allow shrinking the region,
+> through /sys/kernel/kexec_crash_size, to the size of any number of pages
+> and putting the freed memory back to buddy system.
 
-Is this on kvm or on a real hardware? Because for kvm I don't care. And
-don't say "theoretically".
+This shrinking means memory marked memblock:reserve gets used by the slab
+allocator. This makes me feel uneasy, but I agree its not going to break
+anything, and we can't easily un-reserve it.
 
--- 
-Regards/Gruss,
-    Boris.
+The temporary no-map when building the linear map is a neat trick!
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Reviewed-by: James Morse <james.morse@arm.com>
+
+
+This patch will conflict with Ard's 'arm64: mmu: avoid writeable-executable
+mappings' series[0], but they may be complimentary as he adds a
+update_mapping_prot() call in patch 2 [1] which has a similar use-case.
+
+
+Thanks,
+
+James
+
+[0] https://www.spinics.net/lists/arm-kernel/msg562724.html
+[1] https://www.spinics.net/lists/arm-kernel/msg562726.html
 
 _______________________________________________
 kexec mailing list
