@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1celGA-0007QP-Ca
- for kexec@lists.infradead.org; Fri, 17 Feb 2017 16:19:52 +0000
-Subject: Re: [PATCH] x86/mce: Keep quiet in case of broadcasted mce after
- system panic
-References: <20170123145056.fyraeehjfnwmmfb6@pd.tnic>
- <5886AD91.10803@redhat.com> <20170124122212.3dpdex5wjallypis@pd.tnic>
- <5889976A.9020802@redhat.com> <20170126064400.wfsn5pzxnpi6gcuk@pd.tnic>
- <58A53A65.3000405@redhat.com> <20170216101845.vkmnde4v6v72dgzx@pd.tnic>
- <58A59269.3050706@redhat.com> <20170216122215.uvrckt25g2msfxhe@pd.tnic>
- <58A65791.4090600@redhat.com> <20170217090735.ls5pmtsfwkf3q5h6@pd.tnic>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <58A72316.20204@redhat.com>
-Date: Sat, 18 Feb 2017 00:21:42 +0800
-MIME-Version: 1.0
-In-Reply-To: <20170217090735.ls5pmtsfwkf3q5h6@pd.tnic>
+ id 1cerKs-0001xJ-Op
+ for kexec@lists.infradead.org; Fri, 17 Feb 2017 22:49:08 +0000
+From: Eric DeVolder <eric.devolder@oracle.com>
+Subject: [PATCH v5 09/11] crashdump/s390: Add get_crash_kernel_load_range()
+ function
+Date: Fri, 17 Feb 2017 16:47:23 -0600
+Message-Id: <1487371645-8299-10-git-send-email-eric.devolder@oracle.com>
+In-Reply-To: <1487371645-8299-1-git-send-email-eric.devolder@oracle.com>
+References: <1487371645-8299-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,57 +18,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, xlpang@redhat.com
-Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Tony Luck <tony.luck@intel.com>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: kexec@lists.infradead.org, horms@verge.net.au, andrew.cooper3@citrix.com
+Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
-On 02/17/2017 at 05:07 PM, Borislav Petkov wrote:
-> On Fri, Feb 17, 2017 at 09:53:21AM +0800, Xunlei Pang wrote:
->> It changes the value of cpu_online_mask/etc which will cause confusion to vmcore analysis.
-> Then export the crashing_cpu variable, initialize it to something
-> invalid in the first kernel, -1 for example, and test it in the #MC
-> handlier like this:
->
-> 	int cpu;
->
-> 	...
->
-> 	cpu = smp_processor_id();
->
-> 	if (cpu_is_offline(cpu) ||
-> 	    ((crashing_cpu != -1) && (crashing_cpu != cpu)) {
->                 u64 mcgstatus;
->
->                 mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
->                 if (mcgstatus & MCG_STATUS_RIPV) {
->                         mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
-> 			return;
-> 		}
-> 	}
+From: Daniel Kiper <daniel.kiper@oracle.com>
 
-Yes, it is doable, I will do some tests later.
+Implement get_crash_kernel_load_range() in support of
+print crash kernel region size option.
 
->> Moreover, for the code(see comment inlined)
->>
->>         if (cpu_is_offline(smp_processor_id())) {
->>                 u64 mcgstatus;
->>
->>                 mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
->>                 if (mcgstatus & MCG_STATUS_RIPV) { // This condition may be not true, the mce triggered on kdump cpu 
->>                                                                      // doesn't need to have this bit set for the other cpus remain in 1st kernel. 
-> Is this on kvm or on a real hardware? Because for kvm I don't care. And
-> don't say "theoretically".
->
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+v5: Incorporated feedback:
+    - no changes for this arch
+v4: Incorporated feedback:
+    - no changes for this arch
+v3: Incorporated feedback:
+    - changes for coding convention and formatting
+    - restructured to introduce get_crash_kernel_load_range() for each
+      architecture, and then a single function in kexec/kexec.c to call
+      the per-architecture get_crash_kernel_load_range() and print the
+      result.
+    - print_crashkernel_region_size() changed to get_crash_kernel_load_range()
+v2: Incorporated feedback:
+    - no changes for this arch
+v1: Posted to kexec-tools mailing list
+---
+ kexec/arch/s390/kexec-s390.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-It's from my understanding, I didn't get the explicit description from the intel SDM on this point.
-If a broadcast SRAO comes on real hardware, will MSR_IA32_MCG_STATUS of each cpu have MCG_STATUS_RIPV bit set?
+diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
+index 074575e..f863483 100644
+--- a/kexec/arch/s390/kexec-s390.c
++++ b/kexec/arch/s390/kexec-s390.c
+@@ -262,3 +262,8 @@ int is_crashkernel_mem_reserved(void)
+ 	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
+ 		(start != end) : 0;
+ }
++
++int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
++{
++	return parse_iomem_single("Crash kernel\n", start, end);
++}
+-- 
+2.7.4
 
-Regards,
-Xunlei
 
 _______________________________________________
 kexec mailing list
