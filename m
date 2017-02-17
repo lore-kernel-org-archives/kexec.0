@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cerKt-0001xL-QE
- for kexec@lists.infradead.org; Fri, 17 Feb 2017 22:49:17 +0000
+ id 1cerKt-0001x9-VA
+ for kexec@lists.infradead.org; Fri, 17 Feb 2017 22:49:16 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v5 07/11] crashdump/ppc: Add get_crash_kernel_load_range()
+Subject: [PATCH v5 01/11] crashdump/arm: Add get_crash_kernel_load_range()
  function
-Date: Fri, 17 Feb 2017 16:47:21 -0600
-Message-Id: <1487371645-8299-8-git-send-email-eric.devolder@oracle.com>
+Date: Fri, 17 Feb 2017 16:47:15 -0600
+Message-Id: <1487371645-8299-2-git-send-email-eric.devolder@oracle.com>
 In-Reply-To: <1487371645-8299-1-git-send-email-eric.devolder@oracle.com>
 References: <1487371645-8299-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -36,119 +36,36 @@ Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
 ---
 v5: Incorporated feedback:
-    - Removed extraneous setting of start and end in get_devtree_value()
-    - changes for coding convention and formatting
+    - no changes for this arch
 v4: Incorporated feedback:
-    - changes for coding convention and formatting
+    - no changes for this arch
 v3: Incorporated feedback:
     - changes for coding convention and formatting
     - restructured to introduce get_crash_kernel_load_range() for each
       architecture, and then a single function in kexec/kexec.c to call
       the per-architecture get_crash_kernel_load_range() and print the
       result.
-    - changed print_crashkernel_region_size() to get_crash_kernel_load_range()
-    - introduced get_devtree_value()
+    - print_crashkernel_region_size() changed to get_crash_kernel_load_range()
 v2: Incorporated feedback:
-    - utilize the is_crashkernel_mem_reserved() function common in all archs
-    - utilize device-tree values to print size
+    - no changes for this arch
 v1: Posted to kexec-tools mailing list
 ---
- kexec/arch/ppc/crashdump-powerpc.c | 22 +++++++++++++++++++++-
- kexec/arch/ppc/kexec-ppc.c         | 24 ++++++++++++++++++++++++
- kexec/arch/ppc/kexec-ppc.h         |  1 +
- 3 files changed, 46 insertions(+), 1 deletion(-)
+ kexec/arch/arm/crashdump-arm.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index 3dc35eb..dde6de7 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -16,6 +16,9 @@
- #include "kexec-ppc.h"
- #include "crashdump-powerpc.h"
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index 4a89b5e..ac76e0a 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -413,3 +413,8 @@ int is_crashkernel_mem_reserved(void)
  
-+#define DEVTREE_CRASHKERNEL_BASE "/proc/device-tree/chosen/linux,crashkernel-base"
-+#define DEVTREE_CRASHKERNEL_SIZE "/proc/device-tree/chosen/linux,crashkernel-size"
-+
- #ifdef CONFIG_PPC64
- static struct crash_elf_info elf_info64 = {
- class: ELFCLASS64,
-@@ -397,11 +400,28 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size)
- 		usablemem_rgns.size, base, size);
+ 	return crash_kernel_mem.start != crash_kernel_mem.end;
  }
- 
++
 +int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
 +{
-+	unsigned long long value;
-+
-+	if (!get_devtree_value(DEVTREE_CRASHKERNEL_BASE, &value))
-+		*start = value;
-+	else
-+		return -1;
-+
-+	if (!get_devtree_value(DEVTREE_CRASHKERNEL_SIZE, &value))
-+		*end = *start + value - 1;
-+	else
-+		return -1;
-+
-+	return 0;
++	return parse_iomem_single("Crash kernel\n", start, end);
 +}
-+
- int is_crashkernel_mem_reserved(void)
- {
- 	int fd;
- 
--	fd = open("/proc/device-tree/chosen/linux,crashkernel-base", O_RDONLY);
-+	fd = open(DEVTREE_CRASHKERNEL_BASE, O_RDONLY);
- 	if (fd < 0)
- 		return 0;
- 	close(fd);
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index d046110..03bec36 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -423,6 +423,30 @@ err_out:
- 	return -1;
- }
- 
-+/* Return 0 if fname/value valid, -1 otherwise */
-+int get_devtree_value(const char *fname, unsigned long long *value)
-+{
-+	FILE *file;
-+	char buf[MAXBYTES];
-+	int n = -1;
-+
-+	if ((file = fopen(fname, "r"))) {
-+		n = fread(buf, 1, MAXBYTES, file);
-+		fclose(file);
-+	}
-+
-+	if (n == sizeof(uint32_t))
-+		*value = ((uint32_t *)buf)[0];
-+	else if (n == sizeof(uint64_t))
-+		*value = ((uint64_t *)buf)[0];
-+	else {
-+		fprintf(stderr, "%s node has invalid size: %d\n", fname, n);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
- /* Get devtree details and create exclude_range array
-  * Also create usablemem_ranges for KEXEC_ON_CRASH
-  */
-diff --git a/kexec/arch/ppc/kexec-ppc.h b/kexec/arch/ppc/kexec-ppc.h
-index 904cf48..f8fd678 100644
---- a/kexec/arch/ppc/kexec-ppc.h
-+++ b/kexec/arch/ppc/kexec-ppc.h
-@@ -75,6 +75,7 @@ extern unsigned long dt_address_cells, dt_size_cells;
- extern int init_memory_region_info(void);
- extern int read_memory_region_limits(int fd, unsigned long long *start,
- 					unsigned long long *end);
-+extern int get_devtree_value(const char *fname, unsigned long long *pvalue);
- #define COMMAND_LINE_SIZE	512 /* from kernel */
- /*fs2dt*/
- void reserve(unsigned long long where, unsigned long long length);
 -- 
 2.7.4
 
