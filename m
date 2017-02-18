@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp1040.oracle.com ([156.151.31.81])
+Received: from edison.jonmasters.org ([173.255.233.168])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cerKu-0001xE-SC
- for kexec@lists.infradead.org; Fri, 17 Feb 2017 22:49:18 +0000
-From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [PATCH v5 03/11] crashdump/cris: Add get_crash_kernel_load_range()
- function
-Date: Fri, 17 Feb 2017 16:47:17 -0600
-Message-Id: <1487371645-8299-4-git-send-email-eric.devolder@oracle.com>
-In-Reply-To: <1487371645-8299-1-git-send-email-eric.devolder@oracle.com>
-References: <1487371645-8299-1-git-send-email-eric.devolder@oracle.com>
+ id 1cezfV-0000IK-Qz
+ for kexec@lists.infradead.org; Sat, 18 Feb 2017 07:42:59 +0000
+References: <52a88de81ea3c62bb2be9e222eb85805@nuclearcat.com>
+From: Jon Masters <jcm@jonmasters.org>
+Message-ID: <23681d9b-fec9-8ec7-3772-db5b36da9725@jonmasters.org>
+Date: Sat, 18 Feb 2017 02:42:12 -0500
+MIME-Version: 1.0
+In-Reply-To: <52a88de81ea3c62bb2be9e222eb85805@nuclearcat.com>
+Subject: Re: kexec on panic
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +18,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au, andrew.cooper3@citrix.com
-Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
+To: Denys Fedoryshchenko <nuclearcat@nuclearcat.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 
-From: Daniel Kiper <daniel.kiper@oracle.com>
+Hi Denys,
 
-Provide stub get_crash_kernel_load_range() in support of
-print crash kernel region size option.
+On 02/10/2017 03:14 AM, Denys Fedoryshchenko wrote:
 
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
----
-v5: Incorporated feedback:
-    - no changes for this arch
-v4: Incorporated feedback:
-    - Changed commit description to make it clear that
-      get_crash_kernel_load_range() is a stub
-v3: Incorporated feedback:
-    - changes for coding convention and formatting
-    - restructured to introduce get_crash_kernel_load_range() for each
-      architecture, and then a single function in kexec/kexec.c to call
-      the per-architecture get_crash_kernel_load_range() and print the
-      result.
-v2: Incorporated feedback:
-    - unsupported architectures, print appropriate message
-v1: Posted to kexec-tools mailing list
----
- kexec/arch/cris/kexec-cris.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> After years of using kexec and recent unpleasant experience with modern (supposed to be blazing fast to boot) hardware that need 5-10 minutes just to pass POST tests,
+> one question came up to me:
+> Is it possible anyhow to execute regular (not special "panic" one to capture crash data) kexec on panic to reduce reboot time?
 
-diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
-index 4ac2f89..3b69709 100644
---- a/kexec/arch/cris/kexec-cris.c
-+++ b/kexec/arch/cris/kexec-cris.c
-@@ -77,6 +77,12 @@ int is_crashkernel_mem_reserved(void)
- 	return 0;
- }
- 
-+int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
-+{
-+	/* Crash kernel region size is not exposed by the system */
-+	return -1;
-+}
-+
- unsigned long virt_to_phys(unsigned long addr)
- {
- 	return (addr) & 0x7fffffff;
--- 
-2.7.4
+Generally, you don't want to do this, because various platform hardware
+might be in non-quiescent states (still doing DMA to random memory, etc.)
+and other nastiness that means you don't want to do more than the minimal
+amount in a kexec on panic (crash). We've seen no end of fun and games
+even with just regular crash dumps while hardware is busily writing to
+memory that it shouldn't be. An IOMMU helps, but isn't a cure-all.
+
+Jon.
 
 
 _______________________________________________
