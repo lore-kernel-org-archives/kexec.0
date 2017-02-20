@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nuclearcat.com ([144.76.183.226])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cf05l-0002Yv-Oi
- for kexec@lists.infradead.org; Sat, 18 Feb 2017 08:10:07 +0000
-MIME-Version: 1.0
-Date: Sat, 18 Feb 2017 10:09:39 +0200
-From: Denys Fedoryshchenko <nuclearcat@nuclearcat.com>
-Subject: Re: kexec on panic
-In-Reply-To: <23681d9b-fec9-8ec7-3772-db5b36da9725@jonmasters.org>
-References: <52a88de81ea3c62bb2be9e222eb85805@nuclearcat.com>
- <23681d9b-fec9-8ec7-3772-db5b36da9725@jonmasters.org>
-Message-ID: <8dee042080bf3a00d376afc271b050eb@nuclearcat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cfhA5-0007HN-C5
+ for kexec@lists.infradead.org; Mon, 20 Feb 2017 06:09:27 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH v2] x86/mce: Don't participate in rendezvous process once
+ nmi_shootdown_cpus() was made
+Date: Mon, 20 Feb 2017 14:10:37 +0800
+Message-Id: <1487571037-10821-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,72 +16,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jon Masters <jcm@jonmasters.org>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: x86@kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Tony Luck <tony.luck@intel.com>, Xunlei Pang <xlpang@redhat.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
 
-On 2017-02-18 09:42, Jon Masters wrote:
-> Hi Denys,
-> 
-> On 02/10/2017 03:14 AM, Denys Fedoryshchenko wrote:
-> 
->> After years of using kexec and recent unpleasant experience with 
->> modern (supposed to be blazing fast to boot) hardware that need 5-10 
->> minutes just to pass POST tests,
->> one question came up to me:
->> Is it possible anyhow to execute regular (not special "panic" one to 
->> capture crash data) kexec on panic to reduce reboot time?
-> 
-> Generally, you don't want to do this, because various platform hardware
-> might be in non-quiescent states (still doing DMA to random memory, 
-> etc.)
-> and other nastiness that means you don't want to do more than the 
-> minimal
-> amount in a kexec on panic (crash). We've seen no end of fun and games
-> even with just regular crash dumps while hardware is busily writing to
-> memory that it shouldn't be. An IOMMU helps, but isn't a cure-all.
-> 
-> Jon.
-Well, i have to try, even sometimes i am facing issues with non-booting 
-hardware even on regular kexec, but having at small customer HP server 
-that need almost 6 minutes to boot,
-no hot-spare(and hard to do by many reasons, no spare 10G ports, cost of 
-hardware and etc) and some nasty bugs that is not resolved yet - forcing 
-me to search way to reduce reboot time.
-If i will find way to save backtrace and reboot fast, it will help a lot 
-to debug kernels with minimal downtime, if bug is reproducible only on 
-live system.
+We met an issue for kdump: after kdump kernel boots up,
+and there comes a broadcasted mce in first kernel, the
+other cpus remaining in first kernel will enter the old
+mce handler of first kernel, then timeout and panic due
+to MCE synchronization, finally reset the kdump cpus.
 
-What i did now, might be insanely wrong, but:
-diff -Naur linux-4.9.9-vanilla/kernel/kexec_core.c 
-linux-4.9.9/kernel/kexec_core.c
---- linux-4.9.9-vanilla/kernel/kexec_core.c	2017-02-09 
-07:08:40.000000000 +0000
-+++ linux-4.9.9/kernel/kexec_core.c	2017-02-17 12:54:49.000000000 +0000
-@@ -897,6 +897,10 @@
-  			machine_crash_shutdown(&fixed_regs);
-  			machine_kexec(kexec_crash_image);
-  		}
-+		if (kexec_image) {
-+		    machine_shutdown();
-+		    machine_kexec(kexec_image);
-+		}
-  		mutex_unlock(&kexec_mutex);
-  	}
-  }
+This patch lets cpus stay quiet after nmi_shootdown_cpus(),
+so before crash cpu shots them down or after kdump boots,
+they should not do anything except clearing MCG_STATUS
+in case of broadcasted mce. This is useful for kdump
+to let the vmcore dumping perform as hard as it can.
 
-Then
+Previous efforts:
+https://patchwork.kernel.org/patch/6167631/
+https://lists.gt.net/linux/kernel/2146557
 
-kexec -l /mnt/flash/kernel --append="intel_idle.max_cstate=0 
-processor.max_cstate=1"
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+v1->v2:
+Using crashing_cpu according to Borislav's suggestion.
 
-and
-echo c >/proc/sysrq-trigger
-worked even on busy network router, but i'm not sure it will be same on 
-real networking stack crash.
+ arch/x86/include/asm/reboot.h    |  1 +
+ arch/x86/kernel/cpu/mcheck/mce.c |  6 ++++--
+ arch/x86/kernel/reboot.c         | 16 +++++++++++++++-
+ 3 files changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index 2cb1cc2..ec8657b6 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -26,5 +26,6 @@ struct machine_ops {
+ typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback);
+ void run_crash_ipi_callback(struct pt_regs *regs);
++bool cpus_shotdown(void);
+ 
+ #endif /* _ASM_X86_REBOOT_H */
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 8e9725c..3b56710 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -49,6 +49,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/mce.h>
+ #include <asm/msr.h>
++#include <asm/reboot.h>
+ 
+ #include "mce-internal.h"
+ 
+@@ -1128,8 +1129,9 @@ void do_machine_check(struct pt_regs *regs, long error_code)
+ 	 */
+ 	int lmce = 1;
+ 
+-	/* If this CPU is offline, just bail out. */
+-	if (cpu_is_offline(smp_processor_id())) {
++	/* If nmi shootdown happened or this CPU is offline, just bail out. */
++	if (cpus_shotdown() ||
++	    cpu_is_offline(smp_processor_id())) {
+ 		u64 mcgstatus;
+ 
+ 		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index e244c19..b301c8d 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -752,7 +752,7 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ #if defined(CONFIG_SMP)
+ 
+ /* This keeps a track of which one is crashing cpu. */
+-static int crashing_cpu;
++static int crashing_cpu = -1;
+ static nmi_shootdown_cb shootdown_callback;
+ 
+ static atomic_t waiting_for_crash_ipi;
+@@ -852,6 +852,14 @@ void nmi_panic_self_stop(struct pt_regs *regs)
+ 	}
+ }
+ 
++bool cpus_shotdown(void)
++{
++	if (crashing_cpu != -1)
++		return true;
++
++	return false;
++}
++
+ #else /* !CONFIG_SMP */
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ {
+@@ -861,4 +869,10 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ void run_crash_ipi_callback(struct pt_regs *regs)
+ {
+ }
++
++bool cpus_shotdown(void)
++{
++	return false;
++}
++
+ #endif
+-- 
+1.8.3.1
 
 
 _______________________________________________
