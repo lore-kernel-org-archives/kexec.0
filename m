@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cgiQz-0002RH-SP
- for kexec@lists.infradead.org; Thu, 23 Feb 2017 01:43:07 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20170222224646.GC14311@altlinux.org>
-Date: Thu, 23 Feb 2017 14:37:46 +1300
-In-Reply-To: <20170222224646.GC14311@altlinux.org> (Dmitry V. Levin's message
- of "Thu, 23 Feb 2017 01:46:46 +0300")
-Message-ID: <87h93l3cwl.fsf@xmission.com>
+ id 1cgmUP-00046N-7n
+ for kexec@lists.infradead.org; Thu, 23 Feb 2017 06:02:55 +0000
+Subject: Re: [PATCH v3] x86/mce: Don't participate in rendezvous process once
+ nmi_shootdown_cpus() was made
+References: <1487736674-2058-1-git-send-email-xlpang@redhat.com>
+ <20170222185015.GA6141@intel.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <58AE7B82.2040008@redhat.com>
+Date: Thu, 23 Feb 2017 14:04:50 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH] uapi: fix linux/kexec.h userspace compilation errors
+In-Reply-To: <20170222185015.GA6141@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,52 +20,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Dmitry V. Levin" <ldv@altlinux.org>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Luck, Tony" <tony.luck@intel.com>, Xunlei Pang <xlpang@redhat.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
 
-"Dmitry V. Levin" <ldv@altlinux.org> writes:
-
-> Include <stddef.h> (guarded by #ifndef __KERNEL__) to fix the following
-> linux/kexec.h userspace compilation errors:
+On 02/23/2017 at 02:50 AM, Luck, Tony wrote:
+> On Wed, Feb 22, 2017 at 12:11:14PM +0800, Xunlei Pang wrote:
+>> +	/*
+>> +	 * Cases to bail out to avoid rendezvous process timeout:
+>> +	 * 1)If this CPU is offline.
+>> +	 * 2)If crashing_cpu was set, e.g. entering kdump,
+>> +	 *   we need to skip cpus remaining in 1st kernel.
+>> +	 */
+>> +	if (cpu_is_offline(cpu) ||
+>> +	    (crashing_cpu != -1 && crashing_cpu != cpu)) {
+>>  		u64 mcgstatus;
+>>  
+>>  		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
 >
-> /usr/include/linux/kexec.h:53:2: error: unknown type name 'size_t'
->   size_t bufsz;
-> /usr/include/linux/kexec.h:55:2: error: unknown type name 'size_t'
->   size_t memsz;
-
-Were these failures generated with a static checker?
-
-What changed that you are seeing new failures in old essentially static
-headers?
-
-Eric
-
-
-
-
-> Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-> ---
->  include/uapi/linux/kexec.h | 3 +++
->  1 file changed, 3 insertions(+)
+> I think we should document the remaining race conditions. I don't
+> think there is any good way to eliminate them, and they are already
+> pretty small windows.
 >
-> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-> index aae5ebf..7def5f5 100644
-> --- a/include/uapi/linux/kexec.h
-> +++ b/include/uapi/linux/kexec.h
-> @@ -45,6 +45,9 @@
->  #define KEXEC_SEGMENT_MAX 16
->  
->  #ifndef __KERNEL__
-> +
-> +#include <stddef.h>    /* For size_t. */
-> +
->  /*
->   * This structure is used to hold the arguments that are used when
->   * loading  kernel binaries.
+> I think the sequence of events looks like:
+>
+>      1	Panic occurs
+>      2	nmi_shootdown_cpus() sets crashing_cpu
+>      3	send NMI to everyone else
+>      4	wait up to a second for other CPUs to take NMI
+>      5	go to kexec code
+>      6	start new kernel
+>      7	new kernel establishes #MC handler
+>
+> If one of the other cpus triggers a machine check while
+> getting to, or in, the NMI handler ... then that cpu will
+> skip processing (if RIPV is set).
+>
+> Between '2' and '5' if crashing_cpu gets a machine check it
+> will execute in the old kernel handler, and do the right thing.
+>
+> There's a fuzzy area between '6' and '7' where a machine check
+> might not end up in the right code.
+>
+> From '7' onwards the kexec kernel will handle and machine
+> checks caused by kdump.
+>
+
+Agree, will update the comment.
+
+Regards,
+Xunlei
 
 _______________________________________________
 kexec mailing list
