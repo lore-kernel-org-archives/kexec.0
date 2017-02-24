@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1chAUP-00022s-6y
- for kexec@lists.infradead.org; Fri, 24 Feb 2017 07:40:30 +0000
-Date: Fri, 24 Feb 2017 15:39:38 +0800
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1chDHR-0005qg-6L
+ for kexec@lists.infradead.org; Fri, 24 Feb 2017 10:39:19 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] /proc/kcore: Update physical address for kcore ram and
- text
-Message-ID: <20170224073938.GA14810@x1>
-References: <f951340d2917cdd2a329fae9837a83f2059dc3b2.1485318868.git.panand@redhat.com>
- <CAHB_GupwpXiZjmy+4SQLvoJaJkAo9VvNVxQgxqvXeACRR--exg@mail.gmail.com>
- <CAGXu5jL89e33t0g+iVm8o7sstn3B9QCiFP_AhxZj8QiyaTjNZw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jL89e33t0g+iVm8o7sstn3B9QCiFP_AhxZj8QiyaTjNZw@mail.gmail.com>
+Subject: [PATCH] Only search page_offset_base when KASLR mm code is compiled in
+Date: Fri, 24 Feb 2017 18:38:52 +0800
+Message-Id: <1487932732-24539-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,79 +15,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: Pratyush Anand <panand@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, Dave Anderson <anderson@redhat.com>, ebiederm@xmission.com, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, piliu@redhat.com
 
-CC Eric too.
+Otherwise it will print false positve message as below. So add
+a check when do the search.
 
-On 02/13/17 at 02:25pm, Kees Cook wrote:
-> On Mon, Jan 30, 2017 at 11:00 AM, Pratyush Anand <panand@redhat.com> wrote:
-> > CCing Andrew and Kees for their review comments.
-> >
-> >
-> > On Wednesday 25 January 2017 10:14 AM, Pratyush Anand wrote:
-> >> Currently all the p_paddr of PT_LOAD headers are assigned to 0, which is
-> >> not true and could be misleading, since 0 is a valid physical address.
-> >>
-> >> User space tools like makedumpfile needs to know physical address for
-> >> PT_LOAD segments of direct mapped regions. Therefore this patch updates
-> >> paddr for such regions. It also sets an invalid paddr (-1) for other
-> >> regions, so that user space tool can know whether a physical address
-> >> provided in PT_LOAD is correct or not.
-> >>
-> >> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> >> ---
-> >> fs/proc/kcore.c | 5 ++++-
-> >> 1 file changed, 4 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
-> >> index 0b80ad87b4d6..ea9f3d1ae830 100644
-> >> --- a/fs/proc/kcore.c
-> >> +++ b/fs/proc/kcore.c
-> >> @@ -373,7 +373,10 @@ static void elf_kcore_store_hdr(char *bufp, int
-> >> nphdr, int dataoff)
-> >> phdr->p_flags = PF_R|PF_W|PF_X;
-> >> phdr->p_offset = kc_vaddr_to_offset(m->addr) + dataoff;
-> >> phdr->p_vaddr = (size_t)m->addr;
-> >> - phdr->p_paddr = 0;
-> >> + if (m->type == KCORE_RAM || m->type == KCORE_TEXT)
-> >> + phdr->p_paddr = __pa(m->addr);
-> >> + else
-> >> + phdr->p_paddr = (elf_addr_t)-1;
-> >> phdr->p_filesz = phdr->p_memsz = m->size;
-> >> phdr->p_align = PAGE_SIZE;
-> >> }
-> >>
-> 
-> Well, CONFIG_PROC_KCORE is a generalized root KASLR exposure (though
-> there are lots of such exposures). Why is the actual physical address
-> needed? Can this just report the virtual address instead? Then the
-> tool can build a map, but it looks like an identity map, rather than
-> creating a new physical/virtual memory ASLR offset exposure?
+    "Cannot get kernel page_offset_base symbol address"
 
-HPE asked to add a dumped vmcore size estimate feature to makedumpfile,
-just like HP UNIX does. So I added a --mem-usage option to makedumpfile
-and use /proc/kcore to analyze the memory of 1st kernel. Since /proc/kcore
-is a elf file which contains the mm layout of 1st kernel, it can help us
-estimate how much disk space need be reserved. Later s390x people also
-add support for this feature.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-With kaslr enabled, page_offset becomes uncertain, and in kernel Eric
-doesn't suggest exporting them into vmcoreinfo. So Pratyush tried to add
-physical address of direct mapping regions. For kaslr, kcore has
-exported those randomized starting address, I am not sure if it's risky
-to export physical address.
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 88aeee3..b2c1be5 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -150,8 +150,6 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 	off_t size;
+ 	uint32_t elf_flags = 0;
+ 	uint64_t stext_sym;
+-	const unsigned long long pud_mask = ~((1 << 30) - 1);
+-	unsigned long long vaddr, lowest_vaddr = 0;
+ 
+ 	if (elf_info->machine != EM_X86_64)
+ 		return 0;
+@@ -181,8 +179,11 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 
+ 	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+ 
++#ifdef CONFIG_RANDOMIZE_MEMORY
+ 	/* Search for the real PAGE_OFFSET when KASLR memory randomization
+ 	 * is enabled */
++	const unsigned long long pud_mask = ~((1 << 30) - 1);
++	unsigned long long vaddr, lowest_vaddr = 0;
+ 	if (get_kernel_sym("page_offset_base") != 0) {
+ 		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+ 			if (phdr->p_type == PT_LOAD) {
+@@ -194,6 +195,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+ 		if (lowest_vaddr != 0)
+ 			elf_info->page_offset = lowest_vaddr;
+ 	}
++#endif
+ 
+ 	/* Traverse through the Elf headers and find the region where
+ 	 * _stext symbol is located in. That's where kernel is mapped */
+-- 
+2.5.5
 
-It's close to our rhel dev cycle deadline, we hope this can be merged
-soon. I believe we can discuss it and improve it any time if risk is
-felt.
-
-Thanks
-Baoquan
 
 _______________________________________________
 kexec mailing list
