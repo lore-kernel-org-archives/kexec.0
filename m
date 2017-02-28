@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f173.google.com ([209.85.192.173])
+Received: from mail-pg0-f53.google.com ([74.125.83.53])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ciaih-0006Wv-AF
- for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:10 +0000
-Received: by mail-pf0-f173.google.com with SMTP id x66so1185172pfb.3
- for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:45 -0800 (PST)
+ id 1ciaik-0006Wx-2e
+ for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:12 +0000
+Received: by mail-pg0-f53.google.com with SMTP id s67so1278996pgb.3
+ for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:48 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v2 0/7] Fix --mem-usage /proc/kcore
-Date: Tue, 28 Feb 2017 11:22:34 +0530
-Message-Id: <cover.1488260510.git.panand@redhat.com>
+Subject: [Makedumpfile Patch v2 1/7] show_mem_usage(): calculate page offset
+ after elf load
+Date: Tue, 28 Feb 2017 11:22:35 +0530
+Message-Id: <335a7278001dbf8dd36cce6446be594050354e43.1488260510.git.panand@redhat.com>
+In-Reply-To: <cover.1488260510.git.panand@redhat.com>
+References: <cover.1488260510.git.panand@redhat.com>
+In-Reply-To: <cover.1488260510.git.panand@redhat.com>
+References: <cover.1488260510.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +30,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
+x86_64 calculated page offset from PT_LOAD headers. Therefore call
+get_page_offset() after get_elf_loads()
 
-`makedumpfile --mem-usage /proc/kcore` has been broken after kaslr specific
-modifications. A kernel patch has been ACKed by Andrew Morton and has been
-sent to Linus now [0]. This kernel patch helps to fix the issue for both
-the case of kaslr enabled and disabled.
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ makedumpfile.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-[0] http://marc.info/?l=linux-mm-commits&m=148823497215968&w=2
-
-Changes since v1:
- - One more patch..Now mem-usage with older kernel (< 4.11) will only work
-   when that has been rightly patched and -f has been used in makedumpfile
-   command line.
-
-Baoquan He (2):
-  makedumpfile: Correct the calculation of kvaddr in
-    set_kcore_vmcoreinfo
-  makedumpfile: Discard process_dump_load
-
-Pratyush Anand (5):
-  show_mem_usage(): calculate page offset after elf load
-  initial(): call cach_init() a bit early
-  x86_64: check physical address in PT_LOAD for none direct mapped
-    regions
-  elf_info: kcore: check for invalid physical address
-  mem-usage: allow to work only with -f for kernel version < 4.11
-
- arch/x86_64.c  |  6 ++++--
- elf_info.c     | 25 +++++--------------------
- makedumpfile.c | 18 ++++++++++++------
- 3 files changed, 21 insertions(+), 28 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index e69b6df9a9ee..6942047199de 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -10944,15 +10944,15 @@ int show_mem_usage(void)
+ 
+ 	info->dump_level = MAX_DUMP_LEVEL;
+ 
+-	if (!get_page_offset())
+-		return FALSE;
+-
+ 	if (!open_files_for_creating_dumpfile())
+ 		return FALSE;
+ 
+ 	if (!get_elf_loads(info->fd_memory, info->name_memory))
+ 		return FALSE;
+ 
++	if (!get_page_offset())
++		return FALSE;
++
+ 	if (!get_sys_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len))
+ 		return FALSE;
+ 
 -- 
 2.9.3
 
