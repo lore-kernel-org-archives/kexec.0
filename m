@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f176.google.com ([209.85.192.176])
+Received: from mail-pf0-f179.google.com ([209.85.192.179])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ciaim-0006Wy-3v
- for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:13 +0000
-Received: by mail-pf0-f176.google.com with SMTP id x66so1185892pfb.3
- for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:51 -0800 (PST)
+ id 1ciaio-0006X1-KD
+ for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:16 +0000
+Received: by mail-pf0-f179.google.com with SMTP id w189so1014232pfb.0
+ for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:53 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v2 2/7] initial(): call cach_init() a bit early
-Date: Tue, 28 Feb 2017 11:22:36 +0530
-Message-Id: <17681897e6f793895e0dcfd3b83eb07f25ae6ed5.1488260510.git.panand@redhat.com>
+Subject: [Makedumpfile Patch v2 3/7] x86_64: check physical address in PT_LOAD
+ for none direct mapped regions
+Date: Tue, 28 Feb 2017 11:22:37 +0530
+Message-Id: <05fd1418881a8dea155df31adc59ccad0fd30ee1.1488260510.git.panand@redhat.com>
 In-Reply-To: <cover.1488260510.git.panand@redhat.com>
 References: <cover.1488260510.git.panand@redhat.com>
 In-Reply-To: <cover.1488260510.git.panand@redhat.com>
@@ -29,42 +30,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-Call cach_init() before get_kcore_dump_loads(), because latter uses
-cache_search().
+A kcore PT_LOAD can have a section from vmalloc region. However,
+physical address in that header would be invalid (-1) after a recent
+kernel changes [0]. Therefore, check for valid physical address while
+calculating page_offset or phys_offset.
 
-Call path is like this :
-get_kcore_dump_loads() -> process_dump_load() -> vaddr_to_paddr() ->
-vtop4_x86_64() -> readmem() -> cache_search()
+[0] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?h=next-20170206&id=c9d4e5d7b7fd6c74e134ca44df8a5386efbc561c
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- makedumpfile.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86_64.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 6942047199de..3b8e9810468d 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3878,6 +3878,9 @@ initial(void)
- 	if (!get_value_for_old_linux())
- 		return FALSE;
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index 893cd516fc8b..e978a36f8878 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -41,7 +41,8 @@ get_page_offset_x86_64(void)
+ 	unsigned long long virt_start;
  
-+	if (!is_xen_memory() && !cache_init())
-+		return FALSE;
-+
- 	if (info->flag_mem_usage && !get_kcore_dump_loads())
- 		return FALSE;
- 
-@@ -4000,9 +4003,6 @@ out:
+ 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
+-		if (virt_start < __START_KERNEL_map) {
++		if (virt_start < __START_KERNEL_map
++				&& phys_start != NOT_PADDR) {
+ 			info->page_offset = virt_start - phys_start;
+ 			return TRUE;
  		}
+@@ -76,7 +77,8 @@ get_phys_base_x86_64(void)
  	}
  
--	if (!is_xen_memory() && !cache_init())
--		return FALSE;
--
- 	if (debug_info && !get_machdep_info())
- 		return FALSE;
+ 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
+-		if (virt_start >= __START_KERNEL_map) {
++		if (virt_start >= __START_KERNEL_map
++				&& phys_start != NOT_PADDR) {
  
+ 			info->phys_base = phys_start -
+ 			    (virt_start & ~(__START_KERNEL_map));
 -- 
 2.9.3
 
