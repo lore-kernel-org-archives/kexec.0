@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-f173.google.com ([209.85.192.173])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1chDHR-0005qg-6L
- for kexec@lists.infradead.org; Fri, 24 Feb 2017 10:39:19 +0000
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH] Only search page_offset_base when KASLR mm code is compiled in
-Date: Fri, 24 Feb 2017 18:38:52 +0800
-Message-Id: <1487932732-24539-1-git-send-email-bhe@redhat.com>
+ id 1ciaih-0006Wv-AF
+ for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:10 +0000
+Received: by mail-pf0-f173.google.com with SMTP id x66so1185172pfb.3
+ for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:45 -0800 (PST)
+From: Pratyush Anand <panand@redhat.com>
+Subject: [Makedumpfile Patch v2 0/7] Fix --mem-usage /proc/kcore
+Date: Tue, 28 Feb 2017 11:22:34 +0530
+Message-Id: <cover.1488260510.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,54 +22,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, piliu@redhat.com
+To: ats-kumagai@wm.jp.nec.com
+Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-Otherwise it will print false positve message as below. So add
-a check when do the search.
 
-    "Cannot get kernel page_offset_base symbol address"
+`makedumpfile --mem-usage /proc/kcore` has been broken after kaslr specific
+modifications. A kernel patch has been ACKed by Andrew Morton and has been
+sent to Linus now [0]. This kernel patch helps to fix the issue for both
+the case of kaslr enabled and disabled.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+[0] http://marc.info/?l=linux-mm-commits&m=148823497215968&w=2
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 88aeee3..b2c1be5 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -150,8 +150,6 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 	off_t size;
- 	uint32_t elf_flags = 0;
- 	uint64_t stext_sym;
--	const unsigned long long pud_mask = ~((1 << 30) - 1);
--	unsigned long long vaddr, lowest_vaddr = 0;
- 
- 	if (elf_info->machine != EM_X86_64)
- 		return 0;
-@@ -181,8 +179,11 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 
- 	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
- 
-+#ifdef CONFIG_RANDOMIZE_MEMORY
- 	/* Search for the real PAGE_OFFSET when KASLR memory randomization
- 	 * is enabled */
-+	const unsigned long long pud_mask = ~((1 << 30) - 1);
-+	unsigned long long vaddr, lowest_vaddr = 0;
- 	if (get_kernel_sym("page_offset_base") != 0) {
- 		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
- 			if (phdr->p_type == PT_LOAD) {
-@@ -194,6 +195,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
- 		if (lowest_vaddr != 0)
- 			elf_info->page_offset = lowest_vaddr;
- 	}
-+#endif
- 
- 	/* Traverse through the Elf headers and find the region where
- 	 * _stext symbol is located in. That's where kernel is mapped */
+Changes since v1:
+ - One more patch..Now mem-usage with older kernel (< 4.11) will only work
+   when that has been rightly patched and -f has been used in makedumpfile
+   command line.
+
+Baoquan He (2):
+  makedumpfile: Correct the calculation of kvaddr in
+    set_kcore_vmcoreinfo
+  makedumpfile: Discard process_dump_load
+
+Pratyush Anand (5):
+  show_mem_usage(): calculate page offset after elf load
+  initial(): call cach_init() a bit early
+  x86_64: check physical address in PT_LOAD for none direct mapped
+    regions
+  elf_info: kcore: check for invalid physical address
+  mem-usage: allow to work only with -f for kernel version < 4.11
+
+ arch/x86_64.c  |  6 ++++--
+ elf_info.c     | 25 +++++--------------------
+ makedumpfile.c | 18 ++++++++++++------
+ 3 files changed, 21 insertions(+), 28 deletions(-)
+
 -- 
-2.5.5
+2.9.3
 
 
 _______________________________________________
