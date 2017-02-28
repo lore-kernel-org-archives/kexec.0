@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f179.google.com ([209.85.192.179])
+Received: from mail-pg0-f42.google.com ([74.125.83.42])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ciaio-0006X1-KD
- for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:16 +0000
-Received: by mail-pf0-f179.google.com with SMTP id w189so1014232pfb.0
- for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:53 -0800 (PST)
+ id 1ciais-0006X7-9s
+ for kexec@lists.infradead.org; Tue, 28 Feb 2017 05:53:19 +0000
+Received: by mail-pg0-f42.google.com with SMTP id s67so1280421pgb.3
+ for <kexec@lists.infradead.org>; Mon, 27 Feb 2017 21:52:57 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v2 3/7] x86_64: check physical address in PT_LOAD
- for none direct mapped regions
-Date: Tue, 28 Feb 2017 11:22:37 +0530
-Message-Id: <05fd1418881a8dea155df31adc59ccad0fd30ee1.1488260510.git.panand@redhat.com>
+Subject: [Makedumpfile Patch v2 4/7] elf_info: kcore: check for invalid
+ physical address
+Date: Tue, 28 Feb 2017 11:22:38 +0530
+Message-Id: <d01fb1346891c0e48b3d17008e904386e648e5bd.1488260510.git.panand@redhat.com>
 In-Reply-To: <cover.1488260510.git.panand@redhat.com>
 References: <cover.1488260510.git.panand@redhat.com>
 In-Reply-To: <cover.1488260510.git.panand@redhat.com>
@@ -30,42 +30,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-A kcore PT_LOAD can have a section from vmalloc region. However,
-physical address in that header would be invalid (-1) after a recent
-kernel changes [0]. Therefore, check for valid physical address while
-calculating page_offset or phys_offset.
+After a recent kernel changes [0], kcore passes correct phys_start for
+direct mapped region and an invalid value (-1) for all other regions.
+arch specific function is_phys_addr() accepts only virt_start.
+Therefore, check for valid phys_start in get_kcore_dump_loads().
 
 [0] http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?h=next-20170206&id=c9d4e5d7b7fd6c74e134ca44df8a5386efbc561c
 
 Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- arch/x86_64.c | 6 ++++--
+ elf_info.c | 6 ++++--
  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index 893cd516fc8b..e978a36f8878 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -41,7 +41,8 @@ get_page_offset_x86_64(void)
- 	unsigned long long virt_start;
+diff --git a/elf_info.c b/elf_info.c
+index 65ff333cf33a..c5743b3cab28 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -881,7 +881,8 @@ int get_kcore_dump_loads(void)
  
- 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
--		if (virt_start < __START_KERNEL_map) {
-+		if (virt_start < __START_KERNEL_map
-+				&& phys_start != NOT_PADDR) {
- 			info->page_offset = virt_start - phys_start;
- 			return TRUE;
- 		}
-@@ -76,7 +77,8 @@ get_phys_base_x86_64(void)
+ 	for (i = 0; i < num_pt_loads; ++i) {
+ 		struct pt_load_segment *p = &pt_loads[i];
+-		if (!is_phys_addr(p->virt_start))
++		if (p->phys_start == NOT_PADDR
++				|| !is_phys_addr(p->virt_start))
+ 			continue;
+ 		loads++;
  	}
+@@ -901,7 +902,8 @@ int get_kcore_dump_loads(void)
  
- 	for (i = 0; get_pt_load(i, &phys_start, NULL, &virt_start, NULL); i++) {
--		if (virt_start >= __START_KERNEL_map) {
-+		if (virt_start >= __START_KERNEL_map
-+				&& phys_start != NOT_PADDR) {
- 
- 			info->phys_base = phys_start -
- 			    (virt_start & ~(__START_KERNEL_map));
+ 	for (i = 0, j = 0; i < num_pt_loads; ++i) {
+ 		struct pt_load_segment *p = &pt_loads[i];
+-		if (!is_phys_addr(p->virt_start))
++		if (p->phys_start == NOT_PADDR
++				|| !is_phys_addr(p->virt_start))
+ 			continue;
+ 		if (j >= loads)
+ 			return FALSE;
 -- 
 2.9.3
 
