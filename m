@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f176.google.com ([209.85.192.176])
+Received: from mail-pf0-f169.google.com ([209.85.192.169])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjMEq-00011V-TC
- for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:30 +0000
-Received: by mail-pf0-f176.google.com with SMTP id x66so20141564pfb.3
- for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:04 -0800 (PST)
+ id 1cjMEs-00011X-K7
+ for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:32 +0000
+Received: by mail-pf0-f169.google.com with SMTP id w189so19981616pfb.0
+ for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:09 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v3 0/7] Fix --mem-usage /proc/kcore
-Date: Thu,  2 Mar 2017 14:06:45 +0530
-Message-Id: <cover.1488443170.git.panand@redhat.com>
+Subject: [Makedumpfile Patch v3 2/7] initial(): call cach_init() a bit early
+Date: Thu,  2 Mar 2017 14:06:47 +0530
+Message-Id: <5121b3b3857e3f5710195b4983d7261549ef7fac.1488443170.git.panand@redhat.com>
+In-Reply-To: <cover.1488443170.git.panand@redhat.com>
+References: <cover.1488443170.git.panand@redhat.com>
+In-Reply-To: <cover.1488443170.git.panand@redhat.com>
+References: <cover.1488443170.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +29,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
 Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
+Call cach_init() before get_kcore_dump_loads(), because latter uses
+cache_search().
 
-`makedumpfile --mem-usage /proc/kcore` has been broken after kaslr specific
-modifications. Kernel commit commit 464920104bf7 (/proc/kcore: update
-physical address for kcore ram and text) provides now valid physical
-address for direct mapped regions and invalid (-1) for other areas.  This
-helps to fix the issue in makedumpfile for both the case of kaslr enabled
-and disabled.
+Call path is like this :
+get_kcore_dump_loads() -> process_dump_load() -> vaddr_to_paddr() ->
+vtop4_x86_64() -> readmem() -> cache_search()
 
-Changes since v2:
- - Fixed a memory leak issue and updated man page and usage info
-Changes since v1:
- - One more patch..Now mem-usage with older kernel (< 4.11) will only work
-   when that has been rightly patched and -f has been used in makedumpfile
-   command line.
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ makedumpfile.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-Baoquan He (2):
-  makedumpfile: Correct the calculation of kvaddr in
-    set_kcore_vmcoreinfo
-  makedumpfile: Discard process_dump_load
-
-Pratyush Anand (5):
-  show_mem_usage(): calculate page offset after elf load
-  initial(): call cach_init() a bit early
-  x86_64: check physical address in PT_LOAD for none direct mapped
-    regions
-  elf_info: kcore: check for invalid physical address
-  mem-usage: allow to work only with -f for kernel version < 4.11
-
- arch/x86_64.c  |  6 ++++--
- elf_info.c     | 25 +++++--------------------
- makedumpfile.8 |  9 ++++++++-
- makedumpfile.c | 18 ++++++++++++------
- print_info.c   |  3 ++-
- 5 files changed, 31 insertions(+), 30 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 6942047199de..3b8e9810468d 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3878,6 +3878,9 @@ initial(void)
+ 	if (!get_value_for_old_linux())
+ 		return FALSE;
+ 
++	if (!is_xen_memory() && !cache_init())
++		return FALSE;
++
+ 	if (info->flag_mem_usage && !get_kcore_dump_loads())
+ 		return FALSE;
+ 
+@@ -4000,9 +4003,6 @@ out:
+ 		}
+ 	}
+ 
+-	if (!is_xen_memory() && !cache_init())
+-		return FALSE;
+-
+ 	if (debug_info && !get_machdep_info())
+ 		return FALSE;
+ 
 -- 
 2.9.3
 
