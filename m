@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f171.google.com ([209.85.192.171])
+Received: from mail-pf0-f175.google.com ([209.85.192.175])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjMEx-00011j-RF
- for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:38 +0000
-Received: by mail-pf0-f171.google.com with SMTP id j5so20176659pfb.2
- for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:17 -0800 (PST)
+ id 1cjMF3-00011p-7B
+ for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:42 +0000
+Received: by mail-pf0-f175.google.com with SMTP id w189so19983138pfb.0
+ for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:20 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v3 5/7] makedumpfile: Correct the calculation of
- kvaddr in set_kcore_vmcoreinfo
-Date: Thu,  2 Mar 2017 14:06:50 +0530
-Message-Id: <60d2237114dea2d05892f25beb03a7d8ef8e9b3d.1488443170.git.panand@redhat.com>
+Subject: [Makedumpfile Patch v3 6/7] makedumpfile: Discard process_dump_load
+Date: Thu,  2 Mar 2017 14:06:51 +0530
+Message-Id: <7dd6180b3997713c4fe4ce7ab7079838c5d266f4.1488443170.git.panand@redhat.com>
 In-Reply-To: <cover.1488443170.git.panand@redhat.com>
 References: <cover.1488443170.git.panand@redhat.com>
 In-Reply-To: <cover.1488443170.git.panand@redhat.com>
@@ -32,39 +31,52 @@ Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
 From: Baoquan He <bhe@redhat.com>
 
-In set_kcore_vmcoreinfo, we calculate the virtual address of vmcoreinfo
-by OR operation as below:
-
-	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
-
-When mm sections kaslr is not enabled, this is correct since the
-starting address of direct mapping section is 0xffff880000000000 which
-is 1T aligned.  Usually system with memory below 1T won't cause problem.
-
-However with mm section kaslr enabled, the starting address of direct
-mapping is 1G aligned. The above code makes kvaddr unsure.
-
-So change it to adding operation:
-	kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
+Kernel commit 464920104bf7 (/proc/kcore: update physical address for
+kcore ram and text) provides physical address of direct mapping kcore
+program segments. So no need to calculate it specifically now. And the
+old code is not correct since it calls vaddr_to_paddr() which has not
+been ready at that time.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- elf_info.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ elf_info.c | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
 diff --git a/elf_info.c b/elf_info.c
-index c5743b3cab28..100272f83c48 100644
+index 100272f83c48..8e2437622141 100644
 --- a/elf_info.c
 +++ b/elf_info.c
-@@ -372,7 +372,7 @@ int set_kcore_vmcoreinfo(uint64_t vmcoreinfo_addr, uint64_t vmcoreinfo_len)
- 	off_t offset_desc;
+@@ -857,22 +857,6 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
+ 	return 0;
+ }
  
- 	offset = UNINITIALIZED;
--	kvaddr = (ulong)vmcoreinfo_addr | PAGE_OFFSET;
-+	kvaddr = (ulong)vmcoreinfo_addr + PAGE_OFFSET;
+-static int
+-process_dump_load(struct pt_load_segment	*pls)
+-{
+-	unsigned long long paddr;
+-
+-	paddr = vaddr_to_paddr(pls->virt_start);
+-	pls->phys_start  = paddr;
+-	pls->phys_end    = paddr + (pls->virt_end - pls->virt_start);
+-	DEBUG_MSG("process_dump_load\n");
+-	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
+-	DEBUG_MSG("  phys_end   : %llx\n", pls->phys_end);
+-	DEBUG_MSG("  virt_start : %llx\n", pls->virt_start);
+-	DEBUG_MSG("  virt_end   : %llx\n", pls->virt_end);
+-
+-	return TRUE;
+-}
  
- 	for (i = 0; i < num_pt_loads; ++i) {
- 		struct pt_load_segment *p = &pt_loads[i];
+ int get_kcore_dump_loads(void)
+ {
+@@ -917,7 +901,6 @@ int get_kcore_dump_loads(void)
+ 		}
+ 
+ 		pls[j] = *p;
+-		process_dump_load(&pls[j]);
+ 		j++;
+ 	}
+ 
 -- 
 2.9.3
 
