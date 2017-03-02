@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f50.google.com ([74.125.83.50])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjMF5-00011q-Ml
- for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:45 +0000
-Received: by mail-pg0-f50.google.com with SMTP id b129so30029435pgc.2
- for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:23 -0800 (PST)
-From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v3 7/7] mem-usage: allow to work only with -f for
- kernel version < 4.11
-Date: Thu,  2 Mar 2017 14:06:52 +0530
-Message-Id: <6689d9cf1e69f79b0e8c74ecab8e003e5507a79b.1488443170.git.panand@redhat.com>
-In-Reply-To: <cover.1488443170.git.panand@redhat.com>
-References: <cover.1488443170.git.panand@redhat.com>
-In-Reply-To: <cover.1488443170.git.panand@redhat.com>
-References: <cover.1488443170.git.panand@redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cjNBA-0007gq-Kz
+ for kexec@lists.infradead.org; Thu, 02 Mar 2017 09:37:45 +0000
+Date: Thu, 2 Mar 2017 17:36:50 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] Only search page_offset_base when KASLR mm code is
+ compiled in
+Message-ID: <20170302093650.GD18391@x1>
+References: <1487932732-24539-1-git-send-email-bhe@redhat.com>
+ <20170228060625.GA4872@dhcp-128-65.nay.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170228060625.GA4872@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,91 +21,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: Dave Young <dyoung@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, piliu@redhat.com
 
-PT_LOAD of kcore does not have valid p_paddr values for kernel version
-less that v4.11. Therefore, older kernel will no long work for mem-usage
-with current makedumpfile code. They can only work when they are patched
-with fix to "update physical address for kcore ram and text".
+On 02/28/17 at 02:06pm, Dave Young wrote:
+> On 02/24/17 at 06:38pm, Baoquan He wrote:
+> > Otherwise it will print false positve message as below. So add
+> > a check when do the search.
+> > 
+> >     "Cannot get kernel page_offset_base symbol address"
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> >  kexec/arch/i386/crashdump-x86.c | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> > index 88aeee3..b2c1be5 100644
+> > --- a/kexec/arch/i386/crashdump-x86.c
+> > +++ b/kexec/arch/i386/crashdump-x86.c
+> > @@ -150,8 +150,6 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+> >  	off_t size;
+> >  	uint32_t elf_flags = 0;
+> >  	uint64_t stext_sym;
+> > -	const unsigned long long pud_mask = ~((1 << 30) - 1);
+> > -	unsigned long long vaddr, lowest_vaddr = 0;
+> >  
+> >  	if (elf_info->machine != EM_X86_64)
+> >  		return 0;
+> > @@ -181,8 +179,11 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+> >  
+> >  	end_phdr = &ehdr.e_phdr[ehdr.e_phnum];
+> >  
+> > +#ifdef CONFIG_RANDOMIZE_MEMORY
+> 
+> It does not work in userspace code.
 
-This patch fixes the makedumpfile so that it does not allow to work
-older kernel for --mem-usage until someone is sure that kernel is
-rightly patched and so uses -f in command line. It also updates man page
-and usage info accordingly.
+Could be it only works when make header and install. Otherwise it can't
+be seen by user space. I built a rhel kernel package and test passed.
 
-Signed-off-by: Pratyush Anand <panand@redhat.com>
----
- makedumpfile.8 | 9 ++++++++-
- makedumpfile.c | 6 ++++++
- print_info.c   | 3 ++-
- 3 files changed, 16 insertions(+), 2 deletions(-)
+Anyway, since it doesn't work in all cases, I have made another way to
+fix it, just take out the error message and put it where get_kernel_sym
+is called.
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 9069fb18cdb6..993236486e77 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -235,13 +235,20 @@ the ELF format does not support compressed data.
- 
- .TP
- \fB\-f\fR
--Force existing DUMPFILE to be overwritten.
-+Force existing DUMPFILE to be overwritten and mem-usage to work with older
-+kernel as well.
- .br
- .B Example:
- .br
- # makedumpfile \-f \-d 31 \-x vmlinux /proc/vmcore dumpfile
- .br
- This command overwrites \fIDUMPFILE\fR even if it already exists.
-+.br
-+# makedumpfile \-f \-\-mem\-usage /proc/kcore
-+.br
-+Kernel version lesser than v4.11 will not work with \-\-mem\-usage
-+functionality until it has been patched with upstream commit 464920104bf7.
-+Therefore if you have patched your older kernel then use \-f.
- 
- .TP
- \fB\-x\fR \fIVMLINUX\fR
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 3b8e9810468d..e3be1ab0a9ec 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -11269,6 +11269,12 @@ main(int argc, char *argv[])
- 			MSG("Try `makedumpfile --help' for more information.\n");
- 			goto out;
- 		}
-+		if (info->kernel_version < KERNEL_VERSION(4, 11, 0) &&
-+				!info->flag_force) {
-+			MSG("mem-usage not supported for this kernel.\n");
-+			MSG("You can try with -f if your kernel's kcore has valid p_paddr\n");
-+			goto out;
-+		}
- 
- 		if (!show_mem_usage())
- 			goto out;
-diff --git a/print_info.c b/print_info.c
-index 392d863a4227..72ed8fa0c059 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -309,7 +309,8 @@ print_usage(void)
- 	MSG("      Print debugging message.\n");
- 	MSG("\n");
- 	MSG("  [-f]:\n");
--	MSG("      Overwrite DUMPFILE even if it already exists.\n");
-+	MSG("      Overwrite DUMPFILE even if it already exists\n");
-+	MSG("      Force mem-usage to work with older kernel as well.\n");
- 	MSG("\n");
- 	MSG("  [-h, --help]:\n");
- 	MSG("      Show help message and LZO/snappy support status (enabled/disabled).\n");
--- 
-2.9.3
-
+> 
+> Maybe mute the error message or move it to kexec --debug is more
+> reasonable..
+> 
+> >  	/* Search for the real PAGE_OFFSET when KASLR memory randomization
+> >  	 * is enabled */
+> > +	const unsigned long long pud_mask = ~((1 << 30) - 1);
+> > +	unsigned long long vaddr, lowest_vaddr = 0;
+> >  	if (get_kernel_sym("page_offset_base") != 0) {
+> >  		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+> >  			if (phdr->p_type == PT_LOAD) {
+> > @@ -194,6 +195,7 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+> >  		if (lowest_vaddr != 0)
+> >  			elf_info->page_offset = lowest_vaddr;
+> >  	}
+> > +#endif
+> >  
+> >  	/* Traverse through the Elf headers and find the region where
+> >  	 * _stext symbol is located in. That's where kernel is mapped */
+> > -- 
+> > 2.5.5
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> Thanks
+> Dave
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
