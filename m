@@ -1,16 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ciySG-00061s-Hr
- for kexec@lists.infradead.org; Wed, 01 Mar 2017 07:13:46 +0000
-Date: Wed, 1 Mar 2017 15:13:17 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] build_mem_phdrs(): check if p_paddr is invalid
-Message-ID: <20170301071317.GA3534@dhcp-128-65.nay.redhat.com>
-References: <e45f4027aa72ea9009ae03f471894d62ccc135bb.1488346530.git.panand@redhat.com>
+Subject: Re: [PATCH v32 00/13] arm64: add kdump support
+References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <1f4c1497-129d-7350-89c1-1ba0a6764ba5@codeaurora.org>
+Date: Wed, 1 Mar 2017 17:51:21 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <e45f4027aa72ea9009ae03f471894d62ccc135bb.1488346530.git.panand@redhat.com>
+In-Reply-To: <20170207080601.5816-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,50 +18,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, bhe@redhat.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On 03/01/17 at 11:19am, Pratyush Anand wrote:
-> Currently, all the p_paddr of PT_LOAD headers are assigned to 0, which
-> is not correct and could be misleading, since 0 is a valid physical
-> address.
-> 
-> Upstream kernel commit "464920104bf7 /proc/kcore: update physical
-> address for kcore ram and text" fixed it and now invalid PT_LOAD is
-> assigned as -1.
-> 
-> kexec/arch/i386/crashdump-x86.c:get_kernel_vaddr_and_size() uses kcore
-> interface and so calls build_mem_phdrs() for kcore PT_LOAD headers.
-> 
-> This patch fixes build_mem_phdrs() to check if p_paddr is invalid.
-> 
-> Signed-off-by: Pratyush Anand <panand@redhat.com>
-> ---
->  kexec/kexec-elf.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kexec/kexec-elf.c b/kexec/kexec-elf.c
-> index 1d6320a2f0e6..be60bbd48486 100644
-> --- a/kexec/kexec-elf.c
-> +++ b/kexec/kexec-elf.c
-> @@ -432,7 +432,8 @@ static int build_mem_phdrs(const char *buf, off_t len, struct mem_ehdr *ehdr,
->  			}
->  			return -1;
->  		}
-> -		if ((phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
-> +		if (phdr->p_paddr != (unsigned long long)-1 &&
-> +			(phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
->  			/* The memory address wraps */
->  			if (probe_debug) {
->  				fprintf(stderr, "ELF address wrap around\n");
-> -- 
-> 2.9.3
-> 
 
-Acked-by: Dave Young <dyoung@redhat.com>
 
-Thanks
-Dave
+On 2/7/2017 1:06 AM, AKASHI Takahiro wrote:
+> This patch series adds kdump support on arm64.
+> 
+> To load a crash-dump kernel to the systems, a series of patches to
+> kexec-tools[1] are also needed. Please use the latest one, v5 [2].
+> For your convinience, you can pick them up from:
+>    https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
+>    https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
+> 
+> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+>   - crash utility (v7.1.8 or later, i.e. master for now) [3]
+> 
+> I tested this patchset on fast model and hikey.
+> (under various configurations, in particular 4KB-page/39,48-bits, 64KB-page/42
+> -bits with hibernate)
+> 
+> The previous versions were also:
+> Tested-by: Pratyush Anand <panand@redhat.com> (v29, mustang and seattle)
+> Tested-by: James Morse <james.morse@arm.com> (v27, Juno)
+> 
+I tested this patch set on a QDT2400 device with 4k 4-level setup. This patchset worked after applying [1].
+
+[1] [PATCH] efi/libstub/arm*: Set default address and size cells values for an empty dtb
+
+Without the above patch the start address of the crash kernel is recorded incorrectly and the 
+memblock_cap_memory_range clears out the incorrect range. 
+ 
+Thanks,
+Sameer
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
