@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f178.google.com ([209.85.192.178])
+Received: from mail-pg0-f44.google.com ([74.125.83.44])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjJau-0004yM-00
- for kexec@lists.infradead.org; Thu, 02 Mar 2017 05:48:05 +0000
-Received: by mail-pf0-f178.google.com with SMTP id x66so18642476pfb.3
- for <kexec@lists.infradead.org>; Wed, 01 Mar 2017 21:47:43 -0800 (PST)
+ id 1cjJbF-0004ym-DD
+ for kexec@lists.infradead.org; Thu, 02 Mar 2017 05:48:27 +0000
+Received: by mail-pg0-f44.google.com with SMTP id 25so28454594pgy.0
+ for <kexec@lists.infradead.org>; Wed, 01 Mar 2017 21:48:05 -0800 (PST)
 Subject: Re: [Makedumpfile Patch v2 7/7] mem-usage: allow to work only with -f
  for kernel version < 4.11
 References: <cover.1488260510.git.panand@redhat.com>
  <72c8ce7c8c2a54714a8338a08e2ab5ae31e6d4e2.1488260510.git.panand@redhat.com>
  <0910DD04CBD6DE4193FCF86B9C00BE9701EAA666@BPXM01GP.gisp.nec.co.jp>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <7c7a913d-5b34-f11a-1d71-e049629be1b4@redhat.com>
-Date: Thu, 2 Mar 2017 11:17:38 +0530
+Message-ID: <ccd8139b-e5a4-3167-aa5b-94f86689767b@redhat.com>
+Date: Thu, 2 Mar 2017 11:18:00 +0530
 MIME-Version: 1.0
 In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EAA666@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
