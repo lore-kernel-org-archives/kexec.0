@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f175.google.com ([209.85.192.175])
+Received: from mail-pg0-f50.google.com ([74.125.83.50])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjMF3-00011p-7B
- for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:42 +0000
-Received: by mail-pf0-f175.google.com with SMTP id w189so19983138pfb.0
- for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:20 -0800 (PST)
+ id 1cjMF5-00011q-Ml
+ for kexec@lists.infradead.org; Thu, 02 Mar 2017 08:37:45 +0000
+Received: by mail-pg0-f50.google.com with SMTP id b129so30029435pgc.2
+ for <kexec@lists.infradead.org>; Thu, 02 Mar 2017 00:37:23 -0800 (PST)
 From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile Patch v3 6/7] makedumpfile: Discard process_dump_load
-Date: Thu,  2 Mar 2017 14:06:51 +0530
-Message-Id: <7dd6180b3997713c4fe4ce7ab7079838c5d266f4.1488443170.git.panand@redhat.com>
+Subject: [Makedumpfile Patch v3 7/7] mem-usage: allow to work only with -f for
+ kernel version < 4.11
+Date: Thu,  2 Mar 2017 14:06:52 +0530
+Message-Id: <6689d9cf1e69f79b0e8c74ecab8e003e5507a79b.1488443170.git.panand@redhat.com>
 In-Reply-To: <cover.1488443170.git.panand@redhat.com>
 References: <cover.1488443170.git.panand@redhat.com>
 In-Reply-To: <cover.1488443170.git.panand@redhat.com>
@@ -27,56 +28,82 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: ats-kumagai@wm.jp.nec.com
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-From: Baoquan He <bhe@redhat.com>
+PT_LOAD of kcore does not have valid p_paddr values for kernel version
+less that v4.11. Therefore, older kernel will no long work for mem-usage
+with current makedumpfile code. They can only work when they are patched
+with fix to "update physical address for kcore ram and text".
 
-Kernel commit 464920104bf7 (/proc/kcore: update physical address for
-kcore ram and text) provides physical address of direct mapping kcore
-program segments. So no need to calculate it specifically now. And the
-old code is not correct since it calls vaddr_to_paddr() which has not
-been ready at that time.
+This patch fixes the makedumpfile so that it does not allow to work
+older kernel for --mem-usage until someone is sure that kernel is
+rightly patched and so uses -f in command line. It also updates man page
+and usage info accordingly.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Pratyush Anand <panand@redhat.com>
 ---
- elf_info.c | 17 -----------------
- 1 file changed, 17 deletions(-)
+ makedumpfile.8 | 9 ++++++++-
+ makedumpfile.c | 6 ++++++
+ print_info.c   | 3 ++-
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index 100272f83c48..8e2437622141 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -857,22 +857,6 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
- 	return 0;
- }
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 9069fb18cdb6..993236486e77 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -235,13 +235,20 @@ the ELF format does not support compressed data.
  
--static int
--process_dump_load(struct pt_load_segment	*pls)
--{
--	unsigned long long paddr;
--
--	paddr = vaddr_to_paddr(pls->virt_start);
--	pls->phys_start  = paddr;
--	pls->phys_end    = paddr + (pls->virt_end - pls->virt_start);
--	DEBUG_MSG("process_dump_load\n");
--	DEBUG_MSG("  phys_start : %llx\n", pls->phys_start);
--	DEBUG_MSG("  phys_end   : %llx\n", pls->phys_end);
--	DEBUG_MSG("  virt_start : %llx\n", pls->virt_start);
--	DEBUG_MSG("  virt_end   : %llx\n", pls->virt_end);
--
--	return TRUE;
--}
+ .TP
+ \fB\-f\fR
+-Force existing DUMPFILE to be overwritten.
++Force existing DUMPFILE to be overwritten and mem-usage to work with older
++kernel as well.
+ .br
+ .B Example:
+ .br
+ # makedumpfile \-f \-d 31 \-x vmlinux /proc/vmcore dumpfile
+ .br
+ This command overwrites \fIDUMPFILE\fR even if it already exists.
++.br
++# makedumpfile \-f \-\-mem\-usage /proc/kcore
++.br
++Kernel version lesser than v4.11 will not work with \-\-mem\-usage
++functionality until it has been patched with upstream commit 464920104bf7.
++Therefore if you have patched your older kernel then use \-f.
  
- int get_kcore_dump_loads(void)
- {
-@@ -917,7 +901,6 @@ int get_kcore_dump_loads(void)
+ .TP
+ \fB\-x\fR \fIVMLINUX\fR
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 3b8e9810468d..e3be1ab0a9ec 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -11269,6 +11269,12 @@ main(int argc, char *argv[])
+ 			MSG("Try `makedumpfile --help' for more information.\n");
+ 			goto out;
  		}
++		if (info->kernel_version < KERNEL_VERSION(4, 11, 0) &&
++				!info->flag_force) {
++			MSG("mem-usage not supported for this kernel.\n");
++			MSG("You can try with -f if your kernel's kcore has valid p_paddr\n");
++			goto out;
++		}
  
- 		pls[j] = *p;
--		process_dump_load(&pls[j]);
- 		j++;
- 	}
- 
+ 		if (!show_mem_usage())
+ 			goto out;
+diff --git a/print_info.c b/print_info.c
+index 392d863a4227..72ed8fa0c059 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -309,7 +309,8 @@ print_usage(void)
+ 	MSG("      Print debugging message.\n");
+ 	MSG("\n");
+ 	MSG("  [-f]:\n");
+-	MSG("      Overwrite DUMPFILE even if it already exists.\n");
++	MSG("      Overwrite DUMPFILE even if it already exists\n");
++	MSG("      Force mem-usage to work with older kernel as well.\n");
+ 	MSG("\n");
+ 	MSG("  [-h, --help]:\n");
+ 	MSG("      Show help message and LZO/snappy support status (enabled/disabled).\n");
 -- 
 2.9.3
 
