@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjbcN-00085N-As
- for kexec@lists.infradead.org; Fri, 03 Mar 2017 01:02:49 +0000
-Date: Fri, 3 Mar 2017 09:02:18 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2] Fix the false positive error message when search
- /proc/kallsyms for kernel symbol
-Message-ID: <20170303010218.GA24001@x1>
-References: <1488447581-16465-1-git-send-email-bhe@redhat.com>
+ id 1cjckv-0006VM-Ml
+ for kexec@lists.infradead.org; Fri, 03 Mar 2017 02:15:43 +0000
+From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Subject: RE: [Makedumpfile Patch v3 7/7] mem-usage: allow to work only with
+ -f for kernel version < 4.11
+Date: Fri, 3 Mar 2017 02:10:28 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EAABEE@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1488443170.git.panand@redhat.com>
+ <6689d9cf1e69f79b0e8c74ecab8e003e5507a79b.1488443170.git.panand@redhat.com>
+In-Reply-To: <6689d9cf1e69f79b0e8c74ecab8e003e5507a79b.1488443170.git.panand@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1488447581-16465-1-git-send-email-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,103 +25,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org, dyoung@redhat.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "bhe@redhat.com" <bhe@redhat.com>
 
-On 03/02/17 at 05:39pm, Baoquan He wrote:
-> Function get_kernel_sym in kexec will search /proc/kallsyms for
-> kernel symbol and print error message anyway if expected symbol
-> is not found. While page_offset_base definition and exporting
-> codes are only available when mm KASLR code is compiled in kernel.
-> Otherwise search will fail and print out error message, obviously
-> this is false positive warning.
+>PT_LOAD of kcore does not have valid p_paddr values for kernel version
+>less that v4.11. Therefore, older kernel will no long work for mem-usage
+>with current makedumpfile code. They can only work when they are patched
+>with fix to "update physical address for kcore ram and text".
+>
+>This patch fixes the makedumpfile so that it does not allow to work
+>older kernel for --mem-usage until someone is sure that kernel is
+>rightly patched and so uses -f in command line. It also updates man page
+>and usage info accordingly.
+>
+>Signed-off-by: Pratyush Anand <panand@redhat.com>
+>---
+> makedumpfile.8 | 9 ++++++++-
+> makedumpfile.c | 6 ++++++
+> print_info.c   | 3 ++-
+> 3 files changed, 16 insertions(+), 2 deletions(-)
+>
+>diff --git a/makedumpfile.8 b/makedumpfile.8
+>index 9069fb18cdb6..993236486e77 100644
+>--- a/makedumpfile.8
+>+++ b/makedumpfile.8
+>@@ -235,13 +235,20 @@ the ELF format does not support compressed data.
+>
+> .TP
+> \fB\-f\fR
+>-Force existing DUMPFILE to be overwritten.
+>+Force existing DUMPFILE to be overwritten and mem-usage to work with older
+>+kernel as well.
+> .br
+> .B Example:
+> .br
+> # makedumpfile \-f \-d 31 \-x vmlinux /proc/vmcore dumpfile
+> .br
+> This command overwrites \fIDUMPFILE\fR even if it already exists.
+>+.br
+>+# makedumpfile \-f \-\-mem\-usage /proc/kcore
+>+.br
+>+Kernel version lesser than v4.11 will not work with \-\-mem\-usage
+>+functionality until it has been patched with upstream commit 464920104bf7.
+>+Therefore if you have patched your older kernel then use \-f.
+>
+> .TP
+> \fB\-x\fR \fIVMLINUX\fR
+>diff --git a/makedumpfile.c b/makedumpfile.c
+>index 3b8e9810468d..e3be1ab0a9ec 100644
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -11269,6 +11269,12 @@ main(int argc, char *argv[])
+> 			MSG("Try `makedumpfile --help' for more information.\n");
+> 			goto out;
+> 		}
+>+		if (info->kernel_version < KERNEL_VERSION(4, 11, 0) &&
+>+				!info->flag_force) {
+>+			MSG("mem-usage not supported for this kernel.\n");
+>+			MSG("You can try with -f if your kernel's kcore has valid p_paddr\n");
+>+			goto out;
+>+		}
 
-This doesn't work, I must have been dizzy yesterday, NACK it. Will
-repost with a new one.
+You forgot to set COMPLETED to retcd before goto.
+The behavior will be different from the v2 patch.
 
-> 
-> So in this patch take out the error message from get_kernel_sym and
-> put it where get_kernel_sym is called and expected symbol is not found.
-> 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  kexec/arch/i386/crashdump-x86.c | 41 +++++++++++++++++++++++------------------
->  1 file changed, 23 insertions(+), 18 deletions(-)
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 88aeee3..b9adc8c 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -127,7 +127,6 @@ static unsigned long long get_kernel_sym(const char *symbol)
->  		}
->  	}
->  
-> -	fprintf(stderr, "Cannot get kernel %s symbol address\n", symbol);
->  	return 0;
->  }
->  
-> @@ -193,30 +192,36 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  		}
->  		if (lowest_vaddr != 0)
->  			elf_info->page_offset = lowest_vaddr;
-> +	} else {
-> +		fprintf(stderr, "Cannot get kernel page_offset_base symbol address\n");
->  	}
->  
->  	/* Traverse through the Elf headers and find the region where
->  	 * _stext symbol is located in. That's where kernel is mapped */
->  	stext_sym = get_kernel_sym("_stext");
-> -	for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
-> -		if (phdr->p_type == PT_LOAD) {
-> -			unsigned long long saddr = phdr->p_vaddr;
-> -			unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
-> -			unsigned long long size;
-> -
-> -			/* Look for kernel text mapping header. */
-> -			if (saddr <= stext_sym && eaddr > stext_sym) {
-> -				saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
-> -				elf_info->kern_vaddr_start = saddr;
-> -				size = eaddr - saddr;
-> -				/* Align size to page size boundary. */
-> -				size = _ALIGN(size, align);
-> -				elf_info->kern_size = size;
-> -				dbgprintf("kernel vaddr = 0x%llx size = 0x%llx\n",
-> -					saddr, size);
-> -				return 0;
-> +	if (stext_sym) {
-> +		for(phdr = ehdr.e_phdr; stext_sym && phdr != end_phdr; phdr++) {
-> +			if (phdr->p_type == PT_LOAD) {
-> +				unsigned long long saddr = phdr->p_vaddr;
-> +				unsigned long long eaddr = phdr->p_vaddr + phdr->p_memsz;
-> +				unsigned long long size;
-> +
-> +				/* Look for kernel text mapping header. */
-> +				if (saddr <= stext_sym && eaddr > stext_sym) {
-> +					saddr = _ALIGN_DOWN(saddr, X86_64_KERN_VADDR_ALIGN);
-> +					elf_info->kern_vaddr_start = saddr;
-> +					size = eaddr - saddr;
-> +					/* Align size to page size boundary. */
-> +					size = _ALIGN(size, align);
-> +					elf_info->kern_size = size;
-> +					dbgprintf("kernel vaddr = 0x%llx size = 0x%llx\n",
-> +						saddr, size);
-> +					return 0;
-> +				}
->  			}
->  		}
-> +	} else {
-> +		fprintf(stderr, "Cannot get kernel _stext symbol address\n");
->  	}
->  
->  	/* If failed to retrieve kernel text mapping through
-> -- 
-> 2.5.5
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks,
+Atsushi Kumagai
+
+>
+> 		if (!show_mem_usage())
+> 			goto out;
+>diff --git a/print_info.c b/print_info.c
+>index 392d863a4227..72ed8fa0c059 100644
+>--- a/print_info.c
+>+++ b/print_info.c
+>@@ -309,7 +309,8 @@ print_usage(void)
+> 	MSG("      Print debugging message.\n");
+> 	MSG("\n");
+> 	MSG("  [-f]:\n");
+>-	MSG("      Overwrite DUMPFILE even if it already exists.\n");
+>+	MSG("      Overwrite DUMPFILE even if it already exists\n");
+>+	MSG("      Force mem-usage to work with older kernel as well.\n");
+> 	MSG("\n");
+> 	MSG("  [-h, --help]:\n");
+> 	MSG("      Show help message and LZO/snappy support status (enabled/disabled).\n");
+>--
+>2.9.3
+>
+
 
 _______________________________________________
 kexec mailing list
