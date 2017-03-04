@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail.redfish-solutions.com ([66.232.79.143])
  by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cjj9V-0007vD-JI
- for kexec@lists.infradead.org; Fri, 03 Mar 2017 09:05:31 +0000
-Subject: Re: [PATCH v4] x86/mce: Don't participate in rendezvous process once
- nmi_shootdown_cpus() was made
-References: <1487857012-9059-1-git-send-email-xlpang@redhat.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <58B93237.2070406@redhat.com>
-Date: Fri, 3 Mar 2017 17:07:03 +0800
-MIME-Version: 1.0
-In-Reply-To: <1487857012-9059-1-git-send-email-xlpang@redhat.com>
+ id 1ckJ4w-0002vy-VV
+ for kexec@lists.infradead.org; Sat, 04 Mar 2017 23:27:12 +0000
+Received: from macmini.redfish-solutions.com (macmini.redfish-solutions.com
+ [192.168.1.38]) (authenticated bits=0)
+ by mail.redfish-solutions.com (8.15.2/8.15.2) with ESMTPSA id v24NQBo7010217
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO)
+ for <kexec@lists.infradead.org>; Sat, 4 Mar 2017 16:26:11 -0700
+From: Philip Prindeville <philipp@fedoraproject.org>
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Questions about kexec-tools (resend to list)
+Message-Id: <A5F1D916-BEB0-47A2-8227-4C2A78A0B5DA@fedoraproject.org>
+Date: Sat, 4 Mar 2017 16:26:10 -0700
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,120 +21,121 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Borislav Petkov <bp@alien8.de>
-Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Tony Luck <tony.luck@intel.com>, Ingo Molnar <mingo@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: kexec@lists.infradead.org
 
-Ping Boris
-
-On 02/23/2017 at 09:36 PM, Xunlei Pang wrote:
-> We met an issue for kdump: after kdump kernel boots up,
-> and there comes a broadcasted mce in first kernel, the
-> other cpus remaining in first kernel will enter the old
-> mce handler of first kernel, then timeout and panic due
-> to MCE synchronization, finally reset the kdump cpus.
->
-> This patch lets cpus stay quiet after nmi_shootdown_cpus(),
-> so after kdump boots, cpus remaining in 1st kernel should
-> not do anything except clearing MCG_STATUS. This is useful
-> for kdump to let vmcore dumping perform as hard as it can.
->
-> Previous efforts:
-> https://patchwork.kernel.org/patch/6167631/
-> https://lists.gt.net/linux/kernel/2146557
->
-> Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Suggested-by: Borislav Petkov <bp@alien8.de>
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-> ---
-> v1->v2:
-> - Using crashing_cpu according to Borislav's suggestion.
->
-> v2->v3:
-> - Used crashing_cpu in mce.c explicitly, not skip crashing_cpu.
-> - Added some comments.
->
-> v3->v4:
-> - Added more code comments according to Tony's feedback.
->
->  arch/x86/include/asm/reboot.h    |  1 +
->  arch/x86/kernel/cpu/mcheck/mce.c | 17 +++++++++++++++--
->  arch/x86/kernel/reboot.c         |  5 +++--
->  3 files changed, 19 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
-> index 2cb1cc2..fc62ba8 100644
-> --- a/arch/x86/include/asm/reboot.h
-> +++ b/arch/x86/include/asm/reboot.h
-> @@ -15,6 +15,7 @@ struct machine_ops {
->  };
->  
->  extern struct machine_ops machine_ops;
-> +extern int crashing_cpu;
->  
->  void native_machine_crash_shutdown(struct pt_regs *regs);
->  void native_machine_shutdown(void);
-> diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-> index 8e9725c..b65505f 100644
-> --- a/arch/x86/kernel/cpu/mcheck/mce.c
-> +++ b/arch/x86/kernel/cpu/mcheck/mce.c
-> @@ -49,6 +49,7 @@
->  #include <asm/tlbflush.h>
->  #include <asm/mce.h>
->  #include <asm/msr.h>
-> +#include <asm/reboot.h>
->  
->  #include "mce-internal.h"
->  
-> @@ -1127,9 +1128,21 @@ void do_machine_check(struct pt_regs *regs, long error_code)
->  	 * on Intel.
->  	 */
->  	int lmce = 1;
-> +	int cpu = smp_processor_id();
->  
-> -	/* If this CPU is offline, just bail out. */
-> -	if (cpu_is_offline(smp_processor_id())) {
-> +	/*
-> +	 * Cases to bail out to avoid rendezvous process timeout:
-> +	 * 1)If this CPU is offline.
-> +	 * 2)If crashing_cpu was set, e.g. entering kdump,
-> +	 *   we need to skip cpus remaining in 1st kernel.
-> +	 *   Note: there is a small window between kexecing
-> +	 *   and kdump kernel establishing new mce handler,
-> +	 *   if some MCE comes within the window, there is
-> +	 *   no valid mce handler due to pgtable changing,
-> +	 *   let's just face the fate.
-> +	 */
-> +	if (cpu_is_offline(cpu) ||
-> +	    (crashing_cpu != -1 && crashing_cpu != cpu)) {
->  		u64 mcgstatus;
->  
->  		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
-> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-> index e244c19..92ecf4b 100644
-> --- a/arch/x86/kernel/reboot.c
-> +++ b/arch/x86/kernel/reboot.c
-> @@ -749,10 +749,11 @@ void machine_crash_shutdown(struct pt_regs *regs)
->  #endif
->  
->  
-> +/* This keeps a track of which one is crashing cpu. */
-> +int crashing_cpu = -1;
-> +
->  #if defined(CONFIG_SMP)
->  
-> -/* This keeps a track of which one is crashing cpu. */
-> -static int crashing_cpu;
->  static nmi_shootdown_cb shootdown_callback;
->  
->  static atomic_t waiting_for_crash_ipi;
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkuCgpJ4oCZbSB3b3JraW5nIG9uIGEgY291cGxlIG9mIG1pbmltYWwgZW1iZWRkZWQgc3lzdGVt
+cywgYW5kIG9uZSBvZiB0aGUgdGhpbmdzIEkgZG8gaXMgcGxhdGZvcm0gYnJpbmctdXAgKHdoaWNo
+IG1lYW5zIGRlYWxpbmcgd2l0aCBjcmFzaGVzKS4KCldlIGhhdmUga2V4ZWMtdG9vbHMgcG9ydGVk
+IHRvIG91ciBkaXN0cm8gKE9wZW5XUlQvTEVERSkgYnV0IG5vdCB0aGUgT1Mgc2NyaXB0aW5nIHRv
+IGludGVncmF0ZSB0aGVtLiAgSSBoYWQgYSBjb3VwbGUgb2YgcXVlc3Rpb25zIGFib3V0IERvY3Vt
+ZW50YXRpb24va2R1bXAudHh0IHRoYXQgSSB3YXMgaG9waW5nIHlvdSBhbGwgd291bGRu4oCZdCBt
+aW5kIGFuc3dlcmluZy4KClRoZSBrZXJuZWwgSeKAmW0gYnVpbGRpbmcgKGZvciBhIFhlb24gSGFz
+d2VsbCBhbmQgYW4gQXRvbTY0IFBpbmV2aWV3KSBoYXM6CgojIENPTkZJR19TTVAgaXMgbm90IHNl
+dApDT05GSUdfS0VYRUM9eQpDT05GSUdfQ1JBU0hfRFVNUD15CkNPTkZJR19QSFlTSUNBTF9TVEFS
+VD0weDEwMDAwMDAKQ09ORklHX1JFTE9DQVRBQkxFPXkKIyBDT05GSUdfUkFORE9NSVpFX0JBU0Ug
+aXMgbm90IHNldApDT05GSUdfUFJPQ19WTUNPUkU9eQpDT05GSUdfU1lTRlM9eQpDT05GSUdfREVC
+VUdfSU5GTz15CgphbGwgcGVyIHRoZSBkaXJlY3Rpb25zIGFib3ZlLgoKVGhlIGRpcmVjdGlvbnMg
+c2F5OgoKCj4gMikgT3IgdXNlIHRoZSBzeXN0ZW0ga2VybmVsIGJpbmFyeSBpdHNlbGYgYXMgZHVt
+cC1jYXB0dXJlIGtlcm5lbCBhbmQgdGhlcmUgaXMKPiAgbm8gbmVlZCB0byBidWlsZCBhIHNlcGFy
+YXRlIGR1bXAtY2FwdHVyZSBrZXJuZWwuIFRoaXMgaXMgcG9zc2libGUKPiAgb25seSB3aXRoIHRo
+ZSBhcmNoaXRlY3R1cmVzIHdoaWNoIHN1cHBvcnQgYSByZWxvY2F0YWJsZSBrZXJuZWwuIEFzCj4g
+IG9mIHRvZGF5LCBpMzg2LCB4ODZfNjQsIHBwYzY0LCBpYTY0IGFuZCBhcm0gYXJjaGl0ZWN0dXJl
+cyBzdXBwb3J0IHJlbG9jYXRhYmxlCj4gIGtlcm5lbC4KCgpzbyB3ZeKAmXZlIGRlY2lkZWQgdG8g
+Z28gdGhpcyByb3V0ZS4gIEluIHRoZSBzZWN0aW9uIHRpdGxlZCAiRHVtcC1jYXB0dXJlIGtlcm5l
+bCBjb25maWcgb3B0aW9ucyAoQXJjaCBEZXBlbmRlbnQsIGkzODYgYW5kIHg4Nl82NCnigJ0sIHlv
+dSB3cml0ZToKCgo+IDUpIE1ha2UgYW5kIGluc3RhbGwgdGhlIGtlcm5lbCBhbmQgaXRzIG1vZHVs
+ZXMuIERPIE5PVCBhZGQgdGhpcyBrZXJuZWwKPiAgdG8gdGhlIGJvb3QgbG9hZGVyIGNvbmZpZ3Vy
+YXRpb24gZmlsZXMuCgoKCkluIHRoZSBjYXNlIG9mIGhhdmluZyBhIHNpbmdsZSBzeXN0ZW0ga2Vy
+bmVsIGJpbmFyeSwgdGhlbiB5b3XigJlkIGhhdmUgdG8gaW5zdGFsbCB0aGlzIGtlcm5lbCBhbmQg
+aXTigJlzIG1vZHVsZXMsIGFuZCBhZGQgdGhpcyBrZXJuZWwgdG8gdGhlIGJvb3QgbG9hZGVyIGNv
+bmZpZ3VyYXRpb24gZmlsZXMsIHdvdWxkbuKAmXQgeW91PyAgV2hhdCBkbyBteSBncnViIGFyZ3Vt
+ZW50cyBsb29rIGxpa2U/CgpEbyBJIGFsd2F5cyBsb2FkIG15IHN5c3RlbSBrZXJuZWwgd2l0aCDi
+gJxjcmFzaGtlcm5lbD02NE1AMTZN4oCdIHBlciB0aGUg4oCcQ09ORklHX1BIWVNJQ0FMX1NUQVJU
+4oCdIGFuZCBoZXJlOgoKCj4gMikgQm9vdCB0aGUgc3lzdGVtIGtlcm5lbCB3aXRoIHRoZSBib290
+IHBhcmFtZXRlciAiY3Jhc2hrZXJuZWw9WUBYIiwKPiAgd2hlcmUgWSBzcGVjaWZpZXMgaG93IG11
+Y2ggbWVtb3J5IHRvIHJlc2VydmUgZm9yIHRoZSBkdW1wLWNhcHR1cmUga2VybmVsCj4gIGFuZCBY
+IHNwZWNpZmllcyB0aGUgYmVnaW5uaW5nIG9mIHRoaXMgcmVzZXJ2ZWQgbWVtb3J5LiBGb3IgZXhh
+bXBsZSwKPiAgImNyYXNoa2VybmVsPTY0TUAxNk0iIHRlbGxzIHRoZSBzeXN0ZW0ga2VybmVsIHRv
+IHJlc2VydmUgNjQgTUIgb2YgbWVtb3J5Cj4gIHN0YXJ0aW5nIGF0IHBoeXNpY2FsIGFkZHJlc3Mg
+MHgwMTAwMDAwMCAoMTZNQikgZm9yIHRoZSBkdW1wLWNhcHR1cmUga2VybmVsLgoKCgpPa2F5LCB3
+ZSBoYXZlIGEgMi42TUIgL3ZtbGludXogaW4gb3VyIC9ib290IHBhcnRpdGlvbiwgc28gaXTigJlz
+IHJlbG9jYXRhYmxlIGFuZCB0aGlzIHBhcnQgYXBwbGllczoKCgo+IElmIHlvdSBhcmUgdXNpbmcg
+YSBjb21wcmVzc2VkIGJ6SW1hZ2Uvdm1saW51eiwgdGhlbiB1c2UgZm9sbG93aW5nIGNvbW1hbmQK
+PiB0byBsb2FkIGR1bXAtY2FwdHVyZSBrZXJuZWwuCj4gCj4gIGtleGVjIC1wIDxkdW1wLWNhcHR1
+cmUta2VybmVsLWJ6SW1hZ2U+IFwKPiAgLS1pbml0cmQ9PGluaXRyZC1mb3ItZHVtcC1jYXB0dXJl
+LWtlcm5lbD4gXAo+ICAtLWFwcGVuZD0icm9vdD08cm9vdC1kZXY+IDxhcmNoLXNwZWNpZmljLW9w
+dGlvbnM+IgoKCgpOb3Qgc3VyZSBJIHVuZGVyc3RhbmQgdGhpcyBwYXJ0LiAgU28gaWYgd2UgaGF2
+ZSBhIHJlbG9jYXRhYmxlIGtlcm5lbCB3aXRoIGNyYXNoZHVtcCBidWlsdC1pbiB0byBvdXIgc3lz
+dGVtIGtlcm5lbCwgZG8gd2UgbmVlZCB0byBsb2FkIHR3byBrZXJuZWxzLCBqdXN0IHdpdGggZGlm
+ZmVyZW50IDxhcmNoLXNwZWNpZmljLW9wdGlvbnM+IGFuZCBldmVyeXRoaW5nIGVsc2UgYmVpbmcg
+dGhlIHNhbWU/CgpXb3VsZCB0aGUgPGFyY2gtc3BlY2lmaWMtb3B0aW9ucz4gYmU6CgpjcmFzaGtl
+cm5lbD02NE1AMTZNIDEgaXJxcG9sbCBtYXhjcHVzPTEgcmVzZXRfZGV2aWNlcwoKaW4gdGhhdCBj
+YXNlPwoKT24gYSBub3JtYWxseSBydW5uaW5nIHN5c3RlbSwgdXNpbmcgYW4gb3ZlcmxheSByb290
+LCBvdXIgY21kbGluZSBsb29rcyBsaWtlOgoKQk9PVF9JTUFHRT0vYm9vdC92bWxpbnV6IGJsb2Nr
+Mm10ZC5ibG9jazJtdGQ9L2Rldi9zZGEyLDY1NTM2LHJvb3Rmcyw1IHJvb3Q9L2Rldi9tdGRibG9j
+azAgcm9vdGZzdHlwZT1zcXVhc2hmcyByb290d2FpdCBjb25zb2xlPXR0eTAgY29uc29sZT10dHlT
+MCwxMTUyMDBuOHIgbm9pbml0cmQKCgpzbyBJIGd1ZXNzIHdl4oCZZCBqdXN0IG1hc2ggb24gdGhv
+c2UgZXh0cmEgYXJndW1lbnRzLiAgT24gYSBydW5uaW5nIHN5c3RlbSwgb3VyIG1vdW50IHBvaW50
+cyBhcmU6CgovZGV2L3Jvb3Qgb24gL3JvbSB0eXBlIHNxdWFzaGZzIChybyxyZWxhdGltZSkKcHJv
+YyBvbiAvcHJvYyB0eXBlIHByb2MgKHJ3LG5vc3VpZCxub2Rldixub2V4ZWMsbm9hdGltZSkKc3lz
+ZnMgb24gL3N5cyB0eXBlIHN5c2ZzIChydyxub3N1aWQsbm9kZXYsbm9leGVjLG5vYXRpbWUpCnRt
+cGZzIG9uIC90bXAgdHlwZSB0bXBmcyAocncsbm9zdWlkLG5vZGV2LG5vYXRpbWUpCnRtcGZzIG9u
+IC90bXAvcm9vdCB0eXBlIHRtcGZzIChydyxub2F0aW1lLG1vZGU9NzU1KQp0bXBmcyBvbiAvZGV2
+IHR5cGUgdG1wZnMgKHJ3LG5vc3VpZCxyZWxhdGltZSxzaXplPTUxMmssbW9kZT03NTUpCmRldnB0
+cyBvbiAvZGV2L3B0cyB0eXBlIGRldnB0cyAocncsbm9zdWlkLG5vZXhlYyxyZWxhdGltZSxtb2Rl
+PTYwMCkKZGVidWdmcyBvbiAvc3lzL2tlcm5lbC9kZWJ1ZyB0eXBlIGRlYnVnZnMgKHJ3LG5vYXRp
+bWUpCi9kZXYvbXRkYmxvY2sxIG9uIC9vdmVybGF5IHR5cGUgamZmczIgKHJ3LG5vYXRpbWUpCm92
+ZXJsYXlmczovb3ZlcmxheSBvbiAvIHR5cGUgb3ZlcmxheSAocncsbm9hdGltZSxsb3dlcmRpcj0v
+LHVwcGVyZGlyPS9vdmVybGF5L3VwcGVyLHdvcmtkaXI9L292ZXJsYXkvd29yaykKCgpidXQgaXQg
+ZG9lc27igJl0IHNvdW5kIGxpa2UgYW55IG9mIHRoYXQgd291bGQgY2hhbmdlIChleGNlcHQgcGVy
+aGFwcyBtb3VudGluZyBhIFVTQiB0aHVtYi1kcml2ZSBpZiB3ZSB3YW50ZWQgdG8gY29weSBvdXIg
+Y3Jhc2hkdW1wIHRvIHRoYXQgZGV2aWNlIGluc3RlYWQpLgoKU28gaWYgSeKAmXZlIHVuZGVyc3Rv
+b2QsIHdoZW4gdGhlIGZpcnN0IGxvYWRlZCBrZXJuZWwgKHRoZSBzeXN0ZW0ga2VybmVsKSBjcmFz
+aGVzLCBrZXhlYyB3aWxsIHRoZW4gdHJ5IHRoZSBuZXh0IGtlcm5lbCBpdCBzZWVz4oCmICB3aGlj
+aCB3aWxsIGJlIHNvbWV0aGluZyBsaWtlOgoKa2V4ZWMgLXAgL2Jvb3Qvdm1saW51eiBcCgnigJQt
+YXBwZW5kPeKAnCQoY2F0IC9wcm9jL2NtZGxpbmUpIGlycXBvbGwgbWF4Y3B1cz0xIHJlc2V0X2Rl
+dmljZXMgMeKAnQoKKHdlIGRvbuKAmXQgdXNlIGEgaW5pdHJkIGFzIHlvdSBjYW4gc2VlIGFib3Zl
+KSBhbmQgdGhhdOKAmXMgZGVzY3JpYmVkIGhlcmU6CgoKPiBLZXJuZWwgUGFuaWMKPiA9PT09PT09
+PT09PT0KPiAKPiBBZnRlciBzdWNjZXNzZnVsbHkgbG9hZGluZyB0aGUgZHVtcC1jYXB0dXJlIGtl
+cm5lbCBhcyBwcmV2aW91c2x5Cj4gZGVzY3JpYmVkLCB0aGUgc3lzdGVtIHdpbGwgcmVib290IGlu
+dG8gdGhlIGR1bXAtY2FwdHVyZSBrZXJuZWwgaWYgYQo+IHN5c3RlbSBjcmFzaCBpcyB0cmlnZ2Vy
+ZWQuIFtzbmlwXQoKCgphc3N1bWluZyB0aGUgc3lzdGVtIGlzbuKAmXQgc28gYmFkbHkgaG9zZWQg
+dGhhdCBhIFdEVCBleHBpcmVzIGNhdXNpbmcgYSBCSU9TIHJlc2V0LCBldGMuCgpEbyBib3RoIGtl
+cm5lbHMgdXNlIHRoZSBzYW1lIOKAnGNyYXNoZHVtcD3igJwgdmFsdWUsIG9yIGRvIHRoZXkgbmVl
+ZCBkaWZmZXJlbnQgYmFzZSBhZGRyZXNzZXM/CgpBbmQgYXNzdW1pbmcgdGhhdCB5b3XigJlyZSB1
+c2luZyB0aGUgc2FtZSBrZXJuZWwsIGV0Yy4gaG93IGRvZXMgdGhlIGluaXQuZCBzY3JpcHRpbmcg
+b24gdGhlIGNyYXNoZHVtcCAoMm5kIGluc3RhbmNlIG9mIHRoZSBrZXJuZWwpIGtub3cgdGhhdCBp
+dOKAmXMgbm90IHRoZSBub21pbmFsIGtlcm5lbD8gIERvIHdlIHVzZSAvc3lzL2tlcm5lbC9rZXhl
+Y19sb2FkZWQgZm9yIHRoaXMgcHVycG9zZT8gIE9yIGRvIHdlIGp1c3QgbG9vayBmb3IgdGhlIGV4
+aXN0ZW5jZSBvZiAvcHJvYy92bWNvcmU/CgpBbmQgdGhlbiBoYXZlIHNvbWV0aGluZyBpbiBteSBp
+bml0LmQgc2NyaXB0cyBsaWtlOgoKa2V4ZWNfbG9hZGVkPSQoPCAvc3lzL2tlcm5lbC9rZXhlY19s
+b2FkZWQpCgppZiBbIOKAnCRrZXhlY19sb2FkZWTigJ0gPSAwIF07IHRoZW4KICBrZXhlYyAtcCAv
+Ym9vdC92bWxpbnV6IFwKCeKAlC1hcHBlbmQ94oCcJChjYXQgL3Byb2MvY21kbGluZSkgaXJxcG9s
+bCBtYXhjcHVzPTEgcmVzZXRfZGV2aWNlcyAx4oCdCmVsc2UKICBlY2hvIOKAnCoqKiBIQU5ETElO
+RyBDUkFTSCBEVU1QIENPTExFQ1RJT04iCiAgbWtkaXIgLXAgL21udC9jcmFzaGRyaXZlCiAgbW91
+bnQgTEFCRUw9Y3Jhc2hkcml2ZSAvbW50L2NyYXNoZHJpdmUKICAjIG1pZ2h0IGRvIHNvbWV0aGlu
+ZyBjbGV2ZXIgaGVyZSB3aXRoIOKAnGRmIOKAlG91dHB1dD1hdmFpbCAtbSAvbW50L2NyYXNoZHJp
+dmXigJ0gdG8gbWFrZQogICMgc3VyZSBJIGhhdmUgZW5vdWdoIHNwYWNlIGZvciB0aGUgY29weSwg
+cGVyaGFwcyBkZWxldGluZyBvbGRlciBkdW1wcyB1bnRpbCBJIGRv4oCmCiAgY3AgL3Byb2Mvdm1j
+b3JlIC9tbnQvY3Jhc2hkcml2ZQogIHN5bmMKICB1bW91bnQgL21udC9jcmFzaGRyaXZlCiAgZWNo
+byDigJwqKiogTk9XIFJFQk9PVElORyIKICByZWJvb3QgLWYKZmkKCkRvIEkgbmVlZCB0byByZWJv
+b3QgaW4gYSBwYXJ0aWN1bGFyIHdheSB0byBhdm9pZCBsb29waW5nPyAgVGhlIOKAnEtlcm5lbCBQ
+YW5pY+KAnSBzZWN0aW9uIHNlZW1zIHRvIHN0YXRlIHRoYXQgbm9ybWFsIHJlYm9vdHMgd29u4oCZ
+dCBiZSBhZmZlY3RlZC4KCkkgYXBwcmVjaWF0ZSB0aGUgZG9jdW1lbnRhdGlvbiB5b3XigJl2ZSB3
+cml0dGVuLCBidXQgaXTigJlzIGEgbGl0dGxlIHVuY2xlYXIgKHRvIG1lIGF0IGxlYXN0KSBob3cg
+dG8gaGFuZGxlIHRoZSBkZWdlbmVyYXRlIGNhc2Ugb2YgdXNpbmcgdGhlIHNhbWUga2VybmVsIGFz
+IHRoZSBzeXN0ZW0ga2VybmVsIGFuZCB0aGUgY3Jhc2hkdW1wIGtlcm5lbOKApgoKSSB3YW50IHRv
+IG1ha2Ugc3VyZSB0aGF0IEkgZG9u4oCZdCBpbmFkdmVydGVudGx5IHNldCBpdCB1cCB0byBkbyBs
+b29waW5nIGluZmluaXRlbHkgbmVzdGVkIGtlcm5lbHMsIGV0Yy4KCknigJltIHByb2JhYmx5IG92
+ZXJ0aGlua2luZyB0aGlzLCBidXTigKYgd2XigJlyZSBoYXZpbmcgY3Jhc2hlcyBpbiB0aGUgZmll
+bGQgYW5kIHRoZSBjdXN0b21lcnMgYXJlIGEgbGl0dGxlIHJpbGVkIHVwIHJpZ2h0IG5vdyBzbyBJ
+IGRvbuKAmXQgd2FudCB0byBzcGVuZCBhIGxvdCBvZiB0aW1lIHNheWluZyDigJxoZXJlIHRyeSB0
+aGlzIGltYWdl4oCdLiAgVGhleSB3YW50IHRoZWlyIHNtb2tpbmcgZ3VuIGFuZCB0aGV5IHdhbnQg
+aXQgc29vbi4KClRoYW5rcywKCi1QaGlsaXAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
+Cg==
