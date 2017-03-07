@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mail-pf0-f179.google.com ([209.85.192.179])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ckxMm-0000xh-4o
- for kexec@lists.infradead.org; Mon, 06 Mar 2017 18:28:17 +0000
-Date: Mon, 6 Mar 2017 10:27:54 -0800
-From: "Luck, Tony" <tony.luck@intel.com>
-Subject: Re: [PATCH v4] x86/mce: Don't participate in rendezvous process once
- nmi_shootdown_cpus() was made
-Message-ID: <20170306182754.GB29163@intel.com>
-References: <1487857012-9059-1-git-send-email-xlpang@redhat.com>
- <20170306111654.xmmizzae4assppk3@pd.tnic>
+ id 1cl3xh-00005A-GA
+ for kexec@lists.infradead.org; Tue, 07 Mar 2017 01:30:51 +0000
+Received: by mail-pf0-f179.google.com with SMTP id j5so67680657pfb.2
+ for <kexec@lists.infradead.org>; Mon, 06 Mar 2017 17:30:27 -0800 (PST)
+Subject: Re: [PATCH] build_mem_phdrs(): check if p_paddr is invalid
+References: <e45f4027aa72ea9009ae03f471894d62ccc135bb.1488346530.git.panand@redhat.com>
+ <20170301071317.GA3534@dhcp-128-65.nay.redhat.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <c1f408fe-2283-0b37-a035-9080a31e91e2@redhat.com>
+Date: Tue, 7 Mar 2017 06:53:20 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170306111654.xmmizzae4assppk3@pd.tnic>
+In-Reply-To: <20170301071317.GA3534@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,36 +21,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Prarit Bhargava <prarit@redhat.com>, Kiyoshi Ueda <k-ueda@ct.jp.nec.com>, Xunlei Pang <xlpang@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Junichi Nomura <j-nomura@ce.jp.nec.com>, Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>, Dave Young <dyoung@redhat.com>
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, bhe@redhat.com
 
-On Mon, Mar 06, 2017 at 12:16:54PM +0100, Borislav Petkov wrote:
-> On Thu, Feb 23, 2017 at 09:36:52PM +0800, Xunlei Pang wrote:
-> > We met an issue for kdump: after kdump kernel boots up,
-> > and there comes a broadcasted mce in first kernel, the
-> > other cpus remaining in first kernel will enter the old
-> > mce handler of first kernel, then timeout and panic due
-> > to MCE synchronization, finally reset the kdump cpus.
-> > 
-> > This patch lets cpus stay quiet after nmi_shootdown_cpus(),
-> > so after kdump boots, cpus remaining in 1st kernel should
-> > not do anything except clearing MCG_STATUS. This is useful
-> > for kdump to let vmcore dumping perform as hard as it can.
-> 
-> Ok, I went and rewrote the text to make it more succinct, to the point
-> and correct spelling and formatting.
-> 
-> Tony, ACK?
+Hi Simon,
 
-Yes. Looks good now.
+On Wednesday 01 March 2017 12:43 PM, Dave Young wrote:
+> On 03/01/17 at 11:19am, Pratyush Anand wrote:
+>> Currently, all the p_paddr of PT_LOAD headers are assigned to 0, which
+>> is not correct and could be misleading, since 0 is a valid physical
+>> address.
+>>
+>> Upstream kernel commit "464920104bf7 /proc/kcore: update physical
+>> address for kcore ram and text" fixed it and now invalid PT_LOAD is
+>> assigned as -1.
+>>
+>> kexec/arch/i386/crashdump-x86.c:get_kernel_vaddr_and_size() uses kcore
+>> interface and so calls build_mem_phdrs() for kcore PT_LOAD headers.
+>>
+>> This patch fixes build_mem_phdrs() to check if p_paddr is invalid.
 
-Acked-by: Tony Luck <tony.luck@intel.com>
+Any comment on this?
 
--Tony
+>>
+>> Signed-off-by: Pratyush Anand <panand@redhat.com>
+>> ---
+>>  kexec/kexec-elf.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kexec/kexec-elf.c b/kexec/kexec-elf.c
+>> index 1d6320a2f0e6..be60bbd48486 100644
+>> --- a/kexec/kexec-elf.c
+>> +++ b/kexec/kexec-elf.c
+>> @@ -432,7 +432,8 @@ static int build_mem_phdrs(const char *buf, off_t len, struct mem_ehdr *ehdr,
+>>  			}
+>>  			return -1;
+>>  		}
+>> -		if ((phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
+>> +		if (phdr->p_paddr != (unsigned long long)-1 &&
+>> +			(phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
+>>  			/* The memory address wraps */
+>>  			if (probe_debug) {
+>>  				fprintf(stderr, "ELF address wrap around\n");
+>> --
+>> 2.9.3
+>>
+>
+> Acked-by: Dave Young <dyoung@redhat.com>
+>
+
+
+
+~Pratyush
 
 _______________________________________________
 kexec mailing list
