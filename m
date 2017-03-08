@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mail-pg0-f52.google.com ([74.125.83.52])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1clWZw-00065b-9W
- for kexec@lists.infradead.org; Wed, 08 Mar 2017 08:04:14 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] [PATCH] Fix typo in the ERRMSG of function
- show_mem_usage. "kernel" instead of "kenrel".
-Date: Wed, 8 Mar 2017 07:53:18 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EAC439@BPXM01GP.gisp.nec.co.jp>
-References: <1488903948-13185-1-git-send-email-eric.desrochers@canonical.com>
-In-Reply-To: <1488903948-13185-1-git-send-email-eric.desrochers@canonical.com>
-Content-Language: ja-JP
+ id 1clZql-00084p-G7
+ for kexec@lists.infradead.org; Wed, 08 Mar 2017 11:33:51 +0000
+Received: by mail-pg0-f52.google.com with SMTP id 25so12493044pgy.0
+ for <kexec@lists.infradead.org>; Wed, 08 Mar 2017 03:33:27 -0800 (PST)
+Subject: Re: Questions about kexec-tools (resend to list)
+References: <A5F1D916-BEB0-47A2-8227-4C2A78A0B5DA@fedoraproject.org>
+ <1ea88eb9-4df4-3410-5cb6-3ef10b9cb0e3@redhat.com>
+ <67B8328D-6052-4D47-9172-412AB0CA7B0A@fedoraproject.org>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <78e72659-4605-7187-e725-3bf8bf517590@redhat.com>
+Date: Wed, 8 Mar 2017 17:03:23 +0530
 MIME-Version: 1.0
+In-Reply-To: <67B8328D-6052-4D47-9172-412AB0CA7B0A@fedoraproject.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,50 +22,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Desrochers <eric.desrochers@canonical.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Philip Prindeville <philipp@fedoraproject.org>
+Cc: kexec@lists.infradead.org
 
-Hello Eric,
-
-Thanks, I'll merge this fix into v1.6.2.
-
-P.S. I fixed other typos on this occasion.
-
-Regards,
-Atsushi Kumagai
-
->---
-> makedumpfile.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/makedumpfile.c b/makedumpfile.c
->index e3be1ab..18cf30f 100644
->--- a/makedumpfile.c
->+++ b/makedumpfile.c
->@@ -10938,7 +10938,7 @@ int show_mem_usage(void)
-> 	struct cycle cycle = {0};
->
-> 	if (!is_crashkernel_mem_reserved()) {
->-		ERRMSG("No memory is reserved for crashkenrel!\n");
->+		ERRMSG("No memory is reserved for crashkernel!\n");
-> 		return FALSE;
-> 	}
->
->--
->2.7.4
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiBXZWRuZXNkYXkgMDggTWFyY2ggMjAxNyAwNTowNCBBTSwgUGhpbGlwIFByaW5kZXZpbGxl
+IHdyb3RlOgo+CgpbLi4uXQoKPgo+IFRyaWVkIHNvbWV0aGluZyBsaWtlIHRoYXQ6Cj4KPiByb290
+QFBvd2VyY29kZUJNVTovIyBrZXhlYyAtcCAvYm9vdC92bWxpbnV6IC0tcmV1c2UtY21kbGluZSAt
+LWFwcGVuZD0iaXJxcG9sbCBtYXhjcHVzPTEgcmVzZXRfZGV2aWNlcyAxIgo+IENhbm5vdCBnZXQg
+a2VybmVsIHBhZ2Vfb2Zmc2V0X2Jhc2Ugc3ltYm9sIGFkZHJlc3MKClRoYXQgeW91IGNhbiBpZ25v
+cmUuCkZvbGxvd2luZyBwYXRjaCB3aWxsIGNoYW5nZSB0aGlzIGVycm9yIG1lc3NhZ2UgaW50byB3
+YXJuaW5nOgpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwva2V4ZWMvMjAxNy1N
+YXJjaC8wMTgyOTkuaHRtbAoKPiBDYW5ub3QgbG9hZCAvYm9vdC92bWxpbnV6CgpIdW1tLi5jYW4g
+eW91IHBsIHJ1biB3aXRoIC1kIGFuZCBzaGFyZSBkZWJ1ZyBvdXRwdXQuCgo+IHJvb3RAUG93ZXJj
+b2RlQk1VOi8jCj4KClsuLi5dCgo+PiAiY3Jhc2hrZXJuZWw9IiAqbXVzdCogKm5vdCogYmUgcGFz
+c2VkIHRvIGNyYXNoIGtlcm5lbC4gSXQgaXMgb25seSBmb3IgdGhlIHByaW1hcnkga2VybmVsLgo+
+Cj4KPiBPa2F5LiAgQW5kIC0tcmV1c2UtY21kbGluZSB0YWtlcyBjYXJlIG9mIHN0cmlwcGluZyB0
+aGF0IG91dCBmb3IgeW91LCBpdCBsb29rcyBsaWtlLiAgVGhhdCBvcHRpb24gaXNu4oCZdCBkaXNj
+dXNzZWQgaW4gRG9jdW1lbnRhdGlvbi9rZHVtcC8gYnV0IGl0IG1pZ2h0IGJlIGhhbmR5IHRvIGFk
+ZCBzb21ldGhpbmcgYWJvdXQgaXQuCgpZb3Ugc2hvdWxkIHNlZSBhYm91dCBpdCBpbiBrZXhlYy10
+b29scyBkb2MuCgptYW4ga2V4ZWMKCj4KPgo+Cj4+Cj4+PgoKWy4uLl0KCj4+PiBBbmQgYXNzdW1p
+bmcgdGhhdCB5b3XigJlyZSB1c2luZyB0aGUgc2FtZSBrZXJuZWwsIGV0Yy4gaG93IGRvZXMgdGhl
+IGluaXQuZCBzY3JpcHRpbmcgb24gdGhlIGNyYXNoZHVtcCAoMm5kIGluc3RhbmNlIG9mIHRoZSBr
+ZXJuZWwpIGtub3cgdGhhdCBpdOKAmXMgbm90IHRoZSBub21pbmFsIGtlcm5lbD8gIERvIHdlIHVz
+ZSAvc3lzL2tlcm5lbC9rZXhlY19sb2FkZWQgZm9yIHRoaXMgcHVycG9zZT8gIE9yIGRvIHdlIGp1
+c3QgbG9vayBmb3IgdGhlIGV4aXN0ZW5jZSBvZiAvcHJvYy92bWNvcmU/Cj4+Cj4+IFllcCwgeW91
+IGNhbiBmaW5kIC9wcm9jL3ZtY29yZSBpbiAybmQga2VybmVsIGJ1dCBub3QgaW4gMXN0IGtlcm5l
+bC4KPj4gL3N5cy9rZXJuZWwva2V4ZWNfY3Jhc2hfbG9hZGVkICBzaG91bGQgaGF2ZSAxIGluIDFz
+dCBrZXJuZWwgd2hpbGUgMCBpbiBjcmFzaCBrZXJuZWwuCj4KPgo+IFNvIGZhciBJ4oCZbSBzZWVp
+bmcgdGhlIG9wcG9zaXRlOgo+Cj4gcm9vdEBQb3dlcmNvZGVCTVU6LyMgY2F0IC9wcm9jL2NtZGxp
+bmUKPiBCT09UX0lNQUdFPS9ib290L3ZtbGludXogYmxvY2sybXRkLmJsb2NrMm10ZD0vZGV2L3Nk
+YTIsNjU1MzYscm9vdGZzLDUgcm9vdD0vZGV2L210ZGJsb2NrMCByb290ZnN0eXBlPXNxdWFzaGZz
+IHJvb3R3YWl0IGNvbnNvbGU9dHR5MCBjb25zb2xlPXR0eVMwLDExNTIwMG44ciBub2luaXRyZCBj
+cmFzaGtlcm5lbD02NE0KPiByb290QFBvd2VyY29kZUJNVTovIyBjYXQgL3N5cy9rZXJuZWwva2V4
+ZWNfY3Jhc2hfbG9hZGVkCj4gMAoKQmVjYXVzZSB5b3VyIGtleGVjIC1wIGRpZCBub3Qgc3VjY2Vl
+ZCB5ZXQuCgp+UHJhdHl1c2gKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
