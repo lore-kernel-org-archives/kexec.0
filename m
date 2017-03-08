@@ -1,8 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: David Woodhouse <dwmw2@infradead.org>
-Subject: [PATCH 3/7] uImage: Add new IH_ARCH_xxx definitions
-Date: Wed,  8 Mar 2017 22:41:10 +0000
-Message-Id: <20170308224114.49729-3-dwmw2@infradead.org>
+Subject: [PATCH 4/7] uImage: use 'char *' instead of 'unsigned char *' for
+ uImage_load()
+Date: Wed,  8 Mar 2017 22:41:11 +0000
+Message-Id: <20170308224114.49729-4-dwmw2@infradead.org>
 In-Reply-To: <20170308224114.49729-1-dwmw2@infradead.org>
 References: <20170308224114.49729-1-dwmw2@infradead.org>
 List-Id: <kexec.lists.infradead.org>
@@ -23,29 +24,79 @@ Cc: David Woodhouse <dwmw@amazon.co.uk>
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
+This was only ever used on PPC, where they are equivalent and we
+never saw the resulting -Wpointer-sign warnings.
+
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- include/image.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/kexec-uImage.h            | 4 ++--
+ kexec/arch/ppc/kexec-uImage-ppc.c | 2 +-
+ kexec/kexec-uImage.c              | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/image.h b/include/image.h
-index e742aae..8e9d81e 100644
---- a/include/image.h
-+++ b/include/image.h
-@@ -79,6 +79,13 @@
- #define IH_ARCH_BLACKFIN	16	/* Blackfin	*/
- #define IH_ARCH_AVR32		17	/* AVR32	*/
- #define IH_ARCH_ST200	        18	/* STMicroelectronics ST200  */
-+#define IH_ARCH_SANDBOX		19	/* Sandbox architecture (test only) */
-+#define IH_ARCH_NDS32		20	/* ANDES Technology - NDS32  */
-+#define IH_ARCH_OPENRISC	21	/* OpenRISC 1000  */
-+#define IH_ARCH_ARM64		22	/* ARM64        */
-+#define IH_ARCH_ARC		23	/* Synopsys DesignWare ARC */
-+#define IH_ARCH_X86_64		24	/* AMD x86_64, Intel and Via */
-+#define IH_ARCH_XTENSA		25	/* Xtensa       */
+diff --git a/include/kexec-uImage.h b/include/kexec-uImage.h
+index 4725157..483b578 100644
+--- a/include/kexec-uImage.h
++++ b/include/kexec-uImage.h
+@@ -2,7 +2,7 @@
+ #define __KEXEC_UIMAGE_H__
  
- /*
-  * Image Types
+ struct Image_info {
+-	const unsigned char *buf;
++	const char *buf;
+ 	off_t len;
+ 	unsigned int base;
+ 	unsigned int ep;
+@@ -11,5 +11,5 @@ struct Image_info {
+ int uImage_probe(const unsigned char *buf, off_t len, unsigned int arch);
+ int uImage_probe_kernel(const unsigned char *buf, off_t len, unsigned int arch);
+ int uImage_probe_ramdisk(const unsigned char *buf, off_t len, unsigned int arch);
+-int uImage_load(const unsigned char *buf, off_t len, struct Image_info *info);
++int uImage_load(const char *buf, off_t len, struct Image_info *info);
+ #endif
+diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+index c89a1a7..5eec6e4 100644
+--- a/kexec/arch/ppc/kexec-uImage-ppc.c
++++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+@@ -55,7 +55,7 @@ char *slurp_ramdisk_ppc(const char *filename, off_t *r_size)
+ {
+ 	struct Image_info img;
+ 	off_t size;
+-	const unsigned char *buf = slurp_file(filename, &size);
++	const char *buf = slurp_file(filename, &size);
+ 	int rc;
+ 
+ 	/* Check if this is a uImage RAMDisk */
+diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
+index 49f266a..2740a26 100644
+--- a/kexec/kexec-uImage.c
++++ b/kexec/kexec-uImage.c
+@@ -136,7 +136,7 @@ int uImage_probe_ramdisk(const unsigned char *buf, off_t len, unsigned int arch)
+ #define COMMENT		0x10 /* bit 4 set: file comment present */
+ #define RESERVED	0xE0 /* bits 5..7: reserved */
+ 
+-static int uImage_gz_load(const unsigned char *buf, off_t len,
++static int uImage_gz_load(const char *buf, off_t len,
+ 		struct Image_info *image)
+ {
+ 	int ret;
+@@ -225,14 +225,14 @@ static int uImage_gz_load(const unsigned char *buf, off_t len,
+ 	return 0;
+ }
+ #else
+-static int uImage_gz_load(const unsigned char *UNUSED(buf), off_t UNUSED(len),
++static int uImage_gz_load(const char *UNUSED(buf), off_t UNUSED(len),
+ 		struct Image_info *UNUSED(image))
+ {
+ 	return -1;
+ }
+ #endif
+ 
+-int uImage_load(const unsigned char *buf, off_t len, struct Image_info *image)
++int uImage_load(const char *buf, off_t len, struct Image_info *image)
+ {
+ 	const struct image_header *header = (const struct image_header *)buf;
+ 	const unsigned char *img_buf = buf + sizeof(struct image_header);
 -- 
 2.9.3
 
