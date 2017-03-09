@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.redfish-solutions.com ([66.232.79.143])
+Received: from mail-pf0-f175.google.com ([209.85.192.175])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1clpSf-0008Kq-Sf
- for kexec@lists.infradead.org; Thu, 09 Mar 2017 04:13:59 +0000
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: [PATCH v3] Only print debug message when failed to serach for
- kernel symbol from /proc/kallsyms
-From: Philip Prindeville <philipp_subx@redfish-solutions.com>
-In-Reply-To: <20170306014645.GA3111@dhcp-128-65.nay.redhat.com>
-Date: Wed, 8 Mar 2017 21:13:35 -0700
-Message-Id: <8DEC88E0-ED27-46FE-A992-DD24283E402C@redfish-solutions.com>
-References: <1488513135-29611-1-git-send-email-bhe@redhat.com>
- <20170306014645.GA3111@dhcp-128-65.nay.redhat.com>
+ id 1clqdy-0008WH-Lj
+ for kexec@lists.infradead.org; Thu, 09 Mar 2017 05:29:44 +0000
+Received: by mail-pf0-f175.google.com with SMTP id j5so24177986pfb.2
+ for <kexec@lists.infradead.org>; Wed, 08 Mar 2017 21:29:21 -0800 (PST)
+Subject: Re: Questions about kexec-tools (resend to list)
+References: <A5F1D916-BEB0-47A2-8227-4C2A78A0B5DA@fedoraproject.org>
+ <1ea88eb9-4df4-3410-5cb6-3ef10b9cb0e3@redhat.com>
+ <67B8328D-6052-4D47-9172-412AB0CA7B0A@fedoraproject.org>
+ <78e72659-4605-7187-e725-3bf8bf517590@redhat.com>
+ <EE2A2BAB-BAA5-4D79-B37C-90C72A5D972D@fedoraproject.org>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <ced55ae5-9095-3e24-c981-07e17561f478@redhat.com>
+Date: Thu, 9 Mar 2017 10:59:16 +0530
+MIME-Version: 1.0
+In-Reply-To: <EE2A2BAB-BAA5-4D79-B37C-90C72A5D972D@fedoraproject.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,38 +24,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: panand@redhat.com, horms@verge.net.au, kexec@lists.infradead.org, thgarnie@google.com, Baoquan He <bhe@redhat.com>
+To: Philip Prindeville <philipp@fedoraproject.org>
+Cc: kexec@lists.infradead.org
 
-SW5saW5l4oCmCgoKPiBPbiBNYXIgNSwgMjAxNywgYXQgNjo0NiBQTSwgRGF2ZSBZb3VuZyA8ZHlv
-dW5nQHJlZGhhdC5jb20+IHdyb3RlOgo+IAo+IE9uIDAzLzAzLzE3IGF0IDExOjUyYW0sIEJhb3F1
-YW4gSGUgd3JvdGU6Cj4+IEtlcm5lbCBzeW1ib2wgcGFnZV9vZmZzZXRfYmFzZSBjb3VsZCBiZSB1
-bmF2YWlsYWJsZSB3aGVuIG1tIEtBU0xSIGNvZGUgaXMKPj4gbm90IGNvbXBpbGVkIGluIGtlcm5l
-bC4gSXQncyB1bmFwcHJvcHJpYXRlIHRvIHByaW50IG91dCBlcnJvciBtZXNzYWdlCgpJIHN1YnNj
-cmliZWQgdG8gdGhlIGxpc3QgdGhlIGRheSBhZnRlciB0aGlzIHBhdGNoIHdlbnQgb3V04oCmICBB
-bnl3YXksIGNoYW5nZSB0byDigJxpbmFwcHJvcHJpYXRl4oCdLgoKLVBoaWxpcAoKCj4+IHdoZW4g
-ZmFpbGVkIHRvIHNlYXJjaCBmb3IgcGFnZV9vZmZzZXRfYmFzZSBmcm9tIC9wcm9jL2thbGxzeW1z
-LiBTZWVtcyBub3cKPj4gdGhlcmUgaXMgbm90IGEgd2F5IHRvIGZpbmQgb3V0IGlmIG1tIEtBU0xS
-IGlzIGNvbXBpbGVkIGluIG9yIG5vdC4gQW4KPj4gYWx0ZXJuYXRpdmUgYXBwcm9hY2ggaXMgb25s
-eSBwcmludGluZyBvdXQgZGVidWcgbWVzc2FnZSBpbiBnZXRfa2VybmVsX3N5bQo+PiBpZiBmYWls
-ZWQgdG8gc2VhcmNoIGEgZXhwZWN0ZWQga2VybmVsIHN5bWJvbC4KPj4gCj4+IERvIGl0IGluIHRo
-aXMgcGF0Y2gsIGEgc2ltcGxlIGZpeC4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IEJhb3F1YW4gSGUg
-PGJoZUByZWRoYXQuY29tPgo+PiAtLS0KPj4ga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYu
-YyB8IDIgKy0KPj4gMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0p
-Cj4+IAo+PiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYyBiL2tl
-eGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKPj4gaW5kZXggODhhZWVlMy4uYzRjZjIwMSAx
-MDA2NDQKPj4gLS0tIGEva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+PiArKysgYi9r
-ZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5jCj4+IEBAIC0xMjcsNyArMTI3LDcgQEAgc3Rh
-dGljIHVuc2lnbmVkIGxvbmcgbG9uZyBnZXRfa2VybmVsX3N5bShjb25zdCBjaGFyICpzeW1ib2wp
-Cj4+IAkJfQo+PiAJfQo+PiAKPj4gLQlmcHJpbnRmKHN0ZGVyciwgIkNhbm5vdCBnZXQga2VybmVs
-ICVzIHN5bWJvbCBhZGRyZXNzXG4iLCBzeW1ib2wpOwo+PiArCWRiZ3ByaW50ZigiQ2Fubm90IGdl
-dCBrZXJuZWwgJXMgc3ltYm9sIGFkZHJlc3NcbiIsIHN5bWJvbCk7Cj4+IAlyZXR1cm4gMDsKPj4g
-fQo+PiAKPj4gLS0gCj4+IDIuNS41Cj4+IAo+IAo+IEl0IGxvb2tzIHJlYXNvbmFibGUgdG8gbWU6
-Cj4gCj4gQWNrZWQtYnk6IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPgo+IAo+IFRoYW5r
-cwo+IERhdmUKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+
+
+On Wednesday 08 March 2017 10:59 PM, Philip Prindeville wrote:
+> CRASH MEMORY RANGES
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (0)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (0)
+> 0000000000000005-ffffffffffffffff (3)
+> 0000000000000005-ffffffffffffffff (0)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (0)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (2)
+> 0000000000000005-ffffffffffffffff (3)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (0)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (1)
+> 0000000000000005-ffffffffffffffff (0)
+> 0000000000000130-00007f18b2a21938 (0)
+
+No sure whats going here..but above does not look good. It should have 
+values from  /proc/iomem.
+
+> Cannot get kernel page_offset_base symbol address
+> kernel symbol _stext vaddr =      a0000000005
+> kernel vaddr = 0xffffffff81000000 size = 0x818000
+> Memmap after adding segment
+> 0000000000000000-000000000009ffff (0)
+> Cannot load /tmp/boot/boot/vmlinuz
+
+Above wrong ranges might be the reason of failure most likely in 
+crash_create_elf**_headers().
+
+
+~Pratyush
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
