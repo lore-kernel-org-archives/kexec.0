@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cm9aV-0000UJ-Q1
- for kexec@lists.infradead.org; Fri, 10 Mar 2017 01:43:25 +0000
-Date: Fri, 10 Mar 2017 09:42:56 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: kexec regression since 4.9 caused by efi
-Message-ID: <20170310014256.GB2995@dhcp-128-65.nay.redhat.com>
-References: <20170308201616.GC8598@vader>
- <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
- <20170309095408.GA17883@vader>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1cmGbD-00051J-8M
+ for kexec@lists.infradead.org; Fri, 10 Mar 2017 09:12:37 +0000
+Date: Fri, 10 Mar 2017 10:12:10 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] vmcore-dmesg: Define _GNU_SOURCE
+Message-ID: <20170310091210.GB21820@verge.net.au>
+References: <1452388882-11712-1-git-send-email-raj.khem@gmail.com>
+ <1489002280.4347.149.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170309095408.GA17883@vader>
+In-Reply-To: <1489002280.4347.149.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,117 +20,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Omar Sandoval <osandov@osandov.com>
-Cc: linux-efi@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@fb.com, Ingo Molnar <mingo@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: kexec@lists.infradead.org, Khem Raj <raj.khem@gmail.com>
 
-On 03/09/17 at 01:54am, Omar Sandoval wrote:
-> On Thu, Mar 09, 2017 at 02:38:06PM +0800, Dave Young wrote:
-> > Add efi/kexec list.
-> > 
-> > On 03/08/17 at 12:16pm, Omar Sandoval wrote:
-> 
-> [snip]
-> 
-> > I have no more clue yet from your provided log, but the runtime value is
-> > odd to me. It is set in below code:
-> > 
-> > arch/x86/platform/efi/efi.c: efi_systab_init()
-> > 	efi_systab.runtime = data ?
-> > 			     (void *)(unsigned long)data->runtime :
-> > 			     (void *)(unsigne long)systab64->runtime;
-> > 
-> > Here data is the setup_data passed by kexec-tools from normal kernel to
-> > kexec kernel, efi_setup_data structure is like below: 
-> > struct efi_setup_data {
-> >         u64 fw_vendor;
-> >         u64 runtime;
-> >         u64 tables;
-> >         u64 smbios;
-> >         u64 reserved[8];
-> > };
-> > 
-> > kexec-tools get the runtime address from /sys/firmware/efi/runtime
-> > 
-> > So can you do some debuggin on your side, eg. see the sysfs runtime
-> > value is correct or not. And add some printk in efi init path etc.
-> 
-> The attached patch fixes this for me.
-> From 4b343f0b0b408469f28c973ea52877797a166313 Mon Sep 17 00:00:00 2001
-> Message-Id: <4b343f0b0b408469f28c973ea52877797a166313.1489053164.git.osandov@fb.com>
-> From: Omar Sandoval <osandov@fb.com>
-> Date: Thu, 9 Mar 2017 01:46:19 -0800
-> Subject: [PATCH] efi: adjust virt_addr when splitting descriptors in
->  efi_memmap_insert()
-> 
-> When we split efi memory descriptors, we adjust the physical address but
-> not the virtual address it maps to. This leads to bogus memory mappings
-> later when these virtual addresses are used.
-> 
-> This fixes a kexec boot regression since 8e80632fb23f ("efi/esrt: Use
-> efi_mem_reserve() and avoid a kmalloc()"), although the bug was only
-> exposed by that commit.
-> 
-> Signed-off-by: Omar Sandoval <osandov@fb.com>
-> ---
->  drivers/firmware/efi/memmap.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-> index 78686443cb37..ca614db76faf 100644
-> --- a/drivers/firmware/efi/memmap.c
-> +++ b/drivers/firmware/efi/memmap.c
-> @@ -298,6 +298,7 @@ void __init efi_memmap_insert(struct efi_memory_map *old_memmap, void *buf,
->  			memcpy(new, old, old_memmap->desc_size);
->  			md = new;
->  			md->phys_addr = m_end + 1;
-> +			md->virt_addr += md->phys_addr - start;
->  			md->num_pages = (end - md->phys_addr + 1) >>
->  				EFI_PAGE_SHIFT;
->  		}
-> @@ -312,6 +313,7 @@ void __init efi_memmap_insert(struct efi_memory_map *old_memmap, void *buf,
->  			md = new;
->  			md->attribute |= m_attr;
->  			md->phys_addr = m_start;
-> +			md->virt_addr += md->phys_addr - start;
->  			md->num_pages = (m_end - m_start + 1) >>
->  				EFI_PAGE_SHIFT;
->  			/* last part */
-> @@ -319,6 +321,7 @@ void __init efi_memmap_insert(struct efi_memory_map *old_memmap, void *buf,
->  			memcpy(new, old, old_memmap->desc_size);
->  			md = new;
->  			md->phys_addr = m_end + 1;
-> +			md->virt_addr += md->phys_addr - start;
->  			md->num_pages = (end - m_end) >>
->  				EFI_PAGE_SHIFT;
->  		}
-> @@ -333,6 +336,7 @@ void __init efi_memmap_insert(struct efi_memory_map *old_memmap, void *buf,
->  			memcpy(new, old, old_memmap->desc_size);
->  			md = new;
->  			md->phys_addr = m_start;
-> +			md->virt_addr += md->phys_addr - start;
->  			md->num_pages = (end - md->phys_addr + 1) >>
->  				EFI_PAGE_SHIFT;
->  			md->attribute |= m_attr;
-> -- 
-> 2.12.0
-> 
-
-Nice, thanks for the debugging, so the problem is clear now.
-
-Just Runtime areas are not necessarily to be reserved, for boot areas no
-need to update the virt address. But I'm not sure about the fakemem
-usage of this.
-
-So need comments from Matt..
-
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBNYXIgMDgsIDIwMTcgYXQgMDg6NDQ6NDBQTSArMDEwMCwgRGF2aWQgV29vZGhvdXNl
+IHdyb3RlOgo+IE9uIFNhdCwgMjAxNi0wMS0wOSBhdCAxNzoyMSAtMDgwMCwgS2hlbSBSYWogd3Jv
+dGU6Cj4gPiBsb2ZmX3QgaXMgZ3VhcmRlZCB3aXRoIF9HTlVfU09VUkNFIG9uIHNvbWUgQyBsaWJy
+YXJ5IGltcGxlbWVudGF0aW9ucwo+ID4gZS5nLiBtdXNsIHNpbmNlIHRoaXMgdHlwZSBpcyBub3Qg
+ZGVmaW5lZCBieSBQT1NJWC4gRGVmaW5lIF9HTlVfU09VUkNFIHRvCj4gPiBpbmNsdWRlIHRoaXMg
+ZGVmaW5lLCBpdCBzaG91bGQgaGVscCBjb21waWxpbmcgb24gbXVzbCB3aGlsZSBub3RoaW5nCj4g
+PiBjaGFuZ2VzIGZvciBnbGliYyBiYXNlZCBzeXN0ZW1zIHNpbmNlIHRoZXJlIF9HTlVfU09VUkNF
+IGlzIGFscmVhZHkKPiA+IGRlZmluZWQKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogS2hlbSBSYWog
+PHJhai5raGVtQGdtYWlsLmNvbT4KPiAKPiBUaGlzIGFwcGVhcnMgdG8gc3RpbGwgYmUgbmVlZGVk
+Li4uCgpGb3Igc29tZSByZWFzb24gaXQgZGlkIG5vdCBoaXQgbXkgaW5ib3ggOigKClNoYWxsIEkg
+cGljayB1cCB0aGUgdmVyc2lvbiB5b3UgcmVwb3N0ZWQgYXMgUEFUQ0ggNy83ID8KCj4gPiAtLS0K
+PiA+IMKgdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jIHwgMSArCj4gPiDCoDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvdm1jb3JlLWRtZXNnL3Zt
+Y29yZS1kbWVzZy5jIGIvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCj4gPiBpbmRleCAwMzY0
+NjM2Li5hOGY1NmRmIDEwMDY0NAo+ID4gLS0tIGEvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5j
+Cj4gPiArKysgYi92bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMKPiA+IEBAIC0xLDQgKzEsNSBA
+QAo+ID4gwqAjZGVmaW5lIF9YT1BFTl9TT1VSQ0UgNjAwCj4gPiArI2RlZmluZSBfR05VX1NPVVJD
+RQo+ID4gwqAjZGVmaW5lIF9MQVJHRUZJTEVfU09VUkNFIDEKPiA+IMKgI2RlZmluZSBfRklMRV9P
+RkZTRVRfQklUUyA2NAo+ID4gwqAjaW5jbHVkZSAKCgoKPiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlzdAo+IGtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
