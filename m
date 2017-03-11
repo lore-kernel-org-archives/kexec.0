@@ -1,12 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.redfish-solutions.com ([66.232.79.143])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cmXSU-0001PI-4T
- for kexec@lists.infradead.org; Sat, 11 Mar 2017 03:12:44 +0000
-From: "Philip Prindeville" <philipp@redfish-solutions.com>
-Subject: [PATCH v2 1/1] Don't use %L width specifier with integer values
-Date: Fri, 10 Mar 2017 20:12:15 -0700
-Message-Id: <20170311031215.3628-1-philipp@redfish-solutions.com>
+ id 1cmXUY-0001wO-9H
+ for kexec@lists.infradead.org; Sat, 11 Mar 2017 03:14:52 +0000
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Subject: Re: Questions about kexec-tools (resend to list)
+From: Philip Prindeville <philipp_subx@redfish-solutions.com>
+In-Reply-To: <20170311001642.GA12734@x1>
+Date: Fri, 10 Mar 2017 20:14:28 -0700
+Message-Id: <1F047218-35F5-48D8-AB7A-A837F6246759@redfish-solutions.com>
+References: <A5F1D916-BEB0-47A2-8227-4C2A78A0B5DA@fedoraproject.org>
+ <1ea88eb9-4df4-3410-5cb6-3ef10b9cb0e3@redhat.com>
+ <67B8328D-6052-4D47-9172-412AB0CA7B0A@fedoraproject.org>
+ <78e72659-4605-7187-e725-3bf8bf517590@redhat.com>
+ <EE2A2BAB-BAA5-4D79-B37C-90C72A5D972D@fedoraproject.org>
+ <5FF5ABAA-DA98-472E-8598-3122D4B1B55B@fedoraproject.org>
+ <20170311001642.GA12734@x1>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,204 +24,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Philip Prindeville <philipp@fedoraproject.org>, Philip Prindeville <philipp@redfish-solutions.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Pratyush Anand <panand@redhat.com>, kexec@lists.infradead.org
 
-From: Philip Prindeville <philipp@redfish-solutions.com>
-
-MUSL doesn't support %L except for floating-point arguments; therefore,
-%ll must be used instead with integer arguments.
-
-Signed-off-by: Philip Prindeville <philipp@redfish-solutions.com>
----
- kexec/arch/arm/kexec-arm.c           | 2 +-
- kexec/arch/i386/crashdump-x86.c      | 8 ++++----
- kexec/arch/i386/kexec-x86-common.c   | 2 +-
- kexec/arch/ia64/kexec-elf-rel-ia64.c | 2 +-
- kexec/arch/mips/crashdump-mips.c     | 2 +-
- kexec/arch/mips/kexec-mips.c         | 2 +-
- kexec/arch/s390/kexec-s390.c         | 2 +-
- kexec/crashdump.c                    | 8 ++++----
- kexec/kexec-iomem.c                  | 2 +-
- 9 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
-index 2194b7cbfcb7a6a103d6f780e4e6515e95006ccc..49f35b11b21c6564a77ea93e388f2612e2c17317 100644
---- a/kexec/arch/arm/kexec-arm.c
-+++ b/kexec/arch/arm/kexec-arm.c
-@@ -47,7 +47,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 		int count;
- 		if (memory_ranges >= MAX_MEMORY_RANGES)
- 			break;
--		count = sscanf(line, "%Lx-%Lx : %n",
-+		count = sscanf(line, "%llx-%llx : %n",
- 			&start, &end, &consumed);
- 		if (count != 2)
- 			continue;
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index c4cf2013a00107e960e921225aa593f465f3164d..285dea9abd4b19c4733851f91cbed90e789327ba 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -119,7 +119,7 @@ static unsigned long long get_kernel_sym(const char *symbol)
- 	}
- 
- 	while(fgets(line, sizeof(line), fp) != NULL) {
--		if (sscanf(line, "%Lx %c %s", &vaddr, &type, sym) != 3)
-+		if (sscanf(line, "%llx %c %s", &vaddr, &type, sym) != 3)
- 			continue;
- 		if (strcmp(sym, symbol) == 0) {
- 			dbgprintf("kernel symbol %s vaddr = %16llx\n", symbol, vaddr);
-@@ -296,12 +296,12 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
- 
- 		if (memory_ranges >= CRASH_MAX_MEMORY_RANGES)
- 			break;
--		count = sscanf(line, "%Lx-%Lx : %n",
-+		count = sscanf(line, "%llx-%llx : %n",
- 			&start, &end, &consumed);
- 		if (count != 2)
- 			continue;
- 		str = line + consumed;
--		dbgprintf("%016Lx-%016Lx : %s",
-+		dbgprintf("%016llx-%016llx : %s",
- 			start, end, str);
- 		/* Only Dumping memory of type System RAM. */
- 		if (memcmp(str, "System RAM\n", 11) == 0) {
-@@ -778,7 +778,7 @@ static int get_crash_notes(int cpu, uint64_t *addr, uint64_t *len)
- 		*addr = x86__pa(vaddr + (cpu * MAX_NOTE_BYTES));
- 		*len = MAX_NOTE_BYTES;
- 
--		dbgprintf("crash_notes addr = %Lx\n",
-+		dbgprintf("crash_notes addr = %llx\n",
- 			  (unsigned long long)*addr);
- 
- 		fclose(fp);
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index 3e97239c0c78b49523bbddab346abd7d138b5a9c..be03618770f784bb13dbf49218f87e56d6eba0a0 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -81,7 +81,7 @@ static int get_memory_ranges_proc_iomem(struct memory_range **range, int *ranges
- 		int count;
- 		if (memory_ranges >= MAX_MEMORY_RANGES)
- 			break;
--		count = sscanf(line, "%Lx-%Lx : %n",
-+		count = sscanf(line, "%llx-%llx : %n",
- 			&start, &end, &consumed);
- 		if (count != 2)
- 			continue;
-diff --git a/kexec/arch/ia64/kexec-elf-rel-ia64.c b/kexec/arch/ia64/kexec-elf-rel-ia64.c
-index 7f7c08cba4b14c3ed847e2be511b09faf554e12f..500f2473ee38f79508012b43b49ae0c75c0d8a19 100644
---- a/kexec/arch/ia64/kexec-elf-rel-ia64.c
-+++ b/kexec/arch/ia64/kexec-elf-rel-ia64.c
-@@ -155,6 +155,6 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr,
- 	}
- 	return;
- overflow:
--	die("overflow in relocation type %lu val %Lx\n", 
-+	die("overflow in relocation type %lu val %llx\n",
- 			r_type, value);
- }
-diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
-index 9c33599a34ed6f1a4a280173deb1e9a9a38ee44a..6308ec81276f0a8a1a61bb907054bddcd7a4f93e 100644
---- a/kexec/arch/mips/crashdump-mips.c
-+++ b/kexec/arch/mips/crashdump-mips.c
-@@ -173,7 +173,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 		int type, consumed, count;
- 		if (memory_ranges >= CRASH_MAX_MEMORY_RANGES)
- 			break;
--		count = sscanf(line, "%Lx-%Lx : %n",
-+		count = sscanf(line, "%llx-%llx : %n",
- 			&start, &end, &consumed);
- 		if (count != 2)
- 			continue;
-diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
-index ee3cd3a8b6ebc69dfcd7c90d10bd16d7d60760ee..2e5b700da1ed36a9268ffec7ef80f23aee46d78f 100644
---- a/kexec/arch/mips/kexec-mips.c
-+++ b/kexec/arch/mips/kexec-mips.c
-@@ -48,7 +48,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 	while (fgets(line, sizeof(line), fp) != 0) {
- 		if (memory_ranges >= MAX_MEMORY_RANGES)
- 			break;
--		count = sscanf(line, "%Lx-%Lx : %n", &start, &end, &consumed);
-+		count = sscanf(line, "%llx-%llx : %n", &start, &end, &consumed);
- 		if (count != 2)
- 			continue;
- 		str = line + consumed;
-diff --git a/kexec/arch/s390/kexec-s390.c b/kexec/arch/s390/kexec-s390.c
-index f863483ce8084187c625ad407c23a19a8928a80a..33ba6b970664323af096d2305be1ce596cfa72d6 100644
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -170,7 +170,7 @@ int get_memory_ranges_s390(struct memory_range memory_range[], int *ranges,
- 		if (current_range == MAX_MEMORY_RANGES)
- 			break;
- 
--		sscanf(line,"%Lx-%Lx : %n", &start, &end, &cons);
-+		sscanf(line,"%llx-%llx : %n", &start, &end, &cons);
- 		str = line+cons;
- 		if ((memcmp(str, sys_ram, strlen(sys_ram)) == 0) ||
- 		    ((memcmp(str, crash_kernel, strlen(crash_kernel)) == 0) &&
-diff --git a/kexec/crashdump.c b/kexec/crashdump.c
-index 15c11051fb98b365fc2f4fb1b54642052b796bb8..0b363c503833d419d31eeb0b6b61ca46934a81b1 100644
---- a/kexec/crashdump.c
-+++ b/kexec/crashdump.c
-@@ -98,7 +98,7 @@ int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len)
- 	}
- 	if (!fgets(line, sizeof(line), fp))
- 		die("Cannot parse %s: %s\n", crash_notes, strerror(errno));
--	count = sscanf(line, "%Lx", &temp);
-+	count = sscanf(line, "%llx", &temp);
- 	if (count != 1)
- 		die("Cannot parse %s: %s\n", crash_notes, strerror(errno));
- 	*addr = (uint64_t) temp;
-@@ -112,7 +112,7 @@ int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len)
- 		if (!fgets(line, sizeof(line), fp))
- 			die("Cannot parse %s: %s\n",
- 			    crash_notes_size, strerror(errno));
--		count = sscanf(line, "%Lu", &temp);
-+		count = sscanf(line, "%llu", &temp);
- 		if (count != 1)
- 			die("Cannot parse %s: %s\n",
- 			    crash_notes_size, strerror(errno));
-@@ -120,7 +120,7 @@ int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len)
- 		fclose(fp);
- 	}
- 
--	dbgprintf("%s: crash_notes addr = %Lx, size = %Lu\n", __FUNCTION__,
-+	dbgprintf("%s: crash_notes addr = %llx, size = %llu\n", __FUNCTION__,
- 		  (unsigned long long)*addr, (unsigned long long)*len);
- 
- 	return 0;
-@@ -141,7 +141,7 @@ static int get_vmcoreinfo(const char *kdump_info, uint64_t *addr, uint64_t *len)
- 
- 	if (!fgets(line, sizeof(line), fp))
- 		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
--	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
-+	count = sscanf(line, "%llx %llx", &temp, &temp2);
- 	if (count != 2)
- 		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
- 
-diff --git a/kexec/kexec-iomem.c b/kexec/kexec-iomem.c
-index 485a2e810080e20f8af447ab900c7481a361915b..7ec385371a2c188020cf54e10b8d1867400771ea 100644
---- a/kexec/kexec-iomem.c
-+++ b/kexec/kexec-iomem.c
-@@ -44,7 +44,7 @@ int kexec_iomem_for_each_line(char *match,
- 		die("Cannot open %s\n", iomem);
- 
- 	while(fgets(line, sizeof(line), fp) != 0) {
--		count = sscanf(line, "%Lx-%Lx : %n", &start, &end, &consumed);
-+		count = sscanf(line, "%llx-%llx : %n", &start, &end, &consumed);
- 		if (count != 2)
- 			continue;
- 		str = line + consumed;
--- 
-2.9.3
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Cj4gT24gTWFyIDEwLCAyMDE3LCBhdCA1OjE2IFBNLCBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNv
+bT4gd3JvdGU6Cj4gCj4gT24gMDMvMTAvMTcgYXQgMDE6MjBwbSwgUGhpbGlwIFByaW5kZXZpbGxl
+IHdyb3RlOgo+PiAKPiAKPj4gCj4+IFRoZSBhYm92ZSBtZW1vcnkgcmFuZ2VzIGxvb2sgaGlnaGx5
+IHN1c3BlY3QuCj4+IAo+PiBBbnlvbmUgaGF2ZSBhbnkgaWRlYXMgd2hlcmUgSSBzaG91bGQgc3Rh
+cnQgZGlnZ2luZyB0byBmaWd1cmUgb3V0IHdoZXJlIHRoaW5ncyBhcmUgZ29pbmcgc2lkZXdheXM/
+Cj4+IAo+PiBJ4oCZbSB1c2luZyAyLjAuMTQgb24gYSBMaW51eCA0LjQuMTkga2VybmVsLCB3aXRo
+IGdjYyA1LjMuMCBhbmQgTVVTTCAxLjEuMTYuCj4gCj4gSGksCj4gCj4gVGhpcyBpcyB1c2VyIHNw
+YWNlIHByb2dyYW0gYW5kIHVzaW5nIGluIDFzdCBrZXJuZWwuIEkgcmVhbGx5IHN1Z2dlc3QgeW91
+Cj4gc2hvdWxkIHN0YXJ0IGEgZ2RiIHRvIHRyYWNrIHdoYXQncyBnb2luZyBvbiB3aGVuIHlvdXIg
+cmVhbCAvcHJvYy9pb21lbQo+IGlzIGRpZmZlcmVudCB3aXRoIHRoZSBkZWJ1ZyBwcmludGluZyBv
+ZiBrZXhlYy4gSG9uZXN0bHksIGl0IHdvbid0IGJlIHRvbwo+IGRpZmZpY3VsdCwgSSByZWFsbHkg
+bGlrZSB0aGlzIGtpbmQgb2YgZGVidWdnaW5nLiBJZiBoYXBwZW5lZCBpbiBrZHVtcAo+IGtlcm5l
+bCwgZXZlbiBpbiB1c2VyIHNwYWNlIHRvb2xzIGxpa2UgbWFrZWR1bXBmaWxlLCB5b3UgaGF2ZSB0
+byBhZGQKPiBkZWJ1ZyBwcmludGluZyBhZ2FpbiBhbmQgYWdhaW4uCj4gCj4gVGhhbmtzCj4gQmFv
+cXVhbgoKCkFjdHVhbGx5LCBJIGhhdmUgbXkgc21va2luZyBndW4uICBBbmQgZm91bmQgYSBjbHVl
+IChyZWdyZXR0YWJseSBhZnRlciBJIGhhZCBkb25lIGFsbCB0aGUgZGlnZ2luZykgdG8gY29uZmly
+bSB0aGF0IEkgd2FzIG9uIHRoZSByaWdodCB0cmFjazoKCmh0dHA6Ly9naXQuYWxzYS1wcm9qZWN0
+Lm9yZy8/cD1hbHNhLWxpYi5naXQ7YT1jb21taXRkaWZmO2g9MWQzZjc5NzVmOTIwZjQ3ZTZhOGEz
+MjRmNTQ3ZGEyMTgwZTY0MTcxYQoKU2VuZGluZyBhIHBhdGNoLCBzZXBhcmF0ZWx5LgoKLVBoaWxp
+cAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
