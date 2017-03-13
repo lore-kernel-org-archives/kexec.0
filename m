@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cmsDy-0004iE-FI
- for kexec@lists.infradead.org; Sun, 12 Mar 2017 01:23:08 +0000
-Date: Sun, 12 Mar 2017 09:22:39 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: How to detect rebooting into kexec'd kernel
-Message-ID: <20170312012239.GB12734@x1>
-References: <A96AC8B1-F904-4BE1-87DA-A2923599D9C7@redfish-solutions.com>
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cnJkO-0007y6-V4
+ for kexec@lists.infradead.org; Mon, 13 Mar 2017 06:46:25 +0000
+Date: Mon, 13 Mar 2017 14:45:29 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] build_mem_phdrs(): check if p_paddr is invalid
+Message-ID: <20170313064529.GB11197@dhcp-128-65.nay.redhat.com>
+References: <e45f4027aa72ea9009ae03f471894d62ccc135bb.1488346530.git.panand@redhat.com>
+ <20170301071317.GA3534@dhcp-128-65.nay.redhat.com>
+ <c1f408fe-2283-0b37-a035-9080a31e91e2@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <A96AC8B1-F904-4BE1-87DA-A2923599D9C7@redfish-solutions.com>
+In-Reply-To: <c1f408fe-2283-0b37-a035-9080a31e91e2@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,27 +21,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philip Prindeville <philipp_subx@redfish-solutions.com>
-Cc: kexec@lists.infradead.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, bhe@redhat.com
 
-Rm9yIGtkdW1wIGtlcm5lbCwgY2hlY2sgL3Byb2Mvdm1jb3JlCmtleGVjIGtlcm5lbCwgbm8gd2F5
-LgoKT24gMDMvMTEvMTcgYXQgMTA6NDBhbSwgUGhpbGlwIFByaW5kZXZpbGxlIHdyb3RlOgo+IEhv
-dyBkbyB5b3UgdGVsbCB5b3XigJlyZSBpbiB0aGUgbmV3IGtlcm5lbD8KPiAKPiBUaGVyZSBkb2Vz
-buKAmXQgc2VlbSB0byBiZSBhbnl0aGluZyBpbiAvc3lzL2tlcm5lbC8gdGhhdCBpbmRpY2F0ZXMg
-dGhpcy4KPiAKPiBJIGNvdWxkIHBhcnNlIC9wcm9jL2NtZGxpbmUgZm9yIHRoZSBhYnNlbmNlIG9m
-IOKAnGNyYXNoa2VybmVsPeKAnCBmb3IgaW5zdGFuY2UsIGJ1dCB0aGVyZSBhcmUgb2J2aW91cyBw
-aXRmYWxscyB0byB0aGF0Lgo+IAo+IFlvdeKAmWQgdGhpbmsgdGhlcmUgd291bGQgYmUgYSB3YXkg
-Zm9yIHRoZSBrZXhlY+KAmWQga2VybmVsIHRvIG1haW50YWluIHNvbWUgc29ydCBvZiBtYXJrZXIg
-bWFraW5nIGl0IG9idmlvdXMgdGhhdCB0aGlzIGlzIHRoZSBrZXhlY+KAmWQga2VybmVsIChlc3Bl
-Y2lhbGx5IGlmIHlvdXIgc3lzdGVtIGtlcm5lbCBhbmQgeW91ciBjcmFzaCBrZXJuZWwgYXJlIHRo
-ZSBzYW1lLCBhbmQgb25seSB0aGUgY21kbGluZSBhcmd1bWVudHMgY2hhbmdlKS4KPiAKPiBUaGFu
-a3MsCj4gCj4gLVBoaWxpcAo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
-ZWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 03/07/17 at 06:53am, Pratyush Anand wrote:
+> Hi Simon,
+> 
+> On Wednesday 01 March 2017 12:43 PM, Dave Young wrote:
+> > On 03/01/17 at 11:19am, Pratyush Anand wrote:
+> > > Currently, all the p_paddr of PT_LOAD headers are assigned to 0, which
+> > > is not correct and could be misleading, since 0 is a valid physical
+> > > address.
+> > > 
+> > > Upstream kernel commit "464920104bf7 /proc/kcore: update physical
+> > > address for kcore ram and text" fixed it and now invalid PT_LOAD is
+> > > assigned as -1.
+> > > 
+> > > kexec/arch/i386/crashdump-x86.c:get_kernel_vaddr_and_size() uses kcore
+> > > interface and so calls build_mem_phdrs() for kcore PT_LOAD headers.
+> > > 
+> > > This patch fixes build_mem_phdrs() to check if p_paddr is invalid.
+> 
+> Any comment on this?
+
+Simon, ping, explain a bit about the background based on the patch log:
+
+Although it is a kernel regression, the original p_addr = 0 assumption is
+wrong, it should be fixed in kernel instead of keep it to avoid
+kexec-tools breakage.
+
+Since latest kernel already has the fix merged, kexec-tools will fail to
+load crash kernel now. 
+
+Any opinion about this patch?
+> 
+> > > 
+> > > Signed-off-by: Pratyush Anand <panand@redhat.com>
+> > > ---
+> > >  kexec/kexec-elf.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/kexec/kexec-elf.c b/kexec/kexec-elf.c
+> > > index 1d6320a2f0e6..be60bbd48486 100644
+> > > --- a/kexec/kexec-elf.c
+> > > +++ b/kexec/kexec-elf.c
+> > > @@ -432,7 +432,8 @@ static int build_mem_phdrs(const char *buf, off_t len, struct mem_ehdr *ehdr,
+> > >  			}
+> > >  			return -1;
+> > >  		}
+> > > -		if ((phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
+> > > +		if (phdr->p_paddr != (unsigned long long)-1 &&
+> > > +			(phdr->p_paddr + phdr->p_memsz) < phdr->p_paddr) {
+> > >  			/* The memory address wraps */
+> > >  			if (probe_debug) {
+> > >  				fprintf(stderr, "ELF address wrap around\n");
+> > > --
+> > > 2.9.3
+> > > 
+> > 
+> > Acked-by: Dave Young <dyoung@redhat.com>
+> > 
+> 
+> 
+> 
+> ~Pratyush
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
