@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cnLtu-0005tb-1j
- for kexec@lists.infradead.org; Mon, 13 Mar 2017 09:04:23 +0000
-Date: Mon, 13 Mar 2017 10:03:49 +0100
+ id 1cnM1a-0001Ma-OI
+ for kexec@lists.infradead.org; Mon, 13 Mar 2017 09:12:20 +0000
+Date: Mon, 13 Mar 2017 10:04:37 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/7] uImage: fix realloc() pointer confusion
-Message-ID: <20170313090349.GA25077@verge.net.au>
-References: <20170308224114.49729-1-dwmw2@infradead.org>
+Subject: Re: [PATCH] vmcore-dmesg: Define _GNU_SOURCE
+Message-ID: <20170313090437.GB25077@verge.net.au>
+References: <1452388882-11712-1-git-send-email-raj.khem@gmail.com>
+ <1489002280.4347.149.camel@infradead.org>
+ <20170310091210.GB21820@verge.net.au>
+ <1489138715.3732.15.camel@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170308224114.49729-1-dwmw2@infradead.org>
+In-Reply-To: <1489138715.3732.15.camel@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,12 +27,21 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: David Woodhouse <dwmw2@infradead.org>
-Cc: kexec@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>
+Cc: kexec@lists.infradead.org, Khem Raj <raj.khem@gmail.com>
 
-On Wed, Mar 08, 2017 at 10:41:08PM +0000, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
+On Fri, Mar 10, 2017 at 10:38:35AM +0100, David Woodhouse wrote:
+> On Fri, 2017-03-10 at 10:12 +0100, Simon Horman wrote:
+> > 
+> > For some reason it did not hit my inbox :(
+> > 
+> > Shall I pick up the version you reposted as PATCH 7/7 ?
+> 
+> That works. There's a github PR too if that's easier to consume. Which
+> wasn't *intended* to include this patch as it was for the uImage bits,
+> but I made it from the wrong branch and didn't bother to redo it.
 
-Thanks, series applied.
+Thanks, its rather convenient for me that it did include the patch in
+question. I have applied the series.
 
 _______________________________________________
 kexec mailing list
