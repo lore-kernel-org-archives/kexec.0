@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cniii-0003Os-Gs
- for kexec@lists.infradead.org; Tue, 14 Mar 2017 09:26:22 +0000
-Date: Tue, 14 Mar 2017 10:25:52 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/1] Don't use %L width specifier with integer values
-Message-ID: <20170314092552.GD11280@verge.net.au>
-References: <20170311031215.3628-1-philipp@redfish-solutions.com>
- <20170313085443.GA22378@verge.net.au>
- <EF1BB787-6AF6-4E22-972F-75B018C8A7D9@redfish-solutions.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <EF1BB787-6AF6-4E22-972F-75B018C8A7D9@redfish-solutions.com>
+Received: from mail-pg0-f42.google.com ([74.125.83.42])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cnlik-00018o-TO
+ for kexec@lists.infradead.org; Tue, 14 Mar 2017 12:38:37 +0000
+Received: by mail-pg0-f42.google.com with SMTP id 77so88067232pgc.1
+ for <kexec@lists.infradead.org>; Tue, 14 Mar 2017 05:38:13 -0700 (PDT)
+From: Pratyush Anand <panand@redhat.com>
+Subject: [PATCH] x86/x86_64: Fix format warning with die()
+Date: Tue, 14 Mar 2017 17:59:22 +0530
+Message-Id: <3809295c06f9318c380620ccb6b47bd82a43c3a6.1489493828.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,25 +17,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Philip Prindeville <philipp_subx@redfish-solutions.com>
-Cc: kexec@lists.infradead.org
+To: horms@verge.net.au
+Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-T24gTW9uLCBNYXIgMTMsIDIwMTcgYXQgMDk6MzU6MDJBTSAtMDYwMCwgUGhpbGlwIFByaW5kZXZp
-bGxlIHdyb3RlOgo+IAo+ID4gT24gTWFyIDEzLCAyMDE3LCBhdCAyOjU0IEFNLCBTaW1vbiBIb3Jt
-YW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gd3JvdGU6Cj4gPiAKPiA+IE9uIEZyaSwgTWFyIDEwLCAy
-MDE3IGF0IDA4OjEyOjE1UE0gLTA3MDAsIFBoaWxpcCBQcmluZGV2aWxsZSB3cm90ZToKPiA+PiBG
-cm9tOiBQaGlsaXAgUHJpbmRldmlsbGUgPHBoaWxpcHBAcmVkZmlzaC1zb2x1dGlvbnMuY29tPgo+
-ID4+IAo+ID4+IE1VU0wgZG9lc24ndCBzdXBwb3J0ICVMIGV4Y2VwdCBmb3IgZmxvYXRpbmctcG9p
-bnQgYXJndW1lbnRzOyB0aGVyZWZvcmUsCj4gPj4gJWxsIG11c3QgYmUgdXNlZCBpbnN0ZWFkIHdp
-dGggaW50ZWdlciBhcmd1bWVudHMuCj4gPiAKPiA+IEkgYXBvbG9naXNlIGZvciBteSBpZ25vcmFu
-Y2U7IHdoYXQgaXMgTVVTTD8KPiAKPiBJdOKAmXMgYW5vdGhlciBDIHJ1bi10aW1lIGxpYnJhcnkg
-KGxpa2UgZWdsaWJjIG9yIHVDbGliYykgd2hpY2ggaXMgb3B0aW1pemVkIGZvciBlbWJlZGRlZCBz
-eXN0ZW1zLgo+IAo+IGh0dHBzOi8vd3d3Lm11c2wtbGliYy5vcmcvCgpUaGFua3MgZm9yIHRoZSBj
-bGFyaWZpY2F0aW9uLgpJIGhhdmUgYXBwbGllZCB5b3VyIHBhdGNoLgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+Fedora koji uses gcc version 7.0.1-0.12.fc27, and it generates a build
+warning
+
+   kexec/arch/i386/kexec-elf-x86.c:299:3: error: format not a string
+   literal and no format arguments [-Werror=format-security]
+       die(error_msg);
+       ^~~
+    cc1: some warnings being treated as errors
+
+error_msg can have a format specifier as well in string. In such cases,
+if there is no other arguments for the format variable then code will
+try to access a non existing argument. Therefore, use 1st argument as
+format specifier for string print and pass error_msg as the string to be
+printed.
+
+While doing that,also use const qualifier before "char *error_msg".
+
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ kexec/arch/i386/kexec-elf-x86.c      | 4 ++--
+ kexec/arch/x86_64/kexec-elf-x86_64.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kexec/arch/i386/kexec-elf-x86.c b/kexec/arch/i386/kexec-elf-x86.c
+index de00dcb869d7..fedf031cdf4a 100644
+--- a/kexec/arch/i386/kexec-elf-x86.c
++++ b/kexec/arch/i386/kexec-elf-x86.c
+@@ -91,7 +91,7 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	char *command_line = NULL, *modified_cmdline = NULL;
+ 	const char *append = NULL;
+ 	char *tmp_cmdline = NULL;
+-	char *error_msg = NULL;
++	const char *error_msg = NULL;
+ 	int result;
+ 	int command_line_len;
+ 	const char *ramdisk;
+@@ -296,6 +296,6 @@ out:
+ 	free(command_line);
+ 	free(modified_cmdline);
+ 	if (error_msg)
+-		die(error_msg);
++		die("%s", error_msg);
+ 	return result;
+ }
+diff --git a/kexec/arch/x86_64/kexec-elf-x86_64.c b/kexec/arch/x86_64/kexec-elf-x86_64.c
+index ae6569220bc8..ad2231193eb1 100644
+--- a/kexec/arch/x86_64/kexec-elf-x86_64.c
++++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
+@@ -99,7 +99,7 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ #define ARG_STYLE_NONE  2
+ 	int opt;
+ 	int result = 0;
+-	char *error_msg = NULL;
++	const char *error_msg = NULL;
+ 
+ 	/* See options.h and add any new options there too! */
+ 	static const struct option options[] = {
+@@ -276,6 +276,6 @@ out:
+ 	free(command_line);
+ 	free(modified_cmdline);
+ 	if (error_msg)
+-		die(error_msg);
++		die("%s", error_msg);
+ 	return result;
+ }
+-- 
+2.9.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
