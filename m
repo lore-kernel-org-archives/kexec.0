@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x232.google.com ([2607:f8b0:400e:c05::232])
+Received: from mail-pg0-x230.google.com ([2607:f8b0:400e:c05::230])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1co5h8-0003k3-Mq
- for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:58:18 +0000
-Received: by mail-pg0-x232.google.com with SMTP id g2so6987005pge.3
- for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:57:57 -0700 (PDT)
+ id 1co5fy-0002zy-Kt
+ for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:57:06 +0000
+Received: by mail-pg0-x230.google.com with SMTP id 141so6992119pgd.1
+ for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:56:42 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v33 12/14] Documentation: kdump: describe arm64 port
-Date: Wed, 15 Mar 2017 18:59:41 +0900
-Message-Id: <20170315095941.25119-10-takahiro.akashi@linaro.org>
+Subject: [PATCH v33 02/14] memblock: add memblock_cap_memory_range()
+Date: Wed, 15 Mar 2017 18:59:01 +0900
+Message-Id: <20170315095901.25063-2-takahiro.akashi@linaro.org>
 In-Reply-To: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -24,74 +24,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org
+Cc: mark.rutland@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Add arch specific descriptions about kdump usage on arm64 to kdump.txt.
+Add memblock_cap_memory_range() which will remove all the memblock regions
+except the memory range specified in the arguments. In addition, rework is
+done on memblock_mem_limit_remove_map() to re-implement it using
+memblock_cap_memory_range().
+
+This function, like memblock_mem_limit_remove_map(), will not remove
+memblocks with MEMMAP_NOMAP attribute as they may be mapped and accessed
+later as "device memory."
+See the commit a571d4eb55d8 ("mm/memblock.c: add new infrastructure to
+address the mem limit issue").
+
+This function is used, in a succeeding patch in the series of arm64 kdump
+suuport, to limit the range of usable memory, or System RAM, on crash dump
+kernel.
+(Please note that "mem=" parameter is of little use for this purpose.)
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
+Reviewed-by: Will Deacon <will.deacon@arm.com>
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Dennis Chen <dennis.chen@arm.com>
+Cc: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
 ---
- Documentation/kdump/kdump.txt | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ include/linux/memblock.h |  1 +
+ mm/memblock.c            | 44 +++++++++++++++++++++++++++++---------------
+ 2 files changed, 30 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index b0eb27b956d9..615434d81108 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index e82daffcfc44..4ce24a376262 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -336,6 +336,7 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
+ phys_addr_t memblock_start_of_DRAM(void);
+ phys_addr_t memblock_end_of_DRAM(void);
+ void memblock_enforce_memory_limit(phys_addr_t memory_limit);
++void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+ int memblock_is_map_memory(phys_addr_t addr);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 2f4ca8104ea4..b049c9b2dba8 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1543,11 +1543,37 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
+ 			      (phys_addr_t)ULLONG_MAX);
+ }
  
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--s390x and arm architectures.
-+s390x, arm and arm64 architectures.
- 
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
- 
-     AUTO_ZRELADDR=y
- 
-+Dump-capture kernel config options (Arch Dependent, arm64)
-+----------------------------------------------------------
++void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
++{
++	int start_rgn, end_rgn;
++	int i, ret;
 +
-+- Please note that kvm of the dump-capture kernel will not be enabled
-+  on non-VHE systems even if it is configured. This is because the CPU
-+  will not be reset to EL2 on panic.
++	if (!size)
++		return;
 +
- Extended crashkernel syntax
- ===========================
- 
-@@ -305,6 +312,8 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
-+   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-@@ -327,6 +336,8 @@ For s390x:
- 	- Use image or bzImage
- For arm:
- 	- Use zImage
-+For arm64:
-+	- Use vmlinux or Image
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -370,6 +381,9 @@ For s390x:
- For arm:
- 	"1 maxcpus=1 reset_devices"
- 
-+For arm64:
-+	"1 maxcpus=1 reset_devices"
++	ret = memblock_isolate_range(&memblock.memory, base, size,
++						&start_rgn, &end_rgn);
++	if (ret)
++		return;
 +
- Notes on loading the dump-capture kernel:
++	/* remove all the MAP regions */
++	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
++
++	for (i = start_rgn - 1; i >= 0; i--)
++		if (!memblock_is_nomap(&memblock.memory.regions[i]))
++			memblock_remove_region(&memblock.memory, i);
++
++	/* truncate the reserved regions */
++	memblock_remove_range(&memblock.reserved, 0, base);
++	memblock_remove_range(&memblock.reserved,
++			base + size, (phys_addr_t)ULLONG_MAX);
++}
++
+ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ {
+-	struct memblock_type *type = &memblock.memory;
+ 	phys_addr_t max_addr;
+-	int i, ret, start_rgn, end_rgn;
  
- * By default, the ELF headers are stored in ELF64 format to support
+ 	if (!limit)
+ 		return;
+@@ -1558,19 +1584,7 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+ 	if (max_addr == (phys_addr_t)ULLONG_MAX)
+ 		return;
+ 
+-	ret = memblock_isolate_range(type, max_addr, (phys_addr_t)ULLONG_MAX,
+-				&start_rgn, &end_rgn);
+-	if (ret)
+-		return;
+-
+-	/* remove all the MAP regions above the limit */
+-	for (i = end_rgn - 1; i >= start_rgn; i--) {
+-		if (!memblock_is_nomap(&type->regions[i]))
+-			memblock_remove_region(type, i);
+-	}
+-	/* truncate the reserved regions */
+-	memblock_remove_range(&memblock.reserved, max_addr,
+-			      (phys_addr_t)ULLONG_MAX);
++	memblock_cap_memory_range(0, max_addr);
+ }
+ 
+ static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
 -- 
 2.11.1
 
