@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x231.google.com ([2607:f8b0:400e:c05::231])
+Received: from mail-pg0-x232.google.com ([2607:f8b0:400e:c05::232])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1co5gv-0003XZ-HS
- for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:58:07 +0000
-Received: by mail-pg0-x231.google.com with SMTP id b129so6986415pgc.2
- for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:57:44 -0700 (PDT)
+ id 1co5h8-0003k3-Mq
+ for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:58:18 +0000
+Received: by mail-pg0-x232.google.com with SMTP id g2so6987005pge.3
+ for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:57:57 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v33 09/14] arm64: kdump: add VMCOREINFO's for user-space tools
-Date: Wed, 15 Mar 2017 18:59:38 +0900
-Message-Id: <20170315095941.25119-7-takahiro.akashi@linaro.org>
+Subject: [PATCH v33 12/14] Documentation: kdump: describe arm64 port
+Date: Wed, 15 Mar 2017 18:59:41 +0900
+Message-Id: <20170315095941.25119-10-takahiro.akashi@linaro.org>
 In-Reply-To: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,52 +27,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
 Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-In addition to common VMCOREINFO's defined in
-crash_save_vmcoreinfo_init(), we need to know, for crash utility,
-  - kimage_voffset
-  - PHYS_OFFSET
-to examine the contents of a dump file (/proc/vmcore) correctly
-due to the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
-
-  - VA_BITS
-is also required for makedumpfile command.
-
-arch_crash_save_vmcoreinfo() appends them to the dump file.
-More VMCOREINFO's may be added later.
+Add arch specific descriptions about kdump usage on arm64 to kdump.txt.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Baoquan He <bhe@redhat.com>
+Acked-by: Dave Young <dyoung@redhat.com>
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/kernel/machine_kexec.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ Documentation/kdump/kdump.txt | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 2c1108c51d69..68b96ea13b4c 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -18,6 +18,7 @@
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index b0eb27b956d9..615434d81108 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
+ a remote system.
  
- #include <asm/cacheflush.h>
- #include <asm/cpu_ops.h>
-+#include <asm/memory.h>
- #include <asm/mmu.h>
- #include <asm/mmu_context.h>
+ Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+-s390x and arm architectures.
++s390x, arm and arm64 architectures.
  
-@@ -351,3 +352,13 @@ void crash_free_reserved_phys_range(unsigned long begin, unsigned long end)
- 	}
- }
- #endif /* CONFIG_HIBERNATION */
+ When the system kernel boots, it reserves a small section of memory for
+ the dump-capture kernel. This ensures that ongoing Direct Memory Access
+@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
+ 
+     AUTO_ZRELADDR=y
+ 
++Dump-capture kernel config options (Arch Dependent, arm64)
++----------------------------------------------------------
 +
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+	VMCOREINFO_NUMBER(VA_BITS);
-+	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
-+	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-+						kimage_voffset);
-+	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
-+						PHYS_OFFSET);
-+}
++- Please note that kvm of the dump-capture kernel will not be enabled
++  on non-VHE systems even if it is configured. This is because the CPU
++  will not be reset to EL2 on panic.
++
+ Extended crashkernel syntax
+ ===========================
+ 
+@@ -305,6 +312,8 @@ Boot into System Kernel
+    kernel will automatically locate the crash kernel image within the
+    first 512MB of RAM if X is not given.
+ 
++   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
++   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+ 
+ Load the Dump-capture Kernel
+ ============================
+@@ -327,6 +336,8 @@ For s390x:
+ 	- Use image or bzImage
+ For arm:
+ 	- Use zImage
++For arm64:
++	- Use vmlinux or Image
+ 
+ If you are using a uncompressed vmlinux image then use following command
+ to load dump-capture kernel.
+@@ -370,6 +381,9 @@ For s390x:
+ For arm:
+ 	"1 maxcpus=1 reset_devices"
+ 
++For arm64:
++	"1 maxcpus=1 reset_devices"
++
+ Notes on loading the dump-capture kernel:
+ 
+ * By default, the ELF headers are stored in ELF64 format to support
 -- 
 2.11.1
 
