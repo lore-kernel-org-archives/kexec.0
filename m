@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
+Received: from mail-pf0-x234.google.com ([2607:f8b0:400e:c00::234])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1co5Md-00005x-ME
- for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:37:05 +0000
-Received: by mail-pf0-x233.google.com with SMTP id v190so6641317pfb.1
- for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:36:43 -0700 (PDT)
+ id 1co5MZ-000058-P2
+ for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:37:01 +0000
+Received: by mail-pf0-x234.google.com with SMTP id o126so6625736pfb.3
+ for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:36:39 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v6 5/9] arm64: kdump: add elf core header segment
-Date: Wed, 15 Mar 2017 18:38:20 +0900
-Message-Id: <20170315093824.24566-6-takahiro.akashi@linaro.org>
+Subject: [PATCH v6 4/9] arm64: kdump: identify memory regions
+Date: Wed, 15 Mar 2017 18:38:19 +0900
+Message-Id: <20170315093824.24566-5-takahiro.akashi@linaro.org>
 In-Reply-To: <20170315093824.24566-1-takahiro.akashi@linaro.org>
 References: <20170315093824.24566-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,187 +27,198 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-Elf core header contains the information necessary for the coredump of
-the 1st kernel, including its physcal memory layout as well as cpu register
-states at the panic.
-The segment is allocated inside the reserved memory of crash dump kernel.
+The following regions need to be identified for later use:
+ a) memory regions which belong to the 1st kernel
+ b) usable memory reserved for crash dump kernel
+
+We go through /proc/iomem to find out a) and b) which are marked
+as "System RAM" and "Crash kernel", respectively.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/arch/arm64/crashdump-arm64.c | 96 ++++++++++++++++++++++++++++++++++++++
- kexec/arch/arm64/crashdump-arm64.h |  3 ++
- kexec/arch/arm64/iomem.h           |  2 +
- kexec/arch/arm64/kexec-elf-arm64.c | 10 ++++
- 4 files changed, 111 insertions(+)
+ kexec/arch/arm64/Makefile          |   2 +
+ kexec/arch/arm64/crashdump-arm64.c | 100 ++++++++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h |  14 +++++-
+ kexec/arch/arm64/iomem.h           |   1 +
+ 4 files changed, 114 insertions(+), 3 deletions(-)
 
+diff --git a/kexec/arch/arm64/Makefile b/kexec/arch/arm64/Makefile
+index 74b677f..2d4ae0e 100644
+--- a/kexec/arch/arm64/Makefile
++++ b/kexec/arch/arm64/Makefile
+@@ -6,6 +6,8 @@ arm64_FS2DT_INCLUDE += \
+ 
+ arm64_DT_OPS += kexec/dt-ops.c
+ 
++arm64_MEM_REGIONS = kexec/mem_regions.c
++
+ arm64_CPPFLAGS += -I $(srcdir)/kexec/
+ 
+ arm64_KEXEC_SRCS += \
 diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-index ca50677..2497d94 100644
+index b0e4713..ca50677 100644
 --- a/kexec/arch/arm64/crashdump-arm64.c
 +++ b/kexec/arch/arm64/crashdump-arm64.c
-@@ -39,6 +39,39 @@ struct memory_ranges usablemem_rgns = {
- 	.ranges = &crash_reserved_mem,
- };
+@@ -1,5 +1,13 @@
+ /*
+  * ARM64 crashdump.
++ *     partly derived from arm implementation
++ *
++ * Copyright (c) 2014-2016 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
+  */
  
-+struct memory_range elfcorehdr_mem;
+ #define _GNU_SOURCE
+@@ -10,13 +18,103 @@
+ #include "kexec.h"
+ #include "crashdump.h"
+ #include "crashdump-arm64.h"
++#include "iomem.h"
+ #include "kexec-arm64.h"
+ #include "kexec-elf.h"
++#include "mem_regions.h"
+ 
+-struct memory_ranges usablemem_rgns = {};
++/* memory ranges on crashed kernel */
++static struct memory_range crash_memory_ranges[CRASH_MAX_MEMORY_RANGES];
++static struct memory_ranges crash_memory_rgns = {
++	.size = 0,
++	.max_size = CRASH_MAX_MEMORY_RANGES,
++	.ranges = crash_memory_ranges,
++};
 +
-+static struct crash_elf_info elf_info = {
-+	.class		= ELFCLASS64,
-+#if (__BYTE_ORDER == __LITTLE_ENDIAN)
-+	.data		= ELFDATA2LSB,
-+#else
-+	.data		= ELFDATA2MSB,
-+#endif
-+	.machine	= EM_AARCH64,
++/* memory range reserved for crashkernel */
++struct memory_range crash_reserved_mem;
++struct memory_ranges usablemem_rgns = {
++	.size = 0,
++	.max_size = 1,
++	.ranges = &crash_reserved_mem,
 +};
 +
 +/*
-+ * Note: The returned value is correct only if !CONFIG_RANDOMIZE_BASE.
++ * iomem_range_callback() - callback called for each iomem region
++ * @data: not used
++ * @nr: not used
++ * @str: name of the memory region
++ * @base: start address of the memory region
++ * @length: size of the memory region
++ *
++ * This function is called once for each memory region found in /proc/iomem.
++ * It locates system RAM and crashkernel reserved memory and places these to
++ * variables, respectively, crash_memory_ranges and crash_reserved_mem.
 + */
-+static uint64_t get_kernel_page_offset(void)
++
++static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
++				char *str, unsigned long long base,
++				unsigned long long length)
 +{
-+	int i;
-+
-+	if (elf_info.kern_vaddr_start == UINT64_MAX)
-+		return UINT64_MAX;
-+
-+	/* Current max virtual memory range is 48-bits. */
-+	for (i = 48; i > 0; i--)
-+		if (!(elf_info.kern_vaddr_start & (1UL << i)))
-+			break;
-+
-+	if (i <= 0)
-+		return UINT64_MAX;
-+	else
-+		return UINT64_MAX << i;
-+}
-+
- /*
-  * iomem_range_callback() - callback called for each iomem region
-  * @data: not used
-@@ -62,6 +95,10 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
- 	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
- 		return mem_regions_add(&crash_memory_rgns,
- 				       base, length, RANGE_RAM);
-+	else if (strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) == 0)
-+		elf_info.kern_paddr_start = base;
-+	else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
-+		elf_info.kern_size = base + length - elf_info.kern_paddr_start;
- 
- 	return 0;
- }
-@@ -115,6 +152,65 @@ static int crash_get_memory_ranges(void)
- 	dbgprint_mem_range("Coredump memory ranges",
- 			   crash_memory_rgns.ranges, crash_memory_rgns.size);
- 
-+	/*
-+	 * For additional kernel code/data segment.
-+	 * kern_paddr_start/kern_size are determined in iomem_range_callback
-+	 */
-+	elf_info.kern_vaddr_start = get_kernel_sym("_text");
-+	if (!elf_info.kern_vaddr_start)
-+		elf_info.kern_vaddr_start = UINT64_MAX;
++	if (strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)) == 0)
++		return mem_regions_add(&usablemem_rgns,
++				       base, length, RANGE_RAM);
++	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
++		return mem_regions_add(&crash_memory_rgns,
++				       base, length, RANGE_RAM);
 +
 +	return 0;
 +}
+ 
+ int is_crashkernel_mem_reserved(void)
+ {
++	if (!crash_reserved_mem.end)
++		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++
++	return crash_reserved_mem.start != crash_reserved_mem.end;
++}
 +
 +/*
-+ * load_crashdump_segments() - load the elf core header
-+ * @info: kexec info structure
++ * crash_get_memory_ranges() - read system physical memory
 + *
-+ * This function creates and loads an additional segment of elf core header
-+ : which is used to construct /proc/vmcore on crash dump kernel.
++ * Function reads through system physical memory and stores found memory
++ * regions in crash_memory_ranges.
++ * Regions are sorted in ascending order.
 + *
-+ * Return 0 in case of success and -1 in case of error.
++ * Returns 0 in case of success and -1 otherwise (errno is set).
 + */
-+
-+int load_crashdump_segments(struct kexec_info *info)
++static int crash_get_memory_ranges(void)
 +{
-+	unsigned long elfcorehdr;
-+	unsigned long bufsz;
-+	void *buf;
-+	int err;
++	/*
++	 * First read all memory regions that can be considered as
++	 * system memory including the crash area.
++	 */
++	if (!usablemem_rgns.size)
++		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
++
++	/* allow only a single region for crash dump kernel */
++	if (usablemem_rgns.size != 1) {
++		errno = EINVAL;
++		return -1;
++	}
++
++	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
++
++	if (mem_regions_exclude(&crash_memory_rgns, &crash_reserved_mem)) {
++		fprintf(stderr,
++			"Error: Number of crash memory ranges excedeed the max limit\n");
++		errno = ENOMEM;
++		return -1;
++	}
 +
 +	/*
-+	 * First fetch all the memory (RAM) ranges that we are going to
-+	 * pass to the crash dump kernel during panic.
++	 * Make sure that the memory regions are sorted.
 +	 */
++	mem_regions_sort(&crash_memory_rgns);
 +
-+	err = crash_get_memory_ranges();
-+
-+	if (err)
-+		return err;
-+
-+	elf_info.page_offset = get_kernel_page_offset();
-+	dbgprintf("%s: page_offset:   %016llx\n", __func__,
-+			elf_info.page_offset);
-+
-+	err = crash_create_elf64_headers(info, &elf_info,
-+			crash_memory_rgns.ranges, crash_memory_rgns.size,
-+			&buf, &bufsz, ELF_CORE_HEADER_ALIGN);
-+
-+	if (err)
-+		return err;
-+
-+	elfcorehdr = add_buffer_phys_virt(info, buf, bufsz, bufsz, 0,
-+		crash_reserved_mem.start, crash_reserved_mem.end,
-+		-1, 0);
-+
-+	elfcorehdr_mem.start = elfcorehdr;
-+	elfcorehdr_mem.end = elfcorehdr + bufsz - 1;
-+
-+	dbgprintf("%s: elfcorehdr 0x%llx-0x%llx\n", __func__,
-+			elfcorehdr_mem.start, elfcorehdr_mem.end);
++	dbgprint_mem_range("Coredump memory ranges",
++			   crash_memory_rgns.ranges, crash_memory_rgns.size);
 +
  	return 0;
  }
  
 diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
-index 07a0ed0..da75a2d 100644
+index f33c7a2..07a0ed0 100644
 --- a/kexec/arch/arm64/crashdump-arm64.h
 +++ b/kexec/arch/arm64/crashdump-arm64.h
-@@ -18,5 +18,8 @@
+@@ -1,12 +1,22 @@
+ /*
+  * ARM64 crashdump.
++ *
++ * Copyright (c) 2014-2016 Linaro Limited
++ * Author: AKASHI Takahiro <takahiro.akashi@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
+  */
  
- extern struct memory_ranges usablemem_rgns;
- extern struct memory_range crash_reserved_mem;
-+extern struct memory_range elfcorehdr_mem;
+-#if !defined(CRASHDUMP_ARM64_H)
++#ifndef CRASHDUMP_ARM64_H
+ #define CRASHDUMP_ARM64_H
+ 
+ #include "kexec.h"
+ 
++#define CRASH_MAX_MEMORY_RANGES	32
 +
-+extern int load_crashdump_segments(struct kexec_info *info);
+ extern struct memory_ranges usablemem_rgns;
++extern struct memory_range crash_reserved_mem;
  
- #endif /* CRASHDUMP_ARM64_H */
+-#endif
++#endif /* CRASHDUMP_ARM64_H */
 diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
-index 20cda87..d4864bb 100644
+index 7fd66eb..20cda87 100644
 --- a/kexec/arch/arm64/iomem.h
 +++ b/kexec/arch/arm64/iomem.h
-@@ -2,6 +2,8 @@
+@@ -2,6 +2,7 @@
  #define IOMEM_H
  
  #define SYSTEM_RAM		"System RAM\n"
-+#define KERNEL_CODE		"Kernel code\n"
-+#define KERNEL_DATA		"Kernel data\n"
- #define CRASH_KERNEL		"Crash kernel\n"
++#define CRASH_KERNEL		"Crash kernel\n"
  #define IOMEM_RESERVED		"reserved\n"
  
-diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
-index daf8bf0..c70a37a 100644
---- a/kexec/arch/arm64/kexec-elf-arm64.c
-+++ b/kexec/arch/arm64/kexec-elf-arm64.c
-@@ -119,6 +119,16 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
- 	dbgprintf("%s: PE format:      %s\n", __func__,
- 		(arm64_header_check_pe_sig(header) ? "yes" : "no"));
- 
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		/* create and initialize elf core header segment */
-+		result = load_crashdump_segments(info);
-+		if (result) {
-+			dbgprintf("%s: Creating eflcorehdr failed.\n",
-+								__func__);
-+			goto exit;
-+		}
-+	}
-+
- 	/* load the kernel */
- 	result = elf_exec_load(&ehdr, info);
- 
+ #endif
 -- 
 2.11.1
 
