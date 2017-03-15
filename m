@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cnmfr-00012P-RC
- for kexec@lists.infradead.org; Tue, 14 Mar 2017 13:39:41 +0000
-Date: Tue, 14 Mar 2017 14:39:13 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86/x86_64: Fix format warning with die()
-Message-ID: <20170314133913.GA14040@verge.net.au>
-References: <3809295c06f9318c380620ccb6b47bd82a43c3a6.1489493828.git.panand@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3809295c06f9318c380620ccb6b47bd82a43c3a6.1489493828.git.panand@redhat.com>
+Received: from mail-pf0-x22b.google.com ([2607:f8b0:400e:c00::22b])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1co5ME-0008KD-C5
+ for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:36:40 +0000
+Received: by mail-pf0-x22b.google.com with SMTP id v190so6636750pfb.1
+ for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:36:18 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v6 0/9] (kexec-tools) arm64: add kdump support
+Date: Wed, 15 Mar 2017 18:38:15 +0900
+Message-Id: <20170315093824.24566-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,34 +17,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: horms@verge.net.au
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On Tue, Mar 14, 2017 at 05:59:22PM +0530, Pratyush Anand wrote:
-> Fedora koji uses gcc version 7.0.1-0.12.fc27, and it generates a build
-> warning
-> 
->    kexec/arch/i386/kexec-elf-x86.c:299:3: error: format not a string
->    literal and no format arguments [-Werror=format-security]
->        die(error_msg);
->        ^~~
->     cc1: some warnings being treated as errors
-> 
-> error_msg can have a format specifier as well in string. In such cases,
-> if there is no other arguments for the format variable then code will
-> try to access a non existing argument. Therefore, use 1st argument as
-> format specifier for string print and pass error_msg as the string to be
-> printed.
-> 
-> While doing that,also use const qualifier before "char *error_msg".
-> 
-> Signed-off-by: Pratyush Anand <panand@redhat.com>
+My kernel patches of kdump support on arm64 are currently under review.
 
-Thanks, applied.
+This patchset is synced with them (v33 [1]) and provides necessary changes
+for kexec-tools. It can be applied on top of kexec-tools master branch.
+
+[1] T.B.D.
+
+Changes for v6:
+ - use get_kernel_sym() from x86, not from arm (patch #2)
+ - always take root node's "#address-cells" and "#size-cells" into account
+   when adding "linux,usable-memory-range" and "linux,elfcorehdr"
+   (patch #8)
+
+Changes for v5:
+ - remove "linux,crashkernel-base/size" handling aligned with a change
+   on the kernel side
+
+Changes for v4:
+ - rebased on the master branch (including Geoff's v6)
+ - revive "linux,usable-memory-range" DT property (from v2), dropping
+   use of "reserved-memory" nodes introduced in v3 (patch #8)
+ - extend the semantics of kexec_iomem_for_each_line() per Pratyush
+   (patch #1)
+
+Changes for v3:
+ - rebased on Geoff's v5
+ - fix a value of estimated PHYS_OFFSET
+ - add a kernel code/data segment because they now reside out of linear
+   mapping due to KASLR introduction
+ - remove "linux,usable-memory-range" dependency, instead using
+   "reserved-memory" node
+ - add -mem-min/-mem-max support
+
+Changes for v2:
+ - trim a temoprary buffer in setup_2nd_dtb()
+ - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+ - update patch#7 from Pratyush
+   (re-worked by akashi)
+
+AKASHI Takahiro (7):
+  kexec: exntend the semantics of kexec_iomem_for_each_line
+  arm64: identify PHYS_OFFSET correctly
+  arm64: kdump: identify memory regions
+  arm64: kdump: add elf core header segment
+  arm64: kdump: set up kernel image segment
+  arm64: kdump: set up other segments
+  arm64: kdump: add DT properties to crash dump kernel's dtb
+
+Pratyush Anand (2):
+  kexec: generalize and rename get_kernel_stext_sym()
+  arm64: kdump: Add support for binary image files
+
+ kexec/Makefile                       |   1 +
+ kexec/arch/arm/crashdump-arm.c       |  40 +-----
+ kexec/arch/arm64/Makefile            |   2 +
+ kexec/arch/arm64/crashdump-arm64.c   | 219 +++++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
+ kexec/arch/arm64/iomem.h             |  10 ++
+ kexec/arch/arm64/kexec-arm64.c       | 239 +++++++++++++++++++++++++++++++++--
+ kexec/arch/arm64/kexec-elf-arm64.c   |  25 +++-
+ kexec/arch/arm64/kexec-image-arm64.c |  12 ++
+ kexec/arch/i386/crashdump-x86.c      |  29 -----
+ kexec/kexec-iomem.c                  |  15 ++-
+ kexec/kexec.h                        |   2 +
+ kexec/symbols.c                      |  34 +++++
+ 13 files changed, 551 insertions(+), 95 deletions(-)
+ create mode 100644 kexec/arch/arm64/iomem.h
+ create mode 100644 kexec/symbols.c
+
+-- 
+2.11.1
+
 
 _______________________________________________
 kexec mailing list
