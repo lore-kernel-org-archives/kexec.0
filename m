@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x236.google.com ([2607:f8b0:400e:c00::236])
+Received: from mail-pg0-x236.google.com ([2607:f8b0:400e:c05::236])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1co5ft-0002zG-Os
- for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:56:59 +0000
-Received: by mail-pf0-x236.google.com with SMTP id w189so6869366pfb.0
- for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:56:37 -0700 (PDT)
+ id 1co5gg-0003PD-JN
+ for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:57:52 +0000
+Received: by mail-pg0-x236.google.com with SMTP id 141so6999842pgd.1
+ for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:57:26 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v33 01/14] memblock: add memblock_clear_nomap()
-Date: Wed, 15 Mar 2017 18:59:00 +0900
-Message-Id: <20170315095901.25063-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v33 05/14] arm64: mm: allow for unmapping part of kernel
+ mapping
+Date: Wed, 15 Mar 2017 18:59:34 +0900
+Message-Id: <20170315095941.25119-3-takahiro.akashi@linaro.org>
 In-Reply-To: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -24,55 +25,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, akpm@linux-foundation.org
-Cc: mark.rutland@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, geoff@infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-This function, with a combination of memblock_mark_nomap(), will be used
-in a later kdump patch for arm64 when it temporarily isolates some range
-of memory from the other memory blocks in order to create a specific
-kernel mapping at boot time.
+create_pgd_mapping() is enhanced here so that it will accept
+PAGE_KERNEL_INVALID protection attribute and unmap a given range of memory.
+
+The feature will be used in a later kdump patch to implement the protection
+against possible corruption of crash dump kernel memory which is to be set
+aside from ther other memory on primary kernel.
+
+Note that, in this implementation, it assumes that all the range of memory
+to be processed is mapped in page-level since the only current user is
+kdump where page mappings are also required.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- include/linux/memblock.h |  1 +
- mm/memblock.c            | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
+ arch/arm64/include/asm/pgtable-prot.h |  1 +
+ arch/arm64/mm/mmu.c                   | 17 +++++++++++------
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index bdfc65af4152..e82daffcfc44 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -93,6 +93,7 @@ int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
- int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
- int memblock_mark_nomap(phys_addr_t base, phys_addr_t size);
-+int memblock_clear_nomap(phys_addr_t base, phys_addr_t size);
- ulong choose_memblock_flags(void);
+diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+index 2142c7726e76..945d84cd5df7 100644
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -54,6 +54,7 @@
+ #define PAGE_KERNEL_ROX		__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_RDONLY)
+ #define PAGE_KERNEL_EXEC	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE)
+ #define PAGE_KERNEL_EXEC_CONT	__pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_CONT)
++#define PAGE_KERNEL_INVALID	__pgprot(0)
  
- /* Low level functions */
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 696f06d17c4e..2f4ca8104ea4 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -805,6 +805,18 @@ int __init_memblock memblock_mark_nomap(phys_addr_t base, phys_addr_t size)
+ #define PAGE_HYP		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+ #define PAGE_HYP_EXEC		__pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index d28dbcf596b6..cb359a3927ef 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -128,7 +128,10 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
+ 	do {
+ 		pte_t old_pte = *pte;
+ 
+-		set_pte(pte, pfn_pte(pfn, prot));
++		if (pgprot_val(prot))
++			set_pte(pte, pfn_pte(pfn, prot));
++		else
++			pte_clear(null, null, pte);
+ 		pfn++;
+ 
+ 		/*
+@@ -309,12 +312,14 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+ 	__create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, false);
  }
  
- /**
-+ * memblock_clear_nomap - Clear flag MEMBLOCK_NOMAP for a specified region.
-+ * @base: the base phys addr of the region
-+ * @size: the size of the region
-+ *
-+ * Return 0 on success, -errno on failure.
+-void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+-			       unsigned long virt, phys_addr_t size,
+-			       pgprot_t prot, bool page_mappings_only)
++/*
++ * Note that PAGE_KERNEL_INVALID should be used with page_mappings_only
++ * true for now.
 + */
-+int __init_memblock memblock_clear_nomap(phys_addr_t base, phys_addr_t size)
-+{
-+	return memblock_setclr_flag(base, size, 0, MEMBLOCK_NOMAP);
-+}
-+
-+/**
-  * __next_reserved_mem_region - next function for for_each_reserved_region()
-  * @idx: pointer to u64 loop variable
-  * @out_start: ptr to phys_addr_t for start address of the region, can be %NULL
++void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
++			unsigned long virt, phys_addr_t size,
++			pgprot_t prot, bool page_mappings_only)
+ {
+-	BUG_ON(mm == &init_mm);
+-
+ 	__create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+ 			     pgd_pgtable_alloc, page_mappings_only);
+ }
 -- 
 2.11.1
 
