@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x234.google.com ([2607:f8b0:400e:c05::234])
+Received: from mail-pf0-x233.google.com ([2607:f8b0:400e:c00::233])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1co5MK-0008KZ-A9
- for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:36:45 +0000
-Received: by mail-pg0-x234.google.com with SMTP id n190so6793139pga.0
- for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:36:24 -0700 (PDT)
+ id 1co5Md-00005x-ME
+ for kexec@lists.infradead.org; Wed, 15 Mar 2017 09:37:05 +0000
+Received: by mail-pf0-x233.google.com with SMTP id v190so6641317pfb.1
+ for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 02:36:43 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v6 1/9] kexec: exntend the semantics of
- kexec_iomem_for_each_line
-Date: Wed, 15 Mar 2017 18:38:16 +0900
-Message-Id: <20170315093824.24566-2-takahiro.akashi@linaro.org>
+Subject: [PATCH v6 5/9] arm64: kdump: add elf core header segment
+Date: Wed, 15 Mar 2017 18:38:20 +0900
+Message-Id: <20170315093824.24566-6-takahiro.akashi@linaro.org>
 In-Reply-To: <20170315093824.24566-1-takahiro.akashi@linaro.org>
 References: <20170315093824.24566-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -28,72 +27,186 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: horms@verge.net.au
 Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-The current kexec_iomem_for_each_line() counts up all the lines for which
-a callback function returns zero(0) or positive, and otherwise it stops
-further scanning.
-This behavior is incovenient in some cases. For instance, on arm64, we want
-to count up "System RAM" entries, but need to skip "reserved" entries.
-
-So this patch extends the semantics so that we will continue to scan
-succeeding entries but not count lines for which a callback function
-returns positive.
-
-The current users of kexec_iomem_for_each_line(), arm, sh and x86, will not
-be affected by this change because
-* arm
-  The callback function only returns -1 or 0, and the return value of
-  kexec_iomem_for_each_line() will never be used.
-* sh, x86
-  The callback function may return (-1 for sh,) 0 or 1, but always returns
-  1 once we have reached the maximum number of entries allowed.
-  Even so the current kexec_iomem_for_each_line() counts them up.
-  This change actually fixes this bug.
+Elf core header contains the information necessary for the coredump of
+the 1st kernel, including its physcal memory layout as well as cpu register
+states at the panic.
+The segment is allocated inside the reserved memory of crash dump kernel.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
 ---
- kexec/kexec-iomem.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ kexec/arch/arm64/crashdump-arm64.c | 96 ++++++++++++++++++++++++++++++++++++++
+ kexec/arch/arm64/crashdump-arm64.h |  3 ++
+ kexec/arch/arm64/iomem.h           |  2 +
+ kexec/arch/arm64/kexec-elf-arm64.c | 10 ++++
+ 4 files changed, 111 insertions(+)
 
-diff --git a/kexec/kexec-iomem.c b/kexec/kexec-iomem.c
-index 485a2e8..0a0277a 100644
---- a/kexec/kexec-iomem.c
-+++ b/kexec/kexec-iomem.c
-@@ -18,6 +18,9 @@
-  * Iterate over each line in the file returned by proc_iomem(). If match is
-  * NULL or if the line matches with our match-pattern then call the
-  * callback if non-NULL.
-+ * If match is NULL, callback should return a negative if error.
-+ * Otherwise the interation goes on, incrementing nr but only if callback
-+ * returns 0 (matched).
-  *
-  * Return the number of lines matched.
-  */
-@@ -37,7 +40,7 @@ int kexec_iomem_for_each_line(char *match,
- 	char *str;
- 	int consumed;
- 	int count;
--	int nr = 0;
-+	int nr = 0, ret;
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index ca50677..2497d94 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -39,6 +39,39 @@ struct memory_ranges usablemem_rgns = {
+ 	.ranges = &crash_reserved_mem,
+ };
  
- 	fp = fopen(iomem, "r");
- 	if (!fp)
-@@ -50,11 +53,13 @@ int kexec_iomem_for_each_line(char *match,
- 		str = line + consumed;
- 		size = end - start + 1;
- 		if (!match || memcmp(str, match, strlen(match)) == 0) {
--			if (callback
--			    && callback(data, nr, str, start, size) < 0) {
--				break;
-+			if (callback) {
-+				ret = callback(data, nr, str, start, size);
-+				if (ret < 0)
-+					break;
-+				else if (ret == 0)
-+					nr++;
- 			}
--			nr++;
- 		}
- 	}
++struct memory_range elfcorehdr_mem;
++
++static struct crash_elf_info elf_info = {
++	.class		= ELFCLASS64,
++#if (__BYTE_ORDER == __LITTLE_ENDIAN)
++	.data		= ELFDATA2LSB,
++#else
++	.data		= ELFDATA2MSB,
++#endif
++	.machine	= EM_AARCH64,
++};
++
++/*
++ * Note: The returned value is correct only if !CONFIG_RANDOMIZE_BASE.
++ */
++static uint64_t get_kernel_page_offset(void)
++{
++	int i;
++
++	if (elf_info.kern_vaddr_start == UINT64_MAX)
++		return UINT64_MAX;
++
++	/* Current max virtual memory range is 48-bits. */
++	for (i = 48; i > 0; i--)
++		if (!(elf_info.kern_vaddr_start & (1UL << i)))
++			break;
++
++	if (i <= 0)
++		return UINT64_MAX;
++	else
++		return UINT64_MAX << i;
++}
++
+ /*
+  * iomem_range_callback() - callback called for each iomem region
+  * @data: not used
+@@ -62,6 +95,10 @@ static int iomem_range_callback(void *UNUSED(data), int UNUSED(nr),
+ 	else if (strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) == 0)
+ 		return mem_regions_add(&crash_memory_rgns,
+ 				       base, length, RANGE_RAM);
++	else if (strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) == 0)
++		elf_info.kern_paddr_start = base;
++	else if (strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) == 0)
++		elf_info.kern_size = base + length - elf_info.kern_paddr_start;
+ 
+ 	return 0;
+ }
+@@ -115,6 +152,65 @@ static int crash_get_memory_ranges(void)
+ 	dbgprint_mem_range("Coredump memory ranges",
+ 			   crash_memory_rgns.ranges, crash_memory_rgns.size);
+ 
++	/*
++	 * For additional kernel code/data segment.
++	 * kern_paddr_start/kern_size are determined in iomem_range_callback
++	 */
++	elf_info.kern_vaddr_start = get_kernel_sym("_text");
++	if (!elf_info.kern_vaddr_start)
++		elf_info.kern_vaddr_start = UINT64_MAX;
++
++	return 0;
++}
++
++/*
++ * load_crashdump_segments() - load the elf core header
++ * @info: kexec info structure
++ *
++ * This function creates and loads an additional segment of elf core header
++ : which is used to construct /proc/vmcore on crash dump kernel.
++ *
++ * Return 0 in case of success and -1 in case of error.
++ */
++
++int load_crashdump_segments(struct kexec_info *info)
++{
++	unsigned long elfcorehdr;
++	unsigned long bufsz;
++	void *buf;
++	int err;
++
++	/*
++	 * First fetch all the memory (RAM) ranges that we are going to
++	 * pass to the crash dump kernel during panic.
++	 */
++
++	err = crash_get_memory_ranges();
++
++	if (err)
++		return err;
++
++	elf_info.page_offset = get_kernel_page_offset();
++	dbgprintf("%s: page_offset:   %016llx\n", __func__,
++			elf_info.page_offset);
++
++	err = crash_create_elf64_headers(info, &elf_info,
++			crash_memory_rgns.ranges, crash_memory_rgns.size,
++			&buf, &bufsz, ELF_CORE_HEADER_ALIGN);
++
++	if (err)
++		return err;
++
++	elfcorehdr = add_buffer_phys_virt(info, buf, bufsz, bufsz, 0,
++		crash_reserved_mem.start, crash_reserved_mem.end,
++		-1, 0);
++
++	elfcorehdr_mem.start = elfcorehdr;
++	elfcorehdr_mem.end = elfcorehdr + bufsz - 1;
++
++	dbgprintf("%s: elfcorehdr 0x%llx-0x%llx\n", __func__,
++			elfcorehdr_mem.start, elfcorehdr_mem.end);
++
+ 	return 0;
+ }
+ 
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index 07a0ed0..da75a2d 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -18,5 +18,8 @@
+ 
+ extern struct memory_ranges usablemem_rgns;
+ extern struct memory_range crash_reserved_mem;
++extern struct memory_range elfcorehdr_mem;
++
++extern int load_crashdump_segments(struct kexec_info *info);
+ 
+ #endif /* CRASHDUMP_ARM64_H */
+diff --git a/kexec/arch/arm64/iomem.h b/kexec/arch/arm64/iomem.h
+index 20cda87..d4864bb 100644
+--- a/kexec/arch/arm64/iomem.h
++++ b/kexec/arch/arm64/iomem.h
+@@ -2,6 +2,8 @@
+ #define IOMEM_H
+ 
+ #define SYSTEM_RAM		"System RAM\n"
++#define KERNEL_CODE		"Kernel code\n"
++#define KERNEL_DATA		"Kernel data\n"
+ #define CRASH_KERNEL		"Crash kernel\n"
+ #define IOMEM_RESERVED		"reserved\n"
+ 
+diff --git a/kexec/arch/arm64/kexec-elf-arm64.c b/kexec/arch/arm64/kexec-elf-arm64.c
+index daf8bf0..c70a37a 100644
+--- a/kexec/arch/arm64/kexec-elf-arm64.c
++++ b/kexec/arch/arm64/kexec-elf-arm64.c
+@@ -119,6 +119,16 @@ int elf_arm64_load(int argc, char **argv, const char *kernel_buf,
+ 	dbgprintf("%s: PE format:      %s\n", __func__,
+ 		(arm64_header_check_pe_sig(header) ? "yes" : "no"));
+ 
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		/* create and initialize elf core header segment */
++		result = load_crashdump_segments(info);
++		if (result) {
++			dbgprintf("%s: Creating eflcorehdr failed.\n",
++								__func__);
++			goto exit;
++		}
++	}
++
+ 	/* load the kernel */
+ 	result = elf_exec_load(&ehdr, info);
  
 -- 
 2.11.1
