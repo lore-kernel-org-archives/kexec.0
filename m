@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x233.google.com ([2607:f8b0:400e:c05::233])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1coUK1-0005zZ-JK
- for kexec@lists.infradead.org; Thu, 16 Mar 2017 12:16:08 +0000
-Received: by mail-pg0-x233.google.com with SMTP id 141so24418737pgd.1
- for <kexec@lists.infradead.org>; Thu, 16 Mar 2017 05:15:39 -0700 (PDT)
-Date: Thu, 16 Mar 2017 12:15:32 +0000
-From: Matt Fleming <matt@codeblueprint.co.uk>
-Subject: Re: kexec regression since 4.9 caused by efi
-Message-ID: <20170316121532.GE6261@codeblueprint.co.uk>
-References: <20170308201616.GC8598@vader>
- <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
- <20170309095408.GA17883@vader>
- <CAKv+Gu-gRmt=Vq=QCcT5ETY9DwLzJe0f4gHR_9sFMKX7-vK++w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-gRmt=Vq=QCcT5ETY9DwLzJe0f4gHR_9sFMKX7-vK++w@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1coUKU-0003RV-SV
+ for kexec@lists.infradead.org; Thu, 16 Mar 2017 12:16:31 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH] kexec: Update vmcoreinfo after crash happened
+Date: Thu, 16 Mar 2017 20:16:27 +0800
+Message-Id: <1489666587-24103-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +15,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Omar Sandoval <osandov@osandov.com>, Dave Young <dyoung@redhat.com>, kernel-team@fb.com
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Xunlei Pang <xlpang@redhat.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Eric Biederman <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>
 
-On Thu, 09 Mar, at 12:53:36PM, Ard Biesheuvel wrote:
-> 
-> Hi Omar,
-> 
-> Thanks for tracking this down.
-> 
-> I wonder if this is an unintended side effect of the way we repurpose
-> the EFI_MEMORY_RUNTIME attribute in efi_arch_mem_reserve(). AFAIUI,
-> splitting memory map entries should only be necessary for regions that
-> are not runtime memory regions to begin with, and so whether their
-> virtual mapping address makes sense or not should be irrelevant.
-> 
-> Perhaps this only illustrates my lack of understanding of the x86 way
-> of doing this, so perhaps Matt can shed some light on this?
+Currently vmcoreinfo data is updated at boot time subsys_initcall(),
+it has the risk of being modified by some wrong code during system
+is running.
 
-Sorry for the delay.
+As a result, vmcore dumped will contain the wrong vmcoreinfo. Later on,
+when using "crash" utility to parse this vmcore, we probably will get
+"Segmentation fault".
 
-Yes, Ard is correct. It's not necessary to split/reserve memory
-regions that already have the EFI_MEMORY_RUNTIME attribute.
+Based on the fact that the value of each vmcoreinfo stays invariable
+once kernel boots up, we safely move all the vmcoreinfo operations into
+crash_save_vmcoreinfo() which is called after crash happened. In this
+way, vmcoreinfo data correctness is always guaranteed.
+
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+ kernel/kexec_core.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index bfe62d5..1bfdd96 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1367,12 +1367,6 @@ static void update_vmcoreinfo_note(void)
+ 	final_note(buf);
+ }
+ 
+-void crash_save_vmcoreinfo(void)
+-{
+-	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+-	update_vmcoreinfo_note();
+-}
+-
+ void vmcoreinfo_append_str(const char *fmt, ...)
+ {
+ 	va_list args;
+@@ -1402,7 +1396,7 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ 	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
+ }
+ 
+-static int __init crash_save_vmcoreinfo_init(void)
++void crash_save_vmcoreinfo(void)
+ {
+ 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+ 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+@@ -1474,13 +1468,11 @@ static int __init crash_save_vmcoreinfo_init(void)
+ #endif
+ 
+ 	arch_crash_save_vmcoreinfo();
+-	update_vmcoreinfo_note();
++	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+ 
+-	return 0;
++	update_vmcoreinfo_note();
+ }
+ 
+-subsys_initcall(crash_save_vmcoreinfo_init);
+-
+ /*
+  * Move into place and start executing a preloaded standalone
+  * executable.  If nothing was preloaded return an error.
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
