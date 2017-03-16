@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mga14.intel.com ([192.55.52.115])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1coVby-0005TK-PY
- for kexec@lists.infradead.org; Thu, 16 Mar 2017 13:38:42 +0000
-Subject: Re: [PATCH] kexec: Update vmcoreinfo after crash happened
-References: <1489666587-24103-1-git-send-email-xlpang@redhat.com>
- <20170316122730.GB23625@x1> <58CA86D2.70800@redhat.com>
- <20170316131809.GC23625@x1>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <58CA95EA.1040807@redhat.com>
-Date: Thu, 16 Mar 2017 21:40:58 +0800
-MIME-Version: 1.0
-In-Reply-To: <20170316131809.GC23625@x1>
+ id 1coW8j-0007Aa-Dq
+ for kexec@lists.infradead.org; Thu, 16 Mar 2017 14:12:31 +0000
+From: Jussi Kukkonen <jussi.kukkonen@intel.com>
+Subject: [PATCH][kexec-tools] ppc: Fix format warning with die()
+Date: Thu, 16 Mar 2017 16:11:18 +0200
+Message-Id: <20170316141118.22286-1-jussi.kukkonen@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,104 +15,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, xlpang@redhat.com
-Cc: Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
+To: kexec@lists.infradead.org
+Cc: Jussi Kukkonen <jussi.kukkonen@intel.com>
 
-On 03/16/2017 at 09:18 PM, Baoquan He wrote:
-> On 03/16/17 at 08:36pm, Xunlei Pang wrote:
->> On 03/16/2017 at 08:27 PM, Baoquan He wrote:
->>> Hi Xunlei,
->>>
->>> Did you really see this ever happened? Because the vmcore size estimate
->>> feature, namely --mem-usage option of makedumpfile, depends on the
->>> vmcoreinfo in 1st kernel, your change will break it.
->> Hi Baoquan,
->>
->> I can reproduce it using a kernel module which modifies the vmcoreinfo,
->> so it's a problem can actually happen.
->>
->>> If not, it could be not good to change that.
->> That's a good point, then I guess we can keep the crash_save_vmcoreinfo_init(),
->> and store again all the vmcoreinfo after crash. What do you think?
-> Well, then it will make makedumpfile segfault happen too when execute
-> below command in 1st kernel if it existed:
-> 	makedumpfile --mem-usage /proc/kcore
+Enable compiling kexec-tools for ppc with -Werror=format-security.
 
-Yes, if the initial vmcoreinfo data was modified before "makedumpfile --mem-usage", it might happen,
-after all the system is going something wrong. And that's why we deploy kdump service at the very
-beginning when the system has a low possibility of going wrong.
-
-But we have to guarantee kdump vmcore can be generated correctly as possible as it can.
-
->
-> So we still need to face that problem and need fix it. vmcoreinfo_note
-> is in kernel data area, how does module intrude into this area? And can
-> we fix the module code?
->
-
-Bugs always exist in products, we can't know what will happen and fix all the errors,
-that's why we need kdump.
-
-I think the following update should guarantee the correct vmcoreinfo for kdump.
-
+Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
 ---
- kernel/kexec_core.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ kexec/arch/ppc/kexec-elf-ppc.c    | 2 +-
+ kexec/arch/ppc/kexec-uImage-ppc.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index bfe62d5..0f7b328 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -1367,12 +1367,6 @@ static void update_vmcoreinfo_note(void)
-     final_note(buf);
+diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
+index 291f06d..ad43ad1 100644
+--- a/kexec/arch/ppc/kexec-elf-ppc.c
++++ b/kexec/arch/ppc/kexec-elf-ppc.c
+@@ -453,7 +453,7 @@ out:
+ 	if (!tmp_cmdline)
+ 		free(command_line);
+ 	if (error_msg)
+-		die(error_msg);
++		die("%s", error_msg);
+ 
+ 	return result;
+ }
+diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+index 5eec6e4..e8f7adc 100644
+--- a/kexec/arch/ppc/kexec-uImage-ppc.c
++++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+@@ -306,7 +306,7 @@ out:
+ 	if (!tmp_cmdline)
+ 		free(command_line);
+ 	if (error_msg)
+-		die(error_msg);
++		die("%s", error_msg);
+ 	return ret;
  }
  
--void crash_save_vmcoreinfo(void)
--{
--    vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
--    update_vmcoreinfo_note();
--}
--
- void vmcoreinfo_append_str(const char *fmt, ...)
- {
-     va_list args;
-@@ -1402,7 +1396,7 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
-     return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
- }
- 
--static int __init crash_save_vmcoreinfo_init(void)
-+static void do_crash_save_vmcoreinfo_init(void)
- {
-     VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-     VMCOREINFO_PAGESIZE(PAGE_SIZE);
-@@ -1474,6 +1468,20 @@ static int __init crash_save_vmcoreinfo_init(void)
- #endif
- 
-     arch_crash_save_vmcoreinfo();
-+}
-+
-+void crash_save_vmcoreinfo(void)
-+{
-+    /* Save again to protect vmcoreinfo from being modified */
-+    vmcoreinfo_size = 0;
-+    do_crash_save_vmcoreinfo_init();
-+    vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
-+    update_vmcoreinfo_note();
-+}
-+
-+static int __init crash_save_vmcoreinfo_init(void)
-+{
-+    do_crash_save_vmcoreinfo_init();
-     update_vmcoreinfo_note();
- 
-     return 0;
 -- 
-1.8.3.1
+2.11.0
+
 
 _______________________________________________
 kexec mailing list
