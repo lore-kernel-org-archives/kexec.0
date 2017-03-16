@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x22f.google.com ([2607:f8b0:400e:c00::22f])
+Received: from aserp1040.oracle.com ([141.146.126.69])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1coJAf-0003AD-81
- for kexec@lists.infradead.org; Thu, 16 Mar 2017 00:21:39 +0000
-Received: by mail-pf0-x22f.google.com with SMTP id v190so15853403pfb.1
- for <kexec@lists.infradead.org>; Wed, 15 Mar 2017 17:21:16 -0700 (PDT)
-Date: Thu, 16 Mar 2017 09:23:48 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v33 00/14] add kdump support
-Message-ID: <20170316002347.GA11935@linaro.org>
-References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
- <1489578078.4195.113.camel@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1489578078.4195.113.camel@infradead.org>
+ id 1coSP1-0007kH-Dm
+ for kexec@lists.infradead.org; Thu, 16 Mar 2017 10:13:05 +0000
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH] crashdump: Remove stray get_crashkernel_region() declaration
+Date: Thu, 16 Mar 2017 11:12:24 +0100
+Message-Id: <1489659144-14545-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,46 +15,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-T24gV2VkLCBNYXIgMTUsIDIwMTcgYXQgMTE6NDE6MThBTSArMDAwMCwgRGF2aWQgV29vZGhvdXNl
-IHdyb3RlOgo+IE9uIFdlZCwgMjAxNy0wMy0xNSBhdCAxODo1NiArMDkwMCwgQUtBU0hJIFRha2Fo
-aXJvIHdyb3RlOgo+ID4gVGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBrZHVtcCBzdXBwb3J0IG9uIGFy
-bTY0Lgo+ID4gCj4gPiBUbyBsb2FkIGEgY3Jhc2gtZHVtcCBrZXJuZWwgdG8gdGhlIHN5c3RlbXMs
-IGEgc2VyaWVzIG9mIHBhdGNoZXMgdG8KPiA+IGtleGVjLXRvb2xzWzFdIGFyZSBhbHNvIG5lZWRl
-ZC4gUGxlYXNlIHVzZSB0aGUgbGF0ZXN0IG9uZSwgdjYgWzJdLgo+ID4gRm9yIHlvdXIgY29udmlu
-aWVuY2UsIHlvdSBjYW4gcGljayB0aGVtIHVwIGZyb206Cj4gPiDCoMKgIGh0dHBzOi8vZ2l0Lmxp
-bmFyby5vcmcvcGVvcGxlL3Rha2FoaXJvLmFrYXNoaS9saW51eC1hYXJjaDY0LmdpdMKgYXJtNjQv
-a2R1bXAKPiA+IMKgwqAgaHR0cHM6Ly9naXQubGluYXJvLm9yZy9wZW9wbGUvdGFrYWhpcm8uYWth
-c2hpL2tleGVjLXRvb2xzLmdpdMKgYXJtNjQva2R1bXAKPiA+IAo+ID4gVG8gZXhhbWluZSB2bWNv
-cmUgKC9wcm9jL3ZtY29yZSkgb24gYSBjcmFzaC1kdW1wIGtlcm5lbCwgeW91IGNhbiB1c2UKPiA+
-IMKgIC0gY3Jhc2ggdXRpbGl0eSAodjcuMS44IG9yIGxhdGVyKSBbM10KPiA+IAo+ID4gSSB0ZXN0
-ZWQgdGhpcyBwYXRjaHNldCBvbiBmYXN0IG1vZGVsIGFuZCBoaWtleS4KPiAKPiBQbGVhc2UgYnVp
-bGQgd2l0aCBDT05GSUdfREVCVUdfU0VDVElPTl9NSVNNQVRDSD15Lgo+IAo+IEl0IG1pZ2h0IGJl
-IGJlY2F1c2UgSSdtIHVzaW5nIHlvdXIgdjMyIHBhdGNoc2V0LCBoYWNrZWQgbGF0ZSBhdCBuaWdo
-dAo+IHRvIGFwcGx5IHRvIGEgNC45IGtlcm5lbCwgYnV0IEkgc2VlIHRoaXM6Cj4gCj4gV0FSTklO
-Rzogdm1saW51eC5vKC50ZXh0KzB4MTAyNDApOiBTZWN0aW9uIG1pc21hdGNoIGluIHJlZmVyZW5j
-ZSBmcm9tIHRoZSBmdW5jdGlvbiBhcmNoX2tleGVjX3Byb3RlY3RfY3Jhc2hrcmVzKCkgdG8gdGhl
-IGZ1bmN0aW9uIC5pbml0LnRleHQ6Y3JlYXRlX3BnZF9tYXBwaW5nKCkKPiBUaGUgZnVuY3Rpb24g
-YXJjaF9rZXhlY19wcm90ZWN0X2NyYXNoa3JlcygpIHJlZmVyZW5jZXMKPiB0aGUgZnVuY3Rpb24g
-X19pbml0IGNyZWF0ZV9wZ2RfbWFwcGluZygpLgo+IFRoaXMgaXMgb2Z0ZW4gYmVjYXVzZSBhcmNo
-X2tleGVjX3Byb3RlY3RfY3Jhc2hrcmVzIGxhY2tzIGEgX19pbml0wqAKPiBhbm5vdGF0aW9uIG9y
-IHRoZSBhbm5vdGF0aW9uIG9mIGNyZWF0ZV9wZ2RfbWFwcGluZyBpcyB3cm9uZy4KPiAKPiBXQVJO
-SU5HOiB2bWxpbnV4Lm8oLnRleHQrMHgxMDJiMCk6IFNlY3Rpb24gbWlzbWF0Y2ggaW4gcmVmZXJl
-bmNlIGZyb20gdGhlIGZ1bmN0aW9uIGFyY2hfa2V4ZWNfdW5wcm90ZWN0X2NyYXNoa3JlcygpIHRv
-IHRoZSBmdW5jdGlvbiAuaW5pdC50ZXh0OmNyZWF0ZV9wZ2RfbWFwcGluZygpCj4gVGhlIGZ1bmN0
-aW9uIGFyY2hfa2V4ZWNfdW5wcm90ZWN0X2NyYXNoa3JlcygpIHJlZmVyZW5jZXMKPiB0aGUgZnVu
-Y3Rpb24gX19pbml0IGNyZWF0ZV9wZ2RfbWFwcGluZygpLgo+IFRoaXMgaXMgb2Z0ZW4gYmVjYXVz
-ZSBhcmNoX2tleGVjX3VucHJvdGVjdF9jcmFzaGtyZXMgbGFja3MgYSBfX2luaXTCoAo+IGFubm90
-YXRpb24gb3IgdGhlIGFubm90YXRpb24gb2YgY3JlYXRlX3BnZF9tYXBwaW5nIGlzIHdyb25nLgoK
-SSBkb3VibGUtY2hlY2tlZCBidXQgc2F3IG5vIHdhcm5pbmdzIGxpa2UgdGhlc2UgbmVpdGhlciBm
-b3IgdjMyIG5vciB2MzMuCkknbSBhZnJhaWQgdGhhdCB5b3UgbWlnaHQgaGF2ZSBkb25lIHNvbWV0
-aGluZyB3cm9uZyBpbiBiYWNrcG9ydGluZywKcGFydGljdWxhcmx5IHBhdGNoIzUuCgpUaGFua3Ms
-Ci1UYWthaGlybyBBS0FTSEkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+---
+ kexec/crashdump.h |    1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 96219a8..86e1ef2 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -1,7 +1,6 @@
+ #ifndef CRASHDUMP_H
+ #define CRASHDUMP_H
+ 
+-int get_crashkernel_region(uint64_t *start, uint64_t *end);
+ extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
+ extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
+ extern int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len);
+-- 
+1.7.10.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
