@@ -1,12 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga14.intel.com ([192.55.52.115])
+Received: from mail-pg0-x22c.google.com ([2607:f8b0:400e:c05::22c])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1coW8j-0007Aa-Dq
- for kexec@lists.infradead.org; Thu, 16 Mar 2017 14:12:31 +0000
-From: Jussi Kukkonen <jussi.kukkonen@intel.com>
-Subject: [PATCH][kexec-tools] ppc: Fix format warning with die()
-Date: Thu, 16 Mar 2017 16:11:18 +0200
-Message-Id: <20170316141118.22286-1-jussi.kukkonen@intel.com>
+ id 1coZZB-0001Gl-A2
+ for kexec@lists.infradead.org; Thu, 16 Mar 2017 17:52:02 +0000
+Received: by mail-pg0-x22c.google.com with SMTP id n190so28670960pga.0
+ for <kexec@lists.infradead.org>; Thu, 16 Mar 2017 10:51:40 -0700 (PDT)
+Date: Thu, 16 Mar 2017 10:50:48 -0700
+From: Omar Sandoval <osandov@osandov.com>
+Subject: Re: kexec regression since 4.9 caused by efi
+Message-ID: <20170316175048.GA25230@vader.DHCP.thefacebook.com>
+References: <20170308201616.GC8598@vader>
+ <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
+ <20170309095408.GA17883@vader>
+ <20170313073748.GA6332@dhcp-128-65.nay.redhat.com>
+ <20170316124132.GF6261@codeblueprint.co.uk>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170316124132.GF6261@codeblueprint.co.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,51 +25,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Jussi Kukkonen <jussi.kukkonen@intel.com>
+To: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@fb.com, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
 
-Enable compiling kexec-tools for ppc with -Werror=format-security.
+On Thu, Mar 16, 2017 at 12:41:32PM +0000, Matt Fleming wrote:
+> On Mon, 13 Mar, at 03:37:48PM, Dave Young wrote:
+> > 
+> > Omar, could you try below patch? Looking at the efi_mem_desc_lookup, it is not
+> > correct to be used in efi_arch_mem_reserve, if it passed your test, I
+> > can rewrite patch log with more background and send it out:
+> > 
+> >         for_each_efi_memory_desc(md) {
+> > 		[snip]
+> >                 if (!(md->attribute & EFI_MEMORY_RUNTIME) &&
+> >                     md->type != EFI_BOOT_SERVICES_DATA &&
+> >                     md->type != EFI_RUNTIME_SERVICES_DATA) {
+> >                         continue;
+> >                 }
+> > 
+> > In above code, it meant to get a md of EFI_MEMORY_RUNTIME of either boot
+> > data or runtime data, this is wrong for efi_mem_reserve, because we are
+> > reserving boot data which has no EFI_MEMORY_RUNTIME attribute at the
+> > running time. Just is happened to work and we did not capture the error.
+> 
+> Wouldn't something like this be simpler?
+> 
+> ---
+> 
+> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+> index 30031d5293c4..cdfe8c628959 100644
+> --- a/arch/x86/platform/efi/quirks.c
+> +++ b/arch/x86/platform/efi/quirks.c
+> @@ -201,6 +201,10 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+>  		return;
+>  	}
+>  
+> +	/* No need to reserve regions that will never be freed. */
+> +	if (md.attribute & EFI_MEMORY_RUNTIME)
+> +		return;
+> +
+>  	size += addr % EFI_PAGE_SIZE;
+>  	size = round_up(size, EFI_PAGE_SIZE);
+>  	addr = round_down(addr, EFI_PAGE_SIZE);
 
-Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
----
- kexec/arch/ppc/kexec-elf-ppc.c    | 2 +-
- kexec/arch/ppc/kexec-uImage-ppc.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+This works for me.
 
-diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index 291f06d..ad43ad1 100644
---- a/kexec/arch/ppc/kexec-elf-ppc.c
-+++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -453,7 +453,7 @@ out:
- 	if (!tmp_cmdline)
- 		free(command_line);
- 	if (error_msg)
--		die(error_msg);
-+		die("%s", error_msg);
- 
- 	return result;
- }
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 5eec6e4..e8f7adc 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -306,7 +306,7 @@ out:
- 	if (!tmp_cmdline)
- 		free(command_line);
- 	if (error_msg)
--		die(error_msg);
-+		die("%s", error_msg);
- 	return ret;
- }
- 
--- 
-2.11.0
-
+Reported-and-tested-by: Omar Sandoval <osandov@fb.com>
 
 _______________________________________________
 kexec mailing list
