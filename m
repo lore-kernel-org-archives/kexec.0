@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v33 00/14] add kdump support
-References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
- <1489750991.17202.40.camel@infradead.org>
- <1489759373.17202.44.camel@infradead.org> <20170317153358.GI5940@leverpostej>
- <1489765628.17202.59.camel@infradead.org> <20170317162421.GK5940@leverpostej>
- <e75aaa3f-0d87-2523-d7d7-cef56e5bd480@arm.com>
-From: Marc Zyngier <marc.zyngier@arm.com>
-Message-ID: <372d44fe-2d78-596a-55c6-307cb36d60a2@arm.com>
-Date: Fri, 17 Mar 2017 17:10:26 +0000
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1covfW-0007eH-CT
+ for kexec@lists.infradead.org; Fri, 17 Mar 2017 17:28:05 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1489722318-13695-1-git-send-email-xlpang@redhat.com>
+Date: Fri, 17 Mar 2017 12:22:22 -0500
+In-Reply-To: <1489722318-13695-1-git-send-email-xlpang@redhat.com> (Xunlei
+ Pang's message of "Fri, 17 Mar 2017 11:45:18 +0800")
+Message-ID: <874lyrhl81.fsf@xmission.com>
 MIME-Version: 1.0
-In-Reply-To: <e75aaa3f-0d87-2523-d7d7-cef56e5bd480@arm.com>
+Subject: Re: [PATCH v2] kexec: Introduce vmcoreinfo signature verification
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,96 +23,157 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, catalin.marinas@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Xunlei Pang <xlpang@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
 
-On 17/03/17 16:59, Marc Zyngier wrote:
-> On 17/03/17 16:24, Mark Rutland wrote:
->> On Fri, Mar 17, 2017 at 03:47:08PM +0000, David Woodhouse wrote:
->>> On Fri, 2017-03-17 at 15:33 +0000, Mark Rutland wrote:
->>> No, in this case the CPUs *were* offlined correctly, or at least "as
->>> designed", by smp_send_crash_stop(). And if that hadn't worked, as
->>> verified by *its* synchronisation method based on the atomic_t
->>> waiting_for_crash_ipi, then *it* would have complained for itself:
->>>
->>> 	if (atomic_read(&waiting_for_crash_ipi) > 0)
->>> 		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
->>> 			   cpumask_pr_args(cpu_online_mask));
->>>
->>> It's just that smp_send_crash_stop() (or more specifically
->>> ipi_cpu_crash_stop()) doesn't touch the online cpu mask. Unlike the
->>> ARM32 equivalent function machien_crash_nonpanic_core(), which does.
->>>
->>> It wasn't clear if that was *intentional*, to allow the original
->>> contents of the online mask before the crash to be seen in the
->>> resulting vmcore... or purely an accident. 
->>
->> Looking at this, there's a larger mess.
->>
->> The waiting_for_crash_ipi dance only tells us if CPUs have taken the
->> IPI, not wether they've been offlined (i.e. actually left the kernel).
->> We need something closer to the usual cpu_{disable,die,kill} dance,
->> clearing online as appropriate.
->>
->> If CPUs haven't left the kernel, we still need to warn about that.
->>
->>> FWIW if I trigger a crash on CPU 1 my kdump (still 4.9.8+v32) doesn't work.
->>> I end up booting the kdump kernel on CPU#1 and then it gets distinctly unhappy...
->>>
->>> [    0.000000] Booting Linux on physical CPU 0x1
->>> ...
->>> [    0.017125] Detected PIPT I-cache on CPU1
->>> [    0.017138] GICv3: CPU1: found redistributor 0 region 0:0x00000000f0280000
->>> [    0.017147] CPU1: Booted secondary processor [411fd073]
->>> [    0.017339] Detected PIPT I-cache on CPU2
->>> [    0.017347] GICv3: CPU2: found redistributor 2 region 0:0x00000000f02c0000
->>> [    0.017354] CPU2: Booted secondary processor [411fd073]
->>> [    0.017537] Detected PIPT I-cache on CPU3
->>> [    0.017545] GICv3: CPU3: found redistributor 3 region 0:0x00000000f02e0000
->>> [    0.017551] CPU3: Booted secondary processor [411fd073]
->>> [    0.017576] Brought up 4 CPUs
->>> [    0.017587] SMP: Total of 4 processors activated.
->>> ...
->>> [   31.745809] INFO: rcu_sched detected stalls on CPUs/tasks:
->>> [   31.751299] 	1-...: (30 GPs behind) idle=c90/0/0 softirq=0/0 fqs=0 
->>> [   31.757557] 	2-...: (30 GPs behind) idle=608/0/0 softirq=0/0 fqs=0 
->>> [   31.763814] 	3-...: (30 GPs behind) idle=604/0/0 softirq=0/0 fqs=0 
->>> [   31.770069] 	(detected by 0, t=5252 jiffies, g=-270, c=-271, q=0)
->>> [   31.776161] Task dump for CPU 1:
->>> [   31.779381] swapper/1       R  running task        0     0      1 0x00000080
->>> [   31.786446] Task dump for CPU 2:
->>> [   31.789666] swapper/2       R  running task        0     0      1 0x00000080
->>> [   31.796725] Task dump for CPU 3:
->>> [   31.799945] swapper/3       R  running task        0     0      1 0x00000080
->>>
->>> Is some of that platform-specific?
->>
->> That sounds like timer interrupts aren't being taken.
->>
->> Given that the CPUs have come up, my suspicion would be that the GIC's
->> been left in some odd state, that the kdump kernel hasn't managed to
->> recover from.
->>
->> Marc may have an idea.
-> 
-> I thought kdump was UP only? Anyway, this doesn't look too good.
-> 
-> It would be interesting to find out whether we're still taking
-> interrupts. Also, being able to reproduce this on mainline would be useful.
-> 
-> I wonder if we don't have a bug when booting on something other than
-> CPU#0, possibly on a GICv3 platform... I'll give it a go.
+Xunlei Pang <xlpang@redhat.com> writes:
 
-Went ahead and tried a couple of kexecs with various CPUs disabled in
-order to force kexec not to boot on CPU#0, and the VM did boot just fine.
+> Currently vmcoreinfo data is updated at boot time subsys_initcall(),
+> it has the risk of being modified by some wrong code during system
+> is running.
+>
+> As a result, vmcore dumped may contain the wrong vmcoreinfo. Later on,
+> when using "crash" or "makedumpfile"(etc) utility to parse this vmcore,
+> we probably will get "Segmentation fault" or other unexpected/confusing
+> errors.
 
-So I'd really appreciate a mainline reproducer.
+If this is a real concern and the previous discussion sounds like it is
+part of what we need to do is move the variable vmcoreinfo_note out
+of the kernel's .bss section.  And modify the code to regenerate
+and keep this information in something like the control page.
 
-Thanks,
+Definitely something like this needs a page all to itself, and ideally
+far away from any other kernel data structures.  I clearly was not
+watching closely the data someone decided to keep this silly thing
+in the kernel's .bss section.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> As vmcoreinfo is the most fundamental information for vmcore, we better
+> double check its correctness. Here we generate a signature(using crc32)
+> after it is saved, then verify it in crash_save_vmcoreinfo() to see if
+> the signature was broken, if so we have to re-save the vmcoreinfo data
+> to get the correct vmcoreinfo for kdump as possible as we can.
+
+Sigh.  We already have a sha256 that is supposed to cover this sort of
+thing.  The bug rather is that apparently it isn't covering this data.
+That sounds like what we should be fixing.
+
+Please let's not invent new mechanisms we have to maintain.  Let's
+reorganize this so this static data is protected like all other static
+data in the kexec-on-panic path.  We have good mechanims and good
+strategies for avoiding and detecting corruption we just need to use
+them.
+
+Eric
+
+
+
+> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+> ---
+> v1->v2:
+> - Keep crash_save_vmcoreinfo_init() because "makedumpfile --mem-usage"
+>   uses the information.
+> - Add crc32 verification for vmcoreinfo, re-save when failure.
+>
+>  arch/Kconfig        |  1 +
+>  kernel/kexec_core.c | 43 +++++++++++++++++++++++++++++++++++--------
+>  2 files changed, 36 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c4d6833..66eb296 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -4,6 +4,7 @@
+>  
+>  config KEXEC_CORE
+>  	bool
+> +	select CRC32
+>  
+>  config HAVE_IMA_KEXEC
+>  	bool
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index bfe62d5..012acbe 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/syscore_ops.h>
+>  #include <linux/compiler.h>
+>  #include <linux/hugetlb.h>
+> +#include <linux/crc32.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -53,9 +54,10 @@
+>  
+>  /* vmcoreinfo stuff */
+>  static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+> -u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+> +static u32 vmcoreinfo_sig;
+>  size_t vmcoreinfo_size;
+>  size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
+> +u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+>  
+>  /* Flag to indicate we are going to kexec a new kernel */
+>  bool kexec_in_progress = false;
+> @@ -1367,12 +1369,6 @@ static void update_vmcoreinfo_note(void)
+>  	final_note(buf);
+>  }
+>  
+> -void crash_save_vmcoreinfo(void)
+> -{
+> -	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+> -	update_vmcoreinfo_note();
+> -}
+> -
+>  void vmcoreinfo_append_str(const char *fmt, ...)
+>  {
+>  	va_list args;
+> @@ -1402,7 +1398,7 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>  	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
+>  }
+>  
+> -static int __init crash_save_vmcoreinfo_init(void)
+> +static void do_crash_save_vmcoreinfo_init(void)
+>  {
+>  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+>  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+> @@ -1474,6 +1470,37 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  #endif
+>  
+>  	arch_crash_save_vmcoreinfo();
+> +}
+> +
+> +static u32 crash_calc_vmcoreinfo_sig(void)
+> +{
+> +	return crc32(~0, vmcoreinfo_data, vmcoreinfo_size);
+> +}
+> +
+> +static bool crash_verify_vmcoreinfo(void)
+> +{
+> +	if (crash_calc_vmcoreinfo_sig() == vmcoreinfo_sig)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +void crash_save_vmcoreinfo(void)
+> +{
+> +	/* Re-save if verification fails */
+> +	if (!crash_verify_vmcoreinfo()) {
+> +		vmcoreinfo_size = 0;
+> +		do_crash_save_vmcoreinfo_init();
+> +	}
+> +
+> +	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+> +	update_vmcoreinfo_note();
+> +}
+> +
+> +static int __init crash_save_vmcoreinfo_init(void)
+> +{
+> +	do_crash_save_vmcoreinfo_init();
+> +	vmcoreinfo_sig = crash_calc_vmcoreinfo_sig();
+>  	update_vmcoreinfo_note();
+>  
+>  	return 0;
 
 _______________________________________________
 kexec mailing list
