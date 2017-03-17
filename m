@@ -1,14 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1489750355.17202.34.camel@infradead.org>
-Subject: Re: [PATCH v33 04/14] arm64: kdump: reserve memory for crash dump
- kernel
+Message-ID: <1489759373.17202.44.camel@infradead.org>
+Subject: Re: [PATCH v33 00/14] add kdump support
 From: David Woodhouse <dwmw2@infradead.org>
-In-Reply-To: <20170317113116.GB11935@linaro.org>
+In-Reply-To: <1489750991.17202.40.camel@infradead.org>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
- <20170315095941.25119-2-takahiro.akashi@linaro.org>
- <1489747566.17202.19.camel@infradead.org>
- <20170317113116.GB11935@linaro.org>
-Date: Fri, 17 Mar 2017 11:32:35 +0000
+ <1489750991.17202.40.camel@infradead.org>
+Date: Fri, 17 Mar 2017 14:02:53 +0000
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,30 +15,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============6757692969321803009=="
+Content-Type: multipart/mixed; boundary="===============5347061290467662137=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: mark.rutland@arm.com, Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
 
---===============6757692969321803009==
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-TN7xkqs84s0BDPQwCsb9"
+--===============5347061290467662137==
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-3+mddt2Gs5UpxKCOsQUb"
 
 
---=-TN7xkqs84s0BDPQwCsb9
+--=-3+mddt2Gs5UpxKCOsQUb
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2017-03-17 at 20:31 +0900, AKASHI Takahiro wrote:
+On Fri, 2017-03-17 at 11:43 +0000, David Woodhouse wrote:
 >=20
-> Yes and no.
-> This notation is consistent with other places like mem_init()
-> in mm/init.c.]
+> Is this one going to be be my fault too?
 
-Well, perhaps we should fix those too then. But we certainly shouldn't
-add *more* errors.
---=-TN7xkqs84s0BDPQwCsb9
+Looks like it isn't my fault. In ipi_cpu_crash_stop() we don't modify
+the online mask. Which is reasonable enough if we want to preserve its
+original contents from before the crash, but it does make that
+WARN_ON() in machine_kexec() a false positive.
+
+Btw, why is this a normal IPI and not something... less maskable?
+On x86 we use NMI for that...
+--=-3+mddt2Gs5UpxKCOsQUb
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -119,8 +119,8 @@ GeE6+vmbHDFFQ9Ealsti3jGCA9MwggPPAgEBMIGwMIGbMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
 R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0Eg
 TGltaXRlZDFBMD8GA1UEAxM4Q09NT0RPIFNIQS0yNTYgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFu
 ZCBTZWN1cmUgRW1haWwgQ0ECEGoLUFiVUy0EUE3iKBH+GjAwDQYJYIZIAWUDBAIBBQCgggHzMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDMxNzExMzIzNVowLwYJ
-KoZIhvcNAQkEMSIEIPYooomfU2zaHaVWdp1DoRbMkjSCPGUilY4FP+HdyTocMIHBBgkrBgEEAYI3
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDMxNzE0MDI1M1owLwYJ
+KoZIhvcNAQkEMSIEIBe4xdZm+aTnIVAEI5T2G27xMkUUOiqPuhP7MkDYKx0/MIHBBgkrBgEEAYI3
 EAQxgbMwgbAwgZsxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAO
 BgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01P
 RE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQ
@@ -128,18 +128,18 @@ WJVTLQRQTeIoEf4aMDCBwwYLKoZIhvcNAQkQAgsxgbOggbAwgZsxCzAJBgNVBAYTAkdCMRswGQYD
 VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
 TyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRp
 b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQWJVTLQRQTeIoEf4aMDANBgkqhkiG9w0BAQEFAASC
-AQCqTCG6OselyeluYFAwC2SBvG7x1dbUC/pIt7hR6WJ8eIDcLzvdO1FTYpLrD11QvznK2t5/2okl
-hklGvqRSTnTZ7ZTwLzojiTk78cjSOQk4dugyZxyX0Dpm7YlBR8fSkRn98Ie9Bh2d7lVwLiFr50qa
-7KsRy0RAnuit/Aq5Lxqwy7UxvH8Smf/MLP/Pbbe/IkbtiUoGVLqcKzL70l7J+vikT6aa2rDUYP1F
-MgC2YhKUEBnJfyULXjTAScSLj7hipD8sD4X6t+M21PG3QbSk99AtZRf5X1p84kKaSvRxTbtJWp4a
-nQ+TOvvFwlGkhso1H26n/hZJz/8rNzd7VrdqlAawAAAAAAAA
+AQAIB7Rb+LiK3oYFEZn/XwhyykqzFaOwg6kTv5T07z28DAs+udmhMkSkcr1GYkSqcbKhdqJQxCRL
+0XTECL+GLfrDotzbxgkRu4z2xXcRSV74owRHxT7gop+//5UnqcOxhLxWHNxeb01dR8tM6KohoSMg
+DPm1JvLyy8LP91Xw5jCzG2AcWp7zPxCJVT8KdMT6OqiX7Hm72pirSMm/knOlE31TuHfb1MTdTEIk
+283M+7yMuhehX3fKdkaMuCqhCrMEvFKg/VRybEAznWEj7bO9WFqlG1SXlC3fbU/rroZc3xkRMnSP
+o3ul54AoHcqcc+cdAd50xmoOnlX1A1iNyLfmS86kAAAAAAAA
 
 
---=-TN7xkqs84s0BDPQwCsb9--
+--=-3+mddt2Gs5UpxKCOsQUb--
 
 
 
---===============6757692969321803009==
+--===============5347061290467662137==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -150,6 +150,6 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============6757692969321803009==--
+--===============5347061290467662137==--
 
 
