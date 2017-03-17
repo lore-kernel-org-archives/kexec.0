@@ -1,10 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1489750991.17202.40.camel@infradead.org>
-Subject: Re: [PATCH v33 00/14] add kdump support
+Message-ID: <1489750355.17202.34.camel@infradead.org>
+Subject: Re: [PATCH v33 04/14] arm64: kdump: reserve memory for crash dump
+ kernel
 From: David Woodhouse <dwmw2@infradead.org>
-In-Reply-To: <20170315095656.24992-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20170317113116.GB11935@linaro.org>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
-Date: Fri, 17 Mar 2017 11:43:11 +0000
+ <20170315095941.25119-2-takahiro.akashi@linaro.org>
+ <1489747566.17202.19.camel@infradead.org>
+ <20170317113116.GB11935@linaro.org>
+Date: Fri, 17 Mar 2017 11:32:35 +0000
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -14,53 +18,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============5954873070318359211=="
+Content-Type: multipart/mixed; boundary="===============6757692969321803009=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: mark.rutland@arm.com, Pratyush Anand <panand@redhat.com>, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
 
---===============5954873070318359211==
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-6A3l6xfif8BchEyn/rZ1"
+--===============6757692969321803009==
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-TN7xkqs84s0BDPQwCsb9"
 
 
---=-6A3l6xfif8BchEyn/rZ1
+--=-TN7xkqs84s0BDPQwCsb9
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2017-03-15 at 18:56 +0900, AKASHI Takahiro wrote:
-> This patch series adds kdump support on arm64.
+On Fri, 2017-03-17 at 20:31 +0900, AKASHI Takahiro wrote:
 >=20
-> To load a crash-dump kernel to the systems, a series of patches to
-> kexec-tools[1] are also needed. Please use the latest one, v6 [2].
-> For your convinience, you can pick them up from:
-> =C2=A0=C2=A0 https://git.linaro.org/people/takahiro.akashi/linux-aarch64.=
-git=C2=A0arm64/kdump
-> =C2=A0=C2=A0 https://git.linaro.org/people/takahiro.akashi/kexec-tools.gi=
-t=C2=A0arm64/kdump
->=20
-> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
-> =C2=A0 - crash utility (v7.1.8 or later) [3]
->=20
-> I tested this patchset on fast model and hikey.
+> Yes and no.
+> This notation is consistent with other places like mem_init()
+> in mm/init.c.]
 
-Is this one going to be be my fault too?
-
-[=C2=A0=C2=A0=C2=A038.947305] SMP: stopping secondary CPUs
-[=C2=A0=C2=A0=C2=A038.951291] Starting crashdump kernel...
-[=C2=A0=C2=A0=C2=A038.955207] ------------[ cut here ]------------
-[=C2=A0=C2=A0=C2=A038.959818] WARNING: CPU: 0 PID: 312 at arch/arm64/kernel=
-/machine_kexec.c:169 machine_kexec+0x220/0x298
-
-That's the cpus_are_stuck_in_kernel() || num_online_cpus() one. Again,
-v32 applied to a 4.9 kernel. With the stray __init removed this time ;)
-
-Taking secondary CPUs down for a normal kexec does work via PSCI.
-
-I'll see if I can enable enough hardware support to let me test a newer
-kernel...
---=-6A3l6xfif8BchEyn/rZ1
+Well, perhaps we should fix those too then. But we certainly shouldn't
+add *more* errors.
+--=-TN7xkqs84s0BDPQwCsb9
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -138,8 +119,8 @@ GeE6+vmbHDFFQ9Ealsti3jGCA9MwggPPAgEBMIGwMIGbMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
 R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0Eg
 TGltaXRlZDFBMD8GA1UEAxM4Q09NT0RPIFNIQS0yNTYgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFu
 ZCBTZWN1cmUgRW1haWwgQ0ECEGoLUFiVUy0EUE3iKBH+GjAwDQYJYIZIAWUDBAIBBQCgggHzMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDMxNzExNDMxMVowLwYJ
-KoZIhvcNAQkEMSIEIO1ckLg7lLJMk6OAkcHwQSQ1g7VvA4nmlKVx9pqwGwx2MIHBBgkrBgEEAYI3
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDMxNzExMzIzNVowLwYJ
+KoZIhvcNAQkEMSIEIPYooomfU2zaHaVWdp1DoRbMkjSCPGUilY4FP+HdyTocMIHBBgkrBgEEAYI3
 EAQxgbMwgbAwgZsxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAO
 BgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01P
 RE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQ
@@ -147,18 +128,18 @@ WJVTLQRQTeIoEf4aMDCBwwYLKoZIhvcNAQkQAgsxgbOggbAwgZsxCzAJBgNVBAYTAkdCMRswGQYD
 VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
 TyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRp
 b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQWJVTLQRQTeIoEf4aMDANBgkqhkiG9w0BAQEFAASC
-AQAVo6qskZI4tMtLd5ElEguuG/qN4C/I34CbqsDnCVz54Fvsc55U1TllPEAg9ZXoQMLe8r9ISGyc
-B41G3UFYQW3geUNq2HkVKhE3bnolBEy29rf4AZEHf0nw7RdgTGkJAft/awgNdDhWEnza7QPhbcTm
-vmFBsjN1CcZDUSyfYsL85QW7GPt1Jd9rzwGCZFxFikKnUd8vN6YkJM6rZdN+e8gB8uwGoKwn2Ofc
-thGGgBljgoKvz7zAahF9P0f85ubYQdnPpsQCejC2fYc3uyn9AYHtF5/pskmkAR1dYSKNszBPVMP/
-DVBK8f1AoyubOKi7ifNDXWQiezWj6etFdSMp+qedAAAAAAAA
+AQCqTCG6OselyeluYFAwC2SBvG7x1dbUC/pIt7hR6WJ8eIDcLzvdO1FTYpLrD11QvznK2t5/2okl
+hklGvqRSTnTZ7ZTwLzojiTk78cjSOQk4dugyZxyX0Dpm7YlBR8fSkRn98Ie9Bh2d7lVwLiFr50qa
+7KsRy0RAnuit/Aq5Lxqwy7UxvH8Smf/MLP/Pbbe/IkbtiUoGVLqcKzL70l7J+vikT6aa2rDUYP1F
+MgC2YhKUEBnJfyULXjTAScSLj7hipD8sD4X6t+M21PG3QbSk99AtZRf5X1p84kKaSvRxTbtJWp4a
+nQ+TOvvFwlGkhso1H26n/hZJz/8rNzd7VrdqlAawAAAAAAAA
 
 
---=-6A3l6xfif8BchEyn/rZ1--
+--=-TN7xkqs84s0BDPQwCsb9--
 
 
 
---===============5954873070318359211==
+--===============6757692969321803009==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -169,6 +150,6 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============5954873070318359211==--
+--===============6757692969321803009==--
 
 
