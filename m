@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 17 Mar 2017 15:04:12 +0000
+Date: Fri, 17 Mar 2017 15:33:58 +0000
 From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v33 00/14] add kdump support
-Message-ID: <20170317150411.GH5940@leverpostej>
+Message-ID: <20170317153358.GI5940@leverpostej>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
  <1489750991.17202.40.camel@infradead.org>
  <1489759373.17202.44.camel@infradead.org>
@@ -33,14 +33,22 @@ On Fri, Mar 17, 2017 at 02:02:53PM +0000, David Woodhouse wrote:
 > the online mask. Which is reasonable enough if we want to preserve its
 > original contents from before the crash, but it does make that
 > WARN_ON() in machine_kexec() a false positive.
-> 
-> Btw, why is this a normal IPI and not something... less maskable?
-> On x86 we use NMI for that...
 
-Architecturally, arm64 does not have an NMI.
+I'd say it's not so much a false positive, but rather an uninformative
+message.
 
-There's been some work to try to get pseudo-NMIs using GICv3 priorities,
-but that's about the closest we can get today.
+Some warning here is completely appropriate. Even if the CPUs are
+stopped in the kernel, there are a number of cases where the HW can
+corrupt system state in the background.
+
+We can certainly log a better message, e.g.
+	
+	bool kdump = (image == kexec_crash_image);
+	bool stuck_cpus = cpus_are_stuck_in_kernel() ||
+			  num_online_cpus() > 1;
+
+	BUG_ON(stuck_cpus && !kdump);
+	WARN(stuck_cpus, "Unable to offline CPUs, kdump will be unreliable.\n");
 
 Thanks,
 Mark.
