@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 17 Mar 2017 16:24:21 +0000
-From: Mark Rutland <mark.rutland@arm.com>
 Subject: Re: [PATCH v33 00/14] add kdump support
-Message-ID: <20170317162421.GK5940@leverpostej>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
  <1489750991.17202.40.camel@infradead.org>
- <1489759373.17202.44.camel@infradead.org>
- <20170317153358.GI5940@leverpostej>
- <1489765628.17202.59.camel@infradead.org>
+ <1489759373.17202.44.camel@infradead.org> <20170317153358.GI5940@leverpostej>
+ <1489765628.17202.59.camel@infradead.org> <20170317162421.GK5940@leverpostej>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Message-ID: <e75aaa3f-0d87-2523-d7d7-cef56e5bd480@arm.com>
+Date: Fri, 17 Mar 2017 16:59:28 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1489765628.17202.59.camel@infradead.org>
+In-Reply-To: <20170317162421.GK5940@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,72 +17,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>, marc.zyngier@arm.com
+To: Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>
 Cc: geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, catalin.marinas@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-T24gRnJpLCBNYXIgMTcsIDIwMTcgYXQgMDM6NDc6MDhQTSArMDAwMCwgRGF2aWQgV29vZGhvdXNl
-IHdyb3RlOgo+IE9uIEZyaSwgMjAxNy0wMy0xNyBhdCAxNTozMyArMDAwMCwgTWFyayBSdXRsYW5k
-IHdyb3RlOgo+IE5vLCBpbiB0aGlzIGNhc2UgdGhlIENQVXMgKndlcmUqIG9mZmxpbmVkIGNvcnJl
-Y3RseSwgb3IgYXQgbGVhc3QgImFzCj4gZGVzaWduZWQiLCBieSBzbXBfc2VuZF9jcmFzaF9zdG9w
-KCkuIEFuZCBpZiB0aGF0IGhhZG4ndCB3b3JrZWQsIGFzCj4gdmVyaWZpZWQgYnkgKml0cyogc3lu
-Y2hyb25pc2F0aW9uIG1ldGhvZCBiYXNlZCBvbiB0aGUgYXRvbWljX3QKPiB3YWl0aW5nX2Zvcl9j
-cmFzaF9pcGksIHRoZW4gKml0KiB3b3VsZCBoYXZlIGNvbXBsYWluZWQgZm9yIGl0c2VsZjoKPiAK
-PiAJaWYgKGF0b21pY19yZWFkKCZ3YWl0aW5nX2Zvcl9jcmFzaF9pcGkpID4gMCkKPiAJCXByX3dh
-cm5pbmcoIlNNUDogZmFpbGVkIHRvIHN0b3Agc2Vjb25kYXJ5IENQVXMgJSpwYmxcbiIsCj4gCQkJ
-wqDCoMKgY3B1bWFza19wcl9hcmdzKGNwdV9vbmxpbmVfbWFzaykpOwo+IAo+IEl0J3MganVzdCB0
-aGF0IHNtcF9zZW5kX2NyYXNoX3N0b3AoKSAob3IgbW9yZSBzcGVjaWZpY2FsbHkKPiBpcGlfY3B1
-X2NyYXNoX3N0b3AoKSkgZG9lc24ndCB0b3VjaCB0aGUgb25saW5lIGNwdSBtYXNrLiBVbmxpa2Ug
-dGhlCj4gQVJNMzIgZXF1aXZhbGVudCBmdW5jdGlvbiBtYWNoaWVuX2NyYXNoX25vbnBhbmljX2Nv
-cmUoKSwgd2hpY2ggZG9lcy4KPiAKPiBJdCB3YXNuJ3QgY2xlYXIgaWYgdGhhdCB3YXMgKmludGVu
-dGlvbmFsKiwgdG8gYWxsb3cgdGhlIG9yaWdpbmFsCj4gY29udGVudHMgb2YgdGhlIG9ubGluZSBt
-YXNrIGJlZm9yZSB0aGUgY3Jhc2ggdG8gYmUgc2VlbiBpbiB0aGUKPiByZXN1bHRpbmcgdm1jb3Jl
-Li4uIG9yIHB1cmVseSBhbiBhY2NpZGVudC7CoAoKTG9va2luZyBhdCB0aGlzLCB0aGVyZSdzIGEg
-bGFyZ2VyIG1lc3MuCgpUaGUgd2FpdGluZ19mb3JfY3Jhc2hfaXBpIGRhbmNlIG9ubHkgdGVsbHMg
-dXMgaWYgQ1BVcyBoYXZlIHRha2VuIHRoZQpJUEksIG5vdCB3ZXRoZXIgdGhleSd2ZSBiZWVuIG9m
-ZmxpbmVkIChpLmUuIGFjdHVhbGx5IGxlZnQgdGhlIGtlcm5lbCkuCldlIG5lZWQgc29tZXRoaW5n
-IGNsb3NlciB0byB0aGUgdXN1YWwgY3B1X3tkaXNhYmxlLGRpZSxraWxsfSBkYW5jZSwKY2xlYXJp
-bmcgb25saW5lIGFzIGFwcHJvcHJpYXRlLgoKSWYgQ1BVcyBoYXZlbid0IGxlZnQgdGhlIGtlcm5l
-bCwgd2Ugc3RpbGwgbmVlZCB0byB3YXJuIGFib3V0IHRoYXQuCgo+IEZXSVcgaWYgSSB0cmlnZ2Vy
-IGEgY3Jhc2ggb24gQ1BVIDEgbXkga2R1bXAgKHN0aWxsIDQuOS44K3YzMikgZG9lc24ndCB3b3Jr
-Lgo+IEkgZW5kIHVwIGJvb3RpbmcgdGhlIGtkdW1wIGtlcm5lbCBvbiBDUFUjMSBhbmQgdGhlbiBp
-dCBnZXRzIGRpc3RpbmN0bHkgdW5oYXBweS4uLgo+IAo+IFvCoMKgwqDCoDAuMDAwMDAwXSBCb290
-aW5nIExpbnV4IG9uIHBoeXNpY2FsIENQVSAweDEKPiAuLi4KPiBbwqDCoMKgwqAwLjAxNzEyNV0g
-RGV0ZWN0ZWQgUElQVCBJLWNhY2hlIG9uIENQVTEKPiBbwqDCoMKgwqAwLjAxNzEzOF0gR0lDdjM6
-IENQVTE6IGZvdW5kIHJlZGlzdHJpYnV0b3IgMCByZWdpb24gMDoweDAwMDAwMDAwZjAyODAwMDAK
-PiBbwqDCoMKgwqAwLjAxNzE0N10gQ1BVMTogQm9vdGVkIHNlY29uZGFyeSBwcm9jZXNzb3IgWzQx
-MWZkMDczXQo+IFvCoMKgwqDCoDAuMDE3MzM5XSBEZXRlY3RlZCBQSVBUIEktY2FjaGUgb24gQ1BV
-Mgo+IFvCoMKgwqDCoDAuMDE3MzQ3XSBHSUN2MzogQ1BVMjogZm91bmQgcmVkaXN0cmlidXRvciAy
-IHJlZ2lvbiAwOjB4MDAwMDAwMDBmMDJjMDAwMAo+IFvCoMKgwqDCoDAuMDE3MzU0XSBDUFUyOiBC
-b290ZWQgc2Vjb25kYXJ5IHByb2Nlc3NvciBbNDExZmQwNzNdCj4gW8KgwqDCoMKgMC4wMTc1Mzdd
-IERldGVjdGVkIFBJUFQgSS1jYWNoZSBvbiBDUFUzCj4gW8KgwqDCoMKgMC4wMTc1NDVdIEdJQ3Yz
-OiBDUFUzOiBmb3VuZCByZWRpc3RyaWJ1dG9yIDMgcmVnaW9uIDA6MHgwMDAwMDAwMGYwMmUwMDAw
-Cj4gW8KgwqDCoMKgMC4wMTc1NTFdIENQVTM6IEJvb3RlZCBzZWNvbmRhcnkgcHJvY2Vzc29yIFs0
-MTFmZDA3M10KPiBbwqDCoMKgwqAwLjAxNzU3Nl0gQnJvdWdodCB1cCA0IENQVXMKPiBbwqDCoMKg
-wqAwLjAxNzU4N10gU01QOiBUb3RhbCBvZiA0IHByb2Nlc3NvcnMgYWN0aXZhdGVkLgo+IC4uLgo+
-IFvCoMKgwqAzMS43NDU4MDldIElORk86IHJjdV9zY2hlZCBkZXRlY3RlZCBzdGFsbHMgb24gQ1BV
-cy90YXNrczoKPiBbwqDCoMKgMzEuNzUxMjk5XcKgCTEtLi4uOiAoMzAgR1BzIGJlaGluZCkgaWRs
-ZT1jOTAvMC8wIHNvZnRpcnE9MC8wIGZxcz0wwqAKPiBbwqDCoMKgMzEuNzU3NTU3XcKgCTItLi4u
-OiAoMzAgR1BzIGJlaGluZCkgaWRsZT02MDgvMC8wIHNvZnRpcnE9MC8wIGZxcz0wwqAKPiBbwqDC
-oMKgMzEuNzYzODE0XcKgCTMtLi4uOiAoMzAgR1BzIGJlaGluZCkgaWRsZT02MDQvMC8wIHNvZnRp
-cnE9MC8wIGZxcz0wwqAKPiBbwqDCoMKgMzEuNzcwMDY5XcKgCShkZXRlY3RlZCBieSAwLCB0PTUy
-NTIgamlmZmllcywgZz0tMjcwLCBjPS0yNzEsIHE9MCkKPiBbwqDCoMKgMzEuNzc2MTYxXSBUYXNr
-IGR1bXAgZm9yIENQVSAxOgo+IFvCoMKgwqAzMS43NzkzODFdIHN3YXBwZXIvMcKgwqDCoMKgwqDC
-oMKgUsKgwqBydW5uaW5nIHRhc2vCoMKgwqDCoMKgwqDCoMKgMMKgwqDCoMKgwqAwwqDCoMKgwqDC
-oMKgMSAweDAwMDAwMDgwCj4gW8KgwqDCoDMxLjc4NjQ0Nl0gVGFzayBkdW1wIGZvciBDUFUgMjoK
-PiBbwqDCoMKgMzEuNzg5NjY2XSBzd2FwcGVyLzLCoMKgwqDCoMKgwqDCoFLCoMKgcnVubmluZyB0
-YXNrwqDCoMKgwqDCoMKgwqDCoDDCoMKgwqDCoMKgMMKgwqDCoMKgwqDCoDEgMHgwMDAwMDA4MAo+
-IFvCoMKgwqAzMS43OTY3MjVdIFRhc2sgZHVtcCBmb3IgQ1BVIDM6Cj4gW8KgwqDCoDMxLjc5OTk0
-NV0gc3dhcHBlci8zwqDCoMKgwqDCoMKgwqBSwqDCoHJ1bm5pbmcgdGFza8KgwqDCoMKgwqDCoMKg
-wqAwwqDCoMKgwqDCoDDCoMKgwqDCoMKgwqAxIDB4MDAwMDAwODAKPiAKPiBJcyBzb21lIG9mIHRo
-YXQgcGxhdGZvcm0tc3BlY2lmaWM/CgpUaGF0IHNvdW5kcyBsaWtlIHRpbWVyIGludGVycnVwdHMg
-YXJlbid0IGJlaW5nIHRha2VuLgoKR2l2ZW4gdGhhdCB0aGUgQ1BVcyBoYXZlIGNvbWUgdXAsIG15
-IHN1c3BpY2lvbiB3b3VsZCBiZSB0aGF0IHRoZSBHSUMncwpiZWVuIGxlZnQgaW4gc29tZSBvZGQg
-c3RhdGUsIHRoYXQgdGhlIGtkdW1wIGtlcm5lbCBoYXNuJ3QgbWFuYWdlZCB0bwpyZWNvdmVyIGZy
-b20uCgpNYXJjIG1heSBoYXZlIGFuIGlkZWEuCgpUaGFua3MsCk1hcmsuCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+On 17/03/17 16:24, Mark Rutland wrote:
+> On Fri, Mar 17, 2017 at 03:47:08PM +0000, David Woodhouse wrote:
+>> On Fri, 2017-03-17 at 15:33 +0000, Mark Rutland wrote:
+>> No, in this case the CPUs *were* offlined correctly, or at least "as
+>> designed", by smp_send_crash_stop(). And if that hadn't worked, as
+>> verified by *its* synchronisation method based on the atomic_t
+>> waiting_for_crash_ipi, then *it* would have complained for itself:
+>>
+>> 	if (atomic_read(&waiting_for_crash_ipi) > 0)
+>> 		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
+>> 			   cpumask_pr_args(cpu_online_mask));
+>>
+>> It's just that smp_send_crash_stop() (or more specifically
+>> ipi_cpu_crash_stop()) doesn't touch the online cpu mask. Unlike the
+>> ARM32 equivalent function machien_crash_nonpanic_core(), which does.
+>>
+>> It wasn't clear if that was *intentional*, to allow the original
+>> contents of the online mask before the crash to be seen in the
+>> resulting vmcore... or purely an accident. 
+> 
+> Looking at this, there's a larger mess.
+> 
+> The waiting_for_crash_ipi dance only tells us if CPUs have taken the
+> IPI, not wether they've been offlined (i.e. actually left the kernel).
+> We need something closer to the usual cpu_{disable,die,kill} dance,
+> clearing online as appropriate.
+> 
+> If CPUs haven't left the kernel, we still need to warn about that.
+> 
+>> FWIW if I trigger a crash on CPU 1 my kdump (still 4.9.8+v32) doesn't work.
+>> I end up booting the kdump kernel on CPU#1 and then it gets distinctly unhappy...
+>>
+>> [    0.000000] Booting Linux on physical CPU 0x1
+>> ...
+>> [    0.017125] Detected PIPT I-cache on CPU1
+>> [    0.017138] GICv3: CPU1: found redistributor 0 region 0:0x00000000f0280000
+>> [    0.017147] CPU1: Booted secondary processor [411fd073]
+>> [    0.017339] Detected PIPT I-cache on CPU2
+>> [    0.017347] GICv3: CPU2: found redistributor 2 region 0:0x00000000f02c0000
+>> [    0.017354] CPU2: Booted secondary processor [411fd073]
+>> [    0.017537] Detected PIPT I-cache on CPU3
+>> [    0.017545] GICv3: CPU3: found redistributor 3 region 0:0x00000000f02e0000
+>> [    0.017551] CPU3: Booted secondary processor [411fd073]
+>> [    0.017576] Brought up 4 CPUs
+>> [    0.017587] SMP: Total of 4 processors activated.
+>> ...
+>> [   31.745809] INFO: rcu_sched detected stalls on CPUs/tasks:
+>> [   31.751299] 	1-...: (30 GPs behind) idle=c90/0/0 softirq=0/0 fqs=0 
+>> [   31.757557] 	2-...: (30 GPs behind) idle=608/0/0 softirq=0/0 fqs=0 
+>> [   31.763814] 	3-...: (30 GPs behind) idle=604/0/0 softirq=0/0 fqs=0 
+>> [   31.770069] 	(detected by 0, t=5252 jiffies, g=-270, c=-271, q=0)
+>> [   31.776161] Task dump for CPU 1:
+>> [   31.779381] swapper/1       R  running task        0     0      1 0x00000080
+>> [   31.786446] Task dump for CPU 2:
+>> [   31.789666] swapper/2       R  running task        0     0      1 0x00000080
+>> [   31.796725] Task dump for CPU 3:
+>> [   31.799945] swapper/3       R  running task        0     0      1 0x00000080
+>>
+>> Is some of that platform-specific?
+> 
+> That sounds like timer interrupts aren't being taken.
+> 
+> Given that the CPUs have come up, my suspicion would be that the GIC's
+> been left in some odd state, that the kdump kernel hasn't managed to
+> recover from.
+> 
+> Marc may have an idea.
+
+I thought kdump was UP only? Anyway, this doesn't look too good.
+
+It would be interesting to find out whether we're still taking
+interrupts. Also, being able to reproduce this on mainline would be useful.
+
+I wonder if we don't have a bug when booting on something other than
+CPU#0, possibly on a GICv3 platform... I'll give it a go.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
