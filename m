@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1489765628.17202.59.camel@infradead.org>
+Message-ID: <1489780991.17202.70.camel@infradead.org>
 Subject: Re: [PATCH v33 00/14] add kdump support
 From: David Woodhouse <dwmw2@infradead.org>
-In-Reply-To: <20170317153358.GI5940@leverpostej>
+In-Reply-To: <372d44fe-2d78-596a-55c6-307cb36d60a2@arm.com>
 References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
  <1489750991.17202.40.camel@infradead.org>
  <1489759373.17202.44.camel@infradead.org>
  <20170317153358.GI5940@leverpostej>
-Date: Fri, 17 Mar 2017 15:47:08 +0000
+ <1489765628.17202.59.camel@infradead.org>
+ <20170317162421.GK5940@leverpostej>
+ <e75aaa3f-0d87-2523-d7d7-cef56e5bd480@arm.com>
+ <372d44fe-2d78-596a-55c6-307cb36d60a2@arm.com>
+Date: Fri, 17 Mar 2017 20:03:11 +0000
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -17,135 +21,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============4325035378591028347=="
+Content-Type: multipart/mixed; boundary="===============0584107877332451559=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: geoff@infradead.org, kexec@lists.infradead.org, will.deacon@arm.com, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, catalin.marinas@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
 
---===============4325035378591028347==
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-sPG3Uiwn5JX4eRToLjpr"
+--===============0584107877332451559==
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-/03ydH2dpN1rFb5X8v4B"
 
 
---=-sPG3Uiwn5JX4eRToLjpr
+--=-/03ydH2dpN1rFb5X8v4B
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2017-03-17 at 15:33 +0000, Mark Rutland wrote:
+On Fri, 2017-03-17 at 17:10 +0000, Marc Zyngier wrote:
 >=20
-> We can certainly log a better message, e.g.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool kdump =3D (image =3D=
-=3D kexec_crash_image);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool stuck_cpus =3D cpus_=
-are_stuck_in_kernel() ||
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 num_online_cpus() > 1;
+> > > >=20
+> > > > FWIW if I trigger a crash on CPU 1 my kdump (still 4.9.8+v32) doesn=
+'t work.
+> > > > I end up booting the kdump kernel on CPU#1 and then it gets distinc=
+tly unhappy...
+> > > >=20
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.000000] Booting Linux on physical CPU 0x=
+1
+> > > > ...
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017125] Detected PIPT I-cache on CPU1
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017138] GICv3: CPU1: found redistributor=
+ 0 region 0:0x00000000f0280000
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017147] CPU1: Booted secondary processor=
+ [411fd073]
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017339] Detected PIPT I-cache on CPU2
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017347] GICv3: CPU2: found redistributor=
+ 2 region 0:0x00000000f02c0000
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017354] CPU2: Booted secondary processor=
+ [411fd073]
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017537] Detected PIPT I-cache on CPU3
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017545] GICv3: CPU3: found redistributor=
+ 3 region 0:0x00000000f02e0000
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017551] CPU3: Booted secondary processor=
+ [411fd073]
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017576] Brought up 4 CPUs
+> > > > [=C2=A0=C2=A0=C2=A0=C2=A00.017587] SMP: Total of 4 processors activ=
+ated.
+> > > > ...
+> > > > [=C2=A0=C2=A0=C2=A031.745809] INFO: rcu_sched detected stalls on CP=
+Us/tasks:
+> > > > [=C2=A0=C2=A0=C2=A031.751299]=C2=A0	1-...: (30 GPs behind) idle=3Dc=
+90/0/0 softirq=3D0/0 fqs=3D0=C2=A0
+> > > > [=C2=A0=C2=A0=C2=A031.757557]=C2=A0	2-...: (30 GPs behind) idle=3D6=
+08/0/0 softirq=3D0/0 fqs=3D0=C2=A0
+> > > > [=C2=A0=C2=A0=C2=A031.763814]=C2=A0	3-...: (30 GPs behind) idle=3D6=
+04/0/0 softirq=3D0/0 fqs=3D0=C2=A0
+> > > > [=C2=A0=C2=A0=C2=A031.770069]=C2=A0	(detected by 0, t=3D5252 jiffie=
+s, g=3D-270, c=3D-271, q=3D0)
+> > > > [=C2=A0=C2=A0=C2=A031.776161] Task dump for CPU 1:
+> > > > [=C2=A0=C2=A0=C2=A031.779381] swapper/1=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0R=C2=A0=C2=A0running task=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A01 0x00000080
+> > > > [=C2=A0=C2=A0=C2=A031.786446] Task dump for CPU 2:
+> > > > [=C2=A0=C2=A0=C2=A031.789666] swapper/2=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0R=C2=A0=C2=A0running task=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A01 0x00000080
+> > > > [=C2=A0=C2=A0=C2=A031.796725] Task dump for CPU 3:
+> > > > [=C2=A0=C2=A0=C2=A031.799945] swapper/3=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0R=C2=A0=C2=A0running task=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A01 0x00000080
+> > > >=20
+> > > > Is some of that platform-specific?
+> > > That sounds like timer interrupts aren't being taken.
+> > >=20
+> > > Given that the CPUs have come up, my suspicion would be that the GIC'=
+s
+> > > been left in some odd state, that the kdump kernel hasn't managed to
+> > > recover from.
+> > >=20
+> > > Marc may have an idea.
+> > I thought kdump was UP only? Anyway, this doesn't look too good.
+> >=20
+> > It would be interesting to find out whether we're still taking
+> > interrupts. Also, being able to reproduce this on mainline would be use=
+ful.
+> >=20
+> > I wonder if we don't have a bug when booting on something other than
+> > CPU#0, possibly on a GICv3 platform... I'll give it a go.
+> Went ahead and tried a couple of kexecs with various CPUs disabled in
+> order to force kexec not to boot on CPU#0, and the VM did boot just fine.
 >=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BUG_ON(stuck_cpus && !kdu=
-mp);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0WARN(stuck_cpus, "Unable =
-to offline CPUs, kdump will be unreliable.\n");
+> So I'd really appreciate a mainline reproducer.
 
-No, in this case the CPUs *were* offlined correctly, or at least "as
-designed", by smp_send_crash_stop(). And if that hadn't worked, as
-verified by *its* synchronisation method based on the atomic_t
-waiting_for_crash_ipi, then *it* would have complained for itself:
+I booted an up-to-date 4.11-rc2 kernel with the v33 patch set. I cannot
+reproduce.
 
-	if (atomic_read(&waiting_for_crash_ipi) > 0)
-		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
-			=C2=A0=C2=A0=C2=A0cpumask_pr_args(cpu_online_mask));
+But then again, I can't reproduce it on 4.9 *either* any more. And that
+is precisely the same kernel image I uploaded earlier. So it appears to
+be sporadic, and just *happened* to hit me the first time I tried...
+which is probably just as well or I'd never have tried that again :)
 
-It's just that smp_send_crash_stop() (or more specifically
-ipi_cpu_crash_stop()) doesn't touch the online cpu mask. Unlike the
-ARM32 equivalent function machien_crash_nonpanic_core(), which does.
+I'll keep trying.
 
-It wasn't clear if that was *intentional*, to allow the original
-contents of the online mask before the crash to be seen in the
-resulting vmcore... or purely an accident.=C2=A0
-
-FWIW if I trigger a crash on CPU 1 my kdump (still 4.9.8+v32) doesn't work.
-I end up booting the kdump kernel on CPU#1 and then it gets distinctly unha=
-ppy...
-
-[=C2=A0=C2=A0=C2=A0=C2=A00.000000] Booting Linux on physical CPU 0x1
-...
-[=C2=A0=C2=A0=C2=A0=C2=A00.017125] Detected PIPT I-cache on CPU1
-[=C2=A0=C2=A0=C2=A0=C2=A00.017138] GICv3: CPU1: found redistributor 0 regio=
-n 0:0x00000000f0280000
-[=C2=A0=C2=A0=C2=A0=C2=A00.017147] CPU1: Booted secondary processor [411fd0=
-73]
-[=C2=A0=C2=A0=C2=A0=C2=A00.017339] Detected PIPT I-cache on CPU2
-[=C2=A0=C2=A0=C2=A0=C2=A00.017347] GICv3: CPU2: found redistributor 2 regio=
-n 0:0x00000000f02c0000
-[=C2=A0=C2=A0=C2=A0=C2=A00.017354] CPU2: Booted secondary processor [411fd0=
-73]
-[=C2=A0=C2=A0=C2=A0=C2=A00.017537] Detected PIPT I-cache on CPU3
-[=C2=A0=C2=A0=C2=A0=C2=A00.017545] GICv3: CPU3: found redistributor 3 regio=
-n 0:0x00000000f02e0000
-[=C2=A0=C2=A0=C2=A0=C2=A00.017551] CPU3: Booted secondary processor [411fd0=
-73]
-[=C2=A0=C2=A0=C2=A0=C2=A00.017576] Brought up 4 CPUs
-[=C2=A0=C2=A0=C2=A0=C2=A00.017587] SMP: Total of 4 processors activated.
-...
-[=C2=A0=C2=A0=C2=A031.745809] INFO: rcu_sched detected stalls on CPUs/tasks=
-:
-[=C2=A0=C2=A0=C2=A031.751299]=C2=A0	1-...: (30 GPs behind) idle=3Dc90/0/0 s=
-oftirq=3D0/0 fqs=3D0=C2=A0
-[=C2=A0=C2=A0=C2=A031.757557]=C2=A0	2-...: (30 GPs behind) idle=3D608/0/0 s=
-oftirq=3D0/0 fqs=3D0=C2=A0
-[=C2=A0=C2=A0=C2=A031.763814]=C2=A0	3-...: (30 GPs behind) idle=3D604/0/0 s=
-oftirq=3D0/0 fqs=3D0=C2=A0
-[=C2=A0=C2=A0=C2=A031.770069]=C2=A0	(detected by 0, t=3D5252 jiffies, g=3D-=
-270, c=3D-271, q=3D0)
-[=C2=A0=C2=A0=C2=A031.776161] Task dump for CPU 1:
-[=C2=A0=C2=A0=C2=A031.779381] swapper/1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0R=C2=A0=C2=A0running task=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A01=
- 0x00000080
-[=C2=A0=C2=A0=C2=A031.786446] Task dump for CPU 2:
-[=C2=A0=C2=A0=C2=A031.789666] swapper/2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0R=C2=A0=C2=A0running task=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A01=
- 0x00000080
-[=C2=A0=C2=A0=C2=A031.796725] Task dump for CPU 3:
-[=C2=A0=C2=A0=C2=A031.799945] swapper/3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0R=C2=A0=C2=A0running task=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A00=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A01=
- 0x00000080
-
-Is some of that platform-specific?
-
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 701c085..41d238e 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -129,7 +129,7 @@ static struct sysrq_key_op sysrq_unraw_op =3D {
-=C2=A0#define sysrq_unraw_op (*(struct sysrq_key_op *)NULL)
-=C2=A0#endif /* CONFIG_VT */
-=C2=A0
--static void sysrq_handle_crash(int key)
-+static void do_sysrq_handle_crash(int key)
-=C2=A0{
-=C2=A0	char *killer =3D NULL;
-=C2=A0
-@@ -143,6 +143,12 @@ static void sysrq_handle_crash(int key)
-=C2=A0	wmb();
-=C2=A0	*killer =3D 1;
-=C2=A0}
-+
-+static void sysrq_handle_crash(int key)
-+{
-+	smp_call_on_cpu(1, (void *)do_sysrq_handle_crash, 0, 1);
-+}
-+
-=C2=A0static struct sysrq_key_op sysrq_crash_op =3D {
-=C2=A0	.handler	=3D sysrq_handle_crash,
-=C2=A0	.help_msg	=3D "crash(c)",
-
---=-sPG3Uiwn5JX4eRToLjpr
+--=-/03ydH2dpN1rFb5X8v4B
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -223,8 +202,8 @@ GeE6+vmbHDFFQ9Ealsti3jGCA9MwggPPAgEBMIGwMIGbMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
 R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0Eg
 TGltaXRlZDFBMD8GA1UEAxM4Q09NT0RPIFNIQS0yNTYgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFu
 ZCBTZWN1cmUgRW1haWwgQ0ECEGoLUFiVUy0EUE3iKBH+GjAwDQYJYIZIAWUDBAIBBQCgggHzMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDMxNzE1NDcwOFowLwYJ
-KoZIhvcNAQkEMSIEIO7ktbMmxrOapbjlSmOSuf8gPE+UnR9fbstVZocXwUaZMIHBBgkrBgEEAYI3
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDMxNzIwMDMxMVowLwYJ
+KoZIhvcNAQkEMSIEIFGCBIAGKOs10VDHDhCdJ3cO4At2qm39CVSLE9kj0wiMMIHBBgkrBgEEAYI3
 EAQxgbMwgbAwgZsxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAO
 BgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01P
 RE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQ
@@ -232,18 +211,18 @@ WJVTLQRQTeIoEf4aMDCBwwYLKoZIhvcNAQkQAgsxgbOggbAwgZsxCzAJBgNVBAYTAkdCMRswGQYD
 VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
 TyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRp
 b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQWJVTLQRQTeIoEf4aMDANBgkqhkiG9w0BAQEFAASC
-AQChAe9jNlniFWDWF6kQUYPxUWcZFqN5aeYfnjB6eTz0JVdoJQiw5pspws5QEOO2UTZcsmmUTLQk
-Qr2QAqtUPC/orlPyY91ISYiy8QQJhFDYz3bfdKIxoNcJz7xWoKXjQq67I6TRi0h7vgH26TivDX0E
-z5pbqlCdzNsIOrhJUX2gKkkRVVCNW0VxdlJh719UmMOxT/ptDdC3NMMFGUtWth29rQpNEwLj6uIS
-3HGgh04K5QU2qrptuvhwtTsb1LwqVwq69FrXhemZmbZm+tkBTzaoI64BRyjFS9Gf2eAve+xO0+hh
-PkNXRz8KfLq5HGUUdPtWb7skYkVwYBDgO2AofB7pAAAAAAAA
+AQAIrDVmXhVRADBxMsBrjZRIjn38TDwqQJYcA729QgygIngvdn/J+DpR/K1t4MnqOZjq91KlgkkC
+4crYpExQDWOLzQGjYVIuUyUUeCVpLGw1r7cfFDrBmv8W3wZdOBgCRSpBwVWqiWepE8emhgFNNOIh
+pxe0I4c20TsL1gRlIHvTdNpMreQXaTvlo7GyMaqZXKf+4NsVUpqPUIXlpugQwSmM8/0+bqUL4DT3
+FrG5tAmCL97n63eF3woAmiJGuI5dGKMUj3tKpddfMN+Zb7Bj35cAJkDhaPjrdPiin4k1NaF0PHFL
+vA3V3FTo1kYaGBExfZSCYwdu5Qnr5aKqs7l/2mQEAAAAAAAA
 
 
---=-sPG3Uiwn5JX4eRToLjpr--
+--=-/03ydH2dpN1rFb5X8v4B--
 
 
 
---===============4325035378591028347==
+--===============0584107877332451559==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -254,6 +233,6 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============4325035378591028347==--
+--===============0584107877332451559==--
 
 
