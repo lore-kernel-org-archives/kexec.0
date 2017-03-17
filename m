@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x22c.google.com ([2607:f8b0:400e:c05::22c])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1coZZB-0001Gl-A2
- for kexec@lists.infradead.org; Thu, 16 Mar 2017 17:52:02 +0000
-Received: by mail-pg0-x22c.google.com with SMTP id n190so28670960pga.0
- for <kexec@lists.infradead.org>; Thu, 16 Mar 2017 10:51:40 -0700 (PDT)
-Date: Thu, 16 Mar 2017 10:50:48 -0700
-From: Omar Sandoval <osandov@osandov.com>
+ id 1cohLQ-0006yb-J8
+ for kexec@lists.infradead.org; Fri, 17 Mar 2017 02:10:22 +0000
+Date: Fri, 17 Mar 2017 10:09:51 +0800
+From: Dave Young <dyoung@redhat.com>
 Subject: Re: kexec regression since 4.9 caused by efi
-Message-ID: <20170316175048.GA25230@vader.DHCP.thefacebook.com>
+Message-ID: <20170317020951.GA3942@dhcp-128-65.nay.redhat.com>
 References: <20170308201616.GC8598@vader>
  <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
  <20170309095408.GA17883@vader>
@@ -30,9 +28,9 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kernel-team@fb.com, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Omar Sandoval <osandov@osandov.com>, kernel-team@fb.com
 
-On Thu, Mar 16, 2017 at 12:41:32PM +0000, Matt Fleming wrote:
+On 03/16/17 at 12:41pm, Matt Fleming wrote:
 > On Mon, 13 Mar, at 03:37:48PM, Dave Young wrote:
 > > 
 > > Omar, could you try below patch? Looking at the efi_mem_desc_lookup, it is not
@@ -68,13 +66,29 @@ On Thu, Mar 16, 2017 at 12:41:32PM +0000, Matt Fleming wrote:
 > +	if (md.attribute & EFI_MEMORY_RUNTIME)
 > +		return;
 > +
->  	size += addr % EFI_PAGE_SIZE;
->  	size = round_up(size, EFI_PAGE_SIZE);
->  	addr = round_down(addr, EFI_PAGE_SIZE);
 
-This works for me.
+Matt, I think it should be fine although I think the md type checking in
+efi_mem_desc_lookup() is causing confusion and not easy to understand..
 
-Reported-and-tested-by: Omar Sandoval <osandov@fb.com>
+How about move the if chunk early like below because it seems no need
+to sanity check the addr + size any more if the md is still RUNTIME?
+
+--- linux-x86.orig/arch/x86/platform/efi/quirks.c
++++ linux-x86/arch/x86/platform/efi/quirks.c
+@@ -196,6 +196,10 @@ void __init efi_arch_mem_reserve(phys_ad
+ 		return;
+ 	}
+ 
++	/* No need to reserve regions that will never be freed. */
++	if (md.attribute & EFI_MEMORY_RUNTIME)
++		return;
++
+ 	if (addr + size > md.phys_addr + (md.num_pages << EFI_PAGE_SHIFT)) {
+ 		pr_err("Region spans EFI memory descriptors, %pa\n", &addr);
+ 		return;
+
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
