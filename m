@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cpmqr-00050Q-9a
- for kexec@lists.infradead.org; Mon, 20 Mar 2017 02:15:18 +0000
-Date: Mon, 20 Mar 2017 10:14:12 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: kexec regression since 4.9 caused by efi
-Message-ID: <20170320021412.GA3793@dhcp-128-65.nay.redhat.com>
-References: <20170308201616.GC8598@vader>
- <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
- <20170309095408.GA17883@vader>
- <20170313073748.GA6332@dhcp-128-65.nay.redhat.com>
- <20170316124132.GF6261@codeblueprint.co.uk>
- <20170317020951.GA3942@dhcp-128-65.nay.redhat.com>
- <20170317133232.GI6261@codeblueprint.co.uk>
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cpmqt-00031P-1L
+ for kexec@lists.infradead.org; Mon, 20 Mar 2017 02:15:20 +0000
+Subject: Re: [PATCH] kexec: Update vmcoreinfo after crash happened
+References: <1489666587-24103-1-git-send-email-xlpang@redhat.com>
+ <20170316122730.GB23625@x1> <58CA86D2.70800@redhat.com>
+ <20170316131809.GC23625@x1> <58CA95EA.1040807@redhat.com>
+ <20170318192328.31dc1fde@hananiah.suse.cz>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <58CF3BC6.3060808@redhat.com>
+Date: Mon, 20 Mar 2017 10:17:42 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170317133232.GI6261@codeblueprint.co.uk>
+In-Reply-To: <20170318192328.31dc1fde@hananiah.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +21,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Omar Sandoval <osandov@osandov.com>, kernel-team@fb.com
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-On 03/17/17 at 01:32pm, Matt Fleming wrote:
-> On Fri, 17 Mar, at 10:09:51AM, Dave Young wrote:
-> > 
-> > Matt, I think it should be fine although I think the md type checking in
-> > efi_mem_desc_lookup() is causing confusion and not easy to understand..
->  
-> Could you make that a separate patch if you think of improvements
-> there?
+On 03/19/2017 at 02:23 AM, Petr Tesarik wrote:
+> On Thu, 16 Mar 2017 21:40:58 +0800
+> Xunlei Pang <xpang@redhat.com> wrote:
+>
+>> On 03/16/2017 at 09:18 PM, Baoquan He wrote:
+>>> On 03/16/17 at 08:36pm, Xunlei Pang wrote:
+>>>> On 03/16/2017 at 08:27 PM, Baoquan He wrote:
+>>>>> Hi Xunlei,
+>>>>>
+>>>>> Did you really see this ever happened? Because the vmcore size estimate
+>>>>> feature, namely --mem-usage option of makedumpfile, depends on the
+>>>>> vmcoreinfo in 1st kernel, your change will break it.
+>>>> Hi Baoquan,
+>>>>
+>>>> I can reproduce it using a kernel module which modifies the vmcoreinfo,
+>>>> so it's a problem can actually happen.
+>>>>
+>>>>> If not, it could be not good to change that.
+>>>> That's a good point, then I guess we can keep the crash_save_vmcoreinfo_init(),
+>>>> and store again all the vmcoreinfo after crash. What do you think?
+>>> Well, then it will make makedumpfile segfault happen too when execute
+>>> below command in 1st kernel if it existed:
+>>> 	makedumpfile --mem-usage /proc/kcore
+>> Yes, if the initial vmcoreinfo data was modified before "makedumpfile --mem-usage", it might happen,
+>> after all the system is going something wrong. And that's why we deploy kdump service at the very
+>> beginning when the system has a low possibility of going wrong.
+>>
+>> But we have to guarantee kdump vmcore can be generated correctly as possible as it can.
+>>
+>>> So we still need to face that problem and need fix it. vmcoreinfo_note
+>>> is in kernel data area, how does module intrude into this area? And can
+>>> we fix the module code?
+>>>
+>> Bugs always exist in products, we can't know what will happen and fix all the errors,
+>> that's why we need kdump.
+>>
+>> I think the following update should guarantee the correct vmcoreinfo for kdump.
+> I'm still not convinced. I would probably have more trust in a clean
+> kernel (after boot) than a kernel that has already crashed (presumably
+> because of a serious bug). How can be reliability improved by running
+> more code in unsafe environment?
 
-Duplicate the lookup function is indeed a little ugly, will do it when I
-have a better idea, we can leave it as is since it works.
+Correct, I realized that, so used crc32 to protect the original data,
+but since Eric left a more reasonable idea, I will try that later.
 
-> 
-> > How about move the if chunk early like below because it seems no need
-> > to sanity check the addr + size any more if the md is still RUNTIME?
-> 
-> My original version did as you suggest, but I changed it because we
-> *really* want to know if someone tries to reserve a range that spans
-> regions. That would be totally unexpected and a warning about a
-> potential bug/issue.
+>
+> If some code overwrites reserved areas (such as vmcoreinfo), then it's
+> seriously buggy. And in my opinion, it is more difficult to identify
+> such bugs if they are masked by re-initializing vmcoreinfo after crash.
+> In fact, if makedumpfile in the kexec'ed kernel complains that it
+> didn't find valid VMCOREINFO content, that's already a hint.
+>
+> As a side note, if you're debugging a vmcoreinfo corruption, it's
+> possible to use a standalone VMCOREINFO file with makedumpfile, so you
+> can pre-generate it and save it in the kdump initrd.
+>
+> In short, I don't see a compelling case for this change.
 
-Matt, I'm fine if you prefer to capture the range checking errors.
-Would you like me to post it or just you send it out?
+E.g. 1) wrong code overwrites vmcoreinfo_data; 2) further crashes the
+system; 3) trigger kdump, then we obviously will fail to recognize the
+crash context correctly due to the corrupted vmcoreinfo.  Everyone
+will get confused if met such unfortunate customer-side issue.
 
-Thanks
-Dave
+Although it's corner case, if it's easy to fix, then I think we better do it.
+
+Now except for vmcoreinfo, all the crash data is well protected (including
+cpu note which is fully updated in the crash path, thus its correctness is
+guaranteed).
+
+Regards,
+Xunlei
 
 _______________________________________________
 kexec mailing list
