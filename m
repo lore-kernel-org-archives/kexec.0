@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cpJ1C-0003kW-4O
- for kexec@lists.infradead.org; Sat, 18 Mar 2017 18:24:00 +0000
-Date: Sat, 18 Mar 2017 19:23:28 +0100
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] kexec: Update vmcoreinfo after crash happened
-Message-ID: <20170318192328.31dc1fde@hananiah.suse.cz>
-In-Reply-To: <58CA95EA.1040807@redhat.com>
-References: <1489666587-24103-1-git-send-email-xlpang@redhat.com>
- <20170316122730.GB23625@x1> <58CA86D2.70800@redhat.com>
- <20170316131809.GC23625@x1> <58CA95EA.1040807@redhat.com>
+ id 1cpmfm-0007oH-MB
+ for kexec@lists.infradead.org; Mon, 20 Mar 2017 02:03:52 +0000
+Subject: Re: [PATCH v2] kexec: Introduce vmcoreinfo signature verification
+References: <1489722318-13695-1-git-send-email-xlpang@redhat.com>
+ <874lyrhl81.fsf@xmission.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <58CF3914.5030005@redhat.com>
+Date: Mon, 20 Mar 2017 10:06:12 +0800
 MIME-Version: 1.0
+In-Reply-To: <874lyrhl81.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,72 +19,171 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xpang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, xlpang@redhat.com, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Xunlei Pang <xlpang@redhat.com>
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
 
-On Thu, 16 Mar 2017 21:40:58 +0800
-Xunlei Pang <xpang@redhat.com> wrote:
+On 03/18/2017 at 01:22 AM, Eric W. Biederman wrote:
+> Xunlei Pang <xlpang@redhat.com> writes:
+>
+>> Currently vmcoreinfo data is updated at boot time subsys_initcall(),
+>> it has the risk of being modified by some wrong code during system
+>> is running.
+>>
+>> As a result, vmcore dumped may contain the wrong vmcoreinfo. Later on,
+>> when using "crash" or "makedumpfile"(etc) utility to parse this vmcore,
+>> we probably will get "Segmentation fault" or other unexpected/confusing
+>> errors.
+> If this is a real concern and the previous discussion sounds like it is
+> part of what we need to do is move the variable vmcoreinfo_note out
+> of the kernel's .bss section.  And modify the code to regenerate
+> and keep this information in something like the control page.
+>
+> Definitely something like this needs a page all to itself, and ideally
+> far away from any other kernel data structures.  I clearly was not
+> watching closely the data someone decided to keep this silly thing
+> in the kernel's .bss section.
+>
+>> As vmcoreinfo is the most fundamental information for vmcore, we better
+>> double check its correctness. Here we generate a signature(using crc32)
+>> after it is saved, then verify it in crash_save_vmcoreinfo() to see if
+>> the signature was broken, if so we have to re-save the vmcoreinfo data
+>> to get the correct vmcoreinfo for kdump as possible as we can.
+> Sigh.  We already have a sha256 that is supposed to cover this sort of
+> thing.  The bug rather is that apparently it isn't covering this data.
+> That sounds like what we should be fixing.
+>
+> Please let's not invent new mechanisms we have to maintain.  Let's
+> reorganize this so this static data is protected like all other static
+> data in the kexec-on-panic path.  We have good mechanims and good
+> strategies for avoiding and detecting corruption we just need to use
+> them.
+>
+> Eric
+>
 
-> On 03/16/2017 at 09:18 PM, Baoquan He wrote:
-> > On 03/16/17 at 08:36pm, Xunlei Pang wrote:
-> >> On 03/16/2017 at 08:27 PM, Baoquan He wrote:
-> >>> Hi Xunlei,
-> >>>
-> >>> Did you really see this ever happened? Because the vmcore size estimate
-> >>> feature, namely --mem-usage option of makedumpfile, depends on the
-> >>> vmcoreinfo in 1st kernel, your change will break it.
-> >> Hi Baoquan,
-> >>
-> >> I can reproduce it using a kernel module which modifies the vmcoreinfo,
-> >> so it's a problem can actually happen.
-> >>
-> >>> If not, it could be not good to change that.
-> >> That's a good point, then I guess we can keep the crash_save_vmcoreinfo_init(),
-> >> and store again all the vmcoreinfo after crash. What do you think?
-> > Well, then it will make makedumpfile segfault happen too when execute
-> > below command in 1st kernel if it existed:
-> > 	makedumpfile --mem-usage /proc/kcore
-> 
-> Yes, if the initial vmcoreinfo data was modified before "makedumpfile --mem-usage", it might happen,
-> after all the system is going something wrong. And that's why we deploy kdump service at the very
-> beginning when the system has a low possibility of going wrong.
-> 
-> But we have to guarantee kdump vmcore can be generated correctly as possible as it can.
-> 
-> >
-> > So we still need to face that problem and need fix it. vmcoreinfo_note
-> > is in kernel data area, how does module intrude into this area? And can
-> > we fix the module code?
-> >
-> 
-> Bugs always exist in products, we can't know what will happen and fix all the errors,
-> that's why we need kdump.
-> 
-> I think the following update should guarantee the correct vmcoreinfo for kdump.
+Yes, this idea looks way better, I will follow your suggestions, thanks!
 
-I'm still not convinced. I would probably have more trust in a clean
-kernel (after boot) than a kernel that has already crashed (presumably
-because of a serious bug). How can be reliability improved by running
-more code in unsafe environment?
+Regards,
+Xunlei
 
-If some code overwrites reserved areas (such as vmcoreinfo), then it's
-seriously buggy. And in my opinion, it is more difficult to identify
-such bugs if they are masked by re-initializing vmcoreinfo after crash.
-In fact, if makedumpfile in the kexec'ed kernel complains that it
-didn't find valid VMCOREINFO content, that's already a hint.
+>
+>> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+>> ---
+>> v1->v2:
+>> - Keep crash_save_vmcoreinfo_init() because "makedumpfile --mem-usage"
+>>   uses the information.
+>> - Add crc32 verification for vmcoreinfo, re-save when failure.
+>>
+>>  arch/Kconfig        |  1 +
+>>  kernel/kexec_core.c | 43 +++++++++++++++++++++++++++++++++++--------
+>>  2 files changed, 36 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/Kconfig b/arch/Kconfig
+>> index c4d6833..66eb296 100644
+>> --- a/arch/Kconfig
+>> +++ b/arch/Kconfig
+>> @@ -4,6 +4,7 @@
+>>  
+>>  config KEXEC_CORE
+>>  	bool
+>> +	select CRC32
+>>  
+>>  config HAVE_IMA_KEXEC
+>>  	bool
+>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> index bfe62d5..012acbe 100644
+>> --- a/kernel/kexec_core.c
+>> +++ b/kernel/kexec_core.c
+>> @@ -38,6 +38,7 @@
+>>  #include <linux/syscore_ops.h>
+>>  #include <linux/compiler.h>
+>>  #include <linux/hugetlb.h>
+>> +#include <linux/crc32.h>
+>>  
+>>  #include <asm/page.h>
+>>  #include <asm/sections.h>
+>> @@ -53,9 +54,10 @@
+>>  
+>>  /* vmcoreinfo stuff */
+>>  static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+>> -u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+>> +static u32 vmcoreinfo_sig;
+>>  size_t vmcoreinfo_size;
+>>  size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
+>> +u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+>>  
+>>  /* Flag to indicate we are going to kexec a new kernel */
+>>  bool kexec_in_progress = false;
+>> @@ -1367,12 +1369,6 @@ static void update_vmcoreinfo_note(void)
+>>  	final_note(buf);
+>>  }
+>>  
+>> -void crash_save_vmcoreinfo(void)
+>> -{
+>> -	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+>> -	update_vmcoreinfo_note();
+>> -}
+>> -
+>>  void vmcoreinfo_append_str(const char *fmt, ...)
+>>  {
+>>  	va_list args;
+>> @@ -1402,7 +1398,7 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>>  	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
+>>  }
+>>  
+>> -static int __init crash_save_vmcoreinfo_init(void)
+>> +static void do_crash_save_vmcoreinfo_init(void)
+>>  {
+>>  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+>>  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+>> @@ -1474,6 +1470,37 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>  #endif
+>>  
+>>  	arch_crash_save_vmcoreinfo();
+>> +}
+>> +
+>> +static u32 crash_calc_vmcoreinfo_sig(void)
+>> +{
+>> +	return crc32(~0, vmcoreinfo_data, vmcoreinfo_size);
+>> +}
+>> +
+>> +static bool crash_verify_vmcoreinfo(void)
+>> +{
+>> +	if (crash_calc_vmcoreinfo_sig() == vmcoreinfo_sig)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +void crash_save_vmcoreinfo(void)
+>> +{
+>> +	/* Re-save if verification fails */
+>> +	if (!crash_verify_vmcoreinfo()) {
+>> +		vmcoreinfo_size = 0;
+>> +		do_crash_save_vmcoreinfo_init();
+>> +	}
+>> +
+>> +	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+>> +	update_vmcoreinfo_note();
+>> +}
+>> +
+>> +static int __init crash_save_vmcoreinfo_init(void)
+>> +{
+>> +	do_crash_save_vmcoreinfo_init();
+>> +	vmcoreinfo_sig = crash_calc_vmcoreinfo_sig();
+>>  	update_vmcoreinfo_note();
+>>  
+>>  	return 0;
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-As a side note, if you're debugging a vmcoreinfo corruption, it's
-possible to use a standalone VMCOREINFO file with makedumpfile, so you
-can pre-generate it and save it in the kdump initrd.
-
-In short, I don't see a compelling case for this change.
-
-Just my two cents,
-Petr T
 
 _______________________________________________
 kexec mailing list
