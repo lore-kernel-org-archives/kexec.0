@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cpqBV-0003Dd-0L
- for kexec@lists.infradead.org; Mon, 20 Mar 2017 05:48:51 +0000
+ id 1cpqBd-0003E4-5S
+ for kexec@lists.infradead.org; Mon, 20 Mar 2017 05:48:59 +0000
 From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH v3 2/3] powerpc/fadump: Use the correct VMCOREINFO_NOTE_SIZE
- for phdr
-Date: Mon, 20 Mar 2017 13:50:32 +0800
-Message-Id: <1489989033-1179-2-git-send-email-xlpang@redhat.com>
+Subject: [PATCH v3 3/3] kdump: Relocate vmcoreinfo to the crash memory range
+Date: Mon, 20 Mar 2017 13:50:33 +0800
+Message-Id: <1489989033-1179-3-git-send-email-xlpang@redhat.com>
 In-Reply-To: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
 References: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,73 +25,175 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Eric Biederman <ebiederm@xmission.com>, Xunlei Pang <xlpang@redhat.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-vmcoreinfo_max_size stands for the vmcoreinfo_data, the
-correct one we should use is vmcoreinfo_note whose total
-size is VMCOREINFO_NOTE_SIZE.
+Currently vmcoreinfo data is updated at boot time subsys_initcall(),
+it has the risk of being modified by some wrong code during system
+is running.
 
-Like explained in commit 77019967f06b ("kdump: fix exported
-size of vmcoreinfo note"), it does not affect the actual 
-function, we better fix it, also this change should be safe 
-and backward compatible.
+As a result, vmcore dumped may contain the wrong vmcoreinfo. Later on,
+when using "crash", "makedumpfile", etc utility to parse this vmcore,
+we probably will get "Segmentation fault" or other unexpected errors.
 
-After this, we can get rid of variable vmcoreinfo_max_size,
-let's use the macro VMCOREINFO_BYTES instead, fewer variables
-means more safety for vmcoreinfo operation.
+E.g. 1) wrong code overwrites vmcoreinfo_data; 2) further crashes the
+system; 3) trigger kdump, then we obviously will fail to recognize the
+crash context correctly due to the corrupted vmcoreinfo.
+
+Now except for vmcoreinfo, all the crash data is well protected(including
+the cpu note which is fully updated in the crash path, thus its correctness
+is guaranteed). Given that vmcoreinfo data is a large chunk, we better
+protect it as well.
+
+To solve this, we relocate and copy vmcoreinfo_data to the crash memory
+when kdump is loading via kexec syscalls. Because the whole crash memory
+will be protected by existing arch_kexec_protect_crashkres() mechanism,
+we naturally protect vmcoreinfo_data from write(even read) access under
+kernel direct mapping after kdump is loaded.
+
+Since kdump is usually loaded at the very early stage after boot, we can
+trust the correctness of the vmcoreinfo data copied.
+
+On the other hand, we still need to operate the vmcoreinfo safe copy when
+crash happens to generate vmcoreinfo_note again, we rely on vmap() to map
+out a new kernel virtual address and update to use this new one instead in
+the following crash_save_vmcoreinfo().
+
+BTW, we do not touch vmcoreinfo_note, because it will be fully updated
+using the protected vmcoreinfo_data after crash which is surely correct
+just like the cpu crash note.
 
 Signed-off-by: Xunlei Pang <xlpang@redhat.com>
 ---
- arch/powerpc/kernel/fadump.c | 3 +--
- include/linux/kexec.h        | 1 -
- kernel/kexec_core.c          | 3 +--
- 3 files changed, 2 insertions(+), 5 deletions(-)
+ include/linux/kexec.h |  3 +++
+ kernel/kexec.c        |  3 +++
+ kernel/kexec_core.c   | 52 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_file.c   |  3 +++
+ 4 files changed, 61 insertions(+)
 
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 8ff0dd4..b8e15cf 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -906,8 +906,7 @@ static int fadump_create_elfcore_headers(char *bufp)
- 
- 	phdr->p_paddr	= fadump_relocate(paddr_vmcoreinfo_note());
- 	phdr->p_offset	= phdr->p_paddr;
--	phdr->p_memsz	= vmcoreinfo_max_size;
--	phdr->p_filesz	= vmcoreinfo_max_size;
-+	phdr->p_memsz	= phdr->p_filesz = VMCOREINFO_NOTE_SIZE;
- 
- 	/* Increment number of program headers. */
- 	(elf->e_phnum)++;
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index f1c601b..6918fda 100644
+index 6918fda..fae2fc6 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -319,7 +319,6 @@ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
- extern note_buf_t __percpu *crash_notes;
- extern u32 *vmcoreinfo_note;
- extern size_t vmcoreinfo_size;
--extern size_t vmcoreinfo_max_size;
+@@ -187,6 +187,8 @@ struct kimage {
+ 	unsigned long start;
+ 	struct page *control_code_page;
+ 	struct page *swap_page;
++	void *vmcoreinfo_data_copy; /* locates in the crash memory */
++	size_t vmcoreinfo_size_copy;
  
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
+ 	unsigned long nr_segments;
+ 	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
+@@ -243,6 +245,7 @@ extern asmlinkage long sys_kexec_load(unsigned long entry,
+ extern int kernel_kexec(void);
+ extern struct page *kimage_alloc_control_pages(struct kimage *image,
+ 						unsigned int order);
++extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+ extern int kexec_load_purgatory(struct kimage *image, unsigned long min,
+ 				unsigned long max, int top_down,
+ 				unsigned long *load_addr);
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 980936a..e0c4dea 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -93,6 +93,9 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+ 			pr_err("Could not allocate swap buffer\n");
+ 			goto out_free_control_pages;
+ 		}
++	} else {
++		if (kimage_crash_copy_vmcoreinfo(image) < 0)
++			goto out_free_image;
+ 	}
+ 
+ 	*rimage = image;
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index e3a4bda..e503b48 100644
+index e503b48..7fad9f6 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -54,7 +54,6 @@
- /* vmcoreinfo stuff */
- static unsigned char *vmcoreinfo_data;
- size_t vmcoreinfo_size;
--size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
- u32 *vmcoreinfo_note;
+@@ -486,6 +486,45 @@ struct page *kimage_alloc_control_pages(struct kimage *image,
+ 	return pages;
+ }
  
- /* Flag to indicate we are going to kexec a new kernel */
-@@ -1386,7 +1385,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- 	r = vscnprintf(buf, sizeof(buf), fmt, args);
- 	va_end(args);
++int kimage_crash_copy_vmcoreinfo(struct kimage *image)
++{
++	struct page *vmcoreinfo_page;
++	void *safecopy;
++
++	WARN_ON(image->type != KEXEC_TYPE_CRASH);
++
++	if (!vmcoreinfo_size) {
++		pr_err("empty vmcoreinfo data\n");
++		return -ENOMEM;
++	}
++
++	/*
++	 * For kdump, allocate one vmcoreinfo safe copy from the
++	 * crash memory. as we have arch_kexec_protect_crashkres()
++	 * after kexec syscall, we naturally protect it from write
++	 * (even read) access under kernel direct mapping. But on
++	 * the other hand, we still need to operate it when crash
++	 * happens to generate vmcoreinfo note, hereby we rely on
++	 * vmap for this purpose.
++	 */
++	vmcoreinfo_page = kimage_alloc_control_pages(image, 0);
++	if (!vmcoreinfo_page) {
++		pr_err("could not allocate vmcoreinfo buffer\n");
++		return -ENOMEM;
++	}
++	safecopy = vmap(&vmcoreinfo_page, 1, VM_MAP, PAGE_KERNEL);
++	if (!safecopy) {
++		pr_err("cound not vmap vmcoreinfo buffer\n");
++		return -ENOMEM;
++	}
++
++	memcpy(safecopy, vmcoreinfo_data, vmcoreinfo_size);
++	image->vmcoreinfo_data_copy = safecopy;
++	image->vmcoreinfo_size_copy = vmcoreinfo_size;
++
++	return 0;
++}
++
+ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
+ {
+ 	if (*image->entry != 0)
+@@ -603,6 +642,9 @@ void kimage_free(struct kimage *image)
+ 	if (image->file_mode)
+ 		kimage_file_post_load_cleanup(image);
  
--	r = min(r, vmcoreinfo_max_size - vmcoreinfo_size);
-+	r = min(r, VMCOREINFO_BYTES - vmcoreinfo_size);
++	if (image->vmcoreinfo_data_copy)
++		vunmap(image->vmcoreinfo_data_copy);
++
+ 	kfree(image);
+ }
  
- 	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+@@ -1370,6 +1412,16 @@ void crash_save_vmcoreinfo(void)
+ {
+ 	if (!vmcoreinfo_note)
+ 		return;
++	/*
++	 * Always use the safe copy to generate vmcoreinfo note.
++	 * Check kexec_crash_image, fadump does not use kexec.
++	 */
++	if (kexec_crash_image &&
++	    kexec_crash_image->vmcoreinfo_data_copy &&
++	    kexec_crash_image->vmcoreinfo_size_copy) {
++		vmcoreinfo_data = kexec_crash_image->vmcoreinfo_data_copy;
++		vmcoreinfo_size = kexec_crash_image->vmcoreinfo_size_copy;
++	}
  
+ 	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+ 	update_vmcoreinfo_note();
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b56a558..6bb3e4d 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -244,6 +244,9 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+ 			pr_err("Could not allocate swap buffer\n");
+ 			goto out_free_control_pages;
+ 		}
++	} else {
++		if (kimage_crash_copy_vmcoreinfo(image) < 0)
++			goto out_free_post_load_bufs;
+ 	}
+ 
+ 	*rimage = image;
 -- 
 1.8.3.1
 
