@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cppHj-0007yO-BA
- for kexec@lists.infradead.org; Mon, 20 Mar 2017 04:51:13 +0000
-Subject: Re: [PATCH v2] kexec: Introduce vmcoreinfo signature verification
-References: <1489722318-13695-1-git-send-email-xlpang@redhat.com>
- <874lyrhl81.fsf@xmission.com> <20170320021330.GA22469@x1>
- <58CF40E5.6010104@redhat.com> <20170320035509.GB22469@x1>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <58CF604D.7030405@redhat.com>
-Date: Mon, 20 Mar 2017 12:53:33 +0800
-MIME-Version: 1.0
-In-Reply-To: <20170320035509.GB22469@x1>
+ id 1cpqBV-0003Cr-0G
+ for kexec@lists.infradead.org; Mon, 20 Mar 2017 05:48:51 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH v3 1/3] kexec: Move vmcoreinfo out of the kernel's .bss section
+Date: Mon, 20 Mar 2017 13:50:31 +0800
+Message-Id: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,208 +15,152 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, xlpang@redhat.com
-Cc: Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Eric Biederman <ebiederm@xmission.com>, Xunlei Pang <xlpang@redhat.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-On 03/20/2017 at 11:55 AM, Baoquan He wrote:
-> On 03/20/17 at 10:39am, Xunlei Pang wrote:
->> On 03/20/2017 at 10:13 AM, Baoquan He wrote:
->>> On 03/17/17 at 12:22pm, Eric W. Biederman wrote:
->>>> Xunlei Pang <xlpang@redhat.com> writes:
->>>>
->>>>> Currently vmcoreinfo data is updated at boot time subsys_initcall(),
->>>>> it has the risk of being modified by some wrong code during system
->>>>> is running.
->>>>>
->>>>> As a result, vmcore dumped may contain the wrong vmcoreinfo. Later on,
->>>>> when using "crash" or "makedumpfile"(etc) utility to parse this vmcore,
->>>>> we probably will get "Segmentation fault" or other unexpected/confusing
->>>>> errors.
->>>> If this is a real concern and the previous discussion sounds like it is
->>>> part of what we need to do is move the variable vmcoreinfo_note out
->>>> of the kernel's .bss section.  And modify the code to regenerate
->>>> and keep this information in something like the control page.
->>> I guess this is not from a real issue, just from Xunlei's worry. But
->>> Xunlei didn't give a direct answer to this, and Petr's question. Not
->> It's easy to reproduce: write a kernel module to modify part content of
->> vmcoreinfo_data (we surely have many ways to acquire its VA). If it does
->> exist in theory, we will met it sooner or later in real world due to billions
->> of applications.
->>
->> Also there are bugs like this one
->> https://bugzilla.redhat.com/show_bug.cgi?id=1287097
->> Not sure if it is makedumpfile issue or this one, maybe we can't know forever.
-> Well, kdump is not all-purpose. If you write code in module to stomp
-> page init_level4_pgt is pointing at, you won't get a vmcore.
+As Eric said,
+"what we need to do is move the variable vmcoreinfo_note out
+of the kernel's .bss section.  And modify the code to regenerate
+and keep this information in something like the control page.
 
-vmcoreinfo is a large data chunk prepared for kdump not a normal-sized variable, we better protect it.
+Definitely something like this needs a page all to itself, and ideally
+far away from any other kernel data structures.  I clearly was not
+watching closely the data someone decided to keep this silly thing
+in the kernel's .bss section."
 
-> And you are saying vmcoreinfo_data, it's a intermediate page, should be
-> vmcoreinfo_note. If the wrong code you mentioned didn't change
-> vmcoreinfo_note, but other kernel data which need be saved into
-> vmcoreinfo_note, crash_save_vmcoreinfo_init is doing better than you
-> re-saved one.
+This patch allocates extra pages for these vmcoreinfo_XXX variables,
+one advantage is that it enhances some safety of vmcoreinfo, because
+vmcoreinfo now is kept far away from other kernel data structures.
 
-I am not going to touch vmcoreinfo_note, just trying to relocate vmcoreinfo_data into the crash memory,
-then use it to update vmcoreinfo_note which is fully overwritten when crash happens just like the cpu
-crash note.
+Suggested-by: Eric Biederman <ebiederm@xmission.com>
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+ arch/ia64/kernel/machine_kexec.c |  5 -----
+ arch/x86/kernel/crash.c          |  2 +-
+ include/linux/kexec.h            |  2 +-
+ kernel/kexec_core.c              | 29 ++++++++++++++++++++++++-----
+ kernel/ksysfs.c                  |  2 +-
+ 5 files changed, 27 insertions(+), 13 deletions(-)
 
-Anyway I will send v3 soon, let further discuss it there, thanks!
-
-Regards,
-Xunlei
-
->
->> Regards,
->> Xunlei
->>
->>> very sure if this will impact other implementation. fadump will be
->>> impacted by this or other dump? Maybe yet or maybe not.
->>>
->>> I don't object this strongly, but please at least add code comment to
->>> explain why vmcoreinfo need be saved twice because it does look weird.
->>>
->>>> Definitely something like this needs a page all to itself, and ideally
->>>> far away from any other kernel data structures.  I clearly was not
->>>> watching closely the data someone decided to keep this silly thing
->>>> in the kernel's .bss section.
->>>>
->>>>> As vmcoreinfo is the most fundamental information for vmcore, we better
->>>>> double check its correctness. Here we generate a signature(using crc32)
->>>>> after it is saved, then verify it in crash_save_vmcoreinfo() to see if
->>>>> the signature was broken, if so we have to re-save the vmcoreinfo data
->>>>> to get the correct vmcoreinfo for kdump as possible as we can.
->>>> Sigh.  We already have a sha256 that is supposed to cover this sort of
->>>> thing.  The bug rather is that apparently it isn't covering this data.
->>>> That sounds like what we should be fixing.
->>>>
->>>> Please let's not invent new mechanisms we have to maintain.  Let's
->>>> reorganize this so this static data is protected like all other static
->>>> data in the kexec-on-panic path.  We have good mechanims and good
->>>> strategies for avoiding and detecting corruption we just need to use
->>>> them.
->>>>
->>>> Eric
->>>>
->>>>
->>>>
->>>>> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
->>>>> ---
->>>>> v1->v2:
->>>>> - Keep crash_save_vmcoreinfo_init() because "makedumpfile --mem-usage"
->>>>>   uses the information.
->>>>> - Add crc32 verification for vmcoreinfo, re-save when failure.
->>>>>
->>>>>  arch/Kconfig        |  1 +
->>>>>  kernel/kexec_core.c | 43 +++++++++++++++++++++++++++++++++++--------
->>>>>  2 files changed, 36 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/arch/Kconfig b/arch/Kconfig
->>>>> index c4d6833..66eb296 100644
->>>>> --- a/arch/Kconfig
->>>>> +++ b/arch/Kconfig
->>>>> @@ -4,6 +4,7 @@
->>>>>  
->>>>>  config KEXEC_CORE
->>>>>  	bool
->>>>> +	select CRC32
->>>>>  
->>>>>  config HAVE_IMA_KEXEC
->>>>>  	bool
->>>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->>>>> index bfe62d5..012acbe 100644
->>>>> --- a/kernel/kexec_core.c
->>>>> +++ b/kernel/kexec_core.c
->>>>> @@ -38,6 +38,7 @@
->>>>>  #include <linux/syscore_ops.h>
->>>>>  #include <linux/compiler.h>
->>>>>  #include <linux/hugetlb.h>
->>>>> +#include <linux/crc32.h>
->>>>>  
->>>>>  #include <asm/page.h>
->>>>>  #include <asm/sections.h>
->>>>> @@ -53,9 +54,10 @@
->>>>>  
->>>>>  /* vmcoreinfo stuff */
->>>>>  static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
->>>>> -u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
->>>>> +static u32 vmcoreinfo_sig;
->>>>>  size_t vmcoreinfo_size;
->>>>>  size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
->>>>> +u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
->>>>>  
->>>>>  /* Flag to indicate we are going to kexec a new kernel */
->>>>>  bool kexec_in_progress = false;
->>>>> @@ -1367,12 +1369,6 @@ static void update_vmcoreinfo_note(void)
->>>>>  	final_note(buf);
->>>>>  }
->>>>>  
->>>>> -void crash_save_vmcoreinfo(void)
->>>>> -{
->>>>> -	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
->>>>> -	update_vmcoreinfo_note();
->>>>> -}
->>>>> -
->>>>>  void vmcoreinfo_append_str(const char *fmt, ...)
->>>>>  {
->>>>>  	va_list args;
->>>>> @@ -1402,7 +1398,7 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->>>>>  	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
->>>>>  }
->>>>>  
->>>>> -static int __init crash_save_vmcoreinfo_init(void)
->>>>> +static void do_crash_save_vmcoreinfo_init(void)
->>>>>  {
->>>>>  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
->>>>>  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
->>>>> @@ -1474,6 +1470,37 @@ static int __init crash_save_vmcoreinfo_init(void)
->>>>>  #endif
->>>>>  
->>>>>  	arch_crash_save_vmcoreinfo();
->>>>> +}
->>>>> +
->>>>> +static u32 crash_calc_vmcoreinfo_sig(void)
->>>>> +{
->>>>> +	return crc32(~0, vmcoreinfo_data, vmcoreinfo_size);
->>>>> +}
->>>>> +
->>>>> +static bool crash_verify_vmcoreinfo(void)
->>>>> +{
->>>>> +	if (crash_calc_vmcoreinfo_sig() == vmcoreinfo_sig)
->>>>> +		return true;
->>>>> +
->>>>> +	return false;
->>>>> +}
->>>>> +
->>>>> +void crash_save_vmcoreinfo(void)
->>>>> +{
->>>>> +	/* Re-save if verification fails */
->>>>> +	if (!crash_verify_vmcoreinfo()) {
->>>>> +		vmcoreinfo_size = 0;
->>>>> +		do_crash_save_vmcoreinfo_init();
->>>>> +	}
->>>>> +
->>>>> +	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
->>>>> +	update_vmcoreinfo_note();
->>>>> +}
->>>>> +
->>>>> +static int __init crash_save_vmcoreinfo_init(void)
->>>>> +{
->>>>> +	do_crash_save_vmcoreinfo_init();
->>>>> +	vmcoreinfo_sig = crash_calc_vmcoreinfo_sig();
->>>>>  	update_vmcoreinfo_note();
->>>>>  
->>>>>  	return 0;
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
+diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+index 599507b..c14815d 100644
+--- a/arch/ia64/kernel/machine_kexec.c
++++ b/arch/ia64/kernel/machine_kexec.c
+@@ -163,8 +163,3 @@ void arch_crash_save_vmcoreinfo(void)
+ #endif
+ }
+ 
+-phys_addr_t paddr_vmcoreinfo_note(void)
+-{
+-	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
+-}
+-
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 3741461..4d35fbb 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -456,7 +456,7 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
+ 	bufp += sizeof(Elf64_Phdr);
+ 	phdr->p_type = PT_NOTE;
+ 	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
+-	phdr->p_filesz = phdr->p_memsz = sizeof(vmcoreinfo_note);
++	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
+ 	(ehdr->e_phnum)++;
+ 
+ #ifdef CONFIG_X86_64
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index e98e546..f1c601b 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -317,7 +317,7 @@ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
+ extern struct resource crashk_low_res;
+ typedef u32 note_buf_t[KEXEC_NOTE_BYTES/4];
+ extern note_buf_t __percpu *crash_notes;
+-extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
++extern u32 *vmcoreinfo_note;
+ extern size_t vmcoreinfo_size;
+ extern size_t vmcoreinfo_max_size;
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index bfe62d5..e3a4bda 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -52,10 +52,10 @@
+ note_buf_t __percpu *crash_notes;
+ 
+ /* vmcoreinfo stuff */
+-static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+-u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
++static unsigned char *vmcoreinfo_data;
+ size_t vmcoreinfo_size;
+-size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
++size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
++u32 *vmcoreinfo_note;
+ 
+ /* Flag to indicate we are going to kexec a new kernel */
+ bool kexec_in_progress = false;
+@@ -1369,6 +1369,9 @@ static void update_vmcoreinfo_note(void)
+ 
+ void crash_save_vmcoreinfo(void)
+ {
++	if (!vmcoreinfo_note)
++		return;
++
+ 	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
+ 	update_vmcoreinfo_note();
+ }
+@@ -1397,13 +1400,29 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+ void __weak arch_crash_save_vmcoreinfo(void)
+ {}
+ 
+-phys_addr_t __weak paddr_vmcoreinfo_note(void)
++phys_addr_t paddr_vmcoreinfo_note(void)
+ {
+-	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
++	return __pa(vmcoreinfo_note);
+ }
+ 
+ static int __init crash_save_vmcoreinfo_init(void)
+ {
++	/* One page should be enough for VMCOREINFO_BYTES under all archs */
++	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
++	if (!vmcoreinfo_data) {
++		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
++		return -ENOMEM;
++	}
++
++	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
++						GFP_KERNEL | __GFP_ZERO);
++	if (!vmcoreinfo_note) {
++		free_page((unsigned long)vmcoreinfo_data);
++		vmcoreinfo_data = NULL;
++		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
++		return -ENOMEM;
++	}
++
+ 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+ 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+ 
+diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+index ee1bc1b..9de6fcc 100644
+--- a/kernel/ksysfs.c
++++ b/kernel/ksysfs.c
+@@ -130,7 +130,7 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
+ {
+ 	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
+ 	return sprintf(buf, "%pa %x\n", &vmcore_base,
+-		       (unsigned int)sizeof(vmcoreinfo_note));
++			(unsigned int)VMCOREINFO_NOTE_SIZE);
+ }
+ KERNEL_ATTR_RO(vmcoreinfo);
+ 
+-- 
+1.8.3.1
 
 
 _______________________________________________
