@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cpqBV-0003Cr-0G
+ id 1cpqBV-0003Dd-0L
  for kexec@lists.infradead.org; Mon, 20 Mar 2017 05:48:51 +0000
 From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH v3 1/3] kexec: Move vmcoreinfo out of the kernel's .bss section
-Date: Mon, 20 Mar 2017 13:50:31 +0800
-Message-Id: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
+Subject: [PATCH v3 2/3] powerpc/fadump: Use the correct VMCOREINFO_NOTE_SIZE
+ for phdr
+Date: Mon, 20 Mar 2017 13:50:32 +0800
+Message-Id: <1489989033-1179-2-git-send-email-xlpang@redhat.com>
+In-Reply-To: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
+References: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,141 +26,72 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Eric Biederman <ebiederm@xmission.com>, Xunlei Pang <xlpang@redhat.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-As Eric said,
-"what we need to do is move the variable vmcoreinfo_note out
-of the kernel's .bss section.  And modify the code to regenerate
-and keep this information in something like the control page.
+vmcoreinfo_max_size stands for the vmcoreinfo_data, the
+correct one we should use is vmcoreinfo_note whose total
+size is VMCOREINFO_NOTE_SIZE.
 
-Definitely something like this needs a page all to itself, and ideally
-far away from any other kernel data structures.  I clearly was not
-watching closely the data someone decided to keep this silly thing
-in the kernel's .bss section."
+Like explained in commit 77019967f06b ("kdump: fix exported
+size of vmcoreinfo note"), it does not affect the actual 
+function, we better fix it, also this change should be safe 
+and backward compatible.
 
-This patch allocates extra pages for these vmcoreinfo_XXX variables,
-one advantage is that it enhances some safety of vmcoreinfo, because
-vmcoreinfo now is kept far away from other kernel data structures.
+After this, we can get rid of variable vmcoreinfo_max_size,
+let's use the macro VMCOREINFO_BYTES instead, fewer variables
+means more safety for vmcoreinfo operation.
 
-Suggested-by: Eric Biederman <ebiederm@xmission.com>
 Signed-off-by: Xunlei Pang <xlpang@redhat.com>
 ---
- arch/ia64/kernel/machine_kexec.c |  5 -----
- arch/x86/kernel/crash.c          |  2 +-
- include/linux/kexec.h            |  2 +-
- kernel/kexec_core.c              | 29 ++++++++++++++++++++++++-----
- kernel/ksysfs.c                  |  2 +-
- 5 files changed, 27 insertions(+), 13 deletions(-)
+ arch/powerpc/kernel/fadump.c | 3 +--
+ include/linux/kexec.h        | 1 -
+ kernel/kexec_core.c          | 3 +--
+ 3 files changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-index 599507b..c14815d 100644
---- a/arch/ia64/kernel/machine_kexec.c
-+++ b/arch/ia64/kernel/machine_kexec.c
-@@ -163,8 +163,3 @@ void arch_crash_save_vmcoreinfo(void)
- #endif
- }
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 8ff0dd4..b8e15cf 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -906,8 +906,7 @@ static int fadump_create_elfcore_headers(char *bufp)
  
--phys_addr_t paddr_vmcoreinfo_note(void)
--{
--	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
--}
--
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 3741461..4d35fbb 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -456,7 +456,7 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
- 	bufp += sizeof(Elf64_Phdr);
- 	phdr->p_type = PT_NOTE;
- 	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
--	phdr->p_filesz = phdr->p_memsz = sizeof(vmcoreinfo_note);
-+	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
- 	(ehdr->e_phnum)++;
+ 	phdr->p_paddr	= fadump_relocate(paddr_vmcoreinfo_note());
+ 	phdr->p_offset	= phdr->p_paddr;
+-	phdr->p_memsz	= vmcoreinfo_max_size;
+-	phdr->p_filesz	= vmcoreinfo_max_size;
++	phdr->p_memsz	= phdr->p_filesz = VMCOREINFO_NOTE_SIZE;
  
- #ifdef CONFIG_X86_64
+ 	/* Increment number of program headers. */
+ 	(elf->e_phnum)++;
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index e98e546..f1c601b 100644
+index f1c601b..6918fda 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -317,7 +317,7 @@ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
- extern struct resource crashk_low_res;
- typedef u32 note_buf_t[KEXEC_NOTE_BYTES/4];
+@@ -319,7 +319,6 @@ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
  extern note_buf_t __percpu *crash_notes;
--extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-+extern u32 *vmcoreinfo_note;
+ extern u32 *vmcoreinfo_note;
  extern size_t vmcoreinfo_size;
- extern size_t vmcoreinfo_max_size;
+-extern size_t vmcoreinfo_max_size;
  
+ /* flag to track if kexec reboot is in progress */
+ extern bool kexec_in_progress;
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index bfe62d5..e3a4bda 100644
+index e3a4bda..e503b48 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
-@@ -52,10 +52,10 @@
- note_buf_t __percpu *crash_notes;
- 
+@@ -54,7 +54,6 @@
  /* vmcoreinfo stuff */
--static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
--u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-+static unsigned char *vmcoreinfo_data;
+ static unsigned char *vmcoreinfo_data;
  size_t vmcoreinfo_size;
--size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
-+size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
-+u32 *vmcoreinfo_note;
+-size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
+ u32 *vmcoreinfo_note;
  
  /* Flag to indicate we are going to kexec a new kernel */
- bool kexec_in_progress = false;
-@@ -1369,6 +1369,9 @@ static void update_vmcoreinfo_note(void)
+@@ -1386,7 +1385,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+ 	r = vscnprintf(buf, sizeof(buf), fmt, args);
+ 	va_end(args);
  
- void crash_save_vmcoreinfo(void)
- {
-+	if (!vmcoreinfo_note)
-+		return;
-+
- 	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
- 	update_vmcoreinfo_note();
- }
-@@ -1397,13 +1400,29 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- void __weak arch_crash_save_vmcoreinfo(void)
- {}
+-	r = min(r, vmcoreinfo_max_size - vmcoreinfo_size);
++	r = min(r, VMCOREINFO_BYTES - vmcoreinfo_size);
  
--phys_addr_t __weak paddr_vmcoreinfo_note(void)
-+phys_addr_t paddr_vmcoreinfo_note(void)
- {
--	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
-+	return __pa(vmcoreinfo_note);
- }
- 
- static int __init crash_save_vmcoreinfo_init(void)
- {
-+	/* One page should be enough for VMCOREINFO_BYTES under all archs */
-+	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-+	if (!vmcoreinfo_data) {
-+		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
-+						GFP_KERNEL | __GFP_ZERO);
-+	if (!vmcoreinfo_note) {
-+		free_page((unsigned long)vmcoreinfo_data);
-+		vmcoreinfo_data = NULL;
-+		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
-+		return -ENOMEM;
-+	}
-+
- 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
- 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
- 
-diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-index ee1bc1b..9de6fcc 100644
---- a/kernel/ksysfs.c
-+++ b/kernel/ksysfs.c
-@@ -130,7 +130,7 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
- {
- 	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
- 	return sprintf(buf, "%pa %x\n", &vmcore_base,
--		       (unsigned int)sizeof(vmcoreinfo_note));
-+			(unsigned int)VMCOREINFO_NOTE_SIZE);
- }
- KERNEL_ATTR_RO(vmcoreinfo);
+ 	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
  
 -- 
 1.8.3.1
