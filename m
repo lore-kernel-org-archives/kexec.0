@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cpsSq-0000Sk-TR
- for kexec@lists.infradead.org; Mon, 20 Mar 2017 08:14:54 +0000
-Date: Mon, 20 Mar 2017 09:14:23 +0100
+ id 1cpsTg-00025D-Au
+ for kexec@lists.infradead.org; Mon, 20 Mar 2017 08:15:45 +0000
+Date: Mon, 20 Mar 2017 09:15:19 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH][kexec-tools] ppc: Fix format warning with die()
-Message-ID: <20170320081423.GA21538@verge.net.au>
-References: <20170316141118.22286-1-jussi.kukkonen@intel.com>
+Subject: Re: [PATCH] crashdump: Remove stray get_crashkernel_region()
+ declaration
+Message-ID: <20170320081519.GB21538@verge.net.au>
+References: <1489659144-14545-1-git-send-email-daniel.kiper@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170316141118.22286-1-jussi.kukkonen@intel.com>
+In-Reply-To: <1489659144-14545-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,13 +24,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jussi Kukkonen <jussi.kukkonen@intel.com>
+To: Daniel Kiper <daniel.kiper@oracle.com>
 Cc: kexec@lists.infradead.org
 
-On Thu, Mar 16, 2017 at 04:11:18PM +0200, Jussi Kukkonen wrote:
-> Enable compiling kexec-tools for ppc with -Werror=format-security.
-> 
-> Signed-off-by: Jussi Kukkonen <jussi.kukkonen@intel.com>
+On Thu, Mar 16, 2017 at 11:12:24AM +0100, Daniel Kiper wrote:
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
 Thanks, applied.
 
