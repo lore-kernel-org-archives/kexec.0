@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
+Received: from mail-pg0-x233.google.com ([2607:f8b0:400e:c05::233])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cqAd1-000751-Ny
- for kexec@lists.infradead.org; Tue, 21 Mar 2017 03:38:38 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
-Date: Mon, 20 Mar 2017 22:33:07 -0500
-In-Reply-To: <1489989033-1179-1-git-send-email-xlpang@redhat.com> (Xunlei
- Pang's message of "Mon, 20 Mar 2017 13:50:31 +0800")
-Message-ID: <87pohbz4lo.fsf@xmission.com>
+ id 1cqEHU-0002Xr-76
+ for kexec@lists.infradead.org; Tue, 21 Mar 2017 07:32:38 +0000
+Received: by mail-pg0-x233.google.com with SMTP id n190so89978801pga.0
+ for <kexec@lists.infradead.org>; Tue, 21 Mar 2017 00:32:15 -0700 (PDT)
+Date: Tue, 21 Mar 2017 16:34:53 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v33 00/14] add kdump support
+Message-ID: <20170321073452.GA17298@linaro.org>
+References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
+ <1489750991.17202.40.camel@infradead.org>
+ <1489759373.17202.44.camel@infradead.org>
+ <20170317153358.GI5940@leverpostej>
+ <1489765628.17202.59.camel@infradead.org>
+ <20170317162421.GK5940@leverpostej>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 1/3] kexec: Move vmcoreinfo out of the kernel's .bss
- section
+Content-Disposition: inline
+In-Reply-To: <20170317162421.GK5940@leverpostej>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,163 +26,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
+To: Mark Rutland <mark.rutland@arm.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, geoff@infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Xunlei Pang <xlpang@redhat.com> writes:
-
-> As Eric said,
-> "what we need to do is move the variable vmcoreinfo_note out
-> of the kernel's .bss section.  And modify the code to regenerate
-> and keep this information in something like the control page.
->
-> Definitely something like this needs a page all to itself, and ideally
-> far away from any other kernel data structures.  I clearly was not
-> watching closely the data someone decided to keep this silly thing
-> in the kernel's .bss section."
->
-> This patch allocates extra pages for these vmcoreinfo_XXX variables,
-> one advantage is that it enhances some safety of vmcoreinfo, because
-> vmcoreinfo now is kept far away from other kernel data structures.
-
-Can you preceed this patch with a patch that removes CRASHTIME from
-vmcoreinfo?  If someone actually cares we can add a separate note that holds
-a 64bit crashtime in the per cpu notes.  
-
-As we are looking at reliability concerns removing CRASHTIME should make
-everything in vmcoreinfo a boot time constant.  Which should simplify
-everything considerably.
-
-Which means we only need to worry abou the per-cpu notes being written
-at the time of a crash.
-
-> Suggested-by: Eric Biederman <ebiederm@xmission.com>
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
-> ---
->  arch/ia64/kernel/machine_kexec.c |  5 -----
->  arch/x86/kernel/crash.c          |  2 +-
->  include/linux/kexec.h            |  2 +-
->  kernel/kexec_core.c              | 29 ++++++++++++++++++++++++-----
->  kernel/ksysfs.c                  |  2 +-
->  5 files changed, 27 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-> index 599507b..c14815d 100644
-> --- a/arch/ia64/kernel/machine_kexec.c
-> +++ b/arch/ia64/kernel/machine_kexec.c
-> @@ -163,8 +163,3 @@ void arch_crash_save_vmcoreinfo(void)
->  #endif
->  }
->  
-> -phys_addr_t paddr_vmcoreinfo_note(void)
-> -{
-> -	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
-> -}
-> -
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 3741461..4d35fbb 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -456,7 +456,7 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
->  	bufp += sizeof(Elf64_Phdr);
->  	phdr->p_type = PT_NOTE;
->  	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
-> -	phdr->p_filesz = phdr->p_memsz = sizeof(vmcoreinfo_note);
-> +	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
->  	(ehdr->e_phnum)++;
->  
->  #ifdef CONFIG_X86_64
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index e98e546..f1c601b 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -317,7 +317,7 @@ extern void *kexec_purgatory_get_symbol_addr(struct kimage *image,
->  extern struct resource crashk_low_res;
->  typedef u32 note_buf_t[KEXEC_NOTE_BYTES/4];
->  extern note_buf_t __percpu *crash_notes;
-> -extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-> +extern u32 *vmcoreinfo_note;
->  extern size_t vmcoreinfo_size;
->  extern size_t vmcoreinfo_max_size;
->  
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index bfe62d5..e3a4bda 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -52,10 +52,10 @@
->  note_buf_t __percpu *crash_notes;
->  
->  /* vmcoreinfo stuff */
-> -static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
-> -u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-> +static unsigned char *vmcoreinfo_data;
->  size_t vmcoreinfo_size;
-> -size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
-> +size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
-> +u32 *vmcoreinfo_note;
->  
->  /* Flag to indicate we are going to kexec a new kernel */
->  bool kexec_in_progress = false;
-> @@ -1369,6 +1369,9 @@ static void update_vmcoreinfo_note(void)
->  
->  void crash_save_vmcoreinfo(void)
->  {
-> +	if (!vmcoreinfo_note)
-> +		return;
-> +
->  	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
->  	update_vmcoreinfo_note();
->  }
-> @@ -1397,13 +1400,29 @@ void vmcoreinfo_append_str(const char *fmt, ...)
->  void __weak arch_crash_save_vmcoreinfo(void)
->  {}
->  
-> -phys_addr_t __weak paddr_vmcoreinfo_note(void)
-> +phys_addr_t paddr_vmcoreinfo_note(void)
->  {
-> -	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
-> +	return __pa(vmcoreinfo_note);
->  }
->  
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
-> +	/* One page should be enough for VMCOREINFO_BYTES under all archs */
-> +	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-> +	if (!vmcoreinfo_data) {
-> +		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
-> +						GFP_KERNEL | __GFP_ZERO);
-> +	if (!vmcoreinfo_note) {
-> +		free_page((unsigned long)vmcoreinfo_data);
-> +		vmcoreinfo_data = NULL;
-> +		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
-> +		return -ENOMEM;
-> +	}
-> +
->  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
->  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
->  
-> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-> index ee1bc1b..9de6fcc 100644
-> --- a/kernel/ksysfs.c
-> +++ b/kernel/ksysfs.c
-> @@ -130,7 +130,7 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
->  {
->  	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
->  	return sprintf(buf, "%pa %x\n", &vmcore_base,
-> -		       (unsigned int)sizeof(vmcoreinfo_note));
-> +			(unsigned int)VMCOREINFO_NOTE_SIZE);
->  }
->  KERNEL_ATTR_RO(vmcoreinfo);
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBNYXIgMTcsIDIwMTcgYXQgMDQ6MjQ6MjFQTSArMDAwMCwgTWFyayBSdXRsYW5kIHdy
+b3RlOgo+IE9uIEZyaSwgTWFyIDE3LCAyMDE3IGF0IDAzOjQ3OjA4UE0gKzAwMDAsIERhdmlkIFdv
+b2Rob3VzZSB3cm90ZToKPiA+IE9uIEZyaSwgMjAxNy0wMy0xNyBhdCAxNTozMyArMDAwMCwgTWFy
+ayBSdXRsYW5kIHdyb3RlOgo+ID4gTm8sIGluIHRoaXMgY2FzZSB0aGUgQ1BVcyAqd2VyZSogb2Zm
+bGluZWQgY29ycmVjdGx5LCBvciBhdCBsZWFzdCAiYXMKPiA+IGRlc2lnbmVkIiwgYnkgc21wX3Nl
+bmRfY3Jhc2hfc3RvcCgpLiBBbmQgaWYgdGhhdCBoYWRuJ3Qgd29ya2VkLCBhcwo+ID4gdmVyaWZp
+ZWQgYnkgKml0cyogc3luY2hyb25pc2F0aW9uIG1ldGhvZCBiYXNlZCBvbiB0aGUgYXRvbWljX3QK
+PiA+IHdhaXRpbmdfZm9yX2NyYXNoX2lwaSwgdGhlbiAqaXQqIHdvdWxkIGhhdmUgY29tcGxhaW5l
+ZCBmb3IgaXRzZWxmOgo+ID4gCj4gPiAJaWYgKGF0b21pY19yZWFkKCZ3YWl0aW5nX2Zvcl9jcmFz
+aF9pcGkpID4gMCkKPiA+IAkJcHJfd2FybmluZygiU01QOiBmYWlsZWQgdG8gc3RvcCBzZWNvbmRh
+cnkgQ1BVcyAlKnBibFxuIiwKPiA+IAkJCcKgwqDCoGNwdW1hc2tfcHJfYXJncyhjcHVfb25saW5l
+X21hc2spKTsKPiA+IAo+ID4gSXQncyBqdXN0IHRoYXQgc21wX3NlbmRfY3Jhc2hfc3RvcCgpIChv
+ciBtb3JlIHNwZWNpZmljYWxseQo+ID4gaXBpX2NwdV9jcmFzaF9zdG9wKCkpIGRvZXNuJ3QgdG91
+Y2ggdGhlIG9ubGluZSBjcHUgbWFzay4gVW5saWtlIHRoZQo+ID4gQVJNMzIgZXF1aXZhbGVudCBm
+dW5jdGlvbiBtYWNoaWVuX2NyYXNoX25vbnBhbmljX2NvcmUoKSwgd2hpY2ggZG9lcy4KPiA+IAo+
+ID4gSXQgd2Fzbid0IGNsZWFyIGlmIHRoYXQgd2FzICppbnRlbnRpb25hbCosIHRvIGFsbG93IHRo
+ZSBvcmlnaW5hbAo+ID4gY29udGVudHMgb2YgdGhlIG9ubGluZSBtYXNrIGJlZm9yZSB0aGUgY3Jh
+c2ggdG8gYmUgc2VlbiBpbiB0aGUKPiA+IHJlc3VsdGluZyB2bWNvcmUuLi4gb3IgcHVyZWx5IGFu
+IGFjY2lkZW50LsKgCgpZZXMsIGl0IGlzIGludGVudGlvbmFsLiBJIHJlbW92ZWQgJ29mZmxpbmUn
+IGNvZGUgaW4gbXkgdjE0ICgyMDE2LzMvNCkuCkFzIHlvdSBhc3N1bWVkLCBJJ2QgZXhwZWN0ICdv
+bmxpbmUnIHN0YXR1cyBvZiBhbGwgQ1BVcyB0byBiZSBrZXB0CnVuY2hhbmdlZCBpbiB0aGUgY29y
+ZSBkdW1wLgoKSWYgeW91IGNhbiBhZ3JlZSwgSSB3b3VsZCBsaWtlIHRvIG1vZGlmeSB0aGlzIGRp
+c3B1dGVkIHdhcm5pbmcgY29kZSB0bzoKCj09PTg8PT09CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0
+L2luY2x1ZGUvYXNtL3NtcC5oIGIvYXJjaC9hcm02NC9pbmNsdWRlL2FzbS9zbXAuaAppbmRleCBj
+ZWEwMDlmMjY1N2QuLjU1ZjA4YzVhY2ZhZCAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9pbmNsdWRl
+L2FzbS9zbXAuaAorKysgYi9hcmNoL2FybTY0L2luY2x1ZGUvYXNtL3NtcC5oCkBAIC0xNDksNiAr
+MTQ5LDcgQEAgc3RhdGljIGlubGluZSB2b2lkIGNwdV9wYW5pY19rZXJuZWwodm9pZCkKIGJvb2wg
+Y3B1c19hcmVfc3R1Y2tfaW5fa2VybmVsKHZvaWQpOwogCiBleHRlcm4gdm9pZCBzbXBfc2VuZF9j
+cmFzaF9zdG9wKHZvaWQpOworZXh0ZXJuIGJvb2wgc21wX2NyYXNoX3N0b3BfZmFpbGVkKHZvaWQp
+OwogCiAjZW5kaWYgLyogaWZuZGVmIF9fQVNTRU1CTFlfXyAqLwogCmRpZmYgLS1naXQgYS9hcmNo
+L2FybTY0L2tlcm5lbC9tYWNoaW5lX2tleGVjLmMgYi9hcmNoL2FybTY0L2tlcm5lbC9tYWNoaW5l
+X2tleGVjLmMKaW5kZXggNjhiOTZlYTEzYjRjLi4yOWUxY2Y4Y2NhOTUgMTAwNjQ0Ci0tLSBhL2Fy
+Y2gvYXJtNjQva2VybmVsL21hY2hpbmVfa2V4ZWMuYworKysgYi9hcmNoL2FybTY0L2tlcm5lbC9t
+YWNoaW5lX2tleGVjLmMKQEAgLTE0NiwxMiArMTQ2LDE1IEBAIHZvaWQgbWFjaGluZV9rZXhlYyhz
+dHJ1Y3Qga2ltYWdlICpraW1hZ2UpCiB7CiAJcGh5c19hZGRyX3QgcmVib290X2NvZGVfYnVmZmVy
+X3BoeXM7CiAJdm9pZCAqcmVib290X2NvZGVfYnVmZmVyOworCWJvb2wgaW5fa2V4ZWNfY3Jhc2gg
+PSAoa2ltYWdlID09IGtleGVjX2NyYXNoX2ltYWdlKTsKKwlib29sIHN0dWNrX2NwdXMgPSBjcHVz
+X2FyZV9zdHVja19pbl9rZXJuZWwoKTsKIAogCS8qCiAJICogTmV3IGNwdXMgbWF5IGhhdmUgYmVj
+b21lIHN0dWNrX2luX2tlcm5lbCBhZnRlciB3ZSBsb2FkZWQgdGhlIGltYWdlLgogCSAqLwotCUJV
+R19PTigoY3B1c19hcmVfc3R1Y2tfaW5fa2VybmVsKCkgfHwgKG51bV9vbmxpbmVfY3B1cygpID4g
+MSkpICYmCi0JCQkhV0FSTl9PTihraW1hZ2UgPT0ga2V4ZWNfY3Jhc2hfaW1hZ2UpKTsKKwlCVUdf
+T04oIWluX2tleGVjX2NyYXNoICYmIChzdHVja19jcHVzIHx8IChudW1fb25saW5lX2NwdXMoKSA+
+IDEpKSk7CisJV0FSTihpbl9rZXhlY19jcmFzaCAmJiAoc3R1Y2tfY3B1cyB8fCBzbXBfY3Jhc2hf
+c3RvcF9mYWlsZWQoKSksCisJCSJTb21lIENQVXMgbWF5IGJlIHN0YWxlLCBrZHVtcCB3aWxsIGJl
+IHVucmVsaWFibGUuXG4iKTsKIAogCXJlYm9vdF9jb2RlX2J1ZmZlcl9waHlzID0gcGFnZV90b19w
+aHlzKGtpbWFnZS0+Y29udHJvbF9jb2RlX3BhZ2UpOwogCXJlYm9vdF9jb2RlX2J1ZmZlciA9IHBo
+eXNfdG9fdmlydChyZWJvb3RfY29kZV9idWZmZXJfcGh5cyk7CmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2tlcm5lbC9zbXAuYyBiL2FyY2gvYXJtNjQva2VybmVsL3NtcC5jCmluZGV4IGE3ZTI5MjEx
+NDNjNC4uODAxNjkxNDU5MWQyIDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2tlcm5lbC9zbXAuYwor
+KysgYi9hcmNoL2FybTY0L2tlcm5lbC9zbXAuYwpAQCAtODMzLDcgKzgzMyw3IEBAIHN0YXRpYyB2
+b2lkIGlwaV9jcHVfc3RvcCh1bnNpZ25lZCBpbnQgY3B1KQogfQogCiAjaWZkZWYgQ09ORklHX0tF
+WEVDX0NPUkUKLXN0YXRpYyBhdG9taWNfdCB3YWl0aW5nX2Zvcl9jcmFzaF9pcGk7CitzdGF0aWMg
+YXRvbWljX3Qgd2FpdGluZ19mb3JfY3Jhc2hfaXBpID0gQVRPTUlDX0lOSVQoMCk7CiAjZW5kaWYK
+IAogc3RhdGljIHZvaWQgaXBpX2NwdV9jcmFzaF9zdG9wKHVuc2lnbmVkIGludCBjcHUsIHN0cnVj
+dCBwdF9yZWdzICpyZWdzKQpAQCAtOTkwLDcgKzk5MCwxMiBAQCB2b2lkIHNtcF9zZW5kX2NyYXNo
+X3N0b3Aodm9pZCkKIAogCWlmIChhdG9taWNfcmVhZCgmd2FpdGluZ19mb3JfY3Jhc2hfaXBpKSA+
+IDApCiAJCXByX3dhcm5pbmcoIlNNUDogZmFpbGVkIHRvIHN0b3Agc2Vjb25kYXJ5IENQVXMgJSpw
+YmxcbiIsCi0JCQkgICBjcHVtYXNrX3ByX2FyZ3MoY3B1X29ubGluZV9tYXNrKSk7CisJCQkgICBj
+cHVtYXNrX3ByX2FyZ3MoJm1hc2spKTsKK30KKworYm9vbCBzbXBfY3Jhc2hfc3RvcF9mYWlsZWQo
+dm9pZCkKK3sKKwlyZXR1cm4gKGF0b21pY19yZWFkKCZ3YWl0aW5nX2Zvcl9jcmFzaF9pcGkpID4g
+MCk7CiB9CiAjZW5kaWYKPT09Pjg9PT0KCgoKSW4gY2FzZSBvZiBmYWlsdXJlIGluIG9mZmxpbmlu
+ZywgdGhpcyBjYW4gZ2VuZXJhdGUgc3VjaCBhIG1lc3NhZ2UgbGlrZToKCiAgICBTTVA6IHN0b3Bw
+aW5nIHNlY29uZGFyeSBDUFVzCiAgICBTTVA6IGZhaWxlZCB0byBzdG9wIHNlY29uZGFyeSBDUFVz
+IDAsMi03CiAgICBTdGFydGluZyBjcmFzaGR1bXAga2VybmVsLi4uCiAgICBTb21lIENQVXMgbWF5
+IGJlIHN0YWxlLCBrZHVtcCB3aWxsIGJlIHVucmVsaWFibGUuCiAgICAtLS0tLS0tLS0tLS1bIGN1
+dCBoZXJlIF0tLS0tLS0tLS0tLS0KICAgIFdBUk5JTkc6IENQVTogMSBQSUQ6IDExNDEgYXQgL2hv
+bWUvYWthc2hpL2FybS9hcm12OC9saW5hcm8vbGludXgtYWFyY2g2NC9hcmNoL2FybTY0L2tlcm5l
+bC9tYWNoaW5lX2tleGVjLmM6MTU3IG1hY2hpbmVfa2V4ZWMrMHg0NC8weDI4MAoKCj4gTG9va2lu
+ZyBhdCB0aGlzLCB0aGVyZSdzIGEgbGFyZ2VyIG1lc3MuCj4gCj4gVGhlIHdhaXRpbmdfZm9yX2Ny
+YXNoX2lwaSBkYW5jZSBvbmx5IHRlbGxzIHVzIGlmIENQVXMgaGF2ZSB0YWtlbiB0aGUKPiBJUEks
+IG5vdCB3ZXRoZXIgdGhleSd2ZSBiZWVuIG9mZmxpbmVkIChpLmUuIGFjdHVhbGx5IGxlZnQgdGhl
+IGtlcm5lbCkuCj4gV2UgbmVlZCBzb21ldGhpbmcgY2xvc2VyIHRvIHRoZSB1c3VhbCBjcHVfe2Rp
+c2FibGUsZGllLGtpbGx9IGRhbmNlLAo+IGNsZWFyaW5nIG9ubGluZSBhcyBhcHByb3ByaWF0ZS4K
+CkZpcnN0LCBJIGRvbid0IHRoaW5rIHRoZXJlIGlzIG5vIHN1cmUgd2F5IHRvIGNvbmZpcm0gd2hl
+dGhlciBDUFVzCnN1Y2Nlc3NmdWxseSBsZWZ0IHRoZSBrZXJuZWwuCkV2ZW4gaWYgd2UgZG8gc29t
+ZXRoaW5nIGxpa2UgdGhpcyBpbiBpcGlfY3B1X2NyYXNoX3N0b3AoKToKICAgIGF0b21pY19kZWMo
+JndhaXRpbmdfZm9yX2NyYXNoX2lwaSk7CiAgICBjcHVfZGllKGNwdSk7CiAgICBhdG9taWNfaW5j
+KCZ3YWl0aW5nX2Zvcl9jcmFzaF9pcGkpOwp0aGVyZSBpcyBubyBndWFyYW50ZWUgdGhhdCB3ZSBy
+ZWFjaCB0aGUgc2Vjb25kIHVwZGF0ZV9jcHVfYm9vdF9zdGF0dXMoKQppbiBmYWlsdXJlIG9mIGNw
+dV9kaWUoKS4KClNlY29uZCwgd2hpbGUgImdyYWNlZnVsIiBjcHUgc2h1dGRvd24gd291bGQgYmUg
+ZmluZSwgdGhlIGJhc2ljIGlkZWEKaW4ga2R1bXAgZGVzaWduLCBJIGJlbGlldmUsIGlzIHRoYXQg
+d2Ugc2hvdWxkIGRvIG1pbmltdW0gdGhpbmdzIG5lZWRlZAphbmQgdGVhciBkb3duIGFsbCB0aGUg
+Y3B1cyBhcyBxdWlja2x5IGFzIHBvc3NpYmxlIGluIG9yZGVyIG5vdCBvbmx5IHRvIG1ha2UKdGhl
+IHJlYm9vdCBtb3JlIHN1Y2Nlc3NmdWwgYnV0IGFsc28gdG8gcmV0YWluIHRoZSBrZXJuZWwgc3Rh
+dGUgKG1lbW9yeSBjb250ZW50cykKYXMgY2xvc2UgYXMgdG8gdGhlIG1vbWVudCBhdCB0aGUgcGFu
+aWMuIChUaGUgbGF0dGVyIGlzIGFyZ3VhYmxlLikKClRoYXQgc2FpZCwgSSB3aWxsIGFwcHJlY2lh
+dGUgeW91IGlmIHlvdSBoYXZlIGFueSBzdWdnZXN0aW9ucwpyZWdhcmRpbmcgd2hhdCBiZSBhZGRl
+ZCBmb3Igc2FmZXIgc2h1dGRvd24gaGVyZS4KCgpUaGFua3MsCi1UYWthaGlybyBBS0FTSEkKCj4g
+SWYgQ1BVcyBoYXZlbid0IGxlZnQgdGhlIGtlcm5lbCwgd2Ugc3RpbGwgbmVlZCB0byB3YXJuIGFi
+b3V0IHRoYXQuCj4gCj4gPiBGV0lXIGlmIEkgdHJpZ2dlciBhIGNyYXNoIG9uIENQVSAxIG15IGtk
+dW1wIChzdGlsbCA0LjkuOCt2MzIpIGRvZXNuJ3Qgd29yay4KPiA+IEkgZW5kIHVwIGJvb3Rpbmcg
+dGhlIGtkdW1wIGtlcm5lbCBvbiBDUFUjMSBhbmQgdGhlbiBpdCBnZXRzIGRpc3RpbmN0bHkgdW5o
+YXBweS4uLgo+ID4gCj4gPiBbwqDCoMKgwqAwLjAwMDAwMF0gQm9vdGluZyBMaW51eCBvbiBwaHlz
+aWNhbCBDUFUgMHgxCj4gPiAuLi4KPiA+IFvCoMKgwqDCoDAuMDE3MTI1XSBEZXRlY3RlZCBQSVBU
+IEktY2FjaGUgb24gQ1BVMQo+ID4gW8KgwqDCoMKgMC4wMTcxMzhdIEdJQ3YzOiBDUFUxOiBmb3Vu
+ZCByZWRpc3RyaWJ1dG9yIDAgcmVnaW9uIDA6MHgwMDAwMDAwMGYwMjgwMDAwCj4gPiBbwqDCoMKg
+wqAwLjAxNzE0N10gQ1BVMTogQm9vdGVkIHNlY29uZGFyeSBwcm9jZXNzb3IgWzQxMWZkMDczXQo+
+ID4gW8KgwqDCoMKgMC4wMTczMzldIERldGVjdGVkIFBJUFQgSS1jYWNoZSBvbiBDUFUyCj4gPiBb
+wqDCoMKgwqAwLjAxNzM0N10gR0lDdjM6IENQVTI6IGZvdW5kIHJlZGlzdHJpYnV0b3IgMiByZWdp
+b24gMDoweDAwMDAwMDAwZjAyYzAwMDAKPiA+IFvCoMKgwqDCoDAuMDE3MzU0XSBDUFUyOiBCb290
+ZWQgc2Vjb25kYXJ5IHByb2Nlc3NvciBbNDExZmQwNzNdCj4gPiBbwqDCoMKgwqAwLjAxNzUzN10g
+RGV0ZWN0ZWQgUElQVCBJLWNhY2hlIG9uIENQVTMKPiA+IFvCoMKgwqDCoDAuMDE3NTQ1XSBHSUN2
+MzogQ1BVMzogZm91bmQgcmVkaXN0cmlidXRvciAzIHJlZ2lvbiAwOjB4MDAwMDAwMDBmMDJlMDAw
+MAo+ID4gW8KgwqDCoMKgMC4wMTc1NTFdIENQVTM6IEJvb3RlZCBzZWNvbmRhcnkgcHJvY2Vzc29y
+IFs0MTFmZDA3M10KPiA+IFvCoMKgwqDCoDAuMDE3NTc2XSBCcm91Z2h0IHVwIDQgQ1BVcwo+ID4g
+W8KgwqDCoMKgMC4wMTc1ODddIFNNUDogVG90YWwgb2YgNCBwcm9jZXNzb3JzIGFjdGl2YXRlZC4K
+PiA+IC4uLgo+ID4gW8KgwqDCoDMxLjc0NTgwOV0gSU5GTzogcmN1X3NjaGVkIGRldGVjdGVkIHN0
+YWxscyBvbiBDUFVzL3Rhc2tzOgo+ID4gW8KgwqDCoDMxLjc1MTI5OV3CoAkxLS4uLjogKDMwIEdQ
+cyBiZWhpbmQpIGlkbGU9YzkwLzAvMCBzb2Z0aXJxPTAvMCBmcXM9MMKgCj4gPiBbwqDCoMKgMzEu
+NzU3NTU3XcKgCTItLi4uOiAoMzAgR1BzIGJlaGluZCkgaWRsZT02MDgvMC8wIHNvZnRpcnE9MC8w
+IGZxcz0wwqAKPiA+IFvCoMKgwqAzMS43NjM4MTRdwqAJMy0uLi46ICgzMCBHUHMgYmVoaW5kKSBp
+ZGxlPTYwNC8wLzAgc29mdGlycT0wLzAgZnFzPTDCoAo+ID4gW8KgwqDCoDMxLjc3MDA2OV3CoAko
+ZGV0ZWN0ZWQgYnkgMCwgdD01MjUyIGppZmZpZXMsIGc9LTI3MCwgYz0tMjcxLCBxPTApCj4gPiBb
+wqDCoMKgMzEuNzc2MTYxXSBUYXNrIGR1bXAgZm9yIENQVSAxOgo+ID4gW8KgwqDCoDMxLjc3OTM4
+MV0gc3dhcHBlci8xwqDCoMKgwqDCoMKgwqBSwqDCoHJ1bm5pbmcgdGFza8KgwqDCoMKgwqDCoMKg
+wqAwwqDCoMKgwqDCoDDCoMKgwqDCoMKgwqAxIDB4MDAwMDAwODAKPiA+IFvCoMKgwqAzMS43ODY0
+NDZdIFRhc2sgZHVtcCBmb3IgQ1BVIDI6Cj4gPiBbwqDCoMKgMzEuNzg5NjY2XSBzd2FwcGVyLzLC
+oMKgwqDCoMKgwqDCoFLCoMKgcnVubmluZyB0YXNrwqDCoMKgwqDCoMKgwqDCoDDCoMKgwqDCoMKg
+MMKgwqDCoMKgwqDCoDEgMHgwMDAwMDA4MAo+ID4gW8KgwqDCoDMxLjc5NjcyNV0gVGFzayBkdW1w
+IGZvciBDUFUgMzoKPiA+IFvCoMKgwqAzMS43OTk5NDVdIHN3YXBwZXIvM8KgwqDCoMKgwqDCoMKg
+UsKgwqBydW5uaW5nIHRhc2vCoMKgwqDCoMKgwqDCoMKgMMKgwqDCoMKgwqAwwqDCoMKgwqDCoMKg
+MSAweDAwMDAwMDgwCj4gPiAKPiA+IElzIHNvbWUgb2YgdGhhdCBwbGF0Zm9ybS1zcGVjaWZpYz8K
+PiAKPiBUaGF0IHNvdW5kcyBsaWtlIHRpbWVyIGludGVycnVwdHMgYXJlbid0IGJlaW5nIHRha2Vu
+Lgo+IAo+IEdpdmVuIHRoYXQgdGhlIENQVXMgaGF2ZSBjb21lIHVwLCBteSBzdXNwaWNpb24gd291
+bGQgYmUgdGhhdCB0aGUgR0lDJ3MKPiBiZWVuIGxlZnQgaW4gc29tZSBvZGQgc3RhdGUsIHRoYXQg
+dGhlIGtkdW1wIGtlcm5lbCBoYXNuJ3QgbWFuYWdlZCB0bwo+IHJlY292ZXIgZnJvbS4KPiAKPiBN
+YXJjIG1heSBoYXZlIGFuIGlkZWEuCj4gCj4gVGhhbmtzLAo+IE1hcmsuCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
