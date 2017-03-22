@@ -1,25 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x22f.google.com ([2607:f8b0:4001:c0b::22f])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cqiqv-0007Nw-IL
- for kexec@lists.infradead.org; Wed, 22 Mar 2017 16:11:16 +0000
-Received: by mail-it0-x22f.google.com with SMTP id y18so6034850itc.1
- for <kexec@lists.infradead.org>; Wed, 22 Mar 2017 09:10:52 -0700 (PDT)
+Subject: Re: [PATCH v33 00/14] add kdump support
+References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
+From: "Goel, Sameer" <sgoel@codeaurora.org>
+Message-ID: <e2063a29-1233-f30b-0ab4-d35937d6b8a8@codeaurora.org>
+Date: Wed, 22 Mar 2017 10:55:55 -0600
 MIME-Version: 1.0
-In-Reply-To: <20170321074826.GA4571@dhcp-128-65.nay.redhat.com>
-References: <20170308201616.GC8598@vader>
- <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
- <20170309095408.GA17883@vader>
- <20170313073748.GA6332@dhcp-128-65.nay.redhat.com>
- <20170316124132.GF6261@codeblueprint.co.uk>
- <20170317020951.GA3942@dhcp-128-65.nay.redhat.com>
- <20170317133232.GI6261@codeblueprint.co.uk>
- <20170320021412.GA3793@dhcp-128-65.nay.redhat.com>
- <20170321074826.GA4571@dhcp-128-65.nay.redhat.com>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Wed, 22 Mar 2017 16:10:51 +0000
-Message-ID: <CAKv+Gu-hD9TbSX7iyWZSJ+S2SV5n95S+hcYGnH4OBfi_=M49hA@mail.gmail.com>
-Subject: Re: kexec regression since 4.9 caused by efi
+In-Reply-To: <20170315095656.24992-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,118 +18,177 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Omar Sandoval <osandov@osandov.com>, kernel-team@fb.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On 21 March 2017 at 07:48, Dave Young <dyoung@redhat.com> wrote:
-> On 03/20/17 at 10:14am, Dave Young wrote:
->> On 03/17/17 at 01:32pm, Matt Fleming wrote:
->> > On Fri, 17 Mar, at 10:09:51AM, Dave Young wrote:
->> > >
->> > > Matt, I think it should be fine although I think the md type checking in
->> > > efi_mem_desc_lookup() is causing confusion and not easy to understand..
->> >
->> > Could you make that a separate patch if you think of improvements
->> > there?
->>
->> Duplicate the lookup function is indeed a little ugly, will do it when I
->> have a better idea, we can leave it as is since it works.
->
-> Matt, rethinking about this, how about doint something below, not
-> tested, just seeking for idea and opinons, in this way no need duplicate
-> a function, but there is an assumption that no overlapped mem ranges in
-> efi memmap.
->
-> Also the case Omar reported is the esrt memory range type is
-> RUNTIME_DATA, that is a little different with the mem attribute of
-> RUNTIME which also includes BOOT_DATA which has been set the RUNTIME
-> attribute, like bgrt in kexec reboot. Should we distinguish the two
-> cases and give out some warnings or debug info?
->
->
-> ---
->  arch/x86/platform/efi/quirks.c |    5 +++++
->  drivers/firmware/efi/efi.c     |    6 ------
->  drivers/firmware/efi/esrt.c    |    7 +++++++
->  3 files changed, 12 insertions(+), 6 deletions(-)
->
-> --- linux-x86.orig/drivers/firmware/efi/efi.c
-> +++ linux-x86/drivers/firmware/efi/efi.c
-> @@ -376,12 +376,6 @@ int __init efi_mem_desc_lookup(u64 phys_
->                 u64 size;
->                 u64 end;
->
-> -               if (!(md->attribute & EFI_MEMORY_RUNTIME) &&
-> -                   md->type != EFI_BOOT_SERVICES_DATA &&
-> -                   md->type != EFI_RUNTIME_SERVICES_DATA) {
-> -                       continue;
-> -               }
-> -
->                 size = md->num_pages << EFI_PAGE_SHIFT;
->                 end = md->phys_addr + size;
->                 if (phys_addr >= md->phys_addr && phys_addr < end) {
-> --- linux-x86.orig/drivers/firmware/efi/esrt.c
-> +++ linux-x86/drivers/firmware/efi/esrt.c
-> @@ -258,6 +258,13 @@ void __init efi_esrt_init(void)
->                 return;
->         }
->
-> +       if (!(md->attribute & EFI_MEMORY_RUNTIME) &&
-> +             md->type != EFI_BOOT_SERVICES_DATA &&
-> +             md->type != EFI_RUNTIME_SERVICES_DATA) {
-> +               pr_err("ESRT header memory map type is invalid\n");
-> +               return;
-> +       }
-> +
+I tested this patch set on a QDT2400 device with 4k 4-level setup. This patchset worked fine with maxcpus=1 on the first kernel.
 
-This looks wrong to me. While the meanings get convoluted in practice,
-the EFI_MEMORY_RUNTIME attribute only means that the firmware requests
-a virtual mapping for the region. It is perfectly legal for a
-EFI_RUNTIME_SERVICES_DATA region not to have the EFI_MEMORY_RUNTIME
-attribute, if the region is never accessed by the runtime services
-themselves, and this is not entirely unlikely for tables that the
-firmware exposes to the OS
+I don't think this is an issue with the patchset, I am still triaging this issue further.
 
->         max = efi_mem_desc_end(&md);
->         if (max < efi.esrt) {
->                 pr_err("EFI memory descriptor is invalid. (esrt: %p max: %p)\n",
-> --- linux-x86.orig/arch/x86/platform/efi/quirks.c
-> +++ linux-x86/arch/x86/platform/efi/quirks.c
-> @@ -201,6 +201,11 @@ void __init efi_arch_mem_reserve(phys_ad
->                 return;
->         }
->
-> +       if (md->attribute & EFI_MEMORY_RUNTIME ||
-> +             md->type != EFI_BOOT_SERVICES_DATA) {
-> +               return;
-> +       }
-> +
->         size += addr % EFI_PAGE_SIZE;
->         size = round_up(size, EFI_PAGE_SIZE);
->         addr = round_down(addr, EFI_PAGE_SIZE);
->
->>
->> >
->> > > How about move the if chunk early like below because it seems no need
->> > > to sanity check the addr + size any more if the md is still RUNTIME?
->> >
->> > My original version did as you suggest, but I changed it because we
->> > *really* want to know if someone tries to reserve a range that spans
->> > regions. That would be totally unexpected and a warning about a
->> > potential bug/issue.
->>
->> Matt, I'm fine if you prefer to capture the range checking errors.
->> Would you like me to post it or just you send it out?
->>
->> Thanks
->> Dave
->
-> Thanks
-> Dave
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-efi" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 3/15/2017 3:56 AM, AKASHI Takahiro wrote:
+> This patch series adds kdump support on arm64.
+> 
+> To load a crash-dump kernel to the systems, a series of patches to
+> kexec-tools[1] are also needed. Please use the latest one, v6 [2].
+> For your convinience, you can pick them up from:
+>    https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
+>    https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
+> 
+> To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+>   - crash utility (v7.1.8 or later) [3]
+> 
+> I tested this patchset on fast model and hikey.
+> 
+> The previous versions were also:
+> Tested-by: Pratyush Anand <panand@redhat.com> (v32, mustang and seattle)
+> Tested-by: James Morse <james.morse@arm.com> (v27/v32?, Juno)
+> Tested-by: Sameer Goel (v32, QDT2400)
+> 
+> Changes for v33 (Mar 15, 2017)
+>   o rebased to v4.11-rc2+
+>   o arch_kexec_(un)protect_crashkres() now protects loaded data segments
+>     only along with moving copying of control_code_page back to machine_kexec()
+>     (patch #6)
+>   o reduce the size of hibernation image when kdump and hibernation are
+>     comfigured at the same time (patch #7)
+>   o clearify that "linux,usable-memory-range" and "linux,elfcorehdr"
+>     have values of the size of root node's "#address-cells" and "#size-cells"
+>     (patch #13)
+>   o add "efi/libstub/arm*: Set default address and size cells values for
+>     an empty dtb" from Sameer Goel (patch #14)
+>     (I didn't test the case though.)
+> 
+> Changes for v32 (Feb 7, 2017)
+>   o isolate crash dump kernel memory as well as kernel text/data by using
+>     MEMBLOCK_MAP attribute to and then specifically map them in map_mem()
+>     (patch #1,6)
+>   o delete remove_pgd_mapping() and instead modify create_pgd_mapping() to
+>     allowing for unmapping a kernel mapping (patch #5)
+>   o correct a commit message as well as a comment in the source (patch#10)
+>   o other trivial changes after Mark's comments (patch#3,4)
+> 
+> Changes for v31 (Feb 1, 2017)
+>   o add/use remove_pgd_mapping() instead of modifying (__)create_pgd_mapping()
+>     to protect crash dump kernel memory (patch #4,5)
+>   o fix an issue at the isolation of crash dump kernel memory in
+>     map_mem()/__map_memblock(), adding map_crashkernel() (patch#5)
+>   o preserve the contents of crash dump kernel memory around hibernation
+>     (patch#6)
+> 
+> Changes for v30 (Jan 24, 2017)
+>   o rebased to Linux-v4.10-rc5
+>   o remove "linux,crashkernel-base/size" from exported device tree
+>   o protect memory region for crash-dump kernel (adding patch#4,5)
+>   o remove "in_crash_kexec" variable
+>   o and other trivial changes
+> 
+> Changes for v29 (Dec 28, 2016)
+>   o rebased to Linux-v4.10-rc1
+>   o change asm constraints in crash_setup_regs() per Catalin
+> 
+> Changes for v28 (Nov 22, 2016)
+>   o rebased to Linux-v4.9-rc6
+>   o revamp patch #1 and merge memblock_cap_memory_range() with
+>     memblock_mem_limit_remove_map()
+> 
+> Changes for v27 (Nov 1, 2016)
+>   o rebased to Linux-v4.9-rc3
+>   o revert v26 change, i.e. revive "linux,usable-memory-range" property
+>     (patch #2/#3, updating patch #9)
+>   o minor fixes per review comments (patch #3/#4/#6/#8)
+>   o re-order patches and improve commit messages for readability
+> 
+> Changes for v26 (Sep 7, 2016):
+>   o Use /reserved-memory instead of "linux,usable-memory-range" property
+>     (dropping v25's patch#2 and #3, updating ex-patch#9.)
+> 
+> Changes for v25 (Aug 29, 2016):
+>   o Rebase to Linux-4.8-rc4
+>   o Use memremap() instead of ioremap_cache() [patch#5]
+> 
+> Changes for v24 (Aug 9, 2016):
+>   o Rebase to Linux-4.8-rc1
+>   o Update descriptions about newly added DT proerties
+> 
+> Changes for v23 (July 26, 2016):
+> 
+>   o Move memblock_reserve() to a single place in reserve_crashkernel()
+>   o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+>   o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+>   o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+>     (for ACPI) from usable memory at crash kernel
+> 
+> Changes for v22 (July 12, 2016):
+> 
+>   o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+>     and add some descriptions about them in chosen.txt
+>   o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+>     with powerpc's "usable-memory"
+>   o Make cosmetic changes regarding "ifdef" usage
+>   o Correct some wordings in kdump.txt
+> 
+> Changes for v21 (July 6, 2016):
+> 
+>   o Remove kexec patches.
+>   o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+>   o Clarify the description about kvm in kdump.txt.
+> 
+> See the link [4] for older changes.
+> 
+> 
+> [1] https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> [2] http://lists.infradead.org/pipermail/kexec/2017-March/018356.html
+> [3] https://github.com/crash-utility/crash.git
+> [4] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+> 
+> AKASHI Takahiro (12):
+>   memblock: add memblock_clear_nomap()
+>   memblock: add memblock_cap_memory_range()
+>   arm64: limit memory regions based on DT property, usable-memory-range
+>   arm64: kdump: reserve memory for crash dump kernel
+>   arm64: mm: allow for unmapping part of kernel mapping
+>   arm64: kdump: protect crash dump kernel memory
+>   arm64: hibernate: preserve kdump image around hibernation
+>   arm64: kdump: implement machine_crash_shutdown()
+>   arm64: kdump: add VMCOREINFO's for user-space tools
+>   arm64: kdump: provide /proc/vmcore file
+>   arm64: kdump: enable kdump in defconfig
+>   Documentation: kdump: describe arm64 port
+> 
+> James Morse (1):
+>   Documentation: dt: chosen properties for arm64 kdump
+> 
+> Sameer Goel (1):
+>   efi/libstub/arm*: Set default address and size cells values for an
+>     empty dtb
+> 
+>  Documentation/devicetree/bindings/chosen.txt |  45 +++++++
+>  Documentation/kdump/kdump.txt                |  16 ++-
+>  arch/arm64/Kconfig                           |  11 ++
+>  arch/arm64/configs/defconfig                 |   1 +
+>  arch/arm64/include/asm/hardirq.h             |   2 +-
+>  arch/arm64/include/asm/kexec.h               |  52 +++++++-
+>  arch/arm64/include/asm/pgtable-prot.h        |   1 +
+>  arch/arm64/include/asm/smp.h                 |   2 +
+>  arch/arm64/kernel/Makefile                   |   1 +
+>  arch/arm64/kernel/crash_dump.c               |  71 +++++++++++
+>  arch/arm64/kernel/hibernate.c                |  10 +-
+>  arch/arm64/kernel/machine_kexec.c            | 170 +++++++++++++++++++++++--
+>  arch/arm64/kernel/setup.c                    |   7 +-
+>  arch/arm64/kernel/smp.c                      |  63 ++++++++++
+>  arch/arm64/mm/init.c                         | 181 +++++++++++++++++++++++++++
+>  arch/arm64/mm/mmu.c                          | 107 ++++++++--------
+>  drivers/firmware/efi/libstub/fdt.c           |  28 ++++-
+>  include/linux/memblock.h                     |   2 +
+>  mm/memblock.c                                |  56 ++++++---
+>  19 files changed, 745 insertions(+), 81 deletions(-)
+>  create mode 100644 arch/arm64/kernel/crash_dump.c
+> 
+
+-- 
+Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
 _______________________________________________
 kexec mailing list
