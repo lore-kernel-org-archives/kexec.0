@@ -1,18 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-it0-x22f.google.com ([2607:f8b0:4001:c0b::22f])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cqiLy-0001li-4l
- for kexec@lists.infradead.org; Wed, 22 Mar 2017 15:39:17 +0000
-Date: Wed, 22 Mar 2017 16:38:43 +0100
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [RFC][PATCH 3/4] kernel, power: disable printk_kthread in unsafe
- places
-Message-ID: <20170322153843.GC4008@pathway.suse.cz>
-References: <20170306124554.828-1-sergey.senozhatsky@gmail.com>
- <20170306124554.828-4-sergey.senozhatsky@gmail.com>
+ id 1cqiqv-0007Nw-IL
+ for kexec@lists.infradead.org; Wed, 22 Mar 2017 16:11:16 +0000
+Received: by mail-it0-x22f.google.com with SMTP id y18so6034850itc.1
+ for <kexec@lists.infradead.org>; Wed, 22 Mar 2017 09:10:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170306124554.828-4-sergey.senozhatsky@gmail.com>
+In-Reply-To: <20170321074826.GA4571@dhcp-128-65.nay.redhat.com>
+References: <20170308201616.GC8598@vader>
+ <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
+ <20170309095408.GA17883@vader>
+ <20170313073748.GA6332@dhcp-128-65.nay.redhat.com>
+ <20170316124132.GF6261@codeblueprint.co.uk>
+ <20170317020951.GA3942@dhcp-128-65.nay.redhat.com>
+ <20170317133232.GI6261@codeblueprint.co.uk>
+ <20170320021412.GA3793@dhcp-128-65.nay.redhat.com>
+ <20170321074826.GA4571@dhcp-128-65.nay.redhat.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Wed, 22 Mar 2017 16:10:51 +0000
+Message-ID: <CAKv+Gu-hD9TbSX7iyWZSJ+S2SV5n95S+hcYGnH4OBfi_=M49hA@mail.gmail.com>
+Subject: Re: kexec regression since 4.9 caused by efi
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,180 +32,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: linux-pm@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Omar Sandoval <osandov@osandov.com>, kernel-team@fb.com
 
-(added Eric, kexec mailing likst, and linux-pm mailing list
-into CC because we touch their code)
-
-On Mon 2017-03-06 21:45:53, Sergey Senozhatsky wrote:
-> It's not always possible/safe to wake_up() printk kernel
-> thread. For example, late suspend/early resume may printk()
-> while timekeeping is not initialized yet, so calling into the
-> scheduler may result in recursive warnings. Thus we need
-> printk() to operate in old mode there and attempt to immediately
-> flush pending kernel message to the console. This patch adds
-> console_printing_thread_off/on sections.
-
-This patch helps to avoid the warning. But IMHO, even more
-important effect is that it helps to actually see the
-massages when things go wrong, the kthread is never
-called later, and we even do not end up in panic()
-that would flush them to the console.
-
-I am afraid that there are more locations where
-the old mode need to be forced. It might take
-a while until they are found and fixed.
-
-I would really like to have an option that would
-force the old mode all the time. It might help
-a lot when you debug a system freeze and the messages
-are not printed because of the deferred console handling.
-
-Otherwise, the location of console_printing_thread_off()/on()
-calls looks reasonable to me. But it would be great to get
-some confirmation from kexec and pm people.
-
-Best Regards,
-Petr
-
-
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+On 21 March 2017 at 07:48, Dave Young <dyoung@redhat.com> wrote:
+> On 03/20/17 at 10:14am, Dave Young wrote:
+>> On 03/17/17 at 01:32pm, Matt Fleming wrote:
+>> > On Fri, 17 Mar, at 10:09:51AM, Dave Young wrote:
+>> > >
+>> > > Matt, I think it should be fine although I think the md type checking in
+>> > > efi_mem_desc_lookup() is causing confusion and not easy to understand..
+>> >
+>> > Could you make that a separate patch if you think of improvements
+>> > there?
+>>
+>> Duplicate the lookup function is indeed a little ugly, will do it when I
+>> have a better idea, we can leave it as is since it works.
+>
+> Matt, rethinking about this, how about doint something below, not
+> tested, just seeking for idea and opinons, in this way no need duplicate
+> a function, but there is an assumption that no overlapped mem ranges in
+> efi memmap.
+>
+> Also the case Omar reported is the esrt memory range type is
+> RUNTIME_DATA, that is a little different with the mem attribute of
+> RUNTIME which also includes BOOT_DATA which has been set the RUNTIME
+> attribute, like bgrt in kexec reboot. Should we distinguish the two
+> cases and give out some warnings or debug info?
+>
+>
 > ---
->  kernel/kexec_core.c      | 4 ++++
->  kernel/power/hibernate.c | 8 ++++++++
->  kernel/power/suspend.c   | 4 ++++
->  3 files changed, 16 insertions(+)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index bfe62d5b3872..b40fba31150c 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1496,6 +1496,8 @@ int kernel_kexec(void)
->  		goto Unlock;
->  	}
->  
-> +	console_printing_thread_off();
+>  arch/x86/platform/efi/quirks.c |    5 +++++
+>  drivers/firmware/efi/efi.c     |    6 ------
+>  drivers/firmware/efi/esrt.c    |    7 +++++++
+>  3 files changed, 12 insertions(+), 6 deletions(-)
+>
+> --- linux-x86.orig/drivers/firmware/efi/efi.c
+> +++ linux-x86/drivers/firmware/efi/efi.c
+> @@ -376,12 +376,6 @@ int __init efi_mem_desc_lookup(u64 phys_
+>                 u64 size;
+>                 u64 end;
+>
+> -               if (!(md->attribute & EFI_MEMORY_RUNTIME) &&
+> -                   md->type != EFI_BOOT_SERVICES_DATA &&
+> -                   md->type != EFI_RUNTIME_SERVICES_DATA) {
+> -                       continue;
+> -               }
+> -
+>                 size = md->num_pages << EFI_PAGE_SHIFT;
+>                 end = md->phys_addr + size;
+>                 if (phys_addr >= md->phys_addr && phys_addr < end) {
+> --- linux-x86.orig/drivers/firmware/efi/esrt.c
+> +++ linux-x86/drivers/firmware/efi/esrt.c
+> @@ -258,6 +258,13 @@ void __init efi_esrt_init(void)
+>                 return;
+>         }
+>
+> +       if (!(md->attribute & EFI_MEMORY_RUNTIME) &&
+> +             md->type != EFI_BOOT_SERVICES_DATA &&
+> +             md->type != EFI_RUNTIME_SERVICES_DATA) {
+> +               pr_err("ESRT header memory map type is invalid\n");
+> +               return;
+> +       }
 > +
->  #ifdef CONFIG_KEXEC_JUMP
->  	if (kexec_image->preserve_context) {
->  		lock_system_sleep();
-> @@ -1565,6 +1567,8 @@ int kernel_kexec(void)
->  	}
->  #endif
->  
-> +	console_printing_thread_on();
+
+This looks wrong to me. While the meanings get convoluted in practice,
+the EFI_MEMORY_RUNTIME attribute only means that the firmware requests
+a virtual mapping for the region. It is perfectly legal for a
+EFI_RUNTIME_SERVICES_DATA region not to have the EFI_MEMORY_RUNTIME
+attribute, if the region is never accessed by the runtime services
+themselves, and this is not entirely unlikely for tables that the
+firmware exposes to the OS
+
+>         max = efi_mem_desc_end(&md);
+>         if (max < efi.esrt) {
+>                 pr_err("EFI memory descriptor is invalid. (esrt: %p max: %p)\n",
+> --- linux-x86.orig/arch/x86/platform/efi/quirks.c
+> +++ linux-x86/arch/x86/platform/efi/quirks.c
+> @@ -201,6 +201,11 @@ void __init efi_arch_mem_reserve(phys_ad
+>                 return;
+>         }
+>
+> +       if (md->attribute & EFI_MEMORY_RUNTIME ||
+> +             md->type != EFI_BOOT_SERVICES_DATA) {
+> +               return;
+> +       }
 > +
->   Unlock:
->  	mutex_unlock(&kexec_mutex);
->  	return error;
-> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> index a8b978c35a6a..15634841ccc6 100644
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -502,6 +502,7 @@ int hibernation_restore(int platform_mode)
->  {
->  	int error;
->  
-> +	console_printing_thread_off();
->  	pm_prepare_console();
->  	suspend_console();
->  	pm_restrict_gfp_mask();
-> @@ -519,6 +520,7 @@ int hibernation_restore(int platform_mode)
->  	pm_restore_gfp_mask();
->  	resume_console();
->  	pm_restore_console();
-> +	console_printing_thread_on();
->  	return error;
->  }
->  
-> @@ -542,6 +544,7 @@ int hibernation_platform_enter(void)
->  		goto Close;
->  
->  	entering_platform_hibernation = true;
-> +	console_printing_thread_off();
->  	suspend_console();
->  	error = dpm_suspend_start(PMSG_HIBERNATE);
->  	if (error) {
-> @@ -589,6 +592,7 @@ int hibernation_platform_enter(void)
->  	entering_platform_hibernation = false;
->  	dpm_resume_end(PMSG_RESTORE);
->  	resume_console();
-> +	console_printing_thread_on();
->  
->   Close:
->  	hibernation_ops->end();
-> @@ -692,6 +696,7 @@ int hibernate(void)
->  		goto Unlock;
->  	}
->  
-> +	console_printing_thread_off();
->  	pm_prepare_console();
->  	error = __pm_notifier_call_chain(PM_HIBERNATION_PREPARE, -1, &nr_calls);
->  	if (error) {
-> @@ -759,6 +764,7 @@ int hibernate(void)
->   Exit:
->  	__pm_notifier_call_chain(PM_POST_HIBERNATION, nr_calls, NULL);
->  	pm_restore_console();
-> +	console_printing_thread_on();
->  	atomic_inc(&snapshot_device_available);
->   Unlock:
->  	unlock_system_sleep();
-> @@ -868,6 +874,7 @@ static int software_resume(void)
->  		goto Unlock;
->  	}
->  
-> +	console_printing_thread_off();
->  	pm_prepare_console();
->  	error = __pm_notifier_call_chain(PM_RESTORE_PREPARE, -1, &nr_calls);
->  	if (error) {
-> @@ -884,6 +891,7 @@ static int software_resume(void)
->   Finish:
->  	__pm_notifier_call_chain(PM_POST_RESTORE, nr_calls, NULL);
->  	pm_restore_console();
-> +	console_printing_thread_on();
->  	atomic_inc(&snapshot_device_available);
->  	/* For success case, the suspend path will release the lock */
->   Unlock:
-> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-> index 15e6baef5c73..7c6e228b7de4 100644
-> --- a/kernel/power/suspend.c
-> +++ b/kernel/power/suspend.c
-> @@ -433,6 +433,7 @@ int suspend_devices_and_enter(suspend_state_t state)
->  	if (!sleep_state_supported(state))
->  		return -ENOSYS;
->  
-> +	console_printing_thread_off();
->  	error = platform_suspend_begin(state);
->  	if (error)
->  		goto Close;
-> @@ -462,6 +463,7 @@ int suspend_devices_and_enter(suspend_state_t state)
->  
->   Close:
->  	platform_resume_end(state);
-> +	console_printing_thread_on();
->  	return error;
->  
->   Recover_platform:
-> @@ -520,6 +522,7 @@ static int enter_state(suspend_state_t state)
->  #endif
->  
->  	pr_debug("PM: Preparing system for sleep (%s)\n", pm_states[state]);
-> +	console_printing_thread_off();
->  	pm_suspend_clear_flags();
->  	error = suspend_prepare(state);
->  	if (error)
-> @@ -537,6 +540,7 @@ static int enter_state(suspend_state_t state)
->   Finish:
->  	pr_debug("PM: Finishing wakeup.\n");
->  	suspend_finish();
-> +	console_printing_thread_on();
->   Unlock:
->  	mutex_unlock(&pm_mutex);
->  	return error;
-> -- 
-> 2.12.0
-> 
+>         size += addr % EFI_PAGE_SIZE;
+>         size = round_up(size, EFI_PAGE_SIZE);
+>         addr = round_down(addr, EFI_PAGE_SIZE);
+>
+>>
+>> >
+>> > > How about move the if chunk early like below because it seems no need
+>> > > to sanity check the addr + size any more if the md is still RUNTIME?
+>> >
+>> > My original version did as you suggest, but I changed it because we
+>> > *really* want to know if someone tries to reserve a range that spans
+>> > regions. That would be totally unexpected and a warning about a
+>> > potential bug/issue.
+>>
+>> Matt, I'm fine if you prefer to capture the range checking errors.
+>> Would you like me to post it or just you send it out?
+>>
+>> Thanks
+>> Dave
+>
+> Thanks
+> Dave
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-efi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 _______________________________________________
 kexec mailing list
