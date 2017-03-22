@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cqcLU-0000hr-83
- for kexec@lists.infradead.org; Wed, 22 Mar 2017 09:14:22 +0000
+ id 1cqcM2-0000r1-MN
+ for kexec@lists.infradead.org; Wed, 22 Mar 2017 09:14:56 +0000
 Subject: Re: [PATCH v3 1/3] kexec: Move vmcoreinfo out of the kernel's .bss
  section
 References: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
  <87pohbz4lo.fsf@xmission.com> <58D23BF6.5080101@redhat.com>
 From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <58D240FB.3060506@redhat.com>
-Date: Wed, 22 Mar 2017 17:16:43 +0800
+Message-ID: <58D24121.3080200@redhat.com>
+Date: Wed, 22 Mar 2017 17:17:21 +0800
 MIME-Version: 1.0
 In-Reply-To: <58D23BF6.5080101@redhat.com>
 List-Id: <kexec.lists.infradead.org>
