@@ -1,42 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cqfC1-0000H4-Ne
- for kexec@lists.infradead.org; Wed, 22 Mar 2017 12:16:47 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v2MCDrh4042716
- for <kexec@lists.infradead.org>; Wed, 22 Mar 2017 08:16:25 -0400
-Received: from e23smtp07.au.ibm.com (e23smtp07.au.ibm.com [202.81.31.140])
- by mx0a-001b2d01.pphosted.com with ESMTP id 29b9vn9p79-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 22 Mar 2017 08:16:24 -0400
-Received: from localhost
- by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <hbathini@linux.vnet.ibm.com>;
- Wed, 22 Mar 2017 22:16:22 +1000
-Received: from d23av05.au.ibm.com (d23av05.au.ibm.com [9.190.234.119])
- by d23relay09.au.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
- v2MCGCMM29425880
- for <kexec@lists.infradead.org>; Wed, 22 Mar 2017 23:16:20 +1100
-Received: from d23av05.au.ibm.com (localhost [127.0.0.1])
- by d23av05.au.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
- v2MCFmau001408
- for <kexec@lists.infradead.org>; Wed, 22 Mar 2017 23:15:48 +1100
-Subject: Re: [PATCH v3 1/3] kexec: Move vmcoreinfo out of the kernel's .bss
- section
-References: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
- <87pohbz4lo.fsf@xmission.com>
- <20170322025536.GA4424@dhcp-128-65.nay.redhat.com>
- <87pohaxam1.fsf@xmission.com>
- <20170322043004.GB4424@dhcp-128-65.nay.redhat.com>
- <58D24543.5020700@redhat.com>
-From: Hari Bathini <hbathini@linux.vnet.ibm.com>
-Date: Wed, 22 Mar 2017 17:45:28 +0530
+ id 1cqiLy-0001li-4l
+ for kexec@lists.infradead.org; Wed, 22 Mar 2017 15:39:17 +0000
+Date: Wed, 22 Mar 2017 16:38:43 +0100
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [RFC][PATCH 3/4] kernel, power: disable printk_kthread in unsafe
+ places
+Message-ID: <20170322153843.GC4008@pathway.suse.cz>
+References: <20170306124554.828-1-sergey.senozhatsky@gmail.com>
+ <20170306124554.828-4-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <58D24543.5020700@redhat.com>
-Message-Id: <30b07524-0558-7edb-3b0f-ba5e4976ffb7@linux.vnet.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20170306124554.828-4-sergey.senozhatsky@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,60 +21,184 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, holzheu@linux.vnet.ibm.com
+To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: linux-pm@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Xunlei,
+(added Eric, kexec mailing likst, and linux-pm mailing list
+into CC because we touch their code)
+
+On Mon 2017-03-06 21:45:53, Sergey Senozhatsky wrote:
+> It's not always possible/safe to wake_up() printk kernel
+> thread. For example, late suspend/early resume may printk()
+> while timekeeping is not initialized yet, so calling into the
+> scheduler may result in recursive warnings. Thus we need
+> printk() to operate in old mode there and attempt to immediately
+> flush pending kernel message to the console. This patch adds
+> console_printing_thread_off/on sections.
+
+This patch helps to avoid the warning. But IMHO, even more
+important effect is that it helps to actually see the
+massages when things go wrong, the kthread is never
+called later, and we even do not end up in panic()
+that would flush them to the console.
+
+I am afraid that there are more locations where
+the old mode need to be forced. It might take
+a while until they are found and fixed.
+
+I would really like to have an option that would
+force the old mode all the time. It might help
+a lot when you debug a system freeze and the messages
+are not printed because of the deferred console handling.
+
+Otherwise, the location of console_printing_thread_off()/on()
+calls looks reasonable to me. But it would be great to get
+some confirmation from kexec and pm people.
+
+Best Regards,
+Petr
 
 
-On Wednesday 22 March 2017 03:04 PM, Xunlei Pang wrote:
-> On 03/22/2017 at 12:30 PM, Dave Young wrote:
->> On 03/21/17 at 10:18pm, Eric W. Biederman wrote:
->>> Dave Young <dyoung@redhat.com> writes:
->>>
->>>> On 03/20/17 at 10:33pm, Eric W. Biederman wrote:
->>>>> Xunlei Pang <xlpang@redhat.com> writes:
->>>>>
->>>>>> As Eric said,
->>>>>> "what we need to do is move the variable vmcoreinfo_note out
->>>>>> of the kernel's .bss section.  And modify the code to regenerate
->>>>>> and keep this information in something like the control page.
->>>>>>
->>>>>> Definitely something like this needs a page all to itself, and ideally
->>>>>> far away from any other kernel data structures.  I clearly was not
->>>>>> watching closely the data someone decided to keep this silly thing
->>>>>> in the kernel's .bss section."
->>>>>>
->>>>>> This patch allocates extra pages for these vmcoreinfo_XXX variables,
->>>>>> one advantage is that it enhances some safety of vmcoreinfo, because
->>>>>> vmcoreinfo now is kept far away from other kernel data structures.
->>>>> Can you preceed this patch with a patch that removes CRASHTIME from
->>>>> vmcoreinfo?  If someone actually cares we can add a separate note that holds
->>>>> a 64bit crashtime in the per cpu notes.
->>>> I think makedumpfile is using it, but I also vote to remove the
->>>> CRASHTIME. It is better not to do this while crashing and a makedumpfile
->>>> userspace patch is needed to drop the use of it.
->>>>
-> By moving the CRASHTIME info to the cpu note of crashed cpu may be a good
-> way. In kdump kernel, notes of vmcore elfhdr will be merged into one big note
-> section, I don't know how makedumpfile or crash handle the big note section?
-> If they process the note in some order, breakage will definitely happen...
->
-> There is also a fadump may be affected.
->
-
-Would like to keep a tab of such change as fadump builds cpu notes 
-differently
-and such change may have an impact on it considering it depends on the same
-tools - crash, makedumpfile..
-
-Thanks
-Hari
-
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> ---
+>  kernel/kexec_core.c      | 4 ++++
+>  kernel/power/hibernate.c | 8 ++++++++
+>  kernel/power/suspend.c   | 4 ++++
+>  3 files changed, 16 insertions(+)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index bfe62d5b3872..b40fba31150c 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1496,6 +1496,8 @@ int kernel_kexec(void)
+>  		goto Unlock;
+>  	}
+>  
+> +	console_printing_thread_off();
+> +
+>  #ifdef CONFIG_KEXEC_JUMP
+>  	if (kexec_image->preserve_context) {
+>  		lock_system_sleep();
+> @@ -1565,6 +1567,8 @@ int kernel_kexec(void)
+>  	}
+>  #endif
+>  
+> +	console_printing_thread_on();
+> +
+>   Unlock:
+>  	mutex_unlock(&kexec_mutex);
+>  	return error;
+> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+> index a8b978c35a6a..15634841ccc6 100644
+> --- a/kernel/power/hibernate.c
+> +++ b/kernel/power/hibernate.c
+> @@ -502,6 +502,7 @@ int hibernation_restore(int platform_mode)
+>  {
+>  	int error;
+>  
+> +	console_printing_thread_off();
+>  	pm_prepare_console();
+>  	suspend_console();
+>  	pm_restrict_gfp_mask();
+> @@ -519,6 +520,7 @@ int hibernation_restore(int platform_mode)
+>  	pm_restore_gfp_mask();
+>  	resume_console();
+>  	pm_restore_console();
+> +	console_printing_thread_on();
+>  	return error;
+>  }
+>  
+> @@ -542,6 +544,7 @@ int hibernation_platform_enter(void)
+>  		goto Close;
+>  
+>  	entering_platform_hibernation = true;
+> +	console_printing_thread_off();
+>  	suspend_console();
+>  	error = dpm_suspend_start(PMSG_HIBERNATE);
+>  	if (error) {
+> @@ -589,6 +592,7 @@ int hibernation_platform_enter(void)
+>  	entering_platform_hibernation = false;
+>  	dpm_resume_end(PMSG_RESTORE);
+>  	resume_console();
+> +	console_printing_thread_on();
+>  
+>   Close:
+>  	hibernation_ops->end();
+> @@ -692,6 +696,7 @@ int hibernate(void)
+>  		goto Unlock;
+>  	}
+>  
+> +	console_printing_thread_off();
+>  	pm_prepare_console();
+>  	error = __pm_notifier_call_chain(PM_HIBERNATION_PREPARE, -1, &nr_calls);
+>  	if (error) {
+> @@ -759,6 +764,7 @@ int hibernate(void)
+>   Exit:
+>  	__pm_notifier_call_chain(PM_POST_HIBERNATION, nr_calls, NULL);
+>  	pm_restore_console();
+> +	console_printing_thread_on();
+>  	atomic_inc(&snapshot_device_available);
+>   Unlock:
+>  	unlock_system_sleep();
+> @@ -868,6 +874,7 @@ static int software_resume(void)
+>  		goto Unlock;
+>  	}
+>  
+> +	console_printing_thread_off();
+>  	pm_prepare_console();
+>  	error = __pm_notifier_call_chain(PM_RESTORE_PREPARE, -1, &nr_calls);
+>  	if (error) {
+> @@ -884,6 +891,7 @@ static int software_resume(void)
+>   Finish:
+>  	__pm_notifier_call_chain(PM_POST_RESTORE, nr_calls, NULL);
+>  	pm_restore_console();
+> +	console_printing_thread_on();
+>  	atomic_inc(&snapshot_device_available);
+>  	/* For success case, the suspend path will release the lock */
+>   Unlock:
+> diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
+> index 15e6baef5c73..7c6e228b7de4 100644
+> --- a/kernel/power/suspend.c
+> +++ b/kernel/power/suspend.c
+> @@ -433,6 +433,7 @@ int suspend_devices_and_enter(suspend_state_t state)
+>  	if (!sleep_state_supported(state))
+>  		return -ENOSYS;
+>  
+> +	console_printing_thread_off();
+>  	error = platform_suspend_begin(state);
+>  	if (error)
+>  		goto Close;
+> @@ -462,6 +463,7 @@ int suspend_devices_and_enter(suspend_state_t state)
+>  
+>   Close:
+>  	platform_resume_end(state);
+> +	console_printing_thread_on();
+>  	return error;
+>  
+>   Recover_platform:
+> @@ -520,6 +522,7 @@ static int enter_state(suspend_state_t state)
+>  #endif
+>  
+>  	pr_debug("PM: Preparing system for sleep (%s)\n", pm_states[state]);
+> +	console_printing_thread_off();
+>  	pm_suspend_clear_flags();
+>  	error = suspend_prepare(state);
+>  	if (error)
+> @@ -537,6 +540,7 @@ static int enter_state(suspend_state_t state)
+>   Finish:
+>  	pr_debug("PM: Finishing wakeup.\n");
+>  	suspend_finish();
+> +	console_printing_thread_on();
+>   Unlock:
+>  	mutex_unlock(&pm_mutex);
+>  	return error;
+> -- 
+> 2.12.0
+> 
 
 _______________________________________________
 kexec mailing list
