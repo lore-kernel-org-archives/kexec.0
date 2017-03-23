@@ -1,12 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cr0iR-0006rs-Cn
- for kexec@lists.infradead.org; Thu, 23 Mar 2017 11:15:40 +0000
-From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH] x86: Support large number of memory ranges
-Date: Thu, 23 Mar 2017 19:16:59 +0800
-Message-Id: <1490267819-13606-1-git-send-email-xlpang@redhat.com>
+Received: from mail-pg0-x235.google.com ([2607:f8b0:400e:c05::235])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cr0tX-0006YT-Q1
+ for kexec@lists.infradead.org; Thu, 23 Mar 2017 11:27:12 +0000
+Received: by mail-pg0-x235.google.com with SMTP id 21so89003163pgg.1
+ for <kexec@lists.infradead.org>; Thu, 23 Mar 2017 04:26:47 -0700 (PDT)
+Date: Thu, 23 Mar 2017 20:29:30 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v33 07/14] arm64: hibernate: preserve kdump image around
+ hibernation
+Message-ID: <20170323112929.GD17298@linaro.org>
+References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
+ <20170315095941.25119-5-takahiro.akashi@linaro.org>
+ <58D1702A.2010702@arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <58D1702A.2010702@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,60 +24,172 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Xunlei Pang <xlpang@redhat.com>, Dave Young <dyoung@redhat.com>, Frank Ramsay <frank.ramsay@hpe.com>
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-We got a problem on one SGI 64TB machine, the current kexec-tools
-failed to work due to the insufficient ranges(MAX_MEMORY_RANGES)
-allowed which is defined as 1024(less than the ranges on the machine).
-The kcore header is insufficient due to the same reason as well.
+On Tue, Mar 21, 2017 at 06:25:46PM +0000, James Morse wrote:
+> Hi Akashi,
+> 
+> On 15/03/17 09:59, AKASHI Takahiro wrote:
+> > Since arch_kexec_protect_crashkres() removes a mapping for crash dump
+> > kernel image, the loaded data won't be preserved around hibernation.
+> > 
+> > In this patch, helper functions, kexec_prepare_suspend()/
+> > kexec_post_resume(), are additionally called before/after hibernation so
+> > that the relevant memory segments will be mapped again and preserved just
+> > as the others are.
+> > 
+> > In addition, to minimize the size of hibernation image,
+> > kexec_is_chraskres_nosave() is added to pfn_is_nosave() in order to
+> 
+> (crashkres)
 
-To solve this, this patch simply doubles "MAX_MEMORY_RANGES" and
-"KCORE_ELF_HEADERS_SIZE".
+Yes.
 
-Cc: Frank Ramsay <frank.ramsay@hpe.com>
-Signed-off-by: Xunlei Pang <xlpang@redhat.com>
----
- kexec/arch/i386/kexec-x86.h | 2 +-
- kexec/crashdump.h           | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+> > recoginize only the pages that hold loaded crash dump kernel image as
+> 
+> (recognize)
 
-diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
-index 33df352..51855f8 100644
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -1,7 +1,7 @@
- #ifndef KEXEC_X86_H
- #define KEXEC_X86_H
- 
--#define MAX_MEMORY_RANGES 1024
-+#define MAX_MEMORY_RANGES 2048
- 
- enum coretype {
- 	CORE_TYPE_UNDEF = 0,
-diff --git a/kexec/crashdump.h b/kexec/crashdump.h
-index 86e1ef2..18bd691 100644
---- a/kexec/crashdump.h
-+++ b/kexec/crashdump.h
-@@ -7,8 +7,8 @@ extern int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len);
- 
- /* Need to find a better way to determine per cpu notes section size. */
- #define MAX_NOTE_BYTES		1024
--/* Expecting ELF headers to fit in 32K. Increase it if you need more. */
--#define KCORE_ELF_HEADERS_SIZE  32768
-+/* Expecting ELF headers to fit in 64K. Increase it if you need more. */
-+#define KCORE_ELF_HEADERS_SIZE  65536
- /* The address of the ELF header is passed to the secondary kernel
-  * using the kernel command line option memmap=nnn.
-  * The smallest unit the kernel accepts is in kilobytes,
--- 
-1.8.3.1
+Ah, yes ...
 
+> > saveable. Hibernation excludes any pages that are marked as Reserved and
+> > yet "nosave."
+> 
+> 
+> Neat! I didn't think this would be possible without hacking kernel/power/snapshot.c.
+> 
+> I've given this a spin on Juno and Seattle, I even added debug_pagealloc, but
+> that doesn't trick it because your kexec_prepare_suspend() puts the mapping back.
+> 
+> Reviewed-by: James Morse <james.morse@arm.com>
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> 
+> Some nits about comments:
+> 
+> > diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+> > index 97a7384100f3..1e10fafa59bd 100644
+> > --- a/arch/arm64/kernel/hibernate.c
+> > +++ b/arch/arm64/kernel/hibernate.c
+> > @@ -286,6 +288,9 @@ int swsusp_arch_suspend(void)
+> >  	local_dbg_save(flags);
+> >  
+> >  	if (__cpu_suspend_enter(&state)) {
+> > +		/* make the crash dump kernel image visible/saveable */
+> > +		kexec_prepare_suspend();
+> 
+> Strictly this is kdump not kexec, but the comment makes that clear.
+
+I hesitated to use "kdump_" here as there are no functions with
+such a prefix (say, even arch_kexec_protect_crashkres()).
+So probably "crash_" or "crash_kexec_" would sound much better.
+
+> > +
+> >  		sleep_cpu = smp_processor_id();
+> >  		ret = swsusp_save();
+> >  	} else {
+> 
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index 02e4f929db3b..82f48db589cf 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> 
+> > @@ -220,7 +221,6 @@ void arch_kexec_protect_crashkres(void)
+> >  			kexec_crash_image->segment[i].memsz,
+> >  			PAGE_KERNEL_INVALID, true);
+> >  
+> > -
+> 
+> Stray whitespace change from a previous patch?
+
+Oops, fix it.
+
+> >  	flush_tlb_all();
+> >  }
+> >  
+> > @@ -233,3 +233,74 @@ void arch_kexec_unprotect_crashkres(void)
+> 
+> > +/*
+> > + * kexec_is_crashres_nosave
+> > + *
+> > + * Return true only if a page is part of reserved memory for crash dump kernel,
+> > + * but does not hold any data of loaded kernel image.
+> > + *
+> > + * Note that all the pages in crash dump kernel memory have been initially
+> > + * marked as Reserved in kexec_reserve_crashkres_pages().
+> > + *
+> > + * In hibernation, the pages which are Reserved and yet "nosave"
+> > + * are excluded from the hibernation iamge. kexec_is_crashkres_nosave()
+> > + * does this check for crash dump kernel and will reduce the total size
+> > + * of hibernation image.
+> > + */
+> > +
+> > +bool kexec_is_crashkres_nosave(unsigned long pfn)
+> > +{
+> > +	int i;
+> > +	phys_addr_t addr;
+> > +
+> > +	/* in reserved memory? */
+> 
+> Comment in the wrong place?
+
+This is after my deep thinking :) but
+
+> 
+> > +	if (!crashk_res.end)
+> > +		return false;
+> > +
+> > +	addr = __pfn_to_phys(pfn);
+> 
+> (makes more sense here)
+
+if you think so, I will follow you.
+
+> 
+> > +	if ((addr < crashk_res.start) || (crashk_res.end < addr))
+> > +		return false;
+> > +
+> 
+> > +	/* not part of loaded kernel image? */
+> 
+> Comment in the wrong place?
+> 
+> 
+> > +	if (!kexec_crash_image)
+> > +		return true;
+> > +
+> 
+> (makes more sense here)
+
+ditto
+
+> 
+> > +	for (i = 0; i < kexec_crash_image->nr_segments; i++)
+> > +		if (addr >= kexec_crash_image->segment[i].mem &&
+> > +				addr < (kexec_crash_image->segment[i].mem +
+> > +					kexec_crash_image->segment[i].memsz))
+> > +			return false;
+> > +
+> > +	return true;
+> > +}
+> > +
+> 
+> 
+> Thanks,
+> 
+> James
+
+
+Thank you for your review!
+-Takahiro AKASHI
 
 _______________________________________________
 kexec mailing list
