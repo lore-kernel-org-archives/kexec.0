@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cr0NU-00058t-Cv
- for kexec@lists.infradead.org; Thu, 23 Mar 2017 10:54:03 +0000
-Received: by mail-pf0-x231.google.com with SMTP id p189so81037116pfp.1
- for <kexec@lists.infradead.org>; Thu, 23 Mar 2017 03:53:39 -0700 (PDT)
-Date: Thu, 23 Mar 2017 19:56:19 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v33 05/14] arm64: mm: allow for unmapping part of kernel
- mapping
-Message-ID: <20170323105618.GC17298@linaro.org>
-References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
- <20170315095941.25119-3-takahiro.akashi@linaro.org>
- <CAKv+Gu9mJxOci7sW5iJFWaSmQz4N3SJkh+qwcFZ3ZmUpVywZQg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu9mJxOci7sW5iJFWaSmQz4N3SJkh+qwcFZ3ZmUpVywZQg@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cr0iR-0006rs-Cn
+ for kexec@lists.infradead.org; Thu, 23 Mar 2017 11:15:40 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH] x86: Support large number of memory ranges
+Date: Thu, 23 Mar 2017 19:16:59 +0800
+Message-Id: <1490267819-13606-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,104 +15,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Xunlei Pang <xlpang@redhat.com>, Dave Young <dyoung@redhat.com>, Frank Ramsay <frank.ramsay@hpe.com>
 
-Ard,
+We got a problem on one SGI 64TB machine, the current kexec-tools
+failed to work due to the insufficient ranges(MAX_MEMORY_RANGES)
+allowed which is defined as 1024(less than the ranges on the machine).
+The kcore header is insufficient due to the same reason as well.
 
-On Tue, Mar 21, 2017 at 11:16:34AM +0000, Ard Biesheuvel wrote:
-> On 15 March 2017 at 09:59, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> > create_pgd_mapping() is enhanced here so that it will accept
-> > PAGE_KERNEL_INVALID protection attribute and unmap a given range of memory.
-> >
-> > The feature will be used in a later kdump patch to implement the protection
-> > against possible corruption of crash dump kernel memory which is to be set
-> > aside from ther other memory on primary kernel.
-> >
-> > Note that, in this implementation, it assumes that all the range of memory
-> > to be processed is mapped in page-level since the only current user is
-> > kdump where page mappings are also required.
-> >
-> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> 
-> Couldn't we use unmap_kernel_range() for this?
+To solve this, this patch simply doubles "MAX_MEMORY_RANGES" and
+"KCORE_ELF_HEADERS_SIZE".
 
-I've almost forgotten this function, but my understanding is that
-this function (and map counterpart) is mainly for "VM area" (< PAGE_OFFSET).
-While it seems to (actually does) work instead of create_pgd_mapping() for now,
-I'm not sure whether it is an expected usage (now and future).
+Cc: Frank Ramsay <frank.ramsay@hpe.com>
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+ kexec/arch/i386/kexec-x86.h | 2 +-
+ kexec/crashdump.h           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-So I think that it would be safe to keep using create_pgd_mapping().
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 33df352..51855f8 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -1,7 +1,7 @@
+ #ifndef KEXEC_X86_H
+ #define KEXEC_X86_H
+ 
+-#define MAX_MEMORY_RANGES 1024
++#define MAX_MEMORY_RANGES 2048
+ 
+ enum coretype {
+ 	CORE_TYPE_UNDEF = 0,
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 86e1ef2..18bd691 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -7,8 +7,8 @@ extern int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len);
+ 
+ /* Need to find a better way to determine per cpu notes section size. */
+ #define MAX_NOTE_BYTES		1024
+-/* Expecting ELF headers to fit in 32K. Increase it if you need more. */
+-#define KCORE_ELF_HEADERS_SIZE  32768
++/* Expecting ELF headers to fit in 64K. Increase it if you need more. */
++#define KCORE_ELF_HEADERS_SIZE  65536
+ /* The address of the ELF header is passed to the secondary kernel
+  * using the kernel command line option memmap=nnn.
+  * The smallest unit the kernel accepts is in kilobytes,
+-- 
+1.8.3.1
 
-Thanks,
--Takahiro AKASHI
-
-
-> > ---
-> >  arch/arm64/include/asm/pgtable-prot.h |  1 +
-> >  arch/arm64/mm/mmu.c                   | 17 +++++++++++------
-> >  2 files changed, 12 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
-> > index 2142c7726e76..945d84cd5df7 100644
-> > --- a/arch/arm64/include/asm/pgtable-prot.h
-> > +++ b/arch/arm64/include/asm/pgtable-prot.h
-> > @@ -54,6 +54,7 @@
-> >  #define PAGE_KERNEL_ROX                __pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_RDONLY)
-> >  #define PAGE_KERNEL_EXEC       __pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE)
-> >  #define PAGE_KERNEL_EXEC_CONT  __pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_CONT)
-> > +#define PAGE_KERNEL_INVALID    __pgprot(0)
-> >
-> >  #define PAGE_HYP               __pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
-> >  #define PAGE_HYP_EXEC          __pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index d28dbcf596b6..cb359a3927ef 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -128,7 +128,10 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
-> >         do {
-> >                 pte_t old_pte = *pte;
-> >
-> > -               set_pte(pte, pfn_pte(pfn, prot));
-> > +               if (pgprot_val(prot))
-> > +                       set_pte(pte, pfn_pte(pfn, prot));
-> > +               else
-> > +                       pte_clear(null, null, pte);
-> >                 pfn++;
-> >
-> >                 /*
-> > @@ -309,12 +312,14 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
-> >         __create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, false);
-> >  }
-> >
-> > -void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
-> > -                              unsigned long virt, phys_addr_t size,
-> > -                              pgprot_t prot, bool page_mappings_only)
-> > +/*
-> > + * Note that PAGE_KERNEL_INVALID should be used with page_mappings_only
-> > + * true for now.
-> > + */
-> > +void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
-> > +                       unsigned long virt, phys_addr_t size,
-> > +                       pgprot_t prot, bool page_mappings_only)
-> >  {
-> > -       BUG_ON(mm == &init_mm);
-> > -
-> >         __create_pgd_mapping(mm->pgd, phys, virt, size, prot,
-> >                              pgd_pgtable_alloc, page_mappings_only);
-> >  }
-> > --
-> > 2.11.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 _______________________________________________
 kexec mailing list
