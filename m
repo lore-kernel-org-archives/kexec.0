@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pf0-x231.google.com ([2607:f8b0:400e:c00::231])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cqyw0-0004ug-1G
- for kexec@lists.infradead.org; Thu, 23 Mar 2017 09:21:34 +0000
-Subject: Re: [PATCH v3 1/3] kexec: Move vmcoreinfo out of the kernel's .bss
- section
-References: <1489989033-1179-1-git-send-email-xlpang@redhat.com>
- <87pohbz4lo.fsf@xmission.com>
- <20170322025536.GA4424@dhcp-128-65.nay.redhat.com>
- <87pohaxam1.fsf@xmission.com>
- <20170322043004.GB4424@dhcp-128-65.nay.redhat.com>
- <20170322214819.0b64d49c@TP-holzheu>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <58D39429.9020200@redhat.com>
-Date: Thu, 23 Mar 2017 17:23:53 +0800
+ id 1cr0NU-00058t-Cv
+ for kexec@lists.infradead.org; Thu, 23 Mar 2017 10:54:03 +0000
+Received: by mail-pf0-x231.google.com with SMTP id p189so81037116pfp.1
+ for <kexec@lists.infradead.org>; Thu, 23 Mar 2017 03:53:39 -0700 (PDT)
+Date: Thu, 23 Mar 2017 19:56:19 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v33 05/14] arm64: mm: allow for unmapping part of kernel
+ mapping
+Message-ID: <20170323105618.GC17298@linaro.org>
+References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
+ <20170315095941.25119-3-takahiro.akashi@linaro.org>
+ <CAKv+Gu9mJxOci7sW5iJFWaSmQz4N3SJkh+qwcFZ3ZmUpVywZQg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20170322214819.0b64d49c@TP-holzheu>
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9mJxOci7sW5iJFWaSmQz4N3SJkh+qwcFZ3ZmUpVywZQg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,86 +24,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Xunlei Pang <xlpang@redhat.com>, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, hbathini@linux.vnet.ibm.com, akpm@linux-foundation.org, kexec@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 03/23/2017 at 04:48 AM, Michael Holzheu wrote:
-> Am Wed, 22 Mar 2017 12:30:04 +0800
-> schrieb Dave Young <dyoung@redhat.com>:
->
->> On 03/21/17 at 10:18pm, Eric W. Biederman wrote:
->>> Dave Young <dyoung@redhat.com> writes:
->>>
-> [snip]
->
->>>> I think makedumpfile is using it, but I also vote to remove the
->>>> CRASHTIME. It is better not to do this while crashing and a makedumpfile
->>>> userspace patch is needed to drop the use of it.
->>>>
->>>>> As we are looking at reliability concerns removing CRASHTIME should make
->>>>> everything in vmcoreinfo a boot time constant.  Which should simplify
->>>>> everything considerably.
->>>> It is a nice improvement..
->>> We also need to take a close look at what s390 is doing with vmcoreinfo.
->>> As apparently it is reading it in a different kind of crashdump process.
->> Yes, need careful review from s390 and maybe ppc64 especially about
->> patch 2/3, better to have comments from IBM about s390 dump tool and ppc
->> fadump. Added more cc.
-> On s390 we have at least an issue with patch 1/3. For stand-alone dump
-> and also because we create the ELF header for kdump in the new
-> kernel we save the pointer to the vmcoreinfo note in the old kernel on a
-> defined memory address in our absolute zero lowcore.
->
-> This is done in arch/s390/kernel/setup.c:
->
-> static void __init setup_vmcoreinfo(void)
-> {
->         mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
-> }
->
-> Since with patch 1/3 paddr_vmcoreinfo_note() returns NULL at this point in
-> time we have a problem here.
->
-> To solve this - I think - we could move the initialization to
-> arch/s390/kernel/machine_kexec.c:
->
-> void arch_crash_save_vmcoreinfo(void)
-> {
->         VMCOREINFO_SYMBOL(lowcore_ptr);
->         VMCOREINFO_SYMBOL(high_memory);
->         VMCOREINFO_LENGTH(lowcore_ptr, NR_CPUS);
->         mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
-> }
->
-> Probably related to this is my observation that patch 3/3 leads to
-> an empty VMCOREINFO note for kdump on s390. The note is there ...
->
-> # readelf -n /var/crash/127.0.0.1-2017-03-22-21:14:39/vmcore | grep VMCORE
->   VMCOREINFO           0x0000068e       Unknown note type: (0x00000000)
->
-> But it contains only zeros.
+Ard,
 
-Yes, this is a good catch, I will do more tests.
+On Tue, Mar 21, 2017 at 11:16:34AM +0000, Ard Biesheuvel wrote:
+> On 15 March 2017 at 09:59, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+> > create_pgd_mapping() is enhanced here so that it will accept
+> > PAGE_KERNEL_INVALID protection attribute and unmap a given range of memory.
+> >
+> > The feature will be used in a later kdump patch to implement the protection
+> > against possible corruption of crash dump kernel memory which is to be set
+> > aside from ther other memory on primary kernel.
+> >
+> > Note that, in this implementation, it assumes that all the range of memory
+> > to be processed is mapped in page-level since the only current user is
+> > kdump where page mappings are also required.
+> >
+> > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> 
+> Couldn't we use unmap_kernel_range() for this?
+
+I've almost forgotten this function, but my understanding is that
+this function (and map counterpart) is mainly for "VM area" (< PAGE_OFFSET).
+While it seems to (actually does) work instead of create_pgd_mapping() for now,
+I'm not sure whether it is an expected usage (now and future).
+
+So I think that it would be safe to keep using create_pgd_mapping().
 
 Thanks,
-Xunlei
+-Takahiro AKASHI
 
->
-> Unfortunately I have not yet understood the reason for this.
->
-> Michael
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
+> > ---
+> >  arch/arm64/include/asm/pgtable-prot.h |  1 +
+> >  arch/arm64/mm/mmu.c                   | 17 +++++++++++------
+> >  2 files changed, 12 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/arm64/include/asm/pgtable-prot.h b/arch/arm64/include/asm/pgtable-prot.h
+> > index 2142c7726e76..945d84cd5df7 100644
+> > --- a/arch/arm64/include/asm/pgtable-prot.h
+> > +++ b/arch/arm64/include/asm/pgtable-prot.h
+> > @@ -54,6 +54,7 @@
+> >  #define PAGE_KERNEL_ROX                __pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_RDONLY)
+> >  #define PAGE_KERNEL_EXEC       __pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE)
+> >  #define PAGE_KERNEL_EXEC_CONT  __pgprot(_PAGE_DEFAULT | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_CONT)
+> > +#define PAGE_KERNEL_INVALID    __pgprot(0)
+> >
+> >  #define PAGE_HYP               __pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_HYP_XN)
+> >  #define PAGE_HYP_EXEC          __pgprot(_PAGE_DEFAULT | PTE_HYP | PTE_RDONLY)
+> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> > index d28dbcf596b6..cb359a3927ef 100644
+> > --- a/arch/arm64/mm/mmu.c
+> > +++ b/arch/arm64/mm/mmu.c
+> > @@ -128,7 +128,10 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
+> >         do {
+> >                 pte_t old_pte = *pte;
+> >
+> > -               set_pte(pte, pfn_pte(pfn, prot));
+> > +               if (pgprot_val(prot))
+> > +                       set_pte(pte, pfn_pte(pfn, prot));
+> > +               else
+> > +                       pte_clear(null, null, pte);
+> >                 pfn++;
+> >
+> >                 /*
+> > @@ -309,12 +312,14 @@ static void __init create_mapping_noalloc(phys_addr_t phys, unsigned long virt,
+> >         __create_pgd_mapping(init_mm.pgd, phys, virt, size, prot, NULL, false);
+> >  }
+> >
+> > -void __init create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+> > -                              unsigned long virt, phys_addr_t size,
+> > -                              pgprot_t prot, bool page_mappings_only)
+> > +/*
+> > + * Note that PAGE_KERNEL_INVALID should be used with page_mappings_only
+> > + * true for now.
+> > + */
+> > +void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+> > +                       unsigned long virt, phys_addr_t size,
+> > +                       pgprot_t prot, bool page_mappings_only)
+> >  {
+> > -       BUG_ON(mm == &init_mm);
+> > -
+> >         __create_pgd_mapping(mm->pgd, phys, virt, size, prot,
+> >                              pgd_pgtable_alloc, page_mappings_only);
+> >  }
+> > --
+> > 2.11.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 _______________________________________________
 kexec mailing list
