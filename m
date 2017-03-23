@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-x235.google.com ([2607:f8b0:400e:c00::235])
+Received: from mail-dm3nam03on0098.outbound.protection.outlook.com
+ ([104.47.41.98] helo=NAM03-DM3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cr16l-0004up-JO
- for kexec@lists.infradead.org; Thu, 23 Mar 2017 11:40:49 +0000
-Received: by mail-pf0-x235.google.com with SMTP id 20so56717150pfk.2
- for <kexec@lists.infradead.org>; Thu, 23 Mar 2017 04:40:27 -0700 (PDT)
-Date: Thu, 23 Mar 2017 20:43:10 +0900
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v33 05/14] arm64: mm: allow for unmapping part of kernel
- mapping
-Message-ID: <20170323114309.GE17298@linaro.org>
-References: <20170315095656.24992-1-takahiro.akashi@linaro.org>
- <20170315095941.25119-3-takahiro.akashi@linaro.org>
- <58D10209.1090406@arm.com>
+ id 1cr2m2-0008No-E0
+ for kexec@lists.infradead.org; Thu, 23 Mar 2017 13:27:32 +0000
+From: "Ramsay, Frank" <frank.ramsay@hpe.com>
+Subject: Re: [PATCH] x86: Support large number of memory ranges
+Date: Thu, 23 Mar 2017 13:27:08 +0000
+Message-ID: <CS1PR84MB01983072D64758E237736825833F0@CS1PR84MB0198.NAMPRD84.PROD.OUTLOOK.COM>
+References: <1490267819-13606-1-git-send-email-xlpang@redhat.com>
+In-Reply-To: <1490267819-13606-1-git-send-email-xlpang@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <58D10209.1090406@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,81 +24,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: mark.rutland@arm.com, geoff@infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Xunlei Pang <xlpang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: Dave Young <dyoung@redhat.com>
 
-On Tue, Mar 21, 2017 at 10:35:53AM +0000, James Morse wrote:
-> Hi Akashi,
-> 
-> On 15/03/17 09:59, AKASHI Takahiro wrote:
-> > create_pgd_mapping() is enhanced here so that it will accept
-> > PAGE_KERNEL_INVALID protection attribute and unmap a given range of memory.
-> > 
-> > The feature will be used in a later kdump patch to implement the protection
-> > against possible corruption of crash dump kernel memory which is to be set
-> > aside from ther other memory on primary kernel.
-> 
-> Nit: ther- > the
+acking I tested this
+Tested-by: Frank Ramsay <frank.ramsay@hpe.com>
 
-Fix it.
+________________________________________
+From: Xunlei Pang <xlpang@redhat.com>
+Sent: Thursday, March 23, 2017 7:16:59 AM
+To: kexec@lists.infradead.org
+Cc: Dave Young; Xunlei Pang; Ramsay, Frank
+Subject: [PATCH] x86: Support large number of memory ranges
 
-> > Note that, in this implementation, it assumes that all the range of memory
-> > to be processed is mapped in page-level since the only current user is
-> > kdump where page mappings are also required.
-> 
-> Using create_pgd_mapping() like this means the mappings will be updated via the
-> fixmap which is unnecessary as the page tables will be part of mapped memory. In
+We got a problem on one SGI 64TB machine, the current kexec-tools
+failed to work due to the insufficient ranges(MAX_MEMORY_RANGES)
+allowed which is defined as 1024(less than the ranges on the machine).
+The kcore header is insufficient due to the same reason as well.
 
-This might be a reason that we would go for (un)map_kernel_range()
-over create_pgd_mapping() (? not sure)
+To solve this, this patch simply doubles "MAX_MEMORY_RANGES" and
+"KCORE_ELF_HEADERS_SIZE".
 
-> the worst case this adds an extra tlbi for every 2MB of crash image when we map
-> or unmap it. I don't think this matters.
-> 
-> This code used to be __init and it is the only user of FIX_PTE, so there won't
-> be any existing runtime users. The two arch_kexec_unprotect_crashkres() calls in
-> kexec are both protected by the kexec_mutex, and the call in hibernate happens
-> after disable_nonboot_cpus(), so these callers can't race with each other.
-> 
-> This looks safe to me.
-> 
-> 
-> > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> > index d28dbcf596b6..cb359a3927ef 100644
-> > --- a/arch/arm64/mm/mmu.c
-> > +++ b/arch/arm64/mm/mmu.c
-> > @@ -128,7 +128,10 @@ static void alloc_init_pte(pmd_t *pmd, unsigned long addr,
-> >  	do {
-> >  		pte_t old_pte = *pte;
-> >  
-> > -		set_pte(pte, pfn_pte(pfn, prot));
-> > +		if (pgprot_val(prot))
-> > +			set_pte(pte, pfn_pte(pfn, prot));
-> > +		else
-> > +			pte_clear(null, null, pte);
-> 
-> Lowercase NULLs? This relies on these values never being used... __set_fixmap()
-> in the same file passes &init_mm and the address, can we do the same to be
-> consistent?
+Cc: Frank Ramsay <frank.ramsay@hpe.com>
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+ kexec/arch/i386/kexec-x86.h | 2 +-
+ kexec/crashdump.h           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-OK.
+diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
+index 33df352..51855f8 100644
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -1,7 +1,7 @@
+ #ifndef KEXEC_X86_H
+ #define KEXEC_X86_H
 
-Thanks,
--Takahiro AKASHI
+-#define MAX_MEMORY_RANGES 1024
++#define MAX_MEMORY_RANGES 2048
 
-> 
-> >  		pfn++;
-> >  
-> >  		/*
-> 
-> Reviewed-by: James Morse <james.morse@arm.com>
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-> 
+ enum coretype {
+        CORE_TYPE_UNDEF = 0,
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 86e1ef2..18bd691 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -7,8 +7,8 @@ extern int get_xen_vmcoreinfo(uint64_t *addr, uint64_t *len);
+
+ /* Need to find a better way to determine per cpu notes section size. */
+ #define MAX_NOTE_BYTES         1024
+-/* Expecting ELF headers to fit in 32K. Increase it if you need more. */
+-#define KCORE_ELF_HEADERS_SIZE  32768
++/* Expecting ELF headers to fit in 64K. Increase it if you need more. */
++#define KCORE_ELF_HEADERS_SIZE  65536
+ /* The address of the ELF header is passed to the secondary kernel
+  * using the kernel command line option memmap=nnn.
+  * The smallest unit the kernel accepts is in kilobytes,
+--
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
