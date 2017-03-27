@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([103.22.144.67])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1csSAg-0003us-JI
- for kexec@lists.infradead.org; Mon, 27 Mar 2017 10:46:48 +0000
+ id 1csSAy-0003wQ-15
+ for kexec@lists.infradead.org; Mon, 27 Mar 2017 10:47:05 +0000
 From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [RESEND PATCH v4 4/5] powerpc/fadump: reuse crashkernel parameter
- for fadump memory reservation
-In-Reply-To: <149035346749.6881.911095631212975718.stgit@hbathini.in.ibm.com>
+Subject: Re: [RESEND PATCH v4 5/5] powerpc/fadump: update documentation about
+ crashkernel parameter reuse
+In-Reply-To: <149035347559.6881.14224829694291758581.stgit@hbathini.in.ibm.com>
 References: <149035332237.6881.9486330442785822384.stgit@hbathini.in.ibm.com>
- <149035346749.6881.911095631212975718.stgit@hbathini.in.ibm.com>
-Date: Mon, 27 Mar 2017 21:46:27 +1100
-Message-ID: <87poh3dmkc.fsf@concordia.ellerman.id.au>
+ <149035347559.6881.14224829694291758581.stgit@hbathini.in.ibm.com>
+Date: Mon, 27 Mar 2017 21:46:40 +1100
+Message-ID: <87mvc7dmjz.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,31 +29,14 @@ Cc: fenghua.yu@intel.com, tony.luck@intel.com, linux-ia64@vger.kernel.org, linux
 
 Hari Bathini <hbathini@linux.vnet.ibm.com> writes:
 
-> fadump supports specifying memory to reserve for fadump's crash kernel
-> with fadump_reserve_mem kernel parameter. This parameter currently
-> supports passing a fixed memory size, like fadump_reserve_mem=<size>
-> only. This patch aims to add support for other syntaxes like range-based
-> memory size <range1>:<size1>[,<range2>:<size2>,<range3>:<size3>,...]
-> which allows using the same parameter to boot the kernel with different
-> system RAM sizes.
+> As we are reusing crashkernel parameter instead of fadump_reserve_mem
+> parameter to specify the memory to reserve for fadump's crash kernel,
+> update the documentation accordingly.
 >
-> As crashkernel parameter already supports the above mentioned syntaxes,
-> this patch deprecates fadump_reserve_mem parameter and reuses crashkernel
-> parameter instead, to specify memory for fadump's crash kernel memory
-> reservation as well. If any offset is provided in crashkernel parameter,
-> it will be ignored in case of fadump, as fadump reserves memory at end
-> of RAM.
->
-> Advantages using crashkernel parameter instead of fadump_reserve_mem
-> parameter are one less kernel parameter overall, code reuse and support
-> for multiple syntaxes to specify memory.
->
-> Suggested-by: Dave Young <dyoung@redhat.com>
 > Signed-off-by: Hari Bathini <hbathini@linux.vnet.ibm.com>
-> Reviewed-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 > ---
->  arch/powerpc/kernel/fadump.c |   23 ++++++++++-------------
->  1 file changed, 10 insertions(+), 13 deletions(-)
+>  Documentation/powerpc/firmware-assisted-dump.txt |   23 ++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
 
 Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
