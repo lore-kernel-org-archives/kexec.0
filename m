@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x231.google.com ([2607:f8b0:400e:c05::231])
+Received: from mail-pg0-x22b.google.com ([2607:f8b0:400e:c05::22b])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cskwR-0002m4-K0
- for kexec@lists.infradead.org; Tue, 28 Mar 2017 06:49:28 +0000
-Received: by mail-pg0-x231.google.com with SMTP id 21so63590283pgg.1
- for <kexec@lists.infradead.org>; Mon, 27 Mar 2017 23:48:59 -0700 (PDT)
+ id 1cskxF-0003Sj-98
+ for kexec@lists.infradead.org; Tue, 28 Mar 2017 06:50:18 +0000
+Received: by mail-pg0-x22b.google.com with SMTP id 81so49067198pgh.2
+ for <kexec@lists.infradead.org>; Mon, 27 Mar 2017 23:49:48 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v34 07/14] arm64: hibernate: preserve kdump image around
- hibernation
-Date: Tue, 28 Mar 2017 15:51:25 +0900
-Message-Id: <20170328065130.16019-5-takahiro.akashi@linaro.org>
+Subject: [PATCH v34 13/14] Documentation: dt: chosen properties for arm64 kdump
+Date: Tue, 28 Mar 2017 15:52:42 +0900
+Message-Id: <20170328065242.16108-1-takahiro.akashi@linaro.org>
 In-Reply-To: <20170328064831.15894-1-takahiro.akashi@linaro.org>
 References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,229 +24,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: panand@redhat.com, devicetree@vger.kernel.org, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Since arch_kexec_protect_crashkres() removes a mapping for crash dump
-kernel image, the loaded data won't be preserved around hibernation.
+From: James Morse <james.morse@arm.com>
 
-In this patch, helper functions, crash_prepare_suspend()/
-crash_post_resume(), are additionally called before/after hibernation so
-that the relevant memory segments will be mapped again and preserved just
-as the others are.
+Add documentation for DT properties:
+	linux,usable-memory-range
+	linux,elfcorehdr
+used by arm64 kdump. Those are, respectively, a usable memory range
+allocated to crash dump kernel and the elfcorehdr's location within it.
 
-In addition, to minimize the size of hibernation image, crash_is_nosave()
-is added to pfn_is_nosave() in order to recognize only the pages that hold
-loaded crash dump kernel image as saveable. Hibernation excludes any pages
-that are marked as Reserved and yet "nosave."
-
+Signed-off-by: James Morse <james.morse@arm.com>
+[takahiro.akashi@linaro.org: update the text due to recent changes ]
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: James Morse <james.morse@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
 ---
- arch/arm64/include/asm/kexec.h    | 10 ++++++
- arch/arm64/kernel/hibernate.c     | 10 +++++-
- arch/arm64/kernel/machine_kexec.c | 71 +++++++++++++++++++++++++++++++++++++++
- arch/arm64/mm/init.c              | 27 +++++++++++++++
- 4 files changed, 117 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/chosen.txt | 45 ++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 04744dc5fb61..90aabbe893b7 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -43,6 +43,16 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
- 	/* Empty routine needed to avoid build errors. */
- }
- 
-+#if defined(CONFIG_KEXEC_CORE) && defined(CONFIG_HIBERNATION)
-+extern bool crash_is_nosave(unsigned long pfn);
-+extern void crash_prepare_suspend(void);
-+extern void crash_post_resume(void);
-+#else
-+static inline bool crash_is_nosave(unsigned long pfn) {return false; }
-+static inline void crash_prepare_suspend(void) {}
-+static inline void crash_post_resume(void) {}
-+#endif
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82d4c37..b5e39af4ddc0 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,48 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
 +
- #endif /* __ASSEMBLY__ */
- 
- #endif
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 97a7384100f3..a44e13942d30 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -28,6 +28,7 @@
- #include <asm/cacheflush.h>
- #include <asm/cputype.h>
- #include <asm/irqflags.h>
-+#include <asm/kexec.h>
- #include <asm/memory.h>
- #include <asm/mmu_context.h>
- #include <asm/pgalloc.h>
-@@ -102,7 +103,8 @@ int pfn_is_nosave(unsigned long pfn)
- 	unsigned long nosave_begin_pfn = sym_to_pfn(&__nosave_begin);
- 	unsigned long nosave_end_pfn = sym_to_pfn(&__nosave_end - 1);
- 
--	return (pfn >= nosave_begin_pfn) && (pfn <= nosave_end_pfn);
-+	return ((pfn >= nosave_begin_pfn) && (pfn <= nosave_end_pfn)) ||
-+		crash_is_nosave(pfn);
- }
- 
- void notrace save_processor_state(void)
-@@ -286,6 +288,9 @@ int swsusp_arch_suspend(void)
- 	local_dbg_save(flags);
- 
- 	if (__cpu_suspend_enter(&state)) {
-+		/* make the crash dump kernel image visible/saveable */
-+		crash_prepare_suspend();
++linux,usable-memory-range
++-------------------------
 +
- 		sleep_cpu = smp_processor_id();
- 		ret = swsusp_save();
- 	} else {
-@@ -297,6 +302,9 @@ int swsusp_arch_suspend(void)
- 		if (el2_reset_needed())
- 			dcache_clean_range(__hyp_idmap_text_start, __hyp_idmap_text_end);
- 
-+		/* make the crash dump kernel image protected again */
-+		crash_post_resume();
++This property (arm64 only) holds a base address and size, describing a
++limited region in which memory may be considered available for use by
++the kernel. Memory outside of this range is not available for use.
 +
- 		/*
- 		 * Tell the hibernation core that we've just restored
- 		 * the memory
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index b63baa749609..a6d66b98d795 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/kexec.h>
-+#include <linux/page-flags.h>
- #include <linux/smp.h>
- 
- #include <asm/cacheflush.h>
-@@ -230,3 +231,73 @@ void arch_kexec_unprotect_crashkres(void)
- 			__phys_to_virt(kexec_crash_image->segment[i].mem),
- 			kexec_crash_image->segment[i].memsz >> PAGE_SHIFT, 1);
- }
++This property describes a limitation: memory within this range is only
++valid when also described through another mechanism that the kernel
++would otherwise use to determine available memory (e.g. memory nodes
++or the EFI memory map). Valid memory may be sparse within the range.
++e.g.
 +
-+#ifdef CONFIG_HIBERNATION
-+/*
-+ * To preserve the crash dump kernel image, the relevant memory segments
-+ * should be mapped again around the hibernation.
-+ */
-+void crash_prepare_suspend(void)
-+{
-+	if (kexec_crash_image)
-+		arch_kexec_unprotect_crashkres();
-+}
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
 +
-+void crash_post_resume(void)
-+{
-+	if (kexec_crash_image)
-+		arch_kexec_protect_crashkres();
-+}
++The main usage is for crash dump kernel to identify its own usable
++memory and exclude, at its boot time, any other memory areas that are
++part of the panicked kernel's memory.
 +
-+/*
-+ * crash_is_nosave
-+ *
-+ * Return true only if a page is part of reserved memory for crash dump kernel,
-+ * but does not hold any data of loaded kernel image.
-+ *
-+ * Note that all the pages in crash dump kernel memory have been initially
-+ * marked as Reserved in kexec_reserve_crashkres_pages().
-+ *
-+ * In hibernation, the pages which are Reserved and yet "nosave" are excluded
-+ * from the hibernation iamge. crash_is_nosave() does thich check for crash
-+ * dump kernel and will reduce the total size of hibernation image.
-+ */
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
 +
-+bool crash_is_nosave(unsigned long pfn)
-+{
-+	int i;
-+	phys_addr_t addr;
++linux,elfcorehdr
++----------------
 +
-+	if (!crashk_res.end)
-+		return false;
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout as PT_LOAD segments of elf format.
++e.g.
 +
-+	/* in reserved memory? */
-+	addr = __pfn_to_phys(pfn);
-+	if ((addr < crashk_res.start) || (crashk_res.end < addr))
-+		return false;
++/ {
++	chosen {
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
 +
-+	if (!kexec_crash_image)
-+		return true;
-+
-+	/* not part of loaded kernel image? */
-+	for (i = 0; i < kexec_crash_image->nr_segments; i++)
-+		if (addr >= kexec_crash_image->segment[i].mem &&
-+				addr < (kexec_crash_image->segment[i].mem +
-+					kexec_crash_image->segment[i].memsz))
-+			return false;
-+
-+	return true;
-+}
-+
-+void crash_free_reserved_phys_range(unsigned long begin, unsigned long end)
-+{
-+	unsigned long addr;
-+	struct page *page;
-+
-+	for (addr = begin; addr < end; addr += PAGE_SIZE) {
-+		page = phys_to_page(addr);
-+		ClearPageReserved(page);
-+		free_reserved_page(page);
-+	}
-+}
-+#endif /* CONFIG_HIBERNATION */
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 09d19207362d..89ba3cd0fe44 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -134,10 +134,35 @@ static void __init reserve_crashkernel(void)
- 	crashk_res.start = crash_base;
- 	crashk_res.end = crash_base + crash_size - 1;
- }
-+
-+static void __init kexec_reserve_crashkres_pages(void)
-+{
-+#ifdef CONFIG_HIBERNATION
-+	phys_addr_t addr;
-+	struct page *page;
-+
-+	if (!crashk_res.end)
-+		return;
-+
-+	/*
-+	 * To reduce the size of hibernation image, all the pages are
-+	 * marked as Reserved initially.
-+	 */
-+	for (addr = crashk_res.start; addr < (crashk_res.end + 1);
-+			addr += PAGE_SIZE) {
-+		page = phys_to_page(addr);
-+		SetPageReserved(page);
-+	}
-+#endif
-+}
- #else
- static void __init reserve_crashkernel(void)
- {
- }
-+
-+static void __init kexec_reserve_crashkres_pages(void)
-+{
-+}
- #endif /* CONFIG_KEXEC_CORE */
- 
- /*
-@@ -517,6 +542,8 @@ void __init mem_init(void)
- 	/* this will put all unused low memory onto the freelists */
- 	free_all_bootmem();
- 
-+	kexec_reserve_crashkres_pages();
-+
- 	mem_init_print_info(NULL);
- 
- #define MLK(b, t) b, t, ((t) - (b)) >> 10
++While this property does not represent a real hardware, the address
++and the size are expressed in #address-cells and #size-cells,
++respectively, of the root node.
 -- 
 2.11.1
 
