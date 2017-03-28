@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x231.google.com ([2607:f8b0:400e:c05::231])
+Received: from mail-pg0-x229.google.com ([2607:f8b0:400e:c05::229])
  by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cskwh-0005iA-N3
- for kexec@lists.infradead.org; Tue, 28 Mar 2017 06:49:37 +0000
-Received: by mail-pg0-x231.google.com with SMTP id 81so49055368pgh.2
- for <kexec@lists.infradead.org>; Mon, 27 Mar 2017 23:49:18 -0700 (PDT)
+ id 1cskwK-0005e3-0a
+ for kexec@lists.infradead.org; Tue, 28 Mar 2017 06:49:15 +0000
+Received: by mail-pg0-x229.google.com with SMTP id n5so55888118pgh.0
+ for <kexec@lists.infradead.org>; Mon, 27 Mar 2017 23:48:51 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v34 12/14] Documentation: kdump: describe arm64 port
-Date: Tue, 28 Mar 2017 15:51:30 +0900
-Message-Id: <20170328065130.16019-10-takahiro.akashi@linaro.org>
+Subject: [PATCH v34 05/14] arm64: mm: add set_memory_valid()
+Date: Tue, 28 Mar 2017 15:51:23 +0900
+Message-Id: <20170328065130.16019-3-takahiro.akashi@linaro.org>
 In-Reply-To: <20170328064831.15894-1-takahiro.akashi@linaro.org>
 References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -27,71 +27,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
 Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Add arch specific descriptions about kdump usage on arm64 to kdump.txt.
+This function validates and invalidates PTE entries, and will be utilized
+in kdump to protect loaded crash dump kernel image.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- Documentation/kdump/kdump.txt | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/cacheflush.h |  1 +
+ arch/arm64/mm/pageattr.c            | 15 +++++++++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-index b0eb27b956d9..615434d81108 100644
---- a/Documentation/kdump/kdump.txt
-+++ b/Documentation/kdump/kdump.txt
-@@ -18,7 +18,7 @@ memory image to a dump file on the local disk, or across the network to
- a remote system.
+diff --git a/arch/arm64/include/asm/cacheflush.h b/arch/arm64/include/asm/cacheflush.h
+index 5a2a6ee65f65..728f933cef8c 100644
+--- a/arch/arm64/include/asm/cacheflush.h
++++ b/arch/arm64/include/asm/cacheflush.h
+@@ -154,5 +154,6 @@ int set_memory_ro(unsigned long addr, int numpages);
+ int set_memory_rw(unsigned long addr, int numpages);
+ int set_memory_x(unsigned long addr, int numpages);
+ int set_memory_nx(unsigned long addr, int numpages);
++int set_memory_valid(unsigned long addr, unsigned long size, int enable);
  
- Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
--s390x and arm architectures.
-+s390x, arm and arm64 architectures.
+ #endif
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 8def55e7249b..3212ee0558f6 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -125,20 +125,23 @@ int set_memory_x(unsigned long addr, int numpages)
+ }
+ EXPORT_SYMBOL_GPL(set_memory_x);
  
- When the system kernel boots, it reserves a small section of memory for
- the dump-capture kernel. This ensures that ongoing Direct Memory Access
-@@ -249,6 +249,13 @@ Dump-capture kernel config options (Arch Dependent, arm)
- 
-     AUTO_ZRELADDR=y
- 
-+Dump-capture kernel config options (Arch Dependent, arm64)
-+----------------------------------------------------------
+-#ifdef CONFIG_DEBUG_PAGEALLOC
+-void __kernel_map_pages(struct page *page, int numpages, int enable)
++int set_memory_valid(unsigned long addr, int numpages, int enable)
+ {
+-	unsigned long addr = (unsigned long) page_address(page);
+-
+ 	if (enable)
+-		__change_memory_common(addr, PAGE_SIZE * numpages,
++		return __change_memory_common(addr, PAGE_SIZE * numpages,
+ 					__pgprot(PTE_VALID),
+ 					__pgprot(0));
+ 	else
+-		__change_memory_common(addr, PAGE_SIZE * numpages,
++		return __change_memory_common(addr, PAGE_SIZE * numpages,
+ 					__pgprot(0),
+ 					__pgprot(PTE_VALID));
+ }
 +
-+- Please note that kvm of the dump-capture kernel will not be enabled
-+  on non-VHE systems even if it is configured. This is because the CPU
-+  will not be reset to EL2 on panic.
-+
- Extended crashkernel syntax
- ===========================
- 
-@@ -305,6 +312,8 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
-+   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-@@ -327,6 +336,8 @@ For s390x:
- 	- Use image or bzImage
- For arm:
- 	- Use zImage
-+For arm64:
-+	- Use vmlinux or Image
- 
- If you are using a uncompressed vmlinux image then use following command
- to load dump-capture kernel.
-@@ -370,6 +381,9 @@ For s390x:
- For arm:
- 	"1 maxcpus=1 reset_devices"
- 
-+For arm64:
-+	"1 maxcpus=1 reset_devices"
-+
- Notes on loading the dump-capture kernel:
- 
- * By default, the ELF headers are stored in ELF64 format to support
++#ifdef CONFIG_DEBUG_PAGEALLOC
++void __kernel_map_pages(struct page *page, int numpages, int enable)
++{
++	set_memory_valid((unsigned long)page_address(page), numpages, enable);
++}
+ #ifdef CONFIG_HIBERNATION
+ /*
+  * When built with CONFIG_DEBUG_PAGEALLOC and CONFIG_HIBERNATION, this function
 -- 
 2.11.1
 
