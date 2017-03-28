@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x229.google.com ([2607:f8b0:4001:c0b::229])
+Received: from mail-it0-x22b.google.com ([2607:f8b0:4001:c0b::22b])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1csnjM-0001qU-1p
- for kexec@lists.infradead.org; Tue, 28 Mar 2017 09:48:04 +0000
-Received: by mail-it0-x229.google.com with SMTP id y18so12316053itc.1
- for <kexec@lists.infradead.org>; Tue, 28 Mar 2017 02:47:39 -0700 (PDT)
+ id 1csnm8-0004Ia-Sj
+ for kexec@lists.infradead.org; Tue, 28 Mar 2017 09:51:04 +0000
+Received: by mail-it0-x22b.google.com with SMTP id e75so50050672itd.1
+ for <kexec@lists.infradead.org>; Tue, 28 Mar 2017 02:50:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20170328065033.15966-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20170328065130.16019-1-takahiro.akashi@linaro.org>
 References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
- <20170328065033.15966-1-takahiro.akashi@linaro.org>
+ <20170328065130.16019-1-takahiro.akashi@linaro.org>
 From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Tue, 28 Mar 2017 10:47:38 +0100
-Message-ID: <CAKv+Gu_Siy5ObfLjXKXk3qRKgB+QQ2ZtJtA0b8-qd8j4q5UhtA@mail.gmail.com>
-Subject: Re: [PATCH v34 01/14] memblock: add memblock_clear_nomap()
+Date: Tue, 28 Mar 2017 10:50:31 +0100
+Message-ID: <CAKv+Gu9nmF1FECSogrWsqfs=OU21WpVd5o6G-FanvPw1r4n7VQ@mail.gmail.com>
+Subject: Re: [PATCH v34 03/14] arm64: limit memory regions based on DT
+ property, usable-memory-range
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,58 +27,79 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, James Morse <james.morse@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Sameer Goel <sgoel@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Pratyush Anand <panand@redhat.com>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Sameer Goel <sgoel@codeaurora.org>, Dave Young <dyoung@redhat.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 28 March 2017 at 07:50, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> This function, with a combination of memblock_mark_nomap(), will be used
-> in a later kdump patch for arm64 when it temporarily isolates some range
-> of memory from the other memory blocks in order to create a specific
-> kernel mapping at boot time.
+On 28 March 2017 at 07:51, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
+> Crash dump kernel uses only a limited range of available memory as System
+> RAM. On arm64 kdump, This memory range is advertised to crash dump kernel
+> via a device-tree property under /chosen,
+>    linux,usable-memory-range = <BASE SIZE>
+>
+> Crash dump kernel reads this property at boot time and calls
+> memblock_cap_memory_range() to limit usable memory which are listed either
+> in UEFI memory map table or "memory" nodes of a device tree blob.
 >
 > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Reviewed-by: Geoff Levand <geoff@infradead.org>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
 > ---
->  include/linux/memblock.h |  1 +
->  mm/memblock.c            | 12 ++++++++++++
->  2 files changed, 13 insertions(+)
+>  arch/arm64/mm/init.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 >
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index bdfc65af4152..e82daffcfc44 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -93,6 +93,7 @@ int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
->  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
->  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
->  int memblock_mark_nomap(phys_addr_t base, phys_addr_t size);
-> +int memblock_clear_nomap(phys_addr_t base, phys_addr_t size);
->  ulong choose_memblock_flags(void);
->
->  /* Low level functions */
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 696f06d17c4e..2f4ca8104ea4 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -805,6 +805,18 @@ int __init_memblock memblock_mark_nomap(phys_addr_t base, phys_addr_t size)
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index e19e06593e37..290794b1a0f1 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -188,10 +188,45 @@ static int __init early_mem(char *p)
 >  }
+>  early_param("mem", early_mem);
 >
->  /**
-> + * memblock_clear_nomap - Clear flag MEMBLOCK_NOMAP for a specified region.
-> + * @base: the base phys addr of the region
-> + * @size: the size of the region
-> + *
-> + * Return 0 on success, -errno on failure.
-> + */
-> +int __init_memblock memblock_clear_nomap(phys_addr_t base, phys_addr_t size)
+> +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> +               const char *uname, int depth, void *data)
 > +{
-> +       return memblock_setclr_flag(base, size, 0, MEMBLOCK_NOMAP);
+> +       struct memblock_region *usablemem = data;
+> +       const __be32 *reg;
+> +       int len;
+> +
+> +       if (depth != 1 || strcmp(uname, "chosen") != 0)
+> +               return 0;
+> +
+> +       reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> +       if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> +               return 1;
+> +
+> +       usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> +       usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> +
+> +       return 1;
 > +}
 > +
-> +/**
->   * __next_reserved_mem_region - next function for for_each_reserved_region()
->   * @idx: pointer to u64 loop variable
->   * @out_start: ptr to phys_addr_t for start address of the region, can be %NULL
+> +static void __init fdt_enforce_memory_region(void)
+> +{
+> +       struct memblock_region reg = {
+> +               .size = 0,
+> +       };
+> +
+> +       of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> +
+> +       if (reg.size)
+> +               memblock_cap_memory_range(reg.base, reg.size);
+> +}
+> +
+>  void __init arm64_memblock_init(void)
+>  {
+>         const s64 linear_region_size = -(s64)PAGE_OFFSET;
+>
+> +       /* Handle linux,usable-memory-range property */
+> +       fdt_enforce_memory_region();
+> +
+>         /*
+>          * Ensure that the linear region takes up exactly half of the kernel
+>          * virtual address space. This way, we can distinguish a linear address
 > --
 > 2.11.1
 >
