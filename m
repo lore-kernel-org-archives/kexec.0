@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x22f.google.com ([2607:f8b0:400e:c05::22f])
+Received: from mail-pg0-x22b.google.com ([2607:f8b0:400e:c05::22b])
  by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1curdM-0007Fy-Nc
- for kexec@lists.infradead.org; Mon, 03 Apr 2017 02:22:23 +0000
-Received: by mail-pg0-x22f.google.com with SMTP id 21so105669579pgg.1
- for <kexec@lists.infradead.org>; Sun, 02 Apr 2017 19:22:00 -0700 (PDT)
+ id 1curdB-0007E6-4O
+ for kexec@lists.infradead.org; Mon, 03 Apr 2017 02:22:11 +0000
+Received: by mail-pg0-x22b.google.com with SMTP id g2so104388546pge.3
+ for <kexec@lists.infradead.org>; Sun, 02 Apr 2017 19:21:48 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v35 09/14] arm64: kdump: add VMCOREINFO's for user-space tools
-Date: Mon,  3 Apr 2017 11:24:37 +0900
-Message-Id: <20170403022440.12515-7-takahiro.akashi@linaro.org>
+Subject: [PATCH v35 06/14] arm64: kdump: protect crash dump kernel memory
+Date: Mon,  3 Apr 2017 11:24:34 +0900
+Message-Id: <20170403022440.12515-4-takahiro.akashi@linaro.org>
 In-Reply-To: <20170403022139.12383-1-takahiro.akashi@linaro.org>
 References: <20170403022139.12383-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,54 +25,252 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, Takahiro Akashi <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-In addition to common VMCOREINFO's defined in
-crash_save_vmcoreinfo_init(), we need to know, for crash utility,
-  - kimage_voffset
-  - PHYS_OFFSET
-to examine the contents of a dump file (/proc/vmcore) correctly
-due to the introduction of KASLR (CONFIG_RANDOMIZE_BASE) in v4.6.
+From: Takahiro Akashi <takahiro.akashi@linaro.org>
 
-  - VA_BITS
-is also required for makedumpfile command.
+arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
+are meant to be called by kexec_load() in order to protect the memory
+allocated for crash dump kernel once the image is loaded.
 
-arch_crash_save_vmcoreinfo() appends them to the dump file.
-More VMCOREINFO's may be added later.
+The protection is implemented by unmapping the relevant segments in crash
+dump kernel memory, rather than making it read-only as other archs do,
+to prevent coherency issues due to potential cache aliasing (with
+mismatched attributes).
+
+Page-level mappings are consistently used here so that we can change
+the attributes of segments in page granularity as well as shrink the region
+also in page granularity through /sys/kernel/kexec_crash_size, putting
+the freed memory back to buddy system.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Reviewed-by: James Morse <james.morse@arm.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- arch/arm64/kernel/machine_kexec.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/kernel/machine_kexec.c |  32 +++++++++---
+ arch/arm64/mm/mmu.c               | 103 ++++++++++++++++++++------------------
+ 2 files changed, 80 insertions(+), 55 deletions(-)
 
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 779a80046066..481f54a866c5 100644
+index bc96c8a7fc79..b63baa749609 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -18,6 +18,7 @@
+@@ -14,7 +14,9 @@
  
  #include <asm/cacheflush.h>
  #include <asm/cpu_ops.h>
-+#include <asm/memory.h>
- #include <asm/mmu.h>
++#include <asm/mmu.h>
  #include <asm/mmu_context.h>
- #include <asm/page.h>
-@@ -351,3 +352,13 @@ void crash_free_reserved_phys_range(unsigned long begin, unsigned long end)
- 	}
++#include <asm/page.h>
+ 
+ #include "cpu-reset.h"
+ 
+@@ -22,8 +24,6 @@
+ extern const unsigned char arm64_relocate_new_kernel[];
+ extern const unsigned long arm64_relocate_new_kernel_size;
+ 
+-static unsigned long kimage_start;
+-
+ /**
+  * kexec_image_info - For debugging output.
+  */
+@@ -64,8 +64,6 @@ void machine_kexec_cleanup(struct kimage *kimage)
+  */
+ int machine_kexec_prepare(struct kimage *kimage)
+ {
+-	kimage_start = kimage->start;
+-
+ 	kexec_image_info(kimage);
+ 
+ 	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
+@@ -183,7 +181,7 @@ void machine_kexec(struct kimage *kimage)
+ 	kexec_list_flush(kimage);
+ 
+ 	/* Flush the new image if already in place. */
+-	if (kimage->head & IND_DONE)
++	if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
+ 		kexec_segment_flush(kimage);
+ 
+ 	pr_info("Bye!\n");
+@@ -201,7 +199,7 @@ void machine_kexec(struct kimage *kimage)
+ 	 */
+ 
+ 	cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
+-		kimage_start, 0);
++		kimage->start, 0);
+ 
+ 	BUG(); /* Should never get here. */
  }
- #endif /* CONFIG_HIBERNATION */
+@@ -210,3 +208,25 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ {
+ 	/* Empty routine needed to avoid build errors. */
+ }
 +
-+void arch_crash_save_vmcoreinfo(void)
++void arch_kexec_protect_crashkres(void)
 +{
-+	VMCOREINFO_NUMBER(VA_BITS);
-+	/* Please note VMCOREINFO_NUMBER() uses "%d", not "%x" */
-+	vmcoreinfo_append_str("NUMBER(kimage_voffset)=0x%llx\n",
-+						kimage_voffset);
-+	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
-+						PHYS_OFFSET);
++	int i;
++
++	kexec_segment_flush(kexec_crash_image);
++
++	for (i = 0; i < kexec_crash_image->nr_segments; i++)
++		set_memory_valid(
++			__phys_to_virt(kexec_crash_image->segment[i].mem),
++			kexec_crash_image->segment[i].memsz >> PAGE_SHIFT, 0);
 +}
++
++void arch_kexec_unprotect_crashkres(void)
++{
++	int i;
++
++	for (i = 0; i < kexec_crash_image->nr_segments; i++)
++		set_memory_valid(
++			__phys_to_virt(kexec_crash_image->segment[i].mem),
++			kexec_crash_image->segment[i].memsz >> PAGE_SHIFT, 1);
++}
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 91502e36e6d9..0c429ec6fde8 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -22,6 +22,8 @@
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
++#include <linux/ioport.h>
++#include <linux/kexec.h>
+ #include <linux/libfdt.h>
+ #include <linux/mman.h>
+ #include <linux/nodemask.h>
+@@ -393,10 +395,28 @@ static void update_mapping_prot(phys_addr_t phys, unsigned long virt,
+ 	flush_tlb_kernel_range(virt, virt + size);
+ }
+ 
+-static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end)
++static void __init __map_memblock(pgd_t *pgd, phys_addr_t start,
++				  phys_addr_t end, pgprot_t prot, int flags)
++{
++	__create_pgd_mapping(pgd, start, __phys_to_virt(start), end - start,
++			     prot, early_pgtable_alloc, flags);
++}
++
++void __init mark_linear_text_alias_ro(void)
++{
++	/*
++	 * Remove the write permissions from the linear alias of .text/.rodata
++	 */
++	update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
++			    (unsigned long)__init_begin - (unsigned long)_text,
++			    PAGE_KERNEL_RO);
++}
++
++static void __init map_mem(pgd_t *pgd)
+ {
+ 	phys_addr_t kernel_start = __pa_symbol(_text);
+ 	phys_addr_t kernel_end = __pa_symbol(__init_begin);
++	struct memblock_region *reg;
+ 	int flags = 0;
+ 
+ 	if (debug_pagealloc_enabled())
+@@ -405,30 +425,28 @@ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end
+ 	/*
+ 	 * Take care not to create a writable alias for the
+ 	 * read-only text and rodata sections of the kernel image.
++	 * So temporarily mark them as NOMAP to skip mappings in
++	 * the following for-loop
+ 	 */
++	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
++#ifdef CONFIG_KEXEC_CORE
++	if (crashk_res.end)
++		memblock_mark_nomap(crashk_res.start,
++				    resource_size(&crashk_res));
++#endif
+ 
+-	/* No overlap with the kernel text/rodata */
+-	if (end < kernel_start || start >= kernel_end) {
+-		__create_pgd_mapping(pgd, start, __phys_to_virt(start),
+-				     end - start, PAGE_KERNEL,
+-				     early_pgtable_alloc, flags);
+-		return;
+-	}
++	/* map all the memory banks */
++	for_each_memblock(memory, reg) {
++		phys_addr_t start = reg->base;
++		phys_addr_t end = start + reg->size;
+ 
+-	/*
+-	 * This block overlaps the kernel text/rodata mappings.
+-	 * Map the portion(s) which don't overlap.
+-	 */
+-	if (start < kernel_start)
+-		__create_pgd_mapping(pgd, start,
+-				     __phys_to_virt(start),
+-				     kernel_start - start, PAGE_KERNEL,
+-				     early_pgtable_alloc, flags);
+-	if (kernel_end < end)
+-		__create_pgd_mapping(pgd, kernel_end,
+-				     __phys_to_virt(kernel_end),
+-				     end - kernel_end, PAGE_KERNEL,
+-				     early_pgtable_alloc, flags);
++		if (start >= end)
++			break;
++		if (memblock_is_nomap(reg))
++			continue;
++
++		__map_memblock(pgd, start, end, PAGE_KERNEL, flags);
++	}
+ 
+ 	/*
+ 	 * Map the linear alias of the [_text, __init_begin) interval
+@@ -440,37 +458,24 @@ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end
+ 	 * Note that contiguous mappings cannot be remapped in this way,
+ 	 * so we should avoid them here.
+ 	 */
+-	__create_pgd_mapping(pgd, kernel_start, __phys_to_virt(kernel_start),
+-			     kernel_end - kernel_start, PAGE_KERNEL,
+-			     early_pgtable_alloc, NO_CONT_MAPPINGS);
+-}
++	__map_memblock(pgd, kernel_start, kernel_end,
++		       PAGE_KERNEL, NO_CONT_MAPPINGS);
++	memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
+ 
+-void __init mark_linear_text_alias_ro(void)
+-{
++#ifdef CONFIG_KEXEC_CORE
+ 	/*
+-	 * Remove the write permissions from the linear alias of .text/.rodata
++	 * Use page-level mappings here so that we can shrink the region
++	 * in page granularity and put back unused memory to buddy system
++	 * through /sys/kernel/kexec_crash_size interface.
+ 	 */
+-	update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
+-			    (unsigned long)__init_begin - (unsigned long)_text,
+-			    PAGE_KERNEL_RO);
+-}
+-
+-static void __init map_mem(pgd_t *pgd)
+-{
+-	struct memblock_region *reg;
+-
+-	/* map all the memory banks */
+-	for_each_memblock(memory, reg) {
+-		phys_addr_t start = reg->base;
+-		phys_addr_t end = start + reg->size;
+-
+-		if (start >= end)
+-			break;
+-		if (memblock_is_nomap(reg))
+-			continue;
+-
+-		__map_memblock(pgd, start, end);
++	if (crashk_res.end) {
++		__map_memblock(pgd, crashk_res.start, crashk_res.end + 1,
++			       PAGE_KERNEL,
++			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
++		memblock_clear_nomap(crashk_res.start,
++				     resource_size(&crashk_res));
+ 	}
++#endif
+ }
+ 
+ void mark_rodata_ro(void)
 -- 
 2.11.1
 
