@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x235.google.com ([2607:f8b0:4001:c0b::235])
+Received: from mail-pg0-x236.google.com ([2607:f8b0:400e:c05::236])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1ctab0-0000Ym-Cm
- for kexec@lists.infradead.org; Thu, 30 Mar 2017 13:58:41 +0000
-Received: by mail-it0-x235.google.com with SMTP id y18so76626772itc.1
- for <kexec@lists.infradead.org>; Thu, 30 Mar 2017 06:58:16 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20170330095625.GC16309@linaro.org>
-References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
- <20170328065130.16019-4-takahiro.akashi@linaro.org>
- <CAKv+Gu8MFxQ8Lk2io7ywfe=em0qTm8MgCAfrFkQFtAoOaiNqkw@mail.gmail.com>
- <20170328110733.GB16309@linaro.org>
- <CAKv+Gu8_+WR3qrbxX4ZNZwnWDa=rpMgR=hsqzhtyC=n5+0zJUQ@mail.gmail.com>
- <20170330095625.GC16309@linaro.org>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Thu, 30 Mar 2017 14:58:14 +0100
-Message-ID: <CAKv+Gu-7eQaceTK7q35FkTnmT2r+mLys9bWoK-aQxh_0enwLqQ@mail.gmail.com>
-Subject: Re: [PATCH v34 06/14] arm64: kdump: protect crash dump kernel memory
+ id 1curaj-0002Ri-6W
+ for kexec@lists.infradead.org; Mon, 03 Apr 2017 02:19:40 +0000
+Received: by mail-pg0-x236.google.com with SMTP id 81so105574710pgh.2
+ for <kexec@lists.infradead.org>; Sun, 02 Apr 2017 19:19:15 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v35 00/14] arm64: add kdump support
+Date: Mon,  3 Apr 2017 11:21:39 +0900
+Message-Id: <20170403022139.12383-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,266 +17,188 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, James Morse <james.morse@arm.com>, Geoff Levand <geoff@infradead.org>, Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>, Dave Young <dyoung@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Pratyush Anand <panand@redhat.com>, Sameer Goel <sgoel@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: catalin.marinas@arm.com, will.deacon@arm.com
+Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On 30 March 2017 at 10:56, AKASHI Takahiro <takahiro.akashi@linaro.org> wrote:
-> Date: Tue, 28 Mar 2017 15:51:24 +0900
-> Subject: [PATCH] arm64: kdump: protect crash dump kernel memory
->
-> arch_kexec_protect_crashkres() and arch_kexec_unprotect_crashkres()
-> are meant to be called by kexec_load() in order to protect the memory
-> allocated for crash dump kernel once the image is loaded.
->
-> The protection is implemented by unmapping the relevant segments in crash
-> dump kernel memory, rather than making it read-only as other archs do,
-> to prevent coherency issues due to potential cache aliasing (with
-> mismatched attributes).
->
-> Page-level mappings are consistently used here so that we can change
-> the attributes of segments in page granularity as well as shrink the region
-> also in page granularity through /sys/kernel/kexec_crash_size, putting
-> the freed memory back to buddy system.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+This patch series adds kdump support on arm64.
 
-This looks mostly correct. One comment below.
+To load a crash-dump kernel to the systems, a series of patches to
+kexec-tools[1] are also needed. Please use the latest one, v6 [2].
+For your convinience, you can pick them up from:
+   https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git arm64/kdump
+   https://git.linaro.org/people/takahiro.akashi/kexec-tools.git arm64/kdump
 
-> ---
->  arch/arm64/kernel/machine_kexec.c |  32 +++++++++---
->  arch/arm64/mm/mmu.c               | 103 ++++++++++++++++++++------------------
->  2 files changed, 80 insertions(+), 55 deletions(-)
->
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index bc96c8a7fc79..b63baa749609 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -14,7 +14,9 @@
->
->  #include <asm/cacheflush.h>
->  #include <asm/cpu_ops.h>
-> +#include <asm/mmu.h>
->  #include <asm/mmu_context.h>
-> +#include <asm/page.h>
->
->  #include "cpu-reset.h"
->
-> @@ -22,8 +24,6 @@
->  extern const unsigned char arm64_relocate_new_kernel[];
->  extern const unsigned long arm64_relocate_new_kernel_size;
->
-> -static unsigned long kimage_start;
-> -
->  /**
->   * kexec_image_info - For debugging output.
->   */
-> @@ -64,8 +64,6 @@ void machine_kexec_cleanup(struct kimage *kimage)
->   */
->  int machine_kexec_prepare(struct kimage *kimage)
->  {
-> -       kimage_start = kimage->start;
-> -
->         kexec_image_info(kimage);
->
->         if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
-> @@ -183,7 +181,7 @@ void machine_kexec(struct kimage *kimage)
->         kexec_list_flush(kimage);
->
->         /* Flush the new image if already in place. */
-> -       if (kimage->head & IND_DONE)
-> +       if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
->                 kexec_segment_flush(kimage);
->
->         pr_info("Bye!\n");
-> @@ -201,7 +199,7 @@ void machine_kexec(struct kimage *kimage)
->          */
->
->         cpu_soft_restart(1, reboot_code_buffer_phys, kimage->head,
-> -               kimage_start, 0);
-> +               kimage->start, 0);
->
->         BUG(); /* Should never get here. */
->  }
-> @@ -210,3 +208,25 @@ void machine_crash_shutdown(struct pt_regs *regs)
->  {
->         /* Empty routine needed to avoid build errors. */
->  }
-> +
-> +void arch_kexec_protect_crashkres(void)
-> +{
-> +       int i;
-> +
-> +       kexec_segment_flush(kexec_crash_image);
-> +
-> +       for (i = 0; i < kexec_crash_image->nr_segments; i++)
-> +               set_memory_valid(
-> +                       __phys_to_virt(kexec_crash_image->segment[i].mem),
-> +                       kexec_crash_image->segment[i].memsz >> PAGE_SHIFT, 0);
-> +}
-> +
-> +void arch_kexec_unprotect_crashkres(void)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < kexec_crash_image->nr_segments; i++)
-> +               set_memory_valid(
-> +                       __phys_to_virt(kexec_crash_image->segment[i].mem),
-> +                       kexec_crash_image->segment[i].memsz >> PAGE_SHIFT, 1);
-> +}
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 91502e36e6d9..3cde5f2d30ec 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -22,6 +22,8 @@
->  #include <linux/kernel.h>
->  #include <linux/errno.h>
->  #include <linux/init.h>
-> +#include <linux/ioport.h>
-> +#include <linux/kexec.h>
->  #include <linux/libfdt.h>
->  #include <linux/mman.h>
->  #include <linux/nodemask.h>
-> @@ -393,10 +395,28 @@ static void update_mapping_prot(phys_addr_t phys, unsigned long virt,
->         flush_tlb_kernel_range(virt, virt + size);
->  }
->
-> -static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end)
-> +static void __init __map_memblock(pgd_t *pgd, phys_addr_t start,
-> +                                 phys_addr_t end, pgprot_t prot, int flags)
-> +{
-> +       __create_pgd_mapping(pgd, start, __phys_to_virt(start), end - start,
-> +                            prot, early_pgtable_alloc, flags);
-> +}
-> +
-> +void __init mark_linear_text_alias_ro(void)
-> +{
-> +       /*
-> +        * Remove the write permissions from the linear alias of .text/.rodata
-> +        */
-> +       update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
-> +                           (unsigned long)__init_begin - (unsigned long)_text,
-> +                           PAGE_KERNEL_RO);
-> +}
-> +
-> +static void __init map_mem(pgd_t *pgd)
->  {
->         phys_addr_t kernel_start = __pa_symbol(_text);
->         phys_addr_t kernel_end = __pa_symbol(__init_begin);
-> +       struct memblock_region *reg;
->         int flags = 0;
->
->         if (debug_pagealloc_enabled())
-> @@ -405,30 +425,28 @@ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end
->         /*
->          * Take care not to create a writable alias for the
->          * read-only text and rodata sections of the kernel image.
-> +        * So temporarily mark them as NOMAP to skip mappings in
-> +        * the following for-loop
->          */
-> +       memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
-> +#ifdef CONFIG_KEXEC_CORE
-> +       if (crashk_res.end)
-> +               memblock_mark_nomap(crashk_res.start,
-> +                                   resource_size(&crashk_res));
-> +#endif
->
-> -       /* No overlap with the kernel text/rodata */
-> -       if (end < kernel_start || start >= kernel_end) {
-> -               __create_pgd_mapping(pgd, start, __phys_to_virt(start),
-> -                                    end - start, PAGE_KERNEL,
-> -                                    early_pgtable_alloc, flags);
-> -               return;
-> -       }
-> +       /* map all the memory banks */
-> +       for_each_memblock(memory, reg) {
-> +               phys_addr_t start = reg->base;
-> +               phys_addr_t end = start + reg->size;
->
-> -       /*
-> -        * This block overlaps the kernel text/rodata mappings.
-> -        * Map the portion(s) which don't overlap.
-> -        */
-> -       if (start < kernel_start)
-> -               __create_pgd_mapping(pgd, start,
-> -                                    __phys_to_virt(start),
-> -                                    kernel_start - start, PAGE_KERNEL,
-> -                                    early_pgtable_alloc, flags);
-> -       if (kernel_end < end)
-> -               __create_pgd_mapping(pgd, kernel_end,
-> -                                    __phys_to_virt(kernel_end),
-> -                                    end - kernel_end, PAGE_KERNEL,
-> -                                    early_pgtable_alloc, flags);
-> +               if (start >= end)
-> +                       break;
-> +               if (memblock_is_nomap(reg))
-> +                       continue;
-> +
-> +               __map_memblock(pgd, start, end, PAGE_KERNEL, flags);
-> +       }
->
->         /*
->          * Map the linear alias of the [_text, __init_begin) interval
-> @@ -440,37 +458,24 @@ static void __init __map_memblock(pgd_t *pgd, phys_addr_t start, phys_addr_t end
->          * Note that contiguous mappings cannot be remapped in this way,
->          * so we should avoid them here.
->          */
-> -       __create_pgd_mapping(pgd, kernel_start, __phys_to_virt(kernel_start),
-> -                            kernel_end - kernel_start, PAGE_KERNEL,
-> -                            early_pgtable_alloc, NO_CONT_MAPPINGS);
-> -}
-> +       __map_memblock(pgd, kernel_start, kernel_end,
-> +                      PAGE_KERNEL_RO, NO_CONT_MAPPINGS);
+To examine vmcore (/proc/vmcore) on a crash-dump kernel, you can use
+  - crash utility (v7.1.8 or later) [3]
 
-This should be PAGE_KERNEL not PAGE_KERNEL_RO.
+I tested this patchset on fast model and hikey.
 
-> +       memblock_clear_nomap(kernel_start, kernel_end - kernel_start);
->
-> -void __init mark_linear_text_alias_ro(void)
-> -{
-> +#ifdef CONFIG_KEXEC_CORE
->         /*
-> -        * Remove the write permissions from the linear alias of .text/.rodata
-> +        * Use page-level mappings here so that we can shrink the region
-> +        * in page granularity and put back unused memory to buddy system
-> +        * through /sys/kernel/kexec_crash_size interface.
->          */
-> -       update_mapping_prot(__pa_symbol(_text), (unsigned long)lm_alias(_text),
-> -                           (unsigned long)__init_begin - (unsigned long)_text,
-> -                           PAGE_KERNEL_RO);
-> -}
-> -
-> -static void __init map_mem(pgd_t *pgd)
-> -{
-> -       struct memblock_region *reg;
-> -
-> -       /* map all the memory banks */
-> -       for_each_memblock(memory, reg) {
-> -               phys_addr_t start = reg->base;
-> -               phys_addr_t end = start + reg->size;
-> -
-> -               if (start >= end)
-> -                       break;
-> -               if (memblock_is_nomap(reg))
-> -                       continue;
-> -
-> -               __map_memblock(pgd, start, end);
-> +       if (crashk_res.end) {
-> +               __map_memblock(pgd, crashk_res.start, crashk_res.end + 1,
-> +                              PAGE_KERNEL,
-> +                              NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
-> +               memblock_clear_nomap(crashk_res.start,
-> +                                    resource_size(&crashk_res));
->         }
-> +#endif
->  }
->
->  void mark_rodata_ro(void)
-> --
-> 2.11.1
->
+The previous versions were also:
+Tested-by: Pratyush Anand <panand@redhat.com> (v33, mustang and seattle)
+Tested-by: James Morse <james.morse@arm.com> (v27/v32?, Juno)
+Tested-by: Sameer Goel (v33, QDT2400)
+
+Changes for v35 (Apr 3, 2017)
+  o rebased to arm64/for-next/core, solving conflicts on mmu.c (patch#6)
+
+Changes for v34 (Mar 28, 2017)
+  o add and use set_memory_valid() instead of create_pgd_mapping()
+    (patch #5,6)
+  o rename functions from kexec_* to crash_* (patch #7)
+  o supress WARN_ON() message if successfully shutting down secondary cpus
+    (patch #8)
+
+Changes for v33 (Mar 15, 2017)
+  o rebased to v4.11-rc2+
+  o arch_kexec_(un)protect_crashkres() now protects loaded data segments
+    only along with moving copying of control_code_page back to machine_kexec()
+    (patch #6)
+  o reduce the size of hibernation image when kdump and hibernation are
+    comfigured at the same time (patch #7)
+  o clearify that "linux,usable-memory-range" and "linux,elfcorehdr"
+    have values of the size of root node's "#address-cells" and "#size-cells"
+    (patch #13)
+  o add "efi/libstub/arm*: Set default address and size cells values for
+    an empty dtb" from Sameer Goel (patch #14)
+    (I didn't test the case though.)
+
+Changes for v32 (Feb 7, 2017)
+  o isolate crash dump kernel memory as well as kernel text/data by using
+    MEMBLOCK_MAP attribute to and then specifically map them in map_mem()
+    (patch #1,6)
+  o delete remove_pgd_mapping() and instead modify create_pgd_mapping() to
+    allowing for unmapping a kernel mapping (patch #5)
+  o correct a commit message as well as a comment in the source (patch#10)
+  o other trivial changes after Mark's comments (patch#3,4)
+
+Changes for v31 (Feb 1, 2017)
+  o add/use remove_pgd_mapping() instead of modifying (__)create_pgd_mapping()
+    to protect crash dump kernel memory (patch #4,5)
+  o fix an issue at the isolation of crash dump kernel memory in
+    map_mem()/__map_memblock(), adding map_crashkernel() (patch#5)
+  o preserve the contents of crash dump kernel memory around hibernation
+    (patch#6)
+
+Changes for v30 (Jan 24, 2017)
+  o rebased to Linux-v4.10-rc5
+  o remove "linux,crashkernel-base/size" from exported device tree
+  o protect memory region for crash-dump kernel (adding patch#4,5)
+  o remove "in_crash_kexec" variable
+  o and other trivial changes
+
+Changes for v29 (Dec 28, 2016)
+  o rebased to Linux-v4.10-rc1
+  o change asm constraints in crash_setup_regs() per Catalin
+
+Changes for v28 (Nov 22, 2016)
+  o rebased to Linux-v4.9-rc6
+  o revamp patch #1 and merge memblock_cap_memory_range() with
+    memblock_mem_limit_remove_map()
+
+Changes for v27 (Nov 1, 2016)
+  o rebased to Linux-v4.9-rc3
+  o revert v26 change, i.e. revive "linux,usable-memory-range" property
+    (patch #2/#3, updating patch #9)
+  o minor fixes per review comments (patch #3/#4/#6/#8)
+  o re-order patches and improve commit messages for readability
+
+Changes for v26 (Sep 7, 2016):
+  o Use /reserved-memory instead of "linux,usable-memory-range" property
+    (dropping v25's patch#2 and #3, updating ex-patch#9.)
+
+Changes for v25 (Aug 29, 2016):
+  o Rebase to Linux-4.8-rc4
+  o Use memremap() instead of ioremap_cache() [patch#5]
+
+Changes for v24 (Aug 9, 2016):
+  o Rebase to Linux-4.8-rc1
+  o Update descriptions about newly added DT proerties
+
+Changes for v23 (July 26, 2016):
+
+  o Move memblock_reserve() to a single place in reserve_crashkernel()
+  o Use  cpu_park_loop() in ipi_cpu_crash_stop()
+  o Always enforce ARCH_LOW_ADDRESS_LIMIT to the memory range of crash kernel
+  o Re-implement fdt_enforce_memory_region() to remove non-reserve regions
+    (for ACPI) from usable memory at crash kernel
+
+Changes for v22 (July 12, 2016):
+
+  o Export "crashkernel-base" and "crashkernel-size" via device-tree,
+    and add some descriptions about them in chosen.txt
+  o Rename "usable-memory" to "usable-memory-range" to avoid inconsistency
+    with powerpc's "usable-memory"
+  o Make cosmetic changes regarding "ifdef" usage
+  o Correct some wordings in kdump.txt
+
+Changes for v21 (July 6, 2016):
+
+  o Remove kexec patches.
+  o Rebase to arm64's for-next/core (Linux-4.7-rc4 based).
+  o Clarify the description about kvm in kdump.txt.
+
+See the link [4] for older changes.
+
+
+[1] https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+[2] http://lists.infradead.org/pipermail/kexec/2017-March/018356.html
+[3] https://github.com/crash-utility/crash.git
+[4] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-June/438780.html
+
+AKASHI Takahiro (11):
+  memblock: add memblock_clear_nomap()
+  memblock: add memblock_cap_memory_range()
+  arm64: limit memory regions based on DT property, usable-memory-range
+  arm64: kdump: reserve memory for crash dump kernel
+  arm64: mm: add set_memory_valid()
+  arm64: hibernate: preserve kdump image around hibernation
+  arm64: kdump: implement machine_crash_shutdown()
+  arm64: kdump: add VMCOREINFO's for user-space tools
+  arm64: kdump: provide /proc/vmcore file
+  arm64: kdump: enable kdump in defconfig
+  Documentation: kdump: describe arm64 port
+
+James Morse (1):
+  Documentation: dt: chosen properties for arm64 kdump
+
+Sameer Goel (1):
+  efi/libstub/arm*: Set default address and size cells values for an
+    empty dtb
+
+Takahiro Akashi (1):
+  arm64: kdump: protect crash dump kernel memory
+
+ Documentation/devicetree/bindings/chosen.txt |  45 +++++++
+ Documentation/kdump/kdump.txt                |  16 ++-
+ arch/arm64/Kconfig                           |  11 ++
+ arch/arm64/configs/defconfig                 |   1 +
+ arch/arm64/include/asm/cacheflush.h          |   1 +
+ arch/arm64/include/asm/hardirq.h             |   2 +-
+ arch/arm64/include/asm/kexec.h               |  52 +++++++-
+ arch/arm64/include/asm/smp.h                 |   3 +
+ arch/arm64/kernel/Makefile                   |   1 +
+ arch/arm64/kernel/crash_dump.c               |  71 +++++++++++
+ arch/arm64/kernel/hibernate.c                |  10 +-
+ arch/arm64/kernel/machine_kexec.c            | 170 +++++++++++++++++++++++--
+ arch/arm64/kernel/setup.c                    |   7 +-
+ arch/arm64/kernel/smp.c                      |  68 ++++++++++
+ arch/arm64/mm/init.c                         | 181 +++++++++++++++++++++++++++
+ arch/arm64/mm/mmu.c                          | 103 +++++++--------
+ arch/arm64/mm/pageattr.c                     |  15 ++-
+ drivers/firmware/efi/libstub/fdt.c           |  28 ++++-
+ include/linux/memblock.h                     |   2 +
+ mm/memblock.c                                |  56 ++++++---
+ 20 files changed, 757 insertions(+), 86 deletions(-)
+ create mode 100644 arch/arm64/kernel/crash_dump.c
+
+-- 
+2.11.1
+
 
 _______________________________________________
 kexec mailing list
