@@ -1,12 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1491207492.6020.8.camel@infradead.org>
-Subject: Re: [PATCH v34 04/14] arm64: kdump: reserve memory for crash dump
- kernel
+Message-ID: <1491211294.6020.21.camel@infradead.org>
+Subject: Re: [PATCH v35 08/14] arm64: kdump: implement machine_crash_shutdown()
 From: David Woodhouse <dwmw2@infradead.org>
-In-Reply-To: <20170328065130.16019-2-takahiro.akashi@linaro.org>
-References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
- <20170328065130.16019-2-takahiro.akashi@linaro.org>
-Date: Mon, 03 Apr 2017 09:18:12 +0100
+In-Reply-To: <20170403022440.12515-6-takahiro.akashi@linaro.org>
+References: <20170403022139.12383-1-takahiro.akashi@linaro.org>
+ <20170403022440.12515-6-takahiro.akashi@linaro.org>
+Date: Mon, 03 Apr 2017 10:21:34 +0100
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -16,55 +15,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============8067258642243504914=="
+Content-Type: multipart/mixed; boundary="===============2915102133925022940=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, kexec@lists.infradead.org, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
 
---===============8067258642243504914==
-Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-IKPreQvc4LgE0TMWqbSb"
+--===============2915102133925022940==
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/x-pkcs7-signature"; boundary="=-eg4RYOlQlpCbm28ZFXbH"
 
 
---=-IKPreQvc4LgE0TMWqbSb
+--=-eg4RYOlQlpCbm28ZFXbH
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 
-T24gVHVlLCAyMDE3LTAzLTI4IGF0IDE1OjUxICswOTAwLCBBS0FTSEkgVGFrYWhpcm8gd3JvdGU6
-Cj4gCj4gK8KgwqDCoMKgwqDCoMKgaWYgKGNyYXNoX2Jhc2UgPT0gMCkgewo+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBDdXJyZW50IGFybTY0IGJvb3QgcHJvdG9jb2wgcmVxdWly
-ZXMgMk1CIGFsaWdubWVudCAqLwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjcmFz
-aF9iYXNlID0gbWVtYmxvY2tfZmluZF9pbl9yYW5nZSgwLCBBUkNIX0xPV19BRERSRVNTX0xJTUlU
-LAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGNyYXNoX3NpemUsIFNaXzJNKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgaWYgKGNyYXNoX2Jhc2UgPT0gMCkgewo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgcHJfd2FybigiY2Fubm90IGFsbG9jYXRlIGNyYXNoa2VybmVs
-IChzaXplOjB4JWxseClcbiIsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3Jhc2hfc2l6ZSk7Cj4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm47Cj4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoH0KPiArwqDCoMKgwqDCoMKgwqB9IGVsc2Ugewo+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBVc2VyIHNwZWNpZmllcyBiYXNlIGFkZHJlc3MgZXhwbGlj
-aXRseS4gKi8KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKCFtZW1ibG9ja19p
-c19yZWdpb25fbWVtb3J5KGNyYXNoX2Jhc2UsIGNyYXNoX3NpemUpKSB7Cj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl93YXJuKCJjYW5ub3QgcmVzZXJ2
-ZSBjcmFzaGtlcm5lbDogcmVnaW9uIGlzIG5vdCBtZW1vcnlcbiIpOwo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuOwo+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqB9Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBp
-ZiAobWVtYmxvY2tfaXNfcmVnaW9uX3Jlc2VydmVkKGNyYXNoX2Jhc2UsIGNyYXNoX3NpemUpKSB7
-Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwcl93YXJu
-KCJjYW5ub3QgcmVzZXJ2ZSBjcmFzaGtlcm5lbDogcmVnaW9uIG92ZXJsYXBzIHJlc2VydmVkIG1l
-bW9yeVxuIik7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqByZXR1cm47Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0KPiArCj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmICghSVNfQUxJR05FRChjcmFzaF9iYXNlLCBTWl8y
-TSkpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBy
-X3dhcm4oImNhbm5vdCByZXNlcnZlIGNyYXNoa2VybmVsOiBiYXNlIGFkZHJlc3MgaXMgbm90IDJN
-QiBhbGlnbmVkXG4iKTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoHJldHVybjsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfQoKWW91IHN0
-aWxsIGhhdmUgdHlwb3MgaGVyZS4=
+On Mon, 2017-04-03 at 11:24 +0900, AKASHI Takahiro wrote:
+>=20
+> +static void ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs
+> *regs)
+> +{
+> +#ifdef CONFIG_KEXEC_CORE
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0crash_save_cpu(regs, cpu);
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0atomic_dec(&waiting_for_crash_=
+ipi);
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0local_irq_disable();
 
+Shouldn't the above two be the other way round? Stop handling
+interrupts *before* we tell the surviving CPU that we're done?
 
---=-IKPreQvc4LgE0TMWqbSb
+Also, should the surviving CPU be calling __cpu_die() to attempt to
+check that the others really have died? Sure, it can't do much more
+than print a warning if the call to ->cpu_kill() times out, but that's
+still useful information. And perhaps we could allow platforms to
+register a method to shoot other CPUs down forcefully if they don't
+respond. My board could apparently support that.
+
+It would certainly be useful to allow smp_send_crash_stop() to be
+overridden with a platform-specific method instead of normal IPIs. The
+platform might be able to do something... less maskable.
+--=-eg4RYOlQlpCbm28ZFXbH
 Content-Type: application/x-pkcs7-signature; name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
 Content-Transfer-Encoding: base64
@@ -142,8 +134,8 @@ GeE6+vmbHDFFQ9Ealsti3jGCA9MwggPPAgEBMIGwMIGbMQswCQYDVQQGEwJHQjEbMBkGA1UECBMS
 R3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRowGAYDVQQKExFDT01PRE8gQ0Eg
 TGltaXRlZDFBMD8GA1UEAxM4Q09NT0RPIFNIQS0yNTYgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFu
 ZCBTZWN1cmUgRW1haWwgQ0ECEGoLUFiVUy0EUE3iKBH+GjAwDQYJYIZIAWUDBAIBBQCgggHzMBgG
-CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDQwMzA4MTgxMlowLwYJ
-KoZIhvcNAQkEMSIEIMtjLGFuHyEDBDhT1TbRkTk6mT13Sefv/p4zebcH+10bMIHBBgkrBgEEAYI3
+CSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTE3MDQwMzA5MjEzNFowLwYJ
+KoZIhvcNAQkEMSIEII8bbQ7kdKyC6RANKDwes3Szshdn0qra+aGAFp82kj9/MIHBBgkrBgEEAYI3
 EAQxgbMwgbAwgZsxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAO
 BgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01P
 RE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQ
@@ -151,18 +143,18 @@ WJVTLQRQTeIoEf4aMDCBwwYLKoZIhvcNAQkQAgsxgbOggbAwgZsxCzAJBgNVBAYTAkdCMRswGQYD
 VQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNVBAoTEUNPTU9E
 TyBDQSBMaW1pdGVkMUEwPwYDVQQDEzhDT01PRE8gU0hBLTI1NiBDbGllbnQgQXV0aGVudGljYXRp
 b24gYW5kIFNlY3VyZSBFbWFpbCBDQQIQagtQWJVTLQRQTeIoEf4aMDANBgkqhkiG9w0BAQEFAASC
-AQBiFykTMoLluchG9SLF4DGhvq0FaxtgqAZV5ccpvzFCe6XtcaIQF/OhaCCxeXR1lQl4V6LsbxZ3
-ad8fbchsyO/LlERTGg9Tv+EySPakHG4udk/jM4Nf5oxqPfI50/AFnePO45Bclv3aNq9BgXteeNCB
-ecWNTBuKrXPSQgRNzI9iAR1uFCBCmeepd+m9mpKnuQvxs6OKs8kTECOmW1EW2heq+OuheOUOeDvS
-0H7qOf7VFf4WzyYnKWsETsyVn2OFaYURpulmRgHhBsn/TWyB9+FIDvL/K68ceyLmw0dUu695mqWN
-UW5SW3utIEiEc1O8foK67P9zDvgxDiHFn7sShazDAAAAAAAA
+AQC6friMczLyqO0S3Blt3wvA/QMIuEVefDLRMLlgbhAea3hSwZ7cjd/8HI9zUn0Mx7apZcVMpsmz
+irU8iTtK942WcxGs9y+pAroBakP5yBW1SWRRHZS/48bFHhFfh/68FWLZB62X6tcg4IFTUx3nBpJL
+BBJdvHQ6smk7macaxVCkcN2vEuO7n0A+wiCEOhPmt45weolavVz4+t0w1EYvM08MHf/GyXK9l8t6
+Y5oZHAwODpHa54DrX/W5FNSAzVodG/Yu0DWfDTRwum0Y0ufqMVMts18GWM+HmcCSP03Gjidt0oj8
+iKhsZ5PD0+rYaq8KO5gTwSkHQaFQuKodrHZyjTNUAAAAAAAA
 
 
---=-IKPreQvc4LgE0TMWqbSb--
+--=-eg4RYOlQlpCbm28ZFXbH--
 
 
 
---===============8067258642243504914==
+--===============2915102133925022940==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -173,6 +165,6 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============8067258642243504914==--
+--===============2915102133925022940==--
 
 
