@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-x229.google.com ([2607:f8b0:400e:c05::229])
- by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1curd2-0007Db-Mm
- for kexec@lists.infradead.org; Mon, 03 Apr 2017 02:22:02 +0000
-Received: by mail-pg0-x229.google.com with SMTP id 81so105617110pgh.2
- for <kexec@lists.infradead.org>; Sun, 02 Apr 2017 19:21:40 -0700 (PDT)
+Received: from mail-pg0-x22f.google.com ([2607:f8b0:400e:c05::22f])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1curcy-0004Dj-8b
+ for kexec@lists.infradead.org; Mon, 03 Apr 2017 02:21:57 +0000
+Received: by mail-pg0-x22f.google.com with SMTP id 81so105615741pgh.2
+ for <kexec@lists.infradead.org>; Sun, 02 Apr 2017 19:21:35 -0700 (PDT)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v35 04/14] arm64: kdump: reserve memory for crash dump kernel
-Date: Mon,  3 Apr 2017 11:24:32 +0900
-Message-Id: <20170403022440.12515-2-takahiro.akashi@linaro.org>
+Subject: [PATCH v35 03/14] arm64: limit memory regions based on DT property,
+ usable-memory-range
+Date: Mon,  3 Apr 2017 11:24:31 +0900
+Message-Id: <20170403022440.12515-1-takahiro.akashi@linaro.org>
 In-Reply-To: <20170403022139.12383-1-takahiro.akashi@linaro.org>
 References: <20170403022139.12383-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
@@ -25,150 +26,76 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com
-Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, dwmw2@infradead.org, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-"crashkernel=" kernel parameter specifies the size (and optionally
-the start address) of the system ram to be used by crash dump kernel.
-reserve_crashkernel() will allocate and reserve that memory at boot time
-of primary kernel.
+Crash dump kernel uses only a limited range of available memory as System
+RAM. On arm64 kdump, This memory range is advertised to crash dump kernel
+via a device-tree property under /chosen,
+   linux,usable-memory-range = <BASE SIZE>
 
-The memory range will be exposed to userspace as a resource named
-"Crash kernel" in /proc/iomem.
+Crash dump kernel reads this property at boot time and calls
+memblock_cap_memory_range() to limit usable memory which are listed either
+in UEFI memory map table or "memory" nodes of a device tree blob.
 
 Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Signed-off-by: Mark Salter <msalter@redhat.com>
-Signed-off-by: Pratyush Anand <panand@redhat.com>
-Reviewed-by: James Morse <james.morse@arm.com>
+Reviewed-by: Geoff Levand <geoff@infradead.org>
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- arch/arm64/kernel/setup.c |  7 ++++-
- arch/arm64/mm/init.c      | 66 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 1 deletion(-)
+ arch/arm64/mm/init.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 42274bda0ccb..28855ec1be95 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -31,7 +31,6 @@
- #include <linux/screen_info.h>
- #include <linux/init.h>
- #include <linux/kexec.h>
--#include <linux/crash_dump.h>
- #include <linux/root_dev.h>
- #include <linux/cpu.h>
- #include <linux/interrupt.h>
-@@ -226,6 +225,12 @@ static void __init request_standard_resources(void)
- 		if (kernel_data.start >= res->start &&
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
-+#ifdef CONFIG_KEXEC_CORE
-+		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		if (crashk_res.end && crashk_res.start >= res->start &&
-+		    crashk_res.end <= res->end)
-+			request_resource(res, &crashk_res);
-+#endif
- 	}
- }
- 
 diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 290794b1a0f1..09d19207362d 100644
+index e19e06593e37..290794b1a0f1 100644
 --- a/arch/arm64/mm/init.c
 +++ b/arch/arm64/mm/init.c
-@@ -30,6 +30,7 @@
- #include <linux/gfp.h>
- #include <linux/memblock.h>
- #include <linux/sort.h>
-+#include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/dma-mapping.h>
- #include <linux/dma-contiguous.h>
-@@ -37,6 +38,7 @@
- #include <linux/swiotlb.h>
- #include <linux/vmalloc.h>
- #include <linux/mm.h>
-+#include <linux/kexec.h>
+@@ -188,10 +188,45 @@ static int __init early_mem(char *p)
+ }
+ early_param("mem", early_mem);
  
- #include <asm/boot.h>
- #include <asm/fixmap.h>
-@@ -77,6 +79,67 @@ static int __init early_initrd(char *p)
- early_param("initrd", early_initrd);
- #endif
- 
-+#ifdef CONFIG_KEXEC_CORE
-+/*
-+ * reserve_crashkernel() - reserves memory for crash kernel
-+ *
-+ * This function reserves memory area given in "crashkernel=" kernel command
-+ * line parameter. The memory reserved is used by dump capture kernel when
-+ * primary kernel is crashing.
-+ */
-+static void __init reserve_crashkernel(void)
++static int __init early_init_dt_scan_usablemem(unsigned long node,
++		const char *uname, int depth, void *data)
 +{
-+	unsigned long long crash_base, crash_size;
-+	int ret;
++	struct memblock_region *usablemem = data;
++	const __be32 *reg;
++	int len;
 +
-+	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+				&crash_size, &crash_base);
-+	/* no crashkernel= or invalid value specified */
-+	if (ret || !crash_size)
-+		return;
++	if (depth != 1 || strcmp(uname, "chosen") != 0)
++		return 0;
 +
-+	crash_size = PAGE_ALIGN(crash_size);
++	reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
++	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
++		return 1;
 +
-+	if (crash_base == 0) {
-+		/* Current arm64 boot protocol requires 2MB alignment */
-+		crash_base = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
-+				crash_size, SZ_2M);
-+		if (crash_base == 0) {
-+			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-+				crash_size);
-+			return;
-+		}
-+	} else {
-+		/* User specifies base address explicitly. */
-+		if (!memblock_is_region_memory(crash_base, crash_size)) {
-+			pr_warn("cannot reserve crashkernel: region is not memory\n");
-+			return;
-+		}
++	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
 +
-+		if (memblock_is_region_reserved(crash_base, crash_size)) {
-+			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
-+			return;
-+		}
-+
-+		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-+			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
-+			return;
-+		}
-+	}
-+	memblock_reserve(crash_base, crash_size);
-+
-+	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-+		crash_base, crash_base + crash_size, crash_size >> 20);
-+
-+	crashk_res.start = crash_base;
-+	crashk_res.end = crash_base + crash_size - 1;
++	return 1;
 +}
-+#else
-+static void __init reserve_crashkernel(void)
++
++static void __init fdt_enforce_memory_region(void)
 +{
++	struct memblock_region reg = {
++		.size = 0,
++	};
++
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++
++	if (reg.size)
++		memblock_cap_memory_range(reg.base, reg.size);
 +}
-+#endif /* CONFIG_KEXEC_CORE */
 +
- /*
-  * Return the maximum physical address for ZONE_DMA (DMA_BIT_MASK(32)). It
-  * currently assumes that for memory starting above 4G, 32-bit devices will
-@@ -332,6 +395,9 @@ void __init arm64_memblock_init(void)
- 		arm64_dma_phys_limit = max_zone_dma_phys();
- 	else
- 		arm64_dma_phys_limit = PHYS_MASK + 1;
-+
-+	reserve_crashkernel();
-+
- 	dma_contiguous_reserve(arm64_dma_phys_limit);
+ void __init arm64_memblock_init(void)
+ {
+ 	const s64 linear_region_size = -(s64)PAGE_OFFSET;
  
- 	memblock_allow_resize();
++	/* Handle linux,usable-memory-range property */
++	fdt_enforce_memory_region();
++
+ 	/*
+ 	 * Ensure that the linear region takes up exactly half of the kernel
+ 	 * virtual address space. This way, we can distinguish a linear address
 -- 
 2.11.1
 
