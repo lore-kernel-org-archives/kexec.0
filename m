@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 4 Apr 2017 10:26:04 +0100
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v34 04/14] arm64: kdump: reserve memory for crash dump
- kernel
-Message-ID: <20170404092604.GB14898@arm.com>
-References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
- <20170328065130.16019-2-takahiro.akashi@linaro.org>
- <1491207492.6020.8.camel@infradead.org>
- <20170404054144.GG16309@linaro.org>
- <e275e8c8b8d81d97b6a28b860820a27c.squirrel@twosheds.infradead.org>
- <20170404073504.GI16309@linaro.org>
- <1491291844.6218.25.camel@infradead.org>
+Received: from mail-wr0-x22b.google.com ([2a00:1450:400c:c0c::22b])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cvOeV-0005yc-RU
+ for kexec@lists.infradead.org; Tue, 04 Apr 2017 13:37:49 +0000
+Received: by mail-wr0-x22b.google.com with SMTP id w11so213589263wrc.3
+ for <kexec@lists.infradead.org>; Tue, 04 Apr 2017 06:37:22 -0700 (PDT)
+Date: Tue, 4 Apr 2017 14:37:19 +0100
+From: Matt Fleming <matt@codeblueprint.co.uk>
+Subject: Re: kexec regression since 4.9 caused by efi
+Message-ID: <20170404133719.GE19827@codeblueprint.co.uk>
+References: <20170308201616.GC8598@vader>
+ <20170309063806.GB17257@dhcp-128-65.nay.redhat.com>
+ <20170309095408.GA17883@vader>
+ <20170313073748.GA6332@dhcp-128-65.nay.redhat.com>
+ <20170316124132.GF6261@codeblueprint.co.uk>
+ <20170317020951.GA3942@dhcp-128-65.nay.redhat.com>
+ <20170317133232.GI6261@codeblueprint.co.uk>
+ <20170320021412.GA3793@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1491291844.6218.25.camel@infradead.org>
+In-Reply-To: <20170320021412.GA3793@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,45 +28,22 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, catalin.marinas@arm.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, Omar Sandoval <osandov@osandov.com>, kernel-team@fb.com
 
-R3V5cywgd2Ugd2VyZSBzdXBwb3NlZCB0byBzdG9wIGRpc2N1c3NpbmcgdGhpcyB0aHJlZSBkYXlz
-IGFnby4KCk9uIFR1ZSwgQXByIDA0LCAyMDE3IGF0IDA5OjQ0OjA0QU0gKzAyMDAsIERhdmlkIFdv
-b2Rob3VzZSB3cm90ZToKPiBPbiBUdWUsIDIwMTctMDQtMDQgYXQgMTY6MzUgKzA5MDAsIEFLQVNI
-SSBUYWthaGlybyB3cm90ZToKPiA+IAo+ID4gQmVjYXVzZSBJIHRoaW5rIHRoYXQgcGVvcGxlIHNv
-bWV0aW1lcyB1c2UgdGhvc2UgdHdvIGludGVyY2hhbmdlYWJseS4KPiA+IFNvIEkgc2FpZCBJIHdv
-dWxkIGRlZmVyIHRvIHRoZSBtYWludGFpbmVycy4KPiAKPiBTb21ldGltZXMgdGhleSBkbywgeWVz
-LiBKdXN0IGFzIHNvbWV0aW1lcyBwZW9wbGUgdXNlICJ0aGVpciIsCj4gInRoZXkncmUiLCBhbmQg
-InRoZXJlIiBpbnRlcmNoYW5nZWFibHkuCj4gCj4gUmFyZWx5IGluIGEgcHJvZmVzc2lvbmFsIGNv
-bnRleHQsIHRob3VnaC4gQW5kIGV2ZW4gbW9yZSByYXJlbHkgd2hlbgo+IHRoZWlyIGVycm9yIGhh
-cyBhbHJlYWR5IGJlZW4gcG9pbnRlZCBvdXQgdG8gdGhlbS4KPiAKPiBUaGVyZSBhcmUgbm8gZ29v
-ZCByZWFzb25zIHRvICpkZWxpYmVyYXRlbHkqIGdldCBpdCB3cm9uZy4KPiAKPiBJJ3ZlIGhlYXJk
-IGl0IHN1Z2dlc3RlZCB0aGF0ICdNaUInIHdvdWxkIGNvbmZ1c2UgcGVvcGxlIHdobyBoYXZlIG5l
-dmVyCj4gc2VlbiBpdCBiZWZvcmUuIEFuZCB0aGF0IGl0IHdhcyB1Z2x5LiBUaG9zZSBhcmd1bWVu
-dHMgd2VyZSBmYWlybHkKPiBzcGVjaW91cyB3aGVuIHRoZXkgd2VyZSBmaXJzdCBtYWRlLCBhbmQg
-dGhleSdyZSBldmVuIHNpbGxpZXIgbm93IOKAlCBtb3JlCj4gdGhhbiAyMCB5ZWFycyBzaW5jZSB0
-aGUgYmluYXJ5IHByZWZpeGVzIHdlcmUgaW50cm9kdWNlZC4KPiAKPiBUaGUgYWxsZWdlZCBjb25m
-dXNpb24sIGFuZCB0aGUgcGVyY2VpdmVkIHVnbGluZXNzLCBhcmUgcHVyZWx5IGR1ZSB0bwo+IHVu
-ZmFtaWxpYXJpdHkgYW5kIHdpbGwgcGFzcy4KPiAKPiBUaGUgY29ycmVjdG5lc3MsIGFuZCB0aGUg
-bGFjayBvZiBhbWJpZ3VpdHksIHdpbGwgbm90LgoKSSB0aGluayBjb25zaXN0ZW5jeSBjb21lcyBp
-bnRvIHBsYXkgaGVyZS4gV2UgKGFybTY0KSBhbmQgdGhlIHJlc3Qgb2YgdGhlCmtlcm5lbCBnZXQg
-dGhpcyB3cm9uZyBhbGwgdGhlIHRpbWUsIHNvIGlmIHdlJ3JlIGdvaW5nIHRvIGZpeCBpdCB0aGVu
-IHdlCnNob3VsZCBsb29rIGF0IHRoZSB3aWRlciBjb2RlYmFzZSBhbmQgSSdkIHJhdGhlciBub3Qg
-ZG8gdGhhdCBhcyBwYXJ0IG9mIHRoZQprZHVtcCBzZXJpZXMuIEFsc28sIHdoeSBzdG9wIGF0IHRo
-ZSBzdWZmaXhlcz8gV2UgZG9uJ3QgaGF2ZSBhbnkgb2NjdXJlbmNlcwpvZiAnbWViaWJ5dGUnIGlu
-IHRoZSBrZXJuZWwgc291cmNlcywgYnV0IHBsZW50eSBvZiBidXN0ZWQgJ21lZ2FieXRlcycuIEEK
-cGF0Y2ggbWFraW5nIGFybTY0IGNvbnNpc3RlbnQgY291bGQgYmUgZGlzY3Vzc2VkIHNlcGFyYXRl
-bHksIG90aGVyd2lzZSBrZHVtcApiZWNvbWVzIHRoZSBwZWRhbnRpYyBJU08gZ3V5IHRyeWluZyB0
-byBsZWFkIGJ5IGV4YW1wbGUsIGJ1dCByZWFsbHkgZXZlcnlib2R5Cmlnbm9yZXMgaGltIGJlY2F1
-c2UgaXQncyBjb21wbGV0ZWx5IGluY29uc2VxdWVudGlhbCBhbmQgdGhleSBhbHNvIGtub3cgaGUK
-d2VudCAzNSB2ZXJzaW9ucyB3aXRob3V0IGdpdmluZyBhIG1vbmtleSdzLgoKRGF2aWQsIHNpbmNl
-IHlvdSBzZWVtIHRvIGJlIHRoZSBtb3N0IG91dHJhZ2VkLCBmYW5jeSBzZW5kaW5nIGEgcGF0Y2g/
-IDspCgpBbHRlcm5hdGl2ZWx5LCB3aG8gZmFuY2llcyBidXJuaW5nIHNvbWUgZGljdGlvbmFyaWVz
-PwoKV2lsbAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Mon, 20 Mar, at 10:14:12AM, Dave Young wrote:
+> 
+> Matt, I'm fine if you prefer to capture the range checking errors.
+> Would you like me to post it or just you send it out?
+
+Can you please send out the patch with the minimal change to
+efi_arch_mem_reserve() and we'll get it into urgent ASAP.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
