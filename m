@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk0-x233.google.com ([2607:f8b0:400d:c09::233])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cwA6R-0000l6-1V
- for kexec@lists.infradead.org; Thu, 06 Apr 2017 16:17:44 +0000
-Received: by mail-qk0-x233.google.com with SMTP id p68so16368467qke.1
- for <kexec@lists.infradead.org>; Thu, 06 Apr 2017 09:17:21 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cwKEY-0005Mi-5G
+ for kexec@lists.infradead.org; Fri, 07 Apr 2017 03:06:47 +0000
+Date: Fri, 7 Apr 2017 11:05:45 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 09/24] kexec_file: Disable at runtime if securelevel has
+ been set
+Message-ID: <20170407030545.GA4296@dhcp-128-65.nay.redhat.com>
+References: <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
+ <149142335441.5101.2294976563846442575.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-From: Kristian Kielhofner <kris@kriskinc.com>
-Date: Thu, 6 Apr 2017 11:17:00 -0500
-Message-ID: <CAKDfjgcvs=OQrBSXB=u9uYgo6y0vOE62+XmhObqON0z9TR3DoQ@mail.gmail.com>
-Subject: Kexec on ARM - memory detection
+Content-Disposition: inline
+In-Reply-To: <149142335441.5101.2294976563846442575.stgit@warthog.procyon.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,89 +25,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: David Howells <dhowells@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chun-Yi Lee <jlee@suse.com>, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, matthew.garrett@nebula.com
 
-Hello,
+On 04/05/17 at 09:15pm, David Howells wrote:
+> From: Chun-Yi Lee <joeyli.kernel@gmail.com>
+> 
+> When KEXEC_VERIFY_SIG is not enabled, kernel should not loads image
+> through kexec_file systemcall if securelevel has been set.
+> 
+> This code was showed in Matthew's patch but not in git:
+> https://lkml.org/lkml/2015/3/13/778
+> 
+> Cc: Matthew Garrett <mjg59@srcf.ucam.org>
+> Signed-off-by: Chun-Yi Lee <jlee@suse.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: kexec@lists.infradead.org
+> ---
+> 
+>  kernel/kexec_file.c |    6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b118735fea9d..f6937eecd1eb 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -268,6 +268,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+>  		return -EPERM;
+>  
+> +	/* Don't permit images to be loaded into trusted kernels if we're not
+> +	 * going to verify the signature on them
+> +	 */
+> +	if (!IS_ENABLED(CONFIG_KEXEC_VERIFY_SIG) && kernel_is_locked_down())
+> +		return -EPERM;
+> +
+>  	/* Make sure we have a legal set of flags */
+>  	if (flags != (flags & KEXEC_FILE_FLAGS))
+>  		return -EINVAL;
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-  I'm trying to use kexec on ARM. I'm using LEDE 17.01 with their
-ipq806x target on various boards of this type.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-  I've followed many threads and a bit on the history of kexec on ARM
-because I'm running into a strange problem:
-
-root@LEDE:/tmp# kexec -d -t uImage --dtb=C2600-uImage.dtb
---command-line="" -l C2600-uImage
-Try gzip decompression.
-Try LZMA decompression.
-lzma_decompress_file: read on C2600-uImage of 65536 bytes failed
-kernel: 0xb6d27010 kernel_size: 0x1eb76e
-MEMORY RANGES
-00012028b6d27010-bea6aee700000004 (0)
-zImage header: 0x016f2818 0x00000000 0x001e5cd0
-zImage size 0x1e5cd0, file size 0x1eb72e
-Could not find a free area of memory of 0x1edcd0 bytes...
-Cannot load C2600-uImage
-root@LEDE:/tmp# cat /proc/iomem
-00108000-00108fff : /soc/rpm@108000
-00700000-00700fff : /soc/qfprom@700000
-00800000-00803fff : /soc/pinmux@800000
-00900000-00903fff : /soc/clock-controller@900000
-02011000-02011fff : /soc/clock-controller@2011000
-02088000-02088fff : /soc/clock-controller@2088000
-0208a000-0208a0ff : /soc/timer@200a000
-02098000-02098fff : /soc/clock-controller@2098000
-08000000-081fffff : ath
-10000000-10007fff : /soc/usb30@1/dwc3@10000000
-  10000000-10007fff : /soc/usb30@1/dwc3@10000000
-1000c100-1000ccff : /soc/usb30@1/dwc3@10000000
-100f8800-100f882f : /soc/phy@100f8800
-100f8830-100f885f : /soc/phy@100f8830
-11000000-11007fff : /soc/usb30@0/dwc3@11000000
-  11000000-11007fff : /soc/usb30@0/dwc3@11000000
-1100c100-1100ccff : /soc/usb30@0/dwc3@11000000
-110f8800-110f882f : /soc/phy@110f8800
-110f8830-110f885f : /soc/phy@110f8830
-16300000-163000ff : /soc/gsbi@16300000
-16340000-16340fff : msm_serial
-18300000-183fffff : /soc/dma@18300000
-1a200000-1a2000ff : /soc/gsbi@1a200000
-1a280000-1a280fff : /soc/gsbi@1a200000/spi@1a280000
-1a500000-1a5001ff : /soc/rng@1a500000
-1b500000-1b500fff : dbi
-1b502000-1b50207f : elbi
-1b600000-1b6000ff : parf
-1b700000-1b700fff : dbi
-1b702000-1b70207f : elbi
-1b800000-1b8000ff : parf
-2e000000-2e1fffff : ath
-37200000-373fffff : /soc/ethernet@37200000
-37400000-375fffff : /soc/ethernet@37400000
-42000000-5fffffff : System RAM
-  42208000-4278de77 : Kernel code
-  427c4000-4283ab77 : Kernel data
-root@LEDE:/tmp# uname -a
-Linux LEDE 4.4.53 #0 SMP Fri Mar 17 12:56:58 2017 armv7l GNU/Linux
-root@LEDE:/tmp#
-
-  I've tried every possible combination of uImage/zImage (with and
-without initramfs, etc) and always end up with the same error. I've
-compiled my own LEDE 17.01 image with the following LEDE options
-enabled:
-
-grep -i kexec .config
-CONFIG_KERNEL_KEXEC=y
-CONFIG_PACKAGE_kexec-tools=y
-CONFIG_KEXEC_TOOLS_kdump=y
-CONFIG_KEXEC_ZLIB=y
-CONFIG_KEXEC_LZMA=y
-
-  I've also updated my local build to use kexec-tools-2.0.14 but
-always the same result. What else should I be looking at?
-
-Thanks!
-
--- 
-Kristian Kielhofner
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
