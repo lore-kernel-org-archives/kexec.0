@@ -1,15 +1,43 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf0-x231.google.com ([2a00:1450:4010:c07::231])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cwSRo-0003YD-4O
- for kexec@lists.infradead.org; Fri, 07 Apr 2017 11:53:02 +0000
-Received: by mail-lf0-x231.google.com with SMTP id s141so5265176lfe.3
- for <kexec@lists.infradead.org>; Fri, 07 Apr 2017 04:52:38 -0700 (PDT)
-From: Denys Zagorui <denys.zagorui@globallogic.com>
-Subject: Testing kexec/kdump on ls2085ardb (arm64)
-Message-ID: <799fca3b-8d1c-c1d0-f3d7-e3b060f962fd@globallogic.com>
-Date: Fri, 7 Apr 2017 14:52:35 +0300
-MIME-Version: 1.0
+ id 1cwT8I-0001tn-5s
+ for kexec@lists.infradead.org; Fri, 07 Apr 2017 12:36:56 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
+ v37CXwfV062135
+ for <kexec@lists.infradead.org>; Fri, 7 Apr 2017 08:36:31 -0400
+Received: from e28smtp01.in.ibm.com (e28smtp01.in.ibm.com [125.16.236.1])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 29p6g66563-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 07 Apr 2017 08:36:31 -0400
+Received: from localhost
+ by e28smtp01.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.vnet.ibm.com>;
+ Fri, 7 Apr 2017 18:06:28 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+ by d28relay01.in.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v37CaPag14680088
+ for <kexec@lists.infradead.org>; Fri, 7 Apr 2017 18:06:25 +0530
+Received: from d28av01.in.ibm.com (localhost [127.0.0.1])
+ by d28av01.in.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v37CaOm7028301
+ for <kexec@lists.infradead.org>; Fri, 7 Apr 2017 18:06:24 +0530
+Subject: Re: [PATCH 09/24] kexec_file: Disable at runtime if securelevel has
+ been set
+From: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Date: Fri, 07 Apr 2017 08:36:17 -0400
+In-Reply-To: <27362.1491556638@warthog.procyon.org.uk>
+References: <1491551180.4184.50.camel@linux.vnet.ibm.com>
+ <1491536950.4184.10.camel@linux.vnet.ibm.com>
+ <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
+ <149142335441.5101.2294976563846442575.stgit@warthog.procyon.org.uk>
+ <20170407030545.GA4296@dhcp-128-65.nay.redhat.com>
+ <21572.1491548994@warthog.procyon.org.uk>
+ <27362.1491556638@warthog.procyon.org.uk>
+Mime-Version: 1.0
+Message-Id: <1491568577.4184.97.camel@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,214 +46,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
+To: David Howells <dhowells@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chun-Yi Lee <jlee@suse.com>, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, matthew.garrett@nebula.com, Dave Young <dyoung@redhat.com>
 
-Hello,
-
-I was testing kexec/kdump on ls2085ardb using kexec-tools from:
-
-https://git.linaro.org/people/takahiro.akashi/kexec-tools.git/log/?h=arm64/kdump
-
-and kernel from:
-
-https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git/log/?h=arm64/kdump
-
-------------------------------------------------------------------------------------
-
-Kernel required configs:
-
-CONFIG_KEXEC=y
-CONFIG_SYSFS=y
-CONFIG_DEBUG_INFO=y
-CONFIG_CRASH_DUMP=y
-CONFIG_PROC_VMCORE=y
-
-------------------------------------------------------------------------------------
-Starting kernel ...
-
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 4.11.0-rc3 (denyszagorui@kbp1-ldl-f65370) 
-(gcc version 6.2.0 (GCC) ) #4 SMP PREEMPT Tue Apr 4 17:08:07 EEST 2017
-[    0.000000] Boot CPU: AArch64 Processor [411fd071]
-[    0.000000] earlycon: uart8250 at MMIO 0x00000000021c0600 (options '')
-[    0.000000] bootconsole [uart8250] enabled
-[    0.000000] efi: Getting EFI parameters from FDT:
-[    0.000000] efi: UEFI not found.
-[    0.000000] crashkernel reserved: 0x00000000bfe00000 - 
-0x00000000ffe00000 (1024 MB)
-
-.....
-
-[    0.000000] Kernel command line: console=ttyS1,115200 
-root=/dev/mmcblk0p1 rootwait earlycon=uart8250,mmio,0x21c0600, 
-ramdisk_size=0x2000000 default_hugepagesz=2m hugepagesz=2m hugepages=256 
-crashkernel=1024M
-------------------------------------------------------------------------------------
-
-I was trying two modes: direct boot (kexec -l than kexec -e) and kdump 
-(kexec -p than echo c > /proc/sysrq-trigger).
-
-Direct boot:
-------------------------------------------------------------------------------------
-root@ls2085ardb:~# kexec -l /boot/Image --initrd=/boot/initrd.cpio 
---command-line="console=ttyS1,115200 root=/dev/ram0 
-earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
-arch_process_options:147: command_line: console=ttyS1,115200 
-root=/dev/ram0 earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
-arch_process_options:149: initrd: /boot/initrd.cpio
-arch_process_options:150: dtb: (null)
-Try gzip decompression.
-Try LZMA decompression.
-lzma_decompress_file: read on /boot/Image of 65536 bytes failed
-kernel: 0xffffac0f8010 kernel_size: 0xe80a00
-get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
-get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
-elf_arm64_probe: Not an ELF executable.
-image_arm64_load: kernel_segment: 0000000080000000
-image_arm64_load: text_offset:    0000000000080000
-image_arm64_load: image_size:     0000000000eea000
-image_arm64_load: phys_offset:    0000000080000000
-image_arm64_load: vp_offset:      ffffffffffffffff
-image_arm64_load: PE format:      yes
-.....
-kexec_load: entry = 0x817ed660 flags = 0xb70000
-nr_segments = 4
-segment[0].buf   = 0xffffac0f8010
-segment[0].bufsz = 0xe80a00
-segment[0].mem   = 0x80080000
-segment[0].memsz = 0xeea000
-segment[1].buf   = 0xffffab879010
-segment[1].bufsz = 0x87e800
-segment[1].mem   = 0x80f6a000
-segment[1].memsz = 0x87f000
-segment[2].buf   = 0x377b3e80
-segment[2].bufsz = 0x3d64
-segment[2].mem   = 0x817e9000
-segment[2].memsz = 0x4000
-segment[3].buf   = 0x377b7f20
-segment[3].bufsz = 0x31c8
-segment[3].mem   = 0x817ed000
-segment[3].memsz = 0x4000
-kexec_load failed: Device or resource busy
-entry       = 0x817ed660 flags = 0xb70000
-nr_segments = 4
-segment[0].buf   = 0xffffac0f8010
-segment[0].bufsz = 0xe80a00
-segment[0].mem   = 0x80080000
-segment[0].memsz = 0xeea000
-segment[1].buf   = 0xffffab879010
-segment[1].bufsz = 0x87e800
-segment[1].mem   = 0x80f6a000
-segment[1].memsz = 0x87f000
-segment[2].buf   = 0x377b3e80
-segment[2].bufsz = 0x3d64
-segment[2].mem   = 0x817e9000
-segment[2].memsz = 0x4000
-segment[3].buf   = 0x377b7f20
-segment[3].bufsz = 0x31c8
-segment[3].mem   = 0x817ed000
-segment[3].memsz = 0x4000
-root@ls2085ardb:~# kexec -e
-Nothing has been loaded!
-
-Not working for me:
-kexec_load failed: Device or resource busy
-
-
-kdump mode:
-------------------------------------------------------------------------------------
-root@ls2085ardb:~# kexec -p /boot/Image --initrd=/boot/initrd.cpio 
---command-line="console=ttyS1,115200 root=/dev/ram0 
-earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
-arch_process_options:147: command_line: console=ttyS1,115200 
-root=/dev/ram0 earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
-arch_process_options:149: initrd: /boot/initrd.cpio
-arch_process_options:150: dtb: (null)
-Try gzip decompression.
-Try LZMA decompression.
-lzma_decompress_file: read on /boot/Image of 65536 bytes failed
-kernel: 0xffff86fa8010 kernel_size: 0xe80a00
-get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
-get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
-elf_arm64_probe: Not an ELF executable.
-image_arm64_load: kernel_segment: 00000000bfe00000
-image_arm64_load: text_offset:    0000000000080000
-image_arm64_load: image_size:     0000000000eea000
-image_arm64_load: phys_offset:    0000000080000000
-image_arm64_load: vp_offset:      ffffffffffffffff
-image_arm64_load: PE format:      yes
-Reserved memory range
-00000000bfe00000-00000000ffdfffff (0)
-Coredump memory ranges
-0000000080000000-00000000bfdfffff (0)
-00000000ffe00000-00000000ffffffff (0)
-0000008080000000-00000083bfffffff (0)
-kernel symbol _text vaddr = ffff000008080000
-load_crashdump_segments: page_offset:   ffff800000000000
-...
-kexec_load: entry = 0xc15ed660 flags = 0xb70001
-nr_segments = 5
-segment[0].buf   = 0xffff86fa8010
-segment[0].bufsz = 0xe80a00
-segment[0].mem   = 0xbfe80000
-segment[0].memsz = 0xeea000
-segment[1].buf   = 0xffff86729010
-segment[1].bufsz = 0x87e800
-segment[1].mem   = 0xc0d6a000
-segment[1].memsz = 0x87f000
-segment[2].buf   = 0x36959590
-segment[2].bufsz = 0x3dc7
-segment[2].mem   = 0xc15e9000
-segment[2].memsz = 0x4000
-segment[3].buf   = 0x3695d690
-segment[3].bufsz = 0x31c8
-segment[3].mem   = 0xc15ed000
-segment[3].memsz = 0x4000
-segment[4].buf   = 0x36949490
-segment[4].bufsz = 0x400
-segment[4].mem   = 0xffdff000
-segment[4].memsz = 0x1000
-
-root@ls2085ardb:~# echo c > /proc/sysrroot@ls2085ardb:~# echo c > 
-/proc/sysrq-trigger
-
-[  265.274402] sysrq: SysRq : Trigger a crash
-[  265.278588] Unable to handle kernel NULL pointer dereference at 
-virtual address 00000000
-...
-[  265.750726] Starting crashdump kernel...
-[  265.754644] Some CPUs may be stale, kdump will be unreliable.
-[  265.760388] ------------[ cut here ]------------
-[  265.765006] WARNING: CPU: 0 PID: 1360 at 
-arch/arm64/kernel/machine_kexec.c:158 machine_kexec+0x44/0x280
-...
-
-root@ls2085ardb:~# ls -al /proc/
-...
--r--------    1 root     root     15048032256 Mar 28 15:36 vmcore
--r--r--r--    1 root     root             0 Mar 28 15:36 vmstat
--r--r--r--    1 root     root             0 Mar 28 15:36 zoneinfo
-
-After that watched through /proc/vmcore using gdb. Seems to be working
-
-Best Regards,
-Denys
-
--- 
-Denys Zagorui
-GlobalLogic
-Kyiv, 03038, Protasov Business Park, N.Grinchenka, 2/1
-M +380673173093
-www.globallogic.com
-
-http://www.globallogic.com/email_disclaimer.txt
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAyMDE3LTA0LTA3IGF0IDEwOjE3ICswMTAwLCBEYXZpZCBIb3dlbGxzIHdyb3RlOgo+
+IE1pbWkgWm9oYXIgPHpvaGFyQGxpbnV4LnZuZXQuaWJtLmNvbT4gd3JvdGU6Cj4gCj4gPiA+IE9r
+YXksIGZhaXIgZW5vdWdoLiAgSSBjYW4gc3RpY2sgaW4gYW4gT1Igd2l0aCBhbiBJU19FTkFCTEVE
+IG9uIHNvbWUgSU1BCj4gPiA+IHN5bWJvbC4gIENPTkZJR19JTUFfS0VYRUMgbWF5YmU/ICBBbmQg
+YWxzbyByZXF1aXJlIElNQSBiZSBlbmFibGVkPwo+ID4gCj4gPiBOb3QgcXVpdGUsIHNpbmNlIGFz
+IERhdmUgcG9pbnRlZCBvdXQsIElNQSBpcyBwb2xpY3kgZHJpdmVuLiAgQXMgYQo+ID4gcG9saWN5
+IGlzIGluc3RhbGxlZCwgd2UgY291bGQgc2V0IGEgZmxhZy4KPiAKPiBEb2VzIHN1Y2ggYSBmbGFn
+IGV4aXN0IGFzIHlldD8KCk5vdCBleGFjdGx5IHdoYXQgaXMgbmVlZGVkLiDCoFRoZXJlJ3MgYSBm
+bGFnIG5hbWVkIGltYV9hcHByYWlzZSwgd2hpY2gKaXMgdXNlZCBpbnRlcm5hbGx5IGluIElNQS4g
+QSB0ZW1wb3JhcnkgZmxhZyBpcyBjcmVhdGVkLCB3aGlsZQp2YWxpZGF0aW5nIHRoZSBydWxlcy4K
+CglpZiAoZGVmYXVsdF9hcHByYWlzZV9ydWxlc1tpXS5mdW5jID09IFBPTElDWV9DSEVDSykKICAg
+ICAgICAJdGVtcF9pbWFfYXBwcmFpc2UgfD0gSU1BX0FQUFJBSVNFX1BPTElDWTsKCiAgICAgICAg
+aWYgKCFyZXN1bHQgJiYgKGVudHJ5LT5hY3Rpb24gPT0gVU5LTk9XTikpCiAgICAgICAgICAgICAg
+ICByZXN1bHQgPSAtRUlOVkFMOwogICAgICAgIGVsc2UgaWYgKGVudHJ5LT5mdW5jID09IE1PRFVM
+RV9DSEVDSykKICAgICAgICAgICAgICAgIHRlbXBfaW1hX2FwcHJhaXNlIHw9IElNQV9BUFBSQUlT
+RV9NT0RVTEVTOwogICAgICAgIGVsc2UgaWYgKGVudHJ5LT5mdW5jID09IEZJUk1XQVJFX0NIRUNL
+KQogICAgICAgICAgICAgICAgdGVtcF9pbWFfYXBwcmFpc2UgfD0gSU1BX0FQUFJBSVNFX0ZJUk1X
+QVJFOwogICAgICAgIGVsc2UgaWYgKGVudHJ5LT5mdW5jID09IFBPTElDWV9DSEVDSykKICAgICAg
+ICAgICAgICAgIHRlbXBfaW1hX2FwcHJhaXNlIHw9IElNQV9BUFBSQUlTRV9QT0xJQ1k7CgpJZiB0
+aGUgZW50aXJlIHBvbGljeSBpcyB2YWxpZCwgICBpbWFfdXBkYXRlX3BvbGljeV9mbGFnKCkgc2V0
+cyB0aGUgaW1hX2FwcHJhaXNlIGZsYWcuCgogICAgICAgIGltYV9hcHByYWlzZSB8PSB0ZW1wX2lt
+YV9hcHByYWlzZTsKCkZyb20gYW4gSU1BIHBlcnNwZWN0aXZlLCBlaXRoZXIgYSBmaWxlIGhhc2gg
+b3Igc2lnbmF0dXJlIGFyZSB2YWxpZCwKYnV0IGZvciB0aGlzIHVzYWdlIGl0IG11c3QgYmUgYSBz
+aWduYXR1cmUuIMKgU28gaW4gYWRkaXRpb24gdG8gdGVzdGluZwplbnRyeS0+ZnVuYywgYWJvdmUs
+IGVudHJ5LT5mbGFncyB3b3VsZCBuZWVkIHRvIGJlIHRlc3RlZCBhcyB3ZWxsIHRvCmRldGVjdCBp
+ZiBJTUFfRElHU0lHX1JFUVVJUkVEIGlzIHNldC4KCk1pbWkKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
