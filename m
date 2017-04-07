@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cwO2I-0001vP-UN
- for kexec@lists.infradead.org; Fri, 07 Apr 2017 07:10:24 +0000
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <1491536950.4184.10.camel@linux.vnet.ibm.com>
-References: <1491536950.4184.10.camel@linux.vnet.ibm.com>
+ id 1cwOXP-0008RA-Cq
+ for kexec@lists.infradead.org; Fri, 07 Apr 2017 07:42:32 +0000
+Date: Fri, 7 Apr 2017 15:41:59 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 09/24] kexec_file: Disable at runtime if securelevel has
+ been set
+Message-ID: <20170407074159.GB10737@dhcp-128-65.nay.redhat.com>
+References: <20170407061935.GB10100@dhcp-128-65.nay.redhat.com>
  <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
  <149142335441.5101.2294976563846442575.stgit@warthog.procyon.org.uk>
  <20170407030545.GA4296@dhcp-128-65.nay.redhat.com>
-Subject: Re: [PATCH 09/24] kexec_file: Disable at runtime if securelevel has
- been set
+ <1491536950.4184.10.camel@linux.vnet.ibm.com>
+ <21418.1491548875@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Date: Fri, 07 Apr 2017 08:09:54 +0100
-Message-ID: <21572.1491548994@warthog.procyon.org.uk>
+Content-Disposition: inline
+In-Reply-To: <21418.1491548875@warthog.procyon.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,21 +25,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, Chun-Yi Lee <jlee@suse.com>, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, matthew.garrett@nebula.com, Dave Young <dyoung@redhat.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chun-Yi Lee <jlee@suse.com>, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, matthew.garrett@nebula.com, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-TWltaSBab2hhciA8em9oYXJAbGludXgudm5ldC5pYm0uY29tPiB3cm90ZToKCj4gPiA+ICsJaWYg
-KCFJU19FTkFCTEVEKENPTkZJR19LRVhFQ19WRVJJRllfU0lHKSAmJiBrZXJuZWxfaXNfbG9ja2Vk
-X2Rvd24oKSkKPiA+ID4gKwkJcmV0dXJuIC1FUEVSTTsKPiA+ID4gKwo+ID4gPiAgCj4gCj4gSU1B
-IGNhbiBiZSB1c2VkIHRvIHZlcmlmeSBmaWxlIHNpZ25hdHVyZXMgdG9vLCBiYXNlZCBvbiB0aGUg
-TFNNIGhvb2tzCj4gaW4gwqBrZXJuZWxfcmVhZF9maWxlX2Zyb21fZmQoKS4gwqBDT05GSUdfS0VY
-RUNfVkVSSUZZX1NJRyBzaG91bGQgbm90IGJlCj4gcmVxdWlyZWQuCgpPa2F5LCBmYWlyIGVub3Vn
-aC4gIEkgY2FuIHN0aWNrIGluIGFuIE9SIHdpdGggYW4gSVNfRU5BQkxFRCBvbiBzb21lIElNQQpz
-eW1ib2wuICBDT05GSUdfSU1BX0tFWEVDIG1heWJlPyAgQW5kIGFsc28gcmVxdWlyZSBJTUEgYmUg
-ZW5hYmxlZD8KCkRhdmlkCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 04/07/17 at 08:07am, David Howells wrote:
+> Dave Young <dyoung@redhat.com> wrote:
+> =
+
+> > > > > +	/* Don't permit images to be loaded into trusted kernels if we'=
+re not
+> > > > > +	 * going to verify the signature on them
+> > > > > +	 */
+> > > > > +	if (!IS_ENABLED(CONFIG_KEXEC_VERIFY_SIG) && kernel_is_locked_do=
+wn())
+> > > > > +		return -EPERM;
+> > > > > +
+> > > > >  =
+
+> > > =
+
+> > > IMA can be used to verify file signatures too, based on the LSM hooks
+> > > in =A0kernel_read_file_from_fd(). =A0CONFIG_KEXEC_VERIFY_SIG should n=
+ot be
+> > > required.
+> > =
+
+> > Mimi, I remember we talked somthing before about the two signature =
+
+> > verification. One can change IMA policy in initramfs userspace,
+> > also there are kernel cmdline param to disable IMA, so it can break the
+> > lockdown? Suppose kexec boot with ima disabled cmdline param and then
+> > kexec reboot again..
+> =
+
+> I guess I should lock down the parameter to disable IMA too.
+
+That is one thing, user can change IMA policy in initramfs userspace,
+I'm not sure if IMA enforce the signed policy now, if no it will be also
+a problem.
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
