@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cwNFi-000662-EB
- for kexec@lists.infradead.org; Fri, 07 Apr 2017 06:20:13 +0000
-Date: Fri, 7 Apr 2017 14:19:35 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 09/24] kexec_file: Disable at runtime if securelevel has
- been set
-Message-ID: <20170407061935.GB10100@dhcp-128-65.nay.redhat.com>
-References: <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
+ id 1cwO0L-0000za-CM
+ for kexec@lists.infradead.org; Fri, 07 Apr 2017 07:08:22 +0000
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20170407061935.GB10100@dhcp-128-65.nay.redhat.com>
+References: <20170407061935.GB10100@dhcp-128-65.nay.redhat.com>
+ <149142326734.5101.4596394505987813763.stgit@warthog.procyon.org.uk>
  <149142335441.5101.2294976563846442575.stgit@warthog.procyon.org.uk>
  <20170407030545.GA4296@dhcp-128-65.nay.redhat.com>
  <1491536950.4184.10.camel@linux.vnet.ibm.com>
+Subject: Re: [PATCH 09/24] kexec_file: Disable at runtime if securelevel has
+ been set
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1491536950.4184.10.camel@linux.vnet.ibm.com>
+Date: Fri, 07 Apr 2017 08:07:55 +0100
+Message-ID: <21418.1491548875@warthog.procyon.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,106 +23,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.vnet.ibm.com>
-Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, Chun-Yi Lee <jlee@suse.com>, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, matthew.garrett@nebula.com
+To: Dave Young <dyoung@redhat.com>
+Cc: Matthew Garrett <mjg59@srcf.ucam.org>, linux-efi@vger.kernel.org, gnomes@lxorguk.ukuu.org.uk, Chun-Yi Lee <jlee@suse.com>, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, keyrings@vger.kernel.org, matthew.garrett@nebula.com, Mimi Zohar <zohar@linux.vnet.ibm.com>
 
-On 04/06/17 at 11:49pm, Mimi Zohar wrote:
-> On Fri, 2017-04-07 at 11:05 +0800, Dave Young wrote:
-> > On 04/05/17 at 09:15pm, David Howells wrote:
-> > > From: Chun-Yi Lee <joeyli.kernel@gmail.com>
-> > > =
-
-> > > When KEXEC_VERIFY_SIG is not enabled, kernel should not loads image
-> > > through kexec_file systemcall if securelevel has been set.
-> > > =
-
-> > > This code was showed in Matthew's patch but not in git:
-> > > https://lkml.org/lkml/2015/3/13/778
-> > > =
-
-> > > Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-> > > Signed-off-by: Chun-Yi Lee <jlee@suse.com>
-> > > Signed-off-by: David Howells <dhowells@redhat.com>
-> > > cc: kexec@lists.infradead.org
-> > > ---
-> > > =
-
-> > >  kernel/kexec_file.c |    6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > > =
-
-> > > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > > index b118735fea9d..f6937eecd1eb 100644
-> > > --- a/kernel/kexec_file.c
-> > > +++ b/kernel/kexec_file.c
-> > > @@ -268,6 +268,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd,=
- int, initrd_fd,
-> > >  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
-> > >  		return -EPERM;
-> > >  =
-
-> > > +	/* Don't permit images to be loaded into trusted kernels if we're n=
-ot
-> > > +	 * going to verify the signature on them
-> > > +	 */
-> > > +	if (!IS_ENABLED(CONFIG_KEXEC_VERIFY_SIG) && kernel_is_locked_down())
-> > > +		return -EPERM;
-> > > +
-> > >  =
-
-> =
-
-> IMA can be used to verify file signatures too, based on the LSM hooks
-> in =A0kernel_read_file_from_fd(). =A0CONFIG_KEXEC_VERIFY_SIG should not be
-> required.
-
-Mimi, I remember we talked somthing before about the two signature =
-
-verification. One can change IMA policy in initramfs userspace,
-also there are kernel cmdline param to disable IMA, so it can break the
-lockdown? Suppose kexec boot with ima disabled cmdline param and then
-kexec reboot again..
-
-> =
-
-> Mimi
-> =
-
-> =
-
-> > 	/* Make sure we have a legal set of flags */
-> > >  	if (flags !=3D (flags & KEXEC_FILE_FLAGS))
-> > >  		return -EINVAL;
-> > > =
-
-> > > =
-
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> > =
-
-> > Acked-by: Dave Young <dyoung@redhat.com>
-> > =
-
-> > Thanks
-> > Dave
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-securit=
-y-module" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > =
-
-> =
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RGF2ZSBZb3VuZyA8ZHlvdW5nQHJlZGhhdC5jb20+IHdyb3RlOgoKPiA+ID4gPiArCS8qIERvbid0
+IHBlcm1pdCBpbWFnZXMgdG8gYmUgbG9hZGVkIGludG8gdHJ1c3RlZCBrZXJuZWxzIGlmIHdlJ3Jl
+IG5vdAo+ID4gPiA+ICsJICogZ29pbmcgdG8gdmVyaWZ5IHRoZSBzaWduYXR1cmUgb24gdGhlbQo+
+ID4gPiA+ICsJICovCj4gPiA+ID4gKwlpZiAoIUlTX0VOQUJMRUQoQ09ORklHX0tFWEVDX1ZFUklG
+WV9TSUcpICYmIGtlcm5lbF9pc19sb2NrZWRfZG93bigpKQo+ID4gPiA+ICsJCXJldHVybiAtRVBF
+Uk07Cj4gPiA+ID4gKwo+ID4gPiA+ICAKPiA+IAo+ID4gSU1BIGNhbiBiZSB1c2VkIHRvIHZlcmlm
+eSBmaWxlIHNpZ25hdHVyZXMgdG9vLCBiYXNlZCBvbiB0aGUgTFNNIGhvb2tzCj4gPiBpbiDCoGtl
+cm5lbF9yZWFkX2ZpbGVfZnJvbV9mZCgpLiDCoENPTkZJR19LRVhFQ19WRVJJRllfU0lHIHNob3Vs
+ZCBub3QgYmUKPiA+IHJlcXVpcmVkLgo+IAo+IE1pbWksIEkgcmVtZW1iZXIgd2UgdGFsa2VkIHNv
+bXRoaW5nIGJlZm9yZSBhYm91dCB0aGUgdHdvIHNpZ25hdHVyZSAKPiB2ZXJpZmljYXRpb24uIE9u
+ZSBjYW4gY2hhbmdlIElNQSBwb2xpY3kgaW4gaW5pdHJhbWZzIHVzZXJzcGFjZSwKPiBhbHNvIHRo
+ZXJlIGFyZSBrZXJuZWwgY21kbGluZSBwYXJhbSB0byBkaXNhYmxlIElNQSwgc28gaXQgY2FuIGJy
+ZWFrIHRoZQo+IGxvY2tkb3duPyBTdXBwb3NlIGtleGVjIGJvb3Qgd2l0aCBpbWEgZGlzYWJsZWQg
+Y21kbGluZSBwYXJhbSBhbmQgdGhlbgo+IGtleGVjIHJlYm9vdCBhZ2Fpbi4uCgpJIGd1ZXNzIEkg
+c2hvdWxkIGxvY2sgZG93biB0aGUgcGFyYW1ldGVyIHRvIGRpc2FibGUgSU1BIHRvby4KCkRhdmlk
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
+YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
