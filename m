@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr0-x230.google.com ([2a00:1450:400c:c0c::230])
+Received: from mail-pg0-f43.google.com ([74.125.83.43])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cxSxi-0000SN-SK
- for kexec@lists.infradead.org; Mon, 10 Apr 2017 06:38:09 +0000
-Received: by mail-wr0-x230.google.com with SMTP id o21so113289692wrb.2
- for <kexec@lists.infradead.org>; Sun, 09 Apr 2017 23:37:46 -0700 (PDT)
-Received: from [172.22.111.130] ([195.238.93.36])
- by smtp.gmail.com with ESMTPSA id u47sm11340009wrb.27.2017.04.09.23.37.43
- for <kexec@lists.infradead.org>
- (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
- Sun, 09 Apr 2017 23:37:43 -0700 (PDT)
+ id 1cxV0j-0002Qa-Kr
+ for kexec@lists.infradead.org; Mon, 10 Apr 2017 08:49:25 +0000
+Received: by mail-pg0-f43.google.com with SMTP id 81so102506875pgh.2
+ for <kexec@lists.infradead.org>; Mon, 10 Apr 2017 01:49:01 -0700 (PDT)
+From: Pratyush Anand <panand@redhat.com>
 Subject: Re: Testing kexec/kdump on ls2085ardb (arm64)
-References: <mailman.22744.1491574424.26984.kexec@lists.infradead.org>
-From: Denys Zagorui <denys.zagorui@globallogic.com>
-Message-ID: <a3b27745-f8dd-178a-e329-8e03393a3b30@globallogic.com>
-Date: Mon, 10 Apr 2017 09:37:42 +0300
+References: <799fca3b-8d1c-c1d0-f3d7-e3b060f962fd@globallogic.com>
+Message-ID: <98f5b725-a4d4-c881-2b78-d369d6859acc@redhat.com>
+Date: Mon, 10 Apr 2017 14:12:50 +0530
 MIME-Version: 1.0
-In-Reply-To: <mailman.22744.1491574424.26984.kexec@lists.infradead.org>
+In-Reply-To: <799fca3b-8d1c-c1d0-f3d7-e3b060f962fd@globallogic.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,20 +24,26 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Denys Zagorui <denys.zagorui@globallogic.com>, kexec@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
 
+Hi Denys,
 
+On Friday 07 April 2017 05:22 PM, Denys Zagorui wrote:
 > Hello,
 >
 > I was testing kexec/kdump on ls2085ardb using kexec-tools from:
 >
 > https://git.linaro.org/people/takahiro.akashi/kexec-tools.git/log/?h=arm64/kdump
 >
+>
 > and kernel from:
 >
 > https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git/log/?h=arm64/kdump
 >
+>
 > ------------------------------------------------------------------------------------
+>
 >
 > Kernel required configs:
 >
@@ -53,6 +54,7 @@ To: kexec@lists.infradead.org
 > CONFIG_PROC_VMCORE=y
 >
 > ------------------------------------------------------------------------------------
+>
 > Starting kernel ...
 >
 > [    0.000000] Booting Linux on physical CPU 0x0
@@ -74,11 +76,13 @@ To: kexec@lists.infradead.org
 > crashkernel=1024M
 > ------------------------------------------------------------------------------------
 >
+>
 > I was trying two modes: direct boot (kexec -l than kexec -e) and kdump
 > (kexec -p than echo c > /proc/sysrq-trigger).
 >
 > Direct boot:
 > ------------------------------------------------------------------------------------
+>
 > root@ls2085ardb:~# kexec -l /boot/Image --initrd=/boot/initrd.cpio
 > --command-line="console=ttyS1,115200 root=/dev/ram0
 > earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
@@ -90,8 +94,10 @@ To: kexec@lists.infradead.org
 > Try LZMA decompression.
 > lzma_decompress_file: read on /boot/Image of 65536 bytes failed
 > kernel: 0xffffac0f8010 kernel_size: 0xe80a00
-> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
-> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
+> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System
+> RAM
+> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System
+> RAM
 > elf_arm64_probe: Not an ELF executable.
 > image_arm64_load: kernel_segment: 0000000080000000
 > image_arm64_load: text_offset:    0000000000080000
@@ -119,6 +125,17 @@ To: kexec@lists.infradead.org
 > segment[3].mem   = 0x817ed000
 > segment[3].memsz = 0x4000
 > kexec_load failed: Device or resource busy
+
+Since kexec_load failed, so no meaning of trying `kexec -e`. However, 
+not sure whats going here.
+
+Can you also share dmesg (kernel console log)?
+
+Are you using spin-table cpu enable method? If yes, do you have 
+cpu_die() implemented?
+
+~Pratyush
+
 > entry       = 0x817ed660 flags = 0xb70000
 > nr_segments = 4
 > segment[0].buf   = 0xffffac0f8010
@@ -146,6 +163,7 @@ To: kexec@lists.infradead.org
 >
 > kdump mode:
 > ------------------------------------------------------------------------------------
+>
 > root@ls2085ardb:~# kexec -p /boot/Image --initrd=/boot/initrd.cpio
 > --command-line="console=ttyS1,115200 root=/dev/ram0
 > earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
@@ -157,8 +175,10 @@ To: kexec@lists.infradead.org
 > Try LZMA decompression.
 > lzma_decompress_file: read on /boot/Image of 65536 bytes failed
 > kernel: 0xffff86fa8010 kernel_size: 0xe80a00
-> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
-> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
+> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System
+> RAM
+> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System
+> RAM
 > elf_arm64_probe: Not an ELF executable.
 > image_arm64_load: kernel_segment: 00000000bfe00000
 > image_arm64_load: text_offset:    0000000000080000
@@ -223,20 +243,6 @@ To: kexec@lists.infradead.org
 > Best Regards,
 > Denys
 >
-
-Hello, have a question. What i'm doing wrong with direct boot (kexec -l 
-&& kexec -e)
-
-Thanks and Regards
-Denys
--- 
-Denys Zagorui
-GlobalLogic
-Kyiv, 03038, Protasov Business Park, N.Grinchenka, 2/1
-M +380673173093
-www.globallogic.com
-
-http://www.globallogic.com/email_disclaimer.txt
 
 _______________________________________________
 kexec mailing list
