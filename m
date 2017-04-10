@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1cwq1W-0002VI-MR
- for kexec@lists.infradead.org; Sat, 08 Apr 2017 13:03:30 +0000
-Date: Sat, 8 Apr 2017 09:02:59 -0400
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v0] Fix broken Xen support in configure.ac
-Message-ID: <20170408130256.GA19677@verge.net.au>
-References: <1491574386-14764-1-git-send-email-eric.devolder@oracle.com>
- <20170407195744.GP4372@olila.local.net-space.pl>
+Received: from mail-wr0-x230.google.com ([2a00:1450:400c:c0c::230])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cxSxi-0000SN-SK
+ for kexec@lists.infradead.org; Mon, 10 Apr 2017 06:38:09 +0000
+Received: by mail-wr0-x230.google.com with SMTP id o21so113289692wrb.2
+ for <kexec@lists.infradead.org>; Sun, 09 Apr 2017 23:37:46 -0700 (PDT)
+Received: from [172.22.111.130] ([195.238.93.36])
+ by smtp.gmail.com with ESMTPSA id u47sm11340009wrb.27.2017.04.09.23.37.43
+ for <kexec@lists.infradead.org>
+ (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+ Sun, 09 Apr 2017 23:37:43 -0700 (PDT)
+Subject: Re: Testing kexec/kdump on ls2085ardb (arm64)
+References: <mailman.22744.1491574424.26984.kexec@lists.infradead.org>
+From: Denys Zagorui <denys.zagorui@globallogic.com>
+Message-ID: <a3b27745-f8dd-178a-e329-8e03393a3b30@globallogic.com>
+Date: Mon, 10 Apr 2017 09:37:42 +0300
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170407195744.GP4372@olila.local.net-space.pl>
+In-Reply-To: <mailman.22744.1491574424.26984.kexec@lists.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,65 +25,218 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: andrew.cooper3@citrix.com, Eric DeVolder <eric.devolder@oracle.com>, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: kexec@lists.infradead.org
 
-On Fri, Apr 07, 2017 at 09:57:44PM +0200, Daniel Kiper wrote:
-> On Fri, Apr 07, 2017 at 09:13:06AM -0500, Eric DeVolder wrote:
-> > Commit 2cf7cb9a "kexec: implemented XEN KEXEC STATUS to determine
-> > if an image is loaded" added configure-time detection of the
-> > kexec_status() call, but in doing so had the unintended side
-> > effect of disabling support for Xen altogether due to the
-> > missing HAVE_LIBXENCTRL=1. This corrects the broken behavior
-> > while still maintaining the original intention of detecting
-> > support for kexec_status() call.
-> 
-> In general Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
-> but two nitpicks.
-> 
-> You do not need v0 in subject if you post first patch. Plain
-> "[PATCH]" (of course without quotes) is sufficient.
-> 
-> > ---
-> > Broken behavior (HAVE_LIBXENCTRL is missing altogether):
-> >   ...
-> >   checking xenctrl.h usability... yes
-> >   checking xenctrl.h presence... yes
-> >   checking for xenctrl.h... yes
-> >   checking for xc_kexec_load in -lxenctrl... yes
-> >   checking for xc_kexec_status in -lxenctrl... yes
-> >
-> >   in include/config.h:
-> >   /* The kexec_status call is available */
-> >   #define HAVE_KEXEC_CMD_STATUS 1
-> >
-> > Fixed behaviour (restores HAVE_LIBXENCTRL):
-> >   ...
-> >   checking xenctrl.h usability... yes
-> >   checking xenctrl.h presence... yes
-> >   checking for xenctrl.h... yes
-> >   checking for xc_kexec_load in -lxenctrl... yes
-> >   checking for xc_kexec_status in -lxenctrl... yes
-> >
-> >   in include/config.h:
-> >   /* The kexec_status call is available */
-> >   #define HAVE_KEXEC_CMD_STATUS 1
-> >   /* Define to 1 if you have the `xenctrl' library (-lxenctrl). */
-> >   #define HAVE_LIBXENCTRL 1
-> >
-> > Reported-and-Tested-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> 
-> Reported-and-Tested-by, Signed-off-by et consortes should be just
-> before first "---". Otherwise "git am" will drop all of them.
 
-Thanks, I have applied this with the tags above.
+> Hello,
+>
+> I was testing kexec/kdump on ls2085ardb using kexec-tools from:
+>
+> https://git.linaro.org/people/takahiro.akashi/kexec-tools.git/log/?h=arm64/kdump
+>
+> and kernel from:
+>
+> https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git/log/?h=arm64/kdump
+>
+> ------------------------------------------------------------------------------------
+>
+> Kernel required configs:
+>
+> CONFIG_KEXEC=y
+> CONFIG_SYSFS=y
+> CONFIG_DEBUG_INFO=y
+> CONFIG_CRASH_DUMP=y
+> CONFIG_PROC_VMCORE=y
+>
+> ------------------------------------------------------------------------------------
+> Starting kernel ...
+>
+> [    0.000000] Booting Linux on physical CPU 0x0
+> [    0.000000] Linux version 4.11.0-rc3 (denyszagorui@kbp1-ldl-f65370)
+> (gcc version 6.2.0 (GCC) ) #4 SMP PREEMPT Tue Apr 4 17:08:07 EEST 2017
+> [    0.000000] Boot CPU: AArch64 Processor [411fd071]
+> [    0.000000] earlycon: uart8250 at MMIO 0x00000000021c0600 (options '')
+> [    0.000000] bootconsole [uart8250] enabled
+> [    0.000000] efi: Getting EFI parameters from FDT:
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] crashkernel reserved: 0x00000000bfe00000 -
+> 0x00000000ffe00000 (1024 MB)
+>
+> .....
+>
+> [    0.000000] Kernel command line: console=ttyS1,115200
+> root=/dev/mmcblk0p1 rootwait earlycon=uart8250,mmio,0x21c0600,
+> ramdisk_size=0x2000000 default_hugepagesz=2m hugepagesz=2m hugepages=256
+> crashkernel=1024M
+> ------------------------------------------------------------------------------------
+>
+> I was trying two modes: direct boot (kexec -l than kexec -e) and kdump
+> (kexec -p than echo c > /proc/sysrq-trigger).
+>
+> Direct boot:
+> ------------------------------------------------------------------------------------
+> root@ls2085ardb:~# kexec -l /boot/Image --initrd=/boot/initrd.cpio
+> --command-line="console=ttyS1,115200 root=/dev/ram0
+> earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
+> arch_process_options:147: command_line: console=ttyS1,115200
+> root=/dev/ram0 earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
+> arch_process_options:149: initrd: /boot/initrd.cpio
+> arch_process_options:150: dtb: (null)
+> Try gzip decompression.
+> Try LZMA decompression.
+> lzma_decompress_file: read on /boot/Image of 65536 bytes failed
+> kernel: 0xffffac0f8010 kernel_size: 0xe80a00
+> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
+> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
+> elf_arm64_probe: Not an ELF executable.
+> image_arm64_load: kernel_segment: 0000000080000000
+> image_arm64_load: text_offset:    0000000000080000
+> image_arm64_load: image_size:     0000000000eea000
+> image_arm64_load: phys_offset:    0000000080000000
+> image_arm64_load: vp_offset:      ffffffffffffffff
+> image_arm64_load: PE format:      yes
+> .....
+> kexec_load: entry = 0x817ed660 flags = 0xb70000
+> nr_segments = 4
+> segment[0].buf   = 0xffffac0f8010
+> segment[0].bufsz = 0xe80a00
+> segment[0].mem   = 0x80080000
+> segment[0].memsz = 0xeea000
+> segment[1].buf   = 0xffffab879010
+> segment[1].bufsz = 0x87e800
+> segment[1].mem   = 0x80f6a000
+> segment[1].memsz = 0x87f000
+> segment[2].buf   = 0x377b3e80
+> segment[2].bufsz = 0x3d64
+> segment[2].mem   = 0x817e9000
+> segment[2].memsz = 0x4000
+> segment[3].buf   = 0x377b7f20
+> segment[3].bufsz = 0x31c8
+> segment[3].mem   = 0x817ed000
+> segment[3].memsz = 0x4000
+> kexec_load failed: Device or resource busy
+> entry       = 0x817ed660 flags = 0xb70000
+> nr_segments = 4
+> segment[0].buf   = 0xffffac0f8010
+> segment[0].bufsz = 0xe80a00
+> segment[0].mem   = 0x80080000
+> segment[0].memsz = 0xeea000
+> segment[1].buf   = 0xffffab879010
+> segment[1].bufsz = 0x87e800
+> segment[1].mem   = 0x80f6a000
+> segment[1].memsz = 0x87f000
+> segment[2].buf   = 0x377b3e80
+> segment[2].bufsz = 0x3d64
+> segment[2].mem   = 0x817e9000
+> segment[2].memsz = 0x4000
+> segment[3].buf   = 0x377b7f20
+> segment[3].bufsz = 0x31c8
+> segment[3].mem   = 0x817ed000
+> segment[3].memsz = 0x4000
+> root@ls2085ardb:~# kexec -e
+> Nothing has been loaded!
+>
+> Not working for me:
+> kexec_load failed: Device or resource busy
+>
+>
+> kdump mode:
+> ------------------------------------------------------------------------------------
+> root@ls2085ardb:~# kexec -p /boot/Image --initrd=/boot/initrd.cpio
+> --command-line="console=ttyS1,115200 root=/dev/ram0
+> earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
+> arch_process_options:147: command_line: console=ttyS1,115200
+> root=/dev/ram0 earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
+> arch_process_options:149: initrd: /boot/initrd.cpio
+> arch_process_options:150: dtb: (null)
+> Try gzip decompression.
+> Try LZMA decompression.
+> lzma_decompress_file: read on /boot/Image of 65536 bytes failed
+> kernel: 0xffff86fa8010 kernel_size: 0xe80a00
+> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
+> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
+> elf_arm64_probe: Not an ELF executable.
+> image_arm64_load: kernel_segment: 00000000bfe00000
+> image_arm64_load: text_offset:    0000000000080000
+> image_arm64_load: image_size:     0000000000eea000
+> image_arm64_load: phys_offset:    0000000080000000
+> image_arm64_load: vp_offset:      ffffffffffffffff
+> image_arm64_load: PE format:      yes
+> Reserved memory range
+> 00000000bfe00000-00000000ffdfffff (0)
+> Coredump memory ranges
+> 0000000080000000-00000000bfdfffff (0)
+> 00000000ffe00000-00000000ffffffff (0)
+> 0000008080000000-00000083bfffffff (0)
+> kernel symbol _text vaddr = ffff000008080000
+> load_crashdump_segments: page_offset:   ffff800000000000
+> ...
+> kexec_load: entry = 0xc15ed660 flags = 0xb70001
+> nr_segments = 5
+> segment[0].buf   = 0xffff86fa8010
+> segment[0].bufsz = 0xe80a00
+> segment[0].mem   = 0xbfe80000
+> segment[0].memsz = 0xeea000
+> segment[1].buf   = 0xffff86729010
+> segment[1].bufsz = 0x87e800
+> segment[1].mem   = 0xc0d6a000
+> segment[1].memsz = 0x87f000
+> segment[2].buf   = 0x36959590
+> segment[2].bufsz = 0x3dc7
+> segment[2].mem   = 0xc15e9000
+> segment[2].memsz = 0x4000
+> segment[3].buf   = 0x3695d690
+> segment[3].bufsz = 0x31c8
+> segment[3].mem   = 0xc15ed000
+> segment[3].memsz = 0x4000
+> segment[4].buf   = 0x36949490
+> segment[4].bufsz = 0x400
+> segment[4].mem   = 0xffdff000
+> segment[4].memsz = 0x1000
+>
+> root@ls2085ardb:~# echo c > /proc/sysrroot@ls2085ardb:~# echo c >
+> /proc/sysrq-trigger
+>
+> [  265.274402] sysrq: SysRq : Trigger a crash
+> [  265.278588] Unable to handle kernel NULL pointer dereference at
+> virtual address 00000000
+> ...
+> [  265.750726] Starting crashdump kernel...
+> [  265.754644] Some CPUs may be stale, kdump will be unreliable.
+> [  265.760388] ------------[ cut here ]------------
+> [  265.765006] WARNING: CPU: 0 PID: 1360 at
+> arch/arm64/kernel/machine_kexec.c:158 machine_kexec+0x44/0x280
+> ...
+>
+> root@ls2085ardb:~# ls -al /proc/
+> ...
+> -r--------    1 root     root     15048032256 Mar 28 15:36 vmcore
+> -r--r--r--    1 root     root             0 Mar 28 15:36 vmstat
+> -r--r--r--    1 root     root             0 Mar 28 15:36 zoneinfo
+>
+> After that watched through /proc/vmcore using gdb. Seems to be working
+>
+> Best Regards,
+> Denys
+>
 
-Eric, please consider following Daniels advice for future postings.
+Hello, have a question. What i'm doing wrong with direct boot (kexec -l 
+&& kexec -e)
+
+Thanks and Regards
+Denys
+-- 
+Denys Zagorui
+GlobalLogic
+Kyiv, 03038, Protasov Business Park, N.Grinchenka, 2/1
+M +380673173093
+www.globallogic.com
+
+http://www.globallogic.com/email_disclaimer.txt
 
 _______________________________________________
 kexec mailing list
