@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f43.google.com ([74.125.83.43])
+Received: from mail-pg0-f47.google.com ([74.125.83.47])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cxV0j-0002Qa-Kr
- for kexec@lists.infradead.org; Mon, 10 Apr 2017 08:49:25 +0000
-Received: by mail-pg0-f43.google.com with SMTP id 81so102506875pgh.2
- for <kexec@lists.infradead.org>; Mon, 10 Apr 2017 01:49:01 -0700 (PDT)
-From: Pratyush Anand <panand@redhat.com>
-Subject: Re: Testing kexec/kdump on ls2085ardb (arm64)
-References: <799fca3b-8d1c-c1d0-f3d7-e3b060f962fd@globallogic.com>
-Message-ID: <98f5b725-a4d4-c881-2b78-d369d6859acc@redhat.com>
-Date: Mon, 10 Apr 2017 14:12:50 +0530
+ id 1cxVcF-0007wh-MQ
+ for kexec@lists.infradead.org; Mon, 10 Apr 2017 09:28:11 +0000
+Received: by mail-pg0-f47.google.com with SMTP id 21so103084229pgg.1
+ for <kexec@lists.infradead.org>; Mon, 10 Apr 2017 02:27:46 -0700 (PDT)
 MIME-Version: 1.0
 In-Reply-To: <799fca3b-8d1c-c1d0-f3d7-e3b060f962fd@globallogic.com>
+References: <799fca3b-8d1c-c1d0-f3d7-e3b060f962fd@globallogic.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Mon, 10 Apr 2017 14:49:04 +0530
+Message-ID: <CACi5LpMrXDjR9=g=R1B0FEnGAaA_VSuPdkxne8jc2mKws5Qrrw@mail.gmail.com>
+Subject: Re: Testing kexec/kdump on ls2085ardb (arm64)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,30 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Denys Zagorui <denys.zagorui@globallogic.com>, kexec@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
+To: Denys Zagorui <denys.zagorui@globallogic.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi Denys,
+Hi,
 
-On Friday 07 April 2017 05:22 PM, Denys Zagorui wrote:
+On Fri, Apr 7, 2017 at 5:22 PM, Denys Zagorui
+<denys.zagorui@globallogic.com> wrote:
 > Hello,
 >
 > I was testing kexec/kdump on ls2085ardb using kexec-tools from:
 >
 > https://git.linaro.org/people/takahiro.akashi/kexec-tools.git/log/?h=arm64/kdump
 >
->
 > and kernel from:
 >
 > https://git.linaro.org/people/takahiro.akashi/linux-aarch64.git/log/?h=arm64/kdump
 >
->
 > ------------------------------------------------------------------------------------
->
 >
 > Kernel required configs:
 >
@@ -54,50 +52,55 @@ On Friday 07 April 2017 05:22 PM, Denys Zagorui wrote:
 > CONFIG_PROC_VMCORE=y
 >
 > ------------------------------------------------------------------------------------
->
 > Starting kernel ...
 >
 > [    0.000000] Booting Linux on physical CPU 0x0
-> [    0.000000] Linux version 4.11.0-rc3 (denyszagorui@kbp1-ldl-f65370)
-> (gcc version 6.2.0 (GCC) ) #4 SMP PREEMPT Tue Apr 4 17:08:07 EEST 2017
+> [    0.000000] Linux version 4.11.0-rc3 (denyszagorui@kbp1-ldl-f65370) (gcc
+> version 6.2.0 (GCC) ) #4 SMP PREEMPT Tue Apr 4 17:08:07 EEST 2017
 > [    0.000000] Boot CPU: AArch64 Processor [411fd071]
 > [    0.000000] earlycon: uart8250 at MMIO 0x00000000021c0600 (options '')
 > [    0.000000] bootconsole [uart8250] enabled
 > [    0.000000] efi: Getting EFI parameters from FDT:
 > [    0.000000] efi: UEFI not found.
-> [    0.000000] crashkernel reserved: 0x00000000bfe00000 -
-> 0x00000000ffe00000 (1024 MB)
->
+> [    0.000000] crashkernel reserved: 0x00000000bfe00000 - 0x00000000ffe00000
+> (1024 MB)
+
+Having worked on LS0285A-RDB before and seeing your boot logs, seems
+you are using the u-boot bootloader to boot the Linux. If this is the
+case, please make sure that you are using the proper PPA (EL3 firmware
+responsible for managing PSCI specifications) on the board (if in
+doubt contact the NXP support team).
+
 > .....
 >
-> [    0.000000] Kernel command line: console=ttyS1,115200
-> root=/dev/mmcblk0p1 rootwait earlycon=uart8250,mmio,0x21c0600,
-> ramdisk_size=0x2000000 default_hugepagesz=2m hugepagesz=2m hugepages=256
-> crashkernel=1024M
+> [    0.000000] Kernel command line: console=ttyS1,115200 root=/dev/mmcblk0p1
+> rootwait earlycon=uart8250,mmio,0x21c0600, ramdisk_size=0x2000000
+> default_hugepagesz=2m hugepagesz=2m hugepages=256 crashkernel=1024M
+
+Try removing the hugepage allocation from the command line for initial
+tests - in case you are not using the networking applications (like
+packet forwarding) to see if that improves the results.
+
 > ------------------------------------------------------------------------------------
->
 >
 > I was trying two modes: direct boot (kexec -l than kexec -e) and kdump
 > (kexec -p than echo c > /proc/sysrq-trigger).
 >
 > Direct boot:
 > ------------------------------------------------------------------------------------
->
 > root@ls2085ardb:~# kexec -l /boot/Image --initrd=/boot/initrd.cpio
 > --command-line="console=ttyS1,115200 root=/dev/ram0
 > earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
-> arch_process_options:147: command_line: console=ttyS1,115200
-> root=/dev/ram0 earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
+> arch_process_options:147: command_line: console=ttyS1,115200 root=/dev/ram0
+> earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
 > arch_process_options:149: initrd: /boot/initrd.cpio
 > arch_process_options:150: dtb: (null)
 > Try gzip decompression.
 > Try LZMA decompression.
 > lzma_decompress_file: read on /boot/Image of 65536 bytes failed
 > kernel: 0xffffac0f8010 kernel_size: 0xe80a00
-> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System
-> RAM
-> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System
-> RAM
+> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
+> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
 > elf_arm64_probe: Not an ELF executable.
 > image_arm64_load: kernel_segment: 0000000080000000
 > image_arm64_load: text_offset:    0000000000080000
@@ -125,17 +128,6 @@ On Friday 07 April 2017 05:22 PM, Denys Zagorui wrote:
 > segment[3].mem   = 0x817ed000
 > segment[3].memsz = 0x4000
 > kexec_load failed: Device or resource busy
-
-Since kexec_load failed, so no meaning of trying `kexec -e`. However, 
-not sure whats going here.
-
-Can you also share dmesg (kernel console log)?
-
-Are you using spin-table cpu enable method? If yes, do you have 
-cpu_die() implemented?
-
-~Pratyush
-
 > entry       = 0x817ed660 flags = 0xb70000
 > nr_segments = 4
 > segment[0].buf   = 0xffffac0f8010
@@ -159,26 +151,34 @@ cpu_die() implemented?
 >
 > Not working for me:
 > kexec_load failed: Device or resource busy
->
+
+Can you please share the complete logs (may be post them on pastebin)
+from when the primary boots up, so that we can help you better with
+the same.
+
+Also I remember LS2085A-RDB had issues with kexec earlier as well
+(http://www.spinics.net/lists/arm-kernel/msg504353.html). Please check
+with NXP support if this has been resolved/root-caused at their end.
+
+Regards,
+Bhupesh
+
 >
 > kdump mode:
 > ------------------------------------------------------------------------------------
->
 > root@ls2085ardb:~# kexec -p /boot/Image --initrd=/boot/initrd.cpio
 > --command-line="console=ttyS1,115200 root=/dev/ram0
-> earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices" -d
-> arch_process_options:147: command_line: console=ttyS1,115200
-> root=/dev/ram0 earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
+> earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 rese  t_devices" -d
+> arch_process_options:147: command_line: console=ttyS1,115200 root=/dev/ram0
+> earlycon=uart8250,mmio,0x21c0600, 1 maxcpus=1 reset_devices
 > arch_process_options:149: initrd: /boot/initrd.cpio
 > arch_process_options:150: dtb: (null)
 > Try gzip decompression.
 > Try LZMA decompression.
 > lzma_decompress_file: read on /boot/Image of 65536 bytes failed
 > kernel: 0xffff86fa8010 kernel_size: 0xe80a00
-> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System
-> RAM
-> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System
-> RAM
+> get_memory_ranges_iomem_cb: 0000000080000000 - 00000000ffffffff : System RAM
+> get_memory_ranges_iomem_cb: 0000008080000000 - 00000083bfffffff : System RAM
 > elf_arm64_probe: Not an ELF executable.
 > image_arm64_load: kernel_segment: 00000000bfe00000
 > image_arm64_load: text_offset:    0000000000080000
@@ -222,8 +222,8 @@ cpu_die() implemented?
 > /proc/sysrq-trigger
 >
 > [  265.274402] sysrq: SysRq : Trigger a crash
-> [  265.278588] Unable to handle kernel NULL pointer dereference at
-> virtual address 00000000
+> [  265.278588] Unable to handle kernel NULL pointer dereference at virtual
+> address 00000000
 > ...
 > [  265.750726] Starting crashdump kernel...
 > [  265.754644] Some CPUs may be stale, kdump will be unreliable.
@@ -243,6 +243,19 @@ cpu_die() implemented?
 > Best Regards,
 > Denys
 >
+> --
+> Denys Zagorui
+> GlobalLogic
+> Kyiv, 03038, Protasov Business Park, N.Grinchenka, 2/1
+> M +380673173093
+> www.globallogic.com
+>
+> http://www.globallogic.com/email_disclaimer.txt
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
