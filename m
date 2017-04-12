@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cyDpp-0003xp-6d
- for kexec@lists.infradead.org; Wed, 12 Apr 2017 08:41:06 +0000
-Date: Wed, 12 Apr 2017 16:40:37 +0800
-From: Dave Young <dyoung@redhat.com>
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cyHm5-0001dP-50
+ for kexec@lists.infradead.org; Wed, 12 Apr 2017 12:53:29 +0000
+From: Jeff Moyer <jmoyer@redhat.com>
 Subject: Re: KASLR causes intermittent boot failures on some systems
-Message-ID: <20170412084037.GA3894@dhcp-128-65.nay.redhat.com>
 References: <x49shlk700k.fsf@segfault.boston.devel.redhat.com>
  <20170412082433.GA3546@dhcp-128-65.nay.redhat.com>
+ <20170412084037.GA3894@dhcp-128-65.nay.redhat.com>
+Date: Wed, 12 Apr 2017 08:52:36 -0400
+In-Reply-To: <20170412084037.GA3894@dhcp-128-65.nay.redhat.com> (Dave Young's
+ message of "Wed, 12 Apr 2017 16:40:37 +0800")
+Message-ID: <x49tw5t6b57.fsf@segfault.boston.devel.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170412082433.GA3546@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +25,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeff Moyer <jmoyer@redhat.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: bhe@redhat.com, linux-nvdimm@lists.01.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@kernel.org, dan.j.williams@intel.com, thgarnie@google.com
 
-On 04/12/17 at 04:24pm, Dave Young wrote:
-> On 04/07/17 at 10:41am, Jeff Moyer wrote:
-> > Hi,
-> > 
-> > commit 021182e52fe01 ("x86/mm: Enable KASLR for physical mapping memory
-> > regions") causes some of my systems with persistent memory (whether real
-> > or emulated) to fail to boot with a couple of different crash
-> > signatures.  The first signature is a NMI watchdog lockup of all but 1
-> > cpu, which causes much difficulty in extracting useful information from
-> > the console.  The second variant is an invalid paging request, listed
-> > below.
-> > 
-> > On some systems, I haven't hit this problem at all.  Other systems
-> > experience a failed boot maybe 20-30% of the time.  To reproduce it,
-> > configure some emulated pmem on your system.  You can find directions
-> > for that here: https://nvdimm.wiki.kernel.org/
-> > 
-> > Install ndctl (https://github.com/pmem/ndctl).
-> > Configure the namespace:
-> > # ndctl create-namespace -f -e namespace0.0 -m memory
-> > 
-> > Then just reboot several times (5 should be enough), and hopefully
-> > you'll hit the issue.
-> > 
-> > I've attached both my .config and the dmesg output from a successful
-> > boot at the end of this mail.
-> > 
-> [snip]
-> 
-> I did some tests about emulated pmem via memmap=, kdump kernel hangs or
-> just reboots early during compressing kernel, no clue how to handle it.
-> Since for kdump kernel kaslr is pointless a workaround is use "nokaslr"
-> 
-> In Fedora or RHEL, just add "nokaslr" in KDUMP_COMMANDLINE_APPEND
-> in /etc/sysconfig/kdump 
-> 
-> Can you try if this works?
+Dave Young <dyoung@redhat.com> writes:
 
-Oops, your problem is normal boot instead of kdump so this is two
-different problems. Seems we have not met your bug yet..
+> On 04/12/17 at 04:24pm, Dave Young wrote:
+>> I did some tests about emulated pmem via memmap=, kdump kernel hangs or
+>> just reboots early during compressing kernel, no clue how to handle it.
+>> Since for kdump kernel kaslr is pointless a workaround is use "nokaslr"
+>> 
+>> In Fedora or RHEL, just add "nokaslr" in KDUMP_COMMANDLINE_APPEND
+>> in /etc/sysconfig/kdump 
+>> 
+>> Can you try if this works?
+>
+> Oops, your problem is normal boot instead of kdump so this is two
+> different problems. Seems we have not met your bug yet..
 
-Thanks
-Dave
+Correct.
+
+-Jeff
 
 _______________________________________________
 kexec mailing list
