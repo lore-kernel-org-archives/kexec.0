@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.redfish-solutions.com ([66.232.79.143])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1cxgpB-0007tm-EU
- for kexec@lists.infradead.org; Mon, 10 Apr 2017 21:26:14 +0000
-Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
-Subject: Re: No man page for kdump (yet?)
-From: Philip Prindeville <philipp_subx@redfish-solutions.com>
-In-Reply-To: <CACi5LpNCJ-h=v31itkhAkZiXYYuAG-7jMz7g6jBuhgZtpPMhyQ@mail.gmail.com>
-Date: Mon, 10 Apr 2017 15:26:18 -0600
-Message-Id: <4078F15B-E15A-40A8-B7A7-FB5BFBC4CFCB@redfish-solutions.com>
-References: <CACi5LpNCJ-h=v31itkhAkZiXYYuAG-7jMz7g6jBuhgZtpPMhyQ@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1cyDag-0000iL-CY
+ for kexec@lists.infradead.org; Wed, 12 Apr 2017 08:25:28 +0000
+Date: Wed, 12 Apr 2017 16:24:33 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: KASLR causes intermittent boot failures on some systems
+Message-ID: <20170412082433.GA3546@dhcp-128-65.nay.redhat.com>
+References: <x49shlk700k.fsf@segfault.boston.devel.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <x49shlk700k.fsf@segfault.boston.devel.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,23 +19,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, ebiederm@xmission.com
+To: Jeff Moyer <jmoyer@redhat.com>
+Cc: bhe@redhat.com, linux-nvdimm@lists.01.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@kernel.org, dan.j.williams@intel.com, thgarnie@google.com
 
-Cj4gT24gQXByIDEwLCAyMDE3LCBhdCA1OjU3IEFNLCBCaHVwZXNoIFNoYXJtYSA8YmhzaGFybWFA
-cmVkaGF0LmNvbT4gd3JvdGU6Cj4gCj4gSGksCj4gCj4gSXQgc2VlbXMgdGhlIGxhdGVzdCB1cHN0
-cmVhbSBrZXhlYy10b29scyBkb2VzIHN1cHBvcnQgYSBjb21wbGV0ZSBtYW4KPiBwYWdlIGZvciBr
-ZHVtcCB5ZXQ6Cj4gCj4gREVTQ1JJUFRJT04KPiAgICAgICBrZHVtcCBkb2VzIG5vdCBoYXZlIGEg
-bWFuIHBhZ2UgeWV0Lgo+IAo+IEkgd291bGQgcHJvcG9zZSBoYXZpbmcgYSBwcm9wb3NlIGhhdmlu
-ZyBhIG1hbiBwYWdlIGZvciBrZHVtcCAoYXMgdGhlCj4gZmVhdHVyZSBpcyBxdWl0ZSB1c2VmdWwg
-YW5kIGhhcyBtYXR1cmVkIG92ZXIgdGltZSkuCj4gCj4gSSBjYW4gd29yayB0byBjb29rIHVwIGEg
-cGF0Y2ggZm9yIHRoZSBzYW1lLgo+IAo+IFBsZWFzZSBsZXQgbWUga25vdyBpZiB0aGlzIG1ha2Vz
-IHNlbnNlIG9yIGlmIHRoZXJlIGFyZSBhbnkgb2JqZWN0aW9ucwo+IHRvIHRoZSBzYW1lLgo+IAo+
-IFJlZ2FyZHMsCj4gQmh1cGVzaAoKClBlcnNvbmFsbHkgSeKAmWQgd2VsY29tZSBvbmUuCgotUGhp
-bGlwCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 04/07/17 at 10:41am, Jeff Moyer wrote:
+> Hi,
+> 
+> commit 021182e52fe01 ("x86/mm: Enable KASLR for physical mapping memory
+> regions") causes some of my systems with persistent memory (whether real
+> or emulated) to fail to boot with a couple of different crash
+> signatures.  The first signature is a NMI watchdog lockup of all but 1
+> cpu, which causes much difficulty in extracting useful information from
+> the console.  The second variant is an invalid paging request, listed
+> below.
+> 
+> On some systems, I haven't hit this problem at all.  Other systems
+> experience a failed boot maybe 20-30% of the time.  To reproduce it,
+> configure some emulated pmem on your system.  You can find directions
+> for that here: https://nvdimm.wiki.kernel.org/
+> 
+> Install ndctl (https://github.com/pmem/ndctl).
+> Configure the namespace:
+> # ndctl create-namespace -f -e namespace0.0 -m memory
+> 
+> Then just reboot several times (5 should be enough), and hopefully
+> you'll hit the issue.
+> 
+> I've attached both my .config and the dmesg output from a successful
+> boot at the end of this mail.
+> 
+[snip]
+
+I did some tests about emulated pmem via memmap=, kdump kernel hangs or
+just reboots early during compressing kernel, no clue how to handle it.
+Since for kdump kernel kaslr is pointless a workaround is use "nokaslr"
+
+In Fedora or RHEL, just add "nokaslr" in KDUMP_COMMANDLINE_APPEND
+in /etc/sysconfig/kdump 
+
+Can you try if this works?
+
+Thanks
+Dave
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
