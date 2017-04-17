@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 17 Apr 2017 08:12:23 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] arm64: Fix power-of-ten vs. power-of-two prefixes in
- comments etc.
-Message-ID: <20170416231223.GA31693@verge.net.au>
-References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
- <20170328065130.16019-2-takahiro.akashi@linaro.org>
- <1491207492.6020.8.camel@infradead.org>
- <20170404054144.GG16309@linaro.org>
- <e275e8c8b8d81d97b6a28b860820a27c.squirrel@twosheds.infradead.org>
- <20170404073504.GI16309@linaro.org>
- <1491291844.6218.25.camel@infradead.org>
- <20170404092604.GB14898@arm.com>
- <1492085938.20068.6.camel@infradead.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1492085938.20068.6.camel@infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d00Pp-00027T-2r
+ for kexec@lists.infradead.org; Mon, 17 Apr 2017 06:45:38 +0000
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com
+ [10.5.11.12])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mx1.redhat.com (Postfix) with ESMTPS id 3576C7AE83
+ for <kexec@lists.infradead.org>; Mon, 17 Apr 2017 06:44:41 +0000 (UTC)
+From: Pingfan Liu <piliu@redhat.com>
+Subject: [PATCH 1/2] kdump-lib-initramfs.sh: ignore the failure of echo
+Date: Mon, 17 Apr 2017 14:44:35 +0800
+Message-Id: <1492411476-10548-1-git-send-email-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,54 +21,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: mark.rutland@arm.com, panand@redhat.com, ard.biesheuvel@linaro.org, geoff@infradead.org, catalin.marinas@arm.com, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
 
-[Cc linux-renesas-soc]
+The kdump-capture.service will fail, if the following conds are meet up.
+-1. boot up a VM with the following cmd:
+qemu-kvm   -name 'avocado-vt-vm1'  -sandbox off    -machine pc   -nodefaults  -vga cirrus \
+    -drive id=drive_image1,if=none,snapshot=off,aio=native,cache=none,format=qcow2,file=$guest_img \
+    -device virtio-blk-pci,id=image1,drive=drive_image1,bootindex=0,bus=pci.0,addr=04 \
+    -device virtio-net-pci,mac=9a:4d:4e:4f:50:51,id=id3DveCw,vectors=4,netdev=idgW5YRp,bus=pci.0,addr=05 \
+    -netdev tap,id=idgW5YRp \
+    -m 2048  \
+    -smp 4,maxcpus=4,cores=2,threads=1,sockets=2  \
+    -cpu 'SandyBridge',+kvm_pv_unhalt \
+    -vnc :0  \
+    -rtc base=utc,clock=host,driftfix=slew  \
+    -boot order=cdn,once=c,menu=off,strict=off \
+    -enable-kvm \
+    -monitor stdio \
+    -qmp tcp:localhost:4444,server,nowait
+-2. in kernel cmdline with the following options: console=tty0 console=ttyS0,
 
-On Thu, Apr 13, 2017 at 01:18:58PM +0100, David Woodhouse wrote:
-> Less important than in user-visible messages, but still good practice as
-> there's still no excuse for ARM64 code to look like it was written before
-> 1996.
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Because the  "-nodefaults" option in qemu cmd excludes the emulation of serial port, the ttyS0 will
+have no real backend device. We can observe such issue in 1st kernel by:
+	echo teststring > /dev/console or
+	echo teststring > /dev/ttyS0,
+It gets the error "-bash: echo: write error: Input/output error".
+Such conds cause small issue in 1st kernel, but it is a big problem for kdump-capture and emergency
+service.
 
-Hi David,
+This patch aims to work aroundthe issue in kdump-capture service:
+dump_fs() return value will affect the following code in dracut-kdump.sh
+	DUMP_RETVAL=$?    <---
+	do_kdump_post $DUMP_RETVAL
+	if [ $? -ne 0 ]; then
+	    echo "kdump: kdump_post script exited with non-zero status!"
+	fi
 
-I'd be happy to take the Renesas portions of this change if they were
-broken out into a separate patch. The reason I would prefer a separate
-patch is to avoid the possibility of conflicts, even trivial ones.
+Although kdump-capture saves the vmcore successfully, but it exit 1 and
+fall on emergency service.
 
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi             |  2 +-
->  .../boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts      |  2 +-
->  arch/arm64/boot/dts/broadcom/ns2-xmc.dts           | 24 +++++++++++-----------
->  arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  |  2 +-
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |  2 +-
->  arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts      |  2 +-
->  arch/arm64/boot/dts/marvell/berlin4ct-stb.dts      |  2 +-
->  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     |  2 +-
->  arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |  2 +-
->  arch/arm64/boot/dts/renesas/r8a7796-m3ulcb.dts     |  2 +-
->  arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |  2 +-
->  arch/arm64/include/asm/assembler.h                 |  2 +-
->  arch/arm64/include/asm/boot.h                      |  4 ++--
->  arch/arm64/include/asm/elf.h                       |  2 +-
->  arch/arm64/include/asm/fixmap.h                    |  6 +++---
->  arch/arm64/kernel/head.S                           |  8 ++++----
->  arch/arm64/kernel/hyp-stub.S                       |  2 +-
->  arch/arm64/kernel/kaslr.c                          | 14 ++++++-------
->  arch/arm64/kernel/module-plts.c                    |  2 +-
->  arch/arm64/kernel/vmlinux.lds.S                    | 18 ++++++++--------
->  arch/arm64/mm/mmu.c                                |  2 +-
->  arch/arm64/mm/proc.S                               |  2 +-
->  22 files changed, 53 insertions(+), 53 deletions(-)
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+---
+ kdump-lib-initramfs.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-...
+diff --git a/kdump-lib-initramfs.sh b/kdump-lib-initramfs.sh
+index 4c0e2e2..2c18c87 100755
+--- a/kdump-lib-initramfs.sh
++++ b/kdump-lib-initramfs.sh
+@@ -111,6 +111,8 @@ dump_fs()
+     sync
+ 
+     echo "kdump: saving vmcore complete"
++    # improper kernel cmdline can cause the failure of echo, we can ignore this kind of failure
++    return 0
+ }
+ 
+ save_vmcore_dmesg_fs() {
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
