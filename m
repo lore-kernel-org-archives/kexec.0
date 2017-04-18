@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam03on0063.outbound.protection.outlook.com
- ([104.47.40.63] helo=NAM03-CO1-obe.outbound.protection.outlook.com)
+Received: from mail-sn1nam01on0076.outbound.protection.outlook.com
+ ([104.47.32.76] helo=NAM01-SN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d0aWP-00028K-H8
- for kexec@lists.infradead.org; Tue, 18 Apr 2017 21:18:51 +0000
+ id 1d0aWt-0002Fc-Nv
+ for kexec@lists.infradead.org; Tue, 18 Apr 2017 21:19:21 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v5 12/32] x86/mm: Insure that boot memory areas are mapped
- properly
-Date: Tue, 18 Apr 2017 16:18:22 -0500
-Message-ID: <20170418211822.10190.67435.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v5 14/32] efi: Add an EFI table address match function
+Date: Tue, 18 Apr 2017 16:18:48 -0500
+Message-ID: <20170418211848.10190.65062.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,267 +26,91 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Thomas Gleixner <tglx@linutronix.de>, Rik van Riel <riel@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Matt Fleming <matt@codeblueprint.co.uk>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Ingo Molnar <mingo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Dmitry Vyukov <dvyukov@google.com>
 
-The boot data and command line data are present in memory in a decrypted
-state and are copied early in the boot process.  The early page fault
-support will map these areas as encrypted, so before attempting to copy
-them, add decrypted mappings so the data is accessed properly when copied.
-
-For the initrd, encrypt this data in place. Since the future mapping of the
-initrd area will be mapped as encrypted the data will be accessed properly.
+Add a function that will determine if a supplied physical address matches
+the address of an EFI table.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/mem_encrypt.h |   11 +++++
- arch/x86/include/asm/pgtable.h     |    3 +
- arch/x86/kernel/head64.c           |   30 ++++++++++++--
- arch/x86/kernel/setup.c            |   10 +++++
- arch/x86/mm/mem_encrypt.c          |   77 ++++++++++++++++++++++++++++++++++++
- 5 files changed, 127 insertions(+), 4 deletions(-)
+ drivers/firmware/efi/efi.c |   33 +++++++++++++++++++++++++++++++++
+ include/linux/efi.h        |    7 +++++++
+ 2 files changed, 40 insertions(+)
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 4021203..130d7fe 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -31,6 +31,9 @@ void __init sme_early_encrypt(resource_size_t paddr,
- void __init sme_early_decrypt(resource_size_t paddr,
- 			      unsigned long size);
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index b372aad..8f606a3 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -55,6 +55,25 @@ struct efi __read_mostly efi = {
+ };
+ EXPORT_SYMBOL(efi);
  
-+void __init sme_map_bootdata(char *real_mode_data);
-+void __init sme_unmap_bootdata(char *real_mode_data);
++static unsigned long *efi_tables[] = {
++	&efi.mps,
++	&efi.acpi,
++	&efi.acpi20,
++	&efi.smbios,
++	&efi.smbios3,
++	&efi.sal_systab,
++	&efi.boot_info,
++	&efi.hcdp,
++	&efi.uga,
++	&efi.uv_systab,
++	&efi.fw_vendor,
++	&efi.runtime,
++	&efi.config_table,
++	&efi.esrt,
++	&efi.properties_table,
++	&efi.mem_attr_table,
++};
 +
- void __init sme_early_init(void);
- 
- #else	/* !CONFIG_AMD_MEM_ENCRYPT */
-@@ -54,6 +57,14 @@ static inline void __init sme_early_decrypt(resource_size_t paddr,
+ static bool disable_runtime;
+ static int __init setup_noefi(char *arg)
  {
+@@ -854,6 +873,20 @@ int efi_status_to_err(efi_status_t status)
+ 	return err;
  }
  
-+static inline void __init sme_map_bootdata(char *real_mode_data)
++bool efi_table_address_match(unsigned long phys_addr)
 +{
++	unsigned int i;
++
++	if (phys_addr == EFI_INVALID_TABLE_ADDR)
++		return false;
++
++	for (i = 0; i < ARRAY_SIZE(efi_tables); i++)
++		if (*(efi_tables[i]) == phys_addr)
++			return true;
++
++	return false;
 +}
 +
-+static inline void __init sme_unmap_bootdata(char *real_mode_data)
-+{
-+}
+ #ifdef CONFIG_KEXEC
+ static int update_efi_random_seed(struct notifier_block *nb,
+ 				  unsigned long code, void *unused)
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index ec36f42..cd768a1 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1079,6 +1079,8 @@ static inline bool efi_enabled(int feature)
+ 	return test_bit(feature, &efi.flags) != 0;
+ }
+ extern void efi_reboot(enum reboot_mode reboot_mode, const char *__unused);
 +
- static inline void __init sme_early_init(void)
++extern bool efi_table_address_match(unsigned long phys_addr);
+ #else
+ static inline bool efi_enabled(int feature)
  {
- }
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 1f9a2c4..1611bb5 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -23,6 +23,9 @@
- #ifndef __ASSEMBLY__
- #include <asm/x86_init.h>
- 
-+extern pgd_t early_level4_pgt[PTRS_PER_PGD];
-+int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
-+
- void ptdump_walk_pgd_level(struct seq_file *m, pgd_t *pgd);
- void ptdump_walk_pgd_level_checkwx(void);
- 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 9056cf9..e789e14 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -34,7 +34,6 @@
- /*
-  * Manage page tables very early on.
-  */
--extern pgd_t early_level4_pgt[PTRS_PER_PGD];
- extern pmd_t early_dynamic_pgts[EARLY_DYNAMIC_PAGE_TABLES][PTRS_PER_PMD];
- static unsigned int __initdata next_early_pgt = 2;
- pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
-@@ -48,12 +47,12 @@ static void __init reset_early_page_tables(void)
- }
- 
- /* Create a new PMD entry */
--int __init early_make_pgtable(unsigned long address)
-+int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+@@ -1092,6 +1094,11 @@ static inline bool efi_enabled(int feature)
  {
- 	unsigned long physaddr = address - __PAGE_OFFSET;
- 	pgdval_t pgd, *pgd_p;
- 	pudval_t pud, *pud_p;
--	pmdval_t pmd, *pmd_p;
-+	pmdval_t *pmd_p;
- 
- 	/* Invalid address or early pgt is done ?  */
- 	if (physaddr >= MAXMEM || read_cr3() != __sme_pa_nodebug(early_level4_pgt))
-@@ -95,12 +94,21 @@ int __init early_make_pgtable(unsigned long address)
- 		memset(pmd_p, 0, sizeof(*pmd_p) * PTRS_PER_PMD);
- 		*pud_p = (pudval_t)pmd_p - __START_KERNEL_map + phys_base + _KERNPG_TABLE;
- 	}
--	pmd = (physaddr & PMD_MASK) + early_pmd_flags;
- 	pmd_p[pmd_index(address)] = pmd;
- 
- 	return 0;
+ 	return false;
  }
- 
-+int __init early_make_pgtable(unsigned long address)
++
++static inline bool efi_table_address_match(unsigned long phys_addr)
 +{
-+	unsigned long physaddr = address - __PAGE_OFFSET;
-+	pmdval_t pmd;
-+
-+	pmd = (physaddr & PMD_MASK) + early_pmd_flags;
-+
-+	return __early_make_pgtable(address, pmd);
++	return false;
 +}
-+
- /* Don't add a printk in there. printk relies on the PDA which is not initialized 
-    yet. */
- static void __init clear_bss(void)
-@@ -123,6 +131,12 @@ static void __init copy_bootdata(char *real_mode_data)
- 	char * command_line;
- 	unsigned long cmd_line_ptr;
+ #endif
  
-+	/*
-+	 * If SME is active, this will create decrypted mappings of the
-+	 * boot data in advance of the copy operations.
-+	 */
-+	sme_map_bootdata(real_mode_data);
-+
- 	memcpy(&boot_params, real_mode_data, sizeof boot_params);
- 	sanitize_boot_params(&boot_params);
- 	cmd_line_ptr = get_cmd_line_ptr();
-@@ -130,6 +144,14 @@ static void __init copy_bootdata(char *real_mode_data)
- 		command_line = __va(cmd_line_ptr);
- 		memcpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
- 	}
-+
-+	/*
-+	 * The old boot data is no longer needed and won't be reserved,
-+	 * freeing up that memory for use by the system. If SME is active,
-+	 * we need to remove the mappings that were created so that the
-+	 * memory doesn't remain mapped as decrypted.
-+	 */
-+	sme_unmap_bootdata(real_mode_data);
- }
- 
- asmlinkage __visible void __init x86_64_start_kernel(char * real_mode_data)
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 603a166..a95800b 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -115,6 +115,7 @@
- #include <asm/microcode.h>
- #include <asm/mmu_context.h>
- #include <asm/kaslr.h>
-+#include <asm/mem_encrypt.h>
- 
- /*
-  * max_low_pfn_mapped: highest direct mapped pfn under 4GB
-@@ -374,6 +375,15 @@ static void __init reserve_initrd(void)
- 	    !ramdisk_image || !ramdisk_size)
- 		return;		/* No initrd provided by bootloader */
- 
-+	/*
-+	 * If SME is active, this memory will be marked encrypted by the
-+	 * kernel when it is accessed (including relocation). However, the
-+	 * ramdisk image was loaded decrypted by the bootloader, so make
-+	 * sure that it is encrypted before accessing it.
-+	 */
-+	if (sme_active())
-+		sme_early_encrypt(ramdisk_image, ramdisk_end - ramdisk_image);
-+
- 	initrd_start = 0;
- 
- 	mapped_size = memblock_mem_size(max_pfn_mapped);
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 18c0887..2321f05 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -19,6 +19,8 @@
- 
- #include <asm/tlbflush.h>
- #include <asm/fixmap.h>
-+#include <asm/setup.h>
-+#include <asm/bootparam.h>
- 
- /*
-  * Since SME related variables are set early in the boot process they must
-@@ -101,6 +103,81 @@ void __init sme_early_decrypt(resource_size_t paddr, unsigned long size)
- 	__sme_early_enc_dec(paddr, size, false);
- }
- 
-+static void __init sme_early_pgtable_flush(void)
-+{
-+	write_cr3(__sme_pa_nodebug(early_level4_pgt));
-+}
-+
-+static void __init __sme_early_map_unmap_mem(void *vaddr, unsigned long size,
-+					     bool map)
-+{
-+	unsigned long paddr = (unsigned long)vaddr - __PAGE_OFFSET;
-+	pmdval_t pmd_flags, pmd;
-+
-+	/* Use early_pmd_flags but remove the encryption mask */
-+	pmd_flags = __sme_clr(early_pmd_flags);
-+
-+	do {
-+		pmd = map ? (paddr & PMD_MASK) + pmd_flags : 0;
-+		__early_make_pgtable((unsigned long)vaddr, pmd);
-+
-+		vaddr += PMD_SIZE;
-+		paddr += PMD_SIZE;
-+		size = (size <= PMD_SIZE) ? 0 : size - PMD_SIZE;
-+	} while (size);
-+}
-+
-+static void __init __sme_map_unmap_bootdata(char *real_mode_data, bool map)
-+{
-+	struct boot_params *boot_data;
-+	unsigned long cmdline_paddr;
-+
-+	__sme_early_map_unmap_mem(real_mode_data, sizeof(boot_params), map);
-+	boot_data = (struct boot_params *)real_mode_data;
-+
-+	/*
-+	 * Determine the command line address only after having established
-+	 * the decrypted mapping.
-+	 */
-+	cmdline_paddr = boot_data->hdr.cmd_line_ptr |
-+			((u64)boot_data->ext_cmd_line_ptr << 32);
-+
-+	if (cmdline_paddr)
-+		__sme_early_map_unmap_mem(__va(cmdline_paddr),
-+					  COMMAND_LINE_SIZE, map);
-+}
-+
-+void __init sme_unmap_bootdata(char *real_mode_data)
-+{
-+	/* If SME is not active, the bootdata is in the correct state */
-+	if (!sme_active())
-+		return;
-+
-+	/*
-+	 * The bootdata and command line aren't needed anymore so clear
-+	 * any mapping of them.
-+	 */
-+	__sme_map_unmap_bootdata(real_mode_data, false);
-+
-+	sme_early_pgtable_flush();
-+}
-+
-+void __init sme_map_bootdata(char *real_mode_data)
-+{
-+	/* If SME is not active, the bootdata is in the correct state */
-+	if (!sme_active())
-+		return;
-+
-+	/*
-+	 * The bootdata and command line will not be encrypted, so they
-+	 * need to be mapped as decrypted memory so they can be copied
-+	 * properly.
-+	 */
-+	__sme_map_unmap_bootdata(real_mode_data, true);
-+
-+	sme_early_pgtable_flush();
-+}
-+
- void __init sme_early_init(void)
- {
- 	unsigned int i;
+ extern int efi_status_to_err(efi_status_t status);
 
 
 _______________________________________________
