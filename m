@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam03on0054.outbound.protection.outlook.com
- ([104.47.40.54] helo=NAM03-CO1-obe.outbound.protection.outlook.com)
+Received: from mail-bn3nam01on0051.outbound.protection.outlook.com
+ ([104.47.33.51] helo=NAM01-BN3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d0aXn-0002RV-SU
- for kexec@lists.infradead.org; Tue, 18 Apr 2017 21:20:17 +0000
+ id 1d0aYF-0003i2-Jc
+ for kexec@lists.infradead.org; Tue, 18 Apr 2017 21:20:45 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v5 20/32] x86/mm: Add support for changing the memory
- encryption attribute
-Date: Tue, 18 Apr 2017 16:19:50 -0500
-Message-ID: <20170418211950.10190.99981.stgit@tlendack-t1.amdoffice.net>
+Subject: [PATCH v5 23/32] swiotlb: Add warnings for use of bounce buffers
+ with SME
+Date: Tue, 18 Apr 2017 16:20:19 -0500
+Message-ID: <20170418212019.10190.24034.stgit@tlendack-t1.amdoffice.net>
 In-Reply-To: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
@@ -27,112 +27,115 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
 Cc: Thomas Gleixner <tglx@linutronix.de>, Rik van Riel <riel@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Matt Fleming <matt@codeblueprint.co.uk>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Ingo Molnar <mingo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Dmitry Vyukov <dvyukov@google.com>
 
-Add support for changing the memory encryption attribute for one or more
-memory pages. This will be useful when we have to change the AP trampoline
-area to not be encrypted. Or when we need to change the SWIOTLB area to
-not be encrypted in support of devices that can't support the encryption
-mask range.
+Add warnings to let the user know when bounce buffers are being used for
+DMA when SME is active.  Since the bounce buffers are not in encrypted
+memory, these notifications are to allow the user to determine some
+appropriate action - if necessary.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/cacheflush.h |    3 ++
- arch/x86/mm/pageattr.c            |   62 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+)
+ arch/x86/include/asm/mem_encrypt.h |   11 +++++++++++
+ include/linux/dma-mapping.h        |   11 +++++++++++
+ include/linux/mem_encrypt.h        |    6 ++++++
+ lib/swiotlb.c                      |    3 +++
+ 4 files changed, 31 insertions(+)
 
-diff --git a/arch/x86/include/asm/cacheflush.h b/arch/x86/include/asm/cacheflush.h
-index e7e1942..e064f70 100644
---- a/arch/x86/include/asm/cacheflush.h
-+++ b/arch/x86/include/asm/cacheflush.h
-@@ -12,6 +12,7 @@
-  * Executability : eXeutable, NoteXecutable
-  * Read/Write    : ReadOnly, ReadWrite
-  * Presence      : NotPresent
-+ * Encryption    : Encrypted, Decrypted
-  *
-  * Within a category, the attributes are mutually exclusive.
-  *
-@@ -47,6 +48,8 @@
- int set_memory_rw(unsigned long addr, int numpages);
- int set_memory_np(unsigned long addr, int numpages);
- int set_memory_4k(unsigned long addr, int numpages);
-+int set_memory_encrypted(unsigned long addr, int numpages);
-+int set_memory_decrypted(unsigned long addr, int numpages);
- 
- int set_memory_array_uc(unsigned long *addr, int addrinarray);
- int set_memory_array_wc(unsigned long *addr, int addrinarray);
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 669fa48..0a850b1 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -1768,6 +1768,68 @@ int set_memory_4k(unsigned long addr, int numpages)
- 					__pgprot(0), 1, 0, NULL);
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 0637b4b..b406df2 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -26,6 +26,11 @@ static inline bool sme_active(void)
+ 	return !!sme_me_mask;
  }
  
-+static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
++static inline u64 sme_dma_mask(void)
 +{
-+	struct cpa_data cpa;
-+	unsigned long start;
-+	int ret;
-+
-+	/* Nothing to do if the SME is not active */
-+	if (!sme_active())
-+		return 0;
-+
-+	/* Should not be working on unaligned addresses */
-+	if (WARN_ONCE(addr & ~PAGE_MASK, "misaligned address: %#lx\n", addr))
-+		addr &= PAGE_MASK;
-+
-+	start = addr;
-+
-+	memset(&cpa, 0, sizeof(cpa));
-+	cpa.vaddr = &addr;
-+	cpa.numpages = numpages;
-+	cpa.mask_set = enc ? __pgprot(_PAGE_ENC) : __pgprot(0);
-+	cpa.mask_clr = enc ? __pgprot(0) : __pgprot(_PAGE_ENC);
-+	cpa.pgd = init_mm.pgd;
-+
-+	/* Must avoid aliasing mappings in the highmem code */
-+	kmap_flush_unused();
-+	vm_unmap_aliases();
-+
-+	/*
-+	 * Before changing the encryption attribute, we need to flush caches.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_CLFLUSH))
-+		cpa_flush_range(start, numpages, 1);
-+	else
-+		cpa_flush_all(1);
-+
-+	ret = __change_page_attr_set_clr(&cpa, 1);
-+
-+	/*
-+	 * After changing the encryption attribute, we need to flush TLBs
-+	 * again in case any speculative TLB caching occurred (but no need
-+	 * to flush caches again).  We could just use cpa_flush_all(), but
-+	 * in case TLB flushing gets optimized in the cpa_flush_range()
-+	 * path use the same logic as above.
-+	 */
-+	if (static_cpu_has(X86_FEATURE_CLFLUSH))
-+		cpa_flush_range(start, numpages, 0);
-+	else
-+		cpa_flush_all(0);
-+
-+	return ret;
++	return ((u64)sme_me_mask << 1) - 1;
 +}
 +
-+int set_memory_encrypted(unsigned long addr, int numpages)
-+{
-+	return __set_memory_enc_dec(addr, numpages, true);
-+}
-+
-+int set_memory_decrypted(unsigned long addr, int numpages)
-+{
-+	return __set_memory_enc_dec(addr, numpages, false);
-+}
-+
- int set_pages_uc(struct page *page, int numpages)
+ void __init sme_early_encrypt(resource_size_t paddr,
+ 			      unsigned long size);
+ void __init sme_early_decrypt(resource_size_t paddr,
+@@ -50,6 +55,12 @@ static inline bool sme_active(void)
  {
- 	unsigned long addr = (unsigned long)page_address(page);
+ 	return false;
+ }
++
++static inline u64 sme_dma_mask(void)
++{
++	return 0ULL;
++}
++
+ #endif
+ 
+ static inline void __init sme_early_encrypt(resource_size_t paddr,
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 0977317..f825870 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -10,6 +10,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/kmemcheck.h>
+ #include <linux/bug.h>
++#include <linux/mem_encrypt.h>
+ 
+ /**
+  * List of possible attributes associated with a DMA mapping. The semantics
+@@ -577,6 +578,11 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
+ 
+ 	if (!dev->dma_mask || !dma_supported(dev, mask))
+ 		return -EIO;
++
++	if (sme_active() && (mask < sme_dma_mask()))
++		dev_warn_ratelimited(dev,
++				     "SME is active, device will require DMA bounce buffers\n");
++
+ 	*dev->dma_mask = mask;
+ 	return 0;
+ }
+@@ -596,6 +602,11 @@ static inline int dma_set_coherent_mask(struct device *dev, u64 mask)
+ {
+ 	if (!dma_supported(dev, mask))
+ 		return -EIO;
++
++	if (sme_active() && (mask < sme_dma_mask()))
++		dev_warn_ratelimited(dev,
++				     "SME is active, device will require DMA bounce buffers\n");
++
+ 	dev->coherent_dma_mask = mask;
+ 	return 0;
+ }
+diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
+index 3c384d1..000c430 100644
+--- a/include/linux/mem_encrypt.h
++++ b/include/linux/mem_encrypt.h
+@@ -28,6 +28,12 @@ static inline bool sme_active(void)
+ {
+ 	return false;
+ }
++
++static inline u64 sme_dma_mask(void)
++{
++	return 0ULL;
++}
++
+ #endif
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+diff --git a/lib/swiotlb.c b/lib/swiotlb.c
+index 74d6557..af3a268 100644
+--- a/lib/swiotlb.c
++++ b/lib/swiotlb.c
+@@ -509,6 +509,9 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+ 	if (no_iotlb_memory)
+ 		panic("Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
+ 
++	WARN_ONCE(sme_active(),
++		  "SME is active and the system is using DMA bounce buffers\n");
++
+ 	mask = dma_get_seg_boundary(hwdev);
+ 
+ 	tbl_dma_addr &= mask;
 
 
 _______________________________________________
