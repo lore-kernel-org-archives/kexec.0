@@ -1,18 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-MIME-Version: 1.0
-In-Reply-To: <1492085867.20068.4.camel@infradead.org>
-References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
- <20170328065130.16019-2-takahiro.akashi@linaro.org>
- <1491207492.6020.8.camel@infradead.org>
+Received: from mail-lf0-x244.google.com ([2a00:1450:4010:c07::244])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d0qcX-00061g-88
+ for kexec@lists.infradead.org; Wed, 19 Apr 2017 14:30:15 +0000
+Received: by mail-lf0-x244.google.com with SMTP id i3so2592478lfh.2
+ for <kexec@lists.infradead.org>; Wed, 19 Apr 2017 07:29:53 -0700 (PDT)
+Date: Wed, 19 Apr 2017 07:25:03 -0700
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 2/2] arm64: Fix power-of-ten vs. power-of-two prefixes in
+ comments etc.
+Message-ID: <20170419142503.GC12105@localhost>
+References: <1491207492.6020.8.camel@infradead.org>
  <20170404054144.GG16309@linaro.org>
  <e275e8c8b8d81d97b6a28b860820a27c.squirrel@twosheds.infradead.org>
- <20170404073504.GI16309@linaro.org> <1491291844.6218.25.camel@infradead.org>
- <20170404092604.GB14898@arm.com> <1492085867.20068.4.camel@infradead.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 19 Apr 2017 11:29:22 +0200
-Message-ID: <CAMuHMdWHTZ6prRD+3FWBMV+d0huNuEA6DoGagS82DbucBSMjsA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: Fix power-of-ten vs. power-of-two prefixes in
- user-visible messages
+ <20170404073504.GI16309@linaro.org>
+ <1491291844.6218.25.camel@infradead.org>
+ <20170404092604.GB14898@arm.com>
+ <1492085938.20068.6.camel@infradead.org>
+ <20170416231223.GA31693@verge.net.au>
+ <CAMuHMdXTgCEesv3imtnzs6Mcnkp22KW_rx0Jiv3_zce7bR3AVQ@mail.gmail.com>
+ <20170418141312.GD27592@e104818-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170418141312.GD27592@e104818-lin.cambridge.arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,58 +35,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, panand@redhat.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, panand@redhat.com, sgoel@codeaurora.org, arm@kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, David Woodhouse <dwmw2@infradead.org>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, James Morse <james.morse@arm.com>, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Hi David,
+On Tue, Apr 18, 2017 at 03:13:12PM +0100, Catalin Marinas wrote:
+> On Mon, Apr 17, 2017 at 01:54:49PM +0200, Geert Uytterhoeven wrote:
+> > On Mon, Apr 17, 2017 at 1:12 AM, Simon Horman <horms@verge.net.au> wrote:
+> > > On Thu, Apr 13, 2017 at 01:18:58PM +0100, David Woodhouse wrote:
+> > >> Less important than in user-visible messages, but still good practice as
+> > >> there's still no excuse for ARM64 code to look like it was written before
+> > >> 1996.
+> > >>
+> > >> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> > >
+> > > Hi David,
+> > >
+> > > I'd be happy to take the Renesas portions of this change if they were
+> > > broken out into a separate patch. The reason I would prefer a separate
+> > > patch is to avoid the possibility of conflicts, even trivial ones.
+> > 
+> > s/possibility/reality/, unless this series goes in before v4.12-rc1.
+> 
+> Maybe the arm-soc guys can take both patches on top of the other series
+> they pull, in which case, for both patches:
+> 
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
-On Thu, Apr 13, 2017 at 2:17 PM, David Woodhouse <dwmw2@infradead.org> wrote:
-> The IEC binary prefixes (Ki, Mi, Gi, etc.) were published over twenty
-> years ago. We should use them consistently, especially in user-visible
-> messages.
->
-> Sure, it doesn't often matter, just as *most* typos and spelling or
-> grammar mistakes don't often matter. But sometimes, such misuse really
-> do actually introduce ambiguity, and we should avoid that.
->
-> Conversely, there is absolutely no good reason *not* to be using the
-> binary prefixes. Some people once claimed to find them "ugly", or that
-> they would cause confusion. But those are purely down to unfamiliarity.
->
-> The perceived ugliness, and the alleged confusion, will pass with use.
->
-> The correctness, and the lack of ambiguity, will not.
->
-> ARM64 in particular, as a new platform, has no excuse for not using the
-> IEC prefixes which predate its existence by a decade and a half.
->
-> What's worse is that some people are pointing at the existing errors and
-> actually claiming that they want their *new* code to be deliberately
-> wrong in order to be "consistent" with what's there.
->
-> So let's fix the user-visible messages in all of arch/arm64 and nip
-> *that* particular stupidity in the bud...
->
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+Sure, please resend to arm@kernel.org with collected acks.
 
-For correctness:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-For the policy:
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-You're gonna need a new sweep for soon to be added occurrences, though.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-Olo
 
 _______________________________________________
 kexec mailing list
