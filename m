@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam03on0044.outbound.protection.outlook.com
- ([104.47.40.44] helo=NAM03-CO1-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d0aa9-0004Kl-Ll
- for kexec@lists.infradead.org; Tue, 18 Apr 2017 21:22:43 +0000
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v5 32/32] x86/mm: Add support to make use of Secure Memory
- Encryption
-Date: Tue, 18 Apr 2017 16:22:23 -0500
-Message-ID: <20170418212223.10190.85121.stgit@tlendack-t1.amdoffice.net>
-In-Reply-To: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
+In-Reply-To: <1492085867.20068.4.camel@infradead.org>
+References: <20170328064831.15894-1-takahiro.akashi@linaro.org>
+ <20170328065130.16019-2-takahiro.akashi@linaro.org>
+ <1491207492.6020.8.camel@infradead.org>
+ <20170404054144.GG16309@linaro.org>
+ <e275e8c8b8d81d97b6a28b860820a27c.squirrel@twosheds.infradead.org>
+ <20170404073504.GI16309@linaro.org> <1491291844.6218.25.camel@infradead.org>
+ <20170404092604.GB14898@arm.com> <1492085867.20068.4.camel@infradead.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 19 Apr 2017 11:29:22 +0200
+Message-ID: <CAMuHMdWHTZ6prRD+3FWBMV+d0huNuEA6DoGagS82DbucBSMjsA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: Fix power-of-ten vs. power-of-two prefixes in
+ user-visible messages
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,150 +25,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rik van Riel <riel@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Matt Fleming <matt@codeblueprint.co.uk>, Joerg Roedel <joro@8bytes.org>, Radim =?utf-8?b?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Ingo Molnar <mingo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Dmitry Vyukov <dvyukov@google.com>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, panand@redhat.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Geoff Levand <geoff@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Mark Salter <msalter@redhat.com>, bauerman@linux.vnet.ibm.com, sgoel@codeaurora.org, Dave Young <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Add support to check if SME has been enabled and if memory encryption
-should be activated (checking of command line option based on the
-configuration of the default state).  If memory encryption is to be
-activated, then the encryption mask is set and the kernel is encrypted
-"in place."
+Hi David,
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/kernel/head_64.S |    1 +
- arch/x86/mm/mem_encrypt.c |   83 +++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 80 insertions(+), 4 deletions(-)
+On Thu, Apr 13, 2017 at 2:17 PM, David Woodhouse <dwmw2@infradead.org> wrote:
+> The IEC binary prefixes (Ki, Mi, Gi, etc.) were published over twenty
+> years ago. We should use them consistently, especially in user-visible
+> messages.
+>
+> Sure, it doesn't often matter, just as *most* typos and spelling or
+> grammar mistakes don't often matter. But sometimes, such misuse really
+> do actually introduce ambiguity, and we should avoid that.
+>
+> Conversely, there is absolutely no good reason *not* to be using the
+> binary prefixes. Some people once claimed to find them "ugly", or that
+> they would cause confusion. But those are purely down to unfamiliarity.
+>
+> The perceived ugliness, and the alleged confusion, will pass with use.
+>
+> The correctness, and the lack of ambiguity, will not.
+>
+> ARM64 in particular, as a new platform, has no excuse for not using the
+> IEC prefixes which predate its existence by a decade and a half.
+>
+> What's worse is that some people are pointing at the existing errors and
+> actually claiming that they want their *new* code to be deliberately
+> wrong in order to be "consistent" with what's there.
+>
+> So let's fix the user-visible messages in all of arch/arm64 and nip
+> *that* particular stupidity in the bud...
+>
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index abfe5ee..77d7495 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -97,6 +97,7 @@ startup_64:
- 	 * Save the returned mask in %r12 for later use.
- 	 */
- 	push	%rsi
-+	movq	%rsi, %rdi
- 	call	sme_enable
- 	pop	%rsi
- 	movq	%rax, %r12
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 7dc4e98..b517cbc 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -28,6 +28,13 @@
- #include <asm/cacheflush.h>
- #include <asm/sections.h>
- #include <asm/mem_encrypt.h>
-+#include <asm/processor-flags.h>
-+#include <asm/msr.h>
-+#include <asm/cmdline.h>
-+
-+static char sme_cmdline_arg[] __initdata = "mem_encrypt";
-+static char sme_cmdline_on[]  __initdata = "on";
-+static char sme_cmdline_off[] __initdata = "off";
- 
- /*
-  * Since SME related variables are set early in the boot process they must
-@@ -255,6 +262,8 @@ void __init mem_encrypt_init(void)
- 
- 	/* Call into SWIOTLB to update the SWIOTLB DMA buffers */
- 	swiotlb_update_mem_attributes();
-+
-+	pr_info("AMD Secure Memory Encryption (SME) active\n");
- }
- 
- void swiotlb_set_mem_attributes(void *vaddr, unsigned long size)
-@@ -531,8 +540,74 @@ void __init sme_encrypt_kernel(void)
- 	native_write_cr3(native_read_cr3());
- }
- 
--unsigned long __init sme_enable(void)
-+unsigned long __init sme_enable(struct boot_params *bp)
- {
-+	const char *cmdline_ptr, *cmdline_arg, *cmdline_on, *cmdline_off;
-+	unsigned int eax, ebx, ecx, edx;
-+	unsigned long me_mask;
-+	bool active_by_default;
-+	char buffer[16];
-+	u64 msr;
-+
-+	/* Check for the SME support leaf */
-+	eax = 0x80000000;
-+	ecx = 0;
-+	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	if (eax < 0x8000001f)
-+		goto out;
-+
-+	/*
-+	 * Check for the SME feature:
-+	 *   CPUID Fn8000_001F[EAX] - Bit 0
-+	 *     Secure Memory Encryption support
-+	 *   CPUID Fn8000_001F[EBX] - Bits 5:0
-+	 *     Pagetable bit position used to indicate encryption
-+	 */
-+	eax = 0x8000001f;
-+	ecx = 0;
-+	native_cpuid(&eax, &ebx, &ecx, &edx);
-+	if (!(eax & 1))
-+		goto out;
-+	me_mask = 1UL << (ebx & 0x3f);
-+
-+	/* Check if SME is enabled */
-+	msr = __rdmsr(MSR_K8_SYSCFG);
-+	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
-+		goto out;
-+
-+	/*
-+	 * Fixups have not been applied to phys_base yet, so we must obtain
-+	 * the address to the SME command line option data in the following
-+	 * way.
-+	 */
-+	asm ("lea sme_cmdline_arg(%%rip), %0"
-+	     : "=r" (cmdline_arg)
-+	     : "p" (sme_cmdline_arg));
-+	asm ("lea sme_cmdline_on(%%rip), %0"
-+	     : "=r" (cmdline_on)
-+	     : "p" (sme_cmdline_on));
-+	asm ("lea sme_cmdline_off(%%rip), %0"
-+	     : "=r" (cmdline_off)
-+	     : "p" (sme_cmdline_off));
-+
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT))
-+		active_by_default = true;
-+	else
-+		active_by_default = false;
-+
-+	cmdline_ptr = (const char *)((u64)bp->hdr.cmd_line_ptr |
-+				     ((u64)bp->ext_cmd_line_ptr << 32));
-+
-+	cmdline_find_option(cmdline_ptr, cmdline_arg, buffer, sizeof(buffer));
-+
-+	if (strncmp(buffer, cmdline_on, sizeof(buffer)) == 0)
-+		sme_me_mask = me_mask;
-+	else if (strncmp(buffer, cmdline_off, sizeof(buffer)) == 0)
-+		sme_me_mask = 0;
-+	else
-+		sme_me_mask = active_by_default ? me_mask : 0;
-+
-+out:
- 	return sme_me_mask;
- }
- 
-@@ -543,9 +618,9 @@ unsigned long sme_get_me_mask(void)
- 
- #else	/* !CONFIG_AMD_MEM_ENCRYPT */
- 
--void __init sme_encrypt_kernel(void)	{ }
--unsigned long __init sme_enable(void)	{ return 0; }
-+void __init sme_encrypt_kernel(void)			{ }
-+unsigned long __init sme_enable(struct boot_params *bp)	{ return 0; }
- 
--unsigned long sme_get_me_mask(void)	{ return 0; }
-+unsigned long sme_get_me_mask(void)			{ return 0; }
- 
- #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+For correctness:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+For the policy:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+You're gonna need a new sweep for soon to be added occurrences, though.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
