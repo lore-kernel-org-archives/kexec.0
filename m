@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1d0rh7-0003Iu-UR
- for kexec@lists.infradead.org; Wed, 19 Apr 2017 15:39:07 +0000
-Date: Wed, 19 Apr 2017 17:38:19 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 01/32] x86: Documentation for AMD Secure Memory
- Encryption (SME)
-Message-ID: <20170419153818.3pl3gkdpe42lve44@pd.tnic>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211625.10190.52568.stgit@tlendack-t1.amdoffice.net>
- <20170419090224.frmv2jhwfwoxvdie@pd.tnic>
- <bbda868c-9b34-4404-f563-98b000124ac5@amd.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <bbda868c-9b34-4404-f563-98b000124ac5@amd.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by casper.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d1ASP-0007C8-1m
+ for kexec@lists.infradead.org; Thu, 20 Apr 2017 11:41:06 +0000
+From: Xunlei Pang <xlpang@redhat.com>
+Subject: [PATCH v4 2/3] powerpc/fadump: Use the correct VMCOREINFO_NOTE_SIZE
+ for phdr
+Date: Thu, 20 Apr 2017 19:39:33 +0800
+Message-Id: <1492688374-27903-2-git-send-email-xlpang@redhat.com>
+In-Reply-To: <1492688374-27903-1-git-send-email-xlpang@redhat.com>
+References: <1492688374-27903-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +18,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Baoquan He <bhe@redhat.com>, Xunlei Pang <xlpang@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
 
-On Wed, Apr 19, 2017 at 09:23:47AM -0500, Tom Lendacky wrote:
-> Btw, I tried to update all the subjects and descriptions to be
-> more descriptive but I'm sure there is still room for improvement
-> so keep the comments on them coming.
+vmcoreinfo_max_size stands for the vmcoreinfo_data, the
+correct one we should use is vmcoreinfo_note whose total
+size is VMCOREINFO_NOTE_SIZE.
 
-No worries there :)
+Like explained in commit 77019967f06b ("kdump: fix exported
+size of vmcoreinfo note"), it should not affect the actual
+function, but we better fix it, also this change should be
+safe and backward compatible.
 
-> Note, just because the bit is set in %cr3 doesn't mean the full
-> hierarchy is encrypted. Each level in the hierarchy needs to have the
-> encryption bit set. So, theoretically, you could have the encryption
-> bit set in %cr3 so that the PGD is encrypted, but not set the encryption
-> bit in the PGD entry for a PUD and so the PUD pointed to by that entry
-> would not be encrypted.
+After this, we can get rid of variable vmcoreinfo_max_size,
+let's use the corresponding macros directly, fewer variables
+means more safety for vmcoreinfo operation.
 
-Ha, that is a nice detail I didn't realize. You could add it to the text.
+Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+---
+v3->v4:
+-Rebased on the latest linux-next
 
-Thanks.
+ arch/powerpc/kernel/fadump.c | 3 +--
+ include/linux/crash_core.h   | 1 -
+ kernel/crash_core.c          | 3 +--
+ 3 files changed, 2 insertions(+), 5 deletions(-)
 
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 466569e..7bd6cd0 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -893,8 +893,7 @@ static int fadump_create_elfcore_headers(char *bufp)
+ 
+ 	phdr->p_paddr	= fadump_relocate(paddr_vmcoreinfo_note());
+ 	phdr->p_offset	= phdr->p_paddr;
+-	phdr->p_memsz	= vmcoreinfo_max_size;
+-	phdr->p_filesz	= vmcoreinfo_max_size;
++	phdr->p_memsz	= phdr->p_filesz = VMCOREINFO_NOTE_SIZE;
+ 
+ 	/* Increment number of program headers. */
+ 	(elf->e_phnum)++;
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index ba283a2..7d6bc7b 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -55,7 +55,6 @@
+ 
+ extern u32 *vmcoreinfo_note;
+ extern size_t vmcoreinfo_size;
+-extern size_t vmcoreinfo_max_size;
+ 
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 0321f04..43cdb00 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -16,7 +16,6 @@
+ /* vmcoreinfo stuff */
+ static unsigned char *vmcoreinfo_data;
+ size_t vmcoreinfo_size;
+-size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
+ u32 *vmcoreinfo_note;
+ 
+ /*
+@@ -343,7 +342,7 @@ void vmcoreinfo_append_str(const char *fmt, ...)
+ 	r = vscnprintf(buf, sizeof(buf), fmt, args);
+ 	va_end(args);
+ 
+-	r = min(r, vmcoreinfo_max_size - vmcoreinfo_size);
++	r = min(r, VMCOREINFO_BYTES - vmcoreinfo_size);
+ 
+ 	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+ 
 -- 
-Regards/Gruss,
-    Boris.
+1.8.3.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
