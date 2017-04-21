@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 50-200-209-228-static.hfc.comcastbusiness.net ([50.200.209.228]
- helo=mail.litepoint.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d1hQg-0000fu-59
- for kexec@lists.infradead.org; Fri, 21 Apr 2017 22:53:31 +0000
-From: Rudici Cazeao <rudici.cazeao@litepoint.com>
-Subject: ARM lockup during Kexec operation
-Date: Fri, 21 Apr 2017 22:53:09 +0000
-Message-ID: <6aae0d1c65ae480fbfc73bbf2aa019c5@LPHQEX2013.litepoint.internal>
-Content-Language: en-US
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1d1a7f-00062W-D3
+ for kexec@lists.infradead.org; Fri, 21 Apr 2017 15:05:25 +0000
+Date: Fri, 21 Apr 2017 16:55:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 07/32] x86/mm: Add support to enable SME in early boot
+ processing
+Message-ID: <20170421145555.v3xeaijv3vjclsos@pd.tnic>
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211735.10190.29562.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170418211735.10190.29562.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,68 +21,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-Using kexec on a dual-core arm processor (arm7), the non-boot CPU (CPU1) ap=
-pears to be locking up during kexec.
+On Tue, Apr 18, 2017 at 04:17:35PM -0500, Tom Lendacky wrote:
+> Add support to the early boot code to use Secure Memory Encryption (SME).
+> Since the kernel has been loaded into memory in a decrypted state, support
+> is added to encrypt the kernel in place and update the early pagetables
 
-The SoC is mach-transcede=A0 =
+s/support is added to //
 
-The kernel version is 3.0.51-rt75
+> with the memory encryption mask so that new pagetable entries will use
+> memory encryption.
+> 
 
-The issue is localized to=A0 linux-3.0.51/arch\arm/mach-transcede/hotplug.c.
+-- 
+Regards/Gruss,
+    Boris.
 
-
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpu_enter_lowpower();
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 platform_do_lowpower(cpu, &spurious);
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 cpu_leave_lowpower().=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 / *=A0 bring this CPU back into the world of=
- cache=A0 coherency, and then restore interrupts=A0 */
-
-
-static inline void platform_do_lowpower(unsigned int cpu, int *spurious)
-{
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 for (;;) {=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 / * there is no power-control hardware on=
- this platform, so all we can do is put the core into WFI; this is safe as =
-the calling code will have already disabled interrupts */
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 wfe();
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 if (pen_release =3D=3D cpu) {
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 break;=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 / * OK, proper wakeup, we'=
-re done */
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0}
-
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 (*spurious)++;=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 / * Getting here, means that we have come out of WFI without having bee=
-n woken up - Just note it happening - when we're woken, we can report its o=
-ccurrence.
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-}
-
-
-
-When the issue occurs the non-boot CPU (ie CPU 1) is entering the platform_=
-do_lowpower sequence where it should wait until pren_release is set to 1 by=
-=A0 CPU1 =
-
-
-
-Please note that=A0 This failure is random. It usually happens somewhere be=
-tween 300 and 5000 kexec loops.
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
