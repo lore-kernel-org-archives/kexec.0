@@ -1,30 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d2flQ-0000jD-OX
- for kexec@lists.infradead.org; Mon, 24 Apr 2017 15:18:58 +0000
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v3OF3jJq099965
- for <kexec@lists.infradead.org>; Mon, 24 Apr 2017 11:18:35 -0400
-Received: from e06smtp12.uk.ibm.com (e06smtp12.uk.ibm.com [195.75.94.108])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2a1g8qdu16-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Mon, 24 Apr 2017 11:18:34 -0400
-Received: from localhost
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Mon, 24 Apr 2017 16:18:32 +0100
-Date: Mon, 24 Apr 2017 17:18:25 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 1/3] kexec: Move vmcoreinfo out of the kernel's .bss
- section
-In-Reply-To: <1492688374-27903-1-git-send-email-xlpang@redhat.com>
-References: <1492688374-27903-1-git-send-email-xlpang@redhat.com>
+Received: from mail-bl2nam02on0046.outbound.protection.outlook.com
+ ([104.47.38.46] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d2gJq-0000pl-5r
+ for kexec@lists.infradead.org; Mon, 24 Apr 2017 15:54:31 +0000
+Subject: Re: [PATCH v5 09/32] x86/mm: Provide general kernel support for
+ memory encryption
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211754.10190.25082.stgit@tlendack-t1.amdoffice.net>
+ <0106e3fc-9780-e872-2274-fecf79c28923@intel.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <9fc79e28-ad64-1c2f-4c46-a4efcdd550b0@amd.com>
+Date: Mon, 24 Apr 2017 10:53:58 -0500
 MIME-Version: 1.0
-Message-Id: <20170424171825.2aafb644@TP-holzheu>
+In-Reply-To: <0106e3fc-9780-e872-2274-fecf79c28923@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,218 +22,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Xunlei Pang <xlpang@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>, Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, linux-arch@vger.kernel.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rik van Riel <riel@redhat.com>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Matt Fleming <matt@codeblueprint.co.uk>, Joerg Roedel <joro@8bytes.org>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Ingo Molnar <mingo@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, Alexander Potapenko <glider@google.com>, Dave Young <dyoung@redhat.com>, Larry Woodman <lwoodman@redhat.com>, Dmitry Vyukov <dvyukov@google.com>
 
-Am Thu, 20 Apr 2017 19:39:32 +0800
-schrieb Xunlei Pang <xlpang@redhat.com>:
+On 4/21/2017 4:52 PM, Dave Hansen wrote:
+> On 04/18/2017 02:17 PM, Tom Lendacky wrote:
+>> @@ -55,7 +57,7 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
+>>  	__phys_addr_symbol(__phys_reloc_hide((unsigned long)(x)))
+>>
+>>  #ifndef __va
+>> -#define __va(x)			((void *)((unsigned long)(x)+PAGE_OFFSET))
+>> +#define __va(x)			((void *)(__sme_clr(x) + PAGE_OFFSET))
+>>  #endif
+>
+> It seems wrong to be modifying __va().  It currently takes a physical
+> address, and this modifies it to take a physical address plus the SME bits.
 
-> As Eric said,
-> "what we need to do is move the variable vmcoreinfo_note out
-> of the kernel's .bss section.  And modify the code to regenerate
-> and keep this information in something like the control page.
-> 
-> Definitely something like this needs a page all to itself, and ideally
-> far away from any other kernel data structures.  I clearly was not
-> watching closely the data someone decided to keep this silly thing
-> in the kernel's .bss section."
-> 
-> This patch allocates extra pages for these vmcoreinfo_XXX variables,
-> one advantage is that it enhances some safety of vmcoreinfo, because
-> vmcoreinfo now is kept far away from other kernel data structures.
-> 
-> Suggested-by: Eric Biederman <ebiederm@xmission.com>
-> Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Signed-off-by: Xunlei Pang <xlpang@redhat.com>
+This actually modifies it to be sure the encryption bit is not part of
+the physical address.
 
-Now s390 seems to work with the patches. I tested kdump and
-zfcpdump.
+>
+> How does that end up ever happening?  If we are pulling physical
+> addresses out of the page tables, we use p??_phys().  I'd expect *those*
+> to be masking off the SME bits.
+>
+> Is it these cases?
+>
+> 	pgd_t *base = __va(read_cr3());
+>
+> For those, it seems like we really want to create two modes of reading
+> cr3.  One that truly reads CR3 and another that reads the pgd's physical
+> address out of CR3.  Then you only do the SME masking on the one
+> fetching a physical address, and the SME bits never leak into __va().
 
-Tested-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+I'll investigate this and see if I can remove the mod to __va().
 
+Thanks,
+Tom
 
-> ---
-> v3->v4:
-> -Rebased on the latest linux-next
-> -Handle S390 vmcoreinfo_note properly
-> -Handle the newly-added xen/mmu_pv.c
-> 
->  arch/ia64/kernel/machine_kexec.c |  5 -----
->  arch/s390/kernel/machine_kexec.c |  1 +
->  arch/s390/kernel/setup.c         |  6 ------
->  arch/x86/kernel/crash.c          |  2 +-
->  arch/x86/xen/mmu_pv.c            |  4 ++--
->  include/linux/crash_core.h       |  2 +-
->  kernel/crash_core.c              | 27 +++++++++++++++++++++++----
->  kernel/ksysfs.c                  |  2 +-
->  8 files changed, 29 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-> index 599507b..c14815d 100644
-> --- a/arch/ia64/kernel/machine_kexec.c
-> +++ b/arch/ia64/kernel/machine_kexec.c
-> @@ -163,8 +163,3 @@ void arch_crash_save_vmcoreinfo(void)
->  #endif
->  }
-> 
-> -phys_addr_t paddr_vmcoreinfo_note(void)
-> -{
-> -	return ia64_tpa((unsigned long)(char *)&vmcoreinfo_note);
-> -}
-> -
-> diff --git a/arch/s390/kernel/machine_kexec.c b/arch/s390/kernel/machine_kexec.c
-> index 49a6bd4..3d0b14a 100644
-> --- a/arch/s390/kernel/machine_kexec.c
-> +++ b/arch/s390/kernel/machine_kexec.c
-> @@ -246,6 +246,7 @@ void arch_crash_save_vmcoreinfo(void)
->  	VMCOREINFO_SYMBOL(lowcore_ptr);
->  	VMCOREINFO_SYMBOL(high_memory);
->  	VMCOREINFO_LENGTH(lowcore_ptr, NR_CPUS);
-> +	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
->  }
-> 
->  void machine_shutdown(void)
-> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> index 3ae756c..3d1d808 100644
-> --- a/arch/s390/kernel/setup.c
-> +++ b/arch/s390/kernel/setup.c
-> @@ -496,11 +496,6 @@ static void __init setup_memory_end(void)
->  	pr_notice("The maximum memory size is %luMB\n", memory_end >> 20);
->  }
-> 
-> -static void __init setup_vmcoreinfo(void)
-> -{
-> -	mem_assign_absolute(S390_lowcore.vmcore_info, paddr_vmcoreinfo_note());
-> -}
-> -
->  #ifdef CONFIG_CRASH_DUMP
-> 
->  /*
-> @@ -939,7 +934,6 @@ void __init setup_arch(char **cmdline_p)
->  #endif
-> 
->  	setup_resources();
-> -	setup_vmcoreinfo();
->  	setup_lowcore();
->  	smp_fill_possible_mask();
->  	cpu_detect_mhz_feature();
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 22217ec..44404e2 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -457,7 +457,7 @@ static int prepare_elf64_headers(struct crash_elf_data *ced,
->  	bufp += sizeof(Elf64_Phdr);
->  	phdr->p_type = PT_NOTE;
->  	phdr->p_offset = phdr->p_paddr = paddr_vmcoreinfo_note();
-> -	phdr->p_filesz = phdr->p_memsz = sizeof(vmcoreinfo_note);
-> +	phdr->p_filesz = phdr->p_memsz = VMCOREINFO_NOTE_SIZE;
->  	(ehdr->e_phnum)++;
-> 
->  #ifdef CONFIG_X86_64
-> diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
-> index 9d9ae66..35543fa 100644
-> --- a/arch/x86/xen/mmu_pv.c
-> +++ b/arch/x86/xen/mmu_pv.c
-> @@ -2723,8 +2723,8 @@ void xen_destroy_contiguous_region(phys_addr_t pstart, unsigned int order)
->  phys_addr_t paddr_vmcoreinfo_note(void)
->  {
->  	if (xen_pv_domain())
-> -		return virt_to_machine(&vmcoreinfo_note).maddr;
-> +		return virt_to_machine(vmcoreinfo_note).maddr;
->  	else
-> -		return __pa_symbol(&vmcoreinfo_note);
-> +		return __pa(vmcoreinfo_note);
->  }
->  #endif /* CONFIG_KEXEC_CORE */
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index eb71a70..ba283a2 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -53,7 +53,7 @@
->  #define VMCOREINFO_PHYS_BASE(value) \
->  	vmcoreinfo_append_str("PHYS_BASE=%lx\n", (unsigned long)value)
-> 
-> -extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-> +extern u32 *vmcoreinfo_note;
->  extern size_t vmcoreinfo_size;
->  extern size_t vmcoreinfo_max_size;
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index fcbd568..0321f04 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -14,10 +14,10 @@
->  #include <asm/sections.h>
-> 
->  /* vmcoreinfo stuff */
-> -static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
-> -u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-> +static unsigned char *vmcoreinfo_data;
->  size_t vmcoreinfo_size;
-> -size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
-> +size_t vmcoreinfo_max_size = VMCOREINFO_BYTES;
-> +u32 *vmcoreinfo_note;
-> 
->  /*
->   * parsing the "crashkernel" commandline
-> @@ -326,6 +326,9 @@ static void update_vmcoreinfo_note(void)
-> 
->  void crash_save_vmcoreinfo(void)
->  {
-> +	if (!vmcoreinfo_note)
-> +		return;
-> +
->  	vmcoreinfo_append_str("CRASHTIME=%ld\n", get_seconds());
->  	update_vmcoreinfo_note();
->  }
-> @@ -356,11 +359,27 @@ void __weak arch_crash_save_vmcoreinfo(void)
-> 
->  phys_addr_t __weak paddr_vmcoreinfo_note(void)
->  {
-> -	return __pa_symbol((unsigned long)(char *)&vmcoreinfo_note);
-> +	return __pa(vmcoreinfo_note);
->  }
-> 
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
-> +	/* One page should be enough for VMCOREINFO_BYTES under all archs */
-> +	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-> +	if (!vmcoreinfo_data) {
-> +		pr_warn("Memory allocation for vmcoreinfo_data failed\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	vmcoreinfo_note = alloc_pages_exact(VMCOREINFO_NOTE_SIZE,
-> +						GFP_KERNEL | __GFP_ZERO);
-> +	if (!vmcoreinfo_note) {
-> +		free_page((unsigned long)vmcoreinfo_data);
-> +		vmcoreinfo_data = NULL;
-> +		pr_warn("Memory allocation for vmcoreinfo_note failed\n");
-> +		return -ENOMEM;
-> +	}
-> +
->  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
->  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
-> 
-> diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
-> index 23cd706..c40a4e5 100644
-> --- a/kernel/ksysfs.c
-> +++ b/kernel/ksysfs.c
-> @@ -134,7 +134,7 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
->  {
->  	phys_addr_t vmcore_base = paddr_vmcoreinfo_note();
->  	return sprintf(buf, "%pa %x\n", &vmcore_base,
-> -		       (unsigned int)sizeof(vmcoreinfo_note));
-> +			(unsigned int)VMCOREINFO_NOTE_SIZE);
->  }
->  KERNEL_ATTR_RO(vmcoreinfo);
-> 
-
+>
 
 _______________________________________________
 kexec mailing list
