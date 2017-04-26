@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-wm0-x241.google.com ([2a00:1450:400c:c09::241])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3HaU-0003Pj-2A
- for kexec@lists.infradead.org; Wed, 26 Apr 2017 07:42:11 +0000
-From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH v2 2/2] x86_64/kexec: Use PUD level 1GB page for identity
- mapping if available
-Date: Wed, 26 Apr 2017 15:42:42 +0800
-Message-Id: <1493192562-6669-2-git-send-email-xlpang@redhat.com>
-In-Reply-To: <1493192562-6669-1-git-send-email-xlpang@redhat.com>
+ id 1d3I0v-0006ZS-Vd
+ for kexec@lists.infradead.org; Wed, 26 Apr 2017 08:09:31 +0000
+Received: by mail-wm0-x241.google.com with SMTP id d79so31154954wmi.2
+ for <kexec@lists.infradead.org>; Wed, 26 Apr 2017 01:09:09 -0700 (PDT)
+Date: Wed, 26 Apr 2017 10:09:05 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 1/2] x86/mm/ident_map: Add PUD level 1GB page support
+Message-ID: <20170426080905.gvfjwpoknsgcrsyd@gmail.com>
 References: <1493192562-6669-1-git-send-email-xlpang@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1493192562-6669-1-git-send-email-xlpang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,59 +21,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, Xunlei Pang <xlpang@redhat.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Xunlei Pang <xlpang@redhat.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Eric Biederman <ebiederm@xmission.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
 
-Kexec setups all identity mappings before booting into the new
-kernel, and this will cause extra memory consumption for paging
-structures which is quite considerable on modern machines with
-huge memory.
 
-E.g. On one 32TB machine, in kdump case, it could waste around
-128MB (around 4MB/TB) from the reserved memory after kexec set
-all the identity mappings using the current 2MB page, plus the
-loaded kdump kernel, initramfs, etc, it caused kexec syscall
--NOMEM failure. As a result, we had to enlarge reserved memory
-via "crashkernel=X".
+* Xunlei Pang <xlpang@redhat.com> wrote:
 
-This causes some trouble for distributions that use policies
-to evaluate the proper "crashkernel=X" value for users.
+> The current kernel_ident_mapping_init() creates the identity
+> mapping using 2MB page(PMD level), this patch adds the 1GB
+> page(PUD level) support.
+> 
+> This is useful on large machines to save some reserved memory
+> (as paging structures) in the kdump case when kexec setups up
+> identity mappings before booting into the new kernel.
+> 
+> We will utilize this new support in the following patch.
 
-Given that on machines with large number of memory, 1GB feature
-is very likely available, and that kernel_ident_mapping_init()
-supports PUD level 1GB page, to solve this problem, we use 1GB
-size page to create the identity mapping pgtable for kdump if
-1GB feature is available.
+Well, the primary advantage would be better TLB coverage/performance, because we'd 
+utilize 1GB TLBs instead of 2MB ones, right?
 
-Signed-off-by: Xunlei Pang <xlpang@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Any kexec fallout is secondary.
 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1d4f2b0..613df62 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -122,6 +122,11 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 
- 	level4p = (pgd_t *)__va(start_pgtable);
- 	clear_page(level4p);
-+
-+	/* Use PUD level page if available, to save crash memory for kdump */
-+	if (direct_gbpages)
-+		info.direct_gbpages = true;
-+
- 	for (i = 0; i < nr_pfn_mapped; i++) {
- 		mstart = pfn_mapped[i].start << PAGE_SHIFT;
- 		mend   = pfn_mapped[i].end << PAGE_SHIFT;
--- 
-1.8.3.1
+And I'd like to hear more about the primary advantage: what are the effects of 
+this change on a typical test system you have access to:
 
+- For example what percentage of the identity mapping was 4K mapped (if any) and
+  2MB mapped - and how did this change due to the patch - how many 2MB mappings
+  remained and how many 1GB mappings were added?
+
+- Is there anything else we could do to improve the in-RAM layout of kernel data 
+  structures. For example IIRC the CPU breaks up all TLBs under 2MB physical into 
+  4K TLBs. Is this the current limit and could we just reserve all that space and 
+  not use it for anything important? 2MB of RAM wasted is a very small amount of 
+  space, compared to the potential performance advantages.
+
+>  	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
+>  	void *context;			 /* context for alloc_pgt_page */
+> -	unsigned long pmd_flag;		 /* page flag for PMD entry */
+> +	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
+>  	unsigned long offset;		 /* ident mapping offset */
+> +	bool direct_gbpages;		/* PUD level 1GB page support */
+
+Doesn't follow the existing alignment.
+
+Thanks,
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
