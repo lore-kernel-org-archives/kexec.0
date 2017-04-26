@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3HNx-0005wv-4j
- for kexec@lists.infradead.org; Wed, 26 Apr 2017 07:29:18 +0000
-Date: Wed, 26 Apr 2017 15:28:46 +0800
+ id 1d3HQv-0007ZO-2I
+ for kexec@lists.infradead.org; Wed, 26 Apr 2017 07:32:19 +0000
+Date: Wed, 26 Apr 2017 15:31:48 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] memmap: Parse "Reserved" together with "reserved"
-Message-ID: <20170426072846.GA7344@dhcp-128-65.nay.redhat.com>
+Message-ID: <20170426073148.GA7367@dhcp-128-65.nay.redhat.com>
 References: <20170426005526.27313-1-yinghai@kernel.org>
  <20170426062247.fbl62xrkrm7tvnga@gmail.com>
+ <20170426072846.GA7344@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170426062247.fbl62xrkrm7tvnga@gmail.com>
+In-Reply-To: <20170426072846.GA7344@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,46 +28,51 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>
 Cc: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, Yinghai Lu <yinghai@kernel.org>, linux-kernel@vger.kernel.org
 
-On 04/26/17 at 08:22am, Ingo Molnar wrote:
-> 
-> * Yinghai Lu <yinghai@kernel.org> wrote:
-> 
-> > For x86 with recent kernel after
-> >  commit 640e1b38b0 ("x86/boot/e820: Basic cleanup of e820.c")
-> > change "reserved" to "Reserved" in /sys firmware memmap and /proc/iomem.
+On 04/26/17 at 03:28pm, Dave Young wrote:
+> On 04/26/17 at 08:22am, Ingo Molnar wrote:
 > > 
-> > So here, we add handling for that too.
+> > * Yinghai Lu <yinghai@kernel.org> wrote:
 > > 
-> > Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+> > > For x86 with recent kernel after
+> > >  commit 640e1b38b0 ("x86/boot/e820: Basic cleanup of e820.c")
+> > > change "reserved" to "Reserved" in /sys firmware memmap and /proc/iomem.
+> > > 
+> > > So here, we add handling for that too.
+> > > 
+> > > Signed-off-by: Yinghai Lu <yinghai@kernel.org>
+> > > 
+> > > ---
+> > >  kexec/arch/i386/crashdump-x86.c |    2 ++
+> > >  kexec/arch/ia64/kexec-ia64.c    |    2 ++
+> > >  kexec/arch/mips/kexec-mips.c    |    2 ++
+> > >  kexec/firmware_memmap.c         |    2 ++
+> > >  4 files changed, 8 insertions(+)
 > > 
-> > ---
-> >  kexec/arch/i386/crashdump-x86.c |    2 ++
-> >  kexec/arch/ia64/kexec-ia64.c    |    2 ++
-> >  kexec/arch/mips/kexec-mips.c    |    2 ++
-> >  kexec/firmware_memmap.c         |    2 ++
-> >  4 files changed, 8 insertions(+)
+> > I'd rather fix the bug I introduced and undo the reserved->Reserved string change 
 > 
-> I'd rather fix the bug I introduced and undo the reserved->Reserved string change 
+> This patch parses both 'reserved' and 'Reserved' it should be fine, but
+> reverting the change in kernel sounds better..
 
-This patch parses both 'reserved' and 'Reserved' it should be fine, but
-reverting the change in kernel sounds better..
+Hmm, after press sending I noticed old kexec-tools with new kernel, it
+is still a problem, so we'd better to revert the kernel changes.
 
-> in e820.c: I didn't realize that it's exposed in sysfs and had quasi-ABI 
-> consequences for kexec.
 > 
-> Agreed?
+> > in e820.c: I didn't realize that it's exposed in sysfs and had quasi-ABI 
+> > consequences for kexec.
+> > 
+> > Agreed?
+> > 
+> > Thanks,
+> > 
+> > 	Ingo
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> Thanks,
-> 
-> 	Ingo
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-Thanks
-Dave
+> Thanks
+> Dave
 
 _______________________________________________
 kexec mailing list
