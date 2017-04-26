@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3G1f-0001eW-US
- for kexec@lists.infradead.org; Wed, 26 Apr 2017 06:02:09 +0000
-Date: Wed, 26 Apr 2017 14:01:13 +0800
-From: Dave Young <dyoung@redhat.com>
+Received: from mail-wm0-x242.google.com ([2a00:1450:400c:c09::242])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d3GM3-0003Me-Jb
+ for kexec@lists.infradead.org; Wed, 26 Apr 2017 06:23:18 +0000
+Received: by mail-wm0-x242.google.com with SMTP id y10so19412210wmh.0
+ for <kexec@lists.infradead.org>; Tue, 25 Apr 2017 23:22:51 -0700 (PDT)
+Date: Wed, 26 Apr 2017 08:22:47 +0200
+From: Ingo Molnar <mingo@kernel.org>
 Subject: Re: [PATCH] memmap: Parse "Reserved" together with "reserved"
-Message-ID: <20170426060113.GA5381@dhcp-128-65.nay.redhat.com>
+Message-ID: <20170426062247.fbl62xrkrm7tvnga@gmail.com>
 References: <20170426005526.27313-1-yinghai@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -24,14 +26,13 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Yinghai Lu <yinghai@kernel.org>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Ingo Molnar <mingo@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 04/25/17 at 05:55pm, Yinghai Lu wrote:
+
+* Yinghai Lu <yinghai@kernel.org> wrote:
+
 > For x86 with recent kernel after
 >  commit 640e1b38b0 ("x86/boot/e820: Basic cleanup of e820.c")
-
-Need to mention that this is not in mainline yet.
-
 > change "reserved" to "Reserved" in /sys firmware memmap and /proc/iomem.
 > 
 > So here, we add handling for that too.
@@ -42,72 +43,18 @@ Need to mention that this is not in mainline yet.
 >  kexec/arch/i386/crashdump-x86.c |    2 ++
 >  kexec/arch/ia64/kexec-ia64.c    |    2 ++
 >  kexec/arch/mips/kexec-mips.c    |    2 ++
-
-The tip commit only changes x86, so mips and ia64 are not needed here?
-
 >  kexec/firmware_memmap.c         |    2 ++
 >  4 files changed, 8 insertions(+)
-> 
-> Index: kexec-tools/kexec/arch/i386/crashdump-x86.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
-> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
-> @@ -323,6 +323,8 @@ static int get_crash_memory_ranges(struc
->  			type = RANGE_PMEM;
->  		} else if(memcmp(str,"reserved\n",9) == 0 ) {
->  			type = RANGE_RESERVED;
-> +		} else if(memcmp(str,"Reserved\n",9) == 0 ) {
-> +			type = RANGE_RESERVED;
->  		} else if (memcmp(str, "GART\n", 5) == 0) {
->  			gart_start = start;
->  			gart_end = end;
-> Index: kexec-tools/kexec/arch/ia64/kexec-ia64.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/ia64/kexec-ia64.c
-> +++ kexec-tools/kexec/arch/ia64/kexec-ia64.c
-> @@ -117,6 +117,8 @@ int get_memory_ranges(struct memory_rang
->  		}
->  		else if (memcmp(str, "reserved\n", 9) == 0) {
->  			type = RANGE_RESERVED;
-> +		else if (memcmp(str, "Reserved\n", 9) == 0) {
-> +			type = RANGE_RESERVED;
->  		}
->  		else if (memcmp(str, "Crash kernel\n", 13) == 0) {
->  			/* Redefine the memory region boundaries if kernel
-> Index: kexec-tools/kexec/arch/mips/kexec-mips.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/mips/kexec-mips.c
-> +++ kexec-tools/kexec/arch/mips/kexec-mips.c
-> @@ -57,6 +57,8 @@ int get_memory_ranges(struct memory_rang
->  			type = RANGE_RAM;
->  		} else if (memcmp(str, "reserved\n", 9) == 0) {
->  			type = RANGE_RESERVED;
-> +		} else if (memcmp(str, "Reserved\n", 9) == 0) {
-> +			type = RANGE_RESERVED;
->  		} else {
->  			continue;
->  		}
-> Index: kexec-tools/kexec/firmware_memmap.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/firmware_memmap.c
-> +++ kexec-tools/kexec/firmware_memmap.c
-> @@ -164,6 +164,8 @@ static int parse_memmap_entry(const char
->  		range->type = RANGE_RESERVED;
->  	else if (strcmp(type, "reserved") == 0)
->  		range->type = RANGE_RESERVED;
-> +	else if (strcmp(type, "Reserved") == 0)
-> +		range->type = RANGE_RESERVED;
->  	else if (strcmp(type, "ACPI Non-volatile Storage") == 0)
->  		range->type = RANGE_ACPI_NVS;
->  	else if (strcmp(type, "Uncached RAM") == 0)
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
-Thanks
-Dave
+I'd rather fix the bug I introduced and undo the reserved->Reserved string change 
+in e820.c: I didn't realize that it's exposed in sysfs and had quasi-ABI 
+consequences for kexec.
+
+Agreed?
+
+Thanks,
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
