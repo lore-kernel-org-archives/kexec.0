@@ -1,18 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1d3m2H-0006ph-0s
- for kexec@lists.infradead.org; Thu, 27 Apr 2017 16:12:54 +0000
-Date: Thu, 27 Apr 2017 18:12:27 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 09/32] x86/mm: Provide general kernel support for
- memory encryption
-Message-ID: <20170427161227.c57dkvghz63pvmu2@pd.tnic>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211754.10190.25082.stgit@tlendack-t1.amdoffice.net>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d3rSp-0003zb-TO
+ for kexec@lists.infradead.org; Thu, 27 Apr 2017 22:00:42 +0000
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
+ v3RLx89A144943
+ for <kexec@lists.infradead.org>; Thu, 27 Apr 2017 18:00:19 -0400
+Received: from e24smtp05.br.ibm.com (e24smtp05.br.ibm.com [32.104.18.26])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2a3j0kk62m-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Thu, 27 Apr 2017 18:00:17 -0400
+Received: from localhost
+ by e24smtp05.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Thu, 27 Apr 2017 19:00:15 -0300
+Received: from d24av03.br.ibm.com (d24av03.br.ibm.com [9.8.31.95])
+ by d24relay04.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v3RM0ChS66388142
+ for <kexec@lists.infradead.org>; Thu, 27 Apr 2017 19:00:12 -0300
+Received: from d24av03.br.ibm.com (localhost [127.0.0.1])
+ by d24av03.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v3RM0DmE008430
+ for <kexec@lists.infradead.org>; Thu, 27 Apr 2017 19:00:13 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH] kexec: allocate buffer in top-down, if specified,
+ correctly
+Date: Thu, 27 Apr 2017 19:00:04 -0300
+In-Reply-To: <20170426082209.12127-1-takahiro.akashi@linaro.org>
+References: <20170426082209.12127-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170418211754.10190.25082.stgit@tlendack-t1.amdoffice.net>
+Message-Id: <1605356.Vp6YPvtjly@morokweng>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,51 +44,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, linux-kernel@vger.kernel.org
 
-On Tue, Apr 18, 2017 at 04:17:54PM -0500, Tom Lendacky wrote:
-> Changes to the existing page table macros will allow the SME support to
-> be enabled in a simple fashion with minimal changes to files that use these
-> macros.  Since the memory encryption mask will now be part of the regular
-> pagetable macros, we introduce two new macros (_PAGE_TABLE_NOENC and
-> _KERNPG_TABLE_NOENC) to allow for early pagetable creation/initialization
-> without the encryption mask before SME becomes active.  Two new pgprot()
-> macros are defined to allow setting or clearing the page encryption mask.
+Hello,
 
-...
+Am Mittwoch, 26. April 2017, 17:22:09 BRT schrieb AKASHI Takahiro:
+> The current kexec_locate_mem_hole(kbuf.top_down == 1) stops searching at
+> the first memory region that has enough space for requested size even if
+> some of higher regions may also have.
 
-> @@ -55,7 +57,7 @@ static inline void copy_user_page(void *to, void *from, unsigned long vaddr,
->  	__phys_addr_symbol(__phys_reloc_hide((unsigned long)(x)))
->  
->  #ifndef __va
-> -#define __va(x)			((void *)((unsigned long)(x)+PAGE_OFFSET))
-> +#define __va(x)			((void *)(__sme_clr(x) + PAGE_OFFSET))
->  #endif
->  
->  #define __boot_va(x)		__va(x)
-> diff --git a/arch/x86/include/asm/page_types.h b/arch/x86/include/asm/page_types.h
-> index 7bd0099..fead0a5 100644
-> --- a/arch/x86/include/asm/page_types.h
-> +++ b/arch/x86/include/asm/page_types.h
-> @@ -15,7 +15,7 @@
->  #define PUD_PAGE_SIZE		(_AC(1, UL) << PUD_SHIFT)
->  #define PUD_PAGE_MASK		(~(PUD_PAGE_SIZE-1))
->  
-> -#define __PHYSICAL_MASK		((phys_addr_t)((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
-> +#define __PHYSICAL_MASK		((phys_addr_t)(__sme_clr((1ULL << __PHYSICAL_MASK_SHIFT) - 1)))
+kexec_locate_mem_hole expects arch_kexec_walk_mem to walk memory from top to 
+bottom if top_down is true. That is what powerpc's version does.
 
-That looks strange: poking SME mask hole into a mask...?
+Isn't it possible to walk resources from top to bottom?
 
->  #define __VIRTUAL_MASK		((1UL << __VIRTUAL_MASK_SHIFT) - 1)
->  
->  /* Cast *PAGE_MASK to a signed type so that it is sign-extended if
+> This behavior is not consistent with locate_hole(hole_end == -1) function
+> of kexec-tools.
+> 
+> This patch fixes the bug, going though all the memory regions anyway.
+
+This patch would break powerpc, because at the end of the memory walk kbuf 
+would have the lowest memory hole.
+
+If it's not possible to walk resources in reverse order, then this patch needs 
+to change powerpc to always walk memory from bottom to top.
 
 -- 
-Regards/Gruss,
-    Boris.
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
