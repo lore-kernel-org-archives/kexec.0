@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt0-x232.google.com ([2607:f8b0:400d:c0d::232])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3QXz-0000YP-8C
- for kexec@lists.infradead.org; Wed, 26 Apr 2017 17:16:12 +0000
-Received: by mail-qt0-x232.google.com with SMTP id g60so6297958qtd.3
- for <kexec@lists.infradead.org>; Wed, 26 Apr 2017 10:15:50 -0700 (PDT)
+ id 1d3Zc6-0007Rm-3l
+ for kexec@lists.infradead.org; Thu, 27 Apr 2017 02:57:03 +0000
+Date: Thu, 27 Apr 2017 10:56:30 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 3/3] kdump: Protect vmcoreinfo data under the crash
+ memory
+Message-ID: <20170427025630.GA10602@dhcp-128-65.nay.redhat.com>
+References: <1492688374-27903-1-git-send-email-xlpang@redhat.com>
+ <1492688374-27903-3-git-send-email-xlpang@redhat.com>
+ <20170426070936.GB5381@dhcp-128-65.nay.redhat.com>
+ <590066A2.4090309@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <125ffde4-2103-48b5-2c46-886436619124@redhat.com>
-References: <CAKDfjgcvs=OQrBSXB=u9uYgo6y0vOE62+XmhObqON0z9TR3DoQ@mail.gmail.com>
- <125ffde4-2103-48b5-2c46-886436619124@redhat.com>
-From: Kristian Kielhofner <kris@kriskinc.com>
-Date: Wed, 26 Apr 2017 12:15:26 -0500
-Message-ID: <CAKDfjgeo_DNqi6=rDA6nPtjSsSOWGJXA7piQ_LL8yxqUOyg9Jg@mail.gmail.com>
-Subject: Re: Kexec on ARM - memory detection
+Content-Disposition: inline
+In-Reply-To: <590066A2.4090309@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,35 +27,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: kexec@lists.infradead.org
+To: xlpang@redhat.com
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-On Fri, Apr 21, 2017 at 6:27 AM, Pratyush Anand <panand@redhat.com> wrote:
-> Hi Kristian,
->
-> Sorry, I missed this mail.
-> Are you still on it, or it is solved?
+[snip]
+> >> index 43cdb00..a29e9ad 100644
+> >> --- a/kernel/crash_core.c
+> >> +++ b/kernel/crash_core.c
+> >> @@ -15,9 +15,12 @@
+> >>  
+> >>  /* vmcoreinfo stuff */
+> >>  static unsigned char *vmcoreinfo_data;
+> >> -size_t vmcoreinfo_size;
+> >> +static size_t vmcoreinfo_size;
+> >>  u32 *vmcoreinfo_note;
+> >>  
+> >> +/* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+> > May make it clearer like:
+> > /* Trusted vmcoreinfo copy in the kdump reserved memory */
+> 
+> My thought is that it is in crash_core.c now which should be independent of kexec/kdump,
+> so I used "e.g. ..." just like one use case.
 
-  No problem, I'm still experiencing the issue but I haven't
-investigated it further.
+Ok, then it is fine.
 
->
->
-> How does kexec-tools see above memory ranges?
-> As per your /proc/iomem, it should have been
-> 42000000-5fffffff (0)
->
-> Can you put some extra debug print in your code and check why do you have
-> above behavior?
->
+[snip]
+> >>  static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
+> >>  {
+> >>  	if (*image->entry != 0)
+> >> @@ -598,6 +632,11 @@ void kimage_free(struct kimage *image)
+> >>  	if (image->file_mode)
+> >>  		kimage_file_post_load_cleanup(image);
+> >>  
+> >> +	if (image->vmcoreinfo_data_copy) {
+> >> +		crash_update_vmcoreinfo_safecopy(NULL);
+> >> +		vunmap(image->vmcoreinfo_data_copy);
+> >> +	}
+> >> +
+> > Should move above chunk before the freeing of the actual page?
+> 
+> It should be fine, because it is allocated from the reserved memory, it doesn't
+> need to be freed. Anyway I can move it above to avoid confusion. Thanks!
+> 
 
-  Can you point towards some examples or documentation for what you're
-looking for?
+Yes, it looks better, thanks for explanation.
 
-Thanks for your help!
-
--- 
-Kristian Kielhofner
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
