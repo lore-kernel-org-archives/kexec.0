@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1d3ldJ-0003hr-Hz
- for kexec@lists.infradead.org; Thu, 27 Apr 2017 15:47:07 +0000
-Date: Thu, 27 Apr 2017 17:46:31 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 06/32] x86/mm: Add Secure Memory Encryption (SME)
- support
-Message-ID: <20170427154631.2tsqgax4kqcvydnx@pd.tnic>
+Received: from mga04.intel.com ([192.55.52.120])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d3liy-0006FQ-Qf
+ for kexec@lists.infradead.org; Thu, 27 Apr 2017 15:52:58 +0000
+Subject: Re: [PATCH v5 31/32] x86: Add sysfs support for Secure Memory
+ Encryption
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211727.10190.18774.stgit@tlendack-t1.amdoffice.net>
+ <20170418212212.10190.73484.stgit@tlendack-t1.amdoffice.net>
+ <1498ec98-b19d-c47d-902b-a68870a3f860@intel.com>
+ <20170427072547.GB15297@dhcp-128-65.nay.redhat.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Message-ID: <1f034974-20e6-b5e9-e6ff-434b634e1522@intel.com>
+Date: Thu, 27 Apr 2017 08:52:34 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170418211727.10190.18774.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <20170427072547.GB15297@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,79 +26,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, linux-doc@vger.kernel.org, Matt Fleming <matt@codeblueprint.co.uk>, linux-mm@kvack.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On Tue, Apr 18, 2017 at 04:17:27PM -0500, Tom Lendacky wrote:
-> Add support for Secure Memory Encryption (SME). This initial support
-> provides a Kconfig entry to build the SME support into the kernel and
-> defines the memory encryption mask that will be used in subsequent
-> patches to mark pages as encrypted.
+On 04/27/2017 12:25 AM, Dave Young wrote:
+> On 04/21/17 at 02:55pm, Dave Hansen wrote:
+>> On 04/18/2017 02:22 PM, Tom Lendacky wrote:
+>>> Add sysfs support for SME so that user-space utilities (kdump, etc.) can
+>>> determine if SME is active.
+>>>
+>>> A new directory will be created:
+>>>   /sys/kernel/mm/sme/
+>>>
+>>> And two entries within the new directory:
+>>>   /sys/kernel/mm/sme/active
+>>>   /sys/kernel/mm/sme/encryption_mask
+>>
+>> Why do they care, and what will they be doing with this information?
+> 
+> Since kdump will copy old memory but need this to know if the old memory
+> was encrypted or not. With this sysfs file we can know the previous SME
+> status and pass to kdump kernel as like a kernel param.
+> 
+> Tom, have you got chance to try if it works or not?
 
-...
+What will the kdump kernel do with it though?  We kexec() into that
+kernel so the SME keys will all be the same, right?  So, will the kdump
+kernel be just setting the encryption bit in the PTE so it can copy the
+old plaintext out?
 
-> diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-> new file mode 100644
-> index 0000000..d5c4a2b
-> --- /dev/null
-> +++ b/arch/x86/include/asm/mem_encrypt.h
-> @@ -0,0 +1,42 @@
-> +/*
-> + * AMD Memory Encryption Support
-> + *
-> + * Copyright (C) 2016 Advanced Micro Devices, Inc.
-> + *
-> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-
-These ifdeffery closing #endif markers look strange:
-
-> +#ifndef __X86_MEM_ENCRYPT_H__
-> +#define __X86_MEM_ENCRYPT_H__
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +
-> +extern unsigned long sme_me_mask;
-> +
-> +static inline bool sme_active(void)
-> +{
-> +	return !!sme_me_mask;
-> +}
-> +
-> +#else	/* !CONFIG_AMD_MEM_ENCRYPT */
-> +
-> +#ifndef sme_me_mask
-> +#define sme_me_mask	0UL
-> +
-> +static inline bool sme_active(void)
-> +{
-> +	return false;
-> +}
-> +#endif
-
-this endif is the sme_me_mask closing one and it has sme_active() in it.
-Shouldn't it be:
-
-#ifndef sme_me_mask
-#define sme_me_mask  0UL
-#endif
-
-and have sme_active below it, in the !CONFIG_AMD_MEM_ENCRYPT branch?
-
-The same thing is in include/linux/mem_encrypt.h
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Why do we need both 'active' and 'encryption_mask'?  How could it be
+that the hardware-enumerated 'encryption_mask' changes across a kexec()?
 
 _______________________________________________
 kexec mailing list
