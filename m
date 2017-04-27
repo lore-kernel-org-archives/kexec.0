@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3Zc6-0007Rm-3l
- for kexec@lists.infradead.org; Thu, 27 Apr 2017 02:57:03 +0000
-Date: Thu, 27 Apr 2017 10:56:30 +0800
+ id 1d3ZlQ-0002L5-3I
+ for kexec@lists.infradead.org; Thu, 27 Apr 2017 03:06:41 +0000
+Date: Thu, 27 Apr 2017 11:06:07 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v4 3/3] kdump: Protect vmcoreinfo data under the crash
- memory
-Message-ID: <20170427025630.GA10602@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v4 1/3] kexec: Move vmcoreinfo out of the kernel's .bss
+ section
+Message-ID: <20170427030607.GB10602@dhcp-128-65.nay.redhat.com>
 References: <1492688374-27903-1-git-send-email-xlpang@redhat.com>
- <1492688374-27903-3-git-send-email-xlpang@redhat.com>
- <20170426070936.GB5381@dhcp-128-65.nay.redhat.com>
- <590066A2.4090309@redhat.com>
+ <20170426071916.GD5381@dhcp-128-65.nay.redhat.com>
+ <59006DAB.8030908@redhat.com> <59007405.6070107@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <590066A2.4090309@redhat.com>
+In-Reply-To: <59007405.6070107@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,52 +27,33 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: xlpang@redhat.com
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Petr Tesarik <ptesarik@suse.cz>, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Juergen Gross <jgross@suse.com>, linux-s390@vger.kernel.org, linux-ia64@vger.kernel.org, Baoquan He <bhe@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.vnet.ibm.com>, akpm@linux-foundation.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
 [snip]
-> >> index 43cdb00..a29e9ad 100644
-> >> --- a/kernel/crash_core.c
-> >> +++ b/kernel/crash_core.c
-> >> @@ -15,9 +15,12 @@
-> >>  
-> >>  /* vmcoreinfo stuff */
-> >>  static unsigned char *vmcoreinfo_data;
-> >> -size_t vmcoreinfo_size;
-> >> +static size_t vmcoreinfo_size;
-> >>  u32 *vmcoreinfo_note;
-> >>  
-> >> +/* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
-> > May make it clearer like:
-> > /* Trusted vmcoreinfo copy in the kdump reserved memory */
+> >>>  
+> >>>  static int __init crash_save_vmcoreinfo_init(void)
+> >>>  {
+> >>> +	/* One page should be enough for VMCOREINFO_BYTES under all archs */
+> >> Can we add a comment in the VMCOREINFO_BYTES header file about the one
+> >> page assumption?
+> >>
+> >> Or just define the VMCOREINFO_BYTES as PAGE_SIZE instead of 4096
+> > Yes, I considered this before, but VMCOREINFO_BYTES is also used by VMCOREINFO_NOTE_SIZE
+> > definition which is exported to sysfs, also some platform has larger page size(64KB), so
+> > I didn't touch this 4096 value.
+> >
+> > I think I should use kmalloc() to allocate both of them, then move this comment to Patch3 
+> > kimage_crash_copy_vmcoreinfo().
 > 
-> My thought is that it is in crash_core.c now which should be independent of kexec/kdump,
-> so I used "e.g. ..." just like one use case.
+> But on the other hand, using a separate page for them seems safer compared with
+> using frequently-used slab, what's your opinion?
 
-Ok, then it is fine.
+I feel current page based way is better.
 
-[snip]
-> >>  static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
-> >>  {
-> >>  	if (*image->entry != 0)
-> >> @@ -598,6 +632,11 @@ void kimage_free(struct kimage *image)
-> >>  	if (image->file_mode)
-> >>  		kimage_file_post_load_cleanup(image);
-> >>  
-> >> +	if (image->vmcoreinfo_data_copy) {
-> >> +		crash_update_vmcoreinfo_safecopy(NULL);
-> >> +		vunmap(image->vmcoreinfo_data_copy);
-> >> +	}
-> >> +
-> > Should move above chunk before the freeing of the actual page?
-> 
-> It should be fine, because it is allocated from the reserved memory, it doesn't
-> need to be freed. Anyway I can move it above to avoid confusion. Thanks!
-> 
-
-Yes, it looks better, thanks for explanation.
+For 64k page the vmcore note size will increase it seems fine. Do you
+have concern in mind?
 
 Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
