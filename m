@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3xnu-0003PL-02
- for kexec@lists.infradead.org; Fri, 28 Apr 2017 04:46:52 +0000
-Date: Fri, 28 Apr 2017 12:46:19 +0800
+ id 1d3yKI-0007J0-5q
+ for kexec@lists.infradead.org; Fri, 28 Apr 2017 05:20:19 +0000
+Date: Fri, 28 Apr 2017 13:19:50 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH] kexec: allocate buffer in top-down, if specified,
  correctly
-Message-ID: <20170428044619.GA3600@dhcp-128-65.nay.redhat.com>
+Message-ID: <20170428051950.GB3600@dhcp-128-65.nay.redhat.com>
 References: <20170426082209.12127-1-takahiro.akashi@linaro.org>
+ <1605356.Vp6YPvtjly@morokweng> <20170428005135.GA3963@fireball>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20170426082209.12127-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20170428005135.GA3963@fireball>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,79 +25,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: bauerman@linux.vnet.ibm.com, kexec@lists.infradead.org, vgoyal@redhat.com, bhe@redhat.com, linux-kernel@vger.kernel.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, "vgoyal@redhat.com Thiago Jung Bauermann" <bauerman@linux.vnet.ibm.com>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi AKASHI
-On 04/26/17 at 05:22pm, AKASHI Takahiro wrote:
-> The current kexec_locate_mem_hole(kbuf.top_down == 1) stops searching at
-> the first memory region that has enough space for requested size even if
-> some of higher regions may also have.
-> This behavior is not consistent with locate_hole(hole_end == -1) function
-> of kexec-tools.
+Vivek, can you help to give some comments about the locate hole isssue
+in kexec_file?
 
-Have you seen actual bug happened or just observing this during code
-review?
+On 04/28/17 at 09:51am, AKASHI Takahiro wrote:
+> Thiago,
+> 
+> Thank you for the comment.
+> 
+> On Thu, Apr 27, 2017 at 07:00:04PM -0300, Thiago Jung Bauermann wrote:
+> > Hello,
+> > 
+> > Am Mittwoch, 26. April 2017, 17:22:09 BRT schrieb AKASHI Takahiro:
+> > > The current kexec_locate_mem_hole(kbuf.top_down == 1) stops searching at
+> > > the first memory region that has enough space for requested size even if
+> > > some of higher regions may also have.
+> > 
+> > kexec_locate_mem_hole expects arch_kexec_walk_mem to walk memory from top to 
+> > bottom if top_down is true. That is what powerpc's version does.
+> 
+> Ah, I haven't noticed that, but x86 doesn't have arch_kexec_walk_mem and
+> how can it work for x86?
+> 
+> > Isn't it possible to walk resources from top to bottom?
+> 
+> Yes, it will be, but it seems to me that such a behavior is not intuitive
+> and even confusing if it doesn't come with explicit explanation.
 
-Till now seems we do not see any reports about this.
-
+Thing need to make clear is why do we need the change, it might be a
+problem for crashkernel=xM,low since that is for softiotlb in case
+crashkernel=xM,high being used, otherwise seems current code is fine.
+ 
+Need seeking for old memory from Vivek to confirm.
 > 
-> This patch fixes the bug, going though all the memory regions anyway.
+> > > This behavior is not consistent with locate_hole(hole_end == -1) function
+> > > of kexec-tools.
+> > > 
+> > > This patch fixes the bug, going though all the memory regions anyway.
+> > 
+> > This patch would break powerpc, because at the end of the memory walk kbuf 
+> > would have the lowest memory hole.
+> > 
+> > If it's not possible to walk resources in reverse order, then this patch needs 
+> > to change powerpc to always walk memory from bottom to top.
 > 
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> ---
->  kernel/kexec_file.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
+> So I would like to hear from x86 guys.
 > 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index b118735fea9d..2f131c0d9017 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -373,8 +373,8 @@ static int locate_mem_hole_top_down(unsigned long start, unsigned long end,
->  	/* If we are here, we found a suitable memory range */
->  	kbuf->mem = temp_start;
->  
-> -	/* Success, stop navigating through remaining System RAM ranges */
-> -	return 1;
-> +	/* always return zero, going through all the System RAM ranges */
-> +	return 0;
->  }
->  
->  static int locate_mem_hole_bottom_up(unsigned long start, unsigned long end,
-> @@ -439,18 +439,27 @@ static int locate_mem_hole_callback(u64 start, u64 end, void *arg)
->   *
->   * Return: The memory walk will stop when func returns a non-zero value
->   * and that value will be returned. If all free regions are visited without
-> - * func returning non-zero, then zero will be returned.
-> + * func returning non-zero, then kbuf->mem will be additionally checked
-> + * for top-down search.
-> + * After all, zero will be returned if none of regions fits.
->   */
->  int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
->  			       int (*func)(u64, u64, void *))
->  {
-> +	int ret;
-> +
-> +	kbuf->mem = 0;
->  	if (kbuf->image->type == KEXEC_TYPE_CRASH)
-> -		return walk_iomem_res_desc(crashk_res.desc,
-> +		ret = walk_iomem_res_desc(crashk_res.desc,
->  					   IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY,
->  					   crashk_res.start, crashk_res.end,
->  					   kbuf, func);
->  	else
-> -		return walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-> +		ret = walk_system_ram_res(0, ULONG_MAX, kbuf, func);
-> +
-> +	if (!ret && kbuf->mem)
-> +		ret = 1; /* found for top-down search */
-> +	return ret;
->  }
->  
->  /**
-> -- 
-> 2.11.1
+> Thanks
+> -Takahiro AKASHI
 > 
+> > -- 
+> > Thiago Jung Bauermann
+> > IBM Linux Technology Center
+> > 
 
 _______________________________________________
 kexec mailing list
