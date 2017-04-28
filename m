@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3zp2-0004kO-PA
- for kexec@lists.infradead.org; Fri, 28 Apr 2017 06:56:10 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
-Date: Fri, 28 Apr 2017 06:52:56 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1493272570.git.panand@redhat.com>
-In-Reply-To: <cover.1493272570.git.panand@redhat.com>
-Content-Language: ja-JP
+Received: from mail-pf0-f180.google.com ([209.85.192.180])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d49Zv-0000sz-VA
+ for kexec@lists.infradead.org; Fri, 28 Apr 2017 17:21:12 +0000
+Received: by mail-pf0-f180.google.com with SMTP id q66so7337351pfi.3
+ for <kexec@lists.infradead.org>; Fri, 28 Apr 2017 10:20:51 -0700 (PDT)
+Subject: Re: Kexec on ARM - memory detection
+References: <CAKDfjgcvs=OQrBSXB=u9uYgo6y0vOE62+XmhObqON0z9TR3DoQ@mail.gmail.com>
+ <125ffde4-2103-48b5-2c46-886436619124@redhat.com>
+ <CAKDfjgeo_DNqi6=rDA6nPtjSsSOWGJXA7piQ_LL8yxqUOyg9Jg@mail.gmail.com>
+From: Pratyush Anand <panand@redhat.com>
+Message-ID: <b7361ec4-6f26-46f3-64db-b4ef511b283f@redhat.com>
+Date: Fri, 28 Apr 2017 22:50:43 +0530
 MIME-Version: 1.0
+In-Reply-To: <CAKDfjgeo_DNqi6=rDA6nPtjSsSOWGJXA7piQ_LL8yxqUOyg9Jg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,57 +22,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "keescook@chromium.org" <keescook@chromium.org>, "bhe@redhat.com" <bhe@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "yinghai@kernel.org" <yinghai@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>
+To: Kristian Kielhofner <kris@kriskinc.com>
+Cc: kexec@lists.infradead.org
 
-Hello Pratyush,
 
-Thanks for your report, I have received this.
-I'm on vacation until Mar 8, I'll review it when I return from vacation.
 
-Thanks,
-Atsushi Kumagai
+On Wednesday 26 April 2017 10:45 PM, Kristian Kielhofner wrote:
+> On Fri, Apr 21, 2017 at 6:27 AM, Pratyush Anand <panand@redhat.com> wrote:
+>> Hi Kristian,
+>>
+>> Sorry, I missed this mail.
+>> Are you still on it, or it is solved?
+>
+>   No problem, I'm still experiencing the issue but I haven't
+> investigated it further.
+>
+>>
+>>
+>> How does kexec-tools see above memory ranges?
+>> As per your /proc/iomem, it should have been
+>> 42000000-5fffffff (0)
+>>
+>> Can you put some extra debug print in your code and check why do you have
+>> above behavior?
+>>
+>
+>   Can you point towards some examples or documentation for what you're
+> looking for?
 
->Hi All,
->
->We came across another failure in makedumpfile when kaslr is enabled. This
->failure occurs when we try re-filtering. We try to erase some symbol from a
->dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
->
->We have very limited symbol information in vmcoreinfo. So symbols to be
->erased may not be available in vmcoreinfo and we look for it in vmlinux.
->However,  symbol address from vmlinux is a static address which differs
->from run time address with KASLR_OFFSET. Therefore, reading any "virtual
->address of vmlinux" from vmcore is not possible.
->
->These patches finds runtime  KASLR offset and then calculates run time
->address of symbols read from vmlinux.
->
->Since, I am not an expert of x86, and these patches touch x86 part of
->makedumpfile, therefore I have CCed x86 experts. Please, provide your
->review comment and let me know if you think there could have been a better
->way to resolve this issue.
->
->thanks
->
->~Pratyush
->
->Pratyush Anand (2):
->  makedumpfile: add runtime kaslr offset if it exists
->  x86_64: calculate page_offset in case of re-filtering
->
-> arch/x86_64.c  | 45 +++++++++++++++++++++++++++++++++++++++++++--
-> erase_info.c   |  1 +
-> makedumpfile.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
-> makedumpfile.h | 15 +++++++++++++++
-> 4 files changed, 103 insertions(+), 2 deletions(-)
->
->--
->2.9.3
+kexec-tools:kexec/arch/arm/kexec-arm.c:get_memory_ranges() is telling you that 
+you have
+MEMORY RANGES
+00012028b6d27010-bea6aee700000004 (0)
+
+However, you /proc/iomem is telling you:
+
+42000000-5fffffff : System RAM
+
+get_memory_ranges() is reading /proc/iomem and finding out the available ram 
+locations. So, can you debug this kexec-tools function and see why you do not 
+get the range which is coming from /proc/iomem
+
+~Pratyush
+
 
 
 _______________________________________________
