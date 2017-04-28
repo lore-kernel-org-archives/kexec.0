@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f53.google.com ([74.125.83.53])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3yxQ-0000zC-Kt
- for kexec@lists.infradead.org; Fri, 28 Apr 2017 06:00:46 +0000
-Received: by mail-pg0-f53.google.com with SMTP id v1so9627230pgv.1
- for <kexec@lists.infradead.org>; Thu, 27 Apr 2017 23:00:22 -0700 (PDT)
-Subject: Re: [Makedumpfile PATCH 1/2] makedumpfile: add runtime kaslr offset
- if it exists
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d3zN2-0005RS-4T
+ for kexec@lists.infradead.org; Fri, 28 Apr 2017 06:27:13 +0000
+Date: Fri, 28 Apr 2017 14:26:14 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
+Message-ID: <20170428062614.GB2649@x1>
 References: <cover.1493272570.git.panand@redhat.com>
- <11497aba9c2a9f6441bb7ee874e9cba70b02c7f1.1493272570.git.panand@redhat.com>
- <5902D5E0.809@redhat.com>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <a9e8d087-5e7d-2a29-92cf-59e145f6c79a@redhat.com>
-Date: Fri, 28 Apr 2017 11:30:17 +0530
 MIME-Version: 1.0
-In-Reply-To: <5902D5E0.809@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <cover.1493272570.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,30 +19,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xlpang@redhat.com, ats-kumagai@wm.jp.nec.com
-Cc: keescook@chromium.org, bhe@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org, yinghai@kernel.org, mingo@kernel.org
+To: Pratyush Anand <panand@redhat.com>
+Cc: keescook@chromium.org, dyoung@redhat.com, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org, yinghai@kernel.org, mingo@kernel.org
 
 
+Usually we can use gdb to debug the running kernel like this:
+gdb vmlinux /proc/kcore
 
-On Friday 28 April 2017 11:10 AM, Xunlei Pang wrote:
->> +	 */
->> +	get_kaslr_offset(SYMBOL(_stext));
-> Looks like acquiring "KERNELOFFSET" in read_vmcoreinfo() should be enough here.
+However now it doesn't work any more since those kernel symbols are got
+at compiling time, while kaslr-ed kernel do relocation on them. Don't
+know if this will impact anything else.
 
-Ah..OK..but may be not here..rather in get_kaslr_offset_x86_64() would be 
-better. Not all arch could export this offset.
-
->
-> We can get kaslr offset directly from the vmcoreinfo because the compressed dumpfile
-> contains vmcoreinfo as well in case of flag_refiltering, also x86_64 kernel has exported
-> "vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());"
-
-
-~Pratyush
+On 04/27/17 at 11:45am, Pratyush Anand wrote:
+> Hi All,
+> 
+> We came across another failure in makedumpfile when kaslr is enabled. This
+> failure occurs when we try re-filtering. We try to erase some symbol from a
+> dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
+> 
+> We have very limited symbol information in vmcoreinfo. So symbols to be
+> erased may not be available in vmcoreinfo and we look for it in vmlinux.
+> However,  symbol address from vmlinux is a static address which differs
+> from run time address with KASLR_OFFSET. Therefore, reading any "virtual
+> address of vmlinux" from vmcore is not possible. 
+> 
+> These patches finds runtime  KASLR offset and then calculates run time
+> address of symbols read from vmlinux.
+> 
+> Since, I am not an expert of x86, and these patches touch x86 part of
+> makedumpfile, therefore I have CCed x86 experts. Please, provide your
+> review comment and let me know if you think there could have been a better
+> way to resolve this issue.
+> 
+> thanks
+> 
+> ~Pratyush
+> 
+> Pratyush Anand (2):
+>   makedumpfile: add runtime kaslr offset if it exists
+>   x86_64: calculate page_offset in case of re-filtering
+> 
+>  arch/x86_64.c  | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>  erase_info.c   |  1 +
+>  makedumpfile.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  makedumpfile.h | 15 +++++++++++++++
+>  4 files changed, 103 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.9.3
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
