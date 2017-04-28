@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from 50-200-209-228-static.hfc.comcastbusiness.net ([50.200.209.228]
  helo=mail.litepoint.com)
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d3v45-0001eL-OS
- for kexec@lists.infradead.org; Fri, 28 Apr 2017 01:51:22 +0000
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d3vBa-0007mh-4q
+ for kexec@lists.infradead.org; Fri, 28 Apr 2017 01:59:07 +0000
 From: Rudici Cazeao <rudici.cazeao@litepoint.com>
-Subject: Running kexec, kernel gets stuck at  "Starting new kernel"
-Date: Fri, 28 Apr 2017 01:50:57 +0000
-Message-ID: <1fafe0dceb744c8587c3b3a398b46321@LPHQEX2013.litepoint.internal>
+Subject: RE: ARM lockup during Kexec operation
+Date: Fri, 28 Apr 2017 01:43:16 +0000
+Message-ID: <7f67b6aa05124ca68dd71667ed67eaca@LPHQEX2013.litepoint.internal>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -30,6 +30,8 @@ Also, on rare occasions, the kernel gets stuck at " Uncompressing Linux... done,
 
 The SoC is Cortex-A9 (ARMv7-A)
 The kernel version is 3.0.51-rt75
+
+
 
 _______________________________________________
 kexec mailing list
