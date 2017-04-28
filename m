@@ -1,19 +1,39 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf0-f180.google.com ([209.85.192.180])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d49Zv-0000sz-VA
- for kexec@lists.infradead.org; Fri, 28 Apr 2017 17:21:12 +0000
-Received: by mail-pf0-f180.google.com with SMTP id q66so7337351pfi.3
- for <kexec@lists.infradead.org>; Fri, 28 Apr 2017 10:20:51 -0700 (PDT)
-Subject: Re: Kexec on ARM - memory detection
-References: <CAKDfjgcvs=OQrBSXB=u9uYgo6y0vOE62+XmhObqON0z9TR3DoQ@mail.gmail.com>
- <125ffde4-2103-48b5-2c46-886436619124@redhat.com>
- <CAKDfjgeo_DNqi6=rDA6nPtjSsSOWGJXA7piQ_LL8yxqUOyg9Jg@mail.gmail.com>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <b7361ec4-6f26-46f3-64db-b4ef511b283f@redhat.com>
-Date: Fri, 28 Apr 2017 22:50:43 +0530
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d4BeZ-0000iR-SK
+ for kexec@lists.infradead.org; Fri, 28 Apr 2017 19:34:09 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
+ v3SJXU2q132087
+ for <kexec@lists.infradead.org>; Fri, 28 Apr 2017 15:33:45 -0400
+Received: from e24smtp03.br.ibm.com (e24smtp03.br.ibm.com [32.104.18.24])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 2a45uch446-1
+ (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 28 Apr 2017 15:33:45 -0400
+Received: from localhost
+ by e24smtp03.br.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <bauerman@linux.vnet.ibm.com>;
+ Fri, 28 Apr 2017 16:33:43 -0300
+Received: from d24av05.br.ibm.com (d24av05.br.ibm.com [9.18.232.44])
+ by d24relay02.br.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id
+ v3SJXdPX16908702
+ for <kexec@lists.infradead.org>; Fri, 28 Apr 2017 16:33:39 -0300
+Received: from d24av05.br.ibm.com (localhost [127.0.0.1])
+ by d24av05.br.ibm.com (8.14.4/8.14.4/NCO v10.0 AVout) with ESMTP id
+ v3SJXfV9003289
+ for <kexec@lists.infradead.org>; Fri, 28 Apr 2017 16:33:41 -0300
+From: Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
+Subject: Re: [PATCH] kexec: allocate buffer in top-down, if specified,
+ correctly
+Date: Fri, 28 Apr 2017 16:33:34 -0300
+In-Reply-To: <20170428005135.GA3963@fireball>
+References: <20170426082209.12127-1-takahiro.akashi@linaro.org>
+ <1605356.Vp6YPvtjly@morokweng> <20170428005135.GA3963@fireball>
 MIME-Version: 1.0
-In-Reply-To: <CAKDfjgeo_DNqi6=rDA6nPtjSsSOWGJXA7piQ_LL8yxqUOyg9Jg@mail.gmail.com>
+Message-Id: <2404647.dtAsaUPUyE@morokweng>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,53 +42,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kristian Kielhofner <kris@kriskinc.com>
-Cc: kexec@lists.infradead.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, vgoyal@redhat.com, bhe@redhat.com, linux-kernel@vger.kernel.org
 
+Am Freitag, 28. April 2017, 09:51:39 BRT schrieb AKASHI Takahiro:
+> On Thu, Apr 27, 2017 at 07:00:04PM -0300, Thiago Jung Bauermann wrote:
+> > Hello,
+> > 
+> > Am Mittwoch, 26. April 2017, 17:22:09 BRT schrieb AKASHI Takahiro:
+> > > The current kexec_locate_mem_hole(kbuf.top_down == 1) stops searching at
+> > > the first memory region that has enough space for requested size even if
+> > > some of higher regions may also have.
+> > 
+> > kexec_locate_mem_hole expects arch_kexec_walk_mem to walk memory from top
+> > to bottom if top_down is true. That is what powerpc's version does.
+> 
+> Ah, I haven't noticed that, but x86 doesn't have arch_kexec_walk_mem and
+> how can it work for x86?
 
+Looking at v4.9's kexec_add_buffer, the logic has been this way before I 
+factored kexec_locate_mem_hole out of it. So x86 has been behaving this way 
+for a while.
 
-On Wednesday 26 April 2017 10:45 PM, Kristian Kielhofner wrote:
-> On Fri, Apr 21, 2017 at 6:27 AM, Pratyush Anand <panand@redhat.com> wrote:
->> Hi Kristian,
->>
->> Sorry, I missed this mail.
->> Are you still on it, or it is solved?
->
->   No problem, I'm still experiencing the issue but I haven't
-> investigated it further.
->
->>
->>
->> How does kexec-tools see above memory ranges?
->> As per your /proc/iomem, it should have been
->> 42000000-5fffffff (0)
->>
->> Can you put some extra debug print in your code and check why do you have
->> above behavior?
->>
->
->   Can you point towards some examples or documentation for what you're
-> looking for?
+> > Isn't it possible to walk resources from top to bottom?
+> 
+> Yes, it will be, but it seems to me that such a behavior is not intuitive
+> and even confusing if it doesn't come with explicit explanation.
 
-kexec-tools:kexec/arch/arm/kexec-arm.c:get_memory_ranges() is telling you that 
-you have
-MEMORY RANGES
-00012028b6d27010-bea6aee700000004 (0)
+Yes, I should have put a comment pointing out that assumption.
 
-However, you /proc/iomem is telling you:
-
-42000000-5fffffff : System RAM
-
-get_memory_ranges() is reading /proc/iomem and finding out the available ram 
-locations. So, can you debug this kexec-tools function and see why you do not 
-get the range which is coming from /proc/iomem
-
-~Pratyush
-
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 
 _______________________________________________
