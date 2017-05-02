@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f54.google.com ([74.125.83.54])
+Received: from mail-ua0-x22e.google.com ([2607:f8b0:400c:c08::22e])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d58y2-0006Yu-Ne
- for kexec@lists.infradead.org; Mon, 01 May 2017 10:54:13 +0000
-Received: by mail-pg0-f54.google.com with SMTP id v1so43822297pgv.1
- for <kexec@lists.infradead.org>; Mon, 01 May 2017 03:53:49 -0700 (PDT)
-Subject: Re: Running kexec, kernel gets stuck at "Starting new kernel"
-References: <1fafe0dceb744c8587c3b3a398b46321@LPHQEX2013.litepoint.internal>
-From: Pratyush Anand <panand@redhat.com>
-Message-ID: <626fa54e-8a7e-8131-b453-6ef389c10a77@redhat.com>
-Date: Mon, 1 May 2017 16:23:45 +0530
+ id 1d5S69-0003Pu-76
+ for kexec@lists.infradead.org; Tue, 02 May 2017 07:19:50 +0000
+Received: by mail-ua0-x22e.google.com with SMTP id g49so17270116uaa.1
+ for <kexec@lists.infradead.org>; Tue, 02 May 2017 00:19:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1fafe0dceb744c8587c3b3a398b46321@LPHQEX2013.litepoint.internal>
+From: Dumslicer Halo <dumslicer@gmail.com>
+Date: Tue, 2 May 2017 12:49:27 +0530
+Message-ID: <CAAhEX+KVeHHNucs6tZwvwFD9QXNptj1-1fih=seu8uRdB6S13w@mail.gmail.com>
+Subject: Help regarding renaming of vmcore-incomplete to vmcore
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,24 +18,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rudici Cazeao <rudici.cazeao@litepoint.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
+Hi I am a university student, and have made some changes to
+makedumpfile to produce a gzipped output of core dump. The issue I'm
+facing is that the output i get from makedumpfile (after it completes
+successfully) is vmcore-incomplete.gzip.
 
+But this file is not being renamed to vmcore.gzip (even thought the
+dump the complete as I verified it by loading into CRASH utility). Can
+someone please point out to me the changes I should make to solve this
+bug (or  can point to the code where this renaming is done).
 
-On Friday 28 April 2017 07:20 AM, Rudici Cazeao wrote:
-> I am running kexec in consecutive loops on 4 different dual-core arm processors.  On 3 of these processors, usually, somewhere between the 500th and the 5000th loop, the kernel gets stuck at "Starting new kernel". On the remaining processor, kexec is run over and over without running into this issue. And this appears to be pretty consistent. Any ideas?
->
-> Also, on rare occasions, the kernel gets stuck at " Uncompressing Linux... done, booting the kernel".
-
-Try to look for earlycon or earlyprintk setting for your board, and pass that 
-in "--append=" of kexec. You will have more information about the failed 
-component.
-
-~Pratyush
+Thanks and Regards,
 
 _______________________________________________
 kexec mailing list
