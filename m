@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d65mu-0001Jv-OM
- for kexec@lists.infradead.org; Thu, 04 May 2017 01:42:37 +0000
-From: Xunlei Pang <xlpang@redhat.com>
-Subject: [PATCH v3 1/2] x86/mm/ident_map: Add PUD level 1GB page support
-Date: Thu,  4 May 2017 09:42:50 +0800
-Message-Id: <1493862171-8799-1-git-send-email-xlpang@redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1d6DoS-00087Z-J1
+ for kexec@lists.infradead.org; Thu, 04 May 2017 10:16:47 +0000
+Date: Thu, 4 May 2017 12:16:09 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 12/32] x86/mm: Insure that boot memory areas are
+ mapped properly
+Message-ID: <20170504101609.vazu4tuc3gqapaqk@pd.tnic>
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211822.10190.67435.stgit@tlendack-t1.amdoffice.net>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170418211822.10190.67435.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,124 +21,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>
-Cc: Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, Borislav Petkov <bp@alien8.de>, Eric Biederman <ebiederm@xmission.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Xunlei Pang <xlpang@redhat.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-The current kernel_ident_mapping_init() creates the identity
-mapping always using 2MB page(PMD level), this patch adds the
-1GB page(PUD level) support.
+On Tue, Apr 18, 2017 at 04:18:22PM -0500, Tom Lendacky wrote:
+> The boot data and command line data are present in memory in a decrypted
+> state and are copied early in the boot process.  The early page fault
+> support will map these areas as encrypted, so before attempting to copy
+> them, add decrypted mappings so the data is accessed properly when copied.
+> 
+> For the initrd, encrypt this data in place. Since the future mapping of the
+> initrd area will be mapped as encrypted the data will be accessed properly.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/include/asm/mem_encrypt.h |   11 +++++
+>  arch/x86/include/asm/pgtable.h     |    3 +
+>  arch/x86/kernel/head64.c           |   30 ++++++++++++--
+>  arch/x86/kernel/setup.c            |   10 +++++
+>  arch/x86/mm/mem_encrypt.c          |   77 ++++++++++++++++++++++++++++++++++++
+>  5 files changed, 127 insertions(+), 4 deletions(-)
 
-The primary advantage would be better TLB coverage/performance,
-because we'd utilize 1GB TLBs instead of 2MB ones.
+...
 
-It is also useful for machines with large number of memory to
-save paging structure allocations(around 4MB/TB using 2MB page)
-when setting identity mappings for all the memory, after using
-1GB page it will consume only 8KB/TB.
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 603a166..a95800b 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -115,6 +115,7 @@
+>  #include <asm/microcode.h>
+>  #include <asm/mmu_context.h>
+>  #include <asm/kaslr.h>
+> +#include <asm/mem_encrypt.h>
+>  
+>  /*
+>   * max_low_pfn_mapped: highest direct mapped pfn under 4GB
+> @@ -374,6 +375,15 @@ static void __init reserve_initrd(void)
+>  	    !ramdisk_image || !ramdisk_size)
+>  		return;		/* No initrd provided by bootloader */
+>  
+> +	/*
+> +	 * If SME is active, this memory will be marked encrypted by the
+> +	 * kernel when it is accessed (including relocation). However, the
+> +	 * ramdisk image was loaded decrypted by the bootloader, so make
+> +	 * sure that it is encrypted before accessing it.
+> +	 */
+> +	if (sme_active())
 
-Signed-off-by: Xunlei Pang <xlpang@redhat.com>
----
- arch/x86/boot/compressed/pagetable.c |  2 +-
- arch/x86/include/asm/init.h          |  3 ++-
- arch/x86/kernel/machine_kexec_64.c   |  2 +-
- arch/x86/mm/ident_map.c              | 14 +++++++++++++-
- arch/x86/power/hibernate_64.c        |  2 +-
- 5 files changed, 18 insertions(+), 5 deletions(-)
+That test is not needed here because __sme_early_enc_dec() already tests
+sme_me_mask. There you should change that test to sme_active() instead.
 
-diff --git a/arch/x86/boot/compressed/pagetable.c b/arch/x86/boot/compressed/pagetable.c
-index 56589d0..1d78f17 100644
---- a/arch/x86/boot/compressed/pagetable.c
-+++ b/arch/x86/boot/compressed/pagetable.c
-@@ -70,7 +70,7 @@ static void *alloc_pgt_page(void *context)
-  * Due to relocation, pointers must be assigned at run time not build time.
-  */
- static struct x86_mapping_info mapping_info = {
--	.pmd_flag       = __PAGE_KERNEL_LARGE_EXEC,
-+	.page_flag       = __PAGE_KERNEL_LARGE_EXEC,
- };
- 
- /* Locates and clears a region for a new top level page table. */
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index 737da62..474eb8c 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -4,8 +4,9 @@
- struct x86_mapping_info {
- 	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
- 	void *context;			 /* context for alloc_pgt_page */
--	unsigned long pmd_flag;		 /* page flag for PMD entry */
-+	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
-+	bool direct_gbpages;		 /* PUD level 1GB page support */
- };
- 
- int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 085c3b3..1d4f2b0 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -113,7 +113,7 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 	struct x86_mapping_info info = {
- 		.alloc_pgt_page	= alloc_pgt_page,
- 		.context	= image,
--		.pmd_flag	= __PAGE_KERNEL_LARGE_EXEC,
-+		.page_flag	= __PAGE_KERNEL_LARGE_EXEC,
- 	};
- 	unsigned long mstart, mend;
- 	pgd_t *level4p;
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 04210a2..adab159 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -13,7 +13,7 @@ static void ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
- 		if (pmd_present(*pmd))
- 			continue;
- 
--		set_pmd(pmd, __pmd((addr - info->offset) | info->pmd_flag));
-+		set_pmd(pmd, __pmd((addr - info->offset) | info->page_flag));
- 	}
- }
- 
-@@ -30,6 +30,18 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
- 		if (next > end)
- 			next = end;
- 
-+		if (info->direct_gbpages) {
-+			pud_t pudval;
-+
-+			if (pud_present(*pud))
-+				continue;
-+
-+			addr &= PUD_MASK;
-+			pudval = __pud((addr - info->offset) | info->page_flag);
-+			set_pud(pud, pudval);
-+			continue;
-+		}
-+
- 		if (pud_present(*pud)) {
- 			pmd = pmd_offset(pud, 0);
- 			ident_pmd_init(info, pmd, addr, next);
-diff --git a/arch/x86/power/hibernate_64.c b/arch/x86/power/hibernate_64.c
-index 6a61194..a6e21fe 100644
---- a/arch/x86/power/hibernate_64.c
-+++ b/arch/x86/power/hibernate_64.c
-@@ -104,7 +104,7 @@ static int set_up_temporary_mappings(void)
- {
- 	struct x86_mapping_info info = {
- 		.alloc_pgt_page	= alloc_pgt_page,
--		.pmd_flag	= __PAGE_KERNEL_LARGE_EXEC,
-+		.page_flag	= __PAGE_KERNEL_LARGE_EXEC,
- 		.offset		= __PAGE_OFFSET,
- 	};
- 	unsigned long mstart, mend;
+> +		sme_early_encrypt(ramdisk_image, ramdisk_end - ramdisk_image);
+> +
+>  	initrd_start = 0;
+>  
+>  	mapped_size = memblock_mem_size(max_pfn_mapped);
+
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
