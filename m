@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d6aoJ-000321-SP
- for kexec@lists.infradead.org; Fri, 05 May 2017 10:50:09 +0000
-Subject: Re: [PATCH v3 2/2] x86_64/kexec: Use PUD level 1GB page for identity
- mapping if available
-References: <1493862171-8799-1-git-send-email-xlpang@redhat.com>
- <1493862171-8799-2-git-send-email-xlpang@redhat.com>
- <20170505065253.s5yv7c2cxgfcf4i3@gmail.com> <590C2A96.3090106@redhat.com>
- <20170505092046.2qu72pdherfxjmec@gmail.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <590C5912.80202@redhat.com>
-Date: Fri, 5 May 2017 18:50:58 +0800
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1d6gmO-0001Zx-Jr
+ for kexec@lists.infradead.org; Fri, 05 May 2017 17:12:34 +0000
+Date: Fri, 5 May 2017 19:11:55 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 13/32] x86/boot/e820: Add support to determine the
+ E820 type of an address
+Message-ID: <20170505171155.4fm22ks6m5j7lpjm@pd.tnic>
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211831.10190.80158.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
-In-Reply-To: <20170505092046.2qu72pdherfxjmec@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170418211831.10190.80158.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,51 +21,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>, xlpang@redhat.com
-Cc: Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Eric Biederman <ebiederm@xmission.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On 05/05/2017 at 05:20 PM, Ingo Molnar wrote:
-> * Xunlei Pang <xpang@redhat.com> wrote:
->
->> On 05/05/2017 at 02:52 PM, Ingo Molnar wrote:
->>> * Xunlei Pang <xlpang@redhat.com> wrote:
->>>
->>>> @@ -122,6 +122,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
->>>>  
->>>>  	level4p = (pgd_t *)__va(start_pgtable);
->>>>  	clear_page(level4p);
->>>> +
->>>> +	if (direct_gbpages)
->>>> +		info.direct_gbpages = true;
->>> No, this should be keyed off the CPU feature (X86_FEATURE_GBPAGES) automatically, 
->>> not set blindly! AFAICS this patch will crash kexec on any CPU that does not 
->>> support gbpages.
->> It should be fine, probe_page_size_mask() already takes care of this:
->>     if (direct_gbpages && boot_cpu_has(X86_FEATURE_GBPAGES)) {
->>         printk(KERN_INFO "Using GB pages for direct mapping\n");
->>         page_size_mask |= 1 << PG_LEVEL_1G;
->>     } else {
->>         direct_gbpages = 0;
->>     }
->>
->> So if X86_FEATURE_GBPAGES is not supported, direct_gbpages will be set to 0.
-> So why is the introduction of the info.direct_gbpages flag necessary? AFAICS it 
-> just duplicates the kernel's direct_gbpages flag. One outcome is that hibernation 
-> won't use gbpages, which is silly.
+On Tue, Apr 18, 2017 at 04:18:31PM -0500, Tom Lendacky wrote:
+> Add a function that will return the E820 type associated with an address
+> range.
 
-boot/compressed/pagetable.c  also uses kernel_ident_mapping_init() for kaslr, at the moment
-we don't have "direct_gbpages" definition or X86_FEATURE_GBPAGES feature detection.
+...
 
-I thought that we can change the other call sites when found really needed.
+> @@ -110,9 +111,28 @@ bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
+>  		 * coverage of the desired range exists:
+>  		 */
+>  		if (start >= end)
+> -			return 1;
+> +			return entry;
+>  	}
+> -	return 0;
+> +
+> +	return NULL;
+> +}
+> +
+> +/*
+> + * This function checks if the entire range <start,end> is mapped with type.
+> + */
+> +bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
+> +{
+> +	return __e820__mapped_all(start, end, type) ? 1 : 0;
 
-Regards,
-Xunlei
+	return !!__e820__mapped_all(start, end, type);
 
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
