@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-it0-x22c.google.com ([2607:f8b0:4001:c0b::22c])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d6uSJ-0001iy-Qs
- for kexec@lists.infradead.org; Sat, 06 May 2017 07:48:46 +0000
-Received: by mail-it0-x22c.google.com with SMTP id c15so42381705ith.0
- for <kexec@lists.infradead.org>; Sat, 06 May 2017 00:48:23 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20170505171155.4fm22ks6m5j7lpjm@pd.tnic>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1d7Ppj-0004q7-ES
+ for kexec@lists.infradead.org; Sun, 07 May 2017 17:19:01 +0000
+Date: Sun, 7 May 2017 19:18:22 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 15/32] efi: Update efi_mem_type() to return an error
+ rather than 0
+Message-ID: <20170507171822.x7grrqg2tcvbv6j5@pd.tnic>
 References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211831.10190.80158.stgit@tlendack-t1.amdoffice.net>
- <20170505171155.4fm22ks6m5j7lpjm@pd.tnic>
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date: Sat, 6 May 2017 08:48:22 +0100
-Message-ID: <CAKv+Gu-h+1UWPCUwvJT2AD=JtPqYQRRrrUCFjWNiAOCKfHh7rg@mail.gmail.com>
-Subject: Re: [PATCH v5 13/32] x86/boot/e820: Add support to determine the E820
- type of an address
+ <20170418211900.10190.98158.stgit@tlendack-t1.amdoffice.net>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170418211900.10190.98158.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +25,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, "x86@kernel.org" <x86@kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>, KVM devel mailing list <kvm@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev <kasan-dev@googlegroups.com>, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Tom Lendacky <thomas.lendacky@amd.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-On 5 May 2017 at 18:11, Borislav Petkov <bp@alien8.de> wrote:
-> On Tue, Apr 18, 2017 at 04:18:31PM -0500, Tom Lendacky wrote:
->> Add a function that will return the E820 type associated with an address
->> range.
->
-> ...
->
->> @@ -110,9 +111,28 @@ bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
->>                * coverage of the desired range exists:
->>                */
->>               if (start >= end)
->> -                     return 1;
->> +                     return entry;
->>       }
->> -     return 0;
->> +
->> +     return NULL;
->> +}
->> +
->> +/*
->> + * This function checks if the entire range <start,end> is mapped with type.
->> + */
->> +bool __init e820__mapped_all(u64 start, u64 end, enum e820_type type)
->> +{
->> +     return __e820__mapped_all(start, end, type) ? 1 : 0;
->
->         return !!__e820__mapped_all(start, end, type);
->
+On Tue, Apr 18, 2017 at 04:19:00PM -0500, Tom Lendacky wrote:
+> The efi_mem_type() function currently returns a 0, which maps to
+> EFI_RESERVED_TYPE, if the function is unable to find a memmap entry for
+> the supplied physical address. Returning EFI_RESERVED_TYPE implies that
+> a memmap entry exists, when it doesn't.  Instead of returning 0, change
+> the function to return a negative error value when no memmap entry is
+> found.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
 
-Even the !! double negation is redundant, given that the function returns bool.
+...
+
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index cd768a1..a27bb3f 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -973,7 +973,7 @@ static inline void efi_esrt_init(void) { }
+>  extern int efi_config_parse_tables(void *config_tables, int count, int sz,
+>  				   efi_config_table_type_t *arch_tables);
+>  extern u64 efi_get_iobase (void);
+> -extern u32 efi_mem_type (unsigned long phys_addr);
+> +extern int efi_mem_type (unsigned long phys_addr);
+
+WARNING: space prohibited between function name and open parenthesis '('
+#101: FILE: include/linux/efi.h:976:
++extern int efi_mem_type (unsigned long phys_addr);
+
+Please integrate scripts/checkpatch.pl in your patch creation workflow.
+Some of the warnings/errors *actually* make sense.
+
+I know, the other function prototypes have a space too but that's not
+our coding style. Looks like this trickled in from ia64, from looking at
+arch/ia64/kernel/efi.c.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
