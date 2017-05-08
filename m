@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f50.google.com ([74.125.83.50])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d7i6r-0000TB-Ag
- for kexec@lists.infradead.org; Mon, 08 May 2017 12:49:54 +0000
-Received: by mail-pg0-f50.google.com with SMTP id u28so22658435pgn.1
- for <kexec@lists.infradead.org>; Mon, 08 May 2017 05:49:32 -0700 (PDT)
-From: Pratyush Anand <panand@redhat.com>
-Subject: [Makedumpfile PATCH] elf_info: fix file_size if segment is excluded
-Date: Mon,  8 May 2017 18:11:46 +0530
-Message-Id: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d7i6p-0005CD-1O
+ for kexec@lists.infradead.org; Mon, 08 May 2017 12:49:51 +0000
+From: Baoquan He <bhe@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [Makedumpfile PATCH] elf_info: fix file_size if segment is
+ excluded
+Message-Id: <7FA68CAA-173B-4988-A0E3-83DE747422FC@redhat.com>
+Date: Mon, 8 May 2017 08:49:02 -0400 (EDT)
+References: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
+In-Reply-To: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,112 +19,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ats-kumagai@wm.jp.nec.com
-Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
+To: Pratyush Anand <panand@redhat.com>
+Cc: dyoung@redhat.com, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org
 
-I received following on a specific x86_64 hp virtual machine while
-executing `makedumpfile --mem-usage /proc/kcore`.
-
-vtop4_x86_64: Can't get a valid pte.
-readmem: Can't convert a virtual address(ffffffff88115860) to physical address.
-readmem: type_addr: 0, addr:ffffffff88115860, size:128
-get_nodes_online: Can't get the node online map.
-
-With some debug print in vtop4_x86_64() I noticed that pte value is read
-as 0, while crash reads the value correctly:
-
-from makedumpfile:
-vaddr=ffffffff88115860
-page_dir=59eaff8
-pml4=59ed067
-pgd_paddr=59edff0
-pgd_pte=59ee063
-pmd_paddr=59ee200
-pmd_pte=3642f063
-pte_paddr=3642f8a8
-pte=0
-
-from crash
-crash> vtop ffffffff88115860
-VIRTUAL           PHYSICAL
-ffffffff88115860  5b15860
-
-PML4 DIRECTORY: ffffffff87fea000
-PAGE DIRECTORY: 59ed067
-   PUD: 59edff0 => 59ee063
-   PMD: 59ee200 => 3642f063
-   PTE: 3642f8a8 => 5b15163
-  PAGE: 5b15000
-
-With some more debug prints in elf_info.c
-
-Before calling exclude_segment()
-
-LOAD (2)
-  phys_start : 100000
-  phys_end   : dfffd000
-  virt_start : ffff8a5a40100000
-  virt_end   : ffff8a5b1fffd000
-  file_offset: a5a40102000
-  file_size  : dfefd000
-
-exclude_segment() is called for Crash Kernel whose range is
-2b000000-350fffff.
-
-We see following after exclude_segment()
-
-LOAD (2)
-  phys_start : 100000
-  phys_end   : 2affffff
-  virt_start : ffff8a5a40100000
-  virt_end   : ffff8a5a6affffff
-  file_offset: a5a40102000
-  file_size  : dfefd000
-LOAD (3)
-  phys_start : 35100000
-  phys_end   : dfffd000
-  virt_start : ffff8a5a75100000
-  virt_end   : ffff8a5b1fffd000
-  file_offset: a5a75102000
-  file_size  : 0
-
-Since file_size is calculated wrong therefore readpage_elf() does not
-behave correctly.
-
-This patch fixes above wrong behavior.
-
-Signed-off-by: Pratyush Anand <panand@redhat.com>
----
- elf_info.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/elf_info.c b/elf_info.c
-index 8e2437622141..6bf5e3373595 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -826,9 +826,12 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
- 				temp_seg.virt_end = vend;
- 				temp_seg.file_offset = (*pt_loads)[i].file_offset
- 					+ temp_seg.virt_start - (*pt_loads)[i].virt_start;
-+				temp_seg.file_size = temp_seg.phys_end
-+					- temp_seg.phys_start;
- 
- 				(*pt_loads)[i].virt_end = kvstart - 1;
- 				(*pt_loads)[i].phys_end =  start - 1;
-+				(*pt_loads)[i].file_size -= temp_seg.file_size;
- 
- 				tidx = i+1;
- 			} else if (kvstart != vstart) {
--- 
-2.9.3
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+DQpHb29kIGNhdGNoIQ0KQWNrDQoNCrei19TO0rXEIGlQaG9uZQ0KDQo+INTaIDIwMTfE6jXUwjjI
+1aOsz8LO5zg6NDGjrFByYXR5dXNoIEFuYW5kIDxwYW5hbmRAcmVkaGF0LmNvbT4g0LS1wKO6DQo+
+IA0KPiBJIHJlY2VpdmVkIGZvbGxvd2luZyBvbiBhIHNwZWNpZmljIHg4Nl82NCBocCB2aXJ0dWFs
+IG1hY2hpbmUgd2hpbGUNCj4gZXhlY3V0aW5nIGBtYWtlZHVtcGZpbGUgLS1tZW0tdXNhZ2UgL3By
+b2Mva2NvcmVgLg0KPiANCj4gdnRvcDRfeDg2XzY0OiBDYW4ndCBnZXQgYSB2YWxpZCBwdGUuDQo+
+IHJlYWRtZW06IENhbid0IGNvbnZlcnQgYSB2aXJ0dWFsIGFkZHJlc3MoZmZmZmZmZmY4ODExNTg2
+MCkgdG8gcGh5c2ljYWwgYWRkcmVzcy4NCj4gcmVhZG1lbTogdHlwZV9hZGRyOiAwLCBhZGRyOmZm
+ZmZmZmZmODgxMTU4NjAsIHNpemU6MTI4DQo+IGdldF9ub2Rlc19vbmxpbmU6IENhbid0IGdldCB0
+aGUgbm9kZSBvbmxpbmUgbWFwLg0KPiANCj4gV2l0aCBzb21lIGRlYnVnIHByaW50IGluIHZ0b3A0
+X3g4Nl82NCgpIEkgbm90aWNlZCB0aGF0IHB0ZSB2YWx1ZSBpcyByZWFkDQo+IGFzIDAsIHdoaWxl
+IGNyYXNoIHJlYWRzIHRoZSB2YWx1ZSBjb3JyZWN0bHk6DQo+IA0KPiBmcm9tIG1ha2VkdW1wZmls
+ZToNCj4gdmFkZHI9ZmZmZmZmZmY4ODExNTg2MA0KPiBwYWdlX2Rpcj01OWVhZmY4DQo+IHBtbDQ9
+NTllZDA2Nw0KPiBwZ2RfcGFkZHI9NTllZGZmMA0KPiBwZ2RfcHRlPTU5ZWUwNjMNCj4gcG1kX3Bh
+ZGRyPTU5ZWUyMDANCj4gcG1kX3B0ZT0zNjQyZjA2Mw0KPiBwdGVfcGFkZHI9MzY0MmY4YTgNCj4g
+cHRlPTANCj4gDQo+IGZyb20gY3Jhc2gNCj4gY3Jhc2g+IHZ0b3AgZmZmZmZmZmY4ODExNTg2MA0K
+PiBWSVJUVUFMICAgICAgICAgICBQSFlTSUNBTA0KPiBmZmZmZmZmZjg4MTE1ODYwICA1YjE1ODYw
+DQo+IA0KPiBQTUw0IERJUkVDVE9SWTogZmZmZmZmZmY4N2ZlYTAwMA0KPiBQQUdFIERJUkVDVE9S
+WTogNTllZDA2Nw0KPiAgIFBVRDogNTllZGZmMCA9PiA1OWVlMDYzDQo+ICAgUE1EOiA1OWVlMjAw
+ID0+IDM2NDJmMDYzDQo+ICAgUFRFOiAzNjQyZjhhOCA9PiA1YjE1MTYzDQo+ICBQQUdFOiA1YjE1
+MDAwDQo+IA0KPiBXaXRoIHNvbWUgbW9yZSBkZWJ1ZyBwcmludHMgaW4gZWxmX2luZm8uYw0KPiAN
+Cj4gQmVmb3JlIGNhbGxpbmcgZXhjbHVkZV9zZWdtZW50KCkNCj4gDQo+IExPQUQgKDIpDQo+ICBw
+aHlzX3N0YXJ0IDogMTAwMDAwDQo+ICBwaHlzX2VuZCAgIDogZGZmZmQwMDANCj4gIHZpcnRfc3Rh
+cnQgOiBmZmZmOGE1YTQwMTAwMDAwDQo+ICB2aXJ0X2VuZCAgIDogZmZmZjhhNWIxZmZmZDAwMA0K
+PiAgZmlsZV9vZmZzZXQ6IGE1YTQwMTAyMDAwDQo+ICBmaWxlX3NpemUgIDogZGZlZmQwMDANCj4g
+DQo+IGV4Y2x1ZGVfc2VnbWVudCgpIGlzIGNhbGxlZCBmb3IgQ3Jhc2ggS2VybmVsIHdob3NlIHJh
+bmdlIGlzDQo+IDJiMDAwMDAwLTM1MGZmZmZmLg0KPiANCj4gV2Ugc2VlIGZvbGxvd2luZyBhZnRl
+ciBleGNsdWRlX3NlZ21lbnQoKQ0KPiANCj4gTE9BRCAoMikNCj4gIHBoeXNfc3RhcnQgOiAxMDAw
+MDANCj4gIHBoeXNfZW5kICAgOiAyYWZmZmZmZg0KPiAgdmlydF9zdGFydCA6IGZmZmY4YTVhNDAx
+MDAwMDANCj4gIHZpcnRfZW5kICAgOiBmZmZmOGE1YTZhZmZmZmZmDQo+ICBmaWxlX29mZnNldDog
+YTVhNDAxMDIwMDANCj4gIGZpbGVfc2l6ZSAgOiBkZmVmZDAwMA0KPiBMT0FEICgzKQ0KPiAgcGh5
+c19zdGFydCA6IDM1MTAwMDAwDQo+ICBwaHlzX2VuZCAgIDogZGZmZmQwMDANCj4gIHZpcnRfc3Rh
+cnQgOiBmZmZmOGE1YTc1MTAwMDAwDQo+ICB2aXJ0X2VuZCAgIDogZmZmZjhhNWIxZmZmZDAwMA0K
+PiAgZmlsZV9vZmZzZXQ6IGE1YTc1MTAyMDAwDQo+ICBmaWxlX3NpemUgIDogMA0KPiANCj4gU2lu
+Y2UgZmlsZV9zaXplIGlzIGNhbGN1bGF0ZWQgd3JvbmcgdGhlcmVmb3JlIHJlYWRwYWdlX2VsZigp
+IGRvZXMgbm90DQo+IGJlaGF2ZSBjb3JyZWN0bHkuDQo+IA0KPiBUaGlzIHBhdGNoIGZpeGVzIGFi
+b3ZlIHdyb25nIGJlaGF2aW9yLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUHJhdHl1c2ggQW5hbmQg
+PHBhbmFuZEByZWRoYXQuY29tPg0KPiAtLS0NCj4gZWxmX2luZm8uYyB8IDMgKysrDQo+IDEgZmls
+ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9lbGZfaW5mby5j
+IGIvZWxmX2luZm8uYw0KPiBpbmRleCA4ZTI0Mzc2MjIxNDEuLjZiZjVlMzM3MzU5NSAxMDA2NDQN
+Cj4gLS0tIGEvZWxmX2luZm8uYw0KPiArKysgYi9lbGZfaW5mby5jDQo+IEBAIC04MjYsOSArODI2
+LDEyIEBAIHN0YXRpYyBpbnQgZXhjbHVkZV9zZWdtZW50KHN0cnVjdCBwdF9sb2FkX3NlZ21lbnQg
+KipwdF9sb2FkcywNCj4gICAgICAgICAgICAgICAgdGVtcF9zZWcudmlydF9lbmQgPSB2ZW5kOw0K
+PiAgICAgICAgICAgICAgICB0ZW1wX3NlZy5maWxlX29mZnNldCA9ICgqcHRfbG9hZHMpW2ldLmZp
+bGVfb2Zmc2V0DQo+ICAgICAgICAgICAgICAgICAgICArIHRlbXBfc2VnLnZpcnRfc3RhcnQgLSAo
+KnB0X2xvYWRzKVtpXS52aXJ0X3N0YXJ0Ow0KPiArICAgICAgICAgICAgICAgIHRlbXBfc2VnLmZp
+bGVfc2l6ZSA9IHRlbXBfc2VnLnBoeXNfZW5kDQo+ICsgICAgICAgICAgICAgICAgICAgIC0gdGVt
+cF9zZWcucGh5c19zdGFydDsNCj4gDQo+ICAgICAgICAgICAgICAgICgqcHRfbG9hZHMpW2ldLnZp
+cnRfZW5kID0ga3ZzdGFydCAtIDE7DQo+ICAgICAgICAgICAgICAgICgqcHRfbG9hZHMpW2ldLnBo
+eXNfZW5kID0gIHN0YXJ0IC0gMTsNCj4gKyAgICAgICAgICAgICAgICAoKnB0X2xvYWRzKVtpXS5m
+aWxlX3NpemUgLT0gdGVtcF9zZWcuZmlsZV9zaXplOw0KPiANCj4gICAgICAgICAgICAgICAgdGlk
+eCA9IGkrMTsNCj4gICAgICAgICAgICB9IGVsc2UgaWYgKGt2c3RhcnQgIT0gdnN0YXJ0KSB7DQo+
+IC0tIA0KPiAyLjkuMw0KPiANCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
