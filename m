@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pg0-f50.google.com ([74.125.83.50])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d7d1L-0002N6-Q9
- for kexec@lists.infradead.org; Mon, 08 May 2017 07:23:53 +0000
-Subject: Re: [PATCH v3 2/2] x86_64/kexec: Use PUD level 1GB page for identity
- mapping if available
-References: <1493862171-8799-1-git-send-email-xlpang@redhat.com>
- <1493862171-8799-2-git-send-email-xlpang@redhat.com>
- <20170505065253.s5yv7c2cxgfcf4i3@gmail.com> <590C2A96.3090106@redhat.com>
- <20170505092046.2qu72pdherfxjmec@gmail.com> <590C5912.80202@redhat.com>
- <20170508062932.bzg6ck5efarvzqlt@gmail.com>
-From: Xunlei Pang <xpang@redhat.com>
-Message-ID: <59101D3B.2030606@redhat.com>
-Date: Mon, 8 May 2017 15:24:43 +0800
-MIME-Version: 1.0
-In-Reply-To: <20170508062932.bzg6ck5efarvzqlt@gmail.com>
+ id 1d7i6r-0000TB-Ag
+ for kexec@lists.infradead.org; Mon, 08 May 2017 12:49:54 +0000
+Received: by mail-pg0-f50.google.com with SMTP id u28so22658435pgn.1
+ for <kexec@lists.infradead.org>; Mon, 08 May 2017 05:49:32 -0700 (PDT)
+From: Pratyush Anand <panand@redhat.com>
+Subject: [Makedumpfile PATCH] elf_info: fix file_size if segment is excluded
+Date: Mon,  8 May 2017 18:11:46 +0530
+Message-Id: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,57 +17,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: xlpang@redhat.com
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>, xlpang@redhat.com
-Cc: Yinghai Lu <yinghai@kernel.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Eric Biederman <ebiederm@xmission.com>, Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+To: ats-kumagai@wm.jp.nec.com
+Cc: Pratyush Anand <panand@redhat.com>, dyoung@redhat.com, kexec@lists.infradead.org, bhe@redhat.com
 
-On 05/08/2017 at 02:29 PM, Ingo Molnar wrote:
-> * Xunlei Pang <xpang@redhat.com> wrote:
->
->> On 05/05/2017 at 05:20 PM, Ingo Molnar wrote:
->>> * Xunlei Pang <xpang@redhat.com> wrote:
->>>
->>>> On 05/05/2017 at 02:52 PM, Ingo Molnar wrote:
->>>>> * Xunlei Pang <xlpang@redhat.com> wrote:
->>>>>
->>>>>> @@ -122,6 +122,10 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
->>>>>>  
->>>>>>  	level4p = (pgd_t *)__va(start_pgtable);
->>>>>>  	clear_page(level4p);
->>>>>> +
->>>>>> +	if (direct_gbpages)
->>>>>> +		info.direct_gbpages = true;
->>>>> No, this should be keyed off the CPU feature (X86_FEATURE_GBPAGES) automatically, 
->>>>> not set blindly! AFAICS this patch will crash kexec on any CPU that does not 
->>>>> support gbpages.
->>>> It should be fine, probe_page_size_mask() already takes care of this:
->>>>     if (direct_gbpages && boot_cpu_has(X86_FEATURE_GBPAGES)) {
->>>>         printk(KERN_INFO "Using GB pages for direct mapping\n");
->>>>         page_size_mask |= 1 << PG_LEVEL_1G;
->>>>     } else {
->>>>         direct_gbpages = 0;
->>>>     }
->>>>
->>>> So if X86_FEATURE_GBPAGES is not supported, direct_gbpages will be set to 0.
->>> So why is the introduction of the info.direct_gbpages flag necessary? AFAICS it 
->>> just duplicates the kernel's direct_gbpages flag. One outcome is that hibernation 
->>> won't use gbpages, which is silly.
->> boot/compressed/pagetable.c also uses kernel_ident_mapping_init() for kaslr, at 
->> the moment we don't have "direct_gbpages" definition or X86_FEATURE_GBPAGES 
->> feature detection.
->>
->> I thought that we can change the other call sites when found really needed.
-> Ok, you are right - I'll use the original patches as submitted, with the updated 
-> changelogs.
+I received following on a specific x86_64 hp virtual machine while
+executing `makedumpfile --mem-usage /proc/kcore`.
 
-Thanks!
+vtop4_x86_64: Can't get a valid pte.
+readmem: Can't convert a virtual address(ffffffff88115860) to physical address.
+readmem: type_addr: 0, addr:ffffffff88115860, size:128
+get_nodes_online: Can't get the node online map.
 
-Regards,
-Xunlei
+With some debug print in vtop4_x86_64() I noticed that pte value is read
+as 0, while crash reads the value correctly:
+
+from makedumpfile:
+vaddr=ffffffff88115860
+page_dir=59eaff8
+pml4=59ed067
+pgd_paddr=59edff0
+pgd_pte=59ee063
+pmd_paddr=59ee200
+pmd_pte=3642f063
+pte_paddr=3642f8a8
+pte=0
+
+from crash
+crash> vtop ffffffff88115860
+VIRTUAL           PHYSICAL
+ffffffff88115860  5b15860
+
+PML4 DIRECTORY: ffffffff87fea000
+PAGE DIRECTORY: 59ed067
+   PUD: 59edff0 => 59ee063
+   PMD: 59ee200 => 3642f063
+   PTE: 3642f8a8 => 5b15163
+  PAGE: 5b15000
+
+With some more debug prints in elf_info.c
+
+Before calling exclude_segment()
+
+LOAD (2)
+  phys_start : 100000
+  phys_end   : dfffd000
+  virt_start : ffff8a5a40100000
+  virt_end   : ffff8a5b1fffd000
+  file_offset: a5a40102000
+  file_size  : dfefd000
+
+exclude_segment() is called for Crash Kernel whose range is
+2b000000-350fffff.
+
+We see following after exclude_segment()
+
+LOAD (2)
+  phys_start : 100000
+  phys_end   : 2affffff
+  virt_start : ffff8a5a40100000
+  virt_end   : ffff8a5a6affffff
+  file_offset: a5a40102000
+  file_size  : dfefd000
+LOAD (3)
+  phys_start : 35100000
+  phys_end   : dfffd000
+  virt_start : ffff8a5a75100000
+  virt_end   : ffff8a5b1fffd000
+  file_offset: a5a75102000
+  file_size  : 0
+
+Since file_size is calculated wrong therefore readpage_elf() does not
+behave correctly.
+
+This patch fixes above wrong behavior.
+
+Signed-off-by: Pratyush Anand <panand@redhat.com>
+---
+ elf_info.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/elf_info.c b/elf_info.c
+index 8e2437622141..6bf5e3373595 100644
+--- a/elf_info.c
++++ b/elf_info.c
+@@ -826,9 +826,12 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
+ 				temp_seg.virt_end = vend;
+ 				temp_seg.file_offset = (*pt_loads)[i].file_offset
+ 					+ temp_seg.virt_start - (*pt_loads)[i].virt_start;
++				temp_seg.file_size = temp_seg.phys_end
++					- temp_seg.phys_start;
+ 
+ 				(*pt_loads)[i].virt_end = kvstart - 1;
+ 				(*pt_loads)[i].phys_end =  start - 1;
++				(*pt_loads)[i].file_size -= temp_seg.file_size;
+ 
+ 				tidx = i+1;
+ 			} else if (kvstart != vstart) {
+-- 
+2.9.3
+
 
 _______________________________________________
 kexec mailing list
