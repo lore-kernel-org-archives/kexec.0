@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d7i6p-0005CD-1O
- for kexec@lists.infradead.org; Mon, 08 May 2017 12:49:51 +0000
-From: Baoquan He <bhe@redhat.com>
+Received: from mail-dm3nam03on0057.outbound.protection.outlook.com
+ ([104.47.41.57] helo=NAM03-DM3-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1d7iaj-0005uz-Si
+ for kexec@lists.infradead.org; Mon, 08 May 2017 13:20:48 +0000
+Subject: Re: [PATCH v5 15/32] efi: Update efi_mem_type() to return an error
+ rather than 0
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211900.10190.98158.stgit@tlendack-t1.amdoffice.net>
+ <20170507171822.x7grrqg2tcvbv6j5@pd.tnic>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <eb677bb2-ec20-c7a4-cd37-80f3f381981f@amd.com>
+Date: Mon, 8 May 2017 08:20:14 -0500
 MIME-Version: 1.0
-Subject: Re: [Makedumpfile PATCH] elf_info: fix file_size if segment is
- excluded
-Message-Id: <7FA68CAA-173B-4988-A0E3-83DE747422FC@redhat.com>
-Date: Mon, 8 May 2017 08:49:02 -0400 (EDT)
-References: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
-In-Reply-To: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
+In-Reply-To: <20170507171822.x7grrqg2tcvbv6j5@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,64 +22,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: dyoung@redhat.com, ats-kumagai@wm.jp.nec.com, kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S.
+ Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-DQpHb29kIGNhdGNoIQ0KQWNrDQoNCrei19TO0rXEIGlQaG9uZQ0KDQo+INTaIDIwMTfE6jXUwjjI
-1aOsz8LO5zg6NDGjrFByYXR5dXNoIEFuYW5kIDxwYW5hbmRAcmVkaGF0LmNvbT4g0LS1wKO6DQo+
-IA0KPiBJIHJlY2VpdmVkIGZvbGxvd2luZyBvbiBhIHNwZWNpZmljIHg4Nl82NCBocCB2aXJ0dWFs
-IG1hY2hpbmUgd2hpbGUNCj4gZXhlY3V0aW5nIGBtYWtlZHVtcGZpbGUgLS1tZW0tdXNhZ2UgL3By
-b2Mva2NvcmVgLg0KPiANCj4gdnRvcDRfeDg2XzY0OiBDYW4ndCBnZXQgYSB2YWxpZCBwdGUuDQo+
-IHJlYWRtZW06IENhbid0IGNvbnZlcnQgYSB2aXJ0dWFsIGFkZHJlc3MoZmZmZmZmZmY4ODExNTg2
-MCkgdG8gcGh5c2ljYWwgYWRkcmVzcy4NCj4gcmVhZG1lbTogdHlwZV9hZGRyOiAwLCBhZGRyOmZm
-ZmZmZmZmODgxMTU4NjAsIHNpemU6MTI4DQo+IGdldF9ub2Rlc19vbmxpbmU6IENhbid0IGdldCB0
-aGUgbm9kZSBvbmxpbmUgbWFwLg0KPiANCj4gV2l0aCBzb21lIGRlYnVnIHByaW50IGluIHZ0b3A0
-X3g4Nl82NCgpIEkgbm90aWNlZCB0aGF0IHB0ZSB2YWx1ZSBpcyByZWFkDQo+IGFzIDAsIHdoaWxl
-IGNyYXNoIHJlYWRzIHRoZSB2YWx1ZSBjb3JyZWN0bHk6DQo+IA0KPiBmcm9tIG1ha2VkdW1wZmls
-ZToNCj4gdmFkZHI9ZmZmZmZmZmY4ODExNTg2MA0KPiBwYWdlX2Rpcj01OWVhZmY4DQo+IHBtbDQ9
-NTllZDA2Nw0KPiBwZ2RfcGFkZHI9NTllZGZmMA0KPiBwZ2RfcHRlPTU5ZWUwNjMNCj4gcG1kX3Bh
-ZGRyPTU5ZWUyMDANCj4gcG1kX3B0ZT0zNjQyZjA2Mw0KPiBwdGVfcGFkZHI9MzY0MmY4YTgNCj4g
-cHRlPTANCj4gDQo+IGZyb20gY3Jhc2gNCj4gY3Jhc2g+IHZ0b3AgZmZmZmZmZmY4ODExNTg2MA0K
-PiBWSVJUVUFMICAgICAgICAgICBQSFlTSUNBTA0KPiBmZmZmZmZmZjg4MTE1ODYwICA1YjE1ODYw
-DQo+IA0KPiBQTUw0IERJUkVDVE9SWTogZmZmZmZmZmY4N2ZlYTAwMA0KPiBQQUdFIERJUkVDVE9S
-WTogNTllZDA2Nw0KPiAgIFBVRDogNTllZGZmMCA9PiA1OWVlMDYzDQo+ICAgUE1EOiA1OWVlMjAw
-ID0+IDM2NDJmMDYzDQo+ICAgUFRFOiAzNjQyZjhhOCA9PiA1YjE1MTYzDQo+ICBQQUdFOiA1YjE1
-MDAwDQo+IA0KPiBXaXRoIHNvbWUgbW9yZSBkZWJ1ZyBwcmludHMgaW4gZWxmX2luZm8uYw0KPiAN
-Cj4gQmVmb3JlIGNhbGxpbmcgZXhjbHVkZV9zZWdtZW50KCkNCj4gDQo+IExPQUQgKDIpDQo+ICBw
-aHlzX3N0YXJ0IDogMTAwMDAwDQo+ICBwaHlzX2VuZCAgIDogZGZmZmQwMDANCj4gIHZpcnRfc3Rh
-cnQgOiBmZmZmOGE1YTQwMTAwMDAwDQo+ICB2aXJ0X2VuZCAgIDogZmZmZjhhNWIxZmZmZDAwMA0K
-PiAgZmlsZV9vZmZzZXQ6IGE1YTQwMTAyMDAwDQo+ICBmaWxlX3NpemUgIDogZGZlZmQwMDANCj4g
-DQo+IGV4Y2x1ZGVfc2VnbWVudCgpIGlzIGNhbGxlZCBmb3IgQ3Jhc2ggS2VybmVsIHdob3NlIHJh
-bmdlIGlzDQo+IDJiMDAwMDAwLTM1MGZmZmZmLg0KPiANCj4gV2Ugc2VlIGZvbGxvd2luZyBhZnRl
-ciBleGNsdWRlX3NlZ21lbnQoKQ0KPiANCj4gTE9BRCAoMikNCj4gIHBoeXNfc3RhcnQgOiAxMDAw
-MDANCj4gIHBoeXNfZW5kICAgOiAyYWZmZmZmZg0KPiAgdmlydF9zdGFydCA6IGZmZmY4YTVhNDAx
-MDAwMDANCj4gIHZpcnRfZW5kICAgOiBmZmZmOGE1YTZhZmZmZmZmDQo+ICBmaWxlX29mZnNldDog
-YTVhNDAxMDIwMDANCj4gIGZpbGVfc2l6ZSAgOiBkZmVmZDAwMA0KPiBMT0FEICgzKQ0KPiAgcGh5
-c19zdGFydCA6IDM1MTAwMDAwDQo+ICBwaHlzX2VuZCAgIDogZGZmZmQwMDANCj4gIHZpcnRfc3Rh
-cnQgOiBmZmZmOGE1YTc1MTAwMDAwDQo+ICB2aXJ0X2VuZCAgIDogZmZmZjhhNWIxZmZmZDAwMA0K
-PiAgZmlsZV9vZmZzZXQ6IGE1YTc1MTAyMDAwDQo+ICBmaWxlX3NpemUgIDogMA0KPiANCj4gU2lu
-Y2UgZmlsZV9zaXplIGlzIGNhbGN1bGF0ZWQgd3JvbmcgdGhlcmVmb3JlIHJlYWRwYWdlX2VsZigp
-IGRvZXMgbm90DQo+IGJlaGF2ZSBjb3JyZWN0bHkuDQo+IA0KPiBUaGlzIHBhdGNoIGZpeGVzIGFi
-b3ZlIHdyb25nIGJlaGF2aW9yLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUHJhdHl1c2ggQW5hbmQg
-PHBhbmFuZEByZWRoYXQuY29tPg0KPiAtLS0NCj4gZWxmX2luZm8uYyB8IDMgKysrDQo+IDEgZmls
-ZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9lbGZfaW5mby5j
-IGIvZWxmX2luZm8uYw0KPiBpbmRleCA4ZTI0Mzc2MjIxNDEuLjZiZjVlMzM3MzU5NSAxMDA2NDQN
-Cj4gLS0tIGEvZWxmX2luZm8uYw0KPiArKysgYi9lbGZfaW5mby5jDQo+IEBAIC04MjYsOSArODI2
-LDEyIEBAIHN0YXRpYyBpbnQgZXhjbHVkZV9zZWdtZW50KHN0cnVjdCBwdF9sb2FkX3NlZ21lbnQg
-KipwdF9sb2FkcywNCj4gICAgICAgICAgICAgICAgdGVtcF9zZWcudmlydF9lbmQgPSB2ZW5kOw0K
-PiAgICAgICAgICAgICAgICB0ZW1wX3NlZy5maWxlX29mZnNldCA9ICgqcHRfbG9hZHMpW2ldLmZp
-bGVfb2Zmc2V0DQo+ICAgICAgICAgICAgICAgICAgICArIHRlbXBfc2VnLnZpcnRfc3RhcnQgLSAo
-KnB0X2xvYWRzKVtpXS52aXJ0X3N0YXJ0Ow0KPiArICAgICAgICAgICAgICAgIHRlbXBfc2VnLmZp
-bGVfc2l6ZSA9IHRlbXBfc2VnLnBoeXNfZW5kDQo+ICsgICAgICAgICAgICAgICAgICAgIC0gdGVt
-cF9zZWcucGh5c19zdGFydDsNCj4gDQo+ICAgICAgICAgICAgICAgICgqcHRfbG9hZHMpW2ldLnZp
-cnRfZW5kID0ga3ZzdGFydCAtIDE7DQo+ICAgICAgICAgICAgICAgICgqcHRfbG9hZHMpW2ldLnBo
-eXNfZW5kID0gIHN0YXJ0IC0gMTsNCj4gKyAgICAgICAgICAgICAgICAoKnB0X2xvYWRzKVtpXS5m
-aWxlX3NpemUgLT0gdGVtcF9zZWcuZmlsZV9zaXplOw0KPiANCj4gICAgICAgICAgICAgICAgdGlk
-eCA9IGkrMTsNCj4gICAgICAgICAgICB9IGVsc2UgaWYgKGt2c3RhcnQgIT0gdnN0YXJ0KSB7DQo+
-IC0tIA0KPiAyLjkuMw0KPiANCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 5/7/2017 12:18 PM, Borislav Petkov wrote:
+> On Tue, Apr 18, 2017 at 04:19:00PM -0500, Tom Lendacky wrote:
+>> The efi_mem_type() function currently returns a 0, which maps to
+>> EFI_RESERVED_TYPE, if the function is unable to find a memmap entry for
+>> the supplied physical address. Returning EFI_RESERVED_TYPE implies that
+>> a memmap entry exists, when it doesn't.  Instead of returning 0, change
+>> the function to return a negative error value when no memmap entry is
+>> found.
+>>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> ---
+>
+> ...
+>
+>> diff --git a/include/linux/efi.h b/include/linux/efi.h
+>> index cd768a1..a27bb3f 100644
+>> --- a/include/linux/efi.h
+>> +++ b/include/linux/efi.h
+>> @@ -973,7 +973,7 @@ static inline void efi_esrt_init(void) { }
+>>  extern int efi_config_parse_tables(void *config_tables, int count, int sz,
+>>  				   efi_config_table_type_t *arch_tables);
+>>  extern u64 efi_get_iobase (void);
+>> -extern u32 efi_mem_type (unsigned long phys_addr);
+>> +extern int efi_mem_type (unsigned long phys_addr);
+>
+> WARNING: space prohibited between function name and open parenthesis '('
+> #101: FILE: include/linux/efi.h:976:
+> +extern int efi_mem_type (unsigned long phys_addr);
+>
+> Please integrate scripts/checkpatch.pl in your patch creation workflow.
+> Some of the warnings/errors *actually* make sense.
+
+I do/did run scripts/checkpatch.pl against all my patches. In this case
+I chose to keep the space in order to stay consistent with some of the
+surrounding functions.  No problem though, I can remove the space.
+
+Thanks,
+Tom
+
+>
+> I know, the other function prototypes have a space too but that's not
+> our coding style. Looks like this trickled in from ia64, from looking at
+> arch/ia64/kernel/efi.c.
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
