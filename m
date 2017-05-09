@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f51.google.com ([74.125.83.51])
+Received: from mail-pg0-f42.google.com ([74.125.83.42])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d854I-0002xv-UT
- for kexec@lists.infradead.org; Tue, 09 May 2017 13:20:53 +0000
-Received: by mail-pg0-f51.google.com with SMTP id o3so52934560pgn.2
- for <kexec@lists.infradead.org>; Tue, 09 May 2017 06:20:25 -0700 (PDT)
-Subject: Re: [Makedumpfile PATCH] elf_info: fix file_size if segment is
- excluded
-References: <67b01a34efb197a9bafe002dd9775bc094d8bd6e.1494247220.git.panand@redhat.com>
- <7FA68CAA-173B-4988-A0E3-83DE747422FC@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EC87C4@BPXM01GP.gisp.nec.co.jp>
+ id 1d856W-0003Ph-EK
+ for kexec@lists.infradead.org; Tue, 09 May 2017 13:23:05 +0000
+Received: by mail-pg0-f42.google.com with SMTP id 64so28587099pgb.3
+ for <kexec@lists.infradead.org>; Tue, 09 May 2017 06:22:44 -0700 (PDT)
+Subject: Re: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
+References: <cover.1493272570.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <06c98223-3f59-e3e2-2672-62e9e266616e@redhat.com>
-Date: Tue, 9 May 2017 18:50:19 +0530
+Message-ID: <cf5a82bf-8232-f39f-7ab4-69250492d4a2@redhat.com>
+Date: Tue, 9 May 2017 18:52:38 +0530
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EC87C4@BPXM01GP.gisp.nec.co.jp>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,28 +25,64 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, Baoquan He <bhe@redhat.com>
-Cc: "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "keescook@chromium.org" <keescook@chromium.org>, "bhe@redhat.com" <bhe@redhat.com>, "dyoung@redhat.com" <dyoung@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Xunlei Pang <xlpang@redhat.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>
 
+Hi Atsushi,
 
+On Friday 28 April 2017 12:22 PM, Atsushi Kumagai wrote:
+> Hello Pratyush,
+>
+> Thanks for your report, I have received this.
+> I'm on vacation until Mar 8, I'll review it when I return from vacation.
 
-On Tuesday 09 May 2017 07:59 AM, Atsushi Kumagai wrote:
->>> +                temp_seg.file_size = temp_seg.phys_end
->>> +                    - temp_seg.phys_start;
->>>
->>>                (*pt_loads)[i].virt_end = kvstart - 1;
->>>                (*pt_loads)[i].phys_end =  start - 1;
->>> +                (*pt_loads)[i].file_size -= temp_seg.file_size;
-> I think we should additionally subtract (end - start), right ?
-> This code seems to leave Crash Kernel region for the former half of PT_LOAD.
-
-yes, you are right.
-
-Will send v2.
-
-Thanks for review.
+Any further comment on it?
+Otherwise, I will send a v2 after accommodating concern from Xunlei.
 
 ~Pratyush
+
+
+>
+> Thanks,
+> Atsushi Kumagai
+>
+>> Hi All,
+>>
+>> We came across another failure in makedumpfile when kaslr is enabled. This
+>> failure occurs when we try re-filtering. We try to erase some symbol from a
+>> dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
+>>
+>> We have very limited symbol information in vmcoreinfo. So symbols to be
+>> erased may not be available in vmcoreinfo and we look for it in vmlinux.
+>> However,  symbol address from vmlinux is a static address which differs
+>>from run time address with KASLR_OFFSET. Therefore, reading any "virtual
+>> address of vmlinux" from vmcore is not possible.
+>>
+>> These patches finds runtime  KASLR offset and then calculates run time
+>> address of symbols read from vmlinux.
+>>
+>> Since, I am not an expert of x86, and these patches touch x86 part of
+>> makedumpfile, therefore I have CCed x86 experts. Please, provide your
+>> review comment and let me know if you think there could have been a better
+>> way to resolve this issue.
+>>
+>> thanks
+>>
+>> ~Pratyush
+>>
+>> Pratyush Anand (2):
+>>  makedumpfile: add runtime kaslr offset if it exists
+>>  x86_64: calculate page_offset in case of re-filtering
+>>
+>> arch/x86_64.c  | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>> erase_info.c   |  1 +
+>> makedumpfile.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>> makedumpfile.h | 15 +++++++++++++++
+>> 4 files changed, 103 insertions(+), 2 deletions(-)
+>>
+>> --
+>> 2.9.3
+>
 
 _______________________________________________
 kexec mailing list
