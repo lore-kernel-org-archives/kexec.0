@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx1.redhat.com ([209.132.183.28])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d8FPE-0004XL-IB
- for kexec@lists.infradead.org; Wed, 10 May 2017 00:23:06 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20170509230639.GA132135@beast> <1494371625.7678.3.camel@gmail.com>
- <CAGXu5jJxmgRKXBs_h-wO6H1jubvQuBM6GdHriEr97P2+Aau4Mg@mail.gmail.com>
-Date: Tue, 09 May 2017 19:15:43 -0500
-In-Reply-To: <CAGXu5jJxmgRKXBs_h-wO6H1jubvQuBM6GdHriEr97P2+Aau4Mg@mail.gmail.com>
- (Kees Cook's message of "Tue, 9 May 2017 16:22:01 -0700")
-Message-ID: <87wp9psh1s.fsf@xmission.com>
+ id 1d8IHo-0005pW-CD
+ for kexec@lists.infradead.org; Wed, 10 May 2017 03:27:38 +0000
+Subject: Re: [Makedumpfile PATCH V2] elf_info: fix file_size if segment is
+ excluded
+References: <6edcc4dfcd9ed60265a5fde658ad2db4c4f28cad.1494337896.git.panand@redhat.com>
+From: Xunlei Pang <xpang@redhat.com>
+Message-ID: <591288E6.7090401@redhat.com>
+Date: Wed, 10 May 2017 11:28:38 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec_file: Adjust type of kexec_purgatory
+In-Reply-To: <6edcc4dfcd9ed60265a5fde658ad2db4c4f28cad.1494337896.git.panand@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,46 +19,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Reply-To: xlpang@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: Daniel Micay <danielmicay@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Pratyush Anand <panand@redhat.com>, ats-kumagai@wm.jp.nec.com
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, bhe@redhat.com
 
-S2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+IHdyaXRlczoKCj4gT24gVHVlLCBNYXkg
-OSwgMjAxNyBhdCA0OjEzIFBNLCBEYW5pZWwgTWljYXkgPGRhbmllbG1pY2F5QGdtYWlsLmNvbT4g
-d3JvdGU6Cj4+IE9uIFR1ZSwgMjAxNy0wNS0wOSBhdCAxNjowNiAtMDcwMCwgS2VlcyBDb29rIHdy
-b3RlOgo+Pj4gRGVmaW5pbmcga2V4ZWNfcHVyZ2F0b3J5IGFzIGEgemVyby1sZW5ndGggY2hhciBh
-cnJheSB1cHNldHMgY29tcGlsZQo+Pj4gdGltZSBzaXplIGNoZWNraW5nLiBTaW5jZSB0aGlzIGlz
-IGVudGlyZWx5IHJ1bnRpbWUgc2l6ZWQsIHN3aXRjaAo+Pj4gdGhpcyB0byB2b2lkICouIFRoaXMg
-c2lsZW5jZXMgdGhlIHdhcm5pbmcgZ2VuZXJhdGVkIGJ5IHRoZSBmdXR1cmUKPj4+IENPTkZJR19G
-T1JUSUZZX1NPVVJDRSwgd2hpY2ggZGlkIG5vdCBsaWtlIHRoZSBtZW1jbXAoKSBvZiBhICIwIGJ5
-dGUiCj4+PiBhcnJheS4KPj4+Cj4+PiBDYzogRGFuaWVsIE1pY2F5IDxkYW5pZWxtaWNheUBnbWFp
-bC5jb20+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBLZWVzIENvb2sgPGtlZXNjb29rQGNocm9taXVtLm9y
-Zz4KPj4+IC0tLQo+Pj4gIGtlcm5lbC9rZXhlY19maWxlLmMgfCAyICstCj4+PiAgMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBh
-L2tlcm5lbC9rZXhlY19maWxlLmMgYi9rZXJuZWwva2V4ZWNfZmlsZS5jCj4+PiBpbmRleCBiMTE4
-NzM1ZmVhOWQuLmJjODZmODVmMTMyOSAxMDA2NDQKPj4+IC0tLSBhL2tlcm5lbC9rZXhlY19maWxl
-LmMKPj4+ICsrKyBiL2tlcm5lbC9rZXhlY19maWxlLmMKPj4+IEBAIC0zMCw3ICszMCw3IEBACj4+
-PiAgICogRGVjbGFyZSB0aGVzZSBzeW1ib2xzIHdlYWsgc28gdGhhdCBpZiBhcmNoaXRlY3R1cmUg
-cHJvdmlkZXMgYQo+Pj4gcHVyZ2F0b3J5LAo+Pj4gICAqIHRoZXNlIHdpbGwgYmUgb3ZlcnJpZGRl
-bi4KPj4+ICAgKi8KPj4+IC1jaGFyIF9fd2VhayBrZXhlY19wdXJnYXRvcnlbMF07Cj4+PiArdm9p
-ZCAqIF9fd2VhayBrZXhlY19wdXJnYXRvcnk7Cj4+PiAgc2l6ZV90IF9fd2VhayBrZXhlY19wdXJn
-YXRvcnlfc2l6ZSA9IDA7Cj4+Pgo+Pj4gIHN0YXRpYyBpbnQga2V4ZWNfY2FsY3VsYXRlX3N0b3Jl
-X2RpZ2VzdHMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpOwo+Pj4gLS0KPj4+IDIuNy40Cj4+Cj4+IEl0
-IHNlZW1zIG1vcmUgY29ycmVjdCB0byB1c2UgY2hhciBgY2hhciBfX3dlYWsga2V4ZWNfcHVyZ2F0
-b3J5W11gLAo+PiBvdGhlcndpc2UgaXNuJ3QgX19idWlsdGluX29iamVjdF9zaXplIGVuZGluZyB1
-cCBhcyA4LCB3aGljaCBpcyBzdGlsbAo+PiB3cm9uZz8KPgo+IEkgdHJpZWQgW10sIHRoYXQgd2Fz
-IG15IGluc3RpbmN0LCB0b28sIGJ1dCBzaW5jZSB0aGlzIGlzIGEgX193ZWFrIGFuZAo+IG5vdCBh
-biBleHRlcm4sIHRoYXQgZG9lc24ndCB3b3JrOgo+Cj4ga2VybmVsL2tleGVjX2ZpbGUuYzozMzox
-Mzogd2FybmluZzogYXJyYXkg4oCYa2V4ZWNfcHVyZ2F0b3J54oCZIGFzc3VtZWQgdG8KPiBoYXZl
-IG9uZSBlbGVtZW50Cj4gIGNoYXIgX193ZWFrIGtleGVjX3B1cmdhdG9yeVtdOwo+ICAgICAgICAg
-ICAgICBefn5+fn5+fn5+fn5+fn4KCk5vciBkb2VzICJ2b2lkICprZXhlY19wdXJnYXRvcnkiIGFz
-IHRoYXQgc2F5cyBhdCB0aGUgYWRkcmVzcyBrbm93biBhcwprZXhlY19wdXJnYXRvcnkgaXMgYSB2
-b2lkIHBvaW50ZXIgbm90IGEgYmxvYiBhIGJ5dGVzIHRoYXQgY2FuIGJlIHVzZWQKZm9yIHNvbWV0
-aGluZyBpbnRlcmVzdGluZy4KCkJldHRlciB0byBnZXQgcmlkIG9mIHRoZSBfX3dlYWsgYW5kIGRl
-YWwgd2l0aCB0aGF0IGZhbGxvdXQuCgpFcmljCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+On 05/09/2017 at 09:53 PM, Pratyush Anand wrote:
+> I received following on a specific x86_64 hp virtual machine while
+> executing `makedumpfile --mem-usage /proc/kcore`.
+>
+> vtop4_x86_64: Can't get a valid pte.
+> readmem: Can't convert a virtual address(ffffffff88115860) to physical address.
+> readmem: type_addr: 0, addr:ffffffff88115860, size:128
+> get_nodes_online: Can't get the node online map.
+>
+> With some debug print in vtop4_x86_64() I noticed that pte value is read
+> as 0, while crash reads the value correctly:
+>
+> from makedumpfile:
+> vaddr=ffffffff88115860
+> page_dir=59eaff8
+> pml4=59ed067
+> pgd_paddr=59edff0
+> pgd_pte=59ee063
+> pmd_paddr=59ee200
+> pmd_pte=3642f063
+> pte_paddr=3642f8a8
+> pte=0
+>
+> from crash
+> crash> vtop ffffffff88115860
+> VIRTUAL           PHYSICAL
+> ffffffff88115860  5b15860
+>
+> PML4 DIRECTORY: ffffffff87fea000
+> PAGE DIRECTORY: 59ed067
+>    PUD: 59edff0 => 59ee063
+>    PMD: 59ee200 => 3642f063
+>    PTE: 3642f8a8 => 5b15163
+>   PAGE: 5b15000
+>
+> With some more debug prints in elf_info.c
+>
+> Before calling exclude_segment()
+>
+> LOAD (2)
+>   phys_start : 100000
+>   phys_end   : dfffd000
+>   virt_start : ffff8a5a40100000
+>   virt_end   : ffff8a5b1fffd000
+>   file_offset: a5a40102000
+>   file_size  : dfefd000
+>
+> exclude_segment() is called for Crash Kernel whose range is
+> 2b000000-350fffff.
+>
+> We see following after exclude_segment()
+>
+> LOAD (2)
+>   phys_start : 100000
+>   phys_end   : 2affffff
+>   virt_start : ffff8a5a40100000
+>   virt_end   : ffff8a5a6affffff
+>   file_offset: a5a40102000
+>   file_size  : dfefd000
+> LOAD (3)
+>   phys_start : 35100000
+>   phys_end   : dfffd000
+>   virt_start : ffff8a5a75100000
+>   virt_end   : ffff8a5b1fffd000
+>   file_offset: a5a75102000
+>   file_size  : 0
+>
+> Since file_size is calculated wrong therefore readpage_elf() does not
+> behave correctly.
+>
+> This patch fixes above wrong behavior.
+>
+> Signed-off-by: Pratyush Anand <panand@redhat.com>
+> ---
+> v1->v2 : subtracted (end - start) from file_size as well
+>
+>  elf_info.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/elf_info.c b/elf_info.c
+> index 8e2437622141..5494c4dcbebe 100644
+> --- a/elf_info.c
+> +++ b/elf_info.c
+> @@ -826,9 +826,13 @@ static int exclude_segment(struct pt_load_segment **pt_loads,
+>  				temp_seg.virt_end = vend;
+>  				temp_seg.file_offset = (*pt_loads)[i].file_offset
+>  					+ temp_seg.virt_start - (*pt_loads)[i].virt_start;
+> +				temp_seg.file_size = temp_seg.phys_end
+> +					- temp_seg.phys_start;
+>  
+>  				(*pt_loads)[i].virt_end = kvstart - 1;
+>  				(*pt_loads)[i].phys_end =  start - 1;
+> +				(*pt_loads)[i].file_size -= (temp_seg.file_size
+> +					+ end - start);
+
+Hi Pratyush,
+
+Don't we need to move the "(*pt_loads)[i].file_size" minus "(end - start)" down
+to the tail of "if (kvstart <  vend && kvend > vstart)" condition for all cases?
+
+Regards,
+Xunlei
+
+>  
+>  				tidx = i+1;
+>  			} else if (kvstart != vstart) {
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
