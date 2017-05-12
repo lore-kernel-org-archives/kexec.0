@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg0-f53.google.com ([74.125.83.53])
+Received: from mail-pf0-f182.google.com ([209.85.192.182])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d90g0-000708-1k
- for kexec@lists.infradead.org; Fri, 12 May 2017 02:51:33 +0000
-Received: by mail-pg0-f53.google.com with SMTP id q125so3997733pgq.2
- for <kexec@lists.infradead.org>; Thu, 11 May 2017 19:51:11 -0700 (PDT)
-Subject: Re: [PATCH v6 0/9] (kexec-tools) arm64: add kdump support
-References: <20170315093824.24566-1-takahiro.akashi@linaro.org>
+ id 1d90YU-0003BQ-2M
+ for kexec@lists.infradead.org; Fri, 12 May 2017 02:43:47 +0000
+Received: by mail-pf0-f182.google.com with SMTP id m17so22789915pfg.3
+ for <kexec@lists.infradead.org>; Thu, 11 May 2017 19:43:25 -0700 (PDT)
+Subject: Re: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
+References: <cover.1493272570.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
+ <cf5a82bf-8232-f39f-7ab4-69250492d4a2@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC910B@BPXM01GP.gisp.nec.co.jp>
 From: Pratyush Anand <panand@redhat.com>
-Message-ID: <147ae0e7-ebe9-e762-2c36-d4b88d4dc395@redhat.com>
-Date: Fri, 12 May 2017 08:21:07 +0530
+Message-ID: <383e5f5d-8be8-f3cc-f937-5713f785a4df@redhat.com>
+Date: Fri, 12 May 2017 08:13:20 +0530
 MIME-Version: 1.0
-In-Reply-To: <20170315093824.24566-1-takahiro.akashi@linaro.org>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EC910B@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,88 +27,108 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
-Cc: geoff@infradead.org, kexec@lists.infradead.org
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
+Cc: "keescook@chromium.org" <keescook@chromium.org>, "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, Xunlei Pang <xlpang@redhat.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>
 
-On Wednesday 15 March 2017 03:08 PM, AKASHI Takahiro wrote:
-> My kernel patches of kdump support on arm64 are currently under review.
->
-> This patchset is synced with them (v33 [1]) and provides necessary changes
-> for kexec-tools. It can be applied on top of kexec-tools master branch.
->
-> [1] T.B.D.
->
-> Changes for v6:
->  - use get_kernel_sym() from x86, not from arm (patch #2)
->  - always take root node's "#address-cells" and "#size-cells" into account
->    when adding "linux,usable-memory-range" and "linux,elfcorehdr"
->    (patch #8)
+Hi Atsushi,
 
+Thanks for the testing.
 
-I think these patches can be merged now, as kernel patches are there in upstream.
+On Wednesday 10 May 2017 01:37 PM, Atsushi Kumagai wrote:
+>> Hi Atsushi,
+>>
+>> On Friday 28 April 2017 12:22 PM, Atsushi Kumagai wrote:
+>>> Hello Pratyush,
+>>>
+>>> Thanks for your report, I have received this.
+>>> I'm on vacation until Mar 8, I'll review it when I return from vacation.
+>>
+>> Any further comment on it?
+>> Otherwise, I will send a v2 after accommodating concern from Xunlei.
+>
+> Unfortunately, it doesn't seem like I can make time anymore for review this week,
+> but at least this patch doesn't seem to work in my environment (linux 4.8 without kaslr).
+> Do you have any ideas ?
 
+I see, why it would have caused. I have not tested this case, but I hope my v2 
+should not have this issue.
 
-For the series:
-
-Tested-by: Pratyush Anand <panand@redhat.com>
-Reviewed-by: Pratyush Anand <panand@redhat.com>
-
+~Pratyush
 >
-> Changes for v5:
->  - remove "linux,crashkernel-base/size" handling aligned with a change
->    on the kernel side
 >
-> Changes for v4:
->  - rebased on the master branch (including Geoff's v6)
->  - revive "linux,usable-memory-range" DT property (from v2), dropping
->    use of "reserved-memory" nodes introduced in v3 (patch #8)
->  - extend the semantics of kexec_iomem_for_each_line() per Pratyush
->    (patch #1)
+> Program received signal SIGSEGV, Segmentation fault.
+> 0x00007ffff6be49f5 in fseek () from /lib64/libc.so.6
+> Missing separate debuginfos, use: debuginfo-install bzip2-libs-1.0.6-13.el7.x86_64 elfutils-libelf-0.163-3.el7.x86_64 elfutils-libs-0.163-3.el7.x86_64 glibc-2.17-105.el7.x86_64 libgcc-4.8.5-4.el7.x86_64 libstdc++-4.8.5-4.el7.x86_64 snappy-1.1.0-3.el7.x86_64 xz-libs-5.1.2-12alpha.el7.x86_64 zlib-1.2.7-15.el7.x86_64
+> (gdb) bt
+> #0  0x00007ffff6be49f5 in fseek () from /lib64/libc.so.6
+> #1  0x0000000000429d38 in read_vmcoreinfo_symbol (str_symbol=0x44cb0c "SYMBOL(_stext)=") at makedumpfile.c:2384
+> #2  0x000000000042097a in get_kaslr_offset_x86_64 (vaddr=18446744071589596288) at arch/x86_64.c:45
+> #3  0x0000000000414310 in resolve_config_entry (ce=0x701370, base_vaddr=<optimized out>, base_struct_name=0x0)
+>     at erase_info.c:1091
+> #4  0x0000000000415a89 in get_config_symbol_addr (base_struct_name=0x0, base_vaddr=0, ce=0x701370) at erase_info.c:1264
+> #5  update_filter_info (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1579
+> #6  0x0000000000416543 in process_config (config=<optimized out>) at erase_info.c:1789
+> #7  process_config_file (name_config=<optimized out>) at erase_info.c:1862
+> #8  0x0000000000417c57 in gather_filter_info () at erase_info.c:2356
+> #9  0x0000000000443ccb in create_dumpfile () at makedumpfile.c:9863
+> #10 0x000000000044561e in main (argc=<optimized out>, argv=<optimized out>) at makedumpfile.c:11342
+> (gdb)
 >
-> Changes for v3:
->  - rebased on Geoff's v5
->  - fix a value of estimated PHYS_OFFSET
->  - add a kernel code/data segment because they now reside out of linear
->    mapping due to KASLR introduction
->  - remove "linux,usable-memory-range" dependency, instead using
->    "reserved-memory" node
->  - add -mem-min/-mem-max support
 >
-> Changes for v2:
->  - trim a temoprary buffer in setup_2nd_dtb()
->  - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
->  - update patch#7 from Pratyush
->    (re-worked by akashi)
+> Thanks,
+> Atsushi Kumagai
 >
-> AKASHI Takahiro (7):
->   kexec: exntend the semantics of kexec_iomem_for_each_line
->   arm64: identify PHYS_OFFSET correctly
->   arm64: kdump: identify memory regions
->   arm64: kdump: add elf core header segment
->   arm64: kdump: set up kernel image segment
->   arm64: kdump: set up other segments
->   arm64: kdump: add DT properties to crash dump kernel's dtb
+>> ~Pratyush
+>>
+>>
+>>>
+>>> Thanks,
+>>> Atsushi Kumagai
+>>>
+>>>> Hi All,
+>>>>
+>>>> We came across another failure in makedumpfile when kaslr is enabled. This
+>>>> failure occurs when we try re-filtering. We try to erase some symbol from a
+>>>> dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
+>>>>
+>>>> We have very limited symbol information in vmcoreinfo. So symbols to be
+>>>> erased may not be available in vmcoreinfo and we look for it in vmlinux.
+>>>> However,  symbol address from vmlinux is a static address which differs
+>>> >from run time address with KASLR_OFFSET. Therefore, reading any "virtual
+>>>> address of vmlinux" from vmcore is not possible.
+>>>>
+>>>> These patches finds runtime  KASLR offset and then calculates run time
+>>>> address of symbols read from vmlinux.
+>>>>
+>>>> Since, I am not an expert of x86, and these patches touch x86 part of
+>>>> makedumpfile, therefore I have CCed x86 experts. Please, provide your
+>>>> review comment and let me know if you think there could have been a better
+>>>> way to resolve this issue.
+>>>>
+>>>> thanks
+>>>>
+>>>> ~Pratyush
+>>>>
+>>>> Pratyush Anand (2):
+>>>>  makedumpfile: add runtime kaslr offset if it exists
+>>>>  x86_64: calculate page_offset in case of re-filtering
+>>>>
+>>>> arch/x86_64.c  | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>>>> erase_info.c   |  1 +
+>>>> makedumpfile.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>>>> makedumpfile.h | 15 +++++++++++++++
+>>>> 4 files changed, 103 insertions(+), 2 deletions(-)
+>>>>
+>>>> --
+>>>> 2.9.3
+>>>
 >
-> Pratyush Anand (2):
->   kexec: generalize and rename get_kernel_stext_sym()
->   arm64: kdump: Add support for binary image files
 >
->  kexec/Makefile                       |   1 +
->  kexec/arch/arm/crashdump-arm.c       |  40 +-----
->  kexec/arch/arm64/Makefile            |   2 +
->  kexec/arch/arm64/crashdump-arm64.c   | 219 +++++++++++++++++++++++++++++++-
->  kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
->  kexec/arch/arm64/iomem.h             |  10 ++
->  kexec/arch/arm64/kexec-arm64.c       | 239 +++++++++++++++++++++++++++++++++--
->  kexec/arch/arm64/kexec-elf-arm64.c   |  25 +++-
->  kexec/arch/arm64/kexec-image-arm64.c |  12 ++
->  kexec/arch/i386/crashdump-x86.c      |  29 -----
->  kexec/kexec-iomem.c                  |  15 ++-
->  kexec/kexec.h                        |   2 +
->  kexec/symbols.c                      |  34 +++++
->  13 files changed, 551 insertions(+), 95 deletions(-)
->  create mode 100644 kexec/arch/arm64/iomem.h
->  create mode 100644 kexec/symbols.c
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 >
 
 _______________________________________________
