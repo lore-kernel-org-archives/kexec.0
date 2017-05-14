@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vk0-x22d.google.com ([2607:f8b0:400c:c05::22d])
+Received: from userp1040.oracle.com ([156.151.31.81])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1d96jJ-0001HB-C7
- for kexec@lists.infradead.org; Fri, 12 May 2017 09:19:22 +0000
-Received: by mail-vk0-x22d.google.com with SMTP id g23so14701122vke.3
- for <kexec@lists.infradead.org>; Fri, 12 May 2017 02:19:00 -0700 (PDT)
+ id 1dA2wZ-0005W6-Oy
+ for kexec@lists.infradead.org; Sun, 14 May 2017 23:28:57 +0000
+Subject: Re: [PATCH] Handle additional e820 memmap type strings
+References: <1494432217-26092-1-git-send-email-eric.devolder@oracle.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Message-ID: <bdc48f5f-9855-6562-73ea-027c8ad7e7a1@oracle.com>
+Date: Sun, 14 May 2017 18:28:15 -0500
 MIME-Version: 1.0
-In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701EC8190@BPXM01GP.gisp.nec.co.jp>
-References: <CAAhEX+KVeHHNucs6tZwvwFD9QXNptj1-1fih=seu8uRdB6S13w@mail.gmail.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EC8190@BPXM01GP.gisp.nec.co.jp>
-From: Dumslicer Halo <dumslicer@gmail.com>
-Date: Fri, 12 May 2017 14:48:58 +0530
-Message-ID: <CAAhEX+KCL=y+KhCMsEiTqN=prEZDDZb=37LdWvReLoyEmUiChg@mail.gmail.com>
-Subject: Re: Help regarding renaming of vmcore-incomplete to vmcore
+In-Reply-To: <1494432217-26092-1-git-send-email-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,45 +18,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org, horms@verge.net.au, andrew.cooper3@citrix.com
+Cc: daniel.kiper@oracle.com, konrad.wilk@oracle.com
 
-I can't find this file in my system? Can you help me with it?
+There have been no reviews of this patch yet; just bubbling it up to the 
+top to gain some attention.
 
-On 8 May 2017 at 07:11, Atsushi Kumagai <ats-kumagai@wm.jp.nec.com> wrote:
-> Hello,
+Regards,
+eric
+
+On 05/10/2017 11:03 AM, Eric DeVolder wrote:
+> Keep pace with changes to linux arch/x86/kernel/e820.c to
+> function e820_type_to_string(). With this change, the following
+> messages from kexec are eliminated (and allows kexec to load):
 >
->>Hi I am a university student, and have made some changes to
->>makedumpfile to produce a gzipped output of core dump. The issue I'm
->>facing is that the output i get from makedumpfile (after it completes
->>successfully) is vmcore-incomplete.gzip.
->>
->>But this file is not being renamed to vmcore.gzip (even thought the
->>dump the complete as I verified it by loading into CRASH utility). Can
->>someone please point out to me the changes I should make to solve this
->>bug (or  can point to the code where this renaming is done).
+>  Unknown type (Reserved) while parsing /sys/firmware/memmap/8/type.
+>  Please report this as bug. Using RANGE_RESERVED now.
 >
-> makedumpfile doesn't have such renaming mechanism, it just name the dump
-> as user specify. I guess "vmcore-incomplete" you said is came from kexec-tools.
-> For example, kexec-tools of RHEL7 generate the code below for dump-capture kernel:
+>  Unknown type (Unknown E820 type) while parsing /sys/firmware/memmap/4/type.
+>  Please report this as bug. Using RANGE_RESERVED now.
 >
->    110     echo "kdump: saving vmcore"
->    111     $CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incomplete || return 1
->    112     mv $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incomplete $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore
->    113     sync
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>  kexec/firmware_memmap.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> $CORE_COLLECTOR is makedumpfile, so the code generate "vmcore-incomplete"
-> by makedumpfile and rename it to vmcore by mv.
-> If you want "vmcore.gzip", you should just specify vmcore.gzip for
-> makedumpfile.
->
->
-> Thanks,
-> Atsushi Kumagai
+> diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
+> index 4d84f00..1ee214a 100644
+> --- a/kexec/firmware_memmap.c
+> +++ b/kexec/firmware_memmap.c
+> @@ -164,6 +164,10 @@ static int parse_memmap_entry(const char *entry, struct memory_range *range)
+>  		range->type = RANGE_RESERVED;
+>  	else if (strcmp(type, "reserved") == 0)
+>  		range->type = RANGE_RESERVED;
+> +	else if (strcmp(type, "Reserved") == 0)
+> +		range->type = RANGE_RESERVED;
+> +	else if (strcmp(type, "Unknown E820 type") == 0)
+> +		range->type = RANGE_RESERVED;
+>  	else if (strcmp(type, "ACPI Non-volatile Storage") == 0)
+>  		range->type = RANGE_ACPI_NVS;
+>  	else if (strcmp(type, "Uncached RAM") == 0)
 >
 
 _______________________________________________
