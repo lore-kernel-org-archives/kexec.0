@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
- by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
- id 1dAKqX-0004Wu-5K
- for kexec@lists.infradead.org; Mon, 15 May 2017 18:35:55 +0000
-Date: Mon, 15 May 2017 20:35:17 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 17/32] x86/mm: Add support to access boot related data
- in the clear
-Message-ID: <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
+Received: from userp1040.oracle.com ([156.151.31.81])
+ by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
+ id 1dAMok-0000Kq-Pc
+ for kexec@lists.infradead.org; Mon, 15 May 2017 20:42:14 +0000
+Subject: Re: [PATCH] sparc64: Add initial sparc64 support
+References: <1494345865-430884-1-git-send-email-tom.hromatka@oracle.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701ED623C@BPXM01GP.gisp.nec.co.jp>
+From: Tom Hromatka <tom.hromatka@oracle.com>
+Message-ID: <6427edb3-e2c9-960c-b78f-353e62518f17@oracle.com>
+Date: Mon, 15 May 2017 14:41:38 -0600
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
+In-Reply-To: <0910DD04CBD6DE4193FCF86B9C00BE9701ED623C@BPXM01GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,299 +19,478 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
-
-On Tue, Apr 18, 2017 at 04:19:21PM -0500, Tom Lendacky wrote:
-> Boot data (such as EFI related data) is not encrypted when the system is
-> booted because UEFI/BIOS does not run with SME active. In order to access
-> this data properly it needs to be mapped decrypted.
-> 
-> The early_memremap() support is updated to provide an arch specific
-
-"Update early_memremap() to provide... "
-
-> routine to modify the pagetable protection attributes before they are
-> applied to the new mapping. This is used to remove the encryption mask
-> for boot related data.
-> 
-> The memremap() support is updated to provide an arch specific routine
-
-Ditto. Passive tone always reads harder than an active tone,
-"doer"-sentence.
-
-> to determine if RAM remapping is allowed.  RAM remapping will cause an
-> encrypted mapping to be generated. By preventing RAM remapping,
-> ioremap_cache() will be used instead, which will provide a decrypted
-> mapping of the boot related data.
-> 
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->  arch/x86/include/asm/io.h |    4 +
->  arch/x86/mm/ioremap.c     |  182 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/io.h        |    2 
->  kernel/memremap.c         |   20 ++++-
->  mm/early_ioremap.c        |   18 ++++
->  5 files changed, 219 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> index 7afb0e2..75f2858 100644
-> --- a/arch/x86/include/asm/io.h
-> +++ b/arch/x86/include/asm/io.h
-> @@ -381,4 +381,8 @@ extern int __must_check arch_phys_wc_add(unsigned long base,
->  #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
->  #endif
->  
-> +extern bool arch_memremap_do_ram_remap(resource_size_t offset, size_t size,
-> +				       unsigned long flags);
-> +#define arch_memremap_do_ram_remap arch_memremap_do_ram_remap
-> +
->  #endif /* _ASM_X86_IO_H */
-> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-> index 9bfcb1f..bce0604 100644
-> --- a/arch/x86/mm/ioremap.c
-> +++ b/arch/x86/mm/ioremap.c
-> @@ -13,6 +13,7 @@
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
->  #include <linux/mmiotrace.h>
-> +#include <linux/efi.h>
->  
->  #include <asm/cacheflush.h>
->  #include <asm/e820/api.h>
-> @@ -21,6 +22,7 @@
->  #include <asm/tlbflush.h>
->  #include <asm/pgalloc.h>
->  #include <asm/pat.h>
-> +#include <asm/setup.h>
->  
->  #include "physaddr.h"
->  
-> @@ -419,6 +421,186 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
->  	iounmap((void __iomem *)((unsigned long)addr & PAGE_MASK));
->  }
->  
-> +/*
-> + * Examine the physical address to determine if it is an area of memory
-> + * that should be mapped decrypted.  If the memory is not part of the
-> + * kernel usable area it was accessed and created decrypted, so these
-> + * areas should be mapped decrypted.
-> + */
-> +static bool memremap_should_map_decrypted(resource_size_t phys_addr,
-> +					  unsigned long size)
-> +{
-> +	/* Check if the address is outside kernel usable area */
-> +	switch (e820__get_entry_type(phys_addr, phys_addr + size - 1)) {
-> +	case E820_TYPE_RESERVED:
-> +	case E820_TYPE_ACPI:
-> +	case E820_TYPE_NVS:
-> +	case E820_TYPE_UNUSABLE:
-> +		return true;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * Examine the physical address to determine if it is EFI data. Check
-> + * it against the boot params structure and EFI tables and memory types.
-> + */
-> +static bool memremap_is_efi_data(resource_size_t phys_addr,
-> +				 unsigned long size)
-> +{
-> +	u64 paddr;
-> +
-> +	/* Check if the address is part of EFI boot/runtime data */
-> +	if (efi_enabled(EFI_BOOT)) {
-
-Save indentation level:
-
-	if (!efi_enabled(EFI_BOOT))
-		return false;
+To: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>, "tom.hromatka@gmail.com" <tom.hromatka@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 
-> +		paddr = boot_params.efi_info.efi_memmap_hi;
-> +		paddr <<= 32;
-> +		paddr |= boot_params.efi_info.efi_memmap;
-> +		if (phys_addr == paddr)
-> +			return true;
-> +
-> +		paddr = boot_params.efi_info.efi_systab_hi;
-> +		paddr <<= 32;
-> +		paddr |= boot_params.efi_info.efi_systab;
 
-So those two above look like could be two global vars which are
-initialized somewhere in the EFI init path:
+On 05/14/2017 10:32 PM, Atsushi Kumagai wrote:
+> Hello Tom,
+>
+>> This commit adds support for sparc64. The changes were tested on a
+>> sparc64 T7-2 processor with 2 TB of RAM
+> Thanks for your work, what kernel version does this patch support ?
 
-efi_memmap_phys and efi_systab_phys or so.
+I tested it on 4.1.12.  I am trying to test it on 4.11.0 as well, but I
+am running into problems unrelated to kexec.
 
-Matt ?
 
-And then you won't need to create that paddr each time on the fly. I
-mean, it's not a lot of instructions but still...
+> I can't test for sparc64, so I hope you maintain this code.
+> Anyway, I'll merge this into v1.6.2.
 
-> +		if (phys_addr == paddr)
-> +			return true;
-> +
-> +		if (efi_table_address_match(phys_addr))
-> +			return true;
-> +
-> +		switch (efi_mem_type(phys_addr)) {
-> +		case EFI_BOOT_SERVICES_DATA:
-> +		case EFI_RUNTIME_SERVICES_DATA:
-> +			return true;
-> +		default:
-> +			break;
-> +		}
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +/*
-> + * Examine the physical address to determine if it is boot data by checking
-> + * it against the boot params setup_data chain.
-> + */
-> +static bool memremap_is_setup_data(resource_size_t phys_addr,
-> +				   unsigned long size)
-> +{
-> +	struct setup_data *data;
-> +	u64 paddr, paddr_next;
-> +
-> +	paddr = boot_params.hdr.setup_data;
-> +	while (paddr) {
-> +		bool is_setup_data = false;
+You can add me as the maintainer for sparc64.  Thanks.
 
-You don't need that bool:
+>
+> BTW, I have a trivial question below.
+>
+>> ---
+>> Makefile       |    6 +-
+>> arch/sparc64.c |  236 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>> makedumpfile.h |  110 ++++++++++++++++++++++++++
+>> 3 files changed, 350 insertions(+), 2 deletions(-)
+>> create mode 100644 arch/sparc64.c
+>>
+>> diff --git a/Makefile b/Makefile
+>> index 8b0fd24..4d96490 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -48,11 +48,13 @@ endif
+>> SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
+>> SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c
+>> OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+>> -SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
+>> -SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
+>> +SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
+>> arch/sparc64.c
+>> OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+>>
+>> LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
+>> +ifeq ($(ARCH), sparc64)
+>> +LIBS += -llzma
+>> +endif
+> Why lzma is required only on sparc64 ?
 
-static bool memremap_is_setup_data(resource_size_t phys_addr,
-                                   unsigned long size)
-{
-        struct setup_data *data;
-        u64 paddr, paddr_next;
+I assumed it was a sparc-specific problem.  On sparc64, I was seeing errors
+like the following:
 
-        paddr = boot_params.hdr.setup_data;
-        while (paddr) {
-                if (phys_addr == paddr)
-                        return true;
+/usr/lib/gcc/sparc64-redhat-linux/4.4.7/../../../../lib64/libdw.a(lzma.o): 
+In function `__libdw_unlzma':
+(.text+0x19c): undefined reference to `lzma_auto_decoder'
 
-                data = memremap(paddr, sizeof(*data), MEMREMAP_WB | MEMREMAP_DEC);
+But I tried building makedumpfile in an x86/64 VM, and also saw similar 
+errors:
 
-                paddr_next = data->next;
+/home/thromatka/git/elfutils-0.169/libdwfl/gzip.c:233: undefined 
+reference to `lzma_auto_decoder'
 
-                if ((phys_addr > paddr) && (phys_addr < (paddr + data->len))) {
-                        memunmap(data);
-                        return true;
-                }
+Perhaps it was the way I built elfutils?  Thoughts?
 
-                memunmap(data);
 
-                paddr = paddr_next;
-        }
-        return false;
-}
+>
+> Thanks,
+> Atsushi Kumagai
+>
+>> ifneq ($(LINKTYPE), dynamic)
+>> LIBS := -static $(LIBS)
+>> endif
+>> diff --git a/arch/sparc64.c b/arch/sparc64.c
+>> new file mode 100644
+>> index 0000000..1cfaa85
+>> --- /dev/null
+>> +++ b/arch/sparc64.c
+>> @@ -0,0 +1,236 @@
+>> +/*
+>> + * Copyright (C) 2014, 2017 Oracle and/or its affiliates
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation (version 2 of the License).
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program; if not, write to the Free Software
+>> + * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+>> + */
+>> +
+>> +#ifdef __sparc64__
+>> +
+>> +#include "../elf_info.h"
+>> +#include "../makedumpfile.h"
+>> +#include "../print_info.h"
+>> +
+>> +int get_versiondep_info_sparc64(void)
+>> +{
+>> +	info->section_size_bits = _SECTION_SIZE_BITS;
+>> +
+>> +	if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+>> +		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
+>> +	else {
+>> +		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
+>> +		info->flag_vmemmap = TRUE;
+>> +		info->vmemmap_start = VMEMMAP_BASE_SPARC64;
+>> +		info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
+>> +			((1UL << (info->max_physmem_bits - PAGE_SHIFT)) *
+>> +			 SIZE(page));
+>> +	}
+>> +
+>> +	return TRUE;
+>> +}
+>> +
+>> +int get_phys_base_sparc64(void)
+>> +{
+>> +	/* Ideally we'd search the pt_load entries until we found one
+>> +	 * containing KVBASE (_stext), but get_symbol_info hasn't been
+>> +	 * called yet. We'll just go with the first entry.
+>> +	 */
+>> +	unsigned long long phys_start;
+>> +	unsigned long long virt_start;
+>> +	unsigned long long virt_end;
+>> +
+>> +	if (get_pt_load(0, &phys_start, NULL, &virt_start, &virt_end)) {
+>> +		info->phys_base = phys_start & ~KVBASE_MASK;
+>> +		return TRUE;
+>> +	}
+>> +	ERRMSG("Can't find kernel segment\n");
+>> +	return FALSE;
+>> +}
+>> +
+>> +int is_vmalloc_addr_sparc64(unsigned long vaddr)
+>> +{
+>> +	return (vaddr >= VMALLOC_START_SPARC64);
+>> +}
+>> +
+>> +int is_vmemmap_addr_sparc64(unsigned long vaddr)
+>> +{
+>> +	if (info->flag_vmemmap &&
+>> +	    (vaddr >= info->vmemmap_start) && (vaddr < info->vmemmap_end))
+>> +		return TRUE;
+>> +
+>> +	return FALSE;
+>> +}
+>> +
+>> +unsigned long vmemmap_to_phys_sparc64(unsigned long vaddr)
+>> +{
+>> +	unsigned long vmemmap_table;
+>> +	unsigned long offset = vaddr - info->vmemmap_start;
+>> +	unsigned long chunk_offset = offset & ~VMEMMAP_CHUNK_MASK;
+>> +	unsigned long chunk;
+>> +	unsigned long index;
+>> +	unsigned long pte;
+>> +	unsigned long pte_paddr;
+>> +	unsigned long pte_offset;
+>> +
+>> +	vmemmap_table = SYMBOL(vmemmap_table);
+>> +	if (vmemmap_table == NOT_FOUND_SYMBOL) {
+>> +		ERRMSG("Can't get symbol of vmemmap_table\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	index = offset >> NR_CHUNKS_SHIFT;
+>> +	if (!readmem(VADDR, vmemmap_table + (index * sizeof(long)),
+>> +		     &pte_paddr, sizeof(long))) {
+>> +		ERRMSG("Error reading 1st level vmemmap_table\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +	chunk = (vaddr & ~NR_CHUNKS_MASK) >> VMEMMAP_CHUNK_SHIFT;
+>> +	pte_offset = chunk * sizeof(pte);
+>> +	pte_paddr += pte_offset;
+>> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof(pte))) {
+>> +		ERRMSG("Error reading 2nd level vmemmap_table\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +	return pte_to_pa(pte) | chunk_offset;
+>> +}
+>> +
+>> +unsigned long vtop3_sparc64(unsigned long vaddr)
+>> +{
+>> +	unsigned long pgdir, pgd_paddr, pmd_paddr, pte_paddr;
+>> +	unsigned long pgd_pte, pmd_pte, pte;
+>> +
+>> +	pgdir = SYMBOL(swapper_pg_dir);
+>> +	if (pgdir == NOT_FOUND_SYMBOL) {
+>> +		ERRMSG("Can't get symbol of swapper_pg_dir\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	pgd_paddr = pgd_offset_l3(pgdir, vaddr);
+>> +	if (!readmem(VADDR, pgd_paddr, &pgd_pte, sizeof pgd_pte)) {
+>> +		ERRMSG("Can't get pgd_pte, pgd_paddr = 0x%lx\n", pgd_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (pgd_none(pgd_pte)) {
+>> +		ERRMSG("Can't get a valid pgd_pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	pmd_paddr = pmd_offset(pgd_pte, vaddr);
+>> +	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+>> +		ERRMSG("Can't get pmd_pte, pmd_paddr = 0x%lx\n", pmd_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (pmd_none(pmd_pte)) {
+>> +		ERRMSG("Can't get a valid pmd_pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	if (pmd_large(pmd_pte))
+>> +		return pte_to_pa(pmd_pte) + (vaddr & ~PMD_MASK);
+>> +
+>> +	pte_paddr = pte_offset(pmd_pte, vaddr);
+>> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+>> +		ERRMSG("Can't get pte, pte_paddr = 0x%lx\n", pmd_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (!pte_present(pte)) {
+>> +		ERRMSG("Can't get a valid pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	return pte_to_pa(pte) + (vaddr & ~PAGE_MASK);
+>> +}
+>> +
+>> +unsigned long vtop4_sparc64(unsigned long vaddr)
+>> +{
+>> +	unsigned long pgdir, pgd_paddr, pud_paddr, pmd_paddr, pte_paddr;
+>> +	unsigned long pgd_pte, pud_pte, pmd_pte, pte;
+>> +
+>> +	pgdir = SYMBOL(swapper_pg_dir);
+>> +	if (pgdir == NOT_FOUND_SYMBOL) {
+>> +		ERRMSG("Can't get symbol of swapper_pg_dir\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	pgd_paddr = pgd_offset_l4(pgdir, vaddr);
+>> +	if (!readmem(VADDR, pgd_paddr, &pgd_pte, sizeof pgd_pte)) {
+>> +		ERRMSG("Can't get pgd_pte, pgd_paddr = 0x%lx\n", pgd_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (pgd_none(pgd_pte)) {
+>> +		ERRMSG("Can't get a valid pgd_pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	pud_paddr = pud_offset(pgd_pte, vaddr);
+>> +	if (!readmem(PADDR, pud_paddr, &pud_pte, sizeof pud_pte)) {
+>> +		ERRMSG("Can't get pud_pte, pud_paddr = 0x%lx\n", pud_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (pud_none(pud_pte)) {
+>> +		ERRMSG("Can't get a valid pud_pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	if (pud_large(pud_pte))
+>> +		return pte_to_pa(pud_pte) + (vaddr & ~PUD_MASK);
+>> +
+>> +	pmd_paddr = pmd_offset(pud_pte, vaddr);
+>> +	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
+>> +		ERRMSG("Can't get pmd_pte, pmd_paddr = 0x%lx\n", pmd_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (pmd_none(pmd_pte)) {
+>> +		ERRMSG("Can't get a valid pmd_pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	if (pmd_large(pmd_pte))
+>> +		return pte_to_pa(pmd_pte) + (vaddr & ~PMD_MASK);
+>> +
+>> +	pte_paddr = pte_offset(pmd_pte, vaddr);
+>> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
+>> +		ERRMSG("Can't get pte, pte_paddr = 0x%lx\n", pmd_paddr);
+>> +		return NOT_PADDR;
+>> +	}
+>> +	if (!pte_present(pte)) {
+>> +		ERRMSG("Can't get a valid pte.\n");
+>> +		return NOT_PADDR;
+>> +	}
+>> +
+>> +	return pte_to_pa(pte) + (vaddr & ~PAGE_MASK);
+>> +}
+>> +
+>> +unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr)
+>> +{
+>> +	unsigned long paddr;
+>> +
+>> +	paddr = vaddr_to_paddr_general(vaddr);
+>> +	if (paddr != NOT_PADDR)
+>> +		return paddr;
+>> +
+>> +	if (is_vmemmap_addr_sparc64(vaddr))
+>> +		paddr = vmemmap_to_phys_sparc64(vaddr);
+>> +	else if (is_vmalloc_addr_sparc64(vaddr)) {
+>> +		if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+>> +			paddr = vtop4_sparc64(vaddr);
+>> +		else
+>> +			paddr = vtop3_sparc64(vaddr);
+>> +	}
+>> +	if (paddr == NOT_PADDR)
+>> +		ERRMSG("vaddr not mapped: 0x%lx\n", vaddr);
+>> +
+>> +	return paddr;
+>> +}
+>> +
+>> +#endif /* sparc64 */
+>> diff --git a/makedumpfile.h b/makedumpfile.h
+>> index e32e567..9e222b8 100644
+>> --- a/makedumpfile.h
+>> +++ b/makedumpfile.h
+>> @@ -820,6 +820,93 @@ unsigned long get_kvbase_arm64(void);
+>>
+>> #endif          /* ia64 */
+>>
+>> +#ifdef __sparc64__
+>> +
+>> +#define KVBASE			(SYMBOL(_stext))
+>> +#define KVBASE_MASK		(0xffff)
+>> +#define _SECTION_SIZE_BITS	(30)
+>> +#define _MAX_PHYSMEM_BITS_L3	(49)
+>> +#define _MAX_PHYSMEM_BITS_L4	(53)
+>> +#define VMALLOC_START_SPARC64	(0x0000000100000000UL)
+>> +#define VMEMMAP_BASE_SPARC64	(0x0000010000000000UL)
+>> +#define VMEMMAP_CHUNK_SHIFT	(22)
+>> +#define VMEMMAP_CHUNK		(1UL << VMEMMAP_CHUNK_SHIFT)
+>> +#define VMEMMAP_CHUNK_MASK	(~(VMEMMAP_CHUNK - 1UL))
+>> +
+>> +#define PAGE_SHIFT		13
+>> +#define PAGE_SIZE		(1UL << PAGE_SHIFT)
+>> +#define PAGE_MASK		(~(PAGE_SIZE - 1))
+>> +
+>> +#define MAX_PHYS_ADDRESS_LOBITS	(41)
+>> +#define NR_CHUNKS_SHIFT		(MAX_PHYS_ADDRESS_LOBITS - PAGE_SHIFT + 6)
+>> +#define NR_CHUNKS_MASK		(~((1UL << NR_CHUNKS_SHIFT) - 1))
+>> +
+>> +#define PMD_SHIFT		(PAGE_SHIFT + (PAGE_SHIFT - 3))
+>> +#define PMD_SIZE		(1UL << PMD_SHIFT)
+>> +#define PMD_MASK		(~(PMD_SIZE - 1))
+>> +#define PMD_BITS		(PAGE_SHIFT - 3)
+>> +
+>> +#define PUD_SHIFT		(PMD_SHIFT + PMD_BITS)
+>> +#define PUD_SIZE		(1UL << PUD_SHIFT)
+>> +#define PUD_MASK		(~(PUD_SIZE - 1))
+>> +#define PUD_BITS		(PAGE_SHIFT - 3)
+>> +
+>> +#define PGDIR_SHIFT_L4		(PUD_SHIFT + PUD_BITS)
+>> +#define PGDIR_SIZE_L4		(1UL << PGDIR_SHIFT_L4)
+>> +#define PGDIR_MASK_L4		(~(PGDIR_SIZE_L4 - 1))
+>> +
+>> +#define PGDIR_SHIFT_L3		(PMD_SHIFT + PMD_BITS)
+>> +#define PGDIR_SIZE_L3		(1UL << PGDIR_SHIFT_L3)
+>> +#define PGDIR_MASK_L3		(~(PGDIR_SIZE_L3 - 1))
+>> +
+>> +#define PGDIR_BITS		(PAGE_SHIFT - 3)
+>> +
+>> +#define PTRS_PER_PTE		(1UL << (PAGE_SHIFT - 3))
+>> +#define PTRS_PER_PMD		(1UL << PMD_BITS)
+>> +#define PTRS_PER_PUD		(1UL << PUD_BITS)
+>> +#define PTRS_PER_PGD		(1UL << PGDIR_BITS)
+>> +
+>> +#define _PAGE_PMD_HUGE		(0x0100000000000000UL)
+>> +#define _PAGE_PUD_HUGE		_PAGE_PMD_HUGE
+>> +#define _PAGE_PADDR_4V		(0x00FFFFFFFFFFE000UL)
+>> +#define _PAGE_PRESENT_4V	(0x0000000000000010UL)
+>> +
+>> +typedef unsigned long pte_t;
+>> +typedef unsigned long pmd_t;
+>> +typedef unsigned long pud_t;
+>> +typedef unsigned long pgd_t;
+>> +
+>> +#define pud_none(pud)		(!(pud))
+>> +#define pgd_none(pgd)		(!(pgd))
+>> +#define pmd_none(pmd)		(!(pmd))
+>> +
+>> +#define pte_to_pa(pte) (pte & _PAGE_PADDR_4V)
+>> +
+>> +#define pgd_index_l4(addr) (((addr) >> PGDIR_SHIFT_L4) & (PTRS_PER_PGD - 1))
+>> +#define pgd_offset_l4(pgdir,addr)	((unsigned long) \
+>> +				 ((pgd_t *)pgdir + pgd_index_l4(addr)))
+>> +
+>> +#define pgd_index_l3(addr) (((addr) >> PGDIR_SHIFT_L3) & (PTRS_PER_PGD - 1))
+>> +#define pgd_offset_l3(pgdir,addr)	((unsigned long) \
+>> +				 ((pgd_t *)pgdir + pgd_index_l3(addr)))
+>> +
+>> +#define pud_index(addr)		(((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
+>> +#define pud_offset(pgdp, addr)	((unsigned long) \
+>> +				 ((pud_t *)pgdp + pud_index(addr)))
+>> +#define pud_large(pud)		(pud & _PAGE_PUD_HUGE)
+>> +
+>> +#define pmd_index(addr)		(((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+>> +#define pmd_offset(pudp, addr)	((unsigned long) \
+>> +				 ((pmd_t *)pudp + pmd_index(addr)))
+>> +#define pmd_large(pmd)		(pmd & _PAGE_PMD_HUGE)
+>> +
+>> +#define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+>> +#define pte_offset(pmdp, addr)	((unsigned long) \
+>> +				 ((pte_t *)(pte_to_pa(pmdp) + pte_index(addr))))
+>> +#define pte_present(pte)	(pte & _PAGE_PRESENT_4V)
+>> +
+>> +#endif
+>> +
+>> /*
+>>   * The function of dependence on machine
+>>   */
+>> @@ -928,6 +1015,18 @@ unsigned long long vaddr_to_paddr_ia64(unsigned long vaddr);
+>> #define is_phys_addr(X)		stub_true_ul(X)
+>> #endif          /* ia64 */
+>>
+>> +#ifdef __sparc64__ /* sparc64 */
+>> +int get_versiondep_info_sparc64(void);
+>> +int get_phys_base_sparc64(void);
+>> +unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr);
+>> +#define find_vmemmap()          stub_false()
+>> +#define get_machdep_info()      TRUE
+>> +#define get_phys_base()         get_phys_base_sparc64()
+>> +#define get_versiondep_info()   get_versiondep_info_sparc64()
+>> +#define vaddr_to_paddr(X)       vaddr_to_paddr_sparc64(X)
+>> +#define is_phys_addr(X)		stub_true_ul(X)
+>> +#endif		/* sparc64 */
+>> +
+>> typedef unsigned long long mdf_pfn_t;
+>>
+>> #ifndef ARCH_PFN_OFFSET
+>> @@ -1474,6 +1573,11 @@ struct symbol_table {
+>> 	unsigned long long		cpu_pgd;
+>> 	unsigned long long		demote_segment_4k;
+>> 	unsigned long long		cur_cpu_spec;
+>> +
+>> +	/*
+>> +	 * symbols on sparc64 arch
+>> +	 */
+>> +	unsigned long long		vmemmap_table;
+>> };
+>>
+>> struct size_table {
+>> @@ -1952,6 +2056,12 @@ int get_xen_info_ia64(void);
+>> #define get_xen_info_arch(X) FALSE
+>> #endif	/* s390x */
+>>
+>> +#ifdef __sparc64__ /* sparc64 */
+>> +#define kvtop_xen(X)	FALSE
+>> +#define get_xen_basic_info_arch(X) FALSE
+>> +#define get_xen_info_arch(X) FALSE
+>> +#endif	/* sparc64 */
+>> +
+>> struct cycle {
+>> 	mdf_pfn_t start_pfn;
+>> 	mdf_pfn_t end_pfn;
+>> --
+>> 1.7.1
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-Flow is a bit clearer.
-
-> +/*
-> + * Examine the physical address to determine if it is boot data by checking
-> + * it against the boot params setup_data chain (early boot version).
-> + */
-> +static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
-> +						unsigned long size)
-> +{
-> +	struct setup_data *data;
-> +	u64 paddr, paddr_next;
-> +
-> +	paddr = boot_params.hdr.setup_data;
-> +	while (paddr) {
-> +		bool is_setup_data = false;
-> +
-> +		if (phys_addr == paddr)
-> +			return true;
-> +
-> +		data = early_memremap_decrypted(paddr, sizeof(*data));
-> +
-> +		paddr_next = data->next;
-> +
-> +		if ((phys_addr > paddr) && (phys_addr < (paddr + data->len)))
-> +			is_setup_data = true;
-> +
-> +		early_memunmap(data, sizeof(*data));
-> +
-> +		if (is_setup_data)
-> +			return true;
-> +
-> +		paddr = paddr_next;
-> +	}
-> +
-> +	return false;
-> +}
-
-This one is begging to be unified with memremap_is_setup_data() to both
-call a __ worker function.
-
-> +
-> +/*
-> + * Architecture function to determine if RAM remap is allowed. By default, a
-> + * RAM remap will map the data as encrypted. Determine if a RAM remap should
-> + * not be done so that the data will be mapped decrypted.
-> + */
-> +bool arch_memremap_do_ram_remap(resource_size_t phys_addr, unsigned long size,
-> +				unsigned long flags)
-
-So this function doesn't do anything - it replies to a yes/no question.
-So the name should not say "do" but sound like a question. Maybe:
-
-	if (arch_memremap_can_remap( ... ))
-
-or so...
-
-> +{
-> +	if (!sme_active())
-> +		return true;
-> +
-> +	if (flags & MEMREMAP_ENC)
-> +		return true;
-> +
-> +	if (flags & MEMREMAP_DEC)
-> +		return false;
-
-So this looks strange to me: both flags MEMREMAP_ENC and _DEC override
-setup and efi data checking. But we want to remap setup and EFI  data
-*always* decrypted because that data was not encrypted as, as you say,
-firmware doesn't run with SME active.
-
-So my simple logic says that EFI stuff should *always* be mapped DEC,
-regardless of flags. Ditto for setup data. So that check below should
-actually *override* the flags checks and go before them, no?
-
-> +
-> +	if (memremap_is_setup_data(phys_addr, size) ||
-> +	    memremap_is_efi_data(phys_addr, size) ||
-> +	    memremap_should_map_decrypted(phys_addr, size))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +/*
-> + * Architecture override of __weak function to adjust the protection attributes
-> + * used when remapping memory. By default, early_memremp() will map the data
-
-early_memremAp() - a is missing.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
