@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dARxI-0002qw-JL
- for kexec@lists.infradead.org; Tue, 16 May 2017 02:11:23 +0000
+ id 1dARz3-0003G3-Qa
+ for kexec@lists.infradead.org; Tue, 16 May 2017 02:13:12 +0000
 From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [PATCH] sparc64: Add initial sparc64 support
-Date: Tue, 16 May 2017 02:04:59 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701ED6940@BPXM01GP.gisp.nec.co.jp>
-References: <1494345865-430884-1-git-send-email-tom.hromatka@oracle.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701ED623C@BPXM01GP.gisp.nec.co.jp>
- <6427edb3-e2c9-960c-b78f-353e62518f17@oracle.com>
-In-Reply-To: <6427edb3-e2c9-960c-b78f-353e62518f17@oracle.com>
+Subject: RE: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
+Date: Tue, 16 May 2017 02:05:20 +0000
+Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701ED695B@BPXM01GP.gisp.nec.co.jp>
+References: <cover.1493272570.git.panand@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
+ <cf5a82bf-8232-f39f-7ab4-69250492d4a2@redhat.com>
+ <0910DD04CBD6DE4193FCF86B9C00BE9701EC910B@BPXM01GP.gisp.nec.co.jp>
+ <383e5f5d-8be8-f3cc-f937-5713f785a4df@redhat.com>
+In-Reply-To: <383e5f5d-8be8-f3cc-f937-5713f785a4df@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -25,502 +27,145 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Hromatka <tom.hromatka@oracle.com>, "tom.hromatka@gmail.com" <tom.hromatka@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Pratyush Anand <panand@redhat.com>
+Cc: "keescook@chromium.org" <keescook@chromium.org>, "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, Xunlei Pang <xlpang@redhat.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>
 
->On 05/14/2017 10:32 PM, Atsushi Kumagai wrote:
->> Hello Tom,
->>
->>> This commit adds support for sparc64. The changes were tested on a
->>> sparc64 T7-2 processor with 2 TB of RAM
->> Thanks for your work, what kernel version does this patch support ?
+>Hi Atsushi,
 >
->I tested it on 4.1.12.  I am trying to test it on 4.11.0 as well, but I
->am running into problems unrelated to kexec.
-
-Sure, I note this test result.
-
->> I can't test for sparc64, so I hope you maintain this code.
->> Anyway, I'll merge this into v1.6.2.
+>Thanks for the testing.
 >
->You can add me as the maintainer for sparc64.  Thanks.
-
-Thank you, too !
-
->> BTW, I have a trivial question below.
->>
->>> ---
->>> Makefile       |    6 +-
->>> arch/sparc64.c |  236 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>> makedumpfile.h |  110 ++++++++++++++++++++++++++
->>> 3 files changed, 350 insertions(+), 2 deletions(-)
->>> create mode 100644 arch/sparc64.c
+>On Wednesday 10 May 2017 01:37 PM, Atsushi Kumagai wrote:
+>>> Hi Atsushi,
 >>>
->>> diff --git a/Makefile b/Makefile
->>> index 8b0fd24..4d96490 100644
->>> --- a/Makefile
->>> +++ b/Makefile
->>> @@ -48,11 +48,13 @@ endif
->>> SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
->>> SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c
->>> OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
->>> -SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
->>> -SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
->>> +SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
->>> arch/sparc64.c
->>> OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+>>> On Friday 28 April 2017 12:22 PM, Atsushi Kumagai wrote:
+>>>> Hello Pratyush,
+>>>>
+>>>> Thanks for your report, I have received this.
+>>>> I'm on vacation until Mar 8, I'll review it when I return from vacation.
 >>>
->>> LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
->>> +ifeq ($(ARCH), sparc64)
->>> +LIBS += -llzma
->>> +endif
->> Why lzma is required only on sparc64 ?
+>>> Any further comment on it?
+>>> Otherwise, I will send a v2 after accommodating concern from Xunlei.
+>>
+>> Unfortunately, it doesn't seem like I can make time anymore for review this week,
+>> but at least this patch doesn't seem to work in my environment (linux 4.8 without kaslr).
+>> Do you have any ideas ?
 >
->I assumed it was a sparc-specific problem.  On sparc64, I was seeing errors
->like the following:
->
->/usr/lib/gcc/sparc64-redhat-linux/4.4.7/../../../../lib64/libdw.a(lzma.o):
->In function `__libdw_unlzma':
->(.text+0x19c): undefined reference to `lzma_auto_decoder'
->
->But I tried building makedumpfile in an x86/64 VM, and also saw similar
->errors:
->
->/home/thromatka/git/elfutils-0.169/libdwfl/gzip.c:233: undefined
->reference to `lzma_auto_decoder'
->
->Perhaps it was the way I built elfutils?  Thoughts?
+>I see, why it would have caused. I have not tested this case, but I hope my v2
+>should not have this issue.
 
-Actually, elfutils requires liblzma as you said.
+Umm, v2 still doesn't work in my environment...
+It seems that I have to investigate this deeper.
 
-  $ rpm -qf /usr/lib64/libdw.so.1
-  elfutils-libs-0.152-1.el6.x86_64
-  $ ldd /usr/lib64/libdw.so.1
-          linux-vdso.so.1 =>  (0x00007fff0917d000)
-          libelf.so.1 => /usr/lib64/libelf.so.1 (0x0000003085200000)
-          libdl.so.2 => /lib64/libdl.so.2 (0x0000003083e00000)
-          liblzma.so.0 => /usr/lib64/liblzma.so.0 (0x000000308ee00000)
-          libbz2.so.1 => /lib64/libbz2.so.1 (0x0000003097200000)
-          libz.so.1 => /lib64/libz.so.1 (0x0000003084200000)
-          libc.so.6 => /lib64/libc.so.6 (0x0000003083600000)
-          /lib64/ld-linux-x86-64.so.2 (0x0000563009dfc000)
-          libpthread.so.0 => /lib64/libpthread.so.0 (0x0000003083a00000)
+  $ cat scrub.conf
+  [vmlinux]
+  erase modules size 50
   $
 
-It seems that -llzma is necessary if the library is static.
-At least this is not a sparc64 issue, so I'll get rid of the code below
-and fix it in another commit, is this fine with you ?
+  (gdb) r -cd31 -x vmlinux --config scrub.conf vmcore dumpfile.cd31
+  Starting program: /work/kdump_utils/makedumpfile/makedumpfile -cd31 -x vmlinux --config scrub.conf vmcore dumpfile.cd31
+  warning: no loadable sections found in added symbol-file system-supplied DSO at 0x7ffff7ffd000
+  [Thread debugging using libthread_db enabled]
 
-  +ifeq ($(ARCH), sparc64)
-  +LIBS += -llzma
-  +endif
-
+  Program received signal SIGSEGV, Segmentation fault.
+  0x000000308366ee0d in fseek () from /lib64/libc.so.6
+  Missing separate debuginfos, use: debuginfo-install bzip2-libs-1.0.5-7.el6_0.x86_64 elfutils-libelf-0.152-1.el6.x86_64 elfutils-libs-0.152-1.el6.x86_64 glibc-2.12-1.132.el6.x86_64 libgcc-4.4.7-4.el6.x86_64 libstdc++-4.4.7-4.el6.x86_64 snappy-1.1.0-1.el6.x86_64 xz-libs-4.999.9-0.3.beta.20091007git.el6.x86_64 zlib-1.2.3-29.el6.x86_64
+  (gdb) bt
+  #0  0x000000308366ee0d in fseek () from /lib64/libc.so.6
+  #1  0x0000000000420937 in get_kaslr_offset_x86_64 (vaddr=18446744071589596288) at arch/x86_64.c:43
+  #2  0x0000000000414310 in resolve_config_entry (ce=0x701370, base_vaddr=<value optimized out>, base_struct_name=0x0) at erase_info.c:1091
+  #3  0x0000000000415a89 in get_config_symbol_addr (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1264
+  #4  update_filter_info (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1579
+  #5  0x0000000000416543 in process_config (name_config=<value optimized out>) at erase_info.c:1789
+  #6  process_config_file (name_config=<value optimized out>) at erase_info.c:1862
+  #7  0x0000000000417c57 in gather_filter_info () at erase_info.c:2356
+  #8  0x0000000000443e5b in create_dumpfile () at makedumpfile.c:9870
+  #9  0x00000000004457ae in main (argc=<value optimized out>, argv=<value optimized out>) at makedumpfile.c:11349
+  (gdb)
 
 Thanks,
-Atsushi Kumagai
+Atsushi Kuamgai
 
->
+>~Pratyush
+>>
+>>
+>> Program received signal SIGSEGV, Segmentation fault.
+>> 0x00007ffff6be49f5 in fseek () from /lib64/libc.so.6
+>> Missing separate debuginfos, use: debuginfo-install bzip2-libs-1.0.6-13.el7.x86_64 elfutils-libelf-0.163-3.el7.x86_64
+>elfutils-libs-0.163-3.el7.x86_64 glibc-2.17-105.el7.x86_64 libgcc-4.8.5-4.el7.x86_64 libstdc++-4.8.5-4.el7.x86_64
+>snappy-1.1.0-3.el7.x86_64 xz-libs-5.1.2-12alpha.el7.x86_64 zlib-1.2.7-15.el7.x86_64
+>> (gdb) bt
+>> #0  0x00007ffff6be49f5 in fseek () from /lib64/libc.so.6
+>> #1  0x0000000000429d38 in read_vmcoreinfo_symbol (str_symbol=0x44cb0c "SYMBOL(_stext)=") at makedumpfile.c:2384
+>> #2  0x000000000042097a in get_kaslr_offset_x86_64 (vaddr=18446744071589596288) at arch/x86_64.c:45
+>> #3  0x0000000000414310 in resolve_config_entry (ce=0x701370, base_vaddr=<optimized out>, base_struct_name=0x0)
+>>     at erase_info.c:1091
+>> #4  0x0000000000415a89 in get_config_symbol_addr (base_struct_name=0x0, base_vaddr=0, ce=0x701370) at erase_info.c:1264
+>> #5  update_filter_info (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1579
+>> #6  0x0000000000416543 in process_config (config=<optimized out>) at erase_info.c:1789
+>> #7  process_config_file (name_config=<optimized out>) at erase_info.c:1862
+>> #8  0x0000000000417c57 in gather_filter_info () at erase_info.c:2356
+>> #9  0x0000000000443ccb in create_dumpfile () at makedumpfile.c:9863
+>> #10 0x000000000044561e in main (argc=<optimized out>, argv=<optimized out>) at makedumpfile.c:11342
+>> (gdb)
+>>
 >>
 >> Thanks,
 >> Atsushi Kumagai
 >>
->>> ifneq ($(LINKTYPE), dynamic)
->>> LIBS := -static $(LIBS)
->>> endif
->>> diff --git a/arch/sparc64.c b/arch/sparc64.c
->>> new file mode 100644
->>> index 0000000..1cfaa85
->>> --- /dev/null
->>> +++ b/arch/sparc64.c
->>> @@ -0,0 +1,236 @@
->>> +/*
->>> + * Copyright (C) 2014, 2017 Oracle and/or its affiliates
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License as published by
->>> + * the Free Software Foundation (version 2 of the License).
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + *
->>> + * You should have received a copy of the GNU General Public License
->>> + * along with this program; if not, write to the Free Software
->>> + * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
->>> + */
->>> +
->>> +#ifdef __sparc64__
->>> +
->>> +#include "../elf_info.h"
->>> +#include "../makedumpfile.h"
->>> +#include "../print_info.h"
->>> +
->>> +int get_versiondep_info_sparc64(void)
->>> +{
->>> +	info->section_size_bits = _SECTION_SIZE_BITS;
->>> +
->>> +	if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
->>> +		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
->>> +	else {
->>> +		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
->>> +		info->flag_vmemmap = TRUE;
->>> +		info->vmemmap_start = VMEMMAP_BASE_SPARC64;
->>> +		info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
->>> +			((1UL << (info->max_physmem_bits - PAGE_SHIFT)) *
->>> +			 SIZE(page));
->>> +	}
->>> +
->>> +	return TRUE;
->>> +}
->>> +
->>> +int get_phys_base_sparc64(void)
->>> +{
->>> +	/* Ideally we'd search the pt_load entries until we found one
->>> +	 * containing KVBASE (_stext), but get_symbol_info hasn't been
->>> +	 * called yet. We'll just go with the first entry.
->>> +	 */
->>> +	unsigned long long phys_start;
->>> +	unsigned long long virt_start;
->>> +	unsigned long long virt_end;
->>> +
->>> +	if (get_pt_load(0, &phys_start, NULL, &virt_start, &virt_end)) {
->>> +		info->phys_base = phys_start & ~KVBASE_MASK;
->>> +		return TRUE;
->>> +	}
->>> +	ERRMSG("Can't find kernel segment\n");
->>> +	return FALSE;
->>> +}
->>> +
->>> +int is_vmalloc_addr_sparc64(unsigned long vaddr)
->>> +{
->>> +	return (vaddr >= VMALLOC_START_SPARC64);
->>> +}
->>> +
->>> +int is_vmemmap_addr_sparc64(unsigned long vaddr)
->>> +{
->>> +	if (info->flag_vmemmap &&
->>> +	    (vaddr >= info->vmemmap_start) && (vaddr < info->vmemmap_end))
->>> +		return TRUE;
->>> +
->>> +	return FALSE;
->>> +}
->>> +
->>> +unsigned long vmemmap_to_phys_sparc64(unsigned long vaddr)
->>> +{
->>> +	unsigned long vmemmap_table;
->>> +	unsigned long offset = vaddr - info->vmemmap_start;
->>> +	unsigned long chunk_offset = offset & ~VMEMMAP_CHUNK_MASK;
->>> +	unsigned long chunk;
->>> +	unsigned long index;
->>> +	unsigned long pte;
->>> +	unsigned long pte_paddr;
->>> +	unsigned long pte_offset;
->>> +
->>> +	vmemmap_table = SYMBOL(vmemmap_table);
->>> +	if (vmemmap_table == NOT_FOUND_SYMBOL) {
->>> +		ERRMSG("Can't get symbol of vmemmap_table\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	index = offset >> NR_CHUNKS_SHIFT;
->>> +	if (!readmem(VADDR, vmemmap_table + (index * sizeof(long)),
->>> +		     &pte_paddr, sizeof(long))) {
->>> +		ERRMSG("Error reading 1st level vmemmap_table\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +	chunk = (vaddr & ~NR_CHUNKS_MASK) >> VMEMMAP_CHUNK_SHIFT;
->>> +	pte_offset = chunk * sizeof(pte);
->>> +	pte_paddr += pte_offset;
->>> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof(pte))) {
->>> +		ERRMSG("Error reading 2nd level vmemmap_table\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +	return pte_to_pa(pte) | chunk_offset;
->>> +}
->>> +
->>> +unsigned long vtop3_sparc64(unsigned long vaddr)
->>> +{
->>> +	unsigned long pgdir, pgd_paddr, pmd_paddr, pte_paddr;
->>> +	unsigned long pgd_pte, pmd_pte, pte;
->>> +
->>> +	pgdir = SYMBOL(swapper_pg_dir);
->>> +	if (pgdir == NOT_FOUND_SYMBOL) {
->>> +		ERRMSG("Can't get symbol of swapper_pg_dir\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	pgd_paddr = pgd_offset_l3(pgdir, vaddr);
->>> +	if (!readmem(VADDR, pgd_paddr, &pgd_pte, sizeof pgd_pte)) {
->>> +		ERRMSG("Can't get pgd_pte, pgd_paddr = 0x%lx\n", pgd_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (pgd_none(pgd_pte)) {
->>> +		ERRMSG("Can't get a valid pgd_pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	pmd_paddr = pmd_offset(pgd_pte, vaddr);
->>> +	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
->>> +		ERRMSG("Can't get pmd_pte, pmd_paddr = 0x%lx\n", pmd_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (pmd_none(pmd_pte)) {
->>> +		ERRMSG("Can't get a valid pmd_pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	if (pmd_large(pmd_pte))
->>> +		return pte_to_pa(pmd_pte) + (vaddr & ~PMD_MASK);
->>> +
->>> +	pte_paddr = pte_offset(pmd_pte, vaddr);
->>> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
->>> +		ERRMSG("Can't get pte, pte_paddr = 0x%lx\n", pmd_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (!pte_present(pte)) {
->>> +		ERRMSG("Can't get a valid pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	return pte_to_pa(pte) + (vaddr & ~PAGE_MASK);
->>> +}
->>> +
->>> +unsigned long vtop4_sparc64(unsigned long vaddr)
->>> +{
->>> +	unsigned long pgdir, pgd_paddr, pud_paddr, pmd_paddr, pte_paddr;
->>> +	unsigned long pgd_pte, pud_pte, pmd_pte, pte;
->>> +
->>> +	pgdir = SYMBOL(swapper_pg_dir);
->>> +	if (pgdir == NOT_FOUND_SYMBOL) {
->>> +		ERRMSG("Can't get symbol of swapper_pg_dir\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	pgd_paddr = pgd_offset_l4(pgdir, vaddr);
->>> +	if (!readmem(VADDR, pgd_paddr, &pgd_pte, sizeof pgd_pte)) {
->>> +		ERRMSG("Can't get pgd_pte, pgd_paddr = 0x%lx\n", pgd_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (pgd_none(pgd_pte)) {
->>> +		ERRMSG("Can't get a valid pgd_pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	pud_paddr = pud_offset(pgd_pte, vaddr);
->>> +	if (!readmem(PADDR, pud_paddr, &pud_pte, sizeof pud_pte)) {
->>> +		ERRMSG("Can't get pud_pte, pud_paddr = 0x%lx\n", pud_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (pud_none(pud_pte)) {
->>> +		ERRMSG("Can't get a valid pud_pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	if (pud_large(pud_pte))
->>> +		return pte_to_pa(pud_pte) + (vaddr & ~PUD_MASK);
->>> +
->>> +	pmd_paddr = pmd_offset(pud_pte, vaddr);
->>> +	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof pmd_pte)) {
->>> +		ERRMSG("Can't get pmd_pte, pmd_paddr = 0x%lx\n", pmd_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (pmd_none(pmd_pte)) {
->>> +		ERRMSG("Can't get a valid pmd_pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	if (pmd_large(pmd_pte))
->>> +		return pte_to_pa(pmd_pte) + (vaddr & ~PMD_MASK);
->>> +
->>> +	pte_paddr = pte_offset(pmd_pte, vaddr);
->>> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof pte)) {
->>> +		ERRMSG("Can't get pte, pte_paddr = 0x%lx\n", pmd_paddr);
->>> +		return NOT_PADDR;
->>> +	}
->>> +	if (!pte_present(pte)) {
->>> +		ERRMSG("Can't get a valid pte.\n");
->>> +		return NOT_PADDR;
->>> +	}
->>> +
->>> +	return pte_to_pa(pte) + (vaddr & ~PAGE_MASK);
->>> +}
->>> +
->>> +unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr)
->>> +{
->>> +	unsigned long paddr;
->>> +
->>> +	paddr = vaddr_to_paddr_general(vaddr);
->>> +	if (paddr != NOT_PADDR)
->>> +		return paddr;
->>> +
->>> +	if (is_vmemmap_addr_sparc64(vaddr))
->>> +		paddr = vmemmap_to_phys_sparc64(vaddr);
->>> +	else if (is_vmalloc_addr_sparc64(vaddr)) {
->>> +		if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
->>> +			paddr = vtop4_sparc64(vaddr);
->>> +		else
->>> +			paddr = vtop3_sparc64(vaddr);
->>> +	}
->>> +	if (paddr == NOT_PADDR)
->>> +		ERRMSG("vaddr not mapped: 0x%lx\n", vaddr);
->>> +
->>> +	return paddr;
->>> +}
->>> +
->>> +#endif /* sparc64 */
->>> diff --git a/makedumpfile.h b/makedumpfile.h
->>> index e32e567..9e222b8 100644
->>> --- a/makedumpfile.h
->>> +++ b/makedumpfile.h
->>> @@ -820,6 +820,93 @@ unsigned long get_kvbase_arm64(void);
->>>
->>> #endif          /* ia64 */
->>>
->>> +#ifdef __sparc64__
->>> +
->>> +#define KVBASE			(SYMBOL(_stext))
->>> +#define KVBASE_MASK		(0xffff)
->>> +#define _SECTION_SIZE_BITS	(30)
->>> +#define _MAX_PHYSMEM_BITS_L3	(49)
->>> +#define _MAX_PHYSMEM_BITS_L4	(53)
->>> +#define VMALLOC_START_SPARC64	(0x0000000100000000UL)
->>> +#define VMEMMAP_BASE_SPARC64	(0x0000010000000000UL)
->>> +#define VMEMMAP_CHUNK_SHIFT	(22)
->>> +#define VMEMMAP_CHUNK		(1UL << VMEMMAP_CHUNK_SHIFT)
->>> +#define VMEMMAP_CHUNK_MASK	(~(VMEMMAP_CHUNK - 1UL))
->>> +
->>> +#define PAGE_SHIFT		13
->>> +#define PAGE_SIZE		(1UL << PAGE_SHIFT)
->>> +#define PAGE_MASK		(~(PAGE_SIZE - 1))
->>> +
->>> +#define MAX_PHYS_ADDRESS_LOBITS	(41)
->>> +#define NR_CHUNKS_SHIFT		(MAX_PHYS_ADDRESS_LOBITS - PAGE_SHIFT + 6)
->>> +#define NR_CHUNKS_MASK		(~((1UL << NR_CHUNKS_SHIFT) - 1))
->>> +
->>> +#define PMD_SHIFT		(PAGE_SHIFT + (PAGE_SHIFT - 3))
->>> +#define PMD_SIZE		(1UL << PMD_SHIFT)
->>> +#define PMD_MASK		(~(PMD_SIZE - 1))
->>> +#define PMD_BITS		(PAGE_SHIFT - 3)
->>> +
->>> +#define PUD_SHIFT		(PMD_SHIFT + PMD_BITS)
->>> +#define PUD_SIZE		(1UL << PUD_SHIFT)
->>> +#define PUD_MASK		(~(PUD_SIZE - 1))
->>> +#define PUD_BITS		(PAGE_SHIFT - 3)
->>> +
->>> +#define PGDIR_SHIFT_L4		(PUD_SHIFT + PUD_BITS)
->>> +#define PGDIR_SIZE_L4		(1UL << PGDIR_SHIFT_L4)
->>> +#define PGDIR_MASK_L4		(~(PGDIR_SIZE_L4 - 1))
->>> +
->>> +#define PGDIR_SHIFT_L3		(PMD_SHIFT + PMD_BITS)
->>> +#define PGDIR_SIZE_L3		(1UL << PGDIR_SHIFT_L3)
->>> +#define PGDIR_MASK_L3		(~(PGDIR_SIZE_L3 - 1))
->>> +
->>> +#define PGDIR_BITS		(PAGE_SHIFT - 3)
->>> +
->>> +#define PTRS_PER_PTE		(1UL << (PAGE_SHIFT - 3))
->>> +#define PTRS_PER_PMD		(1UL << PMD_BITS)
->>> +#define PTRS_PER_PUD		(1UL << PUD_BITS)
->>> +#define PTRS_PER_PGD		(1UL << PGDIR_BITS)
->>> +
->>> +#define _PAGE_PMD_HUGE		(0x0100000000000000UL)
->>> +#define _PAGE_PUD_HUGE		_PAGE_PMD_HUGE
->>> +#define _PAGE_PADDR_4V		(0x00FFFFFFFFFFE000UL)
->>> +#define _PAGE_PRESENT_4V	(0x0000000000000010UL)
->>> +
->>> +typedef unsigned long pte_t;
->>> +typedef unsigned long pmd_t;
->>> +typedef unsigned long pud_t;
->>> +typedef unsigned long pgd_t;
->>> +
->>> +#define pud_none(pud)		(!(pud))
->>> +#define pgd_none(pgd)		(!(pgd))
->>> +#define pmd_none(pmd)		(!(pmd))
->>> +
->>> +#define pte_to_pa(pte) (pte & _PAGE_PADDR_4V)
->>> +
->>> +#define pgd_index_l4(addr) (((addr) >> PGDIR_SHIFT_L4) & (PTRS_PER_PGD - 1))
->>> +#define pgd_offset_l4(pgdir,addr)	((unsigned long) \
->>> +				 ((pgd_t *)pgdir + pgd_index_l4(addr)))
->>> +
->>> +#define pgd_index_l3(addr) (((addr) >> PGDIR_SHIFT_L3) & (PTRS_PER_PGD - 1))
->>> +#define pgd_offset_l3(pgdir,addr)	((unsigned long) \
->>> +				 ((pgd_t *)pgdir + pgd_index_l3(addr)))
->>> +
->>> +#define pud_index(addr)		(((addr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
->>> +#define pud_offset(pgdp, addr)	((unsigned long) \
->>> +				 ((pud_t *)pgdp + pud_index(addr)))
->>> +#define pud_large(pud)		(pud & _PAGE_PUD_HUGE)
->>> +
->>> +#define pmd_index(addr)		(((addr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
->>> +#define pmd_offset(pudp, addr)	((unsigned long) \
->>> +				 ((pmd_t *)pudp + pmd_index(addr)))
->>> +#define pmd_large(pmd)		(pmd & _PAGE_PMD_HUGE)
->>> +
->>> +#define pte_index(addr)		(((addr) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
->>> +#define pte_offset(pmdp, addr)	((unsigned long) \
->>> +				 ((pte_t *)(pte_to_pa(pmdp) + pte_index(addr))))
->>> +#define pte_present(pte)	(pte & _PAGE_PRESENT_4V)
->>> +
->>> +#endif
->>> +
->>> /*
->>>   * The function of dependence on machine
->>>   */
->>> @@ -928,6 +1015,18 @@ unsigned long long vaddr_to_paddr_ia64(unsigned long vaddr);
->>> #define is_phys_addr(X)		stub_true_ul(X)
->>> #endif          /* ia64 */
->>>
->>> +#ifdef __sparc64__ /* sparc64 */
->>> +int get_versiondep_info_sparc64(void);
->>> +int get_phys_base_sparc64(void);
->>> +unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr);
->>> +#define find_vmemmap()          stub_false()
->>> +#define get_machdep_info()      TRUE
->>> +#define get_phys_base()         get_phys_base_sparc64()
->>> +#define get_versiondep_info()   get_versiondep_info_sparc64()
->>> +#define vaddr_to_paddr(X)       vaddr_to_paddr_sparc64(X)
->>> +#define is_phys_addr(X)		stub_true_ul(X)
->>> +#endif		/* sparc64 */
->>> +
->>> typedef unsigned long long mdf_pfn_t;
->>>
->>> #ifndef ARCH_PFN_OFFSET
->>> @@ -1474,6 +1573,11 @@ struct symbol_table {
->>> 	unsigned long long		cpu_pgd;
->>> 	unsigned long long		demote_segment_4k;
->>> 	unsigned long long		cur_cpu_spec;
->>> +
->>> +	/*
->>> +	 * symbols on sparc64 arch
->>> +	 */
->>> +	unsigned long long		vmemmap_table;
->>> };
->>>
->>> struct size_table {
->>> @@ -1952,6 +2056,12 @@ int get_xen_info_ia64(void);
->>> #define get_xen_info_arch(X) FALSE
->>> #endif	/* s390x */
->>>
->>> +#ifdef __sparc64__ /* sparc64 */
->>> +#define kvtop_xen(X)	FALSE
->>> +#define get_xen_basic_info_arch(X) FALSE
->>> +#define get_xen_info_arch(X) FALSE
->>> +#endif	/* sparc64 */
->>> +
->>> struct cycle {
->>> 	mdf_pfn_t start_pfn;
->>> 	mdf_pfn_t end_pfn;
->>> --
->>> 1.7.1
+>>> ~Pratyush
 >>>
 >>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>>
+>>>> Thanks,
+>>>> Atsushi Kumagai
+>>>>
+>>>>> Hi All,
+>>>>>
+>>>>> We came across another failure in makedumpfile when kaslr is enabled. This
+>>>>> failure occurs when we try re-filtering. We try to erase some symbol from a
+>>>>> dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
+>>>>>
+>>>>> We have very limited symbol information in vmcoreinfo. So symbols to be
+>>>>> erased may not be available in vmcoreinfo and we look for it in vmlinux.
+>>>>> However,  symbol address from vmlinux is a static address which differs
+>>>> >from run time address with KASLR_OFFSET. Therefore, reading any "virtual
+>>>>> address of vmlinux" from vmcore is not possible.
+>>>>>
+>>>>> These patches finds runtime  KASLR offset and then calculates run time
+>>>>> address of symbols read from vmlinux.
+>>>>>
+>>>>> Since, I am not an expert of x86, and these patches touch x86 part of
+>>>>> makedumpfile, therefore I have CCed x86 experts. Please, provide your
+>>>>> review comment and let me know if you think there could have been a better
+>>>>> way to resolve this issue.
+>>>>>
+>>>>> thanks
+>>>>>
+>>>>> ~Pratyush
+>>>>>
+>>>>> Pratyush Anand (2):
+>>>>>  makedumpfile: add runtime kaslr offset if it exists
+>>>>>  x86_64: calculate page_offset in case of re-filtering
+>>>>>
+>>>>> arch/x86_64.c  | 45 +++++++++++++++++++++++++++++++++++++++++++--
+>>>>> erase_info.c   |  1 +
+>>>>> makedumpfile.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>> makedumpfile.h | 15 +++++++++++++++
+>>>>> 4 files changed, 103 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> --
+>>>>> 2.9.3
+>>>>
 >>
->
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+
+
 
 _______________________________________________
 kexec mailing list
