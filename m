@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
- by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dARz3-0003G3-Qa
- for kexec@lists.infradead.org; Tue, 16 May 2017 02:13:12 +0000
-From: Atsushi Kumagai <ats-kumagai@wm.jp.nec.com>
-Subject: RE: [Makedumpfile PATCH 0/2] Fix refiltering when kaslr enabled
-Date: Tue, 16 May 2017 02:05:20 +0000
-Message-ID: <0910DD04CBD6DE4193FCF86B9C00BE9701ED695B@BPXM01GP.gisp.nec.co.jp>
-References: <cover.1493272570.git.panand@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EC6885@BPXM01GP.gisp.nec.co.jp>
- <cf5a82bf-8232-f39f-7ab4-69250492d4a2@redhat.com>
- <0910DD04CBD6DE4193FCF86B9C00BE9701EC910B@BPXM01GP.gisp.nec.co.jp>
- <383e5f5d-8be8-f3cc-f937-5713f785a4df@redhat.com>
-In-Reply-To: <383e5f5d-8be8-f3cc-f937-5713f785a4df@redhat.com>
-Content-Language: ja-JP
+Received: from mail.skyhub.de ([5.9.137.197])
+ by bombadil.infradead.org with esmtp (Exim 4.87 #1 (Red Hat Linux))
+ id 1dAXz3-0006vt-Qf
+ for kexec@lists.infradead.org; Tue, 16 May 2017 08:37:35 +0000
+Date: Tue, 16 May 2017 10:36:58 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v5 18/32] x86, mpparse: Use memremap to map the mpf and
+ mpc data
+Message-ID: <20170516083658.fq2h4ysmrbgn23cs@pd.tnic>
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211930.10190.62640.stgit@tlendack-t1.amdoffice.net>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20170418211930.10190.62640.stgit@tlendack-t1.amdoffice.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,145 +25,138 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: "keescook@chromium.org" <keescook@chromium.org>, "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "dyoung@redhat.com" <dyoung@redhat.com>, Xunlei Pang <xlpang@redhat.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "mingo@kernel.org" <mingo@kernel.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S. Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
->Hi Atsushi,
->
->Thanks for the testing.
->
->On Wednesday 10 May 2017 01:37 PM, Atsushi Kumagai wrote:
->>> Hi Atsushi,
->>>
->>> On Friday 28 April 2017 12:22 PM, Atsushi Kumagai wrote:
->>>> Hello Pratyush,
->>>>
->>>> Thanks for your report, I have received this.
->>>> I'm on vacation until Mar 8, I'll review it when I return from vacation.
->>>
->>> Any further comment on it?
->>> Otherwise, I will send a v2 after accommodating concern from Xunlei.
->>
->> Unfortunately, it doesn't seem like I can make time anymore for review this week,
->> but at least this patch doesn't seem to work in my environment (linux 4.8 without kaslr).
->> Do you have any ideas ?
->
->I see, why it would have caused. I have not tested this case, but I hope my v2
->should not have this issue.
+On Tue, Apr 18, 2017 at 04:19:30PM -0500, Tom Lendacky wrote:
+> The SMP MP-table is built by UEFI and placed in memory in a decrypted
+> state. These tables are accessed using a mix of early_memremap(),
+> early_memunmap(), phys_to_virt() and virt_to_phys(). Change all accesses
+> to use early_memremap()/early_memunmap(). This allows for proper setting
+> of the encryption mask so that the data can be successfully accessed when
+> SME is active.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/kernel/mpparse.c |  102 +++++++++++++++++++++++++++++++--------------
+>  1 file changed, 71 insertions(+), 31 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+> index fd37f39..afbda41d 100644
+> --- a/arch/x86/kernel/mpparse.c
+> +++ b/arch/x86/kernel/mpparse.c
+> @@ -429,7 +429,21 @@ static inline void __init construct_default_ISA_mptable(int mpc_default_type)
+>  	}
+>  }
+>  
+> -static struct mpf_intel *mpf_found;
+> +static unsigned long mpf_base;
+> +
+> +static void __init unmap_mpf(struct mpf_intel *mpf)
+> +{
+> +	early_memunmap(mpf, sizeof(*mpf));
+> +}
+> +
+> +static struct mpf_intel * __init map_mpf(unsigned long paddr)
+> +{
+> +	struct mpf_intel *mpf;
+> +
+> +	mpf = early_memremap(paddr, sizeof(*mpf));
+> +
+> +	return mpf;
 
-Umm, v2 still doesn't work in my environment...
-It seems that I have to investigate this deeper.
+	return early_memremap(paddr, sizeof(*mpf));
 
-  $ cat scrub.conf
-  [vmlinux]
-  erase modules size 50
-  $
+...
 
-  (gdb) r -cd31 -x vmlinux --config scrub.conf vmcore dumpfile.cd31
-  Starting program: /work/kdump_utils/makedumpfile/makedumpfile -cd31 -x vmlinux --config scrub.conf vmcore dumpfile.cd31
-  warning: no loadable sections found in added symbol-file system-supplied DSO at 0x7ffff7ffd000
-  [Thread debugging using libthread_db enabled]
+> @@ -842,25 +873,26 @@ static int __init update_mp_table(void)
+>  	if (!enable_update_mptable)
+>  		return 0;
+>  
+> -	mpf = mpf_found;
+> -	if (!mpf)
+> +	if (!mpf_base)
+>  		return 0;
+>  
+> +	mpf = map_mpf(mpf_base);
+> +
+>  	/*
+>  	 * Now see if we need to go further.
+>  	 */
+>  	if (mpf->feature1 != 0)
 
-  Program received signal SIGSEGV, Segmentation fault.
-  0x000000308366ee0d in fseek () from /lib64/libc.so.6
-  Missing separate debuginfos, use: debuginfo-install bzip2-libs-1.0.5-7.el6_0.x86_64 elfutils-libelf-0.152-1.el6.x86_64 elfutils-libs-0.152-1.el6.x86_64 glibc-2.12-1.132.el6.x86_64 libgcc-4.4.7-4.el6.x86_64 libstdc++-4.4.7-4.el6.x86_64 snappy-1.1.0-1.el6.x86_64 xz-libs-4.999.9-0.3.beta.20091007git.el6.x86_64 zlib-1.2.3-29.el6.x86_64
-  (gdb) bt
-  #0  0x000000308366ee0d in fseek () from /lib64/libc.so.6
-  #1  0x0000000000420937 in get_kaslr_offset_x86_64 (vaddr=18446744071589596288) at arch/x86_64.c:43
-  #2  0x0000000000414310 in resolve_config_entry (ce=0x701370, base_vaddr=<value optimized out>, base_struct_name=0x0) at erase_info.c:1091
-  #3  0x0000000000415a89 in get_config_symbol_addr (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1264
-  #4  update_filter_info (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1579
-  #5  0x0000000000416543 in process_config (name_config=<value optimized out>) at erase_info.c:1789
-  #6  process_config_file (name_config=<value optimized out>) at erase_info.c:1862
-  #7  0x0000000000417c57 in gather_filter_info () at erase_info.c:2356
-  #8  0x0000000000443e5b in create_dumpfile () at makedumpfile.c:9870
-  #9  0x00000000004457ae in main (argc=<value optimized out>, argv=<value optimized out>) at makedumpfile.c:11349
-  (gdb)
+You're kidding, right? map_mpf() *can* return NULL.
 
-Thanks,
-Atsushi Kuamgai
+Also, simplify that test:
 
->~Pratyush
->>
->>
->> Program received signal SIGSEGV, Segmentation fault.
->> 0x00007ffff6be49f5 in fseek () from /lib64/libc.so.6
->> Missing separate debuginfos, use: debuginfo-install bzip2-libs-1.0.6-13.el7.x86_64 elfutils-libelf-0.163-3.el7.x86_64
->elfutils-libs-0.163-3.el7.x86_64 glibc-2.17-105.el7.x86_64 libgcc-4.8.5-4.el7.x86_64 libstdc++-4.8.5-4.el7.x86_64
->snappy-1.1.0-3.el7.x86_64 xz-libs-5.1.2-12alpha.el7.x86_64 zlib-1.2.7-15.el7.x86_64
->> (gdb) bt
->> #0  0x00007ffff6be49f5 in fseek () from /lib64/libc.so.6
->> #1  0x0000000000429d38 in read_vmcoreinfo_symbol (str_symbol=0x44cb0c "SYMBOL(_stext)=") at makedumpfile.c:2384
->> #2  0x000000000042097a in get_kaslr_offset_x86_64 (vaddr=18446744071589596288) at arch/x86_64.c:45
->> #3  0x0000000000414310 in resolve_config_entry (ce=0x701370, base_vaddr=<optimized out>, base_struct_name=0x0)
->>     at erase_info.c:1091
->> #4  0x0000000000415a89 in get_config_symbol_addr (base_struct_name=0x0, base_vaddr=0, ce=0x701370) at erase_info.c:1264
->> #5  update_filter_info (filter_symbol=0x701370, size_symbol=0x701430) at erase_info.c:1579
->> #6  0x0000000000416543 in process_config (config=<optimized out>) at erase_info.c:1789
->> #7  process_config_file (name_config=<optimized out>) at erase_info.c:1862
->> #8  0x0000000000417c57 in gather_filter_info () at erase_info.c:2356
->> #9  0x0000000000443ccb in create_dumpfile () at makedumpfile.c:9863
->> #10 0x000000000044561e in main (argc=<optimized out>, argv=<optimized out>) at makedumpfile.c:11342
->> (gdb)
->>
->>
->> Thanks,
->> Atsushi Kumagai
->>
->>> ~Pratyush
->>>
->>>
->>>>
->>>> Thanks,
->>>> Atsushi Kumagai
->>>>
->>>>> Hi All,
->>>>>
->>>>> We came across another failure in makedumpfile when kaslr is enabled. This
->>>>> failure occurs when we try re-filtering. We try to erase some symbol from a
->>>>> dumpfile which was copied/compressed from /proc/vmcore using makedumpfile.
->>>>>
->>>>> We have very limited symbol information in vmcoreinfo. So symbols to be
->>>>> erased may not be available in vmcoreinfo and we look for it in vmlinux.
->>>>> However,  symbol address from vmlinux is a static address which differs
->>>> >from run time address with KASLR_OFFSET. Therefore, reading any "virtual
->>>>> address of vmlinux" from vmcore is not possible.
->>>>>
->>>>> These patches finds runtime  KASLR offset and then calculates run time
->>>>> address of symbols read from vmlinux.
->>>>>
->>>>> Since, I am not an expert of x86, and these patches touch x86 part of
->>>>> makedumpfile, therefore I have CCed x86 experts. Please, provide your
->>>>> review comment and let me know if you think there could have been a better
->>>>> way to resolve this issue.
->>>>>
->>>>> thanks
->>>>>
->>>>> ~Pratyush
->>>>>
->>>>> Pratyush Anand (2):
->>>>>  makedumpfile: add runtime kaslr offset if it exists
->>>>>  x86_64: calculate page_offset in case of re-filtering
->>>>>
->>>>> arch/x86_64.c  | 45 +++++++++++++++++++++++++++++++++++++++++++--
->>>>> erase_info.c   |  1 +
->>>>> makedumpfile.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
->>>>> makedumpfile.h | 15 +++++++++++++++
->>>>> 4 files changed, 103 insertions(+), 2 deletions(-)
->>>>>
->>>>> --
->>>>> 2.9.3
->>>>
->>
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
+	if (mpf->feature1)
+		...
 
 
+> -		return 0;
+> +		goto do_unmap_mpf;
+>  
+>  	if (!mpf->physptr)
+> -		return 0;
+> +		goto do_unmap_mpf;
+>  
+> -	mpc = phys_to_virt(mpf->physptr);
+> +	mpc = map_mpc(mpf->physptr);
+
+Again: error checking !!!
+
+You have other calls to early_memremap()/map_mpf() in this patch. Please
+add error checking everywhere.
+
+>  
+>  	if (!smp_check_mpc(mpc, oem, str))
+> -		return 0;
+> +		goto do_unmap_mpc;
+>  
+> -	pr_info("mpf: %llx\n", (u64)virt_to_phys(mpf));
+> +	pr_info("mpf: %llx\n", (u64)mpf_base);
+>  	pr_info("physptr: %x\n", mpf->physptr);
+>  
+>  	if (mpc_new_phys && mpc->length > mpc_new_length) {
+> @@ -878,21 +910,23 @@ static int __init update_mp_table(void)
+>  		new = mpf_checksum((unsigned char *)mpc, mpc->length);
+>  		if (old == new) {
+>  			pr_info("mpc is readonly, please try alloc_mptable instead\n");
+> -			return 0;
+> +			goto do_unmap_mpc;
+>  		}
+>  		pr_info("use in-position replacing\n");
+>  	} else {
+>  		mpf->physptr = mpc_new_phys;
+> -		mpc_new = phys_to_virt(mpc_new_phys);
+> +		mpc_new = map_mpc(mpc_new_phys);
+
+Ditto.
+
+>  		memcpy(mpc_new, mpc, mpc->length);
+> +		unmap_mpc(mpc);
+>  		mpc = mpc_new;
+>  		/* check if we can modify that */
+>  		if (mpc_new_phys - mpf->physptr) {
+>  			struct mpf_intel *mpf_new;
+>  			/* steal 16 bytes from [0, 1k) */
+>  			pr_info("mpf new: %x\n", 0x400 - 16);
+> -			mpf_new = phys_to_virt(0x400 - 16);
+> +			mpf_new = map_mpf(0x400 - 16);
+
+Ditto.
+
+>  			memcpy(mpf_new, mpf, 16);
+> +			unmap_mpf(mpf);
+>  			mpf = mpf_new;
+>  			mpf->physptr = mpc_new_phys;
+>  		}
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
 
 _______________________________________________
 kexec mailing list
