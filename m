@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bl2nam02on0053.outbound.protection.outlook.com
- ([104.47.38.53] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
+Received: from mail-pf0-x22e.google.com ([2607:f8b0:400e:c00::22e])
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dAkPt-0005SS-Sd
- for kexec@lists.infradead.org; Tue, 16 May 2017 21:54:07 +0000
-Subject: Re: [PATCH v5 14/32] efi: Add an EFI table address match function
-References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
- <20170418211848.10190.65062.stgit@tlendack-t1.amdoffice.net>
- <20170515180913.lhma7xw52irrdtvr@pd.tnic>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <2364b148-5168-1583-51c2-0beaa7230235@amd.com>
-Date: Tue, 16 May 2017 16:53:33 -0500
-MIME-Version: 1.0
-In-Reply-To: <20170515180913.lhma7xw52irrdtvr@pd.tnic>
+ id 1dArom-0000dP-TU
+ for kexec@lists.infradead.org; Wed, 17 May 2017 05:48:18 +0000
+Received: by mail-pf0-x22e.google.com with SMTP id 9so1827383pfj.1
+ for <kexec@lists.infradead.org>; Tue, 16 May 2017 22:47:56 -0700 (PDT)
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v7 00/10] (kexec-tools) arm64: add kdump support
+Date: Wed, 17 May 2017 14:51:40 +0900
+Message-Id: <20170517055150.12601-1-takahiro.akashi@linaro.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,70 +17,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter
- Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S.
- Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
+To: horms@verge.net.au
+Cc: geoff@infradead.org, panand@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
 
-On 5/15/2017 1:09 PM, Borislav Petkov wrote:
-> On Tue, Apr 18, 2017 at 04:18:48PM -0500, Tom Lendacky wrote:
->> Add a function that will determine if a supplied physical address matches
->> the address of an EFI table.
->>
->> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
->> ---
->>  drivers/firmware/efi/efi.c |   33 +++++++++++++++++++++++++++++++++
->>  include/linux/efi.h        |    7 +++++++
->>  2 files changed, 40 insertions(+)
->>
->> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
->> index b372aad..8f606a3 100644
->> --- a/drivers/firmware/efi/efi.c
->> +++ b/drivers/firmware/efi/efi.c
->> @@ -55,6 +55,25 @@ struct efi __read_mostly efi = {
->>  };
->>  EXPORT_SYMBOL(efi);
->>
->> +static unsigned long *efi_tables[] = {
->> +	&efi.mps,
->> +	&efi.acpi,
->> +	&efi.acpi20,
->> +	&efi.smbios,
->> +	&efi.smbios3,
->> +	&efi.sal_systab,
->> +	&efi.boot_info,
->> +	&efi.hcdp,
->> +	&efi.uga,
->> +	&efi.uv_systab,
->> +	&efi.fw_vendor,
->> +	&efi.runtime,
->> +	&efi.config_table,
->> +	&efi.esrt,
->> +	&efi.properties_table,
->> +	&efi.mem_attr_table,
->> +};
->> +
->>  static bool disable_runtime;
->>  static int __init setup_noefi(char *arg)
->>  {
->> @@ -854,6 +873,20 @@ int efi_status_to_err(efi_status_t status)
->>  	return err;
->>  }
->>
->> +bool efi_table_address_match(unsigned long phys_addr)
->
-> efi_is_table_address() reads easier/better in the code.
+My kernel patches of kdump support on arm64 were merged in v4.12-rc1.
 
-Will do.
+This patchset is synced with them and provides necessary changes for
+kexec-tools. It can be applied on top of kexec-tools master branch.
 
-Thanks,
-Tom
+Patch #1 to #4 are preparatory patches for succeeding patches,
+#5 to #9 are main part of kdump implementation for vmlinux support
+and #10 is for Image support.
 
->
+Changes for v7:
+ - rebased on the latest master
+ - fix incorrect return values on error (patch #4)
+ - implement get_crash_kernel_load_range() (patch #5)
+ - rename some variables/functions for better readability (patch #5/#9)
+ - add/revise comments
+
+Changes for v6:
+ - use get_kernel_sym() from x86, not from arm (patch #2)
+ - always take root node's "#address-cells" and "#size-cells" into account
+   when adding "linux,usable-memory-range" and "linux,elfcorehdr"
+   (patch #8)
+
+Changes for v5:
+ - remove "linux,crashkernel-base/size" handling aligned with a change
+   on the kernel side
+
+Changes for v4:
+ - rebased on the master branch (including Geoff's v6)
+ - revive "linux,usable-memory-range" DT property (from v2), dropping
+   use of "reserved-memory" nodes introduced in v3 (patch #8)
+ - extend the semantics of kexec_iomem_for_each_line() per Pratyush
+   (patch #1)
+
+Changes for v3:
+ - rebased on Geoff's v5
+ - fix a value of estimated PHYS_OFFSET
+ - add a kernel code/data segment because they now reside out of linear
+   mapping due to KASLR introduction
+ - remove "linux,usable-memory-range" dependency, instead using
+   "reserved-memory" node
+ - add -mem-min/-mem-max support
+
+Changes for v2:
+ - trim a temoprary buffer in setup_2nd_dtb()
+ - add patch#6("kexec: generalize and rename get_kernel_stext_sym()")
+ - update patch#7 from Pratyush
+   (re-worked by akashi)
+
+AKASHI Takahiro (8):
+  kexec: exntend the semantics of kexec_iomem_for_each_line
+  arm64: identify PHYS_OFFSET correctly
+  arm64: change return values on error to negative
+  arm64: kdump: identify memory regions
+  arm64: kdump: add elf core header segment
+  arm64: kdump: set up kernel image segment
+  arm64: kdump: set up other segments
+  arm64: kdump: add DT properties to crash dump kernel's dtb
+
+Pratyush Anand (2):
+  kexec: generalize and rename get_kernel_stext_sym()
+  arm64: kdump: Add support for binary image files
+
+ kexec/Makefile                       |   1 +
+ kexec/arch/arm/crashdump-arm.c       |  40 +-----
+ kexec/arch/arm64/Makefile            |   3 +
+ kexec/arch/arm64/crashdump-arm64.c   | 229 +++++++++++++++++++++++++++++-
+ kexec/arch/arm64/crashdump-arm64.h   |  18 ++-
+ kexec/arch/arm64/iomem.h             |  10 ++
+ kexec/arch/arm64/kexec-arm64.c       | 263 +++++++++++++++++++++++++++++++----
+ kexec/arch/arm64/kexec-elf-arm64.c   |  31 +++--
+ kexec/arch/arm64/kexec-image-arm64.c |  17 ++-
+ kexec/arch/i386/crashdump-x86.c      |  29 ----
+ kexec/kexec-iomem.c                  |  15 +-
+ kexec/kexec.h                        |   2 +
+ kexec/symbols.c                      |  34 +++++
+ 13 files changed, 579 insertions(+), 113 deletions(-)
+ create mode 100644 kexec/arch/arm64/iomem.h
+ create mode 100644 kexec/symbols.c
+
+-- 
+2.11.1
+
 
 _______________________________________________
 kexec mailing list
