@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mail-bl2nam02on0065.outbound.protection.outlook.com
+ ([104.47.38.65] helo=NAM02-BL2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.87 #1 (Red Hat Linux))
- id 1dB0TU-0000AY-Gm
- for kexec@lists.infradead.org; Wed, 17 May 2017 15:02:58 +0000
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
- by mx0b-001b2d01.pphosted.com (8.16.0.20/8.16.0.20) with SMTP id
- v4HExaTf010780
- for <kexec@lists.infradead.org>; Wed, 17 May 2017 11:02:31 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
- by mx0b-001b2d01.pphosted.com with ESMTP id 2agq0k6mq8-1
- (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 17 May 2017 11:02:30 -0400
-Received: from localhost
- by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <zaslonko@linux.vnet.ibm.com>;
- Wed, 17 May 2017 09:02:29 -0600
-From: Zaslonko Mikhail <zaslonko@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: Error on re-filtering the dump file with no
- free pages
-Date: Wed, 17 May 2017 17:02:24 +0200
+ id 1dB46J-0005Fn-C5
+ for kexec@lists.infradead.org; Wed, 17 May 2017 18:55:14 +0000
+Subject: Re: [PATCH v5 17/32] x86/mm: Add support to access boot related data
+ in the clear
+References: <20170418211612.10190.82788.stgit@tlendack-t1.amdoffice.net>
+ <20170418211921.10190.1537.stgit@tlendack-t1.amdoffice.net>
+ <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <4845df29-bae7-9b78-0428-ff96dbef2128@amd.com>
+Date: Wed, 17 May 2017 13:54:39 -0500
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------3C2D1891EE08D28595DF6905"
-Message-Id: <2d1847a4-0e3c-b282-a3ff-74755716eb69@linux.vnet.ibm.com>
+In-Reply-To: <20170515183517.mb4k2gp2qobbuvtm@pd.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,84 +22,336 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Michael Holzheu <holzheu@linux.vnet.ibm.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Toshimitsu Kani <toshi.kani@hpe.com>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Matt Fleming <matt@codeblueprint.co.uk>, x86@kernel.org, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Larry Woodman <lwoodman@redhat.com>, linux-arch@vger.kernel.org, kvm@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Joerg Roedel <joro@8bytes.org>, linux-doc@vger.kernel.org, kasan-dev@googlegroups.com, Ingo Molnar <mingo@redhat.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Dave Young <dyoung@redhat.com>, Rik van Riel <riel@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Dmitry Vyukov <dvyukov@google.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, "Michael S.
+ Tsirkin" <mst@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>
 
-This is a multi-part message in MIME format.
---------------3C2D1891EE08D28595DF6905
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+On 5/15/2017 1:35 PM, Borislav Petkov wrote:
+> On Tue, Apr 18, 2017 at 04:19:21PM -0500, Tom Lendacky wrote:
+>> Boot data (such as EFI related data) is not encrypted when the system is
+>> booted because UEFI/BIOS does not run with SME active. In order to access
+>> this data properly it needs to be mapped decrypted.
+>>
+>> The early_memremap() support is updated to provide an arch specific
+>
+> "Update early_memremap() to provide... "
 
-Please find the enclosed patch below.
+Will do.
 
+>
+>> routine to modify the pagetable protection attributes before they are
+>> applied to the new mapping. This is used to remove the encryption mask
+>> for boot related data.
+>>
+>> The memremap() support is updated to provide an arch specific routine
+>
+> Ditto. Passive tone always reads harder than an active tone,
+> "doer"-sentence.
 
---------------3C2D1891EE08D28595DF6905
-Content-Type: text/plain; charset=UTF-8;
- name="0001-makedumpfile-Error-on-re-filtering-the-dump-file-wit.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename*0="0001-makedumpfile-Error-on-re-filtering-the-dump-file-wit.pa";
- filename*1="tch"
+Ditto.
 
-RnJvbSA2MjdiNGM4MDg1MjY5MjUxZjZkNjY2MjdkYWRhNDQ3OTA5YmNlYWZkIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogcm9vdCA8cm9vdEBzODM0NTAyNS5ib2VibGluZ2Vu
-LmRlLmlibS5jb20+DQpEYXRlOiBUdWUsIDE2IE1heSAyMDE3IDE0OjA4OjE0ICswMjAwDQpT
-dWJqZWN0OiBbUEFUQ0hdIG1ha2VkdW1wZmlsZTogRXJyb3Igb24gcmUtZmlsdGVyaW5nIHRo
-ZSBkdW1wIGZpbGUgd2l0aCBubw0KIGZyZWUgcGFnZXMNCg0KV2hlbiByZS1maWx0ZXJpbmcg
-dGhlIGR1bXAgZmlsZSBhZnRlciB0aGUgZnJlZSBwYWdlcyBoYXZlIGFscmVhZHkgYmVlbg0K
-c3RyaXBwZWQgb3V0IHdlIGdldCBhbiBlcnJvciAiQ2FuJ3QgZ2V0IG5lY2Vzc2FyeSBzeW1i
-b2xzIGZvciBleGNsdWRpbmcNCmZyZWUgcGFnZXMiIGlmIG5ld2x5IHNwZWNpZmllZCBkdW1w
-IGxldmVsIGlzIGJlbG93IDE2IChwcmVzZXJ2ZXMgZnJlZQ0KcGFnZXMpLg0KQWNjb3JkaW5n
-IHRvIHRoZSBjb2RlLCB0aGUgY2hlY2sgZm9yIHRoZSBuZXcgZHVtcCBsZXZlbCBpcyBkb25l
-IEJFRk9SRQ0KdGhlIG5ldyBkdW1wIGxldmVsIGlzIGFjdHVhbGx5IHNldCAoYmFzZWQgb24g
-dGhlIGR1bXAgbGV2ZWwgc3BlY2lmaWVkIGluDQp0aGUgY29tbWFuZCBhbmQgdGhlIG9uZSBm
-cm9tIHRoZSBpbnB1dCBkdW1wIGZpbGUpLg0KTW92aW5nIHRoZSBuZXdfZHVtcF9sZXZlbCBj
-YWxjdWxhdGlvbiBhaGVhZCB3b3VsZCBmaXggdGhlIGVycm9yLg0KDQpTaWduZWQtb2ZmLWJ5
-OiBNaWtoYWlsIFphc2xvbmtvIDx6YXNsb25rb0BsaW51eC52bmV0LmlibS5jb20+DQotLS0N
-CiBtYWtlZHVtcGZpbGUuYyB8IDM0ICsrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0NCiAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuYyBiL21ha2VkdW1wZmlsZS5jDQppbmRl
-eCBlNjliNmRmLi4yNGY5OWZjIDEwMDY0NA0KLS0tIGEvbWFrZWR1bXBmaWxlLmMNCisrKyBi
-L21ha2VkdW1wZmlsZS5jDQpAQCAtOTc3NCwxMCArOTc3NCwyNSBAQCB3cml0ZW91dF9tdWx0
-aXBsZV9kdW1wZmlsZXModm9pZCkNCiAJcmV0dXJuIHJldDsNCiB9DQoNCit2b2lkDQordXBk
-YXRlX2R1bXBfbGV2ZWwodm9pZCkNCit7DQorCWludCBuZXdfbGV2ZWw7DQorDQorCW5ld19s
-ZXZlbCA9IGluZm8tPmR1bXBfbGV2ZWwgfCBpbmZvLT5raF9tZW1vcnktPmR1bXBfbGV2ZWw7
-DQorCWlmIChuZXdfbGV2ZWwgIT0gaW5mby0+ZHVtcF9sZXZlbCkgew0KKwkJaW5mby0+ZHVt
-cF9sZXZlbCA9IG5ld19sZXZlbDsNCisJCU1TRygiZHVtcF9sZXZlbCBpcyBjaGFuZ2VkIHRv
-ICVkLCAiIFwNCisJCQkiYmVjYXVzZSAlcyB3YXMgY3JlYXRlZCBieSBkdW1wX2xldmVsKCVk
-KS4iLA0KKwkJCW5ld19sZXZlbCwgaW5mby0+bmFtZV9tZW1vcnksDQorCQkJaW5mby0+a2hf
-bWVtb3J5LT5kdW1wX2xldmVsKTsNCisJfQ0KK30NCisNCiBpbnQNCiBjcmVhdGVfZHVtcGZp
-bGUodm9pZCkNCiB7DQotCWludCBudW1fcmV0cnksIHN0YXR1cywgbmV3X2xldmVsOw0KKwlp
-bnQgbnVtX3JldHJ5LCBzdGF0dXM7DQoNCiAJaWYgKCFvcGVuX2ZpbGVzX2Zvcl9jcmVhdGlu
-Z19kdW1wZmlsZSgpKQ0KIAkJcmV0dXJuIEZBTFNFOw0KQEAgLTk3ODYsNiArOTgwMSwxMCBA
-QCBjcmVhdGVfZHVtcGZpbGUodm9pZCkNCiAJCWlmICghZ2V0X2VsZl9pbmZvKGluZm8tPmZk
-X21lbW9yeSwgaW5mby0+bmFtZV9tZW1vcnkpKQ0KIAkJCXJldHVybiBGQUxTRTsNCiAJfQ0K
-Kw0KKwlpZiAoaW5mby0+ZmxhZ19yZWZpbHRlcmluZykNCisJCXVwZGF0ZV9kdW1wX2xldmVs
-KCk7DQorDQogCWlmICghaW5pdGlhbCgpKQ0KIAkJcmV0dXJuIEZBTFNFOw0KDQpAQCAtOTgw
-NCwxNyArOTgyMyw4IEBAIGNyZWF0ZV9kdW1wZmlsZSh2b2lkKQ0KDQogCW51bV9yZXRyeSA9
-IDA7DQogcmV0cnk6DQotCWlmIChpbmZvLT5mbGFnX3JlZmlsdGVyaW5nKSB7DQotCQkvKiBD
-aGFuZ2UgZHVtcCBsZXZlbCAqLw0KLQkJbmV3X2xldmVsID0gaW5mby0+ZHVtcF9sZXZlbCB8
-IGluZm8tPmtoX21lbW9yeS0+ZHVtcF9sZXZlbDsNCi0JCWlmIChuZXdfbGV2ZWwgIT0gaW5m
-by0+ZHVtcF9sZXZlbCkgew0KLQkJCWluZm8tPmR1bXBfbGV2ZWwgPSBuZXdfbGV2ZWw7DQot
-CQkJTVNHKCJkdW1wX2xldmVsIGlzIGNoYW5nZWQgdG8gJWQsICIgXA0KLQkJCQkiYmVjYXVz
-ZSAlcyB3YXMgY3JlYXRlZCBieSBkdW1wX2xldmVsKCVkKS4iLA0KLQkJCQluZXdfbGV2ZWws
-IGluZm8tPm5hbWVfbWVtb3J5LA0KLQkJCQlpbmZvLT5raF9tZW1vcnktPmR1bXBfbGV2ZWwp
-Ow0KLQkJfQ0KLQl9DQorCWlmIChpbmZvLT5mbGFnX3JlZmlsdGVyaW5nKQ0KKwkJdXBkYXRl
-X2R1bXBfbGV2ZWwoKTsNCg0KIAlpZiAoKGluZm8tPm5hbWVfZmlsdGVyY29uZmlnIHx8IGlu
-Zm8tPm5hbWVfZXBwaWNfY29uZmlnKQ0KIAkJCSYmICFnYXRoZXJfZmlsdGVyX2luZm8oKSkN
-Ci0tIA0KMS44LjMuMQ0KDQo=
---------------3C2D1891EE08D28595DF6905
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+>
+>> to determine if RAM remapping is allowed.  RAM remapping will cause an
+>> encrypted mapping to be generated. By preventing RAM remapping,
+>> ioremap_cache() will be used instead, which will provide a decrypted
+>> mapping of the boot related data.
+>>
+>> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+>> ---
+>>  arch/x86/include/asm/io.h |    4 +
+>>  arch/x86/mm/ioremap.c     |  182 +++++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/io.h        |    2
+>>  kernel/memremap.c         |   20 ++++-
+>>  mm/early_ioremap.c        |   18 ++++
+>>  5 files changed, 219 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+>> index 7afb0e2..75f2858 100644
+>> --- a/arch/x86/include/asm/io.h
+>> +++ b/arch/x86/include/asm/io.h
+>> @@ -381,4 +381,8 @@ extern int __must_check arch_phys_wc_add(unsigned long base,
+>>  #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
+>>  #endif
+>>
+>> +extern bool arch_memremap_do_ram_remap(resource_size_t offset, size_t size,
+>> +				       unsigned long flags);
+>> +#define arch_memremap_do_ram_remap arch_memremap_do_ram_remap
+>> +
+>>  #endif /* _ASM_X86_IO_H */
+>> diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+>> index 9bfcb1f..bce0604 100644
+>> --- a/arch/x86/mm/ioremap.c
+>> +++ b/arch/x86/mm/ioremap.c
+>> @@ -13,6 +13,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/vmalloc.h>
+>>  #include <linux/mmiotrace.h>
+>> +#include <linux/efi.h>
+>>
+>>  #include <asm/cacheflush.h>
+>>  #include <asm/e820/api.h>
+>> @@ -21,6 +22,7 @@
+>>  #include <asm/tlbflush.h>
+>>  #include <asm/pgalloc.h>
+>>  #include <asm/pat.h>
+>> +#include <asm/setup.h>
+>>
+>>  #include "physaddr.h"
+>>
+>> @@ -419,6 +421,186 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+>>  	iounmap((void __iomem *)((unsigned long)addr & PAGE_MASK));
+>>  }
+>>
+>> +/*
+>> + * Examine the physical address to determine if it is an area of memory
+>> + * that should be mapped decrypted.  If the memory is not part of the
+>> + * kernel usable area it was accessed and created decrypted, so these
+>> + * areas should be mapped decrypted.
+>> + */
+>> +static bool memremap_should_map_decrypted(resource_size_t phys_addr,
+>> +					  unsigned long size)
+>> +{
+>> +	/* Check if the address is outside kernel usable area */
+>> +	switch (e820__get_entry_type(phys_addr, phys_addr + size - 1)) {
+>> +	case E820_TYPE_RESERVED:
+>> +	case E820_TYPE_ACPI:
+>> +	case E820_TYPE_NVS:
+>> +	case E820_TYPE_UNUSABLE:
+>> +		return true;
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +/*
+>> + * Examine the physical address to determine if it is EFI data. Check
+>> + * it against the boot params structure and EFI tables and memory types.
+>> + */
+>> +static bool memremap_is_efi_data(resource_size_t phys_addr,
+>> +				 unsigned long size)
+>> +{
+>> +	u64 paddr;
+>> +
+>> +	/* Check if the address is part of EFI boot/runtime data */
+>> +	if (efi_enabled(EFI_BOOT)) {
+>
+> Save indentation level:
+>
+> 	if (!efi_enabled(EFI_BOOT))
+> 		return false;
+>
+
+I was worried what the compiler might do when CONFIG_EFI is not set,
+but it appears to take care of it. I'll double check though.
+
+>
+>> +		paddr = boot_params.efi_info.efi_memmap_hi;
+>> +		paddr <<= 32;
+>> +		paddr |= boot_params.efi_info.efi_memmap;
+>> +		if (phys_addr == paddr)
+>> +			return true;
+>> +
+>> +		paddr = boot_params.efi_info.efi_systab_hi;
+>> +		paddr <<= 32;
+>> +		paddr |= boot_params.efi_info.efi_systab;
+>
+> So those two above look like could be two global vars which are
+> initialized somewhere in the EFI init path:
+>
+> efi_memmap_phys and efi_systab_phys or so.
+>
+> Matt ?
+>
+> And then you won't need to create that paddr each time on the fly. I
+> mean, it's not a lot of instructions but still...
+>
+>> +		if (phys_addr == paddr)
+>> +			return true;
+>> +
+>> +		if (efi_table_address_match(phys_addr))
+>> +			return true;
+>> +
+>> +		switch (efi_mem_type(phys_addr)) {
+>> +		case EFI_BOOT_SERVICES_DATA:
+>> +		case EFI_RUNTIME_SERVICES_DATA:
+>> +			return true;
+>> +		default:
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +/*
+>> + * Examine the physical address to determine if it is boot data by checking
+>> + * it against the boot params setup_data chain.
+>> + */
+>> +static bool memremap_is_setup_data(resource_size_t phys_addr,
+>> +				   unsigned long size)
+>> +{
+>> +	struct setup_data *data;
+>> +	u64 paddr, paddr_next;
+>> +
+>> +	paddr = boot_params.hdr.setup_data;
+>> +	while (paddr) {
+>> +		bool is_setup_data = false;
+>
+> You don't need that bool:
+>
+> static bool memremap_is_setup_data(resource_size_t phys_addr,
+>                                    unsigned long size)
+> {
+>         struct setup_data *data;
+>         u64 paddr, paddr_next;
+>
+>         paddr = boot_params.hdr.setup_data;
+>         while (paddr) {
+>                 if (phys_addr == paddr)
+>                         return true;
+>
+>                 data = memremap(paddr, sizeof(*data), MEMREMAP_WB | MEMREMAP_DEC);
+>
+>                 paddr_next = data->next;
+>
+>                 if ((phys_addr > paddr) && (phys_addr < (paddr + data->len))) {
+>                         memunmap(data);
+>                         return true;
+>                 }
+>
+>                 memunmap(data);
+>
+>                 paddr = paddr_next;
+>         }
+>         return false;
+> }
+>
+> Flow is a bit clearer.
+
+I may introduce a length variable to capture data->len right after
+paddr_next is set and then have just a single memunmap() call before
+the if check.
+
+>
+>> +/*
+>> + * Examine the physical address to determine if it is boot data by checking
+>> + * it against the boot params setup_data chain (early boot version).
+>> + */
+>> +static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
+>> +						unsigned long size)
+>> +{
+>> +	struct setup_data *data;
+>> +	u64 paddr, paddr_next;
+>> +
+>> +	paddr = boot_params.hdr.setup_data;
+>> +	while (paddr) {
+>> +		bool is_setup_data = false;
+>> +
+>> +		if (phys_addr == paddr)
+>> +			return true;
+>> +
+>> +		data = early_memremap_decrypted(paddr, sizeof(*data));
+>> +
+>> +		paddr_next = data->next;
+>> +
+>> +		if ((phys_addr > paddr) && (phys_addr < (paddr + data->len)))
+>> +			is_setup_data = true;
+>> +
+>> +		early_memunmap(data, sizeof(*data));
+>> +
+>> +		if (is_setup_data)
+>> +			return true;
+>> +
+>> +		paddr = paddr_next;
+>> +	}
+>> +
+>> +	return false;
+>> +}
+>
+> This one is begging to be unified with memremap_is_setup_data() to both
+> call a __ worker function.
+
+I tried that, but calling an "__init" function (early_memremap()) from
+a non "__init" function generated warnings. I suppose I can pass in a
+function for the map and unmap but that looks worse to me (also the
+unmap functions take different arguments).
+
+>
+>> +
+>> +/*
+>> + * Architecture function to determine if RAM remap is allowed. By default, a
+>> + * RAM remap will map the data as encrypted. Determine if a RAM remap should
+>> + * not be done so that the data will be mapped decrypted.
+>> + */
+>> +bool arch_memremap_do_ram_remap(resource_size_t phys_addr, unsigned long size,
+>> +				unsigned long flags)
+>
+> So this function doesn't do anything - it replies to a yes/no question.
+> So the name should not say "do" but sound like a question. Maybe:
+>
+> 	if (arch_memremap_can_remap( ... ))
+>
+> or so...
+
+Ok, I'll change that.
+
+>
+>> +{
+>> +	if (!sme_active())
+>> +		return true;
+>> +
+>> +	if (flags & MEMREMAP_ENC)
+>> +		return true;
+>> +
+>> +	if (flags & MEMREMAP_DEC)
+>> +		return false;
+>
+> So this looks strange to me: both flags MEMREMAP_ENC and _DEC override
+> setup and efi data checking. But we want to remap setup and EFI  data
+> *always* decrypted because that data was not encrypted as, as you say,
+> firmware doesn't run with SME active.
+>
+> So my simple logic says that EFI stuff should *always* be mapped DEC,
+> regardless of flags. Ditto for setup data. So that check below should
+> actually *override* the flags checks and go before them, no?
+
+This is like the chicken and the egg scenario. In order to determine if
+an address is setup data I have to explicitly map the setup data chain
+as decrypted. In order to do that I have to supply a flag to explicitly
+map the data decrypted otherwise I wind up back in the
+memremap_is_setup_data() function again and again and again...
+
+>
+>> +
+>> +	if (memremap_is_setup_data(phys_addr, size) ||
+>> +	    memremap_is_efi_data(phys_addr, size) ||
+>> +	    memremap_should_map_decrypted(phys_addr, size))
+>> +		return false;
+>> +
+>> +	return true;
+>> +}
+>> +
+>> +/*
+>> + * Architecture override of __weak function to adjust the protection attributes
+>> + * used when remapping memory. By default, early_memremp() will map the data
+>
+> early_memremAp() - a is missing.
+
+Got it.
+
+Thanks,
+Tom
+
+>
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------3C2D1891EE08D28595DF6905--
-
-
